@@ -7,6 +7,10 @@
  * To change this template use File | Settings | File Templates.
  */
 use \Nette\Diagnostics\Debugger;
+
+/**
+ * Obstarava prihlasovani a odhlasovani uzivatelu
+ */
 class AuthPresenter extends \SRS\BasePresenter
 {
     /**
@@ -20,6 +24,18 @@ class AuthPresenter extends \SRS\BasePresenter
         if ($httpRequest->getPost() == null) {
             $this->redirectUrl($this->context->parameters['skautis']['url']. '/Login/?appid='.$this->context->parameters['skautis']['appID']);
         }
+
+        $soap_client = new \SoapClient($this->context->parameters['skautis']['url']. '/JunakWebservice/UserManagement.asmx?wsdl');
+        $params = array(
+            'ID_Login' => $httpRequest->getPost('skautIS_Token')
+        );
+        $result =  $soap_client->UserDetail(array("userDetailInput" => $params))->UserDetailResult;
+        Debugger::dump($result);
+
+        $params['ID'] = $result->ID_Person;
+        $soap_person = new \SoapClient($this->context->parameters['skautis']['url']. '/JunakWebservice/OrganizationUnit.asmx?wsdl');
+        $result = $soap_person->PersonDetail(array("personDetailInput" => $params))->PersonDetailResult;
+        Debugger::dump($result);
     }
 
 }
