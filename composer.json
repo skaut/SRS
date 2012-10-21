@@ -1,0 +1,16 @@
+{
+	"name": "SRS",
+	
+	"config": {
+		"vendor-dir": "libs/global"
+	},
+	"require": {
+		"php": ">= 5.3.0",
+		"nette/nette": ">= 2.0.5",
+		"phpunit/phpunit": "3.7.*",
+		"nella/doctrine": "@dev",
+        "nella/console": "@dev",
+        "doctrine/migrations": "@dev"
+		
+	}
+}
