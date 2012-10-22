@@ -17,31 +17,19 @@ class AuthPresenter extends \SRS\BasePresenter
      * OCEKAVAME : $_POST[skautIS_Token], $_POST[skautIS_IDRole], $_POST[skautIS_IDUnit]
      */
     public function renderLogin() {
-        \Nette\Diagnostics\Debugger::dump($this->context->parameters['skautis']['appID']);
         $httpRequest = $this->context->httpRequest;
-        Debugger::dump($httpRequest->getPost());
 
         if ($httpRequest->getPost() == null) {
             $this->redirectUrl($this->context->parameters['skautis']['url']. '/Login/?appid='.$this->context->parameters['skautis']['appID']);
         }
 
-//        $soap_client = new \SoapClient($this->context->parameters['skautis']['url']. '/JunakWebservice/UserManagement.asmx?wsdl');
-//        $params = array(
-//            'ID_Login' => $httpRequest->getPost('skautIS_Token')
-//        );
-//        $result =  $soap_client->UserDetail(array("userDetailInput" => $params))->UserDetailResult;
-//        Debugger::dump($result);
-//
-//        $params['ID'] = $result->ID_Person;
-//        $soap_person = new \SoapClient($this->context->parameters['skautis']['url']. '/JunakWebservice/OrganizationUnit.asmx?wsdl');
-//        $result = $soap_person->PersonDetail(array("personDetailInput" => $params))->PersonDetailResult;
+        //@TODO zavolat authenticator
+
 
         $skautIS = new \SRS\Model\skautIS(($this->context->parameters['skautis']['url']));
         $skautISUser = $skautIS->getUser($httpRequest->getPost('skautIS_Token'));
         $skautISPerson = $skautIS->getPerson($httpRequest->getPost('skautIS_Token'), $skautISUser->ID_Person);
 
-        Debugger::dump($skautISUser);
-        \Nette\Diagnostics\Debugger::dump($skautISPerson);
     }
 
 }
