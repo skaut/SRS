@@ -17,19 +17,23 @@ class AuthPresenter extends \SRS\BasePresenter
      * OCEKAVAME : $_POST[skautIS_Token], $_POST[skautIS_IDRole], $_POST[skautIS_IDUnit]
      */
     public function renderLogin() {
+
         $httpRequest = $this->context->httpRequest;
 
         if ($httpRequest->getPost() == null) {
             $this->redirectUrl($this->context->parameters['skautis']['url']. '/Login/?appid='.$this->context->parameters['skautis']['appID']);
         }
+        try {
+            $this->context->user->login(NULL, $httpRequest->getPost('skautIS_Token'));
+            $this->context->user->setExpiration('+ 2 minutes', TRUE);
+            $this->flashMessage('Přihlášení proběhlo úspěšně');
+        }
+        catch (\Nette\Security\AuthenticationException $e) {
+            $this->flashMessage('Přihlášení prostřednictvím skautIS se nezdařilo', 'error');
+        }
 
-        //@TODO zavolat authenticator
-
-
-        $skautIS = new \SRS\Model\skautIS(($this->context->parameters['skautis']['url']));
-        $skautISUser = $skautIS->getUser($httpRequest->getPost('skautIS_Token'));
-        $skautISPerson = $skautIS->getPerson($httpRequest->getPost('skautIS_Token'), $skautISUser->ID_Person);
-
+        //@todo vratit se tam odkud jsme zavolali
+        $this->redirect('Homepage:default');
     }
 
 }

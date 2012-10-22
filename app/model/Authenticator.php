@@ -7,50 +7,43 @@ class Authenticator extends \Nette\Object implements NS\IAuthenticator
     /** @var \Doctrine\ORM\EntityRepository */
     private $users;
 
+    /** @var \SRS\Model\SkautIS */
+    private $skautIS;
 
 
-    public function __construct(\Doctrine\ORM\EntityRepository $users)
+
+    public function __construct(\Doctrine\ORM\EntityRepository $users, \SRS\Model\skautIS $skautIS)
     {
         $this->users = $users;
+        $this->skautIS = $skautIS;
     }
 
 
 
     /**
      * Performs an authentication
-     * @param  array
+     * @param array $credentials
      * @return \Nette\Security\Identity
      * @throws \Nette\Security\AuthenticationException
      */
     public function authenticate(array $credentials)
     {
-        list($username, $password) = $credentials;
-        $user = $this->users->findOneBy(array('username' => $username));
-
-        if (!$user) {
-            throw new NS\AuthenticationException("User '$username' not found.", self::IDENTITY_NOT_FOUND);
+        list($username, $skautISToken) = $credentials;
+        try {
+            $skautISUser = $this->skautIS->getUser($skautISToken);
         }
+        catch (\SoapFault $e)  {
+            \Nette\Diagnostics\Debugger::log($e->getMessage());
+            throw new NS\AuthenticationException("Invalid skautIS Token", self::INVALID_CREDENTIAL);
 
-        if ($user->password !== $this->calculateHash($password)) {
-            throw new NS\AuthenticationException("Invalid password.", self::INVALID_CREDENTIAL);
         }
+        $skautISPerson = $this->skautIS->getPerson($skautISToken, $skautISUser->ID_Person);
 
-        return new NS\Identity($user->id, $user->role, array(
-            'username' => $user->username,
-            'email' => $user->email,
+        //@TODO synchronizace s mou databazi
+
+        return new NS\Identity($skautISUser->UserName, NULL, array(
+            'token' => $skautISToken,
         ));
-    }
-
-
-
-    /**
-     * Computes salted password hash.
-     * @param  string
-     * @return string
-     */
-    public function calculateHash($password)
-    {
-        return md5($password . str_repeat('*enter any random salt here*', 10));
     }
 
 }
