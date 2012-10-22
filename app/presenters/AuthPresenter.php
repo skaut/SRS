@@ -25,7 +25,7 @@ class AuthPresenter extends \SRS\BasePresenter
         }
         try {
             $this->context->user->login(NULL, $httpRequest->getPost('skautIS_Token'));
-            $this->context->user->setExpiration('+ 2 minutes', TRUE);
+            $this->context->user->setExpiration(10, TRUE);
             $this->flashMessage('Přihlášení proběhlo úspěšně');
         }
         catch (\Nette\Security\AuthenticationException $e) {
@@ -33,6 +33,16 @@ class AuthPresenter extends \SRS\BasePresenter
         }
 
         //@todo vratit se tam odkud jsme zavolali
+        $this->redirect('Homepage:default');
+    }
+
+    public function renderLogout() {
+        if ($this->context->user->isLoggedIn()) {
+            $token = $this->context->user->identity->token;
+            $this->context->user->logout(true);
+            $this->redirectUrl($this->context->parameters['skautis']['url']. '/Login/LogOut.aspx?appid='.$this->context->parameters['skautis']['appID'].'&Token='.$token);
+        }
+        $this->flashMessage('Odhlášení proběhlo úspěšně');
         $this->redirect('Homepage:default');
     }
 

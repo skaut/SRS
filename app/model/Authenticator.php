@@ -4,17 +4,17 @@ use Nette\Security as NS;
 
 class Authenticator extends \Nette\Object implements NS\IAuthenticator
 {
-    /** @var \Doctrine\ORM\EntityRepository */
-    private $users;
+    /** @var \Doctrine\ORM\EntityManager */
+    private $database;
 
     /** @var \SRS\Model\SkautIS */
     private $skautIS;
 
 
 
-    public function __construct(\Doctrine\ORM\EntityRepository $users, \SRS\Model\skautIS $skautIS)
+    public function __construct(\Doctrine\ORM\EntityManager $database, \SRS\Model\skautIS $skautIS)
     {
-        $this->users = $users;
+        $this->database = $database;
         $this->skautIS = $skautIS;
     }
 
@@ -38,10 +38,14 @@ class Authenticator extends \Nette\Object implements NS\IAuthenticator
 
         }
         $skautISPerson = $this->skautIS->getPerson($skautISToken, $skautISUser->ID_Person);
+        $user = $this->database->getRepository("\SRS\Model\User")->findOneBy(array('username' => $skautISUser->UserName));
+        if ($user == null) {
+            $user = \SRS\Parsers\UserParser::createFromSkautIS($skautISUser, $skautISPerson);
+            $this->database->persist($user);
+            $this->database->flush();
+        }
 
-        //@TODO synchronizace s mou databazi
-
-        return new NS\Identity($skautISUser->UserName, NULL, array(
+        return new NS\Identity($user->username, $user->role, array(
             'token' => $skautISToken,
         ));
     }

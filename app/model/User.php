@@ -10,8 +10,13 @@ use Doctrine\ORM\Mapping as ORM;
  * @property-read int $id
  * @property-read string $username
  * @property string $email
- * @property string $password
  * @property string $role
+ * @property string $username
+ * @property string $firstName
+ * @property string $lastName
+ * @property string $nickName
+ * @property string $sex
+ * @property string $birthdate
  */
 class User extends \Nette\Object
 {
@@ -21,27 +26,54 @@ class User extends \Nette\Object
      * @ORM\GeneratedValue
      * @var int
      */
-    private $id;
+    protected $id;
     /**
      * @ORM\Column(unique=true)
      * @var string
      */
-    private $username;
+    protected $username;
+    /**
+     * @ORM\Column(unique=true)
+     * @var string
+     */
+    protected $email;
+
+    /**
+     * @ORM\Column(nullable=true)
+     * @var string
+     */
+    protected $role;
+
+     /**
+     * @ORM\Column
+     * @var string
+     */
+    protected $firstName;
+
     /**
      * @ORM\Column
      * @var string
      */
-    private $email;
+    protected $lastName;
+
     /**
-     * @ORM\Column
+     * @ORM\Column(nullable=true)
      * @var string
      */
-    private $password;
+    protected $nickName;
+
     /**
-     * @ORM\Column
+     * @ORM\Column(nullable=true)
      * @var string
      */
-    private $role;
+    protected $sex;
+
+    /**
+     * @ORM\Column(type="date")
+     * @var string
+     */
+    protected $birthdate;
+
 
     /**
      * @param string
@@ -61,6 +93,87 @@ class User extends \Nette\Object
     }
 
     /**
+     * @param string $birhdate
+     */
+    public function setBirthdate($birthdate)
+    {
+        $this->birthdate = $birthdate;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBirthdate()
+    {
+        return $this->birthdate;
+    }
+
+    /**
+     * @param string $firstName
+     */
+    public function setFirstName($firstName)
+    {
+        $this->firstName = $firstName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFirstName()
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @param string $lastName
+     */
+    public function setLastName($lastName)
+    {
+        $this->lastName = $lastName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastName()
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * @param string $nickName
+     */
+    public function setNickName($nickName)
+    {
+        $this->nickName = $nickName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNickName()
+    {
+        return $this->nickName;
+    }
+
+
+    /**
+     * @param string $sex
+     */
+    public function setSex($sex)
+    {
+        $this->sex = $sex;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSex()
+    {
+        return $this->sex;
+    }
+
+    /**
      * @return string
      */
     public function getUsername()
@@ -68,23 +181,6 @@ class User extends \Nette\Object
         return $this->username;
     }
 
-    /**
-     * @return string
-     */
-    public function getPassword()
-    {
-        return $this->password;
-    }
-
-    /**
-     * @param string
-     * @return User
-     */
-    public function setPassword($password)
-    {
-        $this->password = static::normalizeString($password);
-        return $this;
-    }
 
     /**
      * @return string
