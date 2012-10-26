@@ -11,12 +11,13 @@ use Doctrine\ORM\Mapping as ORM;
  * @property-read string $username
  * @property string $email
  * @property string $role
- * @property string $username
  * @property string $firstName
  * @property string $lastName
  * @property string $nickName
  * @property string $sex
  * @property string $birthdate
+ * @property int $skautISUserId
+ * @property int $skautISPersonId
  */
 class User extends \Nette\Object
 {
@@ -73,6 +74,19 @@ class User extends \Nette\Object
      * @var string
      */
     protected $birthdate;
+
+
+   /**
+    * @var int
+    * @ORM\Column(type="integer", unique=true)
+   */
+    protected $skautISUserId;
+
+    /**
+     * @var int
+     * @ORM\Column(type="integer", unique=true)
+     */
+    protected $skautISPersonId;
 
 
     /**
@@ -216,6 +230,38 @@ class User extends \Nette\Object
     {
         $this->role = static::normalizeString($role);
         return $this;
+    }
+
+    /**
+     * @param $skautISPersonId
+     */
+    public function setSkautISPersonId($skautISPersonId)
+    {
+        $this->skautISPersonId = $skautISPersonId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSkautISPersonId()
+    {
+        return $this->skautISPersonId;
+    }
+
+    /**
+     * @param $skautISUserId
+     */
+    public function setSkautISUserId($skautISUserId)
+    {
+        $this->skautISUserId = $skautISUserId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSkautISUserId()
+    {
+        return $this->skautISUserId;
     }
 
     /**
