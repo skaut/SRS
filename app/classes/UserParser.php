@@ -11,13 +11,10 @@ namespace SRS\Parsers;
 class UserParser
 {
     public static function createFromSkautIS($skautISUser, $skautISPerson) {
-//        \Nette\Diagnostics\Debugger::dump($skautISUser);
-//        \Nette\Diagnostics\Debugger::dump($skautISPerson);
         $user = new \SRS\Model\User($skautISUser->UserName);
-
+        $user->roles = array('registered');
         $user->skautISUserId = $skautISUser->ID;
         $user->skautISPersonId = $skautISUser->ID_Person;
-
         $user->email = $skautISPerson->Email;
         $user->firstName = $skautISPerson->FirstName;
         $user->lastName = $skautISPerson->LastName;

@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @property-read int $id
  * @property-read string $username
  * @property string $email
- * @property string $role
+ * @property mixed $roles
  * @property string $firstName
  * @property string $lastName
  * @property string $nickName
@@ -40,10 +40,10 @@ class User extends \Nette\Object
     protected $email;
 
     /**
-     * @ORM\Column(nullable=true)
+     * @ORM\Column
      * @var string
      */
-    protected $role;
+    protected $roles;
 
      /**
      * @ORM\Column
@@ -217,18 +217,20 @@ class User extends \Nette\Object
     /**
      * @return string
      */
-    public function getRole()
+    public function getRoles()
     {
-        return $this->role;
+        $roles = explode(',', $this->roles);
+        return $roles;
     }
 
     /**
-     * @param string
+     * @param mixed
      * @return User
      */
-    public function setRole($role)
+    public function setRoles($roles)
     {
-        $this->role = static::normalizeString($role);
+        $roles = implode(',', $roles);
+        $this->roles = $roles;
         return $this;
     }
 

@@ -45,12 +45,27 @@ else {
 $container = $configurator->createContainer();
 
 
+
+
 // Setup router
 $container->router[] = new Route('index.php', 'Homepage:default', Route::ONE_WAY);
 $container->router[] = new Route('admin/', 'Back:Dashboard:default');
 $container->router[] = new Route('login/', 'Auth:login');
 $container->router[] = new Route('logout/', 'Auth:logout');
 $container->router[] = new Route('<presenter>/<action>[/<id>]', 'Homepage:default');
+
+
+//Setup ACL
+$acl = new \Nette\Security\Permission();
+$acl->addRole('guest');
+$acl->addRole('registered', 'guest');
+$acl->addRole('serviceTeam', 'registered');
+$acl->addRole('lector', 'serviceTeam');
+$acl->addRole('organizer', 'lector');
+$acl->addRole('admin', 'organizer');
+$acl->addRole('webmaster');
+$acl->addRole('programManager');
+$container->user->setAuthorizator($acl);
 
 
 // Configure and run the application!
