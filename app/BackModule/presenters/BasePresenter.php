@@ -4,18 +4,18 @@ namespace BackModule;
 /**
  * Base presenter for all application presenters.
  */
-abstract class BasePresenter extends \Nette\Application\UI\Presenter
+abstract class BasePresenter extends \SRS\BasePresenter
 {
-    /** @var Doctrine\ORM\EntityManager */
-    protected $em;
-
-    public function injectEntityManager(\Doctrine\ORM\EntityManager $em)
-    {
-        if ($this->em) {
-            throw new \Nette\InvalidStateException('Entity manager has already been set');
+    public function startup() {
+        parent::startup();
+        if (!$this->context->user->isLoggedIn()) {
+            $this->redirect(":Auth:login");
         }
-        $this->em = $em;
-        return $this;
+
+//        if ($this->context->user->isInRole('guest')) {
+//            $this->flashMessage('Pro vstup do administrace nemáte dostatečné oprávnění');
+//            $this->redirect(':Homepage:default');
+//        }
     }
     
 

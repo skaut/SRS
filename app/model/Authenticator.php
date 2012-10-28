@@ -45,7 +45,7 @@ class Authenticator extends \Nette\Object implements NS\IAuthenticator
             $this->database->flush();
         }
 
-        return new NS\Identity($user->username, $user->role, array(
+        return new NS\Identity($user->id, $user->role, array(
             'token' => $skautISToken,
         ));
     }

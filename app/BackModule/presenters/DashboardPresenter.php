@@ -4,7 +4,7 @@
  * Homepage presenter.
  */
 namespace BackModule;
-class DashboardPresenter extends \SRS\BasePresenter
+class DashboardPresenter extends BasePresenter
 {
 
 	public function renderDefault()

@@ -25,7 +25,7 @@ class AuthPresenter extends \SRS\BasePresenter
         }
         try {
             $this->context->user->login(NULL, $httpRequest->getPost('skautIS_Token'));
-            $this->context->user->setExpiration(10, TRUE);
+            $this->context->user->setExpiration('+30 minutes', TRUE);
             $this->flashMessage('Přihlášení proběhlo úspěšně');
         }
         catch (\Nette\Security\AuthenticationException $e) {

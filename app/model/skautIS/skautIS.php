@@ -73,9 +73,9 @@ class skautIS extends \Nette\Object
     }
 
     /**
-     * @param string $token
+     * @param string $token skautIS Token
      * @param string $userId
-     * @return mixed
+     * @return mixed Person skautISu
      */
     public function getPerson($token, $personID) {
         $params = array(
@@ -85,6 +85,16 @@ class skautIS extends \Nette\Object
         $response = $this->getOrganizationUnitService()->PersonDetail(array("personDetailInput" => $params))->PersonDetailResult;
         return $response;
 
+    }
+
+    /**
+     * @param string $token skautisToken
+     */
+    public function refreshUserExpiration($token) {
+        $params = array(
+            'ID' => $token
+        );
+        $response = $this->getUserManagementService()->LoginUpdateRefresh(array('loginUpdateRefreshInput' => $params));
     }
 
 
