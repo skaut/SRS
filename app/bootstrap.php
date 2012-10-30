@@ -21,7 +21,7 @@ $configurator->enableDebugger(__DIR__ . '/../log');
 $configurator->setTempDirectory(__DIR__ . '/../temp');
 $configurator->createRobotLoader()
 	->addDirectory(APP_DIR)
-	//->addDirectory(LIBS_DIR)
+	->addDirectory(LOCAL_LIBS_DIR)
 	->register();
 
 \Nella\Console\Config\Extension::register($configurator);

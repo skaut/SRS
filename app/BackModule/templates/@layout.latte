@@ -6,18 +6,9 @@
 	<meta name="robots" content="{$robots}" n:ifset="$robots">
 
 	<title>{block title|striptags}{/block} | SRS</title>
-
-    <link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/reset.css">
-    <link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/nette.css">
-    <link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/screen.css">
-    <link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/bootstrap.css">
-    <link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/bootstrap-responsive.css">
-	<link rel="stylesheet" media="print" href="{$basePath}/css/print.css">
+    {widget cssLoader 'nette.css', 'bootstrap.css', 'bootstrap-responsive.css', 'niftygrid/grid.css', 'niftygrid/example.css'}
 	<link rel="shortcut icon" href="{$basePath}/favicon.ico">
-
-	<script src="{$basePath}/js/jquery-1.8.2.min.js"></script>
-	<script src="{$basePath}/js/netteForms.js"></script>
-    <script src="{$basePath}/js/bootstrap.min.js"></script>
+    {widget jsLoader 'jquery-1.8.2.min.js', 'netteForms.js', 'bootstrap.min.js', 'jquery-ui.js', 'niftygrid/grid.js'}
 
 	{block head}{/block}
 </head>
@@ -38,8 +29,8 @@
                         Přihlášen jako <a href="#" class="navbar-link">{$user->id}</a>
                     </p>
                     <ul class="nav">
-                        <li class="active"><a href="#">Home</a></li>
-                        <li><a href="#about">About</a></li>
+                        <li class="active"><a href="{plink :Back:dashboard:default}">Home</a></li>
+                        <li><a href="{plink :Back:acl:list}">ACL</a></li>
                         <li><a href="#contact">Contact</a></li>
                     </ul>
                 </div><!--/.nav-collapse -->
