@@ -18,7 +18,8 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
         return $this;
     }
 
-    public function startup() {
+    public function startup()
+    {
         parent::startup();
         //Při každém načtení stránky prodlužujeme platnost skautIS Tokenu
         if ($this->user->isLoggedIn()) {

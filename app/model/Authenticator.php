@@ -11,14 +11,11 @@ class Authenticator extends \Nette\Object implements NS\IAuthenticator
     private $skautIS;
 
 
-
     public function __construct(\Doctrine\ORM\EntityManager $database, \SRS\Model\skautIS $skautIS)
     {
         $this->database = $database;
         $this->skautIS = $skautIS;
     }
-
-
 
     /**
      * Performs an authentication
@@ -29,17 +26,19 @@ class Authenticator extends \Nette\Object implements NS\IAuthenticator
     public function authenticate(array $credentials)
     {
         list($username, $skautISToken) = $credentials;
-        try {
+        try
+        {
             $skautISUser = $this->skautIS->getUser($skautISToken);
         }
-        catch (\SoapFault $e)  {
+        catch (\SoapFault $e)
+        {
             \Nette\Diagnostics\Debugger::log($e->getMessage());
             throw new NS\AuthenticationException("Invalid skautIS Token", self::INVALID_CREDENTIAL);
-
         }
         $skautISPerson = $this->skautIS->getPerson($skautISToken, $skautISUser->ID_Person);
         $user = $this->database->getRepository("\SRS\Model\User")->findOneBy(array('username' => $skautISUser->UserName));
-        if ($user == null) {
+        if ($user == null)
+        {
             $user = \SRS\Parsers\UserParser::createFromSkautIS($skautISUser, $skautISPerson);
             $this->database->persist($user);
             $this->database->flush();
