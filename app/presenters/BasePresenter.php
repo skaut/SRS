@@ -2,7 +2,7 @@
 
 namespace SRS;
 /**
- * Base presenter for all application presenters.
+ * Base presenter pro celou SRS aplikaci, primo nebo neprimo jej dedi kazdy presenter v projektu
  */
 abstract class BasePresenter extends \Nette\Application\UI\Presenter
 {
@@ -32,6 +32,36 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
             }
         }
 
+    }
+
+
+    /**
+     * Tovarnicka pro nacitani CSS souboru
+     * @return \WebLoader\Nette\CssLoader
+     */
+    public function createComponentCssLoader()
+    {
+        // připravíme seznam souborů
+        // FileCollection v konstruktoru může dostat výchozí adresář, pak není potřeba psát absolutní cesty
+        $files = new \WebLoader\FileCollection(WWW_DIR . '/css');
+
+        // kompilátoru seznam předáme a určíme adresář, kam má kompilovat
+        $compiler = \WebLoader\Compiler::createCssCompiler($files, WWW_DIR . '/webtemp');
+
+
+        // nette komponenta pro výpis <link>ů přijímá kompilátor a cestu k adresáři na webu
+        return new \WebLoader\Nette\CssLoader($compiler, $this->template->basePath . '/webtemp');
+    }
+
+    /**
+     * Tovarnicka pro nacitani JS souboru
+     * @return \WebLoader\Nette\JavaScriptLoader
+     */
+    public function createComponentJsLoader()
+    {
+        $files = new \WebLoader\FileCollection(WWW_DIR . '/js');
+        $compiler = \WebLoader\Compiler::createJsCompiler($files, WWW_DIR . '/webtemp');
+        return new \WebLoader\Nette\JavaScriptLoader($compiler, $this->template->basePath . '/webtemp');
     }
     
 

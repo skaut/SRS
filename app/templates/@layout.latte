@@ -12,21 +12,12 @@
 	<meta charset="UTF-8">
 	<meta name="description" content="">
 	<meta name="robots" content="{$robots}" n:ifset="$robots">
-
 	<title>{block title|striptags}{/block} | SRS</title>
 
-    <link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/reset.css">
-    <link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/nette.css">
-    <link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/screen.css">
-    {*<link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/bootstrap.css">*}
-    {*<link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/bootstrap-responsive.css">*}
-	<link rel="stylesheet" media="print" href="{$basePath}/css/print.css">
-	<link rel="shortcut icon" href="{$basePath}/favicon.ico">
 
-	<script src="{$basePath}/js/jquery-1.8.2.min.js"></script>
-	<script src="{$basePath}/js/netteForms.js"></script>
-    {*<script src="{$basePath}/js/bootstrap.min.js"></script>*}
-
+    {widget cssLoader 'reset.css', 'nette.css'}
+    {widget jsLoader 'jquery-1.8.2.min.js', 'netteForms.js'}
+    <link rel="shortcut icon" href="{$basePath}/favicon.ico">
 	{block head}{/block}
 </head>
 
@@ -35,10 +26,6 @@
     <div n:foreach="$flashes as $flash" class="sent {$flash->type}">
         <p>{$flash->message}</p>
     </div>
-
-    {dump $user}
-    {$user->id}
-
      {include 'includes/menu.latte'}
 
      {include #content}

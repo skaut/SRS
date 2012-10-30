@@ -10,7 +10,8 @@
 		"phpunit/phpunit": "3.7.*",
 		"nella/doctrine": "@dev",
         "nella/console": "@dev",
-        "doctrine/migrations": "@dev"
+        "doctrine/migrations": "@dev",
+        "JanMarek/WebLoader": "dev-master"
 		
 	}
 }
