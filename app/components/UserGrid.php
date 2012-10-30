@@ -8,6 +8,10 @@
  */
 namespace SRS\Components;
 use \NiftyGrid\Grid;
+
+/**
+ * Grid pro správu uživatelů
+ */
 class UserGrid extends Grid
 {
     /**
@@ -15,12 +19,17 @@ class UserGrid extends Grid
      */
     protected $db;
 
-    public function __construct($db) {
+    /**
+     * @param \Doctrine\ORM\EntityManager
+     */
+    public function __construct($db)
+    {
         parent::__construct();
         $this->db = $db;
     }
 
-    protected function configure($presenter) {
+    protected function configure($presenter)
+    {
         $source = new \NiftyGrid\DataSource\DoctrineDataSource($this->db->createQueryBuilder()->add('select', 'u')->add('from', '\SRS\Model\User u'), 'u_id');
         $this->setDataSource($source);
         $this->addColumn('u_username', 'Username');

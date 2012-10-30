@@ -35,7 +35,8 @@ class skautIS extends \Nette\Object
     /**
      * @param string $skautISUrl
      */
-    public function __construct($skautISUrl) {
+    public function __construct($skautISUrl)
+    {
         $this->skautISUrl = $skautISUrl;
     }
 
@@ -43,7 +44,8 @@ class skautIS extends \Nette\Object
     /**
      * @return \SoapClient
      */
-    protected function getUserManagementService() {
+    protected function getUserManagementService()
+    {
         if ($this->userManagementService == null) {
             $this->userManagementService = new \SoapClient($this->skautISUrl. '/' . $this->webServicesSlug. '/' . $this->userManagementServiceSlug);
         }
@@ -53,7 +55,8 @@ class skautIS extends \Nette\Object
     /**
      * @return \SoapClient
      */
-    protected function getOrganizationUnitService() {
+    protected function getOrganizationUnitService()
+    {
         if ($this->organizationUnitService == null) {
             $this->organizationUnitService = new \SoapClient($this->skautISUrl. '/' . $this->webServicesSlug. '/' . $this->organizationUnitServiceSlug);
         }
@@ -64,7 +67,8 @@ class skautIS extends \Nette\Object
      * @param string $token
      * @return mixed
      */
-    public function getUser($token) {
+    public function getUser($token)
+    {
         $params = array(
             'ID_Login' => $token,
         );
@@ -77,7 +81,8 @@ class skautIS extends \Nette\Object
      * @param string $userId
      * @return mixed Person skautISu
      */
-    public function getPerson($token, $personID) {
+    public function getPerson($token, $personID)
+    {
         $params = array(
             'ID_Login' => $token,
             'ID' => $personID
@@ -89,12 +94,14 @@ class skautIS extends \Nette\Object
 
     /**
      * @param string $token skautisToken
+     * @throws \SoapFault pokud vlozime neplatny token
      */
-    public function refreshUserExpiration($token) {
+    public function refreshUserExpiration($token)
+    {
         $params = array(
             'ID' => $token
         );
-        $response = $this->getUserManagementService()->LoginUpdateRefresh(array('loginUpdateRefreshInput' => $params));
+        $this->getUserManagementService()->LoginUpdateRefresh(array('loginUpdateRefreshInput' => $params));
     }
 
 
