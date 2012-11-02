@@ -15,13 +15,18 @@ class AuthPresenter extends \SRS\BasePresenter
 {
     /**
      * OCEKAVAME : $_POST[skautIS_Token], $_POST[skautIS_IDRole], $_POST[skautIS_IDUnit]
+     * @param string $backlink Ve tvaru pro funkci redirect
      */
-    public function renderLogin() {
+    public function renderLogin($backlink = null) {
 
         $httpRequest = $this->context->httpRequest;
 
         if ($httpRequest->getPost() == null) {
-            $this->redirectUrl($this->context->parameters['skautis']['url']. '/Login/?appid='.$this->context->parameters['skautis']['appID']);
+            $loginUrl = $this->context->parameters['skautis']['url']. '/Login/?appid='.$this->context->parameters['skautis']['appID'];
+            if ($backlink) {
+                $loginUrl .= '&ReturnUrl='.$backlink;
+            }
+            $this->redirectUrl($loginUrl);
         }
         try {
             $this->context->user->login(NULL, $httpRequest->getPost('skautIS_Token'));
@@ -30,9 +35,12 @@ class AuthPresenter extends \SRS\BasePresenter
         }
         catch (\Nette\Security\AuthenticationException $e) {
             $this->flashMessage('Přihlášení prostřednictvím skautIS se nezdařilo', 'error');
+            //@TODO nemeli bychom presmerovat na nejakou stranku, ktera nevyzaduje prihlaseni?
         }
 
-        //@todo vratit se tam odkud jsme zavolali
+        if ($this->getParameter('ReturnUrl')) {
+            $this->redirect($this->getParameter('ReturnUrl'));
+        }
         $this->redirect('Homepage:default');
     }
 
