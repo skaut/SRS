@@ -33,7 +33,8 @@ class TestDataUsersCommand extends Command
 
     protected function configure()
     {
-        $this->setName('srs:test_data:users');
+        $this->setName('srs:test_data:user');
+        $this->setDescription('Vloží do databáze testovací uživatele');
 
     }
 

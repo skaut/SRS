@@ -32,10 +32,11 @@ class UserGrid extends Grid
     {
         $source = new \NiftyGrid\DataSource\DoctrineDataSource($this->em->createQueryBuilder()->add('select', 'u')->add('from', '\SRS\Model\User u'), 'u_id');
         $this->setDataSource($source);
-        $this->addColumn('u_username', 'Username')->setTextFilter();
-        $this->addColumn('u_nickName', 'Přezdívka')->setTextFilter();
-        $this->addColumn('u_firstName', 'Jméno')->setTextFilter();
-        $this->addColumn('u_lastName', 'Příjmení')->setTextFilter();
+        $numOfResults = 10;
+        $this->addColumn('u_username', 'Username')->setTextFilter()->setAutocomplete($numOfResults);
+        $this->addColumn('u_nickName', 'Přezdívka')->setTextFilter()->setAutocomplete($numOfResults);
+        $this->addColumn('u_firstName', 'Jméno')->setTextFilter()->setAutocomplete($numOfResults);
+        $this->addColumn('u_lastName', 'Příjmení')->setTextFilter()->setAutocomplete($numOfResults);
 
     }
 

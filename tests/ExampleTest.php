@@ -1,6 +1,6 @@
 <?php
 
-namespace Project\Test;
+namespace SRS\Test;
 
 class DummyTranslatorTest extends \PHPUnit_Framework_TestCase
 {

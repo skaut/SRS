@@ -65,6 +65,7 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
     {
         $files = new \WebLoader\FileCollection(WWW_DIR . '/js');
         $compiler = \WebLoader\Compiler::createJsCompiler($files, WWW_DIR . '/webtemp');
+        $compiler->setJoinFiles(FALSE);
         return new \WebLoader\Nette\JavaScriptLoader($compiler, $this->template->basePath . '/webtemp');
     }
     
