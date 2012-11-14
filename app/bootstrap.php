@@ -44,9 +44,6 @@ else {
 
 $container = $configurator->createContainer();
 
-
-
-
 // Setup router
 $container->router[] = new Route('index.php', 'Homepage:default', Route::ONE_WAY);
 $container->router[] = new Route('admin/', 'Back:Dashboard:default');
