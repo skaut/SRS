@@ -46,8 +46,11 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
         // FileCollection v konstruktoru může dostat výchozí adresář, pak není potřeba psát absolutní cesty
         $files = new \WebLoader\FileCollection(WWW_DIR . '/css');
 
+
         // kompilátoru seznam předáme a určíme adresář, kam má kompilovat
+        $filter =  new \WebLoader\Filter\CssUrlsFilter($this->template->basePath);
         $compiler = \WebLoader\Compiler::createCssCompiler($files, WWW_DIR . '/webtemp');
+        $compiler->addFileFilter($filter);
 
 
         // nette komponenta pro výpis <link>ů přijímá kompilátor a cestu k adresáři na webu
