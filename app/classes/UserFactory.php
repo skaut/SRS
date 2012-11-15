@@ -14,11 +14,12 @@ class UserFactory
     /**
      * @param int $skautISUser
      * @param int $skautISPerson
+     * @param mixed $roles
      * @return \SRS\Model\User
      */
-    public static function createFromSkautIS($skautISUser, $skautISPerson) {
+    public static function createFromSkautIS($skautISUser, $skautISPerson, $role) {
         $user = new \SRS\Model\User($skautISUser->UserName);
-        $user->roles = array('registered');
+        $user->roles->add($role);
         $user->skautISUserId = $skautISUser->ID;
         $user->skautISPersonId = $skautISUser->ID_Person;
         $user->email = $skautISPerson->Email;

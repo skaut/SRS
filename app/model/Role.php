@@ -53,13 +53,13 @@ class Role extends \Nette\Object
     /**
      * @ORM\OneToMany(targetEntity="\SRS\Model\Role", mappedBy="parent")
      */
-    private $children;
+    protected $children;
 
     /**
      * @ORM\ManyToOne(targetEntity="\SRS\Model\Role", inversedBy="children", cascade={"persist"})
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
      */
-    private $parent;
+    protected $parent;
 
 
     /**

@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @property-read int $id
  * @property-read string $username
  * @property string $email
- * @property mixed $roles
+ * @property \Doctrine\Common\Collections\ArrayCollection $roles
  * @property string $firstName
  * @property string $lastName
  * @property string $nickName
