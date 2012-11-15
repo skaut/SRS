@@ -37,16 +37,15 @@ class UserFactory
     /**
      * @param int $skautISUserId
      * @param int $skautISPersonId
+     * @param \Doctrine\Common\Collections\ArrayCollection $roles
      * @return \SRS\Model\User
      */
-    public static function createRandom($skautISUserId, $skautISPersonId) {
+    public static function createRandom($skautISUserId, $skautISPersonId, $roles) {
         $sex_choices = array('male', 'female');
-        $role_choices = array('guest', 'registered', 'organizer');
-
         $user = new \SRS\Model\User(Strings::random());
         $user->skautISUserId = $skautISUserId;
         $user->skautISPersonId = $skautISPersonId;
-        $user->roles = array($role_choices[mt_rand(0, sizeof($sex_choices)-1)]);
+        $user->roles->add($roles[mt_rand(0, sizeof($roles)-1)]);
         $user->email = Strings::random(5) . '@' . Strings::random(5) . '.' . Strings::random(2);
         $user->firstName = Strings::random(8);
         $user->lastName = Strings::random(5);

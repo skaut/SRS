@@ -45,9 +45,10 @@ class TestDataUsersCommand extends Command
 
         $minUserId = $result[1] ? $result[1] : -1;
         $minPersonId = $result[2] ? $result[2] : -1;
-
+        $roles = $this->em->getRepository('\SRS\Model\Role')->findBy(array('standAlone' => true));
+      //  $roles->toArray();
         for($i = 0; $i < 20; $i++) {
-            $user = UserFactory::createRandom(--$minUserId, --$minPersonId);
+            $user = UserFactory::createRandom(--$minUserId, --$minPersonId, $roles);
             $this->em->persist($user);
         }
         $this->em->flush();

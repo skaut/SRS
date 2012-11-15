@@ -32,7 +32,6 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
                 $this->redirect(':Auth:login');
             }
         }
-
     }
 
 
