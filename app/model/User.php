@@ -40,7 +40,7 @@ class User extends \Nette\Object
     protected $email;
 
     /**
-     * @ORM\Column
+     * @ORM\ManyToMany(targetEntity="\SRS\Model\Role", inversedBy="users")
      * @var string
      */
     protected $roles;
@@ -96,6 +96,7 @@ class User extends \Nette\Object
     public function __construct($username)
     {
         $this->username = static::normalizeString($username);
+        $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -219,8 +220,7 @@ class User extends \Nette\Object
      */
     public function getRoles()
     {
-        $roles = explode(',', $this->roles);
-        return $roles;
+        return $this->roles;
     }
 
     /**
@@ -229,9 +229,7 @@ class User extends \Nette\Object
      */
     public function setRoles($roles)
     {
-        $roles = implode(',', $roles);
         $this->roles = $roles;
-        return $this;
     }
 
     /**

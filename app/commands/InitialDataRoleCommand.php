@@ -2,8 +2,8 @@
 /**
  * Created by JetBrains PhpStorm.
  * User: Michal
- * Date: 14.11.12
- * Time: 20:47
+ * Date: 15.11.12
+ * Time: 14:06
  * To change this template use File | Settings | File Templates.
  */
 
@@ -11,12 +11,12 @@ namespace SRS\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use SRS\Factory\UserFactory;
+use SRS\Factory\RoleFactory;
 
 /**
- * Slouzi pro vlozeni testovacich uzivatelu
+ * Inicializacni data pro Role
  */
-class TestDataUsersCommand extends Command
+class InitialDataRoleCommand extends Command
 {
     /**
      * @var \Doctrine\ORM\EntityManager
@@ -33,24 +33,19 @@ class TestDataUsersCommand extends Command
 
     protected function configure()
     {
-        $this->setName('srs:test-data:user');
+        $this->setName('srs:initial-data:role');
         $this->setDescription('Vloží do databáze testovací uživatele');
 
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $query = $this->em->createQuery('SELECT min(u.skautISUserId), min(u.skautISPersonId) FROM \SRS\Model\User u');
-        $result = $query->getSingleResult();
-
-        $minUserId = $result[1] ? $result[1] : -1;
-        $minPersonId = $result[2] ? $result[2] : -1;
-
-        for($i = 0; $i < 20; $i++) {
-            $user = UserFactory::createRandom(--$minUserId, --$minPersonId);
-            $this->em->persist($user);
+        $roles = RoleFactory::createRoles();
+        foreach ($roles as $role) {
+            $this->em->persist($role);
         }
         $this->em->flush();
-        $output->writeln('Testovaci uzivatele uspesne vlozeni do databaze');
+        $output->writeln('Role uspesne vlozeny');
+
     }
 }

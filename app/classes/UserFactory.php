@@ -11,6 +11,11 @@ use Nette\Utils\Strings;
 
 class UserFactory
 {
+    /**
+     * @param int $skautISUser
+     * @param int $skautISPerson
+     * @return \SRS\Model\User
+     */
     public static function createFromSkautIS($skautISUser, $skautISPerson) {
         $user = new \SRS\Model\User($skautISUser->UserName);
         $user->roles = array('registered');
@@ -29,9 +34,9 @@ class UserFactory
     }
 
     /**
-     * Slouzi pro testovani
      * @param int $skautISUserId
      * @param int $skautISPersonId
+     * @return \SRS\Model\User
      */
     public static function createRandom($skautISUserId, $skautISPersonId) {
         $sex_choices = array('male', 'female');

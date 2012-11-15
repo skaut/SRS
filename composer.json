@@ -11,6 +11,7 @@
 		"nella/doctrine": "@dev",
         "nella/console": "@dev",
         "doctrine/migrations": "@dev",
+        "doctrine/data-fixtures": "dev-master",
         "JanMarek/WebLoader": "dev-master"
 		
 	}
