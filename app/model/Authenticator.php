@@ -46,9 +46,9 @@ class Authenticator extends \Nette\Object implements NS\IAuthenticator
         }
 
         $netteRoles = array();
-        foreach ($user->roles as $role) {
-            $netteRoles[] = $role->name;
-        }
+
+        $netteRoles[] = $user->role->name;
+
         return new NS\Identity($user->id, $netteRoles, array(
             'token' => $skautISToken,
             'object' => $user,

@@ -10,7 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @property-read int $id
  * @property-read string $username
  * @property string $email
- * @property \Doctrine\Common\Collections\ArrayCollection $roles
+ * @property \SRS\Model\Role $role
+
  * @property string $firstName
  * @property string $lastName
  * @property string $nickName
@@ -40,10 +41,13 @@ class User extends \Nette\Object
     protected $email;
 
     /**
-     * @ORM\ManyToMany(targetEntity="\SRS\Model\Role", inversedBy="users")
-     * @var string
+     * @ORM\ManyToOne(targetEntity="\SRS\Model\Role", inversedBy="users")
+     * @var \SRS\Model\Role
      */
-    protected $roles;
+    protected $role;
+
+
+//    protected $roles;
 
      /**
      * @ORM\Column
@@ -96,7 +100,7 @@ class User extends \Nette\Object
     public function __construct($username)
     {
         $this->username = static::normalizeString($username);
-        $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
+        //$this->roles = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -129,6 +133,14 @@ class User extends \Nette\Object
     public function setFirstName($firstName)
     {
         $this->firstName = $firstName;
+    }
+
+    public function getRole() {
+        return $this->role;
+    }
+
+    public function setRole($role) {
+        $this->role = $role;
     }
 
     /**
@@ -218,19 +230,19 @@ class User extends \Nette\Object
     /**
      * @return string
      */
-    public function getRoles()
-    {
-        return $this->roles;
-    }
-
-    /**
-     * @param mixed
-     * @return User
-     */
-    public function setRoles($roles)
-    {
-        $this->roles = $roles;
-    }
+//    public function getRoles()
+//    {
+//        return $this->roles;
+//    }
+//
+//    /**
+//     * @param mixed
+//     * @return User
+//     */
+//    public function setRoles($roles)
+//    {
+//        $this->roles = $roles;
+//    }
 
     /**
      * @param $skautISPersonId

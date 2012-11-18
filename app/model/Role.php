@@ -38,13 +38,7 @@ class Role extends \Nette\Object
 
 
     /**
-     * @ORM\Column(type="boolean")
-     * @var bool
-     */
-    protected $standAlone = true;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="\SRS\model\User", mappedBy="roles")
+     * @ORM\OneToMany(targetEntity="\SRS\model\User", mappedBy="role")
      * @var mixed
      */
     protected $users;
@@ -67,9 +61,8 @@ class Role extends \Nette\Object
      * @param \SRS\Model\Role $parent
      * @param bool $standAlone
      */
-    public function __construct($name, $parent = NULL, $standAlone = true) {
+    public function __construct($name, $parent = NULL) {
         $this->name = $name;
-        $this->standAlone = $standAlone;
         $this->parent = $parent;
         $this->children = new \Doctrine\Common\Collections\ArrayCollection();
         $this->users = new \Doctrine\Common\Collections\ArrayCollection();
@@ -87,16 +80,6 @@ class Role extends \Nette\Object
     public function getName()
     {
         return $this->name;
-    }
-
-    public function setStandAlone($standAlone)
-    {
-        $this->standAlone = $standAlone;
-    }
-
-    public function getStandAlone()
-    {
-        return $this->standAlone;
     }
 
     public function setUsers($users)

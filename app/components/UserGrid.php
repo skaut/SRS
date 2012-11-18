@@ -35,36 +35,55 @@ class UserGrid extends Grid
         $qb->addSelect('u');
         $qb->addSelect('role');
         $qb->from('\SRS\Model\User', 'u');
-        $qb->leftJoin('u.roles','role'); //'WITH', 'role.standAlone=1');
-        $query = $qb->getQuery();
-        $users = $query->getResult();
-        \Nette\Diagnostics\Debugger::dump($qb->getQuery()->getScalarResult());
-        //\Nette\Diagnostics\Debugger::dump($users);
+        $qb->leftJoin('u.role','role'); //'WITH', 'role.standAlone=1');
+
+
+
+       // $query = $this->em->createQuery("SELECT u, role FROM \SRS\Model\User u LEFT JOIN u.roles role WHERE u.username LIKE 'srs%'");
+        //$query->getResult();
+//        $lol = $user->roles->filter(function($role) {
+//            return $role->standAlone == true;
+//        });
 
         $roles = $this->em->getRepository('\SRS\Model\Role')->findAll();
+
         $rolesGrid = array();
+
 
         foreach ($roles as $role) {
             $rolesGrid[$role->id] = $role->name;
         }
-        $source = new \NiftyGrid\DataSource\DoctrineDataSource($qb, 'u_id');
+        $source = new \SRS\SRSDoctrineDataSource($qb, 'id');
 
         $this->setDataSource($source);
         $numOfResults = 10;
-        $this->addColumn('u_username', 'Username')->setTextFilter()->setAutocomplete($numOfResults);
-        $this->addColumn('u_nickName', 'Přezdívka')->setTextFilter()->setAutocomplete($numOfResults);
-        $this->addColumn('u_firstName', 'Jméno')->setTextFilter()->setAutocomplete($numOfResults);
-        $this->addColumn('u_lastName', 'Příjmení')->setTextFilter()->setAutocomplete($numOfResults);
-        $this->addColumn('role_id', 'Role')
+        $this->addColumn('username', 'Username')->setTextFilter()->setAutocomplete($numOfResults);
+        $this->addColumn('nickName', 'Přezdívka')->setTextFilter()->setAutocomplete($numOfResults);
+        $this->addColumn('firstName', 'Jméno')->setTextFilter()->setAutocomplete($numOfResults);
+        $this->addColumn('lastName', 'Příjmení')->setTextFilter()->setAutocomplete($numOfResults);
+        $this->addColumn('role', 'Role')
             ->setRenderer(function($row) {
-                return $row->role_name;
+                return $row->role['name'];
             })
             ->setSelectFilter($rolesGrid)
+
             ->setSelectEditable($rolesGrid);
 
-        $this->setRowFormCallback(function($values) {
-            \Nette\Diagnostics\Debugger::dump($values);
-        });
+
+        $self = $this;
+
+
+
+        $this->setRowFormCallback(function($values) use ($self, $presenter){
+                $userToSave = $presenter->context->database->getRepository('\SRS\Model\User')->find($values['id']);
+                $newRole = $presenter->context->database->getRepository('SRS\Model\Role')->find($values['role']);
+                $userToSave->role = $newRole;
+                $presenter->context->database->flush();
+
+                $self->flashMessage("Záznam byl úspěšně uložen.","success");
+
+            }
+        );
 
         $this->addButton(Grid::ROW_FORM, "Změnit")
             ->setClass("fast-edit");
