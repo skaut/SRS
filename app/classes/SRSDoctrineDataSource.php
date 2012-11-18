@@ -76,13 +76,9 @@ class SRSDoctrineDataSource implements \NiftyGrid\DataSource\IDataSource
     {
         foreach($filters as $filter){
             if($filter["type"] == \NiftyGrid\FilterCondition::WHERE){
-                $part = $this->qb->getDQLPart('from');
-                $fromAlias = $part[0]->getAlias();
 
                 $column = $this->columnName($filter['column']);
 
-                $column = str_replace('.', '', $column);
-                $column = $fromAlias.'.'.$column;
                 $value = $filter["value"];
                 $expr = $this->qb->expr();
                 $cond = false;
@@ -166,7 +162,13 @@ class SRSDoctrineDataSource implements \NiftyGrid\DataSource\IDataSource
         $name = explode("_", $full);
         $entity = $name[0];
         unset($name[0]);
-        return $entity.".".implode("_", $name);
+        $part = $this->qb->getDQLPart('from');
+        $fromAlias = $part[0]->getAlias();
+        $column = $entity.".".implode("_", $name);
+        $column = str_replace('.', '', $column);
+        $column = $fromAlias.'.'.$column;
+
+        return $column;
     }
 
 }
