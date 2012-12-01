@@ -3020,7 +3020,7 @@ button.close {
   -webkit-appearance: none;
 }
 
-.btn {
+.btn, .button {
   display: inline-block;
   *display: inline;
   padding: 4px 14px;

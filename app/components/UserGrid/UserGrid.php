@@ -51,6 +51,10 @@ class UserGrid extends Grid
 
         $rolesGrid = array();
 
+        $userToSave = $presenter->context->database->getRepository('\SRS\Model\User')->find(1);
+
+
+
 
         foreach ($roles as $role) {
             $rolesGrid[$role->id] = $role->name;
@@ -70,6 +74,10 @@ class UserGrid extends Grid
             ->setSelectFilter($rolesGrid)
 
             ->setSelectEditable($rolesGrid);
+        $this->addColumn('approved', 'Schválený')->setBooleanFilter()->setBooleanEditable()
+            ->setRenderer(function($row) {
+                return $row->approved ? 'Ano':'Ne';
+        });
 
 
         $self = $this;
@@ -80,6 +88,7 @@ class UserGrid extends Grid
                 $userToSave = $presenter->context->database->getRepository('\SRS\Model\User')->find($values['id']);
                 $newRole = $presenter->context->database->getRepository('SRS\Model\Acl\Role')->find($values['role']);
                 $userToSave->role = $newRole;
+                $userToSave->approved = isset($values['approved']) ? 1 : 0;
                 $presenter->context->database->flush();
 
                 $self->flashMessage("Záznam byl úspěšně uložen.","success");

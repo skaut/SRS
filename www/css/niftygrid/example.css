@@ -31,7 +31,7 @@
     background: url('images/restore.png') no-repeat 4px;
 }
 
-.grid input, select {
+.grid input[type=text], select {
     width: 80%;
 }
 
@@ -40,4 +40,31 @@
     min-height: 22px;
     display: block;
     float: left;
+}
+
+.grid-changeperpage {
+    width: 50px;
+    float: left;
+}
+
+.grid-paginator {
+
+    float: right;
+}
+
+.grid-filter-reset {
+    display: block;
+    position: absolute;
+    right: -20px;
+    top: 8px;
+    z-index: 999;
+}
+
+th.grid-filter-form {
+    position: relative;
+}
+
+#frmgridForm-userGrid-filter-send {
+  margin-top: -10px;
+
 }

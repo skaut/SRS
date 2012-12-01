@@ -43,6 +43,7 @@ class UserFactory
     public static function createRandom($skautISUserId, $skautISPersonId, $roles) {
 
         $sex_choices = array('male', 'female');
+        $approved_choices = array(true, false);
 
         $user = new \SRS\Model\User(Strings::random());
         $user->skautISUserId = $skautISUserId;
@@ -56,6 +57,7 @@ class UserFactory
         $user->nickName = Strings::random(6);
         $user->sex = $sex_choices[mt_rand(0, sizeof($sex_choices)-1)];
         $user->birthdate = new \DateTime('now');
+        $user->approved = $approved_choices[mt_rand(0, 1)];
 
         return $user;
     }

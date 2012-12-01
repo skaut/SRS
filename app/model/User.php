@@ -19,6 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @property string $birthdate
  * @property int $skautISUserId
  * @property int $skautISPersonId
+ * @property bool approved
  */
 class User extends \Nette\Object
 {
@@ -45,6 +46,12 @@ class User extends \Nette\Object
      * @var \SRS\Model\Acl\Role
      */
     protected $role;
+
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $approved = True;
 
 
 //    protected $roles;
@@ -141,6 +148,16 @@ class User extends \Nette\Object
 
     public function setRole($role) {
         $this->role = $role;
+    }
+
+    public function setApproved($approved)
+    {
+        $this->approved = $approved;
+    }
+
+    public function getApproved()
+    {
+        return $this->approved;
     }
 
     /**
