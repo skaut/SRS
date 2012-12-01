@@ -11,7 +11,7 @@ namespace SRS\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use SRS\Factory\RoleFactory;
+use SRS\Factory\AclFactory;
 
 /**
  * Inicializacni data pro Role
@@ -33,14 +33,14 @@ class InitialDataRoleCommand extends Command
 
     protected function configure()
     {
-        $this->setName('srs:initial-data:role');
-        $this->setDescription('Vloží do databáze testovací uživatele');
+        $this->setName('srs:initial-data:acl');
+        $this->setDescription('Vloží základní role a práva do DB');
 
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $roles = RoleFactory::createRoles();
+        $roles = AclFactory::createRoles();
         foreach ($roles as $role) {
             $this->em->persist($role);
         }

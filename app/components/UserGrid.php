@@ -45,7 +45,7 @@ class UserGrid extends Grid
 //            return $role->standAlone == true;
 //        });
 
-        $roles = $this->em->getRepository('\SRS\Model\Role')->findAll();
+        $roles = $this->em->getRepository('\SRS\Model\Acl\Role')->findAll();
 
         $rolesGrid = array();
 
@@ -76,7 +76,7 @@ class UserGrid extends Grid
 
         $this->setRowFormCallback(function($values) use ($self, $presenter){
                 $userToSave = $presenter->context->database->getRepository('\SRS\Model\User')->find($values['id']);
-                $newRole = $presenter->context->database->getRepository('SRS\Model\Role')->find($values['role']);
+                $newRole = $presenter->context->database->getRepository('SRS\Model\Acl\Role')->find($values['role']);
                 $userToSave->role = $newRole;
                 $presenter->context->database->flush();
 

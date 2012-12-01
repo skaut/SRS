@@ -39,7 +39,7 @@ class Authenticator extends \Nette\Object implements NS\IAuthenticator
         $user = $this->database->getRepository("\SRS\Model\User")->findOneBy(array('username' => $skautISUser->UserName));
         if ($user == null)
         {
-            $role = $this->database->getRepository('\SRS\Model\Role')->findOneBy(array('name'  => 'registered'));
+            $role = $this->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('name'  => 'Lektor'));
             $user = \SRS\Factory\UserFactory::createFromSkautIS($skautISUser, $skautISPerson, $role);
             $this->database->persist($user);
             $this->database->flush();

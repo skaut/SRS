@@ -6,7 +6,7 @@
  * Time: 13:27
  * To change this template use File | Settings | File Templates.
  */
-namespace SRS\Model;
+namespace SRS\Model\Acl;
 use Doctrine\ORM\Mapping as ORM;
 
 
@@ -15,10 +15,10 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @property-read int $id
  * @property string $name
- * @property mixed $users
- * @property \SRS\Model\Role $parent
+ * @property \Doctrine\Common\Collections\ArrayCollection $users
+ * @property \SRS\Model\Acl\Role $parent
+ * @property \Doctrine\Common\Collections\ArrayCollection $resources
  * @property mixed $children
- * @property bool $standAlone
  */
 class Role extends \Nette\Object
 {
@@ -43,14 +43,20 @@ class Role extends \Nette\Object
      */
     protected $users;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="\SRS\model\Acl\Permission", inversedBy="roles", cascade={"persist"})
+     * @var mixed
+     */
+    protected $permissions;
+
 
     /**
-     * @ORM\OneToMany(targetEntity="\SRS\Model\Role", mappedBy="parent")
+     * @ORM\OneToMany(targetEntity="\SRS\Model\Acl\Role", mappedBy="parent")
      */
     protected $children;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\SRS\Model\Role", inversedBy="children", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="\SRS\Model\Acl\Role", inversedBy="children", cascade={"persist"})
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
      */
     protected $parent;
@@ -58,7 +64,7 @@ class Role extends \Nette\Object
 
     /**
      * @param string $name
-     * @param \SRS\Model\Role $parent
+     * @param \SRS\Model\Acl\Role $parent
      * @param bool $standAlone
      */
     public function __construct($name, $parent = NULL) {
@@ -66,6 +72,7 @@ class Role extends \Nette\Object
         $this->parent = $parent;
         $this->children = new \Doctrine\Common\Collections\ArrayCollection();
         $this->users = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->permissions = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     public function getId() {
@@ -90,6 +97,15 @@ class Role extends \Nette\Object
     public function getUsers()
     {
         return $this->users;
+    }
+
+    public function getPermissions()
+    {
+       return $this->permissions;
+    }
+
+    public function setPermissions($permissions) {
+        $this->permissions = $permissions;
     }
 
 

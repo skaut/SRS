@@ -41,8 +41,8 @@ class User extends \Nette\Object
     protected $email;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\SRS\Model\Role", inversedBy="users")
-     * @var \SRS\Model\Role
+     * @ORM\ManyToOne(targetEntity="\SRS\Model\Acl\Role", inversedBy="users")
+     * @var \SRS\Model\Acl\Role
      */
     protected $role;
 
