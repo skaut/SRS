@@ -15,6 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @property-read int $id
  * @property string $name
+ * @property bool $isSystem
  * @property \Doctrine\Common\Collections\ArrayCollection $users
  * @property \SRS\Model\Acl\Role $parent
  * @property \Doctrine\Common\Collections\ArrayCollection $resources
@@ -63,6 +64,16 @@ class Role extends \Nette\Object
 
 
     /**
+     * Pokud je role systemova, nelze ji mazat
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $system = true;
+
+
+
+
+    /**
      * @param string $name
      * @param \SRS\Model\Acl\Role $parent
      * @param bool $standAlone
@@ -106,6 +117,16 @@ class Role extends \Nette\Object
 
     public function setPermissions($permissions) {
         $this->permissions = $permissions;
+    }
+
+    public function setSystem($system)
+    {
+        $this->system = $system;
+    }
+
+    public function isSystem()
+    {
+        return $this->system;
     }
 
 

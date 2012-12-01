@@ -1,0 +1,24 @@
+{* This is the welcome page, you can delete it *}
+{extends 'layout.latte'}
+
+{block content}
+<div class="row-fluid">
+<div class="span9">
+   <a class="btn btn-success" href="#"><i class="icon-plus-sign"></i>Přidat roli</a>
+
+   <table class="table-bordered table-striped table-roles">
+       <thead>
+       <th>Název role</th>
+       <th>Dědí od</th>
+       <th>Systémová</th>
+       <th>Operace</th>
+       </thead>
+       <tbody>
+       {foreach $roles as $role}
+        <tr><td>{$role->name}</td><td>{ifset $role->parent}{$role->parent->name}{/ifset}</td><td>{$role->isSystem()}</td></tr>
+       {/foreach}
+       </tbody>
+   </table>
+</div>
+</div>
+{/block}

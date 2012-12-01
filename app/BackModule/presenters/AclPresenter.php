@@ -9,12 +9,44 @@
 namespace BackModule;
 class AclPresenter extends BasePresenter
 {
+    protected $roleRepo;
+
     protected function createComponentUserGrid()
     {
         return new \SRS\Components\UserGrid($this->context->database);
     }
 
+    public function startup() {
+        parent::startup();
+        $this->roleRepo = $this->context->database->getRepository('\SRS\Model\Acl\Role');
+    }
+
     public function renderList() {
 
+    }
+
+    public function renderRoles() {
+        $roles = $this->roleRepo->findAll();
+
+        $this->template->roles = $roles;
+    }
+
+    public function renderAddRole() {
+
+    }
+
+    public function handleDeleteRole($id) {
+        $role = $this->roleRepo->find($id);
+        if ($role->isSystem()) {
+            $this->flashMessage('Systémovou roli nelze smazat', 'error');
+            $this->redirect('this');
+        }
+        $roleRegistered = $this->roleRepo->findBy(array('name'=>'Registrovaný'));
+        foreach ($role->users as $user) {
+            $user->role = $roleRegistered;
+        }
+        $this->context->database->remove($role);
+        $this->context->database->flush();
+        $this->flashMessage('Role smazána');
     }
 }

@@ -5,3 +5,7 @@
 .grid-flash.success span {
     color: green !important;
 }
+
+.table-roles {
+    margin-top: 20px;
+}

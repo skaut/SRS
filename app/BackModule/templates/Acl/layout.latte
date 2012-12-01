@@ -1,6 +1,6 @@
 {extends '../@layout.latte'}
 {block sidebar}
 <li class="nav-header">Práva a role</li>
-<li {ifCurrent :Back:Acl:list}class="active"{/ifCurrent}><a href="#">Uživatelé</a></li>
-<li {ifCurrent :Back:Acl:roles}class="active"{/ifCurrent}><a href="#">Přehled oprávnění</a></li>
+<li {ifCurrent :Back:Acl:list}class="active"{/ifCurrent}><a href="{plink :Back:Acl:list}">Uživatelé</a></li>
+<li {ifCurrent :Back:Acl:roles}class="active"{/ifCurrent}><a href="{plink :Back:Acl:roles}">Role</a></li>
 {/block}
