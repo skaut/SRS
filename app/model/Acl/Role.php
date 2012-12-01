@@ -15,10 +15,11 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @property-read int $id
  * @property string $name
- * @property bool $isSystem
+ * @property bool $system
+ * @property bool $registerable
  * @property \Doctrine\Common\Collections\ArrayCollection $users
  * @property \SRS\Model\Acl\Role $parent
- * @property \Doctrine\Common\Collections\ArrayCollection $resources
+ * @property \Doctrine\Common\Collections\ArrayCollection $permissions
  * @property mixed $children
  */
 class Role extends \Nette\Object
@@ -70,8 +71,12 @@ class Role extends \Nette\Object
      */
     protected $system = true;
 
-
-
+    /**
+     * Lze o tuto roli zazadat pri registraci na seminar?
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $registerable = true;
 
     /**
      * @param string $name
@@ -127,6 +132,16 @@ class Role extends \Nette\Object
     public function isSystem()
     {
         return $this->system;
+    }
+
+    public function getRegisterable()
+    {
+        return $this->registerable;
+    }
+
+    public function setRegisterable($registerable)
+    {
+        $this->registerable = $registerable;
     }
 
 

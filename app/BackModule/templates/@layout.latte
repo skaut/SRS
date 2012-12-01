@@ -15,6 +15,7 @@
 
 <body>
 	<script> document.body.className+=' js' </script>
+
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container-fluid">
@@ -66,6 +67,10 @@
                 </div><!--/.well -->
             </div><!--/span-->
             <div class="span9">
+                <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                    {$flash->message}
+                </div>
                 {block #content}
             </div><!--/span-->
         </div><!--/row-->

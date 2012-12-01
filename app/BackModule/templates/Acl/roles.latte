@@ -4,7 +4,7 @@
 {block content}
 <div class="row-fluid">
 <div class="span9">
-   <a class="btn btn-success" href="#"><i class="icon-plus-sign"></i>Přidat roli</a>
+   <a class="btn btn-success" href="{plink addRole}"><i class="icon-plus-sign"></i>Přidat roli</a>
 
    <table class="table-bordered table-striped table-roles">
        <thead>
@@ -15,7 +15,7 @@
        </thead>
        <tbody>
        {foreach $roles as $role}
-        <tr><td>{$role->name}</td><td>{ifset $role->parent}{$role->parent->name}{/ifset}</td><td>{$role->isSystem()}</td></tr>
+        <tr><td>{$role->name}</td><td>{ifset $role->parent}{$role->parent->name}{/ifset}</td><td>{$role->isSystem()}</td><td><a class="btn" href="{plink Acl:editRole $role->id}">Upravit</a></a></td></tr>
        {/foreach}
        </tbody>
    </table>

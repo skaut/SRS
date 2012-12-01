@@ -32,6 +32,12 @@ class AclPresenter extends BasePresenter
     }
 
     public function renderAddRole() {
+        $availableRoles = $this->roleRepo->findAll();
+
+
+    }
+
+    public function renderEditRole($id) {
 
     }
 
@@ -48,5 +54,13 @@ class AclPresenter extends BasePresenter
         $this->context->database->remove($role);
         $this->context->database->flush();
         $this->flashMessage('Role smazána');
+    }
+
+
+
+    protected function createComponentNewRoleForm($name)
+    {
+        $form = new \SRS\Form\NewRoleForm($parent = NULL, $name = NULL, $this->roleRepo->findAll());
+        return $form;
     }
 }
