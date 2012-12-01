@@ -98,6 +98,28 @@ class UserGrid extends Grid
 
         $this->addButton(Grid::ROW_FORM, "Změnit")
             ->setClass("fast-edit");
+
+
+        $this->addAction("approve","Schválit")
+            ->setCallback(function($id) use ($self){return $self->handleApprove($id);});
+    }
+
+
+    public function handleApprove($ids)
+    {
+        foreach ($ids as $id ) {
+            $userToSave = $this->presenter->context->database->getRepository('\SRS\Model\User')->find($id);
+            $userToSave->approved = True;
+        }
+
+        $this->presenter->context->database->flush();
+
+        if(count($ids) > 1){
+            $this->flashMessage("Vybraní uživatelé byli schváleni.","success");
+        }else{
+            $this->flashMessage("Vybraný uživatel byl schválen.","success");
+        }
+        $this->redirect("this");
     }
 
 
