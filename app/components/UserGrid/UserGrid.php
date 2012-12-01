@@ -20,6 +20,7 @@ class UserGrid extends Grid
      */
     protected $em;
 
+
     /**
      * @param \Nette\ComponentModel\IContainer $em
      */
@@ -27,6 +28,7 @@ class UserGrid extends Grid
     {
         parent::__construct();
         $this->em = $em;
+        $this->templatePath = __DIR__.'/template.latte';
     }
 
     protected function configure($presenter)
@@ -88,5 +90,8 @@ class UserGrid extends Grid
         $this->addButton(Grid::ROW_FORM, "Změnit")
             ->setClass("fast-edit");
     }
+
+
+
 
 }

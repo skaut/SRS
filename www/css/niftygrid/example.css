@@ -1,6 +1,3 @@
-*{
-    font-family: 'PT Sans', sans-serif;
-}
 
 .link{
     background: url('images/link.png') no-repeat 4px #FFF;
@@ -32,4 +29,15 @@
 
 .restore{
     background: url('images/restore.png') no-repeat 4px;
+}
+
+.grid input, select {
+    width: 80%;
+}
+
+.grid .grid-button {
+    min-width: 24px;
+    min-height: 22px;
+    display: block;
+    float: left;
 }
