@@ -2,6 +2,23 @@
 {extends 'layout.latte'}
 
 {block content}
-Ahooj
+<h2>Úprava role {$role->name}</h2>
+
+{ifset $role->parent->permissions}
+Práva z dědená od svého rodiče:
+<ul>
+    {foreach $role->parent->permissions as $perm}
+    <li>{$perm->name}</li>
+    {/foreach}
+</ul>
+{/ifset}
+
 {widget roleForm}
+
+<script>
+$(function() {
+$(".datepicker").datepicker();
+});
+</script>
+
 {/block}

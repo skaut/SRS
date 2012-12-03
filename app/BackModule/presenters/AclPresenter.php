@@ -9,7 +9,10 @@
 namespace BackModule;
 class AclPresenter extends BasePresenter
 {
-    protected $roleRepo;
+    /**
+     * @var \Nella\Doctrine\Repository
+     */
+    public $roleRepo;
 
     protected function createComponentUserGrid()
     {
@@ -38,16 +41,19 @@ class AclPresenter extends BasePresenter
     public function renderEditRole($id) {
         $role = $this->roleRepo->find($id);
 
+
+
         if ($role == null) {
             $this->flashMessage('Tato role neexistuje', 'error');
             $this->redirect('this');
         }
 
         $query = $this->context->database->createQuery("
-        SELECT pp.id, pp.name from \SRS\Model\Acl\Permission pp WHERE pp NOT IN (
-        SELECT p from \SRS\Model\Acl\Permission p INNER JOIN p.roles r WHERE r.id = ?1)");
+            SELECT pp.id, pp.name from \SRS\Model\Acl\Permission pp WHERE pp NOT IN (
+            SELECT p from \SRS\Model\Acl\Permission p INNER JOIN p.roles r WHERE r.id = ?1)
+            ");
         $query->setParameter(1, isset($role->parent->id) ? $role->parent->id : null);
-        $permissionsNotOwnedByParent = $query->getResult();
+        $permissionsNotOwnedByParent = $query->getResult(); //umoznujeme pracovat jen s temi pravy, ktere jeste nema rodic
         $permissionFormChoices = array();
         $permissionFormDefaults = array();
 
@@ -58,10 +64,19 @@ class AclPresenter extends BasePresenter
             $permissionFormDefaults[] = $perm->id;
         }
 
-
-        $this['roleForm']['name']->setDefaultValue($role->name);
+        $form = $this->getComponent('roleForm');
         $this['roleForm']['permissions']->setItems($permissionFormChoices);
-        $this['roleForm']['permissions']->setDefaultValue($permissionFormDefaults);
+        $form->bindEntity($role);
+
+//        $this['roleForm']['id']->setDefaultValue($role->id);
+//        $this['roleForm']['name']->setDefaultValue($role->name);
+//        $this['roleForm']['registerable']->setDefaultValue($role->registerable);
+//        $this['roleForm']['registerableFrom']->setDefaultValue( $role->registerableTo ? $role->registerableTo->format('Y-m-d') : null);
+//        $this['roleForm']['registerableTo']->setDefaultValue($role->registerableFrom ? $role->registerableFrom->format('Y-m-d') : null);
+
+//        $this['roleForm']['permissions']->setDefaultValue($permissionFormDefaults);
+
+
 
 
         $this->template->role = $role;

@@ -17,6 +17,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @property string $name
  * @property bool $system
  * @property bool $registerable
+ * @property \DateTime $registerableFrom
+ * @property \DateTime $registerableTo
  * @property \Doctrine\Common\Collections\ArrayCollection $users
  * @property \SRS\Model\Acl\Role $parent
  * @property \Doctrine\Common\Collections\ArrayCollection $permissions
@@ -79,6 +81,17 @@ class Role extends \Nette\Object
      * @ORM\Column(type="boolean")
      */
     protected $registerable = true;
+
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    protected $registerableFrom;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    protected $registerableTo;
 
     /**
      * @param string $name
@@ -165,6 +178,29 @@ class Role extends \Nette\Object
     {
         return $this->parent;
     }
+
+
+    public function setRegisterableFrom($registerableFrom)
+    {
+        $this->registerableFrom = $registerableFrom;
+    }
+
+    public function getRegisterableFrom()
+    {
+        return $this->registerableFrom;
+    }
+
+    public function setRegisterableTo($registerableTo)
+    {
+        $this->registerableTo = $registerableTo;
+    }
+
+    public function getRegisterableTo()
+    {
+        return $this->registerableTo;
+    }
+
+
 
 
 
