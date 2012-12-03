@@ -17,22 +17,15 @@ use Doctrine\ORM\Mapping as ORM;
  * @property string $name
  * @property bool $system
  * @property bool $registerable
- * @property \DateTime $registerableFrom
- * @property \DateTime $registerableTo
+ * @property \DateTime|string $registerableFrom
+ * @property \DateTime|string $registerableTo
  * @property \Doctrine\Common\Collections\ArrayCollection $users
  * @property \SRS\Model\Acl\Role $parent
  * @property \Doctrine\Common\Collections\ArrayCollection $permissions
  * @property mixed $children
  */
-class Role extends \Nette\Object
+class Role extends \SRS\Model\BaseEntity
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
-     * @var int
-     */
-    protected $id;
 
     /**
      * @ORM\Column(unique=true)
@@ -106,9 +99,6 @@ class Role extends \Nette\Object
         $this->permissions = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
-    public function getId() {
-        return $this->id;
-    }
 
     public function setName($name)
     {
@@ -182,6 +172,9 @@ class Role extends \Nette\Object
 
     public function setRegisterableFrom($registerableFrom)
     {
+        if (is_string($registerableFrom)) {
+            $registerableFrom = new \DateTime($registerableFrom);
+        }
         $this->registerableFrom = $registerableFrom;
     }
 
@@ -192,6 +185,9 @@ class Role extends \Nette\Object
 
     public function setRegisterableTo($registerableTo)
     {
+        if (is_string($registerableTo)) {
+            $registerableTo = new \DateTime($registerableTo);
+        }
         $this->registerableTo = $registerableTo;
     }
 

@@ -21,15 +21,9 @@ use Doctrine\ORM\Mapping as ORM;
  * @property int $skautISPersonId
  * @property bool approved
  */
-class User extends \Nette\Object
+class User extends BaseEntity
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
-     * @var int
-     */
-    protected $id;
+
     /**
      * @ORM\Column(unique=true)
      * @var string
@@ -110,13 +104,6 @@ class User extends \Nette\Object
         //$this->roles = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * @param string $birhdate
