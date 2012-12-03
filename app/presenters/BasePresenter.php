@@ -49,6 +49,7 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
         // kompilátoru seznam předáme a určíme adresář, kam má kompilovat
         $filter =  new \WebLoader\Filter\CssUrlsFilter($this->template->basePath);
         $compiler = \WebLoader\Compiler::createCssCompiler($files, WWW_DIR . '/webtemp');
+        $compiler->setJoinFiles(FALSE);
         $compiler->addFileFilter($filter);
 
 

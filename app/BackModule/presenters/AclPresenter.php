@@ -21,7 +21,7 @@ class AclPresenter extends BasePresenter
         $this->roleRepo = $this->context->database->getRepository('\SRS\Model\Acl\Role');
     }
 
-    public function renderList() {
+    public function renderUsers() {
 
     }
 
@@ -32,17 +32,39 @@ class AclPresenter extends BasePresenter
     }
 
     public function renderAddRole() {
-        $availableRoles = $this->roleRepo->findAll();
-
 
     }
 
     public function renderEditRole($id) {
+        $role = $this->roleRepo->find($id);
+        $query = $this->context->database->createQuery("SELECT p from \SRS\Model\Acl\Permission p JOIN p.roles r WHERE r.id != ?1");
 
+        $query->setParameter(1, isset($role->parent->id) ? $role->parent->id : null);
+        $result = $query->getResult();
+        echo 'ahojahojahojahojahojahojahoj\n\n\n';
+        \Nette\Diagnostics\Debugger::dump($role->parent->name);
+
+        \Nette\Diagnostics\Debugger::dump($result);
+        if ($role == null) {
+            $this->flashMessage('Tato role neexistuje', 'error');
+            $this->redirect('this');
+        }
+
+        $this['roleForm']['name']->setDefaultValue($role->name);
+
+
+
+        $this->template->role = $role;
     }
 
     public function handleDeleteRole($id) {
         $role = $this->roleRepo->find($id);
+
+        if ($role == null) {
+            $this->flashMessage('Tato role neexistuje', 'error');
+            $this->redirect('this');
+        }
+
         if ($role->isSystem()) {
             $this->flashMessage('Systémovou roli nelze smazat', 'error');
             $this->redirect('this');
@@ -53,7 +75,8 @@ class AclPresenter extends BasePresenter
         }
         $this->context->database->remove($role);
         $this->context->database->flush();
-        $this->flashMessage('Role smazána');
+        $this->flashMessage('Role smazána', 'success');
+        $this->redirect('this');
     }
 
 
@@ -61,6 +84,11 @@ class AclPresenter extends BasePresenter
     protected function createComponentNewRoleForm($name)
     {
         $form = new \SRS\Form\NewRoleForm($parent = NULL, $name = NULL, $this->roleRepo->findAll());
+        return $form;
+    }
+
+    protected function createComponentRoleForm($name) {
+        $form = new \SRS\Form\RoleForm($parent = NULL, $name = NULL);
         return $form;
     }
 }

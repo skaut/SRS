@@ -64,6 +64,8 @@ class Role extends \Nette\Object
     protected $parent;
 
 
+
+
     /**
      * Pokud je role systemova, nelze ji mazat
      * @var bool
@@ -142,6 +144,26 @@ class Role extends \Nette\Object
     public function setRegisterable($registerable)
     {
         $this->registerable = $registerable;
+    }
+
+    public function setChildren($children)
+    {
+        $this->children = $children;
+    }
+
+    public function getChildren()
+    {
+        return $this->children;
+    }
+
+    public function setParent($parent)
+    {
+        $this->parent = $parent;
+    }
+
+    public function getParent()
+    {
+        return $this->parent;
     }
 
 

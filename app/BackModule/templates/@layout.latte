@@ -8,7 +8,16 @@
 	<title>{block title|striptags}{/block} | SRS</title>
     {widget cssLoader 'nette.css', 'bootstrap.css', 'bootstrap-responsive.css', 'niftygrid/grid.css', 'niftygrid/example.css', 'jquery-ui/jquery-ui.css', 'back/screen.css'}
 	<link rel="shortcut icon" href="{$basePath}/favicon.ico">
+    {*<script src="http://code.jquery.com/jquery-latest.js"></script>*}
     {widget jsLoader 'jquery-1.8.2.min.js', 'netteForms.js', 'bootstrap.min.js', 'jquery-ui.js', 'niftygrid/grid.js'}
+
+    {*'jquery-1.8.2.min.js'*}
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+           // $(".alert").alert();
+        });
+    </script>
 
 	{block head}{/block}
 </head>
@@ -31,7 +40,7 @@
                     </p>
                     <ul class="nav">
                         <li {ifCurrent :Back:dashboard:default}class="active"{/ifCurrent}><a href="{plink :Back:dashboard:default}">Home</a></li>
-                        <li {ifCurrent :Back:acl:list}class="active"{/ifCurrent}><a href="{plink :Back:acl:list}">Práva a Role</a></li>
+                        <li {ifCurrent :Back:acl:list}class="active"{/ifCurrent}><a href="{plink :Back:acl:users}">Práva a Role</a></li>
 
                     </ul>
                 </div><!--/.nav-collapse -->
