@@ -3,22 +3,33 @@
 
 {block content}
 <div class="row-fluid">
-<div class="span9">
-   <a class="btn btn-success" href="{plink addRole}"><i class="icon-plus-sign"></i>Přidat roli</a>
+    <div class="span9">
 
-   <table class="table-bordered table-striped table-roles">
-       <thead>
-       <th>Název role</th>
-       <th>Dědí od</th>
-       <th>Systémová</th>
-       <th>Operace</th>
-       </thead>
-       <tbody>
-       {foreach $roles as $role}
-        <tr><td>{$role->name}</td><td>{ifset $role->parent->name}{$role->parent->name}{/ifset}</td><td>{$role->isSystem()}</td><td><a class="btn" href="{plink Acl:editRole $role->id}">Upravit</a> <a class="btn btn-danger" href="{link deleteRole! $role->id}">Smazat</a></td></tr>
-       {/foreach}
-       </tbody>
-   </table>
-</div>
+
+       <a class="btn btn-success" href="{plink addRole}"><i class="icon-plus-sign"></i>Přidat roli</a>
+
+       <table class="table-bordered table-striped table-roles">
+           <thead>
+           <th>Název role</th>
+           <th>Dědí od</th>
+           <th>Systémová</th>
+           <th>Operace</th>
+           </thead>
+           <tbody>
+           {foreach $roles as $role}
+            <tr><td>{$role->name}</td>
+                <td>{ifset $role->parent->name}{$role->parent->name}{/ifset}</td>
+                <td>{$role->isSystem()}</td>
+                <td>
+                    <a class="btn" href="{plink Acl:editRole $role->id}">Upravit</a>
+                    <a class="btn btn-danger" href="{link deleteRole! $role->id}">Smazat</a>
+                </td>
+            </tr>
+           {/foreach}
+           </tbody>
+       </table>
+
+
+    </div>
 </div>
 {/block}

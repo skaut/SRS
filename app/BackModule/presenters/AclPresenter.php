@@ -41,8 +41,6 @@ class AclPresenter extends BasePresenter
     public function renderEditRole($id) {
         $role = $this->roleRepo->find($id);
 
-
-
         if ($role == null) {
             $this->flashMessage('Tato role neexistuje', 'error');
             $this->redirect('this');
@@ -75,9 +73,6 @@ class AclPresenter extends BasePresenter
 //        $this['roleForm']['registerableTo']->setDefaultValue($role->registerableFrom ? $role->registerableFrom->format('Y-m-d') : null);
 
 //        $this['roleForm']['permissions']->setDefaultValue($permissionFormDefaults);
-
-
-
 
         $this->template->role = $role;
     }
