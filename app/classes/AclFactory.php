@@ -19,6 +19,7 @@ class AclFactory
 
         $manage_acl = new \SRS\Model\Acl\Permission('Spravovat', $acl);
         $allow_admin = new \SRS\Model\Acl\Permission('Přístup', $admin);
+        $allow_cms = new \SRS\Model\Acl\Permission('CMS', $acl);
 
         $roles[] = $guest = new \SRS\Model\Acl\Role('Anonym');
         $roles[] = $registered = new \SRS\Model\Acl\Role('Registrovaný',$guest);
@@ -30,6 +31,7 @@ class AclFactory
         $admin->permissions->add($manage_acl);
         $admin->permissions->add($allow_admin);
         $organizer->permissions->add($allow_admin);
+        $organizer->permissions->add($allow_cms);
 
         return $roles;
     }

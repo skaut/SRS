@@ -37,21 +37,31 @@ class AclPresenter extends BasePresenter
 
     public function renderEditRole($id) {
         $role = $this->roleRepo->find($id);
-        $query = $this->context->database->createQuery("SELECT p from \SRS\Model\Acl\Permission p JOIN p.roles r WHERE r.id != ?1");
 
-        $query->setParameter(1, isset($role->parent->id) ? $role->parent->id : null);
-        $result = $query->getResult();
-        echo 'ahojahojahojahojahojahojahoj\n\n\n';
-        \Nette\Diagnostics\Debugger::dump($role->parent->name);
-
-        \Nette\Diagnostics\Debugger::dump($result);
         if ($role == null) {
             $this->flashMessage('Tato role neexistuje', 'error');
             $this->redirect('this');
         }
 
-        $this['roleForm']['name']->setDefaultValue($role->name);
+        $query = $this->context->database->createQuery("
+        SELECT pp.id, pp.name from \SRS\Model\Acl\Permission pp WHERE pp NOT IN (
+        SELECT p from \SRS\Model\Acl\Permission p INNER JOIN p.roles r WHERE r.id = ?1)");
+        $query->setParameter(1, isset($role->parent->id) ? $role->parent->id : null);
+        $permissionsNotOwnedByParent = $query->getResult();
+        $permissionFormChoices = array();
+        $permissionFormDefaults = array();
 
+        foreach ($permissionsNotOwnedByParent as $perm) {
+            $permissionFormChoices[$perm['id']] = $perm['name'];
+        }
+        foreach ($role->permissions as $perm) {
+            $permissionFormDefaults[] = $perm->id;
+        }
+
+
+        $this['roleForm']['name']->setDefaultValue($role->name);
+        $this['roleForm']['permissions']->setItems($permissionFormChoices);
+        $this['roleForm']['permissions']->setDefaultValue($permissionFormDefaults);
 
 
         $this->template->role = $role;
