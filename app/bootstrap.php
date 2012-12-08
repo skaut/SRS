@@ -53,15 +53,16 @@ $container->router[] = new Route('<presenter>/<action>[/<id>]', 'Homepage:defaul
 
 
 //Setup ACL
-$acl = new \Nette\Security\Permission();
-$acl->addRole('guest');
-$acl->addRole('registered', 'guest');
-$acl->addRole('serviceTeam', 'registered');
-$acl->addRole('lector', 'serviceTeam');
-$acl->addRole('organizer', 'lector');
-$acl->addRole('admin', 'organizer');
-$acl->addRole('webmaster');
-$acl->addRole('programManager');
+//$acl = new \Nette\Security\Permission();
+//$acl->addRole('guest');
+//$acl->addRole('registered', 'guest');
+//$acl->addRole('serviceTeam', 'registered');
+//$acl->addRole('lector', 'serviceTeam');
+//$acl->addRole('organizer', 'lector');
+//$acl->addRole('admin', 'organizer');
+//$acl->addRole('webmaster');
+//$acl->addRole('programManager');
+$acl = new \SRS\Security\Acl($container->database);
 $container->user->setAuthorizator($acl);
 
 

@@ -16,17 +16,17 @@ class Acl extends Permission
     {
         $roles = $em->getRepository('\SRS\Model\Acl\Role')->findAll();
         $resources = $em->getRepository('\SRS\Model\Acl\Resource')->findAll();
-        $permissions = $em->getRepository('\SRS\Model\Acl\Permission')->findAll();
+
 
         foreach ($resources as $resource){
             $this->addResource($resource->name);
         }
 
         foreach ($roles as $role) {
-            $this->addRole($role->name, $role->parent ? null : $role->parent->name);
+            $this->addRole($role->name, isset($role->parent) ? null : $role->parent->name);
 
             foreach ($role->permissions as $permission) {
-                $this->allow($role->name, $permission->resource, $permission->name);
+                $this->allow($role->name, $permission->resource->name, $permission->name);
             }
         }
 
