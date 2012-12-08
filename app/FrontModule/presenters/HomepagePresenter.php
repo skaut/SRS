@@ -3,6 +3,7 @@
 /**
  * Homepage presenter.
  */
+namespace FrontModule;
 
 class HomepagePresenter extends \SRS\BasePresenter
 {

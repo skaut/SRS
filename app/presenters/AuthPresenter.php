@@ -41,7 +41,7 @@ class AuthPresenter extends \SRS\BasePresenter
         if ($this->getParameter('ReturnUrl')) {
             $this->redirect($this->getParameter('ReturnUrl'));
         }
-        $this->redirect('Homepage:default');
+        $this->redirect(':Front:Homepage:default');
     }
 
     public function renderLogout() {
@@ -51,7 +51,7 @@ class AuthPresenter extends \SRS\BasePresenter
             $this->redirectUrl($this->context->parameters['skautis']['url']. '/Login/LogOut.aspx?appid='.$this->context->parameters['skautis']['appID'].'&Token='.$token);
         }
         $this->flashMessage('Odhlášení proběhlo úspěšně');
-        $this->redirect('Homepage:default');
+        $this->redirect(':Front:Homepage:default');
     }
 
 }

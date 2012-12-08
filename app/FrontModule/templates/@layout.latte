@@ -1,0 +1,35 @@
+{**
+ *
+ *
+ * @param string   $basePath web base path
+ * @param string   $robots   tell robots how to index the content of a page (optional)
+ * @param array    $flashes  flash messages
+ *}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="description" content="">
+	<meta name="robots" content="{$robots}" n:ifset="$robots">
+	<title>{block title|striptags}{/block} | SRS</title>
+
+
+    {widget cssLoader 'reset.css', 'nette.css'}
+    {widget jsLoader 'jquery-1.8.2.min.js', 'netteForms.js'}
+    <link rel="shortcut icon" href="{$basePath}/favicon.ico">
+	{block head}{/block}
+</head>
+
+<body>
+	<script> document.body.className+=' js' </script>
+    <div n:foreach="$flashes as $flash" class="sent {$flash->type}">
+        <p>{$flash->message}</p>
+    </div>
+     {include 'includes/menu.latte'}
+
+     {include #content}
+
+
+</body>
+</html>
