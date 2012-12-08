@@ -57,14 +57,14 @@ abstract class BaseEntity extends \Nette\Object
                     $targetEntity = $association['targetEntity'];
                 }
 
-                if (is_array($value)) {
+                if (is_array($value)) { //vazba oneToMany nebo ManyToMany
                     $newData = new \Doctrine\Common\Collections\ArrayCollection();
                     foreach($value as $itemId) {
                         $newData->add($em->getReference($targetEntity, $itemId));
                     }
                     $value = $newData;
                 }
-                else {
+                else { //vazba ManyToOne
                     $value = $em->getReference($targetEntity, $value);
                 }
             }
