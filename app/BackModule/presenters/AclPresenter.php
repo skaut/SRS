@@ -66,14 +66,6 @@ class AclPresenter extends BasePresenter
         $this['roleForm']['permissions']->setItems($permissionFormChoices);
         $form->bindEntity($role);
 
-//        $this['roleForm']['id']->setDefaultValue($role->id);
-//        $this['roleForm']['name']->setDefaultValue($role->name);
-//        $this['roleForm']['registerable']->setDefaultValue($role->registerable);
-//        $this['roleForm']['registerableFrom']->setDefaultValue( $role->registerableTo ? $role->registerableTo->format('Y-m-d') : null);
-//        $this['roleForm']['registerableTo']->setDefaultValue($role->registerableFrom ? $role->registerableFrom->format('Y-m-d') : null);
-
-//        $this['roleForm']['permissions']->setDefaultValue($permissionFormDefaults);
-
         $this->template->role = $role;
     }
 
