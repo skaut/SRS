@@ -13,6 +13,11 @@ require LIBS_DIR . '/autoload.php';
 // Configure application
 $configurator = new \Nette\Config\Configurator;
 
+
+\Nella\Console\Config\Extension::register($configurator);
+\Nella\Doctrine\Config\Extension::register($configurator);
+\Nella\Doctrine\Config\MigrationsExtension::register($configurator);
+
 // Enable Nette Debugger for error visualisation & logging
 //$configurator->setDebugMode($configurator::AUTO);
 $configurator->enableDebugger(__DIR__ . '/../log');
@@ -24,14 +29,11 @@ $configurator->createRobotLoader()
 	->addDirectory(LOCAL_LIBS_DIR)
 	->register();
 
-\Nella\Console\Config\Extension::register($configurator);
-\Nella\Doctrine\Config\Extension::register($configurator);
-\Nella\Doctrine\Config\MigrationsExtension::register($configurator);
 
 if (strpos($_SERVER['SERVER_NAME'], 'dev.majsky.cz') !== false) {
     $environment = $configurator::DEVELOPMENT;
     $configurator->addConfig(__DIR__ . '/config/config.neon', $environment);
-    $configurator->setDebugMode();
+
 }
 
 else if (StrPos($_SERVER['SERVER_NAME'], 'local') !== false) {
@@ -43,6 +45,10 @@ else {
     $configurator->addConfig(__DIR__ . '/config/config.neon');
 }
 
+
+if (PHP_SAPI == 'cli') {
+    $configurator->addConfig(__DIR__ . '/config/config.neon', 'console');
+}
 $container = $configurator->createContainer();
 
 // Setup router
