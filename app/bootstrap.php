@@ -36,6 +36,7 @@ if (strpos($_SERVER['SERVER_NAME'], 'dev.majsky.cz') !== false) {
 
 else if (StrPos($_SERVER['SERVER_NAME'], 'local') !== false) {
     $configurator->addConfig(__DIR__ . '/config/config.neon', 'local');
+
     
 }
 else {
