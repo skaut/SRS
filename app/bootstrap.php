@@ -31,7 +31,7 @@ $configurator->createRobotLoader()
 if (strpos($_SERVER['SERVER_NAME'], 'dev.majsky.cz') !== false) {
     $environment = $configurator::DEVELOPMENT;
     $configurator->addConfig(__DIR__ . '/config/config.neon', $environment);
-    
+    $configurator->setDebugMode();
 }
 
 else if (StrPos($_SERVER['SERVER_NAME'], 'local') !== false) {
