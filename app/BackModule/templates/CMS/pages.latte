@@ -2,15 +2,53 @@
 {extends 'layout.latte'}
 
 {block content}
+
 <div class="row-fluid">
     <div class="span9">
         <a class="btn btn-success" href="#addPage" data-toggle="modal"><i class="icon-plus-sign"></i>Přidat stránku</a>
+        <a class="btn" id="sortPages" href="#sortPages">Uložit pořadí stránek</a>
+        {snippet pagelist}
+        <ul id="pageList">
+            <li n:foreach="$pages as $page" id="page-{$page->id}">
+                {$page->name}
+            </li>
+        </ul>
 
+
+            <script>
+
+                function savePagePositions(data) {
+                    console.log(data);
+                    var url = {link sortPages!};
+                    url = url.replace('\\', '');
+                    console.log(url);
+                    //data = $.toJSON(data);
+                    console.log(data);
+
+                    $.get("?do=sortPages", data );
+                }
+
+
+                $(document).ready(function() {
+                    $('#pageList').sortable();
+                    $('#sortPages').click(function() {
+                        var sorted = $( "#pageList" ).sortable( "serialize", { key:'pages[]' } );
+                        //var sorted = $( "#pageList" ).sortable("toArray");
+                        savePagePositions(sorted);
+                    });
+
+                });
+            </script>
+
+
+        {/snippet}
 
 
 
     </div>
 </div>
+
+
 
 {include 'includes/addPage.latte'}
 {/block}

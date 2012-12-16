@@ -20,6 +20,24 @@ class CMSPresenter extends BasePresenter
     }
 
     public function renderPages() {
+        //$pages = $this->context->database->getRepository('\SRS\Model\CMS\Page')->findAll();
+        $query = $this->context->database->createQuery('SELECT p FROM \SRS\Model\CMS\Page p ORDER BY p.position');
+        $pages = $query->getResult();
+        $this->template->pages = $pages;
+    }
+
+    public function handleSortPages() {
+        $pagesOrder = $this->getParameter('pages');
+        $position = 0;
+        foreach ($pagesOrder as $pageId) {
+            $page = $this->context->database->getRepository('\SRS\Model\CMS\Page')->find($pageId);
+            $page->position = $position;
+            $this->context->database->persist($page);
+            $position++;
+        }
+        $this->context->database->flush();
+        $this->invalidateControl('pagelist');
+
 
     }
 

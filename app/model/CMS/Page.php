@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ * @ORM\OrderBy({"position" = "ASC"})
  *
  * @property-read int $id
  * @property string $name
