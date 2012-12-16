@@ -4,9 +4,7 @@
 {block content}
 <div class="row-fluid">
     <div class="span9">
-
-
-       <a class="btn btn-success" href="{plink addRole}"><i class="icon-plus-sign"></i>Přidat roli</a>
+       <a class="btn btn-success" href="#addRole" data-toggle="modal"><i class="icon-plus-sign"></i>Přidat roli</a>
 
        <table class="table-bordered table-striped table-roles">
            <thead>
@@ -28,8 +26,12 @@
            {/foreach}
            </tbody>
        </table>
-
-
     </div>
 </div>
+
+{include 'includes/addRole.latte'}
+
+
+
+
 {/block}

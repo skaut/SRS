@@ -1,0 +1,59 @@
+<?php
+/**
+ * Created by JetBrains PhpStorm.
+ * User: Michal
+ * Date: 15.11.12
+ * Time: 13:27
+ * To change this template use File | Settings | File Templates.
+ */
+namespace SRS\Model\CMS;
+use Doctrine\ORM\Mapping as ORM;
+
+
+/**
+ * @ORM\Entity
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="type", type="string")
+ * @ORM\DiscriminatorMap({"content" = "Content", "textcontent" = "TextContent"})
+ * @property int $order
+ * @property \SRS\Model\CMS\Page $page
+ */
+abstract class Content extends \SRS\Model\BaseEntity
+{
+
+
+    /**
+     * @ORM\Column(type="integer")
+     * @var int
+     */
+    protected $position;
+
+
+    /**
+     * @ORM\ManyToOne(targetEntity="\SRS\Model\CMS\Page", inversedBy="contents", cascade={"persist"})
+     * @var \SRS\Model\CMS\Page
+     */
+    protected $page;
+
+
+    public function setPosition($order)
+    {
+        $this->position = $order;
+    }
+
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+    public function setPage($page)
+    {
+        $this->page = $page;
+    }
+
+    public function getPage()
+    {
+        return $this->page;
+    }
+
+}

@@ -59,9 +59,12 @@ $container->router[] = new Route('logout/', 'Auth:logout');
 $container->router[] = new Route('<presenter>/<action>[/<id>]', 'Front:Homepage:default');
 
 
-$acl = new \SRS\Security\Acl($container->database);
-$container->user->setAuthorizator($acl);
 
+
+if (PHP_SAPI != 'cli') {
+    $acl = new \SRS\Security\Acl($container->database);
+    $container->user->setAuthorizator($acl);
+}
 
 
 // Configure and run the application!
