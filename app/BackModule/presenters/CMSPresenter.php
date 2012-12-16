@@ -36,7 +36,9 @@ class CMSPresenter extends BasePresenter
             $position++;
         }
         $this->context->database->flush();
+        $this->flashMessage('Pořadí stránek uloženo', 'success');
         $this->invalidateControl('pagelist');
+        $this->invalidateControl('flashMessages');
 
 
     }

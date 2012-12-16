@@ -71,10 +71,12 @@
                 </div><!--/.well -->
             </div><!--/span-->
             <div class="span9">
+                {snippet flashMessages}
                 <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">
                     <button type="button" class="close" data-dismiss="alert">×</button>
                     {$flash->message}
                 </div>
+                {/snippet}
                 {block #content}
             </div><!--/span-->
         </div><!--/row-->

@@ -18,6 +18,14 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
         return $this;
     }
 
+    public function beforeRender() {
+        parent::beforeRender();
+        if ($this->isAjax()) {
+            //aby fungovali flashmessages pri ajaxu
+            $this->invalidateControl('flashMessages');
+        }
+    }
+
     public function startup()
     {
         parent::startup();

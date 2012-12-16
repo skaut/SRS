@@ -12,11 +12,12 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\OrderBy({"position" = "ASC"})
+ *
  *
  * @property-read int $id
  * @property string $name
  * @property string $slug
+ * @property bool $public
  * @property \Doctrine\Common\Collections\ArrayCollection $roles
  * @property \Doctrine\Common\Collections\ArrayCollection $contents
  * @property int $position
@@ -43,6 +44,14 @@ class Page extends \SRS\Model\BaseEntity
      * @var int
      */
     protected $position;
+
+    /**
+     * @ORM\Column(type="boolean")
+     * @var bool
+     */
+    protected $public = false;
+
+
 
     /**
      * @ORM\ManyToMany(targetEntity="\SRS\model\Acl\Role", inversedBy="pages")
@@ -119,5 +128,15 @@ class Page extends \SRS\Model\BaseEntity
     public function getSlug()
     {
         return $this->slug;
+    }
+
+    public function setPublic($public)
+    {
+        $this->public = $public;
+    }
+
+    public function getPublic()
+    {
+        return $this->public;
     }
 }
