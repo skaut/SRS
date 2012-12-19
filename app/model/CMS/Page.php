@@ -43,7 +43,7 @@ class Page extends \SRS\Model\BaseEntity
      * @ORM\Column(type="integer")
      * @var int
      */
-    protected $position;
+    protected $position = 0;
 
     /**
      * @ORM\Column(type="boolean")
@@ -55,7 +55,7 @@ class Page extends \SRS\Model\BaseEntity
 
     /**
      * @ORM\ManyToMany(targetEntity="\SRS\model\Acl\Role", inversedBy="pages")
-     * @var mixed
+     * @var \Doctrine\Common\Collections\ArrayCollection
      */
     protected $roles;
 
@@ -63,8 +63,8 @@ class Page extends \SRS\Model\BaseEntity
 
 
     /**
-     * @ORM\OneToMany(targetEntity="\SRS\model\CMS\Content", mappedBy="page")
-     * @var mixed
+     * @ORM\OneToMany(targetEntity="\SRS\model\CMS\Content", mappedBy="page", cascade={"persist"})
+     * @var  \Doctrine\Common\Collections\ArrayCollection
      */
     protected $contents;
 
@@ -73,6 +73,7 @@ class Page extends \SRS\Model\BaseEntity
         $this->name = $name;
         $this->slug = $slug;
         $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->contents = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     public function setContents($contents)

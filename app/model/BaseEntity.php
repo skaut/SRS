@@ -44,33 +44,35 @@ abstract class BaseEntity extends \Nette\Object
         $reflection = new \Nette\Reflection\ClassType($this);
 
         foreach($values as $key => $value){
-           $propertyReflection = $reflection->getProperty($key);
+               if ($reflection->hasProperty($key)) {
+               $propertyReflection = $reflection->getProperty($key);
 
-            //obsluhujeme vazby
-            if ($propertyReflection->hasAnnotation('ORM\ManyToMany') ||
-                $propertyReflection->hasAnnotation('ORM\ManyToOne') ||
-                $propertyReflection->hasAnnotation('ORM\OneToMany'))
-            {
-                $association = null;
-                while ($association == null) {
-                    $association = $propertyReflection->getAnnotation('ORM\ManyToMany');
-                    $targetEntity = $association['targetEntity'];
-                }
-
-                if (is_array($value)) { //vazba oneToMany nebo ManyToMany
-                    $newData = new \Doctrine\Common\Collections\ArrayCollection();
-                    foreach($value as $itemId) {
-                        $newData->add($em->getReference($targetEntity, $itemId));
+                //obsluhujeme vazby
+                if ($propertyReflection->hasAnnotation('ORM\ManyToMany') ||
+                    $propertyReflection->hasAnnotation('ORM\ManyToOne') ||
+                    $propertyReflection->hasAnnotation('ORM\OneToMany'))
+                {
+                    $association = null;
+                    while ($association == null) {
+                        $association = $propertyReflection->getAnnotation('ORM\ManyToMany');
+                        $targetEntity = $association['targetEntity'];
                     }
-                    $value = $newData;
-                }
-                else { //vazba ManyToOne
-                    $value = $em->getReference($targetEntity, $value);
-                }
-            }
 
-            if ($key != 'id') {
-                $this->{"set$key"}($value);
+                    if (is_array($value)) { //vazba oneToMany nebo ManyToMany
+                        $newData = new \Doctrine\Common\Collections\ArrayCollection();
+                        foreach($value as $itemId) {
+                            $newData->add($em->getReference($targetEntity, $itemId));
+                        }
+                        $value = $newData;
+                    }
+                    else { //vazba ManyToOne
+                        $value = $em->getReference($targetEntity, $value);
+                    }
+                }
+
+                if ($key != 'id') {
+                    $this->{"set$key"}($value);
+                }
             }
         }
 

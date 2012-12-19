@@ -26,7 +26,7 @@ abstract class Content extends \SRS\Model\BaseEntity
      * @ORM\Column(type="integer")
      * @var int
      */
-    protected $position;
+    protected $position = 0;
 
 
     /**
@@ -55,5 +55,6 @@ abstract class Content extends \SRS\Model\BaseEntity
     {
         return $this->page;
     }
+
 
 }
