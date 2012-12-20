@@ -38,7 +38,7 @@ class TextContent extends \SRS\Model\CMS\Content implements IContent
 
 
     public function addFormItems(\Nette\Application\UI\Form $form) {
-        $form->addText("{$this->componentName}_{$this->id}_text",'Text')->setDefaultValue($this->text);
+        $form->addTextArea("{$this->componentName}_{$this->id}_text",'Text')->setDefaultValue($this->text);
         return $form;
     }
 
