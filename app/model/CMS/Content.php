@@ -20,7 +20,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 abstract class Content extends \SRS\Model\BaseEntity
 {
-
+    public static $TYPES = array(
+        'Text' => 'Text',
+    );
 
     /**
      * @ORM\Column(type="integer")

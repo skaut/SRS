@@ -59,12 +59,9 @@ class CMSPresenter extends BasePresenter
 
 
     protected function createComponentPageForm($name) {
-
         $pageId = $this->getParameter('pageId');
         $page = $this->context->database->getRepository('\SRS\Model\CMS\Page')->find($pageId);
         if ($page == null) throw new \Nette\Application\BadRequestException('Stránka s tímto id neexistuje');
-
-        $contents = array('Text' => 'Text'); //TODO
 
         $form = new \SRS\Form\EntityForm();
         $form->addHidden('id');
@@ -72,7 +69,7 @@ class CMSPresenter extends BasePresenter
             ->addRule(Form::FILLED, 'Zadejte jméno');
         $form->addText('slug','Slug:')->getControlPrototype()->class('slug')
             ->addRule(Form::FILLED, 'Zadejte slug');
-        $form->addSelect('add_content', 'Přidat obsah', $contents)->setPrompt('vyber typ');
+        $form->addSelect('add_content', 'Přidat obsah', \SRS\Model\CMS\Content::$TYPES)->setPrompt('vyber typ');
 
         $form->bindEntity($page);
 
