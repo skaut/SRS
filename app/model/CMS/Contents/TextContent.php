@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class TextContent extends \SRS\Model\CMS\Content implements IContent
 {
-    protected $componentName = 'textcontent';
+    protected $contentType = 'textcontent';
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -38,13 +38,18 @@ class TextContent extends \SRS\Model\CMS\Content implements IContent
 
 
     public function addFormItems(\Nette\Application\UI\Form $form) {
-        $form->addTextArea("{$this->componentName}_{$this->id}_text",'Text')->setDefaultValue($this->text);
+        $formContainer = $form->addContainer($this->getFormIdentificator());
+        //$form->addTextArea("{$this->componentName}_{$this->id}_text",'Text')->setDefaultValue($this->text);
+        $formContainer->addTextArea("text",'Text')->setDefaultValue($this->text);
         return $form;
     }
 
     public function setValuesFromPageForm(\Nette\Application\UI\Form $form) {
         $values = $form->getValues();
-        $this->text = $values["{$this->componentName}_{$this->id}_text"];
+        $values = $values[$this->getFormIdentificator()];
+        $this->text = $values['text'];
     }
+
+
 
 }

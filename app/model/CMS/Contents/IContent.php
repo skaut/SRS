@@ -11,13 +11,15 @@ namespace SRS\Model\CMS;
 interface IContent
 {
     /**
-     * @param Nette\Application\UI\Form $form
+     * Vytaha si data z formulare PageForm
+     * @param \Nette\Application\UI\Form $form
      * @return void
      */
     public function setValuesFromPageForm(\Nette\Application\UI\Form $form);
 
     /**
-     * @param Nette\Application\UI\Form $form
+     * Prida do formulare prvky, ktere dany content pozaduje vcetne predvyplnenych defaultnich hodnot
+     * @param \Nette\Application\UI\Form $form
      * @return \Nette\Application\UI\Form $form
      */
     public function addFormItems(\Nette\Application\UI\Form $form);

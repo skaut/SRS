@@ -5,8 +5,39 @@
 <div class="row-fluid">
     <div class="span9">
 
+      {form pageForm}
+          <ul class="errors" n:if="$form->hasErrors()">
+              <li n:foreach="$form->errors as $error">{$error}</li>
+          </ul>
 
-      {widget pageForm}
+           {input id}
+
+        <table>
+        <tr>
+            <td>{label name /}</td>
+            <td>{input name}</td>
+        </tr>
+
+        <tr>
+            <td>{label slug /}</td>
+            <td>{input slug}</td>
+        </tr>
+
+        <tr>
+            <td>{label add_content /}</td>
+            <td>{input add_content}</td>
+        </tr>
+        </table>
+         {foreach $form->getComponents(TRUE, 'Nette\Forms\Container') as $container}
+            {foreach $container->getComponents() as $component}
+                {label $component /} {input $component }
+            {/foreach}
+         {/foreach}
+        
+      {input submit} {input submit_continue}
+      {/form pageForm}
+
+        {*{widget pageForm}*}
 
 
     </div>

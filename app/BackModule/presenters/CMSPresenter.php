@@ -46,8 +46,7 @@ class CMSPresenter extends BasePresenter
     }
 
     public function renderPage($pageId) {
-
-
+        //jen vykresluje formular
     }
 
 
@@ -62,22 +61,22 @@ class CMSPresenter extends BasePresenter
         $pageId = $this->getParameter('pageId');
         $page = $this->context->database->getRepository('\SRS\Model\CMS\Page')->find($pageId);
         if ($page == null) throw new \Nette\Application\BadRequestException('Stránka s tímto id neexistuje');
-
-        $form = new \SRS\Form\EntityForm();
-        $form->addHidden('id');
-        $form->addText('name', 'Jméno stránky:')->getControlPrototype()->class('name')
-            ->addRule(Form::FILLED, 'Zadejte jméno');
-        $form->addText('slug','Slug:')->getControlPrototype()->class('slug')
-            ->addRule(Form::FILLED, 'Zadejte slug');
-        $form->addSelect('add_content', 'Přidat obsah', \SRS\Model\CMS\Content::$TYPES)->setPrompt('vyber typ');
+        $form = new \SRS\Form\CMS\PageForm(null, null, $page);
+//        $form = new \SRS\Form\EntityForm();
+//        $form->addHidden('id');
+//        $form->addText('name', 'Jméno stránky:')->getControlPrototype()->class('name')
+//            ->addRule(Form::FILLED, 'Zadejte jméno');
+//        $form->addText('slug','Slug:')->getControlPrototype()->class('slug')
+//            ->addRule(Form::FILLED, 'Zadejte slug');
+//        $form->addSelect('add_content', 'Přidat obsah', \SRS\Model\CMS\Content::$TYPES)->setPrompt('vyber typ');
 
         $form->bindEntity($page);
 
         foreach ($page->contents as $content) {
-            $form = $content->addFormItems($form);
+            $form = $content->addFormItems($form); // pridavame polozky formulare, ktere souvisi s jednotlivymi contenty
         }
 
-        $form->addSubmit('submit', 'Uložit');
+
         $form->onSuccess[] = callback($this, 'pageFormSubmitted');
 
         return $form;
@@ -103,7 +102,11 @@ class CMSPresenter extends BasePresenter
         }
         $this->context->database->flush();
         $this->flashMessage('Stránka uložena');
-        $this->redirect('this');
+
+        $submitName = ($form->isSubmitted());
+        $submitName = $submitName->htmlName;
+        if ($submitName == 'submit_continue') $this->redirect('this');
+        $this->redirect(':Back:CMS:pages');
 
     }
 

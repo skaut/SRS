@@ -24,6 +24,8 @@ abstract class Content extends \SRS\Model\BaseEntity
         'Text' => 'Text',
     );
 
+    protected $contentType;
+
     /**
      * @ORM\Column(type="integer")
      * @var int
@@ -56,6 +58,14 @@ abstract class Content extends \SRS\Model\BaseEntity
     public function getPage()
     {
         return $this->page;
+    }
+
+
+    /**
+     * @return string
+     */
+    protected function getFormIdentificator() {
+        return "{$this->contentType}_{$this->id}";
     }
 
 
