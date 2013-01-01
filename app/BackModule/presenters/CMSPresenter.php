@@ -11,10 +11,6 @@ use Nette\Application\UI\Form;
 
 class CMSPresenter extends BasePresenter
 {
-    protected function createComponentUserGrid()
-    {
-        return new \SRS\Components\UserGrid($this->context->database);
-    }
 
     public function startup() {
         parent::startup();
@@ -46,7 +42,32 @@ class CMSPresenter extends BasePresenter
     }
 
     public function renderPage($pageId) {
-        //jen vykresluje formular
+        if ($pageId == null) {
+            $this->flashMessage('Nebyla zvolena stránka', 'error');
+            $this->redirect(':Back:CMS:Pages');
+        }
+        $page = $this->context->database->getRepository('\SRS\Model\CMS\Page')->find($pageId);
+        if ($page == null) throw new \Nette\Application\BadRequestException('Stránka s tímto id neexistuje');
+
+        $this->template->page = $page;
+
+    }
+
+    public function handleDeletePage($pageId) {
+        if ($pageId == null) {
+            $this->flashMessage('Nebyla zvolena stránka', 'error');
+            $this->redirect(':Back:CMS:Pages');
+        }
+        $page = $this->context->database->getRepository('\SRS\Model\CMS\Page')->find($pageId);
+        if ($page == null) throw new \Nette\Application\BadRequestException('Stránka s tímto id neexistuje');
+        foreach ($page->contents as $content) {
+            $this->context->database->remove($content);
+        }
+        $this->context->database->remove($page);
+        $this->context->database->flush();
+        $this->flashMessage('Stránka smazána', 'success');
+        $this->redirect(':Back:CMS:Pages');
+
     }
 
 
@@ -75,7 +96,7 @@ class CMSPresenter extends BasePresenter
         foreach ($page->contents as $content) {
             $form = $content->addFormItems($form); // pridavame polozky formulare, ktere souvisi s jednotlivymi contenty
             $contentFormContainer = $form[$content->getFormIdentificator()];
-            $contentFormContainer->addCheckbox('delete', 'smazat');
+            $contentFormContainer->addHidden('delete', 'smazat')->setDefaultValue(0);
         }
 
 
@@ -89,6 +110,7 @@ class CMSPresenter extends BasePresenter
         $pageId = $values['id'];
 
         $page = $this->context->database->getRepository('\SRS\Model\CMS\Page')->find($pageId);
+
         $page->setProperties($values);
 
         foreach ($page->contents as $content) {
@@ -112,8 +134,8 @@ class CMSPresenter extends BasePresenter
 
         $submitName = ($form->isSubmitted());
         $submitName = $submitName->htmlName;
-        if ($submitName == 'submit_continue') $this->redirect('this');
-        $this->redirect(':Back:CMS:pages');
+        if ($submitName == 'submit') $this->redirect(':Back:CMS:pages');
+        $this->redirect('this');
 
     }
 

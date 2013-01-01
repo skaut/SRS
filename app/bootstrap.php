@@ -54,7 +54,7 @@ $container = $configurator->createContainer();
 
 // Setup router
 $container->router[] = new Route('index.php', 'Front:Homepage:default', Route::ONE_WAY);
-$container->router[] = new Route('admin/', 'Back:Dashboard:default');
+$container->router[] = new Route('admin/<presenter>/<action>[/<id>]', 'Back:Dashboard:default');
 $container->router[] = new Route('login/', 'Auth:login');
 $container->router[] = new Route('logout/', 'Auth:logout');
 $container->router[] = new Route('<presenter>/<action>[/<id>]', 'Front:Homepage:default');

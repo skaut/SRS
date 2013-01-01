@@ -5,41 +5,68 @@
 <div class="row-fluid">
     <div class="span9">
 
-      {form pageForm}
-          <ul class="errors" n:if="$form->hasErrors()">
-              <li n:foreach="$form->errors as $error">{$error}</li>
-          </ul>
 
-           {input id}
+        <h2>Úprava stránky {$page->name}</h2>
+        {form pageForm}
+         <div class="well">
+            <h4>Základní vlastnosti</h4>
 
-        <table>
-        <tr>
-            <td>{label name /}</td>
-            <td>{input name}</td>
-        </tr>
+              <ul class="errors" n:if="$form->hasErrors()">
+                  <li n:foreach="$form->errors as $error">{$error}</li>
+              </ul>
 
-        <tr>
-            <td>{label public /}</td>
-            <td>{input public}</td>
-        </tr>
+               {input id}
 
-        <tr>
-            <td>{label slug /}</td>
-            <td>{input slug}</td>
-        </tr>
+            <table class="table">
+            <tr>
+                <td>{label name /}</td>
+                <td>{input name}</td>
+            </tr>
 
-        <tr>
-            <td>{label add_content /}</td>
-            <td>{input add_content}</td>
-        </tr>
-        </table>
+            <tr>
+                <td>{label public /}</td>
+                <td>{input public}</td>
+            </tr>
+
+            <tr>
+                <td>{label slug /}</td>
+                <td>{input slug}</td>
+            </tr>
+
+            <tr>
+                <td>{label add_content /}</td>
+                <td>{input add_content} {input submit_content}</td>
+            </tr>
+            </table>
+         </div>
+
+         <ul id="pageContents">
          {foreach $form->getComponents(TRUE, 'Nette\Forms\Container') as $container}
-            {foreach $container->getComponents() as $component}
-                {label $component /} {input $component }
-            {/foreach}
+            <li>
+                <div class="well pageContent content-{$iterator->getCounter()}">
+                    <div class="btn-toolbar pull-right">
+                        <div class="btn-group ">
+                            <a class="btn delete-content" href="#content-{$iterator->getCounter()}"><i class="icon-remove-sign"></i></a>
+                        </div>
+                    </div>
+                {foreach $container->getComponents() as $component}
+                    {label $component /} {input $component }
+                {/foreach}
+                </div>
+            </li>
          {/foreach}
+         </ul>
 
-      {input submit} {input submit_continue}
+
+
+    <div class="navbar navbar-inverse navbar-fixed-bottom button-bar">
+        <div class="navbar-inner">
+          <div class="container-fluid">
+              <a href="{link deletePage! $page->id}" class="btn btn-danger">Smazat</a>
+                {input submit} {input submit_continue}
+           </div>
+        </div>
+    </div>
       {/form pageForm}
 
         {*{widget pageForm}*}
@@ -47,4 +74,33 @@
 
     </div>
 </div>
+
+<script>
+    $(function() {
+        $('#pageContents').sortable({
+            delay: 300,
+            update: function( event, ui ) {
+
+            }
+        });
+        //$( "li" ).disableSelection();
+        $('#sortPages').click(function() {
+            var sorted = $( "#pageList" ).sortable( "serialize", { key:'pages[]' } );
+            //savePagePositions(sorted);
+        });
+
+
+        $('.delete-content').click(function(event) {
+            event.preventDefault();
+            var contentToDelete = $(this).attr('href').replace('#', '');
+            $('.'+contentToDelete+' input[type=hidden]').val(1);
+            $('.'+contentToDelete).fadeOut();
+
+
+        });
+    });
+
+</script>
+
+
 {/block}

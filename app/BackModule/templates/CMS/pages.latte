@@ -11,45 +11,64 @@
     <div class="span9">
         <div class="navbar">
             <a class="btn btn-success" href="#addPage" data-toggle="modal"><i class="icon-plus-sign"></i>Přidat stránku</a>
-            <a class="btn" id="sortPages" href="#sortPages">Uložit pořadí stránek</a>
+            <a class="btn hidden btn-primary" id="sortPages" href="#">Uložit pořadí stránek</a>
         </div>
         {snippet pagelist}
-        <ul id="pageList" class="sortable">
-            <li n:foreach="$pages as $page" id="page-{$page->id}">
-                <span class="ui-icon ui-icon-arrowthick-2-n-s"></span> {$page->name}
-                {if $page->public}
-                 <span class="label label-success">Publikováno</span>
-                {else}
-                 <span class="label label-warning">Koncept</span>
-                {/if}
-                <a class="btn" href="{plink page $page->id}">
-                    Upravit
-                </a>
-            </li>
-        </ul>
+
+        <table class="table-bordered table-striped">
+            <tbody class="sortable" id="pageList">
+            <tr n:foreach="$pages as $page" id="page-{$page->id}">
+                <td class="sort-arrow"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span></td>
+                <td>{$page->name}</td>
+                <td>
+                    {if $page->public}
+                     <span class="label label-success">Publikováno</span>
+                    {else}
+                     <span class="label label-warning">Koncept</span>
+                    {/if}
+                </td>
+                <td>
+                    <a class="btn" href="{plink page $page->id}">
+                        Upravit
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
 
 
             <script>
 
                 function savePagePositions(data) {
-                    console.log(data);
+
                     var url = {link sortPages!};
                     url = url.replace('\\', '');
-                    console.log(url);
-                    //data = $.toJSON(data);
-                    console.log(data);
-
                     $.get("?do=sortPages", data );
                 }
 
 
                 $(document).ready(function() {
-                    $('#pageList').sortable();
+                    var fixHelper = function(e, ui) {
+                        ui.children().each(function() {
+                            $(this).width($(this).width());
+                        });
+                        return ui;
+                    };
+
+
+                    $('#pageList').sortable({
+                        helper: fixHelper,
+                        update: function( event, ui ) {
+                            $('#sortPages').removeClass('hidden');
+
+
+                        }
+                    })
                     $('#sortPages').click(function() {
                         var sorted = $( "#pageList" ).sortable( "serialize", { key:'pages[]' } );
-                        //var sorted = $( "#pageList" ).sortable("toArray");
                         savePagePositions(sorted);
                     });
+                    $('#sortPages').addClass('hidden');
 
                 });
             </script>
