@@ -64,7 +64,7 @@ abstract class Content extends \SRS\Model\BaseEntity
     /**
      * @return string
      */
-    protected function getFormIdentificator() {
+    public function getFormIdentificator() {
         return "{$this->contentType}_{$this->id}";
     }
 

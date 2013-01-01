@@ -74,6 +74,8 @@ class CMSPresenter extends BasePresenter
 
         foreach ($page->contents as $content) {
             $form = $content->addFormItems($form); // pridavame polozky formulare, ktere souvisi s jednotlivymi contenty
+            $contentFormContainer = $form[$content->getFormIdentificator()];
+            $contentFormContainer->addCheckbox('delete', 'smazat');
         }
 
 
@@ -90,7 +92,12 @@ class CMSPresenter extends BasePresenter
         $page->setProperties($values);
 
         foreach ($page->contents as $content) {
-            $content->setValuesFromPageForm($form);
+
+            $contentFormContainer = $values[$content->getFormIdentificator()];
+            $deleteContent = $contentFormContainer['delete'];
+            if ($deleteContent == true) $this->context->database->remove($content);
+            else $content->setValuesFromPageForm($form);
+
         }
         if ($values['add_content'] != null) {
             $contentTypeStr = '\\SRS\\Model\\CMS\\'.$values['add_content'].'Content';
