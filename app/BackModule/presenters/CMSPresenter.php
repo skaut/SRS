@@ -97,6 +97,7 @@ class CMSPresenter extends BasePresenter
             $form = $content->addFormItems($form); // pridavame polozky formulare, ktere souvisi s jednotlivymi contenty
             $contentFormContainer = $form[$content->getFormIdentificator()];
             $contentFormContainer->addHidden('delete', 'smazat')->setDefaultValue(0);
+
         }
 
 
@@ -134,7 +135,8 @@ class CMSPresenter extends BasePresenter
 
         $submitName = ($form->isSubmitted());
         $submitName = $submitName->htmlName;
-        if ($submitName == 'submit') $this->redirect(':Back:CMS:pages');
+
+        if ($submitName == 'submit_to_list') $this->redirect(':Back:CMS:pages');
         $this->redirect('this');
 
     }

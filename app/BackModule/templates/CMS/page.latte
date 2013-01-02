@@ -15,7 +15,7 @@
                   <li n:foreach="$form->errors as $error">{$error}</li>
               </ul>
 
-               {input id}
+              {input id}
 
             <table class="table">
             <tr>
@@ -43,10 +43,10 @@
          <ul id="pageContents">
          {foreach $form->getComponents(TRUE, 'Nette\Forms\Container') as $container}
             <li>
-                <div class="well pageContent content-{$iterator->getCounter()}">
+                <div class="well pageContent">
                     <div class="btn-toolbar pull-right">
                         <div class="btn-group ">
-                            <a class="btn delete-content" href="#content-{$iterator->getCounter()}"><i class="icon-remove-sign"></i></a>
+                            <a class="btn delete-content" href="#"><i class="icon-remove-sign"></i></a>
                         </div>
                     </div>
                 {foreach $container->getComponents() as $component}
@@ -63,7 +63,7 @@
         <div class="navbar-inner">
           <div class="container-fluid">
               <a href="{link deletePage! $page->id}" class="btn btn-danger">Smazat</a>
-                {input submit} {input submit_continue}
+                {input submit_to_list} {input submit_continue}
            </div>
         </div>
     </div>
@@ -77,24 +77,40 @@
 
 <script>
     $(function() {
+        //nastaveni trid a identifikatoru pro spravnou funkcnost mazani a razeni contentu
+        $('#pageContents li').each(function() {
+            var id = $(this).find('input.id').val();
+            $(this).attr('id','content-'+id);
+            $(this).find('.delete-content').attr('href', '#content-'+id);
+        });
+
+        //inicializace razeni contentu
         $('#pageContents').sortable({
             delay: 300,
             update: function( event, ui ) {
 
+
             }
         });
-        //$( "li" ).disableSelection();
-        $('#sortPages').click(function() {
-            var sorted = $( "#pageList" ).sortable( "serialize", { key:'pages[]' } );
-            //savePagePositions(sorted);
+
+        //vlozeni razeni contentu do formularoveho pole
+        $('input[type=submit]').click(function(event) {
+            var sorted = $( "#pageContents" ).sortable("toArray");
+            //console.log(sorted);
+            for (var i=0; i < sorted.length; i++) {
+                //console.log($('#'+sorted[i]).find('input.order'));
+                $('#'+sorted[i]).find('input.order').val(i);
+            }
+            event.trigger();
+            //event.preventDefault();
         });
 
-
+        //mazani contentu
         $('.delete-content').click(function(event) {
             event.preventDefault();
             var contentToDelete = $(this).attr('href').replace('#', '');
-            $('.'+contentToDelete+' input[type=hidden]').val(1);
-            $('.'+contentToDelete).fadeOut();
+            $('#'+contentToDelete+' input[type=hidden]').val(1);
+            $('#'+contentToDelete).fadeOut();
 
 
         });

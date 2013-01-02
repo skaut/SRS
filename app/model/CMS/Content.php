@@ -68,5 +68,18 @@ abstract class Content extends \SRS\Model\BaseEntity
         return "{$this->contentType}_{$this->id}";
     }
 
+    public function addFormItems(\Nette\Application\UI\Form $form) {
+        $formContainer = $form->addContainer($this->getFormIdentificator());
+        $formContainer->addHidden('id')->setDefaultValue($this->id)->getControlPrototype()->class('id');
+        $formContainer->addHidden('position')->getControlPrototype()->class('order');
+        return $form;
+    }
+
+    public function setValuesFromPageForm(\Nette\Application\UI\Form $form) {
+        $values = $form->getValues();
+        $values = $values[$this->getFormIdentificator()];
+        $this->position = $values['position'];
+    }
+
 
 }

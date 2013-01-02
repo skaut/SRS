@@ -38,13 +38,14 @@ class TextContent extends \SRS\Model\CMS\Content implements IContent
 
 
     public function addFormItems(\Nette\Application\UI\Form $form) {
-        $formContainer = $form->addContainer($this->getFormIdentificator());
+        parent::addFormItems($form);
+        $formContainer = $form[$this->getFormIdentificator()];
         $formContainer->addTextArea("text",'Text')->setDefaultValue($this->text);
-
         return $form;
     }
 
     public function setValuesFromPageForm(\Nette\Application\UI\Form $form) {
+        parent::setValuesFromPageForm($form);
         $values = $form->getValues();
         $values = $values[$this->getFormIdentificator()];
         $this->text = $values['text'];
