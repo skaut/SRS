@@ -24,4 +24,10 @@ interface IContent
      */
     public function addFormItems(\Nette\Application\UI\Form $form);
 
+    /**
+     * Vraci UserFriendly jmeno contentu pro zobrazeni v CMS
+     * @return string
+     */
+    public function getContentName();
+
 }

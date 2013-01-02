@@ -24,14 +24,16 @@
             </tr>
 
             <tr>
+                <td>{label slug /}</td>
+                <td>{input slug}</td>
+            </tr>
+
+            <tr>
                 <td>{label public /}</td>
                 <td>{input public}</td>
             </tr>
 
-            <tr>
-                <td>{label slug /}</td>
-                <td>{input slug}</td>
-            </tr>
+
 
             <tr>
                 <td>{label add_content /}</td>
@@ -44,11 +46,20 @@
          {foreach $form->getComponents(TRUE, 'Nette\Forms\Container') as $container}
             <li>
                 <div class="well pageContent">
+
+                    <div class="btn-toolbar pull-left">
+                        <div class="btn-group ">
+                            <a class="btn" href="#"><i class="icon-resize-vertical"></i></a>
+                        </div>
+                    </div>
+
                     <div class="btn-toolbar pull-right">
                         <div class="btn-group ">
                             <a class="btn delete-content" href="#"><i class="icon-remove-sign"></i></a>
                         </div>
                     </div>
+                 <div class="clearfix"></div>
+                 <div class="headline"></div>
                 {foreach $container->getComponents() as $component}
                     {label $component /} {input $component }
                 {/foreach}
@@ -82,6 +93,10 @@
             var id = $(this).find('input.id').val();
             $(this).attr('id','content-'+id);
             $(this).find('.delete-content').attr('href', '#content-'+id);
+
+            var contentName = $(this).find('input.content-name').val();
+            console.log(contentName);
+            $(this).find('.headline').prepend('<h4>Blok: '+contentName+'</h4>');
         });
 
         //inicializace razeni contentu
@@ -101,7 +116,7 @@
                 //console.log($('#'+sorted[i]).find('input.order'));
                 $('#'+sorted[i]).find('input.order').val(i);
             }
-            event.trigger();
+            //event.trigger();
             //event.preventDefault();
         });
 

@@ -18,6 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
 class TextContent extends \SRS\Model\CMS\Content implements IContent
 {
     protected $contentType = 'textcontent';
+    protected $contentName = 'Text';
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -50,6 +51,12 @@ class TextContent extends \SRS\Model\CMS\Content implements IContent
         $values = $values[$this->getFormIdentificator()];
         $this->text = $values['text'];
     }
+
+    public function getContentName() {
+        return $this->contentName;
+    }
+
+
 
 
 

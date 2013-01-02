@@ -26,6 +26,14 @@
 
 }
 
+#pageContents {
+    margin-left: 0;
+}
+
+#frmpageForm-submit_content {
+    margin-top: -8px;
+}
+
 #pageContents ul, li {
     list-style-type: none;
 }
