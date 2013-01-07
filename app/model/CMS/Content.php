@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="type", type="string")
- * @ORM\DiscriminatorMap({"content" = "Content", "textcontent" = "TextContent"})
+ * @ORM\DiscriminatorMap({"content" = "Content", "textcontent" = "TextContent", "documentcontent" = "DocumentContent"})
  * @property int $order
  * @property \SRS\Model\CMS\Page $page
  */
@@ -22,7 +22,12 @@ abstract class Content extends \SRS\Model\BaseEntity implements IContent
 {
     public static $TYPES = array(
         'Text' => 'Text',
+        'Document' => 'Dokumenty',
     );
+    /**
+     * @var \Doctrine\ORM\EntityManager
+     */
+    protected $em;
 
     protected $contentType;
 
@@ -60,6 +65,10 @@ abstract class Content extends \SRS\Model\BaseEntity implements IContent
     public function getPage()
     {
         return $this->page;
+    }
+
+    public function setEntityManager($em) {
+        $this->em = $em;
     }
 
 

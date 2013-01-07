@@ -69,8 +69,9 @@ abstract class BaseEntity extends \Nette\Object
                         $value = $em->getReference($targetEntity, $value);
                     }
                 }
-
+                //method_exists(get_class(),"set$key")
                 if ($key != 'id') {
+
                     $this->{"set$key"}($value);
                 }
             }

@@ -21,6 +21,22 @@ class Document extends \SRS\Model\BaseEntity
 {
 
     /**
+     * @param \Doctrine\Common\Collections\ArrayCollection $tags
+     */
+    public function setTags($tags)
+    {
+        $this->tags = $tags;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    /**
      * @ORM\ManyToMany(targetEntity="\SRS\model\CMS\Documents\Tag", inversedBy="documents", cascade={"persist"})
      * @var \Doctrine\Common\Collections\ArrayCollection
      */
@@ -37,6 +53,27 @@ class Document extends \SRS\Model\BaseEntity
      * @var string
      */
     protected $file;
+
+
+    public function setFile($file)
+    {
+        $this->file = $file;
+    }
+
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
 
 
 }

@@ -71,9 +71,50 @@ class CMSPresenter extends BasePresenter
     }
 
 
+    public function renderDocuments() {
+        $documents = $this->context->database->getRepository('\SRS\Model\CMS\Documents\Document')->findAll();
+        $this->template->documents = $documents;
+    }
+
+    public function renderDocument($docId = null) {
+        if ($docId != null) {
+            $doc = $this->context->database->getRepository('\SRS\Model\CMS\Documents\Document')->find($docId);
+            if ($doc == null) throw new \Nette\Application\BadRequestException('Dokument s tímto id neexistuje');
+            $form = $this->getComponent('documentForm');
+            $form->bindEntity($doc);
+        }
+    }
+
+    public function handleDeleteDocument($docId) {
+        $doc = $this->context->database->getRepository('\SRS\Model\CMS\Documents\Document')->find($docId);
+        if ($doc == null) throw new \Nette\Application\BadRequestException('Dokument s tímto id neexistuje');
+        $this->context->database->remove($doc);
+        $this->context->database->flush();
+        $this->flashMessage('Dokument smazán', 'success');
+        $this->redirect(':Back:CMS:documents');
+
+    }
+
+
     protected function createComponentNewPageForm($name)
     {
         $form = new \SRS\Form\CMS\NewPageForm();
+        return $form;
+    }
+
+    protected function createComponentDocumentForm($name)
+    {
+        $tagChoices = array();
+        $tags = $this->presenter->context->database->getRepository('\SRS\Model\CMS\Documents\Tag')->findAll();
+        $tagChoices = \SRS\Form\EntityForm::getFormChoices($tags);
+        $form = new \SRS\Form\CMS\Documents\DocumentForm(null, null, $tagChoices);
+        return $form;
+    }
+
+    protected function createComponentTagForm($name)
+    {
+        $roles = $this->presenter->context->database->getRepository('SRS\Model\Acl\Role')->findAll();
+        $form = new \SRS\Form\CMS\Documents\TagForm(null, null, \SRS\Form\EntityForm::getFormChoices($roles));
         return $form;
     }
 
@@ -82,15 +123,13 @@ class CMSPresenter extends BasePresenter
         $pageId = $this->getParameter('pageId');
         $page = $this->context->database->getRepository('\SRS\Model\CMS\Page')->find($pageId);
         $roles = $this->context->database->getRepository('\SRS\Model\Acl\Role')->findAll();
-        $roleChoices = array();
-        foreach ($roles as $role) {
-            $roleChoices[$role->id] = $role->name;
-        }
+        $roleChoices = \SRS\Form\EntityForm::getFormChoices($roles);
         if ($page == null) throw new \Nette\Application\BadRequestException('Stránka s tímto id neexistuje');
         $form = new \SRS\Form\CMS\PageForm(null, null, $roleChoices);
         $form->bindEntity($page);
 
         foreach ($page->contents as $content) {
+            $content->setEntityManager($this->context->database);
             $form = $content->addFormItems($form); // pridavame polozky formulare, ktere souvisi s jednotlivymi contenty
             $contentFormContainer = $form[$content->getFormIdentificator()];
             $contentFormContainer->addHidden('delete', 'smazat')->setDefaultValue(0);

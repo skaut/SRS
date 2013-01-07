@@ -18,7 +18,6 @@ use Doctrine\ORM\Mapping as ORM;
 class Tag extends \SRS\Model\BaseEntity
 {
 
-
     /**
      * @ORM\ManyToMany(targetEntity="\SRS\model\CMS\Documents\Document", mappedBy="tags", cascade={"persist"})
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -30,5 +29,26 @@ class Tag extends \SRS\Model\BaseEntity
      * @var string
      */
     protected $name;
+
+
+    public function setDocuments($documents)
+    {
+        $this->documents = $documents;
+    }
+
+    public function getDocuments()
+    {
+        return $this->documents;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
 
 }

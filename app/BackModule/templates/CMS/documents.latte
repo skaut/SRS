@@ -1,0 +1,43 @@
+{* This is the welcome page, you can delete it *}
+{extends 'layout.latte'}
+
+{block title}
+CMS » Dokumenty
+{/block}
+
+{block content}
+
+<div class="row-fluid">
+    <div class="span9">
+        <div class="navbar">
+            <a class="btn btn-success" href="{plink document}"><i class="icon-plus-sign"></i>Přidat Dokument</a>
+            <a class="btn btn-primary" href="#addTag" data-toggle="modal"><i class="icon-plus-sign"></i>Přidat Štítek</a>
+        </div>
+
+
+        <table class="table-bordered table-striped">
+            <tbody class="sortable" id="pageList">
+            <tr n:foreach="$documents as $document" id="document-{$document->id}">
+                <td>{$document->name}</td>
+                <td>
+                    {foreach $document->tags as $tag}
+                    <span class="label label-success">{$tag->name}</span>
+                    {/foreach}
+                </td>
+                <td>
+                    <a class="btn" href="{plink document $document->id}">
+                        Upravit
+                    </a>&nbsp; &nbsp;
+                    <a class="btn btn-danger" href="{link deleteDocument! $document->id}">
+                        Smazat
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+{include 'includes/addTag.latte'}
+{/block}

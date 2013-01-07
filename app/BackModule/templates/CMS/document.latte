@@ -1,0 +1,11 @@
+{* This is the welcome page, you can delete it *}
+{extends 'layout.latte'}
+
+{block title}
+Dokument
+{/block}
+
+{block content}
+ <h1> {ifset $document}Úprava dokument{$document->name} {else}Nový dokument{/ifset}</h1>
+  {widget documentForm}
+{/block}
