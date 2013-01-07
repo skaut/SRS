@@ -38,7 +38,7 @@ abstract class BaseEntity extends \Nette\Object
      * @param array $values
      * @param \Doctrine\ORM\EntityManager $em
      */
-    public function setProperties($values = array(), $em = null)
+    public function setProperties($values = array(), $em)
     {
         $posibilities = array ('ORM\ManyToMany', 'ORM\ManyToOne', 'ORM\OneToMany');
         $reflection = new \Nette\Reflection\ClassType($this);

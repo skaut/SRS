@@ -53,13 +53,9 @@ class AclPresenter extends BasePresenter
         $query->setParameter(1, isset($role->parent->id) ? $role->parent->id : null);
         $permissionsNotOwnedByParent = $query->getResult(); //umoznujeme pracovat jen s temi pravy, ktere jeste nema rodic
         $permissionFormChoices = array();
-        $permissionFormDefaults = array();
 
         foreach ($permissionsNotOwnedByParent as $perm) {
             $permissionFormChoices[$perm['id']] = $perm['name'];
-        }
-        foreach ($role->permissions as $perm) {
-            $permissionFormDefaults[] = $perm->id;
         }
 
         $form = $this->getComponent('roleForm');

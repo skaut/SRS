@@ -4,7 +4,10 @@
 {block head}
 {widget jsLoader 'tiny_mce/jquery.tinymce.js'}
 {include 'includes/tinymce_init.latte'}
+{/block}
 
+{block title}
+Úprava stránky {$page->name}
 {/block}
 
 {block content}
@@ -37,6 +40,11 @@
             <tr>
                 <td>{label public /}</td>
                 <td>{input public}</td>
+            </tr>
+
+            <tr>
+                <td>{label roles /}</td>
+                <td>{input roles}</td>
             </tr>
 
 

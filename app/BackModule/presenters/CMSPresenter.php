@@ -81,16 +81,13 @@ class CMSPresenter extends BasePresenter
     protected function createComponentPageForm($name) {
         $pageId = $this->getParameter('pageId');
         $page = $this->context->database->getRepository('\SRS\Model\CMS\Page')->find($pageId);
+        $roles = $this->context->database->getRepository('\SRS\Model\Acl\Role')->findAll();
+        $roleChoices = array();
+        foreach ($roles as $role) {
+            $roleChoices[$role->id] = $role->name;
+        }
         if ($page == null) throw new \Nette\Application\BadRequestException('Stránka s tímto id neexistuje');
-        $form = new \SRS\Form\CMS\PageForm(null, null, $page);
-//        $form = new \SRS\Form\EntityForm();
-//        $form->addHidden('id');
-//        $form->addText('name', 'Jméno stránky:')->getControlPrototype()->class('name')
-//            ->addRule(Form::FILLED, 'Zadejte jméno');
-//        $form->addText('slug','Slug:')->getControlPrototype()->class('slug')
-//            ->addRule(Form::FILLED, 'Zadejte slug');
-//        $form->addSelect('add_content', 'Přidat obsah', \SRS\Model\CMS\Content::$TYPES)->setPrompt('vyber typ');
-
+        $form = new \SRS\Form\CMS\PageForm(null, null, $roleChoices);
         $form->bindEntity($page);
 
         foreach ($page->contents as $content) {
@@ -112,7 +109,7 @@ class CMSPresenter extends BasePresenter
 
         $page = $this->context->database->getRepository('\SRS\Model\CMS\Page')->find($pageId);
 
-        $page->setProperties($values);
+        $page->setProperties($values, $this->context->database);
 
         foreach ($page->contents as $content) {
 

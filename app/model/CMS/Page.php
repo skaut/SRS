@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\SRS\Model\CMS\PageRepository")
  *
  *
  * @property-read int $id
@@ -140,5 +140,17 @@ class Page extends \SRS\Model\BaseEntity
     public function getPublic()
     {
         return $this->public;
+    }
+}
+
+
+class PageRepository extends \Doctrine\ORM\EntityRepository
+{
+    protected $entity = '\SRS\Model\CMS\Page';
+
+    public function getCount()
+    {
+        return $this->_em->createQuery('SELECT count (p.id) FROM '.$this->entity. ' p' )
+            ->getSingleScalarResult();
     }
 }

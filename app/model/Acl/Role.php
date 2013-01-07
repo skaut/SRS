@@ -46,6 +46,12 @@ class Role extends \SRS\Model\BaseEntity
      */
     protected $permissions;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="\SRS\model\CMS\Page", inversedBy="roles", cascade={"persist"})
+     * @var mixed
+     */
+    protected $pages;
+
 
     /**
      * @ORM\OneToMany(targetEntity="\SRS\Model\Acl\Role", mappedBy="parent")
