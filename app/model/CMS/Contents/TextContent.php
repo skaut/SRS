@@ -40,8 +40,9 @@ class TextContent extends \SRS\Model\CMS\Content implements IContent
 
     public function addFormItems(\Nette\Application\UI\Form $form) {
         parent::addFormItems($form);
+        $form->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
         $formContainer = $form[$this->getFormIdentificator()];
-        $formContainer->addTextArea("text",'Text')->setDefaultValue($this->text);
+        $formContainer->addTextArea("text",'Text')->setDefaultValue($this->text)->getControlPrototype()->class('tinyMCE');
         return $form;
     }
 

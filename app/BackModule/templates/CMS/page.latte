@@ -1,6 +1,12 @@
 {* This is the welcome page, you can delete it *}
 {extends 'layout.latte'}
 
+{block head}
+{widget jsLoader 'tiny_mce/jquery.tinymce.js'}
+{include 'includes/tinymce_init.latte'}
+
+{/block}
+
 {block content}
 <div class="row-fluid">
     <div class="span9">
@@ -49,7 +55,7 @@
 
                     <div class="btn-toolbar pull-left">
                         <div class="btn-group ">
-                            <a class="btn" href="#"><i class="icon-resize-vertical"></i></a>
+                            <a class="btn" href="#" onclick="return false;"><i class="icon-resize-vertical"></i></a>
                         </div>
                     </div>
 
@@ -95,7 +101,6 @@
             $(this).find('.delete-content').attr('href', '#content-'+id);
 
             var contentName = $(this).find('input.content-name').val();
-            console.log(contentName);
             $(this).find('.headline').prepend('<h4>Blok: '+contentName+'</h4>');
         });
 
