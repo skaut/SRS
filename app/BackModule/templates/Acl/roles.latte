@@ -20,7 +20,7 @@ Práva & Role » Role
            {foreach $roles as $role}
             <tr><td>{$role->name}</td>
                 <td>{ifset $role->parent->name}{$role->parent->name}{/ifset}</td>
-                <td>{$role->isSystem()}</td>
+                <td>{if $role->isSystem()}ANO{else}NE{/if}</td>
                 <td>
                     <a class="btn" href="{plink Acl:editRole $role->id}">Upravit</a>
                     <a class="btn btn-danger" href="{link deleteRole! $role->id}">Smazat</a>
