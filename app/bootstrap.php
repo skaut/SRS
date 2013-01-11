@@ -52,9 +52,29 @@ if (PHP_SAPI == 'cli') {
 }
 $container = $configurator->createContainer();
 
+$pageRepo = $container->database->getRepository('\SRS\Model\CMS\Page');
+
 // Setup router
 $container->router[] = new Route('index.php', 'Front:Homepage:default', Route::ONE_WAY);
-$container->router[] = new Route('admin/<presenter>/<action>[/<id>]', 'Back:Dashboard:default');
+//$container->router[] = new Route('admin/', 'Back:Dashboard:default');
+
+$container->router[] = new Route('admin/<presenter>/<action>/<id>/', array(
+    'module' => 'Back',
+    'presenter' => 'Dashboard',
+    'action' => 'default',
+    'id' => null,
+));
+
+$container->router[] = new Route('page/[!<page [a-z-]+>]', array(
+    'module' => 'Front',
+    'presenter' => 'Page',
+    'action' => 'default',
+    'page' => array(
+        Route::FILTER_IN => callback($pageRepo, 'slugToId'),
+        Route::FILTER_OUT => callback($pageRepo, "idToSlug")
+    )
+));
+
 $container->router[] = new Route('login/', 'Auth:login');
 $container->router[] = new Route('logout/', 'Auth:logout');
 $container->router[] = new Route('<presenter>/<action>[/<id>]', 'Front:Homepage:default');

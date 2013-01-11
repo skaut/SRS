@@ -146,11 +146,23 @@ class Page extends \SRS\Model\BaseEntity
 
 class PageRepository extends \Doctrine\ORM\EntityRepository
 {
-    protected $entity = '\SRS\Model\CMS\Page';
+    public $entity = '\SRS\Model\CMS\Page';
 
     public function getCount()
     {
         return $this->_em->createQuery('SELECT count (p.id) FROM '.$this->entity. ' p' )
             ->getSingleScalarResult();
     }
+
+    public function slugToId($slug) {
+        return $this->_em->createQuery("SELECT p.id FROM ".$this->entity. " p WHERE p.slug = '{$slug}' ")
+            ->getSingleScalarResult();
+    }
+
+    public function IdToSlug($id) {
+        return $this->_em->createQuery("SELECT p.slug FROM ".$this->entity. " p WHERE p.id = '{$id}' ")
+            ->getSingleScalarResult();
+    }
+
+
 }

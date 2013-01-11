@@ -15,7 +15,7 @@
 	<title>{block title|striptags}{/block} | SRS</title>
 
 
-    {widget cssLoader 'reset.css', 'nette.css'}
+    {widget cssLoader 'front/reset.css', 'nette.css', 'front/layout.css', 'front/design.css'}
     {widget jsLoader 'jquery-1.8.2.min.js', 'netteForms.js'}
     <link rel="shortcut icon" href="{$basePath}/favicon.ico">
 	{block head}{/block}
@@ -24,11 +24,61 @@
 <body>
 	<script> document.body.className+=' js' </script>
     <div n:foreach="$flashes as $flash" class="sent {$flash->type}">
-        <p>{$flash->message}</p>
+        <div class="flash">{$flash->message}</div>
     </div>
-     {include 'includes/menu.latte'}
 
-     {include #content}
+     <div id="container">
+        <div id="header">
+            <div id="logo">
+            {block logo}
+            <h1>SRS - skautský rezervační systém</h1>
+            {/block}
+            </div>
+
+            <div id="menu">
+            {block menu}
+             {include 'includes/menu.latte'}
+            {/block}
+            </div>
+        </div>
+
+         <div id="main">
+         {block main}
+
+             <div id="content">
+                 <h1>Obsah obsah</h1>
+                 <p>lorem ipsum</p>
+             {block content}
+
+
+             {/block}
+             </div>
+
+
+
+             <div id="sidebar">
+             {block sidebar}
+                 <h3>facebook feed</h3>
+                 <p>lorem ipsum</p>
+             {/block}
+             </div>
+
+
+
+             </div>
+         {/block}
+         </div>
+
+        <div id="footer">
+        {block footer}
+            &copy; Kulda 2013
+        {/block}
+
+
+     </div>
+
+
+
 
 
 </body>

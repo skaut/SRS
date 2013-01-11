@@ -6,6 +6,40 @@ Dokument
 {/block}
 
 {block content}
- <h1> {ifset $document}Úprava dokument{$document->name} {else}Nový dokument{/ifset}</h1>
-  {widget documentForm}
+ <h1> {ifset $document}Úprava dokument {$document->name} {else}Nový dokument{/ifset}</h1>
+{form documentForm}
+<div class="well">
+
+    <ul class="errors" n:if="$form->hasErrors()">
+        <li n:foreach="$form->errors as $error">{$error}</li>
+    </ul>
+
+    {input id}
+
+    <table class="table">
+        <tr>
+            <td>{label name /}</td>
+            <td>{input name}</td>
+        </tr>
+
+        <tr>
+            <td>{label tags /}</td>
+            <td>{input tags}</td>
+        </tr>
+
+        <tr>
+            <td>{label file /}</td>
+            <td>
+                {ifset $document}
+                {if $document->file != null}<a href="{$basePath}{$document->file}">Aktuální soubor</a>{/if}
+                {/ifset}
+                {input file}
+
+            </td>
+        </tr>
+    </table>
+    {input submit}
+</div>
+{/form}
+
 {/block}

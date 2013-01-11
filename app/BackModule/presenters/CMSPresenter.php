@@ -70,7 +70,6 @@ class CMSPresenter extends BasePresenter
 
     }
 
-
     public function renderDocuments() {
         $documents = $this->context->database->getRepository('\SRS\Model\CMS\Documents\Document')->findAll();
         $this->template->documents = $documents;
@@ -82,6 +81,12 @@ class CMSPresenter extends BasePresenter
             if ($doc == null) throw new \Nette\Application\BadRequestException('Dokument s tímto id neexistuje');
             $form = $this->getComponent('documentForm');
             $form->bindEntity($doc);
+
+            $this->template->document = $doc;
+        }
+
+        else {
+            //do nothing
         }
     }
 
@@ -92,9 +97,35 @@ class CMSPresenter extends BasePresenter
         $this->context->database->flush();
         $this->flashMessage('Dokument smazán', 'success');
         $this->redirect(':Back:CMS:documents');
-
     }
 
+    public function renderTags() {
+        $tags = $this->context->database->getRepository('\SRS\Model\CMS\Documents\Tag')->findAll();
+        $this->template->tags = $tags;
+    }
+
+    public function renderTag($tagId = null) {
+        if ($tagId != null) {
+            $tag = $this->context->database->getRepository('\SRS\Model\CMS\Documents\Tag')->find($tagId);
+            if ($tag == null) throw new \Nette\Application\BadRequestException('Tag s tímto id neexistuje');
+            $form = $this->getComponent('tagForm');
+            $form->bindEntity($tag);
+
+            $this->template->tag = $tag;
+        }
+        else {
+            //do nothing
+        }
+    }
+
+    public function handleDeleteTag($tagId) {
+        $tag = $this->context->database->getRepository('\SRS\Model\CMS\Documents\Tag')->find($tagId);
+        if ($tag == null) throw new \Nette\Application\BadRequestException('Tag s tímto id neexistuje');
+        $this->context->database->remove($tag);
+        $this->context->database->flush();
+        $this->flashMessage('Tag smazán', 'success');
+        $this->redirect(':Back:CMS:Tags');
+    }
 
     protected function createComponentNewPageForm($name)
     {
