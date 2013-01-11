@@ -65,18 +65,19 @@ $container->router[] = new Route('admin/<presenter>/<action>/<id>/', array(
     'id' => null,
 ));
 
-$container->router[] = new Route('page/[!<page [a-z-]+>]', array(
+
+$container->router[] = new Route('login/', 'Auth:login');
+$container->router[] = new Route('logout/', 'Auth:logout');
+$container->router[] = new Route('[!<pageId [a-z-]+>]', array(
     'module' => 'Front',
     'presenter' => 'Page',
     'action' => 'default',
-    'page' => array(
+    'pageId' => array(
         Route::FILTER_IN => callback($pageRepo, 'slugToId'),
         Route::FILTER_OUT => callback($pageRepo, "idToSlug")
     )
 ));
 
-$container->router[] = new Route('login/', 'Auth:login');
-$container->router[] = new Route('logout/', 'Auth:logout');
 $container->router[] = new Route('<presenter>/<action>[/<id>]', 'Front:Homepage:default');
 
 

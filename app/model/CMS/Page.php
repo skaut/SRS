@@ -157,7 +157,7 @@ class PageRepository extends \Doctrine\ORM\EntityRepository
     public function slugToId($slug) {
         try {
             return $this->_em->createQuery("SELECT p.id FROM ".$this->entity. " p WHERE p.slug = '{$slug}' ")
-                ->getSingleResult();
+                ->getSingleScalarResult();
         }
         catch (\Doctrine\ORM\NoResultException $e) {
             return null;
@@ -169,7 +169,7 @@ class PageRepository extends \Doctrine\ORM\EntityRepository
         return $this->_em->createQuery("SELECT p.slug FROM ".$this->entity. " p WHERE p.id = '{$id}' ")
             ->getSingleScalarResult();
         }
-        
+
         catch(\Doctrine\ORM\NoResultException $e) {
             return null;
         }
