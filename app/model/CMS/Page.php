@@ -175,5 +175,11 @@ class PageRepository extends \Doctrine\ORM\EntityRepository
         }
     }
 
+    public function findPublishedOrderedByPosition()
+    {
+         return $this->_em->createQuery("SELECT p FROM ".$this->entity. " p WHERE p.public = '1' ORDER BY p.position ASC ")
+             ->getResult();
+    }
+
 
 }

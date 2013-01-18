@@ -81,10 +81,10 @@ class Role extends \SRS\Model\BaseEntity
      * @param \SRS\Model\Acl\Role $parent
      * @param bool $standAlone
      */
-    public function __construct($name, $parent = NULL) {
+    public function __construct($name) {
         $this->name = $name;
-        $this->parent = $parent;
-        $this->children = new \Doctrine\Common\Collections\ArrayCollection();
+//        $this->parent = $parent;
+//        $this->children = new \Doctrine\Common\Collections\ArrayCollection();
         $this->users = new \Doctrine\Common\Collections\ArrayCollection();
         $this->permissions = new \Doctrine\Common\Collections\ArrayCollection();
     }

@@ -21,7 +21,7 @@ Práva & Role » Role
                 <td>{if $role->isSystem()}ANO{else}NE{/if}</td>
                 <td>
                     <a class="btn" href="{plink Acl:editRole $role->id}">Upravit</a> &nbsp;&nbsp;
-                    {if !$role->isSystem()}<a class="btn btn-danger" href="{link deleteRole! $role->id}">Smazat</a>{/if}
+                    {if !$role->isSystem()}<a class="btn btn-danger confirm" href="{link deleteRole! $role->id}">Smazat</a>{/if}
                 </td>
             </tr>
            {/foreach}
@@ -29,7 +29,7 @@ Práva & Role » Role
        </table>
     </div>
 </div>
-
+{include '../includes/confirm_dialog.latte'}
 {include 'includes/addRole.latte'}
 
 

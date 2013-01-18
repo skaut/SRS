@@ -33,4 +33,10 @@ class PagePresenter extends \SRS\BasePresenter
 		$this->template->page = $page;
 	}
 
+    public function createComponentMenu() {
+        $pageRepo = $this->context->database->getRepository('\SRS\Model\CMS\Page');
+        $menu = new \SRS\Components\Menu($pageRepo);
+        return $menu;
+    }
+
 }
