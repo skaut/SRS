@@ -24,12 +24,13 @@ class PagePresenter extends \SRS\BasePresenter
                     throw new \Nette\Application\BadRequestException('Stránka se slugem "/" neexistuje. Vytvořte ji v administriaci.');
                 }
             }
-            else {
-                $page = $this->repository->find($pageId);
-            }
+
 
         }
-		$this->template->page = 'page';
+        else {
+            $page = $this->repository->find($pageId);
+        }
+		$this->template->page = $page;
 	}
 
 }
