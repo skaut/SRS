@@ -20,9 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @property \DateTime|string $registerableFrom
  * @property \DateTime|string $registerableTo
  * @property \Doctrine\Common\Collections\ArrayCollection $users
- * @property \SRS\Model\Acl\Role $parent
  * @property \Doctrine\Common\Collections\ArrayCollection $permissions
- * @property mixed $children
  */
 class Role extends \SRS\Model\BaseEntity
 {
@@ -51,20 +49,6 @@ class Role extends \SRS\Model\BaseEntity
      * @var mixed
      */
     protected $pages;
-
-
-    /**
-     * @ORM\OneToMany(targetEntity="\SRS\Model\Acl\Role", mappedBy="parent")
-     */
-    protected $children;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="\SRS\Model\Acl\Role", inversedBy="children", cascade={"persist"})
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
-     */
-    protected $parent;
-
-
 
 
     /**
@@ -155,25 +139,25 @@ class Role extends \SRS\Model\BaseEntity
         $this->registerable = $registerable;
     }
 
-    public function setChildren($children)
-    {
-        $this->children = $children;
-    }
-
-    public function getChildren()
-    {
-        return $this->children;
-    }
-
-    public function setParent($parent)
-    {
-        $this->parent = $parent;
-    }
-
-    public function getParent()
-    {
-        return $this->parent;
-    }
+//    public function setChildren($children)
+//    {
+//        $this->children = $children;
+//    }
+//
+//    public function getChildren()
+//    {
+//        return $this->children;
+//    }
+//
+//    public function setParent($parent)
+//    {
+//        $this->parent = $parent;
+//    }
+//
+//    public function getParent()
+//    {
+//        return $this->parent;
+//    }
 
 
     public function setRegisterableFrom($registerableFrom)

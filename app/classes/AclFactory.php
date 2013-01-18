@@ -15,23 +15,24 @@ class AclFactory
         $roles = array();
 
         $acl = new \SRS\Model\Acl\Resource('ACL');
-        $admin = new \SRS\Model\Acl\Resource('Admin');
+        $cms = new \SRS\Model\Acl\Resource('CMS');
 
-        $manage_acl = new \SRS\Model\Acl\Permission('Spravovat', $acl);
-        $allow_admin = new \SRS\Model\Acl\Permission('Přístup', $admin);
-        $allow_cms = new \SRS\Model\Acl\Permission('CMS', $acl);
+        $manage_users_acl = new \SRS\Model\Acl\Permission('Spravovat uživatele', $acl);
+        $manage_cms = new \SRS\Model\Acl\Permission('CMS', $cms);
+        $manage_roles_acl = new \SRS\Model\Acl\Permission('Spravovat role', $acl);
 
         $roles[] = $guest = new \SRS\Model\Acl\Role('Anonym');
-        $roles[] = $registered = new \SRS\Model\Acl\Role('Registrovaný',$guest);
-        $roles[] = $atendee = new \SRS\Model\Acl\Role('Účastník', $registered);
-        $roles[] = $serviceTeam = new \SRS\Model\Acl\Role('Servis Tým', $registered);
-        $roles[] = $lector = new \SRS\Model\Acl\Role('Lektor', $serviceTeam);
-        $roles[] = $organizer = new \SRS\Model\Acl\Role('Organizátor', $lector);
-        $roles[] = $admin = new \SRS\Model\Acl\Role('Administrátor', $organizer);
-        $admin->permissions->add($manage_acl);
-        $admin->permissions->add($allow_admin);
-        $organizer->permissions->add($allow_admin);
-        $organizer->permissions->add($allow_cms);
+        $roles[] = $registered = new \SRS\Model\Acl\Role('Registrovaný');
+        $roles[] = $atendee = new \SRS\Model\Acl\Role('Účastník');
+        $roles[] = $serviceTeam = new \SRS\Model\Acl\Role('Servis Tým');
+        $roles[] = $lector = new \SRS\Model\Acl\Role('Lektor');
+        $roles[] = $organizer = new \SRS\Model\Acl\Role('Organizátor');
+        $roles[] = $admin = new \SRS\Model\Acl\Role('Administrátor');
+        $admin->permissions->add($manage_roles_acl);
+        $admin->permissions->add($manage_cms);
+        $admin->permissions->add($manage_users_acl);
+        $organizer->permissions->add($manage_users_acl);
+        //$organizer->permissions->add($allow_cms);
 
         return $roles;
     }

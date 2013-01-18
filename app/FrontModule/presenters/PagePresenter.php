@@ -19,9 +19,9 @@ class PagePresenter extends \SRS\BasePresenter
         if ($pageId == null) {
             $httpRequest = $this->context->getService('httpRequest');
             if ($httpRequest->url->path == '/') {
-                $page = $this->repository->findBySlug('/');
+                $page = $this->repository->findBy(array('slug' => '/', 'public' => true));
                 if ($page == null) {
-                    throw new \Nette\Application\BadRequestException('Stránka se slugem "/" neexistuje. Vytvořte ji v administriaci.');
+                    throw new \Nette\Application\BadRequestException('Stránka se slugem "/" neexistuje nebo není zveřejněná. Vytvořte ji v administriaci.');
                 }
             }
 

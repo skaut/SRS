@@ -8,15 +8,6 @@
 {block content}
 <h2>Úprava role {$role->name}</h2>
 
-{ifset $role->parent->permissions}
-Práva zdědená od svého rodiče:
-<ul>
-    {foreach $role->parent->permissions as $perm}
-    <li>{$perm->name}</li>
-    {/foreach}
-</ul>
-{/ifset}
-
 {widget roleForm}
 
 <script>

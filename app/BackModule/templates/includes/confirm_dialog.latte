@@ -1,0 +1,23 @@
+<div id="confirm-dialog" class="modal hide fade" role="dialog" tabindex="-1" >
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">×</a>
+        <h3>Opravdu smazat?</h3>
+    </div>
+    <div class="modal-body">
+        Tato operace je nenávratná a může ovlivnit i další položky, které mají na tuto položku vazbu.
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn btn-danger ok ">Ok</a>
+        <a href="#" class="btn btn-cancel" data-dismiss="modal">Zrušit</a>
+    </div>
+</div>
+
+<script>
+$('.confirm').click(function(event) {
+    event.preventDefault();
+    $('#confirm-dialog').modal();
+    $('#confirm-dialog').show();
+    $('#confirm-dialog a.ok').attr('href', $(this).attr('href'));
+
+});
+</script>

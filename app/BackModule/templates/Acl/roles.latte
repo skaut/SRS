@@ -12,18 +12,16 @@ Práva & Role » Role
        <table class="table-bordered table-striped table-roles">
            <thead>
            <th>Název role</th>
-           <th>Dědí od</th>
            <th>Systémová</th>
            <th>Operace</th>
            </thead>
            <tbody>
            {foreach $roles as $role}
             <tr><td>{$role->name}</td>
-                <td>{ifset $role->parent->name}{$role->parent->name}{/ifset}</td>
                 <td>{if $role->isSystem()}ANO{else}NE{/if}</td>
                 <td>
-                    <a class="btn" href="{plink Acl:editRole $role->id}">Upravit</a>
-                    <a class="btn btn-danger" href="{link deleteRole! $role->id}">Smazat</a>
+                    <a class="btn" href="{plink Acl:editRole $role->id}">Upravit</a> &nbsp;&nbsp;
+                    {if !$role->isSystem()}<a class="btn btn-danger" href="{link deleteRole! $role->id}">Smazat</a>{/if}
                 </td>
             </tr>
            {/foreach}

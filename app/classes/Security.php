@@ -23,7 +23,8 @@ class Acl extends Permission
         }
 
         foreach ($roles as $role) {
-            $this->addRole($role->name, isset($role->parent) ? null : $role->parent->name);
+            //$this->addRole($role->name, isset($role->parent) ? null : $role->parent->name);
+            $this->addRole($role->name);
 
             foreach ($role->permissions as $permission) {
                 $this->allow($role->name, $permission->resource->name, $permission->name);

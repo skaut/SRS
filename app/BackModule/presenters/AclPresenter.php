@@ -46,17 +46,16 @@ class AclPresenter extends BasePresenter
             $this->redirect('this');
         }
 
-        $query = $this->context->database->createQuery("
-            SELECT pp.id, pp.name from \SRS\Model\Acl\Permission pp WHERE pp NOT IN (
-            SELECT p from \SRS\Model\Acl\Permission p INNER JOIN p.roles r WHERE r.id = ?1)
-            ");
-        $query->setParameter(1, isset($role->parent->id) ? $role->parent->id : null);
-        $permissionsNotOwnedByParent = $query->getResult(); //umoznujeme pracovat jen s temi pravy, ktere jeste nema rodic
-        $permissionFormChoices = array();
+//        $query = $this->context->database->createQuery("
+//            SELECT pp.id, pp.name from \SRS\Model\Acl\Permission pp WHERE pp NOT IN (
+//            SELECT p from \SRS\Model\Acl\Permission p INNER JOIN p.roles r WHERE r.id = ?1)
+//            ");
+//        $query->setParameter(1, isset($role->parent->id) ? $role->parent->id : null);
+        //$permissionsNotOwnedByParent = $query->getResult(); //umoznujeme pracovat jen s temi pravy, ktere jeste nema rodic
 
-        foreach ($permissionsNotOwnedByParent as $perm) {
-            $permissionFormChoices[$perm['id']] = $perm['name'];
-        }
+        $permissions = $this->context->database->getRepository('\SRS\Model\Acl\Permission')->findAll();
+        $permissionFormChoices = \SRS\Form\EntityForm::getFormChoices($permissions);
+
 
         $form = $this->getComponent('roleForm');
         $this['roleForm']['permissions']->setItems($permissionFormChoices);

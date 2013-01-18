@@ -87,7 +87,7 @@
     <div class="navbar navbar-inverse navbar-fixed-bottom button-bar">
         <div class="navbar-inner">
           <div class="container-fluid">
-              <a href="{link deletePage! $page->id}" class="btn btn-danger">Smazat</a>
+              <a href="{link deletePage! $page->id}" class="btn btn-danger confirm">Smazat</a>
                 {input submit_to_list} {input submit_continue}
            </div>
         </div>
@@ -146,5 +146,5 @@
 
 </script>
 
-
+{include '../includes/confirm_dialog.latte'}
 {/block}

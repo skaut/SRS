@@ -28,7 +28,7 @@ CMS » Dokumenty
                     <a class="btn" href="{plink document $document->id}">
                         Upravit
                     </a>&nbsp; &nbsp;
-                    <a class="btn btn-danger" href="{link deleteDocument! $document->id}">
+                    <a class="btn btn-danger confirm" href="{link deleteDocument! $document->id}">
                         Smazat
                     </a>
                 </td>
@@ -38,6 +38,6 @@ CMS » Dokumenty
 
     </div>
 </div>
-
+{include '../includes/confirm_dialog.latte'}
 {include 'includes/addTag.latte'}
 {/block}
