@@ -195,8 +195,15 @@ class RoleRepository extends \Doctrine\ORM\EntityRepository
 
     public function findRegisterableNow()
     {
-        //TODO TODO
-        return $this->_em->createQuery("SELECT r FROM {$this->entity} r WHERE r.registerable=true")
-            ->getResult();
+        $today = new \DateTime('now');
+        $today = $today->format('Y-m-d');
+
+//        $query = $this->_em->createQuery("SELECT r FROM {$this->entity} r WHERE r.registerable=true
+//                AND ((r.registerableFrom >= {$today} OR r.registerableFrom IS NULL) AND (r.registerableTo <= {$today} OR r.registerableTo IS NULL))
+//                ");
+        $query = $this->_em->createQuery("SELECT r FROM {$this->entity} r WHERE r.registerable=true
+              AND (r.registerableFrom <= '{$today}' OR r.registerableFrom IS NULL) AND (r.registerableTo >= '{$today}' OR r.registerableTo IS NULL)");
+        return $query->getResult();
+        //OR (r.registerableTo IS NULL AND r.registerableFrom IS NULL))
     }
 }
