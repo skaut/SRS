@@ -1,0 +1,86 @@
+{**
+ *
+ *
+ * @param string   $basePath web base path
+ * @param string   $robots   tell robots how to index the content of a page (optional)
+ * @param array    $flashes  flash messages
+ *}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="description" content="">
+	<meta name="robots" content="{$robots}" n:ifset="$robots">
+	<title>{block title|striptags}{/block} | SRS</title>
+
+
+    {widget cssLoader 'front/reset.css', 'nette.css', 'front/layout.css', 'front/design.css'}
+    {widget jsLoader 'jquery-1.8.2.min.js', 'netteForms.js'}
+    <link rel="shortcut icon" href="{$basePath}/favicon.ico">
+	{block head}{/block}
+</head>
+
+<body>
+	<script> document.body.className+=' js' </script>
+    <div n:foreach="$flashes as $flash" class="sent {$flash->type}">
+        <div class="flash">{$flash->message}</div>
+    </div>
+
+     <div id="container">
+        <div id="header">
+            <div id="logo">
+            {block logo}
+            <h1>SRS - skautský rezervační systém</h1>
+            {/block}
+            </div>
+
+            <div id="menu">
+            {block menu}
+             {include 'includes/menu.latte'}
+             {widget menu}
+            {/block}
+            </div>
+        </div>
+
+         <div id="main">
+         {block main}
+
+             <div id="content">
+                 <h1>Obsah obsah</h1>
+                 <p>lorem ipsum</p>
+             {block content}
+
+
+             {/block}
+             </div>
+
+
+
+             <div id="sidebar">
+             {block sidebar}
+                 <h3>facebook feed</h3>
+                 <p>lorem ipsum</p>
+             {/block}
+             </div>
+
+
+
+             </div>
+         {/block}
+         </div>
+
+        <div id="footer">
+        {block footer}
+            &copy; Kulda 2013
+        {/block}
+
+
+     </div>
+
+
+
+
+
+</body>
+</html>

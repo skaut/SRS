@@ -20,6 +20,7 @@ class PagePresenter extends \SRS\BasePresenter
             $httpRequest = $this->context->getService('httpRequest');
             if ($httpRequest->url->path == '/') {
                 $page = $this->repository->findBy(array('slug' => '/', 'public' => true));
+                $page = $page[0];
                 if ($page == null) {
                     throw new \Nette\Application\BadRequestException('Stránka se slugem "/" neexistuje nebo není zveřejněná. Vytvořte ji v administriaci.');
                 }
@@ -30,13 +31,17 @@ class PagePresenter extends \SRS\BasePresenter
         else {
             $page = $this->repository->find($pageId);
         }
-		$this->template->page = $page;
+        $this->template->page = $page;
 	}
 
     public function createComponentMenu() {
         $pageRepo = $this->context->database->getRepository('\SRS\Model\CMS\Page');
         $menu = new \SRS\Components\Menu($pageRepo);
         return $menu;
+    }
+
+    public function createComponentAttendeeBox() {
+        return new \SRS\Components\AttendeeBox();
     }
 
 }

@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\SRS\Model\Acl\RoleRepository")
  *
  * @property-read int $id
  * @property string $name
@@ -185,9 +185,18 @@ class Role extends \SRS\Model\BaseEntity
     {
         return $this->registerableTo;
     }
+}
 
 
 
+class RoleRepository extends \Doctrine\ORM\EntityRepository
+{
+    public $entity = '\SRS\Model\Acl\Role';
 
-
+    public function findRegisterableNow()
+    {
+        //TODO TODO
+        return $this->_em->createQuery("SELECT r FROM {$this->entity} r WHERE r.registerable=true")
+            ->getResult();
+    }
 }

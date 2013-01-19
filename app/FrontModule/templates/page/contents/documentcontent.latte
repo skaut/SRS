@@ -1,0 +1,7 @@
+<ul>
+{foreach $content->tag->documents as $document}
+<li>
+    <a href="{$basePath}{$document->file}">{$document->name}</a>
+</li>
+{/foreach}
+</ul>

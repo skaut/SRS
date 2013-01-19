@@ -29,8 +29,16 @@ abstract class Content extends \SRS\Model\BaseEntity implements IContent
      */
     protected $em;
 
+    /**
+     * Jednoznacny identifikator typu contentu
+     * @var string
+     */
     protected $contentType;
 
+    /**
+     * Human readable jmeno contentu pro zobrazeni v adminu apod
+     * @var string
+     */
     protected $contentName = '';
 
     /**
@@ -66,6 +74,12 @@ abstract class Content extends \SRS\Model\BaseEntity implements IContent
     {
         return $this->page;
     }
+
+
+    public function getContentType() {
+        return $this->contentType;
+    }
+
 
     public function setEntityManager($em) {
         $this->em = $em;

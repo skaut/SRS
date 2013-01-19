@@ -1,2 +1,10 @@
 {block content}
+
+{foreach $page->contents as $content}
+    {include 'contents/'.$content->contentType.'.latte' 'content' => $content}
+{/foreach}
+
+{widget attendeeBox}
+
 Page/default.latte
+{/block}
