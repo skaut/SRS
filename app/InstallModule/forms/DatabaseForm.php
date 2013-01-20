@@ -42,8 +42,20 @@ class DatabaseForm extends UI\Form
             $this->presenter->flashMessage('Nepodařilo se připojit k databázi. Zadejte správné údaje');
         }
         else {
+            $config = \Nette\Utils\Neon::decode(file_get_contents(APP_DIR.'/config/config.neon'));
+            $isDebug = $config['common']['parameters']['debug'];
+            $environment = $isDebug == true ? 'development': 'production';
+            $config["{$environment} < common"]['parameters']['database'] = $values;
+            $configFile = \Nette\Utils\Neon::encode($config, \Nette\Utils\Neon::BLOCK);
+            $result = \file_put_contents(APP_DIR.'/config/config.neon', $configFile);
+            if ($result === false) {
+                $this->presenter->flashMessage('Připojení k DB bylo úspěšné, ale nepodařilo se informace zapsat do souboru config.neon. Zkontrolujte práva k souboru');
+
+            }
+            else {
             $this->presenter->flashMessage('Spojení s databází úspěšně navázáno');
             $this->presenter->redirect(':Install:install:schema');
+            }
         }
 
 

@@ -14,10 +14,7 @@ class InstallPresenter extends \Nette\Application\UI\Presenter
             $this->user->logout(true);
         }
 
-        $config = \Nette\Utils\Neon::decode(file_get_contents(APP_DIR.'/config/config.neon'));
-        $isDebug = $config['common']['parameters']['debug'];
-        $environment = $isDebug == true ? 'development': 'production';
-        $DBParams = $config["{$environment} < common"]['parameters']['database'];
+        $DBParams = $this->getDBParams();
         $isConn = $this->IsDBConnection($DBParams['dbname'], $DBParams['host'], $DBParams['user'], $DBParams['password']);
 
 
@@ -106,6 +103,13 @@ class InstallPresenter extends \Nette\Application\UI\Presenter
             return false;
         }
         return true;
+    }
+
+    public function getDBParams() {
+        $config = \Nette\Utils\Neon::decode(file_get_contents(APP_DIR.'/config/config.neon'));
+        $isDebug = $config['common']['parameters']['debug'];
+        $environment = $isDebug == true ? 'development': 'production';
+        return $config["{$environment} < common"]['parameters']['database'];
     }
 
     protected function createComponentDatabaseForm() {
