@@ -9,13 +9,13 @@ abstract class BasePresenter extends \SRS\BasePresenter
     public function startup() {
 
         //jak spustit console prikaz
-        $arguments = array(
-
-        );
-
-       $input = new \Symfony\Component\Console\Input\ArrayInput($arguments);
-       $output = new \Symfony\Component\Console\Output\NullOutput();
-       $command = $this->context->RoleInitialDataCommand->run($input, $output);
+//        $arguments = array(
+//
+//        );
+//
+//       $input = new \Symfony\Component\Console\Input\ArrayInput($arguments);
+//       $output = new \Symfony\Component\Console\Output\NullOutput();
+//       $command = $this->context->RoleInitialDataCommand->run($input, $output);
 
         parent::startup();
         if (!$this->context->user->isLoggedIn()) {

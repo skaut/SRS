@@ -21,7 +21,7 @@ $configurator = new \Nette\Config\Configurator;
 
 // Enable Nette Debugger for error visualisation & logging
 //$configurator->setDebugMode($configurator::AUTO);
-$configurator->enableDebugger(__DIR__ . '/../log');
+
 
 // Enable RobotLoader - this will load all classes automatically
 $configurator->setTempDirectory(__DIR__ . '/../temp');
@@ -31,20 +31,21 @@ $configurator->createRobotLoader()
 	->register();
 
 
-if (strpos($_SERVER['SERVER_NAME'], 'dev.majsky.cz') !== false) {
-    $environment = $configurator::DEVELOPMENT;
-    $configurator->addConfig(__DIR__ . '/config/config.neon', $environment);
+$config = \Nette\Utils\Neon::decode(file_get_contents(__DIR__ . '/config/config.neon'));
+$isDebug = $config['common']['parameters']['debug'];
 
-}
-
-else if (StrPos($_SERVER['SERVER_NAME'], 'local') !== false) {
-    $configurator->addConfig(__DIR__ . '/config/config.neon', 'local');
-
-    
+if ($isDebug) {
+    $configurator->setDebugMode();
+    $configurator->enableDebugger(__DIR__ . '/../log');
 }
 else {
-    $configurator->addConfig(__DIR__ . '/config/config.neon');
+    $configurator->setDebugMode($configurator::NONE);
 }
+$environment = $isDebug == true ? 'development': 'production';
+
+
+$configurator->addConfig(__DIR__ . '/config/config.neon', $environment);
+
 
 
 if (PHP_SAPI == 'cli') {
@@ -52,7 +53,8 @@ if (PHP_SAPI == 'cli') {
 }
 $container = $configurator->createContainer();
 
-$pageRepo = $container->database->getRepository('\SRS\Model\CMS\Page');
+
+
 
 // Setup router
 $container->router[] = new Route('index.php', 'Front:Homepage:default', Route::ONE_WAY);
@@ -65,9 +67,11 @@ $container->router[] = new Route('admin/<presenter>/<action>/<id>/', array(
     'id' => null,
 ));
 
-
+$container->router[] = new Route('install/', 'Install:install:default');
 $container->router[] = new Route('login/', 'Auth:login');
 $container->router[] = new Route('logout/', 'Auth:logout');
+
+$pageRepo = $container->database->getRepository('\SRS\Model\CMS\Page');
 $container->router[] = new Route('[!<pageId [a-z-]+>]', array(
     'module' => 'Front',
     'presenter' => 'Page',
@@ -82,11 +86,11 @@ $container->router[] = new Route('<presenter>/<action>[/<id>]', 'Front:Homepage:
 
 
 
-
-if (PHP_SAPI != 'cli') {
-    $acl = new \SRS\Security\Acl($container->database);
-    $container->user->setAuthorizator($acl);
-}
+//
+//if (PHP_SAPI != 'cli') {
+//    $acl = new \SRS\Security\Acl($container->database);
+//    $container->user->setAuthorizator($acl);
+//}
 
 
 // Configure and run the application!

@@ -29,6 +29,10 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
     public function startup()
     {
         parent::startup();
+        //nastaveni ACL
+        $acl = new \SRS\Security\Acl($this->context->database);
+        $this->context->user->setAuthorizator($acl);
+
         //Při každém načtení stránky prodlužujeme platnost skautIS Tokenu
         if ($this->user->isLoggedIn()) {
             try {

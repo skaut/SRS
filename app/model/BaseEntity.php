@@ -34,9 +34,9 @@ abstract class BaseEntity extends \Nette\Object
 
     /**
      * Slouzi pro vlozeni atributu z Nette Formulare
-     *
      * @param array $values
      * @param \Doctrine\ORM\EntityManager $em
+     * @throws \Exception pak je nejspise chyba v metode a je treba ji opravit
      */
     public function setProperties($values = array(), $em)
     {
