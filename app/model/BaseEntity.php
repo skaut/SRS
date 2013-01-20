@@ -40,7 +40,7 @@ abstract class BaseEntity extends \Nette\Object
      */
     public function setProperties($values = array(), $em)
     {
-        $posibilities = array ('ORM\ManyToMany', 'ORM\ManyToOne', 'ORM\OneToMany');
+        $associtaionPosibilities = array ('ORM\ManyToMany', 'ORM\ManyToOne', 'ORM\OneToMany');
         $reflection = new \Nette\Reflection\ClassType($this);
 
         foreach($values as $key => $value){
@@ -53,10 +53,16 @@ abstract class BaseEntity extends \Nette\Object
                         $propertyReflection->hasAnnotation('ORM\ManyToOne') ||
                         $propertyReflection->hasAnnotation('ORM\OneToMany'))
                     {
+
                         $association = null;
-                        while ($association == null) {
-                            $association = $propertyReflection->getAnnotation('ORM\ManyToMany');
+
+                        foreach ($associtaionPosibilities as $possibility) {
+                            $association = $propertyReflection->getAnnotation($possibility);
                             $targetEntity = $association['targetEntity'];
+                            if ($association != null) break;
+                        }
+                        if ($association == null) {
+                            throw new \Exception('Problem v prirazeni asociaci v BaseEntity->setProperties');
                         }
 
                         if (is_array($value)) { //vazba oneToMany nebo ManyToMany
