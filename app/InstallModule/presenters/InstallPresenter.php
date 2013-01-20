@@ -53,10 +53,18 @@ class InstallPresenter extends \Nette\Application\UI\Presenter
         }
 
         try {
+            //role
             $options = array('command' => 'srs:initial-data:acl');
             $output = new \Symfony\Component\Console\Output\NullOutput();
             $input = new \Symfony\Component\Console\Input\ArrayInput($options);
-            $this->context->console->application->doRun($input, $output);
+            $this->context->console->application->run($input, $output);
+
+            //settings
+            $options = array('command' => 'srs:initial-data:settings');
+            $output = new \Symfony\Component\Console\Output\NullOutput();
+            $input = new \Symfony\Component\Console\Input\ArrayInput($options);
+            $this->context->console->application->run($input, $output);
+
         } catch (\Doctrine\DBAL\DBALException $e) {
             $success = false;
             $this->template->error = $e->getCode();

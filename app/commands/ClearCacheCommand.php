@@ -37,7 +37,8 @@ class ClearCacheCommand extends Command
         $webtempDir = WWW_DIR . '/webtemp';
 
         //nette cache
-        unlink($cacheDir.'../btfj.dat');
+        //if (file_exists($cacheDir.'/../btfj.dat'))
+        //unlink($cacheDir.'/../btfj.dat');
         ClearCacheCommand::recursiveRemoveDirectory($cacheDir);
 
         //doctrine proxies
