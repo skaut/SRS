@@ -17,7 +17,7 @@ $configurator = new \Nette\Config\Configurator;
 \Nella\Console\Config\Extension::register($configurator);
 \Nella\Doctrine\Config\Extension::register($configurator);
 \Nella\Doctrine\Config\MigrationsExtension::register($configurator);
-\Kdyby\Extension\Forms\Replicator\Replicator::register();
+//\Kdyby\Extension\Forms\Replicator\Replicator::register();
 
 // Enable Nette Debugger for error visualisation & logging
 //$configurator->setDebugMode($configurator::AUTO);
