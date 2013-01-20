@@ -43,7 +43,7 @@ class DatabaseForm extends UI\Form
         }
         else {
             $this->presenter->flashMessage('Spojení s databází úspěšně navázáno');
-            $this->presenter->redirect('this');
+            $this->presenter->redirect(':Install:install:schema');
         }
 
 

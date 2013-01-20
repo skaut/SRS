@@ -67,7 +67,12 @@ $container->router[] = new Route('admin/<presenter>/<action>/<id>/', array(
     'id' => null,
 ));
 
-$container->router[] = new Route('install/', 'Install:install:default');
+$container->router[] = new Route('install/<presenter>/<action>/<id>/', array(
+    'module' => 'Install',
+    'presenter' => 'Install',
+    'action' => 'default',
+    'id' => null
+));
 $container->router[] = new Route('login/', 'Auth:login');
 $container->router[] = new Route('logout/', 'Auth:logout');
 
