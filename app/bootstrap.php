@@ -39,6 +39,7 @@ if ($isDebug) {
     $configurator->enableDebugger(__DIR__ . '/../log');
 }
 else {
+    \Nette\Diagnostics\Debugger::$logDirectory = __DIR__ . '/../log';
     $configurator->setDebugMode($configurator::NONE);
 }
 $environment = $isDebug == true ? 'development': 'production';
@@ -99,6 +100,7 @@ $container->router[] = new Route('<presenter>/<action>[/<id>]', 'Front:Homepage:
 
 
 // Configure and run the application!
+//$container->application->catchExceptions = false;
 if (!defined('CANCEL_START_APP')) {
     $container->application->run();
 }
