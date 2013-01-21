@@ -38,8 +38,13 @@ class AuthPresenter extends \SRS\BasePresenter
             //@TODO nemeli bychom presmerovat na nejakou stranku, ktera nevyzaduje prihlaseni?
         }
 
-        if ($this->getParameter('ReturnUrl')) {
+        if ($returnUrl = $this->getParameter('ReturnUrl')) {
+            if (strpos($returnUrl, ':') !== false) {
             $this->redirect($this->getParameter('ReturnUrl'));
+            }
+            else {
+                $this->redirectUrl($returnUrl);
+            }
         }
         $this->redirect(':Front:Homepage:default');
     }

@@ -14,6 +14,12 @@ class PagePresenter extends \SRS\BasePresenter
         $this->repository = $this->context->database->getRepository('\SRS\Model\CMS\Page');
     }
 
+    public function beforeRender() {
+        parent::beforeRender();
+        $path = $this->getHttpRequest()->url->path;
+        $this->template->backlink = $path;
+    }
+
 	public function renderDefault($pageId)
 	{
         if ($pageId == null) {

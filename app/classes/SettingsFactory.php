@@ -14,6 +14,8 @@ class SettingsFactory
 
     public static function create() {
         $settings = array();
+        $settings[] = new \SRS\Model\Settings('superadmin_created', 'Je vytvořen superadmin?', '0');
+        $settings[] = new \SRS\Model\Settings('schema_imported', 'Naimportována inicializační databázová data', '1');
         $settings[] = new \SRS\Model\Settings('seminar_name', 'Jméno semináře', 'SRS');
         $settings[] = new \SRS\Model\Settings('seminar_from_date', 'Začátek semináře');
         $settings[] = new \SRS\Model\Settings('seminar_to_date', 'Konec semináře');

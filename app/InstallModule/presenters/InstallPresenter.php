@@ -13,27 +13,46 @@ class InstallPresenter extends \Nette\Application\UI\Presenter
         if ($this->user->isLoggedIn()) {
             $this->user->logout(true);
         }
+        $values = $this->getDBParams();
+        if (!$this->presenter->isDBConnection($values['dbname'], $values['host'], $values['user'], $values['password'])) {
 
-        $DBParams = $this->getDBParams();
-        $isConn = $this->IsDBConnection($DBParams['dbname'], $DBParams['host'], $DBParams['user'], $DBParams['password']);
+        }
 
 
-        $this->template->anyVariable = 'any value';
+        if ($this->context->parameters['database']['installed']) {
+            $this->flashMessage('Připojení k databázi již bylo nakonfigurováno');
+            $this->redirect(':Install:install:schema');
+        }
+
 	}
 
     public function renderSchema() {
+        if (!$this->context->parameters['database']['installed']) {
+            $this->flashMessage('nejprve nastavte připojení k databázi');
+            $this->redirect(':Install:install:default');
+        }
+        try {
+            if ($this->context->database->getRepository('\SRS\model\Settings')->get('schema_imported') == true) {
+                $this->flashMessage('Schéma databáze bylo již naimportováno');
+                $this->redirect(':Install:install:admin');
+            }
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            //do nothing
+        }
 
 
-//        $arguments = array(
-//        );
-//
-//       $input = new \Symfony\Component\Console\Input\ArrayInput($arguments);
-//       $output = new \Symfony\Component\Console\Output\NullOutput();
-//       $command = $this->context->RoleInitialDataCommand->run($input, $output);
 
     }
 
     public function handleImportDB() {
+        if (!$this->context->parameters['database']['installed']) {
+            $this->flashMessage('nejprve nastavte připojení k databázi');
+            $this->redirect(':Install:install:default');
+        }
+
+
+
+
         $success = true;
         try {
             $options = array('command' => 'orm:schema:create');
@@ -82,6 +101,10 @@ class InstallPresenter extends \Nette\Application\UI\Presenter
     }
 
     public function renderAdmin() {
+        if ($this->context->database->getRepository('\SRS\model\Settings')->get('superadmin_created') == true) {
+            $this->flashMessage('Administrátorská role byla již nastavena dříve');
+            $this->redirect(':Install:install:finish');
+        }
         if ($this->user->isLoggedIn()) {
             $adminRole = $this->context->database->getRepository('\SRS\Model\Acl\Role')->findByName('Administrátor');
             if ($adminRole == null) {
@@ -95,6 +118,7 @@ class InstallPresenter extends \Nette\Application\UI\Presenter
             $user->role = $adminRole;
             $this->context->database->flush();
             $this->user->logout(true);
+            $this->context->database->getRepository('\SRS\model\Settings')->set('superadmin_created', '1');
             $this->flashMessage('Administrátorská role nastavena');
 
             $this->redirect(':Install:install:finish');

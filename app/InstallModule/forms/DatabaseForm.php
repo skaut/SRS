@@ -28,7 +28,7 @@ class DatabaseForm extends UI\Form
             ->addRule(Form::FILLED, 'Zadejte Databázi');
         $this->addText('user', 'Uživatel:')
         ->addRule(Form::FILLED, 'Zadejte Uživatele');
-        $this->addText('password', 'Heslo:')
+        $this->addPassword('password', 'Heslo:')
             ->addRule(Form::FILLED, 'Zadejte Heslo:');
 
         $this->addSubmit('submit','Pokračovat')->getControlPrototype()->class('btn');
@@ -45,6 +45,7 @@ class DatabaseForm extends UI\Form
             $config = \Nette\Utils\Neon::decode(file_get_contents(APP_DIR.'/config/config.neon'));
             $isDebug = $config['common']['parameters']['debug'];
             $environment = $isDebug == true ? 'development': 'production';
+            $values['installed'] = true;
             $config["{$environment} < common"]['parameters']['database'] = $values;
             $configFile = \Nette\Utils\Neon::encode($config, \Nette\Utils\Neon::BLOCK);
             $result = \file_put_contents(APP_DIR.'/config/config.neon', $configFile);

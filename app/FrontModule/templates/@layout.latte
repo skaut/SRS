@@ -27,56 +27,55 @@
         <div class="flash">{$flash->message}</div>
     </div>
 
-     <div id="container">
+    <div id="container">
         <div id="header">
-            <div id="logo">
-            {block logo}
-            <h1>SRS - skautský rezervační systém</h1>
-            {/block}
+            <div id="logo" class="shadow">
+                <a><img src="images/junak_logo.jpg" alt="logo"></a>
             </div>
 
-            <div id="menu">
-            {block menu}
-             {include 'includes/menu.latte'}
-             {widget menu}
+            {block login}
+            <div id="login">
+                <a href="{plink :Auth:login, 'backlink' => $backlink}">přihlásit se</a>
+            </div>
+            {/block}
+
+
+            <div id="main-menu">
+            {block main_menu}
+              {widget menu}
             {/block}
             </div>
         </div>
 
-         <div id="main">
-         {block main}
-
-             <div id="content">
-                 <h1>Obsah obsah</h1>
-                 <p>lorem ipsum</p>
-             {block content}
 
 
-             {/block}
-             </div>
+        <div id="main">
+        {block main}
 
+            <div id="content">
 
+                {include #content}
 
-             <div id="sidebar">
-             {block sidebar}
-                 <h3>facebook feed</h3>
-                 <p>lorem ipsum</p>
-             {/block}
-             </div>
+            </div>
+            <div id="sidebar" class="shadow">
+            {block sidebar}
 
-
-
-             </div>
-         {/block}
-         </div>
-
-        <div id="footer">
-        {block footer}
-            &copy; Kulda 2013
+            {/block}
+            </div>
         {/block}
+        </div>
 
 
-     </div>
+    </div>
+
+    <div id="footer">
+    {block footer}
+        <ul>
+            <li><a href="#">lorem ipsum</a></li>
+            <li><a href="#">lorem ipsum</a></li>
+        </ul>
+    {/block}
+    </div>
 
 
 
