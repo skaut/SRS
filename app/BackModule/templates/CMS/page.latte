@@ -117,9 +117,21 @@
             delay: 300,
             update: function( event, ui ) {
 
+            },
+            start: function(event, ui) {
+                $('.tinyMCE').each(function() {
+                    tinyMCE.execCommand('mceRemoveControl', false, $(this).attr('id'));
+                });
+            },
 
+            stop: function(event,ui) {
+                $('.tinyMCE').each(function() {
+                    tinyMCE.execCommand('mceAddControl', false, $(this).attr('id'));
+                });
             }
         });
+        //tinyMCE.execCommand('mceRemoveControl', false, id);
+        //tinyMCE.execCommand('mceAddControl', false, id);
 
         //vlozeni razeni contentu do formularoveho pole
         $('input[type=submit]').click(function(event) {

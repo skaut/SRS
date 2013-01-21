@@ -1,3 +1,5 @@
+
+{ifset $content->tag->documents}
 <ul>
 {foreach $content->tag->documents as $document}
 <li>
@@ -5,3 +7,4 @@
 </li>
 {/foreach}
 </ul>
+{/ifset}
