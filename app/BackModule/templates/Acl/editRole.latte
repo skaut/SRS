@@ -18,4 +18,10 @@ $(".datepicker").datepicker({
 });
 </script>
 
+{if $role->system}
+<script>
+    $('#frmroleForm-name').attr('readonly', true);
+</script>
+{/if}
+
 {/block}
