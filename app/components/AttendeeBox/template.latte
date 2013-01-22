@@ -4,13 +4,13 @@
     Pro přihlášení na seminář se musíte neprve <a href="{plink :Auth:login, 'backlink' => $backlink}">přihlásit přes skautIS</a>
  </div>
 
-{elseif $user->isInRole('Registrovaný')}
+{elseif $user->identity->object->role->name == 'Registrovaný'}
 <div class="info">
 {widget attendeeForm}
 </div>
 {else}
 <div class="notice">
-Na seminář jste se již přihlásili jako {$user->roles[0]}
+Na seminář jste se již přihlásili jako {$user->identity->object->role->name}
 </div>
 <div class="notice">
 {if $user->identity->object->approved == true}

@@ -37,20 +37,27 @@ class Authenticator extends \Nette\Object implements NS\IAuthenticator
         }
         $skautISPerson = $this->skautIS->getPerson($skautISToken, $skautISUser->ID_Person);
         $user = $this->database->getRepository("\SRS\Model\User")->findOneBy(array('username' => $skautISUser->UserName));
+        $roleRegistered = $this->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('name'  => 'Registrovaný'));
         if ($user == null)
         {
-            $role = $this->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('name'  => 'Registrovaný'));
-            if ($role == null) {
+
+            if ($roleRegistered == null) {
                 throw new \Nette\NotImplementedException('Nekonzistentni stav. Role pro nove uzivatele by vzdy mela existovat');
             }
-            $user = \SRS\Factory\UserFactory::createFromSkautIS($skautISUser, $skautISPerson, $role);
+            $user = \SRS\Factory\UserFactory::createFromSkautIS($skautISUser, $skautISPerson, $roleRegistered);
             $this->database->persist($user);
             $this->database->flush();
         }
 
         $netteRoles = array();
 
+        //pokud uzivatel neba roli schvalenou, degradujeme jen na registrovaneho
+        if ($user->approved == true) {
         $netteRoles[] = $user->role->name;
+        }
+        else {
+            $netteRoles[] = $roleRegistered->name;
+        }
 
         return new NS\Identity($user->id, $netteRoles, array(
             'token' => $skautISToken,

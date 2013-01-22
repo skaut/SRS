@@ -17,7 +17,7 @@ class AttendeeBox extends \Nette\Application\UI\Control
         $template->setFile(__DIR__ . '/template.latte');
 
         $user = $this->presenter->context->user;
-        if ($user->isInRole('Registrovaný')) {
+        if ($user->isLoggedIn() && $user->identity->object->role->name == 'Registrovaný') {
             $form = $this['attendeeForm'];
             $form->bindEntity($user->identity->object);
         }
