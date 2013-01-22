@@ -1,9 +1,9 @@
 <ul>
 {foreach $pages as $page}
  {if $page->slug == '/'}
- <li><a href="{plink :Front:page:default}">{$page->name}</a></li>
+ <li><a class="button" href="{plink :Front:page:default}">{$page->name}</a></li>
 {else}
- <li><a href="{plink :Front:page:default, 'pageId' => $page->id}">{$page->name}</a></li>
+ <li><a a class="button" href="{plink :Front:page:default, 'pageId' => $page->id}">{$page->name}</a></li>
  {/if}
 {/foreach}
 </ul>

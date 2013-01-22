@@ -13,67 +13,23 @@ a:hover {
 	opacity: 0.6;
 }
 
-h1 {
-	font-size: 14pt;
-	font-weight: bold
+
+
+
+ul, li {
+    list-style-type: none;
 }
 
-h2 {
-	font-size: 12pt;
-	font-weight: bold;
-}
-
-h3 {
-	font-size: 11pt;
-	font-weight: bold;
-}
-
-p {
-	font-size: 10pt;
-}
-
-ul {
-	font-size: 10pt;
-}
-
-li a {
-	color: black;
-}
-
-ul.bulleted {
-	list-style-type: disc;
+ul.bulleted > li {
+	list-style-type: disc !important;
+	margin-left: 10px !important;
  }
 
- ul {
- 	list-style-type: none;
- }
 
- input {
- 	height: 30px;
- 	padding-left: 5px;
- 	padding-right: 5px;
- 	width: 220px;
- 	margin-bottom: 10px;
- 	border-radius: 8px;
- }
-
- input[type="submit"] {
- 	text-align: center;
- 	font-weight: bold;
- }
-
- textarea {
- 	width: 340px;
- 	height: 120px;
- 	border-radius: 8px;
- 	padding-left: 5px;
- 	padding-right: 5px;
- 	margin-bottom: 10px;
- }
 
 #container {
 	overflow: hidden;
-	border-radius: 8px 8px 0px 0px;
+
 }
 
 #container #header {
@@ -100,7 +56,7 @@ ul.bulleted {
 	display: block;
 }
 
-#container #header #login {
+#container #header #top-menu {
 	width: 240px;
 	height: 125px;
 	float: right;
@@ -110,34 +66,27 @@ ul.bulleted {
 	text-align: center;
 }
 
-#container #header #login a {
-	display: block;
-	width: 80px;
-	height: 20px;
-	border-radius: 8px;
-	padding-left: 30px;
-	padding-right: 30px;
-	padding-top: 5px;
-	padding-bottom: 5px;
-	font-size: 10pt;
-	font-weight: bold;
-	margin-top: 20px;
+#container #header #top-menu li {
+    float: left;
+    display: block;
+    padding-left: 5px;
 }
+
+
 
 #container #header #main-menu {
 	width: 70%;
 	overflow: hidden;
 }
 
-#container #header #main-menu li a{
+#container #header #main-menu li {
 	list-style-type: none;
-	padding-left: 30px;
-	padding-right: 30px;
+
+
 	padding-top: 5px;
 	padding-bottom: 5px;
 	font-size: 10pt;
 	font-weight: bold;
-	border-radius: 8px;
 	float: left;
 	margin-left: 15px;
 	margin-bottom: 10px;
@@ -165,7 +114,6 @@ ul.bulleted {
 	padding-left: 15px;
 	padding-right: 15px;
 	padding-bottom: 25px;
-	border-radius: 8px;
 	margin-top: 15px;
 }
 
@@ -183,7 +131,7 @@ ul.bulleted {
 }
 
 #container #main #sidebar {
-	float: left;
+	float: right;
 	border-radius: 8px;
 	width: 32%;
 	min-height: 100%;

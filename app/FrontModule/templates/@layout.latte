@@ -14,8 +14,7 @@
 	<meta name="robots" content="{$robots}" n:ifset="$robots">
 	<title>{block title|striptags}{/block} | SRS</title>
 
-
-    {widget cssLoader 'front/reset.css', 'nette.css', 'front/layout.css', 'front/design.css', 'jquery-ui/jquery-ui.css'}
+    {widget cssLoader 'front/reset.css', 'front/layout.css', 'front/design.css', 'jquery-ui/jquery-ui.css'}
     {widget jsLoader 'jquery-1.8.2.min.js', 'netteForms.js', 'jquery-ui.js'}
     <link rel="shortcut icon" href="{$basePath}/favicon.ico">
 	{block head}{/block}
@@ -30,12 +29,15 @@
     <div id="container">
         <div id="header">
             <div id="logo" class="shadow">
-                <a><img src="images/junak_logo.jpg" alt="logo"></a>
+                <a href="{plink :Front:page:default}"><img src="{$basePath}/img/logo.png" alt="logo"></a>
             </div>
 
-            {block login}
-            <div id="login">
-                <a href="{plink :Auth:login, 'backlink' => $backlink}">přihlásit se</a>
+            {block top_menu}
+            <div id="top-menu">
+                <ul>
+                    <li><span class="ui-icon ui-icon-locked" style="display:block; float: left;"></span><a href="{plink :Auth:login, 'backlink' => $backlink}">Přihlásit</a></li>
+                    <li><a href="">Administrace</a></li>
+                </ul>
             </div>
             {/block}
 
@@ -70,7 +72,7 @@
 
     <div id="footer">
     {block footer}
-        <ul>
+        <ul class="bulleted">
             <li><a href="#">lorem ipsum</a></li>
             <li><a href="#">lorem ipsum</a></li>
         </ul>
