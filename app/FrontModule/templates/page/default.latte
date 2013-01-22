@@ -1,6 +1,7 @@
 {block content}
+
+<div class="pageContents">
 <h1>{$page->name}</h1>
-<div class="box shadow">
 {foreach $page->contents as $content}
     {include 'contents/'.$content->contentType.'.latte' 'content' => $content}
 {/foreach}

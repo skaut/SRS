@@ -18,11 +18,18 @@
     {widget jsLoader 'jquery-1.8.2.min.js', 'netteForms.js', 'jquery-ui.js'}
     <link rel="shortcut icon" href="{$basePath}/favicon.ico">
 	{block head}{/block}
+
+    <script>
+        $(document).ready(function() {
+            $('.message').delay(5000).fadeOut();
+        });
+    </script>
+
 </head>
 
 <body>
 	<script> document.body.className+=' js' </script>
-    <div n:foreach="$flashes as $flash" class="sent {$flash->type}">
+    <div n:foreach="$flashes as $flash" class="message {$flash->type}">
         <div class="flash">{$flash->message}</div>
     </div>
 
@@ -34,9 +41,15 @@
 
             {block top_menu}
             <div id="top-menu">
+
                 <ul>
+                    {if !$user->isLoggedIn()}
                     <li><span class="ui-icon ui-icon-locked" style="display:block; float: left;"></span><a href="{plink :Auth:login, 'backlink' => $backlink}">Přihlásit</a></li>
-                    <li><a href="">Administrace</a></li>
+                    {else}
+                    <li>Přihlášen jako: <strong>{$user->identity->object->username}</strong> (v roli {$user->roles[0]})</li>
+                    <li><span class="ui-icon ui-icon-unlocked" style="display:block; float: left;"></span><a href="{plink :Auth:logout, 'backlink' => $backlink}">Odhlásit</a></li>
+                    {/if}
+                    <li><a href="{$basePath}/admin">Administrace</a></li>
                 </ul>
             </div>
             {/block}
@@ -59,7 +72,7 @@
                 {include #content}
 
             </div>
-            <div id="sidebar" class="shadow">
+            <div id="sidebar">
             {block sidebar}
 
             {/block}

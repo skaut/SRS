@@ -22,7 +22,7 @@ class AttendeeBox extends \Nette\Application\UI\Control
             $form->bindEntity($user->identity->object);
         }
         //$template->user = $this->presenter->context->user;
-
+        $template->backlink = $this->presenter->context->httpRequest->url->path;
         $template->render();
     }
 

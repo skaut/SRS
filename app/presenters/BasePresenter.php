@@ -34,6 +34,7 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
         $this->context->user->setAuthorizator($acl);
 
         //Při každém načtení stránky prodlužujeme platnost skautIS Tokenu
+        \Nette\Diagnostics\Debugger::barDump(\Nette\Diagnostics\Debugger::timer(), 'platnost skautis tokenu zacatek');
         if ($this->user->isLoggedIn()) {
             try {
             $this->context->skautIS->refreshUserExpiration($this->user->getIdentity()->token);
@@ -44,6 +45,7 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
                 $this->redirect(':Auth:login');
             }
         }
+        \Nette\Diagnostics\Debugger::barDump(\Nette\Diagnostics\Debugger::timer(), 'platnost skautis tokenu konec');
     }
 
 

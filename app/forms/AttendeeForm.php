@@ -34,6 +34,8 @@ class AttendeeForm extends EntityForm
             ->addRule(Form::EMAIL, 'E-mail není ve správném tvaru');
         $this->addSelect('role', 'Přihlásit jako:')->setItems($roles)
              ->addRule(Form::FILLED, 'Vyplňte roli');
+        $this->addCheckbox('agreement', 'Souhlasím, že uvedené údaje budou poskytnuty lektorům pro účely semináře')
+            ->addRule(Form::FILLED, 'Musíte souhlasit s poskytnutím údajů');
         $this->addSubmit('submit', 'Přihlásit na seminář');
 
 

@@ -21,7 +21,7 @@ class AclFactory
         $manage_cms = new \SRS\Model\Acl\Permission('CMS', $cms);
         $manage_roles_acl = new \SRS\Model\Acl\Permission('Spravovat role', $acl);
 
-        $roles[] = $guest = new \SRS\Model\Acl\Role('Anonym');
+        $roles[] = $guest = new \SRS\Model\Acl\Role('guest');
         $guest->registerable = False;
         $roles[] = $registered = new \SRS\Model\Acl\Role('Registrovaný');
         $registered->registerable = False;

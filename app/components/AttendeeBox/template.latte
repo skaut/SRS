@@ -1,18 +1,24 @@
 
 {if !$user->isLoggedIn()}
- <p>Pro přihlášení na seminář se musíte neprve <a href="{plink :Auth:login}">přihlásit přes skautIS</a></p>
+ <div class="notice">
+    Pro přihlášení na seminář se musíte neprve <a href="{plink :Auth:login, 'backlink' => $backlink}">přihlásit přes skautIS</a>
+ </div>
 
 {elseif $user->isInRole('Registrovaný')}
+<div class="info">
 {widget attendeeForm}
+</div>
 {else}
-<p>Na seminář jste se již přihlásili jako {$user->roles[0]}</p>
-<p>
+<div class="notice">
+Na seminář jste se již přihlásili jako {$user->roles[0]}
+</div>
+<div class="notice">
 {if $user->identity->object->approved == true}
  Vaše přihláška byla již potvrzena
  {else}
  Vaše přihláška zatím nebyla potvrzena.
 {/if}
-</p>
+</div>
 
 {/if}
 <script>

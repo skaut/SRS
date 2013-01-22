@@ -1,3 +1,20 @@
 @import url("lib/typography.css");
 @import url("lib/forms.css");
 @import url("lib/buttons.css");
+
+
+#main {
+    border: 1px solid gray;
+}
+
+#header {
+    border: 1px solid gray;
+}
+
+#sidebar {
+    border-left: 1px solid gray;
+}
+
+#footer {
+    border: 1px solid gray;
+}

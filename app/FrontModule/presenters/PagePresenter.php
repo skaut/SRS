@@ -38,6 +38,12 @@ class PagePresenter extends \SRS\BasePresenter
         else {
             $page = $this->repository->find($pageId);
         }
+
+        if (!$page->isAllowedToRole($this->user->roles[0])) {
+            throw new \Nette\Application\BadRequestException('Na zobrazení této stránky nemáte práva', 404);
+        }
+
+
         $this->template->page = $page;
 	}
 

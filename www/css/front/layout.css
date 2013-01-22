@@ -57,7 +57,7 @@ ul.bulleted > li {
 }
 
 #container #header #top-menu {
-	width: 240px;
+	width: auto;
 	height: 125px;
 	float: right;
 	margin-top: 10px;
@@ -109,30 +109,16 @@ ul.bulleted > li {
 	padding-bottom: 15px;
 }
 
-#container #main .box {
-	padding-top: 5px;
-	padding-left: 15px;
-	padding-right: 15px;
-	padding-bottom: 25px;
-	margin-top: 15px;
-}
-
-#container #main .box a {
-	display: block;
-	font-size: 10pt;
-	color: black;
-	margin-bottom: 2px;
-	text-decoration: underline;
+#container #main .pageContents {
+	margin-left: 5px;
 
 }
 
-#container #main .box p {
-	margin-bottom: 10px;
-}
+
 
 #container #main #sidebar {
 	float: right;
-	border-radius: 8px;
+
 	width: 32%;
 	min-height: 100%;
 	margin-left: 15px;
@@ -146,5 +132,4 @@ ul.bulleted > li {
 #footer {
 	height:90px;
 	padding: 15px;
-	border-radius: 0px 0px 8px 8px;
 }

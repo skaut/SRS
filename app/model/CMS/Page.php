@@ -8,6 +8,7 @@
  */
 namespace SRS\Model\CMS;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Criteria;
 
 
 /**
@@ -18,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @property string $name
  * @property string $slug
  * @property bool $public
- * @property \Doctrine\Common\Collections\ArrayCollection $roles
+ * @property \Doctrine\ORM\PersistentCollection $roles
  * @property \Doctrine\Common\Collections\ArrayCollection $contents
  * @property int $position
 
@@ -141,6 +142,15 @@ class Page extends \SRS\Model\BaseEntity
     {
         return $this->public;
     }
+
+    public function isAllowedToRole($roleName) {
+        return $this->roles->exists(function($key, $role) use ($roleName) {
+            return $role->name == $roleName;
+        });
+
+
+
+    }
 }
 
 
@@ -180,6 +190,8 @@ class PageRepository extends \Doctrine\ORM\EntityRepository
          return $this->_em->createQuery("SELECT p FROM ".$this->entity. " p WHERE p.public = '1' ORDER BY p.position ASC ")
              ->getResult();
     }
+
+
 
 
 }
