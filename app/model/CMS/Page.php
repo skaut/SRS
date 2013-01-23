@@ -100,6 +100,18 @@ class Page extends \SRS\Model\BaseEntity
         return $this->contents->matching($criteria);
     }
 
+    public function countContents($area) {
+        if (!in_array($area, Content::$AREA_TYPES)) {
+            throw new SRSPageException("Area {$area} není definována");
+        }
+
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq("area", $area))
+            ->orderBy(array("position" => "ASC"))
+        ;
+        return $this->contents->matching($criteria)->count();
+    }
+
     public function getId()
     {
         return $this->id;

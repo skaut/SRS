@@ -1,4 +1,4 @@
-{* This is the welcome page, you can delete it *}
+
 {extends '../CMSlayout.latte'}
 
 {block head}
@@ -47,12 +47,6 @@
                 <td>{input roles}</td>
             </tr>
 
-
-
-            <tr>
-                <td>{label add_content /}</td>
-                <td>{input add_content} {input submit_content}</td>
-            </tr>
             </table>
          </div>
 
@@ -60,11 +54,19 @@
                 <div class="navbar-inner">
                     <a class="brand" href="#">Oblast</a>
                     <ul class="nav">
-                        <li>{input submit_to_main}</li>
-                        <li>{input submit_to_sidebar}</li>
+                        <li  {ifCurrent :Back:Page:page, $page->id, 'main'} class="active" {/ifCurrent}>{input submit_to_main} &nbsp;</li>
+                        <li {ifCurrent :Back:Page:page, $page->id, 'sidebar'} class="active" {/ifCurrent}>{input submit_to_sidebar}</li>
                     </ul>
+                    <table class="table">
+                        <tr>
+                            <td>{label add_content /}</td>
+                            <td>{input add_content} {input submit_content}</td>
+                        </tr>
+                    </table>
                 </div>
+
             </div>
+
 
          <ul id="pageContents">
          {foreach $form->getComponents(TRUE, 'Nette\Forms\Container') as $container}

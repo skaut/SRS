@@ -51,4 +51,8 @@
     margin-right: 5px;
 }
 
+li.active input {
+    border-color: black !important;
+}
+
 

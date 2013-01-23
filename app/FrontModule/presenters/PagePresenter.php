@@ -57,4 +57,8 @@ class PagePresenter extends \SRS\BasePresenter
         return new \SRS\Components\AttendeeBox();
     }
 
+    public function createComponentFaqBox() {
+        return new \SRS\Components\FaqBox();
+    }
+
 }

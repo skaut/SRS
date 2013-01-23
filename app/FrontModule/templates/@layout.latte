@@ -70,16 +70,14 @@
         <div id="main" class="row-fluid">
         {block main}
 
-            <div id="content" class="span9">
+            <div id="content" class="{block content_class}span9{/block}">
 
                 {include #content}
 
             </div>
-            <div id="sidebar" class="span3">
             {block sidebar}
 
             {/block}
-            </div>
         {/block}
         </div>
 

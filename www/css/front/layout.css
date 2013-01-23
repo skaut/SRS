@@ -17,10 +17,10 @@ a:hover {
 
 
 ul, li {
-    list-style-type: none;
+    list-style-type: disc !important;
 }
 
-ul.bulleted > li {
+ul.no-bullets > li {
 	list-style-type: disc !important;
 	margin-left: 10px !important;
  }
@@ -114,6 +114,10 @@ ul.bulleted > li {
 
 
 #container #main #sidebar {
+    padding-bottom: 15px;
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 15px;
 
 }
 

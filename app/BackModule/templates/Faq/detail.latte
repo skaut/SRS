@@ -1,0 +1,15 @@
+{* This is the welcome page, you can delete it *}
+{extends '../CMSlayout.latte'}
+
+{block title}
+Otázka
+{/block}
+
+{block content}
+<h1> {ifset $document}Úprava otázky{else}Nová otázka{/ifset}</h1>
+
+    <div class="well">
+    {widget faqForm}
+    </div>
+
+{/block}

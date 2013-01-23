@@ -67,7 +67,7 @@ class NewPageForm extends UI\Form
         $this->presenter->context->database->persist($page);
         $this->presenter->context->database->flush();
         $this->presenter->flashMessage('Stránka vytvořena', 'success');
-        $this->presenter->redirect(':Back:Page:page', $page->id);
+        $this->presenter->redirect(':Back:Page:page', $page->id, 'main');
     }
 
 }

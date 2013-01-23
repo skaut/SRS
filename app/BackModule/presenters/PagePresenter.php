@@ -138,10 +138,10 @@ class PagePresenter extends BasePresenter
 
         if ($submitName == 'submit_to_list') $this->redirect(':Back:Page:pages');
         else if ($submitName == 'submit_to_sidebar') {
-            $this->redirect(':Back:Page:page', array('id'=> $pageId, 'area' => 'sidebar'));
+            $this->redirect(':Back:Page:page#pageContents', array('id'=> $pageId, 'area' => 'sidebar'));
         }
         else if ($submitName == 'submit_to_main') {
-            $this->redirect(':Back:Page:page', array('id'=> $pageId, 'area' => 'main'));
+            $this->redirect(':Back:Page:page#pageContents', array('id'=> $pageId, 'area' => 'main'));
         }
         else {
         $this->redirect('this');
