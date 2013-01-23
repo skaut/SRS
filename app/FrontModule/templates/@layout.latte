@@ -33,46 +33,49 @@
         <div class="flash">{$flash->message}</div>
     </div>
 
-    <div id="container">
-        <div id="header">
-            <div id="logo" class="shadow">
-                <a href="{plink :Front:page:default}"><img src="{$basePath}/img/logo.png" alt="logo"></a>
-            </div>
+    <div id="container" class="container-fluid">
+        <div class="row-fluid" id="header">
+            <div class="span12">
+                <div class="clearfix">
+                <div id="logo" class="shadow">
+                    <a href="{plink :Front:page:default}"><img src="{$basePath}/img/logo.png" alt="logo"></a>
+                </div>
 
-            {block top_menu}
-            <div id="top-menu">
+                {block top_menu}
+                <div id="top-menu">
 
-                <ul>
-                    {if !$user->isLoggedIn()}
-                    <li><span class="ui-icon ui-icon-locked" style="display:block; float: left;"></span><a href="{plink :Auth:login, 'backlink' => $backlink}">Přihlásit</a></li>
-                    {else}
-                    <li>Přihlášen jako: <strong>{$user->identity->object->username}</strong> (v roli {$user->roles[0]})</li>
-                    <li><span class="ui-icon ui-icon-unlocked" style="display:block; float: left;"></span><a href="{plink :Auth:logout, 'backlink' => $backlink}">Odhlásit</a></li>
-                    {/if}
-                    <li><a href="{$basePath}/admin">Administrace</a></li>
-                </ul>
-            </div>
-            {/block}
+                    <ul>
+                        {if !$user->isLoggedIn()}
+                        <li><span class="ui-icon ui-icon-locked" style="display:block; float: left;"></span><a href="{plink :Auth:login, 'backlink' => $backlink}">Přihlásit</a></li>
+                        {else}
+                        <li>Přihlášen jako: <strong>{$user->identity->object->username}</strong> (v roli {$user->roles[0]})</li>
+                        <li><span class="ui-icon ui-icon-unlocked" style="display:block; float: left;"></span><a href="{plink :Auth:logout, 'backlink' => $backlink}">Odhlásit</a></li>
+                        {/if}
+                        <li><a href="{$basePath}/admin">Administrace</a></li>
+                    </ul>
+                </div>
+                {/block}
+                </div>
 
-
-            <div id="main-menu">
-            {block main_menu}
-              {widget menu}
-            {/block}
+                <div id="main-menu">
+                {block main_menu}
+                  {widget menu}
+                {/block}
+                </div>
             </div>
         </div>
 
 
 
-        <div id="main">
+        <div id="main" class="row-fluid">
         {block main}
 
-            <div id="content">
+            <div id="content" class="span9">
 
                 {include #content}
 
             </div>
-            <div id="sidebar">
+            <div id="sidebar" class="span3">
             {block sidebar}
 
             {/block}
@@ -80,17 +83,19 @@
         {/block}
         </div>
 
-
+        <div id="footer" class="row-fluid">
+            <div class="span12">
+            {block footer}
+                <ul class="bulleted">
+                    <li><a href="#">lorem ipsum</a></li>
+                    <li><a href="#">lorem ipsum</a></li>
+                </ul>
+            {/block}
+            </div>
+        </div>
     </div>
 
-    <div id="footer">
-    {block footer}
-        <ul class="bulleted">
-            <li><a href="#">lorem ipsum</a></li>
-            <li><a href="#">lorem ipsum</a></li>
-        </ul>
-    {/block}
-    </div>
+
 
 
 

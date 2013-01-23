@@ -1,5 +1,8 @@
-{block content}
+{block title}
+{$page->name}
+{/block}
 
+{block content}
 <div class="pageContents">
 <h1>{$page->name}</h1>
 {foreach $page->contents as $content}

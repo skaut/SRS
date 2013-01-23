@@ -1,7 +1,7 @@
+@import url("lib/bootstrap.min.css");
+
 body {
 	font-family: Arial, Helvetica, sans-serif;
-	width: 1200px;
-	margin: 0 auto;
 }
 
 a {
@@ -40,9 +40,9 @@ ul.bulleted > li {
 	width: 380px;
 	height: 125px;
 	text-align: center;
-	margin-top: 10px;
+	margin-top: 5px;
 	margin-left: 15px;
-	margin-bottom: 20px;
+	margin-bottom: 5px;
 	border-radius: 8px;
 	float: left;
 }
@@ -58,12 +58,13 @@ ul.bulleted > li {
 
 #container #header #top-menu {
 	width: auto;
-	height: 125px;
+	height: 60px;
 	float: right;
 	margin-top: 10px;
 	margin-right: 10px;
 	margin-bottom: 20px;
 	text-align: center;
+
 }
 
 #container #header #top-menu li {
@@ -75,14 +76,12 @@ ul.bulleted > li {
 
 
 #container #header #main-menu {
-	width: 70%;
 	overflow: hidden;
+
 }
 
 #container #header #main-menu li {
 	list-style-type: none;
-
-
 	padding-top: 5px;
 	padding-bottom: 5px;
 	font-size: 10pt;
@@ -97,16 +96,14 @@ ul.bulleted > li {
 }
 
 #container #main {
-	padding-left: 25px;
-	padding-top: 10pt;
-	padding-bottom: 40px;
-	overflow: hidden;
+
 }
 
 #container #main #content {
-	float: left;
-	width: 64%;
 	padding-bottom: 15px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 15px;
 }
 
 #container #main .pageContents {
@@ -117,19 +114,12 @@ ul.bulleted > li {
 
 
 #container #main #sidebar {
-	float: right;
 
-	width: 32%;
-	min-height: 100%;
-	margin-left: 15px;
-	padding-left: 10px;
-	padding-right: 10px;
-	padding-top: 15px;
-	padding-bottom: 15px;
 }
 
 
 #footer {
 	height:90px;
-	padding: 15px;
+
 }
+
