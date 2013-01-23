@@ -89,6 +89,10 @@ class Page extends \SRS\Model\BaseEntity
         if ($area == null) {
             return $this->contents;
         }
+        if (!in_array($area, Content::$AREA_TYPES)) {
+            throw new SRSPageException("Area {$area} není definována");
+        }
+
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq("area", $area))
             ->orderBy(array("position" => "ASC"))
@@ -199,9 +203,9 @@ class PageRepository extends \Doctrine\ORM\EntityRepository
              ->getResult();
     }
 
+}
 
-
-
-
+class SRSPageException extends \Exception
+{
 
 }

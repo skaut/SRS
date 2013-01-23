@@ -28,8 +28,8 @@ abstract class Content extends \SRS\Model\BaseEntity implements IContent
     );
 
     public static $AREA_TYPES = array(
-        'main' => 'Hlavní oblast',
-        'sidebar' => 'Postranní panel'
+        'main',
+        'sidebar',
     );
 
     /**
