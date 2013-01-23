@@ -21,50 +21,55 @@ use Nette\Application\UI,
     Nette\Application\UI\Form,
     Nette\ComponentModel\IContainer;
 
-class FaqForm extends \SRS\Form\EntityForm
+class NewsForm extends \SRS\Form\EntityForm
 {
     public function __construct(IContainer $parent = NULL, $name = NULL)
     {
         parent::__construct($parent, $name);
 
         $this->addHidden('id');
-        $this->addTextArea('question', 'Otázka:')
-            ->addRule(Form::FILLED, 'Zadejte otázku');
-        $this->addTextArea('answer', 'Odpověď:');
-        $this->addCheckbox('public', 'Zveřejnit');
+        $this->addText('published', 'Zveřejněno:')
+            ->addRule(Form::FILLED, 'Zadejte datum zveřejnění')->getControlPrototype()->class('datepicker');
+        $this->addTextArea('text', 'Text:')
+            ->addRule(Form::FILLED, 'Zadejte text')
+            ->getControlPrototype()->class('tinyMCE');
+
+//        $this->addText('valid_from', 'Platné od:');
+//        $this->addText('valid_to', 'Platné do:');
 
         $this->addSubmit('submit','Uložit')->getControlPrototype()->class('btn');
         $this->addSubmit('submit_continue','Uložit a pokračovat v úpravách')->getControlPrototype()->class('btn');
 
         $this->onSuccess[] = callback($this, 'formSubmitted');
+        $this->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
     }
 
     public function formSubmitted()
     {
         $values = $this->getValues();
-        $faqExists = $values['id'] != null;
+        $exists = $values['id'] != null;
 
-        if (!$faqExists) {
-            $faq = new \SRS\Model\CMS\Faq();
+        if (!$exists) {
+            $news = new \SRS\Model\CMS\News();
         }
         else {
-            $faq = $this->presenter->context->database->getRepository('\SRS\model\CMS\Faq')->find($values['id']);
+            $news = $this->presenter->context->database->getRepository('\SRS\model\CMS\News')->find($values['id']);
         }
 
-        $faq->setProperties($values, $this->presenter->context->database);
+        $news->setProperties($values, $this->presenter->context->database);
 
-        if (!$faqExists) {
-            $this->presenter->context->database->persist($faq);
+        if (!$exists) {
+            $this->presenter->context->database->persist($news);
         }
 
         $this->presenter->context->database->flush();
 
-        $this->presenter->flashMessage('Otázka upravena', 'success');
+        $this->presenter->flashMessage('Aktualita upravena', 'success');
         $submitName = ($this->isSubmitted());
         $submitName = $submitName->htmlName;
 
         if ($submitName == 'submit_continue') $this->presenter->redirect('this');
-        $this->presenter->redirect(':Back:Faq:default');
+        $this->presenter->redirect(':Back:News:default');
 
     }
 

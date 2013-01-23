@@ -1,0 +1,11 @@
+
+<div class="newsBox">
+{foreach $news as $item}
+<div class="newsItem">
+    <p class="published">{$item->published|date:"d.m.Y"}</p>
+    <div class="text">
+    {!$item->text}
+    </div>
+</div>
+{/foreach}
+</div>

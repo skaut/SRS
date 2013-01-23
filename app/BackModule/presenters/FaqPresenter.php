@@ -51,6 +51,18 @@ class FaqPresenter extends BasePresenter
         $this->invalidateControl('flashMessages');
     }
 
+    public function handleDelete($id) {
+        $item = $this->context->database->getRepository($this->entity)->find($id);
+        if ($item == null) {
+            throw new \Nette\Application\BadRequestException('Otázka s tímto id neexistuje', 404);
+        }
+        $this->presenter->context->database->remove($item);
+        $this->presenter->context->database->flush();
+        $this->presenter->flashMessage('Otázka smazána', 'success');
+        $this->redirect('this');
+
+    }
+
 
     protected function createComponentFaqForm() {
         return new \SRS\Form\CMS\FaqForm();

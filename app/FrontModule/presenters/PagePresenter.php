@@ -8,6 +8,7 @@ namespace FrontModule;
 class PagePresenter extends \SRS\BasePresenter
 {
     protected $repository;
+    protected $pageId;
 
     public function startup() {
         parent::startup();
@@ -31,6 +32,7 @@ class PagePresenter extends \SRS\BasePresenter
 
                 }
                 $page = $page[0];
+
             }
 
 
@@ -42,8 +44,8 @@ class PagePresenter extends \SRS\BasePresenter
         if (!$page->isAllowedToRole($this->user->roles[0])) {
             throw new \Nette\Application\BadRequestException('Na zobrazení této stránky nemáte práva', 404);
         }
-
-
+        $this->pageId = $page->id;
+        $this->template->documents = $this->context->database->getRepository('\SRS\model\CMS\Documents\Document')->findAll();
         $this->template->page = $page;
 	}
 
@@ -59,6 +61,10 @@ class PagePresenter extends \SRS\BasePresenter
 
     public function createComponentFaqBox() {
         return new \SRS\Components\FaqBox();
+    }
+
+    public function createComponentNewsBox() {
+        return new \SRS\Components\NewsBox();
     }
 
 }

@@ -42,8 +42,9 @@ class DocumentContent extends \SRS\Model\CMS\Content implements IContent
 
         $formContainer = $form[$this->getFormIdentificator()];
         $tags = $this->em->getRepository('\SRS\Model\CMS\Documents\Tag')->findAll();
+        $tagChoices = \SRS\Form\EntityForm::getFormChoices($tags);
         $defaultValue = $this->tag ? $this->tag->id : null;
-        $formContainer->addSelect("tag",'Tag')->setPrompt('Vyberte Tag')->setItems(\SRS\Form\EntityForm::getFormChoices($tags))->setDefaultValue($defaultValue);
+        $formContainer->addSelect("tag",'Tag')->setPrompt('Všechny dokumenty')->setItems($tagChoices)->setDefaultValue($defaultValue);
         return $form;
     }
 

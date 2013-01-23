@@ -18,3 +18,23 @@
 #footer {
     border: 1px solid gray;
 }
+
+.faqItem .question {
+    font-weight: bold;
+    margin-bottom: 0 !important;
+    margin-top: 3px !important;
+
+}
+
+.faqItem div.answer {
+
+}
+
+.questionForm textarea {
+    height: 100px;
+}
+
+.newsItem .published {
+    margin-bottom: 0px !important;
+    padding-bottom: 0px !important;
+}

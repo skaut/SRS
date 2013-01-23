@@ -2,7 +2,7 @@
 {extends '../CMSlayout.latte'}
 
 {block title}
-Otázka
+Aktualita
 {/block}
 
 {block head}
@@ -11,12 +11,18 @@ Otázka
 {/block}
 
 {block content}
-<h1> {ifset $item}Úprava otázky{else}Nová otázka{/ifset}</h1>
+<h1> {ifset $item}Úprava Aktuality{else}Nová Aktualita{/ifset}</h1>
 
-    <div class="well faqForm">
-    {widget faqForm}
+    <div class="well newsForm">
+    {widget newsForm}
     </div>
 
 
+<script>
+    $(function() {
+        $(".datepicker").datepicker({
 
+        });
+    });
+</script>
 {/block}

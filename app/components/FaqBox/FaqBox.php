@@ -17,12 +17,12 @@ class FaqBox extends \Nette\Application\UI\Control
         $template->setFile(__DIR__ . '/template.latte');
 
         $this->template->faq = $this->presenter->context->database->getRepository('\SRS\model\CMS\Faq')->findAllOrderedPublished();
+        $template->backlink = $this->presenter->context->httpRequest->url->path;
         $template->render();
     }
 
-//    public function createComponentAttendeeForm() {
-//        $roles = $this->presenter->context->database->getRepository('\SRS\Model\Acl\Role')->findRegisterableNow();
-//        return new \SRS\Form\AttendeeForm(null, null,\SRS\Form\EntityForm::getFormChoices($roles));
-//    }
+    public function createComponentQuestionForm() {
+        return new \SRS\Form\CMS\QuestionForm();
+    }
 
 }

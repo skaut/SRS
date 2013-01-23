@@ -22,6 +22,10 @@
     display: none;
 }
 
+input.number {
+    width: 30px;
+}
+
 
 
 #pageContents textarea {
@@ -53,6 +57,11 @@
 
 li.active input {
     border-color: black !important;
+}
+
+.faqForm textarea {
+    width: 500px;
+    height: 100px;
 }
 
 

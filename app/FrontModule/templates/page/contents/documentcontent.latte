@@ -1,10 +1,18 @@
 
-{ifset $content->tag->documents}
+
 <ul>
+{ifset $content->tag->documents}
 {foreach $content->tag->documents as $document}
 <li>
     <a href="{$basePath}{$document->file}">{$document->name}</a>
 </li>
 {/foreach}
-</ul>
+{else}
+{foreach $documents as $document}
+    <li><a href="{$basePath}{$document->file}">{$document->name}</a></li>
+{/foreach}
 {/ifset}
+</ul>
+
+
+
