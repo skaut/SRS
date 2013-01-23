@@ -15,7 +15,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({"content" = "Content", "textcontent" = "TextContent", "documentcontent" = "DocumentContent", "attendeeboxcontent" = "AttendeeBoxContent"})
- * @property int $order
+ * @property int $position
+ * @property string $area
  * @property \SRS\Model\CMS\Page $page
  */
 abstract class Content extends \SRS\Model\BaseEntity implements IContent
@@ -25,6 +26,12 @@ abstract class Content extends \SRS\Model\BaseEntity implements IContent
         'Document' => 'Dokumenty',
         'AttendeeBox' => 'Přihlašovací formulář'
     );
+
+    public static $AREA_TYPES = array(
+        'main' => 'Hlavní oblast',
+        'sidebar' => 'Postranní panel'
+    );
+
     /**
      * @var \Doctrine\ORM\EntityManager
      */
@@ -47,6 +54,12 @@ abstract class Content extends \SRS\Model\BaseEntity implements IContent
      * @var int
      */
     protected $position = 0;
+
+    /**
+     * @ORM\Column(type="string")
+     * @var string
+     */
+    protected $area;
 
 
     /**
@@ -84,6 +97,14 @@ abstract class Content extends \SRS\Model\BaseEntity implements IContent
 
     public function setEntityManager($em) {
         $this->em = $em;
+    }
+
+    public function getArea() {
+        return $this->area;
+    }
+
+    public function setArea($areaKey) {
+        $this->area = $areaKey;
     }
 
 

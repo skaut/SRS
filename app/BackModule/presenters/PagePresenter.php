@@ -41,12 +41,12 @@ class PagePresenter extends BasePresenter
 
     }
 
-    public function renderPage($pageId) {
-        if ($pageId == null) {
+    public function renderPage($id = null, $area = null) {
+        if ($id == null) {
             $this->flashMessage('Nebyla zvolena stránka', 'error');
             $this->redirect(':Back:Page:Pages');
         }
-        $page = $this->context->database->getRepository('\SRS\Model\CMS\Page')->find($pageId);
+        $page = $this->context->database->getRepository('\SRS\Model\CMS\Page')->find($id);
         if ($page == null) throw new \Nette\Application\BadRequestException('Stránka s tímto id neexistuje');
 
         $this->template->page = $page;
@@ -80,7 +80,9 @@ class PagePresenter extends BasePresenter
 
 
     protected function createComponentPageForm($name) {
-        $pageId = $this->getParameter('pageId');
+        $pageId = $this->getParameter('id');
+        $area = $this->getParameter('area');
+        /** @var \SRS\Model\CMS\Page $page */
         $page = $this->context->database->getRepository('\SRS\Model\CMS\Page')->find($pageId);
         $roles = $this->context->database->getRepository('\SRS\Model\Acl\Role')->findAll();
         $roleChoices = \SRS\Form\EntityForm::getFormChoices($roles);
@@ -88,7 +90,7 @@ class PagePresenter extends BasePresenter
         $form = new \SRS\Form\CMS\PageForm(null, null, $roleChoices);
         $form->bindEntity($page);
 
-        foreach ($page->contents as $content) {
+        foreach ($page->getContents($area) as $content) {
             $content->setEntityManager($this->context->database);
             $form = $content->addFormItems($form); // pridavame polozky formulare, ktere souvisi s jednotlivymi contenty
             $contentFormContainer = $form[$content->getFormIdentificator()];
@@ -105,12 +107,13 @@ class PagePresenter extends BasePresenter
     public function pageFormSubmitted(\SRS\Form\EntityForm $form) {
         $values = $form->getValues();
         $pageId = $values['id'];
+        $area = $this->getParameter('area');
 
         $page = $this->context->database->getRepository('\SRS\Model\CMS\Page')->find($pageId);
 
         $page->setProperties($values, $this->context->database);
 
-        foreach ($page->contents as $content) {
+        foreach ($page->getContents($area) as $content) {
 
             $contentFormContainer = $values[$content->getFormIdentificator()];
             $deleteContent = $contentFormContainer['delete'];
@@ -122,6 +125,7 @@ class PagePresenter extends BasePresenter
             $contentTypeStr = '\\SRS\\Model\\CMS\\'.$values['add_content'].'Content';
             $contentType = new $contentTypeStr();
             $contentType->page = $page;
+            $contentType->area = $area;
             $this->context->database->persist($contentType);
             $page->contents->add($contentType); // TODO nefunguje fix
             $this->flashMessage("Obsah typu {$values['add_content']} přidán");
@@ -133,7 +137,15 @@ class PagePresenter extends BasePresenter
         $submitName = $submitName->htmlName;
 
         if ($submitName == 'submit_to_list') $this->redirect(':Back:Page:pages');
+        else if ($submitName == 'submit_to_sidebar') {
+            $this->redirect(':Back:Page:page', array('id'=> $pageId, 'area' => 'sidebar'));
+        }
+        else if ($submitName == 'submit_to_main') {
+            $this->redirect(':Back:Page:page', array('id'=> $pageId, 'area' => 'main'));
+        }
+        else {
         $this->redirect('this');
+        }
 
     }
 

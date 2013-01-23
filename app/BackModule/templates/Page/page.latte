@@ -56,6 +56,16 @@
             </table>
          </div>
 
+            <div class="navbar">
+                <div class="navbar-inner">
+                    <a class="brand" href="#">Oblast</a>
+                    <ul class="nav">
+                        <li>{input submit_to_main}</li>
+                        <li>{input submit_to_sidebar}</li>
+                    </ul>
+                </div>
+            </div>
+
          <ul id="pageContents">
          {foreach $form->getComponents(TRUE, 'Nette\Forms\Container') as $container}
             <li>

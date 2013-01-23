@@ -5,8 +5,14 @@
 {block content}
 <div class="pageContents">
 <h1>{$page->name}</h1>
-{foreach $page->contents as $content}
+{foreach $page->getContents('main') as $content}
     {include 'contents/'.$content->contentType.'.latte' 'content' => $content}
 {/foreach}
 </div>
+{/block}
+
+{block sidebar}
+    {foreach $page->getContents('sidebar') as $content}
+    {include 'contents/'.$content->contentType.'.latte' 'content' => $content}
+    {/foreach}
 {/block}

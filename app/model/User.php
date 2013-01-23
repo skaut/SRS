@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @property-read int $id
  * @property-read string $username
  * @property string $email
- * @property \SRS\Model\Role $role
+ * @property \SRS\Model\Acl\Role $role
 
  * @property string $firstName
  * @property string $lastName

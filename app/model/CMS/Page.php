@@ -83,9 +83,17 @@ class Page extends \SRS\Model\BaseEntity
         $this->contents = $contents;
     }
 
-    public function getContents()
+    public function getContents($area = null)
     {
-        return $this->contents;
+
+        if ($area == null) {
+            return $this->contents;
+        }
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq("area", $area))
+            ->orderBy(array("position" => "ASC"))
+        ;
+        return $this->contents->matching($criteria);
     }
 
     public function getId()
@@ -190,6 +198,8 @@ class PageRepository extends \Doctrine\ORM\EntityRepository
          return $this->_em->createQuery("SELECT p FROM ".$this->entity. " p WHERE p.public = '1' ORDER BY p.position ASC ")
              ->getResult();
     }
+
+
 
 
 
