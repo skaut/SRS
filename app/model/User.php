@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @property-read string $username
  * @property string $email
  * @property \SRS\Model\Acl\Role $role
+ * @property \Doctrine\Common\Collections\ArrayCollection $programs
 
  * @property string $firstName
  * @property string $lastName
@@ -40,6 +41,11 @@ class User extends BaseEntity
      * @var \SRS\Model\Acl\Role
      */
     protected $role;
+
+    /**
+     * ORM\ManyToMany(targetEntity="\SRS\model\Program\Program", mappedBy="attendees", cascade={"persist"})
+     */
+    protected $programs;
 
 
     /**
@@ -135,6 +141,14 @@ class User extends BaseEntity
 
     public function setRole($role) {
         $this->role = $role;
+    }
+
+    public function getPrograms() {
+        return $this->programs;
+    }
+
+    public function setPrograms($programs) {
+        $this->programs = $programs;
     }
 
     public function setApproved($approved)
