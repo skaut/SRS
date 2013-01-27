@@ -15,6 +15,7 @@ Program » Blok {$block->name}
         <div class="navbar">
             <a class="btn btn-warning" href="{plink edit $block->id}">Upravit Blok</a>
             <a class="btn btn-danger" href="{link delete! $block->id}">Smazat Blok</a>
+            <a class="btn btn-danger" href="{plink get}">JSON</a>
         </div>
        <ul>
            {ifset $block->lector->username}
