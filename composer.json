@@ -13,6 +13,6 @@
     "doctrine/migrations": "@dev",
     "doctrine/data-fixtures": "dev-master",
     "JanMarek/WebLoader": "dev-master",
-    "kdyby/forms-replicator": "@dev"
+    "jms/serializer": "1.0.*@dev"
 	}
 }

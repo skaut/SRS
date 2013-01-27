@@ -10,7 +10,6 @@ namespace SRS\Factory;
 
 class SettingsFactory
 {
-    //protected $roles;
 
     public static function create() {
         $settings = array();
@@ -19,6 +18,7 @@ class SettingsFactory
         $settings[] = new \SRS\Model\Settings('seminar_name', 'Jméno semináře', 'SRS');
         $settings[] = new \SRS\Model\Settings('seminar_from_date', 'Začátek semináře');
         $settings[] = new \SRS\Model\Settings('seminar_to_date', 'Konec semináře');
+        $settings[] = new \SRS\Model\Settings('basic_block_duration', 'Základní délka trvání jednoho bloku semináře (minuty)', '60');
         return $settings;
     }
 

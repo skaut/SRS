@@ -1,0 +1,16 @@
+
+{extends '../Programlayout.latte'}
+
+{block title}
+Program » Bloky
+{/block}
+
+{block content}
+
+<div class="row-fluid">
+    <div class="span9">
+       {widget blockForm}
+    </div>
+</div>
+{include '../includes/confirm_dialog.latte'}
+{/block}

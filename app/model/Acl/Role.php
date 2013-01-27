@@ -8,6 +8,7 @@
  */
 namespace SRS\Model\Acl;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Criteria;
 
 
 /**
@@ -206,4 +207,18 @@ class RoleRepository extends \Doctrine\ORM\EntityRepository
               AND (r.registerableTo >= '{$today}' OR r.registerableTo IS NULL)");
         return $query->getResult();
     }
+
+    public function findApprovedUsersInRole($roleName) {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq("approved", 1));
+        $role = $this->_em->getRepository($this->_entityName)->findByName($roleName);
+        if ($role == null) throw new RoleException('Role s tímto jménem neexistuje');
+        $role = $role[0];
+        return $role->users->matching($criteria);
+    }
+}
+
+class RoleException extends \Exception
+{
+
 }

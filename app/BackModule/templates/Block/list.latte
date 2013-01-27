@@ -10,7 +10,7 @@ Program » Bloky
 <div class="row-fluid">
     <div class="span9">
         <div class="navbar">
-            <a class="btn btn-success" href="{plink detail}" data-toggle="modal"><i class="icon-plus-sign"></i>Přidat Blok</a>
+            <a class="btn btn-success" href="{plink edit}"><i class="icon-plus-sign"></i>Přidat Blok</a>
         </div>
             <table class="table-bordered table-striped">
                 <thead>
@@ -20,11 +20,13 @@ Program » Bloky
                 <th>Operace</th>
                 </thead>
                 <tbody>
-                <tr n:foreach="$blocks as $block" id="item-{$item->id}">
-                    <td class="sort-arrow"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span></td>
+                <tr n:foreach="$blocks as $block" id="item-{$block->id}">
+
                     <td>{$block->name|truncate:60, '...'}</td>
                     <td>
-                     {$block->lector->userName}
+                     {ifset $block->lector->username}
+                     {$block->lector->username}
+                     {/ifset}
                     </td>
                     <td>
                         {$block->duration}

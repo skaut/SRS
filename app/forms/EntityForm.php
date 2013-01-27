@@ -75,7 +75,7 @@ class EntityForm extends UI\Form
      * @param string $label Jmeno property, ktera se ma zobrazit ve formulari
      * @return array
      */
-    public static function getFormChoices(array $entities, $id = 'id', $label = 'name') {
+    public static function getFormChoices($entities, $id = 'id', $label = 'name') {
         $choices = array();
         foreach ($entities as $value) {
             $choices[$value->{$id}] = $value->{$label};

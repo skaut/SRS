@@ -7,7 +7,8 @@
  * To change this template use File | Settings | File Templates.
  */
 namespace SRS\Model\Program;
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping as ORM,
+    JMS\Serializer\Annotation as JMS;
 
 /**
  * @ORM\Entity(repositoryClass="\SRS\Model\Program\BlockRepository")
@@ -24,36 +25,44 @@ class Block extends \SRS\Model\BaseEntity
 
     /**
      * @ORM\ManyToOne(targetEntity="\SRS\Model\User")
+     *
+     * @JMS\Type("SRS\Model\User")
      */
     protected $lector;
 
     /**
      * @ORM\OneToMany(targetEntity="\SRS\Model\Program\Program", mappedBy="block")
+     * @JMS\Type("ArrayCollection<SRS\Model\Program\Program>")
      */
     protected $programs;
 
     /**
      * @ORM\Column
+     * @JMS\Type("string")
      */
     protected $name;
 
     /**
      * @ORM\Column(type="integer")
+     * @JMS\Type("integer")
      */
     protected $capacity;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @JMS\Type("string")
      */
     protected $tools;
 
     /**
      * @ORM\Column(nullable=true)
+     * @JMS\Type("string")
      */
     protected $location;
 
     /**
      * @ORM\Column(type="integer")
+     * @JMS\Type("integer")
      */
     protected $duration;
 

@@ -17,7 +17,7 @@ $configurator = new \Nette\Config\Configurator;
 \Nella\Console\Config\Extension::register($configurator);
 \Nella\Doctrine\Config\Extension::register($configurator);
 \Nella\Doctrine\Config\MigrationsExtension::register($configurator);
-//\Kdyby\Extension\Forms\Replicator\Replicator::register();
+$t = new \JMS\Serializer\Annotation\Type(array('value' => 'string')); //TRIK, serializer z neznameho duvodu nelze autoloadovat
 
 // Enable Nette Debugger for error visualisation & logging
 //$configurator->setDebugMode($configurator::AUTO);

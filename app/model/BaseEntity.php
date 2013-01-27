@@ -8,8 +8,8 @@
  */
 
 namespace SRS\Model;
-use Doctrine\ORM\Mapping as ORM;
-
+use Doctrine\ORM\Mapping as ORM,
+    JMS\Serializer\Annotation as JMS;
 
 /**
  * @property-read int $id
@@ -17,10 +17,13 @@ use Doctrine\ORM\Mapping as ORM;
 abstract class BaseEntity extends \Nette\Object
 {
     /**
+     * @JMS\Type("integer")
+     *
      * @ORM\Id
-     * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
-     * @var int
+     * @ORM\Column(type="integer")
+     *
+     *
      */
     protected $id;
 
@@ -88,6 +91,9 @@ abstract class BaseEntity extends \Nette\Object
         }
 
     }
+
+
+
 
 
 }

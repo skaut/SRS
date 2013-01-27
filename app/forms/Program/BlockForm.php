@@ -23,9 +23,22 @@ use Nette\Application\UI,
 
 class BlockForm extends \SRS\Form\EntityForm
 {
-    public function __construct(IContainer $parent = NULL, $name = NULL)
+    protected $dbsettings;
+
+    /**
+     * @var \Doctrine\ORM\EntityManager
+     */
+    protected $em;
+
+    public function __construct(IContainer $parent = NULL, $name = NULL, $dbsettings, $em)
     {
         parent::__construct($parent, $name);
+
+        $this->dbsettings = $dbsettings;
+        $this->em = $em;
+        $lectors = $this->em->getRepository('\SRS\Model\Acl\Role')->findApprovedUsersInRole('lektor');
+
+
 
         $this->addHidden('id');
         $this->addText('name', 'Název:')
@@ -36,10 +49,10 @@ class BlockForm extends \SRS\Form\EntityForm
             ->getControlPrototype()->class('number');
         $this->addTextArea('tools', 'Pomůcky:');
         $this->addText('location', 'Lokalita:');
-        $this->addText('duration', 'Doba trvání:')
-            ->addRule(Form::FILLED, 'Zadejte dobu trvání')
-            ->addRule(Form::INTEGER, 'Doba trvání je číslo');
-
+        $this->addSelect('duration', 'Doba trvání:')
+            ->setItems($this->prepareDurationChoices())
+            ->addRule(Form::FILLED, 'Zadejte dobu trvání');
+        $this->addSelect('lector', 'Lektor:')->setItems(\SRS\Form\EntityForm::getFormChoices($lectors, 'id', 'nickName'))->setPrompt('-- vyberte --');
 
 
         $this->addSubmit('submit','Uložit')->getControlPrototype()->class('btn');
@@ -55,27 +68,38 @@ class BlockForm extends \SRS\Form\EntityForm
         $exists = $values['id'] != null;
 
         if (!$exists) {
-            $news = new \SRS\Model\CMS\News();
+            $block = new \SRS\Model\Program\Block();
         }
         else {
-            $news = $this->presenter->context->database->getRepository('\SRS\model\CMS\News')->find($values['id']);
+            $block = $this->presenter->context->database->getRepository('\SRS\model\Program\Block')->find($values['id']);
         }
 
-        $news->setProperties($values, $this->presenter->context->database);
+        $block->setProperties($values, $this->presenter->context->database);
 
         if (!$exists) {
-            $this->presenter->context->database->persist($news);
+            $this->presenter->context->database->persist($block);
         }
 
         $this->presenter->context->database->flush();
 
-        $this->presenter->flashMessage('Aktualita upravena', 'success');
+        $this->presenter->flashMessage('Block upraven', 'success');
         $submitName = ($this->isSubmitted());
         $submitName = $submitName->htmlName;
 
-        if ($submitName == 'submit_continue') $this->presenter->redirect('this');
-        $this->presenter->redirect(':Back:News:default');
+        if ($submitName == 'submit_continue') $this->presenter->redirect('this', array('id' => $block->id));
+        $this->presenter->redirect(':Back:Block:list');
 
+    }
+
+    protected function prepareDurationChoices() {
+        $basicDuration = $this->dbsettings->get('basic_block_duration');
+        $durationChoices = array();
+
+
+        for ($i = 1; $i < 10; $i++) {
+            $durationChoices[$i] = $i*$basicDuration . ' minut';
+        }
+        return $durationChoices;
     }
 
 }

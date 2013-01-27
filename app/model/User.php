@@ -5,7 +5,7 @@ namespace SRS\Model;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\SRS\Model\UserRepository")
  *
  * @property-read int $id
  * @property-read string $username
@@ -303,4 +303,14 @@ class User extends BaseEntity
         $s = trim($s);
         return $s === "" ? NULL : $s;
     }
+}
+
+
+class UserRepository extends \Nella\Doctrine\Repository
+{
+//    public function findInRole($roleName)
+//    {
+//        return $this->_em->findAllBy(array('role.name' => $roleName));
+//    }
+
 }
