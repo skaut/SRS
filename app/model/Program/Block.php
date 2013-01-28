@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM,
 
 /**
  * @ORM\Entity(repositoryClass="\SRS\Model\Program\BlockRepository")
+ * @JMS\ExclusionPolicy("none")
  * @property \SRS\Model\User $lector
  * @property \Doctrine\Common\Collections\ArrayCollection $programs
  * @property string $name
@@ -27,6 +28,7 @@ class Block extends \SRS\Model\BaseEntity
      * @ORM\ManyToOne(targetEntity="\SRS\Model\User")
      *
      * @JMS\Type("SRS\Model\User")
+     * @JMS\Exclude
      */
     protected $lector;
 
@@ -38,6 +40,7 @@ class Block extends \SRS\Model\BaseEntity
 
     /**
      * @ORM\Column
+     * @JMS\Exclude
      * @JMS\Type("string")
      */
     protected $name;

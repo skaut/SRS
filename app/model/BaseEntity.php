@@ -85,11 +85,30 @@ abstract class BaseEntity extends \Nette\Object
                         if (isset($columnAnnotation['type']) && $columnAnnotation['type'] == 'date') {
                             $value = \DateTime::createFromFormat("Y-m-d", $value);
                         }
+                        if (isset($columnAnnotation['type']) && $columnAnnotation['type'] == 'datetime') {
+                             $value = BaseEntity::normalizeDateTime($value);
+                            $value = \DateTime::createFromFormat("Y-m-d H:i:s", $value);
+                        }
+
                         $this->{"set$key"}($value);
                     }
             }
         }
 
+    }
+
+    /**
+     * Pretransformuje datetime vraceny v javascriptu do tvaru stravitelneho doctrine
+     * @param string $datetime
+     * @return string
+     */
+    public static function normalizeDateTime($datetime) {
+        if (strpos($datetime, 'T') !== false) {
+            $datetime = str_replace('T', ' ', $datetime);
+            $deletePosition = strpos($datetime, '.');
+            $result = str_split($datetime, $deletePosition);
+            return $result[0];
+        }
     }
 
 

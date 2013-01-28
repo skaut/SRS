@@ -1,8 +1,10 @@
 
-{extends '../CMSlayout.latte'}
+{extends '../Programlayout.latte'}
 
 {block head}
-{widget jsLoader 'angular.min.js'}
+{widget jsLoader 'angular.min.js', 'fullcalendar.min.js', 'cal.js'}
+{widget cssLoader 'fullcalendar.css'}
+{*<script src="https://raw.github.com/angular-ui/angular-ui/master/build/angular-ui.js"></script>*}
 {/block}
 
 {block title}
@@ -11,9 +13,30 @@ Program » Harmonogram
 
 {block content}
 
-<div class="row-fluid">
-    <div class="span9">
+<div class="row-fluid" ng-app>
 
+
+    <div class="span9">
+        <div id="canvas" ng-controller="CalendarCtrl">
+            <div id="blockModal" class="modal hide fade">
+                <div class="modal-body">
+                    <select ng-model="option">
+                        <option ng-repeat="option in options" value="{{ option.id }}">{{ option.name }}</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button ng-click="update(option)">Uložit</button>
+                    <button ng-model="event" ng-click="delete(event)">Smazat</button>
+                </div>
+            </div>
+
+            {{ option }}
+            <div id="calendar"></div>
+
+        </div>
+
+
+    </div>
 </div>
 
 {/block}
