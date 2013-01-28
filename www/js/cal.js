@@ -65,7 +65,7 @@ function CalendarCtrl($scope, $http) {
 
     $scope.showupdateModal = function() {
         $('#blockModal').modal('show');
-        console.log($scope.event);
+
     }
 }
 
@@ -91,7 +91,6 @@ function bindCalendar(scope) {
             }
             scope.saveEvent(event);
             event.id = scope.newId;
-            console.log(event);
 
             calendar.fullCalendar('renderEvent',
                 event,
@@ -104,6 +103,12 @@ function bindCalendar(scope) {
             scope.event = event;
             scope.showupdateModal();
         },
+
+        eventDrop: function( event, jsEvent, ui, view ) {
+            scope.event = event;
+            scope.saveEvent(scope.event);
+        },
+
         editable: true,
         events: events
     });

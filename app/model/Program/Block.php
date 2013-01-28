@@ -35,6 +35,7 @@ class Block extends \SRS\Model\BaseEntity
     /**
      * @ORM\OneToMany(targetEntity="\SRS\Model\Program\Program", mappedBy="block")
      * @JMS\Type("ArrayCollection<SRS\Model\Program\Program>")
+     * @JMS\Exclude
      */
     protected $programs;
 

@@ -42,6 +42,7 @@ class ProgramPresenter extends BasePresenter
         //$serializer = \JMS\Serializer\SerializerBuilder::create()->build();
          $data = json_decode($data);
          $data = (array) $data;
+        \Nette\Diagnostics\Debugger::dump($data);
 
         $exists = isset($data['id']);
         if ($exists == true) {
