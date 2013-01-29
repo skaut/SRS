@@ -86,8 +86,15 @@ abstract class BaseEntity extends \Nette\Object
                             $value = \DateTime::createFromFormat("Y-m-d", $value);
                         }
                         if (isset($columnAnnotation['type']) && $columnAnnotation['type'] == 'datetime') {
-                             $value = BaseEntity::normalizeDateTime($value);
+                            $value = BaseEntity::normalizeDateTime($value);
+                            $date = $value;
                             $value = \DateTime::createFromFormat("Y-m-d H:i:s", $value);
+                            if ($value == false) {
+                                $value = \DateTime::createFromFormat("Y-n-j G:i:s", $date);
+                            }
+                            if ($value == false) {
+                                throw new \Exception('Nepodařilo se naparsovat datum '. $date);
+                            }
                         }
 
                         $this->{"set$key"}($value);
@@ -109,6 +116,7 @@ abstract class BaseEntity extends \Nette\Object
             $result = str_split($datetime, $deletePosition);
             return $result[0];
         }
+        return $datetime;
     }
 
 

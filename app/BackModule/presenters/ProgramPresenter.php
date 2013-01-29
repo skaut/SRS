@@ -42,7 +42,8 @@ class ProgramPresenter extends BasePresenter
         //$serializer = \JMS\Serializer\SerializerBuilder::create()->build();
          $data = json_decode($data);
          $data = (array) $data;
-        \Nette\Diagnostics\Debugger::dump($data);
+
+        $data['start'] = $data['startJSON'];
 
         $exists = isset($data['id']);
         if ($exists == true) {
@@ -88,6 +89,26 @@ class ProgramPresenter extends BasePresenter
             $result[$block->id] = array('id' => $block->id, 'name' => $block->name);
         }
         $response = new \Nette\Application\Responses\JsonResponse($result);
+        $this->sendResponse($response);
+        $this->terminate();
+
+    }
+
+    public function actionGetCalendarConfig()
+    {
+        $calConfig = array();
+        $fromDate = $this->dbsettings->get('seminar_from_date');
+        $datePieces = explode('-', $fromDate);
+        $calConfig['year'] = $datePieces[0];
+        $calConfig['month'] = $datePieces[1]-1; //fullcalendar je zerobased
+//        if ($calConfig['month'][0] == 0) {
+//            $calConfig['month'] = $calConfig['month'][1];
+//        }
+        $calConfig['date'] = $datePieces[2];
+//        if ($calConfig['date'][0] == 0) {
+//            $calConfig['date'] = $calConfig['date'][1];
+//        }
+        $response = new \Nette\Application\Responses\JsonResponse($calConfig);
         $this->sendResponse($response);
         $this->terminate();
 

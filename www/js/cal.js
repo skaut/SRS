@@ -1,26 +1,22 @@
-/**
- * Created with JetBrains PhpStorm.
- * User: Michal
- * Date: 28.1.13
- * Time: 13:18
- * To change this template use File | Settings | File Templates.
- */
 
 function CalendarCtrl($scope, $http) {
-
-//    $scope.options = [
-//    {'id': 1, "name": "Blok 1"},
-//    {'id': 2, "name": "Blok 2"}
-//    ]
     $scope.option = '';
     $scope.event = null;
-
-
+    $scope.config = null;
 
     $http.post("./get", {})
         .success(function(data, status, headers, config) {
             $scope.events = data;
-            bindCalendar($scope);
+            $http.post("./getcalendarconfig", {})
+                .success(function(data, status, headers, config) {
+                    $scope.config = data;
+                    bindCalendar($scope);
+                }).error(function(data, status, headers, config) {
+                    $scope.status = status;
+                });
+
+
+
         }).error(function(data, status, headers, config) {
             $scope.status = status;
         });
@@ -33,7 +29,11 @@ function CalendarCtrl($scope, $http) {
         });
 
 
+
+
+
     $scope.saveEvent = function(event) {
+        event.startJSON = fixDate(event.start);
         seen = []
         var json = JSON.stringify(event, function(key, val) {
             if (typeof val == "object") {
@@ -45,7 +45,7 @@ function CalendarCtrl($scope, $http) {
         });
         $http.post("./set?data="+json)
         .success(function(data, status, headers, config) {
-           event.id = data['id'];
+           $scope.event.id = data['id'];
         });
     }
 
@@ -70,7 +70,6 @@ function CalendarCtrl($scope, $http) {
 }
 
 function bindCalendar(scope) {
-
     var events = scope.events;
     var calendar = $('#calendar').fullCalendar({
         header: {
@@ -81,7 +80,6 @@ function bindCalendar(scope) {
         selectable: true,
         selectHelper: true,
         select: function(start, end, allDay) {
-
             var title = 'Nepřiřazeno';
             var event = {
                 title: title,
@@ -89,11 +87,12 @@ function bindCalendar(scope) {
                 end: end,
                 allDay: allDay
             }
+            scope.event = event;
             scope.saveEvent(event);
-            event.id = scope.newId;
+            console.log(scope.event);
 
             calendar.fullCalendar('renderEvent',
-                event,
+                scope.event,
                 true // make the event "stick"
             );
              calendar.fullCalendar('unselect');
@@ -110,6 +109,28 @@ function bindCalendar(scope) {
         },
 
         editable: true,
-        events: events
+        events: events,
+        firstDay: 1,
+        year: scope.config.year,
+        month: scope.config.month,
+        date: scope.config.date,
+        defaultView: 'agendaWeek',
+        ignoreTimezone: true
+
+
     });
+}
+
+
+function fixDate(d) {
+    var curr_date = d.getDate();
+    var curr_month = d.getMonth() + 1; //Months are zero based
+    var curr_year = d.getFullYear();
+    var curr_hours = d.getHours();
+    var curr_minutes = d.getMinutes();
+    var curr_seconds = d.getSeconds();
+    curr_minutes = ( curr_minutes < 10 ? "0" : "" ) + curr_minutes;
+    curr_seconds = ( curr_seconds < 10 ? "0" : "" ) + curr_seconds;
+    var dateString = curr_year + '-' + curr_month + '-' + curr_date + ' ' + curr_hours + ':' + curr_minutes + ':' + curr_seconds;
+    return dateString;
 }
