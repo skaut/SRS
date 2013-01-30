@@ -1,6 +1,7 @@
 
 const COLOR_MANDATORY = 'red';
 const COLOR_EMPTY = 'gray';
+const COLOR_EMPTY_MANDATORY = 'orange';
 
 
 
@@ -57,6 +58,7 @@ function CalendarCtrl($scope, $http) {
         $http.post("./set?data="+json)
         .success(function(data, status, headers, config) {
            $scope.event.id = data['id'];
+
         });
     }
 
@@ -106,6 +108,7 @@ function bindCalendar(scope) {
                 allDay: allDay
             }
             scope.event = event;
+            setColor(event);
             scope.saveEvent(event);
             calendar.fullCalendar('renderEvent',
                 scope.event,
@@ -158,5 +161,9 @@ function setColor(event) {
     }
     if (event.block == null) {
         event.color = COLOR_EMPTY;
+    }
+
+    if (event.block == null && event.mandatory) {
+        event.color = COLOR_EMPTY_MANDATORY;
     }
 }
