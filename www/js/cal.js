@@ -61,11 +61,12 @@ function CalendarCtrl($scope, $http) {
     }
 
     $scope.update = function(event, option) {
-
         $('#blockModal').modal('hide');
         $scope.event.mandatory = event.mandatory;
-        $scope.event.title = $scope.options[option].name;
-        $scope.event.block = $scope.options[option].id;
+        if (option) {
+        $scope.event.title = option.name;
+        $scope.event.block = option.id;
+        }
         setColor(event);
         $scope.saveEvent($scope.event);
         $('#calendar').fullCalendar('updateEvent', $scope.event);
@@ -79,6 +80,10 @@ function CalendarCtrl($scope, $http) {
 
     $scope.refreshForm = function() {
         this.event = $scope.event;
+        if ($scope.event.block != undefined) {
+        var id = $scope.event.block.id
+        $scope.option = $scope.options[id];
+        }
         $scope.$apply();
     }
 }

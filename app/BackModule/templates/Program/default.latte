@@ -17,15 +17,11 @@ Program » Harmonogram
     <div id="blockModal" ng-model="event" class="modal hide fade">
         <div class="modal-body" >
             <ng-form>
-                <input type="text" name="event.title" ng-model="event.title">
-                {{ event.block.id }}
-            <select ng-model="option">
-                <option ng-selected="event.block.id">{{ event.block.name }}</option>
-                <option ng-repeat="option in options" value="{{ option.id }}">{{ option.name }}</option>
-            </select> <br />
-            <input type="checkbox" name="event.mandatory" ng-model="event.mandatory">
-            {{ event.id }}
-            {{ event.mandatory }}
+
+            <select ng-model="option" ng-options="value.name for (key , value) in options">
+
+            </select><br />
+            Je blok povinný?  <input type="checkbox" name="event.mandatory" ng-model="event.mandatory">
             </ng-form>
         </div>
         <div class="modal-footer">
