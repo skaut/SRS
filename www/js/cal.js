@@ -1,12 +1,21 @@
 
+const COLOR_MANDATORY = 'red';
+const COLOR_EMPTY = 'gray';
+
+
+
 function CalendarCtrl($scope, $http) {
     $scope.option = '';
     $scope.event = null;
     $scope.config = null;
+    $scope.counter = 0
 
     $http.post("./get", {})
         .success(function(data, status, headers, config) {
             $scope.events = data;
+            angular.forEach($scope.events, function(event, key) {
+                setColor(event);
+            });
             $http.post("./getcalendarconfig", {})
                 .success(function(data, status, headers, config) {
                     $scope.config = data;
@@ -36,6 +45,7 @@ function CalendarCtrl($scope, $http) {
         event.startJSON = fixDate(event.start);
         event.endJSON = fixDate(event.end);
         seen = []
+      ;
         var json = JSON.stringify(event, function(key, val) {
             if (typeof val == "object") {
                 if (seen.indexOf(val) >= 0)
@@ -50,10 +60,13 @@ function CalendarCtrl($scope, $http) {
         });
     }
 
-    $scope.update = function(option) {
+    $scope.update = function(event, option) {
+
         $('#blockModal').modal('hide');
+        $scope.event.mandatory = event.mandatory;
         $scope.event.title = $scope.options[option].name;
         $scope.event.block = $scope.options[option].id;
+        setColor(event);
         $scope.saveEvent($scope.event);
         $('#calendar').fullCalendar('updateEvent', $scope.event);
     };
@@ -64,14 +77,13 @@ function CalendarCtrl($scope, $http) {
         $('#calendar').fullCalendar( 'removeEvents',[event.id] );
     }
 
-    $scope.showupdateModal = function() {
-        $('#blockModal').modal('show');
-
+    $scope.refreshForm = function() {
+        this.event = $scope.event;
+        $scope.$apply();
     }
 }
 
 function bindCalendar(scope) {
-    var events = scope.events;
     var calendar = $('#calendar').fullCalendar({
         header: {
             left: 'prev,next today',
@@ -90,8 +102,6 @@ function bindCalendar(scope) {
             }
             scope.event = event;
             scope.saveEvent(event);
-            console.log(scope.event);
-
             calendar.fullCalendar('renderEvent',
                 scope.event,
                 true // make the event "stick"
@@ -101,16 +111,18 @@ function bindCalendar(scope) {
 
         eventClick: function(event, element) {
             scope.event = event;
-            scope.showupdateModal();
+            scope.refreshForm();
+            $('#blockModal').modal('show');
+
         },
 
         eventDrop: function( event, jsEvent, ui, view ) {
             scope.event = event;
-            scope.saveEvent(scope.event);
+            scope.saveEvent(event);
         },
 
         editable: true,
-        events: events,
+        events: scope.events,
         firstDay: 1,
         year: scope.config.year,
         month: scope.config.month,
@@ -118,8 +130,6 @@ function bindCalendar(scope) {
         defaultView: 'agendaWeek',
         ignoreTimezone: true,
         slotMinutes: 15
-
-
     });
 }
 
@@ -135,4 +145,13 @@ function fixDate(d) {
     curr_seconds = ( curr_seconds < 10 ? "0" : "" ) + curr_seconds;
     var dateString = curr_year + '-' + curr_month + '-' + curr_date + ' ' + curr_hours + ':' + curr_minutes + ':' + curr_seconds;
     return dateString;
+}
+
+function setColor(event) {
+    if (event.mandatory == true) {
+        event.color = COLOR_MANDATORY;
+    }
+    if (event.block == null) {
+        event.color = COLOR_EMPTY;
+    }
 }

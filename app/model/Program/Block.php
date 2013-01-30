@@ -41,7 +41,7 @@ class Block extends \SRS\Model\BaseEntity
 
     /**
      * @ORM\Column
-     * @JMS\Exclude
+     *
      * @JMS\Type("string")
      */
     protected $name;
