@@ -28,7 +28,7 @@ class Program extends \SRS\Model\BaseEntity
     /**
      * @ORM\ManyToOne(targetEntity="\SRS\Model\Program\Block", inversedBy="programs")
      * @JMS\Type("SRS\Model\Program\Block")
-     * @JMS\Exclude
+     *
      *
      */
     protected $block;

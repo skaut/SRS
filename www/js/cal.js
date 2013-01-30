@@ -34,6 +34,7 @@ function CalendarCtrl($scope, $http) {
 
     $scope.saveEvent = function(event) {
         event.startJSON = fixDate(event.start);
+        event.endJSON = fixDate(event.end);
         seen = []
         var json = JSON.stringify(event, function(key, val) {
             if (typeof val == "object") {
@@ -115,7 +116,8 @@ function bindCalendar(scope) {
         month: scope.config.month,
         date: scope.config.date,
         defaultView: 'agendaWeek',
-        ignoreTimezone: true
+        ignoreTimezone: true,
+        slotMinutes: 15
 
 
     });

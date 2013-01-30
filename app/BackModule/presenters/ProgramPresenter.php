@@ -44,6 +44,10 @@ class ProgramPresenter extends BasePresenter
          $data = (array) $data;
 
         $data['start'] = $data['startJSON'];
+        //\Nette\Diagnostics\Debugger::dump($data);
+        if (isset($data['block']->id)) {
+            $data['block'] = $data['block']->id;
+        }
 
         $exists = isset($data['id']);
         if ($exists == true) {
@@ -53,6 +57,8 @@ class ProgramPresenter extends BasePresenter
             $program = new \SRS\Model\Program\Program();
             $program->duration = 1; //TODO docasne
         }
+
+
 
 
         $program->setProperties($data, $this->context->database);
@@ -101,13 +107,9 @@ class ProgramPresenter extends BasePresenter
         $datePieces = explode('-', $fromDate);
         $calConfig['year'] = $datePieces[0];
         $calConfig['month'] = $datePieces[1]-1; //fullcalendar je zerobased
-//        if ($calConfig['month'][0] == 0) {
-//            $calConfig['month'] = $calConfig['month'][1];
-//        }
         $calConfig['date'] = $datePieces[2];
-//        if ($calConfig['date'][0] == 0) {
-//            $calConfig['date'] = $calConfig['date'][1];
-//        }
+        $calConfig['basic_block_duration'] = $this->dbsettings->get('basic_block_duration');
+
         $response = new \Nette\Application\Responses\JsonResponse($calConfig);
         $this->sendResponse($response);
         $this->terminate();
