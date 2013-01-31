@@ -1,10 +1,3 @@
-
-const COLOR_MANDATORY = 'red';
-const COLOR_EMPTY = 'gray';
-const COLOR_EMPTY_MANDATORY = 'orange';
-
-
-
 function CalendarCtrl($scope, $http) {
     $scope.option = '';
     $scope.event = null;
@@ -105,6 +98,7 @@ function bindCalendar(scope) {
         selectable: true,
         selectHelper: true,
         select: function(start, end, allDay) {
+            end = bindEndToBlockDuration(start, end, scope.config.basic_block_duration);
             var title = 'Nepřiřazeno';
             var event = {
                 title: title,
@@ -147,28 +141,3 @@ function bindCalendar(scope) {
 }
 
 
-function fixDate(d) {
-    var curr_date = d.getDate();
-    var curr_month = d.getMonth() + 1; //Months are zero based
-    var curr_year = d.getFullYear();
-    var curr_hours = d.getHours();
-    var curr_minutes = d.getMinutes();
-    var curr_seconds = d.getSeconds();
-    curr_minutes = ( curr_minutes < 10 ? "0" : "" ) + curr_minutes;
-    curr_seconds = ( curr_seconds < 10 ? "0" : "" ) + curr_seconds;
-    var dateString = curr_year + '-' + curr_month + '-' + curr_date + ' ' + curr_hours + ':' + curr_minutes + ':' + curr_seconds;
-    return dateString;
-}
-
-function setColor(event) {
-    if (event.mandatory == true) {
-        event.color = COLOR_MANDATORY;
-    }
-    if (event.block == null) {
-        event.color = COLOR_EMPTY;
-    }
-
-    if (event.block == null && event.mandatory) {
-        event.color = COLOR_EMPTY_MANDATORY;
-    }
-}
