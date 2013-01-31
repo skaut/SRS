@@ -130,6 +130,15 @@ function bindCalendar(scope) {
             scope.saveEvent(event);
         },
 
+        eventResize: function( event, jsEvent, ui, view ) {
+            var end = bindEndToBlockDuration(event.start, event.end, scope.config.basic_block_duration);
+            event.end = end;
+            scope.event = event;
+            scope.saveEvent(scope.event);
+            $('#calendar').fullCalendar('updateEvent', event);
+
+        },
+
         editable: true,
         events: scope.events,
         firstDay: 1,
@@ -144,14 +153,4 @@ function bindCalendar(scope) {
 
 
 
-//eventResize: function( event, jsEvent, ui, view ) {
-//    console.log(event);
-//    var end = bindEndToBlockDuration(event.start, event.end, scope.config.basic_block_duration);
-//    event.end = end;
-//    scope.event = event;
-//    scope.saveEvent(scope.event);
-//    $('#calendar').fullCalendar('updateEvent', event);
-//    console.log(event);
-//
-//
-//},
+

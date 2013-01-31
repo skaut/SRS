@@ -202,8 +202,9 @@ class ProgramRepository extends \Nella\Doctrine\Repository
         $minutes = $sinceStart->days * 24 * 60;
         $minutes += $sinceStart->h * 60;
         $minutes += $sinceStart->i;
-        $program->duration = $minutes / $basicBlockDuration;
+
         $program->setProperties($data, $this->_em);
+        $program->duration = $minutes / $basicBlockDuration;
 
         $this->_em->persist($program);
         $this->_em->flush();
