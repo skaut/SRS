@@ -24,9 +24,6 @@ function CalendarCtrl($scope, $http) {
                 }).error(function(data, status, headers, config) {
                     $scope.status = status;
                 });
-
-
-
         }).error(function(data, status, headers, config) {
             $scope.status = status;
         });
@@ -43,6 +40,7 @@ function CalendarCtrl($scope, $http) {
 
 
     $scope.saveEvent = function(event) {
+        $scope.event = event;
         event.startJSON = fixDate(event.start);
         event.endJSON = fixDate(event.end);
         seen = []
@@ -57,8 +55,8 @@ function CalendarCtrl($scope, $http) {
         });
         $http.post("./set?data="+json)
         .success(function(data, status, headers, config) {
-           $scope.event.id = data['id'];
-
+           event.id = data['id'];
+           $('#calendar').fullCalendar('updateEvent', event);
         });
     }
 
@@ -75,9 +73,10 @@ function CalendarCtrl($scope, $http) {
     };
 
     $scope.delete = function(event) {
+        console.log(event);
         $http.post("./delete/"+event.id);
         $('#blockModal').modal('hide');
-        $('#calendar').fullCalendar( 'removeEvents',[event.id] );
+        $('#calendar').fullCalendar( 'removeEvents',[event._id] );
     }
 
     $scope.refreshForm = function() {
