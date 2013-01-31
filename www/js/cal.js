@@ -50,8 +50,8 @@ function CalendarCtrl($scope, $http) {
         });
         $http.post("./set?data="+json)
         .success(function(data, status, headers, config) {
-           event.id = data['id'];
-           $('#calendar').fullCalendar('updateEvent', event);
+           $scope.event.id = data['id'];
+
         });
     }
 
@@ -66,9 +66,9 @@ function CalendarCtrl($scope, $http) {
             $scope.event.title = '(Nepřiřazeno)';
             $scope.event.block = null;
         }
-        setColor(event);
+        setColor($scope.event);
         $scope.saveEvent($scope.event);
-        $('#calendar').fullCalendar('updateEvent', $scope.event);
+        $('#calendar').fullCalendar('updateEvent', [$scope.event]);
     };
 
     $scope.delete = function(event) {
@@ -143,3 +143,15 @@ function bindCalendar(scope) {
 }
 
 
+
+//eventResize: function( event, jsEvent, ui, view ) {
+//    console.log(event);
+//    var end = bindEndToBlockDuration(event.start, event.end, scope.config.basic_block_duration);
+//    event.end = end;
+//    scope.event = event;
+//    scope.saveEvent(scope.event);
+//    $('#calendar').fullCalendar('updateEvent', event);
+//    console.log(event);
+//
+//
+//},

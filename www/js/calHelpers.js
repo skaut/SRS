@@ -22,6 +22,9 @@ function setColor(event) {
     if (event.block == null) {
         event.color = COLOR_EMPTY;
     }
+    else {
+        event.color = null;
+    }
 
     if (event.block == null && event.mandatory) {
         event.color = COLOR_EMPTY_MANDATORY;
