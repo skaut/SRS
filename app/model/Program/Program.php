@@ -166,7 +166,6 @@ class ProgramRepository extends \Nella\Doctrine\Repository
             $minutes = $basicDuration*$program->duration;
             $end = $clone = clone $program->start;
             $end->modify("+ {$minutes} minutes");
-            //\Nette\Diagnostics\Debugger::dump($end);
             $program->end = $end;
 
             if ($program->block != null) {
@@ -179,6 +178,36 @@ class ProgramRepository extends \Nella\Doctrine\Repository
         }
         return $programs;
 
+    }
+
+    public function saveFromJson($data, $basicBlockDuration) {
+        $data = json_decode($data);
+        $data = (array) $data;
+        $data['start'] = $data['startJSON'];
+        if (isset($data['block']->id)) {
+            $data['block'] = $data['block']->id;
+        }
+
+        $exists = isset($data['id']);
+        if ($exists == true) {
+            $program = $this->_em->getRepository($this->_entityName)->find($data['id']);
+        }
+        else {
+            $program = new \SRS\Model\Program\Program();
+
+        }
+        $start = \DateTime::createFromFormat("Y-n-j G:i:s", $data['startJSON']);
+        $end = \DateTime::createFromFormat("Y-n-j G:i:s", $data['endJSON']);
+        $sinceStart = $start->diff($end);
+        $minutes = $sinceStart->days * 24 * 60;
+        $minutes += $sinceStart->h * 60;
+        $minutes += $sinceStart->i;
+        $program->duration = $minutes / $basicBlockDuration;
+        $program->setProperties($data, $this->_em);
+
+        $this->_em->persist($program);
+        $this->_em->flush();
+        return $program;
     }
 
 }

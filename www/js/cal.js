@@ -36,13 +36,15 @@ function CalendarCtrl($scope, $http) {
         $scope.event = event;
         event.startJSON = fixDate(event.start);
         event.endJSON = fixDate(event.end);
-        seen = []
-      ;
+        seen = [];
         var json = JSON.stringify(event, function(key, val) {
             if (typeof val == "object") {
                 if (seen.indexOf(val) >= 0)
                     return undefined
                 seen.push(val)
+            }
+            if (key =='source') { // tyto data nepotřebujeme
+                return undefined;
             }
             return val
         });
