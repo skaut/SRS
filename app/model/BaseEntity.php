@@ -76,7 +76,9 @@ abstract class BaseEntity extends \Nette\Object
                             $value = $newData;
                         }
                         else { //vazba ManyToOne
+                            if ($value != null) {
                             $value = $em->getReference($targetEntity, $value);
+                            }
                         }
                     }
                     //method_exists(get_class(),"set$key")

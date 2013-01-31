@@ -65,7 +65,11 @@ function CalendarCtrl($scope, $http) {
         $scope.event.mandatory = event.mandatory;
         if (option) {
         $scope.event.title = option.name;
-        $scope.event.block = option.id;
+        $scope.event.block = $scope.options[option.id];
+        }
+        else {
+            $scope.event.title = '(Nepřiřazeno)';
+            $scope.event.block = null;
         }
         setColor(event);
         $scope.saveEvent($scope.event);
@@ -73,7 +77,6 @@ function CalendarCtrl($scope, $http) {
     };
 
     $scope.delete = function(event) {
-        console.log(event);
         $http.post("./delete/"+event.id);
         $('#blockModal').modal('hide');
         $('#calendar').fullCalendar( 'removeEvents',[event._id] );
@@ -81,9 +84,9 @@ function CalendarCtrl($scope, $http) {
 
     $scope.refreshForm = function() {
         this.event = $scope.event;
-        if ($scope.event.block != undefined) {
-        var id = $scope.event.block.id
-        this.option = $scope.options[id];
+        if ($scope.event.block != undefined && $scope.event.block != null) {
+            var id = $scope.event.block.id
+            this.option = $scope.options[id];
         }
         else {
             this.option = null;

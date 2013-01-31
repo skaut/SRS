@@ -44,7 +44,6 @@ class ProgramPresenter extends BasePresenter
          $data = (array) $data;
 
         $data['start'] = $data['startJSON'];
-        //\Nette\Diagnostics\Debugger::dump($data);
         if (isset($data['block']->id)) {
             $data['block'] = $data['block']->id;
         }
