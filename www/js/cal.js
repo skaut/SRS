@@ -83,7 +83,10 @@ function CalendarCtrl($scope, $http) {
         this.event = $scope.event;
         if ($scope.event.block != undefined) {
         var id = $scope.event.block.id
-        $scope.option = $scope.options[id];
+        this.option = $scope.options[id];
+        }
+        else {
+            this.option = null;
         }
         $scope.$apply();
     }
