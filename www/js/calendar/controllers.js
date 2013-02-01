@@ -1,8 +1,30 @@
+var app = angular.module("calendar", []);
+
+app.directive("externalBlock", function ($parse) {
+    return {
+        restrict: 'A',
+
+        link: function (scope, element, attrs) {
+            attrs.$observe('externalBlock', function(id) {
+                prepareExternalBlock(scope.options[id], element);
+            });
+
+            //console.log(attrs);
+
+
+
+            //console.log(scope)
+        }
+    };
+
+});
+
+
 function CalendarCtrl($scope, $http) {
-    $scope.option = '';
-    $scope.event = null;
-    $scope.config = null;
-    $scope.counter = 0
+    $scope.option = ''; // indexovane bloky - pro snadne vyhledavani a prirazovani
+    $scope.event = null; // udalost se kterou prave pracuji
+    $scope.config = null; // konfiguracni nastaveni pro kalendar
+    $scope.blocks = []; // neindexovane bloky - v poli - pro filtrovani
 
     $http.post("./get", {})
         .success(function(data, status, headers, config) {
@@ -24,11 +46,13 @@ function CalendarCtrl($scope, $http) {
     $http.post("./getoptions", {})
         .success(function(data, status, headers, config) {
             $scope.options = data;
+
+            angular.forEach($scope.options, function(block, key) {
+                $scope.blocks.push(block);
+            });
         }).error(function(data, status, headers, config) {
             $scope.status = status;
         });
-
-
 
 
 
@@ -61,12 +85,9 @@ function CalendarCtrl($scope, $http) {
         if (option) {
         $scope.event.title = option.name;
         $scope.event.block = $scope.options[option.id];
-       //console.log($scope.event.block);
         var end = bindEndToBlockDuration($scope.event.start, $scope.event._end, $scope.event.block.duration, $scope.config.basic_block_duration);
-        //console.log($scope.event);
-        console.log(end);
         $scope.event.end = end;
-        //$scope.event._end = end;
+
         console.log($scope.event);
         }
         else {
@@ -154,6 +175,23 @@ function bindCalendar(scope) {
             }
         },
 
+        drop: function(date, allDay) { // this function is called when something is dropped
+
+            // retrieve the dropped element's stored Event Object
+            var originalEventObject = $(this).data('eventObject');
+
+            // we need to copy it, so that multiple events don't have a reference to the same object
+            var copiedEventObject = $.extend({}, originalEventObject);
+
+            // assign it the date that was reported
+            copiedEventObject.start = date;
+            copiedEventObject.allDay = allDay;
+
+            // render the event on the calendar
+            // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+            $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+        },
+
         eventResizeStart: function( event, jsEvent, ui, view ) {
             return false;
         },
@@ -163,6 +201,7 @@ function bindCalendar(scope) {
         },
 
         editable: true,
+        droppable: true,
         events: scope.events,
         firstDay: 1,
         year: scope.config.year,

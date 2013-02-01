@@ -12,8 +12,8 @@ Program » Harmonogram
 {/block}
 
 {block content}
-<div id="app" ng-app>
-<div id="canvas"  ng-controller="CalendarCtrl">
+<div id="app">
+<div id="canvas">
     <div id="blockModal" ng-model="event"  class="modal hide fade">
         <div class="modal-body" >
             <ng-form>
@@ -41,5 +41,20 @@ Program » Harmonogram
 
 {block sidebar}
 {include #parent}
-        <div class="well"><div id="jsMessages"></div></div>
+<div class="well"><div id="jsMessages"></div></div>
+
+<div class="calendar-blocks well" >
+    Vyhledat: <input type="text" class="input-medium search-query" ng-model="query.name">
+    <div class="block" ng-repeat="block in blocks | filter:query" external-block="{{ block.id }}" >
+    <h6>{{ block.name }}</h6>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+</script>
+
+
 {/block}
+
+{block container_attributes}ng-app="calendar" ng-controller="CalendarCtrl"{/block}

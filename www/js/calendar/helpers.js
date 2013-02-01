@@ -82,3 +82,24 @@ function flashMessage(message, type) {
   messageEl.alert().delay(5000).fadeOut();
 
 }
+
+function prepareExternalBlocks() {
+    console.log('run');
+    $('.calendar-blocks .block').each(function() {
+
+
+    });
+}
+
+function prepareExternalBlock(block, element) {
+        var eventObject = {
+            title: block.name
+        };
+
+        element.data('eventObject', eventObject);
+        $(element).draggable({
+            zIndex: 999,
+            revert: true,      // will cause the event to go back to its
+            revertDuration: 0  //  original position after the drag
+        });
+}
