@@ -101,15 +101,16 @@ function bindCalendar(scope) {
         selectHelper: true,
         select: function(start, end, allDay) {
             end = bindEndToBlockDuration(start, end, scope.config.basic_block_duration);
-            var title = 'Nepřiřazeno';
+            var title = '(Nepřiřazeno)';
             var event = {
                 title: title,
                 start: start,
                 end: end,
-                allDay: allDay
+                allDay: allDay,
+                mandatory: false
             }
             scope.event = event;
-            setColor(event);
+            setColor(scope.event);
             scope.saveEvent(event);
             calendar.fullCalendar('renderEvent',
                 scope.event,
@@ -130,13 +131,17 @@ function bindCalendar(scope) {
             scope.saveEvent(event);
         },
 
-        eventResize: function( event, jsEvent, ui, view ) {
+        eventResize: function( event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, view  ) {
             var end = bindEndToBlockDuration(event.start, event.end, scope.config.basic_block_duration);
             event.end = end;
             scope.event = event;
             scope.saveEvent(scope.event);
             $('#calendar').fullCalendar('updateEvent', event);
 
+        },
+
+        eventRender: function(event, element) {
+            //element.qtip()
         },
 
         editable: true,

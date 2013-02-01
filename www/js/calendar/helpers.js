@@ -16,18 +16,19 @@ const COLOR_EMPTY = 'gray';
 const COLOR_EMPTY_MANDATORY = 'orange';
 
 function setColor(event) {
-    if (event.mandatory == true) {
+    if (event.block != null && event.mandatory == true) {
         event.color = COLOR_MANDATORY;
     }
-    if (event.block == null) {
+
+    else if ((event.block == null || event.block == undefined) && event.mandatory == true) {
+        event.color = COLOR_EMPTY_MANDATORY;
+    }
+
+    else if ((event.block == null || event.block == undefined) && event.mandatory == false) {
         event.color = COLOR_EMPTY;
     }
     else {
         event.color = null;
-    }
-
-    if (event.block == null && event.mandatory) {
-        event.color = COLOR_EMPTY_MANDATORY;
     }
 }
 
