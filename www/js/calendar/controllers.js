@@ -61,6 +61,13 @@ function CalendarCtrl($scope, $http) {
         if (option) {
         $scope.event.title = option.name;
         $scope.event.block = $scope.options[option.id];
+       //console.log($scope.event.block);
+        var end = bindEndToBlockDuration($scope.event.start, $scope.event._end, $scope.event.block.duration, $scope.config.basic_block_duration);
+        //console.log($scope.event);
+        console.log(end);
+        $scope.event.end = end;
+        //$scope.event._end = end;
+        console.log($scope.event);
         }
         else {
             $scope.event.title = '(Nepřiřazeno)';
@@ -86,6 +93,7 @@ function CalendarCtrl($scope, $http) {
         else {
             this.option = null;
         }
+
         $scope.$apply();
     }
 }
@@ -100,7 +108,7 @@ function bindCalendar(scope) {
         selectable: true,
         selectHelper: true,
         select: function(start, end, allDay) {
-            end = bindEndToBlockDuration(start, end, scope.config.basic_block_duration);
+            end = bindEndToBasicBlockDuration(start, end, scope.config.basic_block_duration);
             var title = '(Nepřiřazeno)';
             var event = {
                 title: title,
@@ -120,6 +128,7 @@ function bindCalendar(scope) {
         },
 
         eventClick: function(event, element) {
+            //console.log(event);
             scope.event = event;
             scope.refreshForm();
             $('#blockModal').modal('show');
@@ -133,7 +142,7 @@ function bindCalendar(scope) {
 
         eventResize: function( event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, view  ) {
             if (event.block == null || event.block == undefined) {
-            var end = bindEndToBlockDuration(event.start, event.end, scope.config.basic_block_duration);
+            var end = bindEndToBasicBlockDuration(event.start, event.end, scope.config.basic_block_duration);
             event.end = end;
             scope.event = event;
             scope.saveEvent(scope.event);

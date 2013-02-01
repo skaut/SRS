@@ -69,7 +69,7 @@ class ProgramPresenter extends BasePresenter
         $result = array();
 
         foreach ($blocks as $block) {
-            $result[$block->id] = array('id' => $block->id, 'name' => $block->name, 'tools' => $block->tools, 'location' => $block->location,  'capacity' => $block->capacity);
+            $result[$block->id] = array('id' => $block->id, 'name' => $block->name, 'tools' => $block->tools, 'location' => $block->location,  'capacity' => $block->capacity, 'duration' => $block->duration);
         }
         $response = new \Nette\Application\Responses\JsonResponse($result);
         $this->sendResponse($response);
