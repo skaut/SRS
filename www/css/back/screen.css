@@ -64,14 +64,36 @@ li.active input {
     height: 100px;
 }
 
-.calendar-blocks .block {
-    margin: 10px 0;
 
-    background: #3366CC;
+.calendar-blocks .block {
+    margin: 10px auto;
+    padding: 2px;
     color: #fff;
     font-size: .85em;
     cursor: pointer;
-    width: 100px;
+    width: 150px;
+    border-radius: 2px;
+    background-color: #3366CC;
+    border-color: #3366CC;
+}
+
+.calendar-blocks .block h6 {
+    margin-bottom: 0px;
+}
+.calendar-blocks .block span {
+    color: orange;
+}
+
+ul.no-margin li {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+    line-height: 1em;
+
+}
+
+ul.no-margin {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
 }
 
 

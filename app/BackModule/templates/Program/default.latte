@@ -44,9 +44,14 @@ Program » Harmonogram
 <div class="well"><div id="jsMessages"></div></div>
 
 <div class="calendar-blocks well" >
-    Vyhledat: <input type="text" class="input-medium search-query" ng-model="query.name">
+    <h3>Programové bloky</h3>
+    Vyhledat: <input type="text" class="input-medium search-query" ng-model="query">
     <div class="block" ng-repeat="block in blocks | filter:query" external-block="{{ block.id }}" >
     <h6>{{ block.name }}</h6>
+    <ul class="no-margin">
+        <li><span>lektor:</span> {{ block.lector }}</li>
+        <li><span>kapacita:</span> {{ block.capacity }}</li>
+    </ul>
     </div>
 </div>
 
