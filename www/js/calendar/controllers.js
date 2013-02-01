@@ -132,16 +132,25 @@ function bindCalendar(scope) {
         },
 
         eventResize: function( event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, view  ) {
+            if (event.block == null || event.block == undefined) {
             var end = bindEndToBlockDuration(event.start, event.end, scope.config.basic_block_duration);
             event.end = end;
             scope.event = event;
             scope.saveEvent(scope.event);
             $('#calendar').fullCalendar('updateEvent', event);
+            }
+            else {
+                flashMessage('Položkám s přiřazeným programovým blokem nelze měnit délku', 'error');
+                revertFunc();
+            }
+        },
 
+        eventResizeStart: function( event, jsEvent, ui, view ) {
+            return false;
         },
 
         eventRender: function(event, element) {
-            //element.qtip()
+            //element.qtip({'content': bindTooltipContent(event)});
         },
 
         editable: true,

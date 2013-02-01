@@ -2,7 +2,7 @@
 {extends '../Programlayout.latte'}
 
 {block head}
-{widget jsLoader 'lib/angular.min.js', 'lib/fullcalendar.min.js', 'calendar/controllers.js', 'calendar/helpers.js'}
+{widget jsLoader 'lib/angular.min.js', 'lib/fullcalendar.min.js', 'calendar/controllers.js', 'calendar/helpers.js', 'calendar/jquery.qtip.min.js'}
 {widget cssLoader 'fullcalendar.css'}
 {*<script src="https://raw.github.com/angular-ui/angular-ui/master/build/angular-ui.js"></script>*}
 {/block}
@@ -37,4 +37,9 @@ Program » Harmonogram
 </div>
 
 
+{/block}
+
+{block sidebar}
+{include #parent}
+        <div class="well"><div id="jsMessages"></div></div>
 {/block}

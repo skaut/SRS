@@ -48,9 +48,10 @@
     <div class="container-fluid" id="container">
         <div class="row-fluid">
             <div class="span3">
+                {block sidebar}
                 <div class="well sidebar-nav">
                     <ul class="nav nav-list">
-                        {block #sidebar}
+                        {block #sidebar_menu}
                         <li class="nav-header">Sidebar</li>
                         <li class="active"><a href="#">Link</a></li>
                         <li><a href="#">Link</a></li>
@@ -70,6 +71,7 @@
                         {/block}
                     </ul>
                 </div><!--/.well -->
+                {/block}
             </div><!--/span-->
             <div class="span9">
                 {snippet flashMessages}
