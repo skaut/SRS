@@ -152,6 +152,13 @@ class Program extends \SRS\Model\BaseEntity
         $this->allDay = $allDay;
     }
 
+    public function countEnd($basicDuration) {
+        $minutes = $basicDuration*$this->duration;
+        $end = $clone = clone $this->start;
+        $end->modify("+ {$minutes} minutes");
+        return $end;
+    }
+
 
 
 }
@@ -163,10 +170,8 @@ class ProgramRepository extends \Nella\Doctrine\Repository
         $programs = $this->_em->getRepository($this->_entityName)->findAll();
 
         foreach ($programs as $program) {
-            $minutes = $basicDuration*$program->duration;
-            $end = $clone = clone $program->start;
-            $end->modify("+ {$minutes} minutes");
-            $program->end = $end;
+
+            $program->end = $program->countEnd($basicDuration);
 
             if ($program->block != null) {
                 $program->title = $program->block->name;

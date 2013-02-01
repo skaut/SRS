@@ -33,7 +33,7 @@ class Block extends \SRS\Model\BaseEntity
     protected $lector;
 
     /**
-     * @ORM\OneToMany(targetEntity="\SRS\Model\Program\Program", mappedBy="block")
+     * @ORM\OneToMany(targetEntity="\SRS\Model\Program\Program", mappedBy="block", cascade={"persist"}, orphanRemoval=true)
      * @JMS\Type("ArrayCollection<SRS\Model\Program\Program>")
      * @JMS\Exclude
      */

@@ -29,9 +29,7 @@ class BlockPresenter extends BasePresenter
     public function renderDetail($id) {
         $block = $this->blockRepo->find($id);
         $serializer = \JMS\Serializer\SerializerBuilder::create()->build();
-        \Nette\Diagnostics\Debugger::dump('ahoj ahoj');
-        \Nette\Diagnostics\Debugger::dump($json = $serializer->serialize($block, 'json'));
-        \Nette\Diagnostics\Debugger::dump($serializer->deserialize($json,'SRS\Model\Program\Block', 'json'));
+        $this->template->basicBlockDuration = $this->dbsettings->get('basic_block_duration');
         if ($block == null) throw new \Nette\Application\BadRequestException('Blok s tímto ID neexistuje', 404);
 
         $this->template->block = $block;
