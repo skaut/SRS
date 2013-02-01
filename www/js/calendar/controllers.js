@@ -181,15 +181,19 @@ function bindCalendar(scope) {
             var originalEventObject = $(this).data('eventObject');
 
             // we need to copy it, so that multiple events don't have a reference to the same object
-            var copiedEventObject = $.extend({}, originalEventObject);
+            var event = $.extend({}, originalEventObject);
 
             // assign it the date that was reported
-            copiedEventObject.start = date;
-            copiedEventObject.allDay = allDay;
+            event.start = date;
+            event.allDay = allDay;
+            event.end = bindEndToBlockDuration(date, null, event.block.duration, scope.config.basic_block_duration);
+            scope.event = event;
+            setColor(scope.event);
+            scope.saveEvent(event);
 
             // render the event on the calendar
             // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
-            $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+            $('#calendar').fullCalendar('renderEvent', event, true);
         },
 
         eventResizeStart: function( event, jsEvent, ui, view ) {

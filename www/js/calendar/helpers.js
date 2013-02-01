@@ -53,8 +53,10 @@ function bindEndToBasicBlockDuration(start, end, basic_block_duration) {
 
 function bindEndToBlockDuration(start, end, block_duration, basic_block_duration) {
     var new_end = new Date(start.getTime() + basic_block_duration*60000*block_duration);
-    if (end.getTime() != new_end.getTime()) {
-        flashMessage('Délka programu byla upravena s ohledem na délku přiřazeného bloku', 'warning');
+    if (end != null) {
+        if (end.getTime() != new_end.getTime()) {
+            flashMessage('Délka programu byla upravena s ohledem na délku přiřazeného bloku', 'warning');
+        }
     }
     return new_end;
 }
@@ -92,8 +94,10 @@ function prepareExternalBlocks() {
 }
 
 function prepareExternalBlock(block, element) {
+    console.log(block);
         var eventObject = {
-            title: block.name
+            title: block.name,
+            block: block
         };
 
         element.data('eventObject', eventObject);
