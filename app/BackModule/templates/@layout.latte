@@ -52,22 +52,7 @@
                 <div class="well sidebar-nav">
                     <ul class="nav nav-list">
                         {block #sidebar_menu}
-                        <li class="nav-header">Sidebar</li>
-                        <li class="active"><a href="#">Link</a></li>
-                        <li><a href="#">Link</a></li>
-                        <li><a href="#">Link</a></li>
-                        <li><a href="#">Link</a></li>
-                        <li class="nav-header">Sidebar</li>
-                        <li><a href="#">Link</a></li>
-                        <li><a href="#">Link</a></li>
-                        <li><a href="#">Link</a></li>
-                        <li><a href="#">Link</a></li>
-                        <li><a href="#">Link</a></li>
-                        <li><a href="#">Link</a></li>
-                        <li class="nav-header">Sidebar</li>
-                        <li><a href="#">Link</a></li>
-                        <li><a href="#">Link</a></li>
-                        <li><a href="#">Link</a></li>
+
                         {/block}
                     </ul>
                 </div><!--/.well -->
@@ -79,8 +64,13 @@
                     <button type="button" class="close" data-dismiss="alert">×</button>
                     {$flash->message}
                 </div>
+                <script>
+                  $(document).ready(function() {
+                    $('.alert').delay(4000).fadeOut();
+                  });
+                </script>
                 {/snippet}
-                {block #content}
+                {block #content} {/block}
             </div><!--/span-->
         </div><!--/row-->
 

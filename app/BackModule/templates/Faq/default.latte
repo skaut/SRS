@@ -7,93 +7,90 @@ CMS » Faq
 
 {block content}
 
-<div class="row-fluid">
-    <div class="span9">
-        <div class="navbar">
-            <a class="btn btn-success" href="{plink detail}" data-toggle="modal"><i class="icon-plus-sign"></i>Přidat Otázku</a>
-            <a class="btn hidden btn-primary" id="sort" href="#">Uložit pořadí Otázek</a>
-        </div>
-        {snippet faqlist}
-            <table class="table-bordered table-striped">
-                <thead>
-                <th></th>
-                <th>Otázka</th>
-                <th>Stav</th>
-                <th>Zodpovězena</th>
-                <th>Operace</th>
-                </thead>
-                <tbody class="sortable" id="faqList">
-                <tr n:foreach="$faq as $item" id="item-{$item->id}">
-                    <td class="sort-arrow"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span></td>
-                    <td>{$item->question|truncate:60, '...'}</td>
-                    <td>
-                        {if $item->public}
-                            <span class="label label-success">Publikováno</span>
-                            {else}
-                            <span class="label label-warning">Skryto</span>
-                        {/if}
-                    </td>
-                    <td>
-                        {if $item->answer != null}
-                        <span class="label label-success">ANO</span>
-                        {else}
-                        <span class="label label-warning">NE</span>
-                        {/if}
-                    </td>
-                    <td>
-                        <a class="btn" href="{plink detail $item->id}">
-                            Upravit
-                        </a>
-
-                        <a class="btn btn-danger confirm" href="{link delete! $item->id}">
-                            Smazat
-                        </a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-
-
-            <script>
-
-                function savePositions(data) {
-
-                    var url = {link sort!};
-                    url = url.replace('\\', '');
-                    $.get("?do=sort", data );
-                }
-
-
-                $(document).ready(function() {
-                    var fixHelper = function(e, ui) {
-                        ui.children().each(function() {
-                            $(this).width($(this).width());
-                        });
-                        return ui;
-                    };
-
-
-                    $('#faqList').sortable({
-                        helper: fixHelper,
-                        update: function( event, ui ) {
-                            $('#sort').removeClass('hidden');
-                        }
-                    })
-                    $('#sort').click(function() {
-                        var sorted = $( "#faqList" ).sortable( "serialize", { key:'items[]' } );
-                        savePositions(sorted);
-                    });
-                    $('#sort').addClass('hidden');
-
-                });
-            </script>
-
-
-        {/snippet}
-
-
-
-    </div>
+<div class="navbar">
+    <a class="btn btn-success" href="{plink detail}" data-toggle="modal"><i class="icon-plus-sign"></i>Přidat Otázku</a>
+    <a class="btn hidden btn-primary" id="sort" href="#">Uložit pořadí Otázek</a>
 </div>
+{snippet faqlist}
+    <table class="table-bordered table-striped">
+        <thead>
+        <th></th>
+        <th>Otázka</th>
+        <th>Stav</th>
+        <th>Zodpovězena</th>
+        <th>Operace</th>
+        </thead>
+        <tbody class="sortable" id="faqList">
+        <tr n:foreach="$faq as $item" id="item-{$item->id}">
+            <td class="sort-arrow"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span></td>
+            <td>{$item->question|truncate:60, '...'}</td>
+            <td>
+                {if $item->public}
+                    <span class="label label-success">Publikováno</span>
+                    {else}
+                    <span class="label label-warning">Skryto</span>
+                {/if}
+            </td>
+            <td>
+                {if $item->answer != null}
+                <span class="label label-success">ANO</span>
+                {else}
+                <span class="label label-warning">NE</span>
+                {/if}
+            </td>
+            <td>
+                <a class="btn" href="{plink detail $item->id}">
+                    Upravit
+                </a>
+
+                <a class="btn btn-danger confirm" href="{link delete! $item->id}">
+                    Smazat
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+
+    <script>
+
+        function savePositions(data) {
+
+            var url = {link sort!};
+            url = url.replace('\\', '');
+            $.get("?do=sort", data );
+        }
+
+
+        $(document).ready(function() {
+            var fixHelper = function(e, ui) {
+                ui.children().each(function() {
+                    $(this).width($(this).width());
+                });
+                return ui;
+            };
+
+
+            $('#faqList').sortable({
+                helper: fixHelper,
+                update: function( event, ui ) {
+                    $('#sort').removeClass('hidden');
+                }
+            })
+            $('#sort').click(function() {
+                var sorted = $( "#faqList" ).sortable( "serialize", { key:'items[]' } );
+                savePositions(sorted);
+            });
+            $('#sort').addClass('hidden');
+
+        });
+    </script>
+
+
+{/snippet}
+
+
+
+
 {include '../includes/confirm_dialog.latte'}
 {/block}

@@ -21,6 +21,11 @@ class BlockPresenter extends BasePresenter
         $this->blockRepo = $this->context->database->getRepository('\SRS\Model\Program\Block');
     }
 
+    public function beforeRender() {
+        parent::beforeRender();
+        $this->template->basicBlockDuration = $this->dbsettings->get('basic_block_duration');
+    }
+
     public function renderList() {
         $blocks = $this->blockRepo->findAll();
         $this->template->blocks = $blocks;
@@ -29,7 +34,7 @@ class BlockPresenter extends BasePresenter
     public function renderDetail($id) {
         $block = $this->blockRepo->find($id);
         $serializer = \JMS\Serializer\SerializerBuilder::create()->build();
-        $this->template->basicBlockDuration = $this->dbsettings->get('basic_block_duration');
+
         if ($block == null) throw new \Nette\Application\BadRequestException('Blok s tímto ID neexistuje', 404);
 
         $this->template->block = $block;

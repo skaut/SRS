@@ -4,31 +4,29 @@
 Práva & Role » Role
 {/block}
 {block content}
-<div class="row-fluid">
-    <div class="span9">
-       <div class="navbar">
-            <a class="btn btn-success" href="#addRole" data-toggle="modal"><i class="icon-plus-sign"></i>Přidat roli</a>
-        </div>
-       <table class="table-bordered table-striped table-roles">
-           <thead>
-           <th>Název role</th>
-           <th>Systémová</th>
-           <th>Operace</th>
-           </thead>
-           <tbody>
-           {foreach $roles as $role}
-            <tr><td>{$role->name}</td>
-                <td>{if $role->isSystem()}ANO{else}NE{/if}</td>
-                <td>
-                    <a class="btn" href="{plink Acl:editRole $role->id}">Upravit</a> &nbsp;&nbsp;
-                    {if !$role->isSystem()}<a class="btn btn-danger confirm" title='Všem uživatelům s touto rolí bude nastavena role Registrovaný.' href="{link deleteRole! $role->id}">Smazat</a>{/if}
-                </td>
-            </tr>
-           {/foreach}
-           </tbody>
-       </table>
-    </div>
+
+<div class="navbar">
+    <a class="btn btn-success" href="#addRole" data-toggle="modal"><i class="icon-plus-sign"></i>Přidat roli</a>
 </div>
+<table class="table-bordered table-striped table-roles">
+   <thead>
+   <th>Název role</th>
+   <th>Systémová</th>
+   <th>Operace</th>
+   </thead>
+   <tbody>
+   {foreach $roles as $role}
+    <tr><td>{$role->name}</td>
+        <td>{if $role->isSystem()}ANO{else}NE{/if}</td>
+        <td>
+            <a class="btn" href="{plink Acl:editRole $role->id}">Upravit</a> &nbsp;&nbsp;
+            {if !$role->isSystem()}<a class="btn btn-danger confirm" title='Všem uživatelům s touto rolí bude nastavena role Registrovaný.' href="{link deleteRole! $role->id}">Smazat</a>{/if}
+        </td>
+    </tr>
+   {/foreach}
+   </tbody>
+</table>
+
 {include '../includes/confirm_dialog.latte'}
 {include 'includes/addRole.latte'}
 

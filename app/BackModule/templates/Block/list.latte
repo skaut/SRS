@@ -6,44 +6,44 @@ Program » Bloky
 {/block}
 
 {block content}
-
-<div class="row-fluid">
-    <div class="span9">
-        <div class="navbar">
-            <a class="btn btn-success" href="{plink edit}"><i class="icon-plus-sign"></i>Přidat Blok</a>
-        </div>
-            <table class="table-bordered table-striped">
-                <thead>
-                <th>Název</th>
-                <th>Lektor</th>
-                <th>Délka</th>
-                <th>Operace</th>
-                </thead>
-                <tbody>
-                <tr n:foreach="$blocks as $block" id="item-{$block->id}">
-
-                    <td>{$block->name|truncate:60, '...'}</td>
-                    <td>
-                     {ifset $block->lector->username}
-                     {$block->lector->username}
-                     {/ifset}
-                    </td>
-                    <td>
-                        {$block->duration}
-                    </td>
-                    <td>
-                        <a class="btn" href="{plink detail $block->id}">
-                            Zobrazit detail
-                        </a>
-
-                        <a class="btn btn-danger confirm" href="{link delete! $block->id}">
-                            Smazat
-                        </a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-    </div>
+<div class="navbar">
+    <a class="btn btn-success" href="{plink edit}"><i class="icon-plus-sign"></i>Přidat Blok</a>
 </div>
+    <table class="table-bordered table-striped">
+        <thead>
+        <th>Název</th>
+        <th>Lektor</th>
+        <th>Délka</th>
+        <th>Kapacita</th>
+        <th>Operace</th>
+        </thead>
+        <tbody>
+        <tr n:foreach="$blocks as $block" id="item-{$block->id}">
+
+            <td>{$block->name|truncate:60, '...'}</td>
+            <td>
+             {ifset $block->lector->username}
+             {$block->lector->username}
+             {/ifset}
+            </td>
+            <td>
+                {$block->duration * $basicBlockDuration} minut
+            </td>
+            <td>
+                {$block->capacity}
+            </td>
+            <td>
+                <a class="btn" href="{plink detail $block->id}">
+                    Zobrazit detail
+                </a>
+
+                <a class="btn btn-danger confirm" href="{link delete! $block->id}">
+                    Smazat
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
 {include '../includes/confirm_dialog.latte'}
 {/block}
