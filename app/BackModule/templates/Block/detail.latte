@@ -16,7 +16,7 @@ Program » Blok {$block->name}
             <a class="btn btn-warning" href="{plink edit $block->id}">Upravit Blok</a>
             <a class="btn btn-danger confirm" href="{link delete! $block->id}">Smazat Blok</a>
         </div>
-       <ul>
+       <ul class="block-properties no-margin">
            {ifset $block->lector->username}
            <li><span>Lektor:</span> {$block->lector->username}</li>
            {/ifset}

@@ -90,14 +90,14 @@ class SettingsRepository extends \Doctrine\ORM\EntityRepository
      */
     public function get($item) {
         $item = $this->_em->getRepository($this->entity)->findByItem($item);
-        if ($item == null) return null;
+        if ($item == null) throw new SettingsException('Taková položka v Settings není');
         $value = $item[0]->value;
         return $value;
     }
 
     public function set($item, $value) {
         $item = $this->_em->getRepository($this->entity)->findByItem($item);
-        if ($item == null) throw new SettingsException('Taková položka v konfigu není');
+        if ($item == null) throw new SettingsException('Taková položka v Settings není');
         $item = $item[0];
         $item->value = $value;
         $this->_em->flush();

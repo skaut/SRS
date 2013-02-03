@@ -57,7 +57,7 @@ if (PHP_SAPI == 'cli') {
 }
 $container = $configurator->createContainer();
 
-
+//ProgramFactory::createBlockDataForTests($container->database);
 
 
 // Setup router

@@ -63,7 +63,9 @@ li.active input {
     width: 500px;
     height: 100px;
 }
-
+.calendar-blocks .blocks-container {
+   
+}
 
 .calendar-blocks .block {
     margin: 10px auto;
@@ -75,6 +77,10 @@ li.active input {
     border-radius: 2px;
     background-color: #3366CC;
     border-color: #3366CC;
+}
+
+ul.block-properties span {
+    font-weight: bold;
 }
 
 .calendar-blocks .block h6 {
