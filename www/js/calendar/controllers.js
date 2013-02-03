@@ -33,8 +33,6 @@ function AdminCalendarCtrl($scope, $http) {
             $scope.status = status;
         });
 
-
-
     $scope.saveEvent = function(event) {
         $scope.event = event;
         event.startJSON = fixDate(event.start);
@@ -98,14 +96,17 @@ function AdminCalendarCtrl($scope, $http) {
 }
 
 function bindCalendar(scope) {
-    var calendar = $('#calendar').fullCalendar({
-        header: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'month,agendaWeek,agendaDay'
-        },
+
+    var local_config = {
+        editable: true,
+        droppable: true,
+        events: scope.events,
+        year: scope.config.year,
+        month: scope.config.month,
+        date: scope.config.date,
         selectable: true,
         selectHelper: true,
+
         select: function(start, end, allDay) {
             end = bindEndToBasicBlockDuration(start, end, scope.config.basic_block_duration);
             var title = '(Nepřiřazeno)';
@@ -123,7 +124,7 @@ function bindCalendar(scope) {
                 scope.event,
                 true // make the event "stick"
             );
-             calendar.fullCalendar('unselect');
+            calendar.fullCalendar('unselect');
         },
 
         eventClick: function(event, element) {
@@ -141,11 +142,11 @@ function bindCalendar(scope) {
 
         eventResize: function( event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, view  ) {
             if (event.block == null || event.block == undefined) {
-            var end = bindEndToBasicBlockDuration(event.start, event.end, scope.config.basic_block_duration);
-            event.end = end;
-            scope.event = event;
-            scope.saveEvent(scope.event);
-            $('#calendar').fullCalendar('updateEvent', event);
+                var end = bindEndToBasicBlockDuration(event.start, event.end, scope.config.basic_block_duration);
+                event.end = end;
+                scope.event = event;
+                scope.saveEvent(scope.event);
+                $('#calendar').fullCalendar('updateEvent', event);
             }
             else {
                 flashMessage('Položkám s přiřazeným programovým blokem nelze měnit délku', 'error');
@@ -153,7 +154,7 @@ function bindCalendar(scope) {
             }
         },
 
-        drop: function(date, allDay) { // this function is called when something is dropped
+        drop: function(date, allDay) {
 
             // retrieve the dropped element's stored Event Object
             var originalEventObject = $(this).data('eventObject');
@@ -174,25 +175,12 @@ function bindCalendar(scope) {
             $('#calendar').fullCalendar('renderEvent', event, true);
         },
 
-        eventResizeStart: function( event, jsEvent, ui, view ) {
-            return false;
-        },
-
         eventRender: function(event, element) {
             //element.qtip({'content': bindTooltipContent(event)});
-        },
+        }
+    }
 
-        editable: true,
-        droppable: true,
-        events: scope.events,
-        firstDay: 1,
-        year: scope.config.year,
-        month: scope.config.month,
-        date: scope.config.date,
-        defaultView: 'agendaWeek',
-        ignoreTimezone: true,
-        slotMinutes: 15
-    });
+    var calendar = $('#calendar').fullCalendar(jQuery.extend(local_config, localization_config));
 }
 
 

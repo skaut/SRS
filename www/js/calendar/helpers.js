@@ -1,3 +1,37 @@
+
+var localization_config = {
+    header: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'month,agendaWeek,agendaDay'
+    },
+    firstDay: 1,
+    defaultView: 'agendaWeek',
+    ignoreTimezone: true,
+    slotMinutes: 15,
+    timeFormat: 'H:mm{ - H:mm}',
+    monthNames: ['Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen', 'Červenec',
+    'Srpen', 'Září', 'Říjen', 'Listopad', 'Prosinec'],
+    monthNamesShort: ['Led', 'Úno', 'Bře', 'Dub', 'Kvě', 'Čvn',
+    'Čvc', 'Srp', 'Zář', 'Říj', 'Lis', 'Pro'],
+    dayNames: ['Neděle', 'Pondělí', 'Úterý', 'Středa',
+    'Čtvrtek', 'Pátek', 'Sobota'],
+    dayNamesShort: ['Ne', 'Po', 'Út', 'St',
+    'Čt', 'Pá', 'So'],
+    buttonText: {
+    prev:     '&nbsp;&#9668;&nbsp;',  // left triangle
+        next:     '&nbsp;&#9658;&nbsp;',  // right triangle
+        prevYear: '&nbsp;&lt;&lt;&nbsp;', // <<
+        nextYear: '&nbsp;&gt;&gt;&nbsp;', // >>
+        today:    'Dnes',
+        month:    'měsíc',
+        week:     'týden',
+        day:      'den'
+    },
+    axisFormat: 'H(:mm)'
+}
+
+
 function fixDate(d) {
     var curr_date = d.getDate();
     var curr_month = d.getMonth() + 1; //Months are zero based
