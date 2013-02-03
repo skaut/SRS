@@ -2,9 +2,8 @@
 {extends '../Programlayout.latte'}
 
 {block head}
-{widget jsLoader 'lib/angular.min.js', 'lib/fullcalendar.min.js', 'calendar/controllers.js', 'calendar/helpers.js', 'calendar/jquery.qtip.min.js'}
+{widget jsLoader 'lib/angular.min.js', 'lib/fullcalendar.min.js', 'calendar/app.js', 'calendar/directives.js', 'calendar/controllers.js', 'calendar/helpers.js', 'calendar/jquery.qtip.min.js'}
 {widget cssLoader 'fullcalendar.css'}
-{*<script src="https://raw.github.com/angular-ui/angular-ui/master/build/angular-ui.js"></script>*}
 {/block}
 
 {block title}
@@ -41,7 +40,14 @@ Program » Harmonogram
 
 {block sidebar}
 {include #parent}
-<div class="well"><div id="jsMessages"></div></div>
+<div class="well">
+    <div class="ajax-loader">
+        <img src="{$basePath}/img/ajax-loader.gif">
+    </div>
+    <div id="jsMessages">
+
+    </div>
+</div>
 
 <div class="calendar-blocks well" >
     <h3>Programové bloky</h3>
@@ -60,4 +66,4 @@ Program » Harmonogram
 
 {/block}
 
-{block container_attributes}ng-app="calendar" ng-controller="CalendarCtrl"{/block}
+{block container_attributes}ng-app="calendar" ng-controller="AdminCalendarCtrl"{/block}

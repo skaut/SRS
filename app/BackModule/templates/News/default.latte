@@ -7,33 +7,30 @@ CMS » Aktuality
 
 {block content}
 
-<div class="row-fluid">
-    <div class="span9">
-        <div class="navbar">
-            <a class="btn btn-success" href="{plink detail}" data-toggle="modal"><i class="icon-plus-sign"></i>Přidat Aktualitu</a>
-            <a class="btn hidden btn-primary" id="sort" href="#">Uložit pořadí Otázek</a>
-        </div>
-
-            <table class="table-bordered table-striped">
-                <tbody class="sortable" id="faqList">
-                <tr n:foreach="$news as $item" id="item-{$item->id}">
-                    <td>{$item->published|date:"d.m.Y"}</td>
-                    <td>
-                       {$item->text|truncate:60,'...'}
-                    </td>
-                    <td>
-                        <a class="btn" href="{plink detail $item->id}">
-                            Upravit
-                        </a>
-
-                        <a class="btn btn-danger confirm" href="{link delete! $item->id}">
-                            Smazat
-                        </a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-    </div>
+<div class="navbar">
+    <a class="btn btn-success" href="{plink detail}" data-toggle="modal"><i class="icon-plus-sign"></i>Přidat Aktualitu</a>
+    <a class="btn hidden btn-primary" id="sort" href="#">Uložit pořadí Otázek</a>
 </div>
+
+    <table class="table-bordered table-striped">
+        <tbody class="sortable" id="faqList">
+        <tr n:foreach="$news as $item" id="item-{$item->id}">
+            <td>{$item->published|date:"d.m.Y"}</td>
+            <td>
+               {$item->text|truncate:60,'...'}
+            </td>
+            <td>
+                <a class="btn" href="{plink detail $item->id}">
+                    Upravit
+                </a>
+
+                <a class="btn btn-danger confirm" href="{link delete! $item->id}">
+                    Smazat
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
 {include '../includes/confirm_dialog.latte'}
 {/block}

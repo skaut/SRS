@@ -1,26 +1,5 @@
-var app = angular.module("calendar", []);
 
-app.directive("externalBlock", function ($parse) {
-    return {
-        restrict: 'A',
-
-        link: function (scope, element, attrs) {
-            attrs.$observe('externalBlock', function(id) {
-                prepareExternalBlock(scope.options[id], element);
-            });
-
-            //console.log(attrs);
-
-
-
-            //console.log(scope)
-        }
-    };
-
-});
-
-
-function CalendarCtrl($scope, $http) {
+function AdminCalendarCtrl($scope, $http) {
     $scope.option = ''; // indexovane bloky - pro snadne vyhledavani a prirazovani
     $scope.event = null; // udalost se kterou prave pracuji
     $scope.config = null; // konfiguracni nastaveni pro kalendar
@@ -88,7 +67,6 @@ function CalendarCtrl($scope, $http) {
         var end = bindEndToBlockDuration($scope.event.start, $scope.event._end, $scope.event.block.duration, $scope.config.basic_block_duration);
         $scope.event.end = end;
 
-        console.log($scope.event);
         }
         else {
             $scope.event.title = '(Nepřiřazeno)';

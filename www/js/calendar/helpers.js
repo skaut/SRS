@@ -76,34 +76,25 @@ function bindTooltipContent(event) {
 };
 
 function flashMessage(message, type) {
-  if (type == undefined) {
+    if (type == undefined) {
       type = 'info';
-  }
-  var messageEl = $('<div class="alert alert-'+type+'">'+message+'<a class="close" data-dismiss="alert" href="#">&times;</a></div>');
-  $('#jsMessages').append(messageEl);
-  messageEl.alert().delay(5000).fadeOut();
-
+    }
+    var messageEl = $('<div class="alert alert-'+type+'">'+message+'<a class="close" data-dismiss="alert" href="#">&times;</a></div>');
+    $('#jsMessages').append(messageEl);
+    messageEl.alert().delay(5000).fadeOut();
 }
 
-function prepareExternalBlocks() {
-    console.log('run');
-    $('.calendar-blocks .block').each(function() {
-
-
-    });
-}
 
 function prepareExternalBlock(block, element) {
-    console.log(block);
-        var eventObject = {
-            title: block.name,
-            block: block
-        };
+    var eventObject = {
+        title: block.name,
+        block: block
+    };
 
-        element.data('eventObject', eventObject);
-        $(element).draggable({
-            zIndex: 999,
-            revert: true,      // will cause the event to go back to its
-            revertDuration: 0  //  original position after the drag
-        });
+    element.data('eventObject', eventObject);
+    $(element).draggable({
+        zIndex: 999,
+        revert: true,      // will cause the event to go back to its
+        revertDuration: 0  //  original position after the drag
+    });
 }
