@@ -29,9 +29,20 @@ class ProgramPresenter extends BasePresenter
 //        $this->template->blocks = $blocks;
     }
 
-
-    public function actionGet() {
-        $programs = $this->programRepo->findAllForJson($this->basicBlockDuration);
+    /**
+     * @param bool $userAttending chceme Informace o tom, zda se prihlaseny uzivatel ucastni programu?
+     */
+    public function actionGet($userAttending = false) {
+        if ($userAttending == true) {
+            if (!$this->context->user->isLoggedIn()) {
+                throw new \Nette\Security\AuthenticationException('Uživatel musí být přihlášen');
+            }
+            $user = $this->context->database->getRepository('\SRS\Model\User')->find($this->context->user->id);
+            $programs = $this->programRepo->findAllForJson($this->basicBlockDuration, $user);
+        }
+        else {
+            $programs = $this->programRepo->findAllForJson($this->basicBlockDuration);
+        }
         $serializer = \JMS\Serializer\SerializerBuilder::create()->build();
         $json = $serializer->serialize($programs, 'json');
         $response = new \Nette\Application\Responses\TextResponse($json);
@@ -97,6 +108,70 @@ class ProgramPresenter extends BasePresenter
         $this->sendResponse($response);
         $this->terminate();
 
+    }
+
+    /**
+     * @param integer $id programID
+     */
+    public function actionAttend($id) {
+        if (!$this->context->user->isLoggedIn()) {
+            $message = array('status' => 'error', 'message' => 'Uživatel není přihlášen');
+        }
+        else {
+            $program = $this->programRepo->find($id);
+            if ($program == null) {
+                $message = array('status' => 'error', 'message' => 'Program s tímto id neexistuje');
+            }
+            else {
+                if ($program->block->capacity > $program->attendees->count()) {
+                    $user = $this->context->database->getRepository('\SRS\Model\User')->find($this->context->user->id);
+                    if (!$program->attendees->contains($user)) {
+                        $program->attendees->add($user);
+                        $this->context->database->flush();
+                        $message = array('status' => 'success', 'message' => 'Program úspěšně přihlášen.' );
+                    }
+                    else {
+                        $message = array('status' => 'error', 'message' => 'Uživatel je již přihlášen');
+                    }
+
+                }
+                else {
+                    $message = array('status' => 'error', 'message' => 'Kapacita programu je již plná');
+                }
+            }
+        }
+        $response = new \Nette\Application\Responses\JsonResponse($message);
+        $this->sendResponse($response);
+        $this->terminate();
+    }
+
+    /**
+     * @param integer $id programID
+     */
+    public function actionUnattend($id) {
+        if (!$this->context->user->isLoggedIn()) {
+            $message = array('status' => 'error', 'message' => 'Uživatel není přihlášen');
+        }
+        else {
+            $program = $this->programRepo->find($id);
+            if ($program == null) {
+                $message = array('status' => 'error', 'message' => 'Program s tímto id neexistuje');
+            }
+            else {
+                    $user = $this->context->database->getRepository('\SRS\Model\User')->find($this->context->user->id);
+                    if ($program->attendees->contains($user)) {
+                        $program->attendees->removeElement($user);
+                        $this->context->database->flush();
+                        $message = array('status' => 'success', 'message' => 'Program úspěšně odhlášen.' );
+                    }
+                    else {
+                        $message = array('status' => 'error', 'message' => 'Program vůbec nebyl přihlášen');
+                    }
+            }
+        }
+        $response = new \Nette\Application\Responses\JsonResponse($message);
+        $this->sendResponse($response);
+        $this->terminate();
     }
 }
 

@@ -95,20 +95,6 @@ function bindEndToBlockDuration(start, end, block_duration, basic_block_duration
     return new_end;
 }
 
-function bindTooltipContent(event) {
-    var content =
-        '<h4>' + event.title +  '</h4>';
-
-    if (event.block) {
-    content += "<ul>";
-    content += "<li><span>Kapacita:</span>"+ event.block.capacity +"</li>";
-    content += "<li><span>Lokalita:</span>"+ event.block.location +"</li>";
-    content += "<li><span>Pomůcky:</span>"+ event.block.tools +"</li>";
-    content +="</ul>";
-    }
-    return content;
-};
-
 function flashMessage(message, type) {
     if (type == undefined) {
       type = 'info';
@@ -124,7 +110,6 @@ function prepareExternalBlock(block, element) {
         title: block.name,
         block: block
     };
-
     element.data('eventObject', eventObject);
     $(element).draggable({
         zIndex: 999,

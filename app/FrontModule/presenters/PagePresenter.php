@@ -72,4 +72,8 @@ class PagePresenter extends \SRS\BasePresenter
         return new \SRS\Components\NewsBox();
     }
 
+    public function createComponentProgramBox() {
+        return new \SRS\Components\ProgramBox();
+    }
+
 }

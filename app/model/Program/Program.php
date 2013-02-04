@@ -76,6 +76,16 @@ class Program extends \SRS\Model\BaseEntity
      */
     protected $allDay = false;
 
+    /**
+     * @JMS\Type("boolean")
+    */
+    public $attends;
+
+    /**
+     * @JMS\Type("integer")
+     */
+    public $attendeesCount;
+
 
     public function setAttendees($attendees)
     {
@@ -166,6 +176,25 @@ class Program extends \SRS\Model\BaseEntity
         return $end;
     }
 
+    public function hasAttendee($user) {
+        return $this->attendees->contains($user);
+    }
+
+    public function prepareForJson($user, $basicDuration) {
+        $this->end = $this->countEnd($basicDuration);
+        $this->attendeesCount = $this->attendees->count();
+
+        if ($user != null) {
+            $this->attends = $this->hasAttendee($user);
+        }
+
+        if ($this->block != null) {
+            $this->title = $this->block->name;
+        }
+        else {
+            $this->title = "(Nepřiřazeno)";
+        }
+    }
 
 
 }
@@ -173,20 +202,11 @@ class Program extends \SRS\Model\BaseEntity
 
 class ProgramRepository extends \Nella\Doctrine\Repository
 {
-    public function findAllForJson($basicDuration) {
+    public function findAllForJson($basicDuration, $user = null) {
         $programs = $this->_em->getRepository($this->_entityName)->findAll();
 
         foreach ($programs as $program) {
-
-            $program->end = $program->countEnd($basicDuration);
-
-            if ($program->block != null) {
-                $program->title = $program->block->name;
-            }
-            else {
-                $program->title = "(Nepřiřazeno)";
-            }
-
+            $program->prepareForJson($user, $basicDuration);
         }
         return $programs;
 
