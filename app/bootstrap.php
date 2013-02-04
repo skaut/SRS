@@ -21,6 +21,7 @@ $t = new \JMS\Serializer\Annotation\Type(array('value' => 'string')); //TRIK, se
 $n = new \JMS\Serializer\Annotation\SerializedName(array('value' => 'neco'));
 $e = new \JMS\Serializer\Annotation\Exclude();
 $e = new \JMS\Serializer\Annotation\ExclusionPolicy(array('value' => 'all'));
+$e =  new \JMS\Serializer\Annotation\Accessor();
 
 // Enable Nette Debugger for error visualisation & logging
 //$configurator->setDebugMode($configurator::AUTO);

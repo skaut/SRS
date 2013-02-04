@@ -1,37 +1,52 @@
 
-function AdminCalendarCtrl($scope, $http) {
+function AdminCalendarCtrl($scope, $http, $q) {
     $scope.option = ''; // indexovane bloky - pro snadne vyhledavani a prirazovani
     $scope.event = null; // udalost se kterou prave pracuji
     $scope.config = null; // konfiguracni nastaveni pro kalendar
     $scope.blocks = []; // neindexovane bloky - v poli - pro filtrovani
 
-    $http.post("./get", {})
-        .success(function(data, status, headers, config) {
-            $scope.events = data;
-            angular.forEach($scope.events, function(event, key) {
-                setColor(event);
-            });
-            $http.post("./getcalendarconfig", {})
-                .success(function(data, status, headers, config) {
-                    $scope.config = data;
-                    bindCalendar($scope);
-                }).error(function(data, status, headers, config) {
-                    $scope.status = status;
-                });
-        }).error(function(data, status, headers, config) {
-            $scope.status = status;
-        });
 
-    $http.post("./getoptions", {})
+    var promise, promisses = [];
+
+    promise = $http.post("./getoptions", {})
         .success(function(data, status, headers, config) {
             $scope.options = data;
-
-            angular.forEach($scope.options, function(block, key) {
-                $scope.blocks.push(block);
-            });
         }).error(function(data, status, headers, config) {
             $scope.status = status;
         });
+    promisses.push(promise);
+
+    promise = $http.post("./get", {})
+        .success(function(data, status, headers, config) {
+            $scope.events = data;
+        }).error(function(data, status, headers, config) {
+            $scope.status = status;
+        });
+    promisses.push(promise);
+
+    promise = $http.post("./getcalendarconfig", {})
+        .success(function(data, status, headers, config) {
+            $scope.config = data;
+
+        }).error(function(data, status, headers, config) {
+            $scope.status = status;
+        });
+    promisses.push(promise);
+
+    $q.all(promisses).then(function() {
+        angular.forEach($scope.events, function(event, key) {
+            setColor(event);
+            event.block = $scope.options[event.block];
+
+        });
+        angular.forEach($scope.options, function(block, key) {
+            $scope.blocks.push(block);
+
+        });
+        bindCalendar($scope);
+    });
+
+
 
     $scope.saveEvent = function(event) {
         $scope.event = event;
@@ -41,8 +56,8 @@ function AdminCalendarCtrl($scope, $http) {
         var json = JSON.stringify(event, function(key, val) {
             if (typeof val == "object") {
                 if (seen.indexOf(val) >= 0)
-                    return undefined
-                seen.push(val)
+                    return undefined;
+                seen.push(val);
             }
             if (key =='source') { // tyto data nepotřebujeme
                 return undefined;
@@ -128,7 +143,6 @@ function bindCalendar(scope) {
         },
 
         eventClick: function(event, element) {
-            //console.log(event);
             scope.event = event;
             scope.refreshForm();
             $('#blockModal').modal('show');
@@ -176,7 +190,20 @@ function bindCalendar(scope) {
         },
 
         eventRender: function(event, element) {
-            //element.qtip({'content': bindTooltipContent(event)});
+            var options = {}
+            options.html = true;
+            options.trigger = 'hover';
+            options.title = event.title;
+            options.content = '';
+            if (event.block != null && event.block != undefined) {
+                options.content += "<ul class='no-margin'>";
+                options.content += "<li><span>Kapacita:</span>"+ event.block.capacity +"</li>";
+                options.content += "<li><span>Lokalita:</span>"+ event.block.location +"</li>";
+                options.content += "<li><span>Pomůcky:</span>"+ event.block.tools +"</li>";
+                options.content +="</ul>";
+            }
+
+            element.find('.fc-event-title').popover(options);
         }
     }
 

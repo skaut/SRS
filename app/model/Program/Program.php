@@ -27,7 +27,8 @@ class Program extends \SRS\Model\BaseEntity
 
     /**
      * @ORM\ManyToOne(targetEntity="\SRS\Model\Program\Block", inversedBy="programs")
-     * @JMS\Type("SRS\Model\Program\Block")
+     * @JMS\Type("integer")
+     * @JMS\Accessor(getter="getBlockId")
      *
      *
      */
@@ -94,6 +95,12 @@ class Program extends \SRS\Model\BaseEntity
     public function getBlock()
     {
         return $this->block;
+    }
+
+    public function getBlockId() {
+        if ($this->block != null)
+            return $this->block->id;
+        return null;
     }
 
     public function setDuration($duration)
