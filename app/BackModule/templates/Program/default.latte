@@ -4,6 +4,7 @@
 {block head}
 {widget jsLoader 'lib/angular.min.js', 'lib/fullcalendar.min.js', 'calendar/app.js', 'calendar/directives.js', 'calendar/controllers.js', 'calendar/helpers.js', 'calendar/jquery.qtip.min.js'}
 {widget cssLoader 'fullcalendar.css'}
+<link rel='stylesheet' type='text/css' href='{$basePath}/css/fullcalendar.print.css' media='print' />
 {/block}
 
 {block title}
