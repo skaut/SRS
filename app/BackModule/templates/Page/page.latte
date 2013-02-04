@@ -154,9 +154,15 @@
         //mazani contentu
         $('.delete-content').click(function(event) {
             event.preventDefault();
+
             var contentToDelete = $(this).attr('href').replace('#', '');
+            console.log(contentToDelete);
             $('#'+contentToDelete+' input[type=hidden]').val(1);
+            $('#'+contentToDelete).find('input[type=text]').prop('disabled', true).val('');
+            $('#'+contentToDelete).find('textarea').prop('disabled', true).val('');
+            $('#'+contentToDelete).find('select').prop('disabled', true).val('');
             $('#'+contentToDelete).fadeOut();
+
 
 
         });

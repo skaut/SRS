@@ -44,9 +44,11 @@ class NewsContent extends \SRS\Model\CMS\Content implements IContent
         parent::addFormItems($form);
         $formContainer = $form[$this->getFormIdentificator()];
         $formContainer->addText("count",'Počet zobrazovaných aktualit:')
-            ->addRule(\Nette\Application\UI\Form::INTEGER, 'Musí být číslo')
             ->setDefaultValue($this->count)
-            ->getControlPrototype()->class('number');
+           ->getControlPrototype()->class('number')
+            ->addCondition(\Nette\Application\UI\Form::FILLED)
+            ->addRule(\Nette\Application\UI\Form::INTEGER, 'Musí být číslo');
+
         return $form;
     }
 

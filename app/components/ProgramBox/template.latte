@@ -1,4 +1,9 @@
 
+{if !$user->isLoggedIn()}
+<div class="notice">
+    Pro výběr programů se musíte neprve <a href="{plink :Auth:login, 'backlink' => $backlink}">přihlásit přes skautIS</a>
+</div>
+{else}
 <div id="app" ng-app="calendar" ng-controller="FrontCalendarCtrl">
 <div class="span2">
     <div class="ajax-loader">
@@ -14,3 +19,4 @@
 </div>
 
 </div>
+{/if}

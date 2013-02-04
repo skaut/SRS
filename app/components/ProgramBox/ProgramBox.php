@@ -18,6 +18,7 @@ class ProgramBox extends \Nette\Application\UI\Control
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/template.latte');
+        $template->backlink = $this->presenter->context->httpRequest->url->path;
 
         $template->render();
     }
