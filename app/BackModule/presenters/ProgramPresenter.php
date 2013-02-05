@@ -114,29 +114,42 @@ class ProgramPresenter extends BasePresenter
      * @param integer $id programID
      */
     public function actionAttend($id) {
-        if (!$this->context->user->isLoggedIn()) {
+        if (!$this->context->user->isLoggedIn()) { //uzivatel neni prihlasen
             $message = array('status' => 'error', 'message' => 'Uživatel není přihlášen');
         }
-        else {
+        else { //uzivatel je prihlasen
             $program = $this->programRepo->find($id);
-            if ($program == null) {
+            if ($program == null) { //ID programu neexistuje
                 $message = array('status' => 'error', 'message' => 'Program s tímto id neexistuje');
             }
-            else {
-                if ($program->block->capacity > $program->attendees->count()) {
-                    $user = $this->context->database->getRepository('\SRS\Model\User')->find($this->context->user->id);
-                    if (!$program->attendees->contains($user)) {
-                        $program->attendees->add($user);
-                        $this->context->database->flush();
-                        $message = array('status' => 'success', 'message' => 'Program úspěšně přihlášen.' );
-                    }
-                    else {
-                        $message = array('status' => 'error', 'message' => 'Uživatel je již přihlášen');
-                    }
+            else { // ID programu existuje
 
+                if ($program->block == null) { // program nema prirazeny blok
+                    $message = array('status' => 'error', 'message' => 'Na blok, který nemá přiřazen žádný program se nelze přihlásit.' );
                 }
-                else {
-                    $message = array('status' => 'error', 'message' => 'Kapacita programu je již plná');
+                else { // program ma prirazeny blok
+                    if ($program->block->capacity > $program->attendees->count()) { //program ma volne misto
+                        $userRepo = $this->context->database->getRepository('\SRS\Model\User');
+                        $user = $userRepo->find($this->context->user->id);
+                        if ($user->hasOtherProgram($program, $this->basicBlockDuration)) {
+                            $message = array('status' => 'error', 'message' => 'V tuto dobu máte přihlášený již jiný program.' );
+                        }
+                        else {
+                            if (!$program->attendees->contains($user)) { // uzivatle na program jeste neni prihlasen
+                                $program->attendees->add($user);
+                                $this->context->database->flush();
+                                $message = array('status' => 'success', 'message' => 'Program úspěšně přihlášen.' );
+                            }
+                            else { // uzivatel uz je na program prihlasen
+                                $message = array('status' => 'error', 'message' => 'Uživatel je již přihlášen');
+                            }
+                        }
+
+
+                    }
+                    else { // program je plny
+                        $message = array('status' => 'error', 'message' => 'Kapacita programu je již plná');
+                    }
                 }
             }
         }

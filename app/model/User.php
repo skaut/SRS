@@ -3,6 +3,7 @@
 namespace SRS\Model;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * @ORM\Entity(repositoryClass="\SRS\Model\UserRepository")
@@ -43,7 +44,7 @@ class User extends BaseEntity
     protected $role;
 
     /**
-     * ORM\ManyToMany(targetEntity="\SRS\model\Program\Program", mappedBy="attendees", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="\SRS\Model\Program\Program", mappedBy="attendees", cascade={"persist"})
      */
     protected $programs;
 
@@ -303,6 +304,17 @@ class User extends BaseEntity
         $s = trim($s);
         return $s === "" ? NULL : $s;
     }
+
+    public function hasOtherProgram($program, $basicBlockDuration) {
+        foreach ($this->programs as $otherProgram) {
+            if ($otherProgram->id == $program->id) continue;
+            if ($otherProgram->start == $program->start) return true;
+            if ($otherProgram->start > $program->start && $otherProgram->start < $program->countEnd($basicBlockDuration)) return true;
+            if ($otherProgram->countEnd($basicBlockDuration) > $program->start && $otherProgram->countEnd($basicBlockDuration) < $program->countEnd($basicBlockDuration) ) return true;
+            if ($otherProgram->start < $program->start && $otherProgram->countEnd($basicBlockDuration) > $program->countEnd($basicBlockDuration) ) return true;
+        }
+        return false;
+    }
 }
 
 
@@ -313,4 +325,5 @@ class UserRepository extends \Nella\Doctrine\Repository
 //        return $this->_em->findAllBy(array('role.name' => $roleName));
 //    }
 
+  
 }

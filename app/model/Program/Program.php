@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM,
 /**
  *
  * @ORM\Entity(repositoryClass="\SRS\Model\Program\ProgramRepository")
- *  @JMS\ExclusionPolicy("none")
+ * @JMS\ExclusionPolicy("none")
  * @property \SRS\Model\Program\Block $block
  * @property \Doctrine\Common\Collections\ArrayCollection $attendees
  * @property \DateTime $start
@@ -36,7 +36,7 @@ class Program extends \SRS\Model\BaseEntity
 
 
     /**
-     *  @ORM\ManyToMany(targetEntity="\SRS\model\User", inversedBy="programs", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="\SRS\Model\User", inversedBy="programs", cascade={"persist"})
      * @JMS\Type("ArrayCollection<SRS\Model\User>")
      * @JMS\Exclude
      */
@@ -169,6 +169,10 @@ class Program extends \SRS\Model\BaseEntity
         $this->allDay = $allDay;
     }
 
+    /**
+     * @param string $basicDuration
+     * @return \DateTime
+     */
     public function countEnd($basicDuration) {
         $minutes = $basicDuration*$this->duration;
         $end = $clone = clone $this->start;
@@ -212,6 +216,7 @@ class ProgramRepository extends \Nella\Doctrine\Repository
 
     }
 
+
     public function saveFromJson($data, $basicBlockDuration) {
         $data = json_decode($data);
         $data = (array) $data;
@@ -242,5 +247,7 @@ class ProgramRepository extends \Nella\Doctrine\Repository
         $this->_em->flush();
         return $program;
     }
+
+
 
 }

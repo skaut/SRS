@@ -72,7 +72,7 @@ function setColorFront(event) {
     if (event.attends == true) {
         event.color = COLOR_ATTEND;
     }
-    else if (event.attendees_count >= event.block.capacity) {
+    else if (event.block != undefined && (event.attendees_count >= event.block.capacity)) {
         event.color = COLOR_FULL;
     }
     else {
