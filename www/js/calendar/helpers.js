@@ -46,8 +46,10 @@ function fixDate(d) {
 }
 
 const COLOR_MANDATORY = 'red';
-const COLOR_EMPTY = 'gray';
+const COLOR_EMPTY  = 'gray';
 const COLOR_EMPTY_MANDATORY = 'orange';
+const COLOR_ATTEND = 'green';
+const COLOR_FULL = COLOR_EMPTY
 
 function setColor(event) {
     if (event.block != null && event.mandatory == true) {
@@ -60,6 +62,18 @@ function setColor(event) {
 
     else if ((event.block == null || event.block == undefined) && event.mandatory == false) {
         event.color = COLOR_EMPTY;
+    }
+    else {
+        event.color = null;
+    }
+}
+
+function setColorFront(event) {
+    if (event.attends == true) {
+        event.color = COLOR_ATTEND;
+    }
+    else if (event.attendees_count >= event.block.capacity) {
+        event.color = COLOR_FULL;
     }
     else {
         event.color = null;

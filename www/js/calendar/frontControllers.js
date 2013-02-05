@@ -35,8 +35,8 @@ function FrontCalendarCtrl($scope, $http, $q) {
     //pote co jsou vsechny inicializacni ajax requesty splneny
     $q.all(promisses).then(function() {
         angular.forEach($scope.events, function(event, key) {
-            setColor(event);
             event.block = $scope.options[event.block];
+            setColorFront(event);
 
         });
         console.log($scope.events);
@@ -49,7 +49,7 @@ function FrontCalendarCtrl($scope, $http, $q) {
                 flashMessage(data['message'], data['status']);
                 if (data['status'] == 'success') {
                     event.attends = true;
-                    event.color = 'green';
+                    setColorFront(event);
                 }
                 $('#calendar').fullCalendar('updateEvent', event);
             }).error(function(data, status, headers, config) {
@@ -63,7 +63,7 @@ function FrontCalendarCtrl($scope, $http, $q) {
                 flashMessage(data['message'], data['status']);
                 if (data['status'] == 'success') {
                     event.attends = false;
-                    event.color = null;
+                    setColorFront(event);
                 }
                 $('#calendar').fullCalendar('updateEvent', event);
             }).error(function(data, status, headers, config) {
@@ -85,6 +85,8 @@ function bindCalendar(scope) {
         selectHelper: false,
 
         eventClick: function(event, element) {
+
+
             scope.event = event;
             if (event.attends == false) {
                 scope.attend(event);
@@ -93,6 +95,10 @@ function bindCalendar(scope) {
                 scope.unattend(event);
             }
          },
+
+        eventMouseout: function( event, jsEvent, view ) {
+            $('.popover').fadeOut(); //hack popover obcas nemizi
+        },
 
         eventRender: function(event, element) {
             var options = {}
@@ -103,13 +109,15 @@ function bindCalendar(scope) {
             if (event.block != null && event.block != undefined) {
                 options.content += "<ul class='no-margin block-properties'>";
                 options.content += "<li><span>lektor:</span> "+ event.block.lector +"</li>";
-                options.content += "<li><span>Kapacita:</span> "+ event.block.capacity +"</li>";
+                options.content += "<li><span>Kapacita:</span> "+event.attendees_count+"/"+ event.block.capacity +"</li>";
                 options.content += "<li><span>Lokalita:</span> "+ event.block.location +"</li>";
                 options.content += "<li><span>Pomůcky:</span> "+ event.block.tools +"</li>";
                 options.content +="</ul>";
             }
 
-            element.find('.fc-event-title').popover(options);
+            element.find('.fc-event-content').popover(options);
+            element.find('.fc-event-title').append('<span style="float: right;" class="ui-icon ui-icon-triangle-1-ne"></span>')
+
         }
     }
 

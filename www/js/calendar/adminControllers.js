@@ -36,8 +36,8 @@ function AdminCalendarCtrl($scope, $http, $q) {
     //pote co jsou vsechny inicializacni ajax requesty splneny
     $q.all(promisses).then(function() {
         angular.forEach($scope.events, function(event, key) {
-            setColor(event);
             event.block = $scope.options[event.block];
+            setColor(event);
 
         });
         angular.forEach($scope.options, function(block, key) {
@@ -199,7 +199,7 @@ function bindCalendar(scope) {
             if (event.block != null && event.block != undefined) {
                 options.content += "<ul class='no-margin block-properties'>";
                 options.content += "<li><span>lektor:</span> "+ event.block.lector +"</li>";
-                options.content += "<li><span>Kapacita:</span> "+ event.block.capacity +"</li>";
+                options.content += "<li><span>Kapacita:</span>"+event.attendees_count+"/"+ event.block.capacity +"</li>";
                 options.content += "<li><span>Lokalita:</span> "+ event.block.location +"</li>";
                 options.content += "<li><span>Pomůcky:</span> "+ event.block.tools +"</li>";
                 options.content +="</ul>";
