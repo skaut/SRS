@@ -40,6 +40,7 @@ class ClearCacheCommand extends Command
         //if (file_exists($cacheDir.'/../btfj.dat'))
         //unlink($cacheDir.'/../btfj.dat');
         ClearCacheCommand::recursiveRemoveDirectory($cacheDir);
+        mkdir($cacheDir); //jinak by nette spadlo
 
         //doctrine proxies
         foreach (Finder::findFiles('*.php')->in($proxiesDir) as $key => $file) {

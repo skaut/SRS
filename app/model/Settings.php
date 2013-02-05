@@ -39,6 +39,7 @@ class Settings extends \SRS\Model\BaseEntity
      */
     protected $description;
 
+
     public function __construct($item, $description = null, $value = null)
     {
         $this->item = $item;

@@ -1,0 +1,18 @@
+
+{extends '../@layout.latte'}
+
+{block title}
+ Konfigurace
+{/block}
+
+{block content}
+<h2>Nastavení semináře</h2>
+{widget settingsForm}
+
+<h2>Systém</h2>
+<ul>
+<li><a href="{link clearCache!}">Promazat cache</a></li>
+</ul>
+
+{include '../includes/confirm_dialog.latte'}
+{/block}
