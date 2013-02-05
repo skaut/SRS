@@ -103,6 +103,8 @@ class ProgramPresenter extends BasePresenter
         $calConfig['month'] = $datePieces[1]-1; //fullcalendar je zerobased
         $calConfig['date'] = $datePieces[2];
         $calConfig['basic_block_duration'] = $this->dbsettings->get('basic_block_duration');
+        $calConfig['is_allowed_modify_schedule'] = (bool) $this->dbsettings->get('is_allowed_modify_schedule');
+        $calConfig['is_allowed_log_in_programs'] = (bool) $this->dbsettings->get('is_allowed_log_in_programs');
 
         $response = new \Nette\Application\Responses\JsonResponse($calConfig);
         $this->sendResponse($response);

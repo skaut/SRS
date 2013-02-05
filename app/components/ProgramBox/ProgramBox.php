@@ -19,6 +19,7 @@ class ProgramBox extends \Nette\Application\UI\Control
         $template = $this->template;
         $template->setFile(__DIR__ . '/template.latte');
         $template->backlink = $this->presenter->context->httpRequest->url->path;
+        $template->isAllowedLogInPrograms = (bool) $this->presenter->context->database->getRepository('\SRS\Model\Settings')->get('is_allowed_log_in_programs');
 
         $template->render();
     }

@@ -44,6 +44,9 @@ function AdminCalendarCtrl($scope, $http, $q) {
             $scope.blocks.push(block);
 
         });
+        if (!$scope.config.is_allowed_modify_schedule) {
+            $scope.warning = 'Úprava harmonogramu semináře je zakázána. Povolit úpravy lze v modulu konfigurace.';
+        }
         bindCalendar($scope);
     });
 
@@ -114,14 +117,14 @@ function AdminCalendarCtrl($scope, $http, $q) {
 function bindCalendar(scope) {
 
     var local_config = {
-        editable: true,
-        droppable: true,
+        editable: scope.config.is_allowed_modify_schedule,
+        droppable: scope.config.is_allowed_modify_schedule,
         events: scope.events,
         year: scope.config.year,
         month: scope.config.month,
         date: scope.config.date,
-        selectable: true,
-        selectHelper: true,
+        selectable: scope.config.is_allowed_modify_schedule,
+        selectHelper: scope.config.is_allowed_modify_schedule,
 
         select: function(start, end, allDay) {
             end = bindEndToBasicBlockDuration(start, end, scope.config.basic_block_duration);
@@ -144,9 +147,11 @@ function bindCalendar(scope) {
         },
 
         eventClick: function(event, element) {
-            scope.event = event;
-            scope.refreshForm();
-            $('#blockModal').modal('show');
+            if (scope.config.is_allowed_modify_schedule) {
+                scope.event = event;
+                scope.refreshForm();
+                $('#blockModal').modal('show');
+            }
 
         },
 

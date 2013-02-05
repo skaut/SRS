@@ -32,10 +32,13 @@ class SettingsForm extends UI\Form
         $this->addText('seminar_name', 'Jméno semináře:')->setDefaultValue($this->dbsettings->get('seminar_name'))
             ->addRule(Form::FILLED, 'Zadejte Jméno semináře');
         $this->addText('seminar_from_date', 'Začátek semináře:')->setDefaultValue($this->dbsettings->get('seminar_from_date'))
-            ->addRule(Form::FILLED, 'Zadejte začátek semináře');
+            ->addRule(Form::FILLED, 'Zadejte začátek semináře')->getControlPrototype()->class('datepicker');
         $this->addText('seminar_to_date', 'Konec semináře:')->setDefaultValue($this->dbsettings->get('seminar_to_date'))
-            ->addRule(Form::FILLED, 'Zadejte konec semináře');
+            ->addRule(Form::FILLED, 'Zadejte konec semináře')->getControlPrototype()->class('datepicker');
         $this->addSelect('basic_block_duration','Základní délka trvání jednoho progrmaového bloku semináře:' )->setItems($basicBlockDurationChoices)->setDefaultValue($this->dbsettings->get('basic_block_duration'));
+        $this->addCheckbox('is_allowed_add_block', 'Je povoleno vytvářet programové bloky?')->setDefaultValue($this->dbsettings->get('is_allowed_add_block'));
+        $this->addCheckbox('is_allowed_modify_schedule', 'Je povoleno upravovat harmonogram semináře?')->setDefaultValue($this->dbsettings->get('is_allowed_modify_schedule'));
+        $this->addCheckbox('is_allowed_log_in_programs', 'Je povoleno přihlašovat se na programové bloky?')->setDefaultValue($this->dbsettings->get('is_allowed_log_in_programs'));
 
         $this->addSubmit('submit','Uložit')->getControlPrototype()->class('btn');
         $this->onSuccess[] = callback($this, 'formSubmitted');
@@ -44,10 +47,17 @@ class SettingsForm extends UI\Form
     public function formSubmitted()
     {
         $values = $this->getValues();
-        foreach ($values as $key => $value) {
-            $this->dbsettings->set($key, $value);
+
+        if (\DateTime::createFromFormat("Y-m-d", $values['seminar_to_date']) < \DateTime::createFromFormat("Y-m-d", $values['seminar_from_date'])) {
+            $this->presenter->flashMessage('Datum konce semináře nemůže být menší než začátku', 'error');
         }
-        $this->presenter->flashMessage('Konfigurace uložena', 'success');
+        else {
+            foreach ($values as $key => $value) {
+                $this->dbsettings->set($key, $value);
+            }
+            $this->presenter->flashMessage('Konfigurace uložena', 'success');
+            $this->presenter->redirect('this');
+    }
 
     }
 

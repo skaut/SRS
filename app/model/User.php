@@ -325,5 +325,5 @@ class UserRepository extends \Nella\Doctrine\Repository
 //        return $this->_em->findAllBy(array('role.name' => $roleName));
 //    }
 
-  
+
 }

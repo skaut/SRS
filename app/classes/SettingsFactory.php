@@ -22,6 +22,9 @@ class SettingsFactory
         $settings[] = new \SRS\Model\Settings('seminar_from_date', 'Začátek semináře', $today->format('Y-m-d'));
         $settings[] = new \SRS\Model\Settings('seminar_to_date', 'Konec semináře', $tommorow->format('Y-m-d'));
         $settings[] = new \SRS\Model\Settings('basic_block_duration', 'Základní délka trvání jednoho bloku semináře (minuty)', '60');
+        $settings[] = new \SRS\Model\Settings('is_allowed_add_block', 'Lze vytvářet programové bloky?', '1');
+        $settings[] = new \SRS\Model\Settings('is_allowed_modify_schedule', 'Lze upravovat harmonogram semináře?', '1');
+        $settings[] = new \SRS\Model\Settings('is_allowed_log_in_programs', 'Lze se přihlašovat na Programy?', '0');
         return $settings;
     }
 

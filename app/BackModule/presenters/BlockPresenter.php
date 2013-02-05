@@ -47,6 +47,10 @@ class BlockPresenter extends BasePresenter
             $this['blockForm']->bindEntity($block);
             $this->template->block = $block;
         }
+        else if (!(bool) $this->dbsettings->get('is_allowed_add_block')) {
+            $this->flashMessage('Přidávání nových bloků je zakázáno. Toto lze povolit v modulu konfigurace', 'info');
+            $this->redirect(':Back:Block:list');
+        }
 
     }
 

@@ -39,7 +39,6 @@ function FrontCalendarCtrl($scope, $http, $q) {
             setColorFront(event);
 
         });
-        console.log($scope.events);
         bindCalendar($scope);
     });
 
@@ -85,19 +84,19 @@ function bindCalendar(scope) {
         selectHelper: false,
 
         eventClick: function(event, element) {
-
-
-            scope.event = event;
-            if (event.attends == false) {
-                scope.attend(event);
-            }
-            else {
-                scope.unattend(event);
+            if (scope.config.is_allowed_log_in_programs) {
+                scope.event = event;
+                if (event.attends == false) {
+                    scope.attend(event);
+                }
+                else {
+                    scope.unattend(event);
+                }
             }
          },
 
         eventMouseout: function( event, jsEvent, view ) {
-            $('.popover').fadeOut(); //hack popover obcas nemizi
+            $('.popover').fadeOut(); //hack popover obcas nezmizi
         },
 
         eventRender: function(event, element) {
