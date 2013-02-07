@@ -109,7 +109,7 @@ class InstallPresenter extends \SRS\BaseComponentsPresenter
     public function renderAdmin() {
         if ($this->context->database->getRepository('\SRS\model\Settings')->get('superadmin_created') == true) {
             $this->flashMessage('Administrátorská role byla již nastavena dříve');
-            $this->redirect(':Install:install:finish');
+            $this->redirect(':Install:install:finish?before=true');
         }
         if ($this->user->isLoggedIn()) {
             $adminRole = $this->context->database->getRepository('\SRS\Model\Acl\Role')->findByName('Administrátor');
@@ -130,6 +130,10 @@ class InstallPresenter extends \SRS\BaseComponentsPresenter
             $this->redirect(':Install:install:finish');
         }
         $this->template->backlink = $this->backlink();
+    }
+
+    public function renderFinish() {
+        $this->template->installedEarlier = $this->getParameter('before');
     }
 
 

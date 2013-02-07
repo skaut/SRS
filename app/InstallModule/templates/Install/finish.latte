@@ -1,5 +1,8 @@
 {* This is the welcome page, you can delete it *}
 {block header}Dokončení{/block}
 {block content}
-
+{if $installedEarlier}
+<p>Instalce systému byla již provedena.</p>
+{else}
 <p>Byla vám nastavena Administrátorská role, pokračujte do <a href="{plink :Back:Dashboard:default}">administrace systému</a> a začněte jej používat (bude vyžadováno nové přihlášení).</p>
+{/if}
