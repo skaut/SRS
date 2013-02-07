@@ -2,15 +2,12 @@
 {extends '../Programlayout.latte'}
 
 {block title}
-Program » Bloky
+Program » {ifset $block}{$block->name}{else}Nový blok{/ifset}
 {/block}
 
 {block content}
-
-<div class="row-fluid">
-    <div class="span9">
+        <h1>{ifset $block}{$block->name}{else}Nový blok{/ifset}</h1>
        {widget blockForm}
-    </div>
-</div>
+
 {include '../includes/confirm_dialog.latte'}
 {/block}

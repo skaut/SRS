@@ -35,7 +35,7 @@ class SettingsForm extends UI\Form
             ->addRule(Form::FILLED, 'Zadejte začátek semináře')->getControlPrototype()->class('datepicker');
         $this->addText('seminar_to_date', 'Konec semináře:')->setDefaultValue($this->dbsettings->get('seminar_to_date'))
             ->addRule(Form::FILLED, 'Zadejte konec semináře')->getControlPrototype()->class('datepicker');
-        $this->addSelect('basic_block_duration','Základní délka trvání jednoho progrmaového bloku semináře:' )->setItems($basicBlockDurationChoices)->setDefaultValue($this->dbsettings->get('basic_block_duration'));
+        $this->addSelect('basic_block_duration','Základní délka trvání jednoho programového bloku semináře:' )->setItems($basicBlockDurationChoices)->setDefaultValue($this->dbsettings->get('basic_block_duration'));
         $this->addCheckbox('is_allowed_add_block', 'Je povoleno vytvářet programové bloky?')->setDefaultValue($this->dbsettings->get('is_allowed_add_block'));
         $this->addCheckbox('is_allowed_modify_schedule', 'Je povoleno upravovat harmonogram semináře?')->setDefaultValue($this->dbsettings->get('is_allowed_modify_schedule'));
         $this->addCheckbox('is_allowed_log_in_programs', 'Je povoleno přihlašovat se na programové bloky?')->setDefaultValue($this->dbsettings->get('is_allowed_log_in_programs'));

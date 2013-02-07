@@ -31,11 +31,35 @@ Program » Blok {$block->name}
 <h3>Zařazení v harmonogramu:</h3>
     <table class="table table-stripped">
         <thead>
-        <tr><th>Od</th><th>Do</th><th>Obsazenost</th></tr>
+        <tr><th>Od</th><th>Do</th><th>Obsazenost</th><th>Povinný</th></tr>
         </thead>
         <tbody>
         {foreach $block->programs as $program}
-        <tr><td>{$program->start|date:"d.m. H:i:s"}</td><td>{$program->countEnd($basicBlockDuration)|date:"d.m. H:i:s"}</td><td>{$program->attendees->count()}/{$block->capacity}</td></tr>
+        <tr><td>{$program->start|date:"d.m. H:i:s"}</td>
+            <td>{$program->countEnd($basicBlockDuration)|date:"d.m. H:i:s"}</td>
+            <td>{$program->attendees->count()}/{$block->capacity}
+            <td>{if $program->mandatory == true}ANO{else}NE{/if}</td>
+            <td><a data-toggle="modal" data-target="#modal-{$program->id}">přihlášení účastnící</a>
+                <div id='modal-{$program->id}' class="modal hide fade">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h3>Přihlášení účastnící termín {$program->start|date:"d.m. H:i:s"} - {$program->countEnd($basicBlockDuration)|date:"d.m. H:i:s"} </h3>
+                    </div>
+                    <div class="modal-body">
+                        <ul>
+                            {foreach $program->attendees as $att}
+                            <li>{$att->firstName} {$att->lastName} - {$att->nickName}</li>
+                            {/foreach}
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" class="btn" data-dismiss="modal">Zavřít</a>
+
+                    </div>
+                </div>
+
+            </td>
+        </tr>
         {/foreach}
         </tbody>
 

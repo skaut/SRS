@@ -15,6 +15,7 @@ Program » Bloky
         <th>Lektor</th>
         <th>Délka</th>
         <th>Kapacita</th>
+        <th>Počet zařazení  v harmonogramu</th>
         <th>Operace</th>
         </thead>
         <tbody>
@@ -33,11 +34,15 @@ Program » Bloky
                 {$block->capacity}
             </td>
             <td>
+                {$block->programs->count()}
+            </td>
+
+            <td>
                 <a class="btn" href="{plink detail $block->id}">
                     Zobrazit detail
                 </a>
-
                 {if $user->isAllowed('Program', 'Spravovat Všechny Programy') || ($user->isAllowed('Program', 'Spravovat vlastní Programy') && isset($block->lector->id) && $user->id == $block->lector->id)}
+                <a href="{plink edit $block->id}" class="btn btn-warning">Upravit</a>
                 <a class="btn btn-danger confirm" href="{link delete! $block->id}">
                     Smazat
                 </a>

@@ -11,6 +11,8 @@ namespace BackModule;
 
 class BlockPresenter extends BasePresenter
 {
+    protected $resource = 'Program';
+
     /**
      * @var \SRS\Model\Program\BlockRepository
      */
@@ -18,6 +20,7 @@ class BlockPresenter extends BasePresenter
 
     public function startup() {
         parent::startup();
+        $this->checkPermissions('Přístup');
         $this->blockRepo = $this->context->database->getRepository('\SRS\Model\Program\Block');
     }
 

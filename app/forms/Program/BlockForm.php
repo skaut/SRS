@@ -89,7 +89,7 @@ class BlockForm extends \SRS\Form\EntityForm
 
         $this->presenter->context->database->flush();
 
-        $this->presenter->flashMessage('Block upraven', 'success');
+        $this->presenter->flashMessage('Programový blok upraven', 'success');
         $submitName = ($this->isSubmitted());
         $submitName = $submitName->htmlName;
 
