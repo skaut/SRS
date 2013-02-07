@@ -64,7 +64,7 @@ class Page extends \SRS\Model\BaseEntity
 
 
     /**
-     * @ORM\OneToMany(targetEntity="\SRS\model\CMS\Content", mappedBy="page", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="\SRS\Model\CMS\Content", mappedBy="page", cascade={"persist"})
      * @ORM\OrderBy({"position" = "ASC"})
      * @var  \Doctrine\Common\Collections\ArrayCollection
      */

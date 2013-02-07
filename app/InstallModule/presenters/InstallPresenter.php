@@ -4,7 +4,7 @@
 namespace InstallModule;
 error_reporting(0);
 
-class InstallPresenter extends \Nette\Application\UI\Presenter
+class InstallPresenter extends \SRS\BaseComponentsPresenter
 {
 
 	public function renderDefault()
@@ -80,6 +80,12 @@ class InstallPresenter extends \Nette\Application\UI\Presenter
 
             //settings
             $options = array('command' => 'srs:initial-data:settings');
+            $output = new \Symfony\Component\Console\Output\NullOutput();
+            $input = new \Symfony\Component\Console\Input\ArrayInput($options);
+            $this->context->console->application->run($input, $output);
+
+            //cms
+            $options = array('command' => 'srs:initial-data:cms');
             $output = new \Symfony\Component\Console\Output\NullOutput();
             $input = new \Symfony\Component\Console\Input\ArrayInput($options);
             $this->context->console->application->run($input, $output);

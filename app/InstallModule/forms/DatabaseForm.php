@@ -23,7 +23,7 @@ class DatabaseForm extends UI\Form
         parent::__construct($parent, $name);
 
         $this->addText('host', 'Host:')
-            ->addRule(Form::FILLED, 'Zadejte Host');
+            ->addRule(Form::FILLED, 'Zadejte Host')->setDefaultValue('localhost');
         $this->addText('dbname', 'Databáze:')
             ->addRule(Form::FILLED, 'Zadejte Databázi');
         $this->addText('user', 'Uživatel:')
