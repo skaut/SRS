@@ -40,20 +40,9 @@ class UserGrid extends Grid
         $qb->leftJoin('u.role','role'); //'WITH', 'role.standAlone=1');
 
 
-
-       // $query = $this->em->createQuery("SELECT u, role FROM \SRS\Model\User u LEFT JOIN u.roles role WHERE u.username LIKE 'srs%'");
-        //$query->getResult();
-//        $lol = $user->roles->filter(function($role) {
-//            return $role->standAlone == true;
-//        });
-
         $roles = $this->em->getRepository('\SRS\Model\Acl\Role')->findAll();
 
         $rolesGrid = array();
-
-        $userToSave = $presenter->context->database->getRepository('\SRS\Model\User')->find(1);
-
-
 
 
         foreach ($roles as $role) {
@@ -80,6 +69,8 @@ class UserGrid extends Grid
         });
 
 
+        $this->components['gridForm']['userGrid']['rowForm']['role']->setPrompt('(zachovat původní)');
+
         $self = $this;
 
 
@@ -87,7 +78,9 @@ class UserGrid extends Grid
         $this->setRowFormCallback(function($values) use ($self, $presenter){
                 $userToSave = $presenter->context->database->getRepository('\SRS\Model\User')->find($values['id']);
                 $newRole = $presenter->context->database->getRepository('SRS\Model\Acl\Role')->find($values['role']);
+                if ($newRole != null) {
                 $userToSave->role = $newRole;
+                }
                 $userToSave->approved = isset($values['approved']) ? 1 : 0;
                 $presenter->context->database->flush();
 
