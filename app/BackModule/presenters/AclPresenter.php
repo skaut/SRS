@@ -14,6 +14,8 @@ class AclPresenter extends BasePresenter
      */
     public $roleRepo;
 
+    protected $resource = 'ACL';
+
     protected function createComponentUserGrid()
     {
         return new \SRS\Components\UserGrid($this->context->database);
@@ -21,6 +23,7 @@ class AclPresenter extends BasePresenter
 
     public function startup() {
         parent::startup();
+        $this->checkPermissions('Spravovat');
         $this->roleRepo = $this->context->database->getRepository('\SRS\Model\Acl\Role');
     }
 
@@ -29,6 +32,7 @@ class AclPresenter extends BasePresenter
     }
 
     public function renderRoles() {
+
         $roles = $this->roleRepo->findAll();
 
         $this->template->roles = $roles;
@@ -54,8 +58,11 @@ class AclPresenter extends BasePresenter
         //$permissionsNotOwnedByParent = $query->getResult(); //umoznujeme pracovat jen s temi pravy, ktere jeste nema rodic
 
         $permissions = $this->context->database->getRepository('\SRS\Model\Acl\Permission')->findAll();
-        $permissionFormChoices = \SRS\Form\EntityForm::getFormChoices($permissions);
 
+        $permissionFormChoices = array();
+        foreach ($permissions as $perm) {
+            $permissionFormChoices[$perm->id] = "{$perm->name} | {$perm->resource->name}";
+        }
 
         $form = $this->getComponent('roleForm');
         $this['roleForm']['permissions']->setItems($permissionFormChoices);
@@ -84,6 +91,23 @@ class AclPresenter extends BasePresenter
         $this->context->database->flush();
         $this->flashMessage('Role smazána', 'success');
         $this->redirect('this');
+    }
+
+    public function handleLoginAs($id) {
+        $role = $this->roleRepo->find($id);
+
+        if ($role == null) {
+            $this->flashMessage('Tato role neexistuje', 'error');
+            $this->redirect('this');
+        }
+        else {
+            $user = $this->user;
+
+            $user->identity->setRoles(array($role->name));
+            $this->flashMessage('Přihlášení proběhlo úspěšně');
+        }
+        $this->redirect('this');
+
     }
 
 

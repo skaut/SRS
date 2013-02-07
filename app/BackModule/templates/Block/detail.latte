@@ -11,10 +11,13 @@ Program » Blok {$block->name}
     <li class="active">Detail: {$block->name}</li>
 </ul>
 <h2>Detail bloku: {$block->name}</h2>
+
+{if $user->isAllowed('Program', 'Spravovat Všechny Programy') || ($user->isAllowed('Program', 'Spravovat vlastní Programy') && isset($block->lector->id) && $user->id == $block->lector->id)}
 <div class="navbar">
     <a class="btn btn-warning" href="{plink edit $block->id}">Upravit Blok</a>
     <a class="btn btn-danger confirm" href="{link delete! $block->id}">Smazat Blok</a>
 </div>
+{/if}
 <ul class="block-properties no-margin">
    {ifset $block->lector->username}
    <li><span>Lektor:</span> {$block->lector->username}</li>

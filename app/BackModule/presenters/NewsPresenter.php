@@ -11,10 +11,12 @@ use Nette\Application\UI\Form;
 
 class NewsPresenter extends BasePresenter
 {
+    protected $resource = "CMS";
     protected $entity = '\SRS\Model\CMS\News';
 
     public function startup() {
         parent::startup();
+        $this->checkPermissions('Spravovat');
 
     }
 

@@ -11,9 +11,12 @@ use Nette\Application\UI\Form;
 
 class PagePresenter extends BasePresenter
 {
+    protected $resource = "CMS";
 
     public function startup() {
         parent::startup();
+
+        $this->checkPermissions('Spravovat');
 
     }
 

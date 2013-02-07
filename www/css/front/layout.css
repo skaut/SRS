@@ -127,3 +127,7 @@ ul.no-bullets > li {
 
 }
 
+.fc-event {
+    cursor: pointer !important;
+}
+

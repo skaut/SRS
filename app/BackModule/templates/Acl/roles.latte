@@ -21,6 +21,7 @@ Práva & Role » Role
         <td>
             <a class="btn" href="{plink Acl:editRole $role->id}">Upravit</a> &nbsp;&nbsp;
             {if !$role->isSystem()}<a class="btn btn-danger confirm" title='Všem uživatelům s touto rolí bude nastavena role Registrovaný.' href="{link deleteRole! $role->id}">Smazat</a>{/if}
+            <a class="btn" href="{link loginas! $role->id}">Přihlásit se pod touto rolí</a> &nbsp;&nbsp;
         </td>
     </tr>
    {/foreach}

@@ -34,10 +34,10 @@
                     </p>
                     <ul class="nav">
                         <li {ifCurrent :Back:dashboard:default}class="active"{/ifCurrent}><a href="{plink :Back:dashboard:default}">Home</a></li>
-                        <li {ifCurrent :Back:acl:list}class="active"{/ifCurrent}><a href="{plink :Back:acl:users}">Práva a Role</a></li>
-                        <li {ifCurrent :Back:Page:pages}class="active"{/ifCurrent}><a href="{plink :Back:Page:Pages}">CMS</a></li>
-                        <li {ifCurrent :Back:Block}class="active"{/ifCurrent}><a href="{plink :Back:Block:list}">Program semináře</a></li>
-                        <li {ifCurrent :Back:Configration}class="active"{/ifCurrent}><a href="{plink :Back:Configuration:default}">Konfigurace</a></li>
+                       {if $user->isAllowed('ACL', 'Spravovat')} <li {ifCurrent :Back:acl:list}class="active"{/ifCurrent}><a href="{plink :Back:acl:users}">Práva a Role</a></li>{/if}
+                       {if $user->isAllowed('CMS', 'Spravovat')} <li {ifCurrent :Back:Page:pages}class="active"{/ifCurrent}><a href="{plink :Back:Page:Pages}">CMS</a></li>{/if}
+                       {if $user->isAllowed('Program', 'Přístup')} <li {ifCurrent :Back:Block}class="active"{/ifCurrent}><a href="{plink :Back:Block:list}">Program semináře</a></li>{/if}
+                       {if $user->isAllowed('Konfigurace', 'Spravovat')} <li {ifCurrent :Back:Configration}class="active"{/ifCurrent}><a href="{plink :Back:Configuration:default}">Konfigurace</a></li>{/if}
 
                     </ul>
                 </div><!--/.nav-collapse -->

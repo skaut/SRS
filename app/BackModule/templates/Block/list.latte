@@ -37,9 +37,11 @@ Program » Bloky
                     Zobrazit detail
                 </a>
 
+                {if $user->isAllowed('Program', 'Spravovat Všechny Programy') || ($user->isAllowed('Program', 'Spravovat vlastní Programy') && isset($block->lector->id) && $user->id == $block->lector->id)}
                 <a class="btn btn-danger confirm" href="{link delete! $block->id}">
                     Smazat
                 </a>
+                {/if}
             </td>
         </tr>
         </tbody>

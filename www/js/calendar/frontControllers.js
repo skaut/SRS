@@ -114,7 +114,7 @@ function bindCalendar(scope) {
                 options.content +="</ul>";
             }
 
-            element.find('.fc-event-content').popover(options);
+            element.popover(options);
             element.find('.fc-event-title').append('<span style="float: right;" class="ui-icon ui-icon-triangle-1-ne"></span>')
 
         }

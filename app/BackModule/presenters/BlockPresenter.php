@@ -73,7 +73,7 @@ class BlockPresenter extends BasePresenter
     }
 
     protected function createComponentBlockForm() {
-        return new \SRS\Form\Program\BlockForm(null, null, $this->presenter->dbsettings, $this->context->database);
+        return new \SRS\Form\Program\BlockForm(null, null, $this->presenter->dbsettings, $this->context->database, $this->user);
     }
 
 }

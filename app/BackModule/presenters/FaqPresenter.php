@@ -12,9 +12,11 @@ use Nette\Application\UI\Form;
 class FaqPresenter extends BasePresenter
 {
     protected $entity = '\SRS\Model\CMS\Faq';
+    protected $resource = "CMS";
 
     public function startup() {
         parent::startup();
+        $this->checkPermissions('Spravovat');
 
     }
 

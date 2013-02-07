@@ -21,10 +21,19 @@ abstract class BasePresenter extends \SRS\BasePresenter
 
         $this->dbsettings = $this->presenter->context->database->getRepository('\SRS\Model\Settings');
 
-//        if ($this->context->user->isInRole('guest')) {
-//            $this->flashMessage('Pro vstup do administrace nemáte dostatečné oprávnění');
-//            $this->redirect(':Homepage:default');
-//        }
+
+        if (!$this->context->user->isAllowed('Administrace', 'Přístup' )) {
+            $this->flashMessage('Pro vstup do administrace nemáte dostatečné oprávnění');
+            $this->redirect(':Front:Page:Default');
+        }
+    }
+
+    protected function checkPermissions($permission) {
+        if (!$this->context->user->isAllowed($this->resource, $permission )) {
+            $this->flashMessage('Nemáte dostatečné oprávnění');
+            $this->redirect(':Back:Dashboard:Default');
+        }
+
     }
     
 

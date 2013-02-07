@@ -19,7 +19,7 @@ class Permission extends \SRS\Model\BaseEntity
 
 
     /**
-     * @ORM\Column(unique=true)
+     * @ORM\Column
      * @var string
      */
     protected $name;

@@ -30,12 +30,15 @@ class BlockForm extends \SRS\Form\EntityForm
      */
     protected $em;
 
-    public function __construct(IContainer $parent = NULL, $name = NULL, $dbsettings, $em)
+    protected $user;
+
+    public function __construct(IContainer $parent = NULL, $name = NULL, $dbsettings, $em, $user)
     {
         parent::__construct($parent, $name);
 
         $this->dbsettings = $dbsettings;
         $this->em = $em;
+        $this->user = $user;
         $lectors = $this->em->getRepository('\SRS\Model\Acl\Role')->findApprovedUsersInRole('lektor');
 
 
@@ -52,9 +55,13 @@ class BlockForm extends \SRS\Form\EntityForm
         $this->addSelect('duration', 'Doba trvání:')
             ->setItems($this->prepareDurationChoices())
             ->addRule(Form::FILLED, 'Zadejte dobu trvání');
-        $this->addSelect('lector', 'Lektor:')->setItems(\SRS\Form\EntityForm::getFormChoices($lectors, 'id', 'nickName'))->setPrompt('-- vyberte --');
-
-
+        $this->addSelect('lector', 'Lektor:');
+        if ($this->user->isAllowed('Program', 'Spravovat Všechny Programy')) {
+            $this['lector']->setItems(\SRS\Form\EntityForm::getFormChoices($lectors, 'id', 'lastName'))->setPrompt('-- vyberte --');
+        }
+        else {
+            $this['lector']->setItems(array($this->user->id => $this->user->identity->object->lastName));
+        }
         $this->addSubmit('submit','Uložit')->getControlPrototype()->class('btn');
         $this->addSubmit('submit_continue','Uložit a pokračovat v úpravách')->getControlPrototype()->class('btn');
 
