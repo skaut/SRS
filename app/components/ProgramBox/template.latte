@@ -9,6 +9,12 @@
 Zapisování programů není v tuto chvíli povoleno.
 </div>
 {/if}
+
+{if !$userHasPermission}
+<div class="notice">
+Vaše role nemá právo zapisovat si programy
+</div>
+{/if}
 <div id="app" ng-app="calendar" ng-controller="FrontCalendarCtrl">
 <div class="span2">
     <div class="ajax-loader">

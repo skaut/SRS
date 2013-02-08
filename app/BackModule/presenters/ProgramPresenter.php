@@ -113,7 +113,7 @@ class ProgramPresenter extends BasePresenter
             $calConfig['is_allowed_modify_schedule'] = false;
         }
 
-        $calConfig['is_allowed_log_in_programs'] = (bool) $this->dbsettings->get('is_allowed_log_in_programs');
+        $calConfig['is_allowed_log_in_programs'] = (bool) $this->dbsettings->get('is_allowed_log_in_programs') && $this->user->isAllowed($this->resource, 'Vybírat si programy');
 
         $response = new \Nette\Application\Responses\JsonResponse($calConfig);
         $this->sendResponse($response);
