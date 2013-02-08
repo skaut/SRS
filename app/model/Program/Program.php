@@ -59,6 +59,7 @@ class Program extends \SRS\Model\BaseEntity
     /**
      * @ORM\Column(type="datetime")
      * @JMS\Type("DateTime")
+     * @JMS\Exclude
      */
     protected $timestamp;
 
