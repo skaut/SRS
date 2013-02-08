@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM,
 /**
  *
  * @ORM\Entity(repositoryClass="\SRS\Model\Program\ProgramRepository")
+ * @ORM\HasLifecycleCallbacks
  * @JMS\ExclusionPolicy("none")
  * @property \SRS\Model\Program\Block $block
  * @property \Doctrine\Common\Collections\ArrayCollection $attendees
@@ -53,6 +54,13 @@ class Program extends \SRS\Model\BaseEntity
      * @JMS\Type("integer")
      */
     protected $duration;
+
+
+    /**
+     * @ORM\Column(type="datetime")
+     * @JMS\Type("DateTime")
+     */
+    protected $timestamp;
 
     /**
      * @ORM\Column(type="boolean")
@@ -198,6 +206,14 @@ class Program extends \SRS\Model\BaseEntity
         else {
             $this->title = "(Nepřiřazeno)";
         }
+    }
+
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function updateTimestamp() {
+        $this->timestamp = new \DateTime('now');
     }
 
 
