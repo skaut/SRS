@@ -18,6 +18,7 @@ use Doctrine\Common\Collections\Criteria;
  * @property string $name
  * @property bool $system
  * @property bool $registerable
+ * @property bool $approvedAfterRegistration
  * @property \DateTime|string $registerableFrom
  * @property \DateTime|string $registerableTo
  * @property \Doctrine\Common\Collections\ArrayCollection $users
@@ -65,6 +66,13 @@ class Role extends \SRS\Model\BaseEntity
      * @ORM\Column(type="boolean")
      */
     protected $registerable = true;
+
+    /**
+     * Je role po registraci rovnou schvalena?
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $approvedAfterRegistration = false;
 
 
     /**
@@ -138,6 +146,15 @@ class Role extends \SRS\Model\BaseEntity
     public function setRegisterable($registerable)
     {
         $this->registerable = $registerable;
+    }
+
+    public function getApprovedAfterRegistration()
+    {
+     return $this->approvedAfterRegistration;
+    }
+
+    public function setApprovedAfterRegistration($approvedAfterRegistration) {
+        $this->approvedAfterRegistration = $approvedAfterRegistration;
     }
 
 //    public function setChildren($children)

@@ -35,6 +35,7 @@ class RoleForm extends EntityForm
         $this->addCheckbox('registerable', 'Registrovatelná');
         $this->addText('registerableFrom', 'Registrovatelná od')->getControlPrototype()->class('datepicker');
         $this->addText('registerableTo', 'Registrovatelná do')->getControlPrototype()->class('datepicker');
+        $this->addCheckbox('approvedAfterRegistration', 'Je uživateli role po registraci automaticky schválena?');
 
         $this->addMultiSelect('permissions', 'Práva');
         $this->addSubmit('submit','Upravit roli')->getControlPrototype()->class('btn');

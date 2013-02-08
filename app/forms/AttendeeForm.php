@@ -45,8 +45,10 @@ class AttendeeForm extends EntityForm
     public function submitted()
     {
         $values = $this->getValues();
+        $role = $this->presenter->context->database->getRepository('\SRS\Model\Acl\Role')->find($values['role']);
         $user = $this->presenter->context->database->getRepository('\SRS\Model\User')->find($values['id']);
         $user->setProperties($values, $this->presenter->context->database);
+        $user->approved = $role->approvedAfterRegistration;
         $this->presenter->context->database->flush();
         $this->presenter->flashMessage('Přihláška odeslána', 'success');
         $this->presenter->flashMessage('Pro další používání webu se znovu přihlašte přes skautIS', 'info');

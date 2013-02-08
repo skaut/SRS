@@ -23,6 +23,7 @@ class AclFactory
         $admin->registerable = False;
         $registered->registerable = False;
         $guest->registerable = False;
+        $attendee->approvedAfterRegistration = true;
 
         $backend = new \SRS\Model\Acl\Resource('Administrace');
         $acl = new \SRS\Model\Acl\Resource('ACL');
@@ -66,6 +67,9 @@ class AclFactory
         $program_harmonogram_edit = new \SRS\Model\Acl\Permission('Upravovat harmonogram', $program);
         $admin->permissions->add($program_harmonogram_edit);
         $organizer->permissions->add($program_harmonogram_edit);
+
+        $program_choose = new \SRS\Model\Acl\Permission('Vybírat si programy', $program);
+        $attendee->permissions->add($program_choose);
 
 
         return $roles;

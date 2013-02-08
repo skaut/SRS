@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="type", type="string")
- * @ORM\DiscriminatorMap({"content" = "Content", "textcontent" = "TextContent", "documentcontent" = "DocumentContent", "attendeeboxcontent" = "AttendeeBoxContent", "htmlcontent" = "HTMLContent",  "faqcontent" = "FaqContent", "newscontent" = "NewsContent", "programboxcontent" = "ProgramBoxContent"})
+ * @ORM\DiscriminatorMap({"content" = "Content", "textcontent" = "TextContent", "documentcontent" = "DocumentContent", "attendeeboxcontent" = "AttendeeBoxContent", "htmlcontent" = "HTMLContent",  "faqcontent" = "FaqContent", "newscontent" = "NewsContent", "programboxcontent" = "ProgramBoxContent", "imagecontent" = "ImageContent"})
  * @property int $position
  * @property string $area
  * @property \SRS\Model\CMS\Page $page
@@ -28,6 +28,7 @@ abstract class Content extends \SRS\Model\BaseEntity implements IContent
      */
     public static $TYPES = array(
         'Text' => 'Text',
+        'Image' => 'Obrázek',
         'Document' => 'Dokumenty',
         'AttendeeBox' => 'Přihlašovací formulář',
         'HTML' => 'HTML box',
