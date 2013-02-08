@@ -164,6 +164,8 @@ class ProgramPresenter extends BasePresenter
                 }
             }
         }
+        $program->prepareForJson(null, $this->basicBlockDuration);
+        $message['event']['attendees_count'] = $program->attendeesCount;
         $response = new \Nette\Application\Responses\JsonResponse($message);
         $this->sendResponse($response);
         $this->terminate();
@@ -193,6 +195,8 @@ class ProgramPresenter extends BasePresenter
                     }
             }
         }
+        $program->prepareForJson(null, $this->basicBlockDuration);
+        $message['event']['attendees_count'] = $program->attendeesCount;
         $response = new \Nette\Application\Responses\JsonResponse($message);
         $this->sendResponse($response);
         $this->terminate();

@@ -193,7 +193,7 @@ class Program extends \SRS\Model\BaseEntity
         return $this->attendees->contains($user);
     }
 
-    public function prepareForJson($user, $basicDuration) {
+    public function prepareForJson($user = null, $basicDuration) {
         $this->end = $this->countEnd($basicDuration);
         $this->attendeesCount = $this->attendees->count();
 

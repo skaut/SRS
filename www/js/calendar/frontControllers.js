@@ -1,46 +1,58 @@
 
-function FrontCalendarCtrl($scope, $http, $q) {
+function FrontCalendarCtrl($scope, $http, $q, $timeout) {
     $scope.option = ''; // indexovane bloky - pro snadne vyhledavani a prirazovani
     $scope.event = null; // udalost se kterou prave pracuji
     $scope.config = null; // konfiguracni nastaveni pro kalendar
 
-    var promise, promisses = [];
+
     var api_path = basePath + '/admin/program/';
+    $scope.startup = function() {
+        var promise, promisses = [];
+        promise = $http.post(api_path+"getoptions", {})
+            .success(function(data, status, headers, config) {
+                $scope.options = data;
+            }).error(function(data, status, headers, config) {
+                $scope.status = status;
+            });
+        promisses.push(promise);
 
-    promise = $http.post(api_path+"getoptions", {})
-        .success(function(data, status, headers, config) {
-            $scope.options = data;
-        }).error(function(data, status, headers, config) {
-            $scope.status = status;
+        promise = $http.post(api_path+"./get?userAttending=1", {})
+            .success(function(data, status, headers, config) {
+                $scope.events = data;
+            }).error(function(data, status, headers, config) {
+                $scope.status = status;
+            });
+        promisses.push(promise);
+
+        promise = $http.post(api_path+"./getcalendarconfig", {})
+            .success(function(data, status, headers, config) {
+                $scope.config = data;
+
+            }).error(function(data, status, headers, config) {
+                $scope.status = status;
+            });
+        promisses.push(promise);
+
+        //pote co jsou vsechny inicializacni ajax requesty splneny
+        $q.all(promisses).then(function() {
+            angular.forEach($scope.events, function(event, key) {
+                event.block = $scope.options[event.block];
+                setColorFront(event);
+
+            });
+            bindCalendar($scope);
         });
-    promisses.push(promise);
+    }
 
-    promise = $http.post(api_path+"./get?userAttending=1", {})
-        .success(function(data, status, headers, config) {
-            $scope.events = data;
-        }).error(function(data, status, headers, config) {
-            $scope.status = status;
-        });
-    promisses.push(promise);
+    $scope.startup();
 
-    promise = $http.post(api_path+"./getcalendarconfig", {})
-        .success(function(data, status, headers, config) {
-            $scope.config = data;
+    $scope.onTimeout = function(){
+        $scope.startup();
+        mytimeout = $timeout($scope.onTimeout,120000);
+    }
+    var mytimeout = $timeout($scope.onTimeout,120000);
 
-        }).error(function(data, status, headers, config) {
-            $scope.status = status;
-        });
-    promisses.push(promise);
 
-    //pote co jsou vsechny inicializacni ajax requesty splneny
-    $q.all(promisses).then(function() {
-        angular.forEach($scope.events, function(event, key) {
-            event.block = $scope.options[event.block];
-            setColorFront(event);
-
-        });
-        bindCalendar($scope);
-    });
 
     $scope.attend = function(event) {
         $http.post(api_path+"attend/"+event.id)
@@ -48,6 +60,8 @@ function FrontCalendarCtrl($scope, $http, $q) {
                 flashMessage(data['message'], data['status']);
                 if (data['status'] == 'success') {
                     event.attends = true;
+
+                    event.attendees_count = data.event.attendees_count;
                     setColorFront(event);
                 }
                 $('#calendar').fullCalendar('updateEvent', event);
@@ -62,6 +76,7 @@ function FrontCalendarCtrl($scope, $http, $q) {
                 flashMessage(data['message'], data['status']);
                 if (data['status'] == 'success') {
                     event.attends = false;
+                    event.attendees_count = data.event.attendees_count;
                     setColorFront(event);
                 }
                 $('#calendar').fullCalendar('updateEvent', event);
