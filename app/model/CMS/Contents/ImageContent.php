@@ -42,7 +42,11 @@ class ImageContent extends \SRS\Model\CMS\Content implements IContent
         parent::addFormItems($form);
         $formContainer = $form[$this->getFormIdentificator()];
         $formContainer->addUpload('image', 'Obrázek')
+                        ->addCondition(\Nette\Application\UI\Form::FILLED)
                         ->addRule(\Nette\Application\UI\Form::IMAGE, 'Obrázek musí být JPEG, PNG nebo GIF.');
+        $formContainer->addHidden('template', 'contents/'.$this->contentType.'.html');
+        $formContainer->addHidden('curImage', $this->image);
+
         return $form;
     }
 
@@ -54,13 +58,14 @@ class ImageContent extends \SRS\Model\CMS\Content implements IContent
         $image = $values['image'];
 
         if ($image->size > 0) {
+
             $imagePath = '/files/images/'. \Nette\Utils\Strings::random(5) . '_' . \Nette\Utils\Strings::webalize($image->getName(), '.');
             $image->move( WWW_DIR . $imagePath);
             $this->image = $imagePath;
         }
-        else {
-            $this->image = '';
-        }
+//        else {
+//            $this->image = '';
+//        }
     }
 
     public function getContentName() {

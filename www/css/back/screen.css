@@ -49,6 +49,7 @@ input.number {
 
 .pageContent {
     position: relative;
+    overflow: hidden;
 }
 
 .button-bar input {
