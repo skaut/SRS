@@ -1,3 +1,5 @@
 {if $content->image != null}
-<img src="{$basePath}{$content->image}" style="float: left;" class="contentImage">
+<div class="contentImageWrapper {$content->align}" style="{if $content->width}width: {$content->width}px;{/if}{if $content->height}height: {$content->height}px;{/if}">
+    <img src="{$basePath}{$content->image}" class="image" style="{if $content->width}max-width: {$content->width}px;{/if}{if $content->height}max-height: {$content->height}px;{/if}">
+</div>
 {/if}

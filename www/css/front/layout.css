@@ -14,8 +14,6 @@ a:hover {
 }
 
 
-
-
 ul, li {
     list-style-type: disc !important;
 }
@@ -127,7 +125,27 @@ ul.no-bullets > li {
 
 }
 
+.pageContents {
+    overflow: hidden;
+}
+
 .fc-event {
     cursor: pointer !important;
+}
+
+.contentImageWrapper .image {
+
+}
+
+.contentImageWrapper {
+    margin: 5px;
+}
+
+.contentImageWrapper.left {
+    float: left;
+}
+
+.contentImageWrapper.right {
+    float: right;
 }
 

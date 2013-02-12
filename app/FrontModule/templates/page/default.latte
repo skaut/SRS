@@ -15,9 +15,11 @@
 {block sidebar}
 {if $page->countContents('sidebar')}
 <div id="sidebar" class="span3">
-    {foreach $page->getContents('sidebar') as $content}
-    {include 'contents/'.$content->contentType.'.latte' 'content' => $content}
-    {/foreach}
+    <div class="pageContents">
+        {foreach $page->getContents('sidebar') as $content}
+        {include 'contents/'.$content->contentType.'.latte' 'content' => $content}
+        {/foreach}
+    </div>
 </div>
 {/if}
 {/block}
