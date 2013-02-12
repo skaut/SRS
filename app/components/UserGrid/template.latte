@@ -2,7 +2,7 @@
     {if !$control->isSubGrid}
         {$control['gridForm']->render('begin')}
     {/if}
-<table n:attr="style => $control->width ? 'width: '.$control->width.';'" class="grid table-striped table-bordered table-hover">
+<table n:attr="style => $control->width ? 'width: '.$control->width.';'" class="grid table table-striped table-bordered table-hover">
     <thead>
     <tr n:if="$control->gridName">
         <th colspan="{$colsCount}" class="grid-name">{$control->gridName}</th>
@@ -110,9 +110,9 @@
         </tr>
         {/if}
     </tbody>
-    <tfoot>
-    <tr>
-        <td colspan="{$colsCount}" class="grid-bottom">
+
+    <tr class="warning">
+        <td colspan="{$colsCount}" class=" grid-bottom">
 				<span n:if="$control->hasActionForm()" class="grid-action-box">
 						{$control['gridForm'][$control->name]['action']['action_name']->label}
 						{$control['gridForm'][$control->name]['action']['action_name']->getControl()}
@@ -125,12 +125,12 @@
 				</span>
         </td>
     </tr>
-    <tr n:if="$paginate" class="grid-panel">
+    <tr n:if="$paginate" class="grid-panel error">
         <td colspan="{$colsCount}">
             {control paginator}
         </td>
     </tr>
-    </tfoot>
+
 </table>
     {if !$control->isSubGrid}
         {$control['gridForm']->render('end')}
