@@ -103,4 +103,8 @@ ul.no-margin {
     padding-left: 0 !important;
 }
 
+.grid-row-cell .btn {
+    margin-right: 5px;
+}
+
 

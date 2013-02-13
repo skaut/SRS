@@ -79,4 +79,8 @@ class BlockPresenter extends BasePresenter
         return new \SRS\Form\Program\BlockForm(null, null, $this->presenter->dbsettings, $this->context->database, $this->user);
     }
 
+    protected function createComponentBlockGrid() {
+        return new \SRS\Components\BlockGrid($this->context->database);
+    }
+
 }

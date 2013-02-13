@@ -149,3 +149,13 @@ ul.no-bullets > li {
     float: right;
 }
 
+.contentImageWrapper.center {
+    margin: 0 auto;
+}
+
+.write-upravit:after {
+    content: "upravit";
+
+}
+
+

@@ -28,8 +28,7 @@ class ProgramPresenter extends BasePresenter
     }
 
     public function renderDefault() {
-//        $blocks = $this->blockRepo->findAll();
-//        $this->template->blocks = $blocks;
+
     }
 
     /**
@@ -155,8 +154,6 @@ class ProgramPresenter extends BasePresenter
                                 $message = array('status' => 'error', 'message' => 'Uživatel je již přihlášen');
                             }
                         }
-
-
                     }
                     else { // program je plny
                         $message = array('status' => 'error', 'message' => 'Kapacita programu je již plná');

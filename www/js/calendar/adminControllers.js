@@ -191,6 +191,7 @@ function bindCalendar(scope) {
 
             // assign it the date that was reported
             event.start = date;
+            event.attendees_count = 0;
             event.allDay = allDay;
             event.end = bindEndToBlockDuration(date, null, event.block.duration, scope.config.basic_block_duration);
             scope.event = event;
