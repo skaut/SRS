@@ -48,7 +48,7 @@ class BlockGrid extends Grid
         $this->setDataSource($source);
         $numOfResults = 10;
         $this->addColumn('name', 'Název')->setTextFilter()->setAutocomplete($numOfResults);
-        $this->addColumn('lector', 'Lektor')->setTextFilter()->setAutocomplete($numOfResults)
+        $this->addColumn('lector', 'Lektor')->setSelectFilter($lectorChoices)
                 ->setRenderer(function($row) {
                 return $row->lector['lastName'];
             });

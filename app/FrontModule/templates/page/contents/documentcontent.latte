@@ -4,12 +4,14 @@
 {ifset $content->tag->documents}
 {foreach $content->tag->documents as $document}
 <li>
-    <a href="{$basePath}{$document->file}">{$document->name}</a>
+    <a href="{$basePath}{$document->file}">{$document->name}</a> - {$document->description}(upraveno {$document->timestamp|date:"d.m.Y"})
 </li>
 {/foreach}
 {else}
 {foreach $documents as $document}
-    <li><a href="{$basePath}{$document->file}">{$document->name}</a></li>
+    <li>
+        <a href="{$basePath}{$document->file}">{$document->name}</a>  - {$document->description}(upraveno {$document->timestamp|date:"d.m.Y"})
+    </li>
 {/foreach}
 {/ifset}
 </ul>

@@ -31,7 +31,8 @@ class DocumentForm extends \SRS\Form\EntityForm
 
         $this->addMultiselect('tags', 'Tagy:')->setItems($tagChoices)
             ->addRule(Form::FILLED,'zadejte alespoň jeden tag');
-        $this->addUpload('file', 'soubor');
+        $this->addUpload('file', 'Soubor:');
+        $this->addText('description', 'Popis:');
         $this->addSubmit('submit','Odeslat')->getControlPrototype()->class('btn');
 
         $this->onSuccess[] = callback($this, 'formSubmitted');

@@ -37,25 +37,35 @@ class AuthPresenter extends \SRS\BasePresenter
             $this->flashMessage('Přihlášení prostřednictvím skautIS se nezdařilo', 'error');
             //@TODO nemeli bychom presmerovat na nejakou stranku, ktera nevyzaduje prihlaseni?
         }
+        $this->makeRedirectByReturnUrl();
+    }
 
+    public function renderLogout($backlink = null) {
+        if ($this->context->user->isLoggedIn()) {
+            $token = $this->context->user->identity->token;
+            $this->context->user->logout(true);
+            $logoutUrl = $this->context->parameters['skautis']['url']. '/Login/LogOut.aspx?appid='.$this->context->parameters['skautis']['appID'].'&Token='.$token;
+            if ($backlink) {
+                $logoutUrl .= '&ReturnUrl='.$backlink;
+            }
+            $this->redirectUrl($logoutUrl);
+
+        }
+        $this->flashMessage('Odhlášení proběhlo úspěšně');
+        $this->makeRedirectByReturnUrl();
+    }
+
+
+    protected function makeRedirectByReturnUrl() {
         if ($returnUrl = $this->getParameter('ReturnUrl')) {
+            \Nette\Diagnostics\Debugger::dump($returnUrl);
             if (strpos($returnUrl, ':') !== false) {
-            $this->redirect($this->getParameter('ReturnUrl'));
+                $this->redirect($this->getParameter('ReturnUrl'));
             }
             else {
                 $this->redirectUrl($returnUrl);
             }
         }
-        $this->redirect(':Front:Homepage:default');
-    }
-
-    public function renderLogout() {
-        if ($this->context->user->isLoggedIn()) {
-            $token = $this->context->user->identity->token;
-            $this->context->user->logout(true);
-            $this->redirectUrl($this->context->parameters['skautis']['url']. '/Login/LogOut.aspx?appid='.$this->context->parameters['skautis']['appID'].'&Token='.$token);
-        }
-        $this->flashMessage('Odhlášení proběhlo úspěšně');
         $this->redirect(':Front:Homepage:default');
     }
 

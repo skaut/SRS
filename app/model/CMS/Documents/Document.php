@@ -12,8 +12,11 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  * @property string $name
  * @property string $file
+ * @property string $description
+ * @property-read \DateTime $timestamp
  * @property \Doctrine\Common\Collections\ArrayCollection $tags
  *
  */
@@ -54,6 +57,20 @@ class Document extends \SRS\Model\BaseEntity
      */
     protected $file;
 
+    /**
+     * @ORM\Column(nullable=true)
+     * @var string
+     */
+    protected $description;
+
+
+
+    /**
+     * @ORM\Column(type="datetime");
+     * @var \DateTime
+     */
+    protected $timestamp;
+
 
     public function setFile($file)
     {
@@ -73,6 +90,29 @@ class Document extends \SRS\Model\BaseEntity
     public function getName()
     {
         return $this->name;
+    }
+
+    public function getTimestamp() {
+        return $this->timestamp;
+    }
+
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function updateTimestamp() {
+        $this->timestamp = new \DateTime('now');
     }
 
 
