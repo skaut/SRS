@@ -2,9 +2,32 @@
 @import url("lib/forms.css");
 @import url("lib/buttons.css");
 
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+a {
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    opacity: 0.6;
+}
+
 
 #main {
     border: 1px solid gray;
+}
+
+#container #header #logo {
+    width: 380px;
+    height: 125px;
+    text-align: center;
+    margin-top: 5px;
+    margin-left: 15px;
+    margin-bottom: 5px;
+    border-radius: 8px;
 }
 
 #header {
@@ -39,4 +62,59 @@
     padding-bottom: 0px !important;
 }
 
+#container #header #main-menu li {
+    font-size: 10pt;
+    font-weight: bold;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-left: 15px;
+    margin-bottom: 10px;
+}
 
+#container #main #content {
+    padding-bottom: 15px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 15px;
+}
+
+#container #main #sidebar {
+    padding-bottom: 15px;
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 15px;
+}
+
+
+#container #main .pageContents {
+    margin-left: 5px;
+
+}
+
+#footer {
+    height:90px;
+
+}
+
+#container #header #main-menu li {
+    height: 20px;
+    display: block;
+}
+
+#container #header #top-menu {
+    margin-top: 10px;
+    margin-right: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+    height: 60px;
+    width: auto;
+}
+
+#container #header #top-menu li {
+    padding-left: 5px;
+}
+
+#container #header #logo img {
+    max-width: 375px;
+    max-height: 120px;
+}

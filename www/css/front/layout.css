@@ -1,19 +1,5 @@
 @import url("lib/bootstrap.min.css");
 
-body {
-	font-family: Arial, Helvetica, sans-serif;
-}
-
-a {
-	text-decoration: none;
-	font-weight: bold;
-}
-
-a:hover {
-	opacity: 0.6;
-}
-
-
 ul, li {
     list-style-type: disc !important;
 }
@@ -22,8 +8,6 @@ ul.no-bullets > li {
 	list-style-type: disc !important;
 	margin-left: 10px !important;
  }
-
-
 
 #container {
 	overflow: hidden;
@@ -35,43 +19,17 @@ ul.no-bullets > li {
 }
 
 #container #header #logo {
-	width: 380px;
-	height: 125px;
-	text-align: center;
-	margin-top: 5px;
-	margin-left: 15px;
-	margin-bottom: 5px;
-	border-radius: 8px;
 	float: left;
 }
 
-#container #header #logo img {
-	max-width: 375px;
-	max-height: 120px;
-}
-
-#container #header #logo img a {
-	display: block;
-}
-
 #container #header #top-menu {
-	width: auto;
-	height: 60px;
 	float: right;
-	margin-top: 10px;
-	margin-right: 10px;
-	margin-bottom: 20px;
-	text-align: center;
-
 }
 
 #container #header #top-menu li {
     float: left;
     display: block;
-    padding-left: 5px;
 }
-
-
 
 #container #header #main-menu {
 	overflow: hidden;
@@ -80,48 +38,7 @@ ul.no-bullets > li {
 
 #container #header #main-menu li {
 	list-style-type: none;
-	padding-top: 5px;
-	padding-bottom: 5px;
-	font-size: 10pt;
-	font-weight: bold;
 	float: left;
-	margin-left: 15px;
-	margin-bottom: 10px;
-	text-align: center;
-	width: auto;
-	height: 20px;
-	display: block;
-}
-
-#container #main {
-
-}
-
-#container #main #content {
-	padding-bottom: 15px;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 15px;
-}
-
-#container #main .pageContents {
-	margin-left: 5px;
-
-}
-
-
-
-#container #main #sidebar {
-    padding-bottom: 15px;
-    padding-left: 3px;
-    padding-right: 3px;
-    padding-top: 15px;
-
-}
-
-
-#footer {
-	height:90px;
 
 }
 
@@ -153,9 +70,5 @@ ul.no-bullets > li {
     margin: 0 auto;
 }
 
-.write-upravit:after {
-    content: "upravit";
-
-}
 
 
