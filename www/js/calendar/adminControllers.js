@@ -1,4 +1,7 @@
 
+
+const REFRESH_INTERVAL = 10000
+
 function AdminCalendarCtrl($scope, $http, $q, $timeout) {
     $scope.option = ''; // indexovane bloky - pro snadne vyhledavani a prirazovani
     $scope.event = null; // udalost se kterou prave pracuji
@@ -51,11 +54,11 @@ function AdminCalendarCtrl($scope, $http, $q, $timeout) {
 
     $scope.startup();
 
-    $scope.onTimeout = function(){
-        $scope.startup();
-        mytimeout = $timeout($scope.onTimeout,120000);
-    }
-    var mytimeout = $timeout($scope.onTimeout,120000);
+//    $scope.onTimeout = function(){
+//        $scope.startup();
+//        mytimeout = $timeout($scope.onTimeout, REFRESH_INTERVAL);
+//    }
+//    var mytimeout = $timeout($scope.onTimeout,REFRESH_INTERVAL);
 
 
 

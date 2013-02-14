@@ -39,6 +39,9 @@ class BlockGrid extends Grid
         $qb->addSelect('lector');
         $qb->from('\SRS\Model\Program\Block', 'b');
         $qb->leftJoin('b.lector','lector');
+        if (!$presenter->context->user->isAllowed('Program', 'Spravovat Všechny Programy' )) {
+            $qb->where(new \Doctrine\ORM\Query\Expr\Comparison('lector.id', '=', $presenter->context->user->id ));
+        }
         $source = new \SRS\SRSDoctrineDataSource($qb, 'id');
 
         $lectors = $this->em->getRepository('\SRS\Model\Acl\Role')->findApprovedUsersInRole('lektor');
@@ -48,10 +51,13 @@ class BlockGrid extends Grid
         $this->setDataSource($source);
         $numOfResults = 10;
         $this->addColumn('name', 'Název')->setTextFilter()->setAutocomplete($numOfResults);
-        $this->addColumn('lector', 'Lektor')->setSelectFilter($lectorChoices)
+        $lectorColumn = $this->addColumn('lector', 'Lektor')
                 ->setRenderer(function($row) {
                 return $row->lector['lastName'];
             });
+        if ($presenter->context->user->isAllowed('Program', 'Spravovat Všechny Programy' )) {
+        $lectorColumn->setSelectFilter($lectorChoices);
+        }
                 //->setSelectFilter($lectorChoices);
         $this->addColumn('duration', 'Délka')
             ->setRenderer(function($row) use ($basicBlockDuration) {
@@ -70,11 +76,13 @@ class BlockGrid extends Grid
             ->setLink(function($row) use ($presenter){return $presenter->link("detail", $row['id']);})
             ->setAjax(FALSE);
 
+
         $this->addButton("edit", "Upravit")
             ->setClass("btn btn-warning")
             ->setText('Upravit')
             ->setLink(function($row) use ($presenter){return $presenter->link("edit", $row['id']);})
             ->setAjax(FALSE);
+
 
         $this->addButton("delete", "Smazat")
             ->setClass("btn btn-danger confirm")
