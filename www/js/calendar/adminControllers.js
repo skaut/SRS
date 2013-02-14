@@ -87,6 +87,7 @@ function AdminCalendarCtrl($scope, $http, $q, $timeout) {
         $scope.event.mandatory = event.mandatory;
         if (option) {
         $scope.event.title = option.name;
+        $scope.event.attendees_count = 0;
         $scope.event.block = $scope.options[option.id];
         var end = bindEndToBlockDuration($scope.event.start, $scope.event._end, $scope.event.block.duration, $scope.config.basic_block_duration);
         $scope.event.end = end;
