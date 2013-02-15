@@ -136,7 +136,9 @@ function bindCalendar(scope) {
                 options.content += "<li><span>Kapacita:</span> "+event.attendees_count+"/"+ event.block.capacity +"</li>";
                 options.content += "<li><span>Lokalita:</span> "+ event.block.location +"</li>";
                 options.content +="</ul>";
-                options.content +="<p>"+event.block.perex+"</p>";
+                if (event.block.perex != null) {
+                    options.content +="<p>"+event.block.perex+"</p>";
+                }
             }
 
             element.popover(options);
