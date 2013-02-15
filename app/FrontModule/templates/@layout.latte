@@ -17,7 +17,7 @@
         var basePath = {$basePath};
     </script>
 
-    {widget cssLoader 'front/reset.css', 'front/layout.css', 'front/design.css', 'jquery-ui/jquery-ui.css'}
+    {widget cssLoader 'front/reset.css', 'front/design.css', 'front/layout.css', 'jquery-ui/jquery-ui.css'}
     {widget jsLoader 'jquery-1.8.2.min.js', 'netteForms.js', 'jquery-ui.js'}
 
     <link rel="shortcut icon" href="{$basePath}/favicon.ico">
@@ -34,31 +34,34 @@
 <body>
 	<script> document.body.className+=' js' </script>
     <div n:foreach="$flashes as $flash" class="message {$flash->type}">
-        <div class="flash">{$flash->message}</div>
+        {$flash->message}
     </div>
 
     <div id="container" class="container-fluid">
         <div class="row-fluid" id="header">
             <div class="span12">
                 <div class="clearfix">
-                <div id="logo" class="shadow">
-                    <a href="{plink :Front:page:default}"><img src="{$basePath}/img/logo.png" alt="logo"></a>
-                </div>
+                    <div id="logo">
+                        {block logo}
+                        <a href="{plink :Front:page:default}"><img src="{$basePath}/img/logo.png" alt="logo"></a>
+                        {/block}
+                    </div>
+                    <div id="top-menu">
+                    {block top_menu}
 
-                {block top_menu}
-                <div id="top-menu">
-
-                    <ul>
-                        {if !$user->isLoggedIn()}
-                        <li><span class="ui-icon ui-icon-locked" style="display:block; float: left;"></span><a href="{plink :Auth:login, 'backlink' => $backlink}">Přihlásit</a></li>
-                        {else}
-                        <li>Přihlášen jako: <strong>{$user->identity->object->username}</strong> (v roli {$user->roles[0]})</li>
-                        <li><span class="ui-icon ui-icon-unlocked" style="display:block; float: left;"></span><a href="{plink :Auth:logout, 'backlink' => $backlink}">Odhlásit</a></li>
-                        {/if}
-                        <li><a href="{$basePath}/admin">Administrace</a></li>
-                    </ul>
-                </div>
-                {/block}
+                        <ul>
+                            {if !$user->isLoggedIn()}
+                            <li><span class="ui-icon ui-icon-locked" style="display:block; float: left;"></span><a href="{plink :Auth:login, 'backlink' => $backlink}">Přihlásit</a></li>
+                            {else}
+                            <li>Přihlášen jako: <strong>{$user->identity->object->username}</strong> (v roli {$user->roles[0]})</li>
+                            <li><span class="ui-icon ui-icon-unlocked" style="display:block; float: left;"></span><a href="{plink :Auth:logout, 'backlink' => $backlink}">Odhlásit</a></li>
+                            {/if}
+                            {if $user->isAllowed('Administrace', 'Přístup')}
+                            <li><a href="{$basePath}/admin">Administrace</a></li>
+                            {/if}
+                        </ul>
+                    {/block}
+                    </div>
                 </div>
 
                 <div id="main-menu">
@@ -73,14 +76,10 @@
 
         <div id="main" class="row-fluid">
         {block main}
-
             <div id="content" class="{block content_class}span9{/block}">
-
                 {include #content}
-
             </div>
             {block sidebar}
-
             {/block}
         {/block}
         </div>

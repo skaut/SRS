@@ -33,7 +33,6 @@ abstract class BasePresenter extends \SRS\BasePresenter
             $this->flashMessage('Nemáte dostatečné oprávnění');
             $this->redirect(':Back:Dashboard:Default');
         }
-
     }
     
 

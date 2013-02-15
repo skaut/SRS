@@ -68,7 +68,7 @@ class NewsForm extends \SRS\Form\EntityForm
         $submitName = ($this->isSubmitted());
         $submitName = $submitName->htmlName;
 
-        if ($submitName == 'submit_continue') $this->presenter->redirect('this');
+        if ($submitName == 'submit_continue') $this->presenter->redirect('this', $news->id);
         $this->presenter->redirect(':Back:News:default');
 
     }

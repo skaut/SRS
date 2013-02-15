@@ -63,7 +63,7 @@ class FaqForm extends \SRS\Form\EntityForm
         $submitName = ($this->isSubmitted());
         $submitName = $submitName->htmlName;
 
-        if ($submitName == 'submit_continue') $this->presenter->redirect('this');
+        if ($submitName == 'submit_continue') $this->presenter->redirect('this', $faq->id);
         $this->presenter->redirect(':Back:Faq:default');
 
     }
