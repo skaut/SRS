@@ -1,6 +1,11 @@
 
 {extends '../Programlayout.latte'}
 
+{block head}
+    {widget jsLoader 'tiny_mce/jquery.tinymce.js'}
+{include 'includes/tinymce_init.latte'}
+{/block}
+
 {block title}
 Program » {ifset $block}{$block->name}{else}Nový blok{/ifset}
 {/block}

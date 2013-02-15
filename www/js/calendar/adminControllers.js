@@ -220,6 +220,7 @@ function bindCalendar(scope) {
                 options.content += "<li><span>Lokalita:</span> "+ event.block.location +"</li>";
                 options.content += "<li><span>Pomůcky:</span> "+ event.block.tools +"</li>";
                 options.content +="</ul>";
+                options.content +="<p>"+event.block.perex+"</p>";
             }
 
             element.find('.fc-event-title').popover(options);

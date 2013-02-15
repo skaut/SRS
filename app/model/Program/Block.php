@@ -53,7 +53,7 @@ class Block extends \SRS\Model\BaseEntity
     protected $capacity;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      * @JMS\Type("string")
      */
     protected $tools;
@@ -69,6 +69,37 @@ class Block extends \SRS\Model\BaseEntity
      * @JMS\Type("integer")
      */
     protected $duration;
+
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $perex;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $description;
+
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    public function setPerex($perex)
+    {
+        $this->perex = $perex;
+    }
+
+    public function getPerex()
+    {
+        return $this->perex;
+    }
 
     public function setCapacity($capacity)
     {

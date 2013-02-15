@@ -50,11 +50,13 @@ class BlockForm extends \SRS\Form\EntityForm
             ->addRule(Form::FILLED, 'Zadejte kapacitu')
             ->addRule(Form::INTEGER, 'Kapacita je číslo od 1 do x')
             ->getControlPrototype()->class('number');
-        $this->addTextArea('tools', 'Pomůcky:');
+        $this->addText('tools', 'Pomůcky:');
         $this->addText('location', 'Lokalita:');
         $this->addSelect('duration', 'Doba trvání:')
             ->setItems($this->prepareDurationChoices())
             ->addRule(Form::FILLED, 'Zadejte dobu trvání');
+        $this->addTextArea('perex', 'Stručný popis (160 znaků)');
+        $this->addTextArea('description', 'Detailní popis')->getControlPrototype()->class('tinyMCE');
         $this->addSelect('lector', 'Lektor:');
         if ($this->user->isAllowed('Program', 'Spravovat Všechny Programy')) {
             $this['lector']->setItems(\SRS\Form\EntityForm::getFormChoices($lectors, 'id', 'lastName'))->setPrompt('-- vyberte --');
@@ -64,7 +66,7 @@ class BlockForm extends \SRS\Form\EntityForm
         }
         $this->addSubmit('submit','Uložit')->getControlPrototype()->class('btn');
         $this->addSubmit('submit_continue','Uložit a pokračovat v úpravách')->getControlPrototype()->class('btn');
-
+        $this->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
         $this->onSuccess[] = callback($this, 'formSubmitted');
 
     }
