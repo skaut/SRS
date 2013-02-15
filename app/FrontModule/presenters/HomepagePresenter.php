@@ -5,7 +5,7 @@
  */
 namespace FrontModule;
 
-class HomepagePresenter extends \SRS\BasePresenter
+class HomepagePresenter extends BasePresenter
 {
 
 	public function renderDefault()

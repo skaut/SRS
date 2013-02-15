@@ -1,0 +1,34 @@
+{extends '../CMSlayout.latte'}
+
+{block title}
+CMS » Header & Footer
+{/block}
+
+{block content}
+<h1>Header, Footer</h1>
+    {form headerFooterForm}
+    <div class="well">
+
+        <ul class="errors" n:if="$form->hasErrors()">
+            <li n:foreach="$form->errors as $error">{$error}</li>
+        </ul>
+        <table class="table">
+            <tr>
+                <td>{label logo /}</td>
+                <td>
+                    {ifset $logo}
+                        {if $logo != null}<a target="_blank" href="{$basePath}{$logo}">Aktuální Logo</a>{/if}
+                    {/ifset}<br>
+                    {input logo}
+                </td>
+            </tr>
+
+            <tr>
+                <td>{label footer /}</td>
+                <td>{input footer}</td>
+            </tr>
+        </table>
+        {input submit}
+    </div>
+    {/form}
+{/block}

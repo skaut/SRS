@@ -5,7 +5,7 @@
  */
 namespace FrontModule;
 
-class PagePresenter extends \SRS\BasePresenter
+class PagePresenter extends BasePresenter
 {
     protected $repository;
     protected $pageId;
@@ -47,7 +47,7 @@ class PagePresenter extends \SRS\BasePresenter
         }
 
         if (!$page->isAllowedToRole($this->user->roles[0])) {
-            throw new \Nette\Application\BadRequestException('Na zobrazení této stránky nemáte práva', 404);
+            throw new \Nette\Application\BadRequestException('Na zobrazení této stránky nemáte práva', 403);
         }
         $this->pageId = $page->id;
         $this->template->documents = $this->context->database->getRepository('\SRS\model\CMS\Documents\Document')->findAll();

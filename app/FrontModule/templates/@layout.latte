@@ -43,7 +43,7 @@
                 <div class="clearfix">
                     <div id="logo">
                         {block logo}
-                        <a href="{plink :Front:page:default}"><img src="{$basePath}/img/logo.png" alt="logo"></a>
+                        <a href="{plink :Front:page:default}"><img src="{$basePath}{$logo}" alt="logo"></a>
                         {/block}
                     </div>
                     <div id="top-menu">
@@ -87,10 +87,7 @@
         <div id="footer" class="row-fluid">
             <div class="span12">
             {block footer}
-                <ul class="bulleted">
-                    <li><a href="#">lorem ipsum</a></li>
-                    <li><a href="#">lorem ipsum</a></li>
-                </ul>
+                <p>{!$footer}</p>
             {/block}
             </div>
         </div>

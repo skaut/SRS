@@ -9,6 +9,11 @@ abstract class BasePresenter extends BaseComponentsPresenter
     /** @var Doctrine\ORM\EntityManager */
     protected $em;
 
+    /**
+     * @var \SRS\Model\SettingsRepository
+     */
+    protected $dbsettings;
+
     public function injectEntityManager(\Doctrine\ORM\EntityManager $em)
     {
         if ($this->em) {
@@ -18,17 +23,12 @@ abstract class BasePresenter extends BaseComponentsPresenter
         return $this;
     }
 
-    public function beforeRender() {
-        parent::beforeRender();
-        if ($this->isAjax()) {
-            //aby fungovali flashmessages pri ajaxu
-            $this->invalidateControl('flashMessages');
-        }
-    }
-
     public function startup()
     {
         parent::startup();
+
+        $this->dbsettings = $this->presenter->context->database->getRepository('\SRS\Model\Settings');
+
         //nastaveni ACL
         $acl = new \SRS\Security\Acl($this->context->database);
         $this->context->user->setAuthorizator($acl);
@@ -46,6 +46,15 @@ abstract class BasePresenter extends BaseComponentsPresenter
             }
         }
         \Nette\Diagnostics\Debugger::barDump(\Nette\Diagnostics\Debugger::timer(), 'platnost skautis tokenu konec');
+    }
+
+
+    public function beforeRender() {
+        parent::beforeRender();
+        if ($this->isAjax()) {
+            //aby fungovali flashmessages pri ajaxu
+            $this->invalidateControl('flashMessages');
+        }
     }
 
 

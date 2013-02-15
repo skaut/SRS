@@ -21,9 +21,6 @@ a:hover {
 }
 
 #container #header #logo {
-    width: 380px;
-    height: 125px;
-    text-align: center;
     margin-top: 5px;
     margin-left: 15px;
     margin-bottom: 5px;
@@ -94,6 +91,11 @@ a:hover {
 #footer {
     height:90px;
 
+}
+
+#footer p {
+    padding-left: 15px;
+    color: gray;
 }
 
 #container #header #main-menu li {

@@ -26,7 +26,7 @@ class CMSPresenter extends BasePresenter
     public function renderDocument($docId = null) {
         if ($docId != null) {
             $doc = $this->context->database->getRepository('\SRS\Model\CMS\Documents\Document')->find($docId);
-            if ($doc == null) throw new \Nette\Application\BadRequestException('Dokument s tímto id neexistuje');
+            if ($doc == null) throw new \Nette\Application\BadRequestException('Dokument s tímto id neexistuje', 404);
             $form = $this->getComponent('documentForm');
             $form->bindEntity($doc);
 
@@ -40,7 +40,7 @@ class CMSPresenter extends BasePresenter
 
     public function handleDeleteDocument($docId) {
         $doc = $this->context->database->getRepository('\SRS\Model\CMS\Documents\Document')->find($docId);
-        if ($doc == null) throw new \Nette\Application\BadRequestException('Dokument s tímto id neexistuje');
+        if ($doc == null) throw new \Nette\Application\BadRequestException('Dokument s tímto id neexistuje', 404);
         $this->context->database->remove($doc);
         $this->context->database->flush();
         $this->flashMessage('Dokument smazán', 'success');
@@ -55,7 +55,7 @@ class CMSPresenter extends BasePresenter
     public function renderTag($tagId = null) {
         if ($tagId != null) {
             $tag = $this->context->database->getRepository('\SRS\Model\CMS\Documents\Tag')->find($tagId);
-            if ($tag == null) throw new \Nette\Application\BadRequestException('Tag s tímto id neexistuje');
+            if ($tag == null) throw new \Nette\Application\BadRequestException('Tag s tímto id neexistuje', 404);
             $form = $this->getComponent('tagForm');
             $form->bindEntity($tag);
 
@@ -68,11 +68,16 @@ class CMSPresenter extends BasePresenter
 
     public function handleDeleteTag($tagId) {
         $tag = $this->context->database->getRepository('\SRS\Model\CMS\Documents\Tag')->find($tagId);
-        if ($tag == null) throw new \Nette\Application\BadRequestException('Tag s tímto id neexistuje');
+        if ($tag == null) throw new \Nette\Application\BadRequestException('Tag s tímto id neexistuje', 404);
         $this->context->database->remove($tag);
         $this->context->database->flush();
         $this->flashMessage('Tag smazán', 'success');
         $this->redirect(':Back:CMS:Tags');
+    }
+
+
+    public function renderHeaderFooter() {
+        $this->template->logo = $this->dbsettings->get('logo');
     }
 
 
@@ -89,6 +94,11 @@ class CMSPresenter extends BasePresenter
     {
         $roles = $this->presenter->context->database->getRepository('SRS\Model\Acl\Role')->findAll();
         $form = new \SRS\Form\CMS\Documents\TagForm(null, null, \SRS\Form\EntityForm::getFormChoices($roles));
+        return $form;
+    }
+
+    protected function createComponentHeaderFooterForm() {
+        $form = new \SRS\Form\CMS\HeaderFooterForm(null, null, $this->dbsettings);
         return $form;
     }
 

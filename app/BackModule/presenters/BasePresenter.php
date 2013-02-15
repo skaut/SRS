@@ -8,18 +8,11 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 abstract class BasePresenter extends \SRS\BasePresenter
 {
-    /**
-     * @var \SRS\Model\SettingsRepository
-     */
-    protected $dbsettings;
-
     public function startup() {
         parent::startup();
         if (!$this->context->user->isLoggedIn()) {
             $this->redirect(":Auth:login", array('backlink' => $this->backlink()));
         }
-
-        $this->dbsettings = $this->presenter->context->database->getRepository('\SRS\Model\Settings');
 
 
         if (!$this->context->user->isAllowed('Administrace', 'Přístup' )) {
