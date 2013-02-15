@@ -69,6 +69,7 @@ function FrontCalendarCtrl($scope, $http, $q, $timeout) {
             }).error(function(data, status, headers, config) {
                 $scope.status = status;
          });
+        $('#blockModal').modal('hide');
     }
 
     $scope.unattend = function(event) {
@@ -84,11 +85,16 @@ function FrontCalendarCtrl($scope, $http, $q, $timeout) {
             }).error(function(data, status, headers, config) {
                 $scope.status = status;
             });
+        $('#blockModal').modal('hide');
+    }
+
+
+    $scope.refreshDialog = function() {
+        $scope.$apply();
     }
 }
 
 function bindCalendar(scope) {
-
     var local_config = {
         editable: false,
         droppable: false,
@@ -100,15 +106,18 @@ function bindCalendar(scope) {
         selectHelper: false,
 
         eventClick: function(event, element) {
-            if (scope.config.is_allowed_log_in_programs) {
-                scope.event = event;
-                if (event.attends == false) {
-                    scope.attend(event);
-                }
-                else {
-                    scope.unattend(event);
-                }
-            }
+//            if (scope.config.is_allowed_log_in_programs) {
+//                scope.event = event;
+//                if (event.attends == false) {
+//                    scope.attend(event);
+//                }
+//                else {
+//                    scope.unattend(event);
+//                }
+//            }
+            scope.event = event;
+            scope.refreshDialog();
+            $('#blockModal').modal('show');
          },
 
         eventMouseout: function( event, jsEvent, view ) {

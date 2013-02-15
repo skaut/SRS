@@ -40,6 +40,26 @@ Vaše role nemá právo zapisovat si programy
 <div class="span10">
     <div id="calendar"></div>
 </div>
+    <div id="blockModal" ng-model="event"  class="modal hide fade">
+        <div class="modal-body" >
+            <h2>{{ event.title }}</h2>
+            <ul ng-show="event.block">
+                <li>{{ event.block.lector }}</li>
+                <li>{{ event.block.location }}</li>
+            </ul>
+            <h3>O programu:</h3>
+            <p>{{ event.block.perex }}</p>
+
+            <div ng-bind-html-unsafe="event.block.description"></div>
+        </div>
+        <div class="modal-footer">
+            <button ng-hide="event.attends" ng-click="attend(event)" class="btn btn-success pull-right">Přihlásit</button>
+            <button ng-show="event.attends" ng-click="unattend(event)" class="btn btn-success pull-right">Odhlásit</button>
+            <button data-dismiss="modal">Zavřít</button>
+        </div>
+    </div>
+
+
 
 </div>
 {/if}

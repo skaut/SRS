@@ -14,10 +14,11 @@ abstract class BasePresenter extends \SRS\BasePresenter
             $this->redirect(":Auth:login", array('backlink' => $this->backlink()));
         }
 
-
-        if (!$this->context->user->isAllowed('Administrace', 'Přístup' )) {
-            $this->flashMessage('Pro vstup do administrace nemáte dostatečné oprávnění');
-            $this->redirect(':Front:Page:Default');
+        if (!$this->isAjax()) { //kvuli ajaxovym pozadavkym na program
+            if (!$this->context->user->isAllowed('Administrace', 'Přístup' )) {
+                $this->flashMessage('Pro vstup do administrace nemáte dostatečné oprávnění');
+                $this->redirect(':Front:Page:Default');
+            }
         }
     }
 
