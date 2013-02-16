@@ -18,8 +18,6 @@ class UserFactory
      * @return \SRS\Model\User
      */
     public static function createFromSkautIS($skautISUser, $skautISPerson, $role) {
-//        \Nette\Diagnostics\Debugger::dump($skautISUser);
-//        \Nette\Diagnostics\Debugger::dump($skautISPerson);
         $user = new \SRS\Model\User($skautISUser->UserName);
         $user->role = $role;
         $user->skautISUserId = $skautISUser->ID;

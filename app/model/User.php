@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\Criteria;
  * @ORM\Entity(repositoryClass="\SRS\Model\UserRepository")
  *
  * @property-read int $id
- * @property-read string $username
+ * @property string $username
  * @property string $email
  * @property \SRS\Model\Acl\Role $role
  * @property \Doctrine\Common\Collections\ArrayCollection $programs
@@ -23,6 +23,7 @@ use Doctrine\Common\Collections\Criteria;
  * @property int $skautISPersonId
  * @property bool $approved
  * @property bool $paid
+ * @property bool $attended
  * @property string $displayName
  * @property string $state
  * @property string $city
@@ -152,6 +153,22 @@ class User extends BaseEntity
      * @ORM\Column(type="boolean")
      */
     protected $paid = false;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $attended = false;
+
+    public function getAttended()
+    {
+        return $this->attended;
+    }
+
+    public function setAttended($attended)
+    {
+        $this->attended = $attended;
+    }
 
 
     public function setPaid($paid)
@@ -331,6 +348,11 @@ class User extends BaseEntity
     public function getUsername()
     {
         return $this->username;
+    }
+
+    public function setUsername($username)
+    {
+        $this->username = $username;
     }
 
 
