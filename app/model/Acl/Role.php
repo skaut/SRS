@@ -271,7 +271,7 @@ class RoleRepository extends \Doctrine\ORM\EntityRepository
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq("approved", 1));
         $role = $this->_em->getRepository($this->_entityName)->findByName($roleName);
-        if ($role == null) throw new RoleException('Role s tímto jménem neexistuje');
+        if ($role == null) throw new RoleException("Role s tímto jménem {$roleName} neexistuje");
         $role = $role[0];
         return $role->users->matching($criteria);
     }

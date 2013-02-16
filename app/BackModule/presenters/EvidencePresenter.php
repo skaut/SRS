@@ -13,11 +13,6 @@ class EvidencePresenter extends BasePresenter
 {
     protected $resource = 'Evidence';
 
-    /**
-     * @var \SRS\Model\Program\BlockRepository
-     */
-    protected $blockRepo;
-
     public function startup() {
         parent::startup();
        // $this->checkPermissions('Přístup');
@@ -30,9 +25,16 @@ class EvidencePresenter extends BasePresenter
     }
 
     public function renderList() {
-        $blocks = $this->blockRepo->findAll();
-        $this->template->blocks = $blocks;
+        $dbParams = $this->getDBParams();
+        $dsn = "mysql:host={$dbParams['host']};dbname={$dbParams['dbname']}";
+        $netteDatabase = new \Nette\Database\Connection($dsn, $dbParams['user'], $dbParams['password']);
+        $table = $netteDatabase->table('user')->select('');
+        new \NiftyGrid\DataSource\NDataSource($table);
     }
+
+   protected function createComponentEvidenceGrid() {
+       //TODO
+   }
 
 
 }

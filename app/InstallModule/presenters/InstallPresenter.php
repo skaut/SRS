@@ -13,10 +13,6 @@ class InstallPresenter extends \SRS\BaseComponentsPresenter
         if ($this->user->isLoggedIn()) {
             $this->user->logout(true);
         }
-        $values = $this->getDBParams();
-        if (!$this->presenter->isDBConnection($values['dbname'], $values['host'], $values['user'], $values['password'])) {
-
-        }
 
 
         if ($this->context->parameters['database']['installed']) {
@@ -145,13 +141,6 @@ class InstallPresenter extends \SRS\BaseComponentsPresenter
             return false;
         }
         return true;
-    }
-
-    public function getDBParams() {
-        $config = \Nette\Utils\Neon::decode(file_get_contents(APP_DIR.'/config/config.neon'));
-        $isDebug = $config['common']['parameters']['debug'];
-        $environment = $isDebug == true ? 'development': 'production';
-        return $config["{$environment} < common"]['parameters']['database'];
     }
 
     protected function createComponentDatabaseForm() {

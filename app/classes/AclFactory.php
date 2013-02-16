@@ -32,6 +32,7 @@ class AclFactory
         $cms = new \SRS\Model\Acl\Resource('CMS');
         $program = new \SRS\Model\Acl\Resource('Program');
         $configuration = new \SRS\Model\Acl\Resource('Konfigurace');
+        $evidence = new \SRS\Model\Acl\Resource('Evidence');
 
         $admin_access = new \SRS\Model\Acl\Permission('Přístup', $backend);
         $admin->permissions->add($admin_access);
@@ -72,6 +73,11 @@ class AclFactory
 
         $program_choose = new \SRS\Model\Acl\Permission('Vybírat si programy', $program);
         $attendee->permissions->add($program_choose);
+
+        $evidence_edit = new \SRS\Model\Acl\Permission('Spravovat', $evidence);
+        $admin->permissions->add($evidence_edit);
+        $organizer->permissions->add($evidence_edit);
+
 
         return $roles;
     }

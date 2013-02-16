@@ -38,6 +38,13 @@ abstract class BaseComponentsPresenter extends \Nette\Application\UI\Presenter
         $compiler->setJoinFiles(FALSE);
         return new \WebLoader\Nette\JavaScriptLoader($compiler, $this->template->basePath . '/webtemp');
     }
+
+    public function getDBParams() {
+        $config = \Nette\Utils\Neon::decode(file_get_contents(APP_DIR.'/config/config.neon'));
+        $isDebug = $config['common']['parameters']['debug'];
+        $environment = $isDebug == true ? 'development': 'production';
+        return $config["{$environment} < common"]['parameters']['database'];
+    }
     
 
 }

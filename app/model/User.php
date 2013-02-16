@@ -13,6 +13,7 @@ use Doctrine\Common\Collections\Criteria;
  * @property string $email
  * @property \SRS\Model\Acl\Role $role
  * @property \Doctrine\Common\Collections\ArrayCollection $programs
+ * @property \Doctrine\Common\Collections\ArrayCollection $extensions
 
  * @property string $firstName
  * @property string $lastName
@@ -56,6 +57,13 @@ class User extends BaseEntity
      * @ORM\ManyToMany(targetEntity="\SRS\Model\Program\Program", mappedBy="attendees", cascade={"persist"})
      */
     protected $programs;
+
+
+    /**
+     * @ORM\OneToMany(targetEntity="\SRS\Model\UserExtension", mappedBy="user")
+     * @var \Doctrine\Common\Collections\ArrayCollection
+    */
+    protected $extensions;
 
 
     /**

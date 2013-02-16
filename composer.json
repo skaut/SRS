@@ -9,10 +9,10 @@
 		"nette/nette": ">= 2.0.5",
 		"phpunit/phpunit": "3.7.*",
 		"nella/doctrine": "@dev",
-    "nella/console": "@dev",
-    "doctrine/migrations": "@dev",
-    "doctrine/data-fixtures": "dev-master",
-    "JanMarek/WebLoader": "dev-master",
-    "jms/serializer": "1.0.*@dev"
+        "nella/console": "@dev",
+        "doctrine/migrations": "@dev",
+        "doctrine/data-fixtures": "dev-master",
+        "JanMarek/WebLoader": "dev-master",
+        "jms/serializer": "1.0.*@dev"
 	}
 }
