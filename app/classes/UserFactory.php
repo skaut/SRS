@@ -12,12 +12,14 @@ use Nette\Utils\Strings;
 class UserFactory
 {
     /**
-     * @param int $skautISUser
-     * @param int $skautISPerson
+     * @param stdClass $skautISUser
+     * @param stdClass $skautISPerson
      * @param mixed $roles
      * @return \SRS\Model\User
      */
     public static function createFromSkautIS($skautISUser, $skautISPerson, $role) {
+//        \Nette\Diagnostics\Debugger::dump($skautISUser);
+//        \Nette\Diagnostics\Debugger::dump($skautISPerson);
         $user = new \SRS\Model\User($skautISUser->UserName);
         $user->role = $role;
         $user->skautISUserId = $skautISUser->ID;
@@ -26,9 +28,15 @@ class UserFactory
         $user->firstName = $skautISPerson->FirstName;
         $user->lastName = $skautISPerson->LastName;
         $user->nickName = $skautISPerson->NickName;
+        $user->displayName = $skautISPerson->DisplayName;
         $user->sex = $skautISPerson->ID_Sex;
         $birthday = \explode("T", $skautISPerson->Birthday);
         $user->birthdate = new \DateTime($birthday[0]);
+
+        $user->street = $skautISPerson->Street;
+        $user->city = $skautISPerson->City;
+        $user->postcode = $skautISPerson->Postcode;
+        $user->state = $skautISPerson->State;
 
         return $user;
 

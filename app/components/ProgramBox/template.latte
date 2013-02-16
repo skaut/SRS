@@ -48,8 +48,9 @@ Vaše role nemá právo zapisovat si programy
         <div class="modal-body" >
 
             <ul ng-show="event.block">
-                <li>{{ event.block.lector }}</li>
-                <li>{{ event.block.location }}</li>
+                <li><strong>Lektor: </strong>{{ event.block.lector }}</li>
+                <li><strong>Lokalita: </strong>{{ event.block.location }}</li>
+                <li><strong>Kapacita: </strong>{{ event.attendees_count }}/{{ event.block.capacity }}</li>
             </ul>
             <h3>O programu:</h3>
             <p>{{ event.block.perex }}</p>

@@ -20,10 +20,12 @@ class AclFactory
         $roles[] = $lector = new \SRS\Model\Acl\Role('Lektor');
         $roles[] = $organizer = new \SRS\Model\Acl\Role('Organizátor');
         $roles[] = $admin = new \SRS\Model\Acl\Role('Administrátor');
+
         $admin->registerable = False;
         $registered->registerable = False;
         $guest->registerable = False;
         $attendee->approvedAfterRegistration = true;
+        $attendee->pays = true;
 
         $backend = new \SRS\Model\Acl\Resource('Administrace');
         $acl = new \SRS\Model\Acl\Resource('ACL');
@@ -70,7 +72,6 @@ class AclFactory
 
         $program_choose = new \SRS\Model\Acl\Permission('Vybírat si programy', $program);
         $attendee->permissions->add($program_choose);
-
 
         return $roles;
     }

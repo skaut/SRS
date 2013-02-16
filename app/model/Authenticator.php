@@ -36,7 +36,7 @@ class Authenticator extends \Nette\Object implements NS\IAuthenticator
             throw new NS\AuthenticationException("Invalid skautIS Token", self::INVALID_CREDENTIAL);
         }
         $skautISPerson = $this->skautIS->getPerson($skautISToken, $skautISUser->ID_Person);
-        $user = $this->database->getRepository("\SRS\Model\User")->findOneBy(array('username' => $skautISUser->UserName));
+        $user = $this->database->getRepository("\SRS\Model\User")->findOneBy(array('skautISUserId' => $skautISUser->ID));
         $roleRegistered = $this->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('name'  => 'Registrovaný'));
         if ($user == null)
         {

@@ -21,7 +21,15 @@ use Doctrine\Common\Collections\Criteria;
  * @property string $birthdate
  * @property int $skautISUserId
  * @property int $skautISPersonId
- * @property bool approved
+ * @property bool $approved
+ * @property bool $paid
+ * @property string $displayName
+ * @property string $state
+ * @property string $city
+ * @property string $street
+ * @property string $postcode
+ * @property string $unit
+ * @property string $about
  */
 class User extends BaseEntity
 {
@@ -75,6 +83,13 @@ class User extends BaseEntity
      */
     protected $nickName;
 
+
+    /**
+     * @var string
+     * @ORM\Column
+     */
+    protected $displayName;
+
     /**
      * @ORM\Column(nullable=true)
      * @var string
@@ -99,6 +114,97 @@ class User extends BaseEntity
      * @ORM\Column(type="integer", unique=true)
      */
     protected $skautISPersonId;
+
+
+    /**
+     * @var string
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $about;
+
+    /**
+     * @ORM\Column(nullable=true)
+     */
+    protected $street;
+
+    /**
+     * @ORM\Column(nullable=true)
+     */
+    protected $city;
+
+    /**
+     * @ORM\Column(nullable=true)
+     */
+    protected $postcode;
+
+    /**
+     * @ORM\Column(nullable=true)
+     */
+    protected $state;
+
+    /**
+     * @ORM\Column(nullable=true)
+     */
+    protected $unit;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $paid = false;
+
+
+    public function setPaid($paid)
+    {
+        $this->paid = $paid;
+    }
+
+    public function getPaid()
+    {
+        return $this->paid;
+    }
+
+
+
+    /**
+     * @param string $about
+     */
+    public function setAbout($about)
+    {
+        $this->about = $about;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAbout()
+    {
+        return $this->about;
+    }
+
+    public function setCity($city)
+    {
+        $this->city = $city;
+    }
+
+    public function getCity()
+    {
+        return $this->city;
+    }
+
+    /**
+     * @param string $displayName
+     */
+    public function setDisplayName($displayName)
+    {
+        $this->displayName = $displayName;
+    }
+
+
+    /**
+     * @ORM\Column(nullable=true)
+     */
+    protected $phone;
 
 
     /**
@@ -247,23 +353,6 @@ class User extends BaseEntity
     }
 
     /**
-     * @return string
-     */
-//    public function getRoles()
-//    {
-//        return $this->roles;
-//    }
-//
-//    /**
-//     * @param mixed
-//     * @return User
-//     */
-//    public function setRoles($roles)
-//    {
-//        $this->roles = $roles;
-//    }
-
-    /**
      * @param $skautISPersonId
      */
     public function setSkautISPersonId($skautISPersonId)
@@ -293,6 +382,64 @@ class User extends BaseEntity
     public function getSkautISUserId()
     {
         return $this->skautISUserId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDisplayName()
+    {
+        return $this->displayName;
+    }
+
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
+    }
+
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    public function setPostcode($postcode)
+    {
+        $this->postcode = $postcode;
+    }
+
+    public function getPostcode()
+    {
+        return $this->postcode;
+    }
+
+    public function setState($state)
+    {
+        $this->state = $state;
+    }
+
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    public function setStreet($street)
+    {
+        $this->street = $street;
+    }
+
+    public function getStreet()
+    {
+        return $this->street;
+    }
+
+    public function setUnit($unit)
+    {
+        $this->unit = $unit;
+    }
+
+    public function getUnit()
+    {
+        return $this->unit;
     }
 
     /**

@@ -19,6 +19,8 @@ use Doctrine\Common\Collections\Criteria;
  * @property bool $system
  * @property bool $registerable
  * @property bool $approvedAfterRegistration
+ * @property bool $pays
+ * @property integer $fee
  * @property \DateTime|string $registerableFrom
  * @property \DateTime|string $registerableTo
  * @property \Doctrine\Common\Collections\ArrayCollection $users
@@ -26,7 +28,6 @@ use Doctrine\Common\Collections\Criteria;
  */
 class Role extends \SRS\Model\BaseEntity
 {
-
     /**
      * @ORM\Column(unique=true)
      * @var string
@@ -84,6 +85,19 @@ class Role extends \SRS\Model\BaseEntity
      * @ORM\Column(type="date", nullable=true)
      */
     protected $registerableTo;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $pays = false;
+
+    /**
+     * @var integer
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $fee;
+
 
     /**
      * @param string $name
@@ -157,26 +171,6 @@ class Role extends \SRS\Model\BaseEntity
         $this->approvedAfterRegistration = $approvedAfterRegistration;
     }
 
-//    public function setChildren($children)
-//    {
-//        $this->children = $children;
-//    }
-//
-//    public function getChildren()
-//    {
-//        return $this->children;
-//    }
-//
-//    public function setParent($parent)
-//    {
-//        $this->parent = $parent;
-//    }
-//
-//    public function getParent()
-//    {
-//        return $this->parent;
-//    }
-
 
     public function setRegisterableFrom($registerableFrom)
     {
@@ -202,6 +196,54 @@ class Role extends \SRS\Model\BaseEntity
     public function getRegisterableTo()
     {
         return $this->registerableTo;
+    }
+
+    /**
+     * @param int $fee
+     */
+    public function setFee($fee)
+    {
+        $this->fee = $fee;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFee()
+    {
+        return $this->fee;
+    }
+
+    /**
+     * @param mixed $pages
+     */
+    public function setPages($pages)
+    {
+        $this->pages = $pages;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPages()
+    {
+        return $this->pages;
+    }
+
+    /**
+     * @param boolean $pays
+     */
+    public function setPays($pays)
+    {
+        $this->pays = $pays;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getPays()
+    {
+        return $this->pays;
     }
 }
 
