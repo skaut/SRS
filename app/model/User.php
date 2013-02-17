@@ -19,7 +19,7 @@ use Doctrine\Common\Collections\Criteria;
  * @property string $lastName
  * @property string $nickName
  * @property string $sex
- * @property string $birthdate
+ * @property \DateTime $birthdate
  * @property int $skautISUserId
  * @property int $skautISPersonId
  * @property bool $approved

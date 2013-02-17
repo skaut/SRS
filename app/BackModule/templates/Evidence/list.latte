@@ -1,12 +1,18 @@
 
-{extends '../Programlayout.latte'}
+{extends '../@layout.latte'}
+
+{block sidebar_wrapper}
+
+{/block}
+
+{block content_width}12{/block}
 
 {block title}
-Program » Bloky
+Evidence
 {/block}
 
 {block content}
-hello
+{widget evidenceGrid}
 
 
 

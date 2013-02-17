@@ -49,6 +49,7 @@
 
     <div class="container-fluid" id="container" {block container_attributes}{/block}>
         <div class="row-fluid">
+            {block sidebar_wrapper}
             <div class="span3">
                 {block sidebar}
                 <div class="well sidebar-nav ">
@@ -60,7 +61,8 @@
                 </div><!--/.well -->
                 {/block}
             </div><!--/span-->
-            <div class="span9">
+            {/block}
+            <div class="span{block content_width}9{/block}">
                 {snippet flashMessages}
                 <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">
                     <button type="button" class="close" data-dismiss="alert">×</button>

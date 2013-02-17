@@ -11,7 +11,7 @@ use \NiftyGrid\Grid;
 use \Doctrine\ORM\Query\Expr;
 
 /**
- * Grid pro správu uživatelů a práv
+ * Grid pro správu programových bloků
  */
 class BlockGrid extends Grid
 {
@@ -37,8 +37,12 @@ class BlockGrid extends Grid
         $qb = $this->em->createQueryBuilder();
         $qb->addSelect('b');
         $qb->addSelect('lector');
+        //$qb->addSelect($qb->expr()->count('p'));
+       // $qb->addSelect('count(p) as b.programs');
         $qb->from('\SRS\Model\Program\Block', 'b');
         $qb->leftJoin('b.lector','lector');
+        $qb->leftJoin('b.programs', 'p');
+
         if (!$presenter->context->user->isAllowed('Program', 'Spravovat Všechny Programy' )) {
             $qb->where(new \Doctrine\ORM\Query\Expr\Comparison('lector.id', '=', $presenter->context->user->id ));
         }
