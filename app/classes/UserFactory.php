@@ -41,6 +41,31 @@ class UserFactory
     }
 
     /**
+     * @param \SRS\Model\User $SRSUser
+     * @param  stdClass $skautISPerson
+     * @return stdClass
+     */
+    public static function updateSkautISPerson($SRSUser, $skautISPerson) {
+
+        $skautISPerson->FirstName = $SRSUser->firstName;
+        $skautISPerson->LastName = $SRSUser->lastName;
+        $skautISPerson->NickName = $SRSUser->NickName;
+        $skautISPerson->ID_Sex = $SRSUser->sex;
+        //$skautISPerson->Sex = $sexChoices[$SRSUser->sex];
+        $skautISPerson->Email = $SRSUser->email;
+        $skautISPerson->Street = $SRSUser->street;
+        $skautISPerson->City = $SRSUser->city;
+        $skautISPerson->Postcode = $SRSUser->postcode;
+        $skautISPerson->State = $SRSUser->state;
+        $birthdate = $SRSUser->birthdate;
+        $birthdate = $birthdate->format('Y-m-d');
+        $birthdate .='T00:00:00';
+        $skautISPerson->birthday = $birthdate;
+        return $skautISPerson;
+
+    }
+
+    /**
      * @param int $skautISUserId
      * @param int $skautISPersonId
      * @param \Doctrine\Common\Collections\ArrayCollection $roles

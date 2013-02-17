@@ -15,6 +15,14 @@ use Nette\Application\UI,
 
 class ProfileForm extends EntityForm
 {
+
+    private $em;
+
+    /**
+     * @var \SRS\Model\skautIS
+     */
+    private $skautIS;
+
     public function __construct(IContainer $parent = NULL, $name = NULL)
     {
         parent::__construct($parent, $name);
@@ -25,22 +33,30 @@ class ProfileForm extends EntityForm
     public function submitted()
     {
         $values = $this->getValues();
-        $role = $this->presenter->context->database->getRepository('\SRS\Model\Acl\Role')->find($values['role']);
-        $user = $this->presenter->context->database->getRepository('\SRS\Model\User')->find($values['id']);
+        $user = $this->em->getRepository('\SRS\Model\User')->find($values['id']);
         $user->setProperties($values, $this->presenter->context->database);
-        $user->approved = $role->approvedAfterRegistration;
-        $this->presenter->context->database->flush();
-        $this->presenter->flashMessage('Přihláška odeslána', 'success');
-        $this->presenter->flashMessage('Pro další používání webu se znovu přihlašte přes skautIS', 'info');
-        $this->presenter->user->logout(true);
-        $this->presenter->redirect(':Auth:logout');
+        $this->em->flush();
+
+
+        $skautISPerson = $this->skautIS->getPerson($this->presenter->context->user->identity->token, $user->skautISPersonId);
+        $updatedSkautISPerson = \SRS\Factory\UserFactory::updateSkautISPerson($user, $skautISPerson);
+        try {
+        $this->skautIS->updatePerson($updatedSkautISPerson, $this->presenter->context->user->identity->token);
+        }
+        catch (\SoapFault $e)
+        {
+            $this->presenter->flashMessage('Synchronizace se skautIS se nepodařila', 'error');
+        }
+        $this->presenter->flashMessage('Data aktualizována', 'success');
+        $this->presenter->redirect('this');
+
 
     }
 
     protected function configure()
     {
         $this->setFields();
-        $this->addSubmit('submit', 'Aktualizovat');
+        $this->addSubmit('submit', 'Aktualizovat data a sesynchronizovat se skautIS');
     }
 
 
@@ -64,6 +80,18 @@ class ProfileForm extends EntityForm
             ->addRule(Form::FILLED, 'Zadejte Město');
         $this->addText('postcode', 'PSČ:')
             ->addRule(Form::FILLED, 'Zadejte PSČ');
+        $this->addText('state', 'Stát')
+            ->addRule(Form::FILLED, 'Zadejte stát');
+    }
+
+    /**
+     * @param \Doctrine\ORM\EntityManager $em
+     * @param \SRS\Model\skautIS $skautIS
+     */
+    public function inject($em, $skautIS) {
+        $this->em = $em;
+        $this->skautIS = $skautIS;
+
     }
 
 

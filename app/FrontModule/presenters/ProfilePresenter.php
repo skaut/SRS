@@ -23,21 +23,30 @@ class ProfilePresenter extends BasePresenter
 
         if (!$this->context->user->isLoggedIn()) {
             $this->flashMessage('Pro přístup do profilu musíte být přihlášeni', 'error');
-            $this->redirect(':Front:Page');
+            $this->redirect(':Front:Page:default');
         }
     }
 
 
     public function renderDefault() {
-
+        /**
+         * @var \SRS\Model\User
+         */
+        $user = $this->userRepo->find($this->context->user->id);
+        $skautISPerson = $this->skautIS->getPerson($this->user->identity->token, $user->skautISPersonId);
         $form = $this['profileForm'];
-        $form->bindEntity($this->userRepo->find($this->context->user->id));
+        $form->bindEntity($user);
+        $birthday = \explode("T", $skautISPerson->Birthday);
+        $skautISPerson->birthdate = $birthday[0];
+        $this->template->skautISPerson = $skautISPerson;
 
     }
 
     protected function createComponentProfileForm()
     {
-        return new \SRS\Form\ProfileForm();
+        $form = new \SRS\Form\ProfileForm();
+        $form->inject($this->context->database, $this->skautIS);
+        return $form;
     }
 
 }

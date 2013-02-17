@@ -2,6 +2,12 @@
 {block title}
 Profil
 {/block}
+
+{block head}
+<script src="{$basePath}/js/front/birthdate_picker_cs.js"></script>
+{/block}
+
+
 {block content}
 <h1>Nastavení profilu</h1>
 {form profileForm}
@@ -19,13 +25,13 @@ Profil
     <td>{label sex /}</td>
     <td class="local">{input sex }</td>
     <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
-    <td class="skautIS">hodnota skautIS</td>
+    <td class="skautIS">{$skautISPerson->Sex}</td>
 </tr>
 <tr>
     <td>{label firstName /}</td>
     <td class="local">{input firstName }</td>
     <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
-    <td class="skautIS">hodnota skautIS</td>
+    <td class="skautIS">{$skautISPerson->FirstName}</td>
 </tr>
 
 
@@ -33,49 +39,56 @@ Profil
     <td>{label lastName /}</td>
     <td class="local">{input lastName }</td>
     <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
-    <td class="skautIS">hodnota skautIS</td>
+    <td class="skautIS">{$skautISPerson->LastName}</td>
 </tr>
 
 <tr>
     <td>{label nickName /}</td>
     <td class="local">{input nickName }</td>
     <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
-    <td class="skautIS">hodnota skautIS</td>
+    <td class="skautIS">{$skautISPerson->NickName}</td>
 </tr>
 
 <tr>
     <td>{label birthdate /}</td>
     <td class="local">{input birthdate }</td>
     <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
-    <td class="skautIS">hodnota skautIS</td>
+    <td class="skautIS">{$skautISPerson->birthdate}</td>
 </tr>
 
 <tr>
     <td>{label email /}</td>
     <td class="local">{input email }</td>
     <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
-    <td class="skautIS">hodnota skautIS</td>
+    <td class="skautIS">{$skautISPerson->Email}</td>
 </tr>
 
 <tr>
     <td>{label street /}</td>
     <td class="local">{input street }</td>
     <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
-    <td class="skautIS">hodnota skautIS</td>
+    <td class="skautIS">{$skautISPerson->Street}</td>
 </tr>
 
 <tr>
     <td>{label city /}</td>
     <td class="local">{input city }</td>
     <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
-    <td class="skautIS">hodnota skautIS</td>
+    <td class="skautIS">{$skautISPerson->City}</td>
 </tr>
 
 <tr>
     <td>{label postcode /}</td>
     <td class="local">{input postcode }</td>
     <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
-    <td class="skautIS">hodnota skautIS</td>
+    <td class="skautIS">{$skautISPerson->Postcode}</td>
+</tr>
+
+<tr>
+    <td>{label state /}</td>
+    <td class="local">{input state }</td>
+    <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
+    <td class="skautIS">{$skautISPerson->State}</td>
 </tr>
 
 <tr>
@@ -86,3 +99,21 @@ Profil
 
 </table>
 {/form}
+
+<script>
+    $('.importValue').click(function(event) {
+        event.preventDefault();
+
+        var skautISValue = $(this).parent().parent().find('.skautIS').text();
+        var localEl = $(this).parent().parent().find('.local');
+        if (localEl.find('input').length > 0) {
+           localEl.find('input').val(skautISValue);
+        }
+
+        else if (localEl.find('select').length > 0) {
+            var selectEl = localEl.find('select');
+            selectEl.val(skautISValue);
+        }
+
+    })
+</script>

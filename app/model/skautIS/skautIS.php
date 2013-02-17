@@ -24,6 +24,9 @@ class skautIS extends \Nette\Object
     protected $skautISUrl;
 
     /** @var string */
+    protected $skautISAppID;
+
+    /** @var string */
     public $webServicesSlug = "JunakWebservice";
 
     /** @var string */
@@ -35,9 +38,11 @@ class skautIS extends \Nette\Object
     /**
      * @param string $skautISUrl
      */
-    public function __construct($skautISUrl)
+    public function __construct($skautISUrl, $skautISAppID)
     {
         $this->skautISUrl = $skautISUrl;
+        $this->skautISAppID = $skautISAppID;
+
     }
 
 
@@ -58,7 +63,7 @@ class skautIS extends \Nette\Object
     protected function getOrganizationUnitService()
     {
         if ($this->organizationUnitService == null) {
-            $this->organizationUnitService = new \SoapClient($this->skautISUrl. '/' . $this->webServicesSlug. '/' . $this->organizationUnitServiceSlug);
+            $this->organizationUnitService = new \SoapClient($this->skautISUrl. '/' . $this->webServicesSlug. '/' . $this->organizationUnitServiceSlug, array('ID_Application' => $this->skautISAppID));
         }
         return $this->organizationUnitService;
     }
@@ -87,9 +92,18 @@ class skautIS extends \Nette\Object
             'ID_Login' => $token,
             'ID' => $personID
         );
+       // $response = $this->getOrganizationUnitService()->__soapCall('PersonDetail',array('PersonDetail' => array('personDetailInput' => $params)) )->PersonDetailResult;
         $response = $this->getOrganizationUnitService()->PersonDetail(array("personDetailInput" => $params))->PersonDetailResult;
         return $response;
 
+    }
+
+    public function updatePerson($person, $token)
+    {
+        $person->ID_Login = $token;
+
+        $this->getOrganizationUnitService()->PersonUpdateBasic(array('personUpdateBasicInput' => $person));
+        $this->getOrganizationUnitService()->PersonUpdateAddress(array('personUpdateAddressInput' => $person));
     }
 
     /**
