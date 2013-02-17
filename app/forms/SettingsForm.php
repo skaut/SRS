@@ -40,6 +40,9 @@ class SettingsForm extends UI\Form
         $this->addCheckbox('is_allowed_modify_schedule', 'Je povoleno upravovat harmonogram semináře?')->setDefaultValue($this->dbsettings->get('is_allowed_modify_schedule'));
         $this->addCheckbox('is_allowed_log_in_programs', 'Je povoleno přihlašovat se na programové bloky?')->setDefaultValue($this->dbsettings->get('is_allowed_log_in_programs'));
 
+        $this->addText('company', 'Firma:')->setDefaultValue($this->dbsettings->get('company'));
+        $this->addText('ico', 'IČO:')->setDefaultValue($this->dbsettings->get('ico'));
+
         $this->addSubmit('submit','Uložit')->getControlPrototype()->class('btn');
         $this->onSuccess[] = callback($this, 'formSubmitted');
     }

@@ -67,9 +67,95 @@ class EvidenceGrid extends Grid
                 return $interval->y;
             });
 
+        $this->addColumn('city', 'Město')
+            ->setTextFilter()
+            ->setAutocomplete($numOfResults);
+
+        $this->addColumn('paid', 'Zaplaceno')
+
+            ->setBooleanFilter()
+            ->setBooleanEditable()
+            ->setRenderer(function($row) {
+            if ($row->paid) return 'ANO';
+            return 'NE';
+        });
+        $this->addColumn('attended', 'Přítomen')
+            ->setBooleanFilter()
+            ->setBooleanEditable()
+            ->setRenderer(function($row) {
+            if ($row->attended) return 'ANO';
+            return 'NE';
+        });
+
+
+        $this->addButton(Grid::ROW_FORM, "Řádková editace")
+            ->setClass("fast-edit");
+
+        $this->addButton("detail", "Detail")
+            ->setClass("btn")
+            ->setText('Zobrazit detail')
+            ->setLink(function($row) use ($presenter){return $presenter->link("detail", $row['id']);})
+            ->setAjax(FALSE);
 
 
 
+        $self = $this;
+
+        $this->setRowFormCallback(function($values) use ($self, $presenter){
+                $user = $presenter->context->database->getRepository('\SRS\Model\User')->find($values['id']);
+                $user->paid = isset($values['paid']) ? true : false;
+                $user->attended = isset($values['attended']) ? true : false;
+                //$user->setProperties($values, $presenter->context->database);
+                $presenter->context->database->flush();
+                $self->flashMessage("Záznam byl úspěšně uložen.","success");
+
+            }
+        );
+
+        $this->addAction("makeThemPay","Označit jako zaplacené")
+            ->setCallback(function($id) use ($self){return $self->handleMakeThemPay($id);});
+
+        $this->addAction("attend","Označit jako přítomné")
+            ->setCallback(function($id) use ($self){return $self->handleAttend($id);});
+
+
+
+    }
+
+
+
+    public function handleMakeThemPay($ids)
+    {
+        foreach ($ids as $id ) {
+            $userToSave = $this->presenter->context->database->getRepository('\SRS\Model\User')->find($id);
+            $userToSave->paid = true;
+        }
+
+        $this->presenter->context->database->flush();
+
+        if(count($ids) > 1){
+            $this->flashMessage("Vybraní uživatelé byli označeni jakože zaplatili.","success");
+        }else{
+            $this->flashMessage("Vybraný uživatel byl označen jako zaplacený.","success");
+        }
+        $this->redirect("this");
+    }
+
+    public function handleAttend($ids)
+    {
+        foreach ($ids as $id ) {
+            $userToSave = $this->presenter->context->database->getRepository('\SRS\Model\User')->find($id);
+            $userToSave->paid = true;
+        }
+
+        $this->presenter->context->database->flush();
+
+        if(count($ids) > 1){
+            $this->flashMessage("Vybraní uživatelé byli označeni jako přítomný na akci.","success");
+        }else{
+            $this->flashMessage("Vybraný uživatel byl označen jako přítomný.","success");
+        }
+        $this->redirect("this");
     }
 
 

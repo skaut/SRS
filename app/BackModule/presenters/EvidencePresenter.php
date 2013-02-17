@@ -41,7 +41,13 @@ class EvidencePresenter extends BasePresenter
 //        \Nette\Diagnostics\Debugger::dump($table->fetch());
     }
 
-   protected function createComponentEvidenceGrid() {
+    public function renderDetail($id)
+    {
+
+    }
+
+
+    protected function createComponentEvidenceGrid() {
        return new \SRS\Components\EvidenceGrid($this->context->database);
    }
 

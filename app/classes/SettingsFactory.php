@@ -29,6 +29,9 @@ class SettingsFactory
         $settings[] = new \SRS\Model\Settings('logo', 'Logo', '/img/logo.png');
         $settings[] = new \SRS\Model\Settings('footer', 'Patička', '&copy; SRS 2013');
 
+        $settings[] = new \SRS\Model\Settings('company', 'Firma', 'Konfigurace->Firma');
+        $settings[] = new \SRS\Model\Settings('ico', 'IČO', 'Konfigurace->IČO');
+
         return $settings;
     }
 

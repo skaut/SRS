@@ -42,6 +42,7 @@ class ProfilePresenter extends BasePresenter
 
     }
 
+
     protected function createComponentProfileForm()
     {
         $form = new \SRS\Form\ProfileForm();
