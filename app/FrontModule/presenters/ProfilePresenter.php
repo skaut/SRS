@@ -10,9 +10,17 @@ namespace FrontModule;
 
 class ProfilePresenter extends BasePresenter
 {
+    protected $userRepo;
+
+    protected $skautIS;
+
     public function startup()
     {
         parent::startup();
+
+        $this->userRepo = $this->context->database->getRepository('\SRS\Model\User');
+        $this->skautIS = $this->context->skautIS;
+
         if (!$this->context->user->isLoggedIn()) {
             $this->flashMessage('Pro přístup do profilu musíte být přihlášeni', 'error');
             $this->redirect(':Front:Page');
@@ -22,6 +30,14 @@ class ProfilePresenter extends BasePresenter
 
     public function renderDefault() {
 
+        $form = $this['profileForm'];
+        $form->bindEntity($this->userRepo->find($this->context->user->id));
+
+    }
+
+    protected function createComponentProfileForm()
+    {
+        return new \SRS\Form\ProfileForm();
     }
 
 }

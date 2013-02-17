@@ -22,8 +22,7 @@ class PagePresenter extends BasePresenter
 
     public function beforeRender() {
         parent::beforeRender();
-        $path = $this->getHttpRequest()->url->path;
-        $this->template->backlink = $path;
+
     }
 
 	public function renderDefault($pageId)
@@ -54,11 +53,7 @@ class PagePresenter extends BasePresenter
         $this->template->page = $page;
 	}
 
-    public function createComponentMenu() {
-        $pageRepo = $this->context->database->getRepository('\SRS\Model\CMS\Page');
-        $menu = new \SRS\Components\Menu($pageRepo);
-        return $menu;
-    }
+
 
     public function createComponentAttendeeBox() {
         return new \SRS\Components\AttendeeBox();

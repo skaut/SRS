@@ -1,4 +1,88 @@
-{* This is the welcome page, you can delete it *}
 
+{block title}
+Profil
+{/block}
 {block content}
-Ahooj
+<h1>Nastavení profilu</h1>
+{form profileForm}
+<ul class="errors" n:if="$form->hasErrors()">
+    <li n:foreach="$form->errors as $error">{$error}</li>
+</ul>
+<table>
+<tr>
+    <th>&nbsp;</th>
+    <th>Lokální data</th>
+    <th>&nbsp;</th>
+    <th>Data ze skautIS</th>
+</tr>
+<tr>
+    <td>{label sex /}</td>
+    <td class="local">{input sex }</td>
+    <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
+    <td class="skautIS">hodnota skautIS</td>
+</tr>
+<tr>
+    <td>{label firstName /}</td>
+    <td class="local">{input firstName }</td>
+    <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
+    <td class="skautIS">hodnota skautIS</td>
+</tr>
+
+
+<tr>
+    <td>{label lastName /}</td>
+    <td class="local">{input lastName }</td>
+    <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
+    <td class="skautIS">hodnota skautIS</td>
+</tr>
+
+<tr>
+    <td>{label nickName /}</td>
+    <td class="local">{input nickName }</td>
+    <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
+    <td class="skautIS">hodnota skautIS</td>
+</tr>
+
+<tr>
+    <td>{label birthdate /}</td>
+    <td class="local">{input birthdate }</td>
+    <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
+    <td class="skautIS">hodnota skautIS</td>
+</tr>
+
+<tr>
+    <td>{label email /}</td>
+    <td class="local">{input email }</td>
+    <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
+    <td class="skautIS">hodnota skautIS</td>
+</tr>
+
+<tr>
+    <td>{label street /}</td>
+    <td class="local">{input street }</td>
+    <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
+    <td class="skautIS">hodnota skautIS</td>
+</tr>
+
+<tr>
+    <td>{label city /}</td>
+    <td class="local">{input city }</td>
+    <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
+    <td class="skautIS">hodnota skautIS</td>
+</tr>
+
+<tr>
+    <td>{label postcode /}</td>
+    <td class="local">{input postcode }</td>
+    <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
+    <td class="skautIS">hodnota skautIS</td>
+</tr>
+
+<tr>
+    <td colspan="3">
+        {input submit}
+    </td>
+</tr>
+
+</table>
+{/form}

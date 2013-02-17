@@ -66,7 +66,7 @@ class AuthPresenter extends \SRS\BasePresenter
                 $this->redirectUrl($returnUrl);
             }
         }
-        $this->redirect(':Front:Homepage:default');
+        $this->redirect(':Front:Page:default');
     }
 
 

@@ -53,7 +53,7 @@
                             {if !$user->isLoggedIn()}
                             <li><span class="ui-icon ui-icon-locked" style="display:block; float: left;"></span><a href="{plink :Auth:login, 'backlink' => $backlink}">Přihlásit</a></li>
                             {else}
-                            <li>Přihlášen jako: <strong>{$user->identity->object->username}</strong> (v roli {$user->roles[0]})</li>
+                            <li>Přihlášen jako: <strong><a href="{plink :Front:Profile:default}">{$user->identity->object->username}</a></strong> (v roli {$user->roles[0]})</li>
                             <li><span class="ui-icon ui-icon-unlocked" style="display:block; float: left;"></span><a href="{plink :Auth:logout, 'backlink' => $backlink}">Odhlásit</a></li>
                             {/if}
                             {if $user->isAllowed('Administrace', 'Přístup')}

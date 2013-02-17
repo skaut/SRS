@@ -13,33 +13,16 @@ use Nette\Application\UI,
     Nette\Application\UI\Form,
     Nette\ComponentModel\IContainer;
 
-class AttendeeForm extends EntityForm
+class AttendeeForm extends ProfileForm
 {
+    protected $roles;
+
+
     public function __construct(IContainer $parent = NULL, $name = NULL, $roles)
     {
+        $this->roles = $roles;
         parent::__construct($parent, $name);
 
-        $this->addHidden('id');
-        $this->addSelect('sex', 'Pohlaví:')->setItems(array('male' => 'Muž', 'female' => 'Žena'))
-            ->addRule(Form::FILLED, 'Zadejte pohlaví');
-        $this->addText('firstName', 'Jméno:')
-            ->addRule(Form::FILLED, 'Zadejte jméno');
-        $this->addText('lastName', 'Příjmení:')
-            ->addRule(Form::FILLED, 'Zadejte příjmení');
-        $this->addText('nickName', 'Přezdívka:');
-        $this->addText('birthdate', 'Datum narození:')
-            ->addRule(Form::FILLED, 'Zadejte datum narození')->getControlPrototype()->class('datepicker');
-        $this->addText('email', 'Email:')
-            ->addRule(Form::FILLED, 'Zadejte e-mailovou adresu')
-            ->addRule(Form::EMAIL, 'E-mail není ve správném tvaru');
-        $this->addSelect('role', 'Přihlásit jako:')->setItems($roles)
-             ->addRule(Form::FILLED, 'Vyplňte roli');
-        $this->addCheckbox('agreement', 'Souhlasím, že uvedené údaje budou poskytnuty lektorům pro účely semináře')
-            ->addRule(Form::FILLED, 'Musíte souhlasit s poskytnutím údajů');
-        $this->addSubmit('submit', 'Přihlásit na seminář');
-
-
-        $this->onSuccess[] = callback($this, 'submitted');
     }
 
     public function submitted()
@@ -55,6 +38,22 @@ class AttendeeForm extends EntityForm
         $this->presenter->user->logout(true);
         $this->presenter->redirect(':Auth:logout');
 
+    }
+
+    public function setFields()
+    {
+        parent::setFields();
+        $this->addSelect('role', 'Přihlásit jako:')->setItems($this->roles)
+            ->addRule(Form::FILLED, 'Vyplňte roli');
+        $this->addCheckbox('agreement', 'Souhlasím, že uvedené údaje budou poskytnuty lektorům pro účely semináře')
+            ->addRule(Form::FILLED, 'Musíte souhlasit s poskytnutím údajů');
+        $this->addSubmit('submit', 'Přihlásit na seminář');
+
+    }
+
+    protected function configure()
+    {
+        $this->setFields();
     }
 
 }

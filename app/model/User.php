@@ -42,7 +42,7 @@ class User extends BaseEntity
      */
     protected $username;
     /**
-
+     * @ORM\Column
      * @var string
      */
     protected $email;
