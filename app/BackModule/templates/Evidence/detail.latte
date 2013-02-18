@@ -1,12 +1,29 @@
 
 {extends '../@layout.latte'}
 
+{block head}
+{widget jsLoader 'lib/angular.min.js', 'evidence/userController.js'}
+{/block}
 
 {block title}
 {$dbuser->displayName}
 {/block}
 
+{block sidebar_menu}
+<div ng-app ng-controller="userCtrl">
+Vyhledat účastníka:
+<input type="text" class="input-medium search-query" ng-model="query">
+    <ul>
+        <li ng-repeat="user in users | filter:query"><a ng-href="{{ user.url }}"> {{ user.display_name }}</a></li>
+    </ul>
+</div>
+{/block}
+
 {block content}
+<ul class="breadcrumb">
+<li><a href="{plink :Back:Evidence:list}">Evidence</a> <span class="divider">/</span></li>
+<li class="active">Detail: {$dbuser->displayName}</li>
+</ul>
 <div class="well">
 <h1>{$dbuser->displayName}</h1>
     <table class="table">

@@ -47,8 +47,12 @@ class EvidencePresenter extends BasePresenter
 //        \Nette\Diagnostics\Debugger::dump($table->fetch());
     }
 
-    public function renderDetail($id)
+    public function renderDetail($id = null)
     {
+        if ($id == null) {
+            $this->redirect(':Back:Evidence:list');
+        }
+
         $user = $this->userRepo->find($id);
         if ($user == null) {
             throw new \Nette\Application\BadRequestException("Takový uživatel neexistuje", 404);
@@ -69,6 +73,25 @@ class EvidencePresenter extends BasePresenter
     {
         return new \SRS\Form\Evidence\EvidenceDetailForm();
     }
+
+
+    public function actionGetAttendees()
+    {
+
+        $users = $this->userRepo->findAll();
+        $usersArray = array();
+
+        foreach($users as $user) {
+            $usersArray[] = array('id' => $user->id, 'display_name' => $user->displayName, 'url' =>  $this->link(':Back:evidence:detail', $user->id));
+        }
+
+        $json = json_encode($usersArray);
+        $response = new \Nette\Application\Responses\TextResponse($json);
+        $this->sendResponse($response);
+        $this->terminate();
+
+    }
+
 
 
 }

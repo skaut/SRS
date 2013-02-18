@@ -86,9 +86,17 @@ class UserFactory
         $user->firstName = Strings::random(8);
         $user->lastName = Strings::random(5);
         $user->nickName = Strings::random(6);
+        $user->displayName = $user->lastName . ' ' . $user->firstName . ' ('. $user->nickName. ')';
         $user->sex = $sex_choices[mt_rand(0, sizeof($sex_choices)-1)];
         $user->birthdate = new \DateTime('now');
         $user->approved = $approved_choices[mt_rand(0, 1)];
+        $user->paid = $approved_choices[mt_rand(0, 1)];
+        $user->attended = $approved_choices[mt_rand(0, 1)];
+
+        $user->street = Strings::random(5);
+        $user->city = Strings::random(5);
+        $user->postcode = Strings::random(5);
+        $user->state = Strings::random(5);
 
         return $user;
     }

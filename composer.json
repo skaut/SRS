@@ -13,6 +13,8 @@
         "doctrine/migrations": "@dev",
         "doctrine/data-fixtures": "dev-master",
         "JanMarek/WebLoader": "dev-master",
-        "jms/serializer": "1.0.*@dev"
+        "jms/serializer": "1.0.*@dev",
+        "itbz/fpdf": "1.7.1",
+        "itbz/fpdi": "dev-master"
 	}
 }
