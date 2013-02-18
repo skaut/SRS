@@ -30,7 +30,7 @@
                 <a class="brand" href="/admin">SRS</a>
                 <div class="nav-collapse collapse">
                     <p class="navbar-text pull-right">
-                        Přihlášen jako <a href="#" class="navbar-link">{$user->getIdentity()->data['object']->username}</a> ({$user->roles[0]}) <a href="{plink :Auth:logout}"><i class="icon-remove"></i></a>
+                        Přihlášen jako <a href="{plink :Front:profile:default}" class="navbar-link">{$user->getIdentity()->data['object']->username}</a> ({$user->roles[0]}) <a href="{plink :Auth:logout}"><i class="icon-remove"></i></a>
                     </p>
                     <ul class="nav">
                         <li {ifCurrent :Back:dashboard:default}class="active"{/ifCurrent}><a href="{plink :Back:dashboard:default}">Home</a></li>

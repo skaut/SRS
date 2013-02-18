@@ -13,8 +13,14 @@ class EvidencePresenter extends BasePresenter
 {
     protected $resource = 'Evidence';
 
+    /**
+     * @var \Nella\Doctrine\Repository
+     */
+    protected $userRepo;
+
     public function startup() {
         parent::startup();
+        $this->userRepo = $this->context->database->getRepository('\SRS\Model\User');
     }
 
     public function beforeRender() {
@@ -43,13 +49,26 @@ class EvidencePresenter extends BasePresenter
 
     public function renderDetail($id)
     {
+        $user = $this->userRepo->find($id);
+        if ($user == null) {
+            throw new \Nette\Application\BadRequestException("Takový uživatel neexistuje", 404);
+        }
+        $form = $this->getComponent('evidenceDetailForm');
+        $form->bindEntity($user);
 
+        //$user je v template defaultne
+        $this->template->dbuser = $user;
     }
 
 
     protected function createComponentEvidenceGrid() {
        return new \SRS\Components\EvidenceGrid($this->context->database);
    }
+
+    protected function createComponentEvidenceDetailForm()
+    {
+        return new \SRS\Form\Evidence\EvidenceDetailForm();
+    }
 
 
 }

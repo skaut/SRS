@@ -492,6 +492,13 @@ class User extends BaseEntity
         }
         return false;
     }
+
+    public function countAge()
+    {
+        $today = new \DateTime('now');
+        $interval = $today->diff($this->birthdate);
+        return $interval->y;
+    }
 }
 
 

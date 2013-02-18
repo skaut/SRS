@@ -1,0 +1,69 @@
+
+{extends '../@layout.latte'}
+
+
+{block title}
+{$dbuser->displayName}
+{/block}
+
+{block content}
+<div class="well">
+<h1>{$dbuser->displayName}</h1>
+    <table class="table">
+        <tr class="success">
+            <td colspan="2">Základní údaje o osobě</td>
+        </tr>
+        <tr>
+            <th>Uživatelské jméno (skautIS)</th>
+            <td>{$dbuser->username}</td>
+        </tr>
+        <tr>
+            <th>Jméno</th>
+            <td>{$dbuser->firstName}</td>
+        </tr>
+        <tr>
+            <th>Příjmení</th>
+            <td>{$dbuser->lastName}</td>
+        </tr>
+        <tr>
+            <th>Přezdívka</th>
+            <td>{$dbuser->nickName}</td>
+        </tr>
+        <tr>
+            <th>Datum narození</th>
+            <td>{$dbuser->birthdate|date:"d.m.Y"}</td>
+        </tr>
+        <tr>
+            <th>Věk</th>
+            <td>{$dbuser->countAge()}</td>
+        </tr>
+            <th>Bydliště</th>
+            <td>{$dbuser->street}, {$dbuser->city}, {$dbuser->postcode}</td>
+        </tr>
+        {form evidenceDetailForm}
+        <tr class="success">
+            <td colspan="2">Údaje o osobě a akci</td>
+        </tr>
+        <tr>
+            <td>Role</td>
+            <td>{$dbuser->role->name}</td>
+        </tr>
+        <tr>
+            <td>Zaplatil</td>
+            <td>{input paid}</td>
+        </tr>
+        <tr>
+            <td>Přítomen</td>
+            <td>{input attended}</td>
+        </tr>
+        <tr class="warning">
+            <td colspan="2">{input submit}</td>
+        </tr>
+        {/form}
+
+    </table>
+</div>
+
+
+
+{/block}
