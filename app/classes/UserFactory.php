@@ -92,6 +92,7 @@ class UserFactory
         $user->approved = $approved_choices[mt_rand(0, 1)];
         $user->paid = $approved_choices[mt_rand(0, 1)];
         $user->attended = $approved_choices[mt_rand(0, 1)];
+        $user->incomeProofPrinted  = $approved_choices[mt_rand(0, 1)];
 
         $user->street = Strings::random(5);
         $user->city = Strings::random(5);

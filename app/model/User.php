@@ -24,6 +24,7 @@ use Doctrine\Common\Collections\Criteria;
  * @property int $skautISPersonId
  * @property bool $approved
  * @property bool $paid
+ * @property bool $incomeProofPrinted
  * @property bool $attended
  * @property string $displayName
  * @property string $state
@@ -118,6 +119,8 @@ class User extends BaseEntity
    */
     protected $skautISUserId;
 
+
+
     /**
      * @var int
      * @ORM\Column(type="integer", unique=true)
@@ -167,6 +170,12 @@ class User extends BaseEntity
      * @ORM\Column(type="boolean")
      */
     protected $attended = false;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+    */
+    protected $incomeProofPrinted = false;
 
     public function getAttended()
     {
@@ -470,6 +479,32 @@ class User extends BaseEntity
     public function getUnit()
     {
         return $this->unit;
+    }
+
+    public function setExtensions($extensions)
+    {
+        $this->extensions = $extensions;
+    }
+
+    public function getExtensions()
+    {
+        return $this->extensions;
+    }
+
+    /**
+     * @param boolean $incomeProofPrinted
+     */
+    public function setIncomeProofPrinted($incomeProofPrinted)
+    {
+        $this->incomeProofPrinted = $incomeProofPrinted;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getIncomeProofPrinted()
+    {
+        return $this->incomeProofPrinted;
     }
 
     /**

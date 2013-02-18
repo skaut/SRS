@@ -42,6 +42,7 @@ class SettingsForm extends UI\Form
 
         $this->addText('company', 'Firma:')->setDefaultValue($this->dbsettings->get('company'));
         $this->addText('ico', 'IČO:')->setDefaultValue($this->dbsettings->get('ico'));
+        $this->addText('accountant', 'Pokladník:')->setDefaultValue($this->dbsettings->get('accountant'));
 
         $this->addSubmit('submit','Uložit')->getControlPrototype()->class('btn');
         $this->onSuccess[] = callback($this, 'formSubmitted');

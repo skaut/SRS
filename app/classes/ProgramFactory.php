@@ -13,26 +13,29 @@ class ProgramFactory
         $lectorRole = $em->getRepository('\SRS\Model\Acl\Role')->findByName('Lektor');
         $lectorRole = $lectorRole[0];
 
-        $lector1 = new \SRS\Model\User('TestLektor1');
+        $lector1 = \SRS\Factory\UserFactory::createRandom(8888, 9999, array($lectorRole));
+
+//        $lector1 = new \SRS\Model\User('TestLektor1');
         $lector1->firstName = 'Adam';
         $lector1->lastName = 'Novák';
         $lector1->email = 'adam@novaktest.cz';
         $lector1->role = $lectorRole;
         $lector1->nickName = 'Huhel';
         $lector1->sex = 'male';
-        $lector1->birthdate = new \DateTime('now');
-        $lector1->approved = 1;
-        $lector1->skautISUserId = 8888;
-        $lector1->skautISPersonId = 9999;
+//        $lector1->birthdate = new \DateTime('now');
+       $lector1->approved = 1;
+//        $lector1->skautISUserId = 8888;
+//        $lector1->skautISPersonId = 9999;
 
-        $lector2 = new \SRS\Model\User('TestLektorka2');
+        $lector2 = \SRS\Factory\UserFactory::createRandom(8887, 9998, array($lectorRole));
+       // $lector2 = new \SRS\Model\User('TestLektorka2');
         $lector2->firstName = 'Iva';
         $lector2->lastName = 'Brázdová';
         $lector2->email = 'iva@brazdatest.cz';
         $lector2->role = $lectorRole;
         $lector2->nickName = 'Brázda';
         $lector2->sex = 'female';
-        $lector2->birthdate = new \DateTime('now');
+        //$lector2->birthdate = new \DateTime('now');
         $lector2->approved = 1;
         $lector2->skautISUserId = 8887;
         $lector2->skautISPersonId = 9998;

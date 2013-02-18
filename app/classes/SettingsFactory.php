@@ -31,6 +31,7 @@ class SettingsFactory
 
         $settings[] = new \SRS\Model\Settings('company', 'Firma', 'Konfigurace->Firma');
         $settings[] = new \SRS\Model\Settings('ico', 'IČO', 'Konfigurace->IČO');
+        $settings[] = new \SRS\Model\Settings('accountant', 'Pokladník', 'Konfigurace->Pokladník');
 
         return $settings;
     }
