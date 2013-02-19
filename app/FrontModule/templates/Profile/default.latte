@@ -10,6 +10,7 @@ Profil
 
 {block content}
 <h1>Nastavení profilu</h1>
+<h2>Osobní údaje</h2>
 {form profileForm}
 <ul class="errors" n:if="$form->hasErrors()">
     <li n:foreach="$form->errors as $error">{$error}</li>
@@ -117,3 +118,7 @@ Profil
 
     })
 </script>
+
+<hr>
+<h2>Doplňující informace</h2>
+{widget aboutForm}

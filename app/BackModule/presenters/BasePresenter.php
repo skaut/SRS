@@ -8,6 +8,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 abstract class BasePresenter extends \SRS\BasePresenter
 {
+    protected $dbuser;
+
     public function startup() {
         parent::startup();
         if (!$this->context->user->isLoggedIn()) {
@@ -20,6 +22,9 @@ abstract class BasePresenter extends \SRS\BasePresenter
                 $this->redirect(':Front:Page:Default');
             }
         }
+
+       $this->dbuser = $this->context->database->getRepository('\SRS\Model\User')->find($this->context->user->id);
+
     }
 
     protected function checkPermissions($permission) {

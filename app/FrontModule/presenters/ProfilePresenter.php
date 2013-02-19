@@ -36,6 +36,10 @@ class ProfilePresenter extends BasePresenter
         $skautISPerson = $this->skautIS->getPerson($this->user->identity->token, $user->skautISPersonId);
         $form = $this['profileForm'];
         $form->bindEntity($user);
+
+        $form = $this['aboutForm'];
+        $form->bindEntity($user);
+
         $birthday = \explode("T", $skautISPerson->Birthday);
         $skautISPerson->birthdate = $birthday[0];
         $this->template->skautISPerson = $skautISPerson;
@@ -47,6 +51,12 @@ class ProfilePresenter extends BasePresenter
     {
         $form = new \SRS\Form\ProfileForm();
         $form->inject($this->context->database, $this->skautIS);
+        return $form;
+    }
+
+    protected function createComponentAboutForm()
+    {
+        $form = new \SRS\Form\Evidence\AboutForm();
         return $form;
     }
 

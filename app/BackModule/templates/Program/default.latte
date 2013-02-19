@@ -22,7 +22,8 @@ Program » Harmonogram
             <select ng-model="option" ng-options="value.name for (key , value) in options">
                <option value="">-- nepřiřazeno --</option>
             </select> </span><br />
-             <input type="checkbox" name="event.mandatory" ng-model="event.mandatory"> Je program povinný?
+             <input id="mandatory" type="checkbox" name="event.mandatory" ng-model="event.mandatory" class="pull-left">
+             <label for="mandatory" class="pull-left" style="margin-left:5px;"> Je program povinný?</label>
             </ng-form>
         </div>
         <div class="modal-footer">

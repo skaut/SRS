@@ -22,6 +22,8 @@ class ProgramFactory
         $lector1->role = $lectorRole;
         $lector1->nickName = 'Huhel';
         $lector1->sex = 'male';
+        $lector1->about = 'lorem ipsum dolor sit amet. Hello my Name is Adam And I like food. :)';
+        $lector1->displayName = $lector1->firstName . ' ' . $lector1->lastName;
 //        $lector1->birthdate = new \DateTime('now');
        $lector1->approved = 1;
 //        $lector1->skautISUserId = 8888;
@@ -35,6 +37,7 @@ class ProgramFactory
         $lector2->role = $lectorRole;
         $lector2->nickName = 'Brázda';
         $lector2->sex = 'female';
+        $lector2->displayName = $lector2->firstName . ' ' . $lector2->lastName;
         //$lector2->birthdate = new \DateTime('now');
         $lector2->approved = 1;
         $lector2->skautISUserId = 8887;

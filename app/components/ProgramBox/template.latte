@@ -55,6 +55,9 @@ Vaše role nemá právo zapisovat si programy
             <h3>O programu:</h3>
             <p>{{ event.block.perex }}</p>
 
+            <h3>O lektorovi:</h3>
+            <p>{{ event.block.lector_about }}</p>
+
             <div ng-bind-html-unsafe="event.block.description"></div>
         </div>
         <div class="modal-footer" ng-model="config">

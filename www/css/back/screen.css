@@ -107,4 +107,8 @@ ul.no-margin {
     margin-right: 5px;
 }
 
+.alert a {
+    text-decoration: underline;
+}
+
 

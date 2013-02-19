@@ -59,7 +59,7 @@ class BlockForm extends \SRS\Form\EntityForm
         $this->addTextArea('description', 'Detailní popis')->getControlPrototype()->class('tinyMCE');
         $this->addSelect('lector', 'Lektor:');
         if ($this->user->isAllowed('Program', 'Spravovat Všechny Programy')) {
-            $this['lector']->setItems(\SRS\Form\EntityForm::getFormChoices($lectors, 'id', 'lastName'))->setPrompt('-- vyberte --');
+            $this['lector']->setItems(\SRS\Form\EntityForm::getFormChoices($lectors, 'id', 'displayName'))->setPrompt('-- vyberte --');
         }
         else {
             $this['lector']->setItems(array($this->user->id => $this->user->identity->object->lastName));

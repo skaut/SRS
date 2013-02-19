@@ -84,10 +84,12 @@ class ProgramPresenter extends BasePresenter
         foreach ($blocks as $block) {
             $result[$block->id] = array('id' => $block->id, 'name' => $block->name, 'tools' => $block->tools, 'location' => $block->location,  'capacity' => $block->capacity, 'duration' => $block->duration, 'perex' => $block->perex, 'description' => $block->description);
             if (isset($block->lector) && $block->lector != null) {
-                $result[$block->id]['lector'] = "{$block->lector->firstName} {$block->lector->lastName} - {$block->lector->nickName}";
+                $result[$block->id]['lector'] = "{$block->lector->displayName}";
+                $result[$block->id]['lector_about'] = $block->lector->about;
             }
             else {
                 $result[$block->id]['lector'] = 'Nezadán';
+                 $result[$block->id]['lector_about'] = '';
             }
         }
         $response = new \Nette\Application\Responses\JsonResponse($result);

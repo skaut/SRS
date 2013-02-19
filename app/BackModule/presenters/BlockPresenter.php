@@ -30,6 +30,12 @@ class BlockPresenter extends BasePresenter
     }
 
     public function renderList() {
+        if ($this->context->user->isInRole('Lektor') && $this->dbuser->about == null) {
+            $linkToProfile = $el2 = \Nette\Utils\Html::el('a', 'Vyplňte je')->href($this->link(':Front:Profile:default'));
+            $this->flashMessage('Nemáte vyplněné infromace o sobě '. $linkToProfile.' aby se zobrazovali u Vašich programů', 'info');
+        }
+
+
         $blocks = $this->blockRepo->findAll();
         $this->template->blocks = $blocks;
     }
