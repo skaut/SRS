@@ -77,7 +77,7 @@ Vyhledat účastníka:
         {foreach $customFields as $field}
         <tr>
             <td>{$field['name']}</td>
-            <td>{$field['value']}</td>
+            <td>{if $field['type'] == 'boolean'}{bool $field['value']}{else}{$field['value']}{/if}</td>
         </tr>
         {/foreach}
 

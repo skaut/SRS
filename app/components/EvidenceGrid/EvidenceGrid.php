@@ -78,14 +78,14 @@ class EvidenceGrid extends Grid
         $this->addColumn('paid', 'Zaplaceno')
             ->setBooleanFilter()
             ->setBooleanEditable()
-            ->setRenderer(function($row) use ($self) {
-              return $self->renderBoolean($row->paid);
+            ->setRenderer(function($row) {
+                return \SRS\Helpers::renderBoolean($row->paid);
         });
         $this->addColumn('attended', 'Přítomen')
             ->setBooleanFilter()
             ->setBooleanEditable()
-            ->setRenderer(function($row) use ($self) {
-                return $self->renderBoolean($row->attended);
+            ->setRenderer(function($row) {
+                return \SRS\Helpers::renderBoolean($row->attended);
         });
 
         $CUSTOM_BOOLEAN_COUNT = $presenter->context->parameters['user_custom_boolean_count'];
@@ -96,8 +96,8 @@ class EvidenceGrid extends Grid
         {
             $this->addColumn('customBoolean'.$i, $this->dbsettings->get($column))
                 ->setBooleanFilter()
-                ->setRenderer(function($row) use ($self, $i) {
-                return $self->renderBoolean($row->{"customBoolean$i"});
+                ->setRenderer(function($row) use ($i) {
+                return \SRS\Helpers::renderBoolean($row->{"customBoolean$i"});
             });
         }
         }
@@ -172,12 +172,12 @@ class EvidenceGrid extends Grid
         $this->redirect("this");
     }
 
+//    public function renderBoolean($bool)
+//    {
+//        if ($bool) return 'ANO';
+//        return 'NE';
+//    }
 
-    public function renderBoolean($bool)
-    {
-        if ($bool) return 'ANO';
-        return 'NE';
-    }
 
 
 

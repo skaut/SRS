@@ -90,7 +90,7 @@ class EvidencePresenter extends BasePresenter
             //$dbColumn = 'customBoolean'.$i;
             $dbvalue = $this->dbsettings->get($settingsColumn);
             if ($dbvalue != '') {
-                $fields[] = array('name' => $dbvalue, 'value'=> $user->getCustomBoolean($i));
+                $fields[] = array('name' => $dbvalue, 'value'=> $user->getCustomBoolean($i), 'type' => 'boolean');
             }
         }
 
@@ -99,7 +99,7 @@ class EvidencePresenter extends BasePresenter
             //$dbColumn = 'customText'.$i;
             $dbvalue = $this->dbsettings->get($settingsColumn);
             if ($dbvalue != '') {
-                $fields[] = array( 'name' => $dbvalue, 'value' => $user->getCustomText($i));
+                $fields[] = array( 'name' => $dbvalue, 'value' => $user->getCustomText($i), 'type' => 'text');
             }
         }
         return $fields;

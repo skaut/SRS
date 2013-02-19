@@ -10,6 +10,14 @@ abstract class BasePresenter extends \SRS\BasePresenter
 {
     protected $dbuser;
 
+    function templatePrepareFilters($t)
+    {
+        $t->registerFilter($l = new \Nette\Latte\Engine);
+        $l = new \Nette\Latte\Macros\MacroSet($l->compiler); // in 12.1. $l->parser  --->   $l->compile
+        $l->addMacro('bool', array($this, 'booleanMacro'));
+
+    }
+
     public function startup() {
         parent::startup();
         if (!$this->context->user->isLoggedIn()) {
@@ -32,6 +40,12 @@ abstract class BasePresenter extends \SRS\BasePresenter
             $this->flashMessage('Nemáte dostatečné oprávnění');
             $this->redirect(':Back:Dashboard:Default');
         }
+    }
+
+    public function booleanMacro(\Nette\Latte\MacroNode $node, \Nette\Latte\PhpWriter $writer) {
+        $args = ($node->tokenizer->fetchAll());
+        $array_args = explode(" ", $args);
+        return $writer->write('echo \SRS\Helpers::renderBoolean('.$array_args[0].')');
     }
     
 
