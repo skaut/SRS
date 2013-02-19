@@ -44,8 +44,23 @@ class SettingsForm extends UI\Form
         $this->addText('ico', 'IČO:')->setDefaultValue($this->dbsettings->get('ico'));
         $this->addText('accountant', 'Pokladník:')->setDefaultValue($this->dbsettings->get('accountant'));
 
+        $CUSTOM_BOOLEAN_COUNT = 4;
+        for ($i = 0; $i < $CUSTOM_BOOLEAN_COUNT; $i++) {
+            $column = 'user_custom_boolean_'.$i;
+            $this->addText($column, 'Vlastní checkbox pro přihlášku č.'.$i)->setDefaultValue($this->dbsettings->get($column));
+
+        }
+
+        $CUSTOM_TEXT_COUNT = 2;
+        for ($i = 0; $i < $CUSTOM_TEXT_COUNT; $i++) {
+            $column = 'user_custom_text_'.$i;
+            $this->addText($column, 'Vlastní textové pole pro přihlášku č.'.$i)->setDefaultValue($this->dbsettings->get($column));
+        }
+
         $this->addSubmit('submit','Uložit')->getControlPrototype()->class('btn');
         $this->onSuccess[] = callback($this, 'formSubmitted');
+
+
     }
 
     public function formSubmitted()

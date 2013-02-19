@@ -1,9 +1,9 @@
 <ul>
 {foreach $pages as $page}
  {if $page->slug == '/'}
- <li><a class="button" href="{plink :Front:page:default}">{$page->name}</a></li>
+ <li><a class="button homepage item-{$iterator->getCounter()}" href="{plink :Front:page:default}">{$page->name}</a></li>
 {else}
- <li><a a class="button" href="{plink :Front:page:default, 'pageId' => $page->id}">{$page->name}</a></li>
+ <li><a class="button {$page->slug} item-{$iterator->getCounter()}" href="{plink :Front:page:default, 'pageId' => $page->id}">{$page->name}</a></li>
  {/if}
 {/foreach}
 </ul>

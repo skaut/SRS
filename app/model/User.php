@@ -60,11 +60,11 @@ class User extends BaseEntity
     protected $programs;
 
 
-    /**
-     * @ORM\OneToMany(targetEntity="\SRS\Model\UserExtension", mappedBy="user")
-     * @var \Doctrine\Common\Collections\ArrayCollection
-    */
-    protected $extensions;
+//    /**
+//     * @ORM\OneToOne(targetEntity="\SRS\Model\UserExtension", mappedBy="user")
+//     * @var \Doctrine\Common\Collections\ArrayCollection
+//    */
+//    protected $extension;
 
 
     /**
@@ -171,11 +171,57 @@ class User extends BaseEntity
      */
     protected $attended = false;
 
+
     /**
      * @var bool
      * @ORM\Column(type="boolean")
     */
     protected $incomeProofPrinted = false;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $customBoolean0 = false;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $customBoolean1 = false;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $customBoolean2 = false;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $customBoolean3 = false;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $customBoolean4 = false;
+
+
+    /**
+     * @var string
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $customText0;
+
+
+    /**
+     * @var string
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $customText1;
+
 
     public function getAttended()
     {
@@ -225,15 +271,6 @@ class User extends BaseEntity
     {
         return $this->city;
     }
-
-    /**
-     * @param string $displayName
-     */
-    public function setDisplayName($displayName)
-    {
-        $this->displayName = $displayName;
-    }
-
 
     /**
      * @ORM\Column(nullable=true)
@@ -422,6 +459,16 @@ class User extends BaseEntity
     {
         return $this->skautISUserId;
     }
+
+    /**
+     * @param string $displayName
+     */
+    public function setDisplayName($displayName)
+    {
+        $this->displayName = $displayName;
+    }
+
+
 
     /**
      * @return string

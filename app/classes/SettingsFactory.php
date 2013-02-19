@@ -33,6 +33,16 @@ class SettingsFactory
         $settings[] = new \SRS\Model\Settings('ico', 'IČO', 'Konfigurace->IČO');
         $settings[] = new \SRS\Model\Settings('accountant', 'Pokladník', 'Konfigurace->Pokladník');
 
+
+
+        $settings[] = new \SRS\Model\Settings('user_custom_boolean_0', 'Vlastní checkbox přihlášky č.1', '');
+        $settings[] = new \SRS\Model\Settings('user_custom_boolean_1', 'Vlastní checkbox přihlášky č.2', '');
+        $settings[] = new \SRS\Model\Settings('user_custom_boolean_2', 'Vlastní checkbox přihlášky č.3', '');
+        $settings[] = new \SRS\Model\Settings('user_custom_boolean_3', 'Vlastní checkbox přihlášky č.4', '');
+
+        $settings[] = new \SRS\Model\Settings('user_custom_text_0', 'Vlastní text přihlášky č.1', '');
+        $settings[] = new \SRS\Model\Settings('user_custom_text_1', 'Vlastní text přihlášky č.2', '');
+
         return $settings;
     }
 

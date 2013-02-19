@@ -20,12 +20,15 @@ class EvidenceGrid extends Grid
      */
     protected $em;
 
+    protected $dbsettings;
+
 
 
     public function __construct($em)
     {
         parent::__construct();
         $this->em = $em;
+        $this->dbsettings = $this->em->getRepository('\SRS\Model\Settings');
         $this->templatePath = __DIR__.'/template.latte';
     }
 
@@ -36,6 +39,7 @@ class EvidenceGrid extends Grid
         $qb->addSelect('role');
         $qb->from('\SRS\Model\User', 'u');
         $qb->leftJoin('u.role','role'); //'WITH', 'role.standAlone=1');
+
 
 
         $roles = $this->em->getRepository('\SRS\Model\Acl\Role')->findAll();
@@ -52,7 +56,7 @@ class EvidenceGrid extends Grid
         $this->setDataSource($source);
 
 
-
+        $self = $this;
 
         $this->addColumn('displayName', 'Jméno')->setTextFilter()->setAutocomplete($numOfResults);
         $this->addColumn('role', 'Role')
@@ -72,21 +76,31 @@ class EvidenceGrid extends Grid
             ->setAutocomplete($numOfResults);
 
         $this->addColumn('paid', 'Zaplaceno')
-
             ->setBooleanFilter()
             ->setBooleanEditable()
-            ->setRenderer(function($row) {
-            if ($row->paid) return 'ANO';
-            return 'NE';
+            ->setRenderer(function($row) use ($self) {
+              return $self->renderBoolean($row->paid);
         });
         $this->addColumn('attended', 'Přítomen')
             ->setBooleanFilter()
             ->setBooleanEditable()
-            ->setRenderer(function($row) {
-            if ($row->attended) return 'ANO';
-            return 'NE';
+            ->setRenderer(function($row) use ($self) {
+                return $self->renderBoolean($row->attended);
         });
 
+        $CUSTOM_BOOLEAN_COUNT = 4;
+        for ($i = 0; $i < $CUSTOM_BOOLEAN_COUNT; $i++) {
+        $column = 'user_custom_boolean_'.$i;
+        $dbvalue = $this->dbsettings->get($column);
+        if ($dbvalue != '')
+        {
+            $this->addColumn('customBoolean'.$i, $this->dbsettings->get($column))
+                ->setBooleanFilter()
+                ->setRenderer(function($row) use ($self, $i) {
+                return $self->renderBoolean($row->{"customBoolean$i"});
+            });
+        }
+        }
 
         $this->addButton(Grid::ROW_FORM, "Řádková editace")
             ->setClass("fast-edit");
@@ -99,7 +113,7 @@ class EvidenceGrid extends Grid
 
 
 
-        $self = $this;
+
 
         $this->setRowFormCallback(function($values) use ($self, $presenter){
                 $user = $presenter->context->database->getRepository('\SRS\Model\User')->find($values['id']);
@@ -156,6 +170,13 @@ class EvidenceGrid extends Grid
             $this->flashMessage("Vybraný uživatel byl označen jako přítomný.","success");
         }
         $this->redirect("this");
+    }
+
+
+    public function renderBoolean($bool)
+    {
+        if ($bool) return 'ANO';
+        return 'NE';
     }
 
 
