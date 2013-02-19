@@ -35,19 +35,19 @@ class ConfigurationPresenter extends BasePresenter
         $this->redirect('this');
     }
 
-    public function handleAddColumn() {
-        $sm = $this->context->database->getConnection()->getSchemaManager();
-        $table = $sm->listTableDetails('user');
-        $column = $table->addColumn('custom_name_'.mt_rand(0,100), 'boolean');
-        $diff = new \Doctrine\DBAL\Schema\TableDiff('user', array($column));
-        $sm->alterTable($diff);
-
-
-    }
+//    public function handleAddColumn() {
+//        $sm = $this->context->database->getConnection()->getSchemaManager();
+//        $table = $sm->listTableDetails('user');
+//        $column = $table->addColumn('custom_name_'.mt_rand(0,100), 'boolean');
+//        $diff = new \Doctrine\DBAL\Schema\TableDiff('user', array($column));
+//        $sm->alterTable($diff);
+//
+//
+//    }
 
 
     protected function createComponentSettingsForm() {
-        return new \SRS\Form\SettingsForm(null, null, $this->dbsettings);
+        return new \SRS\Form\SettingsForm(null, null, $this->dbsettings, $this->context->parameters);
     }
 
 }

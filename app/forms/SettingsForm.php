@@ -21,7 +21,7 @@ class SettingsForm extends UI\Form
 
     protected $dbsettings;
 
-    public function __construct(IContainer $parent = NULL, $name = NULL, $dbsettings)
+    public function __construct(IContainer $parent = NULL, $name = NULL, $dbsettings, $configParameters)
     {
         parent::__construct($parent, $name);
         $this->dbsettings = $dbsettings;
@@ -44,14 +44,14 @@ class SettingsForm extends UI\Form
         $this->addText('ico', 'IČO:')->setDefaultValue($this->dbsettings->get('ico'));
         $this->addText('accountant', 'Pokladník:')->setDefaultValue($this->dbsettings->get('accountant'));
 
-        $CUSTOM_BOOLEAN_COUNT = 4;
+        $CUSTOM_BOOLEAN_COUNT = $configParameters['user_custom_boolean_count'];
         for ($i = 0; $i < $CUSTOM_BOOLEAN_COUNT; $i++) {
             $column = 'user_custom_boolean_'.$i;
             $this->addText($column, 'Vlastní checkbox pro přihlášku č.'.$i)->setDefaultValue($this->dbsettings->get($column));
 
         }
 
-        $CUSTOM_TEXT_COUNT = 2;
+        $CUSTOM_TEXT_COUNT = $configParameters['user_custom_text_count'];
         for ($i = 0; $i < $CUSTOM_TEXT_COUNT; $i++) {
             $column = 'user_custom_text_'.$i;
             $this->addText($column, 'Vlastní textové pole pro přihlášku č.'.$i)->setDefaultValue($this->dbsettings->get($column));

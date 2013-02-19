@@ -73,6 +73,14 @@ Vyhledat účastníka:
             <td>Přítomen</td>
             <td>{input attended}</td>
         </tr>
+
+        {foreach $customFields as $field}
+        <tr>
+            <td>{$field['name']}</td>
+            <td>{$field['value']}</td>
+        </tr>
+        {/foreach}
+
         <tr class="warning">
             <td colspan="2">{input submit}</td>
         </tr>

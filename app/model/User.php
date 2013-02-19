@@ -222,6 +222,18 @@ class User extends BaseEntity
      */
     protected $customText1;
 
+    public function getCustomBoolean($index)
+    {
+        $value = $this->{"customBoolean$index"};
+        return $value;
+    }
+
+    public function getCustomText($index)
+    {
+        $value = $this->{"customText$index"};
+        return $value;
+    }
+
 
     public function getAttended()
     {

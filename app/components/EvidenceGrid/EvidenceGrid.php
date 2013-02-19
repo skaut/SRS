@@ -88,7 +88,7 @@ class EvidenceGrid extends Grid
                 return $self->renderBoolean($row->attended);
         });
 
-        $CUSTOM_BOOLEAN_COUNT = 4;
+        $CUSTOM_BOOLEAN_COUNT = $presenter->context->parameters['user_custom_boolean_count'];
         for ($i = 0; $i < $CUSTOM_BOOLEAN_COUNT; $i++) {
         $column = 'user_custom_boolean_'.$i;
         $dbvalue = $this->dbsettings->get($column);

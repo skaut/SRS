@@ -43,6 +43,9 @@ class AttendeeForm extends ProfileForm
     public function setFields()
     {
         parent::setFields();
+
+
+
         $this->addSelect('role', 'Přihlásit jako:')->setItems($this->roles)
             ->addRule(Form::FILLED, 'Vyplňte roli');
         $this->addCheckbox('agreement', 'Souhlasím, že uvedené údaje budou poskytnuty lektorům pro účely semináře')

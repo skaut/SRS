@@ -29,22 +29,7 @@ class EvidencePresenter extends BasePresenter
     }
 
     public function renderList() {
-//        $dbParams = $this->getDBParams();
-//        $dsn = "mysql:host={$dbParams['host']};dbname={$dbParams['dbname']}";
-//        $netteDatabase = new \Nette\Database\Connection($dsn, $dbParams['user'], $dbParams['password']);
-//
-//        $query = "
-//        user.id, firstName, ex.value, ex.property left join (SELECT ex.user_id , ex.value as food FROM userextension ex WHERE ex.property='food') as ex on ex.user_id = user.id
-//        ";
-//        $query = "user.id, firstName, role.name";
-//        $table = $netteDatabase->table('user')->select($query);
-//
-//
-//        $sql = $table->getSql();
-//        \Nette\Diagnostics\Debugger::dump('ahoj');
-//        \Nette\Diagnostics\Debugger::dump($sql);
-//        echo $sql;
-//        \Nette\Diagnostics\Debugger::dump($table->fetch());
+
     }
 
     public function renderDetail($id = null)
@@ -62,6 +47,8 @@ class EvidencePresenter extends BasePresenter
 
         //$user je v template defaultne
         $this->template->dbuser = $user;
+        $this->template->customFields = $this->getFilledCustomFields($user);
+
     }
 
 
@@ -89,6 +76,36 @@ class EvidencePresenter extends BasePresenter
         $response = new \Nette\Application\Responses\TextResponse($json);
         $this->sendResponse($response);
         $this->terminate();
+
+    }
+
+    protected function getFilledCustomFields($user)
+    {
+        $fields = array();
+        $booleansCount = $this->context->parameters['user_custom_boolean_count'];
+        $textsCount = $this->context->parameters['user_custom_text_count'];
+
+        for ($i = 0; $i < $booleansCount; $i++) {
+            $settingsColumn = 'user_custom_boolean_'.$i;
+            //$dbColumn = 'customBoolean'.$i;
+            $dbvalue = $this->dbsettings->get($settingsColumn);
+            if ($dbvalue != '') {
+                $fields[] = array('name' => $dbvalue, 'value'=> $user->getCustomBoolean($i));
+            }
+        }
+
+        for ($i = 0; $i < $textsCount; $i++) {
+            $settingsColumn = 'user_custom_text_'.$i;
+            //$dbColumn = 'customText'.$i;
+            $dbvalue = $this->dbsettings->get($settingsColumn);
+            if ($dbvalue != '') {
+                $fields[] = array( 'name' => $dbvalue, 'value' => $user->getCustomText($i));
+            }
+        }
+        return $fields;
+
+
+
 
     }
 
