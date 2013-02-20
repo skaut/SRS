@@ -12,7 +12,7 @@ abstract class BasePresenter extends BaseComponentsPresenter
     /**
      * @var \SRS\Model\SettingsRepository
      */
-    protected $dbsettings;
+    public $dbsettings;
 
     public function injectEntityManager(\Doctrine\ORM\EntityManager $em)
     {

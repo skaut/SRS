@@ -11,6 +11,7 @@ class PagePresenter extends BasePresenter
     protected $pageId;
 
     public function startup() {
+        parent::startup();
 
         if(!$this->context->parameters['database']['installed']) {
             $this->redirect(':Install:Install:default');

@@ -17,10 +17,16 @@ class AttendeeForm extends ProfileForm
 {
     protected $roles;
 
+    protected $dbsettings;
 
-    public function __construct(IContainer $parent = NULL, $name = NULL, $roles)
+    protected $configParams;
+
+
+    public function __construct(IContainer $parent = NULL, $name = NULL, $roles, $configParams, $dbsettings)
     {
         $this->roles = $roles;
+        $this->dbsettings = $dbsettings;
+        $this->configParams = $configParams;
         parent::__construct($parent, $name);
 
     }
@@ -43,9 +49,7 @@ class AttendeeForm extends ProfileForm
     public function setFields()
     {
         parent::setFields();
-
-
-
+        $this->addCustomFields();
         $this->addSelect('role', 'Přihlásit jako:')->setItems($this->roles)
             ->addRule(Form::FILLED, 'Vyplňte roli');
         $this->addCheckbox('agreement', 'Souhlasím, že uvedené údaje budou poskytnuty lektorům pro účely semináře')
@@ -57,6 +61,29 @@ class AttendeeForm extends ProfileForm
     protected function configure()
     {
         $this->setFields();
+    }
+
+    protected function addCustomFields()
+    {
+        $customBooleanCount = $this->configParams['user_custom_boolean_count'];
+        $customTextCount = $this->configParams['user_custom_text_count'];
+        for ($i = 0; $i < $customBooleanCount; $i++) {
+            $settingsColumn = 'user_custom_boolean_'.$i;
+            //$dbColumn = 'customBoolean'.$i;
+            $dbvalue = $this->dbsettings->get($settingsColumn);
+            if ($dbvalue != '') {
+                $this->addCheckbox('customBoolean'.$i, $dbvalue);
+            }
+        }
+
+        for ($i = 0; $i < $customTextCount; $i++) {
+            $settingsColumn = 'user_custom_text_'.$i;
+            //$dbColumn = 'customText'.$i;
+            $dbvalue = $this->dbsettings->get($settingsColumn);
+            if ($dbvalue != '') {
+                $this->addText('customText'.$i, $dbvalue);
+            }
+        }
     }
 
 }

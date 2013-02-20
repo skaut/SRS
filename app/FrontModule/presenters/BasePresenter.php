@@ -11,6 +11,10 @@ namespace FrontModule;
 
 class BasePresenter extends \SRS\BasePresenter
 {
+    public function startup() {
+        parent::startup();
+    }
+
     public function beforeRender() {
         parent::beforeRender();
         $path = $this->getHttpRequest()->url->path;

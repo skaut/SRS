@@ -246,6 +246,7 @@ class User extends BaseEntity
     }
 
 
+
     public function setPaid($paid)
     {
         $this->paid = $paid;
@@ -549,6 +550,119 @@ class User extends BaseEntity
     {
         return $this->extensions;
     }
+
+    /**
+     * @param boolean $customBoolean0
+     */
+    public function setCustomBoolean0($customBoolean0)
+    {
+        $this->customBoolean0 = $customBoolean0;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getCustomBoolean0()
+    {
+        return $this->customBoolean0;
+    }
+
+    /**
+     * @param boolean $customBoolean1
+     */
+    public function setCustomBoolean1($customBoolean1)
+    {
+        $this->customBoolean1 = $customBoolean1;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getCustomBoolean1()
+    {
+        return $this->customBoolean1;
+    }
+
+    /**
+     * @param boolean $customBoolean2
+     */
+    public function setCustomBoolean2($customBoolean2)
+    {
+        $this->customBoolean2 = $customBoolean2;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getCustomBoolean2()
+    {
+        return $this->customBoolean2;
+    }
+
+    /**
+     * @param boolean $customBoolean3
+     */
+    public function setCustomBoolean3($customBoolean3)
+    {
+        $this->customBoolean3 = $customBoolean3;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getCustomBoolean3()
+    {
+        return $this->customBoolean3;
+    }
+
+    /**
+     * @param boolean $customBoolean4
+     */
+    public function setCustomBoolean4($customBoolean4)
+    {
+        $this->customBoolean4 = $customBoolean4;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getCustomBoolean4()
+    {
+        return $this->customBoolean4;
+    }
+
+    /**
+     * @param string $customText0
+     */
+    public function setCustomText0($customText0)
+    {
+        $this->customText0 = $customText0;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCustomText0()
+    {
+        return $this->customText0;
+    }
+
+    /**
+     * @param string $customText1
+     */
+    public function setCustomText1($customText1)
+    {
+        $this->customText1 = $customText1;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCustomText1()
+    {
+        return $this->customText1;
+    }
+
 
     /**
      * @param boolean $incomeProofPrinted
