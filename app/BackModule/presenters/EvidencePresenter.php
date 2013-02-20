@@ -79,6 +79,12 @@ class EvidencePresenter extends BasePresenter
 
     }
 
+    public function handlePrintIncomeProof($userId)
+    {
+        $printer = $this->context->printer;
+        $printer->printIncomeProofs(array($this->userRepo->find($userId)));
+    }
+
     protected function getFilledCustomFields($user)
     {
         $fields = array();
