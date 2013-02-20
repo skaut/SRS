@@ -56,7 +56,7 @@ class User extends BaseEntity
 
     /**
      * @ORM\ManyToMany(targetEntity="\SRS\Model\Program\Program", mappedBy="attendees", cascade={"persist"})
-     * @OrderBy({"start" = "ASC"})
+     * @ORM\OrderBy({"start" = "ASC"})
      */
     protected $programs;
 

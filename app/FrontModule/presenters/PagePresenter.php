@@ -37,7 +37,6 @@ class PagePresenter extends BasePresenter
 
                 }
                 $page = $page[0];
-
             }
 
 

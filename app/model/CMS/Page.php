@@ -200,8 +200,8 @@ class PageRepository extends \Doctrine\ORM\EntityRepository
 
     public function IdToSlug($id) {
         try {
-        return $this->_em->createQuery("SELECT p.slug FROM ".$this->entity. " p WHERE p.id = '{$id}' ")
-            ->getSingleScalarResult();
+            return $this->_em->createQuery("SELECT p.slug FROM ".$this->entity. " p WHERE p.id = '{$id}' ")
+                ->getSingleScalarResult();
         }
 
         catch(\Doctrine\ORM\NoResultException $e) {

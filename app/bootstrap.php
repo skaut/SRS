@@ -83,7 +83,7 @@ $container->router[] = new Route('login/', 'Auth:login');
 $container->router[] = new Route('logout/', 'Auth:logout');
 
 $pageRepo = $container->database->getRepository('\SRS\Model\CMS\Page');
-$container->router[] = new Route('[!<pageId [a-z-]+>]', array(
+$container->router[] = new Route('[!<pageId [a-z-0-9]+>]', array(
     'module' => 'Front',
     'presenter' => 'Page',
     'action' => 'default',
