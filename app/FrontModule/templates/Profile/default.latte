@@ -1,15 +1,59 @@
 
 {block title}
-Profil
+Můj profil
 {/block}
 
 {block head}
 <script src="{$basePath}/js/front/birthdate_picker_cs.js"></script>
+
+<script>
+    $(function() {
+        var hash = window.location.hash;
+        console.log(hash);
+        var active = 0;
+        if (hash == '#extra_info') {
+            active = 1;
+        }
+        if (hash == '#harmonogram') {
+            active = 2;
+        }
+        $( "#accordion" ).accordion({
+            collapsible: true,
+            heightStyle: "content",
+            active: active
+        });
+    });
+
+
+</script>
+
+<script>
+    $(function() {
+        $('.importValue').click(function(event) {
+            event.preventDefault();
+
+            var skautISValue = $(this).parent().parent().find('.skautIS').text();
+            var localEl = $(this).parent().parent().find('.local');
+            if (localEl.find('input').length > 0) {
+                localEl.find('input').val(skautISValue);
+            }
+
+            else if (localEl.find('select').length > 0) {
+                var selectEl = localEl.find('select');
+                selectEl.val(skautISValue);
+            }
+
+        });
+    });
+</script>
+
 {/block}
 
 
+
 {block content}
-<h1>Nastavení profilu</h1>
+<h1>Můj profil</h1>
+<div id="accordion">
 <h2>Osobní údaje</h2>
 {form profileForm}
 <ul class="errors" n:if="$form->hasErrors()">
@@ -100,25 +144,26 @@ Profil
 
 </table>
 {/form}
-
-<script>
-    $('.importValue').click(function(event) {
-        event.preventDefault();
-
-        var skautISValue = $(this).parent().parent().find('.skautIS').text();
-        var localEl = $(this).parent().parent().find('.local');
-        if (localEl.find('input').length > 0) {
-           localEl.find('input').val(skautISValue);
-        }
-
-        else if (localEl.find('select').length > 0) {
-            var selectEl = localEl.find('select');
-            selectEl.val(skautISValue);
-        }
-
-    })
-</script>
-
-<hr>
 <h2>Doplňující informace</h2>
 {widget aboutForm}
+
+
+<h2>Můj harmonogram semináře</h2>
+    {if $dbuser->programs == null}
+    <p>Nemáte žádné zvolené programy.</p>
+    {/if}
+<table>
+    <tr>
+        <th>Od</th><th>do</th><th>Název programu</th><th>Kde</th><th>Lektor</th>
+    </tr>
+    {foreach $dbuser->programs as $program}
+    <tr>
+        <td>{$program->start|date:"d.m. H:i"}</td>
+        <td>{$program->countEnd($basicBlockDuration)|date:"d.m. H:i"}</td>
+        <td>{$program->block->name}</td>
+        <td>{$program->block->location}</td>
+        <td>{ifset $program->block->lector->displayName}{$program->block->lector->displayName}{/ifset}</td>
+    </tr>
+    {/foreach}
+</table>
+</div>

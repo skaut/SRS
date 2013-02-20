@@ -42,7 +42,10 @@ class ProfilePresenter extends BasePresenter
 
         $birthday = \explode("T", $skautISPerson->Birthday);
         $skautISPerson->birthdate = $birthday[0];
+
         $this->template->skautISPerson = $skautISPerson;
+        $this->template->dbuser = $user;
+        $this->template->basicBlockDuration = $this->dbsettings->get('basic_block_duration');
 
     }
 
