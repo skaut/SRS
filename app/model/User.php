@@ -711,5 +711,12 @@ class UserRepository extends \Nella\Doctrine\Repository
 //        return $this->_em->findAllBy(array('role.name' => $roleName));
 //    }
 
+     public function findAllPaying()
+     {
+         $query = "SELECT u, r FROM {$this->_entityName} u JOIN u.role r WHERE r.pays = 1 ";
+         $result = $this->_em->createQuery($query)->getResult();
+         return $result;
+     }
+
 
 }
