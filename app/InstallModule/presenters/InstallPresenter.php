@@ -97,12 +97,30 @@ class InstallPresenter extends \SRS\BaseComponentsPresenter
 
         if ($success == true) {
             $this->flashMessage('Import schématu databáze a inicializačních dat proběhl úspěšně');
-            $this->redirect(':Install:install:admin');
+            $this->redirect(':Install:install:skautIS');
         }
         $this->redirect('this');
     }
 
+    public function renderSkautIS()
+    {
+        $dbsettings = $this->context->database->getRepository('\SRS\Model\Settings');
+        if ($this->context->parameters['skautis']['app_id'] != null)
+        {
+            $this->flashMessage('Skaut IS byl již nastaven');
+            $this->redirect(':Install:install:admin');
+        }
+
+    }
+
     public function renderAdmin() {
+        if (!$this->context->parameters['database']['installed']) {
+            $this->redirect(':Install:install:default');
+        }
+        if ($this->context->parameters['skautis']['app_id'] == null) {
+            $this->redirect(':Install:install:skautIS');
+        }
+
         if ($this->context->database->getRepository('\SRS\model\Settings')->get('superadmin_created') == true) {
             $this->flashMessage('Administrátorská role byla již nastavena dříve');
             $this->redirect(':Install:install:finish?before=true');
@@ -145,6 +163,11 @@ class InstallPresenter extends \SRS\BaseComponentsPresenter
 
     protected function createComponentDatabaseForm() {
         return new \SRS\Form\Install\DatabaseForm();
+    }
+
+    protected function createComponentSkautISForm()
+    {
+        return new \SRS\Form\Install\SkautISForm();
     }
 
 }

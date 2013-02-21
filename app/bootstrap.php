@@ -58,8 +58,6 @@ if (PHP_SAPI == 'cli') {
 }
 $container = $configurator->createContainer();
 
-//ProgramFactory::createBlockDataForTests($container->database);
-
 
 // Setup router
 $container->router[] = new Route('index.php', 'Front:Homepage:default', Route::ONE_WAY);

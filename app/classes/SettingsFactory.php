@@ -26,6 +26,9 @@ class SettingsFactory
         $settings[] = new \SRS\Model\Settings('is_allowed_modify_schedule', 'Lze upravovat harmonogram semináře?', '1');
         $settings[] = new \SRS\Model\Settings('is_allowed_log_in_programs', 'Lze se přihlašovat na Programy?', '0');
 
+       // $settings[] = new \SRS\Model\Settings('skautis_app_id', 'skautis app id', '');
+        $settings[] = new \SRS\Model\Settings('skautis_seminar_id', 'skautis seminar id', '');
+
         $settings[] = new \SRS\Model\Settings('logo', 'Logo', '/img/logo.png');
         $settings[] = new \SRS\Model\Settings('footer', 'Patička', '&copy; SRS 2013');
 

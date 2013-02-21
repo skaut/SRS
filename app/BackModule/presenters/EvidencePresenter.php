@@ -58,7 +58,7 @@ class EvidencePresenter extends BasePresenter
 
     protected function createComponentEvidenceDetailForm()
     {
-        return new \SRS\Form\Evidence\EvidenceDetailForm();
+        return new \SRS\Form\Evidence\EvidenceDetailForm(null, null, $this->context->parameters);
     }
 
 

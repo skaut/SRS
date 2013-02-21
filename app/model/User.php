@@ -24,6 +24,7 @@ use Doctrine\Common\Collections\Criteria;
  * @property int $skautISPersonId
  * @property bool $approved
  * @property bool $paid
+ * @property string $paymentMethod
  * @property bool $incomeProofPrinted
  * @property bool $attended
  * @property string $displayName
@@ -160,6 +161,12 @@ class User extends BaseEntity
     protected $paid = false;
 
     /**
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $paymentMethod;
+
+    /**
      * @var bool
      * @ORM\Column(type="boolean")
      */
@@ -183,6 +190,7 @@ class User extends BaseEntity
      * @ORM\Column(type="boolean")
      */
     protected $customBoolean1 = false;
+
 
     /**
      * @var bool
@@ -249,6 +257,22 @@ class User extends BaseEntity
     public function getPaid()
     {
         return $this->paid;
+    }
+
+    /**
+     * @param string $payMethod
+     */
+    public function setPaymentMethod($payMethod)
+    {
+        $this->paymentMethod = $payMethod;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaymentMethod()
+    {
+        return $this->paymentMethod;
     }
 
 

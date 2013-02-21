@@ -15,4 +15,5 @@ class Helpers
         if ($bool) return 'ANO';
         return 'NE';
     }
+
 }

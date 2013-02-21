@@ -1,0 +1,23 @@
+{block header}Konfigurace skautIS{/block}
+{block content}
+
+{form skautISForm}
+<table>
+    <tr>
+        <td>{label skautis_app_id /}</td>
+        <td>{input skautis_app_id}</td>
+        <td>Toto pole je povinné, jinak nebude možné se do systému přihlásit!</td>
+    </tr>
+
+    <tr>
+        <td>{label skautis_seminar_id /}</td>
+        <td>{input skautis_seminar_id}</td>
+        <td>Toto pole vyplňte v případě, že chcete váš seminář propojit s odpovídající událostí ve skautIS</td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td>{input submit}</td>
+        <td>&nbsp;</td>
+    </tr>
+</table>
+{/form}

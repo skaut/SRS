@@ -47,6 +47,7 @@ class DatabaseForm extends UI\Form
             $environment = $isDebug == true ? 'development': 'production';
             $values['installed'] = true;
             $config["{$environment} < common"]['parameters']['database'] = $values;
+            $config["{$environment} < common"]['parameters']['skautis']['app_id'] = null; // resetujeme nastaveni
             $configFile = \Nette\Utils\Neon::encode($config, \Nette\Utils\Neon::BLOCK);
             $result = \file_put_contents(APP_DIR.'/config/config.neon', $configFile);
             if ($result === false) {

@@ -15,13 +15,14 @@ use Nette\Application\UI,
 
 class EvidenceDetailForm extends \SRS\Form\EntityForm
 {
-    public function __construct(IContainer $parent = NULL, $name = NULL)
+    public function __construct(IContainer $parent = NULL, $name = NULL, $configParams)
     {
         parent::__construct($parent, $name);
 
         $this->addHidden('id');
         $this->addCheckbox('paid', 'Zaplatil');
         $this->addCheckbox('attended', 'Přítomen');
+        $this->addSelect('paymentMethod', 'Platební metoda')->setItems($configParams['payment_methods'])->setPrompt('Nezadáno');
         $this->addSubmit('submit','Uložit')->getControlPrototype()->class('btn');
         $this->onSuccess[] = callback($this, 'submitted');
 

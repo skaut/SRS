@@ -81,6 +81,18 @@ class EvidenceGrid extends Grid
             ->setRenderer(function($row) {
                 return \SRS\Helpers::renderBoolean($row->paid);
         });
+
+        $paymentMethods = $presenter->context->parameters['payment_methods'];
+
+        $this->addColumn('paymentMethod', 'Platební metoda')
+            ->setSelectFilter($paymentMethods)
+            ->setSelectEditable($paymentMethods, 'nezadáno')
+            ->setRenderer(function ($row) use ($paymentMethods) {
+                if ($row->paymentMethod == null || $row->paymentMethod == '') return '';
+                return $paymentMethods[$row->paymentMethod];
+            });
+
+
         $this->addColumn('attended', 'Přítomen')
             ->setBooleanFilter()
             ->setBooleanEditable()
@@ -119,6 +131,7 @@ class EvidenceGrid extends Grid
                 $user = $presenter->context->database->getRepository('\SRS\Model\User')->find($values['id']);
                 $user->paid = isset($values['paid']) ? true : false;
                 $user->attended = isset($values['attended']) ? true : false;
+                $user->paymentMethod = ($values['paymentMethod'] != null) ? $values['paymentMethod'] : null;
                 //$user->setProperties($values, $presenter->context->database);
                 $presenter->context->database->flush();
                 $self->flashMessage("Záznam byl úspěšně uložen.","success");

@@ -22,7 +22,7 @@ class AuthPresenter extends \SRS\BasePresenter
         $httpRequest = $this->context->httpRequest;
 
         if ($httpRequest->getPost() == null) {
-            $loginUrl = $this->context->parameters['skautis']['url']. '/Login/?appid='.$this->context->parameters['skautis']['appID'];
+            $loginUrl = $this->context->parameters['skautis']['url']. '/Login/?appid='.$this->context->parameters['skautis']['app_id'];
             if ($backlink) {
                 $loginUrl .= '&ReturnUrl='.$backlink;
             }
@@ -44,7 +44,7 @@ class AuthPresenter extends \SRS\BasePresenter
         if ($this->context->user->isLoggedIn()) {
             $token = $this->context->user->identity->token;
             $this->context->user->logout(true);
-            $logoutUrl = $this->context->parameters['skautis']['url']. '/Login/LogOut.aspx?appid='.$this->context->parameters['skautis']['appID'].'&Token='.$token;
+            $logoutUrl = $this->context->parameters['skautis']['url']. '/Login/LogOut.aspx?appid='.$this->context->parameters['skautis']['app_id'].'&Token='.$token;
             if ($backlink) {
                 $logoutUrl .= '&ReturnUrl='.$backlink;
             }

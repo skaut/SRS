@@ -20,6 +20,9 @@ class skautIS extends \Nette\Object
     /** @var \SoapClient */
     protected $organizationUnitService;
 
+    /** @var \SoapClient */
+    protected $applicationManagementService;
+
     /** @var string */
     protected $skautISUrl;
 
@@ -31,8 +34,12 @@ class skautIS extends \Nette\Object
 
     /** @var string */
     public $userManagementServiceSlug = "UserManagement.asmx?wsdl";
+
     /** @var string */
     public $organizationUnitServiceSlug = "OrganizationUnit.asmx?wsdl";
+
+    /** @var string */
+    public $applicationManagementServiceSlug = "ApplicationManagement.asmx?wsdl";
 
 
     /**
@@ -66,6 +73,16 @@ class skautIS extends \Nette\Object
             $this->organizationUnitService = new \SoapClient($this->skautISUrl. '/' . $this->webServicesSlug. '/' . $this->organizationUnitServiceSlug, array('ID_Application' => $this->skautISAppID));
         }
         return $this->organizationUnitService;
+    }
+
+    protected function getApplicationManagementService()
+    {
+        if ($this->applicationManagementService == null) {
+            $this->applicationManagementService = new \SoapClient($this->skautISUrl. '/' . $this->webServicesSlug. '/' . $this->applicationManagementServiceSlug);
+        }
+        //\Nette\Diagnostics\Debugger::dump($this->applicationManagementService);
+
+        return $this->applicationManagementService;
     }
 
     /**
@@ -105,6 +122,15 @@ class skautIS extends \Nette\Object
         $this->getOrganizationUnitService()->PersonUpdateBasic(array('personUpdateBasicInput' => $person));
         $this->getOrganizationUnitService()->PersonUpdateAddress(array('personUpdateAddressInput' => $person));
     }
+
+//    public function getApplications()
+//    {
+//        //TODO nefunguje
+//        $response = $this->getApplicationManagementService()
+//            ->RemoteApplicationAll->RemoteApplicationAllResponse;
+//        \Nette\Diagnostics\Debugger::dump($response);
+//        return $response;
+//    }
 
     /**
      * @param string $token skautisToken
