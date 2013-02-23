@@ -65,6 +65,7 @@ class EvidenceGrid extends Grid
 
 
         $self = $this;
+        $visibility = $this->columnsVisibility;
         if ($this->columnsVisibility['displayName'])
             $this->addColumn('displayName', 'Jméno')->setTextFilter()->setAutocomplete($numOfResults);
 
@@ -156,12 +157,19 @@ class EvidenceGrid extends Grid
 
 
 
-        $this->setRowFormCallback(function($values) use ($self, $presenter){
+        $this->setRowFormCallback(function($values) use ($self, $presenter, $visibility){
                 $user = $presenter->context->database->getRepository('\SRS\Model\User')->find($values['id']);
-                $user->paid = isset($values['paid']) ? true : false;
-                $user->attended = isset($values['attended']) ? true : false;
-                $user->paymentMethod = ($values['paymentMethod'] != null) ? $values['paymentMethod'] : null;
-                //$user->setProperties($values, $presenter->context->database);
+                if ($visibility['paid']) {
+                    $user->paid = isset($values['paid']) ? true : false;
+                }
+                if ($visibility['attended']) {
+                    $user->attended = isset($values['attended']) ? true : false;
+                }
+
+                if (isset($values['paymentMethod'])) {
+                    $user->paymentMethod = ($values['paymentMethod'] != null) ? $values['paymentMethod'] : null;
+                }
+
                 $presenter->context->database->flush();
                 $self->flashMessage("Záznam byl úspěšně uložen.","success");
 
