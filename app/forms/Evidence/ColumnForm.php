@@ -1,0 +1,40 @@
+<?php
+/**
+ * Created by JetBrains PhpStorm.
+ * User: Michal
+ * Date: 19.2.13
+ * Time: 9:42
+ * To change this template use File | Settings | File Templates.
+ */
+
+namespace SRS\Form\Evidence;
+
+use Nette\Application\UI,
+    Nette\Diagnostics\Debugger,
+    Nette\Application\UI\Form,
+    Nette\ComponentModel\IContainer;
+
+class ColumnForm extends Form
+{
+
+    protected $container;
+    public function __construct(IContainer $parent = NULL, $name = NULL, $columns, $container)
+    {
+        $this->container = $container;
+        parent::__construct($parent, $name);
+
+        $session = $container->session;
+        $evidenceColumns = $session->getSection('evidenceColumns');
+        $visibilities = $evidenceColumns->visibility;
+
+        foreach($columns as $column)
+        {
+            $this->addCheckbox($column['name'], $column['label'])->setDefaultValue($visibilities[$column['name']]);
+
+        }
+        $this->addSubmit('submit', 'OK');
+        //$this->onSuccess[] = callback($this->presenter, 'columnFormSubmitted');
+    }
+
+
+}

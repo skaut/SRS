@@ -28,7 +28,9 @@ $e =  new \JMS\Serializer\Annotation\Accessor();
 
 
 // Enable RobotLoader - this will load all classes automatically
-$configurator->setTempDirectory(__DIR__ . '/../temp');
+
+$temp_dir = __DIR__ . '/../temp';
+$configurator->setTempDirectory($temp_dir);
 $configurator->createRobotLoader()
 	->addDirectory(APP_DIR)
 	->addDirectory(LOCAL_LIBS_DIR)
@@ -57,6 +59,8 @@ if (PHP_SAPI == 'cli') {
     $configurator->addConfig(__DIR__ . '/config/config.neon', 'console');
 }
 $container = $configurator->createContainer();
+//$session = $container->session;
+//$session->setSavePath($temp_dir. '/sessions');
 
 
 // Setup router

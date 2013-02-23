@@ -14,6 +14,8 @@ Evidence
 {block content}
 <a class="btn" href="#printDialog" data-toggle="modal"><i class="icon-print"></i>Vytisknout příjmové doklady</a>
 <a class="btn"><i class="icon-print"></i>Vytisknout potvrzení o zaplacení</a>
+<a class="btn pull-right" href="#columnDialog" data-toggle="modal">Zobrazovat sloupce</a>
+
 {widget evidenceGrid}
 
 
@@ -34,6 +36,20 @@ Evidence
         <a href="#" class="btn btn-danger ok ">Smazat</a>
         <a href="#" class="btn btn-cancel" data-dismiss="modal">Zrušit</a>
     </div>
+</div>
+
+<div id="columnDialog" class="modal hide fade" role="dialog" tabindex="-1" >
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">×</a>
+        <h3>Vyberte sloupce</h3>
+    </div>
+    <div class="modal-body">
+      {widget columnForm}
+    </div>
+    {*<div class="modal-footer">*}
+        {*<a href="#" class="btn btn-danger ok ">Smazat</a>*}
+        {*<a href="#" class="btn btn-cancel" data-dismiss="modal">Zrušit</a>*}
+    {*</div>*}
 </div>
 
 {/block}

@@ -20,16 +20,24 @@ class EvidenceGrid extends Grid
      */
     protected $em;
 
+    /**
+     * @var \Nella\Doctrine\Repository
+     */
     protected $dbsettings;
 
+    /**
+     * @var array
+     */
+    protected $columnsVisibility;
 
 
-    public function __construct($em)
+    public function __construct($em, $columnsVisibility)
     {
         parent::__construct();
         $this->em = $em;
         $this->dbsettings = $this->em->getRepository('\SRS\Model\Settings');
         $this->templatePath = __DIR__.'/template.latte';
+        $this->columnsVisibility = $columnsVisibility;
     }
 
     protected function configure($presenter)
@@ -57,61 +65,82 @@ class EvidenceGrid extends Grid
 
 
         $self = $this;
+        if ($this->columnsVisibility['displayName'])
+            $this->addColumn('displayName', 'Jméno')->setTextFilter()->setAutocomplete($numOfResults);
 
-        $this->addColumn('displayName', 'Jméno')->setTextFilter()->setAutocomplete($numOfResults);
-        $this->addColumn('role', 'Role')
-            ->setRenderer(function($row) {
-                return $row->role['name'];
-            })
-            ->setSelectFilter($rolesGrid);
+        if ($this->columnsVisibility['role'])
+            $this->addColumn('role', 'Role')
+                ->setRenderer(function($row) {
+                    return $row->role['name'];
+                })
+                ->setSelectFilter($rolesGrid);
 
-        $this->addColumn('birthdate', 'Věk')
-            ->setRenderer(function($row) use ($today) {
-                $interval = $today->diff($row->birthdate);
-                return $interval->y;
+        if ($this->columnsVisibility['birthdate'])
+            $this->addColumn('birthdate', 'Věk')
+                ->setRenderer(function($row) use ($today) {
+                    $interval = $today->diff($row->birthdate);
+                    return $interval->y;
+                });
+
+        if ($this->columnsVisibility['city'])
+            $this->addColumn('city', 'Město')
+                ->setTextFilter()
+                ->setAutocomplete($numOfResults);
+
+        if ($this->columnsVisibility['paid'])
+            $this->addColumn('paid', 'Zaplaceno')
+                ->setBooleanFilter()
+                ->setBooleanEditable()
+                ->setRenderer(function($row) {
+                    return \SRS\Helpers::renderBoolean($row->paid);
             });
-
-        $this->addColumn('city', 'Město')
-            ->setTextFilter()
-            ->setAutocomplete($numOfResults);
-
-        $this->addColumn('paid', 'Zaplaceno')
-            ->setBooleanFilter()
-            ->setBooleanEditable()
-            ->setRenderer(function($row) {
-                return \SRS\Helpers::renderBoolean($row->paid);
-        });
 
         $paymentMethods = $presenter->context->parameters['payment_methods'];
 
-        $this->addColumn('paymentMethod', 'Platební metoda')
-            ->setSelectFilter($paymentMethods)
-            ->setSelectEditable($paymentMethods, 'nezadáno')
-            ->setRenderer(function ($row) use ($paymentMethods) {
-                if ($row->paymentMethod == null || $row->paymentMethod == '') return '';
-                return $paymentMethods[$row->paymentMethod];
+        if ($this->columnsVisibility['paymentMethod'])
+            $this->addColumn('paymentMethod', 'Platební metoda')
+                ->setSelectFilter($paymentMethods)
+                ->setSelectEditable($paymentMethods, 'nezadáno')
+                ->setRenderer(function ($row) use ($paymentMethods) {
+                    if ($row->paymentMethod == null || $row->paymentMethod == '') return '';
+                    return $paymentMethods[$row->paymentMethod];
+                });
+
+        if ($this->columnsVisibility['attended'])
+            $this->addColumn('attended', 'Přítomen')
+                ->setBooleanFilter()
+                ->setBooleanEditable()
+                ->setRenderer(function($row) {
+                    return \SRS\Helpers::renderBoolean($row->attended);
             });
-
-
-        $this->addColumn('attended', 'Přítomen')
-            ->setBooleanFilter()
-            ->setBooleanEditable()
-            ->setRenderer(function($row) {
-                return \SRS\Helpers::renderBoolean($row->attended);
-        });
 
         $CUSTOM_BOOLEAN_COUNT = $presenter->context->parameters['user_custom_boolean_count'];
         for ($i = 0; $i < $CUSTOM_BOOLEAN_COUNT; $i++) {
-        $column = 'user_custom_boolean_'.$i;
-        $dbvalue = $this->dbsettings->get($column);
-        if ($dbvalue != '')
-        {
-            $this->addColumn('customBoolean'.$i, $this->dbsettings->get($column))
-                ->setBooleanFilter()
-                ->setRenderer(function($row) use ($i) {
-                return \SRS\Helpers::renderBoolean($row->{"customBoolean$i"});
-            });
+            $column = 'user_custom_boolean_'.$i;
+            $dbvalue = $this->dbsettings->get($column);
+            $propertyName = 'customBoolean'.$i;
+
+            if ($dbvalue != '' && $this->columnsVisibility[$propertyName])
+            {
+                $this->addColumn($propertyName, $this->dbsettings->get($column))
+                    ->setBooleanFilter()
+                    ->setRenderer(function($row) use ($i) {
+                    return \SRS\Helpers::renderBoolean($row->{"customBoolean$i"});
+                });
+            }
         }
+
+        $CUSTOM_TEXT_COUNT = $presenter->context->parameters['user_custom_text_count'];
+        for ($i = 0; $i < $CUSTOM_TEXT_COUNT; $i++) {
+            $column = 'user_custom_text_'.$i;
+            $dbvalue = $this->dbsettings->get($column);
+            $propertyName = 'customText'.$i;
+
+            if ($dbvalue != '' && $this->columnsVisibility[$propertyName])
+            {
+                $this->addColumn($propertyName, $this->dbsettings->get($column))
+                    ->setTextFilter();
+            }
         }
 
         $this->addButton(Grid::ROW_FORM, "Řádková editace")

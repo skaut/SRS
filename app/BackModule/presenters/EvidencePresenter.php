@@ -18,6 +18,17 @@ class EvidencePresenter extends BasePresenter
      */
     protected $userRepo;
 
+
+    protected $evidenceDefaultColumns = array(
+        array('name' => 'displayName', 'label' => 'Jméno'),
+        array('name' => 'role', 'label' => 'Role'),
+        array('name' => 'birthdate', 'label' => 'Věk'),
+        array('name' => 'city', 'label' => 'Město'),
+        array('name' => 'paid', 'label' => 'Zaplaceno'),
+        array('name' => 'paymentMethod', 'label' => 'Platební metoda'),
+        array('name' => 'attended', 'label' => 'Přítomen'),
+    );
+
     public function startup() {
         parent::startup();
         $this->userRepo = $this->context->database->getRepository('\SRS\Model\User');
@@ -29,7 +40,14 @@ class EvidencePresenter extends BasePresenter
     }
 
     public function renderList() {
-
+        $evidenceColumns = $this->getSession('evidenceColumns');
+        if ($evidenceColumns->visibility == null) {
+            $columns = array();
+            foreach ($this->getAllEvidenceColumns() as $column) {
+                $columns[$column['name']] = 1;
+            }
+            $evidenceColumns->visibility = $columns;
+        }
     }
 
     public function renderDetail($id = null)
@@ -53,12 +71,43 @@ class EvidencePresenter extends BasePresenter
 
 
     protected function createComponentEvidenceGrid() {
-       return new \SRS\Components\EvidenceGrid($this->context->database);
+       $this->checkSessionConsistency();
+       $evidenceColumns = $this->getSession('evidenceColumns');
+       return new \SRS\Components\EvidenceGrid($this->context->database, $evidenceColumns->visibility);
    }
 
     protected function createComponentEvidenceDetailForm()
     {
         return new \SRS\Form\Evidence\EvidenceDetailForm(null, null, $this->context->parameters);
+    }
+
+    protected function createComponentColumnForm()
+    {
+        $form = new \SRS\Form\Evidence\ColumnForm(null, null, $this->getAllEvidenceColumns(), $this->context);
+        $form->onSuccess[] = callback($this, 'columnFormSubmitted');
+        return $form;
+    }
+
+    protected function checkSessionConsistency()
+    {
+        $evidenceColumns = $this->getSession('evidenceColumns');
+        $visibility = $evidenceColumns->visibility;
+        foreach ($this->getAllEvidenceColumns() as $column)
+        {
+            if (!isset($visibility[$column['name']])) {
+                $visibility[$column['name']] = true;
+            }
+        }
+
+
+    }
+
+    public function columnFormSubmitted($form)
+    {
+        $values = $form->getValues();
+        $evidenceColumns = $this->getSession('evidenceColumns');
+        $evidenceColumns->visibility = $values;
+        $this->redirect('this');
     }
 
 
@@ -92,7 +141,22 @@ class EvidencePresenter extends BasePresenter
 
     }
 
-    protected function getFilledCustomFields($user)
+    protected function getAllEvidenceColumns()
+    {
+        $columns = $this->evidenceDefaultColumns;
+        $customColumns = $this->getFilledCustomFields();
+
+        foreach ($customColumns as $cColumn)
+        {
+            $columns[] = array('name' => $cColumn['property'], 'label' => $cColumn['name']);
+        }
+        return $columns;
+    }
+
+
+
+
+    protected function getFilledCustomFields($user = null)
     {
         $fields = array();
         $booleansCount = $this->context->parameters['user_custom_boolean_count'];
@@ -100,19 +164,29 @@ class EvidencePresenter extends BasePresenter
 
         for ($i = 0; $i < $booleansCount; $i++) {
             $settingsColumn = 'user_custom_boolean_'.$i;
-            //$dbColumn = 'customBoolean'.$i;
             $dbvalue = $this->dbsettings->get($settingsColumn);
+            $propertyName = 'customBoolean'.$i;
             if ($dbvalue != '') {
-                $fields[] = array('name' => $dbvalue, 'value'=> $user->getCustomBoolean($i), 'type' => 'boolean');
+                if ($user) {
+                    $fields[] = array('property' => $propertyName,'name' => $dbvalue, 'value'=> $user->getCustomBoolean($i), 'type' => 'boolean');
+                }
+                else {
+                    $fields[] = array('property' => $propertyName, 'name' => $dbvalue, 'type' => 'boolean');
+                }
             }
         }
 
         for ($i = 0; $i < $textsCount; $i++) {
             $settingsColumn = 'user_custom_text_'.$i;
-            //$dbColumn = 'customText'.$i;
             $dbvalue = $this->dbsettings->get($settingsColumn);
+            $propertyName = 'customText'.$i;
             if ($dbvalue != '') {
-                $fields[] = array( 'name' => $dbvalue, 'value' => $user->getCustomText($i), 'type' => 'text');
+                if ($user) {
+                     $fields[] = array('property' => $propertyName, 'name' => $dbvalue, 'value' => $user->getCustomText($i), 'type' => 'text');
+                }
+                else {
+                    $fields[] = array('property' => $propertyName, 'name' => $dbvalue, 'type' => 'text');
+                }
             }
         }
         return $fields;
@@ -121,7 +195,5 @@ class EvidencePresenter extends BasePresenter
 
 
     }
-
-
 
 }
