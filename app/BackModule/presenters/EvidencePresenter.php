@@ -98,6 +98,7 @@ class EvidencePresenter extends BasePresenter
                 $visibility[$column['name']] = true;
             }
         }
+        $evidenceColumns->visibility = $visibility;
 
 
     }
