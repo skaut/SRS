@@ -103,12 +103,16 @@ ul.no-margin {
     padding-left: 0 !important;
 }
 
-.grid-row-cell .btn {
-    margin-right: 5px;
-}
+
 
 .alert a {
     text-decoration: underline;
 }
+
+.column-form input {
+     margin-right: 5px;
+    margin-top: -2px !important;
+ }
+
 
 

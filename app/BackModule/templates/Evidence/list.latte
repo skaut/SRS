@@ -12,9 +12,11 @@ Evidence
 {/block}
 
 {block content}
+<div class="btn-group">
 <a class="btn" href="#printDialog" data-toggle="modal"><i class="icon-print"></i>Vytisknout příjmové doklady</a>
 <a class="btn"><i class="icon-print"></i>Vytisknout potvrzení o zaplacení</a>
-<a class="btn pull-right" href="#columnDialog" data-toggle="modal">Zobrazovat sloupce</a>
+</div>
+<a class="btn btn-inverse pull-right" href="#columnDialog" data-toggle="modal">Zobrazovat sloupce</a>
 
 {widget evidenceGrid}
 
@@ -43,8 +45,9 @@ Evidence
         <a class="close" data-dismiss="modal">×</a>
         <h3>Vyberte sloupce</h3>
     </div>
-    <div class="modal-body">
+    <div class="modal-body form-inline column-form">
       {widget columnForm}
+
     </div>
     {*<div class="modal-footer">*}
         {*<a href="#" class="btn btn-danger ok ">Smazat</a>*}

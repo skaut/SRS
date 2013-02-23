@@ -86,16 +86,21 @@
 th.grid-filter-form {
     position: relative;
 }
+.grid-filter-form input[type=submit] {
+/*#frmgridForm-userGrid-filter-send {*/
+  margin-top: -25px;
 
-#frmgridForm-userGrid-filter-send {
-    margin-top: -25px;
 
 }
-
-#frmgridForm-userGrid-action-send {
+.grid-action-box input[type=submit] {
+/*#frmgridForm-userGrid-action-send {*/
     margin-top: -10px;
 }
 
 #frm-userGrid-action-action_name {
     width: 150px;
+}
+
+.grid-row-cell .btn {
+    margin-right: 5px;
 }
