@@ -5,6 +5,20 @@ namespace SRS;
 abstract class BaseComponentsPresenter extends \Nette\Application\UI\Presenter
 {
 
+    function templatePrepareFilters($t)
+    {
+        $t->registerFilter($l = new \Nette\Latte\Engine);
+        $l = new \Nette\Latte\Macros\MacroSet($l->compiler); // in 12.1. $l->parser  --->   $l->compile
+        $l->addMacro('bool', array($this, 'booleanMacro'));
+
+    }
+
+    public function booleanMacro(\Nette\Latte\MacroNode $node, \Nette\Latte\PhpWriter $writer) {
+        $args = ($node->tokenizer->fetchAll());
+        $array_args = explode(" ", $args);
+        return $writer->write('echo \SRS\Helpers::renderBoolean('.$array_args[0].')');
+    }
+
     /**
      * Tovarnicka pro nacitani CSS souboru
      * @return \WebLoader\Nette\CssLoader

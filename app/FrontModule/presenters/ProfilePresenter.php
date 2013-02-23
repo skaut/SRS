@@ -49,6 +49,11 @@ class ProfilePresenter extends BasePresenter
 
     }
 
+    public function handlePrintProof()
+    {
+        throw new \Nette\NotImplementedException();
+    }
+
 
     protected function createComponentProfileForm()
     {
