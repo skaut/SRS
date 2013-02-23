@@ -1,5 +1,9 @@
-    RewriteEngine On
-    RewriteCond %{HTTP_HOST} ^(www\.)?srs\.local$
-    RewriteRule ^$ www/ [L]
-    RewriteCond %{HTTP_HOST} ^(www\.)?srs\.local$
-    RewriteRule (.*) www/$1 [L]
+    #RewriteEngine On
+    #RewriteCond %{HTTP_HOST} ^(www\.)?srs\.local$
+    #RewriteRule ^$ www/ [L]
+    #RewriteCond %{HTTP_HOST} ^(www\.)?srs\.local$
+    #RewriteRule (.*) www/$1 [L]
+    
+RewriteEngine On
+RewriteRule ^$ www/$1 [L]
+RewriteRule (.*) www/$1 [L]
