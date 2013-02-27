@@ -6,10 +6,10 @@
  * Time: 21:16
  * To change this template use File | Settings | File Templates.
  */
-namespace BackModule;
+namespace BackModule\CMSModule;
 use Nette\Application\UI\Form;
 
-class CMSPresenter extends BasePresenter
+class DocumentPresenter extends \BackModule\BasePresenter
 {
 
     public function startup() {

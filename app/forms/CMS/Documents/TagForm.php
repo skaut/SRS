@@ -54,7 +54,7 @@ class TagForm extends \SRS\Form\EntityForm
         $this->presenter->context->database->persist($tag);
         $this->presenter->context->database->flush();
 
-        $this->presenter->redirect(':Back:CMS:tags');
+        $this->presenter->redirect(':Back:CMS:Document:tags');
     }
 
 }

@@ -73,7 +73,7 @@ class DocumentForm extends \SRS\Form\EntityForm
             }
             $this->presenter->context->database->flush();
             $this->presenter->flashMessage('Dokument vytvořen', 'success');
-            $this->presenter->redirect(':Back:CMS:documents');
+            $this->presenter->redirect(':Back:CMS:Document:documents');
         }
     }
 

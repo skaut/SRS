@@ -6,10 +6,10 @@
  * Time: 21:16
  * To change this template use File | Settings | File Templates.
  */
-namespace BackModule;
+namespace BackModule\CMSModule;
 use Nette\Application\UI\Form;
 
-class NewsPresenter extends BasePresenter
+class NewsPresenter extends \BackModule\BasePresenter
 {
     protected $resource = "CMS";
     protected $entity = '\SRS\Model\CMS\News';

@@ -1,0 +1,175 @@
+
+{extends '../CMSlayout.latte'}
+
+{block head}
+{widget jsLoader 'tiny_mce/jquery.tinymce.js'}
+{include 'includes/tinymce_init.latte'}
+{/block}
+
+{block title}
+Úprava stránky {$page->name}
+{/block}
+
+{block content}
+
+        <h2>Úprava stránky {$page->name}</h2>
+        {form pageForm}
+         <div class="well">
+            <h4>Základní vlastnosti</h4>
+
+              <ul class="errors" n:if="$form->hasErrors()">
+                  <li n:foreach="$form->errors as $error">{$error}</li>
+              </ul>
+
+              {input id}
+
+            <table class="table">
+            <tr>
+                <td>{label name /}</td>
+                <td>{input name}</td>
+            </tr>
+
+            <tr>
+                <td>{label slug /}</td>
+                <td>{input slug}</td>
+            </tr>
+
+            <tr>
+                <td>{label public /}</td>
+                <td>{input public}</td>
+            </tr>
+
+            <tr>
+                <td>{label roles /}</td>
+                <td>{input roles}</td>
+            </tr>
+
+            </table>
+         </div>
+
+            <div class="navbar">
+                <div class="navbar-inner">
+                    <a class="brand" href="#">Oblast</a>
+                    <ul class="nav nav-tabs">
+                        <li  {ifCurrent :Back:Page:page, $page->id, 'main'} class="active" {/ifCurrent}>{input submit_to_main} &nbsp;</li>
+                        <li {ifCurrent :Back:Page:page, $page->id, 'sidebar'} class="active" {/ifCurrent}>{input submit_to_sidebar}</li>
+                    </ul>
+                    <table class="table">
+                        <tr>
+                            <td>{label add_content /}</td>
+                            <td>{input add_content} {input submit_content}</td>
+                        </tr>
+                    </table>
+                </div>
+
+            </div>
+
+
+         <ul id="pageContents">
+         {foreach $form->getComponents(TRUE, 'Nette\Forms\Container') as $container}
+            <li>
+                <div class="well pageContent">
+
+                    <div class="btn-toolbar pull-left">
+                        <div class="btn-group ">
+                            <a class="btn" href="#" onclick="return false;"><i class="icon-resize-vertical"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="btn-toolbar pull-right">
+                        <div class="btn-group ">
+                            <a class="btn delete-content" href="#"><i class="icon-remove-sign"></i></a>
+                        </div>
+                    </div>
+                 <div class="clearfix"></div>
+                 <div class="headline"></div>
+                {ifset $container['template']} {include $container['template']->getValue() 'container' => $container} {/ifset}
+                {foreach $container->getComponents() as $component}
+                    {label $component /} {input $component }
+                {/foreach}
+                </div>
+            </li>
+         {/foreach}
+         </ul>
+
+
+
+    <div class="navbar navbar-inverse navbar-fixed-bottom button-bar">
+        <div class="navbar-inner">
+          <div class="container-fluid">
+              <a href="{link deletePage! $page->id}" class="btn btn-danger confirm">Smazat</a>
+                {input submit_to_list} {input submit_continue}
+           </div>
+        </div>
+    </div>
+      {/form pageForm}
+
+        {*{widget pageForm}*}
+
+
+<script>
+    $(function() {
+        //nastaveni trid a identifikatoru pro spravnou funkcnost mazani a razeni contentu
+        $('#pageContents li').each(function() {
+            var id = $(this).find('input.id').val();
+            $(this).attr('id','content-'+id);
+            $(this).find('.delete-content').attr('href', '#content-'+id);
+
+            var contentName = $(this).find('input.content-name').val();
+            $(this).find('.headline').prepend('<h4>Blok: '+contentName+'</h4>');
+        });
+
+        //inicializace razeni contentu
+        $('#pageContents').sortable({
+            delay: 300,
+            update: function( event, ui ) {
+
+            },
+            start: function(event, ui) {
+                $('.tinyMCE').each(function() {
+                    tinyMCE.execCommand('mceRemoveControl', false, $(this).attr('id'));
+                });
+            },
+
+            stop: function(event,ui) {
+                $('.tinyMCE').each(function() {
+                    tinyMCE.execCommand('mceAddControl', false, $(this).attr('id'));
+                });
+            }
+        });
+        //tinyMCE.execCommand('mceRemoveControl', false, id);
+        //tinyMCE.execCommand('mceAddControl', false, id);
+
+        //vlozeni razeni contentu do formularoveho pole
+        $('input[type=submit]').click(function(event) {
+            var sorted = $( "#pageContents" ).sortable("toArray");
+            //console.log(sorted);
+            for (var i=0; i < sorted.length; i++) {
+                //console.log($('#'+sorted[i]).find('input.order'));
+                $('#'+sorted[i]).find('input.order').val(i);
+            }
+            //event.trigger();
+            //event.preventDefault();
+        });
+
+        //mazani contentu
+        $('.delete-content').click(function(event) {
+            event.preventDefault();
+
+            var contentToDelete = $(this).attr('href').replace('#', '');
+            console.log(contentToDelete);
+            $('#'+contentToDelete+' input[type=hidden]').val(1);
+            $('#'+contentToDelete).find('input[type=text]').prop('disabled', true).val('');
+            $('#'+contentToDelete).find('textarea').prop('disabled', true).val('');
+            $('#'+contentToDelete).find('select').prop('disabled', true).val('');
+            $('#'+contentToDelete).fadeOut();
+
+
+
+        });
+    });
+
+</script>
+
+{include '../../../templates/includes/confirm_dialog.latte'}
+{/block}

@@ -6,10 +6,10 @@
  * Time: 21:16
  * To change this template use File | Settings | File Templates.
  */
-namespace BackModule;
+namespace BackModule\CMSModule;
 use Nette\Application\UI\Form;
 
-class PagePresenter extends BasePresenter
+class PagePresenter extends \BackModule\BasePresenter
 {
     protected $resource = "CMS";
 
