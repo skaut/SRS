@@ -17,11 +17,8 @@ $configurator = new \Nette\Config\Configurator;
 \Nella\Console\Config\Extension::register($configurator);
 \Nella\Doctrine\Config\Extension::register($configurator);
 \Nella\Doctrine\Config\MigrationsExtension::register($configurator);
-$t = new \JMS\Serializer\Annotation\Type(array('value' => 'string')); //TRIK, serializer z neznameho duvodu nelze autoloadovat
-$n = new \JMS\Serializer\Annotation\SerializedName(array('value' => 'neco'));
-$e = new \JMS\Serializer\Annotation\Exclude();
-$e = new \JMS\Serializer\Annotation\ExclusionPolicy(array('value' => 'all'));
-$e =  new \JMS\Serializer\Annotation\Accessor();
+\Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace('JMS\Serializer\Annotation', LIBS_DIR . "/jms/serializer/src");
+
 
 // Enable Nette Debugger for error visualisation & logging
 //$configurator->setDebugMode($configurator::AUTO);
