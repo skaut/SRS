@@ -27,7 +27,6 @@ class ProfilePresenter extends BasePresenter
         }
     }
 
-
     public function renderDefault() {
         /**
          * @var \SRS\Model\User

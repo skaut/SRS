@@ -47,7 +47,7 @@ class PagePresenter extends \BackModule\BasePresenter
     public function renderPage($id = null, $area = null) {
         if ($id == null) {
             $this->flashMessage('Nebyla zvolena stránka', 'error');
-            $this->redirect(':Back:Page:Pages');
+            $this->redirect(':Back:CMS:Page:Pages');
         }
         $page = $this->context->database->getRepository('\SRS\Model\CMS\Page')->find($id);
         if ($page == null) throw new \Nette\Application\BadRequestException('Stránka s tímto id neexistuje');
@@ -59,7 +59,7 @@ class PagePresenter extends \BackModule\BasePresenter
     public function handleDeletePage($pageId) {
         if ($pageId == null) {
             $this->flashMessage('Nebyla zvolena stránka', 'error');
-            $this->redirect(':Back:Page:Pages');
+            $this->redirect(':Back:CMS:Page:Pages');
         }
         $page = $this->context->database->getRepository('\SRS\Model\CMS\Page')->find($pageId);
         if ($page == null) throw new \Nette\Application\BadRequestException('Stránka s tímto id neexistuje');
@@ -69,11 +69,9 @@ class PagePresenter extends \BackModule\BasePresenter
         $this->context->database->remove($page);
         $this->context->database->flush();
         $this->flashMessage('Stránka smazána', 'success');
-        $this->redirect(':Back:Page:Pages');
+        $this->redirect(':Back:CMS:Page:Pages');
 
     }
-
-
 
     protected function createComponentNewPageForm($name)
     {
@@ -139,12 +137,12 @@ class PagePresenter extends \BackModule\BasePresenter
         $submitName = ($form->isSubmitted());
         $submitName = $submitName->htmlName;
 
-        if ($submitName == 'submit_to_list') $this->redirect(':Back:Page:pages');
+        if ($submitName == 'submit_to_list') $this->redirect(':Back:CMS:Page:pages');
         else if ($submitName == 'submit_to_sidebar') {
-            $this->redirect(':Back:Page:page#pageContents', array('id'=> $pageId, 'area' => 'sidebar'));
+            $this->redirect(':Back:CMS:Page:page#pageContents', array('id'=> $pageId, 'area' => 'sidebar'));
         }
         else if ($submitName == 'submit_to_main') {
-            $this->redirect(':Back:Page:page#pageContents', array('id'=> $pageId, 'area' => 'main'));
+            $this->redirect(':Back:CMS:Page:page#pageContents', array('id'=> $pageId, 'area' => 'main'));
         }
         else {
         $this->redirect('this');

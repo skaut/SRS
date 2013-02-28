@@ -8,13 +8,18 @@
  */
 namespace SRS\Model\Acl;
 use Doctrine\ORM\Mapping as ORM;
+
 /**
  * @ORM\Entity
  */
 class Resource extends \SRS\Model\BaseEntity
 {
-
-
+    const BACKEND = 'Administrace';
+    const CMS = 'CMS';
+    const ACL = 'ACL';
+    const PROGRAM = 'Program';
+    const CONFIGURATION = 'Konfigurace';
+    const EVIDENCE = 'Evidence';
 
     /**
      * @ORM\Column(unique=true)
@@ -30,10 +35,10 @@ class Resource extends \SRS\Model\BaseEntity
     protected $permissions;
 
 
-    public function __construct($name = null) {
+    public function __construct($name = null)
+    {
         $this->name = $name;
         $permissions = new \Doctrine\Common\Collections\ArrayCollection();
-
     }
 
 

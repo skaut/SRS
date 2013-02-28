@@ -15,6 +15,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Permission extends \SRS\Model\BaseEntity
 {
+    const MANAGE = 'Spravovat';
+    const ACCESS = 'Přístup';
+    const MANAGE_OWN_PROGRAMS = 'Spravovat vlastní Programy';
+    const MANAGE_ALL_PROGRAMS = 'Spravovat Všechny Programy';
+    const MANAGE_HARMONOGRAM = 'Upravovat harmonogram';
+    const CHOOSE_PROGRAMS = 'Vybírat si programy';
 
 
 

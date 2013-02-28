@@ -1,6 +1,7 @@
 <?php
 namespace SRS\Model;
 use Nette\Security as NS;
+use SRS\Model\Acl\Role;
 
 class Authenticator extends \Nette\Object implements NS\IAuthenticator
 {
@@ -37,12 +38,11 @@ class Authenticator extends \Nette\Object implements NS\IAuthenticator
         }
         $skautISPerson = $this->skautIS->getPerson($skautISToken, $skautISUser->ID_Person);
         $user = $this->database->getRepository("\SRS\Model\User")->findOneBy(array('skautISUserId' => $skautISUser->ID));
-        $roleRegistered = $this->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('name'  => 'Registrovaný'));
+        $roleRegistered = $this->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('name'  => Role::REGISTERED));
         if ($user == null)
         {
-
             if ($roleRegistered == null) {
-                throw new \Nette\NotImplementedException('Nekonzistentni stav. Role pro nove uzivatele by vzdy mela existovat');
+                throw new \Exception('Nekonzistentni stav. Role pro nove uzivatele by vzdy mela existovat');
             }
             $user = \SRS\Factory\UserFactory::createFromSkautIS($skautISUser, $skautISPerson, $roleRegistered);
             $this->database->persist($user);
@@ -53,7 +53,7 @@ class Authenticator extends \Nette\Object implements NS\IAuthenticator
 
         //pokud uzivatel neba roli schvalenou, degradujeme jen na registrovaneho
         if ($user->approved == true) {
-        $netteRoles[] = $user->role->name;
+            $netteRoles[] = $user->role->name;
         }
         else {
             $netteRoles[] = $roleRegistered->name;

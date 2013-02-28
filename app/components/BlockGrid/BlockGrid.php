@@ -9,6 +9,8 @@
 namespace SRS\Components;
 use \NiftyGrid\Grid;
 use \Doctrine\ORM\Query\Expr;
+use SRS\Model\Acl\Resource;
+use SRS\Model\Acl\Permission;
 
 /**
  * Grid pro správu programových bloků
@@ -43,7 +45,7 @@ class BlockGrid extends Grid
         $qb->leftJoin('b.lector','lector');
         $qb->leftJoin('b.programs', 'p');
 
-        if (!$presenter->context->user->isAllowed('Program', 'Spravovat Všechny Programy' )) {
+        if (!$presenter->context->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS )) {
             $qb->where(new \Doctrine\ORM\Query\Expr\Comparison('lector.id', '=', $presenter->context->user->id ));
         }
         $source = new \SRS\SRSDoctrineDataSource($qb, 'id');
@@ -59,7 +61,7 @@ class BlockGrid extends Grid
                 ->setRenderer(function($row) {
                 return $row->lector['lastName'];
             });
-        if ($presenter->context->user->isAllowed('Program', 'Spravovat Všechny Programy' )) {
+        if ($presenter->context->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS)) {
         $lectorColumn->setSelectFilter($lectorChoices);
         }
                 //->setSelectFilter($lectorChoices);

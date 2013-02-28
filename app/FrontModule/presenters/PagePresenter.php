@@ -1,8 +1,4 @@
 <?php
-
-/**
- * Homepage presenter.
- */
 namespace FrontModule;
 
 class PagePresenter extends BasePresenter
@@ -53,8 +49,6 @@ class PagePresenter extends BasePresenter
         $this->template->documents = $this->context->database->getRepository('\SRS\model\CMS\Documents\Document')->findAll();
         $this->template->page = $page;
 	}
-
-
 
     public function createComponentAttendeeBox() {
         return new \SRS\Components\AttendeeBox();

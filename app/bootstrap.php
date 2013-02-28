@@ -43,6 +43,7 @@ if ($isDebug) {
 }
 else {
     \Nette\Diagnostics\Debugger::$logDirectory = __DIR__ . '/../log';
+    \Nette\Diagnostics\Debugger::$email =$config['common']['parameters']['contact_email'];
     $configurator->setDebugMode($configurator::NONE);
 }
 $environment = $isDebug == true ? 'development': 'production';
@@ -58,6 +59,9 @@ if (PHP_SAPI == 'cli') {
 $container = $configurator->createContainer();
 //$session = $container->session;
 //$session->setSavePath($temp_dir. '/sessions');
+
+//$constants = new \ReflectionClass('\SRS\Model\Acl\Resource');
+//\Nette\Diagnostics\Debugger::dump($constants->getConstants());
 
 
 // Setup router

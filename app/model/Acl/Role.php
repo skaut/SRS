@@ -21,7 +21,7 @@ use Doctrine\Common\Collections\Criteria;
  * @property bool $approvedAfterRegistration
  * @property bool $pays
  * @property integer $fee
- * @property string $fee_word
+ * @property string $feeWord
  * @property \DateTime|string $registerableFrom
  * @property \DateTime|string $registerableTo
  * @property \Doctrine\Common\Collections\ArrayCollection $users
@@ -29,6 +29,15 @@ use Doctrine\Common\Collections\Criteria;
  */
 class Role extends \SRS\Model\BaseEntity
 {
+
+    const GUEST = 'guest';
+    const REGISTERED = 'Registrovaný';
+    const ATTENDEE = 'Účastník';
+    const SERVICE_TEAM = 'Servis Tým';
+    const LECTOR = 'Lektor';
+    const ORGANIZER = 'Organizátor';
+    const ADMIN = 'Administrátor';
+
     /**
      * @ORM\Column(unique=true)
      * @var string

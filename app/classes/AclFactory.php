@@ -7,19 +7,27 @@
  * To change this template use File | Settings | File Templates.
  */
 namespace SRS\Factory;
+
+use SRS\Model\Acl\Resource;
+use SRS\Model\Acl\Permission;
+use SRS\Model\Acl\Role;
 class AclFactory
 {
     //protected $roles;
 
     public static function createRoles() {
+
+
+
+
         $roles = array();
-        $roles[] = $guest = new \SRS\Model\Acl\Role('guest');
-        $roles[] = $registered = new \SRS\Model\Acl\Role('Registrovaný');
-        $roles[] = $attendee = new \SRS\Model\Acl\Role('Účastník');
-        $roles[] = $serviceTeam = new \SRS\Model\Acl\Role('Servis Tým');
-        $roles[] = $lector = new \SRS\Model\Acl\Role('Lektor');
-        $roles[] = $organizer = new \SRS\Model\Acl\Role('Organizátor');
-        $roles[] = $admin = new \SRS\Model\Acl\Role('Administrátor');
+        $roles[] = $guest = new Role(Role::GUEST);
+        $roles[] = $registered = new Role(Role::REGISTERED);
+        $roles[] = $attendee = new Role(Role::ATTENDEE);
+        $roles[] = $serviceTeam = new Role(Role::SERVICE_TEAM);
+        $roles[] = $lector = new Role(Role::LECTOR);
+        $roles[] = $organizer = new Role(Role::ORGANIZER);
+        $roles[] = $admin = new Role(Role::ADMIN);
 
         $admin->registerable = False;
         $registered->registerable = False;
@@ -27,54 +35,54 @@ class AclFactory
         $attendee->approvedAfterRegistration = true;
         $attendee->pays = true;
 
-        $backend = new \SRS\Model\Acl\Resource('Administrace');
-        $acl = new \SRS\Model\Acl\Resource('ACL');
-        $cms = new \SRS\Model\Acl\Resource('CMS');
-        $program = new \SRS\Model\Acl\Resource('Program');
-        $configuration = new \SRS\Model\Acl\Resource('Konfigurace');
-        $evidence = new \SRS\Model\Acl\Resource('Evidence');
+        $backend = new Resource(Resource::BACKEND);
+        $acl = new Resource(Resource::ACL);
+        $cms = new Resource(Resource::CMS);
+        $program = new Resource(Resource::PROGRAM);
+        $configuration = new Resource(Resource::CONFIGURATION);
+        $evidence = new Resource(Resource::EVIDENCE);
 
-        $admin_access = new \SRS\Model\Acl\Permission('Přístup', $backend);
+        $admin_access = new Permission(Permission::ACCESS, $backend);
         $admin->permissions->add($admin_access);
         $organizer->permissions->add($admin_access);
         $lector->permissions->add($admin_access);
         $serviceTeam->permissions->add($admin_access);
 
 
-        $acl_edit = new \SRS\Model\Acl\Permission('Spravovat', $acl);
+        $acl_edit = new Permission(Permission::MANAGE, $acl);
         $admin->permissions->add($acl_edit);
         $organizer->permissions->add($acl_edit);
 
-        $cms_edit = new \SRS\Model\Acl\Permission('Spravovat', $cms);
+        $cms_edit = new Permission(Permission::MANAGE, $cms);
         $admin->permissions->add($cms_edit);
         $organizer->permissions->add($cms_edit);
 
-        $configuration_edit = new \SRS\Model\Acl\Permission('Spravovat', $configuration);
+        $configuration_edit = new Permission(Permission::MANAGE, $configuration);
         $admin->permissions->add($configuration_edit);
         $organizer->permissions->add($configuration_edit);
 
 
-        $program_allow = new \SRS\Model\Acl\Permission('Přístup', $program);
+        $program_allow = new Permission(Permission::ACCESS, $program);
         $admin->permissions->add($program_allow);
         $organizer->permissions->add($program_allow);
         $lector->permissions->add($program_allow);
         $serviceTeam->permissions->add($program_allow);
 
-        $program_edit_mine = new \SRS\Model\Acl\Permission('Spravovat vlastní Programy', $program);
+        $program_edit_mine = new Permission(Permission::MANAGE_OWN_PROGRAMS, $program);
         $lector->permissions->add($program_edit_mine);
 
-        $program_edit = new \SRS\Model\Acl\Permission('Spravovat Všechny Programy', $program);
+        $program_edit = new Permission(Permission::MANAGE_ALL_PROGRAMS, $program);
         $admin->permissions->add($program_edit);
         $organizer->permissions->add($program_edit);
 
-        $program_harmonogram_edit = new \SRS\Model\Acl\Permission('Upravovat harmonogram', $program);
+        $program_harmonogram_edit = new Permission(Permission::MANAGE_HARMONOGRAM, $program);
         $admin->permissions->add($program_harmonogram_edit);
         $organizer->permissions->add($program_harmonogram_edit);
 
-        $program_choose = new \SRS\Model\Acl\Permission('Vybírat si programy', $program);
+        $program_choose = new Permission(Permission::CHOOSE_PROGRAMS, $program);
         $attendee->permissions->add($program_choose);
 
-        $evidence_edit = new \SRS\Model\Acl\Permission('Spravovat', $evidence);
+        $evidence_edit = new Permission(Permission::MANAGE, $evidence);
         $admin->permissions->add($evidence_edit);
         $organizer->permissions->add($evidence_edit);
 
