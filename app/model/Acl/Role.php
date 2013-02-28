@@ -117,13 +117,9 @@ class Role extends \SRS\Model\BaseEntity
 
     /**
      * @param string $name
-     * @param \SRS\Model\Acl\Role $parent
-     * @param bool $standAlone
      */
     public function __construct($name) {
         $this->name = $name;
-//        $this->parent = $parent;
-//        $this->children = new \Doctrine\Common\Collections\ArrayCollection();
         $this->users = new \Doctrine\Common\Collections\ArrayCollection();
         $this->permissions = new \Doctrine\Common\Collections\ArrayCollection();
     }
@@ -290,9 +286,6 @@ class RoleRepository extends \Doctrine\ORM\EntityRepository
         $today = new \DateTime('now');
         $today = $today->format('Y-m-d');
 
-//        $query = $this->_em->createQuery("SELECT r FROM {$this->entity} r WHERE r.registerable=true
-//                AND ((r.registerableFrom >= {$today} OR r.registerableFrom IS NULL) AND (r.registerableTo <= {$today} OR r.registerableTo IS NULL))
-//                ");
         $query = $this->_em->createQuery("SELECT r FROM {$this->entity} r WHERE r.registerable=true
               AND (r.registerableFrom <= '{$today}' OR r.registerableFrom IS NULL)
               AND (r.registerableTo >= '{$today}' OR r.registerableTo IS NULL)");
@@ -300,11 +293,11 @@ class RoleRepository extends \Doctrine\ORM\EntityRepository
     }
 
     public function findApprovedUsersInRole($roleName) {
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq("approved", 1));
         $role = $this->_em->getRepository($this->_entityName)->findByName($roleName);
         if ($role == null) throw new RoleException("Role s tímto jménem {$roleName} neexistuje");
         $role = $role[0];
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq("approved", 1));
         return $role->users->matching($criteria);
     }
 }

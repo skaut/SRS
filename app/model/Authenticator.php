@@ -23,6 +23,7 @@ class Authenticator extends \Nette\Object implements NS\IAuthenticator
      * @param array $credentials
      * @return \Nette\Security\Identity
      * @throws \Nette\Security\AuthenticationException
+     * @throws \Exception
      */
     public function authenticate(array $credentials)
     {
