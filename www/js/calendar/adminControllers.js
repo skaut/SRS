@@ -9,7 +9,7 @@ function AdminCalendarCtrl($scope, $http, $q, $timeout) {
     $scope.blocks = []; // neindexovane bloky - v poli - pro filtrovani
     $scope.startup = function() {
         var promise, promisses = [];
-        promise = $http.post("./getoptions", {})
+        promise = $http.get("./getoptions", {})
             .success(function(data, status, headers, config) {
                 $scope.options = data;
             }).error(function(data, status, headers, config) {
@@ -17,7 +17,7 @@ function AdminCalendarCtrl($scope, $http, $q, $timeout) {
             });
         promisses.push(promise);
 
-        promise = $http.post("./get", {})
+        promise = $http.get("./get", {})
             .success(function(data, status, headers, config) {
                 $scope.events = data;
             }).error(function(data, status, headers, config) {
@@ -25,7 +25,7 @@ function AdminCalendarCtrl($scope, $http, $q, $timeout) {
             });
         promisses.push(promise);
 
-        promise = $http.post("./getcalendarconfig", {})
+        promise = $http.get("./getcalendarconfig", {})
             .success(function(data, status, headers, config) {
                 $scope.config = data;
 
@@ -46,7 +46,7 @@ function AdminCalendarCtrl($scope, $http, $q, $timeout) {
 
             });
             if (!$scope.config.is_allowed_modify_schedule) {
-                $scope.warning = 'Úprava harmonogramu semináře je zakázána. Povolit úpravy lze v modulu konfigurace.';
+                $scope.warning = 'Úprava harmonogramu semináře je zakázána. Nemáte právo spravovat harmonogram nebo musíte povolit úpravu harmonogramu v modulu konfigurace.';
             }
             bindCalendar($scope);
         });

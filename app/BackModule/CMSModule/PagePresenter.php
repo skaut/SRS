@@ -13,21 +13,29 @@ class PagePresenter extends \BackModule\BasePresenter
 {
     protected $resource = "CMS";
 
-    public function startup() {
+    public function startup()
+    {
         parent::startup();
 
         $this->checkPermissions('Spravovat');
 
     }
 
-    public function renderPages() {
+    public function renderDefault()
+    {
+        $this->redirect('pages');
+    }
+
+    public function renderPages()
+    {
         //$pages = $this->context->database->getRepository('\SRS\Model\CMS\Page')->findAll();
         $query = $this->context->database->createQuery('SELECT p FROM \SRS\Model\CMS\Page p ORDER BY p.position');
         $pages = $query->getResult();
         $this->template->pages = $pages;
     }
 
-    public function handleSortPages() {
+    public function handleSortPages()
+    {
         $pagesOrder = $this->getParameter('pages');
         $position = 0;
         foreach ($pagesOrder as $pageId) {
@@ -44,7 +52,8 @@ class PagePresenter extends \BackModule\BasePresenter
 
     }
 
-    public function renderPage($id = null, $area = null) {
+    public function renderPage($id = null, $area = null)
+    {
         if ($id == null) {
             $this->flashMessage('Nebyla zvolena stránka', 'error');
             $this->redirect(':Back:CMS:Page:Pages');
@@ -56,7 +65,8 @@ class PagePresenter extends \BackModule\BasePresenter
 
     }
 
-    public function handleDeletePage($pageId) {
+    public function handleDeletePage($pageId)
+    {
         if ($pageId == null) {
             $this->flashMessage('Nebyla zvolena stránka', 'error');
             $this->redirect(':Back:CMS:Page:Pages');
@@ -80,9 +90,11 @@ class PagePresenter extends \BackModule\BasePresenter
     }
 
 
-    protected function createComponentPageForm($name) {
+    protected function createComponentPageForm($name)
+    {
         $pageId = $this->getParameter('id');
         $area = $this->getParameter('area');
+
         /** @var \SRS\Model\CMS\Page $page */
         $page = $this->context->database->getRepository('\SRS\Model\CMS\Page')->find($pageId);
         $roles = $this->context->database->getRepository('\SRS\Model\Acl\Role')->findAll();
@@ -105,7 +117,8 @@ class PagePresenter extends \BackModule\BasePresenter
         return $form;
     }
 
-    public function pageFormSubmitted(\SRS\Form\EntityForm $form) {
+    public function pageFormSubmitted(\SRS\Form\EntityForm $form)
+    {
         $values = $form->getValues();
         $pageId = $values['id'];
         $area = $this->getParameter('area');
@@ -123,7 +136,7 @@ class PagePresenter extends \BackModule\BasePresenter
 
         }
         if ($values['add_content'] != null) {
-            $contentTypeStr = '\\SRS\\Model\\CMS\\'.$values['add_content'].'Content';
+            $contentTypeStr = '\\SRS\\Model\\CMS\\' . $values['add_content'] . 'Content';
             $contentType = new $contentTypeStr();
             $contentType->page = $page;
             $contentType->area = $area;
@@ -139,13 +152,11 @@ class PagePresenter extends \BackModule\BasePresenter
 
         if ($submitName == 'submit_to_list') $this->redirect(':Back:CMS:Page:pages');
         else if ($submitName == 'submit_to_sidebar') {
-            $this->redirect(':Back:CMS:Page:page#pageContents', array('id'=> $pageId, 'area' => 'sidebar'));
-        }
-        else if ($submitName == 'submit_to_main') {
-            $this->redirect(':Back:CMS:Page:page#pageContents', array('id'=> $pageId, 'area' => 'main'));
-        }
-        else {
-        $this->redirect('this');
+            $this->redirect(':Back:CMS:Page:page#pageContents', array('id' => $pageId, 'area' => 'sidebar'));
+        } else if ($submitName == 'submit_to_main') {
+            $this->redirect(':Back:CMS:Page:page#pageContents', array('id' => $pageId, 'area' => 'main'));
+        } else {
+            $this->redirect('this');
         }
 
     }

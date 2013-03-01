@@ -31,6 +31,7 @@ class EvidencePresenter extends BasePresenter
 
     public function startup() {
         parent::startup();
+        $this->checkPermissions(\SRS\Model\Acl\Permission::MANAGE);
         $this->userRepo = $this->context->database->getRepository('\SRS\Model\User');
     }
 

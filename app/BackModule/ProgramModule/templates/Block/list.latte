@@ -1,0 +1,17 @@
+
+{extends '../Programlayout.latte'}
+
+{block title}
+Program » Bloky
+{/block}
+
+{block content}
+<div class="navbar">
+    {if $user->isAllowed(\SRS\Model\Acl\Resource::PROGRAM, \SRS\Model\Acl\Permission::MANAGE_OWN_PROGRAMS)
+    || $user->isAllowed(\SRS\Model\Acl\Resource::PROGRAM, \SRS\Model\Acl\Permission::MANAGE_ALL_PROGRAMS)}
+    <a class="btn btn-success" href="{plink edit}"><i class="icon-plus-sign"></i>Přidat Blok</a>
+    {/if}
+</div>
+    {widget blockGrid}
+{include '../../../templates/includes/confirm_dialog.latte'}
+{/block}

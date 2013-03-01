@@ -7,11 +7,11 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace BackModule;
+namespace BackModule\ProgramModule;
 
-class BlockPresenter extends BasePresenter
+class BlockPresenter extends \BackModule\BasePresenter
 {
-    protected $resource = 'Program';
+    protected $resource = \SRS\Model\Acl\Resource::PROGRAM;
 
     /**
      * @var \SRS\Model\Program\BlockRepository
@@ -20,7 +20,7 @@ class BlockPresenter extends BasePresenter
 
     public function startup() {
         parent::startup();
-        $this->checkPermissions('Přístup');
+        $this->checkPermissions(\SRS\Model\Acl\Permission::ACCESS);
         $this->blockRepo = $this->context->database->getRepository('\SRS\Model\Program\Block');
     }
 
@@ -34,8 +34,6 @@ class BlockPresenter extends BasePresenter
             $linkToProfile = $el2 = \Nette\Utils\Html::el('a', 'Vyplňte je')->href($this->link(':Front:Profile:default#extra_info'));
             $this->flashMessage('Nemáte vyplněné infromace o sobě '. $linkToProfile.' aby se zobrazovali u Vašich programů', 'info');
         }
-
-
         $blocks = $this->blockRepo->findAll();
         $this->template->blocks = $blocks;
     }

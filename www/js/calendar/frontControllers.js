@@ -8,7 +8,7 @@ function FrontCalendarCtrl($scope, $http, $q, $timeout) {
     var api_path = basePath + '/admin/program/';
     $scope.startup = function() {
         var promise, promisses = [];
-        promise = $http.post(api_path+"getoptions", {})
+        promise = $http.get(api_path+"getoptions", {})
             .success(function(data, status, headers, config) {
                 $scope.options = data;
             }).error(function(data, status, headers, config) {
@@ -16,7 +16,7 @@ function FrontCalendarCtrl($scope, $http, $q, $timeout) {
             });
         promisses.push(promise);
 
-        promise = $http.post(api_path+"./get?userAttending=1", {})
+        promise = $http.get(api_path+"./get?userAttending=1", {})
             .success(function(data, status, headers, config) {
                 $scope.events = data;
             }).error(function(data, status, headers, config) {
@@ -24,7 +24,7 @@ function FrontCalendarCtrl($scope, $http, $q, $timeout) {
             });
         promisses.push(promise);
 
-        promise = $http.post(api_path+"./getcalendarconfig", {})
+        promise = $http.get(api_path+"./getcalendarconfig", {})
             .success(function(data, status, headers, config) {
                 $scope.config = data;
 

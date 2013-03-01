@@ -33,7 +33,7 @@ class ClearCacheCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $cacheDir = WWW_DIR ."/../temp/cache";
-        $proxiesDir = APP_DIR . '/proxies';
+        $proxiesDir = WWW_DIR . '/../temp/proxies';
         $webtempDir = WWW_DIR . '/webtemp';
 
         //nette cache

@@ -1,6 +1,0 @@
-{extends '@layout.latte'}
-{block sidebar_menu}
-<li class="nav-header">Program</li>
-<li {ifCurrent :Back:Block:list}class="active"{/ifCurrent}><a href="{plink :Back:Block:list}">Programové bloky</a></li>
-<li {ifCurrent :Back:Program:default}class="active"{/ifCurrent}><a href="{plink :Back:Program:default}">Tvorba harmonogramu</a></li>
-{/block}

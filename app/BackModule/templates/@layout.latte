@@ -35,8 +35,12 @@
                     <ul class="nav">
                         <li {ifCurrent :Back:dashboard:default}class="active"{/ifCurrent}><a href="{plink :Back:dashboard:default}">Home</a></li>
                        {if $user->isAllowed(\SRS\Model\Acl\Resource::ACL, \SRS\Model\ACL\Permission::MANAGE)} <li {ifCurrent :Back:acl:*}class="active"{/ifCurrent}><a href="{plink :Back:acl:users}">Práva a Role</a></li>{/if}
-                       {if $user->isAllowed(\SRS\Model\Acl\Resource::CMS, \SRS\Model\ACL\Permission::MANAGE)} <li {ifCurrent :Back:CMS:Page:*}class="active"{/ifCurrent}><a href="{plink :Back:CMS:Page:Pages}">CMS</a></li>{/if}
-                       {if $user->isAllowed(\SRS\Model\Acl\Resource::PROGRAM, \SRS\Model\ACL\Permission::ACCESS)} <li {ifCurrent :Back:Block:*}class="active"{/ifCurrent}><a href="{plink :Back:Block:list}">Program semináře</a></li>{/if}
+                       {if $user->isAllowed(\SRS\Model\Acl\Resource::CMS, \SRS\Model\ACL\Permission::MANAGE)}
+                           <li {ifCurrent :Back:CMS:Page:*}class="active"{/ifCurrent}{ifCurrent :Back:CMS:Faq:*}class="active"{/ifCurrent}{ifCurrent :Back:CMS:News:*}class="active"{/ifCurrent}{ifCurrent :Back:CMS:Document:*}class="active"{/ifCurrent}>
+                           <a href="{plink :Back:CMS:Page:Pages}">CMS</a>
+                           </li>
+                       {/if}
+                       {if $user->isAllowed(\SRS\Model\Acl\Resource::PROGRAM, \SRS\Model\ACL\Permission::ACCESS)} <li {ifCurrent :Back:Program:Block:*}class="active"{/ifCurrent}{ifCurrent :Back:Program:Schedule:*}class="active"{/ifCurrent}><a href="{plink :Back:Program:Block:list}">Program semináře</a></li>{/if}
                        {if $user->isAllowed(\SRS\Model\Acl\Resource::CONFIGURATION, \SRS\Model\ACL\Permission::MANAGE)} <li {ifCurrent :Back:Configration:*}class="active"{/ifCurrent}><a href="{plink :Back:Configuration:default}">Konfigurace</a></li>{/if}
                        {if $user->isAllowed(\SRS\Model\Acl\Resource::EVIDENCE, \SRS\Model\ACL\Permission::MANAGE)} <li {ifCurrent :Back:Evidence:*}class="active"{/ifCurrent}><a href="{plink :Back:Evidence:list}">Evidence účastníků</a></li>{/if}
 

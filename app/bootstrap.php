@@ -68,13 +68,30 @@ $container = $configurator->createContainer();
 $container->router[] = new Route('index.php', 'Front:Homepage:default', Route::ONE_WAY);
 //$container->router[] = new Route('admin/', 'Back:Dashboard:default');
 
-$container->router[] = new Route('admin/<presenter>/<action>/<id>/<area>', array(
+$container->router[] = new Route('admin/cms/<presenter>/<action>[/<id>][/<area>]', array(
+    'module' => 'Back:CMS',
+    'presenter' => 'Page',
+    'action' => 'default',
+    'id' => null,
+    'area' => null
+));
+
+$container->router[] = new Route('admin/program/<presenter>/<action>[/<id>][/<area>]', array(
+    'module' => 'Back:Program',
+    'presenter' => 'Block',
+    'action' => 'list',
+    'id' => null,
+    'area' => null
+));
+
+$container->router[] = new Route('admin/<presenter>/<action>[/<id>][/<area>]', array(
     'module' => 'Back',
     'presenter' => 'Dashboard',
     'action' => 'default',
     'id' => null,
     'area' => null
 ));
+
 
 $container->router[] = new Route('install/<presenter>/<action>/<id>/', array(
     'module' => 'Install',

@@ -7,12 +7,15 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace BackModule;
+namespace BackModule\ProgramModule;
+use SRS\Model\Acl\Resource;
+use SRS\Model\Acl\Permission;
 
-class ProgramPresenter extends BasePresenter
+class SchedulePresenter extends \BackModule\BasePresenter
 {
 
-    protected $resource = 'Program';
+    protected $resource = Resource::PROGRAM;
+
 
     /**
      * @var \SRS\Model\Program\ProgramRepository
@@ -23,6 +26,7 @@ class ProgramPresenter extends BasePresenter
 
     public function startup() {
         parent::startup();
+        $this->checkPermissions(Permission::ACCESS);
         $this->programRepo = $this->context->database->getRepository('\SRS\Model\Program\Program');
         $this->basicBlockDuration = $this->dbsettings->get('basic_block_duration');
     }
@@ -33,6 +37,7 @@ class ProgramPresenter extends BasePresenter
 
     /**
      * @param bool $userAttending chceme Informace o tom, zda se prihlaseny uzivatel ucastni programu?
+     * @throws \Nette\Security\AuthenticationException
      */
     public function actionGet($userAttending = false) {
         if ($userAttending == true) {
@@ -107,7 +112,7 @@ class ProgramPresenter extends BasePresenter
         $calConfig['month'] = $datePieces[1]-1; //fullcalendar je zerobased
         $calConfig['date'] = $datePieces[2];
         $calConfig['basic_block_duration'] = $this->dbsettings->get('basic_block_duration');
-        if ((bool) $this->dbsettings->get('is_allowed_modify_schedule') && $this->user->isAllowed($this->resource, 'Upravovat harmonogram')) {
+        if ((bool) $this->dbsettings->get('is_allowed_modify_schedule') && $this->user->isAllowed($this->resource, Permission::MANAGE_HARMONOGRAM)) {
             $calConfig['is_allowed_modify_schedule'] = true;
         }
         else {
