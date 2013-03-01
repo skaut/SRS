@@ -30,22 +30,6 @@ class Acl extends Permission
                 $this->allow($role->name, $permission->resource->name, $permission->name);
             }
         }
-
-//        //roles
-//        $this->addRole('guest');
-//        $this->addRole('member', 'guest');
-//        $this->addRole('editor', 'member');
-//        $this->addRole('admin');
-//
-//        // resources
-//        $this->addResource('ACL');
-//        $this->addResource('');
-//        $this->addResource('Admin:User');
-//
-//        // privileges
-//        $this->allow('member', 'Admin:Default', Permission::ALL);
-//        $this->allow('editor', 'Admin:Page',    Permission::ALL);
-//        $this->allow('admin',  Permission::ALL, Permission::ALL);
     }
 
 }

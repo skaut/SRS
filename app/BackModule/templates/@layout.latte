@@ -8,14 +8,11 @@
 	<title>{block title|striptags}{/block} | SRS</title>
     {widget cssLoader 'nette.css', 'bootstrap.css', 'bootstrap-responsive.css', 'niftygrid/grid.css', 'jquery-ui/jquery-ui.css', 'back/screen.css'}
 	<link rel="shortcut icon" href="{$basePath}/favicon.ico">
-    {*<script src="http://code.jquery.com/jquery-latest.js"></script>*}
     {widget jsLoader 'jquery-1.8.2.min.js', 'netteForms.js', 'bootstrap.min.js', 'jquery-ui.js', 'niftygrid/grid.js'}
 
     <script>
         var basePath = {$basePath}
     </script>
-    {*'jquery-1.8.2.min.js'*}
-
 	{block head}{/block}
 </head>
 
