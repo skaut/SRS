@@ -68,6 +68,14 @@ $container = $configurator->createContainer();
 $container->router[] = new Route('index.php', 'Front:Homepage:default', Route::ONE_WAY);
 //$container->router[] = new Route('admin/', 'Back:Dashboard:default');
 
+$container->router[] = new Route('api/program/<action>[/<id>][/<area>]', array(
+    'module' => 'Back:Program',
+    'presenter' => 'Api',
+    'action' => 'default',
+    'id' => null,
+    'area' => null
+));
+
 $container->router[] = new Route('admin/cms/<presenter>/<action>[/<id>][/<area>]', array(
     'module' => 'Back:CMS',
     'presenter' => 'Page',

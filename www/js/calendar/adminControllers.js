@@ -1,6 +1,7 @@
 
 
 const REFRESH_INTERVAL = 10000
+var api_path = basePath + '/api/program/';
 
 function AdminCalendarCtrl($scope, $http, $q, $timeout) {
     $scope.option = ''; // indexovane bloky - pro snadne vyhledavani a prirazovani
@@ -9,7 +10,7 @@ function AdminCalendarCtrl($scope, $http, $q, $timeout) {
     $scope.blocks = []; // neindexovane bloky - v poli - pro filtrovani
     $scope.startup = function() {
         var promise, promisses = [];
-        promise = $http.get("./getoptions", {})
+        promise = $http.get(api_path+"getoptions", {})
             .success(function(data, status, headers, config) {
                 $scope.options = data;
             }).error(function(data, status, headers, config) {
@@ -17,7 +18,7 @@ function AdminCalendarCtrl($scope, $http, $q, $timeout) {
             });
         promisses.push(promise);
 
-        promise = $http.get("./get", {})
+        promise = $http.get(api_path+"getprograms", {})
             .success(function(data, status, headers, config) {
                 $scope.events = data;
             }).error(function(data, status, headers, config) {
@@ -25,7 +26,7 @@ function AdminCalendarCtrl($scope, $http, $q, $timeout) {
             });
         promisses.push(promise);
 
-        promise = $http.get("./getcalendarconfig", {})
+        promise = $http.get(api_path+"getcalendarconfig", {})
             .success(function(data, status, headers, config) {
                 $scope.config = data;
 
@@ -78,7 +79,7 @@ function AdminCalendarCtrl($scope, $http, $q, $timeout) {
             }
             return val
         });
-        $http.post("./set?data="+json)
+        $http.post(api_path+"setprogram?data="+json)
         .success(function(data, status, headers, config) {
            $scope.event.id = data['id'];
 
@@ -106,7 +107,7 @@ function AdminCalendarCtrl($scope, $http, $q, $timeout) {
     };
 
     $scope.delete = function(event) {
-        $http.post("./delete/"+event.id);
+        $http.post(api_path+"deleteprogram/"+event.id);
         $('#blockModal').modal('hide');
         $('#calendar').fullCalendar( 'removeEvents',[event._id] );
     }

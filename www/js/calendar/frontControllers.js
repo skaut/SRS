@@ -5,7 +5,7 @@ function FrontCalendarCtrl($scope, $http, $q, $timeout) {
     $scope.config = null; // konfiguracni nastaveni pro kalendar
 
 
-    var api_path = basePath + '/admin/program/';
+    var api_path = basePath + '/api/program/';
     $scope.startup = function() {
         var promise, promisses = [];
         promise = $http.get(api_path+"getoptions", {})
@@ -16,7 +16,7 @@ function FrontCalendarCtrl($scope, $http, $q, $timeout) {
             });
         promisses.push(promise);
 
-        promise = $http.get(api_path+"./get?userAttending=1", {})
+        promise = $http.get(api_path+"./getprograms?userAttending=1", {})
             .success(function(data, status, headers, config) {
                 $scope.events = data;
             }).error(function(data, status, headers, config) {

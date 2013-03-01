@@ -70,14 +70,6 @@ class BlockPresenter extends \BackModule\BasePresenter
         $this->redirect(":Back:Block:list");
     }
 
-    public function actionGet() {
-        $blocks = $this->blockRepo->findAll();
-        $serializer = \JMS\Serializer\SerializerBuilder::create()->build();
-        $json = $serializer->serialize($blocks, 'json');
-        $response = new \Nette\Application\Responses\TextResponse($json);
-        $this->sendResponse($response);
-        $this->terminate();
-    }
 
     protected function createComponentBlockForm() {
         return new \SRS\Form\Program\BlockForm(null, null, $this->presenter->dbsettings, $this->context->database, $this->user);
