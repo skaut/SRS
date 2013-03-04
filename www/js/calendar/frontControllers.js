@@ -16,7 +16,7 @@ function FrontCalendarCtrl($scope, $http, $q, $timeout) {
             });
         promisses.push(promise);
 
-        promise = $http.get(api_path+"./getprograms?userAttending=1", {})
+        promise = $http.get(api_path+"./getprograms?userAttending=1&onlyAssigned=1", {})
             .success(function(data, status, headers, config) {
                 $scope.events = data;
             }).error(function(data, status, headers, config) {

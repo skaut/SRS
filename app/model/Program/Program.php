@@ -228,8 +228,14 @@ class Program extends \SRS\Model\BaseEntity
 
 class ProgramRepository extends \Nella\Doctrine\Repository
 {
-    public function findAllForJson($basicDuration, $user = null) {
-        $programs = $this->_em->getRepository($this->_entityName)->findAll();
+    public function findAllForJson($basicDuration, $user = null, $onlyAssigned = false) {
+        if ($onlyAssigned == false) {
+            $programs = $this->_em->getRepository($this->_entityName)->findAll();
+        }
+        else {
+            $query = $this->_em->createQuery("SELECT p FROM {$this->_entityName} p WHERE p.block IS NOT NULL");
+            $programs = $query->getResult();
+        }
 
         foreach ($programs as $program) {
             $program->prepareForJson($user, $basicDuration);
