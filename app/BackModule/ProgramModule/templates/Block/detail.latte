@@ -7,7 +7,7 @@ Program » Blok {$block->name}
 
 {block content}
 <ul class="breadcrumb">
-    <li><a href="{plink :Back:Block:list}">Přehled</a> <span class="divider">/</span></li>
+    <li><a href="{plink :Back:Program:Block:list}">Přehled</a> <span class="divider">/</span></li>
     <li class="active">Detail: {$block->name}</li>
 </ul>
 <h2>Detail bloku: {$block->name}</h2>
@@ -68,5 +68,5 @@ Program » Blok {$block->name}
 
     </table>
 
-{include '../includes/confirm_dialog.latte'}
+{include '../../../templates/includes/confirm_dialog.latte'}
 {/block}

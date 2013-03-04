@@ -26,13 +26,15 @@ Program » Harmonogram
             <select ng-model="option" ng-options="value.name for (key , value) in options">
                <option value="">-- nepřiřazeno --</option>
             </select> </span><br />
+             <a ng-href="../block/detail/{{ option.id }}" ng-show="option" target="_blank">Zobrazit detail bloku</a><br/>
              <input id="mandatory" type="checkbox" name="event.mandatory" ng-model="event.mandatory" class="pull-left">
              <label for="mandatory" class="pull-left" style="margin-left:5px;"> Je program povinný?</label>
             </ng-form>
+
         </div>
         <div class="modal-footer">
-            <button ng-click="update(event, option)" class="btn btn-large btn-success pull-left">Uložit</button>
-            <button ng-model="event" ng-click="delete(event)" class="btn btn-small btn-danger pull-right">Smazat</button>
+            <button ng-click="update(event, option)" class="btn btn-large btn-success pull-left">Uložit program</button>
+            <button ng-model="event" ng-click="delete(event)" class="btn btn-small btn-danger pull-right">Smazat program</button>
         </div>
     </div>
 
