@@ -57,8 +57,6 @@ if (PHP_SAPI == 'cli') {
     $configurator->addConfig(__DIR__ . '/config/config.neon', 'console');
 }
 $container = $configurator->createContainer();
-//$session = $container->session;
-//$session->setSavePath($temp_dir. '/sessions');
 
 //$constants = new \ReflectionClass('\SRS\Model\Acl\Resource');
 //\Nette\Diagnostics\Debugger::dump($constants->getConstants());

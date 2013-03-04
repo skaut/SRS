@@ -11,10 +11,11 @@ use Nette\Application\UI\Form;
 
 class DocumentPresenter extends \BackModule\BasePresenter
 {
+    protected $resource = \SRS\Model\Acl\Resource::CMS;
 
     public function startup() {
         parent::startup();
-
+        $this->checkPermissions(\SRS\Model\Acl\Permission::MANAGE);
     }
 
 
@@ -44,7 +45,7 @@ class DocumentPresenter extends \BackModule\BasePresenter
         $this->context->database->remove($doc);
         $this->context->database->flush();
         $this->flashMessage('Dokument smazán', 'success');
-        $this->redirect(':Back:CMS:documents');
+        $this->redirect(':Back:CMS:Document:documents');
     }
 
     public function renderTags() {
@@ -72,7 +73,7 @@ class DocumentPresenter extends \BackModule\BasePresenter
         $this->context->database->remove($tag);
         $this->context->database->flush();
         $this->flashMessage('Tag smazán', 'success');
-        $this->redirect(':Back:CMS:Tags');
+        $this->redirect(':Back:CMS:Document:Tags');
     }
 
 

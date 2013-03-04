@@ -11,13 +11,13 @@ use Nette\Application\UI\Form;
 
 class PagePresenter extends \BackModule\BasePresenter
 {
-    protected $resource = "CMS";
+    protected $resource = \SRS\Model\Acl\Resource::CMS;
 
     public function startup()
     {
         parent::startup();
 
-        $this->checkPermissions('Spravovat');
+        $this->checkPermissions(\SRS\Model\Acl\Permission::MANAGE);
 
     }
 

@@ -8,15 +8,16 @@
  */
 namespace BackModule\CMSModule;
 use Nette\Application\UI\Form;
-
+use SRS\Model\Acl\Resource;
+use SRS\Model\Acl\Permission;
 class NewsPresenter extends \BackModule\BasePresenter
 {
-    protected $resource = "CMS";
+    protected $resource = Resource::CMS;
     protected $entity = '\SRS\Model\CMS\News';
 
     public function startup() {
         parent::startup();
-        $this->checkPermissions('Spravovat');
+        $this->checkPermissions(Permission::MANAGE);
 
     }
 
