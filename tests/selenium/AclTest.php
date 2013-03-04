@@ -36,4 +36,23 @@ class AclTest extends BaseSeleniumTest
         $this->click("id=frmroleForm-submit");
     }
 
+    /**
+     * @group acl
+     */
+    public function testeditRole()
+    {
+        $this->login();
+        $this->click("link=Administrace");
+        $this->waitForPageToLoad("30000");
+        $this->click("link=Práva a Role");
+        $this->waitForPageToLoad("30000");
+        $this->click("link=Role");
+        $this->waitForPageToLoad("30000");
+        $this->click("xpath=(//a[contains(text(),'Upravit')])[2]");
+        $this->waitForPageToLoad("30000");
+        $this->click("id=frmroleForm-registerable");
+        $this->click("id=frmroleForm-submit");
+        $this->waitForPageToLoad("30000");
+    }
+
 }
