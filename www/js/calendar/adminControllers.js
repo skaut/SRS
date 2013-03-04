@@ -119,6 +119,9 @@ function AdminCalendarCtrl($scope, $http, $q, $timeout) {
     };
 
     $scope.delete = function(event) {
+        if (event.block != null || event.block != undefined) {
+            event.block.program_count--;
+        }
         $http.post(api_path+"deleteprogram/"+event.id);
         $('#blockModal').modal('hide');
         $('#calendar').fullCalendar( 'removeEvents',[event._id] );
