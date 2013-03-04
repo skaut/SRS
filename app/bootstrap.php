@@ -19,7 +19,6 @@ $configurator = new \Nette\Config\Configurator;
 \Nella\Doctrine\Config\MigrationsExtension::register($configurator);
 \Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace('JMS\Serializer\Annotation', LIBS_DIR . "/jms/serializer/src");
 
-
 // Enable Nette Debugger for error visualisation & logging
 //$configurator->setDebugMode($configurator::AUTO);
 
