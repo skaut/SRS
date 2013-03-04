@@ -8,7 +8,7 @@ function FrontCalendarCtrl($scope, $http, $q, $timeout) {
     var api_path = basePath + '/api/program/';
     $scope.startup = function() {
         var promise, promisses = [];
-        promise = $http.get(api_path+"getoptions", {})
+        promise = $http.get(api_path+"getblocks", {})
             .success(function(data, status, headers, config) {
                 $scope.options = data;
             }).error(function(data, status, headers, config) {
@@ -106,15 +106,6 @@ function bindCalendar(scope) {
         selectHelper: false,
 
         eventClick: function(event, element) {
-//            if (scope.config.is_allowed_log_in_programs) {
-//                scope.event = event;
-//                if (event.attends == false) {
-//                    scope.attend(event);
-//                }
-//                else {
-//                    scope.unattend(event);
-//                }
-//            }
             scope.event = event;
             scope.refreshDialog();
             $('#blockModal').modal('show');
@@ -131,7 +122,7 @@ function bindCalendar(scope) {
             options.title = event.title;
             options.content = '';
             if (event.block != null && event.block != undefined) {
-                options.content += "<ul class='no-margin block-properties'>";
+                options.content += "<ul class='no-margin no-bullets block-properties'>";
                 options.content += "<li><span>lektor:</span> "+ event.block.lector +"</li>";
                 options.content += "<li><span>Kapacita:</span> "+event.attendees_count+"/"+ event.block.capacity +"</li>";
                 options.content += "<li><span>Lokalita:</span> "+ event.block.location +"</li>";

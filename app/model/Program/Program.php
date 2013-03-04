@@ -183,7 +183,12 @@ class Program extends \SRS\Model\BaseEntity
      * @return \DateTime
      */
     public function countEnd($basicDuration) {
-        $minutes = $basicDuration*$this->duration;
+        if ($this->block == null) {
+            $minutes = $basicDuration*$this->duration;
+        }
+        else {
+            $minutes = $basicDuration*$this->block->duration;
+        }
         $end = $clone = clone $this->start;
         $end->modify("+ {$minutes} minutes");
         return $end;

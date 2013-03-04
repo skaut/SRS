@@ -5,8 +5,8 @@ ul, li {
 }
 
 ul.no-bullets > li {
-	list-style-type: disc !important;
-	margin-left: 10px !important;
+	list-style-type: none !important;
+	margin-left: 0px !important;
  }
 
 #container {

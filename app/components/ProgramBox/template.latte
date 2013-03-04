@@ -47,25 +47,26 @@ Vaše role nemá právo zapisovat si programy
         </div>
         <div class="modal-body" >
 
-            <ul ng-show="event.block">
+            <ul class="no-margin no-bullets" ng-show="event.block">
                 <li><strong>Lektor: </strong>{{ event.block.lector }}</li>
                 <li><strong>Lokalita: </strong>{{ event.block.location }}</li>
                 <li><strong>Kapacita: </strong>{{ event.attendees_count }}/{{ event.block.capacity }}</li>
             </ul>
             <h3>O programu:</h3>
             <p>{{ event.block.perex }}</p>
+            <div ng-bind-html-unsafe="event.block.description"></div>
 
             <h3>O lektorovi:</h3>
             <p>{{ event.block.lector_about }}</p>
 
-            <div ng-bind-html-unsafe="event.block.description"></div>
+
         </div>
         <div class="modal-footer" ng-model="config">
             <span ng-show='config.is_allowed_log_in_programs'>
-            <button ng-hide="event.attends" ng-click="attend(event)" class="btn btn-success pull-left">Přihlásit</button>
-            <button ng-show="event.attends" ng-click="unattend(event)" class="btn btn-danger pull-left">Odhlásit</button>
+            <button ng-hide="event.attends" ng-click="attend(event)" class="btn btn-large btn-success pull-left">Přihlásit na program</button>
+            <button ng-show="event.attends" ng-click="unattend(event)" class="btn btn-large btn-danger pull-left">Odhlásit program</button>
             </span>
-            <button class="btn pull-right" data-dismiss="modal">Zavřít</button>
+            <button class="btn pull-right" style="float:right;" data-dismiss="modal">Zavřít dialog</button>
         </div>
     </div>
 

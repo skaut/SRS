@@ -36,14 +36,14 @@ class ApiPresenter extends \BackModule\BasePresenter
         $this->basicBlockDuration = $this->dbsettings->get('basic_block_duration');
     }
 
-    public function actionGetBlocks() {
-        $blocks = $this->blockRepo->findAll();
-        $serializer = \JMS\Serializer\SerializerBuilder::create()->build();
-        $json = $serializer->serialize($blocks, 'json');
-        $response = new \Nette\Application\Responses\TextResponse($json);
-        $this->sendResponse($response);
-        $this->terminate();
-    }
+//    public function actionGetBlocks() {
+//        $blocks = $this->blockRepo->findAll();
+//        $serializer = \JMS\Serializer\SerializerBuilder::create()->build();
+//        $json = $serializer->serialize($blocks, 'json');
+//        $response = new \Nette\Application\Responses\TextResponse($json);
+//        $this->sendResponse($response);
+//        $this->terminate();
+//    }
 
     /**
      * @param bool $userAttending chceme Informace o tom, zda se prihlaseny uzivatel ucastni programu?
@@ -92,12 +92,21 @@ class ApiPresenter extends \BackModule\BasePresenter
     }
 
 
-    public function actionGetOptions() {
+    public function actionGetBlocks() {
         $blocks = $this->context->database->getRepository('\SRS\Model\Program\Block')->findAll();
         $result = array();
 
         foreach ($blocks as $block) {
-            $result[$block->id] = array('id' => $block->id, 'name' => $block->name, 'tools' => $block->tools, 'location' => $block->location,  'capacity' => $block->capacity, 'duration' => $block->duration, 'perex' => $block->perex, 'description' => $block->description);
+            $result[$block->id] = array('id' => $block->id,
+                                        'name' => $block->name,
+                                        'tools' => $block->tools,
+                                        'location' => $block->location,
+                                        'capacity' => $block->capacity,
+                                        'duration' => $block->duration,
+                                        'perex' => $block->perex,
+                                        'description' => $block->description,
+                                        'program_count' => $block->programs->count()
+            );
             if (isset($block->lector) && $block->lector != null) {
                 $result[$block->id]['lector'] = "{$block->lector->displayName}";
                 $result[$block->id]['lector_about'] = $block->lector->about;

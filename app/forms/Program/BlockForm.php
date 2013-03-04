@@ -96,7 +96,7 @@ class BlockForm extends \SRS\Form\EntityForm
         $submitName = $submitName->htmlName;
 
         if ($submitName == 'submit_continue') $this->presenter->redirect('this', array('id' => $block->id));
-        $this->presenter->redirect(':Back:Block:list');
+        $this->presenter->redirect(':Back:Program:Block:list');
 
     }
 

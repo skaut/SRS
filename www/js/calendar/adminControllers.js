@@ -10,7 +10,7 @@ function AdminCalendarCtrl($scope, $http, $q, $timeout) {
     $scope.blocks = []; // neindexovane bloky - v poli - pro filtrovani
     $scope.startup = function() {
         var promise, promisses = [];
-        promise = $http.get(api_path+"getoptions", {})
+        promise = $http.get(api_path+"getblocks", {})
             .success(function(data, status, headers, config) {
                 $scope.options = data;
             }).error(function(data, status, headers, config) {
@@ -92,8 +92,20 @@ function AdminCalendarCtrl($scope, $http, $q, $timeout) {
         if (option) {
         $scope.event.title = option.name;
         $scope.event.attendees_count = 0;
+        if ($scope.event.block) {
+            var old_block = $scope.event.block;
+        }
+        else {
+            var old_block = null;
+        }
         $scope.event.block = $scope.options[option.id];
-        var end = bindEndToBlockDuration($scope.event.start, $scope.event._end, $scope.event.block.duration, $scope.config.basic_block_duration);
+
+        if ($scope.event.block != old_block) {
+            if (old_block != null) old_block.program_count--;
+            $scope.event.block.program_count++;
+        }
+        $scope.event.duration = $scope.event.block.duration;
+            var end = bindEndToBlockDuration($scope.event.start, $scope.event._end, $scope.event.block.duration, $scope.config.basic_block_duration);
         $scope.event.end = end;
 
         }
@@ -198,6 +210,7 @@ function bindCalendar(scope) {
             event.start = date;
             event.attendees_count = 0;
             event.allDay = allDay;
+            event.block.program_count++;
             event.end = bindEndToBlockDuration(date, null, event.block.duration, scope.config.basic_block_duration);
             scope.event = event;
             setColor(scope.event);

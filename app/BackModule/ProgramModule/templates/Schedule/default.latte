@@ -15,6 +15,10 @@ Program » Harmonogram
 <div id="app">
 <div id="canvas">
     <div id="blockModal" ng-model="event"  class="modal hide fade">
+        <div class="modal-header">
+            <a class="close" data-dismiss="modal">×</a>
+            <h3>Nastavení programu</h3>
+        </div>
         <div class="modal-body" >
             <ng-form>
             <span class="nullable">
@@ -27,8 +31,8 @@ Program » Harmonogram
             </ng-form>
         </div>
         <div class="modal-footer">
-            <button ng-click="update(event, option)" class="btn btn-success pull-right">Uložit</button>
-            <button ng-model="event" ng-click="delete(event)" class="btn btn-danger pull-left">Smazat</button>
+            <button ng-click="update(event, option)" class="btn btn-large btn-success pull-left">Uložit</button>
+            <button ng-model="event" ng-click="delete(event)" class="btn btn-small btn-danger pull-right">Smazat</button>
         </div>
     </div>
 
@@ -54,13 +58,30 @@ Program » Harmonogram
 
 <div class="calendar-blocks well" >
     <h3>Programové bloky</h3>
-    Vyhledat: <input type="text" class="input-medium search-query" ng-model="query">
+        <table>
+            <tr>
+                <td><label for="checkbox_unassigned" style="padding-top: 12px; ">Jen nezařazené: </label></td>
+                <td><input id="checkbox_unassigned" type="checkbox" ng-model="applyUnassigned"></td>
+            </tr>
+            <tr>
+                <td><label for="text_search">Vyhledat:</label></td><td></td>
+             </tr>
+            <tr>
+                <td colspan="2"> <input id="text_search" type="text" class="input-medium search-query" ng-model="query"></td>
+            </tr>
+        </table>
+
+
+
+
+        </table>
     <div class="blocks-container">
-        <div class="block" ng-repeat="block in blocks | filter:query" external-block="{{ block.id }}" >
+        <div class="block" ng-repeat="block in blocks | filter:query | showUnassigned: applyUnassigned" external-block="{{ block.id }}" >
         <h6>{{ block.name }}</h6>
         <ul class="no-margin">
             <li><span>lektor:</span> {{ block.lector }}</li>
             <li><span>kapacita:</span> {{ block.capacity }}</li>
+            <li><span>Zařazeno:</span>{{ block.program_count }}x</li>
         </ul>
         </div>
     </div>

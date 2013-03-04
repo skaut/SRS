@@ -59,7 +59,7 @@ class BlockGrid extends Grid
         $this->addColumn('name', 'Název')->setTextFilter()->setAutocomplete($numOfResults);
         $lectorColumn = $this->addColumn('lector', 'Lektor')
                 ->setRenderer(function($row) {
-                return $row->lector['lastName'];
+                return $row->lector['displayName'];
             });
         if ($presenter->context->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS)) {
         $lectorColumn->setSelectFilter($lectorChoices);
@@ -70,7 +70,7 @@ class BlockGrid extends Grid
             return $row->duration * $basicBlockDuration . ' minut';
         });
         $this->addColumn('capacity', 'Kapacita');
-        $this->addColumn('program_count', 'Počet zařazení')
+        $this->addColumn('program_count', 'Počet zařazení')->setSortable(false)
             ->setRenderer(function($row) use ($basicBlockDuration, $blockRepo) {
             return $blockRepo->find($row->id)->programs->count();
         });

@@ -33,3 +33,18 @@ app.config(function ($httpProvider) {
             });
         };
     });
+
+app.filter('showUnassigned', function() {
+    return function(items, apply) {
+        if (apply) {
+        var filtered = [];
+        angular.forEach(items, function(item) {
+            if(item.program_count == 0) {
+                filtered.push(item);
+            }
+        });
+        return filtered;
+        }
+        return items;
+    };
+});
