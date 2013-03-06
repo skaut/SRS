@@ -190,8 +190,11 @@ class EvidenceGrid extends Grid
             }
         );
 
-        $this->addAction("makeThemPay","Označit jako zaplacené")
-            ->setCallback(function($id) use ($self){return $self->handleMakeThemPay($id);});
+        $this->addAction("makeThemPayBank","Označit jako zaplacené dnes přes účet")
+            ->setCallback(function($id) use ($self){return $self->handleMakeThemPay($id, 'bank');});
+
+        $this->addAction("makeThemPayCash","Označit jako zaplacené dnes hotově")
+            ->setCallback(function($id) use ($self){return $self->handleMakeThemPay($id, 'cash');});
 
         $this->addAction("attend","Označit jako přítomné")
             ->setCallback(function($id) use ($self){return $self->handleAttend($id);});
@@ -201,11 +204,16 @@ class EvidenceGrid extends Grid
     }
 
 
-
-    public function handleMakeThemPay($ids)
+    /**
+     * @param $ids
+     * @param string $method
+     */
+    public function handleMakeThemPay($ids, $method)
     {
         foreach ($ids as $id ) {
             $userToSave = $this->presenter->context->database->getRepository('\SRS\Model\User')->find($id);
+            $userToSave->paymentMethod = $method;
+            $userToSave->paymentDate = new \DateTime();
             $userToSave->paid = true;
         }
 
@@ -218,6 +226,7 @@ class EvidenceGrid extends Grid
         }
         $this->redirect("this");
     }
+
 
     public function handleAttend($ids)
     {

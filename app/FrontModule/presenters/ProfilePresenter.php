@@ -50,7 +50,8 @@ class ProfilePresenter extends BasePresenter
 
     public function handlePrintProof()
     {
-        throw new \Nette\NotImplementedException();
+       $user = $this->userRepo->find($this->context->user->id);
+       $this->context->printer->printAccountProofs(array($user));
     }
 
 
