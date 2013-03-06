@@ -107,6 +107,16 @@ class EvidenceGrid extends Grid
                     return $paymentMethods[$row->paymentMethod];
                 });
 
+        if ($this->columnsVisibility['paymentDate'])
+            $this->addColumn('paymentDate', 'Datum zaplacení')
+                ->setDateEditable()
+                ->setDateFilter()
+                ->setRenderer(function ($row)  {
+                if ($row->paymentDate == null || $row->paymentDate == '') return '';
+                return $row->paymentDate->format('d.m. Y');
+            });
+
+
         if ($this->columnsVisibility['attended'])
             $this->addColumn('attended', 'Přítomen')
                 ->setBooleanFilter()
@@ -170,6 +180,10 @@ class EvidenceGrid extends Grid
                     $user->paymentMethod = ($values['paymentMethod'] != null) ? $values['paymentMethod'] : null;
                 }
 
+                if ($values['paymentDate']) {
+                    $user->paymentDate = \DateTime::createFromFormat('Y-m-d',$values['paymentDate']);
+                }
+
                 $presenter->context->database->flush();
                 $self->flashMessage("Záznam byl úspěšně uložen.","success");
 
@@ -222,13 +236,63 @@ class EvidenceGrid extends Grid
         $this->redirect("this");
     }
 
-//    public function renderBoolean($bool)
-//    {
-//        if ($bool) return 'ANO';
-//        return 'NE';
-//    }
+    //pretizeni kvuli nefunkcnosti date v row-edit
+    public function render()
+    {
 
+        $count = $this->getCount();
+        $this->getPaginator()->itemCount = $count;
+        $this->template->results = $count;
+        $this->template->columns = $this['columns']->components;
+        $this->template->buttons = $this['buttons']->components;
+        $this->template->globalButtons = $this['globalButtons']->components;
+        $this->template->subGrids = $this['subGrids']->components;
+        $this->template->paginate = $this->paginate;
+        $this->template->colsCount = $this->getColsCount();
+        $rows = $this->dataSource->getData();
+        $this->template->rows = $rows;
+        $this->template->primaryKey = $this->primaryKey;
+        if($this->hasActiveRowForm()){
+            $row = $rows[$this->activeRowForm];
+            foreach($row as $name => $value){
+//                if ($value instanceof \DateTime) {
+//                    $value = $value->format('Y-m-d');
+//                }
+                if($this->columnExists($name) && !empty($this['columns']->components[$name]->formRenderer)){
+                    $row[$name] = call_user_func($this['columns']->components[$name]->formRenderer, $row);
+                }
+                if(isset($this['gridForm'][$this->name]['rowForm'][$name])){
+                    $input = $this['gridForm'][$this->name]['rowForm'][$name];
+                    if($input instanceof \Nette\Forms\Controls\SelectBox){
+                        $items = $this['gridForm'][$this->name]['rowForm'][$name]->getItems();
+                        if(in_array($row[$name], $items)){
+                            $row[$name] = array_search($row[$name], $items);
+                        }
+                    }
+                }
+            }
+            foreach ($row as $key => $column) {
+                if ($column instanceof \DateTime) {
 
+                   $row[$key] = $column->format('Y-m-d');
+                }
+            }
+            $this['gridForm'][$this->name]['rowForm']->setDefaults($row);
+            $this['gridForm'][$this->name]['rowForm']->addHidden($this->primaryKey, $this->activeRowForm);
+        }
+        if($this->paginate){
+            $this->template->viewedFrom = ((($this->getPaginator()->getPage()-1)*$this->perPage)+1);
+            $this->template->viewedTo = ($this->getPaginator()->getLength()+(($this->getPaginator()->getPage()-1)*$this->perPage));
+        }
+        $templatePath = !empty($this->templatePath) ? $this->templatePath : __DIR__."/../../templates/grid.latte";
+
+        if ($this->getTranslator() instanceof \Nette\Localization\ITranslator) {
+            $this->template->setTranslator($this->getTranslator());
+        }
+
+        $this->template->setFile($templatePath);
+        $this->template->render();
+    }
 
 
 

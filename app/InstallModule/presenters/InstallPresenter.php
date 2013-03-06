@@ -104,6 +104,9 @@ class InstallPresenter extends \SRS\BaseComponentsPresenter
 
     public function renderSkautIS()
     {
+        if (!$this->context->parameters['database']['installed']) {
+            $this->redirect(':Install:install:default');
+        }
         $dbsettings = $this->context->database->getRepository('\SRS\Model\Settings');
         if ($this->context->parameters['skautis']['app_id'] != null)
         {

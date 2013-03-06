@@ -24,6 +24,7 @@ use Doctrine\Common\Collections\Criteria;
  * @property int $skautISPersonId
  * @property bool $approved
  * @property bool $paid
+ * @property \DateTime $paymentDate
  * @property string $paymentMethod
  * @property bool $incomeProofPrinted
  * @property bool $attended
@@ -32,6 +33,7 @@ use Doctrine\Common\Collections\Criteria;
  * @property string $city
  * @property string $street
  * @property string $postcode
+ * @property string $phone
  * @property string $unit
  * @property string $about
  */
@@ -149,6 +151,7 @@ class User extends BaseEntity
      */
     protected $state;
 
+
     /**
      * @ORM\Column(nullable=true)
      */
@@ -167,10 +170,30 @@ class User extends BaseEntity
     protected $paymentMethod;
 
     /**
+     * @var string
+     * @ORM\Column(type="date", nullable=true)
+     */
+    protected $paymentDate;
+
+    /**
      * @var bool
      * @ORM\Column(type="boolean")
      */
     protected $attended = false;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $membershipType;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $membershipCategory;
+
+
 
 
     /**
@@ -260,6 +283,54 @@ class User extends BaseEntity
     }
 
     /**
+     * @param string $membershipCategory
+     */
+    public function setMembershipCategory($membershipCategory)
+    {
+        $this->membershipCategory = $membershipCategory;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMembershipCategory()
+    {
+        return $this->membershipCategory;
+    }
+
+    /**
+     * @param string $membershipType
+     */
+    public function setMembershipType($membershipType)
+    {
+        $this->membershipType = $membershipType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMembershipType()
+    {
+        return $this->membershipType;
+    }
+
+    /**
+     * @param string $paymentDate
+     */
+    public function setPaymentDate($paymentDate)
+    {
+        $this->paymentDate = $paymentDate;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaymentDate()
+    {
+        return $this->paymentDate;
+    }
+
+    /**
      * @param string $payMethod
      */
     public function setPaymentMethod($payMethod)
@@ -274,6 +345,8 @@ class User extends BaseEntity
     {
         return $this->paymentMethod;
     }
+
+
 
 
 

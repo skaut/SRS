@@ -45,6 +45,9 @@ abstract class BasePresenter extends BaseComponentsPresenter
                 $this->redirect(':Auth:login');
             }
         }
+
+
+
         \Nette\Diagnostics\Debugger::barDump(\Nette\Diagnostics\Debugger::timer(), 'platnost skautis tokenu konec');
     }
 

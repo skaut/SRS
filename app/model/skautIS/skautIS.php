@@ -100,7 +100,7 @@ class skautIS extends \Nette\Object
 
     /**
      * @param string $token skautIS Token
-     * @param string $userId
+     * @param int $personID
      * @return mixed Person skautISu
      */
     public function getPerson($token, $personID)
@@ -114,6 +114,18 @@ class skautIS extends \Nette\Object
         return $response;
 
     }
+
+    //nepouziva se
+    public function getMembership($token, $membershipID)
+    {
+        $params = array(
+            'ID_Login' => $token,
+            'ID' => $membershipID
+        );
+        $response = $this->getOrganizationUnitService()->MembershipDetail(array('membershipDetailInput' => $params))->MembershipDetailResult;
+        return $response;
+    }
+
 
     public function updatePerson($person, $token)
     {

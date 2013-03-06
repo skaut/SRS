@@ -29,7 +29,8 @@ class AuthPresenter extends \SRS\BasePresenter
             $this->redirectUrl($loginUrl);
         }
         try {
-            $this->context->user->login(NULL, $httpRequest->getPost('skautIS_Token'));
+            \Nette\Diagnostics\Debugger::dump($httpRequest->getPost());
+            $this->context->user->login($httpRequest->getPost('skautIS_Token'),$httpRequest->getPost('skautIS_IDUnit'), $httpRequest->getPost('skautIS_IDRole'));
             $this->context->user->setExpiration('+30 minutes', TRUE);
             $this->flashMessage('Přihlášení proběhlo úspěšně');
         }

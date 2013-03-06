@@ -27,7 +27,7 @@ class Authenticator extends \Nette\Object implements NS\IAuthenticator
      */
     public function authenticate(array $credentials)
     {
-        list($username, $skautISToken) = $credentials;
+        list($skautISToken, $skautISUnitId, $skautISRoleId) = $credentials;
         try
         {
             $skautISUser = $this->skautIS->getUser($skautISToken);
@@ -37,14 +37,17 @@ class Authenticator extends \Nette\Object implements NS\IAuthenticator
             \Nette\Diagnostics\Debugger::log($e->getMessage());
             throw new NS\AuthenticationException("Invalid skautIS Token", self::INVALID_CREDENTIAL);
         }
-        $skautISPerson = $this->skautIS->getPerson($skautISToken, $skautISUser->ID_Person);
+//        $result = $this->skautIS->getMembership($skautISToken, $skautISUnitId);
+//        \Nette\Diagnostics\Debugger::dump($result);
         $user = $this->database->getRepository("\SRS\Model\User")->findOneBy(array('skautISUserId' => $skautISUser->ID));
-        $roleRegistered = $this->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('name'  => Role::REGISTERED));
+
         if ($user == null)
         {
+            $roleRegistered = $this->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('name'  => Role::REGISTERED));
             if ($roleRegistered == null) {
                 throw new \Exception('Nekonzistentni stav. Role pro nove uzivatele by vzdy mela existovat');
             }
+            $skautISPerson = $this->skautIS->getPerson($skautISToken, $skautISUser->ID_Person);
             $user = \SRS\Factory\UserFactory::createFromSkautIS($skautISUser, $skautISPerson, $roleRegistered);
             $this->database->persist($user);
             $this->database->flush();

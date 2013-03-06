@@ -26,7 +26,9 @@ class EvidencePresenter extends BasePresenter
         array('name' => 'city', 'label' => 'Město'),
         array('name' => 'paid', 'label' => 'Zaplaceno'),
         array('name' => 'paymentMethod', 'label' => 'Platební metoda'),
+        array('name' => 'paymentDate', 'label' => 'Datum zaplacení'),
         array('name' => 'attended', 'label' => 'Přítomen'),
+
     );
 
     public function startup() {
