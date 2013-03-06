@@ -28,22 +28,32 @@ class SettingsForm extends UI\Form
 
 
         $basicBlockDurationChoices = array('15' => '15 minut', '30' => '30 minut', '45' => '45 minut', '60' => '60 minut', '75' => '75 minut', '90' => '90 minut', '105' => '105 minut',  '120' => '120 minut');
-
+        $this->addGroup('Seminář');
         $this->addText('seminar_name', 'Jméno semináře:')->setDefaultValue($this->dbsettings->get('seminar_name'))
             ->addRule(Form::FILLED, 'Zadejte Jméno semináře');
         $this->addText('seminar_from_date', 'Začátek semináře:')->setDefaultValue($this->dbsettings->get('seminar_from_date'))
             ->addRule(Form::FILLED, 'Zadejte začátek semináře')->getControlPrototype()->class('datepicker');
         $this->addText('seminar_to_date', 'Konec semináře:')->setDefaultValue($this->dbsettings->get('seminar_to_date'))
             ->addRule(Form::FILLED, 'Zadejte konec semináře')->getControlPrototype()->class('datepicker');
+        $this->addSubmit('submit_seminar','Uložit')->getControlPrototype()->class('btn');
+
+        $this->addGroup('Program');
         $this->addSelect('basic_block_duration','Základní délka trvání program. bloku semináře:' )->setItems($basicBlockDurationChoices)->setDefaultValue($this->dbsettings->get('basic_block_duration'));
         $this->addCheckbox('is_allowed_add_block', 'Je povoleno vytvářet programové bloky?')->setDefaultValue($this->dbsettings->get('is_allowed_add_block'));
         $this->addCheckbox('is_allowed_modify_schedule', 'Je povoleno upravovat harmonogram semináře?')->setDefaultValue($this->dbsettings->get('is_allowed_modify_schedule'));
         $this->addCheckbox('is_allowed_log_in_programs', 'Je povoleno přihlašovat se na programové bloky?')->setDefaultValue($this->dbsettings->get('is_allowed_log_in_programs'));
+        $this->addSubmit('submit_program','Uložit')->getControlPrototype()->class('btn');
 
-        $this->addText('company', 'Firma:')->setDefaultValue($this->dbsettings->get('company'));
+        $this->addGroup('Tisk dokladů');
+        $this->addTextArea('company', 'Firma:')->setDefaultValue($this->dbsettings->get('company'));
         $this->addText('ico', 'IČO:')->setDefaultValue($this->dbsettings->get('ico'));
         $this->addText('accountant', 'Pokladník:')->setDefaultValue($this->dbsettings->get('accountant'));
+        $this->addText('account_number', 'Číslo účtu:')->setDefaultValue($this->dbsettings->get('account_number'));
+        $this->addText('print_location', 'Lokalita:')->setDefaultValue($this->dbsettings->get('print_location'));
+        $this->addSubmit('submit_print','Uložit')->getControlPrototype()->class('btn');
 
+
+        $this->addGroup('Vlastní pole pro přihlášku');
         $CUSTOM_BOOLEAN_COUNT = $configParameters['user_custom_boolean_count'];
         for ($i = 0; $i < $CUSTOM_BOOLEAN_COUNT; $i++) {
             $column = 'user_custom_boolean_'.$i;

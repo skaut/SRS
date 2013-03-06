@@ -5,11 +5,19 @@
  Konfigurace
 {/block}
 
+{block sidebar_menu}
+<li class="nav-header">Konfigurace</li>
+<li><a href="#label_conf">Seminář</a></li>
+<li><a href="#frmsettingsForm-submit_seminar">Program</a></li>
+<li><a href="#frmsettingsForm-submit_program">Tisk dokladů</a></li>
+<li><a href="#frmsettingsForm-submit_print">Vlastní pole pro přihlášku</a></li>
+<li><a href="#label_system">Systém</a></li>
+{/block}
 {block content}
-<h2>Nastavení semináře</h2>
+<h2 id="label_conf">Konfigurace</h2>
 {widget settingsForm}
 
-<h2>Systém</h2>
+<h3 id="label_system">Systém</h3>
 <ul>
 <li><a href="{link clearCache!}">Promazat cache</a></li>
 </ul>

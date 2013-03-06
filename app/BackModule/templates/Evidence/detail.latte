@@ -25,7 +25,8 @@ Vyhledat účastníka:
 <li class="active">Detail: {$dbuser->displayName}</li>
 </ul>
 <div class="well">
-<a class="btn" href={link printIncomeProof! 'single', $dbuser->id}>Vytisknout</a>
+<a class="btn" href={link printIncomeProof! 'single', $dbuser->id}>Vytisknout příjmový doklad</a>
+<a class="btn" href={link printAccountProof! $dbuser->id}>Vytisknout potvrzení o zaplacení na účet</a>
 <h1>{$dbuser->displayName}</h1>
     <table class="table">
         <tr class="success">

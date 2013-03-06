@@ -140,7 +140,13 @@ class EvidencePresenter extends BasePresenter
             $printer->printIncomeProofs($this->userRepo->findAllPaying());
         }
 
+    }
 
+    public function handlePrintAccountProof($userId)
+    {
+        $printer = $this->context->printer;
+        $user = $this->userRepo->find($userId);
+        $printer->printAccountProofs(array($user));
     }
 
     protected function getAllEvidenceColumns()

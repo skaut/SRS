@@ -15,7 +15,7 @@ class SettingsFactory
         $settings = array();
         $settings[] = new \SRS\Model\Settings('superadmin_created', 'Je vytvořen superadmin?', '0');
         $settings[] = new \SRS\Model\Settings('schema_imported', 'Naimportována inicializační databázová data', '1');
-        $settings[] = new \SRS\Model\Settings('seminar_name', 'Jméno semináře', 'SRS');
+        $settings[] = new \SRS\Model\Settings('seminar_name', 'Jméno semináře', 'Konfigurace->Jméno semináře');
         $today = new \DateTime('now');
         $tommorow = new \DateTime('now');
         $tommorow->modify('+1 day');
@@ -35,6 +35,9 @@ class SettingsFactory
         $settings[] = new \SRS\Model\Settings('company', 'Firma', 'Konfigurace->Firma');
         $settings[] = new \SRS\Model\Settings('ico', 'IČO', 'Konfigurace->IČO');
         $settings[] = new \SRS\Model\Settings('accountant', 'Pokladník', 'Konfigurace->Pokladník');
+        $settings[] = new \SRS\Model\Settings('account_number', 'Číslo účtu', 'Konfigurace->Číslo účtu');
+        $settings[] = new \SRS\Model\Settings('print_location', 'Lokalita', 'Konfigurace->Lokalita');
+
 
 
 
