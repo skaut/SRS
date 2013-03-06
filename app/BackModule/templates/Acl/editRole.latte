@@ -10,13 +10,19 @@
 
 {widget roleForm}
 
-<script>
-$(function() {
-$(".datepicker").datepicker({
+{block head}
+  {widget jsLoader 'multiselect/init.js'}
 
-    });
-});
-</script>
+    <script>
+        $(function() {
+            $(".datepicker").datepicker({
+
+            });
+        });
+    </script>
+{/block}
+
+
 
 {if $role->system}
 <script>

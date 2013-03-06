@@ -25,7 +25,7 @@ class PageForm extends \SRS\Form\EntityForm
         $this->addText('slug','Slug:')
             ->addRule(Form::FILLED, 'Zadejte slug')
             ->getControlPrototype()->class('slug');
-        $this->addMultiSelect('roles', 'Viditelná pro Role:')->setItems($roleChoices);
+        $this->addMultiSelect('roles', 'Viditelná pro Role:')->setItems($roleChoices)->getControlPrototype()->class('multiselect');
         $this->addSelect('add_content', 'Přidat obsah', \SRS\Model\CMS\Content::$TYPES)->setPrompt('vyber typ');
         $this->addSubmit('submit_content', 'OK')->getControlPrototype()->class('btn');
         $this->addSubmit('submit_continue', 'Uložit a pokračovat v úpravách')->getControlPrototype()->class('btn pull-right btn-primary');

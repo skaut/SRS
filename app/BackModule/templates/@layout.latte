@@ -6,12 +6,16 @@
 	<meta name="robots" content="{$robots}" n:ifset="$robots">
 
 	<title>{block title|striptags}{/block} | SRS</title>
-    {widget cssLoader 'nette.css', 'bootstrap.css', 'bootstrap-responsive.css', 'niftygrid/grid.css', 'jquery-ui/jquery-ui.css', 'back/screen.css'}
+    {widget cssLoader 'nette.css', 'bootstrap.css', 'bootstrap-responsive.css', 'niftygrid/grid.css', 'jquery-ui/jquery-ui.css', 'back/screen.css', 'ui.multiselect.css'}
 	<link rel="shortcut icon" href="{$basePath}/favicon.ico">
-    {widget jsLoader 'jquery-1.8.2.min.js', 'netteForms.js', 'bootstrap.min.js', 'jquery-ui.js', 'niftygrid/grid.js'}
+    {widget jsLoader 'jquery-1.8.2.min.js', 'jquery.scrollTo.min.js', 'jquery.localisation.min.js', 'netteForms.js', 'bootstrap.min.js', 'jquery-ui.js', 'multiselect/ui.multiselect.js', 'niftygrid/grid.js'}
 
-    <script>
-        var basePath = {$basePath}
+    <script n:syntax="double">
+        var basePath = {{$basePath}}
+
+
+
+
     </script>
 	{block head}{/block}
 </head>

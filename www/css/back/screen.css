@@ -114,5 +114,10 @@ ul.no-margin {
     margin-top: -2px !important;
  }
 
+.multiselect {
+    max-width: 600px;
+    height: 250px !important;
+}
+
 
 

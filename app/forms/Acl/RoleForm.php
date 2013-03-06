@@ -45,7 +45,7 @@ class RoleForm extends EntityForm
 
         $this->addText('feeWord', 'Výše poplatku slovy');
 
-        $this->addMultiSelect('permissions', 'Práva');
+        $this->addMultiSelect('permissions', 'Práva')->getControlPrototype()->class('multiselect');
         $this->addSubmit('submit','Upravit roli')->getControlPrototype()->class('btn');
         $this->addSubmit('submit_continue','Uložit a pokračovat v úpravách')->getControlPrototype()->class('btn');
 
