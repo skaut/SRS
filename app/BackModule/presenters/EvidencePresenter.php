@@ -27,6 +27,7 @@ class EvidencePresenter extends BasePresenter
         array('name' => 'paid', 'label' => 'Zaplaceno'),
         array('name' => 'paymentMethod', 'label' => 'Platební metoda'),
         array('name' => 'paymentDate', 'label' => 'Datum zaplacení'),
+        array('name' => 'incomeProofPrinted', 'label' => 'Vytištěn příjmový doklad?'),
         array('name' => 'attended', 'label' => 'Přítomen'),
 
     );
@@ -132,16 +133,18 @@ class EvidencePresenter extends BasePresenter
 
     }
 
-    public function handlePrintIncomeProof($mode, $userId = null)
+    public function handlePrintIncomeProof($ids = array())
     {
         $printer = $this->context->printer;
-        if ($mode == 'single') {
-        $printer->printIncomeProofs(array($this->userRepo->find($userId)));
-        }
-        else if ($mode == 'all') {
-            $printer->printIncomeProofs($this->userRepo->findAllPaying());
-        }
 
+        $users = array();
+        foreach ($ids as $userId) {
+            $users[] = $user = $this->userRepo->find($userId);
+            $user->incomeProofPrinted = true;
+        }
+        $this->context->database->flush();
+        $this->redirect('this');
+        $printer->printIncomeProofs($users);
     }
 
     public function handlePrintAccountProof($userId)

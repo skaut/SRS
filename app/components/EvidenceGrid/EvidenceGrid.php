@@ -116,6 +116,14 @@ class EvidenceGrid extends Grid
                 return $row->paymentDate->format('d.m. Y');
             });
 
+        if ($this->columnsVisibility['incomeProofPrinted'])
+            $this->addColumn('incomeProofPrinted', 'Příjm. doklad vytištěn?')
+                ->setBooleanEditable()
+                ->setBooleanFilter()
+                ->setRenderer(function ($row)  {
+                    return \SRS\Helpers::renderBoolean($row->incomeProofPrinted);
+            });
+
 
         if ($this->columnsVisibility['attended'])
             $this->addColumn('attended', 'Přítomen')
@@ -176,6 +184,10 @@ class EvidenceGrid extends Grid
                     $user->attended = isset($values['attended']) ? true : false;
                 }
 
+                if ($visibility['incomeProofPrinted']) {
+                    $user->incomeProofPrinted = isset($values['incomeProofPrinted']) ? true : false;
+                }
+
                 if (isset($values['paymentMethod'])) {
                     $user->paymentMethod = ($values['paymentMethod'] != null) ? $values['paymentMethod'] : null;
                 }
@@ -199,11 +211,17 @@ class EvidenceGrid extends Grid
         $this->addAction("attend","Označit jako přítomné")
             ->setCallback(function($id) use ($self){return $self->handleAttend($id);});
 
+        $this->addAction("printIncomeProof","Vytisknout příjmový doklad")->setAjax(false)
+            ->setCallback(function($id) use ($presenter){
+            \Nette\Diagnostics\Debugger::dump($id);
+                $presenter->redirect('printIncomeProof!', array('ids' => $id));
+            });
+
 
 
     }
 
-
+   
     /**
      * @param $ids
      * @param string $method
