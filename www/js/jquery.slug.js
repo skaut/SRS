@@ -34,6 +34,8 @@ jQuery.fn.slug = function(options) {
       slugcontent_cz = slugcontent_cz.replace(/[á]/g,'a');
       slugcontent_cz = slugcontent_cz.replace(/[í]/g,'i');
       slugcontent_cz = slugcontent_cz.replace(/[é]/g,'e');
+      slugcontent_cz = slugcontent_cz.replace(/[ú]/g,'u');
+      slugcontent_cz = slugcontent_cz.replace(/[ů]/g,'u');
 			var finishedslug = slugcontent_cz.replace(/[^a-zA-Z0-9\-]/g,'');
 			jQuery('input.' + settings.slug).val(finishedslug.toLowerCase());
 			jQuery('span.' + settings.slug).text(finishedslug.toLowerCase());

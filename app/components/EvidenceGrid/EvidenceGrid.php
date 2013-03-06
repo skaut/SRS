@@ -221,7 +221,7 @@ class EvidenceGrid extends Grid
 
     }
 
-   
+
     /**
      * @param $ids
      * @param string $method
