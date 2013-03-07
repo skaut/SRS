@@ -104,6 +104,9 @@ function bindCalendar(scope) {
         date: scope.config.date,
         selectable: false,
         selectHelper: false,
+        seminarLength: scope.config.seminar_duration,
+        firstDay: scope.config.seminar_start_day,
+
 
         eventClick: function(event, element) {
             scope.event = event;

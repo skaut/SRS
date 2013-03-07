@@ -5,7 +5,7 @@ var localization_config = {
         center: 'title',
         right: 'month,agendaWeek,agendaDay'
     },
-    firstDay: 1,
+    weekends: true,
     defaultView: 'agendaWeek',
     ignoreTimezone: true,
     slotMinutes: 15,
@@ -25,7 +25,7 @@ var localization_config = {
         nextYear: '&nbsp;&gt;&gt;&nbsp;', // >>
         today:    'Dnes',
         month:    'měsíc',
-        week:     'týden',
+        week:     'Seminář',
         day:      'den'
     },
     axisFormat: 'H(:mm)'

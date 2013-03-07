@@ -128,7 +128,15 @@ class ApiPresenter extends \BackModule\BasePresenter
     {
         $calConfig = array();
         $fromDate = $this->dbsettings->get('seminar_from_date');
+        $seminarStartDay = $dw = date( "w", strtotime($fromDate));
+        $toDate = $this->dbsettings->get('seminar_to_date');
+
+        $datediff = strtotime($toDate) - strtotime($fromDate);
+        $seminarDuration = (int) floor($datediff/(60*60*24))+1;
+        //\Nette\Diagnostics\Debugger::dump($seminarStartDay);
         $datePieces = explode('-', $fromDate);
+        $calConfig['seminar_duration'] = $seminarDuration;
+        $calConfig['seminar_start_day'] = $seminarStartDay;
         $calConfig['year'] = $datePieces[0];
         $calConfig['month'] = $datePieces[1]-1; //fullcalendar je zerobased
         $calConfig['date'] = $datePieces[2];

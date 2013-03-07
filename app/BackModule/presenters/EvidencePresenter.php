@@ -143,7 +143,7 @@ class EvidencePresenter extends BasePresenter
             $user->incomeProofPrinted = true;
         }
         $this->context->database->flush();
-        $this->redirect('this');
+        //$this->redirect('this');
         $printer->printIncomeProofs($users);
     }
 

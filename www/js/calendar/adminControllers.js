@@ -152,6 +152,9 @@ function bindCalendar(scope) {
         date: scope.config.date,
         selectable: scope.config.is_allowed_modify_schedule,
         selectHelper: scope.config.is_allowed_modify_schedule,
+        seminarLength: scope.config.seminar_duration,
+        firstDay: scope.config.seminar_start_day,
+
 
         select: function(start, end, allDay) {
             end = bindEndToBasicBlockDuration(start, end, scope.config.basic_block_duration);
