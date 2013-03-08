@@ -214,6 +214,19 @@ class Program extends \SRS\Model\BaseEntity
         }
     }
 
+    public function getUnsignedUsers($roles)
+    {
+        $unsignedUsers = array();
+        foreach ($roles as $role) {
+            foreach ($role->users as $user) {
+                if (!$this->hasAttendee($user)) {
+                    $unsignedUsers[] = $user;
+                }
+            }
+        }
+        return $unsignedUsers;
+    }
+
     /**
      * @ORM\PrePersist
      * @ORM\PreUpdate
@@ -275,6 +288,9 @@ class ProgramRepository extends \Nella\Doctrine\Repository
         $this->_em->flush();
         return $program;
     }
+
+
+
 
 
 

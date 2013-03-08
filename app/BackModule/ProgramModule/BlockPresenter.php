@@ -40,10 +40,17 @@ class BlockPresenter extends \BackModule\BasePresenter
 
     public function renderDetail($id) {
         $block = $this->blockRepo->find($id);
+        $permRepo = $this->context->database->getRepository('\SRS\Model\Acl\Permission');
+        $rolesWithPerm = $permRepo->findOneBy(array('name' => \SRS\Model\Acl\Permission::CHOOSE_PROGRAMS))->roles;
+
+//        foreach ($block->programs as $program) {
+//            $program->unsignedUsers = $program->getUnsignedUsers($rolesWithPerm);
+//        }
+
         $serializer = \JMS\Serializer\SerializerBuilder::create()->build();
 
         if ($block == null) throw new \Nette\Application\BadRequestException('Blok s tímto ID neexistuje', 404);
-
+        $this->template->rolesWithPerm = $rolesWithPerm;
         $this->template->block = $block;
     }
 

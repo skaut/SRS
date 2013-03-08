@@ -803,6 +803,7 @@ class User extends BaseEntity
         $interval = $today->diff($this->birthdate);
         return $interval->y;
     }
+
 }
 
 

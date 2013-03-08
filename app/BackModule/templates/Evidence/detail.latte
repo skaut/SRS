@@ -48,6 +48,12 @@ Vyhledat účastníka:
             <th>Přezdívka</th>
             <td>{$dbuser->nickName}</td>
         </tr>
+
+        <tr>
+        <th>Email</th>
+        <td><a href="mailto:{$dbuser->email}">{$dbuser->email}</a></td>
+        </tr>
+
         <tr>
             <th>Datum narození</th>
             <td>{$dbuser->birthdate|date:"d.m.Y"}</td>

@@ -51,6 +51,8 @@ class Permission extends \SRS\Model\BaseEntity
     }
 
 
+
+
     /**
      * @param string $name
      */
@@ -81,6 +83,22 @@ class Permission extends \SRS\Model\BaseEntity
     public function getResource()
     {
         return $this->resource;
+    }
+
+    /**
+     * @param \Doctrine\Common\Collections\ArrayCollection $roles
+     */
+    public function setRoles($roles)
+    {
+        $this->roles = $roles;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getRoles()
+    {
+        return $this->roles;
     }
 
 }
