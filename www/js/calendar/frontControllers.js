@@ -3,6 +3,7 @@ function FrontCalendarCtrl($scope, $http, $q, $timeout) {
     $scope.option = ''; // indexovane bloky - pro snadne vyhledavani a prirazovani
     $scope.event = null; // udalost se kterou prave pracuji
     $scope.config = null; // konfiguracni nastaveni pro kalendar
+    $scope.mandatory_unsigned_programs_count = 0;
 
 
     var api_path = basePath + '/api/program/';
@@ -37,6 +38,9 @@ function FrontCalendarCtrl($scope, $http, $q, $timeout) {
         $q.all(promisses).then(function() {
             angular.forEach($scope.events, function(event, key) {
                 event.block = $scope.options[event.block];
+                if (event.mandatory == true && event.attends == false) {
+                    $scope.mandatory_unsigned_programs_count++;
+                }
                 setColorFront(event);
 
             });
@@ -46,21 +50,16 @@ function FrontCalendarCtrl($scope, $http, $q, $timeout) {
 
     $scope.startup();
 
-//    $scope.onTimeout = function(){
-//        $('#calendar').fullCalendar( 'destroy' );
-//        $scope.startup();
-//        mytimeout = $timeout($scope.onTimeout,REFRESH_INTERVAL);
-//    }
-//    var mytimeout = $timeout($scope.onTimeout,REFRESH_INTERVAL);
-
-
-
     $scope.attend = function(event) {
         $http.post(api_path+"attend/"+event.id)
             .success(function(data, status, headers, config) {
                 flashMessage(data['message'], data['status']);
                 if (data['status'] == 'success') {
                     event.attends = true;
+
+                    if (event.mandatory == true) {
+                        $scope.mandatory_unsigned_programs_count--;
+                    }
 
                     event.attendees_count = data.event.attendees_count;
                     setColorFront(event);
@@ -79,6 +78,9 @@ function FrontCalendarCtrl($scope, $http, $q, $timeout) {
                 if (data['status'] == 'success') {
                     event.attends = false;
                     event.attendees_count = data.event.attendees_count;
+                    if (event.mandatory == true) {
+                        $scope.mandatory_unsigned_programs_count++;
+                    }
                     setColorFront(event);
                 }
                 $('#calendar').fullCalendar('updateEvent', event);

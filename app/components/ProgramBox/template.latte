@@ -25,16 +25,19 @@ Vaše role nemá právo zapisovat si programy
 </div>
 
 <div class="span10">
-    <div class="alert alert-info">
+    <div class="alert">
         <a style="float:right;" href="#" class="close" data-dismiss="alert">&times;</a>
         <h3>Instrukce:</h3>
         <ul>
-            <li>Najetím myší na název programu zobrazíte více informací o něm</li>
-            <li>Kliknutím na program se na něj přihlásítě, opětovným kliknutím přihlášení zrušíte</li>
-            <li>Zelené jsou programy, které máte přihlášené</li>
-            <li>Šedivé jsou programy, které nelze přihlásit (např. jsou již plné)</li>
-            <li>Modré jsou programy, na které se lze přihlásit</li>
+            <li>Kliknutím na program zobrazíte více informací o něm a zobrazíte možnost pro přihlášení / odhlášení</li>
+            <li><span style="background-color:green; color: white;">Zelené jsou programy, které máte přihlášené</span></li>
+            <li><span style="background-color:gray; color: white;">Programy, na které nelze přihlásit (např. jsou již plné)</span></li>
+            <li><span style="background-color:blue; color: white;">Programy, na které se lze přihlásit</span></li>
+            <li><span style="background-color:red;  color: white;">Povinné programy vyžadující přihlášení</span></li>
         </ul>
+    </div>
+    <div class="alert alert-error" ng-show="mandatory_unsigned_programs_count">
+        Máte nepřihlášené povinné programy (v kalendáři červeně). Prosíme, zapište si je.
     </div>
     <div id="calendar"></div>
 </div>

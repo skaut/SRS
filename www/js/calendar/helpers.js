@@ -70,7 +70,7 @@ function setColor(event) {
 
 function setColorFront(event) {
 
-    if (event.mandatory == true) {
+    if (event.mandatory == true && event.attends == false) {
         event.color = COLOR_MANDATORY;
     }
 
