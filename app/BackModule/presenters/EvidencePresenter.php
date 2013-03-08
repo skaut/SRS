@@ -136,14 +136,12 @@ class EvidencePresenter extends BasePresenter
     public function handlePrintIncomeProof($ids = array())
     {
         $printer = $this->context->printer;
-
         $users = array();
         foreach ($ids as $userId) {
             $users[] = $user = $this->userRepo->find($userId);
             $user->incomeProofPrinted = true;
         }
         $this->context->database->flush();
-        //$this->redirect('this');
         $printer->printIncomeProofs($users);
     }
 

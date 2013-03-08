@@ -319,7 +319,12 @@ class User extends BaseEntity
      */
     public function setPaymentDate($paymentDate)
     {
+        if ($paymentDate != '' || $paymentDate != null) {
         $this->paymentDate = $paymentDate;
+        }
+        else {
+            $this->paymentDate = null;
+        }
     }
 
     /**

@@ -23,10 +23,14 @@ class EvidenceDetailForm extends \SRS\Form\EntityForm
         $this->addCheckbox('paid', 'Zaplatil');
         $this->addCheckbox('attended', 'Přítomen');
         $this->addSelect('paymentMethod', 'Platební metoda')->setItems($configParams['payment_methods'])->setPrompt('Nezadáno');
-        $this->addText('paymentDate', 'Datum zaplacení')->getControlPrototype()->class('datepicker');
+        $this->addText('paymentDate', 'Datum zaplacení')
+            ->addCondition(FORM::FILLED)
+            ->addRule(FORM::PATTERN, 'Datum zaplacení není ve správném tvaru', \SRS\Helpers::DATE_PATTERN);
+
+        $this->addCheckbox('incomeProofPrinted', 'Příjmový doklad vytištěn');
         $this->addSubmit('submit','Uložit')->getControlPrototype()->class('btn');
         $this->onSuccess[] = callback($this, 'submitted');
-
+        $this['paymentDate']->getControlPrototype()->class('datepicker');
 
     }
 

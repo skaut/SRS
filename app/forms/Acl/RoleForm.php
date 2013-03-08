@@ -33,8 +33,12 @@ class RoleForm extends EntityForm
         $this->addText('name', 'Jméno role:')
             ->addRule(Form::FILLED, 'Zadejte jméno');
         $this->addCheckbox('registerable', 'Registrovatelná');
-        $this->addText('registerableFrom', 'Registrovatelná od')->getControlPrototype()->class('datepicker');
-        $this->addText('registerableTo', 'Registrovatelná do')->getControlPrototype()->class('datepicker');
+        $this->addText('registerableFrom', 'Registrovatelná od')
+            ->addCondition(FORM::FILLED)
+            ->addRule(FORM::PATTERN, 'Datum zaplacení není ve správném tvaru', \SRS\Helpers::DATE_PATTERN);
+        $this->addText('registerableTo', 'Registrovatelná do')
+            ->addCondition(FORM::FILLED)
+            ->addRule(FORM::PATTERN, 'Datum zaplacení není ve správném tvaru', \SRS\Helpers::DATE_PATTERN);
         $this->addCheckbox('approvedAfterRegistration', 'Je uživateli role po registraci automaticky schválena?');
 
         $this->addCheckbox('pays', 'Platí za účast?');
@@ -48,6 +52,9 @@ class RoleForm extends EntityForm
         $this->addMultiSelect('permissions', 'Práva')->getControlPrototype()->class('multiselect');
         $this->addSubmit('submit','Upravit roli')->getControlPrototype()->class('btn');
         $this->addSubmit('submit_continue','Uložit a pokračovat v úpravách')->getControlPrototype()->class('btn');
+
+        $this['registerableFrom']->getControlPrototype()->class('datepicker');
+        $this['registerableTo']->getControlPrototype()->class('datepicker');
 
         $this->onSuccess[] = callback($this, 'submitted');
     }
