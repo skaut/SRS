@@ -124,6 +124,7 @@ function bindCalendar(scope) {
             options.trigger = 'hover';
             options.title = event.title;
             options.content = '';
+            options.placement = 'bottom';
             if (event.block != null && event.block != undefined) {
                 options.content += "<ul class='no-margin no-bullets block-properties'>";
                 options.content += "<li><span>lektor:</span> "+ event.block.lector +"</li>";

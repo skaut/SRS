@@ -17,9 +17,14 @@ Vaše role nemá právo zapisovat si programy
 {/if}
 <div id="app" ng-app="calendar" ng-controller="FrontCalendarCtrl">
 <div class="span2">
-    <div class="ajax-loader">
-        <img src="{$basePath}/img/ajax-loader.gif">
+    <div id="jsMessages">
+        <div class="ajax-loader">
+            <img src="{$basePath}/img/ajax-loader.gif">
+        </div>
     </div>
+</div>
+
+<div class="span10">
     <div class="alert alert-info">
         <a style="float:right;" href="#" class="close" data-dismiss="alert">&times;</a>
         <h3>Instrukce:</h3>
@@ -31,13 +36,6 @@ Vaše role nemá právo zapisovat si programy
             <li>Modré jsou programy, na které se lze přihlásit</li>
         </ul>
     </div>
-
-    <div id="jsMessages">
-
-    </div>
-</div>
-
-<div class="span10">
     <div id="calendar"></div>
 </div>
     <div id="blockModal" ng-model="event"  class="modal hide fade">

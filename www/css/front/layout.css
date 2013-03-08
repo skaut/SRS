@@ -1,5 +1,7 @@
+/*twitter bootstrap grid*/
 @import url("lib/bootstrap.min.css");
 
+/*zakladni styly*/
 ul, li {
     list-style-type: disc !important;
 }
@@ -46,10 +48,8 @@ ul.no-bullets > li {
     overflow: hidden;
 }
 
-.fc-event {
-    cursor: pointer !important;
-}
 
+/*image content*/
 .contentImageWrapper .image {
 
 }
@@ -70,5 +70,15 @@ ul.no-bullets > li {
     margin: 0 auto;
 }
 
+
+/*program content*/
+.fc-event {
+    cursor: pointer !important;
+}
+
+#jsMessages {
+    position: fixed;
+    top: 250px;
+}
 
 

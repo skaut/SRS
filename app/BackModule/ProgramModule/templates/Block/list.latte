@@ -5,6 +5,10 @@
 Program » Bloky
 {/block}
 
+{block sidebar_attributes}
+data-spy="affix" data-offset-top="0"
+{/block}
+
 {block content}
 <div class="navbar">
     {if $user->isAllowed(\SRS\Model\Acl\Resource::PROGRAM, \SRS\Model\Acl\Permission::MANAGE_OWN_PROGRAMS)
