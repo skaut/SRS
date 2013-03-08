@@ -8,7 +8,7 @@
  */
 
 
-namespace SRS\Form;
+namespace SRS\Form\Configuration;
 
 use Nette\Application\UI,
     Nette\Diagnostics\Debugger,

@@ -40,6 +40,7 @@ class RoleForm extends EntityForm
             ->addCondition(FORM::FILLED)
             ->addRule(FORM::PATTERN, 'Datum zaplacení není ve správném tvaru', \SRS\Helpers::DATE_PATTERN);
         $this->addCheckbox('approvedAfterRegistration', 'Je uživateli role po registraci automaticky schválena?');
+        $this->addCheckbox('syncedWithSkautIS', 'Uživatelé v této roli jsou uvedeni jako účastníci ve skautIS');
 
         $this->addCheckbox('pays', 'Platí za účast?');
         $this->addText('fee', 'Výše účastnického poplatku')

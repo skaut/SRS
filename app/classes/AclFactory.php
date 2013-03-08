@@ -35,6 +35,9 @@ class AclFactory
         $attendee->approvedAfterRegistration = true;
         $attendee->pays = true;
 
+        $guest->syncedWithSkautIS = false;
+        $registered->syncedWithSkautIS = false;
+
         $backend = new Resource(Resource::BACKEND);
         $acl = new Resource(Resource::ACL);
         $cms = new Resource(Resource::CMS);

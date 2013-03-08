@@ -23,6 +23,9 @@ class skautIS extends \Nette\Object
     /** @var \SoapClient */
     protected $applicationManagementService;
 
+    /** @var \SoapClient */
+    protected $eventsService;
+
     /** @var string */
     protected $skautISUrl;
 
@@ -40,6 +43,8 @@ class skautIS extends \Nette\Object
 
     /** @var string */
     public $applicationManagementServiceSlug = "ApplicationManagement.asmx?wsdl";
+
+    public $eventsServiceSlug = "Events.asmx?wsdl";
 
 
     /**
@@ -62,6 +67,14 @@ class skautIS extends \Nette\Object
             $this->userManagementService = new \SoapClient($this->skautISUrl. '/' . $this->webServicesSlug. '/' . $this->userManagementServiceSlug);
         }
         return $this->userManagementService;
+    }
+
+    protected function getEventsService()
+    {
+        if ($this->eventsService == null) {
+            $this->eventsService = new \SoapClient($this->skautISUrl. '/' . $this->webServicesSlug. '/' . $this->eventsServiceSlug);
+        }
+        return $this->eventsService;
     }
 
     /**
@@ -126,6 +139,26 @@ class skautIS extends \Nette\Object
         return $response;
     }
 
+    /**
+     * Vola anonymni funkci ve skautIS pro overeni. Ve skautIS v soucasne dobe neni funkce ktera by slouzila primo pro overeni platnosti id
+     * @param $appId
+     * @return array
+     */
+    public function checkAppId($appId) {
+        $params = array(
+            'ID_Application' => $appId
+        );
+        try {
+            $response = $this->getOrganizationUnitService()->UnitAllRegistryBasic(array('unitAllRegistryBasicInput' => $params))->UnitAllRegistryBasicResult;
+            $result = array('success' => true, 'message' => '');
+        }
+        catch (\SoapFault $e) {
+            $result = array('success' => false, 'message' => $e->getMessage());
+        }
+
+        return $result;
+    }
+
 
     public function updatePerson($person, $token)
     {
@@ -135,14 +168,57 @@ class skautIS extends \Nette\Object
         $this->getOrganizationUnitService()->PersonUpdateAddress(array('personUpdateAddressInput' => $person));
     }
 
-//    public function getApplications()
-//    {
-//        //TODO nefunguje
-//        $response = $this->getApplicationManagementService()
-//            ->RemoteApplicationAll->RemoteApplicationAllResponse;
-//        \Nette\Diagnostics\Debugger::dump($response);
-//        return $response;
-//    }
+    public function getEvents($token)
+    {
+        $params = array (
+          'ID_Login' => $token,
+          //'ID_Person' => $skautISPersonId
+        );
+
+        $response = $this->getEventsService()->EventGeneralAll(array('eventGeneralAllInput' => $params))->EventGeneralAllResult;
+        if (isset($response->EventGeneralAllOutput)) $response = $response->EventGeneralAllOutput;
+        return $response;
+    }
+
+    public function syncParticipants($token, $skautISEventId, $users)
+    {
+        $params = array(
+            'ID_Login' => $token,
+            'ID_EventGeneral' => $skautISEventId
+        );
+        $skautISParticipants = $this->getEventsService()->ParticipantGeneralAll(array('participantGeneralAllInput' => $params))->ParticipantGeneralAllResult;
+        if (isset($skautISParticipants->ParticipantGeneralAllOutputt)) $skautISParticipants = $skautISParticipants->ParticipantGeneralAllOutput;
+        foreach($skautISParticipants as $p) {
+            if ($p->CanDelete == true) {
+                $this->deleteParticipant($token, $p->ID, $skautISEventId);
+            }
+        }
+
+        foreach ($users as $user) {
+            $this->insertParticipant($token, $user->skautISPersonId, $skautISEventId);
+        }
+    }
+
+    protected function deleteParticipant($token, $skautISParticipantId, $skautISEventId)
+    {
+        $params = array(
+          'ID_Login' => $token,
+          'ID' => $skautISParticipantId,
+          'DeletePerson' => false
+        );
+        $this->getEventsService()->ParticipantGeneralDelete(array('participantGeneralDeleteInput' => $params));
+    }
+
+    protected function insertParticipant($token, $skautISPersonId, $skautISEventId)
+    {
+        $params = array(
+            'ID_Login' => $token,
+            'ID_EventGeneral' => $skautISEventId,
+            'ID_Person' => $skautISPersonId
+        );
+        $this->getEventsService()->ParticipantGeneralInsert(array('participantGeneralInsertInput' => $params));
+    }
+
 
     /**
      * @param string $token skautisToken

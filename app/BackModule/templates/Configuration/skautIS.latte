@@ -1,0 +1,20 @@
+
+{extends 'ConfigurationLayout.latte'}
+
+{block title}
+ Konfigurace
+{/block}
+
+{block content}
+
+{if !$seminarID}
+<div class="alert alert-info forever">
+    Výpis akci se liší dle právě přihlášeného uživatele do systému. Pokud se Vám vaše akce ze skautIS nezobrazuje, nejspíš na ni nemáte práva.
+    V takovém případě nechte synchronizaci nastavit někoho s patřičnými právy.
+</div>
+{widget skautISEventForm}
+{else}
+<a class="btn btn-danger" href="{link disconnectEvent!}">Odpojit od skautIS</a>
+<a class="btn btn-success" href="{link syncParticipants!}">Nahrát účastníky do skautIS</a>
+{/if}
+{/block}

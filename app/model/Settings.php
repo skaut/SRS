@@ -87,6 +87,7 @@ class SettingsRepository extends \Doctrine\ORM\EntityRepository
     /**
      * Vrati rovnou zadanou hodnotu v konfigu
      * @param string $item
+     * @throws SettingsException
      * @return $string
      */
     public function get($item) {
@@ -96,6 +97,11 @@ class SettingsRepository extends \Doctrine\ORM\EntityRepository
         return $value;
     }
 
+    /**
+     * @param $item
+     * @param $value
+     * @throws SettingsException
+     */
     public function set($item, $value) {
         $result= $this->_em->getRepository($this->entity)->findByItem($item);
         if ($result == null) throw new SettingsException("Položka {$item} v Settings není");

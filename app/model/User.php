@@ -821,5 +821,12 @@ class UserRepository extends \Nella\Doctrine\Repository
          return $result;
      }
 
+    public function findAllForSkautISSync()
+    {
+        $query = "SELECT u, r FROM {$this->_entityName} u JOIN u.role r WHERE r.syncedWithSkautIS = 1 ";
+        $result = $this->_em->createQuery($query)->getResult();
+        return $result;
+    }
+
 
 }

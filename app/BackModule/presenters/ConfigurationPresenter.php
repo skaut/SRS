@@ -17,11 +17,38 @@ class ConfigurationPresenter extends BasePresenter
     }
 
     public function renderDefault() {
-//        SELECT u.*, c.food, c2.medic FROM user u left join (SELECT c.user_id , c.val as food FROM custom c WHERE c.key="food") as c on c.user_id = u.id
-//        left join (SELECT c2.user_id , c2.val as medic FROM custom c2 WHERE c2.key="medic") as c2 on c2.user_id = u.id
 
+    }
 
+    public function renderSkautIS() {
+        $skautISSeminarID = $this->dbsettings->get('skautis_seminar_id');
 
+        $events = $this->context->skautIS->getEvents($this->user->getIdentity()->token);
+
+        $this->template->seminarID = $skautISSeminarID;
+
+    }
+
+    public function handleDisconnectEvent()
+    {
+        $this->dbsettings->set('skautis_seminar_id', '');
+        $this->flashMessage('Systém odpojen od skautIS akce', 'success');
+        $this->redirect('this');
+    }
+
+    public function handleSyncParticipants()
+    {
+        $usersToSync = $this->context->database->getRepository('\SRS\Model\User')->findAllForSkautISSync();
+        $count = sizeof($usersToSync);
+        try {
+            $this->context->skautIS->syncParticipants($this->user->identity->token, $this->dbsettings->get('skautis_seminar_id'), $usersToSync);
+            $this->flashMessage("Do skautIS bylo vloženo {$count} účastníků");
+        } catch (\SoapFault $e)
+        {
+            $this->flashMessage('Synchronizace se nezdařila. Je pravděpodobné, že pro provedení synchronizace nemáte patřičná práva. Požádejte o synchronizaci uživatele, který akci propojil se skautIS', 'error forever');
+        }
+
+        $this->redirect('this');
     }
 
     public function handleClearCache() {
@@ -35,19 +62,17 @@ class ConfigurationPresenter extends BasePresenter
         $this->redirect('this');
     }
 
-//    public function handleAddColumn() {
-//        $sm = $this->context->database->getConnection()->getSchemaManager();
-//        $table = $sm->listTableDetails('user');
-//        $column = $table->addColumn('custom_name_'.mt_rand(0,100), 'boolean');
-//        $diff = new \Doctrine\DBAL\Schema\TableDiff('user', array($column));
-//        $sm->alterTable($diff);
-//
-//
-//    }
-
 
     protected function createComponentSettingsForm() {
-        return new \SRS\Form\SettingsForm(null, null, $this->dbsettings, $this->context->parameters);
+        return new \SRS\Form\Configuration\SettingsForm(null, null, $this->dbsettings, $this->context->parameters);
     }
+
+    protected function createComponentSkautISEventForm()
+    {
+        $events = $this->context->skautIS->getEvents($this->user->identity->token);
+        return new \SRS\Form\Configuration\SkautISEventForm(null, null, $events);
+    }
+
+
 
 }

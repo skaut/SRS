@@ -22,6 +22,7 @@ use Doctrine\Common\Collections\Criteria;
  * @property bool $pays
  * @property integer $fee
  * @property string $feeWord
+ * @property bool $syncedWithSkautIS
  * @property \DateTime|string $registerableFrom
  * @property \DateTime|string $registerableTo
  * @property \Doctrine\Common\Collections\ArrayCollection $users
@@ -29,7 +30,6 @@ use Doctrine\Common\Collections\Criteria;
  */
 class Role extends \SRS\Model\BaseEntity
 {
-
     const GUEST = 'guest';
     const REGISTERED = 'Registrovaný';
     const ATTENDEE = 'Účastník';
@@ -113,6 +113,13 @@ class Role extends \SRS\Model\BaseEntity
      * @ORM\Column(nullable=true)
      */
     protected $feeWord;
+
+
+    /**
+     * @var boolean
+     * @ORM\Column(type="boolean")
+     */
+    protected $syncedWithSkautIS = true;
 
 
     /**
@@ -272,6 +279,22 @@ class Role extends \SRS\Model\BaseEntity
     public function getPays()
     {
         return $this->pays;
+    }
+
+    /**
+     * @param boolean $syncedWithSkautIS
+     */
+    public function setSyncedWithSkautIS($syncedWithSkautIS)
+    {
+        $this->syncedWithSkautIS = $syncedWithSkautIS;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getSyncedWithSkautIS()
+    {
+        return $this->syncedWithSkautIS;
     }
 }
 
