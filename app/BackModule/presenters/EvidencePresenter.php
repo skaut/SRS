@@ -43,7 +43,7 @@ class EvidencePresenter extends BasePresenter
 
     }
 
-    public function renderList() {
+    public function renderList($ids = array()) {
         $evidenceColumns = $this->getSession('evidenceColumns');
         if ($evidenceColumns->visibility == null) {
             $columns = array();
@@ -133,16 +133,17 @@ class EvidencePresenter extends BasePresenter
 
     }
 
+    //tenhle handler pouze zapise priznak o vytisknuti
     public function handlePrintIncomeProof($ids = array())
     {
-        $printer = $this->context->printer;
         $users = array();
         foreach ($ids as $userId) {
             $users[] = $user = $this->userRepo->find($userId);
             $user->incomeProofPrinted = true;
         }
-        $this->context->database->flush();
+        $printer = $this->context->printer;
         $printer->printIncomeProofs($users);
+        $this->context->database->flush();
     }
 
     public function handlePrintAccountProof($userId)
@@ -201,10 +202,6 @@ class EvidencePresenter extends BasePresenter
             }
         }
         return $fields;
-
-
-
-
     }
 
 }

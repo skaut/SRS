@@ -5,6 +5,7 @@ var localization_config = {
         center: 'title',
         right: 'month,agendaWeek,agendaDay'
     },
+    allDaySlot: false,
     weekends: true,
     defaultView: 'agendaWeek',
     ignoreTimezone: true,

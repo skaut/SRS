@@ -33,6 +33,9 @@ class PageForm extends \SRS\Form\EntityForm
         $this->addSubmit('submit_to_sidebar', 'Postranní lišta')->getControlPrototype()->class('btn');
         $this->addSubmit('submit_to_main', 'Hlavní')->getControlPrototype()->class('btn');
 
-        // Formularove prvky tykajici se jednotlivych obsahu se pridavaji v CMS Presenteru v metode createComponent
+        // Formularove prvky tykajici se jednotlivych obsahu se pridavaji v Page Presenteru v metode createComponent
+
     }
+
+    //zpracovani formulare v Page presenteru
 }

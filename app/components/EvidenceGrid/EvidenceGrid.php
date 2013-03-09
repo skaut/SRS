@@ -266,7 +266,6 @@ class EvidenceGrid extends Grid
     //pretizeni kvuli nefunkcnosti date v row-edit
     public function render()
     {
-
         $count = $this->getCount();
         $this->getPaginator()->itemCount = $count;
         $this->template->results = $count;
@@ -282,9 +281,6 @@ class EvidenceGrid extends Grid
         if($this->hasActiveRowForm()){
             $row = $rows[$this->activeRowForm];
             foreach($row as $name => $value){
-//                if ($value instanceof \DateTime) {
-//                    $value = $value->format('Y-m-d');
-//                }
                 if($this->columnExists($name) && !empty($this['columns']->components[$name]->formRenderer)){
                     $row[$name] = call_user_func($this['columns']->components[$name]->formRenderer, $row);
                 }

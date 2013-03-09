@@ -80,6 +80,7 @@ class Program extends \SRS\Model\BaseEntity
     protected $title;
 
     /**
+     * @ORM\Column(type="boolean")
      * @JMS\Type("boolean")
      * @JMS\SerializedName("allDay")
      */
@@ -283,7 +284,6 @@ class ProgramRepository extends \Nella\Doctrine\Repository
 
         $program->setProperties($data, $this->_em);
         $program->duration = $minutes / $basicBlockDuration;
-
         $this->_em->persist($program);
         $this->_em->flush();
         return $program;

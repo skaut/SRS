@@ -42,6 +42,10 @@
     float: left;
 }
 
+.grid .grid-button:hover {
+   opacity: 0.8;
+}
+
 .grid-changeperpage {
     width: 80px;
     float: right;
@@ -74,13 +78,18 @@
     padding-top: 10px;
 }
 
+/*.grid-filter-reset {*/
+    /*width: 15px;*/
+    /*height: 15px;*/
+    /*position: relative;*/
+    /*left: 10px;*/
+    /*top: -10px;*/
+    /*z-index: 999;*/
+/*}*/
+
 .grid-filter-reset {
-    width: 15px;
-    height: 15px;
-    position: relative;
-    left: 10px;
-    top: -10px;
-    z-index: 999;
+
+    margin-bottom: 10px;
 }
 
 th.grid-filter-form {
@@ -88,7 +97,8 @@ th.grid-filter-form {
 }
 .grid-filter-form input[type=submit] {
 /*#frmgridForm-userGrid-filter-send {*/
-  margin-top: -25px;
+  /*margin-top: -25px;*/
+    margin-bottom: 10px;
 
 
 }

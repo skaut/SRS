@@ -58,6 +58,7 @@ CMS » Stránky
 
 
             $('#pageList').sortable({
+                delay: 300,
                 helper: fixHelper,
                 update: function( event, ui ) {
                     $('#sortPages').removeClass('hidden');

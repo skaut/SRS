@@ -55,7 +55,7 @@
 					{$control['gridForm'][$control->name]['filter'][$column->name]->getControl()}
 				{/if}
         </th>
-        <th class="grid-filter-form">{$control['gridForm'][$control->name]['filter']['send']->getControl()}<a n:if="$control->hasActiveFilter()" n:href="this, filter => NULL, paginator-page => NULL" title="Zrušit filtr" class="grid-filter-reset grid-ajax icon-remove"></a></th>
+        <th class="grid-filter-form">{$control['gridForm'][$control->name]['filter']['send']->getControl()->class('btn')}<a n:if="$control->hasActiveFilter()" n:href="this, filter => NULL, paginator-page => NULL" title="Zrušit filtr" class="btn btn-danger grid-filter-reset grid-ajax"><i class="icon-remove"></i></a></th>
     </tr>
     </thead>
     <tbody>
@@ -88,7 +88,7 @@
                 </td>
                 <td n:if="$control->hasButtons() || $control->hasFilterForm()" n:attr="class => array(grid-row-cell, $control->isEditable() && $control->activeRowForm == $row[$primaryKey] ? 'grid-edited-cell')">
                     {if $control->activeRowForm == $row[$primaryKey] && $control->isEditable()}
-                        {$control['gridForm'][$control->name]['rowForm']['send']->getControl()}
+                        {$control['gridForm'][$control->name]['rowForm']['send']->getControl()->class('btn')}
                         <a class="grid-rowForm-cancel grid-ajax" n:href="this" title="Zrušit editaci"></a>
                         {$control['gridForm'][$control->name]['rowForm'][$primaryKey]->getControl()}
                         {else}
@@ -116,7 +116,7 @@
 				<span n:if="$control->hasActionForm()" class="grid-action-box">
 						{$control['gridForm'][$control->name]['action']['action_name']->label}
 						{$control['gridForm'][$control->name]['action']['action_name']->getControl()}
-						{$control['gridForm'][$control->name]['action']['send']->getControl()}
+						{$control['gridForm'][$control->name]['action']['send']->getControl()->class('btn')}
 				</span>
 				<span n:if="$paginate" class="grid-perPage">
 						{$control['gridForm'][$control->name]['perPage']['perPage']->label}

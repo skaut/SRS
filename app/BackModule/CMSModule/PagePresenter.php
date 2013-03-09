@@ -155,6 +155,8 @@ class PagePresenter extends \BackModule\BasePresenter
             $this->redirect(':Back:CMS:Page:page#pageContents', array('id' => $pageId, 'area' => 'sidebar'));
         } else if ($submitName == 'submit_to_main') {
             $this->redirect(':Back:CMS:Page:page#pageContents', array('id' => $pageId, 'area' => 'main'));
+        } else if ($submitName == 'submit_content') {
+            $this->redirect('this#pageContents');
         } else {
             $this->redirect('this');
         }

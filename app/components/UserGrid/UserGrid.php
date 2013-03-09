@@ -52,8 +52,8 @@ class UserGrid extends Grid
 
         $this->setDataSource($source);
         $numOfResults = 10;
-        $this->addColumn('username', 'Username')->setTextFilter()->setAutocomplete($numOfResults);
-        $this->addColumn('nickName', 'Přezdívka')->setTextFilter()->setAutocomplete($numOfResults);
+        $this->addColumn('username', 'Username')->setTextFilter()->setAutocomplete($numOfResults)->setWidth('100');
+        $this->addColumn('nickName', 'Přezdívka')->setTextFilter()->setAutocomplete($numOfResults)->setWidth('100');
         $this->addColumn('firstName', 'Jméno')->setTextFilter()->setAutocomplete($numOfResults);
         $this->addColumn('lastName', 'Příjmení')->setTextFilter()->setAutocomplete($numOfResults);
         $this->addColumn('role', 'Role')

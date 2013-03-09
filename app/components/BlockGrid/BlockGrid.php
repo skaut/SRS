@@ -51,7 +51,7 @@ class BlockGrid extends Grid
         $source = new \SRS\SRSDoctrineDataSource($qb, 'id');
 
         $lectors = $this->em->getRepository('\SRS\Model\Acl\Role')->findApprovedUsersInRole('lektor');
-        $lectorChoices = \SRS\Form\EntityForm::getFormChoices($lectors, 'id', 'lastName');
+        $lectorChoices = \SRS\Form\EntityForm::getFormChoices($lectors, 'id', 'displayName');
         $basicBlockDuration = $this->em->getRepository('\SRS\Model\Settings')->get('basic_block_duration');
 
         $this->setDataSource($source);

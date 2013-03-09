@@ -4,7 +4,11 @@
         <h3>Opravdu smazat?</h3>
     </div>
     <div class="modal-body">
+        {ifset $confirmDialogText}
+            {$confirmDialogText}
+        {else}
         Tato operace je nenávratná a může ovlivnit i další položky, které mají na tuto položku vazbu.
+        {/ifset}
     </div>
     <div class="modal-footer">
         <a href="#" class="btn btn-danger ok ">Smazat</a>
