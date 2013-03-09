@@ -40,10 +40,9 @@ class Authenticator extends \Nette\Object implements NS\IAuthenticator
 //        $result = $this->skautIS->getMembership($skautISToken, $skautISUnitId);
 //        \Nette\Diagnostics\Debugger::dump($result);
         $user = $this->database->getRepository("\SRS\Model\User")->findOneBy(array('skautISUserId' => $skautISUser->ID));
-
+        $roleRegistered = $this->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('name'  => Role::REGISTERED));
         if ($user == null)
         {
-            $roleRegistered = $this->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('name'  => Role::REGISTERED));
             if ($roleRegistered == null) {
                 throw new \Exception('Nekonzistentni stav. Role pro nove uzivatele by vzdy mela existovat');
             }
