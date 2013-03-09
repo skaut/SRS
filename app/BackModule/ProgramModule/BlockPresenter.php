@@ -63,7 +63,7 @@ class BlockPresenter extends \BackModule\BasePresenter
         }
         else if (!(bool) $this->dbsettings->get('is_allowed_add_block')) {
             $this->flashMessage('Přidávání nových bloků je zakázáno. Toto lze povolit v modulu konfigurace', 'info');
-            $this->redirect(':Back:Block:list');
+            $this->redirect(':Back:Program:Block:list');
         }
 
     }
@@ -74,7 +74,7 @@ class BlockPresenter extends \BackModule\BasePresenter
         $this->context->database->remove($block);
         $this->context->database->flush();
         $this->flashMessage('Blok smazán', 'success');
-        $this->redirect(":Back:Block:list");
+        $this->redirect(":Back:Program:Block:list");
     }
 
 

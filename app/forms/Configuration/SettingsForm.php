@@ -32,8 +32,10 @@ class SettingsForm extends UI\Form
         $this->addText('seminar_name', 'Jméno semináře:')->setDefaultValue($this->dbsettings->get('seminar_name'))
             ->addRule(Form::FILLED, 'Zadejte Jméno semináře');
         $this->addText('seminar_from_date', 'Začátek semináře:')->setDefaultValue($this->dbsettings->get('seminar_from_date'))
+            ->addRule(FORM::PATTERN, 'Datum Začátku semináře není ve správném tvaru', \SRS\Helpers::DATE_PATTERN)
             ->addRule(Form::FILLED, 'Zadejte začátek semináře')->getControlPrototype()->class('datepicker');
         $this->addText('seminar_to_date', 'Konec semináře:')->setDefaultValue($this->dbsettings->get('seminar_to_date'))
+            ->addRule(FORM::PATTERN, 'Datum konce semináře není ve správném tvaru', \SRS\Helpers::DATE_PATTERN)
             ->addRule(Form::FILLED, 'Zadejte konec semináře')->getControlPrototype()->class('datepicker');
         $this->addSubmit('submit_seminar','Uložit')->getControlPrototype()->class('btn');
 
