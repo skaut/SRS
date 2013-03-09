@@ -21,7 +21,9 @@ use Doctrine\ORM\Mapping as ORM;
  *
  */
 class Document extends \SRS\Model\BaseEntity
+
 {
+    const SAVE_PATH = '/files/documents/';
 
     /**
      * @param \Doctrine\Common\Collections\ArrayCollection $tags

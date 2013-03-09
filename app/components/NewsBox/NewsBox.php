@@ -16,6 +16,7 @@ class NewsBox extends \Nette\Application\UI\Control
         $template = $this->template;
         $template->setFile(__DIR__ . '/template.latte');
         $content = $this->presenter->context->database->getRepository('\SRS\Model\CMS\NewsContent')->find($contentID);
+
         $this->template->news = $this->presenter->context->database->getRepository('\SRS\model\CMS\News')->findAllOrderedByDate($content->count);
 
         $template->render();

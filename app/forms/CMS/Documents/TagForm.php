@@ -45,7 +45,7 @@ class TagForm extends \SRS\Form\EntityForm
             $tag = $this->presenter->context->database->getRepository('\SRS\Model\CMS\Documents\Tag')->find($values['id']);
         }
         $tag->setProperties($values, $this->presenter->context->database);
-        if ($tag->id != null) {
+        if ($tag->id == null) {
             $this->presenter->flashMessage('Štítek vytvořen', 'success');
         }
         else {

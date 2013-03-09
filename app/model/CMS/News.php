@@ -86,7 +86,8 @@ class NewsRepository extends \Doctrine\ORM\EntityRepository
 
     public function findAllOrderedByDate($limit = null) {
         $query = "SELECT item FROM {$this->entity} item ORDER BY item.published DESC";
-        if ($limit == null) {
+        if ($limit === null) {
+
             $result = $this->_em->createQuery($query)->getResult();
         }
         else {

@@ -14,7 +14,7 @@ use Nette\Application\UI,
 
 class PageForm extends \SRS\Form\EntityForm
 {
-    public function __construct(IContainer $parent = NULL, $name = NULL, $roleChoices)
+    public function __construct(IContainer $parent = NULL, $name = NULL, $roleChoices, $activeArea = null)
     {
         parent::__construct($parent, $name);
         $this->addHidden('id');

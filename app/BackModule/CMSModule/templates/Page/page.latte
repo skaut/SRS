@@ -51,8 +51,8 @@
                 <div class="navbar-inner">
                     <a class="brand" href="#">Oblast</a>
                     <ul class="nav nav-tabs">
-                        <li  {ifCurrent :Back:Page:page, $page->id, 'main'} class="active" {/ifCurrent}>{input submit_to_main} &nbsp;</li>
-                        <li {ifCurrent :Back:Page:page, $page->id, 'sidebar'} class="active" {/ifCurrent}>{input submit_to_sidebar}</li>
+                        <li  {ifCurrent :Back:CMS:Page:page, $page->id, 'main'} class="active" {/ifCurrent}>{input submit_to_main} &nbsp;</li>
+                        <li {ifCurrent :Back:CMS:Page:page, $page->id, 'sidebar'} class="active" {/ifCurrent}>{input submit_to_sidebar}</li>
                     </ul>
                     <table class="table">
                         <tr>

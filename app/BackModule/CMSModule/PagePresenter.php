@@ -54,6 +54,7 @@ class PagePresenter extends \BackModule\BasePresenter
 
     public function renderPage($id = null, $area = null)
     {
+
         if ($id == null) {
             $this->flashMessage('Nebyla zvolena stránka', 'error');
             $this->redirect(':Back:CMS:Page:Pages');
@@ -109,6 +110,9 @@ class PagePresenter extends \BackModule\BasePresenter
             $contentFormContainer = $form[$content->getFormIdentificator()];
             $contentFormContainer->addHidden('delete', 'smazat')->setDefaultValue(0);
 
+        }
+        if ($area) {
+        $form["submit_to_{$area}"]->getControlPrototype()->class('btn btn-inverse');
         }
 
 

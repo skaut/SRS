@@ -56,9 +56,6 @@ input.number {
     margin-right: 5px;
 }
 
-li.active input {
-    border-color: black !important;
-}
 
 .faqForm textarea {
     width: 500px;

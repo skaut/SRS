@@ -13,6 +13,9 @@ class DocumentPresenter extends \BackModule\BasePresenter
 {
     protected $resource = \SRS\Model\Acl\Resource::CMS;
 
+    const DOC_REPO = '\SRS\Model\CMS\Documents\Document';
+    const TAG_REPO = '\SRS\Model\CMS\Documents\Tag';
+
     public function startup() {
         parent::startup();
         $this->checkPermissions(\SRS\Model\Acl\Permission::MANAGE);
@@ -20,13 +23,17 @@ class DocumentPresenter extends \BackModule\BasePresenter
 
 
     public function renderDocuments() {
-        $documents = $this->context->database->getRepository('\SRS\Model\CMS\Documents\Document')->findAll();
+        $documents = $this->context->database->getRepository(self::DOC_REPO)->findAll();
         $this->template->documents = $documents;
     }
 
     public function renderDocument($docId = null) {
+        if (count($this->context->database->getRepository(self::TAG_REPO)->findAll()) == 0) {
+            $this->flashMessage('Nejdříve vytvořte štítek');
+            $this->redirect('tags');
+        }
         if ($docId != null) {
-            $doc = $this->context->database->getRepository('\SRS\Model\CMS\Documents\Document')->find($docId);
+            $doc = $this->context->database->getRepository(self::DOC_REPO)->find($docId);
             if ($doc == null) throw new \Nette\Application\BadRequestException('Dokument s tímto id neexistuje', 404);
             $form = $this->getComponent('documentForm');
             $form->bindEntity($doc);
@@ -40,8 +47,9 @@ class DocumentPresenter extends \BackModule\BasePresenter
     }
 
     public function handleDeleteDocument($docId) {
-        $doc = $this->context->database->getRepository('\SRS\Model\CMS\Documents\Document')->find($docId);
+        $doc = $this->context->database->getRepository(self::DOC_REPO)->find($docId);
         if ($doc == null) throw new \Nette\Application\BadRequestException('Dokument s tímto id neexistuje', 404);
+        unlink(WWW_DIR . $doc->file);
         $this->context->database->remove($doc);
         $this->context->database->flush();
         $this->flashMessage('Dokument smazán', 'success');
@@ -49,13 +57,13 @@ class DocumentPresenter extends \BackModule\BasePresenter
     }
 
     public function renderTags() {
-        $tags = $this->context->database->getRepository('\SRS\Model\CMS\Documents\Tag')->findAll();
+        $tags = $this->context->database->getRepository(self::TAG_REPO)->findAll();
         $this->template->tags = $tags;
     }
 
     public function renderTag($tagId = null) {
         if ($tagId != null) {
-            $tag = $this->context->database->getRepository('\SRS\Model\CMS\Documents\Tag')->find($tagId);
+            $tag = $this->context->database->getRepository(self::TAG_REPO)->find($tagId);
             if ($tag == null) throw new \Nette\Application\BadRequestException('Tag s tímto id neexistuje', 404);
             $form = $this->getComponent('tagForm');
             $form->bindEntity($tag);
@@ -68,7 +76,7 @@ class DocumentPresenter extends \BackModule\BasePresenter
     }
 
     public function handleDeleteTag($tagId) {
-        $tag = $this->context->database->getRepository('\SRS\Model\CMS\Documents\Tag')->find($tagId);
+        $tag = $this->context->database->getRepository(self::TAG_REPO)->find($tagId);
         if ($tag == null) throw new \Nette\Application\BadRequestException('Tag s tímto id neexistuje', 404);
         $this->context->database->remove($tag);
         $this->context->database->flush();
@@ -85,7 +93,7 @@ class DocumentPresenter extends \BackModule\BasePresenter
     protected function createComponentDocumentForm($name)
     {
         $tagChoices = array();
-        $tags = $this->presenter->context->database->getRepository('\SRS\Model\CMS\Documents\Tag')->findAll();
+        $tags = $this->presenter->context->database->getRepository(self::TAG_REPO)->findAll();
         $tagChoices = \SRS\Form\EntityForm::getFormChoices($tags);
         $form = new \SRS\Form\CMS\Documents\DocumentForm(null, null, $tagChoices);
         return $form;

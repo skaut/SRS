@@ -26,8 +26,10 @@ class DocumentForm extends \SRS\Form\EntityForm
         parent::__construct($parent, $name);
 
         $this->addHidden('id');
-        $this->addText('name', 'Jméno:')->getControlPrototype()->class('name')
-            ->addRule(Form::FILLED, 'Zadejte jméno');
+        $this->addText('name', 'Jméno:')
+            ->addRule(Form::FILLED, 'Zadejte jméno')
+            ->getControlPrototype()->class('name');
+
 
         $this->addMultiselect('tags', 'Tagy:')->setItems($tagChoices)
             ->addRule(Form::FILLED,'zadejte alespoň jeden tag');
@@ -35,6 +37,7 @@ class DocumentForm extends \SRS\Form\EntityForm
         $this->addText('description', 'Popis:');
         $this->addSubmit('submit','Odeslat')->getControlPrototype()->class('btn');
 
+        $this['tags']->getControlPrototype()->class('multiselect');
         $this->onSuccess[] = callback($this, 'formSubmitted');
     }
 
@@ -43,7 +46,8 @@ class DocumentForm extends \SRS\Form\EntityForm
         $values = $this->getValues();
         $docExists = $values['id'] != null;
 
-        if (!$docExists && $values['file'] == null) {
+        if (!$docExists && $values['file']->size == 0) {
+            Debugger::dump('ahoj');
             $this->presenter->flashMessage('Je třeba vyplnit soubor', 'error');
         }
 
@@ -58,7 +62,7 @@ class DocumentForm extends \SRS\Form\EntityForm
             $file = $values['file'];
 
             if ($file->size > 0) {
-                $filePath = '/files/documents/'. \Nette\Utils\Strings::random(5) . '_' . \Nette\Utils\Strings::webalize($file->getName(), '.');
+                $filePath = \SRS\Model\CMS\Documents\Document::SAVE_PATH . \Nette\Utils\Strings::random(5) . '_' . \Nette\Utils\Strings::webalize($file->getName(), '.');
                 $file->move( WWW_DIR . $filePath);
                 $values['file'] = $filePath;
             }
