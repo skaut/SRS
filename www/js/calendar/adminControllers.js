@@ -1,6 +1,6 @@
 
 
-const REFRESH_INTERVAL = 10000
+var REFRESH_INTERVAL = 10000;
 var api_path = basePath + '/api/program/';
 
 function AdminCalendarCtrl($scope, $http, $q, $timeout) {

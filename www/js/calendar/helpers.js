@@ -30,7 +30,7 @@ var localization_config = {
         day:      'den'
     },
     axisFormat: 'H(:mm)'
-}
+};
 
 
 function fixDate(d) {
@@ -46,11 +46,11 @@ function fixDate(d) {
     return dateString;
 }
 
-const COLOR_MANDATORY = 'red';
-const COLOR_EMPTY  = 'gray';
-const COLOR_EMPTY_MANDATORY = 'orange';
-const COLOR_ATTEND = 'green';
-const COLOR_FULL = COLOR_EMPTY
+var COLOR_MANDATORY = 'red';
+var COLOR_EMPTY  = 'gray';
+var COLOR_EMPTY_MANDATORY = 'orange';
+var COLOR_ATTEND = 'green';
+var COLOR_FULL = COLOR_EMPTY;
 
 function setColor(event) {
     if (event.block != null && event.mandatory == true) {

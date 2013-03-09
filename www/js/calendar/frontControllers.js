@@ -1,4 +1,4 @@
-const REFRESH_INTERVAL = 10000;
+var REFRESH_INTERVAL = 10000;
 function FrontCalendarCtrl($scope, $http, $q, $timeout) {
     $scope.option = ''; // indexovane bloky - pro snadne vyhledavani a prirazovani
     $scope.event = null; // udalost se kterou prave pracuji
