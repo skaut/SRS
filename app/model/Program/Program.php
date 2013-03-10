@@ -262,6 +262,8 @@ class ProgramRepository extends \Nella\Doctrine\Repository
     public function saveFromJson($data, $basicBlockDuration) {
         $data = json_decode($data);
         $data = (array) $data;
+
+        json_last_error();
         $data['start'] = $data['startJSON'];
         if (isset($data['block']->id)) {
             $data['block'] = $data['block']->id;

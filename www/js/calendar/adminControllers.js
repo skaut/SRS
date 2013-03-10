@@ -55,18 +55,15 @@ function AdminCalendarCtrl($scope, $http, $q, $timeout) {
 
     $scope.startup();
 
-//    $scope.onTimeout = function(){
-//        $scope.startup();
-//        mytimeout = $timeout($scope.onTimeout, REFRESH_INTERVAL);
-//    }
-//    var mytimeout = $timeout($scope.onTimeout,REFRESH_INTERVAL);
-
-
 
     $scope.saveEvent = function(event) {
         $scope.event = event;
         event.startJSON = fixDate(event.start);
         event.endJSON = fixDate(event.end);
+        if (event.block) { //php si neumi poradit s html apod v jsondecode
+            event.block.perex = '';
+            event.block.description = '';
+        }
         seen = [];
         var json = JSON.stringify(event, function(key, val) {
             if (typeof val == "object") {

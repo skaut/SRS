@@ -92,7 +92,6 @@ function bindEndToBasicBlockDuration(start, end, basic_block_duration) {
     var diff_milis = (start - end);
     var event_duration_minutes = Math.abs(Math.round(((diff_milis / 1000) / 60)));
     var ratio = event_duration_minutes / basic_block_duration;
-    console.log(basic_block_duration);
 
     if (ratio % 1 != 0) {
         flashMessage('Délka programu byla upravena, aby odpovídala násobku základní délky bloku', 'warning');
