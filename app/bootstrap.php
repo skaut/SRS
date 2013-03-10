@@ -51,10 +51,10 @@ $environment = $isDebug == true ? 'development': 'production';
 $configurator->addConfig(__DIR__ . '/config/config.neon', $environment);
 
 
-
-if (PHP_SAPI == 'cli') {
-    $configurator->addConfig(__DIR__ . '/config/config.neon', 'console');
-}
+//
+//if (PHP_SAPI == 'cli') {
+//    $configurator->addConfig(__DIR__ . '/config/config.neon', 'console');
+//}
 $container = $configurator->createContainer();
 
 //$constants = new \ReflectionClass('\SRS\Model\Acl\Resource');
