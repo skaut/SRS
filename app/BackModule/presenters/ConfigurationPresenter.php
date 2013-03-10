@@ -24,10 +24,6 @@ class ConfigurationPresenter extends BasePresenter
         $skautISSeminarID = $this->dbsettings->get('skautis_seminar_id');
         $skautISSeminarName = $this->dbsettings->get('skautis_seminar_name');
 
-        if (!$skautISSeminarID) {
-            $events = $this->context->skautIS->getEvents($this->user->getIdentity()->token);
-        }
-
         $this->template->seminarID = $skautISSeminarID;
         $this->template->seminarName = $skautISSeminarName;
 
@@ -73,7 +69,13 @@ class ConfigurationPresenter extends BasePresenter
 
     protected function createComponentSkautISEventForm()
     {
-        $events = $this->context->skautIS->getEvents($this->user->identity->token);
+        try {
+            $events = $this->context->skautIS->getEvents($this->user->identity->token);
+        } catch (\SoapFault $e)
+        {
+           $events = array();
+        }
+
         return new \SRS\Form\Configuration\SkautISEventForm(null, null, $events);
     }
 
