@@ -79,6 +79,8 @@ ul.no-bullets > li {
 #jsMessages {
     position: fixed;
     top: 250px;
+    z-index:999;
+    width: 150px;
 }
 
 

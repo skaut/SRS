@@ -40,8 +40,8 @@ class ProgramFactory
         $lector2->displayName = $lector2->firstName . ' ' . $lector2->lastName;
         //$lector2->birthdate = new \DateTime('now');
         $lector2->approved = 1;
-        $lector2->skautISUserId = 8887;
-        $lector2->skautISPersonId = 9998;
+        $lector2->skautISUserId = -8887;
+        $lector2->skautISPersonId = -9998;
 
         $em->persist($lector1);
         $em->persist($lector2);

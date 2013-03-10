@@ -22,16 +22,21 @@ class ConfigurationPresenter extends BasePresenter
 
     public function renderSkautIS() {
         $skautISSeminarID = $this->dbsettings->get('skautis_seminar_id');
+        $skautISSeminarName = $this->dbsettings->get('skautis_seminar_name');
 
-        $events = $this->context->skautIS->getEvents($this->user->getIdentity()->token);
+        if (!$skautISSeminarID) {
+            $events = $this->context->skautIS->getEvents($this->user->getIdentity()->token);
+        }
 
         $this->template->seminarID = $skautISSeminarID;
+        $this->template->seminarName = $skautISSeminarName;
 
     }
 
     public function handleDisconnectEvent()
     {
         $this->dbsettings->set('skautis_seminar_id', '');
+        $this->dbsettings->set('skautis_seminar_name', '');
         $this->flashMessage('Systém odpojen od skautIS akce', 'success');
         $this->redirect('this');
     }
@@ -39,9 +44,8 @@ class ConfigurationPresenter extends BasePresenter
     public function handleSyncParticipants()
     {
         $usersToSync = $this->context->database->getRepository('\SRS\Model\User')->findAllForSkautISSync();
-        $count = sizeof($usersToSync);
         try {
-            $this->context->skautIS->syncParticipants($this->user->identity->token, $this->dbsettings->get('skautis_seminar_id'), $usersToSync);
+            $count = $this->context->skautIS->syncParticipants($this->user->identity->token, $this->dbsettings->get('skautis_seminar_id'), $usersToSync);
             $this->flashMessage("Do skautIS bylo vloženo {$count} účastníků");
         } catch (\SoapFault $e)
         {

@@ -21,12 +21,18 @@ class SkautISEventForm extends UI\Form
 
     protected $dbsettings;
 
+    protected $skautISEvents;
+
     public function __construct(IContainer $parent = NULL, $name = NULL, $skautISEvents)
     {
         parent::__construct($parent, $name);
 
-        $this->addSelect('skautISEvent', 'Vyberte akci ze skautIS')->setItems(\SRS\Form\EntityForm::getFormChoices($skautISEvents, 'ID', 'DisplayName'));
-        $this->addSubmit('submit_print','Uložit')->getControlPrototype()->class('btn');
+        $this->skautISEvents = $skautISEvents;
+
+        $this->addSelect('skautISEvent', 'Vyberte akci ze skautIS')->setItems(\SRS\Form\EntityForm::getFormChoices($this->skautISEvents, 'ID', 'DisplayName'))
+            ->addRule(FORM::FILLED, 'Vyberte akci');
+
+        $this->addSubmit('submit_print','Propojit se skautIS akcí')->getControlPrototype()->class('btn');
         $this->onSuccess[] = callback($this, 'formSubmitted');
 
 
@@ -37,6 +43,16 @@ class SkautISEventForm extends UI\Form
         $values = $this->getValues();
         $skautISEventID = $values['skautISEvent'];
         $this->presenter->dbsettings->set('skautis_seminar_id', $skautISEventID);
+
+        $skautISEventName = '';
+
+        foreach ($this->skautISEvents as $e)
+        {
+            if ($e->ID == $skautISEventID) {
+                $skautISEventName = $e->DisplayName;
+            }
+        }
+        $this->presenter->dbsettings->set('skautis_seminar_name', $skautISEventName);
         $this->presenter->flashMessage('Akce propojena', 'success');
         $this->presenter->redirect('this');
 //    }

@@ -93,7 +93,6 @@ class skautIS extends \Nette\Object
         if ($this->applicationManagementService == null) {
             $this->applicationManagementService = new \SoapClient($this->skautISUrl. '/' . $this->webServicesSlug. '/' . $this->applicationManagementServiceSlug);
         }
-        //\Nette\Diagnostics\Debugger::dump($this->applicationManagementService);
 
         return $this->applicationManagementService;
     }
@@ -176,27 +175,45 @@ class skautIS extends \Nette\Object
         );
 
         $response = $this->getEventsService()->EventGeneralAll(array('eventGeneralAllInput' => $params))->EventGeneralAllResult;
-        if (isset($response->EventGeneralAllOutput)) $response = $response->EventGeneralAllOutput;
+        if (isset($response->EventGeneralAllOutput)) {
+            $response = $response->EventGeneralAllOutput;
+            if ($response instanceof \stdClass) {
+                $response = array($response);
+            }
+        }
         return $response;
     }
 
     public function syncParticipants($token, $skautISEventId, $users)
     {
+        $count = 0;
+
         $params = array(
             'ID_Login' => $token,
             'ID_EventGeneral' => $skautISEventId
         );
         $skautISParticipants = $this->getEventsService()->ParticipantGeneralAll(array('participantGeneralAllInput' => $params))->ParticipantGeneralAllResult;
-        if (isset($skautISParticipants->ParticipantGeneralAllOutputt)) $skautISParticipants = $skautISParticipants->ParticipantGeneralAllOutput;
-        foreach($skautISParticipants as $p) {
-            if ($p->CanDelete == true) {
-                $this->deleteParticipant($token, $p->ID, $skautISEventId);
+        if (isset($skautISParticipants->ParticipantGeneralAllOutput)) {
+            $skautISParticipants = $skautISParticipants->ParticipantGeneralAllOutput;
+            if ($skautISParticipants instanceof \stdClass) {
+                $skautISParticipants = array($skautISParticipants);
+            }
+            foreach($skautISParticipants as $p) {
+                if ($p->CanDelete == true) {
+                    $this->deleteParticipant($token, $p->ID, $skautISEventId);
+                }
             }
         }
 
+
         foreach ($users as $user) {
-            $this->insertParticipant($token, $user->skautISPersonId, $skautISEventId);
+            if ($user->skautISPersonId >= 0) { //testovaci uzivatele SRS maji zaporna ID
+                $skautISParticipantId = $this->insertParticipant($token, $user->skautISPersonId, $skautISEventId);
+                //$this->updateParticipant($token, $user->skautISPersonId, $skautISParticipantId, '1', 'pozn');
+                $count++;
+            }
         }
+        return $count;
     }
 
     protected function deleteParticipant($token, $skautISParticipantId, $skautISEventId)
@@ -216,7 +233,21 @@ class skautIS extends \Nette\Object
             'ID_EventGeneral' => $skautISEventId,
             'ID_Person' => $skautISPersonId
         );
-        $this->getEventsService()->ParticipantGeneralInsert(array('participantGeneralInsertInput' => $params));
+        $response = $this->getEventsService()->ParticipantGeneralInsert(array('participantGeneralInsertInput' => $params))->ParticipantGeneralInsertResult;
+        return $response->ID;
+    }
+
+    //TODO NEFUNGUJE
+    protected function updateParticipant($token, $skautISEventId, $participantId, $days, $note)
+    {
+        $params = array(
+            'ID_Login' => $token,
+            'ID' => $skautISEventId ,
+            'ID_Participant' => $participantId,
+            'Days' => $days,
+            'Note' => $note
+        );
+        $this->getEventsService()->ParticipantGeneralUpdate(array('participantGeneral' => $params));
     }
 
 

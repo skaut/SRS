@@ -120,7 +120,8 @@ function flashMessage(message, type) {
     if (type == undefined) {
       type = 'info';
     }
-    var messageEl = $('<div class="alert alert-'+type+'">'+message+'<a class="close" data-dismiss="alert" href="#">&times;</a></div>');
+//    <a class="close" data-dismiss="alert" href="#">&times;</a>
+    var messageEl = $('<div class="alert alert-'+type+'">'+message+'</div>');
     $('#jsMessages').append(messageEl);
     messageEl.alert().delay(5000).fadeOut();
 }
