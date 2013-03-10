@@ -21,6 +21,7 @@ class BasePresenter extends \SRS\BasePresenter
         $this->template->backlink = $path;
         $this->template->logo = $this->dbsettings->get('logo');
         $this->template->footer = $this->dbsettings->get('footer');
+        $this->template->title = $this->dbsettings->get('seminar_name');
     }
 
     public function createComponentMenu() {

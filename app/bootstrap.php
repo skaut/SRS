@@ -45,20 +45,12 @@ else {
     \Nette\Diagnostics\Debugger::$email =$config['common']['parameters']['contact_email'];
     $configurator->setDebugMode($configurator::NONE);
 }
+
 $environment = $isDebug == true ? 'development': 'production';
-
-
 $configurator->addConfig(__DIR__ . '/config/config.neon', $environment);
 
 
-//
-//if (PHP_SAPI == 'cli') {
-//    $configurator->addConfig(__DIR__ . '/config/config.neon', 'console');
-//}
 $container = $configurator->createContainer();
-
-//$constants = new \ReflectionClass('\SRS\Model\Acl\Resource');
-//\Nette\Diagnostics\Debugger::dump($constants->getConstants());
 
 
 // Setup router
@@ -121,17 +113,6 @@ $container->router[] = new Route('[!<pageId [a-z-0-9]+>]', array(
 $container->router[] = new Route('<presenter>/<action>[/<id>]', 'Front:Homepage:default');
 
 
-
-//
-//if (PHP_SAPI != 'cli') {
-//    $acl = new \SRS\Security\Acl($container->database);
-//    $container->user->setAuthorizator($acl);
-//}
-
-\Nette\Diagnostics\Debugger::barDump(Debugger::timer(), 'before application run');
-// Configure and run the application!
-//$container->application->catchExceptions = false;
 if (!defined('CANCEL_START_APP')) {
     $container->application->run();
 }
-\Nette\Diagnostics\Debugger::barDump(Debugger::timer(), 'po aplikace run');

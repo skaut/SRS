@@ -32,7 +32,6 @@ abstract class BasePresenter extends BaseComponentsPresenter
         //nastaveni ACL
         $acl = new \SRS\Security\Acl($this->context->database);
         $this->context->user->setAuthorizator($acl);
-       // \Nette\Diagnostics\Debugger::dump($acl->isAllowed('Administrátor', 'Administrace', 'Přístup'));
 
         //Při každém načtení stránky prodlužujeme platnost skautIS Tokenu
         if ($this->user->isLoggedIn()) {
@@ -46,9 +45,6 @@ abstract class BasePresenter extends BaseComponentsPresenter
             }
         }
 
-
-
-        \Nette\Diagnostics\Debugger::barDump(\Nette\Diagnostics\Debugger::timer(), 'platnost skautis tokenu konec');
     }
 
 

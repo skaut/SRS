@@ -28,7 +28,7 @@ class InstallPresenter extends \SRS\BaseComponentsPresenter
             $this->redirect(':Install:install:default');
         }
         try {
-            if ($this->context->database->getRepository('\SRS\model\Settings')->get('schema_imported') == true) {
+            if ($this->context->parameters['database']['schema_imported'] == true) {
                 $this->flashMessage('Schéma databáze bylo již naimportováno');
                 $this->redirect(':Install:install:admin');
             }
@@ -96,6 +96,12 @@ class InstallPresenter extends \SRS\BaseComponentsPresenter
 
 
         if ($success == true) {
+            $config = \Nette\Utils\Neon::decode(file_get_contents(APP_DIR.'/config/config.neon'));
+            $isDebug = $config['common']['parameters']['debug'];
+            $environment = $isDebug == true ? 'development': 'production';
+            $config["{$environment} < common"]['parameters']['database']['schema_imported'] = true;
+            $configFile = \Nette\Utils\Neon::encode($config, \Nette\Utils\Neon::BLOCK);
+            \file_put_contents(APP_DIR.'/config/config.neon', $configFile);
             $this->flashMessage('Import schématu databáze a inicializačních dat proběhl úspěšně');
             $this->redirect(':Install:install:skautIS');
         }

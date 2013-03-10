@@ -8,7 +8,7 @@ class PagePresenter extends BasePresenter
 
     public function startup() {
 
-        if(!$this->context->parameters['database']['installed']) {
+        if(!$this->context->parameters['database']['installed'] || !$this->context->parameters['database']['schema_imported']) {
             $this->redirect(':Install:Install:default');
         }
 

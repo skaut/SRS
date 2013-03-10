@@ -51,7 +51,7 @@ class SkautISForm extends UI\Form
             }
         }
         else {
-            $this->presenter->flashMessage("Nepodařilo se ověřit skautIS App ID. Ujistěte se, že zadávte správné údaje.");
+            $this->presenter->flashMessage("Nepodařilo se ověřit skautIS App ID. Ujistěte se, že zadáváte správné údaje.");
         }
 
     }
