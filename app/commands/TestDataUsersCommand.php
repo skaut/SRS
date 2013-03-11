@@ -14,7 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use SRS\Factory\UserFactory;
 
 /**
- * Slouzi pro vlozeni testovacich uzivatelu
+ * Vlozi testovaci data uzivatelu
  */
 class TestDataUsersCommand extends Command
 {

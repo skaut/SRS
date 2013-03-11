@@ -19,8 +19,6 @@ use Nette\Application\UI,
 
 /**
   * Formular pro editaci jiz existujici role
-  * Zbyvajici parametry pro roli se zadavi v RoleForm.php
-  *
  */
 class RoleForm extends EntityForm
 {

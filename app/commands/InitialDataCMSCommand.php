@@ -14,7 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use SRS\Factory\PageFactory;
 
 /**
- * Inicializacni data pro Role
+ * Inicializacni data pro CMS
  */
 class InitialDataCMSCommand extends Command
 {

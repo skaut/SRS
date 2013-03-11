@@ -13,7 +13,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Slouzi pro vlozeni testovacich uzivatelu
+ * Vlozi testovaci data pro program
  */
 class TestDataProgramCommand extends Command
 {

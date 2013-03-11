@@ -806,7 +806,9 @@ class User extends BaseEntity
 
 }
 
-
+/**
+ * Rozsiruje Repositar o specialni funkce pro Uzivatele
+ */
 class UserRepository extends \Nella\Doctrine\Repository
 {
 //    public function findInRole($roleName)

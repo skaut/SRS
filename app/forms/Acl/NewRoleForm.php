@@ -8,12 +8,6 @@
  */
 
 
-/**
- * Formular pro vytvoreni nove role
- * Zbyvajici parametry pro roli se zadavi v RoleForm.php
-
- */
-
 namespace SRS\Form;
 
 use Nette\Application\UI,
@@ -21,7 +15,11 @@ use Nette\Application\UI,
     Nette\Application\UI\Form,
     Nette\ComponentModel\IContainer;
 
-//TODO odstranit pozustatky od dedicnosti
+
+/**
+ * Formular pro vytvoreni nove role
+ * Zbyvajici parametry pro roli se zadavi v RoleForm.php
+ */
 class NewRoleForm extends UI\Form
 {
     public function __construct(IContainer $parent = NULL, $name = NULL, $rolesAvailable)
@@ -53,7 +51,6 @@ class NewRoleForm extends UI\Form
             $parentRole = $this->presenter->context->database->getRepository('\SRS\Model\Acl\Role')->find($values['parent']);
         }
 
-        //$newRole = new \SRS\Model\Acl\Role($values['name'], $parentRole);
         $newRole = new \SRS\Model\Acl\Role($values['name']);
         $newRole->system = false;
         if ($parentRole != null) {

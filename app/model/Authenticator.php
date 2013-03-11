@@ -3,6 +3,9 @@ namespace SRS\Model;
 use Nette\Security as NS;
 use SRS\Model\Acl\Role;
 
+/**
+ * Obsluhuje autentizaci uzivatelu pres skautIS
+ */
 class Authenticator extends \Nette\Object implements NS\IAuthenticator
 {
     /** @var \Doctrine\ORM\EntityManager */
