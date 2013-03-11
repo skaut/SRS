@@ -36,7 +36,6 @@ class AuthPresenter extends \SRS\BasePresenter
         }
         catch (\Nette\Security\AuthenticationException $e) {
             $this->flashMessage('Přihlášení prostřednictvím skautIS se nezdařilo', 'error');
-            //@TODO nemeli bychom presmerovat na nejakou stranku, ktera nevyzaduje prihlaseni?
         }
         $this->makeRedirectByReturnUrl();
     }
@@ -59,7 +58,6 @@ class AuthPresenter extends \SRS\BasePresenter
 
     protected function makeRedirectByReturnUrl() {
         if ($returnUrl = $this->getParameter('ReturnUrl')) {
-            \Nette\Diagnostics\Debugger::dump($returnUrl);
             if (strpos($returnUrl, ':') !== false) {
                 $this->redirect($this->getParameter('ReturnUrl'));
             }
