@@ -123,48 +123,54 @@ class PagePresenter extends \BackModule\BasePresenter
 
     public function pageFormSubmitted(\SRS\Form\EntityForm $form)
     {
+        $pageRepo = $this->context->database->getRepository('\SRS\Model\CMS\Page');
+
         $values = $form->getValues();
         $pageId = $values['id'];
         $area = $this->getParameter('area');
+        $page = $pageRepo->find($pageId);
+        $pageWithSameSlug = $pageRepo->findOneBySlug($values['slug']);
 
-        $page = $this->context->database->getRepository('\SRS\Model\CMS\Page')->find($pageId);
-
-        $page->setProperties($values, $this->context->database);
-
-        foreach ($page->getContents($area) as $content) {
-
-            $contentFormContainer = $values[$content->getFormIdentificator()];
-            $deleteContent = $contentFormContainer['delete'];
-            if ($deleteContent == true) $this->context->database->remove($content);
-            else $content->setValuesFromPageForm($form);
-
+        if ($pageWithSameSlug!= null && $pageWithSameSlug->id != $values['id']) {
+            $this->flashMessage('Stránka s takovýmto slugem již existuje. Zadejte jiný slug', 'error');
         }
-        if ($values['add_content'] != null) {
-            $contentTypeStr = '\\SRS\\Model\\CMS\\' . $values['add_content'] . 'Content';
-            $contentType = new $contentTypeStr();
-            $contentType->page = $page;
-            $contentType->area = $area;
-            $this->context->database->persist($contentType);
-            $page->contents->add($contentType); // TODO nefunguje fix
-            $this->flashMessage("Obsah typu {$values['add_content']} přidán");
+        else {
+            $page->setProperties($values, $this->context->database);
+
+            foreach ($page->getContents($area) as $content) {
+
+                $contentFormContainer = $values[$content->getFormIdentificator()];
+                $deleteContent = $contentFormContainer['delete'];
+                if ($deleteContent == true) $this->context->database->remove($content);
+                else $content->setValuesFromPageForm($form);
+
+            }
+            if ($values['add_content'] != null) {
+                $contentTypeStr = '\\SRS\\Model\\CMS\\' . $values['add_content'] . 'Content';
+                $contentType = new $contentTypeStr();
+                $contentType->page = $page;
+                $contentType->area = $area;
+                $this->context->database->persist($contentType);
+                $page->contents->add($contentType); // TODO nefunguje fix
+                $this->flashMessage("Obsah typu {$values['add_content']} přidán");
+            }
+            $this->context->database->flush();
+            $this->flashMessage('Stránka uložena');
+
+            $submitName = ($form->isSubmitted());
+            $submitName = $submitName->htmlName;
+
+            if ($submitName == 'submit_to_list') $this->redirect(':Back:CMS:Page:pages');
+            else if ($submitName == 'submit_to_sidebar') {
+                $this->redirect(':Back:CMS:Page:page#pageContents', array('id' => $pageId, 'area' => 'sidebar'));
+            } else if ($submitName == 'submit_to_main') {
+                $this->redirect(':Back:CMS:Page:page#pageContents', array('id' => $pageId, 'area' => 'main'));
+            } else if ($submitName == 'submit_content') {
+                $this->redirect('this#pageContents');
+            } else {
+                $this->redirect('this');
+            }
         }
-        $this->context->database->flush();
-        $this->flashMessage('Stránka uložena');
-
-        $submitName = ($form->isSubmitted());
-        $submitName = $submitName->htmlName;
-
-        if ($submitName == 'submit_to_list') $this->redirect(':Back:CMS:Page:pages');
-        else if ($submitName == 'submit_to_sidebar') {
-            $this->redirect(':Back:CMS:Page:page#pageContents', array('id' => $pageId, 'area' => 'sidebar'));
-        } else if ($submitName == 'submit_to_main') {
-            $this->redirect(':Back:CMS:Page:page#pageContents', array('id' => $pageId, 'area' => 'main'));
-        } else if ($submitName == 'submit_content') {
-            $this->redirect('this#pageContents');
-        } else {
-            $this->redirect('this');
-        }
-
     }
 
 
