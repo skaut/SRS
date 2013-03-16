@@ -213,7 +213,6 @@ class EvidenceGrid extends Grid
 
         $this->addAction("printIncomeProof","Vytisknout příjmový doklad")->setAjax(false)
             ->setCallback(function($id) use ($presenter){
-            \Nette\Diagnostics\Debugger::dump($id);
                 $presenter->redirect('printIncomeProof!', array('ids' => $id));
             });
 
@@ -250,7 +249,7 @@ class EvidenceGrid extends Grid
     {
         foreach ($ids as $id ) {
             $userToSave = $this->presenter->context->database->getRepository('\SRS\Model\User')->find($id);
-            $userToSave->paid = true;
+            $userToSave->attended = true;
         }
 
         $this->presenter->context->database->flush();
