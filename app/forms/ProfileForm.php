@@ -35,8 +35,9 @@ class ProfileForm extends EntityForm
         $values = $this->getValues();
         $user = $this->em->getRepository('\SRS\Model\User')->find($values['id']);
         $user->setProperties($values, $this->presenter->context->database);
+        $user->displayName = "{$user->lastName} {$user->firstName}";
+        if ($user->nickName != '') $user->displayName .=" ({$user->nickName})";
         $this->em->flush();
-
 
         $skautISPerson = $this->skautIS->getPerson($this->presenter->context->user->identity->token, $user->skautISPersonId);
         $updatedSkautISPerson = \SRS\Factory\UserFactory::updateSkautISPerson($user, $skautISPerson);
