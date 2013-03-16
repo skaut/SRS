@@ -29,7 +29,19 @@ var localization_config = {
         week:     'Seminář',
         day:      'den'
     },
-    axisFormat: 'H(:mm)'
+    axisFormat: 'H(:mm)',
+
+    columnFormat: {
+        month: 'ddd',    // Mon
+        week: 'ddd d.M.', // Mon 9/7
+        day: 'dddd d.M.'  // Monday 9/7
+    },
+
+    titleFormat: {
+        month: 'MMMM yyyy',                             // September 2009
+        week: "", // Sep 7 - 13 2009
+        day: 'dddd, d. MMM yyyy'
+    }
 };
 
 
