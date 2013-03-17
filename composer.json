@@ -6,16 +6,16 @@
 	},
     "require": {
         "php": ">= 5.3.0",
-        "nette/nette": ">= 2.0.5",
-        "phpunit/phpunit": "3.7.*",
+        "nette/nette": "2.0.8",
+        "phpunit/phpunit": "3.7.18",
         "phpunit/phpunit-selenium": "dev-master",
         "nella/doctrine": "@dev",
         "nella/console": "@dev",
         "doctrine/migrations": "@dev",
         "doctrine/data-fixtures": "dev-master",
         "JanMarek/WebLoader": "dev-master",
-        "jms/serializer": "1.0.*@dev",
+        "jms/serializer": "0.12.*@dev",
         "itbz/fpdf": "1.7.1",
-        "itbz/fpdi": "dev-master"
+        "itbz/fpdi": "1.4.2"
 	}
 }
