@@ -2,5 +2,4 @@ libs/global/*
 *~
 composer.lock
 .idea
-deployment.ini
 deployment.log
