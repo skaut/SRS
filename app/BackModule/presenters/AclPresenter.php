@@ -43,22 +43,20 @@ class AclPresenter extends BasePresenter
     }
 
     public function renderEditRole($id) {
+
+        if ($id == null) {
+            $this->redirect('roles');
+        }
+
         $role = $this->roleRepo->find($id);
 
         if ($role == null) {
             $this->flashMessage('Tato role neexistuje', 'error');
-            $this->redirect('this');
+            $this->redirect('roles');
         }
 
-//        $query = $this->context->database->createQuery("
-//            SELECT pp.id, pp.name from \SRS\Model\Acl\Permission pp WHERE pp NOT IN (
-//            SELECT p from \SRS\Model\Acl\Permission p INNER JOIN p.roles r WHERE r.id = ?1)
-//            ");
-//        $query->setParameter(1, isset($role->parent->id) ? $role->parent->id : null);
-        //$permissionsNotOwnedByParent = $query->getResult(); //umoznujeme pracovat jen s temi pravy, ktere jeste nema rodic
 
         $permissions = $this->context->database->getRepository('\SRS\Model\Acl\Permission')->findAll();
-
         $permissionFormChoices = array();
         foreach ($permissions as $perm) {
             $permissionFormChoices[$perm->id] = "{$perm->name} | {$perm->resource->name}";
