@@ -18,4 +18,12 @@
         "itbz/fpdf": "1.7.1",
         "itbz/fpdi": "1.4.2"
 	}
+	
+	 "authors": [
+        {
+            "name": "Michal Májský",
+            "email": "m.majsky@gmail.com",
+            "homepage": "http://majsky.cz",
+            "role": "Developer"
+        },
 }
