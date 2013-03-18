@@ -1,3 +1,4 @@
+@import url("lib/reset.css");
 @import url("lib/typography.css");
 @import url("lib/forms.css");
 @import url("lib/buttons.css");
@@ -7,14 +8,12 @@ body {
 }
 
 a {
-
     font-weight: bold;
 }
 
 a:hover {
     opacity: 0.6;
 }
-
 
 #main {
     border: 1px solid gray;

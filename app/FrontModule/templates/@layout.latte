@@ -1,9 +1,10 @@
 {**
- *
- *
  * @param string   $basePath web base path
  * @param string   $robots   tell robots how to index the content of a page (optional)
  * @param array    $flashes  flash messages
+ * @param $user
+ * @param string $footer text patičky
+ * @param string $logo cesta k logu
  *}
 
 <!DOCTYPE html>
@@ -17,7 +18,7 @@
         var basePath = {$basePath};
     </script>
 
-    {widget cssLoader 'front/reset.css', 'front/design.css', 'front/layout.css', 'jquery-ui/jquery-ui.css'}
+    {widget cssLoader 'front/design.css', 'front/layout.css', 'jquery-ui/jquery-ui.css'}
     {widget jsLoader 'jquery-1.8.2.min.js', 'netteForms.js', 'jquery-ui.js'}
 
     <link rel="shortcut icon" href="{$basePath}/favicon.ico">
