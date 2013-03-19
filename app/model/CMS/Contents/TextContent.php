@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 15.11.12
  * Time: 13:27
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 namespace SRS\Model\CMS;
 use Doctrine\ORM\Mapping as ORM;
@@ -38,27 +36,27 @@ class TextContent extends \SRS\Model\CMS\Content implements IContent
     }
 
 
-    public function addFormItems(\Nette\Application\UI\Form $form) {
+    public function addFormItems(\Nette\Application\UI\Form $form)
+    {
         parent::addFormItems($form);
         $form->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
         $formContainer = $form[$this->getFormIdentificator()];
-        $formContainer->addTextArea("text",'Text')->setDefaultValue($this->text)->getControlPrototype()->class('tinyMCE');
+        $formContainer->addTextArea("text", 'Text')->setDefaultValue($this->text)->getControlPrototype()->class('tinyMCE');
         return $form;
     }
 
-    public function setValuesFromPageForm(\Nette\Application\UI\Form $form) {
+    public function setValuesFromPageForm(\Nette\Application\UI\Form $form)
+    {
         parent::setValuesFromPageForm($form);
         $values = $form->getValues();
         $values = $values[$this->getFormIdentificator()];
         $this->text = $values['text'];
     }
 
-    public function getContentName() {
+    public function getContentName()
+    {
         return $this->contentName;
     }
-
-
-
 
 
 }

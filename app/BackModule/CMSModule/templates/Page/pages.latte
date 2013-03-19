@@ -1,4 +1,3 @@
-
 {extends '../CMSlayout.latte'}
 
 {block title}
@@ -14,28 +13,28 @@ CMS » Stránky
     <a class="btn btn-success" href="#addPage" data-toggle="modal"><i class="icon-plus-sign"></i>Přidat stránku</a>
     <a class="btn hidden btn-primary" id="sortPages" href="#">Uložit pořadí stránek</a>
 </div>
-{snippet pagelist}
+    {snippet pagelist}
 
-<table class="table-bordered table-striped">
-    <tbody class="sortable" id="pageList">
-    <tr n:foreach="$pages as $page" id="page-{$page->id}">
-        <td class="sort-arrow"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span></td>
-        <td>{$page->name}</td>
-        <td>
-            {if $page->public}
-             <span class="label label-success">Publikováno</span>
-            {else}
-             <span class="label label-warning">Koncept</span>
-            {/if}
-        </td>
-        <td>
-            <a class="btn" href="{plink page $page->id, 'main'}">
-                Upravit
-            </a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+    <table class="table-bordered table-striped">
+        <tbody class="sortable" id="pageList">
+        <tr n:foreach="$pages as $page" id="page-{$page->id}">
+            <td class="sort-arrow"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span></td>
+            <td>{$page->name}</td>
+            <td>
+                {if $page->public}
+                    <span class="label label-success">Publikováno</span>
+                    {else}
+                    <span class="label label-warning">Koncept</span>
+                {/if}
+            </td>
+            <td>
+                <a class="btn" href="{plink page $page->id, 'main'}">
+                    Upravit
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 
 
     <script>
@@ -44,13 +43,13 @@ CMS » Stránky
 
             var url = {link sortPages!};
             url = url.replace('\\', '');
-            $.get("?do=sortPages", data );
+            $.get("?do=sortPages", data);
         }
 
 
-        $(document).ready(function() {
-            var fixHelper = function(e, ui) {
-                ui.children().each(function() {
+        $(document).ready(function () {
+            var fixHelper = function (e, ui) {
+                ui.children().each(function () {
                     $(this).width($(this).width());
                 });
                 return ui;
@@ -58,14 +57,14 @@ CMS » Stránky
 
 
             $('#pageList').sortable({
-                delay: 300,
-                helper: fixHelper,
-                update: function( event, ui ) {
+                delay:300,
+                helper:fixHelper,
+                update:function (event, ui) {
                     $('#sortPages').removeClass('hidden');
                 }
             })
-            $('#sortPages').click(function() {
-                var sorted = $( "#pageList" ).sortable( "serialize", { key:'pages[]' } );
+            $('#sortPages').click(function () {
+                var sorted = $("#pageList").sortable("serialize", { key:'pages[]' });
                 savePagePositions(sorted);
             });
             $('#sortPages').addClass('hidden');
@@ -74,7 +73,7 @@ CMS » Stránky
     </script>
 
 
-{/snippet}
+    {/snippet}
 
 
 {include 'includes/addPage.latte'}

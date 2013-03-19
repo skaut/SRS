@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 1.12.12
  * Time: 18:58
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 
 
@@ -32,10 +30,10 @@ class DocumentForm extends \SRS\Form\EntityForm
 
 
         $this->addMultiselect('tags', 'Tagy:')->setItems($tagChoices)
-            ->addRule(Form::FILLED,'zadejte alespoň jeden tag');
+            ->addRule(Form::FILLED, 'zadejte alespoň jeden tag');
         $this->addUpload('file', 'Soubor:');
         $this->addText('description', 'Popis:');
-        $this->addSubmit('submit','Odeslat')->getControlPrototype()->class('btn');
+        $this->addSubmit('submit', 'Odeslat')->getControlPrototype()->class('btn');
 
         $this['tags']->getControlPrototype()->class('multiselect');
         $this->onSuccess[] = callback($this, 'formSubmitted');
@@ -49,13 +47,10 @@ class DocumentForm extends \SRS\Form\EntityForm
         if (!$docExists && $values['file']->size == 0) {
             Debugger::dump('ahoj');
             $this->presenter->flashMessage('Je třeba vyplnit soubor', 'error');
-        }
-
-        else {
+        } else {
             if (!$docExists) {
                 $document = new \SRS\Model\CMS\Documents\Document();
-            }
-            else {
+            } else {
                 $document = $this->presenter->context->database->getRepository('\SRS\Model\CMS\Documents\Document')->find($values['id']);
             }
 
@@ -63,10 +58,9 @@ class DocumentForm extends \SRS\Form\EntityForm
 
             if ($file->size > 0) {
                 $filePath = \SRS\Model\CMS\Documents\Document::SAVE_PATH . \Nette\Utils\Strings::random(5) . '_' . \Nette\Utils\Strings::webalize($file->getName(), '.');
-                $file->move( WWW_DIR . $filePath);
+                $file->move(WWW_DIR . $filePath);
                 $values['file'] = $filePath;
-            }
-            else {
+            } else {
                 unset($values['file']);
             }
 

@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 15.11.12
  * Time: 13:27
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 namespace SRS\Model\CMS;
 use Doctrine\ORM\Mapping as ORM;
@@ -105,8 +103,8 @@ class ImageContent extends \SRS\Model\CMS\Content implements IContent
     }
 
 
-
-    public function addFormItems(\Nette\Application\UI\Form $form) {
+    public function addFormItems(\Nette\Application\UI\Form $form)
+    {
         $posOptions = array(
             'left' => 'Vlevo',
             'right' => 'Vpravo',
@@ -115,18 +113,19 @@ class ImageContent extends \SRS\Model\CMS\Content implements IContent
         parent::addFormItems($form);
         $formContainer = $form[$this->getFormIdentificator()];
         $formContainer->addUpload('image', 'Obrázek')
-                        ->addCondition(\Nette\Application\UI\Form::FILLED)
-                        ->addRule(\Nette\Application\UI\Form::IMAGE, 'Obrázek musí být JPEG, PNG nebo GIF.');
+            ->addCondition(\Nette\Application\UI\Form::FILLED)
+            ->addRule(\Nette\Application\UI\Form::IMAGE, 'Obrázek musí být JPEG, PNG nebo GIF.');
         $formContainer->addSelect('align', 'Pozice')->setItems($posOptions)->setDefaultValue($this->align);
         $formContainer->addText('width', 'Šířka')->setDefaultValue($this->width);
         $formContainer->addText('height', 'Výška')->setDefaultValue($this->height);
-        $formContainer->addHidden('template', 'contents/'.$this->contentType.'.html');
+        $formContainer->addHidden('template', 'contents/' . $this->contentType . '.html');
         $formContainer->addHidden('curImage', $this->image);
 
         return $form;
     }
 
-    public function setValuesFromPageForm(\Nette\Application\UI\Form $form) {
+    public function setValuesFromPageForm(\Nette\Application\UI\Form $form)
+    {
         parent::setValuesFromPageForm($form);
         $values = $form->getValues();
         $values = $values[$this->getFormIdentificator()];
@@ -134,25 +133,22 @@ class ImageContent extends \SRS\Model\CMS\Content implements IContent
         $image = $values['image'];
 
         if ($image->size > 0) {
-            $imagePath = '/files/images/'. \Nette\Utils\Strings::random(5) . '_' . \Nette\Utils\Strings::webalize($image->getName(), '.');
-            $image->move( WWW_DIR . $imagePath);
+            $imagePath = '/files/images/' . \Nette\Utils\Strings::random(5) . '_' . \Nette\Utils\Strings::webalize($image->getName(), '.');
+            $image->move(WWW_DIR . $imagePath);
             $this->image = $imagePath;
 
             if ($values['width'] == null) {
                 $this->width = $image->toImage()->getWidth();
-            }
-            else {
+            } else {
                 $this->width = $values['width'];
             }
             if ($values['height'] == null) {
                 $this->height = $image->toImage()->getHeight();
-            }
-            else {
+            } else {
                 $this->height = $values['height'];
             }
 
-        }
-        else {
+        } else {
             $this->width = $values['width'];
             $this->height = $values['height'];
         }
@@ -161,12 +157,10 @@ class ImageContent extends \SRS\Model\CMS\Content implements IContent
 
     }
 
-    public function getContentName() {
+    public function getContentName()
+    {
         return $this->contentName;
     }
-
-
-
 
 
 }

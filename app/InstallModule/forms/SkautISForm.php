@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 1.12.12
  * Time: 18:58
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 
 
@@ -24,7 +22,7 @@ class SkautISForm extends UI\Form
 
         $this->addText('skautis_app_id', 'SkautIS app ID:')
             ->addRule(Form::FILLED, 'Zadejte skautIS App ID');
-        $this->addSubmit('submit','Pokračovat')->getControlPrototype()->class('btn');
+        $this->addSubmit('submit', 'Pokračovat')->getControlPrototype()->class('btn');
         $this->onSuccess[] = callback($this, 'formSubmitted');
     }
 
@@ -34,23 +32,21 @@ class SkautISForm extends UI\Form
 
         $testResult = $this->presenter->context->skautIS->checkAppId($values['skautis_app_id']);
         if ($testResult['success'] === true) {
-            $config = \Nette\Utils\Neon::decode(file_get_contents(APP_DIR.'/config/config.neon'));
+            $config = \Nette\Utils\Neon::decode(file_get_contents(APP_DIR . '/config/config.neon'));
             $isDebug = $config['common']['parameters']['debug'];
-            $environment = $isDebug == true ? 'development': 'production';
+            $environment = $isDebug == true ? 'development' : 'production';
             $config["{$environment} < common"]['parameters']['skautis']['app_id'] = $values['skautis_app_id'];
             $configFile = \Nette\Utils\Neon::encode($config, \Nette\Utils\Neon::BLOCK);
-            $result = \file_put_contents(APP_DIR.'/config/config.neon', $configFile);
+            $result = \file_put_contents(APP_DIR . '/config/config.neon', $configFile);
 
             if ($result === false) {
                 $this->presenter->flashMessage('Nepodařilo se informace zapsat do souboru config.neon. Zkontrolujte práva k souboru');
 
-            }
-            else {
+            } else {
                 $this->presenter->flashMessage('Oveření skautIS App ID proběhlo úspěšně.');
                 $this->presenter->redirect(':Install:install:admin');
             }
-        }
-        else {
+        } else {
             $this->presenter->flashMessage("Nepodařilo se ověřit skautIS App ID. Ujistěte se, že zadáváte správné údaje.");
         }
 

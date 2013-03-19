@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 18.2.13
  * Time: 10:16
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 namespace SRS\Form\Evidence;
 
@@ -28,7 +26,7 @@ class EvidenceDetailForm extends \SRS\Form\EntityForm
             ->addRule(FORM::PATTERN, 'Datum zaplacení není ve správném tvaru', \SRS\Helpers::DATE_PATTERN);
 
         $this->addCheckbox('incomeProofPrinted', 'Příjmový doklad vytištěn');
-        $this->addSubmit('submit','Uložit')->getControlPrototype()->class('btn btn-primary pull-right');
+        $this->addSubmit('submit', 'Uložit')->getControlPrototype()->class('btn btn-primary pull-right');
         $this->onSuccess[] = callback($this, 'submitted');
         $this['paymentDate']->getControlPrototype()->class('datepicker');
 

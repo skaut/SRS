@@ -1,78 +1,93 @@
 <div style="clear:both;">
 {if !$user->isLoggedIn()}
-<div class="notice">
-    Pro výběr programů se musíte neprve <a href="{plink :Auth:login, 'backlink' => $backlink}">přihlásit přes skautIS</a>
-</div>
-{else}
-{if !$isAllowedLogInPrograms}
-<div class="notice">
-Zapisování programů není v tuto chvíli povoleno.
-</div>
-{/if}
-
-{if !$userHasPermission}
-<div class="notice">
-Vaše role nemá právo zapisovat si programy
-</div>
-{/if}
-<div id="app" ng-app="calendar" ng-controller="FrontCalendarCtrl">
-<div class="span2">
-    <div id="jsMessages">
-        <div class="ajax-loader">
-            <img src="{$basePath}/img/ajax-loader.gif">
-        </div>
+    <div class="notice">
+        Pro výběr programů se musíte neprve <a href="{plink :Auth:login, 'backlink' => $backlink}">přihlásit přes
+        skautIS</a>
     </div>
-</div>
-
-<div class="span10">
-    <div class="alert">
-        <a style="float:right;" href="#" class="close" data-dismiss="alert">&times;</a>
-        <h3>Instrukce:</h3>
-        <ul>
-            <li>Kliknutím na program zobrazíte více informací o něm a zobrazíte možnost pro přihlášení / odhlášení</li>
-            <li><span style="background-color:green; color: white;">Zelené jsou programy, které máte přihlášené</span></li>
-            <li><span style="background-color:gray; color: white;">Programy, na které nelze přihlásit (např. jsou již plné)</span></li>
-            <li><span style="background-color:blue; color: white;">Programy, na které se lze přihlásit</span></li>
-            <li><span style="background-color:red;  color: white;">Povinné programy vyžadující přihlášení</span></li>
-        </ul>
-    </div>
-    <div class="alert alert-error" ng-show="mandatory_unsigned_programs_count">
-        Máte nepřihlášené povinné programy (v kalendáři červeně). Prosíme, zapište si je.
-    </div>
-    <div id="calendar"></div>
-</div>
-    <div id="blockModal" ng-model="event"  class="modal hide fade">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h3>{{ event.title }}</h3>
+    {else}
+    {if !$isAllowedLogInPrograms}
+        <div class="notice">
+            Zapisování programů není v tuto chvíli povoleno.
         </div>
-        <div class="modal-body" >
+    {/if}
 
-            <ul class="no-margin no-bullets" ng-show="event.block">
-                <li><strong>Lektor: </strong>{{ event.block.lector }}</li>
-                <li><strong>Lokalita: </strong>{{ event.block.location }}</li>
-                <li><strong>Kapacita: </strong>{{ event.attendees_count }}/{{ event.block.capacity }}</li>
-            </ul>
-            <h3>O programu:</h3>
-            <p>{{ event.block.perex }}</p>
-            <div ng-bind-html-unsafe="event.block.description"></div>
-
-            <h3>O lektorovi:</h3>
-            <p>{{ event.block.lector_about }}</p>
-
-
+    {if !$userHasPermission}
+        <div class="notice">
+            Vaše role nemá právo zapisovat si programy
         </div>
-        <div class="modal-footer" ng-model="config">
+    {/if}
+    <div id="app" ng-app="calendar" ng-controller="FrontCalendarCtrl">
+        <div class="span2">
+            <div id="jsMessages">
+                <div class="ajax-loader">
+                    <img src="{$basePath}/img/ajax-loader.gif">
+                </div>
+            </div>
+        </div>
+
+        <div class="span10">
+            <div class="alert">
+                <a style="float:right;" href="#" class="close" data-dismiss="alert">&times;</a>
+
+                <h3>Instrukce:</h3>
+                <ul>
+                    <li>Kliknutím na program zobrazíte více informací o něm a zobrazíte možnost pro přihlášení /
+                        odhlášení
+                    </li>
+                    <li><span
+                            style="background-color:green; color: white;">Zelené jsou programy, které máte přihlášené</span>
+                    </li>
+                    <li><span style="background-color:gray; color: white;">Programy, na které nelze přihlásit (např. jsou již plné)</span>
+                    </li>
+                    <li><span style="background-color:blue; color: white;">Programy, na které se lze přihlásit</span>
+                    </li>
+                    <li><span style="background-color:red;  color: white;">Povinné programy vyžadující přihlášení</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="alert alert-error" ng-show="mandatory_unsigned_programs_count">
+                Máte nepřihlášené povinné programy (v kalendáři červeně). Prosíme, zapište si je.
+            </div>
+            <div id="calendar"></div>
+        </div>
+        <div id="blockModal" ng-model="event" class="modal hide fade">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3>{{ event.title }}</h3>
+            </div>
+            <div class="modal-body">
+
+                <ul class="no-margin no-bullets" ng-show="event.block">
+                    <li><strong>Lektor: </strong>{{ event.block.lector }}</li>
+                    <li><strong>Lokalita: </strong>{{ event.block.location }}</li>
+                    <li><strong>Kapacita: </strong>{{ event.attendees_count }}/{{ event.block.capacity }}</li>
+                </ul>
+                <h3>O programu:</h3>
+
+                <p>{{ event.block.perex }}</p>
+
+                <div ng-bind-html-unsafe="event.block.description"></div>
+
+                <h3>O lektorovi:</h3>
+
+                <p>{{ event.block.lector_about }}</p>
+
+
+            </div>
+            <div class="modal-footer" ng-model="config">
             <span ng-show='config.is_allowed_log_in_programs'>
-            <button ng-hide="event.attends" ng-click="attend(event)" class="btn btn-large btn-success pull-left">Přihlásit na program</button>
-            <button ng-show="event.attends" ng-click="unattend(event)" class="btn btn-large btn-danger pull-left">Odhlásit program</button>
+            <button ng-hide="event.attends" ng-click="attend(event)" class="btn btn-large btn-success pull-left">
+                Přihlásit na program
+            </button>
+            <button ng-show="event.attends" ng-click="unattend(event)" class="btn btn-large btn-danger pull-left">
+                Odhlásit program
+            </button>
             </span>
-            <button class="btn pull-right" style="float:right;" data-dismiss="modal">Zavřít dialog</button>
+                <button class="btn pull-right" style="float:right;" data-dismiss="modal">Zavřít dialog</button>
+            </div>
         </div>
+
+
     </div>
-
-
-
-</div>
 {/if}
 </div>

@@ -1,16 +1,15 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 3.2.13
  * Time: 12:11
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 namespace SRS;
 class ProgramFactory
 {
 
-    public static function createBlockDataForTests(\Doctrine\ORM\EntityManager $em) {
+    public static function createBlockDataForTests(\Doctrine\ORM\EntityManager $em)
+    {
         $lectorRole = $em->getRepository('\SRS\Model\Acl\Role')->findByName('Lektor');
         $lectorRole = $lectorRole[0];
 
@@ -26,12 +25,12 @@ class ProgramFactory
         $lector1->about = 'lorem ipsum dolor sit amet. Hello my Name is Adam And I like food. :)';
         $lector1->displayName = $lector1->firstName . ' ' . $lector1->lastName;
 //        $lector1->birthdate = new \DateTime('now');
-       $lector1->approved = 1;
+        $lector1->approved = 1;
 //        $lector1->skautISUserId = 8888;
 //        $lector1->skautISPersonId = 9999;
 
         $lector2 = \SRS\Factory\UserFactory::createRandom(8887, 9998, array($lectorRole));
-       // $lector2 = new \SRS\Model\User('TestLektorka2');
+        // $lector2 = new \SRS\Model\User('TestLektorka2');
         $lector2->firstName = 'Iva';
         $lector2->lastName = 'Brázdová';
         $lector2->email = 'iva@brazdatest.cz';
@@ -47,15 +46,14 @@ class ProgramFactory
         $em->persist($lector1);
         $em->persist($lector2);
 
-        for ($i = 0; $i < 20; $i++)  {
+        for ($i = 0; $i < 20; $i++) {
             $block{$i} = new \SRS\Model\Program\Block();
             $block{$i}->name = "Blok{$i}";
-            $block{$i}->capacity = $i*10;
-            $block{$i}->duration = $i % 3 == 0 ? 1: $i % 3;
+            $block{$i}->capacity = $i * 10;
+            $block{$i}->duration = $i % 3 == 0 ? 1 : $i % 3;
             if ($i % 3 == 0) {
                 $block{$i}->lector = $lector1;
-            }
-            else if ($i % 5 == 0) {
+            } else if ($i % 5 == 0) {
                 $block{$i}->lector = $lector2;
             }
             $em->persist($block{$i});

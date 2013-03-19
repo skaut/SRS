@@ -11,7 +11,7 @@ Můj profil
 <script src="{$basePath}/js/front/birthdate_picker_cs.js"></script>
 
 <script>
-    $(function() {
+    $(function () {
         var hash = window.location.hash;
         console.log(hash);
         var active = 0;
@@ -21,10 +21,10 @@ Můj profil
         if (hash == '#harmonogram') {
             active = 2;
         }
-        $( "#accordion" ).accordion({
-            collapsible: true,
-            heightStyle: "content",
-            active: active
+        $("#accordion").accordion({
+            collapsible:true,
+            heightStyle:"content",
+            active:active
         });
     });
 
@@ -32,8 +32,8 @@ Můj profil
 </script>
 
 <script>
-    $(function() {
-        $('.importValue').click(function(event) {
+    $(function () {
+        $('.importValue').click(function (event) {
             event.preventDefault();
 
             var skautISValue = $(this).parent().parent().find('.skautIS').text();
@@ -58,124 +58,132 @@ Můj profil
 {block content}
 <h1>Můj profil</h1>
 <div id="accordion">
-<h2>Osobní údaje</h2>
+    <h2>Osobní údaje</h2>
 {form profileForm}
-<ul class="errors" n:if="$form->hasErrors()">
-    <li n:foreach="$form->errors as $error">{$error}</li>
-</ul>
-<table>
-<tr>
-    <th>&nbsp;</th>
-    <th>Lokální data</th>
-    <th>&nbsp;</th>
-    <th>Data ze skautIS</th>
-</tr>
-<tr>
-    <td>{label sex /}</td>
-    <td class="local">{input sex }</td>
-    <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
-    <td class="skautIS">{$skautISPerson->Sex}</td>
-</tr>
-<tr>
-    <td>{label firstName /}</td>
-    <td class="local">{input firstName }</td>
-    <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
-    <td class="skautIS">{$skautISPerson->FirstName}</td>
-</tr>
+    <ul class="errors" n:if="$form->hasErrors()">
+        <li n:foreach="$form->errors as $error">{$error}</li>
+    </ul>
+    <table>
+        <tr>
+            <th>&nbsp;</th>
+            <th>Lokální data</th>
+            <th>&nbsp;</th>
+            <th>Data ze skautIS</th>
+        </tr>
+        <tr>
+            <td>{label sex /}</td>
+            <td class="local">{input sex }</td>
+            <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
+            <td class="skautIS">{$skautISPerson->Sex}</td>
+        </tr>
+        <tr>
+            <td>{label firstName /}</td>
+            <td class="local">{input firstName }</td>
+            <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
+            <td class="skautIS">{$skautISPerson->FirstName}</td>
+        </tr>
 
 
-<tr>
-    <td>{label lastName /}</td>
-    <td class="local">{input lastName }</td>
-    <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
-    <td class="skautIS">{$skautISPerson->LastName}</td>
-</tr>
+        <tr>
+            <td>{label lastName /}</td>
+            <td class="local">{input lastName }</td>
+            <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
+            <td class="skautIS">{$skautISPerson->LastName}</td>
+        </tr>
 
-<tr>
-    <td>{label nickName /}</td>
-    <td class="local">{input nickName }</td>
-    <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
-    <td class="skautIS">{$skautISPerson->NickName}</td>
-</tr>
+        <tr>
+            <td>{label nickName /}</td>
+            <td class="local">{input nickName }</td>
+            <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
+            <td class="skautIS">{$skautISPerson->NickName}</td>
+        </tr>
 
-<tr>
-    <td>{label birthdate /}</td>
-    <td class="local">{input birthdate }</td>
-    <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
-    <td class="skautIS">{$skautISPerson->birthdate}</td>
-</tr>
+        <tr>
+            <td>{label birthdate /}</td>
+            <td class="local">{input birthdate }</td>
+            <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
+            <td class="skautIS">{$skautISPerson->birthdate}</td>
+        </tr>
 
-<tr>
-    <td>{label email /}</td>
-    <td class="local">{input email }</td>
-    <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
-    <td class="skautIS">{$skautISPerson->Email}</td>
-</tr>
+        <tr>
+            <td>{label email /}</td>
+            <td class="local">{input email }</td>
+            <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
+            <td class="skautIS">{$skautISPerson->Email}</td>
+        </tr>
 
-<tr>
-    <td>{label street /}</td>
-    <td class="local">{input street }</td>
-    <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
-    <td class="skautIS">{$skautISPerson->Street}</td>
-</tr>
+        <tr>
+            <td>{label street /}</td>
+            <td class="local">{input street }</td>
+            <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
+            <td class="skautIS">{$skautISPerson->Street}</td>
+        </tr>
 
-<tr>
-    <td>{label city /}</td>
-    <td class="local">{input city }</td>
-    <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
-    <td class="skautIS">{$skautISPerson->City}</td>
-</tr>
+        <tr>
+            <td>{label city /}</td>
+            <td class="local">{input city }</td>
+            <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
+            <td class="skautIS">{$skautISPerson->City}</td>
+        </tr>
 
-<tr>
-    <td>{label postcode /}</td>
-    <td class="local">{input postcode }</td>
-    <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
-    <td class="skautIS">{$skautISPerson->Postcode}</td>
-</tr>
+        <tr>
+            <td>{label postcode /}</td>
+            <td class="local">{input postcode }</td>
+            <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
+            <td class="skautIS">{$skautISPerson->Postcode}</td>
+        </tr>
 
-<tr>
-    <td>{label state /}</td>
-    <td class="local">{input state }</td>
-    <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
-    <td class="skautIS">{$skautISPerson->State}</td>
-</tr>
+        <tr>
+            <td>{label state /}</td>
+            <td class="local">{input state }</td>
+            <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
+            <td class="skautIS">{$skautISPerson->State}</td>
+        </tr>
 
-<tr>
-    <td colspan="3">
-        {input submit}
-    </td>
-</tr>
+        <tr>
+            <td colspan="3">
+                {input submit}
+            </td>
+        </tr>
 
-</table>
+    </table>
 {/form}
-<h2>Doplňující informace</h2>
+    <h2>Doplňující informace</h2>
 {widget aboutForm}
 
 
-<h2>Můj harmonogram semináře</h2>
-    {if $dbuser->programs == null}
+    <h2>Můj harmonogram semináře</h2>
+{if $dbuser->programs == null}
     <p>Nemáte žádné zvolené programy.</p>
-    {/if}
-<table>
-    <tr>
-        <th>Od</th><th>do</th><th>Název programu</th><th>Kde</th><th>Lektor</th>
-    </tr>
+{/if}
+    <table>
+        <tr>
+            <th>Od</th>
+            <th>do</th>
+            <th>Název programu</th>
+            <th>Kde</th>
+            <th>Lektor</th>
+        </tr>
     {foreach $dbuser->programs as $program}
-    <tr>
-        <td>{$program->start|date:"d.m. H:i"}</td>
-        <td>{$program->countEnd($basicBlockDuration)|date:"d.m. H:i"}</td>
-        <td>{$program->block->name}</td>
-        <td>{$program->block->location}</td>
-        <td>{ifset $program->block->lector->displayName}{$program->block->lector->displayName}{/ifset}</td>
-    </tr>
+        <tr>
+            <td>{$program->start|date:"d.m. H:i"}</td>
+            <td>{$program->countEnd($basicBlockDuration)|date:"d.m. H:i"}</td>
+            <td>{$program->block->name}</td>
+            <td>{$program->block->location}</td>
+            <td>{ifset $program->block->lector->displayName}{$program->block->lector->displayName}{/ifset}</td>
+        </tr>
     {/foreach}
-</table>
+    </table>
 
-<h2>Seminář - účast, platba, tisk potvrzení</h2>
-<ul>
-    <li><strong>Účast na semináři: </strong> {if $dbuser->role->name == 'Registrovaný' || $dbuser->role->name == 'guest'}Neúčastníte se{else}{$dbuser->role->name}{/if}</li>
-    <li><strong>Cena semináře: </strong>{$dbuser->role->fee},-</li>
-    <li><strong>Poplatek uhrazen: </strong>{bool $dbuser->paid} {if $dbuser->paid && $dbuser->paymentMethod =='bank'}- <a href="{link printProof!}">Vytisknout potvrzení</a>{/if}</li>
-</ul>
+    <h2>Seminář - účast, platba, tisk potvrzení</h2>
+    <ul>
+        <li><strong>Účast na
+            semináři: </strong> {if $dbuser->role->name == 'Registrovaný' || $dbuser->role->name == 'guest'}Neúčastníte
+            se{else}{$dbuser->role->name}{/if}</li>
+        <li><strong>Cena semináře: </strong>{$dbuser->role->fee},-</li>
+        <li><strong>Poplatek
+            uhrazen: </strong>{bool $dbuser->paid} {if $dbuser->paid && $dbuser->paymentMethod =='bank'}- <a
+                href="{link printProof!}">Vytisknout potvrzení</a>{/if}</li>
+    </ul>
 
 </div>

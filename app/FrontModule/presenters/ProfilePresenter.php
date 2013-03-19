@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 17.2.13
  * Time: 11:30
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 namespace FrontModule;
 
@@ -27,7 +25,8 @@ class ProfilePresenter extends BasePresenter
         }
     }
 
-    public function renderDefault() {
+    public function renderDefault()
+    {
         /**
          * @var \SRS\Model\User
          */
@@ -50,8 +49,8 @@ class ProfilePresenter extends BasePresenter
 
     public function handlePrintProof()
     {
-       $user = $this->userRepo->find($this->context->user->id);
-       $this->context->printer->printAccountProofs(array($user));
+        $user = $this->userRepo->find($this->context->user->id);
+        $this->context->printer->printAccountProofs(array($user));
     }
 
 

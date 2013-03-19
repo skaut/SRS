@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 19.1.13
  * Time: 10:37
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 namespace SRS\Components;
 
@@ -21,7 +19,8 @@ class FaqBox extends \Nette\Application\UI\Control
         $template->render();
     }
 
-    public function createComponentQuestionForm() {
+    public function createComponentQuestionForm()
+    {
         return new \SRS\Form\CMS\QuestionForm();
     }
 

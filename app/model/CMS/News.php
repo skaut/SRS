@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 15.11.12
  * Time: 13:27
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 namespace SRS\Model\CMS;
 use Doctrine\ORM\Mapping as ORM;
@@ -84,13 +82,13 @@ class NewsRepository extends \Doctrine\ORM\EntityRepository
     public $entity = '\SRS\Model\CMS\News';
 
 
-    public function findAllOrderedByDate($limit = null) {
+    public function findAllOrderedByDate($limit = null)
+    {
         $query = "SELECT item FROM {$this->entity} item ORDER BY item.published DESC";
         if ($limit === null) {
 
             $result = $this->_em->createQuery($query)->getResult();
-        }
-        else {
+        } else {
             $result = $this->_em->createQuery($query)->setMaxResults($limit)->getResult();
         }
         return $result;

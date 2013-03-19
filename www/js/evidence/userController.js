@@ -3,7 +3,7 @@
  * User: Michal
  * Date: 18.2.13
  * Time: 20:33
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 
 function userCtrl($scope, $http) {

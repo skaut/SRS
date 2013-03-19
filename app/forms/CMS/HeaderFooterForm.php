@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 1.12.12
  * Time: 18:58
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 
 
@@ -31,7 +29,7 @@ class HeaderFooterForm extends Form
             ->addCondition(\Nette\Application\UI\Form::FILLED)
             ->addRule(\Nette\Application\UI\Form::IMAGE, 'Obrázek musí být JPEG, PNG nebo GIF.');
         $this->addText('footer', 'Patička:')->setDefaultValue($this->dbsettings->get('footer'));
-        $this->addSubmit('submit','Uložit')->getControlPrototype()->class('btn');
+        $this->addSubmit('submit', 'Uložit')->getControlPrototype()->class('btn');
         $this->onSuccess[] = callback($this, 'formSubmitted');
     }
 
@@ -40,12 +38,11 @@ class HeaderFooterForm extends Form
         $values = $this->getValues();
         $image = $values['logo'];
         if ($image->size > 0) {
-            $imagePath = '/files/logo/'. \Nette\Utils\Strings::random(5) . '_' . \Nette\Utils\Strings::webalize($image->getName(), '.');
-            $image->move( WWW_DIR . $imagePath);
+            $imagePath = '/files/logo/' . \Nette\Utils\Strings::random(5) . '_' . \Nette\Utils\Strings::webalize($image->getName(), '.');
+            $image->move(WWW_DIR . $imagePath);
             $this->dbsettings->set('logo', $imagePath);
-        }
-        else {
-          //do nothing
+        } else {
+            //do nothing
         }
 
         $this->dbsettings->set('footer', $values['footer']);

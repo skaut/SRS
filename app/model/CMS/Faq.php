@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 15.11.12
  * Time: 13:27
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 namespace SRS\Model\CMS;
 use Doctrine\ORM\Mapping as ORM;
@@ -106,12 +104,14 @@ class FaqRepository extends \Doctrine\ORM\EntityRepository
 {
     public $entity = '\SRS\Model\CMS\Faq';
 
-    public function findAllOrdered() {
+    public function findAllOrdered()
+    {
         $result = $this->_em->createQuery("SELECT faq FROM {$this->entity} faq ORDER BY faq.position ASC")->getResult();
         return $result;
     }
 
-    public function findAllOrderedPublished() {
+    public function findAllOrderedPublished()
+    {
         $result = $this->_em->createQuery("SELECT faq FROM {$this->entity} faq WHERE faq.public=true ORDER BY faq.position ASC")->getResult();
         return $result;
 

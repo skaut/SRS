@@ -4,7 +4,7 @@
  * User: Michal
  * Date: 2.3.13
  * Time: 22:01
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 
 namespace SRS\Test;

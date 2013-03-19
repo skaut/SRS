@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 30.10.12
  * Time: 21:16
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 namespace BackModule;
 class AclPresenter extends BasePresenter
@@ -21,28 +19,33 @@ class AclPresenter extends BasePresenter
         return new \SRS\Components\UserGrid($this->context->database);
     }
 
-    public function startup() {
+    public function startup()
+    {
         parent::startup();
         $this->checkPermissions('Spravovat');
         $this->roleRepo = $this->context->database->getRepository('\SRS\Model\Acl\Role');
     }
 
-    public function renderUsers() {
+    public function renderUsers()
+    {
 
     }
 
-    public function renderRoles() {
+    public function renderRoles()
+    {
 
         $roles = $this->roleRepo->findAll();
 
         $this->template->roles = $roles;
     }
 
-    public function renderAddRole() {
+    public function renderAddRole()
+    {
 
     }
 
-    public function renderEditRole($id) {
+    public function renderEditRole($id)
+    {
 
         if ($id == null) {
             $this->redirect('roles');
@@ -69,7 +72,8 @@ class AclPresenter extends BasePresenter
         $this->template->role = $role;
     }
 
-    public function handleDeleteRole($id) {
+    public function handleDeleteRole($id)
+    {
         $role = $this->roleRepo->find($id);
 
         if ($role == null) {
@@ -81,7 +85,7 @@ class AclPresenter extends BasePresenter
             $this->flashMessage('Systémovou roli nelze smazat', 'error');
             $this->redirect('this');
         }
-        $roleRegistered = $this->roleRepo->findBy(array('name'=>'Registrovaný'));
+        $roleRegistered = $this->roleRepo->findBy(array('name' => 'Registrovaný'));
         foreach ($role->users as $user) {
             $user->role = $roleRegistered;
         }
@@ -91,14 +95,14 @@ class AclPresenter extends BasePresenter
         $this->redirect('this');
     }
 
-    public function handleLoginAs($id) {
+    public function handleLoginAs($id)
+    {
         $role = $this->roleRepo->find($id);
 
         if ($role == null) {
             $this->flashMessage('Tato role neexistuje', 'error');
             $this->redirect('this');
-        }
-        else {
+        } else {
             $user = $this->user;
 
             $user->identity->setRoles(array($role->name));
@@ -109,14 +113,14 @@ class AclPresenter extends BasePresenter
     }
 
 
-
     protected function createComponentNewRoleForm($name)
     {
         $form = new \SRS\Form\NewRoleForm($parent = NULL, $name = NULL, $this->roleRepo->findAll());
         return $form;
     }
 
-    protected function createComponentRoleForm($name) {
+    protected function createComponentRoleForm($name)
+    {
         $form = new \SRS\Form\RoleForm($parent = NULL, $name = NULL);
         return $form;
     }

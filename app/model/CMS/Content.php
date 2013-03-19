@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 15.11.12
  * Time: 13:27
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 namespace SRS\Model\CMS;
 use Doctrine\ORM\Mapping as ORM;
@@ -100,20 +98,24 @@ abstract class Content extends \SRS\Model\BaseEntity implements IContent
     }
 
 
-    public function getContentType() {
+    public function getContentType()
+    {
         return $this->contentType;
     }
 
 
-    public function setEntityManager($em) {
+    public function setEntityManager($em)
+    {
         $this->em = $em;
     }
 
-    public function getArea() {
+    public function getArea()
+    {
         return $this->area;
     }
 
-    public function setArea($areaKey) {
+    public function setArea($areaKey)
+    {
         $this->area = $areaKey;
     }
 
@@ -121,11 +123,13 @@ abstract class Content extends \SRS\Model\BaseEntity implements IContent
     /**
      * @return string
      */
-    public function getFormIdentificator() {
+    public function getFormIdentificator()
+    {
         return "{$this->contentType}_{$this->id}";
     }
 
-    public function addFormItems(\Nette\Application\UI\Form $form) {
+    public function addFormItems(\Nette\Application\UI\Form $form)
+    {
         $formContainer = $form->addContainer($this->getFormIdentificator());
         $formContainer->addHidden('id')->setDefaultValue($this->id)->getControlPrototype()->class('id');
         $formContainer->addHidden('position')->getControlPrototype()->class('order');
@@ -133,13 +137,15 @@ abstract class Content extends \SRS\Model\BaseEntity implements IContent
         return $form;
     }
 
-    public function setValuesFromPageForm(\Nette\Application\UI\Form $form) {
+    public function setValuesFromPageForm(\Nette\Application\UI\Form $form)
+    {
         $values = $form->getValues();
         $values = $values[$this->getFormIdentificator()];
         $this->position = $values['position'];
     }
 
-    public function getContentName() {
+    public function getContentName()
+    {
         return $this->contentName;
     }
 

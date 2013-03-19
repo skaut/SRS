@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 1.12.12
  * Time: 18:58
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 
 
@@ -30,10 +28,10 @@ class NewPageForm extends UI\Form
         $this->addText('name', 'Jméno stránky:')
             ->addRule(Form::FILLED, 'Zadejte jméno')
             ->getControlPrototype()->class('name');
-        $this->addText('slug','Slug:')
+        $this->addText('slug', 'Slug:')
             ->addRule(Form::FILLED, 'Zadejte slug')
             ->getControlPrototype()->class('slug');
-        $this->addSubmit('submit','Vytvořit Stránku')->getControlPrototype()->class('btn');
+        $this->addSubmit('submit', 'Vytvořit Stránku')->getControlPrototype()->class('btn');
 
         $this->onSuccess[] = callback($this, 'formSubmitted');
     }
@@ -43,14 +41,14 @@ class NewPageForm extends UI\Form
         $values = $this->getValues();
 
         $page = new \SRS\Model\CMS\Page($values['name'], $values['slug']);
-        $pageRepo =  $this->presenter->context->database->getRepository('\SRS\Model\CMS\Page');
+        $pageRepo = $this->presenter->context->database->getRepository('\SRS\Model\CMS\Page');
 
 
         $page->position = $pageRepo->getCount();
         $slugExists = true;
-        $i=0;
+        $i = 0;
         $newSlug = $page->slug;
-        while($slugExists) {
+        while ($slugExists) {
             $slugExists = $pageRepo->findBySlug($newSlug);
             $i++;
             if ($slugExists) $newSlug = $page->slug . $i;

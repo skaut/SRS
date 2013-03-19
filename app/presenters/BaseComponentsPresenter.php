@@ -13,10 +13,11 @@ abstract class BaseComponentsPresenter extends \Nette\Application\UI\Presenter
 
     }
 
-    public function booleanMacro(\Nette\Latte\MacroNode $node, \Nette\Latte\PhpWriter $writer) {
+    public function booleanMacro(\Nette\Latte\MacroNode $node, \Nette\Latte\PhpWriter $writer)
+    {
         $args = ($node->tokenizer->fetchAll());
         $array_args = explode(" ", $args);
-        return $writer->write('echo \SRS\Helpers::renderBoolean('.$array_args[0].')');
+        return $writer->write('echo \SRS\Helpers::renderBoolean(' . $array_args[0] . ')');
     }
 
     /**
@@ -31,7 +32,7 @@ abstract class BaseComponentsPresenter extends \Nette\Application\UI\Presenter
 
 
         // kompilátoru seznam předáme a určíme adresář, kam má kompilovat
-        $filter =  new \WebLoader\Filter\CssUrlsFilter($this->template->basePath);
+        $filter = new \WebLoader\Filter\CssUrlsFilter($this->template->basePath);
         $compiler = \WebLoader\Compiler::createCssCompiler($files, WWW_DIR . '/webtemp');
 
         $compiler->setJoinFiles(FALSE);
@@ -57,12 +58,13 @@ abstract class BaseComponentsPresenter extends \Nette\Application\UI\Presenter
         return new \WebLoader\Nette\JavaScriptLoader($compiler, $this->template->basePath . '/webtemp');
     }
 
-    public function getDBParams() {
-        $config = \Nette\Utils\Neon::decode(file_get_contents(APP_DIR.'/config/config.neon'));
+    public function getDBParams()
+    {
+        $config = \Nette\Utils\Neon::decode(file_get_contents(APP_DIR . '/config/config.neon'));
         $isDebug = $config['common']['parameters']['debug'];
-        $environment = $isDebug == true ? 'development': 'production';
+        $environment = $isDebug == true ? 'development' : 'production';
         return $config["{$environment} < common"]['parameters']['database'];
     }
-    
+
 
 }

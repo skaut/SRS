@@ -7,8 +7,8 @@ error_reporting(0);
 class InstallPresenter extends \SRS\BaseComponentsPresenter
 {
 
-	public function renderDefault()
-	{
+    public function renderDefault()
+    {
         // pri testovani muze nastat situace, kdy jsme prihlaseni byt v DB nejsme, to by v ostrem provozu nemelo nastat
         if ($this->user->isLoggedIn()) {
             $this->user->logout(true);
@@ -20,9 +20,10 @@ class InstallPresenter extends \SRS\BaseComponentsPresenter
             $this->redirect(':Install:install:schema');
         }
 
-	}
+    }
 
-    public function renderSchema() {
+    public function renderSchema()
+    {
         if (!$this->context->parameters['database']['installed']) {
             $this->flashMessage('nejprve nastavte připojení k databázi');
             $this->redirect(':Install:install:default');
@@ -37,16 +38,14 @@ class InstallPresenter extends \SRS\BaseComponentsPresenter
         }
 
 
-
     }
 
-    public function handleImportDB() {
+    public function handleImportDB()
+    {
         if (!$this->context->parameters['database']['installed']) {
             $this->flashMessage('nejprve nastavte připojení k databázi');
             $this->redirect(':Install:install:default');
         }
-
-
 
 
         $success = true;
@@ -58,12 +57,10 @@ class InstallPresenter extends \SRS\BaseComponentsPresenter
             $this->context->console->application->run($input, $output);
 
 
-
-
         } catch (\Doctrine\ORM\Tools\ToolsException $e) {
             $this->flashMessage('Nahrání schéma databáze se nepodařilo');
             $this->flashMessage('Je pravděpodobné, že Databáze již existuje');
-            $this->flashMessage($e->getCode(). ': ' . $e->getMessage());
+            $this->flashMessage($e->getCode() . ': ' . $e->getMessage());
             $success = false;
         }
 
@@ -90,18 +87,17 @@ class InstallPresenter extends \SRS\BaseComponentsPresenter
             $success = false;
             $this->template->error = $e->getCode();
             $this->flashMessage('Nahrání inicializačních dat se nepodařilo');
-            $this->flashMessage($e->getCode(). ': ' . $e->getMessage());
+            $this->flashMessage($e->getCode() . ': ' . $e->getMessage());
         }
 
 
-
         if ($success == true) {
-            $config = \Nette\Utils\Neon::decode(file_get_contents(APP_DIR.'/config/config.neon'));
+            $config = \Nette\Utils\Neon::decode(file_get_contents(APP_DIR . '/config/config.neon'));
             $isDebug = $config['common']['parameters']['debug'];
-            $environment = $isDebug == true ? 'development': 'production';
+            $environment = $isDebug == true ? 'development' : 'production';
             $config["{$environment} < common"]['parameters']['database']['schema_imported'] = true;
             $configFile = \Nette\Utils\Neon::encode($config, \Nette\Utils\Neon::BLOCK);
-            \file_put_contents(APP_DIR.'/config/config.neon', $configFile);
+            \file_put_contents(APP_DIR . '/config/config.neon', $configFile);
             $this->flashMessage('Import schématu databáze a inicializačních dat proběhl úspěšně');
             $this->redirect(':Install:install:skautIS');
         }
@@ -114,15 +110,15 @@ class InstallPresenter extends \SRS\BaseComponentsPresenter
             $this->redirect(':Install:install:default');
         }
         $dbsettings = $this->context->database->getRepository('\SRS\Model\Settings');
-        if ($this->context->parameters['skautis']['app_id'] != null)
-        {
+        if ($this->context->parameters['skautis']['app_id'] != null) {
             $this->flashMessage('Skaut IS byl již nastaven');
             $this->redirect(':Install:install:admin');
         }
 
     }
 
-    public function renderAdmin() {
+    public function renderAdmin()
+    {
         if (!$this->context->parameters['database']['installed']) {
             $this->redirect(':Install:install:default');
         }
@@ -155,22 +151,25 @@ class InstallPresenter extends \SRS\BaseComponentsPresenter
         $this->template->backlink = $this->backlink();
     }
 
-    public function renderFinish() {
+    public function renderFinish()
+    {
         $this->template->installedEarlier = $this->getParameter('before');
     }
 
 
-    public function IsDBConnection($dbname, $host, $user, $password) {
+    public function IsDBConnection($dbname, $host, $user, $password)
+    {
         try {
             $dsn = "mysql:host={$host};dbname={$dbname}";
             $dbh = new \PDO($dsn, $user, $password);
-        } catch(\PDOException $e) {
+        } catch (\PDOException $e) {
             return false;
         }
         return true;
     }
 
-    protected function createComponentDatabaseForm() {
+    protected function createComponentDatabaseForm()
+    {
         return new \SRS\Form\Install\DatabaseForm();
     }
 

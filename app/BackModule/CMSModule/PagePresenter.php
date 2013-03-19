@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 30.10.12
  * Time: 21:16
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 namespace BackModule\CMSModule;
 use Nette\Application\UI\Form;
@@ -112,7 +110,7 @@ class PagePresenter extends \BackModule\BasePresenter
 
         }
         if ($area) {
-        $form["submit_to_{$area}"]->getControlPrototype()->class('btn btn-inverse');
+            $form["submit_to_{$area}"]->getControlPrototype()->class('btn btn-inverse');
         }
 
 
@@ -131,10 +129,9 @@ class PagePresenter extends \BackModule\BasePresenter
         $page = $pageRepo->find($pageId);
         $pageWithSameSlug = $pageRepo->findOneBySlug($values['slug']);
 
-        if ($pageWithSameSlug!= null && $pageWithSameSlug->id != $values['id']) {
+        if ($pageWithSameSlug != null && $pageWithSameSlug->id != $values['id']) {
             $this->flashMessage('Stránka s takovýmto slugem již existuje. Zadejte jiný slug', 'error');
-        }
-        else {
+        } else {
             $page->setProperties($values, $this->context->database);
 
             foreach ($page->getContents($area) as $content) {

@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 14.11.12
  * Time: 20:47
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 
 namespace SRS\Command;
@@ -26,7 +24,8 @@ class TestDataUsersCommand extends Command
     /**
      * @param \Doctrine\ORM\EntityManager
      */
-    public function __construct(\Doctrine\ORM\EntityManager $em) {
+    public function __construct(\Doctrine\ORM\EntityManager $em)
+    {
         parent::__construct();
         $this->em = $em;
     }
@@ -46,8 +45,8 @@ class TestDataUsersCommand extends Command
         $minUserId = $result[1] ? $result[1] : -1;
         $minPersonId = $result[2] ? $result[2] : -1;
         $roles = $this->em->getRepository('\SRS\Model\Acl\Role')->findAll();
-      //  $roles->toArray();
-        for($i = 0; $i < 20; $i++) {
+        //  $roles->toArray();
+        for ($i = 0; $i < 20; $i++) {
             $user = UserFactory::createRandom(--$minUserId, --$minPersonId, $roles);
             $this->em->persist($user);
         }

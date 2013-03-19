@@ -2,25 +2,26 @@
 
 namespace BackModule;
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 5.2.13
  * Time: 16:36
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 class ConfigurationPresenter extends BasePresenter
 {
 
-    public function startup() {
+    public function startup()
+    {
         parent::startup();
 
     }
 
-    public function renderDefault() {
+    public function renderDefault()
+    {
 
     }
 
-    public function renderSkautIS() {
+    public function renderSkautIS()
+    {
         $skautISSeminarID = $this->dbsettings->get('skautis_seminar_id');
         $skautISSeminarName = $this->dbsettings->get('skautis_seminar_name');
 
@@ -43,15 +44,15 @@ class ConfigurationPresenter extends BasePresenter
         try {
             $count = $this->context->skautIS->syncParticipants($this->user->identity->token, $this->dbsettings->get('skautis_seminar_id'), $usersToSync);
             $this->flashMessage("Do skautIS bylo vloženo {$count} účastníků");
-        } catch (\SoapFault $e)
-        {
+        } catch (\SoapFault $e) {
             $this->flashMessage('Synchronizace se nezdařila. Je pravděpodobné, že pro provedení synchronizace nemáte patřičná práva. Požádejte o synchronizaci uživatele, který akci propojil se skautIS', 'error forever');
         }
 
         $this->redirect('this');
     }
 
-    public function handleClearCache() {
+    public function handleClearCache()
+    {
         $options = array('command' => 'srs:cc');
         $output = new \Symfony\Component\Console\Output\NullOutput();
         $input = new \Symfony\Component\Console\Input\ArrayInput($options);
@@ -63,7 +64,8 @@ class ConfigurationPresenter extends BasePresenter
     }
 
 
-    protected function createComponentSettingsForm() {
+    protected function createComponentSettingsForm()
+    {
         return new \SRS\Form\Configuration\SettingsForm(null, null, $this->dbsettings, $this->context->parameters);
     }
 
@@ -71,14 +73,12 @@ class ConfigurationPresenter extends BasePresenter
     {
         try {
             $events = $this->context->skautIS->getEvents($this->user->identity->token);
-        } catch (\SoapFault $e)
-        {
-           $events = array();
+        } catch (\SoapFault $e) {
+            $events = array();
         }
 
         return new \SRS\Form\Configuration\SkautISEventForm(null, null, $events);
     }
-
 
 
 }

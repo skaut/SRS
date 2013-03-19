@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 1.12.12
  * Time: 18:58
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 
 
@@ -42,7 +40,6 @@ class BlockForm extends \SRS\Form\EntityForm
         $lectors = $this->em->getRepository('\SRS\Model\Acl\Role')->findApprovedUsersInRole('lektor');
 
 
-
         $this->addHidden('id');
         $this->addText('name', 'Název:')
             ->addRule(Form::FILLED, 'Zadejte název');
@@ -60,12 +57,11 @@ class BlockForm extends \SRS\Form\EntityForm
         $this->addSelect('lector', 'Lektor:');
         if ($this->user->isAllowed('Program', 'Spravovat Všechny Programy')) {
             $this['lector']->setItems(\SRS\Form\EntityForm::getFormChoices($lectors, 'id', 'displayName'))->setPrompt('-- vyberte --');
-        }
-        else {
+        } else {
             $this['lector']->setItems(array($this->user->id => $this->user->identity->object->lastName));
         }
-        $this->addSubmit('submit','Uložit')->getControlPrototype()->class('btn');
-        $this->addSubmit('submit_continue','Uložit a pokračovat v úpravách')->getControlPrototype()->class('btn');
+        $this->addSubmit('submit', 'Uložit')->getControlPrototype()->class('btn');
+        $this->addSubmit('submit_continue', 'Uložit a pokračovat v úpravách')->getControlPrototype()->class('btn');
         $this->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
         $this->onSuccess[] = callback($this, 'formSubmitted');
 
@@ -78,8 +74,7 @@ class BlockForm extends \SRS\Form\EntityForm
 
         if (!$exists) {
             $block = new \SRS\Model\Program\Block();
-        }
-        else {
+        } else {
             $block = $this->presenter->context->database->getRepository('\SRS\model\Program\Block')->find($values['id']);
         }
 
@@ -100,13 +95,14 @@ class BlockForm extends \SRS\Form\EntityForm
 
     }
 
-    protected function prepareDurationChoices() {
+    protected function prepareDurationChoices()
+    {
         $basicDuration = $this->dbsettings->get('basic_block_duration');
         $durationChoices = array();
 
 
         for ($i = 1; $i < 10; $i++) {
-            $durationChoices[$i] = $i*$basicDuration . ' minut';
+            $durationChoices[$i] = $i * $basicDuration . ' minut';
         }
         return $durationChoices;
     }

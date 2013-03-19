@@ -10,22 +10,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
-	<meta name="description" content="">
-	<meta name="robots" content="{$robots}" n:ifset="$robots">
-	<title>{block title|striptags}{/block} | {$title}</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta name="robots" content="{$robots}" n:ifset="$robots">
+    <title>{block title|striptags}{/block} | {$title}</title>
     <script>
         var basePath = {$basePath};
     </script>
 
-    {widget cssLoader 'front/design.css', 'front/layout.css', 'jquery-ui/jquery-ui.css'}
-    {widget jsLoader 'jquery-1.8.2.min.js', 'netteForms.js', 'jquery-ui.js'}
+{widget cssLoader 'front/design.css', 'front/layout.css', 'jquery-ui/jquery-ui.css'}
+{widget jsLoader 'jquery-1.8.2.min.js', 'netteForms.js', 'jquery-ui.js'}
 
     <link rel="shortcut icon" href="{$basePath}/favicon.ico">
-	{block head}{/block}
+{block head}{/block}
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('.message').delay(5000).fadeOut();
         });
     </script>
@@ -33,71 +33,70 @@
 </head>
 
 <body>
-	<script> document.body.className+=' js' </script>
-    <div n:foreach="$flashes as $flash" class="message {$flash->type}">
-        {$flash->message}
-    </div>
+<script> document.body.className += ' js' </script>
+<div n:foreach="$flashes as $flash" class="message {$flash->type}">
+{$flash->message}
+</div>
 
-    <div id="container" class="container-fluid">
-        <div class="row-fluid" id="header">
-            <div class="span12">
-                <div class="clearfix">
-                    <div id="logo">
-                        {block logo}
-                        <a href="{plink :Front:page:default}"><img src="{$basePath}{$logo}" alt="logo"></a>
-                        {/block}
-                    </div>
-                    <div id="top-menu">
-                    {block top_menu}
-
-                        <ul>
-                            {if !$user->isLoggedIn()}
-                            <li><span class="ui-icon ui-icon-locked" style="display:block; float: left;"></span><a href="{plink :Auth:login, 'backlink' => $backlink}">Přihlásit</a></li>
-                            {else}
-                            <li>Přihlášen jako: <strong><a href="{plink :Front:Profile:default}">{$user->identity->object->username}</a></strong> (v roli {$user->roles[0]})</li>
-                            <li><span class="ui-icon ui-icon-unlocked" style="display:block; float: left;"></span><a href="{plink :Auth:logout, 'backlink' => $backlink}">Odhlásit</a></li>
-                            {/if}
-                            {if $user->isAllowed('Administrace', 'Přístup')}
-                            <li><a href="{$basePath}/admin">Administrace</a></li>
-                            {/if}
-                        </ul>
-                    {/block}
-                    </div>
+<div id="container" class="container-fluid">
+    <div class="row-fluid" id="header">
+        <div class="span12">
+            <div class="clearfix">
+                <div id="logo">
+                {block logo}
+                    <a href="{plink :Front:page:default}"><img src="{$basePath}{$logo}" alt="logo"></a>
+                {/block}
                 </div>
+                <div id="top-menu">
+                {block top_menu}
 
-                <div id="main-menu">
-                {block main_menu}
-                  {widget menu}
+                    <ul>
+                        {if !$user->isLoggedIn()}
+                            <li><span class="ui-icon ui-icon-locked" style="display:block; float: left;"></span><a
+                                    href="{plink :Auth:login, 'backlink' => $backlink}">Přihlásit</a></li>
+                            {else}
+                            <li>Přihlášen jako: <strong><a
+                                    href="{plink :Front:Profile:default}">{$user->identity->object->username}</a></strong>
+                                (v roli {$user->roles[0]})
+                            </li>
+                            <li><span class="ui-icon ui-icon-unlocked" style="display:block; float: left;"></span><a
+                                    href="{plink :Auth:logout, 'backlink' => $backlink}">Odhlásit</a></li>
+                        {/if}
+                        {if $user->isAllowed('Administrace', 'Přístup')}
+                            <li><a href="{$basePath}/admin">Administrace</a></li>
+                        {/if}
+                    </ul>
                 {/block}
                 </div>
             </div>
-        </div>
 
-
-
-        <div id="main" class="row-fluid">
-        {block main}
-            <div id="content" class="{block content_class}span9{/block}">
-                {include #content}
-            </div>
-            {block sidebar}
-            {/block}
-        {/block}
-        </div>
-
-        <div id="footer" class="row-fluid">
-            <div class="span12">
-            {block footer}
-                <p>{!$footer}</p>
-            {/block}
+            <div id="main-menu">
+            {block main_menu}
+                  {widget menu}
+                {/block}
             </div>
         </div>
     </div>
 
 
+    <div id="main" class="row-fluid">
+    {block main}
+        <div id="content" class="{block content_class}span9{/block}">
+        {include #content}
+        </div>
+        {block sidebar}
+        {/block}
+    {/block}
+    </div>
 
-
-
+    <div id="footer" class="row-fluid">
+        <div class="span12">
+        {block footer}
+            <p>{!$footer}</p>
+        {/block}
+        </div>
+    </div>
+</div>
 
 
 </body>

@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 26.1.13
  * Time: 21:07
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 
 namespace BackModule\ProgramModule;
@@ -29,7 +27,8 @@ class ApiPresenter extends \BackModule\BasePresenter
 
     protected $basicBlockDuration;
 
-    public function startup() {
+    public function startup()
+    {
         parent::startup();
 
         $this->blockRepo = $this->context->database->getRepository('\SRS\Model\Program\Block');
@@ -37,28 +36,19 @@ class ApiPresenter extends \BackModule\BasePresenter
         $this->basicBlockDuration = $this->dbsettings->get('basic_block_duration');
     }
 
-//    public function actionGetBlocks() {
-//        $blocks = $this->blockRepo->findAll();
-//        $serializer = \JMS\Serializer\SerializerBuilder::create()->build();
-//        $json = $serializer->serialize($blocks, 'json');
-//        $response = new \Nette\Application\Responses\TextResponse($json);
-//        $this->sendResponse($response);
-//        $this->terminate();
-//    }
-
     /**
      * @param bool $userAttending chceme Informace o tom, zda se prihlaseny uzivatel ucastni programu?
      * @param bool $onlyAssigned Vrátit jen programy, které mají přiřazený program.blok
      * @throws \Nette\Security\AuthenticationException
      */
-    public function actionGetPrograms($userAttending = false, $onlyAssigned = false) {
+    public function actionGetPrograms($userAttending = false, $onlyAssigned = false)
+    {
         if ($userAttending == true) {
             if (!$this->context->user->isLoggedIn()) {
                 throw new \Nette\Security\AuthenticationException('Uživatel musí být přihlášen');
             }
             $user = $this->context->database->getRepository('\SRS\Model\User')->find($this->context->user->id);
-        }
-        else {
+        } else {
             $user = null;
         }
 
@@ -71,22 +61,23 @@ class ApiPresenter extends \BackModule\BasePresenter
     }
 
 
-    public function actionSetProgram($data) {
+    public function actionSetProgram($data)
+    {
         $program = $this->programRepo->saveFromJson($data, $this->basicBlockDuration);
         $response = new \Nette\Application\Responses\JsonResponse(array('id' => $program->id));
         $this->sendResponse($response);
         $this->terminate();
     }
 
-    public function actionDeleteProgram($id) {
+    public function actionDeleteProgram($id)
+    {
 
         $program = $this->programRepo->find($id);
         if ($program != null) {
             $this->context->database->remove($program);
             $this->context->database->flush();
             $response = new \Nette\Application\Responses\JsonResponse(array('status' => 'ok'));
-        }
-        else {
+        } else {
             $response = new \Nette\Application\Responses\JsonResponse(array('status' => 'error'));
         }
         $this->sendResponse($response);
@@ -95,26 +86,26 @@ class ApiPresenter extends \BackModule\BasePresenter
     }
 
 
-    public function actionGetBlocks() {
+    public function actionGetBlocks()
+    {
         $blocks = $this->context->database->getRepository('\SRS\Model\Program\Block')->findAll();
         $result = array();
 
         foreach ($blocks as $block) {
             $result[$block->id] = array('id' => $block->id,
-                                        'name' => $block->name,
-                                        'tools' => $block->tools,
-                                        'location' => $block->location != null ? $block->location : 'Nezadána',
-                                        'capacity' => $block->capacity,
-                                        'duration' => $block->duration,
-                                        'perex' => $block->perex,
-                                        'description' => $block->description,
-                                        'program_count' => $block->programs->count()
+                'name' => $block->name,
+                'tools' => $block->tools,
+                'location' => $block->location != null ? $block->location : 'Nezadána',
+                'capacity' => $block->capacity,
+                'duration' => $block->duration,
+                'perex' => $block->perex,
+                'description' => $block->description,
+                'program_count' => $block->programs->count()
             );
             if (isset($block->lector) && $block->lector != null) {
                 $result[$block->id]['lector'] = "{$block->lector->displayName}";
                 $result[$block->id]['lector_about'] = $block->lector->about;
-            }
-            else {
+            } else {
                 $result[$block->id]['lector'] = 'Nezadán';
                 $result[$block->id]['lector_about'] = '';
             }
@@ -129,27 +120,26 @@ class ApiPresenter extends \BackModule\BasePresenter
     {
         $calConfig = array();
         $fromDate = $this->dbsettings->get('seminar_from_date');
-        $seminarStartDay = $dw = date( "w", strtotime($fromDate));
+        $seminarStartDay = $dw = date("w", strtotime($fromDate));
         $toDate = $this->dbsettings->get('seminar_to_date');
 
         $datediff = strtotime($toDate) - strtotime($fromDate);
-        $seminarDuration = (int) floor($datediff/(60*60*24))+1;
+        $seminarDuration = (int)floor($datediff / (60 * 60 * 24)) + 1;
         //\Nette\Diagnostics\Debugger::dump($seminarStartDay);
         $datePieces = explode('-', $fromDate);
         $calConfig['seminar_duration'] = $seminarDuration;
         $calConfig['seminar_start_day'] = $seminarStartDay;
         $calConfig['year'] = $datePieces[0];
-        $calConfig['month'] = $datePieces[1]-1; //fullcalendar je zerobased
+        $calConfig['month'] = $datePieces[1] - 1; //fullcalendar je zerobased
         $calConfig['date'] = $datePieces[2];
         $calConfig['basic_block_duration'] = $this->dbsettings->get('basic_block_duration');
-        if ((bool) $this->dbsettings->get('is_allowed_modify_schedule') && $this->user->isAllowed($this->resource, Permission::MANAGE_HARMONOGRAM)) {
+        if ((bool)$this->dbsettings->get('is_allowed_modify_schedule') && $this->user->isAllowed($this->resource, Permission::MANAGE_HARMONOGRAM)) {
             $calConfig['is_allowed_modify_schedule'] = true;
-        }
-        else {
+        } else {
             $calConfig['is_allowed_modify_schedule'] = false;
         }
 
-        $calConfig['is_allowed_log_in_programs'] = (bool) $this->dbsettings->get('is_allowed_log_in_programs') && $this->user->isAllowed($this->resource, 'Vybírat si programy');
+        $calConfig['is_allowed_log_in_programs'] = (bool)$this->dbsettings->get('is_allowed_log_in_programs') && $this->user->isAllowed($this->resource, 'Vybírat si programy');
 
         $response = new \Nette\Application\Responses\JsonResponse($calConfig);
         $this->sendResponse($response);
@@ -160,39 +150,34 @@ class ApiPresenter extends \BackModule\BasePresenter
     /**
      * @param integer $id programID
      */
-    public function actionAttend($id) {
+    public function actionAttend($id)
+    {
         if (!$this->context->user->isLoggedIn()) { //uzivatel neni prihlasen
             $message = array('status' => 'error', 'message' => 'Uživatel není přihlášen');
-        }
-        else { //uzivatel je prihlasen
+        } else { //uzivatel je prihlasen
             $program = $this->programRepo->find($id);
             if ($program == null) { //ID programu neexistuje
                 $message = array('status' => 'error', 'message' => 'Program s tímto id neexistuje');
-            }
-            else { // ID programu existuje
+            } else { // ID programu existuje
 
                 if ($program->block == null) { // program nema prirazeny blok
-                    $message = array('status' => 'error', 'message' => 'Na blok, který nemá přiřazen žádný program se nelze přihlásit.' );
-                }
-                else { // program ma prirazeny blok
+                    $message = array('status' => 'error', 'message' => 'Na blok, který nemá přiřazen žádný program se nelze přihlásit.');
+                } else { // program ma prirazeny blok
                     if ($program->block->capacity > $program->attendees->count()) { //program ma volne misto
                         $userRepo = $this->context->database->getRepository('\SRS\Model\User');
                         $user = $userRepo->find($this->context->user->id);
                         if ($user->hasOtherProgram($program, $this->basicBlockDuration)) {
-                            $message = array('status' => 'error', 'message' => 'V tuto dobu máte přihlášený již jiný program.' );
-                        }
-                        else {
+                            $message = array('status' => 'error', 'message' => 'V tuto dobu máte přihlášený již jiný program.');
+                        } else {
                             if (!$program->attendees->contains($user)) { // uzivatle na program jeste neni prihlasen
                                 $program->attendees->add($user);
                                 $this->context->database->flush();
-                                $message = array('status' => 'success', 'message' => 'Program úspěšně přihlášen.' );
-                            }
-                            else { // uzivatel uz je na program prihlasen
+                                $message = array('status' => 'success', 'message' => 'Program úspěšně přihlášen.');
+                            } else { // uzivatel uz je na program prihlasen
                                 $message = array('status' => 'error', 'message' => 'Uživatel je již přihlášen');
                             }
                         }
-                    }
-                    else { // program je plny
+                    } else { // program je plny
                         $message = array('status' => 'error', 'message' => 'Kapacita programu je již plná');
                     }
                 }
@@ -208,23 +193,21 @@ class ApiPresenter extends \BackModule\BasePresenter
     /**
      * @param integer $id programID
      */
-    public function actionUnattend($id) {
+    public function actionUnattend($id)
+    {
         if (!$this->context->user->isLoggedIn()) {
             $message = array('status' => 'error', 'message' => 'Uživatel není přihlášen');
-        }
-        else {
+        } else {
             $program = $this->programRepo->find($id);
             if ($program == null) {
                 $message = array('status' => 'error', 'message' => 'Program s tímto id neexistuje');
-            }
-            else {
+            } else {
                 $user = $this->context->database->getRepository('\SRS\Model\User')->find($this->context->user->id);
                 if ($program->attendees->contains($user)) {
                     $program->attendees->removeElement($user);
                     $this->context->database->flush();
-                    $message = array('status' => 'success', 'message' => 'Program úspěšně odhlášen.' );
-                }
-                else {
+                    $message = array('status' => 'success', 'message' => 'Program úspěšně odhlášen.');
+                } else {
                     $message = array('status' => 'error', 'message' => 'Program vůbec nebyl přihlášen');
                 }
             }

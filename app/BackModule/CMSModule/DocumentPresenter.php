@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 30.10.12
  * Time: 21:16
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 namespace BackModule\CMSModule;
 use Nette\Application\UI\Form;
@@ -16,18 +14,21 @@ class DocumentPresenter extends \BackModule\BasePresenter
     const DOC_REPO = '\SRS\Model\CMS\Documents\Document';
     const TAG_REPO = '\SRS\Model\CMS\Documents\Tag';
 
-    public function startup() {
+    public function startup()
+    {
         parent::startup();
         $this->checkPermissions(\SRS\Model\Acl\Permission::MANAGE);
     }
 
 
-    public function renderDocuments() {
+    public function renderDocuments()
+    {
         $documents = $this->context->database->getRepository(self::DOC_REPO)->findAll();
         $this->template->documents = $documents;
     }
 
-    public function renderDocument($docId = null) {
+    public function renderDocument($docId = null)
+    {
         if (count($this->context->database->getRepository(self::TAG_REPO)->findAll()) == 0) {
             $this->flashMessage('Nejdříve vytvořte štítek');
             $this->redirect('tags');
@@ -39,14 +40,13 @@ class DocumentPresenter extends \BackModule\BasePresenter
             $form->bindEntity($doc);
 
             $this->template->document = $doc;
-        }
-
-        else {
+        } else {
             //do nothing
         }
     }
 
-    public function handleDeleteDocument($docId) {
+    public function handleDeleteDocument($docId)
+    {
         $doc = $this->context->database->getRepository(self::DOC_REPO)->find($docId);
         if ($doc == null) throw new \Nette\Application\BadRequestException('Dokument s tímto id neexistuje', 404);
         unlink(WWW_DIR . $doc->file);
@@ -56,12 +56,14 @@ class DocumentPresenter extends \BackModule\BasePresenter
         $this->redirect(':Back:CMS:Document:documents');
     }
 
-    public function renderTags() {
+    public function renderTags()
+    {
         $tags = $this->context->database->getRepository(self::TAG_REPO)->findAll();
         $this->template->tags = $tags;
     }
 
-    public function renderTag($tagId = null) {
+    public function renderTag($tagId = null)
+    {
         if ($tagId != null) {
             $tag = $this->context->database->getRepository(self::TAG_REPO)->find($tagId);
             if ($tag == null) throw new \Nette\Application\BadRequestException('Tag s tímto id neexistuje', 404);
@@ -69,13 +71,13 @@ class DocumentPresenter extends \BackModule\BasePresenter
             $form->bindEntity($tag);
 
             $this->template->tag = $tag;
-        }
-        else {
+        } else {
             //do nothing
         }
     }
 
-    public function handleDeleteTag($tagId) {
+    public function handleDeleteTag($tagId)
+    {
         $tag = $this->context->database->getRepository(self::TAG_REPO)->find($tagId);
         if ($tag == null) throw new \Nette\Application\BadRequestException('Tag s tímto id neexistuje', 404);
         $this->context->database->remove($tag);
@@ -85,7 +87,8 @@ class DocumentPresenter extends \BackModule\BasePresenter
     }
 
 
-    public function renderHeaderFooter() {
+    public function renderHeaderFooter()
+    {
         $this->template->logo = $this->dbsettings->get('logo');
     }
 
@@ -106,7 +109,8 @@ class DocumentPresenter extends \BackModule\BasePresenter
         return $form;
     }
 
-    protected function createComponentHeaderFooterForm() {
+    protected function createComponentHeaderFooterForm()
+    {
         $form = new \SRS\Form\CMS\HeaderFooterForm(null, null, $this->dbsettings);
         return $form;
     }

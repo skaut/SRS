@@ -1,17 +1,16 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 7.2.13
  * Time: 17:31
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 
 namespace SRS\Factory;
 
 class PageFactory
 {
-    public static function createInitial($em) {
+    public static function createInitial($em)
+    {
         $homepage = new \SRS\Model\CMS\Page('Homepage', '/');
         $homepage->position = 0;
         $homepage->public = true;
@@ -26,7 +25,7 @@ class PageFactory
         $textContent->position = 0;
         $textContent->area = 'main';
         $textContent->text = "<h2>Úspěšně jste nainstalovali SRS. Gratulujeme!</h2>";
-        $textContent->text .=  "<p>Obsah této stránky můžeme změnit v administraci v sekci CMS</p>";
+        $textContent->text .= "<p>Obsah této stránky můžeme změnit v administraci v sekci CMS</p>";
         $em->persist($textContent);
         $em->persist($homepage);
     }

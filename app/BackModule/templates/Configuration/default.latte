@@ -1,18 +1,17 @@
-
 {extends 'ConfigurationLayout.latte'}
 
 
 {block content}
 <h2 id="label_conf">Konfigurace</h2>
-{widget settingsForm}
+    {widget settingsForm}
 
 <h3 id="label_system">Systém</h3>
 <ul>
-<li><a href="{link clearCache!}">Promazat cache</a></li>
+    <li><a href="{link clearCache!}">Promazat cache</a></li>
 </ul>
 
 <script>
-    $(function() {
+    $(function () {
         $(".datepicker").datepicker({
 
         });

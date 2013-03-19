@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 14.11.12
  * Time: 20:47
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 
 namespace SRS\Command;
@@ -25,7 +23,8 @@ class TestDataProgramCommand extends Command
     /**
      * @param \Doctrine\ORM\EntityManager
      */
-    public function __construct(\Doctrine\ORM\EntityManager $em) {
+    public function __construct(\Doctrine\ORM\EntityManager $em)
+    {
         parent::__construct();
         $this->em = $em;
     }
@@ -39,7 +38,7 @@ class TestDataProgramCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-       \SRS\ProgramFactory::createBlockDataForTests($this->em);
+        \SRS\ProgramFactory::createBlockDataForTests($this->em);
         $output->writeln('Testovaci Programy a bloky vlozeny');
     }
 }

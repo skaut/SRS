@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 15.11.12
  * Time: 14:06
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 
 namespace SRS\Command;
@@ -19,7 +17,8 @@ use Nette\Utils\Finder;
 class ClearCacheCommand extends Command
 {
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
     }
 
@@ -32,7 +31,7 @@ class ClearCacheCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $cacheDir = WWW_DIR ."/../temp/cache";
+        $cacheDir = WWW_DIR . "/../temp/cache";
         $proxiesDir = WWW_DIR . '/../temp/proxies';
         $webtempDir = WWW_DIR . '/webtemp';
 
@@ -58,50 +57,44 @@ class ClearCacheCommand extends Command
     }
 
 
-    public static function recursiveRemoveDirectory($directory, $empty=FALSE)
+    public static function recursiveRemoveDirectory($directory, $empty = FALSE)
     {
         // if the path has a slash at the end we remove it here
-        if(substr($directory,-1) == '/')
-        {
-            $directory = substr($directory,0,-1);
+        if (substr($directory, -1) == '/') {
+            $directory = substr($directory, 0, -1);
         }
 
         // if the path is not valid or is not a directory ...
-        if(!file_exists($directory) || !is_dir($directory))
-        {
+        if (!file_exists($directory) || !is_dir($directory)) {
             // ... we return false and exit the function
             return FALSE;
 
             // ... if the path is not readable
-        }elseif(!is_readable($directory))
-        {
+        } elseif (!is_readable($directory)) {
             // ... we return false and exit the function
             return FALSE;
 
             // ... else if the path is readable
-        }else{
+        } else {
 
             // we open the directory
             $handle = opendir($directory);
 
             // and scan through the items inside
-            while (FALSE !== ($item = readdir($handle)))
-            {
+            while (FALSE !== ($item = readdir($handle))) {
                 // if the filepointer is not the current directory
                 // or the parent directory
-                if($item != '.' && $item != '..')
-                {
+                if ($item != '.' && $item != '..') {
                     // we build the new path to delete
-                    $path = $directory.'/'.$item;
+                    $path = $directory . '/' . $item;
 
                     // if the new path is a directory
-                    if(is_dir($path))
-                    {
+                    if (is_dir($path)) {
                         // we call this function with the new path
                         ClearCacheCommand::recursiveRemoveDirectory($path);
 
                         // if the new path is a file
-                    }else{
+                    } else {
                         // we remove the file
                         unlink($path);
                     }
@@ -111,11 +104,9 @@ class ClearCacheCommand extends Command
             closedir($handle);
 
             // if the option to empty is not set to true
-            if($empty == FALSE)
-            {
+            if ($empty == FALSE) {
                 // try to delete the now empty directory
-                if(!rmdir($directory))
-                {
+                if (!rmdir($directory)) {
                     // return false if not possible
                     return FALSE;
                 }

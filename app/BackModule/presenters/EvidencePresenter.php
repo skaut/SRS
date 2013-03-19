@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 26.1.13
  * Time: 21:07
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 
 namespace BackModule;
@@ -32,18 +30,21 @@ class EvidencePresenter extends BasePresenter
 
     );
 
-    public function startup() {
+    public function startup()
+    {
         parent::startup();
         $this->checkPermissions(\SRS\Model\Acl\Permission::MANAGE);
         $this->userRepo = $this->context->database->getRepository('\SRS\Model\User');
     }
 
-    public function beforeRender() {
+    public function beforeRender()
+    {
         parent::beforeRender();
 
     }
 
-    public function renderList($ids = array()) {
+    public function renderList($ids = array())
+    {
         $evidenceColumns = $this->getSession('evidenceColumns');
         if ($evidenceColumns->visibility == null) {
             $columns = array();
@@ -74,11 +75,12 @@ class EvidencePresenter extends BasePresenter
     }
 
 
-    protected function createComponentEvidenceGrid() {
-       $this->checkSessionConsistency();
-       $evidenceColumns = $this->getSession('evidenceColumns');
-       return new \SRS\Components\EvidenceGrid($this->context->database, $evidenceColumns->visibility);
-   }
+    protected function createComponentEvidenceGrid()
+    {
+        $this->checkSessionConsistency();
+        $evidenceColumns = $this->getSession('evidenceColumns');
+        return new \SRS\Components\EvidenceGrid($this->context->database, $evidenceColumns->visibility);
+    }
 
     protected function createComponentEvidenceDetailForm()
     {
@@ -96,8 +98,7 @@ class EvidencePresenter extends BasePresenter
     {
         $evidenceColumns = $this->getSession('evidenceColumns');
         $visibility = $evidenceColumns->visibility;
-        foreach ($this->getAllEvidenceColumns() as $column)
-        {
+        foreach ($this->getAllEvidenceColumns() as $column) {
             if (!isset($visibility[$column['name']])) {
                 $visibility[$column['name']] = true;
             }
@@ -122,8 +123,8 @@ class EvidencePresenter extends BasePresenter
         $users = $this->userRepo->findAll();
         $usersArray = array();
 
-        foreach($users as $user) {
-            $usersArray[] = array('id' => $user->id, 'display_name' => $user->displayName, 'url' =>  $this->link(':Back:evidence:detail', $user->id));
+        foreach ($users as $user) {
+            $usersArray[] = array('id' => $user->id, 'display_name' => $user->displayName, 'url' => $this->link(':Back:evidence:detail', $user->id));
         }
 
         $json = json_encode($usersArray);
@@ -158,14 +159,11 @@ class EvidencePresenter extends BasePresenter
         $columns = $this->evidenceDefaultColumns;
         $customColumns = $this->getFilledCustomFields();
 
-        foreach ($customColumns as $cColumn)
-        {
+        foreach ($customColumns as $cColumn) {
             $columns[] = array('name' => $cColumn['property'], 'label' => $cColumn['name']);
         }
         return $columns;
     }
-
-
 
 
     protected function getFilledCustomFields($user = null)
@@ -175,28 +173,26 @@ class EvidencePresenter extends BasePresenter
         $textsCount = $this->context->parameters['user_custom_text_count'];
 
         for ($i = 0; $i < $booleansCount; $i++) {
-            $settingsColumn = 'user_custom_boolean_'.$i;
+            $settingsColumn = 'user_custom_boolean_' . $i;
             $dbvalue = $this->dbsettings->get($settingsColumn);
-            $propertyName = 'customBoolean'.$i;
+            $propertyName = 'customBoolean' . $i;
             if ($dbvalue != '') {
                 if ($user) {
-                    $fields[] = array('property' => $propertyName,'name' => $dbvalue, 'value'=> $user->getCustomBoolean($i), 'type' => 'boolean');
-                }
-                else {
+                    $fields[] = array('property' => $propertyName, 'name' => $dbvalue, 'value' => $user->getCustomBoolean($i), 'type' => 'boolean');
+                } else {
                     $fields[] = array('property' => $propertyName, 'name' => $dbvalue, 'type' => 'boolean');
                 }
             }
         }
 
         for ($i = 0; $i < $textsCount; $i++) {
-            $settingsColumn = 'user_custom_text_'.$i;
+            $settingsColumn = 'user_custom_text_' . $i;
             $dbvalue = $this->dbsettings->get($settingsColumn);
-            $propertyName = 'customText'.$i;
+            $propertyName = 'customText' . $i;
             if ($dbvalue != '') {
                 if ($user) {
-                     $fields[] = array('property' => $propertyName, 'name' => $dbvalue, 'value' => $user->getCustomText($i), 'type' => 'text');
-                }
-                else {
+                    $fields[] = array('property' => $propertyName, 'name' => $dbvalue, 'value' => $user->getCustomText($i), 'type' => 'text');
+                } else {
                     $fields[] = array('property' => $propertyName, 'name' => $dbvalue, 'type' => 'text');
                 }
             }

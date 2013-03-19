@@ -1,33 +1,35 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 30.10.12
  * Time: 21:16
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 namespace BackModule\CMSModule;
 use Nette\Application\UI\Form;
 use SRS\Model\Acl\Resource;
 use SRS\Model\Acl\Permission;
+
 class NewsPresenter extends \BackModule\BasePresenter
 {
     protected $resource = Resource::CMS;
     protected $entity = '\SRS\Model\CMS\News';
 
-    public function startup() {
+    public function startup()
+    {
         parent::startup();
         $this->checkPermissions(Permission::MANAGE);
 
     }
 
 
-    public function renderDefault() {
+    public function renderDefault()
+    {
         $news = $this->context->database->getRepository($this->entity)->findAllOrderedByDate();
         $this->template->news = $news;
     }
 
-    public function renderDetail($id) {
+    public function renderDetail($id)
+    {
         $form = $this->getComponent('newsForm');
         if ($id != null) {
             $item = $this->context->database->getRepository($this->entity)->find($id);
@@ -35,8 +37,7 @@ class NewsPresenter extends \BackModule\BasePresenter
             $form = $this->getComponent('newsForm');
             $form->bindEntity($item);
             $this->template->item = $item;
-        }
-        else {
+        } else {
             $today = new \DateTime('now');
             $today = $today->format('Y-m-d');
             $form['published']->setDefaultValue($today);
@@ -46,8 +47,8 @@ class NewsPresenter extends \BackModule\BasePresenter
     }
 
 
-
-    public function handleDelete($id) {
+    public function handleDelete($id)
+    {
         $item = $this->context->database->getRepository($this->entity)->find($id);
         if ($item == null) {
             throw new \Nette\Application\BadRequestException('Aktualita s tímto id neexistuje', 404);
@@ -60,10 +61,10 @@ class NewsPresenter extends \BackModule\BasePresenter
     }
 
 
-    protected function createComponentNewsForm() {
+    protected function createComponentNewsForm()
+    {
         return new \SRS\Form\CMS\NewsForm();
     }
-
 
 
 }

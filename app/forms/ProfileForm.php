@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 7.12.12
  * Time: 9:30
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 namespace SRS\Form;
 
@@ -36,16 +34,14 @@ class ProfileForm extends EntityForm
         $user = $this->em->getRepository('\SRS\Model\User')->find($values['id']);
         $user->setProperties($values, $this->presenter->context->database);
         $user->displayName = "{$user->lastName} {$user->firstName}";
-        if ($user->nickName != '') $user->displayName .=" ({$user->nickName})";
+        if ($user->nickName != '') $user->displayName .= " ({$user->nickName})";
         $this->em->flush();
 
         $skautISPerson = $this->skautIS->getPerson($this->presenter->context->user->identity->token, $user->skautISPersonId);
         $updatedSkautISPerson = \SRS\Factory\UserFactory::updateSkautISPerson($user, $skautISPerson);
         try {
-        $this->skautIS->updatePerson($updatedSkautISPerson, $this->presenter->context->user->identity->token);
-        }
-        catch (\SoapFault $e)
-        {
+            $this->skautIS->updatePerson($updatedSkautISPerson, $this->presenter->context->user->identity->token);
+        } catch (\SoapFault $e) {
             $this->presenter->flashMessage('Synchronizace se skautIS se nepodařila', 'error');
         }
         $this->presenter->flashMessage('Data aktualizována', 'success');
@@ -61,7 +57,8 @@ class ProfileForm extends EntityForm
     }
 
 
-    protected function setFields() {
+    protected function setFields()
+    {
         $this->addHidden('id');
         $this->addSelect('sex', 'Pohlaví:')->setItems(array('male' => 'Muž', 'female' => 'Žena'))
             ->addRule(Form::FILLED, 'Zadejte pohlaví');
@@ -89,7 +86,8 @@ class ProfileForm extends EntityForm
      * @param \Doctrine\ORM\EntityManager $em
      * @param \SRS\Model\skautIS $skautIS
      */
-    public function inject($em, $skautIS) {
+    public function inject($em, $skautIS)
+    {
         $this->em = $em;
         $this->skautIS = $skautIS;
 

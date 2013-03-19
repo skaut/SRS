@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 19.2.13
  * Time: 9:42
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 
 namespace SRS\Form\Evidence;
@@ -13,6 +11,7 @@ use Nette\Application\UI,
     Nette\Diagnostics\Debugger,
     Nette\Application\UI\Form,
     Nette\ComponentModel\IContainer;
+
 class AboutForm extends \SRS\Form\EntityForm
 {
     public function __construct(IContainer $parent = NULL, $name = NULL)
@@ -21,7 +20,7 @@ class AboutForm extends \SRS\Form\EntityForm
 
         $this->addHidden('id');
         $this->addTextArea('about', 'O mně');
-        $this->addSubmit('submit','Uložit')->getControlPrototype()->class('btn');
+        $this->addSubmit('submit', 'Uložit')->getControlPrototype()->class('btn');
         $this->onSuccess[] = callback($this, 'submitted');
     }
 

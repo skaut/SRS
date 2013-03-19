@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 18.11.12
  * Time: 18:04
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 
 namespace SRS;
@@ -29,14 +27,15 @@ class SRSDoctrineDataSource implements \NiftyGrid\DataSource\IDataSource
         return $this->qb->getQuery();
     }
 
-    public function getData() {
+    public function getData()
+    {
         $result = array();
-        foreach($this->getQuery()->getArrayResult() as $item) {
+        foreach ($this->getQuery()->getArrayResult() as $item) {
             $primaryKey = $this->primary;
             $id = $item[$primaryKey];
             $result[$id]['id'] = $item[$primaryKey];
 
-            foreach($item as $column => $value) {
+            foreach ($item as $column => $value) {
                 $result[$id][$column] = $value;
             }
         }
@@ -74,8 +73,8 @@ class SRSDoctrineDataSource implements \NiftyGrid\DataSource\IDataSource
 
     public function filterData(array $filters)
     {
-        foreach($filters as $filter){
-            if($filter["type"] == \NiftyGrid\FilterCondition::WHERE){
+        foreach ($filters as $filter) {
+            if ($filter["type"] == \NiftyGrid\FilterCondition::WHERE) {
 
                 $column = $this->columnName($filter['column']);
 
@@ -83,7 +82,7 @@ class SRSDoctrineDataSource implements \NiftyGrid\DataSource\IDataSource
                 $expr = $this->qb->expr();
                 $cond = false;
 
-                switch($filter['cond']) {
+                switch ($filter['cond']) {
                     case ' LIKE ?':
                         $cond = $expr->like($column, $expr->literal($value));
                         break;
@@ -113,14 +112,15 @@ class SRSDoctrineDataSource implements \NiftyGrid\DataSource\IDataSource
                         break;
                 }
 
-                if(!$cond) {
+                if (!$cond) {
                     try {
                         $datetime = new \DateTime($value);
                         $value = $datetime->format('Y-m-d H:i:s');
-                    } catch(\Exception $e) {}
+                    } catch (\Exception $e) {
+                    }
 
-                    if(isset($datetime)) {
-                        switch($filter['cond']) {
+                    if (isset($datetime)) {
+                        switch ($filter['cond']) {
                             /** Dates */
                             case ' = ':
                                 $cond = $expr->like($column, $expr->literal($datetime->format('Y-m-d') . '%'));
@@ -149,7 +149,7 @@ class SRSDoctrineDataSource implements \NiftyGrid\DataSource\IDataSource
                     }
                 }
 
-                if($cond) {
+                if ($cond) {
                     $this->qb->andWhere($cond);
                 }
 
@@ -164,9 +164,9 @@ class SRSDoctrineDataSource implements \NiftyGrid\DataSource\IDataSource
         unset($name[0]);
         $part = $this->qb->getDQLPart('from');
         $fromAlias = $part[0]->getAlias();
-        $column = $entity.".".implode("_", $name);
+        $column = $entity . "." . implode("_", $name);
         $column = str_replace('.', '', $column);
-        $column = $fromAlias.'.'.$column;
+        $column = $fromAlias . '.' . $column;
 
         return $column;
     }

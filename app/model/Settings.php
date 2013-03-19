@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 7.1.13
  * Time: 16:55
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 namespace SRS\Model;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,7 +13,6 @@ use Doctrine\ORM\Mapping as ORM;
  * @property string $item
  * @property string $value
  * @property string $description
-
  */
 class Settings extends \SRS\Model\BaseEntity
 {
@@ -90,7 +87,8 @@ class SettingsRepository extends \Doctrine\ORM\EntityRepository
      * @throws SettingsException
      * @return $string
      */
-    public function get($item) {
+    public function get($item)
+    {
         $result = $this->_em->getRepository($this->entity)->findByItem($item);
         if ($result == null) throw new SettingsException("Položka {$item} v Settings není");
         $value = $result[0]->value;
@@ -102,15 +100,17 @@ class SettingsRepository extends \Doctrine\ORM\EntityRepository
      * @param $value
      * @throws SettingsException
      */
-    public function set($item, $value) {
-        $result= $this->_em->getRepository($this->entity)->findByItem($item);
+    public function set($item, $value)
+    {
+        $result = $this->_em->getRepository($this->entity)->findByItem($item);
         if ($result == null) throw new SettingsException("Položka {$item} v Settings není");
         $item = $result[0];
         $item->value = $value;
         $this->_em->flush();
     }
 
-    public function toArray() {
+    public function toArray()
+    {
 
         $result = $this->_em->getRepository($this->entity)->findAll();
         \Nette\Diagnostics\Debugger::dump($result);
@@ -119,4 +119,6 @@ class SettingsRepository extends \Doctrine\ORM\EntityRepository
     }
 }
 
-class SettingsException extends \Exception { }
+class SettingsException extends \Exception
+{
+}

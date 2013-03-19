@@ -13,13 +13,13 @@ Aktualita
 {block content}
 <h1> {ifset $item}Úprava Aktuality{else}Nová Aktualita{/ifset}</h1>
 
-    <div class="well newsForm">
+<div class="well newsForm">
     {widget newsForm}
-    </div>
+</div>
 
 
 <script>
-    $(function() {
+    $(function () {
         $(".datepicker").datepicker({
 
         });

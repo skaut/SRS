@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 26.1.13
  * Time: 21:07
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 
 namespace BackModule\ProgramModule;
@@ -24,14 +22,16 @@ class SchedulePresenter extends \BackModule\BasePresenter
 
     protected $basicBlockDuration;
 
-    public function startup() {
+    public function startup()
+    {
         parent::startup();
         $this->checkPermissions(Permission::ACCESS);
         $this->programRepo = $this->context->database->getRepository('\SRS\Model\Program\Program');
         $this->basicBlockDuration = $this->dbsettings->get('basic_block_duration');
     }
 
-    public function renderDefault() {
+    public function renderDefault()
+    {
 
     }
 

@@ -6,9 +6,10 @@ class PagePresenter extends BasePresenter
     protected $repository;
     protected $pageId;
 
-    public function startup() {
+    public function startup()
+    {
 
-        if(!$this->context->parameters['database']['installed'] || !$this->context->parameters['database']['schema_imported']) {
+        if (!$this->context->parameters['database']['installed'] || !$this->context->parameters['database']['schema_imported']) {
             $this->redirect(':Install:Install:default');
         }
 
@@ -18,27 +19,27 @@ class PagePresenter extends BasePresenter
         $this->repository = $this->context->database->getRepository('\SRS\Model\CMS\Page');
     }
 
-    public function beforeRender() {
+    public function beforeRender()
+    {
         parent::beforeRender();
 
     }
 
-	public function renderDefault($pageId)
-	{
+    public function renderDefault($pageId)
+    {
         if ($pageId == null) {
             $httpRequest = $this->context->getService('httpRequest');
             if ($httpRequest->url->path == '/') {
                 $page = $this->repository->findBy(array('slug' => '/', 'public' => true));
                 if ($page == null) {
-                   throw new \Nette\Application\BadRequestException('Stránka se slugem "/" neexistuje nebo není zveřejněná. Vytvořte ji v administriaci.', 404);
+                    throw new \Nette\Application\BadRequestException('Stránka se slugem "/" neexistuje nebo není zveřejněná. Vytvořte ji v administriaci.', 404);
 
                 }
                 $page = $page[0];
             }
 
 
-        }
-        else {
+        } else {
             $page = $this->repository->find($pageId);
         }
 
@@ -48,21 +49,25 @@ class PagePresenter extends BasePresenter
         $this->pageId = $page->id;
         $this->template->documents = $this->context->database->getRepository('\SRS\model\CMS\Documents\Document')->findAll();
         $this->template->page = $page;
-	}
+    }
 
-    public function createComponentAttendeeBox() {
+    public function createComponentAttendeeBox()
+    {
         return new \SRS\Components\AttendeeBox();
     }
 
-    public function createComponentFaqBox() {
+    public function createComponentFaqBox()
+    {
         return new \SRS\Components\FaqBox();
     }
 
-    public function createComponentNewsBox() {
+    public function createComponentNewsBox()
+    {
         return new \SRS\Components\NewsBox();
     }
 
-    public function createComponentProgramBox() {
+    public function createComponentProgramBox()
+    {
         return new \SRS\Components\ProgramBox();
     }
 

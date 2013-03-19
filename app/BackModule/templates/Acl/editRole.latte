@@ -8,26 +8,26 @@
 {block content}
 <h2>Úprava role {$role->name}</h2>
 
-{widget roleForm}
+    {widget roleForm}
 
-{block head}
-  {widget jsLoader 'multiselect/init.js'}
+    {block head}
+        {widget jsLoader 'multiselect/init.js'}
 
     <script>
-        $(function() {
+        $(function () {
             $(".datepicker").datepicker({
 
             });
         });
     </script>
-{/block}
+    {/block}
 
 
 
-{if $role->system}
-<script>
-    $('#frmroleForm-name').attr('readonly', true);
-</script>
-{/if}
+    {if $role->system}
+    <script>
+        $('#frmroleForm-name').attr('readonly', true);
+    </script>
+    {/if}
 
 {/block}

@@ -14,7 +14,6 @@ use Doctrine\Common\Collections\Criteria;
  * @property \SRS\Model\Acl\Role $role
  * @property \Doctrine\Common\Collections\ArrayCollection $programs
  * @property \Doctrine\Common\Collections\ArrayCollection $extensions
-
  * @property string $firstName
  * @property string $lastName
  * @property string $nickName
@@ -72,7 +71,7 @@ class User extends BaseEntity
 
 //    protected $roles;
 
-     /**
+    /**
      * @ORM\Column
      * @var string
      */
@@ -110,12 +109,11 @@ class User extends BaseEntity
     protected $birthdate;
 
 
-   /**
-    * @var int
-    * @ORM\Column(type="integer", unique=true)
-   */
+    /**
+     * @var int
+     * @ORM\Column(type="integer", unique=true)
+     */
     protected $skautISUserId;
-
 
 
     /**
@@ -194,12 +192,10 @@ class User extends BaseEntity
     protected $membershipCategory;
 
 
-
-
     /**
      * @var bool
      * @ORM\Column(type="boolean")
-    */
+     */
     protected $incomeProofPrinted = false;
 
     /**
@@ -271,7 +267,6 @@ class User extends BaseEntity
     }
 
 
-
     public function setPaid($paid)
     {
         $this->paid = $paid;
@@ -320,9 +315,8 @@ class User extends BaseEntity
     public function setPaymentDate($paymentDate)
     {
         if ($paymentDate != '' || $paymentDate != null) {
-        $this->paymentDate = $paymentDate;
-        }
-        else {
+            $this->paymentDate = $paymentDate;
+        } else {
             $this->paymentDate = null;
         }
     }
@@ -350,9 +344,6 @@ class User extends BaseEntity
     {
         return $this->paymentMethod;
     }
-
-
-
 
 
     /**
@@ -422,19 +413,23 @@ class User extends BaseEntity
         $this->firstName = $firstName;
     }
 
-    public function getRole() {
+    public function getRole()
+    {
         return $this->role;
     }
 
-    public function setRole($role) {
+    public function setRole($role)
+    {
         $this->role = $role;
     }
 
-    public function getPrograms() {
+    public function getPrograms()
+    {
         return $this->programs;
     }
 
-    public function setPrograms($programs) {
+    public function setPrograms($programs)
+    {
         $this->programs = $programs;
     }
 
@@ -576,7 +571,6 @@ class User extends BaseEntity
     {
         $this->displayName = $displayName;
     }
-
 
 
     /**
@@ -786,13 +780,14 @@ class User extends BaseEntity
         return $s === "" ? NULL : $s;
     }
 
-    public function hasOtherProgram($program, $basicBlockDuration) {
+    public function hasOtherProgram($program, $basicBlockDuration)
+    {
         foreach ($this->programs as $otherProgram) {
             if ($otherProgram->id == $program->id) continue;
             if ($otherProgram->start == $program->start) return true;
             if ($otherProgram->start > $program->start && $otherProgram->start < $program->countEnd($basicBlockDuration)) return true;
-            if ($otherProgram->countEnd($basicBlockDuration) > $program->start && $otherProgram->countEnd($basicBlockDuration) < $program->countEnd($basicBlockDuration) ) return true;
-            if ($otherProgram->start < $program->start && $otherProgram->countEnd($basicBlockDuration) > $program->countEnd($basicBlockDuration) ) return true;
+            if ($otherProgram->countEnd($basicBlockDuration) > $program->start && $otherProgram->countEnd($basicBlockDuration) < $program->countEnd($basicBlockDuration)) return true;
+            if ($otherProgram->start < $program->start && $otherProgram->countEnd($basicBlockDuration) > $program->countEnd($basicBlockDuration)) return true;
         }
         return false;
     }
@@ -816,12 +811,12 @@ class UserRepository extends \Nella\Doctrine\Repository
 //        return $this->_em->findAllBy(array('role.name' => $roleName));
 //    }
 
-     public function findAllPaying()
-     {
-         $query = "SELECT u, r FROM {$this->_entityName} u JOIN u.role r WHERE r.pays = 1 ";
-         $result = $this->_em->createQuery($query)->getResult();
-         return $result;
-     }
+    public function findAllPaying()
+    {
+        $query = "SELECT u, r FROM {$this->_entityName} u JOIN u.role r WHERE r.pays = 1 ";
+        $result = $this->_em->createQuery($query)->getResult();
+        return $result;
+    }
 
     public function findAllForSkautISSync()
     {

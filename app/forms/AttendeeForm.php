@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 7.12.12
  * Time: 9:30
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 namespace SRS\Form;
 
@@ -68,20 +66,20 @@ class AttendeeForm extends ProfileForm
         $customBooleanCount = $this->configParams['user_custom_boolean_count'];
         $customTextCount = $this->configParams['user_custom_text_count'];
         for ($i = 0; $i < $customBooleanCount; $i++) {
-            $settingsColumn = 'user_custom_boolean_'.$i;
+            $settingsColumn = 'user_custom_boolean_' . $i;
             //$dbColumn = 'customBoolean'.$i;
             $dbvalue = $this->dbsettings->get($settingsColumn);
             if ($dbvalue != '') {
-                $this->addCheckbox('customBoolean'.$i, $dbvalue);
+                $this->addCheckbox('customBoolean' . $i, $dbvalue);
             }
         }
 
         for ($i = 0; $i < $customTextCount; $i++) {
-            $settingsColumn = 'user_custom_text_'.$i;
+            $settingsColumn = 'user_custom_text_' . $i;
             //$dbColumn = 'customText'.$i;
             $dbvalue = $this->dbsettings->get($settingsColumn);
             if ($dbvalue != '') {
-                $this->addText('customText'.$i, $dbvalue);
+                $this->addText('customText' . $i, $dbvalue);
             }
         }
     }

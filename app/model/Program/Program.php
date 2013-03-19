@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 26.1.13
  * Time: 13:47
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 namespace SRS\Model\Program;
 use Doctrine\ORM\Mapping as ORM,
@@ -20,7 +18,6 @@ use Doctrine\ORM\Mapping as ORM,
  * @property \DateTime $start
  * @property integer $duration
  * @property boolean $mandatory
-
  */
 class Program extends \SRS\Model\BaseEntity
 {
@@ -71,7 +68,7 @@ class Program extends \SRS\Model\BaseEntity
 
     /**
      * @JMS\Type("DateTime")
-    */
+     */
     protected $end;
 
     /**
@@ -88,7 +85,7 @@ class Program extends \SRS\Model\BaseEntity
 
     /**
      * @JMS\Type("boolean")
-    */
+     */
     public $attends;
 
     /**
@@ -117,7 +114,8 @@ class Program extends \SRS\Model\BaseEntity
         return $this->block;
     }
 
-    public function getBlockId() {
+    public function getBlockId()
+    {
         if ($this->block != null)
             return $this->block->id;
         return null;
@@ -154,28 +152,34 @@ class Program extends \SRS\Model\BaseEntity
         return $this->start;
     }
 
-    public function getEnd() {
+    public function getEnd()
+    {
         return $this->end;
     }
 
-    public function setEnd($end) {
+    public function setEnd($end)
+    {
         $this->end = $end;
     }
 
-    public function getTitle() {
+    public function getTitle()
+    {
         return $this->title;
     }
 
-    public function setTitle($title) {
+    public function setTitle($title)
+    {
         $this->title = $title;
     }
 
 
-    public function getAllday() {
+    public function getAllday()
+    {
         return $this->allDay;
     }
 
-    public function setAllDay($allDay) {
+    public function setAllDay($allDay)
+    {
         $this->allDay = $allDay;
     }
 
@@ -183,23 +187,25 @@ class Program extends \SRS\Model\BaseEntity
      * @param string $basicDuration
      * @return \DateTime
      */
-    public function countEnd($basicDuration) {
+    public function countEnd($basicDuration)
+    {
         if ($this->block == null) {
-            $minutes = $basicDuration*$this->duration;
-        }
-        else {
-            $minutes = $basicDuration*$this->block->duration;
+            $minutes = $basicDuration * $this->duration;
+        } else {
+            $minutes = $basicDuration * $this->block->duration;
         }
         $end = $clone = clone $this->start;
         $end->modify("+ {$minutes} minutes");
         return $end;
     }
 
-    public function hasAttendee($user) {
+    public function hasAttendee($user)
+    {
         return $this->attendees->contains($user);
     }
 
-    public function prepareForJson($user = null, $basicDuration) {
+    public function prepareForJson($user = null, $basicDuration)
+    {
         $this->end = $this->countEnd($basicDuration);
         $this->attendeesCount = $this->attendees->count();
 
@@ -209,8 +215,7 @@ class Program extends \SRS\Model\BaseEntity
 
         if ($this->block != null) {
             $this->title = $this->block->name;
-        }
-        else {
+        } else {
             $this->title = "(Nepřiřazeno)";
         }
     }
@@ -232,7 +237,8 @@ class Program extends \SRS\Model\BaseEntity
      * @ORM\PrePersist
      * @ORM\PreUpdate
      */
-    public function updateTimestamp() {
+    public function updateTimestamp()
+    {
         $this->timestamp = new \DateTime('now');
     }
 
@@ -242,11 +248,11 @@ class Program extends \SRS\Model\BaseEntity
 
 class ProgramRepository extends \Nella\Doctrine\Repository
 {
-    public function findAllForJson($basicDuration, $user = null, $onlyAssigned = false) {
+    public function findAllForJson($basicDuration, $user = null, $onlyAssigned = false)
+    {
         if ($onlyAssigned == false) {
             $programs = $this->_em->getRepository($this->_entityName)->findAll();
-        }
-        else {
+        } else {
             $query = $this->_em->createQuery("SELECT p FROM {$this->_entityName} p WHERE p.block IS NOT NULL");
             $programs = $query->getResult();
         }
@@ -259,9 +265,10 @@ class ProgramRepository extends \Nella\Doctrine\Repository
     }
 
 
-    public function saveFromJson($data, $basicBlockDuration) {
+    public function saveFromJson($data, $basicBlockDuration)
+    {
         $data = json_decode($data);
-        $data = (array) $data;
+        $data = (array)$data;
 
         json_last_error();
         $data['start'] = $data['startJSON'];
@@ -272,8 +279,7 @@ class ProgramRepository extends \Nella\Doctrine\Repository
         $exists = isset($data['id']);
         if ($exists == true) {
             $program = $this->_em->getRepository($this->_entityName)->find($data['id']);
-        }
-        else {
+        } else {
             $program = new \SRS\Model\Program\Program();
 
         }
@@ -290,10 +296,6 @@ class ProgramRepository extends \Nella\Doctrine\Repository
         $this->_em->flush();
         return $program;
     }
-
-
-
-
 
 
 }

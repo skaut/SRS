@@ -1,17 +1,16 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 15.11.12
  * Time: 13:25
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 namespace SRS\Factory;
 
 class SettingsFactory
 {
 
-    public static function create() {
+    public static function create()
+    {
         $settings = array();
         $settings[] = new \SRS\Model\Settings('superadmin_created', 'Je vytvořen superadmin?', '0');
         $settings[] = new \SRS\Model\Settings('schema_imported', 'Naimportována inicializační databázová data', '1');
@@ -26,7 +25,7 @@ class SettingsFactory
         $settings[] = new \SRS\Model\Settings('is_allowed_modify_schedule', 'Lze upravovat harmonogram semináře?', '1');
         $settings[] = new \SRS\Model\Settings('is_allowed_log_in_programs', 'Lze se přihlašovat na Programy?', '0');
 
-       // $settings[] = new \SRS\Model\Settings('skautis_app_id', 'skautis app id', '');
+        // $settings[] = new \SRS\Model\Settings('skautis_app_id', 'skautis app id', '');
         $settings[] = new \SRS\Model\Settings('skautis_seminar_id', 'skautis seminar id', '');
         $settings[] = new \SRS\Model\Settings('skautis_seminar_name', 'skautis seminar name', '');
 
@@ -40,8 +39,6 @@ class SettingsFactory
         $settings[] = new \SRS\Model\Settings('print_location', 'Lokalita', 'Konfigurace->Lokalita');
 
 
-
-
         $settings[] = new \SRS\Model\Settings('user_custom_boolean_0', 'Vlastní checkbox přihlášky č.1', '');
         $settings[] = new \SRS\Model\Settings('user_custom_boolean_1', 'Vlastní checkbox přihlášky č.2', '');
         $settings[] = new \SRS\Model\Settings('user_custom_boolean_2', 'Vlastní checkbox přihlášky č.3', '');
@@ -53,11 +50,6 @@ class SettingsFactory
 
         return $settings;
     }
-
-
-
-
-
 
 
 }

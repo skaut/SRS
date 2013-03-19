@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 7.1.13
  * Time: 16:55
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 namespace SRS\Model\CMS\Documents;
 use Doctrine\ORM\Mapping as ORM;
@@ -66,7 +64,6 @@ class Document extends \SRS\Model\BaseEntity
     protected $description;
 
 
-
     /**
      * @ORM\Column(type="datetime");
      * @var \DateTime
@@ -94,7 +91,8 @@ class Document extends \SRS\Model\BaseEntity
         return $this->name;
     }
 
-    public function getTimestamp() {
+    public function getTimestamp()
+    {
         return $this->timestamp;
     }
 
@@ -113,7 +111,8 @@ class Document extends \SRS\Model\BaseEntity
      * @ORM\PrePersist
      * @ORM\PreUpdate
      */
-    public function updateTimestamp() {
+    public function updateTimestamp()
+    {
         $this->timestamp = new \DateTime('now');
     }
 

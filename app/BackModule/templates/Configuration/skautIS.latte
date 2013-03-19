@@ -1,28 +1,28 @@
-
 {extends 'ConfigurationLayout.latte'}
 
 {block title}
- Konfigurace
+Konfigurace
 {/block}
 
 {block content}
 
-{if !$seminarID}
-<div class="alert alert-info forever">
-    Výpis akci se liší dle právě přihlášeného uživatele do systému. Pokud se Vám vaše akce ze skautIS nezobrazuje, nejspíš na ni nemáte ve skautIS práva.
-    V takovém případě nechte synchronizaci nastavit někoho s patřičnými právy.
-</div>
+    {if !$seminarID}
+    <div class="alert alert-info forever">
+        Výpis akci se liší dle právě přihlášeného uživatele do systému. Pokud se Vám vaše akce ze skautIS nezobrazuje,
+        nejspíš na ni nemáte ve skautIS práva.
+        V takovém případě nechte synchronizaci nastavit někoho s patřičnými právy.
+    </div>
 
-<div class="well">
-    V tuto chvíli není systém propojen s žádnou akcí ve skautIS
-</div>
-{widget skautISEventForm}
-{else}
-<div class="well">
-    Systém je propojen se skautIS akcí {$seminarName} (id {$seminarID})
-</div>
+    <div class="well">
+        V tuto chvíli není systém propojen s žádnou akcí ve skautIS
+    </div>
+        {widget skautISEventForm}
+        {else}
+    <div class="well">
+        Systém je propojen se skautIS akcí {$seminarName} (id {$seminarID})
+    </div>
 
-<a class="btn btn-danger" href="{link disconnectEvent!}">Odpojit od skautIS</a>
-<a class="btn btn-success" href="{link syncParticipants!}">Nahrát účastníky do skautIS</a>
-{/if}
+    <a class="btn btn-danger" href="{link disconnectEvent!}">Odpojit od skautIS</a>
+    <a class="btn btn-success" href="{link syncParticipants!}">Nahrát účastníky do skautIS</a>
+    {/if}
 {/block}

@@ -9,33 +9,35 @@ Práva & Role » Role
     <a class="btn btn-success" href="#addRole" data-toggle="modal"><i class="icon-plus-sign"></i>Přidat roli</a>
 </div>
 <table class="table-bordered table-striped table-roles table-hover">
-   <thead>
-   <tr>
-   <th>Název role</th>
-   <th>Systémová</th>
-   <th>Registrovatelná</th>
-   <th>Registrovatelná od</th>
-   <th>Registrovatelná do</th>
-   <th>Platí za účast?</th>
-   <th>Operace</th>
-   </tr>
-   </thead>
-   <tbody>
-   {foreach $roles as $role}
-    <tr><td>{$role->name}</td>
-        <td>{if $role->isSystem()}ANO{else}NE{/if}</td>
-        <td>{bool $role->registerable}</td>
-        <td>{$role->registerableFrom|date:"d.m. Y"}</td>
-        <td>{$role->registerableTo|date:"d.m. Y"}</td>
-        <td>{bool $role->pays}</td>
-        <td>
-            <a class="btn" href="{plink Acl:editRole $role->id}">Upravit</a> &nbsp;&nbsp;
-            {if !$role->isSystem()}<a class="btn btn-danger confirm" href="{link deleteRole! $role->id}">Smazat</a>{/if}
-            <a class="btn btn-warning" href="{link loginas! $role->id}">Přihlásit se pod touto rolí</a> &nbsp;&nbsp;
-        </td>
+    <thead>
+    <tr>
+        <th>Název role</th>
+        <th>Systémová</th>
+        <th>Registrovatelná</th>
+        <th>Registrovatelná od</th>
+        <th>Registrovatelná do</th>
+        <th>Platí za účast?</th>
+        <th>Operace</th>
     </tr>
-   {/foreach}
-   </tbody>
+    </thead>
+    <tbody>
+        {foreach $roles as $role}
+        <tr>
+            <td>{$role->name}</td>
+            <td>{if $role->isSystem()}ANO{else}NE{/if}</td>
+            <td>{bool $role->registerable}</td>
+            <td>{$role->registerableFrom|date:"d.m. Y"}</td>
+            <td>{$role->registerableTo|date:"d.m. Y"}</td>
+            <td>{bool $role->pays}</td>
+            <td>
+                <a class="btn" href="{plink Acl:editRole $role->id}">Upravit</a> &nbsp;&nbsp;
+                {if !$role->isSystem()}<a class="btn btn-danger confirm"
+                                          href="{link deleteRole! $role->id}">Smazat</a>{/if}
+                <a class="btn btn-warning" href="{link loginas! $role->id}">Přihlásit se pod touto rolí</a> &nbsp;&nbsp;
+            </td>
+        </tr>
+        {/foreach}
+    </tbody>
 </table>
 
 {include '../includes/confirm_dialog.latte' 'confirmDialogText' => 'Při smazání role bude všem uživatelům s touto rolí nastavena role Registrovaný'}

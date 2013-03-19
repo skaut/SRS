@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 15.11.12
  * Time: 13:27
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 namespace SRS\Model\Acl;
 use Doctrine\ORM\Mapping as ORM;
@@ -125,7 +123,8 @@ class Role extends \SRS\Model\BaseEntity
     /**
      * @param string $name
      */
-    public function __construct($name) {
+    public function __construct($name)
+    {
         $this->name = $name;
         $this->users = new \Doctrine\Common\Collections\ArrayCollection();
         $this->permissions = new \Doctrine\Common\Collections\ArrayCollection();
@@ -154,10 +153,11 @@ class Role extends \SRS\Model\BaseEntity
 
     public function getPermissions()
     {
-       return $this->permissions;
+        return $this->permissions;
     }
 
-    public function setPermissions($permissions) {
+    public function setPermissions($permissions)
+    {
         $this->permissions = $permissions;
     }
 
@@ -183,10 +183,11 @@ class Role extends \SRS\Model\BaseEntity
 
     public function getApprovedAfterRegistration()
     {
-     return $this->approvedAfterRegistration;
+        return $this->approvedAfterRegistration;
     }
 
-    public function setApprovedAfterRegistration($approvedAfterRegistration) {
+    public function setApprovedAfterRegistration($approvedAfterRegistration)
+    {
         $this->approvedAfterRegistration = $approvedAfterRegistration;
     }
 
@@ -299,7 +300,6 @@ class Role extends \SRS\Model\BaseEntity
 }
 
 
-
 class RoleRepository extends \Doctrine\ORM\EntityRepository
 {
     public $entity = '\SRS\Model\Acl\Role';
@@ -315,7 +315,8 @@ class RoleRepository extends \Doctrine\ORM\EntityRepository
         return $query->getResult();
     }
 
-    public function findApprovedUsersInRole($roleName) {
+    public function findApprovedUsersInRole($roleName)
+    {
         $role = $this->_em->getRepository($this->_entityName)->findByName($roleName);
         if ($role == null) throw new RoleException("Role s tímto jménem {$roleName} neexistuje");
         $role = $role[0];

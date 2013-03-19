@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 1.12.12
  * Time: 18:58
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 
 
@@ -33,8 +31,8 @@ class FaqForm extends \SRS\Form\EntityForm
         $this->addTextArea('answer', 'Odpověď:')->getControlPrototype()->class('tinyMCE');
         $this->addCheckbox('public', 'Zveřejnit');
 
-        $this->addSubmit('submit','Uložit')->getControlPrototype()->class('btn');
-        $this->addSubmit('submit_continue','Uložit a pokračovat v úpravách')->getControlPrototype()->class('btn');
+        $this->addSubmit('submit', 'Uložit')->getControlPrototype()->class('btn');
+        $this->addSubmit('submit_continue', 'Uložit a pokračovat v úpravách')->getControlPrototype()->class('btn');
         $this->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
         $this->onSuccess[] = callback($this, 'formSubmitted');
     }
@@ -46,8 +44,7 @@ class FaqForm extends \SRS\Form\EntityForm
 
         if (!$faqExists) {
             $faq = new \SRS\Model\CMS\Faq();
-        }
-        else {
+        } else {
             $faq = $this->presenter->context->database->getRepository('\SRS\model\CMS\Faq')->find($values['id']);
         }
 

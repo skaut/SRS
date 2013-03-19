@@ -1,18 +1,17 @@
-
 {extends '../@layout.latte'}
 
 {block head}
-{widget jsLoader 'lib/angular.min.js', 'evidence/userController.js'}
+    {widget jsLoader 'lib/angular.min.js', 'evidence/userController.js'}
 {/block}
 
 {block title}
-{$dbuser->displayName}
+    {$dbuser->displayName}
 {/block}
 
 {block sidebar_menu}
 <div ng-app ng-controller="userCtrl">
-Vyhledat účastníka:
-<input type="text" class="input-medium search-query" ng-model="query">
+    Vyhledat účastníka:
+    <input type="text" class="input-medium search-query" ng-model="query">
     <ul>
         <li ng-repeat="user in users | filter:query"><a ng-href="{{ user.url }}"> {{ user.display_name }}</a></li>
     </ul>
@@ -28,89 +27,89 @@ Vyhledat účastníka:
 <a class="btn" href={link printIncomeProof!  array($dbuser->id)}>Vytisknout příjmový doklad</a>
 <a class="btn" href={link printAccountProof! $dbuser->id}>Vytisknout potvrzení o zaplacení na účet</a>
 <h1>{$dbuser->displayName}</h1>
-    <table class="table">
-        <tr class="success">
-            <td colspan="2">Základní údaje o osobě</td>
-        </tr>
-        <tr>
-            <th>Uživatelské jméno (skautIS)</th>
-            <td>{$dbuser->username}</td>
-        </tr>
-        <tr>
-            <th>Jméno</th>
-            <td>{$dbuser->firstName}</td>
-        </tr>
-        <tr>
-            <th>Příjmení</th>
-            <td>{$dbuser->lastName}</td>
-        </tr>
-        <tr>
-            <th>Přezdívka</th>
-            <td>{$dbuser->nickName}</td>
-        </tr>
+<table class="table">
+<tr class="success">
+<td colspan="2">Základní údaje o osobě</td>
+</tr>
+<tr>
+<th>Uživatelské jméno (skautIS)</th>
+<td>{$dbuser->username}</td>
+</tr>
+<tr>
+<th>Jméno</th>
+<td>{$dbuser->firstName}</td>
+</tr>
+<tr>
+<th>Příjmení</th>
+<td>{$dbuser->lastName}</td>
+</tr>
+<tr>
+<th>Přezdívka</th>
+<td>{$dbuser->nickName}</td>
+</tr>
 
-        <tr>
-        <th>Email</th>
-        <td><a href="mailto:{$dbuser->email}">{$dbuser->email}</a></td>
-        </tr>
+<tr>
+<th>Email</th>
+<td><a href="mailto:{$dbuser->email}">{$dbuser->email}</a></td>
+</tr>
 
-        <tr>
-            <th>Datum narození</th>
-            <td>{$dbuser->birthdate|date:"d.m.Y"}</td>
-        </tr>
-        <tr>
-            <th>Věk</th>
-            <td>{$dbuser->countAge()}</td>
-        </tr>
-            <th>Bydliště</th>
-            <td>{$dbuser->street}, {$dbuser->city}, {$dbuser->postcode}</td>
-        </tr>
-        {form evidenceDetailForm}
-        <tr class="success">
-            <td colspan="2">Údaje o osobě a akci</td>
-        </tr>
-        <tr>
-            <td>Role</td>
-            <td>{$dbuser->role->name}</td>
-        </tr>
-        <tr>
-            <td>Zaplatil</td>
-            <td>{input paid}</td>
-        </tr>
+<tr>
+<th>Datum narození</th>
+<td>{$dbuser->birthdate|date:"d.m.Y"}</td>
+</tr>
+<tr>
+<th>Věk</th>
+<td>{$dbuser->countAge()}</td>
+</tr>
+<th>Bydliště</th>
+<td>{$dbuser->street}, {$dbuser->city}, {$dbuser->postcode}</td>
+</tr>
+    {form evidenceDetailForm}
+    <tr class="success">
+    <td colspan="2">Údaje o osobě a akci</td>
+    </tr>
+    <tr>
+    <td>Role</td>
+    <td>{$dbuser->role->name}</td>
+    </tr>
+    <tr>
+    <td>Zaplatil</td>
+    <td>{input paid}</td>
+    </tr>
 
-        <tr>
-        <td>Platební metoda</td>
-        <td>{input paymentMethod}</td>
-        </tr>
+    <tr>
+    <td>Platební metoda</td>
+    <td>{input paymentMethod}</td>
+    </tr>
 
-        <tr>
-        <td>Datum platby</td>
-        <td>{input paymentDate}</td>
-        </tr>
+    <tr>
+    <td>Datum platby</td>
+    <td>{input paymentDate}</td>
+    </tr>
 
-        <tr>
-        <td>{label incomeProofPrinted /}</td>
-        <td>{input incomeProofPrinted}</td>
-        </tr>
+    <tr>
+    <td>{label incomeProofPrinted /}</td>
+    <td>{input incomeProofPrinted}</td>
+    </tr>
 
-        <tr>
-            <td>Přítomen</td>
-            <td>{input attended}</td>
-        </tr>
+    <tr>
+    <td>Přítomen</td>
+    <td>{input attended}</td>
+    </tr>
 
         {foreach $customFields as $field}
         <tr>
-            <td>{$field['name']}</td>
-            <td>{if $field['type'] == 'boolean'}{bool $field['value']}{else}{$field['value']}{/if}</td>
+        <td>{$field['name']}</td>
+        <td>{if $field['type'] == 'boolean'}{bool $field['value']}{else}{$field['value']}{/if}</td>
         </tr>
         {/foreach}
 
-        <tr class="warning">
-            <td colspan="2">{input submit}</td>
-        </tr>
-        {/form}
+    <tr class="warning">
+    <td colspan="2">{input submit}</td>
+    </tr>
+    {/form}
 
-    </table>
+</table>
 </div>
 
 <script>

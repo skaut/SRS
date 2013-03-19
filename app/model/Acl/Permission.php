@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 1.12.12
  * Time: 8:17
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 namespace SRS\Model\Acl;
 
@@ -21,7 +19,6 @@ class Permission extends \SRS\Model\BaseEntity
     const MANAGE_ALL_PROGRAMS = 'Spravovat Všechny Programy';
     const MANAGE_HARMONOGRAM = 'Upravovat harmonogram';
     const CHOOSE_PROGRAMS = 'Vybírat si programy';
-
 
 
     /**
@@ -44,13 +41,12 @@ class Permission extends \SRS\Model\BaseEntity
     protected $resource;
 
 
-    public function __construct($name, $resource) {
+    public function __construct($name, $resource)
+    {
         $this->name = $name;
         $this->resource = $resource;
         $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
     }
-
-
 
 
     /**

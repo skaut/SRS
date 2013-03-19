@@ -1,4 +1,3 @@
-
 {extends '../Programlayout.latte'}
 
 {block head}
@@ -11,8 +10,8 @@ Program » {ifset $block}{$block->name}{else}Nový blok{/ifset}
 {/block}
 
 {block content}
-        <h1>{ifset $block}{$block->name}{else}Nový blok{/ifset}</h1>
-       {widget blockForm}
+<h1>{ifset $block}{$block->name}{else}Nový blok{/ifset}</h1>
+    {widget blockForm}
 
 {include '../../../templates/includes/confirm_dialog.latte'}
 {/block}

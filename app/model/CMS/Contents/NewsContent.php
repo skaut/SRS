@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 15.11.12
  * Time: 13:27
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 namespace SRS\Model\CMS;
 use Doctrine\ORM\Mapping as ORM;
@@ -37,34 +35,31 @@ class NewsContent extends \SRS\Model\CMS\Content implements IContent
     }
 
 
-
-
-
-    public function addFormItems(\Nette\Application\UI\Form $form) {
+    public function addFormItems(\Nette\Application\UI\Form $form)
+    {
         parent::addFormItems($form);
         $formContainer = $form[$this->getFormIdentificator()];
-        $formContainer->addText("count",'Počet zobrazovaných aktualit:')
+        $formContainer->addText("count", 'Počet zobrazovaných aktualit:')
             ->setDefaultValue($this->count)
-           ->getControlPrototype()->class('number')
+            ->getControlPrototype()->class('number')
             ->addCondition(\Nette\Application\UI\Form::FILLED)
             ->addRule(\Nette\Application\UI\Form::INTEGER, 'Musí být číslo');
 
         return $form;
     }
 
-    public function setValuesFromPageForm(\Nette\Application\UI\Form $form) {
+    public function setValuesFromPageForm(\Nette\Application\UI\Form $form)
+    {
         parent::setValuesFromPageForm($form);
         $values = $form->getValues();
         $values = $values[$this->getFormIdentificator()];
         $this->count = $values['count'];
     }
 
-    public function getContentName() {
+    public function getContentName()
+    {
         return $this->contentName;
     }
-
-
-
 
 
 }

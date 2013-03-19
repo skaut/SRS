@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 19.2.13
  * Time: 9:42
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 
 namespace SRS\Form\Evidence;
@@ -18,6 +16,7 @@ class ColumnForm extends Form
 {
 
     protected $container;
+
     public function __construct(IContainer $parent = NULL, $name = NULL, $columns, $container)
     {
         $this->container = $container;
@@ -27,8 +26,7 @@ class ColumnForm extends Form
         $evidenceColumns = $session->getSection('evidenceColumns');
         $visibilities = $evidenceColumns->visibility;
 
-        foreach($columns as $column)
-        {
+        foreach ($columns as $column) {
             $this->addCheckbox($column['name'], $column['label'])->setDefaultValue($visibilities[$column['name']]);
 
         }

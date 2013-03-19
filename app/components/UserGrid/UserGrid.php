@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 30.10.12
  * Time: 21:08
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 namespace SRS\Components;
 use \NiftyGrid\Grid;
@@ -28,7 +26,7 @@ class UserGrid extends Grid
     {
         parent::__construct();
         $this->em = $em;
-        $this->templatePath = __DIR__.'/template.latte';
+        $this->templatePath = __DIR__ . '/template.latte';
     }
 
     protected function configure($presenter)
@@ -37,7 +35,7 @@ class UserGrid extends Grid
         $qb->addSelect('u');
         $qb->addSelect('role');
         $qb->from('\SRS\Model\User', 'u');
-        $qb->leftJoin('u.role','role'); //'WITH', 'role.standAlone=1');
+        $qb->leftJoin('u.role', 'role'); //'WITH', 'role.standAlone=1');
 
 
         $roles = $this->em->getRepository('\SRS\Model\Acl\Role')->findAll();
@@ -58,15 +56,15 @@ class UserGrid extends Grid
         $this->addColumn('lastName', 'Příjmení')->setTextFilter()->setAutocomplete($numOfResults);
         $this->addColumn('email', 'Email')->setTextFilter()->setAutocomplete($numOfResults);
         $this->addColumn('role', 'Role')
-            ->setRenderer(function($row) {
-                return $row->role['name'];
-            })
+            ->setRenderer(function ($row) {
+            return $row->role['name'];
+        })
             ->setSelectFilter($rolesGrid)
 
             ->setSelectEditable($rolesGrid);
         $this->addColumn('approved', 'Schválený')->setBooleanFilter()->setBooleanEditable()
-            ->setRenderer(function($row) {
-                return $row->approved ? 'Ano':'Ne';
+            ->setRenderer(function ($row) {
+            return $row->approved ? 'Ano' : 'Ne';
         });
 
 
@@ -75,17 +73,16 @@ class UserGrid extends Grid
         $self = $this;
 
 
-
-        $this->setRowFormCallback(function($values) use ($self, $presenter){
+        $this->setRowFormCallback(function ($values) use ($self, $presenter) {
                 $userToSave = $presenter->context->database->getRepository('\SRS\Model\User')->find($values['id']);
                 $newRole = $presenter->context->database->getRepository('SRS\Model\Acl\Role')->find($values['role']);
                 if ($newRole != null) {
-                $userToSave->role = $newRole;
+                    $userToSave->role = $newRole;
                 }
                 $userToSave->approved = isset($values['approved']) ? 1 : 0;
                 $presenter->context->database->flush();
 
-                $self->flashMessage("Záznam byl úspěšně uložen.","success");
+                $self->flashMessage("Záznam byl úspěšně uložen.", "success");
 
             }
         );
@@ -94,29 +91,29 @@ class UserGrid extends Grid
             ->setClass("fast-edit");
 
 
-        $this->addAction("approve","Schválit")
-            ->setCallback(function($id) use ($self){return $self->handleApprove($id);});
+        $this->addAction("approve", "Schválit")
+            ->setCallback(function ($id) use ($self) {
+            return $self->handleApprove($id);
+        });
     }
 
 
     public function handleApprove($ids)
     {
-        foreach ($ids as $id ) {
+        foreach ($ids as $id) {
             $userToSave = $this->presenter->context->database->getRepository('\SRS\Model\User')->find($id);
             $userToSave->approved = True;
         }
 
         $this->presenter->context->database->flush();
 
-        if(count($ids) > 1){
-            $this->flashMessage("Vybraní uživatelé byli schváleni.","success");
-        }else{
-            $this->flashMessage("Vybraný uživatel byl schválen.","success");
+        if (count($ids) > 1) {
+            $this->flashMessage("Vybraní uživatelé byli schváleni.", "success");
+        } else {
+            $this->flashMessage("Vybraný uživatel byl schválen.", "success");
         }
         $this->redirect("this");
     }
-
-
 
 
 }

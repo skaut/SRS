@@ -8,7 +8,7 @@ CMS » Dokumenty
 {block content}
 <div class="navbar">
     <a class="btn btn-success" href="{plink document}"><i class="icon-plus-sign"></i>Přidat Dokument</a>
-    {*<a class="btn btn-primary" href="#addTag" data-toggle="modal"><i class="icon-plus-sign"></i>Přidat Štítek</a>*}
+{*<a class="btn btn-primary" href="#addTag" data-toggle="modal"><i class="icon-plus-sign"></i>Přidat Štítek</a>*}
 </div>
 
 
@@ -18,7 +18,7 @@ CMS » Dokumenty
         <td>{$document->name}</td>
         <td>
             {foreach $document->tags as $tag}
-            <span class="label label-success">{$tag->name}</span>
+                <span class="label label-success">{$tag->name}</span>
             {/foreach}
         </td>
         <td>

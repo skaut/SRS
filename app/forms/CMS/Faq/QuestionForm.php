@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 1.12.12
  * Time: 18:58
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 
 
@@ -31,7 +29,7 @@ class QuestionForm extends \SRS\Form\EntityForm
         $this->addTextArea('question', 'Otázka:')
             ->addRule(Form::FILLED, 'Zadejte otázku');
 
-        $this->addSubmit('submit','Položit dotaz')->getControlPrototype()->class('btn');
+        $this->addSubmit('submit', 'Položit dotaz')->getControlPrototype()->class('btn');
         $this->onSuccess[] = callback($this, 'formSubmitted');
     }
 

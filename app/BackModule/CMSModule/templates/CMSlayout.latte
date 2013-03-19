@@ -3,12 +3,16 @@
 <li class="nav-header">CMS</li>
 <li {ifCurrent :Back:CMS:Page:pages}class="active"{/ifCurrent}><a href="{plink :Back:CMS:Page:pages}">Stránky</a></li>
 <li {ifCurrent :Back:CMS:Faq:default}class="active"{/ifCurrent}><a href="{plink :Back:CMS:Faq:default}">FAQ</a></li>
-<li {ifCurrent :Back:CMS:News:default}class="active"{/ifCurrent}><a href="{plink :Back:CMS:News:default}">Aktuality</a></li>
-<li {ifCurrent :Back:CMS:Document:documents}class="active"{/ifCurrent}><a href="{plink :Back:CMS:Document:documents}">Dokumenty</a></li>
+<li {ifCurrent :Back:CMS:News:default}class="active"{/ifCurrent}><a href="{plink :Back:CMS:News:default}">Aktuality</a>
+</li>
+<li {ifCurrent :Back:CMS:Document:documents}class="active"{/ifCurrent}><a href="{plink :Back:CMS:Document:documents}">Dokumenty</a>
+</li>
 <li>
     <ul class='nav-list'>
-        <li {ifCurrent :Back:CMS:Document:tags}class="active"{/ifCurrent}><a href="{plink :Back:CMS:Document:tags}">Štítky Dokumentů</a></li>
+        <li {ifCurrent :Back:CMS:Document:tags}class="active"{/ifCurrent}><a href="{plink :Back:CMS:Document:tags}">Štítky
+            Dokumentů</a></li>
     </ul>
 </li>
-<li {ifCurrent :Back:CMS:Document:headerfooter}class="active"{/ifCurrent}><a href="{plink :Back:CMS:Document:headerfooter}">Header, Footer</a></li>
+<li {ifCurrent :Back:CMS:Document:headerfooter}class="active"{/ifCurrent}><a
+        href="{plink :Back:CMS:Document:headerfooter}">Header, Footer</a></li>
 {/block}

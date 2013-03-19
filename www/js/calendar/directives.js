@@ -3,7 +3,7 @@
  * User: Michal
  * Date: 3.2.13
  * Time: 15:55
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 
 app.directive("externalBlock", function ($parse) {

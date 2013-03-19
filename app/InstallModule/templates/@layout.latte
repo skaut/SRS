@@ -9,21 +9,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
-	<meta name="description" content="">
-	<meta name="robots" content="{$robots}" n:ifset="$robots">
-	<title>{block title|striptags}Instalace{/block} | SRS</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta name="robots" content="{$robots}" n:ifset="$robots">
+    <title>{block title|striptags}Instalace{/block} | SRS</title>
 
 
 {widget cssLoader 'nette.css', 'bootstrap.css', 'bootstrap-responsive.css', 'jquery-ui/jquery-ui.css', 'back/screen.css'}
 {widget jsLoader 'jquery-1.8.2.min.js', 'netteForms.js', 'bootstrap.min.js', 'jquery-ui.js'}
 
     <link rel="shortcut icon" href="{$basePath}/favicon.ico">
-	{block head}{/block}
+{block head}{/block}
 </head>
 
 <body>
-<script> document.body.className+=' js' </script>
+<script> document.body.className += ' js' </script>
 <div class="navbar navbar-inverse navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container-fluid">
@@ -31,19 +31,20 @@
         </div>
     </div>
 </div>
-    <div class="container-fluid" style="margin-top: 50px;">
-        <div class="row-fluid">
-            <h1>{block header}{/block}</h1>
-            <div class="span12" style="text-align:center;">
-                <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">
-                    {$flash->message}
-                </div>
-                <div class="well">
-               {block #content}
-                </div>
+<div class="container-fluid" style="margin-top: 50px;">
+    <div class="row-fluid">
+        <h1>{block header}{/block}</h1>
+
+        <div class="span12" style="text-align:center;">
+            <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">
+            {$flash->message}
+            </div>
+            <div class="well">
+            {block #content}
             </div>
         </div>
     </div>
+</div>
 
 </body>
 </html>

@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 1.12.12
  * Time: 18:58
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 
 
@@ -32,7 +30,7 @@ class SkautISEventForm extends UI\Form
         $this->addSelect('skautISEvent', 'Vyberte akci ze skautIS')->setItems(\SRS\Form\EntityForm::getFormChoices($this->skautISEvents, 'ID', 'DisplayName'))
             ->addRule(FORM::FILLED, 'Vyberte akci');
 
-        $this->addSubmit('submit_print','Propojit se skautIS akcí')->getControlPrototype()->class('btn');
+        $this->addSubmit('submit_print', 'Propojit se skautIS akcí')->getControlPrototype()->class('btn');
         $this->onSuccess[] = callback($this, 'formSubmitted');
 
 
@@ -46,8 +44,7 @@ class SkautISEventForm extends UI\Form
 
         $skautISEventName = '';
 
-        foreach ($this->skautISEvents as $e)
-        {
+        foreach ($this->skautISEvents as $e) {
             if ($e->ID == $skautISEventID) {
                 $skautISEventName = $e->DisplayName;
             }

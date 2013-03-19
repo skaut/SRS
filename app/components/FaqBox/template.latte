@@ -1,17 +1,19 @@
 {foreach $faq as $item}
 <div class="faqItem">
     <p class="question">{$item->question}</p>
+
     <div class="answer">
-    {!$item->answer}
+        {!$item->answer}
     </div>
 </div>
 {/foreach}
 
 <h3>Nenašli jste odpověď na svoji otázku? Zeptejte se.</h3>
 <div class="questionForm info">
-    {if !$user->isLoggedIn()}
-    <p>Pro položení otázky se musíte <a href="{plink :Auth:login 'backlink' => $backlink}">přihlásit přes skautIS</a></p>
+{if !$user->isLoggedIn()}
+    <p>Pro položení otázky se musíte <a href="{plink :Auth:login 'backlink' => $backlink}">přihlásit přes skautIS</a>
+    </p>
     {else}
     {widget questionForm}
-    {/if}
+{/if}
 </div>

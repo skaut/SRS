@@ -2,7 +2,8 @@
     {if !$control->isSubGrid}
         {$control['gridForm']->render('begin')}
     {/if}
-<table n:attr="style => $control->width ? 'width: '.$control->width.';'" class="grid table table-striped table-bordered table-hover">
+<table n:attr="style => $control->width ? 'width: '.$control->width.';'"
+       class="grid table table-striped table-bordered table-hover">
     <thead>
     <tr n:if="$control->gridName">
         <th colspan="{$colsCount}" class="grid-name">{$control->gridName}</th>
@@ -17,8 +18,10 @@
                 </div>
                 <div class="grid-upper-info">
                     <a n:href="this" class="grid-current-link" title="Získat odkaz na tuto stránku"></a>
+
                     <div class="grid-results">
-                        celkem {$results} {($results == 1) ? "záznam" : (($results >= 2 && $results <= 4) ? "záznamy" : "záznamů")}{if $paginate} {if (boolean)$results}(Zobrazeno {$viewedFrom} až {$viewedTo}){/if}{/if}
+                        celkem {$results} {($results == 1) ? "záznam" : (($results >= 2 && $results <= 4) ? "záznamy" : "záznamů")}{if $paginate} {if (boolean)$results}
+                        (Zobrazeno {$viewedFrom} až {$viewedTo}){/if}{/if}
                     </div>
                 </div>
             </div>
@@ -27,22 +30,32 @@
     <tr n:foreach="$flashes as $flash" class="grid-flash {$flash->type}">
         <th colspan="{$colsCount}">
             <span>{$flash->message}</span>
+
             <div class="grid-flash-hide"></div>
         </th>
     </tr>
     <tr class="grid-flash grid-error" n:foreach="$control['gridForm']->errors as $error">
         <th colspan="{$colsCount}">
             <span>{$error}</span>
+
             <div class="grid-flash-hide"></div>
         </th>
     </tr>
     <tr>
-        <th n:if="$control->hasActionForm()" style="text-align:center; width: 16px;" class="grid-head-column"><input type="checkbox" class="grid-select-all" title="Označit/odznačit všechny záznamy"></th>
+        <th n:if="$control->hasActionForm()" style="text-align:center; width: 16px;" class="grid-head-column"><input
+                type="checkbox" class="grid-select-all" title="Označit/odznačit všechny záznamy"></th>
         <th n:foreach="$subGrids as $subGrid" style="width: 26px;" class="grid-head-column"></th>
-        <th n:foreach="$columns as $column" n:attr="style => $column->width ? 'width: '.$column->width.';'" class="grid-head-column">{if $control->hasEnabledSorting() && $column->isSortable()}{var $order = ($control->order == $column->name.' ASC') ? " DESC" : " ASC"}<a n:href="this, 'order' => $column->name.$order" class="grid-ajax" title="Obrátit řazení">{$column->label}</a>{else}{$column->label}{/if}
+        <th n:foreach="$columns as $column" n:attr="style => $column->width ? 'width: '.$column->width.';'"
+            class="grid-head-column">{if $control->hasEnabledSorting() && $column->isSortable()}{var $order = ($control->order == $column->name.' ASC') ? " DESC" : " ASC"}
+            <a n:href="this, 'order' => $column->name.$order" class="grid-ajax"
+               title="Obrátit řazení">{$column->label}</a>{else}{$column->label}{/if}
             <div class="grid-order" n:if="$column->isSortable() && $control->hasEnabledSorting()">
-                <a n:href="this, 'order' => $column->name.' ASC'" n:class="grid-ajax, grid-order-up ,($control->order && ($control->order == $column->name.' ASC')) ? grid-order-active-up" title="Řadit vzestupně"></a>
-                <a n:href="this, 'order' => $column->name.' DESC'" n:class="grid-ajax, grid-order-down ,($control->order && ($control->order == $column->name.' DESC')) ? grid-order-active-down" title="Řadit sestupně"></a>
+                <a n:href="this, 'order' => $column->name.' ASC'"
+                   n:class="grid-ajax, grid-order-up ,($control->order && ($control->order == $column->name.' ASC')) ? grid-order-active-up"
+                   title="Řadit vzestupně"></a>
+                <a n:href="this, 'order' => $column->name.' DESC'"
+                   n:class="grid-ajax, grid-order-down ,($control->order && ($control->order == $column->name.' DESC')) ? grid-order-active-down"
+                   title="Řadit sestupně"></a>
             </div>
         </th>
         <th n:if="$control->hasButtons() || $control->hasFilterForm()" class="grid-head-column">Akce</th>
@@ -50,12 +63,16 @@
     <tr n:if="$control->hasFilterForm()">
         <th n:if="$control->hasActionForm()" class="grid-filter-form"></th>
         <th n:foreach="$subGrids as $subGrid" class="grid-filter-form"></th>
-        <th n:foreach="$columns as $column" n:attr="class => array(grid-filter-form, $control->isSpecificFilterActive($column->name) ? grid-filter-form-active)">
+        <th n:foreach="$columns as $column"
+            n:attr="class => array(grid-filter-form, $control->isSpecificFilterActive($column->name) ? grid-filter-form-active)">
             {if $column->hasFilter()}
 					{$control['gridForm'][$control->name]['filter'][$column->name]->getControl()}
 				{/if}
         </th>
-        <th class="grid-filter-form">{$control['gridForm'][$control->name]['filter']['send']->getControl()->class('btn')}<a n:if="$control->hasActiveFilter()" n:href="this, filter => NULL, paginator-page => NULL" title="Zrušit filtr" class="btn btn-danger grid-filter-reset grid-ajax"><i class="icon-remove"></i></a></th>
+        <th class="grid-filter-form">{$control['gridForm'][$control->name]['filter']['send']->getControl()->class('btn')}
+            <a n:if="$control->hasActiveFilter()" n:href="this, filter => NULL, paginator-page => NULL"
+               title="Zrušit filtr" class="btn btn-danger grid-filter-reset grid-ajax"><i class="icon-remove"></i></a>
+        </th>
     </tr>
     </thead>
     <tbody>
@@ -75,18 +92,22 @@
         {if count($rows)}
             {foreach $rows as $row}
             <tr n:attr="class => $iterator->isOdd() ? grid-row-odd : grid-row-even">
-                <td n:if="$control->hasActionForm()" n:attr="class => array(grid-row-cell, grid-action-checkbox, $control->isEditable() && $control->activeRowForm == $row[$primaryKey] ? 'grid-edited-cell')">{$control->assignCheckboxToRow($row[$primaryKey])}</td>
-                <td n:foreach="$subGrids as $subgrid" n:attr="class => array(grid-row-cell, $control->isEditable() && $control->activeRowForm == $row[$primaryKey] ? 'grid-edited-cell')">
+                <td n:if="$control->hasActionForm()"
+                    n:attr="class => array(grid-row-cell, grid-action-checkbox, $control->isEditable() && $control->activeRowForm == $row[$primaryKey] ? 'grid-edited-cell')">{$control->assignCheckboxToRow($row[$primaryKey])}</td>
+                <td n:foreach="$subGrids as $subgrid"
+                    n:attr="class => array(grid-row-cell, $control->isEditable() && $control->activeRowForm == $row[$primaryKey] ? 'grid-edited-cell')">
                     {control $subgrid $row}
                 </td>
-                <td n:foreach="$columns as $column" n:attr="class => array(grid-row-cell, grid-data-cell, $control->isEditable() && $control->activeRowForm == $row[$primaryKey] ? 'grid-edited-cell'), style => $column->hasCellRenderer() ? $column->getCellRenderer($row)">
+                <td n:foreach="$columns as $column"
+                    n:attr="class => array(grid-row-cell, grid-data-cell, $control->isEditable() && $control->activeRowForm == $row[$primaryKey] ? 'grid-edited-cell'), style => $column->hasCellRenderer() ? $column->getCellRenderer($row)">
                     {if $control->isEditable() && $column->editable && $control->activeRowForm == $row[$primaryKey]}
 					{$control['gridForm'][$control->name]['rowForm'][$column->name]->getControl()}
 				{else}
 					{$column->prepareValue($row)}
 				{/if}
                 </td>
-                <td n:if="$control->hasButtons() || $control->hasFilterForm()" n:attr="class => array(grid-row-cell, $control->isEditable() && $control->activeRowForm == $row[$primaryKey] ? 'grid-edited-cell')">
+                <td n:if="$control->hasButtons() || $control->hasFilterForm()"
+                    n:attr="class => array(grid-row-cell, $control->isEditable() && $control->activeRowForm == $row[$primaryKey] ? 'grid-edited-cell')">
                     {if $control->activeRowForm == $row[$primaryKey] && $control->isEditable()}
                         {$control['gridForm'][$control->name]['rowForm']['send']->getControl()->class('btn')}
                         <a class="grid-rowForm-cancel grid-ajax" n:href="this" title="Zrušit editaci"></a>
@@ -98,15 +119,18 @@
                     {/if}
                 </td>
             </tr>
-            <tr n:if="$control->hasActiveSubGrid() && $control->activeSubGridId == $row[$primaryKey]" class="grid-subgrid-row" align="center">
-                <td colspan="{$colsCount}" n:attr="style => $control['subGrids-'.$control->activeSubGridName]->hasCellStyle() ? $control['subGrids-'.$control->activeSubGridName]->getCellStyle().'border-bottom:1px solid #f2f2f2;'">
+            <tr n:if="$control->hasActiveSubGrid() && $control->activeSubGridId == $row[$primaryKey]"
+                class="grid-subgrid-row" align="center">
+                <td colspan="{$colsCount}"
+                    n:attr="style => $control['subGrids-'.$control->activeSubGridName]->hasCellStyle() ? $control['subGrids-'.$control->activeSubGridName]->getCellStyle().'border-bottom:1px solid #f2f2f2;'">
                     {control $control['subGrid'.$control->activeSubGridName]}
                 </td>
             </tr>
             {/foreach}
             {else}
         <tr>
-            <td class="grid-row-cell" style="background-color:#FFF; font-size:16px;" colspan="{$colsCount}">{$control->messageNoRecords}</td>
+            <td class="grid-row-cell" style="background-color:#FFF; font-size:16px;"
+                colspan="{$colsCount}">{$control->messageNoRecords}</td>
         </tr>
         {/if}
     </tbody>

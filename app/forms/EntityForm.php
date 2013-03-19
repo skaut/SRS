@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 3.12.12
  * Time: 20:14
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 
 
@@ -40,15 +38,13 @@ class EntityForm extends UI\Form
 
             $value = $entity->$method();
 
-           if ($value instanceof ArrayCollection || $value instanceof PersistentCollection) {
+            if ($value instanceof ArrayCollection || $value instanceof PersistentCollection) {
                 $value = array_map(function ($entity) {
                     return $entity->getId();
                 }, $value->toArray());
+            } elseif (method_exists($value, 'getId')) {
+                $value = $value->getId();
             }
-
-            elseif (method_exists($value, 'getId')) {
-                    $value = $value->getId();
-                }
 
             if ($value instanceof \DateTime) {
 
@@ -56,12 +52,8 @@ class EntityForm extends UI\Form
 
             }
             $input->setDefaultValue($value);
-            }
         }
-
-
-
-
+    }
 
 
     public function getEntity()
@@ -75,16 +67,14 @@ class EntityForm extends UI\Form
      * @param string $label Jmeno property, ktera se ma zobrazit ve formulari
      * @return array
      */
-    public static function getFormChoices($entities, $id = 'id', $label = 'name') {
+    public static function getFormChoices($entities, $id = 'id', $label = 'name')
+    {
         $choices = array();
         foreach ($entities as $value) {
             $choices[$value->{$id}] = $value->{$label};
         }
         return $choices;
     }
-
-
-
 
 
 }

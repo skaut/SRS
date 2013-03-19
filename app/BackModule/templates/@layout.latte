@@ -1,102 +1,118 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
 <head>
-	<meta charset="UTF-8">
-	<meta name="description" content="">
-	<meta name="robots" content="{$robots}" n:ifset="$robots">
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta name="robots" content="{$robots}" n:ifset="$robots">
 
-	<title>{block title|striptags}{/block} | SRS</title>
-    {widget cssLoader 'nette.css', 'bootstrap.css', 'bootstrap-responsive.css', 'niftygrid/grid.css', 'jquery-ui/jquery-ui.css', 'back/screen.css', 'ui.multiselect.css'}
-	<link rel="shortcut icon" href="{$basePath}/favicon.ico">
-    {widget jsLoader 'jquery-1.8.2.min.js', 'jquery.scrollTo.min.js', 'jquery.localisation.min.js', 'netteForms.js', 'bootstrap.min.js', 'jquery-ui.js', 'multiselect/ui.multiselect.js', 'niftygrid/grid.js'}
+    <title>{block title|striptags}{/block} | SRS</title>
+{widget cssLoader 'nette.css', 'bootstrap.css', 'bootstrap-responsive.css', 'niftygrid/grid.css', 'jquery-ui/jquery-ui.css', 'back/screen.css', 'ui.multiselect.css'}
+    <link rel="shortcut icon" href="{$basePath}/favicon.ico">
+{widget jsLoader 'jquery-1.8.2.min.js', 'jquery.scrollTo.min.js', 'jquery.localisation.min.js', 'netteForms.js', 'bootstrap.min.js', 'jquery-ui.js', 'multiselect/ui.multiselect.js', 'niftygrid/grid.js'}
 
     <script n:syntax="double">
         var basePath = {{$basePath}}
 
 
-
-
     </script>
-	{block head}{/block}
+{block head}{/block}
 </head>
 
 <body>
-	<script> document.body.className+=' js' </script>
+<script> document.body.className += ' js' </script>
 
-    <div class="navbar navbar-inverse navbar-fixed-top ">
-        <div class="navbar-inner">
-            <div class="container-fluid">
-                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </a>
-                <a class="brand" href="/admin">SRS</a>
-                <div class="nav-collapse collapse">
-                    <p class="navbar-text pull-right">
-                        Přihlášen jako <a href="{plink :Front:profile:default}" class="navbar-link">{$user->getIdentity()->data['object']->username}</a> ({$user->roles[0]}) <a href="{plink :Auth:logout}"><i class="icon-remove"></i></a>
-                    </p>
-                    <ul class="nav">
-                        <li {ifCurrent :Back:dashboard:default}class="active"{/ifCurrent}><a href="{plink :Back:dashboard:default}">Home</a></li>
-                       {if $user->isAllowed(\SRS\Model\Acl\Resource::ACL, \SRS\Model\ACL\Permission::MANAGE)} <li {ifCurrent :Back:acl:*}class="active"{/ifCurrent}><a href="{plink :Back:acl:users}">Práva a Role</a></li>{/if}
-                       {if $user->isAllowed(\SRS\Model\Acl\Resource::CMS, \SRS\Model\ACL\Permission::MANAGE)}
-                           <li {ifCurrent :Back:CMS:Page:*}class="active"{/ifCurrent}{ifCurrent :Back:CMS:Faq:*}class="active"{/ifCurrent}{ifCurrent :Back:CMS:News:*}class="active"{/ifCurrent}{ifCurrent :Back:CMS:Document:*}class="active"{/ifCurrent}>
-                           <a href="{plink :Back:CMS:Page:Pages}">CMS</a>
-                           </li>
-                       {/if}
-                       {if $user->isAllowed(\SRS\Model\Acl\Resource::PROGRAM, \SRS\Model\ACL\Permission::ACCESS)} <li {ifCurrent :Back:Program:Block:*}class="active"{/ifCurrent}{ifCurrent :Back:Program:Schedule:*}class="active"{/ifCurrent}><a href="{plink :Back:Program:Block:list}">Program semináře</a></li>{/if}
-                       {if $user->isAllowed(\SRS\Model\Acl\Resource::CONFIGURATION, \SRS\Model\ACL\Permission::MANAGE)} <li {ifCurrent :Back:Configration:*}class="active"{/ifCurrent}><a href="{plink :Back:Configuration:default}">Konfigurace</a></li>{/if}
-                       {if $user->isAllowed(\SRS\Model\Acl\Resource::EVIDENCE, \SRS\Model\ACL\Permission::MANAGE)} <li {ifCurrent :Back:Evidence:*}class="active"{/ifCurrent}><a href="{plink :Back:Evidence:list}">Evidence účastníků</a></li>{/if}
+<div class="navbar navbar-inverse navbar-fixed-top ">
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="/admin">SRS</a>
 
-                    </ul>
-                </div><!--/.nav-collapse -->
+            <div class="nav-collapse collapse">
+                <p class="navbar-text pull-right">
+                    Přihlášen jako <a href="{plink :Front:profile:default}"
+                                      class="navbar-link">{$user->getIdentity()->data['object']->username}</a>
+                    ({$user->roles[0]}) <a href="{plink :Auth:logout}"><i class="icon-remove"></i></a>
+                </p>
+                <ul class="nav">
+                    <li {ifCurrent :Back:dashboard:default}class="active"{/ifCurrent}><a
+                            href="{plink :Back:dashboard:default}">Home</a></li>
+                {if $user->isAllowed(\SRS\Model\Acl\Resource::ACL, \SRS\Model\ACL\Permission::MANAGE)}
+                    <li {ifCurrent :Back:acl:*}class="active"{/ifCurrent}><a href="{plink :Back:acl:users}">Práva a
+                        Role</a></li>{/if}
+                {if $user->isAllowed(\SRS\Model\Acl\Resource::CMS, \SRS\Model\ACL\Permission::MANAGE)}
+                    <li {ifCurrent :Back:CMS:Page:*}class="active"{/ifCurrent}{ifCurrent :Back:CMS:Faq:*}class="active"{/ifCurrent}{ifCurrent :Back:CMS:News:*}class="active"{/ifCurrent}{ifCurrent :Back:CMS:Document:*}class="active"{/ifCurrent}>
+                        <a href="{plink :Back:CMS:Page:Pages}">CMS</a>
+                    </li>
+                {/if}
+                {if $user->isAllowed(\SRS\Model\Acl\Resource::PROGRAM, \SRS\Model\ACL\Permission::ACCESS)}
+                    <li {ifCurrent :Back:Program:Block:*}class="active"{/ifCurrent}{ifCurrent :Back:Program:Schedule:*}class="active"{/ifCurrent}>
+                        <a href="{plink :Back:Program:Block:list}">Program semináře</a></li>{/if}
+                {if $user->isAllowed(\SRS\Model\Acl\Resource::CONFIGURATION, \SRS\Model\ACL\Permission::MANAGE)}
+                    <li {ifCurrent :Back:Configration:*}class="active"{/ifCurrent}><a
+                            href="{plink :Back:Configuration:default}">Konfigurace</a></li>{/if}
+                {if $user->isAllowed(\SRS\Model\Acl\Resource::EVIDENCE, \SRS\Model\ACL\Permission::MANAGE)}
+                    <li {ifCurrent :Back:Evidence:*}class="active"{/ifCurrent}><a href="{plink :Back:Evidence:list}">Evidence
+                        účastníků</a></li>{/if}
+
+                </ul>
             </div>
+            <!--/.nav-collapse -->
         </div>
     </div>
+</div>
 
 
-    <div class="container-fluid" id="container" {block container_attributes}{/block}>
-        <div class="row-fluid">
-            {block sidebar_wrapper}
-            <div class="span3">
-                {block sidebar}
+<div class="container-fluid" id="container" {block container_attributes}{/block}>
+    <div class="row-fluid">
+    {block sidebar_wrapper}
+        <div class="span3">
+            {block sidebar}
                 <div class="well sidebar-nav"  {block sidebar_attributes}{/block}>
                     <ul class="nav nav-list">
                         {block #sidebar_menu}
 
                         {/block}
                     </ul>
-                </div><!--/.well -->
-                {/block}
-            </div><!--/span-->
-            {/block}
-            <div class="span{block content_width}9{/block}">
-                {snippet flashMessages}
-                <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">
-                    <button type="button" class="close" data-dismiss="alert">×</button>
-                    {!$flash->message}
                 </div>
-                <script>
-                  $(document).ready(function() {
+                <!--/.well -->
+            {/block}
+        </div>
+        <!--/span-->
+    {/block}
+        <div class="span{block content_width}9{/block}">
+        {snippet flashMessages}
+            <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                {!$flash->message}
+            </div>
+            <script>
+                $(document).ready(function () {
                     $('.alert:not(.forever)').delay(4000).fadeOut();
-                  });
-                </script>
-                {/snippet}
-                {block #content} {/block}
-            </div><!--/span-->
-        </div><!--/row-->
+                });
+            </script>
+        {/snippet}
+        {block #content} {/block}
+        </div>
+        <!--/span-->
+    </div>
+    <!--/row-->
 
-        <div class="row-fluid">
-            <div class="span12">
+    <div class="row-fluid">
+        <div class="span12">
             <hr>
 
             <footer>
                 <p>&copy; SRS | <a href="{plink :Front:Page:default}">přejít na webovou prezentaci</a</p>
             </footer>
-            </div>
         </div>
+    </div>
 
-    </div><!--/.fluid-container-->
+</div>
+<!--/.fluid-container-->
 
 </body>
 </html>

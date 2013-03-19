@@ -3,7 +3,7 @@
  * User: Michal
  * Date: 17.2.13
  * Time: 16:22
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 $(function() {
     $.datepicker.regional['cs'] = {

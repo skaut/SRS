@@ -1,13 +1,9 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 1.12.12
  * Time: 18:58
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
-
-
 
 
 namespace SRS\Form;
@@ -18,7 +14,7 @@ use Nette\Application\UI,
     Nette\ComponentModel\IContainer;
 
 /**
-  * Formular pro editaci jiz existujici role
+ * Formular pro editaci jiz existujici role
  */
 class RoleForm extends EntityForm
 {
@@ -49,8 +45,8 @@ class RoleForm extends EntityForm
         $this->addText('feeWord', 'Výše poplatku slovy');
 
         $this->addMultiSelect('permissions', 'Práva')->getControlPrototype()->class('multiselect');
-        $this->addSubmit('submit','Upravit roli')->getControlPrototype()->class('btn');
-        $this->addSubmit('submit_continue','Uložit a pokračovat v úpravách')->getControlPrototype()->class('btn');
+        $this->addSubmit('submit', 'Upravit roli')->getControlPrototype()->class('btn');
+        $this->addSubmit('submit_continue', 'Uložit a pokračovat v úpravách')->getControlPrototype()->class('btn');
 
         $this['registerableFrom']->getControlPrototype()->class('datepicker');
         $this['registerableTo']->getControlPrototype()->class('datepicker');
@@ -69,9 +65,7 @@ class RoleForm extends EntityForm
 
         if ($values['registerableTo'] != null && ($values['registerableTo'] < $values['registerableFrom'] && $values['registerableFrom'] != null)) {
             $this->presenter->flashMessage('Datum do musí být větší než od', 'error');
-        }
-
-        else {
+        } else {
             $role->setProperties($values, $this->presenter->context->database);
             //doctrine z nejakyho duvodu cpe do data dnesek ikdyz ma null
             if ($values['registerableFrom'] == null) {
@@ -85,8 +79,8 @@ class RoleForm extends EntityForm
             $submitName = ($this->isSubmitted());
             $submitName = $submitName->htmlName;
 
-           if ($submitName == 'submit_continue') $this->presenter->redirect('this');
-           $this->presenter->redirect('Acl:roles');
+            if ($submitName == 'submit_continue') $this->presenter->redirect('this');
+            $this->presenter->redirect('Acl:roles');
         }
 
     }

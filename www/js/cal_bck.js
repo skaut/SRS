@@ -3,7 +3,7 @@
  * User: Michal
  * Date: 28.1.13
  * Time: 10:03
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 var myApp = angular.module('dialog', ['ui']);
 function CalendarCtrl($scope, $http) {

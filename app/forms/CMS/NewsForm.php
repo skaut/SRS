@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 1.12.12
  * Time: 18:58
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 
 
@@ -37,8 +35,8 @@ class NewsForm extends \SRS\Form\EntityForm
 //        $this->addText('valid_from', 'Platné od:');
 //        $this->addText('valid_to', 'Platné do:');
 
-        $this->addSubmit('submit','Uložit')->getControlPrototype()->class('btn');
-        $this->addSubmit('submit_continue','Uložit a pokračovat v úpravách')->getControlPrototype()->class('btn');
+        $this->addSubmit('submit', 'Uložit')->getControlPrototype()->class('btn');
+        $this->addSubmit('submit_continue', 'Uložit a pokračovat v úpravách')->getControlPrototype()->class('btn');
 
         $this->onSuccess[] = callback($this, 'formSubmitted');
         $this->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
@@ -51,8 +49,7 @@ class NewsForm extends \SRS\Form\EntityForm
 
         if (!$exists) {
             $news = new \SRS\Model\CMS\News();
-        }
-        else {
+        } else {
             $news = $this->presenter->context->database->getRepository('\SRS\model\CMS\News')->find($values['id']);
         }
 

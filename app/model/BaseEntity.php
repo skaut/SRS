@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 3.12.12
  * Time: 20:58
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 
 namespace SRS\Model;
@@ -43,64 +41,63 @@ abstract class BaseEntity extends \Nette\Object
      */
     public function setProperties($values = array(), $em)
     {
-        $associtaionPosibilities = array ('ORM\ManyToMany', 'ORM\ManyToOne', 'ORM\OneToMany');
+        $associtaionPosibilities = array('ORM\ManyToMany', 'ORM\ManyToOne', 'ORM\OneToMany');
         $reflection = new \Nette\Reflection\ClassType($this);
 
-        foreach($values as $key => $value){
-               //pokud vubec existuje property s timto jmenem
-               if ($reflection->hasProperty($key)) {
-                   $propertyReflection = $reflection->getProperty($key);
+        foreach ($values as $key => $value) {
+            //pokud vubec existuje property s timto jmenem
+            if ($reflection->hasProperty($key)) {
+                $propertyReflection = $reflection->getProperty($key);
 
-                    //obsluhujeme vazby
-                    if ($propertyReflection->hasAnnotation('ORM\ManyToMany') ||
-                        $propertyReflection->hasAnnotation('ORM\ManyToOne') ||
-                        $propertyReflection->hasAnnotation('ORM\OneToMany'))
-                    {
+                //obsluhujeme vazby
+                if ($propertyReflection->hasAnnotation('ORM\ManyToMany') ||
+                    $propertyReflection->hasAnnotation('ORM\ManyToOne') ||
+                    $propertyReflection->hasAnnotation('ORM\OneToMany')
+                ) {
 
-                        $association = null;
+                    $association = null;
 
-                        foreach ($associtaionPosibilities as $possibility) {
-                            $association = $propertyReflection->getAnnotation($possibility);
-                            $targetEntity = $association['targetEntity'];
-                            if ($association != null) break;
+                    foreach ($associtaionPosibilities as $possibility) {
+                        $association = $propertyReflection->getAnnotation($possibility);
+                        $targetEntity = $association['targetEntity'];
+                        if ($association != null) break;
+                    }
+                    if ($association == null) {
+                        throw new \Exception('Problem v prirazeni asociaci v BaseEntity->setProperties');
+                    }
+
+                    if (is_array($value)) { //vazba oneToMany nebo ManyToMany
+                        $newData = new \Doctrine\Common\Collections\ArrayCollection();
+                        foreach ($value as $itemId) {
+                            $newData->add($em->getReference($targetEntity, $itemId));
                         }
-                        if ($association == null) {
-                            throw new \Exception('Problem v prirazeni asociaci v BaseEntity->setProperties');
-                        }
-
-                        if (is_array($value)) { //vazba oneToMany nebo ManyToMany
-                            $newData = new \Doctrine\Common\Collections\ArrayCollection();
-                            foreach($value as $itemId) {
-                                $newData->add($em->getReference($targetEntity, $itemId));
-                            }
-                            $value = $newData;
-                        }
-                        else { //vazba ManyToOne
-                            if ($value != null) {
+                        $value = $newData;
+                    } else { //vazba ManyToOne
+                        if ($value != null) {
                             $value = $em->getReference($targetEntity, $value);
-                            }
                         }
                     }
-                    //method_exists(get_class(),"set$key")
-                    if ($key != 'id') {
-                        $columnAnnotation = $propertyReflection->getAnnotation('ORM\Column');
-                        if (isset($columnAnnotation['type']) && $columnAnnotation['type'] == 'date') {
-                            $value = \DateTime::createFromFormat("Y-m-d", $value);
+                }
+                //method_exists(get_class(),"set$key")
+                if ($key != 'id') {
+                    $columnAnnotation = $propertyReflection->getAnnotation('ORM\Column');
+                    if (isset($columnAnnotation['type']) && $columnAnnotation['type'] == 'date') {
+                        $value = \DateTime::createFromFormat("Y-m-d", $value);
+                    }
+                    if (isset($columnAnnotation['type']) && $columnAnnotation['type'] == 'datetime') {
+                        $value = BaseEntity::normalizeDateTime($value);
+                        $date = $value;
+                        $value = \DateTime::createFromFormat("Y-m-d H:i:s", $value);
+                        if ($value == false) {
+                            $value = \DateTime::createFromFormat("Y-n-j G:i:s", $date);
                         }
-                        if (isset($columnAnnotation['type']) && $columnAnnotation['type'] == 'datetime') {
-                            $value = BaseEntity::normalizeDateTime($value);
-                            $date = $value;
-                            $value = \DateTime::createFromFormat("Y-m-d H:i:s", $value);
-                            if ($value == false) {
-                                $value = \DateTime::createFromFormat("Y-n-j G:i:s", $date);
-                            }
-                            if ($value == false) {
-                                throw new \Exception('Nepodařilo se naparsovat datum '. $date);
-                            }
+                        if ($value == false) {
+                            throw new \Exception('Nepodařilo se naparsovat datum ' . $date);
                         }
+                    }
 
-                        $this->{"set$key"}($value);
-                    }
+                    $this->{"set$key"}($value);
+                }
             }
         }
 
@@ -111,7 +108,8 @@ abstract class BaseEntity extends \Nette\Object
      * @param string $datetime
      * @return string
      */
-    public static function normalizeDateTime($datetime) {
+    public static function normalizeDateTime($datetime)
+    {
         if (strpos($datetime, 'T') !== false) {
             $datetime = str_replace('T', ' ', $datetime);
             $deletePosition = strpos($datetime, '.');
@@ -120,9 +118,6 @@ abstract class BaseEntity extends \Nette\Object
         }
         return $datetime;
     }
-
-
-
 
 
 }

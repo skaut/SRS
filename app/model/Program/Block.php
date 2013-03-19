@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 26.1.13
  * Time: 13:47
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 namespace SRS\Model\Program;
 use Doctrine\ORM\Mapping as ORM,
@@ -161,11 +159,13 @@ class Block extends \SRS\Model\BaseEntity
         return $this->tools;
     }
 
-    public function setPrograms($programs) {
+    public function setPrograms($programs)
+    {
         $this->programs = $programs;
     }
 
-    public function getPrograms() {
+    public function getPrograms()
+    {
         return $this->programs;
     }
 

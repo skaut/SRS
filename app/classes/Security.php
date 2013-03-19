@@ -17,7 +17,7 @@ class Acl extends Permission
         $roles = $em->getRepository('\SRS\Model\Acl\Role')->findAll();
         $resources = $em->getRepository('\SRS\Model\Acl\Resource')->findAll();
 
-        foreach ($resources as $resource){
+        foreach ($resources as $resource) {
             $this->addResource($resource->name);
         }
 

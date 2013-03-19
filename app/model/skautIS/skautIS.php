@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 22.10.12
  * Time: 11:40
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 
 namespace SRS\Model;
@@ -64,7 +62,7 @@ class skautIS extends \Nette\Object
     protected function getUserManagementService()
     {
         if ($this->userManagementService == null) {
-            $this->userManagementService = new \SoapClient($this->skautISUrl. '/' . $this->webServicesSlug. '/' . $this->userManagementServiceSlug);
+            $this->userManagementService = new \SoapClient($this->skautISUrl . '/' . $this->webServicesSlug . '/' . $this->userManagementServiceSlug);
         }
         return $this->userManagementService;
     }
@@ -72,7 +70,7 @@ class skautIS extends \Nette\Object
     protected function getEventsService()
     {
         if ($this->eventsService == null) {
-            $this->eventsService = new \SoapClient($this->skautISUrl. '/' . $this->webServicesSlug. '/' . $this->eventsServiceSlug);
+            $this->eventsService = new \SoapClient($this->skautISUrl . '/' . $this->webServicesSlug . '/' . $this->eventsServiceSlug);
         }
         return $this->eventsService;
     }
@@ -83,7 +81,7 @@ class skautIS extends \Nette\Object
     protected function getOrganizationUnitService()
     {
         if ($this->organizationUnitService == null) {
-            $this->organizationUnitService = new \SoapClient($this->skautISUrl. '/' . $this->webServicesSlug. '/' . $this->organizationUnitServiceSlug, array('ID_Application' => $this->skautISAppID));
+            $this->organizationUnitService = new \SoapClient($this->skautISUrl . '/' . $this->webServicesSlug . '/' . $this->organizationUnitServiceSlug, array('ID_Application' => $this->skautISAppID));
         }
         return $this->organizationUnitService;
     }
@@ -91,7 +89,7 @@ class skautIS extends \Nette\Object
     protected function getApplicationManagementService()
     {
         if ($this->applicationManagementService == null) {
-            $this->applicationManagementService = new \SoapClient($this->skautISUrl. '/' . $this->webServicesSlug. '/' . $this->applicationManagementServiceSlug);
+            $this->applicationManagementService = new \SoapClient($this->skautISUrl . '/' . $this->webServicesSlug . '/' . $this->applicationManagementServiceSlug);
         }
 
         return $this->applicationManagementService;
@@ -121,7 +119,7 @@ class skautIS extends \Nette\Object
             'ID_Login' => $token,
             'ID' => $personID
         );
-       // $response = $this->getOrganizationUnitService()->__soapCall('PersonDetail',array('PersonDetail' => array('personDetailInput' => $params)) )->PersonDetailResult;
+        // $response = $this->getOrganizationUnitService()->__soapCall('PersonDetail',array('PersonDetail' => array('personDetailInput' => $params)) )->PersonDetailResult;
         $response = $this->getOrganizationUnitService()->PersonDetail(array("personDetailInput" => $params))->PersonDetailResult;
         return $response;
 
@@ -143,15 +141,15 @@ class skautIS extends \Nette\Object
      * @param $appId
      * @return array
      */
-    public function checkAppId($appId) {
+    public function checkAppId($appId)
+    {
         $params = array(
             'ID_Application' => $appId
         );
         try {
             $response = $this->getOrganizationUnitService()->UnitAllRegistryBasic(array('unitAllRegistryBasicInput' => $params))->UnitAllRegistryBasicResult;
             $result = array('success' => true, 'message' => '');
-        }
-        catch (\SoapFault $e) {
+        } catch (\SoapFault $e) {
             $result = array('success' => false, 'message' => $e->getMessage());
         }
 
@@ -169,9 +167,9 @@ class skautIS extends \Nette\Object
 
     public function getEvents($token)
     {
-        $params = array (
-          'ID_Login' => $token,
-          //'ID_Person' => $skautISPersonId
+        $params = array(
+            'ID_Login' => $token,
+            //'ID_Person' => $skautISPersonId
         );
 
         $response = $this->getEventsService()->EventGeneralAll(array('eventGeneralAllInput' => $params))->EventGeneralAllResult;
@@ -198,7 +196,7 @@ class skautIS extends \Nette\Object
             if ($skautISParticipants instanceof \stdClass) {
                 $skautISParticipants = array($skautISParticipants);
             }
-            foreach($skautISParticipants as $p) {
+            foreach ($skautISParticipants as $p) {
                 if ($p->CanDelete == true) {
                     $this->deleteParticipant($token, $p->ID, $skautISEventId);
                 }
@@ -219,9 +217,9 @@ class skautIS extends \Nette\Object
     protected function deleteParticipant($token, $skautISParticipantId, $skautISEventId)
     {
         $params = array(
-          'ID_Login' => $token,
-          'ID' => $skautISParticipantId,
-          'DeletePerson' => false
+            'ID_Login' => $token,
+            'ID' => $skautISParticipantId,
+            'DeletePerson' => false
         );
         $this->getEventsService()->ParticipantGeneralDelete(array('participantGeneralDeleteInput' => $params));
     }
@@ -242,7 +240,7 @@ class skautIS extends \Nette\Object
     {
         $params = array(
             'ID_Login' => $token,
-            'ID' => $skautISEventId ,
+            'ID' => $skautISEventId,
             'ID_Participant' => $participantId,
             'Days' => $days,
             'Note' => $note
@@ -262,7 +260,6 @@ class skautIS extends \Nette\Object
         );
         $this->getUserManagementService()->LoginUpdateRefresh(array('loginUpdateRefreshInput' => $params));
     }
-
 
 
 }

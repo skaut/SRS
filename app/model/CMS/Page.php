@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 15.11.12
  * Time: 13:27
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 namespace SRS\Model\CMS;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,7 +20,6 @@ use Doctrine\Common\Collections\Criteria;
  * @property \Doctrine\ORM\PersistentCollection $roles
  * @property \Doctrine\Common\Collections\ArrayCollection $contents
  * @property int $position
-
  */
 class Page extends \SRS\Model\BaseEntity
 {
@@ -53,14 +50,11 @@ class Page extends \SRS\Model\BaseEntity
     protected $public = false;
 
 
-
     /**
      * @ORM\ManyToMany(targetEntity="\SRS\model\Acl\Role", inversedBy="pages")
      * @var \Doctrine\Common\Collections\ArrayCollection
      */
     protected $roles;
-
-
 
 
     /**
@@ -71,7 +65,8 @@ class Page extends \SRS\Model\BaseEntity
     protected $contents;
 
 
-    public function __construct($name, $slug) {
+    public function __construct($name, $slug)
+    {
         $this->name = $name;
         $this->slug = $slug;
         $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
@@ -95,20 +90,19 @@ class Page extends \SRS\Model\BaseEntity
 
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq("area", $area))
-            ->orderBy(array("position" => "ASC"))
-        ;
+            ->orderBy(array("position" => "ASC"));
         return $this->contents->matching($criteria);
     }
 
-    public function countContents($area) {
+    public function countContents($area)
+    {
         if (!in_array($area, Content::$AREA_TYPES)) {
             throw new SRSPageException("Area {$area} není definována");
         }
 
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq("area", $area))
-            ->orderBy(array("position" => "ASC"))
-        ;
+            ->orderBy(array("position" => "ASC"));
         return $this->contents->matching($criteria)->count();
     }
 
@@ -167,11 +161,11 @@ class Page extends \SRS\Model\BaseEntity
         return $this->public;
     }
 
-    public function isAllowedToRole($roleName) {
-        return $this->roles->exists(function($key, $role) use ($roleName) {
+    public function isAllowedToRole($roleName)
+    {
+        return $this->roles->exists(function ($key, $role) use ($roleName) {
             return $role->name == $roleName;
         });
-
 
 
     }
@@ -184,35 +178,34 @@ class PageRepository extends \Doctrine\ORM\EntityRepository
 
     public function getCount()
     {
-        return $this->_em->createQuery('SELECT count (p.id) FROM '.$this->entity. ' p' )
+        return $this->_em->createQuery('SELECT count (p.id) FROM ' . $this->entity . ' p')
             ->getSingleScalarResult();
     }
 
-    public function slugToId($slug) {
+    public function slugToId($slug)
+    {
         try {
-            return $this->_em->createQuery("SELECT p.id FROM ".$this->entity. " p WHERE p.slug = '{$slug}' ")
+            return $this->_em->createQuery("SELECT p.id FROM " . $this->entity . " p WHERE p.slug = '{$slug}' ")
                 ->getSingleScalarResult();
-        }
-        catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (\Doctrine\ORM\NoResultException $e) {
             return null;
         }
     }
 
-    public function IdToSlug($id) {
+    public function IdToSlug($id)
+    {
         try {
-            return $this->_em->createQuery("SELECT p.slug FROM ".$this->entity. " p WHERE p.id = '{$id}' ")
+            return $this->_em->createQuery("SELECT p.slug FROM " . $this->entity . " p WHERE p.id = '{$id}' ")
                 ->getSingleScalarResult();
-        }
-
-        catch(\Doctrine\ORM\NoResultException $e) {
+        } catch (\Doctrine\ORM\NoResultException $e) {
             return null;
         }
     }
 
     public function findPublishedOrderedByPosition()
     {
-         return $this->_em->createQuery("SELECT p FROM ".$this->entity. " p WHERE p.public = '1' ORDER BY p.position ASC ")
-             ->getResult();
+        return $this->_em->createQuery("SELECT p FROM " . $this->entity . " p WHERE p.public = '1' ORDER BY p.position ASC ")
+            ->getResult();
     }
 
 }

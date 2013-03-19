@@ -1,23 +1,21 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 15.11.12
  * Time: 13:25
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 namespace SRS\Factory;
 
 use SRS\Model\Acl\Resource;
 use SRS\Model\Acl\Permission;
 use SRS\Model\Acl\Role;
+
 class AclFactory
 {
     //protected $roles;
 
-    public static function createRoles() {
-
-
+    public static function createRoles()
+    {
 
 
         $roles = array();
@@ -92,11 +90,6 @@ class AclFactory
 
         return $roles;
     }
-
-
-
-
-
 
 
 }

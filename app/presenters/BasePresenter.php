@@ -36,10 +36,9 @@ abstract class BasePresenter extends BaseComponentsPresenter
         //Při každém načtení stránky prodlužujeme platnost skautIS Tokenu
         if ($this->user->isLoggedIn()) {
             try {
-            $this->context->skautIS->refreshUserExpiration($this->user->getIdentity()->token);
-            }
-            catch (\SoapFault $e) {
-                \Nette\Diagnostics\Debugger::log('Nepodařilo se prodloužit platnost skautISTokenu, uživatel '.$this->user->getId().', message: '.$e->getMessage());
+                $this->context->skautIS->refreshUserExpiration($this->user->getIdentity()->token);
+            } catch (\SoapFault $e) {
+                \Nette\Diagnostics\Debugger::log('Nepodařilo se prodloužit platnost skautISTokenu, uživatel ' . $this->user->getId() . ', message: ' . $e->getMessage());
                 $this->context->user->logout(true);
                 $this->redirect(':Auth:login');
             }
@@ -48,14 +47,14 @@ abstract class BasePresenter extends BaseComponentsPresenter
     }
 
 
-    public function beforeRender() {
+    public function beforeRender()
+    {
         parent::beforeRender();
         if ($this->isAjax()) {
             //aby fungovali flashmessages pri ajaxu
             $this->invalidateControl('flashMessages');
         }
     }
-
 
 
 }

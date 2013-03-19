@@ -28,9 +28,9 @@ $configurator = new \Nette\Config\Configurator;
 $temp_dir = __DIR__ . '/../temp';
 $configurator->setTempDirectory($temp_dir);
 $configurator->createRobotLoader()
-	->addDirectory(APP_DIR)
-	->addDirectory(LOCAL_LIBS_DIR)
-	->register();
+    ->addDirectory(APP_DIR)
+    ->addDirectory(LOCAL_LIBS_DIR)
+    ->register();
 
 
 $config = \Nette\Utils\Neon::decode(file_get_contents(__DIR__ . '/config/config.neon'));
@@ -39,14 +39,13 @@ $isDebug = $config['common']['parameters']['debug'];
 if ($isDebug) {
     $configurator->setDebugMode();
     $configurator->enableDebugger(__DIR__ . '/../log');
-}
-else {
+} else {
     \Nette\Diagnostics\Debugger::$logDirectory = __DIR__ . '/../log';
-    \Nette\Diagnostics\Debugger::$email =$config['common']['parameters']['contact_email'];
+    \Nette\Diagnostics\Debugger::$email = $config['common']['parameters']['contact_email'];
     $configurator->setDebugMode($configurator::NONE);
 }
 
-$environment = $isDebug == true ? 'development': 'production';
+$environment = $isDebug == true ? 'development' : 'production';
 $configurator->addConfig(__DIR__ . '/config/config.neon', $environment);
 
 

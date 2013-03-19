@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 1.1.13
  * Time: 17:54
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 namespace SRS\Form\CMS;
 use Nette\Application\UI,
@@ -22,11 +20,11 @@ class PageForm extends \SRS\Form\EntityForm
             ->addRule(Form::FILLED, 'Zadejte jméno')
             ->getControlPrototype()->class('name');
         $this->addCheckbox('public', 'Zveřejněno:');
-        $this->addText('slug','Slug:')
+        $this->addText('slug', 'Slug:')
             ->addRule(Form::FILLED, 'Zadejte slug')
             ->getControlPrototype()->class('slug');
         $this->addMultiSelect('roles', 'Viditelná pro Role:')->setItems($roleChoices)
-            ->addRule(Form::FILLED,'Zadejte alespoň jednu Roli. Pokud chcete stránku skrýt. Použijte pole "Zveřejněno"');
+            ->addRule(Form::FILLED, 'Zadejte alespoň jednu Roli. Pokud chcete stránku skrýt. Použijte pole "Zveřejněno"');
         $this->addSelect('add_content', 'Přidat obsah', \SRS\Model\CMS\Content::$TYPES)->setPrompt('vyber typ');
         $this->addSubmit('submit_content', 'OK')->getControlPrototype()->class('btn');
         $this->addSubmit('submit_continue', 'Uložit a pokračovat v úpravách')->getControlPrototype()->class('btn pull-right btn-primary');

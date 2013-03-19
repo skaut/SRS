@@ -9,24 +9,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
-	<meta name="description" content="">
-	<meta name="robots" content="{$robots}" n:ifset="$robots">
-	<title>{block title|striptags}{/block} | SRS</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta name="robots" content="{$robots}" n:ifset="$robots">
+    <title>{block title|striptags}{/block} | SRS</title>
 
 
     <link rel="shortcut icon" href="{$basePath}/favicon.ico">
-	{block head}{/block}
+{block head}{/block}
 </head>
 
 <body>
-	<script> document.body.className+=' js' </script>
-    <div n:foreach="$flashes as $flash" class="sent {$flash->type}">
-        <p>{$flash->message}</p>
-    </div>
+<script> document.body.className += ' js' </script>
+<div n:foreach="$flashes as $flash" class="sent {$flash->type}">
+    <p>{$flash->message}</p>
+</div>
 
 
-     {include #content}
+{include #content}
 
 
 </body>

@@ -31,21 +31,17 @@ class Authenticator extends \Nette\Object implements NS\IAuthenticator
     public function authenticate(array $credentials)
     {
         list($skautISToken, $skautISUnitId, $skautISRoleId) = $credentials;
-        try
-        {
+        try {
             $skautISUser = $this->skautIS->getUser($skautISToken);
-        }
-        catch (\SoapFault $e)
-        {
+        } catch (\SoapFault $e) {
             \Nette\Diagnostics\Debugger::log($e->getMessage());
             throw new NS\AuthenticationException("Invalid skautIS Token", self::INVALID_CREDENTIAL);
         }
 //        $result = $this->skautIS->getMembership($skautISToken, $skautISUnitId);
 //        \Nette\Diagnostics\Debugger::dump($result);
         $user = $this->database->getRepository("\SRS\Model\User")->findOneBy(array('skautISUserId' => $skautISUser->ID));
-        $roleRegistered = $this->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('name'  => Role::REGISTERED));
-        if ($user == null)
-        {
+        $roleRegistered = $this->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('name' => Role::REGISTERED));
+        if ($user == null) {
             if ($roleRegistered == null) {
                 throw new \Exception('Nekonzistentni stav. Role pro nove uzivatele by vzdy mela existovat');
             }
@@ -60,8 +56,7 @@ class Authenticator extends \Nette\Object implements NS\IAuthenticator
         //pokud uzivatel neba roli schvalenou, degradujeme jen na registrovaneho
         if ($user->approved == true) {
             $netteRoles[] = $user->role->name;
-        }
-        else {
+        } else {
             $netteRoles[] = $roleRegistered->name;
         }
 

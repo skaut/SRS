@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 15.11.12
  * Time: 14:06
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 
 namespace SRS\Command;
@@ -26,7 +24,8 @@ class InitialSettingsCommand extends Command
     /**
      * @param \Doctrine\ORM\EntityManager
      */
-    public function __construct(\Doctrine\ORM\EntityManager $em) {
+    public function __construct(\Doctrine\ORM\EntityManager $em)
+    {
         parent::__construct();
         $this->em = $em;
     }

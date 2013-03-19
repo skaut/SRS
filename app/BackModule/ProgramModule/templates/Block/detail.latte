@@ -1,4 +1,3 @@
-
 {extends '../Programlayout.latte'}
 
 {block title}
@@ -12,46 +11,54 @@ Program » Blok {$block->name}
 </ul>
 <h2>Detail bloku: {$block->name}</h2>
 
-{if $user->isAllowed('Program', 'Spravovat Všechny Programy') || ($user->isAllowed('Program', 'Spravovat vlastní Programy') && isset($block->lector->id) && $user->id == $block->lector->id)}
-<div class="navbar">
-    <a class="btn btn-warning" href="{plink edit $block->id}">Upravit Blok</a>
-    <a class="btn btn-danger confirm" href="{link delete! $block->id}">Smazat Blok</a>
-</div>
-{/if}
+    {if $user->isAllowed('Program', 'Spravovat Všechny Programy') || ($user->isAllowed('Program', 'Spravovat vlastní Programy') && isset($block->lector->id) && $user->id == $block->lector->id)}
+    <div class="navbar">
+        <a class="btn btn-warning" href="{plink edit $block->id}">Upravit Blok</a>
+        <a class="btn btn-danger confirm" href="{link delete! $block->id}">Smazat Blok</a>
+    </div>
+    {/if}
 <ul class="block-properties no-margin">
-   {ifset $block->lector->username}
-   <li><span>Lektor:</span> {$block->lector->username}</li>
-   {/ifset}
-   <li><span>Lokalita:</span> {$block->location}</li>
-   <li><span>Délka:</span> {$block->duration * $basicBlockDuration} minut</li>
-   <li><span>Pomůcky:</span> {$block->tools}</li>
-   <li><span>Kapacita:</span> {$block->capacity}</li>
+    {ifset $block->lector->username}
+        <li><span>Lektor:</span> {$block->lector->username}</li>
+    {/ifset}
+    <li><span>Lokalita:</span> {$block->location}</li>
+    <li><span>Délka:</span> {$block->duration * $basicBlockDuration} minut</li>
+    <li><span>Pomůcky:</span> {$block->tools}</li>
+    <li><span>Kapacita:</span> {$block->capacity}</li>
 </ul>
 
 <p>{$block->perex}</p>
-{!$block->description}
+    {!$block->description}
 
 <h3>Zařazení v harmonogramu:</h3>
-    <table class="table table-stripped">
-        <thead>
-        <tr><th>Od</th><th>Do</th><th>Obsazenost</th><th>Povinný</th></tr>
-        </thead>
-        <tbody>
+<table class="table table-stripped">
+    <thead>
+    <tr>
+        <th>Od</th>
+        <th>Do</th>
+        <th>Obsazenost</th>
+        <th>Povinný</th>
+    </tr>
+    </thead>
+    <tbody>
         {foreach $block->programs as $program}
-        <tr><td>{$program->start|date:"d.m. H:i:s"}</td>
+        <tr>
+            <td>{$program->start|date:"d.m. H:i:s"}</td>
             <td>{$program->countEnd($basicBlockDuration)|date:"d.m. H:i:s"}</td>
             <td>{$program->attendees->count()}/{$block->capacity}
             <td>{if $program->mandatory == true}ANO{else}NE{/if}</td>
             <td><a href="#" data-toggle="modal" data-target="#modal-{$program->id}">přihlášení účastnící</a>
+
                 <div id='modal-{$program->id}' class="modal hide fade">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h3>Přihlášení účastnící termín {$program->start|date:"d.m. H:i:s"} - {$program->countEnd($basicBlockDuration)|date:"d.m. H:i:s"} </h3>
+                        <h3>Přihlášení účastnící termín {$program->start|date:"d.m. H:i:s"}
+                            - {$program->countEnd($basicBlockDuration)|date:"d.m. H:i:s"} </h3>
                     </div>
                     <div class="modal-body">
                         <ul>
                             {foreach $program->attendees as $att}
-                            <li><a href="{plink :Back:Evidence:detail $att->id}">{$att->displayName}</a></li>
+                                <li><a href="{plink :Back:Evidence:detail $att->id}">{$att->displayName}</a></li>
                             {/foreach}
                         </ul>
                     </div>
@@ -65,15 +72,17 @@ Program » Blok {$block->name}
             <td>
 
                 <a href="#" data-toggle="modal" data-target="#modal-unsigned-{$program->id}">Neřihlášení účastnící</a>
+
                 <div id='modal-unsigned-{$program->id}' class="modal hide fade">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h3>Nepřihlášení účastnící termín {$program->start|date:"d.m. H:i:s"} - {$program->countEnd($basicBlockDuration)|date:"d.m. H:i:s"} </h3>
+                        <h3>Nepřihlášení účastnící termín {$program->start|date:"d.m. H:i:s"}
+                            - {$program->countEnd($basicBlockDuration)|date:"d.m. H:i:s"} </h3>
                     </div>
                     <div class="modal-body">
                         <ul>
                             {foreach $program->getUnsignedUsers($rolesWithPerm) as $u}
-                               <li><a href="{plink :Back:Evidence:detail $u->id}">{$u->displayName}</a></li>
+                                <li><a href="{plink :Back:Evidence:detail $u->id}">{$u->displayName}</a></li>
                             {/foreach}
                         </ul>
                     </div>
@@ -84,9 +93,9 @@ Program » Blok {$block->name}
             </td>
         </tr>
         {/foreach}
-        </tbody>
+    </tbody>
 
-    </table>
+</table>
 
 {include '../../../templates/includes/confirm_dialog.latte'}
 {/block}

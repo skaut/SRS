@@ -1,10 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Michal
  * Date: 30.10.12
  * Time: 21:08
- * To change this template use File | Settings | File Templates.
+ * Author: Michal Májský
  */
 namespace SRS\Components;
 use \NiftyGrid\Grid;
@@ -36,7 +34,7 @@ class EvidenceGrid extends Grid
         parent::__construct();
         $this->em = $em;
         $this->dbsettings = $this->em->getRepository('\SRS\Model\Settings');
-        $this->templatePath = __DIR__.'/template.latte';
+        $this->templatePath = __DIR__ . '/template.latte';
         $this->columnsVisibility = $columnsVisibility;
     }
 
@@ -46,8 +44,7 @@ class EvidenceGrid extends Grid
         $qb->addSelect('u');
         $qb->addSelect('role');
         $qb->from('\SRS\Model\User', 'u');
-        $qb->leftJoin('u.role','role'); //'WITH', 'role.standAlone=1');
-
+        $qb->leftJoin('u.role', 'role'); //'WITH', 'role.standAlone=1');
 
 
         $roles = $this->em->getRepository('\SRS\Model\Acl\Role')->findAll();
@@ -71,17 +68,17 @@ class EvidenceGrid extends Grid
 
         if ($this->columnsVisibility['role'])
             $this->addColumn('role', 'Role')
-                ->setRenderer(function($row) {
-                    return $row->role['name'];
-                })
+                ->setRenderer(function ($row) {
+                return $row->role['name'];
+            })
                 ->setSelectFilter($rolesGrid);
 
         if ($this->columnsVisibility['birthdate'])
             $this->addColumn('birthdate', 'Věk')
-                ->setRenderer(function($row) use ($today) {
-                    $interval = $today->diff($row->birthdate);
-                    return $interval->y;
-                });
+                ->setRenderer(function ($row) use ($today) {
+                $interval = $today->diff($row->birthdate);
+                return $interval->y;
+            });
 
         if ($this->columnsVisibility['city'])
             $this->addColumn('city', 'Město')
@@ -92,8 +89,8 @@ class EvidenceGrid extends Grid
             $this->addColumn('paid', 'Zaplaceno')
                 ->setBooleanFilter()
                 ->setBooleanEditable()
-                ->setRenderer(function($row) {
-                    return \SRS\Helpers::renderBoolean($row->paid);
+                ->setRenderer(function ($row) {
+                return \SRS\Helpers::renderBoolean($row->paid);
             });
 
         $paymentMethods = $presenter->context->parameters['payment_methods'];
@@ -103,15 +100,15 @@ class EvidenceGrid extends Grid
                 ->setSelectFilter($paymentMethods)
                 ->setSelectEditable($paymentMethods, 'nezadáno')
                 ->setRenderer(function ($row) use ($paymentMethods) {
-                    if ($row->paymentMethod == null || $row->paymentMethod == '') return '';
-                    return $paymentMethods[$row->paymentMethod];
-                });
+                if ($row->paymentMethod == null || $row->paymentMethod == '') return '';
+                return $paymentMethods[$row->paymentMethod];
+            });
 
         if ($this->columnsVisibility['paymentDate'])
             $this->addColumn('paymentDate', 'Datum zaplacení')
                 ->setDateEditable()
                 ->setDateFilter()
-                ->setRenderer(function ($row)  {
+                ->setRenderer(function ($row) {
                 if ($row->paymentDate == null || $row->paymentDate == '') return '';
                 return $row->paymentDate->format('d.m. Y');
             });
@@ -120,8 +117,8 @@ class EvidenceGrid extends Grid
             $this->addColumn('incomeProofPrinted', 'Příjm. doklad vytištěn?')
                 ->setBooleanEditable()
                 ->setBooleanFilter()
-                ->setRenderer(function ($row)  {
-                    return \SRS\Helpers::renderBoolean($row->incomeProofPrinted);
+                ->setRenderer(function ($row) {
+                return \SRS\Helpers::renderBoolean($row->incomeProofPrinted);
             });
 
 
@@ -129,21 +126,20 @@ class EvidenceGrid extends Grid
             $this->addColumn('attended', 'Přítomen')
                 ->setBooleanFilter()
                 ->setBooleanEditable()
-                ->setRenderer(function($row) {
-                    return \SRS\Helpers::renderBoolean($row->attended);
+                ->setRenderer(function ($row) {
+                return \SRS\Helpers::renderBoolean($row->attended);
             });
 
         $CUSTOM_BOOLEAN_COUNT = $presenter->context->parameters['user_custom_boolean_count'];
         for ($i = 0; $i < $CUSTOM_BOOLEAN_COUNT; $i++) {
-            $column = 'user_custom_boolean_'.$i;
+            $column = 'user_custom_boolean_' . $i;
             $dbvalue = $this->dbsettings->get($column);
-            $propertyName = 'customBoolean'.$i;
+            $propertyName = 'customBoolean' . $i;
 
-            if ($dbvalue != '' && $this->columnsVisibility[$propertyName])
-            {
+            if ($dbvalue != '' && $this->columnsVisibility[$propertyName]) {
                 $this->addColumn($propertyName, $this->dbsettings->get($column))
                     ->setBooleanFilter()
-                    ->setRenderer(function($row) use ($i) {
+                    ->setRenderer(function ($row) use ($i) {
                     return \SRS\Helpers::renderBoolean($row->{"customBoolean$i"});
                 });
             }
@@ -151,12 +147,11 @@ class EvidenceGrid extends Grid
 
         $CUSTOM_TEXT_COUNT = $presenter->context->parameters['user_custom_text_count'];
         for ($i = 0; $i < $CUSTOM_TEXT_COUNT; $i++) {
-            $column = 'user_custom_text_'.$i;
+            $column = 'user_custom_text_' . $i;
             $dbvalue = $this->dbsettings->get($column);
-            $propertyName = 'customText'.$i;
+            $propertyName = 'customText' . $i;
 
-            if ($dbvalue != '' && $this->columnsVisibility[$propertyName])
-            {
+            if ($dbvalue != '' && $this->columnsVisibility[$propertyName]) {
                 $this->addColumn($propertyName, $this->dbsettings->get($column))
                     ->setTextFilter();
             }
@@ -168,14 +163,13 @@ class EvidenceGrid extends Grid
         $this->addButton("detail", "Detail")
             ->setClass("btn")
             ->setText('Zobrazit detail')
-            ->setLink(function($row) use ($presenter){return $presenter->link("detail", $row['id']);})
+            ->setLink(function ($row) use ($presenter) {
+            return $presenter->link("detail", $row['id']);
+        })
             ->setAjax(FALSE);
 
 
-
-
-
-        $this->setRowFormCallback(function($values) use ($self, $presenter, $visibility){
+        $this->setRowFormCallback(function ($values) use ($self, $presenter, $visibility) {
                 $user = $presenter->context->database->getRepository('\SRS\Model\User')->find($values['id']);
                 if ($visibility['paid']) {
                     $user->paid = isset($values['paid']) ? true : false;
@@ -193,29 +187,34 @@ class EvidenceGrid extends Grid
                 }
 
                 if ($values['paymentDate']) {
-                    $user->paymentDate = \DateTime::createFromFormat('Y-m-d',$values['paymentDate']);
+                    $user->paymentDate = \DateTime::createFromFormat('Y-m-d', $values['paymentDate']);
                 }
 
                 $presenter->context->database->flush();
-                $self->flashMessage("Záznam byl úspěšně uložen.","success");
+                $self->flashMessage("Záznam byl úspěšně uložen.", "success");
 
             }
         );
 
-        $this->addAction("makeThemPayBank","Označit jako zaplacené dnes přes účet")
-            ->setCallback(function($id) use ($self){return $self->handleMakeThemPay($id, 'bank');});
+        $this->addAction("makeThemPayBank", "Označit jako zaplacené dnes přes účet")
+            ->setCallback(function ($id) use ($self) {
+            return $self->handleMakeThemPay($id, 'bank');
+        });
 
-        $this->addAction("makeThemPayCash","Označit jako zaplacené dnes hotově")
-            ->setCallback(function($id) use ($self){return $self->handleMakeThemPay($id, 'cash');});
+        $this->addAction("makeThemPayCash", "Označit jako zaplacené dnes hotově")
+            ->setCallback(function ($id) use ($self) {
+            return $self->handleMakeThemPay($id, 'cash');
+        });
 
-        $this->addAction("attend","Označit jako přítomné")
-            ->setCallback(function($id) use ($self){return $self->handleAttend($id);});
+        $this->addAction("attend", "Označit jako přítomné")
+            ->setCallback(function ($id) use ($self) {
+            return $self->handleAttend($id);
+        });
 
-        $this->addAction("printIncomeProof","Vytisknout příjmový doklad")->setAjax(false)
-            ->setCallback(function($id) use ($presenter){
-                $presenter->redirect('printIncomeProof!', array('ids' => $id));
-            });
-
+        $this->addAction("printIncomeProof", "Vytisknout příjmový doklad")->setAjax(false)
+            ->setCallback(function ($id) use ($presenter) {
+            $presenter->redirect('printIncomeProof!', array('ids' => $id));
+        });
 
 
     }
@@ -227,7 +226,7 @@ class EvidenceGrid extends Grid
      */
     public function handleMakeThemPay($ids, $method)
     {
-        foreach ($ids as $id ) {
+        foreach ($ids as $id) {
             $userToSave = $this->presenter->context->database->getRepository('\SRS\Model\User')->find($id);
             $userToSave->paymentMethod = $method;
             $userToSave->paymentDate = new \DateTime();
@@ -236,10 +235,10 @@ class EvidenceGrid extends Grid
 
         $this->presenter->context->database->flush();
 
-        if(count($ids) > 1){
-            $this->flashMessage("Vybraní uživatelé byli označeni jakože zaplatili.","success");
-        }else{
-            $this->flashMessage("Vybraný uživatel byl označen jako zaplacený.","success");
+        if (count($ids) > 1) {
+            $this->flashMessage("Vybraní uživatelé byli označeni jakože zaplatili.", "success");
+        } else {
+            $this->flashMessage("Vybraný uživatel byl označen jako zaplacený.", "success");
         }
         $this->redirect("this");
     }
@@ -247,17 +246,17 @@ class EvidenceGrid extends Grid
 
     public function handleAttend($ids)
     {
-        foreach ($ids as $id ) {
+        foreach ($ids as $id) {
             $userToSave = $this->presenter->context->database->getRepository('\SRS\Model\User')->find($id);
             $userToSave->attended = true;
         }
 
         $this->presenter->context->database->flush();
 
-        if(count($ids) > 1){
-            $this->flashMessage("Vybraní uživatelé byli označeni jako přítomný na akci.","success");
-        }else{
-            $this->flashMessage("Vybraný uživatel byl označen jako přítomný.","success");
+        if (count($ids) > 1) {
+            $this->flashMessage("Vybraní uživatelé byli označeni jako přítomný na akci.", "success");
+        } else {
+            $this->flashMessage("Vybraný uživatel byl označen jako přítomný.", "success");
         }
         $this->redirect("this");
     }
@@ -277,17 +276,17 @@ class EvidenceGrid extends Grid
         $rows = $this->dataSource->getData();
         $this->template->rows = $rows;
         $this->template->primaryKey = $this->primaryKey;
-        if($this->hasActiveRowForm()){
+        if ($this->hasActiveRowForm()) {
             $row = $rows[$this->activeRowForm];
-            foreach($row as $name => $value){
-                if($this->columnExists($name) && !empty($this['columns']->components[$name]->formRenderer)){
+            foreach ($row as $name => $value) {
+                if ($this->columnExists($name) && !empty($this['columns']->components[$name]->formRenderer)) {
                     $row[$name] = call_user_func($this['columns']->components[$name]->formRenderer, $row);
                 }
-                if(isset($this['gridForm'][$this->name]['rowForm'][$name])){
+                if (isset($this['gridForm'][$this->name]['rowForm'][$name])) {
                     $input = $this['gridForm'][$this->name]['rowForm'][$name];
-                    if($input instanceof \Nette\Forms\Controls\SelectBox){
+                    if ($input instanceof \Nette\Forms\Controls\SelectBox) {
                         $items = $this['gridForm'][$this->name]['rowForm'][$name]->getItems();
-                        if(in_array($row[$name], $items)){
+                        if (in_array($row[$name], $items)) {
                             $row[$name] = array_search($row[$name], $items);
                         }
                     }
@@ -296,17 +295,17 @@ class EvidenceGrid extends Grid
             foreach ($row as $key => $column) {
                 if ($column instanceof \DateTime) {
 
-                   $row[$key] = $column->format('Y-m-d');
+                    $row[$key] = $column->format('Y-m-d');
                 }
             }
             $this['gridForm'][$this->name]['rowForm']->setDefaults($row);
             $this['gridForm'][$this->name]['rowForm']->addHidden($this->primaryKey, $this->activeRowForm);
         }
-        if($this->paginate){
-            $this->template->viewedFrom = ((($this->getPaginator()->getPage()-1)*$this->perPage)+1);
-            $this->template->viewedTo = ($this->getPaginator()->getLength()+(($this->getPaginator()->getPage()-1)*$this->perPage));
+        if ($this->paginate) {
+            $this->template->viewedFrom = ((($this->getPaginator()->getPage() - 1) * $this->perPage) + 1);
+            $this->template->viewedTo = ($this->getPaginator()->getLength() + (($this->getPaginator()->getPage() - 1) * $this->perPage));
         }
-        $templatePath = !empty($this->templatePath) ? $this->templatePath : __DIR__."/../../templates/grid.latte";
+        $templatePath = !empty($this->templatePath) ? $this->templatePath : __DIR__ . "/../../templates/grid.latte";
 
         if ($this->getTranslator() instanceof \Nette\Localization\ITranslator) {
             $this->template->setTranslator($this->getTranslator());
@@ -315,10 +314,6 @@ class EvidenceGrid extends Grid
         $this->template->setFile($templatePath);
         $this->template->render();
     }
-
-
-
-
 
 
 }
