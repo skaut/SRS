@@ -31,7 +31,7 @@ class InstallPresenter extends \SRS\BaseComponentsPresenter
         try {
             if ($this->context->parameters['database']['schema_imported'] == true) {
                 $this->flashMessage('Schéma databáze bylo již naimportováno');
-                $this->redirect(':Install:install:admin');
+                $this->redirect(':Install:install:skautis');
             }
         } catch (\Doctrine\DBAL\DBALException $e) {
             //do nothing
@@ -42,11 +42,6 @@ class InstallPresenter extends \SRS\BaseComponentsPresenter
 
     public function handleImportDB()
     {
-        if (!$this->context->parameters['database']['installed']) {
-            $this->flashMessage('nejprve nastavte připojení k databázi');
-            $this->redirect(':Install:install:default');
-        }
-
 
         $success = true;
         try {
@@ -58,7 +53,7 @@ class InstallPresenter extends \SRS\BaseComponentsPresenter
 
 
         } catch (\Doctrine\ORM\Tools\ToolsException $e) {
-            $this->flashMessage('Nahrání schéma databáze se nepodařilo');
+            $this->flashMessage('Nahrání schéma databáze se nepodařilo', 'error');
             $this->flashMessage('Je pravděpodobné, že Databáze již existuje');
             $this->flashMessage($e->getCode() . ': ' . $e->getMessage());
             $success = false;
@@ -86,7 +81,7 @@ class InstallPresenter extends \SRS\BaseComponentsPresenter
         } catch (\Doctrine\DBAL\DBALException $e) {
             $success = false;
             $this->template->error = $e->getCode();
-            $this->flashMessage('Nahrání inicializačních dat se nepodařilo');
+            $this->flashMessage('Nahrání inicializačních dat se nepodařilo', 'error');
             $this->flashMessage($e->getCode() . ': ' . $e->getMessage());
         }
 
@@ -97,8 +92,8 @@ class InstallPresenter extends \SRS\BaseComponentsPresenter
             $environment = $isDebug == true ? 'development' : 'production';
             $config["{$environment} < common"]['parameters']['database']['schema_imported'] = true;
             $configFile = \Nette\Utils\Neon::encode($config, \Nette\Utils\Neon::BLOCK);
-            \file_put_contents(APP_DIR . '/config/config.neon', $configFile);
-            $this->flashMessage('Import schématu databáze a inicializačních dat proběhl úspěšně');
+            $configUploaded = \file_put_contents(APP_DIR . '/config/config.neon', $configFile);
+            $this->flashMessage('Import schématu databáze a inicializačních dat proběhl úspěšně', 'success');
             $this->redirect(':Install:install:skautIS');
         }
         $this->redirect('this');
@@ -109,6 +104,12 @@ class InstallPresenter extends \SRS\BaseComponentsPresenter
         if (!$this->context->parameters['database']['installed']) {
             $this->redirect(':Install:install:default');
         }
+
+        if (!$this->context->parameters['database']['schema_imported']) {
+            $this->redirect(':Install:install:schema');
+        }
+
+
         $dbsettings = $this->context->database->getRepository('\SRS\Model\Settings');
         if ($this->context->parameters['skautis']['app_id'] != null) {
             $this->flashMessage('Skaut IS byl již nastaven');
@@ -124,6 +125,10 @@ class InstallPresenter extends \SRS\BaseComponentsPresenter
         }
         if ($this->context->parameters['skautis']['app_id'] == null) {
             $this->redirect(':Install:install:skautIS');
+        }
+
+        if (!$this->context->parameters['database']['schema_imported']) {
+            $this->redirect(':Install:install:schema');
         }
 
         if ($this->context->database->getRepository('\SRS\model\Settings')->get('superadmin_created') == true) {
@@ -144,7 +149,7 @@ class InstallPresenter extends \SRS\BaseComponentsPresenter
             $this->context->database->flush();
             $this->user->logout(true);
             $this->context->database->getRepository('\SRS\model\Settings')->set('superadmin_created', '1');
-            $this->flashMessage('Administrátorská role nastavena');
+            $this->flashMessage('Administrátorská role nastavena', 'success');
 
             $this->redirect(':Install:install:finish');
         }
@@ -153,6 +158,22 @@ class InstallPresenter extends \SRS\BaseComponentsPresenter
 
     public function renderFinish()
     {
+        if (!$this->context->parameters['database']['installed']) {
+            $this->redirect(':Install:install:default');
+        }
+        if (!$this->context->database->getRepository('\SRS\Model\Settings')->get('superadmin_created')) {
+            $this->redirect(':Install:install:admin');
+        }
+
+        if ($this->context->parameters['skautis']['app_id'] == null) {
+            $this->redirect(':Install:install:skautIS');
+        }
+
+        if (!$this->context->parameters['database']['schema_imported']) {
+            $this->redirect(':Install:install:schema');
+        }
+
+
         $this->template->installedEarlier = $this->getParameter('before');
     }
 

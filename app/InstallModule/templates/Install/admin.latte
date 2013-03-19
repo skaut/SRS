@@ -1,4 +1,9 @@
 {* This is the welcome page, you can delete it *}
+{block progress}75%{/block}
 {block header}Vytvoření admin účtu{/block}
 {block content}
-<a href="{plink :Auth:login, 'backlink' => $backlink}">Přihlásit přes skautIS</a>
+<p>
+    Pro vytvoření administrátorského účtu se prosím přihlašte přes skautIS.
+</p>
+
+<a class="btn btn-large" href="{plink :Auth:login, 'backlink' => $backlink}">Přihlásit přes skautIS</a>

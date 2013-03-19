@@ -40,14 +40,14 @@ class SkautISForm extends UI\Form
             $result = \file_put_contents(APP_DIR . '/config/config.neon', $configFile);
 
             if ($result === false) {
-                $this->presenter->flashMessage('Nepodařilo se informace zapsat do souboru config.neon. Zkontrolujte práva k souboru');
+                $this->presenter->flashMessage('Nepodařilo se informace zapsat do souboru config.neon. Zkontrolujte práva k souboru', 'error');
 
             } else {
-                $this->presenter->flashMessage('Oveření skautIS App ID proběhlo úspěšně.');
+                $this->presenter->flashMessage('Oveření skautIS App ID proběhlo úspěšně.', 'success');
                 $this->presenter->redirect(':Install:install:admin');
             }
         } else {
-            $this->presenter->flashMessage("Nepodařilo se ověřit skautIS App ID. Ujistěte se, že zadáváte správné údaje.");
+            $this->presenter->flashMessage("Nepodařilo se ověřit skautIS App ID. Ujistěte se, že zadáváte správné údaje.", 'error');
         }
 
     }
