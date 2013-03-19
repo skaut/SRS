@@ -17,7 +17,7 @@
         "jms/serializer": "0.12.*@dev",
         "itbz/fpdf": "1.7.1",
         "itbz/fpdi": "1.4.2"
-	}
+	},
 	
 	 "authors": [
         {
