@@ -67,7 +67,7 @@ function AdminCalendarCtrl($scope, $http, $q, $timeout) {
         seen = [];
         var json = JSON.stringify(event, function(key, val) {
             if (typeof val == "object") {
-                if (seen.indexOf(val) >= 0)
+                if ($.inArray(val, seen) >= 0)
                     return undefined;
                 seen.push(val);
             }
@@ -113,9 +113,9 @@ function AdminCalendarCtrl($scope, $http, $q, $timeout) {
         setColor($scope.event);
         $scope.saveEvent($scope.event);
         $('#calendar').fullCalendar('updateEvent', [$scope.event]);
-    };
+    }
 
-    $scope.delete = function(event) {
+    $scope.remove = function(event) {
         if (event.block != null || event.block != undefined) {
             event.block.program_count--;
         }

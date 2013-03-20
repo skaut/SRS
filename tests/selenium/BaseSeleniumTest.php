@@ -29,7 +29,7 @@ abstract class BaseSeleniumTest extends \PHPUnit_Extensions_SeleniumTestCase
         $this->waitForPageToLoad(self::WAIT);
         $this->type("id=ctl00_txtUserName", $this->config['roles'][$role]['user']);
         $this->type("id=ctl00_txtPassword", $this->config['roles'][$role]['password']);
-        $this->click("id=ctl00_btnLogin");
+        $this->click("id=btnLogin");
         $this->waitForLocation('*'.$this->config['url'].'*');
 
     }
