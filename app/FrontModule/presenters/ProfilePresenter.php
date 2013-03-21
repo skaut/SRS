@@ -6,6 +6,9 @@
  */
 namespace FrontModule;
 
+/**
+ * Obsluhuje nastaveni profilu 
+ */
 class ProfilePresenter extends BasePresenter
 {
     protected $userRepo;

@@ -6,6 +6,9 @@
  */
 namespace SRS\Components;
 
+/**
+ * Komponenta pro vypis novinek na FE
+ */
 class NewsBox extends \Nette\Application\UI\Control
 {
 

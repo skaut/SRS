@@ -1,6 +1,9 @@
 <?php
 namespace FrontModule;
 
+/**
+ * Obsluhuje vypis stranek ve webove prezentaci
+ */
 class PagePresenter extends BasePresenter
 {
     protected $repository;

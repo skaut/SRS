@@ -10,7 +10,7 @@ use SRS\Model\Acl\Resource;
 use SRS\Model\Acl\Permission;
 
 /**
- * Slouzi pro vyber programu na frontendu
+ * Komponenta slouzici pro vyber programu na frontendu
  */
 class ProgramBox extends \Nette\Application\UI\Control
 {

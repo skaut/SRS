@@ -6,6 +6,9 @@
  */
 namespace SRS\Components;
 
+/**
+ * Kompontenta obsluhujici vypis FAQ na FE
+ */
 class FaqBox extends \Nette\Application\UI\Control
 {
 

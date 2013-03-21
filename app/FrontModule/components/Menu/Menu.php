@@ -6,6 +6,9 @@
  */
 namespace SRS\Components;
 
+/**
+ * Komponenta pro vypis menu na FE
+ */
 class Menu extends \Nette\Application\UI\Control
 {
     /**
