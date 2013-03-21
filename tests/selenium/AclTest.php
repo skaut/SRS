@@ -7,7 +7,7 @@
  * Author: Michal Májský
  */
 namespace SRS\Test;
-require_once 'BaseSeleniumTest.php';
+//require_once 'BaseSeleniumTest.php';
 class AclTest extends BaseSeleniumTest
 {
 

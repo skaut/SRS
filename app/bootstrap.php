@@ -26,6 +26,7 @@ $configurator->setTempDirectory($temp_dir);
 $configurator->createRobotLoader()
     ->addDirectory(APP_DIR)
     ->addDirectory(LOCAL_LIBS_DIR)
+    ->addDirectory(TESTS_DIR)
     ->register();
 
 
