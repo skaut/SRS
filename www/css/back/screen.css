@@ -126,5 +126,9 @@ textarea.wide {
     height: 80px;
 }
 
+.message-box {
+    min-height: 80px;
+}
+
 
 

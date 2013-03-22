@@ -55,14 +55,13 @@ Program » Harmonogram
 
 {block sidebar}
 {include #parent}
-<div class="well">
-<div class="ajax-loader">
-<img src="{$basePath}/img/ajax-loader.gif">
-</div>
-<div id="jsMessages">
-    {{ warning }}
-
-</div>
+<div class="well message-box">
+    <div class="ajax-loader">
+    <img src="{$basePath}/img/ajax-loader.gif">
+    </div>
+    <div id="jsMessages">
+        {{ warning }}
+    </div>
 </div>
 
 <div class="calendar-blocks well">
