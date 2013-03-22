@@ -6,9 +6,9 @@
     <meta name="robots" content="{$robots}" n:ifset="$robots">
 
     <title>{block title|striptags}{/block} | SRS</title>
-{widget cssLoader 'nette.css', 'bootstrap.css', 'bootstrap-responsive.css', 'niftygrid/grid.css', 'jquery-ui/jquery-ui.css', 'back/screen.css', 'ui.multiselect.css'}
+{widget cssLoader 'nette.css', 'bootstrap.css', 'bootstrap-responsive.css', 'bootstrap-notify.css' ,'niftygrid/grid.css', 'jquery-ui/jquery-ui.css', 'back/screen.css', 'ui.multiselect.css'}
     <link rel="shortcut icon" href="{$basePath}/favicon.ico">
-{widget jsLoader 'jquery-1.8.2.min.js', 'jquery.scrollTo.min.js', 'jquery.localisation.min.js', 'netteForms.js', 'bootstrap.min.js', 'jquery-ui.js', 'multiselect/ui.multiselect.js', 'niftygrid/grid.js'}
+{widget jsLoader 'jquery-1.8.2.min.js', 'jquery.scrollTo.min.js', 'jquery.localisation.min.js', 'netteForms.js', 'bootstrap.min.js', 'bootstrap-notify.js', 'jquery-ui.js', 'multiselect/ui.multiselect.js', 'niftygrid/grid.js'}
 
     <script n:syntax="double">
         var basePath = {{$basePath}}
@@ -85,10 +85,14 @@
     {/block}
         <div class="span{block content_width}9{/block}">
         {snippet flashMessages}
-            <div n:foreach="$flashes as $flash" class="alert flash-message alert-{$flash->type}">
-                <button type="button" class="close" data-dismiss="alert">×</button>
-                {!$flash->message}
+            <div class='notifications  top-right'>
+                <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                    {!$flash->message}
+                </div>
             </div>
+
+
             <script>
                 $(document).ready(function () {
                     $('.alert:not(.forever)').delay(4000).fadeOut();
