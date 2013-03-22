@@ -7,7 +7,7 @@
 namespace FrontModule;
 
 /**
- * Obsluhuje nastaveni profilu 
+ * Obsluhuje nastaveni profilu
  */
 class ProfilePresenter extends BasePresenter
 {

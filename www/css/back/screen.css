@@ -116,5 +116,15 @@ ul.no-margin {
     height: 250px !important;
 }
 
+.space {
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+textarea.wide {
+    min-width: 400px;
+    height: 80px;
+}
+
 
 

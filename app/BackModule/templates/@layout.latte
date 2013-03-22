@@ -52,7 +52,7 @@
                     <li {ifCurrent :Back:Program:Block:*}class="active"{/ifCurrent}{ifCurrent :Back:Program:Schedule:*}class="active"{/ifCurrent}>
                         <a href="{plink :Back:Program:Block:list}">Program semináře</a></li>{/if}
                 {if $user->isAllowed(\SRS\Model\Acl\Resource::CONFIGURATION, \SRS\Model\ACL\Permission::MANAGE)}
-                    <li {ifCurrent :Back:Configration:*}class="active"{/ifCurrent}><a
+                    <li {ifCurrent :Back:Configuration:*}class="active"{/ifCurrent}><a
                             href="{plink :Back:Configuration:default}">Konfigurace</a></li>{/if}
                 {if $user->isAllowed(\SRS\Model\Acl\Resource::EVIDENCE, \SRS\Model\ACL\Permission::MANAGE)}
                     <li {ifCurrent :Back:Evidence:*}class="active"{/ifCurrent}><a href="{plink :Back:Evidence:list}">Evidence
@@ -85,7 +85,7 @@
     {/block}
         <div class="span{block content_width}9{/block}">
         {snippet flashMessages}
-            <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">
+            <div n:foreach="$flashes as $flash" class="alert flash-message alert-{$flash->type}">
                 <button type="button" class="close" data-dismiss="alert">×</button>
                 {!$flash->message}
             </div>

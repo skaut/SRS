@@ -52,15 +52,15 @@ class BlockForm extends \SRS\Form\EntityForm
         $this->addSelect('duration', 'Doba trvání:')
             ->setItems($this->prepareDurationChoices())
             ->addRule(Form::FILLED, 'Zadejte dobu trvání');
-        $this->addTextArea('perex', 'Stručný popis (160 znaků)');
-        $this->addTextArea('description', 'Detailní popis')->getControlPrototype()->class('tinyMCE');
+        $this->addTextArea('perex', 'Stručný popis (160 znaků):')->getControlPrototype()->class('wide');
+        $this->addTextArea('description', 'Detailní popis:')->getControlPrototype()->class('tinyMCE wide');
         $this->addSelect('lector', 'Lektor:');
         if ($this->user->isAllowed('Program', 'Spravovat Všechny Programy')) {
             $this['lector']->setItems(\SRS\Form\EntityForm::getFormChoices($lectors, 'id', 'displayName'))->setPrompt('-- vyberte --');
         } else {
-            $this['lector']->setItems(array($this->user->id => $this->user->identity->object->lastName));
+            $this['lector']->setItems(array($this->user->id => $this->user->identity->object->displayName));
         }
-        $this->addSubmit('submit', 'Uložit')->getControlPrototype()->class('btn');
+        $this->addSubmit('submit', 'Uložit')->getControlPrototype()->class('btn btn-primary space');
         $this->addSubmit('submit_continue', 'Uložit a pokračovat v úpravách')->getControlPrototype()->class('btn');
         $this->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
         $this->onSuccess[] = callback($this, 'formSubmitted');

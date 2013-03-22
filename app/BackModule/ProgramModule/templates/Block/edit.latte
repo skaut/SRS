@@ -6,12 +6,17 @@
 {/block}
 
 {block title}
-Program » {ifset $block}{$block->name}{else}Nový blok{/ifset}
+Program » {ifset $block}{$block->name}{else}Nový programový blok{/ifset}
 {/block}
 
 {block content}
-<h1>{ifset $block}{$block->name}{else}Nový blok{/ifset}</h1>
+<ul class="breadcrumb">
+    <li><a href="{plink list}">Přehled programových bloků</a> <span class="divider">/</span></li>
+    <li class="active">{ifset $block}Úprava bloku:{$block->name}{else}Nový programový blok{/ifset}</li>
+</ul>
+<div class="well">
+<h1>{ifset $block}Úprava bloku:{$block->name}{else}Nový programový blok{/ifset}</h1>
     {widget blockForm}
-
+</div>
 {include '../../../templates/includes/confirm_dialog.latte'}
 {/block}

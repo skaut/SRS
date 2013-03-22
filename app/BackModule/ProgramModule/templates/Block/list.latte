@@ -9,10 +9,11 @@ data-spy="affix" data-offset-top="0"
 {/block}
 
 {block content}
+<h1>Přehled programových bloků</h1>
 <div class="navbar">
     {if $user->isAllowed(\SRS\Model\Acl\Resource::PROGRAM, \SRS\Model\Acl\Permission::MANAGE_OWN_PROGRAMS)
     || $user->isAllowed(\SRS\Model\Acl\Resource::PROGRAM, \SRS\Model\Acl\Permission::MANAGE_ALL_PROGRAMS)}
-        <a class="btn btn-success" href="{plink edit}"><i class="icon-plus-sign"></i>Přidat Blok</a>
+        <a class="btn btn-success" href="{plink edit}"><i class="icon-plus-sign"></i>Vytvořit programový Blok</a>
     {/if}
 </div>
     {widget blockGrid}
