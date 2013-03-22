@@ -14,8 +14,11 @@ data-spy="affix" data-offset-top="0"
 {/block}
 
 {block content}
-
-<h2>Úprava stránky {$page->name}</h2>
+<ul class="breadcrumb">
+    <li><a href="{plink pages}">Přehled Stránek</a> <span class="divider">/</span></li>
+    <li class="active">Úprava stránky:{$page->name}</li>
+</ul>
+<h1>Úprava stránky {$page->name}</h1>
     {form pageForm}
     <div class="well">
         <h4>Základní vlastnosti</h4>
