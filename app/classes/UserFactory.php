@@ -12,7 +12,7 @@ class UserFactory
     /**
      * @param stdClass $skautISUser
      * @param stdClass $skautISPerson
-     * @param mixed $roles
+     * @param \SRS\Model\Acl\Role $role
      * @return \SRS\Model\User
      */
     public static function createFromSkautIS($skautISUser, $skautISPerson, $role)
