@@ -48,10 +48,13 @@ class TestCasesDataCommand extends Command
         $roleOrg = $this->em->getRepository('\SRS\Model\Acl\Role')->findOneByName(Role::ORGANIZER);
         $roleLector = $this->em->getRepository('\SRS\Model\Acl\Role')->findOneByName(Role::LECTOR);
         $roleAttendee = $this->em->getRepository('\SRS\Model\Acl\Role')->findOneByName(Role::ATTENDEE);
+        $roleAdmin = $this->em->getRepository('\SRS\Model\Acl\Role')->findOneByName(Role::ADMIN);
         $roles = $this->em->getRepository('\SRS\Model\Acl\Role')->findAll();
         $settings =  $this->em->getRepository('\SRS\Model\Settings');
+        $userRepo = $this->em->getRepository('\SRS\Model\User');
 
         $settings->set('user_custom_text_0', 'Máte nějaká stravovací omezenení?');
+        $settings->set('is_allowed_log_in_programs', '1');
 
         $users = array();
         for ($i = 0; $i < 5; $i++) {
@@ -137,6 +140,26 @@ class TestCasesDataCommand extends Command
         $block6->lector = $users[3];
         $block6->duration = 1;
         $this->em->persist($block6);
+
+//        //nastaveni prav
+//        $srsuser = $userRepo->findOneBySkautISUserId(2102);
+//        if (!$srsuser) {
+//           $srsuser = new \SRS\Model\User('srsuser');
+//           $srsuser->skautISUserId = 2102;
+//           $srsuser->skautISPersonId = 142545;
+//        }
+//        $srsuser->role = $roleOrg;
+//        $this->em->persist($srsuser);
+//
+//        $srsadmin = $userRepo->findOneBySkautISUserId(2129);
+//        if (!$srsuser) {
+//            $srsuser = new \SRS\Model\User('srsadmin');
+//            $srsuser->skautISUserId = 2129;
+//            $srsuser->skautISPersonId = 142545;
+//        }
+//        $srsuser->role = $roleOrg;
+//        $this->em->persist($srsuser);
+
 
 
 
