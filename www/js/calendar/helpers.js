@@ -127,14 +127,27 @@ function bindEndToBlockDuration(start, end, block_duration, basic_block_duration
     return new_end;
 }
 
-function flashMessage(message, type) {
+function flashMessage(text, type) {
     if (type == undefined) {
       type = 'info';
     }
 //    <a class="close" data-dismiss="alert" href="#">&times;</a>
-    var messageEl = $('<div class="alert alert-'+type+'">'+message+'</div>');
-    $('#jsMessages').append(messageEl);
-    messageEl.alert().delay(5000).fadeOut();
+//    var messageEl = $('<div class="alert alert-'+type+'">'+message+'</div>');
+//    $('#jsMessages').append(messageEl);
+//    messageEl.alert().delay(5000).fadeOut();
+
+    var fadeout =  { enabled: true, delay: 6000 }
+
+    $('#jsMessages').notify({
+            message:
+                {
+                    text: text
+            },
+            type: type,
+            fadeOut: fadeout,
+            closable: true
+            }).show();
+
 }
 
 

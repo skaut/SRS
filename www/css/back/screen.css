@@ -161,6 +161,13 @@ textarea.wide {
     min-height: 80px;
 }
 
+.ajax-loader {
+    position: fixed;
+    top: 60px;
+    right: 60px;
+    z-index: 999;
+}
+
 
 
 

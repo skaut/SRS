@@ -141,6 +141,7 @@ function AdminCalendarCtrl($scope, $http, $q, $timeout) {
 function bindCalendar(scope) {
 
     var local_config = {
+        aspectRatio: 1.6,
         editable: scope.config.is_allowed_modify_schedule,
         droppable: scope.config.is_allowed_modify_schedule,
         events: scope.events,

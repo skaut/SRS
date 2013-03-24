@@ -13,7 +13,18 @@ Program » Harmonogram
 
 {block content}
 <h1>Tvorba harmonogramu</h1>
+<div class="ajax-loader">
+    <img src="{$basePath}/img/ajax-loader.gif">
+</div>
+
+
 <div id="app">
+    <div class="notifications bottom-right" id="jsMessages">
+        <div class="alert alert-info forever" ng-show="warning">
+        {{ warning }}
+        </div>
+    </div>
+
     <div id="canvas">
         <div id="blockModal" ng-model="event" class="modal hide fade">
             <div class="modal-header">
@@ -50,19 +61,10 @@ Program » Harmonogram
     </div>
 </div>
 
-
 {/block}
 
 {block sidebar}
 {include #parent}
-<div class="well message-box">
-    <div class="ajax-loader">
-    <img src="{$basePath}/img/ajax-loader.gif">
-    </div>
-    <div id="jsMessages">
-        {{ warning }}
-    </div>
-</div>
 
 <div class="calendar-blocks well">
     <h3>Programové bloky</h3>
