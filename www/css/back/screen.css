@@ -21,6 +21,12 @@ body {
         position: static !important;
     }
 
+    /* Enable use of floated navbar text */
+    .navbar-text.pull-right {
+        float: none;
+        padding-left: 5px;
+        padding-right: 5px;
+
     body {
         padding-top: 0;
     }
