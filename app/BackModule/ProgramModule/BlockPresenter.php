@@ -41,6 +41,10 @@ class BlockPresenter extends \BackModule\BasePresenter
 
     public function renderDetail($id)
     {
+        if ($id == null) {
+            $this->redirect('list');
+        }
+
         $block = $this->blockRepo->find($id);
         $permRepo = $this->context->database->getRepository('\SRS\Model\Acl\Permission');
         $rolesWithPerm = $permRepo->findOneBy(array('name' => \SRS\Model\Acl\Permission::CHOOSE_PROGRAMS))->roles;

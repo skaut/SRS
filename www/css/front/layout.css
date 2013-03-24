@@ -79,11 +79,24 @@ ul.no-margin {
     cursor: pointer !important;
 }
 
+#app {
+    overflow: hidden;
+}
+
 #jsMessages {
     position: fixed;
     top: 250px;
     z-index:999;
     width: 150px;
 }
+
+/* formulare */
+label.required:after, tr.required label:after {
+    content: " *";
+    color: #ff0000;
+    font-weight: bold;
+}
+
+
 
 

@@ -7,7 +7,7 @@
 namespace SRS\Components;
 
 /**
- *  Komponenta obsluhujici prihlasovaco formular na FE
+ *  Komponenta obsluhujici prihlasovaci formular na FE
  */
 class AttendeeBox extends \Nette\Application\UI\Control
 {

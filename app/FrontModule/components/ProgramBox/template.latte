@@ -1,10 +1,10 @@
-<div style="clear:both;">
+<div>
 {if !$user->isLoggedIn()}
     <div class="notice">
         Pro výběr programů se musíte neprve <a href="{plink :Auth:login, 'backlink' => $backlink}">přihlásit přes
         skautIS</a>
     </div>
-    {else}
+{else}
     {if !$isAllowedLogInPrograms}
         <div class="notice">
             Zapisování programů není v tuto chvíli povoleno.
@@ -16,6 +16,7 @@
             Vaše role nemá právo zapisovat si programy
         </div>
     {/if}
+
     <div id="app" ng-app="calendar" ng-controller="FrontCalendarCtrl">
         <div class="span2">
             <div id="jsMessages">

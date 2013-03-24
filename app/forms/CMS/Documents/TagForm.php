@@ -24,8 +24,9 @@ class TagForm extends \SRS\Form\EntityForm
         parent::__construct($parent, $name);
 
         $this->addHidden('id');
-        $this->addText('name', 'Jméno:')->getControlPrototype()->class('name')
-            ->addRule(Form::FILLED, 'Zadejte jméno');
+        $this->addText('name', 'Jméno:')
+            ->addRule(Form::FILLED, 'Zadejte jméno')
+            ->getControlPrototype()->class('name');
         $this->addSubmit('submit', 'Uložit')->getControlPrototype()->class('btn');
 
         $this->onSuccess[] = callback($this, 'formSubmitted');

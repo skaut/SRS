@@ -1,6 +1,6 @@
 {extends '../../templates/@layout.latte'}
 {block sidebar_menu}
-<li class="nav-header">CMS</li>
+<li class="nav-header">Správa obsahu webové prezentace</li>
 <li {ifCurrent :Back:CMS:Page:*}class="active"{/ifCurrent}><a href="{plink :Back:CMS:Page:pages}">Stránky</a></li>
 <li {ifCurrent :Back:CMS:Faq:*}class="active"{/ifCurrent}><a href="{plink :Back:CMS:Faq:default}">FAQ</a></li>
 <li {ifCurrent :Back:CMS:News:*}class="active"{/ifCurrent}><a href="{plink :Back:CMS:News:default}">Aktuality</a>

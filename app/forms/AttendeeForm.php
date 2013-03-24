@@ -37,8 +37,8 @@ class AttendeeForm extends ProfileForm
         $user->setProperties($values, $this->presenter->context->database);
         $user->approved = $role->approvedAfterRegistration;
         $this->presenter->context->database->flush();
-        $this->presenter->flashMessage('Přihláška odeslána', 'success');
-        $this->presenter->flashMessage('Pro další používání webu se znovu přihlašte přes skautIS', 'info');
+        $this->presenter->flashMessage('Přihláška odeslána', 'success forever');
+        $this->presenter->flashMessage('Pro další používání webu se znovu přihlašte přes skautIS', 'info forever');
         $this->presenter->user->logout(true);
         $this->presenter->redirect(':Auth:logout');
 
