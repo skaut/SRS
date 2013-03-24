@@ -93,7 +93,8 @@ input.number {
     height: 100px;
 }
 .calendar-blocks .blocks-container {
-
+    overflow: scroll;
+    height: 400px;
 }
 
 .calendar-blocks .block {

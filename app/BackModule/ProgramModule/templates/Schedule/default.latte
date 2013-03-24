@@ -81,9 +81,7 @@ Program » Harmonogram
             <td colspan="2"><input id="text_search" type="text" class="input-medium search-query" ng-model="query"></td>
         </tr>
     </table>
-
-
-    </table>
+    <hr>
     <div class="blocks-container">
         <div class="block" ng-repeat="block in blocks | filter:query | showUnassigned: applyUnassigned"
              external-block="{{ block.id }}">
