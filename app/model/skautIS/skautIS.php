@@ -9,6 +9,26 @@ namespace SRS\Model;
 
 /**
  * Zaobaluje praci se skautIS WSDL pro human readable pouzivani a odprostuje od jinak nezbytne znalosti struktury Services skautISu
+ * -----------------------------
+ * Seznam volanych funkci:
+ *
+ * userManagement:
+ * - UserDetail
+ * - LoginUpdateRefresh
+ * ------
+ * organizationUnitService:
+ * - PersonDetail
+ * - MembershipDetail
+ * - UnitAllRegistryBasic
+ * - PersonUpdateBasic
+ * - PersonUpdateAddress
+ * 
+ * ------
+ * eventsService:
+ * - EventGeneralAll
+ * - ParticipantGeneralAll
+ * - ParticipantGeneralDelete
+ * - ParticipantGeneralInsert
  */
 class skautIS extends \Nette\Object
 {

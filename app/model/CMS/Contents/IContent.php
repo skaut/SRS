@@ -9,7 +9,7 @@ namespace SRS\Model\CMS;
 interface IContent
 {
     /**
-     * Vytaha si data z formulare PageForm
+     * Vytaha si sva data z formulare PageForm
      * @param \Nette\Application\UI\Form $form
      * @return void
      */
