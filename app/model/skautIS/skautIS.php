@@ -22,7 +22,7 @@ namespace SRS\Model;
  * - UnitAllRegistryBasic
  * - PersonUpdateBasic
  * - PersonUpdateAddress
- * 
+ *
  * ------
  * eventsService:
  * - EventGeneralAll

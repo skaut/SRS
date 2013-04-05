@@ -1,3 +1,7 @@
 RewriteEngine On
+
 RewriteRule ^$ www/$1 [L]
 RewriteRule (.*) www/$1 [L]
+
+
+

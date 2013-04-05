@@ -38,6 +38,7 @@ class RoleForm extends EntityForm
 
         $this->addCheckbox('pays', 'Platí za účast?');
         $this->addText('fee', 'Výše účastnického poplatku')
+            //->setDefaultValue(0)
             ->getControlPrototype()->class('number')
             ->addCondition(FORM::FILLED)
             ->addRule(FORM::INTEGER, 'Výše poplatku musí být číslo');

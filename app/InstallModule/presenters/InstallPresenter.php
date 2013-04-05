@@ -31,7 +31,7 @@ class InstallPresenter extends \SRS\BaseComponentsPresenter
         try {
             if ($this->context->parameters['database']['schema_imported'] == true) {
                 $this->flashMessage('Schéma databáze bylo již naimportováno');
-                $this->redirect(':Install:install:skautis');
+                $this->redirect(':Install:install:skautIS');
             }
         } catch (\Doctrine\DBAL\DBALException $e) {
             //do nothing

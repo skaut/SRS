@@ -223,7 +223,7 @@ class Role extends \SRS\Model\BaseEntity
      */
     public function setFee($fee)
     {
-        $this->fee = $fee;
+        $this->fee = (int) $fee;
     }
 
     /**
