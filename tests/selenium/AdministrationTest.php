@@ -22,7 +22,7 @@ class AdministrationTest extends BaseSeleniumTest
         $this->waitForPageToLoad(self::WAIT);
         $this->click("link=Práva a Role");
         $this->waitForPageToLoad(self::WAIT);
-        $this->click("link=CMS");
+        $this->click("link=Správa obsahu webové prezentace");
         $this->waitForPageToLoad(self::WAIT);
         $this->click("link=Program semináře");
         $this->waitForPageToLoad(self::WAIT);

@@ -9,16 +9,25 @@ namespace SRS\Test;
 
 class CMSTest extends BaseSeleniumTest
 {
+
+    protected $menuTitle = "Správa obsahu webové prezentace";
+
+
+    protected function goToModule()
+    {
+        $this->click("link=Administrace");
+        $this->waitForPageToLoad(self::WAIT);
+        $this->click("link={$this->menuTitle}");
+        $this->waitForPageToLoad(self::WAIT);
+    }
+
     /**
      * @group cms
      */
     public function testContents()
     {
         $this->login();
-        $this->click("link=Administrace");
-        $this->waitForPageToLoad(self::WAIT);
-        $this->click("link=CMS");
-        $this->waitForPageToLoad(self::WAIT);
+        $this->goToModule();
         $this->click("xpath=(//a[contains(text(),'Upravit')])[1]");
         $this->waitForPageToLoad(self::WAIT);
         $this->select("id=frmpageForm-add_content", "label=Text");
@@ -55,10 +64,7 @@ class CMSTest extends BaseSeleniumTest
     public function testAddItems()
     {
         $this->login();
-        $this->click("link=Administrace");
-        $this->waitForPageToLoad(self::WAIT);
-        $this->click("link=CMS");
-        $this->waitForPageToLoad(self::WAIT);
+        $this->goToModule();
         $this->click("link=Přidat stránku");
         $this->type("id=frmnewPageForm-name", "test");
         $this->type("id=frmnewPageForm-slug", \Nette\Utils\Strings::random());
