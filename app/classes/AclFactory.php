@@ -10,6 +10,9 @@ use SRS\Model\Acl\Resource;
 use SRS\Model\Acl\Permission;
 use SRS\Model\Acl\Role;
 
+/**
+ * Pro vytvareni testovacich a inicializacnich dat modulu ACL
+ */
 class AclFactory
 {
     //protected $roles;

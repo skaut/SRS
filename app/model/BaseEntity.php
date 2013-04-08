@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM,
     JMS\Serializer\Annotation as JMS;
 
 /**
+ * Zakladni entita pro cely projekt
  * @property-read int $id
  */
 abstract class BaseEntity extends \Nette\Object

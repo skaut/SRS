@@ -14,7 +14,7 @@ use Nette\Application\UI,
     Nette\ComponentModel\IContainer;
 
 /**
- *
+ * Formular pro zmenu loga a paticky
  */
 class HeaderFooterForm extends Form
 {

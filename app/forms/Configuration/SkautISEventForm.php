@@ -13,7 +13,9 @@ use Nette\Application\UI,
     Nette\Application\UI\Form,
     Nette\ComponentModel\IContainer;
 
-
+/**
+ * Formular pro synchronizaci se skautIS akci
+ */
 class SkautISEventForm extends UI\Form
 {
 

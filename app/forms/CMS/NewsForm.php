@@ -6,11 +6,6 @@
  */
 
 
-/**
- * Formular pro vytvoreni nove role
- * Zbyvajici parametry pro roli se zadavi v RoleForm.php
-
- */
 
 namespace SRS\Form\CMS;
 
@@ -19,6 +14,9 @@ use Nette\Application\UI,
     Nette\Application\UI\Form,
     Nette\ComponentModel\IContainer;
 
+/**
+ * Formular pro aktuality
+ */
 class NewsForm extends \SRS\Form\EntityForm
 {
     public function __construct(IContainer $parent = NULL, $name = NULL)

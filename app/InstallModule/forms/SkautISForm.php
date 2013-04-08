@@ -13,7 +13,9 @@ use Nette\Application\UI,
     Nette\Application\UI\Form,
     Nette\ComponentModel\IContainer;
 
-
+/**
+ * Nastaveni skautIS parametru
+ */
 class SkautISForm extends UI\Form
 {
     public function __construct(IContainer $parent = NULL, $name = NULL)

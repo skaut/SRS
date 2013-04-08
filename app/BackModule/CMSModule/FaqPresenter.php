@@ -9,6 +9,9 @@ use Nette\Application\UI\Form;
 use SRS\Model\Acl\Resource;
 use SRS\Model\Acl\Permission;
 
+/**
+ * obsluhuje sekci FAQ
+ */
 class FaqPresenter extends \BackModule\BasePresenter
 {
     protected $entity = '\SRS\Model\CMS\Faq';

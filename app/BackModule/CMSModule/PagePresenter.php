@@ -7,6 +7,9 @@
 namespace BackModule\CMSModule;
 use Nette\Application\UI\Form;
 
+/**
+ * Obsluhuje sekci Stranky
+ */
 class PagePresenter extends \BackModule\BasePresenter
 {
     protected $resource = \SRS\Model\Acl\Resource::CMS;

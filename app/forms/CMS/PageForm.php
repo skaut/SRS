@@ -10,6 +10,10 @@ use Nette\Application\UI,
     Nette\Application\UI\Form,
     Nette\ComponentModel\IContainer;
 
+
+/**
+ * Formular pro stranky
+ */
 class PageForm extends \SRS\Form\EntityForm
 {
     public function __construct(IContainer $parent = NULL, $name = NULL, $roleChoices, $activeArea = null)

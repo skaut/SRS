@@ -1,10 +1,10 @@
 <?php
 
 namespace BackModule;
+
+
 /**
- * Date: 5.2.13
- * Time: 16:36
- * Author: Michal Májský
+ * presenter obsluhujici balicek konfigurace
  */
 class ConfigurationPresenter extends BasePresenter
 {

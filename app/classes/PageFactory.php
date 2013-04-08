@@ -7,6 +7,9 @@
 
 namespace SRS\Factory;
 
+/**
+* Pro vytvareni testovacich a inicializacnich dat submodulu Page
+*/
 class PageFactory
 {
     public static function createInitial($em)

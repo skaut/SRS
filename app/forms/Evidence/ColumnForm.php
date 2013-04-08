@@ -12,6 +12,9 @@ use Nette\Application\UI,
     Nette\Application\UI\Form,
     Nette\ComponentModel\IContainer;
 
+/**
+ * Formular pro vyber sloupcu ke zobrazeni v evidenci ucastniku
+ */
 class ColumnForm extends Form
 {
 

@@ -7,6 +7,9 @@
 
 namespace BackModule;
 
+/**
+ * presenter obsluhujici balicek Evidence ucastniku
+ */
 class EvidencePresenter extends BasePresenter
 {
     protected $resource = 'Evidence';

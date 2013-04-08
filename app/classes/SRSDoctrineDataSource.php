@@ -7,6 +7,9 @@
 
 namespace SRS;
 
+/**
+ * Vlastni DataSource pro Niftygrid
+ */
 class SRSDoctrineDataSource implements \NiftyGrid\DataSource\IDataSource
 {
     private $qb;

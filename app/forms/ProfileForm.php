@@ -11,6 +11,10 @@ use Nette\Application\UI,
     Nette\Application\UI\Form,
     Nette\ComponentModel\IContainer;
 
+
+/**
+ * Formular pro editaci uzivatelskych osobnich udaju
+ */
 class ProfileForm extends EntityForm
 {
 

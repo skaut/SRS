@@ -11,6 +11,9 @@ use Nette\Application\UI,
     Nette\Application\UI\Form,
     Nette\ComponentModel\IContainer;
 
+/**
+ * Formular pro upravu udaju ucastnika na detailu
+ */
 class EvidenceDetailForm extends \SRS\Form\EntityForm
 {
     public function __construct(IContainer $parent = NULL, $name = NULL, $configParams)

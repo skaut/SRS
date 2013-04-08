@@ -12,6 +12,7 @@ use \Doctrine\Common\Collections\ArrayCollection, \Doctrine\ORM\PersistentCollec
 
 
 /**
+ * Rodic pro formulare pracujici s entitami
  * @author Jan Marek
  * @author Michal Májský
  */
@@ -23,6 +24,10 @@ class EntityForm extends UI\Form
      */
     private $entity;
 
+    /**
+     * Nastavi default hodnoty formulare  dle vlastnosti entity
+     * @param $entity
+     */
     public function bindEntity($entity)
     {
         $this->entity = $entity;
@@ -62,6 +67,7 @@ class EntityForm extends UI\Form
     }
 
     /**
+     * Vytvori pole ve vhodnem formatu pro Nette Select
      * @param array $entities Pole entit
      * @param string $id identifikator entity
      * @param string $label Jmeno property, ktera se ma zobrazit ve formulari

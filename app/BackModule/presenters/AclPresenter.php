@@ -5,6 +5,10 @@
  * Author: Michal Májský
  */
 namespace BackModule;
+
+/**
+ * Presenter pro balicek ACL
+ */
 class AclPresenter extends BasePresenter
 {
     /**

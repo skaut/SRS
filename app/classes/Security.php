@@ -4,6 +4,9 @@ namespace SRS\Security;
 
 use \Nette\Security\Permission;
 
+/**
+ * Obstarava namapovani ACL dat z databaze do Nette Authorizatoru
+ */
 class Acl extends Permission
 {
     /** @var \Doctrine\ORM\EntityManager */

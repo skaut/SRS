@@ -9,7 +9,9 @@ namespace BackModule\ProgramModule;
 use \SRS\Model\Acl\Permission;
 use SRS\Model\Acl\Resource;
 
-
+/**
+ * Vytvari Api pro tvorbu harmonogramu a zapis programu
+ */
 class ApiPresenter extends \BackModule\BasePresenter
 {
     protected $resource = Resource::PROGRAM;

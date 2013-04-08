@@ -13,7 +13,9 @@ use Nette\Application\UI,
     Nette\Application\UI\Form,
     Nette\ComponentModel\IContainer;
 
-
+/**
+ * formular pro konfiguraci
+ */
 class SettingsForm extends UI\Form
 {
 

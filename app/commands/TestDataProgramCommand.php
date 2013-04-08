@@ -38,7 +38,7 @@ class TestDataProgramCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        \SRS\ProgramFactory::createBlockDataForTests($this->em);
+        \SRS\Factory\ProgramFactory::createBlockDataForTests($this->em);
         $output->writeln('Testovaci Programy a bloky vlozeny');
     }
 }

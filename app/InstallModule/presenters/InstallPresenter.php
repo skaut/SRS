@@ -4,6 +4,9 @@
 namespace InstallModule;
 error_reporting(0);
 
+/**
+ * Obsluhuje instalacniho pruvodce
+ */
 class InstallPresenter extends \SRS\BaseComponentsPresenter
 {
 

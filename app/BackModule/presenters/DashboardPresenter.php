@@ -1,10 +1,10 @@
 <?php
 
-/**
- * Homepage presenter.
- * Author: Michal Májský
- */
 namespace BackModule;
+
+/**
+ * Presenter obsluhujici uvodni stranku administrace
+ */
 class DashboardPresenter extends BasePresenter
 {
 

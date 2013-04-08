@@ -6,9 +6,7 @@
  */
 
 
-/**
- * Formular pro vytvoreni dokumentu
- */
+
 
 namespace SRS\Form\CMS\Documents;
 
@@ -17,6 +15,9 @@ use Nette\Application\UI,
     Nette\Application\UI\Form,
     Nette\ComponentModel\IContainer;
 
+/**
+ * Formular pro vytvoreni a editaci dokumentu
+ */
 class DocumentForm extends \SRS\Form\EntityForm
 {
     public function __construct(IContainer $parent = NULL, $name = NULL, $tagChoices)

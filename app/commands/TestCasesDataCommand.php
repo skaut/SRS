@@ -14,6 +14,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use SRS\Factory\UserFactory;
 use SRS\Model\Acl\Role;
 
+/**
+ * Vlozi data pro uzivatelske testovani dle scenaru
+ */
 class TestCasesDataCommand extends Command
 {
     /**

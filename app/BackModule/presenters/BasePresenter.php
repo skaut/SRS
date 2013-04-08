@@ -5,7 +5,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Base presenter for all application presenters.
+ * Base presenter pro administraci
  */
 abstract class BasePresenter extends \SRS\BasePresenter
 {

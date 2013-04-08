@@ -9,6 +9,9 @@ use Nette\Application\UI\Form;
 use SRS\Model\Acl\Resource;
 use SRS\Model\Acl\Permission;
 
+/**
+ * Obsluhuje sekci aktuality
+ */
 class NewsPresenter extends \BackModule\BasePresenter
 {
     protected $resource = Resource::CMS;

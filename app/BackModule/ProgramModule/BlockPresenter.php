@@ -7,6 +7,9 @@
 
 namespace BackModule\ProgramModule;
 
+/**
+ * Obsluhuje sekci programove bloky
+ */
 class BlockPresenter extends \BackModule\BasePresenter
 {
     protected $resource = \SRS\Model\Acl\Resource::PROGRAM;

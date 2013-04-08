@@ -9,6 +9,9 @@ namespace BackModule\ProgramModule;
 use SRS\Model\Acl\Resource;
 use SRS\Model\Acl\Permission;
 
+/**
+ * Obsluhuje sekci tvorba harmonogramu
+ */
 class SchedulePresenter extends \BackModule\BasePresenter
 {
 

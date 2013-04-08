@@ -6,12 +6,6 @@
  */
 
 
-/**
- * Formular pro vytvoreni nove role
- * Zbyvajici parametry pro roli se zadavi v RoleForm.php
-
- */
-
 namespace SRS\Form\Program;
 
 use Nette\Application\UI,
@@ -19,6 +13,9 @@ use Nette\Application\UI,
     Nette\Application\UI\Form,
     Nette\ComponentModel\IContainer;
 
+/**
+ * Formular pro editaci a vytvareni programoveho bloku
+ */
 class BlockForm extends \SRS\Form\EntityForm
 {
     protected $dbsettings;

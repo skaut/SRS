@@ -4,7 +4,11 @@
  * Time: 12:11
  * Author: Michal Májský
  */
-namespace SRS;
+namespace SRS\Factory;
+
+/**
+ * Pro vytvareni testovacich a inicializacnich dat modulu Program
+ */
 class ProgramFactory
 {
 

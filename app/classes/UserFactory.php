@@ -7,6 +7,9 @@
 namespace SRS\Factory;
 use Nette\Utils\Strings;
 
+/**
+ * Obsluhuje tvorbu lokalnich uzivatelu ze skautIS uzivatelu a obracene
+ */
 class UserFactory
 {
     /**

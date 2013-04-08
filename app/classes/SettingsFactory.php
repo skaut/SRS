@@ -6,6 +6,9 @@
  */
 namespace SRS\Factory;
 
+/**
+ * Vytvari inicializacni data pro settings
+ */
 class SettingsFactory
 {
 
