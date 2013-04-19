@@ -73,9 +73,10 @@ class ProfileForm extends EntityForm
         $this->addText('nickName', 'Přezdívka:');
         $this->addText('birthdate', 'Datum narození:')
             ->addRule(Form::FILLED, 'Zadejte datum narození')->getControlPrototype()->class('datepicker');
-        $this->addText('email', 'Email:')
-            ->addRule(Form::FILLED, 'Zadejte e-mailovou adresu')
-            ->addRule(Form::EMAIL, 'E-mail není ve správném tvaru');
+        //@TODO - pro aktualizaci emailu je treba udelit zvlastni pravo, ktere SRS zatim nema
+//        $this->addText('email', 'Email:')
+//            ->addRule(Form::FILLED, 'Zadejte e-mailovou adresu')
+//            ->addRule(Form::EMAIL, 'E-mail není ve správném tvaru');
         $this->addText('street', 'Ulice:')
             ->addRule(Form::FILLED, 'Zadejte Ulici');
         $this->addText('city', 'Město:')

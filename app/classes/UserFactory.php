@@ -55,7 +55,7 @@ class UserFactory
         $skautISPerson->NickName = $SRSUser->NickName;
         $skautISPerson->ID_Sex = $SRSUser->sex;
         //$skautISPerson->Sex = $sexChoices[$SRSUser->sex];
-        $skautISPerson->Email = $SRSUser->email;
+        //$skautISPerson->Email = $SRSUser->email;
         $skautISPerson->Street = $SRSUser->street;
         $skautISPerson->City = $SRSUser->city;
         $skautISPerson->Postcode = $SRSUser->postcode;
@@ -63,7 +63,7 @@ class UserFactory
         $birthdate = $SRSUser->birthdate;
         $birthdate = $birthdate->format('Y-m-d');
         $birthdate .= 'T00:00:00';
-        $skautISPerson->birthday = $birthdate;
+        $skautISPerson->Birthday = $birthdate;
         return $skautISPerson;
 
     }
