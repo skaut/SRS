@@ -7,36 +7,36 @@ function FrontCalendarCtrl($scope, $http, $q, $timeout) {
 
 
     var api_path = basePath + '/api/program/';
-    $scope.startup = function() {
+    $scope.startup = function () {
         var promise, promisses = [];
-        promise = $http.get(api_path+"getblocks", {})
-            .success(function(data, status, headers, config) {
+        promise = $http.get(api_path + "getblocks", {})
+            .success(function (data, status, headers, config) {
                 $scope.options = data;
-            }).error(function(data, status, headers, config) {
+            }).error(function (data, status, headers, config) {
                 $scope.status = status;
             });
         promisses.push(promise);
 
-        promise = $http.get(api_path+"./getprograms?userAttending=1&onlyAssigned=1", {})
-            .success(function(data, status, headers, config) {
+        promise = $http.get(api_path + "./getprograms?userAttending=1&onlyAssigned=1", {})
+            .success(function (data, status, headers, config) {
                 $scope.events = data;
-            }).error(function(data, status, headers, config) {
+            }).error(function (data, status, headers, config) {
                 $scope.status = status;
             });
         promisses.push(promise);
 
-        promise = $http.get(api_path+"./getcalendarconfig", {})
-            .success(function(data, status, headers, config) {
+        promise = $http.get(api_path + "./getcalendarconfig", {})
+            .success(function (data, status, headers, config) {
                 $scope.config = data;
 
-            }).error(function(data, status, headers, config) {
+            }).error(function (data, status, headers, config) {
                 $scope.status = status;
             });
         promisses.push(promise);
 
         //pote co jsou vsechny inicializacni ajax requesty splneny
-        $q.all(promisses).then(function() {
-            angular.forEach($scope.events, function(event, key) {
+        $q.all(promisses).then(function () {
+            angular.forEach($scope.events, function (event, key) {
                 event.block = $scope.options[event.block];
                 if (event.mandatory == true && event.attends == false) {
                     $scope.mandatory_unsigned_programs_count++;
@@ -50,9 +50,9 @@ function FrontCalendarCtrl($scope, $http, $q, $timeout) {
 
     $scope.startup();
 
-    $scope.attend = function(event) {
-        $http.post(api_path+"attend/"+event.id)
-            .success(function(data, status, headers, config) {
+    $scope.attend = function (event) {
+        $http.post(api_path + "attend/" + event.id)
+            .success(function (data, status, headers, config) {
                 flashMessage(data['message'], data['status']);
                 if (data['status'] == 'success') {
                     event.attends = true;
@@ -65,15 +65,15 @@ function FrontCalendarCtrl($scope, $http, $q, $timeout) {
                     setColorFront(event);
                 }
                 $('#calendar').fullCalendar('updateEvent', event);
-            }).error(function(data, status, headers, config) {
+            }).error(function (data, status, headers, config) {
                 $scope.status = status;
-         });
+            });
         $('#blockModal').modal('hide');
     }
 
-    $scope.unattend = function(event) {
-        $http.post(api_path+"unattend/"+event.id)
-            .success(function(data, status, headers, config) {
+    $scope.unattend = function (event) {
+        $http.post(api_path + "unattend/" + event.id)
+            .success(function (data, status, headers, config) {
                 flashMessage(data['message'], data['status']);
                 if (data['status'] == 'success') {
                     event.attends = false;
@@ -84,43 +84,43 @@ function FrontCalendarCtrl($scope, $http, $q, $timeout) {
                     setColorFront(event);
                 }
                 $('#calendar').fullCalendar('updateEvent', event);
-            }).error(function(data, status, headers, config) {
+            }).error(function (data, status, headers, config) {
                 $scope.status = status;
             });
         $('#blockModal').modal('hide');
     }
 
 
-    $scope.refreshDialog = function() {
+    $scope.refreshDialog = function () {
         $scope.$apply();
     }
 }
 
 function bindCalendar(scope) {
     var local_config = {
-        editable: false,
-        droppable: false,
-        events: scope.events,
-        year: scope.config.year,
-        month: scope.config.month,
-        date: scope.config.date,
-        selectable: false,
-        selectHelper: false,
-        seminarLength: scope.config.seminar_duration,
-        firstDay: scope.config.seminar_start_day,
+        editable:false,
+        droppable:false,
+        events:scope.events,
+        year:scope.config.year,
+        month:scope.config.month,
+        date:scope.config.date,
+        selectable:false,
+        selectHelper:false,
+        seminarLength:scope.config.seminar_duration,
+        firstDay:scope.config.seminar_start_day,
 
 
-        eventClick: function(event, element) {
+        eventClick:function (event, element) {
             scope.event = event;
             scope.refreshDialog();
             $('#blockModal').modal('show');
-         },
+        },
 
-        eventMouseout: function( event, jsEvent, view ) {
+        eventMouseout:function (event, jsEvent, view) {
             $('.popover').fadeOut(); //hack popover obcas nezmizi
         },
 
-        eventRender: function(event, element) {
+        eventRender:function (event, element) {
             var options = {}
             options.html = true;
             options.trigger = 'hover';
@@ -129,12 +129,12 @@ function bindCalendar(scope) {
             options.placement = 'bottom';
             if (event.block != null && event.block != undefined) {
                 options.content += "<ul class='no-bullets no-margin'>";
-                options.content += "<li><span>lektor:</span> "+ event.block.lector +"</li>";
-                options.content += "<li><span>Kapacita:</span> "+event.attendees_count+"/"+ event.block.capacity +"</li>";
-                options.content += "<li><span>Lokalita:</span> "+ event.block.location +"</li>";
-                options.content +="</ul>";
+                options.content += "<li><span>lektor:</span> " + event.block.lector + "</li>";
+                options.content += "<li><span>Kapacita:</span> " + event.attendees_count + "/" + event.block.capacity + "</li>";
+                options.content += "<li><span>Lokalita:</span> " + event.block.location + "</li>";
+                options.content += "</ul>";
                 if (event.block.perex != null) {
-                    options.content +="<p>"+event.block.perex+"</p>";
+                    options.content += "<p>" + event.block.perex + "</p>";
                 }
             }
 
