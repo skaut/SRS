@@ -2,6 +2,9 @@
 
 namespace SRS;
 
+/**
+ * Obsahuje komponenty a vlastni latte filtry, ktere jsou vyuzivany ve vice castech aplikace
+ */
 abstract class BaseComponentsPresenter extends \Nette\Application\UI\Presenter
 {
 

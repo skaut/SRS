@@ -9,6 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 
 /**
+ * Entita reprezentujici aktualitu
+ *
  * @ORM\Entity(repositoryClass="\SRS\Model\CMS\NewsRepository")
  * @property string $text
  * @property \DateTime $published

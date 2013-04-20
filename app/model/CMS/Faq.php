@@ -9,6 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 
 /**
+ * Entita reprezentujici FAQ
+ *
  * @ORM\Entity(repositoryClass="\SRS\Model\CMS\FaqRepository")
  * @property string $question
  * @property string $answer

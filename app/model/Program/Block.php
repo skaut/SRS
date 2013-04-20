@@ -9,6 +9,8 @@ use Doctrine\ORM\Mapping as ORM,
     JMS\Serializer\Annotation as JMS;
 
 /**
+ * Entita programoveho bloku
+ *
  * @ORM\Entity(repositoryClass="\SRS\Model\Program\BlockRepository")
  * @JMS\ExclusionPolicy("none")
  * @property \SRS\Model\User $lector
@@ -171,7 +173,9 @@ class Block extends \SRS\Model\BaseEntity
 
 }
 
-
+/**
+ * Vlastni repozitar pro praci s bloky
+ */
 class BlockRepository extends \Nella\Doctrine\Repository
 {
 

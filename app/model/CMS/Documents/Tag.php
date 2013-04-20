@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 
 /**
+ * Entita Stitek pro dokumenty
  * @ORM\Entity
  * @property string $name
  * @property \Doctrine\Common\Collections\ArrayCollection $documents

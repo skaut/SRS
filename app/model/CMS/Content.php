@@ -9,6 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 
 /**
+ * Entita obsahu (contentu) stranky
+ *
  * @ORM\Entity
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="type", type="string")

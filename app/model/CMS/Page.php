@@ -10,6 +10,8 @@ use Doctrine\Common\Collections\Criteria;
 
 
 /**
+ * Entita reprezentujici stranku webove prezentace
+ *
  * @ORM\Entity(repositoryClass="\SRS\Model\CMS\PageRepository")
  *
  *

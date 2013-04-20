@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Criteria;
 
 /**
+ * Entita uzivatele aplikace
+ *
  * @ORM\Entity(repositoryClass="\SRS\Model\UserRepository")
  *
  * @property-read int $id

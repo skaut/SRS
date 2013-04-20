@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 
 /**
+ * Entita databazove nastaveni
  * @ORM\Entity(repositoryClass="\SRS\Model\SettingsRepository")
  * @property string $item
  * @property string $value
@@ -77,6 +78,11 @@ class Settings extends \SRS\Model\BaseEntity
 
 }
 
+/**
+ * Doctrine Repozitar pro praci se settings
+ *
+ * Definuje get a set funkce umoznujici pristupovat k nastaveni podobne jako k asociativnimu poli
+ */
 class SettingsRepository extends \Doctrine\ORM\EntityRepository
 {
     public $entity = '\SRS\Model\Settings';

@@ -9,9 +9,8 @@ namespace SRS\Model;
 
 /**
  * Zaobaluje praci se skautIS WSDL pro human readable pouzivani a odprostuje od jinak nezbytne znalosti struktury Services skautISu
- * -----------------------------
- * Seznam volanych funkci:
  *
+ * Seznam volanych funkci:
  * userManagement:
  * - UserDetail
  * - LoginUpdateRefresh
@@ -22,7 +21,6 @@ namespace SRS\Model;
  * - UnitAllRegistryBasic
  * - PersonUpdateBasic
  * - PersonUpdateAddress
- *
  * ------
  * eventsService:
  * - EventGeneralAll

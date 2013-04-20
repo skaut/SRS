@@ -9,6 +9,7 @@ namespace SRS\Model\Acl;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * Entita Opravneni pro roli
  * @ORM\Entity
  */
 class Permission extends \SRS\Model\BaseEntity

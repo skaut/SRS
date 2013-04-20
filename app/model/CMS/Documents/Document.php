@@ -9,6 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 
 /**
+ * Entita dokumentu
+ *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
  * @property string $name

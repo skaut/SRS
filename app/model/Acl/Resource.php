@@ -8,6 +8,7 @@ namespace SRS\Model\Acl;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * Entita zdroje opravneni
  * @ORM\Entity
  */
 class Resource extends \SRS\Model\BaseEntity

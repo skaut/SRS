@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM,
     JMS\Serializer\Annotation as JMS;
 
 /**
+ * Entita programu zarazeneho v harmonogramu
  *
  * @ORM\Entity(repositoryClass="\SRS\Model\Program\ProgramRepository")
  * @ORM\HasLifecycleCallbacks
@@ -245,7 +246,9 @@ class Program extends \SRS\Model\BaseEntity
 
 }
 
-
+/**
+ * Vlastni repozitar pro praci s programy. Obsahuje metody pro serializaci a deseraliazci do json
+ */
 class ProgramRepository extends \Nella\Doctrine\Repository
 {
     public function findAllForJson($basicDuration, $user = null, $onlyAssigned = false)

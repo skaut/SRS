@@ -10,6 +10,8 @@ use Doctrine\Common\Collections\Criteria;
 
 
 /**
+ * Entita uzivatelske role
+ *
  * @ORM\Entity(repositoryClass="\SRS\Model\Acl\RoleRepository")
  *
  * @property-read int $id
@@ -299,7 +301,11 @@ class Role extends \SRS\Model\BaseEntity
     }
 }
 
-
+/**
+ * Doctrine Repozitar pro entitu Role.
+ *
+ * Pridava dalsi metody pro vyhledavni roli v databazi
+ */
 class RoleRepository extends \Doctrine\ORM\EntityRepository
 {
     public $entity = '\SRS\Model\Acl\Role';
