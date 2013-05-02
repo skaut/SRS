@@ -189,6 +189,9 @@ class EvidenceGrid extends Grid
                 if ($values['paymentDate']) {
                     $user->paymentDate = \DateTime::createFromFormat('Y-m-d', $values['paymentDate']);
                 }
+                else {
+                    $user->paymentDate = null;
+                }
 
                 $presenter->context->database->flush();
                 $self->flashMessage("Záznam byl úspěšně uložen.", "success");
