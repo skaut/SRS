@@ -53,7 +53,7 @@ class NewsContent extends \SRS\Model\CMS\Content implements IContent
         parent::setValuesFromPageForm($form);
         $values = $form->getValues();
         $values = $values[$this->getFormIdentificator()];
-        $this->count = $values['count'];
+        $this->count = (int) $values['count'];
     }
 
     public function getContentName()
