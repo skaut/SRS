@@ -5,7 +5,7 @@ use Nette\Diagnostics\Debugger;
 /**
  * Error presenter.
  */
-class ErrorPresenter extends \Nette\Application\UI\Presenter
+class ErrorPresenter extends FrontModule\BasePresenter
 {
 
     /**

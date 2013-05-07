@@ -190,7 +190,7 @@ class PageRepository extends \Doctrine\ORM\EntityRepository
             return $this->_em->createQuery("SELECT p.id FROM " . $this->entity . " p WHERE p.slug = '{$slug}' ")
                 ->getSingleScalarResult();
         } catch (\Doctrine\ORM\NoResultException $e) {
-            return null;
+            throw new \Nette\Application\BadRequestException('Taková stránka neexistuje', 404);
         }
     }
 
@@ -200,7 +200,7 @@ class PageRepository extends \Doctrine\ORM\EntityRepository
             return $this->_em->createQuery("SELECT p.slug FROM " . $this->entity . " p WHERE p.id = '{$id}' ")
                 ->getSingleScalarResult();
         } catch (\Doctrine\ORM\NoResultException $e) {
-            return null;
+            throw new \Nette\Application\BadRequestException('Taková stránka neexistuje', 404);
         }
     }
 
