@@ -7,6 +7,7 @@
 namespace SRS\Components;
 use \NiftyGrid\Grid;
 use \Doctrine\ORM\Query\Expr;
+use SRS\Model\Acl\Role;
 
 /**
  * Grid pro správu uživatelů a práv
@@ -44,7 +45,9 @@ class UserGrid extends Grid
 
 
         foreach ($roles as $role) {
-            $rolesGrid[$role->id] = $role->name;
+            if ($role->name != Role::GUEST) {
+                $rolesGrid[$role->id] = $role->name;
+            }
         }
         $source = new \SRS\SRSDoctrineDataSource($qb, 'id');
 
