@@ -45,6 +45,7 @@ class AclFactory
         $program = new Resource(Resource::PROGRAM);
         $configuration = new Resource(Resource::CONFIGURATION);
         $evidence = new Resource(Resource::EVIDENCE);
+        $mailing = new Resource(Resource::MAILING);
 
         $admin_access = new Permission(Permission::ACCESS, $backend);
         $admin->permissions->add($admin_access);
@@ -89,6 +90,10 @@ class AclFactory
         $evidence_edit = new Permission(Permission::MANAGE, $evidence);
         $admin->permissions->add($evidence_edit);
         $organizer->permissions->add($evidence_edit);
+
+        $mailing_edit = new \Nette\Security\Permission(Permission::MANAGE, $mailing);
+        $admin->permissions->add($mailing_edit);
+        $organizer->permission->add($mailing_edit);
 
 
         return $roles;

@@ -44,7 +44,9 @@ class UserGrid extends Grid
 
 
         foreach ($roles as $role) {
+            if ($role->name != 'guest') {
             $rolesGrid[$role->id] = $role->name;
+            }
         }
         $source = new \SRS\SRSDoctrineDataSource($qb, 'id');
 

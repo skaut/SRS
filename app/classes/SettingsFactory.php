@@ -18,6 +18,7 @@ class SettingsFactory
         $settings[] = new \SRS\Model\Settings('superadmin_created', 'Je vytvořen superadmin?', '0');
         $settings[] = new \SRS\Model\Settings('schema_imported', 'Naimportována inicializační databázová data', '1');
         $settings[] = new \SRS\Model\Settings('seminar_name', 'Jméno semináře', 'Konfigurace->Jméno semináře');
+        $settings[] = new \SRS\Model\Settings('seminar_email', 'Email', 'noreply@srs.skauting.cz');
         $today = new \DateTime('now');
         $tommorow = new \DateTime('now');
         $tommorow->modify('+1 day');

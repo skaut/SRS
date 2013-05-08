@@ -19,6 +19,7 @@ class Resource extends \SRS\Model\BaseEntity
     const PROGRAM = 'Program';
     const CONFIGURATION = 'Konfigurace';
     const EVIDENCE = 'Evidence';
+    const MAILING = 'Mailing';
 
     /**
      * @ORM\Column(unique=true)

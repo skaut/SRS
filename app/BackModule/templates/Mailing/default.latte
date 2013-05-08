@@ -1,0 +1,9 @@
+{extends '../@layout.latte'}
+{block head}
+    {widget jsLoader 'tiny_mce/jquery.tinymce.js'}
+{include 'includes/tinymce_init.latte'}
+{/block}
+{block content}
+<h1>Mailing</h1>
+{widget mailingForm}
+{/block}

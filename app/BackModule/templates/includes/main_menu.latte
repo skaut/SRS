@@ -17,3 +17,5 @@
 {if $user->isAllowed(\SRS\Model\Acl\Resource::EVIDENCE, \SRS\Model\ACL\Permission::MANAGE)}
 <li {ifCurrent :Back:Evidence:*}class="active"{/ifCurrent}><a href="{plink :Back:Evidence:list}">Evidence
     účastníků</a></li>{/if}
+{if $user->isAllowed(\SRS\Model\Acl\Resource::MAILING, \SRS\Model\ACL\Permission::MANAGE)}
+<li {ifCurrent :Back:Mailing:*}class="active"{/ifCurrent}><a href="{plink :Back:Mailing:default}">Mailing</a></li>{/if}
