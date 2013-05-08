@@ -8,6 +8,8 @@
  */
 namespace SRS\Form\Mailing;
 use \Nette\Application\UI\Form;
+use SRS\Model\Acl\Role;
+
 class MailingForm extends \Nette\Application\UI\Form
 {
     protected $rolesRepo;
@@ -32,9 +34,8 @@ class MailingForm extends \Nette\Application\UI\Form
 
 
         $i = 0;
-        foreach ($roles as $role)
-        {
-            if ($role->name != 'guest') {
+        foreach ($roles as $role) {
+            if ($role->name != Role::GUEST  && $role->name != Role::REGISTERED) {
                 $i++;
                 $rolesContainer->addCheckbox("{$role->id}", "{$role->name} ({$role->users->count()} uživatelů)");
             }
@@ -57,9 +58,11 @@ class MailingForm extends \Nette\Application\UI\Form
         $mail->subject = $values['subject'];
         $mail->setHtmlBody($values['body']);
         foreach ($values['roles'] as $role_id => $checked) {
-            $role = $this->rolesRepo->find($role_id);
-            foreach ($role->users as $user) {
-                $mail->addTo($user->email);
+            if ($checked) {
+                $role = $this->rolesRepo->find($role_id);
+                foreach ($role->users as $user) {
+                    $mail->addBcc($user->email);
+                }
             }
         }
         if ($values['copy'])
