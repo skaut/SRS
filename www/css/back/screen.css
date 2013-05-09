@@ -10,7 +10,7 @@ body {
 
 @media (max-width: 1200px) {
     body {
-        padding-top: 90px;
+        padding-top: 90px !important;
     }
 }
 
