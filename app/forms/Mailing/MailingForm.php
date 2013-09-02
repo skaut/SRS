@@ -35,7 +35,7 @@ class MailingForm extends \Nette\Application\UI\Form
 
         $i = 0;
         foreach ($roles as $role) {
-            if ($role->name != Role::GUEST  && $role->name != Role::REGISTERED) {
+            if ($role->name != Role::GUEST) {
                 $i++;
                 $rolesContainer->addCheckbox("{$role->id}", "{$role->name} ({$role->users->count()} uživatelů)");
             }
