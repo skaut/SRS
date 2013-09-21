@@ -1,5 +1,5 @@
 {
-	"name": "MichalMajsky/SRS",
+	"name": "snakeyyy/SRS",
 	
 	"config": {
 		"vendor-dir": "libs/global"
@@ -23,7 +23,11 @@
         {
             "name": "Michal Májský",
             "email": "m.majsky@gmail.com",
+<<<<<<< HEAD
             "homepage": "http://majsky.cz",
+=======
+            "homepage": "http://michal.majsky.cz",
+>>>>>>> 8eff190e1c07b202f3da33c74e523c79d8f30050
             "role": "Developer"
         }
     ]
