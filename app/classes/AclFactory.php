@@ -93,7 +93,7 @@ class AclFactory
 
         $mailing_edit = new \Nette\Security\Permission(Permission::MANAGE, $mailing);
         $admin->permissions->add($mailing_edit);
-        $organizer->permission->add($mailing_edit);
+        $organizer->permissions->add($mailing_edit);
 
 
         return $roles;
