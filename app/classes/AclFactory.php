@@ -91,7 +91,7 @@ class AclFactory
         $admin->permissions->add($evidence_edit);
         $organizer->permissions->add($evidence_edit);
 
-        $mailing_edit = new \Nette\Security\Permission(Permission::MANAGE, $mailing);
+        $mailing_edit = new Permission(Permission::MANAGE, $mailing);
         $admin->permissions->add($mailing_edit);
         $organizer->permissions->add($mailing_edit);
 
