@@ -5,7 +5,7 @@
                href="{plink :Front:page:default}">{$page->name}</a></li>
         {else}
         {if $page->isAllowedToRole($user->roles[0])}
-            <li><a class="button {$page->slug} item-{$iterator->getCounter()}"
+            <li><a class="button {$page->slug} item-{$iterator->getCounter()}{ifCurrent :Front:page:default, 'pageId' => $page->id} current{/ifCurrent}"
                    href="{plink :Front:page:default, 'pageId' => $page->id}">{$page->name}</a></li>
         {/if}
 
