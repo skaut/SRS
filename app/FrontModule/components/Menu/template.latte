@@ -1,7 +1,7 @@
 <ul>
 {foreach $pages as $page}
     {if $page->slug == '/'}
-        <li><a class="button homepage item-{$iterator->getCounter()}"
+        <li><a class="button homepage item-{$iterator->getCounter()}{ifCurrent :Front:page:default} current{/ifCurrent}"
                href="{plink :Front:page:default}">{$page->name}</a></li>
         {else}
         {if $page->isAllowedToRole($user->roles[0])}
