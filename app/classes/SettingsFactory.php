@@ -52,7 +52,7 @@ class SettingsFactory
             $settings[] = new \SRS\Model\Settings('user_custom_boolean_'.$i, 'Vlastní checkbox přihlášky č.'.$num, '');
         }
 
-        for ($i = 0; $i < $userCustomBooleanCount; $i++) {
+        for ($i = 0; $i < $userCustomTextCount; $i++) {
             $num = $i+1;
             $settings[] = new \SRS\Model\Settings('user_custom_text_'.$i, "Vlastní text přihlášky č.".$num, '');
         }
