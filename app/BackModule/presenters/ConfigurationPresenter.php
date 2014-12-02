@@ -63,6 +63,18 @@ class ConfigurationPresenter extends BasePresenter
         $this->redirect('this');
     }
 
+    public function handleRefreshDBSettings()
+    {
+        $options = array('command' => 'srs:initial-data:settings');
+        $output = new \Symfony\Component\Console\Output\NullOutput();
+        $input = new \Symfony\Component\Console\Input\ArrayInput($options);
+        $this->context->console->application->setAutoExit(false);
+
+        $this->context->console->application->run($input, $output);
+        $this->flashMessage('Databázové nastavení aktualizováno');
+        $this->redirect('this');
+    }
+
 
     protected function createComponentSettingsForm()
     {

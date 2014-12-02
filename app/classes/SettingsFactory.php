@@ -14,6 +14,10 @@ class SettingsFactory
 
     public static function create()
     {
+        $config = \Nette\Utils\Neon::decode(file_get_contents(APP_DIR . '/config/config.neon'));
+        $userCustomBooleanCount = $config['common']['parameters']['user_custom_boolean_count'];
+        $userCustomTextCount = $config['common']['parameters']['user_custom_text_count'];
+
         $settings = array();
         $settings[] = new \SRS\Model\Settings('superadmin_created', 'Je vytvořen superadmin?', '0');
         $settings[] = new \SRS\Model\Settings('schema_imported', 'Naimportována inicializační databázová data', '1');
@@ -43,15 +47,15 @@ class SettingsFactory
         $settings[] = new \SRS\Model\Settings('print_location', 'Lokalita', 'Konfigurace->Lokalita');
 
 
-        $settings[] = new \SRS\Model\Settings('user_custom_boolean_0', 'Vlastní checkbox přihlášky č.1', '');
-        $settings[] = new \SRS\Model\Settings('user_custom_boolean_1', 'Vlastní checkbox přihlášky č.2', '');
-        $settings[] = new \SRS\Model\Settings('user_custom_boolean_2', 'Vlastní checkbox přihlášky č.3', '');
-        $settings[] = new \SRS\Model\Settings('user_custom_boolean_3', 'Vlastní checkbox přihlášky č.4', '');
-        $settings[] = new \SRS\Model\Settings('user_custom_boolean_4', 'Vlastní checkbox přihlášky č.5', '');
+        for ($i = 0; $i < $userCustomBooleanCount; $i++) {
+            $num = $i+1;
+            $settings[] = new \SRS\Model\Settings('user_custom_boolean_'.$i, 'Vlastní checkbox přihlášky č.'.$num, '');
+        }
 
-        $settings[] = new \SRS\Model\Settings('user_custom_text_0', 'Vlastní text přihlášky č.1', '');
-        $settings[] = new \SRS\Model\Settings('user_custom_text_1', 'Vlastní text přihlášky č.2', '');
-
+        for ($i = 0; $i < $userCustomTextCount; $i++) {
+            $num = $i+1;
+            $settings[] = new \SRS\Model\Settings('user_custom_text_'.$i, "Vlastní text přihlášky č.".$num, '');
+        }
         return $settings;
     }
 

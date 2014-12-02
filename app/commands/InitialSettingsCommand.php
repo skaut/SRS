@@ -41,7 +41,9 @@ class InitialSettingsCommand extends Command
     {
         $settings = SettingsFactory::create();
         foreach ($settings as $item) {
-            $this->em->persist($item);
+            if (!$this->em->getRepository('\SRS\Model\Settings')->findByItem($item->item)) {
+                $this->em->persist($item);
+            }
         }
         $this->em->flush();
         $output->writeln('Inicializacni data pro Settings uspesne vlozeny');

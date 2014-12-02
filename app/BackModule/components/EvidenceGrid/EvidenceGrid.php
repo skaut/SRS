@@ -139,6 +139,7 @@ class EvidenceGrid extends Grid
             if ($dbvalue != '' && $this->columnsVisibility[$propertyName]) {
                 $this->addColumn($propertyName, $this->dbsettings->get($column))
                     ->setBooleanFilter()
+                    ->setBooleanEditable()
                     ->setRenderer(function ($row) use ($i) {
                     return \SRS\Helpers::renderBoolean($row->{"customBoolean$i"});
                 });
@@ -153,7 +154,9 @@ class EvidenceGrid extends Grid
 
             if ($dbvalue != '' && $this->columnsVisibility[$propertyName]) {
                 $this->addColumn($propertyName, $this->dbsettings->get($column))
-                    ->setTextFilter();
+                    ->setTextFilter()
+                    ->setTextEditable();
+
             }
         }
 
@@ -191,6 +194,23 @@ class EvidenceGrid extends Grid
                 }
                 else {
                     $user->paymentDate = null;
+                }
+
+                $CUSTOM_BOOLEAN_COUNT = $presenter->context->parameters['user_custom_boolean_count'];
+                for ($i = 0; $i < $CUSTOM_BOOLEAN_COUNT; $i++) {
+                    $propertyName = 'customBoolean' . $i;
+                    if (isset($values[$propertyName])) {
+                        $user->{$propertyName} = isset($values[$propertyName]) ? true : false;;
+                    }
+
+                }
+
+                $CUSTOM_TEXT_COUNT = $presenter->context->parameters['user_custom_text_count'];
+                for ($i = 0; $i < $CUSTOM_TEXT_COUNT; $i++) {
+                    $propertyName = 'customText' . $i;
+                    if (isset($values[$propertyName])) {
+                        $user->{$propertyName} = $values[$propertyName];
+                    }
                 }
 
                 $presenter->context->database->flush();
