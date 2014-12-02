@@ -1,25 +1,25 @@
 {
-	"name": "snakeyyy/SRS",
-	
-	"config": {
-		"vendor-dir": "libs/global"
-	},
+    "name": "snakeyyy/SRS",
+    "config": {
+        "vendor-dir": "libs/global"
+    },
     "require": {
         "php": ">= 5.3.0",
         "nette/nette": "2.0.8",
-        "phpunit/phpunit": "3.7.18",
-        "phpunit/phpunit-selenium": "dev-master",
         "nella/doctrine": "0.8.0",
         "nella/console": "0.8.0",
         "doctrine/migrations": "@dev",
         "doctrine/data-fixtures": "dev-master",
-        "JanMarek/WebLoader": "dev-master",
+        "janmarek/webloader": "dev-nette-2.0",
         "jms/serializer": "0.11.0",
         "itbz/fpdf": "1.7.1",
         "itbz/fpdi": "1.4.2"
-	},
-	
-	 "authors": [
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.18",
+        "phpunit/phpunit-selenium": "dev-master"
+    },
+    "authors": [
         {
             "name": "Michal Májský",
             "email": "m.majsky@gmail.com",
