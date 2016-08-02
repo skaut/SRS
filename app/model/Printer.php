@@ -62,7 +62,7 @@ class Printer extends \Nette\Object
         $this->fpdi->Line(135, 54, 175, 54);
         $this->fpdi->Line(135, 64, 175, 64);
 
-        $this->fpdi->MultiCell(100, 4.5, iconv('UTF-8', 'WINDOWS-1250', $this->dbsettings->get('company')));
+        $this->fpdi->MultiCell(68, 4.5, iconv('UTF-8', 'WINDOWS-1250', $this->dbsettings->get('company')));
         $this->fpdi->Text(35, 71, iconv('UTF-8', 'WINDOWS-1250', $this->dbsettings->get('ico')));
         $this->fpdi->Text(35, 77, iconv('UTF-8', 'WINDOWS-1250', '---------------')); //dic
         $this->fpdi->Text(140, 76, iconv('UTF-8', 'WINDOWS-1250', '== ' . $user->role->fee . ' =='));
