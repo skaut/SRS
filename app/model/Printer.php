@@ -85,8 +85,8 @@ class Printer extends \Nette\Object
         $this->fpdi->useTemplate($this->template, 0, 0);
         $this->fpdi->SetY(30);
         $this->fpdi->SetX(25);
-        $this->fpdi->MultiCell(100, 4.5, iconv('UTF-8', 'WINDOWS-1250', $this->dbsettings->get('company')));
-        $this->fpdi->Text(25, 52, iconv('UTF-8', 'WINDOWS-1250', 'IČO:' . $this->dbsettings->get('ico')));
+        $this->fpdi->MultiCell(68, 4.5, iconv('UTF-8', 'WINDOWS-1250', $this->dbsettings->get('company')));
+        $this->fpdi->Text(26, 52, iconv('UTF-8', 'WINDOWS-1250', 'IČO: ' . $this->dbsettings->get('ico')));
 
         $this->fpdi->Text(70, 71, iconv('UTF-8', 'WINDOWS-1250', $this->dbsettings->get('account_number')));
 
