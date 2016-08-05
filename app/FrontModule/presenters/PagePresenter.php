@@ -32,7 +32,7 @@ class PagePresenter extends BasePresenter
     {
         if ($pageId == null) {
             $httpRequest = $this->context->getService('httpRequest');
-            if ($httpRequest->url->path == '/') {
+            if ($httpRequest->url->path == $httpRequest->url->basePath) {
                 $page = $this->repository->findBy(array('slug' => '/', 'public' => true));
                 if ($page == null) {
                     throw new \Nette\Application\BadRequestException('Stránka se slugem "/" neexistuje nebo není zveřejněná. Vytvořte ji v administriaci.', 404);
