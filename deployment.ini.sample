@@ -1,0 +1,45 @@
+; remote FTP server
+remote = ftp://srs:secretpassword@zavody.skauting.cz/
+
+; local path (optional)
+local = .
+
+; run in test-mode? (can be enabled by option -t or --test too)
+test = no
+
+; files and directories to ignore
+ignore = "
+    .git*
+    project.pp[jx]
+    /deployment.*
+    /log
+    !log/.*
+    www/webtemp/*
+    !www/webtemp/.*
+    www/files/*
+    !www/files/.*
+    temp/*
+    !temp/.*
+    .idea
+    deploy.bat
+    config.neon
+    config.local.neon
+"
+
+; is allowed to delete remote files? (defaults to yes)
+allowdelete = no
+
+; jobs to run before file upload
+;before[] = http://example.com/deployment.php?before
+
+; jobs to run after file upload
+;after[] = http://example.com/deployment.php?after
+
+; directories to purge after file upload
+purge[] = temp/cache
+
+; files to preprocess (defaults to *.js *.css)
+preprocess = no
+
+; file which contains hashes of all uploaded files (defaults to .htdeployment)
+deploymentfile = .deployment
