@@ -1,5 +1,5 @@
 ; remote FTP server
-remote = ftp://uzivatel:heslo@server.cz
+remote = ftp://srs:secretpassword@zavody.skauting.cz/
 
 ; local path (optional)
 local = .
@@ -12,7 +12,7 @@ ignore = "
     .git*
     project.pp[jx]
     /deployment.*
-    log
+    /log
     !log/.*
     www/webtemp/*
     !www/webtemp/.*
@@ -20,11 +20,14 @@ ignore = "
     !www/files/.*
     temp/*
     !temp/.*
-    composer.*
     .idea
+    deploy.bat
+    config.neon
+    config.local.neon
 "
+
 ; is allowed to delete remote files? (defaults to yes)
-allowdelete = yes
+allowdelete = no
 
 ; jobs to run before file upload
 ;before[] = http://example.com/deployment.php?before
@@ -34,6 +37,12 @@ allowdelete = yes
 
 ; directories to purge after file upload
 purge[] = "
-		temp/cache
-		www/webtemp
+    temp/cache
+    www/webtemp
 "
+
+; files to preprocess (defaults to *.js *.css)
+preprocess = no
+
+; file which contains hashes of all uploaded files (defaults to .htdeployment)
+deploymentfile = .deployment
