@@ -36,7 +36,10 @@ allowdelete = no
 ;after[] = http://example.com/deployment.php?after
 
 ; directories to purge after file upload
-purge[] = temp/cache
+purge[] = "
+    temp/cache
+    www/webtemp
+"
 
 ; files to preprocess (defaults to *.js *.css)
 preprocess = no
