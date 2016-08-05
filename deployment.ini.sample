@@ -1,5 +1,5 @@
 ; remote FTP server
-remote = ftp://srs:secretpassword@zavody.skauting.cz/
+remote = ftp://srs:secretpassword@srs.skauting.cz/
 
 ; local path (optional)
 local = .
