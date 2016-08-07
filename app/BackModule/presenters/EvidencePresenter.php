@@ -25,9 +25,8 @@ class EvidencePresenter extends BasePresenter
         array('name' => 'role', 'label' => 'Role'),
         array('name' => 'birthdate', 'label' => 'Věk'),
         array('name' => 'city', 'label' => 'Město'),
-        array('name' => 'paid', 'label' => 'Zaplaceno'),
         array('name' => 'paymentMethod', 'label' => 'Platební metoda'),
-        array('name' => 'paymentDate', 'label' => 'Datum zaplacení'),
+        array('name' => 'paymentDate', 'label' => 'Zaplaceno dne'),
         array('name' => 'incomeProofPrinted', 'label' => 'Vytištěn příjmový doklad?'),
         array('name' => 'attended', 'label' => 'Přítomen'),
 

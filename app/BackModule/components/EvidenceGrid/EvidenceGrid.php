@@ -85,14 +85,6 @@ class EvidenceGrid extends Grid
                 ->setTextFilter()
                 ->setAutocomplete($numOfResults);
 
-        if ($this->columnsVisibility['paid'])
-            $this->addColumn('paid', 'Zaplaceno')
-                ->setBooleanFilter()
-                ->setBooleanEditable()
-                ->setRenderer(function ($row) {
-                return \SRS\Helpers::renderBoolean($row->paid);
-            });
-
         $paymentMethods = $presenter->context->parameters['payment_methods'];
 
         if ($this->columnsVisibility['paymentMethod'])
@@ -105,7 +97,7 @@ class EvidenceGrid extends Grid
             });
 
         if ($this->columnsVisibility['paymentDate'])
-            $this->addColumn('paymentDate', 'Datum zaplacení')
+            $this->addColumn('paymentDate', 'Zaplaceno dne')
                 ->setDateEditable()
                 ->setDateFilter()
                 ->setRenderer(function ($row) {
@@ -174,9 +166,6 @@ class EvidenceGrid extends Grid
 
         $this->setRowFormCallback(function ($values) use ($self, $presenter, $visibility) {
                 $user = $presenter->context->database->getRepository('\SRS\Model\User')->find($values['id']);
-                if ($visibility['paid']) {
-                    $user->paid = isset($values['paid']) ? true : false;
-                }
                 if ($visibility['attended']) {
                     $user->attended = isset($values['attended']) ? true : false;
                 }
@@ -253,7 +242,6 @@ class EvidenceGrid extends Grid
             $userToSave = $this->presenter->context->database->getRepository('\SRS\Model\User')->find($id);
             $userToSave->paymentMethod = $method;
             $userToSave->paymentDate = new \DateTime();
-            $userToSave->paid = true;
         }
 
         $this->presenter->context->database->flush();
