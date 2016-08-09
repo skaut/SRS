@@ -35,13 +35,12 @@ abstract class BaseComponentsPresenter extends \Nette\Application\UI\Presenter
 
 
         // kompilátoru seznam předáme a určíme adresář, kam má kompilovat
-        $filter = new \WebLoader\Filter\CssUrlsFilter(WWW_DIR);
+        $filter = new \WebLoader\Filter\CssUrlsFilter(WWW_DIR, $this->template->basePath);
         $compiler = \WebLoader\Compiler::createCssCompiler($files, WWW_DIR . '/webtemp');
 
         $compiler->setJoinFiles(FALSE);
 
         $compiler->addFileFilter($filter);
-
 
         // nette komponenta pro výpis <link>ů přijímá kompilátor a cestu k adresáři na webu
         return new \WebLoader\Nette\CssLoader($compiler, $this->template->basePath . '/webtemp');
