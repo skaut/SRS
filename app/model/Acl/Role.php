@@ -31,7 +31,7 @@ use Doctrine\Common\Collections\Criteria;
 class Role extends \SRS\Model\BaseEntity
 {
     const GUEST = 'guest';
-    const REGISTERED = 'Registrovaný';
+    const REGISTERED = 'Nepřihlášený';
     const ATTENDEE = 'Účastník';
     const SERVICE_TEAM = 'Servis Tým';
     const LECTOR = 'Lektor';
