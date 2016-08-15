@@ -37,11 +37,11 @@ class BlockGrid extends Grid
         $qb = $this->em->createQueryBuilder();
         $qb->addSelect('b');
         $qb->addSelect('lector');
-        //$qb->addSelect($qb->expr()->count('p'));
+        // $qb->addSelect($qb->expr()->count('p'));
         // $qb->addSelect('count(p) as b.programs');
         $qb->from('\SRS\Model\Program\Block', 'b');
         $qb->leftJoin('b.lector', 'lector');
-        $qb->leftJoin('b.programs', 'p');
+        // $qb->leftJoin('b.programs', 'p');
 
         if (!$presenter->context->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS)) {
             $qb->where(new \Doctrine\ORM\Query\Expr\Comparison('lector.id', '=', $presenter->context->user->id));
