@@ -23,9 +23,8 @@ class Room extends \SRS\Model\BaseEntity
     protected $programs;
 
     /**
-     * @ORM\Column
-     *
-     * @JMS\Type("string")
+     * @ORM\Column(unique=true)
+     * @var string
      */
     protected $name;
 
@@ -48,7 +47,6 @@ class Room extends \SRS\Model\BaseEntity
     {
         return $this->programs;
     }
-
 }
 
 /**
@@ -56,5 +54,12 @@ class Room extends \SRS\Model\BaseEntity
  */
 class RoomRepository extends \Nella\Doctrine\Repository
 {
+    public $entity = '\SRS\Model\Program\Room';
+
+    public function findAll()
+    {
+        $query = $this->_em->createQuery("SELECT r FROM {$this->entity} r");
+        return $query->getResult();
+    }
 
 }

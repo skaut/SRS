@@ -133,14 +133,14 @@ class Block extends \SRS\Model\BaseEntity
         return $this->lector;
     }
 
-    public function setRoom($location)
+    public function setRoom($room)
     {
-        $this->location = $location;
+        $this->room = $room;
     }
 
     public function getRoom()
     {
-        return $this->location;
+        return $this->room;
     }
 
     public function setName($name)
@@ -180,5 +180,10 @@ class Block extends \SRS\Model\BaseEntity
  */
 class BlockRepository extends \Nella\Doctrine\Repository
 {
+    public $entity = '\SRS\Model\Program\Block';
 
+    public function updateRooms($oldRoom, $newRoom)
+    {
+        $this->_em->createQuery("UPDATE {$this->entity} b SET b.room=$newRoom WHERE b.room=$oldRoom")->execute();
+    }
 }

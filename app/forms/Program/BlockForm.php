@@ -35,6 +35,7 @@ class BlockForm extends \SRS\Form\EntityForm
         $this->em = $em;
         $this->user = $user;
         $lectors = $this->em->getRepository('\SRS\Model\Acl\Role')->findApprovedUsersInRole('lektor');
+        $rooms = $this->em->getRepository('\SRS\Model\Program\Room')->findAll();
 
 
         $this->addHidden('id');
@@ -45,7 +46,8 @@ class BlockForm extends \SRS\Form\EntityForm
             ->addRule(Form::INTEGER, 'Kapacita je číslo od 1 do x')
             ->getControlPrototype()->class('number');
         $this->addText('tools', 'Pomůcky:');
-        $this->addText('location', 'Lokalita:');
+        $this->addSelect('room', 'Místnost:')
+            ->setItems(\SRS\Form\EntityForm::getFormChoices($rooms, 'id', 'name'))->setPrompt('-- vyberte --');
         $this->addSelect('duration', 'Doba trvání:')
             ->setItems($this->prepareDurationChoices())
             ->addRule(Form::FILLED, 'Zadejte dobu trvání');

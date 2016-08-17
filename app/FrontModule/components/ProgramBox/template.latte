@@ -60,7 +60,11 @@
 
                 <ul class="no-margin no-bullets" ng-show="event.block">
                     <li><strong>Lektor: </strong>{{ event.block.lector }}</li>
-                    <li><strong>Lokalita: </strong>{{ event.block.location }}</li>
+                    {ifset $block->room->name}
+                        <li><strong>Místnost: </strong>{{ event.block.room.name }}</li>
+                    {else}
+                        <li><strong>Místnost: </strong>nezadána</li>
+                    {/ifset}
                     <li><strong>Kapacita: </strong>{{ event.attendees_count }}/{{ event.block.capacity }}</li>
                 </ul>
                 <h3>O programu:</h3>

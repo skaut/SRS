@@ -38,6 +38,7 @@ class RoomPresenter extends \BackModule\BasePresenter
         if ($room == null) throw new \Nette\Application\BadRequestException('Místnost s tímto ID neexistuje', 404);
         $this->context->database->remove($room);
         $this->context->database->flush();
+        $this->context->database->getRepository('\SRS\Model\Program\Block')->updateRooms($id, 'NULL');
         $this->flashMessage('Místnost smazána', 'success');
         $this->redirect(":Back:Program:Room:list");
     }
