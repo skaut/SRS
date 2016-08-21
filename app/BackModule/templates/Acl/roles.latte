@@ -16,6 +16,7 @@ Práva & Role » Role
         <th>Registrovatelná</th>
         <th>Registrovatelná od</th>
         <th>Registrovatelná do</th>
+        <th>Kapacita</th>
         <th>Platí za účast?</th>
         <th>Operace</th>
     </tr>
@@ -28,6 +29,7 @@ Práva & Role » Role
             <td>{bool $role->registerable}</td>
             <td>{$role->registerableFrom|date:"d.m. Y"}</td>
             <td>{$role->registerableTo|date:"d.m. Y"}</td>
+            <td>{$role->usersLimit}</td>
             <td>{bool $role->pays}</td>
             <td>
                 <a class="btn" href="{plink Acl:editRole $role->id}">Upravit</a> &nbsp;&nbsp;
