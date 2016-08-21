@@ -19,6 +19,7 @@ use Doctrine\Common\Collections\Criteria;
  * @property bool $system
  * @property bool $registerable
  * @property bool $approvedAfterRegistration
+ * @property integer $usersLimit
  * @property bool $pays
  * @property integer $fee
  * @property string $feeWord
@@ -95,6 +96,13 @@ class Role extends \SRS\Model\BaseEntity
      * @ORM\Column(type="date", nullable=true)
      */
     protected $registerableTo;
+
+    /**
+     * Maximální počet osob v roli
+     * @var integer
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $usersLimit;
 
     /**
      * @var bool
@@ -218,6 +226,16 @@ class Role extends \SRS\Model\BaseEntity
     public function getRegisterableTo()
     {
         return $this->registerableTo;
+    }
+
+    public function setUsersLimit($usersLimit)
+    {
+        $this->usersLimit = $usersLimit;
+    }
+
+    public function getUsersLimit()
+    {
+        return $this->usersLimit;
     }
 
     /**
