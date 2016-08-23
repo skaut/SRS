@@ -777,6 +777,14 @@ class User extends BaseEntity
         return false;
     }
 
+    public function hasSameProgram($program)
+    {
+        foreach ($this->programs as $otherProgram) {
+            if ($otherProgram->block->id == $program->block->id) return true;
+        }
+        return false;
+    }
+
     public function countAge()
     {
         $today = new \DateTime('now');

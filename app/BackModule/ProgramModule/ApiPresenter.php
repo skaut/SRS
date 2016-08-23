@@ -170,6 +170,8 @@ class ApiPresenter extends \BackModule\BasePresenter
                         $user = $userRepo->find($this->context->user->id);
                         if ($user->hasOtherProgram($program, $this->basicBlockDuration)) {
                             $message = array('status' => 'error', 'message' => 'V tuto dobu máte přihlášený již jiný program.');
+                        } else if ($user->hasSameProgram($program)) {
+                            $message = array('status' => 'error', 'message' => 'Tento program máte již přihlášený.');
                         } else {
                             if (!$program->attendees->contains($user)) { // uzivatle na program jeste neni prihlasen
                                 $program->attendees->add($user);

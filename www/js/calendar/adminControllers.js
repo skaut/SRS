@@ -231,7 +231,7 @@ function bindCalendar(scope) {
             options.content = '';
             if (event.block != null && event.block != undefined) {
                 options.content += "<ul class='no-margin block-properties'>";
-                options.content += "<li><span>lektor:</span> " + event.block.lector + "</li>";
+                options.content += "<li><span>Lektor:</span> " + event.block.lector + "</li>";
                 options.content += "<li><span>Kapacita:</span>" + event.attendees_count + "/" + event.block.capacity + "</li>";
                 options.content += "<li><span>Lokalita:</span> " + event.block.location + "</li>";
                 options.content += "<li><span>Pomůcky:</span> " + event.block.tools + "</li>";

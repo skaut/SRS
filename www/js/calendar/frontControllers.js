@@ -129,7 +129,7 @@ function bindCalendar(scope) {
             options.placement = 'bottom';
             if (event.block != null && event.block != undefined) {
                 options.content += "<ul class='no-bullets no-margin'>";
-                options.content += "<li><span>lektor:</span> " + event.block.lector + "</li>";
+                options.content += "<li><span>Lektor:</span> " + event.block.lector + "</li>";
                 options.content += "<li><span>Kapacita:</span> " + event.attendees_count + "/" + event.block.capacity + "</li>";
                 options.content += "<li><span>Lokalita:</span> " + event.block.location + "</li>";
                 options.content += "</ul>";
