@@ -73,4 +73,9 @@ class PagePresenter extends BasePresenter
         return new \SRS\Components\ProgramBox();
     }
 
+    public function createComponentUserBox()
+    {
+        return new \SRS\Components\UserBox();
+    }
+
 }

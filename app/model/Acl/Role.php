@@ -23,6 +23,7 @@ use Doctrine\Common\Collections\Criteria;
  * @property bool $pays
  * @property integer $fee
  * @property string $feeWord
+ * @property bool $displayInList
  * @property bool $syncedWithSkautIS
  * @property \DateTime|string $registerableFrom
  * @property \DateTime|string $registerableTo
@@ -121,6 +122,13 @@ class Role extends \SRS\Model\BaseEntity
      * @ORM\Column(nullable=true)
      */
     protected $feeWord;
+
+
+    /**
+     * @var boolean
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    protected $displayInList;
 
 
     /**
@@ -316,6 +324,22 @@ class Role extends \SRS\Model\BaseEntity
     public function getSyncedWithSkautIS()
     {
         return $this->syncedWithSkautIS;
+    }
+
+    /**
+     * @return boolean $displayInList
+     */
+    public function isDisplayInList()
+    {
+        return $this->displayInList;
+    }
+
+    /**
+     * @param boolean $displayInList
+     */
+    public function setDisplayInList($displayInList)
+    {
+        $this->displayInList = $displayInList;
     }
 }
 
