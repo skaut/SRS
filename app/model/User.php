@@ -818,5 +818,9 @@ class UserRepository extends \Nella\Doctrine\Repository
         return $result;
     }
 
+    public function findUsersInVisibleRoles() {
+        $query = "SELECT u FROM {$this->_entityName} u JOIN u.role r WHERE r.displayInList = 1";
+        return $this->_em->createQuery($query)->getResult();
+    }
 
 }
