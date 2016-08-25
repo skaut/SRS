@@ -780,7 +780,12 @@ class User extends BaseEntity
     public function hasSameProgram($program)
     {
         foreach ($this->programs as $otherProgram) {
-            if ($otherProgram->block->id == $program->block->id) return true;
+            if ($otherProgram->id == $program->id)
+                continue;
+            if ($otherProgram->block == null || $program->block == null)
+                continue;
+            if ($otherProgram->block->id == $program->block->id)
+                return true;
         }
         return false;
     }
