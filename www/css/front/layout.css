@@ -9,8 +9,7 @@ ul, li {
 ul.no-bullets > li {
 	list-style-type: none !important;
 	margin-left: 0px !important;
-
- }
+}
 
 ul.no-margin {
     padding-left: 0 !important;
