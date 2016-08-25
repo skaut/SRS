@@ -62,7 +62,6 @@ class ApiPresenter extends \BackModule\BasePresenter
         $this->terminate();
     }
 
-
     public function actionSetProgram($data)
     {
         $program = $this->programRepo->saveFromJson($data, $this->basicBlockDuration);
@@ -187,7 +186,7 @@ class ApiPresenter extends \BackModule\BasePresenter
                 }
             }
         }
-        $program->prepareForJson(null, $this->basicBlockDuration);
+        $program->prepareForJson(null, $this->basicBlockDuration, $program->blocks);
         $message['event']['attendees_count'] = $program->attendeesCount;
         $response = new \Nette\Application\Responses\JsonResponse($message);
         $this->sendResponse($response);
@@ -216,7 +215,7 @@ class ApiPresenter extends \BackModule\BasePresenter
                 }
             }
         }
-        $program->prepareForJson(null, $this->basicBlockDuration);
+        $program->prepareForJson(null, $this->basicBlockDuration, $program->blocks);
         $message['event']['attendees_count'] = $program->attendeesCount;
         $response = new \Nette\Application\Responses\JsonResponse($message);
         $this->sendResponse($response);
