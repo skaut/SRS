@@ -223,9 +223,9 @@ class EvidenceGrid extends Grid
             return $self->handleAttend($id);
         });
 
-        $this->addAction("printIncomeProof", "Vytisknout příjmový doklad")->setAjax(false)
+        $this->addAction("printPaymentProofs", "Vytisknout doklad o zaplacení")->setAjax(false)
             ->setCallback(function ($id) use ($presenter) {
-            $presenter->redirect('printIncomeProof!', array('ids' => $id));
+            $presenter->redirect('printPaymentProofs!', array('ids' => $id));
         });
 
 

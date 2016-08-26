@@ -28,36 +28,28 @@ class Printer extends \Nette\Object
         $this->fpdi->SetFont('verdana', '', 10);
     }
 
-    public function printIncomeProofs($users)
+    public function printPaymentProofs($users)
     {
-        $this->configureForIncomeProof();
         foreach ($users as $user) {
-            $this->addIncomeProof($user);
+            if ($user->paymentMethod == 'bank')
+                $this->addAccountProof($user);
+            else if ($user->paymentMethod == 'cash')
+                $this->addIncomeProof($user);
         }
-        $this->fpdi->Output('prijmove_doklady.pdf', 'D');
+        $this->fpdi->Output('doklady_o_zaplaceni.pdf', 'D');
         exit;
     }
-
-    public function printAccountProofs($users)
-    {
-        $this->configurForAccountProof();
-        foreach ($users as $user) {
-            $this->addAccountProof($user);
-        }
-        $this->fpdi->Output('potvrzeni_o_prijeti_platby.pdf', 'D');
-        exit;
-    }
-
 
     protected function addIncomeProof(\SRS\Model\User $user)
     {
+        $this->configureForIncomeProof();
+
         $this->fpdi->addPage();
 
         $this->fpdi->useTemplate($this->template, 0, 0);
 
         $this->fpdi->SetY(49);
-        $this->fpdi->SetX(32);
-        $this->fpdi->Line(20, 36, 80, 36);
+        $this->fpdi->SetX(37);
 
         $this->fpdi->Line(135, 54, 175, 54);
         $this->fpdi->Line(135, 64, 175, 64);
@@ -68,19 +60,16 @@ class Printer extends \Nette\Object
         $this->fpdi->Text(140, 76, iconv('UTF-8', 'WINDOWS-1250', '== ' . $user->role->fee . ' =='));
         $this->fpdi->Text(38, 86, iconv('UTF-8', 'WINDOWS-1250', '== ' . $user->role->feeWord . ' =='));
 
-        $this->fpdi->Line(20, 92, 50, 92);
-
         $this->fpdi->Text(40, 98, iconv('UTF-8', 'WINDOWS-1250', "{$user->firstName} {$user->lastName}, {$user->street}, {$user->city}, {$user->postcode}"));
         //$this->fpdi->Text(40, 103, iconv('UTF-8', 'WINDOWS-1250', "jednotka"));
 
         $this->fpdi->Text(40, 111, iconv('UTF-8', 'WINDOWS-1250', "účastnický poplatek {$this->dbsettings->get('seminar_name')}"));
-
-        $this->fpdi->Line(80, 121, 100, 121);
-
     }
 
     protected function addAccountProof(\SRS\Model\User $user)
     {
+        $this->configurForAccountProof();
+
         $this->fpdi->addPage();
         $this->fpdi->useTemplate($this->template, 0, 0);
         $this->fpdi->SetY(30);

@@ -136,24 +136,35 @@ class EvidencePresenter extends BasePresenter
 
     }
 
-    //tenhle handler pouze zapise priznak o vytisknuti
-    public function handlePrintIncomeProof($ids = array())
-    {
-        $users = array();
-        foreach ($ids as $userId) {
-            $users[] = $user = $this->userRepo->find($userId);
-            $user->incomeProofPrinted = true;
-        }
-        $printer = $this->context->printer;
-        $printer->printIncomeProofs($users);
-        $this->context->database->flush();
+    private function setPaymentProofPrinted($userId) {
+
+
     }
 
-    public function handlePrintAccountProof($userId)
+    public function handlePrintPaymentProof($userId)
     {
-        $printer = $this->context->printer;
         $user = $this->userRepo->find($userId);
-        $printer->printAccountProofs(array($user));
+        $user->incomeProofPrinted = true;
+        $this->context->database->flush();
+
+        $printer = $this->context->printer;
+        $printer->printPaymentProofs(array($user));
+    }
+
+    public function handlePrintPaymentProofs($ids = array())
+    {
+        $users = [];
+
+        foreach ($ids as $userId) {
+            $user = $this->userRepo->find($userId);
+            if ($user->paymentDate == null)
+                continue;
+            $users[] = $user;
+            $user->incomeProofPrinted = true;
+        }
+        $this->context->database->flush();
+        $printer = $this->context->printer;
+        $printer->printPaymentProofs($users);
     }
 
     protected function getAllEvidenceColumns()
