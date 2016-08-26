@@ -58,7 +58,7 @@ a:hover {
     padding-bottom: 0px !important;
 }
 
-.userBox ul > li, ul {
+.userBoxList {
     list-style-type: none !important;
     margin-left: 0px !important;
     padding-left: 0px !important;
