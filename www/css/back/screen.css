@@ -41,7 +41,11 @@ label.required:after, tr.required label:after {
 
 
 .grid-flash.success span {
-    color: green !important;
+     color: green !important;
+ }
+
+.grid-flash.error span {
+    color: red !important;
 }
 
 .table-roles {
