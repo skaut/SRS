@@ -16,11 +16,11 @@ class Room extends \SRS\Model\BaseEntity
 {
 
     /**
-     * @ORM\OneToMany(targetEntity="\SRS\Model\Program\Program", mappedBy="room", cascade={"persist"}, orphanRemoval=true)
-     * @JMS\Type("ArrayCollection<SRS\Model\Program\Program>")
+     * @ORM\OneToMany(targetEntity="\SRS\Model\Program\Block", mappedBy="room", cascade={"persist"}, orphanRemoval=true)
+     * @JMS\Type("ArrayCollection<SRS\Model\Program\Block>")
      * @JMS\Exclude
      */
-    protected $programs;
+    protected $blocks;
 
     /**
      * @ORM\Column(unique=true)
@@ -38,14 +38,14 @@ class Room extends \SRS\Model\BaseEntity
         return $this->name;
     }
 
-    public function setPrograms($programs)
+    public function setBlocks($blocks)
     {
-        $this->programs = $programs;
+        $this->blocks = $blocks;
     }
 
-    public function getPrograms()
+    public function getBlocks()
     {
-        return $this->programs;
+        return $this->blocks;
     }
 }
 

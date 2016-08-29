@@ -11,10 +11,9 @@ data-spy="affix" data-offset-top="0"
 {block content}
 <h1>Přehled místností</h1>
 <div class="navbar">
-   {if $user->isAllowed(\SRS\Model\Acl\Resource::PROGRAM, \SRS\Model\Acl\Permission::MANAGE_OWN_PROGRAMS)
-    || $user->isAllowed(\SRS\Model\Acl\Resource::PROGRAM, \SRS\Model\Acl\Permission::MANAGE_ALL_PROGRAMS)}
+   {if $user->isAllowed(\SRS\Model\Acl\Resource::ROOM, \SRS\Model\Acl\Permission::MANAGE)}
         <a class="btn btn-success" href="{plink add}"><i class="icon-plus-sign"></i>Vytvořit místnost</a>
-    {/if}
+   {/if}
 </div>
     {widget roomGrid}
 {include '../../../templates/includes/confirm_dialog.latte'}
