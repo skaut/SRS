@@ -96,7 +96,7 @@ class ApiPresenter extends \BackModule\BasePresenter
             $result[$block->id] = array('id' => $block->id,
                 'name' => $block->name,
                 'tools' => $block->tools,
-                'location' => $block->location != null ? $block->location : 'Nezadána',
+                'room' => $block->room != null ? $block->room->name : 'Nezadána',
                 'capacity' => $block->capacity,
                 'duration' => $block->duration,
                 'perex' => $block->perex,

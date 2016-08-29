@@ -21,7 +21,9 @@ Program » Blok {$block->name}
     {ifset $block->lector->username}
         <li><span>Lektor:</span> {$block->lector->username}</li>
     {/ifset}
-    <li><span>Lokalita:</span> {$block->location}</li>
+    {ifset $block->room->name}
+        <li><span>Místnost:</span> {$block->room->name}</li>
+    {/ifset}
     <li><span>Délka:</span> {$block->duration * $basicBlockDuration} minut</li>
     <li><span>Pomůcky:</span> {$block->tools}</li>
     <li><span>Kapacita:</span> {$block->capacity}</li>
