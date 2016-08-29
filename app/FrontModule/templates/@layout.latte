@@ -34,7 +34,7 @@
 
 </head>
 
-<body>
+<body class="body{ifset $slug}-{$slug}{/ifset}">
 <script> document.body.className += ' js' </script>
 <div n:foreach="$flashes as $flash" class="message {$flash->type}">
 {$flash->message}

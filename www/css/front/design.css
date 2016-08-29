@@ -58,6 +58,12 @@ a:hover {
     padding-bottom: 0px !important;
 }
 
+.userBoxList {
+    list-style-type: none !important;
+    margin-left: 0px !important;
+    padding-left: 0px !important;
+}
+
 #container #header #main-menu li {
     font-size: 10pt;
     font-weight: bold;

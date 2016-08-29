@@ -41,8 +41,22 @@ function FrontCalendarCtrl($scope, $http, $q, $timeout) {
                 if (event.mandatory == true && event.attends == false) {
                     $scope.mandatory_unsigned_programs_count++;
                 }
-                setColorFront(event);
 
+                for (i = $scope.events.length - 1; i >= 0; i--) {
+                    $scope.events[i].blocked = false;
+                }
+
+                for (i = $scope.events.length - 1; i >= 0; i--) {
+                    otherEvent = $scope.events[i];
+                    if (otherEvent.id == event.id)
+                        continue;
+                    if (otherEvent.attends == true && otherEvent.blocks.indexOf(event.id) != -1) {
+                        event.blocked = true;
+                        break;
+                    }
+                }
+
+                setColorFront(event);
             });
             bindCalendar($scope);
         });
@@ -62,7 +76,22 @@ function FrontCalendarCtrl($scope, $http, $q, $timeout) {
                     }
 
                     event.attendees_count = data.event.attendees_count;
-                    setColorFront(event);
+
+                    for (i = $scope.events.length - 1; i >= 0; i--) {
+                        $scope.events[i].blocked = false;
+                    }
+
+                    for (i = $scope.events.length - 1; i >= 0; i--) {
+                        for (j = $scope.events.length - 1; j >= 0; j--) {
+                            if (i == j) continue;
+                            if ($scope.events[i].attends == true && $scope.events[i].blocks.indexOf($scope.events[j].id) != -1)
+                                $scope.events[j].blocked = true;
+                        }
+                    }
+
+                    for (i = $scope.events.length - 1; i >= 0; i--) {
+                        setColorFront($scope.events[i]);
+                    }
                 }
                 $('#calendar').fullCalendar('updateEvent', event);
             }).error(function (data, status, headers, config) {
@@ -81,7 +110,22 @@ function FrontCalendarCtrl($scope, $http, $q, $timeout) {
                     if (event.mandatory == true) {
                         $scope.mandatory_unsigned_programs_count++;
                     }
-                    setColorFront(event);
+
+                    for (i = $scope.events.length - 1; i >= 0; i--) {
+                        $scope.events[i].blocked = false;
+                    }
+
+                    for (i = $scope.events.length - 1; i >= 0; i--) {
+                        for (j = $scope.events.length - 1; j >= 0; j--) {
+                            if (i == j) continue;
+                            if ($scope.events[i].attends == true && $scope.events[i].blocks.indexOf($scope.events[j].id) != -1)
+                                $scope.events[j].blocked = true;
+                        }
+                    }
+
+                    for (i = $scope.events.length - 1; i >= 0; i--) {
+                        setColorFront($scope.events[i]);
+                    }
                 }
                 $('#calendar').fullCalendar('updateEvent', event);
             }).error(function (data, status, headers, config) {
@@ -129,7 +173,7 @@ function bindCalendar(scope) {
             options.placement = 'bottom';
             if (event.block != null && event.block != undefined) {
                 options.content += "<ul class='no-bullets no-margin'>";
-                options.content += "<li><span>lektor:</span> " + event.block.lector + "</li>";
+                options.content += "<li><span>Lektor:</span> " + event.block.lector + "</li>";
                 options.content += "<li><span>Kapacita:</span> " + event.attendees_count + "/" + event.block.capacity + "</li>";
                 options.content += "<li><span>Lokalita:</span> " + event.block.location + "</li>";
                 options.content += "</ul>";

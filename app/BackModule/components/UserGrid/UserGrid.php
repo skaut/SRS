@@ -46,7 +46,7 @@ class UserGrid extends Grid
 
         foreach ($roles as $role) {
             if ($role->name != Role::GUEST) {
-            $rolesGrid[$role->id] = $role->name;
+                $rolesGrid[$role->id] = $role->name;
             }
         }
         $source = new \SRS\SRSDoctrineDataSource($qb, 'id');
@@ -63,7 +63,6 @@ class UserGrid extends Grid
             return $row->role['name'];
         })
             ->setSelectFilter($rolesGrid)
-
             ->setSelectEditable($rolesGrid);
         $this->addColumn('approved', 'Schválený')->setBooleanFilter()->setBooleanEditable()
             ->setRenderer(function ($row) {
@@ -79,14 +78,21 @@ class UserGrid extends Grid
         $this->setRowFormCallback(function ($values) use ($self, $presenter) {
                 $userToSave = $presenter->context->database->getRepository('\SRS\Model\User')->find($values['id']);
                 $newRole = $presenter->context->database->getRepository('SRS\Model\Acl\Role')->find($values['role']);
+
                 if ($newRole != null) {
-                    $userToSave->role = $newRole;
+                    if ($newRole->usersLimit == null || count($newRole->users) < $newRole->usersLimit) {
+                        $userToSave->role = $newRole;
+                    }
+                    else {
+                        $self->flashMessage("Překročena kapacita role. Záznam nebyl uložen.", "error");
+                        return;
+                    }
                 }
+
                 $userToSave->approved = isset($values['approved']) ? 1 : 0;
                 $presenter->context->database->flush();
 
                 $self->flashMessage("Záznam byl úspěšně uložen.", "success");
-
             }
         );
 

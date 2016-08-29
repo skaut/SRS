@@ -777,6 +777,19 @@ class User extends BaseEntity
         return false;
     }
 
+    public function hasSameProgram($program)
+    {
+        foreach ($this->programs as $otherProgram) {
+            if ($otherProgram->id == $program->id)
+                continue;
+            if ($otherProgram->block == null || $program->block == null)
+                continue;
+            if ($otherProgram->block->id == $program->block->id)
+                return true;
+        }
+        return false;
+    }
+
     public function countAge()
     {
         $today = new \DateTime('now');
@@ -810,5 +823,9 @@ class UserRepository extends \Nella\Doctrine\Repository
         return $result;
     }
 
+    public function findUsersInVisibleRoles() {
+        $query = "SELECT u FROM {$this->_entityName} u JOIN u.role r WHERE r.displayInList = 1";
+        return $this->_em->createQuery($query)->getResult();
+    }
 
 }

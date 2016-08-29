@@ -81,9 +81,12 @@ function setColor(event) {
 }
 
 function setColorFront(event) {
-
     if (event.mandatory == true && event.attends == false) {
         event.color = COLOR_MANDATORY;
+    }
+
+    else if (event.blocked == true && event.attends == false) {
+        event.color = COLOR_FULL;
     }
 
     else if (event.attends == true) {

@@ -19,9 +19,11 @@ use Doctrine\Common\Collections\Criteria;
  * @property bool $system
  * @property bool $registerable
  * @property bool $approvedAfterRegistration
+ * @property integer $usersLimit
  * @property bool $pays
  * @property integer $fee
  * @property string $feeWord
+ * @property bool $displayInList
  * @property bool $syncedWithSkautIS
  * @property \DateTime|string $registerableFrom
  * @property \DateTime|string $registerableTo
@@ -97,6 +99,13 @@ class Role extends \SRS\Model\BaseEntity
     protected $registerableTo;
 
     /**
+     * Maximální počet osob v roli
+     * @var integer
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $usersLimit;
+
+    /**
      * @var bool
      * @ORM\Column(type="boolean")
      */
@@ -113,6 +122,13 @@ class Role extends \SRS\Model\BaseEntity
      * @ORM\Column(nullable=true)
      */
     protected $feeWord;
+
+
+    /**
+     * @var boolean
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    protected $displayInList;
 
 
     /**
@@ -220,6 +236,16 @@ class Role extends \SRS\Model\BaseEntity
         return $this->registerableTo;
     }
 
+    public function setUsersLimit($usersLimit)
+    {
+        $this->usersLimit = $usersLimit;
+    }
+
+    public function getUsersLimit()
+    {
+        return $this->usersLimit;
+    }
+
     /**
      * @param int $fee
      */
@@ -298,6 +324,22 @@ class Role extends \SRS\Model\BaseEntity
     public function getSyncedWithSkautIS()
     {
         return $this->syncedWithSkautIS;
+    }
+
+    /**
+     * @return boolean $displayInList
+     */
+    public function isDisplayInList()
+    {
+        return $this->displayInList;
+    }
+
+    /**
+     * @param boolean $displayInList
+     */
+    public function setDisplayInList($displayInList)
+    {
+        $this->displayInList = $displayInList;
     }
 }
 

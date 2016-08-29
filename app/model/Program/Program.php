@@ -90,6 +90,11 @@ class Program extends \SRS\Model\BaseEntity
     public $attends;
 
     /**
+     * @JMS\Type("array<integer>")
+     */
+    public $blocks;
+
+    /**
      * @JMS\Type("integer")
      */
     public $attendeesCount;
@@ -205,13 +210,14 @@ class Program extends \SRS\Model\BaseEntity
         return $this->attendees->contains($user);
     }
 
-    public function prepareForJson($user = null, $basicDuration)
+    public function prepareForJson($user = null, $basicDuration, $blocks)
     {
         $this->end = $this->countEnd($basicDuration);
         $this->attendeesCount = $this->attendees->count();
 
         if ($user != null) {
             $this->attends = $this->hasAttendee($user);
+            $this->blocks = $blocks;
         }
 
         if ($this->block != null) {
@@ -242,8 +248,6 @@ class Program extends \SRS\Model\BaseEntity
     {
         $this->timestamp = new \DateTime('now');
     }
-
-
 }
 
 /**
@@ -251,6 +255,55 @@ class Program extends \SRS\Model\BaseEntity
  */
 class ProgramRepository extends \Nella\Doctrine\Repository
 {
+    private function getOtherPrograms($program, $basicBlockDuration)
+    {
+        $programs = $this->_em->getRepository($this->_entityName)->findAll();
+        $otherPrograms = [];
+
+        foreach ($programs as $otherProgram) {
+            if ($otherProgram->id == $program->id) continue;
+
+            if ($otherProgram->start == $program->start) {
+                $otherPrograms[] = $otherProgram->id;
+                continue;
+            }
+
+            if ($otherProgram->start > $program->start && $otherProgram->start < $program->countEnd($basicBlockDuration)) {
+                $otherPrograms[] = $otherProgram->id;
+                continue;
+            }
+
+            if ($otherProgram->countEnd($basicBlockDuration) > $program->start && $otherProgram->countEnd($basicBlockDuration) < $program->countEnd($basicBlockDuration)) {
+                $otherPrograms[] = $otherProgram->id;
+                continue;
+            }
+
+            if ($otherProgram->start < $program->start && $otherProgram->countEnd($basicBlockDuration) > $program->countEnd($basicBlockDuration)) {
+                $otherPrograms[] = $otherProgram->id;
+                continue;
+            }
+        }
+
+        return $otherPrograms;
+    }
+
+    private function getSamePrograms($program)
+    {
+        $programs = $this->_em->getRepository($this->_entityName)->findAll();
+        $samePrograms = [];
+
+        foreach ($programs as $otherProgram) {
+            if ($otherProgram->id == $program->id)
+                continue;
+            if ($otherProgram->block == null || $program->block == null)
+                continue;
+            if ($otherProgram->block->id == $program->block->id)
+                $samePrograms[] = $otherProgram->id;
+        }
+
+        return $samePrograms;
+    }
+
     public function findAllForJson($basicDuration, $user = null, $onlyAssigned = false)
     {
         if ($onlyAssigned == false) {
@@ -261,12 +314,14 @@ class ProgramRepository extends \Nella\Doctrine\Repository
         }
 
         foreach ($programs as $program) {
-            $program->prepareForJson($user, $basicDuration);
+            $blocks = [];
+            if ($user != null) {
+                $blocks = array_merge($this->getSamePrograms($program), $this->getOtherPrograms($program, $basicDuration));
+            }
+            $program->prepareForJson($user, $basicDuration, $blocks);
         }
         return $programs;
-
     }
-
 
     public function saveFromJson($data, $basicBlockDuration)
     {
@@ -299,6 +354,4 @@ class ProgramRepository extends \Nella\Doctrine\Repository
         $this->_em->flush();
         return $program;
     }
-
-
 }
