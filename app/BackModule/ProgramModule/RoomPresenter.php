@@ -7,7 +7,7 @@ namespace BackModule\ProgramModule;
  */
 class RoomPresenter extends \BackModule\BasePresenter
 {
-    protected $resource = \SRS\Model\Acl\Resource::PROGRAM;
+    protected $resource = \SRS\Model\Acl\Resource::ROOM;
 
     /**
      * @var \SRS\Model\Program\RoomRepository
@@ -17,7 +17,7 @@ class RoomPresenter extends \BackModule\BasePresenter
     public function startup()
     {
         parent::startup();
-        $this->checkPermissions(\SRS\Model\Acl\Permission::ACCESS);
+        $this->checkPermissions(\SRS\Model\Acl\Permission::MANAGE);
         $this->roomRepo = $this->context->database->getRepository('\SRS\Model\Program\Room');
     }
 
