@@ -46,6 +46,7 @@ class AclFactory
         $configuration = new Resource(Resource::CONFIGURATION);
         $evidence = new Resource(Resource::EVIDENCE);
         $mailing = new Resource(Resource::MAILING);
+        $room = new Resource(Resource::ROOM);
 
         $admin_access = new Permission(Permission::ACCESS, $backend);
         $admin->permissions->add($admin_access);
@@ -95,6 +96,9 @@ class AclFactory
         $admin->permissions->add($mailing_edit);
         $organizer->permissions->add($mailing_edit);
 
+        $room_edit = new Permission(Permission::MANAGE, $room);
+        $admin->permissions->add($room_edit);
+        $organizer->permissions->add($room_edit);
 
         return $roles;
     }

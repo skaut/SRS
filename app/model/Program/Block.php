@@ -18,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM,
  * @property string $name
  * @property integer $capacity
  * @property string $tools
- * @property string $location
+ * @property \SRS\Model\Program\Room $room
  * @property integer $duration
  */
 class Block extends \SRS\Model\BaseEntity
@@ -59,10 +59,12 @@ class Block extends \SRS\Model\BaseEntity
     protected $tools;
 
     /**
-     * @ORM\Column(nullable=true)
-     * @JMS\Type("string")
+     * @ORM\ManyToOne(targetEntity="\SRS\Model\Program\Room")
+     *
+     * @JMS\Type("SRS\Model\Program\Room")
+     * @JMS\Exclude
      */
-    protected $location;
+    protected $room;
 
     /**
      * @ORM\Column(type="integer")
@@ -131,14 +133,14 @@ class Block extends \SRS\Model\BaseEntity
         return $this->lector;
     }
 
-    public function setLocation($location)
+    public function setRoom($room)
     {
-        $this->location = $location;
+        $this->room = $room;
     }
 
-    public function getLocation()
+    public function getRoom()
     {
-        return $this->location;
+        return $this->room;
     }
 
     public function setName($name)
@@ -178,5 +180,10 @@ class Block extends \SRS\Model\BaseEntity
  */
 class BlockRepository extends \Nella\Doctrine\Repository
 {
+    public $entity = '\SRS\Model\Program\Block';
 
+    public function updateRooms($oldRoom, $newRoom)
+    {
+        $this->_em->createQuery("UPDATE {$this->entity} b SET b.room=$newRoom WHERE b.room=$oldRoom")->execute();
+    }
 }

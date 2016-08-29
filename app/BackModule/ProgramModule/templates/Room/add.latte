@@ -1,0 +1,22 @@
+{extends '../Programlayout.latte'}
+
+{block head}
+    {widget jsLoader 'tiny_mce/jquery.tinymce.js'}
+{include 'includes/tinymce_init.latte'}
+{/block}
+
+{block title}
+Program » Nová místnost
+{/block}
+
+{block content}
+<ul class="breadcrumb">
+    <li><a href="{plink list}">Přehled místností</a> <span class="divider">/</span></li>
+    <li class="active">Nová místnost</li>
+</ul>
+<div class="well">
+<h1>Nová místnost</h1>
+    {widget roomForm}
+</div>
+{include '../../../templates/includes/confirm_dialog.latte'}
+{/block}
