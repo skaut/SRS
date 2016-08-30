@@ -23,11 +23,13 @@ ignore = "
     .idea
     deploy.bat
     config.neon
+    config.example.neon
     config.local.neon
+    config.local.neon.sample
 "
 
 ; is allowed to delete remote files? (defaults to yes)
-allowdelete = no
+allowdelete = yes
 
 ; jobs to run before file upload
 ;before[] = http://example.com/deployment.php?before
@@ -36,10 +38,9 @@ allowdelete = no
 ;after[] = http://example.com/deployment.php?after
 
 ; directories to purge after file upload
-purge[] = "
-    temp/cache
-    www/webtemp
-"
+purge[] = "temp/cache"
+purge[] = "temp/proxies"
+purge[] = "www/webtemp"
 
 ; files to preprocess (defaults to *.js *.css)
 preprocess = no
