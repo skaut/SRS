@@ -3,16 +3,18 @@
 ECHO Stahuji kody z GITu
 ECHO --------------------
 call git pull origin master
+ECHO.
 
 ECHO Aktualizuji composer
 ECHO --------------------
-call composer install
+call composer self-update
+call composer install --no-dev
+ECHO.
 
 ECHO Synchronizuji na FTP
 ECHO --------------------
-ECHO.
 call php deployment.phar deployment.ini
-
-
 ECHO.
+
+
 ECHO HOTOVO !!!
