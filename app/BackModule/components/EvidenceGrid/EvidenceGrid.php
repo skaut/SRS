@@ -105,12 +105,13 @@ class EvidenceGrid extends Grid
                 return $row->paymentDate->format('d.m. Y');
             });
 
-        if ($this->columnsVisibility['incomeProofPrinted'])
-            $this->addColumn('incomeProofPrinted', 'Příjm. doklad vytištěn?')
-                ->setBooleanEditable()
-                ->setBooleanFilter()
+        if ($this->columnsVisibility['incomeProofPrintedDate'])
+            $this->addColumn('incomeProofPrintedDate', 'Příjm. doklad vytištěn dne')
+                ->setDateEditable()
+                ->setDateFilter()
                 ->setRenderer(function ($row) {
-                return \SRS\Helpers::renderBoolean($row->incomeProofPrinted);
+                if ($row->incomeProofPrintedDate == null || $row->incomeProofPrintedDate == '') return '';
+                return $row->incomeProofPrintedDate->format('d.m. Y');
             });
 
 
@@ -170,8 +171,11 @@ class EvidenceGrid extends Grid
                     $user->attended = isset($values['attended']) ? true : false;
                 }
 
-                if ($visibility['incomeProofPrinted']) {
-                    $user->incomeProofPrinted = isset($values['incomeProofPrinted']) ? true : false;
+                if ($values['incomeProofPrintedDate']) {
+                    $user->incomeProofPrintedDate = \DateTime::createFromFormat('Y-m-d', $values['incomeProofPrintedDate']);
+                }
+                else {
+                    $user->incomeProofPrintedDate = null;
                 }
 
                 if (isset($values['paymentMethod'])) {
@@ -188,8 +192,8 @@ class EvidenceGrid extends Grid
                 $CUSTOM_BOOLEAN_COUNT = $presenter->context->parameters['user_custom_boolean_count'];
                 for ($i = 0; $i < $CUSTOM_BOOLEAN_COUNT; $i++) {
                     $propertyName = 'customBoolean' . $i;
-                    if (isset($values[$propertyName])) {
-                        $user->{$propertyName} = isset($values[$propertyName]) ? true : false;;
+                    if (array_key_exists($propertyName, $visibility) && $visibility[$propertyName]) {
+                        $user->{$propertyName} = isset($values[$propertyName]) ? true : false;
                     }
 
                 }
@@ -223,9 +227,9 @@ class EvidenceGrid extends Grid
             return $self->handleAttend($id);
         });
 
-        $this->addAction("printIncomeProof", "Vytisknout příjmový doklad")->setAjax(false)
+        $this->addAction("printPaymentProofs", "Vytisknout doklad o zaplacení")->setAjax(false)
             ->setCallback(function ($id) use ($presenter) {
-            $presenter->redirect('printIncomeProof!', array('ids' => $id));
+            $presenter->redirect('printPaymentProofs!', array('ids' => $id));
         });
 
 

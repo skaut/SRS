@@ -24,8 +24,11 @@
 <li class="active">Detail: {$dbuser->displayName}</li>
 </ul>
 <div class="well">
-<a class="btn" href={link printIncomeProof!  array($dbuser->id)}>Vytisknout příjmový doklad</a>
-<a class="btn" href={link printAccountProof! $dbuser->id}>Vytisknout potvrzení o zaplacení na účet</a>
+    {if $dbuser->paymentMethod == 'bank' && $dbuser->paymentDate != null}
+        <a class="btn" href={link printPaymentProof! $dbuser->id}>Vytisknout potvrzení o zaplacení na účet</a>
+    {elseif $dbuser->paymentMethod == 'cash' && $dbuser->paymentDate != null}
+        <a class="btn" href={link printPaymentProof! $dbuser->id}>Vytisknout příjmový doklad</a>
+    {/if}
 <h1>{$dbuser->displayName}</h1>
 <table class="table">
 <tr class="success">
@@ -84,8 +87,8 @@
     </tr>
 
     <tr>
-    <td>{label incomeProofPrinted /}</td>
-    <td>{input incomeProofPrinted}</td>
+    <td>Příjmový doklad vytištěn dne</td>
+    <td>{input incomeProofPrintedDate}</td>
     </tr>
 
     <tr>

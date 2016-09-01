@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM,
  *
  * @ORM\Entity(repositoryClass="\SRS\Model\Program\RoomRepository")
  * @JMS\ExclusionPolicy("none")
- * @property \Doctrine\Common\Collections\ArrayCollection $programs
+ * @property \Doctrine\Common\Collections\ArrayCollection $blocks
  * @property string $name
  */
 class Room extends \SRS\Model\BaseEntity

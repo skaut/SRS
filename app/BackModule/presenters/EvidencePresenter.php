@@ -27,7 +27,7 @@ class EvidencePresenter extends BasePresenter
         array('name' => 'city', 'label' => 'Město'),
         array('name' => 'paymentMethod', 'label' => 'Platební metoda'),
         array('name' => 'paymentDate', 'label' => 'Zaplaceno dne'),
-        array('name' => 'incomeProofPrinted', 'label' => 'Vytištěn příjmový doklad?'),
+        array('name' => 'incomeProofPrintedDate', 'label' => 'Příjmový doklad vytištěn dne'),
         array('name' => 'attended', 'label' => 'Přítomen'),
 
     );
@@ -136,24 +136,30 @@ class EvidencePresenter extends BasePresenter
 
     }
 
-    //tenhle handler pouze zapise priznak o vytisknuti
-    public function handlePrintIncomeProof($ids = array())
+    public function handlePrintPaymentProof($userId)
     {
-        $users = array();
-        foreach ($ids as $userId) {
-            $users[] = $user = $this->userRepo->find($userId);
-            $user->incomeProofPrinted = true;
-        }
-        $printer = $this->context->printer;
-        $printer->printIncomeProofs($users);
+        $user = $this->userRepo->find($userId);
+        $user->incomeProofPrintedDate = new \DateTime();
         $this->context->database->flush();
+
+        $printer = $this->context->printer;
+        $printer->printPaymentProofs(array($user));
     }
 
-    public function handlePrintAccountProof($userId)
+    public function handlePrintPaymentProofs($ids = array())
     {
+        $users = [];
+
+        foreach ($ids as $userId) {
+            $user = $this->userRepo->find($userId);
+            if ($user->paymentDate == null)
+                continue;
+            $users[] = $user;
+            $user->incomeProofPrintedDate = new \DateTime();
+        }
+        $this->context->database->flush();
         $printer = $this->context->printer;
-        $user = $this->userRepo->find($userId);
-        $printer->printAccountProofs(array($user));
+        $printer->printPaymentProofs($users);
     }
 
     protected function getAllEvidenceColumns()
