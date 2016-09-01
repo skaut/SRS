@@ -94,9 +94,8 @@ class UserFactory
         $user->sex = $sex_choices[mt_rand(0, sizeof($sex_choices) - 1)];
         $user->birthdate = new \DateTime('now');
         $user->approved = $approved_choices[mt_rand(0, 1)];
-        $user->paid = $approved_choices[mt_rand(0, 1)];
         $user->attended = $approved_choices[mt_rand(0, 1)];
-        $user->incomeProofPrinted = $approved_choices[mt_rand(0, 1)];
+        $user->incomeProofPrintedDate = new \DateTime('now');
 
         $user->street = Strings::random(5);
         $user->city = Strings::random(5);

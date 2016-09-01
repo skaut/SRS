@@ -26,7 +26,7 @@ use Doctrine\Common\Collections\Criteria;
  * @property bool $approved
  * @property \DateTime $paymentDate
  * @property string $paymentMethod
- * @property bool $incomeProofPrinted
+ * @property \DateTime $incomeProofPrintedDate
  * @property bool $attended
  * @property string $displayName
  * @property string $state
@@ -186,12 +186,11 @@ class User extends BaseEntity
      */
     protected $membershipCategory;
 
-
     /**
-     * @var bool
-     * @ORM\Column(type="boolean")
+     * @var string
+     * @ORM\Column(type="date", nullable=true)
      */
-    protected $incomeProofPrinted = false;
+    protected $incomeProofPrintedDate;
 
     /**
      * @var bool
@@ -740,19 +739,19 @@ class User extends BaseEntity
 
 
     /**
-     * @param boolean $incomeProofPrinted
+     * @param boolean $incomeProofPrintedDate
      */
-    public function setIncomeProofPrinted($incomeProofPrinted)
+    public function setIncomeProofPrintedDate($incomeProofPrintedDate)
     {
-        $this->incomeProofPrinted = $incomeProofPrinted;
+        $this->incomeProofPrintedDate = $incomeProofPrintedDate;
     }
 
     /**
      * @return boolean
      */
-    public function getIncomeProofPrinted()
+    public function getIncomeProofPrintedDate()
     {
-        return $this->incomeProofPrinted;
+        return $this->incomeProofPrintedDate;
     }
 
     /**

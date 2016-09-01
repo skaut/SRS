@@ -27,7 +27,7 @@ class EvidencePresenter extends BasePresenter
         array('name' => 'city', 'label' => 'Město'),
         array('name' => 'paymentMethod', 'label' => 'Platební metoda'),
         array('name' => 'paymentDate', 'label' => 'Zaplaceno dne'),
-        array('name' => 'incomeProofPrinted', 'label' => 'Vytištěn příjmový doklad?'),
+        array('name' => 'incomeProofPrintedDate', 'label' => 'Příjmový doklad vytištěn dne'),
         array('name' => 'attended', 'label' => 'Přítomen'),
 
     );
@@ -136,15 +136,10 @@ class EvidencePresenter extends BasePresenter
 
     }
 
-    private function setPaymentProofPrinted($userId) {
-
-
-    }
-
     public function handlePrintPaymentProof($userId)
     {
         $user = $this->userRepo->find($userId);
-        $user->incomeProofPrinted = true;
+        $user->incomeProofPrintedDate = new \DateTime();
         $this->context->database->flush();
 
         $printer = $this->context->printer;
@@ -160,7 +155,7 @@ class EvidencePresenter extends BasePresenter
             if ($user->paymentDate == null)
                 continue;
             $users[] = $user;
-            $user->incomeProofPrinted = true;
+            $user->incomeProofPrintedDate = new \DateTime();
         }
         $this->context->database->flush();
         $printer = $this->context->printer;
