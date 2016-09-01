@@ -29,7 +29,7 @@ class EvidencePresenter extends BasePresenter
         array('name' => 'paymentDate', 'label' => 'Zaplaceno dne'),
         array('name' => 'incomeProofPrintedDate', 'label' => 'Příjmový doklad vytištěn dne'),
         array('name' => 'attended', 'label' => 'Přítomen'),
-
+        array('name' => 'approved', 'label' => 'Schválený')
     );
 
     public function startup()

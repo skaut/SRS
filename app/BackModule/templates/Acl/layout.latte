@@ -1,6 +1,0 @@
-{extends '../@layout.latte'}
-{block sidebar_menu}
-<li class="nav-header">Práva a role</li>
-<li {ifCurrent :Back:Acl:users}class="active"{/ifCurrent}><a href="{plink :Back:Acl:users}">Uživatelé</a></li>
-<li {ifCurrent :Back:Acl:roles}class="active"{/ifCurrent}><a href="{plink :Back:Acl:roles}">Role</a></li>
-{/block}
