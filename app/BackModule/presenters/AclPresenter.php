@@ -18,21 +18,11 @@ class AclPresenter extends BasePresenter
 
     protected $resource = 'ACL';
 
-    protected function createComponentUserGrid()
-    {
-        return new \SRS\Components\UserGrid($this->context->database);
-    }
-
     public function startup()
     {
         parent::startup();
         $this->checkPermissions('Spravovat');
         $this->roleRepo = $this->context->database->getRepository('\SRS\Model\Acl\Role');
-    }
-
-    public function renderUsers()
-    {
-
     }
 
     public function renderRoles()

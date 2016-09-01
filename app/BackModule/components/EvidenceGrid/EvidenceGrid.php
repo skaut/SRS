@@ -7,6 +7,7 @@
 namespace SRS\Components;
 use \NiftyGrid\Grid;
 use \Doctrine\ORM\Query\Expr;
+use \SRS\Model\Acl\Role;
 
 /**
  * Grid pro správu uživatelů a práv
@@ -55,7 +56,9 @@ class EvidenceGrid extends Grid
         $today = new \DateTime('now');
 
         foreach ($roles as $role) {
-            $rolesGrid[$role->id] = $role->name;
+            if ($role->name != Role::GUEST) {
+                $rolesGrid[$role->id] = $role->name;
+            }
         }
         $source = new \SRS\SRSDoctrineDataSource($qb, 'id');
         $this->setDataSource($source);
@@ -66,12 +69,21 @@ class EvidenceGrid extends Grid
         if ($this->columnsVisibility['displayName'])
             $this->addColumn('displayName', 'Jméno')->setTextFilter()->setAutocomplete($numOfResults);
 
-        if ($this->columnsVisibility['role'])
+        if ($this->columnsVisibility['role']) {
             $this->addColumn('role', 'Role')
                 ->setRenderer(function ($row) {
-                return $row->role['name'];
-            })
-                ->setSelectFilter($rolesGrid);
+                    return $row->role['name'];
+                })
+                ->setSelectFilter($rolesGrid)
+                ->setSelectEditable($rolesGrid);
+            $this->components['gridForm']['evidenceGrid']['rowForm']['role']->setPrompt('(zachovat původní)');
+        }
+
+        if ($this->columnsVisibility['approved'])
+            $this->addColumn('approved', 'Schválený')->setBooleanFilter()->setBooleanEditable()
+                ->setRenderer(function ($row) {
+                return $row->approved ? 'Ano' : 'Ne';
+            });
 
         if ($this->columnsVisibility['birthdate'])
             $this->addColumn('birthdate', 'Věk')
@@ -189,6 +201,24 @@ class EvidenceGrid extends Grid
                     $user->paymentDate = null;
                 }
 
+                if (isset($values['role'])) {
+                    $newRole = $presenter->context->database->getRepository('SRS\Model\Acl\Role')->find($values['role']);
+
+                    if ($newRole != null) {
+                        if ($newRole->usersLimit == null || $newRole == $user->role || count($newRole->users) < $newRole->usersLimit) {
+                            $user->role = $newRole;
+                        }
+                        else {
+                            $self->flashMessage("Kapacita role byla překročena. Záznam nebyl uložen.", "error");
+                            return;
+                        }
+                    }
+                }
+
+                if ($visibility['approved']) {
+                    $user->approved = isset($values['approved']) ? 1 : 0;
+                }
+
                 $CUSTOM_BOOLEAN_COUNT = $presenter->context->parameters['user_custom_boolean_count'];
                 for ($i = 0; $i < $CUSTOM_BOOLEAN_COUNT; $i++) {
                     $propertyName = 'customBoolean' . $i;
@@ -232,6 +262,11 @@ class EvidenceGrid extends Grid
             $presenter->redirect('printPaymentProofs!', array('ids' => $id));
         });
 
+        $this->addAction("approve", "Schválit")
+            ->setCallback(function ($id) use ($self) {
+                return $self->handleApprove($id);
+            });
+
 
     }
 
@@ -272,6 +307,23 @@ class EvidenceGrid extends Grid
             $this->flashMessage("Vybraní uživatelé byli označeni jako přítomný na akci.", "success");
         } else {
             $this->flashMessage("Vybraný uživatel byl označen jako přítomný.", "success");
+        }
+        $this->redirect("this");
+    }
+
+    public function handleApprove($ids)
+    {
+        foreach ($ids as $id) {
+            $userToSave = $this->presenter->context->database->getRepository('\SRS\Model\User')->find($id);
+            $userToSave->approved = True;
+        }
+
+        $this->presenter->context->database->flush();
+
+        if (count($ids) > 1) {
+            $this->flashMessage("Vybraní uživatelé byli schváleni.", "success");
+        } else {
+            $this->flashMessage("Vybraný uživatel byl schválen.", "success");
         }
         $this->redirect("this");
     }
