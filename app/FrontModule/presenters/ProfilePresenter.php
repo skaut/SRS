@@ -53,7 +53,11 @@ class ProfilePresenter extends BasePresenter
     public function handlePrintProof()
     {
         $user = $this->userRepo->find($this->context->user->id);
-        $this->context->printer->printAccountProofs(array($user));
+        $user->incomeProofPrintedDate = new \DateTime();
+        $this->context->database->flush();
+
+        $printer = $this->context->printer;
+        $printer->printPaymentProofs(array($user));
     }
 
 

@@ -169,7 +169,7 @@ Můj profil
             <td>{$program->start|date:"d.m. H:i"}</td>
             <td>{$program->countEnd($basicBlockDuration)|date:"d.m. H:i"}</td>
             <td>{$program->block->name}</td>
-            <td>{$program->block->location}</td>
+            <td>{ifset $program->block->room->name}{$program->block->room->name}{/ifset}</td>
             <td>{ifset $program->block->lector->displayName}{$program->block->lector->displayName}{/ifset}</td>
         </tr>
     {/foreach}
@@ -181,9 +181,16 @@ Můj profil
             semináři: </strong> {if $dbuser->role->name == 'Registrovaný' || $dbuser->role->name == 'guest'}Neúčastníte
             se{else}{$dbuser->role->name}{/if}</li>
         <li><strong>Cena semináře: </strong>{$dbuser->role->fee},-</li>
-        <li><strong>Poplatek
-            uhrazen: </strong>{bool $dbuser->paid} {if $dbuser->paid && $dbuser->paymentMethod =='bank'}- <a
-                href="{link printProof!}">Vytisknout potvrzení</a>{/if}</li>
+        <li><strong>Poplatek uhrazen dne: </strong>
+            {if $dbuser->paymentDate !== null}
+                {$dbuser->paymentDate->format("j. n. Y")}
+                {if $dbuser->paymentMethod =='bank'}
+                    - <a href="{link printProof!}">Vytisknout potvrzení</a>
+                {/if}
+            {else}
+                poplatek neuhrazen
+            {/if}
+        </li>
     </ul>
 
 </div>
