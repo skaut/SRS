@@ -80,11 +80,11 @@ class UserGrid extends Grid
                 $newRole = $presenter->context->database->getRepository('SRS\Model\Acl\Role')->find($values['role']);
 
                 if ($newRole != null) {
-                    if ($newRole->usersLimit == null || count($newRole->users) < $newRole->usersLimit) {
+                    if ($newRole->usersLimit == null || $newRole == $userToSave->role || count($newRole->users) < $newRole->usersLimit) {
                         $userToSave->role = $newRole;
                     }
                     else {
-                        $self->flashMessage("Překročena kapacita role. Záznam nebyl uložen.", "error");
+                        $self->flashMessage("Kapacita role byla překročena. Záznam nebyl uložen.", "error");
                         return;
                     }
                 }
