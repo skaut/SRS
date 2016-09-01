@@ -28,6 +28,9 @@
         </th>
     </tr>
     <tr n:foreach="$flashes as $flash" class="grid-flash {$flash->type}">
+        {if $flash->type == "error"}
+            <script>alert({$flash->message});</script>
+        {/if}
         <th colspan="{$colsCount}">
             <span>{$flash->message}</span>
 
