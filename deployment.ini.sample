@@ -14,9 +14,9 @@ ignore = "
     /deployment.*
     /log
     !log/.*
-    www/webtemp/*
+    www/webtemp/
     !www/webtemp/.*
-    www/files/*
+    www/files/
     !www/files/.*
     temp/*
     !temp/.*
