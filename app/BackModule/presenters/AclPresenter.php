@@ -16,7 +16,7 @@ class AclPresenter extends BasePresenter
      */
     public $roleRepo;
 
-    protected $resource = 'ACL';
+    protected $resource = 'Práva a role';
 
     public function startup()
     {
