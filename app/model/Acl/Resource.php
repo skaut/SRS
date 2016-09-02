@@ -15,10 +15,10 @@ class Resource extends \SRS\Model\BaseEntity
 {
     const BACKEND = 'Administrace';
     const CMS = 'CMS';
-    const ACL = 'ACL';
+    const ACL = 'Práva a role';
     const PROGRAM = 'Program';
     const CONFIGURATION = 'Konfigurace';
-    const EVIDENCE = 'Evidence';
+    const EVIDENCE = 'Uživatelé';
     const MAILING = 'Mailing';
     const ROOM = 'Místnosti';
 

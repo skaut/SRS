@@ -12,7 +12,7 @@ namespace BackModule;
  */
 class EvidencePresenter extends BasePresenter
 {
-    protected $resource = 'Evidence';
+    protected $resource = 'Uživatelé';
 
     /**
      * @var \Nella\Doctrine\Repository
@@ -73,7 +73,6 @@ class EvidencePresenter extends BasePresenter
         //$user je v template defaultne
         $this->template->dbuser = $user;
         $this->template->customFields = $this->getFilledCustomFields($user);
-
     }
 
 
