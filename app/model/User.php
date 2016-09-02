@@ -743,7 +743,11 @@ class User extends BaseEntity
      */
     public function setIncomeProofPrintedDate($incomeProofPrintedDate)
     {
-        $this->incomeProofPrintedDate = $incomeProofPrintedDate;
+        if ($incomeProofPrintedDate != '' || $incomeProofPrintedDate != null) {
+            $this->incomeProofPrintedDate = $incomeProofPrintedDate;
+        } else {
+            $this->incomeProofPrintedDate = null;
+        }
     }
 
     /**
