@@ -148,7 +148,7 @@ class InstallPresenter extends \SRS\BaseComponentsPresenter
             if ($user == null) {
                 throw new \Nette\Application\BadRequestException($message = 'Uživatel je sice přihlášen ale v DB neexistuje!', $code = 500);
             }
-            $user->role = $adminRole;
+            $user->roles[] = $adminRole;
             $this->context->database->flush();
             $this->user->logout(true);
             $this->context->database->getRepository('\SRS\model\Settings')->set('superadmin_created', '1');

@@ -48,7 +48,7 @@ class Role extends \SRS\Model\BaseEntity
 
 
     /**
-     * @ORM\OneToMany(targetEntity="\SRS\model\User", mappedBy="role")
+     * @ORM\ManyToMany(targetEntity="\SRS\model\User", inversedBy="roles", cascade={"persist"})
      * @var mixed
      */
     protected $users;

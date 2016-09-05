@@ -13,7 +13,7 @@ use Doctrine\Common\Collections\Criteria;
  * @property-read int $id
  * @property string $username
  * @property string $email
- * @property \SRS\Model\Acl\Role $role
+ * @property \Doctrine\Common\Collections\ArrayCollection $roles
  * @property \Doctrine\Common\Collections\ArrayCollection $programs
  * @property \Doctrine\Common\Collections\ArrayCollection $extensions
  * @property string $firstName
@@ -52,10 +52,10 @@ class User extends BaseEntity
     protected $email;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\SRS\Model\Acl\Role", inversedBy="users")
-     * @var \SRS\Model\Acl\Role
+     * @ORM\ManyToMany(targetEntity="\SRS\model\Acl\Role", mappedBy="users", cascade={"persist"})
+     * @var \Doctrine\Common\Collections\ArrayCollection
      */
-    protected $role;
+    protected $roles;
 
     /**
      * @ORM\ManyToMany(targetEntity="\SRS\Model\Program\Program", mappedBy="attendees", cascade={"persist"})
@@ -369,7 +369,7 @@ class User extends BaseEntity
     public function __construct($username)
     {
         $this->username = static::normalizeString($username);
-        //$this->roles = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
 
@@ -397,14 +397,14 @@ class User extends BaseEntity
         $this->firstName = $firstName;
     }
 
-    public function getRole()
+    public function getRoles()
     {
-        return $this->role;
+        return $this->roles;
     }
 
-    public function setRole($role)
+    public function setRoles($roles)
     {
-        $this->role = $role;
+        $this->roles = $roles;
     }
 
     public function getPrograms()
