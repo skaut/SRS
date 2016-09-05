@@ -10,7 +10,7 @@
 
 {block sidebar_menu}
 <div ng-app ng-controller="userCtrl">
-    Vyhledat účastníka:
+    Vyhledat uživatele:
     <input type="text" class="input-medium search-query" ng-model="query">
     <ul>
         <li ng-repeat="user in users | filter:query"><a ng-href="{{ user.url }}"> {{ user.display_name }}</a></li>
