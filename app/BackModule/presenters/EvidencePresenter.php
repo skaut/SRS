@@ -22,7 +22,7 @@ class EvidencePresenter extends BasePresenter
 
     protected $evidenceDefaultColumns = array(
         array('name' => 'displayName', 'label' => 'Jméno'),
-        array('name' => 'role', 'label' => 'Role'),
+        array('name' => 'roles', 'label' => 'Role'),
         array('name' => 'birthdate', 'label' => 'Věk'),
         array('name' => 'city', 'label' => 'Město'),
         array('name' => 'paymentMethod', 'label' => 'Platební metoda'),

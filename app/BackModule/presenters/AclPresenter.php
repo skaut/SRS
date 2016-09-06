@@ -27,7 +27,6 @@ class AclPresenter extends BasePresenter
 
     public function renderRoles()
     {
-
         $roles = $this->roleRepo->findAll();
 
         $this->template->roles = $roles;
@@ -40,7 +39,6 @@ class AclPresenter extends BasePresenter
 
     public function renderEditRole($id)
     {
-
         if ($id == null) {
             $this->redirect('roles');
         }
@@ -81,7 +79,9 @@ class AclPresenter extends BasePresenter
         }
         $roleRegistered = $this->roleRepo->findBy(array('name' => 'Registrovaný'));
         foreach ($role->users as $user) {
-            $user->role = $roleRegistered;
+            $user->removeRole($role->name);
+            if ($user->roles->isEmpty())
+                $user->addRole($roleRegistered);
         }
         $this->context->database->remove($role);
         $this->context->database->flush();

@@ -19,8 +19,6 @@ class AclFactory
 
     public static function createRoles()
     {
-
-
         $roles = array();
         $roles[] = $guest = new Role(Role::GUEST);
         $roles[] = $registered = new Role(Role::REGISTERED);

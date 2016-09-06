@@ -52,7 +52,7 @@ class User extends BaseEntity
     protected $email;
 
     /**
-     * @ORM\ManyToMany(targetEntity="\SRS\model\Acl\Role", mappedBy="users", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="\SRS\model\Acl\Role", inversedBy="users", cascade={"persist"})
      * @var \Doctrine\Common\Collections\ArrayCollection
      */
     protected $roles;
@@ -63,14 +63,11 @@ class User extends BaseEntity
      */
     protected $programs;
 
-
     /**
      * @ORM\Column(type="boolean")
      */
     protected $approved = True;
 
-
-//    protected $roles;
 
     /**
      * @ORM\Column
@@ -800,6 +797,27 @@ class User extends BaseEntity
         return $interval->y;
     }
 
+    public function removeRole($roleName) {
+        $count = count($this->roles);
+        for ($i = 0; $i < $count; $i++) {
+            if ($this->roles[$i]->name == $roleName) {
+                $this->roles->remove($i);
+                break;
+            }
+        }
+    }
+
+    public function addRole($role) {
+        $this->roles->add($role);
+    }
+
+    public function hasRole($roleName) {
+        foreach ($this->roles as $role) {
+            if ($role->name == $roleName)
+                return true;
+        }
+        return false;
+    }
 }
 
 /**
@@ -830,5 +848,4 @@ class UserRepository extends \Nella\Doctrine\Repository
         $query = "SELECT u FROM {$this->_entityName} u JOIN u.role r WHERE r.displayInList = 1";
         return $this->_em->createQuery($query)->getResult();
     }
-
 }

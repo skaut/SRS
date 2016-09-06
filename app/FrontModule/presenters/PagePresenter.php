@@ -45,7 +45,7 @@ class PagePresenter extends BasePresenter
             $page = $this->repository->find($pageId);
         }
 
-        if (!$page->isAllowedToRole($this->user->roles[0])) {
+        if (!$page->isAllowedToRoles($this->user->roles)) {
             throw new \Nette\Application\BadRequestException('Na zobrazení této stránky nemáte práva', 403);
         }
         $this->pageId = $page->id;

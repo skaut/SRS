@@ -2,6 +2,7 @@
 
 
 namespace InstallModule;
+use SRS\Model\Acl\Role;
 error_reporting(0);
 
 /**
@@ -139,16 +140,16 @@ class InstallPresenter extends \SRS\BaseComponentsPresenter
             $this->redirect(':Install:install:finish?before=true');
         }
         if ($this->user->isLoggedIn()) {
-            $adminRole = $this->context->database->getRepository('\SRS\Model\Acl\Role')->findByName('Administrátor');
+            $adminRole = $this->context->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('name' => Role::ADMIN));
             if ($adminRole == null) {
                 throw new \Nette\Application\BadRequestException($message = 'Administrátorská role neexistuje!', $code = 500);
             }
-            $adminRole = $adminRole[0];
             $user = $this->context->database->getRepository('\SRS\Model\User')->find($this->user->id);
             if ($user == null) {
                 throw new \Nette\Application\BadRequestException($message = 'Uživatel je sice přihlášen ale v DB neexistuje!', $code = 500);
             }
-            $user->roles[] = $adminRole;
+            $user->removeRole(Role::REGISTERED);
+            $user->addRole($adminRole);
             $this->context->database->flush();
             $this->user->logout(true);
             $this->context->database->getRepository('\SRS\model\Settings')->set('superadmin_created', '1');

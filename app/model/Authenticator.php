@@ -46,7 +46,8 @@ class Authenticator extends \Nette\Object implements NS\IAuthenticator
                 throw new \Exception('Nekonzistentni stav. Role pro nove uzivatele by vzdy mela existovat');
             }
             $skautISPerson = $this->skautIS->getPerson($skautISToken, $skautISUser->ID_Person);
-            $user = \SRS\Factory\UserFactory::createFromSkautIS($skautISUser, $skautISPerson, array($roleRegistered));
+            $user = \SRS\Factory\UserFactory::createFromSkautIS($skautISUser, $skautISPerson);
+            $user->addRole($roleRegistered);
             $this->database->persist($user);
             $this->database->flush();
         }

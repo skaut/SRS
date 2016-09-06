@@ -73,7 +73,11 @@
     </tr>
     <tr>
     <td>Role</td>
-    <td>{$dbuser->role->name}</td>
+    <td>
+        {foreach $dbuser->roles as $role}
+            {$role->name}{sep}, {/sep}
+        {/foreach}
+    </td>
     </tr>
 
     <tr>

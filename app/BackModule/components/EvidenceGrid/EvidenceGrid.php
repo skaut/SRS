@@ -43,41 +43,34 @@ class EvidenceGrid extends Grid
     {
         $qb = $this->em->createQueryBuilder();
         $qb->addSelect('u');
-        $qb->addSelect('role');
+        $qb->addSelect('roles');
         $qb->from('\SRS\Model\User', 'u');
-        $qb->leftJoin('u.role', 'role'); //'WITH', 'role.standAlone=1');
-
-
-        $roles = $this->em->getRepository('\SRS\Model\Acl\Role')->findAll();
-
-        $rolesGrid = array();
+        $qb->leftJoin('u.roles', 'roles'); //'WITH', 'role.standAlone=1');
 
         $numOfResults = 10;
         $today = new \DateTime('now');
 
-        foreach ($roles as $role) {
-            if ($role->name != Role::GUEST) {
-                $rolesGrid[$role->id] = $role->name;
-            }
-        }
         $source = new \SRS\SRSDoctrineDataSource($qb, 'id');
         $this->setDataSource($source);
-
 
         $self = $this;
         $visibility = $this->columnsVisibility;
         if ($this->columnsVisibility['displayName'])
             $this->addColumn('displayName', 'Jméno')->setTextFilter()->setAutocomplete($numOfResults);
 
-        if ($this->columnsVisibility['role']) {
-            $this->addColumn('role', 'Role')
+        if ($this->columnsVisibility['roles'])
+            $this->addColumn('roles', 'Role')
                 ->setRenderer(function ($row) {
-                    return $row->role['name'];
-                })
-                ->setSelectFilter($rolesGrid)
-                ->setSelectEditable($rolesGrid);
-            $this->components['gridForm']['evidenceGrid']['rowForm']['role']->setPrompt('(zachovat původní)');
-        }
+                    $roles = "";
+                    $i = count($row->roles);
+                    foreach ($row->roles as $role) {
+                        $roles = $roles . $role['name'];
+                        $i--;
+                        if ($i > 0)
+                            $roles = $roles . ", ";
+                    }
+                    return $roles;
+            });
 
         if ($this->columnsVisibility['approved'])
             $this->addColumn('approved', 'Schválený')->setBooleanFilter()->setBooleanEditable()
@@ -199,20 +192,6 @@ class EvidenceGrid extends Grid
                 }
                 else {
                     $user->paymentDate = null;
-                }
-
-                if (isset($values['role'])) {
-                    $newRole = $presenter->context->database->getRepository('SRS\Model\Acl\Role')->find($values['role']);
-
-                    if ($newRole != null) {
-                        if ($newRole->usersLimit == null || $newRole == $user->role || count($newRole->users) < $newRole->usersLimit) {
-                            $user->role = $newRole;
-                        }
-                        else {
-                            $self->flashMessage("Kapacita role byla překročena. Záznam nebyl uložen.", "error");
-                            return;
-                        }
-                    }
                 }
 
                 if ($visibility['approved']) {

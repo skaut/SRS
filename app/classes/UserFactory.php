@@ -15,13 +15,12 @@ class UserFactory
     /**
      * @param stdClass $skautISUser
      * @param stdClass $skautISPerson
-     * @param \SRS\Model\Acl\Role $roles
+     * @param \SRS\Model\Acl\Role $role
      * @return \SRS\Model\User
      */
-    public static function createFromSkautIS($skautISUser, $skautISPerson, $roles)
+    public static function createFromSkautIS($skautISUser, $skautISPerson)
     {
         $user = new \SRS\Model\User($skautISUser->UserName);
-        $user->roles = $roles;
         $user->skautISUserId = $skautISUser->ID;
         $user->skautISPersonId = $skautISUser->ID_Person;
         $user->email = $skautISPerson->Email;
@@ -84,7 +83,7 @@ class UserFactory
 
         $user->skautISPersonId = $skautISPersonId;
 
-        $user->role = $roles[mt_rand(0, sizeof($roles) - 1)];
+        $user->roles->add($roles[mt_rand(0, sizeof($roles) - 1)]);
         $user->email = Strings::random(5) . '@' . Strings::random(5) . '.' . Strings::random(2);
         $user->firstName = Strings::random(8);
         $user->lastName = Strings::random(5);
