@@ -167,7 +167,7 @@ class Page extends \SRS\Model\BaseEntity
     {
         foreach ($roleNames as $roleName) {
             foreach ($this->roles as $role) {
-                if ($role->name == $roleName)
+                if ($roleName == $role->name)
                     return true;
             }
         }

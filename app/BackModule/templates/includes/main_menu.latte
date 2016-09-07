@@ -4,7 +4,7 @@
 
 {if $user->isAllowed(\SRS\Model\Acl\Resource::ACL, \SRS\Model\ACL\Permission::MANAGE)}
     <li {ifCurrent :Back:acl:*}class="active"{/ifCurrent}>
-        <a href="{plink :Back:acl:roles}">Práva a Role</a>
+        <a href="{plink :Back:acl:list}">Práva a Role</a>
     </li>
 {/if}
 

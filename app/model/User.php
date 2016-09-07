@@ -811,12 +811,37 @@ class User extends BaseEntity
         $this->roles->add($role);
     }
 
-    public function hasRole($roleName) {
-        foreach ($this->roles as $role) {
+    public function isInRole($roleName) {
+        foreach ($this->roles as $role)
             if ($role->name == $roleName)
                 return true;
-        }
         return false;
+    }
+
+    public function isNotInAnotherRole($roleNames) {
+        foreach ($this->roles as $role) {
+            if (!in_array($role->name, $roleNames))
+                return false;
+        }
+        return true;
+    }
+
+    public function countFee() {
+        $fee = INF;
+
+        foreach ($this->roles as $role) {
+            if ($role->fee < $fee) {
+                $fee = $role->fee;
+                $feeWord = $role->feeWord;
+            }
+            if ($role->fee == null) {
+                $fee = 0;
+                $feeWord = "";
+                break;
+            }
+        }
+
+        return array("fee" => $fee, "feeWord" => $feeWord);
     }
 }
 
@@ -832,20 +857,18 @@ class UserRepository extends \Nella\Doctrine\Repository
 
     public function findAllPaying()
     {
-        $query = "SELECT u, r FROM {$this->_entityName} u JOIN u.role r WHERE r.pays = 1 ";
-        $result = $this->_em->createQuery($query)->getResult();
-        return $result;
+        $query = "SELECT u FROM {$this->_entityName} u JOIN u.roles r WHERE r.pays = 1 AND u.id NOT IN (SELECT u.id FROM {$this->_entityName} u JOIN u.roles r WHERE r.pays = 0)";
+        return $this->_em->createQuery($query)->getResult();
     }
 
     public function findAllForSkautISSync()
     {
-        $query = "SELECT u, r FROM {$this->_entityName} u JOIN u.role r WHERE r.syncedWithSkautIS = 1 ";
-        $result = $this->_em->createQuery($query)->getResult();
-        return $result;
+        $query = "SELECT u FROM {$this->_entityName} u JOIN u.roles r WHERE r.syncedWithSkautIS = 1";
+        return $this->_em->createQuery($query)->getResult();
     }
 
     public function findUsersInVisibleRoles() {
-        $query = "SELECT u FROM {$this->_entityName} u JOIN u.role r WHERE r.displayInList = 1";
+        $query = "SELECT u FROM {$this->_entityName} u JOIN u.roles r WHERE r.displayInList = 1";
         return $this->_em->createQuery($query)->getResult();
     }
 }

@@ -169,6 +169,14 @@ class EvidenceGrid extends Grid
         })
             ->setAjax(FALSE);
 
+        $this->addButton("edit", "Upravit")
+            ->setClass("btn btn-warning")
+            ->setText('Upravit')
+            ->setLink(function ($row) use ($presenter) {
+                return $presenter->link("edit", $row['id']);
+            })
+            ->setAjax(FALSE);
+
 
         $this->setRowFormCallback(function ($values) use ($self, $presenter, $visibility) {
                 $user = $presenter->context->database->getRepository('\SRS\Model\User')->find($values['id']);

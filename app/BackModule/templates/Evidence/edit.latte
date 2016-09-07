@@ -1,0 +1,82 @@
+{extends '../@layout.latte'}
+
+{block head}
+    {widget jsLoader 'lib/angular.min.js', 'evidence/userController.js'}
+{/block}
+
+{block title}
+    {$dbuser->displayName}
+{/block}
+
+{block sidebar_menu}
+<div ng-app ng-controller="userCtrl">
+    Vyhledat uživatele:
+    <input type="text" class="input-medium search-query" ng-model="query">
+    <ul>
+        <li ng-repeat="user in users | filter:query"><a ng-href="{{ user.url }}"> {{ user.display_name }}</a></li>
+    </ul>
+</div>
+{/block}
+
+{block content}
+<ul class="breadcrumb">
+<li><a href="{plink :Back:Evidence:list}">Evidence</a> <span class="divider">/</span></li>
+<li class="active">Upravit: {$dbuser->displayName}</li>
+</ul>
+<div class="well">
+<h1>{$dbuser->displayName}</h1>
+<table class="table">
+    {form evidenceEditForm}
+    <tr>
+    <td>Role</td>
+    <td>
+        {input roles}
+    </td>
+    </tr>
+
+    <tr>
+    <td>Platební metoda</td>
+    <td>{input paymentMethod}</td>
+    </tr>
+
+    <tr>
+    <td>Zaplaceno dne</td>
+    <td>{input paymentDate}</td>
+    </tr>
+
+    <tr>
+    <td>Příjmový doklad vytištěn dne</td>
+    <td>{input incomeProofPrintedDate}</td>
+    </tr>
+
+    <tr>
+    <td>Přítomen</td>
+    <td>{input attended}</td>
+    </tr>
+
+        {foreach $customFields as $field}
+        <tr>
+        <td>{$field['name']}</td>
+        <td>{input $field['property']}</td>
+        </tr>
+        {/foreach}
+
+    <tr class="warning">
+    <td colspan="2">{input submit}</td>
+    </tr>
+    {/form}
+
+</table>
+</div>
+
+<script>
+$(function() {
+$(".datepicker").datepicker({
+
+});
+});
+</script>
+
+
+
+{/block}

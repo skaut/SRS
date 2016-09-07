@@ -9,7 +9,8 @@ namespace SRS\Form;
 use Nette\Application\UI,
     Nette\Diagnostics\Debugger,
     Nette\Application\UI\Form,
-    Nette\ComponentModel\IContainer;
+    Nette\ComponentModel\IContainer,
+    SRS\Model\Acl\Role;
 
 /**
  * Formular pro prihlasku
@@ -35,8 +36,10 @@ class AttendeeForm extends ProfileForm
     public function submitted()
     {
         $values = $this->getValues();
-        $role = $this->presenter->context->database->getRepository('\SRS\Model\Acl\Role')->find($values['role']);
         $user = $this->presenter->context->database->getRepository('\SRS\Model\User')->find($values['id']);
+        $user->removeRole(Role::REGISTERED);
+        $role = $this->presenter->context->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('id' => $values['role']));
+        $user->addRole($role);
         $user->setProperties($values, $this->presenter->context->database);
         $user->approved = $role->approvedAfterRegistration;
         $this->presenter->context->database->flush();
@@ -44,7 +47,6 @@ class AttendeeForm extends ProfileForm
         $this->presenter->flashMessage('Pro další používání webu se znovu přihlašte přes skautIS', 'info forever');
         $this->presenter->user->logout(true);
         $this->presenter->redirect(':Auth:logout');
-
     }
 
     public function setFields()
@@ -86,5 +88,4 @@ class AttendeeForm extends ProfileForm
             }
         }
     }
-
 }

@@ -5,6 +5,7 @@
  * Author: Michal Májský
  */
 namespace SRS\Components;
+use \SRS\Model\Acl\Role;
 
 /**
  *  Komponenta obsluhujici prihlasovaci formular na FE
@@ -18,9 +19,14 @@ class AttendeeBox extends \Nette\Application\UI\Control
         $template->setFile(__DIR__ . '/template.latte');
 
         $user = $this->presenter->context->user;
-        if ($user->isLoggedIn() && $user->identity->object->role->name == 'Registrovaný') {
-            $form = $this['attendeeForm'];
-            $form->bindEntity($user->identity->object);
+        if ($user->isLoggedIn()) {
+            $dbuser = $this->presenter->context->database->getRepository('\SRS\Model\User')->find($this->presenter->context->user->id);
+            $template->dbuser = $dbuser;
+
+            if ($dbuser->isInRole(Role::REGISTERED)) {
+                $form = $this['attendeeForm'];
+                $form->bindEntity($user->identity->object);
+            }
         }
         //$template->user = $this->presenter->context->user;
         $template->backlink = $this->presenter->context->httpRequest->url->path;

@@ -59,8 +59,8 @@ class Printer extends \Nette\Object
         $this->fpdi->MultiCell(68, 4.5, iconv('UTF-8', 'WINDOWS-1250', $this->dbsettings->get('company')));
         $this->fpdi->Text(35, 71, iconv('UTF-8', 'WINDOWS-1250', $this->dbsettings->get('ico')));
         $this->fpdi->Text(35, 77, iconv('UTF-8', 'WINDOWS-1250', '---------------')); //dic
-        $this->fpdi->Text(140, 76, iconv('UTF-8', 'WINDOWS-1250', '== ' . $user->role->fee . ' =='));
-        $this->fpdi->Text(38, 86, iconv('UTF-8', 'WINDOWS-1250', '== ' . $user->role->feeWord . ' =='));
+        $this->fpdi->Text(140, 76, iconv('UTF-8', 'WINDOWS-1250', '== ' . $user->countFee()['fee'] . ' =='));
+        $this->fpdi->Text(38, 86, iconv('UTF-8', 'WINDOWS-1250', '== ' . $user->countFee()['feeWord'] . ' =='));
 
         $this->fpdi->Text(40, 98, iconv('UTF-8', 'WINDOWS-1250', "{$user->firstName} {$user->lastName}, {$user->street}, {$user->city}, {$user->postcode}"));
         //$this->fpdi->Text(40, 103, iconv('UTF-8', 'WINDOWS-1250', "jednotka"));
@@ -81,8 +81,7 @@ class Printer extends \Nette\Object
 
         $this->fpdi->Text(70, 71, iconv('UTF-8', 'WINDOWS-1250', $this->dbsettings->get('account_number')));
 
-        $this->fpdi->Text(70, 78, iconv('UTF-8', 'WINDOWS-1250', $user->role->fee . ' Kč'));
-        $this->fpdi->Text(90, 78, iconv('UTF-8', 'WINDOWS-1250', ', slovy =' . $user->role->feeWord . '='));
+        $this->fpdi->Text(70, 78, iconv('UTF-8', 'WINDOWS-1250', $user->countFee()['fee'] . ' Kč, slovy =' . $user->countFee()['feeWord'] . '='));
         $this->fpdi->Text(70, 85, iconv('UTF-8', 'WINDOWS-1250', 'účastnický poplatek ' . $this->dbsettings->get('seminar_name')));
         $this->fpdi->Text(70, 92, iconv('UTF-8', 'WINDOWS-1250', "{$user->firstName} {$user->lastName}"));
         $this->fpdi->Text(70, 99, iconv('UTF-8', 'WINDOWS-1250', "{$user->street}, {$user->city}, {$user->postcode}"));

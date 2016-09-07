@@ -5,6 +5,7 @@
  * Author: Michal Májský
  */
 namespace BackModule;
+use SRS\Model\Acl\Role;
 
 /**
  * Presenter pro balicek ACL
@@ -25,29 +26,29 @@ class AclPresenter extends BasePresenter
         $this->roleRepo = $this->context->database->getRepository('\SRS\Model\Acl\Role');
     }
 
-    public function renderRoles()
+    public function renderList()
     {
         $roles = $this->roleRepo->findAll();
 
         $this->template->roles = $roles;
     }
 
-    public function renderAddRole()
+    public function renderAdd()
     {
 
     }
 
-    public function renderEditRole($id)
+    public function renderEdit($id)
     {
         if ($id == null) {
-            $this->redirect('roles');
+            $this->redirect('list');
         }
 
         $role = $this->roleRepo->find($id);
 
         if ($role == null) {
             $this->flashMessage('Tato role neexistuje', 'error');
-            $this->redirect('roles');
+            $this->redirect('list');
         }
 
 
@@ -77,11 +78,11 @@ class AclPresenter extends BasePresenter
             $this->flashMessage('Systémovou roli nelze smazat', 'error');
             $this->redirect('this');
         }
-        $roleRegistered = $this->roleRepo->findBy(array('name' => 'Registrovaný'));
-        foreach ($role->users as $user) {
-            $user->removeRole($role->name);
-            if ($user->roles->isEmpty())
-                $user->addRole($roleRegistered);
+        $roleRegistered = $this->roleRepo->findOneBy(array('name' => Role::REGISTERED));
+        foreach ($role->users as $dbuser) {
+            $dbuser->removeRole($role->name);
+            if ($dbuser->roles->isEmpty())
+                $dbuser->addRole($roleRegistered);
         }
         $this->context->database->remove($role);
         $this->context->database->flush();

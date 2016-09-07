@@ -67,14 +67,30 @@ class EvidencePresenter extends BasePresenter
         if ($user == null) {
             throw new \Nette\Application\BadRequestException("Takový uživatel neexistuje", 404);
         }
-        $form = $this->getComponent('evidenceDetailForm');
+
+        //$user je v template defaultne
+        $this->template->dbuser = $user;
+        $this->template->customFields = $this->getFilledCustomFields($user);
+        $this->template->paymentMethods = $this->context->parameters['payment_methods'];
+    }
+
+    public function renderEdit($id = null)
+    {
+        if ($id == null) {
+            $this->redirect(':Back:Evidence:list');
+        }
+
+        $user = $this->userRepo->find($id);
+        if ($user == null) {
+            throw new \Nette\Application\BadRequestException("Takový uživatel neexistuje", 404);
+        }
+        $form = $this->getComponent('evidenceEditForm');
         $form->bindEntity($user);
 
         //$user je v template defaultne
         $this->template->dbuser = $user;
         $this->template->customFields = $this->getFilledCustomFields($user);
     }
-
 
     protected function createComponentEvidenceGrid()
     {
@@ -83,9 +99,9 @@ class EvidencePresenter extends BasePresenter
         return new \SRS\Components\EvidenceGrid($this->context->database, $evidenceColumns->visibility);
     }
 
-    protected function createComponentEvidenceDetailForm()
+    protected function createComponentEvidenceEditForm()
     {
-        return new \SRS\Form\Evidence\EvidenceDetailForm(null, null, $this->context->parameters);
+        return new \SRS\Form\Evidence\EvidenceEditForm(null, null, $this->context->parameters, $this->context->database);
     }
 
     protected function createComponentColumnForm()
@@ -120,12 +136,11 @@ class EvidencePresenter extends BasePresenter
 
     public function actionGetAttendees()
     {
-
         $users = $this->userRepo->findAll();
         $usersArray = array();
 
         foreach ($users as $user) {
-            $usersArray[] = array('id' => $user->id, 'display_name' => $user->displayName, 'url' => $this->link(':Back:evidence:detail', $user->id));
+            $usersArray[] = array('id' => $user->id, 'display_name' => $user->displayName, 'url' => $user->id);
         }
 
         $json = json_encode($usersArray);

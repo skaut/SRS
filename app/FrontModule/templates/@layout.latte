@@ -60,9 +60,9 @@
                                     href="{plink :Front:Profile:default}">{$user->identity->object->username}</a></strong>
                                 (v
                                     {if count($user->roles) > 1}
-                                        rolích:
+                                        rolích
                                     {else}
-                                        roli:
+                                        roli
                                     {/if}
                                     {foreach $user->roles as $usersRole}{$usersRole}{sep}, {/sep}{/foreach})
                             </li>

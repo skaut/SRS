@@ -67,62 +67,59 @@
 <th>Bydliště</th>
 <td>{$dbuser->street}, {$dbuser->city}, {$dbuser->postcode}</td>
 </tr>
-    {form evidenceDetailForm}
+
     <tr class="success">
-    <td colspan="2">Údaje o osobě a akci</td>
-    </tr>
-    <tr>
-    <td>Role</td>
-    <td>
-        {foreach $dbuser->roles as $role}
-            {$role->name}{sep}, {/sep}
-        {/foreach}
-    </td>
+        <td colspan="2">Údaje o osobě a akci</td>
     </tr>
 
     <tr>
-    <td>Platební metoda</td>
-    <td>{input paymentMethod}</td>
+        <td>Role</td>
+        <td>
+            {foreach $dbuser->roles as $role}
+                {$role->name}{sep}, {/sep}
+            {/foreach}
+        </td>
     </tr>
 
     <tr>
-    <td>Zaplaceno dne</td>
-    <td>{input paymentDate}</td>
+        <td>Platební metoda</td>
+        <td>
+            {if $dbuser->paymentMethod !== null}
+                {$paymentMethods[$dbuser->paymentMethod]}
+            {/if}
+        </td>
     </tr>
 
     <tr>
-    <td>Příjmový doklad vytištěn dne</td>
-    <td>{input incomeProofPrintedDate}</td>
+        <td>Zaplaceno dne</td>
+        <td>
+            {if $dbuser->paymentDate !== null}
+            {$dbuser->paymentDate->format("j. n. Y")}
+            {/if}
+        </td>
     </tr>
 
     <tr>
-    <td>Přítomen</td>
-    <td>{input attended}</td>
+        <td>Příjmový doklad vytištěn dne</td>
+        <td>
+            {if $dbuser->incomeProofPrintedDate !== null}
+                {$dbuser->incomeProofPrintedDate->format("j. n. Y")}
+            {/if}
+        </td>
     </tr>
 
-        {foreach $customFields as $field}
+    <tr>
+        <td>Přítomen</td>
+        <td>{bool $dbuser->attended}</td>
+    </tr>
+
+    {foreach $customFields as $field}
         <tr>
-        <td>{$field['name']}</td>
-        <td>{if $field['type'] == 'boolean'}{bool $field['value']}{else}{$field['value']}{/if}</td>
+            <td>{$field['name']}</td>
+            <td>{if $field['type'] == 'boolean'}{bool $field['value']}{else}{$field['value']}{/if}</td>
         </tr>
-        {/foreach}
-
-    <tr class="warning">
-    <td colspan="2">{input submit}</td>
-    </tr>
-    {/form}
+    {/foreach}
 
 </table>
 </div>
-
-<script>
-$(function() {
-$(".datepicker").datepicker({
-
-});
-});
-</script>
-
-
-
 {/block}
