@@ -5,17 +5,16 @@
  * Author: Michal Májský
  */
 namespace SRS\Factory;
+use SRS\Model\Acl\Role;
 
 /**
  * Pro vytvareni testovacich a inicializacnich dat modulu Program
  */
 class ProgramFactory
 {
-
     public static function createBlockDataForTests(\Doctrine\ORM\EntityManager $em)
     {
-        $lectorRole = $em->getRepository('\SRS\Model\Acl\Role')->findByName('Lektor');
-        $lectorRole = $lectorRole[0];
+        $lectorRole = $em->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('name' => Role::LECTOR));
 
         $lector1 = \SRS\Factory\UserFactory::createRandom(8888, 9999, array($lectorRole));
 
@@ -65,5 +64,4 @@ class ProgramFactory
         }
         $em->flush();
     }
-
 }

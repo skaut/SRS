@@ -177,10 +177,15 @@ Můj profil
 
     <h2>Seminář - účast, platba, tisk potvrzení</h2>
     <ul>
-        <li><strong>Účast na
-            semináři: </strong> {if $dbuser->role->name == 'Registrovaný' || $dbuser->role->name == 'guest'}Neúčastníte
-            se{else}{$dbuser->role->name}{/if}</li>
-        <li><strong>Cena semináře: </strong>{$dbuser->role->fee},-</li>
+        <li>
+            <strong>Účast na semináři: </strong>
+            {if $dbuser->isNotInAnotherRole(array('Nepřihlášený', 'guest'))}
+                Neúčastníte se
+            {else}
+                {foreach $user->roles as $usersRole}{$usersRole}{sep}, {/sep}{/foreach}
+            {/if}
+        </li>
+        <li><strong>Cena semináře: </strong>{$dbuser->countFee()['fee']},-</li>
         <li><strong>Poplatek uhrazen dne: </strong>
             {if $dbuser->paymentDate !== null}
                 {$dbuser->paymentDate->format("j. n. Y")}

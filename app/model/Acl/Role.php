@@ -48,7 +48,7 @@ class Role extends \SRS\Model\BaseEntity
 
 
     /**
-     * @ORM\OneToMany(targetEntity="\SRS\model\User", mappedBy="role")
+     * @ORM\ManyToMany(targetEntity="\SRS\model\User", mappedBy="roles", cascade={"persist"})
      * @var mixed
      */
     protected $users;
@@ -350,14 +350,12 @@ class Role extends \SRS\Model\BaseEntity
  */
 class RoleRepository extends \Doctrine\ORM\EntityRepository
 {
-    public $entity = '\SRS\Model\Acl\Role';
-
     public function findRegisterableNow()
     {
         $today = new \DateTime('now');
         $today = $today->format('Y-m-d');
 
-        $query = $this->_em->createQuery("SELECT r FROM {$this->entity} r WHERE r.registerable=true
+        $query = $this->_em->createQuery("SELECT r FROM {$this->_entityName} r WHERE r.registerable=true
               AND (r.registerableFrom <= '{$today}' OR r.registerableFrom IS NULL)
               AND (r.registerableTo >= '{$today}' OR r.registerableTo IS NULL)");
         return $query->getResult();
@@ -365,12 +363,8 @@ class RoleRepository extends \Doctrine\ORM\EntityRepository
 
     public function findApprovedUsersInRole($roleName)
     {
-        $role = $this->_em->getRepository($this->_entityName)->findByName($roleName);
-        if ($role == null) throw new RoleException("Role s tímto jménem {$roleName} neexistuje");
-        $role = $role[0];
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq("approved", 1));
-        return $role->users->matching($criteria);
+        $query = $this->_em->createQuery("SELECT u FROM \SRS\model\User u JOIN u.roles r WHERE u.approved=true AND r.name='$roleName'");
+        return $query->getResult();
     }
 }
 

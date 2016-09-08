@@ -46,7 +46,8 @@ class Authenticator extends \Nette\Object implements NS\IAuthenticator
                 throw new \Exception('Nekonzistentni stav. Role pro nove uzivatele by vzdy mela existovat');
             }
             $skautISPerson = $this->skautIS->getPerson($skautISToken, $skautISUser->ID_Person);
-            $user = \SRS\Factory\UserFactory::createFromSkautIS($skautISUser, $skautISPerson, $roleRegistered);
+            $user = \SRS\Factory\UserFactory::createFromSkautIS($skautISUser, $skautISPerson);
+            $user->addRole($roleRegistered);
             $this->database->persist($user);
             $this->database->flush();
         }
@@ -55,7 +56,9 @@ class Authenticator extends \Nette\Object implements NS\IAuthenticator
 
         //pokud uzivatel neba roli schvalenou, degradujeme jen na registrovaneho
         if ($user->approved == true) {
-            $netteRoles[] = $user->role->name;
+            foreach ($user->roles as $role) {
+                $netteRoles[] = $role->name;
+            }
         } else {
             $netteRoles[] = $roleRegistered->name;
         }

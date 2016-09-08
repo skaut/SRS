@@ -13,7 +13,7 @@ use Doctrine\Common\Collections\Criteria;
  * @property-read int $id
  * @property string $username
  * @property string $email
- * @property \SRS\Model\Acl\Role $role
+ * @property \Doctrine\Common\Collections\ArrayCollection $roles
  * @property \Doctrine\Common\Collections\ArrayCollection $programs
  * @property \Doctrine\Common\Collections\ArrayCollection $extensions
  * @property string $firstName
@@ -52,10 +52,10 @@ class User extends BaseEntity
     protected $email;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\SRS\Model\Acl\Role", inversedBy="users")
-     * @var \SRS\Model\Acl\Role
+     * @ORM\ManyToMany(targetEntity="\SRS\model\Acl\Role", inversedBy="users", cascade={"persist"})
+     * @var \Doctrine\Common\Collections\ArrayCollection
      */
-    protected $role;
+    protected $roles;
 
     /**
      * @ORM\ManyToMany(targetEntity="\SRS\Model\Program\Program", mappedBy="attendees", cascade={"persist"})
@@ -63,14 +63,11 @@ class User extends BaseEntity
      */
     protected $programs;
 
-
     /**
      * @ORM\Column(type="boolean")
      */
     protected $approved = True;
 
-
-//    protected $roles;
 
     /**
      * @ORM\Column
@@ -369,7 +366,7 @@ class User extends BaseEntity
     public function __construct($username)
     {
         $this->username = static::normalizeString($username);
-        //$this->roles = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
 
@@ -397,14 +394,14 @@ class User extends BaseEntity
         $this->firstName = $firstName;
     }
 
-    public function getRole()
+    public function getRoles()
     {
-        return $this->role;
+        return $this->roles;
     }
 
-    public function setRole($role)
+    public function setRoles($roles)
     {
-        $this->role = $role;
+        $this->roles = $roles;
     }
 
     public function getPrograms()
@@ -800,6 +797,52 @@ class User extends BaseEntity
         return $interval->y;
     }
 
+    public function removeRole($roleName) {
+        $count = count($this->roles);
+        for ($i = 0; $i < $count; $i++) {
+            if ($this->roles[$i]->name == $roleName) {
+                $this->roles->remove($i);
+                break;
+            }
+        }
+    }
+
+    public function addRole($role) {
+        $this->roles->add($role);
+    }
+
+    public function isInRole($roleName) {
+        foreach ($this->roles as $role)
+            if ($role->name == $roleName)
+                return true;
+        return false;
+    }
+
+    public function isNotInAnotherRole($roleNames) {
+        foreach ($this->roles as $role) {
+            if (!in_array($role->name, $roleNames))
+                return false;
+        }
+        return true;
+    }
+
+    public function countFee() {
+        $fee = INF;
+
+        foreach ($this->roles as $role) {
+            if ($role->fee < $fee) {
+                $fee = $role->fee;
+                $feeWord = $role->feeWord;
+            }
+            if ($role->fee == null) {
+                $fee = 0;
+                $feeWord = "";
+                break;
+            }
+        }
+
+        return array("fee" => $fee, "feeWord" => $feeWord);
+    }
 }
 
 /**
@@ -814,21 +857,18 @@ class UserRepository extends \Nella\Doctrine\Repository
 
     public function findAllPaying()
     {
-        $query = "SELECT u, r FROM {$this->_entityName} u JOIN u.role r WHERE r.pays = 1 ";
-        $result = $this->_em->createQuery($query)->getResult();
-        return $result;
+        $query = "SELECT u FROM {$this->_entityName} u JOIN u.roles r WHERE r.pays = 1 AND u.id NOT IN (SELECT u.id FROM {$this->_entityName} u JOIN u.roles r WHERE r.pays = 0)";
+        return $this->_em->createQuery($query)->getResult();
     }
 
     public function findAllForSkautISSync()
     {
-        $query = "SELECT u, r FROM {$this->_entityName} u JOIN u.role r WHERE r.syncedWithSkautIS = 1 ";
-        $result = $this->_em->createQuery($query)->getResult();
-        return $result;
-    }
-
-    public function findUsersInVisibleRoles() {
-        $query = "SELECT u FROM {$this->_entityName} u JOIN u.role r WHERE r.displayInList = 1";
+        $query = "SELECT u FROM {$this->_entityName} u JOIN u.roles r WHERE r.syncedWithSkautIS = 1";
         return $this->_em->createQuery($query)->getResult();
     }
 
+    public function findUsersInVisibleRoles() {
+        $query = "SELECT u FROM {$this->_entityName} u JOIN u.roles r WHERE r.displayInList = 1";
+        return $this->_em->createQuery($query)->getResult();
+    }
 }

@@ -88,7 +88,7 @@ class RoleForm extends EntityForm
             $submitName = $submitName->htmlName;
 
             if ($submitName == 'submit_continue') $this->presenter->redirect('this');
-            $this->presenter->redirect('Acl:roles');
+            $this->presenter->redirect('Acl:list');
         }
 
     }

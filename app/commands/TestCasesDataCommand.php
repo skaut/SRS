@@ -68,14 +68,14 @@ class TestCasesDataCommand extends Command
         $users[0]->lastName = "Novák";
         $users[0]->displayName = "Novák Martin";
         $users[0]->nickName = "";
-        $users[0]->role = $roleAttendee;
+        $users[0]->roles->add($roleAttendee);
         $users[0]->username = 'marnov';
 
         $users[1]->firstName = "Franta";
         $users[1]->lastName = "Vomáčka";
         $users[1]->displayName = "Vomáčka Martin (Guláš)";
         $users[1]->nickName = "Guláš";
-        $users[1]->role = $roleServis;
+        $users[1]->roles->add($roleServis);
         $users[1]->username = 'vomacka378';
         $users[1]->approved = false;
 
@@ -83,7 +83,7 @@ class TestCasesDataCommand extends Command
         $users[2]->lastName = "Houbová";
         $users[2]->displayName = "Houbová Líba (Edka)";
         $users[2]->nickName = "Edka";
-        $users[2]->role = $roleServis;
+        $users[2]->roles->add($roleServis);
         $users[2]->username = 'edka';
         $users[2]->approved = false;
         $users[2]->customText0 = 'Bezlepková dieta';
@@ -92,7 +92,7 @@ class TestCasesDataCommand extends Command
         $users[3]->lastName = "Bouda";
         $users[3]->displayName = "Bouda Zdeněk";
         $users[3]->nickName = "";
-        $users[3]->role = $roleLector;
+        $users[3]->roles->add($roleLector);
         $users[3]->username = 'bouda';
 
         $block1 = new \SRS\Model\Program\Block();

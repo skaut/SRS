@@ -163,13 +163,15 @@ class Page extends \SRS\Model\BaseEntity
         return $this->public;
     }
 
-    public function isAllowedToRole($roleName)
+    public function isAllowedToRoles($roleNames)
     {
-        return $this->roles->exists(function ($key, $role) use ($roleName) {
-            return $role->name == $roleName;
-        });
-
-
+        foreach ($roleNames as $roleName) {
+            foreach ($this->roles as $role) {
+                if ($roleName == $role->name)
+                    return true;
+            }
+        }
+        return false;
     }
 }
 

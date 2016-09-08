@@ -39,18 +39,17 @@ Práva & Role
             <td>{$role->usersLimit}</td>
             <td>{bool $role->pays}</td>
             <td>
-                <a class="btn" href="{plink Acl:editRole $role->id}">Upravit</a> &nbsp;&nbsp;
-                {if !$role->isSystem()}<a class="btn btn-danger confirm"
-                                          href="{link deleteRole! $role->id}">Smazat</a>{/if}
-                <a class="btn btn-warning" href="{link loginas! $role->id}">Přihlásit se pod touto rolí</a> &nbsp;&nbsp;
+                <a class="btn" href="{link Acl:edit $role->id}">Upravit</a>
+                {if !$role->isSystem()}<a class="btn btn-danger confirm" href="{link deleteRole! $role->id}">Smazat</a>{/if}
+                <a class="btn btn-warning" href="{link loginas! $role->id}">Přihlásit se pod touto rolí</a>
             </td>
         </tr>
         {/foreach}
     </tbody>
 </table>
 
-{include '../includes/confirm_dialog.latte' 'confirmDialogText' => 'Při smazání role bude všem uživatelům s touto rolí nastavena role Registrovaný'}
-{include 'includes/addRole.latte'}
+{include '../includes/confirm_dialog.latte' 'confirmDialogText' => 'Při smazání role bude všem uživatelům s touto rolí nastavena role Nepřihlášený'}
+{include 'add.latte'}
 
 
 
