@@ -21,13 +21,16 @@ class AttendeeForm extends ProfileForm
 
     protected $dbsettings;
 
+    protected $database;
+
     protected $configParams;
 
 
-    public function __construct(IContainer $parent = NULL, $name = NULL, $roles, $configParams, $dbsettings)
+    public function __construct(IContainer $parent = NULL, $name = NULL, $roles, $configParams, $dbsettings, $database)
     {
         $this->roles = $roles;
         $this->dbsettings = $dbsettings;
+        $this->database = $database;
         $this->configParams = $configParams;
         parent::__construct($parent, $name);
 
@@ -53,8 +56,19 @@ class AttendeeForm extends ProfileForm
     {
         parent::setFields();
         $this->addCustomFields();
+
+        $checkRoleCapacity = function($field, $database) {
+            $role = $database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('id' => $field->getValue()));
+            if ($role->usersLimit !== null) {
+                if ($role->usersLimit <= count($role->users))
+                    return false;
+            }
+            return true;
+        };
+
         $this->addSelect('role', 'Přihlásit jako:')->setItems($this->roles)
-            ->addRule(Form::FILLED, 'Vyplňte roli');
+            ->addRule(Form::FILLED, 'Vyplňte roli')
+            ->addRule($checkRoleCapacity, 'Překročen maximální počet účastníků v této roli', $this->database);
         $this->addCheckbox('agreement', 'Souhlasím, že uvedené údaje budou poskytnuty lektorům pro účely semináře')
             ->addRule(Form::FILLED, 'Musíte souhlasit s poskytnutím údajů');
         $this->addSubmit('submit', 'Přihlásit na seminář');

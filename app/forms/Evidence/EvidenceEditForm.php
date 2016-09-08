@@ -33,11 +33,12 @@ class EvidenceEditForm extends \SRS\Form\EntityForm
 
         $checkRolesCapacity = function($field, $database) {
             $values = $field->getValue();
+            $user = $database->getRepository('\SRS\Model\User')->findOneBy(array('id' => $this->getForm()->getHttpData()['id']));
 
             foreach ($values as $value) {
                 $role = $database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('id' => $value));
                 if ($role->usersLimit !== null) {
-                    if ($role->usersLimit < count($role->users) || ($role->usersLimit == count($role->users)))
+                    if ($role->usersLimit < count($role->users) || (!$user->isInRole($role->name) && $role->usersLimit == count($role->users)))
                         return false;
                 }
             }
@@ -55,10 +56,18 @@ class EvidenceEditForm extends \SRS\Form\EntityForm
             return true;
         };
 
+        $checkRolesEmpty = function($field) {
+            $values = $field->getValue();
+            return count($values) != 0;
+        };
+
         $this->addMultiSelect('roles', 'Role')->setItems($rolesGrid)
             ->setAttribute('size', count($rolesGrid))
             ->addRule($checkRolesCapacity, 'Kapacita role byla překročena.', $database)
-            ->addRule($checkRolesCombination, 'Role "Nepřihlášený" nemůže být kombinována s jinou rolí.', $database);
+            ->addRule($checkRolesCombination, 'Role "Nepřihlášený" nemůže být kombinována s jinou rolí.', $database)
+            ->addRule($checkRolesEmpty, 'Musí být přidělena alespoň jedna role.', $database);
+
+        $this->addCheckbox('approved', 'Schválený');
 
         $this->addCheckbox('attended', 'Přítomen');
 
