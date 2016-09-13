@@ -95,6 +95,8 @@ class EvidenceEditForm extends \SRS\Form\EntityForm
             $this->addText($propertyName, $column);
         }
 
+        $this->addTextArea('note', 'Neveřejné poznámky');
+
         $this->addSubmit('submit', 'Uložit')->getControlPrototype()->class('btn btn-primary pull-right');
         $this->onSuccess[] = callback($this, 'submitted');
         $this->onError[] = callback($this, 'error');

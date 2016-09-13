@@ -167,7 +167,7 @@
         <tr>
             <td>Neveřejné poznámky</td>
             <td>
-                {$dbuser->note}
+                {!$dbuser->note|escape|nl2br}
             </td>
         </tr>
     {/if}

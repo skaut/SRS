@@ -59,12 +59,19 @@
     <td>{input attended}</td>
     </tr>
 
-        {foreach $customFields as $field}
+    {foreach $customFields as $field}
         <tr>
         <td>{$field['name']}</td>
         <td>{input $field['property']}</td>
         </tr>
-        {/foreach}
+    {/foreach}
+
+    {if $user->isInRole("Administrátor") || $user->isInRole("Organizátor")}
+        <tr>
+            <td>Neveřejné poznámky</td>
+            <td>{input note}</td>
+        </tr>
+    {/if}
 
     <tr class="warning">
     <td colspan="2">{input submit}</td>
