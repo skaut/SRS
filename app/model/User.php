@@ -23,11 +23,16 @@ use Doctrine\Common\Collections\Criteria;
  * @property \DateTime $birthdate
  * @property int $skautISUserId
  * @property int $skautISPersonId
+ * @property \DateTime $firstLogin
+ * @property \DateTime $lastLogin
  * @property bool $approved
  * @property \DateTime $paymentDate
  * @property string $paymentMethod
+ * @property string $variableSymbol
  * @property \DateTime $incomeProofPrintedDate
  * @property bool $attended
+ * @property \DateTime $arrival
+ * @property \DateTime $departure
  * @property string $displayName
  * @property string $state
  * @property string $city
@@ -36,6 +41,7 @@ use Doctrine\Common\Collections\Criteria;
  * @property string $phone
  * @property string $unit
  * @property string $about
+ * @property string $note
  */
 class User extends BaseEntity
 {
@@ -122,6 +128,18 @@ class User extends BaseEntity
 
 
     /**
+     * @ORM\Column(type="datetime", nullable=true)
+     * @var string
+     */
+    protected $firstLogin;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     * @var string
+     */
+    protected $lastLogin;
+
+    /**
      * @var string
      * @ORM\Column(type="text", nullable=true)
      */
@@ -166,10 +184,28 @@ class User extends BaseEntity
     protected $paymentDate;
 
     /**
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $variableSymbol;
+
+    /**
      * @var bool
      * @ORM\Column(type="boolean")
      */
     protected $attended = false;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     * @var string
+     */
+    protected $arrival;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     * @var string
+     */
+    protected $departure;
 
     /**
      * @var string
@@ -233,6 +269,12 @@ class User extends BaseEntity
      * @ORM\Column(type="text", nullable=true)
      */
     protected $customText1;
+
+    /**
+     * @var string
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $note;
 
     public function getCustomBoolean($index)
     {
@@ -537,6 +579,29 @@ class User extends BaseEntity
         $this->skautISUserId = $skautISUserId;
     }
 
+
+    public function getFirstLogin()
+    {
+        return $this->firstLogin;
+    }
+
+    public function setFirstLogin($firstLogin)
+    {
+        $this->firstLogin = $firstLogin;
+    }
+
+
+    public function getLastLogin()
+    {
+        return $this->lastLogin;
+    }
+
+    public function setLastLogin($lastLogin)
+    {
+        $this->lastLogin = $lastLogin;
+    }
+
+
     /**
      * @return int
      */
@@ -756,6 +821,72 @@ class User extends BaseEntity
     }
 
     /**
+     * @return string
+     */
+    public function getVariableSymbol()
+    {
+        return $this->variableSymbol;
+    }
+
+    /**
+     * @param string $variableSymbol
+     */
+    public function setVariableSymbol($variableSymbol)
+    {
+        $this->variableSymbol = $variableSymbol;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getArrival()
+    {
+        return $this->arrival;
+    }
+
+    /**
+     * @param \DateTime $arrival
+     */
+    public function setArrival($arrival)
+    {
+        $this->arrival = $arrival;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDeparture()
+    {
+        return $this->departure;
+    }
+
+    /**
+     * @param \DateTime $departure
+     */
+    public function setDeparture($departure)
+    {
+        $this->departure = $departure;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNote()
+    {
+        return $this->note;
+    }
+
+    /**
+     * @param string $note
+     */
+    public function setNote($note)
+    {
+        $this->note = $note;
+    }
+
+
+
+    /**
      * @param string
      * @return string
      */
@@ -842,6 +973,14 @@ class User extends BaseEntity
         }
 
         return array("fee" => $fee, "feeWord" => $feeWord);
+    }
+
+    public function displayArrivalDeparture() {
+        foreach ($this->roles as $role) {
+            if ($role->displayArrivalDeparture)
+                return true;
+        }
+        return false;
     }
 }
 

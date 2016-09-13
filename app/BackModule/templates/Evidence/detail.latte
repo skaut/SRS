@@ -87,6 +87,24 @@
     </tr>
 
     <tr>
+        <td>První přihlášení</td>
+        <td>
+            {if $dbuser->firstLogin !== null}
+                {$dbuser->firstLogin->format("j. n. Y G:i")}
+            {/if}
+        </td>
+    </tr>
+
+    <tr>
+        <td>Poslední přihlášení</td>
+        <td>
+            {if $dbuser->lastLogin !== null}
+                {$dbuser->lastLogin->format("j. n. Y G:i")}
+            {/if}
+        </td>
+    </tr>
+
+    <tr>
         <td>Platební metoda</td>
         <td>
             {if $dbuser->paymentMethod !== null}
@@ -118,12 +136,41 @@
         <td>{bool $dbuser->attended}</td>
     </tr>
 
+    {if $dbuser->displayArrivalDeparture()}
+        <tr>
+            <td>Příjezd</td>
+            <td>
+                {if $dbuser->arrival !== null}
+                    {$dbuser->arrival->format("j. n. Y G:i")}
+                {/if}
+            </td>
+        </tr>
+
+        <tr>
+            <td>Odjezd</td>
+            <td>
+                {if $dbuser->departure !== null}
+                    {$dbuser->departure->format("j. n. Y G:i")}
+                {/if}
+            </td>
+        </tr>
+    {/if}
+
     {foreach $customFields as $field}
         <tr>
             <td>{$field['name']}</td>
             <td>{if $field['type'] == 'boolean'}{bool $field['value']}{else}{$field['value']}{/if}</td>
         </tr>
     {/foreach}
+
+    {if $user->isInRole("Administrátor") || $user->isInRole("Organizátor")}
+        <tr>
+            <td>Neveřejné poznámky</td>
+            <td>
+                {$dbuser->note}
+            </td>
+        </tr>
+    {/if}
 
 </table>
 </div>
