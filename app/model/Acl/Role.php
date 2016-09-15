@@ -132,11 +132,11 @@ class Role extends \SRS\Model\BaseEntity
     protected $displayInList;
 
 
-    /**
-     * @var boolean
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    protected $displayArrivalDeparture;
+//    /**
+//     * @var boolean
+//     * @ORM\Column(type="boolean", nullable=true)
+//     */
+//    protected $displayArrivalDeparture;
 
 
     /**
@@ -350,21 +350,21 @@ class Role extends \SRS\Model\BaseEntity
         $this->displayInList = $displayInList;
     }
 
-    /**
-     * @return boolean
-     */
-    public function isDisplayArrivalDeparture()
-    {
-        return $this->displayArrivalDeparture;
-    }
-
-    /**
-     * @param boolean $displayArrivalDeparture
-     */
-    public function setDisplayArrivalDeparture($displayArrivalDeparture)
-    {
-        $this->displayArrivalDeparture = $displayArrivalDeparture;
-    }
+//    /**
+//     * @return boolean
+//     */
+//    public function isDisplayArrivalDeparture()
+//    {
+//        return $this->displayArrivalDeparture;
+//    }
+//
+//    /**
+//     * @param boolean $displayArrivalDeparture
+//     */
+//    public function setDisplayArrivalDeparture($displayArrivalDeparture)
+//    {
+//        $this->displayArrivalDeparture = $displayArrivalDeparture;
+//    }
 
 
 }

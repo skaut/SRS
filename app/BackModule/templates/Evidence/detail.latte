@@ -58,7 +58,7 @@
 
 <tr>
 <th>Datum narození</th>
-<td>{$dbuser->birthdate|date:"d.m.Y"}</td>
+<td>{$dbuser->birthdate|date:"j. n. Y"}</td>
 </tr>
 <tr>
 <th>Věk</th>
@@ -114,6 +114,17 @@
     </tr>
 
     <tr>
+        <td>Variabilní symbol</td>
+        <td>
+            {if $dbuser->variableSymbol == null}
+                {$dbuser->generateVariableSymbol($variableSymbolCode)}
+            {else}
+                {$dbuser->variableSymbol}
+            {/if}
+        </td>
+    </tr>
+
+    <tr>
         <td>Zaplaceno dne</td>
         <td>
             {if $dbuser->paymentDate !== null}
@@ -136,7 +147,7 @@
         <td>{bool $dbuser->attended}</td>
     </tr>
 
-    {if $dbuser->displayArrivalDeparture()}
+    {if false && $dbuser->displayArrivalDeparture()}
         <tr>
             <td>Příjezd</td>
             <td>

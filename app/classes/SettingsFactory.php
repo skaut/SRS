@@ -56,6 +56,9 @@ class SettingsFactory
             $num = $i+1;
             $settings[] = new \SRS\Model\Settings('user_custom_text_'.$i, "Vlastní text přihlášky č.".$num, '');
         }
+
+        $settings[] = new \SRS\Model\Settings('variable_symbol_code', 'Předvolba pro variabilní symbol', '00');
+
         return $settings;
     }
 

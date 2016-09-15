@@ -1,7 +1,8 @@
 {extends '../@layout.latte'}
 
 {block head}
-    {widget jsLoader 'lib/angular.min.js', 'evidence/userController.js'}
+    {widget jsLoader 'lib/angular.min.js', 'evidence/userController.js', 'date-input/jquery-ui-timepicker-addon.js', 'date-input/datetimepicker.js'}
+    {widget cssLoader 'date-input/jquery-ui-timepicker-addon.css', 'date-input/datetimepicker.css'}
 {/block}
 
 {block title}
@@ -28,10 +29,8 @@
 <table class="table">
     {form evidenceEditForm}
     <tr>
-    <td>Role</td>
-    <td>
-        {input roles}
-    </td>
+        <td>Role</td>
+        <td>{input roles}</td>
     </tr>
 
     <tr>
@@ -40,24 +39,42 @@
     </tr>
 
     <tr>
-    <td>Platební metoda</td>
-    <td>{input paymentMethod}</td>
+        <td>Platební metoda</td>
+        <td>{input paymentMethod}</td>
     </tr>
 
     <tr>
-    <td>Zaplaceno dne</td>
-    <td>{input paymentDate}</td>
+        <td>Variabilní symbol</td>
+        <td>{input variableSymbol}</td>
+    </tr>
+
+
+    <tr>
+        <td>Zaplaceno dne</td>
+        <td>{input paymentDate}</td>
     </tr>
 
     <tr>
-    <td>Příjmový doklad vytištěn dne</td>
-    <td>{input incomeProofPrintedDate}</td>
+        <td>Příjmový doklad vytištěn dne</td>
+        <td>{input incomeProofPrintedDate}</td>
     </tr>
 
     <tr>
-    <td>Přítomen</td>
-    <td>{input attended}</td>
+        <td>Přítomen</td>
+        <td>{input attended}</td>
     </tr>
+
+    {if false && $dbuser->displayArrivalDeparture()}
+        <tr>
+            <td>Příjezd</td>
+            <td>{input arrival}</td>
+        </tr>
+
+        <tr>
+            <td>Odjezd</td>
+            <td>{input departure}</td>
+        </tr>
+    {/if}
 
     {foreach $customFields as $field}
         <tr>
@@ -80,15 +97,4 @@
 
 </table>
 </div>
-
-<script>
-$(function() {
-$(".datepicker").datepicker({
-
-});
-});
-</script>
-
-
-
 {/block}
