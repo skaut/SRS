@@ -39,7 +39,7 @@ class RoleForm extends EntityForm
         $this->addCheckbox('approvedAfterRegistration', 'Je uživateli role po registraci automaticky schválena?');
         $this->addCheckbox('syncedWithSkautIS', 'Uživatelé v této roli jsou uvedeni jako účastníci ve skautIS');
         $this->addCheckbox('displayInList', 'Zobrazit v přehledu uživatelů');
-
+//        $this->addCheckbox('displayArrivalDeparture', 'Evidovat příjezd a odjezd');
         $this->addCheckbox('pays', 'Platí za účast?');
         $this->addText('fee', 'Výše účastnického poplatku')
             //->setDefaultValue(0)

@@ -32,7 +32,7 @@ class SettingsForm extends UI\Form
         $this->addText('seminar_name', 'Jméno semináře:')->setDefaultValue($this->dbsettings->get('seminar_name'))
             ->addRule(Form::FILLED, 'Zadejte Jméno semináře');
         $this->addText('seminar_from_date', 'Začátek semináře:')->setDefaultValue($this->dbsettings->get('seminar_from_date'))
-            ->addRule(FORM::PATTERN, 'Datum Začátku semináře není ve správném tvaru', \SRS\Helpers::DATE_PATTERN)
+            ->addRule(FORM::PATTERN, 'Datum začátku semináře není ve správném tvaru', \SRS\Helpers::DATE_PATTERN)
             ->addRule(Form::FILLED, 'Zadejte začátek semináře')->getControlPrototype()->class('datepicker');
         $this->addText('seminar_to_date', 'Konec semináře:')->setDefaultValue($this->dbsettings->get('seminar_to_date'))
             ->addRule(FORM::PATTERN, 'Datum konce semináře není ve správném tvaru', \SRS\Helpers::DATE_PATTERN)
@@ -40,6 +40,10 @@ class SettingsForm extends UI\Form
         $this->addText('seminar_email', 'Email pro mailing:')->setDefaultValue($this->dbsettings->get('seminar_email'))
             ->addRule(Form::FILLED, 'Zadejte Email pro mailing')
             ->addRule(FORM::EMAIL, 'Email není ve správném tvaru');
+        $this->addText('variable_symbol_code', 'Předvolba variabilního symbolu:', 2)->setDefaultValue($this->dbsettings->get('variable_symbol_code'))
+            ->addRule(Form::FILLED, 'Zadejte předvolbu variabilního symbolu')
+            ->addRule(Form::INTEGER, 'Zadejte 2 číslice')
+            ->addRule(Form::COUNT, 'Zadejte 2 číslice', 2);
 
         $this->addSubmit('submit_seminar', 'Uložit')->getControlPrototype()->class('btn');
 
@@ -76,8 +80,6 @@ class SettingsForm extends UI\Form
 
         $this->addSubmit('submit', 'Uložit')->getControlPrototype()->class('btn');
         $this->onSuccess[] = callback($this, 'formSubmitted');
-
-
     }
 
     public function formSubmitted()

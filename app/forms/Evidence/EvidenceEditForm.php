@@ -73,6 +73,10 @@ class EvidenceEditForm extends \SRS\Form\EntityForm
 
         $this->addSelect('paymentMethod', 'Platební metoda')->setItems($configParams['payment_methods'])->setPrompt('Nezadáno');
 
+        $this->addText('variableSymbol', 'Variabilní symbol')
+            ->addCondition(FORM::FILLED)
+            ->addRule(FORM::INTEGER);
+
         $this->addText('paymentDate', 'Datum zaplacení')
             ->addCondition(FORM::FILLED)
             ->addRule(FORM::PATTERN, 'Datum zaplacení není ve správném tvaru', \SRS\Helpers::DATE_PATTERN);
@@ -95,6 +99,8 @@ class EvidenceEditForm extends \SRS\Form\EntityForm
             $this->addText($propertyName, $column);
         }
 
+        $this->addTextArea('note', 'Neveřejné poznámky');
+
         $this->addSubmit('submit', 'Uložit')->getControlPrototype()->class('btn btn-primary pull-right');
         $this->onSuccess[] = callback($this, 'submitted');
         $this->onError[] = callback($this, 'error');
@@ -106,6 +112,11 @@ class EvidenceEditForm extends \SRS\Form\EntityForm
     {
         $values = $this->getValues();
         $user = $this->presenter->context->database->getRepository('\SRS\Model\User')->find($values['id']);
+
+        $code = $this->presenter->context->database->getRepository('\SRS\Model\Settings')->get('variable_symbol_code');
+        if ($user->generateVariableSymbol($code) == $values['variableSymbol'])
+            $values['variableSymbol'] = null;
+
         $user->setProperties($values, $this->presenter->context->database);
         $this->presenter->context->database->flush();
         $this->presenter->flashMessage('Záznam uložen', 'success');

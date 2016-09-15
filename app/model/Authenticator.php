@@ -50,7 +50,13 @@ class Authenticator extends \Nette\Object implements NS\IAuthenticator
             $user->addRole($roleRegistered);
             $this->database->persist($user);
             $this->database->flush();
+            $user = $this->database->getRepository("\SRS\Model\User")->findOneBy(array('skautISUserId' => $skautISUser->ID));
         }
+
+        $user->lastLogin = new \DateTime("now");
+        if ($user->firstLogin == null)
+            $user->firstLogin = new \DateTime("now");
+        $this->database->flush();
 
         $netteRoles = array();
 

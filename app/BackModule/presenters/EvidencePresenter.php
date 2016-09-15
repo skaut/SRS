@@ -72,6 +72,7 @@ class EvidencePresenter extends BasePresenter
         $this->template->dbuser = $user;
         $this->template->customFields = $this->getFilledCustomFields($user);
         $this->template->paymentMethods = $this->context->parameters['payment_methods'];
+        $this->template->variableSymbolCode = $this->dbsettings->get('variable_symbol_code');
     }
 
     public function renderEdit($id = null)
@@ -86,6 +87,9 @@ class EvidencePresenter extends BasePresenter
         }
         $form = $this->getComponent('evidenceEditForm');
         $form->bindEntity($user);
+        $form->setDefaults(array (
+            'variableSymbol' => $user->variableSymbol == null ? $user->generateVariableSymbol($this->dbsettings->get('variable_symbol_code')) : $user->variableSymbol
+        ));
 
         //$user je v template defaultne
         $this->template->dbuser = $user;

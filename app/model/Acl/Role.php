@@ -24,6 +24,7 @@ use Doctrine\Common\Collections\Criteria;
  * @property integer $fee
  * @property string $feeWord
  * @property bool $displayInList
+ * @property bool $displayArrivalDeparture
  * @property bool $syncedWithSkautIS
  * @property \DateTime|string $registerableFrom
  * @property \DateTime|string $registerableTo
@@ -129,6 +130,13 @@ class Role extends \SRS\Model\BaseEntity
      * @ORM\Column(type="boolean", nullable=true)
      */
     protected $displayInList;
+
+
+//    /**
+//     * @var boolean
+//     * @ORM\Column(type="boolean", nullable=true)
+//     */
+//    protected $displayArrivalDeparture;
 
 
     /**
@@ -341,6 +349,24 @@ class Role extends \SRS\Model\BaseEntity
     {
         $this->displayInList = $displayInList;
     }
+
+//    /**
+//     * @return boolean
+//     */
+//    public function isDisplayArrivalDeparture()
+//    {
+//        return $this->displayArrivalDeparture;
+//    }
+//
+//    /**
+//     * @param boolean $displayArrivalDeparture
+//     */
+//    public function setDisplayArrivalDeparture($displayArrivalDeparture)
+//    {
+//        $this->displayArrivalDeparture = $displayArrivalDeparture;
+//    }
+
+
 }
 
 /**
