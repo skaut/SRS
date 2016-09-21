@@ -66,6 +66,11 @@
                                     {/if}
                                     {foreach $user->roles as $usersRole}{$usersRole}{sep}, {/sep}{/foreach})
                             </li>
+                            {if !$user->identity->object->member}
+                                <li>
+                                    <a href="{plink :Front:Member:default}" style="color: red">Nepropojený účet člena</a>
+                                </li>
+                            {/if}
                             <li><span class="ui-icon ui-icon-unlocked" style="display:block; float: left;"></span><a
                                     href="{plink :Auth:logout, 'backlink' => $backlink}">Odhlásit</a></li>
                         {/if}

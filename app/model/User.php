@@ -93,12 +93,29 @@ class User extends BaseEntity
      */
     protected $nickName;
 
-
     /**
      * @var string
      * @ORM\Column
      */
     protected $displayName;
+
+    /**
+     * @ORM\Column(nullable=true)
+     * @var string
+     */
+    protected $securityCode;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $member = false;
+
+    /**
+     * @ORM\Column(nullable=true)
+     * @var string
+     */
+    protected $organizationUnit;
 
     /**
      * @ORM\Column(nullable=true)
@@ -504,6 +521,54 @@ class User extends BaseEntity
     public function getNickName()
     {
         return $this->nickName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSecurityCode()
+    {
+        return $this->securityCode;
+    }
+
+    /**
+     * @param mixed $securityCode
+     */
+    public function setSecurityCode($securityCode)
+    {
+        $this->securityCode = $securityCode;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isMember()
+    {
+        return $this->member;
+    }
+
+    /**
+     * @param boolean $member
+     */
+    public function setMember($member)
+    {
+        $this->member = $member;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationUnit()
+    {
+        return $this->organizationUnit;
+    }
+
+    /**
+     * @param string $organizationUnit
+     */
+    public function setOrganizationUnit($organizationUnit)
+    {
+        $this->organizationUnit = $organizationUnit;
     }
 
 

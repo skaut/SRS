@@ -34,7 +34,13 @@
                 <p class="navbar-text pull-right">
                     Přihlášen jako <a href="{plink :Front:profile:default}"
                                       class="navbar-link">{$user->getIdentity()->data['object']->username}</a>
-                    ({foreach $user->roles as $usersRole}{$usersRole}{sep}, {/sep}{/foreach}) <a href="{plink :Auth:logout}"><i title="odhlásit" class="icon-remove icon-white"></i></a>
+                    ({foreach $user->roles as $usersRole}{$usersRole}{sep}, {/sep}{/foreach})
+
+                    {if !$user->identity->object->member}
+                        <a href="{plink :Front:Member:default}" style="color: red">Nepropojený účet člena</a>
+                    {/if}
+
+                    <a href="{plink :Auth:logout}"><i title="odhlásit" class="icon-remove icon-white"></i></a>
                 </p>
                 <ul class="nav">
                  {include 'includes/main_menu.latte'}
