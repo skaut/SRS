@@ -31,11 +31,14 @@ class UserFactory
         $user->sex = $skautISPerson->ID_Sex;
         $birthday = \explode("T", $skautISPerson->Birthday);
         $user->birthdate = new \DateTime($birthday[0]);
+        $user->securityCode = $skautISUser->SecurityCode;
 
         $user->street = $skautISPerson->Street;
         $user->city = $skautISPerson->City;
         $user->postcode = $skautISPerson->Postcode;
         $user->state = $skautISPerson->State;
+
+        $user->firstLogin = new \DateTime("now");
 
         return $user;
     }

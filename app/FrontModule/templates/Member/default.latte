@@ -1,0 +1,24 @@
+{**
+ * @param stdClass $skautISPerson
+ * @param \SRS\Model\User $dbuser
+ *}
+
+{block title}
+    Nemáte propojený účet
+{/block}
+
+{block content}
+<h1>Nemáte propojený účet</h1>
+<div>
+    <p>Byli jste úspěšně přihlášeni na webu, ale pravděpodobně nejste členem Junáka.</p>
+
+    <p>Pokud členy jste, pak nemáte pravděpodobně propojený svůj uživatelský účet se skutečnými údaji v registraci. Kontaktuje svého vedoucího oddílu (nebo osobu, která zpracovává registraci) a požádejte ho o propojení vašeho účtu ve skautISu s reálnými údaji.</p>
+
+    <p>
+        Pro propojení účtu potřebujete tyto údaje:<br>
+        uživatelské jméno: {$dbuser->username}<br>
+        bezpečnostní kód: {$dbuser->securityCode}<br>
+    </p>
+
+    <p>Poznámka: V žádném případě nikdy nikomu nedávejte své heslo.</p>
+</div>

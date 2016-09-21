@@ -54,8 +54,16 @@ class Authenticator extends \Nette\Object implements NS\IAuthenticator
         }
 
         $user->lastLogin = new \DateTime("now");
+        $user->member = $skautISUser->HasMembership;
+        $user->organizationUnit = $this->skautIS->getUnit($skautISToken, $skautISUnitId)->RegistrationNumber;
+
+        /*--------- lze odstranit pri nove instalaci s cistou databazi ---------*/
         if ($user->firstLogin == null)
             $user->firstLogin = new \DateTime("now");
+        if ($user->securityCode == null)
+            $user->securityCode = $skautISUser->SecurityCode;
+        /*----------------------------------------------------------------------*/
+
         $this->database->flush();
 
         $netteRoles = array();

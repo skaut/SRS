@@ -78,6 +78,12 @@ class EvidenceGrid extends Grid
                 return $row->approved ? 'Ano' : 'Ne';
             });
 
+        if ($this->columnsVisibility['membership'])
+            $this->addColumn('membership', 'Členství')
+                ->setRenderer(function ($row) {
+                    return $row->member ? $row->organizationUnit : 'nepropojený účet';
+                });
+
         if ($this->columnsVisibility['birthdate'])
             $this->addColumn('birthdate', 'Věk')
                 ->setRenderer(function ($row) use ($today) {

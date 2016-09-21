@@ -27,7 +27,6 @@ abstract class BasePresenter extends \SRS\BasePresenter
         }
 
         $this->dbuser = $this->context->database->getRepository('\SRS\Model\User')->find($this->context->user->id);
-
     }
 
     protected function checkPermissions($permission)

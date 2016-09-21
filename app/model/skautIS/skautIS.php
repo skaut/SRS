@@ -155,6 +155,21 @@ class skautIS extends \Nette\Object
     }
 
     /**
+     * @param string $token skautIS Token
+     * @param int $unitID
+     * @return mixed Unit skautISu
+     */
+    public function getUnit($token, $unitID)
+    {
+        $params = array(
+            'ID_Login' => $token,
+            'ID' => $unitID
+        );
+        $response = $this->getOrganizationUnitService()->UnitDetail(array('unitDetailInput' => $params))->UnitDetailResult;
+        return $response;
+    }
+
+    /**
      * Vola anonymni funkci ve skautIS pro overeni. Ve skautIS v soucasne dobe neni funkce ktera by slouzila primo pro overeni platnosti id
      * @param $appId
      * @return array
