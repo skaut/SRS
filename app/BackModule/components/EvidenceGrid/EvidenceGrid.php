@@ -8,6 +8,7 @@ namespace SRS\Components;
 use \NiftyGrid\Grid;
 use \Doctrine\ORM\Query\Expr;
 use \SRS\Model\Acl\Role;
+use \Nette\Utils\Html;
 
 /**
  * Grid pro správu uživatelů a práv
@@ -81,7 +82,7 @@ class EvidenceGrid extends Grid
         if ($this->columnsVisibility['membership'])
             $this->addColumn('membership', 'Členství')
                 ->setRenderer(function ($row) {
-                    return $row->member ? $row->organizationUnit : \Nette\Utils\Html::el('span')->style('color: red')->setText('nepropojený účet');
+                    return $row->member ? $row->organizationUnit : Html::el('span')->style('color: red')->setText('nepropojený účet');
                 });
 
         if ($this->columnsVisibility['birthdate'])
