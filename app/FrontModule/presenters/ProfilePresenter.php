@@ -47,7 +47,7 @@ class ProfilePresenter extends BasePresenter
         $this->template->skautISPerson = $skautISPerson;
         $this->template->dbuser = $user;
         $this->template->basicBlockDuration = $this->dbsettings->get('basic_block_duration');
-
+        $this->template->variableSymbolCode = $this->dbsettings->get('variable_symbol_code');
     }
 
     public function handlePrintProof()
