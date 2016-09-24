@@ -186,6 +186,14 @@ Můj profil
             {/if}
         </li>
         <li><strong>Cena semináře: </strong>{$dbuser->countFee()['fee']},-</li>
+        <li>
+            <strong>Variabilní symbol: </strong>
+            {if $dbuser->variableSymbol == null}
+                {$dbuser->generateVariableSymbol($variableSymbolCode)}
+            {else}
+                {$dbuser->variableSymbol}
+            {/if}
+        </li>
         <li><strong>Poplatek uhrazen dne: </strong>
             {if $dbuser->paymentDate !== null}
                 {$dbuser->paymentDate->format("j. n. Y")}
