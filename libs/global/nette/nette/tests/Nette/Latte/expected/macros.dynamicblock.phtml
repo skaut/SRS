@@ -1,0 +1,65 @@
+<?php
+// prolog Nette\Latte\Macros\CoreMacros
+list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
+;
+// prolog Nette\Latte\Macros\UIMacros
+//
+// block static
+//
+if (!function_exists($_l->blocks['static'][] = '_xxx_static')) { function _xxx_static($_l, $_args) { extract($_args)
+?>	Static block #<?php echo Nette\Templating\Helpers::escapeHtml($var, ENT_NOQUOTES) ?>
+
+<?php
+}}
+
+//
+// end of blocks
+//
+
+// template extending and snippets support
+
+$_l->extends = empty($template->_extended) && isset($_control) && $_control instanceof Nette\Application\UI\Presenter ? $_control->findLayoutTemplateFile() : NULL; $template->_extended = $_extended = TRUE;
+
+
+if ($_l->extends) {
+	%A%}
+
+//
+// main template
+//
+$var = 10 ?>
+
+<?php if ($_l->extends) { ob_end_clean(); return Nette\Latte\Macros\CoreMacros::includeTemplate($_l->extends, get_defined_vars(), $template)->render(); }
+call_user_func(reset($_l->blocks['static']), $_l, get_defined_vars())  ?>
+
+
+
+<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator(array('dynamic', 'static')) as $name):
+
+//
+// block $name
+//
+if (!function_exists($_l->blocks[$name]['xxx'] = '_xxx__name')) { function _xxx__name($_l, $_args) { extract($_args) ?>
+		Dynamic block #<?php echo Nette\Templating\Helpers::escapeHtml($var, ENT_NOQUOTES) ?>
+
+<?php }} call_user_func(reset($_l->blocks[$name]), $_l, get_defined_vars()) ;$iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>
+
+<?php Nette\Latte\Macros\UIMacros::callBlock($_l, 'dynamic', array('var' => 20) + $template->getParameters()) ?>
+
+<?php call_user_func(reset($_l->blocks['static']), $_l, array('var' => 30) + get_defined_vars()) ?>
+
+<?php Nette\Latte\Macros\UIMacros::callBlock($_l, $name, array('var' => 40) + $template->getParameters()) ?>
+
+<?php
+
+//
+// block word$name
+//
+if (!function_exists($_l->blocks["word$name"]['xxx'] = '_xxx_word_name')) { function _xxx_word_name($_l, $_args) { extract($_args) ;}} call_user_func(reset($_l->blocks["word$name"]), $_l, get_defined_vars()) ?>
+
+<?php
+
+//
+// block "word$name"
+//
+if (!function_exists($_l->blocks["word$name"]['xxx'] = '_xxx__word_name_')) { function _xxx__word_name_($_l, $_args) { extract($_args) ;}} call_user_func(reset($_l->blocks["word$name"]), $_l, get_defined_vars()) ?>

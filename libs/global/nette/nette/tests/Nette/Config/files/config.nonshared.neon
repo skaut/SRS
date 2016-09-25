@@ -1,0 +1,13 @@
+parameters:
+	'false': false
+
+services:
+	ipsum:
+		class: Ipsum
+
+factories:
+	lorem:
+		class: Lorem
+		parameters: [Ipsum foo, bar: %false%]
+		setup:
+			- test(%foo%, %bar%)
