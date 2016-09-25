@@ -1,3 +1,4 @@
+libs/global/*
 *~
 composer.lock
 .idea
