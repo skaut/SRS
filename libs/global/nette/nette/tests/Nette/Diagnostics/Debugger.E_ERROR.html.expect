@@ -1,0 +1,146 @@
+
+Fatal error: Call to undefined function missing_funcion() in %a% on line %d%
+<!DOCTYPE html><!-- "' --></script></style></pre></xmp></table>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="robots" content="noindex">
+	<meta name="generator" content="Nette Framework">
+
+	<title>Fatal Error</title><!-- Call to undefined function missing_funcion() -->
+
+	%A%
+</head>
+
+
+
+<body>
+<div id="netteBluescreen">
+	<a id="netteBluescreenIcon" href="#" rel="next"><abbr>&#x25bc;</abbr></a
+
+	><div>
+		<div id="netteBluescreenError" class="panel">
+			<h1>Fatal Error</h1>
+
+			<p>Call to undefined function missing_funcion() <a href="%a%" id="netteBsSearch">search&#x25ba;</a></p>
+		</div>
+
+
+
+
+
+
+
+
+
+
+
+			<div class="panel">
+			<h2><a href="#" rel="netteBsPnl1">Source file <abbr>&#x25bc;</abbr></a></h2>
+
+			<div id="netteBsPnl1" class="inner">
+				<p><b>File:</b> %a% &nbsp; <b>Line:</b> %d%</p>
+				<pre><div><code><span style="color: #06B"><span style="color: #D24; font-weight: bold"><span class='line'>%d%:</span>
+<span class='line'>%d%:</span>
+<span class='line'>%d%:</span>    function&nbsp;</span><span style="color: #000">second</span><span style="color: #D24; font-weight: bold">(</span><span style="color: #000">$arg1</span><span style="color: #D24; font-weight: bold">,&nbsp;</span><span style="color: #000">$arg2</span><span style="color: #D24; font-weight: bold">)
+<span class='line'>%d%:</span>    {
+<span class='line'>%d%:</span>    &nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #000">third</span><span style="color: #D24; font-weight: bold">(array(</span><span style="color: #000">1</span><span style="color: #D24; font-weight: bold">,&nbsp;</span><span style="color: #000">2</span><span style="color: #D24; font-weight: bold">,&nbsp;</span><span style="color: #000">3</span><span style="color: #D24; font-weight: bold">));
+<span class='line'>%d%:</span>    }
+<span class='line'>%d%:</span>
+<span class='line'>%d%:</span>
+<span class='line'>%d%:</span>    function&nbsp;</span><span style="color: #000">third</span><span style="color: #D24; font-weight: bold">(</span><span style="color: #000">$arg1</span><span style="color: #D24; font-weight: bold">)
+<span class='line'>%d%:</span>    {
+<span class='highlight'>%d%:    &nbsp;&nbsp;&nbsp;&nbsp;missing_funcion();
+</span></span><span style="color: #000"></span><span style="color: #D24; font-weight: bold"><span class='line'>%d%:</span>    }
+<span class='line'>%d%:</span>
+<span class='line'>%d%:</span>
+<span class='line'>%d%:</span>    </span><span style="color: #000">first</span><span style="color: #D24; font-weight: bold">(</span><span style="color: #000">10</span><span style="color: #D24; font-weight: bold">,&nbsp;</span><span style="color: #080">'any&nbsp;string'</span><span style="color: #D24; font-weight: bold">);
+</span></span></code></div></pre>			</div></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+		<div class="panel">
+		<h2><a href="#" rel="netteBsPnl2">Environment <abbr>&#x25ba;</abbr></a></h2>
+
+		<div id="netteBsPnl2" class="nette-collapsed inner">
+			<h3><a href="#" rel="netteBsPnl3">$_SERVER <abbr>&#x25bc;</abbr></a></h3>
+			<div id="netteBsPnl3" class="outer">
+			<table>%A%</table>
+			</div>
+
+
+			<h3><a href="#" rel="netteBsPnl4">$_SESSION <abbr>&#x25bc;</abbr></a></h3>
+			<div id="netteBsPnl4" class="outer">%A%</div>
+
+
+
+
+						<h3><a href="#" rel="netteBsPnl5">Constants <abbr>&#x25ba;</abbr></a></h3>
+			<div id="netteBsPnl5" class="outer nette-collapsed">
+			<table>%A%</table>
+			</div>
+
+
+			<h3><a href="#" rel="netteBsPnl6">Included files <abbr>&#x25ba;</abbr></a> (%d%)</h3>
+			<div id="netteBsPnl6" class="outer nette-collapsed">
+			<table>%A%</table>
+			</div>
+
+
+			<h3><a href="#" rel="netteBsPnl7">Configuration options <abbr>&#x25ba;</abbr></a></h3>
+			<div id="netteBsPnl7" class="outer nette-collapsed">
+			%A%</div>
+		</div></div>
+
+
+
+		<div class="panel">
+		<h2><a href="#" rel="netteBsPnl8">HTTP request <abbr>&#x25ba;</abbr></a></h2>
+
+		<div id="netteBsPnl8" class="nette-collapsed inner">
+%A%
+						<h3>$_GET</h3>
+						<p><i>empty</i></p>
+									<h3>$_POST</h3>
+						<p><i>empty</i></p>
+									<h3>$_COOKIE</h3>
+						<p><i>empty</i></p>
+								</div></div>
+
+
+
+		<div class="panel">
+		<h2><a href="#" rel="netteBsPnl9">HTTP response <abbr>&#x25ba;</abbr></a></h2>
+
+		<div id="netteBsPnl9" class="nette-collapsed inner">
+			<h3>Headers</h3>
+						<pre>X-Powered-By: Nette Framework<br>Content-Type: text/html<br></pre>
+					</div></div>
+
+
+
+
+
+
+		<ul>
+			<li>Report generated at %a%</li>
+						<li>PHP %a%</li>
+						<li>Nette Framework %a%</li>		</ul>
+	</div>
+</div>
+
+<script type="text/javascript">%A%</script>
+</body>
+</html>
+
+%A%<!-- Nette Debug Bar -->%A%
