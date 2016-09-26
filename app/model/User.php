@@ -1003,6 +1003,10 @@ class User extends BaseEntity
         }
     }
 
+    public function removeAllRoles() {
+        $this->roles->clear();
+    }
+
     public function addRole($role) {
         $this->roles->add($role);
     }
@@ -1078,5 +1082,10 @@ class UserRepository extends \Nella\Doctrine\Repository
     public function findUsersInVisibleRoles() {
         $query = "SELECT u FROM {$this->_entityName} u JOIN u.roles r WHERE r.displayInList = 1";
         return $this->_em->createQuery($query)->getResult();
+    }
+
+    public function findUsersRoles($userId) {
+        $query = $this->_em->createQuery("SELECT r FROM \SRS\model\Acl\Role r JOIN r.users u WHERE u.id = $userId");
+        return $query->getResult();
     }
 }
