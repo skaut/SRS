@@ -44,9 +44,7 @@ class EvidenceGrid extends Grid
     {
         $qb = $this->em->createQueryBuilder();
         $qb->addSelect('u');
-        $qb->addSelect('roles');
         $qb->from('\SRS\Model\User', 'u');
-        $qb->leftJoin('u.roles', 'roles'); //'WITH', 'role.standAlone=1');
 
         $numOfResults = 10;
         $today = new \DateTime('now');
@@ -62,15 +60,16 @@ class EvidenceGrid extends Grid
         if ($this->columnsVisibility['roles'])
             $this->addColumn('roles', 'Role')
                 ->setRenderer(function ($row) {
-                    $roles = "";
-                    $i = count($row->roles);
-                    foreach ($row->roles as $role) {
-                        $roles = $roles . $role['name'];
+                    $roles = $this->em->getRepository('\SRS\Model\User')->findUsersRoles($row->id);
+                    $rolesStr = "";
+                    $i = count($roles);
+                    foreach ($roles as $role) {
+                        $rolesStr = $rolesStr . $role->name;
                         $i--;
                         if ($i > 0)
-                            $roles = $roles . ", ";
+                            $rolesStr = $rolesStr . ", ";
                     }
-                    return $roles;
+                    return $rolesStr;
             });
 
         if ($this->columnsVisibility['approved'])
@@ -261,7 +260,10 @@ class EvidenceGrid extends Grid
                 return $self->handleApprove($id);
             });
 
-
+        $this->addAction("editRole", "Výběr role")->setAjax(false)
+            ->setCallback(function ($id) use ($presenter) {
+                $presenter->redirect('editRoles', array('ids' => $id));
+            });
     }
 
 

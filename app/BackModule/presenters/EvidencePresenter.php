@@ -97,6 +97,27 @@ class EvidencePresenter extends BasePresenter
         $this->template->customFields = $this->getFilledCustomFields($user);
     }
 
+    public function renderEditRoles($ids = array()) {
+        if (count($ids) == 0)
+            $this->redirect(':Back:Evidence:list');
+
+        $users = array();
+        foreach ($ids as $id) {
+            $user = $this->userRepo->find($id);
+            if ($user == null) {
+                throw new \Nette\Application\BadRequestException("Takový uživatel neexistuje", 404);
+            }
+            $users[] = $user;
+        }
+
+        $form = $this->getComponent('evidenceEditRolesForm');
+        $form->setDefaults(array (
+            'ids' => implode(",",$ids)
+        ));
+
+        $this->template->users = $users;
+     }
+
     protected function createComponentEvidenceGrid()
     {
         $this->checkSessionConsistency();
@@ -107,6 +128,11 @@ class EvidencePresenter extends BasePresenter
     protected function createComponentEvidenceEditForm()
     {
         return new \SRS\Form\Evidence\EvidenceEditForm(null, null, $this->context->parameters, $this->context->database);
+    }
+
+    protected function createComponentEvidenceEditRolesForm()
+    {
+        return new \SRS\Form\Evidence\EvidenceEditRolesForm(null, null, $this->context->parameters, $this->context->database);
     }
 
     protected function createComponentColumnForm()
