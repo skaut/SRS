@@ -1,0 +1,32 @@
+{extends '../Programlayout.latte'}
+
+{block title}
+    Program » {ifset $category}{$category->name}{else}Nová kategorie{/ifset}
+{/block}
+
+{block content}
+    <ul class="breadcrumb">
+        <li><a href="{plink list}">Přehled kategorií</a> <span class="divider">/</span></li>
+        <li class="active">{ifset $category}Upravit: {$category->name}{else}Nová kategorie{/ifset}</li>
+    </ul>
+    <div class="well">
+        <h1>{ifset $category}Úprava kategorie: {$category->name}{else}Nová kategorie{/ifset}</h1>
+        <table class="table">
+            {form categoryForm}
+                <tr>
+                    <td>{label name /}</td>
+                    <td>{input name}</td>
+                </tr>
+
+                <tr>
+                    <td>{label registerableRoles /}</td>
+                    <td>{input registerableRoles}</td>
+                </tr>
+
+                <tr class="warning">
+                    <td colspan="2">{input submit}</td>
+                </tr>
+            {/form}
+        </table>
+    </div>
+{/block}

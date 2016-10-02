@@ -1,0 +1,18 @@
+{extends '../Programlayout.latte'}
+
+{block title}
+    Program » Kategorie
+{/block}
+
+{block sidebar_attributes}
+    data-spy="affix" data-offset-top="0"
+{/block}
+
+{block content}
+    <h1>Přehled kategorií</h1>
+    <div class="navbar">
+        <a class="btn btn-success" href="{plink edit}"><i class="icon-plus-sign"></i>Vytvořit kategorii</a>
+    </div>
+    {widget categoryGrid}
+    {include '../../../templates/includes/confirm_dialog.latte'}
+{/block}

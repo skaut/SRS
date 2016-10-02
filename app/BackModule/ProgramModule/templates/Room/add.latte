@@ -16,7 +16,18 @@ Program » Nová místnost
 </ul>
 <div class="well">
 <h1>Nová místnost</h1>
-    {widget roomForm}
+    <table class="table">
+        {form roomForm}
+            <tr>
+                <td>{label name /}</td>
+                <td>{input name}</td>
+            </tr>
+
+            <tr class="warning">
+                <td colspan="2">{input submit}</td>
+            </tr>
+        {/form}
+    </table>
 </div>
 {include '../../../templates/includes/confirm_dialog.latte'}
 {/block}

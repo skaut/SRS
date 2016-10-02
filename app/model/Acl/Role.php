@@ -172,7 +172,7 @@ class Role extends \SRS\Model\BaseEntity
     protected $incompatibleRoles;
 
     /**
-     * @ORM\ManyToMany(targetEntity="\SRS\model\Acl\Role", mappedBy="registerableRoles", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="\SRS\model\Program\Category", mappedBy="registerableRoles", cascade={"persist"})
      * @var mixed
      */
     protected $registerableCategories;
@@ -381,6 +381,72 @@ class Role extends \SRS\Model\BaseEntity
         $this->displayInList = $displayInList;
     }
 
+    /**
+     * @return boolean
+     */
+    public function isDisplayCapacity()
+    {
+        return $this->displayCapacity;
+    }
+
+    /**
+     * @param boolean $displayCapacity
+     */
+    public function setDisplayCapacity($displayCapacity)
+    {
+        $this->displayCapacity = $displayCapacity;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getIncompatibleWithRole()
+    {
+        return $this->incompatibleWithRole;
+    }
+
+    /**
+     * @param \Doctrine\Common\Collections\ArrayCollection $incompatibleWithRole
+     */
+    public function setIncompatibleWithRole($incompatibleWithRole)
+    {
+        $this->incompatibleWithRole = $incompatibleWithRole;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getIncompatibleRoles()
+    {
+        return $this->incompatibleRoles;
+    }
+
+    /**
+     * @param \Doctrine\Common\Collections\ArrayCollection $incompatibleRoles
+     */
+    public function setIncompatibleRoles($incompatibleRoles)
+    {
+        $this->incompatibleRoles = $incompatibleRoles;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getRegisterableCategories()
+    {
+        return $this->registerableCategories;
+    }
+
+    /**
+     * @param \Doctrine\Common\Collections\ArrayCollection $registerableCategories
+     */
+    public function setRegisterableCategories($registerableCategories)
+    {
+        $this->registerableCategories = $registerableCategories;
+    }
+
+
+
 //    /**
 //     * @return boolean
 //     */
@@ -407,6 +473,11 @@ class Role extends \SRS\Model\BaseEntity
  */
 class RoleRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function findRegisterable() {
+        $query = $this->_em->createQuery("SELECT r FROM {$this->_entityName} r WHERE r.registerable=true");
+        return $query->getResult();
+    }
+
     public function findRegisterableNow()
     {
         $today = new \DateTime('now');

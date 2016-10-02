@@ -30,7 +30,7 @@ class Category extends \SRS\Model\BaseEntity
 
     /**
      * @ORM\ManyToMany(targetEntity="\SRS\model\Acl\Role", inversedBy="registerableCategories", cascade={"persist"})
-     * @var mixed
+     * @var \Doctrine\Common\Collections\ArrayCollection
      */
     protected $registerableRoles;
 
@@ -54,6 +54,24 @@ class Category extends \SRS\Model\BaseEntity
     {
         return $this->blocks;
     }
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getRegisterableRoles()
+    {
+        return $this->registerableRoles;
+    }
+
+    /**
+     * @param \Doctrine\Common\Collections\ArrayCollection $registerableRoles
+     */
+    public function setRegisterableRoles($registerableRoles)
+    {
+        $this->registerableRoles = $registerableRoles;
+    }
+
+
 }
 
 /**
@@ -66,6 +84,11 @@ class CategoryRepository extends \Nella\Doctrine\Repository
     public function findAll()
     {
         $query = $this->_em->createQuery("SELECT c FROM {$this->entity} c");
+        return $query->getResult();
+    }
+
+    public function findRegisterableRoles($categoryId) {
+        $query = $this->_em->createQuery("SELECT r FROM \SRS\model\Acl\Role r JOIN r.registerableCategories c WHERE c.id = $categoryId");
         return $query->getResult();
     }
 

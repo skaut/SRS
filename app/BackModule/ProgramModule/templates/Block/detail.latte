@@ -18,6 +18,9 @@ Program » Blok {$block->name}
     </div>
     {/if}
 <ul class="block-properties no-margin">
+    {ifset $block->category->name}
+        <li><span>Kategorie:</span> {$block->category->name}</li>
+    {/ifset}
     {ifset $block->lector->username}
         <li><span>Lektor:</span> {$block->lector->username}</li>
     {/ifset}

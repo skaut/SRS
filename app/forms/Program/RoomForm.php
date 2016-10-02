@@ -27,14 +27,17 @@ class RoomForm extends \SRS\Form\EntityForm
         $this->em = $em;
         $this->user = $user;
 
-        $this->addText('name', 'Název:')
+        $this->addText('name', 'Název')
             ->addRule(Form::FILLED, 'Zadejte název');
-        $this->addSubmit('submit', 'Uložit')->getControlPrototype()->class('btn btn-primary space');
+
+        $this->addSubmit('submit', 'Uložit')->getControlPrototype()->class('btn btn-primary pull-right');
         $this->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
-        $this->onSuccess[] = callback($this, 'formSubmitted');
+
+        $this->onSuccess[] = callback($this, 'submitted');
+        $this->onError[] = callback($this, 'error');
     }
 
-    public function formSubmitted()
+    public function submitted()
     {
         $values = $this->getValues();
         $room = new \SRS\Model\Program\Room();
@@ -45,5 +48,12 @@ class RoomForm extends \SRS\Form\EntityForm
         $this->presenter->flashMessage('Místnost přidána', 'success');
 
         $this->presenter->redirect(':Back:Program:Room:list');
+    }
+
+    public function error()
+    {
+        foreach ($this->getErrors() as $error) {
+            $this->presenter->flashMessage($error, 'error');
+        }
     }
 }

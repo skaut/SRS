@@ -180,6 +180,23 @@ class Block extends \SRS\Model\BaseEntity
         return $this->programs;
     }
 
+    /**
+     * @return Category
+     */
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
+     * @param Category $category
+     */
+    public function setCategory($category)
+    {
+        $this->category = $category;
+    }
+
+
 }
 
 /**
@@ -192,5 +209,10 @@ class BlockRepository extends \Nella\Doctrine\Repository
     public function updateRooms($oldRoom, $newRoom)
     {
         $this->_em->createQuery("UPDATE {$this->entity} b SET b.room=$newRoom WHERE b.room=$oldRoom")->execute();
+    }
+
+    public function updateCategories($oldCategory, $newCategory)
+    {
+        $this->_em->createQuery("UPDATE {$this->entity} b SET b.category=$newCategory WHERE b.category=$oldCategory")->execute();
     }
 }

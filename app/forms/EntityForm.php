@@ -81,6 +81,4 @@ class EntityForm extends UI\Form
         }
         return $choices;
     }
-
-
 }
