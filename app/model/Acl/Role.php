@@ -24,8 +24,12 @@ use Doctrine\Common\Collections\Criteria;
  * @property integer $fee
  * @property string $feeWord
  * @property bool $displayInList
+ * @property bool $displayCapacity
  * @property bool $displayArrivalDeparture
  * @property bool $syncedWithSkautIS
+ * @property \Doctrine\Common\Collections\ArrayCollection $incompatibleWithRole
+ * @property \Doctrine\Common\Collections\ArrayCollection $incompatibleRoles
+ * @property \Doctrine\Common\Collections\ArrayCollection $registerableCategories
  * @property \DateTime|string $registerableFrom
  * @property \DateTime|string $registerableTo
  * @property \Doctrine\Common\Collections\ArrayCollection $users
@@ -131,6 +135,11 @@ class Role extends \SRS\Model\BaseEntity
      */
     protected $displayInList;
 
+    /**
+     * @var boolean
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    protected $displayCapacity;
 
 //    /**
 //     * @var boolean
@@ -145,6 +154,28 @@ class Role extends \SRS\Model\BaseEntity
      */
     protected $syncedWithSkautIS = true;
 
+
+    /**
+     * @ORM\ManyToMany(targetEntity="\SRS\model\Acl\Role", mappedBy="incompatibleRoles", cascade={"persist"})
+     * @var mixed
+     */
+    protected $incompatibleWithRole;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="\SRS\model\Acl\Role", inversedBy="incompatibleWithRole", cascade={"persist"})
+     * @ORM\JoinTable(name="role_role",
+     *      joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="incompatible_role_id", referencedColumnName="id")}
+     *      )
+     * @var mixed
+     */
+    protected $incompatibleRoles;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="\SRS\model\Acl\Role", mappedBy="registerableRoles", cascade={"persist"})
+     * @var mixed
+     */
+    protected $registerableCategories;
 
     /**
      * @param string $name

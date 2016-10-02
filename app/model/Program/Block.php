@@ -19,6 +19,7 @@ use Doctrine\ORM\Mapping as ORM,
  * @property integer $capacity
  * @property string $tools
  * @property \SRS\Model\Program\Room $room
+ * @property \SRS\Model\Program\Category $category
  * @property integer $duration
  */
 class Block extends \SRS\Model\BaseEntity
@@ -60,11 +61,17 @@ class Block extends \SRS\Model\BaseEntity
 
     /**
      * @ORM\ManyToOne(targetEntity="\SRS\Model\Program\Room")
-     *
      * @JMS\Type("SRS\Model\Program\Room")
      * @JMS\Exclude
      */
     protected $room;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="\SRS\Model\Program\Category")
+     * @JMS\Type("SRS\Model\Program\Category")
+     * @JMS\Exclude
+     */
+    protected $category;
 
     /**
      * @ORM\Column(type="integer")
