@@ -30,10 +30,15 @@ class NewRoleForm extends UI\Form
             $roles[$role->id] = $role->name;
         }
 
-        $this->addText('name', 'Jméno role:')
+        $this->addText('name', 'Jméno role')
             ->addRule(Form::FILLED, 'Zadejte jméno');
-        $this->addSelect('parent', 'Založit roli na:', $roles)->setPrompt("žádný")->getControlPrototype()->title('Tato informace se použije pouze pro nastavení počátečních práv pro tuto roli.');
-        $this->addSubmit('submit', 'Vytvořit roli')->getControlPrototype()->class('btn');
+
+        $this->addSelect('parent', 'Založit roli na', $roles)
+            ->setPrompt("žádný")
+            ->getControlPrototype()
+            ->title('Tato informace se použije pouze pro nastavení počátečních práv pro tuto roli.');
+
+        $this->addSubmit('submit', 'Vytvořit roli')->getControlPrototype()->class('btn btn-primary pull-right');
 
         $this->onSuccess[] = callback($this, 'formSubmitted');
     }
@@ -61,7 +66,7 @@ class NewRoleForm extends UI\Form
             $this->presenter->context->database->flush();
 
             $this->presenter->flashMessage('Role vytvořena', 'success');
-            $this->presenter->redirect('editRole', array('id' => $newRole->id));
+            $this->presenter->redirect('edit', array('id' => $newRole->id));
         } else {
             $this->presenter->flashMessage('Role s tímto jménem již existuje', 'error');
         }
