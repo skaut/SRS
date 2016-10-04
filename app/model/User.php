@@ -1027,19 +1027,20 @@ class User extends BaseEntity
     }
 
     public function countFee() {
-        $fee = INF;
+        $fee = 0;
 
         foreach ($this->roles as $role) {
-            if ($role->fee < $fee) {
-                $fee = $role->fee;
-                $feeWord = $role->feeWord;
-            }
             if ($role->fee == null) {
                 $fee = 0;
-                $feeWord = "";
                 break;
             }
+            $fee += $role->fee;
         }
+
+        $numbersWords = new \Numbers_Words();
+        $feeWord = $numbersWords->toWords($fee, 'cs');
+        $feeWord = iconv('windows-1250', 'UTF-8', $feeWord);
+        $feeWord = str_replace(" ", "", $feeWord);
 
         return array("fee" => $fee, "feeWord" => $feeWord);
     }

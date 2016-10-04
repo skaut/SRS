@@ -22,7 +22,6 @@ use Doctrine\Common\Collections\Criteria;
  * @property integer $usersLimit
  * @property bool $pays
  * @property integer $fee
- * @property string $feeWord
  * @property bool $displayInList
  * @property bool $displayCapacity
  * @property bool $displayArrivalDeparture
@@ -121,13 +120,6 @@ class Role extends \SRS\Model\BaseEntity
      * @ORM\Column(type="integer", nullable=true)
      */
     protected $fee;
-
-    /**
-     * @var string
-     * @ORM\Column(nullable=true)
-     */
-    protected $feeWord;
-
 
     /**
      * @var boolean
@@ -299,22 +291,6 @@ class Role extends \SRS\Model\BaseEntity
     public function getFee()
     {
         return $this->fee;
-    }
-
-    /**
-     * @param string $fee_word
-     */
-    public function setFeeWord($fee_word)
-    {
-        $this->feeWord = $fee_word;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFeeWord()
-    {
-        return $this->feeWord;
     }
 
     /**
