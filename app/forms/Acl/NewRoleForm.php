@@ -41,6 +41,7 @@ class NewRoleForm extends UI\Form
         $this->addSubmit('submit', 'Vytvořit roli')->getControlPrototype()->class('btn btn-primary pull-right');
 
         $this->onSuccess[] = callback($this, 'formSubmitted');
+        $this->onError[] = callback($this, 'error');
     }
 
     public function formSubmitted()
@@ -72,4 +73,10 @@ class NewRoleForm extends UI\Form
         }
     }
 
+    public function error()
+    {
+        foreach ($this->getErrors() as $error) {
+            $this->presenter->flashMessage($error, 'error');
+        }
+    }
 }

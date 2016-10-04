@@ -70,6 +70,7 @@ class RoleForm extends EntityForm
         $this['registerableTo']->getControlPrototype()->class('datepicker');
 
         $this->onSuccess[] = callback($this, 'submitted');
+        $this->onError[] = callback($this, 'error');
     }
 
     public function submitted()
@@ -80,8 +81,8 @@ class RoleForm extends EntityForm
         $formValuesPerms = $this->getComponent('permissions')->getRawValue(); //oklika
         $values['permissions'] = $formValuesPerms;
 
-        $formValuesIncompatibleWithRole = $this->getComponent('incompatibleRoles')->getRawValue(); //oklika
-        $values['incompatibleRoles'] = $formValuesIncompatibleWithRole;
+        $formValuesIncompatibleRoles = $this->getComponent('incompatibleRoles')->getRawValue(); //oklika
+        $values['incompatibleRoles'] = $formValuesIncompatibleRoles;
 
         if ($values['registerableTo'] != null && ($values['registerableTo'] < $values['registerableFrom'] && $values['registerableFrom'] != null)) {
             $this->presenter->flashMessage('Datum do musí být větší než od', 'error');
@@ -97,6 +98,13 @@ class RoleForm extends EntityForm
             if ($values['usersLimit'] == null) {
                 $role->usersLimit = null;
             }
+
+            $role->removeAllIncompatibleRoles();
+            foreach($values['incompatibleRoles'] as $incompatibleRoleId) {
+                $incompatibleRole = $this->presenter->roleRepo->find($incompatibleRoleId);
+                $role->addIncompatibleRole($incompatibleRole);
+            }
+
             $this->presenter->context->database->flush();
             $this->presenter->flashMessage('Role upravena', 'success');
             $submitName = ($this->isSubmitted());
@@ -108,4 +116,10 @@ class RoleForm extends EntityForm
 
     }
 
+    public function error()
+    {
+        foreach ($this->getErrors() as $error) {
+            $this->presenter->flashMessage($error, 'error');
+        }
+    }
 }

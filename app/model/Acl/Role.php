@@ -26,7 +26,6 @@ use Doctrine\Common\Collections\Criteria;
  * @property bool $displayCapacity
  * @property bool $displayArrivalDeparture
  * @property bool $syncedWithSkautIS
- * @property \Doctrine\Common\Collections\ArrayCollection $incompatibleWithRole
  * @property \Doctrine\Common\Collections\ArrayCollection $incompatibleRoles
  * @property \Doctrine\Common\Collections\ArrayCollection $registerableCategories
  * @property \DateTime|string $registerableFrom
@@ -151,10 +150,9 @@ class Role extends \SRS\Model\BaseEntity
      * @ORM\ManyToMany(targetEntity="\SRS\model\Acl\Role", mappedBy="incompatibleRoles", cascade={"persist"})
      * @var mixed
      */
-    protected $incompatibleWithRole;
 
     /**
-     * @ORM\ManyToMany(targetEntity="\SRS\model\Acl\Role", inversedBy="incompatibleWithRole", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="\SRS\model\Acl\Role")
      * @ORM\JoinTable(name="role_role",
      *      joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="incompatible_role_id", referencedColumnName="id")}
@@ -373,21 +371,6 @@ class Role extends \SRS\Model\BaseEntity
         $this->displayCapacity = $displayCapacity;
     }
 
-    /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getIncompatibleWithRole()
-    {
-        return $this->incompatibleWithRole;
-    }
-
-    /**
-     * @param \Doctrine\Common\Collections\ArrayCollection $incompatibleWithRole
-     */
-    public function setIncompatibleWithRole($incompatibleWithRole)
-    {
-        $this->incompatibleWithRole = $incompatibleWithRole;
-    }
 
     /**
      * @return \Doctrine\Common\Collections\ArrayCollection
@@ -422,7 +405,6 @@ class Role extends \SRS\Model\BaseEntity
     }
 
 
-
 //    /**
 //     * @return boolean
 //     */
@@ -440,6 +422,31 @@ class Role extends \SRS\Model\BaseEntity
 //    }
 
 
+    public function countVacancies() {
+        if ($this->usersLimit == null)
+            return null;
+        return $this->usersLimit - count($this->users);
+    }
+
+    public function addIncompatibleRole($role) {
+        if (!$this->incompatibleRoles->contains($role)) {
+            $this->incompatibleRoles->add($role);
+            $role->addIncompatibleRole($this);
+        }
+    }
+
+    public function removeIncompatibleRole($role) {
+        if ($this->incompatibleRoles->contains($role)) {
+            $this->incompatibleRoles->removeElement($role);
+            $role->removeIncompatibleRole($this);
+        }
+    }
+
+    public function removeAllIncompatibleRoles() {
+        foreach($this->incompatibleRoles as $role) {
+            $this->removeIncompatibleRole($role);
+        }
+    }
 }
 
 /**

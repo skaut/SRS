@@ -25,6 +25,18 @@ class AttendeeBox extends \Nette\Application\UI\Control
 
             if ($dbuser->isInRole(Role::REGISTERED)) {
                 $form = $this['attendeeForm'];
+
+                $roles = $this->presenter->context->database->getRepository('\SRS\Model\Acl\Role')->findRegisterableNow();
+                $roleFormChoices = array();
+                foreach ($roles as $role) {
+                    $vacancies = $role->countVacancies();
+                    if ($vacancies != null)
+                        $roleFormChoices[$role->id] = "{$role->name} (volno {$vacancies} míst)";
+                    else
+                        $roleFormChoices[$role->id] = "{$role->name}";
+                }
+                $this['attendeeForm']['roles']->setItems($roleFormChoices);
+
                 $form->bindEntity($user->identity->object);
             }
         }
