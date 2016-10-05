@@ -40,11 +40,25 @@ class AttendeeForm extends ProfileForm
     {
         $values = $this->getValues();
         $user = $this->presenter->context->database->getRepository('\SRS\Model\User')->find($values['id']);
+
+        $formValuesRoles = $this->getComponent('roles')->getRawValue(); //oklika
+        $values['roles'] = $formValuesRoles;
+
         $user->removeRole(Role::REGISTERED);
-        $role = $this->presenter->context->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('id' => $values['role']));
-        $user->addRole($role);
+
+        $approved = true;
+
+        foreach ($values['roles'] as $roleId) {
+            $role = $this->presenter->context->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('id' => $roleId));
+            $user->addRole($role);
+
+            if (!$role->approvedAfterRegistration)
+                $approved = false;
+        }
+
         $user->setProperties($values, $this->presenter->context->database);
-        $user->approved = $role->approvedAfterRegistration;
+        $user->approved = $approved;
+
         $this->presenter->context->database->flush();
         $this->presenter->flashMessage('Přihláška odeslána. Více o stavu přihlášky se dozvíte opět na stránce s přihlašovacím formuláře.', 'success forever');
         $this->presenter->flashMessage('Pro další používání webu se znovu přihlašte přes skautIS', 'info forever');
@@ -57,22 +71,50 @@ class AttendeeForm extends ProfileForm
         parent::setFields();
         $this->addCustomFields();
 
-        $checkRoleCapacity = function($field, $database) {
-            $role = $database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('id' => $field->getValue()));
-            if ($role->usersLimit !== null) {
-                if ($role->usersLimit <= count($role->users))
-                    return false;
+        $checkRolesCapacity = function($field, $database) {
+            $values = $this->getComponent('roles')->getRawValue();
+            $user = $database->getRepository('\SRS\Model\User')->findOneBy(array('id' => $this->getForm()->getHttpData()['id']));
+
+            foreach ($values as $value) {
+                $role = $database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('id' => $value));
+                if ($role->usersLimit !== null) {
+                    if ($role->usersLimit < count($role->users) || (!$user->isInRole($role->name) && $role->usersLimit == count($role->users)))
+                        return false;
+                }
             }
             return true;
         };
 
-        $this->addSelect('role', 'Přihlásit jako:')->setItems($this->roles)
-            ->addRule(Form::FILLED, 'Vyplňte roli')
-            ->addRule($checkRoleCapacity, 'Překročen maximální počet účastníků v této roli', $this->database);
+        $checkRolesCombination = function($field, $database) {
+            $values = $this->getComponent('roles')->getRawValue();
+
+            foreach ($values as $value1) {
+                $role1 = $database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('id' => $value1));
+                foreach ($values as $value2) {
+                    $role2 = $database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('id' => $value2));
+                    if (in_array($role1, $role2->incompatibleRoles->getValues()))
+                        return false;
+                }
+            }
+            return true;
+        };
+
+        $checkRolesEmpty = function($field) {
+            $values = $this->getComponent('roles')->getRawValue();
+            return count($values) != 0;
+        };
+
+        $this->addMultiSelect('roles', 'Přihlásit jako')
+            ->addRule($checkRolesCapacity, 'Všechna místa v některé roli jsou obsazena.', $this->database)
+            ->addRule($checkRolesCombination, 'Některé role není možné kombinovat.', $this->database)
+            ->addRule($checkRolesEmpty, 'Musí být vybrána alespoň jedna role.', $this->database)
+            ->getControlPrototype()->class('multiselect');
+
+
         $this->addCheckbox('agreement', 'Souhlasím, že uvedené údaje budou poskytnuty lektorům pro účely semináře')
             ->addRule(Form::FILLED, 'Musíte souhlasit s poskytnutím údajů');
-        $this->addSubmit('submit', 'Přihlásit na seminář');
 
+        $this->addSubmit('submit', 'Přihlásit na seminář');
     }
 
     protected function configure()

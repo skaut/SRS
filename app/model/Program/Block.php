@@ -19,6 +19,7 @@ use Doctrine\ORM\Mapping as ORM,
  * @property integer $capacity
  * @property string $tools
  * @property \SRS\Model\Program\Room $room
+ * @property \SRS\Model\Program\Category $category
  * @property integer $duration
  */
 class Block extends \SRS\Model\BaseEntity
@@ -60,11 +61,17 @@ class Block extends \SRS\Model\BaseEntity
 
     /**
      * @ORM\ManyToOne(targetEntity="\SRS\Model\Program\Room")
-     *
      * @JMS\Type("SRS\Model\Program\Room")
      * @JMS\Exclude
      */
     protected $room;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="\SRS\Model\Program\Category")
+     * @JMS\Type("SRS\Model\Program\Category")
+     * @JMS\Exclude
+     */
+    protected $category;
 
     /**
      * @ORM\Column(type="integer")
@@ -173,6 +180,21 @@ class Block extends \SRS\Model\BaseEntity
         return $this->programs;
     }
 
+    /**
+     * @return Category
+     */
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
+     * @param Category $category
+     */
+    public function setCategory($category)
+    {
+        $this->category = $category;
+    }
 }
 
 /**
@@ -185,5 +207,10 @@ class BlockRepository extends \Nella\Doctrine\Repository
     public function updateRooms($oldRoom, $newRoom)
     {
         $this->_em->createQuery("UPDATE {$this->entity} b SET b.room=$newRoom WHERE b.room=$oldRoom")->execute();
+    }
+
+    public function updateCategories($oldCategory, $newCategory)
+    {
+        $this->_em->createQuery("UPDATE {$this->entity} b SET b.category=$newCategory WHERE b.category=$oldCategory")->execute();
     }
 }

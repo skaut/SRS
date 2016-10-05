@@ -5,6 +5,7 @@
  * Author: Michal Májský
  */
 namespace SRS\Components;
+
 use \NiftyGrid\Grid;
 use \Doctrine\ORM\Query\Expr;
 use SRS\Model\Acl\Resource;
@@ -37,11 +38,12 @@ class BlockGrid extends Grid
         $qb = $this->em->createQueryBuilder();
         $qb->addSelect('b');
         $qb->addSelect('lector');
-        // $qb->addSelect($qb->expr()->count('p'));
-        // $qb->addSelect('count(p) as b.programs');
+        $qb->addSelect('category');
+        $qb->addSelect('room');
         $qb->from('\SRS\Model\Program\Block', 'b');
         $qb->leftJoin('b.lector', 'lector');
-        // $qb->leftJoin('b.programs', 'p');
+        $qb->leftJoin('b.category', 'category');
+        $qb->leftJoin('b.room', 'room');
 
         if (!$presenter->context->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS)) {
             $qb->where(new \Doctrine\ORM\Query\Expr\Comparison('lector.id', '=', $presenter->context->user->id));
@@ -50,36 +52,60 @@ class BlockGrid extends Grid
 
         $lectors = $this->em->getRepository('\SRS\Model\Acl\Role')->findApprovedUsersInRole('lektor');
         $lectorChoices = \SRS\Form\EntityForm::getFormChoices($lectors, 'id', 'displayName');
+
         $basicBlockDuration = $this->em->getRepository('\SRS\Model\Settings')->get('basic_block_duration');
+
+        $categories = $this->em->getRepository('\SRS\Model\Program\Category')->findAll();
+        $categoriesChoices = \SRS\Form\EntityForm::getFormChoices($categories, 'id', 'name');
+
+        $rooms = $this->em->getRepository('\SRS\Model\Program\Room')->findAll();
+        $roomsChoices = \SRS\Form\EntityForm::getFormChoices($rooms, 'id', 'name');
 
         $this->setDataSource($source);
         $numOfResults = 10;
+
+
         $this->addColumn('name', 'Název')->setTextFilter()->setAutocomplete($numOfResults);
+
+        $this->addColumn('category', 'Kategorie')
+            ->setRenderer(function ($row) {
+                return $row->category['name'];
+            })
+            ->setSelectFilter($categoriesChoices);
+
         $lectorColumn = $this->addColumn('lector', 'Lektor')
             ->setRenderer(function ($row) {
-            return $row->lector['displayName'];
-        });
+                return $row->lector['displayName'];
+            });
         if ($presenter->context->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS)) {
             $lectorColumn->setSelectFilter($lectorChoices);
         }
-        //->setSelectFilter($lectorChoices);
+
+        $this->addColumn('room', 'Místnost')
+            ->setRenderer(function ($row) {
+                return $row->room['name'];
+            })
+            ->setSelectFilter($roomsChoices);
+
         $this->addColumn('duration', 'Délka')
             ->setRenderer(function ($row) use ($basicBlockDuration) {
-            return $row->duration * $basicBlockDuration . ' minut';
-        });
+                return $row->duration * $basicBlockDuration . ' minut';
+            });
+
         $this->addColumn('capacity', 'Kapacita');
+
         $this->addColumn('program_count', 'Počet zařazení')->setSortable(false)
             ->setRenderer(function ($row) use ($basicBlockDuration, $blockRepo) {
-            return $blockRepo->find($row->id)->programs->count();
-        });
+                return $blockRepo->find($row->id)->programs->count();
+            });
 
 
         $this->addButton("detail", "Zobrazit detail")
             ->setClass("btn")
             ->setText('Zobrazit detail')
             ->setLink(function ($row) use ($presenter) {
-            return $presenter->link("detail", $row['id']);
-        })
+                return $presenter->link("detail", $row['id']);
+            })
             ->setAjax(FALSE);
 
 
@@ -87,8 +113,8 @@ class BlockGrid extends Grid
             ->setClass("btn btn-warning")
             ->setText('Upravit')
             ->setLink(function ($row) use ($presenter) {
-            return $presenter->link("edit", $row['id']);
-        })
+                return $presenter->link("edit", $row['id']);
+            })
             ->setAjax(FALSE);
 
 
@@ -96,11 +122,9 @@ class BlockGrid extends Grid
             ->setClass("btn btn-danger confirm")
             ->setText('Smazat')
             ->setLink(function ($row) use ($presenter) {
-            return $presenter->link("delete!", $row['id']);
-        })
+                return $presenter->link("delete!", $row['id']);
+            })
             ->setAjax(FALSE);
 
     }
-
-
 }

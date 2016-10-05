@@ -1,14 +1,14 @@
 <div class="userBox">
-{if empty($users)}
-    Žádný uživatel k zobrazení.
-{else}
-    <ul class="userBoxList">
-        {foreach $users as $user}
-            <li class="userBoxItem">
-                {$user->displayName}
-            </li>
-        {/foreach}
-    </ul>
-{/if}
+    {if empty($users)}
+        Žádný uživatel k zobrazení.
+    {else}
+        <ul class="userBoxList">
+            {foreach $users as $user}
+                <li class="userBoxItem">
+                    {$user->displayName}
+                </li>
+            {/foreach}
+        </ul>
+    {/if}
 </div>
 

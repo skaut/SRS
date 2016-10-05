@@ -40,21 +40,21 @@ class ApiPresenter extends \BackModule\BasePresenter
 
     /**
      * @param bool $userAttending chceme Informace o tom, zda se prihlaseny uzivatel ucastni programu?
-     * @param bool $onlyAssigned Vrátit jen programy, které mají přiřazený program.blok
      * @throws \Nette\Security\AuthenticationException
      */
-    public function actionGetPrograms($userAttending = false, $onlyAssigned = false)
+    public function actionGetPrograms($userAttending = false)
     {
+        if (!$this->context->user->isLoggedIn()) {
+            throw new \Nette\Security\AuthenticationException('Uživatel musí být přihlášen');
+        }
+
         if ($userAttending == true) {
-            if (!$this->context->user->isLoggedIn()) {
-                throw new \Nette\Security\AuthenticationException('Uživatel musí být přihlášen');
-            }
             $user = $this->context->database->getRepository('\SRS\Model\User')->find($this->context->user->id);
         } else {
             $user = null;
         }
 
-        $programs = $this->programRepo->findAllForJson($this->basicBlockDuration, $user, $onlyAssigned);
+        $programs = $this->programRepo->findAllForJson($this->basicBlockDuration, $user);
         $serializer = \JMS\Serializer\SerializerBuilder::create()->build();
         $json = $serializer->serialize($programs, 'json');
         $response = new \Nette\Application\Responses\TextResponse($json);
@@ -86,7 +86,6 @@ class ApiPresenter extends \BackModule\BasePresenter
 
     }
 
-
     public function actionGetBlocks()
     {
         $blocks = $this->context->database->getRepository('\SRS\Model\Program\Block')->findAll();
@@ -101,7 +100,8 @@ class ApiPresenter extends \BackModule\BasePresenter
                 'duration' => $block->duration,
                 'perex' => $block->perex,
                 'description' => $block->description,
-                'program_count' => $block->programs->count()
+                'program_count' => $block->programs->count(),
+                'category' => $block->category != null ? $block->category->name : 'Nezařazeno'
             );
             if (isset($block->lector) && $block->lector != null) {
                 $result[$block->id]['lector'] = "{$block->lector->displayName}";
@@ -111,10 +111,10 @@ class ApiPresenter extends \BackModule\BasePresenter
                 $result[$block->id]['lector_about'] = '';
             }
         }
+
         $response = new \Nette\Application\Responses\JsonResponse($result);
         $this->sendResponse($response);
         $this->terminate();
-
     }
 
     public function actionGetCalendarConfig()

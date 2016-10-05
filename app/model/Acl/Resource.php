@@ -21,6 +21,7 @@ class Resource extends \SRS\Model\BaseEntity
     const EVIDENCE = 'Uživatelé';
     const MAILING = 'Mailing';
     const ROOM = 'Místnosti';
+    const CATEGORY = 'Kategorie';
 
     /**
      * @ORM\Column(unique=true)

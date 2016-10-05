@@ -9,7 +9,7 @@ function FrontCalendarCtrl($scope, $http, $q, $timeout) {
     var api_path = basePath + '/api/program/';
     $scope.startup = function () {
         var promise, promisses = [];
-        promise = $http.get(api_path + "getblocks", {})
+        promise = $http.get(api_path + "./getblocks", {})
             .success(function (data, status, headers, config) {
                 $scope.options = data;
             }).error(function (data, status, headers, config) {
@@ -17,7 +17,7 @@ function FrontCalendarCtrl($scope, $http, $q, $timeout) {
             });
         promisses.push(promise);
 
-        promise = $http.get(api_path + "./getprograms?userAttending=1&onlyAssigned=1", {})
+        promise = $http.get(api_path + "./getprograms?userAttending=1", {})
             .success(function (data, status, headers, config) {
                 $scope.events = data;
             }).error(function (data, status, headers, config) {
@@ -176,6 +176,7 @@ function bindCalendar(scope) {
                 options.content += "<li><span>Lektor:</span> " + event.block.lector + "</li>";
                 options.content += "<li><span>Místnost:</span> " + event.block.room + "</li>";
                 options.content += "<li><span>Kapacita:</span> " + event.attendees_count + "/" + event.block.capacity + "</li>";
+                options.content += "<li><span>Kategorie:</span> " + event.block.category + "</li>";
                 options.content += "</ul>";
                 if (event.block.perex != null) {
                     options.content += "<p>" + event.block.perex + "</p>";

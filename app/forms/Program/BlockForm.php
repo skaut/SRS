@@ -11,7 +11,8 @@ namespace SRS\Form\Program;
 use Nette\Application\UI,
     Nette\Diagnostics\Debugger,
     Nette\Application\UI\Form,
-    Nette\ComponentModel\IContainer;
+    Nette\ComponentModel\IContainer,
+    Nette\Utils\Html;
 
 /**
  * Formular pro editaci a vytvareni programoveho bloku
@@ -36,37 +37,51 @@ class BlockForm extends \SRS\Form\EntityForm
         $this->user = $user;
         $lectors = $this->em->getRepository('\SRS\Model\Acl\Role')->findApprovedUsersInRole('lektor');
         $rooms = $this->em->getRepository('\SRS\Model\Program\Room')->findAll();
+        $categories = $this->em->getRepository('\SRS\Model\Program\Category')->findAll();
 
 
         $this->addHidden('id');
-        $this->addText('name', 'Název:')
+
+        $this->addText('name', 'Název')
             ->addRule(Form::FILLED, 'Zadejte název');
-        $this->addText('capacity', 'Kapacita:')
+
+        $this->addSelect('category', 'Kategorie')
+            ->setItems(\SRS\Form\EntityForm::getFormChoices($categories, 'id', 'name'))->setPrompt('-- vyberte --');
+
+        $this->addText('capacity', 'Kapacita')
             ->addRule(Form::FILLED, 'Zadejte kapacitu')
             ->addRule(Form::INTEGER, 'Kapacita je číslo od 1 do x')
             ->getControlPrototype()->class('number');
-        $this->addText('tools', 'Pomůcky:');
-        $this->addSelect('room', 'Místnost:')
+
+        $this->addText('tools', 'Pomůcky');
+
+        $this->addSelect('room', 'Místnost')
             ->setItems(\SRS\Form\EntityForm::getFormChoices($rooms, 'id', 'name'))->setPrompt('-- vyberte --');
-        $this->addSelect('duration', 'Doba trvání:')
+
+        $this->addSelect('duration', 'Doba trvání')
             ->setItems($this->prepareDurationChoices())
             ->addRule(Form::FILLED, 'Zadejte dobu trvání');
-        $this->addTextArea('perex', 'Stručný popis (160 znaků):')->getControlPrototype()->class('wide');
-        $this->addTextArea('description', 'Detailní popis:')->getControlPrototype()->class('tinyMCE wide');
-        $this->addSelect('lector', 'Lektor:');
+
+        $this->addTextArea('perex', 'Stručný popis (160 znaků)')->getControlPrototype()->class('wide');
+
+        $this->addTextArea('description', 'Detailní popis')->getControlPrototype()->class('tinyMCE wide');
+
+        $this->addSelect('lector', 'Lektor');
         if ($this->user->isAllowed('Program', 'Spravovat Všechny Programy')) {
             $this['lector']->setItems(\SRS\Form\EntityForm::getFormChoices($lectors, 'id', 'displayName'))->setPrompt('-- vyberte --');
         } else {
             $this['lector']->setItems(array($this->user->id => $this->user->identity->object->displayName));
         }
-        $this->addSubmit('submit', 'Uložit')->getControlPrototype()->class('btn btn-primary space');
-        $this->addSubmit('submit_continue', 'Uložit a pokračovat v úpravách')->getControlPrototype()->class('btn');
-        $this->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
-        $this->onSuccess[] = callback($this, 'formSubmitted');
 
+        $this->addSubmit('submit', 'Uložit')->getControlPrototype()->class('btn btn-primary pull-right space');
+        $this->addSubmit('submit_continue', 'Uložit a pokračovat v úpravách')->getControlPrototype()->class('btn pull-right');
+        $this->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
+
+        $this->onSuccess[] = callback($this, 'submitted');
+        $this->onError[] = callback($this, 'error');
     }
 
-    public function formSubmitted()
+    public function submitted()
     {
         $values = $this->getValues();
         $exists = $values['id'] != null;
@@ -99,11 +114,16 @@ class BlockForm extends \SRS\Form\EntityForm
         $basicDuration = $this->dbsettings->get('basic_block_duration');
         $durationChoices = array();
 
-
         for ($i = 1; $i < 10; $i++) {
             $durationChoices[$i] = $i * $basicDuration . ' minut';
         }
         return $durationChoices;
     }
 
+    public function error()
+    {
+        foreach ($this->getErrors() as $error) {
+            $this->presenter->flashMessage($error, 'error');
+        }
+    }
 }

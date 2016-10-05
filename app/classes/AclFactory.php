@@ -45,6 +45,7 @@ class AclFactory
         $evidence = new Resource(Resource::EVIDENCE);
         $mailing = new Resource(Resource::MAILING);
         $room = new Resource(Resource::ROOM);
+        $category = new Resource(Resource::CATEGORY);
 
         $admin_access = new Permission(Permission::ACCESS, $backend);
         $admin->permissions->add($admin_access);
@@ -97,6 +98,10 @@ class AclFactory
         $room_edit = new Permission(Permission::MANAGE, $room);
         $admin->permissions->add($room_edit);
         $organizer->permissions->add($room_edit);
+
+        $category_edit = new Permission(Permission::MANAGE, $category);
+        $admin->permissions->add($category_edit);
+        $organizer->permissions->add($category_edit);
 
         return $roles;
     }

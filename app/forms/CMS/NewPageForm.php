@@ -28,7 +28,7 @@ class NewPageForm extends UI\Form
         $this->addText('name', 'Jméno stránky:')
             ->addRule(Form::FILLED, 'Zadejte jméno')
             ->getControlPrototype()->class('name');
-        $this->addText('slug', 'Slug:')
+        $this->addText('slug', 'Cesta:')
             ->addRule(Form::FILLED, 'Zadejte slug')
             ->getControlPrototype()->class('slug');
         $this->addSubmit('submit', 'Vytvořit Stránku')->getControlPrototype()->class('btn');

@@ -10,9 +10,15 @@
         <a href="{plink :Back:Program:Schedule:default}">Tvorba harmonogramu</a>
     </li>
 
-{if $user->isAllowed(\SRS\Model\Acl\Resource::ROOM, \SRS\Model\Acl\Permission::MANAGE)}
-    <li {ifCurrent :Back:Program:Room:*}class="active"{/ifCurrent}>
-        <a href="{plink :Back:Program:Room:list}">Místnosti</a>
-    </li>
-{/if}
+    {if $user->isAllowed(\SRS\Model\Acl\Resource::CATEGORY, \SRS\Model\Acl\Permission::MANAGE)}
+        <li {ifCurrent :Back:Program:Category:*}class="active"{/ifCurrent}>
+            <a href="{plink :Back:Program:Category:list}">Kategorie</a>
+        </li>
+    {/if}
+
+    {if $user->isAllowed(\SRS\Model\Acl\Resource::ROOM, \SRS\Model\Acl\Permission::MANAGE)}
+        <li {ifCurrent :Back:Program:Room:*}class="active"{/ifCurrent}>
+            <a href="{plink :Back:Program:Room:list}">Místnosti</a>
+        </li>
+    {/if}
 {/block}

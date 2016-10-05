@@ -24,7 +24,7 @@ class PageForm extends \SRS\Form\EntityForm
             ->addRule(Form::FILLED, 'Zadejte jméno')
             ->getControlPrototype()->class('name');
         $this->addCheckbox('public', 'Zveřejněno:');
-        $this->addText('slug', 'Slug:')
+        $this->addText('slug', 'Cesta:')
             ->addRule(Form::FILLED, 'Zadejte slug')
             ->getControlPrototype()->class('slug');
         $this->addMultiSelect('roles', 'Viditelná pro Role:')->setItems($roleChoices)

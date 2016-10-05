@@ -51,15 +51,23 @@ class AclPresenter extends BasePresenter
             $this->redirect('list');
         }
 
+        $form = $this->getComponent('roleForm');
 
         $permissions = $this->context->database->getRepository('\SRS\Model\Acl\Permission')->findAll();
         $permissionFormChoices = array();
         foreach ($permissions as $perm) {
             $permissionFormChoices[$perm->id] = "{$perm->name} | {$perm->resource->name}";
         }
-
-        $form = $this->getComponent('roleForm');
         $this['roleForm']['permissions']->setItems($permissionFormChoices);
+
+        $roles = $this->context->database->getRepository('\SRS\Model\Acl\Role')->findRegisterable();
+        $roleFormChoices = array();
+        foreach ($roles as $rol) {
+            if ($rol != $role)
+                $roleFormChoices[$rol->id] = "{$rol->name}";
+        }
+        $this['roleForm']['incompatibleRoles']->setItems($roleFormChoices);
+
         $form->bindEntity($role);
 
         $this->template->role = $role;

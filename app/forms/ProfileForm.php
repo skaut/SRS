@@ -64,24 +64,24 @@ class ProfileForm extends EntityForm
     protected function setFields()
     {
         $this->addHidden('id');
-        $this->addSelect('sex', 'Pohlaví:')->setItems(array('male' => 'Muž', 'female' => 'Žena'))
+        $this->addSelect('sex', 'Pohlaví')->setItems(array('male' => 'Muž', 'female' => 'Žena'))
             ->addRule(Form::FILLED, 'Zadejte pohlaví');
-        $this->addText('firstName', 'Jméno:')
+        $this->addText('firstName', 'Jméno')
             ->addRule(Form::FILLED, 'Zadejte jméno');
-        $this->addText('lastName', 'Příjmení:')
+        $this->addText('lastName', 'Příjmení')
             ->addRule(Form::FILLED, 'Zadejte příjmení');
-        $this->addText('nickName', 'Přezdívka:');
-        $this->addText('birthdate', 'Datum narození:')
+        $this->addText('nickName', 'Přezdívka');
+        $this->addText('birthdate', 'Datum narození')
             ->addRule(Form::FILLED, 'Zadejte datum narození')->getControlPrototype()->class('datepicker');
         //@TODO - pro aktualizaci emailu je treba udelit zvlastni pravo, ktere SRS zatim nema
 //        $this->addText('email', 'Email:')
 //            ->addRule(Form::FILLED, 'Zadejte e-mailovou adresu')
 //            ->addRule(Form::EMAIL, 'E-mail není ve správném tvaru');
-        $this->addText('street', 'Ulice:')
+        $this->addText('street', 'Ulice')
             ->addRule(Form::FILLED, 'Zadejte Ulici');
-        $this->addText('city', 'Město:')
+        $this->addText('city', 'Město')
             ->addRule(Form::FILLED, 'Zadejte Město');
-        $this->addText('postcode', 'PSČ:')
+        $this->addText('postcode', 'PSČ')
             ->addRule(Form::FILLED, 'Zadejte PSČ');
         $this->addText('state', 'Stát')
             ->addRule(Form::FILLED, 'Zadejte stát');
