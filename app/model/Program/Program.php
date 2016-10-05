@@ -255,7 +255,7 @@ class Program extends \SRS\Model\BaseEntity
  */
 class ProgramRepository extends \Nella\Doctrine\Repository
 {
-    private function getOtherPrograms($program, $basicBlockDuration)
+    private function getProgramsInSameTime($program, $basicBlockDuration)
     {
         $programs = $this->_em->getRepository($this->_entityName)->findAll();
         $otherPrograms = [];
@@ -287,7 +287,7 @@ class ProgramRepository extends \Nella\Doctrine\Repository
         return $otherPrograms;
     }
 
-    private function getSamePrograms($program)
+    private function getProgramsSameBlock($program)
     {
         $programs = $this->_em->getRepository($this->_entityName)->findAll();
         $samePrograms = [];
@@ -304,23 +304,36 @@ class ProgramRepository extends \Nella\Doctrine\Repository
         return $samePrograms;
     }
 
-    public function findAllForJson($basicDuration, $user = null, $onlyAssigned = false)
+    public function findAllForJson($basicDuration, $user = null)
     {
-        if ($onlyAssigned == false) {
-            $programs = $this->_em->getRepository($this->_entityName)->findAll();
-        } else {
-            $query = $this->_em->createQuery("SELECT p FROM {$this->_entityName} p WHERE p.block IS NOT NULL");
-            $programs = $query->getResult();
-        }
+        $query = $this->_em->createQuery("SELECT p FROM {$this->_entityName} p WHERE p.block IS NOT NULL");
+        $programs = $query->getResult();
 
         foreach ($programs as $program) {
             $blocks = [];
             if ($user != null) {
-                $blocks = array_merge($this->getSamePrograms($program), $this->getOtherPrograms($program, $basicDuration));
+                $blocks = array_merge($this->getProgramsSameBlock($program), $this->getProgramsInSameTime($program, $basicDuration));
             }
             $program->prepareForJson($user, $basicDuration, $blocks);
         }
-        return $programs;
+
+        $allowedPrograms = array();
+
+        $categories = array();
+        $categories[] = null;
+
+        foreach ($user->roles as $role) {
+            foreach ($role->registerableCategories as $category) {
+                $categories[] = $category;
+            }
+        }
+
+        foreach ($programs as $program) {
+            if (in_array($program->block->category, $categories))
+                $allowedPrograms[] = $program;
+        }
+
+        return $allowedPrograms;
     }
 
     public function saveFromJson($data, $basicBlockDuration)
