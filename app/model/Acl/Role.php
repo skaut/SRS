@@ -422,10 +422,14 @@ class Role extends \SRS\Model\BaseEntity
 //    }
 
 
+    public function countUsersInRole() {
+        return count($this->users);
+    }
+
     public function countVacancies() {
         if ($this->usersLimit == null)
             return null;
-        return $this->usersLimit - count($this->users);
+        return $this->usersLimit - $this->countUsersInRole();
     }
 
     public function addIncompatibleRole($role) {
@@ -469,6 +473,11 @@ class RoleRepository extends \Doctrine\ORM\EntityRepository
         $query = $this->_em->createQuery("SELECT r FROM {$this->_entityName} r WHERE r.registerable=true
               AND (r.registerableFrom <= '{$today}' OR r.registerableFrom IS NULL)
               AND (r.registerableTo >= '{$today}' OR r.registerableTo IS NULL)");
+        return $query->getResult();
+    }
+
+    public function findCapacityVisibleRoles() {
+        $query = $this->_em->createQuery("SELECT r FROM {$this->_entityName} r WHERE r.displayCapacity = 1");
         return $query->getResult();
     }
 

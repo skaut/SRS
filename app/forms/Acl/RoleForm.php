@@ -48,6 +48,8 @@ class RoleForm extends EntityForm
 
         $this->addCheckbox('displayInList', 'Zobrazit v přehledu uživatelů');
 
+        $this->addCheckbox('displayCapacity', 'Zobrazit kapacitu na webu');
+
 //        $this->addCheckbox('displayArrivalDeparture', 'Evidovat příjezd a odjezd');
 
         $this->addCheckbox('pays', 'Platí za účast?');

@@ -25,7 +25,8 @@ use Doctrine\ORM\Mapping as ORM;
  *     "programboxcontent" = "ProgramBoxContent",
  *     "imagecontent" = "ImageContent",
  *     "userboxcontent" = "UserBoxContent",
- *     "blockboxcontent" = "BlockBoxContent"
+ *     "blockboxcontent" = "BlockBoxContent",
+ *     "capacityboxcontent" = "CapacityBoxContent"
  * })
  * @property int $position
  * @property string $area
@@ -48,7 +49,8 @@ abstract class Content extends \SRS\Model\BaseEntity implements IContent
         'News' => 'Aktuality',
         'ProgramBox' => 'Výběr programů',
         'UserBox' => 'Přehled uživatelů',
-        'BlockBox' => 'Program semináře'
+        'BlockBox' => 'Program semináře',
+        'CapacityBox' => 'Kapacita semináře'
     );
 
     public static $AREA_TYPES = array(

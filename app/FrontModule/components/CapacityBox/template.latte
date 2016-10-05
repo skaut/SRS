@@ -1,0 +1,11 @@
+<div class="capacityBox">
+    {if empty($roles)}
+        Žádný role nemají veřejné kapacity.
+    {else}
+        {foreach $roles as $role}
+            <strong>{$role->name}</strong><br>
+            Přihlášeno {$role->countUsersInRole()} {if $role->usersLimit != null}z {$role->usersLimit}{/if}<br><br>
+        {/foreach}
+    {/if}
+</div>
+

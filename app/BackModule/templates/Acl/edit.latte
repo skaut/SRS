@@ -57,6 +57,11 @@
             </tr>
 
             <tr>
+                <td>{label displayCapacity /}</td>
+                <td>{input displayCapacity}</td>
+            </tr>
+
+            <tr>
                 <td>{label pays /}</td>
                 <td>{input pays}</td>
             </tr>
@@ -87,16 +92,14 @@
 
         <script>
             $(function () {
-                $(".datepicker").datepicker({
-
-                });
+                $(".datepicker").datepicker({});
             });
         </script>
     {/block}
 
     {if $role->system}
-    <script>
-        $('#frmroleForm-name').attr('readonly', true);
-    </script>
+        <script>
+            $('#frmroleForm-name').attr('readonly', true);
+        </script>
     {/if}
 {/block}
