@@ -2,11 +2,9 @@
     {if empty($users)}
         Žádný uživatel k zobrazení.
     {else}
-        <ul class="userBoxList">
+        <ul class="no-bullets no-margin">
             {foreach $users as $user}
-                <li class="userBoxItem">
-                    {$user->displayName}
-                </li>
+                <li>{$user->displayName}</li>
             {/foreach}
         </ul>
     {/if}
