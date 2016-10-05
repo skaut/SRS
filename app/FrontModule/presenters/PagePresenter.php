@@ -78,4 +78,9 @@ class PagePresenter extends BasePresenter
         return new \SRS\Components\UserBox();
     }
 
+    public function createComponentBlockBox()
+    {
+        return new \SRS\Components\BlockBox();
+    }
+
 }

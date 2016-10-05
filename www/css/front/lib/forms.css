@@ -126,6 +126,10 @@ form.inline p {
     border-color: #fbc2c4;
 }
 
+.error li {
+    list-style-type: none !important;
+}
+
 .notice {
     background: #fff6bf;
     color: #514721;

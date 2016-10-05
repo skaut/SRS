@@ -195,8 +195,6 @@ class Block extends \SRS\Model\BaseEntity
     {
         $this->category = $category;
     }
-
-
 }
 
 /**
