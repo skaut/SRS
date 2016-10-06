@@ -12,12 +12,12 @@ CMS » Header & Footer
         <ul class="errors" n:if="$form->hasErrors()">
             <li n:foreach="$form->errors as $error">{$error}</li>
         </ul>
-        <table class="table">
+        <table class="table formTable">
             <tr>
                 <td>{label logo /}</td>
                 <td>
                     {ifset $logo}
-                        {if $logo != null}<a target="_blank" href="{$basePath}{$logo}">Aktuální Logo</a>{/if}
+                        {if $logo != null}<a target="_blank" href="{$basePath}{$logo}">Aktuální logo</a>{/if}
                     {/ifset}<br>
                     {input logo}
                 </td>
@@ -27,8 +27,11 @@ CMS » Header & Footer
                 <td>{label footer /}</td>
                 <td>{input footer}</td>
             </tr>
+
+            <tr class="warning">
+                <td colspan="2">{input submit}</td>
+            </tr>
         </table>
-        {input submit}
     </div>
     {/form}
 {/block}

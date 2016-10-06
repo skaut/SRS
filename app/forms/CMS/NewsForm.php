@@ -35,8 +35,8 @@ class NewsForm extends \SRS\Form\EntityForm
 //        $this->addText('valid_from', 'Platné od:');
 //        $this->addText('valid_to', 'Platné do:');
 
-        $this->addSubmit('submit', 'Uložit')->getControlPrototype()->class('btn');
-        $this->addSubmit('submit_continue', 'Uložit a pokračovat v úpravách')->getControlPrototype()->class('btn');
+        $this->addSubmit('submit', 'Uložit')->getControlPrototype()->class('btn btn-primary pull-right');
+        $this->addSubmit('submit_continue', 'Uložit a pokračovat v úpravách')->getControlPrototype()->class('btn space pull-right');
 
         $this->onSuccess[] = callback($this, 'formSubmitted');
         $this->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');

@@ -11,10 +11,24 @@ Aktualita
 {/block}
 
 {block content}
-<h1> {ifset $item}Úprava Aktuality{else}Nová Aktualita{/ifset}</h1>
+<h1> {ifset $item}Úprava aktuality{else}Nová aktualita{/ifset}</h1>
 
 <div class="well newsForm">
-    {widget newsForm}
+    {form newsForm}
+        <table class="table formTable">
+            <tr class="required">
+                <td>{label published/}</td>
+                <td>{input published}</td>
+            </tr>
+            <tr class="required">
+                <td>{label text/}</td>
+                <td>{input text}</td>
+            </tr>
+            <tr class="warning">
+                <td colspan="2">{input submit}{input submit_continue}</td>
+            </tr>
+        </table>
+    {/form}
 </div>
 
 

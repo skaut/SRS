@@ -8,7 +8,7 @@ CMS » Dokumenty
 {block content}
 <h1>Přehled dokumentů</h1>
 <div class="navbar">
-    <a class="btn btn-success" href="{plink document}"><i class="icon-plus-sign"></i>Přidat Dokument</a>
+    <a class="btn btn-success" href="{plink document}"><i class="icon-plus-sign"></i>Přidat dokument</a>
 {*<a class="btn btn-primary" href="#addTag" data-toggle="modal"><i class="icon-plus-sign"></i>Přidat Štítek</a>*}
 </div>
 
@@ -23,12 +23,8 @@ CMS » Dokumenty
             {/foreach}
         </td>
         <td>
-            <a class="btn" href="{plink document $document->id}">
-                Upravit
-            </a>&nbsp; &nbsp;
-            <a class="btn btn-danger confirm" href="{link deleteDocument! $document->id}">
-                Smazat
-            </a>
+            <a class="btn" href="{plink document $document->id}">Upravit</a>
+            <a class="btn btn-danger confirm" href="{link deleteDocument! $document->id}">Smazat</a>
         </td>
     </tr>
     </tbody>

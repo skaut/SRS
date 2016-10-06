@@ -4,7 +4,23 @@
         <h3 id="myModalLabel">Nová stránka</h3>
     </div>
     <div class="modal-body">
-    {widget newPageForm}
+    {form newPageForm}
+        <table class="table formTable">
+            <tr class="required">
+                <td>{label name /}</td>
+                <td>{input name}</td>
+            </tr>
+
+            <tr class="required">
+                <td>{label slug /}</td>
+                <td>{input slug}</td>
+            </tr>
+
+            <tr class="warning">
+                <td colspan="2">{input submit}</td>
+            </tr>
+        </table>
+    {/form}
     </div>
 
     <script type="text/javascript">

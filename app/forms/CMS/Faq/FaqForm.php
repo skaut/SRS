@@ -23,13 +23,13 @@ class FaqForm extends \SRS\Form\EntityForm
         parent::__construct($parent, $name);
 
         $this->addHidden('id');
-        $this->addTextArea('question', 'Otázka:')
+        $this->addTextArea('question', 'Otázka')
             ->addRule(Form::FILLED, 'Zadejte otázku');
-        $this->addTextArea('answer', 'Odpověď:')->getControlPrototype()->class('tinyMCE');
+        $this->addTextArea('answer', 'Odpověď')->getControlPrototype()->class('tinyMCE');
         $this->addCheckbox('public', 'Zveřejnit');
 
-        $this->addSubmit('submit', 'Uložit')->getControlPrototype()->class('btn');
-        $this->addSubmit('submit_continue', 'Uložit a pokračovat v úpravách')->getControlPrototype()->class('btn');
+        $this->addSubmit('submit', 'Uložit')->getControlPrototype()->class('btn btn-primary pull-right');
+        $this->addSubmit('submit_continue', 'Uložit a pokračovat v úpravách')->getControlPrototype()->class('btn space pull-right');
         $this->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
         $this->onSuccess[] = callback($this, 'formSubmitted');
     }

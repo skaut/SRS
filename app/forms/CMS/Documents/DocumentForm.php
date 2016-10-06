@@ -25,16 +25,18 @@ class DocumentForm extends \SRS\Form\EntityForm
         parent::__construct($parent, $name);
 
         $this->addHidden('id');
-        $this->addText('name', 'Jméno:')
+        $this->addText('name', 'Jméno')
             ->addRule(Form::FILLED, 'Zadejte jméno')
             ->getControlPrototype()->class('name');
 
-
-        $this->addMultiselect('tags', 'Tagy:')->setItems($tagChoices)
+        $this->addMultiselect('tags', 'Tagy')->setItems($tagChoices)
             ->addRule(Form::FILLED, 'zadejte alespoň jeden tag');
-        $this->addUpload('file', 'Soubor:');
-        $this->addText('description', 'Popis:');
-        $this->addSubmit('submit', 'Odeslat')->getControlPrototype()->class('btn');
+
+        $this->addUpload('file', 'Soubor');
+
+        $this->addText('description', 'Popis');
+
+        $this->addSubmit('submit', 'Odeslat')->getControlPrototype()->class('btn btn-primary pull-right');
 
         $this['tags']->getControlPrototype()->class('multiselect');
         $this->onSuccess[] = callback($this, 'formSubmitted');
@@ -46,7 +48,6 @@ class DocumentForm extends \SRS\Form\EntityForm
         $docExists = $values['id'] != null;
 
         if (!$docExists && $values['file']->size == 0) {
-            Debugger::dump('ahoj');
             $this->presenter->flashMessage('Je třeba vyplnit soubor', 'error');
         } else {
             if (!$docExists) {

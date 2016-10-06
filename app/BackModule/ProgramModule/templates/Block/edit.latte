@@ -16,9 +16,9 @@
     </ul>
     <div class="well">
         <h1>{ifset $block}Úprava bloku: {$block->name}{else}Nový programový blok{/ifset}</h1>
-        <table class="table">
+        <table class="table formTable">
             {form blockForm}
-                <tr>
+                <tr class="required">
                     <td>{label name /}</td>
                     <td>{input name}</td>
                 </tr>
@@ -28,7 +28,7 @@
                     <td>{input category}</td>
                 </tr>
 
-                <tr>
+                <tr class="required">
                     <td>{label capacity /}</td>
                     <td>{input capacity}</td>
                 </tr>
@@ -43,7 +43,7 @@
                     <td>{input room}</td>
                 </tr>
 
-                <tr>
+                <tr class="required">
                     <td>{label duration /}</td>
                     <td>{input duration}</td>
                 </tr>
@@ -65,7 +65,7 @@
 
 
                 <tr class="warning">
-                    <td colspan="2">{input submit_continue}{input submit}</td>
+                    <td colspan="2">{input submit}{input submit_continue}</td>
                 </tr>
             {/form}
         </table>

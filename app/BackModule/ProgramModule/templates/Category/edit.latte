@@ -11,7 +11,7 @@
     </ul>
     <div class="well">
         <h1>{ifset $category}Úprava kategorie: {$category->name}{else}Nová kategorie{/ifset}</h1>
-        <table class="table">
+        <table class="table formTable">
             {form categoryForm}
                 <tr>
                     <td>{label name /}</td>

@@ -25,11 +25,11 @@ class HeaderFooterForm extends Form
     {
         $this->dbsettings = $dbsettings;
         parent::__construct($parent, $name);
-        $this->addUpload('logo', 'Logo:')
+        $this->addUpload('logo', 'Logo')
             ->addCondition(\Nette\Application\UI\Form::FILLED)
             ->addRule(\Nette\Application\UI\Form::IMAGE, 'Obrázek musí být JPEG, PNG nebo GIF.');
-        $this->addText('footer', 'Patička:')->setDefaultValue($this->dbsettings->get('footer'));
-        $this->addSubmit('submit', 'Uložit')->getControlPrototype()->class('btn');
+        $this->addText('footer', 'Patička')->setDefaultValue($this->dbsettings->get('footer'));
+        $this->addSubmit('submit', 'Uložit')->getControlPrototype()->class('btn btn-primary pull-right');
         $this->onSuccess[] = callback($this, 'formSubmitted');
     }
 

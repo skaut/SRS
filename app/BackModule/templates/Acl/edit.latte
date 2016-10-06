@@ -14,9 +14,9 @@
 {block content}
     <h2>Úprava role {$role->name}</h2>
 
-    <table class="table">
+    <table class="table formTable">
         {form roleForm}
-            <tr>
+            <tr class="required">
                 <td>{label name /}</td>
                 <td>{input name}</td>
             </tr>
@@ -26,17 +26,17 @@
                 <td>{input registerable}</td>
             </tr>
 
-            <tr>
+            <tr class="required">
                 <td>{label registerableFrom /}</td>
                 <td>{input registerableFrom}</td>
             </tr>
 
-            <tr>
+            <tr class="required">
                 <td>{label registerableTo /}</td>
                 <td>{input registerableTo}</td>
             </tr>
 
-            <tr>
+            <tr class="required">
                 <td>{label usersLimit /}</td>
                 <td>{input usersLimit}</td>
             </tr>
