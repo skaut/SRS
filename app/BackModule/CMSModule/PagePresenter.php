@@ -110,12 +110,10 @@ class PagePresenter extends \BackModule\BasePresenter
             $form = $content->addFormItems($form); // pridavame polozky formulare, ktere souvisi s jednotlivymi contenty
             $contentFormContainer = $form[$content->getFormIdentificator()];
             $contentFormContainer->addHidden('delete', 'smazat')->setDefaultValue(0);
-
         }
         if ($area) {
             $form["submit_to_{$area}"]->getControlPrototype()->class('btn btn-inverse');
         }
-
 
         $form->onSuccess[] = callback($this, 'pageFormSubmitted');
 

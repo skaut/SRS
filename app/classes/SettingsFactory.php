@@ -46,6 +46,8 @@ class SettingsFactory
         $settings[] = new \SRS\Model\Settings('account_number', 'Číslo účtu', 'Konfigurace->Číslo účtu');
         $settings[] = new \SRS\Model\Settings('print_location', 'Lokalita', 'Konfigurace->Lokalita');
 
+        $settings[] = new \SRS\Model\Settings('variable_symbol_code', 'Předvolba pro variabilní symbol', '00');
+        $settings[] = new \SRS\Model\Settings('cancel_registration_to_date', 'Odhlašování povoleno do', $today->format('Y-m-d'));
 
         for ($i = 0; $i < $userCustomBooleanCount; $i++) {
             $num = $i+1;
@@ -56,8 +58,6 @@ class SettingsFactory
             $num = $i+1;
             $settings[] = new \SRS\Model\Settings('user_custom_text_'.$i, "Vlastní text přihlášky č.".$num, '');
         }
-
-        $settings[] = new \SRS\Model\Settings('variable_symbol_code', 'Předvolba pro variabilní symbol', '00');
 
         return $settings;
     }

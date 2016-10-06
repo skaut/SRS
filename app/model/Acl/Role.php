@@ -427,7 +427,7 @@ class Role extends \SRS\Model\BaseEntity
     }
 
     public function countVacancies() {
-        if ($this->usersLimit == null)
+        if ($this->usersLimit === null)
             return null;
         return $this->usersLimit - $this->countUsersInRole();
     }

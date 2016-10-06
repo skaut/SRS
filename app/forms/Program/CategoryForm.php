@@ -30,7 +30,8 @@ class CategoryForm extends \SRS\Form\EntityForm
         $roles = $this->em->getRepository('\SRS\Model\Acl\Role')->findRegisterable();
 
         $checkRolesCount = function($field) {
-            $values = $field->getValue();
+            $values = $this->getComponent('registerableRoles')->getRawValue();
+
             if (count($values) == 0)
                 return false;
             return true;
@@ -43,7 +44,8 @@ class CategoryForm extends \SRS\Form\EntityForm
 
         $this->addMultiSelect('registerableRoles', 'Role oprávněné k přihlášení')
             ->setItems(\SRS\Form\EntityForm::getFormChoices($roles, 'id', 'name'))
-            ->addRule($checkRolesCount, 'Vyberte alespoň jednu roli');
+            ->addRule($checkRolesCount, 'Vyberte alespoň jednu roli')
+            ->getControlPrototype()->class('multiselect');
 
 
         $this->addSubmit('submit', 'Uložit')->getControlPrototype()->class('btn btn-primary pull-right');
@@ -57,6 +59,9 @@ class CategoryForm extends \SRS\Form\EntityForm
     {
         $values = $this->getValues();
         $exists = $values['id'] != null;
+
+        $formValuesRegisterableRoles = $this->getComponent('registerableRoles')->getRawValue(); //oklika
+        $values['registerableRoles'] = $formValuesRegisterableRoles;
 
         if (!$exists) {
             $category = new \SRS\Model\Program\Category();

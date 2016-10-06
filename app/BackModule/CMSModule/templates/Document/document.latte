@@ -19,7 +19,7 @@ Dokument
 
         {input id}
 
-        <table class="table">
+        <table class="table formTable">
             <tr class="required">
                 <td>{label name /}</td>
                 <td>{input name}</td>
@@ -30,15 +30,13 @@ Dokument
                 <td>{input tags}</td>
             </tr>
 
-            <tr>
+            <tr class="required">
                 <td>{label file /}</td>
                 <td>
                     {ifset $document}
-                        {if $document->file != null}<a target="_blank" href="{$basePath}{$document->file}">Aktuální
-                            soubor</a>{/if}
+                        {if $document->file != null}<a target="_blank" href="{$basePath}{$document->file}">Aktuální soubor</a><br>{/if}
                     {/ifset}
                     {input file}
-
                 </td>
             </tr>
 
@@ -46,8 +44,11 @@ Dokument
                 <td>{label description /}</td>
                 <td>{input description}</td>
             </tr>
+
+            <tr class="warning">
+                <td colspan="2">{input submit}</td>
+            </tr>
         </table>
-        {input submit}
     </div>
     {/form}
 

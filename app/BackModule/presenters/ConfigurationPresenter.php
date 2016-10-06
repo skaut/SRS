@@ -17,7 +17,7 @@ class ConfigurationPresenter extends BasePresenter
 
     public function renderDefault()
     {
-
+        $this->template->configParameters = $this->context->parameters;
     }
 
     public function renderSkautIS()

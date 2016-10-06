@@ -2,21 +2,139 @@
 
 
 {block content}
-<h2 id="label_conf">Konfigurace</h2>
-    {widget settingsForm}
+    <h2 id="label_conf">Konfigurace</h2>
 
-<h3 id="label_system">Systém</h3>
-<ul>
-    <li><a href="{link clearCache!}">Promazat cache</a></li>
-</ul>
+    {form settingsForm}
+        <a name="group_seminar"></a>
+        <div class="well">
+            <h4>Seminář</h4>
+            <table class="table formTable">
+                <tr class="required">
+                    <td style="width: 50%">{label seminar_name/}</td>
+                    <td style="width: 50%">{input seminar_name}</td>
+                </tr>
+                <tr class="required">
+                    <td>{label seminar_from_date/}</td>
+                    <td>{input seminar_from_date}</td>
+                </tr>
+                <tr class="required">
+                    <td>{label seminar_to_date/}</td>
+                    <td>{input seminar_to_date}</td>
+                </tr>
+                <tr class="required">
+                    <td>{label cancel_registration_to_date/}</td>
+                    <td>{input cancel_registration_to_date}</td>
+                </tr>
+                <tr class="required">
+                    <td>{label seminar_email/}</td>
+                    <td>{input seminar_email}</td>
+                </tr>
+                <tr class="required">
+                    <td>{label variable_symbol_code/}</td>
+                    <td>{input variable_symbol_code}</td>
+                </tr>
+                <tr class="warning">
+                    <td colspan="2">{input submit_seminar}</td>
+                </tr>
+            </table>
+        </div>
 
-<script>
-    $(function () {
-        $(".datepicker").datepicker({
+        <a name="group_program"></a>
+        <div class="well">
+            <h4>Program</h4>
+            <table class="table formTable">
+                <tr>
+                    <td style="width: 50%">{label basic_block_duration/}</td>
+                    <td style="width: 50%">{input basic_block_duration}</td>
+                </tr>
+                <tr>
+                    <td>{label is_allowed_add_block/}</td>
+                    <td>{input is_allowed_add_block}</td>
+                </tr>
+                <tr>
+                    <td>{label is_allowed_modify_schedule/}</td>
+                    <td>{input is_allowed_modify_schedule}</td>
+                </tr>
+                <tr>
+                    <td>{label is_allowed_log_in_programs/}</td>
+                    <td>{input is_allowed_log_in_programs}</td>
+                </tr>
+                <tr class="warning">
+                    <td colspan="2">{input submit_program}</td>
+                </tr>
+            </table>
+        </div>
 
+        <a name="group_print"></a>
+        <div class="well">
+            <h4>Tisk dokladů</h4>
+            <table class="table formTable">
+
+                <tr>
+                    <td style="width: 50%">{label company/}</td>
+                    <td style="width: 50%">{input company}</td>
+                </tr>
+                <tr>
+                    <td>{label ico/}</td>
+                    <td>{input ico}</td>
+                </tr>
+                <tr>
+                    <td>{label accountant/}</td>
+                    <td>{input accountant}</td>
+                </tr>
+                <tr>
+                    <td>{label account_number/}</td>
+                    <td>{input account_number}</td>
+                </tr>
+                <tr>
+                    <td>{label print_location/}</td>
+                    <td>{input print_location}</td>
+                </tr>
+                <tr class="warning">
+                    <td colspan="2">{input submit_print}</td>
+                </tr>
+            </table>
+        </div>
+
+        <a name="group_custom"></a>
+        <div class="well">
+            <h4>Vlastní pole pro přihlášku</h4>
+            <table class="table formTable">
+                {for $i = 0; $i < $configParameters['user_custom_boolean_count']; $i++}
+                    <tr>
+                        <td style="width: 50%">{label user_custom_boolean_$i/}</td>
+                        <td style="width: 50%">{input user_custom_boolean_$i}</td>
+                    </tr>
+
+                {/for}
+
+                {for $i = 0; $i < $configParameters['user_custom_text_count']; $i++}
+                    <tr>
+                        <td style="width: 50%">{label user_custom_text_$i/}</td>
+                        <td style="width: 50%">{input user_custom_text_$i}</td>
+                    </tr>
+                {/for}
+
+                <tr class="warning">
+                    <td colspan="2">{input submit}</td>
+                </tr>
+            </table>
+        </div>
+    {/form}
+
+    <a name="group_system"></a>
+    <div class="well">
+        <h3 id="label_system">Systém</h3>
+        <ul class="no-margin">
+            <li><a href="{link clearCache!}" class="btn btn-danger">Promazat cache</a></li>
+        </ul>
+    </div>
+
+    <script>
+        $(function () {
+            $(".datepicker").datepicker({});
         });
-    });
-</script>
+    </script>
 
-{include '../includes/confirm_dialog.latte'}
+    {include '../includes/confirm_dialog.latte'}
 {/block}

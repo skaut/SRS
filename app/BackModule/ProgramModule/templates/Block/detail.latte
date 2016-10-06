@@ -52,12 +52,12 @@ Program » Blok {$block->name}
             <td>{$program->countEnd($basicBlockDuration)|date:"d.m. H:i:s"}</td>
             <td>{$program->attendees->count()}/{$block->capacity}
             <td>{if $program->mandatory == true}ANO{else}NE{/if}</td>
-            <td><a href="#" data-toggle="modal" data-target="#modal-{$program->id}">přihlášení účastnící</a>
+            <td><a href="#" data-toggle="modal" data-target="#modal-{$program->id}">přihlášení účastníci</a>
 
                 <div id='modal-{$program->id}' class="modal hide fade">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h3>Přihlášení účastnící termín {$program->start|date:"d.m. H:i:s"}
+                        <h3>Přihlášení účastníci termín {$program->start|date:"d.m. H:i:s"}
                             - {$program->countEnd($basicBlockDuration)|date:"d.m. H:i:s"} </h3>
                     </div>
                     <div class="modal-body">
@@ -76,12 +76,12 @@ Program » Blok {$block->name}
             </td>
             <td>
 
-                <a href="#" data-toggle="modal" data-target="#modal-unsigned-{$program->id}">Neřihlášení účastnící</a>
+                <a href="#" data-toggle="modal" data-target="#modal-unsigned-{$program->id}">nepřihlášení účastníci</a>
 
                 <div id='modal-unsigned-{$program->id}' class="modal hide fade">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h3>Nepřihlášení účastnící termín {$program->start|date:"d.m. H:i:s"}
+                        <h3>Nepřihlášení účastníci termín {$program->start|date:"d.m. H:i:s"}
                             - {$program->countEnd($basicBlockDuration)|date:"d.m. H:i:s"} </h3>
                     </div>
                     <div class="modal-body">

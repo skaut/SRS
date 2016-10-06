@@ -127,12 +127,12 @@ class EvidencePresenter extends BasePresenter
 
     protected function createComponentEvidenceEditForm()
     {
-        return new \SRS\Form\Evidence\EvidenceEditForm(null, null, $this->context->parameters, $this->context->database);
+        return new \SRS\Form\Evidence\EvidenceEditForm(null, null, $this->context->parameters, $this->context->database, $this->dbsettings);
     }
 
     protected function createComponentEvidenceEditRolesForm()
     {
-        return new \SRS\Form\Evidence\EvidenceEditRolesForm(null, null, $this->context->parameters, $this->context->database);
+        return new \SRS\Form\Evidence\EvidenceEditRolesForm(null, null, $this->context->database);
     }
 
     protected function createComponentColumnForm()
@@ -152,8 +152,6 @@ class EvidencePresenter extends BasePresenter
             }
         }
         $evidenceColumns->visibility = $visibility;
-
-
     }
 
     public function columnFormSubmitted($form)

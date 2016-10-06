@@ -13,7 +13,7 @@ CMS » Stránky
 <h1>Přehled štítků</h1>
 
 <div class="navbar">
-    <a class="btn btn-success" href="#addTag" data-toggle="modal"><i class="icon-plus-sign"></i>Přidat Štítek</a>
+    <a class="btn btn-success" href="#addTag" data-toggle="modal"><i class="icon-plus-sign"></i>Přidat štítek</a>
 
 </div>
 <table class="table-bordered table-striped">
@@ -24,7 +24,6 @@ CMS » Stránky
             <a class="btn" href="{plink tag $tag->id}">
                 Upravit
             </a>
-            &nbsp;&nbsp;
             <a rel='tooltip'
                title='Smazáním se tento štítek odebere všem příslušným dokumentům. Dokument samotný zůstane zachován.'
                class="btn btn-danger confirm" href="{link deleteTag! $tag->id}">

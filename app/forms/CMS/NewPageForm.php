@@ -25,13 +25,13 @@ class NewPageForm extends UI\Form
     {
         parent::__construct($parent, $name);
 
-        $this->addText('name', 'Jméno stránky:')
+        $this->addText('name', 'Jméno stránky')
             ->addRule(Form::FILLED, 'Zadejte jméno')
             ->getControlPrototype()->class('name');
-        $this->addText('slug', 'Cesta:')
+        $this->addText('slug', 'Cesta')
             ->addRule(Form::FILLED, 'Zadejte slug')
             ->getControlPrototype()->class('slug');
-        $this->addSubmit('submit', 'Vytvořit Stránku')->getControlPrototype()->class('btn');
+        $this->addSubmit('submit', 'Vytvořit stránku')->getControlPrototype()->class('btn btn-primary pull-right');
 
         $this->onSuccess[] = callback($this, 'formSubmitted');
     }

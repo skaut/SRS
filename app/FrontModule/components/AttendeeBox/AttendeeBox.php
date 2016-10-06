@@ -30,7 +30,7 @@ class AttendeeBox extends \Nette\Application\UI\Control
                 $roleFormChoices = array();
                 foreach ($roles as $role) {
                     $vacancies = $role->countVacancies();
-                    if ($vacancies != null)
+                    if ($vacancies !== null)
                         $roleFormChoices[$role->id] = "{$role->name} (volno {$vacancies}/{$role->usersLimit})";
                     else
                         $roleFormChoices[$role->id] = "{$role->name}";

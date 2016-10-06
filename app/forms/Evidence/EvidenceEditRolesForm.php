@@ -17,7 +17,7 @@ use Nette\Application\UI,
  */
 class EvidenceEditRolesForm extends \SRS\Form\EntityForm
 {
-    public function __construct(IContainer $parent = NULL, $name = NULL, $configParams, $database)
+    public function __construct(IContainer $parent = NULL, $name = NULL, $database)
     {
         parent::__construct($parent, $name);
 
@@ -32,12 +32,14 @@ class EvidenceEditRolesForm extends \SRS\Form\EntityForm
         $ids = $this->addHidden('ids');
 
         $checkRolesCapacity = function($field, $args) {
+            $values = $this->getComponent('roles')->getRawValue();
+
             $database = $args[0];
             $ids = explode(",", $args[1]->value);
 
             $usersCount = count($ids);
 
-            foreach ($field->getValue() as $roleId) {
+            foreach ($values as $roleId) {
                 $role = $database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('id' => $roleId));
 
                 if ($role->usersLimit !== null) {
@@ -57,7 +59,7 @@ class EvidenceEditRolesForm extends \SRS\Form\EntityForm
         };
 
         $checkRolesCombination = function($field, $database) {
-            $values = $field->getValue();
+            $values = $this->getComponent('roles')->getRawValue();
 
             foreach ($values as $value) {
                 $role = $database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('id' => $value));
@@ -68,7 +70,7 @@ class EvidenceEditRolesForm extends \SRS\Form\EntityForm
         };
 
         $checkRolesEmpty = function($field) {
-            $values = $field->getValue();
+            $values = $this->getComponent('roles')->getRawValue();
             return count($values) != 0;
         };
 
@@ -76,7 +78,8 @@ class EvidenceEditRolesForm extends \SRS\Form\EntityForm
             ->setAttribute('size', count($rolesGrid))
             ->addRule($checkRolesCapacity, 'Kapacita role byla překročena.', [$database, $ids])
             ->addRule($checkRolesCombination, 'Role "Nepřihlášený" nemůže být kombinována s jinou rolí.', $database)
-            ->addRule($checkRolesEmpty, 'Musí být přidělena alespoň jedna role.', $database);
+            ->addRule($checkRolesEmpty, 'Musí být přidělena alespoň jedna role.', $database)
+            ->getControlPrototype()->class('multiselect');
 
         $this->addSubmit('submit', 'Uložit')->getControlPrototype()->class('btn btn-primary pull-right');
         $this->onSuccess[] = callback($this, 'submitted');
@@ -87,6 +90,9 @@ class EvidenceEditRolesForm extends \SRS\Form\EntityForm
     {
         $values = $this->getValues();
         $ids = explode(",", $values['ids']);
+
+        $formValuesRoles = $this->getComponent('roles')->getRawValue(); //oklika
+        $values['roles'] = $formValuesRoles;
 
         foreach($ids as $id) {
             $user = $this->presenter->context->database->getRepository('\SRS\Model\User')->findOneBy(array('id' => $id));

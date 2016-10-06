@@ -1,7 +1,7 @@
 {extends '../@layout.latte'}
 
 {block head}
-    {widget jsLoader 'lib/angular.min.js', 'evidence/userController.js'}
+    {widget jsLoader 'lib/angular.min.js', 'evidence/userController.js', 'multiselect/init.js'}
 {/block}
 
 {block title}
@@ -25,66 +25,65 @@
     </ul>
     <div class="well">
         <h1>{$dbuser->displayName}</h1>
-        <table class="table">
+        <table class="table formTable">
             {form evidenceEditForm}
-                <tr>
-                    <td>Role</td>
+                <tr class="required">
+                    <td>{label roles/}</td>
                     <td>{input roles}</td>
                 </tr>
 
                 <tr>
-                    <td>Schválený</td>
+                    <td>{label approved/}</td>
                     <td>{input approved}</td>
                 </tr>
 
                 <tr>
-                    <td>Platební metoda</td>
+                    <td>{label paymentMethod/}</td>
                     <td>{input paymentMethod}</td>
                 </tr>
 
                 <tr>
-                    <td>Variabilní symbol</td>
+                    <td>{label variableSymbol/}</td>
                     <td>{input variableSymbol}</td>
                 </tr>
 
-
                 <tr>
-                    <td>Zaplaceno dne</td>
+                    <td>{label paymentDate/}</td>
                     <td>{input paymentDate}</td>
                 </tr>
 
                 <tr>
-                    <td>Příjmový doklad vytištěn dne</td>
+                    <td>{label incomeProofPrintedDate/}</td>
                     <td>{input incomeProofPrintedDate}</td>
                 </tr>
 
                 <tr>
-                    <td>Přítomen</td>
+                    <td>{label attended/}</td>
                     <td>{input attended}</td>
                 </tr>
 
                 {if false && $dbuser->displayArrivalDeparture()}
                     <tr>
-                        <td>Příjezd</td>
+                        <td>{label arrival/}</td>
                         <td>{input arrival}</td>
                     </tr>
 
                     <tr>
-                        <td>Odjezd</td>
+                        <td>{label departure/}</td>
                         <td>{input departure}</td>
                     </tr>
                 {/if}
 
                 {foreach $customFields as $field}
                     <tr>
-                        <td>{$field['name']}</td>
+                        <td>{label $field['property']/}</td>
                         <td>{input $field['property']}</td>
                     </tr>
                 {/foreach}
 
                 {if $user->isInRole("Administrátor") || $user->isInRole("Organizátor")}
                     <tr>
-                        <td>Neveřejné poznámky</td>
+                        <td>{label note/}</td>
                         <td>{input note}</td>
                     </tr>
                 {/if}
