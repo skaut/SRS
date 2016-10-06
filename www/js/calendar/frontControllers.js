@@ -9,7 +9,7 @@ function FrontCalendarCtrl($scope, $http, $q, $timeout) {
     var api_path = basePath + '/api/program/';
     $scope.startup = function () {
         var promise, promisses = [];
-        promise = $http.get(api_path + "./getblocks", {})
+        promise = $http.get(api_path + "getblocks", {})
             .success(function (data, status, headers, config) {
                 $scope.options = data;
             }).error(function (data, status, headers, config) {
@@ -17,7 +17,7 @@ function FrontCalendarCtrl($scope, $http, $q, $timeout) {
             });
         promisses.push(promise);
 
-        promise = $http.get(api_path + "./getprograms?userAttending=1", {})
+        promise = $http.get(api_path + "getprograms?userAttending=1&onlyAssigned=1&userAllowed=1", {})
             .success(function (data, status, headers, config) {
                 $scope.events = data;
             }).error(function (data, status, headers, config) {
