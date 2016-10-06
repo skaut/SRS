@@ -48,6 +48,7 @@ class ProfilePresenter extends BasePresenter
         $this->template->dbuser = $user;
         $this->template->basicBlockDuration = $this->dbsettings->get('basic_block_duration');
         $this->template->variableSymbolCode = $this->dbsettings->get('variable_symbol_code');
+        $this->template->displayCancelRegistration = \DateTime::createFromFormat("Y-m-d", $this->dbsettings->get('cancel_registration_to_date')) >= new \DateTime() ? true : false;
     }
 
     public function handlePrintProof()
@@ -60,6 +61,14 @@ class ProfilePresenter extends BasePresenter
         $printer->printPaymentProofs(array($user));
     }
 
+    public function handleCancelRegistration()
+    {
+        $user = $this->userRepo->find($this->context->user->id);
+        $this->context->database->remove($user);
+        $this->context->database->flush();
+        $this->presenter->user->logout(true);
+        $this->presenter->redirect(':Auth:logout');
+    }
 
     protected function createComponentProfileForm()
     {

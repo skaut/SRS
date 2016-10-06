@@ -32,7 +32,7 @@ class SkautISEventForm extends UI\Form
         $this->addSelect('skautISEvent', 'Vyberte akci ze skautIS')->setItems(\SRS\Form\EntityForm::getFormChoices($this->skautISEvents, 'ID', 'DisplayName'))
             ->addRule(FORM::FILLED, 'Vyberte akci');
 
-        $this->addSubmit('submit_print', 'Propojit se skautIS akcí')->getControlPrototype()->class('btn');
+        $this->addSubmit('submit_print', 'Propojit se skautIS akcí')->getControlPrototype()->class('btn btn-primary pull-right');
         $this->onSuccess[] = callback($this, 'formSubmitted');
 
 

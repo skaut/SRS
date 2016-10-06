@@ -17,7 +17,7 @@ use Nette\Application\UI,
  */
 class EvidenceEditForm extends \SRS\Form\EntityForm
 {
-    public function __construct(IContainer $parent = NULL, $name = NULL, $configParams, $database)
+    public function __construct(IContainer $parent = NULL, $name = NULL, $configParams, $database, $dbsettings)
     {
         parent::__construct($parent, $name);
 
@@ -32,7 +32,7 @@ class EvidenceEditForm extends \SRS\Form\EntityForm
         $this->addHidden('id');
 
         $checkRolesCapacity = function($field, $database) {
-            $values = $field->getValue();
+            $values = $this->getComponent('roles')->getRawValue();
             $user = $database->getRepository('\SRS\Model\User')->findOneBy(array('id' => $this->getForm()->getHttpData()['id']));
 
             foreach ($values as $value) {
@@ -46,7 +46,7 @@ class EvidenceEditForm extends \SRS\Form\EntityForm
         };
 
         $checkRolesCombination = function($field, $database) {
-            $values = $field->getValue();
+            $values = $this->getComponent('roles')->getRawValue();
 
             foreach ($values as $value) {
                 $role = $database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('id' => $value));
@@ -57,7 +57,7 @@ class EvidenceEditForm extends \SRS\Form\EntityForm
         };
 
         $checkRolesEmpty = function($field) {
-            $values = $field->getValue();
+            $values = $this->getComponent('roles')->getRawValue();
             return count($values) != 0;
         };
 
@@ -65,7 +65,8 @@ class EvidenceEditForm extends \SRS\Form\EntityForm
             ->setAttribute('size', count($rolesGrid))
             ->addRule($checkRolesCapacity, 'Kapacita role byla překročena.', $database)
             ->addRule($checkRolesCombination, 'Role "Nepřihlášený" nemůže být kombinována s jinou rolí.', $database)
-            ->addRule($checkRolesEmpty, 'Musí být přidělena alespoň jedna role.', $database);
+            ->addRule($checkRolesEmpty, 'Musí být přidělena alespoň jedna role.', $database)
+            ->getControlPrototype()->class('multiselect');
 
         $this->addCheckbox('approved', 'Schválený');
 
@@ -77,7 +78,7 @@ class EvidenceEditForm extends \SRS\Form\EntityForm
             ->addCondition(FORM::FILLED)
             ->addRule(FORM::INTEGER);
 
-        $this->addText('paymentDate', 'Datum zaplacení')
+        $this->addText('paymentDate', 'Zaplaceno dne')
             ->addCondition(FORM::FILLED)
             ->addRule(FORM::PATTERN, 'Datum zaplacení není ve správném tvaru', \SRS\Helpers::DATE_PATTERN);
 
@@ -87,14 +88,14 @@ class EvidenceEditForm extends \SRS\Form\EntityForm
 
         $CUSTOM_BOOLEAN_COUNT = $configParams['user_custom_boolean_count'];
         for ($i = 0; $i < $CUSTOM_BOOLEAN_COUNT; $i++) {
-            $column = 'user_custom_boolean_' . $i;
+            $column = $dbsettings->get('user_custom_boolean_' . $i);
             $propertyName = 'customBoolean' . $i;
             $this->addCheckbox($propertyName, $column);
         }
 
         $CUSTOM_TEXT_COUNT = $configParams['user_custom_text_count'];
         for ($i = 0; $i < $CUSTOM_TEXT_COUNT; $i++) {
-            $column = 'user_custom_text_' . $i;
+            $column = $dbsettings->get('user_custom_text_' . $i);
             $propertyName = 'customText' . $i;
             $this->addText($propertyName, $column);
         }
@@ -112,6 +113,9 @@ class EvidenceEditForm extends \SRS\Form\EntityForm
     {
         $values = $this->getValues();
         $user = $this->presenter->context->database->getRepository('\SRS\Model\User')->find($values['id']);
+
+        $formValuesRoles = $this->getComponent('roles')->getRawValue(); //oklika
+        $values['roles'] = $formValuesRoles;
 
         $code = $this->presenter->context->database->getRepository('\SRS\Model\Settings')->get('variable_symbol_code');
         if ($user->generateVariableSymbol($code) == $values['variableSymbol'])

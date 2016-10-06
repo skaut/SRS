@@ -58,6 +58,7 @@
 {block content}
 <h1>Můj profil</h1>
 <div id="accordion">
+
     <h2>Osobní údaje</h2>
     {form profileForm}
         <ul class="errors" n:if="$form->hasErrors()">
@@ -142,12 +143,14 @@
 
             <tr>
                 <td colspan="3">
-                    {input submit}
+                    {input sync_with_skautis}
                 </td>
             </tr>
 
         </table>
     {/form}
+
+
     <h2>Doplňující informace</h2>
     {widget aboutForm}
 
@@ -175,35 +178,43 @@
         {/foreach}
     </table>
 
-    <h2>Seminář - účast, platba, tisk potvrzení</h2>
-    <ul>
-        <li>
-            <strong>Účast na semináři: </strong>
-            {if $dbuser->isNotInAnotherRole(array('Nepřihlášený', 'guest'))}
-                Neúčastníte se
-            {else}
-                {foreach $user->roles as $usersRole}{$usersRole}{sep}, {/sep}{/foreach}
-            {/if}
-        </li>
-        <li><strong>Cena semináře: </strong>{$dbuser->countFee()['fee']},-</li>
-        <li>
-            <strong>Variabilní symbol: </strong>
-            {if $dbuser->variableSymbol == null}
-                {$dbuser->generateVariableSymbol($variableSymbolCode)}
-            {else}
-                {$dbuser->variableSymbol}
-            {/if}
-        </li>
-        <li><strong>Poplatek uhrazen dne: </strong>
-            {if $dbuser->paymentDate !== null}
-                {$dbuser->paymentDate->format("j. n. Y")}
-                {if $dbuser->paymentMethod =='bank'}
-                    - <a href="{link printProof!}">Vytisknout potvrzení</a>
-                {/if}
-            {else}
-                poplatek neuhrazen
-            {/if}
-        </li>
-    </ul>
 
+    <h2>Seminář - účast, platba, tisk potvrzení</h2>
+    <div>
+        <ul class="no-bullets no-margin">
+            <li>
+                <strong>Účast na semináři: </strong>
+                {if $dbuser->isNotInAnotherRole(array('Nepřihlášený', 'guest'))}
+                    Neúčastníte se
+                {else}
+                    {foreach $user->roles as $usersRole}{$usersRole}{sep}, {/sep}{/foreach}
+                {/if}
+            </li>
+            <li><strong>Cena semináře: </strong>{$dbuser->countFee()['fee']},-</li>
+            <li>
+                <strong>Variabilní symbol: </strong>
+                {if $dbuser->variableSymbol == null}
+                    {$dbuser->generateVariableSymbol($variableSymbolCode)}
+                {else}
+                    {$dbuser->variableSymbol}
+                {/if}
+            </li>
+            <li><strong>Poplatek uhrazen dne: </strong>
+                {if $dbuser->paymentDate !== null}
+                    {$dbuser->paymentDate->format("j. n. Y")}
+                    {if $dbuser->paymentMethod =='bank'}
+                        - <a href="{link printProof!}">Vytisknout potvrzení</a>
+                    {/if}
+                {else}
+                    poplatek neuhrazen
+                {/if}
+            </li>
+        </ul>
+        {if !$dbuser->isNotInAnotherRole(array('Nepřihlášený', 'guest')) && $displayCancelRegistration}
+            <a href="{link cancelRegistration!}" onclick = "if (! confirm('Opravdu se chcete odhlásit ze semináře?')) return false;">
+                Odhlásit se ze semináře
+            </a>
+        {/if}
+    </div>
 </div>
+

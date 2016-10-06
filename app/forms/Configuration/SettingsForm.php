@@ -79,7 +79,6 @@ class SettingsForm extends UI\Form
         $this->addSubmit('submit_print', 'Uložit')->getControlPrototype()->class('btn btn-primary pull-right');
 
 
-        $this->addGroup('Vlastní pole pro přihlášku');
         $CUSTOM_BOOLEAN_COUNT = $configParameters['user_custom_boolean_count'];
         for ($i = 0; $i < $CUSTOM_BOOLEAN_COUNT; $i++) {
             $column = 'user_custom_boolean_' . $i;

@@ -1,5 +1,9 @@
 {extends '../Programlayout.latte'}
 
+{block head}
+    {widget jsLoader 'multiselect/init.js'}
+{/block}
+
 {block title}
     Program » {ifset $category}{$category->name}{else}Nová kategorie{/ifset}
 {/block}
@@ -10,15 +14,15 @@
         <li class="active">{ifset $category}Upravit: {$category->name}{else}Nová kategorie{/ifset}</li>
     </ul>
     <div class="well">
-        <h1>{ifset $category}Úprava kategorie: {$category->name}{else}Nová kategorie{/ifset}</h1>
+        <h1>{ifset $category}Úprava kategorie {$category->name}{else}Nová kategorie{/ifset}</h1>
         <table class="table formTable">
             {form categoryForm}
-                <tr>
+                <tr class="required">
                     <td>{label name /}</td>
                     <td>{input name}</td>
                 </tr>
 
-                <tr>
+                <tr class="required">
                     <td>{label registerableRoles /}</td>
                     <td>{input registerableRoles}</td>
                 </tr>

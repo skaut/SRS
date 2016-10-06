@@ -35,7 +35,9 @@ class ProfileForm extends EntityForm
     public function submitted()
     {
         $values = $this->getValues();
+
         $user = $this->em->getRepository('\SRS\Model\User')->find($values['id']);
+
         $user->setProperties($values, $this->presenter->context->database);
         $user->displayName = "{$user->lastName} {$user->firstName}";
         if ($user->nickName != '') $user->displayName .= " ({$user->nickName})";
@@ -50,16 +52,13 @@ class ProfileForm extends EntityForm
         }
         $this->presenter->flashMessage('Data aktualizována', 'success');
         $this->presenter->redirect('this');
-
-
     }
 
     protected function configure()
     {
         $this->setFields();
-        $this->addSubmit('submit', 'Aktualizovat data a sesynchronizovat se skautIS');
+        $this->addSubmit('sync_with_skautis', 'Aktualizovat data a sesynchronizovat se skautIS');
     }
-
 
     protected function setFields()
     {
