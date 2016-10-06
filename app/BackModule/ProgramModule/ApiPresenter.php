@@ -42,19 +42,18 @@ class ApiPresenter extends \BackModule\BasePresenter
      * @param bool $userAttending chceme Informace o tom, zda se prihlaseny uzivatel ucastni programu?
      * @throws \Nette\Security\AuthenticationException
      */
-    public function actionGetPrograms($userAttending = false)
+    public function actionGetPrograms($userAttending = false, $onlyAssigned = false, $userAllowed = false)
     {
-        if (!$this->context->user->isLoggedIn()) {
-            throw new \Nette\Security\AuthenticationException('Uživatel musí být přihlášen');
-        }
-
-        if ($userAttending == true) {
+        if ($userAttending || $userAllowed) {
+            if (!$this->context->user->isLoggedIn()) {
+                throw new \Nette\Security\AuthenticationException('Uživatel musí být přihlášen');
+            }
             $user = $this->context->database->getRepository('\SRS\Model\User')->find($this->context->user->id);
         } else {
             $user = null;
         }
 
-        $programs = $this->programRepo->findAllForJson($this->basicBlockDuration, $user);
+        $programs = $this->programRepo->findAllForJson($this->basicBlockDuration, $user, $onlyAssigned, $userAllowed);
         $serializer = \JMS\Serializer\SerializerBuilder::create()->build();
         $json = $serializer->serialize($programs, 'json');
         $response = new \Nette\Application\Responses\TextResponse($json);
