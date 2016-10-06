@@ -304,10 +304,14 @@ class ProgramRepository extends \Nella\Doctrine\Repository
         return $samePrograms;
     }
 
-    public function findAllForJson($basicDuration, $user = null)
+    public function findAllForJson($basicDuration, $user = null, $onlyAssigned = false, $userAllowed = false)
     {
-        $query = $this->_em->createQuery("SELECT p FROM {$this->_entityName} p WHERE p.block IS NOT NULL");
-        $programs = $query->getResult();
+        if ($onlyAssigned == false) {
+            $programs = $this->_em->getRepository($this->_entityName)->findAll();
+        } else {
+            $query = $this->_em->createQuery("SELECT p FROM {$this->_entityName} p WHERE p.block IS NOT NULL");
+            $programs = $query->getResult();
+        }
 
         foreach ($programs as $program) {
             $blocks = [];
@@ -317,23 +321,27 @@ class ProgramRepository extends \Nella\Doctrine\Repository
             $program->prepareForJson($user, $basicDuration, $blocks);
         }
 
-        $allowedPrograms = array();
+        if ($userAllowed) {
+            $allowedPrograms = array();
 
-        $categories = array();
-        $categories[] = null;
+            $categories = array();
+            $categories[] = null;
 
-        foreach ($user->roles as $role) {
-            foreach ($role->registerableCategories as $category) {
-                $categories[] = $category;
+            foreach ($user->roles as $role) {
+                foreach ($role->registerableCategories as $category) {
+                    $categories[] = $category;
+                }
             }
+
+            foreach ($programs as $program) {
+                if (in_array($program->block->category, $categories))
+                    $allowedPrograms[] = $program;
+            }
+
+            return $allowedPrograms;
         }
 
-        foreach ($programs as $program) {
-            if (in_array($program->block->category, $categories))
-                $allowedPrograms[] = $program;
-        }
-
-        return $allowedPrograms;
+        return $programs;
     }
 
     public function saveFromJson($data, $basicBlockDuration)
