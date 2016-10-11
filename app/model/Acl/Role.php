@@ -451,6 +451,15 @@ class Role extends \SRS\Model\BaseEntity
             $this->removeIncompatibleRole($role);
         }
     }
+
+    public function isRegisterableNow() {
+        $today = new \DateTime(date("Y-m-d"));
+
+        if ($this->registerable && ($this->registerableFrom == null || $this->registerableFrom <= $today) &&
+            ($this->registerableTo == null || $this->registerableTo >= $today))
+            return true;
+        return false;
+    }
 }
 
 /**

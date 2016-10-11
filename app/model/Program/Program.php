@@ -304,7 +304,7 @@ class ProgramRepository extends \Nella\Doctrine\Repository
         return $samePrograms;
     }
 
-    public function findAllForJson($basicDuration, $user = null, $onlyAssigned = false, $userAllowed = false)
+    public function findAllForJson($basicDuration, $user = null, $dbuser = null, $onlyAssigned = false, $userAllowed = false)
     {
         if ($onlyAssigned == false) {
             $programs = $this->_em->getRepository($this->_entityName)->findAll();
@@ -315,10 +315,10 @@ class ProgramRepository extends \Nella\Doctrine\Repository
 
         foreach ($programs as $program) {
             $blocks = [];
-            if ($user != null) {
+            if ($dbuser != null) {
                 $blocks = array_merge($this->getProgramsSameBlock($program), $this->getProgramsInSameTime($program, $basicDuration));
             }
-            $program->prepareForJson($user, $basicDuration, $blocks);
+            $program->prepareForJson($dbuser, $basicDuration, $blocks);
         }
 
         if ($userAllowed) {
@@ -327,8 +327,12 @@ class ProgramRepository extends \Nella\Doctrine\Repository
             $categories = array();
             $categories[] = null;
 
-            foreach ($user->roles as $role) {
-                foreach ($role->registerableCategories as $category) {
+            $roles = $user->getIdentity()->getRoles();
+
+            foreach ($roles as $role) {
+                $dbrole = $this->_em->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('name' => $role));
+
+                foreach ($dbrole->registerableCategories as $category) {
                     $categories[] = $category;
                 }
             }

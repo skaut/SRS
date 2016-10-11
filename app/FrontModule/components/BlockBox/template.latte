@@ -3,25 +3,43 @@
         <h3>Kategorie</h3>
 
         {if $uncategorized > 0}
-            <h4>Nazařazené</h4>
-            <ul>
+            <a id="cat_unc" href="#"><h4>Nazařazené</h4></a>
+            <ul id="ul_cat_unc" {if $selectedCategoryId != "unc"}style="display:none"{/if}>
                 {foreach $blocks as $block}
                     {if $block->category == null}
                         <li><a href="?blockId={$block->id}">{$block->name}</a></li>
                     {/if}
                 {/foreach}
             </ul>
+
+            <script>
+                $(document).ready(function(){
+                    $("#cat_unc").click(function(){
+                        $("#ul_cat_unc").slideToggle('fast');
+                        return false;
+                    });
+                });
+            </script>
         {/if}
 
         {foreach $categories as $category}
-            <h4>{$category->name}</h4>
-            <ul>
+            <a id="cat_{$category->id}" href="#"><h4>{$category->name}</h4></a>
+            <ul id="ul_cat_{$category->id}" {if $selectedCategoryId != $category->id}style="display:none"{/if}>
                 {foreach $blocks as $block}
                     {if $block->category != null && $block->category->id == $category->id}
                         <li><a href="?blockId={$block->id}">{$block->name}</a></li>
                     {/if}
                 {/foreach}
             </ul>
+
+            <script>
+                $(document).ready(function(){
+                    $("#cat_{$category->id}").click(function(){
+                        $("#ul_cat_{$category->id}").slideToggle('fast');
+                        return false;
+                    });
+                });
+            </script>
         {/foreach}
     </div>
 
