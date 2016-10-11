@@ -85,17 +85,21 @@ class AttendeeForm extends ProfileForm
             return true;
         };
 
-        $checkRolesCombination = function($field, $database) {
+        $checkRolesCombination = function($field, $args) {
+            $database = $args[0];
+            $role = $args[1];
+
             $values = $this->getComponent('roles')->getRawValue();
 
-            foreach ($values as $value1) {
-                $role1 = $database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('id' => $value1));
-                foreach ($values as $value2) {
-                    $role2 = $database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('id' => $value2));
-                    if (in_array($role1, $role2->incompatibleRoles->getValues()))
-                        return false;
-                }
+            if (!in_array($role->id, $values))
+                return true;
+
+            foreach ($values as $value) {
+                $testRole = $database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('id' => $value));
+                if ($role != $testRole && in_array($testRole, $role->incompatibleRoles->getValues()))
+                    return false;
             }
+
             return true;
         };
 
@@ -104,12 +108,28 @@ class AttendeeForm extends ProfileForm
             return count($values) != 0;
         };
 
-        $this->addMultiSelect('roles', 'Přihlásit jako')
+        $rolesSelect = $this->addMultiSelect('roles', 'Přihlásit jako')
             ->addRule($checkRolesCapacity, 'Všechna místa v některé roli jsou obsazena.', $this->database)
-            ->addRule($checkRolesCombination, 'Některé role není možné kombinovat.', $this->database)
-            ->addRule($checkRolesEmpty, 'Musí být vybrána alespoň jedna role.', $this->database)
-            ->getControlPrototype()->class('multiselect');
+            ->addRule($checkRolesEmpty, 'Musí být vybrána alespoň jedna role.', $this->database);
 
+        $roles = $this->database->getRepository('\SRS\Model\Acl\Role')->findRegisterableNow();
+
+        foreach($roles as $role) {
+            $incompatibleRoles = $role->incompatibleRoles;
+            $incompatibleRolesSize = count($incompatibleRoles);
+
+            if ($incompatibleRolesSize > 0) {
+                $message = $role->name;
+
+                foreach ($incompatibleRoles as $incompatibleRole) {
+                    if ($incompatibleRole->isRegisterableNow())
+                        $message .= ", " . $incompatibleRole->name;
+                }
+                $rolesSelect->addRule($checkRolesCombination, 'Není možné kombinovat role: ' . $message . '.', [$this->database, $role]);
+            }
+        }
+
+        $rolesSelect->getControlPrototype()->class('multiselect');
 
         $this->addCheckbox('agreement', 'Souhlasím, že uvedené údaje budou poskytnuty lektorům pro účely semináře')
             ->addRule(Form::FILLED, 'Musíte souhlasit s poskytnutím údajů');
