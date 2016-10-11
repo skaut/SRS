@@ -19,8 +19,17 @@ class BlockBox extends \Nette\Application\UI\Control
         $this->template->basicBlockDuration = $this->presenter->dbsettings->get('basic_block_duration');
 
         $blockId = $this->presenter->getParameter('blockId');
-        if ($blockId != null)
-            $this->template->selectedBlock = $this->presenter->context->database->getRepository('\SRS\Model\Program\Block')->find($blockId);
+        if ($blockId != null) {
+            $selectedBlock = $this->presenter->context->database->getRepository('\SRS\Model\Program\Block')->find($blockId);
+            $this->template->selectedBlock = $selectedBlock;
+            if ($selectedBlock->category != null)
+                $this->template->selectedCategoryId = $selectedBlock->category->id;
+            else
+                $this->template->selectedCategoryId = "unc";
+        }
+        else {
+            $this->template->selectedCategoryId = null;
+        }
 
         $template->render();
     }
