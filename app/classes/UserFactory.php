@@ -50,7 +50,6 @@ class UserFactory
      */
     public static function updateSkautISPerson($SRSUser, $skautISPerson)
     {
-
         $skautISPerson->FirstName = $SRSUser->firstName;
         $skautISPerson->LastName = $SRSUser->lastName;
         $skautISPerson->NickName = $SRSUser->NickName;
@@ -66,7 +65,6 @@ class UserFactory
         $birthdate .= 'T00:00:00';
         $skautISPerson->Birthday = $birthdate;
         return $skautISPerson;
-
     }
 
     /**
@@ -77,7 +75,6 @@ class UserFactory
      */
     public static function createRandom($skautISUserId, $skautISPersonId, $roles)
     {
-
         $sex_choices = array('male', 'female');
         $approved_choices = array(true, false);
 
@@ -105,5 +102,4 @@ class UserFactory
 
         return $user;
     }
-
 }

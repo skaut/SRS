@@ -48,12 +48,14 @@ class ApiPresenter extends \BackModule\BasePresenter
             if (!$this->context->user->isLoggedIn()) {
                 throw new \Nette\Security\AuthenticationException('Uživatel musí být přihlášen');
             }
-            $user = $this->context->database->getRepository('\SRS\Model\User')->find($this->context->user->id);
+            $dbuser = $this->context->database->getRepository('\SRS\Model\User')->find($this->context->user->id);
+            $user = $this->context->user;
         } else {
+            $dbuser = null;
             $user = null;
         }
 
-        $programs = $this->programRepo->findAllForJson($this->basicBlockDuration, $user, $onlyAssigned, $userAllowed);
+        $programs = $this->programRepo->findAllForJson($this->basicBlockDuration, $user, $dbuser, $onlyAssigned, $userAllowed);
         $serializer = \JMS\Serializer\SerializerBuilder::create()->build();
         $json = $serializer->serialize($programs, 'json');
         $response = new \Nette\Application\Responses\TextResponse($json);
