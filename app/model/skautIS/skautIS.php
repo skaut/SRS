@@ -194,8 +194,12 @@ class skautIS extends \Nette\Object
     {
         $person->ID_Login = $token;
 
-        $this->getOrganizationUnitService()->PersonUpdateBasic(array('personUpdateBasicInput' => $person));
-        $this->getOrganizationUnitService()->PersonUpdateAddress(array('personUpdateAddressInput' => $person));
+        $personBasic = array_intersect_key((array)$person, array_flip(array(
+            "ID_Login", "ID", "ID_Sex", "Birthday", "FirstName", "LastName", "NickName", "City", "Postcode", "Street"
+        )));
+
+        $this->getOrganizationUnitService()->PersonUpdateBasic(array('personUpdateBasicInput' => $personBasic));
+        //$this->getOrganizationUnitService()->PersonUpdateAddress(array('personUpdateAddressInput' => $person));
     }
 
     public function getEvents($token)
