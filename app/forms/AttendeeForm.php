@@ -138,6 +138,17 @@ class AttendeeForm extends ProfileForm
 
         $rolesSelect->getControlPrototype()->class('multiselect');
 
+        $this->addText('arrival', 'Příjezd')
+            ->setAttribute('class', 'datetimepicker')
+            ->addCondition(FORM::FILLED)
+            ->addRule(FORM::PATTERN, 'Datum a čas příjezdu není ve správném tvaru', \SRS\Helpers::DATETIME_PATTERN);
+
+        $this->addText('departure', 'Odjezd')
+            ->setAttribute('class', 'datetimepicker')
+            ->addCondition(FORM::FILLED)
+            ->addRule(FORM::PATTERN, 'Datum a čas odjezdu není ve správném tvaru', \SRS\Helpers::DATETIME_PATTERN);
+
+
         $this->addCheckbox('agreement', 'Souhlasím, že uvedené údaje budou poskytnuty lektorům pro účely semináře')
             ->addRule(Form::FILLED, 'Musíte souhlasit s poskytnutím údajů');
 

@@ -79,7 +79,7 @@ class ProfilePresenter extends BasePresenter
 
     protected function createComponentAboutForm()
     {
-        $form = new \SRS\Form\Evidence\AboutForm();
+        $form = new \SRS\Form\Evidence\AboutForm(null, null, $this->userRepo->find($this->context->user->id));
         return $form;
     }
 

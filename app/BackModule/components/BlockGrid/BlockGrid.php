@@ -110,7 +110,7 @@ class BlockGrid extends Grid
 
 
         $this->addButton("edit", "Upravit")
-            ->setClass("btn btn-warning")
+            ->setClass("btn")
             ->setText('Upravit')
             ->setLink(function ($row) use ($presenter) {
                 return $presenter->link("edit", $row['id']);
