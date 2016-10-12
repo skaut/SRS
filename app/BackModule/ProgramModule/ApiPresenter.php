@@ -128,12 +128,12 @@ class ApiPresenter extends \BackModule\BasePresenter
         $datediff = strtotime($toDate) - strtotime($fromDate);
         $seminarDuration = (int)floor($datediff / (60 * 60 * 24)) + 1;
         //\Nette\Diagnostics\Debugger::dump($seminarStartDay);
-        $datePieces = explode('-', $fromDate);
+        $datePieces = explode('.', $fromDate);
         $calConfig['seminar_duration'] = $seminarDuration;
         $calConfig['seminar_start_day'] = $seminarStartDay;
-        $calConfig['year'] = $datePieces[0];
+        $calConfig['year'] = $datePieces[2];
         $calConfig['month'] = $datePieces[1] - 1; //fullcalendar je zerobased
-        $calConfig['date'] = $datePieces[2];
+        $calConfig['date'] = $datePieces[0];
         $calConfig['basic_block_duration'] = $this->dbsettings->get('basic_block_duration');
         if ((bool)$this->dbsettings->get('is_allowed_modify_schedule') && $this->user->isAllowed($this->resource, Permission::MANAGE_HARMONOGRAM)) {
             $calConfig['is_allowed_modify_schedule'] = true;

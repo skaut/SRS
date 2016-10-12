@@ -132,11 +132,11 @@ class Role extends \SRS\Model\BaseEntity
      */
     protected $displayCapacity;
 
-//    /**
-//     * @var boolean
-//     * @ORM\Column(type="boolean", nullable=true)
-//     */
-//    protected $displayArrivalDeparture;
+    /**
+     * @var boolean
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    protected $displayArrivalDeparture;
 
 
     /**
@@ -424,21 +424,21 @@ class Role extends \SRS\Model\BaseEntity
     }
 
 
-//    /**
-//     * @return boolean
-//     */
-//    public function isDisplayArrivalDeparture()
-//    {
-//        return $this->displayArrivalDeparture;
-//    }
-//
-//    /**
-//     * @param boolean $displayArrivalDeparture
-//     */
-//    public function setDisplayArrivalDeparture($displayArrivalDeparture)
-//    {
-//        $this->displayArrivalDeparture = $displayArrivalDeparture;
-//    }
+    /**
+     * @return boolean
+     */
+    public function isDisplayArrivalDeparture()
+    {
+        return $this->displayArrivalDeparture;
+    }
+
+    /**
+     * @param boolean $displayArrivalDeparture
+     */
+    public function setDisplayArrivalDeparture($displayArrivalDeparture)
+    {
+        $this->displayArrivalDeparture = $displayArrivalDeparture;
+    }
 
 
     public function countUsersInRole() {
@@ -506,6 +506,11 @@ class RoleRepository extends \Doctrine\ORM\EntityRepository
 
     public function findCapacityVisibleRoles() {
         $query = $this->_em->createQuery("SELECT r FROM {$this->_entityName} r WHERE r.displayCapacity = 1");
+        return $query->getResult();
+    }
+
+    public function findArrivalDepartureVisibleRoles() {
+        $query = $this->_em->createQuery("SELECT r FROM {$this->_entityName} r WHERE r.displayArrivalDeparture = 1");
         return $query->getResult();
     }
 

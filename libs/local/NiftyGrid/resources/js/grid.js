@@ -124,7 +124,7 @@ $(function(){
             dayNamesShort: ['ne', 'po', 'út', 'st', 'čt', 'pá', 'so'],
             dayNamesMin: ['ne','po','út','st','čt','pá','so'],
             weekHeader: 'Týd',
-            dateFormat: 'yy-mm-dd',
+            dateFormat: 'dd.mm.yy',
             constrainInput: false,
             firstDay: 1,
             isRTL: false,
@@ -134,7 +134,7 @@ $(function(){
 
         $(".grid-datepicker").each(function(){
             if(($(this).val() != "")){
-                var date = $.datepicker.formatDate('yy-mm-dd', new Date($(this).val()));
+                var date = $.datepicker.formatDate('dd.mm.yy', new Date($(this).val()));
             }
             $(this).datepicker();
             $(this).datepicker({ constrainInput: false});
