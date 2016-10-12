@@ -33,7 +33,7 @@ class NewRoleForm extends UI\Form
         $this->addText('name', 'Jméno role')
             ->addRule(Form::FILLED, 'Zadejte jméno');
 
-        $this->addSelect('parent', 'Založit roli na', $roles)
+        $this->addSelect('parent', 'Vychází z role', $roles)
             ->setPrompt("žádný")
             ->getControlPrototype()
             ->title('Tato informace se použije pouze pro nastavení počátečních práv pro tuto roli.');
@@ -59,13 +59,32 @@ class NewRoleForm extends UI\Form
             $newRole->system = false;
 
             if ($parentRole != null) {
-                foreach ($parentRole->permissions as $perm) {
-                    $newRole->permissions->add($perm);
+                foreach ($parentRole->permissions as $permission) {
+                    $newRole->permissions->add($permission);
                 }
-            }
 
-            $roleRegistered = $this->presenter->context->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('name' => 'Nepřihlášený'));
-            $newRole->pages = $roleRegistered->pages;
+                foreach ($parentRole->incompatibleRoles as $incompatibleRole) {
+                    $newRole->incompatibleRoles->add($incompatibleRole);
+                }
+
+                $newRole->registerableCategories = $parentRole->registerableCategories;
+                $newRole->pages = $parentRole->pages;
+
+                $newRole->pays = $parentRole->pays;
+                $newRole->fee = $parentRole->fee;
+                $newRole->usersLimit = $parentRole->usersLimit;
+                $newRole->displayCapacity = $parentRole->displayCapacity;
+                $newRole->displayInList = $parentRole->displayInList;
+                $newRole->approvedAfterRegistration = $parentRole->approvedAfterRegistration;
+                $newRole->syncedWithSkautIS = $parentRole->syncedWithSkautIS;
+                $newRole->registerable = $parentRole->registerable;
+                $newRole->registerableFrom = $parentRole->registerableFrom;
+                $newRole->registerableTo = $parentRole->registerableTo;
+            }
+            else {
+                $roleRegistered = $this->presenter->context->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('name' => 'Nepřihlášený'));
+                $newRole->pages = $roleRegistered->pages;
+            }
 
             $this->presenter->context->database->persist($newRole);
             $this->presenter->context->database->flush();

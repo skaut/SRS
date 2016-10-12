@@ -157,7 +157,7 @@ class Role extends \SRS\Model\BaseEntity
      *      joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="incompatible_role_id", referencedColumnName="id")}
      *      )
-     * @var mixed
+     * @var \Doctrine\Common\Collections\ArrayCollection
      */
     protected $incompatibleRoles;
 
@@ -175,6 +175,9 @@ class Role extends \SRS\Model\BaseEntity
         $this->name = $name;
         $this->users = new \Doctrine\Common\Collections\ArrayCollection();
         $this->permissions = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->pages = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->registerableCategories = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->incompatibleRoles = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
 
@@ -296,16 +299,13 @@ class Role extends \SRS\Model\BaseEntity
      */
     public function setPages($pages)
     {
-        if (!$this->pages == null) {
-            foreach ($this->pages as $page) {
-                if (!$pages->contains($page))
-                    $page->roles->removeElement($this);
-            }
+        foreach ($this->pages as $page) {
+            if (!$pages->contains($page))
+                $page->roles->removeElement($this);
         }
         foreach ($pages as $page) {
-            if (!$page->roles->contains($this)) {
+            if (!$page->roles->contains($this))
                 $page->roles->add($this);
-            }
         }
         $this->pages = $pages;
     }
@@ -412,6 +412,14 @@ class Role extends \SRS\Model\BaseEntity
      */
     public function setRegisterableCategories($registerableCategories)
     {
+        foreach ($this->registerableCategories as $registerableCategory) {
+            if (!$registerableCategories->contains($registerableCategory))
+                $registerableCategory->registerableRoles->removeElement($this);
+        }
+        foreach ($registerableCategories as $registerableCategory) {
+            if (!$registerableCategory->registerableRoles->contains($this))
+                $registerableCategory->registerableRoles->add($this);
+        }
         $this->registerableCategories = $registerableCategories;
     }
 
