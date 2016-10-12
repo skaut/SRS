@@ -1018,14 +1018,6 @@ class User extends BaseEntity
         return false;
     }
 
-    public function isNotInAnotherRole($roleNames) {
-        foreach ($this->roles as $role) {
-            if (!in_array($role->name, $roleNames))
-                return false;
-        }
-        return true;
-    }
-
     public function countFee() {
         $fee = 0;
 

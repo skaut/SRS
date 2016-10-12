@@ -184,7 +184,7 @@
         <ul class="no-bullets no-margin">
             <li>
                 <strong>Účast na semináři: </strong>
-                {if $dbuser->isNotInAnotherRole(array('Nepřihlášený', 'guest'))}
+                {if !$dbuser->isInRole('Nepřihlášený')}
                     Neúčastníte se
                 {else}
                     {foreach $user->roles as $usersRole}{$usersRole}{sep}, {/sep}{/foreach}
@@ -199,7 +199,8 @@
                     {$dbuser->variableSymbol}
                 {/if}
             </li>
-            <li><strong>Poplatek uhrazen dne: </strong>
+            <li>
+                <strong>Poplatek uhrazen dne: </strong>
                 {if $dbuser->paymentDate !== null}
                     {$dbuser->paymentDate->format("j. n. Y")}
                     {if $dbuser->paymentMethod =='bank'}
@@ -210,7 +211,7 @@
                 {/if}
             </li>
         </ul>
-        {if !$dbuser->isNotInAnotherRole(array('Nepřihlášený', 'guest')) && $displayCancelRegistration}
+        {if !$dbuser->isInRole('Nepřihlášený') && $displayCancelRegistration}
             <a href="{link cancelRegistration!}" onclick = "if (! confirm('Opravdu se chcete odhlásit ze semináře?')) return false;">
                 Odhlásit se ze semináře
             </a>

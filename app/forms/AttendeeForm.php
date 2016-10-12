@@ -119,13 +119,20 @@ class AttendeeForm extends ProfileForm
             $incompatibleRolesSize = count($incompatibleRoles);
 
             if ($incompatibleRolesSize > 0) {
-                $message = $role->name;
+                $messageThis = $role->name;
 
+                $first = true;
+                $messageOthers = "";
                 foreach ($incompatibleRoles as $incompatibleRole) {
-                    if ($incompatibleRole->isRegisterableNow())
-                        $message .= ", " . $incompatibleRole->name;
+                    if ($incompatibleRole->isRegisterableNow()) {
+                        if ($first)
+                            $messageOthers .= $incompatibleRole->name;
+                        else
+                            $messageOthers .= ", " . $incompatibleRole->name;
+                    }
+                    $first = false;
                 }
-                $rolesSelect->addRule($checkRolesCombination, 'Není možné kombinovat role: ' . $message . '.', [$this->database, $role]);
+                $rolesSelect->addRule($checkRolesCombination, 'Není možné kombinovat roli ' . $messageThis . ' s rolemi: ' . $messageOthers . '.', [$this->database, $role]);
             }
         }
 
