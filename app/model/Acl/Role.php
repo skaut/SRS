@@ -63,7 +63,7 @@ class Role extends \SRS\Model\BaseEntity
     protected $permissions;
 
     /**
-     * @ORM\ManyToMany(targetEntity="\SRS\model\CMS\Page", inversedBy="roles", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="\SRS\model\CMS\Page", mappedBy="roles", cascade={"persist"})
      * @var mixed
      */
     protected $pages;
@@ -296,6 +296,17 @@ class Role extends \SRS\Model\BaseEntity
      */
     public function setPages($pages)
     {
+        if (!$this->pages == null) {
+            foreach ($this->pages as $page) {
+                if (!$pages->contains($page))
+                    $page->roles->removeElement($this);
+            }
+        }
+        foreach ($pages as $page) {
+            if (!$page->roles->contains($this)) {
+                $page->roles->add($this);
+            }
+        }
         $this->pages = $pages;
     }
 

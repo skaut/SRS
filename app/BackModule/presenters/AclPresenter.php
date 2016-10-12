@@ -60,11 +60,18 @@ class AclPresenter extends BasePresenter
         }
         $this['roleForm']['permissions']->setItems($permissionFormChoices);
 
+        $pages = $this->context->database->getRepository('\SRS\Model\CMS\Page')->findAll();
+        $pagesFormChoices = array();
+        foreach ($pages as $page) {
+            $pagesFormChoices[$page->id] = $page->name;
+        }
+        $this['roleForm']['pages']->setItems($pagesFormChoices);
+
         $roles = $this->context->database->getRepository('\SRS\Model\Acl\Role')->findRegisterable();
         $roleFormChoices = array();
         foreach ($roles as $rol) {
             if ($rol != $role)
-                $roleFormChoices[$rol->id] = "{$rol->name}";
+                $roleFormChoices[$rol->id] = $rol->name;
         }
         $this['roleForm']['incompatibleRoles']->setItems($roleFormChoices);
 

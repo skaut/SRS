@@ -62,6 +62,8 @@ class RoleForm extends EntityForm
 
         $this->addMultiSelect('permissions', 'Práva')->getControlPrototype()->class('multiselect');
 
+        $this->addMultiSelect('pages', 'Viditelné stránky')->getControlPrototype()->class('multiselect');
+
         $this->addMultiSelect('incompatibleRoles', 'Neregistrovatelná s')->getControlPrototype()->class('multiselect');
 
         $this->addSubmit('submit', 'Uložit')->getControlPrototype()->class('btn btn-primary pull-right space ');
@@ -82,6 +84,9 @@ class RoleForm extends EntityForm
 
         $formValuesPerms = $this->getComponent('permissions')->getRawValue(); //oklika
         $values['permissions'] = $formValuesPerms;
+
+        $formValuesPages = $this->getComponent('pages')->getRawValue(); //oklika
+        $values['pages'] = $formValuesPages;
 
         $formValuesIncompatibleRoles = $this->getComponent('incompatibleRoles')->getRawValue(); //oklika
         $values['incompatibleRoles'] = $formValuesIncompatibleRoles;
@@ -115,7 +120,6 @@ class RoleForm extends EntityForm
             if ($submitName == 'submit_continue') $this->presenter->redirect('this');
             $this->presenter->redirect('Acl:list');
         }
-
     }
 
     public function error()

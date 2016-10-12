@@ -57,11 +57,15 @@ class NewRoleForm extends UI\Form
 
             $newRole = new \SRS\Model\Acl\Role($values['name']);
             $newRole->system = false;
+
             if ($parentRole != null) {
                 foreach ($parentRole->permissions as $perm) {
                     $newRole->permissions->add($perm);
                 }
             }
+
+            $roleRegistered = $this->presenter->context->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('name' => 'Nepřihlášený'));
+            $newRole->pages = $roleRegistered->pages;
 
             $this->presenter->context->database->persist($newRole);
             $this->presenter->context->database->flush();
