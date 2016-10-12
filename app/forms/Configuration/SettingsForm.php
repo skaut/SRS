@@ -99,10 +99,10 @@ class SettingsForm extends UI\Form
     {
         $values = $this->getValues();
 
-        if (\DateTime::createFromFormat("Y-m-d", $values['seminar_to_date']) < \DateTime::createFromFormat("Y-m-d", $values['seminar_from_date'])) {
+        if (\DateTime::createFromFormat("d.m.Y", $values['seminar_to_date']) < \DateTime::createFromFormat("d.m.Y", $values['seminar_from_date'])) {
             $this->presenter->flashMessage('Datum konce semináře nemůže být menší než začátku', 'error');
         }
-        else if (\DateTime::createFromFormat("Y-m-d", $values['seminar_from_date']) < \DateTime::createFromFormat("Y-m-d", $values['cancel_registration_to_date'])) {
+        else if (\DateTime::createFromFormat("d.m.Y", $values['seminar_from_date']) < \DateTime::createFromFormat("d.m.Y", $values['cancel_registration_to_date'])) {
             $this->presenter->flashMessage('Datum konce odhlašování nemůže být větší než začátku', 'error');
         } else {
             foreach ($values as $key => $value) {

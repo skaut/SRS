@@ -80,6 +80,7 @@ class NewRoleForm extends UI\Form
                 $newRole->registerable = $parentRole->registerable;
                 $newRole->registerableFrom = $parentRole->registerableFrom;
                 $newRole->registerableTo = $parentRole->registerableTo;
+                $newRole->displayArrivalDeparture = $parentRole->displayArrivalDeparture;
             }
             else {
                 $roleRegistered = $this->presenter->context->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('name' => 'Nepřihlášený'));

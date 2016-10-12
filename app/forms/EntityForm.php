@@ -52,10 +52,12 @@ class EntityForm extends UI\Form
             }
 
             if ($value instanceof \DateTime) {
-
-                $value = $value->format('Y-m-d');
-
+                if ($value->format("H:i") == "00:00")
+                    $value = $value->format('d.m.Y');
+                else
+                    $value = $value->format('d.m.Y H:i');
             }
+
             $input->setDefaultValue($value);
         }
     }

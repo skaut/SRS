@@ -8,8 +8,6 @@
 {/block}
 
 {block head}
-    <script src="{$basePath}/js/front/birthdate_picker_cs.js"></script>
-
     <script>
         $(function () {
             var hash = window.location.hash;
@@ -103,7 +101,7 @@
                 <td>{label birthdate /}</td>
                 <td class="local">{input birthdate }</td>
                 <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
-                <td class="skautIS">{$skautISPerson->birthdate}</td>
+                <td class="skautIS">{$skautISPerson->birthdate|date:'d.m.Y'}</td>
             </tr>
 
             {*<tr class="required">*}
@@ -202,7 +200,7 @@
             <li>
                 <strong>Poplatek uhrazen dne: </strong>
                 {if $dbuser->paymentDate !== null}
-                    {$dbuser->paymentDate->format("j. n. Y")}
+                    {$dbuser->paymentDate->format("d.m.Y")}
                     {if $dbuser->paymentMethod =='bank'}
                         - <a href="{link printProof!}">Vytisknout potvrzení</a>
                     {/if}

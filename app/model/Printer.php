@@ -54,7 +54,7 @@ class Printer extends \Nette\Object
         $this->fpdi->Line(135, 54, 175, 54);
         $this->fpdi->Line(135, 64, 175, 64);
 
-        $this->fpdi->Text(133, 41, iconv('UTF-8', 'WINDOWS-1250', $user->paymentDate->format("j. n. Y")));
+        $this->fpdi->Text(133, 41, iconv('UTF-8', 'WINDOWS-1250', $user->paymentDate->format("d.m.Y")));
 
         $this->fpdi->MultiCell(68, 4.5, iconv('UTF-8', 'WINDOWS-1250', $this->dbsettings->get('company')));
         $this->fpdi->Text(35, 71, iconv('UTF-8', 'WINDOWS-1250', $this->dbsettings->get('ico')));
@@ -114,7 +114,7 @@ class Printer extends \Nette\Object
     protected function writeToday()
     {
         $today = new \DateTime('now');
-        return $today->format("d.m. Y");
+        return $today->format("d.m.Y");
     }
 
 

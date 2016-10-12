@@ -12,7 +12,8 @@ namespace SRS;
  */
 class Helpers
 {
-    const DATE_PATTERN = '([0-9]){4}-([0-9]){2}-([0-9]){2}';
+    const DATE_PATTERN = '([0-9]){2}.([0-9]){2}.([0-9]){4}';
+    const DATETIME_PATTERN = '(([0-9]){2}.([0-9]){2}.([0-9]){4} ([0-9]){2}:([0-9]){2})|(([0-9]){2}.([0-9]){2}.([0-9]){4})';
 
 
     public static function renderBoolean($bool)

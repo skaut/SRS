@@ -58,7 +58,7 @@
 
 <tr>
 <th>Datum narození</th>
-<td>{$dbuser->birthdate|date:"j. n. Y"}</td>
+<td>{$dbuser->birthdate|date:"d.m.Y"}</td>
 </tr>
 <tr>
 <th>Věk</th>
@@ -90,7 +90,7 @@
         <td>První přihlášení</td>
         <td>
             {if $dbuser->firstLogin !== null}
-                {$dbuser->firstLogin->format("j. n. Y G:i")}
+                {$dbuser->firstLogin->format("d.m.Y H:i")}
             {/if}
         </td>
     </tr>
@@ -99,7 +99,7 @@
         <td>Poslední přihlášení</td>
         <td>
             {if $dbuser->lastLogin !== null}
-                {$dbuser->lastLogin->format("j. n. Y G:i")}
+                {$dbuser->lastLogin->format("d.m.Y H:i")}
             {/if}
         </td>
     </tr>
@@ -128,7 +128,7 @@
         <td>Zaplaceno dne</td>
         <td>
             {if $dbuser->paymentDate !== null}
-            {$dbuser->paymentDate->format("j. n. Y")}
+            {$dbuser->paymentDate->format("d.m.Y")}
             {/if}
         </td>
     </tr>
@@ -137,7 +137,7 @@
         <td>Příjmový doklad vytištěn dne</td>
         <td>
             {if $dbuser->incomeProofPrintedDate !== null}
-                {$dbuser->incomeProofPrintedDate->format("j. n. Y")}
+                {$dbuser->incomeProofPrintedDate->format("d.m.Y")}
             {/if}
         </td>
     </tr>
@@ -152,7 +152,7 @@
             <td>Příjezd</td>
             <td>
                 {if $dbuser->arrival !== null}
-                    {$dbuser->arrival->format("j. n. Y G:i")}
+                    {$dbuser->arrival->format("d.m.Y H:i")}
                 {/if}
             </td>
         </tr>
@@ -161,7 +161,7 @@
             <td>Odjezd</td>
             <td>
                 {if $dbuser->departure !== null}
-                    {$dbuser->departure->format("j. n. Y G:i")}
+                    {$dbuser->departure->format("d.m.Y H:i")}
                 {/if}
             </td>
         </tr>

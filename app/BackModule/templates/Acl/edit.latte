@@ -62,6 +62,11 @@
             </tr>
 
             <tr>
+                <td>{label displayArrivalDeparture /}</td>
+                <td>{input displayArrivalDeparture}</td>
+            </tr>
+
+            <tr>
                 <td>{label pays /}</td>
                 <td>{input pays}</td>
             </tr>
@@ -94,12 +99,6 @@
 
     {block head}
         {widget jsLoader 'multiselect/init.js'}
-
-        <script>
-            $(function () {
-                $(".datepicker").datepicker({});
-            });
-        </script>
     {/block}
 
     {if $role->system}
