@@ -1,5 +1,15 @@
-<script src="{$basePath}/js/front/birthdate_picker_cs.js"></script>
 <script src="{$basePath}/js/multiselect/init.js"></script>
+
+<script>
+    Nette.validators.SRSFormAttendeeForm_toggleArrivalDeparture = function (elem, arg, value) {
+        var i;
+        for (i = 0; i < value.length; i++) {
+            if (jQuery.inArray(value[i], arg) != -1)
+                return true;
+        }
+        return false;
+    };
+</script>
 
 {if !$user->isLoggedIn()}
     <div class="notice">

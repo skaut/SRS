@@ -509,6 +509,11 @@ class RoleRepository extends \Doctrine\ORM\EntityRepository
         return $query->getResult();
     }
 
+    public function findArrivalDepartureVisibleRoles() {
+        $query = $this->_em->createQuery("SELECT r FROM {$this->_entityName} r WHERE r.displayArrivalDeparture = 1");
+        return $query->getResult();
+    }
+
     public function findApprovedUsersInRole($roleName)
     {
         $query = $this->_em->createQuery("SELECT u FROM \SRS\model\User u JOIN u.roles r WHERE u.approved=true AND r.name='$roleName'");
