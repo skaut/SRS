@@ -3,7 +3,7 @@
         <h3>Kategorie</h3>
 
         {if $uncategorized > 0}
-            <a id="cat_unc" href="#"><h4>Nazařazené</h4></a>
+            <a id="cat_unc" href="#"><h4>nezařazené</h4></a>
             <ul id="ul_cat_unc" {if $selectedCategoryId != "unc"}style="display:none"{/if}>
                 {foreach $blocks as $block}
                     {if $block->category == null}

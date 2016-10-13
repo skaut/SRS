@@ -26,8 +26,8 @@ class SettingsFactory
         $today = new \DateTime('now');
         $tommorow = new \DateTime('now');
         $tommorow->modify('+1 day');
-        $settings[] = new \SRS\Model\Settings('seminar_from_date', 'Začátek semináře', $today->format('Y-m-d'));
-        $settings[] = new \SRS\Model\Settings('seminar_to_date', 'Konec semináře', $tommorow->format('Y-m-d'));
+        $settings[] = new \SRS\Model\Settings('seminar_from_date', 'Začátek semináře', $today->format('d.m.Y'));
+        $settings[] = new \SRS\Model\Settings('seminar_to_date', 'Konec semináře', $tommorow->format('d.m.Y'));
         $settings[] = new \SRS\Model\Settings('basic_block_duration', 'Základní délka trvání jednoho bloku semináře (minuty)', '60');
         $settings[] = new \SRS\Model\Settings('is_allowed_add_block', 'Lze vytvářet programové bloky?', '1');
         $settings[] = new \SRS\Model\Settings('is_allowed_modify_schedule', 'Lze upravovat harmonogram semináře?', '1');
@@ -47,7 +47,7 @@ class SettingsFactory
         $settings[] = new \SRS\Model\Settings('print_location', 'Lokalita', 'Konfigurace->Lokalita');
 
         $settings[] = new \SRS\Model\Settings('variable_symbol_code', 'Předvolba pro variabilní symbol', '00');
-        $settings[] = new \SRS\Model\Settings('cancel_registration_to_date', 'Odhlašování povoleno do', $today->format('Y-m-d'));
+        $settings[] = new \SRS\Model\Settings('cancel_registration_to_date', 'Odhlašování povoleno do', $today->format('d.m.Y'));
 
         for ($i = 0; $i < $userCustomBooleanCount; $i++) {
             $num = $i+1;

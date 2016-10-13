@@ -62,7 +62,7 @@
                     <td>{input attended}</td>
                 </tr>
 
-                {if false && $dbuser->displayArrivalDeparture()}
+                {if $dbuser->displayArrivalDeparture()}
                     <tr>
                         <td>{label arrival/}</td>
                         <td>{input arrival}</td>
@@ -95,11 +95,4 @@
 
         </table>
     </div>
-
-    <script>
-        $(function() {
-            $(".datepicker").datepicker({});
-        });
-    </script>
-
 {/block}

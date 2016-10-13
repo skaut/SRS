@@ -212,17 +212,17 @@ class User extends BaseEntity
      */
     protected $attended = false;
 
-//    /**
-//     * @ORM\Column(type="datetime", nullable=true)
-//     * @var string
-//     */
-//    protected $arrival;
-//
-//    /**
-//     * @ORM\Column(type="datetime", nullable=true)
-//     * @var string
-//     */
-//    protected $departure;
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     * @var string
+     */
+    protected $arrival;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     * @var string
+     */
+    protected $departure;
 
     /**
      * @var string
@@ -900,45 +900,45 @@ class User extends BaseEntity
     {
         $this->variableSymbol = $variableSymbol;
     }
-
-//    /**
-//     * @return \DateTime
-//     */
-//    public function getArrival()
-//    {
-//        return $this->arrival;
-//    }
-//
-//    /**
-//     * @param \DateTime $arrival
-//     */
-//    public function setArrival($arrival)
-//    {
-//        $this->arrival = $arrival;
-//    }
-//
-//    /**
-//     * @return \DateTime
-//     */
-//    public function getDeparture()
-//    {
-//        return $this->departure;
-//    }
-//
-//    /**
-//     * @param \DateTime $departure
-//     */
-//    public function setDeparture($departure)
-//    {
-//        $this->departure = $departure;
-//    }
-
     /**
      * @return string
      */
     public function getNote()
     {
         return $this->note;
+    }
+
+
+    /**
+     * @return \DateTime
+     */
+    public function getArrival()
+    {
+        return $this->arrival;
+    }
+
+    /**
+     * @param \DateTime $arrival
+    */
+    public function setArrival($arrival)
+    {
+        $this->arrival = $arrival;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDeparture()
+    {
+        return $this->departure;
+    }
+
+    /**
+     * @param \DateTime $departure
+     */
+    public function setDeparture($departure)
+    {
+        $this->departure = $departure;
     }
 
     /**
@@ -948,8 +948,6 @@ class User extends BaseEntity
     {
         $this->note = $note;
     }
-
-
 
     /**
      * @param string
@@ -1018,14 +1016,6 @@ class User extends BaseEntity
         return false;
     }
 
-    public function isNotInAnotherRole($roleNames) {
-        foreach ($this->roles as $role) {
-            if (!in_array($role->name, $roleNames))
-                return false;
-        }
-        return true;
-    }
-
     public function countFee() {
         $fee = 0;
 
@@ -1049,13 +1039,13 @@ class User extends BaseEntity
         return $code . $this->birthdate->format("ymd");
     }
 
-//    public function displayArrivalDeparture() {
-//        foreach ($this->roles as $role) {
-//            if ($role->displayArrivalDeparture)
-//                return true;
-//        }
-//        return false;
-//    }
+    public function displayArrivalDeparture() {
+        foreach ($this->roles as $role) {
+            if ($role->displayArrivalDeparture)
+                return true;
+        }
+        return false;
+    }
 }
 
 /**

@@ -6,9 +6,9 @@
     <meta name="robots" content="{$robots}" n:ifset="$robots">
 
     <title>{block title|striptags}{/block} | SRS</title>
-{widget cssLoader 'nette.css', 'bootstrap.css', 'bootstrap-responsive.css', 'bootstrap-notify.css' ,'niftygrid/grid.css', 'jquery-ui/jquery-ui.css', 'back/screen.css', 'ui.multiselect.css'}
+{widget cssLoader 'nette.css', 'bootstrap.css', 'bootstrap-responsive.css', 'bootstrap-notify.css' ,'niftygrid/grid.css', 'jquery-ui/jquery-ui.css', 'back/screen.css', 'ui.multiselect.css', 'jquery.datetimepicker.min.css'}
     <link rel="shortcut icon" href="{$basePath}/favicon.ico">
-{widget jsLoader 'jquery-1.8.2.min.js', 'jquery.scrollTo.min.js', 'jquery.localisation.min.js', 'netteForms.js', 'bootstrap.min.js', 'bootstrap-notify.js', 'jquery-ui.js', 'multiselect/ui.multiselect.js', 'niftygrid/grid.js'}
+{widget jsLoader 'jquery-1.8.2.min.js', 'jquery.scrollTo.min.js', 'jquery.localisation.min.js', 'netteForms.js', 'bootstrap.min.js', 'bootstrap-notify.js', 'jquery-ui.js', 'multiselect/ui.multiselect.js', 'niftygrid/grid.js', 'jquery.datetimepicker.full.min.js', 'main.js'}
 
     <script n:syntax="double">
         var basePath = {{$basePath}}

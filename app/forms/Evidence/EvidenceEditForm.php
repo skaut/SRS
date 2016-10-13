@@ -79,12 +79,25 @@ class EvidenceEditForm extends \SRS\Form\EntityForm
             ->addRule(FORM::INTEGER);
 
         $this->addText('paymentDate', 'Zaplaceno dne')
+            ->getControlPrototype()->class('datepicker')
             ->addCondition(FORM::FILLED)
             ->addRule(FORM::PATTERN, 'Datum zaplacení není ve správném tvaru', \SRS\Helpers::DATE_PATTERN);
 
         $this->addText('incomeProofPrintedDate', 'Příjmový doklad vytištěn dne')
+            ->getControlPrototype()->class('datepicker')
             ->addCondition(FORM::FILLED)
             ->addRule(FORM::PATTERN, 'Datum vytištění příjmového dokladu není ve správném tvaru', \SRS\Helpers::DATE_PATTERN);
+
+        $this->addText('arrival', 'Příjezd')
+            ->setAttribute('class', 'datetimepicker')
+            ->addCondition(FORM::FILLED)
+            ->addRule(FORM::PATTERN, 'Datum a čas příjezdu není ve správném tvaru', \SRS\Helpers::DATETIME_PATTERN);
+
+        $this->addText('departure', 'Odjezd')
+            ->setAttribute('class', 'datetimepicker')
+            ->addCondition(FORM::FILLED)
+            ->addRule(FORM::PATTERN, 'Datum a čas odjezdu není ve správném tvaru', \SRS\Helpers::DATETIME_PATTERN);
+
 
         $CUSTOM_BOOLEAN_COUNT = $configParams['user_custom_boolean_count'];
         for ($i = 0; $i < $CUSTOM_BOOLEAN_COUNT; $i++) {
@@ -105,8 +118,6 @@ class EvidenceEditForm extends \SRS\Form\EntityForm
         $this->addSubmit('submit', 'Uložit')->getControlPrototype()->class('btn btn-primary pull-right');
         $this->onSuccess[] = callback($this, 'submitted');
         $this->onError[] = callback($this, 'error');
-        $this['paymentDate']->getControlPrototype()->class('datepicker');
-        $this['incomeProofPrintedDate']->getControlPrototype()->class('datepicker');
     }
 
     public function submitted()

@@ -1,7 +1,7 @@
 common:
 	parameters:
 		contact_email: email@example.com
-		debug: true
+		debug: false
 		user_custom_boolean_count: 5
 		user_custom_text_count: 2
 		payment_methods:

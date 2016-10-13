@@ -94,7 +94,6 @@ class ProfileForm extends EntityForm
     {
         $this->em = $em;
         $this->skautIS = $skautIS;
-
     }
 
 

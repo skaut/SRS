@@ -66,6 +66,11 @@ class AttendeeForm extends ProfileForm
         $this->presenter->redirect(':Auth:logout');
     }
 
+    public static function toggleArrivalDeparture(\Nette\Forms\IControl $control)
+    {
+        return false;
+    }
+
     public function setFields()
     {
         parent::setFields();
@@ -119,17 +124,47 @@ class AttendeeForm extends ProfileForm
             $incompatibleRolesSize = count($incompatibleRoles);
 
             if ($incompatibleRolesSize > 0) {
-                $message = $role->name;
+                $messageThis = $role->name;
 
+                $first = true;
+                $messageOthers = "";
                 foreach ($incompatibleRoles as $incompatibleRole) {
-                    if ($incompatibleRole->isRegisterableNow())
-                        $message .= ", " . $incompatibleRole->name;
+                    if ($incompatibleRole->isRegisterableNow()) {
+                        if ($first)
+                            $messageOthers .= $incompatibleRole->name;
+                        else
+                            $messageOthers .= ", " . $incompatibleRole->name;
+                    }
+                    $first = false;
                 }
-                $rolesSelect->addRule($checkRolesCombination, 'Není možné kombinovat role: ' . $message . '.', [$this->database, $role]);
+                $rolesSelect->addRule($checkRolesCombination, 'Není možné kombinovat roli ' . $messageThis . ' s rolemi: ' . $messageOthers . '.', [$this->database, $role]);
             }
         }
 
+        $departureArrivalVisibleRoles = $this->database->getRepository('\SRS\Model\Acl\Role')->findArrivalDepartureVisibleRoles();
+        $ids = array();
+        foreach ($departureArrivalVisibleRoles as $departureArrivalVisibleRole) {
+            $ids[] = "".$departureArrivalVisibleRole->id;
+        }
+
+        $rolesSelect->addCondition('SRS\Form\AttendeeForm::toggleArrivalDeparture', $ids)
+            ->toggle('arrivalInput')
+            ->toggle('departureInput');
+
         $rolesSelect->getControlPrototype()->class('multiselect');
+
+        $this->addText('arrival', 'Příjezd')
+            ->setAttribute('class', 'datetimepicker')
+            ->setOption('id', 'arrivalInput')
+            ->addCondition(FORM::FILLED)
+            ->addRule(FORM::PATTERN, 'Datum a čas příjezdu není ve správném tvaru', \SRS\Helpers::DATETIME_PATTERN);
+
+        $this->addText('departure', 'Odjezd')
+            ->setAttribute('class', 'datetimepicker')
+            ->setOption('id', 'departureInput')
+            ->addCondition(FORM::FILLED)
+            ->addRule(FORM::PATTERN, 'Datum a čas odjezdu není ve správném tvaru', \SRS\Helpers::DATETIME_PATTERN);
+
 
         $this->addCheckbox('agreement', 'Souhlasím, že uvedené údaje budou poskytnuty lektorům pro účely semináře')
             ->addRule(Form::FILLED, 'Musíte souhlasit s poskytnutím údajů');
@@ -165,3 +200,5 @@ class AttendeeForm extends ProfileForm
         }
     }
 }
+
+

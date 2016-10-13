@@ -48,7 +48,7 @@ class ProfilePresenter extends BasePresenter
         $this->template->dbuser = $user;
         $this->template->basicBlockDuration = $this->dbsettings->get('basic_block_duration');
         $this->template->variableSymbolCode = $this->dbsettings->get('variable_symbol_code');
-        $this->template->displayCancelRegistration = \DateTime::createFromFormat("Y-m-d", $this->dbsettings->get('cancel_registration_to_date')) >= new \DateTime() ? true : false;
+        $this->template->displayCancelRegistration = \DateTime::createFromFormat("d.m.Y", $this->dbsettings->get('cancel_registration_to_date')) >= new \DateTime() ? true : false;
     }
 
     public function handlePrintProof()
@@ -79,7 +79,7 @@ class ProfilePresenter extends BasePresenter
 
     protected function createComponentAboutForm()
     {
-        $form = new \SRS\Form\Evidence\AboutForm();
+        $form = new \SRS\Form\Evidence\AboutForm(null, null, $this->userRepo->find($this->context->user->id));
         return $form;
     }
 

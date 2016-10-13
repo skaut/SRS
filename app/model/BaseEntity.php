@@ -83,17 +83,45 @@ abstract class BaseEntity extends \Nette\Object
                 if ($key != 'id') {
                     $columnAnnotation = $propertyReflection->getAnnotation('ORM\Column');
                     if (isset($columnAnnotation['type']) && $columnAnnotation['type'] == 'date') {
-                        $value = \DateTime::createFromFormat("Y-m-d", $value);
+                        if ($value == "") {
+                            $value = null;
+                        }
+                        else {
+                            $date = $value;
+                            $value = \DateTime::createFromFormat("d.m.Y", $date);
+
+                            if ($value == false) {
+                                $value = \DateTime::createFromFormat("Y-m-d", $value);
+                            }
+
+                            if ($value == false) {
+                                throw new \Exception('Nepodařilo se naparsovat datum ' . $date);
+                            }
+                        }
                     }
                     if (isset($columnAnnotation['type']) && $columnAnnotation['type'] == 'datetime') {
-                        $value = BaseEntity::normalizeDateTime($value);
-                        $date = $value;
-                        $value = \DateTime::createFromFormat("Y-m-d H:i:s", $value);
-                        if ($value == false) {
-                            $value = \DateTime::createFromFormat("Y-n-j G:i:s", $date);
+                        if ($value == "") {
+                            $value = null;
                         }
-                        if ($value == false) {
-                            throw new \Exception('Nepodařilo se naparsovat datum ' . $date);
+                        else {
+                            $date = $value;
+                            $value = \DateTime::createFromFormat("d.m.Y H:i", $date);
+
+                            if ($value == false) {
+                                $value = \DateTime::createFromFormat("d.m.Y H:i", $date . " 00:00");
+                            }
+
+                            if ($value == false) {
+                                $value = \DateTime::createFromFormat("Y-n-j H:i:s", $date);
+                            }
+
+                            if ($value == false) {
+                                $value = \DateTime::createFromFormat("Y-n-j G:i:s", $date);
+                            }
+
+                            if ($value == false) {
+                                throw new \Exception('Nepodařilo se naparsovat datum a čas ' . $date);
+                            }
                         }
                     }
 
@@ -103,22 +131,4 @@ abstract class BaseEntity extends \Nette\Object
         }
 
     }
-
-    /**
-     * Pretransformuje datetime vraceny v javascriptu do tvaru stravitelneho doctrine
-     * @param string $datetime
-     * @return string
-     */
-    public static function normalizeDateTime($datetime)
-    {
-        if (strpos($datetime, 'T') !== false) {
-            $datetime = str_replace('T', ' ', $datetime);
-            $deletePosition = strpos($datetime, '.');
-            $result = str_split($datetime, $deletePosition);
-            return $result[0];
-        }
-        return $datetime;
-    }
-
-
 }

@@ -113,7 +113,7 @@ class EvidenceGrid extends Grid
                 ->setDateFilter()
                 ->setRenderer(function ($row) {
                 if ($row->paymentDate == null || $row->paymentDate == '') return '';
-                return $row->paymentDate->format('d.m. Y');
+                return $row->paymentDate->format('d.m.Y');
             });
 
         if ($this->columnsVisibility['incomeProofPrintedDate'])
@@ -122,7 +122,7 @@ class EvidenceGrid extends Grid
                 ->setDateFilter()
                 ->setRenderer(function ($row) {
                 if ($row->incomeProofPrintedDate == null || $row->incomeProofPrintedDate == '') return '';
-                return $row->incomeProofPrintedDate->format('d.m. Y');
+                return $row->incomeProofPrintedDate->format('d.m.Y');
             });
 
 
@@ -176,7 +176,7 @@ class EvidenceGrid extends Grid
             ->setAjax(FALSE);
 
         $this->addButton("edit", "Upravit")
-            ->setClass("btn btn-warning")
+            ->setClass("btn")
             ->setText('Upravit')
             ->setLink(function ($row) use ($presenter) {
                 return $presenter->link("edit", $row['id']);
@@ -191,7 +191,7 @@ class EvidenceGrid extends Grid
                 }
 
                 if ($values['incomeProofPrintedDate']) {
-                    $user->incomeProofPrintedDate = \DateTime::createFromFormat('Y-m-d', $values['incomeProofPrintedDate']);
+                    $user->incomeProofPrintedDate = \DateTime::createFromFormat('d.m.Y', $values['incomeProofPrintedDate']);
                 }
                 else {
                     $user->incomeProofPrintedDate = null;
@@ -202,7 +202,7 @@ class EvidenceGrid extends Grid
                 }
 
                 if ($values['paymentDate']) {
-                    $user->paymentDate = \DateTime::createFromFormat('Y-m-d', $values['paymentDate']);
+                    $user->paymentDate = \DateTime::createFromFormat('d.m.Y', $values['paymentDate']);
                 }
                 else {
                     $user->paymentDate = null;
@@ -357,8 +357,7 @@ class EvidenceGrid extends Grid
             }
             foreach ($row as $key => $column) {
                 if ($column instanceof \DateTime) {
-
-                    $row[$key] = $column->format('Y-m-d');
+                    $row[$key] = $column->format('d.m.Y');
                 }
             }
             $this['gridForm'][$this->name]['rowForm']->setDefaults($row);
@@ -377,6 +376,4 @@ class EvidenceGrid extends Grid
         $this->template->setFile($templatePath);
         $this->template->render();
     }
-
-
 }

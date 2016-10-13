@@ -63,7 +63,7 @@ class Role extends \SRS\Model\BaseEntity
     protected $permissions;
 
     /**
-     * @ORM\ManyToMany(targetEntity="\SRS\model\CMS\Page", inversedBy="roles", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="\SRS\model\CMS\Page", mappedBy="roles", cascade={"persist"})
      * @var mixed
      */
     protected $pages;
@@ -132,11 +132,11 @@ class Role extends \SRS\Model\BaseEntity
      */
     protected $displayCapacity;
 
-//    /**
-//     * @var boolean
-//     * @ORM\Column(type="boolean", nullable=true)
-//     */
-//    protected $displayArrivalDeparture;
+    /**
+     * @var boolean
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    protected $displayArrivalDeparture;
 
 
     /**
@@ -157,7 +157,7 @@ class Role extends \SRS\Model\BaseEntity
      *      joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="incompatible_role_id", referencedColumnName="id")}
      *      )
-     * @var mixed
+     * @var \Doctrine\Common\Collections\ArrayCollection
      */
     protected $incompatibleRoles;
 
@@ -175,6 +175,9 @@ class Role extends \SRS\Model\BaseEntity
         $this->name = $name;
         $this->users = new \Doctrine\Common\Collections\ArrayCollection();
         $this->permissions = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->pages = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->registerableCategories = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->incompatibleRoles = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
 
@@ -296,6 +299,14 @@ class Role extends \SRS\Model\BaseEntity
      */
     public function setPages($pages)
     {
+        foreach ($this->pages as $page) {
+            if (!$pages->contains($page))
+                $page->roles->removeElement($this);
+        }
+        foreach ($pages as $page) {
+            if (!$page->roles->contains($this))
+                $page->roles->add($this);
+        }
         $this->pages = $pages;
     }
 
@@ -401,25 +412,33 @@ class Role extends \SRS\Model\BaseEntity
      */
     public function setRegisterableCategories($registerableCategories)
     {
+        foreach ($this->registerableCategories as $registerableCategory) {
+            if (!$registerableCategories->contains($registerableCategory))
+                $registerableCategory->registerableRoles->removeElement($this);
+        }
+        foreach ($registerableCategories as $registerableCategory) {
+            if (!$registerableCategory->registerableRoles->contains($this))
+                $registerableCategory->registerableRoles->add($this);
+        }
         $this->registerableCategories = $registerableCategories;
     }
 
 
-//    /**
-//     * @return boolean
-//     */
-//    public function isDisplayArrivalDeparture()
-//    {
-//        return $this->displayArrivalDeparture;
-//    }
-//
-//    /**
-//     * @param boolean $displayArrivalDeparture
-//     */
-//    public function setDisplayArrivalDeparture($displayArrivalDeparture)
-//    {
-//        $this->displayArrivalDeparture = $displayArrivalDeparture;
-//    }
+    /**
+     * @return boolean
+     */
+    public function isDisplayArrivalDeparture()
+    {
+        return $this->displayArrivalDeparture;
+    }
+
+    /**
+     * @param boolean $displayArrivalDeparture
+     */
+    public function setDisplayArrivalDeparture($displayArrivalDeparture)
+    {
+        $this->displayArrivalDeparture = $displayArrivalDeparture;
+    }
 
 
     public function countUsersInRole() {
@@ -487,6 +506,11 @@ class RoleRepository extends \Doctrine\ORM\EntityRepository
 
     public function findCapacityVisibleRoles() {
         $query = $this->_em->createQuery("SELECT r FROM {$this->_entityName} r WHERE r.displayCapacity = 1");
+        return $query->getResult();
+    }
+
+    public function findArrivalDepartureVisibleRoles() {
+        $query = $this->_em->createQuery("SELECT r FROM {$this->_entityName} r WHERE r.displayArrivalDeparture = 1");
         return $query->getResult();
     }
 

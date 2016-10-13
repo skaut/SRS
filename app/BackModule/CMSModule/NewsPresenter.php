@@ -42,11 +42,9 @@ class NewsPresenter extends \BackModule\BasePresenter
             $this->template->item = $item;
         } else {
             $today = new \DateTime('now');
-            $today = $today->format('Y-m-d');
+            $today = $today->format('d.m.Y');
             $form['published']->setDefaultValue($today);
         }
-
-
     }
 
 
