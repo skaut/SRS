@@ -2,6 +2,7 @@ language: php
 
 before_deploy:
   - "mkdir deploy"
+  - "cp -r app deploy"
 
 deploy:
   skip_cleanup: true
