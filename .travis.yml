@@ -1,0 +1,18 @@
+before_deploy:
+  - mkdir deploy
+  - cp -r app deploy
+  - cp -r libs deploy
+  - cp -r log deploy 
+  - cp -r temp deploy
+  - cp -r www deploy 
+  - cp -r .htaccess deploy
+  - cp -r README.md deploy
+
+deploy:
+  provider: releases
+  api_key:
+    secure: NR/ucemwbYbLkqlEt9885kKZuzI/SwNLwoWpLByoI0dS9LgmbNJ0t9kI2UwTV20epotppyNms+CUNfTAS9PPqIjVjKzGn3kyJFwvY11f9/2F6Tv5k+GMFchqbCEtxM/tntSuC0RPrf3tfdXhhAF8h3V4VvrKk8FHXvhaeghMFSQ=
+  file: release.zip
+  on:
+    tags: true
+
