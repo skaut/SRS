@@ -7,8 +7,7 @@ deploy:
 
   skip_cleanup: true
 
-  file_glob: true
-    file: "libs.zip"
+  file: "libs.zip"
 
   on:
     tags: true
