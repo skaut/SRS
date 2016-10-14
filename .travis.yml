@@ -6,8 +6,9 @@ before_install:
   - composer self-update
 
 install:
-  - composer self-update
   - composer install --no-dev --prefer-dist --optimize-autoloader
+
+script:
 
 before_deploy:
   - zip -r srs app libs log temp www .htaccess README.md
