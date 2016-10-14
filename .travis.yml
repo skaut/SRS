@@ -1,18 +1,13 @@
 language: php
-
+install:
+   - composer install --no-dev --prefer-dist --optimize-autoloader --ignore-platform-reqs
 deploy:
-  overwrite: true
   provider: releases
-
   api_key:
-    secure: NR/ucemwbYbLkqlEt9885kKZuzI/SwNLwoWpLByoI0dS9LgmbNJ0t9kI2UwTV20epotppyNms+CUNfTAS9PPqIjVjKzGn3kyJFwvY11f9/2F6Tv5k+GMFchqbCEtxM/tntSuC0RPrf3tfdXhhAF8h3V4VvrKk8FHXvhaeghMFSQ=
-
+    secure: DT6qfSlb6dVuXZKMnPLddyheWDsAargfBD2KfchL3uIy86c7iJBeovXXZxdXQDslDAMfllJqCsTeuX0arfUXLJYwT54aNysBqdrnz9TZcsovcM3E+g8YCWjIrbVMG46wXC2cz8DMrhXhHlg36BzNrEaWIe+ov5gp6EgafWyhK2U=
+  file: libs/global/
   skip_cleanup: true
-
-  file: libs.zip
-
   on:
+    repo: skaut/SRS
+    branch: travis
     tags: true
-    all_branches: true
-
-
