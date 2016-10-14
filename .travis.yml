@@ -22,4 +22,5 @@ deploy:
   skip_cleanup: true
   on:
     repo: skaut/SRS
+    branch: master
     tags: true
