@@ -9,7 +9,7 @@ install:
   - composer install --no-dev --prefer-dist --optimize-autoloader
 
 script:
-  - exit 0
+  - echo ""
 
 before_deploy:
   - zip -r srs app libs log temp www .htaccess README.md
