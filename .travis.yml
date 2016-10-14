@@ -12,6 +12,7 @@ script:
   - echo ""
 
 before_deploy:
+  - mv app/config/config.example.neon app/config/config.neon
   - zip -r SRS app libs log temp tests www .htaccess README.md
 
 deploy:
