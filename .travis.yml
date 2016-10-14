@@ -1,6 +1,7 @@
 language: php
-install:
-   - composer install --no-dev --prefer-dist --optimize-autoloader --ignore-platform-reqs
+before_script:
+  - composer self-update
+  - composer install --no-dev --prefer-dist --optimize-autoloader --ignore-platform-reqs
 deploy:
   provider: releases
   api_key:
