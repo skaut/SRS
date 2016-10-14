@@ -12,15 +12,14 @@ script:
   - echo ""
 
 before_deploy:
-  - zip -r srs app libs log temp www .htaccess README.md
+  - zip -r SRS app libs log temp www .htaccess README.md
 
 deploy:
   provider: releases
   api_key:
     secure: DT6qfSlb6dVuXZKMnPLddyheWDsAargfBD2KfchL3uIy86c7iJBeovXXZxdXQDslDAMfllJqCsTeuX0arfUXLJYwT54aNysBqdrnz9TZcsovcM3E+g8YCWjIrbVMG46wXC2cz8DMrhXhHlg36BzNrEaWIe+ov5gp6EgafWyhK2U=
-  file: srs.zip
+  file: SRS.zip
   skip_cleanup: true
   on:
     repo: skaut/SRS
-    branch: travis
     tags: true
