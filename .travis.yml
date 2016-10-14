@@ -1,7 +1,14 @@
 language: php
+
+php: 5.4
+
 before_script:
   - composer self-update
   - composer install --no-dev --prefer-dist --optimize-autoloader --ignore-platform-reqs
+
+script:
+  - ls
+
 deploy:
   provider: releases
   api_key:
