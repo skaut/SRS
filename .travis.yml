@@ -7,7 +7,7 @@ before_install:
 
 install:
   - composer self-update
-  - composer install --no-dev --ignore-platform-reqs
+  - composer install --no-dev --prefer-dist --optimize-autoloader
 
 script:
   - ls
