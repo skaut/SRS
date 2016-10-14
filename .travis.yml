@@ -12,7 +12,7 @@ script:
   - echo ""
 
 before_deploy:
-  - zip -r SRS app libs log temp www .htaccess README.md
+  - zip -r SRS app libs log temp tests www .htaccess README.md
 
 deploy:
   provider: releases
