@@ -31,12 +31,14 @@ class RoleForm extends EntityForm
         $this->addCheckbox('registerable', 'Registrovatelná');
 
         $this->addText('registerableFrom', 'Registrovatelná od')
+            ->getControlPrototype()->class('datetimepicker')
             ->addCondition(FORM::FILLED)
-            ->addRule(FORM::PATTERN, 'Datum zaplacení není ve správném tvaru', \SRS\Helpers::DATE_PATTERN);
+            ->addRule(FORM::PATTERN, 'Datum a čas není ve správném tvaru', \SRS\Helpers::DATETIME_PATTERN);
 
         $this->addText('registerableTo', 'Registrovatelná do')
+            ->getControlPrototype()->class('datetimepicker')
             ->addCondition(FORM::FILLED)
-            ->addRule(FORM::PATTERN, 'Datum zaplacení není ve správném tvaru', \SRS\Helpers::DATE_PATTERN);
+            ->addRule(FORM::PATTERN, 'Datum a čas není ve správném tvaru', \SRS\Helpers::DATETIME_PATTERN);
 
         $this->addText('usersLimit', 'Kapacita')
             ->getControlPrototype()->class('number')
@@ -68,10 +70,6 @@ class RoleForm extends EntityForm
 
         $this->addSubmit('submit', 'Uložit')->getControlPrototype()->class('btn btn-primary pull-right space ');
         $this->addSubmit('submit_continue', 'Uložit a pokračovat v úpravách')->getControlPrototype()->class('btn pull-right');
-
-
-        $this['registerableFrom']->getControlPrototype()->class('datepicker');
-        $this['registerableTo']->getControlPrototype()->class('datepicker');
 
         $this->onSuccess[] = callback($this, 'submitted');
         $this->onError[] = callback($this, 'error');
