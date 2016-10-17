@@ -41,7 +41,7 @@ class SettingsForm extends UI\Form
             ->addRule(Form::FILLED, 'Zadejte konec semináře')->getControlPrototype()->class('datepicker');
 
         $this->addText('cancel_registration_to_date', 'Odhlašování povoleno do')->setDefaultValue($this->dbsettings->get('cancel_registration_to_date'))
-            ->addRule(FORM::PATTERN, 'Datum, do kdy je možné se ze semináře odhlásit', \SRS\Helpers::DATE_PATTERN)
+            ->addRule(FORM::PATTERN, 'Datum, do kdy je možné se ze semináře odhlásit, není ve správném tvaru', \SRS\Helpers::DATE_PATTERN)
             ->addRule(Form::FILLED, 'Zadejte datum, do kdy je možné se ze semináře odhlásit')->getControlPrototype()->class('datepicker');
 
         $this->addText('seminar_email', 'Email pro mailing')->setDefaultValue($this->dbsettings->get('seminar_email'))
@@ -67,6 +67,14 @@ class SettingsForm extends UI\Form
 
         $this->addCheckbox('is_allowed_log_in_programs', 'Je povoleno přihlašovat se na programové bloky?')
             ->setDefaultValue($this->dbsettings->get('is_allowed_log_in_programs'));
+
+        $this->addText('log_in_programs_from', 'Přihlašování programů otevřeno od')->setDefaultValue($this->dbsettings->get('log_in_programs_from'))
+            ->addRule(FORM::PATTERN, 'Datum a čas, od kdy je možné se přihlašovat na programy, není ve správném tvaru', \SRS\Helpers::DATETIME_PATTERN)
+            ->addRule(Form::FILLED, 'Zadejte datum a čas, od kdy je možné se přihlašovat na programy')->getControlPrototype()->class('datetimepicker');
+
+        $this->addText('log_in_programs_to', 'Přihlašování programů otevřeno do')->setDefaultValue($this->dbsettings->get('log_in_programs_to'))
+            ->addRule(FORM::PATTERN, 'Datum a čas, do kdy je možné se přihlašovat na programy, není ve správném tvaru', \SRS\Helpers::DATETIME_PATTERN)
+            ->addRule(Form::FILLED, 'Zadejte datum a čas, do kdy je možné se přihlašovat na programy')->getControlPrototype()->class('datetimepicker');
 
         $this->addSubmit('submit_program', 'Uložit')->getControlPrototype()->class('btn btn-primary pull-right');
 
@@ -104,7 +112,11 @@ class SettingsForm extends UI\Form
         }
         else if (\DateTime::createFromFormat("d.m.Y", $values['seminar_from_date']) < \DateTime::createFromFormat("d.m.Y", $values['cancel_registration_to_date'])) {
             $this->presenter->flashMessage('Datum konce odhlašování nemůže být větší než začátku', 'error');
-        } else {
+        }
+        else if (\DateTime::createFromFormat("d.m.Y H:i", $values['log_in_programs_to']) < \DateTime::createFromFormat("d.m.Y H:i", $values['log_in_programs_from'])) {
+            $this->presenter->flashMessage('Datum a čas konce přihlašování na programové bloky musí být větší než začátku přihlašování', 'error');
+        }
+        else {
             foreach ($values as $key => $value) {
                 $this->dbsettings->set($key, $value);
             }
