@@ -113,9 +113,22 @@ class AttendeeForm extends ProfileForm
             return count($values) != 0;
         };
 
+        $checkRolesRegisterable = function($field, $database) {
+            $values = $this->getComponent('roles')->getRawValue();
+
+            foreach ($values as $value) {
+                $role = $database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('id' => $value));
+                if (!$role->isRegisterableNow())
+                    return false;
+            }
+
+            return true;
+        };
+
         $rolesSelect = $this->addMultiSelect('roles', 'Přihlásit jako')
             ->addRule($checkRolesCapacity, 'Všechna místa v některé roli jsou obsazena.', $this->database)
-            ->addRule($checkRolesEmpty, 'Musí být vybrána alespoň jedna role.', $this->database);
+            ->addRule($checkRolesEmpty, 'Musí být vybrána alespoň jedna role.', $this->database)
+            ->addRule($checkRolesRegisterable, 'Registrace do některé z rolí již není možná.', $this->database);
 
         $roles = $this->database->getRepository('\SRS\Model\Acl\Role')->findRegisterableNow();
 

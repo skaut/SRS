@@ -34,8 +34,8 @@ Práva & Role
             <td>{$role->name}</td>
             <td>{if $role->isSystem()}ANO{else}NE{/if}</td>
             <td>{bool $role->registerable}</td>
-            <td>{$role->registerableFrom|date:"d.m.Y"}</td>
-            <td>{$role->registerableTo|date:"d.m.Y"}</td>
+            <td>{$role->registerableFrom|date:"d.m.Y H:i"}</td>
+            <td>{$role->registerableTo|date:"d.m.Y H:i"}</td>
             <td>{$role->usersLimit}</td>
             <td>{bool $role->pays}</td>
             <td>

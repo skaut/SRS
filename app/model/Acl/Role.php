@@ -92,12 +92,12 @@ class Role extends \SRS\Model\BaseEntity
 
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
     protected $registerableFrom;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
     protected $registerableTo;
 
@@ -472,7 +472,7 @@ class Role extends \SRS\Model\BaseEntity
     }
 
     public function isRegisterableNow() {
-        $today = new \DateTime(date("Y-m-d"));
+        $today = new \DateTime(date("Y-m-d H:i"));
 
         if ($this->registerable && ($this->registerableFrom == null || $this->registerableFrom <= $today) &&
             ($this->registerableTo == null || $this->registerableTo >= $today))
@@ -495,8 +495,7 @@ class RoleRepository extends \Doctrine\ORM\EntityRepository
 
     public function findRegisterableNow()
     {
-        $today = new \DateTime('now');
-        $today = $today->format('Y-m-d');
+        $today = date("Y-m-d H:i");
 
         $query = $this->_em->createQuery("SELECT r FROM {$this->_entityName} r WHERE r.registerable=true
               AND (r.registerableFrom <= '{$today}' OR r.registerableFrom IS NULL)
