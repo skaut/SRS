@@ -1079,4 +1079,9 @@ class UserRepository extends \Nella\Doctrine\Repository
         $query = $this->_em->createQuery("SELECT r FROM \SRS\model\Acl\Role r JOIN r.users u WHERE u.id = $userId");
         return $query->getResult();
     }
+
+    public function findUsersPayingRoles($userId) {
+        $query = $this->_em->createQuery("SELECT r FROM \SRS\model\Acl\Role r JOIN r.users u WHERE u.id = $userId AND r.pays = 1 AND u.id NOT IN (SELECT v.id FROM {$this->_entityName} v JOIN v.roles s WHERE s.pays = 0)");
+        return $query->getResult();
+    }
 }
