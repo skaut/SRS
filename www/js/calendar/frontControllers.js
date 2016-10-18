@@ -56,7 +56,7 @@ function FrontCalendarCtrl($scope, $http, $q, $timeout) {
                     }
                 }
 
-                setColorFront(event);
+                setColorFront(event, $scope.config);
             });
             bindCalendar($scope);
         });
@@ -90,7 +90,7 @@ function FrontCalendarCtrl($scope, $http, $q, $timeout) {
                     }
 
                     for (i = $scope.events.length - 1; i >= 0; i--) {
-                        setColorFront($scope.events[i]);
+                        setColorFront($scope.events[i], $scope.config);
                     }
                 }
                 $('#calendar').fullCalendar('updateEvent', event);
@@ -124,7 +124,7 @@ function FrontCalendarCtrl($scope, $http, $q, $timeout) {
                     }
 
                     for (i = $scope.events.length - 1; i >= 0; i--) {
-                        setColorFront($scope.events[i]);
+                        setColorFront($scope.events[i], $scope.config);
                     }
                 }
                 $('#calendar').fullCalendar('updateEvent', event);

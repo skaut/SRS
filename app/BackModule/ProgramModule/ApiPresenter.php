@@ -141,7 +141,10 @@ class ApiPresenter extends \BackModule\BasePresenter
             $calConfig['is_allowed_modify_schedule'] = false;
         }
 
-        $calConfig['is_allowed_log_in_programs'] = (bool)$this->dbsettings->get('is_allowed_log_in_programs') && $this->user->isAllowed($this->resource, 'Vybírat si programy');
+        $calConfig['is_allowed_log_in_programs'] = (bool)$this->dbsettings->get('is_allowed_log_in_programs') &&
+            $this->user->isAllowed($this->resource, 'Vybírat si programy') &&
+            \DateTime::createFromFormat("d.m.Y H:i", $this->dbsettings->get('log_in_programs_from')) <= new \DateTime('now') &&
+            \DateTime::createFromFormat("d.m.Y H:i", $this->dbsettings->get('log_in_programs_to')) >= new \DateTime('now');
 
         $response = new \Nette\Application\Responses\JsonResponse($calConfig);
         $this->sendResponse($response);
