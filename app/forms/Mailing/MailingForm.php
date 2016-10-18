@@ -45,8 +45,6 @@ class MailingForm extends \Nette\Application\UI\Form
 
         $this->onSuccess[] = callback($this, 'formSubmitted');
         $this->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
-
-
     }
 
 
