@@ -9,6 +9,7 @@ var localization_config = {
     defaultView:'agendaWeek',
     ignoreTimezone:true,
     slotMinutes:15,
+    snapMinutes:5,
     timeFormat:'H:mm{ - H:mm}',
     monthNames:['Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen', 'Červenec',
         'Srpen', 'Září', 'Říjen', 'Listopad', 'Prosinec'],
@@ -24,9 +25,9 @@ var localization_config = {
         prevYear:'&nbsp;&lt;&lt;&nbsp;', // <<
         nextYear:'&nbsp;&gt;&gt;&nbsp;', // >>
         today:'Dnes',
-        month:'měsíc',
+        month:'Měsíc',
         week:'Seminář',
-        day:'den'
+        day:'Den'
     },
     axisFormat:'H(:mm)',
 

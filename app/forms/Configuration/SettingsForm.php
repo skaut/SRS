@@ -27,7 +27,7 @@ class SettingsForm extends UI\Form
         $this->dbsettings = $dbsettings;
 
 
-        $basicBlockDurationChoices = array('15' => '15 minut', '30' => '30 minut', '45' => '45 minut', '60' => '60 minut', '75' => '75 minut', '90' => '90 minut', '105' => '105 minut', '120' => '120 minut');
+        $basicBlockDurationChoices = array('5' => '5 minut', '10' => '10 minut', '15' => '15 minut', '30' => '30 minut', '45' => '45 minut', '60' => '60 minut', '75' => '75 minut', '90' => '90 minut', '105' => '105 minut', '120' => '120 minut');
 
         $this->addText('seminar_name', 'Jméno semináře')->setDefaultValue($this->dbsettings->get('seminar_name'))
             ->addRule(Form::FILLED, 'Zadejte Jméno semináře');
@@ -56,7 +56,7 @@ class SettingsForm extends UI\Form
         $this->addSubmit('submit_seminar', 'Uložit')->getControlPrototype()->class('btn btn-primary pull-right');
 
 
-        $this->addSelect('basic_block_duration', 'Základní délka trvání program. bloku semináře')
+        $this->addSelect('basic_block_duration', 'Základní délka trvání programového bloku semináře')
             ->setItems($basicBlockDurationChoices)->setDefaultValue($this->dbsettings->get('basic_block_duration'));
 
         $this->addCheckbox('is_allowed_add_block', 'Je povoleno vytvářet programové bloky?')
