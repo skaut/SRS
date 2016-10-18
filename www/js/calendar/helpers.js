@@ -81,8 +81,12 @@ function setColor(event) {
     }
 }
 
-function setColorFront(event) {
-    if (event.blocked == true && event.attends == false) {
+function setColorFront(event, config) {
+    if (event.attends == false && !config['is_allowed_log_in_programs']) {
+        event.color = COLOR_FULL;
+    }
+
+    else if (event.blocked == true && event.attends == false) {
         event.color = COLOR_FULL;
     }
 
