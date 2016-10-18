@@ -97,6 +97,7 @@ function setColorFront(event) {
     else if (event.block != undefined && (event.attendees_count >= event.block.capacity)) {
         event.color = COLOR_FULL;
     }
+
     else {
         event.color = null;
     }
