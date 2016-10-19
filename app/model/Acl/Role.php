@@ -27,6 +27,8 @@ use Doctrine\Common\Collections\Criteria;
  * @property bool $displayArrivalDeparture
  * @property bool $syncedWithSkautIS
  * @property \Doctrine\Common\Collections\ArrayCollection $incompatibleRoles
+ * @property \SRS\Model\Acl\Role $requiredByRole
+ * @property \Doctrine\Common\Collections\ArrayCollection $requiredRoles
  * @property \Doctrine\Common\Collections\ArrayCollection $registerableCategories
  * @property \DateTime|string $registerableFrom
  * @property \DateTime|string $registerableTo
@@ -145,21 +147,29 @@ class Role extends \SRS\Model\BaseEntity
      */
     protected $syncedWithSkautIS = true;
 
-
-    /**
-     * @ORM\ManyToMany(targetEntity="\SRS\model\Acl\Role", mappedBy="incompatibleRoles", cascade={"persist"})
-     * @var mixed
-     */
-
     /**
      * @ORM\ManyToMany(targetEntity="\SRS\model\Acl\Role")
-     * @ORM\JoinTable(name="role_role",
+     * @ORM\JoinTable(name="role_role_incompatible",
      *      joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="incompatible_role_id", referencedColumnName="id")}
      *      )
      * @var \Doctrine\Common\Collections\ArrayCollection
      */
     protected $incompatibleRoles;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="\SRS\model\Acl\Role", mappedBy="requiredRoles")
+     */
+    private $requiredByRole;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="\SRS\model\Acl\Role", inversedBy="requiredByRole")
+     * @ORM\JoinTable(name="role_role_required",
+     *      joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="required_role_id", referencedColumnName="id")}
+     *      )
+     */
+    private $requiredRoles;
 
     /**
      * @ORM\ManyToMany(targetEntity="\SRS\model\Program\Category", mappedBy="registerableRoles", cascade={"persist"})
@@ -397,6 +407,38 @@ class Role extends \SRS\Model\BaseEntity
     public function setIncompatibleRoles($incompatibleRoles)
     {
         $this->incompatibleRoles = $incompatibleRoles;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRequiredByRole()
+    {
+        return $this->requiredByRole;
+    }
+
+    /**
+     * @param mixed $requiredByRole
+     */
+    public function setRequiredByRole($requiredByRole)
+    {
+        $this->requiredByRole = $requiredByRole;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRequiredRoles()
+    {
+        return $this->requiredRoles;
+    }
+
+    /**
+     * @param mixed $requiredRoles
+     */
+    public function setRequiredRoles($requiredRoles)
+    {
+        $this->requiredRoles = $requiredRoles;
     }
 
     /**
