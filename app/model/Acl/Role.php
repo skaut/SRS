@@ -523,6 +523,26 @@ class Role extends \SRS\Model\BaseEntity
             return true;
         return false;
     }
+
+    public function getAllRequiredRoles() {
+        $allRequiredRoles = array();
+
+        foreach ($this->requiredRoles as $requiredRole) {
+            $this->getAllRequiredRolesRec($allRequiredRoles, $requiredRole);
+        }
+
+        return $allRequiredRoles;
+    }
+
+    private function getAllRequiredRolesRec(&$allRequiredRoles, $role) {
+        if ($this == $role || in_array($role, $allRequiredRoles)) {
+            return;
+        }
+        $allRequiredRoles[] = $role;
+        foreach ($role->requiredRoles as $requiredRole) {
+            $this->getAllRequiredRolesRec($allRequiredRoles, $requiredRole);
+        }
+    }
 }
 
 /**

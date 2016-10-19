@@ -50,13 +50,22 @@ class AttendeeForm extends ProfileForm
 
         foreach ($values['roles'] as $roleId) {
             $role = $this->presenter->context->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('id' => $roleId));
-            $user->addRole($role);
-
             if (!$role->approvedAfterRegistration)
                 $approved = false;
         }
 
         $user->setProperties($values, $this->presenter->context->database);
+
+        foreach ($user->roles as $role) {
+            $requiredRoles = $role->getAllRequiredRoles();
+            foreach ($requiredRoles as $requiredRole) {
+                if (!$user->roles->contains($requiredRole))
+                    $user->addRole($requiredRole);
+                if (!$requiredRole->approvedAfterRegistration)
+                    $approved = false;
+            }
+        }
+
         $user->approved = $approved;
 
         $this->presenter->context->database->flush();
@@ -85,6 +94,22 @@ class AttendeeForm extends ProfileForm
                 if ($role->usersLimit !== null) {
                     if ($role->usersLimit < count($role->users) || (!$user->isInRole($role->name) && $role->usersLimit == count($role->users)))
                         return false;
+                }
+            }
+            return true;
+        };
+
+        $checkRequiredRolesCapacity = function($field, $database) {
+            $values = $this->getComponent('roles')->getRawValue();
+            $user = $database->getRepository('\SRS\Model\User')->findOneBy(array('id' => $this->getForm()->getHttpData()['id']));
+
+            foreach ($values as $value) {
+                $role = $database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('id' => $value));
+                foreach ($role->getAllRequiredRoles() as $requiredRole) {
+                    if ($requiredRole->usersLimit !== null) {
+                        if ($requiredRole->usersLimit < count($requiredRole->users) || (!$user->isInRole($requiredRole->name) && $requiredRole->usersLimit == count($requiredRole->users)))
+                            return false;
+                    }
                 }
             }
             return true;
@@ -127,6 +152,7 @@ class AttendeeForm extends ProfileForm
 
         $rolesSelect = $this->addMultiSelect('roles', 'Přihlásit jako')
             ->addRule($checkRolesCapacity, 'Všechna místa v některé roli jsou obsazena.', $this->database)
+            ->addRule($checkRequiredRolesCapacity, 'Všechna místa v některé související roli jsou obsazena.', $this->database)
             ->addRule($checkRolesEmpty, 'Musí být vybrána alespoň jedna role.', $this->database)
             ->addRule($checkRolesRegisterable, 'Registrace do některé z rolí již není možná.', $this->database);
 

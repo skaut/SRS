@@ -68,6 +68,8 @@ class RoleForm extends EntityForm
 
         $this->addMultiSelect('incompatibleRoles', 'Neregistrovatelná s')->getControlPrototype()->class('multiselect');
 
+        $this->addMultiSelect('requiredRoles', 'Související role')->getControlPrototype()->class('multiselect');
+
         $this->addSubmit('submit', 'Uložit')->getControlPrototype()->class('btn btn-primary pull-right space ');
         $this->addSubmit('submit_continue', 'Uložit a pokračovat v úpravách')->getControlPrototype()->class('btn pull-right');
 
@@ -80,20 +82,45 @@ class RoleForm extends EntityForm
         $values = $this->getValues(); // POZOR!! getValues z nejakeho neznameho duvodu nevraci permissions, ziskavame oklikou
         $role = $this->presenter->roleRepo->find($values['id']);
 
+        $oldIncompatibleRoles = $role->incompatibleRoles->getValues();
+
         $formValuesPerms = $this->getComponent('permissions')->getRawValue(); //oklika
         $values['permissions'] = $formValuesPerms;
 
         $formValuesPages = $this->getComponent('pages')->getRawValue(); //oklika
         $values['pages'] = $formValuesPages;
 
-        $oldIncompatibleRoles = $role->incompatibleRoles->getValues();
-
         $formValuesIncompatibleRoles = $this->getComponent('incompatibleRoles')->getRawValue(); //oklika
         $values['incompatibleRoles'] = $formValuesIncompatibleRoles;
 
+        $formValuesIncompatibleRoles = $this->getComponent('requiredRoles')->getRawValue(); //oklika
+        $values['requiredRoles'] = $formValuesIncompatibleRoles;
+
+        $incompatibleAndRequired = false;
+        foreach ($values['incompatibleRoles'] as $incompatibleRoleId) {
+            foreach ($values['requiredRoles'] as $requiredRoleId) {
+                $requiredRole = $this->presenter->roleRepo->find($requiredRoleId);
+                $requiredRoles = $requiredRole->getAllRequiredRoles();
+                foreach ($requiredRoles as $requiredRole) {
+                    if ($incompatibleRoleId == $requiredRole->id) {
+                        $incompatibleAndRequired = true;
+                        break;
+                    }
+                }
+                if ($incompatibleAndRequired)
+                    break;
+            }
+            if ($incompatibleAndRequired)
+                break;
+        }
+
         if ($values['registerableTo'] != null && ($values['registerableTo'] < $values['registerableFrom'] && $values['registerableFrom'] != null)) {
             $this->presenter->flashMessage('Datum do musí být větší než od', 'error');
-        } else {
+        }
+        else if ($incompatibleAndRequired) {
+            $this->presenter->flashMessage('Související role nemůže být zároveň neregistrovatelná s touto rolí', 'error');
+        }
+        else {
             $role->setProperties($values, $this->presenter->context->database);
             //doctrine z nejakyho duvodu cpe do data dnesek ikdyz ma null
             if ($values['registerableFrom'] == null) {
@@ -107,7 +134,6 @@ class RoleForm extends EntityForm
             }
 
             $role->removeAllIncompatibleRoles($oldIncompatibleRoles);
-
             foreach($values['incompatibleRoles'] as $incompatibleRoleId) {
                 $incompatibleRole = $this->presenter->roleRepo->find($incompatibleRoleId);
                 $role->addIncompatibleRole($incompatibleRole);
