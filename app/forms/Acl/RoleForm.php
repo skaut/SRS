@@ -99,6 +99,11 @@ class RoleForm extends EntityForm
         $incompatibleAndRequired = false;
         foreach ($values['incompatibleRoles'] as $incompatibleRoleId) {
             foreach ($values['requiredRoles'] as $requiredRoleId) {
+                if ($incompatibleRoleId == $requiredRoleId) {
+                    $incompatibleAndRequired = true;
+                    break;
+                }
+
                 $requiredRole = $this->presenter->roleRepo->find($requiredRoleId);
                 $requiredRoles = $requiredRole->getAllRequiredRoles();
                 foreach ($requiredRoles as $requiredRole) {
@@ -107,9 +112,23 @@ class RoleForm extends EntityForm
                         break;
                     }
                 }
+
                 if ($incompatibleAndRequired)
                     break;
             }
+
+            if ($incompatibleAndRequired)
+                break;
+
+            $incompatibleRole = $this->presenter->roleRepo->find($incompatibleRoleId);
+            $incompatibleRequiredRoles = $incompatibleRole->getAllRequiredRoles();
+            foreach ($incompatibleRequiredRoles as $incompatibleRequiredRole) {
+                if ($incompatibleRequiredRole == $role) {
+                    $incompatibleAndRequired = true;
+                    break;
+                }
+            }
+
             if ($incompatibleAndRequired)
                 break;
         }
