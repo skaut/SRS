@@ -171,6 +171,7 @@ function bindCalendar(scope) {
             options.title = event.title;
             options.content = '';
             options.placement = 'bottom';
+            options.container = 'body';
             if (event.block != null && event.block != undefined) {
                 options.content += "<ul class='no-bullets no-margin'>";
                 options.content += "<li><span>Lektor:</span> " + event.block.lector + "</li>";
