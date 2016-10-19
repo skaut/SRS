@@ -111,11 +111,11 @@ input.number {
 
 .calendar-blocks .block {
     margin: 10px auto;
-    padding: 2px;
+    padding: 2px 10px;
     color: #fff;
     font-size: .85em;
     cursor: pointer;
-    width: 150px;
+    width: 180px;
     border-radius: 2px;
     background-color: #3366CC;
     border-color: #3366CC;

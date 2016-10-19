@@ -67,25 +67,31 @@ Program » Harmonogram
     <h3>Programové bloky</h3>
     <table>
         <tr>
-            <td><label for="checkbox_unassigned" style="padding-top: 12px; ">Jen nezařazené: </label></td>
-            <td><input id="checkbox_unassigned" type="checkbox" ng-model="applyUnassigned"></td>
+            <td>
+                <label for="checkbox_unassigned" style="padding-top: 12px; ">Jen nezařazené: </label>
+            </td>
+            <td>
+                <input id="checkbox_unassigned" type="checkbox" ng-model="applyUnassigned">
+            </td>
         </tr>
         <tr>
-            <td><label for="text_search">Vyhledat:</label></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td colspan="2"><input id="text_search" type="text" class="input-medium search-query" ng-model="query"></td>
+            <td>
+                <label for="text_search">Vyhledat: </label>
+            </td>
+            <td>
+                <input id="text_search" type="text" class="input-medium search-query" ng-model="query">
+            </td>
         </tr>
     </table>
     <hr>
     <div class="blocks-container">
-        <div class="block" ng-repeat="block in blocks | filter:query | showUnassigned: applyUnassigned"
-             external-block="{{ block.id }}">
+        <div class="block" ng-repeat="block in blocks | filter:query | showUnassigned: applyUnassigned" external-block="{{ block.id }}">
             <h6>{{ block.name }}</h6>
             <ul class="no-margin">
-                <li><span>lektor:</span> {{ block.lector }}</li>
-                <li><span>kapacita:</span> {{ block.capacity }}</li>
+                <li><span>Lektor:</span> {{ block.lector }}</li>
+                <li><span>Místnost:</span> {{ block.room }}</li>
+                <li><span>Kapacita:</span> {{ block.capacity }}</li>
+                <li><span>Kategorie:</span> {{ block.category }}</li>
                 <li><span>Zařazeno:</span>{{ block.program_count }}x</li>
             </ul>
         </div>
