@@ -86,6 +86,8 @@ class RoleForm extends EntityForm
         $formValuesPages = $this->getComponent('pages')->getRawValue(); //oklika
         $values['pages'] = $formValuesPages;
 
+        $oldIncompatibleRoles = $role->incompatibleRoles->getValues();
+
         $formValuesIncompatibleRoles = $this->getComponent('incompatibleRoles')->getRawValue(); //oklika
         $values['incompatibleRoles'] = $formValuesIncompatibleRoles;
 
@@ -104,7 +106,8 @@ class RoleForm extends EntityForm
                 $role->usersLimit = null;
             }
 
-            $role->removeAllIncompatibleRoles();
+            $role->removeAllIncompatibleRoles($oldIncompatibleRoles);
+
             foreach($values['incompatibleRoles'] as $incompatibleRoleId) {
                 $incompatibleRole = $this->presenter->roleRepo->find($incompatibleRoleId);
                 $role->addIncompatibleRole($incompatibleRole);

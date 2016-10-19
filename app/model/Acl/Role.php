@@ -168,6 +168,7 @@ class Role extends \SRS\Model\BaseEntity
      *      joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="required_role_id", referencedColumnName="id")}
      *      )
+     * @var \Doctrine\Common\Collections\ArrayCollection
      */
     private $requiredRoles;
 
@@ -188,8 +189,8 @@ class Role extends \SRS\Model\BaseEntity
         $this->pages = new \Doctrine\Common\Collections\ArrayCollection();
         $this->registerableCategories = new \Doctrine\Common\Collections\ArrayCollection();
         $this->incompatibleRoles = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->requiredRoles = new \Doctrine\Common\Collections\ArrayCollection();
     }
-
 
     public function setName($name)
     {
@@ -493,22 +494,23 @@ class Role extends \SRS\Model\BaseEntity
         return $this->usersLimit - $this->countUsersInRole();
     }
 
-    public function addIncompatibleRole($role) {
+    public function addIncompatibleRole($role, $inversed = false) {
         if (!$this->incompatibleRoles->contains($role)) {
             $this->incompatibleRoles->add($role);
-            $role->addIncompatibleRole($this);
         }
+        if (!$inversed)
+            $role->addIncompatibleRole($this, true);
     }
 
-    public function removeIncompatibleRole($role) {
-        if ($this->incompatibleRoles->contains($role)) {
+    public function removeIncompatibleRole($role, $inversed = false) {
+        if ($this->incompatibleRoles->contains($role))
             $this->incompatibleRoles->removeElement($role);
-            $role->removeIncompatibleRole($this);
-        }
+        if (!$inversed)
+            $role->removeIncompatibleRole($this, true);
     }
 
-    public function removeAllIncompatibleRoles() {
-        foreach($this->incompatibleRoles as $role) {
+    public function removeAllIncompatibleRoles($oldIncompatibleRoles) {
+        foreach($oldIncompatibleRoles as $role) {
             $this->removeIncompatibleRole($role);
         }
     }
