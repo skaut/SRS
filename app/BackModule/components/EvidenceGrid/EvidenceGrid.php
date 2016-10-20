@@ -141,7 +141,6 @@ class EvidenceGrid extends Grid
 
         if ($this->columnsVisibility['firstLogin'])
             $this->addColumn('firstLogin', 'Registrace')
-                ->setDateFilter()
                 ->setRenderer(function ($row) {
                     if ($row->firstLogin == null || $row->firstLogin == '') return '';
                     return $row->firstLogin->format('d.m.Y H:i');
