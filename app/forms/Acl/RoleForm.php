@@ -19,11 +19,11 @@ use Nette\Application\UI,
 class RoleForm extends EntityForm
 {
 
-    public function __construct(IContainer $parent = NULL, $name = NULL)
+    public function __construct(IContainer $parent = NULL, $name = NULL, $database)
     {
         parent::__construct($parent, $name);
 
-        $this->addHidden('id');
+        $id = $this->addHidden('id');
 
         $this->addText('name', 'Jméno role')
             ->addRule(Form::FILLED, 'Zadejte jméno');
@@ -40,9 +40,21 @@ class RoleForm extends EntityForm
             ->addCondition(FORM::FILLED)
             ->addRule(FORM::PATTERN, 'Datum a čas není ve správném tvaru', \SRS\Helpers::DATETIME_PATTERN);
 
-        $this->addText('usersLimit', 'Kapacita')
-            ->getControlPrototype()->class('number')
-            ->addRule(FORM::INTEGER, 'Kapacita role musí být číslo');
+        $checkRoleCapacity = function($field, $args) {
+            $database = $args[0];
+            $id = $args[1];
+
+            $role = $database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('id' => $id->value));
+            if ($role->countUsersInRole() > $field->getValue())
+                return false;
+            return true;
+        };
+
+        $capacity = $this->addText('usersLimit', 'Kapacita');
+        $capacity->addCondition(FORM::FILLED)
+            ->addRule(FORM::INTEGER, 'Kapacita role musí být číslo')
+            ->addRule($checkRoleCapacity, 'Kapacita role nesmí být nižší než počet uživatelů v roli', [$database, $id]);
+        $capacity->getControlPrototype()->class('number');
 
         $this->addCheckbox('approvedAfterRegistration', 'Je uživateli role po registraci automaticky schválena?');
 
@@ -57,7 +69,6 @@ class RoleForm extends EntityForm
         $this->addCheckbox('pays', 'Platí za účast?');
 
         $this->addText('fee', 'Výše účastnického poplatku')
-            //->setDefaultValue(0)
             ->getControlPrototype()->class('number')
             ->addCondition(FORM::FILLED)
             ->addRule(FORM::INTEGER, 'Výše poplatku musí být číslo');
