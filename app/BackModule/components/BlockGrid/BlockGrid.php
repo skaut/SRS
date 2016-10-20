@@ -100,9 +100,9 @@ class BlockGrid extends Grid
             });
 
 
-        $this->addButton("detail", "Zobrazit detail")
+        $this->addButton("detail", "Detail")
             ->setClass("btn")
-            ->setText('Zobrazit detail')
+            ->setText('Detail')
             ->setLink(function ($row) use ($presenter) {
                 return $presenter->link("detail", $row['id']);
             })

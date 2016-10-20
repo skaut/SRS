@@ -105,6 +105,13 @@
     </tr>
 
     <tr>
+        <td>Cena</td>
+        <td>
+            {$dbuser->countFee()['fee']}
+        </td>
+    </tr>
+
+    <tr>
         <td>Platební metoda</td>
         <td>
             {if $dbuser->paymentMethod !== null}
@@ -116,11 +123,7 @@
     <tr>
         <td>Variabilní symbol</td>
         <td>
-            {if $dbuser->variableSymbol == null}
-                {$dbuser->generateVariableSymbol($variableSymbolCode)}
-            {else}
-                {$dbuser->variableSymbol}
-            {/if}
+            {$variableSymbol}
         </td>
     </tr>
 

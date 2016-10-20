@@ -26,9 +26,12 @@ class EvidencePresenter extends BasePresenter
         array('name' => 'membership', 'label' => 'Členství'),
         array('name' => 'birthdate', 'label' => 'Věk'),
         array('name' => 'city', 'label' => 'Město'),
+        array('name' => 'fee', 'label' => 'Cena'),
         array('name' => 'paymentMethod', 'label' => 'Platební metoda'),
+        array('name' => 'variableSymbol', 'label' => 'Variabilní symbol'),
         array('name' => 'paymentDate', 'label' => 'Zaplaceno dne'),
-        array('name' => 'incomeProofPrintedDate', 'label' => 'Příjmový doklad vytištěn dne'),
+        array('name' => 'incomeProofPrintedDate', 'label' => 'Doklad vytištěn dne'),
+        array('name' => 'firstLogin', 'label' => 'Registrace'),
         array('name' => 'attended', 'label' => 'Přítomen'),
         array('name' => 'approved', 'label' => 'Schválený')
     );
@@ -73,7 +76,7 @@ class EvidencePresenter extends BasePresenter
         $this->template->dbuser = $user;
         $this->template->customFields = $this->getFilledCustomFields($user);
         $this->template->paymentMethods = $this->context->parameters['payment_methods'];
-        $this->template->variableSymbolCode = $this->dbsettings->get('variable_symbol_code');
+        $this->template->variableSymbol = $user->variableSymbol == null ? $user->generateVariableSymbol($this->dbsettings->get('variable_symbol_code')) : $user->variableSymbol;
     }
 
     public function renderEdit($id = null)
