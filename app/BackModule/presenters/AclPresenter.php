@@ -133,7 +133,7 @@ class AclPresenter extends BasePresenter
 
     protected function createComponentRoleForm($name)
     {
-        $form = new \SRS\Form\RoleForm($parent = NULL, $name = NULL);
+        $form = new \SRS\Form\RoleForm($parent = NULL, $name = NULL, $this->context->database);
         return $form;
     }
 }
