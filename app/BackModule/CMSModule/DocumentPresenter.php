@@ -5,7 +5,7 @@
  * Author: Michal Májský
  */
 namespace BackModule\CMSModule;
-use Nette\Application\UI\Form;
+
 
 /**
  * Obsluhuje sekci dokumenty
@@ -100,7 +100,6 @@ class DocumentPresenter extends \BackModule\BasePresenter
 
     protected function createComponentDocumentForm($name)
     {
-        $tagChoices = array();
         $tags = $this->presenter->context->database->getRepository(self::TAG_REPO)->findAll();
         $tagChoices = \SRS\Form\EntityForm::getFormChoices($tags);
         $form = new \SRS\Form\CMS\Documents\DocumentForm(null, null, $tagChoices);

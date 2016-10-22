@@ -225,5 +225,4 @@ class ApiPresenter extends \BackModule\BasePresenter
         $this->sendResponse($response);
         $this->terminate();
     }
-
 }

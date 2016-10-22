@@ -77,6 +77,7 @@ class EvidencePresenter extends BasePresenter
         $this->template->customFields = $this->getFilledCustomFields($user);
         $this->template->paymentMethods = $this->context->parameters['payment_methods'];
         $this->template->variableSymbol = $user->variableSymbol == null ? $user->generateVariableSymbol($this->dbsettings->get('variable_symbol_code')) : $user->variableSymbol;
+        $this->template->pays = $user->countFee()['fee'] != 0;
     }
 
     public function renderEdit($id = null)
@@ -98,6 +99,7 @@ class EvidencePresenter extends BasePresenter
         //$user je v template defaultne
         $this->template->dbuser = $user;
         $this->template->customFields = $this->getFilledCustomFields($user);
+        $this->template->pays = $user->countFee()['fee'] != 0;
     }
 
     public function renderEditRoles($ids = array()) {

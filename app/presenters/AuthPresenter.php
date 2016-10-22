@@ -4,7 +4,7 @@
  * Time: 15:51
  * Author: Michal Májský
  */
-use \Nette\Diagnostics\Debugger;
+
 
 /**
  * Obstarava prihlasovani a odhlasovani uzivatelu

@@ -34,7 +34,6 @@ class InitialDataRoleCommand extends Command
     {
         $this->setName('srs:initial-data:acl');
         $this->setDescription('Vloží základní role a práva do DB');
-
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -45,6 +44,5 @@ class InitialDataRoleCommand extends Command
         }
         $this->em->flush();
         $output->writeln('Role uspesne vlozeny');
-
     }
 }

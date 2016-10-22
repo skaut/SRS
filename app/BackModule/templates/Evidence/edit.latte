@@ -41,25 +41,27 @@
                     <td>{input approved}</td>
                 </tr>
 
-                <tr>
-                    <td>{label paymentMethod/}</td>
-                    <td>{input paymentMethod}</td>
-                </tr>
+                {if $pays}
+                    <tr>
+                        <td>{label paymentMethod/}</td>
+                        <td>{input paymentMethod}</td>
+                    </tr>
 
-                <tr>
-                    <td>{label variableSymbol/}</td>
-                    <td>{input variableSymbol}</td>
-                </tr>
+                    <tr>
+                        <td>{label variableSymbol/}</td>
+                        <td>{input variableSymbol}</td>
+                    </tr>
 
-                <tr>
-                    <td>{label paymentDate/}</td>
-                    <td>{input paymentDate}</td>
-                </tr>
+                    <tr>
+                        <td>{label paymentDate/}</td>
+                        <td>{input paymentDate}</td>
+                    </tr>
 
-                <tr>
-                    <td>{label incomeProofPrintedDate/}</td>
-                    <td>{input incomeProofPrintedDate}</td>
-                </tr>
+                    <tr>
+                        <td>{label incomeProofPrintedDate/}</td>
+                        <td>{input incomeProofPrintedDate}</td>
+                    </tr>
+                {/if}
 
                 <tr>
                     <td>{label attended/}</td>

@@ -61,8 +61,10 @@
         <ul class="no-bullets no-margin">
             <li>
                 <strong>Účast na semináři: </strong>
-                {if $dbuser->isInRole('Nepřihlášený')}
+                {if $user->isInRole(\SRS\model\Acl\Role::REGISTERED)}
                     neúčastníte se
+                {elseif $user->isInRole(\SRS\model\Acl\Role::UNAPPROVED)}
+                    Vaše přihláška zatím nebyla schválena
                 {else}
                     {foreach $user->roles as $usersRole}{$usersRole}{sep}, {/sep}{/foreach}
                 {/if}
@@ -101,7 +103,7 @@
                 </li>
             {/if}
         </ul>
-        {if !$dbuser->isInRole('Nepřihlášený') && $displayCancelRegistration}
+        {if !$user->isInRole(\SRS\model\Acl\Role::REGISTERED) && $displayCancelRegistration}
             <a href="{link cancelRegistration!}" onclick = "if (! confirm('Opravdu se chcete odhlásit ze semináře?')) return false;">
                 Odhlásit se ze semináře
             </a>

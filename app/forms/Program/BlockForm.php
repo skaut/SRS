@@ -8,11 +8,8 @@
 
 namespace SRS\Form\Program;
 
-use Nette\Application\UI,
-    Nette\Diagnostics\Debugger,
-    Nette\Application\UI\Form,
-    Nette\ComponentModel\IContainer,
-    Nette\Utils\Html;
+use Nette\Application\UI\Form,
+    Nette\ComponentModel\IContainer;
 
 /**
  * Formular pro editaci a vytvareni programoveho bloku

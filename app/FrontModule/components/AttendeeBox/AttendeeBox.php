@@ -23,7 +23,7 @@ class AttendeeBox extends \Nette\Application\UI\Control
             $dbuser = $this->presenter->context->database->getRepository('\SRS\Model\User')->find($this->presenter->context->user->id);
             $template->dbuser = $dbuser;
 
-            if ($dbuser->isInRole(Role::REGISTERED)) {
+            if ($user->isInRole(Role::REGISTERED)) {
                 $form = $this['attendeeForm'];
 
                 $roles = $this->presenter->context->database->getRepository('\SRS\Model\Acl\Role')->findRegisterableNow();

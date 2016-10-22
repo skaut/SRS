@@ -10,9 +10,7 @@
 
 namespace SRS\Form\CMS\Documents;
 
-use Nette\Application\UI,
-    Nette\Diagnostics\Debugger,
-    Nette\Application\UI\Form,
+use Nette\Application\UI\Form,
     Nette\ComponentModel\IContainer;
 
 /**
@@ -29,7 +27,7 @@ class DocumentForm extends \SRS\Form\EntityForm
             ->addRule(Form::FILLED, 'Zadejte jméno')
             ->getControlPrototype()->class('name');
 
-        $this->addMultiselect('tags', 'Tagy')->setItems($tagChoices)
+        $this->addMultiSelect('tags', 'Tagy')->setItems($tagChoices)
             ->addRule(Form::FILLED, 'zadejte alespoň jeden tag');
 
         $this->addUpload('file', 'Soubor');

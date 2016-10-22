@@ -9,7 +9,6 @@
 namespace SRS\Form;
 
 use Nette\Application\UI,
-    Nette\Diagnostics\Debugger,
     Nette\Application\UI\Form,
     Nette\ComponentModel\IContainer;
 
@@ -70,7 +69,6 @@ class NewRoleForm extends UI\Form
                 $newRole->registerableCategories = $parentRole->registerableCategories;
                 $newRole->pages = $parentRole->pages;
 
-                $newRole->pays = $parentRole->pays;
                 $newRole->fee = $parentRole->fee;
                 $newRole->usersLimit = $parentRole->usersLimit;
                 $newRole->displayCapacity = $parentRole->displayCapacity;
@@ -83,7 +81,7 @@ class NewRoleForm extends UI\Form
                 $newRole->displayArrivalDeparture = $parentRole->displayArrivalDeparture;
             }
             else {
-                $roleRegistered = $this->presenter->context->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('name' => 'Nepřihlášený'));
+                $roleRegistered = $this->presenter->context->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('name' => \SRS\model\Acl\Role::REGISTERED));
                 $newRole->pages = $roleRegistered->pages;
             }
 

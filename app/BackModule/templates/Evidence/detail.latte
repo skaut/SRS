@@ -108,46 +108,48 @@
         </td>
     </tr>
 
-    <tr>
-        <td>Cena</td>
-        <td>
-            {$dbuser->countFee()['fee']}
-        </td>
-    </tr>
+    {if $pays}
+        <tr>
+            <td>Cena</td>
+            <td>
+                {$dbuser->countFee()['fee']}
+            </td>
+        </tr>
 
-    <tr>
-        <td>Platební metoda</td>
-        <td>
-            {if $dbuser->paymentMethod !== null}
-                {$paymentMethods[$dbuser->paymentMethod]}
-            {/if}
-        </td>
-    </tr>
+        <tr>
+            <td>Platební metoda</td>
+            <td>
+                {if $dbuser->paymentMethod !== null}
+                    {$paymentMethods[$dbuser->paymentMethod]}
+                {/if}
+            </td>
+        </tr>
 
-    <tr>
-        <td>Variabilní symbol</td>
-        <td>
-            {$variableSymbol}
-        </td>
-    </tr>
+        <tr>
+            <td>Variabilní symbol</td>
+            <td>
+                {$variableSymbol}
+            </td>
+        </tr>
 
-    <tr>
-        <td>Zaplaceno dne</td>
-        <td>
-            {if $dbuser->paymentDate !== null}
-            {$dbuser->paymentDate->format("d.m.Y")}
-            {/if}
-        </td>
-    </tr>
+        <tr>
+            <td>Zaplaceno dne</td>
+            <td>
+                {if $dbuser->paymentDate !== null}
+                {$dbuser->paymentDate->format("d.m.Y")}
+                {/if}
+            </td>
+        </tr>
 
-    <tr>
-        <td>Příjmový doklad vytištěn dne</td>
-        <td>
-            {if $dbuser->incomeProofPrintedDate !== null}
-                {$dbuser->incomeProofPrintedDate->format("d.m.Y")}
-            {/if}
-        </td>
-    </tr>
+        <tr>
+            <td>Příjmový doklad vytištěn dne</td>
+            <td>
+                {if $dbuser->incomeProofPrintedDate !== null}
+                    {$dbuser->incomeProofPrintedDate->format("d.m.Y")}
+                {/if}
+            </td>
+        </tr>
+    {/if}
 
     <tr>
         <td>Přítomen</td>

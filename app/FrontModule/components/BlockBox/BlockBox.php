@@ -1,7 +1,7 @@
 <?php
 namespace SRS\Components;
-use SRS\Model\Acl\Resource;
-use SRS\Model\Acl\Permission;
+
+
 
 /**
  * Komponenta slouzici pro zobrazeni informaci o blocich

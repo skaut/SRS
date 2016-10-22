@@ -9,7 +9,6 @@
 namespace SRS\Form\Install;
 
 use Nette\Application\UI,
-    Nette\Diagnostics\Debugger,
     Nette\Application\UI\Form,
     Nette\ComponentModel\IContainer;
 

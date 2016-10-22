@@ -27,15 +27,15 @@ class MailingForm extends \Nette\Application\UI\Form
         $this->addTextArea('body', 'Obsah emailu')->controlPrototype->class('tinyMCE')
             ->addRule(Form::FILLED, 'Zadejte obsah');
         $this->addText('copy', 'Zaslat kontrolní skrytou kopii na:')
-            ->addCondition(FORM::FILLED)
-            ->addRule(FORM::EMAIL, 'Zadejte platný mail');
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::EMAIL, 'Zadejte platný mail');
         $this->addGroup('Zaslat rolím:');
         $rolesContainer = $this->addContainer('roles');
 
 
         $i = 0;
         foreach ($roles as $role) {
-            if ($role->name != Role::GUEST) {
+            if ($role->name != Role::GUEST && $role->name != Role::UNAPPROVED) {
                 $i++;
                 $rolesContainer->addCheckbox("{$role->id}", "{$role->name} ({$role->users->count()} uživatelů)");
             }

@@ -4,7 +4,7 @@
     {else}
         {foreach $roles as $role}
             <strong>{$role->name}</strong><br>
-            Přihlášeno {$role->countUsersInRole()} {if $role->usersLimit != null}z {$role->usersLimit}{/if}<br><br>
+            Přihlášeni {$role->countApprovedUsersInRole()}{if $role->usersLimit != null} z {$role->usersLimit}{/if}<br><br>
         {/foreach}
     {/if}
 </div>

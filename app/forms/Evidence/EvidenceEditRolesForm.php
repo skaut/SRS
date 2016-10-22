@@ -6,10 +6,7 @@
  */
 namespace SRS\Form\Evidence;
 
-use Nette\Application\UI,
-    Nette\Diagnostics\Debugger,
-    Nette\Application\UI\Form,
-    Nette\ComponentModel\IContainer,
+use Nette\ComponentModel\IContainer,
     SRS\Model\Acl\Role;
 
 /**
@@ -24,7 +21,7 @@ class EvidenceEditRolesForm extends \SRS\Form\EntityForm
         $roles = $database->getRepository('\SRS\Model\Acl\Role')->findAll();
         $rolesGrid = array();
         foreach ($roles as $role) {
-            if ($role->name != Role::GUEST) {
+            if ($role->name != Role::GUEST && $role->name != Role::UNAPPROVED) {
                 $rolesGrid[$role->id] = $role->name;
             }
         }
@@ -43,12 +40,12 @@ class EvidenceEditRolesForm extends \SRS\Form\EntityForm
                 $role = $database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('id' => $roleId));
 
                 if ($role->usersLimit !== null) {
-                    $freeCapacity = $role->usersLimit - count($role->users);
+                    $freeCapacity = $role->countVacancies();
 
                     foreach($ids as $userId) {
                         $user = $database->getRepository('\SRS\Model\User')->findOneBy(array('id' => $userId));
-                        if ($user->isInRole($role->name))
-                            $freeCapacity++;
+                        if (!$user->approved || $user->isInRole($role->name))
+                            $usersCount--;
                     }
 
                     if ($freeCapacity < $usersCount)
@@ -92,16 +89,15 @@ class EvidenceEditRolesForm extends \SRS\Form\EntityForm
         $ids = explode(",", $values['ids']);
 
         $formValuesRoles = $this->getComponent('roles')->getRawValue(); //oklika
-        $values['roles'] = $formValuesRoles;
+
+        $roles = array();
+        foreach ($formValuesRoles as $roleId) {
+            $roles[] = $this->presenter->context->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('id' => $roleId));
+        }
 
         foreach($ids as $id) {
             $user = $this->presenter->context->database->getRepository('\SRS\Model\User')->findOneBy(array('id' => $id));
-            $user->removeAllRoles();
-
-            foreach ($values['roles'] as $roleId) {
-                $role = $this->presenter->context->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('id' => $roleId));
-                $user->addRole($role);
-            }
+            $user->changeRolesTo($roles);
         }
 
         $this->presenter->context->database->flush();

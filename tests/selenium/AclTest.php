@@ -31,7 +31,6 @@ class AclTest extends BaseSeleniumTest
         $this->waitForPageToLoad(self::WAIT);
         $this->addSelection("id=frmroleForm-permissions", "label=Vybírat si programy | Program");
         $this->addSelection("id=frmroleForm-permissions", "label=Přístup | Administrace");
-        $this->click("id=frmroleForm-pays");
         $this->click("id=frmroleForm-approvedAfterRegistration");
         $this->click("id=frmroleForm-submit");
         $this->waitForPageToLoad(self::WAIT);

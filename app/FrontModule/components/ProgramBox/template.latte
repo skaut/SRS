@@ -76,9 +76,9 @@
             </div>
 
             <div class="modal-footer" ng-model="config">
-                {if $isAllowedLogInPrograms}
-                    <button ng-hide="event.attends" ng-click="attend(event)" class="btn btn-success pull-left">Přihlásit na program</button>
-                    <button ng-show="event.attends" ng-click="unattend(event)" class="btn btn-danger pull-left">Odhlásit program</button>
+                {if $isAllowedLogInPrograms && $userHasPermission}
+                    <button ng-hide="event.attends" ng-click="attend(event)" class="btn btn-success pull-left">Přihlásit se na program</button>
+                    <button ng-show="event.attends" ng-click="unattend(event)" class="btn btn-danger pull-left">Odhlásit se z programu</button>
                 {/if}
                 <button class="btn pull-right" style="float:right;" data-dismiss="modal">Zavřít dialog</button>
             </div>

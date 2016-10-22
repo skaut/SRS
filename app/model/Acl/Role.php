@@ -6,7 +6,6 @@
  */
 namespace SRS\Model\Acl;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Criteria;
 
 
 /**
@@ -20,7 +19,6 @@ use Doctrine\Common\Collections\Criteria;
  * @property bool $registerable
  * @property bool $approvedAfterRegistration
  * @property integer $usersLimit
- * @property bool $pays
  * @property integer $fee
  * @property bool $displayInList
  * @property bool $displayCapacity
@@ -39,6 +37,7 @@ class Role extends \SRS\Model\BaseEntity
 {
     const GUEST = 'guest';
     const REGISTERED = 'Nepřihlášený';
+    const UNAPPROVED = 'Neschválený';
     const ATTENDEE = 'Účastník';
     const SERVICE_TEAM = 'Servis Tým';
     const LECTOR = 'Lektor';
@@ -92,7 +91,6 @@ class Role extends \SRS\Model\BaseEntity
      */
     protected $approvedAfterRegistration = false;
 
-
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
@@ -109,12 +107,6 @@ class Role extends \SRS\Model\BaseEntity
      * @ORM\Column(type="integer", nullable=true)
      */
     protected $usersLimit;
-
-    /**
-     * @var bool
-     * @ORM\Column(type="boolean")
-     */
-    protected $pays = false;
 
     /**
      * @var integer
@@ -330,22 +322,6 @@ class Role extends \SRS\Model\BaseEntity
     }
 
     /**
-     * @param boolean $pays
-     */
-    public function setPays($pays)
-    {
-        $this->pays = $pays;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function getPays()
-    {
-        return $this->pays;
-    }
-
-    /**
      * @param boolean $syncedWithSkautIS
      */
     public function setSyncedWithSkautIS($syncedWithSkautIS)
@@ -483,15 +459,23 @@ class Role extends \SRS\Model\BaseEntity
         $this->displayArrivalDeparture = $displayArrivalDeparture;
     }
 
-
-    public function countUsersInRole() {
+    public function countAllUsersInRole() {
         return count($this->users);
+    }
+
+    public function countApprovedUsersInRole() {
+        $usersCount = 0;
+        foreach ($this->users as $user) {
+            if ($user->approved)
+                $usersCount++;
+        }
+        return $usersCount;
     }
 
     public function countVacancies() {
         if ($this->usersLimit === null)
             return null;
-        return $this->usersLimit - $this->countUsersInRole();
+        return $this->usersLimit - $this->countApprovedUsersInRole();
     }
 
     public function addIncompatibleRole($role, $inversed = false) {
@@ -564,6 +548,11 @@ class RoleRepository extends \Doctrine\ORM\EntityRepository
         $query = $this->_em->createQuery("SELECT r FROM {$this->_entityName} r WHERE r.registerable=true
               AND (r.registerableFrom <= '{$today}' OR r.registerableFrom IS NULL)
               AND (r.registerableTo >= '{$today}' OR r.registerableTo IS NULL)");
+        return $query->getResult();
+    }
+
+    public function findCapacityLimitedRoles() {
+        $query = $this->_em->createQuery("SELECT r FROM {$this->_entityName} r WHERE r.usersLimit IS NOT NULL");
         return $query->getResult();
     }
 

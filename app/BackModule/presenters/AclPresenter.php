@@ -95,12 +95,14 @@ class AclPresenter extends BasePresenter
             $this->flashMessage('Systémovou roli nelze smazat', 'error');
             $this->redirect('this');
         }
+
         $roleRegistered = $this->roleRepo->findOneBy(array('name' => Role::REGISTERED));
-        foreach ($role->users as $dbuser) {
-            $dbuser->removeRole($role->name);
-            if ($dbuser->roles->isEmpty())
-                $dbuser->addRole($roleRegistered);
+        foreach ($role->users as $user) {
+            $user->removeRole($role->name);
+            if ($user->roles->isEmpty())
+                $user->addRole($roleRegistered);
         }
+
         $this->context->database->remove($role);
         $this->context->database->flush();
         $this->flashMessage('Role smazána', 'success');

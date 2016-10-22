@@ -9,7 +9,6 @@
 namespace SRS\Form\Configuration;
 
 use Nette\Application\UI,
-    Nette\Diagnostics\Debugger,
     Nette\Application\UI\Form,
     Nette\ComponentModel\IContainer;
 
@@ -33,20 +32,20 @@ class SettingsForm extends UI\Form
             ->addRule(Form::FILLED, 'Zadejte Jméno semináře');
 
         $this->addText('seminar_from_date', 'Začátek semináře')->setDefaultValue($this->dbsettings->get('seminar_from_date'))
-            ->addRule(FORM::PATTERN, 'Datum začátku semináře není ve správném tvaru', \SRS\Helpers::DATE_PATTERN)
+            ->addRule(Form::PATTERN, 'Datum začátku semináře není ve správném tvaru', \SRS\Helpers::DATE_PATTERN)
             ->addRule(Form::FILLED, 'Zadejte začátek semináře')->getControlPrototype()->class('datepicker');
 
         $this->addText('seminar_to_date', 'Konec semináře')->setDefaultValue($this->dbsettings->get('seminar_to_date'))
-            ->addRule(FORM::PATTERN, 'Datum konce semináře není ve správném tvaru', \SRS\Helpers::DATE_PATTERN)
+            ->addRule(Form::PATTERN, 'Datum konce semináře není ve správném tvaru', \SRS\Helpers::DATE_PATTERN)
             ->addRule(Form::FILLED, 'Zadejte konec semináře')->getControlPrototype()->class('datepicker');
 
         $this->addText('cancel_registration_to_date', 'Odhlašování povoleno do')->setDefaultValue($this->dbsettings->get('cancel_registration_to_date'))
-            ->addRule(FORM::PATTERN, 'Datum, do kdy je možné se ze semináře odhlásit, není ve správném tvaru', \SRS\Helpers::DATE_PATTERN)
+            ->addRule(Form::PATTERN, 'Datum, do kdy je možné se ze semináře odhlásit, není ve správném tvaru', \SRS\Helpers::DATE_PATTERN)
             ->addRule(Form::FILLED, 'Zadejte datum, do kdy je možné se ze semináře odhlásit')->getControlPrototype()->class('datepicker');
 
         $this->addText('seminar_email', 'Email pro mailing')->setDefaultValue($this->dbsettings->get('seminar_email'))
             ->addRule(Form::FILLED, 'Zadejte Email pro mailing')
-            ->addRule(FORM::EMAIL, 'Email není ve správném tvaru');
+            ->addRule(Form::EMAIL, 'Email není ve správném tvaru');
 
         $this->addText('variable_symbol_code', 'Předvolba variabilního symbolu', 2)->setDefaultValue($this->dbsettings->get('variable_symbol_code'))
             ->addRule(Form::FILLED, 'Zadejte předvolbu variabilního symbolu')

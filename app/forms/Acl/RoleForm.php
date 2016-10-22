@@ -8,9 +8,7 @@
 
 namespace SRS\Form;
 
-use Nette\Application\UI,
-    Nette\Diagnostics\Debugger,
-    Nette\Application\UI\Form,
+use Nette\Application\UI\Form,
     Nette\ComponentModel\IContainer;
 
 /**
@@ -32,17 +30,17 @@ class RoleForm extends EntityForm
 
         $this->addText('registerableFrom', 'Registrovatelná od')
             ->getControlPrototype()->class('datetimepicker')
-            ->addCondition(FORM::FILLED)
-            ->addRule(FORM::PATTERN, 'Datum a čas není ve správném tvaru', \SRS\Helpers::DATETIME_PATTERN);
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::PATTERN, 'Datum a čas není ve správném tvaru', \SRS\Helpers::DATETIME_PATTERN);
 
         $this->addText('registerableTo', 'Registrovatelná do')
             ->getControlPrototype()->class('datetimepicker')
-            ->addCondition(FORM::FILLED)
-            ->addRule(FORM::PATTERN, 'Datum a čas není ve správném tvaru', \SRS\Helpers::DATETIME_PATTERN);
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::PATTERN, 'Datum a čas není ve správném tvaru', \SRS\Helpers::DATETIME_PATTERN);
 
         $this->addText('usersLimit', 'Kapacita')
             ->getControlPrototype()->class('number')
-            ->addRule(FORM::INTEGER, 'Kapacita role musí být číslo');
+            ->addRule(Form::INTEGER, 'Kapacita role musí být číslo');
 
         $this->addCheckbox('approvedAfterRegistration', 'Je uživateli role po registraci automaticky schválena?');
 
@@ -54,13 +52,10 @@ class RoleForm extends EntityForm
 
         $this->addCheckbox('displayArrivalDeparture', 'Evidovat příjezd a odjezd');
 
-        $this->addCheckbox('pays', 'Platí za účast?');
-
         $this->addText('fee', 'Výše účastnického poplatku')
-            //->setDefaultValue(0)
             ->getControlPrototype()->class('number')
-            ->addCondition(FORM::FILLED)
-            ->addRule(FORM::INTEGER, 'Výše poplatku musí být číslo');
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::INTEGER, 'Výše poplatku musí být číslo');
 
         $this->addMultiSelect('permissions', 'Práva')->getControlPrototype()->class('multiselect');
 

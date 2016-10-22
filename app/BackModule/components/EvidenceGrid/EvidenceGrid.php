@@ -7,8 +7,8 @@
 namespace SRS\Components;
 
 use \NiftyGrid\Grid;
-use \Doctrine\ORM\Query\Expr;
-use \SRS\Model\Acl\Role;
+
+
 use \Nette\Utils\Html;
 
 /**
@@ -294,8 +294,10 @@ class EvidenceGrid extends Grid
     {
         foreach ($ids as $id) {
             $userToSave = $this->presenter->context->database->getRepository('\SRS\Model\User')->find($id);
-            $userToSave->paymentMethod = $method;
-            $userToSave->paymentDate = new \DateTime();
+            if ($userToSave->countFee()['fee'] != 0) {
+                $userToSave->paymentMethod = $method;
+                $userToSave->paymentDate = new \DateTime();
+            }
         }
 
         $this->presenter->context->database->flush();
@@ -328,18 +330,50 @@ class EvidenceGrid extends Grid
 
     public function handleApprove($ids)
     {
+        $users = array();
+
+        $rolesCapacities = array();
+        $roles = $this->presenter->context->database->getRepository('\SRS\Model\Acl\Role')->findCapacityLimitedRoles();
+        foreach ($roles as $role) {
+            $rolesCapacities[$role->id] = $role->countVacancies();
+        }
+
         foreach ($ids as $id) {
-            $userToSave = $this->presenter->context->database->getRepository('\SRS\Model\User')->find($id);
-            $userToSave->approved = True;
+            $users[] = $user = $this->presenter->context->database->getRepository('\SRS\Model\User')->find($id);
+            if (!$user->approved) {
+                foreach ($user->roles as $role) {
+                    if ($role->usersLimit !== null)
+                        $rolesCapacities[$role->id]--;
+                }
+            }
         }
 
-        $this->presenter->context->database->flush();
+        $error = false;
 
-        if (count($ids) > 1) {
-            $this->flashMessage("Vybraní uživatelé byli schváleni.", "success");
-        } else {
-            $this->flashMessage("Vybraný uživatel byl schválen.", "success");
+        foreach ($rolesCapacities as $roleCapacity) {
+            if ($roleCapacity < 0) {
+                $error = true;
+                break;
+            }
         }
+
+        if (!$error) {
+            foreach ($users as $user) {
+                $user->approved = true;
+            }
+
+            $this->presenter->context->database->flush();
+
+            if (count($ids) > 1) {
+                $this->flashMessage("Vybraní uživatelé byli schváleni.", "success");
+            } else {
+                $this->flashMessage("Vybraný uživatel byl schválen.", "success");
+            }
+        }
+        else {
+            $this->flashMessage("Kapacita role byla překročena.", "error");
+        }
+
         $this->redirect("this");
     }
 

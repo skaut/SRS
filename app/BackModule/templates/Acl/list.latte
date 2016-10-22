@@ -24,7 +24,7 @@ Práva a role
         <th>Registrovatelná od</th>
         <th>Registrovatelná do</th>
         <th>Obsazenost</th>
-        <th>Platí za účast?</th>
+        <th>Poplatek</th>
         <th>Operace</th>
     </tr>
     </thead>
@@ -36,8 +36,8 @@ Práva a role
             <td>{bool $role->registerable}</td>
             <td>{$role->registerableFrom|date:"d.m.Y H:i"}</td>
             <td>{$role->registerableTo|date:"d.m.Y H:i"}</td>
-            <td>{if $role->usersLimit === null}{$role->countUsersInRole()}{else}{$role->countUsersInRole() . "/" . $role->usersLimit}{/if}</td>
-            <td>{bool $role->pays}</td>
+            <td>{if $role->usersLimit === null}{$role->countApprovedUsersInRole()}{else}{$role->countApprovedUsersInRole() . "/" . $role->usersLimit}{/if}</td>
+            <td>{$role->fee}</td>
             <td>
                 <a class="btn" href="{link Acl:edit $role->id}">Upravit</a>
                 {if !$role->isSystem()}<a class="btn btn-danger confirm" href="{link deleteRole! $role->id}">Smazat</a>{/if}

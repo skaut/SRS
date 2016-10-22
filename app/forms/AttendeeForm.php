@@ -6,9 +6,7 @@
  */
 namespace SRS\Form;
 
-use Nette\Application\UI,
-    Nette\Diagnostics\Debugger,
-    Nette\Application\UI\Form,
+use Nette\Application\UI\Form,
     Nette\ComponentModel\IContainer,
     SRS\Model\Acl\Role;
 
@@ -33,7 +31,6 @@ class AttendeeForm extends ProfileForm
         $this->database = $database;
         $this->configParams = $configParams;
         parent::__construct($parent, $name);
-
     }
 
     public function submitted()
@@ -54,18 +51,15 @@ class AttendeeForm extends ProfileForm
                 $approved = false;
         }
 
-        $user->setProperties($values, $this->presenter->context->database);
-
         foreach ($user->roles as $role) {
             $requiredRoles = $role->getAllRequiredRoles();
             foreach ($requiredRoles as $requiredRole) {
-                if (!$user->roles->contains($requiredRole))
-                    $user->addRole($requiredRole);
                 if (!$requiredRole->approvedAfterRegistration)
                     $approved = false;
             }
         }
 
+        $user->setProperties($values, $this->presenter->context->database);
         $user->approved = $approved;
 
         $this->presenter->context->database->flush();
@@ -92,30 +86,14 @@ class AttendeeForm extends ProfileForm
             foreach ($values as $value) {
                 $role = $database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('id' => $value));
                 if ($role->usersLimit !== null) {
-                    if ($role->usersLimit < count($role->users) || (!$user->isInRole($role->name) && $role->usersLimit == count($role->users)))
+                    if ($role->countVacancies() == 0)
                         return false;
                 }
             }
             return true;
         };
 
-        $checkRequiredRolesCapacity = function($field, $database) {
-            $values = $this->getComponent('roles')->getRawValue();
-            $user = $database->getRepository('\SRS\Model\User')->findOneBy(array('id' => $this->getForm()->getHttpData()['id']));
-
-            foreach ($values as $value) {
-                $role = $database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('id' => $value));
-                foreach ($role->getAllRequiredRoles() as $requiredRole) {
-                    if ($requiredRole->usersLimit !== null) {
-                        if ($requiredRole->usersLimit < count($requiredRole->users) || (!$user->isInRole($requiredRole->name) && $requiredRole->usersLimit == count($requiredRole->users)))
-                            return false;
-                    }
-                }
-            }
-            return true;
-        };
-
-        $checkRolesCombination = function($field, $args) {
+        $checkIncompatibleRoles = function($field, $args) {
             $database = $args[0];
             $role = $args[1];
 
@@ -127,6 +105,21 @@ class AttendeeForm extends ProfileForm
             foreach ($values as $value) {
                 $testRole = $database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('id' => $value));
                 if ($role != $testRole && in_array($testRole, $role->incompatibleRoles->getValues()))
+                    return false;
+            }
+
+            return true;
+        };
+
+        $checkRequiredRoles = function($field, $role) {
+            $values = $this->getComponent('roles')->getRawValue();
+
+            if (!in_array($role->id, $values))
+                return true;
+
+            $requiredRoles = $role->getAllRequiredRoles();
+            foreach ($requiredRoles as $requiredRole) {
+                if (!in_array($requiredRole->id, $values))
                     return false;
             }
 
@@ -152,7 +145,6 @@ class AttendeeForm extends ProfileForm
 
         $rolesSelect = $this->addMultiSelect('roles', 'Přihlásit jako')
             ->addRule($checkRolesCapacity, 'Všechna místa v některé roli jsou obsazena.', $this->database)
-            ->addRule($checkRequiredRolesCapacity, 'Všechna místa v některé související roli jsou obsazena.', $this->database)
             ->addRule($checkRolesEmpty, 'Musí být vybrána alespoň jedna role.', $this->database)
             ->addRule($checkRolesRegisterable, 'Registrace do některé z rolí již není možná.', $this->database);
 
@@ -160,9 +152,9 @@ class AttendeeForm extends ProfileForm
 
         foreach($roles as $role) {
             $incompatibleRoles = $role->incompatibleRoles;
-            $incompatibleRolesSize = count($incompatibleRoles);
+            $incompatibleRolesCount = count($incompatibleRoles);
 
-            if ($incompatibleRolesSize > 0) {
+            if ($incompatibleRolesCount > 0) {
                 $messageThis = $role->name;
 
                 $first = true;
@@ -176,7 +168,25 @@ class AttendeeForm extends ProfileForm
                     }
                     $first = false;
                 }
-                $rolesSelect->addRule($checkRolesCombination, 'Není možné kombinovat roli ' . $messageThis . ' s rolemi: ' . $messageOthers . '.', [$this->database, $role]);
+                $rolesSelect->addRule($checkIncompatibleRoles, 'Není možné kombinovat roli ' . $messageThis . ' s rolemi: ' . $messageOthers . '.', [$this->database, $role]);
+            }
+
+            $requiredRoles = $role->requiredRoles;
+            $requiredRolesCount = count($requiredRoles);
+
+            if ($requiredRolesCount > 0) {
+                $messageThis = $role->name;
+
+                $first = true;
+                $messageOthers = "";
+                foreach ($requiredRoles as $requiredRole) {
+                    if ($first)
+                        $messageOthers .= $requiredRole->name;
+                    else
+                        $messageOthers .= ", " . $requiredRole->name;
+                    $first = false;
+                }
+                $rolesSelect->addRule($checkRequiredRoles, 'K roli ' . $messageThis . ' musíte mít vybrané role: ' . $messageOthers . '.', $role);
             }
         }
 
@@ -195,14 +205,14 @@ class AttendeeForm extends ProfileForm
         $this->addText('arrival', 'Příjezd')
             ->setAttribute('class', 'datetimepicker')
             ->setOption('id', 'arrivalInput')
-            ->addCondition(FORM::FILLED)
-            ->addRule(FORM::PATTERN, 'Datum a čas příjezdu není ve správném tvaru', \SRS\Helpers::DATETIME_PATTERN);
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::PATTERN, 'Datum a čas příjezdu není ve správném tvaru', \SRS\Helpers::DATETIME_PATTERN);
 
         $this->addText('departure', 'Odjezd')
             ->setAttribute('class', 'datetimepicker')
             ->setOption('id', 'departureInput')
-            ->addCondition(FORM::FILLED)
-            ->addRule(FORM::PATTERN, 'Datum a čas odjezdu není ve správném tvaru', \SRS\Helpers::DATETIME_PATTERN);
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::PATTERN, 'Datum a čas odjezdu není ve správném tvaru', \SRS\Helpers::DATETIME_PATTERN);
 
 
         $this->addCheckbox('agreement', 'Souhlasím, že uvedené údaje budou poskytnuty lektorům pro účely semináře')

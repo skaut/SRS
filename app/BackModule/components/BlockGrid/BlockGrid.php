@@ -7,7 +7,7 @@
 namespace SRS\Components;
 
 use \NiftyGrid\Grid;
-use \Doctrine\ORM\Query\Expr;
+
 use SRS\Model\Acl\Resource;
 use SRS\Model\Acl\Permission;
 
