@@ -78,10 +78,6 @@ class EvidenceEditForm extends \SRS\Form\EntityForm
 
         $this->addSelect('paymentMethod', 'Platební metoda')->setItems($configParams['payment_methods'])->setPrompt('Nezadáno');
 
-        $this->addText('variableSymbol', 'Variabilní symbol')
-            ->addCondition(Form::FILLED)
-            ->addRule(Form::INTEGER);
-
         $this->addText('paymentDate', 'Zaplaceno dne')
             ->getControlPrototype()->class('datepicker')
             ->addCondition(Form::FILLED)
@@ -137,10 +133,6 @@ class EvidenceEditForm extends \SRS\Form\EntityForm
         }
 
         $user->changeRolesTo($roles);
-
-        $code = $this->presenter->context->database->getRepository('\SRS\Model\Settings')->get('variable_symbol_code');
-        if ($user->generateVariableSymbol($code) == $values['variableSymbol'])
-            $values['variableSymbol'] = null;
 
         $user->setProperties($values, $this->presenter->context->database);
         $this->presenter->context->database->flush();
