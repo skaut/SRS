@@ -64,7 +64,7 @@ class AttendeeForm extends ProfileForm
 
         $this->presenter->context->database->flush();
         $this->presenter->flashMessage('Přihláška odeslána. Více o stavu přihlášky se dozvíte opět na stránce s přihlašovacím formuláře.', 'success forever');
-        $this->presenter->flashMessage('Pro zobrazení dalších informací o programu a platbě se musíte znovu přihlásit', 'info forever');
+        $this->presenter->flashMessage('Pro zobrazení dalších informací o programu a platbě se musíte znovu přihlásit.', 'info forever');
         $this->presenter->user->logout(true);
         $this->presenter->redirect(':Auth:logout');
     }
