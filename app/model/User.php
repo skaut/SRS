@@ -896,7 +896,7 @@ class User extends BaseEntity
                 $variableSymbol++;
             }
 
-            $this->variableSymbol = $variableSymbol;
+            $this->variableSymbol = str_pad($variableSymbol, 6, '0', STR_PAD_LEFT);
             $database->flush();
         }
 
