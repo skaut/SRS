@@ -1028,7 +1028,7 @@ class User extends BaseEntity
             }
 
             foreach ($oldCategories as $oldCategory) {
-                if (!in_array($oldCategory, $newCategories))
+                if (!in_array($oldCategory, $newCategories, true))
                     $this->removeProgramsInCategory($oldCategory);
             }
         }
