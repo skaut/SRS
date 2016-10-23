@@ -103,7 +103,8 @@ class RoleForm extends EntityForm
         $formValuesRequiredRoles = $this->getComponent('requiredRoles')->getRawValue(); //oklika
         $values['requiredRoles'] = $formValuesRequiredRoles;
 
-        if ($values['registerableTo'] != null && ($values['registerableTo'] < $values['registerableFrom'] && $values['registerableFrom'] != null)) {
+        if ($values['registerableTo'] != null && $values['registerableFrom'] != null &&
+            \DateTime::createFromFormat("d.m.Y H:i", $values['registerableTo']) <= \DateTime::createFromFormat("d.m.Y H:i", $values['registerableFrom'])) {
             $this->presenter->flashMessage('Datum do musí být větší než od', 'error');
         }
         else {
