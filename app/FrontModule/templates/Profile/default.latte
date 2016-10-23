@@ -84,11 +84,7 @@
             {if $usersPayingRolesCount > 0}
                 <li>
                     <strong>Variabilní symbol: </strong>
-                    {if $dbuser->variableSymbol == null}
-                        {$dbuser->generateVariableSymbol($variableSymbolCode)}
-                    {else}
-                        {$dbuser->variableSymbol}
-                    {/if}
+                    {$variableSymbol}
                 </li>
                 <li>
                     <strong>Poplatek uhrazen dne: </strong>

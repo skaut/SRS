@@ -428,7 +428,6 @@ class User extends BaseEntity
         $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
-
     /**
      * @param string $birhdate
      */
@@ -888,18 +887,24 @@ class User extends BaseEntity
     /**
      * @return string
      */
-    public function getVariableSymbol()
+    public function getVariableSymbol($database)
     {
-        return $this->variableSymbol;
+        if ($this->variableSymbol === null) {
+            $variableSymbol = $this->birthdate->format("ymd");
+
+            while ($database->getRepository('\SRS\model\User')->findOneBy(array("variableSymbol" => $variableSymbol)) !== null) {
+                $variableSymbol++;
+            }
+
+            $this->variableSymbol = $variableSymbol;
+            $database->flush();
+        }
+
+        $code = $database->getRepository('\SRS\model\Settings')->findOneBy(array("item" => "variable_symbol_code"))->value;
+
+        return $code . $this->variableSymbol;
     }
 
-    /**
-     * @param string $variableSymbol
-     */
-    public function setVariableSymbol($variableSymbol)
-    {
-        $this->variableSymbol = $variableSymbol;
-    }
     /**
      * @return string
      */
@@ -1015,7 +1020,7 @@ class User extends BaseEntity
 
         $this->roles->clear();
 
-        if (count($roles) == 1 && $roles[0]->name = Role::REGISTERED)
+        if (count($roles) == 1 && $roles[0]->name == Role::REGISTERED)
             $this->removeAllPrograms();
         else {
             foreach ($roles as $role) {
@@ -1023,7 +1028,7 @@ class User extends BaseEntity
             }
 
             foreach ($oldCategories as $oldCategory) {
-                if (!in_array($oldCategory, $newCategories))
+                if (!in_array($oldCategory, $newCategories, true))
                     $this->removeProgramsInCategory($oldCategory);
             }
         }
@@ -1081,10 +1086,6 @@ class User extends BaseEntity
         $feeWord = str_replace(" ", "", $feeWord);
 
         return array("fee" => $fee, "feeWord" => $feeWord);
-    }
-
-    public function generateVariableSymbol($code) {
-        return $code . $this->birthdate->format("ymd");
     }
 
     public function displayArrivalDeparture() {

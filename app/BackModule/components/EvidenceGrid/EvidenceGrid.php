@@ -116,9 +116,9 @@ class EvidenceGrid extends Grid
         if ($this->columnsVisibility['variableSymbol'])
             $this->addColumn('variableSymbol', 'Variabilní symbol')
                 ->setRenderer(function ($row) {
-                    $variableSymbolCode = $this->dbsettings->get('variable_symbol_code');
+                    //$variableSymbolCode = $this->dbsettings->get('variable_symbol_code');
                     $user = $this->em->getRepository('\SRS\model\User')->find($row->id);
-                    return $row->variableSymbol === null ? $user->generateVariableSymbol($variableSymbolCode) : $row->variableSymbol;
+                    return $user->getVariableSymbol($this->em);
                 });
 
         if ($this->columnsVisibility['paymentDate'])
