@@ -171,7 +171,7 @@ class AttendeeForm extends ProfileForm
                 $rolesSelect->addRule($checkIncompatibleRoles, 'Není možné kombinovat roli ' . $messageThis . ' s rolemi: ' . $messageOthers . '.', [$this->database, $role]);
             }
 
-            $requiredRoles = $role->requiredRoles;
+            $requiredRoles = $role->getAllRequiredRoles();
             $requiredRolesCount = count($requiredRoles);
 
             if ($requiredRolesCount > 0) {
