@@ -25,7 +25,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @property bool $displayArrivalDeparture
  * @property bool $syncedWithSkautIS
  * @property \Doctrine\Common\Collections\ArrayCollection $incompatibleRoles
- * @property \SRS\Model\Acl\Role $requiredByRole
+ * @property \Doctrine\Common\Collections\ArrayCollection $requiredByRole
  * @property \Doctrine\Common\Collections\ArrayCollection $requiredRoles
  * @property \Doctrine\Common\Collections\ArrayCollection $registerableCategories
  * @property \DateTime|string $registerableFrom
@@ -286,7 +286,7 @@ class Role extends \SRS\Model\BaseEntity
      */
     public function setFee($fee)
     {
-        $this->fee = (int) $fee;
+        $this->fee = $fee;
     }
 
     /**
@@ -493,7 +493,7 @@ class Role extends \SRS\Model\BaseEntity
             $role->removeIncompatibleRole($this, true);
     }
 
-    public function removeAllIncompatibleRoles($oldIncompatibleRoles) {
+    public function removeIncompatibleRoles($oldIncompatibleRoles) {
         foreach($oldIncompatibleRoles as $role) {
             $this->removeIncompatibleRole($role);
         }
@@ -525,6 +525,26 @@ class Role extends \SRS\Model\BaseEntity
         $allRequiredRoles[] = $role;
         foreach ($role->requiredRoles as $requiredRole) {
             $this->getAllRequiredRolesRec($allRequiredRoles, $requiredRole);
+        }
+    }
+
+    public function getAllRequiredByRole() {
+        $allRequiredByRole = array();
+
+        foreach ($this->requiredByRole as $requiredByRole) {
+            $this->getAllRequiredByRoleRec($allRequiredByRole, $requiredByRole);
+        }
+
+        return $allRequiredByRole;
+    }
+
+    private function getAllRequiredByRoleRec(&$allRequiredByRole, $role) {
+        if ($this == $role || in_array($role, $allRequiredByRole)) {
+            return;
+        }
+        $allRequiredByRole[] = $role;
+        foreach ($role->requiredByRole as $requiredByRole) {
+            $this->getAllRequiredByRoleRec($allRequiredByRole, $requiredByRole);
         }
     }
 }

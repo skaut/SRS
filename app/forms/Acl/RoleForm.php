@@ -88,51 +88,11 @@ class RoleForm extends EntityForm
         $formValuesIncompatibleRoles = $this->getComponent('incompatibleRoles')->getRawValue(); //oklika
         $values['incompatibleRoles'] = $formValuesIncompatibleRoles;
 
-        $formValuesIncompatibleRoles = $this->getComponent('requiredRoles')->getRawValue(); //oklika
-        $values['requiredRoles'] = $formValuesIncompatibleRoles;
-
-        $incompatibleAndRequired = false;
-        foreach ($values['incompatibleRoles'] as $incompatibleRoleId) {
-            foreach ($values['requiredRoles'] as $requiredRoleId) {
-                if ($incompatibleRoleId == $requiredRoleId) {
-                    $incompatibleAndRequired = true;
-                    break;
-                }
-
-                $requiredRole = $this->presenter->roleRepo->find($requiredRoleId);
-                $requiredRoles = $requiredRole->getAllRequiredRoles();
-                foreach ($requiredRoles as $requiredRole) {
-                    if ($incompatibleRoleId == $requiredRole->id) {
-                        $incompatibleAndRequired = true;
-                        break;
-                    }
-                }
-
-                if ($incompatibleAndRequired)
-                    break;
-            }
-
-            if ($incompatibleAndRequired)
-                break;
-
-            $incompatibleRole = $this->presenter->roleRepo->find($incompatibleRoleId);
-            $incompatibleRequiredRoles = $incompatibleRole->getAllRequiredRoles();
-            foreach ($incompatibleRequiredRoles as $incompatibleRequiredRole) {
-                if ($incompatibleRequiredRole == $role) {
-                    $incompatibleAndRequired = true;
-                    break;
-                }
-            }
-
-            if ($incompatibleAndRequired)
-                break;
-        }
+        $formValuesRequiredRoles = $this->getComponent('requiredRoles')->getRawValue(); //oklika
+        $values['requiredRoles'] = $formValuesRequiredRoles;
 
         if ($values['registerableTo'] != null && ($values['registerableTo'] < $values['registerableFrom'] && $values['registerableFrom'] != null)) {
             $this->presenter->flashMessage('Datum do musí být větší než od', 'error');
-        }
-        else if ($incompatibleAndRequired) {
-            $this->presenter->flashMessage('Související role nemůže být zároveň neregistrovatelná s touto rolí', 'error');
         }
         else {
             $role->setProperties($values, $this->presenter->context->database);
@@ -146,20 +106,29 @@ class RoleForm extends EntityForm
             if ($values['usersLimit'] == null) {
                 $role->usersLimit = null;
             }
+            if ($values['fee'] == null) {
+                $role->fee = null;
+            }
 
-            $role->removeAllIncompatibleRoles($oldIncompatibleRoles);
+            // mazani neregistrovatelnych roli z opacne strany
+            $role->removeIncompatibleRoles($oldIncompatibleRoles);
             foreach($values['incompatibleRoles'] as $incompatibleRoleId) {
                 $incompatibleRole = $this->presenter->roleRepo->find($incompatibleRoleId);
                 $role->addIncompatibleRole($incompatibleRole);
             }
 
-            $this->presenter->context->database->flush();
-            $this->presenter->flashMessage('Role upravena', 'success');
-            $submitName = ($this->isSubmitted());
-            $submitName = $submitName->htmlName;
+            if (!$this->areCompatible($role)) {
+                $this->presenter->flashMessage('Související role nemůže být zároveň neregistrovatelná s touto rolí', 'error');
+            }
+            else {
+                $this->presenter->context->database->flush();
+                $this->presenter->flashMessage('Role upravena', 'success');
+                $submitName = ($this->isSubmitted());
+                $submitName = $submitName->htmlName;
 
-            if ($submitName == 'submit_continue') $this->presenter->redirect('this');
-            $this->presenter->redirect('Acl:list');
+                if ($submitName == 'submit_continue') $this->presenter->redirect('this');
+                $this->presenter->redirect('Acl:list');
+            }
         }
     }
 
@@ -168,5 +137,43 @@ class RoleForm extends EntityForm
         foreach ($this->getErrors() as $error) {
             $this->presenter->flashMessage($error, 'error');
         }
+    }
+
+    private function areCompatible($role) {
+        foreach ($role->incompatibleRoles as $incompatibleRole) {
+            foreach ($role->requiredRoles as $requiredRole) {
+                //vybrana stejna role jako neregistrovatelna i souvisejici
+                if ($incompatibleRole == $requiredRole)
+                    return false;
+
+                //role souvisi s roli, ktera neni s touto registrovatelna
+                $allRequiredRoles = $requiredRole->getAllRequiredRoles();
+                foreach ($allRequiredRoles as $allRequiredRole) {
+                    if ($incompatibleRole == $allRequiredRole)
+                        return false;
+                }
+            }
+
+            //role je neregistrovatelna s roli, ktera s touto roli souvisi
+            $incompatibleRequiredRoles = $incompatibleRole->getAllRequiredRoles();
+            foreach ($incompatibleRequiredRoles as $incompatibleRequiredRole) {
+                if ($incompatibleRequiredRole == $role)
+                    return false;
+            }
+        }
+
+        //nektera role pozadujici tuto roli, neni registrovatelna s roli pozadovanou touto roli
+        $requiredByRoleRoles = $role->getAllRequiredByRole();
+        $requiredRoles = $role->getAllRequiredRoles();
+        foreach ($requiredByRoleRoles as $requiredByRoleRole) {
+            foreach ($requiredByRoleRole->incompatibleRoles as $requiredByRoleIncompatibleRole) {
+                foreach($requiredRoles as $requiredRole) {
+                    if ($requiredByRoleIncompatibleRole == $requiredRole)
+                        return false;
+                }
+            }
+        }
+
+        return true;
     }
 }
