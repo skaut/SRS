@@ -1,16 +1,11 @@
 <?php
-/**
- * Date: 18.2.13
- * Time: 10:16
- * Author: Michal Májský
- */
 namespace SRS\Form\Evidence;
 
 use Nette\ComponentModel\IContainer,
     SRS\Model\Acl\Role;
 
 /**
- * Formular pro upravu udaju ucastnika na detailu
+ * Formular pro hromadnou upravu roli ucastniku
  */
 class EvidenceEditRolesForm extends \SRS\Form\EntityForm
 {

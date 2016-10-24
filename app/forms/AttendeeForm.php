@@ -44,19 +44,10 @@ class AttendeeForm extends ProfileForm
         $user->removeRole(Role::REGISTERED);
 
         $approved = true;
-
         foreach ($values['roles'] as $roleId) {
             $role = $this->presenter->context->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('id' => $roleId));
             if (!$role->approvedAfterRegistration)
                 $approved = false;
-        }
-
-        foreach ($user->roles as $role) {
-            $requiredRoles = $role->getAllRequiredRoles();
-            foreach ($requiredRoles as $requiredRole) {
-                if (!$requiredRole->approvedAfterRegistration)
-                    $approved = false;
-            }
         }
 
         $user->setProperties($values, $this->presenter->context->database);

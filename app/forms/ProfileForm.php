@@ -37,8 +37,11 @@ class ProfileForm extends EntityForm
         $user = $this->em->getRepository('\SRS\Model\User')->find($values['id']);
 
         $user->setProperties($values, $this->presenter->context->database);
+
         $user->displayName = "{$user->lastName} {$user->firstName}";
-        if ($user->nickName != '') $user->displayName .= " ({$user->nickName})";
+        if ($user->nickName != '')
+            $user->displayName .= " ({$user->nickName})";
+
         $this->em->flush();
 
         $skautISPerson = $this->skautIS->getPerson($this->presenter->context->user->identity->token, $user->skautISPersonId);
@@ -48,6 +51,7 @@ class ProfileForm extends EntityForm
         } catch (\SoapFault $e) {
             $this->presenter->flashMessage('Synchronizace se skautIS se nepodařila', 'error');
         }
+
         $this->presenter->flashMessage('Data aktualizována', 'success');
         $this->presenter->redirect('this');
     }
@@ -61,25 +65,35 @@ class ProfileForm extends EntityForm
     protected function setFields()
     {
         $this->addHidden('id');
+
         $this->addSelect('sex', 'Pohlaví')->setItems(array('male' => 'Muž', 'female' => 'Žena'))
             ->addRule(Form::FILLED, 'Zadejte pohlaví');
+
         $this->addText('firstName', 'Jméno')
             ->addRule(Form::FILLED, 'Zadejte jméno');
+
         $this->addText('lastName', 'Příjmení')
             ->addRule(Form::FILLED, 'Zadejte příjmení');
+
         $this->addText('nickName', 'Přezdívka');
+
         $this->addText('birthdate', 'Datum narození')
             ->addRule(Form::FILLED, 'Zadejte datum narození')->getControlPrototype()->class('datepicker');
-        //@TODO - pro aktualizaci emailu je treba udelit zvlastni pravo, ktere SRS zatim nema
+
+//        @TODO - pro aktualizaci emailu je treba udelit zvlastni pravo, ktere SRS zatim nema
 //        $this->addText('email', 'Email:')
 //            ->addRule(Form::FILLED, 'Zadejte e-mailovou adresu')
 //            ->addRule(Form::EMAIL, 'E-mail není ve správném tvaru');
+
         $this->addText('street', 'Ulice')
             ->addRule(Form::FILLED, 'Zadejte Ulici');
+
         $this->addText('city', 'Město')
             ->addRule(Form::FILLED, 'Zadejte Město');
+
         $this->addText('postcode', 'PSČ')
             ->addRule(Form::FILLED, 'Zadejte PSČ');
+
         $this->addText('state', 'Stát')
             ->addRule(Form::FILLED, 'Zadejte stát');
     }
@@ -93,6 +107,4 @@ class ProfileForm extends EntityForm
         $this->em = $em;
         $this->skautIS = $skautIS;
     }
-
-
 }
