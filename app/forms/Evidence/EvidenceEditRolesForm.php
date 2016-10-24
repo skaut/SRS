@@ -17,7 +17,10 @@ class EvidenceEditRolesForm extends \SRS\Form\EntityForm
         $rolesGrid = array();
         foreach ($roles as $role) {
             if ($role->name != Role::GUEST && $role->name != Role::UNAPPROVED) {
-                $rolesGrid[$role->id] = $role->name;
+                if ($role->usersLimit !== null)
+                    $rolesGrid[$role->id] = "{$role->name} (obsazeno {$role->countApprovedUsersInRole()}/{$role->usersLimit})";
+                else
+                    $rolesGrid[$role->id] = "{$role->name}";
             }
         }
 
