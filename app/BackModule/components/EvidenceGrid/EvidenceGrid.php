@@ -56,7 +56,9 @@ class EvidenceGrid extends Grid
         $self = $this;
         $visibility = $this->columnsVisibility;
         if ($this->columnsVisibility['displayName'])
-            $this->addColumn('displayName', 'Jméno')->setTextFilter()->setAutocomplete($numOfResults);
+            $this->addColumn('displayName', 'Jméno')
+                ->setTextFilter()
+                ->setAutocomplete($numOfResults);
 
         if ($this->columnsVisibility['roles'])
             $this->addColumn('roles', 'Role')
@@ -115,8 +117,9 @@ class EvidenceGrid extends Grid
 
         if ($this->columnsVisibility['variableSymbol'])
             $this->addColumn('variableSymbol', 'Variabilní symbol')
-                ->setRenderer(function ($row) {
-                    //$variableSymbolCode = $this->dbsettings->get('variable_symbol_code');
+                ->setTextFilter()
+                ->setAutocomplete($numOfResults)
+                ->setRenderer(function ($row) use ($paymentMethods) {
                     $user = $this->em->getRepository('\SRS\model\User')->find($row->id);
                     $user->generateVariableSymbol($this->em);
                     return $user->variableSymbol;
