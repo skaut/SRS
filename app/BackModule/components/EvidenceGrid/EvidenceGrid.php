@@ -60,6 +60,11 @@ class EvidenceGrid extends Grid
                 ->setTextFilter()
                 ->setAutocomplete($numOfResults);
 
+        if ($this->columnsVisibility['username'])
+            $this->addColumn('username', 'Uživatelské jméno')
+                ->setTextFilter()
+                ->setAutocomplete($numOfResults);
+
         if ($this->columnsVisibility['roles'])
             $this->addColumn('roles', 'Role')
                 ->setRenderer(function ($row) {
