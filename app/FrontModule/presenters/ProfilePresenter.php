@@ -43,6 +43,9 @@ class ProfilePresenter extends BasePresenter
         $form = $this['aboutForm'];
         $form->bindEntity($user);
 
+        $form = $this['rolesForm'];
+        $form->bindEntity($user);
+
         $birthday = \explode("T", $skautISPerson->Birthday);
         $skautISPerson->birthdate = $birthday[0];
 
@@ -88,4 +91,9 @@ class ProfilePresenter extends BasePresenter
         return $form;
     }
 
+    protected function createComponentRolesForm()
+    {
+        $form = new \SRS\Form\RolesForm(null, null, $this->context->database, $this->userRepo->find($this->context->user->id));
+        return $form;
+    }
 }
