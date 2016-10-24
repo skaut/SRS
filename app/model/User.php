@@ -887,22 +887,17 @@ class User extends BaseEntity
     /**
      * @return string
      */
-    public function getVariableSymbol($database)
+    public function getVariableSymbol()
     {
-        if ($this->variableSymbol === null) {
-            $variableSymbol = $this->birthdate->format("ymd");
+        return $this->variableSymbol;
+    }
 
-            while ($database->getRepository('\SRS\model\User')->findOneBy(array("variableSymbol" => $variableSymbol)) !== null) {
-                $variableSymbol++;
-            }
-
-            $this->variableSymbol = str_pad($variableSymbol, 6, '0', STR_PAD_LEFT);
-            $database->flush();
-        }
-
-        $code = $database->getRepository('\SRS\model\Settings')->findOneBy(array("item" => "variable_symbol_code"))->value;
-
-        return $code . $this->variableSymbol;
+    /**
+     * @param string $variableSymbol
+     */
+    public function setVariableSymbol($variableSymbol)
+    {
+        $this->variableSymbol = $variableSymbol;
     }
 
     /**
@@ -1094,6 +1089,21 @@ class User extends BaseEntity
                 return true;
         }
         return false;
+    }
+
+    public function generateVariableSymbol($database) {
+        if ($this->variableSymbol === null) {
+            $code = $database->getRepository('\SRS\model\Settings')->findOneBy(array("item" => "variable_symbol_code"))->value;
+
+            $variableSymbol = $code . $this->birthdate->format("ymd");
+
+            while ($database->getRepository('\SRS\model\User')->findOneBy(array("variableSymbol" => $variableSymbol)) !== null) {
+                $variableSymbol++;
+            }
+
+            $this->variableSymbol = str_pad($variableSymbol, 8, '0', STR_PAD_LEFT);
+            $database->flush();
+        }
     }
 }
 

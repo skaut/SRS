@@ -72,11 +72,12 @@ class EvidencePresenter extends BasePresenter
             throw new \Nette\Application\BadRequestException("Takový uživatel neexistuje", 404);
         }
 
+        $user->generateVariableSymbol($this->context->database);
+
         //$user je v template defaultne
         $this->template->dbuser = $user;
         $this->template->customFields = $this->getFilledCustomFields($user);
         $this->template->paymentMethods = $this->context->parameters['payment_methods'];
-        $this->template->variableSymbol = $user->getVariableSymbol($this->context->database);
         $this->template->pays = $user->countFee()['fee'] != 0;
     }
 
@@ -90,6 +91,9 @@ class EvidencePresenter extends BasePresenter
         if ($user == null) {
             throw new \Nette\Application\BadRequestException("Takový uživatel neexistuje", 404);
         }
+
+        $user->generateVariableSymbol($this->context->database);
+
         $form = $this->getComponent('evidenceEditForm');
         $form->bindEntity($user);
 

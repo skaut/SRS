@@ -47,7 +47,7 @@ class SettingsForm extends UI\Form
             ->addRule(Form::FILLED, 'Zadejte Email pro mailing')
             ->addRule(Form::EMAIL, 'Email není ve správném tvaru');
 
-        $this->addText('variable_symbol_code', 'Předvolba variabilního symbolu', 2)->setDefaultValue($this->dbsettings->get('variable_symbol_code'))
+        $this->addText('variable_symbol_code', 'Předvolba variabilního symbolu (neovlivní již vygenerované)', 2)->setDefaultValue($this->dbsettings->get('variable_symbol_code'))
             ->addRule(Form::FILLED, 'Zadejte předvolbu variabilního symbolu')
             ->addRule(Form::INTEGER, 'Zadejte 2 číslice')
             ->addRule(Form::COUNT, 'Zadejte 2 číslice', 2);

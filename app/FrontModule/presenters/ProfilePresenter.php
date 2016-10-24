@@ -35,6 +35,8 @@ class ProfilePresenter extends BasePresenter
          */
         $user = $this->userRepo->find($this->context->user->id);
         $skautISPerson = $this->skautIS->getPerson($this->user->identity->token, $user->skautISPersonId);
+        $user->generateVariableSymbol($this->context->database);
+
         $form = $this['profileForm'];
         $form->bindEntity($user);
 
@@ -47,7 +49,6 @@ class ProfilePresenter extends BasePresenter
         $this->template->skautISPerson = $skautISPerson;
         $this->template->dbuser = $user;
         $this->template->basicBlockDuration = $this->dbsettings->get('basic_block_duration');
-        $this->template->variableSymbol = $user->getVariableSymbol($this->context->database);
         $this->template->displayCancelRegistration = \DateTime::createFromFormat("d.m.Y", $this->dbsettings->get('cancel_registration_to_date')) >= new \DateTime() ? true : false;
 
         $usersPayingRoles = $this->userRepo->findUsersPayingRoles($user->id);
