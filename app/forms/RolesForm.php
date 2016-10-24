@@ -20,9 +20,9 @@ class RolesForm extends \SRS\Form\EntityForm
         foreach ($roles as $role) {
             if ($role->name != Role::GUEST && $role->name != Role::UNAPPROVED) {
                 if ($role->usersLimit === null)
-                    $rolesGrid[$role->id] = $role->name . " (obsazeno " . $role->countApprovedUsersInRole() . ")";
+                    $rolesGrid[$role->id] = $role->name;
                 else
-                    $rolesGrid[$role->id] = $role->name . " (obsazeno " . $role->countApprovedUsersInRole() . "/" . $role->usersLimit . ")";
+                    $rolesGrid[$role->id] = "{$role->name} (obsazeno {$role->countApprovedUsersInRole()}/{$role->usersLimit})";
                 $availableRoles[] = $role;
             }
         }
@@ -30,9 +30,9 @@ class RolesForm extends \SRS\Form\EntityForm
             if ($role->name != Role::GUEST && $role->name != Role::UNAPPROVED && $role->name != Role::REGISTERED) {
                 if (!in_array($role, $availableRoles)) {
                     if ($role->usersLimit === null)
-                        $rolesGrid[$role->id] = $role->name . " (obsazeno " . $role->countApprovedUsersInRole() . ")";
+                        $rolesGrid[$role->id] = $role->name;
                     else
-                        $rolesGrid[$role->id] = $role->name . " (obsazeno " . $role->countApprovedUsersInRole() . "/" . $role->usersLimit . ")";
+                        $rolesGrid[$role->id] = "{$role->name} (obsazeno {$role->countApprovedUsersInRole()}/{$role->usersLimit})";
                     $availableRoles[] = $role;
                 }
             }

@@ -27,15 +27,14 @@ class AttendeeBox extends \Nette\Application\UI\Control
                 $form = $this['attendeeForm'];
 
                 $roles = $this->presenter->context->database->getRepository('\SRS\Model\Acl\Role')->findRegisterableNow();
-                $roleFormChoices = array();
+                $rolesGrid = array();
                 foreach ($roles as $role) {
-                    $vacancies = $role->countVacancies();
-                    if ($vacancies !== null)
-                        $roleFormChoices[$role->id] = "{$role->name} (volno {$vacancies}/{$role->usersLimit})";
+                    if ($role->usersLimit !== null)
+                        $rolesGrid[$role->id] = "{$role->name} (obsazeno {$role->countApprovedUsersInRole()}/{$role->usersLimit})";
                     else
-                        $roleFormChoices[$role->id] = "{$role->name}";
+                        $rolesGrid[$role->id] = "{$role->name}";
                 }
-                $this['attendeeForm']['roles']->setItems($roleFormChoices);
+                $this['attendeeForm']['roles']->setItems($rolesGrid);
 
                 $form->bindEntity($user->identity->object);
             }
