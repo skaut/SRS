@@ -95,6 +95,11 @@ label.required:after, tr.required label:after {
     font-weight: bold;
 }
 
+.table-padding td {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
 
 
 
