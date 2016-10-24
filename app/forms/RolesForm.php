@@ -154,7 +154,7 @@ class RolesForm extends \SRS\Form\EntityForm
 
         $rolesSelect->getControlPrototype()->class('multiselect');
 
-        $this->addSubmit('submit', 'Uložit');
+        $this->addSubmit('submit', 'Upravit role');
         $this->onSuccess[] = callback($this, 'submitted');
         $this->onError[] = callback($this, 'error');
     }
