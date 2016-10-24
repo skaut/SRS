@@ -78,6 +78,10 @@ class EvidenceEditForm extends \SRS\Form\EntityForm
 
         $this->addSelect('paymentMethod', 'Platební metoda')->setItems($configParams['payment_methods'])->setPrompt('Nezadáno');
 
+        $this->addText('variableSymbol', 'Variabilní symbol')
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::INTEGER);
+
         $this->addText('paymentDate', 'Zaplaceno dne')
             ->getControlPrototype()->class('datepicker')
             ->addCondition(Form::FILLED)

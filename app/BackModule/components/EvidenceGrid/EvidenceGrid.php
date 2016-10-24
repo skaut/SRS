@@ -118,7 +118,8 @@ class EvidenceGrid extends Grid
                 ->setRenderer(function ($row) {
                     //$variableSymbolCode = $this->dbsettings->get('variable_symbol_code');
                     $user = $this->em->getRepository('\SRS\model\User')->find($row->id);
-                    return $user->getVariableSymbol($this->em);
+                    $user->generateVariableSymbol($this->em);
+                    return $user->variableSymbol;
                 });
 
         if ($this->columnsVisibility['paymentDate'])
