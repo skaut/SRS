@@ -52,6 +52,9 @@
     <div>
         {form rolesForm}
             <table class="table-padding">
+                <col width="20%">
+                <col width="80%">
+
                 <tr>
                     <td><strong>Účast na semináři </strong></td>
                     <td>
@@ -110,112 +113,145 @@
                     </tr>
                 {/if}
 
-                <tr>
-                    <td>{label roles /}</td>
-                    <td class="local">{input roles }</td>
-                </tr>
+                {if !$user->isInRole(\SRS\model\Acl\Role::REGISTERED)}
+                    <tr>
+                        <td>{label roles /}</td>
+                        <td class="local">{input roles }</td>
+                    </tr>
 
-                <tr>
-                    <td colspan="1">
-                        {input submit}
-                    </td>
-                </tr>
+                    <tr>
+                        <td colspan="1">
+                            {input submit}
+                        </td>
+                    </tr>
+                {/if}
             </table>
         {/form}
     </div>
 
     <h2>Osobní údaje</h2>
-    {form profileForm}
-        <table>
-            <tr>
-                <th>&nbsp;</th>
-                <th>Lokální data</th>
-                <th>&nbsp;</th>
-                <th>Data ze skautIS</th>
-            </tr>
+    <div>
+        {form profileForm}
+            <table>
+                <col width="20%">
+                <col width="25%">
+                <col width="30%">
+                <col width="25%">
 
-            <tr class="required">
-                <td>{label sex /}</td>
-                <td class="local">{input sex }</td>
-                <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
-                <td class="skautIS">{$skautISPerson->Sex}</td>
-            </tr>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th>Lokální data</th>
+                    <th>&nbsp;</th>
+                    <th>Data ze skautIS</th>
+                </tr>
 
-            <tr class="required">
-                <td>{label firstName /}</td>
-                <td class="local">{input firstName }</td>
-                <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
-                <td class="skautIS">{$skautISPerson->FirstName}</td>
-            </tr>
+                <tr class="required">
+                    <td>{label sex /}</td>
+                    <td class="local">{input sex }</td>
+                    <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
+                    <td class="skautIS">{$skautISPerson->Sex}</td>
+                </tr>
 
-            <tr class="required">
-                <td>{label lastName /}</td>
-                <td class="local">{input lastName }</td>
-                <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
-                <td class="skautIS">{$skautISPerson->LastName}</td>
-            </tr>
+                <tr class="required">
+                    <td>{label firstName /}</td>
+                    <td class="local">{input firstName }</td>
+                    <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
+                    <td class="skautIS">{$skautISPerson->FirstName}</td>
+                </tr>
 
-            <tr>
-                <td>{label nickName /}</td>
-                <td class="local">{input nickName }</td>
-                <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
-                <td class="skautIS">{$skautISPerson->NickName}</td>
-            </tr>
+                <tr class="required">
+                    <td>{label lastName /}</td>
+                    <td class="local">{input lastName }</td>
+                    <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
+                    <td class="skautIS">{$skautISPerson->LastName}</td>
+                </tr>
 
-            <tr class="required">
-                <td>{label birthdate /}</td>
-                <td class="local">{input birthdate }</td>
-                <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
-                <td class="skautIS">{$skautISPerson->birthdate|date:'d.m.Y'}</td>
-            </tr>
+                <tr>
+                    <td>{label nickName /}</td>
+                    <td class="local">{input nickName }</td>
+                    <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
+                    <td class="skautIS">{$skautISPerson->NickName}</td>
+                </tr>
 
-            {*<tr class="required">*}
-            {*<td>{label email /}</td>*}
-            {*<td class="local">{input email }</td>*}
-            {*<td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>*}
-            {*<td class="skautIS">{$skautISPerson->Email}</td>*}
-            {*</tr>*}
+                <tr class="required">
+                    <td>{label birthdate /}</td>
+                    <td class="local">{input birthdate }</td>
+                    <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
+                    <td class="skautIS">{$skautISPerson->birthdate|date:'d.m.Y'}</td>
+                </tr>
 
-            <tr class="required">
-                <td>{label street /}</td>
-                <td class="local">{input street }</td>
-                <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
-                <td class="skautIS">{$skautISPerson->Street}</td>
-            </tr>
+                {*<tr class="required">*}
+                {*<td>{label email /}</td>*}
+                {*<td class="local">{input email }</td>*}
+                {*<td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>*}
+                {*<td class="skautIS">{$skautISPerson->Email}</td>*}
+                {*</tr>*}
 
-            <tr class="required">
-                <td>{label city /}</td>
-                <td class="local">{input city }</td>
-                <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
-                <td class="skautIS">{$skautISPerson->City}</td>
-            </tr>
+                <tr class="required">
+                    <td>{label street /}</td>
+                    <td class="local">{input street }</td>
+                    <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
+                    <td class="skautIS">{$skautISPerson->Street}</td>
+                </tr>
 
-            <tr class="required">
-                <td>{label postcode /}</td>
-                <td class="local">{input postcode }</td>
-                <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
-                <td class="skautIS">{$skautISPerson->Postcode}</td>
-            </tr>
+                <tr class="required">
+                    <td>{label city /}</td>
+                    <td class="local">{input city }</td>
+                    <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
+                    <td class="skautIS">{$skautISPerson->City}</td>
+                </tr>
 
-            <tr class="required">
-                <td>{label state /}</td>
-                <td class="local">{input state }</td>
-                <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
-                <td class="skautIS">{$skautISPerson->State}</td>
-            </tr>
+                <tr class="required">
+                    <td>{label postcode /}</td>
+                    <td class="local">{input postcode }</td>
+                    <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
+                    <td class="skautIS">{$skautISPerson->Postcode}</td>
+                </tr>
 
-            <tr class="table-padding">
-                <td colspan="3">
-                    {input sync_with_skautis}
-                </td>
-            </tr>
+                <tr class="required">
+                    <td>{label state /}</td>
+                    <td class="local">{input state }</td>
+                    <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
+                    <td class="skautIS">{$skautISPerson->State}</td>
+                </tr>
 
-        </table>
-    {/form}
+                <tr class="table-padding">
+                    <td colspan="3">
+                        {input sync_with_skautis}
+                    </td>
+                </tr>
+
+            </table>
+        {/form}
+    </div>
 
 
     <h2>Doplňující informace</h2>
-    {widget aboutForm}
+    <div>
+        {form aboutForm}
+            <table>
+                <col width="20%">
+                <col width="80%">
+
+                <tr>
+                    <td>{label about /}</td>
+                    <td>{input about}</td>
+                </tr>
+
+                {if $dbuser->displayArrivalDeparture()}
+                    <tr>
+                        <td>{label arrival /}</td>
+                        <td>{input arrival}</td>
+                    </tr>
+
+                    <tr>
+                        <td>{label departure /}</td>
+                        <td>{input departure}</td>
+                    </tr>
+                {/if}
+            </table>
+        {/form}
+    </div>
 
 
     <h2>Můj harmonogram semináře</h2>
@@ -223,9 +259,15 @@
         <p>Nemáte žádné zvolené programy.</p>
     {/if}
     <table>
+        <col width="15%">
+        <col width="15%">
+        <col width="25%">
+        <col width="20%">
+        <col width="25%">
+
         <tr>
             <th>Od</th>
-            <th>do</th>
+            <th>Do</th>
             <th>Název programu</th>
             <th>Kde</th>
             <th>Lektor</th>

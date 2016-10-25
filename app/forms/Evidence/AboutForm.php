@@ -17,24 +17,23 @@ use Nette\Application\UI\Form,
  */
 class AboutForm extends EntityForm
 {
-    public function __construct(IContainer $parent = NULL, $name = NULL, $dbuser)
+    public function __construct(IContainer $parent = NULL, $name = NULL)
     {
         parent::__construct($parent, $name);
 
         $this->addHidden('id');
+
         $this->addTextArea('about', 'O mně');
 
-        if ($dbuser->displayArrivalDeparture()) {
-            $this->addText('arrival', 'Příjezd')
-                ->setAttribute('class', 'datetimepicker')
-                ->addCondition(Form::FILLED)
-                ->addRule(Form::PATTERN, 'Datum a čas příjezdu není ve správném tvaru', Helpers::DATETIME_PATTERN);
+        $this->addText('arrival', 'Příjezd')
+            ->setAttribute('class', 'datetimepicker')
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::PATTERN, 'Datum a čas příjezdu není ve správném tvaru', Helpers::DATETIME_PATTERN);
 
-            $this->addText('departure', 'Odjezd')
-                ->setAttribute('class', 'datetimepicker')
-                ->addCondition(Form::FILLED)
-                ->addRule(Form::PATTERN, 'Datum a čas odjezdu není ve správném tvaru', Helpers::DATETIME_PATTERN);
-        }
+        $this->addText('departure', 'Odjezd')
+            ->setAttribute('class', 'datetimepicker')
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::PATTERN, 'Datum a čas odjezdu není ve správném tvaru', Helpers::DATETIME_PATTERN);
 
         $this->addSubmit('submit', 'Uložit')->getControlPrototype()->class('btn');
 
