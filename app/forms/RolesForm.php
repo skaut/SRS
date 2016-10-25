@@ -182,8 +182,9 @@ class RolesForm extends \SRS\Form\EntityForm
         $user->approved = $approved;
 
         $this->presenter->context->database->flush();
-        $this->presenter->flashMessage('Role upraveny', 'success');
-        $this->presenter->redirect('this');
+        $this->presenter->flashMessage('Role byly upraveny, přihlaste se prosím znovu.', 'success');
+        $this->presenter->user->logout(true);
+        $this->presenter->redirect(':Auth:logout');
     }
 
     public function error()
