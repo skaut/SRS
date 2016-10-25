@@ -63,7 +63,6 @@ class Printer extends \Nette\Object
         $this->fpdi->Text(38, 86, iconv('UTF-8', 'WINDOWS-1250', '== ' . $user->countFee()['feeWord'] . ' =='));
 
         $this->fpdi->Text(40, 98, iconv('UTF-8', 'WINDOWS-1250', "{$user->firstName} {$user->lastName}, {$user->street}, {$user->city}, {$user->postcode}"));
-        //$this->fpdi->Text(40, 103, iconv('UTF-8', 'WINDOWS-1250', "jednotka"));
 
         $this->fpdi->Text(40, 111, iconv('UTF-8', 'WINDOWS-1250', "účastnický poplatek {$this->dbsettings->get('seminar_name')}"));
     }
@@ -86,13 +85,10 @@ class Printer extends \Nette\Object
         $this->fpdi->Text(70, 92, iconv('UTF-8', 'WINDOWS-1250', "{$user->firstName} {$user->lastName}"));
         $this->fpdi->Text(70, 99, iconv('UTF-8', 'WINDOWS-1250', "{$user->street}, {$user->city}, {$user->postcode}"));
 
-
         $this->fpdi->Text(31, 111, iconv('UTF-8', 'WINDOWS-1250', "{$this->dbsettings->get('print_location')}"));
         $this->fpdi->Text(75, 111, iconv('UTF-8', 'WINDOWS-1250', "{$this->writeToday()}"));
 
-
         $this->fpdi->Text(130, 119, iconv('UTF-8', 'WINDOWS-1250', "{$this->dbsettings->get('accountant')}"));
-
     }
 
     protected function configureForIncomeProof()
@@ -108,7 +104,6 @@ class Printer extends \Nette\Object
         $pagecount = $this->fpdi->setSourceFile(WWW_DIR . '/print/potvrzeni-o-prijeti-platby.pdf');
         $template = $this->fpdi->importPage(1, '/MediaBox');
         $this->template = $template;
-
     }
 
     protected function writeToday()
@@ -116,6 +111,4 @@ class Printer extends \Nette\Object
         $today = new \DateTime('now');
         return $today->format("d.m.Y");
     }
-
-
 }
