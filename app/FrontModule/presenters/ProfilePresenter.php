@@ -80,8 +80,7 @@ class ProfilePresenter extends BasePresenter
 
     protected function createComponentProfileForm()
     {
-        $form = new \SRS\Form\ProfileForm();
-        $form->inject($this->context->database, $this->skautIS);
+        $form = new \SRS\Form\ProfileForm(null, null, $this->context->database, $this->userRepo->find($this->context->user->id), $this->skautIS);
         return $form;
     }
 
