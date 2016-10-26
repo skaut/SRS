@@ -61,7 +61,7 @@
                         {if $user->isInRole(\SRS\model\Acl\Role::REGISTERED)}
                             neúčastníte se
                         {elseif $user->isInRole(\SRS\model\Acl\Role::UNAPPROVED)}
-                            Vaše přihláška zatím nebyla schválena
+                            Vaše registrace zatím nebyla potvrzena
                         {else}
                             {foreach $user->roles as $usersRole}{$usersRole}{sep}, {/sep}{/foreach}
                         {/if}
@@ -113,7 +113,7 @@
                     </tr>
                 {/if}
 
-                {if !$user->isInRole(\SRS\model\Acl\Role::REGISTERED)}
+                {if !$user->isInRole(\SRS\model\Acl\Role::REGISTERED) && $dbuser->paymentDate === null}
                     <tr>
                         <td>{label roles /}</td>
                         <td class="local">{input roles }</td>
@@ -148,35 +148,35 @@
                 <tr class="required">
                     <td>{label sex /}</td>
                     <td class="local">{input sex }</td>
-                    <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
+                    <td>{if !$dbuser->member}<a class="importValue" href="#">« použít hodnotu ze skautIS</a>{/if}</td>
                     <td class="skautIS">{$skautISPerson->Sex}</td>
                 </tr>
 
                 <tr class="required">
                     <td>{label firstName /}</td>
                     <td class="local">{input firstName }</td>
-                    <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
+                    <td>{if !$dbuser->member}<a class="importValue" href="#">« použít hodnotu ze skautIS</a>{/if}</td>
                     <td class="skautIS">{$skautISPerson->FirstName}</td>
                 </tr>
 
                 <tr class="required">
                     <td>{label lastName /}</td>
                     <td class="local">{input lastName }</td>
-                    <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
+                    <td>{if !$dbuser->member}<a class="importValue" href="#">« použít hodnotu ze skautIS</a>{/if}</td>
                     <td class="skautIS">{$skautISPerson->LastName}</td>
                 </tr>
 
                 <tr>
                     <td>{label nickName /}</td>
                     <td class="local">{input nickName }</td>
-                    <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
+                    <td>{if !$dbuser->member}<a class="importValue" href="#">« použít hodnotu ze skautIS</a>{/if}</td>
                     <td class="skautIS">{$skautISPerson->NickName}</td>
                 </tr>
 
                 <tr class="required">
                     <td>{label birthdate /}</td>
                     <td class="local">{input birthdate }</td>
-                    <td><a class="importValue" href="#">« použít hodnotu ze skautIS</a></td>
+                    <td>{if !$dbuser->member}<a class="importValue" href="#">« použít hodnotu ze skautIS</a>{/if}</td>
                     <td class="skautIS">{$skautISPerson->birthdate|date:'d.m.Y'}</td>
                 </tr>
 

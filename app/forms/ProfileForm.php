@@ -15,70 +15,46 @@ use Nette\Application\UI\Form,
  */
 class ProfileForm extends EntityForm
 {
-
-    private $em;
+    private $database;
 
     /**
      * @var \SRS\Model\skautIS
      */
     private $skautIS;
 
-    public function __construct(IContainer $parent = NULL, $name = NULL)
+    public function __construct(IContainer $parent = NULL, $name = NULL, $database, $user, $skautIS)
     {
         parent::__construct($parent, $name);
-        $this->configure();
-        $this->onSuccess[] = callback($this, 'submitted');
-    }
 
-    public function submitted()
-    {
-        $values = $this->getValues();
+        $this->database = $database;
+        $this->skautIS = $skautIS;
 
-        $user = $this->em->getRepository('\SRS\Model\User')->find($values['id']);
-
-        $user->setProperties($values, $this->presenter->context->database);
-
-        $user->displayName = "{$user->lastName} {$user->firstName}";
-        if ($user->nickName != '')
-            $user->displayName .= " ({$user->nickName})";
-
-        $this->em->flush();
-
-        $skautISPerson = $this->skautIS->getPerson($this->presenter->context->user->identity->token, $user->skautISPersonId);
-        $updatedSkautISPerson = \SRS\Factory\UserFactory::updateSkautISPerson($user, $skautISPerson);
-        try {
-            $this->skautIS->updatePerson($updatedSkautISPerson, $this->presenter->context->user->identity->token);
-        } catch (\SoapFault $e) {
-            $this->presenter->flashMessage('Synchronizace se skautIS se nepodařila', 'error');
-        }
-
-        $this->presenter->flashMessage('Data aktualizována', 'success');
-        $this->presenter->redirect('this');
-    }
-
-    protected function configure()
-    {
-        $this->setFields();
-        $this->addSubmit('sync_with_skautis', 'Aktualizovat data a sesynchronizovat se skautIS');
-    }
-
-    protected function setFields()
-    {
         $this->addHidden('id');
 
-        $this->addSelect('sex', 'Pohlaví')->setItems(array('male' => 'Muž', 'female' => 'Žena'))
+        $inputSex = $this->addSelect('sex', 'Pohlaví', ['male' => 'Muž', 'female' => 'Žena'])
             ->addRule(Form::FILLED, 'Zadejte pohlaví');
 
-        $this->addText('firstName', 'Jméno')
+        $inputFirstName = $this->addText('firstName', 'Jméno')
             ->addRule(Form::FILLED, 'Zadejte jméno');
 
-        $this->addText('lastName', 'Příjmení')
+        $inputLastName = $this->addText('lastName', 'Příjmení')
             ->addRule(Form::FILLED, 'Zadejte příjmení');
 
-        $this->addText('nickName', 'Přezdívka');
+        $inputNickName = $this->addText('nickName', 'Přezdívka');
 
-        $this->addText('birthdate', 'Datum narození')
-            ->addRule(Form::FILLED, 'Zadejte datum narození')->getControlPrototype()->class('datepicker');
+        $inputBirthdate = $this->addText('birthdate', 'Datum narození')
+            ->addRule(Form::FILLED, 'Zadejte datum narození');
+
+        if ($user->member) {
+            $inputSex->setDisabled();
+            $inputFirstName->setDisabled();
+            $inputLastName->setDisabled();
+            $inputNickName->setDisabled();
+            $inputBirthdate->setDisabled();
+        }
+        else {
+            $inputBirthdate->getControlPrototype()->class('datepicker-birthdate');
+        }
 
 //        @TODO - pro aktualizaci emailu je treba udelit zvlastni pravo, ktere SRS zatim nema
 //        $this->addText('email', 'Email:')
@@ -96,15 +72,35 @@ class ProfileForm extends EntityForm
 
         $this->addText('state', 'Stát')
             ->addRule(Form::FILLED, 'Zadejte stát');
+
+        $this->addSubmit('sync_with_skautis', 'Aktualizovat data a sesynchronizovat se skautIS');
+
+        $this->onSuccess[] = callback($this, 'submitted');
     }
 
-    /**
-     * @param \Doctrine\ORM\EntityManager $em
-     * @param \SRS\Model\skautIS $skautIS
-     */
-    public function inject($em, $skautIS)
+    public function submitted()
     {
-        $this->em = $em;
-        $this->skautIS = $skautIS;
+        $values = $this->getValues();
+
+        $user = $this->database->getRepository('\SRS\Model\User')->find($values['id']);
+
+        $user->setProperties($values, $this->presenter->context->database);
+
+        $user->displayName = "{$user->lastName} {$user->firstName}";
+        if ($user->nickName != '')
+            $user->displayName .= " ({$user->nickName})";
+
+        $this->database->flush();
+
+        $skautISPerson = $this->skautIS->getPerson($this->presenter->context->user->identity->token, $user->skautISPersonId);
+        $updatedSkautISPerson = \SRS\Factory\UserFactory::updateSkautISPerson($user, $skautISPerson);
+        try {
+            $this->skautIS->updatePerson($updatedSkautISPerson, $this->presenter->context->user->identity->token);
+        } catch (\SoapFault $e) {
+            $this->presenter->flashMessage('Synchronizace se skautIS se nepodařila', 'error');
+        }
+
+        $this->presenter->flashMessage('Data aktualizována', 'success');
+        $this->presenter->redirect('this');
     }
 }

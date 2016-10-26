@@ -171,11 +171,12 @@ class RolesForm extends \SRS\Form\EntityForm
             $roles[] = $this->presenter->context->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('id' => $roleId));
         }
 
-        $approved = $user->approved;
+        $approved = true;
         foreach ($roles as $role) {
-            if (!$user->roles->contains($role))
-                if (!$role->approvedAfterRegistration)
-                    $approved = false;
+            if ((!$user->approved || !$user->roles->contains($role)) && !$role->approvedAfterRegistration) {
+                $approved = false;
+                break;
+            }
         }
 
         $user->changeRolesTo($roles);

@@ -79,11 +79,11 @@ class EvidenceEditForm extends \SRS\Form\EntityForm
 
         $this->addCheckbox('attended', 'Přítomen');
 
-        $this->addSelect('paymentMethod', 'Platební metoda')->setItems($configParams['payment_methods'])->setPrompt('Nezadáno');
-
         $this->addText('variableSymbol', 'Variabilní symbol')
             ->addCondition(Form::FILLED)
             ->addRule(Form::INTEGER);
+
+        $this->addSelect('paymentMethod', 'Platební metoda')->setItems($configParams['payment_methods'])->setPrompt('Nezadáno');
 
         $this->addText('paymentDate', 'Zaplaceno dne')
             ->getControlPrototype()->class('datepicker')

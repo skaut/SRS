@@ -13,7 +13,7 @@
 
 {if !$user->isLoggedIn()}
     <div class="notice">
-        Pro přihlášení na seminář se musíte neprve <a href="{plink :Auth:login, 'backlink' => $backlink}">přihlásit přes
+        Pro přihlášení na seminář se musíte nejprve <a href="{plink :Auth:login, 'backlink' => $backlink}">přihlásit přes
         skautIS</a>
     </div>
 {elseif $user->isInRole(\SRS\model\Acl\Role::REGISTERED)}
@@ -26,9 +26,9 @@
     </div>
     <div class="notice">
         {if $dbuser->approved == true}
-            Vaše přihláška byla již potvrzena
+            Vaše registrace byla již potvrzena.
             {else}
-            Vaše přihláška zatím nebyla potvrzena.
+            Vaše registrace zatím nebyla potvrzena.
         {/if}
     </div>
 {/if}

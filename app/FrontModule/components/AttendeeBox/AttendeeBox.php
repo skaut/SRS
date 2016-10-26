@@ -46,8 +46,9 @@ class AttendeeBox extends \Nette\Application\UI\Control
 
     public function createComponentAttendeeForm()
     {
-        $roles = $this->presenter->context->database->getRepository('\SRS\Model\Acl\Role')->findRegisterableNow();
-        return new \SRS\Form\AttendeeForm(null, null, \SRS\Form\EntityForm::getFormChoices($roles), $this->presenter->context->parameters, $this->presenter->dbsettings, $this->presenter->context->database);
+        return new \SRS\Form\AttendeeForm(null, null, $this->presenter->context->parameters,
+            $this->presenter->dbsettings, $this->presenter->context->database,
+            $this->presenter->context->database->getRepository('\SRS\Model\User')->find($this->presenter->context->user->id));
     }
 
 }

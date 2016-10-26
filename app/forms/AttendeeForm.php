@@ -13,10 +13,8 @@ use Nette\Application\UI\Form,
 /**
  * Formular pro prihlasku
  */
-class AttendeeForm extends ProfileForm
+class AttendeeForm extends EntityForm
 {
-    protected $roles;
-
     protected $dbsettings;
 
     protected $database;
@@ -24,50 +22,58 @@ class AttendeeForm extends ProfileForm
     protected $configParams;
 
 
-    public function __construct(IContainer $parent = NULL, $name = NULL, $roles, $configParams, $dbsettings, $database)
+    public function __construct(IContainer $parent = NULL, $name = NULL, $configParams, $dbsettings, $database, $user)
     {
-        $this->roles = $roles;
+        parent::__construct($parent, $name);
+
         $this->dbsettings = $dbsettings;
         $this->database = $database;
         $this->configParams = $configParams;
-        parent::__construct($parent, $name);
-    }
 
-    public function submitted()
-    {
-        $values = $this->getValues();
-        $user = $this->presenter->context->database->getRepository('\SRS\Model\User')->find($values['id']);
+        $this->addHidden('id');
 
-        $formValuesRoles = $this->getComponent('roles')->getRawValue(); //oklika
-        $values['roles'] = $formValuesRoles;
+        $inputSex = $this->addSelect('sex', 'Pohlaví', ['male' => 'Muž', 'female' => 'Žena'])
+            ->addRule(Form::FILLED, 'Zadejte pohlaví');
 
-        $user->removeRole(Role::REGISTERED);
+        $inputFirstName = $this->addText('firstName', 'Jméno')
+            ->addRule(Form::FILLED, 'Zadejte jméno');
 
-        $approved = true;
-        foreach ($values['roles'] as $roleId) {
-            $role = $this->presenter->context->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('id' => $roleId));
-            if (!$role->approvedAfterRegistration)
-                $approved = false;
+        $inputLastName = $this->addText('lastName', 'Příjmení')
+            ->addRule(Form::FILLED, 'Zadejte příjmení');
+
+        $inputNickName = $this->addText('nickName', 'Přezdívka');
+
+        $inputBirthdate = $this->addText('birthdate', 'Datum narození')
+            ->addRule(Form::FILLED, 'Zadejte datum narození');
+
+        if ($user->member) {
+            $inputSex->setDisabled()->setDefaultValue($user->sex);
+            $inputFirstName->setDisabled()->setDefaultValue($user->firstName);
+            $inputLastName->setDisabled()->setDefaultValue($user->lastName);
+            $inputNickName->setDisabled()->setDefaultValue($user->nickName);
+            $inputBirthdate->setDisabled()->setDefaultValue($user->birthdate->format("d.m.Y"));
+        }
+        else {
+            $inputBirthdate->getControlPrototype()->class('datepicker-birthdate');
         }
 
-        $user->setProperties($values, $this->presenter->context->database);
-        $user->approved = $approved;
+//        @TODO - pro aktualizaci emailu je treba udelit zvlastni pravo, ktere SRS zatim nema
+//        $this->addText('email', 'Email:')
+//            ->addRule(Form::FILLED, 'Zadejte e-mailovou adresu')
+//            ->addRule(Form::EMAIL, 'E-mail není ve správném tvaru');
 
-        $this->presenter->context->database->flush();
-        $this->presenter->flashMessage('Přihláška odeslána. Více o stavu přihlášky se dozvíte opět na stránce s přihlašovacím formuláře.', 'success forever');
-        $this->presenter->flashMessage('Pro zobrazení dalších informací o programu a platbě se musíte znovu přihlásit.', 'info forever');
-        $this->presenter->user->logout(true);
-        $this->presenter->redirect(':Auth:logout');
-    }
+        $this->addText('street', 'Ulice')
+            ->addRule(Form::FILLED, 'Zadejte Ulici');
 
-    public static function toggleArrivalDeparture(\Nette\Forms\IControl $control)
-    {
-        return false;
-    }
+        $this->addText('city', 'Město')
+            ->addRule(Form::FILLED, 'Zadejte Město');
 
-    public function setFields()
-    {
-        parent::setFields();
+        $this->addText('postcode', 'PSČ')
+            ->addRule(Form::FILLED, 'Zadejte PSČ');
+
+        $this->addText('state', 'Stát')
+            ->addRule(Form::FILLED, 'Zadejte stát');
+
         $this->addCustomFields();
 
         $checkRolesCapacity = function($field, $database) {
@@ -209,12 +215,40 @@ class AttendeeForm extends ProfileForm
         $this->addCheckbox('agreement', 'Souhlasím, že uvedené údaje budou poskytnuty lektorům pro účely semináře')
             ->addRule(Form::FILLED, 'Musíte souhlasit s poskytnutím údajů');
 
-        $this->addSubmit('submit', 'Přihlásit na seminář');
+        $this->addSubmit('submit', 'Registrovat');
+
+        $this->onSuccess[] = callback($this, 'submitted');
     }
 
-    protected function configure()
+    public function submitted()
     {
-        $this->setFields();
+        $values = $this->getValues();
+        $user = $this->presenter->context->database->getRepository('\SRS\Model\User')->find($values['id']);
+
+        $formValuesRoles = $this->getComponent('roles')->getRawValue(); //oklika
+        $values['roles'] = $formValuesRoles;
+
+        $user->removeRole(Role::REGISTERED);
+
+        $approved = true;
+        foreach ($values['roles'] as $roleId) {
+            $role = $this->presenter->context->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('id' => $roleId));
+            if (!$role->approvedAfterRegistration)
+                $approved = false;
+        }
+
+        $user->setProperties($values, $this->presenter->context->database);
+        $user->approved = $approved;
+
+        $this->presenter->context->database->flush();
+        $this->presenter->flashMessage('Registrace odeslána. Pro další informace o stavu registrace, platbě a semináři se musíte znovu přihlásit.', 'success forever');
+        $this->presenter->user->logout(true);
+        $this->presenter->redirect(':Auth:logout');
+    }
+
+    public static function toggleArrivalDeparture(\Nette\Forms\IControl $control)
+    {
+        return false;
     }
 
     protected function addCustomFields()
