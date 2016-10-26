@@ -6,6 +6,10 @@ $(function () {
         timepicker: false
     });
 
+    $('.datepicker-birthdate').datetimepicker({
+        format: 'd.m.Y'
+    });
+
     $('.datetimepicker').datetimepicker({
         format: 'd.m.Y H:i'
     });

@@ -140,7 +140,6 @@ class skautIS extends \Nette\Object
         // $response = $this->getOrganizationUnitService()->__soapCall('PersonDetail',array('PersonDetail' => array('personDetailInput' => $params)) )->PersonDetailResult;
         $response = $this->getOrganizationUnitService()->PersonDetail(array("personDetailInput" => $params))->PersonDetailResult;
         return $response;
-
     }
 
     //nepouziva se
@@ -194,8 +193,11 @@ class skautIS extends \Nette\Object
     {
         $person->ID_Login = $token;
 
-        //$this->getOrganizationUnitService()->PersonUpdateBasic(array('personUpdateBasicInput' => $person));
-        $this->getOrganizationUnitService()->PersonUpdateAddress(array('personUpdateAddressInput' => $person));
+        $personBasic = $this->convertObjectToArray($person, array("ID_Login", "ID", "ID_Sex", "Birthday", "FirstName", "LastName", "NickName"));
+        $personAddress = $this->convertObjectToArray($person, array("ID_Login", "ID", "Street", "City", "Postcode", "State", "PostalFirstLine", "PostalStreet", "PostalCity", "PostalPostcode", "PostalState"));
+
+        $this->getOrganizationUnitService()->PersonUpdateBasic(array('personUpdateBasicInput' => $personBasic));
+        $this->getOrganizationUnitService()->PersonUpdateAddress(array('personUpdateAddressInput' => $personAddress));
     }
 
     public function getEvents($token)
@@ -294,5 +296,7 @@ class skautIS extends \Nette\Object
         $this->getUserManagementService()->LoginUpdateRefresh(array('loginUpdateRefreshInput' => $params));
     }
 
-
+    private function convertObjectToArray($object, $attributes) {
+        return array_intersect_key((array) $object, array_flip($attributes));
+    }
 }
