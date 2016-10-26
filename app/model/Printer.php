@@ -7,10 +7,13 @@
 
 namespace SRS\Model;
 
+use Nette\Object;
+
+
 /**
  * Obsluhuje tisk dokladu
  */
-class Printer extends \Nette\Object
+class Printer extends Object
 {
     protected $fpdi;
 

@@ -62,6 +62,7 @@ common:
 		database: @doctrine.entityManager
 		skautIS: \SRS\Model\SkautIS(%skautis.url%, %skautis.app_id%)
 		printer: \SRS\Model\Printer(@database)
+		excelExporter: \SRS\Model\Excel\ExcelExporter
 		authenticator: \SRS\Model\Authenticator(@database, @skautIS)
 		authorizator: \SRS\Security\Acl(@database)
 		UserTestDataCommand:

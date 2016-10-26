@@ -6,7 +6,7 @@
  * Time: 23:11
  */
 
-namespace SRS\Model;
+namespace SRS\Model\Excel;
 
 use Nette\Application\IResponse;
 use Nette\Object;

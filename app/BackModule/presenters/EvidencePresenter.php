@@ -214,37 +214,16 @@ class EvidencePresenter extends BasePresenter
 
     public function handleExportUsersList($ids = array())
     {
-        $excel = new \PHPExcel();
-        $filename = "UsersList.xlsx";
-
-        $sheet = $excel->getSheet(0);
-
         $roles = $this->context->database->getRepository('\SRS\model\Acl\Role')->findAll();
-
-        $row = 1;
-        $column = 1;
-
-        foreach($roles as $role) {
-            $sheet->setCellValueByColumnAndRow($column, $row, $role->name);
-            $column++;
-        }
+        $users = array();
 
         foreach ($ids as $userId) {
-            $user = $this->userRepo->find($userId);
-
-            $row++;
-            $column = 0;
-
-            $sheet->setCellValueByColumnAndRow($column, $row, $user->displayName);
-
-            foreach($roles as $role) {
-                $column++;
-                if ($user->isInRole($role->name))
-                    $sheet->setCellValueByColumnAndRow($column, $row, "X");
-            }
+            $users[] = $this->userRepo->find($userId);
         }
 
-        $response = new \SRS\Model\ExcelResponse($excel, $filename);
+        $excelExporter = $this->context->excelExporter;
+        $response = $excelExporter->exportUsersRoles($users, $roles);
+
         $this->sendResponse($response);
     }
 
