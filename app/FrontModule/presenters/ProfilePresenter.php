@@ -51,6 +51,7 @@ class ProfilePresenter extends BasePresenter
 
         $this->template->skautISPerson = $skautISPerson;
         $this->template->dbuser = $user;
+        $this->template->accountNumber = $this->dbsettings->get('account_number');
         $this->template->basicBlockDuration = $this->dbsettings->get('basic_block_duration');
         $this->template->displayCancelRegistration = \DateTime::createFromFormat("d.m.Y", $this->dbsettings->get('cancel_registration_to_date')) >= new \DateTime() ? true : false;
 

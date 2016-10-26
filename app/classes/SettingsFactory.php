@@ -49,6 +49,7 @@ class SettingsFactory
         $settings[] = new \SRS\Model\Settings('print_location', 'Lokalita', 'Konfigurace->Lokalita');
 
         $settings[] = new \SRS\Model\Settings('variable_symbol_code', 'Předvolba pro variabilní symbol', '00');
+
         $settings[] = new \SRS\Model\Settings('cancel_registration_to_date', 'Odhlašování povoleno do', $today->format('d.m.Y'));
 
         $settings[] = new \SRS\Model\Settings('log_in_programs_from', 'Přihlašování programů otevřeno od', $yesterday->format('d.m.Y H:i'));

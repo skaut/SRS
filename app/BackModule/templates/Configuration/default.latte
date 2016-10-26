@@ -4,14 +4,17 @@
 {block content}
     <h2 id="label_conf">Konfigurace</h2>
 
-    {form settingsForm}
+    {form settingsFormSeminar}
         <a name="group_seminar"></a>
         <div class="well">
             <h4>Seminář</h4>
             <table class="table formTable">
+                <col width="50%">
+                <col width="50%">
+
                 <tr class="required">
-                    <td style="width: 50%">{label seminar_name/}</td>
-                    <td style="width: 50%">{input seminar_name}</td>
+                    <td>{label seminar_name/}</td>
+                    <td>{input seminar_name}</td>
                 </tr>
                 <tr class="required">
                     <td>{label seminar_from_date/}</td>
@@ -29,23 +32,47 @@
                     <td>{label seminar_email/}</td>
                     <td>{input seminar_email}</td>
                 </tr>
-                <tr class="required">
-                    <td>{label variable_symbol_code/}</td>
-                    <td>{input variable_symbol_code}</td>
-                </tr>
                 <tr class="warning">
                     <td colspan="2">{input submit_seminar}</td>
                 </tr>
             </table>
         </div>
+    {/form}
 
+    {form settingsFormPayment}
+        <a name="group_payment"></a>
+        <div class="well">
+            <h4>Platba</h4>
+            <table class="table formTable">
+                <col width="50%">
+                <col width="50%">
+
+                <tr class="required">
+                    <td>{label account_number/}</td>
+                    <td>{input account_number}</td>
+                </tr>
+                <tr class="required">
+                    <td>{label variable_symbol_code/}</td>
+                    <td>{input variable_symbol_code}</td>
+                </tr>
+                <tr class="warning">
+                    <td colspan="2">{input submit_payment}</td>
+                </tr>
+            </table>
+        </div>
+    {/form}
+
+    {form settingsFormProgram}
         <a name="group_program"></a>
         <div class="well">
             <h4>Program</h4>
             <table class="table formTable">
+                <col width="50%">
+                <col width="50%">
+
                 <tr>
-                    <td style="width: 50%">{label basic_block_duration/}</td>
-                    <td style="width: 50%">{input basic_block_duration}</td>
+                    <td>{label basic_block_duration/}</td>
+                    <td>{input basic_block_duration}</td>
                 </tr>
                 <tr>
                     <td>{label is_allowed_add_block/}</td>
@@ -72,15 +99,19 @@
                 </tr>
             </table>
         </div>
+    {/form}
 
+    {form settingsFormPrint}
         <a name="group_print"></a>
         <div class="well">
             <h4>Tisk dokladů</h4>
             <table class="table formTable">
+                <col width="50%">
+                <col width="50%">
 
                 <tr>
-                    <td style="width: 50%">{label company/}</td>
-                    <td style="width: 50%">{input company}</td>
+                    <td>{label company/}</td>
+                    <td>{input company}</td>
                 </tr>
                 <tr>
                     <td>{label ico/}</td>
@@ -91,10 +122,6 @@
                     <td>{input accountant}</td>
                 </tr>
                 <tr>
-                    <td>{label account_number/}</td>
-                    <td>{input account_number}</td>
-                </tr>
-                <tr>
                     <td>{label print_location/}</td>
                     <td>{input print_location}</td>
                 </tr>
@@ -103,23 +130,28 @@
                 </tr>
             </table>
         </div>
+    {/form}
 
+    {form settingsFormCustom}
         <a name="group_custom"></a>
         <div class="well">
             <h4>Vlastní pole pro přihlášku</h4>
             <table class="table formTable">
+                <col width="50%">
+                <col width="50%">
+
                 {for $i = 0; $i < $configParameters['user_custom_boolean_count']; $i++}
                     <tr>
-                        <td style="width: 50%">{label user_custom_boolean_$i/}</td>
-                        <td style="width: 50%">{input user_custom_boolean_$i}</td>
+                        <td>{label user_custom_boolean_$i/}</td>
+                        <td>{input user_custom_boolean_$i}</td>
                     </tr>
 
                 {/for}
 
                 {for $i = 0; $i < $configParameters['user_custom_text_count']; $i++}
                     <tr>
-                        <td style="width: 50%">{label user_custom_text_$i/}</td>
-                        <td style="width: 50%">{input user_custom_text_$i}</td>
+                        <td>{label user_custom_text_$i/}</td>
+                        <td>{input user_custom_text_$i}</td>
                     </tr>
                 {/for}
 
