@@ -61,7 +61,7 @@
                         {if $user->isInRole(\SRS\model\Acl\Role::REGISTERED)}
                             neúčastníte se
                         {elseif $user->isInRole(\SRS\model\Acl\Role::UNAPPROVED)}
-                            Vaše přihláška zatím nebyla schválena
+                            Vaše registrace zatím nebyla potvrzena
                         {else}
                             {foreach $user->roles as $usersRole}{$usersRole}{sep}, {/sep}{/foreach}
                         {/if}

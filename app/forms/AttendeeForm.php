@@ -215,7 +215,7 @@ class AttendeeForm extends EntityForm
         $this->addCheckbox('agreement', 'Souhlasím, že uvedené údaje budou poskytnuty lektorům pro účely semináře')
             ->addRule(Form::FILLED, 'Musíte souhlasit s poskytnutím údajů');
 
-        $this->addSubmit('submit', 'Přihlásit na seminář');
+        $this->addSubmit('submit', 'Registrovat');
 
         $this->onSuccess[] = callback($this, 'submitted');
     }
@@ -241,8 +241,7 @@ class AttendeeForm extends EntityForm
         $user->approved = $approved;
 
         $this->presenter->context->database->flush();
-        $this->presenter->flashMessage('Přihláška odeslána. Více o stavu přihlášky se dozvíte opět na stránce s přihlašovacím formulářem.', 'success forever');
-        $this->presenter->flashMessage('Pro zobrazení dalších informací o programu a platbě se musíte znovu přihlásit.', 'info forever');
+        $this->presenter->flashMessage('Registrace odeslána. Pro další informace o stavu registrace, platbě a semináři se musíte znovu přihlásit.', 'success forever');
         $this->presenter->user->logout(true);
         $this->presenter->redirect(':Auth:logout');
     }
