@@ -897,6 +897,8 @@ class User extends BaseEntity
      */
     public function setVariableSymbol($variableSymbol)
     {
+        if ($variableSymbol == '')
+            $variableSymbol = null;
         $this->variableSymbol = $variableSymbol;
     }
 
