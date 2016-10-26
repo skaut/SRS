@@ -16,7 +16,7 @@
         Pro přihlášení na seminář se musíte neprve <a href="{plink :Auth:login, 'backlink' => $backlink}">přihlásit přes
         skautIS</a>
     </div>
-{elseif $dbuser->isInRole('Nepřihlášený')}
+{elseif $user->isInRole(\SRS\model\Acl\Role::REGISTERED)}
     <div class="info">
         {widget attendeeForm}
     </div>

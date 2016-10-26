@@ -5,7 +5,7 @@
  * Author: Michal Májský
  */
 namespace BackModule\CMSModule;
-use Nette\Application\UI\Form;
+
 use SRS\Model\Acl\Resource;
 use SRS\Model\Acl\Permission;
 

@@ -73,12 +73,19 @@ class Authenticator extends \Nette\Object implements NS\IAuthenticator
         $netteRoles = array();
 
         //pokud uzivatel neba roli schvalenou, degradujeme jen na registrovaneho
-        if ($user->approved == true) {
+        $roleUnapproved = $this->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('name' => Role::UNAPPROVED));
+        if ($roleUnapproved == null) {
+            throw new \Exception('Nekonzistentni stav. Role pro neschvalene uzivatele by vzdy mela existovat');
+        }
+
+        if ($user->roles[0] == $roleRegistered)
+            $netteRoles[] = $roleRegistered->name;
+        elseif ($user->approved == true) {
             foreach ($user->roles as $role) {
                 $netteRoles[] = $role->name;
             }
         } else {
-            $netteRoles[] = $roleRegistered->name;
+            $netteRoles[] = $roleUnapproved->name;
         }
 
         return new NS\Identity($user->id, $netteRoles, array(

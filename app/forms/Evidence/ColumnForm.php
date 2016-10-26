@@ -7,9 +7,7 @@
 
 namespace SRS\Form\Evidence;
 
-use Nette\Application\UI,
-    Nette\Diagnostics\Debugger,
-    Nette\Application\UI\Form,
+use Nette\Application\UI\Form,
     Nette\ComponentModel\IContainer;
 
 /**

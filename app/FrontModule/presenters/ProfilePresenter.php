@@ -35,10 +35,15 @@ class ProfilePresenter extends BasePresenter
          */
         $user = $this->userRepo->find($this->context->user->id);
         $skautISPerson = $this->skautIS->getPerson($this->user->identity->token, $user->skautISPersonId);
+        $user->generateVariableSymbol($this->context->database);
+
         $form = $this['profileForm'];
         $form->bindEntity($user);
 
         $form = $this['aboutForm'];
+        $form->bindEntity($user);
+
+        $form = $this['rolesForm'];
         $form->bindEntity($user);
 
         $birthday = \explode("T", $skautISPerson->Birthday);
@@ -47,8 +52,11 @@ class ProfilePresenter extends BasePresenter
         $this->template->skautISPerson = $skautISPerson;
         $this->template->dbuser = $user;
         $this->template->basicBlockDuration = $this->dbsettings->get('basic_block_duration');
-        $this->template->variableSymbolCode = $this->dbsettings->get('variable_symbol_code');
         $this->template->displayCancelRegistration = \DateTime::createFromFormat("d.m.Y", $this->dbsettings->get('cancel_registration_to_date')) >= new \DateTime() ? true : false;
+
+        $usersPayingRoles = $this->userRepo->findUsersPayingRoles($user->id);
+        $this->template->usersPayingRoles = $usersPayingRoles;
+        $this->template->usersPayingRolesCount = count($usersPayingRoles);
     }
 
     public function handlePrintProof()
@@ -79,8 +87,13 @@ class ProfilePresenter extends BasePresenter
 
     protected function createComponentAboutForm()
     {
-        $form = new \SRS\Form\Evidence\AboutForm(null, null, $this->userRepo->find($this->context->user->id));
+        $form = new \SRS\Form\Evidence\AboutForm(null, null);
         return $form;
     }
 
+    protected function createComponentRolesForm()
+    {
+        $form = new \SRS\Form\RolesForm(null, null, $this->context->database, $this->userRepo->find($this->context->user->id));
+        return $form;
+    }
 }

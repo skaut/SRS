@@ -240,6 +240,10 @@ class Program extends \SRS\Model\BaseEntity
         return $unsignedUsers;
     }
 
+    public function countAttendees() {
+        return count($this->attendees);
+    }
+
     /**
      * @ORM\PrePersist
      * @ORM\PreUpdate

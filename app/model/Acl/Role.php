@@ -6,7 +6,6 @@
  */
 namespace SRS\Model\Acl;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Criteria;
 
 
 /**
@@ -20,13 +19,14 @@ use Doctrine\Common\Collections\Criteria;
  * @property bool $registerable
  * @property bool $approvedAfterRegistration
  * @property integer $usersLimit
- * @property bool $pays
  * @property integer $fee
  * @property bool $displayInList
  * @property bool $displayCapacity
  * @property bool $displayArrivalDeparture
  * @property bool $syncedWithSkautIS
  * @property \Doctrine\Common\Collections\ArrayCollection $incompatibleRoles
+ * @property \Doctrine\Common\Collections\ArrayCollection $requiredByRole
+ * @property \Doctrine\Common\Collections\ArrayCollection $requiredRoles
  * @property \Doctrine\Common\Collections\ArrayCollection $registerableCategories
  * @property \DateTime|string $registerableFrom
  * @property \DateTime|string $registerableTo
@@ -37,6 +37,7 @@ class Role extends \SRS\Model\BaseEntity
 {
     const GUEST = 'guest';
     const REGISTERED = 'Nepřihlášený';
+    const UNAPPROVED = 'Neschválený';
     const ATTENDEE = 'Účastník';
     const SERVICE_TEAM = 'Servis Tým';
     const LECTOR = 'Lektor';
@@ -90,14 +91,13 @@ class Role extends \SRS\Model\BaseEntity
      */
     protected $approvedAfterRegistration = false;
 
-
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
     protected $registerableFrom;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
     protected $registerableTo;
 
@@ -107,12 +107,6 @@ class Role extends \SRS\Model\BaseEntity
      * @ORM\Column(type="integer", nullable=true)
      */
     protected $usersLimit;
-
-    /**
-     * @var bool
-     * @ORM\Column(type="boolean")
-     */
-    protected $pays = false;
 
     /**
      * @var integer
@@ -145,21 +139,30 @@ class Role extends \SRS\Model\BaseEntity
      */
     protected $syncedWithSkautIS = true;
 
-
-    /**
-     * @ORM\ManyToMany(targetEntity="\SRS\model\Acl\Role", mappedBy="incompatibleRoles", cascade={"persist"})
-     * @var mixed
-     */
-
     /**
      * @ORM\ManyToMany(targetEntity="\SRS\model\Acl\Role")
-     * @ORM\JoinTable(name="role_role",
+     * @ORM\JoinTable(name="role_role_incompatible",
      *      joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="incompatible_role_id", referencedColumnName="id")}
      *      )
      * @var \Doctrine\Common\Collections\ArrayCollection
      */
     protected $incompatibleRoles;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="\SRS\model\Acl\Role", mappedBy="requiredRoles")
+     */
+    private $requiredByRole;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="\SRS\model\Acl\Role", inversedBy="requiredByRole")
+     * @ORM\JoinTable(name="role_role_required",
+     *      joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="required_role_id", referencedColumnName="id")}
+     *      )
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     */
+    private $requiredRoles;
 
     /**
      * @ORM\ManyToMany(targetEntity="\SRS\model\Program\Category", mappedBy="registerableRoles", cascade={"persist"})
@@ -178,8 +181,8 @@ class Role extends \SRS\Model\BaseEntity
         $this->pages = new \Doctrine\Common\Collections\ArrayCollection();
         $this->registerableCategories = new \Doctrine\Common\Collections\ArrayCollection();
         $this->incompatibleRoles = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->requiredRoles = new \Doctrine\Common\Collections\ArrayCollection();
     }
-
 
     public function setName($name)
     {
@@ -283,7 +286,7 @@ class Role extends \SRS\Model\BaseEntity
      */
     public function setFee($fee)
     {
-        $this->fee = (int) $fee;
+        $this->fee = $fee;
     }
 
     /**
@@ -316,22 +319,6 @@ class Role extends \SRS\Model\BaseEntity
     public function getPages()
     {
         return $this->pages;
-    }
-
-    /**
-     * @param boolean $pays
-     */
-    public function setPays($pays)
-    {
-        $this->pays = $pays;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function getPays()
-    {
-        return $this->pays;
     }
 
     /**
@@ -400,6 +387,38 @@ class Role extends \SRS\Model\BaseEntity
     }
 
     /**
+     * @return mixed
+     */
+    public function getRequiredByRole()
+    {
+        return $this->requiredByRole;
+    }
+
+    /**
+     * @param mixed $requiredByRole
+     */
+    public function setRequiredByRole($requiredByRole)
+    {
+        $this->requiredByRole = $requiredByRole;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRequiredRoles()
+    {
+        return $this->requiredRoles;
+    }
+
+    /**
+     * @param mixed $requiredRoles
+     */
+    public function setRequiredRoles($requiredRoles)
+    {
+        $this->requiredRoles = $requiredRoles;
+    }
+
+    /**
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getRegisterableCategories()
@@ -440,44 +459,93 @@ class Role extends \SRS\Model\BaseEntity
         $this->displayArrivalDeparture = $displayArrivalDeparture;
     }
 
-
-    public function countUsersInRole() {
+    public function countAllUsersInRole() {
         return count($this->users);
+    }
+
+    public function countApprovedUsersInRole() {
+        $usersCount = 0;
+        foreach ($this->users as $user) {
+            if ($user->approved)
+                $usersCount++;
+        }
+        return $usersCount;
     }
 
     public function countVacancies() {
         if ($this->usersLimit === null)
             return null;
-        return $this->usersLimit - $this->countUsersInRole();
+        return $this->usersLimit - $this->countApprovedUsersInRole();
     }
 
-    public function addIncompatibleRole($role) {
+    public function addIncompatibleRole($role, $inversed = false) {
         if (!$this->incompatibleRoles->contains($role)) {
             $this->incompatibleRoles->add($role);
-            $role->addIncompatibleRole($this);
         }
+        if (!$inversed)
+            $role->addIncompatibleRole($this, true);
     }
 
-    public function removeIncompatibleRole($role) {
-        if ($this->incompatibleRoles->contains($role)) {
+    public function removeIncompatibleRole($role, $inversed = false) {
+        if ($this->incompatibleRoles->contains($role))
             $this->incompatibleRoles->removeElement($role);
-            $role->removeIncompatibleRole($this);
-        }
+        if (!$inversed)
+            $role->removeIncompatibleRole($this, true);
     }
 
-    public function removeAllIncompatibleRoles() {
-        foreach($this->incompatibleRoles as $role) {
+    public function removeIncompatibleRoles($oldIncompatibleRoles) {
+        foreach($oldIncompatibleRoles as $role) {
             $this->removeIncompatibleRole($role);
         }
     }
 
     public function isRegisterableNow() {
-        $today = new \DateTime(date("Y-m-d"));
+        $today = new \DateTime(date("Y-m-d H:i"));
 
         if ($this->registerable && ($this->registerableFrom == null || $this->registerableFrom <= $today) &&
             ($this->registerableTo == null || $this->registerableTo >= $today))
             return true;
         return false;
+    }
+
+    public function getAllRequiredRoles() {
+        $allRequiredRoles = array();
+
+        foreach ($this->requiredRoles as $requiredRole) {
+            $this->getAllRequiredRolesRec($allRequiredRoles, $requiredRole);
+        }
+
+        return $allRequiredRoles;
+    }
+
+    private function getAllRequiredRolesRec(&$allRequiredRoles, $role) {
+        if ($this == $role || in_array($role, $allRequiredRoles)) {
+            return;
+        }
+        $allRequiredRoles[] = $role;
+        foreach ($role->requiredRoles as $requiredRole) {
+            $this->getAllRequiredRolesRec($allRequiredRoles, $requiredRole);
+        }
+    }
+
+    public function getAllRequiredByRole() {
+        $allRequiredByRole = array();
+
+        foreach ($this->requiredByRole as $requiredByRole) {
+            $this->getAllRequiredByRoleRec($allRequiredByRole, $requiredByRole);
+        }
+
+        return $allRequiredByRole;
+    }
+
+    private function getAllRequiredByRoleRec(&$allRequiredByRole, $role) {
+        if ($this == $role || in_array($role, $allRequiredByRole)) {
+            return;
+        }
+        $allRequiredByRole[] = $role;
+        foreach ($role->requiredByRole as $requiredByRole) {
+            $this->getAllRequiredByRoleRec($allRequiredByRole, $requiredByRole);
+        }
     }
 }
 
@@ -495,12 +563,16 @@ class RoleRepository extends \Doctrine\ORM\EntityRepository
 
     public function findRegisterableNow()
     {
-        $today = new \DateTime('now');
-        $today = $today->format('Y-m-d');
+        $today = date("Y-m-d H:i");
 
         $query = $this->_em->createQuery("SELECT r FROM {$this->_entityName} r WHERE r.registerable=true
               AND (r.registerableFrom <= '{$today}' OR r.registerableFrom IS NULL)
               AND (r.registerableTo >= '{$today}' OR r.registerableTo IS NULL)");
+        return $query->getResult();
+    }
+
+    public function findCapacityLimitedRoles() {
+        $query = $this->_em->createQuery("SELECT r FROM {$this->_entityName} r WHERE r.usersLimit IS NOT NULL");
         return $query->getResult();
     }
 

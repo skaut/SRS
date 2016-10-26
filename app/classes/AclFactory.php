@@ -22,20 +22,22 @@ class AclFactory
         $roles = array();
         $roles[] = $guest = new Role(Role::GUEST);
         $roles[] = $registered = new Role(Role::REGISTERED);
+        $roles[] = $unapproved = new Role(Role::UNAPPROVED);
         $roles[] = $attendee = new Role(Role::ATTENDEE);
         $roles[] = $serviceTeam = new Role(Role::SERVICE_TEAM);
         $roles[] = $lector = new Role(Role::LECTOR);
         $roles[] = $organizer = new Role(Role::ORGANIZER);
         $roles[] = $admin = new Role(Role::ADMIN);
 
-        $admin->registerable = False;
-        $registered->registerable = False;
-        $guest->registerable = False;
+        $admin->registerable = false;
+        $registered->registerable = false;
+        $unapproved->registerable = false;
+        $guest->registerable = false;
         $attendee->approvedAfterRegistration = true;
-        $attendee->pays = true;
 
         $guest->syncedWithSkautIS = false;
         $registered->syncedWithSkautIS = false;
+        $unapproved->syncedWithSkautIS = false;
 
         $backend = new Resource(Resource::BACKEND);
         $acl = new Resource(Resource::ACL);
@@ -53,7 +55,6 @@ class AclFactory
         $lector->permissions->add($admin_access);
         $serviceTeam->permissions->add($admin_access);
 
-
         $acl_edit = new Permission(Permission::MANAGE, $acl);
         $admin->permissions->add($acl_edit);
         $organizer->permissions->add($acl_edit);
@@ -65,7 +66,6 @@ class AclFactory
         $configuration_edit = new Permission(Permission::MANAGE, $configuration);
         $admin->permissions->add($configuration_edit);
         $organizer->permissions->add($configuration_edit);
-
 
         $program_allow = new Permission(Permission::ACCESS, $program);
         $admin->permissions->add($program_allow);

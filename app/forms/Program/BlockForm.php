@@ -8,11 +8,8 @@
 
 namespace SRS\Form\Program;
 
-use Nette\Application\UI,
-    Nette\Diagnostics\Debugger,
-    Nette\Application\UI\Form,
-    Nette\ComponentModel\IContainer,
-    Nette\Utils\Html;
+use Nette\Application\UI\Form,
+    Nette\ComponentModel\IContainer;
 
 /**
  * Formular pro editaci a vytvareni programoveho bloku
@@ -114,7 +111,7 @@ class BlockForm extends \SRS\Form\EntityForm
         $basicDuration = $this->dbsettings->get('basic_block_duration');
         $durationChoices = array();
 
-        for ($i = 1; $i < 10; $i++) {
+        for ($i = 1; $i * $basicDuration <= 240; $i++) {
             $durationChoices[$i] = $i * $basicDuration . ' minut';
         }
         return $durationChoices;

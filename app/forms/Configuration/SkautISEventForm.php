@@ -9,7 +9,6 @@
 namespace SRS\Form\Configuration;
 
 use Nette\Application\UI,
-    Nette\Diagnostics\Debugger,
     Nette\Application\UI\Form,
     Nette\ComponentModel\IContainer;
 
@@ -30,7 +29,7 @@ class SkautISEventForm extends UI\Form
         $this->skautISEvents = $skautISEvents;
 
         $this->addSelect('skautISEvent', 'Vyberte akci ze skautIS')->setItems(\SRS\Form\EntityForm::getFormChoices($this->skautISEvents, 'ID', 'DisplayName'))
-            ->addRule(FORM::FILLED, 'Vyberte akci');
+            ->addRule(Form::FILLED, 'Vyberte akci');
 
         $this->addSubmit('submit_print', 'Propojit se skautIS akcí')->getControlPrototype()->class('btn btn-primary pull-right');
         $this->onSuccess[] = callback($this, 'formSubmitted');

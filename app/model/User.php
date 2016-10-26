@@ -2,8 +2,9 @@
 
 namespace SRS\Model;
 
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\Mapping as ORM,
+    \SRS\Model\Acl\Role;
+
 
 /**
  * Entita uzivatele aplikace
@@ -420,14 +421,12 @@ class User extends BaseEntity
 
     /**
      * @param string
-     * @return User
      */
     public function __construct($username)
     {
         $this->username = static::normalizeString($username);
         $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
     }
-
 
     /**
      * @param string $birhdate
@@ -900,6 +899,7 @@ class User extends BaseEntity
     {
         $this->variableSymbol = $variableSymbol;
     }
+
     /**
      * @return string
      */
@@ -1001,12 +1001,60 @@ class User extends BaseEntity
         }
     }
 
-    public function removeAllRoles() {
+    public function changeRolesTo($roles) {
+        $oldCategories = array();
+        $newCategories = array();
+
+        foreach ($this->getRolesCategories($this->roles) as $oldCategory) {
+            $oldCategories[] = $oldCategory;
+        }
+
+        foreach ($this->getRolesCategories($roles) as $newCategory) {
+            $newCategories[] = $newCategory;
+        }
+
         $this->roles->clear();
+
+        if (count($roles) == 1 && $roles[0]->name == Role::REGISTERED)
+            $this->removeAllPrograms();
+        else {
+            foreach ($roles as $role) {
+                $this->roles->add($role);
+            }
+
+            foreach ($oldCategories as $oldCategory) {
+                if (!in_array($oldCategory, $newCategories, true))
+                    $this->removeProgramsInCategory($oldCategory);
+            }
+        }
     }
 
     public function addRole($role) {
         $this->roles->add($role);
+    }
+
+    private function getRolesCategories($roles) {
+        $categories = array();
+        foreach ($roles as $role) {
+            foreach ($role->registerableCategories as $category) {
+                $categories[] = $category;
+            }
+        }
+        return $categories;
+    }
+
+    private function removeAllPrograms() {
+        foreach ($this->programs as $program) {
+            $program->attendees->removeElement($this);
+        }
+    }
+
+    private function removeProgramsInCategory($category) {
+        foreach ($this->programs as $program) {
+            if ($program->block->category === $category) {
+                $program->attendees->removeElement($this);
+            }
+        }
     }
 
     public function isInRole($roleName) {
@@ -1035,16 +1083,27 @@ class User extends BaseEntity
         return array("fee" => $fee, "feeWord" => $feeWord);
     }
 
-    public function generateVariableSymbol($code) {
-        return $code . $this->birthdate->format("ymd");
-    }
-
     public function displayArrivalDeparture() {
         foreach ($this->roles as $role) {
             if ($role->displayArrivalDeparture)
                 return true;
         }
         return false;
+    }
+
+    public function generateVariableSymbol($database) {
+        if ($this->variableSymbol === null) {
+            $code = $database->getRepository('\SRS\model\Settings')->findOneBy(array("item" => "variable_symbol_code"))->value;
+
+            $variableSymbol = $code . $this->birthdate->format("ymd");
+
+            while ($database->getRepository('\SRS\model\User')->findOneBy(array("variableSymbol" => $variableSymbol)) !== null) {
+                $variableSymbol++;
+            }
+
+            $this->variableSymbol = str_pad($variableSymbol, 8, '0', STR_PAD_LEFT);
+            $database->flush();
+        }
     }
 }
 
@@ -1060,7 +1119,7 @@ class UserRepository extends \Nella\Doctrine\Repository
 
     public function findAllPaying()
     {
-        $query = "SELECT u FROM {$this->_entityName} u JOIN u.roles r WHERE r.pays = 1 AND u.id NOT IN (SELECT u.id FROM {$this->_entityName} u JOIN u.roles r WHERE r.pays = 0)";
+        $query = "SELECT u FROM {$this->_entityName} u JOIN u.roles r WHERE r.fee > 0 AND u.id NOT IN (SELECT u.id FROM {$this->_entityName} u JOIN u.roles r WHERE r.fee = 0 OR r.fee IS NULL)";
         return $this->_em->createQuery($query)->getResult();
     }
 
@@ -1077,6 +1136,11 @@ class UserRepository extends \Nella\Doctrine\Repository
 
     public function findUsersRoles($userId) {
         $query = $this->_em->createQuery("SELECT r FROM \SRS\model\Acl\Role r JOIN r.users u WHERE u.id = $userId");
+        return $query->getResult();
+    }
+
+    public function findUsersPayingRoles($userId) {
+        $query = $this->_em->createQuery("SELECT r FROM \SRS\model\Acl\Role r JOIN r.users u WHERE u.id = $userId AND r.fee > 0 AND u.id NOT IN (SELECT v.id FROM {$this->_entityName} v JOIN v.roles s WHERE s.fee = 0 OR s.fee IS NULL)");
         return $query->getResult();
     }
 }

@@ -5,9 +5,10 @@
  * Author: Michal Májský
  */
 namespace SRS\Components;
+
 use \NiftyGrid\Grid;
-use \Doctrine\ORM\Query\Expr;
-use \SRS\Model\Acl\Role;
+
+
 use \Nette\Utils\Html;
 
 /**
@@ -55,7 +56,14 @@ class EvidenceGrid extends Grid
         $self = $this;
         $visibility = $this->columnsVisibility;
         if ($this->columnsVisibility['displayName'])
-            $this->addColumn('displayName', 'Jméno')->setTextFilter()->setAutocomplete($numOfResults);
+            $this->addColumn('displayName', 'Jméno')
+                ->setTextFilter()
+                ->setAutocomplete($numOfResults);
+
+        if ($this->columnsVisibility['username'])
+            $this->addColumn('username', 'Uživatelské jméno')
+                ->setTextFilter()
+                ->setAutocomplete($numOfResults);
 
         if ($this->columnsVisibility['roles'])
             $this->addColumn('roles', 'Role')
@@ -70,13 +78,13 @@ class EvidenceGrid extends Grid
                             $rolesStr = $rolesStr . ", ";
                     }
                     return $rolesStr;
-            });
+                });
 
         if ($this->columnsVisibility['approved'])
             $this->addColumn('approved', 'Schválený')->setBooleanFilter()->setBooleanEditable()
                 ->setRenderer(function ($row) {
-                return $row->approved ? 'Ano' : 'Ne';
-            });
+                    return $row->approved ? 'ANO' : 'NE';
+                });
 
         if ($this->columnsVisibility['membership'])
             $this->addColumn('membership', 'Členství')
@@ -87,52 +95,73 @@ class EvidenceGrid extends Grid
         if ($this->columnsVisibility['birthdate'])
             $this->addColumn('birthdate', 'Věk')
                 ->setRenderer(function ($row) use ($today) {
-                $interval = $today->diff($row->birthdate);
-                return $interval->y;
-            });
+                    $interval = $today->diff($row->birthdate);
+                    return $interval->y;
+                });
 
         if ($this->columnsVisibility['city'])
             $this->addColumn('city', 'Město')
                 ->setTextFilter()
                 ->setAutocomplete($numOfResults);
 
-        $paymentMethods = $presenter->context->parameters['payment_methods'];
+        if ($this->columnsVisibility['fee'])
+            $this->addColumn('fee', 'Cena')
+                ->setRenderer(function ($row) {
+                    return $this->em->getRepository('\SRS\model\User')->find($row->id)->countFee()['fee'];
+                });
 
+        $paymentMethods = $presenter->context->parameters['payment_methods'];
         if ($this->columnsVisibility['paymentMethod'])
             $this->addColumn('paymentMethod', 'Platební metoda')
                 ->setSelectFilter($paymentMethods)
                 ->setSelectEditable($paymentMethods, 'nezadáno')
                 ->setRenderer(function ($row) use ($paymentMethods) {
-                if ($row->paymentMethod == null || $row->paymentMethod == '') return '';
-                return $paymentMethods[$row->paymentMethod];
-            });
+                    if ($row->paymentMethod == null || $row->paymentMethod == '') return '';
+                    return $paymentMethods[$row->paymentMethod];
+                });
+
+        if ($this->columnsVisibility['variableSymbol'])
+            $this->addColumn('variableSymbol', 'Variabilní symbol')
+                ->setTextFilter()
+                ->setAutocomplete($numOfResults)
+                ->setRenderer(function ($row) use ($paymentMethods) {
+                    $user = $this->em->getRepository('\SRS\model\User')->find($row->id);
+                    $user->generateVariableSymbol($this->em);
+                    return $user->variableSymbol;
+                });
 
         if ($this->columnsVisibility['paymentDate'])
             $this->addColumn('paymentDate', 'Zaplaceno dne')
                 ->setDateEditable()
                 ->setDateFilter()
                 ->setRenderer(function ($row) {
-                if ($row->paymentDate == null || $row->paymentDate == '') return '';
-                return $row->paymentDate->format('d.m.Y');
-            });
+                    if ($row->paymentDate == null || $row->paymentDate == '') return '';
+                    return $row->paymentDate->format('d.m.Y');
+                });
 
         if ($this->columnsVisibility['incomeProofPrintedDate'])
-            $this->addColumn('incomeProofPrintedDate', 'Příjm. doklad vytištěn dne')
+            $this->addColumn('incomeProofPrintedDate', 'Doklad vytištěn dne')
                 ->setDateEditable()
                 ->setDateFilter()
                 ->setRenderer(function ($row) {
-                if ($row->incomeProofPrintedDate == null || $row->incomeProofPrintedDate == '') return '';
-                return $row->incomeProofPrintedDate->format('d.m.Y');
-            });
+                    if ($row->incomeProofPrintedDate == null || $row->incomeProofPrintedDate == '') return '';
+                    return $row->incomeProofPrintedDate->format('d.m.Y');
+                });
 
+        if ($this->columnsVisibility['firstLogin'])
+            $this->addColumn('firstLogin', 'Registrace')
+                ->setRenderer(function ($row) {
+                    if ($row->firstLogin == null || $row->firstLogin == '') return '';
+                    return $row->firstLogin->format('d.m.Y H:i');
+                });
 
         if ($this->columnsVisibility['attended'])
             $this->addColumn('attended', 'Přítomen')
                 ->setBooleanFilter()
                 ->setBooleanEditable()
                 ->setRenderer(function ($row) {
-                return \SRS\Helpers::renderBoolean($row->attended);
-            });
+                    return \SRS\Helpers::renderBoolean($row->attended);
+                });
 
         $CUSTOM_BOOLEAN_COUNT = $presenter->context->parameters['user_custom_boolean_count'];
         for ($i = 0; $i < $CUSTOM_BOOLEAN_COUNT; $i++) {
@@ -145,8 +174,8 @@ class EvidenceGrid extends Grid
                     ->setBooleanFilter()
                     ->setBooleanEditable()
                     ->setRenderer(function ($row) use ($i) {
-                    return \SRS\Helpers::renderBoolean($row->{"customBoolean$i"});
-                });
+                        return \SRS\Helpers::renderBoolean($row->{"customBoolean$i"});
+                    });
             }
         }
 
@@ -169,10 +198,10 @@ class EvidenceGrid extends Grid
 
         $this->addButton("detail", "Detail")
             ->setClass("btn")
-            ->setText('Zobrazit detail')
+            ->setText('Detail')
             ->setLink(function ($row) use ($presenter) {
-            return $presenter->link("detail", $row['id']);
-        })
+                return $presenter->link("detail", $row['id']);
+            })
             ->setAjax(FALSE);
 
         $this->addButton("edit", "Upravit")
@@ -185,75 +214,73 @@ class EvidenceGrid extends Grid
 
 
         $this->setRowFormCallback(function ($values) use ($self, $presenter, $visibility) {
-                $user = $presenter->context->database->getRepository('\SRS\Model\User')->find($values['id']);
-                if ($visibility['attended']) {
-                    $user->attended = isset($values['attended']) ? true : false;
-                }
+            $user = $presenter->context->database->getRepository('\SRS\Model\User')->find($values['id']);
+            if ($visibility['attended']) {
+                $user->attended = isset($values['attended']) ? true : false;
+            }
 
-                if ($values['incomeProofPrintedDate']) {
-                    $user->incomeProofPrintedDate = \DateTime::createFromFormat('d.m.Y', $values['incomeProofPrintedDate']);
-                }
-                else {
-                    $user->incomeProofPrintedDate = null;
-                }
+            if ($values['incomeProofPrintedDate']) {
+                $user->incomeProofPrintedDate = \DateTime::createFromFormat('d.m.Y', $values['incomeProofPrintedDate']);
+            } else {
+                $user->incomeProofPrintedDate = null;
+            }
 
-                if (isset($values['paymentMethod'])) {
-                    $user->paymentMethod = ($values['paymentMethod'] != null) ? $values['paymentMethod'] : null;
-                }
+            if (isset($values['paymentMethod'])) {
+                $user->paymentMethod = ($values['paymentMethod'] != null) ? $values['paymentMethod'] : null;
+            }
 
-                if ($values['paymentDate']) {
-                    $user->paymentDate = \DateTime::createFromFormat('d.m.Y', $values['paymentDate']);
-                }
-                else {
-                    $user->paymentDate = null;
-                }
+            if ($values['paymentDate']) {
+                $user->paymentDate = \DateTime::createFromFormat('d.m.Y', $values['paymentDate']);
+            } else {
+                $user->paymentDate = null;
+            }
 
-                if ($visibility['approved']) {
-                    $user->approved = isset($values['approved']) ? 1 : 0;
+            if ($visibility['approved']) {
+                $user->approved = isset($values['approved']) ? 1 : 0;
+            }
+
+            $CUSTOM_BOOLEAN_COUNT = $presenter->context->parameters['user_custom_boolean_count'];
+            for ($i = 0; $i < $CUSTOM_BOOLEAN_COUNT; $i++) {
+                $propertyName = 'customBoolean' . $i;
+                if (array_key_exists($propertyName, $visibility) && $visibility[$propertyName]) {
+                    $user->{$propertyName} = isset($values[$propertyName]) ? true : false;
                 }
-
-                $CUSTOM_BOOLEAN_COUNT = $presenter->context->parameters['user_custom_boolean_count'];
-                for ($i = 0; $i < $CUSTOM_BOOLEAN_COUNT; $i++) {
-                    $propertyName = 'customBoolean' . $i;
-                    if (array_key_exists($propertyName, $visibility) && $visibility[$propertyName]) {
-                        $user->{$propertyName} = isset($values[$propertyName]) ? true : false;
-                    }
-
-                }
-
-                $CUSTOM_TEXT_COUNT = $presenter->context->parameters['user_custom_text_count'];
-                for ($i = 0; $i < $CUSTOM_TEXT_COUNT; $i++) {
-                    $propertyName = 'customText' . $i;
-                    if (isset($values[$propertyName])) {
-                        $user->{$propertyName} = $values[$propertyName];
-                    }
-                }
-
-                $presenter->context->database->flush();
-                $self->flashMessage("Záznam byl úspěšně uložen.", "success");
 
             }
+
+            $CUSTOM_TEXT_COUNT = $presenter->context->parameters['user_custom_text_count'];
+            for ($i = 0; $i < $CUSTOM_TEXT_COUNT; $i++) {
+                $propertyName = 'customText' . $i;
+                if (isset($values[$propertyName])) {
+                    $user->{$propertyName} = $values[$propertyName];
+                }
+            }
+
+            $presenter->context->database->flush();
+            $self->flashMessage("Záznam byl úspěšně uložen.", "success");
+
+        }
         );
 
         $this->addAction("makeThemPayBank", "Označit jako zaplacené dnes přes účet")
             ->setCallback(function ($id) use ($self) {
-            return $self->handleMakeThemPay($id, 'bank');
-        });
+                return $self->handleMakeThemPay($id, 'bank');
+            });
 
         $this->addAction("makeThemPayCash", "Označit jako zaplacené dnes hotově")
             ->setCallback(function ($id) use ($self) {
-            return $self->handleMakeThemPay($id, 'cash');
-        });
+                return $self->handleMakeThemPay($id, 'cash');
+            });
 
         $this->addAction("attend", "Označit jako přítomné")
             ->setCallback(function ($id) use ($self) {
-            return $self->handleAttend($id);
-        });
+                return $self->handleAttend($id);
+            });
 
         $this->addAction("printPaymentProofs", "Vytisknout doklad o zaplacení")->setAjax(false)
             ->setCallback(function ($id) use ($presenter) {
-            $presenter->redirect('printPaymentProofs!', array('ids' => $id));
-        });
+                $presenter->redirect('printPaymentProofs!', array('ids' => $id));
+            });
 
         $this->addAction("approve", "Schválit")
             ->setCallback(function ($id) use ($self) {
@@ -275,8 +302,10 @@ class EvidenceGrid extends Grid
     {
         foreach ($ids as $id) {
             $userToSave = $this->presenter->context->database->getRepository('\SRS\Model\User')->find($id);
-            $userToSave->paymentMethod = $method;
-            $userToSave->paymentDate = new \DateTime();
+            if ($userToSave->countFee()['fee'] != 0) {
+                $userToSave->paymentMethod = $method;
+                $userToSave->paymentDate = new \DateTime();
+            }
         }
 
         $this->presenter->context->database->flush();
@@ -309,18 +338,50 @@ class EvidenceGrid extends Grid
 
     public function handleApprove($ids)
     {
+        $users = array();
+
+        $rolesCapacities = array();
+        $roles = $this->presenter->context->database->getRepository('\SRS\Model\Acl\Role')->findCapacityLimitedRoles();
+        foreach ($roles as $role) {
+            $rolesCapacities[$role->id] = $role->countVacancies();
+        }
+
         foreach ($ids as $id) {
-            $userToSave = $this->presenter->context->database->getRepository('\SRS\Model\User')->find($id);
-            $userToSave->approved = True;
+            $users[] = $user = $this->presenter->context->database->getRepository('\SRS\Model\User')->find($id);
+            if (!$user->approved) {
+                foreach ($user->roles as $role) {
+                    if ($role->usersLimit !== null)
+                        $rolesCapacities[$role->id]--;
+                }
+            }
         }
 
-        $this->presenter->context->database->flush();
+        $error = false;
 
-        if (count($ids) > 1) {
-            $this->flashMessage("Vybraní uživatelé byli schváleni.", "success");
-        } else {
-            $this->flashMessage("Vybraný uživatel byl schválen.", "success");
+        foreach ($rolesCapacities as $roleCapacity) {
+            if ($roleCapacity < 0) {
+                $error = true;
+                break;
+            }
         }
+
+        if (!$error) {
+            foreach ($users as $user) {
+                $user->approved = true;
+            }
+
+            $this->presenter->context->database->flush();
+
+            if (count($ids) > 1) {
+                $this->flashMessage("Vybraní uživatelé byli schváleni.", "success");
+            } else {
+                $this->flashMessage("Vybraný uživatel byl schválen.", "success");
+            }
+        }
+        else {
+            $this->flashMessage("Kapacita role byla překročena.", "error");
+        }
+
         $this->redirect("this");
     }
 

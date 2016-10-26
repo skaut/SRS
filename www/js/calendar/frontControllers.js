@@ -56,7 +56,7 @@ function FrontCalendarCtrl($scope, $http, $q, $timeout) {
                     }
                 }
 
-                setColorFront(event);
+                setColorFront(event, $scope.config);
             });
             bindCalendar($scope);
         });
@@ -90,7 +90,7 @@ function FrontCalendarCtrl($scope, $http, $q, $timeout) {
                     }
 
                     for (i = $scope.events.length - 1; i >= 0; i--) {
-                        setColorFront($scope.events[i]);
+                        setColorFront($scope.events[i], $scope.config);
                     }
                 }
                 $('#calendar').fullCalendar('updateEvent', event);
@@ -124,7 +124,7 @@ function FrontCalendarCtrl($scope, $http, $q, $timeout) {
                     }
 
                     for (i = $scope.events.length - 1; i >= 0; i--) {
-                        setColorFront($scope.events[i]);
+                        setColorFront($scope.events[i], $scope.config);
                     }
                 }
                 $('#calendar').fullCalendar('updateEvent', event);
@@ -171,11 +171,12 @@ function bindCalendar(scope) {
             options.title = event.title;
             options.content = '';
             options.placement = 'bottom';
+            options.container = 'body';
             if (event.block != null && event.block != undefined) {
                 options.content += "<ul class='no-bullets no-margin'>";
                 options.content += "<li><span>Lektor:</span> " + event.block.lector + "</li>";
                 options.content += "<li><span>Místnost:</span> " + event.block.room + "</li>";
-                options.content += "<li><span>Kapacita:</span> " + event.attendees_count + "/" + event.block.capacity + "</li>";
+                options.content += "<li><span>Obsazenost:</span> " + event.attendees_count + "/" + event.block.capacity + "</li>";
                 options.content += "<li><span>Kategorie:</span> " + event.block.category + "</li>";
                 options.content += "</ul>";
                 if (event.block.perex != null) {

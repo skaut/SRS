@@ -22,13 +22,17 @@ class EvidencePresenter extends BasePresenter
 
     protected $evidenceDefaultColumns = array(
         array('name' => 'displayName', 'label' => 'Jméno'),
+        array('name' => 'username', 'label' => 'Uživatelské jméno'),
         array('name' => 'roles', 'label' => 'Role'),
         array('name' => 'membership', 'label' => 'Členství'),
         array('name' => 'birthdate', 'label' => 'Věk'),
         array('name' => 'city', 'label' => 'Město'),
+        array('name' => 'fee', 'label' => 'Cena'),
         array('name' => 'paymentMethod', 'label' => 'Platební metoda'),
+        array('name' => 'variableSymbol', 'label' => 'Variabilní symbol'),
         array('name' => 'paymentDate', 'label' => 'Zaplaceno dne'),
-        array('name' => 'incomeProofPrintedDate', 'label' => 'Příjmový doklad vytištěn dne'),
+        array('name' => 'incomeProofPrintedDate', 'label' => 'Doklad vytištěn dne'),
+        array('name' => 'firstLogin', 'label' => 'Registrace'),
         array('name' => 'attended', 'label' => 'Přítomen'),
         array('name' => 'approved', 'label' => 'Schválený')
     );
@@ -69,11 +73,13 @@ class EvidencePresenter extends BasePresenter
             throw new \Nette\Application\BadRequestException("Takový uživatel neexistuje", 404);
         }
 
+        $user->generateVariableSymbol($this->context->database);
+
         //$user je v template defaultne
         $this->template->dbuser = $user;
         $this->template->customFields = $this->getFilledCustomFields($user);
         $this->template->paymentMethods = $this->context->parameters['payment_methods'];
-        $this->template->variableSymbolCode = $this->dbsettings->get('variable_symbol_code');
+        $this->template->pays = $user->countFee()['fee'] != 0;
     }
 
     public function renderEdit($id = null)
@@ -86,15 +92,16 @@ class EvidencePresenter extends BasePresenter
         if ($user == null) {
             throw new \Nette\Application\BadRequestException("Takový uživatel neexistuje", 404);
         }
+
+        $user->generateVariableSymbol($this->context->database);
+
         $form = $this->getComponent('evidenceEditForm');
         $form->bindEntity($user);
-        $form->setDefaults(array (
-            'variableSymbol' => $user->variableSymbol == null ? $user->generateVariableSymbol($this->dbsettings->get('variable_symbol_code')) : $user->variableSymbol
-        ));
 
         //$user je v template defaultne
         $this->template->dbuser = $user;
         $this->template->customFields = $this->getFilledCustomFields($user);
+        $this->template->pays = $user->countFee()['fee'] != 0;
     }
 
     public function renderEditRoles($ids = array()) {

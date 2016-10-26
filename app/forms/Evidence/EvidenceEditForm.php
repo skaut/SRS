@@ -6,9 +6,7 @@
  */
 namespace SRS\Form\Evidence;
 
-use Nette\Application\UI,
-    Nette\Diagnostics\Debugger,
-    Nette\Application\UI\Form,
+use Nette\Application\UI\Form,
     Nette\ComponentModel\IContainer,
     SRS\Model\Acl\Role;
 
@@ -24,21 +22,30 @@ class EvidenceEditForm extends \SRS\Form\EntityForm
         $roles = $database->getRepository('\SRS\Model\Acl\Role')->findAll();
         $rolesGrid = array();
         foreach ($roles as $role) {
-            if ($role->name != Role::GUEST) {
-                $rolesGrid[$role->id] = $role->name;
+            if ($role->name != Role::GUEST && $role->name != Role::UNAPPROVED) {
+                if ($role->usersLimit !== null)
+                    $rolesGrid[$role->id] = "{$role->name} (obsazeno {$role->countApprovedUsersInRole()}/{$role->usersLimit})";
+                else
+                    $rolesGrid[$role->id] = "{$role->name}";
             }
         }
 
         $this->addHidden('id');
 
-        $checkRolesCapacity = function($field, $database) {
+        $checkRolesCapacity = function($field, $args) {
+            $database = $args[0];
+            $approved = $args[1];
+
+            if ($approved->getValue() === false)
+                return true;
+
             $values = $this->getComponent('roles')->getRawValue();
             $user = $database->getRepository('\SRS\Model\User')->findOneBy(array('id' => $this->getForm()->getHttpData()['id']));
 
             foreach ($values as $value) {
                 $role = $database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('id' => $value));
                 if ($role->usersLimit !== null) {
-                    if ($role->usersLimit < count($role->users) || (!$user->isInRole($role->name) && $role->usersLimit == count($role->users)))
+                    if (($role->countVacancies() == 0 && !$user->isInRole($role->name)) || ($role->countVacancies() == 0 && !$user->approved))
                         return false;
                 }
             }
@@ -61,42 +68,42 @@ class EvidenceEditForm extends \SRS\Form\EntityForm
             return count($values) != 0;
         };
 
+        $approved = $this->addCheckbox('approved', 'Schválený');
+
         $this->addMultiSelect('roles', 'Role')->setItems($rolesGrid)
             ->setAttribute('size', count($rolesGrid))
-            ->addRule($checkRolesCapacity, 'Kapacita role byla překročena.', $database)
+            ->addRule($checkRolesCapacity, 'Kapacita role byla překročena.', [$database, $approved])
             ->addRule($checkRolesCombination, 'Role "Nepřihlášený" nemůže být kombinována s jinou rolí.', $database)
             ->addRule($checkRolesEmpty, 'Musí být přidělena alespoň jedna role.', $database)
             ->getControlPrototype()->class('multiselect');
-
-        $this->addCheckbox('approved', 'Schválený');
 
         $this->addCheckbox('attended', 'Přítomen');
 
         $this->addSelect('paymentMethod', 'Platební metoda')->setItems($configParams['payment_methods'])->setPrompt('Nezadáno');
 
         $this->addText('variableSymbol', 'Variabilní symbol')
-            ->addCondition(FORM::FILLED)
-            ->addRule(FORM::INTEGER);
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::INTEGER);
 
         $this->addText('paymentDate', 'Zaplaceno dne')
             ->getControlPrototype()->class('datepicker')
-            ->addCondition(FORM::FILLED)
-            ->addRule(FORM::PATTERN, 'Datum zaplacení není ve správném tvaru', \SRS\Helpers::DATE_PATTERN);
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::PATTERN, 'Datum zaplacení není ve správném tvaru', \SRS\Helpers::DATE_PATTERN);
 
         $this->addText('incomeProofPrintedDate', 'Příjmový doklad vytištěn dne')
             ->getControlPrototype()->class('datepicker')
-            ->addCondition(FORM::FILLED)
-            ->addRule(FORM::PATTERN, 'Datum vytištění příjmového dokladu není ve správném tvaru', \SRS\Helpers::DATE_PATTERN);
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::PATTERN, 'Datum vytištění příjmového dokladu není ve správném tvaru', \SRS\Helpers::DATE_PATTERN);
 
         $this->addText('arrival', 'Příjezd')
             ->setAttribute('class', 'datetimepicker')
-            ->addCondition(FORM::FILLED)
-            ->addRule(FORM::PATTERN, 'Datum a čas příjezdu není ve správném tvaru', \SRS\Helpers::DATETIME_PATTERN);
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::PATTERN, 'Datum a čas příjezdu není ve správném tvaru', \SRS\Helpers::DATETIME_PATTERN);
 
         $this->addText('departure', 'Odjezd')
             ->setAttribute('class', 'datetimepicker')
-            ->addCondition(FORM::FILLED)
-            ->addRule(FORM::PATTERN, 'Datum a čas odjezdu není ve správném tvaru', \SRS\Helpers::DATETIME_PATTERN);
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::PATTERN, 'Datum a čas odjezdu není ve správném tvaru', \SRS\Helpers::DATETIME_PATTERN);
 
 
         $CUSTOM_BOOLEAN_COUNT = $configParams['user_custom_boolean_count'];
@@ -126,11 +133,13 @@ class EvidenceEditForm extends \SRS\Form\EntityForm
         $user = $this->presenter->context->database->getRepository('\SRS\Model\User')->find($values['id']);
 
         $formValuesRoles = $this->getComponent('roles')->getRawValue(); //oklika
-        $values['roles'] = $formValuesRoles;
 
-        $code = $this->presenter->context->database->getRepository('\SRS\Model\Settings')->get('variable_symbol_code');
-        if ($user->generateVariableSymbol($code) == $values['variableSymbol'])
-            $values['variableSymbol'] = null;
+        $roles = array();
+        foreach ($formValuesRoles as $roleId) {
+            $roles[] = $this->presenter->context->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('id' => $roleId));
+        }
+
+        $user->changeRolesTo($roles);
 
         $user->setProperties($values, $this->presenter->context->database);
         $this->presenter->context->database->flush();

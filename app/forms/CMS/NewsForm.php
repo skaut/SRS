@@ -9,9 +9,7 @@
 
 namespace SRS\Form\CMS;
 
-use Nette\Application\UI,
-    Nette\Diagnostics\Debugger,
-    Nette\Application\UI\Form,
+use Nette\Application\UI\Form,
     Nette\ComponentModel\IContainer;
 
 /**
@@ -26,7 +24,7 @@ class NewsForm extends \SRS\Form\EntityForm
         $this->addHidden('id');
         $this->addText('published', 'Zveřejněno:')
             ->addRule(Form::FILLED, 'Zadejte datum zveřejnění')
-            ->addRule(FORM::PATTERN, 'Špatný formát datumu zveřejnění', \SRS\Helpers::DATE_PATTERN)
+            ->addRule(Form::PATTERN, 'Špatný formát datumu zveřejnění', \SRS\Helpers::DATE_PATTERN)
             ->getControlPrototype()->class('datepicker');
         $this->addTextArea('text', 'Text:')
             ->addRule(Form::FILLED, 'Zadejte text')

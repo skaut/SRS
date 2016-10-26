@@ -5,9 +5,7 @@
  * Author: Michal Májský
  */
 namespace SRS\Form\CMS;
-use Nette\Application\UI,
-    Nette\Diagnostics\Debugger,
-    Nette\Application\UI\Form,
+use Nette\Application\UI\Form,
     Nette\ComponentModel\IContainer;
 
 

@@ -72,7 +72,7 @@
             <p>
                 {!$selectedBlock->description}
             </p>
-            {if $selectedBlock->lector->about != null}
+            {if $selectedBlock->lector != null && $selectedBlock->lector->about != null}
                 <h4>O lektorovi</h4>
                 <p>
                     {$selectedBlock->lector->about}
@@ -85,4 +85,6 @@
             </div>
         {/ifset}
     </div>
+
+    <div style="clear:both"></div>
 </div>

@@ -5,7 +5,7 @@
  * Author: Michal Májský
  */
 namespace BackModule\CMSModule;
-use Nette\Application\UI\Form;
+
 
 /**
  * Obsluhuje sekci dokumenty
@@ -52,7 +52,9 @@ class DocumentPresenter extends \BackModule\BasePresenter
     {
         $doc = $this->context->database->getRepository(self::DOC_REPO)->find($docId);
         if ($doc == null) throw new \Nette\Application\BadRequestException('Dokument s tímto id neexistuje', 404);
-        unlink(WWW_DIR . $doc->file);
+        $file = WWW_DIR . $doc->file;
+        if (file_exists($file))
+            unlink($file);
         $this->context->database->remove($doc);
         $this->context->database->flush();
         $this->flashMessage('Dokument smazán', 'success');
@@ -98,7 +100,6 @@ class DocumentPresenter extends \BackModule\BasePresenter
 
     protected function createComponentDocumentForm($name)
     {
-        $tagChoices = array();
         $tags = $this->presenter->context->database->getRepository(self::TAG_REPO)->findAll();
         $tagChoices = \SRS\Form\EntityForm::getFormChoices($tags);
         $form = new \SRS\Form\CMS\Documents\DocumentForm(null, null, $tagChoices);

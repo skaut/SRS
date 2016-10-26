@@ -10,8 +10,12 @@
 
 {block sidebar_menu}
 <div ng-app ng-controller="userCtrl">
-    Vyhledat uživatele:
-    <input type="text" class="input-medium search-query" ng-model="query">
+    <table>
+        <tr>
+            <td>Vyhledat: </td>
+            <td><input type="text" class="input-medium search-query" ng-model="query"></td>
+        </tr>
+    </table>
     <ul>
         <li ng-repeat="user in users | filter:query"><a ng-href="{{ user.url }}"> {{ user.display_name }}</a></li>
     </ul>
@@ -104,43 +108,48 @@
         </td>
     </tr>
 
-    <tr>
-        <td>Platební metoda</td>
-        <td>
-            {if $dbuser->paymentMethod !== null}
-                {$paymentMethods[$dbuser->paymentMethod]}
-            {/if}
-        </td>
-    </tr>
+    {if $pays}
+        <tr>
+            <td>Cena</td>
+            <td>
+                {$dbuser->countFee()['fee']}
+            </td>
+        </tr>
 
-    <tr>
-        <td>Variabilní symbol</td>
-        <td>
-            {if $dbuser->variableSymbol == null}
-                {$dbuser->generateVariableSymbol($variableSymbolCode)}
-            {else}
+        <tr>
+            <td>Platební metoda</td>
+            <td>
+                {if $dbuser->paymentMethod !== null}
+                    {$paymentMethods[$dbuser->paymentMethod]}
+                {/if}
+            </td>
+        </tr>
+
+        <tr>
+            <td>Variabilní symbol</td>
+            <td>
                 {$dbuser->variableSymbol}
-            {/if}
-        </td>
-    </tr>
+            </td>
+        </tr>
 
-    <tr>
-        <td>Zaplaceno dne</td>
-        <td>
-            {if $dbuser->paymentDate !== null}
-            {$dbuser->paymentDate->format("d.m.Y")}
-            {/if}
-        </td>
-    </tr>
+        <tr>
+            <td>Zaplaceno dne</td>
+            <td>
+                {if $dbuser->paymentDate !== null}
+                {$dbuser->paymentDate->format("d.m.Y")}
+                {/if}
+            </td>
+        </tr>
 
-    <tr>
-        <td>Příjmový doklad vytištěn dne</td>
-        <td>
-            {if $dbuser->incomeProofPrintedDate !== null}
-                {$dbuser->incomeProofPrintedDate->format("d.m.Y")}
-            {/if}
-        </td>
-    </tr>
+        <tr>
+            <td>Příjmový doklad vytištěn dne</td>
+            <td>
+                {if $dbuser->incomeProofPrintedDate !== null}
+                    {$dbuser->incomeProofPrintedDate->format("d.m.Y")}
+                {/if}
+            </td>
+        </tr>
+    {/if}
 
     <tr>
         <td>Přítomen</td>

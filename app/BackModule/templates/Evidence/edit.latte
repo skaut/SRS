@@ -10,8 +10,12 @@
 
 {block sidebar_menu}
     <div ng-app ng-controller="userCtrl">
-        Vyhledat uživatele:
-        <input type="text" class="input-medium search-query" ng-model="query">
+        <table>
+            <tr>
+                <td>Vyhledat: </td>
+                <td><input type="text" class="input-medium search-query" ng-model="query"></td>
+            </tr>
+        </table>
         <ul>
             <li ng-repeat="user in users | filter:query"><a ng-href="{{ user.url }}"> {{ user.display_name }}</a></li>
         </ul>
@@ -37,25 +41,27 @@
                     <td>{input approved}</td>
                 </tr>
 
-                <tr>
-                    <td>{label paymentMethod/}</td>
-                    <td>{input paymentMethod}</td>
-                </tr>
+                {if $pays}
+                    <tr>
+                        <td>{label paymentMethod/}</td>
+                        <td>{input paymentMethod}</td>
+                    </tr>
 
-                <tr>
-                    <td>{label variableSymbol/}</td>
-                    <td>{input variableSymbol}</td>
-                </tr>
+                    <tr>
+                        <td>{label variableSymbol/}</td>
+                        <td>{input variableSymbol}</td>
+                    </tr>
 
-                <tr>
-                    <td>{label paymentDate/}</td>
-                    <td>{input paymentDate}</td>
-                </tr>
+                    <tr>
+                        <td>{label paymentDate/}</td>
+                        <td>{input paymentDate}</td>
+                    </tr>
 
-                <tr>
-                    <td>{label incomeProofPrintedDate/}</td>
-                    <td>{input incomeProofPrintedDate}</td>
-                </tr>
+                    <tr>
+                        <td>{label incomeProofPrintedDate/}</td>
+                        <td>{input incomeProofPrintedDate}</td>
+                    </tr>
+                {/if}
 
                 <tr>
                     <td>{label attended/}</td>
