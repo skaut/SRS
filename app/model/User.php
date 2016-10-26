@@ -1100,10 +1100,10 @@ class User extends BaseEntity
             $variableSymbol = $code . $this->birthdate->format("ymd");
 
             while ($database->getRepository('\SRS\model\User')->findOneBy(array("variableSymbol" => $variableSymbol)) !== null) {
-                $variableSymbol++;
+                $variableSymbol = str_pad(++$variableSymbol, 8, '0', STR_PAD_LEFT);
             }
 
-            $this->variableSymbol = str_pad($variableSymbol, 8, '0', STR_PAD_LEFT);
+            $this->variableSymbol = $variableSymbol;
             $database->flush();
         }
     }
