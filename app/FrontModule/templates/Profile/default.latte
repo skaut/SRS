@@ -113,7 +113,7 @@
                     </tr>
                 {/if}
 
-                {if !$user->isInRole(\SRS\model\Acl\Role::REGISTERED)}
+                {if !$user->isInRole(\SRS\model\Acl\Role::REGISTERED) && $dbuser->paymentDate === null}
                     <tr>
                         <td>{label roles /}</td>
                         <td class="local">{input roles }</td>
