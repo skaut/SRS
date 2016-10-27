@@ -55,6 +55,9 @@ class SettingsFactory
         $settings[] = new \SRS\Model\Settings('log_in_programs_from', 'Přihlašování programů otevřeno od', $yesterday->format('d.m.Y H:i'));
         $settings[] = new \SRS\Model\Settings('log_in_programs_to', 'Přihlašování programů otevřeno do', $today->format('d.m.Y H:i'));
 
+        $settings[] = new \SRS\Model\Settings('display_users_roles', 'Zobrazovat uživatelské role?', '1');
+
+
         for ($i = 0; $i < $userCustomBooleanCount; $i++) {
             $num = $i+1;
             $settings[] = new \SRS\Model\Settings('user_custom_boolean_'.$i, 'Vlastní checkbox přihlášky č.'.$num, '');

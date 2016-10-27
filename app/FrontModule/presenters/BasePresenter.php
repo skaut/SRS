@@ -22,6 +22,7 @@ class BasePresenter extends \SRS\BasePresenter
         $this->template->logo = $this->dbsettings->get('logo');
         $this->template->footer = $this->dbsettings->get('footer');
         $this->template->title = $this->dbsettings->get('seminar_name');
+        $this->template->displayUsersRoles = $this->dbsettings->get('display_users_roles');
         if (isset($this->params['pageId']) && $this->params['pageId'] !== null)
             $this->template->slug = $this->repository->IdToSlug($this->params['pageId']);
     }

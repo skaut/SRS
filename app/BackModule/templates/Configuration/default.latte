@@ -39,29 +39,6 @@
         </div>
     {/form}
 
-    {form settingsFormPayment}
-        <a name="group_payment"></a>
-        <div class="well">
-            <h4>Platba</h4>
-            <table class="table formTable">
-                <col width="50%">
-                <col width="50%">
-
-                <tr class="required">
-                    <td>{label account_number/}</td>
-                    <td>{input account_number}</td>
-                </tr>
-                <tr class="required">
-                    <td>{label variable_symbol_code/}</td>
-                    <td>{input variable_symbol_code}</td>
-                </tr>
-                <tr class="warning">
-                    <td colspan="2">{input submit_payment}</td>
-                </tr>
-            </table>
-        </div>
-    {/form}
-
     {form settingsFormProgram}
         <a name="group_program"></a>
         <div class="well">
@@ -96,6 +73,29 @@
                 </tr>
                 <tr class="warning">
                     <td colspan="2">{input submit_program}</td>
+                </tr>
+            </table>
+        </div>
+    {/form}
+
+    {form settingsFormPayment}
+        <a name="group_payment"></a>
+        <div class="well">
+            <h4>Platba</h4>
+            <table class="table formTable">
+                <col width="50%">
+                <col width="50%">
+
+                <tr class="required">
+                    <td>{label account_number/}</td>
+                    <td>{input account_number}</td>
+                </tr>
+                <tr class="required">
+                    <td>{label variable_symbol_code/}</td>
+                    <td>{input variable_symbol_code}</td>
+                </tr>
+                <tr class="warning">
+                    <td colspan="2">{input submit_payment}</td>
                 </tr>
             </table>
         </div>
@@ -156,19 +156,35 @@
                 {/for}
 
                 <tr class="warning">
-                    <td colspan="2">{input submit}</td>
+                    <td colspan="2">{input submit_custom}</td>
                 </tr>
             </table>
         </div>
     {/form}
 
-    <a name="group_system"></a>
-    <div class="well">
-        <h3 id="label_system">Systém</h3>
-        <ul class="no-margin">
-            <li><a href="{link clearCache!}" class="btn btn-danger">Promazat cache</a></li>
-        </ul>
-    </div>
+    {form settingsFormSystem}
+        <a name="group_system"></a>
+        <div class="well">
+            <h3 id="label_system">Nastavení systému</h3>
+            <table class="table formTable">
+                <col width="50%">
+                <col width="50%">
+
+                <tr>
+                    <td>{label display_users_roles/}</td>
+                    <td>{input display_users_roles}</td>
+                </tr>
+
+                <tr class="warning">
+                    <td colspan="2">{input submit_system}</td>
+                </tr>
+
+                <tr>
+                    <td colspan="2"><a href="{link clearCache!}" class="btn btn-danger">Promazat cache</a></td>
+                </tr>
+            </table>
+        </div>
+    {/form}
 
     {include '../includes/confirm_dialog.latte'}
 {/block}
