@@ -39,6 +39,9 @@ class AttendeeBox extends \Nette\Application\UI\Control
                 $form->bindEntity($user->identity->object);
             }
         }
+
+        $template->translator = $this->presenter->translator;
+
         //$template->user = $this->presenter->context->user;
         $template->backlink = $this->presenter->context->httpRequest->url->path;
         $template->render();
@@ -46,7 +49,7 @@ class AttendeeBox extends \Nette\Application\UI\Control
 
     public function createComponentAttendeeForm()
     {
-        return new \SRS\Form\AttendeeForm(null, null, $this->presenter->context->parameters,
+        return new \SRS\Form\AttendeeForm(null, null, $this->presenter->translator, $this->presenter->context->parameters,
             $this->presenter->dbsettings, $this->presenter->context->database,
             $this->presenter->context->database->getRepository('\SRS\Model\User')->find($this->presenter->context->user->id));
     }

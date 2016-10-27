@@ -22,13 +22,15 @@ class AttendeeForm extends EntityForm
     protected $configParams;
 
 
-    public function __construct(IContainer $parent = NULL, $name = NULL, $configParams, $dbsettings, $database, $user)
+    public function __construct(IContainer $parent = NULL, $name = NULL, $translator, $configParams, $dbsettings, $database, $user)
     {
         parent::__construct($parent, $name);
 
         $this->dbsettings = $dbsettings;
         $this->database = $database;
         $this->configParams = $configParams;
+
+        $this->setTranslator($translator);
 
         $this->addHidden('id');
 
@@ -140,7 +142,7 @@ class AttendeeForm extends EntityForm
             return true;
         };
 
-        $rolesSelect = $this->addMultiSelect('roles', 'Přihlásit jako')
+        $rolesSelect = $this->addMultiSelect('roles', 'front.attendeeForm.rolesLabel')
             ->addRule($checkRolesCapacity, 'Všechna místa v některé roli jsou obsazena.', $this->database)
             ->addRule($checkRolesEmpty, 'Musí být vybrána alespoň jedna role.', $this->database)
             ->addRule($checkRolesRegisterable, 'Registrace do některé z rolí již není možná.', $this->database);
@@ -183,7 +185,7 @@ class AttendeeForm extends EntityForm
                         $messageOthers .= ", " . $requiredRole->name;
                     $first = false;
                 }
-                $rolesSelect->addRule($checkRequiredRoles, 'K roli ' . $messageThis . ' musíte mít vybrané role: ' . $messageOthers . '.', $role);
+                $rolesSelect->addRule($checkRequiredRoles, $translator->translate('front.messages.missingRequiredRole', NULL, ['role' => $messageThis, 'requiredRoles' => $messageOthers]), $role);
             }
         }
 

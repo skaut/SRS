@@ -1,0 +1,33 @@
+profile:
+    seminarGroup: "Seminář"
+
+    attendanceLabel: "Účast na semináři"
+    feeLabel: "Cena semináře"
+
+    unapprovedRegistration: "Vaše registrace zatím nebyla potvrzena"
+    notRegistered: "neúčastníte se"
+
+
+attendeeBox:
+    loginRequest: "Pro přihlášení na seminář se musíte nejprve"
+    loginRequestLink: "přihlásit přes skautIS"
+    registeredRoles: "Na seminář jste se již přihlásili jako"
+    unapprovedRegistration: "Vaše registrace zatím nebyla potvrzena."
+    approvedRegistration: "Vaše registrace byla již potvrzena."
+
+
+programBox:
+    unapprovedLoginPrograms: "Vaše role nemá právo zapisovat si programy"
+
+
+attendeeForm:
+    rolesLabel: "Přihlásit jako"
+
+
+rolesForm:
+    rolesLabel: "Role "
+    submit: "Upravit role"
+
+
+messages:
+    missingRequiredRole: "K roli %role% musíte mít vybrané role: %requiredRoles%."

@@ -14,11 +14,13 @@ use SRS\Model\Acl\Permission;
  */
 class ProgramBox extends \Nette\Application\UI\Control
 {
-
     public function render()
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/template.latte');
+
+        $template->translator = $this->presenter->translator;
+
         $template->backlink = $this->presenter->context->httpRequest->url->path;
         $dbsettings = $this->presenter->context->database->getRepository('\SRS\Model\Settings');
 

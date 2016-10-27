@@ -7,13 +7,11 @@ namespace SRS;
  */
 abstract class BaseComponentsPresenter extends \Nette\Application\UI\Presenter
 {
-
     function templatePrepareFilters($t)
     {
         $t->registerFilter($l = new \Nette\Latte\Engine);
         $l = new \Nette\Latte\Macros\MacroSet($l->compiler); // in 12.1. $l->parser  --->   $l->compile
         $l->addMacro('bool', array($this, 'booleanMacro'));
-
     }
 
     public function booleanMacro(\Nette\Latte\MacroNode $node, \Nette\Latte\PhpWriter $writer)
@@ -67,6 +65,4 @@ abstract class BaseComponentsPresenter extends \Nette\Application\UI\Presenter
         $environment = $isDebug == true ? 'development' : 'production';
         return $config["{$environment} < common"]['parameters']['database'];
     }
-
-
 }
