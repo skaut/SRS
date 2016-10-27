@@ -33,7 +33,7 @@ class SettingsFormCustom extends \SRS\Form\Configuration\SettingsForm
             $this->addText($column, 'Vlastní textové pole pro přihlášku č.' . $i)->setDefaultValue($this->dbsettings->get($column));
         }
 
-        $this->addSubmit('submit', 'Uložit')->getControlPrototype()->class('btn btn-primary pull-right');
+        $this->addSubmit('submit_custom', 'Uložit')->getControlPrototype()->class('btn btn-primary pull-right');
         $this->onSuccess[] = callback($this, 'formSubmitted');
     }
 }

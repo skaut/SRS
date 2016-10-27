@@ -49,6 +49,8 @@ class ProfilePresenter extends BasePresenter
         $birthday = \explode("T", $skautISPerson->Birthday);
         $skautISPerson->birthdate = $birthday[0];
 
+        $this->template->translator = $this->translator;
+
         $this->template->skautISPerson = $skautISPerson;
         $this->template->dbuser = $user;
         $this->template->accountNumber = $this->dbsettings->get('account_number');
@@ -81,7 +83,7 @@ class ProfilePresenter extends BasePresenter
 
     protected function createComponentProfileForm()
     {
-        $form = new \SRS\Form\ProfileForm(null, null, $this->context->database, $this->userRepo->find($this->context->user->id), $this->skautIS);
+        $form = new \SRS\Form\ProfileForm(null, null, $this->translator, $this->context->database, $this->userRepo->find($this->context->user->id), $this->skautIS);
         return $form;
     }
 
@@ -93,7 +95,7 @@ class ProfilePresenter extends BasePresenter
 
     protected function createComponentRolesForm()
     {
-        $form = new \SRS\Form\RolesForm(null, null, $this->context->database, $this->userRepo->find($this->context->user->id));
+        $form = new \SRS\Form\RolesForm(null, null, $this->translator, $this->context->database, $this->userRepo->find($this->context->user->id));
         return $form;
     }
 }

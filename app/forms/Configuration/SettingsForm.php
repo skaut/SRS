@@ -15,7 +15,7 @@ use Nette\Application\UI,
 /**
  * formular pro konfiguraci
  */
-class SettingsForm extends UI\Form
+abstract class SettingsForm extends UI\Form
 {
     protected $dbsettings;
 

@@ -13,8 +13,10 @@
 
 {if !$user->isLoggedIn()}
     <div class="notice">
-        Pro přihlášení na seminář se musíte nejprve <a href="{plink :Auth:login, 'backlink' => $backlink}">přihlásit přes
-        skautIS</a>
+        {$translator->translate('front.attendeeBox.loginRequest')}
+        <a href="{plink :Auth:login, 'backlink' => $backlink}">
+            {$translator->translate('front.attendeeBox.loginRequestLink')}
+        </a>
     </div>
 {elseif $user->isInRole(\SRS\model\Acl\Role::REGISTERED)}
     <div class="info">
@@ -22,13 +24,14 @@
     </div>
 {else}
     <div class="notice">
-        Na seminář jste se již přihlásili jako {foreach $dbuser->roles as $userRole}{$userRole->name}{sep}, {/sep}{/foreach}
+        {$translator->translate('front.attendeeBox.registeredRoles')}
+        {foreach $dbuser->roles as $userRole}{$userRole->name}{sep}, {/sep}{/foreach}
     </div>
     <div class="notice">
         {if $dbuser->approved == true}
-            Vaše registrace byla již potvrzena.
-            {else}
-            Vaše registrace zatím nebyla potvrzena.
+            {$translator->translate('front.attendeeBox.approvedRegistration')}
+        {else}
+            {$translator->translate('front.attendeeBox.unapprovedRegistration')}
         {/if}
     </div>
 {/if}

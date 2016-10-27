@@ -56,15 +56,20 @@
                                 <li><span class="ui-icon ui-icon-locked" style="display:block; float: left;"></span><a
                                             href="{plink :Auth:login, 'backlink' => $backlink}">Přihlásit</a></li>
                             {else}
-                                <li>Přihlášen jako: <strong><a
-                                                href="{plink :Front:Profile:default}">{$user->identity->object->username}</a></strong>
-                                    (v
-                                    {if count($user->roles) > 1}
-                                        rolích
-                                    {else}
-                                        roli
+                                <li>Přihlášen jako:
+                                    <strong>
+                                        <a href="{plink :Front:Profile:default}">{$user->identity->object->username}</a>
+                                    </strong>
+
+                                    {if $displayUsersRoles}
+                                        (v
+                                        {if count($user->roles) > 1}
+                                            rolích
+                                        {else}
+                                            roli
+                                        {/if}
+                                        {foreach $user->roles as $usersRole}{$usersRole}{sep}, {/sep}{/foreach})
                                     {/if}
-                                    {foreach $user->roles as $usersRole}{$usersRole}{sep}, {/sep}{/foreach})
                                 </li>
                                 {if !$user->identity->object->member}
                                     <li>
