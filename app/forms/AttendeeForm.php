@@ -167,7 +167,7 @@ class AttendeeForm extends EntityForm
                     }
                     $first = false;
                 }
-                $rolesSelect->addRule($checkIncompatibleRoles, 'Není možné kombinovat roli ' . $messageThis . ' s rolemi: ' . $messageOthers . '.', [$this->database, $role]);
+                $rolesSelect->addRule($checkIncompatibleRoles, $translator->translate('front.messages.incompatibleRolesSelected', NULL, ['role' => $messageThis, 'incompatibleRoles' => $messageOthers]), [$this->database, $role]);
             }
 
             $requiredRoles = $role->getAllRequiredRoles();
@@ -185,7 +185,7 @@ class AttendeeForm extends EntityForm
                         $messageOthers .= ", " . $requiredRole->name;
                     $first = false;
                 }
-                $rolesSelect->addRule($checkRequiredRoles, $translator->translate('front.messages.missingRequiredRole', NULL, ['role' => $messageThis, 'requiredRoles' => $messageOthers]), $role);
+                $rolesSelect->addRule($checkRequiredRoles, $translator->translate('front.messages.requiredRolesNotSelected', NULL, ['role' => $messageThis, 'requiredRoles' => $messageOthers]), $role);
             }
         }
 
