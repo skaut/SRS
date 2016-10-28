@@ -132,7 +132,7 @@ class RolesForm extends \SRS\Form\EntityForm
                     }
                     $first = false;
                 }
-                $rolesSelect->addRule($checkIncompatibleRoles, 'Není možné kombinovat roli ' . $messageThis . ' s rolemi: ' . $messageOthers . '.', [$database, $role]);
+                $rolesSelect->addRule($checkIncompatibleRoles, $translator->translate('front.messages.incompatibleRolesSelected', NULL, ['role' => $messageThis, 'incompatibleRoles' => $messageOthers]), [$database, $role]);
             }
 
             $requiredRoles = $role->getAllRequiredRoles();
@@ -150,7 +150,7 @@ class RolesForm extends \SRS\Form\EntityForm
                         $messageOthers .= ", " . $requiredRole->name;
                     $first = false;
                 }
-                $rolesSelect->addRule($checkRequiredRoles, $translator->translate('front.messages.missingRequiredRole', NULL, ['role' => $messageThis, 'requiredRoles' => $messageOthers]), $role);
+                $rolesSelect->addRule($checkRequiredRoles, $translator->translate('front.messages.requiredRolesNotSelected', NULL, ['role' => $messageThis, 'requiredRoles' => $messageOthers]), $role);
             }
         }
 
@@ -185,7 +185,7 @@ class RolesForm extends \SRS\Form\EntityForm
         $user->approved = $approved;
 
         $this->presenter->context->database->flush();
-        $this->presenter->flashMessage('Role byly upraveny, přihlaste se prosím znovu.', 'success');
+        $this->presenter->flashMessage($this->presenter->translator->translate('front.messages.rolesChanged'), 'success');
         $this->presenter->user->logout(true);
         $this->presenter->redirect(':Auth:logout');
     }

@@ -30,4 +30,6 @@ rolesForm:
 
 
 messages:
-    missingRequiredRole: "K roli %role% musíte mít vybrané role: %requiredRoles%."
+    requiredRolesNotSelected: "K roli %role% musíte mít vybrané role: %requiredRoles%."
+    incompatibleRolesSelected: "Není možné kombinovat roli %role% s rolemi: %incompatibleRoles%."
+    rolesChanged: "Role byly upraveny, přihlaste se prosím znovu."
