@@ -5,17 +5,23 @@
         </div>
     {else}
 
-    {if !$isAllowedLogInPrograms}
+    {if !$logInProgramsAllowed}
         <div class="notice">
             Zapisování programů není v tuto chvíli povoleno.
         </div>
-    {/if}
-
-    {if !$userHasPermission}
+    {elseif !$userHasPermission}
         <div class="notice">
             {$translator->translate('front.programBox.unapprovedLoginPrograms')}
         </div>
+    {elseif !$userIsPaid}
+        <div class="notice">
+            Zapisování programů je povoleno až po zaplacení poplatku.
+        </div>
     {/if}
+
+    <script>
+        var userAllowedLogInPrograms = {$logInProgramsAllowed && $userIsPaid && $userHasPermission};
+    </script>
 
     <div id="app" ng-app="calendar" ng-controller="FrontCalendarCtrl">
         <div class="span2">
@@ -76,7 +82,7 @@
             </div>
 
             <div class="modal-footer" ng-model="config">
-                {if $isAllowedLogInPrograms && $userHasPermission}
+                {if $logInProgramsAllowed && $userIsPaid && $userHasPermission}
                     <button ng-hide="event.attends" ng-click="attend(event)" class="btn btn-success pull-left">Přihlásit se na program</button>
                     <button ng-show="event.attends" ng-click="unattend(event)" class="btn btn-danger pull-left">Odhlásit se z programu</button>
                 {/if}

@@ -1066,6 +1066,20 @@ class User extends BaseEntity
         return false;
     }
 
+    public function pays() {
+        foreach ($this->roles as $role) {
+            if ($role->fee == null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public function isPaid() {
+        if ($this->paymentDate !== null)
+            return true;
+    }
+
     public function countFee() {
         $fee = 0;
 

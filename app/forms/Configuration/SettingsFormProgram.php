@@ -36,6 +36,9 @@ class SettingsFormProgram extends \SRS\Form\Configuration\SettingsForm
         $this->addCheckbox('is_allowed_log_in_programs', 'Je povoleno přihlašovat se na programové bloky?')
             ->setDefaultValue($this->dbsettings->get('is_allowed_log_in_programs'));
 
+        $this->addCheckbox('log_in_programs_after_payment', 'Povolit zápis programu až po uhrazení poplatku?')
+            ->setDefaultValue($this->dbsettings->get('log_in_programs_after_payment'));
+
         $this->addText('log_in_programs_from', 'Přihlašování programů otevřeno od')->setDefaultValue($this->dbsettings->get('log_in_programs_from'))
             ->addRule(FORM::PATTERN, 'Datum a čas, od kdy je možné se přihlašovat na programy, není ve správném tvaru', \SRS\Helpers::DATETIME_PATTERN)
             ->addRule(Form::FILLED, 'Zadejte datum a čas, od kdy je možné se přihlašovat na programy')->getControlPrototype()->class('datetimepicker');

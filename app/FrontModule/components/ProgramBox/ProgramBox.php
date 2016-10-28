@@ -24,11 +24,18 @@ class ProgramBox extends \Nette\Application\UI\Control
         $template->backlink = $this->presenter->context->httpRequest->url->path;
         $dbsettings = $this->presenter->context->database->getRepository('\SRS\Model\Settings');
 
-        $template->isAllowedLogInPrograms = ((bool)$dbsettings->get('is_allowed_log_in_programs')) &&
+        $user = $this->presenter->context->user;
+
+        $template->logInProgramsAllowed = ((bool)$dbsettings->get('is_allowed_log_in_programs')) &&
             \DateTime::createFromFormat("d.m.Y H:i", $dbsettings->get('log_in_programs_from')) <= new \DateTime('now') &&
             \DateTime::createFromFormat("d.m.Y H:i", $dbsettings->get('log_in_programs_to')) >= new \DateTime('now');
 
-        $template->userHasPermission = $this->presenter->user->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS);
+        $template->userHasPermission = $user->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS);
+
+        if ($user->id !== null) {
+            $dbuser = $this->presenter->context->database->getRepository('\SRS\Model\User')->find($user->id);
+            $template->userIsPaid = !((bool)$dbsettings->get('log_in_programs_after_payment')) || $dbuser->isPaid() || !$dbuser->pays();
+        }
 
         $template->render();
     }

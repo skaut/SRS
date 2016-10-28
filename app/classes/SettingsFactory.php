@@ -18,22 +18,25 @@ class SettingsFactory
         $userCustomBooleanCount = $config['common']['parameters']['user_custom_boolean_count'];
         $userCustomTextCount = $config['common']['parameters']['user_custom_text_count'];
 
-        $settings = array();
-        $settings[] = new \SRS\Model\Settings('superadmin_created', 'Je vytvořen superadmin?', '0');
-        $settings[] = new \SRS\Model\Settings('schema_imported', 'Naimportována inicializační databázová data', '1');
-        $settings[] = new \SRS\Model\Settings('seminar_name', 'Jméno semináře', 'Konfigurace->Jméno semináře');
-        $settings[] = new \SRS\Model\Settings('seminar_email', 'Email', 'noreply@srs.skauting.cz');
         $today = new \DateTime('now');
         $tommorow = new \DateTime('now');
         $tommorow->modify('+1 day');
         $yesterday = new \DateTime('now');
         $yesterday->modify('-1 day');
+
+        $settings = array();
+        $settings[] = new \SRS\Model\Settings('superadmin_created', 'Je vytvořen superadmin?', '0');
+        $settings[] = new \SRS\Model\Settings('schema_imported', 'Naimportována inicializační databázová data', '1');
+        $settings[] = new \SRS\Model\Settings('seminar_name', 'Jméno semináře', 'Konfigurace->Jméno semináře');
+        $settings[] = new \SRS\Model\Settings('seminar_email', 'Email', 'noreply@srs.skauting.cz');
+
         $settings[] = new \SRS\Model\Settings('seminar_from_date', 'Začátek semináře', $today->format('d.m.Y'));
         $settings[] = new \SRS\Model\Settings('seminar_to_date', 'Konec semináře', $tommorow->format('d.m.Y'));
         $settings[] = new \SRS\Model\Settings('basic_block_duration', 'Základní délka trvání jednoho bloku semináře (minuty)', '60');
         $settings[] = new \SRS\Model\Settings('is_allowed_add_block', 'Lze vytvářet programové bloky?', '1');
         $settings[] = new \SRS\Model\Settings('is_allowed_modify_schedule', 'Lze upravovat harmonogram semináře?', '1');
-        $settings[] = new \SRS\Model\Settings('is_allowed_log_in_programs', 'Lze se přihlašovat na Programy?', '0');
+        $settings[] = new \SRS\Model\Settings('is_allowed_log_in_programs', 'Lze se přihlašovat na programy?', '0');
+        $settings[] = new \SRS\Model\Settings('log_in_programs_after_payment', 'Lze se přihlašovat na programy až po zaplacení?', '1');
 
         // $settings[] = new \SRS\Model\Settings('skautis_app_id', 'skautis app id', '');
         $settings[] = new \SRS\Model\Settings('skautis_seminar_id', 'skautis seminar id', '');
@@ -54,6 +57,8 @@ class SettingsFactory
 
         $settings[] = new \SRS\Model\Settings('log_in_programs_from', 'Přihlašování programů otevřeno od', $yesterday->format('d.m.Y H:i'));
         $settings[] = new \SRS\Model\Settings('log_in_programs_to', 'Přihlašování programů otevřeno do', $today->format('d.m.Y H:i'));
+
+
 
         $settings[] = new \SRS\Model\Settings('display_users_roles', 'Zobrazovat uživatelské role?', '1');
 
