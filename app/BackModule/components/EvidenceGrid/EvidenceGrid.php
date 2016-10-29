@@ -89,7 +89,7 @@ class EvidenceGrid extends Grid
         if ($this->columnsVisibility['membership'])
             $this->addColumn('membership', 'Členství')
                 ->setRenderer(function ($row) {
-                    return $row->member ? $row->organizationUnit : Html::el('span')->style('color: red')->setText('nepropojený účet');
+                    return $row->member ? ($row->organizationUnit !== null ? $row->organizationUnit : Html::el('span')->style('color: red')->setText('nečlen')) : Html::el('span')->style('color: red')->setText('nepropojený účet');
                 });
 
         if ($this->columnsVisibility['birthdate'])
