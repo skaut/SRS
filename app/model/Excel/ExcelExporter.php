@@ -29,6 +29,8 @@ class ExcelExporter extends Object
 
         foreach($roles as $role) {
             $sheet->setCellValueByColumnAndRow($column, $row, $role->name);
+            $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+            $sheet->getColumnDimensionByColumn($column)->setWidth('15');
             $column++;
         }
 
@@ -37,6 +39,8 @@ class ExcelExporter extends Object
             $column = 0;
 
             $sheet->setCellValueByColumnAndRow($column, $row, $user->displayName);
+            $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+            $sheet->getColumnDimensionByColumn($column)->setWidth('20');
 
             foreach($roles as $role) {
                 $column++;
