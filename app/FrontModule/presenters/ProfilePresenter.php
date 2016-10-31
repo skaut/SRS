@@ -72,6 +72,15 @@ class ProfilePresenter extends BasePresenter
         $printer->printPaymentProofs(array($user));
     }
 
+    public function handleExportSchedule() {
+        $user = $this->userRepo->find($this->context->user->id);
+
+        $excelExporter = $this->context->excelExporter;
+        $response = $excelExporter->exportUsersSchedule($user, $this->dbsettings->get('basic_block_duration'));
+
+        $this->sendResponse($response);
+    }
+
     public function handleCancelRegistration()
     {
         $user = $this->userRepo->find($this->context->user->id);
