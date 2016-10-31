@@ -25,7 +25,10 @@ class ExcelExporter extends Object
         $sheet = $this->phpExcel->getSheet(0);
 
         $row = 1;
-        $column = 1;
+        $column = 0;
+
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth('25');
 
         foreach($roles as $role) {
             $sheet->setCellValueByColumnAndRow($column, $row, $role->name);
@@ -39,8 +42,6 @@ class ExcelExporter extends Object
             $column = 0;
 
             $sheet->setCellValueByColumnAndRow($column, $row, $user->displayName);
-            $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
-            $sheet->getColumnDimensionByColumn($column)->setWidth('20');
 
             foreach($roles as $role) {
                 $column++;
