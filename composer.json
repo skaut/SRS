@@ -8,6 +8,7 @@
         "nette/nette": "2.0.8",
         "nella/doctrine": "0.8.0",
         "nella/console": "0.8.0",
+        "kdyby/translation": "0.10.4",
         "doctrine/migrations": "@dev",
         "doctrine/data-fixtures": "1.0.0",
         "janmarek/webloader": "dev-nette-2.0",

@@ -75,10 +75,34 @@ class ConfigurationPresenter extends BasePresenter
         $this->redirect('this');
     }
 
-
-    protected function createComponentSettingsForm()
+    protected function createComponentSettingsFormCustom()
     {
-        return new \SRS\Form\Configuration\SettingsForm(null, null, $this->dbsettings, $this->context->parameters);
+        return new \SRS\Form\Configuration\SettingsFormCustom(null, null, $this->dbsettings, $this->context->parameters);
+    }
+
+    protected function createComponentSettingsFormPayment()
+    {
+        return new \SRS\Form\Configuration\SettingsFormPayment(null, null, $this->dbsettings);
+    }
+
+    protected function createComponentSettingsFormPrint()
+    {
+        return new \SRS\Form\Configuration\SettingsFormPrint(null, null, $this->dbsettings);
+    }
+
+    protected function createComponentSettingsFormProgram()
+    {
+        return new \SRS\Form\Configuration\SettingsFormProgram(null, null, $this->dbsettings);
+    }
+
+    protected function createComponentSettingsFormSeminar()
+    {
+        return new \SRS\Form\Configuration\SettingsFormSeminar(null, null, $this->dbsettings);
+    }
+
+    protected function createComponentSettingsFormSystem()
+    {
+        return new \SRS\Form\Configuration\SettingsFormSystem(null, null, $this->dbsettings);
     }
 
     protected function createComponentSkautISEventForm()

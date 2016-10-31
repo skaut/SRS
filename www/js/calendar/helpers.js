@@ -11,14 +11,10 @@ var localization_config = {
     slotMinutes:15,
     snapMinutes:5,
     timeFormat:'H:mm{ - H:mm}',
-    monthNames:['Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen', 'Červenec',
-        'Srpen', 'Září', 'Říjen', 'Listopad', 'Prosinec'],
-    monthNamesShort:['Led', 'Úno', 'Bře', 'Dub', 'Kvě', 'Čvn',
-        'Čvc', 'Srp', 'Zář', 'Říj', 'Lis', 'Pro'],
-    dayNames:['Neděle', 'Pondělí', 'Úterý', 'Středa',
-        'Čtvrtek', 'Pátek', 'Sobota'],
-    dayNamesShort:['Ne', 'Po', 'Út', 'St',
-        'Čt', 'Pá', 'So'],
+    monthNames:['Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen', 'Červenec', 'Srpen', 'Září', 'Říjen', 'Listopad', 'Prosinec'],
+    monthNamesShort:['Led', 'Úno', 'Bře', 'Dub', 'Kvě', 'Čvn', 'Čvc', 'Srp', 'Zář', 'Říj', 'Lis', 'Pro'],
+    dayNames:['Neděle', 'Pondělí', 'Úterý', 'Středa', 'Čtvrtek', 'Pátek', 'Sobota'],
+    dayNamesShort:['Ne', 'Po', 'Út', 'St', 'Čt', 'Pá', 'So'],
     buttonText:{
         prev:'&nbsp;&#9668;&nbsp;', // left triangle
         next:'&nbsp;&#9658;&nbsp;', // right triangle
@@ -81,8 +77,8 @@ function setColor(event) {
     }
 }
 
-function setColorFront(event, config) {
-    if (event.attends == false && !config['is_allowed_log_in_programs']) {
+function setColorFront(event) {
+    if (event.attends == false && !userAllowedLogInPrograms) {
         event.color = COLOR_FULL;
     }
 

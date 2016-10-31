@@ -15,9 +15,14 @@ $configurator = new \Nette\Config\Configurator;
 
 
 \Nella\Console\Config\Extension::register($configurator);
+
 \Nella\Doctrine\Config\Extension::register($configurator);
 \Nella\Doctrine\Config\MigrationsExtension::register($configurator);
+
 \Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace('JMS\Serializer\Annotation', LIBS_DIR . "/jms/serializer/src");
+
+\Kdyby\Translation\DI\TranslationExtension::register($configurator);
+
 
 // Enable RobotLoader - this will load all classes automatically
 

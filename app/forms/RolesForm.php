@@ -9,9 +9,11 @@ use Nette\ComponentModel\IContainer,
  */
 class RolesForm extends \SRS\Form\EntityForm
 {
-    public function __construct(IContainer $parent = NULL, $name = NULL, $database, $user)
+    public function __construct(IContainer $parent = NULL, $name = NULL, $translator, $database, $user)
     {
         parent::__construct($parent, $name);
+
+        $this->setTranslator($translator);
 
         $roles = $database->getRepository('\SRS\Model\Acl\Role')->findRegisterableNow();
 
@@ -106,7 +108,7 @@ class RolesForm extends \SRS\Form\EntityForm
             return true;
         };
 
-        $rolesSelect = $this->addMultiSelect('roles', 'Role ')->setItems($rolesGrid)
+        $rolesSelect = $this->addMultiSelect('roles', 'front.rolesForm.rolesLabel')->setItems($rolesGrid)
             ->addRule($checkRolesCapacity, 'Všechna místa v některé roli jsou obsazena.', $database)
             ->addRule($checkRolesEmpty, 'Musí být vybrána alespoň jedna role.', $database)
             ->addRule($checkRolesRegisterable, 'Registrace do některé z rolí již není možná.', $database);
@@ -130,7 +132,7 @@ class RolesForm extends \SRS\Form\EntityForm
                     }
                     $first = false;
                 }
-                $rolesSelect->addRule($checkIncompatibleRoles, 'Není možné kombinovat roli ' . $messageThis . ' s rolemi: ' . $messageOthers . '.', [$database, $role]);
+                $rolesSelect->addRule($checkIncompatibleRoles, $translator->translate('front.messages.incompatibleRolesSelected', NULL, ['role' => $messageThis, 'incompatibleRoles' => $messageOthers]), [$database, $role]);
             }
 
             $requiredRoles = $role->getAllRequiredRoles();
@@ -148,13 +150,13 @@ class RolesForm extends \SRS\Form\EntityForm
                         $messageOthers .= ", " . $requiredRole->name;
                     $first = false;
                 }
-                $rolesSelect->addRule($checkRequiredRoles, 'K roli ' . $messageThis . ' musíte mít vybrané role: ' . $messageOthers . '.', $role);
+                $rolesSelect->addRule($checkRequiredRoles, $translator->translate('front.messages.requiredRolesNotSelected', NULL, ['role' => $messageThis, 'requiredRoles' => $messageOthers]), $role);
             }
         }
 
         $rolesSelect->getControlPrototype()->class('multiselect');
 
-        $this->addSubmit('submit', 'Upravit role');
+        $this->addSubmit('submit', 'front.rolesForm.submit');
         $this->onSuccess[] = callback($this, 'submitted');
         $this->onError[] = callback($this, 'error');
     }
@@ -183,7 +185,7 @@ class RolesForm extends \SRS\Form\EntityForm
         $user->approved = $approved;
 
         $this->presenter->context->database->flush();
-        $this->presenter->flashMessage('Role byly upraveny, přihlaste se prosím znovu.', 'success');
+        $this->presenter->flashMessage($this->presenter->translator->translate('front.messages.rolesChanged'), 'success');
         $this->presenter->user->logout(true);
         $this->presenter->redirect(':Auth:logout');
     }

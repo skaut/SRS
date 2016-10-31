@@ -22,12 +22,14 @@ class ProfileForm extends EntityForm
      */
     private $skautIS;
 
-    public function __construct(IContainer $parent = NULL, $name = NULL, $database, $user, $skautIS)
+    public function __construct(IContainer $parent = NULL, $name = NULL, $translator, $database, $user, $skautIS)
     {
         parent::__construct($parent, $name);
 
         $this->database = $database;
         $this->skautIS = $skautIS;
+
+        $this->setTranslator($translator);
 
         $this->addHidden('id');
 

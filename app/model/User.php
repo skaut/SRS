@@ -1066,6 +1066,20 @@ class User extends BaseEntity
         return false;
     }
 
+    public function pays() {
+        foreach ($this->roles as $role) {
+            if ($role->fee == null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public function isPaid() {
+        if ($this->paymentDate !== null)
+            return true;
+    }
+
     public function countFee() {
         $fee = 0;
 
@@ -1100,10 +1114,10 @@ class User extends BaseEntity
             $variableSymbol = $code . $this->birthdate->format("ymd");
 
             while ($database->getRepository('\SRS\model\User')->findOneBy(array("variableSymbol" => $variableSymbol)) !== null) {
-                $variableSymbol++;
+                $variableSymbol = str_pad(++$variableSymbol, 8, '0', STR_PAD_LEFT);
             }
 
-            $this->variableSymbol = str_pad($variableSymbol, 8, '0', STR_PAD_LEFT);
+            $this->variableSymbol = $variableSymbol;
             $database->flush();
         }
     }

@@ -41,7 +41,9 @@ common:
 			namespace: SRS\Model\Proxies
 			autogenerate: true
 			dir: %tempDir%/proxies
-			
+
+	translation:
+		default: cs
 		
 	migrations:
 		connection: @doctrine.connection

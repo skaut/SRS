@@ -1,12 +1,17 @@
 <?php
 
 namespace SRS;
+use Kdyby\Translation\TemplateHelpers;
+
 /**
  * Base presenter pro celou SRS aplikaci, primo nebo neprimo jej dedi kazdy presenter v projektu
  */
 abstract class BasePresenter extends BaseComponentsPresenter
 {
-    /** @var Doctrine\ORM\EntityManager */
+    /** @var \Kdyby\Translation\Translator */
+    public $translator;
+
+    /** @var \Doctrine\ORM\EntityManager */
     protected $em;
 
     /**
@@ -21,6 +26,11 @@ abstract class BasePresenter extends BaseComponentsPresenter
         }
         $this->em = $em;
         return $this;
+    }
+
+    public function injectTranslator(\Kdyby\Translation\Translator $translator)
+    {
+        $this->translator = $translator;
     }
 
     public function startup()
@@ -46,7 +56,6 @@ abstract class BasePresenter extends BaseComponentsPresenter
 
     }
 
-
     public function beforeRender()
     {
         parent::beforeRender();
@@ -55,6 +64,4 @@ abstract class BasePresenter extends BaseComponentsPresenter
             $this->invalidateControl('flashMessages');
         }
     }
-
-
 }
