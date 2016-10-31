@@ -20,7 +20,7 @@ class ExcelExporter extends Object
     }
 
     public function exportUsersRoles($users, $roles) {
-        $filename = "role uzivatelu.xlsx";
+        $filename = "role-uzivatelu.xlsx";
 
         $sheet = $this->phpExcel->getSheet(0);
 
