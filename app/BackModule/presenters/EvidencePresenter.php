@@ -227,6 +227,20 @@ class EvidencePresenter extends BasePresenter
         $this->sendResponse($response);
     }
 
+    public function handleExportUsersSchedules($ids = array())
+    {
+        $users = array();
+
+        foreach ($ids as $userId) {
+            $users[] = $this->userRepo->find($userId);
+        }
+
+        $excelExporter = $this->context->excelExporter;
+        $response = $excelExporter->exportUsersSchedules($users, $this->dbsettings->get("basic_block_duration"));
+
+        $this->sendResponse($response);
+    }
+
     protected function getAllEvidenceColumns()
     {
         $columns = $this->evidenceDefaultColumns;
