@@ -68,6 +68,8 @@ class Authenticator extends \Nette\Object implements NS\IAuthenticator
             $user->securityCode = $skautISUser->SecurityCode;
         /*----------------------------------------------------------------------*/
 
+        $user->skautISPersonId = $skautISUser->ID_Person;
+
         $this->database->flush();
 
         $netteRoles = array();

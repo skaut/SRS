@@ -80,7 +80,6 @@ class AttendeeForm extends EntityForm
 
         $checkRolesCapacity = function($field, $database) {
             $values = $this->getComponent('roles')->getRawValue();
-            $user = $database->getRepository('\SRS\Model\User')->findOneBy(array('id' => $this->getForm()->getHttpData()['id']));
 
             foreach ($values as $value) {
                 $role = $database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('id' => $value));
