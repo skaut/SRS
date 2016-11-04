@@ -241,6 +241,10 @@ class AttendeeForm extends EntityForm
         $user->setProperties($values, $this->presenter->context->database);
         $user->approved = $approved;
 
+        $user->displayName = "{$user->lastName} {$user->firstName}";
+        if ($user->nickName != '')
+            $user->displayName .= " ({$user->nickName})";
+
         $this->presenter->context->database->flush();
         $this->presenter->flashMessage('Registrace odeslána. Pro další informace o stavu registrace, platbě a semináři se musíte znovu přihlásit.', 'success forever');
         $this->presenter->user->logout(true);
