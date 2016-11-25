@@ -34,7 +34,7 @@ abstract class Grid extends \Nette\Application\UI\Control
 	public $activeSubGridName;
 
 	/** @var array */
-	protected $perPageValues = array(20 => 20, 50 => 50, 100 => 100);
+	protected $perPageValues = array(20 => 20, 50 => 50, 100 => 100, 2000 => 2000);
 
 	/** @var bool */
 	public $paginate = TRUE;
