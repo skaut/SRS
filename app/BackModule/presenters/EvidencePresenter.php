@@ -227,6 +227,21 @@ class EvidencePresenter extends BasePresenter
         $this->sendResponse($response);
     }
 
+    public function handleExportMiquik($ids = array())
+    {
+        $roles = $this->context->database->getRepository('\SRS\model\Acl\Role')->findAll();
+        $users = array();
+
+        foreach ($ids as $userId) {
+            $users[] = $this->userRepo->find($userId);
+        }
+
+        $excelExporter = $this->context->excelExporter;
+        $response = $excelExporter->exportMiquik($users, $roles);
+
+        $this->sendResponse($response);
+    }
+
     public function handleExportUsersSchedules($ids = array())
     {
         $users = array();

@@ -287,6 +287,11 @@ class EvidenceGrid extends Grid
                 $presenter->redirect('exportUsersList!', array('ids' => $id));
             });
 
+        $this->addAction("exportMiquik", "Vyexportovat pro Miquik vstupenky")->setAjax(false)
+            ->setCallback(function ($id) use ($presenter) {
+                $presenter->redirect('exportMiquik!', array('ids' => $id));
+            });
+
         $this->addAction("exportUsersSchedules", "Stáhnout harmonogram")->setAjax(false)
             ->setCallback(function ($id) use ($presenter) {
                 $presenter->redirect('exportUsersSchedules!', array('ids' => $id));
