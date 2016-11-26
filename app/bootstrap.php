@@ -55,6 +55,8 @@ $container = $configurator->createContainer();
 
 
 // Setup router
+Route::$defaultFlags = Route::SECURED;
+
 $container->router[] = new Route('index.php', 'Front:Homepage:default', Route::ONE_WAY);
 //$container->router[] = new Route('admin/', 'Back:Dashboard:default');
 
