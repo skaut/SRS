@@ -10,7 +10,7 @@ class DatabaseFormFactory
      * @var \App\InstallModule\Forms\BaseFormFactory
      * @inject
      */
-    public $baseFormFactory;
+    public $baseFormFactory; //TODO
 
     public function create()
     {

@@ -2,13 +2,13 @@
 
 
 namespace InstallModule;
-use SRS\Model\Acl\Role;
+use SRS\Model\Acl\Role; //TODO
 error_reporting(0);
 
 /**
  * Obsluhuje instalacniho pruvodce
  */
-class InstallPresenter extends \App\BaseComponentsPresenter
+class InstallPresenter extends \App\BaseComponentsPresenter //TODO
 {
 
     public function renderDefault()
