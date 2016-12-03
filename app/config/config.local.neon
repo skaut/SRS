@@ -11,7 +11,7 @@ parameters:
         skautIS: false
 
     skautIS:
-        appId:
+        appId: skaut_is_app_id
         test: true
 
 

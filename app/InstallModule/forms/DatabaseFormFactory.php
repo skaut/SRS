@@ -6,9 +6,15 @@ use Nette\Application\UI\Form;
 
 class DatabaseFormFactory
 {
+    /**
+     * @var \App\InstallModule\Forms\BaseFormFactory
+     * @inject
+     */
+    public $baseFormFactory;
+
     public function create()
     {
-        $form = new Form;
+        $form = $this->baseFormFactory->create();
 
         $form->addText('host', 'Host:')
             ->addRule(Form::FILLED, 'Zadejte Host')->setDefaultValue('localhost');

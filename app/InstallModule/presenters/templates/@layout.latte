@@ -1,43 +1,49 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="description" content="">
-        <meta name="robots" content="{$robots}" n:ifset="$robots">
-        <title>{block title|striptags}Instalace{/block} | SRS</title>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
 
-        {control css}
-        {control js}
+    <title>{block title|striptags}Instalace{/block} | SRS</title>
 
-        <link rel="shortcut icon" href="{$basePath}/favicon.ico">
-        {block head}{/block}
-    </head>
+    <link rel="shortcut icon" href="{$basePath}/favicon.ico">
 
-    <body>
-        <div class="navbar navbar-inverse navbar-fixed-top">
-            <div class="navbar-inner">
-                <div class="container-fluid">
-                    <a class="brand" href="/install">SRS - Instalace</a>
-                </div>
-            </div>
+    {control css}
+    {control js}
+
+    {block head}{/block}
+</head>
+
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/install">SRS - Instalace</a>
         </div>
-        <div class="container-fluid" style="margin-top: 50px;">
-            <div class="row-fluid">
-                <div class="progress">
-                    <div class="bar" style="width: {block progress}25%{/block};"></div>
-                </div>
+    </div>
+</nav>
 
-                <h1>{block header}{/block}</h1>
+<div class="container-fluid" style="margin-top: 50px;">
+    <h1>{block header}{/block}</h1>
 
-                <div class="span12" style="text-align:center;">
-                    <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">
-                        {$flash->message}
-                    </div>
-                    <div class="well">
-                        {block #content}
-                    </div>
-                </div>
-            </div>
+    <div class="progress">
+        <div class="bar" style="width: {block progress}25%{/block};"></div>
+    </div>
+
+    <div class="span12" style="text-align:center;">
+        <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">
+            {$flash->message}
         </div>
-    </body>
+        <div class="well">
+            {block #content}
+        </div>
+    </div>
+</div>
+</body>
 </html>
+
+
+
+
