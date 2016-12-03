@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="description" content="">
+        <meta name="robots" content="{$robots}" n:ifset="$robots">
+        <title>{block title|striptags}Instalace{/block} | SRS</title>
+
+        {control css}
+        {control js}
+
+        <link rel="shortcut icon" href="{$basePath}/favicon.ico">
+        {block head}{/block}
+    </head>
+
+    <body>
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container-fluid">
+                    <a class="brand" href="/install">SRS - Instalace</a>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid" style="margin-top: 50px;">
+            <div class="row-fluid">
+                <div class="progress">
+                    <div class="bar" style="width: {block progress}25%{/block};"></div>
+                </div>
+
+                <h1>{block header}{/block}</h1>
+
+                <div class="span12" style="text-align:center;">
+                    <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">
+                        {$flash->message}
+                    </div>
+                    <div class="well">
+                        {block #content}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

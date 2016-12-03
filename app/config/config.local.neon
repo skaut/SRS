@@ -1,0 +1,17 @@
+parameters:
+    database:
+        host: localhost
+        dbname: srs
+        user: srs
+        password: srs
+
+    installed:
+        connection: false
+        schema: false
+        skautIS: false
+
+    skautIS:
+        appId:
+        test: true
+
+
