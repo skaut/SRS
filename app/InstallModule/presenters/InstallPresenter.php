@@ -1,15 +1,25 @@
 <?php
 
+namespace App\InstallModule\Presenters;
 
-namespace InstallModule;
-use SRS\Model\Acl\Role; //TODO
-error_reporting(0);
+use Nette\Application\UI\Form;
 
 /**
  * Obsluhuje instalacniho pruvodce
  */
-class InstallPresenter extends \App\BaseComponentsPresenter //TODO
+class InstallPresenter extends InstallBasePresenter //TODO
 {
+    /**
+     * @var \App\InstallModule\Forms\DatabaseFormFactory
+     * @inject
+     */
+    public $databaseFormFactory;
+
+    /**
+     * @var \App\InstallModule\Forms\SkautISFormFactory
+     * @inject
+     */
+    public $skautISFormFactory;
 
     public function renderDefault()
     {
@@ -18,35 +28,107 @@ class InstallPresenter extends \App\BaseComponentsPresenter //TODO
             $this->user->logout(true);
         }
 
-
-        if ($this->context->parameters['database']['installed']) {
+        if ($this->context->parameters['installed']['connection']) {
             $this->flashMessage('Připojení k databázi již bylo nakonfigurováno');
             $this->redirect(':Install:install:schema');
         }
-
     }
 
     public function renderSchema()
     {
-        if (!$this->context->parameters['database']['installed']) {
+        if (!$this->context->parameters['installed']['connection']) {
             $this->flashMessage('nejprve nastavte připojení k databázi');
             $this->redirect(':Install:install:default');
         }
         try {
-            if ($this->context->parameters['database']['schema_imported'] == true) {
+            if ($this->context->parameters['installed']['schema'] == true) {
                 $this->flashMessage('Schéma databáze bylo již naimportováno');
                 $this->redirect(':Install:install:skautIS');
             }
         } catch (\Doctrine\DBAL\DBALException $e) {
             //do nothing
         }
+    }
+
+    public function renderSkautIS()
+    {
+        if (!$this->context->parameters['installed']['connection']) {
+            $this->redirect(':Install:install:default');
+        }
+
+        if (!$this->context->parameters['installed']['schema']) {
+            $this->redirect(':Install:install:schema');
+        }
 
 
+        $dbsettings = $this->context->database->getRepository('\SRS\Model\Settings');
+        if ($this->context->parameters['skautis']['app_id'] != null) {
+            $this->flashMessage('Skaut IS byl již nastaven');
+            $this->redirect(':Install:install:admin');
+        }
+
+    }
+
+    public function renderAdmin()
+    {
+        if (!$this->context->parameters['installed']['connection']) {
+            $this->redirect(':Install:install:default');
+        }
+        if (!$this->context->parameters['installed']['schema']) {
+            $this->redirect(':Install:install:schema');
+        }
+        if ($this->context->parameters['installed']['skautIS'] == null) {
+            $this->redirect(':Install:install:skautIS');
+        }
+
+        if ($this->context->database->getRepository('\SRS\model\Settings')->get('superadmin_created') == true) {
+            $this->flashMessage('Administrátorská role byla již nastavena dříve');
+            $this->redirect(':Install:install:finish?before=true');
+        }
+        if ($this->user->isLoggedIn()) {
+            $adminRole = $this->context->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('name' => Role::ADMIN));
+            if ($adminRole == null) {
+                throw new \Nette\Application\BadRequestException($message = 'Administrátorská role neexistuje!', $code = 500);
+            }
+            $user = $this->context->database->getRepository('\SRS\Model\User')->find($this->user->id);
+            if ($user == null) {
+                throw new \Nette\Application\BadRequestException($message = 'Uživatel je sice přihlášen ale v DB neexistuje!', $code = 500);
+            }
+            $user->removeRole(Role::REGISTERED);
+            $user->addRole($adminRole);
+            $this->context->database->flush();
+            $this->user->logout(true);
+            $this->context->database->getRepository('\SRS\model\Settings')->set('superadmin_created', '1');
+            $this->flashMessage('Administrátorská role nastavena', 'success');
+
+            $this->redirect(':Install:install:finish');
+        }
+        $this->template->backlink = $this->backlink();
+    }
+
+    public function renderFinish()
+    {
+        if (!$this->context->parameters['installed']['connection']) {
+            $this->redirect(':Install:install:default');
+        }
+
+        if (!$this->context->parameters['installed']['schema']) {
+            $this->redirect(':Install:install:schema');
+        }
+
+        if ($this->context->parameters['installed']['skautIS'] == null) {
+            $this->redirect(':Install:install:skautIS');
+        }
+
+        if (!$this->context->database->getRepository('\SRS\Model\Settings')->get('superadmin_created')) {
+            $this->redirect(':Install:install:admin');
+        }
+
+        $this->template->installedEarlier = $this->getParameter('before');
     }
 
     public function handleImportDB()
     {
-
         $success = true;
         try {
             $options = array('command' => 'orm:schema:create');
@@ -103,83 +185,6 @@ class InstallPresenter extends \App\BaseComponentsPresenter //TODO
         $this->redirect('this');
     }
 
-    public function renderSkautIS()
-    {
-        if (!$this->context->parameters['database']['installed']) {
-            $this->redirect(':Install:install:default');
-        }
-
-        if (!$this->context->parameters['database']['schema_imported']) {
-            $this->redirect(':Install:install:schema');
-        }
-
-
-        $dbsettings = $this->context->database->getRepository('\SRS\Model\Settings');
-        if ($this->context->parameters['skautis']['app_id'] != null) {
-            $this->flashMessage('Skaut IS byl již nastaven');
-            $this->redirect(':Install:install:admin');
-        }
-
-    }
-
-    public function renderAdmin()
-    {
-        if (!$this->context->parameters['database']['installed']) {
-            $this->redirect(':Install:install:default');
-        }
-        if ($this->context->parameters['skautis']['app_id'] == null) {
-            $this->redirect(':Install:install:skautIS');
-        }
-
-        if (!$this->context->parameters['database']['schema_imported']) {
-            $this->redirect(':Install:install:schema');
-        }
-
-        if ($this->context->database->getRepository('\SRS\model\Settings')->get('superadmin_created') == true) {
-            $this->flashMessage('Administrátorská role byla již nastavena dříve');
-            $this->redirect(':Install:install:finish?before=true');
-        }
-        if ($this->user->isLoggedIn()) {
-            $adminRole = $this->context->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('name' => Role::ADMIN));
-            if ($adminRole == null) {
-                throw new \Nette\Application\BadRequestException($message = 'Administrátorská role neexistuje!', $code = 500);
-            }
-            $user = $this->context->database->getRepository('\SRS\Model\User')->find($this->user->id);
-            if ($user == null) {
-                throw new \Nette\Application\BadRequestException($message = 'Uživatel je sice přihlášen ale v DB neexistuje!', $code = 500);
-            }
-            $user->removeRole(Role::REGISTERED);
-            $user->addRole($adminRole);
-            $this->context->database->flush();
-            $this->user->logout(true);
-            $this->context->database->getRepository('\SRS\model\Settings')->set('superadmin_created', '1');
-            $this->flashMessage('Administrátorská role nastavena', 'success');
-
-            $this->redirect(':Install:install:finish');
-        }
-        $this->template->backlink = $this->backlink();
-    }
-
-    public function renderFinish()
-    {
-        if (!$this->context->parameters['database']['installed']) {
-            $this->redirect(':Install:install:default');
-        }
-        if (!$this->context->database->getRepository('\SRS\Model\Settings')->get('superadmin_created')) {
-            $this->redirect(':Install:install:admin');
-        }
-
-        if ($this->context->parameters['skautis']['app_id'] == null) {
-            $this->redirect(':Install:install:skautIS');
-        }
-
-        if (!$this->context->parameters['database']['schema_imported']) {
-            $this->redirect(':Install:install:schema');
-        }
-
-
-        $this->template->installedEarlier = $this->getParameter('before');
-    }
 
 
     public function IsDBConnection($dbname, $host, $user, $password)
@@ -195,12 +200,11 @@ class InstallPresenter extends \App\BaseComponentsPresenter //TODO
 
     protected function createComponentDatabaseForm()
     {
-        return new \SRS\Form\Install\DatabaseForm();
+        return $this->databaseFormFactory->create();
     }
 
     protected function createComponentSkautISForm()
     {
-        return new \SRS\Form\Install\SkautISForm();
+        return $this->skautISFormFactory->create();
     }
-
 }

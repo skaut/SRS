@@ -6,30 +6,39 @@ use Nette\Application\UI\Form;
 
 class DatabaseFormFactory
 {
-    /**
-     * @var \App\InstallModule\Forms\BaseFormFactory
-     * @inject
-     */
-    public $baseFormFactory; //TODO
+    private $baseFormFactory;
+
+    public function __construct(BaseFormFactory $baseFormFactory)
+    {
+        $this->baseFormFactory = $baseFormFactory;
+    }
 
     public function create()
     {
         $form = $this->baseFormFactory->create();
 
-        $form->addText('host', 'Host:')
-            ->addRule(Form::FILLED, 'Zadejte Host')->setDefaultValue('localhost');
+        $form->addText('host', $form->getTranslator()->translate('install.databaseForm.host'))
+            ->addRule(Form::FILLED, $form->getTranslator()->translate('install.databaseForm.emptyHost'))
+            ->setDefaultValue('localhost');
 
-        $form->addText('dbname', 'Databáze:')
-            ->addRule(Form::FILLED, 'Zadejte Databázi');
+        $form->addText('dbname', $form->getTranslator()->translate('install.databaseForm.dbname'))
+            ->addRule(Form::FILLED, $form->getTranslator()->translate('install.databaseForm.emptyDbname'));
 
-        $form->addText('user', 'Uživatel:')
-            ->addRule(Form::FILLED, 'Zadejte Uživatele');
+        $form->addText('user', $form->getTranslator()->translate('install.databaseForm.user'))
+            ->addRule(Form::FILLED, $form->getTranslator()->translate('install.databaseForm.emptyUser'));
 
-        $form->addPassword('password', 'Heslo:')
-            ->addRule(Form::FILLED, 'Zadejte Heslo:');
+        $form->addPassword('password', $form->getTranslator()->translate('install.databaseForm.password'))
+            ->addRule(Form::FILLED, $form->getTranslator()->translate('install.databaseForm.emptyPassword'));
 
-        $form->addSubmit('submit', 'Pokračovat')->getControlPrototype()->class('btn');
+        $form->addSubmit('submit', $form->getTranslator()->translate('install.databaseForm.continue'));
+        $form->onValidate[] = array($this, 'formSucceeded');
 
         return $form;
     }
+
+    public function formSucceeded(Form $form, $values)
+    {
+
+    }
+
 }

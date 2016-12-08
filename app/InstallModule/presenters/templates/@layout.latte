@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
 
-    <title>{block title|striptags}Instalace{/block} | SRS</title>
+    <title>{_install.title}</title>
 
     <link rel="shortcut icon" href="{$basePath}/favicon.ico">
 
@@ -18,28 +18,31 @@
 
 <body>
 <nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container-fluid">
+    <div class="container">
         <div class="navbar-header">
-            <a class="navbar-brand" href="/install">SRS - Instalace</a>
+            <a class="navbar-brand" href="{$basePath}/install">{_global.name}</a>
         </div>
     </div>
 </nav>
 
-<div class="container-fluid" style="margin-top: 50px;">
+<div class="container" style="margin-top: 50px;">
     <h1>{block header}{/block}</h1>
 
-    <div class="progress">
-        <div class="bar" style="width: {block progress}25%{/block};"></div>
-    </div>
+    <row class="span12">
+        <div class="progress">
+            <div class="bar" style="width: {block progress}25%{/block};"></div>
+        </div>
+    </row>
 
-    <div class="span12" style="text-align:center;">
-        <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">
-            {$flash->message}
-        </div>
+    <row class="span12">
+        <div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
+    </row>
+
+    <row class="span12">
         <div class="well">
-            {block #content}
+            {block content}
         </div>
-    </div>
+    </row>
 </div>
 </body>
 </html>

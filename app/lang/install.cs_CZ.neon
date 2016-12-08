@@ -1,0 +1,13 @@
+title: "Instalace | SRS"
+
+databaseForm:
+    header: "Nastavení databáze"
+    host: "Server:"
+    dbname: "Databáze:"
+    user: "Uživatel:"
+    password: "Heslo:"
+    emptyHost: "Zadejte adresu serveru"
+    emptyDbname: "Zadejte název databáze"
+    emptyUser: "Zadejte uživatelské jméno"
+    emptyPassword: "Zadejte heslo"
+    continue: "Pokračovat"
