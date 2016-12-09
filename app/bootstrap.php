@@ -109,6 +109,8 @@ $container->router[] = new Route('[!<pageId [a-z-0-9]+>]', array(
     )
 ));
 
+$container->router[] = new Route('<presenter>/<action>[/<id>]', 'Front:Homepage:default');
+
 if (!defined('CANCEL_START_APP')) {
     $container->application->run();
 }
