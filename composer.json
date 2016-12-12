@@ -7,13 +7,13 @@
 
         "kdyby/doctrine": "~3.1",
         "kdyby/events": "~3.0",
-        "kdyby/translation": "dev-master",  //dočasná nekompatibilita s 2.4
+        "kdyby/translation": "dev-master",
         "kdyby/console": "~2.6",
 
         "nextras/forms": "~2.0.1",
         "nextras/datagrid": "~2.1.3",
 
-        "janmarek/webloader" : "~2.5",      //dočasná nekompatibilita s 2.4, upraveno
+        "janmarek/webloader" : "~2.5",
         "texy/texy" : "dev-master",
 
         "skautis/skautis": "2.*@dev",

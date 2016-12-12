@@ -20,7 +20,7 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
-            <a class="navbar-brand" href="{$basePath}/install">{_global.name}</a>
+            <a class="navbar-brand" href="{$basePath}/install">{_common.name}</a>
         </div>
     </div>
 </nav>
@@ -28,17 +28,19 @@
 <div class="container" style="margin-top: 50px;">
     <h1>{block header}{/block}</h1>
 
-    <row class="span12">
+    <row>
         <div class="progress">
-            <div class="bar" style="width: {block progress}25%{/block};"></div>
+            <div class="progress-bar" role="progressbar" aria-valuenow="70"
+                 aria-valuemin="0" aria-valuemax="100" style="width: {block progress}{/block}">
+            </div>
         </div>
     </row>
 
-    <row class="span12">
-        <div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
+    <row>
+        <div n:foreach="$flashes as $flash" n:class="alert, $flash->type">{$flash->message}</div>
     </row>
 
-    <row class="span12">
+    <row>
         <div class="well">
             {block content}
         </div>

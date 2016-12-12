@@ -1,14 +1,15 @@
 parameters:
     database:
         host: localhost
-        dbname: srs
-        user: srs
-        password: srs
+        dbname: dbname
+        user: user
+        password: password
 
     installed:
         connection: false
         schema: false
         skautIS: false
+        admin: false
 
     skautIS:
         appId: skaut_is_app_id

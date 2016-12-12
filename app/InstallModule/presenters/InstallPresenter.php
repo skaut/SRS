@@ -2,7 +2,7 @@
 
 namespace App\InstallModule\Presenters;
 
-use Nette\Application\UI\Form;
+use Nette\Application\UI;
 
 /**
  * Obsluhuje instalacniho pruvodce
@@ -21,6 +21,12 @@ class InstallPresenter extends InstallBasePresenter //TODO
      */
     public $skautISFormFactory;
 
+    /**
+     * @var \App\ConfigWriter
+     * @inject
+     */
+    public $configWriter;
+
     public function renderDefault()
     {
         // pri testovani muze nastat situace, kdy jsme prihlaseni byt v DB nejsme, to by v ostrem provozu nemelo nastat
@@ -28,63 +34,69 @@ class InstallPresenter extends InstallBasePresenter //TODO
             $this->user->logout(true);
         }
 
+        $this->checkInstallationStatus();
+
         if ($this->context->parameters['installed']['connection']) {
             $this->flashMessage('Připojení k databázi již bylo nakonfigurováno');
-            $this->redirect(':Install:install:schema');
+            $this->redirect('schema');
         }
+
+
     }
 
     public function renderSchema()
     {
+        $this->checkInstallationStatus();
+
         if (!$this->context->parameters['installed']['connection']) {
-            $this->flashMessage('nejprve nastavte připojení k databázi');
-            $this->redirect(':Install:install:default');
+            $this->redirect('connection');
         }
-        try {
-            if ($this->context->parameters['installed']['schema'] == true) {
-                $this->flashMessage('Schéma databáze bylo již naimportováno');
-                $this->redirect(':Install:install:skautIS');
-            }
-        } catch (\Doctrine\DBAL\DBALException $e) {
-            //do nothing
+
+        if ($this->context->parameters['installed']['schema']) {
+            $this->flashMessage('Schéma databáze bylo již naimportováno');
+            $this->redirect('skautIS');
         }
     }
 
     public function renderSkautIS()
     {
+        $this->checkInstallationStatus();
+
         if (!$this->context->parameters['installed']['connection']) {
-            $this->redirect(':Install:install:default');
+            $this->redirect('connection');
         }
 
         if (!$this->context->parameters['installed']['schema']) {
-            $this->redirect(':Install:install:schema');
+            $this->redirect('schema');
         }
 
-
-        $dbsettings = $this->context->database->getRepository('\SRS\Model\Settings');
-        if ($this->context->parameters['skautis']['app_id'] != null) {
+        if ($this->context->parameters['installed']['skautis']) {
             $this->flashMessage('Skaut IS byl již nastaven');
-            $this->redirect(':Install:install:admin');
+            $this->redirect('admin');
         }
-
     }
 
     public function renderAdmin()
     {
+        $this->checkInstallationStatus();
+
         if (!$this->context->parameters['installed']['connection']) {
-            $this->redirect(':Install:install:default');
-        }
-        if (!$this->context->parameters['installed']['schema']) {
-            $this->redirect(':Install:install:schema');
-        }
-        if ($this->context->parameters['installed']['skautIS'] == null) {
-            $this->redirect(':Install:install:skautIS');
+            $this->redirect('connection');
         }
 
-        if ($this->context->database->getRepository('\SRS\model\Settings')->get('superadmin_created') == true) {
-            $this->flashMessage('Administrátorská role byla již nastavena dříve');
-            $this->redirect(':Install:install:finish?before=true');
+        if (!$this->context->parameters['installed']['schema']) {
+            $this->redirect('schema');
         }
+
+        if (!$this->context->parameters['installed']['skautis']) {
+            $this->redirect('skautis');
+        }
+
+        if ($this->context->parameters['installed']['admin']) {
+            $this->flashMessage('Administrátorská role byla již nastavena dříve');
+            $this->redirect('finish');
+        }
+
         if ($this->user->isLoggedIn()) {
             $adminRole = $this->context->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('name' => Role::ADMIN));
             if ($adminRole == null) {
@@ -108,23 +120,13 @@ class InstallPresenter extends InstallBasePresenter //TODO
 
     public function renderFinish()
     {
-        if (!$this->context->parameters['installed']['connection']) {
-            $this->redirect(':Install:install:default');
-        }
+        $this->checkInstallationStatus();
 
-        if (!$this->context->parameters['installed']['schema']) {
-            $this->redirect(':Install:install:schema');
-        }
+    }
 
-        if ($this->context->parameters['installed']['skautIS'] == null) {
-            $this->redirect(':Install:install:skautIS');
-        }
-
-        if (!$this->context->database->getRepository('\SRS\Model\Settings')->get('superadmin_created')) {
-            $this->redirect(':Install:install:admin');
-        }
-
-        $this->template->installedEarlier = $this->getParameter('before');
+    public function renderInstalled()
+    {
+        $this->checkInstallationError();
     }
 
     public function handleImportDB()
@@ -185,10 +187,73 @@ class InstallPresenter extends InstallBasePresenter //TODO
         $this->redirect('this');
     }
 
-
-
-    public function IsDBConnection($dbname, $host, $user, $password)
+    protected function createComponentDatabaseForm()
     {
+        $form = $this->databaseFormFactory->create();
+
+        $form->onSuccess[] = function (UI\Form $form) {
+            $values = $form->getValues();
+
+            if (!$this->checkDBConnection($values['host'], $values['dbname'], $values['user'], $values['password'])) {
+                $this->flashMessage('Nepodařilo se připojit k databázi, zadejte správné údaje.', 'alert-danger');
+                return;
+            }
+
+            $config = $this->configWriter->getConfig();
+            $config['parameters']['installed']['connection'] = true;
+            $config['parameters']['database']['host'] = $values['host'];
+            $config['parameters']['database']['dbname'] = $values['dbname'];
+            $config['parameters']['database']['user'] = $values['user'];
+            $config['parameters']['database']['password'] = $values['password'];
+            $result = $this->configWriter->saveConfig($config);
+
+            if ($result === false) {
+                $this->presenter->flashMessage('Nastavení se nepodařilo uložit. Zkontrolujte práva souboru config.local.neon.', 'alert-danger');
+                return;
+            }
+
+            $this->redirect('schema');
+        };
+
+        return $form;
+    }
+
+    protected function createComponentSkautISForm()
+    {
+        return $this->skautISFormFactory->create();
+    }
+
+    private function checkInstallationStatus()
+    {
+        if ($this->context->parameters['installed']['connection'] &&
+            $this->context->parameters['installed']['schema'] &&
+            $this->context->parameters['installed']['skautIS'] &&
+            $this->context->parameters['installed']['admin']
+        ) {
+            $this->redirect('installed');
+        }
+
+        $this->checkInstallationError();
+    }
+
+    private function checkInstallationError() {
+        if ((!$this->context->parameters['installed']['connection'] && (
+                    $this->context->parameters['installed']['schema'] ||
+                    $this->context->parameters['installed']['skautIS'] ||
+                    $this->context->parameters['installed']['admin']))
+            ||
+            (!$this->context->parameters['installed']['schema'] && (
+                    $this->context->parameters['installed']['skautIS'] ||
+                    $this->context->parameters['installed']['admin']))
+            ||
+            (!$this->context->parameters['installed']['skautIS'] &&
+                $this->context->parameters['installed']['admin'])
+        ) {
+            $this->redirect('error');
+        }
+    }
+
+    private function checkDBConnection($host, $dbname, $user, $password) {
         try {
             $dsn = "mysql:host={$host};dbname={$dbname}";
             $dbh = new \PDO($dsn, $user, $password);
@@ -196,15 +261,5 @@ class InstallPresenter extends InstallBasePresenter //TODO
             return false;
         }
         return true;
-    }
-
-    protected function createComponentDatabaseForm()
-    {
-        return $this->databaseFormFactory->create();
-    }
-
-    protected function createComponentSkautISForm()
-    {
-        return $this->skautISFormFactory->create();
     }
 }
