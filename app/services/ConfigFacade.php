@@ -3,9 +3,9 @@ namespace App;
 
 use Nette\Utils\Neon;
 
-class ConfigWriter
+class ConfigFacade
 {
-    public function getConfig() {
+    public function loadConfig() {
         return Neon::decode(file_get_contents(__DIR__ . '/../config/config.local.neon'));
     }
 

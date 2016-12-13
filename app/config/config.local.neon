@@ -15,4 +15,7 @@ parameters:
         appId: skaut_is_app_id
         test: true
 
+    customInputs:
+        booleanCount: 5
+        textCount: 2
 

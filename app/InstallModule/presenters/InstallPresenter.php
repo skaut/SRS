@@ -22,10 +22,10 @@ class InstallPresenter extends InstallBasePresenter //TODO
     public $skautISFormFactory;
 
     /**
-     * @var \App\ConfigWriter
+     * @var \App\ConfigFacade
      * @inject
      */
-    public $configWriter;
+    public $configFacade;
 
     public function renderDefault()
     {
@@ -199,7 +199,7 @@ class InstallPresenter extends InstallBasePresenter //TODO
                 return;
             }
 
-            $config = $this->configWriter->getConfig();
+            $config = $this->configWriter->loadConfig();
             $config['parameters']['installed']['connection'] = true;
             $config['parameters']['database']['host'] = $values['host'];
             $config['parameters']['database']['dbname'] = $values['dbname'];

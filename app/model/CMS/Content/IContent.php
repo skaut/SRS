@@ -1,23 +1,22 @@
 <?php
 
-namespace App\Model\Settings;
+namespace App\Model\CMS\Content;
 
-use Doctrine\ORM\Mapping as ORM;
+use Nette\Application\UI\Form;
 
-/**
- * @ORM\Entity
- */
-class Settings
+interface IContent
 {
     /**
-     * @ORM\Column(type="string", unique=true)
-     * @ORM\Id
+     * Prida do formulare prvky, ktere dany content pozaduje vcetne predvyplnenych defaultnich hodnot
+     * @param Form $form
+     * @return Form $form
      */
-    protected $item;
+    public function addFormItems(Form $form);
 
-    /** @ORM\Column(type="string", nullable=true) */
-    protected $value;
-
-    /** @ORM\Column(type="string", nullable=true) */
-    protected $description;
+    /**
+     * Vytaha si sva data z formulare PageForm
+     * @param Form $form
+     * @return void
+     */
+    public function setValuesFromPageForm(Form $form);
 }

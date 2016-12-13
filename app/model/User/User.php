@@ -133,4 +133,669 @@ class User
 
     /** @ORM\Column(type="text", nullable=true) */
     protected $note;
+
+    /**
+     * User constructor.
+     * @param $username
+     */
+    public function __construct($username)
+    {
+        $this->username = $username;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    /**
+     * @param mixed $username
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param mixed $email
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+
+    /**
+     * @param mixed $roles
+     */
+    public function setRoles($roles)
+    {
+        $this->roles = $roles;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrograms()
+    {
+        return $this->programs;
+    }
+
+    /**
+     * @param mixed $programs
+     */
+    public function setPrograms($programs)
+    {
+        $this->programs = $programs;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getApproved()
+    {
+        return $this->approved;
+    }
+
+    /**
+     * @param mixed $approved
+     */
+    public function setApproved($approved)
+    {
+        $this->approved = $approved;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFirstName()
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @param mixed $firstName
+     */
+    public function setFirstName($firstName)
+    {
+        $this->firstName = $firstName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLastName()
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * @param mixed $lastName
+     */
+    public function setLastName($lastName)
+    {
+        $this->lastName = $lastName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNickName()
+    {
+        return $this->nickName;
+    }
+
+    /**
+     * @param mixed $nickName
+     */
+    public function setNickName($nickName)
+    {
+        $this->nickName = $nickName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDisplayName()
+    {
+        return $this->displayName;
+    }
+
+    /**
+     * @param mixed $displayName
+     */
+    public function setDisplayName($displayName)
+    {
+        $this->displayName = $displayName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSecurityCode()
+    {
+        return $this->securityCode;
+    }
+
+    /**
+     * @param mixed $securityCode
+     */
+    public function setSecurityCode($securityCode)
+    {
+        $this->securityCode = $securityCode;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMember()
+    {
+        return $this->member;
+    }
+
+    /**
+     * @param mixed $member
+     */
+    public function setMember($member)
+    {
+        $this->member = $member;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUnit()
+    {
+        return $this->unit;
+    }
+
+    /**
+     * @param mixed $unit
+     */
+    public function setUnit($unit)
+    {
+        $this->unit = $unit;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSex()
+    {
+        return $this->sex;
+    }
+
+    /**
+     * @param mixed $sex
+     */
+    public function setSex($sex)
+    {
+        $this->sex = $sex;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBirthdate()
+    {
+        return $this->birthdate;
+    }
+
+    /**
+     * @param mixed $birthdate
+     */
+    public function setBirthdate($birthdate)
+    {
+        $this->birthdate = $birthdate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSkautISUserId()
+    {
+        return $this->skautISUserId;
+    }
+
+    /**
+     * @param mixed $skautISUserId
+     */
+    public function setSkautISUserId($skautISUserId)
+    {
+        $this->skautISUserId = $skautISUserId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSkautISPersonId()
+    {
+        return $this->skautISPersonId;
+    }
+
+    /**
+     * @param mixed $skautISPersonId
+     */
+    public function setSkautISPersonId($skautISPersonId)
+    {
+        $this->skautISPersonId = $skautISPersonId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFirstLogin()
+    {
+        return $this->firstLogin;
+    }
+
+    /**
+     * @param mixed $firstLogin
+     */
+    public function setFirstLogin($firstLogin)
+    {
+        $this->firstLogin = $firstLogin;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLastLogin()
+    {
+        return $this->lastLogin;
+    }
+
+    /**
+     * @param mixed $lastLogin
+     */
+    public function setLastLogin($lastLogin)
+    {
+        $this->lastLogin = $lastLogin;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAbout()
+    {
+        return $this->about;
+    }
+
+    /**
+     * @param mixed $about
+     */
+    public function setAbout($about)
+    {
+        $this->about = $about;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStreet()
+    {
+        return $this->street;
+    }
+
+    /**
+     * @param mixed $street
+     */
+    public function setStreet($street)
+    {
+        $this->street = $street;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCity()
+    {
+        return $this->city;
+    }
+
+    /**
+     * @param mixed $city
+     */
+    public function setCity($city)
+    {
+        $this->city = $city;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPostcode()
+    {
+        return $this->postcode;
+    }
+
+    /**
+     * @param mixed $postcode
+     */
+    public function setPostcode($postcode)
+    {
+        $this->postcode = $postcode;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    /**
+     * @param mixed $state
+     */
+    public function setState($state)
+    {
+        $this->state = $state;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPaymentMethod()
+    {
+        return $this->paymentMethod;
+    }
+
+    /**
+     * @param mixed $paymentMethod
+     */
+    public function setPaymentMethod($paymentMethod)
+    {
+        $this->paymentMethod = $paymentMethod;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPaymentDate()
+    {
+        return $this->paymentDate;
+    }
+
+    /**
+     * @param mixed $paymentDate
+     */
+    public function setPaymentDate($paymentDate)
+    {
+        $this->paymentDate = $paymentDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVariableSymbol()
+    {
+        return $this->variableSymbol;
+    }
+
+    /**
+     * @param mixed $variableSymbol
+     */
+    public function setVariableSymbol($variableSymbol)
+    {
+        $this->variableSymbol = $variableSymbol;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAttended()
+    {
+        return $this->attended;
+    }
+
+    /**
+     * @param mixed $attended
+     */
+    public function setAttended($attended)
+    {
+        $this->attended = $attended;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getArrival()
+    {
+        return $this->arrival;
+    }
+
+    /**
+     * @param mixed $arrival
+     */
+    public function setArrival($arrival)
+    {
+        $this->arrival = $arrival;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDeparture()
+    {
+        return $this->departure;
+    }
+
+    /**
+     * @param mixed $departure
+     */
+    public function setDeparture($departure)
+    {
+        $this->departure = $departure;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMembershipType()
+    {
+        return $this->membershipType;
+    }
+
+    /**
+     * @param mixed $membershipType
+     */
+    public function setMembershipType($membershipType)
+    {
+        $this->membershipType = $membershipType;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMembershipCategory()
+    {
+        return $this->membershipCategory;
+    }
+
+    /**
+     * @param mixed $membershipCategory
+     */
+    public function setMembershipCategory($membershipCategory)
+    {
+        $this->membershipCategory = $membershipCategory;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIncomeProofPrintedDate()
+    {
+        return $this->incomeProofPrintedDate;
+    }
+
+    /**
+     * @param mixed $incomeProofPrintedDate
+     */
+    public function setIncomeProofPrintedDate($incomeProofPrintedDate)
+    {
+        $this->incomeProofPrintedDate = $incomeProofPrintedDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCustomBoolean0()
+    {
+        return $this->customBoolean0;
+    }
+
+    /**
+     * @param mixed $customBoolean0
+     */
+    public function setCustomBoolean0($customBoolean0)
+    {
+        $this->customBoolean0 = $customBoolean0;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCustomBoolean1()
+    {
+        return $this->customBoolean1;
+    }
+
+    /**
+     * @param mixed $customBoolean1
+     */
+    public function setCustomBoolean1($customBoolean1)
+    {
+        $this->customBoolean1 = $customBoolean1;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCustomBoolean2()
+    {
+        return $this->customBoolean2;
+    }
+
+    /**
+     * @param mixed $customBoolean2
+     */
+    public function setCustomBoolean2($customBoolean2)
+    {
+        $this->customBoolean2 = $customBoolean2;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCustomBoolean3()
+    {
+        return $this->customBoolean3;
+    }
+
+    /**
+     * @param mixed $customBoolean3
+     */
+    public function setCustomBoolean3($customBoolean3)
+    {
+        $this->customBoolean3 = $customBoolean3;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCustomBoolean4()
+    {
+        return $this->customBoolean4;
+    }
+
+    /**
+     * @param mixed $customBoolean4
+     */
+    public function setCustomBoolean4($customBoolean4)
+    {
+        $this->customBoolean4 = $customBoolean4;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCustomText0()
+    {
+        return $this->customText0;
+    }
+
+    /**
+     * @param mixed $customText0
+     */
+    public function setCustomText0($customText0)
+    {
+        $this->customText0 = $customText0;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCustomText1()
+    {
+        return $this->customText1;
+    }
+
+    /**
+     * @param mixed $customText1
+     */
+    public function setCustomText1($customText1)
+    {
+        $this->customText1 = $customText1;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNote()
+    {
+        return $this->note;
+    }
+
+    /**
+     * @param mixed $note
+     */
+    public function setNote($note)
+    {
+        $this->note = $note;
+    }
 }

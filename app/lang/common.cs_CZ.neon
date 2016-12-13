@@ -1,33 +1,91 @@
 name: "SRS"
 
-enum:
-    role:
-        guest: "guest"
-        unregistered: "Nepřihlášený"
-        unapproved: "Neschválený"
-        attendee: "Účastník"
-        service_team: "Servis tým"
-        lector: "Lektor"
-        organizer: "Organizátor"
-        admin: "Administrátor"
+role:
+    guest: "guest"
+    unregistered: "Nepřihlášený"
+    unapproved: "Neschválený"
+    attendee: "Účastník"
+    service_team: "Servis tým"
+    lector: "Lektor"
+    organizer: "Organizátor"
+    admin: "Administrátor"
 
-    resource:
-        admin: "Administrace"
-        cms: "CMS"
-        acl: "Práva a role"
-        program: "Program"
-        room: "Místnosti"
-        category: "Kategorie"
-        configuration: "Konfigurace"
-        evidence: "Uživatelé"
-        mailing: "Mailing"
+resource:
+    admin: "Administrace"
+    cms: "CMS"
+    acl: "Práva a role"
+    program: "Program"
+    room: "Místnosti"
+    category: "Kategorie"
+    configuration: "Konfigurace"
+    evidence: "Uživatelé"
+    mailing: "Mailing"
 
-    permission:
-        manage: "Spravovat"
-        access: "Přístup"
-        manage_own_programs: "Spravovat vlastní programy"
-        manage_all_programs: "Spravovat všechny programy"
-        manage_harmonogram: "Upravovat harmonogram"
-        choose_programs: "Vybírat si programy"
+permission:
+    manage: "Spravovat"
+    access: "Přístup"
+    manage_own_programs: "Spravovat vlastní programy"
+    manage_all_programs: "Spravovat všechny programy"
+    manage_harmonogram: "Upravovat harmonogram"
+    choose_programs: "Vybírat si programy"
 
+settings:
+    name:
+        seminar_name: "Název semináře"
+        seminar_from_date: "Začátek semináře"
+        seminar_to_date: "Konec semináře"
+        cancel_registration_to: "Odhlašování povoleno do"
+        seminar_email: "Email pro rozesílání emailů"
 
+        basic_block_duration: "Základní délka programového bloku"
+        is_allowed_add_block: "Je povoleno vytvářet programové bloky?"
+        is_allowed_modify_schedule: "Je povoleno upravovat harmonogram semináře?"
+        is_allowed_log_in_programs: "Je povoleno přihlašovat se na programové bloky?"
+        is_allowed_log_in_programs_before_payment: "Je povoleno přihlašovat se na programové bloky před uhrazením poplatku?"
+
+        skautis_action_name: "Akce ze skautIS"
+
+        company: "Firma"
+        ico: "IČO"
+        accountant: "Pokladník"
+        print_location: "Místo"
+        account_number: "Číslo účtu"
+        variable_symbol_code: "Předvolba variabilního symbolu (neovlivní stávající uživatele)"
+
+        log_in_programs_from: "Přihlašování programů otevřeno od"
+        log_in_programs_to: "Přihlašování programů otevřeno do"
+
+        display_users_roles: "Zobrazovat uživatelské role?"
+
+        custom_boolean: "Vlastní checkbox pro přihlášku č. %i%"
+        custom_text: "Vlastní textové pole pro přihlášku č. %i%"
+
+    default:
+        seminar_name: "Konfigurace->Název semináře"
+        seminar_email: "noreply@srs.skauting.cz"
+        company: "Konfigurace->Firma"
+        ico: "Konfigurace->IČO"
+        accountant: "Konfigurace->Pokladník"
+        print_location: "Konfigurace->Místo"
+        account_number: "Konfigurace->Číslo účtu"
+
+content:
+    text: "Text"
+    image: "Obrázek"
+    document: "Dokumenty"
+    attendee_box: "Přihlašovací formulář"
+    html: "HTML box"
+    faq: "FAQ"
+    news: "Aktuality"
+    program_box: "Výběr programů"
+    user_box: "Přehled uživatelů"
+    block_box: "Program semináře"
+    capacity_box: "Kapacita semináře"
+
+area:
+    main: "Hlavní"
+    sidebar: "Postranní lišta"
+
+payment:
+    cash: "Hotovost"
+    bank: "Na účet"

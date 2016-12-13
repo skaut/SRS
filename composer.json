@@ -10,6 +10,8 @@
         "kdyby/translation": "dev-master",
         "kdyby/console": "~2.6",
 
+        "doctrine/data-fixtures": "~1.2",
+
         "nextras/forms": "~2.0.1",
         "nextras/datagrid": "~2.1.3",
 
