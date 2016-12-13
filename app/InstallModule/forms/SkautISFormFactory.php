@@ -6,11 +6,12 @@ use Nette\Application\UI\Form;
 
 class SkautISFormFactory
 {
-    /**
-     * @var \App\InstallModule\Forms\BaseFormFactory
-     * @inject
-     */
-    public $baseFormFactory; //TODO
+    private $baseFormFactory;
+
+    public function __construct(BaseFormFactory $baseFormFactory, \Kdyby\Doctrine\EntityManager $em)
+    {
+        $this->baseFormFactory = $baseFormFactory;
+    }
 
     public function create()
     {

@@ -2,20 +2,15 @@
 
 namespace App\InstallModule\Forms;
 
-use Kdyby\Doctrine\Configuration;
-use Kdyby\Doctrine\EntityManager;
 use Nette\Application\UI\Form;
-use Nette\Utils\Neon;
 
 class DatabaseFormFactory
 {
     private $baseFormFactory;
-    private $em;
 
     public function __construct(BaseFormFactory $baseFormFactory, \Kdyby\Doctrine\EntityManager $em)
     {
         $this->baseFormFactory = $baseFormFactory;
-        $this->em = $em;
     }
 
     public function create()
