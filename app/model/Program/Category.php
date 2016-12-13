@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  */
-class Settings
+class Category //TODO
 {
     /**
      * @ORM\Column(type="string", unique=true)

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  */
-class Document //TODO
+class Room //TODO
 {
     /**
      * @ORM\Column(type="string", unique=true)
