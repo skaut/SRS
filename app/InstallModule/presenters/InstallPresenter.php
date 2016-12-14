@@ -2,7 +2,10 @@
 
 namespace App\InstallModule\Presenters;
 
+use App\LoadInitDataCommand;
 use Nette\Application\UI;
+use Symfony\Component\Console\Input\ArrayInput;
+use Kdyby\Console\StringOutput;
 
 /**
  * Obsluhuje instalacniho pruvodce
@@ -26,6 +29,12 @@ class InstallPresenter extends InstallBasePresenter //TODO
      * @inject
      */
     public $configFacade;
+
+    /**
+     * @var \Kdyby\Console\Application
+     * @inject
+     */
+    public $application;
 
     public function renderDefault()
     {
@@ -56,6 +65,22 @@ class InstallPresenter extends InstallBasePresenter //TODO
             $this->flashMessage('Schéma databáze bylo již naimportováno');
             $this->redirect('skautIS');
         }
+    }
+
+    public function handleImportSchema() {
+        $this->application->add(new LoadInitDataCommand());
+
+        $input = new ArrayInput([ //TODO
+            'command' => 'orm:schema:create'
+        ]);
+        $output = new StringOutput;
+        $this->application->run($input, $output);
+
+        $input = new ArrayInput([
+            'command' => 'orm:init-data:load'
+        ]);
+        $output = new StringOutput;
+        $this->application->run($input, $output);
     }
 
     public function renderSkautIS()

@@ -1,17 +1,18 @@
 <?php
 
+namespace App;
+
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Kdyby\Doctrine\EntityManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class LoadInitData extends Command
+class LoadInitDataCommand extends Command
 {
     /**
-     * @var EntityManager
+     * @var \Kdyby\Doctrine\EntityManager
      * @inject
      */
     public $em;

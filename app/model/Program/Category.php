@@ -1,23 +1,29 @@
 <?php
 
-namespace App\Model\Settings;
+namespace App\Model\Program;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ORM\Entity
  */
-class Category //TODO
+class Category
 {
+    use \Kdyby\Doctrine\Entities\Attributes\Identifier;
+
     /**
-     * @ORM\Column(type="string", unique=true)
-     * @ORM\Id
+     * @ORM\OneToMany(targetEntity="\App\Model\Program\Block", mappedBy="room", cascade={"persist"}, onDelete="SET NULL")
+     * @JMS\Type("ArrayCollection<App\Model\Program\Block>")
+     * @JMS\Exclude
      */
-    protected $item;
+    protected $blocks;
 
-    /** @ORM\Column(type="string", nullable=true) */
-    protected $value;
+    /** @ORM\Column(type="string", unique=true) */
+    protected $name;
 
-    /** @ORM\Column(type="string", nullable=true) */
-    protected $description;
+    /**
+     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="registerableCategories", cascade={"persist"})
+     */
+    protected $registerableRoles;
 }

@@ -5,7 +5,7 @@ namespace App\Model\CMS;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\App\Model\CMS\PageRepository")
  */
 class Page
 {

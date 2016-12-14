@@ -4,7 +4,7 @@ namespace App\WebModule\Presenters;
 
 use App\Presenters\BasePresenter;
 
-abstract class InstallBasePresenter extends BasePresenter
+abstract class WebBasePresenter extends BasePresenter
 {
     /**
      * @return CssLoader

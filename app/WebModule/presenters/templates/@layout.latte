@@ -1,0 +1,99 @@
+<!DOCTYPE html> {* TODO *}
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+
+    <title>{_web.title}</title>
+
+    <link rel="shortcut icon" href="{$basePath}/favicon.ico">
+
+    {control css}
+    {control js}
+
+    {block head}{/block}
+
+    <script>
+        var basePath = {$basePath};
+        var messageDelay = 6000;
+
+        $(document).ready(function () {
+            $('.message:not(.forever)').delay(messageDelay).fadeOut();
+        });
+    </script>
+</head>
+
+<body class="body{ifset $slug}-{$slug}{/ifset}">
+<script> document.body.className += ' js' </script>
+
+<div n:foreach="$flashes as $flash" n:class="alert, $flash->type">{$flash->message}</div>
+
+<div id="container">
+    <row id="header">
+        <div id="logo">
+            {block logo}
+                <a href="{plink :Front:page:default}"><img src="{$basePath}{$logo}" alt="logo"></a>
+            {/block}
+        </div>
+        <div id="top-menu">
+            {block top_menu}
+                <ul>
+                    {if !$user->isLoggedIn()}
+                        <li><span class="ui-icon ui-icon-locked" style="display:block; float: left;"></span><a
+                                    href="{plink :Auth:login, 'backlink' => $backlink}">Přihlásit</a></li>
+                    {else}
+                        <li>Přihlášen jako:
+                            <strong>
+                                <a href="{plink :Front:Profile:default}">{$user->identity->object->username}</a>
+                            </strong>
+
+                            {if $displayUsersRoles}
+                                (v
+                                {if count($user->roles) > 1}
+                                    rolích
+                                {else}
+                                    roli
+                                {/if}
+                                {foreach $user->roles as $usersRole}{$usersRole}{sep}, {/sep}{/foreach})
+                            {/if}
+                        </li>
+                        {if !$user->identity->object->member}
+                            <li>
+                                <a href="{plink :Front:Member:default}" style="color: red">Nepropojený účet
+                                    člena</a>
+                            </li>
+                        {/if}
+                        <li><span class="ui-icon ui-icon-unlocked" style="display:block; float: left;"></span><a
+                                    href="{plink :Auth:logout, 'backlink' => $backlink}">Odhlásit</a></li>
+                    {/if}
+                    {if $user->isAllowed('Administrace', 'Přístup')}
+                        <li><a href="{$basePath}/admin">Administrace</a></li>
+                    {/if}
+                </ul>
+            {/block}
+        </div>
+
+        <div id="main-menu">
+            {block main_menu}
+                {widget menu}
+            {/block}
+        </div>
+    </row>
+
+    <row id="main">
+        {block main}
+            <div id="content" class="{block content_class}span9{/block}">
+                {include #content}
+            </div>
+            {block sidebar}{/block}
+        {/block}
+    </row>
+
+    <row id="footer">
+        {block footer}<p>{!$footer}</p>{/block}
+    </row>
+</div>
+</body>
+</html>

@@ -60,11 +60,7 @@ abstract class Content implements IContent
         self::SIDEBAR
     ];
 
-    /**
-     * @var \Kdyby\Translation\Translator
-     * @inject
-     */
-    public $translator;
+    protected $translator;
 
     /**
      * Jednoznacny identifikator typu contentu
@@ -82,8 +78,17 @@ abstract class Content implements IContent
     /** @ORM\Column(type="string") */
     protected $area;
 
-    /** @ORM\ManyToOne(targetEntity="\SRS\Model\CMS\Page", inversedBy="contents", cascade={"persist"}) */
+    /** @ORM\ManyToOne(targetEntity="\App\Model\CMS\Page", inversedBy="contents", cascade={"persist"}) */
     protected $page;
+
+    /**
+     * Content constructor.
+     * @param \Kdyby\Translation\Translator $translator
+     */
+    public function __construct(\Kdyby\Translation\Translator $translator)
+    {
+        $this->translator = $translator;
+    }
 
     /**
      * @return int

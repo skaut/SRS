@@ -32,10 +32,10 @@ class Permission
     /** @ORM\Column(type="string") */
     protected $name;
 
-    /** @ORM\ManyToMany(targetEntity="\SRS\model\Acl\Role", mappedBy="permissions", cascade={"persist"}) */
+    /** @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", mappedBy="permissions", cascade={"persist"}) */
     protected $roles;
 
-    /** @ORM\ManyToOne(targetEntity="\SRS\Model\Acl\Resource", inversedBy="permissions", cascade={"persist"}) */
+    /** @ORM\ManyToOne(targetEntity="\App\Model\ACL\Resource", inversedBy="permissions", cascade={"persist"}) */
     protected $resource;
 
     /**

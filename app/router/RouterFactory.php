@@ -33,33 +33,9 @@ class RouterFactory
             'area' => null
         ));
 
-        $router[] = new Route('admin/acl/<presenter>/<action>[/<id>][/<area>]', array(
-            'module' => 'Admin:ACL',
-            'presenter' => 'Page', //TODO
-            'action' => 'default',
-            'id' => null,
-            'area' => null
-        ));
-
         $router[] = new Route('admin/cms/<presenter>/<action>[/<id>][/<area>]', array(
             'module' => 'Admin:CMS',
             'presenter' => 'Page',
-            'action' => 'default',
-            'id' => null,
-            'area' => null
-        ));
-
-        $router[] = new Route('admin/configuration/<presenter>/<action>[/<id>][/<area>]', array(
-            'module' => 'Admin:Configuration',
-            'presenter' => 'Page', //TODO
-            'action' => 'default',
-            'id' => null,
-            'area' => null
-        ));
-
-        $router[] = new Route('admin/mailing/<presenter>/<action>[/<id>][/<area>]', array(
-            'module' => 'Admin:Mailing',
-            'presenter' => 'Page', //TODO
             'action' => 'default',
             'id' => null,
             'area' => null
@@ -73,14 +49,6 @@ class RouterFactory
             'area' => null
         ));
 
-        $router[] = new Route('admin/user/<presenter>/<action>[/<id>][/<area>]', array(
-            'module' => 'Admin:User',
-            'presenter' => 'Block', //TODO
-            'action' => 'list',
-            'id' => null,
-            'area' => null
-        ));
-
         $router[] = new Route('admin/<presenter>/<action>[/<id>][/<area>]', array(
             'module' => 'Admin',
             'presenter' => 'Dashboard',
@@ -89,7 +57,7 @@ class RouterFactory
             'area' => null
         ));
 
-        $router[] = new Route('install/<presenter>/<action>/<id>/', array(
+        $router[] = new Route('install/<action>/<id>/', array(
             'module' => 'Install',
             'presenter' => 'Install',
             'action' => 'default',
@@ -99,14 +67,14 @@ class RouterFactory
         $router[] = new Route('login/', 'Auth:login'); //TODO
         $router[] = new Route('logout/', 'Auth:logout'); //TODO
 
-        $router[] = new Route('[!<pageId [a-z-0-9]+>]', array( //TODO
-            'module' => 'Front',
+        $router[] = new Route('[!<pageId [a-z-0-9]+>]', array(
+            'module' => 'Web',
             'presenter' => 'Page',
             'action' => 'default',
-//            'pageId' => array(
-//                Route::FILTER_IN => callback($this->pageRepository, 'slugToId'),
-//                Route::FILTER_OUT => callback($this->pageRepository, "idToSlug")
-//            )
+            'pageId' => array(
+                Route::FILTER_IN => [$this->pageRepository, 'slugToId'],
+                Route::FILTER_OUT => [$this->pageRepository, "idToSlug"]
+            )
         ));
 
         $router[] = new Route('<presenter>/<action>[/<id>]', 'Front:Homepage:default');

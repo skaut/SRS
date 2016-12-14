@@ -1,23 +1,19 @@
 <?php
 
-namespace App\Model\Settings;
+namespace App\Model\CMS\Document;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
  */
-class Tag //TODO
+class Tag
 {
-    /**
-     * @ORM\Column(type="string", unique=true)
-     * @ORM\Id
-     */
-    protected $item;
+    use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
-    /** @ORM\Column(type="string", nullable=true) */
-    protected $value;
+    /** @ORM\ManyToMany(targetEntity="\App\Model\CMS\Documents\Document", mappedBy="tags", cascade={"persist"}) */
+    protected $documents;
 
-    /** @ORM\Column(type="string", nullable=true) */
-    protected $description;
+    /** @ORM\Column(type="string") */
+    protected $name;
 }

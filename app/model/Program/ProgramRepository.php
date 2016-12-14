@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Model\Settings;
+namespace App\Model\Program;
 
 use Nette;
 use Kdyby;
 
-class ProgramRepository extends Nette\Object //TODO
+class ProgramRepository extends Nette\Object
 {
     private $em;
-    private $settingsRepository;
+    private $programRepository;
 
     public function __construct(Kdyby\Doctrine\EntityManager $em)
     {
         $this->em = $em;
-        $this->settingsRepository = $em->getRepository(Settings::class);
+        $this->programRepository = $em->getRepository(Program::class);
     }
 }

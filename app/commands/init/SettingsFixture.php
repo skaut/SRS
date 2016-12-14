@@ -8,17 +8,20 @@ use App\Model\Settings\Settings;
 
 class SettingsFixture extends AbstractFixture
 {
-    /**
-     * @var \Kdyby\Translation\Translator
-     * @inject
-     */
     public $translator;
 
-    /**
-     * @var \App\ConfigFacade
-     * @inject
-     */
     public $configFacade;
+
+    /**
+     * SettingsFixture constructor.
+     * @param \Kdyby\Translation\Translator $translator
+     * @param \App\ConfigFacade $configFacade
+     */
+    public function __construct(\Kdyby\Translation\Translator $translator, \App\ConfigFacade $configFacade)
+    {
+        $this->translator = $translator;
+        $this->configFacade = $configFacade;
+    }
 
     public function load(ObjectManager $manager)
     {
