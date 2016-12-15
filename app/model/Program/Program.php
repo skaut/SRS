@@ -3,6 +3,7 @@
 namespace App\Model\Program;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ORM\Entity(repositoryClass="ProgramRepository")
@@ -14,21 +15,21 @@ class Program
     use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Block", inversedBy="programs" cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="Block", inversedBy="programs", cascade={"persist"})
      * @JMS\Type("integer")
      * @JMS\Accessor(getter="getBlockId")
      */
     protected $block;
 
     /**
-     * @ORM\ManyToMany(targetEntity="\App\Model\User\User", mappedBy="programs", cascade={"persist", "remove"})
+     * @ORM\ManyToMany(targetEntity="\App\Model\User\User", mappedBy="programs", cascade={"persist"})
      * @JMS\Type("ArrayCollection<App\Model\User\User>")
      * @JMS\Exclude
      */
     protected $attendees;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Room" inversedBy="room", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="Room", cascade={"persist"})
      * @JMS\Type("Room")
      * @JMS\Exclude
      */

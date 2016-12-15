@@ -11,21 +11,20 @@ use Nette\Application\UI\Form;
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="content", type="string")
  * @ORM\DiscriminatorMap({
- *     "Content" = "Content",
- *     "TextContent" = "TextContent",
- *     "DocumentContent" = "DocumentContent",
- *     "AttendeeBoxContent" = "AttendeeBoxContent",
- *     "HTMLContent" = "HTMLContent",
- *     "FAQContent" = "FAQContent",
- *     "NewsContent" = "NewsContent",
- *     "ProgramBoxContent" = "ProgramBoxContent",
- *     "ImageContent" = "ImageContent",
- *     "UserBoxBontent" = "UserBoxContent",
- *     "BlockBoxContent" = "BlockBoxContent",
- *     "CapacityBoxContent" = "CapacityBoxContent"
+ *     "text_content" = "TextContent",
+ *     "document_content" = "DocumentContent",
+ *     "attendee_box_content" = "AttendeeBoxContent",
+ *     "html_content" = "HTMLContent",
+ *     "faq_content" = "FAQContent",
+ *     "news_content" = "NewsContent",
+ *     "program_box_content" = "ProgramBoxContent",
+ *     "image_content" = "ImageContent",
+ *     "user_box_content" = "UserBoxContent",
+ *     "block_box_content" = "BlockBoxContent",
+ *     "capacity_box_bontent" = "CapacityBoxContent"
  * })
  */
-abstract class Content implements IContent
+abstract class Content
 {
     const TEXT = 'text';
     const IMAGE = 'image';
@@ -66,7 +65,7 @@ abstract class Content implements IContent
     /** @ORM\Column(type="string", nullable=true) */
     protected $header;
 
-    /** @ORM\ManyToOne(targetEntity="\App\Model\CMS\Page", inversedBy="contents", cascade={"persist", "remove"}) */
+    /** @ORM\ManyToOne(targetEntity="\App\Model\CMS\Page", inversedBy="contents", cascade={"persist"}) */
     protected $page;
 
     /** @ORM\Column(type="string") */

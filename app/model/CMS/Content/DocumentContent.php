@@ -11,6 +11,6 @@ use Nette\Application\UI\Form;
  */
 class DocumentContent extends Content
 {
-    /** @ORM\ManyToOne(targetEntity="\App\Model\CMS\Document\Tag") */
+    /** @ORM\ManyToOne(targetEntity="\App\Model\CMS\Document\Tag", cascade={"persist"}) */
     protected $tag;
 }

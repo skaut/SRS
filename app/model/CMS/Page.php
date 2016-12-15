@@ -24,7 +24,7 @@ class Page
     /** @ORM\Column(type="boolean") */
     protected $public = false;
 
-    /** @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="pages", cascade={"persist", "remove"}) */
+    /** @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="pages", cascade={"persist"}) */
     protected $roles;
 
     /**

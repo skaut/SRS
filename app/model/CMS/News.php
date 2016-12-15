@@ -18,6 +18,6 @@ class News
     /** @ORM\Column(type="date") */
     protected $published;
 
-    /** @ORM\ManyToOne(targetEntity="\App\Model\User\User") */
+    /** @ORM\ManyToOne(targetEntity="\App\Model\User\User", cascade={"persist"}) */
     protected $author;
 }

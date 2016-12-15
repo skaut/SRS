@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Commands;
+
 /**
  * Created by PhpStorm.
  * User: jan

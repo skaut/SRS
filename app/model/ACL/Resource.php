@@ -30,10 +30,10 @@ class Resource
 
     use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
-    /** @ORM\Column(type="string" unique=true) */
+    /** @ORM\Column(type="string", unique=true) */
     protected $name;
 
-    /** @ORM\OneToMany(targetEntity="\App\Model\ACL\Permission", mappedBy="resource", cascade={"persist", "remove"}) */
+    /** @ORM\OneToMany(targetEntity="\App\Model\ACL\Permission", mappedBy="resource", cascade={"persist"}) */
     protected $permissions;
 
     /**

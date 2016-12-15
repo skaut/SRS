@@ -15,7 +15,7 @@ class Block
     use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\App\Model\User\User")
+     * @ORM\ManyToOne(targetEntity="\App\Model\User\User", cascade={"persist"})
      * @JMS\Type("App\Model\User\User")
      * @JMS\Exclude
      */
@@ -47,7 +47,7 @@ class Block
     protected $tools;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Category", inversedBy="blocks", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="Category", inversedBy="blocks", cascade={"persist"})
      * @JMS\Type("Category")
      * @JMS\Exclude
      */

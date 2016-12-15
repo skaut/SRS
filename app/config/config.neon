@@ -1,0 +1,97 @@
+application:
+    errorPresenter: Error
+    mapping:
+        *: App\*Module\Presenters\*Presenter
+
+session:
+    expiration: 14 days
+
+extensions:
+    console: Kdyby\Console\DI\ConsoleExtension
+    events: Kdyby\Events\DI\EventsExtension
+    annotations: Kdyby\Annotations\DI\AnnotationsExtension
+    doctrine: Kdyby\Doctrine\DI\OrmExtension
+    webloader: WebLoader\Nette\Extension
+    skautis: Skautis\Nette\SkautisExtension
+    translation: Kdyby\Translation\DI\TranslationExtension
+    nextras.form: Nextras\Forms\Bridges\NetteDI\FormsExtension
+
+latte:
+    macros:
+        - Nextras\Forms\Bridges\Latte\Macros\BS3InputMacros
+
+doctrine:
+    host: %database.host%
+    dbname: %database.dbname%
+    user: %database.user%
+    password: %database.password%
+    metadata:
+        App: %appDir%
+
+skautis:
+    applicationId: %skautIS.appId%
+    testMode: $skautIS.test%
+
+services:
+    - App\RouterFactory
+    router: @App\RouterFactory::createRouter
+    - App\Model\CMS\PageRepository
+    - App\Model\User\UserRepository
+    - App\Model\Settings\SettingsRepository
+    - App\InstallModule\Forms\BaseFormFactory
+    - App\InstallModule\Forms\DatabaseFormFactory
+    - App\InstallModule\Forms\SkautISFormFactory
+    - App\ConfigFacade
+
+console:
+    commands:
+        - App\Commands\LoadInitData
+
+webloader:
+    css:
+        web:
+            files:
+                - bootstrap.min.css
+                - multi-select.css
+
+        admin:
+            files:
+                - bootstrap.min.css
+                - multi-select.css
+
+        install:
+            files:
+                - bootstrap.min.css
+
+    js:
+        web:
+            remoteFiles:
+                - https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js
+                - https://oss.maxcdn.com/respond/1.4.2/respond.min.js
+                - https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js
+            files:
+                - netteForms.js
+                - main.js
+                - bootstrap.min.js
+                - jquery.multi-select.js
+
+        admin:
+            remoteFiles:
+                - https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js
+                - https://oss.maxcdn.com/respond/1.4.2/respond.min.js
+                - https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js
+            files:
+                - netteForms.js
+                - main.js
+                - bootstrap.min.js
+                - jquery.multi-select.js
+
+        install:
+            remoteFiles:
+                - https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js
+                - https://oss.maxcdn.com/respond/1.4.2/respond.min.js
+                - https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js
+            files:
+                - netteForms.js
+                - main.js
+                - bootstrap.min.js

@@ -14,7 +14,7 @@ class Category
     use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
     /**
-     * @ORM\OneToMany(targetEntity="Block", mappedBy="category", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Block", mappedBy="category", cascade={"persist"})
      * @JMS\Type("ArrayCollection<Block>")
      * @JMS\Exclude
      */
@@ -24,7 +24,7 @@ class Category
     protected $name;
 
     /**
-     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="registerableCategories", cascade={"persist", "remove"})
+     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="registerableCategories", cascade={"persist"})
      */
     protected $registerableRoles;
 

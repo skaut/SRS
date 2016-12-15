@@ -10,11 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Document
 {
-    const SAVE_PATH = '/files/documents/';
-
     use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
-    /** @ORM\ManyToMany(targetEntity="\App\Model\CMS\Document\Documents\Tag", inversedBy="documents", cascade={"persist", "remove"}) */
+    /** @ORM\ManyToMany(targetEntity="Tag", inversedBy="documents", cascade={"persist"}) */
     protected $tags;
 
     /** @ORM\Column(type="string") */

@@ -18,11 +18,11 @@ class User
     /** @ORM\Column(type="string") */
     protected $email;
 
-    /** @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="users", cascade={"persist", "remove"}) */
+    /** @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="users", cascade={"persist"}) */
     protected $roles;
 
     /**
-     * @ORM\ManyToMany(targetEntity="\App\Model\Program\Program", inversedBy="attendees", cascade={"persist", "remove"})
+     * @ORM\ManyToMany(targetEntity="\App\Model\Program\Program", inversedBy="attendees", cascade={"persist"})
      * @ORM\OrderBy({"start" = "ASC"})
      */
     protected $programs;

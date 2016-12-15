@@ -15,7 +15,7 @@ class FAQ
     /** @ORM\Column(type="text") */
     protected $question;
 
-    /** @ORM\ManyToOne(targetEntity="\App\Model\User\User") */
+    /** @ORM\ManyToOne(targetEntity="\App\Model\User\User", cascade={"persist"}) */
     protected $author;
 
     /** @ORM\Column(type="text", nullable=true) */

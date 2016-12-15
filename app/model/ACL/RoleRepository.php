@@ -6,15 +6,6 @@ use Nette;
 
 class RoleRepository extends Nette\Object
 {
-    private $em;
-    private $roleRepository;
-
-    public function __construct(\Kdyby\Doctrine\EntityManager $em)
-    {
-        $this->em = $em;
-        $this->roleRepository = $em->getRepository(Role::class);
-    }
-
     public function findRegisterable() {
         $query = $this->em->createQuery("SELECT r FROM {Role::class} r WHERE r.registerable=true");
         return $query->getResult();

@@ -3,6 +3,7 @@
 namespace App\Model\Program;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ORM\Entity
@@ -11,13 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
 class Room
 {
     use \Kdyby\Doctrine\Entities\Attributes\Identifier;
-
-    /**
-     * @ORM\OneToMany(targetEntity="Program", mappedBy="room", cascade={"persist", "remove"})
-     * @JMS\Type("ArrayCollection<Program>")
-     * @JMS\Exclude
-     */
-    protected $blocks;
 
     /** @ORM\Column(type="string", unique=true) */
     protected $name;

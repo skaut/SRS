@@ -32,7 +32,7 @@ class Role
 
     use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
-    /** @ORM\Column(type="string" unique=true) */
+    /** @ORM\Column(type="string", unique=true) */
     protected $name;
 
     /** @ORM\ManyToMany(targetEntity="\App\Model\User\User", mappedBy="roles", cascade={"persist", "remove"}) */

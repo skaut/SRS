@@ -12,7 +12,7 @@ class Tag
 {
     use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
-    /** @ORM\ManyToMany(targetEntity="\App\Model\CMS\Documents\Document", mappedBy="tags", cascade={"persist", "remove"}) */
+    /** @ORM\ManyToMany(targetEntity="Document", mappedBy="tags", cascade={"persist"}) */
     protected $documents;
 
     /** @ORM\Column(type="string") */

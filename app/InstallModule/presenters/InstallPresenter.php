@@ -2,7 +2,7 @@
 
 namespace App\InstallModule\Presenters;
 
-use App\LoadInitDataCommand;
+use App\Commands\LoadInitDataCommand;
 use Nette\Application\UI;
 use Symfony\Component\Console\Input\ArrayInput;
 use Kdyby\Console\StringOutput;
@@ -68,10 +68,8 @@ class InstallPresenter extends InstallBasePresenter //TODO
     }
 
     public function handleImportSchema() {
-        $this->application->add(new LoadInitDataCommand());
-
         $input = new ArrayInput([ //TODO
-            'command' => 'orm:schema:create'
+            'command' => 'orm:schema-tool:create'
         ]);
         $output = new StringOutput;
         $this->application->run($input, $output);
@@ -224,13 +222,13 @@ class InstallPresenter extends InstallBasePresenter //TODO
                 return;
             }
 
-            $config = $this->configWriter->loadConfig();
+            $config = $this->configFacade->loadConfig();
             $config['parameters']['installed']['connection'] = true;
             $config['parameters']['database']['host'] = $values['host'];
             $config['parameters']['database']['dbname'] = $values['dbname'];
             $config['parameters']['database']['user'] = $values['user'];
             $config['parameters']['database']['password'] = $values['password'];
-            $result = $this->configWriter->saveConfig($config);
+            $result = $this->configFacade->saveConfig($config);
 
             if ($result === false) {
                 $this->presenter->flashMessage('Nastavení se nepodařilo uložit. Zkontrolujte práva souboru config.local.neon.', 'alert-danger');

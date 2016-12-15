@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Commands\Init;
+
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -76,6 +78,10 @@ class RoleFixture extends AbstractFixture implements DependentFixtureInterface
             $manager->persist($value);
         }
         $manager->flush();
+
+        foreach ($roles as $key => $value) {
+            $this->addReference($key, $value);
+        }
     }
 
     /**
