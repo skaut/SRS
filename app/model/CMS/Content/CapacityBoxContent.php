@@ -3,36 +3,18 @@
 namespace App\Model\CMS\Content;
 
 use Doctrine\ORM\Mapping as ORM;
-use Nette\Application\UI\Form;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="capacity_box_content")
  */
-class CapacityBoxContent extends Content implements IContent
+class CapacityBoxContent extends Content
 {
-    protected $content = Content::CAPACITY_BOX;
+    /** @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role") */
+    protected $roles;
 
-    /** @ORM\Column() */
-    protected $roles; //TODO
-
-    /**
-     * Prida do formulare prvky, ktere dany content pozaduje vcetne predvyplnenych defaultnich hodnot
-     * @param Form $form
-     * @return Form $form
-     */
-    public function addFormItems(Form $form)
+    public function __construct()
     {
-        parrent::addFormItems($form);
-        return $form;
-    }
-
-    /**
-     * Vytaha si sva data z formulare PageForm
-     * @param Form $form
-     * @return void
-     */
-    public function setValuesFromPageForm(Form $form)
-    {
-        parent::setValuesFromPageForm($form);
+        $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
     }
 }

@@ -5,7 +5,8 @@ namespace App\Model\Program;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="\App\Model\Program\ProgramRepository")
+ * @ORM\Entity(repositoryClass="ProgramRepository")
+ * @ORM\Table(name="program")
  * @JMS\ExclusionPolicy("none")
  */
 class Program
@@ -13,22 +14,22 @@ class Program
     use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\App\Model\Program\Block", inversedBy="programs")
+     * @ORM\ManyToOne(targetEntity="Block", inversedBy="programs" cascade={"persist", "remove"})
      * @JMS\Type("integer")
      * @JMS\Accessor(getter="getBlockId")
      */
     protected $block;
 
     /**
-     * @ORM\ManyToMany(targetEntity="\App\Model\User\User", inversedBy="programs", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="\App\Model\User\User", mappedBy="programs", cascade={"persist", "remove"})
      * @JMS\Type("ArrayCollection<App\Model\User\User>")
      * @JMS\Exclude
      */
     protected $attendees;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\App\Model\Program\Room")
-     * @JMS\Type("App\Model\Program\Room")
+     * @ORM\ManyToOne(targetEntity="Room" inversedBy="room", cascade={"persist", "remove"})
+     * @JMS\Type("Room")
      * @JMS\Exclude
      */
     protected $room;
@@ -89,4 +90,9 @@ class Program
      * @JMS\Type("integer")
      */
     public $attendeesCount;
+
+    public function __construct()
+    {
+        $this->attendees = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 }

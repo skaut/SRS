@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="faq")
  */
 class FAQ
 {
@@ -14,7 +15,7 @@ class FAQ
     /** @ORM\Column(type="text") */
     protected $question;
 
-    /** @ORM\ManyToOne(targetEntity="\SRS\model\User") */
+    /** @ORM\ManyToOne(targetEntity="\App\Model\User\User") */
     protected $author;
 
     /** @ORM\Column(type="text", nullable=true) */

@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="permission")
  */
 class Permission
 {
@@ -18,24 +19,24 @@ class Permission
     const MANAGE_CATEGORIES = 'manage_categories';
     const CHOOSE_PROGRAMS = 'choose_programs';
 
-//    public static $permissions = [
-//        self::MANAGE,
-//        self::ACCESS,
-//        self::MANAGE_OWN_PROGRAMS,
-//        self::MANAGE_ALL_PROGRAMS,
-//        self::MANAGE_HARMONOGRAM,
-//        self::CHOOSE_PROGRAMS
-//    ];
+    public static $permissions = [
+        self::MANAGE,
+        self::ACCESS,
+        self::MANAGE_OWN_PROGRAMS,
+        self::MANAGE_ALL_PROGRAMS,
+        self::MANAGE_HARMONOGRAM,
+        self::CHOOSE_PROGRAMS
+    ];
 
     use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
     /** @ORM\Column(type="string") */
     protected $name;
 
-    /** @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", mappedBy="permissions", cascade={"persist"}) */
+    /** @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", mappedBy="permissions", cascade={"persist", "remove"}) */
     protected $roles;
 
-    /** @ORM\ManyToOne(targetEntity="\App\Model\ACL\Resource", inversedBy="permissions", cascade={"persist"}) */
+    /** @ORM\ManyToOne(targetEntity="\App\Model\ACL\Resource", inversedBy="permissions", cascade={"persist", "remove"}) */
     protected $resource;
 
     /**
@@ -47,6 +48,7 @@ class Permission
     {
         $this->name = $name;
         $this->resource = $resource;
+        $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**

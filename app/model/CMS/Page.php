@@ -5,7 +5,8 @@ namespace App\Model\CMS;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="\App\Model\CMS\PageRepository")
+ * @ORM\Entity(repositoryClass="PageRepository")
+ * @ORM\Table(name="page")
  */
 class Page
 {
@@ -23,24 +24,21 @@ class Page
     /** @ORM\Column(type="boolean") */
     protected $public = false;
 
-    /** @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="pages") */
+    /** @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="pages", cascade={"persist", "remove"}) */
     protected $roles;
 
     /**
-     * @ORM\OneToMany(targetEntity="\App\Model\CMS\Content\Content", mappedBy="page", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="\App\Model\CMS\Content\Content", mappedBy="page", cascade={"persist", "remove"})
      * @ORM\OrderBy({"position" = "ASC"})
      */
     protected $contents;
 
-    /**
-     * Page constructor.
-     * @param $name
-     * @param $slug
-     */
     public function __construct($name, $slug)
     {
         $this->name = $name;
         $this->slug = $slug;
+        $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->contents = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**

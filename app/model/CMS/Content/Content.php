@@ -7,8 +7,9 @@ use Nette\Application\UI\Form;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="content")
  * @ORM\InheritanceType("JOINED")
- * @ORM\DiscriminatorColumn(name="type", type="string")
+ * @ORM\DiscriminatorColumn(name="content", type="string")
  * @ORM\DiscriminatorMap({
  *     "Content" = "Content",
  *     "TextContent" = "TextContent",
@@ -41,7 +42,7 @@ abstract class Content implements IContent
     const MAIN = 'main';
     const SIDEBAR = 'sidebar';
 
-    public static $types = [
+    public static $contents = [
         self::TEXT,
         self::IMAGE,
         self::DOCUMENT,
@@ -60,35 +61,19 @@ abstract class Content implements IContent
         self::SIDEBAR
     ];
 
-    protected $translator;
-
-    /**
-     * Jednoznacny identifikator typu contentu
-     */
-    protected $content;
-
     use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
     /** @ORM\Column(type="string", nullable=true) */
     protected $header;
 
-    /** @ORM\Column(type="integer") */
-    protected $position = 0;
+    /** @ORM\ManyToOne(targetEntity="\App\Model\CMS\Page", inversedBy="contents", cascade={"persist", "remove"}) */
+    protected $page;
 
     /** @ORM\Column(type="string") */
     protected $area;
 
-    /** @ORM\ManyToOne(targetEntity="\App\Model\CMS\Page", inversedBy="contents", cascade={"persist"}) */
-    protected $page;
-
-    /**
-     * Content constructor.
-     * @param \Kdyby\Translation\Translator $translator
-     */
-    public function __construct(\Kdyby\Translation\Translator $translator)
-    {
-        $this->translator = $translator;
-    }
+    /** @ORM\Column(type="integer") */
+    protected $position = 0;
 
     /**
      * @return int
@@ -168,30 +153,5 @@ abstract class Content implements IContent
     public function setPage($page)
     {
         $this->page = $page;
-    }
-
-    public function getFormIdentificator()
-    {
-        return "{$this->content}_{$this->id}";
-    }
-
-    public function addFormItems(Form $form)
-    {
-        $formContainer = $form->addContainer($this->getFormIdentificator());
-        $formContainer->addHidden('id')->setDefaultValue($this->id)->getControlPrototype()->class('id');
-        $formContainer->addHidden('position')->getControlPrototype()->class('order');
-        $formContainer->addHidden('content')->setDefaultValue($this->content)->getControlPrototype()->class('content');
-        return $form;
-    }
-
-    public function setValuesFromPageForm(Form $form)
-    {
-        $values = $form->getValues();
-        $values = $values[$this->getFormIdentificator()];
-        $this->position = $values['position'];
-    }
-
-    public function getContentName() {
-        $this->translator->translate($this->content);
     }
 }

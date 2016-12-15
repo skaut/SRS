@@ -5,7 +5,8 @@ namespace App\Model\ACL;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="\App\Model\ACL\RoleRepository")
+ * @ORM\Entity(repositoryClass="RoleRepository")
+ * @ORM\Table(name="role")
  */
 class Role
 {
@@ -34,13 +35,13 @@ class Role
     /** @ORM\Column(type="string" unique=true) */
     protected $name;
 
-    /** @ORM\ManyToMany(targetEntity="\App\Model\User\User", mappedBy="roles", cascade={"persist"}) */
+    /** @ORM\ManyToMany(targetEntity="\App\Model\User\User", mappedBy="roles", cascade={"persist", "remove"}) */
     protected $users;
 
-    /** @ORM\ManyToMany(targetEntity="\App\Model\ACL\Permission", inversedBy="roles", cascade={"persist"}) */
+    /** @ORM\ManyToMany(targetEntity="Permission", inversedBy="roles", cascade={"persist", "remove"}) */
     protected $permissions;
 
-    /** @ORM\ManyToMany(targetEntity="\App\Model\CMS\Page", mappedBy="roles", cascade={"persist"}) */
+    /** @ORM\ManyToMany(targetEntity="\App\Model\CMS\Page", mappedBy="roles", cascade={"persist", "remove"}) */
     protected $pages;
 
     /**
@@ -83,7 +84,7 @@ class Role
     protected $syncedWithSkautIS = true;
 
     /**
-     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role")
+     * @ORM\ManyToMany(targetEntity="Role")
      * @ORM\JoinTable(name="role_role_incompatible",
      *      joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="incompatible_role_id", referencedColumnName="id")}
@@ -91,11 +92,11 @@ class Role
      */
     protected $incompatibleRoles;
 
-    /** @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", mappedBy="requiredRoles") */
+    /** @ORM\ManyToMany(targetEntity="Role", mappedBy="requiredRoles", cascade={"persist", "remove"}) */
     protected $requiredByRole;
 
     /**
-     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="requiredByRole")
+     * @ORM\ManyToMany(targetEntity="Role", inversedBy="requiredByRole", cascade={"persist", "remove"})
      * @ORM\JoinTable(name="role_role_required",
      *      joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="required_role_id", referencedColumnName="id")}
@@ -103,7 +104,7 @@ class Role
      */
     protected $requiredRoles;
 
-    /** @ORM\ManyToMany(targetEntity="\App\Model\Program\Category", mappedBy="registerableRoles", cascade={"persist"}) */
+    /** @ORM\ManyToMany(targetEntity="\App\Model\Program\Category", mappedBy="registerableRoles", cascade={"persist", "remove"}) */
     protected $registerableCategories;
 
     /**
@@ -113,6 +114,13 @@ class Role
     public function __construct($name)
     {
         $this->name = $name;
+        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->permissions = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->pages = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->incompatibleRoles = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->requiredByRole = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->requiredRoles = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->registerableCategories = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**

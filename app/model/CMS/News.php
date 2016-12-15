@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="news")
  */
 class News
 {
@@ -17,6 +18,6 @@ class News
     /** @ORM\Column(type="date") */
     protected $published;
 
-    /** @ORM\ManyToOne(targetEntity="\SRS\model\User") */
+    /** @ORM\ManyToOne(targetEntity="\App\Model\User\User") */
     protected $author;
 }

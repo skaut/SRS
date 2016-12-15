@@ -7,31 +7,10 @@ use Nette\Application\UI\Form;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="document_content")
  */
-class DocumentContent extends Content implements IContent
+class DocumentContent extends Content
 {
-    protected $content = Content::DOCUMENT;
-
-    protected $tags; //TODO
-
-    /**
-     * Vytaha si sva data z formulare PageForm
-     * @param Form $form
-     * @return void
-     */
-    public function setValuesFromPageForm(Form $form)
-    {
-        parent::setValuesFromPageForm($form);
-    }
-
-    /**
-     * Prida do formulare prvky, ktere dany content pozaduje vcetne predvyplnenych defaultnich hodnot
-     * @param Form $form
-     * @return Form $form
-     */
-    public function addFormItems(Form $form)
-    {
-        parrent::addFormItems($form);
-        return $form;
-    }
+    /** @ORM\ManyToOne(targetEntity="\App\Model\CMS\Document\Tag") */
+    protected $tag;
 }

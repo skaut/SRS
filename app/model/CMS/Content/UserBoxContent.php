@@ -7,31 +7,15 @@ use Nette\Application\UI\Form;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="user_box_content")
  */
-class UserBoxContent extends Content implements IContent
+class UserBoxContent extends Content
 {
-    protected $content = Content::USER_BOX;
+    /** @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role") */
+    protected $roles;
 
-    protected $roles; //TODO
-
-    /**
-     * Vytaha si sva data z formulare PageForm
-     * @param Form $form
-     * @return void
-     */
-    public function setValuesFromPageForm(Form $form)
+    public function __construct()
     {
-        parent::setValuesFromPageForm($form);
-    }
-
-    /**
-     * Prida do formulare prvky, ktere dany content pozaduje vcetne predvyplnenych defaultnich hodnot
-     * @param Form $form
-     * @return Form $form
-     */
-    public function addFormItems(Form $form)
-    {
-        parrent::addFormItems($form);
-        return $form;
+        $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
     }
 }

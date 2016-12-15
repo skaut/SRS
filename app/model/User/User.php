@@ -5,7 +5,8 @@ namespace App\Model\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="UserRepository")
+ * @ORM\Table(name="user")
  */
 class User
 {
@@ -17,11 +18,11 @@ class User
     /** @ORM\Column(type="string") */
     protected $email;
 
-    /** @ORM\ManyToMany(targetEntity="Role", inversedBy="users", cascade={"persist"}) */
+    /** @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="users", cascade={"persist", "remove"}) */
     protected $roles;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Program", mappedBy="attendees", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="\App\Model\Program\Program", inversedBy="attendees", cascade={"persist", "remove"})
      * @ORM\OrderBy({"start" = "ASC"})
      */
     protected $programs;
@@ -134,13 +135,11 @@ class User
     /** @ORM\Column(type="text", nullable=true) */
     protected $note;
 
-    /**
-     * User constructor.
-     * @param $username
-     */
     public function __construct($username)
     {
         $this->username = $username;
+        $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->programs = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**

@@ -7,31 +7,10 @@ use Nette\Application\UI\Form;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="news_content")
  */
-class NewsContent extends Content implements IContent
+class NewsContent extends Content
 {
-    protected $content = Content::NEWS;
-
-    protected $count; //TODO
-
-    /**
-     * Vytaha si sva data z formulare PageForm
-     * @param Form $form
-     * @return void
-     */
-    public function setValuesFromPageForm(Form $form)
-    {
-        parent::setValuesFromPageForm($form);
-    }
-
-    /**
-     * Prida do formulare prvky, ktere dany content pozaduje vcetne predvyplnenych defaultnich hodnot
-     * @param Form $form
-     * @return Form $form
-     */
-    public function addFormItems(Form $form)
-    {
-        parrent::addFormItems($form);
-        return $form;
-    }
+    /** @ORM\Column(type="integer", nullable=true) */
+    protected $count;
 }

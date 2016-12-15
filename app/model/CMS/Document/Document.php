@@ -6,12 +6,15 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="document")
  */
 class Document
 {
+    const SAVE_PATH = '/files/documents/';
+
     use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
-    /** @ORM\ManyToMany(targetEntity="\App\Model\CMS\Document\Documents\Tag", inversedBy="documents", cascade={"persist"}) */
+    /** @ORM\ManyToMany(targetEntity="\App\Model\CMS\Document\Documents\Tag", inversedBy="documents", cascade={"persist", "remove"}) */
     protected $tags;
 
     /** @ORM\Column(type="string") */

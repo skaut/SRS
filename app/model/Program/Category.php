@@ -7,14 +7,15 @@ use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="category")
  */
 class Category
 {
     use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
     /**
-     * @ORM\OneToMany(targetEntity="\App\Model\Program\Block", mappedBy="room", cascade={"persist"}, onDelete="SET NULL")
-     * @JMS\Type("ArrayCollection<App\Model\Program\Block>")
+     * @ORM\OneToMany(targetEntity="Block", mappedBy="category", cascade={"persist", "remove"})
+     * @JMS\Type("ArrayCollection<Block>")
      * @JMS\Exclude
      */
     protected $blocks;
@@ -23,7 +24,13 @@ class Category
     protected $name;
 
     /**
-     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="registerableCategories", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="registerableCategories", cascade={"persist", "remove"})
      */
     protected $registerableRoles;
+
+    public function __construct()
+    {
+        $this->blocks = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->registerableRoles = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 }

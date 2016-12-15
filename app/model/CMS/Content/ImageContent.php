@@ -7,31 +7,19 @@ use Nette\Application\UI\Form;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="image_content")
  */
-class ImageContent extends Content implements IContent
+class ImageContent extends Content
 {
-    protected $content = Content::IMAGE;
+    /** @ORM\Column(type="string" nullable=true) */
+    protected $image;
 
-    protected $image; //TODO
+    /** @ORM\Column(type="string" nullable=true) */
+    protected $align;
 
-    /**
-     * Vytaha si sva data z formulare PageForm
-     * @param Form $form
-     * @return void
-     */
-    public function setValuesFromPageForm(Form $form)
-    {
-        parent::setValuesFromPageForm($form);
-    }
+    /** @ORM\Column(type="integer" nullable=true) */
+    protected $width;
 
-    /**
-     * Prida do formulare prvky, ktere dany content pozaduje vcetne predvyplnenych defaultnich hodnot
-     * @param Form $form
-     * @return Form $form
-     */
-    public function addFormItems(Form $form)
-    {
-        parrent::addFormItems($form);
-        return $form;
-    }
+    /** @ORM\Column(type="integer" nullable=true) */
+    protected $height;
 }

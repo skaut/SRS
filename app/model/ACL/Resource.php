@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="resource")
  */
 class Resource
 {
@@ -32,7 +33,7 @@ class Resource
     /** @ORM\Column(type="string" unique=true) */
     protected $name;
 
-    /** @ORM\OneToMany(targetEntity="Permission", mappedBy="resources", cascade={"persist"}) */
+    /** @ORM\OneToMany(targetEntity="\App\Model\ACL\Permission", mappedBy="resource", cascade={"persist", "remove"}) */
     protected $permissions;
 
     /**
@@ -42,6 +43,7 @@ class Resource
     public function __construct($name)
     {
         $this->name = $name;
+        $this->permissions = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**

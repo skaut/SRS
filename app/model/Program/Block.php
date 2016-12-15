@@ -7,6 +7,7 @@ use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="block")
  * @JMS\ExclusionPolicy("none")
  */
 class Block
@@ -21,8 +22,8 @@ class Block
     protected $lector;
 
     /**
-     * @ORM\OneToMany(targetEntity="\App\Model\Program\Program", mappedBy="block", cascade={"persist"}, orphanRemoval=true)
-     * @JMS\Type("ArrayCollection<App\Model\Program\Program>")
+     * @ORM\OneToMany(targetEntity="Program", mappedBy="block", cascade={"persist", "remove"})
+     * @JMS\Type("ArrayCollection<Program>")
      * @JMS\Exclude
      */
     protected $programs;
@@ -46,8 +47,8 @@ class Block
     protected $tools;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\App\Model\Program\Category")
-     * @JMS\Type("App\Model\Program\Category")
+     * @ORM\ManyToOne(targetEntity="Category", inversedBy="blocks", cascade={"persist", "remove"})
+     * @JMS\Type("Category")
      * @JMS\Exclude
      */
     protected $category;
@@ -63,4 +64,9 @@ class Block
 
     /** @ORM\Column(type="text", nullable=true) */
     protected $description;
+
+    public function __construct()
+    {
+        $this->programs = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 }
