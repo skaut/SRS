@@ -2,6 +2,7 @@
 
 namespace App\Model\CMS\Content;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -10,9 +11,15 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CapacityBoxContent extends Content
 {
-    /** @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role") */
+    /**
+     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role")
+     * @var ArrayCollection
+     */
     protected $roles;
 
+    /**
+     * CapacityBoxContent constructor.
+     */
     public function __construct()
     {
         $this->roles = new \Doctrine\Common\Collections\ArrayCollection();

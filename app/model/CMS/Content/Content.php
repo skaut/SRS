@@ -2,6 +2,7 @@
 
 namespace App\Model\CMS\Content;
 
+use App\Model\CMS\Page;
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
 
@@ -62,95 +63,42 @@ abstract class Content
 
     use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
-    /** @ORM\Column(type="string", nullable=true) */
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     * @var string
+     */
     protected $header;
 
-    /** @ORM\ManyToOne(targetEntity="\App\Model\CMS\Page", inversedBy="contents", cascade={"persist"}) */
+    /**
+     * @ORM\ManyToOne(targetEntity="\App\Model\CMS\Page", inversedBy="contents", cascade={"persist"})
+     * @var Page
+     */
     protected $page;
 
-    /** @ORM\Column(type="string") */
+    /**
+     * @ORM\Column(type="string")
+     * @var string
+     */
     protected $area;
 
-    /** @ORM\Column(type="integer") */
+    /**
+     * @ORM\Column(type="integer")
+     * @var int
+     */
     protected $position = 0;
 
     /**
-     * @return int
+     * Content constructor.
+     * @param string $header
+     * @param Page $page
+     * @param string $area
+     * @param int $position
      */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getHeader()
-    {
-        return $this->header;
-    }
-
-    /**
-     * @param mixed $header
-     */
-    public function setHeader($header)
+    public function __construct($header, Page $page, $area, $position)
     {
         $this->header = $header;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPosition()
-    {
-        return $this->position;
-    }
-
-    /**
-     * @param mixed $position
-     */
-    public function setPosition($position)
-    {
-        $this->position = $position;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getArea()
-    {
-        return $this->area;
-    }
-
-    /**
-     * @param mixed $area
-     */
-    public function setArea($area)
-    {
-        $this->area = $area;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPage()
-    {
-        return $this->page;
-    }
-
-    /**
-     * @param mixed $page
-     */
-    public function setPage($page)
-    {
         $this->page = $page;
+        $this->area = $area;
+        $this->position = $position;
     }
 }

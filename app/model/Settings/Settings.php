@@ -13,16 +13,20 @@ class Settings
     /**
      * @ORM\Column(type="string", unique=true)
      * @ORM\Id
+     * @var string
      */
     protected $item;
 
-    /** @ORM\Column(type="string", nullable=true) */
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     * @var string
+     */
     protected $value;
 
     /**
      * Settings constructor.
-     * @param $item
-     * @param $value
+     * @param string $item
+     * @param string $value
      */
     public function __construct($item, $value)
     {
@@ -31,7 +35,7 @@ class Settings
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getItem()
     {
@@ -39,7 +43,7 @@ class Settings
     }
 
     /**
-     * @param mixed $item
+     * @param string $item
      */
     public function setItem($item)
     {
@@ -47,7 +51,7 @@ class Settings
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getValue()
     {
@@ -55,7 +59,7 @@ class Settings
     }
 
     /**
-     * @param mixed $value
+     * @param string $value
      */
     public function setValue($value)
     {

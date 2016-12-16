@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Commands\Init;
+namespace App\Commands;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\AbstractFixture;
@@ -22,7 +22,7 @@ class ResourceFixture extends AbstractFixture
         $manager->flush();
 
         foreach ($resources as $key => $value) {
-            $this->addReference($key, $value);
+            $this->addReference("resource_" . $key, $value);
         }
     }
 }

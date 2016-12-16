@@ -11,6 +11,9 @@ use Nette\Application\UI\Form;
  */
 class NewsContent extends Content
 {
-    /** @ORM\Column(type="integer", nullable=true) */
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     * @var int
+     */
     protected $count;
 }

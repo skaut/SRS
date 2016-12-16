@@ -1,13 +1,10 @@
 <?php
 
-namespace App\Commands\Init;
+namespace App\Commands;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use Nette\Security\Passwords;
-use App\Model\ACL\Role;
-use App\Model\ACL\Resource;
 use App\Model\ACL\Permission;
 
 class PermissionFixture extends AbstractFixture implements DependentFixtureInterface
@@ -44,6 +41,6 @@ class PermissionFixture extends AbstractFixture implements DependentFixtureInter
      */
     function getDependencies()
     {
-        return array('ResourceFixture');
+        return array('App\Commands\ResourceFixture');
     }
 }

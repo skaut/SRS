@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Commands\Init;
+namespace App\Commands;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\AbstractFixture;
@@ -10,9 +10,15 @@ use App\Model\Settings\Settings;
 
 class SettingsFixture extends AbstractFixture
 {
-    public $translator;
+    /**
+     * @var \Kdyby\Translation\Translator
+     */
+    private $translator;
 
-    public $configFacade;
+    /**
+     * @var \App\ConfigFacade
+     */
+    private $configFacade;
 
     /**
      * SettingsFixture constructor.

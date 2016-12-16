@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Commands\Init;
+namespace App\Commands;
 
 use App\Model\ACL\Role;
 use App\Model\CMS\Content\Content;
@@ -15,22 +15,20 @@ class CMSFixture extends AbstractFixture implements DependentFixtureInterface
     public function load(ObjectManager $manager)
     {
         $homepage = new Page('Homepage', '/');
-        $homepage->position = 0;
-        $homepage->public = true;
+        $homepage->setPosition(0);
+        $homepage->setPublic(true);
 
         foreach (Role::$roles as $role) {
-            $homepage->roles->add($this->getReference($role));
+            $homepage->addRole($this->getReference($role));
         }
 
         $manager->persist($homepage);
         $this->addReference('homepage', $homepage);
 
-        $textContent = new TextContent();
-        $textContent->page = $this->getReference('homepage');
-        $textContent->position = 0;
-        $textContent->area = Content::MAIN;
-        $textContent->text = "<h2>Úspěšně jste nainstalovali SRS. Gratulujeme!</h2>";
-        $textContent->text = "<p>Obsah této stránky můžeme změnit v administraci v sekci CMS.</p>";
+        $textContent = new TextContent(null, $this->getReference('homepage'), Content::MAIN, 0,
+            "<h2>Úspěšně jste nainstalovali SRS. Gratulujeme!</h2>" .
+            "<p>Obsah této stránky můžeme změnit v administraci v sekci CMS.</p>"
+        );
 
         $manager->persist($textContent);
         $manager->flush();
@@ -41,6 +39,6 @@ class CMSFixture extends AbstractFixture implements DependentFixtureInterface
      */
     function getDependencies()
     {
-        return array('RoleFixture');
+        return array('App\Commands\RoleFixture');
     }
 }

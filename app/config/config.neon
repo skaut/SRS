@@ -10,6 +10,9 @@ extensions:
     console: Kdyby\Console\DI\ConsoleExtension
     events: Kdyby\Events\DI\EventsExtension
     annotations: Kdyby\Annotations\DI\AnnotationsExtension
+    - Arachne\ContainerAdapter\DI\ContainerAdapterExtension
+    - Arachne\EventDispatcher\DI\EventDispatcherExtension
+    migrations: Zenify\DoctrineMigrations\DI\MigrationsExtension
     doctrine: Kdyby\Doctrine\DI\OrmExtension
     webloader: WebLoader\Nette\Extension
     skautis: Skautis\Nette\SkautisExtension
@@ -28,6 +31,14 @@ doctrine:
     metadata:
         App: %appDir%
 
+migrations:
+    table: doctrine_migrations # database table for applied migrations
+    column: version # database column for applied migrations
+    directory: %appDir%/../migrations # directory, where all migrations are stored
+    namespace: Migrations # namespace of migration classes
+    codingStandard: tabs # or "spaces", coding style for generated classes
+    versionsOrganization: null # null, "year" or "year_and_month", organizes migrations to subdirectories
+
 skautis:
     applicationId: %skautIS.appId%
     testMode: $skautIS.test%
@@ -35,17 +46,13 @@ skautis:
 services:
     - App\RouterFactory
     router: @App\RouterFactory::createRouter
+    - App\ConfigFacade
     - App\Model\CMS\PageRepository
     - App\Model\User\UserRepository
     - App\Model\Settings\SettingsRepository
     - App\InstallModule\Forms\BaseFormFactory
     - App\InstallModule\Forms\DatabaseFormFactory
     - App\InstallModule\Forms\SkautISFormFactory
-    - App\ConfigFacade
-
-console:
-    commands:
-        - App\Commands\LoadInitData
 
 webloader:
     css:

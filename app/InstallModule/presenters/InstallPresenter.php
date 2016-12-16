@@ -2,7 +2,8 @@
 
 namespace App\InstallModule\Presenters;
 
-use App\Commands\LoadInitDataCommand;
+use App\Commands\InitDataCommand;
+use Doctrine\ORM\Tools\Console\Command\SchemaTool\CreateCommand;
 use Nette\Application\UI;
 use Symfony\Component\Console\Input\ArrayInput;
 use Kdyby\Console\StringOutput;
@@ -49,8 +50,6 @@ class InstallPresenter extends InstallBasePresenter //TODO
             $this->flashMessage('Připojení k databázi již bylo nakonfigurováno');
             $this->redirect('schema');
         }
-
-
     }
 
     public function renderSchema()
@@ -68,17 +67,32 @@ class InstallPresenter extends InstallBasePresenter //TODO
     }
 
     public function handleImportSchema() {
-        $input = new ArrayInput([ //TODO
-            'command' => 'orm:schema-tool:create'
-        ]);
+        $this->application->add(new CreateCommand());
+        $this->application->add(new InitDataCommand());
+
         $output = new StringOutput;
-        $this->application->run($input, $output);
 
         $input = new ArrayInput([
-            'command' => 'orm:init-data:load'
+            'command' => 'orm:schema-tool:create'
         ]);
-        $output = new StringOutput;
         $this->application->run($input, $output);
+
+        if ($output->getOutput() != "") {
+            $this->flashMessage("Databazi se nepodarilo vytvorit"); //TODO
+            return;
+        }
+
+        $input = new ArrayInput([
+            'command' => 'app:init-data:load'
+        ]);
+        $this->application->run($input, $output);
+
+        if ($output->getOutput() != "") {
+            $this->flashMessage("Databazi se nepodarilo inicializovat"); //TODO
+            return;
+        }
+
+        $this->redirect('skautIS');
     }
 
     public function renderSkautIS()

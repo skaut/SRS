@@ -2,6 +2,7 @@
 
 namespace App\Model\CMS;
 
+use App\Model\User\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -12,12 +13,21 @@ class News
 {
     use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
-    /** @ORM\Column(type="text") */
+    /**
+     * @ORM\Column(type="text")
+     * @var string
+     */
     protected $text;
 
-    /** @ORM\Column(type="date") */
+    /**
+     * @ORM\Column(type="date")
+     * @var \DateTime
+     */
     protected $published;
 
-    /** @ORM\ManyToOne(targetEntity="\App\Model\User\User", cascade={"persist"}) */
+    /**
+     * @ORM\ManyToOne(targetEntity="\App\Model\User\User", cascade={"persist"})
+     * @var User
+     */
     protected $author;
 }

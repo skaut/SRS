@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Commands\Init;
+namespace App\Commands;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\AbstractFixture;
@@ -21,58 +21,58 @@ class RoleFixture extends AbstractFixture implements DependentFixtureInterface
         }
 
         $guest = $roles[Role::GUEST];
-        $guest->registerable = false;
-        $guest->syncedWithSkautIS = false;
+        $guest->setRegisterable(false);
+        $guest->setSyncedWithSkautIS(false);
 
         $unregistered = $roles[Role::UNREGISTERED];
-        $unregistered->registerable = false;
-        $unregistered->syncedWithSkautIS = false;
+        $unregistered->setRegisterable(false);
+        $unregistered->setSyncedWithSkautIS(false);
 
         $unapproved = $roles[Role::UNAPPROVED];
-        $unapproved->registerable = false;
-        $unapproved->syncedWithSkautIS = false;
+        $unapproved->setRegisterable(false);
+        $unapproved->setSyncedWithSkautIS(false);
 
         $attendee = $roles[Role::ATTENDEE];
-        $attendee->approvedAfterRegistration = true;
-        $attendee->permissions->add($this->getReference('program_choose_programs'));
+        $attendee->setApprovedAfterRegistration(true);
+        $attendee->addPermission($this->getReference('program_choose_programs'));
 
         $serviceTeam = $roles[Role::SERVICE_TEAM];
-        $serviceTeam->permissions->add($this->getReference('admin_access'));
-        $serviceTeam->permissions->add($this->getReference('program_access'));
+        $serviceTeam->addPermission($this->getReference('admin_access'));
+        $serviceTeam->addPermission($this->getReference('program_access'));
 
         $lector = $roles[Role::LECTOR];
-        $lector->permissions->add($this->getReference('admin_access'));
-        $lector->permissions->add($this->getReference('program_access'));
-        $lector->permissions->add($this->getReference('program_manage_own_programs'));
+        $lector->addPermission($this->getReference('admin_access'));
+        $lector->addPermission($this->getReference('program_access'));
+        $lector->addPermission($this->getReference('program_manage_own_programs'));
 
         $organizer = $roles[Role::ORGANIZER];
-        $organizer->permissions->add($this->getReference('admin_access'));
-        $organizer->permissions->add($this->getReference('acl_manage'));
-        $organizer->permissions->add($this->getReference('cms_manage'));
-        $organizer->permissions->add($this->getReference('configuration_manage'));
-        $organizer->permissions->add($this->getReference('program_access'));
-        $organizer->permissions->add($this->getReference('program_manage_all_programs'));
-        $organizer->permissions->add($this->getReference('program_manage_harmonogram'));
-        $organizer->permissions->add($this->getReference('program_manage_rooms'));
-        $organizer->permissions->add($this->getReference('program_manage_categories'));
-        $organizer->permissions->add($this->getReference('program_choose_programs'));
-        $organizer->permissions->add($this->getReference('evidence_manage'));
-        $organizer->permissions->add($this->getReference('mailing_manage'));
+        $organizer->addPermission($this->getReference('admin_access'));
+        $organizer->addPermission($this->getReference('acl_manage'));
+        $organizer->addPermission($this->getReference('cms_manage'));
+        $organizer->addPermission($this->getReference('configuration_manage'));
+        $organizer->addPermission($this->getReference('program_access'));
+        $organizer->addPermission($this->getReference('program_manage_all_programs'));
+        $organizer->addPermission($this->getReference('program_manage_harmonogram'));
+        $organizer->addPermission($this->getReference('program_manage_rooms'));
+        $organizer->addPermission($this->getReference('program_manage_categories'));
+        $organizer->addPermission($this->getReference('program_choose_programs'));
+        $organizer->addPermission($this->getReference('evidence_manage'));
+        $organizer->addPermission($this->getReference('mailing_manage'));
 
         $admin = $roles[Role::ADMIN];
-        $admin->registerable = false;
-        $admin->permissions->add($this->getReference('admin_access'));
-        $admin->permissions->add($this->getReference('acl_manage'));
-        $admin->permissions->add($this->getReference('cms_manage'));
-        $admin->permissions->add($this->getReference('configuration_manage'));
-        $admin->permissions->add($this->getReference('program_access'));
-        $admin->permissions->add($this->getReference('program_manage_all_programs'));
-        $admin->permissions->add($this->getReference('program_manage_harmonogram'));
-        $admin->permissions->add($this->getReference('program_manage_rooms'));
-        $admin->permissions->add($this->getReference('program_manage_categories'));
-        $admin->permissions->add($this->getReference('program_choose_programs'));
-        $admin->permissions->add($this->getReference('evidence_manage'));
-        $admin->permissions->add($this->getReference('mailing_manage'));
+        $admin->setRegisterable(false);
+        $admin->addPermission($this->getReference('admin_access'));
+        $admin->addPermission($this->getReference('acl_manage'));
+        $admin->addPermission($this->getReference('cms_manage'));
+        $admin->addPermission($this->getReference('configuration_manage'));
+        $admin->addPermission($this->getReference('program_access'));
+        $admin->addPermission($this->getReference('program_manage_all_programs'));
+        $admin->addPermission($this->getReference('program_manage_harmonogram'));
+        $admin->addPermission($this->getReference('program_manage_rooms'));
+        $admin->addPermission($this->getReference('program_manage_categories'));
+        $admin->addPermission($this->getReference('program_choose_programs'));
+        $admin->addPermission($this->getReference('evidence_manage'));
+        $admin->addPermission($this->getReference('mailing_manage'));
 
         foreach ($roles as $key => $value) {
             $manager->persist($value);
@@ -89,6 +89,6 @@ class RoleFixture extends AbstractFixture implements DependentFixtureInterface
      */
     function getDependencies()
     {
-        return array('PermissionFixture');
+        return array('App\Commands\PermissionFixture');
     }
 }

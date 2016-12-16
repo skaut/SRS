@@ -2,6 +2,7 @@
 
 namespace App\Model\CMS\Content;
 
+use App\Model\CMS\Document\Tag;
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
 
@@ -11,6 +12,9 @@ use Nette\Application\UI\Form;
  */
 class DocumentContent extends Content
 {
-    /** @ORM\ManyToOne(targetEntity="\App\Model\CMS\Document\Tag", cascade={"persist"}) */
+    /**
+     * @ORM\ManyToOne(targetEntity="\App\Model\CMS\Document\Tag", cascade={"persist"})
+     * @var Tag
+     */
     protected $tag;
 }

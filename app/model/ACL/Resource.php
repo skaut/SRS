@@ -2,6 +2,7 @@
 
 namespace App\Model\ACL;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -30,10 +31,16 @@ class Resource
 
     use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
-    /** @ORM\Column(type="string", unique=true) */
+    /**
+     * @ORM\Column(type="string", unique=true)
+     * @var string
+     */
     protected $name;
 
-    /** @ORM\OneToMany(targetEntity="\App\Model\ACL\Permission", mappedBy="resource", cascade={"persist"}) */
+    /**
+     * @ORM\OneToMany(targetEntity="\App\Model\ACL\Permission", mappedBy="resource", cascade={"persist"})
+     * @var ArrayCollection
+     */
     protected $permissions;
 
     /**
@@ -55,31 +62,7 @@ class Resource
     }
 
     /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @return array
-     */
-    public static function getResources()
-    {
-        return self::$resources;
-    }
-
-    /**
-     * @param array $resources
-     */
-    public static function setResources($resources)
-    {
-        self::$resources = $resources;
-    }
-
-    /**
-     * @return mixed
+     * @return string
      */
     public function getName()
     {
@@ -87,7 +70,7 @@ class Resource
     }
 
     /**
-     * @param mixed $name
+     * @param string $name
      */
     public function setName($name)
     {
@@ -95,7 +78,7 @@ class Resource
     }
 
     /**
-     * @return mixed
+     * @return ArrayCollection
      */
     public function getPermissions()
     {
@@ -103,7 +86,7 @@ class Resource
     }
 
     /**
-     * @param mixed $permissions
+     * @param ArrayCollection $permissions
      */
     public function setPermissions($permissions)
     {

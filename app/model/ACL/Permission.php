@@ -2,6 +2,7 @@
 
 namespace App\Model\ACL;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -30,13 +31,22 @@ class Permission
 
     use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
-    /** @ORM\Column(type="string") */
+    /**
+     * @ORM\Column(type="string")
+     * @var string
+     */
     protected $name;
 
-    /** @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", mappedBy="permissions", cascade={"persist"}) */
+    /**
+     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", mappedBy="permissions", cascade={"persist"})
+     * @var ArrayCollection
+     */
     protected $roles;
 
-    /** @ORM\ManyToOne(targetEntity="\App\Model\ACL\Resource", inversedBy="permissions", cascade={"persist"}) */
+    /**
+     * @ORM\ManyToOne(targetEntity="\App\Model\ACL\Resource", inversedBy="permissions", cascade={"persist"})
+     * @var Resource
+     */
     protected $resource;
 
     /**
@@ -60,15 +70,7 @@ class Permission
     }
 
     /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @return mixed
+     * @return string
      */
     public function getName()
     {
@@ -76,7 +78,7 @@ class Permission
     }
 
     /**
-     * @param mixed $name
+     * @param string $name
      */
     public function setName($name)
     {
@@ -84,7 +86,7 @@ class Permission
     }
 
     /**
-     * @return mixed
+     * @return ArrayCollection
      */
     public function getRoles()
     {
@@ -92,7 +94,7 @@ class Permission
     }
 
     /**
-     * @param mixed $roles
+     * @param ArrayCollection $roles
      */
     public function setRoles($roles)
     {
@@ -100,7 +102,7 @@ class Permission
     }
 
     /**
-     * @return mixed
+     * @return ArrayCollection
      */
     public function getResource()
     {
@@ -108,7 +110,7 @@ class Permission
     }
 
     /**
-     * @param mixed $resource
+     * @param ArrayCollection $resource
      */
     public function setResource($resource)
     {

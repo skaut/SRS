@@ -2,6 +2,7 @@
 
 namespace App\Model\User;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -12,129 +13,245 @@ class User
 {
     use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
-    /** @ORM\Column(type="string", unique=true) */
+    /**
+     * @ORM\Column(type="string", unique=true)
+     * @var string
+     */
     protected $username;
 
-    /** @ORM\Column(type="string") */
+    /**
+     * @ORM\Column(type="string")
+     * @var string
+     */
     protected $email;
 
-    /** @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="users", cascade={"persist"}) */
+    /**
+     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="users", cascade={"persist"})
+     * @var ArrayCollection
+     */
     protected $roles;
 
     /**
      * @ORM\ManyToMany(targetEntity="\App\Model\Program\Program", inversedBy="attendees", cascade={"persist"})
      * @ORM\OrderBy({"start" = "ASC"})
+     * @var ArrayCollection
      */
     protected $programs;
 
-    /** @ORM\Column(type="boolean") */
-    protected $approved = True;
+    /**
+     * @ORM\Column(type="boolean")
+     * @var bool
+     */
+    protected $approved = true;
 
-    /** @ORM\Column(type="string") */
+    /**
+     * @ORM\Column(type="string")
+     * @var string
+     */
     protected $firstName;
 
-    /** @ORM\Column(type="string") */
+    /**
+     * @ORM\Column(type="string")
+     * @var string
+     */
     protected $lastName;
 
-    /** @ORM\Column(type="string", nullable=true) */
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     * @var string
+     */
     protected $nickName;
 
-    /** @ORM\Column(type="string") */
-    protected $displayName;
-
-    /** @ORM\Column(type="string", nullable=true) */
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     * @var string
+     */
     protected $securityCode;
 
-    /** @ORM\Column(type="boolean") */
+    /**
+     * @ORM\Column(type="boolean")
+     * @var bool
+     */
     protected $member = false;
 
-    /** @ORM\Column(type="string", nullable=true) */
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     * @var string
+     */
     protected $unit;
 
-    /** @ORM\Column(type="string", nullable=true) */
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     * @var string
+     */
     protected $sex;
 
-    /** @ORM\Column(type="date") */
+    /**
+     * @ORM\Column(type="date")
+     * @var \DateTime
+     */
     protected $birthdate;
 
-    /** @ORM\Column(type="integer", unique=true) */
+    /**
+     * @ORM\Column(type="integer", unique=true)
+     * @var int
+     */
     protected $skautISUserId;
 
-    /** @ORM\Column(type="integer", unique=true) */
+    /**
+     * @ORM\Column(type="integer", unique=true)
+     * @var int
+     */
     protected $skautISPersonId;
 
-    /** @ORM\Column(type="datetime", nullable=true) */
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     * @var \DateTime
+     */
     protected $firstLogin;
 
-    /** @ORM\Column(type="datetime", nullable=true) */
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     * @var \DateTime
+     */
     protected $lastLogin;
 
-    /** @ORM\Column(type="text", nullable=true) */
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     * @var string
+     */
     protected $about;
 
-    /** @ORM\Column(type="string", nullable=true) */
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     * @var string
+     */
     protected $street;
 
-    /** @ORM\Column(type="string", nullable=true) */
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     * @var string
+     */
     protected $city;
 
-    /** @ORM\Column(type="string", nullable=true) */
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     * @var string
+     */
     protected $postcode;
 
-    /** @ORM\Column(type="string", nullable=true) */
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     * @var string
+     */
     protected $state;
 
-    /** @ORM\Column(type="string", nullable=true) */
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     * @var string
+     */
     protected $paymentMethod;
 
-    /** @ORM\Column(type="date", nullable=true) */
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     * @var \DateTime
+     */
     protected $paymentDate;
 
-    /** @ORM\Column(type="string", nullable=true) */
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     * @var string
+     */
     protected $variableSymbol;
 
-    /** @ORM\Column(type="boolean") */
+    /**
+     * @ORM\Column(type="boolean")
+     * @var bool
+     */
     protected $attended = false;
 
-    /** @ORM\Column(type="datetime", nullable=true) */
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     * @var \DateTime
+     */
     protected $arrival;
 
-    /** @ORM\Column(type="datetime", nullable=true) */
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     * @var \DateTime
+     */
     protected $departure;
 
-    /** @ORM\Column(type="string", nullable=true) */
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     * @var string
+     */
     protected $membershipType;
 
-    /** @ORM\Column(type="string", nullable=true) */
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     * @var string
+     */
     protected $membershipCategory;
 
-    /** @ORM\Column(type="date", nullable=true) */
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     * @var \DateTime
+     */
     protected $incomeProofPrintedDate;
 
-    /** @ORM\Column(type="boolean") */
+    /**
+     * @ORM\Column(type="boolean")
+     * @var bool
+     */
     protected $customBoolean0 = false;
 
-    /** @ORM\Column(type="boolean") */
+    /**
+     * @ORM\Column(type="boolean")
+     * @var bool
+     */
     protected $customBoolean1 = false;
 
-    /** @ORM\Column(type="boolean") */
+    /**
+     * @ORM\Column(type="boolean")
+     * @var bool
+     */
     protected $customBoolean2 = false;
 
-    /** @ORM\Column(type="boolean") */
+    /**
+     * @ORM\Column(type="boolean")
+     * @var bool
+     */
     protected $customBoolean3 = false;
 
-    /** @ORM\Column(type="boolean") */
+    /**
+     * @ORM\Column(type="boolean")
+     * @var bool
+     */
     protected $customBoolean4 = false;
 
-    /** @ORM\Column(type="text", nullable=true) */
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     * @var string
+     */
     protected $customText0;
 
-    /** @ORM\Column(type="text", nullable=true) */
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     * @var string
+     */
     protected $customText1;
 
-    /** @ORM\Column(type="text", nullable=true) */
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     * @var string
+     */
     protected $note;
 
+    /**
+     * User constructor.
+     * @param string $username
+     */
     public function __construct($username)
     {
         $this->username = $username;
@@ -159,7 +276,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getUsername()
     {
@@ -167,7 +284,7 @@ class User
     }
 
     /**
-     * @param mixed $username
+     * @param string $username
      */
     public function setUsername($username)
     {
@@ -175,7 +292,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getEmail()
     {
@@ -183,7 +300,7 @@ class User
     }
 
     /**
-     * @param mixed $email
+     * @param string $email
      */
     public function setEmail($email)
     {
@@ -191,7 +308,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return ArrayCollection
      */
     public function getRoles()
     {
@@ -199,7 +316,7 @@ class User
     }
 
     /**
-     * @param mixed $roles
+     * @param ArrayCollection $roles
      */
     public function setRoles($roles)
     {
@@ -207,7 +324,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return ArrayCollection
      */
     public function getPrograms()
     {
@@ -215,7 +332,7 @@ class User
     }
 
     /**
-     * @param mixed $programs
+     * @param ArrayCollection $programs
      */
     public function setPrograms($programs)
     {
@@ -223,15 +340,15 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function getApproved()
+    public function isApproved()
     {
         return $this->approved;
     }
 
     /**
-     * @param mixed $approved
+     * @param bool $approved
      */
     public function setApproved($approved)
     {
@@ -239,7 +356,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getFirstName()
     {
@@ -247,7 +364,7 @@ class User
     }
 
     /**
-     * @param mixed $firstName
+     * @param string $firstName
      */
     public function setFirstName($firstName)
     {
@@ -255,7 +372,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getLastName()
     {
@@ -263,7 +380,7 @@ class User
     }
 
     /**
-     * @param mixed $lastName
+     * @param string $lastName
      */
     public function setLastName($lastName)
     {
@@ -271,7 +388,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getNickName()
     {
@@ -279,7 +396,7 @@ class User
     }
 
     /**
-     * @param mixed $nickName
+     * @param string $nickName
      */
     public function setNickName($nickName)
     {
@@ -287,23 +404,7 @@ class User
     }
 
     /**
-     * @return mixed
-     */
-    public function getDisplayName()
-    {
-        return $this->displayName;
-    }
-
-    /**
-     * @param mixed $displayName
-     */
-    public function setDisplayName($displayName)
-    {
-        $this->displayName = $displayName;
-    }
-
-    /**
-     * @return mixed
+     * @return string
      */
     public function getSecurityCode()
     {
@@ -311,7 +412,7 @@ class User
     }
 
     /**
-     * @param mixed $securityCode
+     * @param string $securityCode
      */
     public function setSecurityCode($securityCode)
     {
@@ -319,15 +420,15 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function getMember()
+    public function isMember()
     {
         return $this->member;
     }
 
     /**
-     * @param mixed $member
+     * @param bool $member
      */
     public function setMember($member)
     {
@@ -335,7 +436,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getUnit()
     {
@@ -343,7 +444,7 @@ class User
     }
 
     /**
-     * @param mixed $unit
+     * @param string $unit
      */
     public function setUnit($unit)
     {
@@ -351,7 +452,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getSex()
     {
@@ -359,7 +460,7 @@ class User
     }
 
     /**
-     * @param mixed $sex
+     * @param string $sex
      */
     public function setSex($sex)
     {
@@ -367,7 +468,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return \DateTime
      */
     public function getBirthdate()
     {
@@ -375,7 +476,7 @@ class User
     }
 
     /**
-     * @param mixed $birthdate
+     * @param \DateTime $birthdate
      */
     public function setBirthdate($birthdate)
     {
@@ -383,7 +484,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getSkautISUserId()
     {
@@ -391,7 +492,7 @@ class User
     }
 
     /**
-     * @param mixed $skautISUserId
+     * @param int $skautISUserId
      */
     public function setSkautISUserId($skautISUserId)
     {
@@ -399,7 +500,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getSkautISPersonId()
     {
@@ -407,7 +508,7 @@ class User
     }
 
     /**
-     * @param mixed $skautISPersonId
+     * @param int $skautISPersonId
      */
     public function setSkautISPersonId($skautISPersonId)
     {
@@ -415,7 +516,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return \DateTime
      */
     public function getFirstLogin()
     {
@@ -423,7 +524,7 @@ class User
     }
 
     /**
-     * @param mixed $firstLogin
+     * @param \DateTime $firstLogin
      */
     public function setFirstLogin($firstLogin)
     {
@@ -431,7 +532,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return \DateTime
      */
     public function getLastLogin()
     {
@@ -439,7 +540,7 @@ class User
     }
 
     /**
-     * @param mixed $lastLogin
+     * @param \DateTime $lastLogin
      */
     public function setLastLogin($lastLogin)
     {
@@ -447,7 +548,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getAbout()
     {
@@ -455,7 +556,7 @@ class User
     }
 
     /**
-     * @param mixed $about
+     * @param string $about
      */
     public function setAbout($about)
     {
@@ -463,7 +564,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getStreet()
     {
@@ -471,7 +572,7 @@ class User
     }
 
     /**
-     * @param mixed $street
+     * @param string $street
      */
     public function setStreet($street)
     {
@@ -479,7 +580,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getCity()
     {
@@ -487,7 +588,7 @@ class User
     }
 
     /**
-     * @param mixed $city
+     * @param string $city
      */
     public function setCity($city)
     {
@@ -495,7 +596,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getPostcode()
     {
@@ -503,7 +604,7 @@ class User
     }
 
     /**
-     * @param mixed $postcode
+     * @param string $postcode
      */
     public function setPostcode($postcode)
     {
@@ -511,7 +612,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getState()
     {
@@ -519,7 +620,7 @@ class User
     }
 
     /**
-     * @param mixed $state
+     * @param string $state
      */
     public function setState($state)
     {
@@ -527,7 +628,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getPaymentMethod()
     {
@@ -535,7 +636,7 @@ class User
     }
 
     /**
-     * @param mixed $paymentMethod
+     * @param string $paymentMethod
      */
     public function setPaymentMethod($paymentMethod)
     {
@@ -543,7 +644,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return \DateTime
      */
     public function getPaymentDate()
     {
@@ -551,7 +652,7 @@ class User
     }
 
     /**
-     * @param mixed $paymentDate
+     * @param \DateTime $paymentDate
      */
     public function setPaymentDate($paymentDate)
     {
@@ -559,7 +660,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getVariableSymbol()
     {
@@ -567,7 +668,7 @@ class User
     }
 
     /**
-     * @param mixed $variableSymbol
+     * @param string $variableSymbol
      */
     public function setVariableSymbol($variableSymbol)
     {
@@ -575,15 +676,15 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function getAttended()
+    public function isAttended()
     {
         return $this->attended;
     }
 
     /**
-     * @param mixed $attended
+     * @param bool $attended
      */
     public function setAttended($attended)
     {
@@ -591,7 +692,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return \DateTime
      */
     public function getArrival()
     {
@@ -599,7 +700,7 @@ class User
     }
 
     /**
-     * @param mixed $arrival
+     * @param \DateTime $arrival
      */
     public function setArrival($arrival)
     {
@@ -607,7 +708,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return \DateTime
      */
     public function getDeparture()
     {
@@ -615,7 +716,7 @@ class User
     }
 
     /**
-     * @param mixed $departure
+     * @param \DateTime $departure
      */
     public function setDeparture($departure)
     {
@@ -623,7 +724,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getMembershipType()
     {
@@ -631,7 +732,7 @@ class User
     }
 
     /**
-     * @param mixed $membershipType
+     * @param string $membershipType
      */
     public function setMembershipType($membershipType)
     {
@@ -639,7 +740,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getMembershipCategory()
     {
@@ -647,7 +748,7 @@ class User
     }
 
     /**
-     * @param mixed $membershipCategory
+     * @param string $membershipCategory
      */
     public function setMembershipCategory($membershipCategory)
     {
@@ -655,7 +756,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return \DateTime
      */
     public function getIncomeProofPrintedDate()
     {
@@ -663,7 +764,7 @@ class User
     }
 
     /**
-     * @param mixed $incomeProofPrintedDate
+     * @param \DateTime $incomeProofPrintedDate
      */
     public function setIncomeProofPrintedDate($incomeProofPrintedDate)
     {
@@ -671,15 +772,15 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function getCustomBoolean0()
+    public function isCustomBoolean0()
     {
         return $this->customBoolean0;
     }
 
     /**
-     * @param mixed $customBoolean0
+     * @param bool $customBoolean0
      */
     public function setCustomBoolean0($customBoolean0)
     {
@@ -687,15 +788,15 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function getCustomBoolean1()
+    public function isCustomBoolean1()
     {
         return $this->customBoolean1;
     }
 
     /**
-     * @param mixed $customBoolean1
+     * @param bool $customBoolean1
      */
     public function setCustomBoolean1($customBoolean1)
     {
@@ -703,15 +804,15 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function getCustomBoolean2()
+    public function isCustomBoolean2()
     {
         return $this->customBoolean2;
     }
 
     /**
-     * @param mixed $customBoolean2
+     * @param bool $customBoolean2
      */
     public function setCustomBoolean2($customBoolean2)
     {
@@ -719,15 +820,15 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function getCustomBoolean3()
+    public function isCustomBoolean3()
     {
         return $this->customBoolean3;
     }
 
     /**
-     * @param mixed $customBoolean3
+     * @param bool $customBoolean3
      */
     public function setCustomBoolean3($customBoolean3)
     {
@@ -735,15 +836,15 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function getCustomBoolean4()
+    public function isCustomBoolean4()
     {
         return $this->customBoolean4;
     }
 
     /**
-     * @param mixed $customBoolean4
+     * @param bool $customBoolean4
      */
     public function setCustomBoolean4($customBoolean4)
     {
@@ -751,7 +852,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getCustomText0()
     {
@@ -759,7 +860,7 @@ class User
     }
 
     /**
-     * @param mixed $customText0
+     * @param string $customText0
      */
     public function setCustomText0($customText0)
     {
@@ -767,7 +868,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getCustomText1()
     {
@@ -775,7 +876,7 @@ class User
     }
 
     /**
-     * @param mixed $customText1
+     * @param string $customText1
      */
     public function setCustomText1($customText1)
     {
@@ -783,7 +884,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getNote()
     {
@@ -791,10 +892,12 @@ class User
     }
 
     /**
-     * @param mixed $note
+     * @param string $note
      */
     public function setNote($note)
     {
         $this->note = $note;
     }
+
+
 }

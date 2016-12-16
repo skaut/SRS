@@ -2,6 +2,7 @@
 
 namespace App\Model\CMS;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -12,27 +13,48 @@ class Page
 {
     use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
-    /** @ORM\Column(type="string") */
+    /**
+     * @ORM\Column(type="string")
+     * @var string
+     */
     protected $name;
 
-    /** @ORM\Column(type="string", unique=true) */
+    /**
+     * @ORM\Column(type="string", unique=true)
+     * @var string
+     */
     protected $slug;
 
-    /** @ORM\Column(type="integer") */
+    /**
+     * @ORM\Column(type="integer")
+     * @var int
+     */
     protected $position = 0;
 
-    /** @ORM\Column(type="boolean") */
+    /**
+     * @ORM\Column(type="boolean")
+     * @var bool
+     */
     protected $public = false;
 
-    /** @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="pages", cascade={"persist"}) */
+    /**
+     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="pages", cascade={"persist"})
+     * @var ArrayCollection
+     */
     protected $roles;
 
     /**
      * @ORM\OneToMany(targetEntity="\App\Model\CMS\Content\Content", mappedBy="page", cascade={"persist", "remove"})
      * @ORM\OrderBy({"position" = "ASC"})
+     * @var ArrayCollection
      */
     protected $contents;
 
+    /**
+     * Page constructor.
+     * @param string $name
+     * @param string $slug
+     */
     public function __construct($name, $slug)
     {
         $this->name = $name;
@@ -58,7 +80,7 @@ class Page
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getName()
     {
@@ -66,7 +88,7 @@ class Page
     }
 
     /**
-     * @param mixed $name
+     * @param string $name
      */
     public function setName($name)
     {
@@ -74,7 +96,7 @@ class Page
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getSlug()
     {
@@ -82,7 +104,7 @@ class Page
     }
 
     /**
-     * @param mixed $slug
+     * @param string $slug
      */
     public function setSlug($slug)
     {
@@ -90,7 +112,7 @@ class Page
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getPosition()
     {
@@ -98,7 +120,7 @@ class Page
     }
 
     /**
-     * @param mixed $position
+     * @param int $position
      */
     public function setPosition($position)
     {
@@ -106,15 +128,15 @@ class Page
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function getPublic()
+    public function isPublic()
     {
         return $this->public;
     }
 
     /**
-     * @param mixed $public
+     * @param bool $public
      */
     public function setPublic($public)
     {
@@ -122,7 +144,7 @@ class Page
     }
 
     /**
-     * @return mixed
+     * @return ArrayCollection
      */
     public function getRoles()
     {
@@ -130,7 +152,7 @@ class Page
     }
 
     /**
-     * @param mixed $roles
+     * @param ArrayCollection $roles
      */
     public function setRoles($roles)
     {
@@ -138,7 +160,14 @@ class Page
     }
 
     /**
-     * @return mixed
+     * @param Role $role
+     */
+    public function addRole($role) {
+        $this->roles->add($role);
+    }
+
+    /**
+     * @return ArrayCollection
      */
     public function getContents()
     {
@@ -146,7 +175,7 @@ class Page
     }
 
     /**
-     * @param mixed $contents
+     * @param ArrayCollection $contents
      */
     public function setContents($contents)
     {

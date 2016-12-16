@@ -2,6 +2,7 @@
 
 namespace App\Model\ACL;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -32,55 +33,85 @@ class Role
 
     use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
-    /** @ORM\Column(type="string", unique=true) */
+    /**
+     * @ORM\Column(type="string", unique=true)
+     * @var string
+     */
     protected $name;
 
-    /** @ORM\ManyToMany(targetEntity="\App\Model\User\User", mappedBy="roles", cascade={"persist", "remove"}) */
+    /**
+     * @ORM\ManyToMany(targetEntity="\App\Model\User\User", mappedBy="roles", cascade={"persist", "remove"})
+     * @var ArrayCollection
+     */
     protected $users;
 
-    /** @ORM\ManyToMany(targetEntity="Permission", inversedBy="roles", cascade={"persist", "remove"}) */
+    /**
+     * @ORM\ManyToMany(targetEntity="Permission", inversedBy="roles", cascade={"persist", "remove"})
+     * @var ArrayCollection
+     */
     protected $permissions;
 
-    /** @ORM\ManyToMany(targetEntity="\App\Model\CMS\Page", mappedBy="roles", cascade={"persist", "remove"}) */
+    /**
+     * @ORM\ManyToMany(targetEntity="\App\Model\CMS\Page", mappedBy="roles", cascade={"persist", "remove"})
+     * @var ArrayCollection
+     */
     protected $pages;
 
     /**
      * Pokud je role systemova, nelze ji smazat
      * @ORM\Column(type="boolean")
+     * @var bool
      */
     protected $system = true;
 
     /**
      * Lze o tuto roli zazadat pri registraci na seminar?
      * @ORM\Column(type="boolean")
+     * @var bool
      */
     protected $registerable = true;
 
     /**
      * Je role po registraci rovnou schvalena?
      * @ORM\Column(type="boolean")
+     * @var bool
      */
     protected $approvedAfterRegistration = false;
 
-    /** @ORM\Column(type="datetime", nullable=true) */
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     * @var \DateTime
+     */
     protected $registerableFrom;
 
-    /** @ORM\Column(type="datetime", nullable=true) */
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     * @var \DateTime
+     */
     protected $registerableTo;
 
     /**
-     * Maximální počet osob v roli
      * @ORM\Column(type="integer", nullable=true)
+     * @var int
      */
     protected $capacity;
 
-    /** @ORM\Column(type="integer", nullable=true) */
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     * @var int
+     */
     protected $fee;
 
-    /** @ORM\Column(type="boolean", nullable=true) */
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     * @var bool
+     */
     protected $displayArrivalDeparture;
 
-    /** @ORM\Column(type="boolean") */
+    /**
+     * @ORM\Column(type="boolean")
+     * @var bool
+     */
     protected $syncedWithSkautIS = true;
 
     /**
@@ -89,10 +120,14 @@ class Role
      *      joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="incompatible_role_id", referencedColumnName="id")}
      *      )
+     * @var ArrayCollection
      */
     protected $incompatibleRoles;
 
-    /** @ORM\ManyToMany(targetEntity="Role", mappedBy="requiredRoles", cascade={"persist", "remove"}) */
+    /**
+     * @ORM\ManyToMany(targetEntity="Role", mappedBy="requiredRoles", cascade={"persist", "remove"})
+     * @var ArrayCollection
+     */
     protected $requiredByRole;
 
     /**
@@ -101,10 +136,14 @@ class Role
      *      joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="required_role_id", referencedColumnName="id")}
      *      )
+     * @var ArrayCollection
      */
     protected $requiredRoles;
 
-    /** @ORM\ManyToMany(targetEntity="\App\Model\Program\Category", mappedBy="registerableRoles", cascade={"persist", "remove"}) */
+    /**
+     * @ORM\ManyToMany(targetEntity="\App\Model\Program\Category", mappedBy="registerableRoles", cascade={"persist", "remove"})
+     * @var ArrayCollection
+     */
     protected $registerableCategories;
 
     /**
@@ -132,31 +171,7 @@ class Role
     }
 
     /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @return array
-     */
-    public static function getRoles()
-    {
-        return self::$roles;
-    }
-
-    /**
-     * @param array $roles
-     */
-    public static function setRoles($roles)
-    {
-        self::$roles = $roles;
-    }
-
-    /**
-     * @return mixed
+     * @return string
      */
     public function getName()
     {
@@ -164,7 +179,7 @@ class Role
     }
 
     /**
-     * @param mixed $name
+     * @param string $name
      */
     public function setName($name)
     {
@@ -172,7 +187,7 @@ class Role
     }
 
     /**
-     * @return mixed
+     * @return ArrayCollection
      */
     public function getUsers()
     {
@@ -180,7 +195,7 @@ class Role
     }
 
     /**
-     * @param mixed $users
+     * @param ArrayCollection $users
      */
     public function setUsers($users)
     {
@@ -188,7 +203,7 @@ class Role
     }
 
     /**
-     * @return mixed
+     * @return ArrayCollection
      */
     public function getPermissions()
     {
@@ -196,15 +211,20 @@ class Role
     }
 
     /**
-     * @param mixed $permissions
+     * @param ArrayCollection $permissions
      */
     public function setPermissions($permissions)
     {
         $this->permissions = $permissions;
     }
 
+    public function addPermission($permission)
+    {
+        $this->permissions->add($permission);
+    }
+
     /**
-     * @return mixed
+     * @return ArrayCollection
      */
     public function getPages()
     {
@@ -212,7 +232,7 @@ class Role
     }
 
     /**
-     * @param mixed $pages
+     * @param ArrayCollection $pages
      */
     public function setPages($pages)
     {
@@ -220,15 +240,15 @@ class Role
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function getSystem()
+    public function isSystem()
     {
         return $this->system;
     }
 
     /**
-     * @param mixed $system
+     * @param bool $system
      */
     public function setSystem($system)
     {
@@ -236,15 +256,15 @@ class Role
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function getRegisterable()
+    public function isRegisterable()
     {
         return $this->registerable;
     }
 
     /**
-     * @param mixed $registerable
+     * @param bool $registerable
      */
     public function setRegisterable($registerable)
     {
@@ -252,15 +272,15 @@ class Role
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function getApprovedAfterRegistration()
+    public function isApprovedAfterRegistration()
     {
         return $this->approvedAfterRegistration;
     }
 
     /**
-     * @param mixed $approvedAfterRegistration
+     * @param bool $approvedAfterRegistration
      */
     public function setApprovedAfterRegistration($approvedAfterRegistration)
     {
@@ -268,7 +288,7 @@ class Role
     }
 
     /**
-     * @return mixed
+     * @return \DateTime
      */
     public function getRegisterableFrom()
     {
@@ -276,7 +296,7 @@ class Role
     }
 
     /**
-     * @param mixed $registerableFrom
+     * @param \DateTime $registerableFrom
      */
     public function setRegisterableFrom($registerableFrom)
     {
@@ -284,7 +304,7 @@ class Role
     }
 
     /**
-     * @return mixed
+     * @return \DateTime
      */
     public function getRegisterableTo()
     {
@@ -292,7 +312,7 @@ class Role
     }
 
     /**
-     * @param mixed $registerableTo
+     * @param \DateTime $registerableTo
      */
     public function setRegisterableTo($registerableTo)
     {
@@ -300,7 +320,7 @@ class Role
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getCapacity()
     {
@@ -308,7 +328,7 @@ class Role
     }
 
     /**
-     * @param mixed $capacity
+     * @param int $capacity
      */
     public function setCapacity($capacity)
     {
@@ -316,7 +336,7 @@ class Role
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getFee()
     {
@@ -324,7 +344,7 @@ class Role
     }
 
     /**
-     * @param mixed $fee
+     * @param int $fee
      */
     public function setFee($fee)
     {
@@ -332,15 +352,15 @@ class Role
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function getDisplayArrivalDeparture()
+    public function isDisplayArrivalDeparture()
     {
         return $this->displayArrivalDeparture;
     }
 
     /**
-     * @param mixed $displayArrivalDeparture
+     * @param bool $displayArrivalDeparture
      */
     public function setDisplayArrivalDeparture($displayArrivalDeparture)
     {
@@ -348,15 +368,15 @@ class Role
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function getSyncedWithSkautIS()
+    public function isSyncedWithSkautIS()
     {
         return $this->syncedWithSkautIS;
     }
 
     /**
-     * @param mixed $syncedWithSkautIS
+     * @param bool $syncedWithSkautIS
      */
     public function setSyncedWithSkautIS($syncedWithSkautIS)
     {
@@ -364,7 +384,7 @@ class Role
     }
 
     /**
-     * @return mixed
+     * @return ArrayCollection
      */
     public function getIncompatibleRoles()
     {
@@ -372,7 +392,7 @@ class Role
     }
 
     /**
-     * @param mixed $incompatibleRoles
+     * @param ArrayCollection $incompatibleRoles
      */
     public function setIncompatibleRoles($incompatibleRoles)
     {
@@ -380,7 +400,7 @@ class Role
     }
 
     /**
-     * @return mixed
+     * @return ArrayCollection
      */
     public function getRequiredByRole()
     {
@@ -388,7 +408,7 @@ class Role
     }
 
     /**
-     * @param mixed $requiredByRole
+     * @param ArrayCollection $requiredByRole
      */
     public function setRequiredByRole($requiredByRole)
     {
@@ -396,7 +416,7 @@ class Role
     }
 
     /**
-     * @return mixed
+     * @return ArrayCollection
      */
     public function getRequiredRoles()
     {
@@ -404,7 +424,7 @@ class Role
     }
 
     /**
-     * @param mixed $requiredRoles
+     * @param ArrayCollection $requiredRoles
      */
     public function setRequiredRoles($requiredRoles)
     {
@@ -412,7 +432,7 @@ class Role
     }
 
     /**
-     * @return mixed
+     * @return ArrayCollection
      */
     public function getRegisterableCategories()
     {
@@ -420,12 +440,10 @@ class Role
     }
 
     /**
-     * @param mixed $registerableCategories
+     * @param ArrayCollection $registerableCategories
      */
     public function setRegisterableCategories($registerableCategories)
     {
         $this->registerableCategories = $registerableCategories;
     }
-
-
 }

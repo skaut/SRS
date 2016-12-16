@@ -10,6 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class HTMLContent extends Content
 {
-    /** @ORM\Column(type="text", nullable=true) */
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     * @var string
+     */
     protected $text;
 }

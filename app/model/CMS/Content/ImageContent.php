@@ -11,15 +11,27 @@ use Nette\Application\UI\Form;
  */
 class ImageContent extends Content
 {
-    /** @ORM\Column(type="string", nullable=true) */
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     * @var string
+     */
     protected $image;
 
-    /** @ORM\Column(type="string", nullable=true) */
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     * @var string
+     */
     protected $align;
 
-    /** @ORM\Column(type="integer", nullable=true) */
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     * @var int
+     */
     protected $width;
 
-    /** @ORM\Column(type="integer", nullable=true) */
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     * @var int
+     */
     protected $height;
 }

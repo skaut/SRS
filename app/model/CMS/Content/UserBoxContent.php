@@ -2,6 +2,7 @@
 
 namespace App\Model\CMS\Content;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
 
@@ -11,9 +12,15 @@ use Nette\Application\UI\Form;
  */
 class UserBoxContent extends Content
 {
-    /** @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role") */
+    /**
+     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role")
+     * @var ArrayCollection
+     */
     protected $roles;
 
+    /**
+     * UserBoxContent constructor.
+     */
     public function __construct()
     {
         $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
