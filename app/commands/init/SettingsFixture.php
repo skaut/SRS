@@ -73,6 +73,7 @@ class SettingsFixture extends AbstractFixture
         $settings[] = new Settings('cancel_registration_to', $today->format('d.m.Y'));
 
         $settings[] = new Settings('display_users_roles', '1');
+        $settings[] = new Settings('redirect_after_login', '/');
 
         for ($i = 1; $i <= $customBooleanCount; $i++) {
             $settings[] = new Settings('custom_boolean_' . $i, '');

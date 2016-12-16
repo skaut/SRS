@@ -147,6 +147,12 @@ class Role
     protected $registerableCategories;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     * @var string
+     */
+    protected $redirectAfterLogin;
+
+    /**
      * Role constructor.
      * @param $name
      */
