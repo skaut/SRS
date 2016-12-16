@@ -2,7 +2,6 @@ libs/global/*
 *~
 composer.lock
 .idea
-app/config/config.local.neon
 composer.phar
 deployment.ini
 deployment.log
