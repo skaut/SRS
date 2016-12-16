@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Commands;
+namespace App\Commands\Fixtures;
 
 use App\Model\ACL\Role;
 use App\Model\CMS\Content\Content;
@@ -39,6 +39,6 @@ class CMSFixture extends AbstractFixture implements DependentFixtureInterface
      */
     function getDependencies()
     {
-        return array('App\Commands\RoleFixture');
+        return array('App\Commands\Fixtures\RoleFixture');
     }
 }

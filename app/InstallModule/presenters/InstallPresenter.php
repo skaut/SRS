@@ -2,16 +2,19 @@
 
 namespace App\InstallModule\Presenters;
 
+use App\Commands\FixturesLoadCommand;
 use App\Commands\InitDataCommand;
-use Doctrine\ORM\Tools\Console\Command\SchemaTool\CreateCommand;
+use Kdyby\Doctrine\Console\SchemaCreateCommand;
 use Nette\Application\UI;
+use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Input\ArrayInput;
 use Kdyby\Console\StringOutput;
+use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 
 /**
  * Obsluhuje instalacniho pruvodce
  */
-class InstallPresenter extends InstallBasePresenter //TODO
+class InstallPresenter extends InstallBasePresenter
 {
     /**
      * @var \App\InstallModule\Forms\DatabaseFormFactory
@@ -37,6 +40,18 @@ class InstallPresenter extends InstallBasePresenter //TODO
      */
     public $application;
 
+    /**
+     * @var \Kdyby\Translation\Translator
+     * @inject
+     */
+    public $translator;
+
+    /**
+     * @var \Kdyby\Doctrine\EntityManager
+     * @inject
+     */
+    public $em;
+
     public function renderDefault()
     {
         // pri testovani muze nastat situace, kdy jsme prihlaseni byt v DB nejsme, to by v ostrem provozu nemelo nastat
@@ -47,7 +62,7 @@ class InstallPresenter extends InstallBasePresenter //TODO
         $this->checkInstallationStatus();
 
         if ($this->context->parameters['installed']['connection']) {
-            $this->flashMessage('Připojení k databázi již bylo nakonfigurováno');
+            $this->flashMessage($this->translator->translate('install.database.connection_already_configured'), 'alert-info');
             $this->redirect('schema');
         }
     }
@@ -61,34 +76,46 @@ class InstallPresenter extends InstallBasePresenter //TODO
         }
 
         if ($this->context->parameters['installed']['schema']) {
-            $this->flashMessage('Schéma databáze bylo již naimportováno');
+            $this->flashMessage($this->translator->translate('install.schema.schema_already_created'), 'alert-info');
             $this->redirect('skautIS');
         }
     }
 
     public function handleImportSchema() {
-        $this->application->add(new CreateCommand());
-        $this->application->add(new InitDataCommand());
+        $helperSet = new HelperSet(['em' => new EntityManagerHelper($this->em)]);
+        $this->application->setHelperSet($helperSet);
 
-        $output = new StringOutput;
+        $this->application->add(new SchemaCreateCommand());
+        $this->application->add(new FixturesLoadCommand());
+
+        $output = new StringOutput();
 
         $input = new ArrayInput([
             'command' => 'orm:schema-tool:create'
         ]);
-        $this->application->run($input, $output);
+        $result = $this->application->run($input, $output);
 
-        if ($output->getOutput() != "") {
-            $this->flashMessage("Databazi se nepodarilo vytvorit"); //TODO
+        if ($result != 0) {
+            $this->flashMessage($this->translator->translate('install.schema.schema_create_unsuccessful'), 'alert-danger');
             return;
         }
 
         $input = new ArrayInput([
-            'command' => 'app:init-data:load'
+            'command' => 'app:fixtures:load'
         ]);
-        $this->application->run($input, $output);
+        $result = $this->application->run($input, $output);
 
-        if ($output->getOutput() != "") {
-            $this->flashMessage("Databazi se nepodarilo inicializovat"); //TODO
+        if ($result != 0) {
+            $this->flashMessage($this->translator->translate('install.schema.data_import_unsuccessful'), 'alert-danger');
+            return;
+        }
+
+        $config = $this->configFacade->loadConfig();
+        $config['parameters']['installed']['schema'] = true;
+        $result = $this->configFacade->saveConfig($config);
+
+        if ($result === false) {
+            $this->presenter->flashMessage($this->translator->translate('install.common.config_save_unsuccessful'), 'alert-danger');
             return;
         }
 
@@ -107,8 +134,8 @@ class InstallPresenter extends InstallBasePresenter //TODO
             $this->redirect('schema');
         }
 
-        if ($this->context->parameters['installed']['skautis']) {
-            $this->flashMessage('Skaut IS byl již nastaven');
+        if ($this->context->parameters['installed']['skautIS']) {
+            $this->flashMessage($this->translator->translate('install.skautis.skautis_already_configured'), 'alert-info');
             $this->redirect('admin');
         }
     }
@@ -125,8 +152,8 @@ class InstallPresenter extends InstallBasePresenter //TODO
             $this->redirect('schema');
         }
 
-        if (!$this->context->parameters['installed']['skautis']) {
-            $this->redirect('skautis');
+        if (!$this->context->parameters['installed']['skautIS']) {
+            $this->redirect('skautIS');
         }
 
         if ($this->context->parameters['installed']['admin']) {
@@ -158,70 +185,11 @@ class InstallPresenter extends InstallBasePresenter //TODO
     public function renderFinish()
     {
         $this->checkInstallationStatus();
-
     }
 
     public function renderInstalled()
     {
         $this->checkInstallationError();
-    }
-
-    public function handleImportDB()
-    {
-        $success = true;
-        try {
-            $options = array('command' => 'orm:schema:create');
-            $output = new \Symfony\Component\Console\Output\NullOutput();
-            $input = new \Symfony\Component\Console\Input\ArrayInput($options);
-            $this->context->console->application->setAutoExit(false);
-            $this->context->console->application->run($input, $output);
-
-
-        } catch (\Doctrine\ORM\Tools\ToolsException $e) {
-            $this->flashMessage('Nahrání schéma databáze se nepodařilo', 'error');
-            $this->flashMessage('Je pravděpodobné, že Databáze již existuje');
-            $this->flashMessage($e->getCode() . ': ' . $e->getMessage());
-            $success = false;
-        }
-
-        try {
-            //role
-            $options = array('command' => 'srs:initial-data:acl');
-            $output = new \Symfony\Component\Console\Output\NullOutput();
-            $input = new \Symfony\Component\Console\Input\ArrayInput($options);
-            $this->context->console->application->run($input, $output);
-
-            //settings
-            $options = array('command' => 'srs:initial-data:settings');
-            $output = new \Symfony\Component\Console\Output\NullOutput();
-            $input = new \Symfony\Component\Console\Input\ArrayInput($options);
-            $this->context->console->application->run($input, $output);
-
-            //cms
-            $options = array('command' => 'srs:initial-data:cms');
-            $output = new \Symfony\Component\Console\Output\NullOutput();
-            $input = new \Symfony\Component\Console\Input\ArrayInput($options);
-            $this->context->console->application->run($input, $output);
-
-        } catch (\Doctrine\DBAL\DBALException $e) {
-            $success = false;
-            $this->template->error = $e->getCode();
-            $this->flashMessage('Nahrání inicializačních dat se nepodařilo', 'error');
-            $this->flashMessage($e->getCode() . ': ' . $e->getMessage());
-        }
-
-
-        if ($success == true) {
-            $config = \Nette\Utils\Neon::decode(file_get_contents(APP_DIR . '/config/config.neon'));
-            $isDebug = $config['common']['parameters']['debug'];
-            $environment = $isDebug == true ? 'development' : 'production';
-            $config["{$environment} < common"]['parameters']['database']['schema_imported'] = true;
-            $configFile = \Nette\Utils\Neon::encode($config, \Nette\Utils\Neon::BLOCK);
-            $configUploaded = \file_put_contents(APP_DIR . '/config/config.neon', $configFile);
-            $this->flashMessage('Import schématu databáze a inicializačních dat proběhl úspěšně', 'success');
-            $this->redirect(':Install:install:skautIS');
-        }
-        $this->redirect('this');
     }
 
     protected function createComponentDatabaseForm()
@@ -245,7 +213,7 @@ class InstallPresenter extends InstallBasePresenter //TODO
             $result = $this->configFacade->saveConfig($config);
 
             if ($result === false) {
-                $this->presenter->flashMessage('Nastavení se nepodařilo uložit. Zkontrolujte práva souboru config.local.neon.', 'alert-danger');
+                $this->presenter->flashMessage($this->translator->translate('install.common.config_save_unsuccessful'), 'alert-danger');
                 return;
             }
 

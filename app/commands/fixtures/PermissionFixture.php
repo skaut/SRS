@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Commands;
+namespace App\Commands\Fixtures;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\AbstractFixture;
@@ -41,6 +41,6 @@ class PermissionFixture extends AbstractFixture implements DependentFixtureInter
      */
     function getDependencies()
     {
-        return array('App\Commands\ResourceFixture');
+        return array('App\Commands\Fixtures\ResourceFixture');
     }
 }

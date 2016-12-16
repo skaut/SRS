@@ -1,18 +1,29 @@
 title: "Instalace | SRS"
 
+common:
+    config_save_unsuccessful: "Nastavení se nepodařilo uložit. Zkontrolujte práva souboru config.local.neon."
+
 database:
     header: "Nastavení databáze"
     host: "Server"
     dbname: "Databáze"
     user: "Uživatel"
     password: "Heslo"
-    emptyHost: "Zadejte adresu serveru"
-    emptyDbname: "Zadejte název databáze"
-    emptyUser: "Zadejte uživatelské jméno"
-    emptyPassword: "Zadejte heslo"
+    empty_host: "Zadejte adresu serveru"
+    empty_dbname: "Zadejte název databáze"
+    empty_user: "Zadejte uživatelské jméno"
+    empty_password: "Zadejte heslo"
     continue: "Pokračovat"
-
+    connection_already_configured: "Připojení k databázi již bylo nastaveno."
 
 schema:
     header: "Vytvoření tabulek"
+    text: "Pokračujte vytvořením tabulek. Před pokračováním odstraňte data z předchozích instalací!"
     continue: "Pokračovat"
+    schema_already_created: "Schéma databáze bylo již vytvořeno."
+    schema_create_unsuccessful: "Tabulky se nepodařilo vytvořit."
+    data_import_unsuccessful: "Nepodařilo se načíst inicializační data."
+
+skautis:
+    header: "Nastavení skautISu"
+    skautis_already_configured: "Připojení ke skautISu již bylo nastaveno."

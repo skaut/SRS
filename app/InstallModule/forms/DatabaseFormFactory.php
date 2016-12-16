@@ -18,17 +18,17 @@ class DatabaseFormFactory
         $form = $this->baseFormFactory->create();
 
         $form->addText('host', $form->getTranslator()->translate('install.database.host'))
-            ->addRule(Form::FILLED, $form->getTranslator()->translate('install.database.emptyHost'))
+            ->addRule(Form::FILLED, $form->getTranslator()->translate('install.database.empty_host'))
             ->setDefaultValue('localhost');
 
         $form->addText('dbname', $form->getTranslator()->translate('install.database.dbname'))
-            ->addRule(Form::FILLED, $form->getTranslator()->translate('install.database.emptyDbname'));
+            ->addRule(Form::FILLED, $form->getTranslator()->translate('install.database.empty_dbname'));
 
         $form->addText('user', $form->getTranslator()->translate('install.database.user'))
-            ->addRule(Form::FILLED, $form->getTranslator()->translate('install.database.emptyUser'));
+            ->addRule(Form::FILLED, $form->getTranslator()->translate('install.database.empty_user'));
 
         $form->addPassword('password', $form->getTranslator()->translate('install.database.password'))
-            ->addRule(Form::FILLED, $form->getTranslator()->translate('install.database.emptyPassword'));
+            ->addRule(Form::FILLED, $form->getTranslator()->translate('install.database.empty_password'));
 
         $form->addSubmit('submit', $form->getTranslator()->translate('install.database.continue'));
 

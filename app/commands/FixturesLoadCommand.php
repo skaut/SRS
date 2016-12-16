@@ -3,13 +3,12 @@
 namespace App\Commands;
 
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
-use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class InitDataCommand extends Command
+class FixturesLoadCommand extends Command
 {
     /**
      * @var \Kdyby\Doctrine\EntityManager
@@ -31,7 +30,7 @@ class InitDataCommand extends Command
 
     protected function configure()
     {
-        $this->setName('app:init-data:load');
+        $this->setName('app:fixtures:load');
         $this->setDescription('Loads initial data to database.');
     }
 
