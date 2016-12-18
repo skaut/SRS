@@ -15,15 +15,24 @@ database:
     empty_password: "Zadejte heslo"
     continue: "Pokračovat"
     connection_already_configured: "Připojení k databázi již bylo nastaveno."
+    database_connection_unsuccessful: "Připojení k databázi se nepodařilo, zkontrolujte zadané údaje."
 
 schema:
     header: "Vytvoření tabulek"
     text: "Pokračujte vytvořením tabulek. Před pokračováním odstraňte data z předchozích instalací!"
     continue: "Pokračovat"
-    schema_already_created: "Schéma databáze bylo již vytvořeno."
+    schema_already_created: "Schéma databáze již bylo vytvořeno."
     schema_create_unsuccessful: "Tabulky se nepodařilo vytvořit."
     data_import_unsuccessful: "Nepodařilo se načíst inicializační data."
 
 skautis:
     header: "Nastavení skautISu"
+    skautis_version: "Verze skautIS"
+    skautis_appid: "SkautIS app ID"
+    empty_skautis_appid: "Zadejte skautIS App ID"
+    invalid_skautis_appid: "SkautIS App ID nemá správný formát."
+    version_production: "ostrá"
+    version_development: "testovací"
+    continue: "Pokračovat"
     skautis_already_configured: "Připojení ke skautISu již bylo nastaveno."
+    skautis_access_denied: "Připojení ke skautISu se nepodařilo, zkontrolujte zadané údaje."

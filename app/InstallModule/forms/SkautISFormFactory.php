@@ -18,18 +18,19 @@ class SkautISFormFactory
         $form = $this->baseFormFactory->create();
 
         $skautisVersions = [
-            true => 'testovací',
-            false => 'ostrá'
+            'false' => $form->getTranslator()->translate('install.skautis.version_production'),
+            'true' => $form->getTranslator()->translate('install.skautis.version_development')
         ];
 
-        $form->addRadioList('skautis_version', 'SkautIS verze:', $skautisVersions)
-            ->getSeparatorPrototype()->setName(NULL)
-            ->setDefaultValue(false);
+        $form->addRadioList('skautis_version', $form->getTranslator()->translate('install.skautis.skautis_version'), $skautisVersions)
+            ->setDefaultValue('false')
+            ->getSeparatorPrototype()->setName(NULL);
 
-        $form->addText('skautis_app_id', 'SkautIS app ID:')
-            ->addRule(Form::FILLED, 'Zadejte skautIS App ID');
+        $form->addText('skautis_app_id', $form->getTranslator()->translate('install.skautis.skautis_appid'))
+            ->addRule(Form::FILLED, $form->getTranslator()->translate('install.skautis.empty_skautis_appid'))
+            ->addRule(Form::PATTERN, $form->getTranslator()->translate('install.skautis.invalid_skautis_appid'), '([0-9a-fA-F]){8}(-([0-9a-fA-F]){4}){3}-([0-9a-fA-F]){12}');
 
-        $form->addSubmit('submit', 'Pokračovat');
+        $form->addSubmit('submit', $form->getTranslator()->translate('install.skautis.continue'));
 
         return $form;
     }

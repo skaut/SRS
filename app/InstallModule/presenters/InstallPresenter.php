@@ -4,8 +4,14 @@ namespace App\InstallModule\Presenters;
 
 use App\Commands\FixturesLoadCommand;
 use App\Commands\InitDataCommand;
+use InstallModule\presenters\SkautISAccessor;
 use Kdyby\Doctrine\Console\SchemaCreateCommand;
 use Nette\Application\UI;
+use Skautis\Config;
+use Skautis\Skautis;
+use Skautis\User;
+use Skautis\Wsdl\WebServiceFactory;
+use Skautis\Wsdl\WsdlManager;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Input\ArrayInput;
 use Kdyby\Console\StringOutput;
@@ -77,7 +83,7 @@ class InstallPresenter extends InstallBasePresenter
 
         if ($this->context->parameters['installed']['schema']) {
             $this->flashMessage($this->translator->translate('install.schema.schema_already_created'), 'alert-info');
-            $this->redirect('skautIS');
+            $this->redirect('skautIs');
         }
     }
 
@@ -119,10 +125,10 @@ class InstallPresenter extends InstallBasePresenter
             return;
         }
 
-        $this->redirect('skautIS');
+        $this->redirect('skautIs');
     }
 
-    public function renderSkautIS()
+    public function renderSkautIs()
     {
         $this->checkInstallationStatus();
 
@@ -153,7 +159,7 @@ class InstallPresenter extends InstallBasePresenter
         }
 
         if (!$this->context->parameters['installed']['skautIS']) {
-            $this->redirect('skautIS');
+            $this->redirect('skautIs');
         }
 
         if ($this->context->parameters['installed']['admin']) {
@@ -161,25 +167,25 @@ class InstallPresenter extends InstallBasePresenter
             $this->redirect('finish');
         }
 
-        if ($this->user->isLoggedIn()) {
-            $adminRole = $this->context->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('name' => Role::ADMIN));
-            if ($adminRole == null) {
-                throw new \Nette\Application\BadRequestException($message = 'Administrátorská role neexistuje!', $code = 500);
-            }
-            $user = $this->context->database->getRepository('\SRS\Model\User')->find($this->user->id);
-            if ($user == null) {
-                throw new \Nette\Application\BadRequestException($message = 'Uživatel je sice přihlášen ale v DB neexistuje!', $code = 500);
-            }
-            $user->removeRole(Role::REGISTERED);
-            $user->addRole($adminRole);
-            $this->context->database->flush();
-            $this->user->logout(true);
-            $this->context->database->getRepository('\SRS\model\Settings')->set('superadmin_created', '1');
-            $this->flashMessage('Administrátorská role nastavena', 'success');
-
-            $this->redirect(':Install:install:finish');
-        }
-        $this->template->backlink = $this->backlink();
+//        if ($this->user->isLoggedIn()) {
+//            $adminRole = $this->context->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('name' => Role::ADMIN));
+//            if ($adminRole == null) {
+//                throw new \Nette\Application\BadRequestException($message = 'Administrátorská role neexistuje!', $code = 500);
+//            }
+//            $user = $this->context->database->getRepository('\SRS\Model\User')->find($this->user->id);
+//            if ($user == null) {
+//                throw new \Nette\Application\BadRequestException($message = 'Uživatel je sice přihlášen ale v DB neexistuje!', $code = 500);
+//            }
+//            $user->removeRole(Role::REGISTERED);
+//            $user->addRole($adminRole);
+//            $this->context->database->flush();
+//            $this->user->logout(true);
+//            $this->context->database->getRepository('\SRS\model\Settings')->set('superadmin_created', '1');
+//            $this->flashMessage('Administrátorská role nastavena', 'success');
+//
+//            $this->redirect(':Install:install:finish');
+//        }
+//        $this->template->backlink = $this->backlink();
     }
 
     public function renderFinish()
@@ -200,7 +206,7 @@ class InstallPresenter extends InstallBasePresenter
             $values = $form->getValues();
 
             if (!$this->checkDBConnection($values['host'], $values['dbname'], $values['user'], $values['password'])) {
-                $this->flashMessage('Nepodařilo se připojit k databázi, zadejte správné údaje.', 'alert-danger');
+                $this->flashMessage($this->translator->translate('install.database.database_connection_unsuccessful'), 'alert-danger');
                 return;
             }
 
@@ -225,7 +231,38 @@ class InstallPresenter extends InstallBasePresenter
 
     protected function createComponentSkautISForm()
     {
-        return $this->skautISFormFactory->create();
+        $form = $this->skautISFormFactory->create();
+
+        $form->onSuccess[] = function (UI\Form $form) {
+            $values = $form->getValues();
+
+            $appId = $values['skautis_app_id'];
+            $version = filter_var($values['skautis_version'], FILTER_VALIDATE_BOOLEAN);
+
+            try {
+                $wsdlManager = new WsdlManager(new WebServiceFactory(), new Config($appId, $version));
+                $skautis = new Skautis($wsdlManager, new User($wsdlManager));
+                $skautis->getWebService('OrganizationUnit')->call('UnitAllRegistry');
+            } catch (\Skautis\Wsdl\WsdlException $ex) {
+                $this->flashMessage($this->translator->translate('install.skautis.skautis_access_denied'), 'alert-danger');
+                return;
+            }
+
+            $config = $this->configFacade->loadConfig();
+            $config['parameters']['installed']['skautIS'] = true;
+            $config['parameters']['skautIS']['appId'] = $appId;
+            $config['parameters']['skautIS']['test'] = $version;
+            $result = $this->configFacade->saveConfig($config);
+
+            if ($result === false) {
+                $this->presenter->flashMessage($this->translator->translate('install.common.config_save_unsuccessful'), 'alert-danger');
+                return;
+            }
+
+            $this->redirect('admin');
+        };
+
+        return $form;
     }
 
     private function checkInstallationStatus()
