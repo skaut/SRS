@@ -2,6 +2,11 @@
 
 namespace App\Commands;
 
+use App\Commands\Fixtures\CMSFixture;
+use App\Commands\Fixtures\PermissionFixture;
+use App\Commands\Fixtures\ResourceFixture;
+use App\Commands\Fixtures\RoleFixture;
+use App\Commands\Fixtures\SettingsFixture;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Symfony\Component\Console\Command\Command;
@@ -23,7 +28,7 @@ class FixturesLoadCommand extends Command
     public $translator;
 
     /**
-     * @var \App\ConfigFacade
+     * @var \App\Services\ConfigFacade
      * @inject
      */
     public $configFacade;

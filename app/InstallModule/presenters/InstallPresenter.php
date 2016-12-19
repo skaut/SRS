@@ -4,18 +4,13 @@ namespace App\InstallModule\Presenters;
 
 use App\Commands\FixturesLoadCommand;
 use App\Commands\InitDataCommand;
-use InstallModule\presenters\SkautISAccessor;
 use Kdyby\Doctrine\Console\SchemaCreateCommand;
 use Nette\Application\UI;
-use Skautis\Config;
-use Skautis\Skautis;
-use Skautis\User;
-use Skautis\Wsdl\WebServiceFactory;
-use Skautis\Wsdl\WsdlManager;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Input\ArrayInput;
 use Kdyby\Console\StringOutput;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
+use App\Model\ACL\Role;
 
 /**
  * Obsluhuje instalacniho pruvodce
@@ -35,7 +30,7 @@ class InstallPresenter extends InstallBasePresenter
     public $skautISFormFactory;
 
     /**
-     * @var \App\ConfigFacade
+     * @var \App\Services\ConfigFacade
      * @inject
      */
     public $configFacade;
@@ -57,6 +52,18 @@ class InstallPresenter extends InstallBasePresenter
      * @inject
      */
     public $em;
+
+    /**
+     * @var \App\Model\User\UserRepository
+     * @inject
+     */
+    public $userRepository;
+
+    /**
+     * @var \App\Model\ACL\RoleRepository
+     * @inject
+     */
+    public $roleRepository;
 
     public function renderDefault()
     {
@@ -163,39 +170,77 @@ class InstallPresenter extends InstallBasePresenter
         }
 
         if ($this->context->parameters['installed']['admin']) {
-            $this->flashMessage('Administrátorská role byla již nastavena dříve');
+            $this->flashMessage($this->translator->translate('install.admin.admin_already_created'), 'alert-info');
             $this->redirect('finish');
         }
 
-//        if ($this->user->isLoggedIn()) {
-//            $adminRole = $this->context->database->getRepository('\SRS\Model\Acl\Role')->findOneBy(array('name' => Role::ADMIN));
-//            if ($adminRole == null) {
-//                throw new \Nette\Application\BadRequestException($message = 'Administrátorská role neexistuje!', $code = 500);
-//            }
-//            $user = $this->context->database->getRepository('\SRS\Model\User')->find($this->user->id);
-//            if ($user == null) {
-//                throw new \Nette\Application\BadRequestException($message = 'Uživatel je sice přihlášen ale v DB neexistuje!', $code = 500);
-//            }
-//            $user->removeRole(Role::REGISTERED);
-//            $user->addRole($adminRole);
-//            $this->context->database->flush();
-//            $this->user->logout(true);
-//            $this->context->database->getRepository('\SRS\model\Settings')->set('superadmin_created', '1');
-//            $this->flashMessage('Administrátorská role nastavena', 'success');
-//
-//            $this->redirect(':Install:install:finish');
-//        }
-//        $this->template->backlink = $this->backlink();
+        $this->template->backlink = ':Install:Install:admin';
+
+        if ($this->user->isLoggedIn()) {
+            $user = $this->userRepository->findUserById($this->user->id);
+
+            $unregisteredRole = $this->roleRepository->findRoleByName(Role::UNREGISTERED);
+            $user->removeRole($unregisteredRole);
+
+            $adminRole = $this->roleRepository->findRoleByName(Role::ADMIN);
+            $user->addRole($adminRole);
+
+            $this->em->flush();
+            $this->user->logout(true);
+
+            $config = $this->configFacade->loadConfig();
+            $config['parameters']['installed']['admin'] = true;
+            $result = $this->configFacade->saveConfig($config);
+
+            if ($result === false) {
+                $this->presenter->flashMessage($this->translator->translate('install.common.config_save_unsuccessful'), 'alert-danger');
+                return;
+            }
+
+            $this->redirect('finish');
+        }
     }
 
     public function renderFinish()
     {
-        $this->checkInstallationStatus();
+        if ($this->checkInstallationError())
+            $this->redirect('error');
     }
 
     public function renderInstalled()
     {
-        $this->checkInstallationError();
+        if ($this->checkInstallationError())
+            $this->redirect('error');
+
+        $this->template->migrationAvailable = false; //TODO dostupnost migraci
+    }
+
+    public function handleMigrate()
+    {
+        //TODO spusteni migraci
+    }
+
+    public function renderError()
+    {
+        if (!$this->checkInstallationError())
+            $this->redirect('default');
+    }
+
+    public function handleReinstall()
+    {
+        $config = $this->configFacade->loadConfig();
+        $config['parameters']['installed']['connection'] = false;
+        $config['parameters']['installed']['schema'] = false;
+        $config['parameters']['installed']['skautIS'] = false;
+        $config['parameters']['installed']['admin'] = false;
+        $result = $this->configFacade->saveConfig($config);
+
+        if ($result === false) {
+            $this->presenter->flashMessage($this->translator->translate('install.common.config_save_unsuccessful'), 'alert-danger');
+            return;
+        }
+
+        $this->redirect('default');
     }
 
     protected function createComponentDatabaseForm()
@@ -239,11 +284,7 @@ class InstallPresenter extends InstallBasePresenter
             $appId = $values['skautis_app_id'];
             $version = filter_var($values['skautis_version'], FILTER_VALIDATE_BOOLEAN);
 
-            try {
-                $wsdlManager = new WsdlManager(new WebServiceFactory(), new Config($appId, $version));
-                $skautis = new Skautis($wsdlManager, new User($wsdlManager));
-                $skautis->getWebService('OrganizationUnit')->call('UnitAllRegistry');
-            } catch (\Skautis\Wsdl\WsdlException $ex) {
+            if (!$this->checkSkautISConnection($appId, $version)) {
                 $this->flashMessage($this->translator->translate('install.skautis.skautis_access_denied'), 'alert-danger');
                 return;
             }
@@ -271,15 +312,15 @@ class InstallPresenter extends InstallBasePresenter
             $this->context->parameters['installed']['schema'] &&
             $this->context->parameters['installed']['skautIS'] &&
             $this->context->parameters['installed']['admin']
-        ) {
+        )
             $this->redirect('installed');
-        }
 
-        $this->checkInstallationError();
+        if ($this->checkInstallationError())
+            $this->redirect('error');
     }
 
     private function checkInstallationError() {
-        if ((!$this->context->parameters['installed']['connection'] && (
+        return ((!$this->context->parameters['installed']['connection'] && (
                     $this->context->parameters['installed']['schema'] ||
                     $this->context->parameters['installed']['skautIS'] ||
                     $this->context->parameters['installed']['admin']))
@@ -290,9 +331,7 @@ class InstallPresenter extends InstallBasePresenter
             ||
             (!$this->context->parameters['installed']['skautIS'] &&
                 $this->context->parameters['installed']['admin'])
-        ) {
-            $this->redirect('error');
-        }
+        );
     }
 
     private function checkDBConnection($host, $dbname, $user, $password) {
@@ -300,6 +339,16 @@ class InstallPresenter extends InstallBasePresenter
             $dsn = "mysql:host={$host};dbname={$dbname}";
             $dbh = new \PDO($dsn, $user, $password);
         } catch (\PDOException $e) {
+            return false;
+        }
+        return true;
+    }
+
+    private function checkSkautISConnection($appId, $version) {
+        try {
+            $skautis = \Skautis\Skautis::getInstance($appId, $version);
+            $skautis->org->UnitAllRegistry();
+        } catch (\Skautis\Wsdl\WsdlException $ex) {
             return false;
         }
         return true;

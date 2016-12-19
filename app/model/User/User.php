@@ -93,13 +93,13 @@ class User
     protected $birthdate;
 
     /**
-     * @ORM\Column(type="integer", unique=true)
+     * @ORM\Column(type="integer", unique=true, name="skautis_user_id")
      * @var int
      */
     protected $skautISUserId;
 
     /**
-     * @ORM\Column(type="integer", unique=true)
+     * @ORM\Column(type="integer", unique=true, name="skautis_person_id")
      * @var int
      */
     protected $skautISPersonId;
@@ -321,6 +321,26 @@ class User
     public function setRoles($roles)
     {
         $this->roles = $roles;
+    }
+
+    public function isInRole($roleName)
+    {
+        foreach ($this->roles as $role) {
+            if ($role->getName() == $roleName)
+                return true;
+        }
+        return false;
+    }
+
+    public function addRole($role)
+    {
+        if (!$this->isInRole($role->getName()))
+            $this->roles->add($role);
+    }
+
+    public function removeRole($role)
+    {
+        return $this->roles->removeElement($role);
     }
 
     /**

@@ -46,10 +46,13 @@ skautis:
 services:
     - App\RouterFactory
     router: @App\RouterFactory::createRouter
-    - App\ConfigFacade
-    - App\Model\CMS\PageRepository
+    authenticator: App\Services\Authenticator
+    - App\Services\ConfigFacade
     - App\Model\User\UserRepository
+    - App\Model\ACL\RoleRepository
     - App\Model\Settings\SettingsRepository
+    - App\Model\CMS\PageRepository
+    - App\Model\Program\ProgramRepository
     - App\InstallModule\Forms\BaseFormFactory
     - App\InstallModule\Forms\DatabaseFormFactory
     - App\InstallModule\Forms\SkautISFormFactory

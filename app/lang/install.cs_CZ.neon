@@ -19,14 +19,17 @@ database:
 
 schema:
     header: "Vytvoření tabulek"
-    text: "Pokračujte vytvořením tabulek. Před pokračováním odstraňte data z předchozích instalací!"
+    text: "V dalším kroku budou vytvořeny tabulky. Před pokračováním odstraňte data z předchozích instalací!"
     continue: "Pokračovat"
     schema_already_created: "Schéma databáze již bylo vytvořeno."
-    schema_create_unsuccessful: "Tabulky se nepodařilo vytvořit."
+    schema_create_unsuccessful: "Tabulky se nepodařilo vytvořit. Zkontrolujte, zda nebyly vytvořeny dříve, a případně je odstraňte."
     data_import_unsuccessful: "Nepodařilo se načíst inicializační data."
 
 skautis:
     header: "Nastavení skautISu"
+    text_begin: "Pro správnou funkčnost systému je třeba jej propojit se skautIS. Pokud nedisponujete skautIS App ID nebo nevíte o co se jedná, kontaktujte "
+    text_link: "technickou podporu Junáka"
+    text_end: "."
     skautis_version: "Verze skautIS"
     skautis_appid: "SkautIS app ID"
     empty_skautis_appid: "Zadejte skautIS App ID"
@@ -36,3 +39,29 @@ skautis:
     continue: "Pokračovat"
     skautis_already_configured: "Připojení ke skautISu již bylo nastaveno."
     skautis_access_denied: "Připojení ke skautISu se nepodařilo, zkontrolujte zadané údaje."
+
+admin:
+    header: "Vytvoření administrátora"
+    text: "V dalším kroku budete přesměrování na přihlašovací stránku skautISu, přihlášenému uživateli bude v systému přiřazena administrátorská role."
+    continue: "Pokračovat"
+    admin_already_created: "Administrátorská role již byla vytvořena."
+
+finish:
+    header: "Instalace dokončena"
+    text: "Instalace systému byla úspěšně dokončena."
+    redirect_home: "Přejít na úvodní stránku"
+
+error:
+    header: "Chyba instalace"
+    text: "Systém není správně nainstalován."
+    reinstall: "Nainstalovat znovu"
+
+installed:
+    header: "Instalace již byla dokončena"
+    text: "Instalace systému byla již provedena."
+    redirect_home: "Přejít na úvodní stránku"
+    migration_unavailable: "Není k dispozici žádná aktualizace databáze."
+    migration_available: "Je k dispozici aktualizace databáze."
+    migration_migrate: "Aktualizovat databázi"
+
+

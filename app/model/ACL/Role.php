@@ -40,19 +40,19 @@ class Role
     protected $name;
 
     /**
-     * @ORM\ManyToMany(targetEntity="\App\Model\User\User", mappedBy="roles", cascade={"persist", "remove"})
+     * @ORM\ManyToMany(targetEntity="\App\Model\User\User", mappedBy="roles", cascade={"persist"})
      * @var ArrayCollection
      */
     protected $users;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Permission", inversedBy="roles", cascade={"persist", "remove"})
+     * @ORM\ManyToMany(targetEntity="Permission", inversedBy="roles", cascade={"persist"})
      * @var ArrayCollection
      */
     protected $permissions;
 
     /**
-     * @ORM\ManyToMany(targetEntity="\App\Model\CMS\Page", mappedBy="roles", cascade={"persist", "remove"})
+     * @ORM\ManyToMany(targetEntity="\App\Model\CMS\Page", mappedBy="roles", cascade={"persist"})
      * @var ArrayCollection
      */
     protected $pages;
@@ -125,13 +125,13 @@ class Role
     protected $incompatibleRoles;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Role", mappedBy="requiredRoles", cascade={"persist", "remove"})
+     * @ORM\ManyToMany(targetEntity="Role", mappedBy="requiredRoles", cascade={"persist"})
      * @var ArrayCollection
      */
     protected $requiredByRole;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Role", inversedBy="requiredByRole", cascade={"persist", "remove"})
+     * @ORM\ManyToMany(targetEntity="Role", inversedBy="requiredByRole", cascade={"persist"})
      * @ORM\JoinTable(name="role_role_required",
      *      joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="required_role_id", referencedColumnName="id")}
@@ -141,7 +141,7 @@ class Role
     protected $requiredRoles;
 
     /**
-     * @ORM\ManyToMany(targetEntity="\App\Model\Program\Category", mappedBy="registerableRoles", cascade={"persist", "remove"})
+     * @ORM\ManyToMany(targetEntity="\App\Model\Program\Category", mappedBy="registerableRoles", cascade={"persist"})
      * @var ArrayCollection
      */
     protected $registerableCategories;

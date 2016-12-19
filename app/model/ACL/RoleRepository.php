@@ -2,12 +2,16 @@
 
 namespace App\Model\ACL;
 
-use Nette;
+use Kdyby\Doctrine\EntityRepository;
 
-class RoleRepository extends Nette\Object
+class RoleRepository extends EntityRepository
 {
+    public function findRoleByName($name) {
+        return $this->findOneBy(array('name' => $name));
+    }
+
     public function findRegisterable() {
-        $query = $this->em->createQuery("SELECT r FROM {Role::class} r WHERE r.registerable=true");
+        $query = $this->_em->createQuery("SELECT r FROM {Role::class} r WHERE r.registerable=true");
         return $query->getResult();
     }
 
@@ -15,19 +19,14 @@ class RoleRepository extends Nette\Object
     {
         $today = date("Y-m-d H:i");
 
-        $query = $this->em->createQuery("SELECT r FROM {Role::class} r WHERE r.registerable=true
+        $query = $this->_em->createQuery("SELECT r FROM {Role::class} r WHERE r.registerable=true
               AND (r.registerableFrom <= '{$today}' OR r.registerableFrom IS NULL)
               AND (r.registerableTo >= '{$today}' OR r.registerableTo IS NULL)");
         return $query->getResult();
     }
 
     public function findCapacityLimitedRoles() {
-        $query = $this->_em->createQuery("SELECT r FROM {Role::class} r WHERE r.usersLimit IS NOT NULL");
-        return $query->getResult();
-    }
-
-    public function findCapacityVisibleRoles() {
-        $query = $this->_em->createQuery("SELECT r FROM {Role::class} r WHERE r.displayCapacity = 1");
+        $query = $this->_em->createQuery("SELECT r FROM {Role::class} r WHERE r.capacity IS NOT NULL");
         return $query->getResult();
     }
 
@@ -36,9 +35,9 @@ class RoleRepository extends Nette\Object
         return $query->getResult();
     }
 
-    public function findApprovedUsersInRole($roleName)
+    public function findApprovedUsersInRole($role)
     {
-        $query = $this->_em->createQuery("SELECT u FROM User u JOIN u.roles r WHERE u.approved=true AND r.name='$roleName'");
+        $query = $this->_em->createQuery("SELECT u FROM User u JOIN u.roles r WHERE u.approved=true AND r.name='$role'");
         return $query->getResult();
     }
 }

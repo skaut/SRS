@@ -2,9 +2,8 @@
 
 namespace App\Model\Program;
 
-use Nette;
-use Kdyby;
+use Kdyby\Doctrine\EntityRepository;
 
-class ProgramRepository extends Nette\Object
+class ProgramRepository extends EntityRepository
 {
 }

@@ -16,16 +16,16 @@ class SettingsFixture extends AbstractFixture
     private $translator;
 
     /**
-     * @var \App\ConfigFacade
+     * @var \App\Services\ConfigFacade
      */
     private $configFacade;
 
     /**
      * SettingsFixture constructor.
      * @param \Kdyby\Translation\Translator $translator
-     * @param \App\ConfigFacade $configFacade
+     * @param \App\Services\ConfigFacade $configFacade
      */
-    public function __construct(\Kdyby\Translation\Translator $translator, \App\ConfigFacade $configFacade)
+    public function __construct(\Kdyby\Translation\Translator $translator, \App\Services\ConfigFacade $configFacade)
     {
         $this->translator = $translator;
         $this->configFacade = $configFacade;

@@ -2,18 +2,15 @@
 
 namespace App\Model\User;
 
-use Nette;
-use Kdyby;
+use Kdyby\Doctrine\EntityRepository;
 
-class UserRepository extends Nette\Object
+class UserRepository extends EntityRepository
 {
-    private $em;
-    private $userRepository;
-
-    public function __construct(Kdyby\Doctrine\EntityManager $em)
-    {
-        $this->em = $em;
-        $this->userRepository = $em->getRepository(User::class);
+    public function findUserById($id) {
+        return $this->findOneBy(array('id' => $id));
     }
 
+    public function findUserBySkautISUserIdName($skautISUserId) {
+        return $this->findOneBy(array('skautISUserId' => $skautISUserId));
+    }
 }

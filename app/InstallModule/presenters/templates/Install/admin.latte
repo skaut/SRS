@@ -1,8 +1,8 @@
-{block progress}0%{/block}
+{block progress}75%{/block}
 
 {block header}{_install.admin.header}{/block}
 
 {block content}
-    <p>{_install.schema.text}</p>
-    <a class="btn btn-primary" href="{link importSchema!}">{_install.schema.continue}</a>
+    <p>{_install.admin.text}</p>
+    <a class="btn btn-primary" href="{plink :Auth:login, 'backlink' => $backlink}">{_install.admin.continue}</a>
 {/block}

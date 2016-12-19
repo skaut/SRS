@@ -2,10 +2,9 @@
 
 namespace App\Model\Settings;
 
-use Nette;
-use Kdyby;
+use Kdyby\Doctrine\EntityRepository;
 
-class SettingsRepository extends Nette\Object
+class SettingsRepository extends EntityRepository
 {
 
 }

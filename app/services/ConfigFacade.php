@@ -1,5 +1,5 @@
 <?php
-namespace App;
+namespace App\Services;
 
 use Nette\Utils\Neon;
 

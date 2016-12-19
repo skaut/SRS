@@ -2,10 +2,9 @@
 
 namespace App\Model\CMS;
 
-use Nette;
-use Kdyby;
+use  Kdyby\Doctrine\EntityRepository;
 
-class PageRepository extends Nette\Object
+class PageRepository extends EntityRepository
 {
     public function getCount()
     {
