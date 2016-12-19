@@ -12,12 +12,25 @@ use App\Model\ACL\Permission;
 
 class RoleFixture extends AbstractFixture implements DependentFixtureInterface
 {
+    /**
+     * @var \Kdyby\Translation\Translator
+     */
+    private $translator;
+
+    /**
+     * RoleFixture constructor.
+     * @param \Kdyby\Translation\Translator $translator
+     */
+    public function __construct(\Kdyby\Translation\Translator $translator)
+    {
+        $this->translator = $translator;
+    }
 
     public function load(ObjectManager $manager)
     {
         $roles = array();
         foreach (Role::$roles as $role) {
-            $roles[$role] = new Role($role);
+            $roles[$role] = new Role($this->translator->translate('common.role.' . $role));
         }
 
         $guest = $roles[Role::GUEST];

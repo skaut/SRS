@@ -64,8 +64,8 @@ class RouterFactory
             'id' => null
         ));
 
-        $router[] = new Route('login/', 'Auth:login'); //TODO
-        $router[] = new Route('logout/', 'Auth:logout'); //TODO
+        $router[] = new Route('login/', 'Auth:login');
+        $router[] = new Route('logout/', 'Auth:logout');
 
         $router[] = new Route('[!<pageId [a-z-0-9]+>]', array(
             'module' => 'Web',

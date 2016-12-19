@@ -50,6 +50,7 @@ services:
     - App\Services\ConfigFacade
     - App\Model\User\UserRepository
     - App\Model\ACL\RoleRepository
+    - App\Model\ACL\ResourceRepository
     - App\Model\Settings\SettingsRepository
     - App\Model\CMS\PageRepository
     - App\Model\Program\ProgramRepository
@@ -61,17 +62,17 @@ webloader:
     css:
         web:
             files:
-                - bootstrap.min.css
+                - %appDir%/../vendor/twbs/bootstrap/dist/css/bootstrap.min.css
                 - multi-select.css
 
         admin:
             files:
-                - bootstrap.min.css
+                - %appDir%/../vendor/twbs/bootstrap/dist/css/bootstrap.min.css
                 - multi-select.css
 
         install:
             files:
-                - bootstrap.min.css
+                - %appDir%/../vendor/twbs/bootstrap/dist/css/bootstrap.min.css
 
     js:
         web:
@@ -82,7 +83,7 @@ webloader:
             files:
                 - netteForms.js
                 - main.js
-                - bootstrap.min.js
+                - %appDir%/../vendor/twbs/bootstrap/dist/js/bootstrap.min.js
                 - jquery.multi-select.js
 
         admin:
@@ -93,7 +94,7 @@ webloader:
             files:
                 - netteForms.js
                 - main.js
-                - bootstrap.min.js
+                - %appDir%/../vendor/twbs/bootstrap/dist/js/bootstrap.min.js
                 - jquery.multi-select.js
 
         install:
@@ -104,4 +105,4 @@ webloader:
             files:
                 - netteForms.js
                 - main.js
-                - bootstrap.min.js
+                - %appDir%/../vendor/twbs/bootstrap/dist/js/bootstrap.min.js

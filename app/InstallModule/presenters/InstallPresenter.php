@@ -72,7 +72,8 @@ class InstallPresenter extends InstallBasePresenter
             $this->user->logout(true);
         }
 
-        $this->checkInstallationStatus();
+        if ($this->checkInstallationStatus())
+            $this->redirect('installed');
 
         if ($this->context->parameters['installed']['connection']) {
             $this->flashMessage($this->translator->translate('install.database.connection_already_configured'), 'alert-info');
@@ -82,7 +83,8 @@ class InstallPresenter extends InstallBasePresenter
 
     public function renderSchema()
     {
-        $this->checkInstallationStatus();
+        if ($this->checkInstallationStatus())
+            $this->redirect('installed');
 
         if (!$this->context->parameters['installed']['connection']) {
             $this->redirect('connection');
@@ -137,7 +139,8 @@ class InstallPresenter extends InstallBasePresenter
 
     public function renderSkautIs()
     {
-        $this->checkInstallationStatus();
+        if ($this->checkInstallationStatus())
+            $this->redirect('installed');
 
         if (!$this->context->parameters['installed']['connection']) {
             $this->redirect('connection');
@@ -155,7 +158,8 @@ class InstallPresenter extends InstallBasePresenter
 
     public function renderAdmin()
     {
-        $this->checkInstallationStatus();
+        if ($this->checkInstallationStatus())
+            $this->redirect('installed');
 
         if (!$this->context->parameters['installed']['connection']) {
             $this->redirect('connection');
@@ -179,10 +183,10 @@ class InstallPresenter extends InstallBasePresenter
         if ($this->user->isLoggedIn()) {
             $user = $this->userRepository->findUserById($this->user->id);
 
-            $unregisteredRole = $this->roleRepository->findRoleByName(Role::UNREGISTERED);
+            $unregisteredRole = $this->roleRepository->findRoleByUntranslatedName(Role::UNREGISTERED);
             $user->removeRole($unregisteredRole);
 
-            $adminRole = $this->roleRepository->findRoleByName(Role::ADMIN);
+            $adminRole = $this->roleRepository->findRoleByUntranslatedName(Role::ADMIN);
             $user->addRole($adminRole);
 
             $this->em->flush();
@@ -304,34 +308,6 @@ class InstallPresenter extends InstallBasePresenter
         };
 
         return $form;
-    }
-
-    private function checkInstallationStatus()
-    {
-        if ($this->context->parameters['installed']['connection'] &&
-            $this->context->parameters['installed']['schema'] &&
-            $this->context->parameters['installed']['skautIS'] &&
-            $this->context->parameters['installed']['admin']
-        )
-            $this->redirect('installed');
-
-        if ($this->checkInstallationError())
-            $this->redirect('error');
-    }
-
-    private function checkInstallationError() {
-        return ((!$this->context->parameters['installed']['connection'] && (
-                    $this->context->parameters['installed']['schema'] ||
-                    $this->context->parameters['installed']['skautIS'] ||
-                    $this->context->parameters['installed']['admin']))
-            ||
-            (!$this->context->parameters['installed']['schema'] && (
-                    $this->context->parameters['installed']['skautIS'] ||
-                    $this->context->parameters['installed']['admin']))
-            ||
-            (!$this->context->parameters['installed']['skautIS'] &&
-                $this->context->parameters['installed']['admin'])
-        );
     }
 
     private function checkDBConnection($host, $dbname, $user, $password) {

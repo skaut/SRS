@@ -22,7 +22,7 @@ class AuthPresenter extends BasePresenter
         $this->redirectReturnUrl($this->getParameter('ReturnUrl'));
     }
 
-    public function renderLogout($backlink = null) {
+    public function renderLogout() {
         if ($this->user->isLoggedIn()) {
             $this->user->logout(true);
             $logoutUrl = $this->skautis->getLogoutUrl();

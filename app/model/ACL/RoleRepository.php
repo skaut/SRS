@@ -6,8 +6,23 @@ use Kdyby\Doctrine\EntityRepository;
 
 class RoleRepository extends EntityRepository
 {
+    /**
+     * @var \Kdyby\Translation\Translator
+     */
+    protected $translator;
+
+    public function __construct(\Kdyby\Doctrine\EntityManager $em, \Doctrine\ORM\Mapping\ClassMetadata $metadata, \Kdyby\Translation\Translator $translator)
+    {
+        parent::__construct($em, $metadata);
+        $this->translator = $translator;
+    }
+
     public function findRoleByName($name) {
         return $this->findOneBy(array('name' => $name));
+    }
+
+    public function findRoleByUntranslatedName($name) {
+        return $this->findRoleByName($this->translator->translate('common.role.' . $name));
     }
 
     public function findRegisterable() {

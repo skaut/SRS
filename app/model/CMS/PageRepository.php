@@ -20,7 +20,7 @@ class PageRepository extends EntityRepository
                 ->where("p.slug = $slug");
             return $qb->getQuery()->getSingleScalarResult();
         } catch (\Doctrine\ORM\NoResultException $e) {
-            throw new \Nette\Application\BadRequestException('Taková stránka neexistuje', 404);
+            throw new \Nette\Application\BadRequestException('Page not found', 404);
         }
     }
 
@@ -33,7 +33,7 @@ class PageRepository extends EntityRepository
                 ->where("p.id = $id");
             return $qb->getQuery()->getSingleScalarResult();
         } catch (\Doctrine\ORM\NoResultException $e) {
-            throw new \Nette\Application\BadRequestException('Taková stránka neexistuje', 404);
+            throw new \Nette\Application\BadRequestException('Page not found', 404);
         }
     }
 

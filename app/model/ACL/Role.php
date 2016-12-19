@@ -14,8 +14,8 @@ class Role
     const GUEST = 'guest';
     const UNREGISTERED = 'unregistered';
     const UNAPPROVED = 'unapproved';
-    const ATTENDEE = 'attentee';
-    const SERVICE_TEAM = 'sevice_team';
+    const ATTENDEE = 'attendee';
+    const SERVICE_TEAM = 'service_team';
     const LECTOR = 'lector';
     const ORGANIZER = 'organizer';
     const ADMIN = 'admin';

@@ -26,6 +26,8 @@
         "itbz/fpdi": "^1.6",
         "phpoffice/phpexcel": "^1.8",
 
+        "twbs/bootstrap": "^3.3",
+
         "texy/texy": "^2.9",
 
         "pear/numbers_words": "^0.18.1"
