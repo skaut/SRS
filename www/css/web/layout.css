@@ -1,4 +1,4 @@
-/* Základní styly */
+/* rozvrzeni stranek */
 ul.no-bullets > li {
     list-style-type: none !important;
     margin-left: 0px !important;
@@ -9,31 +9,39 @@ ul.no-margin {
     margin-left: 0 !important;
 }
 
-.container {
+#wrapper {
     min-width: 768px;
 }
 
-#header #logo {
+#messages {
+    margin-top: 10px;
+}
+
+#messages .alert {
+    margin-bottom: 10px;
+}
+
+#header {
+    margin-top: 20px;
+}
+
+#logo {
     float: left;
 }
 
-#header img {
-    margin: 10px 0 0 0;
-}
-
-#header #user-menu {
+#user-menu {
     float: right;
-    margin: 20px 0 0 0;
+    margin-top: 5px;
     width: auto;
 }
 
-#header #user-menu ul {
+#user-menu ul {
     float: right;
     margin: 0;
     padding: 0;
 }
 
-#header #user-menu li {
+#user-menu li {
     font-size: 12px;
     line-height: 2em;
     float: left;
@@ -41,6 +49,26 @@ ul.no-margin {
     margin-left: 5px;
 }
 
-#header #main-menu {
-    height: 100px;
+#main-menu {
+    margin-top: 15px;
 }
+
+#main-menu nav {
+    margin-bottom: 0;
+}
+
+#main-menu .navbar-nav {
+    float: left;
+    margin: 0;
+}
+
+#main-menu .navbar-nav > li {
+    float: left;
+}
+
+#main-menu .navbar-nav > li > a {
+    padding: 15px;
+}
+
+
+

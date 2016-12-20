@@ -1,3 +1,11 @@
-{block main}{/block}
+{block body-class}body-member{/block}
 
-{block sidebar}{/block}
+{block main}
+    <h2>{_web.member.header}</h2>
+    <div>
+        <p>{_web.member.text_info}</p>
+        <p>{_web.member.text_instructions}</p>
+        <p>{_web.member.text_details, ['username' => $dbuser->getUsername(), 'securityCode' => $dbuser->getSecurityCode()]|noescape}</p>
+        <p>{_web.member.text_note}</p>
+    </div>
+{/block}

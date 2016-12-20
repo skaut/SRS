@@ -6,11 +6,6 @@ use  Kdyby\Doctrine\EntityRepository;
 
 class PageRepository extends EntityRepository
 {
-    public function getCount()
-    {
-        return $this->countBy();
-    }
-
     public function slugToId($slug)
     {
         return $this->findOneBy(['slug' => $slug]);
@@ -24,5 +19,10 @@ class PageRepository extends EntityRepository
     public function findPublishedPagesOrderedByPosition()
     {
         return $this->findBy(['public' => true], ['position' => 'ASC']);
+    }
+
+    public function findPublishedPageBySlug($slug)
+    {
+        return $this->findOneBy(['public' => true, 'slug' => $slug]);
     }
 }

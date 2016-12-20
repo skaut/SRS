@@ -1,5 +1,6 @@
-header: "SRS - instalace"
-title: "SRS - instalace"
+common:
+    title: "Instalace | SRS"
+    header: "SRS - instalace"
 
 schema:
     header: "Vytvoření tabulek"

@@ -181,4 +181,15 @@ class Page
     {
         $this->contents = $contents;
     }
+
+    public function isAllowedToRoles($roleNames)
+    {
+        foreach ($roleNames as $roleName) {
+            foreach ($this->roles as $role) {
+                if ($roleName == $role->getName())
+                    return true;
+            }
+        }
+        return false;
+    }
 }

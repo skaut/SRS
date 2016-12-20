@@ -61,16 +61,12 @@ abstract class WebBasePresenter extends BasePresenter
 
         $this->template->logo = $this->settingsRepository->getValue('logo');
         $this->template->footer = $this->settingsRepository->getValue('footer');
-        $this->template->title = $this->settingsRepository->getValue('seminar_name');
-
-        $this->template->sidebar = false;
+        $this->template->seminarName = $this->settingsRepository->getValue('seminar_name');
 
         $this->template->adminAccess = $this->user->isAllowed(Resource::ADMIN, Permission::ACCESS);
         $this->template->displayUsersRoles = $this->settingsRepository->getValue('display_users_roles');
 
         $this->template->pages = $this->pageRepository->findPublishedPagesOrderedByPosition();
-        if (isset($this->params['pageId']) && $this->params['pageId'] !== null)
-            $this->template->slug = $this->pageRepository->idToSlug($this->params['pageId']);
     }
 
     private function checkInstallation() {

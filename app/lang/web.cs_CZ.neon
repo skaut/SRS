@@ -1,40 +1,64 @@
 common:
+    title: "%page% | %seminar_name%"
     logged_in_user: "Uživatel:"
     logged_in_roles: "v roli:|v rolích:"
+    login: "Přihlásit"
+    logout: "Odhlásit"
+    admin: "Administrace"
 
+    homepage_not_exists: "Stránka s cestou \"/\" neexistuje nebo není zveřejněná. Nastavte ji v administriaci."
+    page_access_denied: "Na zobrazení této stránky nemáte práva."
+    login_required: "Pro přístup musíte být přihlášeni."
 
 profile:
-    seminarGroup: "Seminář"
+    name: "Profil"
+    title: "Můj profil"
+    header: "Můj profil"
 
-    attendanceLabel: "Účast na semináři"
-    feeLabel: "Cena semináře"
-
-    unapprovedRegistration: "Vaše registrace zatím nebyla potvrzena"
-    notRegistered: "neúčastníte se"
-
-
-attendeeBox:
-    loginRequest: "Pro přihlášení na seminář se musíte nejprve"
-    loginRequestLink: "přihlásit přes skautIS"
-    registeredRoles: "Na seminář jste se již přihlásili jako"
-    unapprovedRegistration: "Vaše registrace zatím nebyla potvrzena."
-    approvedRegistration: "Vaše registrace byla již potvrzena."
+member:
+    name: "Nepropojený účet člena"
+    title: "Nepropojený účet"
+    header: "Nemáte propojený účet"
+    text_info: "Byli jste úspěšně přihlášeni na webu, ale pravděpodobně nejste členem Junáka."
+    text_instructions: "Pokud členy jste, pak nemáte pravděpodobně propojený svůj uživatelský účet se skutečnými údaji v registraci. Kontaktuje svého vedoucího oddílu (nebo osobu, která zpracovává registraci) a požádejte ho o propojení vašeho účtu ve skautISu s reálnými údaji."
+    text_details: "Pro propojení účtu potřebujete tyto údaje:<br>uživatelské jméno: %username%<br>bezpečnostní kód: %securityCode%"
+    text_note: "Poznámka: V žádném případě nikdy nikomu nedávejte své heslo."
 
 
-programBox:
-    unapprovedLoginPrograms: "Vaše role nemá právo zapisovat si programy"
 
 
-attendeeForm:
-    rolesLabel: "Přihlásit jako"
-
-
-rolesForm:
-    rolesLabel: "Role "
-    submit: "Upravit role"
-
-
-messages:
-    requiredRolesNotSelected: "K roli %role% musíte mít vybrané role: %requiredRoles%."
-    incompatibleRolesSelected: "Není možné kombinovat roli %role% s rolemi: %incompatibleRoles%."
-    rolesChanged: "Role byly upraveny, přihlaste se prosím znovu."
+#profile:
+#    seminarGroup: "Seminář"
+#
+#    attendanceLabel: "Účast na semináři"
+#    feeLabel: "Cena semináře"
+#
+#    unapprovedRegistration: "Vaše registrace zatím nebyla potvrzena"
+#    notRegistered: "neúčastníte se"
+#
+#
+#attendeeBox:
+#    loginRequest: "Pro přihlášení na seminář se musíte nejprve"
+#    loginRequestLink: "přihlásit přes skautIS"
+#    registeredRoles: "Na seminář jste se již přihlásili jako"
+#    unapprovedRegistration: "Vaše registrace zatím nebyla potvrzena."
+#    approvedRegistration: "Vaše registrace byla již potvrzena."
+#
+#
+#programBox:
+#    unapprovedLoginPrograms: "Vaše role nemá právo zapisovat si programy"
+#
+#
+#attendeeForm:
+#    rolesLabel: "Přihlásit jako"
+#
+#
+#rolesForm:
+#    rolesLabel: "Role "
+#    submit: "Upravit role"
+#
+#
+#messages:
+#    requiredRolesNotSelected: "K roli %role% musíte mít vybrané role: %requiredRoles%."
+#    incompatibleRolesSelected: "Není možné kombinovat roli %role% s rolemi: %incompatibleRoles%."
+#    rolesChanged: "Role byly upraveny, přihlaste se prosím znovu."

@@ -1,0 +1,62 @@
+{define user-menu $user, $adminAccess, $displayUsersRoles, $backlink}
+    <div id="user-menu">
+        <ul>
+            {if $user->isLoggedIn()}
+                <li>
+                    {_web.common.logged_in_user}
+                    <strong>
+                        {$user->identity->dbuser->getUsername()}
+                    </strong>
+                    {if $displayUsersRoles}
+                        {_web.common.logged_in_roles, count($user->roles)}
+                        <strong>
+                            {foreach $user->roles as $role}{$role}{sep}, {/sep}{/foreach}
+                        </strong>
+                    {/if}
+                </li>
+
+                {if !$user->identity->dbuser->isMember()}
+                    <li>
+                        <strong><a href="{plink :Web:Member:default}" style="color: red">{_web.member.name}</a></strong>
+                    </li>
+                {/if}
+            {/if}
+        </ul>
+
+        <div class="clearfix"></div>
+
+        <ul>
+            {if !$user->isLoggedIn()}
+                <li>
+                    <a href="{plink :Auth:login, 'backlink' => $backlink}" class="btn btn-default">
+                        <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+                        {_web.common.login}
+                    </a>
+                </li>
+            {else}
+                <li>
+                    <a href="{plink :Web:Profile:default}" class="btn btn-default">
+                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                        {_web.profile.name}
+                    </a>
+                </li>
+
+                {if $adminAccess}
+                    <li>
+                        <a href="{$basePath}/admin" class="btn btn-default">
+                            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                            {_web.common.admin}
+                        </a>
+                    </li>
+                {/if}
+
+                <li>
+                    <a href="{plink :Auth:logout}" class="btn btn-default">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                        {_web.common.logout}
+                    </a>
+                </li>
+            {/if}
+        </ul>
+    </div>
+{/define}

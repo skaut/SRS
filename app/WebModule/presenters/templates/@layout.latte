@@ -3,17 +3,16 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
 
-    <title>{_web.title}</title>
+    <title>{_web.common.title, [page => $pageName, seminar_name => $seminarName]}</title>
 
     <link rel="shortcut icon" href="{$basePath}/favicon.ico">
 
     {control css}
     {control js}
 
-    {block head}{/block}
+    {block head}
 
     <script>
         var basePath = {$basePath};
@@ -25,126 +24,56 @@
     </script>
 </head>
 
-<body class="body{ifset $slug}-{$slug}{/ifset}">
+<body class="{block body-class}{/block}">
 <script>
     document.body.className += ' js'
 </script>
 
-<div class="container">
-    <row>
-        <div n:foreach="$flashes as $flash" n:class="alert, $flash->type">{$flash->message}</div>
-    </row>
-
-    <row id="header">
-        <div id="user-menu">
-            <ul>
-                {if $user->isLoggedIn()}
-                    <li>
-                        {_web.common.logged_in_user}
-                        <strong>
-                            {$user->identity->dbuser->getUsername()}
-                        </strong>
-                        {if $displayUsersRoles}
-                            {_web.common.logged_in_roles, count($user->roles)}
-                            <strong>
-                                {foreach $user->roles as $role}{$role}{sep}, {/sep}{/foreach}
-                            </strong>
-                        {/if}
-                    </li>
-
-                    {if !$user->identity->dbuser->isMember()}
-                        <li>
-                            <strong>
-                                <a href="{plink :Web:Member:default}" style="color: red">
-                                    Nepropojený účet člena
-                                </a>
-                            </strong>
-                        </li>
-                    {/if}
-                {/if}
-            </ul>
-
-            <div class="clearfix"></div>
-
-            <ul>
-                {if !$user->isLoggedIn()}
-                    <li>
-                        <a href="{plink :Auth:login, 'backlink' => $backlink}" class="btn btn-default">
-                            <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
-                            Přihlásit
-                        </a>
-                    </li>
-                {else}
-                    <li>
-                        <a href="{plink :Web:Profile:default}" class="btn btn-default">
-                            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                            Profil
-                        </a>
-                    </li>
-
-                    {if $adminAccess}
-                        <li>
-                            <a href="{$basePath}/admin" class="btn btn-default">
-                                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-                                Administrace
-                            </a>
-                        </li>
-                    {/if}
-
-                    <li>
-                        <a href="{plink :Auth:logout}" class="btn btn-default">
-                            <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
-                            Odhlásit
-                        </a>
-                    </li>
-                {/if}
-            </ul>
+<div class="container" id="wrapper">
+    <div id="messages" class="row" n:if="$flashes">
+        <div class="col-sm-12">
+            <div n:foreach="$flashes as $flash" n:class="alert, $flash->type"
+                    role="alert">{$flash->message|noescape}</div>
         </div>
+    </div>
 
-        <div id="logo">
-            <a href="{plink :Web:Page:default}"><img src="{$basePath}{$logo}" alt="logo"></a>
-        </div>
+    <div id="header" class="row">
+        <div class="col-sm-12">
+            {import 'components/user-menu.latte'}
+            {include user-menu $user, $adminAccess, $displayUsersRoles, $backlink}
 
-        <div class="clearfix"></div>
-    </row>
-
-    <row id="main-menu">
-        <nav class="navbar navbar-default">
-            <div class="container">
-                <ul class="nav navbar-nav">
-                    {foreach $pages as $page}
-                        {if $page->getSlug() == '/'}
-                            <li class="{ifCurrent :Web:Page:default, 'pageId' => NULL}active{/ifCurrent}">
-                                <a href="{plink :Web:Page:default}">{$page->getName()}</a>
-                            </li>
-                        {else}
-                            {if $page->isAllowedToRoles($user->roles)}
-                                <li class="{ifCurrent :Web:Page:default, 'pageId' => $page->id}active{/ifCurrent}">
-                                    <a href="{plink :Web:Page:default, 'pageId' => $page->getId()}">{$page->getName()}</a>
-                                </li>
-                            {/if}
-                        {/if}
-                    {/foreach}
-                </ul>
+            <div id="logo">
+                <a href="{plink :Web:Page:default}"><img src="{$basePath}{$logo}" alt="logo"></a>
             </div>
-        </nav>
-    </row>
-
-    <row id="main">
-        <div id="content" class="{if $sidebar}span9{else}span12{/if}">
-            {block main}{/block}
         </div>
-        {if $sidebar}
-            <div id="sidebar" class="span3">
-                {block sidebar}{/block}
+    </div>
+
+    <div id="main-menu" class="row">
+        <div class="col-sm-12">
+            {import 'components/main-menu.latte'}
+            {include main-menu $pages}
+        </div>
+    </div>
+
+    <div id="content" class="row">
+        <div id="main" class="{ifset #sidebar}col-sm-9{else}col-sm-12{/ifset}">
+            {include #main}
+        </div>
+        {ifset #sidebar}
+            <div id="sidebar" class="col-sm-3">
+                {include #sidebar}
             </div>
-        {/if}
-    </row>
+        {/ifset}
+    </div>
+
+    <hr>
 
     <footer class="footer">
         <p>{$footer}</p>
     </footer>
 </div>
+
+
 </body>
 </html>
 
