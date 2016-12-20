@@ -35,69 +35,100 @@
         <div n:foreach="$flashes as $flash" n:class="alert, $flash->type">{$flash->message}</div>
     </row>
 
-    <div class="header">
+    <row id="header">
+        <div id="user-menu">
+            <ul>
+                {if $user->isLoggedIn()}
+                    <li>
+                        {_web.common.logged_in_user}
+                        <strong>
+                            {$user->identity->dbuser->getUsername()}
+                        </strong>
+                        {if $displayUsersRoles}
+                            {_web.common.logged_in_roles, count($user->roles)}
+                            <strong>
+                                {foreach $user->roles as $role}{$role}{sep}, {/sep}{/foreach}
+                            </strong>
+                        {/if}
+                    </li>
+
+                    {if !$user->identity->dbuser->isMember()}
+                        <li>
+                            <strong>
+                                <a href="{plink :Web:Member:default}" style="color: red">
+                                    Nepropojený účet člena
+                                </a>
+                            </strong>
+                        </li>
+                    {/if}
+                {/if}
+            </ul>
+
+            <div class="clearfix"></div>
+
+            <ul>
+                {if !$user->isLoggedIn()}
+                    <li>
+                        <a href="{plink :Auth:login, 'backlink' => $backlink}" class="btn btn-default">
+                            <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+                            Přihlásit
+                        </a>
+                    </li>
+                {else}
+                    <li>
+                        <a href="{plink :Web:Profile:default}" class="btn btn-default">
+                            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                            Profil
+                        </a>
+                    </li>
+
+                    {if $adminAccess}
+                        <li>
+                            <a href="{$basePath}/admin" class="btn btn-default">
+                                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                                Administrace
+                            </a>
+                        </li>
+                    {/if}
+
+                    <li>
+                        <a href="{plink :Auth:logout}" class="btn btn-default">
+                            <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                            Odhlásit
+                        </a>
+                    </li>
+                {/if}
+            </ul>
+        </div>
+
         <div id="logo">
             <a href="{plink :Web:Page:default}"><img src="{$basePath}{$logo}" alt="logo"></a>
         </div>
 
-        <div id="user">
-            {if !$user->isLoggedIn()}
-                <li>
-                    <a href="{plink :Auth:login, 'backlink' => $backlink}">
-                        <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
-                        Přihlásit
-                    </a>
-                </li>
-            {else}
-                <li>Přihlášen jako:
-                    <strong>
-                        <a href="{plink :Web:Profile:default}">
-                            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                            {$user->identity->dbuser->getUsername()}
-                        </a>
-                    </strong>
+        <div class="clearfix"></div>
+    </row>
 
-                    {if $displayUsersRoles}
-                        ({_web.common.in_roles, count($user->roles)}
-                        {foreach $user->roles as $role}
-                            {$role}{sep}, {/sep}
-                        {/foreach})
-                    {/if}
-                </li>
-
-                {if !$user->identity->dbuser->isMember()}
-                    <li>
-                        <a href="{plink :Web:Member:default}" style="color: red">
-                            <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
-                            Nepropojený účet člena
-                        </a>
-                    </li>
-                {/if}
-
-                <li>
-                    <a href="{plink :Auth:logout, 'backlink' => $backlink}">
-                        <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
-                        Odhlásit
-                    </a>
-                </li>
-
-                {if $user->isAllowed('admin', 'access')}
-                    <li>
-                        <a href="{$basePath}/admin">
-                            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-                            Administrace
-                        </a>
-                    </li>
-                {/if}
-            {/if}
-        </div>
-
-        <nav>
-            <ul class="nav">
-                <li></li>
-            </ul>
+    <row id="main-menu">
+        <nav class="navbar navbar-default">
+            <div class="container">
+                <ul class="nav navbar-nav">
+                    {foreach $pages as $page}
+                        {if $page->getSlug() == '/'}
+                            <li class="{ifCurrent :Web:Page:default, 'pageId' => NULL}active{/ifCurrent}">
+                                <a href="{plink :Web:Page:default}">{$page->getName()}</a>
+                            </li>
+                        {else}
+                            {if $page->isAllowedToRoles($user->roles)}
+                                <li class="{ifCurrent :Web:Page:default, 'pageId' => $page->id}active{/ifCurrent}">
+                                    <a href="{plink :Web:Page:default, 'pageId' => $page->getId()}">{$page->getName()}</a>
+                                </li>
+                            {/if}
+                        {/if}
+                    {/foreach}
+                </ul>
+            </div>
         </nav>
-    </div>
+    </row>
 
     <row id="main">
         <div id="content" class="{if $sidebar}span9{else}span12{/if}">
@@ -110,9 +141,9 @@
         {/if}
     </row>
 
-    <row id="footer">
-        {$footer}
-    </row>
+    <footer class="footer">
+        <p>{$footer}</p>
+    </footer>
 </div>
 </body>
 </html>

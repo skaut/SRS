@@ -1,0 +1,46 @@
+/* Základní styly */
+ul.no-bullets > li {
+    list-style-type: none !important;
+    margin-left: 0px !important;
+}
+
+ul.no-margin {
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+}
+
+.container {
+    min-width: 768px;
+}
+
+#header #logo {
+    float: left;
+}
+
+#header img {
+    margin: 10px 0 0 0;
+}
+
+#header #user-menu {
+    float: right;
+    margin: 20px 0 0 0;
+    width: auto;
+}
+
+#header #user-menu ul {
+    float: right;
+    margin: 0;
+    padding: 0;
+}
+
+#header #user-menu li {
+    font-size: 12px;
+    line-height: 2em;
+    float: left;
+    display: block;
+    margin-left: 5px;
+}
+
+#header #main-menu {
+    height: 100px;
+}

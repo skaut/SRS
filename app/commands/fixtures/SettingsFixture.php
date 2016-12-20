@@ -13,12 +13,12 @@ class SettingsFixture extends AbstractFixture
     /**
      * @var \Kdyby\Translation\Translator
      */
-    private $translator;
+    protected $translator;
 
     /**
      * @var \App\Services\ConfigFacade
      */
-    private $configFacade;
+    protected $configFacade;
 
     /**
      * SettingsFixture constructor.
@@ -59,7 +59,7 @@ class SettingsFixture extends AbstractFixture
         $settings[] = new Settings('skautis_action_name', '');
 
         $settings[] = new Settings('logo', '/img/logo.png');
-        $settings[] = new Settings('footer', '&copy; SRS ' + $today->format('Y'));
+        $settings[] = new Settings('footer', $this->translator->translate('common.settings.default.footer', ['year' => $today->format('Y')]));
 
         $settings[] = new Settings('company', $this->translator->translate('common.settings.default.seminar_name'));
         $settings[] = new Settings('ico', $this->translator->translate('common.settings.default.seminar_name'));

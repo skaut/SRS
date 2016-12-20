@@ -12,9 +12,23 @@ use App\Model\CMS\Page;
 
 class CMSFixture extends AbstractFixture implements DependentFixtureInterface
 {
+    /**
+     * @var \Kdyby\Translation\Translator
+     */
+    protected $translator;
+
+    /**
+     * RoleFixture constructor.
+     * @param \Kdyby\Translation\Translator $translator
+     */
+    public function __construct(\Kdyby\Translation\Translator $translator)
+    {
+        $this->translator = $translator;
+    }
+
     public function load(ObjectManager $manager)
     {
-        $homepage = new Page('Homepage', '/');
+        $homepage = new Page($this->translator->translate('common.cms.default.homepage_name'), '/');
         $homepage->setPosition(0);
         $homepage->setPublic(true);
 
@@ -26,8 +40,7 @@ class CMSFixture extends AbstractFixture implements DependentFixtureInterface
         $this->addReference('homepage', $homepage);
 
         $textContent = new TextContent(null, $this->getReference('homepage'), Content::MAIN, 0,
-            "<h2>Úspěšně jste nainstalovali SRS. Gratulujeme!</h2>" .
-            "<p>Obsah této stránky můžeme změnit v administraci v sekci CMS.</p>"
+            $this->translator->translate('common.cms.default.homepage_text')
         );
 
         $manager->persist($textContent);

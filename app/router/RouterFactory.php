@@ -9,11 +9,20 @@ use Nette\Application\Routers\Route;
 
 class RouterFactory
 {
-	private $pageRepository;
+    /**
+     * @var \Kdyby\Doctrine\EntityManager
+     */
+	private $em;
 
-    public function __construct(\App\Model\CMS\PageRepository $pageRepository)
+    /**
+     * @var \App\Services\ConfigFacade
+     */
+	private $configFacade;
+
+    public function __construct(\Kdyby\Doctrine\EntityManager $em, \App\Services\ConfigFacade $configFacade)
     {
-        $this->pageRepository = $pageRepository;
+        $this->em = $em;
+        $this->configFacade = $configFacade;
     }
 
     /**
@@ -67,17 +76,22 @@ class RouterFactory
         $router[] = new Route('login/', 'Auth:login');
         $router[] = new Route('logout/', 'Auth:logout');
 
-        $router[] = new Route('[!<pageId [a-z-0-9]+>]', array(
-            'module' => 'Web',
-            'presenter' => 'Page',
-            'action' => 'default',
-            'pageId' => array(
-                Route::FILTER_IN => [$this->pageRepository, 'slugToId'],
-                Route::FILTER_OUT => [$this->pageRepository, "idToSlug"]
-            )
-        ));
+        $config = $this->configFacade->loadConfig();
+        if ($config['parameters']['installed']['connection'] && $config['parameters']['installed']['schema']) {
+            $pageRepository = $this->em->getRepository(\App\Model\CMS\Page::class);
 
-        $router[] = new Route('<presenter>/<action>[/<id>]', 'Front:Homepage:default');
+            $router[] = new Route('[!<pageId [a-z-0-9]+>]', array(
+                'module' => 'Web',
+                'presenter' => 'Page',
+                'action' => 'default',
+                'pageId' => array(
+                    Route::FILTER_IN => [$pageRepository, 'slugToId'],
+                    Route::FILTER_OUT => [$pageRepository, "idToSlug"]
+                )
+            ));
+        }
+
+        $router[] = new Route('<presenter>/<action>[/<id>]', 'Web:Page:default');
 
         return $router;
 	}

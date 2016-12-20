@@ -1,3 +1,8 @@
+common:
+    logged_in_user: "Uživatel:"
+    logged_in_roles: "v roli:|v rolích:"
+
+
 profile:
     seminarGroup: "Seminář"
 

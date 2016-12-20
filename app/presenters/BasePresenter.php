@@ -7,6 +7,12 @@ use Nette;
 abstract class BasePresenter extends Nette\Application\UI\Presenter
 {
     /**
+     * @var \Kdyby\Doctrine\EntityManager
+     * @inject
+     */
+    public $em;
+
+    /**
      * @var \WebLoader\Nette\LoaderFactory
      * @inject
      */
@@ -18,8 +24,15 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
      */
     public $translator;
 
+    /**
+     * @var \App\Services\ConfigFacade
+     * @inject
+     */
+    public $configFacade;
+
     protected function checkInstallationStatus()
     {
+
         if ($this->checkInstallationError())
             $this->redirect(':Install:Install:error');
 

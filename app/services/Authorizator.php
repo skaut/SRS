@@ -6,27 +6,20 @@ use Nette;
 use Nette\Security\privilege;
 use Nette\Security\role;
 
+/**
+ * Class Authorizator
+ * @package App\Services
+ */
 class Authorizator extends Nette\Security\Permission
 {
     /**
-     * @var \App\Model\ACL\RoleRepository
-     */
-    protected $roleRepository;
-
-    /**
-     * @var \App\Model\ACL\ResourceRepository
-     */
-    protected $resourceRepository;
-
-    /**
      * Authorizator constructor.
-     * @param \App\Model\ACL\RoleRepository $roleRepository
-     * @param \App\Model\ACL\ResourceRepository $resourceRepository
+     * @param \Kdyby\Doctrine\EntityManager $em
      */
-    public function __construct(\App\Model\ACL\RoleRepository $roleRepository, \App\Model\ACL\ResourceRepository $resourceRepository)
+    public function __construct(\Kdyby\Doctrine\EntityManager $em)
     {
-        $this->roleRepository = $roleRepository;
-        $this->resourceRepository = $resourceRepository;
+        $roleRepository = $em->getRepository(\App\Model\ACL\Role::class);
+        $resourceRepository = $em->getRepository(\App\Model\ACL\Resource::class);
 
         foreach ($resourceRepository->findAll() as $resource) {
             $this->addResource($resource->getName());

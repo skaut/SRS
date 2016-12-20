@@ -14,12 +14,12 @@ class PageRepository extends EntityRepository
     public function slugToId($slug)
     {
         try {
-            $qb = $this->em->createQueryBuilder()
+            $qb = $this->_em->createQueryBuilder()
                 ->select("p.id")
-                ->from("Page", "p")
+                ->from(Page::class, "p")
                 ->where("p.slug = $slug");
             return $qb->getQuery()->getSingleScalarResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (\Doctrine\ORM\NoResultException $ex) {
             throw new \Nette\Application\BadRequestException('Page not found', 404);
         }
     }
@@ -27,9 +27,9 @@ class PageRepository extends EntityRepository
     public function idToSlug($id)
     {
         try {
-            $qb = $this->em->createQueryBuilder()
+            $qb = $this->_em->createQueryBuilder()
                 ->select("p.id")
-                ->from("Page", "p")
+                ->from(Page::class, "p")
                 ->where("p.id = $id");
             return $qb->getQuery()->getSingleScalarResult();
         } catch (\Doctrine\ORM\NoResultException $e) {
@@ -37,13 +37,13 @@ class PageRepository extends EntityRepository
         }
     }
 
-    public function findPublishedOrderedByPosition()
+    public function findPublishedPagesOrderedByPosition()
     {
-        $qb = $this->em->createQueryBuilder()
+        $qb = $this->_em->createQueryBuilder()
             ->select("p")
-            ->from("Page", "p")
+            ->from(Page::class, "p")
             ->where("p.public = 1")
-            ->orderBy("p.position ASC");
+            ->orderBy("p.position", "ASC");
         return $qb->getQuery()->getResult();
     }
 

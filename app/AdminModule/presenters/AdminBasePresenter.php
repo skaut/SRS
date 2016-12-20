@@ -8,21 +8,33 @@ abstract class AdminBasePresenter extends BasePresenter
 {
     /**
      * @var \App\Model\Settings\SettingsRepository
-     * @inject
      */
-    public $settingsRepository;
+    protected $settingsRepository;
+
+    /**
+     * @var \App\Model\CMS\PageRepository
+     */
+    protected $pageRepository;
 
     /**
      * @var \App\Model\ACL\RoleRepository
-     * @inject
      */
-    public $roleRepository;
+    protected $roleRepository;
 
     /**
      * @var \App\Model\ACL\ResourceRepository
-     * @inject
      */
-    public $resourceRepository;
+    protected $resourceRepository;
+
+    /**
+     * @var \App\Model\User\User
+     */
+    protected $userRepository;
+
+    /**
+     * @var \App\Model\Program\Program
+     */
+    protected $programRepository;
 
     /**
      * @return CssLoader

@@ -47,24 +47,6 @@ class InstallPresenter extends InstallBasePresenter
      */
     public $translator;
 
-    /**
-     * @var \Kdyby\Doctrine\EntityManager
-     * @inject
-     */
-    public $em;
-
-    /**
-     * @var \App\Model\User\UserRepository
-     * @inject
-     */
-    public $userRepository;
-
-    /**
-     * @var \App\Model\ACL\RoleRepository
-     * @inject
-     */
-    public $roleRepository;
-
     public function renderDefault()
     {
         // pri testovani muze nastat situace, kdy jsme prihlaseni byt v DB nejsme, to by v ostrem provozu nemelo nastat
@@ -87,7 +69,7 @@ class InstallPresenter extends InstallBasePresenter
             $this->redirect('installed');
 
         if (!$this->context->parameters['installed']['connection']) {
-            $this->redirect('connection');
+            $this->redirect('default');
         }
 
         if ($this->context->parameters['installed']['schema']) {
@@ -126,7 +108,7 @@ class InstallPresenter extends InstallBasePresenter
         }
 
         $config = $this->configFacade->loadConfig();
-        $config['parameters']['installed']['schema'] = true;
+        $this->context->parameters['installed']['schema'] = $config['parameters']['installed']['schema'] = true;
         $result = $this->configFacade->saveConfig($config);
 
         if ($result === false) {
@@ -143,7 +125,7 @@ class InstallPresenter extends InstallBasePresenter
             $this->redirect('installed');
 
         if (!$this->context->parameters['installed']['connection']) {
-            $this->redirect('connection');
+            $this->redirect('default');
         }
 
         if (!$this->context->parameters['installed']['schema']) {
@@ -162,7 +144,7 @@ class InstallPresenter extends InstallBasePresenter
             $this->redirect('installed');
 
         if (!$this->context->parameters['installed']['connection']) {
-            $this->redirect('connection');
+            $this->redirect('default');
         }
 
         if (!$this->context->parameters['installed']['schema']) {
@@ -181,19 +163,22 @@ class InstallPresenter extends InstallBasePresenter
         $this->template->backlink = ':Install:Install:admin';
 
         if ($this->user->isLoggedIn()) {
-            $user = $this->userRepository->findUserById($this->user->id);
+            $userRepository = $this->em->getRepository(\App\Model\User\User::class);
+            $roleRepository = $this->em->getRepository(\App\Model\ACL\Role::class);
 
-            $unregisteredRole = $this->roleRepository->findRoleByUntranslatedName(Role::UNREGISTERED);
+            $user = $userRepository->findUserById($this->user->id);
+
+            $unregisteredRole = $roleRepository->findRoleByUntranslatedName(Role::UNREGISTERED);
             $user->removeRole($unregisteredRole);
 
-            $adminRole = $this->roleRepository->findRoleByUntranslatedName(Role::ADMIN);
+            $adminRole = $roleRepository->findRoleByUntranslatedName(Role::ADMIN);
             $user->addRole($adminRole);
 
             $this->em->flush();
             $this->user->logout(true);
 
             $config = $this->configFacade->loadConfig();
-            $config['parameters']['installed']['admin'] = true;
+            $this->context->parameters['installed']['admin'] = $config['parameters']['installed']['admin'] = true;
             $result = $this->configFacade->saveConfig($config);
 
             if ($result === false) {
@@ -233,10 +218,10 @@ class InstallPresenter extends InstallBasePresenter
     public function handleReinstall()
     {
         $config = $this->configFacade->loadConfig();
-        $config['parameters']['installed']['connection'] = false;
-        $config['parameters']['installed']['schema'] = false;
-        $config['parameters']['installed']['skautIS'] = false;
-        $config['parameters']['installed']['admin'] = false;
+        $this->context->parameters['installed']['connection'] = $config['parameters']['installed']['connection'] = false;
+        $this->context->parameters['installed']['schema'] = $config['parameters']['installed']['schema'] = false;
+        $this->context->parameters['installed']['skautIS'] = $config['parameters']['installed']['skautIS'] = false;
+        $this->context->parameters['installed']['admin'] = $config['parameters']['installed']['admin'] = false;
         $result = $this->configFacade->saveConfig($config);
 
         if ($result === false) {
@@ -260,7 +245,7 @@ class InstallPresenter extends InstallBasePresenter
             }
 
             $config = $this->configFacade->loadConfig();
-            $config['parameters']['installed']['connection'] = true;
+            $this->context->parameters['installed']['connection'] = $config['parameters']['installed']['connection'] = true;
             $config['parameters']['database']['host'] = $values['host'];
             $config['parameters']['database']['dbname'] = $values['dbname'];
             $config['parameters']['database']['user'] = $values['user'];
@@ -294,7 +279,7 @@ class InstallPresenter extends InstallBasePresenter
             }
 
             $config = $this->configFacade->loadConfig();
-            $config['parameters']['installed']['skautIS'] = true;
+            $this->context->parameters['installed']['skautIS'] = $config['parameters']['installed']['skautIS'] = true;
             $config['parameters']['skautIS']['appId'] = $appId;
             $config['parameters']['skautIS']['test'] = $version;
             $result = $this->configFacade->saveConfig($config);

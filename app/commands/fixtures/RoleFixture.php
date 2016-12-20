@@ -15,7 +15,7 @@ class RoleFixture extends AbstractFixture implements DependentFixtureInterface
     /**
      * @var \Kdyby\Translation\Translator
      */
-    private $translator;
+    protected $translator;
 
     /**
      * RoleFixture constructor.

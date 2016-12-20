@@ -45,6 +45,8 @@ settings:
 
         skautis_action_name: "Akce ze skautIS"
 
+        footer: "Text v patičce"
+
         company: "Firma"
         ico: "IČO"
         accountant: "Pokladník"
@@ -56,6 +58,7 @@ settings:
         log_in_programs_to: "Přihlašování programů otevřeno do"
 
         display_users_roles: "Zobrazovat uživatelské role?"
+        redirect_after_login: "Po přihlášení přesměrovat na"
 
         custom_boolean: "Vlastní checkbox pro přihlášku č. %i%"
         custom_text: "Vlastní textové pole pro přihlášku č. %i%"
@@ -63,11 +66,18 @@ settings:
     default:
         seminar_name: "Konfigurace->Název semináře"
         seminar_email: "noreply@srs.skauting.cz"
+        footer: "© %year% SRS"
         company: "Konfigurace->Firma"
         ico: "Konfigurace->IČO"
         accountant: "Konfigurace->Pokladník"
         print_location: "Konfigurace->Místo"
         account_number: "Konfigurace->Číslo účtu"
+
+cms:
+    default:
+        homepage_name: "Homepage"
+        homepage_text: "<h2>Úspěšně jste nainstalovali SRS. Gratulujeme!</h2><p>Obsah této stránky můžeme změnit v administraci v sekci CMS.</p>"
+
 
 content:
     text: "Text"

@@ -46,7 +46,7 @@ class FixturesLoadCommand extends Command
             $fixtures[] = new ResourceFixture();
             $fixtures[] = new PermissionFixture();
             $fixtures[] = new RoleFixture($this->translator);
-            $fixtures[] = new CMSFixture();
+            $fixtures[] = new CMSFixture($this->translator);
 
             $purger = new ORMPurger($this->em);
             $executor = new ORMExecutor($this->em, $purger);

@@ -48,12 +48,6 @@ services:
     router: @App\RouterFactory::createRouter
     authenticator: App\Services\Authenticator
     - App\Services\ConfigFacade
-    - App\Model\User\UserRepository
-    - App\Model\ACL\RoleRepository
-    - App\Model\ACL\ResourceRepository
-    - App\Model\Settings\SettingsRepository
-    - App\Model\CMS\PageRepository
-    - App\Model\Program\ProgramRepository
     - App\InstallModule\Forms\BaseFormFactory
     - App\InstallModule\Forms\DatabaseFormFactory
     - App\InstallModule\Forms\SkautISFormFactory
@@ -64,6 +58,8 @@ webloader:
             files:
                 - %appDir%/../vendor/twbs/bootstrap/dist/css/bootstrap.min.css
                 - multi-select.css
+                - web/layout.css
+                - web/design.css
 
         admin:
             files:
