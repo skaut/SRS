@@ -6,6 +6,12 @@ use App\Commands\FixturesLoadCommand;
 use App\Commands\InitDataCommand;
 use Kdyby\Doctrine\Console\SchemaCreateCommand;
 use Nette\Application\UI;
+use Nette\Forms\ControlGroup;
+use Skautis\Config;
+use Skautis\Skautis;
+use Skautis\User;
+use Skautis\Wsdl\WebServiceFactory;
+use Skautis\Wsdl\WsdlManager;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Input\ArrayInput;
 use Kdyby\Console\StringOutput;
@@ -18,63 +24,55 @@ use App\Model\ACL\Role;
 class InstallPresenter extends InstallBasePresenter
 {
     /**
-     * @var \App\InstallModule\Forms\DatabaseFormFactory
-     * @inject
-     */
-    public $databaseFormFactory;
-
-    /**
-     * @var \App\InstallModule\Forms\SkautISFormFactory
-     * @inject
-     */
-    public $skautISFormFactory;
-
-    /**
-     * @var \App\Services\ConfigFacade
-     * @inject
-     */
-    public $configFacade;
-
-    /**
      * @var \Kdyby\Console\Application
      * @inject
      */
     public $application;
 
     /**
-     * @var \Kdyby\Translation\Translator
+     * @var \Skautis\Skautis
      * @inject
      */
-    public $translator;
+    public $skautIS;
+
+    /**
+     * @var \Kdyby\Doctrine\EntityManager
+     * @inject
+     */
+    public $em;
+
+    /**
+     * @var \App\Model\Settings\SettingsRepository
+     * @inject
+     */
+    public $settingsRepository;
+
+    /**
+     * @var \App\Model\ACL\RoleRepository
+     * @inject
+     */
+    public $roleRepository;
+
+    /**
+     * @var \App\Model\User\UserRepository
+     * @inject
+     */
+    public $userRepository;
 
     public function renderDefault()
     {
-        // pri testovani muze nastat situace, kdy jsme prihlaseni byt v DB nejsme, to by v ostrem provozu nemelo nastat
         if ($this->user->isLoggedIn()) {
             $this->user->logout(true);
         }
 
-        if ($this->checkInstallationStatus())
-            $this->redirect('installed');
-
-        if ($this->context->parameters['installed']['connection']) {
-            $this->flashMessage($this->translator->translate('install.database.connection_already_configured'), 'alert-info');
-            $this->redirect('schema');
-        }
-    }
-
-    public function renderSchema()
-    {
-        if ($this->checkInstallationStatus())
-            $this->redirect('installed');
-
-        if (!$this->context->parameters['installed']['connection']) {
-            $this->redirect('default');
-        }
-
-        if ($this->context->parameters['installed']['schema']) {
+        try {
+            if (filter_var($this->settingsRepository->getValue('admin_created'), FILTER_VALIDATE_BOOLEAN)) {
+                $this->redirect('installed');
+            }
             $this->flashMessage($this->translator->translate('install.schema.schema_already_created'), 'alert-info');
-            $this->redirect('skautIs');
+            $this->redirect('admin');
+        } catch (\Doctrine\DBAL\Exception\TableNotFoundException $ex) {
+        } catch (\App\Model\Settings\SettingsException $ex) {
         }
     }
 
@@ -86,7 +84,6 @@ class InstallPresenter extends InstallBasePresenter
         $this->application->add(new FixturesLoadCommand());
 
         $output = new StringOutput();
-
         $input = new ArrayInput([
             'command' => 'orm:schema-tool:create'
         ]);
@@ -97,6 +94,7 @@ class InstallPresenter extends InstallBasePresenter
             return;
         }
 
+        $output = new StringOutput();
         $input = new ArrayInput([
             'command' => 'app:fixtures:load'
         ]);
@@ -107,99 +105,71 @@ class InstallPresenter extends InstallBasePresenter
             return;
         }
 
-        $config = $this->configFacade->loadConfig();
-        $this->context->parameters['installed']['schema'] = $config['parameters']['installed']['schema'] = true;
-        $result = $this->configFacade->saveConfig($config);
-
-        if ($result === false) {
-            $this->presenter->flashMessage($this->translator->translate('install.common.config_save_unsuccessful'), 'alert-danger');
-            return;
-        }
-
-        $this->redirect('skautIs');
-    }
-
-    public function renderSkautIs()
-    {
-        if ($this->checkInstallationStatus())
-            $this->redirect('installed');
-
-        if (!$this->context->parameters['installed']['connection']) {
-            $this->redirect('default');
-        }
-
-        if (!$this->context->parameters['installed']['schema']) {
-            $this->redirect('schema');
-        }
-
-        if ($this->context->parameters['installed']['skautIS']) {
-            $this->flashMessage($this->translator->translate('install.skautis.skautis_already_configured'), 'alert-info');
-            $this->redirect('admin');
-        }
+        $this->redirect('admin');
     }
 
     public function renderAdmin()
     {
-        if ($this->checkInstallationStatus())
-            $this->redirect('installed');
-
-        if (!$this->context->parameters['installed']['connection']) {
+        try {
+            if (filter_var($this->settingsRepository->getValue('admin_created'), FILTER_VALIDATE_BOOLEAN)) {
+                $this->flashMessage($this->translator->translate('install.admin.admin_already_created'), 'alert-info');
+                $this->redirect('finish');
+            }
+        } catch (\Doctrine\DBAL\Exception\TableNotFoundException $ex) {
+            $this->redirect('default');
+        } catch (\App\Model\Settings\SettingsException $ex) {
             $this->redirect('default');
         }
 
-        if (!$this->context->parameters['installed']['schema']) {
-            $this->redirect('schema');
-        }
-
-        if (!$this->context->parameters['installed']['skautIS']) {
-            $this->redirect('skautIs');
-        }
-
-        if ($this->context->parameters['installed']['admin']) {
-            $this->flashMessage($this->translator->translate('install.admin.admin_already_created'), 'alert-info');
-            $this->redirect('finish');
-        }
-
-        $this->template->backlink = ':Install:Install:admin';
-
         if ($this->user->isLoggedIn()) {
-            $userRepository = $this->em->getRepository(\App\Model\User\User::class);
-            $roleRepository = $this->em->getRepository(\App\Model\ACL\Role::class);
+            $user = $this->userRepository->findUserById($this->user->id);
 
-            $user = $userRepository->findUserById($this->user->id);
-
-            $unregisteredRole = $roleRepository->findRoleByUntranslatedName(Role::UNREGISTERED);
+            $unregisteredRole = $this->roleRepository->findRoleByUntranslatedName(Role::UNREGISTERED);
             $user->removeRole($unregisteredRole);
 
-            $adminRole = $roleRepository->findRoleByUntranslatedName(Role::ADMIN);
+            $adminRole = $this->roleRepository->findRoleByUntranslatedName(Role::ADMIN);
             $user->addRole($adminRole);
+
+            $this->settingsRepository->setValue('admin_created', true);
 
             $this->em->flush();
             $this->user->logout(true);
 
-            $config = $this->configFacade->loadConfig();
-            $this->context->parameters['installed']['admin'] = $config['parameters']['installed']['admin'] = true;
-            $result = $this->configFacade->saveConfig($config);
-
-            if ($result === false) {
-                $this->presenter->flashMessage($this->translator->translate('install.common.config_save_unsuccessful'), 'alert-danger');
-                return;
-            }
-
             $this->redirect('finish');
         }
     }
 
+    public function handleCreateAdmin()
+    {
+        if (!$this->checkSkautISConnection()) {
+            $this->flashMessage($this->translator->translate('install.admin.skautis_access_denied'), 'alert-danger');
+            return;
+        }
+        $this->redirect(':Auth:login', ['backlink' => ':Install:Install:admin']);
+    }
+
     public function renderFinish()
     {
-        if ($this->checkInstallationError())
-            $this->redirect('error');
+        try {
+            if (!filter_var($this->settingsRepository->getValue('admin_created'), FILTER_VALIDATE_BOOLEAN))
+                $this->redirect('default');
+        } catch (\Doctrine\DBAL\Exception\TableNotFoundException $ex) {
+            $this->redirect('default');
+        } catch (\App\Model\Settings\SettingsException $ex) {
+            $this->redirect('default');
+        }
     }
 
     public function renderInstalled()
     {
-        if ($this->checkInstallationError())
-            $this->redirect('error');
+        try {
+            if (!filter_var($this->settingsRepository->getValue('admin_created'), FILTER_VALIDATE_BOOLEAN))
+                $this->redirect('default');
+        } catch (\Doctrine\DBAL\Exception\TableNotFoundException $ex) {
+            $this->redirect('default');
+        } catch (\App\Model\Settings\SettingsException $ex) {
+            $this->redirect('default');
+        }
 
         $this->template->migrationAvailable = false; //TODO dostupnost migraci
     }
@@ -209,106 +179,11 @@ class InstallPresenter extends InstallBasePresenter
         //TODO spusteni migraci
     }
 
-    public function renderError()
-    {
-        if (!$this->checkInstallationError())
-            $this->redirect('default');
-    }
-
-    public function handleReinstall()
-    {
-        $config = $this->configFacade->loadConfig();
-        $this->context->parameters['installed']['connection'] = $config['parameters']['installed']['connection'] = false;
-        $this->context->parameters['installed']['schema'] = $config['parameters']['installed']['schema'] = false;
-        $this->context->parameters['installed']['skautIS'] = $config['parameters']['installed']['skautIS'] = false;
-        $this->context->parameters['installed']['admin'] = $config['parameters']['installed']['admin'] = false;
-        $result = $this->configFacade->saveConfig($config);
-
-        if ($result === false) {
-            $this->presenter->flashMessage($this->translator->translate('install.common.config_save_unsuccessful'), 'alert-danger');
-            return;
-        }
-
-        $this->redirect('default');
-    }
-
-    protected function createComponentDatabaseForm()
-    {
-        $form = $this->databaseFormFactory->create();
-
-        $form->onSuccess[] = function (UI\Form $form) {
-            $values = $form->getValues();
-
-            if (!$this->checkDBConnection($values['host'], $values['dbname'], $values['user'], $values['password'])) {
-                $this->flashMessage($this->translator->translate('install.database.database_connection_unsuccessful'), 'alert-danger');
-                return;
-            }
-
-            $config = $this->configFacade->loadConfig();
-            $this->context->parameters['installed']['connection'] = $config['parameters']['installed']['connection'] = true;
-            $config['parameters']['database']['host'] = $values['host'];
-            $config['parameters']['database']['dbname'] = $values['dbname'];
-            $config['parameters']['database']['user'] = $values['user'];
-            $config['parameters']['database']['password'] = $values['password'];
-            $result = $this->configFacade->saveConfig($config);
-
-            if ($result === false) {
-                $this->presenter->flashMessage($this->translator->translate('install.common.config_save_unsuccessful'), 'alert-danger');
-                return;
-            }
-
-            $this->redirect('schema');
-        };
-
-        return $form;
-    }
-
-    protected function createComponentSkautISForm()
-    {
-        $form = $this->skautISFormFactory->create();
-
-        $form->onSuccess[] = function (UI\Form $form) {
-            $values = $form->getValues();
-
-            $appId = $values['skautis_app_id'];
-            $version = filter_var($values['skautis_version'], FILTER_VALIDATE_BOOLEAN);
-
-            if (!$this->checkSkautISConnection($appId, $version)) {
-                $this->flashMessage($this->translator->translate('install.skautis.skautis_access_denied'), 'alert-danger');
-                return;
-            }
-
-            $config = $this->configFacade->loadConfig();
-            $this->context->parameters['installed']['skautIS'] = $config['parameters']['installed']['skautIS'] = true;
-            $config['parameters']['skautIS']['appId'] = $appId;
-            $config['parameters']['skautIS']['test'] = $version;
-            $result = $this->configFacade->saveConfig($config);
-
-            if ($result === false) {
-                $this->presenter->flashMessage($this->translator->translate('install.common.config_save_unsuccessful'), 'alert-danger');
-                return;
-            }
-
-            $this->redirect('admin');
-        };
-
-        return $form;
-    }
-
-    private function checkDBConnection($host, $dbname, $user, $password) {
+    private function checkSkautISConnection() {
         try {
-            $dsn = "mysql:host={$host};dbname={$dbname}";
-            $dbh = new \PDO($dsn, $user, $password);
-        } catch (\PDOException $e) {
-            return false;
-        }
-        return true;
-    }
-
-    private function checkSkautISConnection($appId, $version) {
-        try {
-            $skautis = \Skautis\Skautis::getInstance($appId, $version);
-            $skautis->org->UnitAllRegistry();
+            $wsdlManager = new WsdlManager(new WebServiceFactory(), new Config($this->context->parameters['skautIS']['appId'], $this->context->parameters['skautIS']['test']));
+            $skautIS = new Skautis($wsdlManager, new User($wsdlManager));
+            $skautIS->org->UnitAllRegistry();
         } catch (\Skautis\Wsdl\WsdlException $ex) {
             return false;
         }

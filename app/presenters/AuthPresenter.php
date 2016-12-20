@@ -8,15 +8,15 @@ class AuthPresenter extends BasePresenter
      * @var \Skautis\Skautis
      * @inject
      */
-    public $skautis;
+    public $skautIS;
 
     public function renderLogin($backlink = null) {
         if ($this->getHttpRequest()->getPost() == null) {
-            $loginUrl = $this->skautis->getLoginUrl($backlink);
+            $loginUrl = $this->skautIS->getLoginUrl($backlink);
             $this->redirectUrl($loginUrl);
         }
 
-        $this->skautis->setLoginData($_POST);
+        $this->skautIS->setLoginData($_POST);
         $this->user->login();
         $this->user->setExpiration('+30 minutes');
         $this->redirectReturnUrl($this->getParameter('ReturnUrl'));
@@ -25,7 +25,7 @@ class AuthPresenter extends BasePresenter
     public function renderLogout() {
         if ($this->user->isLoggedIn()) {
             $this->user->logout(true);
-            $logoutUrl = $this->skautis->getLogoutUrl();
+            $logoutUrl = $this->skautIS->getLogoutUrl();
             $this->redirectUrl($logoutUrl);
         }
         $this->redirect(':Web:Page:default');

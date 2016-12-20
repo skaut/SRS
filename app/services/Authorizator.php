@@ -12,15 +12,8 @@ use Nette\Security\role;
  */
 class Authorizator extends Nette\Security\Permission
 {
-    /**
-     * Authorizator constructor.
-     * @param \Kdyby\Doctrine\EntityManager $em
-     */
-    public function __construct(\Kdyby\Doctrine\EntityManager $em)
+    public function __construct(\App\Model\ACL\RoleRepository $roleRepository, \App\Model\ACL\ResourceRepository $resourceRepository)
     {
-        $roleRepository = $em->getRepository(\App\Model\ACL\Role::class);
-        $resourceRepository = $em->getRepository(\App\Model\ACL\Resource::class);
-
         foreach ($resourceRepository->findAll() as $resource) {
             $this->addResource($resource->getName());
         }

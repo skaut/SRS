@@ -52,7 +52,7 @@ settings:
         accountant: "Pokladník"
         print_location: "Místo"
         account_number: "Číslo účtu"
-        variable_symbol_code: "Předvolba variabilního symbolu (neovlivní stávající uživatele)"
+        variable_symbol_code: "Předvolba variabilního symbolu"
 
         log_in_programs_from: "Přihlašování programů otevřeno od"
         log_in_programs_to: "Přihlašování programů otevřeno do"
@@ -64,8 +64,8 @@ settings:
         custom_text: "Vlastní textové pole pro přihlášku č. %i%"
 
     default:
-        seminar_name: "Konfigurace->Název semináře"
-        seminar_email: "noreply@srs.skauting.cz"
+        seminar_name: "Název semináře"
+        seminar_email: "srs@skauting.cz"
         footer: "© %year% SRS"
         company: "Konfigurace->Firma"
         ico: "Konfigurace->IČO"

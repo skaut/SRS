@@ -1,63 +1,28 @@
-title: "Instalace | SRS"
-
-common:
-    config_save_unsuccessful: "Nastavení se nepodařilo uložit. Zkontrolujte práva souboru config.local.neon."
-
-database:
-    header: "Nastavení databáze"
-    host: "Server"
-    dbname: "Databáze"
-    user: "Uživatel"
-    password: "Heslo"
-    empty_host: "Zadejte adresu serveru"
-    empty_dbname: "Zadejte název databáze"
-    empty_user: "Zadejte uživatelské jméno"
-    empty_password: "Zadejte heslo"
-    continue: "Pokračovat"
-    connection_already_configured: "Připojení k databázi již bylo nastaveno."
-    database_connection_unsuccessful: "Připojení k databázi se nepodařilo, zkontrolujte zadané údaje."
+header: "SRS - instalace"
+title: "SRS - instalace"
 
 schema:
     header: "Vytvoření tabulek"
-    text: "V dalším kroku budou vytvořeny tabulky. Před pokračováním odstraňte data z předchozích instalací!"
-    continue: "Pokračovat"
+    text: "Pro správnou funkci systému je třeba v databázi vytvořit tabulky a počáteční data. Před pokračováním odstraňte data z předchozích instalací!"
+    create_schema: "Vytvořit tabulky"
     schema_already_created: "Schéma databáze již bylo vytvořeno."
     schema_create_unsuccessful: "Tabulky se nepodařilo vytvořit. Zkontrolujte, zda nebyly vytvořeny dříve, a případně je odstraňte."
-    data_import_unsuccessful: "Nepodařilo se načíst inicializační data."
-
-skautis:
-    header: "Nastavení skautISu"
-    text_begin: "Pro správnou funkčnost systému je třeba jej propojit se skautIS. Pokud nedisponujete skautIS App ID nebo nevíte o co se jedná, kontaktujte "
-    text_link: "technickou podporu Junáka"
-    text_end: "."
-    skautis_version: "Verze skautIS"
-    skautis_appid: "SkautIS app ID"
-    empty_skautis_appid: "Zadejte skautIS App ID"
-    invalid_skautis_appid: "SkautIS App ID nemá správný formát."
-    version_production: "ostrá"
-    version_development: "testovací"
-    continue: "Pokračovat"
-    skautis_already_configured: "Připojení ke skautISu již bylo nastaveno."
-    skautis_access_denied: "Připojení ke skautISu se nepodařilo, zkontrolujte zadané údaje."
+    data_import_unsuccessful: "Nepodařilo se načíst počáteční data."
 
 admin:
     header: "Vytvoření administrátora"
-    text: "V dalším kroku budete přesměrování na přihlašovací stránku skautISu, přihlášenému uživateli bude v systému přiřazena administrátorská role."
-    continue: "Pokračovat"
+    text: "Pro administraci systému je třeba nastavit administrátora, v dalším kroku budete přesměrováni na přihlašovací stránku skautISu, přihlášenému uživateli bude v systému přiřazena administrátorská role."
+    create_admin: "Přihlásit se"
     admin_already_created: "Administrátorská role již byla vytvořena."
+    skautis_access_denied: "Připojení ke skautISu se nepodařilo, zkontrolujte App ID a verzi v config.local.neon."
 
 finish:
     header: "Instalace dokončena"
     text: "Instalace systému byla úspěšně dokončena."
     redirect_home: "Přejít na úvodní stránku"
 
-error:
-    header: "Chyba instalace"
-    text: "Systém není správně nainstalován."
-    reinstall: "Nainstalovat znovu"
-
 installed:
-    header: "Instalace již byla dokončena"
+    header: "Instalace systému"
     text: "Instalace systému byla již provedena."
     redirect_home: "Přejít na úvodní stránku"
     migration_unavailable: "Není k dispozici žádná aktualizace databáze."

@@ -10,29 +10,23 @@ use Nette\Application\Routers\Route;
 class RouterFactory
 {
     /**
-     * @var \Kdyby\Doctrine\EntityManager
+     * @var \App\Model\CMS\PageRepository
      */
-	private $em;
+    private $pageRepository;
 
-    /**
-     * @var \App\Services\ConfigFacade
-     */
-	private $configFacade;
-
-    public function __construct(\Kdyby\Doctrine\EntityManager $em, \App\Services\ConfigFacade $configFacade)
+    public function __construct(\App\Model\CMS\PageRepository $pageRepository)
     {
-        $this->em = $em;
-        $this->configFacade = $configFacade;
+        $this->pageRepository = $pageRepository;
     }
 
     /**
-	 * @return Nette\Application\IRouter
-	 */
-	public function createRouter()
-	{
-		$router = new RouteList;
+     * @return Nette\Application\IRouter
+     */
+    public function createRouter()
+    {
+        $router = new RouteList;
 
-        $router[] = new Route('index.php', 'Front:Homepage:default', Route::ONE_WAY);
+        $router[] = new Route('index.php', 'Web:Page:default', Route::ONE_WAY);
 
         $router[] = new Route('api/<action>[/<id>][/<area>]', array(
             'module' => 'Api',
@@ -76,23 +70,22 @@ class RouterFactory
         $router[] = new Route('login/', 'Auth:login');
         $router[] = new Route('logout/', 'Auth:logout');
 
-        $config = $this->configFacade->loadConfig();
-        if ($config['parameters']['installed']['connection'] && $config['parameters']['installed']['schema']) {
-            $pageRepository = $this->em->getRepository(\App\Model\CMS\Page::class);
+        try {
+            $this->pageRepository->findAll(); //vyvola vyjimku, pokud neexistuje databaze
 
             $router[] = new Route('[!<pageId [a-z-0-9]+>]', array(
                 'module' => 'Web',
                 'presenter' => 'Page',
                 'action' => 'default',
                 'pageId' => array(
-                    Route::FILTER_IN => [$pageRepository, 'slugToId'],
-                    Route::FILTER_OUT => [$pageRepository, "idToSlug"]
+                    Route::FILTER_IN => [$this->pageRepository, 'slugToId'],
+                    Route::FILTER_OUT => [$this->pageRepository, "idToSlug"]
                 )
             ));
-        }
+        } catch (\Doctrine\DBAL\Exception\TableNotFoundException $ex) { }
 
         $router[] = new Route('<presenter>/<action>[/<id>]', 'Web:Page:default');
 
         return $router;
-	}
+    }
 }

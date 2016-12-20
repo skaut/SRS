@@ -4,3 +4,4 @@ composer.lock
 composer.phar
 deployment.ini
 deployment.log
+.gitignore

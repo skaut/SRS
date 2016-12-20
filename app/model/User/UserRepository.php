@@ -7,10 +7,14 @@ use Kdyby\Doctrine\EntityRepository;
 class UserRepository extends EntityRepository
 {
     public function findUserById($id) {
-        return $this->findOneBy(array('id' => $id));
+        return $this->findOneBy(['id' => $id]);
     }
 
     public function findUserBySkautISUserIdName($skautISUserId) {
-        return $this->findOneBy(array('skautISUserId' => $skautISUserId));
+        return $this->findOneBy(['skautISUserId' => $skautISUserId]);
+    }
+
+    public function variableSymbolExists($variableSymbol) {
+        return $this->findOneBy(['variableSymbol' => $variableSymbol]) !== null;
     }
 }

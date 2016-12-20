@@ -5,15 +5,9 @@ parameters:
         user: user
         password: password
 
-    installed:
-        connection: false
-        schema: false
-        skautIS: false
-        admin: false
-
     skautIS:
         appId: skaut_is_app_id
-        test: true
+        test: false
 
     customInputs:
         booleanCount: 5

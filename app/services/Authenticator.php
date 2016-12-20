@@ -8,52 +8,67 @@ use Nette;
 use Nette\Security as NS;
 use App\Model\ACL\Role;
 
-class Authenticator extends Nette\Object implements NS\IAuthenticator {
-
+class Authenticator extends Nette\Object implements NS\IAuthenticator
+{
     /**
      * @var \Kdyby\Doctrine\EntityManager
      */
-    protected $em;
+    private $em;
+
+    /**
+     * @var \App\Model\User\UserRepository
+     */
+    private $userRepository;
+
+    /**
+     * @var \App\Model\ACL\RoleRepository
+     */
+    private $roleRepository;
+
+    /**
+     * @var \App\Model\Settings\SettingsRepository
+     */
+    private $settingsRepository;
 
     /**
      * @var \Skautis\Skautis
      */
-    protected $skautis;
+    protected $skautIS;
 
-    /**
-     * Authenticator constructor.
-     * @param \Kdyby\Doctrine\EntityManager $em
-     * @param \Skautis\Skautis $skautis
-     */
-    public function __construct(\Kdyby\Doctrine\EntityManager $em, \Skautis\Skautis $skautis)
+    public function __construct(\Kdyby\Doctrine\EntityManager $em,
+                                \App\Model\User\UserRepository $userRepository,
+                                \App\Model\ACL\RoleRepository $roleRepository,
+                                \App\Model\Settings\SettingsRepository $settingsRepository,
+                                \Skautis\Skautis $skautIS)
     {
         $this->em = $em;
-        $this->skautis = $skautis;
+        $this->userRepository = $userRepository;
+        $this->roleRepository = $roleRepository;
+        $this->skautIS = $skautIS;
     }
 
     /**
      * @param array $credentials
+     * @return NS\Identity
      */
     function authenticate(array $credentials)
     {
-        $userRepository = $this->em->getRepository(\App\Model\User\User::class);
-        $roleRepository = $this->em->getRepository(\App\Model\ACL\Role::class);
+        $skautISUser = $this->skautIS->usr->UserDetail(['ID_Login' => $this->skautIS->getUser()->getLoginId()]);
 
-        $skautISUser = $this->skautis->usr->UserDetail(['ID_Login' => $this->skautis->getUser()->getLoginId()]);
-
-        $user = $userRepository->findUserBySkautISUserIdName($skautISUser->ID);
+        $user = $this->userRepository->findUserBySkautISUserIdName($skautISUser->ID);
         $newUser = $user === null;
 
         if ($newUser) {
             $user = new User($skautISUser->UserName);
             $user->setFirstLogin(new \DateTime("now"));
-            $roleUnregistered = $roleRepository->findRoleByUntranslatedName(Role::UNREGISTERED);
+            $roleUnregistered = $this->roleRepository->findRoleByUntranslatedName(Role::UNREGISTERED);
             $user->addRole($roleUnregistered);
         }
 
         $this->updateUserFromSkautIS($user, $skautISUser);
 
         if ($newUser) {
+            $user->setVariableSymbol($this->generateVariableSymbol($user->getBirthdate()));
             $this->em->persist($user);
         }
 
@@ -65,7 +80,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator {
                 $netteRoles[] = $role->getName();
         }
         else {
-            $roleUnapproved = $roleRepository->findRoleByUntranslatedName(Role::UNAPPROVED);
+            $roleUnapproved = $this->roleRepository->findRoleByUntranslatedName(Role::UNAPPROVED);
             $netteRoles[] = $roleUnapproved->getName();
         }
 
@@ -73,7 +88,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator {
     }
 
     private function updateUserFromSkautIS(User $user, $skautISUser) {
-        $skautISPerson = $this->skautis->org->PersonDetail(['ID_Login' => $this->skautis->getUser()->getLoginId(), 'ID' => $skautISUser->ID_Person]);
+        $skautISPerson = $this->skautIS->org->PersonDetail(['ID_Login' => $this->skautIS->getUser()->getLoginId(), 'ID' => $skautISUser->ID_Person]);
 
         $user->setSkautISUserId($skautISUser->ID);
         $user->setSkautISPersonId($skautISUser->ID_Person);
@@ -90,12 +105,20 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator {
         $user->setState($skautISPerson->State);
         $user->setLastLogin(new \DateTime("now"));
         $user->setMember($skautISUser->HasMembership);
-        //TODO variabilni symbol
 
-        $skautISUnitId = $this->skautis->getUser()->getUnitId();
+        $skautISUnitId = $this->skautIS->getUser()->getUnitId();
         if ($skautISUnitId != null)
-            $user->setUnit($this->skautis->org->UnitDetail(['ID_Login' => $this->skautis->getUser()->getLoginId(), 'ID' => $skautISUnitId])->RegistrationNumber);
+            $user->setUnit($this->skautIS->org->UnitDetail(['ID_Login' => $this->skautIS->getUser()->getLoginId(), 'ID' => $skautISUnitId])->RegistrationNumber);
         else
             $user->setUnit(null);
+    }
+
+    private function generateVariableSymbol(\DateTime $birthDate) {
+        $variableSymbol = $birthDate->format('ymd');
+
+        while ($this->userRepository->variableSymbolExists($variableSymbol))
+            $variableSymbol++;
+
+        return $variableSymbol;
     }
 }

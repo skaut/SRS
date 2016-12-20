@@ -1,16 +1,17 @@
 <?php
+
 namespace App\Services;
 
 use Nette\Utils\Neon;
 
 class ConfigFacade
 {
-    public function loadConfig() {
-        return Neon::decode(file_get_contents(__DIR__ . '/../config/config.local.neon'));
+    private $config;
+
+    public function getConfig() {
+        if ($this->config === null)
+            $this->config = Neon::decode(file_get_contents(__DIR__ . '/../config/config.local.neon'));
+        return $this->config;
     }
 
-    public function saveConfig($config) {
-        $configFile = Neon::encode($config, Neon::BLOCK);
-        return \file_put_contents(__DIR__ . '/../config/config.local.neon', $configFile);
-    }
 }

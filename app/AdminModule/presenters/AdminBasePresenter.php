@@ -56,9 +56,6 @@ abstract class AdminBasePresenter extends BasePresenter
     {
         parent::startup();
 
-        if (!$this->checkInstallationStatus())
-            $this->redirect(':Install:Install:default');
-
         $this->user->setAuthorizator(new Authorizator($this->roleRepository, $this->resourceRepository));
 
     }

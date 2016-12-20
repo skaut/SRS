@@ -48,9 +48,12 @@ services:
     router: @App\RouterFactory::createRouter
     authenticator: App\Services\Authenticator
     - App\Services\ConfigFacade
-    - App\InstallModule\Forms\BaseFormFactory
-    - App\InstallModule\Forms\DatabaseFormFactory
-    - App\InstallModule\Forms\SkautISFormFactory
+    - App\Model\ACL\ResourceRepository
+    - App\Model\ACL\RoleRepository
+    - App\Model\CMS\PageRepository
+    - App\Model\Program\ProgramRepository
+    - App\Model\Settings\SettingsRepository
+    - App\Model\User\UserRepository
 
 webloader:
     css:

@@ -10,34 +10,28 @@ use App\Services\Authorizator;
 abstract class WebBasePresenter extends BasePresenter
 {
     /**
-     * @var \App\Model\Settings\SettingsRepository
+     * @var \App\Model\ACL\ResourceRepository
+     * @inject
      */
-    protected $settingsRepository;
-
-    /**
-     * @var \App\Model\CMS\PageRepository
-     */
-    protected $pageRepository;
+    public $resourceRepository;
 
     /**
      * @var \App\Model\ACL\RoleRepository
+     * @inject
      */
-    protected $roleRepository;
+    public $roleRepository;
 
     /**
-     * @var \App\Model\ACL\ResourceRepository
+     * @var \App\Model\CMS\PageRepository
+     * @inject
      */
-    protected $resourceRepository;
+    public $pageRepository;
 
     /**
-     * @var \App\Model\User\User
+     * @var \App\Model\Settings\SettingsRepository
+     * @inject
      */
-    protected $userRepository;
-
-    /**
-     * @var \App\Model\Program\Program
-     */
-    protected $programRepository;
+    public $settingsRepository;
 
     /**
      * @return CssLoader
@@ -59,12 +53,9 @@ abstract class WebBasePresenter extends BasePresenter
     {
         parent::startup();
 
-        if (!$this->checkInstallationStatus())
-            $this->redirect(':Install:Install:default');
+        $this->checkInstallation();
 
         $this->user->setAuthorizator(new Authorizator($this->roleRepository, $this->resourceRepository));
-
-        $this->loadRepositories();
 
         $this->template->backlink = $this->getHttpRequest()->getUrl()->getPath();
 
@@ -82,13 +73,14 @@ abstract class WebBasePresenter extends BasePresenter
             $this->template->slug = $this->pageRepository->idToSlug($this->params['pageId']);
     }
 
-    private function loadRepositories()
-    {
-        $this->settingsRepository = $this->em->getRepository(\App\Model\Settings\Settings::class);
-        $this->pageRepository = $this->em->getRepository(\App\Model\CMS\Page::class);
-        $this->roleRepository = $this->em->getRepository(\App\Model\ACL\Role::class);
-        $this->resourceRepository = $this->em->getRepository(\App\Model\ACL\Resource::class);
-        $this->userRepository = $this->em->getRepository(\App\Model\User\User::class);
-        $this->prograRepository = $this->em->getRepository(\App\Model\Program\Program::class);
+    private function checkInstallation() {
+        try {
+            if (!filter_var($this->settingsRepository->getValue('admin_created'), FILTER_VALIDATE_BOOLEAN))
+                $this->redirect(':Install:Install:default');
+        } catch (\Doctrine\DBAL\Exception\TableNotFoundException $ex) {
+            $this->redirect(':Install:Install:default');
+        } catch (\App\Model\Settings\SettingsException $ex) {
+            $this->redirect(':Install:Install:default');
+        }
     }
 }

@@ -2,10 +2,17 @@
 
 namespace App\InstallModule\Presenters;
 
+use Nette;
 use App\Presenters\BasePresenter;
 
 abstract class InstallBasePresenter extends BasePresenter
 {
+    /**
+     * @var \Kdyby\Translation\Translator
+     * @inject
+     */
+    public $translator;
+
     /**
      * @return CssLoader
      */
