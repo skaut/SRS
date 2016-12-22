@@ -11,6 +11,8 @@ use Nette\Application\UI\Form;
  */
 class ImageContent extends Content
 {
+    protected $type = Content::IMAGE;
+
     /**
      * @ORM\Column(type="string", nullable=true)
      * @var string

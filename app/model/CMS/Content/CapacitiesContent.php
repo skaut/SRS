@@ -4,14 +4,15 @@ namespace App\Model\CMS\Content;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Nette\Application\UI\Form;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="user_box_content")
+ * @ORM\Table(name="capacities_content")
  */
-class UserBoxContent extends Content
+class CapacitiesContent extends Content
 {
+    protected $type = Content::CAPACITIES;
+
     /**
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role")
      * @var ArrayCollection
@@ -19,7 +20,7 @@ class UserBoxContent extends Content
     protected $roles;
 
     /**
-     * UserBoxContent constructor.
+     * CapacityBoxContent constructor.
      */
     public function __construct()
     {

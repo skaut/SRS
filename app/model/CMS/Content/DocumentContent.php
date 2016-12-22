@@ -12,6 +12,8 @@ use Nette\Application\UI\Form;
  */
 class DocumentContent extends Content
 {
+    protected $type = Content::DOCUMENT;
+
     /**
      * @ORM\ManyToOne(targetEntity="\App\Model\CMS\Document\Tag", cascade={"persist"})
      * @var Tag

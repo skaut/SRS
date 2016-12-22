@@ -70,5 +70,18 @@ ul.no-margin {
     padding: 15px;
 }
 
+.page-heading {
+    margin-bottom: -10px; /* TODO bud jen tady, nebo u kazde radky */
+}
+
+.table-borderless tbody tr td,
+.table-borderless tbody tr th,
+.table-borderless thead tr th,
+.table-borderless thead tr td,
+.table-borderless tfoot tr th,
+.table-borderless tfoot tr td {
+    border: none;
+}
+
 
 

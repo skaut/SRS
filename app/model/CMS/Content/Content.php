@@ -14,15 +14,15 @@ use Nette\Application\UI\Form;
  * @ORM\DiscriminatorMap({
  *     "text_content" = "TextContent",
  *     "document_content" = "DocumentContent",
- *     "attendee_box_content" = "AttendeeBoxContent",
+ *     "application_content" = "ApplicationContent",
  *     "html_content" = "HTMLContent",
  *     "faq_content" = "FAQContent",
  *     "news_content" = "NewsContent",
- *     "program_box_content" = "ProgramBoxContent",
+ *     "programs_content" = "ProgramsContent",
  *     "image_content" = "ImageContent",
- *     "user_box_content" = "UserBoxContent",
- *     "block_box_content" = "BlockBoxContent",
- *     "capacity_box_bontent" = "CapacityBoxContent"
+ *     "users_content" = "UsersContent",
+ *     "blocks_content" = "BlocksContent",
+ *     "capacities_content" = "CapacitiesContent"
  * })
  */
 abstract class Content
@@ -30,14 +30,14 @@ abstract class Content
     const TEXT = 'text';
     const IMAGE = 'image';
     const DOCUMENT = 'document';
-    const ATTENDEE_BOX = 'attendee_box';
+    const APPLICATION = 'application';
     const HTML = 'html';
     const FAQ = 'faq';
     const NEWS = 'news';
-    const PROGRAM_BOX = 'program_box';
-    const USER_BOX = 'user_box';
-    const BLOCK_BOX = 'block_box';
-    const CAPACITY_BOX = 'capacity_box';
+    const PROGRAMS = 'programs';
+    const USERS = 'users';
+    const BLOCKS = 'blocks';
+    const CAPACITIES = 'capacities';
 
     const MAIN = 'main';
     const SIDEBAR = 'sidebar';
@@ -46,14 +46,14 @@ abstract class Content
         self::TEXT,
         self::IMAGE,
         self::DOCUMENT,
-        self::ATTENDEE_BOX,
+        self::APPLICATION,
         self::HTML,
         self::FAQ,
         self::NEWS,
-        self::PROGRAM_BOX,
-        self::USER_BOX,
-        self::BLOCK_BOX,
-        self::CAPACITY_BOX
+        self::PROGRAMS,
+        self::USERS,
+        self::BLOCKS,
+        self::CAPACITIES
     ];
 
     public static $areas = [
@@ -61,13 +61,15 @@ abstract class Content
         self::SIDEBAR
     ];
 
+    protected $type;
+
     use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      * @var string
      */
-    protected $header;
+    protected $heading;
 
     /**
      * @ORM\ManyToOne(targetEntity="\App\Model\CMS\Page", inversedBy="contents", cascade={"persist"})
@@ -89,16 +91,26 @@ abstract class Content
 
     /**
      * Content constructor.
-     * @param string $header
+     * @param string $heading
      * @param Page $page
      * @param string $area
      * @param int $position
      */
-    public function __construct($header, Page $page, $area, $position)
+    public function __construct($heading, Page $page, $area, $position)
     {
-        $this->header = $header;
+        $this->heading = $heading;
         $this->page = $page;
         $this->area = $area;
         $this->position = $position;
+    }
+
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    public function getTypeName()
+    {
+        return $this->type . 'Content';
     }
 }

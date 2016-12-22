@@ -3,6 +3,7 @@
 namespace App\Model\User;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -323,15 +324,6 @@ class User
         $this->roles = $roles;
     }
 
-    public function isInRole($roleName)
-    {
-        foreach ($this->roles as $role) {
-            if ($role->getName() == $roleName)
-                return true;
-        }
-        return false;
-    }
-
     public function addRole($role)
     {
         if (!$this->isInRole($role->getName()))
@@ -341,6 +333,57 @@ class User
     public function removeRole($role)
     {
         return $this->roles->removeElement($role);
+    }
+
+    public function isInRole($roleName)
+    {
+        foreach ($this->roles as $role) {
+            if ($role->getName() == $roleName)
+                return true;
+        }
+        return false;
+    }
+
+    public function getPayingRoles()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->neq('fee', 0));
+        return $this->roles->matching($criteria);
+    }
+
+    public function isPaying()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('fee', 0));
+        return !$this->roles->matching($criteria)->isEmpty();
+    }
+
+    public function hasPaid()
+    {
+        return $this->paymentDate !== null;
+    }
+
+    public function getFee()
+    {
+        if (!$this->isPaying())
+            return 0;
+
+        $fee = 0;
+
+        foreach ($this->getPayingRoles() as $role) {
+            $fee += $role->getFee();
+        }
+
+        return $fee;
+    }
+
+    public function getFeeWords()
+    {
+        $numbersWords = new \Numbers_Words();
+        $feeWord = $numbersWords->toWords($this->getFee(), 'cs');
+        $feeWord = iconv('windows-1250', 'UTF-8', $feeWord);
+        $feeWord = str_replace(" ", "", $feeWord);
+        return $feeWord;
     }
 
     /**
@@ -421,6 +464,14 @@ class User
     public function setNickName($nickName)
     {
         $this->nickName = $nickName;
+    }
+
+    public function getDisplayName()
+    {
+        $displayName = $this->lastName . " " . $this->firstName;
+        if ($this->nickName != null)
+            $displayName .= " (" . $this->nickName . ")";
+        return $displayName;
     }
 
     /**
@@ -695,6 +746,11 @@ class User
         $this->variableSymbol = $variableSymbol;
     }
 
+    public function getVariableSymbolWithCode($code)
+    {
+        return $code . $this->variableSymbol;
+    }
+
     /**
      * @return bool
      */
@@ -919,5 +975,11 @@ class User
         $this->note = $note;
     }
 
+    public function isDisplayArrivalDeparture()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('displayArrivalDeparture', true));
+        return !$this->roles->matching($criteria)->isEmpty();
+    }
 
 }

@@ -54,6 +54,8 @@ services:
     - App\Model\Program\ProgramRepository
     - App\Model\Settings\SettingsRepository
     - App\Model\User\UserRepository
+    - App\WebModule\Forms\BaseFormFactory
+    - App\WebModule\Forms\PersonalDetailsFormFactory
 
 webloader:
     css:

@@ -17,6 +17,5 @@ class MemberPresenter extends WebBasePresenter
 
     public function renderDefault() {
         $this->template->pageName = $this->translator->translate('web.member.title');
-        $this->template->dbuser = $this->user->identity->dbuser;
     }
 }

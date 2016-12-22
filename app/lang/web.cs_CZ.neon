@@ -13,30 +13,86 @@ common:
 profile:
     name: "Profil"
     title: "Můj profil"
-    header: "Můj profil"
+    heading: "Můj profil"
+
+    seminar_group: "Seminář"
+    attendance: "Účast na semináři"
+    unregistered: "neúčastníte se"
+    unapproved: "Vaše registrace zatím nebyla potvrzena"
+    cancel_registration: "Odhlásit se ze semináře"
+    cancel_registration_confirm: "Opravdu se chcete odhlásit ze semináře?"
+    cancel_registration_disabled: "Ze semináře již není možné se odhlásit."
+    variable_symbol: "Variabilní symbol"
+    account_number: "Uhraďte na účet"
+    fee: "Cena semináře"
+    fee_paid_date: "Poplatek uhrazen dne"
+    fee_not_paid: "poplatek neuhrazen"
+    total: "celkem:"
+    print_proof: "vytisknout potvrzení"
+    roles: "Role"
+    save_roles: "Upravit role"
+
+    personal_details_group: "Osobní údaje"
+    sex: "Pohlaví"
+    firstname: "Jméno"
+    firstname_empty: "Zadejte jméno."
+    lastname: "Příjmení"
+    lastname_empty: "Zadejte příjmení."
+    nickname: "Přezdívka"
+    birthdate: "Datum narození"
+    birthdate_empty: "Zadejte datum narození."
+    street: "Ulice"
+    street_empty: "Zadejte ulici."
+    city: "Město"
+    city_empty: "Zadejte město."
+    postcode: "PSČ"
+    postcode_empty: "Zadejte PSČ."
+    state: "Stát"
+    state_empty: "Zadejte stát."
+    update_personal_details: "Aktualizovat údaje a uložit do skautISu"
+
+    additional_information_group: "Doplňující informace"
+    arrival: "Příjezd"
+    departure: "Odjezd"
+    save_additional_information: "Uložit"
+
+    my_schedule_group: "Můj harmonogram semináře"
+    from: "Od"
+    to: "Do"
+    program_name: "Název programu"
+    room: "Místnost"
+    lector: "Lektor"
+    no_programs: "Nemáte žádné zvolené programy."
+    download_schedule: "Stáhnout harmonogram"
 
 member:
     name: "Nepropojený účet člena"
     title: "Nepropojený účet"
-    header: "Nemáte propojený účet"
+    heading: "Nemáte propojený účet"
     text_info: "Byli jste úspěšně přihlášeni na webu, ale pravděpodobně nejste členem Junáka."
     text_instructions: "Pokud členy jste, pak nemáte pravděpodobně propojený svůj uživatelský účet se skutečnými údaji v registraci. Kontaktuje svého vedoucího oddílu (nebo osobu, která zpracovává registraci) a požádejte ho o propojení vašeho účtu ve skautISu s reálnými údaji."
     text_details: "Pro propojení účtu potřebujete tyto údaje:<br>uživatelské jméno: %username%<br>bezpečnostní kód: %securityCode%"
     text_note: "Poznámka: V žádném případě nikdy nikomu nedávejte své heslo."
 
+application_content:
+
+blocks_content:
+
+capacities_content:
+
+document_content:
+
+faq_content:
+
+news_content:
+
+programs_content:
+
+users_content:
 
 
 
-#profile:
-#    seminarGroup: "Seminář"
-#
-#    attendanceLabel: "Účast na semináři"
-#    feeLabel: "Cena semináře"
-#
-#    unapprovedRegistration: "Vaše registrace zatím nebyla potvrzena"
-#    notRegistered: "neúčastníte se"
-#
-#
+
 #attendeeBox:
 #    loginRequest: "Pro přihlášení na seminář se musíte nejprve"
 #    loginRequestLink: "přihlásit přes skautIS"

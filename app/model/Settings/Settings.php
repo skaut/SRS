@@ -66,3 +66,4 @@ class Settings
         $this->value = $value;
     }
 }
+

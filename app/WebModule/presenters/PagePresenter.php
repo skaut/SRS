@@ -2,6 +2,20 @@
 
 namespace App\WebModule\Presenters;
 
+use App\Model\CMS\Content\TextContent;
+use App\Model\CMS\FAQ;
+use App\WebModule\Components\ApplicationContentControl;
+use App\WebModule\Components\BlocksContentControl;
+use App\WebModule\Components\CapacitiesContentControl;
+use App\WebModule\Components\DocumentContentControl;
+use App\WebModule\Components\FAQContentControl;
+use App\WebModule\Components\HTMLContentControl;
+use App\WebModule\Components\ImageContentControl;
+use App\WebModule\Components\NewsContentControl;
+use App\WebModule\Components\ProgramsContentControl;
+use App\WebModule\Components\TextContentControl;
+use App\WebModule\Components\UsersContentControl;
+
 class PagePresenter extends WebBasePresenter
 {
     protected $pageId;
@@ -19,11 +33,69 @@ class PagePresenter extends WebBasePresenter
             $this->template->bodyClass = "body-{$page->getSlug()}";
         }
 
-        if (!$page->isAllowedToRoles($this->user->roles)) {
+        if (!$page->isAllowedForRoles($this->user->roles)) {
             throw new \Nette\Application\BadRequestException($this->translator->translate('_web.common.page_access_denied'), 403);
         }
 
         $this->pageId = $page->getId();
+
+        $this->template->page = $page;
         $this->template->pageName = $page->getName();
+        $this->template->sidebarVisibility = $page->hasContents('sidebar');
+    }
+
+    public function createComponentApplicationContent($content)
+    {
+        return new ApplicationContentControl;
+    }
+
+    public function createComponentBlocksContent($content)
+    {
+        return new BlocksContentControl;
+    }
+
+    public function createComponentCapacitiesContent($content)
+    {
+        return new CapacitiesContentControl;
+    }
+
+    public function createComponentDocumentContent($content)
+    {
+        return new DocumentContentControl;
+    }
+
+    public function createComponentFAQContent($content)
+    {
+        return new FAQContentControl;
+    }
+
+    public function createComponentHTMLContent($content)
+    {
+        return new HTMLContentControl;
+    }
+
+    public function createComponentImageContent($content)
+    {
+        return new ImageContentControl;
+    }
+
+    public function createComponentNewsContent($content)
+    {
+        return new NewsContentControl;
+    }
+
+    public function createComponentProgramsContent($content)
+    {
+        return new ProgramsContentControl;
+    }
+
+    public function createComponentTextContent($content)
+    {
+        return new TextContentControl;
+    }
+
+    public function createComponentUsersContent($content)
+    {
+        return new UsersContentControl;
     }
 }

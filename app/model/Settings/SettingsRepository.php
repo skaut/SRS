@@ -14,6 +14,16 @@ class SettingsRepository extends EntityRepository
         return $setting->getValue();
     }
 
+    public function getDateValue($item)
+    {
+        return new \DateTime($this->getValue($item));
+    }
+
+    public function getDateTimeValue($item)
+    {
+        return new \DateTime($this->getValue($item));
+    }
+
     public function setValue($item, $value)
     {
         $setting = $this->findOneBy(['item' => $item]);
@@ -21,9 +31,15 @@ class SettingsRepository extends EntityRepository
             throw new SettingsException("Item {$item} was not found in table Settings.");
         $setting->setValue($value);
     }
+
+    public function setDateValue($item, $value)
+    {
+        //TODO
+    }
+
+    public function setDateTimeValue($item, $value)
+    {
+        //TODO
+    }
 }
 
-class SettingsException extends \Exception
-{
-
-}

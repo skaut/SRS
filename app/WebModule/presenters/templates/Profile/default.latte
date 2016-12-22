@@ -1,7 +1,166 @@
 {block body-class}body-profile{/block}
 
 {block main}
-    <h2>{_web.profile.header}</h2>
+    <h2>{_web.profile.heading}</h2>
+
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingSeminar">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSeminar" aria-expanded="true" aria-controls="collapseSeminar">
+                        {_web.profile.seminar_group}
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseSeminar" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingSeminar">
+                <div class="panel-body">
+                    <table class="table table-borderless">
+                        <col class="col-sm-3 col-xs-3">
+                        <col class="col-sm-9 col-xs-9">
+
+                        <tr>
+                            <th>{_web.profile.attendance}</th>
+                            <td>
+                                {if $user->isInRole(\App\Model\ACL\Role::UNREGISTERED)}
+                                    {_web.profile.unregistered}
+                                {elseif $user->isInRole(\App\Model\ACL\Role::UNAPPROVED)}
+                                    {_web.profile.unapproved}
+                                {else}
+                                    {foreach $user->roles as $role}{$role}{sep}, {/sep}{/foreach}
+                                {/if}
+                            </td>
+                        </tr>
+
+                        {if $dbuser->isPaying()}
+                            <tr>
+                                <th>{_web.profile.fee}</th>
+                                {if $usersPayingRoles->count() == 1}
+                                    <td>{$dbuser->getFee()},-</td>
+                                {elseif $usersPayingRoles->count() > 1}
+                                    <td>
+                                        {foreach $usersPayingRoles as $usersPayingRole}
+                                            {$usersPayingRole->getName()}: {$usersPayingRole->getFee()},-<br>
+                                        {/foreach}
+                                        <strong>{_web.profile.total} {$dbuser->getFee()},-</strong>
+                                    </td>
+                                {/if}
+                            </tr>
+
+                            <tr>
+                                <th>{_web.profile.variable_symbol}</th>
+                                <td>{$dbuser->getVariableSymbolWithCode($settings->getValue('variable_symbol_code'))}</td>
+                            </tr>
+
+                            <tr>
+                                <th>{_web.profile.account_number}</th>
+                                <td>{$settings->getValue('account_number')}</td>
+                            </tr>
+
+                            <tr>
+                                <th>{_web.profile.fee_paid_date}</th>
+                                <td>
+                                    {if $dbuser->getPaymentDate() !== null}
+                                        {$dbuser->getPaymentDate()|date:"j. n. Y"}
+                                        {if $dbuser->getPaymentMethod() == \App\Model\Payment::BANK}
+                                            - <a href="{link printProof!}">{_web.profile.print_proof}</a>
+                                        {/if}
+                                    {else}
+                                        {_web.profile.fee_not_paid}
+                                    {/if}
+                                </td>
+                            </tr>
+                        {/if}
+
+                        {if !$user->isInRole(\App\Model\ACL\Role::UNREGISTERED)}
+                            {if $cancelRegistrationAllowed}
+                                <a href="{link cancelRegistration!}" onclick = "if (!confirm({_cancel_registration_confirm})) return false;">
+                                    {_web.profile.cancel_registration}
+                                </a>
+                            {else}
+                            {/if}
+                        {/if}
+
+                        {if !$user->isInRole(\App\Model\ACL\Role::UNREGISTERED) && !$dbuser->hasPaid()}
+                            {control rolesForm}
+                        {/if}
+                   </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingPersonalDetails">
+                <h4 class="panel-title">
+                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsePersonalDetails" aria-expanded="false" aria-controls="collapsePersonalDetails">
+                        {_web.profile.personal_details_group}
+                    </a>
+                </h4>
+            </div>
+            <div id="collapsePersonalDetails" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingPersonalDetails">
+                <div class="panel-body">
+                    {control personalDetailsForm}
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingAdditionalInformation">
+                <h4 class="panel-title">
+                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseAdditionalInformation" aria-expanded="false" aria-controls="collapseAdditionalInformation">
+                        {_web.profile.additional_information_group}
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseAdditionalInformation" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingAdditionalInformation">
+                <div class="panel-body">
+                    {control additionalInformationForm}
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingSchedule">
+                <h4 class="panel-title">
+                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSchedule" aria-expanded="false" aria-controls="collapseSchedule">
+                        {_web.profile.my_schedule_group}
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseSchedule" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSchedule">
+                <div class="panel-body">
+                    {if $dbuser->getPrograms()->isEmpty()}
+                        <p>{_web.profile.no_programs}</p>
+                    {else}
+                        <table class="table table-bordered">
+                            <col class="col-sm-2 col-xs-2">
+                            <col class="col-sm-2 col-xs-2">
+                            <col class="col-sm-3 col-xs-3">
+                            <col class="col-sm-2 col-xs-2">
+                            <col class="col-sm-3 col-xs-3">
+
+                            <tr>
+                                <th>{_web.profile.from}</th>
+                                <th>{_web.profile.to}</th>
+                                <th>{_web.profile.program_name}</th>
+                                <th>{_web.profile.room}</th>
+                                <th>{_web.profile.lector}</th>
+                            </tr>
+                            {foreach $dbuser->getPrograms() as $program}
+                                <tr>
+                                    <td>{$program->getStart()|date:"j. n. G:i"}</td>
+                                    <td>{$program->countEnd($basicBlockDuration)|date:"j. n. G:i"}</td>
+                                    <td>{$program->getBlock()->getName()}</td>
+                                    <td>{if $program->getRoom() !== null}{$program->getRoom()->getName()}{/if}</td>
+                                    <td>{if $program->getBlock()->getLector() !== null}{$program->getBlock()->getLector()->getDisplayName()}{/if}</td>
+                                </tr>
+                            {/foreach}
+                        </table>
+                        <a href="{link exportSchedule!}">{_web.profile.download_schedule}</a>
+                    {/if}
+                </div>
+            </div>
+        </div>
+    </div>
 {/block}
 
 

@@ -11,6 +11,8 @@ use Nette\Application\UI\Form;
  */
 class NewsContent extends Content
 {
+    protected $type = Content::NEWS;
+
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @var int

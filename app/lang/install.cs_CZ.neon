@@ -1,9 +1,9 @@
 common:
     title: "Instalace | SRS"
-    header: "SRS - instalace"
+    heading: "SRS: instalace"
 
 schema:
-    header: "Vytvoření tabulek"
+    heading: "Vytvoření tabulek"
     text: "Pro správnou funkci systému je třeba v databázi vytvořit tabulky a počáteční data. Před pokračováním odstraňte data z předchozích instalací!"
     create_schema: "Vytvořit tabulky"
     schema_already_created: "Schéma databáze již bylo vytvořeno."
@@ -11,19 +11,19 @@ schema:
     data_import_unsuccessful: "Nepodařilo se načíst počáteční data."
 
 admin:
-    header: "Vytvoření administrátora"
+    heading: "Vytvoření administrátora"
     text: "Pro administraci systému je třeba nastavit administrátora, v dalším kroku budete přesměrováni na přihlašovací stránku skautISu, přihlášenému uživateli bude v systému přiřazena administrátorská role."
     create_admin: "Přihlásit se"
     admin_already_created: "Administrátorská role již byla vytvořena."
     skautis_access_denied: "Připojení ke skautISu se nepodařilo, zkontrolujte App ID a verzi v config.local.neon."
 
 finish:
-    header: "Instalace dokončena"
+    heading: "Instalace dokončena"
     text: "Instalace systému byla úspěšně dokončena."
     redirect_home: "Přejít na úvodní stránku"
 
 installed:
-    header: "Instalace systému"
+    heading: "Instalace systému"
     text: "Instalace systému byla již provedena."
     redirect_home: "Přejít na úvodní stránku"
     migration_unavailable: "Není k dispozici žádná aktualizace databáze."

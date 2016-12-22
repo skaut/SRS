@@ -56,20 +56,20 @@
     </div>
 
     <div id="content" class="row">
-        <div id="main" class="{ifset #sidebar}col-sm-9{else}col-sm-12{/ifset}">
+        <div id="main" class="{if $sidebarVisibility}col-sm-9{else}col-sm-12{/if}">
             {include #main}
         </div>
-        {ifset #sidebar}
+        {if $sidebarVisibility}
             <div id="sidebar" class="col-sm-3">
                 {include #sidebar}
             </div>
-        {/ifset}
+        {/if}
     </div>
 
     <hr>
 
     <footer class="footer">
-        <p>{$footer}</p>
+        <p>{$footer|noescape}</p>
     </footer>
 </div>
 

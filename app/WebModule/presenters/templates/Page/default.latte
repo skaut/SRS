@@ -1,5 +1,29 @@
 {block body-class}$bodyClass{/block}
 
-{block main}{/block}
+{block main}
+    <div class="row">
+        <div class="col-sm-12 page-headline">
+            <h2>{$page->getName()}</h2>
+        </div>
+    </div>
 
-{block sidebar}{/block}
+    {foreach $page->getContents('main') as $content}
+        <div class="row">
+            <div class="col-sm-12">
+                {control $content->getTypeName(), $content}
+            </div>
+        </div>
+    {/foreach}
+{/block}
+
+{if $sidebar}
+    {block sidebar}
+        {foreach $page->getContents('sidebar') as $content}
+            <div class="row">
+                <div class="col-sm-12">
+                    {control $content->getTypeName(), $content}
+                </div>
+            </div>
+        {/foreach}
+    {/block}
+{/if}

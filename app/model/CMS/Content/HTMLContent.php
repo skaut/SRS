@@ -6,10 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="htmlcontent")
+ * @ORM\Table(name="html_content")
  */
 class HTMLContent extends Content
 {
+    protected $type = Content::HTML;
+
     /**
      * @ORM\Column(type="text", nullable=true)
      * @var string

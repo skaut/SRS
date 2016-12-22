@@ -97,16 +97,16 @@ class Role
     protected $capacity;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer")
      * @var int
      */
-    protected $fee;
+    protected $fee = 0;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="boolean")
      * @var bool
      */
-    protected $displayArrivalDeparture;
+    protected $displayArrivalDeparture = false;
 
     /**
      * @ORM\Column(type="boolean")

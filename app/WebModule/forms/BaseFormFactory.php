@@ -1,11 +1,14 @@
 <?php
 
-namespace App\InstallModule\Forms;
+namespace App\WebModule\Forms;
 
 use Nette\Application\UI\Form;
 
 class BaseFormFactory
 {
+    /**
+     * @var \Kdyby\Translation\Translator
+     */
     private $translator;
 
     public function __construct(\Kdyby\Translation\Translator $translator)

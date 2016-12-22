@@ -63,7 +63,7 @@ settings:
         custom_boolean: "Vlastní checkbox pro přihlášku č. %i%"
         custom_text: "Vlastní textové pole pro přihlášku č. %i%"
 
-    default:
+    default_value:
         seminar_name: "Název semináře"
         seminar_email: "srs@skauting.cz"
         footer: "© %year% SRS"
@@ -76,21 +76,34 @@ settings:
 cms:
     default:
         homepage_name: "Homepage"
-        homepage_text: "<h2>Úspěšně jste nainstalovali SRS. Gratulujeme!</h2><p>Obsah této stránky můžeme změnit v administraci v sekci CMS.</p>"
-
+        homepage_text: "<h3>Úspěšně jste nainstalovali SRS. Gratulujeme!</h3><p>Obsah této stránky můžete změnit v administraci v sekci CMS.</p>"
 
 content:
-    text: "Text"
-    image: "Obrázek"
-    document: "Dokumenty"
-    attendee_box: "Přihlašovací formulář"
-    html: "HTML box"
-    faq: "FAQ"
-    news: "Aktuality"
-    program_box: "Výběr programů"
-    user_box: "Přehled uživatelů"
-    block_box: "Program semináře"
-    capacity_box: "Kapacita semináře"
+    name:
+        text: "Text"
+        image: "Obrázek"
+        document: "Dokumenty"
+        application: "Přihlašovací formulář"
+        html: "HTML box"
+        faq: "FAQ"
+        news: "Aktuality"
+        programs: "Výběr programů"
+        users: "Přehled uživatelů"
+        blocks: "Program semináře"
+        capacities: "Kapacita semináře"
+
+    default_heading:
+        text: ""
+        image: ""
+        document: "Dokumenty"
+        application: "Přihlašovací formulář"
+        html: ""
+        faq: "FAQ"
+        news: "Aktuality"
+        programs: "Výběr programů"
+        users: "Přehled uživatelů"
+        blocks: "Program semináře"
+        capacities: "Kapacita semináře"
 
 area:
     main: "Hlavní"
@@ -99,3 +112,7 @@ area:
 payment:
     cash: "Hotovost"
     bank: "Na účet"
+
+sex:
+    male: "Muž"
+    female: "Žena"

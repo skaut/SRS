@@ -2,7 +2,9 @@
 
 namespace App\Model\CMS;
 
+use App\Model\CMS\Content\Content;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -166,12 +168,25 @@ class Page
         $this->roles->add($role);
     }
 
-    /**
-     * @return ArrayCollection
-     */
-    public function getContents()
+    public function getContents($area = null)
     {
-        return $this->contents;
+        if ($area === null)
+            return $this->contents;
+        if (!in_array($area, Content::$areas))
+            throw new SRSPageException("Area {$area} not defined.");
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('area', $area))
+            ->orderBy(['position' => 'ASC']);
+        return $this->contents->matching($criteria);
+    }
+
+    public function hasContents($area)
+    {
+        if (!in_array($area, Content::$areas))
+            throw new SRSPageException("Area {$area} not defined.");
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('area', $area));
+        return !$this->contents->matching($criteria)->isEmpty();
     }
 
     /**
@@ -182,7 +197,7 @@ class Page
         $this->contents = $contents;
     }
 
-    public function isAllowedToRoles($roleNames)
+    public function isAllowedForRoles($roleNames)
     {
         foreach ($roleNames as $roleName) {
             foreach ($this->roles as $role) {

@@ -12,6 +12,8 @@ use Nette\Application\UI\Form;
  */
 class TextContent extends Content
 {
+    protected $type = Content::TEXT;
+
     /**
      * @ORM\Column(type="text", nullable=true)
      * @var string
@@ -20,15 +22,15 @@ class TextContent extends Content
 
     /**
      * TextContent constructor.
-     * @param string $header
+     * @param string $heading
      * @param Page $page
      * @param string $area
      * @param int $position
      * @param string $text
      */
-    public function __construct($header, $page, $area, $position, $text)
+    public function __construct($heading, $page, $area, $position, $text)
     {
-        parent::__construct($header, $page, $area, $position);
+        parent::__construct($heading, $page, $area, $position);
         $this->text = $text;
     }
 

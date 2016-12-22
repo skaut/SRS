@@ -2,15 +2,15 @@
     <nav class="navbar navbar-default">
         <div class="container">
             <ul class="nav navbar-nav">
-                {foreach $pages as $page}
-                    {if $page->getSlug() == '/'}
+                {foreach $pages as $item}
+                    {if $item->getSlug() == '/'}
                         <li class="{ifCurrent :Web:Page:default, 'pageId' => null}active{/ifCurrent}">
-                            <a href="{plink :Web:Page:default}">{$page->getName()}</a>
+                            <a href="{plink :Web:Page:default}">{$item->getName()}</a>
                         </li>
                     {else}
-                        {if $page->isAllowedToRoles($user->roles)}
-                            <li class="{ifCurrent :Web:Page:default, 'pageId' => $page->id}active{/ifCurrent}">
-                                <a href="{plink :Web:Page:default, 'pageId' => $page->getId()}">{$page->getName()}</a>
+                        {if $item->isAllowedForRoles($user->roles)}
+                            <li class="{ifCurrent :Web:Page:default, 'pageId' => $item->getId()}active{/ifCurrent}">
+                                <a href="{plink :Web:Page:default, 'pageId' => $item->getId()}">{$item->getName()}</a>
                             </li>
                         {/if}
                     {/if}
