@@ -3,6 +3,7 @@
 namespace App\Model\ACL;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -206,6 +207,13 @@ class Role
     public function setUsers($users)
     {
         $this->users = $users;
+    }
+
+    public function getApprovedUsers()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('approved', true));
+        return $this->users->matching($criteria);
     }
 
     /**

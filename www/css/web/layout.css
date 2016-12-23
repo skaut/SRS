@@ -1,4 +1,5 @@
-/* rozvrzeni stranek */
+/** rozvrzeni stranek */
+
 ul.no-bullets > li {
     list-style-type: none !important;
     margin-left: 0px !important;
@@ -7,10 +8,6 @@ ul.no-bullets > li {
 ul.no-margin {
     padding-left: 0 !important;
     margin-left: 0 !important;
-}
-
-#wrapper {
-    min-width: 768px;
 }
 
 #messages {
@@ -57,6 +54,47 @@ ul.no-margin {
     margin-bottom: 0;
 }
 
+/* odstraneni mezery pod nadpisem u content */
+.page-heading {
+    margin-bottom: -10px; /* TODO bud jen tady, nebo u kazde radky */
+}
+
+/* tabulka bez ramecku */
+.table-borderless tbody tr td,
+.table-borderless tbody tr th,
+.table-borderless thead tr th,
+.table-borderless thead tr td,
+.table-borderless tfoot tr th,
+.table-borderless tfoot tr td {
+    border: none;
+}
+
+/* tabulka bez ramecku a okraju, pro kombinaci s formulari */
+.table-form tbody tr td,
+.table-form tbody tr th,
+.table-form thead tr th,
+.table-form thead tr td,
+.table-form tfoot tr th,
+.table-form tfoot tr td {
+    border: none;
+}
+
+.table-form tbody tr th,
+.table-form thead tr th,
+.table-form tfoot tr th {
+    padding-left: 0;
+}
+
+/* popisky ve formularich vlevo */
+.control-label {
+    text-align: left !important;
+}
+
+/* vypnuti responzivity*/
+#wrapper {
+    min-width: 768px;
+}
+
 #main-menu .navbar-nav {
     float: left;
     margin: 0;
@@ -69,19 +107,4 @@ ul.no-margin {
 #main-menu .navbar-nav > li > a {
     padding: 15px;
 }
-
-.page-heading {
-    margin-bottom: -10px; /* TODO bud jen tady, nebo u kazde radky */
-}
-
-.table-borderless tbody tr td,
-.table-borderless tbody tr th,
-.table-borderless thead tr th,
-.table-borderless thead tr td,
-.table-borderless tfoot tr th,
-.table-borderless tfoot tr td {
-    border: none;
-}
-
-
 

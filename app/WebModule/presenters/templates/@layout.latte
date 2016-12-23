@@ -12,22 +12,10 @@
     {control css}
     {control js}
 
-    {block head}
-
-    <script>
-        var basePath = {$basePath};
-        var messageDelay = 6000;
-
-        $(document).ready(function () {
-            $('.message:not(.forever)').delay(messageDelay).fadeOut();
-        });
-    </script>
+    {block head}{/block}
 </head>
 
 <body class="{block body-class}{/block}">
-<script>
-    document.body.className += ' js'
-</script>
 
 <div class="container" id="wrapper">
     <div id="messages" class="row" n:if="$flashes">
@@ -72,7 +60,6 @@
         <p>{$footer|noescape}</p>
     </footer>
 </div>
-
 
 </body>
 </html>

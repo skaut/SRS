@@ -14,7 +14,7 @@
             </div>
             <div id="collapseSeminar" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingSeminar">
                 <div class="panel-body">
-                    <table class="table table-borderless">
+                    <table class="table table-form">
                         <col class="col-sm-3 col-xs-3">
                         <col class="col-sm-9 col-xs-9">
 
@@ -32,6 +32,7 @@
                         </tr>
 
                         {if $dbuser->isPaying()}
+                            {var $usersPayingRoles = $dbuser->getPayingRoles()}
                             <tr>
                                 <th>{_web.profile.fee}</th>
                                 {if $usersPayingRoles->count() == 1}
@@ -73,17 +74,17 @@
 
                         {if !$user->isInRole(\App\Model\ACL\Role::UNREGISTERED)}
                             {if $cancelRegistrationAllowed}
-                                <a href="{link cancelRegistration!}" onclick = "if (!confirm({_cancel_registration_confirm})) return false;">
+                                <a href="{link cancelRegistration!}" onclick = "if (!confirm({_cancel_registration_confirm})) return false;"> {* TODO tlacitko *}
                                     {_web.profile.cancel_registration}
                                 </a>
                             {else}
                             {/if}
                         {/if}
+                    </table>
 
-                        {if !$user->isInRole(\App\Model\ACL\Role::UNREGISTERED) && !$dbuser->hasPaid()}
-                            {control rolesForm}
-                        {/if}
-                   </table>
+                    {if !$user->isInRole(\App\Model\ACL\Role::UNREGISTERED) && !$dbuser->hasPaid()}
+                        {control rolesForm}
+                    {/if}
                 </div>
             </div>
         </div>
@@ -155,7 +156,7 @@
                                 </tr>
                             {/foreach}
                         </table>
-                        <a href="{link exportSchedule!}">{_web.profile.download_schedule}</a>
+                        <a href="{link exportSchedule!}">{_web.profile.download_schedule}</a> {* TODO tlacitko *}
                     {/if}
                 </div>
             </div>

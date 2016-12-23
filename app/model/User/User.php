@@ -975,7 +975,7 @@ class User
         $this->note = $note;
     }
 
-    public function isDisplayArrivalDeparture()
+    public function hasDisplayArrivalDepartureRole()
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('displayArrivalDeparture', true));

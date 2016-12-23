@@ -3,6 +3,8 @@
 namespace App\WebModule\Forms;
 
 use Nette\Application\UI\Form;
+use Nextras\Forms\Controls\DatePicker;
+use Nextras\Forms\Controls\DateTimePicker;
 
 class PersonalDetailsFormFactory
 {
@@ -16,52 +18,53 @@ class PersonalDetailsFormFactory
         $this->baseFormFactory = $baseFormFactory;
     }
 
-    public function create($userIsMember)
+    public function create($user)
     {
         $form = $this->baseFormFactory->create();
 
         $form->addHidden('id');
 
         $sexOptions = [
-            'male' => $form->getTranslator()->translate('common.sex.male'),
-            'female' => $form->getTranslator()->translate('common.sex.female')
+            'male' => 'common.sex.male',
+            'female' => 'common.sex.female'
         ];
 
-        $inputSex = $form->addRadioList('sex', $form->getTranslator()->translate('web.profile.sex'), $sexOptions)
-            ->getSeparatorPrototype()->setName(null);
+        $inputSex = $form->addRadioList('sex', 'web.profile.sex', $sexOptions);
+        $inputSex->getSeparatorPrototype()->setName(null);
 
-        $inputFirstName = $form->addText('firstName', $form->getTranslator()->translate('web.profile.firstname'))
-            ->addRule(Form::FILLED, $form->getTranslator()->translate('web.profile.firstname_empty'));
+        $inputFirstName = $form->addText('firstName', 'web.profile.firstname')
+            ->addRule(Form::FILLED, 'web.profile.firstname_empty');
 
-        $inputLastName = $form->addText('lastName', $form->getTranslator()->translate('web.profile.lastname'))
-            ->addRule(Form::FILLED, $form->getTranslator()->translate('web.profile.lastname_empty'));
+        $inputLastName = $form->addText('lastName', 'web.profile.lastname')
+            ->addRule(Form::FILLED, 'web.profile.lastname_empty');
 
-        $inputNickName = $form->addText('nickName', $form->getTranslator()->translate('web.profile.nickname'));
+        $inputNickName = $form->addText('nickName', 'web.profile.nickname');
 
-//        $inputBirthdate = $form->addDate('birthdate', $form->getTranslator()->translate('web.profile.birthdate'))
-//            ->addRule(Form::FILLED, $form->getTranslator()->translate('web.profile.birthdate_empty'));
+        $inputBirthdate = $form->addDatePicker('birthdate', 'web.profile.birthdate');
 
-        if ($userIsMember) {
+        if ($user->isMember()) {
             $inputSex->setDisabled();
             $inputFirstName->setDisabled();
             $inputLastName->setDisabled();
             $inputNickName->setDisabled();
-            //$inputBirthdate->setDisabled();
+            $inputBirthdate->setDisabled();
         }
 
-        $form->addText('street', $form->getTranslator()->translate('web.profile.street'))
-            ->addRule(Form::FILLED, $form->getTranslator()->translate('web.profile.street_empty'));
+        $form->addText('street', 'web.profile.street')
+            ->addRule(Form::FILLED, 'web.profile.street_empty')
+            ->addRule(Form::PATTERN, 'web.profile.street_format', '^(.*[^0-9]+) (([1-9][0-9]*)/)?([1-9][0-9]*[a-cA-C]?)$');
 
-        $form->addText('city', $form->getTranslator()->translate('web.profile.city'))
-            ->addRule(Form::FILLED, $form->getTranslator()->translate('web.profile.city_empty'));
+        $form->addText('city', 'web.profile.city')
+            ->addRule(Form::FILLED, 'web.profile.city_empty');
 
-        $form->addText('postcode', $form->getTranslator()->translate('web.profile.postcode'))
-            ->addRule(Form::FILLED, $form->getTranslator()->translate('web.profile.postcode_empty'));
+        $form->addText('postcode', 'web.profile.postcode')
+            ->addRule(Form::FILLED, 'web.profile.postcode_empty')
+            ->addRule(Form::PATTERN, 'web.profile.postcode_format', '^\d{5}$');
 
-        $form->addText('state', $form->getTranslator()->translate('web.profile.state'))
-            ->addRule(Form::FILLED, $form->getTranslator()->translate('web.profile.state_empty'));
+        $form->addText('state', 'web.profile.state')
+            ->addRule(Form::FILLED, 'web.profile.state_empty');
 
-        $form->addSubmit('update_personal_details', $form->getTranslator()->translate('web.profile.update_personal_details'));
+        $form->addSubmit('submit', 'web.profile.update_personal_details');
 
         return $form;
     }

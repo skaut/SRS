@@ -2,6 +2,8 @@
 
 namespace App\Model\ACL;
 
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Kdyby\Doctrine\EntityRepository;
 
 class RoleRepository extends EntityRepository
@@ -18,41 +20,38 @@ class RoleRepository extends EntityRepository
     }
 
     public function findRoleByName($name) {
-        return $this->findOneBy(array('name' => $name));
+        return $this->findOneBy(['name' => $name]);
     }
 
     public function findRoleByUntranslatedName($name) {
         return $this->findRoleByName($this->translator->translate('common.role.' . $name));
     }
 
-    public function findRegisterable() {
-        $query = $this->_em->createQuery("SELECT r FROM {Role::class} r WHERE r.registerable=true");
-        return $query->getResult();
+    public function findRegisterableRoles() {
+        return $this->findBy(['registerable' => true]);
     }
 
-    public function findRegisterableNow()
+    public function findRegisterableNowRoles()
     {
-        $today = date("Y-m-d H:i");
+        $now = date("Y-m-d H:i");
 
-        $query = $this->_em->createQuery("SELECT r FROM {Role::class} r WHERE r.registerable=true
-              AND (r.registerableFrom <= '{$today}' OR r.registerableFrom IS NULL)
-              AND (r.registerableTo >= '{$today}' OR r.registerableTo IS NULL)");
-        return $query->getResult();
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('registerable', true))
+            ->andWhere(Criteria::expr()->orX(Criteria::expr()->lte('registerableFrom', new \DateTime('now')), Criteria::expr()->isNull('registerableFrom')))
+            ->andWhere(Criteria::expr()->orX(Criteria::expr()->gte('registerableTo', new \DateTime('now')), Criteria::expr()->isNull('registerableTo')));
+
+        return $this->matching($criteria);
     }
 
-    public function findCapacityLimitedRoles() {
-        $query = $this->_em->createQuery("SELECT r FROM {Role::class} r WHERE r.capacity IS NOT NULL");
-        return $query->getResult();
+    public function findRolesWithLimitedCapacity() {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->neq('capacity', null));
+        return $this->matching($criteria);
     }
 
-    public function findArrivalDepartureVisibleRoles() {
-        $query = $this->_em->createQuery("SELECT r FROM {Role::class} r WHERE r.displayArrivalDeparture = 1");
-        return $query->getResult();
-    }
-
-    public function findApprovedUsersInRole($role)
-    {
-        $query = $this->_em->createQuery("SELECT u FROM User u JOIN u.roles r WHERE u.approved=true AND r.name='$role'");
-        return $query->getResult();
+    public function findRolesWithArrivalDeparture() {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('displayArrivalDeparture', true));
+        return $this->matching($criteria);
     }
 }

@@ -4,6 +4,7 @@ namespace App\WebModule\Presenters;
 
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
+use App\Model\User\User;
 use App\Presenters\BasePresenter;
 use App\Services\Authorizator;
 
@@ -34,6 +35,11 @@ abstract class WebBasePresenter extends BasePresenter
     public $settingsRepository;
 
     /**
+     * @var User
+     */
+    protected $dbuser;
+
+    /**
      * @return CssLoader
      */
     protected function createComponentCss()
@@ -56,6 +62,7 @@ abstract class WebBasePresenter extends BasePresenter
         $this->checkInstallation();
 
         $this->user->setAuthorizator(new Authorizator($this->roleRepository, $this->resourceRepository));
+        $this->dbuser = $this->user->isLoggedIn() ? $this->user->identity->dbuser : null;
 
         $this->template->backlink = $this->getHttpRequest()->getUrl()->getPath();
 
@@ -63,7 +70,7 @@ abstract class WebBasePresenter extends BasePresenter
         $this->template->footer = $this->settingsRepository->getValue('footer');
         $this->template->seminarName = $this->settingsRepository->getValue('seminar_name');
 
-        $this->template->dbuser = $this->user->identity->dbuser;
+        $this->template->dbuser = $this->dbuser;
 
         $this->template->adminAccess = $this->user->isAllowed(Resource::ADMIN, Permission::ACCESS);
         $this->template->displayUsersRoles = $this->settingsRepository->getValue('display_users_roles');
