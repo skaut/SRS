@@ -3,3 +3,16 @@ common:
     heading: "SRS: %seminar_name%"
     logged_in_user: "Uživatel:"
     logged_in_roles: "v roli:|v rolích:"
+
+menu:
+    dashboard: "Úvod"
+    cms: "Webová prezentace"
+    program: "Program semináře"
+    users: "Uživatelé"
+    acl: "Role"
+    mailing: "Mailing"
+    configuration: "Konfigurace"
+
+dashboard:
+    heading: "Vítejte v systému SRS!"
+    text: "<p>Pokud jste v systému poprvé nebo s ním nejste zcela srozuměni, přečtěte si <a href=\"https://github.com/skaut/SRS/wiki/U%C5%BEivatelsk%C3%A1-p%C5%99%C3%ADru%C4%8Dka\" target=\"_blank\">uživatelskou příručku</a>.</p>"

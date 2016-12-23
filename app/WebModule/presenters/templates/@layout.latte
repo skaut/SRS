@@ -27,7 +27,7 @@
     <div id="header" class="row">
         <div class="col-sm-12">
             {import 'components/user-menu.latte'}
-            {include user-menu $user, $adminAccess, $displayUsersRoles, $backlink}
+            {include user-menu}
 
             <div id="logo">
                 <a href="{plink :Web:Page:default}"><img src="{$basePath}{$logo}" alt="logo"></a>
@@ -38,7 +38,7 @@
     <div id="main-menu" class="row">
         <div class="col-sm-12">
             {import 'components/main-menu.latte'}
-            {include main-menu $pages}
+            {include main-menu}
         </div>
     </div>
 

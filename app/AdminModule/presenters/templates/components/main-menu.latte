@@ -1,0 +1,67 @@
+{define main-menu}
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="{plink :Web:Page:default}">{_admin.common.heading, [seminar_name => $seminarName]}</a>
+            </div>
+
+            <div id="navbar">
+                <ul class="nav navbar-nav">
+                    <li n:class="$presenter->isLinkCurrent(':Admin:Dashboard:*') ? active">
+                        <a href="{plink :Admin:Dashboard:default}">{_admin.menu.dashboard}</a>
+                    </li>
+                    {if $user->isAllowed($resourceCMS, $permissionManage)}
+                        <li n:class="$presenter->isLinkCurrent(':Admin:CMS:Page:*') ? active">
+                            <a href="{plink :Admin:CMS:Page:list}">{_admin.menu.cms}</a>
+                        </li>
+                    {/if}
+                    {if $user->isAllowed($resourceProgram, $permissionAccess)}
+                        <li n:class="$presenter->isLinkCurrent(':Admin:Program:Block:*') ? active">
+                            <a href="{plink :Admin:Program:Block:list}">{_admin.menu.program}</a>
+                        </li>
+                    {/if}
+                    {if $user->isAllowed($resourceUsers, $permissionManage)}
+                        <li n:class="$presenter->isLinkCurrent(':Admin:Users:*') ? active">
+                            <a href="{plink :Admin:Users:list}">{_admin.menu.users}</a>
+                        </li>
+                    {/if}
+                    {if $user->isAllowed($resourceACL, $permissionManage)}
+                        <li n:class="$presenter->isLinkCurrent(':Admin:Acl:*') ? active">
+                            <a href="{plink :Admin:Acl:list}">{_admin.menu.acl}</a>
+                        </li>
+                    {/if}
+                    {if $user->isAllowed($resourceMailing, $permissionManage)}
+                        <li n:class="$presenter->isLinkCurrent(':Admin:Mailing:Mailing:') ? active">
+                            <a href="{plink :Admin:Mailing:Mailing:default}">{_admin.menu.mailing}</a> {* TODO rozsireni mailingu*}
+                        </li>
+                    {/if}
+                    {if $user->isAllowed($resourceConfiguration, $permissionManage)}
+                        <li n:class="$presenter->isLinkCurrent(':Admin:Configuration:*') ? active">
+                            <a href="{plink :Admin:Configuration:settings}">{_admin.menu.configuration}</a>
+                        </li>
+                    {/if}
+                </ul>
+
+                <div class="navbar-right">
+                    <p class="navbar-text">
+                        {_admin.common.logged_in_user}
+                        <strong>
+                            {$user->identity->dbuser->getUsername()}
+                        </strong>
+                        {_admin.common.logged_in_roles, count($user->roles)}
+                        <strong>
+                            {foreach $user->roles as $role}{$role}{sep}, {/sep}{/foreach}
+                        </strong>
+                    </p>
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="{plink :Auth:logout}">
+                                <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+{/define}
