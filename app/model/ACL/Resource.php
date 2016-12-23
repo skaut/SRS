@@ -16,7 +16,7 @@ class Resource
     const ACL = 'acl';
     const PROGRAM = 'program';
     const CONFIGURATION = 'configuration';
-    const EVIDENCE = 'evidence';
+    const USERS = 'users';
     const MAILING = 'mailing';
 
     public static $resources = [
@@ -25,7 +25,7 @@ class Resource
         self::ACL,
         self::PROGRAM,
         self::CONFIGURATION,
-        self::EVIDENCE,
+        self::USERS,
         self::MAILING
     ];
 

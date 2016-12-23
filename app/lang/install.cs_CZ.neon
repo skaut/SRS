@@ -1,6 +1,6 @@
 common:
     title: "Instalace | SRS"
-    heading: "SRS: instalace"
+    heading: "SRS: Instalace"
 
 schema:
     heading: "Vytvoření tabulek"
@@ -11,7 +11,7 @@ schema:
     data_import_unsuccessful: "Nepodařilo se načíst počáteční data."
 
 admin:
-    heading: "Vytvoření administrátora"
+    heading: "Nastavení administrátora"
     text: "Pro administraci systému je třeba nastavit administrátora, v dalším kroku budete přesměrováni na přihlašovací stránku skautISu, přihlášenému uživateli bude v systému přiřazena administrátorská role."
     create_admin: "Přihlásit se"
     admin_already_created: "Administrátorská role již byla vytvořena."

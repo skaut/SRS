@@ -21,9 +21,9 @@
                         <tr>
                             <th>{_web.profile.attendance}</th>
                             <td>
-                                {if $user->isInRole($unregisteredRoleName)}
+                                {if $user->isInRole($unregisteredRole->getName())}
                                     {_web.profile.unregistered}
-                                {elseif $user->isInRole($unapprovedRoleName)}
+                                {elseif $user->isInRole($unapprovedRole->getName())}
                                     {_web.profile.unapproved}
                                 {else}
                                     {foreach $user->roles as $role}{$role}{sep}, {/sep}{/foreach}
@@ -72,7 +72,7 @@
                             </tr>
                         {/if}
 
-                        {if !$user->isInRole($unregisteredRoleName)}
+                        {if !$user->isInRole($unregisteredRole->getName())}
                             {if $cancelRegistrationAllowed}
                                 <a href="{link cancelRegistration!}" onclick = "if (!confirm({_cancel_registration_confirm})) return false;"> {* TODO tlacitko *}
                                     {_web.profile.cancel_registration}
@@ -82,7 +82,7 @@
                         {/if}
                     </table>
 
-                    {if !$user->isInRole($unregisteredRoleName) && !$dbuser->hasPaid()}
+                    {if !$user->isInRole($unregisteredRole->getName()) && !$dbuser->hasPaid()}
                         {control rolesForm}
                     {/if}
                 </div>

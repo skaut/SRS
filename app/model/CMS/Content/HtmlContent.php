@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="html_content")
  */
-class HTMLContent extends Content
+class HtmlContent extends Content
 {
     protected $type = Content::HTML;
 

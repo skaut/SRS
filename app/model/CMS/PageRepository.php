@@ -8,12 +8,17 @@ class PageRepository extends EntityRepository
 {
     public function slugToId($slug)
     {
-        return $this->findOneBy(['slug' => $slug]);
+        return $this->findOneBy(['slug' => $slug])->getId();
     }
 
     public function idToSlug($id)
     {
-        return $this->findOneBy(['id' => $id]);
+        return $this->findOneBy(['id' => $id])->getSlug();
+    }
+
+    public function findPageBySlug($slug)
+    {
+        return $this->findOneBy(['slug' => $slug]);
     }
 
     public function findPublishedPagesOrderedByPosition()

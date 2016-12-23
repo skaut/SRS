@@ -4,13 +4,13 @@
             <ul class="nav navbar-nav">
                 {foreach $pages as $item}
                     {if $item->getSlug() == '/'}
-                        <li class="{ifCurrent :Web:Page:default, 'pageId' => null}active{/ifCurrent}">
+                        <li n:class="$presenter->isLinkCurrent(':Web:Page:default', ['slug' => null]) ? active">
                             <a href="{plink :Web:Page:default}">{$item->getName()}</a>
                         </li>
                     {else}
                         {if $item->isAllowedForRoles($user->roles)}
-                            <li class="{ifCurrent :Web:Page:default, 'pageId' => $item->getId()}active{/ifCurrent}">
-                                <a href="{plink :Web:Page:default, 'pageId' => $item->getId()}">{$item->getName()}</a>
+                            <li n:class="$presenter->isLinkCurrent(':Web:Page:default', ['slug' => $item->getSlug()]) ? active">
+                                <a href="{plink :Web:Page:default, 'slug' => $item->getSlug()}">{$item->getName()}</a>
                             </li>
                         {/if}
                     {/if}

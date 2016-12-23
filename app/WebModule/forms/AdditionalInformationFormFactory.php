@@ -2,10 +2,6 @@
 
 namespace App\WebModule\Forms;
 
-use Nette\Application\UI\Form;
-use Nextras\Forms\Controls\DatePicker;
-use Nextras\Forms\Controls\DateTimePicker;
-
 class AdditionalInformationFormFactory
 {
     /**

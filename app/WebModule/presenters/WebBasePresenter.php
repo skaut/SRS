@@ -72,8 +72,8 @@ abstract class WebBasePresenter extends BasePresenter
 
         $this->template->dbuser = $this->dbuser;
 
-        $this->template->unregisteredRoleName = $this->translator->translate('common.role.' . \App\Model\ACL\Role::UNREGISTERED);
-        $this->template->unapprovedRoleName = $this->translator->translate('common.role.' . \App\Model\ACL\Role::UNAPPROVED);
+        $this->template->unregisteredRole = $this->roleRepository->findRoleByUntranslatedName(\App\Model\ACL\Role::UNREGISTERED);
+        $this->template->unapprovedRole = $this->roleRepository->findRoleByUntranslatedName(\App\Model\ACL\Role::UNAPPROVED);
 
         $this->template->adminAccess = $this->user->isAllowed(Resource::ADMIN, Permission::ACCESS);
         $this->template->displayUsersRoles = $this->settingsRepository->getValue('display_users_roles');

@@ -69,7 +69,7 @@ class RoleFixture extends AbstractFixture implements DependentFixtureInterface
         $organizer->addPermission($this->getReference('program_manage_rooms'));
         $organizer->addPermission($this->getReference('program_manage_categories'));
         $organizer->addPermission($this->getReference('program_choose_programs'));
-        $organizer->addPermission($this->getReference('evidence_manage'));
+        $organizer->addPermission($this->getReference('users_manage'));
         $organizer->addPermission($this->getReference('mailing_manage'));
 
         $admin = $roles[Role::ADMIN];
@@ -84,7 +84,7 @@ class RoleFixture extends AbstractFixture implements DependentFixtureInterface
         $admin->addPermission($this->getReference('program_manage_rooms'));
         $admin->addPermission($this->getReference('program_manage_categories'));
         $admin->addPermission($this->getReference('program_choose_programs'));
-        $admin->addPermission($this->getReference('evidence_manage'));
+        $admin->addPermission($this->getReference('users_manage'));
         $admin->addPermission($this->getReference('mailing_manage'));
 
         foreach ($roles as $key => $value) {

@@ -2,9 +2,7 @@
 
 namespace App\WebModule\Forms;
 
-use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
-use Nette\Utils\Html;
 
 class RolesFormFactory
 {

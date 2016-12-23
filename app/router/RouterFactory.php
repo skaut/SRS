@@ -28,63 +28,71 @@ class RouterFactory
 
         $router[] = new Route('index.php', 'Web:Page:default', Route::ONE_WAY);
 
-        $router[] = new Route('api/<action>[/<id>][/<area>]', array(
+        $router[] = new Route('api/<action>[/<id>][/<area>]', [
             'module' => 'Api',
             'presenter' => 'Api',
             'action' => 'default',
             'id' => null,
             'area' => null
-        ));
+        ]);
 
-        $router[] = new Route('admin/cms/<presenter>/<action>[/<id>][/<area>]', array(
+        $router[] = new Route('admin/cms/<presenter>/<action>[/<id>][/<area>]', [
             'module' => 'Admin:CMS',
             'presenter' => 'Page',
             'action' => 'default',
             'id' => null,
             'area' => null
-        ));
+        ]);
 
-        $router[] = new Route('admin/program/<presenter>/<action>[/<id>][/<area>]', array(
+        $router[] = new Route('admin/program/<presenter>/<action>[/<id>][/<area>]', [
             'module' => 'Admin:Program',
             'presenter' => 'Block',
             'action' => 'list',
             'id' => null,
             'area' => null
-        ));
+        ]);
 
-        $router[] = new Route('admin/<presenter>/<action>[/<id>][/<area>]', array(
+        $router[] = new Route('admin/<presenter>/<action>[/<id>][/<area>]', [
             'module' => 'Admin',
             'presenter' => 'Dashboard',
             'action' => 'default',
             'id' => null,
             'area' => null
-        ));
+        ]);
 
-        $router[] = new Route('install/<action>/<id>/', array(
+        $router[] = new Route('install/<action>/<id>/', [
             'module' => 'Install',
             'presenter' => 'Install',
             'action' => 'default',
             'id' => null
-        ));
+        ]);
 
         $router[] = new Route('login/', 'Auth:login');
         $router[] = new Route('logout/', 'Auth:logout');
 
         try {
-            $this->pageRepository->findAll(); //vyvola vyjimku, pokud neexistuje databaze
-
-            $router[] = new Route('[!<pageId [a-z-0-9]+>]', array(
+            $router[] = new Route('[page/<slug>]', [
                 'module' => 'Web',
                 'presenter' => 'Page',
                 'action' => 'default',
-                'pageId' => array(
-                    Route::FILTER_IN => [$this->pageRepository, 'slugToId'],
-                    Route::FILTER_OUT => [$this->pageRepository, "idToSlug"]
-                )
-            ));
+                'page' => [
+                    Route::FILTER_IN => function ($page) {
+                        return $this->pageRepository->findBySlug($page);
+                    },
+                    Route::FILTER_OUT => function ($page) {
+                        return $page->getSlug();
+                    }
+                ]
+            ]);
         } catch (\Doctrine\DBAL\Exception\TableNotFoundException $ex) { }
 
-        $router[] = new Route('<presenter>/<action>[/<id>]', 'Web:Page:default');
+        $router[] = new Route('<presenter>/<action>[/<id>]', [
+            'module' => 'Web',
+            'presenter' => 'Page',
+            'action' => 'default',
+            'id' => null,
+            'area' => null
+        ]);
 
         return $router;
     }

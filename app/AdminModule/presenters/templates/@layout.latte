@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+
+    <title>{_admin.common.title, [seminar_name => $seminarName]}</title>
+
+    <link rel="shortcut icon" href="{$basePath}/favicon.ico">
+
+    {control css}
+    {control js}
+
+    {block head}{/block}
+</head>
+
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="{plink :Web:Page:default}">{_admin.common.heading, [seminar_name => $seminarName]}</a>
+        </div>
+
+        <div id="navbar">
+            <ul class="nav navbar-nav">
+                <li n:class="$presenter->isLinkCurrent(':Admin:Dashboard:*') ? active">
+                    <a href="{plink :Admin:Dashboard:default}">Home</a>
+                </li>
+                {if $user->isAllowed($resourceCMS, $permissionManage)}
+                    <li n:class="$presenter->isLinkCurrent(':Admin:CMS:Page:*') ? active">
+                        <a href="{plink :Admin:CMS:Page:list}">Webová prezentace</a>
+                    </li>
+                {/if}
+                {if $user->isAllowed($resourceProgram, $permissionAccess)}
+                    <li n:class="$presenter->isLinkCurrent(':Admin:Program:Block:*') ? active">
+                        <a href="{plink :Admin:Program:Block:list}">Program semináře</a>
+                    </li>
+                {/if}
+                {if $user->isAllowed($resourceUsers, $permissionManage)}
+                    <li n:class="$presenter->isLinkCurrent(':Admin:Users:*') ? active">
+                        <a href="{plink :Admin:Users:list}">Uživatelé</a>
+                    </li>
+                {/if}
+                {if $user->isAllowed($resourceACL, $permissionManage)}
+                    <li n:class="$presenter->isLinkCurrent(':Admin:Acl:*') ? active">
+                        <a href="{plink :Admin:Acl:list}">Role</a>
+                    </li>
+                {/if}
+                {if $user->isAllowed($resourceMailing, $permissionManage)}
+                    <li n:class="$presenter->isLinkCurrent(':Admin:Mailing:Mailing:') ? active">
+                        <a href="{plink :Admin:Mailing:Mailing:default}">Mailing</a> {* TODO rozsireni mailingu*}
+                    </li>
+                {/if}
+                {if $user->isAllowed($resourceConfiguration, $permissionManage)}
+                    <li n:class="$presenter->isLinkCurrent(':Admin:Configuration:*') ? active">
+                        <a href="{plink :Admin:Configuration:settings}">Konfigurace</a>
+                    </li>
+                {/if}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container" id="wrapper">
+    <div id="content" class="row">
+        {if $sidebarVisibility}
+            <div id="sidebar" class="col-sm-3">
+                {include #sidebar}
+            </div>
+        {/if}
+
+        <div id="main" class="{if $sidebarVisibility}col-sm-9{else}col-sm-12{/if}">
+            <div id="messages" class="row" n:if="$flashes">
+                <div class="col-sm-12">
+                    <div n:foreach="$flashes as $flash" n:class="alert, $flash->type" role="alert">
+                        {$flash->message|noescape}
+                        <button type="button" class="close" data-dismiss="alert">×</button>
+                    </div>
+                </div>
+            </div>
+
+            {include #main}
+        </div>
+    </div>
+
+    <hr>
+
+    <footer class="footer">
+        <p>{$footer|noescape}</p>
+    </footer>
+</div>
+</body>
+</html>
+
+
+
+

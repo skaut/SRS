@@ -2,14 +2,12 @@
 
 namespace App\WebModule\Presenters;
 
-use App\Model\CMS\Content\TextContent;
-use App\Model\CMS\FAQ;
 use App\WebModule\Components\ApplicationContentControl;
 use App\WebModule\Components\BlocksContentControl;
 use App\WebModule\Components\CapacitiesContentControl;
 use App\WebModule\Components\DocumentContentControl;
-use App\WebModule\Components\FAQContentControl;
-use App\WebModule\Components\HTMLContentControl;
+use App\WebModule\Components\FaqContentControl;
+use App\WebModule\Components\HtmlContentControl;
 use App\WebModule\Components\ImageContentControl;
 use App\WebModule\Components\NewsContentControl;
 use App\WebModule\Components\ProgramsContentControl;
@@ -20,16 +18,16 @@ class PagePresenter extends WebBasePresenter
 {
     protected $pageId;
 
-    public function renderDefault($pageId)
+    public function renderDefault($slug)
     {
-        if ($pageId === null) {
+        if ($slug === null) {
             $page = $this->pageRepository->findPublishedPageBySlug('/');
             if ($page === null) {
                 throw new \Nette\Application\BadRequestException($this->translator->translate('_web.common.homepage_not_found'), 404);
             }
             $this->template->bodyClass = "body-homepage";
         } else {
-            $page = $this->pageRepository->find($pageId);
+            $page = $this->pageRepository->findPageBySlug($slug);
             $this->template->bodyClass = "body-{$page->getSlug()}";
         }
 
@@ -64,14 +62,14 @@ class PagePresenter extends WebBasePresenter
         return new DocumentContentControl;
     }
 
-    public function createComponentFAQContent($content)
+    public function createComponentFaqContent($content)
     {
-        return new FAQContentControl;
+        return new FaqContentControl;
     }
 
-    public function createComponentHTMLContent($content)
+    public function createComponentHtmlContent($content)
     {
-        return new HTMLContentControl;
+        return new HtmlContentControl;
     }
 
     public function createComponentImageContent($content)

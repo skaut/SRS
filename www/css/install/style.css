@@ -1,0 +1,8 @@
+.navbar-brand:hover {
+    color: #9d9d9d!important;
+}
+
+#wrapper {
+    margin-top: 50px;
+    min-width: 768px;
+}

@@ -18,7 +18,7 @@ resource:
     room: "Místnosti"
     category: "Kategorie"
     configuration: "Konfigurace"
-    evidence: "Uživatelé"
+    users: "Uživatelé"
     mailing: "Mailing"
 
 permission:

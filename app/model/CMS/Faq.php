@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="faq")
  */
-class FAQ
+class Faq
 {
     use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 

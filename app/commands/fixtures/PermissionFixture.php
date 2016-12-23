@@ -23,7 +23,7 @@ class PermissionFixture extends AbstractFixture implements DependentFixtureInter
         $permissions['program_manage_rooms'] = new Permission(Permission::MANAGE_ROOMS, $this->getReference('resource_program'));
         $permissions['program_manage_categories'] = new Permission(Permission::MANAGE_CATEGORIES, $this->getReference('resource_program'));
         $permissions['program_choose_programs'] = new Permission(Permission::CHOOSE_PROGRAMS, $this->getReference('resource_program'));
-        $permissions['evidence_manage'] = new Permission(Permission::MANAGE, $this->getReference('resource_evidence'));
+        $permissions['users_manage'] = new Permission(Permission::MANAGE, $this->getReference('resource_users'));
         $permissions['mailing_manage'] = new Permission(Permission::MANAGE, $this->getReference('resource_mailing'));
 
         foreach ($permissions as $permission) {

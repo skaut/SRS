@@ -12,19 +12,19 @@
     {control css}
     {control js}
 
-    {block head}
+    {block head}{/block}
 </head>
 
 <body>
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
-            <a class="navbar-brand" href="{$basePath}/install">{_install.common.heading}</a>
+            <span class="navbar-brand">{_install.common.heading}</span>
         </div>
     </div>
 </nav>
 
-<div class="container" style="margin-top: 50px; min-width: 768px;">
+<div class="container" id="wrapper">
     <div class="row">
         <div class="col-sm-12">
             <h2>{include #header}</h2>
@@ -35,13 +35,13 @@
         <div class="col-sm-12">
             <div class="progress">
                 <div class="progress-bar" role="progressbar" aria-valuenow="70"
-                     aria-valuemin="0" aria-valuemax="100" style="width: {include #progress}{/block}">
+                     aria-valuemin="0" aria-valuemax="100" style="width: {include #progress}">
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row">
+    <div class="row" n:if="$flashes">
         <div class="col-sm-12">
             <div n:foreach="$flashes as $flash" n:class="alert, $flash->type" role="alert">{$flash->message}</div>
         </div>

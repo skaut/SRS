@@ -20,8 +20,7 @@
 <div class="container" id="wrapper">
     <div id="messages" class="row" n:if="$flashes">
         <div class="col-sm-12">
-            <div n:foreach="$flashes as $flash" n:class="alert, $flash->type"
-                    role="alert">{$flash->message|noescape}</div>
+            <div n:foreach="$flashes as $flash" n:class="alert, $flash->type" role="alert">{$flash->message|noescape}</div>
         </div>
     </div>
 
@@ -47,6 +46,7 @@
         <div id="main" class="{if $sidebarVisibility}col-sm-9{else}col-sm-12{/if}">
             {include #main}
         </div>
+
         {if $sidebarVisibility}
             <div id="sidebar" class="col-sm-3">
                 {include #sidebar}
@@ -56,7 +56,7 @@
 
     <hr>
 
-    <footer class="footer">
+    <footer>
         <p>{$footer|noescape}</p>
     </footer>
 </div>
