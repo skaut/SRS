@@ -1,3 +1,5 @@
 common:
     title: "Administrace | %seminar_name%"
     heading: "SRS: %seminar_name%"
+    logged_in_user: "Uživatel:"
+    logged_in_roles: "v roli:|v rolích:"

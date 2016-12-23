@@ -2,3 +2,13 @@
     margin-top: 50px;
     min-width: 768px;
 }
+
+nav {
+    min-width: 768px !important;
+}
+
+.navbar-text {
+    margin-right: 0 !important;
+}
+
+
