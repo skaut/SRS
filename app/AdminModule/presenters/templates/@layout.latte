@@ -29,9 +29,9 @@
         {/if}
 
         <div id="main" class="{if $sidebarVisibility}col-sm-9{else}col-sm-12{/if}">
-            <div id="messages" class="row" n:if="$flashes">
+            <div id="messages" class="row" n:if="$flashes"> {* TODO: mizeni hlasek *}
                 <div class="col-sm-12">
-                    <div n:foreach="$flashes as $flash" n:class="alert, $flash->type" role="alert">
+                    <div n:foreach="$flashes as $flash" n:class="alert, 'alert-' . $flash->type" role="alert">
                         {$flash->message|noescape}
                         <button type="button" class="close" data-dismiss="alert">×</button>
                     </div>

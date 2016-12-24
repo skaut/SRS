@@ -35,6 +35,12 @@ abstract class WebBasePresenter extends BasePresenter
     public $settingsRepository;
 
     /**
+     * @var \App\Model\User\UserRepository
+     * @inject
+     */
+    public $userRepository;
+
+    /**
      * @var User
      */
     protected $dbuser;

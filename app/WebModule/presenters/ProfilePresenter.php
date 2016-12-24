@@ -6,6 +6,7 @@ namespace App\WebModule\Presenters;
 use App\WebModule\Forms\AdditionalInformationFormFactory;
 use App\WebModule\Forms\PersonalDetailsFormFactory;
 use App\WebModule\Forms\RolesFormFactory;
+use Kdyby\Doctrine\EntityManager;
 use Nette\Application\UI\Form;
 
 class ProfilePresenter extends WebBasePresenter
@@ -33,7 +34,7 @@ class ProfilePresenter extends WebBasePresenter
         parent::startup();
 
         if (!$this->user->isLoggedIn()) {
-            $this->flashMessage('<span class="glyphicon glyphicon-lock" aria-hidden="true"></span> ' . $this->translator->translate('web.common.login_required'), 'alert-danger');
+            $this->flashMessage('<span class="glyphicon glyphicon-lock" aria-hidden="true"></span> ' . $this->translator->translate('web.common.login_required'), 'danger');
             $this->redirect(':Web:Page:default');
         }
     }
@@ -111,9 +112,18 @@ class ProfilePresenter extends WebBasePresenter
         $form->onSuccess[] = function (Form $form) {
             $values = $form->getValues();
 
-            // TODO
+            $editedUser = $this->userRepository->find($values['id']);
+            $editedUser->setAbout($values['about']);
 
-            $this->redirect($this);
+            if (array_key_exists('arrival', $values))
+                $editedUser->setArrival($values['arrival']);
+            if (array_key_exists('departure', $values))
+                $editedUser->setDeparture($values['departure']);
+            $this->userRepository->getEntityManager()->flush();
+
+            $this->flashMessage('Doplňující informace upraveny.', 'success');
+
+            $this->redirect('this'); // TODO zmena udaju v identite
         };
 
         return $form;

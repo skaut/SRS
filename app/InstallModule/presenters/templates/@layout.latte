@@ -41,9 +41,9 @@
         </div>
     </div>
 
-    <div class="row" n:if="$flashes">
+    <div class="row" n:if="$flashes"> {* TODO: mizeni hlasek *}
         <div class="col-sm-12">
-            <div n:foreach="$flashes as $flash" n:class="alert, $flash->type" role="alert">{$flash->message}</div>
+            <div n:foreach="$flashes as $flash" n:class="alert, 'alert-' . $flash->type" role="alert">{$flash->message}</div>
         </div>
     </div>
 
