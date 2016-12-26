@@ -59,6 +59,11 @@ abstract class AdminBasePresenter extends BasePresenter
 
         if (!$this->user->isLoggedIn() || !$this->user->isAllowed(Resource::ADMIN, Permission::ACCESS))
             $this->redirect(":Web:Page:default");
+    }
+
+    public function beforeRender()
+    {
+        parent::beforeRender();
 
         $this->template->resourceACL = Resource::ACL;
         $this->template->resourceCMS = Resource::CMS;

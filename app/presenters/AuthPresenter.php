@@ -10,7 +10,7 @@ class AuthPresenter extends BasePresenter
      */
     public $skautIS;
 
-    public function renderLogin($backlink = null) {
+    public function actionLogin($backlink = null) {
         if ($this->getHttpRequest()->getPost() == null) {
             $loginUrl = $this->skautIS->getLoginUrl($backlink);
             $this->redirectUrl($loginUrl);
@@ -22,7 +22,7 @@ class AuthPresenter extends BasePresenter
         $this->redirectReturnUrl($this->getParameter('ReturnUrl'));
     }
 
-    public function renderLogout() {
+    public function actionLogout() {
         if ($this->user->isLoggedIn()) {
             $this->user->logout(true);
             $logoutUrl = $this->skautIS->getLogoutUrl();

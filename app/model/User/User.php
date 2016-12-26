@@ -977,6 +977,8 @@ class User
 
     public function hasDisplayArrivalDepartureRole()
     {
+        $this->roles->toArray(); // prednacteni roli kvuli problemu s camelacase u lazyloading
+
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('displayArrivalDeparture', true));
         return !$this->roles->matching($criteria)->isEmpty();

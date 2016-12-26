@@ -55,7 +55,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
     {
         $skautISUser = $this->skautIS->usr->UserDetail(['ID_Login' => $this->skautIS->getUser()->getLoginId()]);
 
-        $user = $this->userRepository->findUserBySkautISUserIdName($skautISUser->ID);
+        $user = $this->userRepository->findUserBySkautISUserId($skautISUser->ID);
         $newUser = $user === null;
 
         if ($newUser) {

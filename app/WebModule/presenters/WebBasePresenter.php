@@ -68,7 +68,12 @@ abstract class WebBasePresenter extends BasePresenter
         $this->checkInstallation();
 
         $this->user->setAuthorizator(new Authorizator($this->roleRepository, $this->resourceRepository));
-        $this->dbuser = $this->user->isLoggedIn() ? $this->user->identity->dbuser : null;
+        $this->dbuser = $this->user->isLoggedIn() ? $this->userRepository->findUserById($this->user->id) : null;
+    }
+
+    public function beforeRender()
+    {
+        parent::beforeRender();
 
         $this->template->backlink = $this->getHttpRequest()->getUrl()->getPath();
 

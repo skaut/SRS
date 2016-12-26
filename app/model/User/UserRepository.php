@@ -10,7 +10,7 @@ class UserRepository extends EntityRepository
         return $this->findOneBy(['id' => $id]);
     }
 
-    public function findUserBySkautISUserIdName($skautISUserId) {
+    public function findUserBySkautISUserId($skautISUserId) {
         return $this->findOneBy(['skautISUserId' => $skautISUserId]);
     }
 
