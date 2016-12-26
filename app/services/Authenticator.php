@@ -84,7 +84,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
             $netteRoles[] = $roleUnapproved->getName();
         }
 
-        return new NS\Identity($user->getId(), $netteRoles, ['dbuser' => $user]);
+        return new NS\Identity($user->getId(), $netteRoles);
     }
 
     private function updateUserFromSkautIS(User $user, $skautISUser) {

@@ -5,7 +5,7 @@
                 <li>
                     {_web.common.logged_in_user}
                     <strong>
-                        {$user->identity->dbuser->getUsername()}
+                        {$dbuser->getUsername()}
                     </strong>
                     {if $displayUsersRoles}
                         {_web.common.logged_in_roles, count($user->roles)}
@@ -15,7 +15,7 @@
                     {/if}
                 </li>
 
-                {if !$user->identity->dbuser->isMember()}
+                {if !$dbuser->isMember()}
                     <li>
                         <strong><a href="{plink :Web:Member:default}" style="color: red">{_web.member.name}</a></strong>
                     </li>

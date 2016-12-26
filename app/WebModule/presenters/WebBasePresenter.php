@@ -75,13 +75,13 @@ abstract class WebBasePresenter extends BasePresenter
     {
         parent::beforeRender();
 
+        $this->template->dbuser = $this->dbuser;
+
         $this->template->backlink = $this->getHttpRequest()->getUrl()->getPath();
 
         $this->template->logo = $this->settingsRepository->getValue('logo');
         $this->template->footer = $this->settingsRepository->getValue('footer');
         $this->template->seminarName = $this->settingsRepository->getValue('seminar_name');
-
-        $this->template->dbuser = $this->dbuser;
 
         $this->template->unregisteredRole = $this->roleRepository->findRoleByUntranslatedName(\App\Model\ACL\Role::UNREGISTERED);
         $this->template->unapprovedRole = $this->roleRepository->findRoleByUntranslatedName(\App\Model\ACL\Role::UNAPPROVED);

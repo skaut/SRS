@@ -36,6 +36,17 @@ abstract class AdminBasePresenter extends BasePresenter
     public $settingsRepository;
 
     /**
+     * @var \App\Model\User\UserRepository
+     * @inject
+     */
+    public $userRepository;
+
+    /**
+     * @var User
+     */
+    protected $dbuser;
+
+    /**
      * @return CssLoader
      */
     protected function createComponentCss()
@@ -59,11 +70,14 @@ abstract class AdminBasePresenter extends BasePresenter
 
         if (!$this->user->isLoggedIn() || !$this->user->isAllowed(Resource::ADMIN, Permission::ACCESS))
             $this->redirect(":Web:Page:default");
+        $this->dbuser = $this->userRepository->findUserById($this->user->id);
     }
 
     public function beforeRender()
     {
         parent::beforeRender();
+
+        $this->template->dbuser = $this->dbuser;
 
         $this->template->resourceACL = Resource::ACL;
         $this->template->resourceCMS = Resource::CMS;
