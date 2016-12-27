@@ -5,6 +5,7 @@ namespace App\Model\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
 
 /**
  * @ORM\Entity(repositoryClass="UserRepository")
@@ -975,12 +976,20 @@ class User
         $this->note = $note;
     }
 
+    /**
+     * Je uživatel v roli, u které se eviduje příjezd a odjezd?
+     *
+     * @return bool
+     */
     public function hasDisplayArrivalDepartureRole()
     {
-        $this->roles->toArray(); // prednacteni roli kvuli problemu s camelacase u lazyloading
+        $criteria = Criteria::create();
 
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('displayArrivalDeparture', true));
+        if($this->roles instanceof PersistentCollection && $this->roles->isInitialized())
+            $criteria->where(Criteria::expr()->eq('displayArrivalDeparture', true));
+        else
+            $criteria->where(Criteria::expr()->eq('display_arrival_departure', true));  //kvuli problemu s lazyloadingem u camelcase nazvu
+
         return !$this->roles->matching($criteria)->isEmpty();
     }
 

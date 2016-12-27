@@ -66,10 +66,13 @@ abstract class AdminBasePresenter extends BasePresenter
     {
         parent::startup();
 
-        $this->user->setAuthorizator(new Authorizator($this->roleRepository, $this->resourceRepository));
+        if ($this->user->isLoggedIn() && !$this->skautIS->getUser()->isLoggedIn())
+            $this->user->logout(true);
 
+        $this->user->setAuthorizator(new Authorizator($this->roleRepository, $this->resourceRepository));
         if (!$this->user->isLoggedIn() || !$this->user->isAllowed(Resource::ADMIN, Permission::ACCESS))
             $this->redirect(":Web:Page:default");
+
         $this->dbuser = $this->userRepository->findUserById($this->user->id);
     }
 

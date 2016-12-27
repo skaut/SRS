@@ -7,6 +7,7 @@ use App\Model\ACL\Resource;
 use App\Model\User\User;
 use App\Presenters\BasePresenter;
 use App\Services\Authorizator;
+use Skautis\Skautis;
 
 abstract class WebBasePresenter extends BasePresenter
 {
@@ -41,6 +42,12 @@ abstract class WebBasePresenter extends BasePresenter
     public $userRepository;
 
     /**
+     * @var Skautis
+     * @inject
+     */
+    public $skautIS;
+
+    /**
      * @var User
      */
     protected $dbuser;
@@ -67,7 +74,11 @@ abstract class WebBasePresenter extends BasePresenter
 
         $this->checkInstallation();
 
+        if ($this->user->isLoggedIn() && !$this->skautIS->getUser()->isLoggedIn())
+            $this->user->logout(true);
+
         $this->user->setAuthorizator(new Authorizator($this->roleRepository, $this->resourceRepository));
+
         $this->dbuser = $this->user->isLoggedIn() ? $this->userRepository->findUserById($this->user->id) : null;
     }
 

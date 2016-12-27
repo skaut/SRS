@@ -8,6 +8,7 @@ use App\WebModule\Forms\PersonalDetailsFormFactory;
 use App\WebModule\Forms\RolesFormFactory;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Application\UI\Form;
+use Skautis\Skautis;
 
 class ProfilePresenter extends WebBasePresenter
 {
@@ -28,6 +29,12 @@ class ProfilePresenter extends WebBasePresenter
      * @inject
      */
     public $additionalInformationForm;
+
+    /**
+     * @var Skautis
+     * @inject
+     */
+    public $skautIS;
 
     public function startup()
     {
@@ -69,9 +76,56 @@ class ProfilePresenter extends WebBasePresenter
         $form->onSuccess[] = function (Form $form) {
             $values = $form->getValues();
 
-            // TODO
+            $editedUser = $this->userRepository->find($values['id']);
 
-            $this->redirect($this);
+            $editedUser->setSex($values['sex']);
+            $editedUser->setFirstName($values['firstName']);
+            $editedUser->setLastName($values['lastName']);
+            $editedUser->setNickName($values['nickName']);
+            $editedUser->setBirthdate($values['birthdate']);
+            $editedUser->setStreet($values['street']);
+            $editedUser->setCity($values['city']);
+            $editedUser->setPostcode($values['postcode']);
+            $editedUser->setState($values['state']);
+
+            $this->userRepository->getEntityManager()->flush();
+
+            try {
+                $skautISPerson = $this->skautIS->org->PersonDetail([
+                    'ID_Login' => $this->skautIS->getUser()->getLoginId(),
+                    'ID' => $editedUser->getSkautISPersonId(),
+                ], 'personDetailInput');
+
+                $this->skautIS->org->PersonUpdateBasic([
+                    'ID_Login' => $this->skautIS->getUser()->getLoginId(),
+                    'ID' => $editedUser->getSkautISPersonId(),
+                    'ID_Sex' => $editedUser->getSex(),
+                    'Birthday' => $editedUser->getBirthdate()->format('Y-m-d\TH:i:s'),
+                    'FirstName' => $editedUser->getFirstName(),
+                    'LastName' => $editedUser->getLastName(),
+                    'NickName' => $editedUser->getNickName()
+                ], 'personUpdateBasicInput');
+
+                $this->skautIS->org->PersonUpdateAddress([
+                    'ID_Login' => $this->skautIS->getUser()->getLoginId(),
+                    'ID' => $editedUser->getSkautISPersonId(),
+                    'Street' => $editedUser->getStreet(),
+                    'City' => $editedUser->getCity(),
+                    'Postcode' => $editedUser->getPostcode(),
+                    'State' => $editedUser->getState(),
+                    'PostalFirstLine' => $skautISPerson->PostalFirstLine,
+                    'PostalStreet' => $skautISPerson->PostalStreet,
+                    'PostalCity' => $skautISPerson->PostalCity,
+                    'PostalPostcode' => $skautISPerson->PostalPostcode,
+                    'PostalState' => $skautISPerson->PostalState
+                ], 'personUpdateAddressInput');
+            } catch (\Skautis\Wsdl\WsdlException $ex) {
+                $this->presenter->flashMessage('Synchronizace se skautIS se nepodařila. Zkuste se znovu přihlásit.', 'danger');
+            }
+
+            $this->flashMessage('Osobní údaje aktualizovány.', 'success');
+
+            $this->redirect('this');
         };
 
         return $form;
@@ -90,9 +144,15 @@ class ProfilePresenter extends WebBasePresenter
         $form->onSuccess[] = function (Form $form) {
             $values = $form->getValues();
 
+            $editedUser = $this->userRepository->find($values['id']);
+
             // TODO
 
-            $this->redirect($this);
+            $this->userRepository->getEntityManager()->flush();
+
+            $this->flashMessage('Role upraveny.', 'success');
+
+            $this->redirect('this');
         };
 
         return $form;
@@ -119,11 +179,12 @@ class ProfilePresenter extends WebBasePresenter
                 $editedUser->setArrival($values['arrival']);
             if (array_key_exists('departure', $values))
                 $editedUser->setDeparture($values['departure']);
+
             $this->userRepository->getEntityManager()->flush();
 
             $this->flashMessage('Doplňující informace upraveny.', 'success');
 
-            $this->redirect('this'); // TODO zmena udaju v identite
+            $this->redirect('this');
         };
 
         return $form;
