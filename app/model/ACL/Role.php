@@ -41,6 +41,12 @@ class Role
     protected $name;
 
     /**
+     * @ORM\Column(type="string", unique=true, nullable=true)
+     * @var string
+     */
+    protected $untranslatedName;
+
+    /**
      * @ORM\ManyToMany(targetEntity="\App\Model\User\User", mappedBy="roles", cascade={"persist"})
      * @var ArrayCollection
      */
@@ -191,6 +197,22 @@ class Role
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUntranslatedName()
+    {
+        return $this->untranslatedName;
+    }
+
+    /**
+     * @param string $untranslatedName
+     */
+    public function setUntranslatedName($untranslatedName)
+    {
+        $this->untranslatedName = $untranslatedName;
     }
 
     /**

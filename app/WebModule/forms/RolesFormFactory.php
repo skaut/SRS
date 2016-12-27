@@ -55,7 +55,6 @@ class RolesFormFactory
         $rolesSelect = $form->addMultiSelect('roles', 'web.profile.roles')->setItems($availableRolesOptions)
             ->setRequired(true)
             ->addRule([$this, 'validateRolesCapacities'], 'web.profile.capacity_occupied', null)
-            ->addRule([$this, 'validateRolesEmpty'], 'web.profile.no_role_selected', null)
             ->addRule([$this, 'validateRolesRegisterable'], 'web.profile.role_is_not_registerable', null);
 
         foreach ($availableRoles as $role) {
@@ -101,6 +100,7 @@ class RolesFormFactory
 
     public function validateRolesCapacities($field, $args)
     {
+        return true; // TODO
 //        $field->getValue();
 //            $values = $this->getComponent('roles')->getRawValue();
 //            //$user = $database->getRepository('\SRS\Model\User')->findOneBy(array('id' => $this->getForm()->getHttpData()['id']));
@@ -117,6 +117,7 @@ class RolesFormFactory
 
     public function validateRolesIncompatible($field, $args)
     {
+        return true; // TODO
 //    $database = $args[0];
 //    $role = $args[1];
 //
@@ -136,6 +137,7 @@ class RolesFormFactory
 
     public function validateRolesRequired($field, $args)
     {
+        return true; // TODO
 //    $values = $this->getComponent('roles')->getRawValue();
 //
 //    if (!in_array($role->id, $values))
@@ -150,14 +152,9 @@ class RolesFormFactory
 //    return true;
     }
 
-    public function validateRolesEmpty($field, $args)
-    {
-//    $values = $this->getComponent('roles')->getRawValue();
-//    return count($values) != 0;
-    }
-
     public function validateRolesRegisterable($field, $args)
     {
+        return true; // TODO
 //    $values = $this->getComponent('roles')->getRawValue();
 //    $user = $database->getRepository('\SRS\Model\User')->findOneBy(array('id' => $this->getForm()->getHttpData()['id']));
 //

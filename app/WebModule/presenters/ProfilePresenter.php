@@ -47,7 +47,7 @@ class ProfilePresenter extends WebBasePresenter
 
     public function handleExportSchedule()
     {
-        //TODO
+        // TODO export harmonogramu
     }
 
     protected function createComponentPersonalDetailsForm()
@@ -145,13 +145,28 @@ class ProfilePresenter extends WebBasePresenter
 
             $editedUser = $this->userRepository->find($values['id']);
 
-            // TODO
+            $selectedRoles = array();
+            foreach ($values['roles'] as $roleId) {
+                $selectedRoles[] = $this->roleRepository->find($roleId);
+            }
+
+            //pokud si uživatel přidá roli, která vyžaduje schválení, stane se neschválený
+            $approved = $editedUser->isApproved();
+            if ($approved) {
+                foreach ($selectedRoles as $role) {
+                    if (!$role->isApprovedAfterRegistration() && !$editedUser->getRoles()->contains($role)) {
+                        $approved = false;
+                        break;
+                    }
+                }
+            }
+
+            $editedUser->updateRoles($selectedRoles);
+            $editedUser->setApproved($approved);
 
             $this->userRepository->getEntityManager()->flush();
 
-            $this->flashMessage('Role upraveny.', 'success');
-
-            $this->redirect('this');
+            $this->redirect(':Auth:logout');
         };
 
         return $form;

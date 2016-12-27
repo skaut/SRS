@@ -2,6 +2,7 @@
 
 namespace App\Model\User;
 
+use App\Model\ACL\Role;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
@@ -334,6 +335,34 @@ class User
     public function removeRole($role)
     {
         return $this->roles->removeElement($role);
+    }
+
+    public function updateRoles($newRoles) {
+        $registerableCategoriesOld = array();
+        $registerableCategoriesNew = array();
+
+        foreach ($this->getRegisterableCategories() as $category) {
+            $registerableCategoriesOld[] = $category;
+        }
+
+        foreach ($this->getRegisterableCategories($newRoles) as $category) {
+            $registerableCategoriesNew[] = $category;
+        }
+
+        $this->roles->clear();
+
+        if (count($newRoles) == 1 && $newRoles[0]->getUntranslatedName() == Role::UNREGISTERED)
+            $this->programs->clear();
+        else {
+            foreach ($newRoles as $role) {
+                $this->roles->add($role);
+            }
+
+            foreach ($registerableCategoriesOld as $oldCategory) {
+                if (!in_array($oldCategory, $registerableCategoriesNew))
+                    $this->removeProgramsInCategory($oldCategory);
+            }
+        }
     }
 
     public function isInRole($roleName)
@@ -993,4 +1022,23 @@ class User
         return !$this->roles->matching($criteria)->isEmpty();
     }
 
+    public function getRegisterableCategories($roles = null) {
+        $categories = array();
+        if ($roles === null)
+            $roles = $this->roles;
+        foreach ($roles as $role) {
+            foreach ($role->getRegisterableCategories() as $category) {
+                $categories[] = $category;
+            }
+        }
+        return $categories;
+    }
+
+    public function removeProgramsInCategory($category) {
+        foreach ($this->programs as $program) {
+            if ($program->getBlock()->getCategory() === $category) {
+                $this->programs->removeElement($program);
+            }
+        }
+    }
 }

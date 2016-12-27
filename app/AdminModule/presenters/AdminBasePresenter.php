@@ -6,6 +6,7 @@ use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Presenters\BasePresenter;
 use App\Services\Authorizator;
+use Skautis\Skautis;
 use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\JavaScriptLoader;
 
@@ -40,6 +41,12 @@ abstract class AdminBasePresenter extends BasePresenter
      * @inject
      */
     public $userRepository;
+
+    /**
+     * @var Skautis
+     * @inject
+     */
+    public $skautIS;
 
     /**
      * @var User
