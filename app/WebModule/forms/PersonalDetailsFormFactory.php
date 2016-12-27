@@ -57,7 +57,7 @@ class PersonalDetailsFormFactory
 
         $form->addText('postcode', 'web.profile.postcode')
             ->addRule(Form::FILLED, 'web.profile.postcode_empty')
-            ->addRule(Form::PATTERN, 'web.profile.postcode_format', '^\d{5}$');
+            ->addRule(Form::PATTERN, 'web.profile.postcode_format', '^\d{3} ?\d{2}$');
 
         $form->addText('state', 'web.profile.state')
             ->addRule(Form::FILLED, 'web.profile.state_empty');

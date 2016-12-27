@@ -30,12 +30,6 @@ class ProfilePresenter extends WebBasePresenter
      */
     public $additionalInformationForm;
 
-    /**
-     * @var Skautis
-     * @inject
-     */
-    public $skautIS;
-
     public function startup()
     {
         parent::startup();
@@ -78,11 +72,16 @@ class ProfilePresenter extends WebBasePresenter
 
             $editedUser = $this->userRepository->find($values['id']);
 
-            $editedUser->setSex($values['sex']);
-            $editedUser->setFirstName($values['firstName']);
-            $editedUser->setLastName($values['lastName']);
-            $editedUser->setNickName($values['nickName']);
-            $editedUser->setBirthdate($values['birthdate']);
+            if (array_key_exists('sex', $values))
+                $editedUser->setSex($values['sex']);
+            if (array_key_exists('firstName', $values))
+                $editedUser->setFirstName($values['firstName']);
+            if (array_key_exists('lastName', $values))
+                $editedUser->setLastName($values['lastName']);
+            if (array_key_exists('nickName', $values))
+                $editedUser->setNickName($values['nickName']);
+            if (array_key_exists('birthdate', $values))
+                $editedUser->setBirthdate($values['birthdate']);
             $editedUser->setStreet($values['street']);
             $editedUser->setCity($values['city']);
             $editedUser->setPostcode($values['postcode']);
