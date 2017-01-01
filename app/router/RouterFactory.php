@@ -24,7 +24,7 @@ class RouterFactory
      */
     public function createRouter()
     {
-        $router = new RouteList;
+        $router = new RouteList; // TODO https (od 2.4 v htaccess)
 
         $router[] = new Route('index.php', 'Web:Page:default', Route::ONE_WAY);
 

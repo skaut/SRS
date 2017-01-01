@@ -70,16 +70,26 @@
                                     {/if}
                                 </td>
                             </tr>
+
+                            <tr>
+                                <th></th>
+                                <td>
+                                    {if !$user->isInRole($unregisteredRole->getName())}
+                                        {if $cancelRegistrationAllowed}
+                                            <a href="{link cancelRegistration!}" class="btn btn-danger" onclick = "if (!confirm({_cancel_registration_confirm})) return false;">
+                                                {_web.profile.cancel_registration}
+                                            </a>
+                                        {else}
+                                            <a href="#" class="btn btn-danger" disabled="true">
+                                                {_web.profile.cancel_registration}
+                                            </a>
+                                         {/if}
+                                    {/if}
+                                </td>
+                            </tr>
                         {/if}
 
-                        {if !$user->isInRole($unregisteredRole->getName())}
-                            {if $cancelRegistrationAllowed}
-                                <a href="{link cancelRegistration!}" onclick = "if (!confirm({_cancel_registration_confirm})) return false;"> {* TODO tlacitko *}
-                                    {_web.profile.cancel_registration}
-                                </a>
-                            {else}
-                            {/if}
-                        {/if}
+
                     </table>
 
                     {if !$user->isInRole($unregisteredRole->getName()) && !$dbuser->hasPaid()}
