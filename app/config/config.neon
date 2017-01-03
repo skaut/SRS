@@ -59,6 +59,7 @@ services:
     - App\WebModule\Forms\RolesFormFactory
     - App\WebModule\Forms\AdditionalInformationFormFactory
     - App\AdminModule\Forms\BaseFormFactory
+    - App\AdminModule\Components\IUsersGridControlFactory
 
 webloader:
     css:
@@ -67,6 +68,7 @@ webloader:
                 - https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css
             files:
                 - %appDir%/../vendor/twbs/bootstrap/dist/css/bootstrap.min.css
+                - libs/font-awesome.min.css
                 - libs/multi-select.css
                 - libs/bootstrap-datetimepicker.css
                 - web/layout.css
@@ -77,6 +79,7 @@ webloader:
                 - https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css
             files:
                 - %appDir%/../vendor/twbs/bootstrap/dist/css/bootstrap.min.css
+                - libs/font-awesome.min.css
                 - libs/multi-select.css
                 - libs/bootstrap-datetimepicker.css
                 - admin/style.css

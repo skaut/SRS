@@ -9,7 +9,7 @@ class DocumentContentControl extends Control
     public function render($content)
     {
         $template = $this->template;
-        $template->setFile(__DIR__ . '/templates/DocumentContentControl.latte');
+        $template->setFile(__DIR__ . '/templates/document_content.latte');
 
         //$template->text = $content->getText();
 

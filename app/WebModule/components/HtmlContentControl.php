@@ -9,7 +9,7 @@ class HtmlContentControl extends Control
     public function render($content)
     {
         $template = $this->template;
-        $template->setFile(__DIR__ . '/templates/HtmlContentControl.latte');
+        $template->setFile(__DIR__ . '/templates/html_content.latte');
 
         //$template->text = $content->getText();
 

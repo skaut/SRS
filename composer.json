@@ -14,7 +14,8 @@
         "zenify/doctrine-migrations": "^3.0",
 
         "nextras/forms": "^2.0",
-        "nextras/datagrid": "^2.1",
+
+        "ublaboo/datagrid": "^5.0",
 
         "janmarek/webloader": "dev-master",
         "jms/serializer": "^1.4",

@@ -9,7 +9,7 @@ class ApplicationContentControl extends Control
     public function render($content)
     {
         $template = $this->template;
-        $template->setFile(__DIR__ . '/templates/ApplicationContentControl.latte');
+        $template->setFile(__DIR__ . '/templates/application_content.latte');
 
         //$template->text = $content->getText();
 

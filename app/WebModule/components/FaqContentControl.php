@@ -9,7 +9,7 @@ class FaqContentControl extends Control
     public function render($content)
     {
         $template = $this->template;
-        $template->setFile(__DIR__ . '/templates/FaqContentControl.latte');
+        $template->setFile(__DIR__ . '/templates/faq_content.latte');
 
         //$template->text = $content->getText();
 
