@@ -30,6 +30,21 @@ class UsersGridControl extends Control
     {
         $grid = new DataGrid($this, $name);
         $grid->setDataSource($this->userRepository->findAll());
-        $grid->addColumnText('username', 'Name');
+        $grid->addColumnText('displayName', 'Jméno')
+            ->setSortable(true);
+        $grid->addColumnText('username', 'Uživatelské jméno');
+        $grid->addColumnText('roles', 'Role')
+            ->setRenderer(function ($item) {
+                $rolesText = "";
+                foreach ($item->getRoles() as $role) {
+                    $rolesText .= $role->getName();
+                }
+                return $rolesText;
+            })
+            ->setSortable(true);
+
+        $grid->addColumnText('approved', 'Schválený')
+            ->setReplacement(['0' => 'ne', '1' => 'ano']);
+
     }
 }
