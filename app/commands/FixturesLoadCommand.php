@@ -27,12 +27,6 @@ class FixturesLoadCommand extends Command
      */
     public $translator;
 
-    /**
-     * @var \App\Services\ConfigFacade
-     * @inject
-     */
-    public $configFacade;
-
     protected function configure()
     {
         $this->setName('app:fixtures:load');
@@ -42,7 +36,7 @@ class FixturesLoadCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output) {
         try {
             $fixtures = array();
-            $fixtures[] = new SettingsFixture($this->translator, $this->configFacade);
+            $fixtures[] = new SettingsFixture($this->translator);
             $fixtures[] = new ResourceFixture();
             $fixtures[] = new PermissionFixture();
             $fixtures[] = new RoleFixture($this->translator);

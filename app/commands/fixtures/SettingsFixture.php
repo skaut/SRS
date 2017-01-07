@@ -16,27 +16,16 @@ class SettingsFixture extends AbstractFixture
     protected $translator;
 
     /**
-     * @var \App\Services\ConfigFacade
-     */
-    protected $configFacade;
-
-    /**
      * SettingsFixture constructor.
      * @param \Kdyby\Translation\Translator $translator
-     * @param \App\Services\ConfigFacade $configFacade
      */
-    public function __construct(\Kdyby\Translation\Translator $translator, \App\Services\ConfigFacade $configFacade)
+    public function __construct(\Kdyby\Translation\Translator $translator)
     {
         $this->translator = $translator;
-        $this->configFacade = $configFacade;
     }
 
     public function load(ObjectManager $manager)
     {
-        $config = $this->configFacade->getConfig();
-        $customBooleanCount = $config['parameters']['customInputs']['booleanCount'];
-        $customTextCount = $config['parameters']['customInputs']['textCount'];
-
         $today = new \DateTime('now');
         $tommorow = new \DateTime('now');
         $tommorow->modify('+1 day');
@@ -77,13 +66,8 @@ class SettingsFixture extends AbstractFixture
         $settings[] = new Settings('display_users_roles', '1');
         $settings[] = new Settings('redirect_after_login', '/');
 
-        for ($i = 1; $i <= $customBooleanCount; $i++) {
-            $settings[] = new Settings('custom_boolean_' . $i, '');
-        }
-
-        for ($i = 1; $i <= $customTextCount; $i++) {
-            $settings[] = new Settings('custom_text_' . $i, '');
-        }
+        $settings[] = new Settings('custom_booleans_labels', serialize([]));
+        $settings[] = new Settings('custom_texts_labels', serialize([]));
 
         foreach ($settings as $setting) {
             $manager->persist($setting);

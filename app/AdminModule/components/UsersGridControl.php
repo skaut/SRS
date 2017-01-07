@@ -6,6 +6,7 @@ use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use Nette\Application\UI\Control;
+use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 
 class UsersGridControl extends Control
@@ -26,7 +27,6 @@ class UsersGridControl extends Control
         $this->settingsRepository = $settingsRepository;
     }
 
-
     public function render()
     {
         $this->template->render(__DIR__ . '/templates/users_grid.latte');
@@ -35,61 +35,82 @@ class UsersGridControl extends Control
 
     public function createComponentGrid($name)
     {
-        $settingsRepository = $this->settingsRepository;
-
         $grid = new DataGrid($this, $name);
-        $grid->setDataSource($this->userRepository->findAll());
+        $grid->setDataSource($this->userRepository->createQueryBuilder('user'));
+        $grid->setColumnsHideable();
 
-        $grid->addGroupAction('Delete examples')->onSelect[] = [$this, 'deleteExamples'];
+        $grid->addGroupAction('Delete examples')->onSelect[] = [$this, 'deleteExamples']; //TODO akce
 
         $grid->addColumnText('displayName', 'Jméno')
             ->setSortable()
-            ->setSortableCallback(function($datasource, $sort) {
-                $order = $sort['displayName'] == "ASC";
-                usort($datasource, function($a, $b) use($order) {
-                    $ret = strnatcmp($a->getDisplayName(), $b->getDisplayName());
-                    return $order ? $ret : -$ret;
-                });
-                return $datasource;
-            });
+            ->setFilterText();
 
         $grid->addColumnText('username', 'Uživatelské jméno')
             ->setSortable()
-            ->setSortableCallback(function($datasource, $sort) {
-                $order = $sort['username'] == "ASC";
-                usort($datasource, function($a, $b) use($order) {
-                    $ret = strnatcmp($a->getUsername(), $b->getUsername());
-                    return $order ? $ret : -$ret;
-                });
-                return $datasource;
-            })
             ->setFilterText();
 
-        $grid->addColumnText('rolesText', 'Role');
+        $grid->addColumnText('rolesText', 'Role'); //TODO filtr
 
         $grid->addColumnText('approved', 'Schválený')
-            ->setReplacement(['0' => 'ne', '1' => 'ano']);
+            ->setReplacement(['0' => 'ne', '1' => 'ano'])
+            ->setSortable()
+            ->setFilterSelect(['' => 'vše', '0' => 'ne', '1' => 'ano']);
 
         $grid->addColumnText('unit', 'Členství')
             ->setRendererOnCondition(function ($row) {
-                return $row->isMember() ? "Nečlen" : "Nepropojený účet";
+                return Html::el('span')->style('color: red')->setText($row->isMember() ? 'nečlen' : 'nepropojený účet');
             }, function ($row) {
-                return $row->getUnit() == null;
-            });
+                return $row->getUnit() === null;
+            })
+            ->setSortable()
+            ->setFilterText();
 
-        $grid->addColumnText('age', 'Věk');
+        $grid->addColumnText('age', 'Věk')
+            ->setSortable()
+            ->setFilterText();
 
-        $grid->addColumnText('city', 'Město');
+        $grid->addColumnText('city', 'Město')
+            ->setSortable()
+            ->setFilterText();
 
-        $grid->addColumnText('fee', 'Cena');
+        $grid->addColumnNumber('fee', 'Cena'); //TODO sort
 
-        $grid->addColumnText('paymentMethod', 'Platební metoda');
+        $grid->addColumnText('paymentMethod', 'Platební metoda'); //TODO
 
+        $variableSymbolCode = $this->settingsRepository->getValue('variable_symbol_code');
         $grid->addColumnText('variableSymbol', 'Variabilní symbol')
-            ->setRenderer(function ($row) use($settingsRepository) {
-                return $row->getVariableSymbolWithCode($settingsRepository->getValue('variable_symbol_code'));
-            });
+            ->setRenderer(function ($row) use($variableSymbolCode) {
+                return $row->getVariableSymbolWithCode($variableSymbolCode);
+            })
+            ->setSortable();
 
-        $grid->addColumnText('paymentDate', 'Zaplaceno');
+        $grid->addColumnDateTime('paymentDate', 'Zaplaceno'); //TODO
+
+        $grid->addColumnDateTime('incomeProofPrintedDate', 'Doklad vytištěn dne')
+            ->setSortable();
+
+        $grid->addColumnDateTime('firstLogin', 'Registrace')
+            ->setSortable();
+
+        $grid->addColumnText('attended', 'Přítomen')
+            ->setReplacement(['0' => 'ne', '1' => 'ano'])
+            ->setSortable()
+            ->setFilterSelect(['' => 'vše', '0' => 'ne', '1' => 'ano']);
+
+        $customBooleansCount = $this->settingsRepository->getValue('custom_booleans_count');
+
+        for ($i = 0; $i < $customBooleansCount; $i++) {
+            //TODO
+        }
+
+        $customTextsCount = $this->settingsRepository->getValue('custom_texts_count');
+
+        for ($i = 0; $i < $customTextsCount; $i++) {
+            //TODO
+        }
+
+        //$grid->addAction('edit', 'Edit'); //TODO akce
+
+        $grid->setColumnsSummary(['fee']);
     }
 }

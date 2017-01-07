@@ -66,6 +66,12 @@ class User
     protected $nickName;
 
     /**
+     * @ORM\Column(type="string")
+     * @var string
+     */
+    protected $displayName;
+
+    /**
      * @ORM\Column(type="string", nullable=true)
      * @var string
      */
@@ -204,46 +210,16 @@ class User
     protected $incomeProofPrintedDate;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="text", nullable=true)
      * @var bool
      */
-    protected $customBoolean0 = false;
-
-    /**
-     * @ORM\Column(type="boolean")
-     * @var bool
-     */
-    protected $customBoolean1 = false;
-
-    /**
-     * @ORM\Column(type="boolean")
-     * @var bool
-     */
-    protected $customBoolean2 = false;
-
-    /**
-     * @ORM\Column(type="boolean")
-     * @var bool
-     */
-    protected $customBoolean3 = false;
-
-    /**
-     * @ORM\Column(type="boolean")
-     * @var bool
-     */
-    protected $customBoolean4 = false;
+    protected $customBooleans;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      * @var string
      */
-    protected $customText0;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     * @var string
-     */
-    protected $customText1;
+    protected $customTexts;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -473,6 +449,7 @@ class User
     public function setFirstName($firstName)
     {
         $this->firstName = $firstName;
+        $this->generateDisplayName();
     }
 
     /**
@@ -489,6 +466,7 @@ class User
     public function setLastName($lastName)
     {
         $this->lastName = $lastName;
+        $this->generateDisplayName();
     }
 
     /**
@@ -505,14 +483,22 @@ class User
     public function setNickName($nickName)
     {
         $this->nickName = $nickName;
+        $this->generateDisplayName();
     }
 
+    /**
+     * @return string $displayName
+     */
     public function getDisplayName()
     {
-        $displayName = $this->lastName . " " . $this->firstName;
+        return $this->displayName;
+    }
+
+    private function generateDisplayName()
+    {
+        $this->displayName = $this->lastName . " " . $this->firstName;
         if ($this->nickName != null)
-            $displayName .= " (" . $this->nickName . ")";
-        return $displayName;
+            $this->displayName .= " (" . $this->nickName . ")";
     }
 
     /**
@@ -895,116 +881,28 @@ class User
         $this->incomeProofPrintedDate = $incomeProofPrintedDate;
     }
 
-    /**
-     * @return bool
-     */
-    public function isCustomBoolean0()
+    public function isCustomBoolean($i)
     {
-        return $this->customBoolean0;
+        return unserialize($this->customBooleans)[$i]; //TODO osetreni ruzneho poctu poli
     }
 
-    /**
-     * @param bool $customBoolean0
-     */
-    public function setCustomBoolean0($customBoolean0)
+    public function setCustomBoolean($i, $value)
     {
-        $this->customBoolean0 = $customBoolean0;
+        $tmp = unserialize($this->customBooleans); //TODO osetreni ruzneho poctu poli
+        $tmp[$i] = $value;
+        $this->customBooleans = serialize($tmp);
     }
 
-    /**
-     * @return bool
-     */
-    public function isCustomBoolean1()
+    public function getCustomText($i)
     {
-        return $this->customBoolean1;
+        return unserialize($this->customTexts)[$i]; //TODO osetreni ruzneho poctu poli
     }
 
-    /**
-     * @param bool $customBoolean1
-     */
-    public function setCustomBoolean1($customBoolean1)
+    public function setCustomText($i, $value)
     {
-        $this->customBoolean1 = $customBoolean1;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isCustomBoolean2()
-    {
-        return $this->customBoolean2;
-    }
-
-    /**
-     * @param bool $customBoolean2
-     */
-    public function setCustomBoolean2($customBoolean2)
-    {
-        $this->customBoolean2 = $customBoolean2;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isCustomBoolean3()
-    {
-        return $this->customBoolean3;
-    }
-
-    /**
-     * @param bool $customBoolean3
-     */
-    public function setCustomBoolean3($customBoolean3)
-    {
-        $this->customBoolean3 = $customBoolean3;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isCustomBoolean4()
-    {
-        return $this->customBoolean4;
-    }
-
-    /**
-     * @param bool $customBoolean4
-     */
-    public function setCustomBoolean4($customBoolean4)
-    {
-        $this->customBoolean4 = $customBoolean4;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCustomText0()
-    {
-        return $this->customText0;
-    }
-
-    /**
-     * @param string $customText0
-     */
-    public function setCustomText0($customText0)
-    {
-        $this->customText0 = $customText0;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCustomText1()
-    {
-        return $this->customText1;
-    }
-
-    /**
-     * @param string $customText1
-     */
-    public function setCustomText1($customText1)
-    {
-        $this->customText1 = $customText1;
+        $tmp = unserialize($this->customTexts); //TODO osetreni ruzneho poctu poli
+        $tmp[$i] = $value;
+        $this->customTexts = serialize($tmp);
     }
 
     /**

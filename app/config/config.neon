@@ -47,7 +47,6 @@ services:
     - App\RouterFactory
     router: @App\RouterFactory::createRouter
     authenticator: App\Services\Authenticator
-    - App\Services\ConfigFacade
     - App\Model\ACL\ResourceRepository
     - App\Model\ACL\RoleRepository
     - App\Model\CMS\PageRepository
