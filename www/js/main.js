@@ -1,13 +1,16 @@
-$( document ).ready(function () {
+$(function () {
+    $.nette.init();
+
     $('select[multiple]').selectpicker({
         iconBase: 'fa',
         tickIcon: 'fa-check'
     });
 
-    $.nette.init();
-});
+    $('.selectpicker').selectpicker({
+        iconBase: 'fa',
+        tickIcon: 'fa-check'
+    });
 
-jQuery(function($) {
     $('input.date, input.datetime-local').each(function(i, el) {
         el = $(el);
         el.get(0).type = 'text';
@@ -22,4 +25,16 @@ jQuery(function($) {
         });
         el.attr('value') && el.datetimepicker('setValue');
     });
+
+    $.confirm.options = {
+        title: "",
+        confirmButton: "Ano",
+        cancelButton: "Ne",
+        post: false,
+        submitForm: false,
+        confirmButtonClass: "btn-primary",
+        cancelButtonClass: "btn-default",
+        dialogClass: "modal-dialog"
+    }
 });
+

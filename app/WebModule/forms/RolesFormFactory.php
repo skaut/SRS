@@ -3,6 +3,7 @@
 namespace App\WebModule\Forms;
 
 use App\Model\ACL\RoleRepository;
+use Nette\Application\UI\Form;
 
 class RolesFormFactory
 {
@@ -22,7 +23,7 @@ class RolesFormFactory
         $this->roleRepository = $roleRepository;
     }
 
-    public function create($user)
+    public function create($user, $enabled)
     {
         $form = $this->baseFormFactory->create();
 
@@ -48,14 +49,16 @@ class RolesFormFactory
             if ($role->getCapacity() === null)
                 $availableRolesOptions[$role->getId()] = $role->getName();
             else
-                $availableRolesOptions[$role->getId()] = $form->getTranslator()
-                    ->translate('web.profile.role_option', null, ['role' => $role->getName(), 'occupied' => $role->getApprovedUsers()->count(), 'total' => $role->getCapacity()]);
+                $availableRolesOptions[$role->getId()] = $form->getTranslator()->translate('web.profile.role_option', null,
+                    ['role' => $role->getName(), 'occupied' => $role->getApprovedUsers()->count(), 'total' => $role->getCapacity()]
+                );
         }
 
         $rolesSelect = $form->addMultiSelect('roles', 'web.profile.roles')->setItems($availableRolesOptions)
-            ->setRequired(true)
+            ->addRule(Form::FILLED, 'web.profile.no_role_selected')
             ->addRule([$this, 'validateRolesCapacities'], 'web.profile.capacity_occupied', null)
-            ->addRule([$this, 'validateRolesRegisterable'], 'web.profile.role_is_not_registerable', null);
+            ->addRule([$this, 'validateRolesRegisterable'], 'web.profile.role_is_not_registerable', null)
+            ->setDisabled(!$enabled);
 
         foreach ($availableRoles as $role) {
             $incompatibleRoles = $role->getIncompatibleRoles();
@@ -73,7 +76,11 @@ class RolesFormFactory
                     }
                     $first = false;
                 }
-                $rolesSelect->addRule([$this, 'validateRolesIncompatible'], $this->translator->translate('web.profile.incompatible_roles_selected', null, ['role' => $messageThis, 'incompatibleRoles' => $messageOthers]));
+                $rolesSelect->addRule([$this, 'validateRolesIncompatible'],
+                    $this->translator->translate('web.profile.incompatible_roles_selected', null,
+                        ['role' => $messageThis, 'incompatibleRoles' => $messageOthers]
+                    )
+                );
             }
 
             $requiredRoles = $role->getRequiredRoles();
@@ -89,15 +96,20 @@ class RolesFormFactory
                         $messageOthers .= ", " . $requiredRole->getName();
                     $first = false;
                 }
-                $rolesSelect->addRule([$this, 'validateRolesRequired'], $this->translator->translate('web.profile.required_roles_not_selected', null, ['role' => $messageThis, 'requiredRoles' => $messageOthers]));
+                $rolesSelect->addRule([$this, 'validateRolesRequired'],
+                    $this->translator->translate('web.profile.required_roles_not_selected', null,
+                        ['role' => $messageThis, 'requiredRoles' => $messageOthers]
+                    )
+                );
             }
         }
 
-        $form->addSubmit('submit', 'web.profile.update_roles');
+        $form->addSubmit('submit', 'web.profile.update_roles')
+            ->setDisabled(!$enabled);
 
-        $form->addSubmit('cancelRegistration', 'web.profile.cancel_registration')
-            ->setValidationScope(false)
-            ->getControlPrototype()->setAttribute('class', 'btn-danger');
+        $form->addButton('cancelRegistration', 'web.profile.cancel_registration')
+            ->setDisabled(!$enabled)
+            ->getControlPrototype()->setAttribute('class', 'btn-danger')->setAttribute('id', 'btn-cancelRegistration');
 
         return $form;
     }

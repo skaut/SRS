@@ -4,6 +4,9 @@ common:
     logged_in_user: "Uživatel:"
     logged_in_roles: "v roli:|v rolích:"
 
+    login_required: "Pro přístup do administrace musíte být přihlášeni."
+    access_denied: "Pro přístup k této stránce nemáte oprávnění."
+
 menu:
     dashboard: "Úvod"
     cms: "Webová prezentace"
@@ -28,7 +31,7 @@ settings:
         seminar_name: "Název semináře"
         seminar_from_date: "Začátek semináře"
         seminar_to_date: "Konec semináře"
-        cancel_registration_to: "Odhlašování povoleno do"
+        edit_registration_to: "Odhlášení a změna role povolena do"
         seminar_email: "Email pro rozesílání emailů"
 
         basic_block_duration: "Základní délka programového bloku"

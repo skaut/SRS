@@ -17,4 +17,9 @@ class UserRepository extends EntityRepository
     public function variableSymbolExists($variableSymbol) {
         return $this->findOneBy(['variableSymbol' => $variableSymbol]) !== null;
     }
+
+    public function removeUser($user) {
+        $this->_em->remove($user);
+        $this->_em->flush();
+    }
 }

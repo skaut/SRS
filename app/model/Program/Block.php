@@ -21,7 +21,7 @@ class Block
     protected $lector;
 
     /**
-     * @ORM\OneToMany(targetEntity="Program", mappedBy="block", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Program", mappedBy="block", cascade={"persist"})
      * @var ArrayCollection
      */
     protected $programs;

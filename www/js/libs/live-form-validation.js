@@ -39,7 +39,7 @@ var LiveForm = {
 		messageIdPostfix: '_message',
 
 		// show this html before error message itself
-		messageErrorPrefix: '&nbsp;<i class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></i>&nbsp;',
+		messageErrorPrefix: '&nbsp;<i class="fa fa-exclamation-circle" aria-hidden="true"></i>&nbsp;',
 
 		// show all errors when submitting form; or use "false" to show only first error
 		showAllErrors: true,

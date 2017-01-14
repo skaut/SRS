@@ -61,7 +61,7 @@ class SettingsFixture extends AbstractFixture
 
         $settings[] = new Settings('log_in_programs_from', $yesterday->format(\DateTime::ISO8601));
         $settings[] = new Settings('log_in_programs_to', $today->format(\DateTime::ISO8601));
-        $settings[] = new Settings('cancel_registration_to', $today->format('Y-m-d'));
+        $settings[] = new Settings('edit_registration_to', $today->format('Y-m-d'));
 
         $settings[] = new Settings('display_users_roles', '1');
         $settings[] = new Settings('redirect_after_login', '/');

@@ -30,19 +30,33 @@ class ProfilePresenter extends WebBasePresenter
      */
     public $additionalInformationForm;
 
+    private $editRegistrationAllowed;
+
     public function startup()
     {
         parent::startup();
 
         if (!$this->user->isLoggedIn()) {
-            $this->flashMessage('<span class="glyphicon glyphicon-lock" aria-hidden="true"></span> ' . $this->translator->translate('web.common.login_required'), 'danger');
+            $this->flashMessage('<span class="fa fa-lock" aria-hidden="true"></span> '
+                . $this->translator->translate('web.common.login_required'), 'danger');
             $this->redirect(':Web:Page:default');
         }
+
+        $unregisteredRole = $this->roleRepository->findRoleByUntranslatedName(\App\Model\ACL\Role::UNREGISTERED);
+        $this->editRegistrationAllowed = !$this->dbuser->isInRole($unregisteredRole->getName()) && !$this->dbuser->hasPaid()
+            && $this->settingsRepository->getDateValue('edit_registration_to') >= (new \DateTime())->setTime(0, 0);
     }
 
     public function renderDefault() {
         $this->template->pageName = $this->translator->translate('web.profile.title');
-        $this->template->cancelRegistrationAllowed = $this->settingsRepository->getDateValue('cancel_registration_to') >= new \DateTime();
+        $this->template->basicBlockDuration = $this->settingsRepository->getValue('basic_block_duration');
+    }
+
+    public function handleCancelRegistration() {
+        if ($this->editRegistrationAllowed) {
+            $this->userRepository->removeUser($this->dbuser);
+            $this->presenter->redirect(':Auth:logout');
+        }
     }
 
     public function handleExportSchedule()
@@ -50,7 +64,7 @@ class ProfilePresenter extends WebBasePresenter
         // TODO export harmonogramu
     }
 
-    protected function createComponentPersonalDetailsForm()
+    protected function createComponentPersonalDetailsForm($name)
     {
         $form = $this->personalDetailsFormFactory->create($this->dbuser);
 
@@ -130,9 +144,9 @@ class ProfilePresenter extends WebBasePresenter
         return $form;
     }
 
-    protected function createComponentRolesForm()
+    protected function createComponentRolesForm($name)
     {
-        $form = $this->rolesFormFactory->create($this->dbuser);
+        $form = $this->rolesFormFactory->create($this->dbuser, $this->editRegistrationAllowed);
 
         $usersRolesIds = array_map(function($o) { return $o->getId(); }, $this->dbuser->getRoles()->toArray());
         $form->setDefaults([
@@ -143,16 +157,36 @@ class ProfilePresenter extends WebBasePresenter
         $form->onSuccess[] = function (Form $form) {
             $values = $form->getValues();
 
-            if ($form['submit']->isSubmittedBy())
-                $this->changeRoles($values);
-            elseif ($form['cancelRegistration']->isSubmittedBy())
-                $this->cancelRegistration($values);
+            $editedUser = $this->userRepository->find($values['id']);
+
+            $selectedRoles = array();
+            foreach ($values['roles'] as $roleId) {
+                $selectedRoles[] = $this->roleRepository->find($roleId);
+            }
+
+            //pokud si uživatel přidá roli, která vyžaduje schválení, stane se neschválený
+            $approved = $editedUser->isApproved();
+            if ($approved) {
+                foreach ($selectedRoles as $role) {
+                    if (!$role->isApprovedAfterRegistration() && !$editedUser->getRoles()->contains($role)) {
+                        $approved = false;
+                        break;
+                    }
+                }
+            }
+
+            $editedUser->updateRoles($selectedRoles);
+            $editedUser->setApproved($approved);
+
+            $this->userRepository->getEntityManager()->flush();
+
+            $this->redirect(':Auth:logout');
         };
 
         return $form;
     }
 
-    protected function createComponentAdditionalInformationForm()
+    protected function createComponentAdditionalInformationForm($name)
     {
         $form = $this->additionalInformationForm->create($this->dbuser);
 
@@ -184,34 +218,5 @@ class ProfilePresenter extends WebBasePresenter
         return $form;
     }
 
-    private function changeRoles($values) {
-        $editedUser = $this->userRepository->find($values['id']);
 
-        $selectedRoles = array();
-        foreach ($values['roles'] as $roleId) {
-            $selectedRoles[] = $this->roleRepository->find($roleId);
-        }
-
-        //pokud si uživatel přidá roli, která vyžaduje schválení, stane se neschválený
-        $approved = $editedUser->isApproved();
-        if ($approved) {
-            foreach ($selectedRoles as $role) {
-                if (!$role->isApprovedAfterRegistration() && !$editedUser->getRoles()->contains($role)) {
-                    $approved = false;
-                    break;
-                }
-            }
-        }
-
-        $editedUser->updateRoles($selectedRoles);
-        $editedUser->setApproved($approved);
-
-        $this->userRepository->getEntityManager()->flush();
-
-        $this->redirect(':Auth:logout');
-    }
-
-    private function cancelRegistration($values) {
-        $this->redirect('this');
-    }
 }

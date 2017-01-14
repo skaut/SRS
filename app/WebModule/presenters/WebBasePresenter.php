@@ -74,7 +74,7 @@ abstract class WebBasePresenter extends BasePresenter
 
         $this->checkInstallation();
 
-        if ($this->user->isLoggedIn() && !$this->skautIS->getUser()->isLoggedIn())
+        if ($this->user->isLoggedIn() && !$this->skautIS->getUser()->isLoggedIn(true))
             $this->user->logout(true);
 
         $this->user->setAuthorizator(new Authorizator($this->roleRepository, $this->resourceRepository));

@@ -46,7 +46,7 @@ class Page
     protected $roles;
 
     /**
-     * @ORM\OneToMany(targetEntity="\App\Model\CMS\Content\Content", mappedBy="page", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="\App\Model\CMS\Content\Content", mappedBy="page", cascade={"persist"})
      * @ORM\OrderBy({"position" = "ASC"})
      * @var ArrayCollection
      */
@@ -71,14 +71,6 @@ class Page
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
     }
 
     /**

@@ -73,12 +73,19 @@ abstract class AdminBasePresenter extends BasePresenter
     {
         parent::startup();
 
-        if ($this->user->isLoggedIn() && !$this->skautIS->getUser()->isLoggedIn())
+        if ($this->user->isLoggedIn() && !$this->skautIS->getUser()->isLoggedIn(true))
             $this->user->logout(true);
 
         $this->user->setAuthorizator(new Authorizator($this->roleRepository, $this->resourceRepository));
-        if (!$this->user->isLoggedIn() || !$this->user->isAllowed(Resource::ADMIN, Permission::ACCESS))
+
+        if (!$this->user->isLoggedIn()) {
+            $this->flashMessage('<span class="fa fa-lock" aria-hidden="true"></span> ' . $this->translator->translate('admin.common.login_required'), 'danger');
             $this->redirect(":Web:Page:default");
+        }
+        if (!$this->user->isAllowed(Resource::ADMIN, Permission::ACCESS)) {
+            $this->flashMessage('<span class="fa fa-lock" aria-hidden="true"></span> ' . $this->translator->translate('admin.common.access_denied'), 'danger');
+            $this->redirect(":Web:Page:default");
+        }
 
         $this->dbuser = $this->userRepository->findUserById($this->user->id);
     }

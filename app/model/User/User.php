@@ -210,7 +210,7 @@ class User
     protected $incomeProofPrintedDate;
 
     /**
-     * @ORM\OneToMany(targetEntity="\App\Model\User\CustomInputValue\CustomInputValue", mappedBy="user", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="\App\Model\User\CustomInputValue\CustomInputValue", mappedBy="user", cascade={"persist"})
      * @var ArrayCollection
      */
     protected $customInputValues;
@@ -238,14 +238,6 @@ class User
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
     }
 
     /**
@@ -348,11 +340,12 @@ class User
 
     public function isInRole($roleName)
     {
-        foreach ($this->roles as $role) {
-            if ($role->getName() == $roleName)
-                return true;
-        }
-        return false;
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('name', $roleName));
+
+        if ($this->roles->matching($criteria)->count() == 0)
+            return false;
+        return true;
     }
 
     public function getPayingRoles()
