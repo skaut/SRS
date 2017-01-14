@@ -105,7 +105,8 @@ class RolesFormFactory
         }
 
         $form->addSubmit('submit', 'web.profile.update_roles')
-            ->setDisabled(!$enabled);
+            ->setDisabled(!$enabled)
+            ->setAttribute('id', 'btn-submit');
 
         $form->addButton('cancelRegistration', 'web.profile.cancel_registration')
             ->setDisabled(!$enabled)

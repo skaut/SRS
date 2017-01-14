@@ -1,6 +1,17 @@
 {block head}
     <script>
         $(function () {
+            $("#btn-submit").confirm({
+                text: {_web.profile.change_roles_confirm},
+                confirm: function(button) {
+                    $("#frm-rolesForm").submit()
+                },
+                cancel: function(button) { },
+                confirmButton: "Ok",
+                cancelButton: "Storno",
+                post: true,
+                submitForm: true,
+            });
             $("#btn-cancelRegistration").confirm({
                 text: {_web.profile.cancel_registration_confirm},
                 confirm: function(button) {
