@@ -143,30 +143,10 @@ class ProfilePresenter extends WebBasePresenter
         $form->onSuccess[] = function (Form $form) {
             $values = $form->getValues();
 
-            $editedUser = $this->userRepository->find($values['id']);
-
-            $selectedRoles = array();
-            foreach ($values['roles'] as $roleId) {
-                $selectedRoles[] = $this->roleRepository->find($roleId);
-            }
-
-            //pokud si uživatel přidá roli, která vyžaduje schválení, stane se neschválený
-            $approved = $editedUser->isApproved();
-            if ($approved) {
-                foreach ($selectedRoles as $role) {
-                    if (!$role->isApprovedAfterRegistration() && !$editedUser->getRoles()->contains($role)) {
-                        $approved = false;
-                        break;
-                    }
-                }
-            }
-
-            $editedUser->updateRoles($selectedRoles);
-            $editedUser->setApproved($approved);
-
-            $this->userRepository->getEntityManager()->flush();
-
-            $this->redirect(':Auth:logout');
+            if ($form['submit']->isSubmittedBy())
+                $this->changeRoles($values);
+            elseif ($form['cancelRegistration']->isSubmittedBy())
+                $this->cancelRegistration($values);
         };
 
         return $form;
@@ -202,5 +182,36 @@ class ProfilePresenter extends WebBasePresenter
         };
 
         return $form;
+    }
+
+    private function changeRoles($values) {
+        $editedUser = $this->userRepository->find($values['id']);
+
+        $selectedRoles = array();
+        foreach ($values['roles'] as $roleId) {
+            $selectedRoles[] = $this->roleRepository->find($roleId);
+        }
+
+        //pokud si uživatel přidá roli, která vyžaduje schválení, stane se neschválený
+        $approved = $editedUser->isApproved();
+        if ($approved) {
+            foreach ($selectedRoles as $role) {
+                if (!$role->isApprovedAfterRegistration() && !$editedUser->getRoles()->contains($role)) {
+                    $approved = false;
+                    break;
+                }
+            }
+        }
+
+        $editedUser->updateRoles($selectedRoles);
+        $editedUser->setApproved($approved);
+
+        $this->userRepository->getEntityManager()->flush();
+
+        $this->redirect(':Auth:logout');
+    }
+
+    private function cancelRegistration($values) {
+        $this->redirect('this');
     }
 }

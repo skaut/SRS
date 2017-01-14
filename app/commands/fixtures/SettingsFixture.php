@@ -66,9 +66,6 @@ class SettingsFixture extends AbstractFixture
         $settings[] = new Settings('display_users_roles', '1');
         $settings[] = new Settings('redirect_after_login', '/');
 
-        $settings[] = new Settings('custom_booleans_labels', serialize([]));
-        $settings[] = new Settings('custom_texts_labels', serialize([]));
-
         foreach ($settings as $setting) {
             $manager->persist($setting);
         }

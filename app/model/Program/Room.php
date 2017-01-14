@@ -3,7 +3,6 @@
 namespace App\Model\Program;
 
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ORM\Entity

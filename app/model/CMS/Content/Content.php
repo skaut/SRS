@@ -10,7 +10,7 @@ use Nette\Application\UI\Form;
  * @ORM\Entity
  * @ORM\Table(name="content")
  * @ORM\InheritanceType("JOINED")
- * @ORM\DiscriminatorColumn(name="content", type="string")
+ * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({
  *     "text_content" = "TextContent",
  *     "document_content" = "DocumentContent",
@@ -42,7 +42,7 @@ abstract class Content
     const MAIN = 'main';
     const SIDEBAR = 'sidebar';
 
-    public static $contents = [
+    public static $types = [
         self::TEXT,
         self::IMAGE,
         self::DOCUMENT,

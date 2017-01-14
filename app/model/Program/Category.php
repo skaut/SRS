@@ -4,7 +4,6 @@ namespace App\Model\Program;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ORM\Entity
@@ -17,8 +16,6 @@ class Category
     /**
      * @ORM\OneToMany(targetEntity="Block", mappedBy="category", cascade={"persist"})
      * @var ArrayCollection
-     * @JMS\Type("ArrayCollection<Block>")
-     * @JMS\Exclude
      */
     protected $blocks;
 

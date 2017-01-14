@@ -210,16 +210,10 @@ class User
     protected $incomeProofPrintedDate;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
-     * @var bool
+     * @ORM\OneToMany(targetEntity="\App\Model\User\CustomInputValue\CustomInputValue", mappedBy="user", cascade={"persist", "remove"})
+     * @var ArrayCollection
      */
-    protected $customBooleans;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     * @var string
-     */
-    protected $customTexts;
+    protected $customInputValues;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -881,28 +875,20 @@ class User
         $this->incomeProofPrintedDate = $incomeProofPrintedDate;
     }
 
-    public function isCustomBoolean($i)
+    /**
+     * @return ArrayCollection
+     */
+    public function getCustomInputValues()
     {
-        return unserialize($this->customBooleans)[$i]; //TODO osetreni ruzneho poctu poli
+        return $this->customInputValues;
     }
 
-    public function setCustomBoolean($i, $value)
+    /**
+     * @param ArrayCollection $customInputValues
+     */
+    public function setCustomInputValues($customInputValues)
     {
-        $tmp = unserialize($this->customBooleans); //TODO osetreni ruzneho poctu poli
-        $tmp[$i] = $value;
-        $this->customBooleans = serialize($tmp);
-    }
-
-    public function getCustomText($i)
-    {
-        return unserialize($this->customTexts)[$i]; //TODO osetreni ruzneho poctu poli
-    }
-
-    public function setCustomText($i, $value)
-    {
-        $tmp = unserialize($this->customTexts); //TODO osetreni ruzneho poctu poli
-        $tmp[$i] = $value;
-        $this->customTexts = serialize($tmp);
+        $this->customInputValues = $customInputValues;
     }
 
     /**

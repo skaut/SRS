@@ -68,10 +68,10 @@ webloader:
             files:
                 - %appDir%/../vendor/twbs/bootstrap/dist/css/bootstrap.min.css
                 - libs/font-awesome.min.css
-                - libs/multi-select.css
+                - libs/bootstrap-select.min.css
                 - libs/bootstrap-datetimepicker.css
                 - web/layout.css
-                - web/design.css
+                - web/style.css
 
         admin:
             remoteFiles:
@@ -79,7 +79,10 @@ webloader:
             files:
                 - %appDir%/../vendor/twbs/bootstrap/dist/css/bootstrap.min.css
                 - libs/font-awesome.min.css
-                - libs/multi-select.css
+                - libs/datagrid/happy.min.css
+                - libs/datagrid/datagrid.min.css
+                - libs/datagrid/datagrid-spinners.min.css
+                - libs/bootstrap-select.min.css
                 - libs/bootstrap-datetimepicker.css
                 - admin/style.css
 
@@ -95,11 +98,12 @@ webloader:
                 - https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js
                 - https://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.13/jquery.mousewheel.min.js
             files:
-                - live-form-validation.js
+                - libs/live-form-validation.js
                 - %appDir%/../vendor/twbs/bootstrap/dist/js/bootstrap.min.js
-                - jquery.multi-select.js
-                - bootstrap-datetimepicker.js
-                - bootstrap-datetimepicker.cs.js
+                - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.js
+                - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.cs.js
+                - libs/bootstrap-select/bootstrap-select.min.js
+                - libs/bootstrap-select/defaults-cs_CZ.js
                 - main.js
 
         admin:
@@ -108,11 +112,18 @@ webloader:
                 - https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js
                 - https://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.13/jquery.mousewheel.min.js
             files:
-                - live-form-validation.js
+                - libs/live-form-validation.js
+                - libs/nette.ajax.js
                 - %appDir%/../vendor/twbs/bootstrap/dist/js/bootstrap.min.js
-                - jquery.multi-select.js
-                - bootstrap-datetimepicker.js
-                - bootstrap-datetimepicker.cs.js
+                - libs/datagrid/happy.min.js
+                - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.js
+                - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.cs.js
+                - libs/jquery-ui-sortable.min.js
+                - libs/datagrid/datagrid.min.js
+                - libs/datagrid/datagrid-instant-url-refresh.min.js
+                - libs/datagrid/datagrid-spinners.min.js
+                - libs/bootstrap-select/bootstrap-select.min.js
+                - libs/bootstrap-select/defaults-cs_CZ.js
                 - main.js
 
         install:

@@ -1,5 +1,10 @@
 $( document ).ready(function () {
-    $('select[multiple]').multiSelect();
+    $('select[multiple]').selectpicker({
+        iconBase: 'fa',
+        tickIcon: 'fa-check'
+    });
+
+    $.nette.init();
 });
 
 jQuery(function($) {

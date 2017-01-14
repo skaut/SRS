@@ -97,17 +97,17 @@ class UsersGridControl extends Control
             ->setSortable()
             ->setFilterSelect(['' => 'vše', '0' => 'ne', '1' => 'ano']);
 
-        $customBooleansCount = $this->settingsRepository->getValue('custom_booleans_count');
-
-        for ($i = 0; $i < $customBooleansCount; $i++) {
-            //TODO
-        }
-
-        $customTextsCount = $this->settingsRepository->getValue('custom_texts_count');
-
-        for ($i = 0; $i < $customTextsCount; $i++) {
-            //TODO
-        }
+//        $customBooleansCount = $this->settingsRepository->getValue('custom_booleans_count');
+//
+//        for ($i = 0; $i < $customBooleansCount; $i++) {
+//            //TODO
+//        }
+//
+//        $customTextsCount = $this->settingsRepository->getValue('custom_texts_count');
+//
+//        for ($i = 0; $i < $customTextsCount; $i++) {
+//            //TODO
+//        }
 
         //$grid->addAction('edit', 'Edit'); //TODO akce
 

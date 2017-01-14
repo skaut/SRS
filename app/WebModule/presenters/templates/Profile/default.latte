@@ -1,3 +1,15 @@
+{block head}
+    <script>
+        $("#frm-rolesForm").submit(function() {
+            if ($("input[type='submit']").val() == "cancelRegistration") {
+                alert("Please confirm if everything is correct");
+                $("input[type='submit']").val("cancelRegistration");
+                return false;
+            }
+        });
+    </script>
+{/block}
+
 {block body-class}body-profile{/block}
 
 {block main}
@@ -67,23 +79,6 @@
                                         {/if}
                                     {else}
                                         {_web.profile.fee_not_paid}
-                                    {/if}
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <th></th>
-                                <td>
-                                    {if !$user->isInRole($unregisteredRole->getName())}
-                                        {if $cancelRegistrationAllowed}
-                                            <a href="{link cancelRegistration!}" class="btn btn-danger" onclick = "if (!confirm({_cancel_registration_confirm})) return false;">
-                                                {_web.profile.cancel_registration}
-                                            </a>
-                                        {else}
-                                            <a href="#" class="btn btn-danger" disabled="true">
-                                                {_web.profile.cancel_registration}
-                                            </a>
-                                         {/if}
                                     {/if}
                                 </td>
                             </tr>

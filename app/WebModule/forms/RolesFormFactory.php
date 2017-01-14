@@ -95,6 +95,10 @@ class RolesFormFactory
 
         $form->addSubmit('submit', 'web.profile.update_roles');
 
+        $form->addSubmit('cancelRegistration', 'web.profile.cancel_registration')
+            ->setValidationScope(false)
+            ->getControlPrototype()->setAttribute('class', 'btn-danger');
+
         return $form;
     }
 
