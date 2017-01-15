@@ -66,6 +66,10 @@ class SettingsFixture extends AbstractFixture
         $settings[] = new Settings('display_users_roles', '1');
         $settings[] = new Settings('redirect_after_login', '/');
 
+        $settings[] = new Settings('place_gps_lat', '0');
+        $settings[] = new Settings('place_gps_lon', '0');
+        $settings[] = new Settings('place_description', '');
+
         foreach ($settings as $setting) {
             $manager->persist($setting);
         }

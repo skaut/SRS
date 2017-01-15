@@ -57,5 +57,5 @@ settings:
         display_users_roles: "Zobrazovat uživatelské role?"
         redirect_after_login: "Po přihlášení přesměrovat na"
 
-        custom_boolean: "Vlastní checkbox pro přihlášku č. %i%"
-        custom_text: "Vlastní textové pole pro přihlášku č. %i%"
+        place_description: "Popis cesty"
+

@@ -175,9 +175,9 @@
                                 <tr>
                                     <td>{$program->getStart()|date:"j. n. G:i"}</td>
                                     <td>{$program->getEnd($basicBlockDuration)|date:"j. n. G:i"}</td>
-                                    {*<td>{$program->getBlock()->getName()}</td>*}
+                                    <td>{$program->getBlock()->getName()}</td>
                                     <td>{if $program->getRoom() !== null}{$program->getRoom()->getName()}{/if}</td>
-                                    {*<td>{if $program->getBlock()->getLector() !== null}{$program->getBlock()->getLector()->getDisplayName()}{/if}</td>*}
+                                    <td>{if $program->getBlock()->getLector() !== null}{$program->getBlock()->getLector()->getDisplayName()}{/if}</td>
                                 </tr>
                             {/foreach}
                         </table>
