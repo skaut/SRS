@@ -9,8 +9,8 @@ common:
 
 menu:
     dashboard: "Úvod"
-    cms: "Webová prezentace"
-    program: "Program semináře"
+    cms: "Web"
+    program: "Program"
     users: "Uživatelé"
     acl: "Role"
     mailing: "Mailing"
