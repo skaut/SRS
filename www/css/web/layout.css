@@ -91,7 +91,7 @@ ul.no-margin {
 }
 
 /* vypnuti responzivity*/
-#wrapper {
+body {
     min-width: 768px;
 }
 

@@ -17,7 +17,7 @@
 
 <body class="{block body-class}{/block}">
 
-<div class="container" id="wrapper">
+<div class="container">
     <div id="messages" class="row" n:if="$flashes"> {* TODO: mizeni hlasek *}
         <div class="col-sm-12">
             <div n:foreach="$flashes as $flash" n:class="alert, 'alert-' . $flash->type" role="alert">{$flash->message|noescape}</div>

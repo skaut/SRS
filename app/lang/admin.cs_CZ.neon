@@ -1,8 +1,8 @@
 common:
     title: "Administrace | %seminar_name%"
     heading: "SRS: %seminar_name%"
-    logged_in_user: "Uživatel:"
-    logged_in_roles: "v roli:|v rolích:"
+    logged_in_roles: "Role:"
+    logout: "Odhlásit"
 
     login_required: "Pro přístup do administrace musíte být přihlášeni."
     access_denied: "Pro přístup k této stránce nemáte oprávnění."

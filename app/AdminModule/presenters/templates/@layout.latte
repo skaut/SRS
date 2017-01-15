@@ -16,29 +16,34 @@
 </head>
 
 <body>
+<div id="main-menu">
+    {import 'components/main_menu.latte'}
+    {include main-menu}
+</div>
 
-{import 'components/main_menu.latte'}
-{include main-menu}
-
-<div class="container-fluid" id="wrapper">
-    <div id="content" class="row-fluid">
-        {if $sidebarVisibility}
-            <div id="sidebar" class="col-sm-3">
-                {include #sidebar}
-            </div>
-        {/if}
-
-        <div id="main" class="{if $sidebarVisibility}col-sm-9{else}col-sm-12{/if}">
-            <div id="messages" class="row" n:if="$flashes"> {* TODO: mizeni hlasek *}
-                <div class="col-sm-12">
-                    <div n:foreach="$flashes as $flash" n:class="alert, 'alert-' . $flash->type" role="alert">
-                        {$flash->message|noescape}
-                        <button type="button" class="close" data-dismiss="alert">×</button>
-                    </div>
+<div class="container-fluid">
+    <div id="messages" class="row-fluid" n:if="$flashes"> {* TODO: mizeni hlasek *}
+        <div class="container-fluid">
+            <div class="col-sm-12">
+                <div n:foreach="$flashes as $flash" n:class="alert, 'alert-' . $flash->type" role="alert">
+                    {$flash->message|noescape}
+                    <button type="button" class="close" data-dismiss="alert">×</button>
                 </div>
             </div>
+        </div>
+    </div>
 
-            {include #main}
+    <div id="content" class="row-fluid">
+        <div class="container-fluid">
+            {if $sidebarVisibility}
+                <div id="sidebar" class="col-sm-3">
+                    {include #sidebar}
+                </div>
+            {/if}
+
+            <div id="main" class="{if $sidebarVisibility}col-sm-9{else}col-sm-12{/if}">
+                {include #main}
+            </div>
         </div>
     </div>
 
