@@ -1,0 +1,22 @@
+{block sidebar}
+    <ul class="nav nav-pills nav-stacked">
+        <li role="presentation" {ifCurrent Configuration:srs}class="active"{/ifCurrent}><a href="#">Nastavení SRS</a></li>
+        <li>
+            <ul>
+                <li role="presentation"><a href="{plink Configuration:srs}#group_seminar">Seminář</a></li>
+                <li role="presentation"><a href="{plink Configuration:srs}#group_program">Program</a></li>
+                <li role="presentation"><a href="{plink Configuration:srs}#group_payment">Platba</a></li>
+                <li role="presentation"><a href="{plink Configuration:srs}#group_print">Tisk dokladů</a></li>
+                <li role="presentation"><a href="{plink Configuration:srs}#group_custom">Vlastní pole pro přihlášku</a></li>
+                <li role="presentation"><a href="{plink Configuration:srs}#group_system">Nastavení systému</a></li>
+            </ul>
+        </li>
+        <li role="presentation" {ifCurrent Configuration:srs}class="active"{/ifCurrent}><a href="#">Nastavení skautIS</a></li>
+        <li>
+            <ul>
+                <li role="presentation"><a href="{plink Configuration:srs}#group_seminar">Propojení akce</a></li>
+                <li role="presentation"><a href="{plink Configuration:srs}#group_program">Synchronizace účastníků</a></li>
+            </ul>
+        </li>
+    </ul>
+{/block}

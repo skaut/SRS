@@ -2,15 +2,21 @@
 
 namespace App\AdminModule\Components;
 
+use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\SettingsRepository;
-use App\Model\User\User;
 use App\Model\User\UserRepository;
+use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 
 class UsersGridControl extends Control
 {
+    /**
+     * @var Translator
+     */
+    private $translator;
+
     /**
      * @var UserRepository
      */
@@ -21,10 +27,17 @@ class UsersGridControl extends Control
      */
     private $settingsRepository;
 
-    public function __construct(UserRepository $userRepository, SettingsRepository $settingsRepository)
+    /**
+     * @var CustomInputRepository
+     */
+    private $customInputRepository;
+
+    public function __construct(Translator $translator, UserRepository $userRepository, SettingsRepository $settingsRepository, CustomInputRepository $customInputRepository)
     {
+        $this->translator = $translator;
         $this->userRepository = $userRepository;
         $this->settingsRepository = $settingsRepository;
+        $this->customInputRepository = $customInputRepository;
     }
 
     public function render()
@@ -32,10 +45,10 @@ class UsersGridControl extends Control
         $this->template->render(__DIR__ . '/templates/users_grid.latte');
     }
 
-
     public function createComponentGrid($name)
     {
         $grid = new DataGrid($this, $name);
+        $grid->setTranslator($this->translator);
         $grid->setDataSource($this->userRepository->createQueryBuilder('user'));
         $grid->setColumnsHideable();
 

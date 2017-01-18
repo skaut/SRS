@@ -43,11 +43,11 @@
     </div>
 
     <div id="content" class="row">
-        <div id="main" class="{if $sidebarVisibility}col-sm-9{else}col-sm-12{/if}">
+        <div id="main" class="{if $sidebarVisible}col-sm-9{else}col-sm-12{/if}">
             {include #main}
         </div>
 
-        {if $sidebarVisibility}
+        {if $sidebarVisible}
             <div id="sidebar" class="col-sm-3">
                 {include #sidebar}
             </div>

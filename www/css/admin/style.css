@@ -8,11 +8,7 @@ body {
 
 .navbar-nav {
     float: left;
-    margin: 0 0 0 15px;
-}
-
-.navbar-right {
-    float: right;
+    margin: 0;
 }
 
 .navbar-nav > li {
@@ -21,6 +17,10 @@ body {
 
 .navbar-nav > li > a {
     padding: 15px;
+}
+
+.navbar-right {
+    float: right;
 }
 
 .navbar .navbar-nav .open .dropdown-menu {

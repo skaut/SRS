@@ -52,6 +52,7 @@ services:
     - App\Model\CMS\PageRepository
     - App\Model\Program\ProgramRepository
     - App\Model\Settings\SettingsRepository
+    - App\Model\Settings\CustomInput\CustomInputRepository
     - App\Model\User\UserRepository
     - App\WebModule\Forms\BaseFormFactory
     - App\WebModule\Forms\PersonalDetailsFormFactory
@@ -59,6 +60,7 @@ services:
     - App\WebModule\Forms\AdditionalInformationFormFactory
     - App\AdminModule\Forms\BaseFormFactory
     - App\AdminModule\Components\IUsersGridControlFactory
+    - App\AdminModule\Components\ICustomInputsGridControlFactory
 
 webloader:
     css:

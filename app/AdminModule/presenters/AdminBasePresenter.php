@@ -114,7 +114,7 @@ abstract class AdminBasePresenter extends BasePresenter
         $this->template->footer = $this->settingsRepository->getValue('footer');
         $this->template->seminarName = $this->settingsRepository->getValue('seminar_name');
 
-        $this->template->sidebarVisibility = false;
+        $this->template->sidebarVisible = false;
 
         $this->template->settings = $this->settingsRepository;
     }

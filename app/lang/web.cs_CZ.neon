@@ -36,7 +36,6 @@ profile:
     no_role_selected: "Musí být vybrána alespoň jedna role."
     role_is_not_registerable: "Registrace do některé z rolí již není možná."
     capacity_occupied: "Všechna místa v některé roli jsou obsazena."
-
     update_roles: "Upravit role"
 
     personal_details_group: "Osobní údaje"
