@@ -59,6 +59,11 @@ services:
     - App\WebModule\Forms\RolesFormFactory
     - App\WebModule\Forms\AdditionalInformationFormFactory
     - App\AdminModule\Forms\BaseFormFactory
+    - App\AdminModule\Forms\SeminarConfigurationFormFactory
+    - App\AdminModule\Forms\ProgramConfigurationFormFactory
+    - App\AdminModule\Forms\PaymentConfigurationFormFactory
+    - App\AdminModule\Forms\PaymentProofConfigurationFormFactory
+    - App\AdminModule\Forms\SystemConfigurationFormFactory
     - App\AdminModule\Components\IUsersGridControlFactory
     - App\AdminModule\Components\ICustomInputsGridControlFactory
 

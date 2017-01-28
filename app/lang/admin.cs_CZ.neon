@@ -3,7 +3,7 @@ common:
     heading: "SRS: %seminar_name%"
     logged_in_roles: "Role:"
     logout: "Odhlásit"
-
+    save: "Uložit"
     login_required: "Pro přístup do administrace musíte být přihlášeni."
     access_denied: "Pro přístup k této stránce nemáte oprávnění."
 
@@ -20,42 +20,49 @@ dashboard:
     heading: "Vítejte v systému SRS!"
     text: "<p>Pokud jste v systému poprvé nebo s ním nejste zcela srozuměni, přečtěte si <a href=\"https://github.com/skaut/SRS/wiki/U%C5%BEivatelsk%C3%A1-p%C5%99%C3%ADru%C4%8Dka\" target=\"_blank\">uživatelskou příručku</a>.</p>"
 
+cms:
 
+program:
 
+users:
 
+acl:
 
+mailing:
 
+configuration:
+    seminar_name: "Název semináře"
+    seminar_name_empty: "Zadejte název semináře."
+    seminar_from_date: "Začátek semináře"
+    seminar_from_date_empty: "Zadejte začátek semináře."
+    seminar_to_date: "Konec semináře"
+    seminar_to_date_empty: "Zadejte konec semináře."
+    edit_registration_to: "Odhlášení a změna role povolena do"
+    edit_registration_to_empty: "Zadejte datum, do kdy je povoleno odhlášení a změna role."
+    seminar_email: "E-mail pro mailing"
+    seminar_email_empty: "Zadejte e-mail."
+    seminar_email_format: "Zadejte e-mail ve správném formátu."
 
-settings:
-    name:
-        seminar_name: "Název semináře"
-        seminar_from_date: "Začátek semináře"
-        seminar_to_date: "Konec semináře"
-        edit_registration_to: "Odhlášení a změna role povolena do"
-        seminar_email: "Email pro rozesílání emailů"
+    basic_block_duration: "Základní délka programového bloku"
+    is_allowed_add_block: "povolit vytváření programových bloků"
+    is_allowed_modify_schedule: "povolit úpravu harmonogramu semináře"
+    is_allowed_log_in_programs: "povolit přihlašování na programy"
+    is_allowed_log_in_programs_before_payment: "povolit přihlašování na programy před uhrazením poplatku"
+    log_in_programs_from: "Přihlašování programů otevřeno od"
+    log_in_programs_to: "Přihlašování programů otevřeno do"
 
-        basic_block_duration: "Základní délka programového bloku"
-        is_allowed_add_block: "Je povoleno vytvářet programové bloky?"
-        is_allowed_modify_schedule: "Je povoleno upravovat harmonogram semináře?"
-        is_allowed_log_in_programs: "Je povoleno přihlašovat se na programové bloky?"
-        is_allowed_log_in_programs_before_payment: "Je povoleno přihlašovat se na programové bloky před uhrazením poplatku?"
+    account_number: "Číslo účtu"
+    variable_symbol_code: "Předvolba variabilního symbolu"
 
-        skautis_action_name: "Akce ze skautIS"
+    company: "Firma"
+    ico: "IČO"
+    accountant: "Pokladník"
+    print_location: "Místo"
 
-        footer: "Text v patičce"
+    skautis_action_name: "Akce ze skautIS"
 
-        company: "Firma"
-        ico: "IČO"
-        accountant: "Pokladník"
-        print_location: "Místo"
-        account_number: "Číslo účtu"
-        variable_symbol_code: "Předvolba variabilního symbolu"
+    footer: "Text v patičce"
+    redirect_after_login: "Po přihlášení přesměrovat na"
+    display_users_roles: "zobrazovat uživatelské role"
 
-        log_in_programs_from: "Přihlašování programů otevřeno od"
-        log_in_programs_to: "Přihlašování programů otevřeno do"
-
-        display_users_roles: "Zobrazovat uživatelské role?"
-        redirect_after_login: "Po přihlášení přesměrovat na"
-
-        place_description: "Popis cesty"
-
+    place_description: "Popis cesty"

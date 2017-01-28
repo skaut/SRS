@@ -45,7 +45,7 @@ class UsersGridControl extends Control
         $this->template->render(__DIR__ . '/templates/users_grid.latte');
     }
 
-    public function createComponentGrid($name)
+    public function createComponentUsersGrid($name)
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);

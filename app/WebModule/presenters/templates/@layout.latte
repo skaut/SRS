@@ -18,11 +18,15 @@
 <body class="{block body-class}{/block}">
 
 <div class="container">
-    <div id="messages" class="row" n:if="$flashes"> {* TODO: mizeni hlasek *}
-        <div class="col-sm-12">
-            <div n:foreach="$flashes as $flash" n:class="alert, 'alert-' . $flash->type" role="alert">{$flash->message|noescape}</div>
+    {snippet flashes}
+        <div id="flashes" class="row">
+            <div class="col-sm-12">
+                <div n:foreach="$flashes as $flash" n:class="alert, 'alert-' . $flash->type" role="alert">
+                    {$flash->message|noescape}
+                </div>
+            </div>
         </div>
-    </div>
+    {/snippet}
 
     <div id="header" class="row">
         <div class="col-sm-12">
@@ -43,12 +47,12 @@
     </div>
 
     <div id="content" class="row">
-        <div id="main" class="{if $sidebarVisible}col-sm-9{else}col-sm-12{/if}">
+        <div id="main" class="{if $sidebarVisible}col-sm-9 col-xs-9{else}col-sm-12{/if}">
             {include #main}
         </div>
 
         {if $sidebarVisible}
-            <div id="sidebar" class="col-sm-3">
+            <div id="sidebar" class="col-sm-3 col-xs-3">
                 {include #sidebar}
             </div>
         {/if}

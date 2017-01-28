@@ -1,5 +1,17 @@
 $(function () {
+    $.nette.ext('flashes', {
+        complete: function () {
+            $('.alert').animate({
+                opacity: 1.0
+            }, 4000).fadeOut(2000);
+        }
+    });
+
     $.nette.init();
+
+    $('.alert').animate({
+        opacity: 1.0
+    }, 4000).fadeOut(2000);
 
     $('select[multiple]').selectpicker({
         iconBase: 'fa',
@@ -21,7 +33,10 @@ $(function () {
             weekStart: 1,
             minView: el.is('.date') ? 'month' : 'hour',
             format: el.is('.date') ? 'd. m. yyyy' : 'd. m. yyyy - hh:ii', // for seconds support use 'd. m. yyyy - hh:ii:ss'
-            autoclose: true
+            autoclose: true,
+            fontAwesome: true,
+            todayBtn: true,
+            todayHighlight: true
         });
         el.attr('value') && el.datetimepicker('setValue');
     });

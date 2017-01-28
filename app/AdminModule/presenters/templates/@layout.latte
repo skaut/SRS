@@ -22,28 +22,25 @@
 </div>
 
 <div class="container-fluid">
-    <div id="messages" class="row-fluid" n:if="$flashes"> {* TODO: mizeni hlasek *}
-        <div class="container-fluid">
-            <div class="col-sm-12">
-                <div n:foreach="$flashes as $flash" n:class="alert, 'alert-' . $flash->type" role="alert">
-                    {$flash->message|noescape}
-                    <button type="button" class="close" data-dismiss="alert">×</button>
-                </div>
+    <div id="content" class="row">
+        {if $sidebarVisible}
+            <div id="sidebar" class="col-sm-3 col-xs-3">
+                {include #sidebar}
             </div>
-        </div>
-    </div>
+        {/if}
 
-    <div id="content" class="row-fluid">
-        <div class="container-fluid">
-            {if $sidebarVisible}
-                <div id="sidebar" class="col-sm-3">
-                    {include #sidebar}
+        <div id="main" class="{if $sidebarVisible}col-sm-9 col-xs-9{else}col-sm-12{/if}">
+            {snippet flashes}
+                <div id="flashes" class="row">
+                    <div class="col-sm-12">
+                        <div n:foreach="$flashes as $flash" n:class="alert, 'alert-' . $flash->type" role="alert">
+                            {$flash->message|noescape}
+                        </div>
+                    </div>
                 </div>
-            {/if}
+            {/snippet}
 
-            <div id="main" class="{if $sidebarVisible}col-sm-9{else}col-sm-12{/if}">
-                {include #main}
-            </div>
+            {include #main}
         </div>
     </div>
 

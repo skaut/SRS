@@ -2,6 +2,11 @@ body {
     min-width: 950px;
 }
 
+/* popisky ve formularich vlevo */
+.control-label {
+    text-align: left !important;
+}
+
 .navbar-header {
     float: left;
 }

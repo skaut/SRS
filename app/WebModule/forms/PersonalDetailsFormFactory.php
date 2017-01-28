@@ -38,7 +38,8 @@ class PersonalDetailsFormFactory
 
         $inputNickName = $form->addText('nickName', 'web.profile.nickname');
 
-        $inputBirthdate = $form->addDatePicker('birthdate', 'web.profile.birthdate');
+        $inputBirthdate = $form->addDatePicker('birthdate', 'web.profile.birthdate')
+            ->addRule(Form::FILLED, 'web.profile.birthdate_empty');
 
         if ($user->isMember()) {
             $inputSex->setDisabled();

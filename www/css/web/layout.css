@@ -10,11 +10,8 @@ ul.no-margin {
     margin-left: 0 !important;
 }
 
-#messages {
+#flashes .alert {
     margin-top: 10px;
-}
-
-#messages .alert {
     margin-bottom: 10px;
 }
 
