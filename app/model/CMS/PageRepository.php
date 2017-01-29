@@ -21,6 +21,11 @@ class PageRepository extends EntityRepository
         return $this->findOneBy(['slug' => $slug]);
     }
 
+    public function findPublishedPagesOrderedBySlug()
+    {
+        return $this->findBy(['public' => true], ['slug' => 'ASC']);
+    }
+
     public function findPublishedPagesOrderedByPosition()
     {
         return $this->findBy(['public' => true], ['position' => 'ASC']);

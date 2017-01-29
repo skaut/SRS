@@ -67,7 +67,7 @@ class CustomInputRepository extends EntityRepository
 
         $itemsToMoveDown = $this->createQueryBuilder('i')
             ->where('i.position >= :position')
-            ->setParameter('position', $next ? $next->getPosition() : 0)
+            ->setParameter('position', $next ? $next->getPosition() : PHP_INT_MAX)
             ->andWhere('i.position < :position2')
             ->setParameter('position2', $item->getPosition())
             ->getQuery()

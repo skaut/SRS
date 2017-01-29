@@ -2,6 +2,9 @@
 
 namespace App\AdminModule\Forms;
 
+use App\Model\CMS\PageRepository;
+use Nette\Application\UI\Form;
+
 class SystemConfigurationFormFactory
 {
     /**
@@ -9,9 +12,15 @@ class SystemConfigurationFormFactory
      */
     private $baseFormFactory;
 
-    public function __construct(BaseFormFactory $baseFormFactory)
+    /**
+     * @var PageRepository
+     */
+    private $pageRepository;
+
+    public function __construct(BaseFormFactory $baseFormFactory, PageRepository $pageRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
+        $this->pageRepository = $pageRepository;
     }
 
     public function create()
@@ -23,11 +32,23 @@ class SystemConfigurationFormFactory
         $renderer->wrappers['label']['container'] = 'div class="col-sm-5 col-xs-5 control-label"';
 
         $form->addText('footer', 'admin.configuration.footer');
-        $form->addSelect('redirectAfterLogin', 'admin.configuration.redirect_after_login'); //TODO seznam stranek
+
+        $pagesChoices = $this->preparePagesChoices();
+
+        $form->addSelect('redirectAfterLogin', 'admin.configuration.redirect_after_login', $pagesChoices)
+            ->addRule(Form::FILLED, 'admin.configuration.redirect_after_login_empty');
+
         $form->addCheckbox('displayUsersRoles', 'admin.configuration.display_users_roles');
 
         $form->addSubmit('submit', 'admin.common.save');
 
         return $form;
+    }
+
+    private function preparePagesChoices() {
+        $choices = [];
+        foreach ($this->pageRepository->findPublishedPagesOrderedBySlug() as $page)
+            $choices[$page->getSlug()] = $page->getName();
+        return $choices;
     }
 }

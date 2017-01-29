@@ -27,14 +27,18 @@ class SeminarConfigurationFormFactory
         $form->addText('seminarName', 'admin.configuration.seminar_name')
             ->addRule(Form::FILLED, 'admin.configuration.seminar_name_empty');
 
-        $form->addDatePicker('seminarFromDate', 'admin.configuration.seminar_from_date')
+        $seminarFromDate = $form->addDatePicker('seminarFromDate', 'admin.configuration.seminar_from_date')
             ->addRule(Form::FILLED, 'admin.configuration.seminar_from_date_empty');
 
-        $form->addDatePicker('seminarToDate', 'admin.configuration.seminar_to_date')
+        $seminarToDate = $form->addDatePicker('seminarToDate', 'admin.configuration.seminar_to_date')
             ->addRule(Form::FILLED, 'admin.configuration.seminar_to_date_empty');
 
-        $form->addDatePicker('editRegistrationTo', 'admin.configuration.edit_registration_to')
+        $editRegistrationTo = $form->addDatePicker('editRegistrationTo', 'admin.configuration.edit_registration_to')
             ->addRule(Form::FILLED, 'admin.configuration.edit_registration_to_empty');
+
+        $seminarFromDate->addRule([$this, 'validateSeminarFromDate'], 'admin.configuration.seminar_from_date_after_to', [$seminarFromDate, $seminarToDate]);
+        $seminarToDate->addRule([$this, 'validateSeminarToDate'], 'admin.configuration.seminar_to_date_before_from', [$seminarToDate, $seminarFromDate]);
+        $editRegistrationTo->addRule([$this, 'validateEditRegistrationTo'], 'admin.configuration.edit_registration_to_after_from', [$editRegistrationTo, $seminarFromDate]);
 
         $form->addText('seminarEmail', 'admin.configuration.seminar_email')
             ->addRule(Form::FILLED, 'admin.configuration.seminar_email_empty')
@@ -43,5 +47,17 @@ class SeminarConfigurationFormFactory
         $form->addSubmit('submit', 'admin.common.save');
 
         return $form;
+    }
+
+    public function validateSeminarFromDate($field, $args) {
+        return $args[0] <= $args[1];
+    }
+
+    public function validateSeminarToDate($field, $args) {
+        return $args[0] >= $args[1];
+    }
+
+    public function validateEditRegistrationTo($field, $args) {
+        return $args[0] < $args[1];
     }
 }

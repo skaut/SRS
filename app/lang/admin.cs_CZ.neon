@@ -3,9 +3,16 @@ common:
     heading: "SRS: %seminar_name%"
     logged_in_roles: "Role:"
     logout: "Odhlásit"
+    delete: "Odstranit"
     save: "Uložit"
+
+    minutes: "%count% minut"
+    custom_text: "Textové pole"
+    custom_checkbox: "Zaškrtávací pole"
+
     login_required: "Pro přístup do administrace musíte být přihlášeni."
     access_denied: "Pro přístup k této stránce nemáte oprávnění."
+
 
 menu:
     dashboard: "Úvod"
@@ -35,34 +42,62 @@ configuration:
     seminar_name_empty: "Zadejte název semináře."
     seminar_from_date: "Začátek semináře"
     seminar_from_date_empty: "Zadejte začátek semináře."
+    seminar_from_date_after_to: "Začátek semináře nesmí být později než konec semináře."
     seminar_to_date: "Konec semináře"
     seminar_to_date_empty: "Zadejte konec semináře."
+    seminar_to_date_before_from: "Konec semináře nesmí být později než začátek semináře."
     edit_registration_to: "Odhlášení a změna role povolena do"
     edit_registration_to_empty: "Zadejte datum, do kdy je povoleno odhlášení a změna role."
+    edit_registration_to_after_from: "Datum, do kdy je povoleno odhlášení a změna role, musí být před začátkem semináře."
     seminar_email: "E-mail pro mailing"
     seminar_email_empty: "Zadejte e-mail."
     seminar_email_format: "Zadejte e-mail ve správném formátu."
+    place_description: "Popis cesty" #todo
 
     basic_block_duration: "Základní délka programového bloku"
+    basic_block_duration_empty: "Vyberte základní délku programového bloku."
     is_allowed_add_block: "povolit vytváření programových bloků"
     is_allowed_modify_schedule: "povolit úpravu harmonogramu semináře"
     is_allowed_log_in_programs: "povolit přihlašování na programy"
     is_allowed_log_in_programs_before_payment: "povolit přihlašování na programy před uhrazením poplatku"
     log_in_programs_from: "Přihlašování programů otevřeno od"
+    log_in_programs_from_empty: "Zadejte datum a čas otevření přihlašování na programy."
+    log_in_programs_from_after_to: "Otevření přihlašování na programy musí být dříve než uzavření přihlašování."
     log_in_programs_to: "Přihlašování programů otevřeno do"
+    log_in_programs_to_empty: "Zadejte datum a čas uzavření přihlašování na programy."
+    log_in_programs_to_before_from: "Uzavření přihlašování na programy musí být později než otevření přihlašování."
 
     account_number: "Číslo účtu"
+    account_number_empty: "Zadejte číslo účtu."
+    account_number_format: "Zadejte číslo účtu ve správném formátu."
     variable_symbol_code: "Předvolba variabilního symbolu"
+    variable_symbol_code_empty: "Zadejte předvolbu variabilního symbolu."
+    variable_symbol_code_format: "Zadejte 2 číslice."
 
     company: "Firma"
-    ico: "IČO"
+    company_empty: "Zadejte identifikaci firmy."
+    ico: "IČ"
+    ico_empty: "Zadejte IČ."
+    ico_format: "Zadejte IČ ve správném formátu."
     accountant: "Pokladník"
+    accountant_empty: "Zadejte jméno pokladníka."
     print_location: "Místo"
+    print_location_empty: "Zadejte místo."
+
+    application_input_added: "Pole bylo úspěšně přidáno."
+    application_input_edited: "Pole bylo úspěšně upraveno."
+    application_input_delete_confirm: "Opravdu chcete odstranit pole \"%s\"?"
+    application_input_deleted: "Pole bylo úspěšně odstraněno."
+    application_inputs_order_saved: "Pořadí polí bylo úspěšně upraveno."
 
     skautis_action_name: "Akce ze skautIS"
 
     footer: "Text v patičce"
     redirect_after_login: "Po přihlášení přesměrovat na"
+    redirect_after_login_empty: "Vyberte stránku, na kterou budou uživatelé přesměrováni po přihlášení."
     display_users_roles: "zobrazovat uživatelské role"
 
-    place_description: "Popis cesty"
+
+
+    configuration_saved: "Konfigurace úspěšně uložena."
+

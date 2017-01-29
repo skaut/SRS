@@ -2,6 +2,7 @@
 
 namespace App\AdminModule\Components;
 
+use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
@@ -44,13 +45,14 @@ class CustomInputsGridControl extends Control
 
         $grid->addColumnText('type', 'Typ')
             ->setRenderer(function ($row) {
-                return $row->getType();
+                return $this->translator->translate('admin.common.custom_' . $row->getType());
             });
 
+        $customInputTypesChoices = $this->prepareCustomInputTypesChoices();
 
-        $grid->addInlineAdd()->onControlAdd[] = function($container) {
+        $grid->addInlineAdd()->onControlAdd[] = function($container) use($customInputTypesChoices) {
             $container->addText('name', '');
-            $container->addSelect('type', '', ['text' => 'Textové pole', 'checkbox' => 'Zaškrtávací pole']);
+            $container->addSelect('type', '', $customInputTypesChoices);
         };
         $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
 
@@ -68,9 +70,9 @@ class CustomInputsGridControl extends Control
 
         $grid->addAction('delete', '', 'delete!')
             ->setIcon('trash')
-            ->setTitle('Odstranit')
+            ->setTitle('admin.common.delete')
             ->setClass('btn btn-xs btn-danger ajax')
-            ->setConfirm('Opravdu chcete odstranit pole "%s"?', 'name');
+            ->setConfirm('admin.configuration.application_input_delete_confirm', 'name');
     }
 
     public function add($values) {
@@ -85,7 +87,7 @@ class CustomInputsGridControl extends Control
         }
 
         $p = $this->getPresenter();
-        $p->flashMessage("Pole bylo úspěšně přidáno.", 'success');
+        $p->flashMessage($this->translator->translate('admin.configuration.application_input_added'), 'success');
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
@@ -100,7 +102,7 @@ class CustomInputsGridControl extends Control
         $this->customInputRepository->renameInput($id, $values['name']);
 
         $p = $this->getPresenter();
-        $p->flashMessage("Pole bylo úspěšně upraveno.", 'success');
+        $p->flashMessage($this->translator->translate('admin.configuration.application_input_edited'), 'success');
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
@@ -114,7 +116,7 @@ class CustomInputsGridControl extends Control
         $this->customInputRepository->removeInput($id);
 
         $p = $this->getPresenter();
-        $p->flashMessage("Pole bylo úspěšně odstraněno.", 'success');
+        $p->flashMessage($this->translator->translate('admin.configuration.application_input_deleted'), 'success');
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
@@ -129,7 +131,7 @@ class CustomInputsGridControl extends Control
         $this->customInputRepository->changePosition($item_id, $prev_id, $next_id);
 
         $p = $this->getPresenter();
-        $p->flashMessage("Pořadí polí bylo úspěšně upraveno.", 'success');
+        $p->flashMessage($this->translator->translate('admin.configuration.application_inputs_order_saved'), 'success');
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
@@ -137,5 +139,12 @@ class CustomInputsGridControl extends Control
         } else {
             $this->redirect('this');
         }
+    }
+
+    private function prepareCustomInputTypesChoices() {
+        $choices = [];
+        foreach (CustomInput::$types as $type)
+            $choices[$type] = $this->translator->translate('admin.common.custom_' . $type);
+        return $choices;
     }
 }
