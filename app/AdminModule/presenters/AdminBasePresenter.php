@@ -79,11 +79,11 @@ abstract class AdminBasePresenter extends BasePresenter
         $this->user->setAuthorizator(new Authorizator($this->roleRepository, $this->resourceRepository));
 
         if (!$this->user->isLoggedIn()) {
-            $this->flashMessage('<span class="fa fa-lock" aria-hidden="true"></span> ' . $this->translator->translate('admin.common.login_required'), 'danger');
+            $this->flashMessage('admin.common.login_required', 'danger', 'lock');
             $this->redirect(":Web:Page:default");
         }
         if (!$this->user->isAllowed(Resource::ADMIN, Permission::ACCESS)) {
-            $this->flashMessage('<span class="fa fa-lock" aria-hidden="true"></span> ' . $this->translator->translate('admin.common.access_denied'), 'danger');
+            $this->flashMessage('admin.common.access_denied', 'danger', 'lock');
             $this->redirect(":Web:Page:default");
         }
 

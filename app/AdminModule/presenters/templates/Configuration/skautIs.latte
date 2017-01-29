@@ -1,7 +1,19 @@
 {import 'sidebar.latte'}
 
 {block main}
-    <h2>Propojení se skautIS</h2>
+    <h2>{_admin.configuration.skautis_action_heading}</h2>
+    {if !$connected}
+        <div class="alert alert-info alert-forever">Výpis akci se liší dle právě přihlášeného uživatele do systému. Pokud se Vám vaše akce ze skautIS nezobrazuje, nejspíš na ni nemáte ve skautIS práva. V takovém případě nechte synchronizaci nastavit někoho s patřičnými právy.</div>
+        {control skautIsActionConfigurationForm}
+    {else}
+        <div class="alert alert-info alert-forever">Systém je propojen s akcí: xxxxxxx.</div>
+        <a class="btn btn-danger" href="">Odpojit od akce</a> {*TODO handler, confirm*}
+    {/if}
 
-    <h2>Synchronizace účastníků</h2>
+    <h2>{_admin.configuration.skautis_sync_heading}</h2>
+    {if !$connected}
+        <div class="alert alert-warning alert-forever">V tuto chvíli není systém propojen s žádnou akcí ve skautIS.</div>
+    {else}
+        <a class="btn btn-primary" href="">Nahrát účastníky do skautIS</a>
+    {/if}
 {/block}

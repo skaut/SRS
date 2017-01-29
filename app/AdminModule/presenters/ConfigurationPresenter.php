@@ -7,12 +7,12 @@ use App\AdminModule\Forms\PaymentConfigurationFormFactory;
 use App\AdminModule\Forms\PaymentProofConfigurationFormFactory;
 use App\AdminModule\Forms\ProgramConfigurationFormFactory;
 use App\AdminModule\Forms\SeminarConfigurationFormFactory;
+use App\AdminModule\Forms\SkautIsActionConfigurationFormFactory;
 use App\AdminModule\Forms\SystemConfigurationFormFactory;
-use App\AdminModule\Presenters\AdminBasePresenter;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\SettingsRepository;
-use Kdyby\Translation\Translator;
 use Nette\Application\UI\Form;
+use Skautis\Skautis;
 
 class ConfigurationPresenter extends AdminBasePresenter
 {
@@ -53,6 +53,12 @@ class ConfigurationPresenter extends AdminBasePresenter
     public $paymentProofConfigurationFormFactory;
 
     /**
+     * @var SkautIsActionConfigurationFormFactory
+     * @inject
+     */
+    public $skautIsActionConfigurationFormFactory;
+
+    /**
      * @var SystemConfigurationFormFactory
      * @inject
      */
@@ -65,16 +71,21 @@ class ConfigurationPresenter extends AdminBasePresenter
     public $customInputsGridControlFactory;
 
     /**
-     * @var Translator
+     * @var Skautis
      * @inject
      */
-    public $translator;
+    public $skautIS;
 
     public function beforeRender()
     {
         parent::beforeRender();
 
         $this->template->sidebarVisible = true;
+    }
+
+    public function renderSkautIs()
+    {
+        $this->template->connected = true;
     }
 
     public function createComponentSeminarConfigurationForm($name)
@@ -98,7 +109,7 @@ class ConfigurationPresenter extends AdminBasePresenter
             $this->settingsRepository->setDateValue('edit_registration_to', $values['editRegistrationTo']);
             $this->settingsRepository->setValue('seminar_email', $values['seminarEmail']);
 
-            $this->flashMessage($this->translator->translate('admin.configuration.configuration_saved'), 'success');
+            $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');
         };
@@ -131,7 +142,7 @@ class ConfigurationPresenter extends AdminBasePresenter
             $this->settingsRepository->setDateTimeValue('log_in_programs_from', $values['logInProgramsFrom']);
             $this->settingsRepository->setDateTimeValue('log_in_programs_to', $values['logInProgramsTo']);
 
-            $this->flashMessage($this->translator->translate('admin.configuration.configuration_saved'), 'success');
+            $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');
         };
@@ -154,7 +165,7 @@ class ConfigurationPresenter extends AdminBasePresenter
             $this->settingsRepository->setValue('account_number', $values['accountNumber']);
             $this->settingsRepository->setValue('variable_symbol_code', $values['variableSymbolCode']);
 
-            $this->flashMessage($this->translator->translate('admin.configuration.configuration_saved'), 'success');
+            $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');
         };
@@ -181,7 +192,31 @@ class ConfigurationPresenter extends AdminBasePresenter
             $this->settingsRepository->setValue('accountant', $values['accountant']);
             $this->settingsRepository->setValue('print_location', $values['printLocation']);
 
-            $this->flashMessage($this->translator->translate('admin.configuration.configuration_saved'), 'success');
+            $this->flashMessage('admin.configuration.configuration_saved', 'success');
+
+            $this->redirect('this');
+        };
+
+        return $form;
+    }
+
+    public function createComponentSkautIsActionConfigurationForm($name)
+    {
+        $form = $this->skautIsActionConfigurationFormFactory->create();
+
+        $skautIsAction = $this->settingsRepository->getValue('skautis_action');
+        if ($skautIsAction) {
+            $form->setDefaults([
+                'skautisAction' => $skautIsAction
+            ]);
+        }
+
+        $form->onSuccess[] = function (Form $form) {
+            $values = $form->getValues();
+
+            $this->settingsRepository->setValue('skautis_action', $values['skautisAction']);
+
+            $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');
         };
@@ -206,7 +241,7 @@ class ConfigurationPresenter extends AdminBasePresenter
             $this->settingsRepository->setValue('redirect_after_login', $values['redirectAfterLogin']);
             $this->settingsRepository->setValue('display_users_roles', $values['displayUsersRoles']);
 
-            $this->flashMessage($this->translator->translate('admin.configuration.configuration_saved'), 'success');
+            $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');
         };

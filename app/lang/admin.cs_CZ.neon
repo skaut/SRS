@@ -38,6 +38,7 @@ acl:
 mailing:
 
 configuration:
+    seminar_heading: "Seminář"
     seminar_name: "Název semináře"
     seminar_name_empty: "Zadejte název semináře."
     seminar_from_date: "Začátek semináře"
@@ -54,6 +55,7 @@ configuration:
     seminar_email_format: "Zadejte e-mail ve správném formátu."
     place_description: "Popis cesty" #todo
 
+    program_heading: "Program"
     basic_block_duration: "Základní délka programového bloku"
     basic_block_duration_empty: "Vyberte základní délku programového bloku."
     is_allowed_add_block: "povolit vytváření programových bloků"
@@ -67,6 +69,7 @@ configuration:
     log_in_programs_to_empty: "Zadejte datum a čas uzavření přihlašování na programy."
     log_in_programs_to_before_from: "Uzavření přihlašování na programy musí být později než otevření přihlašování."
 
+    payment_heading: "Platba"
     account_number: "Číslo účtu"
     account_number_empty: "Zadejte číslo účtu."
     account_number_format: "Zadejte číslo účtu ve správném formátu."
@@ -74,6 +77,7 @@ configuration:
     variable_symbol_code_empty: "Zadejte předvolbu variabilního symbolu."
     variable_symbol_code_format: "Zadejte 2 číslice."
 
+    payment_proof_heading: "Doklady"
     company: "Firma"
     company_empty: "Zadejte identifikaci firmy."
     ico: "IČ"
@@ -84,20 +88,27 @@ configuration:
     print_location: "Místo"
     print_location_empty: "Zadejte místo."
 
+    custom_inputs_heading: "Vlastní pole"
+    custom_inputs_name: "Název"
+    custom_inputs_type: "Typ"
     application_input_added: "Pole bylo úspěšně přidáno."
     application_input_edited: "Pole bylo úspěšně upraveno."
     application_input_delete_confirm: "Opravdu chcete odstranit pole \"%s\"?"
     application_input_deleted: "Pole bylo úspěšně odstraněno."
     application_inputs_order_saved: "Pořadí polí bylo úspěšně upraveno."
 
+    skautis_action_heading: "Propojení s akcí ve skautIS"
+    skautis_action: "Akce ze skautIS"
+
+    skautis_sync_heading: "Synchronizace účastníků"
+
     skautis_action_name: "Akce ze skautIS"
 
+    system_heading: "Systém"
     footer: "Text v patičce"
     redirect_after_login: "Po přihlášení přesměrovat na"
     redirect_after_login_empty: "Vyberte stránku, na kterou budou uživatelé přesměrováni po přihlášení."
     display_users_roles: "zobrazovat uživatelské role"
-
-
 
     configuration_saved: "Konfigurace úspěšně uložena."
 

@@ -10,7 +10,7 @@ class MemberPresenter extends WebBasePresenter
         parent::startup();
 
         if (!$this->user->isLoggedIn()) {
-            $this->flashMessage('<span class="fa fa-lock" aria-hidden="true"></span> ' . $this->translator->translate('web.common.login_required'), 'danger');
+            $this->flashMessage('web.common.login_required', 'danger', 'lock');
             $this->redirect(':Web:Page:default');
         }
     }

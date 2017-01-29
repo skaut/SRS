@@ -37,8 +37,7 @@ class ProfilePresenter extends WebBasePresenter
         parent::startup();
 
         if (!$this->user->isLoggedIn()) {
-            $this->flashMessage('<span class="fa fa-lock" aria-hidden="true"></span> '
-                . $this->translator->translate('web.common.login_required'), 'danger');
+            $this->flashMessage('web.common.login_required', 'danger', 'lock');
             $this->redirect(':Web:Page:default');
         }
 
@@ -133,10 +132,10 @@ class ProfilePresenter extends WebBasePresenter
                     'PostalState' => $skautISPerson->PostalState
                 ], 'personUpdateAddressInput');
             } catch (\Skautis\Wsdl\WsdlException $ex) {
-                $this->presenter->flashMessage('Synchronizace se skautIS se nepodařila. Zkuste se znovu přihlásit.', 'danger');
+                $this->presenter->flashMessage('personal_details_synchronization_failed', 'danger');
             }
 
-            $this->flashMessage('Osobní údaje aktualizovány.', 'success');
+            $this->flashMessage('personal_details_update_successful', 'success');
 
             $this->redirect('this');
         };
@@ -210,7 +209,7 @@ class ProfilePresenter extends WebBasePresenter
 
             $this->userRepository->getEntityManager()->flush();
 
-            $this->flashMessage('Doplňující informace upraveny.', 'success');
+            $this->flashMessage('additional_information_update_successfull', 'success');
 
             $this->redirect('this');
         };

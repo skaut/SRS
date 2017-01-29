@@ -53,7 +53,7 @@ ul.no-margin {
 
 /* odstraneni mezery pod nadpisem u content */
 .page-heading {
-    margin-bottom: -10px; /* TODO bud jen tady, nebo u kazde radky */
+    margin-bottom: -10px; /* TODO bud jen tady, nebo u kazde row */
 }
 
 /* tabulka bez ramecku */

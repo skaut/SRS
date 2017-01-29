@@ -58,12 +58,15 @@ profile:
     state: "Stát"
     state_empty: "Zadejte stát."
     update_personal_details: "Aktualizovat údaje a uložit do skautISu"
+    personal_details_synchronization_failed: "Synchronizace se skautIS se nepodařila. Zkuste se znovu přihlásit."
+    personal_details_update_successful: "Osobní údaje úspěšně aktualizovány."
 
     additional_information_group: "Doplňující informace"
     about_me: "O mně"
     arrival: "Příjezd"
     departure: "Odjezd"
     update_additional_information: "Upravit doplňující informace"
+    additional_information_update_successfull: "Doplňující informace úspěšně upraveny."
 
     my_schedule_group: "Můj harmonogram semináře"
     from: "Od"

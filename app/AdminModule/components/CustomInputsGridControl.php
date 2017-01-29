@@ -41,9 +41,9 @@ class CustomInputsGridControl extends Control
 
         $grid->setPagination(false);
 
-        $grid->addColumnText('name', 'Název');
+        $grid->addColumnText('name', 'admin.configuration.custom_inputs_name');
 
-        $grid->addColumnText('type', 'Typ')
+        $grid->addColumnText('type', 'admin.configuration.custom_inputs_type')
             ->setRenderer(function ($row) {
                 return $this->translator->translate('admin.common.custom_' . $row->getType());
             });
@@ -87,7 +87,7 @@ class CustomInputsGridControl extends Control
         }
 
         $p = $this->getPresenter();
-        $p->flashMessage($this->translator->translate('admin.configuration.application_input_added'), 'success');
+        $p->flashMessage('admin.configuration.application_input_added', 'success');
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
@@ -102,7 +102,7 @@ class CustomInputsGridControl extends Control
         $this->customInputRepository->renameInput($id, $values['name']);
 
         $p = $this->getPresenter();
-        $p->flashMessage($this->translator->translate('admin.configuration.application_input_edited'), 'success');
+        $p->flashMessage('admin.configuration.application_input_edited', 'success');
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
@@ -116,7 +116,7 @@ class CustomInputsGridControl extends Control
         $this->customInputRepository->removeInput($id);
 
         $p = $this->getPresenter();
-        $p->flashMessage($this->translator->translate('admin.configuration.application_input_deleted'), 'success');
+        $p->flashMessage('admin.configuration.application_input_deleted', 'success');
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
@@ -131,7 +131,7 @@ class CustomInputsGridControl extends Control
         $this->customInputRepository->changePosition($item_id, $prev_id, $next_id);
 
         $p = $this->getPresenter();
-        $p->flashMessage($this->translator->translate('admin.configuration.application_inputs_order_saved'), 'success');
+        $p->flashMessage('admin.configuration.application_inputs_order_saved', 'success');
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');

@@ -64,6 +64,7 @@ services:
     - App\AdminModule\Forms\PaymentConfigurationFormFactory
     - App\AdminModule\Forms\PaymentProofConfigurationFormFactory
     - App\AdminModule\Forms\SystemConfigurationFormFactory
+    - App\AdminModule\Forms\SkautIsActionConfigurationFormFactory
     - App\AdminModule\Components\IUsersGridControlFactory
     - App\AdminModule\Components\ICustomInputsGridControlFactory
 

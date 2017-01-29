@@ -69,7 +69,7 @@ class InstallPresenter extends InstallBasePresenter
             if (filter_var($this->settingsRepository->getValue('admin_created'), FILTER_VALIDATE_BOOLEAN)) {
                 $this->redirect('installed');
             }
-            $this->flashMessage($this->translator->translate('install.schema.schema_already_created'), 'info');
+            $this->flashMessage('install.schema.schema_already_created', 'info');
             $this->redirect('admin');
         } catch (\Doctrine\DBAL\Exception\TableNotFoundException $ex) {
         } catch (\App\Model\Settings\SettingsException $ex) {
@@ -90,7 +90,7 @@ class InstallPresenter extends InstallBasePresenter
         $result = $this->application->run($input, $output);
 
         if ($result != 0) {
-            $this->flashMessage($this->translator->translate('install.schema.schema_create_unsuccessful'), 'danger');
+            $this->flashMessage('install.schema.schema_create_unsuccessful', 'danger');
             return;
         }
 
@@ -101,7 +101,7 @@ class InstallPresenter extends InstallBasePresenter
         $result = $this->application->run($input, $output);
 
         if ($result != 0) {
-            $this->flashMessage($this->translator->translate('install.schema.data_import_unsuccessful'), 'danger');
+            $this->flashMessage('install.schema.data_import_unsuccessful', 'danger');
             return;
         }
 
@@ -112,7 +112,7 @@ class InstallPresenter extends InstallBasePresenter
     {
         try {
             if (filter_var($this->settingsRepository->getValue('admin_created'), FILTER_VALIDATE_BOOLEAN)) {
-                $this->flashMessage($this->translator->translate('install.admin.admin_already_created'), 'info');
+                $this->flashMessage('install.admin.admin_already_created', 'info');
                 $this->redirect('finish');
             }
         } catch (\Doctrine\DBAL\Exception\TableNotFoundException $ex) {
@@ -142,7 +142,7 @@ class InstallPresenter extends InstallBasePresenter
     public function handleCreateAdmin()
     {
         if (!$this->checkSkautISConnection()) {
-            $this->flashMessage($this->translator->translate('install.admin.skautis_access_denied'), 'danger');
+            $this->flashMessage('install.admin.skautis_access_denied', 'danger');
             return;
         }
         $this->redirect(':Auth:login', ['backlink' => ':Install:Install:admin']);

@@ -1,17 +1,17 @@
 $(function () {
     $.nette.ext('flashes', {
         complete: function () {
-            $('.alert').animate({
+            $('.alert:not(.alert-forever)').animate({
                 opacity: 1.0
-            }, 4000).fadeOut(2000);
+            }, 5000).slideUp(1000);
         }
     });
 
     $.nette.init();
 
-    $('.alert').animate({
+    $('.alert:not(.alert-forever)').animate({
         opacity: 1.0
-    }, 4000).fadeOut(2000);
+    }, 5000).slideUp(1000);
 
     $('select[multiple]').selectpicker({
         iconBase: 'fa',

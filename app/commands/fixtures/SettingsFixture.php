@@ -46,8 +46,7 @@ class SettingsFixture extends AbstractFixture
         $settings[] = new Settings('is_allowed_log_in_programs', '0');
         $settings[] = new Settings('is_allowed_log_in_programs_before_payment', '0');
 
-        $settings[] = new Settings('skautis_action_id', '');
-        $settings[] = new Settings('skautis_action_name', '');
+        $settings[] = new Settings('skautis_action', '');
 
         $settings[] = new Settings('logo', '/img/logo.png');
         $settings[] = new Settings('footer', $this->translator->translate('common.settings.default_value.footer', ['year' => $today->format('Y')]));

@@ -1,9 +1,9 @@
 {import 'sidebar.latte'}
 
 {block main}
-    <h2>Platba</h2>
+    <h2>{_admin.configuration.payment_heading}</h2>
     {control paymentConfigurationForm}
 
-    <h2>Doklady</h2>
+    <h2>{_admin.configuration.payment_proof_heading}</h2>
     {control paymentProofConfigurationForm}
 {/block}
