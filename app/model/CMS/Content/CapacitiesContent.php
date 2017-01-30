@@ -24,6 +24,6 @@ class CapacitiesContent extends Content
      */
     public function __construct()
     {
-        $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->roles = new ArrayCollection();
     }
 }

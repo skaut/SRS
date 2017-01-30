@@ -2,12 +2,10 @@
 
 namespace App\Commands\Fixtures;
 
+
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\AbstractFixture;
-use Nette\Security\Passwords;
-use App\Model\ACL\Role;
 use App\Model\ACL\Resource;
-use App\Model\ACL\Permission;
 
 class ResourceFixture extends AbstractFixture
 {

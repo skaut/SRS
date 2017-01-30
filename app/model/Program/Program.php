@@ -4,6 +4,7 @@ namespace App\Model\Program;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 /**
  * @ORM\Entity(repositoryClass="ProgramRepository")
@@ -11,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Program
 {
-    use \Kdyby\Doctrine\Entities\Attributes\Identifier;
+    use Identifier;
 
     /**
      * @ORM\ManyToOne(targetEntity="Block", inversedBy="programs", cascade={"persist"})
@@ -54,7 +55,7 @@ class Program
      */
     public function __construct()
     {
-        $this->attendees = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->attendees = new ArrayCollection();
     }
 
     /**

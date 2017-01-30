@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Model\ACL\ResourceRepository;
+use App\Model\ACL\RoleRepository;
 use Nette;
 use Nette\Security\privilege;
 use Nette\Security\role;
@@ -12,7 +14,7 @@ use Nette\Security\role;
  */
 class Authorizator extends Nette\Security\Permission
 {
-    public function __construct(\App\Model\ACL\RoleRepository $roleRepository, \App\Model\ACL\ResourceRepository $resourceRepository)
+    public function __construct(RoleRepository $roleRepository, ResourceRepository $resourceRepository)
     {
         foreach ($resourceRepository->findAll() as $resource) {
             $this->addResource($resource->getName());

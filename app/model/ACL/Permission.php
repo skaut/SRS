@@ -4,6 +4,7 @@ namespace App\Model\ACL;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 /**
  * @ORM\Entity
@@ -29,7 +30,7 @@ class Permission
         self::CHOOSE_PROGRAMS
     ];
 
-    use \Kdyby\Doctrine\Entities\Attributes\Identifier;
+    use Identifier;
 
     /**
      * @ORM\Column(type="string")
@@ -58,7 +59,7 @@ class Permission
     {
         $this->name = $name;
         $this->resource = $resource;
-        $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->roles = new ArrayCollection();
     }
 
     /**

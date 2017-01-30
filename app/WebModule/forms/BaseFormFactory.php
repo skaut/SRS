@@ -2,16 +2,18 @@
 
 namespace App\WebModule\Forms;
 
+use Kdyby\Translation\Translator;
 use Nette\Application\UI\Form;
+use Nextras\Forms\Rendering\Bs3FormRenderer;
 
 class BaseFormFactory
 {
     /**
-     * @var \Kdyby\Translation\Translator
+     * @var Translator
      */
     private $translator;
 
-    public function __construct(\Kdyby\Translation\Translator $translator)
+    public function __construct(Translator $translator)
     {
         $this->translator = $translator;
     }
@@ -21,7 +23,7 @@ class BaseFormFactory
         $form = new Form;
         $form->setTranslator($this->translator);
 
-        $renderer = new \Nextras\Forms\Rendering\Bs3FormRenderer();
+        $renderer = new Bs3FormRenderer();
         $renderer->wrappers['control']['container'] = 'div class="col-sm-9 col-xs-9"';
 		$renderer->wrappers['label']['container'] = 'div class="col-sm-3 col-xs-3 control-label"';
 

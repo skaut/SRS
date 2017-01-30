@@ -9,19 +9,20 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use App\Model\CMS\Page;
+use Kdyby\Translation\Translator;
 
 class CMSFixture extends AbstractFixture implements DependentFixtureInterface
 {
     /**
-     * @var \Kdyby\Translation\Translator
+     * @var Translator
      */
     protected $translator;
 
     /**
      * RoleFixture constructor.
-     * @param \Kdyby\Translation\Translator $translator
+     * @param Translator $translator
      */
-    public function __construct(\Kdyby\Translation\Translator $translator)
+    public function __construct(Translator $translator)
     {
         $this->translator = $translator;
     }

@@ -4,6 +4,7 @@ namespace App\Model\CMS;
 
 use App\Model\User\User;
 use Doctrine\ORM\Mapping as ORM;
+use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 /**
  * @ORM\Entity
@@ -11,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Faq
 {
-    use \Kdyby\Doctrine\Entities\Attributes\Identifier;
+    use Identifier;
 
     /**
      * @ORM\Column(type="text")

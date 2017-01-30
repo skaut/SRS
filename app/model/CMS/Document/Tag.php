@@ -4,6 +4,7 @@ namespace App\Model\CMS\Document;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 /**
  * @ORM\Entity
@@ -11,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Tag
 {
-    use \Kdyby\Doctrine\Entities\Attributes\Identifier;
+    use Identifier;
 
     /**
      * @ORM\ManyToMany(targetEntity="Document", mappedBy="tags", cascade={"persist"})
@@ -30,6 +31,6 @@ class Tag
      */
     public function __construct()
     {
-        $this->documents = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->documents = new ArrayCollection();
     }
 }

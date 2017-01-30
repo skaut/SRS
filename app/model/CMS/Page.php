@@ -6,6 +6,7 @@ use App\Model\CMS\Content\Content;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
+use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 /**
  * @ORM\Entity(repositoryClass="PageRepository")
@@ -13,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Page
 {
-    use \Kdyby\Doctrine\Entities\Attributes\Identifier;
+    use Identifier;
 
     /**
      * @ORM\Column(type="string")
@@ -61,8 +62,8 @@ class Page
     {
         $this->name = $name;
         $this->slug = $slug;
-        $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->contents = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->roles = new ArrayCollection();
+        $this->contents = new ArrayCollection();
     }
 
     /**

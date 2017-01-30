@@ -3,10 +3,12 @@
 namespace App\WebModule\Presenters;
 
 
+use App\Model\ACL\Role;
 use App\WebModule\Forms\AdditionalInformationFormFactory;
 use App\WebModule\Forms\PersonalDetailsFormFactory;
 use App\WebModule\Forms\RolesFormFactory;
 use Nette\Application\UI\Form;
+use Skautis\Wsdl\WsdlException;
 
 class ProfilePresenter extends WebBasePresenter
 {
@@ -39,7 +41,7 @@ class ProfilePresenter extends WebBasePresenter
             $this->redirect(':Web:Page:default');
         }
 
-        $unregisteredRole = $this->roleRepository->findRoleByUntranslatedName(\App\Model\ACL\Role::UNREGISTERED);
+        $unregisteredRole = $this->roleRepository->findRoleByUntranslatedName(Role::UNREGISTERED);
         $this->editRegistrationAllowed = !$this->dbuser->isInRole($unregisteredRole->getName()) && !$this->dbuser->hasPaid()
             && $this->settingsRepository->getDateValue('edit_registration_to') >= (new \DateTime())->setTime(0, 0);
     }
@@ -107,7 +109,7 @@ class ProfilePresenter extends WebBasePresenter
 
                 $this->skautIsService->updatePersonAddress($editedUser->getSkautISPersonId(), $editedUser->getStreet(),
                     $editedUser->getCity(), $editedUser->getPostcode(), $editedUser->getState());
-            } catch (\Skautis\Wsdl\WsdlException $ex) {
+            } catch (WsdlException $ex) {
                 $this->presenter->flashMessage('web.profile.personal_details_synchronization_failed', 'danger');
             }
 

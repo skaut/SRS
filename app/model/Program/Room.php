@@ -3,6 +3,7 @@
 namespace App\Model\Program;
 
 use Doctrine\ORM\Mapping as ORM;
+use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 /**
  * @ORM\Entity
@@ -10,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Room
 {
-    use \Kdyby\Doctrine\Entities\Attributes\Identifier;
+    use Identifier;
 
     /**
      * @ORM\Column(type="string", unique=true)
@@ -23,6 +24,6 @@ class Room
      */
     public function __construct()
     {
-        $this->blocks = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->blocks = new ArrayCollection();
     }
 }

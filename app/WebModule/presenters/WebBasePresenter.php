@@ -4,10 +4,13 @@ namespace App\WebModule\Presenters;
 
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
+use App\Model\ACL\Role;
+use App\Model\Settings\SettingsException;
 use App\Model\User\User;
 use App\Presenters\BasePresenter;
 use App\Services\Authorizator;
 use App\Services\SkautIsService;
+use Doctrine\DBAL\Exception\TableNotFoundException;
 
 abstract class WebBasePresenter extends BasePresenter
 {
@@ -94,8 +97,8 @@ abstract class WebBasePresenter extends BasePresenter
         $this->template->footer = $this->settingsRepository->getValue('footer');
         $this->template->seminarName = $this->settingsRepository->getValue('seminar_name');
 
-        $this->template->unregisteredRole = $this->roleRepository->findRoleByUntranslatedName(\App\Model\ACL\Role::UNREGISTERED);
-        $this->template->unapprovedRole = $this->roleRepository->findRoleByUntranslatedName(\App\Model\ACL\Role::UNAPPROVED);
+        $this->template->unregisteredRole = $this->roleRepository->findRoleByUntranslatedName(Role::UNREGISTERED);
+        $this->template->unapprovedRole = $this->roleRepository->findRoleByUntranslatedName(Role::UNAPPROVED);
 
         $this->template->adminAccess = $this->user->isAllowed(Resource::ADMIN, Permission::ACCESS);
         $this->template->displayUsersRoles = $this->settingsRepository->getValue('display_users_roles');
@@ -110,9 +113,9 @@ abstract class WebBasePresenter extends BasePresenter
         try {
             if (!filter_var($this->settingsRepository->getValue('admin_created'), FILTER_VALIDATE_BOOLEAN))
                 $this->redirect(':Install:Install:default');
-        } catch (\Doctrine\DBAL\Exception\TableNotFoundException $ex) {
+        } catch (TableNotFoundException $ex) {
             $this->redirect(':Install:Install:default');
-        } catch (\App\Model\Settings\SettingsException $ex) {
+        } catch (SettingsException $ex) {
             $this->redirect(':Install:Install:default');
         }
     }

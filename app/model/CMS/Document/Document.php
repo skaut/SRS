@@ -4,6 +4,7 @@ namespace App\Model\CMS\Document;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 /**
  * @ORM\Entity
@@ -11,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Document
 {
-    use \Kdyby\Doctrine\Entities\Attributes\Identifier;
+    use Identifier;
 
     /**
      * @ORM\ManyToMany(targetEntity="Tag", inversedBy="documents", cascade={"persist"})

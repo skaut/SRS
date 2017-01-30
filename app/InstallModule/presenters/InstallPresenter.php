@@ -4,11 +4,14 @@ namespace App\InstallModule\Presenters;
 
 use App\Commands\FixturesLoadCommand;
 use App\Commands\InitDataCommand;
+use App\Model\Settings\SettingsException;
+use Doctrine\DBAL\Exception\TableNotFoundException;
 use Kdyby\Doctrine\Console\SchemaCreateCommand;
 use Skautis\Config;
 use Skautis\Skautis;
 use Skautis\User;
 use Skautis\Wsdl\WebServiceFactory;
+use Skautis\Wsdl\WsdlException;
 use Skautis\Wsdl\WsdlManager;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -63,8 +66,8 @@ class InstallPresenter extends InstallBasePresenter
             }
             $this->flashMessage('install.schema.schema_already_created', 'info');
             $this->redirect('admin');
-        } catch (\Doctrine\DBAL\Exception\TableNotFoundException $ex) {
-        } catch (\App\Model\Settings\SettingsException $ex) {
+        } catch (TableNotFoundException $ex) {
+        } catch (SettingsException $ex) {
         }
     }
 
@@ -107,9 +110,9 @@ class InstallPresenter extends InstallBasePresenter
                 $this->flashMessage('install.admin.admin_already_created', 'info');
                 $this->redirect('finish');
             }
-        } catch (\Doctrine\DBAL\Exception\TableNotFoundException $ex) {
+        } catch (TableNotFoundException $ex) {
             $this->redirect('default');
-        } catch (\App\Model\Settings\SettingsException $ex) {
+        } catch (SettingsException $ex) {
             $this->redirect('default');
         }
 
@@ -145,9 +148,9 @@ class InstallPresenter extends InstallBasePresenter
         try {
             if (!filter_var($this->settingsRepository->getValue('admin_created'), FILTER_VALIDATE_BOOLEAN))
                 $this->redirect('default');
-        } catch (\Doctrine\DBAL\Exception\TableNotFoundException $ex) {
+        } catch (TableNotFoundException $ex) {
             $this->redirect('default');
-        } catch (\App\Model\Settings\SettingsException $ex) {
+        } catch (SettingsException $ex) {
             $this->redirect('default');
         }
     }
@@ -157,9 +160,9 @@ class InstallPresenter extends InstallBasePresenter
         try {
             if (!filter_var($this->settingsRepository->getValue('admin_created'), FILTER_VALIDATE_BOOLEAN))
                 $this->redirect('default');
-        } catch (\Doctrine\DBAL\Exception\TableNotFoundException $ex) {
+        } catch (TableNotFoundException $ex) {
             $this->redirect('default');
-        } catch (\App\Model\Settings\SettingsException $ex) {
+        } catch (SettingsException $ex) {
             $this->redirect('default');
         }
 
@@ -176,7 +179,7 @@ class InstallPresenter extends InstallBasePresenter
             $wsdlManager = new WsdlManager(new WebServiceFactory(), new Config($this->context->parameters['skautIS']['appId'], $this->context->parameters['skautIS']['test']));
             $skautIS = new Skautis($wsdlManager, new User($wsdlManager));
             $skautIS->org->UnitAllRegistry();
-        } catch (\Skautis\Wsdl\WsdlException $ex) {
+        } catch (WsdlException $ex) {
             return false;
         }
         return true;

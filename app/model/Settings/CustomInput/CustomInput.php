@@ -3,6 +3,7 @@
 namespace App\Model\Settings\CustomInput;
 
 use Doctrine\ORM\Mapping as ORM;
+use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 
 /**
@@ -27,7 +28,7 @@ abstract class CustomInput
 
     protected $type;
 
-    use \Kdyby\Doctrine\Entities\Attributes\Identifier;
+    use Identifier;
 
     /**
      * @ORM\Column(type="string")

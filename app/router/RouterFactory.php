@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Model\CMS\PageRepository;
+use Doctrine\DBAL\Exception\TableNotFoundException;
 use Nette;
 use Nette\Application\Routers\RouteList;
 use Nette\Application\Routers\Route;
@@ -10,11 +12,11 @@ use Nette\Application\Routers\Route;
 class RouterFactory
 {
     /**
-     * @var \App\Model\CMS\PageRepository
+     * @var PageRepository
      */
     private $pageRepository;
 
-    public function __construct(\App\Model\CMS\PageRepository $pageRepository)
+    public function __construct(PageRepository $pageRepository)
     {
         $this->pageRepository = $pageRepository;
     }
@@ -84,7 +86,7 @@ class RouterFactory
                     }
                 ]
             ]);
-        } catch (\Doctrine\DBAL\Exception\TableNotFoundException $ex) { }
+        } catch (TableNotFoundException $ex) { }
 
         $router[] = new Route('<presenter>/<action>[/<id>]', [
             'module' => 'Web',

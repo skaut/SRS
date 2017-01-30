@@ -4,6 +4,7 @@ namespace App\AdminModule\Forms;
 
 use App\Services\SkautIsService;
 use Nette\Application\UI\Form;
+use Skautis\Wsdl\WsdlException;
 
 class SkautIsEventConfigurationFormFactory
 {
@@ -48,7 +49,7 @@ class SkautIsEventConfigurationFormFactory
             $skautIsEvents = $this->skautIsService->getDraftEvents();
             foreach ($skautIsEvents as $e)
                 $choices[$e->ID] = $e->DisplayName;
-        } catch (\Skautis\Wsdl\WsdlException $ex) { }
+        } catch (WsdlException $ex) { }
         return $choices;
     }
 }

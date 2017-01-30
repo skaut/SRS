@@ -2,8 +2,8 @@
 
 namespace App\Model\ACL;
 
+
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\DBAL\Query\QueryBuilder;
 use Kdyby\Doctrine\EntityRepository;
 
 class RoleRepository extends EntityRepository
@@ -22,8 +22,6 @@ class RoleRepository extends EntityRepository
 
     public function findRegisterableNowRoles()
     {
-        $now = date("Y-m-d H:i");
-
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('registerable', true))
             ->andWhere(Criteria::expr()->orX(Criteria::expr()->lte('registerableFrom', new \DateTime('now')), Criteria::expr()->isNull('registerableFrom')))

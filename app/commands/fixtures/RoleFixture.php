@@ -2,26 +2,25 @@
 
 namespace App\Commands\Fixtures;
 
+
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use Nette\Security\Passwords;
+use Kdyby\Translation\Translator;
 use App\Model\ACL\Role;
-use App\Model\ACL\Resource;
-use App\Model\ACL\Permission;
 
 class RoleFixture extends AbstractFixture implements DependentFixtureInterface
 {
     /**
-     * @var \Kdyby\Translation\Translator
+     * @var Translator
      */
     protected $translator;
 
     /**
      * RoleFixture constructor.
-     * @param \Kdyby\Translation\Translator $translator
+     * @param Translator $translator
      */
-    public function __construct(\Kdyby\Translation\Translator $translator)
+    public function __construct(Translator $translator)
     {
         $this->translator = $translator;
     }

@@ -2,7 +2,7 @@
 
 namespace App\AdminModule\Presenters;
 
-use App\AdminModule\Presenters\AdminBasePresenter;
+
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 

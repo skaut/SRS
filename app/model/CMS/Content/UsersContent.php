@@ -2,9 +2,9 @@
 
 namespace App\Model\CMS\Content;
 
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Nette\Application\UI\Form;
 
 /**
  * @ORM\Entity
@@ -25,6 +25,6 @@ class UsersContent extends Content
      */
     public function __construct()
     {
-        $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->roles = new ArrayCollection();
     }
 }

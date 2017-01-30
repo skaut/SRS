@@ -4,6 +4,7 @@ namespace App\Model\Program;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 /**
  * @ORM\Entity
@@ -11,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Category
 {
-    use \Kdyby\Doctrine\Entities\Attributes\Identifier;
+    use Identifier;
 
     /**
      * @ORM\OneToMany(targetEntity="Block", mappedBy="category", cascade={"persist"})
@@ -36,7 +37,7 @@ class Category
      */
     public function __construct()
     {
-        $this->blocks = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->registerableRoles = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->blocks = new ArrayCollection();
+        $this->registerableRoles = new ArrayCollection();
     }
 }

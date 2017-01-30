@@ -2,9 +2,8 @@
 
 namespace App\AdminModule\Presenters;
 
+
 use App\AdminModule\Components\IUsersGridControlFactory;
-use App\AdminModule\Components\UsersGridControl;
-use App\AdminModule\Presenters\AdminBasePresenter;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 
@@ -32,7 +31,7 @@ class UsersPresenter extends AdminBasePresenter
 
     public function createComponentUsersGrid($name)
     {
-        return $this->usersGridControlFactory->create();
+        return $this->usersGridControlFactory->create($name);
     }
 
 }

@@ -2,9 +2,10 @@
 
 namespace App\Model\CMS\Content;
 
+
 use App\Model\CMS\Page;
 use Doctrine\ORM\Mapping as ORM;
-use Nette\Application\UI\Form;
+use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 /**
  * @ORM\Entity
@@ -63,7 +64,7 @@ abstract class Content
 
     protected $type;
 
-    use \Kdyby\Doctrine\Entities\Attributes\Identifier;
+    use Identifier;
 
     /**
      * @ORM\Column(type="string", nullable=true)

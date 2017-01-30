@@ -2,24 +2,24 @@
 
 namespace App\Commands\Fixtures;
 
+
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\AbstractFixture;
-use Nette\Security\Passwords;
-use Nette\Utils\Neon;
+use Kdyby\Translation\Translator;
 use App\Model\Settings\Settings;
 
 class SettingsFixture extends AbstractFixture
 {
     /**
-     * @var \Kdyby\Translation\Translator
+     * @var Translator
      */
     protected $translator;
 
     /**
      * SettingsFixture constructor.
-     * @param \Kdyby\Translation\Translator $translator
+     * @param Translator $translator
      */
-    public function __construct(\Kdyby\Translation\Translator $translator)
+    public function __construct(Translator $translator)
     {
         $this->translator = $translator;
     }

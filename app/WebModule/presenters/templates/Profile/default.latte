@@ -3,23 +3,23 @@
         $(function () {
             $("#btn-submit").confirm({
                 text: {_web.profile.change_roles_confirm},
-                confirm: function(button) {
+                confirm: function() {
                     $("#frm-rolesForm").submit()
                 },
-                cancel: function(button) { },
+                cancel: function() { },
                 confirmButton: "Ok",
                 cancelButton: "Zrušit",
                 post: true,
-                submitForm: true,
+                submitForm: true
             });
             $("#btn-cancelRegistration").confirm({
                 text: {_web.profile.cancel_registration_confirm},
-                confirm: function(button) {
+                confirm: function() {
                     $.nette.ajax({
                         url: {link cancelRegistration!}
                     });
                 },
-                cancel: function(button) { },
+                cancel: function() { }
             });
         });
     </script>

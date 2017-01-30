@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\PersistentCollection;
+use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 /**
  * @ORM\Entity(repositoryClass="UserRepository")
@@ -14,7 +15,7 @@ use Doctrine\ORM\PersistentCollection;
  */
 class User
 {
-    use \Kdyby\Doctrine\Entities\Attributes\Identifier;
+    use Identifier;
 
     /**
      * @ORM\Column(type="string", unique=true)
@@ -228,8 +229,8 @@ class User
     public function __construct($username)
     {
         $this->username = $username;
-        $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->programs = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->roles = new ArrayCollection();
+        $this->programs = new ArrayCollection();
     }
 
     /**

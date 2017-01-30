@@ -4,6 +4,7 @@ namespace App\Model\User\CustomInputValue;
 
 use App\Model\User\User;
 use Doctrine\ORM\Mapping as ORM;
+use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 /**
  * @ORM\Entity
@@ -17,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 abstract class CustomInputValue
 {
-    use \Kdyby\Doctrine\Entities\Attributes\Identifier;
+    use Identifier;
 
     /**
      * @ORM\ManyToOne(targetEntity="\App\Model\Settings\CustomInput\CustomInput", cascade={"persist"})

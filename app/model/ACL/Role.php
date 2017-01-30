@@ -5,6 +5,7 @@ namespace App\Model\ACL;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
+use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 /**
  * @ORM\Entity(repositoryClass="RoleRepository")
@@ -32,7 +33,7 @@ class Role
         self::ADMIN
     ];
 
-    use \Kdyby\Doctrine\Entities\Attributes\Identifier;
+    use Identifier;
 
     /**
      * @ORM\Column(type="string", unique=true)
@@ -166,13 +167,13 @@ class Role
     public function __construct($name)
     {
         $this->name = $name;
-        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->permissions = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->pages = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->incompatibleRoles = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->requiredByRole = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->requiredRoles = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->registerableCategories = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->users = new ArrayCollection();
+        $this->permissions = new ArrayCollection();
+        $this->pages = new ArrayCollection();
+        $this->incompatibleRoles = new ArrayCollection();
+        $this->requiredByRole = new ArrayCollection();
+        $this->requiredRoles = new ArrayCollection();
+        $this->registerableCategories = new ArrayCollection();
     }
 
     /**

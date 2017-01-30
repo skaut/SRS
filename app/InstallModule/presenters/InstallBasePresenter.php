@@ -2,7 +2,7 @@
 
 namespace App\InstallModule\Presenters;
 
-use Nette;
+
 use App\Presenters\BasePresenter;
 
 abstract class InstallBasePresenter extends BasePresenter

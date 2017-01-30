@@ -13,6 +13,7 @@ use App\WebModule\Components\NewsContentControl;
 use App\WebModule\Components\ProgramsContentControl;
 use App\WebModule\Components\TextContentControl;
 use App\WebModule\Components\UsersContentControl;
+use Nette\Application\BadRequestException;
 
 class PagePresenter extends WebBasePresenter
 {
@@ -23,7 +24,7 @@ class PagePresenter extends WebBasePresenter
         if ($slug === null) {
             $page = $this->pageRepository->findPublishedPageBySlug('/');
             if ($page === null) {
-                throw new \Nette\Application\BadRequestException($this->translator->translate('_web.common.homepage_not_found'), 404);
+                throw new BadRequestException($this->translator->translate('_web.common.homepage_not_found'), 404);
             }
             $this->template->bodyClass = "body-homepage";
         } else {
@@ -32,7 +33,7 @@ class PagePresenter extends WebBasePresenter
         }
 
         if (!$page->isAllowedForRoles($this->user->roles)) {
-            throw new \Nette\Application\BadRequestException($this->translator->translate('_web.common.page_access_denied'), 403);
+            throw new BadRequestException($this->translator->translate('_web.common.page_access_denied'), 403);
         }
 
         $this->pageId = $page->getId();

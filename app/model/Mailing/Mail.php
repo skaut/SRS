@@ -6,6 +6,7 @@ namespace App\Model\Mailing;
 use App\Model\ACL\Role;
 use App\Model\User\User;
 use Doctrine\ORM\Mapping as ORM;
+use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 /**
  * @ORM\Entity(repositoryClass="MailRepository")
@@ -13,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Mail
 {
-    use \Kdyby\Doctrine\Entities\Attributes\Identifier;
+    use Identifier;
 
     /**
      * @ORM\Column(type="string")

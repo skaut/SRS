@@ -3,7 +3,11 @@
 namespace App\Services;
 
 
+use App\Model\ACL\RoleRepository;
+use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
+use App\Model\User\UserRepository;
+use Kdyby\Doctrine\EntityManager;
 use Nette;
 use Nette\Security as NS;
 use App\Model\ACL\Role;
@@ -11,34 +15,28 @@ use App\Model\ACL\Role;
 class Authenticator extends Nette\Object implements NS\IAuthenticator
 {
     /**
-     * @var \Kdyby\Doctrine\EntityManager
+     * @var EntityManager
      */
     private $em;
 
     /**
-     * @var \App\Model\User\UserRepository
+     * @var UserRepository
      */
     private $userRepository;
 
     /**
-     * @var \App\Model\ACL\RoleRepository
+     * @var RoleRepository
      */
     private $roleRepository;
-
-    /**
-     * @var \App\Model\Settings\SettingsRepository
-     */
-    private $settingsRepository;
 
     /**
      * @var SkautIsService
      */
     protected $skautIsService;
 
-    public function __construct(\Kdyby\Doctrine\EntityManager $em,
-                                \App\Model\User\UserRepository $userRepository,
-                                \App\Model\ACL\RoleRepository $roleRepository,
-                                \App\Model\Settings\SettingsRepository $settingsRepository,
+    public function __construct(EntityManager $em,
+                                UserRepository $userRepository,
+                                RoleRepository $roleRepository,
                                 SkautIsService $skautIsService)
     {
         $this->em = $em;

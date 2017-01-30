@@ -5,6 +5,7 @@ namespace App\Model\Program;
 use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 /**
  * @ORM\Entity
@@ -12,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Block
 {
-    use \Kdyby\Doctrine\Entities\Attributes\Identifier;
+    use Identifier;
 
     /**
      * @ORM\ManyToOne(targetEntity="\App\Model\User\User", cascade={"persist"})
@@ -73,6 +74,6 @@ class Block
      */
     public function __construct()
     {
-        $this->programs = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->programs = new ArrayCollection();
     }
 }

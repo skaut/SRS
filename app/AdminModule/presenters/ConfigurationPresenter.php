@@ -15,6 +15,7 @@ use App\Model\Settings\SettingsRepository;
 use App\Model\User\UserRepository;
 use App\Services\SkautIsService;
 use Nette\Application\UI\Form;
+use Skautis\Wsdl\WsdlException;
 
 class ConfigurationPresenter extends AdminBasePresenter
 {
@@ -107,7 +108,7 @@ class ConfigurationPresenter extends AdminBasePresenter
             try {
                 if (!$this->skautIsService->isEventDraft($eventId))
                     $this->template->closed = true;
-            } catch (\Skautis\Wsdl\WsdlException $ex) {
+            } catch (WsdlException $ex) {
                 $this->template->access = false;
             }
         }
@@ -135,7 +136,7 @@ class ConfigurationPresenter extends AdminBasePresenter
         try {
             $this->skautIsService->syncParticipants($eventId, $participants);
             $this->flashMessage('admin.configuration.skautis_event_sync_successful', 'success');
-        } catch (\Skautis\Wsdl\WsdlException $ex) {
+        } catch (WsdlException $ex) {
             $this->flashMessage('admin.configuration.skautis_event_sync_unsuccessful', 'danger');
         }
 
@@ -306,6 +307,6 @@ class ConfigurationPresenter extends AdminBasePresenter
 
     public function createComponentCustomInputsGrid($name)
     {
-        return $this->customInputsGridControlFactory->create();
+        return $this->customInputsGridControlFactory->create($name);
     }
 }

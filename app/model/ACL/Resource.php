@@ -4,6 +4,7 @@ namespace App\Model\ACL;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 /**
  * @ORM\Entity(repositoryClass="ResourceRepository")
@@ -29,7 +30,7 @@ class Resource
         self::MAILING
     ];
 
-    use \Kdyby\Doctrine\Entities\Attributes\Identifier;
+    use Identifier;
 
     /**
      * @ORM\Column(type="string", unique=true)
@@ -50,7 +51,7 @@ class Resource
     public function __construct($name)
     {
         $this->name = $name;
-        $this->permissions = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->permissions = new ArrayCollection();
     }
 
     /**
