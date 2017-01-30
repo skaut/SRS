@@ -97,12 +97,22 @@ configuration:
     application_input_deleted: "Pole bylo úspěšně odstraněno."
     application_inputs_order_saved: "Pořadí polí bylo úspěšně upraveno."
 
-    skautis_action_heading: "Propojení s akcí ve skautIS"
-    skautis_action: "Akce ze skautIS"
+    skautis_event_heading: "Propojení s akcí ve skautIS"
+    skautis_event: "Akce ve skautIS"
+    skautis_event_empty: "Vyberte akci ze seznamu."
+    skautis_event_name: "Systém je propojen s akcí: %name%."
+    skautis_event_note: "V sezmanu akcí jsou neuzavřené akce, na které máte ve SkautIS oprávnění, pokud se Vám akce v seznamu nezobrazuje, nechte synchronizaci nastavit někoho s patřičnými právy."
+    skautis_event_disconnect: "Odpojit od akce"
+    skautis_event_disconnect_confirm: "Opravdu se chcete odpojit od akce?"
+    skautis_event_disconnect_successful: "Odpojení od akce proběhlo úspěšně."
 
-    skautis_sync_heading: "Synchronizace účastníků"
-
-    skautis_action_name: "Akce ze skautIS"
+    skautis_event_sync_heading: "Synchronizace účastníků"
+    skautis_event_sync: "Nahrát účastníky do skautIS"
+    skautis_event_sync_successful: "Nahrání účastníků proběhlo úspěšně."
+    skautis_event_sync_unsuccessful: "Nahrání účastníků selhalo."
+    skautis_event_not_connected: "V tuto chvíli není systém propojen s žádnou akcí ve skautIS."
+    skautis_event_access_denied: "Nemáte oprávnění k synchronizaci účastníků s propojenou akcí."
+    skautis_event_closed: "Akce již byla ve skautIS uzavřena."
 
     system_heading: "Systém"
     footer: "Text v patičce"

@@ -14,6 +14,13 @@ class UserRepository extends EntityRepository
         return $this->findOneBy(['skautISUserId' => $skautISUserId]);
     }
 
+    public function findUsersForSync() {
+        return $this->createQueryBuilder('u')
+            ->join('u.roles', 'r')
+            ->where('r.syncedWithSkautIS  = true')
+            ->getQuery()->execute();
+    }
+
     public function variableSymbolExists($variableSymbol) {
         return $this->findOneBy(['variableSymbol' => $variableSymbol]) !== null;
     }

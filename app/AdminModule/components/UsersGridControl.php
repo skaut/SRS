@@ -52,7 +52,11 @@ class UsersGridControl extends Control
         $grid->setDataSource($this->userRepository->createQueryBuilder('user'));
         $grid->setColumnsHideable();
 
-        $grid->addGroupAction('Delete examples')->onSelect[] = [$this, 'deleteExamples']; //TODO akce
+        $grid->addGroupSelectAction('Send', [
+            'john'  => 'John',
+            'joe'   => 'Joe',
+            'frank' => 'Frank',
+        ])->onSelect[] = [$this, 'groupSend']; //TODO akce
 
         $grid->addColumnText('displayName', 'Jméno')
             ->setSortable()

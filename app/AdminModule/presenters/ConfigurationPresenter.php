@@ -7,10 +7,11 @@ use App\AdminModule\Forms\PaymentConfigurationFormFactory;
 use App\AdminModule\Forms\PaymentProofConfigurationFormFactory;
 use App\AdminModule\Forms\ProgramConfigurationFormFactory;
 use App\AdminModule\Forms\SeminarConfigurationFormFactory;
-use App\AdminModule\Forms\SkautIsActionConfigurationFormFactory;
+use App\AdminModule\Forms\SkautIsEventConfigurationFormFactory;
 use App\AdminModule\Forms\SystemConfigurationFormFactory;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\SettingsRepository;
+use App\Model\User\UserRepository;
 use Nette\Application\UI\Form;
 use Skautis\Skautis;
 
@@ -27,6 +28,12 @@ class ConfigurationPresenter extends AdminBasePresenter
      * @inject
      */
     public $customInputRepository;
+
+    /**
+     * @var UserRepository
+     * @inject
+     */
+    public $userRepository;
 
     /**
      * @var SeminarConfigurationFormFactory
@@ -53,10 +60,10 @@ class ConfigurationPresenter extends AdminBasePresenter
     public $paymentProofConfigurationFormFactory;
 
     /**
-     * @var SkautIsActionConfigurationFormFactory
+     * @var SkautIsEventConfigurationFormFactory
      * @inject
      */
-    public $skautIsActionConfigurationFormFactory;
+    public $skautIsEventConfigurationFormFactory;
 
     /**
      * @var SystemConfigurationFormFactory
@@ -85,7 +92,84 @@ class ConfigurationPresenter extends AdminBasePresenter
 
     public function renderSkautIs()
     {
-        $this->template->connected = true;
+        $eventId = $this->settingsRepository->getValue('skautis_event_id');
+        if ($eventId !== null) {
+            $this->template->event = $this->settingsRepository->getValue('skautis_event_name');
+            $this->template->connected = true;
+            $this->template->access = true;
+            $this->template->closed = false;
+
+            try {
+                $event = $this->skautIS->event->EventGeneralDetail([
+                    'ID_Login' => $this->skautIS->getUser()->getLoginId(),
+                    'ID' => $eventId
+                ]);
+                if ($event->ID_EventGeneralState != 'draft')
+                    $this->template->closed = true;
+            } catch (\Skautis\Wsdl\WsdlException $ex) {
+                $this->template->access = false;
+            }
+        }
+        else {
+            $this->template->connected = false;
+        }
+    }
+
+    public function handleDisconnect()
+    {
+        $this->settingsRepository->setValue('skautis_event_id', null);
+        $this->settingsRepository->setValue('skautis_event_name', null);
+
+        $this->flashMessage('admin.configuration.skautis_event_disconnect_successful', 'success');
+
+        $this->redirect('this');
+    }
+
+    public function handleSyncParticipants()
+    {
+        $participants = $this->userRepository->findUsersForSync();
+
+        $eventId = $this->settingsRepository->getValue('skautis_event_id');
+
+        try {
+            $skautISParticipants = $this->skautIS->event->ParticipantGeneralAll([
+                'ID_Login' => $this->skautIS->getUser()->getLoginId(),
+                'ID_EventGeneral' => $eventId
+            ]);
+
+            foreach ($skautISParticipants as $p) {
+                if ($p->CanDelete)
+                    $this->deleteParticipant($p->ID);
+            }
+
+            foreach ($participants as $p) {
+                $this->insertParticipant($p->getSkautISPersonId(), $eventId);
+            }
+
+            $this->flashMessage('admin.configuration.skautis_event_sync_successful', 'success');
+        } catch (\Skautis\Wsdl\WsdlException $ex) {
+            $this->flashMessage('admin.configuration.skautis_event_sync_unsuccessful', 'danger');
+        }
+
+        $this->redirect('this');
+    }
+
+    private function deleteParticipant($participantId)
+    {
+        $this->skautIS->event->ParticipantGeneralDelete([
+            'ID_Login' => $this->skautIS->getUser()->getLoginId(),
+            'ID' => $participantId,
+            'DeletePerson' => false
+        ]);
+    }
+
+    private function insertParticipant($participantId, $eventId)
+    {
+        $this->skautIS->event->ParticipantGeneralInsert([
+            'ID_Login' => $this->skautIS->getUser()->getLoginId(),
+            'ID_EventGeneral' => $eventId,
+            'ID_Person' => $participantId
+        ]);
     }
 
     public function createComponentSeminarConfigurationForm($name)
@@ -200,21 +284,23 @@ class ConfigurationPresenter extends AdminBasePresenter
         return $form;
     }
 
-    public function createComponentSkautIsActionConfigurationForm($name)
+    public function createComponentSkautIsEventConfigurationForm($name)
     {
-        $form = $this->skautIsActionConfigurationFormFactory->create();
-
-        $skautIsAction = $this->settingsRepository->getValue('skautis_action');
-        if ($skautIsAction) {
-            $form->setDefaults([
-                'skautisAction' => $skautIsAction
-            ]);
-        }
+        $form = $this->skautIsEventConfigurationFormFactory->create();
 
         $form->onSuccess[] = function (Form $form) {
             $values = $form->getValues();
 
-            $this->settingsRepository->setValue('skautis_action', $values['skautisAction']);
+            $eventId = $values['skautisEvent'];
+
+            $this->settingsRepository->setValue('skautis_event_id', $eventId);
+
+            $event = $this->skautIS->event->EventGeneralDetail([
+                'ID_Login' => $this->skautIS->getUser()->getLoginId(),
+                'ID' => $eventId
+            ]);
+
+            $this->settingsRepository->setValue('skautis_event_name', $event->DisplayName);
 
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
