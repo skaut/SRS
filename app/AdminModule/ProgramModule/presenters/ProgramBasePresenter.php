@@ -1,18 +1,19 @@
 <?php
 
-namespace App\AdminModule\Presenters;
+namespace App\AdminModule\ProgramModule\Presenters;
+
 
 use App\AdminModule\Presenters\AdminBasePresenter;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 
-class AclPresenter extends AdminBasePresenter
+abstract class ProgramBasePresenter extends AdminBasePresenter
 {
     public function startup()
     {
         parent::startup();
 
-        if (!$this->user->isAllowed(Resource::ACL, Permission::MANAGE)) {
+        if (!$this->user->isAllowed(Resource::PROGRAM, Permission::ACCESS)) {
             $this->flashMessage('admin.common.access_denied', 'danger', 'lock');
             $this->redirect(":Web:Page:default");
         }

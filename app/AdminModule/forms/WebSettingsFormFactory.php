@@ -5,7 +5,7 @@ namespace App\AdminModule\Forms;
 use App\Model\CMS\PageRepository;
 use Nette\Application\UI\Form;
 
-class SystemConfigurationFormFactory
+class WebSettingsFormFactory
 {
     /**
      * @var BaseFormFactory

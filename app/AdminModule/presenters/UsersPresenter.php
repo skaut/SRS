@@ -5,6 +5,8 @@ namespace App\AdminModule\Presenters;
 use App\AdminModule\Components\IUsersGridControlFactory;
 use App\AdminModule\Components\UsersGridControl;
 use App\AdminModule\Presenters\AdminBasePresenter;
+use App\Model\ACL\Permission;
+use App\Model\ACL\Resource;
 
 class UsersPresenter extends AdminBasePresenter
 {
@@ -13,6 +15,16 @@ class UsersPresenter extends AdminBasePresenter
      * @inject
      */
     public $usersGridControlFactory;
+
+    public function startup()
+    {
+        parent::startup();
+
+        if (!$this->user->isAllowed(Resource::USERS, Permission::MANAGE)) {
+            $this->flashMessage('admin.common.access_denied', 'danger', 'lock');
+            $this->redirect(":Web:Page:default");
+        }
+    }
 
     public function renderList() {
 

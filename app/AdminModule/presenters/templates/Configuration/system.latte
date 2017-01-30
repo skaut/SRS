@@ -2,5 +2,5 @@
 
 {block main}
     <h2>{_admin.configuration.system_heading}</h2>
-    {control systemConfigurationForm}
+    <a href="{link clearCache!}" class="btn btn-danger">{_admin.configuration.system_clear_cache}</a>
 {/block}

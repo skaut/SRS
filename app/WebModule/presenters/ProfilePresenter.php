@@ -60,7 +60,7 @@ class ProfilePresenter extends WebBasePresenter
 
     public function handleExportSchedule()
     {
-        // TODO export harmonogramu
+        //TODO export harmonogramu
     }
 
     protected function createComponentPersonalDetailsForm($name)

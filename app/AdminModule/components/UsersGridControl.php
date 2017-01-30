@@ -56,6 +56,12 @@ class UsersGridControl extends Control
             'john'  => 'John',
             'joe'   => 'Joe',
             'frank' => 'Frank',
+        ])->onSelect[] = [$this, 'groupSend'];
+
+        $grid->addGroupMultiSelectAction('SendMulti', [
+            'john'  => 'John',
+            'joe'   => 'Joe',
+            'frank' => 'Frank',
         ])->onSelect[] = [$this, 'groupSend']; //TODO akce
 
         $grid->addColumnText('displayName', 'Jméno')

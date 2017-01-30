@@ -50,6 +50,7 @@ services:
     - App\Model\ACL\ResourceRepository
     - App\Model\ACL\RoleRepository
     - App\Model\CMS\PageRepository
+    - App\Model\Mailing\MailRepository
     - App\Model\Program\ProgramRepository
     - App\Model\Settings\SettingsRepository
     - App\Model\Settings\CustomInput\CustomInputRepository
@@ -59,14 +60,26 @@ services:
     - App\WebModule\Forms\RolesFormFactory
     - App\WebModule\Forms\AdditionalInformationFormFactory
     - App\AdminModule\Forms\BaseFormFactory
+    - App\AdminModule\Forms\WebSettingsFormFactory
     - App\AdminModule\Forms\SeminarConfigurationFormFactory
     - App\AdminModule\Forms\ProgramConfigurationFormFactory
     - App\AdminModule\Forms\PaymentConfigurationFormFactory
     - App\AdminModule\Forms\PaymentProofConfigurationFormFactory
-    - App\AdminModule\Forms\SystemConfigurationFormFactory
     - App\AdminModule\Forms\SkautIsEventConfigurationFormFactory
-    - App\AdminModule\Components\IUsersGridControlFactory
     - App\AdminModule\Components\ICustomInputsGridControlFactory
+    - App\AdminModule\Components\IRolesGridControlFactory
+    - App\AdminModule\Components\IUsersGridControlFactory
+    - App\AdminModule\CMSModule\Components\IDocumentsGridControlFactory
+    - App\AdminModule\CMSModule\Components\IDocumentTagsGridControlFactory
+    - App\AdminModule\CMSModule\Components\IFaqGridControlFactory
+    - App\AdminModule\CMSModule\Components\INewsGridControlFactory
+    - App\AdminModule\CMSModule\Components\IPagesGridControlFactory
+    - App\AdminModule\CMSModule\Components\IMailHistoryGridControlFactory
+    - App\AdminModule\Components\IProgramBlocksGridControlFactory
+    - App\AdminModule\Components\IProgramCategoriesGridControlFactory
+    - App\AdminModule\Components\IProgramLoggedUsersGridControlFactory
+    - App\AdminModule\Components\IProgramNotLoggedUsersGridControlFactory
+    - App\AdminModule\Components\IRoomsGridControlFactory
 
 webloader:
     css:

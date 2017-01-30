@@ -11,28 +11,28 @@
                         <a href="{plink :Admin:Dashboard:default}">{_admin.menu.dashboard}</a>
                     </li>
                     {if $user->isAllowed($resourceCMS, $permissionManage)}
-                        <li n:class="$presenter->isLinkCurrent(':Admin:CMS:Page:*') ? active">
-                            <a href="{plink :Admin:CMS:Page:list}">{_admin.menu.cms}</a>
+                        <li n:class="$presenter->isLinkCurrent(':Admin:CMS:Pages:*') ? active">
+                            <a href="{plink :Admin:CMS:Pages:default}">{_admin.menu.cms}</a>
                         </li>
                     {/if}
                     {if $user->isAllowed($resourceProgram, $permissionAccess)}
-                        <li n:class="$presenter->isLinkCurrent(':Admin:Program:Block:*') ? active">
-                            <a href="{plink :Admin:Program:Block:list}">{_admin.menu.program}</a>
+                        <li n:class="$presenter->isLinkCurrent(':Admin:Program:Blocks:*') ? active">
+                            <a href="{plink :Admin:Program:Blocks:default}">{_admin.menu.program}</a>
                         </li>
                     {/if}
                     {if $user->isAllowed($resourceUsers, $permissionManage)}
                         <li n:class="$presenter->isLinkCurrent(':Admin:Users:*') ? active">
-                            <a href="{plink :Admin:Users:list}">{_admin.menu.users}</a>
+                            <a href="{plink :Admin:Users:default}">{_admin.menu.users}</a>
                         </li>
                     {/if}
                     {if $user->isAllowed($resourceACL, $permissionManage)}
                         <li n:class="$presenter->isLinkCurrent(':Admin:Acl:*') ? active">
-                            <a href="{plink :Admin:Acl:list}">{_admin.menu.acl}</a>
+                            <a href="{plink :Admin:Acl:default}">{_admin.menu.acl}</a>
                         </li>
                     {/if}
                     {if $user->isAllowed($resourceMailing, $permissionManage)}
-                        <li n:class="$presenter->isLinkCurrent(':Admin:Mailing:Mailing:') ? active">
-                            <a href="{plink :Admin:Mailing:Mailing:default}">{_admin.menu.mailing}</a> {* TODO rozsireni mailingu*}
+                        <li n:class="$presenter->isLinkCurrent(':Admin:Mailing:AutoMails:') ? active">
+                            <a href="{plink :Admin:Mailing:AutoMails:default}">{_admin.menu.mailing}</a> {* TODO rozsireni mailingu*}
                         </li>
                     {/if}
                     {if $user->isAllowed($resourceConfiguration, $permissionManage)}

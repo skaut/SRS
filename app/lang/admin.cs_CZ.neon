@@ -28,6 +28,11 @@ dashboard:
     text: "<p>Pokud jste v systému poprvé nebo s ním nejste zcela srozuměni, přečtěte si <a href=\"https://github.com/skaut/SRS/wiki/U%C5%BEivatelsk%C3%A1-p%C5%99%C3%ADru%C4%8Dka\" target=\"_blank\">uživatelskou příručku</a>.</p>"
 
 cms:
+#    footer: "Text v patičce"
+#    redirect_after_login: "Po přihlášení přesměrovat na"
+#    redirect_after_login_empty: "Vyberte stránku, na kterou budou uživatelé přesměrováni po přihlášení."
+#    display_users_roles: "zobrazovat uživatelské role"
+
 
 program:
 
@@ -115,10 +120,7 @@ configuration:
     skautis_event_closed: "Akce již byla ve skautIS uzavřena."
 
     system_heading: "Systém"
-    footer: "Text v patičce"
-    redirect_after_login: "Po přihlášení přesměrovat na"
-    redirect_after_login_empty: "Vyberte stránku, na kterou budou uživatelé přesměrováni po přihlášení."
-    display_users_roles: "zobrazovat uživatelské role"
+    system_clear_cache: "Vymazat cache"
 
     configuration_saved: "Konfigurace úspěšně uložena."
 

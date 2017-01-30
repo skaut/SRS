@@ -9,6 +9,8 @@ use App\AdminModule\Forms\ProgramConfigurationFormFactory;
 use App\AdminModule\Forms\SeminarConfigurationFormFactory;
 use App\AdminModule\Forms\SkautIsEventConfigurationFormFactory;
 use App\AdminModule\Forms\SystemConfigurationFormFactory;
+use App\Model\ACL\Permission;
+use App\Model\ACL\Resource;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\UserRepository;
@@ -66,12 +68,6 @@ class ConfigurationPresenter extends AdminBasePresenter
     public $skautIsEventConfigurationFormFactory;
 
     /**
-     * @var SystemConfigurationFormFactory
-     * @inject
-     */
-    public $systemConfigurationFormFactory;
-
-    /**
      * @var ICustomInputsGridControlFactory
      * @inject
      */
@@ -82,6 +78,16 @@ class ConfigurationPresenter extends AdminBasePresenter
      * @inject
      */
     public $skautIS;
+
+    public function startup()
+    {
+        parent::startup();
+
+        if (!$this->user->isAllowed(Resource::CONFIGURATION, Permission::MANAGE)) {
+            $this->flashMessage('admin.common.access_denied', 'danger', 'lock');
+            $this->redirect(":Web:Page:default");
+        }
+    }
 
     public function beforeRender()
     {
@@ -170,6 +176,10 @@ class ConfigurationPresenter extends AdminBasePresenter
             'ID_EventGeneral' => $eventId,
             'ID_Person' => $participantId
         ]);
+    }
+
+    public function handleClearCache() {
+        //TODO clear cache handler
     }
 
     public function createComponentSeminarConfigurationForm($name)
@@ -310,30 +320,30 @@ class ConfigurationPresenter extends AdminBasePresenter
         return $form;
     }
 
-    public function createComponentSystemConfigurationForm($name)
-    {
-        $form = $this->systemConfigurationFormFactory->create();
-
-        $form->setDefaults([
-            'footer' => $this->settingsRepository->getValue('footer'),
-            'redirectAfterLogin' => $this->settingsRepository->getValue('redirect_after_login'),
-            'displayUsersRoles' => $this->settingsRepository->getValue('display_users_roles')
-        ]);
-
-        $form->onSuccess[] = function (Form $form) {
-            $values = $form->getValues();
-
-            $this->settingsRepository->setValue('footer', $values['footer']);
-            $this->settingsRepository->setValue('redirect_after_login', $values['redirectAfterLogin']);
-            $this->settingsRepository->setValue('display_users_roles', $values['displayUsersRoles']);
-
-            $this->flashMessage('admin.configuration.configuration_saved', 'success');
-
-            $this->redirect('this');
-        };
-
-        return $form;
-    }
+//    public function createComponentSystemConfigurationForm($name)
+//    {
+//        $form = $this->systemConfigurationFormFactory->create();
+//
+//        $form->setDefaults([
+//            'footer' => $this->settingsRepository->getValue('footer'),
+//            'redirectAfterLogin' => $this->settingsRepository->getValue('redirect_after_login'),
+//            'displayUsersRoles' => $this->settingsRepository->getValue('display_users_roles')
+//        ]);
+//
+//        $form->onSuccess[] = function (Form $form) {
+//            $values = $form->getValues();
+//
+//            $this->settingsRepository->setValue('footer', $values['footer']);
+//            $this->settingsRepository->setValue('redirect_after_login', $values['redirectAfterLogin']);
+//            $this->settingsRepository->setValue('display_users_roles', $values['displayUsersRoles']);
+//
+//            $this->flashMessage('admin.configuration.configuration_saved', 'success');
+//
+//            $this->redirect('this');
+//        };
+//
+//        return $form;
+//    }
 
     public function createComponentCustomInputsGrid($name)
     {
