@@ -12,22 +12,26 @@
 
 {block main}
     <h2>{_admin.configuration.skautis_event_heading}</h2>
-    {if !$connected}
-        <div class="alert alert-info alert-forever">{_admin.configuration.skautis_event_note}</div>
-        {control skautIsEventConfigurationForm}
-    {else}
-        <div class="alert alert-info alert-forever">{_admin.configuration.skautis_event_name, ['name' => $event]}</div>
-        <a class="btn btn-danger" id="disconnect-button" href="{link disconnect!}">{_admin.configuration.skautis_event_disconnect}</a>
-    {/if}
+    <div class="well">
+        {if !$connected}
+            <div class="alert alert-info alert-forever">{_admin.configuration.skautis_event_note}</div>
+            {control skautIsEventConfigurationForm}
+        {else}
+            <div class="alert alert-info alert-forever">{_admin.configuration.skautis_event_name, ['name' => $event]}</div>
+            <a class="btn btn-danger" id="disconnect-button" href="{link disconnect!}">{_admin.configuration.skautis_event_disconnect}</a>
+        {/if}
+    </div>
 
     <h2>{_admin.configuration.skautis_event_sync_heading}</h2>
-    {if !$connected}
-        <div class="alert alert-warning alert-forever">{_admin.configuration.skautis_event_not_connected}</div>
-    {elseif !$access}
-        <div class="alert alert-warning alert-forever">{_admin.configuration.skautis_event_access_denied}</div>
-    {elseif $closed}
-        <div class="alert alert-warning alert-forever">{_admin.configuration.skautis_event_closed}</div>
-    {else}
-        <a class="btn btn-primary" href="{link syncParticipants!}">{_admin.configuration.skautis_event_sync}</a>
-    {/if}
+    <div class="well">
+        {if !$connected}
+            <div class="alert alert-warning alert-forever">{_admin.configuration.skautis_event_not_connected}</div>
+        {elseif !$access}
+            <div class="alert alert-warning alert-forever">{_admin.configuration.skautis_event_access_denied}</div>
+        {elseif $closed}
+            <div class="alert alert-warning alert-forever">{_admin.configuration.skautis_event_closed}</div>
+        {else}
+            <a class="btn btn-primary" href="{link syncParticipants!}">{_admin.configuration.skautis_event_sync}</a>
+        {/if}
+    </div>
 {/block}

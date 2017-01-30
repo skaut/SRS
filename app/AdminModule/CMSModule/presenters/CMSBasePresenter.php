@@ -19,4 +19,11 @@ abstract class CMSBasePresenter extends AdminBasePresenter
         }
     }
 
+    public function beforeRender()
+    {
+        parent::beforeRender();
+
+        $this->template->sidebarVisible = true;
+    }
+
 }

@@ -18,4 +18,11 @@ abstract class MailingBasePresenter extends AdminBasePresenter
             $this->redirect(":Web:Page:default");
         }
     }
+
+    public function beforeRender()
+    {
+        parent::beforeRender();
+
+        $this->template->sidebarVisible = true;
+    }
 }

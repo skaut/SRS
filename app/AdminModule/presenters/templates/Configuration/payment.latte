@@ -2,8 +2,12 @@
 
 {block main}
     <h2>{_admin.configuration.payment_heading}</h2>
-    {control paymentConfigurationForm}
+    <div class="well">
+        {control paymentConfigurationForm}
+    </div>
 
     <h2>{_admin.configuration.payment_proof_heading}</h2>
-    {control paymentProofConfigurationForm}
+    <div class="well">
+        {control paymentProofConfigurationForm}
+    </div>
 {/block}

@@ -1,0 +1,25 @@
+{block sidebar} {*TODO překlad*}
+    <div class="well">
+        <ul class="nav nav-pills nav-stacked">
+            <li role="presentation" {ifCurrent Pages:default}class="active"{/ifCurrent}>
+                <a href="{plink Pages:default}">Stránky</a>
+            </li>
+
+            <li role="presentation" {ifCurrent News:default}class="active"{/ifCurrent}>
+                <a href="{plink News:default}">Aktuality</a>
+            </li>
+
+            <li role="presentation" {ifCurrent Documents:default}class="active"{/ifCurrent}>
+                <a href="{plink Documents:default}">Dokumenty</a>
+            </li>
+
+            <li role="presentation" {ifCurrent Faq:default}class="active"{/ifCurrent}>
+                <a href="{plink Faq:default}">FAQ</a>
+            </li>
+
+            <li role="presentation" {ifCurrent Settings:default}class="active"{/ifCurrent}>
+                <a href="{plink Settings:default}">Nastavení</a>
+            </li>
+        </ul>
+    </div>
+{/block}
