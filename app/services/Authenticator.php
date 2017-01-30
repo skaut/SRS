@@ -31,20 +31,20 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
     private $settingsRepository;
 
     /**
-     * @var \Skautis\Skautis
+     * @var SkautIsService
      */
-    protected $skautIS;
+    protected $skautIsService;
 
     public function __construct(\Kdyby\Doctrine\EntityManager $em,
                                 \App\Model\User\UserRepository $userRepository,
                                 \App\Model\ACL\RoleRepository $roleRepository,
                                 \App\Model\Settings\SettingsRepository $settingsRepository,
-                                \Skautis\Skautis $skautIS)
+                                SkautIsService $skautIsService)
     {
         $this->em = $em;
         $this->userRepository = $userRepository;
         $this->roleRepository = $roleRepository;
-        $this->skautIS = $skautIS;
+        $this->skautIsService = $skautIsService;
     }
 
     /**
@@ -53,7 +53,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
      */
     function authenticate(array $credentials)
     {
-        $skautISUser = $this->skautIS->usr->UserDetail(['ID_Login' => $this->skautIS->getUser()->getLoginId()]);
+        $skautISUser = $this->skautIsService->getUserDetail();
 
         $user = $this->userRepository->findUserBySkautISUserId($skautISUser->ID);
         $newUser = $user === null;
@@ -88,7 +88,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
     }
 
     private function updateUserFromSkautIS(User $user, $skautISUser) {
-        $skautISPerson = $this->skautIS->org->PersonDetail(['ID_Login' => $this->skautIS->getUser()->getLoginId(), 'ID' => $skautISUser->ID_Person]);
+        $skautISPerson = $this->skautIsService->getPersonDetail($skautISUser->ID_Person);
 
         $user->setSkautISUserId($skautISUser->ID);
         $user->setSkautISPersonId($skautISUser->ID_Person);
@@ -106,9 +106,9 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
         $user->setLastLogin(new \DateTime("now"));
         $user->setMember($skautISUser->HasMembership);
 
-        $skautISUnitId = $this->skautIS->getUser()->getUnitId();
+        $skautISUnitId = $this->skautIsService->getUnitId();
         if ($skautISUnitId != null)
-            $user->setUnit($this->skautIS->org->UnitDetail(['ID_Login' => $this->skautIS->getUser()->getLoginId(), 'ID' => $skautISUnitId])->RegistrationNumber);
+            $user->setUnit($this->skautIsService->getUnitDetail($skautISUnitId)->RegistrationNumber);
         else
             $user->setUnit(null);
     }

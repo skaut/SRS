@@ -6,9 +6,7 @@ namespace App\WebModule\Presenters;
 use App\WebModule\Forms\AdditionalInformationFormFactory;
 use App\WebModule\Forms\PersonalDetailsFormFactory;
 use App\WebModule\Forms\RolesFormFactory;
-use Kdyby\Doctrine\EntityManager;
 use Nette\Application\UI\Form;
-use Skautis\Skautis;
 
 class ProfilePresenter extends WebBasePresenter
 {
@@ -103,39 +101,17 @@ class ProfilePresenter extends WebBasePresenter
             $this->userRepository->getEntityManager()->flush();
 
             try {
-                $skautISPerson = $this->skautIS->org->PersonDetail([
-                    'ID_Login' => $this->skautIS->getUser()->getLoginId(),
-                    'ID' => $editedUser->getSkautISPersonId(),
-                ], 'personDetailInput');
+                $this->skautIsService->updatePersonBasic($editedUser->getSkautISPersonId(), $editedUser->getSex(),
+                    $editedUser->getBirthdate(), $editedUser->getFirstName(), $editedUser->getLastName(),
+                    $editedUser->getNickName());
 
-                $this->skautIS->org->PersonUpdateBasic([
-                    'ID_Login' => $this->skautIS->getUser()->getLoginId(),
-                    'ID' => $editedUser->getSkautISPersonId(),
-                    'ID_Sex' => $editedUser->getSex(),
-                    'Birthday' => $editedUser->getBirthdate()->format('Y-m-d\TH:i:s'),
-                    'FirstName' => $editedUser->getFirstName(),
-                    'LastName' => $editedUser->getLastName(),
-                    'NickName' => $editedUser->getNickName()
-                ], 'personUpdateBasicInput');
-
-                $this->skautIS->org->PersonUpdateAddress([
-                    'ID_Login' => $this->skautIS->getUser()->getLoginId(),
-                    'ID' => $editedUser->getSkautISPersonId(),
-                    'Street' => $editedUser->getStreet(),
-                    'City' => $editedUser->getCity(),
-                    'Postcode' => $editedUser->getPostcode(),
-                    'State' => $editedUser->getState(),
-                    'PostalFirstLine' => $skautISPerson->PostalFirstLine,
-                    'PostalStreet' => $skautISPerson->PostalStreet,
-                    'PostalCity' => $skautISPerson->PostalCity,
-                    'PostalPostcode' => $skautISPerson->PostalPostcode,
-                    'PostalState' => $skautISPerson->PostalState
-                ], 'personUpdateAddressInput');
+                $this->skautIsService->updatePersonAddress($editedUser->getSkautISPersonId(), $editedUser->getStreet(),
+                    $editedUser->getCity(), $editedUser->getPostcode(), $editedUser->getState());
             } catch (\Skautis\Wsdl\WsdlException $ex) {
-                $this->presenter->flashMessage('personal_details_synchronization_failed', 'danger');
+                $this->presenter->flashMessage('web.profile.personal_details_synchronization_failed', 'danger');
             }
 
-            $this->flashMessage('personal_details_update_successful', 'success');
+            $this->flashMessage('web.profile.personal_details_update_successful', 'success');
 
             $this->redirect('this');
         };
@@ -209,7 +185,7 @@ class ProfilePresenter extends WebBasePresenter
 
             $this->userRepository->getEntityManager()->flush();
 
-            $this->flashMessage('additional_information_update_successfull', 'success');
+            $this->flashMessage('web.profile.additional_information_update_successfull', 'success');
 
             $this->redirect('this');
         };

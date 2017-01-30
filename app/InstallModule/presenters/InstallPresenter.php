@@ -5,8 +5,6 @@ namespace App\InstallModule\Presenters;
 use App\Commands\FixturesLoadCommand;
 use App\Commands\InitDataCommand;
 use Kdyby\Doctrine\Console\SchemaCreateCommand;
-use Nette\Application\UI;
-use Nette\Forms\ControlGroup;
 use Skautis\Config;
 use Skautis\Skautis;
 use Skautis\User;
@@ -28,12 +26,6 @@ class InstallPresenter extends InstallBasePresenter
      * @inject
      */
     public $application;
-
-    /**
-     * @var \Skautis\Skautis
-     * @inject
-     */
-    public $skautIS;
 
     /**
      * @var \Kdyby\Doctrine\EntityManager

@@ -2,21 +2,23 @@
 
 namespace App\Presenters;
 
+use App\Services\SkautIsService;
+
 class AuthPresenter extends BasePresenter
 {
     /**
-     * @var \Skautis\Skautis
+     * @var SkautIsService
      * @inject
      */
-    public $skautIS;
+    public $skautIsService;
 
     public function actionLogin($backlink = null) {
         if ($this->getHttpRequest()->getPost() == null) {
-            $loginUrl = $this->skautIS->getLoginUrl($backlink);
+            $loginUrl = $this->skautIsService->getLoginUrl($backlink);
             $this->redirectUrl($loginUrl);
         }
 
-        $this->skautIS->setLoginData($_POST);
+        $this->skautIsService->setLoginData($_POST);
         $this->user->login();
         $this->user->setExpiration('+30 minutes');
         $this->redirectReturnUrl($this->getParameter('ReturnUrl'));
@@ -25,7 +27,7 @@ class AuthPresenter extends BasePresenter
     public function actionLogout() {
         if ($this->user->isLoggedIn()) {
             $this->user->logout(true);
-            $logoutUrl = $this->skautIS->getLogoutUrl();
+            $logoutUrl = $this->skautIsService->getLogoutUrl();
             $this->redirectUrl($logoutUrl);
         }
         $this->redirect(':Web:Page:default');

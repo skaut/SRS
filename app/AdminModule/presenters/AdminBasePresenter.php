@@ -4,49 +4,47 @@ namespace App\AdminModule\Presenters;
 
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
+use App\Model\ACL\ResourceRepository;
+use App\Model\ACL\RoleRepository;
+use App\Model\Settings\SettingsRepository;
+use App\Model\User\UserRepository;
 use App\Presenters\BasePresenter;
 use App\Services\Authorizator;
-use Skautis\Skautis;
+use App\Services\SkautIsService;
 use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\JavaScriptLoader;
 
 abstract class AdminBasePresenter extends BasePresenter
 {
     /**
-     * @var \App\Model\ACL\ResourceRepository
+     * @var ResourceRepository
      * @inject
      */
     public $resourceRepository;
 
     /**
-     * @var \App\Model\ACL\RoleRepository
+     * @var RoleRepository
      * @inject
      */
     public $roleRepository;
 
     /**
-     * @var \App\Model\CMS\PageRepository
-     * @inject
-     */
-    public $pageRepository;
-
-    /**
-     * @var \App\Model\Settings\SettingsRepository
+     * @var SettingsRepository
      * @inject
      */
     public $settingsRepository;
 
     /**
-     * @var \App\Model\User\UserRepository
+     * @var UserRepository
      * @inject
      */
     public $userRepository;
 
     /**
-     * @var Skautis
+     * @var SkautIsService
      * @inject
      */
-    public $skautIS;
+    public $skautIsService;
 
     /**
      * @var User
@@ -73,7 +71,7 @@ abstract class AdminBasePresenter extends BasePresenter
     {
         parent::startup();
 
-        if ($this->user->isLoggedIn() && !$this->skautIS->getUser()->isLoggedIn(true))
+        if ($this->user->isLoggedIn() && !$this->skautIsService->isLoggedIn())
             $this->user->logout(true);
 
         $this->user->setAuthorizator(new Authorizator($this->roleRepository, $this->resourceRepository));

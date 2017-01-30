@@ -8,14 +8,13 @@ use App\AdminModule\Forms\PaymentProofConfigurationFormFactory;
 use App\AdminModule\Forms\ProgramConfigurationFormFactory;
 use App\AdminModule\Forms\SeminarConfigurationFormFactory;
 use App\AdminModule\Forms\SkautIsEventConfigurationFormFactory;
-use App\AdminModule\Forms\SystemConfigurationFormFactory;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\UserRepository;
+use App\Services\SkautIsService;
 use Nette\Application\UI\Form;
-use Skautis\Skautis;
 
 class ConfigurationPresenter extends AdminBasePresenter
 {
@@ -74,10 +73,10 @@ class ConfigurationPresenter extends AdminBasePresenter
     public $customInputsGridControlFactory;
 
     /**
-     * @var Skautis
+     * @var SkautIsService
      * @inject
      */
-    public $skautIS;
+    public $skautIsService;
 
     public function startup()
     {
@@ -106,11 +105,7 @@ class ConfigurationPresenter extends AdminBasePresenter
             $this->template->closed = false;
 
             try {
-                $event = $this->skautIS->event->EventGeneralDetail([
-                    'ID_Login' => $this->skautIS->getUser()->getLoginId(),
-                    'ID' => $eventId
-                ]);
-                if ($event->ID_EventGeneralState != 'draft')
+                if (!$this->skautIsService->isEventDraft($eventId))
                     $this->template->closed = true;
             } catch (\Skautis\Wsdl\WsdlException $ex) {
                 $this->template->access = false;
@@ -138,44 +133,13 @@ class ConfigurationPresenter extends AdminBasePresenter
         $eventId = $this->settingsRepository->getValue('skautis_event_id');
 
         try {
-            $skautISParticipants = $this->skautIS->event->ParticipantGeneralAll([
-                'ID_Login' => $this->skautIS->getUser()->getLoginId(),
-                'ID_EventGeneral' => $eventId
-            ]);
-
-            foreach ($skautISParticipants as $p) {
-                if ($p->CanDelete)
-                    $this->deleteParticipant($p->ID);
-            }
-
-            foreach ($participants as $p) {
-                $this->insertParticipant($p->getSkautISPersonId(), $eventId);
-            }
-
+            $this->skautIsService->syncParticipants($eventId, $participants);
             $this->flashMessage('admin.configuration.skautis_event_sync_successful', 'success');
         } catch (\Skautis\Wsdl\WsdlException $ex) {
             $this->flashMessage('admin.configuration.skautis_event_sync_unsuccessful', 'danger');
         }
 
         $this->redirect('this');
-    }
-
-    private function deleteParticipant($participantId)
-    {
-        $this->skautIS->event->ParticipantGeneralDelete([
-            'ID_Login' => $this->skautIS->getUser()->getLoginId(),
-            'ID' => $participantId,
-            'DeletePerson' => false
-        ]);
-    }
-
-    private function insertParticipant($participantId, $eventId)
-    {
-        $this->skautIS->event->ParticipantGeneralInsert([
-            'ID_Login' => $this->skautIS->getUser()->getLoginId(),
-            'ID_EventGeneral' => $eventId,
-            'ID_Person' => $participantId
-        ]);
     }
 
     public function handleClearCache() {
@@ -305,12 +269,7 @@ class ConfigurationPresenter extends AdminBasePresenter
 
             $this->settingsRepository->setValue('skautis_event_id', $eventId);
 
-            $event = $this->skautIS->event->EventGeneralDetail([
-                'ID_Login' => $this->skautIS->getUser()->getLoginId(),
-                'ID' => $eventId
-            ]);
-
-            $this->settingsRepository->setValue('skautis_event_name', $event->DisplayName);
+            $this->settingsRepository->setValue('skautis_event_name', $this->skautIsService->getEventDisplayName($eventId));
 
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
 

@@ -2,8 +2,8 @@
 
 namespace App\AdminModule\Forms;
 
+use App\Services\SkautIsService;
 use Nette\Application\UI\Form;
-use Skautis\Skautis;
 
 class SkautIsEventConfigurationFormFactory
 {
@@ -13,14 +13,14 @@ class SkautIsEventConfigurationFormFactory
     private $baseFormFactory;
 
     /**
-     * @var Skautis
+     * @var SkautIsService
      */
-    private $skautIS;
+    private $skautIsService;
 
-    public function __construct(BaseFormFactory $baseFormFactory, Skautis $skautis)
+    public function __construct(BaseFormFactory $baseFormFactory, SkautIsService $skautIsService)
     {
         $this->baseFormFactory = $baseFormFactory;
-        $this->skautIS = $skautis;
+        $this->skautIsService = $skautIsService;
     }
 
     public function create()
@@ -45,10 +45,7 @@ class SkautIsEventConfigurationFormFactory
     {
         $choices = [];
         try {
-            $skautIsEvents = $this->skautIS->event->EventGeneralAll([
-                'ID_Login' => $this->skautIS->getUser()->getLoginId(),
-                'ID_EventGeneralState' => 'draft'
-            ]);
+            $skautIsEvents = $this->skautIsService->getDraftEvents();
             foreach ($skautIsEvents as $e)
                 $choices[$e->ID] = $e->DisplayName;
         } catch (\Skautis\Wsdl\WsdlException $ex) { }
