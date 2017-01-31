@@ -6,6 +6,7 @@ use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
+use Nette\Application\UI\Form;
 use Ublaboo\DataGrid\DataGrid;
 
 class CustomInputsGridControl extends Control
@@ -56,8 +57,7 @@ class CustomInputsGridControl extends Control
         };
         $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
 
-        $grid->addInlineEdit()
-            ->onControlAdd[] = function($container) {
+        $grid->addInlineEdit()->onControlAdd[] = function($container) {
             $container->addText('name', '');
         };
         $grid->getInlineEdit()->onSetDefaults[] = function($container, $item) {
@@ -76,18 +76,25 @@ class CustomInputsGridControl extends Control
     }
 
     public function add($values) {
-        switch ($values['type']) {
-            case 'text':
-                $this->customInputRepository->createText($values['name']);
-                break;
-
-            case 'checkbox':
-                $this->customInputRepository->createCheckBox($values['name']);
-                break;
-        }
-
         $p = $this->getPresenter();
-        $p->flashMessage('admin.configuration.application_input_added', 'success');
+
+        $name = $values['name'];
+
+        if (!$name) {
+            $p->flashMessage('admin.configuration.application_input_name_empty', 'danger');
+        }
+        else {
+            switch ($values['type']) {
+                case 'text':
+                    $this->customInputRepository->addText($name);
+                    break;
+
+                case 'checkbox':
+                    $this->customInputRepository->addCheckBox($name);
+                    break;
+            }
+            $p->flashMessage('admin.configuration.application_input_added', 'success');
+        }
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
@@ -99,10 +106,17 @@ class CustomInputsGridControl extends Control
 
     public function edit($id, $values)
     {
-        $this->customInputRepository->renameInput($id, $values['name']);
-
         $p = $this->getPresenter();
-        $p->flashMessage('admin.configuration.application_input_edited', 'success');
+
+        $name = $values['name'];
+
+        if (!$name) {
+            $p->flashMessage('admin.configuration.application_input_name_empty', 'danger');
+        }
+        else {
+            $this->customInputRepository->renameInput($id, $name);
+            $p->flashMessage('admin.configuration.application_input_edited', 'success');
+        }
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');

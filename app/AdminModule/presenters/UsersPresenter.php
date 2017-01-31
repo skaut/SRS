@@ -29,7 +29,7 @@ class UsersPresenter extends AdminBasePresenter
 
     }
 
-    public function createComponentUsersGrid($name)
+    protected function createComponentUsersGrid($name)
     {
         return $this->usersGridControlFactory->create($name);
     }

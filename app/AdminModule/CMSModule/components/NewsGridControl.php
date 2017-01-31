@@ -3,7 +3,9 @@
 namespace App\AdminModule\CMSModule\Components;
 
 
-class NewsGridControl
+use Nette\Application\UI\Control;
+
+class NewsGridControl extends Control
 {
 
 }

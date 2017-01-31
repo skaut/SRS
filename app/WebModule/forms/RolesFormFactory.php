@@ -56,8 +56,8 @@ class RolesFormFactory
 
         $rolesSelect = $form->addMultiSelect('roles', 'web.profile.roles')->setItems($availableRolesOptions)
             ->addRule(Form::FILLED, 'web.profile.no_role_selected')
-            ->addRule([$this, 'validateRolesCapacities'], 'web.profile.capacity_occupied', null)
-            ->addRule([$this, 'validateRolesRegisterable'], 'web.profile.role_is_not_registerable', null)
+            ->addRule([$this, 'validateRolesCapacities'], 'web.profile.capacity_occupied')
+            ->addRule([$this, 'validateRolesRegisterable'], 'web.profile.role_is_not_registerable')
             ->setDisabled(!$enabled);
 
         foreach ($availableRoles as $role) {

@@ -1,9 +1,11 @@
 <?php
 
-namespace App\AdminModule\Components;
+namespace App\AdminModule\ProgramModule\Components;
 
 
-class RoomsGridControl
+use Nette\Application\UI\Control;
+
+class RoomsGridControl extends Control
 {
 
 }

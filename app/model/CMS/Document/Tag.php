@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="TagRepository")
  * @ORM\Table(name="tag")
  */
 class Tag
@@ -32,5 +32,53 @@ class Tag
     public function __construct()
     {
         $this->documents = new ArrayCollection();
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getDocuments()
+    {
+        return $this->documents;
+    }
+
+    /**
+     * @param ArrayCollection $documents
+     */
+    public function setDocuments($documents)
+    {
+        $this->documents = $documents;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
     }
 }

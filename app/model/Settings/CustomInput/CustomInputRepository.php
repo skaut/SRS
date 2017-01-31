@@ -6,7 +6,7 @@ use Kdyby\Doctrine\EntityRepository;
 
 class CustomInputRepository extends EntityRepository
 {
-    public function createCheckBox($name) {
+    public function addCheckBox($name) {
         $checkbox = new CustomCheckbox();
         $checkbox->setName($name);
         $checkbox->setPosition($this->countBy() + 1);
@@ -14,7 +14,7 @@ class CustomInputRepository extends EntityRepository
         $this->_em->flush();
     }
 
-    public function createText($name) {
+    public function addText($name) {
         $text = new CustomText();
         $text->setName($name);
         $text->setPosition($this->countBy() + 1);

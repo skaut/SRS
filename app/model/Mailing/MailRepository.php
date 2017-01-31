@@ -3,7 +3,9 @@
 namespace App\Model\Mailing;
 
 
-class MailRepository
+use Kdyby\Doctrine\EntityRepository;
+
+class MailRepository extends EntityRepository
 {
 
 }

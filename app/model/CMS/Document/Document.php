@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="DocumentRepository")
  * @ORM\Table(name="document")
  */
 class Document

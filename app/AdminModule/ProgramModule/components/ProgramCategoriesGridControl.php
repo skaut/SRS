@@ -1,9 +1,11 @@
 <?php
 
-namespace App\AdminModule\Components;
+namespace App\AdminModule\ProgramModule\Components;
 
 
-class ProgramCategoriesGridControl
+use Nette\Application\UI\Control;
+
+class ProgramCategoriesGridControl extends Control
 {
 
 }

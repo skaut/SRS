@@ -3,7 +3,9 @@
 namespace App\AdminModule\CMSModule\Components;
 
 
-class PagesGridControl
+use Nette\Application\UI\Control;
+
+class PagesGridControl extends Control
 {
 
 }

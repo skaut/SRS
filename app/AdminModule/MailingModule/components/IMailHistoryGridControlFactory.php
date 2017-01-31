@@ -1,6 +1,6 @@
 <?php
 
-namespace App\AdminModule\CMSModule\Components;
+namespace App\AdminModule\MailingModule\Components;
 
 interface IMailHistoryGridControlFactory
 {

@@ -3,7 +3,9 @@
 namespace App\AdminModule\CMSModule\Components;
 
 
-class FaqGridControl
+use Nette\Application\UI\Control;
+
+class FaqGridControl extends Control
 {
 
 }

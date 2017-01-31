@@ -1,24 +1,24 @@
-{block sidebar} {*TODO překlad*}
+{block sidebar}
     <div class="well">
         <ul class="nav nav-pills nav-stacked">
             <li role="presentation" {ifCurrent Pages:default}class="active"{/ifCurrent}>
-                <a href="{plink Pages:default}">Stránky</a>
+                <a href="{plink Pages:default}">{_admin.cms.menu_pages}</a>
             </li>
 
             <li role="presentation" {ifCurrent News:default}class="active"{/ifCurrent}>
-                <a href="{plink News:default}">Aktuality</a>
+                <a href="{plink News:default}">{_admin.cms.menu_news}</a>
             </li>
 
             <li role="presentation" {ifCurrent Documents:default}class="active"{/ifCurrent}>
-                <a href="{plink Documents:default}">Dokumenty</a>
+                <a href="{plink Documents:default}">{_admin.cms.menu_documents}</a>
             </li>
 
             <li role="presentation" {ifCurrent Faq:default}class="active"{/ifCurrent}>
-                <a href="{plink Faq:default}">FAQ</a>
+                <a href="{plink Faq:default}">{_admin.cms.menu_faq}</a>
             </li>
 
             <li role="presentation" {ifCurrent Settings:default}class="active"{/ifCurrent}>
-                <a href="{plink Settings:default}">Nastavení</a>
+                <a href="{plink Settings:default}">{_admin.cms.menu_settings}</a>
             </li>
         </ul>
     </div>

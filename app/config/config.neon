@@ -53,11 +53,15 @@ services:
     - App\Services\ExportService
     - App\Model\ACL\ResourceRepository
     - App\Model\ACL\RoleRepository
+    - App\Model\CMS\Document\DocumentRepository
+    - App\Model\CMS\Document\TagRepository
+    - App\Model\CMS\FaqRepository
+    - App\Model\CMS\NewsRepository
     - App\Model\CMS\PageRepository
     - App\Model\Mailing\MailRepository
     - App\Model\Program\ProgramRepository
-    - App\Model\Settings\SettingsRepository
     - App\Model\Settings\CustomInput\CustomInputRepository
+    - App\Model\Settings\SettingsRepository
     - App\Model\User\UserRepository
     - App\WebModule\Forms\BaseFormFactory
     - App\WebModule\Forms\PersonalDetailsFormFactory
@@ -78,12 +82,12 @@ services:
     - App\AdminModule\CMSModule\Components\IFaqGridControlFactory
     - App\AdminModule\CMSModule\Components\INewsGridControlFactory
     - App\AdminModule\CMSModule\Components\IPagesGridControlFactory
-    - App\AdminModule\CMSModule\Components\IMailHistoryGridControlFactory
-    - App\AdminModule\Components\IProgramBlocksGridControlFactory
-    - App\AdminModule\Components\IProgramCategoriesGridControlFactory
-    - App\AdminModule\Components\IProgramLoggedUsersGridControlFactory
-    - App\AdminModule\Components\IProgramNotLoggedUsersGridControlFactory
-    - App\AdminModule\Components\IRoomsGridControlFactory
+    - App\AdminModule\MailingModule\Components\IMailHistoryGridControlFactory
+    - App\AdminModule\ProgramModule\Components\IProgramBlocksGridControlFactory
+    - App\AdminModule\ProgramModule\Components\IProgramCategoriesGridControlFactory
+    - App\AdminModule\ProgramModule\Components\IProgramLoggedUsersGridControlFactory
+    - App\AdminModule\ProgramModule\Components\IProgramNotLoggedUsersGridControlFactory
+    - App\AdminModule\ProgramModule\Components\IRoomsGridControlFactory
 
 webloader:
     css:

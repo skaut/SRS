@@ -1,28 +1,28 @@
-{block sidebar} {*TODO překlad*}
+{block sidebar}
     <div class="well">
         <ul class="nav nav-pills nav-stacked">
             <li role="presentation" {ifCurrent Configuration:seminar}class="active"{/ifCurrent}>
-                <a href="{plink Configuration:seminar}">Seminář</a>
+                <a href="{plink Configuration:seminar}">{_admin.configuration.menu_seminar}</a>
             </li>
 
             <li role="presentation" {ifCurrent Configuration:program}class="active"{/ifCurrent}>
-                <a href="{plink Configuration:program}">Program</a>
+                <a href="{plink Configuration:program}">{_admin.configuration.menu_program}</a>
             </li>
 
             <li role="presentation" {ifCurrent Configuration:payment}class="active"{/ifCurrent}>
-                <a href="{plink Configuration:payment}">Platba a doklady</a>
+                <a href="{plink Configuration:payment}">{_admin.configuration.menu_payment}</a>
             </li>
 
             <li role="presentation" {ifCurrent Configuration:application}class="active"{/ifCurrent}>
-                <a href="{plink Configuration:application}">Přihláška</a>
+                <a href="{plink Configuration:application}">{_admin.configuration.menu_application}</a>
             </li>
 
             <li role="presentation" {ifCurrent Configuration:skautIs}class="active"{/ifCurrent}>
-                <a href="{plink Configuration:skautIs}">SkautIS</a>
+                <a href="{plink Configuration:skautIs}">{_admin.configuration.menu_skautis}</a>
             </li>
 
             <li role="presentation" {ifCurrent Configuration:system}class="active"{/ifCurrent}>
-                <a href="{plink Configuration:system}">Systém</a>
+                <a href="{plink Configuration:system}">{_admin.configuration.menu_system}</a>
             </li>
         </ul>
     </div>

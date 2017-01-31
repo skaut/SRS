@@ -3,7 +3,9 @@
 namespace App\AdminModule\Components;
 
 
-class RolesGridControl
+use Nette\Application\UI\Control;
+
+class RolesGridControl extends Control
 {
 
 }

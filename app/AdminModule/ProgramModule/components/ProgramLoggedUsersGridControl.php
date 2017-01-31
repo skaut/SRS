@@ -1,9 +1,11 @@
 <?php
 
-namespace App\AdminModule\Components;
+namespace App\AdminModule\ProgramModule\Components;
 
 
-class ProgramLoggedUsersGridControl
+use Nette\Application\UI\Control;
+
+class ProgramLoggedUsersGridControl extends Control
 {
 
 }

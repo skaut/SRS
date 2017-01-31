@@ -13,7 +13,6 @@ common:
     login_required: "Pro přístup do administrace musíte být přihlášeni."
     access_denied: "Pro přístup k této stránce nemáte oprávnění."
 
-
 menu:
     dashboard: "Úvod"
     cms: "Web"
@@ -28,6 +27,32 @@ dashboard:
     text: "<p>Pokud jste v systému poprvé nebo s ním nejste zcela srozuměni, přečtěte si <a href=\"https://github.com/skaut/SRS/wiki/U%C5%BEivatelsk%C3%A1-p%C5%99%C3%ADru%C4%8Dka\" target=\"_blank\">uživatelskou příručku</a>.</p>"
 
 cms:
+    menu_pages: "Stránky"
+    menu_news: "Aktuality"
+    menu_documents: "Dokumenty"
+    menu_faq: "FAQ"
+    menu_settings: "Nastavení"
+
+    pages_heading: "Stránky"
+
+    news_heading: "Aktuality"
+
+    documents_heading: "Dokumenty"
+
+    tags_heading: "Štítky dokumentů"
+    tags_name: "Název"
+    tags_name_empty: "Název štítku nesmí být prázdný."
+    tags_name_not_unique: "Název štítku musí být unikátní."
+    tags_delete_confirm: "Opravdu chcete odstranit štítek \"%s\"?"
+    tags_deleted: "Štítek byl úspěšně odstraněn."
+    tags_added: "Štítek byl úspěšně přidán."
+    tags_edited: "Štítek byl úspěšně upraven."
+
+
+    faq_heading: "FAQ"
+
+    settings_heading: "Nastavení"
+
 #    footer: "Text v patičce"
 #    redirect_after_login: "Po přihlášení přesměrovat na"
 #    redirect_after_login_empty: "Vyberte stránku, na kterou budou uživatelé přesměrováni po přihlášení."
@@ -43,6 +68,13 @@ acl:
 mailing:
 
 configuration:
+    menu_seminar: "Seminář"
+    menu_program: "Program"
+    menu_payment: "Platba a doklady"
+    menu_application: "Přihláška"
+    menu_skautis: "SkautIS"
+    menu_system: "Systém"
+
     seminar_heading: "Seminář"
     seminar_name: "Název semináře"
     seminar_name_empty: "Zadejte název semináře."
@@ -96,6 +128,7 @@ configuration:
     custom_inputs_heading: "Vlastní pole"
     custom_inputs_name: "Název"
     custom_inputs_type: "Typ"
+    application_input_name_empty: "Název pole nesmí být prázdný."
     application_input_added: "Pole bylo úspěšně přidáno."
     application_input_edited: "Pole bylo úspěšně upraveno."
     application_input_delete_confirm: "Opravdu chcete odstranit pole \"%s\"?"

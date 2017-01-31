@@ -147,7 +147,7 @@ class ConfigurationPresenter extends AdminBasePresenter
         //TODO clear cache handler
     }
 
-    public function createComponentSeminarConfigurationForm($name)
+    protected function createComponentSeminarConfigurationForm($name)
     {
         $form = $this->seminarConfigurationFormFactory->create();
 
@@ -176,7 +176,7 @@ class ConfigurationPresenter extends AdminBasePresenter
         return $form;
     }
 
-    public function createComponentProgramConfigurationForm($name)
+    protected function createComponentProgramConfigurationForm($name)
     {
         $form = $this->programConfigurationFormFactory->create();
 
@@ -209,7 +209,7 @@ class ConfigurationPresenter extends AdminBasePresenter
         return $form;
     }
 
-    public function createComponentPaymentConfigurationForm($name)
+    protected function createComponentPaymentConfigurationForm($name)
     {
         $form = $this->paymentConfigurationFormFactory->create();
 
@@ -232,7 +232,7 @@ class ConfigurationPresenter extends AdminBasePresenter
         return $form;
     }
 
-    public function createComponentPaymentProofConfigurationForm($name)
+    protected function createComponentPaymentProofConfigurationForm($name)
     {
         $form = $this->paymentProofConfigurationFormFactory->create();
 
@@ -259,7 +259,7 @@ class ConfigurationPresenter extends AdminBasePresenter
         return $form;
     }
 
-    public function createComponentSkautIsEventConfigurationForm($name)
+    protected function createComponentSkautIsEventConfigurationForm($name)
     {
         $form = $this->skautIsEventConfigurationFormFactory->create();
 
@@ -280,7 +280,7 @@ class ConfigurationPresenter extends AdminBasePresenter
         return $form;
     }
 
-//    public function createComponentSystemConfigurationForm($name)
+//    protected function createComponentSystemConfigurationForm($name)
 //    {
 //        $form = $this->systemConfigurationFormFactory->create();
 //
@@ -305,7 +305,7 @@ class ConfigurationPresenter extends AdminBasePresenter
 //        return $form;
 //    }
 
-    public function createComponentCustomInputsGrid($name)
+    protected function createComponentCustomInputsGrid($name)
     {
         return $this->customInputsGridControlFactory->create($name);
     }

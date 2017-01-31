@@ -23,13 +23,13 @@ class Mail
     protected $subject;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Model\User\User", cascade={"persist"})
      * @var User
      */
     protected $toUser;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Role", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Model\ACL\Role", cascade={"persist"})
      * @var Role
      */
     protected $toRole;

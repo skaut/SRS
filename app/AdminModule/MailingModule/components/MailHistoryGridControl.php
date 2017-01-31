@@ -1,9 +1,11 @@
 <?php
 
-namespace App\AdminModule\CMSModule\Components;
+namespace App\AdminModule\MailingModule\Components;
 
 
-class MailHistoryGridControl
+use Nette\Application\UI\Control;
+
+class MailHistoryGridControl extends Control
 {
 
 }

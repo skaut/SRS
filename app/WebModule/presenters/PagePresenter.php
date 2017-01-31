@@ -43,57 +43,57 @@ class PagePresenter extends WebBasePresenter
         $this->template->sidebarVisible = $page->hasContents('sidebar');
     }
 
-    public function createComponentApplicationContent($content)
+    protected function createComponentApplicationContent($content)
     {
         return new ApplicationContentControl;
     }
 
-    public function createComponentBlocksContent($content)
+    protected function createComponentBlocksContent($content)
     {
         return new BlocksContentControl;
     }
 
-    public function createComponentCapacitiesContent($content)
+    protected function createComponentCapacitiesContent($content)
     {
         return new CapacitiesContentControl;
     }
 
-    public function createComponentDocumentContent($content)
+    protected function createComponentDocumentContent($content)
     {
         return new DocumentContentControl;
     }
 
-    public function createComponentFaqContent($content)
+    protected function createComponentFaqContent($content)
     {
         return new FaqContentControl;
     }
 
-    public function createComponentHtmlContent($content)
+    protected function createComponentHtmlContent($content)
     {
         return new HtmlContentControl;
     }
 
-    public function createComponentImageContent($content)
+    protected function createComponentImageContent($content)
     {
         return new ImageContentControl;
     }
 
-    public function createComponentNewsContent($content)
+    protected function createComponentNewsContent($content)
     {
         return new NewsContentControl;
     }
 
-    public function createComponentProgramsContent($content)
+    protected function createComponentProgramsContent($content)
     {
         return new ProgramsContentControl;
     }
 
-    public function createComponentTextContent($content)
+    protected function createComponentTextContent($content)
     {
         return new TextContentControl;
     }
 
-    public function createComponentUsersContent($content)
+    protected function createComponentUsersContent($content)
     {
         return new UsersContentControl;
     }
