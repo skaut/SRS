@@ -3,7 +3,9 @@
 namespace App\Services;
 
 
-class MailService
+use Nette;
+
+class MailService extends Nette\Object
 {
 
 }

@@ -3,7 +3,9 @@
 namespace App\Services;
 
 
-class PrintService
+use Nette;
+
+class PrintService extends Nette\Object
 {
 
 }

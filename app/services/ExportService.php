@@ -3,7 +3,9 @@
 namespace App\Services;
 
 
-class ExportService
+use Nette;
+
+class ExportService extends Nette\Object
 {
 
 }

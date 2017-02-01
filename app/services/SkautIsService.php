@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+
+use Nette;
 use Skautis\Skautis;
 
-class SkautIsService
+class SkautIsService extends Nette\Object
 {
     /**
      * @var Skautis

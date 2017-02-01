@@ -49,7 +49,7 @@ class SettingsFixture extends AbstractFixture
         $settings[] = new Settings('skautis_event_id', null);
         $settings[] = new Settings('skautis_event_name', null);
 
-        $settings[] = new Settings('logo', '/img/logo.png');
+        $settings[] = new Settings('logo', 'logo.png');
         $settings[] = new Settings('footer', $this->translator->translate('common.settings.default_value.footer', ['year' => $today->format('Y')]));
 
         $settings[] = new Settings('company', $this->translator->translate('common.settings.default_value.company'));

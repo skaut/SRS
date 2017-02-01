@@ -45,8 +45,8 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
                         <div class="navbar-btn">
-                            <a id="user-button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="fa fa-user" aria-hidden="true"></span>
+                            <a id="user-button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                <span class="fa fa-user"></span>
                                 {$dbuser->getUsername()}
                                 <span class="caret"></span>
                             </a>
@@ -54,13 +54,13 @@
                             <ul id="user-menu" class="dropdown-menu">
                                 <li>
                                     <a class="dropdown-item">
-                                        <span class="fa fa-users" aria-hidden="true"></span>
+                                        <span class="fa fa-users"></span>
                                         {foreach $user->roles as $role}{$role}{sep}, {/sep}{/foreach}
                                     </a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item" href="{plink :Auth:logout}">
-                                        <span class="fa fa-sign-out" aria-hidden="true"></span>
+                                        <span class="fa fa-sign-out"></span>
                                         {_admin.common.logout}
                                     </a>
                                 </li>

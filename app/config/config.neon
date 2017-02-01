@@ -48,6 +48,7 @@ services:
     router: @App\RouterFactory::createRouter
     authenticator: App\Services\Authenticator
     - App\Services\SkautIsService
+    - App\Services\FilesService(%wwwDir%/files)
     - App\Services\MailService
     - App\Services\PrintService
     - App\Services\ExportService
@@ -109,8 +110,8 @@ webloader:
                 - %appDir%/../vendor/twbs/bootstrap/dist/css/bootstrap.min.css
                 - libs/font-awesome.min.css
                 - libs/datagrid/happy.min.css
-                - libs/datagrid/datagrid.min.css
-                - libs/datagrid/datagrid-spinners.min.css
+                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid.min.css
+                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid-spinners.min.css
                 - libs/bootstrap-select.min.css
                 - libs/bootstrap-datetimepicker.css
                 - admin/style.css
@@ -150,9 +151,9 @@ webloader:
                 - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.js
                 - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.cs.js
                 - libs/jquery-ui-sortable.min.js
-                - libs/datagrid/datagrid.min.js
-                - libs/datagrid/datagrid-instant-url-refresh.min.js
-                - libs/datagrid/datagrid-spinners.min.js
+                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid.min.js
+                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid-instant-url-refresh.min.js
+                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid-spinners.min.js
                 - libs/bootstrap-select/bootstrap-select.min.js
                 - libs/bootstrap-select/defaults-cs_CZ.js
                 - libs/jquery.confirm.min.js

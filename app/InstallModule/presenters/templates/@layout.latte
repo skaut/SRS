@@ -34,16 +34,14 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="progress">
-                <div class="progress-bar" role="progressbar" aria-valuenow="70"
-                     aria-valuemin="0" aria-valuemax="100" style="width: {include #progress}">
-                </div>
+                <div class="progress-bar" style="width: {include #progress}"></div>
             </div>
         </div>
     </div>
 
     <div class="row" n:if="$flashes">
         <div class="col-sm-12">
-            <div n:foreach="$flashes as $flash" n:class="alert, 'alert-' . $flash->type" role="alert">{$flash->message}</div>
+            <div n:foreach="$flashes as $flash" n:class="alert, 'alert-' . $flash->type">{$flash->message}</div>
         </div>
     </div>
 

@@ -1,3 +1,10 @@
+$( document ).ajaxComplete(function() {
+    $('select[multiple]').selectpicker({
+        iconBase: 'fa',
+        tickIcon: 'fa-check'
+    });
+});
+
 $(function () {
     $.nette.ext('flashes', {
         complete: function () {
@@ -14,11 +21,6 @@ $(function () {
     }, 5000).slideUp(1000);
 
     $('select[multiple]').selectpicker({
-        iconBase: 'fa',
-        tickIcon: 'fa-check'
-    });
-
-    $('.selectpicker').selectpicker({
         iconBase: 'fa',
         tickIcon: 'fa-check'
     });
@@ -51,5 +53,7 @@ $(function () {
         cancelButtonClass: "btn-default",
         dialogClass: "modal-dialog"
     }
+
+    $('[data-toggle="tooltip"]').tooltip();
 });
 

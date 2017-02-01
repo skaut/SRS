@@ -77,7 +77,7 @@ class RolesFormFactory
                     $first = false;
                 }
                 $rolesSelect->addRule([$this, 'validateRolesIncompatible'],
-                    $this->translator->translate('web.profile.incompatible_roles_selected', null,
+                    $form->getTranslator()->translate('web.profile.incompatible_roles_selected', null,
                         ['role' => $messageThis, 'incompatibleRoles' => $messageOthers]
                     )
                 );
@@ -97,20 +97,30 @@ class RolesFormFactory
                     $first = false;
                 }
                 $rolesSelect->addRule([$this, 'validateRolesRequired'],
-                    $this->translator->translate('web.profile.required_roles_not_selected', null,
+                    $form->getTranslator()->translate('web.profile.required_roles_not_selected', null,
                         ['role' => $messageThis, 'requiredRoles' => $messageOthers]
                     )
                 );
             }
         }
 
-        $form->addSubmit('submit', 'web.profile.update_roles')
+        $submitButton = $form->addSubmit('submit', 'web.profile.update_roles')
             ->setDisabled(!$enabled)
             ->setAttribute('id', 'btn-submit');
 
-        $form->addButton('cancelRegistration', 'web.profile.cancel_registration')
+        $cancelRegistrationButton = $form->addButton('cancelRegistration', 'web.profile.cancel_registration')
             ->setDisabled(!$enabled)
-            ->getControlPrototype()->setAttribute('class', 'btn-danger')->setAttribute('id', 'btn-cancelRegistration');
+            ->setAttribute('class', 'btn-danger')
+            ->setAttribute('id', 'btn-cancelRegistration');
+
+        if (!$enabled) {
+            $submitButton
+                ->setAttribute('data-toggle', 'tooltip')
+                ->setAttribute('title', $form->getTranslator()->translate('web.profile.change_roles_disabled'));
+            $cancelRegistrationButton
+                ->setAttribute('data-toggle', 'tooltip')
+                ->setAttribute('title', $form->getTranslator()->translate('web.profile.cancel_registration_disabled'));
+        }
 
         return $form;
     }

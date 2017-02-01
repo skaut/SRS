@@ -84,6 +84,7 @@ class DocumentTagsGridControl extends Control
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
             $this['documentTagsGrid']->reload();
+            $p->redrawControl('documentsGrid');
         } else {
             $this->redirect('this');
         }
@@ -108,6 +109,7 @@ class DocumentTagsGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
+            $p->redrawControl('documentsGrid');
         } else {
             $this->redirect('this');
         }
@@ -123,6 +125,7 @@ class DocumentTagsGridControl extends Control
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
             $this['documentTagsGrid']->reload();
+            $p->redrawControl('documentsGrid');
         } else {
             $this->redirect('this');
         }

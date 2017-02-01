@@ -49,7 +49,7 @@ class UsersGridControl extends Control
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
-        $grid->setDataSource($this->userRepository->createQueryBuilder('user'));
+        $grid->setDataSource($this->userRepository->createQueryBuilder('u'));
         $grid->setColumnsHideable();
 
         $grid->addGroupSelectAction('Send', [

@@ -30,18 +30,16 @@
 {block main}
     <h2>{_web.profile.heading}</h2>
 
-    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+    <div class="panel-group" id="accordion">
         <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="headingSeminar">
+            <div class="panel-heading" id="headingSeminar">
                 <h4 class="panel-title">
-                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSeminar"
-                       aria-expanded="true" aria-controls="collapseSeminar">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseSeminar">
                         {_web.profile.seminar_group}
                     </a>
                 </h4>
             </div>
-            <div id="collapseSeminar" class="panel-collapse collapse in" role="tabpanel"
-                 aria-labelledby="headingSeminar">
+            <div id="collapseSeminar" class="panel-collapse collapse in">
                 <div class="panel-body">
                     <table class="table table-form">
                         <col class="col-sm-3 col-xs-3">
@@ -108,16 +106,14 @@
         </div>
 
         <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="headingPersonalDetails">
+            <div class="panel-heading" id="headingPersonalDetails">
                 <h4 class="panel-title">
-                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
-                       href="#collapsePersonalDetails" aria-expanded="false" aria-controls="collapsePersonalDetails">
+                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapsePersonalDetails">
                         {_web.profile.personal_details_group}
                     </a>
                 </h4>
             </div>
-            <div id="collapsePersonalDetails" class="panel-collapse collapse" role="tabpanel"
-                 aria-labelledby="headingPersonalDetails">
+            <div id="collapsePersonalDetails" class="panel-collapse collapse">
                 <div class="panel-body">
                     {control personalDetailsForm}
                 </div>
@@ -125,17 +121,14 @@
         </div>
 
         <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="headingAdditionalInformation">
+            <div class="panel-heading" id="headingAdditionalInformation">
                 <h4 class="panel-title">
-                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
-                       href="#collapseAdditionalInformation" aria-expanded="false"
-                       aria-controls="collapseAdditionalInformation">
+                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseAdditionalInformation">
                         {_web.profile.additional_information_group}
                     </a>
                 </h4>
             </div>
-            <div id="collapseAdditionalInformation" class="panel-collapse collapse" role="tabpanel"
-                 aria-labelledby="headingAdditionalInformation">
+            <div id="collapseAdditionalInformation" class="panel-collapse collapse">
                 <div class="panel-body">
                     {control additionalInformationForm}
                 </div>
@@ -143,16 +136,14 @@
         </div>
 
         <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="headingSchedule">
+            <div class="panel-heading" id="headingSchedule">
                 <h4 class="panel-title">
-                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
-                       href="#collapseSchedule" aria-expanded="false" aria-controls="collapseSchedule">
+                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseSchedule">
                         {_web.profile.my_schedule_group}
                     </a>
                 </h4>
             </div>
-            <div id="collapseSchedule" class="panel-collapse collapse" role="tabpanel"
-                 aria-labelledby="headingSchedule">
+            <div id="collapseSchedule" class="panel-collapse collapse">
                 <div class="panel-body">
                     {if $dbuser->getPrograms()->isEmpty()}
                         <p>{_web.profile.no_programs}</p>

@@ -38,16 +38,29 @@ cms:
     news_heading: "Aktuality"
 
     documents_heading: "Dokumenty"
+    documents_name: "Název"
+    documents_name_empty: "Název dokumentu nesmí být prázdný."
+    documents_name_not_unique: "Dokument s tímto názvem již existuje."
+    documents_tags: "Štítky"
+    documents_tags_empty: "Dokument musí mít alespoň jeden štítek."
+    documents_file: "Soubor"
+    documents_file_empty: "Nebyl vybrán žádný soubor."
+    documents_description: "Popis"
+    documents_timestamp: "Upraven"
+    documents_added: "Dokument byl úspěšně přidán."
+    documents_edited: "Dokument byl úspěšně upraven."
+    documents_delete_confirm: "Opravdu chcete odstranit dokument \"%s\"?"
+    documents_deleted: "Dokument byl úspěšně odstraněn."
+    documents_download: "Stáhnout"
 
     tags_heading: "Štítky dokumentů"
     tags_name: "Název"
     tags_name_empty: "Název štítku nesmí být prázdný."
-    tags_name_not_unique: "Název štítku musí být unikátní."
-    tags_delete_confirm: "Opravdu chcete odstranit štítek \"%s\"?"
-    tags_deleted: "Štítek byl úspěšně odstraněn."
+    tags_name_not_unique: "Štítek s tímto názvem již existuje."
     tags_added: "Štítek byl úspěšně přidán."
     tags_edited: "Štítek byl úspěšně upraven."
-
+    tags_delete_confirm: "Odstraněním štítku odeberete štítek všem dokumentům, samotné dokumenty zůstanou zachovány. Opravdu chcete odstranit štítek \"%s\"?"
+    tags_deleted: "Štítek byl úspěšně odstraněn."
 
     faq_heading: "FAQ"
 

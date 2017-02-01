@@ -7,6 +7,16 @@ body {
     text-align: left !important;
 }
 
+.datagrid-multiselect {
+    padding-bottom: 0 !important;
+    padding-top: 0 !important;
+}
+
+.datagrid-multiselect .btn {
+    padding: 3px 12px !important;
+    margin-top: -1px !important;
+}
+
 .navbar-header {
     float: left;
 }

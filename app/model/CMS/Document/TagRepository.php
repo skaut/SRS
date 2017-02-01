@@ -3,6 +3,7 @@
 namespace App\Model\CMS\Document;
 
 
+use Doctrine\Common\Collections\Criteria;
 use Kdyby\Doctrine\EntityRepository;
 
 class TagRepository extends EntityRepository
@@ -35,5 +36,19 @@ class TagRepository extends EntityRepository
             return false;
         }
         return true;
+    }
+
+    public function findTagsOrderedByName() {
+        return $this->createQueryBuilder('t')
+            ->orderBy('t.name')
+            ->getQuery()
+            ->execute();
+    }
+
+    public function findTagsByIds($ids) {
+        return $this->createQueryBuilder('t')
+            ->addCriteria(Criteria::create()->where(Criteria::expr()->in('t.id', $ids)))
+            ->getQuery()
+            ->execute();
     }
 }
