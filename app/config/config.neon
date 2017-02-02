@@ -135,6 +135,7 @@ webloader:
                 - libs/live-form-validation.js
                 - libs/nette.ajax.js
                 - %appDir%/../vendor/twbs/bootstrap/dist/js/bootstrap.min.js
+                - libs/bootstrap-datetimepicker/moment-with-locales.js
                 - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.js
                 - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.cs.js
                 - libs/bootstrap-select/bootstrap-select.min.js
@@ -152,6 +153,7 @@ webloader:
                 - libs/nette.ajax.js
                 - %appDir%/../vendor/twbs/bootstrap/dist/js/bootstrap.min.js
                 - libs/datagrid/happy.min.js
+                - libs/bootstrap-datetimepicker/moment-with-locales.js
                 - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.js
                 - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.cs.js
                 - libs/jquery-ui-sortable.min.js

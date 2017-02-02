@@ -1,44 +1,21 @@
-$( document ).ajaxComplete(function() {
-    $('select[multiple]').selectpicker({
-        iconBase: 'fa',
-        tickIcon: 'fa-check',
-        noneSelectedText: 'Nic není vybráno',
-        noneResultsText: 'Žádné výsledky {0}',
-        countSelectedText: 'Označeno {0} z {1}',
-        maxOptionsText: ['Limit překročen ({n} {var} max)', 'Limit skupiny překročen ({n} {var} max)', ['položek', 'položka']],
-        multipleSeparator: ', '
-    });
-
-    $('input[type="file"]').fileinput({
-        language: "cz",
-        theme: "fa",
-        showPreview: false,
-        showRemove: false,
-        showUpload: false,
-        showCancel: false,
-        browseClass: "btn btn-default"
-    });
-});
-
 $(function () {
-    $.nette.ext('flashes', {
+    $.nette.ext('onload', {
         complete: function () {
-            $('.alert:not(.alert-forever)').animate({
-                opacity: 1.0
-            }, 5000).slideUp(1000);
+            animateAlerts();
+            initMultiSelects();
+            initFileInputs();
         }
     });
 
     $.nette.init();
 
+    animateAlerts();
+    initMultiSelects();
+    initFileInputs();
+
     $('.alert:not(.alert-forever)').animate({
         opacity: 1.0
     }, 5000).slideUp(1000);
-
-    $('select[multiple]').selectpicker({
-        iconBase: 'fa',
-        tickIcon: 'fa-check'
-    });
 
     $('input.date, input.datetime-local').each(function(i, el) {
         el = $(el);
@@ -70,7 +47,27 @@ $(function () {
     }
 
     $('[data-toggle="tooltip"]').tooltip();
+});
 
+function animateAlerts() {
+    $('.alert:not(.alert-forever)').animate({
+        opacity: 1.0
+    }, 5000).slideUp(1000);
+}
+
+function initMultiSelects() {
+    $('select[multiple]').selectpicker({
+        iconBase: 'fa',
+        tickIcon: 'fa-check',
+        noneSelectedText: 'Nic není vybráno',
+        noneResultsText: 'Žádné výsledky {0}',
+        countSelectedText: 'Označeno {0} z {1}',
+        maxOptionsText: ['Limit překročen ({n} {var} max)', 'Limit skupiny překročen ({n} {var} max)', ['položek', 'položka']],
+        multipleSeparator: ', '
+    });
+}
+
+function initFileInputs() {
     $('input[type="file"]').fileinput({
         language: "cz",
         theme: "fa",
@@ -80,5 +77,5 @@ $(function () {
         showCancel: false,
         browseClass: "btn btn-default"
     });
-});
+}
 
