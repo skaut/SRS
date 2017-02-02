@@ -236,7 +236,7 @@ class Role
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('approved', true));
-        return $this->users->matching($criteria);
+        return $this->users->matching($criteria); //TODO test
     }
 
     /**

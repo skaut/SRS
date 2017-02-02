@@ -170,7 +170,7 @@ class Page
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('area', $area))
             ->orderBy(['position' => 'ASC']);
-        return $this->contents->matching($criteria);
+        return $this->contents->matching($criteria); //TODO test
     }
 
     public function hasContents($area)
@@ -179,7 +179,7 @@ class Page
             throw new SRSPageException("Area {$area} not defined.");
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('area', $area));
-        return !$this->contents->matching($criteria)->isEmpty();
+        return !$this->contents->matching($criteria)->isEmpty(); //TODO test
     }
 
     /**

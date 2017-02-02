@@ -291,7 +291,7 @@ class User
 
     public function addRole($role)
     {
-        if (!$this->isInRole($role->getName()))
+        if (!$this->isInRole($role))
             $this->roles->add($role);
     }
 
@@ -328,28 +328,25 @@ class User
         }
     }
 
-    public function isInRole($roleName)
+    public function isInRole($role)
     {
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('name', $roleName));
-
-        if ($this->roles->matching($criteria)->count() == 0)
-            return false;
-        return true;
+        return $this->roles->filter(function ($item) use ($role) {
+            return $item == $role;
+        })->count() != 0;
     }
 
     public function getPayingRoles()
     {
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->neq('fee', 0));
-        return $this->roles->matching($criteria);
+        return $this->roles->filter(function ($item) {
+            return $item->getFee() > 0;
+        });
     }
 
     public function isPaying()
     {
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('fee', 0));
-        return !$this->roles->matching($criteria)->isEmpty();
+        return $this->roles->filter(function ($item) {
+            return $item->getFee() == 0;
+        })->count() == 0;
     }
 
     public function hasPaid()
