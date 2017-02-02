@@ -1,23 +1,23 @@
 {block sidebar}
     <div class="well">
         <ul class="nav nav-pills nav-stacked">
-            <li {ifCurrent Pages:default}class="active"{/ifCurrent}>
+            <li {ifCurrent Pages:*}class="active"{/ifCurrent}>
                 <a href="{plink Pages:default}">{_admin.cms.menu_pages}</a>
             </li>
 
-            <li {ifCurrent News:default}class="active"{/ifCurrent}>
+            <li {ifCurrent News:*}class="active"{/ifCurrent}>
                 <a href="{plink News:default}">{_admin.cms.menu_news}</a>
             </li>
 
-            <li {ifCurrent Documents:default}class="active"{/ifCurrent}>
+            <li {ifCurrent Documents:*}class="active"{/ifCurrent}>
                 <a href="{plink Documents:default}">{_admin.cms.menu_documents}</a>
             </li>
 
-            <li {ifCurrent Faq:default}class="active"{/ifCurrent}>
+            <li {ifCurrent Faq:*}class="active"{/ifCurrent}>
                 <a href="{plink Faq:default}">{_admin.cms.menu_faq}</a>
             </li>
 
-            <li {ifCurrent Settings:default}class="active"{/ifCurrent}>
+            <li {ifCurrent Settings:*}class="active"{/ifCurrent}>
                 <a href="{plink Settings:default}">{_admin.cms.menu_settings}</a>
             </li>
         </ul>

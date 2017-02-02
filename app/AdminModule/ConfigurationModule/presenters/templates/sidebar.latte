@@ -1,27 +1,27 @@
 {block sidebar}
     <div class="well">
         <ul class="nav nav-pills nav-stacked">
-            <li {ifCurrent Seminar:default}class="active"{/ifCurrent}>
+            <li {ifCurrent Seminar:*}class="active"{/ifCurrent}>
                 <a href="{plink Seminar:default}">{_admin.configuration.menu_seminar}</a>
             </li>
 
-            <li {ifCurrent Program:default}class="active"{/ifCurrent}>
+            <li {ifCurrent Program:*}class="active"{/ifCurrent}>
                 <a href="{plink Program:default}">{_admin.configuration.menu_program}</a>
             </li>
 
-            <li {ifCurrent Payment:default}class="active"{/ifCurrent}>
+            <li {ifCurrent Payment:*}class="active"{/ifCurrent}>
                 <a href="{plink Payment:default}">{_admin.configuration.menu_payment}</a>
             </li>
 
-            <li {ifCurrent Application:default}class="active"{/ifCurrent}>
+            <li {ifCurrent Application:*}class="active"{/ifCurrent}>
                 <a href="{plink Application:default}">{_admin.configuration.menu_application}</a>
             </li>
 
-            <li {ifCurrent SkautIs:default}class="active"{/ifCurrent}>
+            <li {ifCurrent SkautIs:*}class="active"{/ifCurrent}>
                 <a href="{plink SkautIs:default}">{_admin.configuration.menu_skautis}</a>
             </li>
 
-            <li {ifCurrent System:default}class="active"{/ifCurrent}>
+            <li {ifCurrent System:*}class="active"{/ifCurrent}>
                 <a href="{plink System:default}">{_admin.configuration.menu_system}</a>
             </li>
         </ul>

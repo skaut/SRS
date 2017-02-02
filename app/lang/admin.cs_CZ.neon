@@ -59,7 +59,7 @@ cms:
     tags_name_not_unique: "Štítek s tímto názvem již existuje."
     tags_added: "Štítek byl úspěšně přidán."
     tags_edited: "Štítek byl úspěšně upraven."
-    tags_delete_confirm: "Odstraněním štítku odeberete štítek všem dokumentům, samotné dokumenty zůstanou zachovány. Opravdu chcete odstranit štítek \"%s\"?"
+    tags_delete_confirm: "Odstraněním štítku odeberete štítek všem dokumentům. Opravdu chcete odstranit štítek \"%s\"?"
     tags_deleted: "Štítek byl úspěšně odstraněn."
 
     faq_heading: "FAQ"
@@ -81,8 +81,17 @@ program:
     categories_registerable_roles_empty: "Musí být vybrána alespoň jedna role oprávněná k přihlašování na programy z kategorie."
     categories_added: "Kategorie byla úspěšně přidána."
     categories_edited: "Kategorie byla úspěšně upravena."
-    categories_delete_confirm: "Opravdu chcete odstranit kategorii \"%s\"?"
+    categories_delete_confirm: "Odstraněním kategorie odeberete kategorii všem programovým blokům. Opravdu chcete odstranit kategorii \"%s\"?"
     categories_deleted: "Kategorie byla úspěšně odstraněna."
+
+    rooms_heading: "Místnosti"
+    rooms_name: "Název"
+    rooms_name_empty: "Název místnosti nesmí být prázdný."
+    rooms_name_not_unique: "Místnost s tímo názvem již existuje."
+    rooms_added: "Místnost byla úspěšně přidána."
+    rooms_edited: "Místnost byla úspěšně upravena."
+    rooms_delete_confirm: "Odstraněním místnosti odeberete místnost všem programům. Opravdu chcete odstranit místnost \"%s\"?"
+    rooms_deleted: "Místnost byla úspěšně odstraněna."
 
 users:
 
@@ -154,7 +163,7 @@ configuration:
     application_input_name_empty: "Název pole nesmí být prázdný."
     application_input_added: "Pole bylo úspěšně přidáno."
     application_input_edited: "Pole bylo úspěšně upraveno."
-    application_input_delete_confirm: "Opravdu chcete odstranit pole \"%s\"?"
+    application_input_delete_confirm: "Odstraněním pole odeberete odpovědi uživatelů na tuto otázku. Opravdu chcete odstranit pole \"%s\"?"
     application_input_deleted: "Pole bylo úspěšně odstraněno."
     application_inputs_order_saved: "Pořadí polí bylo úspěšně upraveno."
 

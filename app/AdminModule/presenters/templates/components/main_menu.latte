@@ -11,12 +11,21 @@
                         <a href="{plink :Admin:Dashboard:default}">{_admin.menu.dashboard}</a>
                     </li>
                     {if $user->isAllowed($resourceCMS, $permissionManage)}
-                        <li n:class="$presenter->isLinkCurrent(':Admin:CMS:Pages:*') ? active">
+                        <li n:class="
+                                $presenter->isLinkCurrent(':Admin:CMS:Pages:*') ||
+                                $presenter->isLinkCurrent(':Admin:CMS:News:*') ||
+                                $presenter->isLinkCurrent(':Admin:CMS:Documents:*') ||
+                                $presenter->isLinkCurrent(':Admin:CMS:Faq:*') ||
+                                $presenter->isLinkCurrent(':Admin:CMS:Settings:*') ? active">
                             <a href="{plink :Admin:CMS:Pages:default}">{_admin.menu.cms}</a>
                         </li>
                     {/if}
                     {if $user->isAllowed($resourceProgram, $permissionAccess)}
-                        <li n:class="$presenter->isLinkCurrent(':Admin:Program:Blocks:*') ? active">
+                        <li n:class="
+                                $presenter->isLinkCurrent(':Admin:Program:Blocks:*') ||
+                                $presenter->isLinkCurrent(':Admin:Program:Schedule:*') ||
+                                $presenter->isLinkCurrent(':Admin:Program:Categories:*') ||
+                                $presenter->isLinkCurrent(':Admin:Program:Rooms:*') ? active">
                             <a href="{plink :Admin:Program:Blocks:default}">{_admin.menu.program}</a>
                         </li>
                     {/if}
@@ -31,8 +40,11 @@
                         </li>
                     {/if}
                     {if $user->isAllowed($resourceMailing, $permissionManage)}
-                        <li n:class="$presenter->isLinkCurrent(':Admin:Mailing:AutoMails:*') ? active">
-                            <a href="{plink :Admin:Mailing:AutoMails:default}">{_admin.menu.mailing}</a> {* TODO rozsireni mailingu*}
+                        <li n:class="
+                                $presenter->isLinkCurrent(':Admin:Mailing:Auto:*') ||
+                                $presenter->isLinkCurrent(':Admin:Mailing:Send:*') ||
+                                $presenter->isLinkCurrent(':Admin:Mailing:History:*') ? active">
+                            <a href="{plink :Admin:Mailing:Auto:default}">{_admin.menu.mailing}</a> {* TODO rozsireni mailingu*}
                         </li>
                     {/if}
                     {if $user->isAllowed($resourceConfiguration, $permissionManage)}

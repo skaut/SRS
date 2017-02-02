@@ -20,10 +20,28 @@ class Room
     protected $name;
 
     /**
-     * Room constructor.
+     * @return int
      */
-    public function __construct()
+    public function getId()
     {
-        $this->blocks = new ArrayCollection();
+        return $this->id;
     }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+
 }
