@@ -39,7 +39,7 @@ class ProgramBlocksGridControl extends Control
 
         $grid->setPagination(false);
 
-        $grid->addColumnText('name', 'admin.program.blocks_name');
+        $grid->addColumnText('name', 'admin.program.blocks_name'); //TODO sort, filters
 
         $grid->addColumnText('category', 'admin.program.blocks_category');
 
@@ -56,36 +56,19 @@ class ProgramBlocksGridControl extends Control
                 return $row->getPrograms()->count();
             });
 
-        $grid->addInlineAdd()->onControlAdd[] = function($container) {
-            $container->addText('name', '');
-        };
-        $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
+        $grid->addToolbarButton('Blocks:add')
+            ->setIcon('plus')
+            ->setTitle('admin.common.add');
 
-        $grid->addInlineEdit()->onControlAdd[] = function($container) {
-            $container->addText('name', '');
-        };
-        $grid->getInlineEdit()->onSetDefaults[] = function($container, $item) {
-            $container->setDefaults([
-                'name' => $item->getName()
-            ]);
-        };
-        $grid->getInlineEdit()->setShowNonEditingColumns();
-        $grid->getInlineEdit()->onSubmit[] = [$this, 'edit'];
+        $grid->addAction('edit', '', 'Block:edit')
+            ->setIcon('pencil-square-o')
+            ->setTitle('admin.common.edit');
 
         $grid->addAction('delete', '', 'delete!')
             ->setIcon('trash')
             ->setTitle('admin.common.delete')
             ->setClass('btn btn-xs btn-danger ajax')
             ->setConfirm('admin.program.rooms_delete_confirm', 'name');
-    }
-
-    public function add($values) {
-
-    }
-
-    public function edit($id, $values)
-    {
-
     }
 
     public function handleDelete($id)
