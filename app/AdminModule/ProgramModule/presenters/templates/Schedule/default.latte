@@ -1,4 +1,8 @@
-{block main}
-    <h2></h2>
+{block head}
+    {include '../../../../presenters/templates/includes/fullcalendar_init.latte'}
+{/block}
 
+{block main}
+    <h2>{_admin.program.harmonogram_heading}</h2>
+    <div id='calendar'></div>
 {/block}
