@@ -8,6 +8,16 @@ $( document ).ajaxComplete(function() {
         maxOptionsText: ['Limit překročen ({n} {var} max)', 'Limit skupiny překročen ({n} {var} max)', ['položek', 'položka']],
         multipleSeparator: ', '
     });
+
+    $('input[type="file"]').fileinput({
+        language: "cz",
+        theme: "fa",
+        showPreview: false,
+        showRemove: false,
+        showUpload: false,
+        showCancel: false,
+        browseClass: "btn btn-default"
+    });
 });
 
 $(function () {
@@ -60,5 +70,15 @@ $(function () {
     }
 
     $('[data-toggle="tooltip"]').tooltip();
+
+    $('input[type="file"]').fileinput({
+        language: "cz",
+        theme: "fa",
+        showPreview: false,
+        showRemove: false,
+        showUpload: false,
+        showCancel: false,
+        browseClass: "btn btn-default"
+    });
 });
 

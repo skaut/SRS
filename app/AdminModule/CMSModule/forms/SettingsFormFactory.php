@@ -2,6 +2,7 @@
 
 namespace App\AdminModule\CMSModule\Forms;
 
+use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\CMS\PageRepository;
 use Nette\Application\UI\Form;
 
@@ -31,14 +32,16 @@ class SettingsFormFactory
         $renderer->wrappers['control']['container'] = 'div class="col-sm-7 col-xs-7"';
         $renderer->wrappers['label']['container'] = 'div class="col-sm-5 col-xs-5 control-label"';
 
-        $form->addText('footer', 'admin.configuration.footer');
+        $form->addUpload('logo', 'admin.cms.settings_logo');
+
+        $form->addText('footer', 'admin.cms.settings_footer');
 
         $pagesChoices = $this->preparePagesChoices();
 
-        $form->addSelect('redirectAfterLogin', 'admin.configuration.redirect_after_login', $pagesChoices)
-            ->addRule(Form::FILLED, 'admin.configuration.redirect_after_login_empty');
+        $form->addSelect('redirectAfterLogin', 'admin.cms.settings_redirect_after_login', $pagesChoices)
+            ->addRule(Form::FILLED, 'admin.cms.settings_redirect_after_login_empty');
 
-        $form->addCheckbox('displayUsersRoles', 'admin.configuration.display_users_roles');
+        $form->addCheckbox('displayUsersRoles', 'admin.cms.settings_display_users_roles');
 
         $form->addSubmit('submit', 'admin.common.save');
 

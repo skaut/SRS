@@ -7,15 +7,39 @@ body {
     text-align: left !important;
 }
 
+/* oprava multiselect v inline editaci */
 .datagrid-multiselect {
     padding-bottom: 0 !important;
     padding-top: 0 !important;
 }
 
 .datagrid-multiselect .btn {
-    padding: 3px 12px !important;
+    font-size: 12px !important;
+    padding: 4px 12px 5px 12px !important;
 }
 
+.datagrid-multiselect li {
+    font-size: 12px !important;
+}
+
+/* oprava file input v inline editaci */
+.datagrid-inline-edit .kv-fileinput-caption {
+    font-size: 12px !important;
+    padding: 4px 12px 5px 12px !important;
+    margin-top: 0px !important;
+}
+
+.datagrid-inline-edit .btn-file {
+    font-size: 12px !important;
+    padding: 4px 12px 4px 12px !important;
+    margin-left: -4px !important;
+}
+
+.datagrid-row-inline-add .btn-file {
+    padding: 4px 12px 5px 12px !important;
+}
+
+/* vypnuti responzivity */
 .navbar-header {
     float: left;
 }
