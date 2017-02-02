@@ -30,8 +30,6 @@
         "twbs/bootstrap": "^3.3",
         "kartik-v/bootstrap-fileinput": "dev-master",
 
-        "texy/texy": "^2.9",
-
         "pear/numbers_words": "^0.18.1"
 	},
 

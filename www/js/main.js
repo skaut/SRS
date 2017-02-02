@@ -44,7 +44,7 @@ $(function () {
         confirmButtonClass: "btn-primary",
         cancelButtonClass: "btn-default",
         dialogClass: "modal-dialog"
-    }
+    };
 
     $('[data-toggle="tooltip"]').tooltip();
 });

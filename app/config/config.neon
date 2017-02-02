@@ -71,13 +71,14 @@ services:
     - App\WebModule\Forms\PersonalDetailsFormFactory
     - App\WebModule\Forms\RolesFormFactory
     - App\WebModule\Forms\AdditionalInformationFormFactory
+    - App\AdminModule\Forms\BaseFormFactory
     - App\AdminModule\CMSModule\Forms\SettingsFormFactory
     - App\AdminModule\ConfigurationModule\Forms\PaymentFormFactory
     - App\AdminModule\ConfigurationModule\Forms\PaymentProofFormFactory
     - App\AdminModule\ConfigurationModule\Forms\ProgramFormFactory
     - App\AdminModule\ConfigurationModule\Forms\SeminarFormFactory
     - App\AdminModule\ConfigurationModule\Forms\SkautIsEventFormFactory
-    - App\AdminModule\Forms\BaseFormFactory
+    - App\AdminModule\ProgramModule\Forms\BlockFormFactory
     - App\AdminModule\Components\IRolesGridControlFactory
     - App\AdminModule\Components\IUsersGridControlFactory
     - App\AdminModule\CMSModule\Components\IDocumentsGridControlFactory

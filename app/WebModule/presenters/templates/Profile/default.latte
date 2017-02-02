@@ -1,6 +1,13 @@
 {block head}
     <script>
         $(function () {
+            //otevreni accordion podle url
+            if(location.hash != null && location.hash != ""){
+                $('.collapse').removeClass('in');
+                $(location.hash + '.collapse').collapse('show');
+            }
+
+            //potvrzeni zmeny roli
             $("#btn-submit").confirm({
                 text: {_web.profile.change_roles_confirm},
                 confirm: function() {
@@ -12,6 +19,8 @@
                 post: true,
                 submitForm: true
             });
+
+            //potvrzeni odhlaseni
             $("#btn-cancelRegistration").confirm({
                 text: {_web.profile.cancel_registration_confirm},
                 confirm: function() {

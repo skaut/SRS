@@ -7,7 +7,7 @@ use Kdyby\Doctrine\EntityRepository;
 class UserRepository extends EntityRepository
 {
     public function findUserById($id) {
-        return $this->findOneBy(['id' => $id]);
+        return $this->find($id);
     }
 
     public function findUserBySkautISUserId($skautISUserId) {

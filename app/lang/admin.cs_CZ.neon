@@ -79,6 +79,27 @@ program:
     menu_categories: "Kategorie"
     menu_rooms: "Místnosti"
 
+    empty_user_info_begin: "Nemáte vyplňené informace o sobě, "
+    empty_user_info_link: "vyplňte je"
+    empty_user_info_end: ", aby se zobrazovaly u Vašich programů."
+
+    blocks_heading: "Programové bloky"
+    blocks_name: "Název"
+    blocks_category: "Místnost"
+    blocks_lector: "Lektor"
+    blocks_room: "Místnost"
+    blocks_duration: "Délka"
+    blocks_capacity: "Kapacita"
+    blocks_programs_count: "Počet zařazení"
+    blocks_tools: "Pomůcky"
+    blocks_perex: "Stručný popis (160 znaků)"
+    blocks_description: "Detailní popis"
+
+    blocks_add_heading: "Nový programový blok"
+    blocks_edit_heading: "Úprava bloku: %name%"
+
+    harmonogram_heading: "Harmonogram"
+
     categories_heading: "Kategorie"
     categories_name: "Název"
     categories_name_empty: "Název kategorie nesmí být prázdný."

@@ -61,7 +61,17 @@ body {
 .table-form thead tr th,
 .table-form tfoot tr th {
     padding-left: 0;
-    vertical-align: middle;
+}
+
+/* prekryti hlavicky ve fullscreen modu TinyMCE */
+div.mce-fullscreen {
+    z-index: 1050;
+}
+
+/* zarovnani fullscreen tlacitka doprava */
+.mce-btn-group:last-child {
+    float:right;
+    border-left: none !important;
 }
 
 /* vypnuti responzivity */
