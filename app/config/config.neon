@@ -71,14 +71,13 @@ services:
     - App\WebModule\Forms\PersonalDetailsFormFactory
     - App\WebModule\Forms\RolesFormFactory
     - App\WebModule\Forms\AdditionalInformationFormFactory
+#    - App\AdminModule\CMSModule\Forms\SettingsFormFactory
+    - App\AdminModule\ConfigurationModule\Forms\PaymentFormFactory
+    - App\AdminModule\ConfigurationModule\Forms\PaymentProofFormFactory
+    - App\AdminModule\ConfigurationModule\Forms\ProgramFormFactory
+    - App\AdminModule\ConfigurationModule\Forms\SeminarFormFactory
+    - App\AdminModule\ConfigurationModule\Forms\SkautIsEventFormFactory
     - App\AdminModule\Forms\BaseFormFactory
-    - App\AdminModule\Forms\WebSettingsFormFactory
-    - App\AdminModule\Forms\SeminarConfigurationFormFactory
-    - App\AdminModule\Forms\ProgramConfigurationFormFactory
-    - App\AdminModule\Forms\PaymentConfigurationFormFactory
-    - App\AdminModule\Forms\PaymentProofConfigurationFormFactory
-    - App\AdminModule\Forms\SkautIsEventConfigurationFormFactory
-    - App\AdminModule\Components\ICustomInputsGridControlFactory
     - App\AdminModule\Components\IRolesGridControlFactory
     - App\AdminModule\Components\IUsersGridControlFactory
     - App\AdminModule\CMSModule\Components\IDocumentsGridControlFactory
@@ -86,6 +85,7 @@ services:
     - App\AdminModule\CMSModule\Components\IFaqGridControlFactory
     - App\AdminModule\CMSModule\Components\INewsGridControlFactory
     - App\AdminModule\CMSModule\Components\IPagesGridControlFactory
+    - App\AdminModule\ConfigurationModule\Components\ICustomInputsGridControlFactory
     - App\AdminModule\MailingModule\Components\IMailHistoryGridControlFactory
     - App\AdminModule\ProgramModule\Components\IProgramBlocksGridControlFactory
     - App\AdminModule\ProgramModule\Components\IProgramCategoriesGridControlFactory

@@ -3,7 +3,7 @@
 namespace App\AdminModule\MailingModule\Presenters;
 
 
-class MailHistoryPresenter extends MailingBasePresenter
+class SendMailPresenter extends MailingBasePresenter
 {
 
 }

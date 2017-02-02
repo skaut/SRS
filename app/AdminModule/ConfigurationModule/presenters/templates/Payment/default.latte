@@ -1,13 +1,11 @@
-{import 'sidebar.latte'}
-
 {block main}
     <h2>{_admin.configuration.payment_heading}</h2>
     <div class="well">
-        {control paymentConfigurationForm}
+        {control paymentForm}
     </div>
 
     <h2>{_admin.configuration.payment_proof_heading}</h2>
     <div class="well">
-        {control paymentProofConfigurationForm}
+        {control paymentProofForm}
     </div>
 {/block}

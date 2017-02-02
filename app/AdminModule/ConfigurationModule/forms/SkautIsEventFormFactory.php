@@ -1,12 +1,13 @@
 <?php
 
-namespace App\AdminModule\Forms;
+namespace App\AdminModule\ConfigurationModule\Forms;
 
+use App\AdminModule\Forms\BaseFormFactory;
 use App\Services\SkautIsService;
 use Nette\Application\UI\Form;
 use Skautis\Wsdl\WsdlException;
 
-class SkautIsEventConfigurationFormFactory
+class SkautIsEventFormFactory
 {
     /**
      * @var BaseFormFactory

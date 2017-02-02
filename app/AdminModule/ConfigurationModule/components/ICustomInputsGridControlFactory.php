@@ -1,6 +1,6 @@
 <?php
 
-namespace App\AdminModule\Components;
+namespace App\AdminModule\ConfigurationModule\Components;
 
 interface ICustomInputsGridControlFactory
 {

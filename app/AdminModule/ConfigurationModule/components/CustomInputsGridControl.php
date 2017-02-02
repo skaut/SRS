@@ -1,6 +1,6 @@
 <?php
 
-namespace App\AdminModule\Components;
+namespace App\AdminModule\ConfigurationModule\Components;
 
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;

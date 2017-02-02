@@ -1,11 +1,11 @@
 <?php
 
-namespace App\AdminModule\Forms;
+namespace App\AdminModule\CMSModule\Forms;
 
 use App\Model\CMS\PageRepository;
 use Nette\Application\UI\Form;
 
-class WebSettingsFormFactory
+class SettingsFormFactory
 {
     /**
      * @var BaseFormFactory

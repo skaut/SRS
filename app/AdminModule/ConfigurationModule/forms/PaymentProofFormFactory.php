@@ -1,10 +1,11 @@
 <?php
 
-namespace App\AdminModule\Forms;
+namespace App\AdminModule\ConfigurationModule\Forms;
 
+use App\AdminModule\Forms\BaseFormFactory;
 use Nette\Application\UI\Form;
 
-class PaymentProofConfigurationFormFactory
+class PaymentProofFormFactory
 {
     /**
      * @var BaseFormFactory

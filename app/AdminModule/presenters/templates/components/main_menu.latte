@@ -31,13 +31,19 @@
                         </li>
                     {/if}
                     {if $user->isAllowed($resourceMailing, $permissionManage)}
-                        <li n:class="$presenter->isLinkCurrent(':Admin:Mailing:AutoMails:') ? active">
+                        <li n:class="$presenter->isLinkCurrent(':Admin:Mailing:AutoMails:*') ? active">
                             <a href="{plink :Admin:Mailing:AutoMails:default}">{_admin.menu.mailing}</a> {* TODO rozsireni mailingu*}
                         </li>
                     {/if}
                     {if $user->isAllowed($resourceConfiguration, $permissionManage)}
-                        <li n:class="$presenter->isLinkCurrent(':Admin:Configuration:*') ? active">
-                            <a href="{plink :Admin:Configuration:seminar}">{_admin.menu.configuration}</a>
+                        <li n:class="
+                                $presenter->isLinkCurrent(':Admin:Configuration:Application:*') ||
+                                $presenter->isLinkCurrent(':Admin:Configuration:Payment:*') ||
+                                $presenter->isLinkCurrent(':Admin:Configuration:Program:*') ||
+                                $presenter->isLinkCurrent(':Admin:Configuration:Seminar:*') ||
+                                $presenter->isLinkCurrent(':Admin:Configuration:SkautIs:*') ||
+                                $presenter->isLinkCurrent(':Admin:Configuration:System:*') ? active">
+                            <a href="{plink :Admin:Configuration:Seminar:default}">{_admin.menu.configuration}</a>
                         </li>
                     {/if}
                 </ul>

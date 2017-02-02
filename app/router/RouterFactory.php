@@ -62,6 +62,14 @@ class RouterFactory
             'area' => null
         ]);
 
+        $router[] = new Route('admin/configuration/<presenter>/<action>[/<id>][/<area>]', [
+            'module' => 'Admin:Configuration',
+            'presenter' => 'Seminar',
+            'action' => 'default',
+            'id' => null,
+            'area' => null
+        ]);
+
         $router[] = new Route('admin/<presenter>/<action>[/<id>][/<area>]', [
             'module' => 'Admin',
             'presenter' => 'Dashboard',
