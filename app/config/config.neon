@@ -60,7 +60,10 @@ services:
     - App\Model\CMS\NewsRepository
     - App\Model\CMS\PageRepository
     - App\Model\Mailing\MailRepository
+    - App\Model\Program\BlockRepository
+    - App\Model\Program\CategoryRepository
     - App\Model\Program\ProgramRepository
+    - App\Model\Program\RoomRepository
     - App\Model\Settings\CustomInput\CustomInputRepository
     - App\Model\Settings\SettingsRepository
     - App\Model\User\UserRepository

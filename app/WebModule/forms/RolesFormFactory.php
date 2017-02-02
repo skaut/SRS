@@ -54,6 +54,8 @@ class RolesFormFactory
                 );
         }
 
+        asort($availableRolesOptions);
+
         $rolesSelect = $form->addMultiSelect('roles', 'web.profile.roles')->setItems($availableRolesOptions)
             ->addRule(Form::FILLED, 'web.profile.no_role_selected')
             ->addRule([$this, 'validateRolesCapacities'], 'web.profile.capacity_occupied')

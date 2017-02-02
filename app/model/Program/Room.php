@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="RoomRepository")
  * @ORM\Table(name="room")
  */
 class Room

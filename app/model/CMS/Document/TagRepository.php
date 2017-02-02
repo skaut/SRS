@@ -39,16 +39,15 @@ class TagRepository extends EntityRepository
     }
 
     public function findTagsOrderedByName() {
-        return $this->createQueryBuilder('t')
-            ->orderBy('t.name')
-            ->getQuery()
-            ->execute();
+        $criteria = Criteria::create()
+            ->orderBy(['name' => 'ASC']);
+        return $this->matching($criteria);
     }
 
     public function findTagsByIds($ids) {
-        return $this->createQueryBuilder('t')
-            ->addCriteria(Criteria::create()->where(Criteria::expr()->in('t.id', $ids)))
-            ->getQuery()
-            ->execute();
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->in('id', $ids))
+            ->orderBy(['name' => 'ASC']);
+        return $this->matching($criteria);
     }
 }

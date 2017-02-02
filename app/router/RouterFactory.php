@@ -49,7 +49,15 @@ class RouterFactory
         $router[] = new Route('admin/program/<presenter>/<action>[/<id>][/<area>]', [
             'module' => 'Admin:Program',
             'presenter' => 'Block',
-            'action' => 'list',
+            'action' => 'default',
+            'id' => null,
+            'area' => null
+        ]);
+
+        $router[] = new Route('admin/mailing/<presenter>/<action>[/<id>][/<area>]', [
+            'module' => 'Admin:Mailing',
+            'presenter' => 'AutoMails',
+            'action' => 'default',
             'id' => null,
             'area' => null
         ]);

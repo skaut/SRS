@@ -328,17 +328,6 @@ class User
         }
     }
 
-    /**
-     * @return string
-     */
-    public function getRolesText(){
-       $roles = array();
-       foreach ($this->roles as $role) {
-           $roles[] = $role->getName();
-       }
-       return implode(", ", $roles);
-    }
-
     public function isInRole($roleName)
     {
         $criteria = Criteria::create()

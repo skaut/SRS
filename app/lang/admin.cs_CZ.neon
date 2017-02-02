@@ -44,6 +44,7 @@ cms:
     documents_tags: "Štítky"
     documents_tags_empty: "Dokument musí mít alespoň jeden štítek."
     documents_file: "Soubor"
+    documents_download: "Stáhnout"
     documents_file_empty: "Nebyl vybrán žádný soubor."
     documents_description: "Popis"
     documents_timestamp: "Upraven"
@@ -51,7 +52,6 @@ cms:
     documents_edited: "Dokument byl úspěšně upraven."
     documents_delete_confirm: "Opravdu chcete odstranit dokument \"%s\"?"
     documents_deleted: "Dokument byl úspěšně odstraněn."
-    documents_download: "Stáhnout"
 
     tags_heading: "Štítky dokumentů"
     tags_name: "Název"
@@ -73,6 +73,16 @@ cms:
 
 
 program:
+    categories_heading: "Kategorie"
+    categories_name: "Název"
+    categories_name_empty: "Název kategorie nesmí být prázdný."
+    categories_name_not_unique: "Kategorie s tímto názvem již existuje."
+    categories_registerable_roles: "Oprávněné role"
+    categories_registerable_roles_empty: "Musí být vybrána alespoň jedna role oprávněná k přihlašování na programy z kategorie."
+    categories_added: "Kategorie byla úspěšně přidána."
+    categories_edited: "Kategorie byla úspěšně upravena."
+    categories_delete_confirm: "Opravdu chcete odstranit kategorii \"%s\"?"
+    categories_deleted: "Kategorie byla úspěšně odstraněna."
 
 users:
 
