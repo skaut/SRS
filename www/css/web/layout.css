@@ -80,6 +80,7 @@ ul.no-margin {
 .table-form thead tr th,
 .table-form tfoot tr th {
     padding-left: 0;
+    vertical-align: middle;
 }
 
 /* popisky ve formularich vlevo */

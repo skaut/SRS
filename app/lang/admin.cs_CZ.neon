@@ -65,12 +65,13 @@ cms:
     faq_heading: "FAQ"
 
     settings_heading: "Nastavení"
-
-#    footer: "Text v patičce"
-#    redirect_after_login: "Po přihlášení přesměrovat na"
-#    redirect_after_login_empty: "Vyberte stránku, na kterou budou uživatelé přesměrováni po přihlášení."
-#    display_users_roles: "zobrazovat uživatelské role"
-
+    settings_current_logo: "Stávající logo"
+    settings_new_logo: "Nové logo"
+    settings_footer: "Text v patičce"
+    settings_redirect_after_login: "Po přihlášení přesměrovat na"
+    settings_redirect_after_login_empty: "Vyberte stránku, na kterou budou uživatelé přesměrováni po přihlášení."
+    settings_display_users_roles: "zobrazovat uživatelské role"
+    settings_saved: "Nastavení úspěšně uloženo."
 
 program:
     menu_blocks: "Programové bloky"

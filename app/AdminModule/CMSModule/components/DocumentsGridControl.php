@@ -73,10 +73,14 @@ class DocumentsGridControl extends Control
 
         $grid->addColumnText('file', 'admin.cms.documents_file')
             ->setRenderer(function ($row) {
-                return Html::el('a')
-                    ->setAttribute('href', '../../../files' . $row->getFile())
-                    ->setAttribute('target', '_blank')
-                    ->setText($this->translator->translate('admin.cms.documents_download'));
+                return Html::el()
+                    ->addHtml(Html::el('span')->setAttribute('class', 'fa fa-download'))
+                    ->addText(' ')
+                    ->addHtml(Html::el('a')
+                        ->setAttribute('href', '../../../files' . $row->getFile())
+                        ->setAttribute('target', '_blank')
+                         ->addText($this->translator->translate('admin.cms.documents_download'))
+                    );
             });
 
         $grid->addColumnText('description', 'admin.cms.documents_description');

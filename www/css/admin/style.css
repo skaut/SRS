@@ -27,16 +27,41 @@ body {
     font-size: 12px !important;
     padding: 4px 12px 5px 12px !important;
     margin-top: 0px !important;
+    height: 28px !important;
 }
 
 .datagrid-inline-edit .btn-file {
     font-size: 12px !important;
     padding: 4px 12px 5px 12px !important;
     margin-left: -4px !important;
+    height: 28px !important;
 }
 
-.datagrid-row-inline-add .btn-file {
-    padding: 4px 12px 5px 12px !important;
+/* tabulka bez ramecku */
+.table-borderless tbody tr td,
+.table-borderless tbody tr th,
+.table-borderless thead tr th,
+.table-borderless thead tr td,
+.table-borderless tfoot tr th,
+.table-borderless tfoot tr td {
+    border: none;
+}
+
+/* tabulka bez ramecku a okraju, pro kombinaci s formulari */
+.table-form tbody tr td,
+.table-form tbody tr th,
+.table-form thead tr th,
+.table-form thead tr td,
+.table-form tfoot tr th,
+.table-form tfoot tr td {
+    border: none;
+}
+
+.table-form tbody tr th,
+.table-form thead tr th,
+.table-form tfoot tr th {
+    padding-left: 0;
+    vertical-align: middle;
 }
 
 /* vypnuti responzivity */
