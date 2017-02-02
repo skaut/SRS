@@ -34,11 +34,11 @@ settings:
         seminar_name: "Název semináře"
         seminar_email: "srs@skauting.cz"
         footer: "© %year% SRS"
-        company: "Konfigurace->Firma"
-        ico: "Konfigurace->IČO"
-        accountant: "Konfigurace->Pokladník"
-        print_location: "Konfigurace->Místo"
-        account_number: "Konfigurace->Číslo účtu"
+        company: "Konfigurace -> Platba a doklady -> Firma"
+        ico: "Konfigurace -> Platba a doklady -> IČ"
+        accountant: "Konfigurace -> Platba a doklady -> Pokladník"
+        print_location: "Konfigurace -> Platba a doklady -> Místo"
+        account_number: "Konfigurace -> Platba a doklady -> Číslo účtu"
 
 cms:
     default:

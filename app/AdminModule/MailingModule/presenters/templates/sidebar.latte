@@ -1,16 +1,16 @@
-{block sidebar} {*TODO překlad*}
+{block sidebar}
     <div class="well">
         <ul class="nav nav-pills nav-stacked">
             <li {ifCurrent Auto:*}class="active"{/ifCurrent}>
-                <a href="{plink Auto:default}">Automatické maily</a>
+                <a href="{plink Auto:default}">{_admin.mailing.menu_auto}</a>
             </li>
 
             <li {ifCurrent Send:*}class="active"{/ifCurrent}>
-                <a href="{plink Send:default}">Rozeslat e-mail</a>
+                <a href="{plink Send:default}">{_admin.mailing.menu_send}</a>
             </li>
 
             <li {ifCurrent History:*}class="active"{/ifCurrent}>
-                <a href="{plink History:default}">Historie e-mailů</a>
+                <a href="{plink History:default}">{_admin.mailing.menu_history}</a>
             </li>
         </ul>
     </div>

@@ -73,6 +73,11 @@ cms:
 
 
 program:
+    menu_blocks: "Programové bloky"
+    menu_schedule: "Harmonogram"
+    menu_categories: "Kategorie"
+    menu_rooms: "Místnosti"
+
     categories_heading: "Kategorie"
     categories_name: "Název"
     categories_name_empty: "Název kategorie nesmí být prázdný."
@@ -98,6 +103,9 @@ users:
 acl:
 
 mailing:
+    menu_auto: "Automatické e-maily"
+    menu_send: "Rozeslat e-mail"
+    menu_history: "Historie"
 
 configuration:
     menu_seminar: "Seminář"

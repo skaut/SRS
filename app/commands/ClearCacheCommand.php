@@ -4,5 +4,5 @@ namespace App\Commands;
 
 class ClearCacheCommand
 {
-    //TODO vymyzani cache
+    //TODO vymazani cache
 }
