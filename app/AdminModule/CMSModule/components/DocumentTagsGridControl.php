@@ -60,8 +60,11 @@ class DocumentTagsGridControl extends Control
         $grid->addAction('delete', '', 'delete!')
             ->setIcon('trash')
             ->setTitle('admin.common.delete')
-            ->setClass('btn btn-xs btn-danger ajax')
-            ->setConfirm('admin.cms.tags_delete_confirm', 'name');
+            ->setClass('btn btn-xs btn-danger')
+            ->addAttributes([
+                'data-toggle' => 'confirmation',
+                'data-content' => $this->translator->translate('admin.cms.tags_delete_confirm')
+            ]);
     }
 
     public function add($values)

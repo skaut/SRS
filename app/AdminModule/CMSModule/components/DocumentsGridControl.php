@@ -113,14 +113,16 @@ class DocumentsGridControl extends Control
                 'description' => $item->getDescription()
             ]);
         };
-        $grid->getInlineEdit()->setShowNonEditingColumns();
         $grid->getInlineEdit()->onSubmit[] = [$this, 'edit'];
 
         $grid->addAction('delete', '', 'delete!')
             ->setIcon('trash')
             ->setTitle('admin.common.delete')
-            ->setClass('btn btn-xs btn-danger ajax')
-            ->setConfirm('admin.cms.documents_delete_confirm', 'name');
+            ->setClass('btn btn-xs btn-danger')
+            ->addAttributes([
+                'data-toggle' => 'confirmation',
+                'data-content' => $this->translator->translate('admin.cms.documents_delete_confirm')
+            ]);
     }
 
     public function add($values) {

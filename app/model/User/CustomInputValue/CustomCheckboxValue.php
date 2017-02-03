@@ -12,7 +12,7 @@ class CustomCheckboxValue extends CustomInputValue
 {
     /**
      * @ORM\Column(type="boolean")
-     * @var boolean
+     * @var bool
      */
     protected $value;
 }

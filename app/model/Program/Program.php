@@ -39,18 +39,6 @@ class Program
     protected $start;
 
     /**
-     * @ORM\Column(type="integer")
-     * @var int
-     */
-    protected $duration;
-
-    /**
-     * @ORM\Column(type="boolean")
-     * @var bool
-     */
-    protected $mandatory = false;
-
-    /**
      * Program constructor.
      */
     public function __construct()
@@ -129,42 +117,4 @@ class Program
     {
         $this->start = $start;
     }
-
-    public function getEnd($basicBlockDuration) {
-        return (clone $this->start)->modify('+' . $this->duration * $basicBlockDuration . ' minutes');
-    }
-
-    /**
-     * @return int
-     */
-    public function getDuration()
-    {
-        return $this->duration;
-    }
-
-    /**
-     * @param int $duration
-     */
-    public function setDuration($duration)
-    {
-        $this->duration = $duration;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isMandatory()
-    {
-        return $this->mandatory;
-    }
-
-    /**
-     * @param bool $mandatory
-     */
-    public function setMandatory($mandatory)
-    {
-        $this->mandatory = $mandatory;
-    }
-
-
 }

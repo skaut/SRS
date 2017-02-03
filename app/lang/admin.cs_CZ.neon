@@ -8,6 +8,7 @@ common:
     edit: "Upravit"
     delete: "Odstranit"
     save: "Uložit"
+    save_and_continue: "Uložit a pokračovat v úpravách"
 
     minutes: "%count% minut"
     custom_text: "Textové pole"
@@ -37,6 +38,11 @@ cms:
     menu_settings: "Nastavení"
 
     pages_heading: "Stránky"
+    pages_name: "Název"
+    pages_slug: "Cesta"
+    pages_published_column: "Viditelnost"
+    pages_published_label: "Viditelná"
+    pages_roles: "Viditelná pro role"
 
     news_heading: "Aktuality"
 
@@ -53,7 +59,7 @@ cms:
     documents_timestamp: "Upraven"
     documents_added: "Dokument byl úspěšně přidán."
     documents_edited: "Dokument byl úspěšně upraven."
-    documents_delete_confirm: "Opravdu chcete odstranit dokument \"%s\"?"
+    documents_delete_confirm: "Opravdu chcete dokument odstranit?"
     documents_deleted: "Dokument byl úspěšně odstraněn."
 
     tags_heading: "Štítky dokumentů"
@@ -62,7 +68,7 @@ cms:
     tags_name_not_unique: "Štítek s tímto názvem již existuje."
     tags_added: "Štítek byl úspěšně přidán."
     tags_edited: "Štítek byl úspěšně upraven."
-    tags_delete_confirm: "Odstraněním štítku odeberete štítek všem dokumentům. Opravdu chcete odstranit štítek \"%s\"?"
+    tags_delete_confirm: "Odstraněním štítku odeberete štítek všem dokumentům. Opravdu chcete štítek odstranit?"
     tags_deleted: "Štítek byl úspěšně odstraněn."
 
     faq_heading: "FAQ"
@@ -90,13 +96,14 @@ program:
     blocks_name: "Název"
     blocks_category: "Místnost"
     blocks_lector: "Lektor"
-    blocks_room: "Místnost"
     blocks_duration: "Délka"
     blocks_capacity: "Kapacita"
+    blocks_mandatory_column: "Povinnost"
+    blocks_mandatory_label: "Povinný"
     blocks_programs_count: "Počet zařazení"
-    blocks_tools: "Pomůcky"
     blocks_perex: "Stručný popis (160 znaků)"
     blocks_description: "Detailní popis"
+    blocks_tools: "Pomůcky"
 
     blocks_add_heading: "Nový programový blok"
     blocks_edit_heading: "Úprava bloku: %name%"
@@ -111,7 +118,7 @@ program:
     categories_registerable_roles_empty: "Musí být vybrána alespoň jedna role oprávněná k přihlašování na programy z kategorie."
     categories_added: "Kategorie byla úspěšně přidána."
     categories_edited: "Kategorie byla úspěšně upravena."
-    categories_delete_confirm: "Odstraněním kategorie odeberete kategorii všem programovým blokům. Opravdu chcete odstranit kategorii \"%s\"?"
+    categories_delete_confirm: "Odstraněním kategorie odeberete kategorii všem programovým blokům. Opravdu chcete kategorii odstranit?"
     categories_deleted: "Kategorie byla úspěšně odstraněna."
 
     rooms_heading: "Místnosti"
@@ -120,7 +127,7 @@ program:
     rooms_name_not_unique: "Místnost s tímo názvem již existuje."
     rooms_added: "Místnost byla úspěšně přidána."
     rooms_edited: "Místnost byla úspěšně upravena."
-    rooms_delete_confirm: "Odstraněním místnosti odeberete místnost všem programům. Opravdu chcete odstranit místnost \"%s\"?"
+    rooms_delete_confirm: "Odstraněním místnosti odeberete místnost všem programům. Opravdu chcete místnost odstranit?"
     rooms_deleted: "Místnost byla úspěšně odstraněna."
 
 users:
@@ -196,7 +203,7 @@ configuration:
     application_input_name_empty: "Název pole nesmí být prázdný."
     application_input_added: "Pole bylo úspěšně přidáno."
     application_input_edited: "Pole bylo úspěšně upraveno."
-    application_input_delete_confirm: "Odstraněním pole odeberete odpovědi uživatelů na tuto otázku. Opravdu chcete odstranit pole \"%s\"?"
+    application_input_delete_confirm: "Odstraněním pole odeberete odpovědi uživatelů na tuto otázku. Opravdu chcete pole odstranit?"
     application_input_deleted: "Pole bylo úspěšně odstraněno."
     application_inputs_order_saved: "Pořadí polí bylo úspěšně upraveno."
 

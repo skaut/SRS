@@ -6,30 +6,6 @@
                 $('.collapse').removeClass('in');
                 $(location.hash + '.collapse').collapse('show');
             }
-
-            //potvrzeni zmeny roli
-            $("#btn-submit").confirm({
-                text: {_web.profile.change_roles_confirm},
-                confirm: function() {
-                    $("#frm-rolesForm").submit()
-                },
-                cancel: function() { },
-                confirmButton: "Ok",
-                cancelButton: "Zrušit",
-                post: true,
-                submitForm: true
-            });
-
-            //potvrzeni odhlaseni
-            $("#btn-cancelRegistration").confirm({
-                text: {_web.profile.cancel_registration_confirm},
-                confirm: function() {
-                    $.nette.ajax({
-                        url: {link cancelRegistration!}
-                    });
-                },
-                cancel: function() { }
-            });
         });
     </script>
 {/block}

@@ -60,12 +60,12 @@ class ProgramDTO
     private $capacity;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $attends;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $blocked;
 

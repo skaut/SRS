@@ -1,9 +1,10 @@
 $(function () {
-    $.nette.ext('onload', {
+    $.nette.ext('initScripts', {
         complete: function () {
             animateAlerts();
             initMultiSelects();
             initFileInputs();
+            initConfirms();
         }
     });
 
@@ -12,12 +13,9 @@ $(function () {
     animateAlerts();
     initMultiSelects();
     initFileInputs();
+    initConfirms();
 
-    $('.alert:not(.alert-forever)').animate({
-        opacity: 1.0
-    }, 5000).slideUp(1000);
-
-    $('input.date, input.datetime-local').each(function(i, el) {
+    $('input.date, input.datetime-local').each(function (i, el) {
         el = $(el);
         el.get(0).type = 'text';
         el.datetimepicker({
@@ -34,17 +32,6 @@ $(function () {
         });
         el.attr('value') && el.datetimepicker('setValue');
     });
-
-    $.confirm.options = {
-        title: "",
-        confirmButton: "Ano",
-        cancelButton: "Ne",
-        post: false,
-        submitForm: false,
-        confirmButtonClass: "btn-primary",
-        cancelButtonClass: "btn-default",
-        dialogClass: "modal-dialog"
-    };
 
     $('[data-toggle="tooltip"]').tooltip();
 });
@@ -76,6 +63,21 @@ function initFileInputs() {
         showUpload: false,
         showCancel: false,
         browseClass: "btn btn-default"
+    });
+}
+
+function initConfirms() {
+    $('[data-toggle=confirmation]').confirmation({
+        rootSelector: '[data-toggle=confirmation]',
+        title: '',
+        singleton: 'true',
+        popout: 'true',
+        btnOkClass: 'btn btn-primary',
+        btnOkIcon: 'fa fa-check',
+        btnOkLabel: 'Ano',
+        btnCancelClass: 'btn btn-default',
+        btnCancelIcon: 'fa fa-times',
+        btnCancelLabel: 'Ne'
     });
 }
 

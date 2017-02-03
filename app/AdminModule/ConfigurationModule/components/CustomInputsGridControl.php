@@ -65,14 +65,16 @@ class CustomInputsGridControl extends Control
                 'name' => $item->getName()
             ]);
         };
-        $grid->getInlineEdit()->setShowNonEditingColumns();
         $grid->getInlineEdit()->onSubmit[] = [$this, 'edit'];
 
         $grid->addAction('delete', '', 'delete!')
             ->setIcon('trash')
             ->setTitle('admin.common.delete')
-            ->setClass('btn btn-xs btn-danger ajax')
-            ->setConfirm('admin.configuration.application_input_delete_confirm', 'name');
+            ->setClass('btn btn-xs btn-danger')
+            ->addAttributes([
+                'data-toggle' => 'confirmation',
+                'data-content' => $this->translator->translate('admin.configuration.application_input_delete_confirm')
+            ]);
     }
 
     public function add($values) {

@@ -30,20 +30,20 @@ class BlockFormFactory
 
         $form->addSelect('lector', 'admin.program.blocks_lector');
 
-        $form->addSelect('room', 'admin.program.blocks_room');
-
         $form->addSelect('duration', 'admin.program.blocks_duration')
             ->addRule(Form::FILLED, 'admin.program.blocks_duration_empty');
 
         $form->addText('capacity', 'admin.program.blocks_capacity')
             ->addCondition(Form::FILLED)->addRule(Form::NUMERIC, 'admin.program.blocks_capacity_format');
 
-        $form->addText('tools', 'admin.program.blocks_tools');
+        $form->addCheckbox('mandatory', 'admin.program.blocks_mandatory');
 
         $form->addTextArea('perex', 'admin.program.blocks_perex');
 
         $form->addTextArea('description', 'admin.program.blocks_description')
             ->setAttribute('class', 'tinymce-paragraph');
+
+        $form->addText('tools', 'admin.program.blocks_tools');
 
         $form->addSubmit('submit', 'admin.common.save');
 

@@ -30,7 +30,7 @@ class CalendarConfigDTO
     private $day;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $editAllowed;
 }

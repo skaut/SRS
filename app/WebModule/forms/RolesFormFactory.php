@@ -106,20 +106,26 @@ class RolesFormFactory
             }
         }
 
-        $submitButton = $form->addSubmit('submit', 'web.profile.update_roles')
-            ->setDisabled(!$enabled)
-            ->setAttribute('id', 'btn-submit');
+        $submitButton = $form->addSubmit('submit', 'web.profile.update_roles');
 
         $cancelRegistrationButton = $form->addButton('cancelRegistration', 'web.profile.cancel_registration')
-            ->setDisabled(!$enabled)
-            ->setAttribute('class', 'btn-danger')
-            ->setAttribute('id', 'btn-cancelRegistration');
+            ->setAttribute('class', 'btn-danger');
 
-        if (!$enabled) {
+        if ($enabled) {
             $submitButton
+                ->setAttribute('data-toggle', 'confirmation')
+                ->setAttribute('data-content', $form->getTranslator()->translate('web.profile.change_roles_confirm'));
+            $cancelRegistrationButton
+                ->setAttribute('data-toggle', 'confirmation')
+                ->setAttribute('data-content', $form->getTranslator()->translate('web.profile.cancel_registration_confirm'));
+        }
+        else {
+            $submitButton
+                ->setDisabled()
                 ->setAttribute('data-toggle', 'tooltip')
                 ->setAttribute('title', $form->getTranslator()->translate('web.profile.change_roles_disabled'));
             $cancelRegistrationButton
+                ->setDisabled()
                 ->setAttribute('data-toggle', 'tooltip')
                 ->setAttribute('title', $form->getTranslator()->translate('web.profile.cancel_registration_disabled'));
         }

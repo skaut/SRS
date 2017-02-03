@@ -45,11 +45,11 @@ class ProgramBlocksGridControl extends Control
 
         $grid->addColumnText('lector', 'admin.program.blocks_lector');
 
-        $grid->addColumnText('room', 'admin.program.blocks_room');
-
         $grid->addColumnText('duration', 'admin.program.blocks_duration');
 
         $grid->addColumnText('capacity', 'admin.program.blocks_capacity');
+
+        $grid->addColumnStatus('mandatory', 'admin.program.blocks_mandatory');
 
         $grid->addColumnText('programsCount', 'admin.program.blocks_programs_count')
             ->setRenderer(function ($row) {
@@ -67,8 +67,11 @@ class ProgramBlocksGridControl extends Control
         $grid->addAction('delete', '', 'delete!')
             ->setIcon('trash')
             ->setTitle('admin.common.delete')
-            ->setClass('btn btn-xs btn-danger ajax')
-            ->setConfirm('admin.program.rooms_delete_confirm', 'name');
+            ->setClass('btn btn-xs btn-danger')
+            ->addAttributes([
+                'data-toggle' => 'confirmation',
+                'data-content' => $this->translator->translate('admin.program.blocks_delete_confirm')
+            ]);
     }
 
     public function handleDelete($id)
