@@ -28,7 +28,7 @@ class ProfilePresenter extends WebBasePresenter
      * @var AdditionalInformationFormFactory
      * @inject
      */
-    public $additionalInformationForm;
+    public $additionalInformationFormFactory;
 
     private $editRegistrationAllowed;
 
@@ -80,10 +80,8 @@ class ProfilePresenter extends WebBasePresenter
             'state' => $this->dbuser->getState()
         ]);
 
-        $form->onSuccess[] = function (Form $form) {
-            $values = $form->getValues();
-
-            $editedUser = $this->userRepository->find($values['id']);
+        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+            $editedUser = $this->userRepository->find($values['id']); //TODO editace do repository
 
             if (array_key_exists('sex', $values))
                 $editedUser->setSex($values['sex']);
@@ -131,10 +129,8 @@ class ProfilePresenter extends WebBasePresenter
             'roles' => $usersRolesIds
         ]);
 
-        $form->onSuccess[] = function (Form $form) {
-            $values = $form->getValues();
-
-            $editedUser = $this->userRepository->find($values['id']);
+        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+            $editedUser = $this->userRepository->find($values['id']); //TODO editace do repository
 
             $selectedRoles = array();
             foreach ($values['roles'] as $roleId) {
@@ -165,7 +161,7 @@ class ProfilePresenter extends WebBasePresenter
 
     protected function createComponentAdditionalInformationForm($name)
     {
-        $form = $this->additionalInformationForm->create($this->dbuser);
+        $form = $this->additionalInformationFormFactory->create($this->dbuser);
 
         $form->setDefaults([
             'id' => $this->dbuser->getId(),
@@ -174,10 +170,8 @@ class ProfilePresenter extends WebBasePresenter
             'departure' => $this->dbuser->getDeparture()
         ]);
 
-        $form->onSuccess[] = function (Form $form) {
-            $values = $form->getValues();
-
-            $editedUser = $this->userRepository->find($values['id']);
+        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+            $editedUser = $this->userRepository->find($values['id']); //TODO editace do repository
             $editedUser->setAbout($values['about']);
 
             if (array_key_exists('arrival', $values))

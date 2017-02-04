@@ -26,9 +26,7 @@ class SeminarPresenter extends ConfigurationBasePresenter
             'seminarEmail' => $this->settingsRepository->getValue('seminar_email')
         ]);
 
-        $form->onSuccess[] = function (Form $form) {
-            $values = $form->getValues();
-
+        $form->onSuccess[] = function (Form $form, \stdClass $values) {
             $this->settingsRepository->setValue('seminar_name', $values['seminarName']);
             $this->settingsRepository->setDateValue('seminar_from_date', $values['seminarFromDate']);
             $this->settingsRepository->setDateValue('seminar_to_date', $values['seminarToDate']);

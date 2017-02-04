@@ -42,6 +42,10 @@ class CategoryRepository extends EntityRepository
         return true;
     }
 
+    public function findCategoryById($id) {
+        return $this->find($id);
+    }
+
     public function findCategoriesOrderedByName() {
         $criteria = Criteria::create()
             ->orderBy(['name' => 'ASC']);

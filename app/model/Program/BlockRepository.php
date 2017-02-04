@@ -10,6 +10,39 @@ class BlockRepository extends EntityRepository
         return $this->find($id);
     }
 
+    public function addBlock($name, $category, $lector, $duration, $capacity, $mandatory, $perex, $description, $tools) {
+        $block = new Block();
+
+        $block->setName($name);
+        $block->setCategory($category);
+        $block->setLector($lector);
+        $block->setDuration($duration);
+        $block->setCapacity($capacity);
+        $block->setMandatory($mandatory);
+        $block->setPerex($perex);
+        $block->setDescription($description);
+        $block->setTools($tools);
+
+        $this->_em->persist($block);
+        $this->_em->flush();
+    }
+
+    public function editBlock($id, $name, $category, $lector, $duration, $capacity, $mandatory, $perex, $description, $tools) {
+        $block = $this->find($id);
+
+        $block->setName($name);
+        $block->setCategory($category);
+        $block->setLector($lector);
+        $block->setDuration($duration);
+        $block->setCapacity($capacity);
+        $block->setMandatory($mandatory);
+        $block->setPerex($perex);
+        $block->setDescription($description);
+        $block->setTools($tools);
+
+        $this->_em->flush();
+    }
+
     public function removeBlock($id)
     {
         $block = $this->find($id);

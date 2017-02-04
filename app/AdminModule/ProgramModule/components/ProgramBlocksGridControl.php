@@ -4,6 +4,7 @@ namespace App\AdminModule\ProgramModule\Components;
 
 
 use App\Model\Program\BlockRepository;
+use App\Model\Program\Category;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Ublaboo\DataGrid\DataGrid;
@@ -35,13 +36,13 @@ class ProgramBlocksGridControl extends Control
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
-        $grid->setDataSource($this->blockRepository->createQueryBuilder('b')); //TODO default order name
+        $grid->setDataSource($this->blockRepository->createQueryBuilder('b')->join(Category::class, 'c')); //TODO default order name
 
         $grid->setPagination(false);
 
         $grid->addColumnText('name', 'admin.program.blocks_name'); //TODO sort, filters
 
-        $grid->addColumnText('category', 'admin.program.blocks_category');
+        $grid->addColumnText('c.name', 'admin.program.blocks_category');
 
         $grid->addColumnText('lector', 'admin.program.blocks_lector');
 
@@ -49,7 +50,7 @@ class ProgramBlocksGridControl extends Control
 
         $grid->addColumnText('capacity', 'admin.program.blocks_capacity');
 
-        $grid->addColumnStatus('mandatory', 'admin.program.blocks_mandatory');
+        $grid->addColumnStatus('mandatory', 'admin.program.blocks_mandatory_grid');
 
         $grid->addColumnText('programsCount', 'admin.program.blocks_programs_count')
             ->setRenderer(function ($row) {

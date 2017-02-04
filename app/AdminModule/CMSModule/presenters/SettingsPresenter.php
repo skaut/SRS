@@ -36,9 +36,7 @@ class SettingsPresenter extends CMSBasePresenter
             'displayUsersRoles' => $this->settingsRepository->getValue('display_users_roles')
         ]);
 
-        $form->onSuccess[] = function (Form $form) {
-            $values = $form->getValues();
-
+        $form->onSuccess[] = function (Form $form, \stdClass $values) {
             $logo = $values['logo'];
             if ($logo->name) {
                 $this->filesService->delete('/logo/' . $this->settingsRepository->getValue('logo'));

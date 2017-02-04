@@ -28,9 +28,7 @@ class ProgramPresenter extends ConfigurationBasePresenter
             'logInProgramsTo' => $this->settingsRepository->getDateTimeValue('log_in_programs_to')
         ]);
 
-        $form->onSuccess[] = function (Form $form) {
-            $values = $form->getValues();
-
+        $form->onSuccess[] = function (Form $form, \stdClass $values) {
             $this->settingsRepository->setValue('basic_block_duration', $values['basicBlockDuration']);
             $this->settingsRepository->setValue('is_allowed_add_block', $values['isAllowedAddBlock']);
             $this->settingsRepository->setValue('is_allowed_modify_schedule', $values['isAllowedModifySchedule']);
