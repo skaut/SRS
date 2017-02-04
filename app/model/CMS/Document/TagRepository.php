@@ -10,9 +10,13 @@ class TagRepository extends EntityRepository
 {
     public function addTag($name) {
         $tag = new Tag();
+
         $tag->setName($name);
+
         $this->_em->persist($tag);
         $this->_em->flush();
+
+        return $tag;
     }
 
     public function removeTag($id)
@@ -24,8 +28,12 @@ class TagRepository extends EntityRepository
 
     public function editTag($id, $name) {
         $tag = $this->find($id);
+
         $tag->setName($name);
+
         $this->_em->flush();
+
+        return $tag;
     }
 
     public function isNameUnique($name, $id = null) {

@@ -18,6 +18,8 @@ class DocumentRepository extends EntityRepository
 
         $this->_em->persist($document);
         $this->_em->flush();
+
+        return $document;
     }
 
     public function removeDocument($id)
@@ -38,6 +40,8 @@ class DocumentRepository extends EntityRepository
         $document->setTimestamp(new \DateTime());
 
         $this->_em->flush();
+
+        return $document;
     }
 
     public function isNameUnique($name, $id = null) {

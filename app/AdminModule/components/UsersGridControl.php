@@ -72,7 +72,7 @@ class UsersGridControl extends Control
             ->setSortable()
             ->setFilterText();
 
-        $grid->addColumnText('rolesText', 'Role'); //TODO filtr
+        $grid->addColumnText('roles', 'Role', 'rolesText'); //TODO filtr
 
         $grid->addColumnText('approved', 'Schválený')
             ->setReplacement(['0' => 'ne', '1' => 'ano'])

@@ -7,6 +7,8 @@ common:
     add: "Přidat"
     edit: "Upravit"
     delete: "Odstranit"
+    detail: "Detail"
+    all: "Vše"
     save: "Uložit"
     save_and_continue: "Uložit a pokračovat v úpravách"
 
@@ -102,6 +104,8 @@ program:
     blocks_capacity: "Kapacita"
     blocks_capacity_format: "Zadejte číslo nebo nechte pole prázdné."
     blocks_mandatory_grid: "Povinnost"
+    blocks_mandatory_grid_mandatory: "Povinný"
+    blocks_mandatory_grid_voluntary: "Nepovinný"
     blocks_mandatory_form: "povinný"
     blocks_programs_count: "Počet zařazení"
     blocks_perex: "Stručný popis (160 znaků)"
@@ -109,11 +113,11 @@ program:
     blocks_tools: "Pomůcky"
     blocks_added: "Programový blok byl úspěšně přidán."
     blocks_edited: "Programový blok byl úspěšně upraven."
+    blocks_changed_mandatory: "Povinnost programového bloku byla úspěšně upravena."
     blocks_delete_confirm: "Opravdu chcete programový blok odstranit?"
     blocks_deleted: "Programový blok byl úspěšně odstraněn."
-
     blocks_add_heading: "Nový programový blok"
-    blocks_edit_heading: "Úprava bloku: %name%"
+    blocks_edit_heading: "Úprava programového bloku: %name%"
 
     harmonogram_heading: "Harmonogram"
 

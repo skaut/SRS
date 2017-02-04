@@ -14,6 +14,8 @@ class RoomRepository extends EntityRepository
 
         $this->_em->persist($room);
         $this->_em->flush();
+
+        return $room;
     }
 
     public function removeRoom($id)
@@ -29,6 +31,8 @@ class RoomRepository extends EntityRepository
         $room->setName($name);
 
         $this->_em->flush();
+
+        return $room;
     }
 
     public function isNameUnique($name, $id = null) {

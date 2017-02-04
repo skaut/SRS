@@ -3,7 +3,7 @@
     {if $emptyUserInfo}
         <div class="alert alert-warning alert-forever alert-dismissable">
             <a href="#" class="close" data-dismiss="alert">&times;</a>
-            {_admin.program.empty_user_info_begin}<a href="{plink :Web:Profile:default}#collapseAdditionalInformation" target="_blank">{_admin.program.empty_user_info_link}</a>{_admin.program.empty_user_info_end}
+            {_admin.program.empty_user_info_begin}<a href="{plink :Web:Profile:default}#collapseAdditionalInformation" class="alert-link" target="_blank">{_admin.program.empty_user_info_link}</a>{_admin.program.empty_user_info_end}
         </div>
     {/if}
     {control programBlocksGrid}

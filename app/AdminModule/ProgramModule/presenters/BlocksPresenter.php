@@ -44,7 +44,20 @@ class BlocksPresenter extends ProgramBasePresenter
     public function renderEdit($id)
     {
         $this->template->name = $this->blockRepository->findBlockById($id)->getName();
-        $this->template->id = $id;
+
+        $block = $this->blockRepository->findBlockById($id);
+        $this['blockForm']->setDefaults([
+            'id' => $id,
+            'name' => $block->getName(),
+            'category' => $block->getCategory() ? $block->getCategory()->getId() : null,
+            'lector' => $block->getLector() ? $block->getLector()->getId() : null,
+            'duration' => $block->getDuration(),
+            'capacity' => $block->getCapacity(),
+            'mandatory' => $block->isMandatory(),
+            'perex' => $block->getPerex(),
+            'description' => $block->getDescription(),
+            'tools' => $block->getTools()
+        ]);
     }
 
     protected function createComponentProgramBlocksGrid($name)
@@ -52,29 +65,14 @@ class BlocksPresenter extends ProgramBasePresenter
         return $this->programBlocksGridControlFactory->create($name);
     }
 
-    protected function createComponentBlockForm($name, $id = null)
+    protected function createComponentBlockForm($name)
     {
-        $form = $this->blockFormFactory->create();
-
-        if ($id !== null) {
-            $block = $this->blockRepository->findBlockById($id);
-            $form->setDefaults([
-                'id' => $id,
-                'name' => $block->getName(),
-                'category' => $block->getCategory()->getId(),
-                'lector' => $block->getLector()->getId(),
-                'duration' => $block->getDuration(),
-                'capacity' => $block->getCapacity(),
-                'mandatory' => $block->isMandatory(),
-                'perex' => $block->getPerex(),
-                'description' => $block->getDescription(),
-                'tools' => $block->getTools()
-            ]);
-        }
+        $form =  $this->blockFormFactory->create();
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) {
             if ($form['submitAndContinue']->isSubmittedBy()) {
-                $this->saveBlock($values);
+                $block = $this->saveBlock($values);
+                $this->redirect('Blocks:edit', ['id' => $block->getId()]);
             }
             else {
                 $this->saveBlock($values);
@@ -85,21 +83,22 @@ class BlocksPresenter extends ProgramBasePresenter
         return $form;
     }
 
-    private function saveBlock($values)
-    {
+    private function saveBlock($values) {
         $id = $values['id'];
 
-        $category = $values['category'] == '' ? null : $this->categoryRepository->findCategoryById($values['category']);
-        $lector = $values['lector'] == '' ? null : $this->userRepository->findUserById($values['lector']);
+        $category = $values['category'] != '' ? $this->categoryRepository->findCategoryById($values['category']) : null;
+        $lector = $values['lector'] != '' ? $this->userRepository->findUserById($values['lector']) : null;
+        $capacity = $values['capacity'] != '' ? $values['capacity'] : null;
 
-        if ($id != '')
-            $block = $this->blockRepository->editBlock($id, $values['name'], $category, $lector, $values['duration'], $values['capacity'], $values['mandatory'], $values['perex'], $values['description'], $values['tools']);
-        else
-            $block = $this->blockRepository->addBlock($values['name'], $category, $lector, $values['duration'], $values['capacity'], $values['mandatory'], $values['perex'], $values['description'], $values['tools']);
-
-        if ($id != '')
-            $this->flashMessage('admin.program.blocks_edited', 'success');
-        else
+        if ($id == null) {
+            $block = $this->blockRepository->addBlock($values['name'], $category, $lector, $values['duration'], $capacity, $values['mandatory'], $values['perex'], $values['description'], $values['tools']);
             $this->flashMessage('admin.program.blocks_added', 'success');
+        }
+        else {
+            $block = $this->blockRepository->editBlock($values['id'], $values['name'], $category, $lector, $values['duration'], $capacity, $values['mandatory'], $values['perex'], $values['description'], $values['tools']);
+            $this->flashMessage('admin.program.blocks_edited', 'success');
+        }
+
+        return $block;
     }
 }

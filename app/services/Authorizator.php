@@ -16,7 +16,7 @@ class Authorizator extends Nette\Security\Permission
 {
     public function __construct(RoleRepository $roleRepository, ResourceRepository $resourceRepository)
     {
-        foreach ($resourceRepository->findAll() as $resource) {
+        foreach ($resourceRepository->findAll() as $resource) { //TODO optimalizace
             $this->addResource($resource->getName());
         }
 

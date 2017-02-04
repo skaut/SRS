@@ -14,6 +14,8 @@ class CategoryRepository extends EntityRepository
 
         $this->_em->persist($category);
         $this->_em->flush();
+
+        return $category;
     }
 
     public function removeCategory($id)
@@ -30,6 +32,8 @@ class CategoryRepository extends EntityRepository
         $category->setRegisterableRoles($roles);
 
         $this->_em->flush();
+
+        return $category;
     }
 
     public function isNameUnique($name, $id = null) {

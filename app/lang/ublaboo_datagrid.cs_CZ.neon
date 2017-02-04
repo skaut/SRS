@@ -1,22 +1,32 @@
-no_item_found_reset: 'Žádné položky nenalezeny. Filtr můžete vynulovat'
-no_item_found: 'Žádné položky nenalezeny.'
-here: 'zde'
-items: 'Položky'
-all: 'všechny'
-from: 'z'
-reset_filter: 'Resetovat filtr'
-group_actions: 'Hromadné akce'
-show_all_columns: 'Zobrazit všechny sloupce'
-hide_column: 'Skrýt sloupec'
-action: 'Akce'
-previous: 'Předchozí'
-next: 'Další'
-choose: 'Vyberte'
-execute: 'Provést'
-per_page_submit: 'Počet položek na stránku'
-add: 'Přidat'
-cancel: 'Zrušit'
-save: 'Uložit'
-edit: 'Upravit v řádce'
+no_item_found_reset: "Žádné položky nenalezeny. Filtr můžete vynulovat"
+no_item_found: "Žádné položky nenalezeny."
+here: "zde"
+items: "Položky"
+all: "všechny"
+from: "z"
+reset_filter: "Resetovat filtr"
+group_actions: "Hromadné akce"
+show: "Zobrazit"
+add: "Přidat"
+edit: "Upravit v řádce"
+show_all_columns: "Zobrazit všechny sloupce"
+show_default_columns: "Zobrazit výchozí sloupce"
+hide_column: "Skrýt sloupec"
+action: "Akce"
+previous: "Předchozí"
+next: "Další"
+choose: "Vyberte"
+choose_input_required: "Pole hromadné akce nesmí být prázdné"
+execute: "Provést"
+save: "Uložit"
+cancel: "Zrušit"
+multiselect_choose: "Vyberte"
+multiselect_selected: "Označeno {0} z {1}"
+filter_submit_button: "Filtrovat"
+show_filter: "Zobrazit filtr"
+per_page_submit: "Změnit"
+
+
+
 
 

@@ -4,6 +4,7 @@ namespace App\Model\Program;
 
 use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
@@ -52,7 +53,7 @@ class Block
     protected $duration;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      * @var int
      */
     protected $capacity;
@@ -123,6 +124,10 @@ class Block
         $this->programs = $programs;
     }
 
+    public function getProgramsCount() {
+        return $this->programs->count();
+    }
+
     /**
      * @return User
      */
@@ -185,6 +190,10 @@ class Block
     public function setDuration($duration)
     {
         $this->duration = $duration;
+    }
+
+    public function getDurationInMinutes($basicBlockDuration) {
+        return $this->duration * $basicBlockDuration;
     }
 
     /**

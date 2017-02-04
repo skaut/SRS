@@ -25,6 +25,8 @@ class BlockRepository extends EntityRepository
 
         $this->_em->persist($block);
         $this->_em->flush();
+
+        return $block;
     }
 
     public function editBlock($id, $name, $category, $lector, $duration, $capacity, $mandatory, $perex, $description, $tools) {
@@ -41,6 +43,15 @@ class BlockRepository extends EntityRepository
         $block->setTools($tools);
 
         $this->_em->flush();
+
+        return $block;
+    }
+
+    public function editBlockMandatory($id, $mandatory) {
+        $block = $this->find($id);
+        $block->setMandatory($mandatory);
+        $this->_em->flush();
+        return $block;
     }
 
     public function removeBlock($id)
