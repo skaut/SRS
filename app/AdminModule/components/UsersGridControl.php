@@ -50,6 +50,7 @@ class UsersGridControl extends Control
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
         $grid->setDataSource($this->userRepository->createQueryBuilder('u'));
+        $grid->setDefaultSort(['displayName' => 'ASC']);
         $grid->setColumnsHideable();
 
         $grid->addGroupSelectAction('Send', [
@@ -72,7 +73,7 @@ class UsersGridControl extends Control
             ->setSortable()
             ->setFilterText();
 
-        $grid->addColumnText('roles', 'Role', 'rolesText'); //TODO filtr
+        //$grid->addColumnText('roles', 'Role', 'roles'); //TODO filtr
 
         $grid->addColumnText('approved', 'Schválený')
             ->setReplacement(['0' => 'ne', '1' => 'ano'])

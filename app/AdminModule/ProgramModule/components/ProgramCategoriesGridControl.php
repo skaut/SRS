@@ -43,8 +43,8 @@ class ProgramCategoriesGridControl extends Control
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
-        $grid->setDataSource($this->categoryRepository->createQueryBuilder('c')->orderBy('c.name'));
-
+        $grid->setDataSource($this->categoryRepository->createQueryBuilder('c'));
+        $grid->setDefaultSort(['name' => 'ASC']);
         $grid->setPagination(false);
 
         $grid->addColumnText('name', 'admin.program.categories_name');

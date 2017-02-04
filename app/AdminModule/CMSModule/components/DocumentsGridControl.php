@@ -53,8 +53,8 @@ class DocumentsGridControl extends Control
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
-        $grid->setDataSource($this->documentRepository->createQueryBuilder('d')->orderBy('d.name'));
-
+        $grid->setDataSource($this->documentRepository->createQueryBuilder('d'));
+        $grid->setDefaultSort(['name' => 'ASC']);
         $grid->setPagination(false);
 
         $grid->addColumnText('name', 'admin.cms.documents_name');

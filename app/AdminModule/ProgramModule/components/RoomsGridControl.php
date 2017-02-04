@@ -35,8 +35,8 @@ class RoomsGridControl extends Control
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
-        $grid->setDataSource($this->roomRepository->createQueryBuilder('r')->orderBy('r.name'));
-
+        $grid->setDataSource($this->roomRepository->createQueryBuilder('r'));
+        $grid->setDefaultSort(['name' => 'ASC']);
         $grid->setPagination(false);
 
         $grid->addColumnText('name', 'admin.program.rooms_name');
