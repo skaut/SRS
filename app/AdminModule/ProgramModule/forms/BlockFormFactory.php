@@ -60,7 +60,8 @@ class BlockFormFactory
 
         $form->addCheckbox('mandatory', 'admin.program.blocks_mandatory_form');
 
-        $form->addTextArea('perex', 'admin.program.blocks_perex');
+        $form->addTextArea('perex', 'admin.program.blocks_perex_form')
+            ->addCondition(Form::FILLED)->addRule(Form::MAX_LENGTH, 'admin.program.blocks_perex_length', 160);
 
         $form->addTextArea('description', 'admin.program.blocks_description')
             ->setAttribute('class', 'tinymce-paragraph');

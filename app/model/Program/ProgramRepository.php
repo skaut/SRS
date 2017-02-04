@@ -6,4 +6,5 @@ use Kdyby\Doctrine\EntityRepository;
 
 class ProgramRepository extends EntityRepository
 {
+
 }

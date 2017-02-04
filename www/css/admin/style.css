@@ -7,6 +7,14 @@ body {
     text-align: left !important;
 }
 
+.datagrid {
+    padding: 0 !important;
+}
+
+.datagrid th {
+    text-align: center !important;
+}
+
 /* oprava multiselect v inline editaci */
 .datagrid-multiselect {
     padding-bottom: 0 !important;

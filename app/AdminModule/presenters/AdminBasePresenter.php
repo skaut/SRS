@@ -105,7 +105,7 @@ abstract class AdminBasePresenter extends BasePresenter
         $this->template->permissionManage = Permission::MANAGE;
         $this->template->permissionManageOwnPrograms = Permission::MANAGE_OWN_PROGRAMS;
         $this->template->permissionManageAllPrograms = Permission::MANAGE_ALL_PROGRAMS;
-        $this->template->permissionManageHarmonogram = Permission::MANAGE_HARMONOGRAM;
+        $this->template->permissionManageSchedule = Permission::MANAGE_SCHEDULE;
         $this->template->permissionManageRooms = Permission::MANAGE_ROOMS;
         $this->template->permissionManageCategories = Permission::MANAGE_CATEGORIES;
 

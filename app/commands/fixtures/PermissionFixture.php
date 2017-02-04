@@ -19,7 +19,7 @@ class PermissionFixture extends AbstractFixture implements DependentFixtureInter
         $permissions['program_access'] = new Permission(Permission::ACCESS, $this->getReference('resource_program'));
         $permissions['program_manage_own_programs'] = new Permission(Permission::MANAGE_OWN_PROGRAMS, $this->getReference('resource_program'));
         $permissions['program_manage_all_programs'] = new Permission(Permission::MANAGE_ALL_PROGRAMS, $this->getReference('resource_program'));
-        $permissions['program_manage_harmonogram'] = new Permission(Permission::MANAGE_HARMONOGRAM, $this->getReference('resource_program'));
+        $permissions['program_manage_schedule'] = new Permission(Permission::MANAGE_SCHEDULE, $this->getReference('resource_program'));
         $permissions['program_manage_rooms'] = new Permission(Permission::MANAGE_ROOMS, $this->getReference('resource_program'));
         $permissions['program_manage_categories'] = new Permission(Permission::MANAGE_CATEGORIES, $this->getReference('resource_program'));
         $permissions['program_choose_programs'] = new Permission(Permission::CHOOSE_PROGRAMS, $this->getReference('resource_program'));

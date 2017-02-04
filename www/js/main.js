@@ -24,7 +24,7 @@ $(function () {
             endDate: el.attr('max'),
             weekStart: 1,
             minView: el.is('.date') ? 'month' : 'hour',
-            format: el.is('.date') ? 'd. m. yyyy' : 'd. m. yyyy - hh:ii', // for seconds support use 'd. m. yyyy - hh:ii:ss'
+            format: el.is('.date') ? 'd. m. yyyy' : 'd. m. yyyy hh:ii', // for seconds support use 'd. m. yyyy - hh:ii:ss'
             autoclose: true,
             fontAwesome: true,
             todayBtn: true,

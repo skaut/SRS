@@ -86,7 +86,7 @@ class DocumentsGridControl extends Control
         $grid->addColumnText('description', 'admin.cms.documents_description');
 
         $grid->addColumnDateTime('timestamp', 'admin.cms.documents_timestamp')
-            ->setFormat('j. n. Y - H:i');;
+            ->setFormat('j. n. Y H:i');
 
         $tagsChoices = $this->prepareTagsChoices();
 

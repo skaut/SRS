@@ -3,7 +3,7 @@
 {/block}
 
 {block main}
-    <h2>{_admin.program.blocks_edit_heading, ['name' => $name]}</h2>
+    <h2>{_admin.program.blocks_edit_heading, ['name' => $block->getName()]}</h2>
     <div class="well">
         {control blockForm}
     </div>

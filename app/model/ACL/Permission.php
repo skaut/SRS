@@ -16,7 +16,7 @@ class Permission
     const ACCESS = 'access';
     const MANAGE_OWN_PROGRAMS = 'manage_own_programs';
     const MANAGE_ALL_PROGRAMS = 'manage_all_programs';
-    const MANAGE_HARMONOGRAM = 'manage_harmonogram';
+    const MANAGE_SCHEDULE = 'manage_schedule';
     const MANAGE_ROOMS = 'manage_rooms';
     const MANAGE_CATEGORIES = 'manage_categories';
     const CHOOSE_PROGRAMS = 'choose_programs';
@@ -26,7 +26,7 @@ class Permission
         self::ACCESS,
         self::MANAGE_OWN_PROGRAMS,
         self::MANAGE_ALL_PROGRAMS,
-        self::MANAGE_HARMONOGRAM,
+        self::MANAGE_SCHEDULE,
         self::CHOOSE_PROGRAMS
     ];
 

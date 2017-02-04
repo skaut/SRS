@@ -86,6 +86,17 @@ class Program
         $this->attendees = $attendees;
     }
 
+    public function getAttendeesCount() {
+        return $this->attendees->count();
+    }
+
+    public function getOccupancy() {
+        if ($this->block->getCapacity() !== null)
+            return $this->getAttendeesCount() . '/' . $this->block->getCapacity();
+        else
+            return $this->getAttendeesCount();
+    }
+
     /**
      * @return Room
      */
@@ -116,5 +127,10 @@ class Program
     public function setStart($start)
     {
         $this->start = $start;
+    }
+
+    public function getEnd($basicBlockDuration) {
+        $end = clone($this->start);
+        return $end->add(new \DateInterval('PT' . $basicBlockDuration * $this->block->getDuration() . 'M'));
     }
 }

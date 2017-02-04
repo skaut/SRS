@@ -65,7 +65,7 @@ class RoleFixture extends AbstractFixture implements DependentFixtureInterface
         $organizer->addPermission($this->getReference('configuration_manage'));
         $organizer->addPermission($this->getReference('program_access'));
         $organizer->addPermission($this->getReference('program_manage_all_programs'));
-        $organizer->addPermission($this->getReference('program_manage_harmonogram'));
+        $organizer->addPermission($this->getReference('program_manage_schedule'));
         $organizer->addPermission($this->getReference('program_manage_rooms'));
         $organizer->addPermission($this->getReference('program_manage_categories'));
         $organizer->addPermission($this->getReference('program_choose_programs'));
@@ -80,7 +80,7 @@ class RoleFixture extends AbstractFixture implements DependentFixtureInterface
         $admin->addPermission($this->getReference('configuration_manage'));
         $admin->addPermission($this->getReference('program_access'));
         $admin->addPermission($this->getReference('program_manage_all_programs'));
-        $admin->addPermission($this->getReference('program_manage_harmonogram'));
+        $admin->addPermission($this->getReference('program_manage_schedule'));
         $admin->addPermission($this->getReference('program_manage_rooms'));
         $admin->addPermission($this->getReference('program_manage_categories'));
         $admin->addPermission($this->getReference('program_choose_programs'));

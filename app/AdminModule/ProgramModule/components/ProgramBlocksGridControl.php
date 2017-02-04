@@ -91,17 +91,16 @@ class ProgramBlocksGridControl extends Control
         $grid->addColumnText('capacity', 'admin.program.blocks_capacity')
             ->setSortable();
 
-        $mandatoryColumn = $grid->addColumnStatus('mandatory', 'admin.program.blocks_mandatory_grid');
-        $mandatoryColumn
-            ->addOption(false, 'admin.program.blocks_mandatory_grid_voluntary')->setClass('btn-success')->endOption()
-            ->addOption(true, 'admin.program.blocks_mandatory_grid_mandatory')->setClass('btn-danger')->endOption()
-            ->onChange[] = [$this, 'mandatoryChange'];
-        $mandatoryColumn
+        $grid->addColumnText('mandatory', 'admin.program.blocks_mandatory')
+            ->setReplacement([
+                false => $translator->translate('admin.program.blocks_mandatory_voluntary'),
+                true => $translator->translate('admin.program.blocks_mandatory_mandatory')
+            ])
             ->setSortable()
             ->setFilterSelect([
                 '' => $translator->translate('admin.common.all'),
-                false => $translator->translate('admin.program.blocks_mandatory_grid_voluntary'),
-                true => $translator->translate('admin.program.blocks_mandatory_grid_mandatory')
+                false => $translator->translate('admin.program.blocks_mandatory_voluntary'),
+                true => $translator->translate('admin.program.blocks_mandatory_mandatory')
             ]);
 
         $grid->addColumnText('programsCount', 'admin.program.blocks_programs_count')
@@ -113,14 +112,10 @@ class ProgramBlocksGridControl extends Control
             ->setIcon('plus')
             ->setTitle('admin.common.add');
 
-        $grid->addAction('detail', '', 'Blocks:detail')
-            ->setIcon('eye')
-            ->setTitle('admin.common.detail')
+        $grid->addAction('detail', 'admin.common.detail', 'Blocks:detail')
             ->setClass('btn btn-xs btn-primary');
 
-        $grid->addAction('edit', '', 'Blocks:edit')
-            ->setIcon('pencil-square-o')
-            ->setTitle('admin.common.edit');
+        $grid->addAction('edit', 'admin.common.edit', 'Blocks:edit');
 
         $grid->addAction('delete', '', 'delete!')
             ->setIcon('trash')

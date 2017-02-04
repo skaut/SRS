@@ -1,0 +1,71 @@
+{block main}
+    <h2>{_admin.program.blocks_detail_heading, ['name' => $block->getName()]}</h2>
+    <div class="well">
+        <table class="table table-form">
+            <col class="col-sm-3 col-xs-3">
+            <col class="col-sm-9 col-xs-9">
+
+            <tr>
+                <th>{_admin.program.blocks_category}</th>
+                <td>
+                    {if $block->getCategory()}
+                        {$block->getCategory()->getName()}
+                    {/if}
+                </td>
+            </tr>
+
+            <tr>
+                <th>{_admin.program.blocks_lector}</th>
+                <td>
+                    {if $block->getLector()}
+                        {$block->getLector()->getDisplayName()}
+                    {/if}
+                </td>
+            </tr>
+
+            <tr>
+                <th>{_admin.program.blocks_duration}</th>
+                <td>{_admin.common.minutes, ['count' => $block->getDurationInMinutes($basicBlockDuration)]}</td>
+            </tr>
+
+            <tr>
+                <th>{_admin.program.blocks_capacity}</th>
+                <td>
+                    {if $block->getCapacity() !== null}
+                        {$block->getCapacity()}
+                    {else}
+                        {_admin.program.blocks_capacity_unlimited}
+                    {/if}
+                </td>
+            </tr>
+
+            <tr>
+                <th>{_admin.program.blocks_mandatory}</th>
+                <td>
+                    {if $block->isMandatory()}
+                        {_admin.program.blocks_mandatory_mandatory}
+                    {else}
+                        {_admin.program.blocks_mandatory_voluntary}
+                    {/if}
+                </td>
+            </tr>
+
+            <tr>
+                <th>{_admin.program.blocks_tools}</th>
+                <td>{$block->getTools()}</td>
+            </tr>
+
+            <tr>
+                <th>{_admin.program.blocks_perex}</th>
+                <td>{$block->getPerex()}</td>
+            </tr>
+
+            <tr>
+                <td colspan="1" style="padding-left: 0">{$block->getDescription()|noescape}</td>
+            </tr>
+        </table>
+    </div>
+
+    <h3>{_admin.program.blocks_schedule}</h3>
+    {control programBlockScheduleGrid}
+{/block}

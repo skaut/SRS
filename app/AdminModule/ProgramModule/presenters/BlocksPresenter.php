@@ -3,6 +3,7 @@
 namespace App\AdminModule\ProgramModule\Presenters;
 
 
+use App\AdminModule\ProgramModule\Components\IProgramBlockScheduleGridControlFactory;
 use App\AdminModule\ProgramModule\Components\IProgramBlocksGridControlFactory;
 use App\AdminModule\ProgramModule\Forms\BlockFormFactory;
 use App\Model\Program\Block;
@@ -31,6 +32,12 @@ class BlocksPresenter extends ProgramBasePresenter
     public $programBlocksGridControlFactory;
 
     /**
+     * @var IProgramBlockScheduleGridControlFactory
+     * @inject
+     */
+    public $programBlockScheduleGridControlFactory;
+
+    /**
      * @var BlockFormFactory
      * @inject
      */
@@ -41,11 +48,20 @@ class BlocksPresenter extends ProgramBasePresenter
         $this->template->emptyUserInfo = $this->dbuser->getAbout() == '';
     }
 
+    public function renderDetail($id)
+    {
+        $block = $this->blockRepository->findBlockById($id);
+
+        $this->template->block = $block;
+        $this->template->basicBlockDuration = $this->settingsRepository->getValue('basic_block_duration');
+    }
+
     public function renderEdit($id)
     {
-        $this->template->name = $this->blockRepository->findBlockById($id)->getName();
-
         $block = $this->blockRepository->findBlockById($id);
+
+        $this->template->block = $block;
+
         $this['blockForm']->setDefaults([
             'id' => $id,
             'name' => $block->getName(),
@@ -63,6 +79,11 @@ class BlocksPresenter extends ProgramBasePresenter
     protected function createComponentProgramBlocksGrid($name)
     {
         return $this->programBlocksGridControlFactory->create($name);
+    }
+
+    protected function createComponentProgramBlockScheduleGrid($name)
+    {
+        return $this->programBlockScheduleGridControlFactory->create($name);
     }
 
     protected function createComponentBlockForm($name)

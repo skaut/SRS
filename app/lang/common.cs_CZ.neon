@@ -26,7 +26,7 @@ permission:
     access: "Přístup"
     manage_own_programs: "Spravovat vlastní programy"
     manage_all_programs: "Spravovat všechny programy"
-    manage_harmonogram: "Upravovat harmonogram"
+    manage_schedule: "Upravovat harmonogram"
     choose_programs: "Vybírat si programy"
 
 settings:
