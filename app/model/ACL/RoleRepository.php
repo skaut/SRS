@@ -8,6 +8,10 @@ use Kdyby\Doctrine\EntityRepository;
 
 class RoleRepository extends EntityRepository
 {
+    public function findRolesNames() {
+        return $this->createQueryBuilder('r')->select('r.name')->getQuery()->execute();
+    }
+
     public function findRoleByName($name) {
         return $this->findOneBy(['name' => $name]);
     }

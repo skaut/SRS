@@ -15,6 +15,12 @@ use Doctrine\DBAL\Exception\TableNotFoundException;
 abstract class WebBasePresenter extends BasePresenter
 {
     /**
+     * @var Authorizator
+     * @inject
+     */
+    public $authorizator;
+
+    /**
      * @var \App\Model\ACL\ResourceRepository
      * @inject
      */
@@ -80,7 +86,7 @@ abstract class WebBasePresenter extends BasePresenter
         if ($this->user->isLoggedIn() && !$this->skautIsService->isLoggedIn())
             $this->user->logout(true);
 
-        $this->user->setAuthorizator(new Authorizator($this->roleRepository, $this->resourceRepository));
+        $this->user->setAuthorizator($this->authorizator);
 
         $this->dbuser = $this->user->isLoggedIn() ? $this->userRepository->findUserById($this->user->id) : null;
     }

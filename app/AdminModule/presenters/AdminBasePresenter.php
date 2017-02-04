@@ -17,6 +17,12 @@ use WebLoader\Nette\JavaScriptLoader;
 abstract class AdminBasePresenter extends BasePresenter
 {
     /**
+     * @var Authorizator
+     * @inject
+     */
+    public $authorizator;
+
+    /**
      * @var ResourceRepository
      * @inject
      */
@@ -74,7 +80,7 @@ abstract class AdminBasePresenter extends BasePresenter
         if ($this->user->isLoggedIn() && !$this->skautIsService->isLoggedIn())
             $this->user->logout(true);
 
-        $this->user->setAuthorizator(new Authorizator($this->roleRepository, $this->resourceRepository));
+        $this->user->setAuthorizator($this->authorizator);
 
         if (!$this->user->isLoggedIn()) {
             $this->flashMessage('admin.common.login_required', 'danger', 'lock');

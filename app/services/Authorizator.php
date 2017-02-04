@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Model\ACL\PermissionRepository;
 use App\Model\ACL\ResourceRepository;
 use App\Model\ACL\RoleRepository;
 use Nette;
@@ -14,18 +15,18 @@ use Nette\Security\role;
  */
 class Authorizator extends Nette\Security\Permission
 {
-    public function __construct(RoleRepository $roleRepository, ResourceRepository $resourceRepository)
+    public function __construct(RoleRepository $roleRepository, PermissionRepository $permissionRepository, ResourceRepository $resourceRepository)
     {
-        foreach ($resourceRepository->findAll() as $resource) { //TODO optimalizace
-            $this->addResource($resource->getName());
+        foreach ($resourceRepository->findResourcesNames() as $resource) {
+            $this->addResource($resource['name']);
         }
 
-        foreach ($roleRepository->findAll() as $role) {
-            $this->addRole($role->getName());
+        foreach ($roleRepository->findRolesNames() as $role) {
+            $this->addRole($role['name']);
+        }
 
-            foreach ($role->getPermissions() as $permission) {
-                $this->allow($role->getName(), $permission->getResource()->getName(), $permission->getName());
-            }
+        foreach ($permissionRepository->findPermissionsNames() as $permission) {
+            $this->allow($permission['roleName'], $permission['resourceName'], $permission['name']);
         }
     }
 }

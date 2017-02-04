@@ -47,11 +47,13 @@ services:
     - App\RouterFactory
     router: @App\RouterFactory::createRouter
     authenticator: App\Services\Authenticator
+    - App\Services\Authorizator
     - App\Services\SkautIsService
     - App\Services\FilesService(%wwwDir%/files)
     - App\Services\MailService
     - App\Services\PrintService
     - App\Services\ExportService
+    - App\Model\ACL\PermissionRepository
     - App\Model\ACL\ResourceRepository
     - App\Model\ACL\RoleRepository
     - App\Model\CMS\Document\DocumentRepository
