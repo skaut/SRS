@@ -33,14 +33,103 @@ class Faq
     protected $answer;
 
     /**
+     * @ORM\Column(type="boolean")
+     * @var bool
+     */
+    protected $public = false;
+
+    /**
      * @ORM\Column(type="integer")
      * @var int
      */
     protected $position = 0;
 
+
     /**
-     * @ORM\Column(type="boolean")
-     * @var bool
+     * @return int
      */
-    protected $public = false;
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getQuestion()
+    {
+        return $this->question;
+    }
+
+    /**
+     * @param string $question
+     */
+    public function setQuestion($question)
+    {
+        $this->question = $question;
+    }
+
+    /**
+     * @return User
+     */
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+    /**
+     * @param User $author
+     */
+    public function setAuthor($author)
+    {
+        $this->author = $author;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAnswer()
+    {
+        return $this->answer;
+    }
+
+    /**
+     * @param string $answer
+     */
+    public function setAnswer($answer)
+    {
+        $this->answer = $answer;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPublic()
+    {
+        return $this->public;
+    }
+
+    /**
+     * @param bool $public
+     */
+    public function setPublic($public)
+    {
+        $this->public = $public;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+    /**
+     * @param int $position
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
+    }
 }

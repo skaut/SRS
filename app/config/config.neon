@@ -74,6 +74,8 @@ services:
     - App\WebModule\Forms\RolesFormFactory
     - App\WebModule\Forms\AdditionalInformationFormFactory
     - App\AdminModule\Forms\BaseFormFactory
+    - App\AdminModule\CMSModule\Forms\FaqFormFactory
+    - App\AdminModule\CMSModule\Forms\NewsFormFactory
     - App\AdminModule\CMSModule\Forms\SettingsFormFactory
     - App\AdminModule\ConfigurationModule\Forms\PaymentFormFactory
     - App\AdminModule\ConfigurationModule\Forms\PaymentProofFormFactory

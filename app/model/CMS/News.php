@@ -21,14 +21,48 @@ class News
     protected $text;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="datetime")
      * @var \DateTime
      */
     protected $published;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\App\Model\User\User", cascade={"persist"})
-     * @var User
+     * @return int
      */
-    protected $author;
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getText()
+    {
+        return $this->text;
+    }
+
+    /**
+     * @param string $text
+     */
+    public function setText($text)
+    {
+        $this->text = $text;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getPublished()
+    {
+        return $this->published;
+    }
+
+    /**
+     * @param \DateTime $published
+     */
+    public function setPublished($published)
+    {
+        $this->published = $published;
+    }
 }

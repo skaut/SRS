@@ -65,6 +65,6 @@ class ProgramBlockScheduleGridControl extends Control
 
         $grid->addColumnText('occupancy', 'admin.program.blocks_program_occupancy');
 
-        //TODO detail s 2 datagridy pro přihlášené a nepřihlášené, skupinové akce
+        //TODO detail s 2 datagridy pro přihlášené a nepřihlášené, skupinové akce / pouzit tady klasickou tabulku s vyjizdecimi datagridy
     }
 }

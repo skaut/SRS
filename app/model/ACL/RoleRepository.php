@@ -28,8 +28,8 @@ class RoleRepository extends EntityRepository
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('registerable', true))
-            ->andWhere(Criteria::expr()->orX(Criteria::expr()->lte('registerableFrom', new \DateTime('now')), Criteria::expr()->isNull('registerableFrom')))
-            ->andWhere(Criteria::expr()->orX(Criteria::expr()->gte('registerableTo', new \DateTime('now')), Criteria::expr()->isNull('registerableTo')));
+            ->andWhere(Criteria::expr()->orX(Criteria::expr()->lte('registerableFrom', new \DateTime()), Criteria::expr()->isNull('registerableFrom')))
+            ->andWhere(Criteria::expr()->orX(Criteria::expr()->gte('registerableTo', new \DateTime()), Criteria::expr()->isNull('registerableTo')));
 
         return $this->matching($criteria);
     }

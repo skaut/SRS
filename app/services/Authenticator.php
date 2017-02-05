@@ -58,7 +58,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
 
         if ($newUser) {
             $user = new User($skautISUser->UserName);
-            $user->setFirstLogin(new \DateTime("now"));
+            $user->setFirstLogin(new \DateTime());
             $roleUnregistered = $this->roleRepository->findRoleByUntranslatedName(Role::UNREGISTERED);
             $user->addRole($roleUnregistered);
         }
@@ -101,7 +101,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
         $user->setCity($skautISPerson->City);
         $user->setPostcode($skautISPerson->Postcode);
         $user->setState($skautISPerson->State);
-        $user->setLastLogin(new \DateTime("now"));
+        $user->setLastLogin(new \DateTime());
         $user->setMember($skautISUser->HasMembership);
 
         $skautISUnitId = $this->skautIsService->getUnitId();

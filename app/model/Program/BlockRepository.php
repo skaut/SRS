@@ -47,13 +47,6 @@ class BlockRepository extends EntityRepository
         return $block;
     }
 
-    public function editBlockMandatory($id, $mandatory) {
-        $block = $this->find($id);
-        $block->setMandatory($mandatory);
-        $this->_em->flush();
-        return $block;
-    }
-
     public function removeBlock($id)
     {
         $block = $this->find($id);

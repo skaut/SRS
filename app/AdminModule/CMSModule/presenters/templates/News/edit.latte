@@ -1,0 +1,10 @@
+{block head}
+    {include '../../../../presenters/templates/includes/tinymce_init.latte'}
+{/block}
+
+{block main}
+    <h2>{_admin.cms.news_edit_heading}</h2>
+    <div class="well">
+        {control newsForm}
+    </div>
+{/block}

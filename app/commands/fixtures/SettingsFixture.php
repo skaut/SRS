@@ -26,10 +26,10 @@ class SettingsFixture extends AbstractFixture
 
     public function load(ObjectManager $manager)
     {
-        $today = new \DateTime('now');
-        $tommorow = new \DateTime('now');
+        $today = new \DateTime();
+        $tommorow = new \DateTime();
         $tommorow->modify('+1 day');
-        $yesterday = new \DateTime('now');
+        $yesterday = new \DateTime();
         $yesterday->modify('-1 day');
 
         $settings = array();
