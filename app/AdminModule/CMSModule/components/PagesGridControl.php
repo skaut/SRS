@@ -75,6 +75,7 @@ class PagesGridControl extends Control
                 }
             });
 
+
         $rolesChoices = $this->prepareRolesChoices();
         $publicChoices = [
             false => $this->translator->translate('admin.cms.pages_public_private'),
@@ -82,13 +83,17 @@ class PagesGridControl extends Control
         ];
 
         $grid->addInlineAdd()->onControlAdd[] = function($container) use($rolesChoices, $publicChoices) {
-            $container->addText('name', '')
-                ->addRule(Form::FILLED, 'admin.cms.pages_name_empty');
+            $container->addText('name', '');
+                //->addRule(Form::FILLED, 'admin.cms.pages_name_empty'); //TODO validace
+
             $container->addText('slug', '')
-                ->addRule(Form::FILLED, 'admin.cms.pages_slug_empty')
+                ->addCondition(Form::FILLED) //->addRule(Form::FILLED, 'admin.cms.pages_slug_empty')
                 ->addRule(Form::PATTERN, 'admin.cms.pages_slug_format', '^[a-z0-9-]*$')
                 ->addRule(Form::IS_NOT_IN, 'admin.cms.pages_slug_exists', $this->pageRepository->findAllSlugs());
+
             $container->addMultiSelect('roles', '', $rolesChoices)->setAttribute('class', 'datagrid-multiselect');
+                //->addRule(Form::FILLED, 'admin.cms.pages_roles_empty');
+
             $container->addSelect('public', '', $publicChoices);
         };
         $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
@@ -96,10 +101,14 @@ class PagesGridControl extends Control
         $grid->addInlineEdit()->onControlAdd[] = function($container) use($rolesChoices, $publicChoices) {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.pages_name_empty');
+
             $container->addText('slug', '')
                 ->addRule(Form::FILLED, 'admin.cms.pages_slug_empty')
-                ->addRule(Form::PATTERN, 'admin.cms.pages_slug_format', '^([a-z-]*)|/$');
-            $container->addMultiSelect('roles', '', $rolesChoices)->setAttribute('class', 'datagrid-multiselect');
+                ->addRule(Form::PATTERN, 'admin.cms.pages_slug_format', '^([a-z0-9-]*)|/$');
+
+            $container->addMultiSelect('roles', '', $rolesChoices)->setAttribute('class', 'datagrid-multiselect')
+                ->addRule(Form::FILLED, 'admin.cms.pages_roles_empty');
+
             $container->addSelect('public', '', $publicChoices);
         };
         $grid->getInlineEdit()->onSetDefaults[] = function($container, $item) {
@@ -112,13 +121,14 @@ class PagesGridControl extends Control
                 'name' => $item->getName(),
                 'slug' => $item->getSlug(),
                 'roles' => $rolesIds,
-                'public' => $item->isPublic()
+                'public' => $item->isPublic() ? 1 : 0
             ]);
         };
         $grid->getInlineEdit()->onSubmit[] = [$this, 'edit'];
 
 
-        $grid->addAction('content', 'admin.cms.pages_edit_content', 'Pages:content');
+        $grid->addAction('content', 'admin.cms.pages_edit_content', 'Pages:content')
+            ->setClass('btn btn-xs btn-primary');
 
         $grid->addAction('delete', '', 'delete!')
             ->setIcon('trash')
@@ -137,10 +147,23 @@ class PagesGridControl extends Control
     {
         $p = $this->getPresenter();
 
+        $name = $values['name'];
+        $slug = $values['slug'];
         $roles = $this->roleRepository->findRolesByIds($values['roles']);
 
-        $this->pageRepository->addPage($values['name'], $values['slug'], $roles, $values['public']);
-        $p->flashMessage('admin.cms.pages_added', 'success');
+        if (!$name) {
+            $p->flashMessage('admin.cms.pages_name_empty', 'danger');
+        }
+        elseif (!$slug) {
+            $p->flashMessage('admin.cms.pages_slug_empty', 'danger');
+        }
+        elseif (count($roles) == 0) {
+            $p->flashMessage('admin.cms.pages_roles_empty', 'danger');
+        }
+        else {
+            $this->pageRepository->addPage($name, $slug, $roles, $values['public']);
+            $p->flashMessage('admin.cms.pages_added', 'success');
+        }
 
         $this->redirect('this');
     }
@@ -149,9 +172,7 @@ class PagesGridControl extends Control
     {
         $p = $this->getPresenter();
 
-        $roles = $this->roleRepository->findRolesByIds($values['roles']);
-
-        $this->pageRepository->editPage($id, $values['name'], $values['slug'], $roles, $values['public']);
+        $this->pageRepository->editPage($id, $values['name'], $values['slug'], $this->roleRepository->findRolesByIds($values['roles']), $values['public']);
         $p->flashMessage('admin.cms.pages_edited', 'success');
 
         $this->redirect('this');
@@ -186,7 +207,7 @@ class PagesGridControl extends Control
         $p = $this->getPresenter();
 
         if ($this->pageRepository->findPageById($id)->getSlug() == '/' && !$public) {
-            $p->flashMessage('admin.cms.pages_changed_public_denied', 'danger');
+            $p->flashMessage('admin.cms.pages_change_public_denied', 'danger');
         }
         else {
             $this->pageRepository->setPagePublic($id, $public);

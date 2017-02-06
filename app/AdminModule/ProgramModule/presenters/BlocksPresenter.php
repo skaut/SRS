@@ -6,6 +6,8 @@ namespace App\AdminModule\ProgramModule\Presenters;
 use App\AdminModule\ProgramModule\Components\IProgramBlockScheduleGridControlFactory;
 use App\AdminModule\ProgramModule\Components\IProgramBlocksGridControlFactory;
 use App\AdminModule\ProgramModule\Forms\BlockFormFactory;
+use App\Model\ACL\Permission;
+use App\Model\ACL\Resource;
 use App\Model\Program\Block;
 use App\Model\Program\BlockRepository;
 use App\Model\Program\CategoryRepository;
@@ -56,11 +58,17 @@ class BlocksPresenter extends ProgramBasePresenter
         $this->template->basicBlockDuration = $this->settingsRepository->getValue('basic_block_duration');
     }
 
+    public function renderAdd() {
+        $this['blockForm']['name']->addRule(Form::IS_NOT_IN, 'admin.program.blocks_name_exists', $this->blockRepository->findAllNames());
+    }
+
     public function renderEdit($id)
     {
         $block = $this->blockRepository->findBlockById($id);
 
         $this->template->block = $block;
+
+        $this['blockForm']['name']->addRule(Form::IS_NOT_IN, 'admin.program.blocks_name_exists', $this->blockRepository->findOthersNames($id));
 
         $this['blockForm']->setDefaults([
             'id' => $id,
@@ -109,7 +117,7 @@ class BlocksPresenter extends ProgramBasePresenter
 
         $category = $values['category'] != '' ? $this->categoryRepository->findCategoryById($values['category']) : null;
         $lector = $values['lector'] != '' ? $this->userRepository->findUserById($values['lector']) : null;
-        $capacity = $values['capacity'] != '' ? $values['capacity'] : null;
+        $capacity = $values['capacity'] !== '' ? $values['capacity'] : null;
 
         if ($id == null) {
             $block = $this->blockRepository->addBlock($values['name'], $category, $lector, $values['duration'], $capacity, $values['mandatory'], $values['perex'], $values['description'], $values['tools']);
@@ -121,5 +129,17 @@ class BlocksPresenter extends ProgramBasePresenter
         }
 
         return $block;
+    }
+
+    public function isUserAllowedModifyProgramBlock($id) {
+        if ($this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS))
+            return true;
+
+        $block = $this->blockRepository->findBlockById($id);
+        if ($this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS) &&
+            $block->getLector() && $block->getLector()->getId() == $this->user->id)
+            return true;
+
+        return false;
     }
 }

@@ -8,6 +8,24 @@ use Kdyby\Doctrine\EntityRepository;
 
 class TagRepository extends EntityRepository
 {
+    public function findAllNames() {
+        $names = $this->createQueryBuilder('t')
+            ->select('t.name')
+            ->getQuery()
+            ->getScalarResult();
+        return array_map('current', $names);
+    }
+
+    public function findOthersNames($id) {
+        $names = $this->createQueryBuilder('t')
+            ->select('t.name')
+            ->where('t.id != :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getScalarResult();
+        return array_map('current', $names);
+    }
+
     public function addTag($name) {
         $tag = new Tag();
 
@@ -34,16 +52,6 @@ class TagRepository extends EntityRepository
         $this->_em->flush();
 
         return $tag;
-    }
-
-    public function isNameUnique($name, $id = null) {
-        $tag = $this->findOneBy(['name' => $name]);
-        if ($tag) {
-            if ($id == $tag->getId())
-                return true;
-            return false;
-        }
-        return true;
     }
 
     public function findTagsOrderedByName() {

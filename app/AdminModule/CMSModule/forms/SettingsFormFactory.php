@@ -33,9 +33,9 @@ class SettingsFormFactory
         $renderer->wrappers['label']['container'] = 'div class="col-sm-5 col-xs-5 control-label"';
 
         $form->addUpload('logo', 'admin.cms.settings_new_logo')
+            ->setAttribute('accept', 'image/*')
             ->addCondition(Form::FILLED)
-            ->addRule(Form::IMAGE, 'admin.cms.settings_new_logo_format')
-            ->setAttribute('accept', 'image/*');
+            ->addRule(Form::IMAGE, 'admin.cms.settings_new_logo_format');
 
         $form->addText('footer', 'admin.cms.settings_footer');
 

@@ -6,6 +6,24 @@ use Kdyby\Doctrine\EntityRepository;
 
 class CategoryRepository extends EntityRepository
 {
+    public function findAllNames() {
+        $names = $this->createQueryBuilder('c')
+            ->select('c.name')
+            ->getQuery()
+            ->getScalarResult();
+        return array_map('current', $names);
+    }
+
+    public function findOthersNames($id) {
+        $names = $this->createQueryBuilder('c')
+            ->select('c.name')
+            ->where('c.id != :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getScalarResult();
+        return array_map('current', $names);
+    }
+
     public function addCategory($name, $roles) {
         $category = new Category();
 
@@ -34,16 +52,6 @@ class CategoryRepository extends EntityRepository
         $this->_em->flush();
 
         return $category;
-    }
-
-    public function isNameUnique($name, $id = null) {
-        $tag = $this->findOneBy(['name' => $name]);
-        if ($tag) {
-            if ($id == $tag->getId())
-                return true;
-            return false;
-        }
-        return true;
     }
 
     public function findCategoryById($id) {

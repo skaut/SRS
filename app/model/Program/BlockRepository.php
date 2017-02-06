@@ -10,6 +10,24 @@ class BlockRepository extends EntityRepository
         return $this->find($id);
     }
 
+    public function findAllNames() {
+        $names = $this->createQueryBuilder('b')
+            ->select('b.name')
+            ->getQuery()
+            ->getScalarResult();
+        return array_map('current', $names);
+    }
+
+    public function findOthersNames($id) {
+        $names = $this->createQueryBuilder('b')
+            ->select('b.name')
+            ->where('b.id != :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getScalarResult();
+        return array_map('current', $names);
+    }
+
     public function addBlock($name, $category, $lector, $duration, $capacity, $mandatory, $perex, $description, $tools) {
         $block = new Block();
 
@@ -44,6 +62,13 @@ class BlockRepository extends EntityRepository
 
         $this->_em->flush();
 
+        return $block;
+    }
+
+    public function setBlockMandatory($id, $mandatory) {
+        $block = $this->find($id);
+        $block->setMandatory($mandatory);
+        $this->_em->flush();
         return $block;
     }
 

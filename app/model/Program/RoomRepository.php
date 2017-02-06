@@ -7,6 +7,24 @@ use Kdyby\Doctrine\EntityRepository;
 
 class RoomRepository extends EntityRepository
 {
+    public function findAllNames() {
+        $names = $this->createQueryBuilder('r')
+            ->select('r.name')
+            ->getQuery()
+            ->getScalarResult();
+        return array_map('current', $names);
+    }
+
+    public function findOthersNames($id) {
+        $names = $this->createQueryBuilder('r')
+            ->select('r.name')
+            ->where('r.id != :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getScalarResult();
+        return array_map('current', $names);
+    }
+
     public function addRoom($name) {
         $room = new Room();
 
@@ -33,16 +51,6 @@ class RoomRepository extends EntityRepository
         $this->_em->flush();
 
         return $room;
-    }
-
-    public function isNameUnique($name, $id = null) {
-        $tag = $this->findOneBy(['name' => $name]);
-        if ($tag) {
-            if ($id == $tag->getId())
-                return true;
-            return false;
-        }
-        return true;
     }
 
     public function findRoomsOrderedByName() {

@@ -6,6 +6,7 @@ namespace App\AdminModule\ProgramModule\Components;
 use App\Model\Program\RoomRepository;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
+use Nette\Application\UI\Form;
 use Ublaboo\DataGrid\DataGrid;
 
 class RoomsGridControl extends Control
@@ -42,14 +43,20 @@ class RoomsGridControl extends Control
         $grid->addColumnText('name', 'admin.program.rooms_name');
 
         $grid->addInlineAdd()->onControlAdd[] = function($container) {
-            $container->addText('name', '');
+            $container->addText('name', '')
+                ->addCondition(Form::FILLED) //->addRule(Form::FILLED, 'admin.program.rooms_name_empty') //TODO validace
+                ->addRule(Form::IS_NOT_IN, 'admin.program.rooms_name_exists', $this->roomRepository->findAllNames());
         };
         $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
 
         $grid->addInlineEdit()->onControlAdd[] = function($container) {
-            $container->addText('name', '');
+            $container->addText('name', '')
+                ->addRule(Form::FILLED, 'admin.program.rooms_name_empty');
         };
         $grid->getInlineEdit()->onSetDefaults[] = function($container, $item) {
+            $container['name']
+                ->addRule(Form::IS_NOT_IN, 'admin.program.rooms_name_exists', $this->roomRepository->findOthersNames($item->getId()));
+
             $container->setDefaults([
                 'name' => $item->getName()
             ]);
@@ -74,20 +81,12 @@ class RoomsGridControl extends Control
         if (!$name) {
             $p->flashMessage('admin.program.rooms_name_empty', 'danger');
         }
-        elseif (!$this->roomRepository->isNameUnique($name)) {
-            $p->flashMessage('admin.program.rooms_name_not_unique', 'danger');
-        }
         else {
             $this->roomRepository->addRoom($name);
             $p->flashMessage('admin.program.rooms_added', 'success');
         }
 
-        if ($p->isAjax()) {
-            $p->redrawControl('flashes');
-            $this['roomsGrid']->reload();
-        } else {
-            $this->redirect('this');
-        }
+        $this->redirect('this');
     }
 
     public function edit($id, $values)
@@ -96,22 +95,10 @@ class RoomsGridControl extends Control
 
         $name = $values['name'];
 
-        if (!$name) {
-            $p->flashMessage('admin.program.rooms_name_empty', 'danger');
-        }
-        elseif (!$this->roomRepository->isNameUnique($name, $id)) {
-            $p->flashMessage('admin.program.rooms_name_not_unique', 'danger');
-        }
-        else {
-            $this->roomRepository->editRoom($id, $name);
-            $p->flashMessage('admin.program.rooms_edited', 'success');
-        }
+        $this->roomRepository->editRoom($id, $name);
+        $p->flashMessage('admin.program.rooms_edited', 'success');
 
-        if ($p->isAjax()) {
-            $p->redrawControl('flashes');
-        } else {
-            $this->redirect('this');
-        }
+        $this->redirect('this');
     }
 
     public function handleDelete($id)

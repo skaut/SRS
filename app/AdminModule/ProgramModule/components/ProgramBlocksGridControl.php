@@ -3,6 +3,7 @@
 namespace App\AdminModule\ProgramModule\Components;
 
 
+use App\Model\ACL\Resource;
 use App\Model\ACL\Role;
 use App\Model\Program\BlockRepository;
 use App\Model\Program\Category;
@@ -66,6 +67,7 @@ class ProgramBlocksGridControl extends Control
         $grid->setDefaultSort(['name' => 'ASC']);
         $grid->setPagination(false);
 
+
         $grid->addColumnText('name', 'admin.program.blocks_name')
             ->setSortable()
             ->setFilterText();
@@ -88,14 +90,25 @@ class ProgramBlocksGridControl extends Control
             ->setFilterMultiSelect($this->prepareDurationsChoices($this->translator));
 
         $grid->addColumnText('capacity', 'admin.program.blocks_capacity')
+            ->setRendererOnCondition(function ($row) {
+                    return $this->translator->translate('admin.program.blocks_capacity_unlimited');
+                }, function ($row) {
+                    return $row->getCapacity() === null;
+                }
+            )
             ->setSortable();
 
-        $grid->addColumnText('mandatory', 'admin.program.blocks_mandatory')
-            ->setReplacement([
-                false => $this->translator->translate('admin.program.blocks_mandatory_voluntary'),
-                true => $this->translator->translate('admin.program.blocks_mandatory_mandatory')
-            ])
-            ->setSortable()
+        $columnMandatory = $grid->addColumnStatus('mandatory', 'admin.program.blocks_mandatory');
+        $columnMandatory
+            ->addOption(false, 'admin.program.blocks_mandatory_voluntary')
+                ->setClass('btn-success')
+                ->endOption()
+            ->addOption(true, 'admin.program.blocks_mandatory_mandatory')
+                ->setClass('btn-danger')
+                ->endOption()
+            ->onChange[] = [$this, 'changeMandatory'];
+
+        $columnMandatory
             ->setFilterSelect([
                 '' => $this->translator->translate('admin.common.all'),
                 false => $this->translator->translate('admin.program.blocks_mandatory_voluntary'),
@@ -106,6 +119,7 @@ class ProgramBlocksGridControl extends Control
             ->setRenderer(function ($row) {
                 return $row->getProgramsCount();
             });
+
 
         $grid->addToolbarButton('Blocks:add')
             ->setIcon('plus')
@@ -133,9 +147,23 @@ class ProgramBlocksGridControl extends Control
         $p = $this->getPresenter();
         $p->flashMessage('admin.program.blocks_deleted', 'success');
 
+        $this->redirect('this');
+    }
+
+    public function changeMandatory($id, $mandatory) {
+        $p = $this->getPresenter();
+
+        if (!$p->isUserAllowedModifyProgramBlock($id)) {
+            $p->flashMessage('admin.program.blocks_change_mandatory_denied', 'danger');
+        }
+        else {
+            $this->blockRepository->setBlockMandatory($id, $mandatory);
+            $p->flashMessage('admin.program.blocks_changed_mandatory', 'success');
+        }
+
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $this['programBlocksGrid']->reload();
+            $this['programBlocksGrid']->redrawItem($id);
         }
         else {
             $this->redirect('this');

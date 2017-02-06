@@ -82,10 +82,11 @@ class UsersGridControl extends Control
 
         $grid->addColumnText('unit', 'Členství')
             ->setRendererOnCondition(function ($row) {
-                return Html::el('span')->style('color: red')->setText($row->isMember() ? 'nečlen' : 'nepropojený účet');
-            }, function ($row) {
-                return $row->getUnit() === null;
-            })
+                    return Html::el('span')->style('color: red')->setText($row->isMember() ? 'nečlen' : 'nepropojený účet');
+                }, function ($row) {
+                    return $row->getUnit() === null;
+                }
+            )
             ->setSortable()
             ->setFilterText();
 

@@ -52,12 +52,14 @@ class CustomInputsGridControl extends Control
 
         $grid->addInlineAdd()->onControlAdd[] = function($container) use($customInputTypesChoices) {
             $container->addText('name', '');
+                //->addRule(Form::FILLED, 'admin.configuration.application_input_name_empty'); //TODO validace
             $container->addSelect('type', '', $customInputTypesChoices);
         };
         $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
 
         $grid->addInlineEdit()->onControlAdd[] = function($container) {
-            $container->addText('name', '');
+            $container->addText('name', '')
+                ->addRule(Form::FILLED, 'admin.configuration.application_input_name_empty');
         };
         $grid->getInlineEdit()->onSetDefaults[] = function($container, $item) {
             $container->setDefaults([
@@ -89,7 +91,6 @@ class CustomInputsGridControl extends Control
                 case 'text':
                     $this->customInputRepository->addText($name);
                     break;
-
                 case 'checkbox':
                     $this->customInputRepository->addCheckBox($name);
                     break;
@@ -109,15 +110,8 @@ class CustomInputsGridControl extends Control
     {
         $p = $this->getPresenter();
 
-        $name = $values['name'];
-
-        if (!$name) {
-            $p->flashMessage('admin.configuration.application_input_name_empty', 'danger');
-        }
-        else {
-            $this->customInputRepository->renameInput($id, $name);
-            $p->flashMessage('admin.configuration.application_input_edited', 'success');
-        }
+        $this->customInputRepository->renameInput($id, $values['name']);
+        $p->flashMessage('admin.configuration.application_input_edited', 'success');
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
@@ -133,12 +127,7 @@ class CustomInputsGridControl extends Control
         $p = $this->getPresenter();
         $p->flashMessage('admin.configuration.application_input_deleted', 'success');
 
-        if ($p->isAjax()) {
-            $p->redrawControl('flashes');
-            $this['customInputsGrid']->reload();
-        } else {
-            $this->redirect('this');
-        }
+        $this->redirect('this');
     }
 
     public function handleSort($item_id, $prev_id, $next_id)

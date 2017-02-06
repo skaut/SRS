@@ -43,14 +43,20 @@ class DocumentTagsGridControl extends Control
         $grid->addColumnText('name', 'admin.cms.tags_name');
 
         $grid->addInlineAdd()->onControlAdd[] = function($container) {
-            $container->addText('name', '');
+            $container->addText('name', '')
+                ->addCondition(Form::FILLED) //->addRule(Form::FILLED, 'admin.cms.tags_name_empty') //TODO validace
+                ->addRule(Form::IS_NOT_IN, 'admin.cms.tags_name_exists', $this->tagRepository->findAllNames());
         };
         $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
 
         $grid->addInlineEdit()->onControlAdd[] = function($container) {
-            $container->addText('name', '');
+            $container->addText('name', '')
+                ->addRule(Form::FILLED, 'admin.cms.tags_name_empty');
         };
         $grid->getInlineEdit()->onSetDefaults[] = function($container, $item) {
+            $container['name']
+                ->addRule(Form::IS_NOT_IN, 'admin.cms.tags_name_exists', $this->tagRepository->findOthersNames($item->getId()));
+
             $container->setDefaults([
                 'name' => $item->getName()
             ]);
@@ -76,46 +82,22 @@ class DocumentTagsGridControl extends Control
         if (!$name) {
             $p->flashMessage('admin.cms.tags_name_empty', 'danger');
         }
-        elseif (!$this->tagRepository->isNameUnique($name)) {
-            $p->flashMessage('admin.cms.tags_name_not_unique', 'danger');
-        }
         else {
             $this->tagRepository->addTag($name);
             $p->flashMessage('admin.cms.tags_added', 'success');
         }
 
-        if ($p->isAjax()) {
-            $p->redrawControl('flashes');
-            $this['documentTagsGrid']->reload();
-            $p->redrawControl('documentsGrid');
-        } else {
-            $this->redirect('this');
-        }
+        $this->redirect('this');
     }
 
     public function edit($id, $values)
     {
         $p = $this->getPresenter();
 
-        $name = $values['name'];
+        $this->tagRepository->editTag($id, $values['name']);
+        $p->flashMessage('admin.cms.tags_edited', 'success');
 
-        if (!$name) {
-            $p->flashMessage('admin.cms.tags_name_empty', 'danger');
-        }
-        elseif (!$this->tagRepository->isNameUnique($name, $id)) {
-            $p->flashMessage('admin.cms.tags_name_not_unique', 'danger');
-        }
-        else {
-            $this->tagRepository->editTag($id, $name);
-            $p->flashMessage('admin.cms.tags_edited', 'success');
-        }
-
-        if ($p->isAjax()) {
-            $p->redrawControl('flashes');
-            $p->redrawControl('documentsGrid');
-        } else {
-            $this->redirect('this');
-        }
+        $this->redirect('this');
     }
 
     public function handleDelete($id)
@@ -125,12 +107,6 @@ class DocumentTagsGridControl extends Control
         $p = $this->getPresenter();
         $p->flashMessage('admin.cms.tags_deleted', 'success');
 
-        if ($p->isAjax()) {
-            $p->redrawControl('flashes');
-            $this['documentTagsGrid']->reload();
-            $p->redrawControl('documentsGrid');
-        } else {
-            $this->redirect('this');
-        }
+        $this->redirect('this');
     }
 }

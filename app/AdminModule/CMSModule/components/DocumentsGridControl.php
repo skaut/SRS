@@ -9,6 +9,7 @@ use App\Model\CMS\Document\TagRepository;
 use App\Services\FilesService;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
+use Nette\Application\UI\Form;
 use Nette\Utils\Html;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
@@ -91,20 +92,35 @@ class DocumentsGridControl extends Control
         $tagsChoices = $this->prepareTagsChoices();
 
         $grid->addInlineAdd()->onControlAdd[] = function($container) use($tagsChoices) {
-            $container->addText('name', '');
+            $container->addText('name', '')
+                ->addCondition(Form::FILLED) //->addRule(Form::FILLED, 'admin.cms.documents_name_empty') //TODO validace
+                ->addRule(Form::IS_NOT_IN, 'admin.cms.documents_name_exists', $this->documentRepository->findAllNames());
+
             $container->addMultiSelect('tags', '', $tagsChoices)->setAttribute('class', 'datagrid-multiselect');
+                //->addRule(Form::FILLED, 'admin.cms.documents_tags_empty');
+
             $container->addUpload('file', '')->setAttribute('class', 'datagrid-upload');
+                //->addRule(Form::FILLED, 'admin.cms.documents_file_empty');
+
             $container->addText('description', '');
         };
         $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
 
         $grid->addInlineEdit()->onControlAdd[] = function($container) use($tagsChoices) {
-            $container->addText('name', '');
-            $container->addMultiSelect('tags', '', $tagsChoices)->setAttribute('class', 'datagrid-multiselect');
+            $container->addText('name', '')
+                ->addRule(Form::FILLED, 'admin.cms.documents_name_empty');
+
+            $container->addMultiSelect('tags', '', $tagsChoices)->setAttribute('class', 'datagrid-multiselect')
+                ->addRule(Form::FILLED, 'admin.cms.documents_tags_empty');
+
             $container->addUpload('file', '')->setAttribute('class', 'datagrid-upload');
+
             $container->addText('description', '');
         };
         $grid->getInlineEdit()->onSetDefaults[] = function($container, $item) {
+            $container['name']
+                ->addRule(Form::IS_NOT_IN, 'admin.cms.documents_name_exists', $this->documentRepository->findOthersNames($item->getId()));
+
             $tagsIds = array_map(function($o) { return $o->getId(); }, $item->getTags()->toArray());
 
             $container->setDefaults([
@@ -136,9 +152,6 @@ class DocumentsGridControl extends Control
         if (!$name) {
             $p->flashMessage('admin.cms.documents_name_empty', 'danger');
         }
-        elseif (!$this->documentRepository->isNameUnique($name)) {
-            $p->flashMessage('admin.cms.documents_name_not_unique', 'danger');
-        }
         elseif (count($tags) == 0) {
             $p->flashMessage('admin.cms.documents_tags_empty', 'danger');
         }
@@ -152,52 +165,27 @@ class DocumentsGridControl extends Control
             $p->flashMessage('admin.cms.documents_added', 'success');
         }
 
-        if ($p->isAjax()) {
-            $p->redrawControl('flashes');
-            $this['documentsGrid']->reload();
-            $p->redrawControl('documentTagsGrid');
-        } else {
-            $this->redirect('this');
-        }
+        $this->redirect('this');
     }
 
     public function edit($id, $values)
     {
         $p = $this->getPresenter();
 
-        $name = $values['name'];
-        $tags = $values['tags'];
         $file = $values['file'];
-        $description = $values['description'];
-
-        if (!$name) {
-            $p->flashMessage('admin.cms.documents_name_empty', 'danger');
-        }
-        elseif (!$this->documentRepository->isNameUnique($name, $id)) {
-            $p->flashMessage('admin.cms.documents_name_not_unique', 'danger');
-        }
-        elseif (count($tags) == 0) {
-            $p->flashMessage('admin.cms.documents_tags_empty', 'danger');
+        if ($file->name) {
+            $this->filesService->delete($this->documentRepository->find($id)->getFile());
+            $path = $this->generatePath($file);
+            $this->filesService->save($file, $path);
         }
         else {
-            if ($file->name) {
-                $this->filesService->delete($this->documentRepository->find($id)->getFile());
-                $path = $this->generatePath($file);
-                $this->filesService->save($file, $path);
-            }
-            else {
-                $path = null;
-            }
-            $this->documentRepository->editDocument($id, $name, $this->tagRepository->findTagsByIds($tags), $path, $description);
-            $p->flashMessage('admin.cms.documents_edited', 'success');
+            $path = null;
         }
 
-        if ($p->isAjax()) {
-            $p->redrawControl('flashes');
-            $p->redrawControl('documentTagsGrid');
-        } else {
-            $this->redirect('this');
-        }
+        $this->documentRepository->editDocument($id, $values['name'], $this->tagRepository->findTagsByIds($values['tags']), $path, $values['description']);
+        $p->flashMessage('admin.cms.documents_edited', 'success');
+
+        $this->redirect('this');
     }
 
     public function handleDelete($id)
@@ -208,13 +196,7 @@ class DocumentsGridControl extends Control
         $p = $this->getPresenter();
         $p->flashMessage('admin.cms.documents_deleted', 'success');
 
-        if ($p->isAjax()) {
-            $p->redrawControl('flashes');
-            $this['documentsGrid']->reload();
-            $p->redrawControl('documentTagsGrid');
-        } else {
-            $this->redirect('this');
-        }
+        $this->redirect('this');
     }
 
     private function prepareTagsChoices() {

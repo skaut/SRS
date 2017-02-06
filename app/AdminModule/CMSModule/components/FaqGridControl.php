@@ -84,13 +84,7 @@ class FaqGridControl extends Control
         $p = $this->getPresenter();
         $p->flashMessage('admin.cms.faq_deleted', 'success');
 
-        if ($p->isAjax()) {
-            $p->redrawControl('flashes');
-            $this['faqGrid']->reload();
-        }
-        else {
-            $this->redirect('this');
-        }
+        $this->redirect('this');
     }
 
     public function handleSort($item_id, $prev_id, $next_id)

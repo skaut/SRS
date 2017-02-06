@@ -69,12 +69,6 @@ class NewsGridControl extends Control
         $p = $this->getPresenter();
         $p->flashMessage('admin.cms.news_deleted', 'success');
 
-        if ($p->isAjax()) {
-            $p->redrawControl('flashes');
-            $this['newsGrid']->reload();
-        }
-        else {
-            $this->redirect('this');
-        }
+        $this->redirect('this');
     }
 }

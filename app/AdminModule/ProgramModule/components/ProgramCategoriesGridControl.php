@@ -7,6 +7,7 @@ use App\Model\ACL\RoleRepository;
 use App\Model\Program\CategoryRepository;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
+use Nette\Application\UI\Form;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 
@@ -61,16 +62,26 @@ class ProgramCategoriesGridControl extends Control
         $rolesChoices = $this->prepareRolesChoices();
 
         $grid->addInlineAdd()->onControlAdd[] = function($container) use($rolesChoices) {
-            $container->addText('name', '');
+            $container->addText('name', '')
+                ->addCondition(Form::FILLED) //->addRule(Form::FILLED, 'admin.program.categories_name_empty') //TODO validace
+                ->addRule(Form::IS_NOT_IN, 'admin.program.categories_name_exists', $this->categoryRepository->findAllNames());
+
             $container->addMultiSelect('registerableRoles', '', $rolesChoices)->setAttribute('class', 'datagrid-multiselect');
+                //->addRule(Form::FILLED, 'admin.program.categories_registerable_roles_empty');
         };
         $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
 
         $grid->addInlineEdit()->onControlAdd[] = function($container) use($rolesChoices) {
-            $container->addText('name', '');
-            $container->addMultiSelect('registerableRoles', '', $rolesChoices)->setAttribute('class', 'datagrid-multiselect');
+            $container->addText('name', '')
+                ->addRule(Form::FILLED, 'admin.program.categories_name_empty');
+
+            $container->addMultiSelect('registerableRoles', '', $rolesChoices)->setAttribute('class', 'datagrid-multiselect')
+                ->addRule(Form::FILLED, 'admin.program.categories_registerable_roles_empty');
         };
         $grid->getInlineEdit()->onSetDefaults[] = function($container, $item) {
+            $container['name']
+                ->addRule(Form::IS_NOT_IN, 'admin.program.categories_name_exists', $this->categoryRepository->findOthersNames($item->getId()));
+
             $rolesIds = array_map(function($o) { return $o->getId(); }, $item->getRegisterableRoles()->toArray());
 
             $container->setDefaults([
@@ -99,9 +110,6 @@ class ProgramCategoriesGridControl extends Control
         if (!$name) {
             $p->flashMessage('admin.program.categories_name_empty', 'danger');
         }
-        elseif (!$this->categoryRepository->isNameUnique($name)) {
-            $p->flashMessage('admin.program.categories_name_not_unique', 'danger');
-        }
         elseif (count($roles) == 0) {
             $p->flashMessage('admin.program.categories_registerable_roles_empty', 'danger');
         }
@@ -110,40 +118,17 @@ class ProgramCategoriesGridControl extends Control
             $p->flashMessage('admin.program.categories_added', 'success');
         }
 
-        if ($p->isAjax()) {
-            $p->redrawControl('flashes');
-            $this['programCategoriesGrid']->reload();
-        } else {
-            $this->redirect('this');
-        }
+        $this->redirect('this');
     }
 
     public function edit($id, $values)
     {
         $p = $this->getPresenter();
 
-        $name = $values['name'];
-        $roles = $values['registerableRoles'];
+        $this->categoryRepository->editCategory($id, $values['name'], $this->roleRepository->findRolesByIds($values['registerableRoles']));
+        $p->flashMessage('admin.program.categories_edited', 'success');
 
-        if (!$name) {
-            $p->flashMessage('admin.program.categories_name_empty', 'danger');
-        }
-        elseif (!$this->categoryRepository->isNameUnique($name, $id)) {
-            $p->flashMessage('admin.program.categories_name_not_unique', 'danger');
-        }
-        elseif (count($roles) == 0) {
-            $p->flashMessage('admin.program.categories_registerable_roles_empty', 'danger');
-        }
-        else {
-            $this->categoryRepository->editCategory($id, $name, $this->roleRepository->findRolesByIds($roles));
-            $p->flashMessage('admin.program.categories_edited', 'success');
-        }
-
-        if ($p->isAjax()) {
-            $p->redrawControl('flashes');
-        } else {
-            $this->redirect('this');
-        }
+        $this->redirect('this');
     }
 
     public function handleDelete($id)
@@ -153,12 +138,7 @@ class ProgramCategoriesGridControl extends Control
         $p = $this->getPresenter();
         $p->flashMessage('admin.program.categories_deleted', 'success');
 
-        if ($p->isAjax()) {
-            $p->redrawControl('flashes');
-            $this['programCategoriesGrid']->reload();
-        } else {
-            $this->redirect('this');
-        }
+        $this->redirect('this');
     }
 
     private function prepareRolesChoices() {
