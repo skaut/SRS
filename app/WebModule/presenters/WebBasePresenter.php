@@ -103,8 +103,8 @@ abstract class WebBasePresenter extends BasePresenter
         $this->template->footer = $this->settingsRepository->getValue('footer');
         $this->template->seminarName = $this->settingsRepository->getValue('seminar_name');
 
-        $this->template->unregisteredRole = $this->roleRepository->findRoleByUntranslatedName(Role::UNREGISTERED);
-        $this->template->unapprovedRole = $this->roleRepository->findRoleByUntranslatedName(Role::UNAPPROVED);
+        $this->template->nonregisteredRole = $this->roleRepository->findRoleBySystemName(Role::NONREGISTERED);
+        $this->template->unapprovedRole = $this->roleRepository->findRoleBySystemName(Role::UNAPPROVED);
 
         $this->template->adminAccess = $this->user->isAllowed(Resource::ADMIN, Permission::ACCESS);
         $this->template->displayUsersRoles = $this->settingsRepository->getValue('display_users_roles');

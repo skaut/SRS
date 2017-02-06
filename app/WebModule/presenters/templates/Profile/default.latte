@@ -33,8 +33,8 @@
                         <tr>
                             <th>{_web.profile.attendance}</th>
                             <td>
-                                {if $user->isInRole($unregisteredRole->getName())}
-                                    {_web.profile.unregistered}
+                                {if $user->isInRole($nonregisteredRole->getName())}
+                                    {_web.profile.nonregistered}
                                 {elseif $user->isInRole($unapprovedRole->getName())}
                                     {_web.profile.unapproved}
                                 {else}

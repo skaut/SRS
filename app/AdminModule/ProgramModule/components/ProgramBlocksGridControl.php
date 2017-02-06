@@ -143,23 +143,6 @@ class ProgramBlocksGridControl extends Control
         }
     }
 
-    //TODO odlozeno pro pouziti jinde, odstranit
-//    public function mandatoryChange($id, $mandatory)
-//    {
-//        $this->blockRepository->editBlockMandatory($id, $mandatory);
-//
-//        $p = $this->getPresenter();
-//        $p->flashMessage('admin.program.blocks_changed_mandatory', 'success');
-//
-//        if ($p->isAjax()) {
-//            $p->redrawControl('flashes');
-//            $this['programBlocksGrid']->redrawItem($id);
-//        }
-//        else {
-//            $this->redirect('this');
-//        }
-//    }
-
     private function prepareDurationsChoices($translator) {
         $basicBlockDuration = $this->settingsRepository->getValue('basic_block_duration');
         $choices = [];

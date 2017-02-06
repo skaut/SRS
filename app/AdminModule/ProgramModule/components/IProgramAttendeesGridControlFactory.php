@@ -2,10 +2,10 @@
 
 namespace App\AdminModule\ProgramModule\Components;
 
-interface IProgramNotLoggedUsersGridControlFactory
+interface IProgramAttendeesGridControlFactory
 {
     /**
-     * @return ProgramNotLoggedUsersGridControl
+     * @return ProgramAttendeesGridControl
      */
     function create();
 }

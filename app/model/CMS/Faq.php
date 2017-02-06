@@ -132,4 +132,9 @@ class Faq
     {
         $this->position = $position;
     }
+
+    public function isAnswered()
+    {
+        return $this->answer != '';
+    }
 }

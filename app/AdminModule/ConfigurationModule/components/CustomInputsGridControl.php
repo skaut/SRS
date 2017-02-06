@@ -38,8 +38,7 @@ class CustomInputsGridControl extends Control
         $grid->setTranslator($this->translator);
         $grid->setSortable();
         $grid->setSortableHandler('customInputsGrid:sort!');
-        $grid->setDataSource($this->customInputRepository->createQueryBuilder('i'));
-        $grid->setDefaultSort(['position' => 'ASC']);
+        $grid->setDataSource($this->customInputRepository->createQueryBuilder('i')->orderBy('i.position'));
         $grid->setPagination(false);
 
         $grid->addColumnText('name', 'admin.configuration.custom_inputs_name');

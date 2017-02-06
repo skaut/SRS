@@ -17,7 +17,7 @@ profile:
 
     seminar_group: "Seminář"
     attendance: "Účast na semináři"
-    unregistered: "neúčastníte se"
+    nonregistered: "neúčastníte se"
     unapproved: "Vaše registrace zatím nebyla potvrzena"
     cancel_registration: "Odhlásit se ze semináře"
     cancel_registration_confirm: "Opravdu se chcete odhlásit ze semináře?"

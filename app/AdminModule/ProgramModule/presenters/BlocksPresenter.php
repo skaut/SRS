@@ -88,7 +88,7 @@ class BlocksPresenter extends ProgramBasePresenter
 
     protected function createComponentBlockForm($name)
     {
-        $form =  $this->blockFormFactory->create();
+        $form = $this->blockFormFactory->create();
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) {
             if ($form['submitAndContinue']->isSubmittedBy()) {

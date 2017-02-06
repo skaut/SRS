@@ -2,7 +2,7 @@ name: "SRS"
 
 role:
     guest: "guest"
-    unregistered: "Nepřihlášený"
+    nonregistered: "Nepřihlášený"
     unapproved: "Neschválený"
     attendee: "Účastník"
     service_team: "Servis tým"

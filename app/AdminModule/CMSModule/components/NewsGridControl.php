@@ -34,12 +34,14 @@ class NewsGridControl extends Control
     public function createComponentNewsGrid($name)
     {
         $grid = new DataGrid($this, $name);
+        $grid->setTemplateFile(__DIR__ . '/templates/news_grid_template.latte');
         $grid->setTranslator($this->translator);
         $grid->setDataSource($this->newsRepository->createQueryBuilder('n'));
         $grid->setDefaultSort(['published' => 'DESC']);
         $grid->setPagination(false);
 
-        $grid->addColumnText('published', 'admin.cms.news_published');
+        $grid->addColumnDateTime('published', 'admin.cms.news_published')
+            ->setFormat('j. n. Y H:i');
 
         $grid->addColumnText('text', 'admin.cms.news_text');
 

@@ -24,13 +24,13 @@ class UserRepository extends EntityRepository
             ->getQuery()->execute();
     }
 
-    public function findApprovedUsersInRole($untranslatedName)
+    public function findApprovedUsersInRole($systemName)
     {
         return $this->createQueryBuilder('u')
             ->join('u.roles', 'r')
-            ->where('r.untranslatedName = :name')
+            ->where('r.systemName = :name')
             ->andWhere('u.approved = true')
-            ->setParameter('name', $untranslatedName)
+            ->setParameter('name', $systemName)
             ->getQuery()->execute();
     }
 

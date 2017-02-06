@@ -16,8 +16,8 @@ class RoleRepository extends EntityRepository
         return $this->findOneBy(['name' => $name]);
     }
 
-    public function findRoleByUntranslatedName($name) {
-        return $this->findOneBy(['untranslatedName' => $name]);
+    public function findRoleBySystemName($name) {
+        return $this->findOneBy(['systemName' => $name]);
     }
 
     public function findRegisterableRoles() {
@@ -63,9 +63,9 @@ class RoleRepository extends EntityRepository
 
     public function findRolesWithoutGuests() {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->neq('untranslatedName', Role::GUEST))
-            ->andWhere(Criteria::expr()->neq('untranslatedName', Role::UNAPPROVED))
-            ->andWhere(Criteria::expr()->neq('untranslatedName', Role::UNREGISTERED));
+            ->where(Criteria::expr()->neq('systemName', Role::GUEST))
+            ->andWhere(Criteria::expr()->neq('systemName', Role::UNAPPROVED))
+            ->andWhere(Criteria::expr()->neq('systemName', Role::NONREGISTERED));
 
         return $this->matching($criteria);
     }

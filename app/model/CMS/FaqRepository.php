@@ -26,10 +26,9 @@ class FaqRepository extends EntityRepository
         return $question;
     }
 
-    public function editQuestion($id, $author, $questionText, $answer, $public) {
+    public function editQuestion($id, $questionText, $answer, $public) {
         $question = $this->find($id);
 
-        $question->setAuthor($author);
         $question->setQuestion($questionText);
         $question->setAnswer($answer);
         $question->setPublic($public);

@@ -14,7 +14,7 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
 class Role
 {
     const GUEST = 'guest';
-    const UNREGISTERED = 'unregistered';
+    const NONREGISTERED = 'nonregistered';
     const UNAPPROVED = 'unapproved';
     const ATTENDEE = 'attendee';
     const SERVICE_TEAM = 'service_team';
@@ -24,7 +24,7 @@ class Role
 
     public static $roles = [
         self::GUEST,
-        self::UNREGISTERED,
+        self::NONREGISTERED,
         self::UNAPPROVED,
         self::ATTENDEE,
         self::SERVICE_TEAM,
@@ -45,7 +45,7 @@ class Role
      * @ORM\Column(type="string", unique=true, nullable=true)
      * @var string
      */
-    protected $untranslatedName;
+    protected $systemName;
 
     /**
      * @ORM\ManyToMany(targetEntity="\App\Model\User\User", mappedBy="roles", cascade={"persist"})
@@ -203,17 +203,17 @@ class Role
     /**
      * @return string
      */
-    public function getUntranslatedName()
+    public function getSystemName()
     {
-        return $this->untranslatedName;
+        return $this->systemName;
     }
 
     /**
-     * @param string $untranslatedName
+     * @param string $systemName
      */
-    public function setUntranslatedName($untranslatedName)
+    public function setSystemName($systemName)
     {
-        $this->untranslatedName = $untranslatedName;
+        $this->systemName = $systemName;
     }
 
     /**

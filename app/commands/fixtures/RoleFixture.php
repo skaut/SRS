@@ -30,16 +30,16 @@ class RoleFixture extends AbstractFixture implements DependentFixtureInterface
         $roles = array();
         foreach (Role::$roles as $role) {
             $roles[$role] = new Role($this->translator->translate('common.role.' . $role));
-            $roles[$role]->setUntranslatedName($role);
+            $roles[$role]->setSystemName($role);
         }
 
         $guest = $roles[Role::GUEST];
         $guest->setRegisterable(false);
         $guest->setSyncedWithSkautIS(false);
 
-        $unregistered = $roles[Role::UNREGISTERED];
-        $unregistered->setRegisterable(false);
-        $unregistered->setSyncedWithSkautIS(false);
+        $nonregistered = $roles[Role::NONREGISTERED];
+        $nonregistered->setRegisterable(false);
+        $nonregistered->setSyncedWithSkautIS(false);
 
         $unapproved = $roles[Role::UNAPPROVED];
         $unapproved->setRegisterable(false);

@@ -41,8 +41,8 @@ class ProfilePresenter extends WebBasePresenter
             $this->redirect(':Web:Page:default');
         }
 
-        $unregisteredRole = $this->roleRepository->findRoleByUntranslatedName(Role::UNREGISTERED);
-        $this->editRegistrationAllowed = !$this->dbuser->isInRole($unregisteredRole) && !$this->dbuser->hasPaid()
+        $nonregisteredRole = $this->roleRepository->findRoleBySystemName(Role::NONREGISTERED);
+        $this->editRegistrationAllowed = !$this->dbuser->isInRole($nonregisteredRole) && !$this->dbuser->hasPaid()
             && $this->settingsRepository->getDateValue('edit_registration_to') >= (new \DateTime())->setTime(0, 0);
     }
 

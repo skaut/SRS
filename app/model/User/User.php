@@ -314,7 +314,7 @@ class User
 
         $this->roles->clear();
 
-        if (count($newRoles) == 1 && $newRoles[0]->getUntranslatedName() == Role::UNREGISTERED)
+        if (count($newRoles) == 1 && $newRoles[0]->getSystemName() == Role::NONREGISTERED)
             $this->programs->clear();
         else {
             foreach ($newRoles as $role) {

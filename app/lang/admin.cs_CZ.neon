@@ -12,6 +12,9 @@ common:
     save: "Uložit"
     save_and_continue: "Uložit a pokračovat v úpravách"
 
+    yes: "Ano"
+    no: "Ne"
+
     minutes: "%count% minut"
     custom_text: "Textové pole"
     custom_checkbox: "Zaškrtávací pole"
@@ -51,7 +54,8 @@ cms:
     news_published_empty: "Zadejte čas zveřejnění."
     news_text: "Text"
     news_text_empty: "Zadejte text aktuality."
-    # TODO
+    news_added: "Aktualita byla úspěšně přidána."
+    news_edited: "Aktualita byla úspěšně upravena."
     news_delete_confirm: "Opravdu chcete aktualitu odstranit?"
     news_deleted: "Aktualita byla úspěšně odstraněna."
     news_add_heading: "Nová aktualita"
@@ -86,14 +90,18 @@ cms:
     faq_question: "Otázka"
     faq_question_empty: "Zadejte otázku."
     faq_author: "Autor"
-    faq_status: "Stav"
-    faq_status_form: "zveřejnit"
+    faq_public: "Stav"
+    faq_public_public: "Veřejná"
+    faq_public_private: "Neveřejná"
+    faq_public_form: "zveřejnit"
     faq_answer: "Odpověď"
     faq_answered: "Zodpovězena"
-    # TODO
+    faq_added: "Otázka byla úspěšně přidána."
+    faq_edited: "Otázka byla úspěšně upravena."
     faq_delete_confirm: "Opravdu chcete otázku odstranit?"
     faq_deleted: "Otázka byla úspěšně odstraněna."
     faq_order_saved: "Pořadí otázek bylo úspěšně upraveno."
+    faq_changed_public: "Stav otázky byl úspěšně změněn."
     faq_add_heading: "Nová otázka"
     faq_edit_heading: "Úprava otázky"
 
@@ -150,8 +158,8 @@ program:
     blocks_program_end: "Do"
     blocks_program_room: "Místnost"
     blocks_program_occupancy: "Obsazenost"
-    blocks_logged_attendees: "Přihlášení účastníci"
-    blocks_not_logged_attendees: "Nepřihlášení účastníci"
+    blocks_registered_attendees: "Přihlášení účastníci"
+    blocks_non_registered_attendees: "Nepřihlášení účastníci"
 
     schedule_heading: "Harmonogram"
 

@@ -25,13 +25,12 @@ class FaqFormFactory
         $form->addHidden('id');
 
         $form->addTextArea('question', 'admin.cms.faq_question')
-            ->addRule(Form::FILLED, 'admin.cms.faq_question_empty')
-            ->setAttribute('class', 'tinymce-paragraph');
+            ->addRule(Form::FILLED, 'admin.cms.faq_question_empty');
 
         $form->addTextArea('answer', 'admin.cms.faq_answer')
             ->setAttribute('class', 'tinymce-paragraph');
 
-        $form->addCheckbox('public', 'admin.cms.faq_status_form');
+        $form->addCheckbox('public', 'admin.cms.faq_public_form');
 
         $form->addSubmit('submit', 'admin.common.save');
 

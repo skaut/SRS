@@ -95,8 +95,7 @@ services:
     - App\AdminModule\ProgramModule\Components\IProgramBlockScheduleGridControlFactory
     - App\AdminModule\ProgramModule\Components\IProgramBlocksGridControlFactory
     - App\AdminModule\ProgramModule\Components\IProgramCategoriesGridControlFactory
-    - App\AdminModule\ProgramModule\Components\IProgramLoggedUsersGridControlFactory
-    - App\AdminModule\ProgramModule\Components\IProgramNotLoggedUsersGridControlFactory
+    - App\AdminModule\ProgramModule\Components\IProgramAttendeesGridControlFactory
     - App\AdminModule\ProgramModule\Components\IRoomsGridControlFactory
 
 webloader:

@@ -6,6 +6,8 @@ use Kdyby\Doctrine\EntityRepository;
 
 class SettingsRepository extends EntityRepository
 {
+    //TODO cachovani
+
     public function getValue($item)
     {
         $setting = $this->findOneBy(['item' => $item]);

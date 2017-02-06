@@ -37,18 +37,28 @@ class FaqGridControl extends Control
         $grid->setTranslator($this->translator);
         $grid->setSortable();
         $grid->setSortableHandler('faqGrid:sort!');
-        $grid->setDataSource($this->faqRepository->createQueryBuilder('f'));
-        $grid->setDefaultSort(['position' => 'ASC']);
+        $grid->setDataSource($this->faqRepository->createQueryBuilder('f')->orderBy('f.position'));
         $grid->setPagination(false);
 
 
         $grid->addColumnText('question', 'admin.cms.faq_question');
 
-        $grid->addColumnText('author', 'admin.cms.faq_author');
+        $grid->addColumnText('author', 'admin.cms.faq_author', 'author.displayName');
 
-        $grid->addColumnStatus('status', 'admin.cms.faq_status');
+        $grid->addColumnStatus('public', 'admin.cms.faq_public')
+            ->addOption(false, 'admin.cms.faq_public_private')
+                ->setClass('btn-danger')
+                ->endOption()
+            ->addOption(true, 'admin.cms.faq_public_public')
+                ->setClass('btn-success')
+                ->endOption()
+            ->onChange[] = [$this, 'changeStatus'];
 
-        $grid->addColumnText('answered', 'admin.cms.faq_answered');
+        $grid->addColumnText('answered', 'admin.cms.faq_answered')
+            ->setReplacement([
+                false => $this->translator->translate('admin.common.no'),
+                true => $this->translator->translate('admin.common.yes')
+            ]);
 
 
         $grid->addToolbarButton('Faq:add')
@@ -76,7 +86,7 @@ class FaqGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $this['newsGrid']->reload();
+            $this['faqGrid']->reload();
         }
         else {
             $this->redirect('this');
@@ -92,8 +102,23 @@ class FaqGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $this['newsGrid']->reload();
+            $this['faqGrid']->reload();
         } else {
+            $this->redirect('this');
+        }
+    }
+
+    public function changeStatus($id, $public) {
+        $this->faqRepository->setQuestionPublic($id, $public);
+
+        $p = $this->getPresenter();
+        $p->flashMessage('admin.cms.faq_changed_public', 'success');
+
+        if ($p->isAjax()) {
+            $p->redrawControl('flashes');
+            $this['faqGrid']->redrawItem($id);
+        }
+        else {
             $this->redirect('this');
         }
     }
