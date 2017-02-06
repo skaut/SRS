@@ -49,6 +49,7 @@ function initMultiSelects() {
         countSelectedText: 'Označeno {0} z {1}',
         maxOptionsText: ['Limit překročen ({n} {var} max)', 'Limit skupiny překročen ({n} {var} max)', ['položek', 'položka']],
         multipleSeparator: ', ',
+        selectedTextFormat: 'count > 3',
         iconBase: 'fa',
         tickIcon: 'fa-check'
     });

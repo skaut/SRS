@@ -30,7 +30,7 @@ class CMSFixture extends AbstractFixture implements DependentFixtureInterface
     public function load(ObjectManager $manager)
     {
         $homepage = new Page($this->translator->translate('common.cms.default.homepage_name'), '/');
-        $homepage->setPosition(0);
+        $homepage->setPosition(1);
         $homepage->setPublic(true);
 
         foreach (Role::$roles as $role) {

@@ -30,7 +30,7 @@ class FaqPresenter extends CMSBasePresenter
 
     public function renderAdd() {
         $this['faqForm']->setDefaults([
-            'status' => true
+            'public' => true
         ]);
     }
 

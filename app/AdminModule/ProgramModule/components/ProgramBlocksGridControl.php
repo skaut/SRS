@@ -79,28 +79,27 @@ class ProgramBlocksGridControl extends Control
             ->setFilterMultiSelect($this->prepareLectorsChoices(), 'l.id');
 
         $basicBlockDuration = $this->settingsRepository->getValue('basic_block_duration');
-        $translator = $this->translator;
 
         $grid->addColumnText('duration', 'admin.program.blocks_duration')
-            ->setRenderer(function ($row) use ($translator, $basicBlockDuration) {
-                return $translator->translate('admin.common.minutes', null, ['count' => $row->getDurationInMinutes($basicBlockDuration)]);
+            ->setRenderer(function ($row) use ($basicBlockDuration) {
+                return $this->translator->translate('admin.common.minutes', null, ['count' => $row->getDurationInMinutes($basicBlockDuration)]);
             })
             ->setSortable()
-            ->setFilterMultiSelect($this->prepareDurationsChoices($translator));
+            ->setFilterMultiSelect($this->prepareDurationsChoices($this->translator));
 
         $grid->addColumnText('capacity', 'admin.program.blocks_capacity')
             ->setSortable();
 
         $grid->addColumnText('mandatory', 'admin.program.blocks_mandatory')
             ->setReplacement([
-                false => $translator->translate('admin.program.blocks_mandatory_voluntary'),
-                true => $translator->translate('admin.program.blocks_mandatory_mandatory')
+                false => $this->translator->translate('admin.program.blocks_mandatory_voluntary'),
+                true => $this->translator->translate('admin.program.blocks_mandatory_mandatory')
             ])
             ->setSortable()
             ->setFilterSelect([
-                '' => $translator->translate('admin.common.all'),
-                false => $translator->translate('admin.program.blocks_mandatory_voluntary'),
-                true => $translator->translate('admin.program.blocks_mandatory_mandatory')
+                '' => $this->translator->translate('admin.common.all'),
+                false => $this->translator->translate('admin.program.blocks_mandatory_voluntary'),
+                true => $this->translator->translate('admin.program.blocks_mandatory_mandatory')
             ]);
 
         $grid->addColumnText('programsCount', 'admin.program.blocks_programs_count')
