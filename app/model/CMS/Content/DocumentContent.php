@@ -62,13 +62,11 @@ class DocumentContent extends Content implements IContent
     {
         parent::addContentForm($form);
 
-        $tagsIds = array_map(function($o) { return $o->getId(); }, $this->tags->toArray());
-
         $formContainer = $form[$this->getContentFormName()];
 
+        $tagsIds = array_map(function($o) { return $o->getId(); }, $this->tags->toArray());
         $formContainer->addMultiSelect('tags', 'admin.cms.pages_content_tags', $this->tagRepository->getTagsOptions())
-            ->setDefaultValue($tagsIds)
-            ->addRule(Form::FILLED, 'admin.cms.pages_content_tags_empty');
+            ->setDefaultValue($tagsIds);
 
         return $form;
     }

@@ -38,10 +38,13 @@ class HtmlContent extends Content implements IContent
     public function addContentForm(Form $form)
     {
         parent::addContentForm($form);
+
         $formContainer = $form[$this->getContentFormName()];
+
         $formContainer->addTextArea('text', 'admin.cms.pages_content_html')
             ->setDefaultValue($this->text)
             ->setAttribute('rows', 5);
+
         return $form;
     }
 

@@ -63,13 +63,11 @@ class CapacitiesContent extends Content implements IContent
     {
         parent::addContentForm($form);
 
-        $rolesIds = array_map(function($o) { return $o->getId(); }, $this->roles->toArray());
-
         $formContainer = $form[$this->getContentFormName()];
 
+        $rolesIds = array_map(function($o) { return $o->getId(); }, $this->roles->toArray());
         $formContainer->addMultiSelect('roles', 'admin.cms.pages_content_capacities_roles', $this->roleRepository->getRolesWithoutGuestsOptions())
-            ->setDefaultValue($rolesIds)
-            ->addRule(Form::FILLED, 'admin.cms.pages_content_capacities_roles_empty');
+            ->setDefaultValue($rolesIds);
 
         return $form;
     }

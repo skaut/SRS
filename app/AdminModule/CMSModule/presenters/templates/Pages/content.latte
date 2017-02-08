@@ -4,7 +4,7 @@
     <script>
         $(function () {
             //nastaveni trid a identifikatoru pro spravnou funkcnost mazani a razeni contentu
-            $('#contents .contents-item').each(function () {
+            $('.contents-item').each(function () {
                 var id = $(this).find('input.id').val();
                 $(this).attr('id', 'content-' + id);
                 $(this).find('.delete-content').attr('href', '#content-' + id);
@@ -14,23 +14,17 @@
             $('#contents').sortable({
                 delay: 300,
                 update: function (event, ui) { },
-                start: function (event, ui) {
-//                    $('.tinyMCE').each(function () {
-//                        tinyMCE.execCommand('mceRemoveControl', false, $(this).attr('id'));
-//                    });
-                },
+                start: function (event, ui) { },
                 stop: function (event, ui) {
-//                    $('.tinyMCE').each(function () {
-//                        tinyMCE.execCommand('mceAddControl', false, $(this).attr('id'));
-//                    });
-                }
-            });
+                    $('.tinymce').each(function () {
+                        tinymce.EditorManager.execCommand('mceRemoveEditor', false, $(this).attr('id'));
+                        tinymce.EditorManager.execCommand('mceAddEditor', false, $(this).attr('id'));
+                    });
 
-            //vlozeni razeni contentu do formularoveho pole
-            $('input[type=submit]').click(function (event) {
-                var sorted = $("#contents").sortable("toArray");
-                for (var i = 1; i < sorted.length; i++) {
-                    $('#' + sorted[i]).find('input.position').val(i);
+                    var sorted = $("#contents").sortable("toArray");
+                    for (var i = 0; i < sorted.length; i++) {
+                        $('#' + sorted[i]).find('input.position').val(i+1);
+                    }
                 }
             });
 
@@ -39,11 +33,9 @@
                 event.preventDefault();
 
                 var contentToDelete = $(this).attr('href').replace('#', '');
-                console.log(contentToDelete);
-                $('#' + contentToDelete + ' input[type=hidden]').val(1);
+                $('#' + contentToDelete + ' .delete').val(1);
                 $('#' + contentToDelete).find('input[type=text]').prop('disabled', true).val('');
                 $('#' + contentToDelete).find('textarea').prop('disabled', true).val('');
-                $('#' + contentToDelete).find('select').prop('disabled', true).val('');
                 $('#' + contentToDelete).fadeOut();
             });
         });
@@ -91,10 +83,10 @@
                             {_common.content.name.$type}
                         </div>
                         <div class="pull-right">
-                            <a n:href="delete! area => $area, cid => $id" class="btn btn-xs btn-danger" data-toggle="confirmation" data-content="{_admin.cms.pages_content_delete_confirm}">
+                            <a href="#" class="btn btn-xs btn-danger delete-content">
                                 <i class="fa fa-trash"></i>
                             </a>
-                            <a class="btn btn-xs btn-default">
+                            <a href="#" class="btn btn-xs btn-default" onclick="return false;">
                                 <i class="fa fa-arrows-v"></i>
                             </a>
                         </div>
@@ -104,8 +96,10 @@
                         {var $container = $form->getComponent($content->getContentFormName())}
                         {foreach $container->getComponents() as $input}
                             {var $prototype = $input->getControlPrototype()}
+
                             {if $prototype->getAttribute('type') == 'hidden'}
                                 {input $input}
+
                             {elseif $prototype->getAttribute('data-type') == 'image'}
                                 <div class="form-group">
                                     <div class="col-sm-3 col-xs-3 control-label">
@@ -118,10 +112,11 @@
                                         {if $image}
                                             <img src="{$basePath}/files/{$image}" width="{$prototype->getAttribute('data-width')}" height="{$prototype->getAttribute('data-height')}"/>
                                         {else}
-                                            Žádný obrázek
+                                            <div style="padding-top: 7px">Žádný obrázek</div>
                                         {/if}
                                     </div>
                                 </div>
+
                             {else}
                                 <div class="form-group {$input->required ? required}">
                                     <div class="col-sm-3 col-xs-3 control-label">

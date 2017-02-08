@@ -91,7 +91,6 @@ class PageFormFactory
                     $content->injectRoleRepository($this->roleRepository);
                     break;
             }
-
             $form = $content->addContentForm($form);
         }
 

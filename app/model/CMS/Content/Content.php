@@ -186,10 +186,25 @@ abstract class Content implements IContent
     public function addContentForm(Form $form)
     {
         $formContainer = $form->addContainer($this->getContentFormName());
-        $formContainer->addHidden('id')->setDefaultValue($this->id)->setAttribute('class', 'id');
-        $formContainer->addHidden('position')->setAttribute('class', 'position');
-        $formContainer->addHidden('delete')->setDefaultValue(false);
-        $formContainer->addText('heading', 'admin.cms.pages_content_heading')->setDefaultValue($this->heading);
+
+        $formContainer->addHidden('id')
+            ->setAttribute('class', 'id');
+
+        $formContainer->addHidden('position')
+            ->setAttribute('class', 'position');
+
+        $formContainer->addHidden('delete')
+            ->setAttribute('class', 'delete');
+
+        $formContainer->addText('heading', 'admin.cms.pages_content_heading');
+
+        $formContainer->setDefaults([
+            'id' => $this->id,
+            'position' => $this->position,
+            'delete' => 0,
+            'heading' => $this->heading
+        ]);
+
         return $form;
     }
 

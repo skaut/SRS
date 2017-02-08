@@ -39,10 +39,13 @@ class NewsContent extends Content implements IContent
     public function addContentForm(Form $form)
     {
         parent::addContentForm($form);
+
         $formContainer = $form[$this->getContentFormName()];
+
         $formContainer->addText('count', 'admin.cms.pages_content_news_count')
             ->setDefaultValue($this->count)
             ->addCondition(Form::FILLED)->addRule(Form::NUMERIC, 'admin.cms.pages_content_news_count_format');
+
         return $form;
     }
 
