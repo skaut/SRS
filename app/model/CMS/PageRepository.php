@@ -106,6 +106,10 @@ class PageRepository extends EntityRepository
             $this->_em->persist($t);
         }
 
+        foreach ($page->getContents() as $content) {
+            $this->_em->remove($content);
+        }
+
         $this->_em->remove($page);
         $this->_em->flush();
     }

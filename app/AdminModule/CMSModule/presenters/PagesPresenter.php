@@ -39,9 +39,8 @@ class PagesPresenter extends CMSBasePresenter
     public $contentRepository;
 
 
-    public function renderContent($id) {
+    public function renderContent($id, $area) {
         $page = $this->pagesRepository->findPageById($id);
-        $area = $this->getParameter('area') ?: Content::MAIN;
 
         $this->template->page = $page;
         $this->template->area = $area;
@@ -50,11 +49,11 @@ class PagesPresenter extends CMSBasePresenter
     }
 
     public function handleDelete($cid) {
-        $id = $this->getParameter('id');
-        $area = $this->getParameter('area') ?: Content::MAIN;
-
-        $this->contentRepository->removeContent($cid);
-        $this->redirect('Pages:content', ['id' => $id, 'area' => $area]);
+//        $id = $this->getParameter('id');
+//        $area = $this->getParameter('area');
+//
+//        $this->contentRepository->removeContent($cid);
+//        $this->redirect('Pages:content', ['id' => $id, 'area' => $area]);
     }
 
     protected function createComponentPagesGrid($name)
@@ -62,25 +61,10 @@ class PagesPresenter extends CMSBasePresenter
         return $this->pagesGridControlFactory->create($name);
     }
 
-//    protected function createComponentAddContentForm($name)
-//    {
-//        $id = $this->getParameter('id');
-//        $area = $this->getParameter('area') ?: Content::MAIN;
-//
-//        $form = $this->addContentFormFactory->create($id, $area);
-//
-//        $form->onSuccess[] = function (Form $form, \stdClass $values) {
-//            $this->flashMessage('admin.cms.pages_content_added', 'success');
-//            $this->redirect('Pages:content', ['id' => $values['id'], 'area' => $values['area']]);
-//        };
-//
-//        return $form;
-//    }
-
     protected function createComponentPageForm($name)
     {
         $id = $this->getParameter('id');
-        $area = $this->getParameter('area') ?: Content::MAIN;
+        $area = $this->getParameter('area');
 
         $form = $this->pageFormFactory->create($id, $area);
 
@@ -95,6 +79,10 @@ class PagesPresenter extends CMSBasePresenter
                 $this->redirect('Pages:content', ['id' => $values['id'], 'area' => Content::SIDEBAR]);
             else
                 $this->redirect('Pages:default');
+        };
+
+        $form->onError[] = function (Form $form) {
+            $form->getErrors();
         };
 
         return $form;

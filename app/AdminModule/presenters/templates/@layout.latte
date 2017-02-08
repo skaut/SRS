@@ -33,7 +33,8 @@
             {snippet flashes}
                 <div id="flashes" class="row">
                     <div class="col-sm-12">
-                        <div n:foreach="$flashes as $flash" n:class="alert, 'alert-' . $flash->type">
+                        <div n:foreach="$flashes as $flash" n:class="alert, alert-dismissable, 'alert-' . $flash->type">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                             {$flash->message|noescape}
                         </div>
                     </div>

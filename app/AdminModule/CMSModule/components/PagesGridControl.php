@@ -92,7 +92,10 @@ class PagesGridControl extends Control
                 ->addRule(Form::PATTERN, 'admin.cms.pages_slug_format', '^[a-z0-9-]*$')
                 ->addRule(Form::IS_NOT_IN, 'admin.cms.pages_slug_exists', $this->pageRepository->findAllSlugs());
 
-            $container->addMultiSelect('roles', '', $rolesChoices)->setAttribute('class', 'datagrid-multiselect');
+            $rolesIds = array_keys($rolesChoices);
+
+            $container->addMultiSelect('roles', '', $rolesChoices)->setAttribute('class', 'datagrid-multiselect')
+                ->setDefaultValue($rolesIds);
                 //->addRule(Form::FILLED, 'admin.cms.pages_roles_empty');
 
             $container->addSelect('public', '', $publicChoices);
@@ -129,6 +132,7 @@ class PagesGridControl extends Control
 
 
         $grid->addAction('content', 'admin.cms.pages_edit_content', 'Pages:content')
+            ->addParameters(['area' => 'main'])
             ->setClass('btn btn-xs btn-primary');
 
         $grid->addAction('delete', '', 'delete!')

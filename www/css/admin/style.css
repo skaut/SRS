@@ -2,19 +2,40 @@ body {
     min-width: 950px;
 }
 
+#flashes {
+    position: fixed;
+    right: 15px;
+    z-index: 1000;
+}
+
 /* popisky ve formularich vlevo */
 .control-label {
     text-align: left !important;
 }
 
-.well-tabs .nav-tabs a {
-    border-bottom: 1px solid #E3E3E3 !important;
+/* tabs s tlacitky */
+.well-tabs .nav-tabs {
+    text-align: center;
 }
 
-.well-tabs .nav-tabs .active a {
-    border-bottom: 1px solid #F5F5F5 !important;
-    background-color: #F5F5F5 !important;
+.well-tabs .nav-tabs button {
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+    border-radius: 4px 4px 0 0;
+    text-decoration: none;
+    padding: 10px 15px;
+}
+
+.well-tabs .nav-tabs:hover button {
+    background-color: #F5F5F5;
+}
+
+.well-tabs .nav-tabs .active button {
+    background-color: #F5F5F5;
+    border: 1px solid #ddd;
+    border-bottom: 1px solid #F5F5F5;
     font-weight: bold;
+    color: #333;
 }
 
 .well-tabs .well {
@@ -90,7 +111,7 @@ div.mce-fullscreen {
     z-index: 1050;
 }
 
-/* zarovnani fullscreen tlacitka doprava */
+/* zarovnani fullscreen tlacitka TinyMCE doprava */
 .mce-btn-group:last-child {
     float:right;
     border-left: none !important;

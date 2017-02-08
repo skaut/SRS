@@ -63,10 +63,15 @@ class UsersContent extends Content implements IContent
     public function addContentForm(Form $form)
     {
         parent::addContentForm($form);
+
+        $rolesIds = array_map(function($o) { return $o->getId(); }, $this->roles->toArray());
+
         $formContainer = $form[$this->getContentFormName()];
+
         $formContainer->addMultiSelect('roles', 'admin.cms.pages_content_users_roles', $this->roleRepository->getRolesWithoutGuestsOptions())
-            ->setDefaultValue($this->roles)
+            ->setDefaultValue($rolesIds)
             ->addRule(Form::FILLED, 'admin.cms.pages_content_users_roles_empty');
+
         return $form;
     }
 
@@ -74,6 +79,6 @@ class UsersContent extends Content implements IContent
     {
         parent::contentFormSucceeded($form, $values);
         $values = $values[$this->getContentFormName()];
-        $this->roles = $values['roles'];
+        $this->roles = $this->roleRepository->findRolesByIds($values['roles']);
     }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Model\CMS;
 
+use App\Model\ACL\Role;
 use App\Model\CMS\Content\Content;
+use App\Model\Page\PageException;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
@@ -166,7 +168,7 @@ class Page
         if ($area === null)
             return $this->contents;
         if (!in_array($area, Content::$areas))
-            throw new SRSPageException("Area {$area} not defined.");
+            throw new PageException("Area {$area} not defined.");
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('area', $area))
             ->orderBy(['position' => 'ASC']);
@@ -176,7 +178,7 @@ class Page
     public function hasContents($area)
     {
         if (!in_array($area, Content::$areas))
-            throw new SRSPageException("Area {$area} not defined.");
+            throw new PageException("Area {$area} not defined.");
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('area', $area));
         return !$this->contents->matching($criteria)->isEmpty();
