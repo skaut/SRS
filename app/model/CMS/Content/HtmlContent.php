@@ -3,12 +3,13 @@
 namespace App\Model\CMS\Content;
 
 use Doctrine\ORM\Mapping as ORM;
+use Nette\Application\UI\Form;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="html_content")
  */
-class HtmlContent extends Content
+class HtmlContent extends Content implements IContent
 {
     protected $type = Content::HTML;
 
@@ -17,4 +18,37 @@ class HtmlContent extends Content
      * @var string
      */
     protected $text;
+
+    /**
+     * @return string
+     */
+    public function getText()
+    {
+        return $this->text;
+    }
+
+    /**
+     * @param string $text
+     */
+    public function setText($text)
+    {
+        $this->text = $text;
+    }
+
+    public function addContentForm(Form $form)
+    {
+        parent::addContentForm($form);
+        $formContainer = $form[$this->getContentFormName()];
+        $formContainer->addTextArea('text', 'admin.cms.pages_content_html')
+            ->setDefaultValue($this->text)
+            ->setAttribute('rows', 5);
+        return $form;
+    }
+
+    public function contentFormSucceeded(Form $form, \stdClass $values)
+    {
+        parent::contentFormSucceeded($form, $values);
+        $values = $values[$this->getContentFormName()];
+        $this->text = $values['text'];
+    }
 }

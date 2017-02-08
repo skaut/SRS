@@ -43,7 +43,8 @@ settings:
 cms:
     default:
         homepage_name: "Homepage"
-        homepage_text: "<h3>Úspěšně jste nainstalovali SRS. Gratulujeme!</h3><p>Obsah této stránky můžete změnit v administraci v sekci CMS.</p>"
+        homepage_heading: "Úspěšně jste nainstalovali SRS. Gratulujeme!"
+        homepage_text: "<p>Obsah této stránky můžete změnit v administraci v sekci Web.</p>"
 
 content:
     name:
@@ -73,8 +74,13 @@ content:
         capacities: "Kapacita semináře"
 
 area:
-    main: "Hlavní"
+    main: "Hlavní oblast"
     sidebar: "Postranní lišta"
+
+align:
+    left: "Vlevo"
+    right: "Vpravo"
+    center: "Uprostřed (bez obtékání)"
 
 payment:
     cash: "Hotovost"

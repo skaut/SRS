@@ -4,6 +4,7 @@ namespace App\AdminModule\CMSModule\Components;
 
 
 use App\Model\ACL\RoleRepository;
+use App\Model\CMS\Content\Content;
 use App\Model\CMS\PageRepository;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;

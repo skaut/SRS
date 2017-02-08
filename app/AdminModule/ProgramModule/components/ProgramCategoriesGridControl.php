@@ -59,7 +59,7 @@ class ProgramCategoriesGridControl extends Control
                 return implode(", ", $roles);
             });
 
-        $rolesChoices = $this->prepareRolesChoices();
+        $rolesChoices = $this->roleRepository->getRolesWithoutGuestsOptions();
 
         $grid->addInlineAdd()->onControlAdd[] = function($container) use($rolesChoices) {
             $container->addText('name', '')
@@ -139,12 +139,5 @@ class ProgramCategoriesGridControl extends Control
         $p->flashMessage('admin.program.categories_deleted', 'success');
 
         $this->redirect('this');
-    }
-
-    private function prepareRolesChoices() {
-        $choices = [];
-        foreach ($this->roleRepository->findRolesWithoutGuestsOrderedByName() as $role)
-            $choices[$role->getId()] = $role->getName();
-        return $choices;
     }
 }

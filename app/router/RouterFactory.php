@@ -30,7 +30,7 @@ class RouterFactory
 
         $router[] = new Route('index.php', 'Web:Page:default', Route::ONE_WAY);
 
-        $router[] = new Route('api/<action>[/<id>][/<area>]', [
+        $router[] = new Route('api/<action>[/<id>]', [
             'module' => 'Api',
             'presenter' => 'Api',
             'action' => 'default',
@@ -46,7 +46,7 @@ class RouterFactory
             'area' => null
         ]);
 
-        $router[] = new Route('admin/program/<presenter>/<action>[/<id>][/<area>]', [
+        $router[] = new Route('admin/program/<presenter>/<action>[/<id>]', [
             'module' => 'Admin:Program',
             'presenter' => 'Block',
             'action' => 'default',
@@ -54,7 +54,7 @@ class RouterFactory
             'area' => null
         ]);
 
-        $router[] = new Route('admin/mailing/<presenter>/<action>[/<id>][/<area>]', [
+        $router[] = new Route('admin/mailing/<presenter>/<action>[/<id>]', [
             'module' => 'Admin:Mailing',
             'presenter' => 'AutoMails',
             'action' => 'default',
@@ -62,7 +62,7 @@ class RouterFactory
             'area' => null
         ]);
 
-        $router[] = new Route('admin/configuration/<presenter>/<action>[/<id>][/<area>]', [
+        $router[] = new Route('admin/configuration/<presenter>/<action>[/<id>]', [
             'module' => 'Admin:Configuration',
             'presenter' => 'Seminar',
             'action' => 'default',
@@ -70,7 +70,7 @@ class RouterFactory
             'area' => null
         ]);
 
-        $router[] = new Route('admin/<presenter>/<action>[/<id>][/<area>]', [
+        $router[] = new Route('admin/<presenter>/<action>[/<id>]', [
             'module' => 'Admin',
             'presenter' => 'Dashboard',
             'action' => 'default',

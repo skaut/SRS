@@ -11,6 +11,7 @@ class ImageContentControl extends Control
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/image_content.latte');
 
+        $template->heading = $content->getHeading();
         //$template->text = $content->getText();
 
         $template->render();

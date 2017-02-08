@@ -170,7 +170,7 @@ class Page
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('area', $area))
             ->orderBy(['position' => 'ASC']);
-        return $this->contents->matching($criteria); //TODO test
+        return $this->contents->matching($criteria);
     }
 
     public function hasContents($area)
@@ -179,15 +179,15 @@ class Page
             throw new SRSPageException("Area {$area} not defined.");
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('area', $area));
-        return !$this->contents->matching($criteria)->isEmpty(); //TODO test
+        return !$this->contents->matching($criteria)->isEmpty();
     }
 
-    /**
-     * @param ArrayCollection $contents
-     */
-    public function setContents($contents)
+    public function addContent($content)
     {
-        $this->contents = $contents;
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('area', $content->getArea()));
+        $content->setPosition($this->contents->matching($criteria)->count() + 1);
+        $this->contents->add($content);
     }
 
     public function isAllowedForRoles($roleNames)

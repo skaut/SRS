@@ -40,9 +40,10 @@ class CMSFixture extends AbstractFixture implements DependentFixtureInterface
         $manager->persist($homepage);
         $this->addReference('homepage', $homepage);
 
-        $textContent = new TextContent(null, $this->getReference('homepage'), Content::MAIN, 0,
-            $this->translator->translate('common.cms.default.homepage_text')
-        );
+        $textContent = new TextContent($this->getReference('homepage'), Content::MAIN);
+        $textContent->setPosition(1);
+        $textContent->setHeading($this->translator->translate('common.cms.default.homepage_heading'));
+        $textContent->setText($this->translator->translate('common.cms.default.homepage_text'));
 
         $manager->persist($textContent);
         $manager->flush();

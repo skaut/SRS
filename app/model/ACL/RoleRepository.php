@@ -70,18 +70,27 @@ class RoleRepository extends EntityRepository
         return $this->matching($criteria);
     }
 
-    public function findRolesWithoutGuestsOrderedByName() {
-        $rolesWithoutGuests = $this->findRolesWithoutGuests();
-        $criteria = Criteria::create()
-            ->orderBy(['name' => 'ASC']);
-
-        return $rolesWithoutGuests->matching($criteria);
-    }
-
     public function findRolesByIds($ids) {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids))
             ->orderBy(['name' => 'ASC']);
         return $this->matching($criteria);
+    }
+
+    public function getRolesWithoutGuestsOptions() {
+        $roles = $this->createQueryBuilder('r')
+            ->select('r.id, r.name')
+            ->where('r.systemName != :guest')->setParameter('guest', Role::GUEST)
+            ->andWhere('r.systemName != :guest')->setParameter('guest', Role::UNAPPROVED)
+            ->andWhere('r.systemName != :guest')->setParameter('guest', Role::NONREGISTERED)
+            ->orderBy('r.name')
+            ->getQuery()
+            ->getResult();
+
+        $options = [];
+        foreach ($roles as $role) {
+            $options[$role['id']] = $role['name'];
+        }
+        return $options;
     }
 }

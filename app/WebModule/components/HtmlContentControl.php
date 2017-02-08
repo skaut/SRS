@@ -11,7 +11,8 @@ class HtmlContentControl extends Control
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/html_content.latte');
 
-        //$template->text = $content->getText();
+        $template->heading = $content->getHeading();
+        $template->html = $content->getText();
 
         $template->render();
     }

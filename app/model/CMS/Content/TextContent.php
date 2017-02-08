@@ -5,12 +5,13 @@ namespace App\Model\CMS\Content;
 
 use App\Model\CMS\Page;
 use Doctrine\ORM\Mapping as ORM;
+use Nette\Application\UI\Form;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="text_content")
  */
-class TextContent extends Content
+class TextContent extends Content implements IContent
 {
     protected $type = Content::TEXT;
 
@@ -19,20 +20,6 @@ class TextContent extends Content
      * @var string
      */
     protected $text;
-
-    /**
-     * TextContent constructor.
-     * @param string $heading
-     * @param Page $page
-     * @param string $area
-     * @param int $position
-     * @param string $text
-     */
-    public function __construct($heading, $page, $area, $position, $text)
-    {
-        parent::__construct($heading, $page, $area, $position);
-        $this->text = $text;
-    }
 
     /**
      * @return string
@@ -48,5 +35,22 @@ class TextContent extends Content
     public function setText($text)
     {
         $this->text = $text;
+    }
+
+    public function addContentForm(Form $form)
+    {
+        parent::addContentForm($form);
+        $formContainer = $form[$this->getContentFormName()];
+        $formContainer->addTextArea('text', 'admin.cms.pages_content_text')
+            ->setDefaultValue($this->text)
+            ->setAttribute('class', 'tinymce');
+        return $form;
+    }
+
+    public function contentFormSucceeded(Form $form, \stdClass $values)
+    {
+        parent::contentFormSucceeded($form, $values);
+        $values = $values[$this->getContentFormName()];
+        $this->text = $values['text'];
     }
 }

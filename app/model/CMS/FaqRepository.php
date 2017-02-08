@@ -103,6 +103,7 @@ class FaqRepository extends EntityRepository
             $item->setPosition(1);
         }
 
-        $this->_em->persist($item)->flush();
+        $this->_em->persist($item);
+        $this->_em->flush();
     }
 }

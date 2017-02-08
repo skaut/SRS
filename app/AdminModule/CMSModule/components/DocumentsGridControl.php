@@ -155,7 +155,7 @@ class DocumentsGridControl extends Control
         elseif (count($tags) == 0) {
             $p->flashMessage('admin.cms.documents_tags_empty', 'danger');
         }
-        elseif (!$file->name) {
+        elseif ($file->size <= 0) {
             $p->flashMessage('admin.cms.documents_file_empty', 'danger');
         }
         else {

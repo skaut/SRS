@@ -1,10 +1,136 @@
 {block head}
     {include '../../../../presenters/templates/includes/tinymce_init.latte'}
+
+    <script>
+        $(function () {
+            //nastaveni trid a identifikatoru pro spravnou funkcnost mazani a razeni contentu
+            $('#pageContents li').each(function () {
+                var id = $(this).find('input.id').val();
+                $(this).attr('id', 'content-' + id);
+                $(this).find('.delete-content').attr('href', '#content-' + id);
+            });
+
+            //inicializace razeni contentu
+            $('#pageContents').sortable({
+                delay: 300,
+                update: function (event, ui) { },
+                start: function (event, ui) {
+                    $('.tinyMCE').each(function () {
+                        tinyMCE.execCommand('mceRemoveControl', false, $(this).attr('id'));
+                    });
+                },
+                stop: function (event, ui) {
+                    $('.tinyMCE').each(function () {
+                        tinyMCE.execCommand('mceAddControl', false, $(this).attr('id'));
+                    });
+                }
+            });
+
+            //vlozeni razeni contentu do formularoveho pole
+            $('input[type=submit]').click(function (event) {
+                var sorted = $("#pageContents").sortable("toArray");
+                for (var i = 0; i < sorted.length; i++) {
+                    $('#' + sorted[i]).find('input.order').val(i);
+                }
+            });
+
+            //mazani contentu
+            $('.delete-content').click(function (event) {
+                event.preventDefault();
+
+                var contentToDelete = $(this).attr('href').replace('#', '');
+                console.log(contentToDelete);
+                $('#' + contentToDelete + ' input[type=hidden]').val(1);
+                $('#' + contentToDelete).find('input[type=text]').prop('disabled', true).val('');
+                $('#' + contentToDelete).find('textarea').prop('disabled', true).val('');
+                $('#' + contentToDelete).find('select').prop('disabled', true).val('');
+                $('#' + contentToDelete).fadeOut();
+            });
+        });
+    </script>
 {/block}
 
 {block main}
     <h2>{_admin.cms.pages_edit_heading, ['name' => $page->getName()]}</h2>
-    <div class="well">
-        {*{control blockForm}*}
-    </div>
+    {form pageForm class => form-horizontal}
+        <div class="well-tabs">
+            <ul class="nav nav-tabs nav-justified">
+                {foreach $areas as $a}
+                    <li n:class="$area == $a ? active"><a n:href="Pages:content $page->getId(), area => $a">{_common.area.$a}</a></li>
+                {/foreach}
+            </ul>
+
+            <div class="well">
+                <div class="form-group">
+                    {var $input = $form->getComponent('type')}
+                    <div class="col-sm-3 col-xs-3 control-label">
+                        <label for="{$input->htmlId}">
+                            {_$input->caption}
+                        </label>
+                    </div>
+                    <div class="col-sm-9 col-xs-9">
+                        {input $input}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3 col-xs-3 control-label"></div>
+                    <div class="col-sm-9 col-xs-9">
+                        {input submitAdd class => 'btn btn-primary button'}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {foreach $contents as $content}
+            {var $type = $content->getType()}
+            {var $id = $content->getId()}
+
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <div class="panel-title pull-left">
+                        {_common.content.name.$type}
+                    </div>
+                    <div class="pull-right">
+                        <a n:href="delete! area => $area, cid => $id" class="btn btn-xs btn-danger" data-toggle="confirmation" data-content="{_admin.cms.pages_content_delete_confirm}">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                        <a class="btn btn-xs btn-default">
+                            <i class="fa fa-arrows-v"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+                    {var $container = $form->getComponent($content->getContentFormName())}
+                    {foreach $container->getComponents() as $input}
+                        {if $input->getControlPrototype()->getAttribute('type') != 'hidden'}
+                            <div class="form-group" class="form-group {$input->required ? required}">
+                                <div class="col-sm-3 col-xs-3 control-label">
+                                    <label for="{$input->htmlId}">
+                                        {_$input->caption}
+                                    </label>
+                                </div>
+                                <div class="col-sm-9 col-xs-9">
+                                    {input $input}
+                                </div>
+                            </div>
+                        {else}
+                            {input $input}
+                        {/if}
+                    {/foreach}
+                </div>
+            </div>
+        {/foreach}
+
+        <div class="well">
+            <div class="row">
+                <div class="form-group">
+                    <div class="col-sm-3 col-xs-3"></div>
+                    <div class="col-sm-9 col-xs-9">
+                        {input submit class => 'btn btn-primary button'} {input submitAndContinue class => 'btn btn-default button'}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {/form}
 {/block}

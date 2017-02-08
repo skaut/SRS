@@ -10,7 +10,7 @@
     {foreach $page->getContents('main') as $content}
         <div class="row">
             <div class="col-sm-12">
-                {control $content->getTypeName(), $content}
+                {control $content->getComponentName(), $content}
             </div>
         </div>
     {/foreach}
@@ -21,7 +21,7 @@
         {foreach $page->getContents('sidebar') as $content}
             <div class="row">
                 <div class="col-sm-12">
-                    {control $content->getTypeName(), $content}
+                    {control $content->getComponentName(), $content}
                 </div>
             </div>
         {/foreach}

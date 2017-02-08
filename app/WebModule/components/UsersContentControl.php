@@ -11,6 +11,7 @@ class UsersContentControl extends Control
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/users_content.latte');
 
+        $template->heading = $content->getHeading();
         //$template->text = $content->getText();
 
         $template->render();

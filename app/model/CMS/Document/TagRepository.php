@@ -66,4 +66,11 @@ class TagRepository extends EntityRepository
             ->orderBy(['name' => 'ASC']);
         return $this->matching($criteria);
     }
+
+    public function getTagsOptions() {
+        $choices = [];
+        foreach ($this->findAll() as $tag)
+            $choices[$tag->getId()] = $tag->getName();
+        return $choices;
+    }
 }

@@ -38,7 +38,7 @@ class SettingsPresenter extends CMSBasePresenter
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) {
             $logo = $values['logo'];
-            if ($logo->name) {
+            if ($logo->size > 0) {
                 $this->filesService->delete('/logo/' . $this->settingsRepository->getValue('logo'));
 
                 $logoName = Strings::webalize($logo->name, '.');

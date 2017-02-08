@@ -56,6 +56,7 @@ services:
     - App\Model\ACL\PermissionRepository
     - App\Model\ACL\ResourceRepository
     - App\Model\ACL\RoleRepository
+    - App\Model\CMS\Content\ContentRepository
     - App\Model\CMS\Document\DocumentRepository
     - App\Model\CMS\Document\TagRepository
     - App\Model\CMS\FaqRepository
@@ -75,6 +76,7 @@ services:
     - App\WebModule\Forms\AdditionalInformationFormFactory
     - App\AdminModule\Forms\BaseFormFactory
     - App\AdminModule\CMSModule\Forms\FaqFormFactory
+    - App\AdminModule\CMSModule\Forms\PageFormFactory
     - App\AdminModule\CMSModule\Forms\NewsFormFactory
     - App\AdminModule\CMSModule\Forms\SettingsFormFactory
     - App\AdminModule\ConfigurationModule\Forms\PaymentFormFactory

@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="blocks_content")
  */
-class BlocksContent extends Content
+class BlocksContent extends Content implements IContent
 {
     protected $type = Content::BLOCKS;
 }
