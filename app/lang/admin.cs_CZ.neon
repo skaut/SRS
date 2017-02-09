@@ -101,7 +101,6 @@ cms:
     documents_heading: "Dokumenty"
     documents_name: "Název"
     documents_name_empty: "Zadejte název dokumentu."
-    documents_name_exists: "Dokument s tímto názvem již existuje."
     documents_tags: "Štítky"
     documents_tags_empty: "Dokument musí mít alespoň jeden štítek."
     documents_file: "Soubor"

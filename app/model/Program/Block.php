@@ -17,7 +17,7 @@ class Block
     use Identifier;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", unique=true)
      * @var string
      */
     protected $name;

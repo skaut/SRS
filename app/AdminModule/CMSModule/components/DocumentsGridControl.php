@@ -92,9 +92,8 @@ class DocumentsGridControl extends Control
         $tagsOptions = $this->tagRepository->getTagsOptions();
 
         $grid->addInlineAdd()->onControlAdd[] = function($container) use($tagsOptions) {
-            $container->addText('name', '')
-                ->addCondition(Form::FILLED) //->addRule(Form::FILLED, 'admin.cms.documents_name_empty') //TODO validace
-                ->addRule(Form::IS_NOT_IN, 'admin.cms.documents_name_exists', $this->documentRepository->findAllNames());
+            $container->addText('name', '');
+                //->addRule(Form::FILLED, 'admin.cms.documents_name_empty') //TODO validace
 
             $container->addMultiSelect('tags', '', $tagsOptions)->setAttribute('class', 'datagrid-multiselect');
                 //->addRule(Form::FILLED, 'admin.cms.documents_tags_empty');
@@ -118,9 +117,6 @@ class DocumentsGridControl extends Control
             $container->addText('description', '');
         };
         $grid->getInlineEdit()->onSetDefaults[] = function($container, $item) {
-            $container['name']
-                ->addRule(Form::IS_NOT_IN, 'admin.cms.documents_name_exists', $this->documentRepository->findOthersNames($item->getId()));
-
             $container->setDefaults([
                 'name' => $item->getName(),
                 'tags' => $this->tagRepository->findTagsIds($item->getTags()),
