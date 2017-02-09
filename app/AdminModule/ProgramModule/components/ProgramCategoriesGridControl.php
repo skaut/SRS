@@ -52,7 +52,7 @@ class ProgramCategoriesGridControl extends Control
 
         $grid->addColumnText('registerableRoles', 'admin.program.categories_registerable_roles')
             ->setRenderer(function ($row) {
-                $roles = array();
+                $roles = [];
                 foreach ($row->getRegisterableRoles() as $role) {
                     $roles[] = $role->getName();
                 }
@@ -82,11 +82,9 @@ class ProgramCategoriesGridControl extends Control
             $container['name']
                 ->addRule(Form::IS_NOT_IN, 'admin.program.categories_name_exists', $this->categoryRepository->findOthersNames($item->getId()));
 
-            $rolesIds = array_map(function($o) { return $o->getId(); }, $item->getRegisterableRoles()->toArray());
-
             $container->setDefaults([
                 'name' => $item->getName(),
-                'registerableRoles' => $rolesIds
+                'registerableRoles' => $this->roleRepository->findRolesIds($item->getRegisterableRoles())
             ]);
         };
         $grid->getInlineEdit()->onSubmit[] = [$this, 'edit'];

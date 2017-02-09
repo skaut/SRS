@@ -191,12 +191,16 @@ class ImageContent extends Content implements IContent
             $this->image = $path;
             $this->filesService->save($file, $path);
             $image = $file->toImage();
+            $exists = true;
         }
         else if ($this->image) {
-            $image = Image::fromFile($this->filesService->getDir() . $this->image);
+            $path = $this->filesService->getDir() . $this->image;
+            $exists = file_exists($path);
+            if ($exists)
+                $image = Image::fromFile($path);
         }
 
-        if ($file->size > 0 || $this->image) {
+        if ($exists) {
             if ($width && $height) {
                 $this->width = $width;
                 $this->height = $height;

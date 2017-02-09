@@ -27,7 +27,7 @@ class RoleFixture extends AbstractFixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager)
     {
-        $roles = array();
+        $roles = [];
         foreach (Role::$roles as $role) {
             $roles[$role] = new Role($this->translator->translate('common.role.' . $role));
             $roles[$role]->setSystemName($role);

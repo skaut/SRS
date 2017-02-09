@@ -82,7 +82,7 @@ class PagesPresenter extends CMSBasePresenter
         };
 
         $form->onError[] = function (Form $form) {
-            $form->getErrors();
+            $this->flashMessage('admin.cms.pages_content_save_error', 'danger');
         };
 
         return $form;

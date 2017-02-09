@@ -4,18 +4,11 @@ namespace App\AdminModule\CMSModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\ACL\RoleRepository;
-use App\Model\CMS\Content\ApplicationContent;
-use App\Model\CMS\Content\BlocksContent;
 use App\Model\CMS\Content\CapacitiesContent;
 use App\Model\CMS\Content\Content;
 use App\Model\CMS\Content\ContentRepository;
 use App\Model\CMS\Content\DocumentContent;
-use App\Model\CMS\Content\FaqContent;
-use App\Model\CMS\Content\HtmlContent;
 use App\Model\CMS\Content\ImageContent;
-use App\Model\CMS\Content\NewsContent;
-use App\Model\CMS\Content\ProgramsContent;
-use App\Model\CMS\Content\TextContent;
 use App\Model\CMS\Content\UsersContent;
 use App\Model\CMS\Document\TagRepository;
 use App\Model\CMS\PageRepository;

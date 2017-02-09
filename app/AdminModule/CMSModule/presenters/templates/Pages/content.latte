@@ -10,7 +10,7 @@
                 $(this).find('.delete-content').attr('href', '#content-' + id);
             });
 
-            //inicializace razeni contentu
+            //razeni contentu
             $('#contents').sortable({
                 delay: 300,
                 update: function (event, ui) { },
@@ -35,6 +35,7 @@
                 var contentToDelete = $(this).attr('href').replace('#', '');
                 $('#' + contentToDelete + ' .delete').val(1);
                 $('#' + contentToDelete).find('input[type=text]').prop('disabled', true).val('');
+                $('#' + contentToDelete).find('input[type=file]').prop('disabled', true).val('');
                 $('#' + contentToDelete).find('textarea').prop('disabled', true).val('');
                 $('#' + contentToDelete).fadeOut();
             });

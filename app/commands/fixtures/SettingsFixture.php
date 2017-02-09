@@ -32,7 +32,7 @@ class SettingsFixture extends AbstractFixture
         $yesterday = new \DateTime();
         $yesterday->modify('-1 day');
 
-        $settings = array();
+        $settings = [];
         $settings[] = new Settings('admin_created', '0');
 
         $settings[] = new Settings('seminar_name', $this->translator->translate('common.settings.default_value.seminar_name'));

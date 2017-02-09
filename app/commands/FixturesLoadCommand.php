@@ -35,7 +35,7 @@ class FixturesLoadCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output) {
         try {
-            $fixtures = array();
+            $fixtures = [];
             $fixtures[] = new SettingsFixture($this->translator);
             $fixtures[] = new ResourceFixture();
             $fixtures[] = new PermissionFixture();

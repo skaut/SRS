@@ -72,7 +72,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
 
         $this->em->flush();
 
-        $netteRoles = array();
+        $netteRoles = [];
         if ($user->isApproved()) {
             foreach ($user->getRoles() as $role)
                 $netteRoles[] = $role->getName();

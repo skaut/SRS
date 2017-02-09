@@ -70,6 +70,17 @@ services:
     - App\Model\Settings\CustomInput\CustomInputRepository
     - App\Model\Settings\SettingsRepository
     - App\Model\User\UserRepository
+    - App\WebModule\Components\IApplicationContentControlFactory
+    - App\WebModule\Components\IBlocksContentControlFactory
+    - App\WebModule\Components\ICapacitiesContentControlFactory
+    - App\WebModule\Components\IDocumentContentControlFactory
+    - App\WebModule\Components\IFaqContentControlFactory
+    - App\WebModule\Components\IHtmlContentControlFactory
+    - App\WebModule\Components\IImageContentControlFactory
+    - App\WebModule\Components\INewsContentControlFactory
+    - App\WebModule\Components\IProgramsContentControlFactory
+    - App\WebModule\Components\ITextContentControlFactory
+    - App\WebModule\Components\IUsersContentControlFactory
     - App\WebModule\Forms\BaseFormFactory
     - App\WebModule\Forms\PersonalDetailsFormFactory
     - App\WebModule\Forms\RolesFormFactory

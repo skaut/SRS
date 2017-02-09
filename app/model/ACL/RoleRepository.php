@@ -77,12 +77,16 @@ class RoleRepository extends EntityRepository
         return $this->matching($criteria);
     }
 
+    public function findRolesIds($roles) {
+        return array_map(function($o) { return $o->getId(); }, $roles->toArray());
+    }
+
     public function getRolesWithoutGuestsOptions() {
         $roles = $this->createQueryBuilder('r')
             ->select('r.id, r.name')
             ->where('r.systemName != :guest')->setParameter('guest', Role::GUEST)
-            ->andWhere('r.systemName != :guest')->setParameter('guest', Role::UNAPPROVED)
-            ->andWhere('r.systemName != :guest')->setParameter('guest', Role::NONREGISTERED)
+            ->andWhere('r.systemName != :unapproved')->setParameter('unapproved', Role::UNAPPROVED)
+            ->andWhere('r.systemName != :nonregistered')->setParameter('nonregistered', Role::NONREGISTERED)
             ->orderBy('r.name')
             ->getQuery()
             ->getResult();

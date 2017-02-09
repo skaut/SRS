@@ -11,7 +11,7 @@ class PermissionFixture extends AbstractFixture implements DependentFixtureInter
 {
     public function load(ObjectManager $manager)
     {
-        $permissions = array();
+        $permissions = [];
         $permissions['admin_access'] = new Permission(Permission::ACCESS, $this->getReference('resource_admin'));
         $permissions['acl_manage'] = new Permission(Permission::MANAGE, $this->getReference('resource_acl'));
         $permissions['cms_manage'] = new Permission(Permission::MANAGE, $this->getReference('resource_cms'));

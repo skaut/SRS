@@ -68,7 +68,7 @@ class PagesGridControl extends Control
                 if (count($this->roleRepository->findAll()) == count($row->getRoles()))
                     return $this->translator->translate('admin.cms.pages_roles_all');
                 else {
-                    $roles = array();
+                    $roles = [];
                     foreach ($row->getRoles() as $role) {
                         $roles[] = $role->getName();
                     }
@@ -119,12 +119,10 @@ class PagesGridControl extends Control
             $container['slug']
                 ->addRule(Form::IS_NOT_IN, 'admin.cms.pages_slug_exists', $this->pageRepository->findOthersSlugs($item->getId()));
 
-            $rolesIds = array_map(function($o) { return $o->getId(); }, $item->getRoles()->toArray());
-
             $container->setDefaults([
                 'name' => $item->getName(),
                 'slug' => $item->getSlug(),
-                'roles' => $rolesIds,
+                'roles' => $this->roleRepository->findRolesIds($item->getRoles()),
                 'public' => $item->isPublic() ? 1 : 0
             ]);
         };

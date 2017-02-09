@@ -123,16 +123,15 @@ class ProfilePresenter extends WebBasePresenter
     {
         $form = $this->rolesFormFactory->create($this->dbuser, $this->editRegistrationAllowed);
 
-        $usersRolesIds = array_map(function($o) { return $o->getId(); }, $this->dbuser->getRoles()->toArray());
         $form->setDefaults([
             'id' => $this->dbuser->getId(),
-            'roles' => $usersRolesIds
+            'roles' => $this->roleRepository->findRolesIds($this->dbuser->getRoles())
         ]);
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) {
             $editedUser = $this->userRepository->find($values['id']); //TODO editace do repository
 
-            $selectedRoles = array();
+            $selectedRoles = [];
             foreach ($values['roles'] as $roleId) {
                 $selectedRoles[] = $this->roleRepository->find($roleId);
             }

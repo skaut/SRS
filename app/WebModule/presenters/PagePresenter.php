@@ -8,7 +8,18 @@ use App\WebModule\Components\CapacitiesContentControl;
 use App\WebModule\Components\DocumentContentControl;
 use App\WebModule\Components\FaqContentControl;
 use App\WebModule\Components\HtmlContentControl;
+use App\WebModule\Components\IApplicationContentControlFactory;
+use App\WebModule\Components\IBlocksContentControlFactory;
+use App\WebModule\Components\ICapacitiesContentControlFactory;
+use App\WebModule\Components\IDocumentContentControlFactory;
+use App\WebModule\Components\IFaqContentControlFactory;
+use App\WebModule\Components\IHtmlContentControlFactory;
+use App\WebModule\Components\IImageContentControlFactory;
 use App\WebModule\Components\ImageContentControl;
+use App\WebModule\Components\INewsContentControlFactory;
+use App\WebModule\Components\IProgramsContentControlFactory;
+use App\WebModule\Components\ITextContentControlFactory;
+use App\WebModule\Components\IUsersContentControlFactory;
 use App\WebModule\Components\NewsContentControl;
 use App\WebModule\Components\ProgramsContentControl;
 use App\WebModule\Components\TextContentControl;
@@ -17,7 +28,72 @@ use Nette\Application\BadRequestException;
 
 class PagePresenter extends WebBasePresenter
 {
-    protected $pageId;
+    /**
+     * @var IApplicationContentControlFactory
+     * @inject
+     */
+    public $applicationContentControlFactory;
+
+    /**
+     * @var IBlocksContentControlFactory
+     * @inject
+     */
+    public $blocksContentControlFactory;
+
+    /**
+     * @var ICapacitiesContentControlFactory
+     * @inject
+     */
+    public $capacitiesContentControlFactory;
+
+    /**
+     * @var IDocumentContentControlFactory
+     * @inject
+     */
+    public $documentContentControlFactory;
+
+    /**
+     * @var IFaqContentControlFactory
+     * @inject
+     */
+    public $faqContentControlFactory;
+
+    /**
+     * @var IHtmlContentControlFactory
+     * @inject
+     */
+    public $htmlContentControlFactory;
+
+    /**
+     * @var IImageContentControlFactory
+     * @inject
+     */
+    public $imageContentControlFactory;
+
+    /**
+     * @var INewsContentControlFactory
+     * @inject
+     */
+    public $newsContentControlFactory;
+
+    /**
+     * @var IProgramsContentControlFactory
+     * @inject
+     */
+    public $programsContentControlFactory;
+
+    /**
+     * @var ITextContentControlFactory
+     * @inject
+     */
+    public $textContentControlFactory;
+
+    /**
+     * @var IUsersContentControlFactory
+     * @inject
+     */
+    public $usersContentControlFactory;
+
 
     public function renderDefault($slug)
     {
@@ -36,65 +112,63 @@ class PagePresenter extends WebBasePresenter
             throw new BadRequestException($this->translator->translate('_web.common.page_access_denied'), 403);
         }
 
-        $this->pageId = $page->getId();
-
         $this->template->page = $page;
         $this->template->pageName = $page->getName();
         $this->template->sidebarVisible = $page->hasContents('sidebar');
     }
 
-    protected function createComponentApplicationContent($content)
+    protected function createComponentApplicationContent($name)
     {
-        return new ApplicationContentControl;
+        return $this->applicationContentControlFactory->create($name);
     }
 
-    protected function createComponentBlocksContent($content)
+    protected function createComponentBlocksContent($name)
     {
-        return new BlocksContentControl;
+        return $this->blocksContentControlFactory->create($name);
     }
 
-    protected function createComponentCapacitiesContent($content)
+    protected function createComponentCapacitiesContent($name)
     {
-        return new CapacitiesContentControl;
+        return $this->capacitiesContentControlFactory->create($name);
     }
 
-    protected function createComponentDocumentContent($content)
+    protected function createComponentDocumentContent($name)
     {
-        return new DocumentContentControl;
+        return $this->documentContentControlFactory->create($name);
     }
 
-    protected function createComponentFaqContent($content)
+    protected function createComponentFaqContent($name)
     {
-        return new FaqContentControl;
+        return $this->faqContentControlFactory->create($name);
     }
 
-    protected function createComponentHtmlContent($content)
+    protected function createComponentHtmlContent($name)
     {
-        return new HtmlContentControl;
+        return $this->htmlContentControlFactory->create($name);
     }
 
-    protected function createComponentImageContent($content)
+    protected function createComponentImageContent($name)
     {
-        return new ImageContentControl;
+        return $this->imageContentControlFactory->create($name);
     }
 
-    protected function createComponentNewsContent($content)
+    protected function createComponentNewsContent($name)
     {
-        return new NewsContentControl;
+        return $this->newsContentControlFactory->create($name);
     }
 
-    protected function createComponentProgramsContent($content)
+    protected function createComponentProgramsContent($name)
     {
-        return new ProgramsContentControl;
+        return $this->programsContentControlFactory->create($name);
     }
 
-    protected function createComponentTextContent($content)
+    protected function createComponentTextContent($name)
     {
-        return new TextContentControl;
+        return $this->textContentControlFactory->create($name);
     }
 
-    protected function createComponentUsersContent($content)
+    protected function createComponentUsersContent($name)
     {
-        return new UsersContentControl;
+        return $this->usersContentControlFactory->create($name);
     }
 }

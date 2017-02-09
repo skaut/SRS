@@ -67,6 +67,10 @@ class TagRepository extends EntityRepository
         return $this->matching($criteria);
     }
 
+    public function findTagsIds($tags) {
+        return array_map(function($o) { return $o->getId(); }, $tags->toArray());
+    }
+
     public function getTagsOptions() {
         $choices = [];
         foreach ($this->findAll() as $tag)

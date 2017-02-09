@@ -28,9 +28,18 @@ class UserRepository extends EntityRepository
     {
         return $this->createQueryBuilder('u')
             ->join('u.roles', 'r')
-            ->where('r.systemName = :name')
+            ->where('r.systemName = :name')->setParameter('name', $systemName)
             ->andWhere('u.approved = true')
-            ->setParameter('name', $systemName)
+            ->orderBy('u.displayName')
+            ->getQuery()->execute();
+    }
+
+    public function findApprovedUsersInRoles($rolesIds) {
+        return $this->createQueryBuilder('u')
+            ->join('u.roles', 'r')
+            ->where('r.id IN (:ids)')->setParameter('ids', $rolesIds)
+            ->andWhere('u.approved = true')
+            ->orderBy('u.displayName')
             ->getQuery()->execute();
     }
 

@@ -12,7 +12,7 @@ class ResourceFixture extends AbstractFixture
 
     public function load(ObjectManager $manager)
     {
-        $resources = array();
+        $resources = [];
         foreach (Resource::$resources as $resource) {
             $resources[$resource] = new Resource($resource);
             $manager->persist($resources[$resource]);

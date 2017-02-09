@@ -121,11 +121,9 @@ class DocumentsGridControl extends Control
             $container['name']
                 ->addRule(Form::IS_NOT_IN, 'admin.cms.documents_name_exists', $this->documentRepository->findOthersNames($item->getId()));
 
-            $tagsIds = array_map(function($o) { return $o->getId(); }, $item->getTags()->toArray());
-
             $container->setDefaults([
                 'name' => $item->getName(),
-                'tags' => $tagsIds,
+                'tags' => $this->tagRepository->getTagsIds($item->getTags()),
                 'description' => $item->getDescription()
             ]);
         };

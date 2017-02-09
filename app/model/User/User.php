@@ -905,7 +905,7 @@ class User
     }
 
     public function getRegisterableCategories($roles = null) {
-        $categories = array();
+        $categories = [];
         if ($roles === null)
             $roles = $this->roles;
         foreach ($roles as $role) {

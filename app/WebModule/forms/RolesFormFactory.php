@@ -30,8 +30,8 @@ class RolesFormFactory
         $form->addHidden('id');
 
         $registerableNowRoles = $this->roleRepository->findRegisterableNowRoles();
-        $availableRoles = array();
-        $availableRolesOptions = array();
+        $availableRoles = [];
+        $availableRolesOptions = [];
 
         //pridani roli, ktere jsou registrovatelne
         foreach ($registerableNowRoles as $role) {
