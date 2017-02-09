@@ -100,7 +100,7 @@ class PagePresenter extends WebBasePresenter
         if ($slug === null) {
             $page = $this->pageRepository->findPublishedBySlug('/');
             if ($page === null) {
-                throw new BadRequestException($this->translator->translate('_web.common.homepage_not_found'), 404);
+                throw new BadRequestException($this->translator->translate('web.common.homepage_not_found'), 404);
             }
             $this->template->bodyClass = "body-homepage";
         } else {
@@ -109,7 +109,7 @@ class PagePresenter extends WebBasePresenter
         }
 
         if (!$page->isAllowedForRoles($this->user->roles)) {
-            throw new BadRequestException($this->translator->translate('_web.common.page_access_denied'), 403);
+            throw new BadRequestException($this->translator->translate('web.common.page_access_denied'), 403);
         }
 
         $this->template->page = $page;
