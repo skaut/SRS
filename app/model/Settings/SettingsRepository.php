@@ -9,9 +9,7 @@ use Kdyby\Translation\Translator;
 
 class SettingsRepository extends EntityRepository
 {
-    /**
-     * @var Translator
-     */
+    /** @var Translator */
     private $translator;
 
     public function __construct(EntityManager $em, Mapping\ClassMetadata $class, Translator $translator)
@@ -20,26 +18,42 @@ class SettingsRepository extends EntityRepository
         $this->translator = $translator;
     }
 
-    //TODO cachovani
-
+    /**
+     * @param $item
+     * @return mixed
+     * @throws SettingsException
+     */
     public function getValue($item)
     {
-        $setting = $this->findOneBy(['item' => $item]);
+        $setting = $this->findOneBy(['item' => $item]); //TODO cachovani
         if ($setting === null)
             throw new SettingsException("Item {$item} was not found in table Settings.");
         return $setting->getValue();
     }
 
+    /**
+     * @param $item
+     * @return \DateTime
+     */
     public function getDateValue($item)
     {
         return new \DateTime($this->getValue($item));
     }
 
+    /**
+     * @param $item
+     * @return \DateTime
+     */
     public function getDateTimeValue($item)
     {
         return new \DateTime($this->getValue($item));
     }
 
+    /**
+     * @param $item
+     * @param $value
+     * @throws SettingsException
+     */
     public function setValue($item, $value)
     {
         $setting = $this->findOneBy(['item' => $item]);
@@ -49,16 +63,27 @@ class SettingsRepository extends EntityRepository
         $this->_em->flush();
     }
 
-    public function setDateValue($item, $value)
+    /**
+     * @param $item
+     * @param \DateTime $value
+     */
+    public function setDateValue($item, \DateTime $value)
     {
         $this->setValue($item, $value->format('Y-m-d'));
     }
 
-    public function setDateTimeValue($item, $value)
+    /**
+     * @param $item
+     * @param \DateTime $value
+     */
+    public function setDateTimeValue($item, \DateTime $value)
     {
         $this->setValue($item, $value->format(\DateTime::ISO8601));
     }
 
+    /**
+     * @return array
+     */
     public function getDurationsOptions() {
         $MAX_LENGTH = 240;
 

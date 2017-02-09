@@ -154,9 +154,15 @@ class PagesGridControl extends Control
 
         $this->pageRepository->save($page);
 
-        $this->getPresenter()->flashMessage('admin.cms.pages_saved', 'success');
+        $p = $this->getPresenter();
+        $p->flashMessage('admin.cms.pages_saved', 'success');
 
-        $this->redirect('this');
+        if ($p->isAjax()) {
+            $p->redrawControl('flashes');
+            $this['pagesGrid']->reload();
+        } else {
+            $this->redirect('this');
+        }
     }
 
     public function edit($id, $values)
@@ -170,9 +176,14 @@ class PagesGridControl extends Control
 
         $this->pageRepository->save($page);
 
-        $this->getPresenter()->flashMessage('admin.cms.pages_saved', 'success');
+        $p = $this->getPresenter();
+        $p->flashMessage('admin.cms.pages_saved', 'success');
 
-        $this->redirect('this');
+        if ($p->isAjax()) {
+            $p->redrawControl('flashes');
+        } else {
+            $this->redirect('this');
+        }
     }
 
     public function handleDelete($id)

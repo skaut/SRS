@@ -42,6 +42,17 @@ class PageRepository extends EntityRepository
     }
 
     /**
+     * @return int
+     */
+    public function findLastPosition()
+    {
+        return $this->createQueryBuilder('p')
+            ->select('MAX(p.position)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
      * @return array
      */
     public function findAllSlugs() {
@@ -89,7 +100,7 @@ class PageRepository extends EntityRepository
     public function save(Page $page)
     {
         if (!$page->getPosition())
-            $page->setPosition($this->countBy() + 1);
+            $page->setPosition($this->findLastPosition() + 1);
 
         $this->_em->persist($page);
         $this->_em->flush();

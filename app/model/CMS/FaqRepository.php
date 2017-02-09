@@ -28,12 +28,23 @@ class FaqRepository extends EntityRepository
     }
 
     /**
+     * @return int
+     */
+    public function findLastPosition()
+    {
+        return $this->createQueryBuilder('f')
+            ->select('MAX(f.position)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
      * @param Faq $faq
      */
     public function save(Faq $faq)
     {
         if (!$faq->getPosition())
-            $faq->setPosition($this->countBy() + 1);
+            $faq->setPosition($this->findLastPosition() + 1);
 
         $this->_em->persist($faq);
         $this->_em->flush();

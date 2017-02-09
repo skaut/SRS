@@ -287,8 +287,7 @@ configuration:
     custom_inputs_name: "Název"
     custom_inputs_type: "Typ"
     application_input_name_empty: "Zadejte název pole."
-    application_input_added: "Pole bylo úspěšně přidáno."
-    application_input_edited: "Pole bylo úspěšně upraveno."
+    application_input_saved: "Pole bylo úspěšně uloženo."
     application_input_delete_confirm: "Odstraněním pole odeberete odpovědi uživatelů na tuto otázku. Opravdu chcete pole odstranit?"
     application_input_deleted: "Pole bylo úspěšně odstraněno."
     application_inputs_order_saved: "Pořadí polí bylo úspěšně upraveno."
@@ -300,6 +299,7 @@ configuration:
     skautis_event_note: "V sezmanu akcí jsou neuzavřené akce, na které máte ve SkautIS oprávnění, pokud se Vám akce v seznamu nezobrazuje, nechte synchronizaci nastavit někoho s patřičnými právy."
     skautis_event_disconnect: "Odpojit od akce"
     skautis_event_disconnect_confirm: "Opravdu se chcete odpojit od akce?"
+    skautis_event_connect_successful: "Propojení s akcí proběhlo úspěšně."
     skautis_event_disconnect_successful: "Odpojení od akce proběhlo úspěšně."
 
     skautis_event_sync_heading: "Synchronizace účastníků"

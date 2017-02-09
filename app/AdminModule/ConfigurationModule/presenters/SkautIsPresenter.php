@@ -69,12 +69,7 @@ class SkautIsPresenter extends ConfigurationBasePresenter
         $form = $this->skautIsEventFormFactory->create();
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) {
-            $eventId = $values['skautisEvent'];
-
-            $this->settingsRepository->setValue('skautis_event_id', $eventId);
-            $this->settingsRepository->setValue('skautis_event_name', $this->skautIsService->getEventDisplayName($eventId));
-
-            $this->flashMessage('admin.configuration.configuration_saved', 'success');
+            $this->flashMessage('admin.configuration.skautis_event_connect_successful', 'success');
 
             $this->redirect('this');
         };

@@ -3,6 +3,7 @@
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
+use App\Model\Settings\SettingsRepository;
 use App\Services\SkautIsService;
 use Nette;
 use Nette\Application\UI\Form;
@@ -10,19 +11,19 @@ use Skautis\Wsdl\WsdlException;
 
 class SkautIsEventForm extends Nette\Object
 {
-    /**
-     * @var BaseForm
-     */
+    /** @var BaseForm */
     private $baseForm;
 
-    /**
-     * @var SkautIsService
-     */
+    /** @var SettingsRepository */
+    private $settingsRepository;
+
+    /** @var SkautIsService */
     private $skautIsService;
 
-    public function __construct(BaseForm $baseForm, SkautIsService $skautIsService)
+    public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository, SkautIsService $skautIsService)
     {
         $this->baseForm = $baseForm;
+        $this->settingsRepository = $settingsRepository;
         $this->skautIsService = $skautIsService;
     }
 
@@ -39,6 +40,15 @@ class SkautIsEventForm extends Nette\Object
 
         $form->addSubmit('submit', 'admin.common.save');
 
+        $form->onSuccess[] = [$this, 'processForm'];
+
         return $form;
+    }
+
+    public function processForm(Form $form, \stdClass $values) {
+        $eventId = $values['skautisEvent'];
+
+        $this->settingsRepository->setValue('skautis_event_id', $eventId);
+        $this->settingsRepository->setValue('skautis_event_name', $this->skautIsService->getEventDisplayName($eventId));
     }
 }

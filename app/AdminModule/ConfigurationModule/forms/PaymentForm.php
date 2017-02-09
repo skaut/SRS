@@ -3,19 +3,22 @@
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
+use App\Model\Settings\SettingsRepository;
 use Nette;
 use Nette\Application\UI\Form;
 
 class PaymentForm extends Nette\Object
 {
-    /**
-     * @var BaseForm
-     */
+    /** @var BaseForm */
     private $baseForm;
 
-    public function __construct(BaseForm $baseForm)
+    /** @var SettingsRepository */
+    private $settingsRepository;
+
+    public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository)
     {
         $this->baseForm = $baseForm;
+        $this->settingsRepository = $settingsRepository;
     }
 
     public function create()
@@ -36,6 +39,18 @@ class PaymentForm extends Nette\Object
 
         $form->addSubmit('submit', 'admin.common.save');
 
+        $form->setDefaults([
+            'accountNumber' => $this->settingsRepository->getValue('account_number'),
+            'variableSymbolCode' => $this->settingsRepository->getValue('variable_symbol_code')
+        ]);
+
+        $form->onSuccess[] = [$this, 'processForm'];
+
         return $form;
+    }
+
+    public function processForm(Form $form, \stdClass $values) {
+        $this->settingsRepository->setValue('account_number', $values['accountNumber']);
+        $this->settingsRepository->setValue('variable_symbol_code', $values['variableSymbolCode']);
     }
 }

@@ -149,7 +149,7 @@ class PageForm extends UI\Control
         foreach ($page->getContents($area) as $content) {
             $formContainer = $values[$content->getContentFormName()];
             if ($formContainer['delete'])
-                $this->contentRepository->removeContent($content->getId());
+                $this->contentRepository->remove($content);
             else
                 $content->contentFormSucceeded($form, $values);
         }

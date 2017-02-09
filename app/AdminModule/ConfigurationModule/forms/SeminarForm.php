@@ -3,19 +3,22 @@
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
+use App\Model\Settings\SettingsRepository;
 use Nette;
 use Nette\Application\UI\Form;
 
 class SeminarForm extends Nette\Object
 {
-    /**
-     * @var BaseForm
-     */
+    /** @var BaseForm */
     private $baseForm;
 
-    public function __construct(BaseForm $baseForm)
+    /** @var SettingsRepository */
+    private $settingsRepository;
+
+    public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository)
     {
         $this->baseForm = $baseForm;
+        $this->settingsRepository = $settingsRepository;
     }
 
     public function create()
@@ -48,7 +51,25 @@ class SeminarForm extends Nette\Object
 
         $form->addSubmit('submit', 'admin.common.save');
 
+        $form->setDefaults([
+            'seminarName' => $this->settingsRepository->getValue('seminar_name'),
+            'seminarFromDate' => $this->settingsRepository->getDateValue('seminar_from_date'),
+            'seminarToDate' => $this->settingsRepository->getDateValue('seminar_to_date'),
+            'editRegistrationTo' => $this->settingsRepository->getDateValue('edit_registration_to'),
+            'seminarEmail' => $this->settingsRepository->getValue('seminar_email')
+        ]);
+
+        $form->onSuccess[] = [$this, 'processForm'];
+
         return $form;
+    }
+
+    public function processForm(Form $form, \stdClass $values) {
+        $this->settingsRepository->setValue('seminar_name', $values['seminarName']);
+        $this->settingsRepository->setDateValue('seminar_from_date', $values['seminarFromDate']);
+        $this->settingsRepository->setDateValue('seminar_to_date', $values['seminarToDate']);
+        $this->settingsRepository->setDateValue('edit_registration_to', $values['editRegistrationTo']);
+        $this->settingsRepository->setValue('seminar_email', $values['seminarEmail']);
     }
 
     public function validateSeminarFromDate($field, $args) {

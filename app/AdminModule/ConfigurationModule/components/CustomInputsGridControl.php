@@ -2,8 +2,10 @@
 
 namespace App\AdminModule\ConfigurationModule\Components;
 
+use App\Model\Settings\CustomInput\CustomCheckbox;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
+use App\Model\Settings\CustomInput\CustomText;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
@@ -53,8 +55,8 @@ class CustomInputsGridControl extends Control
         $customInputTypesOptions = $this->prepareCustomInputTypesOptions();
 
         $grid->addInlineAdd()->onControlAdd[] = function($container) use($customInputTypesOptions) {
-            $container->addText('name', '');
-                //->addRule(Form::FILLED, 'admin.configuration.application_input_name_empty'); //TODO validace
+            $container->addText('name', '')
+                ->addRule(Form::FILLED, 'admin.configuration.application_input_name_empty');
             $container->addSelect('type', '', $customInputTypesOptions);
         };
         $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
@@ -82,24 +84,21 @@ class CustomInputsGridControl extends Control
     }
 
     public function add($values) {
+        switch ($values['type']) {
+            case 'text':
+                $input = new CustomText();
+                break;
+            case 'checkbox':
+                $input = new CustomCheckbox();
+                break;
+        }
+
+        $input->setName($values['name']);
+
+        $this->customInputRepository->save($input);
+
         $p = $this->getPresenter();
-
-        $name = $values['name'];
-
-        if (!$name) {
-            $p->flashMessage('admin.configuration.application_input_name_empty', 'danger');
-        }
-        else {
-            switch ($values['type']) {
-                case 'text':
-                    $this->customInputRepository->addText($name);
-                    break;
-                case 'checkbox':
-                    $this->customInputRepository->addCheckBox($name);
-                    break;
-            }
-            $p->flashMessage('admin.configuration.application_input_added', 'success');
-        }
+        $p->flashMessage('admin.configuration.application_input_saved', 'success');
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
@@ -111,10 +110,14 @@ class CustomInputsGridControl extends Control
 
     public function edit($id, $values)
     {
-        $p = $this->getPresenter();
+        $input = $this->customInputRepository->findById($id);
 
-        $this->customInputRepository->renameInput($id, $values['name']);
-        $p->flashMessage('admin.configuration.application_input_edited', 'success');
+        $input->setName($values['name']);
+
+        $this->customInputRepository->save($input);
+
+        $p = $this->getPresenter();
+        $p->flashMessage('admin.configuration.application_input_saved', 'success');
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
@@ -125,17 +128,17 @@ class CustomInputsGridControl extends Control
 
     public function handleDelete($id)
     {
-        $this->customInputRepository->removeInput($id);
+        $input = $this->customInputRepository->findById($id);
+        $this->customInputRepository->remove($input);
 
-        $p = $this->getPresenter();
-        $p->flashMessage('admin.configuration.application_input_deleted', 'success');
+        $this->getPresenter()->flashMessage('admin.configuration.application_input_deleted', 'success');
 
         $this->redirect('this');
     }
 
     public function handleSort($item_id, $prev_id, $next_id)
     {
-        $this->customInputRepository->changePosition($item_id, $prev_id, $next_id);
+        $this->customInputRepository->sort($item_id, $prev_id, $next_id);
 
         $p = $this->getPresenter();
         $p->flashMessage('admin.configuration.application_inputs_order_saved', 'success');

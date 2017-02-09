@@ -6,48 +6,53 @@ use Kdyby\Doctrine\EntityRepository;
 
 class CustomInputRepository extends EntityRepository
 {
-    public function addCheckBox($name) {
-        $checkbox = new CustomCheckbox();
-        $checkbox->setName($name);
-        $checkbox->setPosition($this->countBy() + 1);
-        $this->_em->persist($checkbox);
-        $this->_em->flush();
-    }
-
-    public function addText($name) {
-        $text = new CustomText();
-        $text->setName($name);
-        $text->setPosition($this->countBy() + 1);
-        $this->_em->persist($text);
-        $this->_em->flush();
-    }
-
-    public function removeInput($id)
+    /**
+     * @param $id
+     * @return CustomInput|null
+     */
+    public function findById($id)
     {
-        $input = $this->find($id);
+        return $this->findOneBy(['id' => $id]);
+    }
 
-        $itemsToMoveUp = $this->createQueryBuilder('i')
-            ->andWhere('i.position > :position')
-            ->setParameter('position', $input->getPosition())
+    /**
+     * @return int
+     */
+    public function findLastPosition()
+    {
+        return $this->createQueryBuilder('i')
+            ->select('MAX(i.position)')
             ->getQuery()
-            ->getResult();
+            ->getSingleScalarResult();
+    }
 
-        foreach ($itemsToMoveUp as $t) {
-            $t->setPosition($t->getPosition() - 1);
-            $this->_em->persist($t);
-        }
+    /**
+     * @param CustomInput $input
+     */
+    public function save(CustomInput $input)
+    {
+        if (!$input->getPosition())
+            $input->setPosition($this->findLastPosition() + 1);
 
+        $this->_em->persist($input);
+        $this->_em->flush();
+    }
+
+    /**
+     * @param CustomInput $input
+     */
+    public function remove(CustomInput $input)
+    {
         $this->_em->remove($input);
         $this->_em->flush();
     }
 
-    public function renameInput($id, $name) {
-        $input = $this->find($id);
-        $input->setName($name);
-        $this->_em->flush();
-    }
-
-    public function changePosition($itemId, $prevId, $nextId) {
+    /**
+     * @param $itemId
+     * @param $prevId
+     * @param $nextId
+     */
+    public function sort($itemId, $prevId, $nextId) {
         $item = $this->find($itemId);
         $prev = $prevId ? $this->find($prevId) : null;
         $next = $nextId ? $this->find($nextId) : null;
