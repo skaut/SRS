@@ -9,49 +9,49 @@ use Skautis\Wsdl\WsdlException;
 
 class SkautIsService extends Nette\Object
 {
-    /**
-     * @var Skautis
-     */
-    private $skautIS;
+    /** @var Skautis */
+    private $skautIs;
 
     public function __construct(Skautis $skautIS)
     {
-        $this->skautIS = $skautIS;
+        $this->skautIs = $skautIS;
     }
 
     public function getLoginUrl($backlink) {
-        return $this->skautIS->getLoginUrl($backlink);
+        return $this->skautIs->getLoginUrl($backlink);
     }
 
     public function getLogoutUrl() {
-        return $this->skautIS->getLogoutUrl();
+        return $this->skautIs->getLogoutUrl();
     }
 
     public function isLoggedIn()
     {
-        return $this->skautIS->getUser()->isLoggedIn(true);
+        $logoutTime = clone($this->skautIs->getUser()->getLogoutDate());
+        $hardCheck = $logoutTime->diff(new \DateTime())->i < 20;
+        return $this->skautIs->getUser()->isLoggedIn($hardCheck);
     }
 
     public function setLoginData($data) {
-        $this->skautIS->setLoginData($data);
+        $this->skautIs->setLoginData($data);
     }
 
     public function getUserDetail() {
-        return $this->skautIS->usr->UserDetail([
-            'ID_Login' => $this->skautIS->getUser()->getLoginId()
+        return $this->skautIs->usr->UserDetail([
+            'ID_Login' => $this->skautIs->getUser()->getLoginId()
         ]);
     }
 
     public function getPersonDetail($personId) {
-        return $this->skautIS->org->PersonDetail([
-            'ID_Login' => $this->skautIS->getUser()->getLoginId(),
+        return $this->skautIs->org->PersonDetail([
+            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID' => $personId
         ]);
     }
 
     public function updatePersonBasic($personId, $sex, $birthday, $firstName, $lastName, $nickName) {
-        $this->skautIS->org->PersonUpdateBasic([
-            'ID_Login' => $this->skautIS->getUser()->getLoginId(),
+        $this->skautIs->org->PersonUpdateBasic([
+            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID' => $personId,
             'ID_Sex' => $sex,
             'Birthday' => $birthday->format('Y-m-d\TH:i:s'),
@@ -64,8 +64,8 @@ class SkautIsService extends Nette\Object
     public function updatePersonAddress($personId, $street, $city, $postcode, $state) {
         $skautISPerson = $this->getPersonDetail($personId);
 
-        $this->skautIS->org->PersonUpdateAddress([
-            'ID_Login' => $this->skautIS->getUser()->getLoginId(),
+        $this->skautIs->org->PersonUpdateAddress([
+            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID' => $personId,
             'Street' => $street,
             'City' => $city,
@@ -80,26 +80,26 @@ class SkautIsService extends Nette\Object
     }
 
     public function getUnitId() {
-        return $this->skautIS->getUser()->getUnitId();
+        return $this->skautIs->getUser()->getUnitId();
     }
 
     public function getUnitDetail($unitId) {
-        return $this->skautIS->org->UnitDetail([
-            'ID_Login' => $this->skautIS->getUser()->getLoginId(),
+        return $this->skautIs->org->UnitDetail([
+            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID' => $unitId
         ]);
     }
 
     public function getDraftEvents() {
-        return $this->skautIS->event->EventGeneralAll([
-            'ID_Login' => $this->skautIS->getUser()->getLoginId(),
+        return $this->skautIs->event->EventGeneralAll([
+            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID_EventGeneralState' => 'draft'
         ]);
     }
 
     public function getEventDetail($eventId) {
-        return $this->skautIS->event->EventGeneralDetail([
-            'ID_Login' => $this->skautIS->getUser()->getLoginId(),
+        return $this->skautIs->event->EventGeneralDetail([
+            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID' => $eventId
         ]);
     }
@@ -113,8 +113,8 @@ class SkautIsService extends Nette\Object
     }
 
     public function syncParticipants($eventId, $participants) {
-        $skautISParticipants = $this->skautIS->event->ParticipantGeneralAll([
-            'ID_Login' => $this->skautIS->getUser()->getLoginId(),
+        $skautISParticipants = $this->skautIs->event->ParticipantGeneralAll([
+            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID_EventGeneral' => $eventId
         ]);
 
@@ -130,8 +130,8 @@ class SkautIsService extends Nette\Object
 
     private function deleteParticipant($participantId)
     {
-        $this->skautIS->event->ParticipantGeneralDelete([
-            'ID_Login' => $this->skautIS->getUser()->getLoginId(),
+        $this->skautIs->event->ParticipantGeneralDelete([
+            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID' => $participantId,
             'DeletePerson' => false
         ]);
@@ -139,8 +139,8 @@ class SkautIsService extends Nette\Object
 
     private function insertParticipant($participantId, $eventId)
     {
-        $this->skautIS->event->ParticipantGeneralInsert([
-            'ID_Login' => $this->skautIS->getUser()->getLoginId(),
+        $this->skautIs->event->ParticipantGeneralInsert([
+            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID_EventGeneral' => $eventId,
             'ID_Person' => $participantId
         ]);
