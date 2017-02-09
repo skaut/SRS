@@ -4,8 +4,11 @@ namespace App\WebModule\Presenters;
 
 
 use App\Model\ACL\Role;
+use App\WebModule\Forms\AdditionalInformationForm;
 use App\WebModule\Forms\AdditionalInformationFormFactory;
+use App\WebModule\Forms\PersonalDetailsForm;
 use App\WebModule\Forms\PersonalDetailsFormFactory;
+use App\WebModule\Forms\RolesForm;
 use App\WebModule\Forms\RolesFormFactory;
 use Nette\Application\UI\Form;
 use Skautis\Wsdl\WsdlException;
@@ -13,19 +16,19 @@ use Skautis\Wsdl\WsdlException;
 class ProfilePresenter extends WebBasePresenter
 {
     /**
-     * @var PersonalDetailsFormFactory
+     * @var PersonalDetailsForm
      * @inject
      */
     public $personalDetailsFormFactory;
 
     /**
-     * @var RolesFormFactory
+     * @var RolesForm
      * @inject
      */
     public $rolesFormFactory;
 
     /**
-     * @var AdditionalInformationFormFactory
+     * @var AdditionalInformationForm
      * @inject
      */
     public $additionalInformationFormFactory;

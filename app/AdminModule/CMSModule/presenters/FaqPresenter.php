@@ -4,7 +4,7 @@ namespace App\AdminModule\CMSModule\Presenters;
 
 
 use App\AdminModule\CMSModule\Components\IFaqGridControlFactory;
-use App\AdminModule\CMSModule\Forms\FaqFormFactory;
+use App\AdminModule\CMSModule\Forms\FaqForm;
 use App\Model\CMS\FaqRepository;
 use Nette\Application\UI\Form;
 
@@ -17,7 +17,7 @@ class FaqPresenter extends CMSBasePresenter
     public $faqGridControlFactory;
 
     /**
-     * @var FaqFormFactory
+     * @var FaqForm
      * @inject
      */
     public $faqFormFactory;

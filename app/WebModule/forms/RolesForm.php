@@ -3,12 +3,13 @@
 namespace App\WebModule\Forms;
 
 use App\Model\ACL\RoleRepository;
+use Nette;
 use Nette\Application\UI\Form;
 
-class RolesFormFactory
+class RolesForm extends Nette\Object
 {
     /**
-     * @var BaseFormFactory
+     * @var BaseForm
      */
     private $baseFormFactory;
 
@@ -17,7 +18,7 @@ class RolesFormFactory
      */
     private $roleRepository;
 
-    public function __construct(BaseFormFactory $baseFormFactory, RoleRepository $roleRepository)
+    public function __construct(BaseForm $baseFormFactory, RoleRepository $roleRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->roleRepository = $roleRepository;

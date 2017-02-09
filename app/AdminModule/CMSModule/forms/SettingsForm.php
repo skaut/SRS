@@ -2,14 +2,15 @@
 
 namespace App\AdminModule\CMSModule\Forms;
 
-use App\AdminModule\Forms\BaseFormFactory;
+use App\AdminModule\Forms\BaseForm;
 use App\Model\CMS\PageRepository;
+use Nette;
 use Nette\Application\UI\Form;
 
-class SettingsFormFactory
+class SettingsForm extends Nette\Object
 {
     /**
-     * @var BaseFormFactory
+     * @var BaseForm
      */
     private $baseFormFactory;
 
@@ -18,7 +19,7 @@ class SettingsFormFactory
      */
     private $pageRepository;
 
-    public function __construct(BaseFormFactory $baseFormFactory, PageRepository $pageRepository)
+    public function __construct(BaseForm $baseFormFactory, PageRepository $pageRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->pageRepository = $pageRepository;

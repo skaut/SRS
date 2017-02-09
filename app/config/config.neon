@@ -81,21 +81,24 @@ services:
     - App\WebModule\Components\IProgramsContentControlFactory
     - App\WebModule\Components\ITextContentControlFactory
     - App\WebModule\Components\IUsersContentControlFactory
-    - App\WebModule\Forms\BaseFormFactory
-    - App\WebModule\Forms\PersonalDetailsFormFactory
-    - App\WebModule\Forms\RolesFormFactory
-    - App\WebModule\Forms\AdditionalInformationFormFactory
-    - App\AdminModule\Forms\BaseFormFactory
-    - App\AdminModule\CMSModule\Forms\FaqFormFactory
-    - App\AdminModule\CMSModule\Forms\PageFormFactory
-    - App\AdminModule\CMSModule\Forms\NewsFormFactory
-    - App\AdminModule\CMSModule\Forms\SettingsFormFactory
-    - App\AdminModule\ConfigurationModule\Forms\PaymentFormFactory
-    - App\AdminModule\ConfigurationModule\Forms\PaymentProofFormFactory
-    - App\AdminModule\ConfigurationModule\Forms\ProgramFormFactory
-    - App\AdminModule\ConfigurationModule\Forms\SeminarFormFactory
-    - App\AdminModule\ConfigurationModule\Forms\SkautIsEventFormFactory
-    - App\AdminModule\ProgramModule\Forms\BlockFormFactory
+    - App\WebModule\Forms\BaseForm
+    - App\WebModule\Forms\PersonalDetailsForm
+    - App\WebModule\Forms\RolesForm
+    - App\WebModule\Forms\AdditionalInformationForm
+    - App\AdminModule\Forms\BaseForm
+    - App\AdminModule\CMSModule\Forms\FaqForm
+    pageFormFactory:
+        class: App\AdminModule\CMSModule\Forms\PageForm(%id%, %area%, ...)
+        implement: App\AdminModule\CMSModule\Forms\IPageFormFactory
+        parameters: [id, area]
+    - App\AdminModule\CMSModule\Forms\NewsForm
+    - App\AdminModule\CMSModule\Forms\SettingsForm
+    - App\AdminModule\ConfigurationModule\Forms\PaymentForm
+    - App\AdminModule\ConfigurationModule\Forms\PaymentProofForm
+    - App\AdminModule\ConfigurationModule\Forms\ProgramForm
+    - App\AdminModule\ConfigurationModule\Forms\SeminarForm
+    - App\AdminModule\ConfigurationModule\Forms\SkautIsEventForm
+    - App\AdminModule\ProgramModule\Forms\BlockForm
     - App\AdminModule\Components\IRolesGridControlFactory
     - App\AdminModule\Components\IUsersGridControlFactory
     - App\AdminModule\CMSModule\Components\IDocumentsGridControlFactory

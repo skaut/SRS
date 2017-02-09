@@ -3,20 +3,22 @@
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
 
+use App\AdminModule\ConfigurationModule\Forms\PaymentForm;
 use App\AdminModule\ConfigurationModule\Forms\PaymentFormFactory;
+use App\AdminModule\ConfigurationModule\Forms\PaymentProofForm;
 use App\AdminModule\ConfigurationModule\Forms\PaymentProofFormFactory;
 use Nette\Application\UI\Form;
 
 class PaymentPresenter extends ConfigurationBasePresenter
 {
     /**
-     * @var PaymentFormFactory
+     * @var PaymentForm
      * @inject
      */
     public $paymentFormFactory;
 
     /**
-     * @var PaymentProofFormFactory
+     * @var PaymentProofForm
      * @inject
      */
     public $paymentProofFormFactory;

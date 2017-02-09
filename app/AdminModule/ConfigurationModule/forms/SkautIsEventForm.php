@@ -2,32 +2,33 @@
 
 namespace App\AdminModule\ConfigurationModule\Forms;
 
-use App\AdminModule\Forms\BaseFormFactory;
+use App\AdminModule\Forms\BaseForm;
 use App\Services\SkautIsService;
+use Nette;
 use Nette\Application\UI\Form;
 use Skautis\Wsdl\WsdlException;
 
-class SkautIsEventFormFactory
+class SkautIsEventForm extends Nette\Object
 {
     /**
-     * @var BaseFormFactory
+     * @var BaseForm
      */
-    private $baseFormFactory;
+    private $baseForm;
 
     /**
      * @var SkautIsService
      */
     private $skautIsService;
 
-    public function __construct(BaseFormFactory $baseFormFactory, SkautIsService $skautIsService)
+    public function __construct(BaseForm $baseForm, SkautIsService $skautIsService)
     {
-        $this->baseFormFactory = $baseFormFactory;
+        $this->baseForm = $baseForm;
         $this->skautIsService = $skautIsService;
     }
 
     public function create()
     {
-        $form = $this->baseFormFactory->create();
+        $form = $this->baseForm->create();
 
         $renderer = $form->getRenderer();
         $renderer->wrappers['control']['container'] = 'div class="col-sm-7 col-xs-7"';

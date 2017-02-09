@@ -1,7 +1,7 @@
 <div class="usersContent">
     <h3 n:ifcontent>{$heading}</h3>
     {if empty($users)}
-        Žádný uživatel k zobrazení.
+        {_web.users_content.list_empty}
     {else}
         <ul class="no-bullets no-margin">
             {foreach $users as $u}

@@ -43,8 +43,8 @@ class SettingsFixture extends AbstractFixture
         $settings[] = new Settings('basic_block_duration', '60');
         $settings[] = new Settings('is_allowed_add_block', '1');
         $settings[] = new Settings('is_allowed_modify_schedule', '1');
-        $settings[] = new Settings('is_allowed_log_in_programs', '0');
-        $settings[] = new Settings('is_allowed_log_in_programs_before_payment', '0');
+        $settings[] = new Settings('is_allowed_register_programs', '0');
+        $settings[] = new Settings('is_allowed_register_programs_before_payment', '0');
 
         $settings[] = new Settings('skautis_event_id', null);
         $settings[] = new Settings('skautis_event_name', null);
@@ -59,9 +59,9 @@ class SettingsFixture extends AbstractFixture
         $settings[] = new Settings('account_number', $this->translator->translate('common.settings.default_value.account_number'));
         $settings[] = new Settings('variable_symbol_code', '00');
 
-        $settings[] = new Settings('log_in_programs_from', $yesterday->format(\DateTime::ISO8601));
-        $settings[] = new Settings('log_in_programs_to', $today->format(\DateTime::ISO8601));
-        $settings[] = new Settings('edit_registration_to', $today->format('Y-m-d'));
+        $settings[] = new Settings('register_programs_from', $yesterday->format(\DateTime::ISO8601));
+        $settings[] = new Settings('register_programs_to', $today->format(\DateTime::ISO8601));
+        $settings[] = new Settings('edit_registration_to', $yesterday->format('Y-m-d'));
 
         $settings[] = new Settings('display_users_roles', '1');
         $settings[] = new Settings('redirect_after_login', '/');

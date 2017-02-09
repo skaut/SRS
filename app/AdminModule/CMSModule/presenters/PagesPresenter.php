@@ -4,13 +4,13 @@ namespace App\AdminModule\CMSModule\Presenters;
 
 
 use App\AdminModule\CMSModule\Components\IPagesGridControlFactory;
-use App\AdminModule\CMSModule\Forms\PageFormFactory;
+use App\AdminModule\CMSModule\Forms\IPageFormFactory;
+use App\AdminModule\CMSModule\Forms\PageForm;
 use App\Model\CMS\Content\Content;
 use App\Model\CMS\Content\ContentRepository;
-use App\Model\CMS\Page;
 use App\Model\CMS\PageRepository;
 use Nette\Application\UI\Form;
-use Nette\Application\UI\Multiplier;
+
 
 class PagesPresenter extends CMSBasePresenter
 {
@@ -21,7 +21,7 @@ class PagesPresenter extends CMSBasePresenter
     public $pagesGridControlFactory;
 
     /**
-     * @var PageFormFactory
+     * @var IPageFormFactory
      * @inject
      */
     public $pageFormFactory;
@@ -43,9 +43,8 @@ class PagesPresenter extends CMSBasePresenter
         $page = $this->pagesRepository->findPageById($id);
 
         $this->template->page = $page;
+        $this->template->id = $id;
         $this->template->area = $area;
-        $this->template->areas = Content::$areas;
-        $this->template->contents = $page->getContents($area);
     }
 
     public function handleDelete($cid) {
@@ -66,25 +65,31 @@ class PagesPresenter extends CMSBasePresenter
         $id = $this->getParameter('id');
         $area = $this->getParameter('area');
 
-        $form = $this->pageFormFactory->create($id, $area);
+        $control = $this->pageFormFactory->create($id, $area);
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+        $control->onPageSave[] = function (PageForm $control, $submitName) {
             $this->flashMessage('admin.cms.pages_content_saved', 'success');
-
-            if ($form['submitAndContinue']->isSubmittedBy() || $form['submitAdd']->isSubmittedBy())
-                $this->redirect('Pages:content', ['id' => $values['id'], 'area' => $values['area']]);
-            elseif ($form['submitMain']->isSubmittedBy())
-                $this->redirect('Pages:content', ['id' => $values['id'], 'area' => Content::MAIN]);
-            elseif ($form['submitSidebar']->isSubmittedBy())
-                $this->redirect('Pages:content', ['id' => $values['id'], 'area' => Content::SIDEBAR]);
-            else
-                $this->redirect('Pages:default');
+            switch ($submitName) {
+                case 'submitAndContinue':
+                case 'submitAdd':
+                    $this->redirect('Pages:content', ['id' => $control->id, 'area' => $control->area]);
+                    break;
+                case 'submitMain':
+                    $this->redirect('Pages:content', ['id' => $control->id, 'area' => Content::MAIN]);
+                    break;
+                case 'submitSidebar':
+                    $this->redirect('Pages:content', ['id' => $control->id, 'area' => Content::SIDEBAR]);
+                    break;
+                default:
+                    $this->redirect('Pages:default');
+            }
         };
 
-        $form->onError[] = function (Form $form) {
+        $control->onPageSaveError[] = function(PageForm $control) {
             $this->flashMessage('admin.cms.pages_content_save_error', 'danger');
+            $this->redirect('Pages:content', ['id' => $control->id, 'area' => $control->area]);
         };
 
-        return $form;
+        return $control;
     }
 }

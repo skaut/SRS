@@ -3,7 +3,7 @@
 namespace App\AdminModule\CMSModule\Presenters;
 
 
-use App\AdminModule\CMSModule\Forms\SettingsFormFactory;
+use App\AdminModule\CMSModule\Forms\SettingsForm;
 use App\Services\FilesService;
 use Nette\Application\UI\Form;
 use Nette\Utils\Strings;
@@ -11,7 +11,7 @@ use Nette\Utils\Strings;
 class SettingsPresenter extends CMSBasePresenter
 {
     /**
-     * @var SettingsFormFactory
+     * @var SettingsForm
      * @inject
      */
     public $settingsFormFactory;

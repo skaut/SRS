@@ -2,7 +2,7 @@
 
 namespace App\AdminModule\CMSModule\Forms;
 
-use App\AdminModule\Forms\BaseFormFactory;
+use App\AdminModule\Forms\BaseForm;
 use App\Model\ACL\RoleRepository;
 use App\Model\CMS\Content\CapacitiesContent;
 use App\Model\CMS\Content\Content;
@@ -13,12 +13,23 @@ use App\Model\CMS\Content\UsersContent;
 use App\Model\CMS\Document\TagRepository;
 use App\Model\CMS\PageRepository;
 use App\Services\FilesService;
+use Nette\Application\UI;
 use Nette\Application\UI\Form;
 
-class PageFormFactory
+class PageForm extends UI\Control
 {
+    public $id;
+
+    public $area;
+
+    public $onPageSave;
+
+    public $onPageSaveError;
+
+    private $page;
+
     /**
-     * @var BaseFormFactory
+     * @var BaseForm
      */
     private $baseFormFactory;
 
@@ -47,29 +58,44 @@ class PageFormFactory
      */
     private $filesService;
 
-    public function __construct(BaseFormFactory $baseFormFactory, PageRepository $pageRepository,
+    public function __construct($id, $area, BaseForm $baseFormFactory, PageRepository $pageRepository,
                                 ContentRepository $contentRepository, RoleRepository $roleRepository,
                                 TagRepository $tagRepository, FilesService $filesService)
     {
+        parent::__construct();
+
+        $this->id = $id;
+        $this->area = $area;
+
         $this->baseFormFactory = $baseFormFactory;
         $this->pageRepository = $pageRepository;
         $this->contentRepository = $contentRepository;
         $this->roleRepository = $roleRepository;
         $this->tagRepository = $tagRepository;
         $this->filesService = $filesService;
+
+        $this->page = $this->pageRepository->findPageById($id);
     }
 
-    public function create($id, $area)
+    public function render()
+    {
+        $this->template->setFile(__DIR__ . '/templates/page_form.latte');
+
+        $this->template->area = $this->area;
+        $this->template->contents = $this->page->getContents($this->area);
+
+        $this->template->render();
+    }
+
+    public function createComponentForm()
     {
         $form = $this->baseFormFactory->create();
 
-        $page = $this->pageRepository->findPageById($id);
-
-        $form->addHidden('id')->setDefaultValue($page->getId());
-        $form->addHidden('area')->setDefaultValue($area);
+        $form->addHidden('id')->setDefaultValue($this->page->getId());
+        $form->addHidden('area')->setDefaultValue($this->area);
         $form->addSelect('type', 'admin.cms.pages_content_type', $this->prepareContentTypesOptions($form->getTranslator()));
 
-        foreach ($page->getContents($area) as $content) {
+        foreach ($this->page->getContents($this->area) as $content) {
             switch (get_class($content)) {
                 case CapacitiesContent::class:
                     $content->injectRoleRepository($this->roleRepository);
@@ -95,12 +121,16 @@ class PageFormFactory
         $form->addSubmit('submitSidebar', 'common.area.sidebar')
             ->setAttribute('class', 'btn-link');
 
-        $form->onSuccess[] = [$this, 'formSucceeded'];
+        $form->onSuccess[] = [$this, 'processForm'];
+
+        $form->onError[] = function (Form $form) {
+            $this->onPageSaveError($this);
+        };
 
         return $form;
     }
 
-    public function formSucceeded(Form $form, \stdClass $values) {
+    public function processForm(Form $form, \stdClass $values) {
         $page = $this->pageRepository->findPageById($values['id']);
 
         $area = $values['area'];
@@ -122,6 +152,19 @@ class PageFormFactory
         }
 
         $this->pageRepository->getEntityManager()->flush();
+
+        if ($form['submitAdd']->isSubmittedBy())
+            $submitName = 'submitAdd';
+        elseif ($form['submitMain']->isSubmittedBy())
+            $submitName = 'submitMain';
+        elseif ($form['submitSidebar']->isSubmittedBy())
+            $submitName = 'submitSidebar';
+        elseif ($form['submitAndContinue']->isSubmittedBy())
+            $submitName = 'submitAndContinue';
+        else
+            $submitName = 'submit';
+
+        $this->onPageSave($this, $submitName);
     }
 
     private function prepareContentTypesOptions($translator) {

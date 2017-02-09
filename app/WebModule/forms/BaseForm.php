@@ -3,10 +3,11 @@
 namespace App\WebModule\Forms;
 
 use Kdyby\Translation\Translator;
+use Nette;
 use Nette\Application\UI\Form;
 use Nextras\Forms\Rendering\Bs3FormRenderer;
 
-class BaseFormFactory
+class BaseForm extends Nette\Object
 {
     /**
      * @var Translator

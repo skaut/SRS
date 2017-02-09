@@ -5,6 +5,7 @@ namespace App\AdminModule\ProgramModule\Presenters;
 
 use App\AdminModule\ProgramModule\Components\IProgramBlockScheduleGridControlFactory;
 use App\AdminModule\ProgramModule\Components\IProgramBlocksGridControlFactory;
+use App\AdminModule\ProgramModule\Forms\BlockForm;
 use App\AdminModule\ProgramModule\Forms\BlockFormFactory;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
@@ -40,7 +41,7 @@ class BlocksPresenter extends ProgramBasePresenter
     public $programBlockScheduleGridControlFactory;
 
     /**
-     * @var BlockFormFactory
+     * @var BlockForm
      * @inject
      */
     public $blockFormFactory;

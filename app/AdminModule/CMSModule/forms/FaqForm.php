@@ -2,18 +2,18 @@
 
 namespace App\AdminModule\CMSModule\Forms;
 
-use App\AdminModule\Forms\BaseFormFactory;
-use App\Model\ACL\Role;
+use App\AdminModule\Forms\BaseForm;
 use Nette\Application\UI\Form;
+use Nette;
 
-class FaqFormFactory
+class FaqForm extends Nette\Object
 {
     /**
-     * @var BaseFormFactory
+     * @var BaseForm
      */
     private $baseFormFactory;
 
-    public function __construct(BaseFormFactory $baseFormFactory)
+    public function __construct(BaseForm $baseFormFactory)
     {
         $this->baseFormFactory = $baseFormFactory;
     }

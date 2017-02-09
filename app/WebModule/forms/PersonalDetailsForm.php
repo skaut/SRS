@@ -2,16 +2,17 @@
 
 namespace App\WebModule\Forms;
 
+use Nette;
 use Nette\Application\UI\Form;
 
-class PersonalDetailsFormFactory
+class PersonalDetailsForm extends Nette\Object
 {
     /**
-     * @var BaseFormFactory
+     * @var BaseForm
      */
     private $baseFormFactory;
 
-    public function __construct(BaseFormFactory $baseFormFactory)
+    public function __construct(BaseForm $baseFormFactory)
     {
         $this->baseFormFactory = $baseFormFactory;
     }

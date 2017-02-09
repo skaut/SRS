@@ -2,17 +2,18 @@
 
 namespace App\AdminModule\ProgramModule\Forms;
 
-use App\AdminModule\Forms\BaseFormFactory;
+use App\AdminModule\Forms\BaseForm;
 use App\Model\ACL\Role;
 use App\Model\Program\CategoryRepository;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\UserRepository;
+use Nette;
 use Nette\Application\UI\Form;
 
-class BlockFormFactory
+class BlockForm extends Nette\Object
 {
     /**
-     * @var BaseFormFactory
+     * @var BaseForm
      */
     private $baseFormFactory;
 
@@ -31,7 +32,7 @@ class BlockFormFactory
      */
     private $categoryRepository;
 
-    public function __construct(BaseFormFactory $baseFormFactory, SettingsRepository $settingsRepository, UserRepository $userRepository, CategoryRepository $categoryRepository)
+    public function __construct(BaseForm $baseFormFactory, SettingsRepository $settingsRepository, UserRepository $userRepository, CategoryRepository $categoryRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->settingsRepository = $settingsRepository;

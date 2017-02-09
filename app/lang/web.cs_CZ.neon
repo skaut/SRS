@@ -103,6 +103,7 @@ news_content:
 programs_content:
 
 users_content:
+    list_empty: "Žádný uživatel k zobrazení."
 
 
 

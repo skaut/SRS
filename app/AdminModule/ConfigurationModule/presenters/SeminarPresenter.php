@@ -3,13 +3,14 @@
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
 
+use App\AdminModule\ConfigurationModule\Forms\SeminarForm;
 use App\AdminModule\ConfigurationModule\Forms\SeminarFormFactory;
 use Nette\Application\UI\Form;
 
 class SeminarPresenter extends ConfigurationBasePresenter
 {
     /**
-     * @var SeminarFormFactory
+     * @var SeminarForm
      * @inject
      */
     public $seminarFormFactory;
