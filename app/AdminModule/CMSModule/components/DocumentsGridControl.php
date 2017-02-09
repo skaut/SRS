@@ -92,14 +92,14 @@ class DocumentsGridControl extends Control
         $tagsOptions = $this->tagRepository->getTagsOptions();
 
         $grid->addInlineAdd()->onControlAdd[] = function($container) use($tagsOptions) {
-            $container->addText('name', '');
-                //->addRule(Form::FILLED, 'admin.cms.documents_name_empty') //TODO validace
+            $container->addText('name', '')
+                ->addRule(Form::FILLED, 'admin.cms.documents_name_empty');
 
-            $container->addMultiSelect('tags', '', $tagsOptions)->setAttribute('class', 'datagrid-multiselect');
-                //->addRule(Form::FILLED, 'admin.cms.documents_tags_empty');
+            $container->addMultiSelect('tags', '', $tagsOptions)->setAttribute('class', 'datagrid-multiselect')
+                ->addRule(Form::FILLED, 'admin.cms.documents_tags_empty');
 
-            $container->addUpload('file', '')->setAttribute('class', 'datagrid-upload');
-                //->addRule(Form::FILLED, 'admin.cms.documents_file_empty');
+            $container->addUpload('file', '')->setAttribute('class', 'datagrid-upload')
+                ->addRule(Form::FILLED, 'admin.cms.documents_file_empty');
 
             $container->addText('description', '');
         };
@@ -136,59 +136,57 @@ class DocumentsGridControl extends Control
     }
 
     public function add($values) {
-        $p = $this->getPresenter();
-
-        $name = $values['name'];
-        $tags = $values['tags'];
         $file = $values['file'];
-        $description = $values['description'];
+        $path = $this->generatePath($file);
+        $this->filesService->save($file, $path);
 
-        if (!$name) {
-            $p->flashMessage('admin.cms.documents_name_empty', 'danger');
-        }
-        elseif (count($tags) == 0) {
-            $p->flashMessage('admin.cms.documents_tags_empty', 'danger');
-        }
-        elseif ($file->size <= 0) {
-            $p->flashMessage('admin.cms.documents_file_empty', 'danger');
-        }
-        else {
-            $path = $this->generatePath($file);
-            $this->filesService->save($file, $path);
-            $this->documentRepository->addDocument($name, $this->tagRepository->findTagsByIds($tags), $path, $description);
-            $p->flashMessage('admin.cms.documents_added', 'success');
-        }
+        $document = new Document();
+
+        $document->setName($values['name']);
+        $document->setTags($this->tagRepository->findTagsByIds($values['tags']));
+        $document->setFile($path);
+        $document->setDescription($values['description']);
+        $document->setTimestamp(new \DateTime());
+
+        $this->documentRepository->save($document);
+
+        $this->getPresenter()->flashMessage('admin.cms.documents_saved', 'success');
 
         $this->redirect('this');
     }
 
     public function edit($id, $values)
     {
-        $p = $this->getPresenter();
+        $document = $this->documentRepository->findById($id);
 
         $file = $values['file'];
-        if ($file->name) {
+        if ($file->size > 0) {
             $this->filesService->delete($this->documentRepository->find($id)->getFile());
             $path = $this->generatePath($file);
             $this->filesService->save($file, $path);
-        }
-        else {
-            $path = null;
+
+            $document->setFile($path);
         }
 
-        $this->documentRepository->editDocument($id, $values['name'], $this->tagRepository->findTagsByIds($values['tags']), $path, $values['description']);
-        $p->flashMessage('admin.cms.documents_edited', 'success');
+        $document->setName($values['name']);
+        $document->setTags($this->tagRepository->findTagsByIds($values['tags']));
+        $document->setDescription($values['description']);
+        $document->setTimestamp(new \DateTime());
+
+        $this->documentRepository->save($document);
+
+        $this->getPresenter()->flashMessage('admin.cms.documents_saved', 'success');
 
         $this->redirect('this');
     }
 
     public function handleDelete($id)
     {
-        $this->filesService->delete($this->documentRepository->find($id)->getFile());
-        $this->documentRepository->removeDocument($id);
+        $document = $this->documentRepository->findById($id);
+        $this->filesService->delete($document->getFile());
+        $this->documentRepository->remove($document);
 
-        $p = $this->getPresenter();
-        $p->flashMessage('admin.cms.documents_deleted', 'success');
+        $this->getPresenter()->flashMessage('admin.cms.documents_deleted', 'success');
 
         $this->redirect('this');
     }

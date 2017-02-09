@@ -8,7 +8,43 @@ use Kdyby\Doctrine\EntityRepository;
 
 class TagRepository extends EntityRepository
 {
-    public function findAllNames() {
+    /**
+     * @param $id
+     * @return Tag
+     */
+    public function findById($id)
+    {
+        return $this->findOneBy(['id' => $id]);
+    }
+
+    /**
+     * @param $ids
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function findTagsByIds($ids)
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->in('id', $ids))
+            ->orderBy(['name' => 'ASC']);
+        return $this->matching($criteria);
+    }
+
+    /**
+     * @param $tags
+     * @return array
+     */
+    public function findTagsIds($tags)
+    {
+        return array_map(function ($o) {
+            return $o->getId();
+        }, $tags->toArray());
+    }
+
+    /**
+     * @return array
+     */
+    public function findAllNames()
+    {
         $names = $this->createQueryBuilder('t')
             ->select('t.name')
             ->getQuery()
@@ -16,7 +52,12 @@ class TagRepository extends EntityRepository
         return array_map('current', $names);
     }
 
-    public function findOthersNames($id) {
+    /**
+     * @param $id
+     * @return array
+     */
+    public function findOthersNames($id)
+    {
         $names = $this->createQueryBuilder('t')
             ->select('t.name')
             ->where('t.id != :id')
@@ -26,52 +67,29 @@ class TagRepository extends EntityRepository
         return array_map('current', $names);
     }
 
-    public function addTag($name) {
-        $tag = new Tag();
-
-        $tag->setName($name);
-
+    /**
+     * @param Tag $tag
+     */
+    public function save(Tag $tag)
+    {
         $this->_em->persist($tag);
         $this->_em->flush();
-
-        return $tag;
     }
 
-    public function removeTag($id)
+    /**
+     * @param Tag $tag
+     */
+    public function remove(Tag $tag)
     {
-        $tag = $this->find($id);
         $this->_em->remove($tag);
         $this->_em->flush();
     }
 
-    public function editTag($id, $name) {
-        $tag = $this->find($id);
-
-        $tag->setName($name);
-
-        $this->_em->flush();
-
-        return $tag;
-    }
-
-    public function findTagsOrderedByName() {
-        $criteria = Criteria::create()
-            ->orderBy(['name' => 'ASC']);
-        return $this->matching($criteria);
-    }
-
-    public function findTagsByIds($ids) {
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->in('id', $ids))
-            ->orderBy(['name' => 'ASC']);
-        return $this->matching($criteria);
-    }
-
-    public function findTagsIds($tags) {
-        return array_map(function($o) { return $o->getId(); }, $tags->toArray());
-    }
-
-    public function getTagsOptions() {
+    /**
+     * @return array
+     */
+    public function getTagsOptions()
+    {
         $tags = $this->createQueryBuilder('t')
             ->select('t.id, t.name')
             ->orderBy('t.name')

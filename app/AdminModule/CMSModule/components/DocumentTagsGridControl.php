@@ -3,6 +3,7 @@
 namespace App\AdminModule\CMSModule\Components;
 
 
+use App\Model\CMS\Document\Tag;
 use App\Model\CMS\Document\TagRepository;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
@@ -40,11 +41,13 @@ class DocumentTagsGridControl extends Control
         $grid->setDefaultSort(['name' => 'ASC']);
         $grid->setPagination(false);
 
+
         $grid->addColumnText('name', 'admin.cms.tags_name');
+
 
         $grid->addInlineAdd()->onControlAdd[] = function($container) {
             $container->addText('name', '')
-                ->addCondition(Form::FILLED) //->addRule(Form::FILLED, 'admin.cms.tags_name_empty') //TODO validace
+                ->addRule(Form::FILLED, 'admin.cms.tags_name_empty')
                 ->addRule(Form::IS_NOT_IN, 'admin.cms.tags_name_exists', $this->tagRepository->findAllNames());
         };
         $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
@@ -63,6 +66,7 @@ class DocumentTagsGridControl extends Control
         };
         $grid->getInlineEdit()->onSubmit[] = [$this, 'edit'];
 
+
         $grid->addAction('delete', '', 'delete!')
             ->setIcon('trash')
             ->setTitle('admin.common.delete')
@@ -75,37 +79,36 @@ class DocumentTagsGridControl extends Control
 
     public function add($values)
     {
-        $p = $this->getPresenter();
+        $tag = new Tag();
 
-        $name = $values['name'];
+        $tag->setName($values['name']);
 
-        if (!$name) {
-            $p->flashMessage('admin.cms.tags_name_empty', 'danger');
-        }
-        else {
-            $this->tagRepository->addTag($name);
-            $p->flashMessage('admin.cms.tags_added', 'success');
-        }
+        $this->tagRepository->save($tag);
+
+        $this->getPresenter()->flashMessage('admin.cms.tags_saved', 'success');
 
         $this->redirect('this');
     }
 
     public function edit($id, $values)
     {
-        $p = $this->getPresenter();
+        $tag = $this->tagRepository->findById($id);
 
-        $this->tagRepository->editTag($id, $values['name']);
-        $p->flashMessage('admin.cms.tags_edited', 'success');
+        $tag->setName($values['name']);
+
+        $this->tagRepository->save($tag);
+
+        $this->getPresenter()->flashMessage('admin.cms.tags_saved', 'success');
 
         $this->redirect('this');
     }
 
     public function handleDelete($id)
     {
-        $this->tagRepository->removeTag($id);
+        $tag = $this->tagRepository->findById($id);
+        $this->tagRepository->remove($tag);
 
-        $p = $this->getPresenter();
-        $p->flashMessage('admin.cms.tags_deleted', 'success');
+        $this->getPresenter()->flashMessage('admin.cms.tags_deleted', 'success');
 
         $this->redirect('this');
     }

@@ -108,8 +108,7 @@ cms:
     documents_file_empty: "Vyberte soubor."
     documents_description: "Popis"
     documents_timestamp: "Upraven"
-    documents_added: "Dokument byl úspěšně přidán."
-    documents_edited: "Dokument byl úspěšně upraven."
+    documents_saved: "Dokument byl úspěšně uložen."
     documents_delete_confirm: "Opravdu chcete dokument odstranit?"
     documents_deleted: "Dokument byl úspěšně odstraněn."
 
@@ -117,8 +116,7 @@ cms:
     tags_name: "Název"
     tags_name_empty: "Zadejte název štítku."
     tags_name_exists: "Štítek s tímto názvem již existuje."
-    tags_added: "Štítek byl úspěšně přidán."
-    tags_edited: "Štítek byl úspěšně upraven."
+    tags_saved: "Štítek byl úspěšně uložen."
     tags_delete_confirm: "Odstraněním štítku odeberete štítek všem dokumentům. Opravdu chcete štítek odstranit?"
     tags_deleted: "Štítek byl úspěšně odstraněn."
 

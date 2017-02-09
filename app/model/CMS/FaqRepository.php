@@ -4,36 +4,57 @@ namespace App\Model\CMS;
 
 
 use Kdyby\Doctrine\EntityRepository;
-use Symfony\Component\Console\Question\Question;
 
 class FaqRepository extends EntityRepository
 {
-    public function findById($id) {
+    /**
+     * @param $id
+     * @return Faq
+     */
+    public function findById($id)
+    {
         return $this->findOneBy(['id' => $id]);
     }
 
-    public function findLastId() {
+    /**
+     * @return int
+     */
+    public function findLastId()
+    {
         return $this->createQueryBuilder('f')
             ->select('MAX(f.id)')
             ->getQuery()
             ->getSingleScalarResult();
     }
 
-    public function save(Faq $question) {
-        if (!$question->getPosition())
-            $question->setPosition($this->countBy() + 1);
-
-        $this->_em->persist($question);
-        $this->_em->flush();
-    }
-
-    public function remove(Faq $question)
+    /**
+     * @param Faq $faq
+     */
+    public function save(Faq $faq)
     {
-        $this->_em->remove($question);
+        if (!$faq->getPosition())
+            $faq->setPosition($this->countBy() + 1);
+
+        $this->_em->persist($faq);
         $this->_em->flush();
     }
 
-    public function sort($itemId, $prevId, $nextId) {
+    /**
+     * @param Faq $faq
+     */
+    public function remove(Faq $faq)
+    {
+        $this->_em->remove($faq);
+        $this->_em->flush();
+    }
+
+    /**
+     * @param $itemId
+     * @param $prevId
+     * @param $nextId
+     */
+    public function sort($itemId, $prevId, $nextId)
+    {
         $item = $this->find($itemId);
         $prev = $prevId ? $this->find($prevId) : null;
         $next = $nextId ? $this->find($nextId) : null;
