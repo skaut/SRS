@@ -12,7 +12,7 @@ use Nette;
 class FaqForm extends Nette\Object
 {
     /** @var Faq */
-    public $faq;
+    private $faq;
 
     /** @var  User */
     private $user;

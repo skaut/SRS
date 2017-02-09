@@ -64,10 +64,10 @@ class NewsGridControl extends Control
 
     public function handleDelete($id)
     {
-        $this->newsRepository->removeNews($id);
+        $news = $this->newsRepository->findById($id);
+        $this->newsRepository->remove($news);
 
-        $p = $this->getPresenter();
-        $p->flashMessage('admin.cms.news_deleted', 'success');
+        $this->getPresenter()->flashMessage('admin.cms.news_deleted', 'success');
 
         $this->redirect('this');
     }

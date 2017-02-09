@@ -7,37 +7,41 @@ use Kdyby\Doctrine\EntityRepository;
 
 class NewsRepository extends EntityRepository
 {
-    public function findNewsById($id) {
-        return $this->find($id);
+    /**
+     * @param $id
+     * @return News
+     */
+    public function findById($id)
+    {
+        return $this->findOneBy(['id' => $id]);
     }
 
-    public function addNews($text, $published) {
-        $news = new News();
+    /**
+     * @return int
+     */
+    public function findLastId()
+    {
+        return $this->createQueryBuilder('n')
+            ->select('MAX(n.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 
-        $news->setText($text);
-        $news->setPublished($published);
-
+    /**
+     * @param News $news
+     */
+    public function save(News $news)
+    {
         $this->_em->persist($news);
         $this->_em->flush();
-
-        return $news;
     }
 
-    public function editNews($id, $text, $published) {
-        $news = $this->find($id);
-
-        $news->setText($text);
-        $news->setPublished($published);
-
-        $this->_em->flush();
-
-        return $news;
-    }
-
-    public function removeNews($id)
+    /**
+     * @param News $document
+     */
+    public function remove(News $document)
     {
-        $news = $this->find($id);
-        $this->_em->remove($news);
+        $this->_em->remove($document);
         $this->_em->flush();
     }
 }

@@ -28,21 +28,7 @@ class NewsPresenter extends CMSBasePresenter
      */
     public $newsRepository;
 
-    public function renderAdd() {
-        $this['newsForm']->setDefaults([
-            'published' => new \DateTime()
-        ]);
-    }
-
-    public function renderEdit($id) {
-        $news = $this->newsRepository->findNewsById($id);
-
-        $this['newsForm']->setDefaults([
-            'id' => $id,
-            'published' => $news->getPublished(),
-            'text' => $news->getText()
-        ]);
-    }
+    public function renderEdit($id) { }
 
     protected function createComponentNewsGrid($name)
     {
@@ -51,34 +37,19 @@ class NewsPresenter extends CMSBasePresenter
 
     protected function createComponentNewsForm($name)
     {
-        $form = $this->newsFormFactory->create();
+        $form = $this->newsFormFactory->create($this->getParameter('id'));
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) {
+            $this->flashMessage('admin.cms.news_saved', 'success');
+
             if ($form['submitAndContinue']->isSubmittedBy()) {
-                $news = $this->saveNews($values);
-                $this->redirect('News:edit', ['id' => $news->getId()]);
+                $id = $values['id'] ?: $this->newsRepository->findLastId();
+                $this->redirect('News:edit', ['id' => $id]);
             }
-            else {
-                $this->saveNews($values);
+            else
                 $this->redirect('News:default');
-            }
         };
 
         return $form;
-    }
-
-    private function saveNews($values) {
-        $id = $values['id'];
-
-        if ($id == null) {
-            $news = $this->newsRepository->addNews($values['text'], $values['published']);
-            $this->flashMessage('admin.cms.news_added', 'success');
-        }
-        else {
-            $news = $this->newsRepository->editNews($values['id'], $values['text'], $values['published']);
-            $this->flashMessage('admin.cms.news_edited', 'success');
-        }
-
-        return $news;
     }
 }
