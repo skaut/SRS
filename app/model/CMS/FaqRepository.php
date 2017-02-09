@@ -4,67 +4,36 @@ namespace App\Model\CMS;
 
 
 use Kdyby\Doctrine\EntityRepository;
+use Symfony\Component\Console\Question\Question;
 
 class FaqRepository extends EntityRepository
 {
-    public function findQuestionById($id) {
-        return $this->find($id);
+    public function findById($id) {
+        return $this->findOneBy(['id' => $id]);
     }
 
-    public function addQuestion($author, $questionText, $answer = null, $public = false) {
-        $question = new Faq();
+    public function findLastId() {
+        return $this->createQueryBuilder('f')
+            ->select('MAX(f.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 
-        $question->setAuthor($author);
-        $question->setQuestion($questionText);
-        $question->setAnswer($answer);
-        $question->setPublic($public);
-        $question->setPosition($this->countBy() + 1);
+    public function save(Faq $question) {
+        if (!$question->getPosition())
+            $question->setPosition($this->countBy() + 1);
 
         $this->_em->persist($question);
         $this->_em->flush();
-
-        return $question;
     }
 
-    public function editQuestion($id, $questionText, $answer, $public) {
-        $question = $this->find($id);
-
-        $question->setQuestion($questionText);
-        $question->setAnswer($answer);
-        $question->setPublic($public);
-
-        $this->_em->flush();
-
-        return $question;
-    }
-
-    public function setQuestionPublic($id, $public) {
-        $question = $this->find($id);
-        $question->setPublic($public);
-        $this->_em->flush();
-        return $question;
-    }
-
-    public function removeQuestion($id)
+    public function remove(Faq $question)
     {
-        $question = $this->find($id);
-
-        $itemsToMoveUp = $this->createQueryBuilder('i')
-            ->andWhere('i.position > :position')
-            ->setParameter('position', $question->getPosition())
-            ->getQuery()
-            ->getResult();
-
-        foreach ($itemsToMoveUp as $t) {
-            $t->setPosition($t->getPosition() - 1);
-            $this->_em->persist($t);
-        }
-
         $this->_em->remove($question);
         $this->_em->flush();
     }
 
-    public function changePosition($itemId, $prevId, $nextId) {
+    public function sort($itemId, $prevId, $nextId) {
         $item = $this->find($itemId);
         $prev = $prevId ? $this->find($prevId) : null;
         $next = $nextId ? $this->find($nextId) : null;

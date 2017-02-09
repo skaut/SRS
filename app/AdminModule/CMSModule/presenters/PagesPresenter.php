@@ -61,6 +61,7 @@ class PagesPresenter extends CMSBasePresenter
 
         $control->onPageSave[] = function (PageForm $control, $submitName) {
             $this->flashMessage('admin.cms.pages_content_saved', 'success');
+
             switch ($submitName) {
                 case 'submitAndContinue':
                 case 'submitAdd':

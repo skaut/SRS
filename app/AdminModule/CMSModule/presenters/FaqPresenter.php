@@ -28,58 +28,28 @@ class FaqPresenter extends CMSBasePresenter
      */
     public $faqRepository;
 
-    public function renderAdd() {
-        $this['faqForm']->setDefaults([
-            'public' => true
-        ]);
-    }
-
-    public function renderEdit($id) {
-        $question = $this->faqRepository->findQuestionById($id);
-
-        $this['faqForm']->setDefaults([
-            'id' => $id,
-            'question' => $question->getQuestion(),
-            'answer' => $question->getAnswer(),
-            'public' => $question->isPublic()
-        ]);
-    }
+    public function renderEdit($id) { }
 
     protected function createComponentFaqGrid($name)
     {
-        return $this->faqGridControlFactory->create($name);
+        return $this->faqGridControlFactory->create();
     }
 
     protected function createComponentFaqForm()
     {
-        $form = $this->faqFormFactory->create();
+        $form = $this->faqFormFactory->create($this->getParameter('id'), $this->dbuser);
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) {
+            $this->flashMessage('admin.cms.faq_saved', 'success');
+
             if ($form['submitAndContinue']->isSubmittedBy()) {
-                $question = $this->saveQuestion($values);
-                $this->redirect('Faq:edit', ['id' => $question->getId()]);
+                $id = $values['id'] ?: $this->faqRepository->findLastId();
+                $this->redirect('Faq:edit', ['id' => $id]);
             }
-            else {
-                $this->saveQuestion($values);
+            else
                 $this->redirect('Faq:default');
-            }
         };
 
         return $form;
-    }
-
-    private function saveQuestion($values) {
-        $id = $values['id'];
-
-        if ($id == null) {
-            $question = $this->faqRepository->addQuestion($this->dbuser, $values['question'], $values['answer'], $values['public']);
-            $this->flashMessage('admin.cms.faq_added', 'success');
-        }
-        else {
-            $question = $this->faqRepository->editQuestion($values['id'], $values['question'], $values['answer'], $values['public']);
-            $this->flashMessage('admin.cms.faq_edited', 'success');
-        }
-
-        return $question;
     }
 }

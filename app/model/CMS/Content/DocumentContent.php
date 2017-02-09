@@ -38,7 +38,7 @@ class DocumentContent extends Content implements IContent
     /**
      * @param TagRepository $tagRepository
      */
-    public function injectRoleRepository(TagRepository $tagRepository) {
+    public function injectTagRepository(TagRepository $tagRepository) {
         $this->tagRepository = $tagRepository;
     }
 

@@ -79,17 +79,17 @@ class FaqGridControl extends Control
 
     public function handleDelete($id)
     {
-        $this->faqRepository->removeQuestion($id);
+        $faq = $this->faqRepository->findById($id);
+        $this->faqRepository->remove($faq);
 
-        $p = $this->getPresenter();
-        $p->flashMessage('admin.cms.faq_deleted', 'success');
+        $this->getPresenter()->flashMessage('admin.cms.faq_deleted', 'success');
 
         $this->redirect('this');
     }
 
     public function handleSort($item_id, $prev_id, $next_id)
     {
-        $this->faqRepository->changePosition($item_id, $prev_id, $next_id);
+        $this->faqRepository->sort($item_id, $prev_id, $next_id);
 
         $p = $this->getPresenter();
         $p->flashMessage('admin.cms.faq_order_saved', 'success');
@@ -103,7 +103,9 @@ class FaqGridControl extends Control
     }
 
     public function changeStatus($id, $public) {
-        $this->faqRepository->setQuestionPublic($id, $public);
+        $faq = $this->faqRepository->findById($id);
+        $faq->setPublic($public);
+        $this->faqRepository->save($faq);
 
         $p = $this->getPresenter();
         $p->flashMessage('admin.cms.faq_changed_public', 'success');

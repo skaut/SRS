@@ -60,14 +60,14 @@ class PageRepository extends EntityRepository
 
     public function getPagesOptions() {
         $pages = $this->createQueryBuilder('p')
-            ->select('p.id, p.name')
+            ->select('p.slug, p.name')
             ->orderBy('p.position')
             ->getQuery()
             ->getResult();
 
         $options = [];
         foreach ($pages as $page) {
-            $options[$page['id']] = $page['name'];
+            $options[$page['slug']] = $page['name'];
         }
         return $options;
     }
