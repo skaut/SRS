@@ -5,6 +5,7 @@ namespace App\Model\CMS\Content;
 
 use App\Services\FilesService;
 use Doctrine\ORM\Mapping as ORM;
+use Kdyby\Translation\Translator;
 use Nette\Application\UI\Form;
 use Nette\Utils\Image;
 use Nette\Utils\Random;
@@ -58,10 +59,22 @@ class ImageContent extends Content implements IContent
     private $filesService;
 
     /**
+     * @var Translator
+     */
+    private $translator;
+
+    /**
      * @param FilesService $filesService
      */
     public function injectFilesService(FilesService $filesService) {
         $this->filesService = $filesService;
+    }
+
+    /**
+     * @param Translator $translator
+     */
+    public function injectTranslator(Translator $translator) {
+        $this->translator = $translator;
     }
 
     /**
@@ -160,7 +173,7 @@ class ImageContent extends Content implements IContent
             ->addCondition(Form::FILLED)
             ->addRule(Form::IMAGE, 'admin.cms.pages_content_image_new_file_format');
 
-        $formContainer->addSelect('align', 'admin.cms.pages_content_image_align', $this->prepareAlignOptions($form->getTranslator()));
+        $formContainer->addSelect('align', 'admin.cms.pages_content_image_align', $this->prepareAlignOptions());
 
         $formContainer->addText('width', 'admin.cms.pages_content_image_width')
             ->addCondition(Form::FILLED)->addRule(Form::NUMERIC, 'admin.cms.pages_content_image_width_format');
@@ -223,11 +236,11 @@ class ImageContent extends Content implements IContent
         $this->align = $values['align'];
     }
 
-    private function prepareAlignOptions($translator)
+    private function prepareAlignOptions()
     {
         $options = [];
         foreach (ImageContent::$aligns as $align)
-            $options[$align] = $translator->translate('common.align.' . $align);
+            $options[$align] = $this->translator->translate('common.align.' . $align);
         return $options;
     }
 

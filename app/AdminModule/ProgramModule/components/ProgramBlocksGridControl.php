@@ -74,11 +74,11 @@ class ProgramBlocksGridControl extends Control
 
         $grid->addColumnText('category', 'admin.program.blocks_category', 'category.name')
             ->setSortable('c.name')
-            ->setFilterMultiSelect($this->prepareCategoriesChoices(), 'c.id');
+            ->setFilterMultiSelect($this->categoryRepository->getCategoriesOptions(), 'c.id');
 
         $grid->addColumnText('lector', 'admin.program.blocks_lector', 'lector.name')
             ->setSortable('l.displayName')
-            ->setFilterMultiSelect($this->prepareLectorsChoices(), 'l.id');
+            ->setFilterMultiSelect($this->userRepository->getLectorsOptions(), 'l.id');
 
         $basicBlockDuration = $this->settingsRepository->getValue('basic_block_duration');
 
@@ -87,7 +87,7 @@ class ProgramBlocksGridControl extends Control
                 return $this->translator->translate('admin.common.minutes', null, ['count' => $row->getDurationInMinutes($basicBlockDuration)]);
             })
             ->setSortable()
-            ->setFilterMultiSelect($this->prepareDurationsChoices($this->translator));
+            ->setFilterMultiSelect($this->settingsRepository->getDurationsOptions());
 
         $grid->addColumnText('capacity', 'admin.program.blocks_capacity')
             ->setRendererOnCondition(function ($row) {
@@ -168,28 +168,5 @@ class ProgramBlocksGridControl extends Control
         else {
             $this->redirect('this');
         }
-    }
-
-    private function prepareDurationsChoices($translator) {
-        $basicBlockDuration = $this->settingsRepository->getValue('basic_block_duration');
-        $choices = [];
-        for ($i = 1; $basicBlockDuration * $i <= 240; $i++) {
-            $choices[$i] = $translator->translate('admin.common.minutes', null, ['count' => $basicBlockDuration * $i]);
-        }
-        return $choices;
-    }
-
-    private function prepareLectorsChoices() {
-        $choices = [];
-        foreach ($this->userRepository->findApprovedUsersInRole(Role::LECTOR) as $user)
-            $choices[$user->getId()] = $user->getDisplayName();
-        return $choices;
-    }
-
-    private function prepareCategoriesChoices() {
-        $choices = [];
-        foreach ($this->categoryRepository->findAll() as $category)
-            $choices[$category->getId()] = $category->getName();
-        return $choices;
     }
 }

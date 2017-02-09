@@ -72,9 +72,15 @@ class TagRepository extends EntityRepository
     }
 
     public function getTagsOptions() {
-        $choices = [];
-        foreach ($this->findAll() as $tag)
-            $choices[$tag->getId()] = $tag->getName();
-        return $choices;
+        $tags = $this->createQueryBuilder('t')
+            ->select('t.id, t.name')
+            ->orderBy('t.name')
+            ->getQuery()
+            ->getResult();
+
+        $options = [];
+        foreach ($tags as $tag)
+            $options[$tag['id']] = $tag['name'];
+        return $options;
     }
 }

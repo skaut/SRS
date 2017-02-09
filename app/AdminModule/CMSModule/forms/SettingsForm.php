@@ -40,9 +40,7 @@ class SettingsForm extends Nette\Object
 
         $form->addText('footer', 'admin.cms.settings_footer');
 
-        $pagesChoices = $this->preparePagesChoices();
-
-        $form->addSelect('redirectAfterLogin', 'admin.cms.settings_redirect_after_login', $pagesChoices)
+        $form->addSelect('redirectAfterLogin', 'admin.cms.settings_redirect_after_login', $this->pageRepository->getPagesOptions())
             ->addRule(Form::FILLED, 'admin.cms.settings_redirect_after_login_empty');
 
         $form->addCheckbox('displayUsersRoles', 'admin.cms.settings_display_users_roles');
@@ -50,12 +48,5 @@ class SettingsForm extends Nette\Object
         $form->addSubmit('submit', 'admin.common.save');
 
         return $form;
-    }
-
-    private function preparePagesChoices() {
-        $choices = [];
-        foreach ($this->pageRepository->findPublishedPagesOrderedBySlug() as $page)
-            $choices[$page->getSlug()] = $page->getName();
-        return $choices;
     }
 }

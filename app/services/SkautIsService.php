@@ -5,6 +5,7 @@ namespace App\Services;
 
 use Nette;
 use Skautis\Skautis;
+use Skautis\Wsdl\WsdlException;
 
 class SkautIsService extends Nette\Object
 {
@@ -143,5 +144,15 @@ class SkautIsService extends Nette\Object
             'ID_EventGeneral' => $eventId,
             'ID_Person' => $participantId
         ]);
+    }
+
+    public function getEventsOptions()
+    {
+        $options = [];
+        try {
+            foreach ($this->getDraftEvents() as $e)
+                $options[$e->ID] = $e->DisplayName;
+        } catch (WsdlException $ex) { }
+        return $options;
     }
 }

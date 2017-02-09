@@ -59,23 +59,23 @@ class ProgramCategoriesGridControl extends Control
                 return implode(", ", $roles);
             });
 
-        $rolesChoices = $this->roleRepository->getRolesWithoutGuestsOptions();
+        $rolesOptions = $this->roleRepository->getRolesWithoutGuestsOptions();
 
-        $grid->addInlineAdd()->onControlAdd[] = function($container) use($rolesChoices) {
+        $grid->addInlineAdd()->onControlAdd[] = function($container) use($rolesOptions) {
             $container->addText('name', '')
                 ->addCondition(Form::FILLED) //->addRule(Form::FILLED, 'admin.program.categories_name_empty') //TODO validace
                 ->addRule(Form::IS_NOT_IN, 'admin.program.categories_name_exists', $this->categoryRepository->findAllNames());
 
-            $container->addMultiSelect('registerableRoles', '', $rolesChoices)->setAttribute('class', 'datagrid-multiselect');
+            $container->addMultiSelect('registerableRoles', '', $rolesOptions)->setAttribute('class', 'datagrid-multiselect');
                 //->addRule(Form::FILLED, 'admin.program.categories_registerable_roles_empty');
         };
         $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
 
-        $grid->addInlineEdit()->onControlAdd[] = function($container) use($rolesChoices) {
+        $grid->addInlineEdit()->onControlAdd[] = function($container) use($rolesOptions) {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.program.categories_name_empty');
 
-            $container->addMultiSelect('registerableRoles', '', $rolesChoices)->setAttribute('class', 'datagrid-multiselect')
+            $container->addMultiSelect('registerableRoles', '', $rolesOptions)->setAttribute('class', 'datagrid-multiselect')
                 ->addRule(Form::FILLED, 'admin.program.categories_registerable_roles_empty');
         };
         $grid->getInlineEdit()->onSetDefaults[] = function($container, $item) {

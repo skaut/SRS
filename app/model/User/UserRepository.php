@@ -2,6 +2,7 @@
 
 namespace App\Model\User;
 
+use App\Model\ACL\Role;
 use Kdyby\Doctrine\EntityRepository;
 
 class UserRepository extends EntityRepository
@@ -41,6 +42,22 @@ class UserRepository extends EntityRepository
             ->andWhere('u.approved = true')
             ->orderBy('u.displayName')
             ->getQuery()->execute();
+    }
+
+    public function getLectorsOptions() {
+        $lectors = $this->createQueryBuilder('u')
+            ->select('u.id, u.displayName')
+            ->join('u.roles', 'r')
+            ->where('r.systemName = :name')->setParameter('name', Role::LECTOR)
+            ->andWhere('u.approved = true')
+            ->orderBy('u.displayName')
+            ->getQuery()->execute();
+
+        $options = [];
+        foreach ($lectors as $lector) {
+            $options[$lector['id']] = $lector['displayName'];
+        }
+        return $options;
     }
 
     public function variableSymbolExists($variableSymbol)

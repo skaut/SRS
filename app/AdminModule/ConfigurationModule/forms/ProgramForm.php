@@ -3,6 +3,7 @@
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
+use Kdyby\Translation\Translator;
 use Nette;
 use Nette\Application\UI\Form;
 
@@ -13,9 +14,15 @@ class ProgramForm extends Nette\Object
      */
     private $baseForm;
 
-    public function __construct(BaseForm $baseForm)
+    /**
+     * @var Translator
+     */
+    private $translator;
+
+    public function __construct(BaseForm $baseForm, Translator $translator)
     {
         $this->baseForm = $baseForm;
+        $this->translator = $translator;
     }
 
     public function create()
@@ -26,9 +33,9 @@ class ProgramForm extends Nette\Object
         $renderer->wrappers['control']['container'] = 'div class="col-sm-7 col-xs-7"';
         $renderer->wrappers['label']['container'] = 'div class="col-sm-5 col-xs-5 control-label"';
 
-        $basicBlockDurationChoices = $this->prepareBasicBlockDurationChoices([5, 10, 15, 30, 45, 60, 75, 90, 105, 120], $form->getTranslator());
+        $basicBlockDurationOptions = $this->prepareBasicBlockDurationOptions([5, 10, 15, 30, 45, 60, 75, 90, 105, 120]);
 
-        $form->addSelect('basicBlockDuration', 'admin.configuration.basic_block_duration', $basicBlockDurationChoices)
+        $form->addSelect('basicBlockDuration', 'admin.configuration.basic_block_duration', $basicBlockDurationOptions)
             ->addRule(Form::FILLED, 'admin.configuration.basic_block_duration_empty');
         $form->addCheckbox('isAllowedAddBlock', 'admin.configuration.is_allowed_add_block');
         $form->addCheckbox('isAllowedModifySchedule', 'admin.configuration.is_allowed_modify_schedule');
@@ -49,11 +56,11 @@ class ProgramForm extends Nette\Object
         return $form;
     }
 
-    private function prepareBasicBlockDurationChoices($durations, $translator) {
-        $choices = [];
+    private function prepareBasicBlockDurationOptions($durations) {
+        $options = [];
         foreach ($durations as $duration)
-            $choices[$duration] = $translator->translate('admin.common.minutes', null, ['count' => $duration]);
-        return $choices;
+            $options[$duration] = $this->translator->translate('admin.common.minutes', null, ['count' => $duration]);
+        return $options;
     }
 
     public function validateSeminarFromDate($field, $args) {

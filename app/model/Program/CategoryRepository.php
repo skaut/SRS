@@ -63,4 +63,18 @@ class CategoryRepository extends EntityRepository
             ->orderBy(['name' => 'ASC']);
         return $this->matching($criteria);
     }
+
+    public function getCategoriesOptions() {
+        $categories = $this->createQueryBuilder('c')
+            ->select('c.id, c.name')
+            ->orderBy('c.name')
+            ->getQuery()
+            ->getResult();
+
+        $options = [];
+        foreach ($categories as $category) {
+            $options[$category['id']] = $category['name'];
+        }
+        return $options;
+    }
 }

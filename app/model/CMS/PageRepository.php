@@ -58,6 +58,20 @@ class PageRepository extends EntityRepository
         return array_map('current', $slugs);
     }
 
+    public function getPagesOptions() {
+        $pages = $this->createQueryBuilder('p')
+            ->select('p.id, p.name')
+            ->orderBy('p.position')
+            ->getQuery()
+            ->getResult();
+
+        $options = [];
+        foreach ($pages as $page) {
+            $options[$page['id']] = $page['name'];
+        }
+        return $options;
+    }
+
     public function addPage($name, $slug, $roles, $public) {
         $page = new Page($name, $slug);
 

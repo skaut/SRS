@@ -41,6 +41,7 @@ class CustomInputsGridControl extends Control
         $grid->setDataSource($this->customInputRepository->createQueryBuilder('i')->orderBy('i.position'));
         $grid->setPagination(false);
 
+
         $grid->addColumnText('name', 'admin.configuration.custom_inputs_name');
 
         $grid->addColumnText('type', 'admin.configuration.custom_inputs_type')
@@ -48,12 +49,13 @@ class CustomInputsGridControl extends Control
                 return $this->translator->translate('admin.common.custom_' . $row->getType());
             });
 
-        $customInputTypesChoices = $this->prepareCustomInputTypesChoices();
 
-        $grid->addInlineAdd()->onControlAdd[] = function($container) use($customInputTypesChoices) {
+        $customInputTypesOptions = $this->prepareCustomInputTypesOptions();
+
+        $grid->addInlineAdd()->onControlAdd[] = function($container) use($customInputTypesOptions) {
             $container->addText('name', '');
                 //->addRule(Form::FILLED, 'admin.configuration.application_input_name_empty'); //TODO validace
-            $container->addSelect('type', '', $customInputTypesChoices);
+            $container->addSelect('type', '', $customInputTypesOptions);
         };
         $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
 
@@ -67,6 +69,7 @@ class CustomInputsGridControl extends Control
             ]);
         };
         $grid->getInlineEdit()->onSubmit[] = [$this, 'edit'];
+
 
         $grid->addAction('delete', '', 'delete!')
             ->setIcon('trash')
@@ -145,10 +148,10 @@ class CustomInputsGridControl extends Control
         }
     }
 
-    private function prepareCustomInputTypesChoices() {
-        $choices = [];
+    private function prepareCustomInputTypesOptions() {
+        $options = [];
         foreach (CustomInput::$types as $type)
-            $choices[$type] = $this->translator->translate('admin.common.custom_' . $type);
-        return $choices;
+            $options[$type] = $this->translator->translate('admin.common.custom_' . $type);
+        return $options;
     }
 }

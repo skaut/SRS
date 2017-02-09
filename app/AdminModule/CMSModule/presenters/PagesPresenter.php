@@ -47,14 +47,6 @@ class PagesPresenter extends CMSBasePresenter
         $this->template->area = $area;
     }
 
-    public function handleDelete($cid) {
-//        $id = $this->getParameter('id');
-//        $area = $this->getParameter('area');
-//
-//        $this->contentRepository->removeContent($cid);
-//        $this->redirect('Pages:content', ['id' => $id, 'area' => $area]);
-    }
-
     protected function createComponentPagesGrid($name)
     {
         return $this->pagesGridControlFactory->create($name);

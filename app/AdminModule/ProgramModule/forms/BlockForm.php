@@ -49,11 +49,11 @@ class BlockForm extends Nette\Object
         $form->addText('name', 'admin.program.blocks_name')
             ->addRule(Form::FILLED, 'admin.program.blocks_name_empty');
 
-        $form->addSelect('category', 'admin.program.blocks_category', $this->prepareCategoriesChoices())->setPrompt('');
+        $form->addSelect('category', 'admin.program.blocks_category', $this->categoryRepository->getCategoriesOptions())->setPrompt('');
 
-        $form->addSelect('lector', 'admin.program.blocks_lector', $this->prepareLectorsChoices())->setPrompt('');
+        $form->addSelect('lector', 'admin.program.blocks_lector', $this->userRepository->getLectorsOptions())->setPrompt('');
 
-        $form->addSelect('duration', 'admin.program.blocks_duration', $this->prepareDurationsChoices($form->getTranslator()))
+        $form->addSelect('duration', 'admin.program.blocks_duration', $this->settingsRepository->getDurationsOptions())
             ->addRule(Form::FILLED, 'admin.program.blocks_duration_empty');
 
         $form->addText('capacity', 'admin.program.blocks_capacity')
@@ -74,28 +74,5 @@ class BlockForm extends Nette\Object
         $form->addSubmit('submitAndContinue', 'admin.common.save_and_continue');
 
         return $form;
-    }
-
-    private function prepareDurationsChoices($translator) {
-        $basicBlockDuration = $this->settingsRepository->getValue('basic_block_duration');
-        $choices = [];
-        for ($i = 1; $basicBlockDuration * $i <= 240; $i++) {
-            $choices[$i] = $translator->translate('admin.common.minutes', null, ['count' => $basicBlockDuration * $i]);
-        }
-        return $choices;
-    }
-
-    private function prepareLectorsChoices() {
-        $choices = [];
-        foreach ($this->userRepository->findApprovedUsersInRole(Role::LECTOR) as $user)
-            $choices[$user->getId()] = $user->getDisplayName();
-        return $choices;
-    }
-
-    private function prepareCategoriesChoices() {
-        $choices = [];
-        foreach ($this->categoryRepository->findAll() as $category)
-            $choices[$category->getId()] = $category->getName();
-        return $choices;
     }
 }

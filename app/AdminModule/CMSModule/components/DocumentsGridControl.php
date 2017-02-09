@@ -89,14 +89,14 @@ class DocumentsGridControl extends Control
         $grid->addColumnDateTime('timestamp', 'admin.cms.documents_timestamp')
             ->setFormat('j. n. Y H:i');
 
-        $tagsChoices = $this->prepareTagsChoices();
+        $tagsOptions = $this->tagRepository->getTagsOptions();
 
-        $grid->addInlineAdd()->onControlAdd[] = function($container) use($tagsChoices) {
+        $grid->addInlineAdd()->onControlAdd[] = function($container) use($tagsOptions) {
             $container->addText('name', '')
                 ->addCondition(Form::FILLED) //->addRule(Form::FILLED, 'admin.cms.documents_name_empty') //TODO validace
                 ->addRule(Form::IS_NOT_IN, 'admin.cms.documents_name_exists', $this->documentRepository->findAllNames());
 
-            $container->addMultiSelect('tags', '', $tagsChoices)->setAttribute('class', 'datagrid-multiselect');
+            $container->addMultiSelect('tags', '', $tagsOptions)->setAttribute('class', 'datagrid-multiselect');
                 //->addRule(Form::FILLED, 'admin.cms.documents_tags_empty');
 
             $container->addUpload('file', '')->setAttribute('class', 'datagrid-upload');
@@ -106,11 +106,11 @@ class DocumentsGridControl extends Control
         };
         $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
 
-        $grid->addInlineEdit()->onControlAdd[] = function($container) use($tagsChoices) {
+        $grid->addInlineEdit()->onControlAdd[] = function($container) use($tagsOptions) {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.documents_name_empty');
 
-            $container->addMultiSelect('tags', '', $tagsChoices)->setAttribute('class', 'datagrid-multiselect')
+            $container->addMultiSelect('tags', '', $tagsOptions)->setAttribute('class', 'datagrid-multiselect')
                 ->addRule(Form::FILLED, 'admin.cms.documents_tags_empty');
 
             $container->addUpload('file', '')->setAttribute('class', 'datagrid-upload');
@@ -123,7 +123,7 @@ class DocumentsGridControl extends Control
 
             $container->setDefaults([
                 'name' => $item->getName(),
-                'tags' => $this->tagRepository->getTagsIds($item->getTags()),
+                'tags' => $this->tagRepository->findTagsIds($item->getTags()),
                 'description' => $item->getDescription()
             ]);
         };
@@ -195,13 +195,6 @@ class DocumentsGridControl extends Control
         $p->flashMessage('admin.cms.documents_deleted', 'success');
 
         $this->redirect('this');
-    }
-
-    private function prepareTagsChoices() {
-        $choices = [];
-        foreach ($this->tagRepository->findTagsOrderedByName() as $tag)
-            $choices[$tag->getId()] = $tag->getName();
-        return $choices;
     }
 
     private function generatePath($file) {

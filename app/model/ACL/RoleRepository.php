@@ -81,6 +81,20 @@ class RoleRepository extends EntityRepository
         return array_map(function($o) { return $o->getId(); }, $roles->toArray());
     }
 
+    public function getRolesOptions() {
+        $roles = $this->createQueryBuilder('r')
+            ->select('r.id, r.name')
+            ->orderBy('r.name')
+            ->getQuery()
+            ->getResult();
+
+        $options = [];
+        foreach ($roles as $role) {
+            $options[$role['id']] = $role['name'];
+        }
+        return $options;
+    }
+
     public function getRolesWithoutGuestsOptions() {
         $roles = $this->createQueryBuilder('r')
             ->select('r.id, r.name')
