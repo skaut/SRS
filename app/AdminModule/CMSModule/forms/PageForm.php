@@ -82,7 +82,7 @@ class PageForm extends UI\Control
         $this->tagRepository = $tagRepository;
         $this->filesService = $filesService;
 
-        $this->page = $this->pageRepository->findPageById($id);
+        $this->page = $this->pageRepository->findById($id);
     }
 
     public function render()
@@ -130,6 +130,7 @@ class PageForm extends UI\Control
         $form->addSubmit('submitSidebar', 'common.area.sidebar')
             ->setAttribute('class', 'btn-link');
 
+        $form->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
         $form->onSuccess[] = [$this, 'processForm'];
 
         $form->onError[] = function (Form $form) {
@@ -140,7 +141,7 @@ class PageForm extends UI\Control
     }
 
     public function processForm(Form $form, \stdClass $values) {
-        $page = $this->pageRepository->findPageById($values['id']);
+        $page = $this->pageRepository->findById($values['id']);
 
         $area = $values['area'];
         $type = $values['type'];

@@ -98,13 +98,13 @@ class PagePresenter extends WebBasePresenter
     public function renderDefault($slug)
     {
         if ($slug === null) {
-            $page = $this->pageRepository->findPublishedPageBySlug('/');
+            $page = $this->pageRepository->findPublishedBySlug('/');
             if ($page === null) {
                 throw new BadRequestException($this->translator->translate('_web.common.homepage_not_found'), 404);
             }
             $this->template->bodyClass = "body-homepage";
         } else {
-            $page = $this->pageRepository->findPageBySlug($slug);
+            $page = $this->pageRepository->findBySlug($slug);
             $this->template->bodyClass = "body-{$page->getSlug()}";
         }
 

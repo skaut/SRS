@@ -6,40 +6,44 @@ use  Kdyby\Doctrine\EntityRepository;
 
 class PageRepository extends EntityRepository
 {
-    public function slugToId($slug)
+    /**
+     * @param $id
+     * @return Page|null
+     */
+    public function findById($id)
     {
-        return $this->findOneBy(['slug' => $slug])->getId();
+        return $this->findOneBy(['id' => $id]);
     }
 
-    public function idToSlug($id)
-    {
-        return $this->findOneBy(['id' => $id])->getSlug();
-    }
-
-    public function findPageBySlug($slug)
+    /**
+     * @param $slug
+     * @return Page|null
+     */
+    public function findBySlug($slug)
     {
         return $this->findOneBy(['slug' => $slug]);
     }
 
-    public function findPublishedPagesOrderedBySlug()
-    {
-        return $this->findBy(['public' => true], ['slug' => 'ASC']);
-    }
-
-    public function findPublishedPagesOrderedByPosition()
-    {
-        return $this->findBy(['public' => true], ['position' => 'ASC']);
-    }
-
-    public function findPublishedPageBySlug($slug)
+    /**
+     * @param $slug
+     * @return Page|null
+     */
+    public function findPublishedBySlug($slug)
     {
         return $this->findOneBy(['public' => true, 'slug' => $slug]);
     }
 
-    public function findPageById($id) {
-        return $this->find($id);
+    /**
+     * @return array
+     */
+    public function findPublishedOrderedByPosition()
+    {
+        return $this->findBy(['public' => true], ['position' => 'ASC']);
     }
 
+    /**
+     * @return array
+     */
     public function findAllSlugs() {
         $slugs = $this->createQueryBuilder('p')
             ->select('p.slug')
@@ -48,6 +52,10 @@ class PageRepository extends EntityRepository
         return array_map('current', $slugs);
     }
 
+    /**
+     * @param $id
+     * @return array
+     */
     public function findOthersSlugs($id) {
         $slugs = $this->createQueryBuilder('p')
             ->select('p.slug')
@@ -58,6 +66,9 @@ class PageRepository extends EntityRepository
         return array_map('current', $slugs);
     }
 
+    /**
+     * @return array
+     */
     public function getPagesOptions() {
         $pages = $this->createQueryBuilder('p')
             ->select('p.slug, p.name')
@@ -72,63 +83,33 @@ class PageRepository extends EntityRepository
         return $options;
     }
 
-    public function addPage($name, $slug, $roles, $public) {
-        $page = new Page($name, $slug);
-
-        $page->setPosition($this->countBy() + 1);
-        $page->setRoles($roles);
-        $page->setPublic($public);
+    /**
+     * @param Page $page
+     */
+    public function save(Page $page)
+    {
+        if (!$page->getPosition())
+            $page->setPosition($this->countBy() + 1);
 
         $this->_em->persist($page);
         $this->_em->flush();
-
-        return $page;
     }
 
-    public function editPage($id, $name, $slug, $roles, $public) {
-        $page = $this->find($id);
-
-        $page->setName($name);
-        $page->setSlug($slug);
-        $page->setRoles($roles);
-        $page->setPublic($public);
-
-        $this->_em->flush();
-
-        return $page;
-    }
-
-    public function setPagePublic($id, $public) {
-        $page = $this->find($id);
-        $page->setPublic($public);
-        $this->_em->flush();
-        return $page;
-    }
-
-    public function removePage($id)
+    /**
+     * @param Page $page
+     */
+    public function remove(Page $page)
     {
-        $page = $this->find($id);
-
-        $itemsToMoveUp = $this->createQueryBuilder('i')
-            ->andWhere('i.position > :position')
-            ->setParameter('position', $page->getPosition())
-            ->getQuery()
-            ->getResult();
-
-        foreach ($itemsToMoveUp as $t) {
-            $t->setPosition($t->getPosition() - 1);
-            $this->_em->persist($t);
-        }
-
-        foreach ($page->getContents() as $content) {
-            $this->_em->remove($content);
-        }
-
         $this->_em->remove($page);
         $this->_em->flush();
     }
 
-    public function changePosition($itemId, $prevId, $nextId) {
+    /**
+     * @param $itemId
+     * @param $prevId
+     * @param $nextId
+     */
+    public function sort($itemId, $prevId, $nextId) {
         $item = $this->find($itemId);
         $prev = $prevId ? $this->find($prevId) : null;
         $next = $nextId ? $this->find($nextId) : null;

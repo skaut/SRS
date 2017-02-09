@@ -10,7 +10,7 @@ class TagRepository extends EntityRepository
 {
     /**
      * @param $id
-     * @return Tag
+     * @return Tag|null
      */
     public function findById($id)
     {

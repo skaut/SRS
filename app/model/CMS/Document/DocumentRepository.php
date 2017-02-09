@@ -9,7 +9,7 @@ class DocumentRepository extends EntityRepository
 {
     /**
      * @param $id
-     * @return Document
+     * @return Document|null
      */
     public function findById($id)
     {

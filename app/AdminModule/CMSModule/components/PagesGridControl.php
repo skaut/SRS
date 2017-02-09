@@ -5,6 +5,7 @@ namespace App\AdminModule\CMSModule\Components;
 
 use App\Model\ACL\RoleRepository;
 use App\Model\CMS\Content\Content;
+use App\Model\CMS\Page;
 use App\Model\CMS\PageRepository;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
@@ -84,17 +85,17 @@ class PagesGridControl extends Control
         ];
 
         $grid->addInlineAdd()->onControlAdd[] = function($container) use($rolesOptions, $publicOptions) {
-            $container->addText('name', '');
-                //->addRule(Form::FILLED, 'admin.cms.pages_name_empty'); //TODO validace
+            $container->addText('name', '')
+                ->addRule(Form::FILLED, 'admin.cms.pages_name_empty');
 
             $container->addText('slug', '')
-                ->addCondition(Form::FILLED) //->addRule(Form::FILLED, 'admin.cms.pages_slug_empty')
+                ->addRule(Form::FILLED, 'admin.cms.pages_slug_empty')
                 ->addRule(Form::PATTERN, 'admin.cms.pages_slug_format', '^[a-z0-9-]*$')
                 ->addRule(Form::IS_NOT_IN, 'admin.cms.pages_slug_exists', $this->pageRepository->findAllSlugs());
 
             $container->addMultiSelect('roles', '', $rolesOptions)->setAttribute('class', 'datagrid-multiselect')
-                ->setDefaultValue(array_keys($rolesOptions));
-                //->addRule(Form::FILLED, 'admin.cms.pages_roles_empty');
+                ->setDefaultValue(array_keys($rolesOptions))
+                ->addRule(Form::FILLED, 'admin.cms.pages_roles_empty');
 
             $container->addSelect('public', '', $publicOptions);
         };
@@ -146,52 +147,47 @@ class PagesGridControl extends Control
 
     public function add($values)
     {
-        $p = $this->getPresenter();
+        $page = new Page($values['name'], $values['slug']);
 
-        $name = $values['name'];
-        $slug = $values['slug'];
-        $roles = $this->roleRepository->findRolesByIds($values['roles']);
+        $page->setRoles($this->roleRepository->findRolesByIds($values['roles']));
+        $page->setPublic($values['public']);
 
-        if (!$name) {
-            $p->flashMessage('admin.cms.pages_name_empty', 'danger');
-        }
-        elseif (!$slug) {
-            $p->flashMessage('admin.cms.pages_slug_empty', 'danger');
-        }
-        elseif (count($roles) == 0) {
-            $p->flashMessage('admin.cms.pages_roles_empty', 'danger');
-        }
-        else {
-            $this->pageRepository->addPage($name, $slug, $roles, $values['public']);
-            $p->flashMessage('admin.cms.pages_added', 'success');
-        }
+        $this->pageRepository->save($page);
+
+        $this->getPresenter()->flashMessage('admin.cms.pages_saved', 'success');
 
         $this->redirect('this');
     }
 
     public function edit($id, $values)
     {
-        $p = $this->getPresenter();
+        $page = $this->pageRepository->findById($id);
 
-        $this->pageRepository->editPage($id, $values['name'], $values['slug'], $this->roleRepository->findRolesByIds($values['roles']), $values['public']);
-        $p->flashMessage('admin.cms.pages_edited', 'success');
+        $page->setName($values['name']);
+        $page->setSlug($values['slug']);
+        $page->setRoles($this->roleRepository->findRolesByIds($values['roles']));
+        $page->setPublic($values['public']);
+
+        $this->pageRepository->save($page);
+
+        $this->getPresenter()->flashMessage('admin.cms.pages_saved', 'success');
 
         $this->redirect('this');
     }
 
     public function handleDelete($id)
     {
-        $this->pageRepository->removePage($id);
+        $page = $this->pageRepository->findById($id);
+        $this->pageRepository->remove($page);
 
-        $p = $this->getPresenter();
-        $p->flashMessage('admin.cms.pages_deleted', 'success');
+        $this->getPresenter()->flashMessage('admin.cms.pages_deleted', 'success');
 
         $this->redirect('this');
     }
 
     public function handleSort($item_id, $prev_id, $next_id)
     {
-        $this->pageRepository->changePosition($item_id, $prev_id, $next_id);
+        $this->pageRepository->sort($item_id, $prev_id, $next_id);
 
         $p = $this->getPresenter();
         $p->flashMessage('admin.cms.pages_order_saved', 'success');
@@ -207,11 +203,14 @@ class PagesGridControl extends Control
     public function changeStatus($id, $public) {
         $p = $this->getPresenter();
 
-        if ($this->pageRepository->findPageById($id)->getSlug() == '/' && !$public) {
+        if ($this->pageRepository->findById($id)->getSlug() == '/' && !$public) {
             $p->flashMessage('admin.cms.pages_change_public_denied', 'danger');
         }
         else {
-            $this->pageRepository->setPagePublic($id, $public);
+            $page = $this->pageRepository->findById($id);
+            $page->setPublic($public);
+            $this->pageRepository->save($page);
+
             $p->flashMessage('admin.cms.pages_changed_public', 'success');
         }
 

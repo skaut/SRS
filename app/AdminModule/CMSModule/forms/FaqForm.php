@@ -65,6 +65,7 @@ class FaqForm extends Nette\Object
             ]);
         }
 
+        $form->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
         $form->onSuccess[] = [$this, 'processForm'];
 
         return $form;

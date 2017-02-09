@@ -109,7 +109,7 @@ abstract class WebBasePresenter extends BasePresenter
         $this->template->adminAccess = $this->user->isAllowed(Resource::ADMIN, Permission::ACCESS);
         $this->template->displayUsersRoles = $this->settingsRepository->getValue('display_users_roles');
 
-        $this->template->pages = $this->pageRepository->findPublishedPagesOrderedByPosition();
+        $this->template->pages = $this->pageRepository->findPublishedOrderedByPosition();
         $this->template->sidebarVisible = false;
 
         $this->template->settings = $this->settingsRepository;

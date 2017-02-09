@@ -9,7 +9,7 @@ class FaqRepository extends EntityRepository
 {
     /**
      * @param $id
-     * @return Faq
+     * @return Faq|null
      */
     public function findById($id)
     {

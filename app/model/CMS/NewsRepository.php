@@ -9,7 +9,7 @@ class NewsRepository extends EntityRepository
 {
     /**
      * @param $id
-     * @return News
+     * @return News|null
      */
     public function findById($id)
     {
