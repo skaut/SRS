@@ -84,6 +84,21 @@ class RoleRepository extends EntityRepository
     }
 
     /**
+     * @param $roles
+     * @return array
+     */
+    public function countApprovedUsersInRoles($roles) {
+        return $this->createQueryBuilder('r')
+            ->select('r.name, r.capacity', 'COUNT(u.id) AS usersCount')
+            ->leftJoin('r.users', 'u', 'WITH',  'u.approved = true')
+            ->where('r.id IN (:ids)')->setParameter('ids', $this->findRolesIds($roles))
+            ->groupBy('r.id')
+            ->orderBy('r.name')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * @return array
      */
     public function getRolesOptions() {

@@ -93,6 +93,9 @@ application_content:
 blocks_content:
 
 capacities_content:
+    list_empty: "Žádné role nemají veřejnou obsazenost."
+    occupied_limited: "Obsazeno %occupied% z %total%"
+    occupied_unlimited: "Obsazeno %occupied%"
 
 document_content:
 
