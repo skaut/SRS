@@ -7,25 +7,41 @@ use Kdyby\Doctrine\EntityRepository;
 
 class UserRepository extends EntityRepository
 {
-    public function findUserById($id)
+    /**
+     * @param $id
+     * @return User|null
+     */
+    public function findById($id)
     {
-        return $this->find($id);
+        return $this->findOneBy(['id' => $id]);
     }
 
-    public function findUserBySkautISUserId($skautISUserId)
+    /**
+     * @param $skautISUserId
+     * @return User|null
+     */
+    public function findBySkautISUserId($skautISUserId)
     {
         return $this->findOneBy(['skautISUserId' => $skautISUserId]);
     }
 
-    public function findUsersForSync()
+    /**
+     * @return mixed
+     */
+    public function findAllSyncedWithSkautIS()
     {
         return $this->createQueryBuilder('u')
             ->join('u.roles', 'r')
             ->where('r.syncedWithSkautIS = true')
-            ->getQuery()->execute();
+            ->getQuery()
+            ->getResult();
     }
 
-    public function findApprovedUsersInRole($systemName)
+    /**
+     * @param $systemName
+     * @return mixed
+     */
+    public function findAllApprovedInRole($systemName)
     {
         return $this->createQueryBuilder('u')
             ->join('u.roles', 'r')
@@ -35,15 +51,23 @@ class UserRepository extends EntityRepository
             ->getQuery()->execute();
     }
 
-    public function findApprovedUsersInRoles($rolesIds) {
+    /**
+     * @param $rolesIds
+     * @return mixed
+     */
+    public function findAllApprovedInRoles($rolesIds) {
         return $this->createQueryBuilder('u')
             ->join('u.roles', 'r')
             ->where('r.id IN (:ids)')->setParameter('ids', $rolesIds)
             ->andWhere('u.approved = true')
             ->orderBy('u.displayName')
-            ->getQuery()->execute();
+            ->getQuery()
+            ->getResult();
     }
 
+    /**
+     * @return array
+     */
     public function getLectorsOptions() {
         $lectors = $this->createQueryBuilder('u')
             ->select('u.id, u.displayName')
@@ -51,7 +75,8 @@ class UserRepository extends EntityRepository
             ->where('r.systemName = :name')->setParameter('name', Role::LECTOR)
             ->andWhere('u.approved = true')
             ->orderBy('u.displayName')
-            ->getQuery()->execute();
+            ->getQuery()
+            ->getResult();
 
         $options = [];
         foreach ($lectors as $lector) {
@@ -60,12 +85,27 @@ class UserRepository extends EntityRepository
         return $options;
     }
 
+    /**
+     * @param $variableSymbol
+     * @return bool
+     */
     public function variableSymbolExists($variableSymbol)
     {
         return $this->findOneBy(['variableSymbol' => $variableSymbol]) !== null;
     }
 
-    public function removeUser($user)
+    /**
+     * @param User $user
+     */
+    public function save(User $user) {
+        $this->_em->persist($user);
+        $this->_em->flush();
+    }
+
+    /**
+     * @param User $user
+     */
+    public function remove(User $user)
     {
         $this->_em->remove($user);
         $this->_em->flush();

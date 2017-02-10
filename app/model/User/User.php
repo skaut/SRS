@@ -2,7 +2,10 @@
 
 namespace App\Model\User;
 
+use App\Model\ACL\Permission;
+use App\Model\ACL\Resource;
 use App\Model\ACL\Role;
+use App\Model\Program\Block;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
@@ -289,13 +292,13 @@ class User
         $this->roles = $roles;
     }
 
-    public function addRole($role)
+    public function addRole(Role $role)
     {
         if (!$this->isInRole($role))
             $this->roles->add($role);
     }
 
-    public function removeRole($role)
+    public function removeRole(Role $role)
     {
         return $this->roles->removeElement($role);
     }
@@ -328,11 +331,31 @@ class User
         }
     }
 
-    public function isInRole($role)
+    public function isInRole(Role $role)
     {
         return $this->roles->filter(function ($item) use ($role) {
             return $item == $role;
         })->count() != 0;
+    }
+
+    public function isAllowed($resource, $permission) {
+        foreach ($this->roles as $r) {
+            foreach ($r->getPermissions() as $p) {
+                if ($p->getResource()->getName() == $resource && $p->getName() == $permission)
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public function isAllowedModifyBlock(Block $block) {
+        if ($this->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS))
+            return true;
+
+        if ($this->isAllowed(Resource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS) && $block->getLector() == $this)
+            return true;
+
+        return false;
     }
 
     public function getPayingRoles()

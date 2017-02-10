@@ -7,6 +7,18 @@ use Kdyby\Doctrine\EntityRepository;
 
 class RoomRepository extends EntityRepository
 {
+    /**
+     * @param $id
+     * @return Room|null
+     */
+    public function findById($id)
+    {
+        return $this->findOneBy(['id' => $id]);
+    }
+
+    /**
+     * @return array
+     */
     public function findAllNames() {
         $names = $this->createQueryBuilder('r')
             ->select('r.name')
@@ -15,6 +27,10 @@ class RoomRepository extends EntityRepository
         return array_map('current', $names);
     }
 
+    /**
+     * @param $id
+     * @return array
+     */
     public function findOthersNames($id) {
         $names = $this->createQueryBuilder('r')
             ->select('r.name')
@@ -25,37 +41,21 @@ class RoomRepository extends EntityRepository
         return array_map('current', $names);
     }
 
-    public function addRoom($name) {
-        $room = new Room();
-
-        $room->setName($name);
-
+    /**
+     * @param Room $room
+     */
+    public function save(Room $room)
+    {
         $this->_em->persist($room);
         $this->_em->flush();
-
-        return $room;
     }
 
-    public function removeRoom($id)
+    /**
+     * @param Room $room
+     */
+    public function remove(Room $room)
     {
-        $room = $this->find($id);
         $this->_em->remove($room);
         $this->_em->flush();
-    }
-
-    public function editRoom($id, $name) {
-        $room = $this->find($id);
-
-        $room->setName($name);
-
-        $this->_em->flush();
-
-        return $room;
-    }
-
-    public function findRoomsOrderedByName() {
-        $criteria = Criteria::create()
-            ->orderBy(['name' => 'ASC']);
-        return $this->matching($criteria);
     }
 }

@@ -17,32 +17,24 @@ use Ublaboo\DataGrid\DataGrid;
 
 class ProgramBlocksGridControl extends Control
 {
-    /**
-     * @var Translator
-     */
+    /** @var Translator */
     private $translator;
 
-    /**
-     * @var BlockRepository
-     */
+    /** @var BlockRepository */
     private $blockRepository;
 
-    /**
-     * @var SettingsRepository
-     */
+    /** @var SettingsRepository */
     private $settingsRepository;
 
-    /**
-     * @var UserRepository
-     */
+    /** @var UserRepository */
     private $userRepository;
 
-    /**
-     * @var CategoryRepository
-     */
+    /** @var CategoryRepository */
     private $categoryRepository;
 
-    public function __construct(Translator $translator, BlockRepository $blockRepository, SettingsRepository $settingsRepository, UserRepository $userRepository, CategoryRepository $categoryRepository)
+    public function __construct(Translator $translator, BlockRepository $blockRepository,
+                                SettingsRepository $settingsRepository, UserRepository $userRepository,
+                                CategoryRepository $categoryRepository)
     {
         $this->translator = $translator;
         $this->blockRepository = $blockRepository;
@@ -129,6 +121,7 @@ class ProgramBlocksGridControl extends Control
             ->setClass('btn btn-xs btn-primary');
 
         $grid->addAction('edit', 'admin.common.edit', 'Blocks:edit');
+        $grid->allowRowsAction('edit', [$this, 'isAllowedModifyBlock']);
 
         $grid->addAction('delete', '', 'delete!')
             ->setIcon('trash')
@@ -138,26 +131,31 @@ class ProgramBlocksGridControl extends Control
                 'data-toggle' => 'confirmation',
                 'data-content' => $this->translator->translate('admin.program.blocks_delete_confirm')
             ]);
+        $grid->allowRowsAction('delete', [$this, 'isAllowedModifyBlock']);
     }
 
     public function handleDelete($id)
     {
-        $this->blockRepository->removeBlock($id);
+        $block = $this->blockRepository->findById($id);
+        $this->blockRepository->remove($block);
 
-        $p = $this->getPresenter();
-        $p->flashMessage('admin.program.blocks_deleted', 'success');
+        $this->getPresenter()->flashMessage('admin.program.blocks_deleted', 'success');
 
         $this->redirect('this');
     }
 
     public function changeMandatory($id, $mandatory) {
+        $block = $this->blockRepository->findById($id);
+
         $p = $this->getPresenter();
 
-        if (!$p->isUserAllowedModifyProgramBlock($id)) {
+        if (!$p->dbuser->isAllowedModifyBlock($block)) {
             $p->flashMessage('admin.program.blocks_change_mandatory_denied', 'danger');
         }
         else {
-            $this->blockRepository->setBlockMandatory($id, $mandatory);
+            $block->setMandatory($mandatory);
+            $this->blockRepository->save($block);
+
             $p->flashMessage('admin.program.blocks_changed_mandatory', 'success');
         }
 
@@ -168,5 +166,9 @@ class ProgramBlocksGridControl extends Control
         else {
             $this->redirect('this');
         }
+    }
+
+    public function isAllowedModifyBlock($block) {
+        return $this->getPresenter()->dbuser->isAllowedModifyBlock($block);
     }
 }

@@ -6,10 +6,29 @@ use Kdyby\Doctrine\EntityRepository;
 
 class BlockRepository extends EntityRepository
 {
-    public function findBlockById($id) {
-        return $this->find($id);
+    /**
+     * @param $id
+     * @return Block|null
+     */
+    public function findById($id)
+    {
+        return $this->findOneBy(['id' => $id]);
     }
 
+    /**
+     * @return int
+     */
+    public function findLastId()
+    {
+        return $this->createQueryBuilder('b')
+            ->select('MAX(b.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * @return array
+     */
     public function findAllNames() {
         $names = $this->createQueryBuilder('b')
             ->select('b.name')
@@ -18,6 +37,10 @@ class BlockRepository extends EntityRepository
         return array_map('current', $names);
     }
 
+    /**
+     * @param $id
+     * @return array
+     */
     public function findOthersNames($id) {
         $names = $this->createQueryBuilder('b')
             ->select('b.name')
@@ -28,53 +51,20 @@ class BlockRepository extends EntityRepository
         return array_map('current', $names);
     }
 
-    public function addBlock($name, $category, $lector, $duration, $capacity, $mandatory, $perex, $description, $tools) {
-        $block = new Block();
-
-        $block->setName($name);
-        $block->setCategory($category);
-        $block->setLector($lector);
-        $block->setDuration($duration);
-        $block->setCapacity($capacity);
-        $block->setMandatory($mandatory);
-        $block->setPerex($perex);
-        $block->setDescription($description);
-        $block->setTools($tools);
-
+    /**
+     * @param Block $block
+     */
+    public function save(Block $block)
+    {
         $this->_em->persist($block);
         $this->_em->flush();
-
-        return $block;
     }
 
-    public function editBlock($id, $name, $category, $lector, $duration, $capacity, $mandatory, $perex, $description, $tools) {
-        $block = $this->find($id);
-
-        $block->setName($name);
-        $block->setCategory($category);
-        $block->setLector($lector);
-        $block->setDuration($duration);
-        $block->setCapacity($capacity);
-        $block->setMandatory($mandatory);
-        $block->setPerex($perex);
-        $block->setDescription($description);
-        $block->setTools($tools);
-
-        $this->_em->flush();
-
-        return $block;
-    }
-
-    public function setBlockMandatory($id, $mandatory) {
-        $block = $this->find($id);
-        $block->setMandatory($mandatory);
-        $this->_em->flush();
-        return $block;
-    }
-
-    public function removeBlock($id)
+    /**
+     * @param Block $block
+     */
+    public function remove(Block $block)
     {
-        $block = $this->find($id);
         $this->_em->remove($block);
         $this->_em->flush();
     }

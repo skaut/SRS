@@ -53,36 +53,17 @@ class BlocksPresenter extends ProgramBasePresenter
 
     public function renderDetail($id)
     {
-        $block = $this->blockRepository->findBlockById($id);
+        $block = $this->blockRepository->findById($id);
 
         $this->template->block = $block;
         $this->template->basicBlockDuration = $this->settingsRepository->getValue('basic_block_duration');
     }
 
-    public function renderAdd() {
-        $this['blockForm']['name']->addRule(Form::IS_NOT_IN, 'admin.program.blocks_name_exists', $this->blockRepository->findAllNames());
-    }
-
     public function renderEdit($id)
     {
-        $block = $this->blockRepository->findBlockById($id);
+        $block = $this->blockRepository->findById($id);
 
         $this->template->block = $block;
-
-        $this['blockForm']['name']->addRule(Form::IS_NOT_IN, 'admin.program.blocks_name_exists', $this->blockRepository->findOthersNames($id));
-
-        $this['blockForm']->setDefaults([
-            'id' => $id,
-            'name' => $block->getName(),
-            'category' => $block->getCategory() ? $block->getCategory()->getId() : null,
-            'lector' => $block->getLector() ? $block->getLector()->getId() : null,
-            'duration' => $block->getDuration(),
-            'capacity' => $block->getCapacity(),
-            'mandatory' => $block->isMandatory(),
-            'perex' => $block->getPerex(),
-            'description' => $block->getDescription(),
-            'tools' => $block->getTools()
-        ]);
     }
 
     protected function createComponentProgramBlocksGrid($name)
@@ -97,50 +78,19 @@ class BlocksPresenter extends ProgramBasePresenter
 
     protected function createComponentBlockForm($name)
     {
-        $form = $this->blockFormFactory->create();
+        $form = $this->blockFormFactory->create($this->getParameter('id'));
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) {
+            $this->flashMessage('admin.program.blocks_saved', 'success');
+
             if ($form['submitAndContinue']->isSubmittedBy()) {
-                $block = $this->saveBlock($values);
-                $this->redirect('Blocks:edit', ['id' => $block->getId()]);
+                $id = $values['id'] ?: $this->blockRepository->findLastId();
+                $this->redirect('Blocks:edit', ['id' => $id]);
             }
-            else {
-                $this->saveBlock($values);
+            else
                 $this->redirect('Blocks:default');
-            }
         };
 
         return $form;
-    }
-
-    private function saveBlock($values) {
-        $id = $values['id'];
-
-        $category = $values['category'] != '' ? $this->categoryRepository->findCategoryById($values['category']) : null;
-        $lector = $values['lector'] != '' ? $this->userRepository->findUserById($values['lector']) : null;
-        $capacity = $values['capacity'] !== '' ? $values['capacity'] : null;
-
-        if ($id == null) {
-            $block = $this->blockRepository->addBlock($values['name'], $category, $lector, $values['duration'], $capacity, $values['mandatory'], $values['perex'], $values['description'], $values['tools']);
-            $this->flashMessage('admin.program.blocks_added', 'success');
-        }
-        else {
-            $block = $this->blockRepository->editBlock($values['id'], $values['name'], $category, $lector, $values['duration'], $capacity, $values['mandatory'], $values['perex'], $values['description'], $values['tools']);
-            $this->flashMessage('admin.program.blocks_edited', 'success');
-        }
-
-        return $block;
-    }
-
-    public function isUserAllowedModifyProgramBlock($id) {
-        if ($this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS))
-            return true;
-
-        $block = $this->blockRepository->findBlockById($id);
-        if ($this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS) &&
-            $block->getLector() && $block->getLector()->getId() == $this->user->id)
-            return true;
-
-        return false;
     }
 }

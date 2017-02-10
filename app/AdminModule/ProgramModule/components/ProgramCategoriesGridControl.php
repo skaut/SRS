@@ -4,6 +4,7 @@ namespace App\AdminModule\ProgramModule\Components;
 
 
 use App\Model\ACL\RoleRepository;
+use App\Model\Program\Category;
 use App\Model\Program\CategoryRepository;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
@@ -63,11 +64,11 @@ class ProgramCategoriesGridControl extends Control
 
         $grid->addInlineAdd()->onControlAdd[] = function($container) use($rolesOptions) {
             $container->addText('name', '')
-                ->addCondition(Form::FILLED) //->addRule(Form::FILLED, 'admin.program.categories_name_empty') //TODO validace
+                ->addRule(Form::FILLED, 'admin.program.categories_name_empty')
                 ->addRule(Form::IS_NOT_IN, 'admin.program.categories_name_exists', $this->categoryRepository->findAllNames());
 
-            $container->addMultiSelect('registerableRoles', '', $rolesOptions)->setAttribute('class', 'datagrid-multiselect');
-                //->addRule(Form::FILLED, 'admin.program.categories_registerable_roles_empty');
+            $container->addMultiSelect('registerableRoles', '', $rolesOptions)->setAttribute('class', 'datagrid-multiselect')
+                ->addRule(Form::FILLED, 'admin.program.categories_registerable_roles_empty');
         };
         $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
 
@@ -100,41 +101,49 @@ class ProgramCategoriesGridControl extends Control
     }
 
     public function add($values) {
+        $category = new Category();
+
+        $category->setName($values['name']);
+        $category->setRegisterableRoles($this->roleRepository->findRolesByIds($values['registerableRoles']));
+
+        $this->categoryRepository->save($category);
+
         $p = $this->getPresenter();
+        $p->flashMessage('admin.program.categories_saved', 'success');
 
-        $name = $values['name'];
-        $roles = $values['registerableRoles'];
-
-        if (!$name) {
-            $p->flashMessage('admin.program.categories_name_empty', 'danger');
+        if ($p->isAjax()) {
+            $p->redrawControl('flashes');
+            $this['programCategoriesGrid']->reload();
+        } else {
+            $this->redirect('this');
         }
-        elseif (count($roles) == 0) {
-            $p->flashMessage('admin.program.categories_registerable_roles_empty', 'danger');
-        }
-        else {
-            $this->categoryRepository->addCategory($name, $this->roleRepository->findRolesByIds($roles));
-            $p->flashMessage('admin.program.categories_added', 'success');
-        }
-
-        $this->redirect('this');
     }
 
     public function edit($id, $values)
     {
+        $category = $this->categoryRepository->findById($id);
+
+        $category->setName($values['name']);
+        $category->setRegisterableRoles($this->roleRepository->findRolesByIds($values['registerableRoles']));
+
+        $this->categoryRepository->save($category);
+
         $p = $this->getPresenter();
+        $p->flashMessage('admin.program.categories_saved', 'success');
 
-        $this->categoryRepository->editCategory($id, $values['name'], $this->roleRepository->findRolesByIds($values['registerableRoles']));
-        $p->flashMessage('admin.program.categories_edited', 'success');
-
-        $this->redirect('this');
+        if ($p->isAjax()) {
+            $p->redrawControl('flashes');
+        } else {
+            $this->redirect('this');
+        }
     }
 
     public function handleDelete($id)
     {
-        $this->categoryRepository->removeCategory($id);
+        $category = $this->categoryRepository->findById($id);
+        $this->categoryRepository->remove($category);
 
-        $p = $this->getPresenter();
-        $p->flashMessage('admin.program.categories_deleted', 'success');
+        $this->getPresenter()->flashMessage('admin.program.categories_deleted', 'success');
 
         $this->redirect('this');
     }

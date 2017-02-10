@@ -44,7 +44,7 @@ class ProfilePresenter extends WebBasePresenter
             $this->redirect(':Web:Page:default');
         }
 
-        $nonregisteredRole = $this->roleRepository->findRoleBySystemName(Role::NONREGISTERED);
+        $nonregisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
         $this->editRegistrationAllowed = !$this->dbuser->isInRole($nonregisteredRole) && !$this->dbuser->hasPaid()
             && $this->settingsRepository->getDateValue('edit_registration_to') >= (new \DateTime())->setTime(0, 0);
     }
@@ -56,7 +56,7 @@ class ProfilePresenter extends WebBasePresenter
 
     public function handleCancelRegistration() {
         if ($this->editRegistrationAllowed) {
-            $this->userRepository->removeUser($this->dbuser);
+            $this->userRepository->remove($this->dbuser);
             $this->presenter->redirect(':Auth:logout');
         }
     }

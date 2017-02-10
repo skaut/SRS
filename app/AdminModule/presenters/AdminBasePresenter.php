@@ -55,7 +55,7 @@ abstract class AdminBasePresenter extends BasePresenter
     /**
      * @var User
      */
-    protected $dbuser;
+    public $dbuser;
 
     /**
      * @return CssLoader
@@ -91,7 +91,7 @@ abstract class AdminBasePresenter extends BasePresenter
             $this->redirect(":Web:Page:default");
         }
 
-        $this->dbuser = $this->userRepository->findUserById($this->user->id);
+        $this->dbuser = $this->userRepository->findById($this->user->id);
     }
 
     public function beforeRender()

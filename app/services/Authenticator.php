@@ -15,11 +15,6 @@ use App\Model\ACL\Role;
 class Authenticator extends Nette\Object implements NS\IAuthenticator
 {
     /**
-     * @var EntityManager
-     */
-    private $em;
-
-    /**
      * @var UserRepository
      */
     private $userRepository;
@@ -34,12 +29,9 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
      */
     protected $skautIsService;
 
-    public function __construct(EntityManager $em,
-                                UserRepository $userRepository,
-                                RoleRepository $roleRepository,
+    public function __construct(UserRepository $userRepository, RoleRepository $roleRepository,
                                 SkautIsService $skautIsService)
     {
-        $this->em = $em;
         $this->userRepository = $userRepository;
         $this->roleRepository = $roleRepository;
         $this->skautIsService = $skautIsService;
@@ -53,13 +45,13 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
     {
         $skautISUser = $this->skautIsService->getUserDetail();
 
-        $user = $this->userRepository->findUserBySkautISUserId($skautISUser->ID);
+        $user = $this->userRepository->findBySkautISUserId($skautISUser->ID);
         $newUser = $user === null;
 
         if ($newUser) {
             $user = new User($skautISUser->UserName);
             $user->setFirstLogin(new \DateTime());
-            $roleNonregistered = $this->roleRepository->findRoleBySystemName(Role::NONREGISTERED);
+            $roleNonregistered = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
             $user->addRole($roleNonregistered);
         }
 
@@ -67,10 +59,9 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
 
         if ($newUser) {
             $user->setVariableSymbol($this->generateVariableSymbol($user->getBirthdate()));
-            $this->em->persist($user);
         }
 
-        $this->em->flush();
+        $this->userRepository->save($user);
 
         $netteRoles = [];
         if ($user->isApproved()) {
@@ -78,7 +69,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
                 $netteRoles[] = $role->getName();
         }
         else {
-            $roleUnapproved = $this->roleRepository->findRoleBySystemName(Role::UNAPPROVED);
+            $roleUnapproved = $this->roleRepository->findBySystemName(Role::UNAPPROVED);
             $netteRoles[] = $roleUnapproved->getName();
         }
 

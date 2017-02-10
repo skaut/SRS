@@ -14,16 +14,17 @@ use Nette;
  */
 class Authorizator extends Nette\Security\Permission
 {
-    public function __construct(RoleRepository $roleRepository, PermissionRepository $permissionRepository, ResourceRepository $resourceRepository)
+    public function __construct(RoleRepository $roleRepository, PermissionRepository $permissionRepository,
+                                ResourceRepository $resourceRepository)
     {
         try {
-            foreach ($resourceRepository->findResourcesNames() as $resource) {
+            foreach ($resourceRepository->findAllNames() as $resource) {
                 $this->addResource($resource['name']);
             }
-            foreach ($roleRepository->findRolesNames() as $role) {
+            foreach ($roleRepository->findAllNames() as $role) {
                 $this->addRole($role['name']);
             }
-            foreach ($permissionRepository->findPermissionsNames() as $permission) {
+            foreach ($permissionRepository->findAllNames() as $permission) {
                 $this->allow($permission['roleName'], $permission['resourceName'], $permission['name']);
             }
         } catch (TableNotFoundException $ex) { } //prvni spusteni pred vytvorenim databaze

@@ -117,12 +117,12 @@ class InstallPresenter extends InstallBasePresenter
         }
 
         if ($this->user->isLoggedIn()) {
-            $user = $this->userRepository->findUserById($this->user->id);
+            $user = $this->userRepository->findById($this->user->id);
 
-            $nonregisteredRole = $this->roleRepository->findRoleBySystemName(Role::NONREGISTERED);
+            $nonregisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
             $user->removeRole($nonregisteredRole);
 
-            $adminRole = $this->roleRepository->findRoleBySystemName(Role::ADMIN);
+            $adminRole = $this->roleRepository->findBySystemName(Role::ADMIN);
             $user->addRole($adminRole);
 
             $this->settingsRepository->setValue('admin_created', true);

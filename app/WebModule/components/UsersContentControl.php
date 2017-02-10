@@ -31,7 +31,7 @@ class UsersContentControl extends Control
         $template->setFile(__DIR__ . '/templates/users_content.latte');
 
         $template->heading = $content->getHeading();
-        $template->users = $this->userRepository->findApprovedUsersInRoles(
+        $template->users = $this->userRepository->findAllApprovedInRoles(
             $this->roleRepository->findRolesIds($content->getRoles())
         );
 

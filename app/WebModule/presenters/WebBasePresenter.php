@@ -88,7 +88,7 @@ abstract class WebBasePresenter extends BasePresenter
 
         $this->user->setAuthorizator($this->authorizator);
 
-        $this->dbuser = $this->user->isLoggedIn() ? $this->userRepository->findUserById($this->user->id) : null;
+        $this->dbuser = $this->user->isLoggedIn() ? $this->userRepository->findById($this->user->id) : null;
     }
 
     public function beforeRender()
@@ -103,8 +103,8 @@ abstract class WebBasePresenter extends BasePresenter
         $this->template->footer = $this->settingsRepository->getValue('footer');
         $this->template->seminarName = $this->settingsRepository->getValue('seminar_name');
 
-        $this->template->nonregisteredRole = $this->roleRepository->findRoleBySystemName(Role::NONREGISTERED);
-        $this->template->unapprovedRole = $this->roleRepository->findRoleBySystemName(Role::UNAPPROVED);
+        $this->template->nonregisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
+        $this->template->unapprovedRole = $this->roleRepository->findBySystemName(Role::UNAPPROVED);
 
         $this->template->adminAccess = $this->user->isAllowed(Resource::ADMIN, Permission::ACCESS);
         $this->template->displayUsersRoles = $this->settingsRepository->getValue('display_users_roles');

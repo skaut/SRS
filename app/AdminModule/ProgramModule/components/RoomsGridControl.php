@@ -3,6 +3,7 @@
 namespace App\AdminModule\ProgramModule\Components;
 
 
+use App\Model\Program\Room;
 use App\Model\Program\RoomRepository;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
@@ -44,7 +45,7 @@ class RoomsGridControl extends Control
 
         $grid->addInlineAdd()->onControlAdd[] = function($container) {
             $container->addText('name', '')
-                ->addCondition(Form::FILLED) //->addRule(Form::FILLED, 'admin.program.rooms_name_empty') //TODO validace
+                ->addRule(Form::FILLED, 'admin.program.rooms_name_empty')
                 ->addRule(Form::IS_NOT_IN, 'admin.program.rooms_name_exists', $this->roomRepository->findAllNames());
         };
         $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
@@ -74,39 +75,14 @@ class RoomsGridControl extends Control
     }
 
     public function add($values) {
-        $p = $this->getPresenter();
+        $room = new Room();
 
-        $name = $values['name'];
+        $room->setName($values['name']);
 
-        if (!$name) {
-            $p->flashMessage('admin.program.rooms_name_empty', 'danger');
-        }
-        else {
-            $this->roomRepository->addRoom($name);
-            $p->flashMessage('admin.program.rooms_added', 'success');
-        }
-
-        $this->redirect('this');
-    }
-
-    public function edit($id, $values)
-    {
-        $p = $this->getPresenter();
-
-        $name = $values['name'];
-
-        $this->roomRepository->editRoom($id, $name);
-        $p->flashMessage('admin.program.rooms_edited', 'success');
-
-        $this->redirect('this');
-    }
-
-    public function handleDelete($id)
-    {
-        $this->roomRepository->removeRoom($id);
+        $this->roomRepository->save($room);
 
         $p = $this->getPresenter();
-        $p->flashMessage('admin.program.rooms_deleted', 'success');
+        $p->flashMessage('admin.program.rooms_saved', 'success');
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
@@ -114,5 +90,33 @@ class RoomsGridControl extends Control
         } else {
             $this->redirect('this');
         }
+    }
+
+    public function edit($id, $values)
+    {
+        $room = $this->roomRepository->findById($id);
+
+        $room->setName($values['name']);
+
+        $this->roomRepository->save($room);
+
+        $p = $this->getPresenter();
+        $p->flashMessage('admin.program.rooms_saved', 'success');
+
+        if ($p->isAjax()) {
+            $p->redrawControl('flashes');
+        } else {
+            $this->redirect('this');
+        }
+    }
+
+    public function handleDelete($id)
+    {
+        $room = $this->roomRepository->findById($id);
+        $this->roomRepository->remove($room);
+
+        $this->getPresenter()->flashMessage('admin.program.rooms_deleted', 'success');
+
+        $this->redirect('this');
     }
 }

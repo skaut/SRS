@@ -6,7 +6,13 @@ use Kdyby\Doctrine\EntityRepository;
 
 class ResourceRepository extends EntityRepository
 {
-    public function findResourcesNames() {
-        return $this->createQueryBuilder('r')->select('r.name')->getQuery()->execute();
+    /**
+     * @return array
+     */
+    public function findAllNames() {
+        return $this->createQueryBuilder('r')
+            ->select('r.name')
+            ->getQuery()
+            ->getResult();
     }
 }

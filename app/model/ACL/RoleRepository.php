@@ -8,23 +8,35 @@ use Kdyby\Doctrine\EntityRepository;
 
 class RoleRepository extends EntityRepository
 {
-    public function findRolesNames() {
-        return $this->createQueryBuilder('r')->select('r.name')->getQuery()->execute();
-    }
-
-    public function findRoleByName($name) {
-        return $this->findOneBy(['name' => $name]);
-    }
-
-    public function findRoleBySystemName($name) {
+    /**
+     * @param $name
+     * @return Role|null
+     */
+    public function findBySystemName($name) {
         return $this->findOneBy(['systemName' => $name]);
     }
 
-    public function findRegisterableRoles() {
+    /**
+     * @return array
+     */
+    public function findAllNames() {
+        return $this->createQueryBuilder('r')
+            ->select('r.name')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return array
+     */
+    public function findAllRegisterable() {
         return $this->findBy(['registerable' => true]);
     }
 
-    public function findRegisterableNowRoles()
+    /**
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function findAllRegisterableNow()
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('registerable', true))
@@ -34,42 +46,28 @@ class RoleRepository extends EntityRepository
         return $this->matching($criteria);
     }
 
-    public function findRegisterableNowRolesOrderedByName()
-    {
-        $registerableNowRoles = $this->findRegisterableNowRoles();
-        $criteria = Criteria::create()
-            ->orderBy(['name' => 'ASC']);
-
-        return $registerableNowRoles->matching($criteria);
-    }
-
-    public function findRolesWithLimitedCapacity() {
+    /**
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function findAllWithLimitedCapacity() {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->neq('capacity', null));
         return $this->matching($criteria);
     }
 
-    public function findRolesWithArrivalDeparture() {
+    /**
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function findAllWithArrivalDeparture() {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('displayArrivalDeparture', true));
         return $this->matching($criteria);
     }
 
-    public function findRolesOrderedByName() {
-        $criteria = Criteria::create()
-            ->orderBy(['name' => 'ASC']);
-        return $this->matching($criteria);
-    }
-
-    public function findRolesWithoutGuests() {
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->neq('systemName', Role::GUEST))
-            ->andWhere(Criteria::expr()->neq('systemName', Role::UNAPPROVED))
-            ->andWhere(Criteria::expr()->neq('systemName', Role::NONREGISTERED));
-
-        return $this->matching($criteria);
-    }
-
+    /**
+     * @param $ids
+     * @return \Doctrine\Common\Collections\Collection
+     */
     public function findRolesByIds($ids) {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids))
@@ -77,10 +75,17 @@ class RoleRepository extends EntityRepository
         return $this->matching($criteria);
     }
 
+    /**
+     * @param $roles
+     * @return array
+     */
     public function findRolesIds($roles) {
         return array_map(function($o) { return $o->getId(); }, $roles->toArray());
     }
 
+    /**
+     * @return array
+     */
     public function getRolesOptions() {
         $roles = $this->createQueryBuilder('r')
             ->select('r.id, r.name')
@@ -95,6 +100,9 @@ class RoleRepository extends EntityRepository
         return $options;
     }
 
+    /**
+     * @return array
+     */
     public function getRolesWithoutGuestsOptions() {
         $roles = $this->createQueryBuilder('r')
             ->select('r.id, r.name')

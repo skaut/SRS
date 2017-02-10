@@ -50,7 +50,7 @@ class SkautIsPresenter extends ConfigurationBasePresenter
 
     public function handleSyncParticipants()
     {
-        $participants = $this->userRepository->findUsersForSync();
+        $participants = $this->userRepository->findAllSyncedWithSkautIS();
 
         $eventId = $this->settingsRepository->getValue('skautis_event_id');
 

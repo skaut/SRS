@@ -30,7 +30,7 @@ class RolesForm extends Nette\Object
 
         $form->addHidden('id');
 
-        $registerableNowRoles = $this->roleRepository->findRegisterableNowRoles();
+        $registerableNowRoles = $this->roleRepository->findAllRegisterableNow();
         $availableRoles = [];
         $availableRolesOptions = [];
 
