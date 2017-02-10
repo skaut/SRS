@@ -154,7 +154,7 @@ class CustomInputsGridControl extends Control
     private function prepareCustomInputTypesOptions() {
         $options = [];
         foreach (CustomInput::$types as $type)
-            $options[$type] = $this->translator->translate('admin.common.custom_' . $type);
+            $options[$type] = 'admin.common.custom_' . $type;
         return $options;
     }
 }

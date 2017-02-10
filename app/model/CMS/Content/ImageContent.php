@@ -5,7 +5,6 @@ namespace App\Model\CMS\Content;
 
 use App\Services\FilesService;
 use Doctrine\ORM\Mapping as ORM;
-use Kdyby\Translation\Translator;
 use Nette\Application\UI\Form;
 use Nette\Utils\Image;
 use Nette\Utils\Random;
@@ -59,22 +58,10 @@ class ImageContent extends Content implements IContent
     private $filesService;
 
     /**
-     * @var Translator
-     */
-    private $translator;
-
-    /**
      * @param FilesService $filesService
      */
     public function injectFilesService(FilesService $filesService) {
         $this->filesService = $filesService;
-    }
-
-    /**
-     * @param Translator $translator
-     */
-    public function injectTranslator(Translator $translator) {
-        $this->translator = $translator;
     }
 
     /**
@@ -176,9 +163,13 @@ class ImageContent extends Content implements IContent
         $formContainer->addSelect('align', 'admin.cms.pages_content_image_align', $this->prepareAlignOptions());
 
         $formContainer->addText('width', 'admin.cms.pages_content_image_width')
+            ->setAttribute('data-toggle', 'tooltip')
+            ->setAttribute('title', $form->getTranslator()->translate('admin.cms.pages_content_image_size_note'))
             ->addCondition(Form::FILLED)->addRule(Form::NUMERIC, 'admin.cms.pages_content_image_width_format');
 
         $formContainer->addText('height', 'admin.cms.pages_content_image_height')
+            ->setAttribute('data-toggle', 'tooltip')
+            ->setAttribute('title', $form->getTranslator()->translate('admin.cms.pages_content_image_size_note'))
             ->addCondition(Form::FILLED)->addRule(Form::NUMERIC, 'admin.cms.pages_content_image_height_format');
 
         $formContainer->setDefaults([
@@ -196,8 +187,10 @@ class ImageContent extends Content implements IContent
         $values = $values[$this->getContentFormName()];
 
         $file = $values['image'];
-        $width = $values['width'];
-        $height = $values['height'];
+        $width = $values['width'] !== '' ? $values['width'] : null;
+        $height = $values['height'] !== '' ? $values['height'] : null;
+
+        $exists = false;
 
         if ($file->size > 0) {
             $path = $this->generatePath($file);
@@ -240,7 +233,7 @@ class ImageContent extends Content implements IContent
     {
         $options = [];
         foreach (ImageContent::$aligns as $align)
-            $options[$align] = $this->translator->translate('common.align.' . $align);
+            $options[$align] = 'common.align.' . $align;
         return $options;
     }
 

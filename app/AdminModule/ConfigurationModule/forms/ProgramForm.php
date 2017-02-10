@@ -4,6 +4,7 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 
 
 use App\AdminModule\Forms\BaseForm;
+use App\Model\Enums\BasicBlockDuration;
 use App\Model\Settings\SettingsRepository;
 use Kdyby\Translation\Translator;
 use Nette;
@@ -35,7 +36,7 @@ class ProgramForm extends Nette\Object
         $renderer->wrappers['control']['container'] = 'div class="col-sm-7 col-xs-7"';
         $renderer->wrappers['label']['container'] = 'div class="col-sm-5 col-xs-5 control-label"';
 
-        $basicBlockDurationOptions = $this->prepareBasicBlockDurationOptions([5, 10, 15, 30, 45, 60, 75, 90, 105, 120]);
+        $basicBlockDurationOptions = $this->prepareBasicBlockDurationOptions();
 
         $form->addSelect('basicBlockDuration', 'admin.configuration.basic_block_duration', $basicBlockDurationOptions)
             ->addRule(Form::FILLED, 'admin.configuration.basic_block_duration_empty');
@@ -79,9 +80,9 @@ class ProgramForm extends Nette\Object
         $this->settingsRepository->setDateTimeValue('register_programs_to', $values['registerProgramsTo']);
     }
 
-    private function prepareBasicBlockDurationOptions($durations) {
+    private function prepareBasicBlockDurationOptions() {
         $options = [];
-        foreach ($durations as $duration)
+        foreach (BasicBlockDuration::$durations as $duration)
             $options[$duration] = $this->translator->translate('admin.common.minutes', null, ['count' => $duration]);
         return $options;
     }

@@ -80,6 +80,7 @@ cms:
     pages_content_image_width_format: "Zadejte číslo."
     pages_content_image_height: "Výška"
     pages_content_image_height_format: "Zadejte číslo."
+    pages_content_image_size_note: "Pokud zadáte jeden rozměr, druhý bude vypočten automaticky. Pokud nezadáte žádný, použije se velikost obrázku."
     pages_content_news_count: "Zobrazovaný počet"
     pages_content_news_count_format: "Zadejte číslo."
     pages_content_text: "Text"

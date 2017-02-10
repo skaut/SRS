@@ -80,7 +80,7 @@ class DocumentsGridControl extends Control
                     ->addHtml(Html::el('a')
                         ->setAttribute('href', '../../../files' . $row->getFile())
                         ->setAttribute('target', '_blank')
-                         ->addText($this->translator->translate('admin.cms.documents_download'))
+                        ->addText($this->translator->translate('admin.cms.documents_download'))
                     );
             });
 

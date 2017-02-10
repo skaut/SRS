@@ -13,7 +13,6 @@ use App\Model\CMS\Content\UsersContent;
 use App\Model\CMS\Document\TagRepository;
 use App\Model\CMS\PageRepository;
 use App\Services\FilesService;
-use Kdyby\Translation\Translator;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
 
@@ -59,12 +58,7 @@ class PageForm extends UI\Control
      */
     private $filesService;
 
-    /**
-     * @var Translator
-     */
-    private $translator;
-
-    public function __construct($id, $area, BaseForm $baseFormFactory, Translator $translator, PageRepository $pageRepository,
+    public function __construct($id, $area, BaseForm $baseFormFactory, PageRepository $pageRepository,
                                 ContentRepository $contentRepository, RoleRepository $roleRepository,
                                 TagRepository $tagRepository, FilesService $filesService)
     {
@@ -72,8 +66,6 @@ class PageForm extends UI\Control
 
         $this->id = $id;
         $this->area = $area;
-
-        $this->translator = $translator;
 
         $this->baseFormFactory = $baseFormFactory;
         $this->pageRepository = $pageRepository;
@@ -101,7 +93,7 @@ class PageForm extends UI\Control
 
         $form->addHidden('id')->setDefaultValue($this->page->getId());
         $form->addHidden('area')->setDefaultValue($this->area);
-        $form->addSelect('type', 'admin.cms.pages_content_type', $this->prepareContentTypesOptions($form->getTranslator()));
+        $form->addSelect('type', 'admin.cms.pages_content_type', $this->prepareContentTypesOptions());
 
         foreach ($this->page->getContents($this->area) as $content) {
             switch (get_class($content)) {
@@ -113,7 +105,6 @@ class PageForm extends UI\Control
                     break;
                 case ImageContent::class:
                     $content->injectFilesService($this->filesService);
-                    $content->injectTranslator($this->translator);
                     break;
                 case UsersContent::class:
                     $content->injectRoleRepository($this->roleRepository);
@@ -180,7 +171,7 @@ class PageForm extends UI\Control
     private function prepareContentTypesOptions() {
         $options = [];
         foreach (Content::$types as $type)
-            $options[$type] = $this->translator->translate('common.content.name.' . $type);
+            $options[$type] = 'common.content.name.' . $type;
         return $options;
     }
 }
