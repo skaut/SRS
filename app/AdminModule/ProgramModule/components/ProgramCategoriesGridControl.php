@@ -111,12 +111,7 @@ class ProgramCategoriesGridControl extends Control
         $p = $this->getPresenter();
         $p->flashMessage('admin.program.categories_saved', 'success');
 
-        if ($p->isAjax()) {
-            $p->redrawControl('flashes');
-            $this['programCategoriesGrid']->reload();
-        } else {
-            $this->redirect('this');
-        }
+        $this->redirect('this');
     }
 
     public function edit($id, $values)
@@ -131,11 +126,7 @@ class ProgramCategoriesGridControl extends Control
         $p = $this->getPresenter();
         $p->flashMessage('admin.program.categories_saved', 'success');
 
-        if ($p->isAjax()) {
-            $p->redrawControl('flashes');
-        } else {
-            $this->redirect('this');
-        }
+        $this->redirect('this');
     }
 
     public function handleDelete($id)
