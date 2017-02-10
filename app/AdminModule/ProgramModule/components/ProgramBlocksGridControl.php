@@ -68,7 +68,7 @@ class ProgramBlocksGridControl extends Control
             ->setSortable('c.name')
             ->setFilterMultiSelect($this->categoryRepository->getCategoriesOptions(), 'c.id');
 
-        $grid->addColumnText('lector', 'admin.program.blocks_lector', 'lector.name')
+        $grid->addColumnText('lector', 'admin.program.blocks_lector', 'lector.displayName')
             ->setSortable('l.displayName')
             ->setFilterMultiSelect($this->userRepository->getLectorsOptions(), 'l.id');
 

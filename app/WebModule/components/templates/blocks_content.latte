@@ -1,1 +1,115 @@
-<h3 n:ifcontent>{$heading}</h3>
+<div class="blocksContent">
+    <h3 n:ifcontent>{$heading}</h3>
+    <div class="row">
+        <div class="col-sm-3 col-xs-3">
+            <h4>{_web.blocks_content.categories}</h4>
+
+            <div class="panel-group" id="accordion">
+                {if !empty($uncategorizedBlocks)}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#uncategorized">
+                                    {_web.blocks_content.uncategorized}
+                                </a>
+                            </h4>
+                        </div>
+
+                        <div id="uncategorized"
+                             class="panel-collapse collapse {if $selectedCategoryId == 'uncategorized'}in{/if}">
+                            <ul class="list-group">
+                                {foreach $uncategorizedBlocks as $block}
+                                    <a href="?blockId={$block->getId()}"
+                                            n:class="list-group-item, $block->getId() == $selectedBlockId ? active">
+                                        {$block->getName()}
+                                    </a>
+                                {/foreach}
+                            </ul>
+                        </div>
+                    </div>
+                {/if}
+
+                {foreach $categories as $category}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a role="button" data-toggle="collapse" data-parent="#accordion"
+                                   href="#category-{$category->getId()}">
+                                    {$category->getName()}
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="category-{$category->getId()}"
+                             class="panel-collapse collapse {if $selectedCategoryId == $category->getId()}in{/if}">
+                            <ul class="list-group">
+                                {foreach $category->getBlocks() as $block}
+                                    <a href="?blockId={$block->getId()}"
+                                            n:class="list-group-item, $block->getId() == $selectedBlockId ? active">
+                                        {$block->getName()}
+                                    </a>
+                                {/foreach}
+                            </ul>
+                        </div>
+                    </div>
+                {/foreach}
+            </div>
+        </div>
+
+        <div class="col-sm-9 col-xs-9">
+            {ifset $selectedBlock}
+                <h4>{$selectedBlock->getName()}</h4>
+                <div class="well">
+                    <ul class="no-bullets no-margin">
+                        {if $selectedBlock->getCategory()}
+                            <li>
+                                <strong>{_web.blocks_content.category}</strong>
+                                {$selectedBlock->getCategory()->getName()}
+                            </li>
+                        {/if}
+
+                        {if $selectedBlock->getLector()}
+                            <li>
+                                <strong>{_web.blocks_content.lector}</strong>
+                                {$selectedBlock->getLector()->getDisplayName()}
+                            </li>
+                        {/if}
+
+                        <li>
+                            <strong>{_web.blocks_content.duration}</strong>
+                            {_web.common.minutes, $selectedBlock->getDuration() * $basicBlockDuration}
+                        </li>
+
+                        <li>
+                            <strong>{_web.blocks_content.capacity}</strong>
+                            {if $selectedBlock->getCapacity() !== null}
+                                {$selectedBlock->getCapacity()}
+                            {else}
+                                {_web.blocks_content.capacity_unlimited}
+                            {/if}
+                        </li>
+                    </ul>
+
+                    <h5>{_web.blocks_content.about_block}</h5>
+                    <p>{$selectedBlock->getPerex()}</p>
+                    <p>{$selectedBlock->getDescription()|noescape}</p>
+
+                    {if $selectedBlock->getLector() && $selectedBlock->getLector()->getAbout()}
+                        <h5>{_web.blocks_content.about_lector}</h5>
+                        <p>{$selectedBlock->getLector()->getAbout()}</p>
+                    {/if}
+                </div>
+            {else}
+                <h4>{_web.blocks_content.all_blocks}</h4>
+                <div class="well">
+                    <ul class="no-bullets no-margin">
+                        {foreach $allBlocks as $block}
+                            <li>
+                                <a href="?blockId={$block->getId()}"><strong>{$block->getName()}</strong></a>
+                            </li>
+                        {/foreach}
+                    </ul>
+                </div>
+            {/ifset}
+        </div>
+    </div>
+</div>

@@ -10,6 +10,8 @@ common:
     page_access_denied: "Na zobrazení této stránky nemáte práva."
     login_required: "Pro přístup musíte být přihlášeni."
 
+    minutes: "%count% minut"
+
 profile:
     name: "Profil"
     title: "Můj profil"
@@ -91,6 +93,16 @@ member:
 application_content:
 
 blocks_content:
+    uncategorized: "Nezařazené"
+    categories: "Kategorie"
+    category: "Kategorie:"
+    lector: "Lektor:"
+    duration: "Délka:"
+    capacity: "Kapacita:"
+    capacity_unlimited: "Neomezená"
+    about_block: "O programovém bloku"
+    about_lector: "O lektorovi"
+    all_blocks: "Všechny programové bloky"
 
 capacities_content:
     list_empty: "Žádné role nemají veřejnou obsazenost."

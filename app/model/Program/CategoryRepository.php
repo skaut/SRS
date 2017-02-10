@@ -15,6 +15,13 @@ class CategoryRepository extends EntityRepository
         return $this->findOneBy(['id' => $id]);
     }
 
+    public function findAllOrderedByName() {
+        return $this->createQueryBuilder('c')
+            ->orderBy('c.name')
+            ->getQuery()
+            ->getResult();
+    }
+
     /**
      * @return array
      */

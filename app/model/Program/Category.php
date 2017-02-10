@@ -28,6 +28,7 @@ class Category
 
     /**
      * @ORM\OneToMany(targetEntity="Block", mappedBy="category", cascade={"persist"})
+     * @ORM\OrderBy({"name" = "ASC"})
      * @var ArrayCollection
      */
     protected $blocks;

@@ -7,9 +7,7 @@ tinymce.init({
     plugins: 'autolink lists link code fullscreen paste',
     toolbar: 'undo redo | bold italic | bullist numlist | link unlink | code | fullscreen',
     paste_auto_cleanup_on_paste: true,
-    relative_urls: false,
-    entities: '160,nbsp',
-    entity_encoding: 'named'
+    relative_urls: false
 });
 
 tinymce.init({
@@ -22,8 +20,6 @@ tinymce.init({
     toolbar: 'undo redo | formatselect | bold italic | bullist numlist | link unlink | code | fullscreen', //TODO omezeni formatu
     paste_auto_cleanup_on_paste: true,
     relative_urls: false,
-    entities: '160,nbsp',
-    entity_encoding: 'named',
     block_formats: 'Paragraph=p;Heading 3=h3;Heading 4=h4;Heading 5=h5;Heading 6=h6;Preformatted=pre'
 });
 

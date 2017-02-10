@@ -38,6 +38,27 @@ class BlockRepository extends EntityRepository
     }
 
     /**
+     * @return array
+     */
+    public function findAllOrderedByName() {
+        return $this->createQueryBuilder('b')
+            ->orderBy('b.name')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return array
+     */
+    public function findAllUncategorizedOrderedByName() {
+        return $this->createQueryBuilder('b')
+            ->where('b.category IS NULL')
+            ->orderBy('b.name')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * @param $id
      * @return array
      */

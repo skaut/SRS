@@ -56,7 +56,7 @@ class RolesForm extends Nette\Object
         foreach ($availableRoles as $role) {
             if ($role->hasLimitedCapacity())
                 $availableRolesOptions[$role->getId()] = $form->getTranslator()->translate('web.profile.role_option', null,
-                    ['role' => $role->getName(), 'occupied' => $role->getApprovedUsers()->count(), 'total' => $role->getCapacity()]
+                    ['role' => $role->getName(), 'occupied' => $this->roleRepository->countApprovedUsersInRole($role), 'total' => $role->getCapacity()]
                 );
             else
                 $availableRolesOptions[$role->getId()] = $role->getName();

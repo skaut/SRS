@@ -166,12 +166,12 @@ class DocumentsGridControl extends Control
             $this->filesService->save($file, $path);
 
             $document->setFile($path);
+            $document->setTimestamp(new \DateTime());
         }
 
         $document->setName($values['name']);
         $document->setTags($this->tagRepository->findTagsByIds($values['tags']));
         $document->setDescription($values['description']);
-        $document->setTimestamp(new \DateTime());
 
         $this->documentRepository->save($document);
 
