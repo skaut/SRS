@@ -68,55 +68,16 @@ class ProfilePresenter extends WebBasePresenter
 
     protected function createComponentPersonalDetailsForm($name)
     {
-        $form = $this->personalDetailsFormFactory->create($this->dbuser);
-
-        $form->setDefaults([
-            'id' => $this->dbuser->getId(),
-            'sex' => $this->dbuser->getSex(),
-            'firstName' => $this->dbuser->getFirstName(),
-            'lastName' => $this->dbuser->getLastName(),
-            'nickName' => $this->dbuser->getNickName(),
-            'birthdate' => $this->dbuser->getBirthdate(),
-            'street' => $this->dbuser->getStreet(),
-            'city' => $this->dbuser->getCity(),
-            'postcode' => $this->dbuser->getPostcode(),
-            'state' => $this->dbuser->getState()
-        ]);
+        $form = $this->personalDetailsFormFactory->create($this->user->id);
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) {
-            $editedUser = $this->userRepository->find($values['id']); //TODO editace do repository
-
-            if (array_key_exists('sex', $values))
-                $editedUser->setSex($values['sex']);
-            if (array_key_exists('firstName', $values))
-                $editedUser->setFirstName($values['firstName']);
-            if (array_key_exists('lastName', $values))
-                $editedUser->setLastName($values['lastName']);
-            if (array_key_exists('nickName', $values))
-                $editedUser->setNickName($values['nickName']);
-            if (array_key_exists('birthdate', $values))
-                $editedUser->setBirthdate($values['birthdate']);
-            $editedUser->setStreet($values['street']);
-            $editedUser->setCity($values['city']);
-            $editedUser->setPostcode($values['postcode']);
-            $editedUser->setState($values['state']);
-
-            $this->userRepository->getEntityManager()->flush();
-
-            try {
-                $this->skautIsService->updatePersonBasic($editedUser->getSkautISPersonId(), $editedUser->getSex(),
-                    $editedUser->getBirthdate(), $editedUser->getFirstName(), $editedUser->getLastName(),
-                    $editedUser->getNickName());
-
-                $this->skautIsService->updatePersonAddress($editedUser->getSkautISPersonId(), $editedUser->getStreet(),
-                    $editedUser->getCity(), $editedUser->getPostcode(), $editedUser->getState());
-            } catch (WsdlException $ex) {
-                $this->presenter->flashMessage('web.profile.personal_details_synchronization_failed', 'danger');
-            }
-
             $this->flashMessage('web.profile.personal_details_update_successful', 'success');
 
-            $this->redirect('this');
+            $this->redirect('this#collapsePersonalDetails');
+        };
+
+        $this->personalDetailsFormFactory->onSkautIsError[] = function () {
+            $this->presenter->flashMessage('web.profile.personal_details_synchronization_failed', 'danger');
         };
 
         return $form;
@@ -124,37 +85,9 @@ class ProfilePresenter extends WebBasePresenter
 
     protected function createComponentRolesForm($name)
     {
-        $form = $this->rolesFormFactory->create($this->dbuser, $this->editRegistrationAllowed);
-
-        $form->setDefaults([
-            'id' => $this->dbuser->getId(),
-            'roles' => $this->roleRepository->findRolesIds($this->dbuser->getRoles())
-        ]);
+        $form = $this->rolesFormFactory->create($this->user->id, $this->editRegistrationAllowed);
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) {
-            $editedUser = $this->userRepository->find($values['id']); //TODO editace do repository
-
-            $selectedRoles = [];
-            foreach ($values['roles'] as $roleId) {
-                $selectedRoles[] = $this->roleRepository->find($roleId);
-            }
-
-            //pokud si uživatel přidá roli, která vyžaduje schválení, stane se neschválený
-            $approved = $editedUser->isApproved();
-            if ($approved) {
-                foreach ($selectedRoles as $role) {
-                    if (!$role->isApprovedAfterRegistration() && !$editedUser->getRoles()->contains($role)) {
-                        $approved = false;
-                        break;
-                    }
-                }
-            }
-
-            $editedUser->updateRoles($selectedRoles);
-            $editedUser->setApproved($approved);
-
-            $this->userRepository->getEntityManager()->flush();
-
             $this->redirect(':Auth:logout');
         };
 
@@ -163,29 +96,12 @@ class ProfilePresenter extends WebBasePresenter
 
     protected function createComponentAdditionalInformationForm($name)
     {
-        $form = $this->additionalInformationFormFactory->create($this->dbuser);
-
-        $form->setDefaults([
-            'id' => $this->dbuser->getId(),
-            'about' => $this->dbuser->getAbout(),
-            'arrival' => $this->dbuser->getArrival(),
-            'departure' => $this->dbuser->getDeparture()
-        ]);
+        $form = $this->additionalInformationFormFactory->create($this->user->id);
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) {
-            $editedUser = $this->userRepository->find($values['id']); //TODO editace do repository
-            $editedUser->setAbout($values['about']);
-
-            if (array_key_exists('arrival', $values))
-                $editedUser->setArrival($values['arrival']);
-            if (array_key_exists('departure', $values))
-                $editedUser->setDeparture($values['departure']);
-
-            $this->userRepository->getEntityManager()->flush();
-
             $this->flashMessage('web.profile.additional_information_update_successfull', 'success');
 
-            $this->redirect('this');
+            $this->redirect('this#collapseAdditionalInformation');
         };
 
         return $form;

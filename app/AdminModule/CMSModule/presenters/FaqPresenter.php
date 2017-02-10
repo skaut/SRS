@@ -37,7 +37,7 @@ class FaqPresenter extends CMSBasePresenter
 
     protected function createComponentFaqForm()
     {
-        $form = $this->faqFormFactory->create($this->getParameter('id'), $this->dbuser);
+        $form = $this->faqFormFactory->create($this->getParameter('id'), $this->user->id);
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) {
             $this->flashMessage('admin.cms.faq_saved', 'success');

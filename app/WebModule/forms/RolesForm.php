@@ -3,29 +3,36 @@
 namespace App\WebModule\Forms;
 
 use App\Model\ACL\RoleRepository;
+use App\Model\User\User;
+use App\Model\User\UserRepository;
 use Nette;
 use Nette\Application\UI\Form;
 
 class RolesForm extends Nette\Object
 {
-    /**
-     * @var BaseForm
-     */
+    /** @var User */
+    private $user;
+
+    /** @var BaseForm */
     private $baseFormFactory;
 
-    /**
-     * @var RoleRepository
-     */
+    /** @var UserRepository */
+    private $userRepository;
+
+    /** @var RoleRepository */
     private $roleRepository;
 
-    public function __construct(BaseForm $baseFormFactory, RoleRepository $roleRepository)
+    public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository, RoleRepository $roleRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
+        $this->userRepository = $userRepository;
         $this->roleRepository = $roleRepository;
     }
 
-    public function create($user, $enabled)
+    public function create($id, $enabled)
     {
+        $this->user = $this->userRepository->findById($id);
+
         $form = $this->baseFormFactory->create();
 
         $form->addHidden('id');
@@ -40,19 +47,19 @@ class RolesForm extends Nette\Object
         }
 
         //pridani roli, ktere uzivatel uz ma
-        foreach ($user->getRoles() as $role) {
+        foreach ($this->user->getRoles() as $role) {
             if (!in_array($role, $availableRoles)) {
                 $availableRoles[] = $role;
             }
         }
 
         foreach ($availableRoles as $role) {
-            if ($role->getCapacity() === null)
-                $availableRolesOptions[$role->getId()] = $role->getName();
-            else
+            if ($role->hasLimitedCapacity())
                 $availableRolesOptions[$role->getId()] = $form->getTranslator()->translate('web.profile.role_option', null,
                     ['role' => $role->getName(), 'occupied' => $role->getApprovedUsers()->count(), 'total' => $role->getCapacity()]
                 );
+            else
+                $availableRolesOptions[$role->getId()] = $role->getName();
         }
 
         asort($availableRolesOptions);
@@ -131,7 +138,34 @@ class RolesForm extends Nette\Object
                 ->setAttribute('title', $form->getTranslator()->translate('web.profile.cancel_registration_disabled'));
         }
 
+        $form->setDefaults([
+            'id' => $id,
+            'roles' => $this->roleRepository->findRolesIds($this->user->getRoles())
+        ]);
+
+        $form->onSuccess[] = [$this, 'processForm'];
+
         return $form;
+    }
+
+    public function processForm(Form $form, \stdClass $values) {
+        $selectedRoles = $this->roleRepository->findRolesByIds($values['roles']);
+
+        //pokud si uživatel přidá roli, která vyžaduje schválení, stane se neschválený
+        $approved = $this->user->isApproved();
+        if ($approved) {
+            foreach ($selectedRoles as $role) {
+                if (!$role->isApprovedAfterRegistration() && !$this->user->getRoles()->contains($role)) {
+                    $approved = false;
+                    break;
+                }
+            }
+        }
+
+        $this->user->updateRoles($selectedRoles);
+        $this->user->setApproved($approved);
+
+        $this->userRepository->save($this->user);
     }
 
     public function validateRolesCapacities($field, $args)

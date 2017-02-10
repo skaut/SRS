@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Model;
+namespace App\Model\Enums;
 
-class Payment
+
+class PaymentType
 {
     const CASH = "cash";
     const BANK = "bank";
 
     public static $types = [
-        CASH,
-        BANK
+        self::CASH,
+        self::BANK
     ];
 }

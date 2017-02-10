@@ -6,6 +6,7 @@ use App\AdminModule\Forms\BaseForm;
 use App\Model\CMS\Faq;
 use App\Model\CMS\FaqRepository;
 use App\Model\User\User;
+use App\Model\User\UserRepository;
 use Nette\Application\UI\Form;
 use Nette;
 
@@ -23,17 +24,20 @@ class FaqForm extends Nette\Object
     /** @var FaqRepository */
     private $faqRepository;
 
+    /** @var UserRepository */
+    private $userRepository;
 
-    public function __construct(BaseForm $baseFormFactory, FaqRepository $faqRepository)
+    public function __construct(BaseForm $baseFormFactory, FaqRepository $faqRepository, UserRepository $userRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->faqRepository = $faqRepository;
+        $this->userRepository = $userRepository;
     }
 
-    public function create($id, $user)
+    public function create($id, $userId)
     {
         $this->faq = $this->faqRepository->findById($id);
-        $this->user = $user;
+        $this->user = $this->userRepository->findById($userId);
 
         $form = $this->baseFormFactory->create();
 

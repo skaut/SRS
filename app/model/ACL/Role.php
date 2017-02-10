@@ -372,6 +372,10 @@ class Role
         $this->capacity = $capacity;
     }
 
+    public function hasLimitedCapacity() {
+        return $this->capacity !== null;
+    }
+
     /**
      * @return int
      */

@@ -48,7 +48,7 @@ class BlocksPresenter extends ProgramBasePresenter
 
     public function renderDefault()
     {
-        $this->template->emptyUserInfo = $this->dbuser->getAbout() == '';
+        $this->template->emptyUserInfo = empty($this->dbuser->getAbout());
     }
 
     public function renderDetail($id)

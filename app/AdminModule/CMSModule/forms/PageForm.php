@@ -161,7 +161,7 @@ class PageForm extends UI\Control
             $page->addContent($content);
         }
 
-        $this->pageRepository->getEntityManager()->flush();
+        $this->pageRepository->save($page);
 
         if ($form['submitAdd']->isSubmittedBy())
             $submitName = 'submitAdd';
