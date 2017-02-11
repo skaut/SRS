@@ -12,7 +12,10 @@ class ImageContentControl extends Control
         $template->setFile(__DIR__ . '/templates/image_content.latte');
 
         $template->heading = $content->getHeading();
-        //$template->text = $content->getText();
+        $template->image = $content->getImage();
+        $template->align = $content->getAlign();
+        $template->width = $content->getWidth();
+        $template->height = $content->getHeight();
 
         $template->render();
     }

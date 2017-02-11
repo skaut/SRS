@@ -1,4 +1,6 @@
-<div class="htmlContent">
-    <h3 n:ifcontent>{$heading}</h3>
-    {$html|noescape}
+<div class="row" n:ifcontent>
+    <div class="col-sm-12" n:ifcontent>
+        <h3 n:ifcontent>{$heading}</h3>
+    </div>
 </div>
+{$html|noescape}

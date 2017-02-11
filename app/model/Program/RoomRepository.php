@@ -2,7 +2,6 @@
 
 namespace App\Model\Program;
 
-use Doctrine\Common\Collections\Criteria;
 use Kdyby\Doctrine\EntityRepository;
 
 class RoomRepository extends EntityRepository

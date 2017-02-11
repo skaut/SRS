@@ -51,9 +51,28 @@ ul.no-margin {
     margin-bottom: 0;
 }
 
+/* image content */
+.image-wrapper {
+    margin: 10px 0;
+}
+
+.image-wrapper.left {
+    float: left;
+    margin-right: 10px;
+}
+
+.image-wrapper.right {
+    float: right;
+    margin-left: 10px;
+}
+
+.image-wrapper.center {
+    margin: 10px auto;
+}
+
 /* odstraneni mezery pod nadpisem u content */
 .page-heading {
-    margin-bottom: -10px; /* TODO bud jen tady, nebo u kazde row */
+    margin-bottom: -10px;
 }
 
 /* tabulka bez ramecku */

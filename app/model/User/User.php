@@ -922,7 +922,7 @@ class User
         if($this->roles instanceof PersistentCollection && $this->roles->isInitialized())
             $criteria->where(Criteria::expr()->eq('displayArrivalDeparture', true));
         else
-            $criteria->where(Criteria::expr()->eq('display_arrival_departure', true));  //kvuli problemu s lazyloadingem u camelcase nazvu
+            $criteria->where(Criteria::expr()->eq('display_arrival_departure', true));  //problem s lazyloadingem u camelcase nazvu
 
         return !$this->roles->matching($criteria)->isEmpty();
     }

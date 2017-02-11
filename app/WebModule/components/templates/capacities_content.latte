@@ -1,16 +1,25 @@
-<div class="capacitiesContent">
-    <h3 n:ifcontent>{$heading}</h3>
-    {if empty($roles)}
-        {_web.capacities_content.list_empty}
-    {else}
-        {foreach $roles as $role}
-            <strong>{$role['name']}</strong><br>
-            {if  $role['capacity'] !== null}
-                {_web.capacities_content.occupied_limited, [occupied => $role['usersCount'], total => $role['capacity']]}
+<div class="capacities-content">
+    <div class="row">
+        <div class="col-sm-12">
+            <h3 n:ifcontent>{$heading}</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            {if empty($roles)}
+                {_web.capacities_content.list_empty}
             {else}
-                {_web.capacities_content.occupied_unlimited, [occupied => $role['usersCount']]}
+                {foreach $roles as $role}
+                    <strong>{$role['name']}</strong><br>
+                    {if  $role['capacity'] !== null}
+                        {_web.capacities_content.occupied_limited, [occupied => $role['usersCount'], total => $role['capacity']]}
+                    {else}
+                        {_web.capacities_content.occupied_unlimited, [occupied => $role['usersCount']]}
+                    {/if}
+                    {sep}<br><br>{/sep}
+                {/foreach}
             {/if}
-            {sep}<br><br>{/sep}
-        {/foreach}
-    {/if}
+        </div>
+    </div>
 </div>

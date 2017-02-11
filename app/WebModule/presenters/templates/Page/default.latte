@@ -8,22 +8,14 @@
     </div>
 
     {foreach $page->getContents('main') as $content}
-        <div class="row">
-            <div class="col-sm-12">
-                {control $content->getComponentName(), $content}
-            </div>
-        </div>
+        {control $content->getComponentName(), $content}
     {/foreach}
 {/block}
 
 {if $sidebar}
     {block sidebar}
         {foreach $page->getContents('sidebar') as $content}
-            <div class="row">
-                <div class="col-sm-12">
-                    {control $content->getComponentName(), $content}
-                </div>
-            </div>
+            {control $content->getComponentName(), $content}
         {/foreach}
     {/block}
 {/if}

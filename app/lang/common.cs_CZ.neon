@@ -80,7 +80,7 @@ area:
 align:
     left: "Vlevo"
     right: "Vpravo"
-    center: "Uprostřed (bez obtékání)"
+    center: "Střed (bez obtékání)"
 
 payment:
     cash: "Hotovost"
