@@ -3,6 +3,7 @@ common:
     heading: "SRS: %seminar_name%"
     logged_in_roles: "Role:"
     logout: "Odhlásit"
+    profile: "Profil"
 
     add: "Přidat"
     edit: "Upravit"
