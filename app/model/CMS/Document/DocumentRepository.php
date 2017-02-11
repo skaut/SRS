@@ -17,6 +17,20 @@ class DocumentRepository extends EntityRepository
     }
 
     /**
+     * @param $tags
+     * @return Document[]
+     */
+    public function findAllByTagsOrderedByName($tags) {
+        return $this->createQueryBuilder('d')
+            ->select('d')
+            ->join('d.tags', 't')
+            ->where('t IN (:ids)')->setParameter('ids', $tags)
+            ->orderBy('d.name')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * @param Document $document
      */
     public function save(Document $document)
