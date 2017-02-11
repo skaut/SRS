@@ -62,6 +62,8 @@ class BlockForm extends Nette\Object
             ->addRule(Form::FILLED, 'admin.program.blocks_duration_empty');
 
         $form->addText('capacity', 'admin.program.blocks_capacity')
+            ->setAttribute('data-toggle', 'tooltip')
+            ->setAttribute('title', $form->getTranslator()->translate('admin.program.blocks_capacity_note'))
             ->addCondition(Form::FILLED)->addRule(Form::NUMERIC, 'admin.program.blocks_capacity_format');
 
         $form->addCheckbox('mandatory', 'admin.program.blocks_mandatory_form');

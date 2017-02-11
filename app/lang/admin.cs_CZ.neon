@@ -84,6 +84,7 @@ cms:
     pages_content_image_size_note: "Pokud zadáte jeden rozměr, druhý bude vypočten automaticky. Pokud nezadáte žádný, použije se velikost obrázku."
     pages_content_news_count: "Zobrazovaný počet"
     pages_content_news_count_format: "Zadejte číslo."
+    pages_content_news_count_note: "Pokud necháte počet prázdný, zobrazí se všechny aktuality."
     pages_content_text: "Text"
     pages_content_users_roles: "Zobrazované role"
 
@@ -168,6 +169,7 @@ program:
     blocks_duration_empty: "Vyberte délku."
     blocks_capacity: "Kapacita"
     blocks_capacity_format: "Zadejte číslo nebo nechte pole prázdné."
+    blocks_capacity_note: "Pokud chcete kapacitu neomezenou, nechte pole prázdné."
     blocks_capacity_unlimited: "Neomezená"
     blocks_mandatory: "Povinnost"
     blocks_mandatory_mandatory: "Povinný"

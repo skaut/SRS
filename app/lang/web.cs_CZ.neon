@@ -163,17 +163,8 @@ faq_content:
     add_question: "Položit dotaz."
     add_question_successful: "Otázka byla úspěšně přidána. Dle uvážení organizátorů bude odpověď zveřejněna."
 
-news_content:
-
 programs_content:
+#    unapprovedLoginPrograms: "Vaše role nemá právo zapisovat si programy"
 
 users_content:
     list_empty: "Žádný uživatel k zobrazení."
-
-
-
-
-#programBox:
-#    unapprovedLoginPrograms: "Vaše role nemá právo zapisovat si programy"
-#
-#
