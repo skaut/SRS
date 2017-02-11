@@ -153,6 +153,15 @@ capacities_content:
 document_content:
 
 faq_content:
+    login_required_begin: "Pro položení otázky se musíte"
+    login_required_link: "přihlásit přes skautIS"
+    login_required_end: "."
+    add_question_heading: "Nenašli jste odpověď na svoji otázku? Zeptejte se."
+
+    question: "Otázka"
+    question_empty: "Zadejte otázku."
+    add_question: "Položit dotaz."
+    add_question_successful: "Otázka byla úspěšně přidána. Dle uvážení organizátorů bude odpověď zveřejněna."
 
 news_content:
 

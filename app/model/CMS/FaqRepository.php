@@ -39,6 +39,14 @@ class FaqRepository extends EntityRepository
     }
 
     /**
+     * @return array
+     */
+    public function findPublishedOrderedByPosition()
+    {
+        return $this->findBy(['public' => true], ['position' => 'ASC']);
+    }
+
+    /**
      * @param Faq $faq
      */
     public function save(Faq $faq)

@@ -42,7 +42,7 @@ class ApplicationContentControl extends Control
 
         $template->heading = $content->getHeading();
 
-        $this->template->backlink = $this->getPresenter()->getHttpRequest()->getUrl()->getPath();
+        $template->backlink = $this->getPresenter()->getHttpRequest()->getUrl()->getPath();
 
         $user = $this->getPresenter()->user;
         $template->guestRole = $user->isInRole($this->roleRepository->findBySystemName(Role::GUEST)->getName());
@@ -61,7 +61,7 @@ class ApplicationContentControl extends Control
         $form = $this->applicationFormFactory->create($this->getPresenter()->user->id);
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) {
-            $this->getPresenter()->flashMessage('web.application_content.register_successful', 'success', null, null, ['class' => 'alert-forever']);
+            $this->getPresenter()->flashMessage('web.application_content.register_successful', 'success');
 
             $this->authenticator->updateRoles($this->getPresenter()->user);
 
