@@ -7,7 +7,7 @@ use Kdyby\Doctrine\EntityRepository;
 class ResourceRepository extends EntityRepository
 {
     /**
-     * @return array
+     * @return string[]
      */
     public function findAllNames() {
         return $this->createQueryBuilder('r')

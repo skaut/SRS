@@ -28,6 +28,19 @@ class NewsRepository extends EntityRepository
     }
 
     /**
+     * @param $maxCount
+     * @return News[]
+     */
+    public function findPublishedOrderedByDate($maxCount) {
+        return $this->createQueryBuilder('n')
+            ->where($this->createQueryBuilder()->expr()->lte('n.published', 'CURRENT_TIMESTAMP()'))
+            ->orderBy('n.published', 'DESC')
+            ->setMaxResults($maxCount)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * @param News $news
      */
     public function save(News $news)

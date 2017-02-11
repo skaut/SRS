@@ -7,7 +7,7 @@ use Kdyby\Doctrine\EntityRepository;
 class PermissionRepository extends EntityRepository
 {
     /**
-     * @return array
+     * @return string[]
      */
     public function findAllNames() {
         return $this->createQueryBuilder('p')
