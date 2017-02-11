@@ -7,6 +7,37 @@
 
     <div class="row">
         <div class="col-sm-12">
+            {if $guestRole}
+                <div class="alert alert-warning alert-forever">
+                    {_web.application_content.login_required_begin}
+                    <a href="{plink :Auth:login, 'backlink' => $backlink}">{_web.application_content.login_required_link}</a>{_web.application_content.login_required_end}
+                </div>
+            {elseif $nonregisteredRole}
+                <script>
+                    Nette.validators.AppWebModuleFormsApplicationForm_toggleArrivalDeparture = function (elem, arg, value) {
+                        var i;
+                        for (i = 0; i < value.length; i++) {
+                            if (jQuery.inArray(value[i], arg) != -1)
+                                return true;
+                        }
+                        return false;
+                    };
+                </script>
+
+                <div class="well">
+                    {control applicationForm}
+                </div>
+            {else}
+                <div class="alert alert-info alert-forever">
+                    {_web.application_content.registered_roles_begin}
+                    {foreach $user->getRoles() as $role}{$role->getName()}{sep}, {/sep}{/foreach}{_web.application_content.registered_roles_end}
+                </div>
+                {if $unapprovedRole}
+                    <div class="alert alert-warning alert-forever">{_web.application_content.unapproved_registration}</div>
+                {else}
+                    <div class="alert alert-info alert-forever">{_web.application_content.approved_registration}</div>
+                {/if}
+            {/if}
         </div>
     </div>
 </div>

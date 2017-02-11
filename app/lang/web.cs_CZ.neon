@@ -12,6 +12,8 @@ common:
 
     minutes: "%count% minut"
 
+    role_option: "%role% (obsazeno %occupied% z %total%)"
+
 profile:
     name: "Profil"
     title: "Můj profil"
@@ -19,28 +21,28 @@ profile:
 
     seminar_group: "Seminář"
     attendance: "Účast na semináři"
-    nonregistered: "neúčastníte se"
+    nonregistered: "Neúčastníte se"
     unapproved: "Vaše registrace zatím nebyla potvrzena"
     cancel_registration: "Odhlásit se ze semináře"
     cancel_registration_confirm: "Opravdu se chcete odhlásit ze semináře?"
     cancel_registration_disabled: "Odhlášení ze semináře již není možné nebo nejste na seminář přihlášeni."
-    change_roles_confirm: "Po změně role budete automaticky odhlášeni. Pokud nová role vyžaduje schválení organizátora, budete Vám nastavena role \"Neschválený\". Opravdu chcete pokračovat?"
+    change_roles_confirm: "Pokud nová role vyžaduje schválení organizátora, budete Vám nastavena role \"Neschválený\". Opravdu chcete pokračovat?"
     change_roles_disabled: "Změna rolí již není možná nebo nejste na seminář přihlášeni."
     variable_symbol: "Variabilní symbol"
     account_number: "Uhraďte na účet"
     fee: "Cena semináře"
     fee_paid_date: "Poplatek uhrazen dne"
     fee_not_paid: "poplatek neuhrazen"
-    total: "celkem:"
+    total: "Celkem:"
     print_proof: "vytisknout potvrzení"
     roles: "Role"
-    role_option: "%role% (obsazeno %occupied% z %total%)"
     required_roles_not_selected: "K roli %role% musíte mít vybrané role: %requiredRoles%."
     incompatible_roles_selected: "Není možné kombinovat roli %role% s rolemi: %incompatibleRoles%."
-    no_role_selected: "Musí být vybrána alespoň jedna role."
+    roles_empty: "Musí být vybrána alespoň jedna role."
     role_is_not_registerable: "Registrace do některé z rolí již není možná."
     capacity_occupied: "Všechna místa v některé roli jsou obsazena."
     update_roles: "Upravit role"
+    roles_update_successful: "Role byly úspěšně upraveny."
 
     personal_details_group: "Osobní údaje"
     sex: "Pohlaví"
@@ -91,6 +93,45 @@ member:
     text_note: "Poznámka: V žádném případě nikdy nikomu nedávejte své heslo."
 
 application_content:
+    login_required_begin: "Pro přihlášení na seminář se musíte nejprve"
+    login_required_link: "přihlásit přes skautIS"
+    login_required_end: "."
+    registered_roles_begin: "Na seminář jste se již přihlásili jako"
+    registered_roles_end: "."
+    unapproved_registration: "Vaše přihláška zatím nebyla potvrzena."
+    approved_registration: "Vaše přihláška již byla potvrzena."
+
+    sex: "Pohlaví"
+    firstname: "Jméno"
+    firstname_empty: "Zadejte jméno."
+    lastname: "Příjmení"
+    lastname_empty: "Zadejte příjmení."
+    nickname: "Přezdívka"
+    birthdate: "Datum narození"
+    birthdate_empty: "Zadejte datum narození."
+    street: "Ulice"
+    street_empty: "Zadejte ulici."
+    street_format: "Zadejte ulici ve správném formátu."
+    city: "Město"
+    city_empty: "Zadejte město."
+    postcode: "PSČ"
+    postcode_empty: "Zadejte PSČ."
+    postcode_format: "Zadejte PSČ ve správném formátu."
+    state: "Stát"
+    state_empty: "Zadejte stát."
+    roles: "Role"
+    required_roles_not_selected: "K roli %role% musíte mít vybrané role: %requiredRoles%."
+    incompatible_roles_selected: "Není možné kombinovat roli %role% s rolemi: %incompatibleRoles%."
+    roles_empty: "Musí být vybrána alespoň jedna role."
+    role_is_not_registerable: "Registrace do některé z rolí již není možná."
+    capacity_occupied: "Všechna místa v některé roli jsou obsazena."
+    arrival: "Příjezd"
+    departure: "Odjezd"
+    agreement: "Souhlasím, že uvedené údaje budou poskytnuty lektorům pro účely semináře."
+    agreement_empty: "Musíte souhlasit s poskytnutím údajů."
+    register: "Přihlásit se"
+    register_synchronization_failed: "Synchronizace se skautIS se nepodařila. Zkuste se znovu přihlásit a upravit údaje v profilu."
+    register_successful: "Přihláška byla úspěšně odeslána."
 
 blocks_content:
     uncategorized: "Nezařazené"
@@ -123,27 +164,7 @@ users_content:
 
 
 
-#attendeeBox:
-#    loginRequest: "Pro přihlášení na seminář se musíte nejprve"
-#    loginRequestLink: "přihlásit přes skautIS"
-#    registeredRoles: "Na seminář jste se již přihlásili jako"
-#    unapprovedRegistration: "Vaše registrace zatím nebyla potvrzena."
-#    approvedRegistration: "Vaše registrace byla již potvrzena."
-#
-#
 #programBox:
 #    unapprovedLoginPrograms: "Vaše role nemá právo zapisovat si programy"
 #
 #
-#attendeeForm:
-#    rolesLabel: "Přihlásit jako"
-#
-#
-#rolesForm:
-#    rolesLabel: "Role "
-#    submit: "Upravit role"
-#
-#
-#messages:
-
-#    rolesChanged: "Role byly upraveny, přihlaste se prosím znovu."

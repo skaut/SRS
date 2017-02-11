@@ -95,14 +95,6 @@ class Permission
     }
 
     /**
-     * @param ArrayCollection $roles
-     */
-    public function setRoles($roles)
-    {
-        $this->roles = $roles;
-    }
-
-    /**
      * @return ArrayCollection
      */
     public function getResource()

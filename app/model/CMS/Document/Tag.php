@@ -51,14 +51,6 @@ class Tag
     }
 
     /**
-     * @param ArrayCollection $documents
-     */
-    public function setDocuments($documents)
-    {
-        $this->documents = $documents;
-    }
-
-    /**
      * @return string
      */
     public function getName()

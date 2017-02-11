@@ -78,13 +78,14 @@ class Program
         return $this->attendees;
     }
 
-    /**
-     * @param ArrayCollection $attendees
-     */
-    public function setAttendees($attendees)
-    {
-        $this->attendees = $attendees;
-    }
+// TODO nefunguje
+//    /**
+//     * @param ArrayCollection $attendees
+//     */
+//    public function setAttendees($attendees)
+//    {
+//        $this->attendees = $attendees;
+//    }
 
     public function getAttendeesCount() {
         return $this->attendees->count();

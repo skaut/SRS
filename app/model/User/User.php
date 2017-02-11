@@ -6,6 +6,7 @@ use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\ACL\Role;
 use App\Model\Program\Block;
+use App\Model\User\CustomInputValue\CustomInputValue;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
@@ -446,7 +447,7 @@ class User
     public function setFirstName($firstName)
     {
         $this->firstName = $firstName;
-        $this->generateDisplayName();
+        $this->updateDisplayName();
     }
 
     /**
@@ -463,7 +464,7 @@ class User
     public function setLastName($lastName)
     {
         $this->lastName = $lastName;
-        $this->generateDisplayName();
+        $this->updateDisplayName();
     }
 
     /**
@@ -480,7 +481,7 @@ class User
     public function setNickName($nickName)
     {
         $this->nickName = $nickName;
-        $this->generateDisplayName();
+        $this->updateDisplayName();
     }
 
     /**
@@ -491,7 +492,7 @@ class User
         return $this->displayName;
     }
 
-    private function generateDisplayName()
+    private function updateDisplayName()
     {
         $this->displayName = $this->lastName . " " . $this->firstName;
         if ($this->nickName != null)
@@ -892,6 +893,11 @@ class User
     public function setCustomInputValues($customInputValues)
     {
         $this->customInputValues = $customInputValues;
+    }
+
+    public function addCustomInputValue(CustomInputValue $customInputValue) {
+        if (!$this->customInputValues->contains($customInputValue))
+            $this->customInputValues->add($customInputValue);
     }
 
     /**

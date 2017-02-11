@@ -39,6 +39,8 @@ class DocumentsGridControl extends Control
 
     public function __construct(Translator $translator, DocumentRepository $documentRepository, TagRepository $tagRepository, FilesService $filesService)
     {
+        parent::__construct();
+
         $this->translator = $translator;
         $this->documentRepository = $documentRepository;
         $this->tagRepository = $tagRepository;

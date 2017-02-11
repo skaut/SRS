@@ -21,6 +21,7 @@ class Role
     const LECTOR = 'lector';
     const ORGANIZER = 'organizer';
     const ADMIN = 'admin';
+    const TEST = 'test';
 
     public static $roles = [
         self::GUEST,
@@ -225,14 +226,6 @@ class Role
     }
 
     /**
-     * @param ArrayCollection $users
-     */
-    public function setUsers($users)
-    {
-        $this->users = $users;
-    }
-
-    /**
      * @return ArrayCollection
      */
     public function getPermissions()
@@ -261,13 +254,14 @@ class Role
         return $this->pages;
     }
 
-    /**
-     * @param ArrayCollection $pages
-     */
-    public function setPages($pages)
-    {
-        $this->pages = $pages;
-    }
+// TODO nefunguje
+//    /**
+//     * @param ArrayCollection $pages
+//     */
+//    public function setPages($pages)
+//    {
+//        $this->pages = $pages;
+//    }
 
     /**
      * @return bool
@@ -299,6 +293,15 @@ class Role
     public function setRegisterable($registerable)
     {
         $this->registerable = $registerable;
+    }
+
+    public function isRegisterableNow() {
+        $now = new \DateTime();
+        if ($this->registerable &&
+            ($this->registerableFrom == null || $this->registerableFrom <= $now) &&
+            ($this->registerableTo == null || $this->registerableTo >= $now))
+            return true;
+        return false;
     }
 
     /**
@@ -441,13 +444,14 @@ class Role
         return $this->requiredByRole;
     }
 
-    /**
-     * @param ArrayCollection $requiredByRole
-     */
-    public function setRequiredByRole($requiredByRole)
-    {
-        $this->requiredByRole = $requiredByRole;
-    }
+// TODO nefunguje
+//    /**
+//     * @param ArrayCollection $requiredByRole
+//     */
+//    public function setRequiredByRole($requiredByRole)
+//    {
+//        $this->requiredByRole = $requiredByRole;
+//    }
 
     /**
      * @return ArrayCollection
@@ -465,6 +469,25 @@ class Role
         $this->requiredRoles = $requiredRoles;
     }
 
+    public function getRequiredRolesTransitive() {
+        $allRequiredRoles = [];
+        foreach ($this->requiredRoles as $requiredRole) {
+            $this->getRequiredRolesTransitiveRec($allRequiredRoles, $requiredRole);
+        }
+        return $allRequiredRoles;
+    }
+
+    private function getRequiredRolesTransitiveRec(&$allRequiredRoles, $role) {
+        if ($this == $role || in_array($role, $allRequiredRoles))
+            return;
+
+        $allRequiredRoles[] = $role;
+
+        foreach ($role->requiredRoles as $requiredRole) {
+            $this->getRequiredRolesTransitiveRec($allRequiredRoles, $requiredRole);
+        }
+    }
+
     /**
      * @return ArrayCollection
      */
@@ -473,11 +496,12 @@ class Role
         return $this->registerableCategories;
     }
 
-    /**
-     * @param ArrayCollection $registerableCategories
-     */
-    public function setRegisterableCategories($registerableCategories)
-    {
-        $this->registerableCategories = $registerableCategories;
-    }
+// TODO nefunguje
+//    /**
+//     * @param ArrayCollection $registerableCategories
+//     */
+//    public function setRegisterableCategories($registerableCategories)
+//    {
+//        $this->registerableCategories = $registerableCategories;
+//    }
 }

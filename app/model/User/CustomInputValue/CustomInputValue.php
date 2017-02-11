@@ -2,6 +2,7 @@
 
 namespace App\Model\User\CustomInputValue;
 
+use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\User\User;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
@@ -31,4 +32,44 @@ abstract class CustomInputValue
      * @var User
      */
     protected $user;
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return CustomInput
+     */
+    public function getInput()
+    {
+        return $this->input;
+    }
+
+    /**
+     * @param CustomInput $input
+     */
+    public function setInput($input)
+    {
+        $this->input = $input;
+    }
+
+    /**
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+    }
 }

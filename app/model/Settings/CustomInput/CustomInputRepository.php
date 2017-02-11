@@ -16,6 +16,16 @@ class CustomInputRepository extends EntityRepository
     }
 
     /**
+     * @return CustomInput[]
+     */
+    public function findAllOrderedByPosition() {
+        return $this->createQueryBuilder('i')
+            ->orderBy('i.position')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * @return int
      */
     public function findLastPosition()

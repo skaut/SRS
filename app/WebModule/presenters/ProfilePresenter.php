@@ -4,6 +4,7 @@ namespace App\WebModule\Presenters;
 
 
 use App\Model\ACL\Role;
+use App\Services\Authenticator;
 use App\WebModule\Forms\AdditionalInformationForm;
 use App\WebModule\Forms\AdditionalInformationFormFactory;
 use App\WebModule\Forms\PersonalDetailsForm;
@@ -33,6 +34,12 @@ class ProfilePresenter extends WebBasePresenter
      */
     public $additionalInformationFormFactory;
 
+    /**
+     * @var Authenticator
+     * @inject
+     */
+    public $authenticator;
+
     private $editRegistrationAllowed;
 
     public function startup()
@@ -54,13 +61,6 @@ class ProfilePresenter extends WebBasePresenter
         $this->template->basicBlockDuration = $this->settingsRepository->getValue('basic_block_duration');
     }
 
-    public function handleCancelRegistration() {
-        if ($this->editRegistrationAllowed) {
-            $this->userRepository->remove($this->dbuser);
-            $this->presenter->redirect(':Auth:logout');
-        }
-    }
-
     public function handleExportSchedule()
     {
         //TODO export harmonogramu
@@ -77,7 +77,7 @@ class ProfilePresenter extends WebBasePresenter
         };
 
         $this->personalDetailsFormFactory->onSkautIsError[] = function () {
-            $this->presenter->flashMessage('web.profile.personal_details_synchronization_failed', 'danger');
+            $this->flashMessage('web.profile.personal_details_synchronization_failed', 'danger');
         };
 
         return $form;
@@ -88,7 +88,16 @@ class ProfilePresenter extends WebBasePresenter
         $form = $this->rolesFormFactory->create($this->user->id, $this->editRegistrationAllowed);
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) {
-            $this->redirect(':Auth:logout');
+            if ($form['submit']->isSubmittedBy()) {
+                $this->flashMessage('web.profile.roles_update_successful', 'success');
+
+                $this->authenticator->updateRoles($this->user);
+
+                $this->redirect('this#collapseSeminar');
+            }
+            elseif ($form['cancelRegistration']->isSubmittedBy()) {
+                $this->redirect(':Auth:logout');
+            }
         };
 
         return $form;
@@ -106,6 +115,4 @@ class ProfilePresenter extends WebBasePresenter
 
         return $form;
     }
-
-
 }

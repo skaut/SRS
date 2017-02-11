@@ -82,9 +82,11 @@ services:
     - App\WebModule\Components\ITextContentControlFactory
     - App\WebModule\Components\IUsersContentControlFactory
     - App\WebModule\Forms\BaseForm
+    - App\WebModule\Forms\AdditionalInformationForm
+    - App\WebModule\Forms\ApplicationForm
+    - App\WebModule\Forms\FaqForm
     - App\WebModule\Forms\PersonalDetailsForm
     - App\WebModule\Forms\RolesForm
-    - App\WebModule\Forms\AdditionalInformationForm
     - App\AdminModule\Forms\BaseForm
     - App\AdminModule\CMSModule\Forms\FaqForm
     pageFormFactory:

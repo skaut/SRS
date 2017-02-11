@@ -8,13 +8,21 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="custom_text_value")
  */
-class CustomTextValue extends CustomInputValue
+class CustomTextValue extends CustomInputValue implements ICustomInputValue
 {
-    protected $type = CustomInputValue::TEXT;
-
     /**
      * @ORM\Column(type="string")
      * @var string
      */
     protected $value;
+
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    public function setValue($value)
+    {
+        $this->value = $value;
+    }
 }

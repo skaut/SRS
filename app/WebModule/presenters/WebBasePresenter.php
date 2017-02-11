@@ -11,6 +11,8 @@ use App\Presenters\BasePresenter;
 use App\Services\Authorizator;
 use App\Services\SkautIsService;
 use Doctrine\DBAL\Exception\TableNotFoundException;
+use WebLoader\Nette\CssLoader;
+use WebLoader\Nette\JavaScriptLoader;
 
 abstract class WebBasePresenter extends BasePresenter
 {

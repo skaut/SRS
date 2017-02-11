@@ -246,7 +246,7 @@ configuration:
     seminar_email: "E-mail pro mailing"
     seminar_email_empty: "Zadejte e-mail."
     seminar_email_format: "Zadejte e-mail ve správném formátu."
-    place_description: "Popis cesty" #todo
+    place_description: "Popis cesty" #TODO popis cesty
 
     program_heading: "Program"
     basic_block_duration: "Základní délka programového bloku"

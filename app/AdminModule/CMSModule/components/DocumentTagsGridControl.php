@@ -24,6 +24,8 @@ class DocumentTagsGridControl extends Control
 
     public function __construct(Translator $translator, TagRepository $tagRepository)
     {
+        parent::__construct();
+
         $this->translator = $translator;
         $this->tagRepository = $tagRepository;
     }

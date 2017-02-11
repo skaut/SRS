@@ -31,6 +31,8 @@ class PagesGridControl extends Control
 
     public function __construct(Translator $translator, PageRepository $pageRepository, RoleRepository $roleRepository)
     {
+        parent::__construct();
+
         $this->translator = $translator;
         $this->pageRepository = $pageRepository;
         $this->roleRepository = $roleRepository;

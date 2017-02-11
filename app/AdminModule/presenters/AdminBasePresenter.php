@@ -7,6 +7,7 @@ use App\Model\ACL\Resource;
 use App\Model\ACL\ResourceRepository;
 use App\Model\ACL\RoleRepository;
 use App\Model\Settings\SettingsRepository;
+use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Presenters\BasePresenter;
 use App\Services\Authorizator;
