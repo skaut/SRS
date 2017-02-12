@@ -53,6 +53,7 @@ services:
     - App\Services\MailService
     - App\Services\PrintService
     - App\Services\ExportService
+    - App\ApiModule\Services\ScheduleService
     - App\Model\ACL\PermissionRepository
     - App\Model\ACL\ResourceRepository
     - App\Model\ACL\RoleRepository

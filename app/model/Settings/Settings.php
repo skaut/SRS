@@ -10,6 +10,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Settings
 {
+    const BASIC_BLOCK_DURATION = 'basic_block_duration';
+    const SEMINAR_FROM_DATE = 'seminar_from_date';
+    const SEMINAR_TO_DATE = 'seminar_to_date';
+    const IS_ALLOWED_MODIFY_SCHEDULE = 'is_allowed_modify_schedule';
+
     /**
      * @ORM\Column(type="string", unique=true)
      * @ORM\Id

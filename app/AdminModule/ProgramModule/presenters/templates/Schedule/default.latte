@@ -1,8 +1,12 @@
 {block head}
+    <script n:syntax="double">
+        var basePath = {{$basePath}}
+        var flashMessageShowInterval = 6000;
+    </script>
+
     {control css 'libs/fullcalendar/fullcalendar.min.css'}
-    {control js 'libs/angular/angular.min.js', 'libs/fullcalendar/fullcalendar.min.js',
-                'libs/fullcalendar/locale-all.js', 'common/schedule/app.js', 'common/schedule/directives.js',
-                'common/schedule/adminControllers.js', 'common/schedule/helpers.js'}
+    {control js 'libs/angular/angular.min.js', 'libs/fullcalendar/fullcalendar.min.js', 'common/schedule/app.js',
+                'common/schedule/directives.js', 'common/schedule/adminControllers.js', 'common/schedule/helpers.js'}
 {/block}
 
 {block main}
@@ -22,41 +26,32 @@
             <div id="blockModal" ng-model="event" class="modal hide fade">
                 <div class="modal-header">
                     <a class="close" data-dismiss="modal">×</a>
+
                     <h3>Nastavení programu</h3>
                 </div>
                 <div class="modal-body">
                     <ng-form>
-                        <span class="nullable">
-                            <label>Přiřazený programový blok:</label>
-                            <select ng-model="option" ng-options="value.name for (key , value) in options">
-                                <option value="">-- nepřiřazeno --</option>
-                            </select>
-                        </span>
-
-                        <br>
-
-                        <a ng-href="../block/detail/{{ option.id }}" ng-show="option" target="_blank">
-                            Zobrazit detail bloku
-                        </a>
-
-                        <br>
-
+            <span class="nullable">
+            <label>Přiřazený programový blok:</label>
+            <select ng-model="option" ng-options="value.name for (key , value) in options">
+                <option value="">-- nepřiřazeno --</option>
+            </select> </span><br/>
+                        <a ng-href="../block/detail/{{ option.id }}" ng-show="option" target="_blank">Zobrazit detail
+                            bloku</a><br/>
                         <input id="mandatory" type="checkbox" name="event.mandatory" ng-model="event.mandatory"
                                class="pull-left">
                         <label for="mandatory" class="pull-left" style="margin-left:5px;"> Je program povinný?</label>
                     </ng-form>
+
                 </div>
                 <div class="modal-footer">
-                    <button ng-click="update(event, option)" class="btn btn-success pull-left">
-                        Uložit program
-                    </button>
-                    <button ng-model="event" ng-click="remove(event)" class="btn btn-danger pull-right">
-                        Smazat program
-                    </button>
+                    <button ng-click="update(event, option)" class="btn btn-success pull-left">Uložit program</button>
+                    <button ng-model="event" ng-click="remove(event)" class="btn btn-danger pull-right">Smazat program</button>
                 </div>
             </div>
 
             <div id="calendar"></div>
+
         </div>
     </div>
 {/block}
@@ -81,8 +76,7 @@
         <hr>
 
         <div class="blocks-container">
-            <div class="block" ng-repeat="block in blocks | filter:query | showUnassigned: applyUnassigned"
-                 external-block="{{ block.id }}">
+            <div class="block" ng-repeat="block in blocks | filter:query | showUnassigned: applyUnassigned" external-block="{{ block.id }}">
                 <h6>{{ block.name }}</h6>
                 <ul class="no-margin">
                     <li><span>Lektor:</span> {{ block.lector }}</li>
@@ -96,4 +90,3 @@
     </div>
 {/block}
 
-{block container_attributes}ng-app="calendar" ng-controller="AdminCalendarCtrl"{/block}

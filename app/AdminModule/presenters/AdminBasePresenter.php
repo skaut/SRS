@@ -122,5 +122,7 @@ abstract class AdminBasePresenter extends BasePresenter
         $this->template->sidebarVisible = false;
 
         $this->template->settings = $this->settingsRepository;
+
+        $this->template->containerAttributes = '';
     }
 }

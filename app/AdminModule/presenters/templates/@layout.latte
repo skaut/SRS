@@ -21,7 +21,7 @@
     {include main-menu}
 </div>
 
-<div class="container-fluid">
+<div class="container-fluid" {$containerAttributes|noescape}>
     <div id="content" class="row">
         {if $sidebarVisible}
             <div id="sidebar" class="col-sm-3 col-xs-3">

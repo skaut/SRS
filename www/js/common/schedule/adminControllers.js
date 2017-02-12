@@ -1,5 +1,5 @@
 var REFRESH_INTERVAL = 10000;
-var api_path = basePath + '/api/program/';
+var api_path = basePath + '/api/schedule/';
 
 function AdminCalendarCtrl($scope, $http, $q, $timeout) {
     $scope.option = ''; // indexovane bloky - pro snadne vyhledavani a prirazovani
@@ -8,7 +8,8 @@ function AdminCalendarCtrl($scope, $http, $q, $timeout) {
     $scope.blocks = []; // neindexovane bloky - v poli - pro filtrovani
     $scope.startup = function () {
         var promise, promisses = [];
-        promise = $http.get(api_path + "getblocks", {})
+
+        promise = $http.get(api_path + "getallblocks", {})
             .success(function (data, status, headers, config) {
                 $scope.options = data;
             }).error(function (data, status, headers, config) {
@@ -16,7 +17,15 @@ function AdminCalendarCtrl($scope, $http, $q, $timeout) {
             });
         promisses.push(promise);
 
-        promise = $http.get(api_path + "getprograms", {})
+        promise = $http.get(api_path + "getallrooms", {})
+            .success(function (data, status, headers, config) {
+                $scope.rooms = data;
+            }).error(function (data, status, headers, config) {
+                $scope.status = status;
+            });
+        promisses.push(promise);
+
+        promise = $http.get(api_path + "getallprograms", {})
             .success(function (data, status, headers, config) {
                 $scope.events = data;
             }).error(function (data, status, headers, config) {
@@ -44,7 +53,7 @@ function AdminCalendarCtrl($scope, $http, $q, $timeout) {
                 $scope.blocks.push(block);
 
             });
-            if (!$scope.config.is_allowed_modify_schedule) {
+            if (!$scope.config.allowed_modify_schedule) {
                 $scope.warning = 'Úprava harmonogramu semináře je zakázána. Nemáte právo spravovat harmonogram nebo musíte povolit úpravu harmonogramu v modulu konfigurace.';
             }
             bindCalendar($scope);
@@ -74,7 +83,7 @@ function AdminCalendarCtrl($scope, $http, $q, $timeout) {
             }
             return val
         });
-        $http.post(api_path + "setprogram?data=" + json)
+        $http.post(api_path + "saveprogram?data=" + json)
             .success(function (data, status, headers, config) {
                 $scope.event.id = data['id'];
 
@@ -117,7 +126,7 @@ function AdminCalendarCtrl($scope, $http, $q, $timeout) {
         if (event.block != null || event.block != undefined) {
             event.block.program_count--;
         }
-        $http.post(api_path + "deleteprogram/" + event.id);
+        $http.post(api_path + "removeprogram/" + event.id);
         $('#blockModal').modal('hide');
         $('#calendar').fullCalendar('removeEvents', [event._id]);
     }
@@ -140,16 +149,16 @@ function bindCalendar(scope) {
 
     var local_config = {
         aspectRatio:1.6,
-        editable:scope.config.is_allowed_modify_schedule,
-        droppable:scope.config.is_allowed_modify_schedule,
+        editable:scope.config.allowed_modify_schedule,
+        droppable:scope.config.allowed_modify_schedule,
         events:scope.events,
         year:scope.config.year,
         month:scope.config.month,
         date:scope.config.date,
-        selectable:scope.config.is_allowed_modify_schedule,
-        selectHelper:scope.config.is_allowed_modify_schedule,
+        selectable:scope.config.allowed_modify_schedule,
+        selectHelper:scope.config.allowed_modify_schedule,
         seminarLength:scope.config.seminar_duration,
-        firstDay:scope.config.seminar_start_day,
+        firstDay:scope.config.seminar_from_week_day,
 
 
         select:function (start, end, allDay) {
@@ -173,7 +182,7 @@ function bindCalendar(scope) {
         },
 
         eventClick:function (event, element) {
-            if (scope.config.is_allowed_modify_schedule) {
+            if (scope.config.allowed_modify_schedule) {
                 scope.event = event;
                 scope.refreshForm();
                 $('#blockModal').modal('show');
@@ -212,7 +221,7 @@ function bindCalendar(scope) {
             event.start = date;
             event.attendees_count = 0;
             event.allDay = allDay;
-            event.block.program_count++;
+            event.block.programs_count++;
             event.end = bindEndToBlockDuration(date, null, event.block.duration, scope.config.basic_block_duration);
             scope.event = event;
             setColor(scope.event);
