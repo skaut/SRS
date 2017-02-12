@@ -34,6 +34,15 @@ class RoleRepository extends EntityRepository
      * @param $name
      * @return Role|null
      */
+    public function findByName($name)
+    {
+        return $this->findOneBy(['name' => $name]);
+    }
+
+    /**
+     * @param $name
+     * @return Role|null
+     */
     public function findBySystemName($name)
     {
         return $this->findOneBy(['systemName' => $name]);
