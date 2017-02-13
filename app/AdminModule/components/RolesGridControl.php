@@ -67,9 +67,11 @@ class RolesGridControl extends Control
             ->endOption()
             ->onChange[] = [$this, 'changeRegisterable'];
 
-        $grid->addColumnText('registerableFrom', 'admin.acl.roles_registerable_from');
+        $grid->addColumnDateTime('registerableFrom', 'admin.acl.roles_registerable_from')
+            ->setFormat('j. n. Y H:i');
 
-        $grid->addColumnText('registerableTo', 'admin.acl.roles_registerable_to');
+        $grid->addColumnDateTime('registerableTo', 'admin.acl.roles_registerable_to')
+            ->setFormat('j. n. Y H:i');
 
         $grid->addColumnText('occupancy', 'admin.acl.roles_occupancy')->setRenderer(
             function ($row) {
