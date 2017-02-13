@@ -2,6 +2,7 @@
 
 namespace App\Model\CMS;
 
+use Doctrine\Common\Collections\Criteria;
 use  Kdyby\Doctrine\EntityRepository;
 
 class PageRepository extends EntityRepository
@@ -75,6 +76,40 @@ class PageRepository extends EntityRepository
             ->getQuery()
             ->getScalarResult();
         return array_map('current', $slugs);
+    }
+
+    /**
+     * @param $pages
+     * @return array
+     */
+    public function findPagesIds($pages)
+    {
+        return array_map(function ($o) {
+            return $o->getId();
+        }, $pages->toArray());
+    }
+
+    /**
+     * @param $ids
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function findPagesBySlugs($slugs)
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->in('slug', $slugs))
+            ->orderBy(['name' => 'ASC']);
+        return $this->matching($criteria);
+    }
+
+    /**
+     * @param $pages
+     * @return array
+     */
+    public function findPagesSlugs($pages)
+    {
+        return array_map(function ($o) {
+            return $o->getSlug();
+        }, $pages->toArray());
     }
 
     /**

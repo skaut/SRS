@@ -2,7 +2,7 @@ $(function () {
     $.nette.ext('initScripts', {
         complete: function () {
             animateAlerts();
-            initMultiSelects();
+            initSelects();
             initFileInputs();
             initConfirms();
         }
@@ -11,7 +11,7 @@ $(function () {
     $.nette.init();
 
     animateAlerts();
-    initMultiSelects();
+    initSelects();
     initFileInputs();
     initConfirms();
 
@@ -42,8 +42,8 @@ function animateAlerts() {
     }, 5000).slideUp(1000);
 }
 
-function initMultiSelects() {
-    $('select[multiple]').selectpicker({
+function initSelects() {
+    $('select').selectpicker({
         noneSelectedText: 'Nic není vybráno',
         noneResultsText: 'Žádné výsledky {0}',
         countSelectedText: 'Označeno {0} z {1}',

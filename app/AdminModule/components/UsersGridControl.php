@@ -34,6 +34,8 @@ class UsersGridControl extends Control
 
     public function __construct(Translator $translator, UserRepository $userRepository, SettingsRepository $settingsRepository, CustomInputRepository $customInputRepository)
     {
+        parent::__construct();
+
         $this->translator = $translator;
         $this->userRepository = $userRepository;
         $this->settingsRepository = $settingsRepository;

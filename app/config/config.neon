@@ -89,6 +89,8 @@ services:
     - App\WebModule\Forms\PersonalDetailsForm
     - App\WebModule\Forms\RolesForm
     - App\AdminModule\Forms\BaseForm
+    - App\AdminModule\ProgramModule\Forms\AddRoleForm
+    - App\AdminModule\ProgramModule\Forms\EditRoleForm
     - App\AdminModule\CMSModule\Forms\FaqForm
     pageFormFactory:
         class: App\AdminModule\CMSModule\Forms\PageForm(%id%, %area%, ...)

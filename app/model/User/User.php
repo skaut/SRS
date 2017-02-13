@@ -304,7 +304,15 @@ class User
         return $this->roles->removeElement($role);
     }
 
-    public function updateRoles($newRoles) {
+    public function removeRoleAndNotAllowedPrograms($role, $nonregisteredRole) {
+        $newRoles = new ArrayCollection($this->roles->toArray());
+        $newRoles->removeElement($role);
+        if ($newRoles->isEmpty())
+            $newRoles->add($nonregisteredRole);
+        $this->setRolesAndRemoveNotAllowedPrograms($newRoles);
+    }
+
+    public function setRolesAndRemoveNotAllowedPrograms($roles) {
         $registerableCategoriesOld = array();
         $registerableCategoriesNew = array();
 
@@ -312,16 +320,18 @@ class User
             $registerableCategoriesOld[] = $category;
         }
 
-        foreach ($this->getRegisterableCategories($newRoles) as $category) {
+        foreach ($this->getRegisterableCategories($roles) as $category) {
             $registerableCategoriesNew[] = $category;
         }
 
         $this->roles->clear();
 
-        if (count($newRoles) == 1 && $newRoles[0]->getSystemName() == Role::NONREGISTERED)
+        if (count($roles) == 1 && $roles[0]->getSystemName() == Role::NONREGISTERED) {
+            $this->addRole($roles[0]);
             $this->programs->clear();
+        }
         else {
-            foreach ($newRoles as $role) {
+            foreach ($roles as $role) {
                 $this->roles->add($role);
             }
 
@@ -945,7 +955,8 @@ class User
         return $categories;
     }
 
-    public function removeProgramsInCategory($category) {
+
+    private function removeProgramsInCategory($category) {
         foreach ($this->programs as $program) {
             if ($program->getBlock()->getCategory() === $category) {
                 $this->programs->removeElement($program);

@@ -49,14 +49,40 @@ class RoleRepository extends EntityRepository
     }
 
     /**
-     * @return array
+     * @return int
+     */
+    public function findLastId()
+    {
+        return $this->createQueryBuilder('r')
+            ->select('MAX(r.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * @return string[]
      */
     public function findAllNames()
     {
-        return $this->createQueryBuilder('r')
+        $names = $this->createQueryBuilder('r')
             ->select('r.name')
             ->getQuery()
-            ->getResult();
+            ->getScalarResult();
+        return array_map('current', $names);
+    }
+
+    /**
+     * @param $id
+     * @return array
+     */
+    public function findOthersNames($id) {
+        $names = $this->createQueryBuilder('b')
+            ->select('b.name')
+            ->where('b.id != :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getScalarResult();
+        return array_map('current', $names);
     }
 
     /**
@@ -160,6 +186,26 @@ class RoleRepository extends EntityRepository
     {
         $roles = $this->createQueryBuilder('r')
             ->select('r.id, r.name')
+            ->orderBy('r.name')
+            ->getQuery()
+            ->getResult();
+
+        $options = [];
+        foreach ($roles as $role) {
+            $options[$role['id']] = $role['name'];
+        }
+        return $options;
+    }
+
+    /**
+     * @param $roleId
+     * @return array
+     */
+    public function getRolesWithoutRoleOptions($roleId)
+    {
+        $roles = $this->createQueryBuilder('r')
+            ->select('r.id, r.name')
+            ->where('r.id != :id')->setParameter('id', $roleId)
             ->orderBy('r.name')
             ->getQuery()
             ->getResult();
@@ -288,5 +334,15 @@ class RoleRepository extends EntityRepository
             $options[$role['id']] = $role['name'];
         }
         return $options;
+    }
+
+    public function save(Role $role) {
+        $this->_em->persist($role);
+        $this->_em->flush();
+    }
+
+    public function remove(Role $role) {
+        $this->_em->remove($role);
+        $this->_em->flush();
     }
 }

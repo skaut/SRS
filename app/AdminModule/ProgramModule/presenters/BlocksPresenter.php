@@ -23,12 +23,6 @@ class BlocksPresenter extends ProgramBasePresenter
     public $blockRepository;
 
     /**
-     * @var CategoryRepository
-     * @inject
-     */
-    public $categoryRepository;
-
-    /**
      * @var IProgramBlocksGridControlFactory
      * @inject
      */
@@ -45,6 +39,7 @@ class BlocksPresenter extends ProgramBasePresenter
      * @inject
      */
     public $blockFormFactory;
+
 
     public function renderDefault()
     {

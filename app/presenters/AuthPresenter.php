@@ -2,6 +2,8 @@
 
 namespace App\Presenters;
 
+use App\Model\Settings\SettingsRepository;
+use App\Model\User\UserRepository;
 use App\Services\SkautIsService;
 
 class AuthPresenter extends BasePresenter
@@ -12,6 +14,19 @@ class AuthPresenter extends BasePresenter
      */
     public $skautIsService;
 
+    /**
+     * @var SettingsRepository
+     * @inject
+     */
+    public $settingsRepository;
+
+    /**
+     * @var UserRepository
+     * @inject
+     */
+    public $userRepository;
+
+
     public function actionLogin($backlink = null) {
         if ($this->getHttpRequest()->getPost() == null) {
             $loginUrl = $this->skautIsService->getLoginUrl($backlink);
@@ -21,7 +36,7 @@ class AuthPresenter extends BasePresenter
         $this->skautIsService->setLoginData($_POST);
         $this->user->login();
         $this->user->setExpiration('+30 minutes');
-        $this->redirectReturnUrl($this->getParameter('ReturnUrl'));
+        $this->redirectAfterLogin($this->getParameter('ReturnUrl'));
     }
 
     public function actionLogout() {
@@ -33,13 +48,40 @@ class AuthPresenter extends BasePresenter
         $this->redirect(':Web:Page:default');
     }
 
-    private function redirectReturnUrl($returnUrl) {
+    private function redirectAfterLogin($returnUrl) {
         if ($returnUrl) {
             if (strpos($returnUrl, ':') !== false)
                 $this->redirect($returnUrl);
             else
                 $this->redirectUrl($returnUrl);
         }
-        $this->redirect(':Web:Page:default'); //TODO redirect podle nastaveni
+
+        //pokud neni navratova adresa, presmerovani podle role
+        $user = $this->userRepository->findById($this->user->id);
+
+        $redirectByRole = null;
+        $multipleRedirects = false;
+
+        foreach ($user->getRoles() as $role) {
+            if ($role->getRedirectAfterLogin()) {
+                $roleRedirect = $role->getRedirectAfterLogin();
+
+                if ($redirectByRole && $redirectByRole == $roleRedirect) {
+                    $multipleRedirects = true;
+                    break;
+                }
+                else {
+                    $redirectByRole = $roleRedirect;
+                }
+            }
+        }
+
+        //pokud nema role nastaveno presmerovani, nebo je uzivatel v rolich s ruznymi presmerovani, je presmerovan na vychozi stranku
+        if ($redirectByRole && !$multipleRedirects)
+            $slug = $redirectByRole;
+        else
+            $slug = $this->settingsRepository->getValue('redirect_after_login');
+
+        $this->redirect(':Web:Page:default', ['slug' => $slug]);
     }
 }

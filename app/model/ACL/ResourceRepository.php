@@ -10,9 +10,10 @@ class ResourceRepository extends EntityRepository
      * @return string[]
      */
     public function findAllNames() {
-        return $this->createQueryBuilder('r')
+        $names = $this->createQueryBuilder('r')
             ->select('r.name')
             ->getQuery()
-            ->getResult();
+            ->getScalarResult();
+        return array_map('current', $names);
     }
 }

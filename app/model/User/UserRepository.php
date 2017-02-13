@@ -41,6 +41,19 @@ class UserRepository extends EntityRepository
      * @param $systemName
      * @return mixed
      */
+    public function findAllInRole(Role $role)
+    {
+        return $this->createQueryBuilder('u')
+            ->join('u.roles', 'r')
+            ->where('r.id = :id')->setParameter('id', $role->getId())
+            ->orderBy('u.displayName')
+            ->getQuery()->execute();
+    }
+
+    /**
+     * @param $systemName
+     * @return mixed
+     */
     public function findAllApprovedInRole($systemName)
     {
         return $this->createQueryBuilder('u')

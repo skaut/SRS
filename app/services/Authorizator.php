@@ -18,11 +18,11 @@ class Authorizator extends Nette\Security\Permission
                                 ResourceRepository $resourceRepository)
     {
         try {
-            foreach ($resourceRepository->findAllNames() as $resource) {
-                $this->addResource($resource['name']);
+            foreach ($resourceRepository->findAllNames() as $resourceName) {
+                $this->addResource($resourceName);
             }
-            foreach ($roleRepository->findAllNames() as $role) {
-                $this->addRole($role['name']);
+            foreach ($roleRepository->findAllNames() as $roleName) {
+                $this->addRole($roleName);
             }
             foreach ($permissionRepository->findAllNames() as $permission) {
                 $this->allow($permission['roleName'], $permission['resourceName'], $permission['name']);

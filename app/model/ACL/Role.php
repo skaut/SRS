@@ -2,6 +2,8 @@
 
 namespace App\Model\ACL;
 
+use App\Model\CMS\Page;
+use App\Model\Program\Category;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
@@ -68,6 +70,7 @@ class Role
 
     /**
      * Pokud je role systemova, nelze ji smazat
+     *
      * @ORM\Column(type="boolean")
      * @var bool
      */
@@ -75,6 +78,7 @@ class Role
 
     /**
      * Lze o tuto roli zazadat pri registraci na seminar?
+     *
      * @ORM\Column(type="boolean")
      * @var bool
      */
@@ -82,6 +86,7 @@ class Role
 
     /**
      * Je role po registraci rovnou schvalena?
+     *
      * @ORM\Column(type="boolean")
      * @var bool
      */
@@ -254,14 +259,26 @@ class Role
         return $this->pages;
     }
 
-// TODO nefunguje
-//    /**
-//     * @param ArrayCollection $pages
-//     */
-//    public function setPages($pages)
-//    {
-//        $this->pages = $pages;
-//    }
+    /**
+     * @param ArrayCollection $pages
+     */
+    public function setPages($pages)
+    {
+        foreach ($this->getPages() as $page) {
+            if (!$pages->contains($page))
+                $page->getRoles()->removeElement($this);
+        }
+        foreach ($pages as $page) {
+            if (!$page->getRoles()->contains($this))
+                $page->getRoles()->add($this);
+        }
+        $this->pages = $pages;
+    }
+
+    public function addPage(Page $page) {
+        if (!$this->pages->contains($page))
+            $page->addRole($this);
+    }
 
     /**
      * @return bool
@@ -433,7 +450,21 @@ class Role
      */
     public function setIncompatibleRoles($incompatibleRoles)
     {
+        foreach ($this->getIncompatibleRoles() as $role) {
+            if (!$incompatibleRoles->contains($role))
+                $role->getIncompatibleRoles()->removeElement($this);
+        }
+        foreach ($incompatibleRoles as $role) {
+            if (!$role->getIncompatibleRoles()->contains($this))
+                $role->getIncompatibleRoles()->add($this);
+        }
+
         $this->incompatibleRoles = $incompatibleRoles;
+    }
+
+    public function addIncompatibleRole($role) {
+        if (!$this->incompatibleRoles->contains($role))
+            $this->incompatibleRoles->add($role);
     }
 
     /**
@@ -444,14 +475,24 @@ class Role
         return $this->requiredByRole;
     }
 
-// TODO nefunguje
-//    /**
-//     * @param ArrayCollection $requiredByRole
-//     */
-//    public function setRequiredByRole($requiredByRole)
-//    {
-//        $this->requiredByRole = $requiredByRole;
-//    }
+    public function getRequiredByRoleTransitive() {
+        $allRequiredByRole = array();
+        foreach ($this->requiredByRole as $requiredByRole) {
+            $this->getRequiredByRoleTransitiveRec($allRequiredByRole, $requiredByRole);
+        }
+        return $allRequiredByRole;
+    }
+
+    private function getRequiredByRoleTransitiveRec(&$allRequiredByRole, $role) {
+        if ($this == $role || in_array($role, $allRequiredByRole))
+            return;
+
+        $allRequiredByRole[] = $role;
+
+        foreach ($role->requiredByRole as $requiredByRole) {
+            $this->getRequiredByRoleTransitiveRec($allRequiredByRole, $requiredByRole);
+        }
+    }
 
     /**
      * @return ArrayCollection
@@ -467,6 +508,11 @@ class Role
     public function setRequiredRoles($requiredRoles)
     {
         $this->requiredRoles = $requiredRoles;
+    }
+
+    public function addRequiredRole($role) {
+        if (!$this->requiredRoles->contains($role))
+            $this->requiredRoles->add($role);
     }
 
     public function getRequiredRolesTransitive() {
@@ -504,4 +550,25 @@ class Role
 //    {
 //        $this->registerableCategories = $registerableCategories;
 //    }
+
+    public function addRegisterableCategory(Category $category) {
+        if (!$this->registerableCategories->contains($category))
+            $category->addRole($this);
+    }
+
+    /**
+     * @return string
+     */
+    public function getRedirectAfterLogin()
+    {
+        return $this->redirectAfterLogin;
+    }
+
+    /**
+     * @param string $redirectAfterLogin
+     */
+    public function setRedirectAfterLogin($redirectAfterLogin)
+    {
+        $this->redirectAfterLogin = $redirectAfterLogin;
+    }
 }

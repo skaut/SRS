@@ -26,8 +26,44 @@ permission:
     access: "Přístup"
     manage_own_programs: "Spravovat vlastní programy"
     manage_all_programs: "Spravovat všechny programy"
+    manage_rooms: "Spravovat místnosti"
+    manage_categories: "Spravovat kategorie"
     manage_schedule: "Upravovat harmonogram"
     choose_programs: "Vybírat si programy"
+
+permission_group:
+    web: "Web"
+    admin: "Administrace"
+
+permission_name:
+    access:
+        admin: "Přístup do administrace"
+        program: "Přístup do správy programů"
+
+    manage:
+        cms: "Spravovat web"
+        users: "Spravovat uživatele"
+        acl: "Spravovat role"
+        mailing: "Spravovat mailing"
+        configuration: "Spravovat konfiguraci"
+
+    choose_programs:
+        program: "Přihlašovat se na programy"
+
+    manage_own_programs:
+        program: "Spravovat vlastní programy"
+
+    manage_all_programs:
+        program: "Spravovat všechny programy"
+
+    manage_schedule:
+        program: "Spravovat harmonogram"
+
+    manage_categories:
+        program: "Spravovat kategorie"
+
+    manage_rooms:
+        program: "Spravovat místnosti"
 
 settings:
     default_value:

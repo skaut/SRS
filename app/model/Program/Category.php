@@ -2,6 +2,7 @@
 
 namespace App\Model\Program;
 
+use App\Model\ACL\Role;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
@@ -80,6 +81,11 @@ class Category
     public function setRegisterableRoles($registerableRoles)
     {
         $this->registerableRoles = $registerableRoles;
+    }
+
+    public function addRole(Role $role) {
+        if (!$this->registerableRoles->contains($role))
+            $this->registerableRoles->add($role);
     }
 
     /**

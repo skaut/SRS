@@ -28,7 +28,8 @@
         <ul>
             {if !$user->isLoggedIn()}
                 <li>
-                    <a href="{plink :Auth:login, 'backlink' => $backlink}" class="btn btn-default">
+                    {var $currentBacklink = $presenter->getParameter('slug') ? $backlink : null}
+                    <a href="{plink :Auth:login, 'backlink' => $currentBacklink}" class="btn btn-default">
                         <span class="fa fa-sign-in"></span>
                         {_web.common.login}
                     </a>
