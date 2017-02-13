@@ -15,6 +15,8 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  */
 class MailToRoles extends Mail
 {
+    protected $type = Mail::TO_ROLES;
+
     /**
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role")
      * @var ArrayCollection

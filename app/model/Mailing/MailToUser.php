@@ -15,6 +15,8 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  */
 class MailToUser extends Mail
 {
+    protected $type = Mail::TO_USER;
+
     /**
      * @ORM\ManyToOne(targetEntity="App\Model\User\User", cascade={"persist"})
      * @var User

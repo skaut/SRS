@@ -18,6 +18,11 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  */
 abstract class Mail
 {
+    const TO_USER = 'user';
+    const TO_ROLES = 'roles';
+
+    protected $type;
+
     use Identifier;
 
     /**
@@ -31,6 +36,11 @@ abstract class Mail
      * @var \DateTime
      */
     protected $datetime;
+
+    public function getType()
+    {
+        return $this->type;
+    }
 
     /**
      * @return string

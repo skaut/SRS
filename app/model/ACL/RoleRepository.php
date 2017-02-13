@@ -336,6 +336,30 @@ class RoleRepository extends EntityRepository
         return $options;
     }
 
+    /**
+     * @return array
+     */
+    public function getRolesWithoutGuestsOptionsWithUsersCount()
+    {
+        $roles = $this->createQueryBuilder('r')
+            ->where('r.systemName != :guest')->setParameter('guest', Role::GUEST)
+            ->andWhere('r.systemName != :unapproved')->setParameter('unapproved', Role::UNAPPROVED)
+            ->andWhere('r.systemName != :nonregistered')->setParameter('nonregistered', Role::NONREGISTERED)
+            ->orderBy('r.name')
+            ->getQuery()
+            ->getResult();
+
+        $options = [];
+        foreach ($roles as $role) {
+            $options[$role->getId()] = $this->translator->translate('admin.common.role_option',
+                $this->countApprovedUsersInRole($role), [
+                    'role' => $role->getName()
+                ]
+            );
+        }
+        return $options;
+    }
+
     public function save(Role $role) {
         $this->_em->persist($role);
         $this->_em->flush();
@@ -345,4 +369,7 @@ class RoleRepository extends EntityRepository
         $this->_em->remove($role);
         $this->_em->flush();
     }
+
+
+
 }

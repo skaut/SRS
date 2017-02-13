@@ -39,7 +39,7 @@ class SendForm extends Nette\Object
     {
         $form = $this->baseFormFactory->create();
 
-        $form->addMultiSelect('recipients', 'admin.mailing.send_recipients', $this->roleRepository->getRolesWithoutGuestsOptions())
+        $form->addMultiSelect('recipients', 'admin.mailing.send_recipients', $this->roleRepository->getRolesWithoutGuestsOptionsWithUsersCount())
             ->addRule(Form::FILLED, 'admin.mailing.send_recipients_empty');
 
         $form->addText('copy', 'admin.mailing.send_copy')

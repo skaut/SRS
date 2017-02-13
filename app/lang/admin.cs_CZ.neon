@@ -23,6 +23,8 @@ common:
 
     access_denied: "Pro přístup k této stránce nemáte oprávnění."
 
+    role_option: "{0} %role% (%count% uživatelů)|{1} %role% (%count% uživatel)|[2,4] %role% (%count% uživatelé)|[5,Inf[ %role% (%count% uživatelů)"
+
 menu:
     dashboard: "Úvod"
     cms: "Web"
@@ -281,6 +283,8 @@ mailing:
     history_datetime: "Odesláno"
     history_subject: "Předmět"
     history_recipients: "Příjemci"
+    history_roles: "Role: %roles%"
+    history_user: "Uživatel: %name%"
 
 configuration:
     menu_seminar: "Seminář"
