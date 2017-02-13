@@ -55,7 +55,7 @@ class RouterFactory
 
         $router[] = new Route('admin/mailing/<presenter>/<action>[/<id>]', [
             'module' => 'Admin:Mailing',
-            'presenter' => 'AutoMails',
+            'presenter' => 'Auto',
             'action' => 'default',
             'id' => null
         ]);

@@ -38,7 +38,7 @@ class UserRepository extends EntityRepository
     }
 
     /**
-     * @param $systemName
+     * @param Role $role
      * @return mixed
      */
     public function findAllInRole(Role $role)
@@ -48,6 +48,20 @@ class UserRepository extends EntityRepository
             ->where('r.id = :id')->setParameter('id', $role->getId())
             ->orderBy('u.displayName')
             ->getQuery()->execute();
+    }
+
+    /**
+     * @param $rolesIds
+     * @return mixed
+     */
+    public function findAllInRoles($rolesIds) {
+        return $this->createQueryBuilder('u')
+            ->join('u.roles', 'r')
+            ->where('r.id IN (:ids)')->setParameter('ids', $rolesIds)
+            ->orderBy('u.displayName')
+            ->distinct()
+            ->getQuery()
+            ->getResult();
     }
 
     /**
@@ -74,6 +88,7 @@ class UserRepository extends EntityRepository
             ->where('r.id IN (:ids)')->setParameter('ids', $rolesIds)
             ->andWhere('u.approved = true')
             ->orderBy('u.displayName')
+            ->distinct()
             ->getQuery()
             ->getResult();
     }

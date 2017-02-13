@@ -266,6 +266,22 @@ mailing:
     menu_send: "Rozeslat e-mail"
     menu_history: "Historie"
 
+    send_heading: "Rozeslat e-mail"
+    send_recipients: "Příjemci"
+    send_recipients_empty: "Vyberte alespoň jednu roli."
+    send_copy: "Zaslat kopii na"
+    send_copy_format: "Zadejte e-mail."
+    send_subject: "Předmět"
+    send_subject_empty: "Zadejte předmět."
+    send_text: "Text e-mailu"
+    send_send: "Odeslat"
+    send_sent: "E-mail byl úspěšně rozeslán."
+
+    history_heading: "Historie"
+    history_datetime: "Odesláno"
+    history_subject: "Předmět"
+    history_recipients: "Příjemci"
+
 configuration:
     menu_seminar: "Seminář"
     menu_program: "Program"

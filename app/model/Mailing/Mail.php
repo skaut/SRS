@@ -3,16 +3,20 @@
 namespace App\Model\Mailing;
 
 
-use App\Model\ACL\Role;
-use App\Model\User\User;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 /**
  * @ORM\Entity(repositoryClass="MailRepository")
  * @ORM\Table(name="mail")
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="type", type="string")
+ * @ORM\DiscriminatorMap({
+ *     "mail_to_user" = "MailToUser",
+ *     "mail_to_roles" = "MailToRoles"
+ * })
  */
-class Mail
+abstract class Mail
 {
     use Identifier;
 
@@ -23,20 +27,40 @@ class Mail
     protected $subject;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Model\User\User", cascade={"persist"})
-     * @var User
-     */
-    protected $toUser;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Model\ACL\Role", cascade={"persist"})
-     * @var Role
-     */
-    protected $toRole;
-
-    /**
      * @ORM\Column(type="datetime")
      * @var \DateTime
      */
     protected $datetime;
+
+    /**
+     * @return string
+     */
+    public function getSubject()
+    {
+        return $this->subject;
+    }
+
+    /**
+     * @param string $subject
+     */
+    public function setSubject($subject)
+    {
+        $this->subject = $subject;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDatetime()
+    {
+        return $this->datetime;
+    }
+
+    /**
+     * @param \DateTime $datetime
+     */
+    public function setDatetime($datetime)
+    {
+        $this->datetime = $datetime;
+    }
 }

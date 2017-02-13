@@ -13,7 +13,7 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({
  *     "custom_checkbox" = "CustomCheckbox",
- *     "custom_text" = "CustomText",
+ *     "custom_text" = "CustomText"
  * })
  */
 abstract class CustomInput

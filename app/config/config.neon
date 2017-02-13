@@ -18,6 +18,7 @@ extensions:
     skautis: Skautis\Nette\SkautisExtension
     translation: Kdyby\Translation\DI\TranslationExtension
     nextras.form: Nextras\Forms\Bridges\NetteDI\FormsExtension
+    mailing: Ublaboo\Mailing\DI\MailingExtension
 
 latte:
     macros:
@@ -42,6 +43,10 @@ migrations:
 skautis:
     applicationId: %skautIS.appId%
     testMode: $skautIS.test%
+
+mailing:
+    do: both
+    log_directory: '%appDir%/../log/mails'
 
 services:
     - App\RouterFactory
@@ -112,6 +117,7 @@ services:
     - App\AdminModule\CMSModule\Components\INewsGridControlFactory
     - App\AdminModule\CMSModule\Components\IPagesGridControlFactory
     - App\AdminModule\ConfigurationModule\Components\ICustomInputsGridControlFactory
+    - App\AdminModule\MailingModule\Forms\SendForm
     - App\AdminModule\MailingModule\Components\IMailHistoryGridControlFactory
     - App\AdminModule\ProgramModule\Components\IProgramBlockScheduleGridControlFactory
     - App\AdminModule\ProgramModule\Components\IProgramBlocksGridControlFactory

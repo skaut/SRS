@@ -44,7 +44,8 @@
                                 $presenter->isLinkCurrent(':Admin:Mailing:Auto:*') ||
                                 $presenter->isLinkCurrent(':Admin:Mailing:Send:*') ||
                                 $presenter->isLinkCurrent(':Admin:Mailing:History:*') ? active">
-                            <a href="{plink :Admin:Mailing:Auto:default}">{_admin.menu.mailing}</a>
+                            <a href="{plink :Admin:Mailing:Send:default}">{_admin.menu.mailing}</a>
+                            {*<a href="{plink :Admin:Mailing:Auto:default}">{_admin.menu.mailing}</a>*}  {*TODO mailing*}
                         </li>
                     {/if}
                     {if $user->isAllowed($resourceConfiguration, $permissionManage)}
