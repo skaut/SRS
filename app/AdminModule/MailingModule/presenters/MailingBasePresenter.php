@@ -9,14 +9,13 @@ use App\Model\ACL\Resource;
 
 abstract class MailingBasePresenter extends AdminBasePresenter
 {
+    protected $resource = Resource::MAILING;
+
     public function startup()
     {
         parent::startup();
 
-        if (!$this->user->isAllowed(Resource::MAILING, Permission::MANAGE)) {
-            $this->flashMessage('admin.common.access_denied', 'danger', 'lock');
-            $this->redirect(":Web:Page:default");
-        }
+        $this->checkPermission(Permission::MANAGE);
     }
 
     public function beforeRender()

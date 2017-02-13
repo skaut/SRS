@@ -15,14 +15,13 @@ class UsersPresenter extends AdminBasePresenter
      */
     public $usersGridControlFactory;
 
+    protected $resource = Resource::USERS;
+
     public function startup()
     {
         parent::startup();
 
-        if (!$this->user->isAllowed(Resource::USERS, Permission::MANAGE)) {
-            $this->flashMessage('admin.common.access_denied', 'danger', 'lock');
-            $this->redirect(":Web:Page:default");
-        }
+        $this->checkPermission(Permission::MANAGE);
     }
 
     public function renderList() {

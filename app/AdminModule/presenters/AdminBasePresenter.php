@@ -58,6 +58,7 @@ abstract class AdminBasePresenter extends BasePresenter
      */
     public $dbuser;
 
+
     /**
      * @return CssLoader
      */
@@ -84,12 +85,11 @@ abstract class AdminBasePresenter extends BasePresenter
         $this->user->setAuthorizator($this->authorizator);
 
         if (!$this->user->isLoggedIn()) {
-            $this->flashMessage('admin.common.login_required', 'danger', 'lock');
-            $this->redirect(":Web:Page:default");
+            $this->redirect(':Auth:login', ['backlink' => $this->getHttpRequest()->getUrl()->getPath()]);
         }
         if (!$this->user->isAllowed(Resource::ADMIN, Permission::ACCESS)) {
             $this->flashMessage('admin.common.access_denied', 'danger', 'lock');
-            $this->redirect(":Web:Page:default");
+            $this->redirect(':Web:Page:default');
         }
 
         $this->dbuser = $this->userRepository->findById($this->user->id);
@@ -124,5 +124,12 @@ abstract class AdminBasePresenter extends BasePresenter
         $this->template->settings = $this->settingsRepository;
 
         $this->template->containerAttributes = '';
+    }
+
+    public function checkPermission($permission) {
+        if (!$this->user->isAllowed($this->resource, $permission)) {
+            $this->flashMessage('admin.common.access_denied', 'danger', 'lock');
+            $this->redirect(':Admin:Dashboard:default');
+        }
     }
 }

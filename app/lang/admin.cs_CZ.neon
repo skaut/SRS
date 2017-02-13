@@ -21,7 +21,6 @@ common:
     custom_text: "Textové pole"
     custom_checkbox: "Zaškrtávací pole"
 
-    login_required: "Pro přístup do administrace musíte být přihlášeni."
     access_denied: "Pro přístup k této stránce nemáte oprávnění."
 
 menu:

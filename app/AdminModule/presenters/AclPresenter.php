@@ -30,15 +30,13 @@ class AclPresenter extends AdminBasePresenter
      */
     public $rolesGridControlFactory;
 
+    protected $resource = Resource::ACL;
 
     public function startup()
     {
         parent::startup();
 
-        if (!$this->user->isAllowed(Resource::ACL, Permission::MANAGE)) {
-            $this->flashMessage('admin.common.access_denied', 'danger', 'lock');
-            $this->redirect(":Web:Page:default");
-        }
+        $this->checkPermission(Permission::MANAGE);
     }
 
     public function renderEdit($id) {

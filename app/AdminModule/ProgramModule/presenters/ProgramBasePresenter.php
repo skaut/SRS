@@ -9,15 +9,15 @@ use App\Model\ACL\Resource;
 
 abstract class ProgramBasePresenter extends AdminBasePresenter
 {
+    protected $resource = Resource::PROGRAM;
+
     public function startup()
     {
         parent::startup();
 
-        if (!$this->user->isAllowed(Resource::PROGRAM, Permission::ACCESS)) {
-            $this->flashMessage('admin.common.access_denied', 'danger', 'lock');
-            $this->redirect(":Web:Page:default");
-        }
+        $this->checkPermission(Permission::ACCESS);
     }
+
 
     public function beforeRender()
     {
