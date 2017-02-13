@@ -56,7 +56,8 @@ class MailService extends Nette\Object
         $users = $this->userRepository->findAllApprovedInRoles($rolesIds);
 
         $params = [
-            'from' => $this->settingsRepository->getValue('seminar_email'),
+            'fromEmail' => $this->settingsRepository->getValue('seminar_email'),
+            'fromName' => $this->settingsRepository->getValue('seminar_name'),
             'recipients' => $users,
             'copy' => $copy,
             'subject' => $subject,

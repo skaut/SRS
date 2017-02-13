@@ -278,6 +278,7 @@ mailing:
     send_text: "Text e-mailu"
     send_send: "Odeslat"
     send_sent: "E-mail byl úspěšně rozeslán."
+    send_error: "Při odesílání e-mailu došlo k chybě."
 
     history_heading: "Historie"
     history_datetime: "Odesláno"

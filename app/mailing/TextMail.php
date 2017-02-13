@@ -16,10 +16,13 @@ class TextMail extends Mail implements IComposableMail
      */
     public function compose(Nette\Mail\Message $message, $params = NULL)
     {
-        $message->setFrom($params['from']);
+        $message->setFrom($params['fromEmail'], $params['fromName']);
 
         foreach ($params['recipients'] as $recipient)
             $message->addBcc($recipient->getEmail(), $recipient->getDisplayName());
+
+        if ($params['copy'])
+            $message->addBcc($params['copy']);
 
         $message->setSubject($params['subject']);
 

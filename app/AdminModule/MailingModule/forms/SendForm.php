@@ -16,9 +16,12 @@ use App\Model\User\UserRepository;
 use App\Services\MailService;
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\Mail\SendException;
 
 class SendForm extends Nette\Object
 {
+    public $mailSuccess;
+
     /** @var BaseForm */
     private $baseFormFactory;
 
@@ -61,6 +64,11 @@ class SendForm extends Nette\Object
     }
 
     public function processForm(Form $form, \stdClass $values) {
-        $this->mailService->sendMailToRoles($values['recipients'], $values['copy'], $values['subject'], $values['text']);
+        try {
+            $this->mailService->sendMailToRoles($values['recipients'], $values['copy'], $values['subject'], $values['text']);
+            $this->mailSuccess = true;
+        } catch (SendException $ex) {
+            $this->mailSuccess = false;
+        }
     }
 }
