@@ -82,8 +82,8 @@ class PagesGridControl extends Control
 
         $rolesOptions = $this->roleRepository->getRolesOptions();
         $publicOptions = [
-            false => $this->translator->translate('admin.cms.pages_public_private'),
-            true => $this->translator->translate('admin.cms.pages_public_public')
+            false => 'admin.cms.pages_public_private',
+            true => 'admin.cms.pages_public_public'
         ];
 
         $grid->addInlineAdd()->onControlAdd[] = function($container) use($rolesOptions, $publicOptions) {

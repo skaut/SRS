@@ -2,6 +2,9 @@
 
 namespace App\AdminModule\Components;
 
+use App\Model\ACL\RoleRepository;
+use App\Model\Enums\PaymentType;
+use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\UserRepository;
@@ -32,7 +35,14 @@ class UsersGridControl extends Control
      */
     private $customInputRepository;
 
-    public function __construct(Translator $translator, UserRepository $userRepository, SettingsRepository $settingsRepository, CustomInputRepository $customInputRepository)
+    /**
+     * @var RoleRepository
+     */
+    private $roleRepository;
+
+    public function __construct(Translator $translator, UserRepository $userRepository,
+                                SettingsRepository $settingsRepository, CustomInputRepository $customInputRepository,
+                                RoleRepository $roleRepository)
     {
         parent::__construct();
 
@@ -40,6 +50,7 @@ class UsersGridControl extends Control
         $this->userRepository = $userRepository;
         $this->settingsRepository = $settingsRepository;
         $this->customInputRepository = $customInputRepository;
+        $this->roleRepository = $roleRepository;
     }
 
     public function render()
@@ -55,36 +66,73 @@ class UsersGridControl extends Control
         $grid->setDefaultSort(['displayName' => 'ASC']);
         $grid->setColumnsHideable();
 
-        $grid->addGroupSelectAction('Send', [
-            'john'  => 'John',
-            'joe'   => 'Joe',
-            'frank' => 'Frank',
-        ])->onSelect[] = [$this, 'groupSend'];
+        $grid->addGroupAction('Change order status', [
+            1 => 'Received',
+            2 => 'Ready',
+            3 => 'Processing',
+            4 => 'Sent',
+            5 => 'Storno'
+        ])->onSelect[] = [$this, 'groupChangeStatus'];
+//
+//        $grid->addGroupSelectAction('Send', [
+//            'john'  => 'John',
+//            'joe'   => 'Joe',
+//            'frank' => 'Frank'
+//        ])->onSelect[] = [$this, 'groupSend'];
+//
+//        $grid->addGroupMultiSelectAction('SendMulti', [
+//            'john'  => 'John',
+//            'joe'   => 'Joe',
+//            'frank' => 'Frank'
+//        ])->onSelect[] = [$this, 'groupSendaaaaa'];
 
-        $grid->addGroupMultiSelectAction('SendMulti', [
-            'john'  => 'John',
-            'joe'   => 'Joe',
-            'frank' => 'Frank',
-        ])->onSelect[] = [$this, 'groupSend']; //TODO akce
-
-        $grid->addColumnText('displayName', 'Jméno')
+        $grid->addColumnText('displayName', 'admin.users.users_name')
             ->setSortable()
             ->setFilterText();
 
-        $grid->addColumnText('username', 'Uživatelské jméno')
+        $grid->addColumnText('username', 'admin.users.users_username')
             ->setSortable()
             ->setFilterText();
 
-        //$grid->addColumnText('roles', 'Role', 'roles'); //TODO filtr
+        $grid->addColumnText('roles', 'admin.users.users_roles', 'roles')
+            ->setRenderer(function ($row) {
+                $roles = [];
+                foreach ($row->getRoles() as $role) {
+                    $roles[] = $role->getName();
+                }
+                return implode(", ", $roles);
+            })
+            ->setFilterMultiSelect($this->roleRepository->getRolesOptions())
+            ->setCondition(function($qb, $values) {
+                $qb->join('u.roles', 'r')->where('r.id IN (:ids)')->setParameter(':ids', $values);
+            });
 
-        $grid->addColumnText('approved', 'Schválený')
-            ->setReplacement(['0' => 'ne', '1' => 'ano'])
+        $columnApproved = $grid->addColumnStatus('approved', 'admin.users.users_approved');
+        $columnApproved
+            ->addOption(false, 'admin.users.users_approved_unapproved')
+                ->setClass('btn-danger')
+                ->endOption()
+            ->addOption(true, 'admin.users.users_approved_approved')
+                ->setClass('btn-success')
+                ->endOption()
+            ->onChange[] = [$this, 'changeApproved'];
+
+        $columnApproved
             ->setSortable()
-            ->setFilterSelect(['' => 'vše', '0' => 'ne', '1' => 'ano']);
+            ->setFilterSelect([
+                '' => 'admin.common.all',
+                '0' => 'admin.users.users_approved_unapproved',
+                '1' => 'admin.users.users_approved_approved'
+            ])
+            ->setTranslateOptions();
 
-        $grid->addColumnText('unit', 'Členství')
+        $grid->addColumnText('unit', 'admin.users.users_membership')
             ->setRendererOnCondition(function ($row) {
-                    return Html::el('span')->style('color: red')->setText($row->isMember() ? 'nečlen' : 'nepropojený účet');
+                    return Html::el('span')
+                        ->style('color: red')
+                        ->setText($row->isMember() ?
+                            $this->translator->translate('admin.users.users_membership_no') :
+                            $this->translator->translate('admin.users.users_membership_not_connected'));
                 }, function ($row) {
                     return $row->getUnit() === null;
                 }
@@ -92,52 +140,126 @@ class UsersGridControl extends Control
             ->setSortable()
             ->setFilterText();
 
-        $grid->addColumnText('age', 'Věk')
+        $grid->addColumnText('age', 'admin.users.users_age')
+            ->setSortable()
+            ->setSortableCallback(function($qb, $sort) {
+                $sort = $sort['age'] == 'DESC' ? 'ASC' : 'DESC';
+                $qb->orderBy('u.birthdate', $sort);
+            });
+
+        $grid->addColumnText('city', 'admin.users.users_city')
             ->setSortable()
             ->setFilterText();
 
-        $grid->addColumnText('city', 'Město')
+        $grid->addColumnNumber('fee', 'admin.users.users_fee');
+
+        $grid->addColumnText('paymentMethod', 'admin.users.users_payment_method') //TODO editace
             ->setSortable()
-            ->setFilterText();
-
-        $grid->addColumnNumber('fee', 'Cena'); //TODO sort
-
-        $grid->addColumnText('paymentMethod', 'Platební metoda'); //TODO
+            ->setFilterSelect($this->preparePaymentOptions())
+            ->setTranslateOptions();
 
         $variableSymbolCode = $this->settingsRepository->getValue('variable_symbol_code');
-        $grid->addColumnText('variableSymbol', 'Variabilní symbol')
+        $grid->addColumnText('variableSymbol', 'admin.users.users_variable_symbol')
             ->setRenderer(function ($row) use($variableSymbolCode) {
                 return $row->getVariableSymbolWithCode($variableSymbolCode);
             })
             ->setSortable();
 
-        $grid->addColumnDateTime('paymentDate', 'Zaplaceno'); //TODO
-
-        $grid->addColumnDateTime('incomeProofPrintedDate', 'Doklad vytištěn dne')
+        $grid->addColumnDateTime('paymentDate', 'admin.users.users_payment_date') //TODO editace
             ->setSortable();
 
-        $grid->addColumnDateTime('firstLogin', 'Registrace')
+        $grid->addColumnDateTime('incomeProofPrintedDate', 'admin.users.users_income_proof_printed_date')
             ->setSortable();
 
-        $grid->addColumnText('attended', 'Přítomen')
-            ->setReplacement(['0' => 'ne', '1' => 'ano'])
+        $grid->addColumnDateTime('firstLogin', 'admin.users.users_first_login')
+            ->setSortable();
+
+        $columnAttended = $grid->addColumnStatus('attended', 'admin.users.users_attended');
+        $columnAttended
+            ->addOption(false, 'admin.users.users_attended_no')
+            ->setClass('btn-danger')
+            ->endOption()
+            ->addOption(true, 'admin.users.users_attended_yes')
+            ->setClass('btn-success')
+            ->endOption()
+            ->onChange[] = [$this, 'changeAttended'];
+
+        $columnAttended
             ->setSortable()
-            ->setFilterSelect(['' => 'vše', '0' => 'ne', '1' => 'ano']);
+            ->setFilterSelect([
+                '' => 'admin.common.all',
+                '0' => 'admin.users.users_attended_no',
+                '1' => 'admin.users.users_attended_yes'
+            ])
+            ->setTranslateOptions();
 
-//        $customBooleansCount = $this->settingsRepository->getValue('custom_booleans_count');
-//
-//        for ($i = 0; $i < $customBooleansCount; $i++) {
-//            //TODO
-//        }
-//
-//        $customTextsCount = $this->settingsRepository->getValue('custom_texts_count');
-//
-//        for ($i = 0; $i < $customTextsCount; $i++) {
-//            //TODO
-//        }
+        foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
+            $grid->addColumnText('customInput' . $customInput->getId(), $customInput->getName())
+                ->setRenderer(function ($row) use ($customInput) {
+                    $customInputValue = $row->getCustomInputValue($customInput);
+                    if ($customInputValue) {
+                        if ($customInputValue->getInput()->getType() == CustomInput::TEXT)
+                            return $customInputValue->getValue();
+                        else {
+                            return $customInputValue->getValue() ?
+                                $this->translator->translate('admin.common.yes') :
+                                $this->translator->translate('admin.common.no');
+                        }
+                    }
+                    return null;
+                })
+                ->setSortable();
+        }
 
-        //$grid->addAction('edit', 'Edit'); //TODO akce
+        $grid->addAction('detail', 'admin.common.detail', 'Users:detail')
+            ->setClass('btn btn-xs btn-primary');
+
+        $grid->addAction('edit', 'admin.common.edit', 'Users:edit');
 
         $grid->setColumnsSummary(['fee']);
+    }
+
+    public function changeApproved($id, $approved) {
+        $user = $this->userRepository->findById($id);
+
+        $user->setApproved($approved);
+        $this->userRepository->save($user);
+
+        $p = $this->getPresenter();
+        $p->flashMessage('admin.users.users_changed_approved', 'success');
+
+        if ($p->isAjax()) {
+            $p->redrawControl('flashes');
+            $this['usersGrid']->redrawItem($id);
+        }
+        else {
+            $this->redirect('this');
+        }
+    }
+
+    public function changeAttended($id, $attended) {
+        $user = $this->userRepository->findById($id);
+
+        $user->setAttended($attended);
+        $this->userRepository->save($user);
+
+        $p = $this->getPresenter();
+        $p->flashMessage('admin.users.users_changed_attended', 'success');
+
+        if ($p->isAjax()) {
+            $p->redrawControl('flashes');
+            $this['usersGrid']->redrawItem($id);
+        }
+        else {
+            $this->redirect('this');
+        }
+    }
+
+    private function preparePaymentOptions() {
+        $options = [];
+        $options[''] = 'admin.common.all';
+        foreach (PaymentType::$types as $type)
+            $options[$type] = 'common.payment.' . $type;
+        return $options;
     }
 }

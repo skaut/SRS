@@ -43,7 +43,7 @@ function animateAlerts() {
 }
 
 function initSelects() {
-    $('select').selectpicker({
+    $('select').not('.row-group-actions select').selectpicker({
         noneSelectedText: 'Nic není vybráno',
         noneResultsText: 'Žádné výsledky {0}',
         countSelectedText: 'Označeno {0} z {1}',

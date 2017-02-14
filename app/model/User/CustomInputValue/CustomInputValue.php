@@ -7,8 +7,9 @@ use App\Model\User\User;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
+
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="CustomInputValueRepository")
  * @ORM\Table(name="custom_input_value")
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="type", type="string")

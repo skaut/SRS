@@ -102,11 +102,13 @@ class ProgramBlocksGridControl extends Control
             ->onChange[] = [$this, 'changeMandatory'];
 
         $columnMandatory
+            ->setSortable()
             ->setFilterSelect([
-                '' => $this->translator->translate('admin.common.all'),
-                false => $this->translator->translate('admin.program.blocks_mandatory_voluntary'),
-                true => $this->translator->translate('admin.program.blocks_mandatory_mandatory')
-            ]);
+                '' => 'admin.common.all',
+                false => 'admin.program.blocks_mandatory_voluntary',
+                true => 'admin.program.blocks_mandatory_mandatory'
+            ])
+            ->setTranslateOptions();
 
         $grid->addColumnText('programsCount', 'admin.program.blocks_programs_count')
             ->setRenderer(function ($row) {

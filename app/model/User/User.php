@@ -6,6 +6,7 @@ use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\ACL\Role;
 use App\Model\Program\Block;
+use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\User\CustomInputValue\CustomInputValue;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
@@ -905,9 +906,12 @@ class User
         $this->customInputValues = $customInputValues;
     }
 
-    public function addCustomInputValue(CustomInputValue $customInputValue) {
-        if (!$this->customInputValues->contains($customInputValue))
-            $this->customInputValues->add($customInputValue);
+    public function getCustomInputValue(CustomInput $customInput) {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()
+                ->eq('input', $customInput)
+            );
+        return $this->customInputValues->matching($criteria)->first();
     }
 
     /**

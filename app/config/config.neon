@@ -76,6 +76,7 @@ services:
     - App\Model\Settings\CustomInput\CustomInputRepository
     - App\Model\Settings\SettingsRepository
     - App\Model\User\UserRepository
+    - App\Model\User\CustomInputValue\CustomInputValueRepository
     - App\WebModule\Components\IApplicationContentControlFactory
     - App\WebModule\Components\IBlocksContentControlFactory
     - App\WebModule\Components\ICapacitiesContentControlFactory

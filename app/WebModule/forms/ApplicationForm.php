@@ -7,6 +7,7 @@ use App\Model\ACL\RoleRepository;
 use App\Model\Enums\Sex;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
+use App\Model\User\CustomInputValue\CustomInputValueRepository;
 use App\Model\User\CustomInputValue\CustomTextValue;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
@@ -34,17 +35,21 @@ class ApplicationForm extends Nette\Object
     /** @var CustomInputRepository */
     private $customInputRepository;
 
+    /** @var CustomInputValueRepository */
+    private $customInputValueRepository;
+
     /** @var SkautIsService */
     private $skautIsService;
 
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
                                 RoleRepository $roleRepository, CustomInputRepository $customInputRepository,
-                                SkautIsService $skautIsService)
+                                CustomInputValueRepository $customInputValueRepository, SkautIsService $skautIsService)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->userRepository = $userRepository;
         $this->roleRepository = $roleRepository;
         $this->customInputRepository = $customInputRepository;
+        $this->customInputValueRepository = $customInputValueRepository;
         $this->skautIsService = $skautIsService;
     }
 
@@ -162,9 +167,10 @@ class ApplicationForm extends Nette\Object
                     $customInputValue = new CustomCheckboxValue();
             }
             $customInputValue->setValue($values['custom'. $customInput->getId()]);
-            $this->user->addCustomInputValue($customInputValue);
+            $customInputValue->setUser($this->user);
+            $customInputValue->setInput($customInput);
+            $this->customInputValueRepository->save($customInputValue);
         }
-
 
         $this->userRepository->save($this->user);
 

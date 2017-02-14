@@ -74,6 +74,11 @@ body {
     font-size: 12px !important;
 }
 
+/* oprava barvy chybove hlasky u poli v datagridu */
+.datagrid .text-danger {
+    color: #a94442 !important;
+}
+
 /* oprava file input v inline editaci */
 .datagrid-inline-edit .kv-fileinput-caption {
     font-size: 12px !important;
