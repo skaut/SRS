@@ -69,11 +69,6 @@ ul.no-margin {
     margin: 10px auto;
 }
 
-/* odstraneni mezery pod nadpisem u content */
-.page-heading {
-    margin-bottom: -10px;
-}
-
 /* tabulka bez ramecku */
 .table-borderless tbody tr td,
 .table-borderless tbody tr th,
