@@ -4,19 +4,16 @@
             <li {ifCurrent Blocks:*}class="active"{/ifCurrent}>
                 <a href="{plink Blocks:default}">{_admin.program.menu_blocks}</a>
             </li>
-        </ul>
-        <ul class="nav nav-pills nav-stacked">
+
             <li {ifCurrent Schedule:*}class="active"{/ifCurrent}>
                 <a href="{plink Schedule:default}">{_admin.program.menu_schedule}</a>
             </li>
-        </ul>
-        <ul class="nav nav-pills nav-stacked">
-            <li {ifCurrent Categories:*}class="active"{/ifCurrent}>
+
+            <li n:if="$user->isAllowed($resourceProgram, $permissionManageCategories)" {ifCurrent Categories:*}class="active"{/ifCurrent}>
                 <a href="{plink Categories:default}">{_admin.program.menu_categories}</a>
             </li>
-        </ul>
-        <ul class="nav nav-pills nav-stacked">
-            <li {ifCurrent Rooms:*}class="active"{/ifCurrent}>
+
+            <li n:if="$user->isAllowed($resourceProgram, $permissionManageRooms)" {ifCurrent Rooms:*}class="active"{/ifCurrent}>
                 <a href="{plink Rooms:default}">{_admin.program.menu_rooms}</a>
             </li>
         </ul>

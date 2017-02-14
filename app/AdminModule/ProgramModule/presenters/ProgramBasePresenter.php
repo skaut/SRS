@@ -18,7 +18,6 @@ abstract class ProgramBasePresenter extends AdminBasePresenter
         $this->checkPermission(Permission::ACCESS);
     }
 
-
     public function beforeRender()
     {
         parent::beforeRender();

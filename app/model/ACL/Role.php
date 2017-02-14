@@ -542,7 +542,7 @@ class Role
         return $this->registerableCategories;
     }
 
-// TODO nefunguje
+//    //nefunguje z inverse side, zatim neni potreba
 //    /**
 //     * @param ArrayCollection $registerableCategories
 //     */
@@ -550,11 +550,11 @@ class Role
 //    {
 //        $this->registerableCategories = $registerableCategories;
 //    }
-
-    public function addRegisterableCategory(Category $category) {
-        if (!$this->registerableCategories->contains($category))
-            $category->addRole($this);
-    }
+//
+//    public function addRegisterableCategory(Category $category) {
+//        if (!$this->registerableCategories->contains($category))
+//            $category->addRole($this);
+//    }
 
     /**
      * @return string

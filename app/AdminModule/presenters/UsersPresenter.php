@@ -9,13 +9,14 @@ use App\Model\ACL\Resource;
 
 class UsersPresenter extends AdminBasePresenter
 {
+    protected $resource = Resource::USERS;
+
     /**
      * @var IUsersGridControlFactory
      * @inject
      */
     public $usersGridControlFactory;
 
-    protected $resource = Resource::USERS;
 
     public function startup()
     {

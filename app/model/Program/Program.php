@@ -86,7 +86,7 @@ class Program
         return $this->attendees;
     }
 
-// TODO nefunguje
+//    //nefunguje z inverse side, zatim neni potreba
 //    /**
 //     * @param ArrayCollection $attendees
 //     */

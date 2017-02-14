@@ -12,6 +12,8 @@ use Nette\Forms\Form;
 
 class AclPresenter extends AdminBasePresenter
 {
+    protected $resource = Resource::ACL;
+
     /**
      * @var AddRoleForm
      * @inject
@@ -30,7 +32,6 @@ class AclPresenter extends AdminBasePresenter
      */
     public $rolesGridControlFactory;
 
-    protected $resource = Resource::ACL;
 
     public function startup()
     {

@@ -3,6 +3,7 @@
 namespace App\AdminModule\ProgramModule\Components;
 
 
+use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\ACL\Role;
 use App\Model\Program\BlockRepository;
@@ -112,10 +113,13 @@ class ProgramBlocksGridControl extends Control
                 return $row->getProgramsCount();
             });
 
-
-        $grid->addToolbarButton('Blocks:add')
-            ->setIcon('plus')
-            ->setTitle('admin.common.add');
+        if (($this->getPresenter()->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS) ||
+            $this->getPresenter()->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS)) &&
+            $this->settingsRepository->getValue('is_allowed_add_block')) {
+            $grid->addToolbarButton('Blocks:add')
+                ->setIcon('plus')
+                ->setTitle('admin.common.add');
+        }
 
         $grid->addAction('detail', 'admin.common.detail', 'Blocks:detail')
             ->setClass('btn btn-xs btn-primary');
