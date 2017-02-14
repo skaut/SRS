@@ -3,6 +3,7 @@
 namespace App\Model\User;
 
 use App\Model\ACL\Role;
+use Doctrine\Common\Collections\Criteria;
 use Kdyby\Doctrine\EntityRepository;
 
 class UserRepository extends EntityRepository
@@ -23,6 +24,17 @@ class UserRepository extends EntityRepository
     public function findBySkautISUserId($skautISUserId)
     {
         return $this->findOneBy(['skautISUserId' => $skautISUserId]);
+    }
+
+    /**
+     * @param $ids
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function findUsersByIds($ids)
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->in('id', $ids));
+        return $this->matching($criteria);
     }
 
     /**

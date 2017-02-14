@@ -161,7 +161,7 @@ class RolesForm extends Nette\Object
     {
         foreach ($this->roleRepository->findRolesByIds($field->getValue()) as $role) {
             if ($role->hasLimitedCapacity()) {
-                if ($this->roleRepository->countUnoccupied($role) == 0 && !$this->user->isInRole($role))
+                if ($this->roleRepository->countUnoccupiedInRole($role) == 0 && !$this->user->isInRole($role))
                     return false;
             }
         }

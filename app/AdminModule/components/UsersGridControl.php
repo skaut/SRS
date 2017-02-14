@@ -258,29 +258,29 @@ class UsersGridControl extends Control
     }
 
     public function changeApproved($id, $approved) {
-        $p = $this->getPresenter();
-
         $user = $this->userRepository->findById($id);
 
-        $unoccupied = true;
+        $over = false;
         if ($approved && !$user->isApproved()) {
             foreach ($user->getRoles() as $role) {
-                $count = $this->roleRepository->countUnoccupied($role);
+                $count = $this->roleRepository->countUnoccupiedInRole($role);
                 if ($count !== null && $count < 1) {
-                    $unoccupied = false;
+                    $over = true;
                     break;
                 }
             }
         }
 
-        if ($unoccupied) {
+        $p = $this->getPresenter();
+
+        if ($over) {
+            $p->flashMessage('admin.users.users_change_approved_error', 'danger');
+        }
+        else {
             $user->setApproved($approved);
             $this->userRepository->save($user);
 
             $p->flashMessage('admin.users.users_changed_approved', 'success');
-        }
-        else {
-            $p->flashMessage('admin.users.users_change_approved_error', 'danger');
         }
 
         if ($p->isAjax()) {
@@ -310,12 +310,40 @@ class UsersGridControl extends Control
     }
 
     public function groupApprove(array $ids) {
-        //TODO kontrola kapacity
+        $users = $this->userRepository->findUsersByIds($ids);
+        $rolesWithLimitedCapacity = $this->roleRepository->findAllWithLimitedCapacity();
+        $unoccupiedCounts = $this->roleRepository->countUnoccupiedInRoles($rolesWithLimitedCapacity);
 
-        //$this->userRepository->setApproved($ids);
+        foreach ($users as $user) {
+            if (!$user->isApproved()) {
+                foreach ($user->getRoles() as $role) {
+                    if ($role->hasLimitedCapacity())
+                        $unoccupiedCounts[$role->getId()]--;
+                }
+            }
+        }
+
+        $over = false;
+        foreach ($unoccupiedCounts as $count) {
+            if ($count < 0) {
+                $over = true;
+                break;
+            }
+        }
 
         $p = $this->getPresenter();
-        $p->flashMessage('admin.users.users_group_action_approved', 'success');
+
+        if ($over) {
+            $p->flashMessage('admin.users.users_group_action_approve_error', 'danger');
+        }
+        else {
+            foreach ($users as $user) {
+                $user->setApproved(true);
+                $this->userRepository->save($user);
+            }
+
+            $p->flashMessage('admin.users.users_group_action_approved', 'success');
+        }
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');

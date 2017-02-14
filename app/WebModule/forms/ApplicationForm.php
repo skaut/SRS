@@ -289,7 +289,7 @@ class ApplicationForm extends Nette\Object
     {
         foreach ($this->roleRepository->findRolesByIds($field->getValue()) as $role) {
             if ($role->hasLimitedCapacity()) {
-                if ($this->roleRepository->countUnoccupied($role) == 0)
+                if ($this->roleRepository->countUnoccupiedInRole($role) == 0)
                     return false;
             }
         }

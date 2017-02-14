@@ -248,6 +248,7 @@ users:
     users_saved: "Uživatel byl úspěšně uložen."
     users_group_action_approve: "Schválit"
     users_group_action_approved: "Vybraní uživatelé byli úspěšně schváleni."
+    users_group_action_approve_error: "Vybraní uživatelé nebyli schváleni, byla by překročena kapacita některé role."
     users_group_action_mark_paid_today: "Označit jako zaplacené dnes"
     users_group_action_marked_paid_today: "U vybraných platících uživatelů byly úspěšně nastaveny den zaplacení a platební metoda."
     users_group_action_mark_attended: "Označit jako přítomné"

@@ -131,11 +131,23 @@ class RoleRepository extends EntityRepository
      * @param Role $role
      * @return int|null
      */
-    public function countUnoccupied(Role $role)
+    public function countUnoccupiedInRole(Role $role)
     {
         if ($role->getCapacity() === null)
             return null;
         return $role->getCapacity() - $this->countApprovedUsersInRole($role);
+    }
+
+    /**
+     * @param $roles
+     * @return array
+     */
+    public function countUnoccupiedInRoles($roles) {
+        $count = [];
+        foreach ($roles as $role) {
+            $count[$role->getId()] = $this->countUnoccupiedInRole($role);
+        }
+        return $count;
     }
 
     /**
