@@ -111,19 +111,25 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
         return $variableSymbol;
     }
 
-    public function updateRoles($netteUser) {
-        $user = $this->userRepository->findById($netteUser->id);
+    public function updateRoles($user, $testRole = null) {
+        $dbuser = $this->userRepository->findById($user->id);
 
         $netteRoles = [];
-        if ($user->isApproved()) {
-            foreach ($user->getRoles() as $role)
-                $netteRoles[] = $role->getName();
+
+        if (!$testRole) {
+            if ($dbuser->isApproved()) {
+                foreach ($dbuser->getRoles() as $role)
+                    $netteRoles[] = $role->getName();
+            } else {
+                $roleUnapproved = $this->roleRepository->findBySystemName(Role::UNAPPROVED);
+                $netteRoles[] = $roleUnapproved->getName();
+            }
         }
         else {
-            $roleUnapproved = $this->roleRepository->findBySystemName(Role::UNAPPROVED);
-            $netteRoles[] = $roleUnapproved->getName();
+            $netteRoles[] = Role::TEST;
+            $netteRoles[] = $testRole->getName();
         }
 
-        $netteUser->identity->setRoles($netteRoles);
+        $user->identity->setRoles($netteRoles);
     }
 }

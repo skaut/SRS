@@ -46,11 +46,12 @@ class ApplicationContentControl extends Control
 
         $user = $this->getPresenter()->user;
         $template->guestRole = $user->isInRole($this->roleRepository->findBySystemName(Role::GUEST)->getName());
+        $template->testRole = Role::TEST;
 
         if ($user->isLoggedIn()) {
             $template->unapprovedRole = $user->isInRole($this->roleRepository->findBySystemName(Role::UNAPPROVED)->getName());
             $template->nonregisteredRole = $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED)->getName());
-            $template->user = $this->userRepository->findById($user->id);
+            $template->dbuser = $this->userRepository->findById($user->id);
         }
 
         $template->render();

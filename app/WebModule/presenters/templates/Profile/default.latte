@@ -33,12 +33,12 @@
                         <tr>
                             <th>{_web.profile.attendance}</th>
                             <td>
-                                {if $user->isInRole($nonregisteredRole->getName())}
+                                {if $dbuser->isInRole($nonregisteredRole)}
                                     {_web.profile.nonregistered}
-                                {elseif $user->isInRole($unapprovedRole->getName())}
+                                {elseif !$dbuser->isApproved()}
                                     {_web.profile.unapproved}
                                 {else}
-                                    {foreach $user->roles as $role}{$role}{sep}, {/sep}{/foreach}
+                                    {foreach $dbuser->getRoles() as $role}{$role->getName()}{sep}, {/sep}{/foreach}
                                 {/if}
                             </td>
                         </tr>

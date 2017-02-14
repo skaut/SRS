@@ -14,6 +14,10 @@ common:
 
     role_option: "%role% (obsazeno %occupied% z %total%)"
 
+    role_test_warning_begin: "Máte zapnutý náhled na web pod jinou rolí, nevyplňujte žádné formuláře!"
+    role_test_warning_link: "Ukončit náhled"
+    role_test_warning_end: "."
+
 profile:
     name: "Profil"
     title: "Můj profil"

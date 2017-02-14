@@ -30,7 +30,7 @@
             {else}
                 <div class="alert alert-info alert-forever">
                     {_web.application_content.registered_roles_begin}
-                    {foreach $user->getRoles() as $role}{$role->getName()}{sep}, {/sep}{/foreach}{_web.application_content.registered_roles_end}
+                    {foreach $dbuser->getRoles() as $role}{$role->getName()}{sep}, {/sep}{/foreach}{_web.application_content.registered_roles_end}
                 </div>
                 {if $unapprovedRole}
                     <div class="alert alert-warning alert-forever">{_web.application_content.unapproved_registration}</div>

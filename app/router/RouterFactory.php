@@ -85,7 +85,7 @@ class RouterFactory
         $router[] = new Route('logout/', 'Auth:logout');
 
         try {
-            $router[] = new Route('[page/<slug>]', [
+            $router[] = new Route('[page/<slug>/<action>]', [
                 'module' => 'Web',
                 'presenter' => 'Page',
                 'action' => 'default',

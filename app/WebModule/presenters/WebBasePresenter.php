@@ -8,6 +8,7 @@ use App\Model\ACL\Role;
 use App\Model\Settings\SettingsException;
 use App\Model\User\User;
 use App\Presenters\BasePresenter;
+use App\Services\Authenticator;
 use App\Services\Authorizator;
 use App\Services\SkautIsService;
 use Doctrine\DBAL\Exception\TableNotFoundException;
@@ -21,6 +22,12 @@ abstract class WebBasePresenter extends BasePresenter
      * @inject
      */
     public $authorizator;
+
+    /**
+     * @var Authenticator
+     * @inject
+     */
+    public $authenticator;
 
     /**
      * @var \App\Model\ACL\ResourceRepository
@@ -107,6 +114,7 @@ abstract class WebBasePresenter extends BasePresenter
 
         $this->template->nonregisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
         $this->template->unapprovedRole = $this->roleRepository->findBySystemName(Role::UNAPPROVED);
+        $this->template->testRole = Role::TEST;
 
         $this->template->adminAccess = $this->user->isAllowed(Resource::ADMIN, Permission::ACCESS);
         $this->template->displayUsersRoles = $this->settingsRepository->getValue('display_users_roles');
@@ -115,6 +123,11 @@ abstract class WebBasePresenter extends BasePresenter
         $this->template->sidebarVisible = false;
 
         $this->template->settings = $this->settingsRepository;
+    }
+
+    public function actionExitRoleTest() {
+        $this->authenticator->updateRoles($this->user);
+        $this->redirect(':Admin:Acl:default');
     }
 
     private function checkInstallation() {

@@ -21,6 +21,9 @@
     {snippet flashes}
         <div id="flashes" class="row">
             <div class="col-sm-12">
+                {import 'includes/role_test.latte'}
+                {include role-test}
+
                 <div n:foreach="$flashes as $flash" n:class="alert, 'alert-' . $flash->type">
                     {$flash->message|noescape}
                 </div>

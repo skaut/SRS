@@ -8,6 +8,7 @@ use App\AdminModule\ProgramModule\Forms\AddRoleForm;
 use App\AdminModule\ProgramModule\Forms\EditRoleForm;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
+use App\Services\Authenticator;
 use Nette\Forms\Form;
 
 class AclPresenter extends AdminBasePresenter
@@ -32,6 +33,12 @@ class AclPresenter extends AdminBasePresenter
      */
     public $rolesGridControlFactory;
 
+    /**
+     * @var Authenticator
+     * @inject
+     */
+    public $authenticator;
+
 
     public function startup()
     {
@@ -49,9 +56,9 @@ class AclPresenter extends AdminBasePresenter
     public function actionTest($id) {
         $role = $this->roleRepository->findById($id);
 
-        //TODO
+        $this->authenticator->updateRoles($this->getPresenter()->user, $role);
 
-        $this->redirect('Web:default');
+        $this->redirect(':Web:Page:default');
     }
 
     protected function createComponentRolesGrid($name)

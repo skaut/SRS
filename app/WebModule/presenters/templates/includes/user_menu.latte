@@ -10,7 +10,7 @@
                     {if $displayUsersRoles}
                         {_web.common.logged_in_roles, count($user->roles)}
                         <strong>
-                            {foreach $user->roles as $role}{$role}{sep}, {/sep}{/foreach}
+                            {foreach $user->roles as $role}{if $role != $testRole}{$role}{sep}, {/sep}{/if}{/foreach}
                         </strong>
                     {/if}
                 </li>
