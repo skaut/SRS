@@ -219,8 +219,10 @@ program:
     rooms_deleted: "Místnost byla úspěšně odstraněna."
 
 users:
+    users_heading: "Uživatelé"
 
 acl:
+    roles_heading: "Role"
     roles_name: "Název"
     roles_name_empty: "Zadejte název."
     roles_name_exists: "Role s tímto názvem již existuje."
