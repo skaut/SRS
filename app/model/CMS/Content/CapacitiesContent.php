@@ -2,6 +2,7 @@
 
 namespace App\Model\CMS\Content;
 
+use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\CMS\Page;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -65,7 +66,8 @@ class CapacitiesContent extends Content implements IContent
 
         $formContainer = $form[$this->getContentFormName()];
 
-        $formContainer->addMultiSelect('roles', 'admin.cms.pages_content_capacities_roles', $this->roleRepository->getRolesWithoutGuestsOptions())
+        $formContainer->addMultiSelect('roles', 'admin.cms.pages_content_capacities_roles',
+            $this->roleRepository->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]))
             ->setDefaultValue($this->roleRepository->findRolesIds($this->roles));
 
         return $form;

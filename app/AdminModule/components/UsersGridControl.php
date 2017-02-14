@@ -2,6 +2,7 @@
 
 namespace App\AdminModule\Components;
 
+use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Enums\PaymentType;
 use App\Model\Settings\CustomInput\CustomInput;
@@ -66,25 +67,28 @@ class UsersGridControl extends Control
         $grid->setDefaultSort(['displayName' => 'ASC']);
         $grid->setColumnsHideable();
 
-        $grid->addGroupAction('Change order status', [
-            1 => 'Received',
-            2 => 'Ready',
-            3 => 'Processing',
-            4 => 'Sent',
-            5 => 'Storno'
-        ])->onSelect[] = [$this, 'groupChangeStatus'];
-//
-//        $grid->addGroupSelectAction('Send', [
-//            'john'  => 'John',
-//            'joe'   => 'Joe',
-//            'frank' => 'Frank'
-//        ])->onSelect[] = [$this, 'groupSend'];
-//
-//        $grid->addGroupMultiSelectAction('SendMulti', [
-//            'john'  => 'John',
-//            'joe'   => 'Joe',
-//            'frank' => 'Frank'
-//        ])->onSelect[] = [$this, 'groupSendaaaaa'];
+
+        $grid->addGroupAction('admin.users.users_group_action_approve')
+            ->onSelect[] = [$this, 'groupApprove'];
+
+        $grid->addGroupMultiSelectAction('admin.users.users_group_action_change_roles',
+            $this->roleRepository->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED]))
+            ->onSelect[] = [$this, 'groupChangeRoles'];
+
+        $grid->addGroupAction('admin.users.users_group_action_mark_attended')
+            ->onSelect[] = [$this, 'groupMarkAttended'];
+
+        $grid->addGroupAction('admin.users.users_group_action_mark_paid_today', $this->preparePaymentMethodOptionsWithoutEmpty())
+            ->onSelect[] = [$this, 'groupMarkPaidToday'];
+
+        $grid->addGroupAction('admin.users.users_group_action_print_payment_proof')
+            ->onSelect[] = [$this, 'groupPrintPaymentProof'];
+
+        $grid->addGroupAction('admin.users.users_group_action_export_roles')
+            ->onSelect[] = [$this, 'groupExportRoles'];
+
+        $grid->addGroupAction('admin.users.users_group_action_export_schedule')
+            ->onSelect[] = [$this, 'groupExportSchedule'];
 
 
         $grid->addColumnText('displayName', 'admin.users.users_name')
@@ -103,7 +107,7 @@ class UsersGridControl extends Control
                 }
                 return implode(", ", $roles);
             })
-            ->setFilterMultiSelect($this->roleRepository->getRolesOptions())
+            ->setFilterMultiSelect($this->roleRepository->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED]))
             ->setCondition(function($qb, $values) {
                 $qb->join('u.roles', 'r')->where('r.id IN (:ids)')->setParameter(':ids', $values);
             });
@@ -216,7 +220,7 @@ class UsersGridControl extends Control
 
 
         $grid->addInlineEdit()->onControlAdd[] = function($container) {
-            $container->addSelect('paymentMethod', '', $this->preparePaymentMethodOptions());
+            $container->addSelect('paymentMethod', '', $this->preparePaymentMethodOptionsWithEmpty());
             $container->addDatePicker('paymentDate', '');
         };
         $grid->getInlineEdit()->onSetDefaults[] = function($container, $item) {
@@ -254,12 +258,30 @@ class UsersGridControl extends Control
     }
 
     public function changeApproved($id, $approved) {
-        $user = $this->userRepository->findById($id);
-        $user->setApproved($approved);
-        $this->userRepository->save($user);
-
         $p = $this->getPresenter();
-        $p->flashMessage('admin.users.users_changed_approved', 'success');
+
+        $user = $this->userRepository->findById($id);
+
+        $unoccupied = true;
+        if ($approved && !$user->isApproved()) {
+            foreach ($user->getRoles() as $role) {
+                $count = $this->roleRepository->countUnoccupied($role);
+                if ($count !== null && $count < 1) {
+                    $unoccupied = false;
+                    break;
+                }
+            }
+        }
+
+        if ($unoccupied) {
+            $user->setApproved($approved);
+            $this->userRepository->save($user);
+
+            $p->flashMessage('admin.users.users_changed_approved', 'success');
+        }
+        else {
+            $p->flashMessage('admin.users.users_change_approved_error', 'danger');
+        }
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
@@ -287,7 +309,91 @@ class UsersGridControl extends Control
         }
     }
 
-    private function preparePaymentMethodOptions() {
+    public function groupApprove(array $ids) {
+        //TODO kontrola kapacity
+
+        //$this->userRepository->setApproved($ids);
+
+        $p = $this->getPresenter();
+        $p->flashMessage('admin.users.users_group_action_approved', 'success');
+
+        if ($p->isAjax()) {
+            $p->redrawControl('flashes');
+            $this['usersGrid']->reload();
+        } else {
+            $this->redirect('this');
+        }
+    }
+
+    public function groupChangeRoles(array $ids, $value) {
+        //TODO + kontrola kapacity
+
+        $p = $this->getPresenter();
+        $p->flashMessage('admin.users.users_group_action_changed_roles', 'success');
+
+        if ($p->isAjax()) {
+            $p->redrawControl('flashes');
+            $this['usersGrid']->reload();
+        } else {
+            $this->redirect('this');
+        }
+    }
+
+    public function groupMarkAttended(array $ids) {
+        $this->userRepository->setAttended($ids);
+
+        $p = $this->getPresenter();
+        $p->flashMessage('admin.users.users_group_action_marked_attended', 'success');
+
+        if ($p->isAjax()) {
+            $p->redrawControl('flashes');
+            $this['usersGrid']->reload();
+        } else {
+            $this->redirect('this');
+        }
+    }
+
+    public function groupMarkPaidToday(array $ids, $value) {
+        foreach ($ids as $id) {
+            $user = $this->userRepository->findById($id);
+            if ($user->isPaying()) {
+                $user->setPaymentMethod($value);
+                $user->setPaymentDate(new \DateTime());
+                $this->userRepository->save($user);
+            }
+        }
+
+        $p = $this->getPresenter();
+        $p->flashMessage('admin.users.users_group_action_marked_paid_today', 'success');
+
+        if ($p->isAjax()) {
+            $p->redrawControl('flashes');
+            $this['usersGrid']->reload();
+        } else {
+            $this->redirect('this');
+        }
+    }
+
+    public function groupPrintPaymentProof(array $ids) {
+        //TODO
+    }
+
+    public function groupExportRoles(array $ids) {
+        //TODO
+    }
+
+    public function groupExportSchedule(array $ids) {
+        //TODO
+    }
+
+    private function preparePaymentMethodOptionsWithoutEmpty() {
+        $options = [];
+        foreach (PaymentType::$types as $type)
+            $options[$type] = 'common.payment.' . $type;
+        return $options;
+    }
+
+    private function preparePaymentMethodOptionsWithEmpty() {
         $options = [];
         $options[''] = '';
         foreach (PaymentType::$types as $type)

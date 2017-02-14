@@ -80,7 +80,7 @@ class PagesGridControl extends Control
             });
 
 
-        $rolesOptions = $this->roleRepository->getRolesOptions();
+        $rolesOptions = $this->roleRepository->getRolesWithoutRolesOptions([]);
         $publicOptions = [
             false => 'admin.cms.pages_public_private',
             true => 'admin.cms.pages_public_public'

@@ -180,24 +180,6 @@ class RoleRepository extends EntityRepository
     }
 
     /**
-     * @return array
-     */
-    public function getRolesOptions()
-    {
-        $roles = $this->createQueryBuilder('r')
-            ->select('r.id, r.name')
-            ->orderBy('r.name')
-            ->getQuery()
-            ->getResult();
-
-        $options = [];
-        foreach ($roles as $role) {
-            $options[$role['id']] = $role['name'];
-        }
-        return $options;
-    }
-
-    /**
      * @param $roleId
      * @return array
      */
@@ -316,15 +298,14 @@ class RoleRepository extends EntityRepository
     }
 
     /**
+     * @param array $withoutRoles
      * @return array
      */
-    public function getRolesWithoutGuestsOptions()
+    public function getRolesWithoutRolesOptions(array $withoutRoles)
     {
         $roles = $this->createQueryBuilder('r')
             ->select('r.id, r.name')
-            ->where('r.systemName != :guest')->setParameter('guest', Role::GUEST)
-            ->andWhere('r.systemName != :unapproved')->setParameter('unapproved', Role::UNAPPROVED)
-            ->andWhere('r.systemName != :nonregistered')->setParameter('nonregistered', Role::NONREGISTERED)
+            ->where('r.systemName NOT IN (:roles)')->setParameter('roles', $withoutRoles)
             ->orderBy('r.name')
             ->getQuery()
             ->getResult();
@@ -339,12 +320,36 @@ class RoleRepository extends EntityRepository
     /**
      * @return array
      */
-    public function getRolesWithoutGuestsOptionsWithUsersCount()
+    public function getRolesWithoutRolesOptionsWithCapacity(array $withoutRoles)
     {
         $roles = $this->createQueryBuilder('r')
-            ->where('r.systemName != :guest')->setParameter('guest', Role::GUEST)
-            ->andWhere('r.systemName != :unapproved')->setParameter('unapproved', Role::UNAPPROVED)
-            ->andWhere('r.systemName != :nonregistered')->setParameter('nonregistered', Role::NONREGISTERED)
+            ->where('r.systemName NOT IN (:roles)')->setParameter('roles', $withoutRoles)
+            ->orderBy('r.name')
+            ->getQuery()
+            ->getResult();
+
+        $options = [];
+        foreach ($roles as $role) {
+            if ($role->hasLimitedCapacity())
+                $options[$role->getId()] = $this->translator->translate('web.common.role_option', null, [
+                    'role' => $role->getName(),
+                    'occupied' => $this->countApprovedUsersInRole($role),
+                    'total' => $role->getCapacity()
+                ]);
+            else
+                $options[$role->getId()] = $role->getName();
+        }
+        return $options;
+    }
+
+    /**
+     * @param array $withoutRoles
+     * @return array
+     */
+    public function getRolesWithoutRolesOptionsWithUsersCount(array $withoutRoles)
+    {
+        $roles = $this->createQueryBuilder('r')
+            ->where('r.systemName NOT IN (:roles)')->setParameter('roles', $withoutRoles)
             ->orderBy('r.name')
             ->getQuery()
             ->getResult();

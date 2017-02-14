@@ -3,6 +3,7 @@
 namespace App\AdminModule\ProgramModule\Components;
 
 
+use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Program\Category;
 use App\Model\Program\CategoryRepository;
@@ -60,7 +61,7 @@ class ProgramCategoriesGridControl extends Control
                 return implode(", ", $roles);
             });
 
-        $rolesOptions = $this->roleRepository->getRolesWithoutGuestsOptions();
+        $rolesOptions = $this->roleRepository->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]);
 
         $grid->addInlineAdd()->onControlAdd[] = function($container) use($rolesOptions) {
             $container->addText('name', '')
