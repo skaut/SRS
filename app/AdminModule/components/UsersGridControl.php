@@ -283,13 +283,7 @@ class UsersGridControl extends Control
             $p->flashMessage('admin.users.users_changed_approved', 'success');
         }
 
-        if ($p->isAjax()) {
-            $p->redrawControl('flashes');
-            $this['usersGrid']->redrawItem($id);
-        }
-        else {
-            $this->redirect('this');
-        }
+        $this->redirect('this');
     }
 
     public function changeAttended($id, $attended) {
@@ -345,26 +339,58 @@ class UsersGridControl extends Control
             $p->flashMessage('admin.users.users_group_action_approved', 'success');
         }
 
-        if ($p->isAjax()) {
-            $p->redrawControl('flashes');
-            $this['usersGrid']->reload();
-        } else {
-            $this->redirect('this');
-        }
+        $this->redirect('this');
     }
 
     public function groupChangeRoles(array $ids, $value) {
-        //TODO + kontrola kapacity
+        $users = $this->userRepository->findUsersByIds($ids);
+        $selectedRoles = $this->roleRepository->findRolesByIds($value);
 
         $p = $this->getPresenter();
-        $p->flashMessage('admin.users.users_group_action_changed_roles', 'success');
 
-        if ($p->isAjax()) {
-            $p->redrawControl('flashes');
-            $this['usersGrid']->reload();
-        } else {
-            $this->redirect('this');
+        $error = false;
+
+        //neni vybrana zadna role
+        if ($selectedRoles->isEmpty()) {
+            $p->flashMessage('admin.users.users_group_action_change_roles_error_empty', 'danger');
+            $error = true;
         }
+
+        //pokud je vybrana role neregistrovany, nesmi byt zadna vybrana jina role
+        $nonregisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
+        if ($selectedRoles->contains($nonregisteredRole) && $selectedRoles->count() > 1) {
+            $p->flashMessage('admin.users.users_group_action_change_roles_error_nonregistered', 'danger');
+            $error = true;
+        }
+
+        //v rolich musi byt dostatek volnych mist
+        $unoccupiedCounts = $this->roleRepository->countUnoccupiedInRoles($selectedRoles);
+        foreach ($selectedRoles as $role) {
+            if ($role->hasLimitedCapacity()) {
+                foreach ($users as $user) {
+                    if ($user->isApproved() && !$user->isInRole($role))
+                        $unoccupiedCounts[$role->getId()]--;
+                }
+            }
+        }
+        foreach ($unoccupiedCounts as $count) {
+            if ($count < 0) {
+                $p->flashMessage('admin.users.users_group_action_change_roles_error_capacity', 'danger');
+                $error = true;
+                break;
+            }
+        }
+
+        if (!$error) {
+            foreach ($users as $user) {
+                $user->setRolesAndRemoveNotAllowedPrograms($selectedRoles);
+                $this->userRepository->save($user);
+            }
+
+            $p->flashMessage('admin.users.users_group_action_changed_roles', 'success');
+        }
+
+        $this->redirect('this');
     }
 
     public function groupMarkAttended(array $ids) {

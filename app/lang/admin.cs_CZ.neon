@@ -258,6 +258,9 @@ users:
     users_group_action_export_schedule: "Vyexportovat harmonogramy"
     users_group_action_change_roles: "Nastavit role"
     users_group_action_changed_roles: "Vybraným uživatelům byly úspěšně nastaveny role."
+    users_group_action_change_roles_error_empty: "Role nebyly nastaveny, musí být vybrána alespoň jedna role."
+    users_group_action_change_roles_error_nonregistered: "Role nebyly nastaveny, role nepřihlášený nemůže být kombinována s jinými rolemi."
+    users_group_action_change_roles_error_capacity: "Role nebyly nastaveny, byla by překročena kapacita některé role."
 
 acl:
     roles_heading: "Role"
