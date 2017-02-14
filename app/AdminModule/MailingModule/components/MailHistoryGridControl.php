@@ -42,11 +42,6 @@ class MailHistoryGridControl extends Control
         $grid->setDefaultSort(['datetime' => 'DESC']);
         $grid->setPagination(false);
 
-        $grid->addColumnDateTime('datetime', 'admin.mailing.history_datetime')
-            ->setFormat('j. n. Y H:i');
-
-        $grid->addColumnText('subject', 'admin.mailing.history_subject');
-
         $grid->addColumnText('recipients', 'admin.mailing.history_recipients')
             ->setRenderer(function($row) {
                 if ($row->getType() == Mail::TO_ROLES) {
@@ -61,5 +56,10 @@ class MailHistoryGridControl extends Control
                     return $this->translator->translate('admin.mailing.history_user', null, ['name' => $row->getRecipientUser()->getDisplayName()]);
                 }
             });
+
+        $grid->addColumnText('subject', 'admin.mailing.history_subject');
+
+        $grid->addColumnDateTime('datetime', 'admin.mailing.history_datetime')
+            ->setFormat('j. n. Y H:i');
     }
 }
