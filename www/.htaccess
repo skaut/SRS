@@ -11,6 +11,10 @@ Allow from all
 	RewriteEngine On
 	# RewriteBase /
 
+    RewriteCond %{HTTPS} !=on
+    RewriteCond %{HTTP_HOST} !=localhost
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
 	# prevents files starting with dot to be viewed by browser
 	RewriteRule /\.|^\.(?!well-known/) - [F]
 
