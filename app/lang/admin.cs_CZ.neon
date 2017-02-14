@@ -244,6 +244,7 @@ users:
     users_attended_yes: "Přítomen"
     users_attended_form: "přítomen"
     users_changed_attended: "Účast uživatele byla úspěšně upravena."
+    users_saved: "Uživatel byl úspěšně uložen."
 
 acl:
     roles_heading: "Role"

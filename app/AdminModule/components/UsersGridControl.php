@@ -86,6 +86,7 @@ class UsersGridControl extends Control
 //            'frank' => 'Frank'
 //        ])->onSelect[] = [$this, 'groupSendaaaaa'];
 
+
         $grid->addColumnText('displayName', 'admin.users.users_name')
             ->setSortable()
             ->setFilterText();
@@ -116,7 +117,6 @@ class UsersGridControl extends Control
                 ->setClass('btn-success')
                 ->endOption()
             ->onChange[] = [$this, 'changeApproved'];
-
         $columnApproved
             ->setSortable()
             ->setFilterSelect([
@@ -153,9 +153,14 @@ class UsersGridControl extends Control
 
         $grid->addColumnNumber('fee', 'admin.users.users_fee');
 
-        $grid->addColumnText('paymentMethod', 'admin.users.users_payment_method') //TODO editace
+        $grid->addColumnText('paymentMethod', 'admin.users.users_payment_method')
+            ->setRenderer(function ($row) {
+                if ($row->getPaymentMethod())
+                    return $this->translator->translate('common.payment.' . $row->getPaymentMethod());
+                return null;
+            })
             ->setSortable()
-            ->setFilterSelect($this->preparePaymentOptions())
+            ->setFilterSelect($this->preparePaymentMethodFilterOptions())
             ->setTranslateOptions();
 
         $variableSymbolCode = $this->settingsRepository->getValue('variable_symbol_code');
@@ -165,7 +170,7 @@ class UsersGridControl extends Control
             })
             ->setSortable();
 
-        $grid->addColumnDateTime('paymentDate', 'admin.users.users_payment_date') //TODO editace
+        $grid->addColumnDateTime('paymentDate', 'admin.users.users_payment_date')
             ->setSortable();
 
         $grid->addColumnDateTime('incomeProofPrintedDate', 'admin.users.users_income_proof_printed_date')
@@ -177,13 +182,12 @@ class UsersGridControl extends Control
         $columnAttended = $grid->addColumnStatus('attended', 'admin.users.users_attended');
         $columnAttended
             ->addOption(false, 'admin.users.users_attended_no')
-            ->setClass('btn-danger')
-            ->endOption()
+                ->setClass('btn-danger')
+                ->endOption()
             ->addOption(true, 'admin.users.users_attended_yes')
-            ->setClass('btn-success')
-            ->endOption()
+                ->setClass('btn-success')
+                ->endOption()
             ->onChange[] = [$this, 'changeAttended'];
-
         $columnAttended
             ->setSortable()
             ->setFilterSelect([
@@ -207,9 +211,22 @@ class UsersGridControl extends Control
                         }
                     }
                     return null;
-                })
-                ->setSortable();
+                });
         }
+
+
+        $grid->addInlineEdit()->onControlAdd[] = function($container) {
+            $container->addSelect('paymentMethod', '', $this->preparePaymentMethodOptions());
+            $container->addDatePicker('paymentDate', '');
+        };
+        $grid->getInlineEdit()->onSetDefaults[] = function($container, $item) {
+            $container->setDefaults([
+                'paymentMethod' => $item->getPaymentMethod(),
+                'paymentDate' => $item->getPaymentDate()
+            ]);
+        };
+        $grid->getInlineEdit()->onSubmit[] = [$this, 'edit'];
+
 
         $grid->addAction('detail', 'admin.common.detail', 'Users:detail')
             ->setClass('btn btn-xs btn-primary');
@@ -219,9 +236,25 @@ class UsersGridControl extends Control
         $grid->setColumnsSummary(['fee']);
     }
 
+    public function edit($id, $values) {
+        $user = $this->userRepository->findById($id);
+        $user->setPaymentMethod($values['paymentMethod']);
+        $user->setPaymentDate($values['paymentDate']);
+        $this->userRepository->save($user);
+
+        $p = $this->getPresenter();
+        $p->flashMessage('admin.users.users_saved', 'success');
+
+        if ($p->isAjax()) {
+            $p->redrawControl('flashes');
+        }
+        else {
+            $this->redirect('this');
+        }
+    }
+
     public function changeApproved($id, $approved) {
         $user = $this->userRepository->findById($id);
-
         $user->setApproved($approved);
         $this->userRepository->save($user);
 
@@ -239,7 +272,6 @@ class UsersGridControl extends Control
 
     public function changeAttended($id, $attended) {
         $user = $this->userRepository->findById($id);
-
         $user->setAttended($attended);
         $this->userRepository->save($user);
 
@@ -255,7 +287,15 @@ class UsersGridControl extends Control
         }
     }
 
-    private function preparePaymentOptions() {
+    private function preparePaymentMethodOptions() {
+        $options = [];
+        $options[''] = '';
+        foreach (PaymentType::$types as $type)
+            $options[$type] = 'common.payment.' . $type;
+        return $options;
+    }
+
+    private function preparePaymentMethodFilterOptions() {
         $options = [];
         $options[''] = 'admin.common.all';
         foreach (PaymentType::$types as $type)
