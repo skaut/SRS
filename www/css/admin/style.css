@@ -50,10 +50,19 @@ body {
     padding: 0 !important;
 }
 
-/* oprava multiselect v inline editaci */
-.datagrid-multiselect {
+/* oprava select a multiselect v inline editaci */
+.datagrid-inline-edit .bootstrap-select {
     padding-bottom: 0 !important;
     padding-top: 0 !important;
+}
+
+.datagrid-inline-edit .bootstrap-select .btn {
+    font-size: 12px !important;
+    padding: 4px 12px 4px 12px !important;
+}
+
+.datagrid-inline-edit .bootstrap-select li {
+    font-size: 12px !important;
 }
 
 .datagrid-multiselect .btn {
