@@ -1,9 +1,37 @@
+{block head}
+    {include #parent}
+
+    <script>
+        $(function () {
+            $('#searchInput').on('keyup', function () {
+                var value = $(this).val();
+                if (value.length >= 2) {
+                    $.nette.ajax({
+                        'url': {link search!},
+                        'data': {
+                            text: value
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+{/block}
+
 {block sidebar}
     <h3>Uživatelé</h3>
-    <div class="calendar-blocks well">
+    <div class="well">
         <div class="input-group">
             <span class="input-group-addon"><i class="fa fa-search fa-fw"></i></span>
-            <input class="form-control" type="text" ng-model="query">
+            <input id="searchInput" class="form-control" type="text">
         </div>
+
+        {snippet results}
+            <div id="results" class="list-group" n:if="$results" style="margin-top: 15px; margin-bottom: 0">
+                {foreach $results as $result}
+                    <a href="{$result['id']}" class="list-group-item">{$result['displayName']}</a>
+                {/foreach}
+            </div>
+        {/snippet}
     </div>
 {/block}

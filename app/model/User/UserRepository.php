@@ -37,6 +37,15 @@ class UserRepository extends EntityRepository
         return $this->matching($criteria);
     }
 
+    public function findNamesByLikeDisplayNameOrderedByDisplayName($text) {
+        return $this->createQueryBuilder('u')
+            ->select('u.id, u.displayName')
+            ->where('u.displayName LIKE :text')->setParameter('text', '%'.$text.'%')
+            ->addOrderBy('u.displayName')
+            ->getQuery()
+            ->getResult();
+    }
+
     /**
      * @return mixed
      */

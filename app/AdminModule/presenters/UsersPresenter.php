@@ -57,6 +57,8 @@ class UsersPresenter extends AdminBasePresenter
         parent::startup();
 
         $this->checkPermission(Permission::MANAGE);
+
+        $this->template->results = [];
     }
 
     public function renderDetail($id) {
@@ -79,6 +81,12 @@ class UsersPresenter extends AdminBasePresenter
     public function renderEdit($id) {
         $this->template->sidebarVisible = true;
         $this->template->editedUser = $this->userRepository->findById($id);
+    }
+
+    public function handleSearch($text)
+    {
+        $this->template->results = $this->userRepository->findNamesByLikeDisplayNameOrderedByDisplayName($text);
+        $this->redrawControl('results');
     }
 
     public function actionGeneratePaymentProofCash($id) {
