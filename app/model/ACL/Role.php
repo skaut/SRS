@@ -550,11 +550,11 @@ class Role
 //    {
 //        $this->registerableCategories = $registerableCategories;
 //    }
-//
-//    public function addRegisterableCategory(Category $category) {
-//        if (!$this->registerableCategories->contains($category))
-//            $category->addRole($this);
-//    }
+
+    public function addRegisterableCategory(Category $category) {
+        if (!$this->registerableCategories->contains($category))
+            $category->addRole($this);
+    }
 
     /**
      * @return string

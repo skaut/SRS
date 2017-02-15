@@ -15,6 +15,7 @@ use App\Model\Settings\Settings;
 use App\Model\User\CustomInputValue\CustomInputValueRepository;
 use App\Services\ExcelExportService;
 use App\Services\PdfExportService;
+use Nette\Application\UI\Form;
 use Nette\Http\Session;
 
 class UsersPresenter extends AdminBasePresenter
@@ -107,6 +108,17 @@ class UsersPresenter extends AdminBasePresenter
     protected function createComponentEditUserForm($name)
     {
         $form = $this->editUserFormFactory->create($this->getParameter('id'));
+
+        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+            $this->flashMessage('admin.users.users_saved', 'success');
+
+            if ($form['submitAndContinue']->isSubmittedBy()) {
+                $id = $values['id'];
+                $this->redirect('Users:edit', ['id' => $id]);
+            }
+            else
+                $this->redirect('Users:default');
+        };
 
         return $form;
     }

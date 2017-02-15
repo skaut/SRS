@@ -165,12 +165,20 @@ class ApplicationForm extends Nette\Object
                     break;
                 case 'checkbox':
                     $customInputValue = new CustomCheckboxValue();
+                    break;
             }
             $customInputValue->setValue($values['custom'. $customInput->getId()]);
             $customInputValue->setUser($this->user);
             $customInputValue->setInput($customInput);
             $this->customInputValueRepository->save($customInputValue);
         }
+
+        if (array_key_exists('arrival', $values))
+            $this->user->setArrival($values['arrival']);
+
+        if (array_key_exists('departure', $values))
+            $this->user->setDeparture($values['departure']);
+
 
         $this->userRepository->save($this->user);
 
@@ -289,7 +297,7 @@ class ApplicationForm extends Nette\Object
     {
         foreach ($this->roleRepository->findRolesByIds($field->getValue()) as $role) {
             if ($role->hasLimitedCapacity()) {
-                if ($this->roleRepository->countUnoccupiedInRole($role) == 0)
+                if ($this->roleRepository->countUnoccupiedInRole($role) < 1)
                     return false;
             }
         }
