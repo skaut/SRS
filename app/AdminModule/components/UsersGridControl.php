@@ -9,41 +9,41 @@ use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\UserRepository;
+use App\Services\ExcelExportService;
+use App\Services\PdfExportService;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
+use Nette\Http\Session;
+use Nette\Http\SessionSection;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 
 class UsersGridControl extends Control
 {
-    /**
-     * @var Translator
-     */
+    /** @var Translator */
     private $translator;
 
-    /**
-     * @var UserRepository
-     */
+    /** @var UserRepository */
     private $userRepository;
 
-    /**
-     * @var SettingsRepository
-     */
+    /** @var SettingsRepository */
     private $settingsRepository;
 
-    /**
-     * @var CustomInputRepository
-     */
+    /** @var CustomInputRepository */
     private $customInputRepository;
 
-    /**
-     * @var RoleRepository
-     */
+    /** @var RoleRepository */
     private $roleRepository;
+
+    /** @var Session */
+    private $session;
+
+    /** @var SessionSection */
+    private $sessionSection;
 
     public function __construct(Translator $translator, UserRepository $userRepository,
                                 SettingsRepository $settingsRepository, CustomInputRepository $customInputRepository,
-                                RoleRepository $roleRepository)
+                                RoleRepository $roleRepository, Session $session)
     {
         parent::__construct();
 
@@ -52,6 +52,9 @@ class UsersGridControl extends Control
         $this->settingsRepository = $settingsRepository;
         $this->customInputRepository = $customInputRepository;
         $this->roleRepository = $roleRepository;
+
+        $this->session = $session;
+        $this->sessionSection = $session->getSection('datagrid-action');
     }
 
     public function render()
@@ -429,7 +432,8 @@ class UsersGridControl extends Control
     }
 
     public function groupPrintPaymentProof(array $ids) {
-        //TODO
+        $this->sessionSection->ids = $ids;
+        $this->getPresenter()->redirect('generatepaymentproofs');
     }
 
     public function groupExportRoles(array $ids) {

@@ -5,7 +5,7 @@ namespace App\Services;
 
 use Nette;
 
-class ExportService extends Nette\Object
+class ExcelExportService extends Nette\Object
 {
 
 }

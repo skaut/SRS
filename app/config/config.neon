@@ -56,8 +56,8 @@ services:
     - App\Services\SkautIsService
     - App\Services\FilesService(%wwwDir%/files)
     - App\Services\MailService
-    - App\Services\PrintService
-    - App\Services\ExportService
+    - App\Services\PdfExportService(%wwwDir%/pdf)
+    - App\Services\ExcelExportService
     - App\ApiModule\Services\ScheduleService
     - App\Model\ACL\PermissionRepository
     - App\Model\ACL\ResourceRepository
