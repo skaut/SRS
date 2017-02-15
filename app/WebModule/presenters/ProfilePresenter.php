@@ -6,6 +6,8 @@ namespace App\WebModule\Presenters;
 use App\Model\ACL\Role;
 use App\Model\Enums\PaymentType;
 use App\Services\Authenticator;
+use App\Services\ExcelExportService;
+use App\Services\PdfExportService;
 use App\WebModule\Forms\AdditionalInformationForm;
 use App\WebModule\Forms\AdditionalInformationFormFactory;
 use App\WebModule\Forms\PersonalDetailsForm;
@@ -36,12 +38,25 @@ class ProfilePresenter extends WebBasePresenter
     public $additionalInformationFormFactory;
 
     /**
+     * @var PdfExportService
+     * @inject
+     */
+    public $pdfExportService;
+
+    /**
+     * @var ExcelExportService
+     * @inject
+     */
+    public $excelExportService;
+
+    /**
      * @var Authenticator
      * @inject
      */
     public $authenticator;
 
     private $editRegistrationAllowed;
+
 
     public function startup()
     {
@@ -63,9 +78,16 @@ class ProfilePresenter extends WebBasePresenter
         $this->template->paymentMethodBank = PaymentType::BANK;
     }
 
-    public function handleExportSchedule()
+    public function actionGeneratePaymentProofBank() {
+        $user = $this->userRepository->findById($this->user->id);
+        $this->pdfExportService->generatePaymentProof($user, "potvrzeni-o-prijeti-platby.pdf");
+    }
+
+    public function actionExportSchedule()
     {
-        //TODO export harmonogramu
+        $user = $this->userRepository->findById($this->user->id);
+        $response = $this->excelExportService->exportUsersSchedules($user, "harmonogram-seminare.xlsx");
+        $this->sendResponse($response);
     }
 
     protected function createComponentPersonalDetailsForm($name)

@@ -38,7 +38,7 @@ profile:
     fee_paid_date: "Poplatek uhrazen dne"
     fee_not_paid: "poplatek neuhrazen"
     total: "Celkem:"
-    print_proof: "vytisknout potvrzení"
+    print_proof: "stáhnout potvrzení"
     roles: "Role"
     required_roles_not_selected: "K roli %role% musíte mít vybrané role: %requiredRoles%."
     incompatible_roles_selected: "Není možné kombinovat roli %role% s rolemi: %incompatibleRoles%."

@@ -75,7 +75,7 @@
                                     {if $dbuser->getPaymentDate() !== null}
                                         {$dbuser->getPaymentDate()|date:"j. n. Y"}
                                         {if $dbuser->getPaymentMethod() == $paymentMethodBank}
-                                            - <a href="{link printProof!}" class="btn btn-default">{_web.profile.print_proof}</a>
+                                            - <a n:href="generatepaymentproofbank">{_web.profile.print_proof}</a>
                                         {/if}
                                     {else}
                                         {_web.profile.fee_not_paid}
@@ -157,7 +157,7 @@
                                 </tr>
                             {/foreach}
                         </table>
-                        <a href="{link exportSchedule!}">{_web.profile.download_schedule}</a> {* TODO tlacitko *}
+                        <a n:href="exportschedule" class="btn btn-primary">{_web.profile.download_schedule}</a>
                     {/if}
                 </div>
             </div>
