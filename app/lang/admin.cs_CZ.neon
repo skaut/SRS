@@ -274,6 +274,7 @@ users:
     users_group_action_change_roles_error_empty: "Role nebyly nastaveny, musí být vybrána alespoň jedna role."
     users_group_action_change_roles_error_nonregistered: "Role nebyly nastaveny, role nepřihlášený nemůže být kombinována s jinými rolemi."
     users_group_action_change_roles_error_capacity: "Role nebyly nastaveny, byla by překročena kapacita některé role."
+    users_search_heading: "Vyhledání uživatele"
     users_edit_heading: "Úprava uživatele: %name%"
     users_detail_heading: "Detail uživatele: %name%"
     users_detail_personal_details: "Osobní údaje"

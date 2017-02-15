@@ -175,7 +175,13 @@ class UsersGridControl extends Control
             ->setRenderer(function ($row) use($variableSymbolCode) {
                 return $row->getVariableSymbolWithCode($variableSymbolCode);
             })
-            ->setSortable();
+            ->setFilterText()
+            ->setCondition(function($qb, $value) use($variableSymbolCode) {
+                if (substr($value, 0, 2) == $variableSymbolCode)
+                    $qb->where('u.variableSymbol LIKE :vs')->setParameter('vs', substr($value, 2) . '%');
+                else
+                    $qb->where('u.variableSymbol LIKE :vsc')->setParameter('vsc', '#' . $value . '%');
+            });
 
         $grid->addColumnText('paymentMethod', 'admin.users.users_payment_method')
             ->setRenderer(function ($row) {

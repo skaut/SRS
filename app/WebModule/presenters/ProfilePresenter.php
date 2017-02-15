@@ -4,6 +4,7 @@ namespace App\WebModule\Presenters;
 
 
 use App\Model\ACL\Role;
+use App\Model\Enums\PaymentType;
 use App\Services\Authenticator;
 use App\WebModule\Forms\AdditionalInformationForm;
 use App\WebModule\Forms\AdditionalInformationFormFactory;
@@ -59,6 +60,7 @@ class ProfilePresenter extends WebBasePresenter
     public function renderDefault() {
         $this->template->pageName = $this->translator->translate('web.profile.title');
         $this->template->basicBlockDuration = $this->settingsRepository->getValue('basic_block_duration');
+        $this->template->paymentMethodBank = PaymentType::BANK;
     }
 
     public function handleExportSchedule()

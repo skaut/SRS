@@ -74,8 +74,8 @@
                                 <td>
                                     {if $dbuser->getPaymentDate() !== null}
                                         {$dbuser->getPaymentDate()|date:"j. n. Y"}
-                                        {if $dbuser->getPaymentMethod() == \App\Model\Payment::BANK}
-                                            - <a href="{link printProof!}">{_web.profile.print_proof}</a>
+                                        {if $dbuser->getPaymentMethod() == $paymentMethodBank}
+                                            - <a href="{link printProof!}" class="btn btn-default">{_web.profile.print_proof}</a>
                                         {/if}
                                     {else}
                                         {_web.profile.fee_not_paid}

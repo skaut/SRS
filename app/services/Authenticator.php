@@ -106,7 +106,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
         $variableSymbol = $birthDate->format('ymd');
 
         while ($this->userRepository->variableSymbolExists($variableSymbol))
-            $variableSymbol++;
+            $variableSymbol = str_pad(++$variableSymbol, 6, '0', STR_PAD_LEFT);
 
         return $variableSymbol;
     }

@@ -791,6 +791,8 @@ class User
 
     public function getVariableSymbolWithCode($code)
     {
+        if (substr($this->variableSymbol, 0, 1) == '#')
+            return substr($this->variableSymbol, 1);
         return $code . $this->variableSymbol;
     }
 
