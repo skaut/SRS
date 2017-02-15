@@ -277,6 +277,10 @@ users:
     users_group_action_change_roles_error_capacity: "Role nebyly nastaveny, byla by překročena kapacita některé role."
     users_edit_heading: "Úprava uživatele: %name%"
     users_detail_heading: "Detail uživatele: %name%"
+    users_detail_personal_details: "Osobní údaje"
+    users_detail_seminar: "Účast na semináři"
+    users_detail_generate_payment_proof_bank: "Stáhnout potvrzení o přijetí platby"
+    users_detail_generate_payment_proof_cash: "Stáhnout příjmový doklad"
 
 acl:
     roles_heading: "Role"

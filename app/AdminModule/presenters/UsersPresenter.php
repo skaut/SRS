@@ -8,6 +8,7 @@ use App\AdminModule\Forms\EditUserForm;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\ACL\Role;
+use App\Model\Enums\PaymentType;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\User\CustomInputValue\CustomInputValueRepository;
@@ -67,11 +68,24 @@ class UsersPresenter extends AdminBasePresenter
 
         $this->template->roleAdminName = $this->roleRepository->findBySystemName(Role::ADMIN)->getName();
         $this->template->roleOrganizerName = $this->roleRepository->findBySystemName(Role::ORGANIZER)->getName();
+
+        $this->template->paymentMethodCash = PaymentType::CASH;
+        $this->template->paymentMethodBank = PaymentType::BANK;
     }
 
     public function renderEdit($id) {
         $this->template->sidebarVisible = true;
         $this->template->editedUser = $this->userRepository->findById($id);
+    }
+
+    public function actionGeneratePaymentProofCash($id) {
+        $user = $this->userRepository->findById($id);
+        $this->pdfExportService->generatePaymentProof($user, "prijmovy-pokladni-doklad.pdf");
+    }
+
+    public function actionGeneratePaymentProofBank($id) {
+        $user = $this->userRepository->findById($id);
+        $this->pdfExportService->generatePaymentProof($user, "potvrzeni-o-prijeti-platby.pdf");
     }
 
     protected function createComponentUsersGrid($name)

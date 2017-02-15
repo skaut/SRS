@@ -2,7 +2,16 @@
 
 {block main}
     <h2>{_admin.users.users_detail_heading, ['name' => $detailUser->getDisplayName()]}</h2>
-    <h3>Osobní údaje</h3>
+
+    {if $detailUser->getPaymentDate() != null}
+        {if $detailUser->getPaymentMethod() == $paymentMethodBank}
+            <a class="btn btn-default" n:href="generatePaymentProofBank $detailUser->getId()">{_admin.users.users_detail_generate_payment_proof_bank}</a>
+        {elseif $detailUser->getPaymentMethod() == $paymentMethodCash}
+            <a class="btn btn-default" n:href="generatePaymentProofCash $detailUser->getId()">{_admin.users.users_detail_generate_payment_proof_cash}</a>
+        {/if}
+    {/if}
+
+    <h3>{_admin.users.users_detail_personal_details}</h3>
     <div class="well">
         <table class="table table-form">
             <col class="col-sm-3 col-xs-3">
@@ -51,7 +60,7 @@
         </table>
     </div>
 
-    <h3>Účast na semináři</h3>
+    <h3>{_admin.users.users_detail_seminar}</h3>
     <div class="well">
         <table class="table table-form">
             <col class="col-sm-3 col-xs-3">
