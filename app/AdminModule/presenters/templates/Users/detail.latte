@@ -1,0 +1,140 @@
+{import 'sidebar.latte'}
+
+{block main}
+    <h2>{_admin.users.users_detail_heading, ['name' => $detailUser->getDisplayName()]}</h2>
+    <h3>Osobní údaje</h3>
+    <div class="well">
+        <table class="table table-form">
+            <col class="col-sm-3 col-xs-3">
+            <col class="col-sm-9 col-xs-9">
+
+            <tr>
+                <th>{_admin.users.users_username}</th>
+                <td>{$detailUser->getUserName()}</td>
+            </tr>
+
+            <tr>
+                <th>{_admin.users.users_firstname}</th>
+                <td>{$detailUser->getFirstName()}</td>
+            </tr>
+
+            <tr>
+                <th>{_admin.users.users_lastname}</th>
+                <td>{$detailUser->getLastName()}</td>
+            </tr>
+
+            <tr>
+                <th>{_admin.users.users_nickname}</th>
+                <td>{$detailUser->getNickName()}</td>
+            </tr>
+
+            <tr>
+                <th>{_admin.users.users_email}</th>
+                <td><a href="mailto:{$detailUser->getEmail()}">{$detailUser->getEmail()}</a></td>
+            </tr>
+
+            <tr>
+                <th>{_admin.users.users_birthdate}</th>
+                <td>{$detailUser->getBirthdate()->format('j. n. Y')}</td>
+            </tr>
+
+            <tr>
+                <th>{_admin.users.users_age}</th>
+                <td>{$detailUser->getAge()}</td>
+            </tr>
+
+            <tr>
+                <th>{_admin.users.users_address}</th>
+                <td>{$detailUser->getStreet()}, {$detailUser->getCity()}, {$detailUser->getPostcode()}</td>
+            </tr>
+
+        </table>
+    </div>
+
+    <h3>Účast na semináři</h3>
+    <div class="well">
+        <table class="table table-form">
+            <col class="col-sm-3 col-xs-3">
+            <col class="col-sm-9 col-xs-9">
+
+            <tr>
+                <th>{_admin.users.users_roles}</th>
+                <td>{foreach $detailUser->getRoles() as $role}{$role->getName()}{sep}, {/sep}{/foreach}</td>
+            </tr>
+
+            <tr>
+                <th>{_admin.users.users_approved_detail}</th>
+                <td>{if $detailUser->isApproved()}
+                        {_admin.common.yes}
+                    {else}
+                        {_admin.common.no}
+                    {/if}
+                </td>
+            </tr>
+
+            <tr>
+                <th>{_admin.users.users_first_login}</th>
+                <td>{$detailUser->getFirstLogin()->format('j. n. Y h:i')}</td>
+            </tr>
+
+            <tr>
+                <th>{_admin.users.users_last_login}</th>
+                <td>{$detailUser->getLastLogin()->format('j. n. Y h:i')}</td>
+            </tr>
+
+            <tr>
+                <th>{_admin.users.users_attended_detail}</th>
+                <td>{if $detailUser->isAttended()}
+                        {_admin.common.yes}
+                    {else}
+                        {_admin.common.no}
+                    {/if}
+                </td>
+            </tr>
+
+            {if $detailUser->hasDisplayArrivalDepartureRole()}
+                <tr>
+                    <th>{_admin.users.users_arrival}</th>
+                    <td>{if $detailUser->getArrival()}{$detailUser->getArrival()->format('j. n. Y h:i')}{/if}</td>
+                </tr>
+
+                <tr>
+                    <th>{_admin.users.users_departure}</th>
+                    <td>{if $detailUser->getDeparture()}{$detailUser->getDeparture()->format('j. n. Y h:i')}{/if}</td>
+                </tr>
+            {/if}
+
+            <tr>
+                <th>{_admin.users.users_about_me}</th>
+                <td>{$detailUser->getAbout()}</td>
+            </tr>
+
+            {foreach $customInputs as $customInput}
+                <tr>
+                    <th>{$customInput->getName()}</th>
+                    <td>
+                        {var $customInputValue = $detailUser->getCustomInputValue($customInput)}
+                        {if $customInputValue}
+                            {if $customInput->getType() == $customInputTypeText}
+                                {$customInputValue->getValue()}
+                            {elseif $customInput->getType() == $customInputTypeCheckbox}
+                                {if $customInputValue->getValue()}
+                                    {_admin.common.yes}
+                                {else}
+                                    {_admin.common.no}
+                                {/if}
+                            {/if}
+                        {/if}
+                    </td>
+                </tr>
+            {/foreach}
+
+            {if $user->isInRole($roleAdminName) || $user->isInRole($roleOrganizerName)}
+                <tr>
+                    <th>{_admin.users.users_private_note|breaklines}</th>
+                    <td>{$detailUser->getNote()}</td>
+                </tr>
+            {/if}
+        </table>
+    </div>
+{/block}

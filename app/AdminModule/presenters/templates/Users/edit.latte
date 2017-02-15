@@ -1,0 +1,9 @@
+{import 'sidebar.latte'}
+
+{block main}
+    <h2>{_admin.users.users_edit_heading, ['name' => $editedUser->getDisplayName()]}</h2>
+    <div class="well">
+        {control editUserForm}
+    </div>
+{/block}
+

@@ -906,6 +906,10 @@ class User
         $this->customInputValues = $customInputValues;
     }
 
+    /**
+     * @param CustomInput $customInput
+     * @return mixed
+     */
     public function getCustomInputValue(CustomInput $customInput) {
         $criteria = Criteria::create()
             ->where(Criteria::expr()
