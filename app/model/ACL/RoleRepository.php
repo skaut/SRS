@@ -318,6 +318,7 @@ class RoleRepository extends EntityRepository
         $roles = $this->createQueryBuilder('r')
             ->select('r.id, r.name')
             ->where('r.systemName NOT IN (:roles)')->setParameter('roles', $withoutRoles)
+            ->orWhere('r.systemName IS NULL')
             ->orderBy('r.name')
             ->getQuery()
             ->getResult();
@@ -336,6 +337,7 @@ class RoleRepository extends EntityRepository
     {
         $roles = $this->createQueryBuilder('r')
             ->where('r.systemName NOT IN (:roles)')->setParameter('roles', $withoutRoles)
+            ->orWhere('r.systemName IS NULL')
             ->orderBy('r.name')
             ->getQuery()
             ->getResult();
@@ -362,6 +364,7 @@ class RoleRepository extends EntityRepository
     {
         $roles = $this->createQueryBuilder('r')
             ->where('r.systemName NOT IN (:roles)')->setParameter('roles', $withoutRoles)
+            ->orWhere('r.systemName IS NULL')
             ->orderBy('r.name')
             ->getQuery()
             ->getResult();

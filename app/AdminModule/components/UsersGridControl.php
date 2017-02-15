@@ -41,9 +41,17 @@ class UsersGridControl extends Control
     /** @var SessionSection */
     private $sessionSection;
 
+    /** @var PdfExportService */
+    private $pdfExportService;
+
+    /** @var ExcelExportService */
+    private $excelExportService;
+
+
     public function __construct(Translator $translator, UserRepository $userRepository,
                                 SettingsRepository $settingsRepository, CustomInputRepository $customInputRepository,
-                                RoleRepository $roleRepository, Session $session)
+                                RoleRepository $roleRepository, PdfExportService $pdfExportService,
+                                ExcelExportService $excelExportService, Session $session)
     {
         parent::__construct();
 
@@ -52,6 +60,8 @@ class UsersGridControl extends Control
         $this->settingsRepository = $settingsRepository;
         $this->customInputRepository = $customInputRepository;
         $this->roleRepository = $roleRepository;
+        $this->pdfExportService = $pdfExportService;
+        $this->excelExportService = $excelExportService;
 
         $this->session = $session;
         $this->sessionSection = $session->getSection('datagrid-action');
@@ -84,14 +94,14 @@ class UsersGridControl extends Control
         $grid->addGroupAction('admin.users.users_group_action_mark_paid_today', $this->preparePaymentMethodOptionsWithoutEmpty())
             ->onSelect[] = [$this, 'groupMarkPaidToday'];
 
-        $grid->addGroupAction('admin.users.users_group_action_print_payment_proof')
-            ->onSelect[] = [$this, 'groupPrintPaymentProof'];
+        $grid->addGroupAction('admin.users.users_group_action_generate_payment_proofs')
+            ->onSelect[] = [$this, 'groupGeneratePaymentProofs'];
 
         $grid->addGroupAction('admin.users.users_group_action_export_roles')
             ->onSelect[] = [$this, 'groupExportRoles'];
 
-        $grid->addGroupAction('admin.users.users_group_action_export_schedule')
-            ->onSelect[] = [$this, 'groupExportSchedule'];
+        $grid->addGroupAction('admin.users.users_group_action_export_schedules')
+            ->onSelect[] = [$this, 'groupExportSchedules'];
 
 
         $grid->addColumnText('displayName', 'admin.users.users_name')
@@ -431,17 +441,57 @@ class UsersGridControl extends Control
         }
     }
 
-    public function groupPrintPaymentProof(array $ids) {
+    public function groupGeneratePaymentProofs(array $ids) {
         $this->sessionSection->ids = $ids;
-        $this->getPresenter()->redirect('generatepaymentproofs');
+        $this->redirect('generatepaymentproofs'); //presmerovani kvuli zruseni ajax
     }
 
     public function groupExportRoles(array $ids) {
-        //TODO
+        $this->sessionSection->ids = $ids;
+        $this->redirect('exportroles'); //presmerovani kvuli zruseni ajax
     }
 
-    public function groupExportSchedule(array $ids) {
-        //TODO
+    public function groupExportSchedules(array $ids) {
+        $this->sessionSection->ids = $ids;
+        $this->redirect('exportschedules'); //presmerovani kvuli zruseni ajax
+    }
+
+    public function handleGeneratePaymentProofs() {
+        $ids = $this->session->getSection('datagrid-action')->ids;
+
+        $users = $this->userRepository->findUsersByIds($ids);
+        $usersToGenerate = [];
+
+        foreach ($users as $user) {
+            if ($user->getPaymentDate()) {
+                $usersToGenerate[] = $user;
+                $user->setIncomeProofPrintedDate(new \DateTime());
+                $this->userRepository->save($user);
+            }
+        }
+
+        $this->pdfExportService->generatePaymentProofs($usersToGenerate, "doklady.pdf");
+    }
+
+    public function handleExportRoles() {
+        $ids = $this->session->getSection('datagrid-action')->ids;
+
+        $users = $this->userRepository->findUsersByIds($ids);
+        $roles = $this->roleRepository->findAll();
+
+        $response = $this->excelExportService->exportUsersRoles($users, $roles, "role-uzivatelu.xlsx");
+
+        $this->getPresenter()->sendResponse($response);
+    }
+
+    public function handleExportSchedules() {
+        $ids = $this->session->getSection('datagrid-action')->ids;
+
+        $users = $this->userRepository->findUsersByIds($ids);
+
+        $response = $this->excelExportService->exportUsersSchedules($users, "harmonogramy-uzivatelu.xlsx");
+
+        $this->getPresenter()->sendResponse($response);
     }
 
     private function preparePaymentMethodOptionsWithoutEmpty() {

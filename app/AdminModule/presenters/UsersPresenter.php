@@ -46,23 +46,6 @@ class UsersPresenter extends AdminBasePresenter
         $this->checkPermission(Permission::MANAGE);
     }
 
-    public function actionGeneratePaymentProofs() {
-        $ids = $this->session->getSection('datagrid-action')->ids;
-
-        $users = $this->userRepository->findUsersByIds($ids);
-        $usersToGenerate = [];
-
-        foreach ($users as $user) {
-            if ($user->getPaymentDate()) {
-                $usersToGenerate[] = $user;
-                $user->setIncomeProofPrintedDate(new \DateTime());
-                $this->userRepository->save($user);
-            }
-        }
-
-        $this->pdfExportService->generatePaymentProofs($usersToGenerate);
-    }
-
     protected function createComponentUsersGrid($name)
     {
         return $this->usersGridControlFactory->create();

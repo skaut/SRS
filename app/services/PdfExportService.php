@@ -37,18 +37,18 @@ class PdfExportService extends Nette\Object
         $this->fpdi->SetFont('verdana', '', 10);
     }
 
-    public function generatePaymentProof(User $user) {
-        $this->generatePaymentProofs([$user]);
+    public function generatePaymentProof(User $user, $filename) {
+        $this->generatePaymentProofs([$user], $filename);
     }
 
-    public function generatePaymentProofs($users) {
+    public function generatePaymentProofs($users, $filename) {
         foreach ($users as $user) {
             if ($user->getPaymentMethod() == PaymentType::BANK)
                 $this->addAccountProofPage($user);
             else if ($user->getPaymentMethod() == PaymentType::CASH)
                 $this->addIncomeProofPage($user);
         }
-        $this->fpdi->Output('doklady-o-zaplaceni.pdf', 'D');
+        $this->fpdi->Output($filename, 'D');
         exit;
     }
 
