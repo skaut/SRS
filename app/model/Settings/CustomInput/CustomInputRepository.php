@@ -53,6 +53,9 @@ class CustomInputRepository extends EntityRepository
      */
     public function remove(CustomInput $input)
     {
+        foreach ($input->getCustomInputValues() as $customInputValue)
+            $this->_em->remove($customInputValue);
+
         $this->_em->remove($input);
         $this->_em->flush();
     }

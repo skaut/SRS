@@ -2,6 +2,7 @@
 
 namespace App\Model\Settings\CustomInput;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
@@ -43,6 +44,12 @@ abstract class CustomInput
     protected $position;
 
     /**
+     * @ORM\OneToMany(targetEntity="\App\Model\User\CustomInputValue\CustomInputValue", mappedBy="input", cascade={"persist"})
+     * @var ArrayCollection
+     */
+    protected $customInputValues;
+
+    /**
      * @return string
      */
     public function getName()
@@ -80,5 +87,21 @@ abstract class CustomInput
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getCustomInputValues()
+    {
+        return $this->customInputValues;
+    }
+
+    /**
+     * @param ArrayCollection $customInputValues
+     */
+    public function setCustomInputValues($customInputValues)
+    {
+        $this->customInputValues = $customInputValues;
     }
 }

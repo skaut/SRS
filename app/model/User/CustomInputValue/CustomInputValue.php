@@ -23,7 +23,7 @@ abstract class CustomInputValue
     use Identifier;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\App\Model\Settings\CustomInput\CustomInput", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="\App\Model\Settings\CustomInput\CustomInput", inversedBy="customInputValues", cascade={"persist"})
      * @var CustomInput
      */
     protected $input;
