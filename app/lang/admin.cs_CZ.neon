@@ -257,7 +257,6 @@ users:
     users_arrival: "Příjezd"
     users_departure: "Odjezd"
     users_private_note: "Neveřejná poznámka"
-    users_private_note_note: "Tuto poznámku vidí pouze uživatelé v rolích Administrátor a Organizátor."
     users_changed_attended: "Účast uživatele byla úspěšně upravena."
     users_saved: "Uživatel byl úspěšně uložen."
     users_group_action_approve: "Schválit"
@@ -279,6 +278,7 @@ users:
     users_detail_heading: "Detail uživatele: %name%"
     users_detail_personal_details: "Osobní údaje"
     users_detail_seminar: "Účast na semináři"
+    users_detail_payment: "Platba"
     users_detail_generate_payment_proof_bank: "Stáhnout potvrzení o přijetí platby"
     users_detail_generate_payment_proof_cash: "Stáhnout příjmový doklad"
 

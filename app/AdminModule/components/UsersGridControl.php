@@ -170,6 +170,13 @@ class UsersGridControl extends Control
 
         $grid->addColumnNumber('fee', 'admin.users.users_fee');
 
+        $variableSymbolCode = $this->settingsRepository->getValue('variable_symbol_code');
+        $grid->addColumnText('variableSymbol', 'admin.users.users_variable_symbol')
+            ->setRenderer(function ($row) use($variableSymbolCode) {
+                return $row->getVariableSymbolWithCode($variableSymbolCode);
+            })
+            ->setSortable();
+
         $grid->addColumnText('paymentMethod', 'admin.users.users_payment_method')
             ->setRenderer(function ($row) {
                 if ($row->getPaymentMethod())
@@ -179,13 +186,6 @@ class UsersGridControl extends Control
             ->setSortable()
             ->setFilterSelect($this->preparePaymentMethodFilterOptions())
             ->setTranslateOptions();
-
-        $variableSymbolCode = $this->settingsRepository->getValue('variable_symbol_code');
-        $grid->addColumnText('variableSymbol', 'admin.users.users_variable_symbol')
-            ->setRenderer(function ($row) use($variableSymbolCode) {
-                return $row->getVariableSymbolWithCode($variableSymbolCode);
-            })
-            ->setSortable();
 
         $grid->addColumnDateTime('paymentDate', 'admin.users.users_payment_date')
             ->setSortable();

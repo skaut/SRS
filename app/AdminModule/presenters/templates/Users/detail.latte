@@ -3,14 +3,6 @@
 {block main}
     <h2>{_admin.users.users_detail_heading, ['name' => $detailUser->getDisplayName()]}</h2>
 
-    {if $detailUser->getPaymentDate() != null}
-        {if $detailUser->getPaymentMethod() == $paymentMethodBank}
-            <a class="btn btn-default" n:href="generatePaymentProofBank $detailUser->getId()">{_admin.users.users_detail_generate_payment_proof_bank}</a>
-        {elseif $detailUser->getPaymentMethod() == $paymentMethodCash}
-            <a class="btn btn-default" n:href="generatePaymentProofCash $detailUser->getId()">{_admin.users.users_detail_generate_payment_proof_cash}</a>
-        {/if}
-    {/if}
-
     <h3>{_admin.users.users_detail_personal_details}</h3>
     <div class="well">
         <table class="table table-form">
@@ -138,12 +130,53 @@
                 </tr>
             {/foreach}
 
-            {if $user->isInRole($roleAdminName) || $user->isInRole($roleOrganizerName)}
-                <tr>
-                    <th>{_admin.users.users_private_note|breaklines}</th>
-                    <td>{$detailUser->getNote()}</td>
-                </tr>
-            {/if}
+            <tr>
+                <th>{_admin.users.users_private_note|breaklines}</th>
+                <td>{$detailUser->getNote()}</td>
+            </tr>
         </table>
     </div>
+
+    {if $detailUser->isPaying()}
+        <h3>{_admin.users.users_detail_payment}</h3>
+        <div class="well">
+            <table class="table table-form">
+                <col class="col-sm-3 col-xs-3">
+                <col class="col-sm-9 col-xs-9">
+
+                <tr>
+                    <th>{_admin.users.users_fee}</th>
+                    <td>{$detailUser->getFee()}</td>
+                </tr>
+
+                <tr>
+                    <th>{_admin.users.users_variable_symbol}</th>
+                    <td>{$detailUser->getVariableSymbol($variableSymbolCode)}</td>
+                </tr>
+
+                <tr>
+                    <th>{_admin.users.users_payment_method}</th>
+                    <td>{if $detailUser->getPaymentMethod()}{_'common.payment.' . $detailUser->getPaymentMethod()}{/if}</td>
+                </tr>
+
+                <tr>
+                    <th>{_admin.users.users_payment_date}</th>
+                    <td>{if $detailUser->getPaymentDate()}{$detailUser->getPaymentDate()->format('j. n. Y')}{/if}</td>
+                </tr>
+
+                <tr>
+                    <th>{_admin.users.users_income_proof_printed_date}</th>
+                    <td>{if $detailUser->getIncomeProofPrintedDate()}{$detailUser->getIncomeProofPrintedDate()->format('j. n. Y')}{/if}</td>
+                </tr>
+            </table>
+
+            {if $detailUser->getPaymentDate() != null}
+                {if $detailUser->getPaymentMethod() == $paymentMethodBank}
+                    <a class="btn btn-primary" n:href="generatePaymentProofBank $detailUser->getId()">{_admin.users.users_detail_generate_payment_proof_bank}</a>
+                {elseif $detailUser->getPaymentMethod() == $paymentMethodCash}
+                    <a class="btn btn-primary" n:href="generatePaymentProofCash $detailUser->getId()">{_admin.users.users_detail_generate_payment_proof_cash}</a>
+                {/if}
+            {/if}
+        </div>
+    {/if}
 {/block}

@@ -11,6 +11,7 @@ use App\Model\ACL\Role;
 use App\Model\Enums\PaymentType;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
+use App\Model\Settings\Settings;
 use App\Model\User\CustomInputValue\CustomInputValueRepository;
 use App\Services\ExcelExportService;
 use App\Services\PdfExportService;
@@ -71,6 +72,8 @@ class UsersPresenter extends AdminBasePresenter
 
         $this->template->paymentMethodCash = PaymentType::CASH;
         $this->template->paymentMethodBank = PaymentType::BANK;
+
+        $this->template->variableSymbolCode = $this->settingsRepository->getValue('variable_symbol_code');
     }
 
     public function renderEdit($id) {
