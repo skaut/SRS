@@ -36,7 +36,7 @@
 
             <tr>
                 <th>{_admin.users.users_birthdate}</th>
-                <td>{$detailUser->getBirthdate()->format('j. n. Y')}</td>
+                <td>{$detailUser->getBirthdate()|date:'j. n. Y'}</td>
             </tr>
 
             <tr>
@@ -75,12 +75,12 @@
 
             <tr>
                 <th>{_admin.users.users_first_login}</th>
-                <td>{$detailUser->getFirstLogin()->format('j. n. Y h:i')}</td>
+                <td>{$detailUser->getFirstLogin()|date:'j. n. Y H:i'}</td>
             </tr>
 
             <tr>
                 <th>{_admin.users.users_last_login}</th>
-                <td>{$detailUser->getLastLogin()->format('j. n. Y h:i')}</td>
+                <td>{$detailUser->getLastLogin()|date:'j. n. Y H:i'}</td>
             </tr>
 
             <tr>
@@ -96,12 +96,12 @@
             {if $detailUser->hasDisplayArrivalDepartureRole()}
                 <tr>
                     <th>{_admin.users.users_arrival}</th>
-                    <td>{if $detailUser->getArrival()}{$detailUser->getArrival()->format('j. n. Y h:i')}{/if}</td>
+                    <td>{if $detailUser->getArrival()}{$detailUser->getArrival()|date:'j. n. Y H:i'}{/if}</td>
                 </tr>
 
                 <tr>
                     <th>{_admin.users.users_departure}</th>
-                    <td>{if $detailUser->getDeparture()}{$detailUser->getDeparture()->format('j. n. Y h:i')}{/if}</td>
+                    <td>{if $detailUser->getDeparture()}{$detailUser->getDeparture()|date:'j. n. Y H:i'}{/if}</td>
                 </tr>
             {/if}
 
@@ -161,12 +161,12 @@
 
                 <tr>
                     <th>{_admin.users.users_payment_date}</th>
-                    <td>{if $detailUser->getPaymentDate()}{$detailUser->getPaymentDate()->format('j. n. Y')}{/if}</td>
+                    <td>{if $detailUser->getPaymentDate()}{$detailUser->getPaymentDate()|date:'j. n. Y'}{/if}</td>
                 </tr>
 
                 <tr>
                     <th>{_admin.users.users_income_proof_printed_date}</th>
-                    <td>{if $detailUser->getIncomeProofPrintedDate()}{$detailUser->getIncomeProofPrintedDate()->format('j. n. Y')}{/if}</td>
+                    <td>{if $detailUser->getIncomeProofPrintedDate()}{$detailUser->getIncomeProofPrintedDate()|date:'j. n. Y'}{/if}</td>
                 </tr>
             </table>
 

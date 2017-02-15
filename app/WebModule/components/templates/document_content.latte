@@ -13,7 +13,7 @@
                         <i class="fa-li fa fa-file"></i>
                         <a href="{$basePath}/files{$document->getFile()}" target="_blank">{$document->getName()}</a>
                         <span n:if="$document->getDescription()">- {$document->getDescription()}</span>
-                        (upraveno: {$document->getTimestamp()->format('j. n. Y')})
+                        (upraveno: {$document->getTimestamp()|date:'j. n. Y'})
                     </li>
                 {/foreach}
             </ul>

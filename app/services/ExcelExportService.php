@@ -96,8 +96,8 @@ class ExcelExportService extends Nette\Object
                 $row++;
                 $column = 0;
 
-                $sheet->setCellValueByColumnAndRow($column++, $row, $program->getStart()->format("j. n. h:i"));
-                $sheet->setCellValueByColumnAndRow($column++, $row, $program->getEnd($basicBlockDuration)->format("j. n. h:i"));
+                $sheet->setCellValueByColumnAndRow($column++, $row, $program->getStart()->format("j. n. H:i"));
+                $sheet->setCellValueByColumnAndRow($column++, $row, $program->getEnd($basicBlockDuration)->format("j. n. H:i"));
                 $sheet->setCellValueByColumnAndRow($column++, $row, $program->getBlock()->getName());
                 $sheet->setCellValueByColumnAndRow($column++, $row, $program->getRoom() ? $program->getRoom()->getName() : null);
                 $sheet->setCellValueByColumnAndRow($column++, $row, $program->getBlock()->getLector() ? $program->getBlock()->getLector()->getDisplayName() : null);

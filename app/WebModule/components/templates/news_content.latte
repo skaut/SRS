@@ -10,7 +10,7 @@
             {foreach $news as $n}
                 <div class="panel panel-default">
                     <div class="panel-body">{$n->getText()|noescape}</div>
-                    <div class="panel-footer">{$n->getPublished()->format('j. n. Y')}</div>
+                    <div class="panel-footer">{$n->getPublished()|date:'j. n. Y'}</div>
                 </div>
             {/foreach}
         </div>
