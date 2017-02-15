@@ -48,6 +48,10 @@ mailing:
     do: both
     log_directory: '%appDir%/../log/mails'
 
+translation:
+    default: cs
+    fallback: [cs_CZ, cs]
+
 services:
     - App\RouterFactory
     router: @App\RouterFactory::createRouter
