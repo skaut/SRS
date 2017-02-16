@@ -9,6 +9,7 @@ use App\Model\ACL\Role;
 use App\Model\Program\BlockRepository;
 use App\Model\Program\Category;
 use App\Model\Program\CategoryRepository;
+use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
@@ -112,7 +113,7 @@ class ProgramBlocksGridControl extends Control
 
         if (($this->getPresenter()->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS) ||
             $this->getPresenter()->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS)) &&
-            $this->settingsRepository->getValue('is_allowed_add_block')) {
+            $this->settingsRepository->getValue(Settings::IS_ALLOWED_ADD_BLOCK)) {
             $grid->addToolbarButton('Blocks:add')
                 ->setIcon('plus')
                 ->setTitle('admin.common.add');

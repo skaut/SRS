@@ -140,7 +140,25 @@ class UserRepository extends EntityRepository
      */
     public function variableSymbolExists($variableSymbol)
     {
-        return $this->findOneBy(['variableSymbol' => $variableSymbol]) !== null;
+        $res = $this->createQueryBuilder('u')
+            ->where('u.variableSymbol LIKE :vs')->setParameter('vs', $variableSymbol . '%')
+            ->getQuery()
+            ->getResult();
+        return !empty($res);
+    }
+
+    public function setVariableSymbolCode($variableSymbolCode) {
+        $this->createQueryBuilder('u')
+            ->update()
+            ->set('u.variableSymbol', $this->createQueryBuilder()->expr()->concat(
+                ':code',
+                $this->createQueryBuilder()->expr()->substring('u.variableSymbol', 3, 6)
+            ))
+            ->setParameter('code', $variableSymbolCode)
+            ->where('u.variableSymbol NOT LIKE :edited')
+            ->setParameter('edited', '%#')
+            ->getQuery()
+            ->execute();
     }
 
     /**

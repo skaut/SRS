@@ -5,6 +5,7 @@ namespace App\AdminModule\ConfigurationModule\Presenters;
 
 use App\AdminModule\ConfigurationModule\Forms\SkautIsEventForm;
 use App\AdminModule\ConfigurationModule\Forms\SkautIsEventFormFactory;
+use App\Model\Settings\Settings;
 use App\Services\SkautIsService;
 use Nette\Application\UI\Form;
 use Skautis\Wsdl\WsdlException;
@@ -19,9 +20,9 @@ class SkautIsPresenter extends ConfigurationBasePresenter
 
     public function renderDefault()
     {
-        $eventId = $this->settingsRepository->getValue('skautis_event_id');
+        $eventId = $this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_ID);
         if ($eventId !== null) {
-            $this->template->event = $this->settingsRepository->getValue('skautis_event_name');
+            $this->template->event = $this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_NAME);
             $this->template->connected = true;
             $this->template->access = true;
             $this->template->closed = false;
@@ -40,8 +41,8 @@ class SkautIsPresenter extends ConfigurationBasePresenter
 
     public function handleDisconnect()
     {
-        $this->settingsRepository->setValue('skautis_event_id', null);
-        $this->settingsRepository->setValue('skautis_event_name', null);
+        $this->settingsRepository->setValue(Settings::SKAUTIS_EVENT_ID, null);
+        $this->settingsRepository->setValue(Settings::SKAUTIS_EVENT_NAME, null);
 
         $this->flashMessage('admin.configuration.skautis_event_disconnect_successful', 'success');
 
@@ -52,7 +53,7 @@ class SkautIsPresenter extends ConfigurationBasePresenter
     {
         $participants = $this->userRepository->findAllSyncedWithSkautIS();
 
-        $eventId = $this->settingsRepository->getValue('skautis_event_id');
+        $eventId = $this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_ID);
 
         try {
             $this->skautIsService->syncParticipants($eventId, $participants);

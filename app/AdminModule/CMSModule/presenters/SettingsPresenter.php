@@ -4,6 +4,7 @@ namespace App\AdminModule\CMSModule\Presenters;
 
 
 use App\AdminModule\CMSModule\Forms\SettingsForm;
+use App\Model\Settings\Settings;
 use Nette\Application\UI\Form;
 
 class SettingsPresenter extends CMSBasePresenter
@@ -15,7 +16,7 @@ class SettingsPresenter extends CMSBasePresenter
     public $settingsFormFactory;
 
     public function renderDefault() {
-        $this->template->logo = $this->settingsRepository->getValue('logo');
+        $this->template->logo = $this->settingsRepository->getValue(Settings::LOGO);
     }
 
     protected function createComponentSettingsForm($name)

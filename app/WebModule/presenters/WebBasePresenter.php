@@ -5,6 +5,7 @@ namespace App\WebModule\Presenters;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\ACL\Role;
+use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\User\User;
 use App\Presenters\BasePresenter;
@@ -108,16 +109,16 @@ abstract class WebBasePresenter extends BasePresenter
 
         $this->template->backlink = $this->getHttpRequest()->getUrl()->getPath();
 
-        $this->template->logo = $this->settingsRepository->getValue('logo');
-        $this->template->footer = $this->settingsRepository->getValue('footer');
-        $this->template->seminarName = $this->settingsRepository->getValue('seminar_name');
+        $this->template->logo = $this->settingsRepository->getValue(Settings::LOGO);
+        $this->template->footer = $this->settingsRepository->getValue(Settings::FOOTER);
+        $this->template->seminarName = $this->settingsRepository->getValue(Settings::SEMINAR_NAME);
 
         $this->template->nonregisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
         $this->template->unapprovedRole = $this->roleRepository->findBySystemName(Role::UNAPPROVED);
         $this->template->testRole = Role::TEST;
 
         $this->template->adminAccess = $this->user->isAllowed(Resource::ADMIN, Permission::ACCESS);
-        $this->template->displayUsersRoles = $this->settingsRepository->getValue('display_users_roles');
+        $this->template->displayUsersRoles = $this->settingsRepository->getValue(Settings::DISPLAY_USERS_ROLES);
 
         $this->template->pages = $this->pageRepository->findPublishedOrderedByPosition();
         $this->template->sidebarVisible = false;
@@ -132,7 +133,7 @@ abstract class WebBasePresenter extends BasePresenter
 
     private function checkInstallation() {
         try {
-            if (!filter_var($this->settingsRepository->getValue('admin_created'), FILTER_VALIDATE_BOOLEAN))
+            if (!filter_var($this->settingsRepository->getValue(Settings::ADMIN_CREATED), FILTER_VALIDATE_BOOLEAN))
                 $this->redirect(':Install:Install:default');
         } catch (TableNotFoundException $ex) {
             $this->redirect(':Install:Install:default');

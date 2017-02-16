@@ -2,6 +2,7 @@
 
 namespace App\Presenters;
 
+use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\UserRepository;
 use App\Services\SkautIsService;
@@ -80,7 +81,7 @@ class AuthPresenter extends BasePresenter
         if ($redirectByRole && !$multipleRedirects)
             $slug = $redirectByRole;
         else
-            $slug = $this->settingsRepository->getValue('redirect_after_login');
+            $slug = $this->settingsRepository->getValue(Settings::REDIRECT_AFTER_LOGIN);
 
         $this->redirect(':Web:Page:default', ['slug' => $slug]);
     }

@@ -4,6 +4,7 @@ namespace App\AdminModule\CMSModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
 use App\Model\CMS\PageRepository;
+use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Services\FilesService;
 use Nette;
@@ -56,9 +57,9 @@ class SettingsForm extends Nette\Object
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'footer' => $this->settingsRepository->getValue('footer'),
-            'redirectAfterLogin' => $this->settingsRepository->getValue('redirect_after_login'),
-            'displayUsersRoles' => $this->settingsRepository->getValue('display_users_roles')
+            'footer' => $this->settingsRepository->getValue(Settings::FOOTER),
+            'redirectAfterLogin' => $this->settingsRepository->getValue(Settings::REDIRECT_AFTER_LOGIN),
+            'displayUsersRoles' => $this->settingsRepository->getValue(Settings::DISPLAY_USERS_ROLES)
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -69,17 +70,17 @@ class SettingsForm extends Nette\Object
     public function processForm(Form $form, \stdClass $values) {
         $logo = $values['logo'];
         if ($logo->size > 0) {
-            $this->filesService->delete('/logo/' . $this->settingsRepository->getValue('logo'));
+            $this->filesService->delete('/logo/' . $this->settingsRepository->getValue(Settings::LOGO));
 
             $logoName = Strings::webalize($logo->name, '.');
             $this->filesService->save($logo, '/logo/' . $logoName);
             $this->filesService->resizeImage('/logo/' . $logoName, null, 100);
 
-            $this->settingsRepository->setValue('logo', $logoName);
+            $this->settingsRepository->setValue(Settings::LOGO, $logoName);
         }
 
-        $this->settingsRepository->setValue('footer', $values['footer']);
-        $this->settingsRepository->setValue('redirect_after_login', $values['redirectAfterLogin']);
-        $this->settingsRepository->setValue('display_users_roles', $values['displayUsersRoles']);
+        $this->settingsRepository->setValue(Settings::FOOTER, $values['footer']);
+        $this->settingsRepository->setValue(Settings::REDIRECT_AFTER_LOGIN, $values['redirectAfterLogin']);
+        $this->settingsRepository->setValue(Settings::DISPLAY_USERS_ROLES, $values['displayUsersRoles']);
     }
 }

@@ -7,6 +7,7 @@ use App\Model\ACL\RoleRepository;
 use App\Model\Enums\PaymentType;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
+use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\UserRepository;
 use App\Services\ExcelExportService;
@@ -170,24 +171,9 @@ class UsersGridControl extends Control
 
         $grid->addColumnNumber('fee', 'admin.users.users_fee');
 
-        $variableSymbolCode = $this->settingsRepository->getValue('variable_symbol_code');
         $grid->addColumnText('variableSymbol', 'admin.users.users_variable_symbol')
-            ->setRenderer(function ($row) use($variableSymbolCode) {
-                return $row->getVariableSymbolWithCode($variableSymbolCode);
-            })
-            ->setFilterText()
-            ->setCondition(function($qb, $value) use($variableSymbolCode) {
-                if (substr($value, 0, 2) == $variableSymbolCode) {
-                    $str = substr($value, 2);
-                    if ($str)
-                        $qb->where('u.variableSymbol LIKE :vs')->setParameter('vs', substr($value, 2) . '%');
-                    else
-                        $qb->where('u.variableSymbol NOT LIKE :vs')->setParameter('vs', '#%');
-                }
-                else {
-                    $qb->where('u.variableSymbol LIKE :vsc')->setParameter('vsc', '#' . $value . '%');
-                }
-            });
+            ->setSortable()
+            ->setFilterText();
 
         $grid->addColumnText('paymentMethod', 'admin.users.users_payment_method')
             ->setRenderer(function ($row) {

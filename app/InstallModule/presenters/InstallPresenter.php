@@ -4,6 +4,7 @@ namespace App\InstallModule\Presenters;
 
 use App\Commands\FixturesLoadCommand;
 use App\Commands\InitDataCommand;
+use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Kdyby\Doctrine\Console\SchemaCreateCommand;
@@ -61,7 +62,7 @@ class InstallPresenter extends InstallBasePresenter
         }
 
         try {
-            if (filter_var($this->settingsRepository->getValue('admin_created'), FILTER_VALIDATE_BOOLEAN)) {
+            if (filter_var($this->settingsRepository->getValue(Settings::ADMIN_CREATED), FILTER_VALIDATE_BOOLEAN)) {
                 $this->redirect('installed');
             }
             $this->flashMessage('install.schema.schema_already_created', 'info');
@@ -106,7 +107,7 @@ class InstallPresenter extends InstallBasePresenter
     public function renderAdmin()
     {
         try {
-            if (filter_var($this->settingsRepository->getValue('admin_created'), FILTER_VALIDATE_BOOLEAN)) {
+            if (filter_var($this->settingsRepository->getValue(Settings::ADMIN_CREATED), FILTER_VALIDATE_BOOLEAN)) {
                 $this->flashMessage('install.admin.admin_already_created', 'info');
                 $this->redirect('finish');
             }
@@ -125,7 +126,7 @@ class InstallPresenter extends InstallBasePresenter
             $adminRole = $this->roleRepository->findBySystemName(Role::ADMIN);
             $user->addRole($adminRole);
 
-            $this->settingsRepository->setValue('admin_created', true);
+            $this->settingsRepository->setValue(Settings::ADMIN_CREATED, true);
 
             $this->em->flush();
             $this->user->logout(true);
@@ -146,7 +147,7 @@ class InstallPresenter extends InstallBasePresenter
     public function renderFinish()
     {
         try {
-            if (!filter_var($this->settingsRepository->getValue('admin_created'), FILTER_VALIDATE_BOOLEAN))
+            if (!filter_var($this->settingsRepository->getValue(Settings::ADMIN_CREATED), FILTER_VALIDATE_BOOLEAN))
                 $this->redirect('default');
         } catch (TableNotFoundException $ex) {
             $this->redirect('default');
@@ -158,7 +159,7 @@ class InstallPresenter extends InstallBasePresenter
     public function renderInstalled()
     {
         try {
-            if (!filter_var($this->settingsRepository->getValue('admin_created'), FILTER_VALIDATE_BOOLEAN))
+            if (!filter_var($this->settingsRepository->getValue(Settings::ADMIN_CREATED), FILTER_VALIDATE_BOOLEAN))
                 $this->redirect('default');
         } catch (TableNotFoundException $ex) {
             $this->redirect('default');

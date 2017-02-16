@@ -4,6 +4,7 @@ namespace App\Services;
 
 
 use App\Model\Enums\PaymentType;
+use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
 use fpdi\FPDI;
@@ -68,8 +69,8 @@ class PdfExportService extends Nette\Object
 
         $this->fpdi->Text(133, 41, iconv('UTF-8', 'WINDOWS-1250', $user->getPaymentDate()->format("j. n. Y")));
 
-        $this->fpdi->MultiCell(68, 4.5, iconv('UTF-8', 'WINDOWS-1250', $this->settingsRepository->getValue('company')));
-        $this->fpdi->Text(35, 71, iconv('UTF-8', 'WINDOWS-1250', $this->settingsRepository->getValue('ico')));
+        $this->fpdi->MultiCell(68, 4.5, iconv('UTF-8', 'WINDOWS-1250', $this->settingsRepository->getValue(Settings::COMPANY)));
+        $this->fpdi->Text(35, 71, iconv('UTF-8', 'WINDOWS-1250', $this->settingsRepository->getValue(Settings::ICO)));
         $this->fpdi->Text(35, 77, iconv('UTF-8', 'WINDOWS-1250', '---------------')); //DIC
         $this->fpdi->Text(140, 76, iconv('UTF-8', 'WINDOWS-1250', '== ' . $user->getFee() . ' =='));
         $this->fpdi->Text(38, 86, iconv('UTF-8', 'WINDOWS-1250', '== ' . $user->getFeeWords() . ' =='));
@@ -77,7 +78,7 @@ class PdfExportService extends Nette\Object
         $this->fpdi->Text(40, 98, iconv('UTF-8', 'WINDOWS-1250',
             "{$user->getFirstName()} {$user->getLastName()}, {$user->getStreet()}, {$user->getCity()}, {$user->getPostcode()}"));
 
-        $this->fpdi->Text(40, 111, iconv('UTF-8', 'WINDOWS-1250', "účastnický poplatek {$this->settingsRepository->getValue('seminar_name')}"));
+        $this->fpdi->Text(40, 111, iconv('UTF-8', 'WINDOWS-1250', "účastnický poplatek {$this->settingsRepository->getValue(Settings::SEMINAR_NAME)}"));
     }
 
     private function addAccountProofPage(User $user)
@@ -88,20 +89,20 @@ class PdfExportService extends Nette\Object
         $this->fpdi->useTemplate($this->template, 0, 0);
         $this->fpdi->SetY(30);
         $this->fpdi->SetX(25);
-        $this->fpdi->MultiCell(68, 4.5, iconv('UTF-8', 'WINDOWS-1250', $this->settingsRepository->getValue('company')));
-        $this->fpdi->Text(26, 52, iconv('UTF-8', 'WINDOWS-1250', 'IČO: ' . $this->settingsRepository->getValue('ico')));
+        $this->fpdi->MultiCell(68, 4.5, iconv('UTF-8', 'WINDOWS-1250', $this->settingsRepository->getValue(Settings::COMPANY)));
+        $this->fpdi->Text(26, 52, iconv('UTF-8', 'WINDOWS-1250', 'IČO: ' . $this->settingsRepository->getValue(Settings::ICO)));
 
-        $this->fpdi->Text(70, 71, iconv('UTF-8', 'WINDOWS-1250', $this->settingsRepository->getValue('account_number')));
+        $this->fpdi->Text(70, 71, iconv('UTF-8', 'WINDOWS-1250', $this->settingsRepository->getValue(Settings::ACCOUNT_NUMBER)));
 
         $this->fpdi->Text(70, 78, iconv('UTF-8', 'WINDOWS-1250', $user->getFee() . ' Kč, slovy =' . $user->getFeeWords() . '='));
-        $this->fpdi->Text(70, 85, iconv('UTF-8', 'WINDOWS-1250', 'účastnický poplatek ' . $this->settingsRepository->getValue('seminar_name')));
+        $this->fpdi->Text(70, 85, iconv('UTF-8', 'WINDOWS-1250', 'účastnický poplatek ' . $this->settingsRepository->getValue(Settings::SEMINAR_NAME)));
         $this->fpdi->Text(70, 92, iconv('UTF-8', 'WINDOWS-1250', "{$user->getFirstName()} {$user->getLastName()}"));
         $this->fpdi->Text(70, 99, iconv('UTF-8', 'WINDOWS-1250', "{$user->getStreet()}, {$user->getCity()}, {$user->getPostcode()}"));
 
-        $this->fpdi->Text(31, 111, iconv('UTF-8', 'WINDOWS-1250', "{$this->settingsRepository->getValue('print_location')}"));
+        $this->fpdi->Text(31, 111, iconv('UTF-8', 'WINDOWS-1250', "{$this->settingsRepository->getValue(Settings::PRINT_LOCATION)}"));
         $this->fpdi->Text(75, 111, iconv('UTF-8', 'WINDOWS-1250', "{$this->writeToday()}"));
 
-        $this->fpdi->Text(130, 119, iconv('UTF-8', 'WINDOWS-1250', "{$this->settingsRepository->getValue('accountant')}"));
+        $this->fpdi->Text(130, 119, iconv('UTF-8', 'WINDOWS-1250', "{$this->settingsRepository->getValue(Settings::ACCOUNTANT)}"));
     }
 
     private function configureForIncomeProof()

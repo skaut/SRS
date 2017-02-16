@@ -75,8 +75,6 @@ class UsersPresenter extends AdminBasePresenter
 
         $this->template->paymentMethodCash = PaymentType::CASH;
         $this->template->paymentMethodBank = PaymentType::BANK;
-
-        $this->template->variableSymbolCode = $this->settingsRepository->getValue('variable_symbol_code');
     }
 
     public function renderEdit($id) {

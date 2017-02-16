@@ -3,6 +3,7 @@
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
+use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use Nette;
 use Nette\Application\UI\Form;
@@ -52,11 +53,11 @@ class SeminarForm extends Nette\Object
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'seminarName' => $this->settingsRepository->getValue('seminar_name'),
-            'seminarFromDate' => $this->settingsRepository->getDateValue('seminar_from_date'),
-            'seminarToDate' => $this->settingsRepository->getDateValue('seminar_to_date'),
-            'editRegistrationTo' => $this->settingsRepository->getDateValue('edit_registration_to'),
-            'seminarEmail' => $this->settingsRepository->getValue('seminar_email')
+            'seminarName' => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
+            'seminarFromDate' => $this->settingsRepository->getDateValue(Settings::SEMINAR_FROM_DATE),
+            'seminarToDate' => $this->settingsRepository->getDateValue(Settings::SEMINAR_TO_DATE),
+            'editRegistrationTo' => $this->settingsRepository->getDateValue(Settings::EDIT_REGISTRATION_TO),
+            'seminarEmail' => $this->settingsRepository->getValue(Settings::SEMINAR_EMAIL)
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -65,11 +66,11 @@ class SeminarForm extends Nette\Object
     }
 
     public function processForm(Form $form, \stdClass $values) {
-        $this->settingsRepository->setValue('seminar_name', $values['seminarName']);
-        $this->settingsRepository->setDateValue('seminar_from_date', $values['seminarFromDate']);
-        $this->settingsRepository->setDateValue('seminar_to_date', $values['seminarToDate']);
-        $this->settingsRepository->setDateValue('edit_registration_to', $values['editRegistrationTo']);
-        $this->settingsRepository->setValue('seminar_email', $values['seminarEmail']);
+        $this->settingsRepository->setValue(Settings::SEMINAR_NAME, $values['seminarName']);
+        $this->settingsRepository->setDateValue(Settings::SEMINAR_FROM_DATE, $values['seminarFromDate']);
+        $this->settingsRepository->setDateValue(Settings::SEMINAR_TO_DATE, $values['seminarToDate']);
+        $this->settingsRepository->setDateValue(Settings::EDIT_REGISTRATION_TO, $values['editRegistrationTo']);
+        $this->settingsRepository->setValue(Settings::SEMINAR_EMAIL, $values['seminarEmail']);
     }
 
     public function validateSeminarFromDate($field, $args) {

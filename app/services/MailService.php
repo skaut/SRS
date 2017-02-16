@@ -8,6 +8,7 @@ use App\Model\ACL\RoleRepository;
 use App\Model\Mailing\Mail;
 use App\Model\Mailing\MailRepository;
 use App\Model\Mailing\MailToRoles;
+use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\UserRepository;
 use Nette;
@@ -56,8 +57,8 @@ class MailService extends Nette\Object
         $users = $this->userRepository->findAllApprovedInRoles($rolesIds);
 
         $params = [
-            'fromEmail' => $this->settingsRepository->getValue('seminar_email'),
-            'fromName' => $this->settingsRepository->getValue('seminar_name'),
+            'fromEmail' => $this->settingsRepository->getValue(Settings::SEMINAR_EMAIL),
+            'fromName' => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
             'recipients' => $users,
             'copy' => $copy,
             'subject' => $subject,

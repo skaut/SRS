@@ -3,6 +3,7 @@
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
+use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Services\SkautIsService;
 use Nette;
@@ -48,7 +49,7 @@ class SkautIsEventForm extends Nette\Object
     public function processForm(Form $form, \stdClass $values) {
         $eventId = $values['skautisEvent'];
 
-        $this->settingsRepository->setValue('skautis_event_id', $eventId);
-        $this->settingsRepository->setValue('skautis_event_name', $this->skautIsService->getEventDisplayName($eventId));
+        $this->settingsRepository->setValue(Settings::SKAUTIS_EVENT_ID, $eventId);
+        $this->settingsRepository->setValue(Settings::SKAUTIS_EVENT_NAME, $this->skautIsService->getEventDisplayName($eventId));
     }
 }

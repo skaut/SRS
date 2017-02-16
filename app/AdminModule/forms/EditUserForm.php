@@ -15,6 +15,7 @@ use App\Model\Program\BlockRepository;
 use App\Model\Program\CategoryRepository;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
+use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
 use App\Model\User\CustomInputValue\CustomInputValueRepository;
@@ -124,13 +125,12 @@ class EditUserForm extends Nette\Object
         $form->addSubmit('submitAndContinue', 'admin.common.save_and_continue');
 
 
-        $variableSymbolCode = $this->settingsRepository->getValue('variable_symbol_code');
         $form->setDefaults([
             'id' => $id,
             'roles' => $this->roleRepository->findRolesIds($this->user->getRoles()),
             'approved' => $this->user->isApproved(),
             'attended' => $this->user->isAttended(),
-            'variableSymbol' => $this->user->getVariableSymbolWithCode($variableSymbolCode),
+            'variableSymbol' => $this->user->getVariableSymbol(),
             'paymentMethod' => $this->user->getPaymentMethod(),
             'paymentDate' => $this->user->getPaymentDate(),
             'incomeProofPrintedDate' => $this->user->getIncomeProofPrintedDate(),
@@ -151,9 +151,7 @@ class EditUserForm extends Nette\Object
         $this->user->setAttended($values['attended']);
 
         if (array_key_exists('variableSymbol', $values)) {
-            $variableSymbolCode = $this->settingsRepository->getValue('variable_symbol_code');
-            if ($this->user->getVariableSymbolWithCode($variableSymbolCode) != $values['variableSymbol'])
-                $this->user->setVariableSymbol('#' . $values['variableSymbol']);
+            $this->user->setVariableSymbol($values['variableSymbol']);
         }
 
         if (array_key_exists('paymentMethod', $values))

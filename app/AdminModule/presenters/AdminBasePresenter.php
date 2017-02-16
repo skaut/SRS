@@ -6,6 +6,7 @@ use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\ACL\ResourceRepository;
 use App\Model\ACL\RoleRepository;
+use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
@@ -116,8 +117,8 @@ abstract class AdminBasePresenter extends BasePresenter
         $this->template->permissionManageRooms = Permission::MANAGE_ROOMS;
         $this->template->permissionManageCategories = Permission::MANAGE_CATEGORIES;
 
-        $this->template->footer = $this->settingsRepository->getValue('footer');
-        $this->template->seminarName = $this->settingsRepository->getValue('seminar_name');
+        $this->template->footer = $this->settingsRepository->getValue(Settings::FOOTER);
+        $this->template->seminarName = $this->settingsRepository->getValue(Settings::SEMINAR_NAME);
 
         $this->template->sidebarVisible = false;
 

@@ -4,6 +4,7 @@ namespace App\Services;
 
 
 use App\Model\ACL\RoleRepository;
+use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
@@ -14,26 +15,24 @@ use App\Model\ACL\Role;
 
 class Authenticator extends Nette\Object implements NS\IAuthenticator
 {
-    /**
-     * @var UserRepository
-     */
+    /** @var UserRepository */
     private $userRepository;
 
-    /**
-     * @var RoleRepository
-     */
+    /** @var RoleRepository */
     private $roleRepository;
 
-    /**
-     * @var SkautIsService
-     */
+    /** @var SettingsRepository */
+    private $settingsRepository;
+
+    /** @var SkautIsService */
     protected $skautIsService;
 
     public function __construct(UserRepository $userRepository, RoleRepository $roleRepository,
-                                SkautIsService $skautIsService)
+                                SettingsRepository $settingsRepository, SkautIsService $skautIsService)
     {
         $this->userRepository = $userRepository;
         $this->roleRepository = $roleRepository;
+        $this->settingsRepository = $settingsRepository;
         $this->skautIsService = $skautIsService;
     }
 
@@ -103,10 +102,11 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
     }
 
     private function generateVariableSymbol(\DateTime $birthDate) {
-        $variableSymbol = $birthDate->format('ymd');
+        $variableSymbolCode = $this->settingsRepository->getValue(Settings::VARIABLE_SYMBOL_CODE);
+        $variableSymbol = $variableSymbolCode . $birthDate->format('ymd');
 
         while ($this->userRepository->variableSymbolExists($variableSymbol))
-            $variableSymbol = str_pad(++$variableSymbol, 6, '0', STR_PAD_LEFT);
+            $variableSymbol = str_pad(++$variableSymbol, 8, '0', STR_PAD_LEFT);
 
         return $variableSymbol;
     }

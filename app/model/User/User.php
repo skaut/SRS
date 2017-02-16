@@ -778,7 +778,7 @@ class User
      */
     public function getVariableSymbol()
     {
-        return $this->variableSymbol;
+        return substr($this->variableSymbol, 0, 8);
     }
 
     /**
@@ -786,14 +786,8 @@ class User
      */
     public function setVariableSymbol($variableSymbol)
     {
-        $this->variableSymbol = $variableSymbol;
-    }
-
-    public function getVariableSymbolWithCode($code)
-    {
-        if (substr($this->variableSymbol, 0, 1) == '#')
-            return substr($this->variableSymbol, 1);
-        return $code . $this->variableSymbol;
+        if (substr($this->variableSymbol, 0, 8) != $variableSymbol)
+            $this->variableSymbol = $variableSymbol . '#';
     }
 
     /**

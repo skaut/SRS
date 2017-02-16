@@ -4,6 +4,7 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 
 
 use App\AdminModule\Forms\BaseForm;
+use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use Kdyby\Translation\Translator;
 use Nette;
@@ -51,12 +52,12 @@ class ProgramForm extends Nette\Object
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'isAllowedAddBlock' => $this->settingsRepository->getValue('is_allowed_add_block'),
-            'isAllowedModifySchedule' => $this->settingsRepository->getValue('is_allowed_modify_schedule'),
-            'isAllowedRegisterPrograms' => $this->settingsRepository->getValue('is_allowed_register_programs'),
-            'isAllowedRegisterProgramsBeforePayment' => $this->settingsRepository->getValue('is_allowed_register_programs_before_payment'),
-            'registerProgramsFrom' => $this->settingsRepository->getDateTimeValue('register_programs_from'),
-            'registerProgramsTo' => $this->settingsRepository->getDateTimeValue('register_programs_to')
+            'isAllowedAddBlock' => $this->settingsRepository->getValue(Settings::IS_ALLOWED_ADD_BLOCK),
+            'isAllowedModifySchedule' => $this->settingsRepository->getValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE),
+            'isAllowedRegisterPrograms' => $this->settingsRepository->getValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS),
+            'isAllowedRegisterProgramsBeforePayment' => $this->settingsRepository->getValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT),
+            'registerProgramsFrom' => $this->settingsRepository->getDateTimeValue(Settings::REGISTER_PROGRAMS_FROM),
+            'registerProgramsTo' => $this->settingsRepository->getDateTimeValue(Settings::REGISTER_PROGRAMS_TO)
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -65,12 +66,12 @@ class ProgramForm extends Nette\Object
     }
 
     public function processForm(Form $form, \stdClass $values) {
-        $this->settingsRepository->setValue('is_allowed_add_block', $values['isAllowedAddBlock']);
-        $this->settingsRepository->setValue('is_allowed_modify_schedule', $values['isAllowedModifySchedule']);
-        $this->settingsRepository->setValue('is_allowed_register_programs', $values['isAllowedRegisterPrograms']);
-        $this->settingsRepository->setValue('is_allowed_register_programs_before_payment', $values['isAllowedRegisterProgramsBeforePayment']);
-        $this->settingsRepository->setDateTimeValue('register_programs_from', $values['registerProgramsFrom']);
-        $this->settingsRepository->setDateTimeValue('register_programs_to', $values['registerProgramsTo']);
+        $this->settingsRepository->setValue(Settings::IS_ALLOWED_ADD_BLOCK, $values['isAllowedAddBlock']);
+        $this->settingsRepository->setValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE, $values['isAllowedModifySchedule']);
+        $this->settingsRepository->setValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS, $values['isAllowedRegisterPrograms']);
+        $this->settingsRepository->setValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, $values['isAllowedRegisterProgramsBeforePayment']);
+        $this->settingsRepository->setDateTimeValue(Settings::REGISTER_PROGRAMS_FROM, $values['registerProgramsFrom']);
+        $this->settingsRepository->setDateTimeValue(Settings::REGISTER_PROGRAMS_TO, $values['registerProgramsTo']);
     }
 
     public function validateSeminarFromDate($field, $args) {
