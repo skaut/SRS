@@ -199,6 +199,10 @@ program:
     blocks_non_registered_attendees: "Nepřihlášení účastníci"
 
     schedule_heading: "Harmonogram"
+    schedule_category: "Kategorie:"
+    schedule_lector: "Lektor:"
+    schedule_capacity: "Kapacita:"
+    schedule_programs_count: "Zařazeno:"
 
     categories_heading: "Kategorie"
     categories_name: "Název"

@@ -73,6 +73,26 @@ class BlockRepository extends EntityRepository
     }
 
     /**
+     * @param $text
+     * @param bool $unassignedOnly
+     * @return array
+     */
+    public function findByLikeNameOrderedByName($text, $unassignedOnly = false) {
+        $qb = $this->createQueryBuilder('b')
+            ->select('b')
+            ->where('b.name LIKE :text')->setParameter('text', '%' . $text . '%');
+
+        if ($unassignedOnly) {
+            $qb = $qb->leftJoin('b.programs', 'p')
+                ->andWhere('SIZE(b.programs) = 0');
+        }
+
+        return $qb->orderBy('b.name')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * @param Block $block
      */
     public function save(Block $block)

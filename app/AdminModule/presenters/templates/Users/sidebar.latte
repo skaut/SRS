@@ -3,7 +3,7 @@
 
     <script>
         $(function () {
-            $('#searchInput').on('keyup', function () {
+            $('#textbox-search').on('keyup', function () {
                 var value = $(this).val();
                 if (value.length >= 2) {
                     $.nette.ajax({
@@ -26,7 +26,7 @@
     <div class="well">
         <div class="input-group">
             <span class="input-group-addon"><i class="fa fa-search fa-fw"></i></span>
-            <input id="searchInput" class="form-control" type="text">
+            <input id="textbox-search" class="form-control" type="text">
         </div>
 
         {snippet results}

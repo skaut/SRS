@@ -1,13 +1,34 @@
 {block head}
-    <script n:syntax="double">
-        var basePath = {{$basePath}}
-        var flashMessageShowInterval = 6000;
-    </script>
+    {*<script n:syntax="double">*}
+    {*var basePath = {{$basePath}}*}
+    {*var flashMessageShowInterval = 6000;*}
+    {*</script>*}
 
-    {control css 'libs/fullcalendar/fullcalendar.min.css'}
-    {control js 'libs/angular/angular.min.js', 'libs/fullcalendar/fullcalendar.min.js', 'common/schedule/app.js',
-                'common/schedule/directives.js', 'common/schedule/adminControllers.js', 'common/schedule/helpers.js'}
+    {*{control css 'libs/fullcalendar/fullcalendar.min.css'}*}
+    {*{control js 'libs/angular/angular.min.js', 'libs/fullcalendar/fullcalendar.min.js', 'common/schedule/app.js',*}
+    {*'common/schedule/directives.js', 'common/schedule/adminControllers.js', 'common/schedule/helpers.js'}*}
+
+    <script>
+        $(function () {
+            $('#textbox-search').on('keyup', search);
+            $('#checkbox-unassigned').change(search);
+        });
+
+        function search() {
+            var value = $('#textbox-search').val();
+            var checked = $('#checkbox-unassigned').is(':checked');
+
+            $.nette.ajax({
+                'url': {link search!},
+                'data': {
+                    text: value,
+                    unassignedOnly: checked
+                }
+            });
+        }
+    </script>
 {/block}
+
 
 {block main}
     <h2>{_admin.program.schedule_heading}</h2>
@@ -15,78 +36,114 @@
         <img src="{$basePath}/js/common/schedule/ajax-loader.gif">
     </div>
 
-    <div id="app">
-        <div class="notifications bottom-right" id="jsMessages">
-            <div class="alert alert-info forever" ng-show="warning">
-                {{ warning }}
-            </div>
-        </div>
+    {*<div id="app">*}
+    {*<div class="notifications bottom-right" id="jsMessages">*}
+    {*<div class="alert alert-info forever" ng-show="warning">*}
+    {*{{ warning }}*}
+    {*</div>*}
+    {*</div>*}
 
-        <div id="canvas">
-            <div id="blockModal" ng-model="event" class="modal hide fade">
-                <div class="modal-header">
-                    <a class="close" data-dismiss="modal">×</a>
+    {*<div id="canvas">*}
+    {*<div id="blockModal" ng-model="event" class="modal hide fade">*}
+    {*<div class="modal-header">*}
+    {*<a class="close" data-dismiss="modal">×</a>*}
 
-                    <h3>Nastavení programu</h3>
-                </div>
-                <div class="modal-body">
-                    <ng-form>
-            <span class="nullable">
-            <label>Přiřazený programový blok:</label>
-            <select ng-model="option" ng-options="value.name for (key , value) in options">
-                <option value="">-- nepřiřazeno --</option>
-            </select> </span><br/>
-                        <a ng-href="../block/detail/{{ option.id }}" ng-show="option" target="_blank">Zobrazit detail
-                            bloku</a><br/>
-                        <input id="mandatory" type="checkbox" name="event.mandatory" ng-model="event.mandatory"
-                               class="pull-left">
-                        <label for="mandatory" class="pull-left" style="margin-left:5px;"> Je program povinný?</label>
-                    </ng-form>
+    {*<h3>Nastavení programu</h3>*}
+    {*</div>*}
+    {*<div class="modal-body">*}
+    {*<ng-form>*}
+    {*<span class="nullable">*}
+    {*<label>Přiřazený programový blok:</label>*}
+    {*<select ng-model="option" ng-options="value.name for (key , value) in options">*}
+    {*<option value="">-- nepřiřazeno --</option>*}
+    {*</select> </span><br/>*}
+    {*<a ng-href="../block/detail/{{ option.id }}" ng-show="option" target="_blank">Zobrazit detail*}
+    {*bloku</a><br/>*}
+    {*<input id="mandatory" type="checkbox" name="event.mandatory" ng-model="event.mandatory"*}
+    {*class="pull-left">*}
+    {*<label for="mandatory" class="pull-left" style="margin-left:5px;"> Je program povinný?</label>*}
+    {*</ng-form>*}
 
-                </div>
-                <div class="modal-footer">
-                    <button ng-click="update(event, option)" class="btn btn-success pull-left">Uložit program</button>
-                    <button ng-model="event" ng-click="remove(event)" class="btn btn-danger pull-right">Smazat program</button>
-                </div>
-            </div>
+    {*</div>*}
+    {*<div class="modal-footer">*}
+    {*<button ng-click="update(event, option)" class="btn btn-success pull-left">Uložit program</button>*}
+    {*<button ng-model="event" ng-click="remove(event)" class="btn btn-danger pull-right">Smazat program</button>*}
+    {*</div>*}
+    {*</div>*}
 
-            <div id="calendar"></div>
+    {*<div id="calendar"></div>*}
 
-        </div>
-    </div>
+    {*</div>*}
+    {*</div>*}
 {/block}
 
 {block sidebar}
     {include #parent}
 
     <h3>Programové bloky</h3>
-    <div class="calendar-blocks well">
+    <div class="well">
         <div class="input-group">
             <span class="input-group-addon"><i class="fa fa-search fa-fw"></i></span>
-            <input class="form-control" type="text" ng-model="query">
+            <input id="textbox-search" class="form-control" type="text">
         </div>
 
-        <div class="checkbox">
+        <div class="checkbox" style="text-align: center">
             <label for="checkbox-unassigned">
-                <input type="checkbox" id="checkbox-unassigned" ng-model="applyUnassigned">
+                <input type="checkbox" id="checkbox-unassigned">
                 jen nezařazené
             </label>
         </div>
 
-        <hr>
-
-        <div class="blocks-container">
-            <div class="block" ng-repeat="block in blocks | filter:query | showUnassigned: applyUnassigned" external-block="{{ block.id }}">
-                <h6>{{ block.name }}</h6>
-                <ul class="no-margin">
-                    <li><span>Lektor:</span> {{ block.lector }}</li>
-                    <li><span>Místnost:</span> {{ block.room }}</li>
-                    <li><span>Kapacita:</span> {{ block.capacity }}</li>
-                    <li><span>Kategorie:</span> {{ block.category }}</li>
-                    <li><span>Zařazeno:</span> {{ block.program_count }}x</li>
+        <div class="pre-scrollable">
+            {snippet results}
+                <ul id="results" class="list-group" style="margin-top: 15px; margin-bottom: 0">
+                    {foreach $results as $result}
+                        <li class="list-group-item {if $result->isMandatory()}list-group-item-danger{else}list-group-item-info{/if}">
+                            <table>
+                                <tr>
+                                    <th colspan="2">{$result->getName()}</th>
+                                </tr>
+                                <tr>
+                                    <td style="padding-right: 15px">{_admin.program.schedule_category}</td>
+                                    <td>{$result->getCategory() ? $result->getCategory()->getName() : ''}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-right: 15px">{_admin.program.schedule_lector}</td>
+                                    <td>{$result->getLector() ? $result->getLector()->getDisplayName() : ''}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-right: 15px">{_admin.program.schedule_capacity}</td>
+                                    <td>
+                                        {if $result->getCapacity()}
+                                            {$result->getCapacity()}
+                                        {else}
+                                            {_admin.program.blocks_capacity_unlimited}
+                                        {/if}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-right: 15px">{_admin.program.schedule_programs_count}</td>
+                                    <td>{$result->getPrograms()->count()}×</td>
+                                </tr>
+                            </table>
+                        </li>
+                    {/foreach}
                 </ul>
-            </div>
+            {/snippet}
         </div>
+
+        {*<div class="blocks-container">*}
+        {*<div class="block" ng-repeat="block in blocks | filter:query | showUnassigned: applyUnassigned" external-block="{{ block.id }}">*}
+        {*<h6>{{ block.name }}</h6>*}
+        {*<ul class="no-margin">*}
+        {*<li><span>Lektor:</span> {{ block.lector }}</li>*}
+        {*<li><span>Místnost:</span> {{ block.room }}</li>*}
+        {*<li><span>Kapacita:</span> {{ block.capacity }}</li>*}
+        {*<li><span>Kategorie:</span> {{ block.category }}</li>*}
+        {*<li><span>Zařazeno:</span> {{ block.program_count }}x</li>*}
+        {*</ul>*}
+        {*</div>*}
+        {*</div>*}
     </div>
 {/block}
 

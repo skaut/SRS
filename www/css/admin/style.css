@@ -186,37 +186,33 @@ div.mce-fullscreen {
 
 
 /*TODO*/
-.calendar-blocks .blocks-container {
-    overflow: scroll;
-    height: 400px;
-}
 
-.calendar-blocks .block {
-    margin: 10px auto;
-    padding: 2px 10px;
-    color: #fff;
-    font-size: .85em;
-    cursor: pointer;
-    width: 180px;
-    border-radius: 2px;
-    background-color: #3366CC;
-    border-color: #3366CC;
-}
+/*.calendar-blocks .block {*/
+    /*margin: 10px auto;*/
+    /*padding: 2px 10px;*/
+    /*color: #fff;*/
+    /*font-size: .85em;*/
+    /*cursor: pointer;*/
+    /*width: 180px;*/
+    /*border-radius: 2px;*/
+    /*background-color: #3366CC;*/
+    /*border-color: #3366CC;*/
+/*}*/
 
-ul.block-properties span {
-    font-weight: bold;
-}
+/*ul.block-properties span {*/
+    /*font-weight: bold;*/
+/*}*/
 
-.calendar-blocks .block h6 {
-    margin-bottom: 0px;
-}
-.calendar-blocks .block span {
-    color: orange;
-}
+/*.calendar-blocks .block h6 {*/
+    /*margin-bottom: 0px;*/
+/*}*/
+/*.calendar-blocks .block span {*/
+    /*color: orange;*/
+/*}*/
 
-.ajax-loader {
-    position: fixed;
-    top: 60px;
-    right: 60px;
-    z-index: 999;
-}
+/*.ajax-loader {*/
+    /*position: fixed;*/
+    /*top: 60px;*/
+    /*right: 60px;*/
+    /*z-index: 999;*/
+/*}*/
