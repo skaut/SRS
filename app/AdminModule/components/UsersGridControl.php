@@ -177,10 +177,16 @@ class UsersGridControl extends Control
             })
             ->setFilterText()
             ->setCondition(function($qb, $value) use($variableSymbolCode) {
-                if (substr($value, 0, 2) == $variableSymbolCode)
-                    $qb->where('u.variableSymbol LIKE :vs')->setParameter('vs', substr($value, 2) . '%');
-                else
+                if (substr($value, 0, 2) == $variableSymbolCode) {
+                    $str = substr($value, 2);
+                    if ($str)
+                        $qb->where('u.variableSymbol LIKE :vs')->setParameter('vs', substr($value, 2) . '%');
+                    else
+                        $qb->where('u.variableSymbol NOT LIKE :vs')->setParameter('vs', '#%');
+                }
+                else {
                     $qb->where('u.variableSymbol LIKE :vsc')->setParameter('vsc', '#' . $value . '%');
+                }
             });
 
         $grid->addColumnText('paymentMethod', 'admin.users.users_payment_method')
