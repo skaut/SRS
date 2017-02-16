@@ -442,6 +442,8 @@ configuration:
 
     system_heading: "Systém"
     system_clear_cache: "Vymazat cache"
+    system_cache_cleared: "Cache byla vymazána."
+    system_cache_not_cleared: "Cache nebyla vymazána, pravděpodobně se právě vytváří."
 
     configuration_saved: "Konfigurace úspěšně uložena."
 

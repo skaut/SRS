@@ -28,7 +28,7 @@ class SkautIsService extends Nette\Object
     public function isLoggedIn()
     {
         $logoutTime = clone($this->skautIs->getUser()->getLogoutDate());
-        $hardCheck = $logoutTime->diff(new \DateTime())->i < 20;
+        $hardCheck = $logoutTime->diff(new \DateTime())->i < 25; //pokud od posledniho obnoveni prihlaseni ubehlo 5 minut
         return $this->skautIs->getUser()->isLoggedIn($hardCheck);
     }
 
