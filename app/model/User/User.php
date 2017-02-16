@@ -786,7 +786,9 @@ class User
      */
     public function setVariableSymbol($variableSymbol)
     {
-        if (substr($this->variableSymbol, 0, 8) != $variableSymbol)
+        if (!$this->variableSymbol)
+            $this->variableSymbol = $variableSymbol;
+        elseif (substr($this->variableSymbol, 0, 8) != $variableSymbol)
             $this->variableSymbol = $variableSymbol . '#';
     }
 
