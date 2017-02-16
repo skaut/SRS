@@ -92,11 +92,15 @@ class UsersPresenter extends AdminBasePresenter
 
     public function actionGeneratePaymentProofCash($id) {
         $user = $this->userRepository->findById($id);
+        $user->setIncomeProofPrintedDate(new \DateTime());
+        $this->userRepository->save($user);
         $this->pdfExportService->generatePaymentProof($user, "prijmovy-pokladni-doklad.pdf");
     }
 
     public function actionGeneratePaymentProofBank($id) {
         $user = $this->userRepository->findById($id);
+        $user->setIncomeProofPrintedDate(new \DateTime());
+        $this->userRepository->save($user);
         $this->pdfExportService->generatePaymentProof($user, "potvrzeni-o-prijeti-platby.pdf");
     }
 
