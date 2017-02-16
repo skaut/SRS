@@ -51,7 +51,6 @@ class BlocksPresenter extends ProgramBasePresenter
         $block = $this->blockRepository->findById($id);
 
         $this->template->block = $block;
-        $this->template->basicBlockDuration = $this->settingsRepository->getValue('basic_block_duration');
     }
 
     public function renderEdit($id)

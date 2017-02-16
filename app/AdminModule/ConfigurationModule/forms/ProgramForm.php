@@ -4,7 +4,6 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 
 
 use App\AdminModule\Forms\BaseForm;
-use App\Model\Enums\BasicBlockDuration;
 use App\Model\Settings\SettingsRepository;
 use Kdyby\Translation\Translator;
 use Nette;
@@ -36,10 +35,6 @@ class ProgramForm extends Nette\Object
         $renderer->wrappers['control']['container'] = 'div class="col-sm-7 col-xs-7"';
         $renderer->wrappers['label']['container'] = 'div class="col-sm-5 col-xs-5 control-label"';
 
-        $basicBlockDurationOptions = $this->prepareBasicBlockDurationOptions();
-
-        $form->addSelect('basicBlockDuration', 'admin.configuration.basic_block_duration', $basicBlockDurationOptions)
-            ->addRule(Form::FILLED, 'admin.configuration.basic_block_duration_empty');
         $form->addCheckbox('isAllowedAddBlock', 'admin.configuration.is_allowed_add_block');
         $form->addCheckbox('isAllowedModifySchedule', 'admin.configuration.is_allowed_modify_schedule');
         $form->addCheckbox('isAllowedRegisterPrograms', 'admin.configuration.is_allowed_register_programs');
@@ -56,7 +51,6 @@ class ProgramForm extends Nette\Object
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'basicBlockDuration' => $this->settingsRepository->getValue('basic_block_duration'),
             'isAllowedAddBlock' => $this->settingsRepository->getValue('is_allowed_add_block'),
             'isAllowedModifySchedule' => $this->settingsRepository->getValue('is_allowed_modify_schedule'),
             'isAllowedRegisterPrograms' => $this->settingsRepository->getValue('is_allowed_register_programs'),
@@ -71,20 +65,12 @@ class ProgramForm extends Nette\Object
     }
 
     public function processForm(Form $form, \stdClass $values) {
-        $this->settingsRepository->setValue('basic_block_duration', $values['basicBlockDuration']);
         $this->settingsRepository->setValue('is_allowed_add_block', $values['isAllowedAddBlock']);
         $this->settingsRepository->setValue('is_allowed_modify_schedule', $values['isAllowedModifySchedule']);
         $this->settingsRepository->setValue('is_allowed_register_programs', $values['isAllowedRegisterPrograms']);
         $this->settingsRepository->setValue('is_allowed_register_programs_before_payment', $values['isAllowedRegisterProgramsBeforePayment']);
         $this->settingsRepository->setDateTimeValue('register_programs_from', $values['registerProgramsFrom']);
         $this->settingsRepository->setDateTimeValue('register_programs_to', $values['registerProgramsTo']);
-    }
-
-    private function prepareBasicBlockDurationOptions() {
-        $options = [];
-        foreach (BasicBlockDuration::$durations as $duration)
-            $options[$duration] = $this->translator->translate('admin.common.minutes', null, ['count' => $duration]);
-        return $options;
     }
 
     public function validateSeminarFromDate($field, $args) {

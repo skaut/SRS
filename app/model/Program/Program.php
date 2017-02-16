@@ -40,11 +40,6 @@ class Program
      */
     protected $start;
 
-    /**
-     * @ORM\Column(type="integer")
-     * @var int
-     */
-    protected $duration;
 
     /**
      * Program constructor.
@@ -104,10 +99,7 @@ class Program
     }
 
     public function getCapacity() {
-        if ($this->block)
-            return $this->block->getCapacity();
-        else
-            return null;
+        return $this->block->getCapacity();
     }
 
     /**
@@ -143,71 +135,12 @@ class Program
     }
 
     /**
-     * @return int
+     * @return \DateTime
      */
-    public function getDuration()
+    public function getEnd()
     {
-        return $this->duration;
-    }
-
-    /**
-     * @param int $duration
-     */
-    public function setDuration($duration)
-    {
-        $this->duration = $duration;
-    }
-
-    public function getEnd($basicBlockDuration) {
-        if ($this->block)
-            $duration = $basicBlockDuration * $this->block->getDuration();
-        else
-            $duration = $basicBlockDuration * $this->duration;
-
         $end = clone($this->start);
-        return $end->add(new \DateInterval('PT' . $duration . 'M'));
-    }
-
-    /**
-     * @param $basicBlockDuration
-     * @param User $user
-     * @param $blocksPrograms Programy blokovane timto programem.
-     * @return ProgramDetailDTO
-     */
-    public function convertToProgramDetailDTO($basicBlockDuration, User $user = null, $blocksPrograms = null) {
-        $programDetailDTO = new ProgramDetailDTO();
-
-        $programDetailDTO->setId($this->id);
-
-        if ($this->block) {
-            $programDetailDTO->setBlockId($this->block->getId());
-            $programDetailDTO->setBlockName($this->block->getName());
-            $programDetailDTO->setPerex($this->block->getPerex());
-            $programDetailDTO->setDescription($this->block->getDescription());
-            $programDetailDTO->setCategoryName($this->block->getCategory() ? $this->block->getCategory()->getName() : null);
-            $programDetailDTO->setLectorName($this->block->getLector() ? $this->block->getLector()->getDisplayName() : null);
-            $programDetailDTO->setLectorAbout($this->block->getLector() ? $this->block->getLector()->getAbout() : null);
-            $programDetailDTO->setMandatory($this->block->isMandatory());
-        }
-        else {
-            $programDetailDTO->setBlockId(null);
-            $programDetailDTO->setBlockName(null);
-            $programDetailDTO->setPerex(null);
-            $programDetailDTO->setDescription(null);
-            $programDetailDTO->setCategoryName(null);
-            $programDetailDTO->setLectorName(null);
-            $programDetailDTO->setLectorAbout(null);
-            $programDetailDTO->setMandatory(false);
-        }
-
-        $programDetailDTO->setStart($this->start);
-        $programDetailDTO->setEnd($this->getEnd($basicBlockDuration));
-        $programDetailDTO->setRoomName($this->getRoom() ? $this->getRoom()->getName() : null);
-        $programDetailDTO->setCapacity($this->getCapacity());
-        $programDetailDTO->setAttendeesCount($this->getAttendeesCount());
-        $programDetailDTO->setUserAttends($this->isAttendee($user));
-        $programDetailDTO->setBlocksPrograms($blocksPrograms);
-
-        return $programDetailDTO;
+        $end->add(new \DateInterval('PT' . $this->block->getDuration() . 'M'));
+        return $end;
     }
 }

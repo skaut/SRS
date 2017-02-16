@@ -80,19 +80,5 @@ class SettingsRepository extends EntityRepository
     {
         $this->setValue($item, $value->format(\DateTime::ISO8601));
     }
-
-    /**
-     * @return array
-     */
-    public function getDurationsOptions() {
-        $MAX_LENGTH = 240;
-
-        $basicBlockDuration = $this->getValue('basic_block_duration');
-        $options = [];
-        for ($i = 1; $basicBlockDuration * $i <= $MAX_LENGTH; $i++) {
-            $options[$i] = $this->translator->translate('admin.common.minutes', null, ['count' => $basicBlockDuration * $i]);
-        }
-        return $options;
-    }
 }
 

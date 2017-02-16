@@ -73,14 +73,9 @@ class ProgramBlocksGridControl extends Control
             ->setSortable('l.displayName')
             ->setFilterMultiSelect($this->userRepository->getLectorsOptions(), 'l.id');
 
-        $basicBlockDuration = $this->settingsRepository->getValue('basic_block_duration');
-
         $grid->addColumnText('duration', 'admin.program.blocks_duration')
-            ->setRenderer(function ($row) use ($basicBlockDuration) {
-                return $this->translator->translate('admin.common.minutes', null, ['count' => $row->getDurationInMinutes($basicBlockDuration)]);
-            })
             ->setSortable()
-            ->setFilterMultiSelect($this->settingsRepository->getDurationsOptions());
+            ->setFilterText();
 
         $grid->addColumnText('capacity', 'admin.program.blocks_capacity')
             ->setRendererOnCondition(function ($row) {

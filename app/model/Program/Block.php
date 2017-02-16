@@ -191,10 +191,6 @@ class Block
         $this->duration = $duration;
     }
 
-    public function getDurationInMinutes($basicBlockDuration) {
-        return $this->duration * $basicBlockDuration;
-    }
-
     /**
      * @return int
      */

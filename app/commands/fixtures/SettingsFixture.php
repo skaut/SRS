@@ -40,7 +40,6 @@ class SettingsFixture extends AbstractFixture
         $settings[] = new Settings('seminar_from_date', $today->format('Y-m-d'));
         $settings[] = new Settings('seminar_to_date', $tommorow->format('Y-m-d'));
 
-        $settings[] = new Settings('basic_block_duration', '60');
         $settings[] = new Settings('is_allowed_add_block', '1');
         $settings[] = new Settings('is_allowed_modify_schedule', '1');
         $settings[] = new Settings('is_allowed_register_programs', '0');

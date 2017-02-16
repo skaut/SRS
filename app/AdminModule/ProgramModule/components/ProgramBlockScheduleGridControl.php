@@ -3,9 +3,7 @@
 namespace App\AdminModule\ProgramModule\Components;
 
 
-use App\Model\Program\BlockRepository;
 use App\Model\Program\ProgramRepository;
-use App\Model\Settings\SettingsRepository;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Ublaboo\DataGrid\DataGrid;
@@ -22,16 +20,11 @@ class ProgramBlockScheduleGridControl extends Control
      */
     private $programRepository;
 
-    /**
-     * @var SettingsRepository
-     */
-    private $settingsRepository;
 
-    public function __construct(Translator $translator, ProgramRepository $programRepository, SettingsRepository $settingsRepository)
+    public function __construct(Translator $translator, ProgramRepository $programRepository)
     {
         $this->translator = $translator;
         $this->programRepository = $programRepository;
-        $this->settingsRepository = $settingsRepository;
     }
 
     public function render()
@@ -54,12 +47,12 @@ class ProgramBlockScheduleGridControl extends Control
         $grid->addColumnDateTime('start', 'admin.program.blocks_program_start')
             ->setFormat('j. n. Y H:i');
 
-        $basicBlockDuration = $this->settingsRepository->getValue('basic_block_duration');
-
-        $grid->addColumnDateTime('end', 'admin.program.blocks_program_end')
-            ->setRenderer(function ($row) use ($basicBlockDuration) {
-                return $row->getEnd($basicBlockDuration)->format('j. n. Y H:i');
-            });
+//        $basicBlockDuration = $this->settingsRepository->getValue('basic_block_duration');
+//
+//        $grid->addColumnDateTime('end', 'admin.program.blocks_program_end')
+//            ->setRenderer(function ($row) use ($basicBlockDuration) {
+//                return $row->getEnd($basicBlockDuration)->format('j. n. Y H:i');
+//            });
 
         $grid->addColumnText('room', 'admin.program.blocks_program_room', 'room.name');
 

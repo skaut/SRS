@@ -4,8 +4,6 @@ namespace App\WebModule\Components;
 
 use App\Model\Program\BlockRepository;
 use App\Model\Program\CategoryRepository;
-use App\Model\Settings\SettingsRepository;
-use App\Model\User\UserRepository;
 use Nette\Application\UI\Control;
 
 class BlocksContentControl extends Control
@@ -16,17 +14,13 @@ class BlocksContentControl extends Control
     /** @var CategoryRepository */
     private $categoryRepository;
 
-    /** @var SettingsRepository */
-    private $settingsRepository;
 
-    public function __construct(BlockRepository $blockRepository, CategoryRepository $categoryRepository,
-                                SettingsRepository $settingsRepository)
+    public function __construct(BlockRepository $blockRepository, CategoryRepository $categoryRepository)
     {
         parent::__construct();
 
         $this->blockRepository = $blockRepository;
         $this->categoryRepository = $categoryRepository;
-        $this->settingsRepository = $settingsRepository;
     }
 
     public function render($content)
@@ -38,7 +32,6 @@ class BlocksContentControl extends Control
         $template->categories =  $this->categoryRepository->findAllOrderedByName();
         $template->allBlocks = $this->blockRepository->findAllOrderedByName();
         $template->uncategorizedBlocks = $this->blockRepository->findAllUncategorizedOrderedByName();
-        $template->basicBlockDuration = $this->settingsRepository->getValue('basic_block_duration');
 
         $selectedBlockId = $this->getPresenter()->getParameter('blockId');
 

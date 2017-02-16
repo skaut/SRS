@@ -3,11 +3,9 @@
 namespace App\AdminModule\ProgramModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
-use App\Model\ACL\Role;
 use App\Model\Program\Block;
 use App\Model\Program\BlockRepository;
 use App\Model\Program\CategoryRepository;
-use App\Model\Settings\SettingsRepository;
 use App\Model\User\UserRepository;
 use Nette;
 use Nette\Application\UI\Form;
@@ -23,9 +21,6 @@ class BlockForm extends Nette\Object
     /** @var BlockRepository */
     private $blockRepository;
 
-    /** @var SettingsRepository */
-    private $settingsRepository;
-
     /** @var UserRepository */
     private $userRepository;
 
@@ -33,12 +28,10 @@ class BlockForm extends Nette\Object
     private $categoryRepository;
 
     public function __construct(BaseForm $baseFormFactory, BlockRepository $blockRepository,
-                                SettingsRepository $settingsRepository, UserRepository $userRepository,
-                                CategoryRepository $categoryRepository)
+                                UserRepository $userRepository, CategoryRepository $categoryRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->blockRepository = $blockRepository;
-        $this->settingsRepository = $settingsRepository;
         $this->userRepository = $userRepository;
         $this->categoryRepository = $categoryRepository;
     }
@@ -58,8 +51,9 @@ class BlockForm extends Nette\Object
 
         $form->addSelect('lector', 'admin.program.blocks_lector', $this->userRepository->getLectorsOptions())->setPrompt('');
 
-        $form->addSelect('duration', 'admin.program.blocks_duration', $this->settingsRepository->getDurationsOptions())
-            ->addRule(Form::FILLED, 'admin.program.blocks_duration_empty');
+        $form->addText('duration', 'admin.program.blocks_duration_form')
+            ->addRule(Form::FILLED, 'admin.program.blocks_duration_empty')
+            ->addRule(Form::NUMERIC, 'admin.program.blocks_duration_format');
 
         $form->addText('capacity', 'admin.program.blocks_capacity')
             ->setAttribute('data-toggle', 'tooltip')

@@ -74,7 +74,6 @@ class ProfilePresenter extends WebBasePresenter
 
     public function renderDefault() {
         $this->template->pageName = $this->translator->translate('web.profile.title');
-        $this->template->basicBlockDuration = $this->settingsRepository->getValue('basic_block_duration');
         $this->template->paymentMethodBank = PaymentType::BANK;
     }
 

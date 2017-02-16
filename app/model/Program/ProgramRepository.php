@@ -3,15 +3,7 @@
 namespace App\Model\Program;
 
 use App\ApiModule\DTO\ProgramDetailDTO;
-use App\Model\ACL\RoleRepository;
-use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\Mapping;
-use Doctrine\ORM\Query\Expr;
-use Kdyby\Doctrine\EntityManager;
 use Kdyby\Doctrine\EntityRepository;
 
 class ProgramRepository extends EntityRepository
@@ -68,15 +60,11 @@ class ProgramRepository extends EntityRepository
 
     /**
      * @param Program $program
-     * @param $basicBlockDuration
      * @return int[]
      */
-    public function findBlockedProgramsIdsByProgram(Program $program, $basicBlockDuration) {
-        if (!$program->getBlock())
-            return $this->findOverlappingProgramsIds($program, $basicBlockDuration);
-
+    public function findBlockedProgramsIdsByProgram(Program $program) {
         $merged = array_merge($this->findProgramsIdsByBlock($program->getBlock()),
-            $this->findOverlappingProgramsIds($program, $basicBlockDuration)
+            $this->findOverlappingProgramsIds($program)
         );
 
         if (($key = array_search($program->getId(), $merged)) !== false)
@@ -101,16 +89,16 @@ class ProgramRepository extends EntityRepository
 
     /**
      * @param Program $program
-     * @param $basicBlockDuration
      * @return int[]
      */
-    public function findOverlappingProgramsIds(Program $program, $basicBlockDuration)
+    public function findOverlappingProgramsIds(Program $program)
     {
         $start = $program->getStart();
-        $end = $program->getEnd($basicBlockDuration);
+        $end = $program->getEnd();
 
         return $this->createQueryBuilder('p')
             ->select('p.id')
+            ->join('p.block', 'b')
             ->where(
                 $this->createQueryBuilder()->expr()->lt(
                     $this->createQueryBuilder()->expr()->max(
@@ -120,10 +108,7 @@ class ProgramRepository extends EntityRepository
                     $this->createQueryBuilder()->expr()->min(
                         $this->createQueryBuilder()->expr()->sum(
                             'p.start',
-                            $this->createQueryBuilder()->expr()->prod(
-                                'p.duration',
-                                $basicBlockDuration
-                            )
+                            'b.duration'
                         ),
                         $end
                     )

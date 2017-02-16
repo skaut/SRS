@@ -18,12 +18,6 @@ class CalendarConfigDTO extends Nette\Object
      * @JMS\Type("int")
      * @var int
      */
-    private $basicBlockDuration;
-
-    /**
-     * @JMS\Type("int")
-     * @var int
-     */
     private $seminarFromYear;
 
     /**
@@ -64,22 +58,6 @@ class CalendarConfigDTO extends Nette\Object
     public function setSeminarDuration($seminarDuration)
     {
         $this->seminarDuration = $seminarDuration;
-    }
-
-    /**
-     * @return int
-     */
-    public function getBasicBlockDuration()
-    {
-        return $this->basicBlockDuration;
-    }
-
-    /**
-     * @param int $basicBlockDuration
-     */
-    public function setBasicBlockDuration($basicBlockDuration)
-    {
-        $this->basicBlockDuration = $basicBlockDuration;
     }
 
     /**

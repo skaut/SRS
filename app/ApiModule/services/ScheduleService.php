@@ -34,9 +34,6 @@ class ScheduleService extends Nette\Object
     /** @var User */
     private $user;
 
-    /** @var int */
-    private $basicBlockDuration;
-
     /** @var Translator */
     private $translator;
 
@@ -74,8 +71,6 @@ class ScheduleService extends Nette\Object
         $this->blockRepository = $blockRepository;
         $this->roomRepository = $roomRepository;
         $this->settingsRepository = $settingsRepository;
-
-        $this->basicBlockDuration = $this->settingsRepository->getValue(Settings::BASIC_BLOCK_DURATION);
     }
 
     /**
@@ -143,7 +138,6 @@ class ScheduleService extends Nette\Object
         $calendarConfigDTO->setSeminarFromYear($fromDate->format('Y'));
         $calendarConfigDTO->setSeminarFromMonth($fromDate->format('n') - 1);
         $calendarConfigDTO->setSeminarFromDay($fromDate->format('j'));
-        $calendarConfigDTO->setBasicBlockDuration($this->basicBlockDuration);
         $calendarConfigDTO->setAllowedModifySchedule(
             $this->settingsRepository->getValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE) &&
             $this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE)
@@ -180,7 +174,6 @@ class ScheduleService extends Nette\Object
         $programDetailDTO->setDuration($program->getDuration());
         $programDetailDTO->setAttendeesCount($program->getAttendeesCount());
         $programDetailDTO->setUserAttends($this->user ? $program->isAttendee($this->user) : false);
-        $programDetailDTO->setBlocksPrograms($this->programRepository->findBlockedProgramsIdsByProgram($program, $this->basicBlockDuration));
 
         return $programDetailDTO;
     }

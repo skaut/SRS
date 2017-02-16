@@ -167,7 +167,9 @@ program:
     blocks_category: "Kategorie"
     blocks_lector: "Lektor"
     blocks_duration: "Délka"
-    blocks_duration_empty: "Vyberte délku."
+    blocks_duration_form: "Délka v minutách"
+    blocks_duration_empty: "Zadejte délku."
+    blocks_duration_format: "Zadejte číslo."
     blocks_capacity: "Kapacita"
     blocks_capacity_format: "Zadejte číslo nebo nechte pole prázdné."
     blocks_capacity_note: "Pokud nechcete kapacitu omezovat, nechte pole prázdné."
@@ -385,8 +387,6 @@ configuration:
     place_description: "Popis cesty" #TODO popis cesty
 
     program_heading: "Program"
-    basic_block_duration: "Základní délka programového bloku"
-    basic_block_duration_empty: "Vyberte základní délku programového bloku."
     is_allowed_add_block: "povolit vytváření programových bloků"
     is_allowed_modify_schedule: "povolit úpravu harmonogramu semináře"
     is_allowed_register_programs: "povolit přihlašování na programy"

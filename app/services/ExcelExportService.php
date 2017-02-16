@@ -3,8 +3,6 @@
 namespace App\Services;
 
 
-use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsRepository;
 use Nette;
 
 class ExcelExportService extends Nette\Object
@@ -12,18 +10,13 @@ class ExcelExportService extends Nette\Object
     /** @var \PHPExcel */
     private $phpExcel;
 
-    /** @var SettingsRepository */
-    private $settingsRepository;
-
 
     /**
      * ExcelExportService constructor.
      * @param \PHPExcel $phpExcel
      */
-    public function __construct(SettingsRepository $settingsRepository)
+    public function __construct()
     {
-        $this->settingsRepository = $settingsRepository;
-
         $this->phpExcel = new \PHPExcel();
     }
 
@@ -60,8 +53,6 @@ class ExcelExportService extends Nette\Object
     }
 
     public function exportUsersSchedules($users, $filename) {
-        $basicBlockDuration = $this->settingsRepository->getValue(Settings::BASIC_BLOCK_DURATION);
-
         $this->phpExcel->removeSheetByIndex(0);
         $sheetNumber = 0;
 
@@ -97,7 +88,7 @@ class ExcelExportService extends Nette\Object
                 $column = 0;
 
                 $sheet->setCellValueByColumnAndRow($column++, $row, $program->getStart()->format("j. n. H:i"));
-                $sheet->setCellValueByColumnAndRow($column++, $row, $program->getEnd($basicBlockDuration)->format("j. n. H:i"));
+                $sheet->setCellValueByColumnAndRow($column++, $row, $program->getEnd()->format("j. n. H:i"));
                 $sheet->setCellValueByColumnAndRow($column++, $row, $program->getBlock()->getName());
                 $sheet->setCellValueByColumnAndRow($column++, $row, $program->getRoom() ? $program->getRoom()->getName() : null);
                 $sheet->setCellValueByColumnAndRow($column++, $row, $program->getBlock()->getLector() ? $program->getBlock()->getLector()->getDisplayName() : null);
