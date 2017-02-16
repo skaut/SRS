@@ -476,9 +476,11 @@ class UsersGridControl extends Control
 
         foreach ($users as $user) {
             if ($user->getPaymentDate()) {
+                if (!$user->getIncomeProofPrintedDate()) {
+                    $user->setIncomeProofPrintedDate(new \DateTime());
+                    $this->userRepository->save($user);
+                }
                 $usersToGenerate[] = $user;
-                $user->setIncomeProofPrintedDate(new \DateTime());
-                $this->userRepository->save($user);
             }
         }
 

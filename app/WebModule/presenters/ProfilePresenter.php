@@ -79,8 +79,10 @@ class ProfilePresenter extends WebBasePresenter
 
     public function actionGeneratePaymentProofBank() {
         $user = $this->userRepository->findById($this->user->id);
-        $user->setIncomeProofPrintedDate(new \DateTime());
-        $this->userRepository->save($user);
+        if (!$user->getIncomeProofPrintedDate()) {
+            $user->setIncomeProofPrintedDate(new \DateTime());
+            $this->userRepository->save($user);
+        }
         $this->pdfExportService->generatePaymentProof($user, "potvrzeni-o-prijeti-platby.pdf");
     }
 
