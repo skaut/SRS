@@ -51,10 +51,18 @@
                                     <td>{$dbuser->getFee()},-</td>
                                 {elseif $usersPayingRoles->count() > 1}
                                     <td>
-                                        {foreach $usersPayingRoles as $usersPayingRole}
-                                            {$usersPayingRole->getName()}: {$usersPayingRole->getFee()},-<br>
-                                        {/foreach}
-                                        <strong>{_web.profile.total} {$dbuser->getFee()},-</strong>
+                                        <table>
+                                            {foreach $usersPayingRoles as $usersPayingRole}
+                                                <tr>
+                                                    <td style="padding-right: 15px">{$usersPayingRole->getName()}</td>
+                                                    <td align="right">{$usersPayingRole->getFee()},-</td>
+                                                </tr>
+                                            {/foreach}
+                                            <tr>
+                                                <td style="padding-right: 15px"><strong>{_web.profile.total}</strong></td>
+                                                <td align="right"><strong>{$dbuser->getFee()},-</strong></td>
+                                            </tr>
+                                        </table>
                                     </td>
                                 {/if}
                             </tr>

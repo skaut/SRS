@@ -37,7 +37,7 @@ profile:
     fee: "Cena semináře"
     fee_paid_date: "Poplatek uhrazen dne"
     fee_not_paid: "poplatek neuhrazen"
-    total: "Celkem:"
+    total: "Celkem"
     print_proof: "stáhnout potvrzení"
     roles: "Role"
     required_roles_not_selected: "K roli %role% musíte mít vybrané role: %requiredRoles%."
