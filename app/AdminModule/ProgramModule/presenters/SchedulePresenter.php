@@ -29,7 +29,7 @@ class SchedulePresenter extends ProgramBasePresenter
     }
 
     public function renderDefault() {
-        $this->template->containerAttributes = 'ng-app="calendar" ng-controller="AdminCalendarCtrl"';
+        $this->template->containerAttributes = 'ng-app="scheduleApp" ng-controller="AdminScheduleCtrl"';
     }
 
     public function handleSearch($text, $unassignedOnly)

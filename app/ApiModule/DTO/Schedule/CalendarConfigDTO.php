@@ -9,40 +9,39 @@ use JMS\Serializer\Annotation as JMS;
 class CalendarConfigDTO extends Nette\Object
 {
     /**
+     * @JMS\Type("string")
+     * @var string
+     */
+    private $seminarFromDate;
+
+    /**
      * @JMS\Type("int")
      * @var int
      */
     private $seminarDuration;
 
     /**
-     * @JMS\Type("int")
-     * @var int
-     */
-    private $seminarFromYear;
-
-    /**
-     * @JMS\Type("int")
-     * @var integer
-     */
-    private $seminarFromMonth;
-
-    /**
-     * @JMS\Type("int")
-     * @var integer
-     */
-    private $seminarFromDay;
-
-    /**
-     * @JMS\Type("int")
-     * @var int
-     */
-    private $seminarFromWeekDay;
-
-    /**
      * @JMS\Type("boolean")
      * @var boolean
      */
     private $allowedModifySchedule;
+
+
+    /**
+     * @return string
+     */
+    public function getSeminarFromDate()
+    {
+        return $this->seminarFromDate;
+    }
+
+    /**
+     * @param string $seminarFromDate
+     */
+    public function setSeminarFromDate($seminarFromDate)
+    {
+        $this->seminarFromDate = $seminarFromDate;
+    }
 
     /**
      * @return int
@@ -58,70 +57,6 @@ class CalendarConfigDTO extends Nette\Object
     public function setSeminarDuration($seminarDuration)
     {
         $this->seminarDuration = $seminarDuration;
-    }
-
-    /**
-     * @return int
-     */
-    public function getSeminarFromYear()
-    {
-        return $this->seminarFromYear;
-    }
-
-    /**
-     * @param int $seminarFromYear
-     */
-    public function setSeminarFromYear($seminarFromYear)
-    {
-        $this->seminarFromYear = $seminarFromYear;
-    }
-
-    /**
-     * @return int
-     */
-    public function getSeminarFromMonth()
-    {
-        return $this->seminarFromMonth;
-    }
-
-    /**
-     * @param int $seminarFromMonth
-     */
-    public function setSeminarFromMonth($seminarFromMonth)
-    {
-        $this->seminarFromMonth = $seminarFromMonth;
-    }
-
-    /**
-     * @return int
-     */
-    public function getSeminarFromDay()
-    {
-        return $this->seminarFromDay;
-    }
-
-    /**
-     * @param int $seminarFromDay
-     */
-    public function setSeminarFromDay($seminarFromDay)
-    {
-        $this->seminarFromDay = $seminarFromDay;
-    }
-
-    /**
-     * @return int
-     */
-    public function getSeminarFromWeekDay()
-    {
-        return $this->seminarFromWeekDay;
-    }
-
-    /**
-     * @param int $seminarFromWeekDay
-     */
-    public function setSeminarFromWeekDay($seminarFromWeekDay)
-    {
-        $this->seminarFromWeekDay = $seminarFromWeekDay;
     }
 
     /**

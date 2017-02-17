@@ -1,50 +1,76 @@
-/**
- * Created with JetBrains PhpStorm.
- * User: Michal
- * Date: 3.2.13
- * Time: 15:51
- * Author: Michal Májský
- */
-var app = angular.module("calendar", []);
+var apiPath = basePath + '/api/schedule/';
 
-app.config(function ($httpProvider) {
-    $httpProvider.responseInterceptors.push('myHttpInterceptor');
-    var spinnerFunction = function (data, headersGetter) {
-        // todo start the spinner here
-        $('.ajax-loader').fadeIn();
-        return data;
-    };
-    $httpProvider.defaults.transformRequest.push(spinnerFunction);
-})
-// register the interceptor as a service, intercepts ALL angular ajax http calls
-    .factory('myHttpInterceptor', function ($q, $window) {
-        return function (promise) {
-            return promise.then(function (response) {
-                // do something on success
-                // todo hide the spinner
-                $('.ajax-loader').fadeOut();
-                return response;
+var app = angular.module('scheduleApp', ['ui.calendar', 'ui.bootstrap']);
 
-            }, function (response) {
-                // do something on error
-                // todo hide the spinner
-                $('.ajax-loader').fadeOut();
-                return $q.reject(response);
+app.factory('myService', function($http) {
+    var getData = function() {
+        return $http.get(apiPath + "getcalendarconfig", {})
+            .then(function(result){
+                return result.data;
             });
-        };
+    };
+
+    return { getData: getData };
+});
+
+
+app.controller('AdminScheduleCtrl', AdminScheduleCtrl);
+
+function AdminScheduleCtrl($scope, $http, uiCalendarConfig, myService) {
+    var myDataPromise = myService.getData();
+    myDataPromise.then(function (result) {
+        $scope.uiConfig.calendar.defaultDate = $.fullCalendar.moment(result.seminar_from_date);
+        $scope.uiConfig.calendar.views.seminar.duration.days = result.seminar_duration;
+        $scope.uiConfig.calendar.editable = result.allowed_modify_schedule;
+        $scope.uiConfig.calendar.droppable = result.allowed_modify_schedule;
     });
 
-app.filter('showUnassigned', function () {
-    return function (items, apply) {
-        if (apply) {
-            var filtered = [];
-            angular.forEach(items, function (item) {
-                if (item.program_count == 0) {
-                    filtered.push(item);
+
+    $scope.uiConfig = {
+        calendar:{
+            lang: 'cs',
+            timezone: false,
+            defaultView: 'seminar',
+            aspectRatio: 1.6,
+            header: false,
+            eventDurationEditable: false,
+            views: {
+                seminar: {
+                    type: 'agenda',
+                    duration: { days: 3 },
+                    buttonText: 'Seminář',
+                    allDaySlot: false,
+                    slotDuration: '00:15:00',
+                    slotLabelInterval: '01:00:00',
+                    snapDuration: '00:05:00'
                 }
-            });
-            return filtered;
+            },
+            eventClick: $scope.alertEventOnClick,
+            eventDrop: $scope.alertOnDrop,
+            eventResize: $scope.alertOnResize
         }
-        return items;
     };
-});
+
+
+    // $http.get(api_path + "getallprograms", {
+    //     cache: true,
+    //     params: {}
+    // }).then(function (data) {
+    //     $scope.events.slice(0, $scope.events.length);
+    //     angular.forEach(data.data, function (value) {
+    //         $scope.events.push({
+    //             title: value.title,
+    //             description: value.desctiption,
+    //             start: new Date(parseInt(value.StartAt.substr(6))),
+    //             end: new Date(parseInt(value.EndAt.substr(6))),
+    //             allDay: false
+    //         })
+    //     })
+    // })
+
+    //config
+
+
+
+}
+

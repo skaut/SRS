@@ -172,7 +172,7 @@ webloader:
                 - libs/jquery/jquery-ui.min.js
                 - libs/jquery/jquery.mousewheel.min.js
                 - %appDir%/../vendor/twbs/bootstrap/dist/js/bootstrap.min.js
-                - libs/bootstrap-datetimepicker/moment-with-locales.js
+                - libs/moment/moment.js
                 - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.js
                 - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.cs.js
                 - libs/bootstrap-select/bootstrap-select.min.js
@@ -192,7 +192,7 @@ webloader:
                 - libs/jquery/jquery.mousewheel.min.js
                 - libs/jquery/jquery-ui-sortable.min.js
                 - %appDir%/../vendor/twbs/bootstrap/dist/js/bootstrap.min.js
-                - libs/bootstrap-datetimepicker/moment-with-locales.js
+                - libs/moment/moment.js
                 - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.js
                 - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.cs.js
                 - libs/bootstrap-select/bootstrap-select.min.js

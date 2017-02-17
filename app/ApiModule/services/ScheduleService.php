@@ -133,11 +133,8 @@ class ScheduleService extends Nette\Object
         $fromDate = $this->settingsRepository->getDateValue(Settings::SEMINAR_FROM_DATE);
         $toDate = $this->settingsRepository->getDateValue(Settings::SEMINAR_TO_DATE);
 
-        $calendarConfigDTO->setSeminarFromWeekDay($fromDate->format('w'));
-        $calendarConfigDTO->setSeminarDuration($toDate->diff($fromDate)->d);
-        $calendarConfigDTO->setSeminarFromYear($fromDate->format('Y'));
-        $calendarConfigDTO->setSeminarFromMonth($fromDate->format('n') - 1);
-        $calendarConfigDTO->setSeminarFromDay($fromDate->format('j'));
+        $calendarConfigDTO->setSeminarFromDate($fromDate->format('Y-m-d'));
+        $calendarConfigDTO->setSeminarDuration($toDate->diff($fromDate)->d + 1);
         $calendarConfigDTO->setAllowedModifySchedule(
             $this->settingsRepository->getValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE) &&
             $this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE)

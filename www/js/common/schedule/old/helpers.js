@@ -107,33 +107,6 @@ function setColorFront(event) {
     }
 }
 
-function bindEndToBasicBlockDuration(start, end, basic_block_duration) {
-
-    var diff_milis = (start - end);
-    var event_duration_minutes = Math.abs(Math.round(((diff_milis / 1000) / 60)));
-    var ratio = event_duration_minutes / basic_block_duration;
-
-    if (ratio % 1 != 0) {
-        flashMessage('Délka programu byla upravena, aby odpovídala násobku základní délky bloku', 'warning');
-    }
-
-    var event_basic_block_count = Math.round(ratio);
-    if (event_basic_block_count == 0) {
-        event_basic_block_count = 1; //vzdy vytvorime udalost o delce alespon jednoho bloku
-    }
-    var end = new Date(start.getTime() + basic_block_duration * event_basic_block_count * 60000);
-    return end;
-}
-
-function bindEndToBlockDuration(start, end, block_duration, basic_block_duration) {
-    var new_end = new Date(start.getTime() + basic_block_duration * 60000 * block_duration);
-    if (end != null) {
-        if (end.getTime() != new_end.getTime()) {
-            flashMessage('Délka programu byla upravena s ohledem na délku přiřazeného bloku', 'warning');
-        }
-    }
-    return new_end;
-}
 
 function flashMessage(text, type) {
     if (type == undefined) {
