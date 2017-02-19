@@ -6,7 +6,7 @@ namespace App\ApiModule\DTO\Schedule;
 use Nette;
 use JMS\Serializer\Annotation as JMS;
 
-class ProgramAdminDetailDTO extends Nette\Object
+class ProgramDetailDTO extends Nette\Object
 {
     /**
      * @JMS\Type("int")
@@ -33,10 +33,10 @@ class ProgramAdminDetailDTO extends Nette\Object
     private $end;
 
     /**
-     * @JMS\Type("string")
-     * @var string
+     * @JMS\Type("int")
+     * @var int
      */
-    private $color;
+    private $blockId;
 
     /**
      * @JMS\Type("int")
@@ -109,19 +109,19 @@ class ProgramAdminDetailDTO extends Nette\Object
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getColor()
+    public function getBlockId()
     {
-        return $this->color;
+        return $this->blockId;
     }
 
     /**
-     * @param string $color
+     * @param int $blockId
      */
-    public function setColor($color)
+    public function setBlockId($blockId)
     {
-        $this->color = $color;
+        $this->blockId = $blockId;
     }
 
     /**

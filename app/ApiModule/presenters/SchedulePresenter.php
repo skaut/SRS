@@ -4,6 +4,7 @@ namespace App\ApiModule\Presenters;
 
 
 use App\ApiModule\DTO\CalendarConfigDTO;
+use App\ApiModule\DTO\Schedule\ProgramAddDTO;
 use App\ApiModule\DTO\Schedule\ProgramSaveDTO;
 use App\ApiModule\Services\ScheduleService;
 use JMS\Serializer\Serializer;
@@ -65,32 +66,6 @@ class SchedulePresenter extends ApiBasePresenter
         $this->sendResponse($response);
     }
 
-    /**
-     * @param $data
-     */
-    public function actionSaveProgram($data)
-    {
-        $programSaveDTO = $this->serializer->deserialize($data, ProgramSaveDTO::class, 'json');
-
-        $data = $this->scheduleService->saveProgram($programSaveDTO);
-
-        $json = $this->serializer->serialize($data, 'json');
-        $response = new TextResponse($json);
-        $this->sendResponse($response);
-    }
-
-    /**
-     * @param $id
-     */
-    public function actionRemoveProgram($id)
-    {
-        $data = $this->scheduleService->removeProgram($id);
-
-        $json = $this->serializer->serialize($data, 'json');
-        $response = new TextResponse($json);
-        $this->sendResponse($response);
-    }
-
     public function actionGetBlocks()
     {
         $data = $this->scheduleService->getBlocks();
@@ -123,6 +98,46 @@ class SchedulePresenter extends ApiBasePresenter
         $response = new TextResponse($json);
         $this->sendResponse($response);
     }
+
+    /**
+     * @param $data
+     */
+    public function actionSaveProgram($data)
+    {
+        $programSaveDTO = $this->serializer->deserialize($data, ProgramSaveDTO::class, 'json');
+
+        $data = $this->scheduleService->saveProgram($programSaveDTO);
+
+        $json = $this->serializer->serialize($data, 'json');
+        $response = new TextResponse($json);
+        $this->sendResponse($response);
+    }
+
+    /**
+    //     * @param $data
+    //     */
+//    public function actionSaveProgram($data)
+//    {
+//        $programSaveDTO = $this->serializer->deserialize($data, ProgramSaveDTO::class, 'json');
+//
+//        $data = $this->scheduleService->saveProgram($programSaveDTO);
+//
+//        $json = $this->serializer->serialize($data, 'json');
+//        $response = new TextResponse($json);
+//        $this->sendResponse($response);
+//    }
+//
+//    /**
+//     * @param $id
+//     */
+//    public function actionRemoveProgram($id)
+//    {
+//        $data = $this->scheduleService->removeProgram($id);
+//
+//        $json = $this->serializer->serialize($data, 'json');
+//        $response = new TextResponse($json);
+//        $this->sendResponse($response);
+//    }
 
     /**
      * @param integer $id programID

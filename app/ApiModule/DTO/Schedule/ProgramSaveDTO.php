@@ -33,12 +33,6 @@ class ProgramSaveDTO extends Nette\Object
     private $start;
 
     /**
-     * @JMS\Type("DateTime")
-     * @var \DateTime
-     */
-    private $end;
-
-    /**
      * @return int
      */
     public function getId()
@@ -101,22 +95,4 @@ class ProgramSaveDTO extends Nette\Object
     {
         $this->start = $start;
     }
-
-    /**
-     * @return \DateTime
-     */
-    public function getEnd()
-    {
-        return $this->end;
-    }
-
-    /**
-     * @param \DateTime $end
-     */
-    public function setEnd($end)
-    {
-        $this->end = $end;
-    }
-
-
 }

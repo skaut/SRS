@@ -2,8 +2,8 @@ var apiPath = basePath + '/api/schedule/';
 
 var app = angular.module('scheduleApp', ['ui.calendar', 'ui.bootstrap']);
 
-app.filter("filterBlocks", function() {
-    return function(items, search, unassignedOnly) {
+app.filter("filterBlocks", function () {
+    return function (items, search, unassignedOnly) {
         var filtered;
 
         if (search) {
@@ -35,11 +35,10 @@ app.directive("block", function ($parse) {
     return {
         restrict: 'A',
         link: function (scope, element, attrs) {
-            attrs.$observe('block', function(id) {
+            attrs.$observe('block', function (id) {
                 var block = scope.blocksMap[id];
 
                 var eventObject = {
-                    title: block.name,
                     block: block,
                     duration: block.duration_hours + ":" + block.duration_minutes
                 };
@@ -48,85 +47,126 @@ app.directive("block", function ($parse) {
                 $(element).draggable({
                     scroll: false,
                     helper: 'clone',
-                    zIndex:999,
-                    revert:true,
-                    revertDuration:0
+                    zIndex: 999,
+                    revert: true,
+                    revertDuration: 0
                 });
             });
         }
     };
 });
 
-app.factory('configService', function($http) {
-    var getData = function() {
-        return $http.get(apiPath + 'getcalendarconfig', {})
-            .then(function(result){
+app.factory('apiService', function ($http) {
+    var getData = function (action) {
+        return $http.get(apiPath + action, {})
+            .then(function (result) {
                 return result.data;
             });
     };
-    return { getData: getData };
+    return {getData: getData};
 });
 
-app.factory('blocksService', function($http) {
-    var getData = function() {
-        return $http.get(apiPath + 'getblocks', {})
-            .then(function(result){
-                return result.data;
-            });
-    };
-    return { getData: getData };
-});
+app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q, uiCalendarConfig, apiService) {
+    $scope.config = null;
 
-app.factory('programsService', function($http) {
-    var getData = function() {
-        return $http.get(apiPath + 'getprogramsadmin', {})
-            .then(function(result){
-                return result.data;
-            });
-    };
-    return { getData: getData };
-});
-
-
-app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, uiCalendarConfig, configService, blocksService, programsService) {
-    $scope.blocks = [];
+    $scope.blocks = null;
     $scope.blocksMap = [];
+
+    $scope.rooms = null;
+    $scope.roomsMap = [];
+
+    $scope.programs = null;
+
+    $scope.events = [];
+
     $scope.event = null;
 
+    $scope.startup = function () {
+        var promisses = [];
 
-    var configPromise = configService.getData();
-    var blocksPromise = blocksService.getData();
-    var programsPromise = programsService.getData();
+        var configPromise = apiService.getData('getcalendarconfig');
+        configPromise.then(function (result) {
+            calendarConfig = $scope.uiConfig.calendar;
+            calendarConfig.defaultDate = $.fullCalendar.moment(result.seminar_from_date);
+            calendarConfig.views.seminar.duration.days = result.seminar_duration;
+            calendarConfig.editable = result.allowed_modify_schedule;
+            calendarConfig.droppable = result.allowed_modify_schedule;
+        });
+        promisses.push(configPromise);
 
-    configPromise.then(function (result) {
-        calendarConfig = $scope.uiConfig.calendar;
-        calendarConfig.defaultDate = $.fullCalendar.moment(result.seminar_from_date);
-        calendarConfig.views.seminar.duration.days = result.seminar_duration;
-        calendarConfig.editable = result.allowed_modify_schedule;
-        calendarConfig.droppable = result.allowed_modify_schedule;
-    });
+        var blocksPromise = apiService.getData('getblocks');
+        blocksPromise.then(function (result) {
+            $scope.blocks = result;
+            angular.forEach($scope.blocks, function (block, key) {
+                $scope.blocksMap[block.id] = block;
+            })
+        });
+        promisses.push(blocksPromise);
 
-    blocksPromise.then(function (result) {
-        $scope.blocks = result;
-        angular.forEach($scope.blocks, function (block, key) {
-            $scope.blocksMap[block.id] = block;
-        })
-    });
+        var roomsPromise = apiService.getData('getrooms');
+        roomsPromise.then(function (result) {
+            $scope.rooms = result;
+            angular.forEach($scope.rooms, function (room, key) {
+                $scope.roomsMap[room.id] = room;
+            })
+        });
+        promisses.push(roomsPromise);
 
-    $scope.programs = {
-        url: apiPath + 'getprogramsadmin'
+        var programsPromise = apiService.getData('getprogramsadmin');
+        programsPromise.then(function (result) {
+            $scope.programs = result;
+        });
+        promisses.push(programsPromise);
+
+
+        $q.all(promisses).then(function () {
+            angular.forEach($scope.programs, function (program, key) {
+                program.block = $scope.blocksMap[program.block_id];
+                program.room = $scope.roomsMap[program.room_id];
+                $scope.setEventParams(program);
+                $scope.events.push(program);
+            })
+        });
     };
+    $scope.startup();
 
-    $scope.eventSources = [$scope.programs];
+    $scope.setEventParams = function (event) {
+        var room = event.block.room_id ? roomsMap[event.block.room_id] : null;
+        event.title = event.block.name + (room ? ' - ' + room.name : '');
+        event.color = event.block.mandatory ? '#D9534F' : '#0275D8';
+    };
 
     $scope.addEvent = function (event) {
-
+        var programSaveDTO = {
+            block_id: event.block.id,
+            start: event.start.utc().format()
+        };
+        var json = encodeURIComponent(JSON.stringify(programSaveDTO));
+        $http.post(apiPath + 'saveprogram?data=' + json)
+            .then(function (result) {
+                event.id = result;
+            })
     };
 
+    $scope.saveEvent = function (event) {
+        var programSaveDTO = {
+            id: event.id,
+            block_id: event.block.id,
+            room_id: event.room ? event.room.id : null,
+            start: event.start.utc().format()
+        };
+        var json = encodeURIComponent(JSON.stringify(programSaveDTO));
+        $http.post(apiPath + 'saveprogram?data=' + json)
+            .then(function (result) {
+
+            })
+    };
+
+
     $scope.uiConfig = {
-        calendar:{
+        calendar: {
             lang: 'cs',
-            timezone: false,
+            timezone: 'utc',
             defaultView: 'seminar',
             aspectRatio: 1.6,
             header: false,
@@ -134,7 +174,7 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, ui
             views: {
                 seminar: {
                     type: 'agenda',
-                    duration: { days: 3 },
+                    duration: {days: 3},
                     buttonText: 'Seminář',
                     allDaySlot: false,
                     slotDuration: '00:15:00',
@@ -143,23 +183,44 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, ui
                 }
             },
             eventClick: $scope.alertEventOnClick,
-            eventDrop: $scope.alertOnDrop,
+
+            eventDrop: function (event) {
+                $scope.saveEvent(event);
+            },
+
             drop: function (date) {
-                var event = {};
+                var event = angular.extend({}, $(this).data('event'));
 
                 event.start = date;
                 event.attendees_count = 0;
-                event.block = $scope.blocksMap[$(this)[0].attributes['data-id'].value];
                 event.block.programs_count++;
-                $scope.event = event;
+
+                $scope.setEventParams(event);
                 $scope.addEvent(event);
-
-                $('#calendar').fullCalendar('renderEvent', event, true);
-
             }
+            // eventRender: function (event, element) {
+            //     // var options = {
+            //     //     html: true,
+            //     //     trigger: 'hover',
+            //     //     title: event.title,
+            //     //     placement: 'bottom',
+            //     //     content: ''
+            //     // };
+            //     //
+            //     // options.content += "<ul class='no-margin block-properties'>";
+            //     // options.content += "<li><span>Lektor:</span> " + event.block.lector + "</li>";
+            //     // options.content += "<li><span>Obsazenost:</span>" + event.attendees_count + "/" + event.block.capacity + "</li>";
+            //     // options.content += "<li><span>Lokalita:</span> " + event.block.location + "</li>";
+            //     // options.content += "<li><span>Pomůcky:</span> " + event.block.tools + "</li>";
+            //     // options.content += "</ul>";
+            //     // options.content += "<p>" + event.block.perex + "</p>";
+            //     //
+            //     // element.popover(options);
+            // }
         }
     };
 
+    $scope.eventSources = [$scope.events];
 
     // $http.get(api_path + "getallprograms", {
     //     cache: true,
@@ -178,7 +239,6 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, ui
     // })
 
     //config
-
 
 
 });
