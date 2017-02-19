@@ -6,7 +6,7 @@ namespace App\ApiModule\DTO\Schedule;
 use Nette;
 use JMS\Serializer\Annotation as JMS;
 
-class BlockDetailDTO extends Nette\Object
+class ProgramWebDetailDTO extends Nette\Object
 {
     /**
      * @JMS\Type("int")
@@ -18,7 +18,25 @@ class BlockDetailDTO extends Nette\Object
      * @JMS\Type("string")
      * @var string
      */
-    private $name;
+    private $title;
+
+    /**
+     * @JMS\Type("string")
+     * @var string
+     */
+    private $start;
+
+    /**
+     * @JMS\Type("string")
+     * @var string
+     */
+    private $end;
+
+    /**
+     * @JMS\Type("string")
+     * @var string
+     */
+    private $color;
 
     /**
      * @JMS\Type("string")
@@ -39,16 +57,16 @@ class BlockDetailDTO extends Nette\Object
     private $aboutLector;
 
     /**
-     * @JMS\Type("int")
-     * @var int
+     * @JMS\Type("string")
+     * @var string
      */
-    private $durationHours;
+    private $room;
 
     /**
      * @JMS\Type("int")
      * @var int
      */
-    private $durationMinutes;
+    private $attendeesCount;
 
     /**
      * @JMS\Type("int")
@@ -60,25 +78,13 @@ class BlockDetailDTO extends Nette\Object
      * @JMS\Type("boolean")
      * @var bool
      */
-    private $mandatory;
+    private $userAttends;
 
     /**
-     * @JMS\Type("string")
-     * @var string
+     * @JMS\Type("boolean")
+     * @var bool
      */
-    private $perex;
-
-    /**
-     * @JMS\Type("string")
-     * @var string
-     */
-    private $description;
-
-    /**
-     * @JMS\Type("int")
-     * @var int
-     */
-    private $programsCount;
+    private $blocked;
 
     /**
      * @return int
@@ -99,17 +105,65 @@ class BlockDetailDTO extends Nette\Object
     /**
      * @return string
      */
-    public function getName()
+    public function getTitle()
     {
-        return $this->name;
+        return $this->title;
     }
 
     /**
-     * @param string $name
+     * @param string $title
      */
-    public function setName($name)
+    public function setTitle($title)
     {
-        $this->name = $name;
+        $this->title = $title;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStart()
+    {
+        return $this->start;
+    }
+
+    /**
+     * @param string $start
+     */
+    public function setStart($start)
+    {
+        $this->start = $start;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEnd()
+    {
+        return $this->end;
+    }
+
+    /**
+     * @param string $end
+     */
+    public function setEnd($end)
+    {
+        $this->end = $end;
+    }
+
+    /**
+     * @return string
+     */
+    public function getColor()
+    {
+        return $this->color;
+    }
+
+    /**
+     * @param string $color
+     */
+    public function setColor($color)
+    {
+        $this->color = $color;
     }
 
     /**
@@ -161,35 +215,35 @@ class BlockDetailDTO extends Nette\Object
     }
 
     /**
+     * @return string
+     */
+    public function getRoom()
+    {
+        return $this->room;
+    }
+
+    /**
+     * @param string $room
+     */
+    public function setRoom($room)
+    {
+        $this->room = $room;
+    }
+
+    /**
      * @return int
      */
-    public function getDurationHours()
+    public function getAttendeesCount()
     {
-        return $this->durationHours;
+        return $this->attendeesCount;
     }
 
     /**
-     * @param int $durationHours
+     * @param int $attendeesCount
      */
-    public function setDurationHours($durationHours)
+    public function setAttendeesCount($attendeesCount)
     {
-        $this->durationHours = $durationHours;
-    }
-
-    /**
-     * @return int
-     */
-    public function getDurationMinutes()
-    {
-        return $this->durationMinutes;
-    }
-
-    /**
-     * @param int $durationMinutes
-     */
-    public function setDurationMinutes($durationMinutes)
-    {
-        $this->durationMinutes = $durationMinutes;
+        $this->attendeesCount = $attendeesCount;
     }
 
     /**
@@ -211,64 +265,32 @@ class BlockDetailDTO extends Nette\Object
     /**
      * @return bool
      */
-    public function isMandatory()
+    public function isUserAttends()
     {
-        return $this->mandatory;
+        return $this->userAttends;
     }
 
     /**
-     * @param bool $mandatory
+     * @param bool $userAttends
      */
-    public function setMandatory($mandatory)
+    public function setUserAttends($userAttends)
     {
-        $this->mandatory = $mandatory;
+        $this->userAttends = $userAttends;
     }
 
     /**
-     * @return string
+     * @return bool
      */
-    public function getPerex()
+    public function isBlocked()
     {
-        return $this->perex;
+        return $this->blocked;
     }
 
     /**
-     * @param string $perex
+     * @param bool $blocked
      */
-    public function setPerex($perex)
+    public function setBlocked($blocked)
     {
-        $this->perex = $perex;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * @param string $description
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-    }
-
-    /**
-     * @return int
-     */
-    public function getProgramsCount()
-    {
-        return $this->programsCount;
-    }
-
-    /**
-     * @param int $programsCount
-     */
-    public function setProgramsCount($programsCount)
-    {
-        $this->programsCount = $programsCount;
+        $this->blocked = $blocked;
     }
 }

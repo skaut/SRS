@@ -190,7 +190,6 @@ webloader:
                 - libs/nette.ajax.js
                 - libs/jquery/jquery-ui.min.js
                 - libs/jquery/jquery.mousewheel.min.js
-                - libs/jquery/jquery-ui-sortable.min.js
                 - %appDir%/../vendor/twbs/bootstrap/dist/js/bootstrap.min.js
                 - libs/moment/moment.js
                 - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.js

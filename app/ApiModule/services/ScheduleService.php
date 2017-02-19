@@ -6,8 +6,10 @@ namespace App\ApiModule\Services;
 use ApiModule\DTO\Schedule\RoomDetailDTO;
 use App\ApiModule\DTO\Schedule\BlockDetailDTO;
 use App\ApiModule\DTO\Schedule\CalendarConfigDTO;
+use App\ApiModule\DTO\Schedule\ProgramAdminDetailDTO;
 use App\ApiModule\DTO\Schedule\ProgramDetailDTO;
 use App\ApiModule\DTO\Schedule\ProgramSaveDTO;
+use App\ApiModule\DTO\Schedule\ProgramWebDetailDTO;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\Program\Block;
@@ -81,31 +83,31 @@ class ScheduleService extends Nette\Object
     }
 
     /**
-     * @return ProgramDetailDTO[]
+     * @return ProgramAdminDetailDTO[]
      */
-    public function getAllPrograms() {
+    public function getProgramsAdmin() {
         $programs = $this->programRepository->findAll();
-        $programDetailDTOs = [];
+        $programAdminDetailDTOs = [];
         foreach ($programs as $program)
-            $programDetailDTOs[] = $this->convertProgramToProgramDetailDTO($program);
-        return $programDetailDTOs;
+            $programAdminDetailDTOs[] = $this->convertProgramToProgramAdminDetailDTO($program);
+        return $programAdminDetailDTOs;
     }
 
     /**
-     * @return ProgramDetailDTO[]
+     * @return ProgramWebDetailDTO[]
      */
-    public function getUserAllowedPrograms() {
-        $programs = $this->programRepository->findUserAllowed($this->user);
-        $programDetailDTOs = [];
-        foreach ($programs as $program)
-            $programDetailDTOs[] = $this->convertProgramToProgramDetailDTO($program);
-        return $programDetailDTOs;
+    public function getProgramsWeb() {
+//        $programs = $this->programRepository->findUserAllowed($this->user);
+//        $programDetailDTOs = [];
+//        foreach ($programs as $program)
+//            $programDetailDTOs[] = $this->convertProgramToProgramDetailDTO($program);
+//        return $programDetailDTOs;
     }
 
     /**
      * @return BlockDetailDTO[]
      */
-    public function getAllBlocks() {
+    public function getBlocks() {
         $blocks = $this->blockRepository->findAll();
         $blockDetailDTOs = [];
         foreach ($blocks as $block)
@@ -116,7 +118,7 @@ class ScheduleService extends Nette\Object
     /**
      * @return RoomDetailDTO[]
      */
-    public function getAllRooms() {
+    public function getRooms() {
         $rooms = $this->roomRepository->findAll();
         $roomDetailDTOs = [];
         foreach ($rooms as $room)
@@ -159,20 +161,23 @@ class ScheduleService extends Nette\Object
 
     }
 
-    private function convertProgramToProgramDetailDTO(Program $program) {
-        $programDetailDTO = new ProgramDetailDTO();
+    /**
+     * @param Program $program
+     * @return ProgramAdminDetailDTO
+     */
+    private function convertProgramToProgramAdminDetailDTO(Program $program) {
+        $title = $program->getBlock()->getName() . ($program->getRoom() ? ' - ' . $program->getRoom()->getName() : '');
 
-        $programDetailDTO->setId($program->getId());
-        $programDetailDTO->setBlockId($program->getBlock() ? $program->getBlock()->getId() : null);
-        $programDetailDTO->setRoomId($program->getRoom() ? $program->getRoom()->getId() : null);
-        $programDetailDTO->setName($program->getBlock() ? $program->getBlock()->getName() : $this->translator->translate('common.schedule.no_block'));
-        $programDetailDTO->setStart($program->getStart());
-        $programDetailDTO->setEnd($program->getEnd());
-        $programDetailDTO->setDuration($program->getDuration());
-        $programDetailDTO->setAttendeesCount($program->getAttendeesCount());
-        $programDetailDTO->setUserAttends($this->user ? $program->isAttendee($this->user) : false);
+        $programAdminDetailDTO = new ProgramAdminDetailDTO();
 
-        return $programDetailDTO;
+        $programAdminDetailDTO->setId($program->getId());
+        $programAdminDetailDTO->setTitle($title);
+        $programAdminDetailDTO->setStart($program->getStart()->format(DATE_ISO8601));
+        $programAdminDetailDTO->setEnd($program->getEnd()->format(DATE_ISO8601));
+        $programAdminDetailDTO->setRoomId($program->getRoom() ? $program->getRoom()->getId() : null);
+        $programAdminDetailDTO->setColor($program->getBlock()->isMandatory() ? '#D9534F' : '#0275D8');
+
+        return $programAdminDetailDTO;
     }
 
     private function convertBlockToBlockDetailDTO(Block $block) {
@@ -180,16 +185,16 @@ class ScheduleService extends Nette\Object
 
         $blockDetailDTO->setId($block->getId());
         $blockDetailDTO->setName($block->getName());
-        $blockDetailDTO->setCategoryName($block->getCategory() ? $block->getCategory()->getName() : $this->translator->translate('common.schedule.no_category'));
-        $blockDetailDTO->setLectorName($block->getLector() ? $block->getLector()->getDisplayName() : $this->translator->translate('common.schedule.no_lector'));
-        $blockDetailDTO->setLectorAbout($block->getLector() ? $block->getLector()->getAbout() : '');
-        $blockDetailDTO->setDuration($block->getDuration());
+        $blockDetailDTO->setCategory($block->getCategory() ? $block->getCategory()->getName() : $this->translator->translate('common.schedule.no_category'));
+        $blockDetailDTO->setLector($block->getLector() ? $block->getLector()->getDisplayName() : $this->translator->translate('common.schedule.no_lector'));
+        $blockDetailDTO->setAboutLector($block->getLector() ? $block->getLector()->getAbout() : '');
+        $blockDetailDTO->setDurationHours(floor($block->getDuration()/60));
+        $blockDetailDTO->setDurationMinutes($block->getDuration()%60);
         $blockDetailDTO->setCapacity($block->getCapacity());
         $blockDetailDTO->setMandatory($block->isMandatory());
         $blockDetailDTO->setPerex($block->getPerex());
         $blockDetailDTO->setDescription($block->getDescription());
         $blockDetailDTO->setProgramsCount($block->getProgramsCount());
-        $blockDetailDTO->setTools($block->getTools());
 
         return $blockDetailDTO;
     }

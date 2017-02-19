@@ -3,18 +3,13 @@
 namespace App\ApiModule\Presenters;
 
 
-use ApiModule\DTO\ProgramSaveDTO;
 use App\ApiModule\DTO\CalendarConfigDTO;
+use App\ApiModule\DTO\Schedule\ProgramSaveDTO;
 use App\ApiModule\Services\ScheduleService;
-use App\Model\ACL\Permission;
-use App\Model\ACL\Resource;
-use App\Services\SkautIsService;
 use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializerBuilder;
-use Nette\Application\Responses\JsonResponse;
 use Nette\Application\Responses\TextResponse;
 use Nette\Security\AuthenticationException;
-use Nette\Utils\Json;
 
 /**
  * SchedulePresenter
@@ -48,8 +43,8 @@ class SchedulePresenter extends ApiBasePresenter
     /**
      *
      */
-    public function actionGetAllPrograms() {
-        $data = $this->scheduleService->getAllPrograms();
+    public function actionGetProgramsAdmin() {
+        $data = $this->scheduleService->getProgramsAdmin();
 
         $json = $this->serializer->serialize($data, 'json');
         $response = new TextResponse($json);
@@ -59,11 +54,11 @@ class SchedulePresenter extends ApiBasePresenter
     /**
      * @throws AuthenticationException
      */
-    public function actionGetUserAllowedPrograms() {
+    public function actionGetProgramsWeb() {
         if (!$this->user->isLoggedIn())
             throw new AuthenticationException('Uživatel musí být přihlášen');
 
-        $data = $this->scheduleService->getUserAllowedPrograms();
+        $data = $this->scheduleService->getProgramsWeb();
 
         $json = $this->serializer->serialize($data, 'json');
         $response = new TextResponse($json);
@@ -96,18 +91,18 @@ class SchedulePresenter extends ApiBasePresenter
         $this->sendResponse($response);
     }
 
-    public function actionGetAllBlocks()
+    public function actionGetBlocks()
     {
-        $data = $this->scheduleService->getAllBlocks();
+        $data = $this->scheduleService->getBlocks();
 
         $json = $this->serializer->serialize($data, 'json');
         $response = new TextResponse($json);
         $this->sendResponse($response);
     }
 
-    public function actionGetAllRooms()
+    public function actionGetRooms()
     {
-        $data = $this->scheduleService->getAllRooms();
+        $data = $this->scheduleService->getRooms();
 
         $json = $this->serializer->serialize($data, 'json');
         $response = new TextResponse($json);

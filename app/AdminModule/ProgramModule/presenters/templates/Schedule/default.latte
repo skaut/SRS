@@ -1,38 +1,28 @@
 {block head}
     <script>
         var basePath = {$basePath};
-//        var flashMessageShowInterval = 6000;
+        //        var flashMessageShowInterval = 6000;
     </script>
 
     {control css 'libs/fullcalendar/fullcalendar.min.css'}
     {control js 'libs/angular/angular.min.js', 'libs/angular-ui-calendar/calendar.js',
     'libs/angular-ui-bootstrap/ui-bootstrap-tpls-2.5.0.min.js', 'libs/fullcalendar/fullcalendar.min.js',
-    'libs/fullcalendar/lang-all.js', 'common/schedule/app.js'}
-
-    <script>
-        $(function () {
-            $('#textbox-search').on('keyup', search);
-            $('#checkbox-unassigned').change(search);
-        });
-
-        function search() {
-            var value = $('#textbox-search').val();
-            var checked = $('#checkbox-unassigned').is(':checked');
-
-            $.nette.ajax({
-                'url': {link search!},
-                'data': {
-                    text: value,
-                    unassignedOnly: checked
-                }
-            });
-        }
-    </script>
+    'libs/fullcalendar/lang-all.js', 'common/schedule/app.js', 'common/schedule/adminController.js'}
 {/block}
 
 
 {block main}
     <h2>{_admin.program.schedule_heading}</h2>
+
+    {*<div class="ajax-loader">*}
+    {*<img src="{$basePath}/js/common/schedule/ajax-loader.gif">*}
+    {*</div>*}
+
+    {*<div class="notifications" id="jsMessages">*}
+    {*<div class="alert alert-info forever" ng-show="warning">*}
+    {*{{ warning }}*}
+    {*</div>*}
+    {*</div>*}
 
     {*<div id="app">*}
     {*<div class="notifications bottom-right" id="jsMessages">*}
@@ -82,66 +72,46 @@
     <div class="well">
         <div class="input-group">
             <span class="input-group-addon"><i class="fa fa-search fa-fw"></i></span>
-            <input id="textbox-search" class="form-control" type="text">
+            <input id="textbox-search" class="form-control" type="text" ng-model="search">
         </div>
 
         <div class="checkbox" style="text-align: center">
             <label for="checkbox-unassigned">
-                <input type="checkbox" id="checkbox-unassigned">
+                <input type="checkbox" id="checkbox-unassigned" ng-model="unassignedOnly">
                 jen nezařazené
             </label>
         </div>
 
         <div class="pre-scrollable">
-            {snippet results}
-                <ul id="results" class="list-group" style="margin-top: 15px; margin-bottom: 0">
-                    {foreach $results as $result}
-                        <li class="list-group-item {if $result->isMandatory()}list-group-item-danger{else}list-group-item-info{/if}">
-                            <table>
-                                <tr>
-                                    <th colspan="2">{$result->getName()}</th>
-                                </tr>
-                                <tr>
-                                    <td style="padding-right: 15px">{_admin.program.schedule_category}</td>
-                                    <td>{$result->getCategory() ? $result->getCategory()->getName() : ''}</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding-right: 15px">{_admin.program.schedule_lector}</td>
-                                    <td>{$result->getLector() ? $result->getLector()->getDisplayName() : ''}</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding-right: 15px">{_admin.program.schedule_capacity}</td>
-                                    <td>
-                                        {if $result->getCapacity()}
-                                            {$result->getCapacity()}
-                                        {else}
-                                            {_admin.program.blocks_capacity_unlimited}
-                                        {/if}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="padding-right: 15px">{_admin.program.schedule_programs_count}</td>
-                                    <td>{$result->getPrograms()->count()}×</td>
-                                </tr>
-                            </table>
-                        </li>
-                    {/foreach}
-                </ul>
-            {/snippet}
+            <ul id="blocks-container" class="list-group" style="margin-top: 15px; margin-bottom: 0">
+                <li class="list-group-item block"
+                    ng-repeat="block in blocks | filterBlocks: search:unassignedOnly"
+                    ng-class="block.mandatory ? 'list-group-item-danger' : 'list-group-item-info'"
+                    block="{{ block.id }}">
+                    <table>
+                        <tr>
+                            <th colspan="2">{{ block.name }}</th>
+                        </tr>
+                        <tr>
+                            <td style="padding-right: 15px">{_admin.program.schedule_category}</td>
+                            <td>{{ block.category }}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding-right: 15px">{_admin.program.schedule_lector}</td>
+                            <td>{{ block.lector }}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding-right: 15px">{_admin.program.schedule_capacity}</td>
+                            <td>{{ block.capacity }}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding-right: 15px">{_admin.program.schedule_programs_count}</td>
+                            <td>{{ block.programs_count }}×</td>
+                        </tr>
+                    </table>
+                </li>
+            </ul>
         </div>
-
-        {*<div class="blocks-container">*}
-        {*<div class="block" ng-repeat="block in blocks | filter:query | showUnassigned: applyUnassigned" external-block="{{ block.id }}">*}
-        {*<h6>{{ block.name }}</h6>*}
-        {*<ul class="no-margin">*}
-        {*<li><span>Lektor:</span> {{ block.lector }}</li>*}
-        {*<li><span>Místnost:</span> {{ block.room }}</li>*}
-        {*<li><span>Kapacita:</span> {{ block.capacity }}</li>*}
-        {*<li><span>Kategorie:</span> {{ block.category }}</li>*}
-        {*<li><span>Zařazeno:</span> {{ block.program_count }}x</li>*}
-        {*</ul>*}
-        {*</div>*}
-        {*</div>*}
     </div>
 {/block}
 
