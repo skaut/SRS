@@ -57,6 +57,26 @@ function AdminScheduleCtrl($scope, $http, uiCalendarConfig, configService) {
         }
     };
 
+    // eventRender: function (event, element) {
+    //     // var options = {
+    //     //     html: true,
+    //     //     trigger: 'hover',
+    //     //     title: event.title,
+    //     //     placement: 'bottom',
+    //     //     content: ''
+    //     // };
+    //     //
+    //     // options.content += "<ul class='no-margin block-properties'>";
+    //     // options.content += "<li><span>Lektor:</span> " + event.block.lector + "</li>";
+    //     // options.content += "<li><span>Obsazenost:</span>" + event.attendees_count + "/" + event.block.capacity + "</li>";
+    //     // options.content += "<li><span>Lokalita:</span> " + event.block.location + "</li>";
+    //     // options.content += "<li><span>Pomůcky:</span> " + event.block.tools + "</li>";
+    //     // options.content += "</ul>";
+    //     // options.content += "<p>" + event.block.perex + "</p>";
+    //     //
+    //     // element.popover(options);
+    // }
+
 
     // $http.get(api_path + "getallprograms", {
     //     cache: true,

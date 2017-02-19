@@ -26,7 +26,7 @@ function animateAlerts() {
 }
 
 function initSelects() {
-    $('select').not('.row-group-actions select').add('select[multiple]').selectpicker({
+    $('select').not('.row-group-actions select').not('.modal-body select').add('select[multiple]').selectpicker({
         noneSelectedText: 'Nic není vybráno',
         noneResultsText: 'Žádné výsledky {0}',
         countSelectedText: 'Označeno {0} z {1}',

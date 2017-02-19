@@ -114,30 +114,16 @@ class SchedulePresenter extends ApiBasePresenter
     }
 
     /**
-    //     * @param $data
-    //     */
-//    public function actionSaveProgram($data)
-//    {
-//        $programSaveDTO = $this->serializer->deserialize($data, ProgramSaveDTO::class, 'json');
-//
-//        $data = $this->scheduleService->saveProgram($programSaveDTO);
-//
-//        $json = $this->serializer->serialize($data, 'json');
-//        $response = new TextResponse($json);
-//        $this->sendResponse($response);
-//    }
-//
-//    /**
-//     * @param $id
-//     */
-//    public function actionRemoveProgram($id)
-//    {
-//        $data = $this->scheduleService->removeProgram($id);
-//
-//        $json = $this->serializer->serialize($data, 'json');
-//        $response = new TextResponse($json);
-//        $this->sendResponse($response);
-//    }
+     * @param $id
+     */
+    public function actionRemoveProgram($id)
+    {
+        $data = $this->scheduleService->removeProgram($id);
+
+        $json = $this->serializer->serialize($data, 'json');
+        $response = new TextResponse($json);
+        $this->sendResponse($response);
+    }
 
     /**
      * @param integer $id programID

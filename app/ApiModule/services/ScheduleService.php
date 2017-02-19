@@ -156,11 +156,15 @@ class ScheduleService extends Nette\Object
 
         $this->programRepository->save($program);
 
-        return $program->getId();
+        $programSaveDTO->setId($program->getId());
+
+        return $programSaveDTO;
     }
 
     public function removeProgram($programId) {
-
+        $program = $this->programRepository->findById($programId);
+        $this->programRepository->remove($program);
+        return true;
     }
 
     public function attendProgram($programId) {
@@ -193,8 +197,8 @@ class ScheduleService extends Nette\Object
 
         $blockDetailDTO->setId($block->getId());
         $blockDetailDTO->setName($block->getName());
-        $blockDetailDTO->setCategory($block->getCategory() ? $block->getCategory()->getName() : $this->translator->translate('common.schedule.no_category'));
-        $blockDetailDTO->setLector($block->getLector() ? $block->getLector()->getDisplayName() : $this->translator->translate('common.schedule.no_lector'));
+        $blockDetailDTO->setCategory($block->getCategory() ? $block->getCategory()->getName() : '');//$this->translator->translate('common.schedule.no_category'));
+        $blockDetailDTO->setLector($block->getLector() ? $block->getLector()->getDisplayName() : '');//$this->translator->translate('common.schedule.no_lector'));
         $blockDetailDTO->setAboutLector($block->getLector() ? $block->getLector()->getAbout() : '');
         $blockDetailDTO->setDurationHours(floor($block->getDuration()/60));
         $blockDetailDTO->setDurationMinutes($block->getDuration()%60);
