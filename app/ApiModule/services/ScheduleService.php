@@ -146,6 +146,10 @@ class ScheduleService extends Nette\Object
         return $calendarConfigDTO;
     }
 
+    /**
+     * @param ProgramSaveDTO $programSaveDTO
+     * @return ResponseDTO
+     */
     public function saveProgram(ProgramSaveDTO $programSaveDTO) {
         if ($programSaveDTO->getId())
             $program = $this->programRepository->findById($programSaveDTO->getId());
@@ -166,14 +170,27 @@ class ScheduleService extends Nette\Object
         return $responseDTO;
     }
 
+    /**
+     * @param $programId
+     * @return ResponseDTO
+     */
     public function removeProgram($programId) {
         $program = $this->programRepository->findById($programId);
-        $this->programRepository->remove($program);
 
         $responseDTO = new ResponseDTO();
-        $responseDTO->setEventId($program->getId());
-        $responseDTO->setMessage($this->translator->translate('admin.program.schedule_deleted'));
-        $responseDTO->setStatus('success');
+
+        if ($program) {
+            $this->programRepository->remove($program);
+
+            $responseDTO = new ResponseDTO();
+            $responseDTO->setEventId($program->getId());
+            $responseDTO->setMessage($this->translator->translate('admin.program.schedule_deleted'));
+            $responseDTO->setStatus('success');
+        }
+        else {
+            $responseDTO->setMessage($this->translator->translate('admin.program.schedule_delete_error'));
+            $responseDTO->setStatus('danger');
+        }
 
         return $responseDTO;
     }
