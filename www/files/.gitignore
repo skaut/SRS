@@ -1,3 +1,7 @@
-*
-!.*
-!documents
+/*
+!.gitignore
+!/logo
+!/documents
+/documents/*
+!/images
+/images/*
