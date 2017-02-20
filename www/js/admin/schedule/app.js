@@ -142,7 +142,7 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q
 
         var programSaveDTO = {
             block_id: event.block.id,
-            start: event.start.utc().format()
+            start: event.start.format()
         };
         var json = encodeURIComponent(JSON.stringify(programSaveDTO));
         $http.post(apiPath + 'saveprogram?data=' + json)
@@ -158,7 +158,7 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q
             id: event.id,
             block_id: event.block.id,
             room_id: event.room ? event.room.id : null,
-            start: event.start.utc().format()
+            start: event.start.format()
         };
         var json = encodeURIComponent(JSON.stringify(programSaveDTO));
         $http.post(apiPath + 'saveprogram?data=' + json)
@@ -185,13 +185,14 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q
     $scope.updateEvent = function (event, room) {
         $('#program-modal').modal('hide');
 
-        event.room = room ? room : null;
+        event.room = room;
+        event.start.stripZone();
 
         setTitle(event);
 
         $scope.saveEvent(event);
 
-        $('#calendar').fullCalendar('updateEvent', [event]);
+        $('#calendar').fullCalendar('rerenderEvents');
     };
 
 
@@ -203,7 +204,7 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q
     $scope.uiConfig = {
         calendar: {
             lang: 'cs',
-            timezone: 'utc',
+            timezone: false,
             defaultView: 'seminar',
             aspectRatio: 1.6,
             header: false,

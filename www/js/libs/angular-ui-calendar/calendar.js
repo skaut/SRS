@@ -203,7 +203,7 @@ angular.module('ui.calendar', [])
             };
 
             this.getLocaleConfig = function (fullCalendarConfig) {
-                if (!fullCalendarConfig.lang && !fullCalendarConfig.locale || fullCalendarConfig.useNgLocale) {
+                if (!fullCalendarConfig.lang || fullCalendarConfig.useNgLocale) {
                     // Configure to use locale names by default
                     var tValues = function (data) {
                         // convert {0: "Jan", 1: "Feb", ...} to ["Jan", "Feb", ...]
@@ -281,7 +281,7 @@ angular.module('ui.calendar', [])
 
                     scope.initCalendar = function () {
                         if (!calendar) {
-                            calendar = $(elm).html('');
+                            calendar = angular.element(elm).html('');
                         }
                         calendar.fullCalendar(options);
                         if (attrs.calendar) {

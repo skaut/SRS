@@ -27,8 +27,8 @@ class ProgramSaveDTO extends Nette\Object
     private $roomId;
 
     /**
-     * @JMS\Type("DateTime")
-     * @var \DateTime
+     * @JMS\Type("DateTime<'Y-m-d\TH:i:s'>")
+     * \DateTime
      */
     private $start;
 
