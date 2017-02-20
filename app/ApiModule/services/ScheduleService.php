@@ -9,6 +9,8 @@ use App\ApiModule\DTO\Schedule\CalendarConfigDTO;
 use App\ApiModule\DTO\Schedule\ProgramAddDTO;
 use App\ApiModule\DTO\Schedule\ProgramDetailDTO;
 use App\ApiModule\DTO\Schedule\ProgramSaveDTO;
+use App\ApiModule\DTO\Schedule\Response;
+use App\ApiModule\DTO\Schedule\ResponseDTO;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\Program\Block;
@@ -156,15 +158,24 @@ class ScheduleService extends Nette\Object
 
         $this->programRepository->save($program);
 
-        $programSaveDTO->setId($program->getId());
+        $responseDTO = new ResponseDTO();
+        $responseDTO->setEventId($program->getId());
+        $responseDTO->setMessage($this->translator->translate('admin.program.schedule_saved'));
+        $responseDTO->setStatus('success');
 
-        return $programSaveDTO;
+        return $responseDTO;
     }
 
     public function removeProgram($programId) {
         $program = $this->programRepository->findById($programId);
         $this->programRepository->remove($program);
-        return true;
+
+        $responseDTO = new ResponseDTO();
+        $responseDTO->setEventId($program->getId());
+        $responseDTO->setMessage($this->translator->translate('admin.program.schedule_deleted'));
+        $responseDTO->setStatus('success');
+
+        return $responseDTO;
     }
 
     public function attendProgram($programId) {

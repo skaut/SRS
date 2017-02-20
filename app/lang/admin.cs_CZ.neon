@@ -205,6 +205,8 @@ program:
     schedule_lector: "Lektor:"
     schedule_capacity: "Kapacita:"
     schedule_programs_count: "Zařazeno:"
+    schedule_saved: "Program byl úspěšně uložen."
+    schedule_deleted: "Program byl úspěšně odstraněn."
 
     categories_heading: "Kategorie"
     categories_name: "Název"

@@ -14,9 +14,13 @@
 {block main}
     <h2>{_admin.program.schedule_heading}</h2>
     <div id="app">
-        <div class="notifications" id="jsMessages">
-            <div class="alert alert-info forever" ng-show="message">
-                {{ message }}
+        <div class="notifications">
+            <div class="spinner" ng-show="loading" style="float: left; margin-right: 15px">
+                <img src="{$basePath}/img/spin.gif" width="50"/>
+            </div>
+
+            <div ng-model="message" ng-show="message.text" class="alert alert-{{ message.type }}" style="float: left">
+                {{ message.text }}
             </div>
         </div>
 

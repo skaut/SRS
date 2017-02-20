@@ -60,17 +60,7 @@ app.directive("block", function ($parse) {
     };
 });
 
-app.factory('apiService', function ($http) {
-    var getData = function (action) {
-        return $http.get(apiPath + action, {})
-            .then(function (result) {
-                return result.data;
-            });
-    };
-    return {getData: getData};
-});
-
-app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q, uiCalendarConfig, apiService) {
+app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q, uiCalendarConfig) {
     $scope.config = null;
 
     $scope.blocks = null;
@@ -85,42 +75,71 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q
 
     $scope.event = null;
 
+    $scope.loading = true;
+    $scope.message = {
+        text: '',
+        type: ''
+    };
+
+
     $scope.startup = function () {
         var promisses = [];
 
-        var configPromise = apiService.getData('getcalendarconfig');
-        configPromise.then(function (result) {
-            $scope.config = result;
-            calendarConfig = $scope.uiConfig.calendar;
-            calendarConfig.defaultDate = $.fullCalendar.moment($scope.config.seminar_from_date);
-            calendarConfig.views.seminar.duration.days = $scope.config.seminar_duration;
-            calendarConfig.editable = $scope.config.allowed_modify_schedule;
-            calendarConfig.droppable = $scope.config.allowed_modify_schedule;
-        });
+        $scope.loading = 0;
+
+        $scope.loading++;
+        var configPromise = $http.get(apiPath + 'getcalendarconfig')
+            .then(function (response) {
+                $scope.config = response.data;
+                calendarConfig = $scope.uiConfig.calendar;
+                calendarConfig.defaultDate = $.fullCalendar.moment($scope.config.seminar_from_date);
+                calendarConfig.views.seminar.duration.days = $scope.config.seminar_duration;
+                calendarConfig.editable = $scope.config.allowed_modify_schedule;
+                calendarConfig.droppable = $scope.config.allowed_modify_schedule;
+            }, function (response) {
+                // TODO: error
+            }).finally(function () {
+                $scope.loading--;
+            });
         promisses.push(configPromise);
 
-        var blocksPromise = apiService.getData('getblocks');
-        blocksPromise.then(function (result) {
-            $scope.blocks = result;
-            angular.forEach($scope.blocks, function (block, key) {
-                $scope.blocksMap[block.id] = block;
-            })
-        });
+        $scope.loading++;
+        var blocksPromise = $http.get(apiPath + 'getblocks')
+            .then(function (response) {
+                $scope.blocks = response.data;
+                angular.forEach($scope.blocks, function (block, key) {
+                    $scope.blocksMap[block.id] = block;
+                })
+            }, function (response) {
+                // TODO: error
+            }).finally(function () {
+                $scope.loading--;
+            });
         promisses.push(blocksPromise);
 
-        var roomsPromise = apiService.getData('getrooms');
-        roomsPromise.then(function (result) {
-            $scope.rooms = result;
-            angular.forEach($scope.rooms, function (room, key) {
-                $scope.roomsMap[room.id] = room;
-            })
-        });
+        $scope.loading++;
+        var roomsPromise = $http.get(apiPath + 'getrooms')
+            .then(function (response) {
+                $scope.rooms = response.data;
+                angular.forEach($scope.rooms, function (room, key) {
+                    $scope.roomsMap[room.id] = room;
+                })
+            }, function (response) {
+                // TODO: error
+            }).finally(function () {
+                $scope.loading--;
+            });
         promisses.push(roomsPromise);
 
-        var programsPromise = apiService.getData('getprogramsadmin');
-        programsPromise.then(function (result) {
-            $scope.programs = result;
-        });
+        $scope.loading++;
+        var programsPromise = $http.get(apiPath + 'getprogramsadmin')
+            .then(function (response) {
+                $scope.programs = response.data;
+            }, function (response) {
+                // TODO: error
+            }).finally(function () {
+                $scope.loading--;
+            });
         promisses.push(programsPromise);
 
 
@@ -145,11 +164,17 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q
             start: event.start.format()
         };
         var json = encodeURIComponent(JSON.stringify(programSaveDTO));
+
+        $scope.loading++;
         $http.post(apiPath + 'saveprogram?data=' + json)
-            .then(function (result) {
-                $scope.event.id = result.data.id;
-                flashMessage('Pridano', 'success');
-            })
+            .then(function (response) {
+                $scope.event.id = response.data.event_id;
+                $scope.flashMessage(response.data.message, response.data.status);
+            }, function (response) {
+                $scope.flashMessage('Program se nepodařilo uložit.', 'danger');
+            }).finally(function () {
+            $scope.loading--;
+        });
     };
 
 
@@ -161,10 +186,16 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q
             start: event.start.format()
         };
         var json = encodeURIComponent(JSON.stringify(programSaveDTO));
+
+        $scope.loading++;
         $http.post(apiPath + 'saveprogram?data=' + json)
-            .then(function (result) {
-                flashMessage('Upraveno', 'success');
-            })
+            .then(function (response) {
+                $scope.flashMessage(response.data.message, response.data.status);
+            }, function (response) {
+                $scope.flashMessage('Program se nepodařilo uložit.', 'danger');
+            }).finally(function () {
+            $scope.loading--;
+        });
     };
 
 
@@ -173,10 +204,15 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q
 
         event.block.programs_count--;
 
+        $scope.loading++;
         $http.post(apiPath + 'removeprogram/' + event.id)
-            .then(function (result) {
-                flashMessage('Smazano', 'success');
-            });
+            .then(function (response) {
+                $scope.flashMessage(response.data.message, response.data.status);
+            }, function (response) {
+                $scope.flashMessage('Program se nepodařilo odstranit.', 'danger');
+            }).finally(function () {
+            $scope.loading--;
+        });
 
         $('#calendar').fullCalendar('removeEvents', [event._id]);
     };
@@ -200,6 +236,17 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q
         this.event = $scope.event;
         this.room = $scope.event.room;
     };
+
+
+    $scope.flashMessage = function (text, type) {
+        $scope.message.text = text;
+        $scope.message.type = type ? type : 'info';
+
+        $('.notifications .alert').show().animate({
+            opacity: 1.0
+        }, 5000).slideUp(1000);
+    };
+
 
     $scope.uiConfig = {
         calendar: {
@@ -247,23 +294,6 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q
 
     $scope.eventSources = [$scope.events];
 });
-
-function flashMessage(text, type) {
-    // if (type == undefined) {
-    //     type = 'info';
-    // }
-    //
-    // var fadeout = { enabled:true, delay:6000 }
-    //
-    // $('#jsMessages').notify({
-    //     message:{
-    //         text: text
-    //     },
-    //     type: type,
-    //     fadeOut: fadeout,
-    //     closable: true
-    // }).show();
-}
 
 function setColor(event) {
     event.color = event.block.mandatory ? '#D9534F' : '#0275D8';
