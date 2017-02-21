@@ -1,3 +1,5 @@
+var ALERT_DURATION = 5000;
+
 $(function () {
     $.nette.ext('initScripts', {
         complete: function () {
@@ -22,7 +24,7 @@ function init() {
 function animateAlerts() {
     $('.alert:not(.alert-forever)').animate({
         opacity: 1.0
-    }, 5000).slideUp(1000);
+    }, ALERT_DURATION).slideUp(1000);
 }
 
 function initSelects() {

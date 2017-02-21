@@ -1,3 +1,17 @@
+{block head}
+    <script>
+        var basePath = {$basePath};
+    </script>
+
+    <link rel="stylesheet" type="text/css" href="{$basePath}/css/libs/fullcalendar/fullcalendar.min.css">
+    <script src="{$basePath}/js/libs/angular/angular.min.js"></script>
+    <script src="{$basePath}/js/libs/angular-ui-calendar/calendar.js"></script>
+    <script src="{$basePath}/js/libs/angular-ui-bootstrap/ui-bootstrap-tpls-2.5.0.min.js"></script>
+    <script src="{$basePath}/js/libs/fullcalendar/fullcalendar.min.js"></script>
+    <script src="{$basePath}/js/libs/fullcalendar/lang-all.js"></script>
+    <script src="{$basePath}/js/web/schedule/app.js"></script>
+{/block}
+
 <div class="programs-content">
     <div class="row">
         <div class="col-sm-12">
@@ -7,6 +21,140 @@
 
     <div class="row">
         <div class="col-sm-12">
+            {if $guestRole}
+                <div class="alert alert-warning alert-forever">
+                    {_web.programs_content.login_required_begin}
+                    <a href="{plink :Auth:login, 'backlink' => $backlink}">{_web.programs_content.login_required_link}</a>{_web.programs_content.login_required_end}
+                </div>
+            {else}
+                {if !$registerProgramsAllowed}
+                    <div class="alert alert-warning alert-forever">
+                        Zapisování programů není v tuto chvíli povoleno.
+                    </div>
+                {elseif !$userHasPermission}
+                    <div class="alert alert-warning alert-forever">
+                        {_web.programs_content.login_required_begin}
+                    </div>
+                {elseif $userNotPaid}
+                    <div class="alert alert-warning alert-forever">
+                        Zapisování programů je povoleno až po zaplacení poplatku.
+                    </div>
+                {/if}
+
+                {var $userAllowedRegisterPrograms = $registerProgramsAllowed && $userHasPermission && !$userNotPaid}
+
+                <script>
+                    var userAllowedRegisterPrograms = {$userAllowedRegisterPrograms};
+                </script>
+
+                <div id="app" ng-app="scheduleApp" ng-controller="WebScheduleCtrl">
+                    <div class="row">
+                        <div class="col-sm-4 col-xs-4">
+                            <button data-toggle="modal" data-target="#help-modal" class="btn btn-default" style="margin-bottom: 15px">
+                                <i class="fa fa-info"></i> Nápověda
+                            </button>
+                        </div>
+
+                        <div class="col-sm-8 col-xs-8">
+                            <div class="pull-right">
+                                <div class="spinner pull-left" ng-show="loading" style="float: left">
+                                    <img src="{$basePath}/img/spin.gif" height="34"/>
+                                </div>
+
+                                <div ng-model="message" ng-show="message.text"
+                                     class="alert alert-{{ message.type }} pull-left" style="margin-left: 15px">
+                                    {{ message.text }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-danger alert-forever" ng-show="mandatory_nonregistered_programs_count">
+                        Máte nepřihlášené povinné programy (v kalendáři červeně). Prosíme, zapište si je.
+                    </div>
+
+                    <div ui-calendar="uiConfig.calendar" id="calendar" ng-model="eventSources"></div>
+
+                    <div id="program-modal" class="modal fade" ng-model="event">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">{{ event.block.name }}</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <table class="table table-form">
+                                        <colgroup>
+                                            <col class="col-sm-3 col-xs-3">
+                                            <col class="col-sm-9 col-xs-9">
+                                        </colgroup>
+
+                                        <tr>
+                                            <th>Kategorie</th>
+                                            <td>{{ event.block.category }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Lektor</th>
+                                            <td>{{ event.block.lector }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Místnost</th>
+                                            <td>{{ event.room ? event.room.name : '' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Obsazenost</th>
+                                            <td>{{ event.block.attendees_count + '/' + event.block.capacity }}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <h5>O programu</h5>
+                                <p>{{ event.block.perex }}</p>
+
+                                <div ng-bind-html-unsafe="event.block.description"></div>
+
+                                <h5>O lektorovi</h5>
+                                <p>{{ event.block.about_lector }}</p>
+
+                                <div class="modal-footer">
+                                    {if $userAllowedRegisterPrograms}
+                                        <button ng-hide="event.attends" ng-click="attend(event)"
+                                                class="btn btn-success pull-left">
+                                            Přihlásit se na program
+                                        </button>
+                                        <button ng-show="event.attends" ng-click="unattend(event)"
+                                                class="btn btn-danger pull-left">
+                                            Odhlásit se z programu
+                                        </button>
+                                    {/if}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="help-modal" class="modal fade">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Nápověda</h4>
+                                </div>
+                                <div class="modal-body">
+                                    Kliknutím na program se zobrazí možnost přihlášení/odhlášení a další informace o programu.
+
+                                    <h5>Typy programů</h5>
+                                    <ul class="list-group">
+                                        <li class="list-group-item list-group-item-success">Programy, které máte přihlášené.</li>
+                                        <li class="list-group-item disabled">Programy, na které se nelze přihlásit (např. obsazené).</li>
+                                        <li class="list-group-item list-group-item-info">Programy, na které se lze přihlásit.</li>
+                                        <li class="list-group-item list-group-item-danger">Programy, které jsou povinné.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {/if}
         </div>
     </div>
 </div>

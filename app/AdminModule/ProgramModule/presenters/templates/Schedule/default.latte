@@ -1,7 +1,6 @@
 {block head}
     <script>
         var basePath = {$basePath};
-        //        var flashMessageShowInterval = 6000;
     </script>
 
     {control css 'libs/fullcalendar/fullcalendar.min.css'}
@@ -15,86 +14,84 @@
     <h2>{_admin.program.schedule_heading}</h2>
     <div id="app">
         <div class="notifications">
-            <div class="spinner" ng-show="loading" style="float: left; margin-right: 15px">
-                <img src="{$basePath}/img/spin.gif" width="50"/>
+            <div class="spinner" ng-show="loading" style="float: left">
+                <img src="{$basePath}/img/spin.gif" height="52"/>
             </div>
 
-            <div ng-model="message" ng-show="message.text" class="alert alert-{{ message.type }}" style="float: left">
+            <div ng-model="message" ng-show="message.text" class="alert alert-{{ message.type }}" style="float: left; margin-left: 15px">
                 {{ message.text }}
             </div>
         </div>
 
-        <div id="canvas">
-            <div id="program-modal" class="modal fade" ng-model="event">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Nastavení programu</h4>
-                        </div>
-                        <div class="modal-body">
-                            <table class="table table-form">
-                                <colgroup>
-                                    <col class="col-sm-3 col-xs-3">
-                                    <col class="col-sm-9 col-xs-9">
-                                </colgroup>
+        <div ui-calendar="uiConfig.calendar" id="calendar" ng-model="eventSources"></div>
 
-                                <tr>
-                                    <th>Blok</th>
-                                    <td>
-                                        <a ng-href="../blocks/detail/{{ event.block.id }}" target="_blank">
-                                            {{ event.block.name }}
-                                        </a>
-                                    </td>
-                                </tr>
+        <div id="program-modal" class="modal fade" ng-model="event">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Nastavení programu</h4>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-form">
+                            <colgroup>
+                                <col class="col-sm-3 col-xs-3">
+                                <col class="col-sm-9 col-xs-9">
+                            </colgroup>
 
-                                <tr>
-                                    <th>Kategorie</th>
-                                    <td>{{ event.block.category }}</td>
-                                </tr>
+                            <tr>
+                                <th>Blok</th>
+                                <td>
+                                    <a ng-href="../blocks/detail/{{ event.block.id }}" target="_blank">
+                                        {{ event.block.name }}
+                                    </a>
+                                </td>
+                            </tr>
 
-                                <tr>
-                                    <th>Lektor</th>
-                                    <td>{{ event.block.lector }}</td>
-                                </tr>
-                            </table>
+                            <tr>
+                                <th>Kategorie</th>
+                                <td>{{ event.block.category }}</td>
+                            </tr>
 
-                            <form class="form-horizontal">
-                                <div class="form-group">
-                                    <div class="col-sm-3 col-xs-3 control-label">
-                                        <label for="select-room">Místnost</label>
-                                    </div>
-                                    <div class="col-sm-9 col-xs-9">
-                                        <select id="select-room" class="form-control" ng-model="room"
-                                                ng-options="value.name for (key, value) in rooms">
-                                            <option value=""></option>
-                                        </select>
-                                    </div>
+                            <tr>
+                                <th>Lektor</th>
+                                <td>{{ event.block.lector }}</td>
+                            </tr>
+                        </table>
+
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <div class="col-sm-3 col-xs-3 control-label">
+                                    <label for="select-room">Místnost</label>
                                 </div>
-                            </form>
+                                <div class="col-sm-9 col-xs-9">
+                                    <select id="select-room" class="form-control" ng-model="room"
+                                            ng-options="value.name for (key, value) in rooms">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
 
-                            <table class="table table-form">
-                                <colgroup>
-                                    <col class="col-sm-3 col-xs-3">
-                                    <col class="col-sm-9 col-xs-9">
-                                </colgroup>
+                        <table class="table table-form">
+                            <colgroup>
+                                <col class="col-sm-3 col-xs-3">
+                                <col class="col-sm-9 col-xs-9">
+                            </colgroup>
 
-                                <tr>
-                                    <th>Kapacita</th>
-                                    <td>{{ event.block.capacity }}</td>
-                                </tr>
-                            </table>
-                        </div>
+                            <tr>
+                                <th>Kapacita</th>
+                                <td>{{ event.block.capacity }}</td>
+                            </tr>
+                        </table>
+                    </div>
 
-                        <div class="modal-footer">
-                            <button ng-click="updateEvent(event, room)" class="btn btn-primary pull-left">Uložit</button>
-                            <button ng-click="removeEvent(event)" class="btn btn-danger pull-right">Odstranit</button>
-                        </div>
+                    <div class="modal-footer">
+                        <button ng-click="updateEvent(event, room)" class="btn btn-primary pull-left">Uložit</button>
+                        <button ng-click="removeEvent(event)" class="btn btn-danger pull-right">Odstranit</button>
                     </div>
                 </div>
             </div>
-
-            <div ui-calendar="uiConfig.calendar" id="calendar" ng-model="eventSources"></div>
         </div>
     </div>
 {/block}

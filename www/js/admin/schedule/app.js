@@ -1,6 +1,11 @@
 var apiPath = basePath + '/api/schedule/';
 
+var COLOR_OPTIONAL = '#0275D8';
+var COLOR_MANDATORY = '#D9534F';
+
+
 var app = angular.module('scheduleApp', ['ui.calendar', 'ui.bootstrap']);
+
 
 app.filter("filterBlocks", function () {
     return function (items, search, unassignedOnly) {
@@ -31,6 +36,7 @@ app.filter("filterBlocks", function () {
     };
 });
 
+
 app.directive("block", function ($parse) {
     return {
         restrict: 'A',
@@ -60,6 +66,7 @@ app.directive("block", function ($parse) {
     };
 });
 
+
 app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q, uiCalendarConfig) {
     $scope.config = null;
 
@@ -75,7 +82,6 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q
 
     $scope.event = null;
 
-    $scope.loading = true;
     $scope.message = {
         text: '',
         type: ''
@@ -97,7 +103,7 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q
                 calendarConfig.editable = $scope.config.allowed_modify_schedule;
                 calendarConfig.droppable = $scope.config.allowed_modify_schedule;
             }, function (response) {
-                // TODO: error
+                $scope.flashMessage('Nepodařilo se načíst nastavení kalendáře.', 'danger');
             }).finally(function () {
                 $scope.loading--;
             });
@@ -111,7 +117,7 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q
                     $scope.blocksMap[block.id] = block;
                 })
             }, function (response) {
-                // TODO: error
+                $scope.flashMessage('Nepodařilo se načíst programové bloky.', 'danger');
             }).finally(function () {
                 $scope.loading--;
             });
@@ -125,7 +131,7 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q
                     $scope.roomsMap[room.id] = room;
                 })
             }, function (response) {
-                // TODO: error
+                $scope.flashMessage('Nepodařilo se načíst místnosti.', 'danger');
             }).finally(function () {
                 $scope.loading--;
             });
@@ -136,7 +142,7 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q
             .then(function (response) {
                 $scope.programs = response.data;
             }, function (response) {
-                // TODO: error
+                $scope.flashMessage('Nepodařilo se načíst programy.', 'danger');
             }).finally(function () {
                 $scope.loading--;
             });
@@ -244,7 +250,7 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q
 
         $('.notifications .alert').show().animate({
             opacity: 1.0
-        }, 5000).slideUp(1000);
+        }, ALERT_DURATION).slideUp(1000);
     };
 
 
@@ -296,7 +302,7 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q
 });
 
 function setColor(event) {
-    event.color = event.block.mandatory ? '#D9534F' : '#0275D8';
+    event.color = event.block.mandatory ? COLOR_MANDATORY : COLOR_OPTIONAL;
 }
 
 function setTitle(event) {

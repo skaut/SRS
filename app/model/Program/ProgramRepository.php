@@ -4,10 +4,23 @@ namespace App\Model\Program;
 
 use App\ApiModule\DTO\ProgramDetailDTO;
 use App\Model\User\User;
+use App\Model\User\UserRepository;
+use Doctrine\ORM\Mapping;
+use Kdyby\Doctrine\EntityManager;
 use Kdyby\Doctrine\EntityRepository;
 
 class ProgramRepository extends EntityRepository
 {
+    /** @var UserRepository */
+    private $userRepository;
+
+    public function __construct(EntityManager $em, Mapping\ClassMetadata $class, UserRepository $userRepository)
+    {
+        parent::__construct($em, $class);
+
+        $this->userRepository = $userRepository;
+    }
+
     /**
      * @param $id
      * @return Program|null
@@ -38,21 +51,15 @@ class ProgramRepository extends EntityRepository
      * @param User $user
      * @return array
      */
-    public function findUserAllowed(User $user)
+    public function findUserAllowed($user)
     {
-        $allowedCategoriesIds = $this->createQueryBuilder('u')
-            ->select('c.id')
-            ->join('u.roles', 'r')
-            ->join('r.registerableCategories', 'c')
-            ->where('u.id = :id')->setParameter('id', $user->getId())
-            ->getQuery()
-            ->getScalarResult();
+        $registerableCategoriesIds = $this->userRepository->findRegisterableCategoriesIdsByUser($user);
 
         return $this->createQueryBuilder('p')
             ->select('p')
             ->join('p.block', 'b')
             ->leftJoin('b.category', 'c')
-            ->where('c.id IN (:ids)')->setParameter('ids', $allowedCategoriesIds)
+            ->where('c.id IN (:ids)')->setParameter('ids', $registerableCategoriesIds)
             ->orWhere('b.category IS NULL')
             ->getQuery()
             ->getResult();
@@ -96,24 +103,13 @@ class ProgramRepository extends EntityRepository
         $start = $program->getStart();
         $end = $program->getEnd();
 
-        return $this->createQueryBuilder('p')
+        return $this->createQueryBuilder('p')//(StartA <= EndB)  and  (EndA >= StartB) (StartA <= EndB)  and  (StartB <= EndA)
             ->select('p.id')
             ->join('p.block', 'b')
-            ->where(
-                $this->createQueryBuilder()->expr()->lt(
-                    $this->createQueryBuilder()->expr()->max(
-                        'p.start',
-                        $start
-                    ),
-                    $this->createQueryBuilder()->expr()->min(
-                        $this->createQueryBuilder()->expr()->sum(
-                            'p.start',
-                            'b.duration'
-                        ),
-                        $end
-                    )
-                )
-            )
+            ->where("(p.start <= :end) AND (DATE_ADD(p.start, (b.duration * 60), 'second') >= :start)")
+            ->orWhere("(p.start <= :end) AND (:start <= (DATE_ADD(p.start, (b.duration * 60), 'second')))")
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
             ->getQuery()
             ->getScalarResult();
     }

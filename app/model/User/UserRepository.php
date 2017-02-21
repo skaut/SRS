@@ -37,6 +37,10 @@ class UserRepository extends EntityRepository
         return $this->matching($criteria);
     }
 
+    /**
+     * @param $text
+     * @return array
+     */
     public function findNamesByLikeDisplayNameOrderedByDisplayName($text) {
         return $this->createQueryBuilder('u')
             ->select('u.id, u.displayName')
@@ -135,6 +139,20 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * @param User $user
+     * @return int[]
+     */
+    public function findRegisterableCategoriesIdsByUser(User $user) {
+        return $this->createQueryBuilder('u')
+            ->select('c.id')
+            ->join('u.roles', 'r')
+            ->join('r.registerableCategories', 'c')
+            ->where('u.id = :id')->setParameter('id', $user->getId())
+            ->getQuery()
+            ->getScalarResult();
+    }
+
+    /**
      * @param $variableSymbol
      * @return bool
      */
@@ -147,6 +165,9 @@ class UserRepository extends EntityRepository
         return !empty($res);
     }
 
+    /**
+     * @param $variableSymbolCode
+     */
     public function setVariableSymbolCode($variableSymbolCode) {
         $this->createQueryBuilder('u')
             ->update()
@@ -183,6 +204,10 @@ class UserRepository extends EntityRepository
         $this->_em->flush();
     }
 
+    /**
+     * @param $ids
+     * @param bool $value
+     */
     public function setAttended($ids, $value = true) {
         $this->createQueryBuilder('u')
             ->update()

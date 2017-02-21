@@ -45,6 +45,12 @@ class ProgramDetailDTO extends Nette\Object
     private $roomId;
 
     /**
+     * @JMS\Type("array")
+     * @var int[]
+     */
+    private $blocks;
+
+    /**
      * @return int
      */
     public function getId()
@@ -138,5 +144,21 @@ class ProgramDetailDTO extends Nette\Object
     public function setRoomId($roomId)
     {
         $this->roomId = $roomId;
+    }
+
+    /**
+     * @return \int[]
+     */
+    public function getBlocks()
+    {
+        return $this->blocks;
+    }
+
+    /**
+     * @param \int[] $blocks
+     */
+    public function setBlocks($blocks)
+    {
+        $this->blocks = $blocks;
     }
 }

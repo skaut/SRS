@@ -69,6 +69,11 @@ ul.no-margin {
     margin: 10px auto;
 }
 
+/* programs content */
+.programs-content .alert {
+    padding: 6px 15px;
+}
+
 /* tabulka bez ramecku */
 .table-borderless tbody tr td,
 .table-borderless tbody tr th,

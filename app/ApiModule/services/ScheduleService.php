@@ -98,11 +98,14 @@ class ScheduleService extends Nette\Object
      * @return ProgramDetailDTO[]
      */
     public function getProgramsWeb() {
-//        $programs = $this->programRepository->findUserAllowed($this->user);
-//        $programDetailDTOs = [];
-//        foreach ($programs as $program)
-//            $programDetailDTOs[] = $this->convertProgramToProgramDetailDTO($program);
-//        return $programDetailDTOs;
+        $programs = $this->programRepository->findUserAllowed($this->user);
+        $programDetailDTOs = [];
+        foreach ($programs as $program) {
+            $programDetailDTO = $this->convertProgramToProgramDetailDTO($program);
+            $programDetailDTO->setBlocks($this->programRepository->findBlockedProgramsIdsByProgram($program));
+            $programDetailDTOs[] = $programDetailDTO;
+        }
+        return $programDetailDTOs;
     }
 
     /**
@@ -220,6 +223,10 @@ class ScheduleService extends Nette\Object
         return $programDetailDTO;
     }
 
+    /**
+     * @param Block $block
+     * @return BlockDetailDTO
+     */
     private function convertBlockToBlockDetailDTO(Block $block) {
         $blockDetailDTO = new BlockDetailDTO();
 
@@ -239,6 +246,10 @@ class ScheduleService extends Nette\Object
         return $blockDetailDTO;
     }
 
+    /**
+     * @param Room $room
+     * @return RoomDetailDTO
+     */
     private function convertRoomToRoomDetailDTO(Room $room) {
         $roomDetailDTO = new RoomDetailDTO();
 
