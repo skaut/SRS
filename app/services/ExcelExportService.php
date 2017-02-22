@@ -64,22 +64,27 @@ class ExcelExportService extends Nette\Object
             $column = 0;
 
             $sheet->setCellValueByColumnAndRow($column, $row, "Od");
+            $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
             $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
             $sheet->getColumnDimensionByColumn($column++)->setWidth('15');
 
             $sheet->setCellValueByColumnAndRow($column, $row, "Do");
+            $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
             $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
             $sheet->getColumnDimensionByColumn($column++)->setWidth('15');
 
             $sheet->setCellValueByColumnAndRow($column, $row, "Název programu");
+            $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
             $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
             $sheet->getColumnDimensionByColumn($column++)->setWidth('30');
 
             $sheet->setCellValueByColumnAndRow($column, $row, "Místnost");
+            $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
             $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
             $sheet->getColumnDimensionByColumn($column++)->setWidth('25');
 
             $sheet->setCellValueByColumnAndRow($column, $row, "Lektor");
+            $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
             $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
             $sheet->getColumnDimensionByColumn($column++)->setWidth('25');
 

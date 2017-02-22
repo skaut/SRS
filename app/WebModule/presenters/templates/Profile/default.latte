@@ -141,7 +141,7 @@
                     {if $dbuser->getPrograms()->isEmpty()}
                         <p>{_web.profile.no_programs}</p>
                     {else}
-                        <table class="table table-bordered">
+                        <table class="table table-bordered table-striped">
                             <col class="col-sm-2 col-xs-2">
                             <col class="col-sm-2 col-xs-2">
                             <col class="col-sm-3 col-xs-3">
@@ -149,16 +149,16 @@
                             <col class="col-sm-3 col-xs-3">
 
                             <tr>
-                                <th>{_web.profile.from}</th>
-                                <th>{_web.profile.to}</th>
+                                <th class="text-right">{_web.profile.from}</th>
+                                <th class="text-right">{_web.profile.to}</th>
                                 <th>{_web.profile.program_name}</th>
                                 <th>{_web.profile.room}</th>
                                 <th>{_web.profile.lector}</th>
                             </tr>
                             {foreach $dbuser->getPrograms() as $program}
                                 <tr>
-                                    <td>{$program->getStart()|date:"j. n. G:i"}</td>
-                                    <td>{$program->getEnd()|date:"j. n. G:i"}</td>
+                                    <td class="text-right">{$program->getStart()|date:"j. n. G:i"}</td>
+                                    <td class="text-right">{$program->getEnd()|date:"j. n. G:i"}</td>
                                     <td>{$program->getBlock()->getName()}</td>
                                     <td>{if $program->getRoom() !== null}{$program->getRoom()->getName()}{/if}</td>
                                     <td>{if $program->getBlock()->getLector() !== null}{$program->getBlock()->getLector()->getDisplayName()}{/if}</td>
