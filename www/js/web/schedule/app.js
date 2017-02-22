@@ -6,7 +6,7 @@ var COLOR_ATTENDS = '#5CB85C';
 var COLOR_BLOCKED = '#A6A6A6';
 
 
-var app = angular.module('scheduleApp', ['ui.calendar', 'ui.bootstrap']);
+var app = angular.module('scheduleApp', ['ui.calendar', 'ui.bootstrap', 'ngSanitize']);
 
 
 app.controller('WebScheduleCtrl', function WebScheduleCtrl($scope, $http, $q, uiCalendarConfig) {

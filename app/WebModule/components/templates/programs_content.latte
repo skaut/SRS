@@ -5,6 +5,7 @@
 
     <link rel="stylesheet" type="text/css" href="{$basePath}/css/libs/fullcalendar/fullcalendar.min.css">
     <script src="{$basePath}/js/libs/angular/angular.min.js"></script>
+    <script src="{$basePath}/js/libs/angular/angular-sanitize.min.js"></script>
     <script src="{$basePath}/js/libs/angular-ui-calendar/calendar.js"></script>
     <script src="{$basePath}/js/libs/angular-ui-bootstrap/ui-bootstrap-tpls-2.5.0.min.js"></script>
     <script src="{$basePath}/js/libs/fullcalendar/fullcalendar.min.js"></script>
@@ -107,12 +108,12 @@
                                         </tr>
                                     </table>
 
-                                    <strong>O programu</strong>
+                                    <h5><strong>O programu</strong></h5>
                                     <p>{{ event.block.perex }}</p>
 
                                     <div ng-bind-html="event.block.description"></div> {* TODO ng-bind-html-unsafe removed *}
 
-                                    <strong>O lektorovi</strong>
+                                    <h5><strong>O lektorovi</strong></h5>
                                     <p>{{ event.block.about_lector }}</p>
                                 </div>
 

@@ -85,6 +85,10 @@ ul.no-margin {
 }
 
 /* tabulka bez ramecku a okraju, pro kombinaci s formulari */
+.table-form {
+    margin-bottom: 0;
+}
+
 .table-form tbody tr td,
 .table-form tbody tr th,
 .table-form thead tr th,
