@@ -28,13 +28,13 @@
                     <a href="{plink :Auth:login, 'backlink' => $backlink}">{_web.programs_content.login_required_link}</a>{_web.programs_content.login_required_end}
                 </div>
             {else}
-                {if !$registerProgramsAllowed}
-                    <div class="alert alert-warning alert-forever">
-                        {_web.programs_content.register_programs_not_allowed}
-                    </div>
-                {elseif !$userHasPermission}
+                {if !$userHasPermission}
                     <div class="alert alert-warning alert-forever">
                         {_web.programs_content.unapproved_register_programs}
+                    </div>
+                {elseif !$registerProgramsAllowed}
+                    <div class="alert alert-warning alert-forever">
+                        {_web.programs_content.register_programs_not_allowed}
                     </div>
                 {elseif $userNotPaid}
                     <div class="alert alert-warning alert-forever">
