@@ -154,8 +154,6 @@ capacities_content:
     occupied_limited: "Obsazeno %occupied% z %total%"
     occupied_unlimited: "Obsazeno %occupied%"
 
-document_content:
-
 faq_content:
     login_required_begin: "Pro položení otázky se musíte"
     login_required_link: "přihlásit přes skautIS"
@@ -168,7 +166,29 @@ faq_content:
     add_question_successful: "Otázka byla úspěšně přidána. Dle uvážení organizátorů bude odpověď zveřejněna."
 
 programs_content:
-#    unapprovedLoginPrograms: "Vaše role nemá právo zapisovat si programy"
+    login_required_begin: "Pro výběr programů se musíte nejprve"
+    login_required_link: "přihlásit přes skautIS"
+    login_required_end: "."
+    register_programs_not_allowed: "Zapisování programů není v tuto chvíli povoleno."
+    unapproved_register_programs: "Vaše role nemá právo zapisovat si programy."
+    register_programs_not_allowed_before_payment: "Zapisování programů je povoleno až po zaplacení poplatku."
+    mandatory_programs_not_registered: "Máte nepřihlášené povinné programy (v kalendáři červeně). Prosíme, zapište si je."
+    category: "Kategorie"
+    lector: "Lektor"
+    room: "Místnost"
+    occupancy: "Obsazenost"
+    about_program: "O programu"
+    about_lector: "O lektorovi"
+    register: "Přihlásit se na program"
+    unregister: "Odhlásit se z programu"
+    help: "Nápověda"
+    help_text: "Kliknutím na program se zobrazí možnost přihlášení/odhlášení a další informace o programu."
+    help_legend: "Typy programů"
+    help_legend_attends: "Programy, které máte přihlášené."
+    help_legend_blocked: "Programy, na které se nelze přihlásit (např. obsazené)."
+    help_legend_optional: "Programy, na které se lze přihlásit."
+    help_legend_mandatory: "Programy, které jsou povinné."
+
 
 users_content:
     list_empty: "Žádný uživatel k zobrazení."

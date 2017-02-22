@@ -198,8 +198,6 @@ class UserRepository extends EntityRepository
         foreach ($user->getCustomInputValues() as $customInputValue)
             $this->_em->remove($customInputValue);
 
-        //TODO odstraneni prihlasenych programu
-
         $this->_em->remove($user);
         $this->_em->flush();
     }

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 
+use Kdyby\Translation\Translator;
 use Nette;
 
 class ExcelExportService extends Nette\Object
@@ -10,14 +11,14 @@ class ExcelExportService extends Nette\Object
     /** @var \PHPExcel */
     private $phpExcel;
 
+    /** @var Translator */
+    private $translator;
 
-    /**
-     * ExcelExportService constructor.
-     * @param \PHPExcel $phpExcel
-     */
-    public function __construct()
+    public function __construct(Translator $translator)
     {
         $this->phpExcel = new \PHPExcel();
+
+        $this->translator = $translator;
     }
 
     public function exportUsersRoles($users, $roles, $filename) {
@@ -63,27 +64,27 @@ class ExcelExportService extends Nette\Object
             $row = 1;
             $column = 0;
 
-            $sheet->setCellValueByColumnAndRow($column, $row, "Od");
+            $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.schedule.from'));
             $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
             $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
             $sheet->getColumnDimensionByColumn($column++)->setWidth('15');
 
-            $sheet->setCellValueByColumnAndRow($column, $row, "Do");
+            $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.schedule.to'));
             $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
             $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
             $sheet->getColumnDimensionByColumn($column++)->setWidth('15');
 
-            $sheet->setCellValueByColumnAndRow($column, $row, "Název programu");
+            $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.schedule.program_name'));
             $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
             $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
             $sheet->getColumnDimensionByColumn($column++)->setWidth('30');
 
-            $sheet->setCellValueByColumnAndRow($column, $row, "Místnost");
+            $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.schedule.room'));
             $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
             $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
             $sheet->getColumnDimensionByColumn($column++)->setWidth('25');
 
-            $sheet->setCellValueByColumnAndRow($column, $row, "Lektor");
+            $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.schedule.lector'));
             $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
             $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
             $sheet->getColumnDimensionByColumn($column++)->setWidth('25');

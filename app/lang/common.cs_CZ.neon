@@ -143,3 +143,11 @@ api:
     program_registered: "Program byl úspěšně přihlášen."
     schedule_program_not_registered: "Na tento program jste nebyli přihlášeni."
     program_unregistered: "Program byl úspěšně odhlášen."
+
+export:
+    schedule:
+        from: "Od"
+        to: "Do"
+        program_name: "Název programu"
+        room: "Místnost"
+        lector: "Lektor"

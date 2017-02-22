@@ -32,7 +32,7 @@ menu:
     users: "Uživatelé"
     acl: "Role"
     mailing: "Mailing"
-    configuration: "Konfigurace"
+    configuration: "Nastavení"
 
 dashboard:
     heading: "Vítejte v systému SRS!"
@@ -201,10 +201,15 @@ program:
     blocks_non_registered_attendees: "Nepřihlášení účastníci"
 
     schedule_heading: "Harmonogram"
-    schedule_category: "Kategorie:"
-    schedule_lector: "Lektor:"
-    schedule_capacity: "Kapacita:"
-    schedule_programs_count: "Zařazeno:"
+    schedule_name: "Název"
+    schedule_category: "Kategorie"
+    schedule_lector: "Lektor"
+    schedule_room: "Místnost"
+    schedule_capacity: "Kapacita"
+    schedule_programs_count: "Zařazeno"
+    schedule_program_settings: "Nastavení programu"
+    schedule_blocks_heading: "Programové bloky"
+    schedule_blocks_unassigned_only: "jen nezařazené"
 
     categories_heading: "Kategorie"
     categories_name: "Název"
@@ -449,5 +454,5 @@ configuration:
     system_cache_cleared: "Cache byla vymazána."
     system_cache_not_cleared: "Cache nebyla vymazána, pravděpodobně se právě vytváří."
 
-    configuration_saved: "Konfigurace úspěšně uložena."
+    configuration_saved: "Nastavení bylo úspěšně uloženo."
 

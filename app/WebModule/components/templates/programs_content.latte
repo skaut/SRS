@@ -30,15 +30,15 @@
             {else}
                 {if !$registerProgramsAllowed}
                     <div class="alert alert-warning alert-forever">
-                        Zapisování programů není v tuto chvíli povoleno.
+                        {_web.programs_content.register_programs_not_allowed}
                     </div>
                 {elseif !$userHasPermission}
                     <div class="alert alert-warning alert-forever">
-                        {_web.programs_content.login_required_begin}
+                        {_web.programs_content.unapproved_register_programs}
                     </div>
                 {elseif $userNotPaid}
                     <div class="alert alert-warning alert-forever">
-                        Zapisování programů je povoleno až po zaplacení poplatku.
+                        {_web.programs_content.register_programs_not_allowed_before_payment}
                     </div>
                 {/if}
 
@@ -52,7 +52,7 @@
                     <div class="row">
                         <div class="col-sm-4 col-xs-4">
                             <button data-toggle="modal" data-target="#help-modal" class="btn btn-default" style="margin-bottom: 20px">
-                                <i class="fa fa-info"></i> Nápověda
+                                <i class="fa fa-info"></i> {_web.programs_content.help}
                             </button>
                         </div>
 
@@ -71,7 +71,7 @@
                     </div>
 
                     <div class="alert alert-danger alert-forever" ng-show="mandatory_nonregistered_programs_count">
-                        Máte nepřihlášené povinné programy (v kalendáři červeně). Prosíme, zapište si je.
+                        {_web.programs_content.mandatory_programs_not_registered}
                     </div>
 
                     <div ui-calendar="uiConfig.calendar" id="calendar" ng-model="eventSources"></div>
@@ -91,29 +91,29 @@
                                         </colgroup>
 
                                         <tr>
-                                            <th>Kategorie</th>
+                                            <th>{_web.programs_content.category}</th>
                                             <td>{{ event.block.category }}</td>
                                         </tr>
                                         <tr>
-                                            <th>Lektor</th>
+                                            <th>{_web.programs_content.lector}</th>
                                             <td>{{ event.block.lector }}</td>
                                         </tr>
                                         <tr>
-                                            <th>Místnost</th>
+                                            <th>{_web.programs_content.room}</th>
                                             <td>{{ event.room ? event.room.name : '' }}</td>
                                         </tr>
                                         <tr>
-                                            <th>Obsazenost</th>
+                                            <th>{_web.programs_content.occupancy}</th>
                                             <td>{{ event.block.capacity !== undefined ? event.attendees_count + '/' + event.block.capacity : event.attendees_count }}</td>
                                         </tr>
                                     </table>
 
-                                    <h5><strong>O programu</strong></h5>
+                                    <h5><strong>{_web.programs_content.about_program}</strong></h5>
                                     <p>{{ event.block.perex }}</p>
 
-                                    <div ng-bind-html="event.block.description"></div> {* TODO ng-bind-html-unsafe removed *}
+                                    <div ng-bind-html="event.block.description"></div>
 
-                                    <h5><strong>O lektorovi</strong></h5>
+                                    <h5><strong>{_web.programs_content.about_lector}</strong></h5>
                                     <p>{{ event.block.about_lector }}</p>
                                 </div>
 
@@ -121,11 +121,11 @@
                                     {if $userAllowedRegisterPrograms}
                                         <button ng-hide="event.user_attends || event.blocked || event.occupied" ng-click="attend(event)"
                                                 class="btn btn-success pull-left">
-                                            Přihlásit se na program
+                                            {_web.programs_content.register}
                                         </button>
-                                        <button ng-show="event.user_attends" ng-click="unattend(event)"
+                                        <button ng-show="event.user_attends" ng-click="unattend(event)" style="margin-left: 0"
                                                 class="btn btn-danger pull-left">
-                                            Odhlásit se z programu
+                                            {_web.programs_content.unregister}
                                         </button>
                                     {/if}
                                 </div>
@@ -138,17 +138,17 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title">Nápověda</h4>
+                                    <h4 class="modal-title">{_web.programs_content.help}</h4>
                                 </div>
                                 <div class="modal-body">
-                                    Kliknutím na program se zobrazí možnost přihlášení/odhlášení a další informace o programu.
+                                    {_web.programs_content.help_text}
 
-                                    <strong>Typy programů</strong>
+                                    <h5><strong>{_web.programs_content.help_legend}</strong></h5>
                                     <ul class="list-group">
-                                        <li class="list-group-item list-group-item-success">Programy, které máte přihlášené.</li>
-                                        <li class="list-group-item disabled">Programy, na které se nelze přihlásit (např. obsazené).</li>
-                                        <li class="list-group-item list-group-item-info">Programy, na které se lze přihlásit.</li>
-                                        <li class="list-group-item list-group-item-danger">Programy, které jsou povinné.</li>
+                                        <li class="list-group-item list-group-item-success">{_web.programs_content.help_legend_attends}</li>
+                                        <li class="list-group-item list-group-item-info">{_web.programs_content.help_legend_optional}</li>
+                                        <li class="list-group-item list-group-item-danger">{_web.programs_content.help_legend_mandatory}</li>
+                                        <li class="list-group-item disabled">{_web.programs_content.help_legend_blocked}</li>
                                     </ul>
                                 </div>
                             </div>
