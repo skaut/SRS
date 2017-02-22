@@ -24,10 +24,7 @@ finish:
 
 installed:
     heading: "Instalace systému"
-    text: "Instalace systému byla již provedena."
+    text: "Instalace systému již byla provedena."
     redirect_home: "Přejít na úvodní stránku"
-    migration_unavailable: "Není k dispozici žádná aktualizace databáze."
-    migration_available: "Je k dispozici aktualizace databáze."
-    migration_migrate: "Aktualizovat databázi"
 
 

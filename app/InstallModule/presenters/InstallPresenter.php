@@ -166,13 +166,6 @@ class InstallPresenter extends InstallBasePresenter
         } catch (SettingsException $ex) {
             $this->redirect('default');
         }
-
-        $this->template->migrationAvailable = false; //TODO dostupnost migraci
-    }
-
-    public function handleMigrate()
-    {
-        //TODO spusteni migraci
     }
 
     private function checkSkautISConnection() {
