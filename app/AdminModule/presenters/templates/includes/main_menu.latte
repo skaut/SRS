@@ -15,8 +15,7 @@
                                 $presenter->isLinkCurrent(':Admin:CMS:Pages:*') ||
                                 $presenter->isLinkCurrent(':Admin:CMS:News:*') ||
                                 $presenter->isLinkCurrent(':Admin:CMS:Documents:*') ||
-                                $presenter->isLinkCurrent(':Admin:CMS:Faq:*') ||
-                                $presenter->isLinkCurrent(':Admin:CMS:Settings:*') ? active">
+                                $presenter->isLinkCurrent(':Admin:CMS:Faq:*') ? active">
                             <a href="{plink :Admin:CMS:Pages:default}">{_admin.menu.cms}</a>
                         </li>
                     {/if}
@@ -55,6 +54,7 @@
                                 $presenter->isLinkCurrent(':Admin:Configuration:Program:*') ||
                                 $presenter->isLinkCurrent(':Admin:Configuration:Seminar:*') ||
                                 $presenter->isLinkCurrent(':Admin:Configuration:SkautIs:*') ||
+                                $presenter->isLinkCurrent(':Admin:Configuration:Web:*') ||
                                 $presenter->isLinkCurrent(':Admin:Configuration:System:*') ? active">
                             <a href="{plink :Admin:Configuration:Seminar:default}">{_admin.menu.configuration}</a>
                         </li>

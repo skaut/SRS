@@ -109,12 +109,12 @@ services:
         implement: App\AdminModule\CMSModule\Forms\IPageFormFactory
         parameters: [id, area]
     - App\AdminModule\CMSModule\Forms\NewsForm
-    - App\AdminModule\CMSModule\Forms\SettingsForm
     - App\AdminModule\ConfigurationModule\Forms\PaymentForm
     - App\AdminModule\ConfigurationModule\Forms\PaymentProofForm
     - App\AdminModule\ConfigurationModule\Forms\ProgramForm
     - App\AdminModule\ConfigurationModule\Forms\SeminarForm
     - App\AdminModule\ConfigurationModule\Forms\SkautIsEventForm
+    - App\AdminModule\ConfigurationModule\Forms\WebForm
     - App\AdminModule\ProgramModule\Forms\BlockForm
     - App\AdminModule\Components\IRolesGridControlFactory
     - App\AdminModule\Components\IUsersGridControlFactory

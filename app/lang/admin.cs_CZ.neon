@@ -43,7 +43,6 @@ cms:
     menu_news: "Aktuality"
     menu_documents: "Dokumenty"
     menu_faq: "FAQ"
-    menu_settings: "Nastavení"
 
     pages_heading: "Stránky"
     pages_name: "Název"
@@ -139,16 +138,6 @@ cms:
     faq_changed_public: "Viditelnost otázky byla úspěšně změněna."
     faq_add_heading: "Nová otázka"
     faq_edit_heading: "Úprava otázky"
-
-    settings_heading: "Nastavení"
-    settings_current_logo: "Stávající logo"
-    settings_new_logo: "Nové logo"
-    settings_new_logo_format: "Logo musí být ve formátu JPG, PNG nebo GIF."
-    settings_footer: "Text v patičce"
-    settings_redirect_after_login: "Po přihlášení přesměrovat na"
-    settings_redirect_after_login_empty: "Vyberte stránku, na kterou budou uživatelé přesměrováni po přihlášení."
-    settings_display_users_roles: "zobrazovat uživatelské role"
-    settings_saved: "Nastavení úspěšně uloženo."
 
 program:
     menu_blocks: "Programové bloky"
@@ -372,6 +361,7 @@ configuration:
     menu_payment: "Platba a doklady"
     menu_application: "Přihláška"
     menu_skautis: "SkautIS"
+    menu_web: "Web"
     menu_system: "Systém"
 
     seminar_heading: "Seminář"
@@ -448,6 +438,15 @@ configuration:
     skautis_event_not_connected: "V tuto chvíli není systém propojen s žádnou akcí ve skautIS."
     skautis_event_access_denied: "Nemáte oprávnění k synchronizaci účastníků s propojenou akcí."
     skautis_event_closed: "Akce již byla ve skautIS uzavřena."
+
+    web_heading: "Web"
+    web_current_logo: "Stávající logo"
+    web_new_logo: "Nové logo"
+    web_new_logo_format: "Logo musí být ve formátu JPG, PNG nebo GIF."
+    web_footer: "Text v patičce"
+    web_redirect_after_login: "Po přihlášení přesměrovat na"
+    web_redirect_after_login_empty: "Vyberte stránku, na kterou budou uživatelé přesměrováni po přihlášení."
+    web_display_users_roles: "zobrazovat uživatelské role"
 
     system_heading: "Systém"
     system_clear_cache: "Vymazat cache"
