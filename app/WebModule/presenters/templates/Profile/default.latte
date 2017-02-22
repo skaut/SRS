@@ -148,22 +148,26 @@
                             <col class="col-sm-2 col-xs-2">
                             <col class="col-sm-3 col-xs-3">
 
-                            <tr>
-                                <th class="text-right">{_web.profile.from}</th>
-                                <th class="text-right">{_web.profile.to}</th>
-                                <th>{_web.profile.program_name}</th>
-                                <th>{_web.profile.room}</th>
-                                <th>{_web.profile.lector}</th>
-                            </tr>
-                            {foreach $dbuser->getPrograms() as $program}
+                            <thead>
                                 <tr>
-                                    <td class="text-right">{$program->getStart()|date:"j. n. G:i"}</td>
-                                    <td class="text-right">{$program->getEnd()|date:"j. n. G:i"}</td>
-                                    <td>{$program->getBlock()->getName()}</td>
-                                    <td>{if $program->getRoom() !== null}{$program->getRoom()->getName()}{/if}</td>
-                                    <td>{if $program->getBlock()->getLector() !== null}{$program->getBlock()->getLector()->getDisplayName()}{/if}</td>
+                                    <th class="text-right">{_web.profile.from}</th>
+                                    <th class="text-right">{_web.profile.to}</th>
+                                    <th>{_web.profile.program_name}</th>
+                                    <th>{_web.profile.room}</th>
+                                    <th>{_web.profile.lector}</th>
                                 </tr>
-                            {/foreach}
+                            </thead>
+                            <tbody>
+                                {foreach $dbuser->getPrograms() as $program}
+                                    <tr>
+                                        <td class="text-right">{$program->getStart()|date:"j. n. G:i"}</td>
+                                        <td class="text-right">{$program->getEnd()|date:"j. n. G:i"}</td>
+                                        <td>{$program->getBlock()->getName()}</td>
+                                        <td>{if $program->getRoom() !== null}{$program->getRoom()->getName()}{/if}</td>
+                                        <td>{if $program->getBlock()->getLector() !== null}{$program->getBlock()->getLector()->getDisplayName()}{/if}</td>
+                                    </tr>
+                                {/foreach}
+                            </tbody>
                         </table>
                         <a n:href="exportschedule" class="btn btn-primary">{_web.profile.download_schedule}</a>
                     {/if}

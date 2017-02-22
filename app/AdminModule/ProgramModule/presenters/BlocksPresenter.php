@@ -3,6 +3,7 @@
 namespace App\AdminModule\ProgramModule\Presenters;
 
 
+use App\AdminModule\ProgramModule\Components\IProgramAttendeesGridControlFactory;
 use App\AdminModule\ProgramModule\Components\IProgramBlockScheduleGridControlFactory;
 use App\AdminModule\ProgramModule\Components\IProgramBlocksGridControlFactory;
 use App\AdminModule\ProgramModule\Forms\BlockForm;
@@ -13,6 +14,7 @@ use App\Model\Program\Block;
 use App\Model\Program\BlockRepository;
 use App\Model\Program\CategoryRepository;
 use Nette\Application\UI\Form;
+use Nette\Http\Session;
 
 class BlocksPresenter extends ProgramBasePresenter
 {
@@ -29,10 +31,10 @@ class BlocksPresenter extends ProgramBasePresenter
     public $programBlocksGridControlFactory;
 
     /**
-     * @var IProgramBlockScheduleGridControlFactory
+     * @var IProgramAttendeesGridControlFactory
      * @inject
      */
-    public $programBlockScheduleGridControlFactory;
+    public $programAttendeesGridControlFactory;
 
     /**
      * @var BlockForm
@@ -40,10 +42,18 @@ class BlocksPresenter extends ProgramBasePresenter
      */
     public $blockFormFactory;
 
+    /**
+     * @var Session
+     * @inject
+     */
+    public $session;
+
 
     public function renderDefault()
     {
         $this->template->emptyUserInfo = empty($this->dbuser->getAbout());
+
+        $this->session->getSection('srs')->programId = 0;
     }
 
     public function renderDetail($id)
@@ -51,6 +61,18 @@ class BlocksPresenter extends ProgramBasePresenter
         $block = $this->blockRepository->findById($id);
 
         $this->template->block = $block;
+        $this->template->programId = $this->session->getSection('srs')->programId;
+    }
+
+    public function handleShowAttendees($programId) {
+        $this->session->getSection('srs')->programId = $programId;
+
+        $this->template->programId = $programId;
+
+        if ($this->isAjax())
+            $this->redrawControl('programs');
+        else
+            $this->redirect('this');
     }
 
     public function renderEdit($id)
@@ -65,9 +87,9 @@ class BlocksPresenter extends ProgramBasePresenter
         return $this->programBlocksGridControlFactory->create($name);
     }
 
-    protected function createComponentProgramBlockScheduleGrid($name)
+    protected function createComponentProgramAttendeesGrid($name)
     {
-        return $this->programBlockScheduleGridControlFactory->create($name);
+        return $this->programAttendeesGridControlFactory->create($name);
     }
 
     protected function createComponentBlockForm($name)

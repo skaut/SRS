@@ -24,6 +24,7 @@ class Block
 
     /**
      * @ORM\OneToMany(targetEntity="Program", mappedBy="block", cascade={"persist"})
+     * @ORM\OrderBy({"start" = "ASC"})
      * @var ArrayCollection
      */
     protected $programs;

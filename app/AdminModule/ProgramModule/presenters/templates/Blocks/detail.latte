@@ -67,5 +67,49 @@
     </div>
 
     <h3>{_admin.program.blocks_schedule}</h3>
-    {control programBlockScheduleGrid}
+    {snippet programs}
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th class="text-right">{_admin.program.blocks_program_start}</th>
+                <th class="text-right">{_admin.program.blocks_program_end}</th>
+                <th>{_admin.program.blocks_program_room}</th>
+                <th>Počet účastníků</th>
+                <th class="text-center">Akce</th>
+            </tr>
+            </thead>
+
+            <tbody>
+                {var $i = 1}
+                {foreach $block->getPrograms() as $program}
+                    {var $background = $i % 2 ? '#F9F9F9' : '#FFFFFF'}
+                    <tr style="background-color: {$background|noescape}">
+                        <td class="text-right">{$program->getStart()|date:"j. n. G:i"}</td>
+                        <td class="text-right">{$program->getEnd()|date:"j. n. G:i"}</td>
+                        <td>{if $program->getRoom() !== null}{$program->getRoom()->getName()}{/if}</td>
+                        <td>{$program->getAttendeesCount()}</td>
+                        <td class="text-right">
+                            {if $programId == $program->getId()}
+                                <a class="btn btn-xs btn-default ajax" n:href="showattendees! 0">
+                                    Skrýt seznam oprávněných účastníků
+                                </a>
+                            {else}
+                                <a class="btn btn-xs btn-default ajax" n:href="showattendees! $program->getId()">
+                                    Zobrazit seznam oprávněných účastníků
+                                </a>
+                            {/if}
+                        </td>
+                    </tr>
+                    {if $programId == $program->getId()}
+                        <tr style="background-color: #337AB7" class="program-attendees">
+                            <td colspan="5" style="padding: 10px">
+                                {control programAttendeesGrid}
+                            </td>
+                        </tr>
+                    {/if}
+                    {var $i = $i + 1}
+                {/foreach}
+            </tbody>
+        </table>
+    {/snippet}
 {/block}

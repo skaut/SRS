@@ -65,7 +65,7 @@ class UsersGridControl extends Control
         $this->excelExportService = $excelExportService;
 
         $this->session = $session;
-        $this->sessionSection = $session->getSection('datagrid-action');
+        $this->sessionSection = $session->getSection('srs');
     }
 
     public function render()
@@ -440,22 +440,22 @@ class UsersGridControl extends Control
     }
 
     public function groupGeneratePaymentProofs(array $ids) {
-        $this->sessionSection->ids = $ids;
+        $this->sessionSection->userIds = $ids;
         $this->redirect('generatepaymentproofs'); //presmerovani kvuli zruseni ajax
     }
 
     public function groupExportRoles(array $ids) {
-        $this->sessionSection->ids = $ids;
+        $this->sessionSection->userIds = $ids;
         $this->redirect('exportroles'); //presmerovani kvuli zruseni ajax
     }
 
     public function groupExportSchedules(array $ids) {
-        $this->sessionSection->ids = $ids;
+        $this->sessionSection->userIds = $ids;
         $this->redirect('exportschedules'); //presmerovani kvuli zruseni ajax
     }
 
     public function handleGeneratePaymentProofs() {
-        $ids = $this->session->getSection('datagrid-action')->ids;
+        $ids = $this->session->getSection('srs')->userIds;
 
         $users = $this->userRepository->findUsersByIds($ids);
         $usersToGenerate = [];
@@ -474,7 +474,7 @@ class UsersGridControl extends Control
     }
 
     public function handleExportRoles() {
-        $ids = $this->session->getSection('datagrid-action')->ids;
+        $ids = $this->session->getSection('srs')->userIds;
 
         $users = $this->userRepository->findUsersByIds($ids);
         $roles = $this->roleRepository->findAll();
@@ -485,7 +485,7 @@ class UsersGridControl extends Control
     }
 
     public function handleExportSchedules() {
-        $ids = $this->session->getSection('datagrid-action')->ids;
+        $ids = $this->session->getSection('srs')->userIds;
 
         $users = $this->userRepository->findUsersByIds($ids);
 
