@@ -125,3 +125,21 @@ payment:
 sex:
     male: "Muž"
     female: "Žena"
+
+api:
+    authentification_error: "Uživatel musí být přihlášen."
+    schedule_saved: "Program byl úspěšně uložen."
+    schedule_deleted: "Program byl úspěšně odstraněn."
+    schedule_program_not_found: "Program nebyl nalezen."
+    schedule_user_not_allowed_manage: "Nemáte právo upravovat harmonogram."
+    schedule_not_allowed_modfify: "Úprava harmonogramu není povolena."
+    schedule_user_not_allowed_register_programs: "Nemáte právo přihlašovat se na programy."
+    schedule_register_programs_not_allowed: "Přihlašování na programy není v tuto chvíli povoleno."
+    schedule_register_programs_before_payment_not_allowed: "Přihlašování na programy povoleno až po zaplacení poplatku."
+    schedule_program_already_registered: "Program už máte přihlášený."
+    schedule_program_no_vacancies: "Kapacita programu je již obsazena."
+    schedule_program_category_not_allowed: "Nemáte právo přihlašovat se na programy z této kategorie."
+    schedule_program_blocked: "Tento programový blok už máte zapsaný, nebo máte jiný program ve stejnou dobu."
+    program_registered: "Program byl úspěšně přihlášen."
+    schedule_program_not_registered: "Na tento program jste nebyli přihlášeni."
+    program_unregistered: "Program byl úspěšně odhlášen."

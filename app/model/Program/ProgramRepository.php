@@ -48,6 +48,17 @@ class ProgramRepository extends EntityRepository
     }
 
     /**
+     * @param $programs
+     * @return array
+     */
+    public function findProgramsIds($programs)
+    {
+        return array_map(function ($o) {
+            return $o->getId();
+        }, $programs->toArray());
+    }
+
+    /**
      * @param User $user
      * @return array
      */
@@ -70,28 +81,26 @@ class ProgramRepository extends EntityRepository
      * @return int[]
      */
     public function findBlockedProgramsIdsByProgram(Program $program) {
-        $merged = array_merge($this->findProgramsIdsByBlock($program->getBlock()),
+        return array_merge(
+            $this->findOtherProgramsWithSameBlockIds($program),
             $this->findOverlappingProgramsIds($program)
         );
-
-        if (($key = array_search($program->getId(), $merged)) !== false)
-            unset($key);
-
-        return $merged;
     }
 
     /**
-     * @param Block $block
+     * @param Program $program
      * @return int[]
      */
-    public function findProgramsIdsByBlock(Block $block)
+    public function findOtherProgramsWithSameBlockIds(Program $program)
     {
-        return $this->createQueryBuilder('p')
+        $programs =  $this->createQueryBuilder('p')
             ->select('p.id')
             ->join('p.block', 'b')
-            ->where('b.id = :id')->setParameter('id', $block->getId())
+            ->where('b.id = :bid')->setParameter('bid', $program->getBlock()->getId())
+            ->andWhere('p.id != :pid')->setParameter('pid', $program->getId())
             ->getQuery()
             ->getScalarResult();
+        return array_map('intval', array_map('current', $programs));
     }
 
     /**
@@ -103,14 +112,19 @@ class ProgramRepository extends EntityRepository
         $start = $program->getStart();
         $end = $program->getEnd();
 
-        return $this->createQueryBuilder('p')//(StartA <= EndB)  and  (EndA >= StartB) (StartA <= EndB)  and  (StartB <= EndA)
+        $programs = $this->createQueryBuilder('p')
             ->select('p.id')
             ->join('p.block', 'b')
-            ->where("(p.start <= :end) AND (DATE_ADD(p.start, (b.duration * 60), 'second') >= :start)")
-            ->orWhere("(p.start <= :end) AND (:start <= (DATE_ADD(p.start, (b.duration * 60), 'second')))")
+            ->where($this->createQueryBuilder()->expr()->orX(
+                "(p.start <= :end) AND (DATE_ADD(p.start, (b.duration * 60), 'second') >= :start)",
+                "(p.start <= :end) AND (:start <= (DATE_ADD(p.start, (b.duration * 60), 'second')))"
+            ))
+            ->andWhere('p.id != :pid')
             ->setParameter('start', $start)
             ->setParameter('end', $end)
+            ->setParameter('pid', $program->getId())
             ->getQuery()
             ->getScalarResult();
+        return array_map('intval', array_map('current', $programs));
     }
 }

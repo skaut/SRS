@@ -106,6 +106,9 @@ class BlockRepository extends EntityRepository
      */
     public function remove(Block $block)
     {
+        foreach ($block->getPrograms() as $program)
+            $this->_em->remove($program);
+
         $this->_em->remove($block);
         $this->_em->flush();
     }

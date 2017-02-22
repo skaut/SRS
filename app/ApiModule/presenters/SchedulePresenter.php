@@ -6,6 +6,7 @@ namespace App\ApiModule\Presenters;
 use App\ApiModule\DTO\CalendarConfigDTO;
 use App\ApiModule\DTO\Schedule\ProgramAddDTO;
 use App\ApiModule\DTO\Schedule\ProgramSaveDTO;
+use App\ApiModule\DTO\Schedule\ResponseDTO;
 use App\ApiModule\Services\ScheduleService;
 use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializerBuilder;
@@ -37,8 +38,18 @@ class SchedulePresenter extends ApiBasePresenter
 
         $this->serializer = SerializerBuilder::create()->build();
 
-        if ($this->user->isLoggedIn())
+        if ($this->user->isLoggedIn()) {
             $this->scheduleService->setUser($this->user->id);
+        }
+        else {
+            $data = new ResponseDTO();
+            $data->setMessage($this->translator->translate('common.api.authentification_error'));
+            $data->setStatus('danger');
+
+            $json = $this->serializer->serialize($data, 'json');
+            $response = new TextResponse($json);
+            $this->sendResponse($response);
+        }
     }
 
     /**
@@ -53,12 +64,9 @@ class SchedulePresenter extends ApiBasePresenter
     }
 
     /**
-     * @throws AuthenticationException
+     *
      */
     public function actionGetProgramsWeb() {
-        if (!$this->user->isLoggedIn())
-            throw new AuthenticationException('Uživatel musí být přihlášen');
-
         $data = $this->scheduleService->getProgramsWeb();
 
         $json = $this->serializer->serialize($data, 'json');
@@ -66,6 +74,9 @@ class SchedulePresenter extends ApiBasePresenter
         $this->sendResponse($response);
     }
 
+    /**
+     *
+     */
     public function actionGetBlocks()
     {
         $data = $this->scheduleService->getBlocks();
@@ -75,6 +86,9 @@ class SchedulePresenter extends ApiBasePresenter
         $this->sendResponse($response);
     }
 
+    /**
+     *
+     */
     public function actionGetRooms()
     {
         $data = $this->scheduleService->getRooms();
@@ -85,13 +99,10 @@ class SchedulePresenter extends ApiBasePresenter
     }
 
     /**
-     * @throws AuthenticationException
+     *
      */
     public function actionGetCalendarConfig()
     {
-        if (!$this->user->isLoggedIn())
-            throw new AuthenticationException('Uživatel musí být přihlášen');
-
         $data = $this->scheduleService->getCalendarConfig();
 
         $json = $this->serializer->serialize($data, 'json');
@@ -126,18 +137,26 @@ class SchedulePresenter extends ApiBasePresenter
     }
 
     /**
-     * @param integer $id programID
+     * @param $id
      */
-    public function actionAttend($id)
+    public function actionAttendProgram($id)
     {
+        $data = $this->scheduleService->attendProgram($id);
 
+        $json = $this->serializer->serialize($data, 'json');
+        $response = new TextResponse($json);
+        $this->sendResponse($response);
     }
 
     /**
-     * @param integer $id programID
+     * @param $id
      */
-    public function actionUnattend($id)
+    public function actionUnattendProgram($id)
     {
+        $data = $this->scheduleService->unattendProgram($id);
 
+        $json = $this->serializer->serialize($data, 'json');
+        $response = new TextResponse($json);
+        $this->sendResponse($response);
     }
 }

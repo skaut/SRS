@@ -81,6 +81,19 @@ class BlockDetailDTO extends Nette\Object
     private $programsCount;
 
     /**
+     * @JMS\Type("boolean")
+     * @var bool
+     */
+    private $userAllowed;
+
+    /**
+     * @JMS\Type("boolean")
+     * @var bool
+     */
+    private $userAttends;
+
+
+    /**
      * @return int
      */
     public function getId()
@@ -270,5 +283,37 @@ class BlockDetailDTO extends Nette\Object
     public function setProgramsCount($programsCount)
     {
         $this->programsCount = $programsCount;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUserAllowed()
+    {
+        return $this->userAllowed;
+    }
+
+    /**
+     * @param bool $userAllowed
+     */
+    public function setUserAllowed($userAllowed)
+    {
+        $this->userAllowed = $userAllowed;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUserAttends()
+    {
+        return $this->userAttends;
+    }
+
+    /**
+     * @param bool $userAttends
+     */
+    public function setUserAttends($userAttends)
+    {
+        $this->userAttends = $userAttends;
     }
 }

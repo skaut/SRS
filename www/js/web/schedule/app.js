@@ -2,8 +2,8 @@ var apiPath = basePath + '/api/schedule/';
 
 var COLOR_OPTIONAL = '#0275D8';
 var COLOR_MANDATORY = '#D9534F';
-var COLOR_ATTEND = '#5CB85C';
-var COLOR_BLOCKED = '#F7F7F7';
+var COLOR_ATTENDS = '#5CB85C';
+var COLOR_BLOCKED = '#A6A6A6';
 
 
 var app = angular.module('scheduleApp', ['ui.calendar', 'ui.bootstrap']);
@@ -57,6 +57,9 @@ app.controller('WebScheduleCtrl', function WebScheduleCtrl($scope, $http, $q, ui
                 $scope.blocks = response.data;
                 angular.forEach($scope.blocks, function (block, key) {
                     $scope.blocksMap[block.id] = block;
+
+                    if (block.mandatory && block.user_allowed && !block.user_attends)
+                        $scope.mandatory_nonregistered_programs_count++;
                 })
             }, function (response) {
                 $scope.flashMessage('Nepodařilo se načíst programové bloky.', 'danger');
@@ -95,85 +98,91 @@ app.controller('WebScheduleCtrl', function WebScheduleCtrl($scope, $http, $q, ui
             angular.forEach($scope.programs, function (program, key) {
                 program.block = $scope.blocksMap[program.block_id];
                 program.room = $scope.roomsMap[program.room_id];
+
                 setTitle(program);
                 setColor(program);
+
                 $scope.events.push(program);
-            })
+            });
         });
     };
     $scope.startup();
 
-    //
-    // $scope.attend = function (event) {
-    //     $http.post(api_path + "attend/" + event.id)
-    //         .success(function (data, status, headers, config) {
-    //             flashMessage(data['message'], data['status']);
-    //             if (data['status'] == 'success') {
-    //                 event.attends = true;
-    //
-    //                 if (event.mandatory == true) {
-    //                     $scope.mandatory_unsigned_programs_count--;
-    //                 }
-    //
-    //                 event.attendees_count = data.event.attendees_count;
-    //
-    //                 for (i = $scope.events.length - 1; i >= 0; i--) {
-    //                     $scope.events[i].blocked = false;
-    //                 }
-    //
-    //                 for (i = $scope.events.length - 1; i >= 0; i--) {
-    //                     for (j = $scope.events.length - 1; j >= 0; j--) {
-    //                         if (i == j) continue;
-    //                         if ($scope.events[i].attends == true && $scope.events[i].blocks.indexOf($scope.events[j].id) != -1)
-    //                             $scope.events[j].blocked = true;
-    //                     }
-    //                 }
-    //
-    //                 for (i = $scope.events.length - 1; i >= 0; i--) {
-    //                     setColorFront($scope.events[i]);
-    //                 }
-    //             }
-    //             $('#calendar').fullCalendar('updateEvent', event);
-    //         }).error(function (data, status, headers, config) {
-    //         $scope.status = status;
-    //     });
-    //     $('#blockModal').modal('hide');
-    // };
-    //
-    //
-    // $scope.unattend = function (event) {
-    //     $http.post(api_path + "unattend/" + event.id)
-    //         .success(function (data, status, headers, config) {
-    //             flashMessage(data['message'], data['status']);
-    //             if (data['status'] == 'success') {
-    //                 event.attends = false;
-    //                 event.attendees_count = data.event.attendees_count;
-    //                 if (event.mandatory == true) {
-    //                     $scope.mandatory_unsigned_programs_count++;
-    //                 }
-    //
-    //                 for (i = $scope.events.length - 1; i >= 0; i--) {
-    //                     $scope.events[i].blocked = false;
-    //                 }
-    //
-    //                 for (i = $scope.events.length - 1; i >= 0; i--) {
-    //                     for (j = $scope.events.length - 1; j >= 0; j--) {
-    //                         if (i == j) continue;
-    //                         if ($scope.events[i].attends == true && $scope.events[i].blocks.indexOf($scope.events[j].id) != -1)
-    //                             $scope.events[j].blocked = true;
-    //                     }
-    //                 }
-    //
-    //                 for (i = $scope.events.length - 1; i >= 0; i--) {
-    //                     setColorFront($scope.events[i]);
-    //                 }
-    //             }
-    //             $('#calendar').fullCalendar('updateEvent', event);
-    //         }).error(function (data, status, headers, config) {
-    //         $scope.status = status;
-    //     });
-    //     $('#blockModal').modal('hide');
-    // };
+
+    $scope.attend = function (event) {
+        $('#program-modal').modal('hide');
+
+        $scope.loading++;
+        $http.post(apiPath + 'attendprogram/' + event.id)
+            .then(function (response) {
+                if (response.data.status == 'success') {
+                    $scope.event.user_attends = true;
+
+                    if ($scope.event.block.mandatory == true) {
+                        $scope.mandatory_nonregistered_programs_count--;
+                    }
+
+                    $scope.event.attendees_count = response.data.int_data;
+
+                    angular.forEach($scope.events, function (event, key) {
+                        if ($scope.event.id != event.id && $scope.event.user_attends && $scope.event.blocks.indexOf(event.id) != -1)
+                            event.blocked = true;
+                    });
+
+                    angular.forEach($scope.events, function (event, key) {
+                        setColor(event);
+                    });
+
+                    $('#calendar').fullCalendar('removeEvents');
+                    $('#calendar').fullCalendar('addEventSource', $scope.events);
+                }
+
+                $scope.flashMessage(response.data.message, response.data.status);
+            }).finally(function () {
+            $scope.loading--;
+        });
+    };
+
+
+    $scope.unattend = function (event) {
+        $('#program-modal').modal('hide');
+
+        $scope.loading++;
+        $http.post(apiPath + 'unattendprogram/' + event.id)
+            .then(function (response) {
+                if (response.data.status == 'success') {
+                    $scope.event.user_attends = false;
+
+                    if ($scope.event.block.mandatory) {
+                        $scope.mandatory_nonregistered_programs_count++;
+                    }
+
+                    $scope.event.attendees_count = response.data.int_data;
+
+                    angular.forEach($scope.events, function (event, key) {
+                        event.blocked = false;
+                    });
+
+                    angular.forEach($scope.events, function (event, key) {
+                        angular.forEach($scope.events, function (event, key) {
+                            if (this.id != event.id && this.user_attends && this.blocks.indexOf(event.id) != -1)
+                                event.blocked = true;
+                        }, event)
+                    });
+
+                    angular.forEach($scope.events, function (event, key) {
+                        setColor(event);
+                    });
+
+                    $('#calendar').fullCalendar('removeEvents');
+                    $('#calendar').fullCalendar('addEventSource', $scope.events);
+                }
+
+                $scope.flashMessage(response.data.message, response.data.status);
+            }).finally(function () {
+            $scope.loading--;
+        });
+    };
 
 
     $scope.flashMessage = function (text, type) {
@@ -206,11 +215,14 @@ app.controller('WebScheduleCtrl', function WebScheduleCtrl($scope, $http, $q, ui
             },
 
             eventClick: function (event, element) {
-                $scope.event = event;
+                $scope.event = $scope.events[event._id - 1];
+                if (event.block.capacity !== undefined && event.block.capacity <= event.attendees_count)
+                    $scope.event.occupied = true;
+
                 $('#program-modal').modal('show');
             },
 
-            eventMouseout:function (event, jsEvent, view) {
+            eventMouseout: function (event, jsEvent, view) {
                 $('.popover').fadeOut();
             },
 
@@ -223,15 +235,12 @@ app.controller('WebScheduleCtrl', function WebScheduleCtrl($scope, $http, $q, ui
                     content: ''
                 };
 
-                options.content += "<ul class='no-margin block-properties'>";
-                options.content += "<li><span>Kategorie:</span> " + event.block.lector + "</li>";
-                options.content += "<li><span>Lektor:</span> " + event.block.lector + "</li>";
-                options.content += "<li><span>Místnost:</span> " + event.block.lector + "</li>";
-                options.content += "<li><span>Obsazenost:</span>" + event.attendees_count + "/" + event.block.capacity + "</li>";
-                options.content += "</ul>";
-                if (event.block.perex) {
-                    options.content += "<p>" + event.block.perex + "</p>";
-                }
+                options.content += "<strong>Kategorie:</strong> " + event.block.category + "<br>";
+                options.content += "<strong>Lektor:</strong> " + event.block.lector + "<br>";
+                options.content += "<strong>Místnost:</strong> " + (event.room ? event.room.name : '') + "<br>";
+                options.content += "<strong>Obsazenost:</strong> " + (event.block.capacity !== undefined ? event.attendees_count + "/" + event.block.capacity : event.attendees_count) + "</br>";
+                options.content += event.block.perex;
+
                 element.popover(options);
             }
         }
@@ -241,7 +250,18 @@ app.controller('WebScheduleCtrl', function WebScheduleCtrl($scope, $http, $q, ui
 });
 
 function setColor(event) {
-    event.color = event.block.mandatory ? COLOR_MANDATORY : COLOR_OPTIONAL;
+    if (event.user_attends) {
+        event.color = COLOR_ATTENDS;
+    }
+    else if (!userAllowedRegisterPrograms || (event.block.capacity !== null && event.attendees_count >= event.block.capacity) || event.blocked) {
+        event.color = COLOR_BLOCKED;
+    }
+    else if (event.block.mandatory) {
+        event.color = COLOR_MANDATORY;
+    }
+    else {
+        event.color = COLOR_OPTIONAL;
+    }
 }
 
 function setTitle(event) {

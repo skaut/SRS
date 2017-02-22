@@ -50,13 +50,13 @@
                 <div id="app" ng-app="scheduleApp" ng-controller="WebScheduleCtrl">
                     <div class="row">
                         <div class="col-sm-4 col-xs-4">
-                            <button data-toggle="modal" data-target="#help-modal" class="btn btn-default" style="margin-bottom: 15px">
+                            <button data-toggle="modal" data-target="#help-modal" class="btn btn-default" style="margin-bottom: 20px">
                                 <i class="fa fa-info"></i> Nápověda
                             </button>
                         </div>
 
                         <div class="col-sm-8 col-xs-8">
-                            <div class="pull-right">
+                            <div class="notifications pull-right">
                                 <div class="spinner pull-left" ng-show="loading" style="float: left">
                                     <img src="{$basePath}/img/spin.gif" height="34"/>
                                 </div>
@@ -103,26 +103,26 @@
                                         </tr>
                                         <tr>
                                             <th>Obsazenost</th>
-                                            <td>{{ event.block.attendees_count + '/' + event.block.capacity }}</td>
+                                            <td>{{ event.block.capacity !== undefined ? event.attendees_count + '/' + event.block.capacity : event.attendees_count }}</td>
                                         </tr>
                                     </table>
+
+                                    <strong>O programu</strong>
+                                    <p>{{ event.block.perex }}</p>
+
+                                    <div ng-bind-html="event.block.description"></div> {* TODO ng-bind-html-unsafe removed *}
+
+                                    <strong>O lektorovi</strong>
+                                    <p>{{ event.block.about_lector }}</p>
                                 </div>
-
-                                <h5>O programu</h5>
-                                <p>{{ event.block.perex }}</p>
-
-                                <div ng-bind-html-unsafe="event.block.description"></div>
-
-                                <h5>O lektorovi</h5>
-                                <p>{{ event.block.about_lector }}</p>
 
                                 <div class="modal-footer">
                                     {if $userAllowedRegisterPrograms}
-                                        <button ng-hide="event.attends" ng-click="attend(event)"
+                                        <button ng-hide="event.user_attends || event.blocked || event.occupied" ng-click="attend(event)"
                                                 class="btn btn-success pull-left">
                                             Přihlásit se na program
                                         </button>
-                                        <button ng-show="event.attends" ng-click="unattend(event)"
+                                        <button ng-show="event.user_attends" ng-click="unattend(event)"
                                                 class="btn btn-danger pull-left">
                                             Odhlásit se z programu
                                         </button>
@@ -142,7 +142,7 @@
                                 <div class="modal-body">
                                     Kliknutím na program se zobrazí možnost přihlášení/odhlášení a další informace o programu.
 
-                                    <h5>Typy programů</h5>
+                                    <strong>Typy programů</strong>
                                     <ul class="list-group">
                                         <li class="list-group-item list-group-item-success">Programy, které máte přihlášené.</li>
                                         <li class="list-group-item disabled">Programy, na které se nelze přihlásit (např. obsazené).</li>

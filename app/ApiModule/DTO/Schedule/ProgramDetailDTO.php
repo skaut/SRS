@@ -45,10 +45,28 @@ class ProgramDetailDTO extends Nette\Object
     private $roomId;
 
     /**
+     * @JMS\Type("int")
+     * @var int
+     */
+    private $attendeesCount;
+
+    /**
+     * @JMS\Type("boolean")
+     * @var bool
+     */
+    private $userAttends;
+
+    /**
      * @JMS\Type("array")
      * @var int[]
      */
     private $blocks;
+
+    /**
+     * @JMS\Type("boolean")
+     * @var bool
+     */
+    private $blocked;
 
     /**
      * @return int
@@ -147,6 +165,38 @@ class ProgramDetailDTO extends Nette\Object
     }
 
     /**
+     * @return int
+     */
+    public function getAttendeesCount()
+    {
+        return $this->attendeesCount;
+    }
+
+    /**
+     * @param int $attendeesCount
+     */
+    public function setAttendeesCount($attendeesCount)
+    {
+        $this->attendeesCount = $attendeesCount;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUserAttends()
+    {
+        return $this->userAttends;
+    }
+
+    /**
+     * @param bool $userAttends
+     */
+    public function setUserAttends($userAttends)
+    {
+        $this->userAttends = $userAttends;
+    }
+
+    /**
      * @return \int[]
      */
     public function getBlocks()
@@ -160,5 +210,21 @@ class ProgramDetailDTO extends Nette\Object
     public function setBlocks($blocks)
     {
         $this->blocks = $blocks;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBlocked()
+    {
+        return $this->blocked;
+    }
+
+    /**
+     * @param bool $blocked
+     */
+    public function setBlocked($blocked)
+    {
+        $this->blocked = $blocked;
     }
 }

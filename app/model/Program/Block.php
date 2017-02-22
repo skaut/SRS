@@ -4,6 +4,7 @@ namespace App\Model\Program;
 
 use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
@@ -253,5 +254,32 @@ class Block
     public function setDescription($description)
     {
         $this->description = $description;
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function isAllowed(User $user) {
+        if (!$this->category)
+            return true;
+
+        foreach ($user->getRoles() as $role) {
+            if ($role->getRegisterableCategories()->contains($this->category))
+                return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function isAttendee(User $user) {
+        foreach ($this->programs as $program) {
+            if ($program->isAttendee($user))
+                return true;
+        }
+        return false;
     }
 }

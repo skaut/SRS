@@ -6,6 +6,7 @@ use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\ACL\Role;
 use App\Model\Program\Block;
+use App\Model\Program\Program;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\User\CustomInputValue\CustomInputValue;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -426,6 +427,15 @@ class User
     public function setPrograms($programs)
     {
         $this->programs = $programs;
+    }
+
+    public function addProgram(Program $program) {
+        if (!$this->programs->contains($program))
+            $this->programs->add($program);
+    }
+
+    public function removeProgram(Program $program) {
+        return $this->programs->removeElement($program);
     }
 
     /**
