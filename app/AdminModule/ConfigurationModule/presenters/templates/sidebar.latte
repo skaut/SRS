@@ -21,6 +21,10 @@
                 <a href="{plink SkautIs:default}">{_admin.configuration.menu_skautis}</a>
             </li>
 
+            <li {ifCurrent Web:*}class="active"{/ifCurrent}>
+                <a href="{plink Web:default}">{_admin.configuration.menu_web}</a>
+            </li>
+
             <li {ifCurrent System:*}class="active"{/ifCurrent}>
                 <a href="{plink System:default}">{_admin.configuration.menu_system}</a>
             </li>

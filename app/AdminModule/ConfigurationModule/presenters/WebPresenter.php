@@ -1,16 +1,16 @@
 <?php
 
-namespace App\AdminModule\CMSModule\Presenters;
+namespace App\AdminModule\ConfigurationModule\Presenters;
 
 
-use App\AdminModule\CMSModule\Forms\SettingsForm;
+use App\AdminModule\ConfigurationModule\Forms\WebForm;
 use App\Model\Settings\Settings;
 use Nette\Application\UI\Form;
 
-class SettingsPresenter extends CMSBasePresenter
+class WebPresenter extends ConfigurationBasePresenter
 {
     /**
-     * @var SettingsForm
+     * @var WebForm
      * @inject
      */
     public $settingsFormFactory;
@@ -24,7 +24,7 @@ class SettingsPresenter extends CMSBasePresenter
         $form = $this->settingsFormFactory->create();
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) {
-            $this->flashMessage('admin.cms.settings_saved', 'success');
+            $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');
         };

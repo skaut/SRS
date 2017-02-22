@@ -1,6 +1,7 @@
 <?php
 
-namespace App\AdminModule\CMSModule\Forms;
+namespace App\AdminModule\ConfigurationModule\Forms;
+
 
 use App\AdminModule\Forms\BaseForm;
 use App\Model\CMS\PageRepository;
@@ -11,7 +12,7 @@ use Nette;
 use Nette\Application\UI\Form;
 use Nette\Utils\Strings;
 
-class SettingsForm extends Nette\Object
+class WebForm extends Nette\Object
 {
     /** @var BaseForm */
     private $baseFormFactory;
@@ -42,17 +43,17 @@ class SettingsForm extends Nette\Object
         $renderer->wrappers['control']['container'] = 'div class="col-sm-7 col-xs-7"';
         $renderer->wrappers['label']['container'] = 'div class="col-sm-5 col-xs-5 control-label"';
 
-        $form->addUpload('logo', 'admin.cms.settings_new_logo')
+        $form->addUpload('logo', 'admin.configuration.web_new_logo')
             ->setAttribute('accept', 'image/*')
             ->addCondition(Form::FILLED)
-            ->addRule(Form::IMAGE, 'admin.cms.settings_new_logo_format');
+            ->addRule(Form::IMAGE, 'admin.configuration.web_new_logo_format');
 
-        $form->addText('footer', 'admin.cms.settings_footer');
+        $form->addText('footer', 'admin.configuration.web_footer');
 
-        $form->addSelect('redirectAfterLogin', 'admin.cms.settings_redirect_after_login', $this->pageRepository->getPagesOptions())
-            ->addRule(Form::FILLED, 'admin.cms.settings_redirect_after_login_empty');
+        $form->addSelect('redirectAfterLogin', 'admin.configuration.web_redirect_after_login', $this->pageRepository->getPagesOptions())
+            ->addRule(Form::FILLED, 'admin.configuration.web_redirect_after_login_empty');
 
-        $form->addCheckbox('displayUsersRoles', 'admin.cms.settings_display_users_roles');
+        $form->addCheckbox('displayUsersRoles', 'admin.configuration.web_display_users_roles');
 
         $form->addSubmit('submit', 'admin.common.save');
 
