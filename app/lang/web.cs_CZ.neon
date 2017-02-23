@@ -29,9 +29,9 @@ profile:
     unapproved: "Vaše registrace zatím nebyla potvrzena"
     cancel_registration: "Odhlásit se ze semináře"
     cancel_registration_confirm: "Opravdu se chcete odhlásit ze semináře?"
-    cancel_registration_disabled: "Odhlášení ze semináře již není možné nebo nejste na seminář přihlášeni."
+    cancel_registration_disabled: "Odhlášení ze semináře již není možné nebo nejste na seminář registrováni."
     change_roles_confirm: "Pokud nová role vyžaduje schválení organizátora, budete Vám nastavena role \"Neschválený\". Opravdu chcete pokračovat?"
-    change_roles_disabled: "Změna rolí již není možná nebo nejste na seminář přihlášeni."
+    change_roles_disabled: "Změna rolí již není možná nebo nejste na seminář registrováni."
     variable_symbol: "Variabilní symbol"
     account_number: "Uhraďte na účet"
     fee: "Cena semináře"
@@ -97,13 +97,13 @@ member:
     text_note: "Poznámka: V žádném případě nikdy nikomu nedávejte své heslo."
 
 application_content:
-    login_required_begin: "Pro přihlášení na seminář se musíte nejprve"
+    login_required_begin: "Pro registraci na seminář se musíte nejprve"
     login_required_link: "přihlásit přes skautIS"
     login_required_end: "."
-    registered_roles_begin: "Na seminář jste se již přihlásili jako"
+    registered_roles_begin: "Na seminář jste se již zaregistrovali jako"
     registered_roles_end: "."
-    unapproved_registration: "Vaše přihláška zatím nebyla potvrzena."
-    approved_registration: "Vaše přihláška již byla potvrzena."
+    unapproved_registration: "Vaše registrace zatím nebyla potvrzena."
+    approved_registration: "Vaše registrace již byla potvrzena."
 
     sex: "Pohlaví"
     firstname: "Jméno"
@@ -133,9 +133,9 @@ application_content:
     departure: "Odjezd"
     agreement: "Souhlasím, že uvedené údaje budou poskytnuty lektorům pro účely semináře."
     agreement_empty: "Musíte souhlasit s poskytnutím údajů."
-    register: "Přihlásit se"
+    register: "Registrovat"
     register_synchronization_failed: "Synchronizace se skautIS se nepodařila. Zkuste se znovu přihlásit a upravit údaje v profilu."
-    register_successful: "Přihláška byla úspěšně odeslána."
+    register_successful: "Registrace byla úspěšně odeslána."
 
 blocks_content:
     uncategorized: "Nezařazené"
