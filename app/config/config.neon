@@ -42,7 +42,7 @@ migrations:
 
 skautis:
     applicationId: %skautIS.appId%
-    testMode: $skautIS.test%
+    testMode: %skautIS.test%
 
 mailing:
     do: both
