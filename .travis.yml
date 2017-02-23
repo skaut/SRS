@@ -13,7 +13,7 @@ script:
 
 before_deploy:
   - mv app/config/config.local.sample.neon app/config/config.local.neon
-  - zip -r SRS app log-nette temp-nette vendor www .htaccess README.md
+  - zip -r SRS app log temp vendor www README.md
 
 deploy:
   provider: releases
