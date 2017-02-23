@@ -75,6 +75,10 @@ class BlocksPresenter extends ProgramBasePresenter
             $this->redirect('this');
     }
 
+    public function handleDelete($programId) {
+        //TODO
+    }
+
     public function renderEdit($id)
     {
         $block = $this->blockRepository->findById($id);
