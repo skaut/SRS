@@ -126,7 +126,6 @@ services:
     - App\AdminModule\ConfigurationModule\Components\ICustomInputsGridControlFactory
     - App\AdminModule\MailingModule\Forms\SendForm
     - App\AdminModule\MailingModule\Components\IMailHistoryGridControlFactory
-    - App\AdminModule\ProgramModule\Components\IProgramBlockScheduleGridControlFactory
     - App\AdminModule\ProgramModule\Components\IProgramBlocksGridControlFactory
     - App\AdminModule\ProgramModule\Components\IProgramCategoriesGridControlFactory
     - App\AdminModule\ProgramModule\Components\IProgramAttendeesGridControlFactory

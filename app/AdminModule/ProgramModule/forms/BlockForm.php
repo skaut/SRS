@@ -3,15 +3,23 @@
 namespace App\AdminModule\ProgramModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
+use App\Model\ACL\Permission;
+use App\Model\ACL\Resource;
 use App\Model\Program\Block;
 use App\Model\Program\BlockRepository;
 use App\Model\Program\CategoryRepository;
+use App\Model\Settings\Settings;
+use App\Model\Settings\SettingsRepository;
+use App\Model\User\User;
 use App\Model\User\UserRepository;
 use Nette;
 use Nette\Application\UI\Form;
 
 class BlockForm extends Nette\Object
 {
+    /** @var User */
+    private $user;
+
     /** @var Block */
     private $block;
 
@@ -27,18 +35,24 @@ class BlockForm extends Nette\Object
     /** @var CategoryRepository */
     private $categoryRepository;
 
+    /** @var SettingsRepository */
+    private $settingsRepository;
+
     public function __construct(BaseForm $baseFormFactory, BlockRepository $blockRepository,
-                                UserRepository $userRepository, CategoryRepository $categoryRepository)
+                                UserRepository $userRepository, CategoryRepository $categoryRepository,
+                                SettingsRepository $settingsRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->blockRepository = $blockRepository;
         $this->userRepository = $userRepository;
         $this->categoryRepository = $categoryRepository;
+        $this->settingsRepository = $settingsRepository;
     }
 
-    public function create($id)
+    public function create($id, $userId)
     {
         $this->block = $this->blockRepository->findById($id);
+        $this->user = $this->userRepository->findById($userId);
 
         $form = $this->baseFormFactory->create();
 
@@ -49,7 +63,17 @@ class BlockForm extends Nette\Object
 
         $form->addSelect('category', 'admin.program.blocks_category', $this->categoryRepository->getCategoriesOptions())->setPrompt('');
 
-        $form->addSelect('lector', 'admin.program.blocks_lector', $this->userRepository->getLectorsOptions())->setPrompt('');
+
+        if ($this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS))
+            $lectorsOptions = $this->userRepository->getLectorsOptions();
+        else
+            $lectorsOptions = [$this->user->getId() => $this->user->getDisplayName()];
+
+        $lectorColumn = $form->addSelect('lector', 'admin.program.blocks_lector', $lectorsOptions);
+
+        if ($this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS))
+            $lectorColumn->setPrompt('');
+
 
         $form->addText('duration', 'admin.program.blocks_duration_form')
             ->addRule(Form::FILLED, 'admin.program.blocks_duration_empty')
@@ -101,8 +125,13 @@ class BlockForm extends Nette\Object
     }
 
     public function processForm(Form $form, \stdClass $values) {
-        if (!$this->block)
+        if (!$this->block) {
+            if (!$this->settingsRepository->getValue(Settings::IS_ALLOWED_ADD_BLOCK))
+                return;
             $this->block = new Block();
+        }
+        else if (!$this->user->isAllowedModifyBlock($this->block))
+            return;
 
         $category = $values['category'] != '' ? $this->categoryRepository->findById($values['category']) : null;
         $lector = $values['lector'] != '' ? $this->userRepository->findById($values['lector']) : null;

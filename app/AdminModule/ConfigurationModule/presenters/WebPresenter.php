@@ -13,7 +13,7 @@ class WebPresenter extends ConfigurationBasePresenter
      * @var WebForm
      * @inject
      */
-    public $settingsFormFactory;
+    public $webFormFactory;
 
     public function renderDefault() {
         $this->template->logo = $this->settingsRepository->getValue(Settings::LOGO);
@@ -21,7 +21,7 @@ class WebPresenter extends ConfigurationBasePresenter
 
     protected function createComponentSettingsForm($name)
     {
-        $form = $this->settingsFormFactory->create();
+        $form = $this->webFormFactory->create();
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');

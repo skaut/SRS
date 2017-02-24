@@ -5,13 +5,4 @@
 {block content}
     <p>{_install.installed.text}</p>
     <a class="btn btn-primary" href="{plink :Web:Page:default}">{_install.installed.redirect_home}</a>
-
-    <br><br>
-
-    {if $migrationAvailable}
-        <p>{_install.installed.migration_available}</p>
-        <a class="btn btn-warning" href="{link migrate!}">{_install.error.reinstall}</a>
-    {else}
-        <p>{_install.installed.migration_unavailable}</p>
-    {/if}
 {/block}

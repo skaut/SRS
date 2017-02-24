@@ -438,6 +438,14 @@ class User
         return $this->programs->removeElement($program);
     }
 
+    public function hasProgramBlock(Block $block) {
+        $criteria = Criteria::create()->where(
+            Criteria::expr()->eq('block_id', $block->getId())
+        );
+
+        return !$this->programs->matching($criteria)->isEmpty();
+    }
+
     /**
      * @return bool
      */

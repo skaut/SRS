@@ -126,6 +126,15 @@ sex:
     male: "Muž"
     female: "Žena"
 
+day:
+    1: "Po"
+    2: "Út"
+    3: "St"
+    4: "Čt"
+    5: "Pá"
+    6: "So"
+    7: "Ne"
+
 api:
     authentification_error: "Uživatel musí být přihlášen."
     schedule_saved: "Program byl úspěšně uložen."
