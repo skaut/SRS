@@ -74,8 +74,8 @@
                 <th class="text-right">{_admin.program.blocks_program_start}</th>
                 <th class="text-right">{_admin.program.blocks_program_end}</th>
                 <th>{_admin.program.blocks_program_room}</th>
-                <th>Počet účastníků</th>
-                <th class="text-center" style="white-space: nowrap; width: 1%;">Akce</th>
+                <th>{_admin.program.blocks_program_occupancy}</th>
+                <th class="text-center" style="white-space: nowrap; width: 1%;">{_ublaboo_datagrid.action}</th>
             </tr>
             </thead>
 
@@ -105,16 +105,20 @@
                         <td class="text-right" style="white-space: nowrap; width: 1%;">
                             {if $programId == $program->getId()}
                                 <a class="btn btn-xs btn-warning ajax" n:href="showattendees! 0">
-                                    Skrýt
+                                    {_admin.program.blocks_program_hide_attendees_list}
                                 </a>
                             {else}
                                 <a class="btn btn-xs btn-default ajax" n:href="showattendees! $program->getId()">
-                                    Seznam oprávněných účastníků
+                                    {_admin.program.blocks_program_show_attendees_list}
                                 </a>
                             {/if}
-                            <a class="btn btn-xs btn-danger" n:href="delete! $program->getId()">
-                                <i class="fa fa-trash"></i>
-                            </a>
+                            {if $userAllowedModifySchedule}
+                                <a class="btn btn-xs btn-danger" n:href="deleteProgram! $program->getId()"
+                                   data-toggle="confirmation"
+                                   data-content="{_admin.program.blocks_program_delete_confirm}">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            {/if}
                         </td>
                     </tr>
                     {if $programId == $program->getId()}
