@@ -178,6 +178,7 @@ program:
     blocks_change_mandatory_denied: "Nemáte oprávnění k úpravě tohoto programového bloku."
     blocks_delete_confirm: "Opravdu chcete programový blok odstranit?"
     blocks_deleted: "Programový blok byl úspěšně odstraněn."
+    blocks_delete_not_allowed: "K odstranění tohoto bloku nemáte oprávnění."
     blocks_add_heading: "Nový programový blok"
     blocks_add_not_allowed: "Přidávání programových bloků není povoleno."
     blocks_edit_heading: "Úprava bloku: %name%"

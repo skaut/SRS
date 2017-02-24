@@ -139,6 +139,12 @@ class ProgramBlocksGridControl extends Control
     public function handleDelete($id)
     {
         $block = $this->blockRepository->findById($id);
+
+        if (!$this->userRepository->findById($this->getPresenter()->getUser()->getId())->isAllowedModifyBlock($block)) {
+            $this->getPresenter()->flashMessage('admin.program.blocks_delete_not_allowed', 'danger');
+            $this->redirect('this');
+        }
+
         $this->blockRepository->remove($block);
 
         $this->getPresenter()->flashMessage('admin.program.blocks_deleted', 'success');
