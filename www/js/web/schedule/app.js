@@ -104,6 +104,8 @@ app.controller('WebScheduleCtrl', function WebScheduleCtrl($scope, $http, $q, ui
 
                 $scope.events.push(program);
             });
+
+            $('#calendar').css('visibility', 'visible');
         });
     };
     $scope.startup();
@@ -210,16 +212,18 @@ app.controller('WebScheduleCtrl', function WebScheduleCtrl($scope, $http, $q, ui
                     allDaySlot: false,
                     duration: {days: 7},
                     slotDuration: '00:15:00',
-                    slotLabelInterval: '01:00:00',
+                    slotLabelInterval: '01:00:00'
                 }
             },
 
             eventClick: function (event, element) {
-                $scope.event = $scope.events[event._id - 1];
-                if (event.block.capacity !== undefined && event.block.capacity <= event.attendees_count)
-                    $scope.event.occupied = true;
+                if ($scope.loading == 0) {
+                    $scope.event = $scope.events[event._id - 1];
+                    if (event.block.capacity !== undefined && event.block.capacity <= event.attendees_count)
+                        $scope.event.occupied = true;
 
-                $('#program-modal').modal('show');
+                    $('#program-modal').modal('show');
+                }
             },
 
             eventMouseout: function (event, jsEvent, view) {
