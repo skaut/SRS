@@ -54,6 +54,11 @@ class RoomRepository extends EntityRepository
      */
     public function remove(Room $room)
     {
+        foreach ($room->getPrograms() as $program) {
+            $program->setRoom(null);
+            $this->_em->persist($program);
+        }
+
         $this->_em->remove($room);
         $this->_em->flush();
     }

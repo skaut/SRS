@@ -29,7 +29,7 @@ class Program
     protected $attendees;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Room", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Room", inversedBy="programs", cascade={"persist"})
      * @var Room
      */
     protected $room;
