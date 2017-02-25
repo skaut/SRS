@@ -78,6 +78,11 @@ class CategoryRepository extends EntityRepository
      */
     public function remove(Category $category)
     {
+        foreach ($category->getBlocks() as $block) {
+            $block->setCategory(null);
+            $this->_em->persist($block);
+        }
+
         $this->_em->remove($category);
         $this->_em->flush();
     }

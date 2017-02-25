@@ -2,6 +2,7 @@
 
 namespace App\Model\Program;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
@@ -18,6 +19,12 @@ class Room
      * @var string
      */
     protected $name;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Program", mappedBy="room", cascade={"persist"})
+     * @var ArrayCollection
+     */
+    protected $programs;
 
     /**
      * @return int
@@ -43,5 +50,19 @@ class Room
         $this->name = $name;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getPrograms()
+    {
+        return $this->programs;
+    }
 
+    /**
+     * @param mixed $programs
+     */
+    public function setPrograms($programs)
+    {
+        $this->programs = $programs;
+    }
 }
