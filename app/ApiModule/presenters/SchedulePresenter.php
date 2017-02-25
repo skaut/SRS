@@ -11,7 +11,7 @@ use App\ApiModule\Services\ScheduleService;
 use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializerBuilder;
 use Nette\Application\Responses\TextResponse;
-use Nette\Security\AuthenticationException;
+
 
 /**
  * SchedulePresenter

@@ -3,7 +3,7 @@
 namespace App\Model\CMS\Content;
 
 
-use App\Model\CMS\Document\Tag;
+
 use App\Model\CMS\Document\TagRepository;
 use App\Model\CMS\Page;
 use Doctrine\Common\Collections\ArrayCollection;

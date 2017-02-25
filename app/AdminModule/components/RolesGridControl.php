@@ -6,7 +6,7 @@ namespace App\AdminModule\Components;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\User\UserRepository;
-use App\Services\Authenticator;
+
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Ublaboo\DataGrid\DataGrid;

@@ -2,8 +2,8 @@
 
 namespace App\WebModule\Components;
 
+
 use App\Model\ACL\RoleRepository;
-use App\Model\CMS\Content\UsersContent;
 use App\Model\User\UserRepository;
 use Nette\Application\UI\Control;
 

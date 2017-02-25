@@ -10,7 +10,7 @@ use App\Model\Program\CategoryRepository;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Utils\Html;
+
 use Ublaboo\DataGrid\DataGrid;
 
 class ProgramCategoriesGridControl extends Control

@@ -2,12 +2,9 @@
 
 namespace App\WebModule\Presenters;
 
-use App\WebModule\Components\ApplicationContentControl;
-use App\WebModule\Components\BlocksContentControl;
-use App\WebModule\Components\CapacitiesContentControl;
-use App\WebModule\Components\DocumentContentControl;
-use App\WebModule\Components\FaqContentControl;
-use App\WebModule\Components\HtmlContentControl;
+
+
+
 use App\WebModule\Components\IApplicationContentControlFactory;
 use App\WebModule\Components\IBlocksContentControlFactory;
 use App\WebModule\Components\ICapacitiesContentControlFactory;
@@ -15,15 +12,13 @@ use App\WebModule\Components\IDocumentContentControlFactory;
 use App\WebModule\Components\IFaqContentControlFactory;
 use App\WebModule\Components\IHtmlContentControlFactory;
 use App\WebModule\Components\IImageContentControlFactory;
-use App\WebModule\Components\ImageContentControl;
+
 use App\WebModule\Components\INewsContentControlFactory;
 use App\WebModule\Components\IProgramsContentControlFactory;
 use App\WebModule\Components\ITextContentControlFactory;
 use App\WebModule\Components\IUsersContentControlFactory;
-use App\WebModule\Components\NewsContentControl;
-use App\WebModule\Components\ProgramsContentControl;
-use App\WebModule\Components\TextContentControl;
-use App\WebModule\Components\UsersContentControl;
+
+
 use Nette\Application\BadRequestException;
 
 class PagePresenter extends WebBasePresenter

@@ -7,7 +7,6 @@ use App\Model\ACL\RoleRepository;
 use App\Model\Enums\PaymentType;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
-use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\UserRepository;
 use App\Services\ExcelExportService;
@@ -245,8 +244,6 @@ class UsersGridControl extends Control
 
         $grid->addAction('detail', 'admin.common.detail', 'Users:detail')
             ->setClass('btn btn-xs btn-primary');
-
-        $grid->addAction('edit', 'admin.common.edit', 'Users:edit');
 
         $grid->setColumnsSummary(['fee']);
     }

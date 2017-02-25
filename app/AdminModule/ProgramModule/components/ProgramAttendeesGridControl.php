@@ -5,9 +5,8 @@ namespace App\AdminModule\ProgramModule\Components;
 
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
-use App\Model\ACL\ResourceRepository;
-use App\Model\Program\BlockRepository;
-use App\Model\Program\CategoryRepository;
+
+
 use App\Model\Program\Program;
 use App\Model\Program\ProgramRepository;
 use App\Model\User\User;

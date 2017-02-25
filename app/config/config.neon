@@ -100,7 +100,8 @@ services:
     - App\WebModule\Forms\PersonalDetailsForm
     - App\WebModule\Forms\RolesForm
     - App\AdminModule\Forms\BaseForm
-    - App\AdminModule\Forms\EditUserForm
+    - App\AdminModule\Forms\EditUserSeminarForm
+    - App\AdminModule\Forms\EditUserPaymentForm
     - App\AdminModule\ProgramModule\Forms\AddRoleForm
     - App\AdminModule\ProgramModule\Forms\EditRoleForm
     - App\AdminModule\CMSModule\Forms\FaqForm

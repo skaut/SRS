@@ -5,7 +5,7 @@ namespace App\Services;
 
 use App\Mailing\TextMail;
 use App\Model\ACL\RoleRepository;
-use App\Model\Mailing\Mail;
+
 use App\Model\Mailing\MailRepository;
 use App\Model\Mailing\MailToRoles;
 use App\Model\Settings\Settings;

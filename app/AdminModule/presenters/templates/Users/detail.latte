@@ -49,30 +49,6 @@
                 <td>{$detailUser->getStreet()}, {$detailUser->getCity()}, {$detailUser->getPostcode()}</td>
             </tr>
 
-        </table>
-    </div>
-
-    <h3>{_admin.users.users_detail_seminar}</h3>
-    <div class="well">
-        <table class="table table-form">
-            <col class="col-sm-3 col-xs-3">
-            <col class="col-sm-9 col-xs-9">
-
-            <tr>
-                <th>{_admin.users.users_roles}</th>
-                <td>{foreach $detailUser->getRoles() as $role}{$role->getName()}{sep}, {/sep}{/foreach}</td>
-            </tr>
-
-            <tr>
-                <th>{_admin.users.users_approved_detail}</th>
-                <td>{if $detailUser->isApproved()}
-                        {_admin.common.yes}
-                    {else}
-                        {_admin.common.no}
-                    {/if}
-                </td>
-            </tr>
-
             <tr>
                 <th>{_admin.users.users_first_login}</th>
                 <td>{$detailUser->getFirstLogin()|date:'j. n. Y H:i'}</td>
@@ -83,100 +59,149 @@
                 <td>{$detailUser->getLastLogin()|date:'j. n. Y H:i'}</td>
             </tr>
 
-            <tr>
-                <th>{_admin.users.users_attended_detail}</th>
-                <td>{if $detailUser->isAttended()}
-                        {_admin.common.yes}
-                    {else}
-                        {_admin.common.no}
-                    {/if}
-                </td>
-            </tr>
-
-            {if $detailUser->hasDisplayArrivalDepartureRole()}
-                <tr>
-                    <th>{_admin.users.users_arrival}</th>
-                    <td>{if $detailUser->getArrival()}{$detailUser->getArrival()|date:'j. n. Y H:i'}{/if}</td>
-                </tr>
-
-                <tr>
-                    <th>{_admin.users.users_departure}</th>
-                    <td>{if $detailUser->getDeparture()}{$detailUser->getDeparture()|date:'j. n. Y H:i'}{/if}</td>
-                </tr>
-            {/if}
-
-            <tr>
-                <th>{_admin.users.users_about_me}</th>
-                <td>{$detailUser->getAbout()}</td>
-            </tr>
-
-            {foreach $customInputs as $customInput}
-                <tr>
-                    <th>{$customInput->getName()}</th>
-                    <td>
-                        {var $customInputValue = $detailUser->getCustomInputValue($customInput)}
-                        {if $customInputValue}
-                            {if $customInput->getType() == $customInputTypeText}
-                                {$customInputValue->getValue()}
-                            {elseif $customInput->getType() == $customInputTypeCheckbox}
-                                {if $customInputValue->getValue()}
-                                    {_admin.common.yes}
-                                {else}
-                                    {_admin.common.no}
-                                {/if}
-                            {/if}
-                        {/if}
-                    </td>
-                </tr>
-            {/foreach}
-
-            <tr>
-                <th>{_admin.users.users_private_note|breaklines}</th>
-                <td>{$detailUser->getNote()}</td>
-            </tr>
         </table>
     </div>
 
-    {if $detailUser->isPaying()}
-        <h3>{_admin.users.users_detail_payment}</h3>
+    {snippet userDetail}
+        <h3>{_admin.users.users_detail_seminar}</h3>
         <div class="well">
-            <table class="table table-form">
-                <col class="col-sm-3 col-xs-3">
-                <col class="col-sm-9 col-xs-9">
+            {if !$editSeminar}
+                <table class="table table-form">
+                    <col class="col-sm-3 col-xs-3">
+                    <col class="col-sm-9 col-xs-9">
 
-                <tr>
-                    <th>{_admin.users.users_fee}</th>
-                    <td>{$detailUser->getFee()}</td>
-                </tr>
+                    <tr>
+                        <th>{_admin.users.users_roles}</th>
+                        <td>{foreach $detailUser->getRoles() as $role}{$role->getName()}{sep}, {/sep}{/foreach}</td>
+                    </tr>
 
-                <tr>
-                    <th>{_admin.users.users_variable_symbol}</th>
-                    <td>{$detailUser->getVariableSymbol()}</td>
-                </tr>
+                    <tr>
+                        <th>{_admin.users.users_approved_detail}</th>
+                        <td>{if $detailUser->isApproved()}
+                                {_admin.common.yes}
+                            {else}
+                                {_admin.common.no}
+                            {/if}
+                        </td>
+                    </tr>
 
-                <tr>
-                    <th>{_admin.users.users_payment_method}</th>
-                    <td>{if $detailUser->getPaymentMethod()}{_'common.payment.' . $detailUser->getPaymentMethod()}{/if}</td>
-                </tr>
+                    <tr>
+                        <th>{_admin.users.users_attended_detail}</th>
+                        <td>{if $detailUser->isAttended()}
+                                {_admin.common.yes}
+                            {else}
+                                {_admin.common.no}
+                            {/if}
+                        </td>
+                    </tr>
 
-                <tr>
-                    <th>{_admin.users.users_payment_date}</th>
-                    <td>{if $detailUser->getPaymentDate()}{$detailUser->getPaymentDate()|date:'j. n. Y'}{/if}</td>
-                </tr>
+                    {if $detailUser->hasDisplayArrivalDepartureRole()}
+                        <tr>
+                            <th>{_admin.users.users_arrival}</th>
+                            <td>{if $detailUser->getArrival()}{$detailUser->getArrival()|date:'j. n. Y H:i'}{/if}</td>
+                        </tr>
 
-                <tr>
-                    <th>{_admin.users.users_income_proof_printed_date}</th>
-                    <td>{if $detailUser->getIncomeProofPrintedDate()}{$detailUser->getIncomeProofPrintedDate()|date:'j. n. Y'}{/if}</td>
-                </tr>
-            </table>
+                        <tr>
+                            <th>{_admin.users.users_departure}</th>
+                            <td>{if $detailUser->getDeparture()}{$detailUser->getDeparture()|date:'j. n. Y H:i'}{/if}</td>
+                        </tr>
+                    {/if}
 
-            {if $detailUser->getPaymentDate() != null}
-                {if $detailUser->getPaymentMethod() == $paymentMethodBank}
-                    <a class="btn btn-primary" n:href="generatePaymentProofBank $detailUser->getId()">{_admin.users.users_detail_generate_payment_proof_bank}</a>
-                {elseif $detailUser->getPaymentMethod() == $paymentMethodCash}
-                    <a class="btn btn-primary" n:href="generatePaymentProofCash $detailUser->getId()">{_admin.users.users_detail_generate_payment_proof_cash}</a>
-                {/if}
+                    {foreach $customInputs as $customInput}
+                        <tr>
+                            <th>{$customInput->getName()}</th>
+                            <td>
+                                {var $customInputValue = $detailUser->getCustomInputValue($customInput)}
+                                {if $customInputValue}
+                                    {if $customInput->getType() == $customInputTypeText}
+                                        {$customInputValue->getValue()}
+                                    {elseif $customInput->getType() == $customInputTypeCheckbox}
+                                        {if $customInputValue->getValue()}
+                                            {_admin.common.yes}
+                                        {else}
+                                            {_admin.common.no}
+                                        {/if}
+                                    {/if}
+                                {/if}
+                            </td>
+                        </tr>
+                    {/foreach}
+
+                    <tr>
+                        <th>{_admin.users.users_about_me}</th>
+                        <td>{$detailUser->getAbout()}</td>
+                    </tr>
+
+                    <tr>
+                        <th>{_admin.users.users_private_note|breaklines}</th>
+                        <td>{$detailUser->getNote()}</td>
+                    </tr>
+
+                    <tr>
+                        <td></td>
+                        <td><a n:href="editSeminar!" class="btn btn-default ajax">{_admin.common.edit}</a></td>
+                    </tr>
+                </table>
+            {else}
+                {control editUserSeminarForm}
             {/if}
         </div>
-    {/if}
+
+        {if $detailUser->isPaying()}
+            <h3>{_admin.users.users_detail_payment}</h3>
+            <div class="well">
+                {if !$editPayment}
+                    <table class="table table-form">
+                        <col class="col-sm-3 col-xs-3">
+                        <col class="col-sm-9 col-xs-9">
+
+                        <tr>
+                            <th>{_admin.users.users_fee}</th>
+                            <td>{$detailUser->getFee()}</td>
+                        </tr>
+
+                        <tr>
+                            <th>{_admin.users.users_variable_symbol}</th>
+                            <td>{$detailUser->getVariableSymbol()}</td>
+                        </tr>
+
+                        <tr>
+                            <th>{_admin.users.users_payment_method}</th>
+                            <td>{if $detailUser->getPaymentMethod()}{_'common.payment.' . $detailUser->getPaymentMethod()}{/if}</td>
+                        </tr>
+
+                        <tr>
+                            <th>{_admin.users.users_payment_date}</th>
+                            <td>{if $detailUser->getPaymentDate()}{$detailUser->getPaymentDate()|date:'j. n. Y'}{/if}</td>
+                        </tr>
+
+                        <tr>
+                            <th>{_admin.users.users_income_proof_printed_date}</th>
+                            <td>{if $detailUser->getIncomeProofPrintedDate()}{$detailUser->getIncomeProofPrintedDate()|date:'j. n. Y'}{/if}</td>
+                        </tr>
+
+                        <tr>
+                            <td></td>
+                            <td>
+                                <a n:href="editPayment!" class="btn btn-default ajax">{_admin.common.edit}</a>
+                                {if $detailUser->getPaymentDate() != null}
+                                    {if $detailUser->getPaymentMethod() == $paymentMethodBank}
+                                        <a class="btn btn-default" n:href="generatePaymentProofBank $detailUser->getId()">
+                                            {_admin.users.users_detail_generate_payment_proof_bank}
+                                        </a>
+                                    {elseif $detailUser->getPaymentMethod() == $paymentMethodCash}
+                                        <a class="btn btn-default" n:href="generatePaymentProofCash $detailUser->getId()">
+                                            {_admin.users.users_detail_generate_payment_proof_cash}
+                                        </a>
+                                    {/if}
+                                {/if}
+                            </td>
+                        </tr>
+                    </table>
+                {else}
+                    {control editUserPaymentForm}
+                {/if}
+            </div>
+        {/if}
+    {/snippet}
 {/block}
