@@ -199,41 +199,27 @@ class EditRoleForm extends Nette\Object
         $incompatibleRoles = $this->roleRepository->findRolesByIds($args[0]);
         $requiredRoles = $this->roleRepository->findRolesByIds($args[1]);
 
-        foreach ($incompatibleRoles as $incompatibleRole) {
-            foreach ($requiredRoles as $requiredRole) {
-                //vybrana stejna role jako neregistrovatelna i souvisejici
-                if ($incompatibleRole == $requiredRole)
-                    return false;
+        $this->roleRepository->getEntityManager()->getConnection()->beginTransaction();
 
-                //role souvisi s roli, ktera neni s touto registrovatelna
-                $allRequiredRoles = $requiredRole->getRequiredRolesTransitive();
-                foreach ($allRequiredRoles as $allRequiredRole) {
-                    if ($incompatibleRole == $allRequiredRole)
-                        return false;
+        $this->role->setIncompatibleRoles($incompatibleRoles);
+        $this->role->setRequiredRoles($requiredRoles);
+
+        $valid = true;
+
+        foreach ($this->roleRepository->findAll() as $role) {
+            foreach ($role->getRequiredRolesTransitive() as $requiredRole) {
+                if ($role->getIncompatibleRoles()->contains($requiredRole)) {
+                    $valid = false;
+                    break;
                 }
             }
-
-            //role je neregistrovatelna s roli, ktera s touto roli souvisi
-            $incompatibleRequiredRoles = $incompatibleRole->getRequiredRolesTransitive();
-            foreach ($incompatibleRequiredRoles as $incompatibleRequiredRole) {
-                if ($incompatibleRequiredRole == $this->role)
-                    return false;
-            }
+            if (!$valid)
+                break;
         }
 
-        //nektera role pozadujici tuto roli, neni registrovatelna s roli pozadovanou touto roli
-        $requiredByRoleRoles = $this->role->getRequiredByRoleTransitive();
-        $requiredRoles = $this->role->getRequiredRolesTransitive();
-        foreach ($requiredByRoleRoles as $requiredByRoleRole) {
-            foreach ($requiredByRoleRole->getIncompatibleRoles() as $requiredByRoleIncompatibleRole) {
-                foreach($requiredRoles as $requiredRole) {
-                    if ($requiredByRoleIncompatibleRole == $requiredRole)
-                        return false;
-                }
-            }
-        }
+        $this->roleRepository->getEntityManager()->getConnection()->rollBack();
 
-        return true;
+        return $valid;
     }
 
     public function validateRedirectAllowed($field, $args) {
