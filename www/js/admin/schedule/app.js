@@ -153,10 +153,14 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q
             angular.forEach($scope.programs, function (program, key) {
                 program.block = $scope.blocksMap[program.block_id];
                 program.room = $scope.roomsMap[program.room_id];
+
                 setTitle(program);
                 setColor(program);
+
                 $scope.events.push(program);
-            })
+            });
+
+            $('#calendar').css('visibility', 'visible');
         });
     };
     $scope.startup();
@@ -275,7 +279,7 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q
             },
 
             eventClick: function (event, element) {
-                if ($scope.config.allowed_modify_schedule) {
+                if ($scope.loading == 0 && $scope.config.allowed_modify_schedule) {
                     $scope.event = event;
                     $scope.refreshForm();
                     $('#program-modal').modal('show');
