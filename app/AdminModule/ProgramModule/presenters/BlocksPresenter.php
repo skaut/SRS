@@ -4,10 +4,8 @@ namespace App\AdminModule\ProgramModule\Presenters;
 
 
 use App\AdminModule\ProgramModule\Components\IProgramAttendeesGridControlFactory;
-use App\AdminModule\ProgramModule\Components\IProgramBlockScheduleGridControlFactory;
 use App\AdminModule\ProgramModule\Components\IProgramBlocksGridControlFactory;
 use App\AdminModule\ProgramModule\Forms\BlockForm;
-use App\AdminModule\ProgramModule\Forms\BlockFormFactory;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\Program\Block;
@@ -102,10 +100,10 @@ class BlocksPresenter extends ProgramBasePresenter
 
         if (!$this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE) ||
             !$this->settingsRepository->getValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE))
-            $this->getPresenter()->flashMessage('blocks_program_modify_schedule_not_allowed', 'danger');
+            $this->getPresenter()->flashMessage('admin.program.blocks_program_modify_schedule_not_allowed', 'danger');
         else {
             $this->programRepository->remove($program);
-            $this->getPresenter()->flashMessage('blocks_program_deleted', 'success');
+            $this->getPresenter()->flashMessage('admin.program.blocks_program_deleted', 'success');
         }
 
         $this->redirect('this');

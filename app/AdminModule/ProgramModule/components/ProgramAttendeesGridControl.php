@@ -65,16 +65,18 @@ class ProgramAttendeesGridControl extends Control
         if (!$programId)
             $programId = $this->sessionSection->programId;
 
-        $this->program = $this->programRepository->findById($programId);
-
-        $this->user = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
+        $program = $this->programRepository->findById($programId);
 
 
         $grid = new DataGrid($this, $name);
 
-        if (!$this->program) {
+
+        if (!$program) {
             $grid->setDataSource([]);
         } else {
+            $this->program = $program;
+            $this->user = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
+
             $grid->setTranslator($this->translator);
 
             $qb = $this->userRepository->createQueryBuilder('u')
@@ -154,12 +156,15 @@ class ProgramAttendeesGridControl extends Control
 
         $p = $this->getPresenter();
 
-        if (!$this->user->isAllowedModifyBlock($this->program->getBlock()))
+        $user = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
+        $program = $this->programRepository->findById($this->sessionSection->programId);
+
+        if (!$user->isAllowedModifyBlock($program->getBlock()))
             $p->flashMessage('admin.program.blocks_edit_not_allowed', 'danger');
-        elseif ($editedUser->hasProgramBlock($this->program->getBlock()))
+        elseif ($editedUser->hasProgramBlock($program->getBlock()))
             $p->flashMessage('admin.program.blocks_attendees_already_has_block', 'danger');
         else {
-            $editedUser->addProgram($this->program);
+            $editedUser->addProgram($program);
             $this->userRepository->save($editedUser);
 
             $p->flashMessage('admin.program.blocks_attendees_registered', 'success');
@@ -180,10 +185,13 @@ class ProgramAttendeesGridControl extends Control
 
         $p = $this->getPresenter();
 
-        if (!$this->user->isAllowedModifyBlock($this->program->getBlock()))
+        $user = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
+        $program = $this->programRepository->findById($this->sessionSection->programId);
+
+        if (!$user->isAllowedModifyBlock($program->getBlock()))
             $p->flashMessage('admin.program.blocks_edit_not_allowed', 'danger');
         else {
-            $editedUser->removeProgram($this->program);
+            $editedUser->removeProgram($program);
             $this->userRepository->save($editedUser);
 
             $p->flashMessage('admin.program.blocks_attendees_unregistered', 'success');
