@@ -9,12 +9,8 @@ use App\Model\ACL\Resource;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\CMS\PageRepository;
-use App\Model\Program\Block;
-use App\Model\Program\BlockRepository;
-use App\Model\Program\CategoryRepository;
-use App\Model\Settings\SettingsRepository;
-use App\Model\User\UserRepository;
-use Kdyby\Translation\Translator;
+
+
 use Nette;
 use Nette\Application\UI\Form;
 

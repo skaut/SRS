@@ -5,18 +5,18 @@ namespace App\AdminModule\Presenters;
 
 use App\AdminModule\Components\IUsersGridControlFactory;
 use App\AdminModule\Forms\EditUserForm;
+use App\AdminModule\Forms\EditUserPaymentForm;
+use App\AdminModule\Forms\EditUserSeminarForm;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\ACL\Role;
 use App\Model\Enums\PaymentType;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
-use App\Model\Settings\Settings;
-use App\Model\User\CustomInputValue\CustomInputValueRepository;
 use App\Services\ExcelExportService;
 use App\Services\PdfExportService;
 use Nette\Application\UI\Form;
-use Nette\Http\Session;
+
 
 class UsersPresenter extends AdminBasePresenter
 {
@@ -29,10 +29,16 @@ class UsersPresenter extends AdminBasePresenter
     public $usersGridControlFactory;
 
     /**
-     * @var EditUserForm
+     * @var EditUserSeminarForm
      * @inject
      */
-    public $editUserFormFactory;
+    public $editUserSeminarFormFactory;
+
+    /**
+     * @var EditUserPaymentForm
+     * @inject
+     */
+    public $editUserPaymentFormFactory;
 
     /**
      * @var PdfExportService
@@ -60,6 +66,8 @@ class UsersPresenter extends AdminBasePresenter
         $this->checkPermission(Permission::MANAGE);
 
         $this->template->results = [];
+        $this->template->editSeminar = false;
+        $this->template->editPayment = false;
     }
 
     public function renderDetail($id) {
@@ -88,6 +96,28 @@ class UsersPresenter extends AdminBasePresenter
         $this->redrawControl('results');
     }
 
+    public function handleEditSeminar() {
+        $this->template->editSeminar = true;
+
+        if ($this->isAjax()) {
+            $this->redrawControl('userDetail');
+        }
+        else {
+            $this->redirect('this');
+        }
+    }
+
+    public function handleEditPayment() {
+        $this->template->editPayment = true;
+
+        if ($this->isAjax()) {
+            $this->redrawControl('userDetail');
+        }
+        else {
+            $this->redirect('this');
+        }
+    }
+
     public function actionGeneratePaymentProofCash($id) {
         $user = $this->userRepository->findById($id);
         if (!$user->getIncomeProofPrintedDate()) {
@@ -111,19 +141,35 @@ class UsersPresenter extends AdminBasePresenter
         return $this->usersGridControlFactory->create();
     }
 
-    protected function createComponentEditUserForm($name)
+    protected function createComponentEditUserSeminarForm($name)
     {
-        $form = $this->editUserFormFactory->create($this->getParameter('id'));
+        $form = $this->editUserSeminarFormFactory->create($this->getParameter('id'));
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) {
-            $this->flashMessage('admin.users.users_saved', 'success');
-
-            if ($form['submitAndContinue']->isSubmittedBy()) {
-                $id = $values['id'];
-                $this->redirect('Users:edit', ['id' => $id]);
+            if ($form['cancel']->isSubmittedBy()) {
+                $this->redirect('this');
             }
-            else
-                $this->redirect('Users:default');
+            else {
+                $this->flashMessage('admin.users.users_saved', 'success');
+                $this->redirect('this');
+            }
+        };
+
+        return $form;
+    }
+
+    protected function createComponentEditUserPaymentForm($name)
+    {
+        $form = $this->editUserPaymentFormFactory->create($this->getParameter('id'));
+
+        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+            if ($form['cancel']->isSubmittedBy()) {
+                $this->redirect('this');
+            }
+            else {
+                $this->flashMessage('admin.users.users_saved', 'success');
+                $this->redirect('this');
+            }
         };
 
         return $form;

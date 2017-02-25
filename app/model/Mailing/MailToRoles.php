@@ -3,11 +3,11 @@
 namespace App\Model\Mailing;
 
 
-use App\Model\ACL\Role;
-use App\Model\User\User;
+
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Kdyby\Doctrine\Entities\Attributes\Identifier;
+
 
 /**
  * @ORM\Entity

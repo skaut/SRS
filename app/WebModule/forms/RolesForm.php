@@ -2,7 +2,7 @@
 
 namespace App\WebModule\Forms;
 
-use App\Model\ACL\Role;
+
 use App\Model\ACL\RoleRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;

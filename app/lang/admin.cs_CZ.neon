@@ -13,6 +13,7 @@ common:
     choose: "Vyberte"
     save: "Uložit"
     save_and_continue: "Uložit a pokračovat v úpravách"
+    cancel: "Storno"
 
     yes: "Ano"
     no: "Ne"

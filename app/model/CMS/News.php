@@ -2,7 +2,7 @@
 
 namespace App\Model\CMS;
 
-use App\Model\User\User;
+
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 

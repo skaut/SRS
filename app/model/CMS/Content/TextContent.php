@@ -3,7 +3,7 @@
 namespace App\Model\CMS\Content;
 
 
-use App\Model\CMS\Page;
+
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
 

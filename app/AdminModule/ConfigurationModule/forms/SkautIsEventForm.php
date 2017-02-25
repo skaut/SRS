@@ -8,7 +8,7 @@ use App\Model\Settings\SettingsRepository;
 use App\Services\SkautIsService;
 use Nette;
 use Nette\Application\UI\Form;
-use Skautis\Wsdl\WsdlException;
+
 
 class SkautIsEventForm extends Nette\Object
 {

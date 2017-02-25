@@ -15,7 +15,7 @@ use App\WebModule\Forms\PersonalDetailsFormFactory;
 use App\WebModule\Forms\RolesForm;
 use App\WebModule\Forms\RolesFormFactory;
 use Nette\Application\UI\Form;
-use Skautis\Wsdl\WsdlException;
+
 
 class ProfilePresenter extends WebBasePresenter
 {
