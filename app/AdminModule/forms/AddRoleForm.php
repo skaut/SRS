@@ -37,49 +37,54 @@ class AddRoleForm extends Nette\Object
 
         $form->addSubmit('submit', 'admin.common.save');
 
+        $form->addSubmit('cancel', 'admin.common.cancel')
+            ->setValidationScope([])
+            ->setAttribute('class', 'btn btn-warning');
+
         $form->onSuccess[] = [$this, 'processForm'];
 
         return $form;
     }
 
     public function processForm(Form $form, \stdClass $values) {
-        $role = new Role($values['name']);
+        if (!$form['cancel']->isSubmittedBy()) {
+            $role = new Role($values['name']);
 
-        $parent = $this->roleRepository->findById($values['parent']);
+            $parent = $this->roleRepository->findById($values['parent']);
 
-        $role->setSystem(false);
+            $role->setSystem(false);
 
-        if ($parent) {
-            foreach ($parent->getPermissions() as $permission)
-                $role->addPermission($permission);
+            if ($parent) {
+                foreach ($parent->getPermissions() as $permission)
+                    $role->addPermission($permission);
 
-            foreach ($parent->getIncompatibleRoles() as $incompatibleRole)
-                $role->addIncompatibleRole($incompatibleRole);
+                foreach ($parent->getIncompatibleRoles() as $incompatibleRole)
+                    $role->addIncompatibleRole($incompatibleRole);
 
-            foreach ($parent->getRequiredRoles() as $requiredRole)
-                $role->addRequiredRole($requiredRole);
+                foreach ($parent->getRequiredRoles() as $requiredRole)
+                    $role->addRequiredRole($requiredRole);
 
-            foreach ($parent->getRegisterableCategories() as $registerableCategory)
-                $role->addRegisterableCategory($registerableCategory);
+                foreach ($parent->getRegisterableCategories() as $registerableCategory)
+                    $role->addRegisterableCategory($registerableCategory);
 
-            foreach ($parent->getPages() as $page)
-                $role->addPage($page);
+                foreach ($parent->getPages() as $page)
+                    $role->addPage($page);
 
-            $role->setFee($parent->getFee());
-            $role->setCapacity($parent->getCapacity());
-            $role->setApprovedAfterRegistration($parent->isApprovedAfterRegistration());
-            $role->setSyncedWithSkautIS($parent->isSyncedWithSkautIS());
-            $role->setRegisterable($parent->isRegisterable());
-            $role->setRegisterableFrom($parent->getRegisterableFrom());
-            $role->setRegisterableTo($parent->getRegisterableTo());
-            $role->setDisplayArrivalDeparture($parent->isDisplayArrivalDeparture());
+                $role->setFee($parent->getFee());
+                $role->setCapacity($parent->getCapacity());
+                $role->setApprovedAfterRegistration($parent->isApprovedAfterRegistration());
+                $role->setSyncedWithSkautIS($parent->isSyncedWithSkautIS());
+                $role->setRegisterable($parent->isRegisterable());
+                $role->setRegisterableFrom($parent->getRegisterableFrom());
+                $role->setRegisterableTo($parent->getRegisterableTo());
+                $role->setDisplayArrivalDeparture($parent->isDisplayArrivalDeparture());
+            } else {
+                $nonregistered = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
+                foreach ($nonregistered->getPages() as $page)
+                    $role->addPage($page);
+            }
+
+            $this->roleRepository->save($role);
         }
-        else {
-            $nonregistered = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
-            foreach ($nonregistered->getPages() as $page)
-                $role->addPage($page);
-        }
-
-        $this->roleRepository->save($role);
     }
 }
