@@ -44,6 +44,10 @@ class NewsForm extends Nette\Object
 
         $form->addSubmit('submitAndContinue', 'admin.common.save_and_continue');
 
+        $form->addSubmit('cancel', 'admin.common.cancel')
+            ->setValidationScope([])
+            ->setAttribute('class', 'btn btn-warning');
+
         if ($this->news) {
             $form->setDefaults([
                 'id' => $id,
@@ -64,12 +68,14 @@ class NewsForm extends Nette\Object
     }
 
     public function processForm(Form $form, \stdClass $values) {
-        if (!$this->news)
-            $this->news = new News();
+        if (!$form['cancel']->isSubmittedBy()) {
+            if (!$this->news)
+                $this->news = new News();
 
-        $this->news->setText($values['text']);
-        $this->news->setPublished($values['published']);
+            $this->news->setText($values['text']);
+            $this->news->setPublished($values['published']);
 
-        $this->newsRepository->save($this->news);
+            $this->newsRepository->save($this->news);
+        }
     }
 }

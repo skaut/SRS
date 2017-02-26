@@ -114,6 +114,10 @@ class EditRoleForm extends Nette\Object
 
         $form->addSubmit('submitAndContinue', 'admin.common.save_and_continue');
 
+        $form->addSubmit('cancel', 'admin.common.cancel')
+            ->setValidationScope([])
+            ->setAttribute('class', 'btn btn-warning');
+
 
         $form->setDefaults([
             'id' => $id,
@@ -140,24 +144,26 @@ class EditRoleForm extends Nette\Object
     }
 
     public function processForm(Form $form, \stdClass $values) {
-        $capacity = $values['capacity'] !== '' ? $values['capacity'] : null;
+        if (!$form['cancel']->isSubmittedBy()) {
+            $capacity = $values['capacity'] !== '' ? $values['capacity'] : null;
 
-        $this->role->setName($values['name']);
-        $this->role->setRegisterable($values['registerable']);
-        $this->role->setRegisterableFrom($values['registerableFrom']);
-        $this->role->setRegisterableTo($values['registerableTo']);
-        $this->role->setCapacity($capacity);
-        $this->role->setApprovedAfterRegistration($values['approvedAfterRegistration']);
-        $this->role->setSyncedWithSkautIS($values['syncedWithSkautIs']);
-        $this->role->setDisplayArrivalDeparture($values['displayArrivalDeparture']);
-        $this->role->setFee($values['fee']);
-        $this->role->setPermissions($this->permissionRepository->findPermissionsByIds($values['permissions']));
-        $this->role->setPages($this->pageRepository->findPagesBySlugs($values['pages']));
-        $this->role->setRedirectAfterLogin($values['redirectAfterLogin']);
-        $this->role->setIncompatibleRoles($this->roleRepository->findRolesByIds($values['incompatibleRoles']));
-        $this->role->setRequiredRoles($this->roleRepository->findRolesByIds($values['requiredRoles']));
+            $this->role->setName($values['name']);
+            $this->role->setRegisterable($values['registerable']);
+            $this->role->setRegisterableFrom($values['registerableFrom']);
+            $this->role->setRegisterableTo($values['registerableTo']);
+            $this->role->setCapacity($capacity);
+            $this->role->setApprovedAfterRegistration($values['approvedAfterRegistration']);
+            $this->role->setSyncedWithSkautIS($values['syncedWithSkautIs']);
+            $this->role->setDisplayArrivalDeparture($values['displayArrivalDeparture']);
+            $this->role->setFee($values['fee']);
+            $this->role->setPermissions($this->permissionRepository->findPermissionsByIds($values['permissions']));
+            $this->role->setPages($this->pageRepository->findPagesBySlugs($values['pages']));
+            $this->role->setRedirectAfterLogin($values['redirectAfterLogin']);
+            $this->role->setIncompatibleRoles($this->roleRepository->findRolesByIds($values['incompatibleRoles']));
+            $this->role->setRequiredRoles($this->roleRepository->findRolesByIds($values['requiredRoles']));
 
-        $this->roleRepository->save($this->role);
+            $this->roleRepository->save($this->role);
+        }
     }
 
     private function preparePermissionsOptions()

@@ -122,6 +122,9 @@ class BlocksPresenter extends ProgramBasePresenter
         $form = $this->blockFormFactory->create($this->getParameter('id'), $this->getUser()->getId());
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) {
+            if ($form['cancel']->isSubmittedBy())
+                $this->redirect('Blocks:default');
+
             if (!$values['id']) {
                 if (!$this->settingsRepository->getValue(Settings::IS_ALLOWED_ADD_BLOCK)) {
                     $this->flashMessage('admin.program.blocks_add_not_allowed', 'danger');
