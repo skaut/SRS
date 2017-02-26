@@ -40,6 +40,9 @@ class FaqPresenter extends CMSBasePresenter
         $form = $this->faqFormFactory->create($this->getParameter('id'), $this->user->id);
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) {
+            if ($form['cancel']->isSubmittedBy())
+                $this->redirect('Faq:default');
+
             $this->flashMessage('admin.cms.faq_saved', 'success');
 
             if ($form['submitAndContinue']->isSubmittedBy()) {

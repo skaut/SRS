@@ -55,6 +55,10 @@ class FaqForm extends Nette\Object
 
         $form->addSubmit('submitAndContinue', 'admin.common.save_and_continue');
 
+        $form->addSubmit('cancel', 'admin.common.cancel')
+            ->setValidationScope([])
+            ->setAttribute('class', 'btn btn-warning');
+
         if ($this->faq) {
             $form->setDefaults([
                 'id' => $id,
@@ -76,15 +80,17 @@ class FaqForm extends Nette\Object
     }
 
     public function processForm(Form $form, \stdClass $values) {
-        if (!$this->faq) {
-            $this->faq = new Faq();
-            $this->faq->setAuthor($this->user);
+        if (!$form['cancel']->isSubmittedBy()) {
+            if (!$this->faq) {
+                $this->faq = new Faq();
+                $this->faq->setAuthor($this->user);
+            }
+
+            $this->faq->setQuestion($values['question']);
+            $this->faq->setAnswer($values['answer']);
+            $this->faq->setPublic($values['public']);
+
+            $this->faqRepository->save($this->faq);
         }
-
-        $this->faq->setQuestion($values['question']);
-        $this->faq->setAnswer($values['answer']);
-        $this->faq->setPublic($values['public']);
-
-        $this->faqRepository->save($this->faq);
     }
 }
