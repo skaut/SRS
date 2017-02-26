@@ -40,6 +40,9 @@ class NewsPresenter extends CMSBasePresenter
         $form = $this->newsFormFactory->create($this->getParameter('id'));
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) {
+            if ($form['cancel']->isSubmittedBy())
+                $this->redirect('News:default');
+
             $this->flashMessage('admin.cms.news_saved', 'success');
 
             if ($form['submitAndContinue']->isSubmittedBy()) {
