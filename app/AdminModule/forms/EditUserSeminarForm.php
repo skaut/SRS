@@ -108,7 +108,9 @@ class EditUserSeminarForm extends Nette\Object
 
         $form->addSubmit('submit', 'admin.common.save');
 
-        $form->addSubmit('cancel', 'admin.common.cancel')->setAttribute('class', 'btn btn-warning');
+        $form->addSubmit('cancel', 'admin.common.cancel')
+            ->setValidationScope([])
+            ->setAttribute('class', 'btn btn-warning');
 
 
         $form->setDefaults([
