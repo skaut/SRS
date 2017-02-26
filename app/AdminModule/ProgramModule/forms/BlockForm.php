@@ -98,6 +98,10 @@ class BlockForm extends Nette\Object
 
         $form->addSubmit('submitAndContinue', 'admin.common.save_and_continue');
 
+        $form->addSubmit('cancel', 'admin.common.cancel')
+            ->setValidationScope([])
+            ->setAttribute('class', 'btn btn-warning');
+
         if ($this->block) {
             $form['name']->addRule(Form::IS_NOT_IN, 'admin.program.blocks_name_exists', $this->blockRepository->findOthersNames($id));
 
@@ -125,28 +129,29 @@ class BlockForm extends Nette\Object
     }
 
     public function processForm(Form $form, \stdClass $values) {
-        if (!$this->block) {
-            if (!$this->settingsRepository->getValue(Settings::IS_ALLOWED_ADD_BLOCK))
+        if (!$form['cancel']->isSubmittedBy()) {
+            if (!$this->block) {
+                if (!$this->settingsRepository->getValue(Settings::IS_ALLOWED_ADD_BLOCK))
+                    return;
+                $this->block = new Block();
+            } else if (!$this->user->isAllowedModifyBlock($this->block))
                 return;
-            $this->block = new Block();
+
+            $category = $values['category'] != '' ? $this->categoryRepository->findById($values['category']) : null;
+            $lector = $values['lector'] != '' ? $this->userRepository->findById($values['lector']) : null;
+            $capacity = $values['capacity'] !== '' ? $values['capacity'] : null;
+
+            $this->block->setName($values['name']);
+            $this->block->setCategory($category);
+            $this->block->setLector($lector);
+            $this->block->setDuration($values['duration']);
+            $this->block->setCapacity($capacity);
+            $this->block->setMandatory($values['mandatory']);
+            $this->block->setPerex($values['perex']);
+            $this->block->setDescription($values['description']);
+            $this->block->setTools($values['tools']);
+
+            $this->blockRepository->save($this->block);
         }
-        else if (!$this->user->isAllowedModifyBlock($this->block))
-            return;
-
-        $category = $values['category'] != '' ? $this->categoryRepository->findById($values['category']) : null;
-        $lector = $values['lector'] != '' ? $this->userRepository->findById($values['lector']) : null;
-        $capacity = $values['capacity'] !== '' ? $values['capacity'] : null;
-
-        $this->block->setName($values['name']);
-        $this->block->setCategory($category);
-        $this->block->setLector($lector);
-        $this->block->setDuration($values['duration']);
-        $this->block->setCapacity($capacity);
-        $this->block->setMandatory($values['mandatory']);
-        $this->block->setPerex($values['perex']);
-        $this->block->setDescription($values['description']);
-        $this->block->setTools($values['tools']);
-
-        $this->blockRepository->save($this->block);
     }
 }
