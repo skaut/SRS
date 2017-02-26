@@ -85,11 +85,6 @@ class UsersPresenter extends AdminBasePresenter
         $this->template->paymentMethodBank = PaymentType::BANK;
     }
 
-    public function renderEdit($id) {
-        $this->template->sidebarVisible = true;
-        $this->template->editedUser = $this->userRepository->findById($id);
-    }
-
     public function handleSearch($text)
     {
         $this->template->results = $this->userRepository->findNamesByLikeDisplayNameOrderedByDisplayName($text);
