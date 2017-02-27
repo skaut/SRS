@@ -13,19 +13,17 @@ ignore = "
     project.pp[jx]
     /deployment.*
     /log
-    !log/.*
-    www/webtemp/
-    !www/webtemp/.*
-    www/files/
-    !www/files/.*
-    temp/*
-    !temp/.*
-    .idea
-    deploy.bat
-    config.neon
-    config.example.neon
-    config.local.neon
-    config.local.neon.sample
+    !/log/.*
+    /www/webtemp/
+    !/www/webtemp/.*
+    /www/files/
+    !/www/files/.*
+    /temp/*
+    !/temp/.*
+    /.idea
+    /deploy.bat
+    /config.local.neon
+    /config.local.neon.sample
 "
 
 ; is allowed to delete remote files? (defaults to yes)
