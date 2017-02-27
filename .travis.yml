@@ -12,7 +12,7 @@ script:
   - echo ""
 
 before_deploy:
-  - mv app/config/config.local.sample.neon app/config/config.local.neon
+  - mv app/config/config.local.neon.sample app/config/config.local.neon
   - zip -r SRS app log temp vendor www README.md
 
 deploy:
