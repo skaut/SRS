@@ -290,13 +290,7 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q
                 $scope.saveEvent(event);
             },
 
-            drop: function (date) {
-                var event = angular.extend({}, $(this).data('event'));
-
-                event.start = date;
-                event.attendees_count = 0;
-                event.block.programs_count++;
-
+            eventReceive : function (event) {
                 $scope.addEvent(event);
             }
         }
