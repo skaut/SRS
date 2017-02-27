@@ -116,8 +116,8 @@ class ProgramRepository extends EntityRepository
             ->select('p.id')
             ->join('p.block', 'b')
             ->where($this->createQueryBuilder()->expr()->orX(
-                "(p.start <= :end) AND (DATE_ADD(p.start, (b.duration * 60), 'second') >= :start)",
-                "(p.start <= :end) AND (:start <= (DATE_ADD(p.start, (b.duration * 60), 'second')))"
+                "(p.start < :end) AND (DATE_ADD(p.start, (b.duration * 60), 'second') > :start)",
+                "(p.start < :end) AND (:start < (DATE_ADD(p.start, (b.duration * 60), 'second')))"
             ))
             ->andWhere('p.id != :pid')
             ->setParameter('start', $start)
