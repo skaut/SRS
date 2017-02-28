@@ -181,14 +181,22 @@ class ScheduleService extends Nette\Object
         $responseDTO = new ResponseDTO();
         $responseDTO->setStatus('danger');
 
+        $block = $this->blockRepository->findById($programSaveDTO->getBlockId());
+        $room = $programSaveDTO->getRoomId() ? $this->roomRepository->findById($programSaveDTO->getRoomId()) : null;
+        $start = $programSaveDTO->getStart();
+        $end = clone $start;
+        $end->add(new \DateInterval('PT' . $block->getDuration() . 'M'));
+
         if (!$this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE))
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_user_not_allowed_manage'));
         elseif (!$this->settingsRepository->getValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE))
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_not_allowed_modfify'));
+        elseif ($room && $this->roomRepository->hasOverlappingProgram($room, $program, $start, $end))
+            $responseDTO->setMessage($this->translator->translate('common.api.schedule_room_occupied', null, ['name' => $room->getName()]));
         else {
-            $program->setBlock($this->blockRepository->findById($programSaveDTO->getBlockId()));
-            $program->setRoom($programSaveDTO->getRoomId() ? $this->roomRepository->findById($programSaveDTO->getRoomId()) : null);
-            $program->setStart($programSaveDTO->getStart());
+            $program->setBlock($block);
+            $program->setRoom($room);
+            $program->setStart($start);
 
             $this->programRepository->save($program);
 
