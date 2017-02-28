@@ -166,6 +166,11 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q
     $scope.startup();
 
 
+    /**
+     * Pridani programu pretazenim ze seznamu bloku.
+     *
+     * @param event
+     */
     $scope.addEvent = function (event) {
         $scope.event = event;
 
@@ -178,9 +183,16 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q
         $scope.loading++;
         $http.post(apiPath + 'saveprogram?data=' + json)
             .then(function (response) {
-                $scope.event.id = response.data.event_id;
+                if (response.data.status == 'success') {
+                    $scope.event.id = response.data.program.id;
+                    $scope.event.block.programs_count++;
+                }
+                else {
+                    $('#calendar').fullCalendar('removeEvents', [$scope.event._id]);
+                }
                 $scope.flashMessage(response.data.message, response.data.status);
             }, function (response) {
+                $('#calendar').fullCalendar('removeEvents', [$scope.event._id]);
                 $scope.flashMessage('Program se nepodařilo uložit.', 'danger');
             }).finally(function () {
             $scope.loading--;
@@ -188,7 +200,17 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q
     };
 
 
-    $scope.saveEvent = function (event) {
+    /**
+     * Presunuti programu na jiny cas.
+     *
+     * @param event
+     * @param revertFunc
+     */
+    $scope.moveEvent = function (event, revertFunc) {
+        $scope.event = event;
+
+        event.start.stripZone();
+
         var programSaveDTO = {
             id: event.id,
             block_id: event.block.id,
@@ -200,6 +222,11 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q
         $scope.loading++;
         $http.post(apiPath + 'saveprogram?data=' + json)
             .then(function (response) {
+                if (response.data.status == 'success') {
+                }
+                else {
+                    revertFunc()
+                }
                 $scope.flashMessage(response.data.message, response.data.status);
             }, function (response) {
                 $scope.flashMessage('Program se nepodařilo uložit.', 'danger');
@@ -209,42 +236,68 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q
     };
 
 
+    /**
+     * Uprava programu - zmena mistnosti.
+     *
+     * @param event
+     */
+    $scope.updateEvent = function (event) {
+        $('#program-modal').modal('hide');
+
+        $scope.event = event;
+
+        event.start.stripZone();
+
+        var programSaveDTO = {
+            id: event.id,
+            block_id: event.block.id,
+            room_id: event.room ? event.room.id : null,
+            start: event.start.format()
+        };
+        var json = encodeURIComponent(JSON.stringify(programSaveDTO));
+
+        $scope.loading++;
+        $http.post(apiPath + 'saveprogram?data=' + json)
+            .then(function (response) {
+                if (response.data.status == 'success') {
+                    setTitle($scope.event);
+                    $('#calendar').fullCalendar('rerenderEvents');
+                }
+                else {
+                    $scope.event.room = $scope.event._room;
+                }
+                $scope.flashMessage(response.data.message, response.data.status);
+            }, function (response) {
+                $scope.flashMessage('Program se nepodařilo uložit.', 'danger');
+            }).finally(function () {
+            $scope.loading--;
+        });
+    };
+
+
+    /**
+     * Odstraneni programu.
+     *
+     * @param event
+     */
     $scope.removeEvent = function (event) {
         $('#program-modal').modal('hide');
 
-        event.block.programs_count--;
+        $scope.event = event;
 
         $scope.loading++;
         $http.post(apiPath + 'removeprogram/' + event.id)
             .then(function (response) {
+                if (response.data.status == 'success') {
+                    $scope.event.block.programs_count--;
+                    $('#calendar').fullCalendar('removeEvents', [$scope.event._id]);
+                }
                 $scope.flashMessage(response.data.message, response.data.status);
             }, function (response) {
                 $scope.flashMessage('Program se nepodařilo odstranit.', 'danger');
             }).finally(function () {
             $scope.loading--;
         });
-
-        $('#calendar').fullCalendar('removeEvents', [event._id]);
-    };
-
-
-    $scope.updateEvent = function (event, room) {
-        $('#program-modal').modal('hide');
-
-        event.room = room;
-        event.start.stripZone();
-
-        setTitle(event);
-
-        $scope.saveEvent(event);
-
-        $('#calendar').fullCalendar('rerenderEvents');
-    };
-
-
-    $scope.refreshForm = function () {
-        this.event = $scope.event;
-        this.room = $scope.event.room;
     };
 
 
@@ -281,17 +334,23 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q
             eventClick: function (event, element) {
                 if ($scope.loading == 0 && $scope.config.allowed_modify_schedule) {
                     $scope.event = event;
-                    $scope.refreshForm();
+                    $scope.event._room = $scope.event.room;
                     $('#program-modal').modal('show');
                 }
             },
 
-            eventDrop: function (event) {
-                $scope.saveEvent(event);
+            eventDrop: function (event, delta, revertFunc) {
+                if ($scope.loading == 0)
+                    $scope.moveEvent(event, revertFunc);
+                else
+                    revertFunc();
             },
 
-            eventReceive : function (event) {
-                $scope.addEvent(event);
+            eventReceive: function (event) {
+                if ($scope.loading == 0)
+                    $scope.addEvent(event);
+                else
+                    $('#calendar').fullCalendar('removeEvents', [event._id]);
             }
         }
     };

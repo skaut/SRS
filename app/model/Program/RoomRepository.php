@@ -62,4 +62,35 @@ class RoomRepository extends EntityRepository
         $this->_em->remove($room);
         $this->_em->flush();
     }
+
+    /**
+     * @param Room $room
+     * @param Program $program
+     * @param \DateTime $start
+     * @param \DateTime $end
+     * @return bool
+     */
+    public function hasOverlappingProgram(Room $room, Program $program, \DateTime $start, \DateTime $end)
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->select('r.id')
+            ->join('r.programs', 'p')
+            ->join('p.block', 'b')
+            ->where($this->createQueryBuilder()->expr()->orX(
+                "(p.start < :end) AND (DATE_ADD(p.start, (b.duration * 60), 'second') > :start)",
+                "(p.start < :end) AND (:start < (DATE_ADD(p.start, (b.duration * 60), 'second')))"
+            ))
+            ->andWhere('r.id = :rid')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->setParameter('rid', $room->getId());
+
+        if ($program->getId()) {
+            $qb = $qb
+                ->andWhere('p.id != :pid')
+                ->setParameter('pid', $program->getId());
+        }
+
+        return !empty($qb->getQuery()->getResult());
+    }
 }

@@ -152,6 +152,7 @@ api:
     program_registered: "Program byl úspěšně přihlášen."
     schedule_program_not_registered: "Na tento program jste nebyli přihlášeni."
     program_unregistered: "Program byl úspěšně odhlášen."
+    schedule_room_occupied: "Místnost %name% je v tuto dobu již obsazena."
 
 export:
     schedule:

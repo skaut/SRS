@@ -90,6 +90,13 @@ class Program
 //        $this->attendees = $attendees;
 //    }
 
+    public function addAttendee($user) {
+        if (!$this->attendees->contains($user)) {
+            $this->attendees->add($user);
+            $user->addProgram($this);
+        }
+    }
+
     public function getAttendeesCount() {
         return $this->attendees->count();
     }
