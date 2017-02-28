@@ -430,8 +430,10 @@ class User
     }
 
     public function addProgram(Program $program) {
-        if (!$this->programs->contains($program))
+        if (!$this->programs->contains($program)) {
             $this->programs->add($program);
+            $program->addAttendee($this);
+        }
     }
 
     public function removeProgram(Program $program) {

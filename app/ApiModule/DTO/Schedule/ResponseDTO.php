@@ -21,22 +21,10 @@ class ResponseDTO extends Nette\Object
     private $status;
 
     /**
-     * @JMS\Type("int")
-     * @var int
+     * @JMS\Type("App\ApiModule\DTO\Schedule\ProgramDetailDTO")
+     * @var ProgramDetailDTO
      */
-    private $eventId;
-
-    /**
-     * @JMS\Type("int")
-     * @var int
-     */
-    private $intData;
-
-    /**
-     * @JMS\Type("string")
-     * @var string
-     */
-    private $stringData;
+    private $program;
 
     /**
      * @return string
@@ -71,50 +59,18 @@ class ResponseDTO extends Nette\Object
     }
 
     /**
-     * @return int
+     * @return mixed
      */
-    public function getEventId()
+    public function getProgram()
     {
-        return $this->eventId;
+        return $this->program;
     }
 
     /**
-     * @param int $eventId
+     * @param mixed $program
      */
-    public function setEventId($eventId)
+    public function setProgram($program)
     {
-        $this->eventId = $eventId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getIntData()
-    {
-        return $this->intData;
-    }
-
-    /**
-     * @param int $intData
-     */
-    public function setIntData($intData)
-    {
-        $this->intData = $intData;
-    }
-
-    /**
-     * @return string
-     */
-    public function getStringData()
-    {
-        return $this->stringData;
-    }
-
-    /**
-     * @param string $stringData
-     */
-    public function setStringData($stringData)
-    {
-        $this->stringData = $stringData;
+        $this->program = $program;
     }
 }

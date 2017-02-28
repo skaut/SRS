@@ -124,7 +124,7 @@ app.controller('WebScheduleCtrl', function WebScheduleCtrl($scope, $http, $q, ui
                         $scope.mandatory_nonregistered_programs_count--;
                     }
 
-                    $scope.event.attendees_count = response.data.int_data;
+                    $scope.event.attendees_count = response.data.program.attendees_count;
 
                     angular.forEach($scope.events, function (event, key) {
                         if ($scope.event.id != event.id && $scope.event.user_attends && $scope.event.blocks.indexOf(event.id) != -1)
@@ -159,7 +159,7 @@ app.controller('WebScheduleCtrl', function WebScheduleCtrl($scope, $http, $q, ui
                         $scope.mandatory_nonregistered_programs_count++;
                     }
 
-                    $scope.event.attendees_count = response.data.int_data;
+                    $scope.event.attendees_count = response.data.program.attendees_count;
 
                     angular.forEach($scope.events, function (event, key) {
                         event.blocked = false;

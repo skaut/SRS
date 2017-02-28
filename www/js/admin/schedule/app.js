@@ -178,8 +178,14 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q
         $scope.loading++;
         $http.post(apiPath + 'saveprogram?data=' + json)
             .then(function (response) {
-                $scope.event.id = response.data.event_id;
-                $scope.flashMessage(response.data.message, response.data.status);
+                if (response.data.status == 'success') {
+                    $scope.event.id = response.data.event_id;
+                    $scope.event.block.programs_count++;
+                    $scope.flashMessage(response.data.message, response.data.status);
+                }
+                else {
+                    $('#calendar').fullCalendar('removeEvents', [$scope.event._id]);
+                }
             }, function (response) {
                 $scope.flashMessage('Program se nepodařilo uložit.', 'danger');
             }).finally(function () {

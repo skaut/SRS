@@ -193,7 +193,7 @@ class ScheduleService extends Nette\Object
             $this->programRepository->save($program);
 
             $responseDTO = new ResponseDTO();
-            $responseDTO->setEventId($program->getId());
+            $responseDTO->setProgram($this->convertProgramToProgramDetailDTO($program));
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_saved'));
             $responseDTO->setStatus('success');
         }
@@ -221,7 +221,7 @@ class ScheduleService extends Nette\Object
         else {
             $this->programRepository->remove($program);
 
-            $responseDTO->setEventId($program->getId());
+            $responseDTO->setProgram($this->convertProgramToProgramDetailDTO($program));
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_deleted'));
             $responseDTO->setStatus('success');
         }
@@ -263,10 +263,15 @@ class ScheduleService extends Nette\Object
             $this->user->addProgram($program);
             $this->userRepository->save($this->user);
 
+            $this->programRepository->getEntityManager()->flush();
+
             $responseDTO->setMessage($this->translator->translate('common.api.program_registered'));
             $responseDTO->setStatus('success');
-            $responseDTO->setEventId($programId);
-            $responseDTO->setIntData($program->getAttendeesCount());
+
+            $programDetailDTO = $this->convertProgramToProgramDetailDTO($program);
+            $programDetailDTO->setAttendeesCount($program->getAttendeesCount());
+
+            $responseDTO->setProgram($programDetailDTO);
         }
 
         return $responseDTO;
@@ -294,8 +299,11 @@ class ScheduleService extends Nette\Object
 
             $responseDTO->setMessage($this->translator->translate('common.api.program_unregistered'));
             $responseDTO->setStatus('success');
-            $responseDTO->setEventId($programId);
-            $responseDTO->setIntData($program->getAttendeesCount());
+
+            $programDetailDTO = $this->convertProgramToProgramDetailDTO($program);
+            $programDetailDTO->setAttendeesCount($program->getAttendeesCount());
+
+            $responseDTO->setProgram($programDetailDTO);
         }
 
         return $responseDTO;
