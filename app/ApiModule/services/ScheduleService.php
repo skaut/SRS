@@ -219,9 +219,12 @@ class ScheduleService extends Nette\Object
         elseif (!$program)
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_program_not_found'));
         else {
+            $programDetailDTO = new ProgramDetailDTO();
+            $programDetailDTO->setId($program->getId());
+
             $this->programRepository->remove($program);
 
-            $responseDTO->setProgram($this->convertProgramToProgramDetailDTO($program));
+            $responseDTO->setProgram($programDetailDTO);
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_deleted'));
             $responseDTO->setStatus('success');
         }
@@ -262,8 +265,6 @@ class ScheduleService extends Nette\Object
         else {
             $this->user->addProgram($program);
             $this->userRepository->save($this->user);
-
-            $this->programRepository->getEntityManager()->flush();
 
             $responseDTO->setMessage($this->translator->translate('common.api.program_registered'));
             $responseDTO->setStatus('success');

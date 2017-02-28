@@ -181,11 +181,12 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q
                 if (response.data.status == 'success') {
                     $scope.event.id = response.data.event_id;
                     $scope.event.block.programs_count++;
-                    $scope.flashMessage(response.data.message, response.data.status);
                 }
                 else {
-                    $('#calendar').fullCalendar('removeEvents', [$scope.event._id]);
+                    $('#calendar').fullCalendar('removeEvents', [$scope.event._id]); //TODO
                 }
+
+                $scope.flashMessage(response.data.message, response.data.status);
             }, function (response) {
                 $scope.flashMessage('Program se nepodařilo uložit.', 'danger');
             }).finally(function () {
@@ -195,6 +196,8 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q
 
 
     $scope.saveEvent = function (event) {
+        $scope.event = event;
+
         var programSaveDTO = {
             id: event.id,
             block_id: event.block.id,
@@ -218,11 +221,13 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q
     $scope.removeEvent = function (event) {
         $('#program-modal').modal('hide');
 
-        event.block.programs_count--;
-
         $scope.loading++;
         $http.post(apiPath + 'removeprogram/' + event.id)
             .then(function (response) {
+                if (response.data.status == 'success') {
+                    $scope.event.block.programs_count--;
+                }
+
                 $scope.flashMessage(response.data.message, response.data.status);
             }, function (response) {
                 $scope.flashMessage('Program se nepodařilo odstranit.', 'danger');
@@ -237,7 +242,7 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q
     $scope.updateEvent = function (event, room) {
         $('#program-modal').modal('hide');
 
-        event.room = room;
+        event.room = room; //TODO po success
         event.start.stripZone();
 
         setTitle(event);
