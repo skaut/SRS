@@ -85,18 +85,18 @@ class RouterFactory
         $router[] = new Route('logout/', 'Auth:logout');
 
         try {
-            $router[] = new Route('[page/<slug>/<action>]', [
+            $router[] = new Route('page/<slug>/', [
                 'module' => 'Web',
                 'presenter' => 'Page',
-                'action' => 'default',
                 'page' => [
-                    Route::FILTER_IN => function ($page) {
-                        return $this->pageRepository->findBySlug($page);
+                    Route::FILTER_IN => function ($slug) {
+                        return $this->pageRepository->findBySlug($slug);
                     },
                     Route::FILTER_OUT => function ($page) {
                         return $page->getSlug();
                     }
-                ]
+                ],
+                'action' => 'default'
             ]);
         } catch (TableNotFoundException $ex) { }
 
