@@ -15,7 +15,7 @@
 
         "nextras/forms": "^2.0",
 
-        "ublaboo/datagrid": "dev-master",
+        "ublaboo/datagrid": "^5.1",
         "ublaboo/mailing": "^1.1",
 
         "janmarek/webloader": "dev-master",
@@ -29,7 +29,7 @@
         "phpoffice/phpexcel": "^1.8",
 
         "twbs/bootstrap": "^3.3",
-        "kartik-v/bootstrap-fileinput": "dev-master",
+        "kartik-v/bootstrap-fileinput": "^4.3",
 
         "pear/numbers_words": "^0.18.1"
 	},
