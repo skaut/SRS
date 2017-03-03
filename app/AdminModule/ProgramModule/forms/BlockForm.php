@@ -14,6 +14,7 @@ use App\Model\User\User;
 use App\Model\User\UserRepository;
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\Forms\IControl;
 
 class BlockForm extends Nette\Object
 {
@@ -61,7 +62,8 @@ class BlockForm extends Nette\Object
         $form->addText('name', 'admin.program.blocks_name')
             ->addRule(Form::FILLED, 'admin.program.blocks_name_empty');
 
-        $form->addSelect('category', 'admin.program.blocks_category', $this->categoryRepository->getCategoriesOptions())->setPrompt('');
+        $form->addSelect('category', 'admin.program.blocks_category', $this->categoryRepository->getCategoriesOptions())
+            ->setPrompt('');
 
 
         if ($this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS))
@@ -84,7 +86,16 @@ class BlockForm extends Nette\Object
             ->setAttribute('title', $form->getTranslator()->translate('admin.program.blocks_capacity_note'))
             ->addCondition(Form::FILLED)->addRule(Form::NUMERIC, 'admin.program.blocks_capacity_format');
 
-        $form->addCheckbox('mandatory', 'admin.program.blocks_mandatory_form');
+        $form->addCheckbox('mandatory', 'admin.program.blocks_mandatory_form')
+            ->addCondition(Form::EQUAL, true)
+            ->toggle('autoRegisterCheckbox');
+
+        $form->addCheckbox('autoRegister', 'admin.program.blocks_auto_register')
+            ->setOption('id', 'autoRegisterCheckbox')
+            ->setAttribute('data-toggle', 'tooltip')
+            ->setAttribute('title', $form->getTranslator()->translate('admin.program.blocks_auto_register_note'))
+            ->addCondition(Form::FILLED)
+            ->addRule([$this, 'validateAutoRegister'], 'admin.program.blocks_auto_register_not_allowed');
 
         $form->addTextArea('perex', 'admin.program.blocks_perex_form')
             ->addCondition(Form::FILLED)->addRule(Form::MAX_LENGTH, 'admin.program.blocks_perex_length', 160);
@@ -112,7 +123,8 @@ class BlockForm extends Nette\Object
                 'lector' => $this->block->getLector() ? $this->block->getLector()->getId() : null,
                 'duration' => $this->block->getDuration(),
                 'capacity' => $this->block->getCapacity(),
-                'mandatory' => $this->block->isMandatory(),
+                'mandatory' => $this->block->getMandatory() > 0,
+                'autoRegister' => $this->block->getMandatory() == 2,
                 'perex' => $this->block->getPerex(),
                 'description' => $this->block->getDescription(),
                 'tools' => $this->block->getTools()
@@ -146,12 +158,21 @@ class BlockForm extends Nette\Object
             $this->block->setLector($lector);
             $this->block->setDuration($values['duration']);
             $this->block->setCapacity($capacity);
-            $this->block->setMandatory($values['mandatory']);
+            $this->block->setMandatory($values['mandatory'] ? ((array_key_exists('autoRegister', $values) && $values['autoRegister']) ? 2 : 1) : 0);
             $this->block->setPerex($values['perex']);
             $this->block->setDescription($values['description']);
             $this->block->setTools($values['tools']);
 
             $this->blockRepository->save($this->block);
         }
+    }
+
+    public function validateAutoRegister($field, $args)
+    {
+        if ($this->block) {
+            if ($this->block->getMandatory() != 2 && $this->block->getProgramsCount() > 0)
+                return false;
+        }
+        return true;
     }
 }

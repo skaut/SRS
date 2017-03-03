@@ -89,11 +89,14 @@ class ProgramBlocksGridControl extends Control
 
         $columnMandatory = $grid->addColumnStatus('mandatory', 'admin.program.blocks_mandatory');
         $columnMandatory
-            ->addOption(false, 'admin.program.blocks_mandatory_voluntary')
-                ->setClass('btn-success')
+            ->addOption(0, 'admin.program.blocks_mandatory_voluntary')
+                ->setClass('btn-primary')
                 ->endOption()
-            ->addOption(true, 'admin.program.blocks_mandatory_mandatory')
+            ->addOption(1, 'admin.program.blocks_mandatory_mandatory')
                 ->setClass('btn-danger')
+                ->endOption()
+            ->addOption(2, 'admin.program.blocks_mandatory_auto_register')
+                ->setClass('btn-warning')
                 ->endOption()
             ->onChange[] = [$this, 'changeMandatory'];
 
@@ -101,8 +104,9 @@ class ProgramBlocksGridControl extends Control
             ->setSortable()
             ->setFilterSelect([
                 '' => 'admin.common.all',
-                false => 'admin.program.blocks_mandatory_voluntary',
-                true => 'admin.program.blocks_mandatory_mandatory'
+                0 => 'admin.program.blocks_mandatory_voluntary',
+                1 => 'admin.program.blocks_mandatory_mandatory',
+                2 => 'admin.program.blocks_mandatory_auto_register'
             ])
             ->setTranslateOptions();
 
@@ -159,6 +163,9 @@ class ProgramBlocksGridControl extends Control
 
         if (!$p->dbuser->isAllowedModifyBlock($block)) {
             $p->flashMessage('admin.program.blocks_change_mandatory_denied', 'danger');
+        }
+        elseif ($mandatory == 2 && $block->getMandatory() != 2 && $block->getProgramsCount() > 0) {
+            $p->flashMessage('admin.program.blocks_change_mandatory_auto_register_not_allowed', 'danger');
         }
         else {
             $block->setMandatory($mandatory);

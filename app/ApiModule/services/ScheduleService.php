@@ -193,6 +193,8 @@ class ScheduleService extends Nette\Object
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_not_allowed_modfify'));
         elseif ($room && $this->roomRepository->hasOverlappingProgram($room, $program, $start, $end))
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_room_occupied', null, ['name' => $room->getName()]));
+        elseif (false)
+            $responseDTO->setMessage(); //TODO
         else {
             $program->setBlock($block);
             $program->setRoom($room);
@@ -352,7 +354,8 @@ class ScheduleService extends Nette\Object
         $blockDetailDTO->setDurationHours(floor($block->getDuration() / 60));
         $blockDetailDTO->setDurationMinutes($block->getDuration() % 60);
         $blockDetailDTO->setCapacity($block->getCapacity());
-        $blockDetailDTO->setMandatory($block->isMandatory());
+        $blockDetailDTO->setMandatory($block->getMandatory() > 0);
+        $blockDetailDTO->setAutoRegister($block->getMandatory() == 2);
         $blockDetailDTO->setPerex($block->getPerex());
         $blockDetailDTO->setDescription($block->getDescription());
         $blockDetailDTO->setProgramsCount($block->getProgramsCount());

@@ -14,6 +14,7 @@ use App\Model\User\UserRepository;
 use App\Services\SkautIsService;
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\Forms\IControl;
 use Skautis\Wsdl\WsdlException;
 
 class ApplicationForm extends Nette\Object
@@ -345,7 +346,7 @@ class ApplicationForm extends Nette\Object
         return true;
     }
 
-    public static function toggleArrivalDeparture(\Nette\Forms\IControl $control)
+    public static function toggleArrivalDeparture(IControl $control)
     {
         return false;
     }
