@@ -2,6 +2,7 @@
 
 namespace App\Model\User;
 
+use App\Model\ACL\Permission;
 use App\Model\ACL\Role;
 use Doctrine\Common\Collections\Criteria;
 use Kdyby\Doctrine\EntityRepository;
@@ -114,6 +115,22 @@ class UserRepository extends EntityRepository
             ->andWhere('u.approved = true')
             ->orderBy('u.displayName')
             ->distinct()
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param $program
+     * @return array
+     */
+    public function findProgramAllowed($program) {
+        return $this->createQueryBuilder('u')
+            ->leftJoin('u.programs', 'p', 'WITH', 'p.id = :pid')
+            ->innerJoin('u.roles', 'r')
+            ->innerJoin('r.permissions', 'per')
+            ->where('per.name = :permission')
+            ->setParameter('pid', $program->getId())
+            ->setParameter('permission', Permission::CHOOSE_PROGRAMS)
             ->getQuery()
             ->getResult();
     }

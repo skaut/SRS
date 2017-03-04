@@ -193,12 +193,22 @@ class ScheduleService extends Nette\Object
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_not_allowed_modfify'));
         elseif ($room && $this->roomRepository->hasOverlappingProgram($room, $program, $start, $end))
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_room_occupied', null, ['name' => $room->getName()]));
+        elseif ($block->getMandatory() == 2 && $this->programRepository->hasOverlappingProgram($program, $start, $end))
+            $responseDTO->setMessage($this->translator->translate('common.api.schedule_auto_register_not_allowed'));
+        elseif ($this->programRepository->hasOverlappingAutoRegisterProgram($program, $start, $end))
+            $responseDTO->setMessage($this->translator->translate('common.api.schedule_auto_register_not_allowed'));
         else {
             $program->setBlock($block);
             $program->setRoom($room);
             $program->setStart($start);
-
             $this->programRepository->save($program);
+
+            if ($block->getMandatory() == 2) {
+                foreach ($this->userRepository->findProgramAllowed($program) as $attendee) {
+                    $program->addAttendee($attendee);
+                }
+                $this->programRepository->save($program);
+            }
 
             $responseDTO = new ResponseDTO();
             $responseDTO->setProgram($this->convertProgramToProgramDetailDTO($program));
@@ -352,7 +362,8 @@ class ScheduleService extends Nette\Object
         $blockDetailDTO->setDurationHours(floor($block->getDuration() / 60));
         $blockDetailDTO->setDurationMinutes($block->getDuration() % 60);
         $blockDetailDTO->setCapacity($block->getCapacity());
-        $blockDetailDTO->setMandatory($block->isMandatory());
+        $blockDetailDTO->setMandatory($block->getMandatory() > 0);
+        $blockDetailDTO->setAutoRegister($block->getMandatory() == 2);
         $blockDetailDTO->setPerex($block->getPerex());
         $blockDetailDTO->setDescription($block->getDescription());
         $blockDetailDTO->setProgramsCount($block->getProgramsCount());

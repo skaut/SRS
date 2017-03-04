@@ -2,6 +2,7 @@ var apiPath = basePath + '/api/schedule/';
 
 var COLOR_OPTIONAL = '#0275D8';
 var COLOR_MANDATORY = '#D9534F';
+var COLOR_AUTO_REGISTER = '#F0AD4E';
 
 
 var app = angular.module('scheduleApp', ['ui.calendar', 'ui.bootstrap']);
@@ -31,6 +32,14 @@ app.filter("filterBlocks", function () {
             });
             items = filtered;
         }
+
+        filtered = [];
+        angular.forEach(items, function (item) {
+            if (item.programs_count == 0 || !item.auto_register) {
+                filtered.push(item);
+            }
+        });
+        items = filtered;
 
         return items;
     };
@@ -359,7 +368,7 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q
 });
 
 function setColor(event) {
-    event.color = event.block.mandatory ? COLOR_MANDATORY : COLOR_OPTIONAL;
+    event.color = event.block.mandatory ? (event.block.auto_register ? COLOR_AUTO_REGISTER : COLOR_MANDATORY) : COLOR_OPTIONAL;
 }
 
 function setTitle(event) {

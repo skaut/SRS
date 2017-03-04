@@ -41,10 +41,10 @@ class Block
     protected $category;
 
     /**
-     * @ORM\Column(type="boolean")
-     * @var bool
+     * @ORM\Column(type="integer")
+     * @var int
      */
-    protected $mandatory = false;
+    protected $mandatory = 0;
 
     /**
      * @ORM\Column(type="integer")
@@ -161,15 +161,15 @@ class Block
     }
 
     /**
-     * @return bool
+     * @return int
      */
-    public function isMandatory()
+    public function getMandatory()
     {
         return $this->mandatory;
     }
 
     /**
-     * @param bool $mandatory
+     * @param int $mandatory
      */
     public function setMandatory($mandatory)
     {

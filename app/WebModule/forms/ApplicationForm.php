@@ -5,6 +5,7 @@ namespace App\WebModule\Forms;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Enums\Sex;
+use App\Model\Program\ProgramRepository;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
 use App\Model\User\CustomInputValue\CustomInputValueRepository;
@@ -14,6 +15,7 @@ use App\Model\User\UserRepository;
 use App\Services\SkautIsService;
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\Forms\IControl;
 use Skautis\Wsdl\WsdlException;
 
 class ApplicationForm extends Nette\Object
@@ -38,18 +40,23 @@ class ApplicationForm extends Nette\Object
     /** @var CustomInputValueRepository */
     private $customInputValueRepository;
 
+    /** @var ProgramRepository */
+    private $programRepository;
+
     /** @var SkautIsService */
     private $skautIsService;
 
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
                                 RoleRepository $roleRepository, CustomInputRepository $customInputRepository,
-                                CustomInputValueRepository $customInputValueRepository, SkautIsService $skautIsService)
+                                CustomInputValueRepository $customInputValueRepository,
+                                ProgramRepository $programRepository, SkautIsService $skautIsService)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->userRepository = $userRepository;
         $this->roleRepository = $roleRepository;
         $this->customInputRepository = $customInputRepository;
         $this->customInputValueRepository = $customInputValueRepository;
+        $this->programRepository = $programRepository;
         $this->skautIsService = $skautIsService;
     }
 
@@ -155,7 +162,7 @@ class ApplicationForm extends Nette\Object
             }
         }
 
-        $this->user->setRoles($roles);
+        $this->user->setRolesAndUpdatePrograms($roles, $this->programRepository->findUserAllowedAutoRegister($this->user));
 
 
         foreach ($this->customInputRepository->findAll() as $customInput) {
@@ -345,7 +352,7 @@ class ApplicationForm extends Nette\Object
         return true;
     }
 
-    public static function toggleArrivalDeparture(\Nette\Forms\IControl $control)
+    public static function toggleArrivalDeparture(IControl $control)
     {
         return false;
     }

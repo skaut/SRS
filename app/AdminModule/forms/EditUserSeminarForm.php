@@ -9,6 +9,7 @@ use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 
 
+use App\Model\Program\ProgramRepository;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 
@@ -45,10 +46,13 @@ class EditUserSeminarForm extends Nette\Object
     /** @var SettingsRepository */
     private $settingsRepository;
 
+    /** @var ProgramRepository */
+    private $programRepository;
+
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
                                 RoleRepository $roleRepository, CustomInputRepository $customInputRepository,
                                 CustomInputValueRepository $customInputValueRepository,
-                                SettingsRepository $settingsRepository)
+                                SettingsRepository $settingsRepository, ProgramRepository $programRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->userRepository = $userRepository;
@@ -56,6 +60,7 @@ class EditUserSeminarForm extends Nette\Object
         $this->customInputRepository = $customInputRepository;
         $this->customInputValueRepository = $customInputValueRepository;
         $this->settingsRepository = $settingsRepository;
+        $this->programRepository = $programRepository;
     }
 
     public function create($id)
@@ -132,7 +137,8 @@ class EditUserSeminarForm extends Nette\Object
 
     public function processForm(Form $form, \stdClass $values) {
         if (!$form['cancel']->isSubmittedBy()) {
-            $this->user->setRolesAndRemoveNotAllowedPrograms($this->roleRepository->findRolesByIds($values['roles']));
+            $this->user->setRolesAndUpdatePrograms($this->roleRepository->findRolesByIds($values['roles']),
+                $this->programRepository->findUserAllowedAutoRegister($this->user));
             $this->user->setApproved($values['approved']);
             $this->user->setAttended($values['attended']);
 

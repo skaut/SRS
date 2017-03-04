@@ -2,10 +2,24 @@
 
 namespace App\Model\Program;
 
+use App\Model\User\User;
+use App\Model\User\UserRepository;
+use Doctrine\ORM\Mapping;
+use Kdyby\Doctrine\EntityManager;
 use Kdyby\Doctrine\EntityRepository;
 
 class BlockRepository extends EntityRepository
 {
+    /** @var UserRepository */
+    private $userRepository;
+
+    public function __construct(EntityManager $em, Mapping\ClassMetadata $class, UserRepository $userRepository)
+    {
+        parent::__construct($em, $class);
+
+        $this->userRepository = $userRepository;
+    }
+
     /**
      * @param $id
      * @return Block|null
@@ -90,6 +104,57 @@ class BlockRepository extends EntityRepository
         return $qb->orderBy('b.name')
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * @param User $user
+     * @return array
+     */
+    public function findUserMandatoryNotRegisteredNames($user)
+    {
+        $registerableCategoriesIds = $this->userRepository->findRegisterableCategoriesIdsByUser($user);
+
+        $usersBlocks = $this->createQueryBuilder('b')
+            ->select('b')
+            ->leftJoin('b.programs', 'p')
+            ->leftJoin('p.attendees', 'u')
+            ->where('u.id = :uid')
+            ->setParameter('uid', $user->getId())
+            ->getQuery()
+            ->getResult();
+
+        $qb = $this->createQueryBuilder('b')
+            ->select('b.name')
+            ->leftJoin('b.category', 'c')
+            ->where($this->createQueryBuilder()->expr()->orX(
+                'c.id IN (:ids)',
+                'b.category IS NULL'
+            ))
+            ->andWhere('b.mandatory > 0')
+            ->setParameter('ids', $registerableCategoriesIds);
+
+        if (!empty($usersBlocks)) {
+            $qb = $qb
+                ->andWhere('b NOT IN (:usersBlocks)')
+                ->setParameter('usersBlocks', $usersBlocks);
+        }
+
+        $names = $qb
+            ->getQuery()
+            ->getScalarResult();
+
+        return array_map('current', $names);
+    }
+
+    /**
+     * @param $blocks
+     * @return array
+     */
+    public function findBlocksIds($blocks)
+    {
+        return array_map(function ($o) {
+            return $o->getId();
+        }, $blocks->toArray());
     }
 
     /**

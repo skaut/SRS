@@ -306,15 +306,15 @@ class User
         return $this->roles->removeElement($role);
     }
 
-    public function removeRoleAndNotAllowedPrograms($role, $nonregisteredRole) {
+    public function removeRoleAndUpdatePrograms($role, $nonregisteredRole) {
         $newRoles = new ArrayCollection($this->roles->toArray());
         $newRoles->removeElement($role);
         if ($newRoles->isEmpty())
             $newRoles->add($nonregisteredRole);
-        $this->setRolesAndRemoveNotAllowedPrograms($newRoles);
+        $this->setRolesAndUpdatePrograms($newRoles);
     }
 
-    public function setRolesAndRemoveNotAllowedPrograms($roles) {
+    public function setRolesAndUpdatePrograms($roles, $autoRegisterPrograms = []) {
         $registerableCategoriesOld = array();
         $registerableCategoriesNew = array();
 
@@ -328,10 +328,12 @@ class User
 
         $this->roles->clear();
 
+        //pridani role Neprihlaseny, odstraneni vsech programu
         if (count($roles) == 1 && $roles[0]->getSystemName() == Role::NONREGISTERED) {
             $this->addRole($roles[0]);
             $this->programs->clear();
         }
+        //nastaveni roli, odebrani nepovolenych programu, pridani automaticky prihlasovanych
         else {
             foreach ($roles as $role) {
                 $this->roles->add($role);
@@ -340,6 +342,10 @@ class User
             foreach ($registerableCategoriesOld as $oldCategory) {
                 if (!in_array($oldCategory, $registerableCategoriesNew))
                     $this->removeProgramsInCategory($oldCategory);
+            }
+
+            foreach ($autoRegisterPrograms as $autoRegisterProgram) {
+                $this->addProgram($autoRegisterProgram);
             }
         }
     }

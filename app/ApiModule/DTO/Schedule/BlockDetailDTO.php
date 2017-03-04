@@ -63,6 +63,12 @@ class BlockDetailDTO extends Nette\Object
     private $mandatory;
 
     /**
+     * @JMS\Type("boolean")
+     * @var bool
+     */
+    private $autoRegister;
+
+    /**
      * @JMS\Type("string")
      * @var string
      */
@@ -235,6 +241,22 @@ class BlockDetailDTO extends Nette\Object
     public function setMandatory($mandatory)
     {
         $this->mandatory = $mandatory;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAutoRegister()
+    {
+        return $this->autoRegister;
+    }
+
+    /**
+     * @param bool $autoRegister
+     */
+    public function setAutoRegister($autoRegister)
+    {
+        $this->autoRegister = $autoRegister;
     }
 
     /**
