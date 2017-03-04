@@ -4,6 +4,7 @@ namespace App\WebModule\Forms;
 
 
 use App\Model\ACL\RoleRepository;
+use App\Model\Program\ProgramRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use Nette;
@@ -23,11 +24,16 @@ class RolesForm extends Nette\Object
     /** @var RoleRepository */
     private $roleRepository;
 
-    public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository, RoleRepository $roleRepository)
+    /** @var ProgramRepository */
+    private $programRepository;
+
+    public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
+                                RoleRepository $roleRepository, ProgramRepository $programRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->userRepository = $userRepository;
         $this->roleRepository = $roleRepository;
+        $this->programRepository = $programRepository;
     }
 
     public function create($id, $enabled)
@@ -89,7 +95,7 @@ class RolesForm extends Nette\Object
                 }
             }
 
-            $this->user->setRolesAndRemoveNotAllowedPrograms($selectedRoles);
+            $this->user->setRolesAndUpdatePrograms($selectedRoles, $this->programRepository->findUserAllowedAutoRegister($this->user));
             $this->user->setApproved($approved);
 
             $this->userRepository->save($this->user);

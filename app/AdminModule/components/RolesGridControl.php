@@ -109,7 +109,7 @@ class RolesGridControl extends Control
         $usersInRole = $this->userRepository->findAllInRole($role);
 
         foreach ($usersInRole as $user) {
-            $user->removeRoleAndNotAllowedPrograms($role, $this->roleRepository->findBySystemName(Role::NONREGISTERED));
+            $user->removeRoleAndUpdatePrograms($role, $this->roleRepository->findBySystemName(Role::NONREGISTERED));
         }
 
         $this->roleRepository->remove($role);

@@ -149,6 +149,12 @@ class BlockForm extends Nette\Object
             } else if (!$this->user->isAllowedModifyBlock($this->block))
                 return;
 
+            if ($this->block->getMandatory() == 2 && (!array_key_exists('autoRegister', $values) || !$values['autoRegister'])) {
+                foreach ($this->block->getPrograms() as $program) {
+                    $program->removeAllAttendees();
+                }
+            }
+
             $category = $values['category'] != '' ? $this->categoryRepository->findById($values['category']) : null;
             $lector = $values['lector'] != '' ? $this->userRepository->findById($values['lector']) : null;
             $capacity = $values['capacity'] !== '' ? $values['capacity'] : null;

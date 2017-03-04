@@ -193,14 +193,22 @@ class ScheduleService extends Nette\Object
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_not_allowed_modfify'));
         elseif ($room && $this->roomRepository->hasOverlappingProgram($room, $program, $start, $end))
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_room_occupied', null, ['name' => $room->getName()]));
-        elseif (false)
-            $responseDTO->setMessage(); //TODO
+        elseif ($block->getMandatory() == 2 && $this->programRepository->hasOverlappingProgram($program, $start, $end))
+            $responseDTO->setMessage($this->translator->translate('common.api.schedule_auto_register_not_allowed'));
+        elseif ($this->programRepository->hasOverlappingAutoRegisterProgram($program, $start, $end))
+            $responseDTO->setMessage($this->translator->translate('common.api.schedule_auto_register_not_allowed'));
         else {
             $program->setBlock($block);
             $program->setRoom($room);
             $program->setStart($start);
-
             $this->programRepository->save($program);
+
+            if ($block->getMandatory() == 2) {
+                foreach ($this->userRepository->findProgramAllowed($program) as $attendee) {
+                    $program->addAttendee($attendee);
+                }
+                $this->programRepository->save($program);
+            }
 
             $responseDTO = new ResponseDTO();
             $responseDTO->setProgram($this->convertProgramToProgramDetailDTO($program));

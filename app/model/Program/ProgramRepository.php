@@ -77,6 +77,28 @@ class ProgramRepository extends EntityRepository
     }
 
     /**
+     * @param User $user
+     * @return array
+     */
+    public function findUserAllowedAutoRegister($user)
+    {
+        $registerableCategoriesIds = $this->userRepository->findRegisterableCategoriesIdsByUser($user);
+
+        return $this->createQueryBuilder('p')
+            ->select('p')
+            ->join('p.block', 'b')
+            ->leftJoin('b.category', 'c')
+            ->where($this->createQueryBuilder()->expr()->orX(
+                'c.id IN (:ids)',
+                'b.category IS NULL'
+            ))
+            ->andWhere('b.mandatory = 2')
+            ->setParameter('ids', $registerableCategoriesIds)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * @param Program $program
      * @return int[]
      */
@@ -126,5 +148,46 @@ class ProgramRepository extends EntityRepository
             ->getQuery()
             ->getScalarResult();
         return array_map('intval', array_map('current', $programs));
+    }
+
+    public function hasOverlappingProgram(Program $program, \DateTime $start, \DateTime $end) {
+        $qb = $this->createQueryBuilder('p')
+            ->select('p.id')
+            ->join('p.block', 'b')
+            ->where($this->createQueryBuilder()->expr()->orX(
+                "(p.start < :end) AND (DATE_ADD(p.start, (b.duration * 60), 'second') > :start)",
+                "(p.start < :end) AND (:start < (DATE_ADD(p.start, (b.duration * 60), 'second')))"
+            ))
+            ->setParameter('start', $start)
+            ->setParameter('end', $end);
+
+        if ($program->getId()) {
+            $qb = $qb
+                ->andWhere('p.id != :pid')
+                ->setParameter('pid', $program->getId());
+        }
+
+        return !empty($qb->getQuery()->getResult());
+    }
+
+    public function hasOverlappingAutoRegisterProgram(Program $program, \DateTime $start, \DateTime $end) {
+        $qb = $this->createQueryBuilder('p')
+            ->select('p.id')
+            ->join('p.block', 'b')
+            ->where($this->createQueryBuilder()->expr()->orX(
+                "(p.start < :end) AND (DATE_ADD(p.start, (b.duration * 60), 'second') > :start)",
+                "(p.start < :end) AND (:start < (DATE_ADD(p.start, (b.duration * 60), 'second')))"
+            ))
+            ->andWhere('b.mandatory = 2')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end);
+
+        if ($program->getId()) {
+            $qb = $qb
+                ->andWhere('p.id != :pid')
+                ->setParameter('pid', $program->getId());
+        }
+
+        return !empty($qb->getQuery()->getResult());
     }
 }

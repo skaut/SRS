@@ -101,6 +101,12 @@ class Program
         return $this->attendees->count();
     }
 
+    public function removeAllAttendees() {
+        foreach ($this->attendees as $attendee) {
+            $attendee->removeProgram($this);
+        }
+    }
+
     public function isAttendee(User $user) {
         return $this->attendees->contains($user);
     }

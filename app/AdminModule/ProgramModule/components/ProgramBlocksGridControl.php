@@ -168,6 +168,12 @@ class ProgramBlocksGridControl extends Control
             $p->flashMessage('admin.program.blocks_change_mandatory_auto_register_not_allowed', 'danger');
         }
         else {
+            if ($block->getMandatory() == 2 && $mandatory != 2) {
+                foreach ($block->getPrograms() as $program) {
+                    $program->removeAllAttendees();
+                }
+            }
+
             $block->setMandatory($mandatory);
             $this->blockRepository->save($block);
 

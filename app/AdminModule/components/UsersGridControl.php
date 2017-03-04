@@ -2,9 +2,13 @@
 
 namespace App\AdminModule\Components;
 
+use App\Model\ACL\Permission;
+use App\Model\ACL\Resource;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Enums\PaymentType;
+use App\Model\Program\BlockRepository;
+use App\Model\Program\ProgramRepository;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\SettingsRepository;
@@ -35,6 +39,12 @@ class UsersGridControl extends Control
     /** @var RoleRepository */
     private $roleRepository;
 
+    /** @var ProgramRepository */
+    private $programRepository;
+
+    /** @var BlockRepository */
+    private $blockRepository;
+
     /** @var Session */
     private $session;
 
@@ -50,7 +60,8 @@ class UsersGridControl extends Control
 
     public function __construct(Translator $translator, UserRepository $userRepository,
                                 SettingsRepository $settingsRepository, CustomInputRepository $customInputRepository,
-                                RoleRepository $roleRepository, PdfExportService $pdfExportService,
+                                RoleRepository $roleRepository, ProgramRepository $programRepository,
+                                BlockRepository $blockRepository, PdfExportService $pdfExportService,
                                 ExcelExportService $excelExportService, Session $session)
     {
         parent::__construct();
@@ -60,6 +71,8 @@ class UsersGridControl extends Control
         $this->settingsRepository = $settingsRepository;
         $this->customInputRepository = $customInputRepository;
         $this->roleRepository = $roleRepository;
+        $this->programRepository = $programRepository;
+        $this->blockRepository = $blockRepository;
         $this->pdfExportService = $pdfExportService;
         $this->excelExportService = $excelExportService;
 
@@ -210,6 +223,19 @@ class UsersGridControl extends Control
                 '1' => 'admin.users.users_attended_yes'
             ])
             ->setTranslateOptions();
+
+        $grid->addColumnText('unregisteredMandatoryBlocks', 'admin.users.users_not_registered_mandatory_blocks')
+            ->setRenderer(function ($row){
+                if (!$row->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS) || !$row->isApproved())
+                    return null;
+
+                $unregisteredMandatoryBlocksNames = $this->blockRepository->findUserMandatoryNotRegisteredNames($row);
+                $unregisteredMandatoryBlocksNamesText = implode(', ', $unregisteredMandatoryBlocksNames);
+                return Html::el('span')
+                    ->setAttribute('data-toggle', 'tooltip')
+                    ->setAttribute('title', $unregisteredMandatoryBlocksNamesText)
+                    ->setText(count($unregisteredMandatoryBlocksNames));
+            });
 
         foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
             $grid->addColumnText('customInput' . $customInput->getId(), $customInput->getName())
@@ -391,7 +417,7 @@ class UsersGridControl extends Control
 
         if (!$error) {
             foreach ($users as $user) {
-                $user->setRolesAndRemoveNotAllowedPrograms($selectedRoles);
+                $user->setRolesAndUpdatePrograms($selectedRoles, $this->programRepository->findUserAllowedAutoRegister($user));
                 $this->userRepository->save($user);
             }
 

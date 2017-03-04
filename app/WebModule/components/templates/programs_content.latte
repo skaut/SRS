@@ -123,7 +123,7 @@
                                                 class="btn btn-success pull-left">
                                             {_web.programs_content.register}
                                         </button>
-                                        <button ng-show="event.user_attends" ng-click="unattend(event)" style="margin-left: 0"
+                                        <button ng-show="event.user_attends && !event.block.auto_register" ng-click="unattend(event)" style="margin-left: 0"
                                                 class="btn btn-danger pull-left">
                                             {_web.programs_content.unregister}
                                         </button>
