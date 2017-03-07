@@ -21,7 +21,7 @@
         "janmarek/webloader": "dev-master",
         "jms/serializer": "^1.4",
 
-        "skautis/skautis": "^2.0",
+        "skautis/skautis": "^2.1",
         "skautis/nette": "^2.0",
 
         "itbz/fpdf": "^1.7",
