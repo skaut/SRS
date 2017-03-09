@@ -62,6 +62,7 @@ services:
     - App\Services\MailService
     - App\Services\PdfExportService(%wwwDir%/pdf)
     - App\Services\ExcelExportService
+    - App\Services\ProgramAttendeesService
     - App\Commands\ClearCacheCommand(%appDir%/..)
     - App\ApiModule\Services\ScheduleService
     - App\Model\ACL\PermissionRepository
