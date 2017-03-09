@@ -5,17 +5,18 @@ namespace App\Model\Settings;
 use Doctrine\ORM\Mapping;
 use Kdyby\Doctrine\EntityManager;
 use Kdyby\Doctrine\EntityRepository;
-use Kdyby\Translation\Translator;
+use Nette\Caching\Cache;
+use Nette\Caching\IStorage;
 
 class SettingsRepository extends EntityRepository
 {
-    /** @var Translator */
-    private $translator;
+    /** @var Cache */
+    private $cache;
 
-    public function __construct(EntityManager $em, Mapping\ClassMetadata $class, Translator $translator)
+    public function __construct(EntityManager $em, Mapping\ClassMetadata $class, IStorage $storage)
     {
         parent::__construct($em, $class);
-        $this->translator = $translator;
+        $this->cache = new Cache($storage, 'Settings');
     }
 
     /**
@@ -25,10 +26,18 @@ class SettingsRepository extends EntityRepository
      */
     public function getValue($item)
     {
-        $setting = $this->findOneBy(['item' => $item]); //TODO cachovani
-        if ($setting === null)
+        $value = $this->cache->load($item);
+        if ($value !== null)
+            return $value;
+
+        $settings = $this->findOneBy(['item' => $item]);
+        if ($settings === null)
             throw new SettingsException("Item {$item} was not found in table Settings.");
-        return $setting->getValue();
+
+        $value = $settings->getValue();
+        $this->cache->save($item, $value);
+
+        return $value;
     }
 
     /**
@@ -56,11 +65,14 @@ class SettingsRepository extends EntityRepository
      */
     public function setValue($item, $value)
     {
-        $setting = $this->findOneBy(['item' => $item]);
-        if ($setting === null)
+        $settings = $this->findOneBy(['item' => $item]);
+        if ($settings === null)
             throw new SettingsException("Item {$item} was not found in table Settings.");
-        $setting->setValue($value);
+
+        $settings->setValue($value);
         $this->_em->flush();
+
+        $this->cache->save($item, $value);
     }
 
     /**
