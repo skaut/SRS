@@ -81,14 +81,16 @@ class Program
         return $this->attendees;
     }
 
-//    //nefunguje z inverse side, zatim neni potreba
-//    /**
-//     * @param ArrayCollection $attendees
-//     */
-//    public function setAttendees($attendees)
-//    {
-//        $this->attendees = $attendees;
-//    }
+    /**
+     * @param ArrayCollection $attendees
+     */
+    public function setAttendees($attendees)
+    {
+        $this->removeAllAttendees();
+        foreach ($attendees as $attendee) {
+            $this->addAttendee($attendee);
+        }
+    }
 
     public function addAttendee($user) {
         if (!$this->attendees->contains($user)) {

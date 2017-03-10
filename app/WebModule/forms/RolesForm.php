@@ -95,7 +95,9 @@ class RolesForm extends Nette\Object
                 }
             }
 
-            $this->user->setRolesAndUpdatePrograms($selectedRoles, $this->programRepository->findUserAllowedAutoRegister($this->user));
+            $this->user->setRoles($selectedRoles);
+            $this->programRepository->updateUserPrograms($this->user);
+
             $this->user->setApproved($approved);
 
             $this->userRepository->save($this->user);

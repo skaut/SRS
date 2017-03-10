@@ -4,7 +4,10 @@ namespace App\Model\User;
 
 use App\Model\ACL\Permission;
 use App\Model\ACL\Role;
+use App\Model\Program\ProgramRepository;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\Mapping;
+use Kdyby\Doctrine\EntityManager;
 use Kdyby\Doctrine\EntityRepository;
 
 class UserRepository extends EntityRepository

@@ -5,6 +5,8 @@ namespace App\Model\Program;
 use App\ApiModule\DTO\ProgramDetailDTO;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping;
 use Kdyby\Doctrine\EntityManager;
 use Kdyby\Doctrine\EntityRepository;
@@ -14,10 +16,11 @@ class ProgramRepository extends EntityRepository
     /** @var UserRepository */
     private $userRepository;
 
-    public function __construct(EntityManager $em, Mapping\ClassMetadata $class, UserRepository $userRepository)
+    /**
+     * @param UserRepository $userRepository
+     */
+    public function injectUserRepository(UserRepository $userRepository)
     {
-        parent::__construct($em, $class);
-
         $this->userRepository = $userRepository;
     }
 
@@ -189,5 +192,37 @@ class ProgramRepository extends EntityRepository
         }
 
         return !empty($qb->getQuery()->getResult());
+    }
+
+    /**
+     * @param User $user
+     */
+    public function updateUserPrograms(User $user) {
+        $this->updateUsersPrograms([$user]);
+    }
+
+    /**
+     * @param User[] $users
+     */
+    public function updateUsersPrograms(array $users) {
+        foreach ($users as $user) {
+            $oldUsersPrograms = $user->getPrograms();
+            $userAllowedPrograms = $this->findUserAllowed($user);
+            $userAllowedAutoRegisterPrograms = $this->findUserAllowedAutoRegister($user);
+
+            $newUsersPrograms = new ArrayCollection();
+
+            foreach ($oldUsersPrograms as $oldUsersProgram) {
+                if (in_array($oldUsersProgram, $userAllowedPrograms))
+                    $newUsersPrograms->add($oldUsersProgram);
+            }
+
+            foreach ($userAllowedAutoRegisterPrograms as $userAllowedAutoRegisterProgram) {
+                if (!$newUsersPrograms->contains($userAllowedAutoRegisterProgram))
+                    $newUsersPrograms->add($userAllowedAutoRegisterProgram);
+            }
+
+            $user->setPrograms($newUsersPrograms);
+        }
     }
 }

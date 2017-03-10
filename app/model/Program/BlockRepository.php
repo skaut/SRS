@@ -13,10 +13,11 @@ class BlockRepository extends EntityRepository
     /** @var UserRepository */
     private $userRepository;
 
-    public function __construct(EntityManager $em, Mapping\ClassMetadata $class, UserRepository $userRepository)
+    /**
+     * @param UserRepository $userRepository
+     */
+    public function injectUserRepository(UserRepository $userRepository)
     {
-        parent::__construct($em, $class);
-
         $this->userRepository = $userRepository;
     }
 

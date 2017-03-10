@@ -7,6 +7,8 @@ use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Program\Category;
 use App\Model\Program\CategoryRepository;
+use App\Model\Program\ProgramRepository;
+use App\Model\User\UserRepository;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
@@ -15,26 +17,30 @@ use Ublaboo\DataGrid\DataGrid;
 
 class ProgramCategoriesGridControl extends Control
 {
-    /**
-     * @var Translator
-     */
+    /** @var Translator */
     private $translator;
 
-    /**
-     * @var CategoryRepository
-     */
+    /** @var CategoryRepository */
     private $categoryRepository;
 
-    /**
-     * @var RoleRepository
-     */
+    /** @var RoleRepository */
     private $roleRepository;
 
-    public function __construct(Translator $translator, CategoryRepository $categoryRepository, RoleRepository $roleRepository)
+    /** @var UserRepository */
+    private $userRepository;
+
+    /** @var ProgramRepository */
+    private $programRepository;
+
+    public function __construct(Translator $translator, CategoryRepository $categoryRepository,
+                                RoleRepository $roleRepository, UserRepository $userRepository,
+                                ProgramRepository $programRepository)
     {
         $this->translator = $translator;
         $this->categoryRepository = $categoryRepository;
         $this->roleRepository = $roleRepository;
+        $this->userRepository = $userRepository;
+        $this->programRepository = $programRepository;
     }
 
     public function render()
@@ -122,6 +128,8 @@ class ProgramCategoriesGridControl extends Control
         $category->setName($values['name']);
         $category->setRegisterableRoles($this->roleRepository->findRolesByIds($values['registerableRoles']));
 
+        $this->programRepository->updateUsersPrograms($this->userRepository->findAll());
+
         $this->categoryRepository->save($category);
 
         $p = $this->getPresenter();
@@ -134,6 +142,9 @@ class ProgramCategoriesGridControl extends Control
     {
         $category = $this->categoryRepository->findById($id);
         $this->categoryRepository->remove($category);
+
+        $this->programRepository->updateUsersPrograms($this->userRepository->findAll());
+        $this->programRepository->getEntityManager()->flush();
 
         $this->getPresenter()->flashMessage('admin.program.categories_deleted', 'success');
 

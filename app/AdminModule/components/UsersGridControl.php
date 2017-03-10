@@ -417,7 +417,8 @@ class UsersGridControl extends Control
 
         if (!$error) {
             foreach ($users as $user) {
-                $user->setRolesAndUpdatePrograms($selectedRoles, $this->programRepository->findUserAllowedAutoRegister($user));
+                $user->setRoles($selectedRoles);
+                $this->programRepository->updateUserPrograms($user);
                 $this->userRepository->save($user);
             }
 

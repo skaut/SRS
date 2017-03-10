@@ -137,8 +137,8 @@ class EditUserSeminarForm extends Nette\Object
 
     public function processForm(Form $form, \stdClass $values) {
         if (!$form['cancel']->isSubmittedBy()) {
-            $this->user->setRolesAndUpdatePrograms($this->roleRepository->findRolesByIds($values['roles']),
-                $this->programRepository->findUserAllowedAutoRegister($this->user));
+            $this->user->setRoles($this->roleRepository->findRolesByIds($values['roles']));
+            $this->programRepository->updateUserPrograms($this->user);
             $this->user->setApproved($values['approved']);
             $this->user->setAttended($values['attended']);
 

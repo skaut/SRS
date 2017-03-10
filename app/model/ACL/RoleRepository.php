@@ -15,9 +15,10 @@ class RoleRepository extends EntityRepository
     /** @var Translator */
     private $translator;
 
-    public function __construct(EntityManager $em, Mapping\ClassMetadata $class, Translator $translator)
-    {
-        parent::__construct($em, $class);
+    /**
+     * @param Translator $translator
+     */
+    public function injectTranslator(Translator $translator) {
         $this->translator = $translator;
     }
 

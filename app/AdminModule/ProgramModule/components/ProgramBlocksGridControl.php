@@ -9,6 +9,7 @@ use App\Model\ACL\Resource;
 use App\Model\Program\BlockRepository;
 
 use App\Model\Program\CategoryRepository;
+use App\Model\Program\ProgramRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 
@@ -34,15 +35,19 @@ class ProgramBlocksGridControl extends Control
     /** @var CategoryRepository */
     private $categoryRepository;
 
+    /** @var ProgramRepository */
+    private $programRepository;
+
     public function __construct(Translator $translator, BlockRepository $blockRepository,
                                 SettingsRepository $settingsRepository, UserRepository $userRepository,
-                                CategoryRepository $categoryRepository)
+                                CategoryRepository $categoryRepository, ProgramRepository $programRepository)
     {
         $this->translator = $translator;
         $this->blockRepository = $blockRepository;
         $this->settingsRepository = $settingsRepository;
         $this->userRepository = $userRepository;
         $this->categoryRepository = $categoryRepository;
+        $this->programRepository = $programRepository;
     }
 
     public function render()
@@ -164,13 +169,28 @@ class ProgramBlocksGridControl extends Control
         if (!$p->dbuser->isAllowedModifyBlock($block)) {
             $p->flashMessage('admin.program.blocks_change_mandatory_denied', 'danger');
         }
-        elseif ($mandatory == 2 && $block->getMandatory() != 2 && $block->getProgramsCount() > 0) {
+        elseif ($mandatory == 2 && $block->getMandatory() != 2 &&
+            ($block->getProgramsCount() > 1 ||
+                ($block->getProgramsCount() == 1 && $this->programRepository->hasOverlappingProgram(
+                    $block->getPrograms()->first(),
+                    $block->getPrograms()->first()->getStart(),
+                    $block->getPrograms()->first()->getEnd())
+                )
+            )
+        ) {
             $p->flashMessage('admin.program.blocks_change_mandatory_auto_register_not_allowed', 'danger');
         }
         else {
+            //odstraneni ucastniku, pokud se odstrani automaticke prihlasovani
             if ($block->getMandatory() == 2 && $mandatory != 2) {
                 foreach ($block->getPrograms() as $program) {
                     $program->removeAllAttendees();
+                }
+            }
+            //pridani ucastniku, pokud je pridana automaticke prihlaseni
+            if ($mandatory == 2 && $block->getMandatory() != 2) {
+                foreach ($block->getPrograms() as $program) {
+                    $program->setAttendees($this->userRepository->findProgramAllowed($program));
                 }
             }
 

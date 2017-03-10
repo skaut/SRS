@@ -162,8 +162,8 @@ class ApplicationForm extends Nette\Object
             }
         }
 
-        $this->user->setRolesAndUpdatePrograms($roles, $this->programRepository->findUserAllowedAutoRegister($this->user));
-
+        $this->user->setRoles($roles);
+        $this->programRepository->updateUserPrograms($this->user);
 
         foreach ($this->customInputRepository->findAll() as $customInput) {
             switch ($customInput->getType()) {
