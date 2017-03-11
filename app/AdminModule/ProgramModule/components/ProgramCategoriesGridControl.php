@@ -128,6 +128,8 @@ class ProgramCategoriesGridControl extends Control
         $category->setName($values['name']);
         $category->setRegisterableRoles($this->roleRepository->findRolesByIds($values['registerableRoles']));
 
+        $this->categoryRepository->save($category);
+
         $this->programRepository->updateUsersPrograms($this->userRepository->findAll());
 
         $this->categoryRepository->save($category);

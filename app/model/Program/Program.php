@@ -5,6 +5,7 @@ namespace App\Model\Program;
 use App\ApiModule\DTO\ProgramDetailDTO;
 use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 

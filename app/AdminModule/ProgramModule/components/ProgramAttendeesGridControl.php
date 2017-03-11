@@ -82,7 +82,7 @@ class ProgramAttendeesGridControl extends Control
                 ->leftJoin('u.programs', 'p', 'WITH', 'p.id = :pid')
                 ->innerJoin('u.roles', 'r')
                 ->innerJoin('r.permissions', 'per')
-                ->where('u.approved = true')
+//                ->where('u.approved = true')
                 ->andWhere('per.name = :permission')
                 ->setParameter('pid', $programId)
                 ->setParameter('permission', Permission::CHOOSE_PROGRAMS)
