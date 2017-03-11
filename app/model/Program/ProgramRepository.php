@@ -185,9 +185,9 @@ class ProgramRepository extends EntityRepository
     }
 
     /**
-     * @param User[] $users
+     * @param $users
      */
-    public function updateUsersPrograms(array $users) {
+    public function updateUsersPrograms($users) {
         foreach ($users as $user) {
             $oldUsersPrograms = $user->getPrograms();
             $userAllowedPrograms = $this->findUserAllowed($user);

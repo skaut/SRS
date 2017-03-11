@@ -11,6 +11,7 @@ use App\Model\ACL\RoleRepository;
 use App\Model\CMS\PageRepository;
 
 
+use App\Model\Program\ProgramRepository;
 use Nette;
 use Nette\Application\UI\Form;
 
@@ -31,13 +32,18 @@ class EditRoleForm extends Nette\Object
     /** @var PermissionRepository */
     private $permissionRepository;
 
+    /** @var ProgramRepository */
+    private $programRepository;
+
     public function __construct(BaseForm $baseFormFactory, RoleRepository $roleRepository,
-                                PageRepository $pageRepository, PermissionRepository $permissionRepository)
+                                PageRepository $pageRepository, PermissionRepository $permissionRepository,
+                                ProgramRepository $programRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->roleRepository = $roleRepository;
         $this->pageRepository = $pageRepository;
         $this->permissionRepository = $permissionRepository;
+        $this->programRepository = $programRepository;
     }
 
     public function create($id)
@@ -162,6 +168,9 @@ class EditRoleForm extends Nette\Object
             $this->role->setIncompatibleRoles($this->roleRepository->findRolesByIds($values['incompatibleRoles']));
             $this->role->setRequiredRoles($this->roleRepository->findRolesByIds($values['requiredRoles']));
 
+            $this->roleRepository->save($this->role);
+
+            $this->programRepository->updateUsersPrograms($this->role->getUsers());
             $this->roleRepository->save($this->role);
         }
     }
