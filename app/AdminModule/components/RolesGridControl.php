@@ -5,8 +5,10 @@ namespace App\AdminModule\Components;
 
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
+use App\Model\Program\ProgramRepository;
 use App\Model\User\UserRepository;
 
+use App\Services\AttendeesService;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Ublaboo\DataGrid\DataGrid;
@@ -22,13 +24,18 @@ class RolesGridControl extends Control
     /** @var UserRepository */
     private $userRepository;
 
-    public function __construct(Translator $translator, RoleRepository $roleRepository, UserRepository $userRepository)
+    /** @var ProgramRepository */
+    private $programRepository;
+
+    public function __construct(Translator $translator, RoleRepository $roleRepository, UserRepository $userRepository,
+                                ProgramRepository $programRepository)
     {
         parent::__construct();
 
         $this->translator = $translator;
         $this->roleRepository = $roleRepository;
         $this->userRepository = $userRepository;
+        $this->programRepository = $programRepository;
     }
 
     public function render()
@@ -108,11 +115,17 @@ class RolesGridControl extends Control
 
         $usersInRole = $this->userRepository->findAllInRole($role);
 
+        $this->roleRepository->remove($role);
+
         foreach ($usersInRole as $user) {
-            $user->removeRoleAndUpdatePrograms($role, $this->roleRepository->findBySystemName(Role::NONREGISTERED));
+            if ($user->getRoles()->isEmpty()) {
+                $user->addRole($this->roleRepository->findBySystemName(Role::NONREGISTERED));
+                $this->userRepository->save($user);
+            }
         }
 
-        $this->roleRepository->remove($role);
+        $this->programRepository->updateUsersPrograms($this->userRepository->findAll());
+        $this->programRepository->getEntityManager()->flush();
 
         $this->getPresenter()->flashMessage('admin.acl.roles_deleted', 'success');
 

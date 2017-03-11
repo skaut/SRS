@@ -4,7 +4,11 @@ namespace App\Model\User;
 
 use App\Model\ACL\Permission;
 use App\Model\ACL\Role;
+use App\Model\Program\Program;
+use App\Model\Program\ProgramRepository;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\Mapping;
+use Kdyby\Doctrine\EntityManager;
 use Kdyby\Doctrine\EntityRepository;
 
 class UserRepository extends EntityRepository
@@ -123,15 +127,22 @@ class UserRepository extends EntityRepository
      * @param $program
      * @return array
      */
-    public function findProgramAllowed($program) {
-        return $this->createQueryBuilder('u')
+    public function findProgramAllowed(Program $program) {
+        $qb = $this->createQueryBuilder('u')
             ->leftJoin('u.programs', 'p', 'WITH', 'p.id = :pid')
             ->innerJoin('u.roles', 'r')
             ->innerJoin('r.permissions', 'per')
             ->where('per.name = :permission')
             ->setParameter('pid', $program->getId())
-            ->setParameter('permission', Permission::CHOOSE_PROGRAMS)
-            ->getQuery()
+            ->setParameter('permission', Permission::CHOOSE_PROGRAMS);
+
+        if ($program->getBlock()->getCategory()) {
+            $qb = $qb->innerJoin('r.registerableCategories', 'c')
+                ->andWhere('c.id = :cid')
+                ->setParameter('cid', $program->getBlock()->getCategory()->getId());
+        }
+
+        return $qb->getQuery()
             ->getResult();
     }
 

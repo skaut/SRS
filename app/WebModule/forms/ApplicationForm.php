@@ -162,8 +162,7 @@ class ApplicationForm extends Nette\Object
             }
         }
 
-        $this->user->setRolesAndUpdatePrograms($roles, $this->programRepository->findUserAllowedAutoRegister($this->user));
-
+        $this->user->setRoles($roles);
 
         foreach ($this->customInputRepository->findAll() as $customInput) {
             switch ($customInput->getType()) {
@@ -186,6 +185,10 @@ class ApplicationForm extends Nette\Object
         if (array_key_exists('departure', $values))
             $this->user->setDeparture($values['departure']);
 
+
+        $this->userRepository->save($this->user);
+
+        $this->programRepository->updateUserPrograms($this->user);
 
         $this->userRepository->save($this->user);
 

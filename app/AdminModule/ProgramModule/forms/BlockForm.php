@@ -8,6 +8,7 @@ use App\Model\ACL\Resource;
 use App\Model\Program\Block;
 use App\Model\Program\BlockRepository;
 use App\Model\Program\CategoryRepository;
+use App\Model\Program\ProgramRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
@@ -39,15 +40,19 @@ class BlockForm extends Nette\Object
     /** @var SettingsRepository */
     private $settingsRepository;
 
+    /** @var ProgramRepository */
+    private $programRepository;
+
     public function __construct(BaseForm $baseFormFactory, BlockRepository $blockRepository,
                                 UserRepository $userRepository, CategoryRepository $categoryRepository,
-                                SettingsRepository $settingsRepository)
+                                SettingsRepository $settingsRepository, ProgramRepository $programRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->blockRepository = $blockRepository;
         $this->userRepository = $userRepository;
         $this->categoryRepository = $categoryRepository;
         $this->settingsRepository = $settingsRepository;
+        $this->programRepository = $programRepository;
     }
 
     public function create($id, $userId)
@@ -149,11 +154,8 @@ class BlockForm extends Nette\Object
             } else if (!$this->user->isAllowedModifyBlock($this->block))
                 return;
 
-            if ($this->block->getMandatory() == 2 && (!array_key_exists('autoRegister', $values) || !$values['autoRegister'])) {
-                foreach ($this->block->getPrograms() as $program) {
-                    $program->removeAllAttendees();
-                }
-            }
+            $oldMandatory = $this->block->getMandatory();
+            $oldCategory = $this->block->getCategory();
 
             $category = $values['category'] != '' ? $this->categoryRepository->findById($values['category']) : null;
             $lector = $values['lector'] != '' ? $this->userRepository->findById($values['lector']) : null;
@@ -170,13 +172,41 @@ class BlockForm extends Nette\Object
             $this->block->setTools($values['tools']);
 
             $this->blockRepository->save($this->block);
+
+            //odstraneni ucastniku, pokud se odstrani automaticke prihlasovani
+            if ($oldMandatory == 2 && $this->block->getMandatory() != 2) {
+                foreach ($this->block->getPrograms() as $program) {
+                    $program->removeAllAttendees();
+                }
+            }
+
+            //pridani ucastniku, pokud je pridano automaticke prihlaseni
+            if ($oldMandatory != 2 && $this->block->getMandatory() == 2) {
+                foreach ($this->block->getPrograms() as $program) {
+                    $program->setAttendees($this->userRepository->findProgramAllowed($program));
+                }
+            }
+
+            //aktualizace ucastniku pri zmene kategorie
+            if ($oldMandatory == $this->block->getMandatory() && $this->block->getCategory() != $oldCategory) {
+                $this->programRepository->updateUsersPrograms($this->userRepository->findAll());
+            }
+
+            $this->blockRepository->save($this->block);
         }
     }
 
     public function validateAutoRegister($field, $args)
     {
         if ($this->block) {
-            if ($this->block->getMandatory() != 2 && $this->block->getProgramsCount() > 0)
+            if ($this->block->getMandatory() != 2 && ($this->block->getProgramsCount() > 1 ||
+                    ($this->block->getProgramsCount() == 1 && $this->programRepository->hasOverlappingProgram(
+                        $this->block->getPrograms()->first(),
+                        $this->block->getPrograms()->first()->getStart(),
+                        $this->block->getPrograms()->first()->getEnd())
+                    )
+                )
+            )
                 return false;
         }
         return true;

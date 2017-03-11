@@ -3,8 +3,12 @@
 namespace App\Model\Program;
 
 use App\ApiModule\DTO\ProgramDetailDTO;
+use App\Model\ACL\Permission;
+use App\Model\ACL\Resource;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping;
 use Kdyby\Doctrine\EntityManager;
 use Kdyby\Doctrine\EntityRepository;
@@ -14,10 +18,11 @@ class ProgramRepository extends EntityRepository
     /** @var UserRepository */
     private $userRepository;
 
-    public function __construct(EntityManager $em, Mapping\ClassMetadata $class, UserRepository $userRepository)
+    /**
+     * @param UserRepository $userRepository
+     */
+    public function injectUserRepository(UserRepository $userRepository)
     {
-        parent::__construct($em, $class);
-
         $this->userRepository = $userRepository;
     }
 
@@ -64,6 +69,9 @@ class ProgramRepository extends EntityRepository
      */
     public function findUserAllowed($user)
     {
+        if (!$user->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS))
+            return [];
+
         $registerableCategoriesIds = $this->userRepository->findRegisterableCategoriesIdsByUser($user);
 
         return $this->createQueryBuilder('p')
@@ -72,28 +80,6 @@ class ProgramRepository extends EntityRepository
             ->leftJoin('b.category', 'c')
             ->where('c.id IN (:ids)')->setParameter('ids', $registerableCategoriesIds)
             ->orWhere('b.category IS NULL')
-            ->getQuery()
-            ->getResult();
-    }
-
-    /**
-     * @param User $user
-     * @return array
-     */
-    public function findUserAllowedAutoRegister($user)
-    {
-        $registerableCategoriesIds = $this->userRepository->findRegisterableCategoriesIdsByUser($user);
-
-        return $this->createQueryBuilder('p')
-            ->select('p')
-            ->join('p.block', 'b')
-            ->leftJoin('b.category', 'c')
-            ->where($this->createQueryBuilder()->expr()->orX(
-                'c.id IN (:ids)',
-                'b.category IS NULL'
-            ))
-            ->andWhere('b.mandatory = 2')
-            ->setParameter('ids', $registerableCategoriesIds)
             ->getQuery()
             ->getResult();
     }
@@ -189,5 +175,32 @@ class ProgramRepository extends EntityRepository
         }
 
         return !empty($qb->getQuery()->getResult());
+    }
+
+    /**
+     * @param User $user
+     */
+    public function updateUserPrograms(User $user) {
+        $this->updateUsersPrograms([$user]);
+    }
+
+    /**
+     * @param User[] $users
+     */
+    public function updateUsersPrograms(array $users) {
+        foreach ($users as $user) {
+            $oldUsersPrograms = $user->getPrograms();
+            $userAllowedPrograms = $this->findUserAllowed($user);
+
+            $newUsersPrograms = new ArrayCollection();
+
+            foreach ($userAllowedPrograms as $userAllowedProgram) {
+                if ($userAllowedProgram->getBlock()->getMandatory() == 2 || $oldUsersPrograms->contains($userAllowedProgram))
+                    $newUsersPrograms->add($userAllowedProgram);
+            }
+
+            $oldUsersPrograms->clear();
+            $user->setPrograms($newUsersPrograms);
+        }
     }
 }

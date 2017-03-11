@@ -66,7 +66,9 @@ services:
     - App\ApiModule\Services\ScheduleService
     - App\Model\ACL\PermissionRepository
     - App\Model\ACL\ResourceRepository
-    - App\Model\ACL\RoleRepository
+    roleRepository:
+         class: App\Model\ACL\RoleRepository
+         inject: yes
     - App\Model\CMS\Content\ContentRepository
     - App\Model\CMS\Document\DocumentRepository
     - App\Model\CMS\Document\TagRepository
@@ -74,9 +76,13 @@ services:
     - App\Model\CMS\NewsRepository
     - App\Model\CMS\PageRepository
     - App\Model\Mailing\MailRepository
-    - App\Model\Program\BlockRepository
+    blockRepository:
+         class: App\Model\Program\BlockRepository
+         inject: yes
     - App\Model\Program\CategoryRepository
-    - App\Model\Program\ProgramRepository
+    programRepository:
+        class: App\Model\Program\ProgramRepository
+        inject: yes
     - App\Model\Program\RoomRepository
     - App\Model\Settings\CustomInput\CustomInputRepository
     - App\Model\Settings\SettingsRepository

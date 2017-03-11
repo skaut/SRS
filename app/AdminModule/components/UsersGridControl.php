@@ -417,9 +417,12 @@ class UsersGridControl extends Control
 
         if (!$error) {
             foreach ($users as $user) {
-                $user->setRolesAndUpdatePrograms($selectedRoles, $this->programRepository->findUserAllowedAutoRegister($user));
+                $user->setRoles($selectedRoles);
                 $this->userRepository->save($user);
             }
+
+            $this->programRepository->updateUsersPrograms($users->toArray());
+            $this->userRepository->getEntityManager()->flush();
 
             $p->flashMessage('admin.users.users_group_action_changed_roles', 'success');
         }

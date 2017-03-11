@@ -5,6 +5,7 @@ namespace App\Model\Program;
 use App\ApiModule\DTO\ProgramDetailDTO;
 use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
@@ -81,14 +82,16 @@ class Program
         return $this->attendees;
     }
 
-//    //nefunguje z inverse side, zatim neni potreba
-//    /**
-//     * @param ArrayCollection $attendees
-//     */
-//    public function setAttendees($attendees)
-//    {
-//        $this->attendees = $attendees;
-//    }
+    /**
+     * @param ArrayCollection $attendees
+     */
+    public function setAttendees($attendees)
+    {
+        $this->removeAllAttendees();
+        foreach ($attendees as $attendee) {
+            $this->addAttendee($attendee);
+        }
+    }
 
     public function addAttendee($user) {
         if (!$this->attendees->contains($user)) {
