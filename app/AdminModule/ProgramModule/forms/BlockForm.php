@@ -154,26 +154,10 @@ class BlockForm extends Nette\Object
             } else if (!$this->user->isAllowedModifyBlock($this->block))
                 return;
 
-            //odstraneni ucastniku, pokud se odstrani automaticke prihlasovani
-            if ($this->block->getMandatory() == 2 && (!array_key_exists('autoRegister', $values) || !$values['autoRegister'])) {
-                foreach ($this->block->getPrograms() as $program) {
-                    $program->removeAllAttendees();
-                }
-            }
-            //pridani ucastniku, pokud je pridana automaticke prihlaseni
-            if (array_key_exists('autoRegister', $values) && $values['autoRegister'] && $this->block->getMandatory() != 2) {
-                foreach ($this->block->getPrograms() as $program) {
-                    $program->setAttendees($this->userRepository->findProgramAllowed($program));
-                }
-            }
+            $oldMandatory = $this->block->getMandatory();
+            $oldCategory = $this->block->getCategory();
 
             $category = $values['category'] != '' ? $this->categoryRepository->findById($values['category']) : null;
-
-            //aktualizace ucastniku pri zmene kategorie
-            if ($this->block->getCategory() != $category) {
-                $this->programRepository->updateUsersPrograms($this->userRepository->findAll());
-            }
-
             $lector = $values['lector'] != '' ? $this->userRepository->findById($values['lector']) : null;
             $capacity = $values['capacity'] !== '' ? $values['capacity'] : null;
 
@@ -186,6 +170,27 @@ class BlockForm extends Nette\Object
             $this->block->setPerex($values['perex']);
             $this->block->setDescription($values['description']);
             $this->block->setTools($values['tools']);
+
+            $this->blockRepository->save($this->block);
+
+            //odstraneni ucastniku, pokud se odstrani automaticke prihlasovani
+            if ($oldMandatory == 2 && $this->block->getMandatory() != 2) {
+                foreach ($this->block->getPrograms() as $program) {
+                    $program->removeAllAttendees();
+                }
+            }
+
+            //pridani ucastniku, pokud je pridano automaticke prihlaseni
+            if ($oldMandatory != 2 && $this->block->getMandatory() == 2) {
+                foreach ($this->block->getPrograms() as $program) {
+                    $program->setAttendees($this->userRepository->findProgramAllowed($program));
+                }
+            }
+
+            //aktualizace ucastniku pri zmene kategorie
+            if ($oldMandatory == $this->block->getMandatory() && $this->block->getCategory() != $oldCategory) {
+                $this->programRepository->updateUsersPrograms($this->userRepository->findAll());
+            }
 
             $this->blockRepository->save($this->block);
         }

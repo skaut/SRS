@@ -3,6 +3,8 @@
 namespace App\Model\Program;
 
 use App\ApiModule\DTO\ProgramDetailDTO;
+use App\Model\ACL\Permission;
+use App\Model\ACL\Resource;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -67,6 +69,9 @@ class ProgramRepository extends EntityRepository
      */
     public function findUserAllowed($user)
     {
+        if (!$user->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS))
+            return [];
+
         $registerableCategoriesIds = $this->userRepository->findRegisterableCategoriesIdsByUser($user);
 
         return $this->createQueryBuilder('p')
@@ -75,28 +80,6 @@ class ProgramRepository extends EntityRepository
             ->leftJoin('b.category', 'c')
             ->where('c.id IN (:ids)')->setParameter('ids', $registerableCategoriesIds)
             ->orWhere('b.category IS NULL')
-            ->getQuery()
-            ->getResult();
-    }
-
-    /**
-     * @param User $user
-     * @return array
-     */
-    public function findUserAllowedAutoRegister($user)
-    {
-        $registerableCategoriesIds = $this->userRepository->findRegisterableCategoriesIdsByUser($user);
-
-        return $this->createQueryBuilder('p')
-            ->select('p')
-            ->join('p.block', 'b')
-            ->leftJoin('b.category', 'c')
-            ->where($this->createQueryBuilder()->expr()->orX(
-                'c.id IN (:ids)',
-                'b.category IS NULL'
-            ))
-            ->andWhere('b.mandatory = 2')
-            ->setParameter('ids', $registerableCategoriesIds)
             ->getQuery()
             ->getResult();
     }
@@ -208,20 +191,15 @@ class ProgramRepository extends EntityRepository
         foreach ($users as $user) {
             $oldUsersPrograms = $user->getPrograms();
             $userAllowedPrograms = $this->findUserAllowed($user);
-            $userAllowedAutoRegisterPrograms = $this->findUserAllowedAutoRegister($user);
 
             $newUsersPrograms = new ArrayCollection();
 
-            foreach ($oldUsersPrograms as $oldUsersProgram) {
-                if (in_array($oldUsersProgram, $userAllowedPrograms))
-                    $newUsersPrograms->add($oldUsersProgram);
+            foreach ($userAllowedPrograms as $userAllowedProgram) {
+                if ($userAllowedProgram->getBlock()->getMandatory() == 2 || $oldUsersPrograms->contains($userAllowedProgram))
+                    $newUsersPrograms->add($userAllowedProgram);
             }
 
-            foreach ($userAllowedAutoRegisterPrograms as $userAllowedAutoRegisterProgram) {
-                if (!$newUsersPrograms->contains($userAllowedAutoRegisterProgram))
-                    $newUsersPrograms->add($userAllowedAutoRegisterProgram);
-            }
-
+            $oldUsersPrograms->clear();
             $user->setPrograms($newUsersPrograms);
         }
     }
