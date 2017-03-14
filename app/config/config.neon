@@ -19,7 +19,7 @@ extensions:
     translation: Kdyby\Translation\DI\TranslationExtension
     nextras.form: Nextras\Forms\Bridges\NetteDI\FormsExtension
     mailing: Ublaboo\Mailing\DI\MailingExtension
-#    gpspicker: VojtechDobes\NetteForms\GpsPickerExtension
+    gpspicker: VojtechDobes\NetteForms\GpsPickerExtension
 
 latte:
     macros:
@@ -135,6 +135,7 @@ services:
     - App\AdminModule\CMSModule\Components\INewsGridControlFactory
     - App\AdminModule\CMSModule\Components\IPagesGridControlFactory
     - App\AdminModule\ConfigurationModule\Components\ICustomInputsGridControlFactory
+    - App\AdminModule\ConfigurationModule\Components\IPlacePointsGridControlFactory
     - App\AdminModule\MailingModule\Forms\SendForm
     - App\AdminModule\MailingModule\Components\IMailHistoryGridControlFactory
     - App\AdminModule\ProgramModule\Components\IProgramBlocksGridControlFactory

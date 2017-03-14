@@ -10,6 +10,7 @@ use App\Model\Settings\SettingsRepository;
 use Kdyby\Translation\Translator;
 use Nette;
 use Nette\Application\UI\Form;
+use VojtechDobes\NetteForms\GpsPicker;
 
 class PlacePointForm extends Nette\Object
 {
@@ -34,18 +35,26 @@ class PlacePointForm extends Nette\Object
 
         $form = $this->baseForm->create();
 
-        $form->addText('name', 'admin.configuration.place_point_name')
-            ->addRule(Form::FILLED, 'admin.configuration.place_point_name_empty');
-        $form->addText('gpsLat', 'admin.configuration.place_point_gps_lat');
-        $form->addText('gpsLon', 'admin.configuration.place_point_gps_lon');
+        $form->addText('name', 'admin.configuration.place_points_name')
+            ->addRule(Form::FILLED, 'admin.configuration.place_points_name_empty');
+
+        $form->addGpsPicker('gps', 'admin.configuration.place_points_gps')
+            ->setDriver(GpsPicker::DRIVER_SEZNAM)
+            ->setSize("100%", 400);
 
         $form->addSubmit('submit', 'admin.common.save');
+
+        $form->addSubmit('cancel', 'admin.common.cancel')
+            ->setValidationScope([])
+            ->setAttribute('class', 'btn btn-warning');
 
         if ($this->placePoint) {
             $form->setDefaults([
                 'name' => $this->placePoint->getName(),
-                'gpsLat' => $this->placePoint->getGpsLat(),
-                'gpsLon' => $this->placePoint->getGpsLon()
+                'gps' => [
+                    'lat' => $this->placePoint->getGpsLat(),
+                    'lng' => $this->placePoint->getGpsLon()
+                ]
             ]);
         }
 
@@ -55,13 +64,15 @@ class PlacePointForm extends Nette\Object
     }
 
     public function processForm(Form $form, \stdClass $values) {
-        if (!$this->placePoint)
-            $this->placePoint = new PlacePoint();
+        if (!$form['cancel']->isSubmittedBy()) {
+            if (!$this->placePoint)
+                $this->placePoint = new PlacePoint();
 
-        $this->placePoint->setName($values['name']);
-        $this->placePoint->setGpsLat($values['gpsLat']);
-        $this->placePoint->setGpsLon($values['gpsLon']);
+            $this->placePoint->setName($values['name']);
+            $this->placePoint->setGpsLat($values['gps']->lat);
+            $this->placePoint->setGpsLon($values['gps']->lng);
 
-        $this->placePointRepository->save($this->placePoint);
+            $this->placePointRepository->save($this->placePoint);
+        }
     }
 }

@@ -28,7 +28,8 @@ class PlaceDescriptionForm extends Nette\Object
     {
         $form = $this->baseForm->create();
 
-        $form->addTextArea('placeDescription', 'admin.configuration.place_description');
+        $form->addTextArea('placeDescription', 'admin.configuration.place_description')
+            ->setAttribute('class', 'tinymce-paragraph');
 
         $form->addSubmit('submit', 'admin.common.save');
 
@@ -36,6 +37,7 @@ class PlaceDescriptionForm extends Nette\Object
             'placeDescription' => $this->settingsRepository->getValue(Settings::PLACE_DESCRIPTION)
         ]);
 
+        $form->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
         $form->onSuccess[] = [$this, 'processForm'];
 
         return $form;

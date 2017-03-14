@@ -3,5 +3,11 @@
 {/block}
 
 {block main}
-    {control placeDescriptionForm}
+    <h2>{_admin.configuration.place_heading}</h2>
+    <div class="well">
+        {control placeDescriptionForm}
+    </div>
+
+    <h2>{_admin.configuration.place_points}</h2>
+    {control placePointsGrid}
 {/block}
