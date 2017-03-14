@@ -65,8 +65,6 @@ class SettingsFixture extends AbstractFixture
         $settings[] = new Settings(Settings::DISPLAY_USERS_ROLES, '1');
         $settings[] = new Settings(Settings::REDIRECT_AFTER_LOGIN, '/');
 
-        $settings[] = new Settings(Settings::PLACE_GPS_LAT, '0');
-        $settings[] = new Settings(Settings::PLACE_GPS_LON, '0');
         $settings[] = new Settings(Settings::PLACE_DESCRIPTION, null);
 
         foreach ($settings as $setting) {

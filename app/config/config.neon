@@ -19,6 +19,7 @@ extensions:
     translation: Kdyby\Translation\DI\TranslationExtension
     nextras.form: Nextras\Forms\Bridges\NetteDI\FormsExtension
     mailing: Ublaboo\Mailing\DI\MailingExtension
+#    gpspicker: VojtechDobes\NetteForms\GpsPickerExtension
 
 latte:
     macros:
@@ -85,6 +86,7 @@ services:
         inject: yes
     - App\Model\Program\RoomRepository
     - App\Model\Settings\CustomInput\CustomInputRepository
+    - App\Model\Settings\Place\PlacePointRepository
     - App\Model\Settings\SettingsRepository
     - App\Model\User\UserRepository
     - App\Model\User\CustomInputValue\CustomInputValueRepository
@@ -118,6 +120,8 @@ services:
     - App\AdminModule\CMSModule\Forms\NewsForm
     - App\AdminModule\ConfigurationModule\Forms\PaymentForm
     - App\AdminModule\ConfigurationModule\Forms\PaymentProofForm
+    - App\AdminModule\ConfigurationModule\Forms\PlaceDescriptionForm
+    - App\AdminModule\ConfigurationModule\Forms\PlacePointForm
     - App\AdminModule\ConfigurationModule\Forms\ProgramForm
     - App\AdminModule\ConfigurationModule\Forms\SeminarForm
     - App\AdminModule\ConfigurationModule\Forms\SkautIsEventForm

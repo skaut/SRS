@@ -382,6 +382,7 @@ configuration:
     menu_program: "Program"
     menu_payment: "Platba a doklady"
     menu_application: "Přihláška"
+    menu_place: "Místo"
     menu_skautis: "SkautIS"
     menu_web: "Web"
     menu_system: "Systém"
@@ -401,7 +402,6 @@ configuration:
     seminar_email: "E-mail pro mailing"
     seminar_email_empty: "Zadejte e-mail."
     seminar_email_format: "Zadejte e-mail ve správném formátu."
-    place_description: "Popis cesty" #TODO popis cesty
 
     program_heading: "Program"
     is_allowed_add_block: "povolit vytváření programových bloků"
@@ -442,6 +442,10 @@ configuration:
     application_input_delete_confirm: "Odstraněním pole odeberete odpovědi uživatelů na tuto otázku. Opravdu chcete pole odstranit?"
     application_input_deleted: "Pole bylo úspěšně odstraněno."
     application_inputs_order_saved: "Pořadí polí bylo úspěšně upraveno."
+
+    place_heading: "Místo"
+    place_description: "Popis cesty"
+    place_points: "Mapové body"
 
     skautis_event_heading: "Propojení s akcí ve skautIS"
     skautis_event: "Akce ve skautIS"
