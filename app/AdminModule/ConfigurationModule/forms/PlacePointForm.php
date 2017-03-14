@@ -38,7 +38,7 @@ class PlacePointForm extends Nette\Object
         $form->addText('name', 'admin.configuration.place_points_name')
             ->addRule(Form::FILLED, 'admin.configuration.place_points_name_empty');
 
-        $form->addGpsPicker('gps', 'admin.configuration.place_points_gps')
+        $form->addGpsPicker('gps', 'admin.configuration.place_points_place')
             ->setDriver(GpsPicker::DRIVER_SEZNAM)
             ->setSize("100%", 400);
 

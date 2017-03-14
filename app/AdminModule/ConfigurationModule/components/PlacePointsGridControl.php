@@ -40,10 +40,16 @@ class PlacePointsGridControl extends Control
 
 
         $grid->addColumnText('name', 'admin.configuration.place_points_name');
-        $grid->addColumnNumber('gpsLat', 'admin.configuration.place_points_latitude')
-            ->setFormat(5);
-        $grid->addColumnNumber('gpsLon', 'admin.configuration.place_points_longitude')
-            ->setFormat(5);
+        $grid->addColumnText('gps', 'admin.configuration.place_points_gps')
+            ->setRenderer(function ($row) {
+                $lat = $row->getGpsLat();
+                $lon = $row->getGpsLon();
+
+                $latText = number_format(abs($lat), 7) . ($lat >= 0 ? 'N' : 'S');
+                $lonText = number_format(abs($lon), 7) . ($lon >= 0 ? 'E' : 'W');
+
+                return $latText . ", " . $lonText;
+            });
 
 
         $grid->addToolbarButton('Place:add')
