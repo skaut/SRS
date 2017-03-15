@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-
 use App\Mailing\TextMail;
 use App\Model\ACL\RoleRepository;
 use App\Model\Mailing\MailRepository;
@@ -13,31 +12,22 @@ use App\Model\User\UserRepository;
 use Nette;
 use Ublaboo\Mailing\MailFactory;
 
+
 class MailService extends Nette\Object
 {
-    /**
-     * @var MailFactory
-     */
+    /** @var MailFactory */
     private $mailFactory;
 
-    /**
-     * @var SettingsRepository
-     */
+    /** @var SettingsRepository */
     private $settingsRepository;
 
-    /**
-     * @var MailRepository
-     */
+    /** @var MailRepository */
     private $mailRepository;
 
-    /**
-     * @var UserRepository
-     */
+    /** @var UserRepository */
     private $userRepository;
 
-    /**
-     * @var RoleRepository
-     */
+    /** @var RoleRepository */
     private $roleRepository;
 
 

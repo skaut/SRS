@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-
 use Nette;
 use Nette\Application\IResponse;
+
 
 class ExcelResponse extends Nette\Object implements IResponse
 {

@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-
 use Kdyby\Translation\Translator;
 use Nette;
+
 
 class ExcelExportService extends Nette\Object
 {
@@ -13,6 +13,7 @@ class ExcelExportService extends Nette\Object
 
     /** @var Translator */
     private $translator;
+
 
     public function __construct(Translator $translator)
     {

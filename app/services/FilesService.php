@@ -2,13 +2,14 @@
 
 namespace App\Services;
 
-
 use Nette;
 use Nette\Utils\Image;
+
 
 class FilesService extends Nette\Object
 {
     private $dir;
+
 
     /**
      * FilesService constructor.

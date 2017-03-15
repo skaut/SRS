@@ -2,15 +2,16 @@
 
 namespace App\Services;
 
-
 use Nette;
 use Skautis\Skautis;
 use Skautis\Wsdl\WsdlException;
+
 
 class SkautIsService extends Nette\Object
 {
     /** @var Skautis */
     private $skautIs;
+
 
     public function __construct(Skautis $skautIS)
     {

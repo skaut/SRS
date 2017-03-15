@@ -2,13 +2,13 @@
 
 namespace App\Services;
 
-
 use App\Model\Enums\PaymentType;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
 use fpdi\FPDI;
 use Nette;
+
 
 class PdfExportService extends Nette\Object
 {
@@ -21,6 +21,7 @@ class PdfExportService extends Nette\Object
 
     /** @var SettingsRepository */
     private $settingsRepository;
+
 
     /**
      * PdfExportService constructor.

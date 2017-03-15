@@ -9,6 +9,7 @@ use App\Model\ACL\RoleRepository;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Nette;
 
+
 /**
  * Class Authorizator
  * @package App\Services
@@ -18,8 +19,7 @@ class Authorizator extends Nette\Security\Permission
     public function __construct(RoleRepository $roleRepository, PermissionRepository $permissionRepository,
                                 ResourceRepository $resourceRepository)
     {
-        //role pouzivana pri testovani jine role
-        $this->addRole(Role::TEST);
+        $this->addRole(Role::TEST); //role pouzivana pri testovani jine role
 
         try {
             foreach ($resourceRepository->findAllNames() as $resourceName) {

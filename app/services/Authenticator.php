@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Settings\Settings;
@@ -12,6 +11,11 @@ use App\Model\User\UserRepository;
 use Nette;
 use Nette\Security as NS;
 
+
+/**
+ * Class Authenticator
+ * @package App\Services
+ */
 class Authenticator extends Nette\Object implements NS\IAuthenticator
 {
     /** @var UserRepository */
@@ -25,6 +29,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
 
     /** @var SkautIsService */
     protected $skautIsService;
+
 
     public function __construct(UserRepository $userRepository, RoleRepository $roleRepository,
                                 SettingsRepository $settingsRepository, SkautIsService $skautIsService)
