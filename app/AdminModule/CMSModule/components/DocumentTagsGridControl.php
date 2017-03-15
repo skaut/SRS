@@ -47,18 +47,18 @@ class DocumentTagsGridControl extends Control
         $grid->addColumnText('name', 'admin.cms.tags_name');
 
 
-        $grid->addInlineAdd()->onControlAdd[] = function($container) {
+        $grid->addInlineAdd()->onControlAdd[] = function ($container) {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.tags_name_empty')
                 ->addRule(Form::IS_NOT_IN, 'admin.cms.tags_name_exists', $this->tagRepository->findAllNames());
         };
         $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
 
-        $grid->addInlineEdit()->onControlAdd[] = function($container) {
+        $grid->addInlineEdit()->onControlAdd[] = function ($container) {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.tags_name_empty');
         };
-        $grid->getInlineEdit()->onSetDefaults[] = function($container, $item) {
+        $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) {
             $container['name']
                 ->addRule(Form::IS_NOT_IN, 'admin.cms.tags_name_exists', $this->tagRepository->findOthersNames($item->getId()));
 

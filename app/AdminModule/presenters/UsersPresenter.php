@@ -69,7 +69,8 @@ class UsersPresenter extends AdminBasePresenter
         $this->template->editPayment = false;
     }
 
-    public function renderDetail($id) {
+    public function renderDetail($id)
+    {
         $this->template->sidebarVisible = true;
         $this->template->detailUser = $this->userRepository->findById($id);
 
@@ -90,29 +91,30 @@ class UsersPresenter extends AdminBasePresenter
         $this->redrawControl('results');
     }
 
-    public function handleEditSeminar() {
+    public function handleEditSeminar()
+    {
         $this->template->editSeminar = true;
 
         if ($this->isAjax()) {
             $this->redrawControl('userDetail');
-        }
-        else {
+        } else {
             $this->redirect('this');
         }
     }
 
-    public function handleEditPayment() {
+    public function handleEditPayment()
+    {
         $this->template->editPayment = true;
 
         if ($this->isAjax()) {
             $this->redrawControl('userDetail');
-        }
-        else {
+        } else {
             $this->redirect('this');
         }
     }
 
-    public function actionGeneratePaymentProofCash($id) {
+    public function actionGeneratePaymentProofCash($id)
+    {
         $user = $this->userRepository->findById($id);
         if (!$user->getIncomeProofPrintedDate()) {
             $user->setIncomeProofPrintedDate(new \DateTime());
@@ -121,7 +123,8 @@ class UsersPresenter extends AdminBasePresenter
         $this->pdfExportService->generatePaymentProof($user, "prijmovy-pokladni-doklad.pdf");
     }
 
-    public function actionGeneratePaymentProofBank($id) {
+    public function actionGeneratePaymentProofBank($id)
+    {
         $user = $this->userRepository->findById($id);
         if (!$user->getIncomeProofPrintedDate()) {
             $user->setIncomeProofPrintedDate(new \DateTime());
@@ -142,8 +145,7 @@ class UsersPresenter extends AdminBasePresenter
         $form->onSuccess[] = function (Form $form, \stdClass $values) {
             if ($form['cancel']->isSubmittedBy()) {
                 $this->redirect('this');
-            }
-            else {
+            } else {
                 $this->flashMessage('admin.users.users_saved', 'success');
                 $this->redirect('this');
             }
@@ -159,8 +161,7 @@ class UsersPresenter extends AdminBasePresenter
         $form->onSuccess[] = function (Form $form, \stdClass $values) {
             if ($form['cancel']->isSubmittedBy()) {
                 $this->redirect('this');
-            }
-            else {
+            } else {
                 $this->flashMessage('admin.users.users_saved', 'success');
                 $this->redirect('this');
             }

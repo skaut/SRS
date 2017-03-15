@@ -33,7 +33,7 @@ class ExcelResponse extends Nette\Object implements IResponse
     function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse)
     {
         $httpResponse->setContentType('application/force-download');
-        $httpResponse->setHeader('Content-Disposition', 'attachment;filename='.$this->filename);
+        $httpResponse->setHeader('Content-Disposition', 'attachment;filename=' . $this->filename);
         $httpResponse->setHeader('Content-Transfer-Encoding', 'binary');
 
         $writer = new \PHPExcel_Writer_Excel2007($this->phpExcel);

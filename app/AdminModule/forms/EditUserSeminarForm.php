@@ -3,8 +3,6 @@
 namespace App\AdminModule\Forms;
 
 
-
-
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Program\ProgramRepository;
@@ -132,7 +130,8 @@ class EditUserSeminarForm extends Nette\Object
         return $form;
     }
 
-    public function processForm(Form $form, \stdClass $values) {
+    public function processForm(Form $form, \stdClass $values)
+    {
         if (!$form['cancel']->isSubmittedBy()) {
             $this->user->setRoles($this->roleRepository->findRolesByIds($values['roles']));
             $this->user->setApproved($values['approved']);

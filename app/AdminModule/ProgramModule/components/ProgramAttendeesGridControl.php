@@ -171,8 +171,7 @@ class ProgramAttendeesGridControl extends Control
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
             $p->redrawControl('programs');
-        }
-        else {
+        } else {
             $this->redirect('this');
         }
     }
@@ -198,13 +197,13 @@ class ProgramAttendeesGridControl extends Control
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
             $p->redrawControl('programs');
-        }
-        else {
+        } else {
             $this->redirect('this');
         }
     }
 
-    public function groupRegister(array $ids) {
+    public function groupRegister(array $ids)
+    {
         foreach ($ids as $id) {
             $user = $this->userRepository->findById($id);
             if (!$user->hasProgramBlock($this->program->getBlock())) {
@@ -224,7 +223,8 @@ class ProgramAttendeesGridControl extends Control
         }
     }
 
-    public function groupUnregister(array $ids) {
+    public function groupUnregister(array $ids)
+    {
         foreach ($ids as $id) {
             $user = $this->userRepository->findById($id);
             $user->removeProgram($this->program);

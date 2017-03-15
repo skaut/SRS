@@ -65,8 +65,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
         if ($user->isApproved()) {
             foreach ($user->getRoles() as $role)
                 $netteRoles[] = $role->getName();
-        }
-        else {
+        } else {
             $roleUnapproved = $this->roleRepository->findBySystemName(Role::UNAPPROVED);
             $netteRoles[] = $roleUnapproved->getName();
         }
@@ -74,7 +73,8 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
         return new NS\Identity($user->getId(), $netteRoles);
     }
 
-    private function updateUserFromSkautIS(User $user, $skautISUser) {
+    private function updateUserFromSkautIS(User $user, $skautISUser)
+    {
         $skautISPerson = $this->skautIsService->getPersonDetail($skautISUser->ID_Person);
 
         $user->setSkautISUserId($skautISUser->ID);
@@ -100,7 +100,8 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
             $user->setUnit(null);
     }
 
-    private function generateVariableSymbol(\DateTime $birthDate) {
+    private function generateVariableSymbol(\DateTime $birthDate)
+    {
         $variableSymbolCode = $this->settingsRepository->getValue(Settings::VARIABLE_SYMBOL_CODE);
         $variableSymbol = $variableSymbolCode . $birthDate->format('ymd');
 
@@ -110,7 +111,8 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
         return $variableSymbol;
     }
 
-    public function updateRoles($user, $testRole = null) {
+    public function updateRoles($user, $testRole = null)
+    {
         $dbuser = $this->userRepository->findById($user->id);
 
         $netteRoles = [];
@@ -123,8 +125,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
                 $roleUnapproved = $this->roleRepository->findBySystemName(Role::UNAPPROVED);
                 $netteRoles[] = $roleUnapproved->getName();
             }
-        }
-        else {
+        } else {
             $netteRoles[] = Role::TEST;
             $netteRoles[] = $testRole->getName();
         }

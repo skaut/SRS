@@ -38,8 +38,7 @@ class SchedulePresenter extends ApiBasePresenter
 
         if ($this->user->isLoggedIn()) {
             $this->scheduleService->setUser($this->user->id);
-        }
-        else {
+        } else {
             $data = new ResponseDTO();
             $data->setMessage($this->translator->translate('common.api.authentification_error'));
             $data->setStatus('danger');
@@ -53,7 +52,8 @@ class SchedulePresenter extends ApiBasePresenter
     /**
      *
      */
-    public function actionGetProgramsAdmin() {
+    public function actionGetProgramsAdmin()
+    {
         $data = $this->scheduleService->getProgramsAdmin();
 
         $json = $this->serializer->serialize($data, 'json');
@@ -64,7 +64,8 @@ class SchedulePresenter extends ApiBasePresenter
     /**
      *
      */
-    public function actionGetProgramsWeb() {
+    public function actionGetProgramsWeb()
+    {
         $data = $this->scheduleService->getProgramsWeb();
 
         $json = $this->serializer->serialize($data, 'json');

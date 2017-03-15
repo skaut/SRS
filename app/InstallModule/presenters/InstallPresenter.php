@@ -71,7 +71,8 @@ class InstallPresenter extends InstallBasePresenter
         }
     }
 
-    public function handleImportSchema() {
+    public function handleImportSchema()
+    {
         $helperSet = new HelperSet(['em' => new EntityManagerHelper($this->em)]);
         $this->application->setHelperSet($helperSet);
 
@@ -167,7 +168,8 @@ class InstallPresenter extends InstallBasePresenter
         }
     }
 
-    private function checkSkautISConnection() {
+    private function checkSkautISConnection()
+    {
         try {
             $wsdlManager = new WsdlManager(new WebServiceFactory(), new Config($this->context->parameters['skautIS']['appId'], $this->context->parameters['skautIS']['test']));
             $skautIS = new Skautis($wsdlManager, new User($wsdlManager));

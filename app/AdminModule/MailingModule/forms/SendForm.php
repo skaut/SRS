@@ -57,7 +57,8 @@ class SendForm extends Nette\Object
         return $form;
     }
 
-    public function processForm(Form $form, \stdClass $values) {
+    public function processForm(Form $form, \stdClass $values)
+    {
         try {
             $this->mailService->sendMailToRoles($values['recipients'], $values['copy'], $values['subject'], $values['text']);
             $this->mailSuccess = true;

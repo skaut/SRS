@@ -182,7 +182,8 @@ abstract class Content implements IContent
         $this->position = $position;
     }
 
-    public function getContentFormName() {
+    public function getContentFormName()
+    {
         return $this->type . "_" . $this->id;
     }
 

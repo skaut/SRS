@@ -3,7 +3,6 @@
 namespace App\Model\CMS\Content;
 
 
-
 use App\Model\CMS\Document\TagRepository;
 use App\Model\CMS\Page;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -38,7 +37,8 @@ class DocumentContent extends Content implements IContent
     /**
      * @param TagRepository $tagRepository
      */
-    public function injectTagRepository(TagRepository $tagRepository) {
+    public function injectTagRepository(TagRepository $tagRepository)
+    {
         $this->tagRepository = $tagRepository;
     }
 

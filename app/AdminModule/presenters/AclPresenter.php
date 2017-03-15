@@ -47,13 +47,15 @@ class AclPresenter extends AdminBasePresenter
         $this->checkPermission(Permission::MANAGE);
     }
 
-    public function renderEdit($id) {
+    public function renderEdit($id)
+    {
         $role = $this->roleRepository->findById($id);
 
         $this->template->editedRole = $role;
     }
 
-    public function actionTest($id) {
+    public function actionTest($id)
+    {
         $role = $this->roleRepository->findById($id);
 
         $this->authenticator->updateRoles($this->getPresenter()->user, $role);
@@ -96,8 +98,7 @@ class AclPresenter extends AdminBasePresenter
             if ($form['submitAndContinue']->isSubmittedBy()) {
                 $id = $values['id'];
                 $this->redirect('Acl:edit', ['id' => $id]);
-            }
-            else
+            } else
                 $this->redirect('Acl:default');
         };
 

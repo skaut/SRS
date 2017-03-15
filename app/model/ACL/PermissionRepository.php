@@ -10,7 +10,8 @@ class PermissionRepository extends EntityRepository
     /**
      * @return array
      */
-    public function findAllNames() {
+    public function findAllNames()
+    {
         return $this->createQueryBuilder('p')
             ->select('p.name')
             ->addSelect('role.name AS roleName')->join('p.roles', 'role')
@@ -47,7 +48,8 @@ class PermissionRepository extends EntityRepository
      * @param $resourceName
      * @return Permission
      */
-    public function findByPermissionAndResourceName($permissionName, $resourceName) {
+    public function findByPermissionAndResourceName($permissionName, $resourceName)
+    {
         return $this->createQueryBuilder('p')
             ->select('p')
             ->join('p.resource', 'r')

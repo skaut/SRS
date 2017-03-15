@@ -68,7 +68,8 @@ class WebForm extends Nette\Object
         return $form;
     }
 
-    public function processForm(Form $form, \stdClass $values) {
+    public function processForm(Form $form, \stdClass $values)
+    {
         $logo = $values['logo'];
         if ($logo->size > 0) {
             $this->filesService->delete('/logo/' . $this->settingsRepository->getValue(Settings::LOGO));

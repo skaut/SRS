@@ -134,18 +134,18 @@ class UsersGridControl extends Control
                 return implode(", ", $roles);
             })
             ->setFilterMultiSelect($this->roleRepository->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED]))
-            ->setCondition(function($qb, $values) {
+            ->setCondition(function ($qb, $values) {
                 $qb->join('u.roles', 'r')->where('r.id IN (:ids)')->setParameter(':ids', $values);
             });
 
         $columnApproved = $grid->addColumnStatus('approved', 'admin.users.users_approved');
         $columnApproved
             ->addOption(false, 'admin.users.users_approved_unapproved')
-                ->setClass('btn-danger')
-                ->endOption()
+            ->setClass('btn-danger')
+            ->endOption()
             ->addOption(true, 'admin.users.users_approved_approved')
-                ->setClass('btn-success')
-                ->endOption()
+            ->setClass('btn-success')
+            ->endOption()
             ->onChange[] = [$this, 'changeApproved'];
         $columnApproved
             ->setSortable()
@@ -158,21 +158,21 @@ class UsersGridControl extends Control
 
         $grid->addColumnText('unit', 'admin.users.users_membership')
             ->setRendererOnCondition(function ($row) {
-                    return Html::el('span')
-                        ->style('color: red')
-                        ->setText($row->isMember() ?
-                            $this->translator->translate('admin.users.users_membership_no') :
-                            $this->translator->translate('admin.users.users_membership_not_connected'));
-                }, function ($row) {
-                    return $row->getUnit() === null;
-                }
+                return Html::el('span')
+                    ->style('color: red')
+                    ->setText($row->isMember() ?
+                        $this->translator->translate('admin.users.users_membership_no') :
+                        $this->translator->translate('admin.users.users_membership_not_connected'));
+            }, function ($row) {
+                return $row->getUnit() === null;
+            }
             )
             ->setSortable()
             ->setFilterText();
 
         $grid->addColumnText('age', 'admin.users.users_age')
             ->setSortable()
-            ->setSortableCallback(function($qb, $sort) {
+            ->setSortableCallback(function ($qb, $sort) {
                 $sort = $sort['age'] == 'DESC' ? 'ASC' : 'DESC';
                 $qb->orderBy('u.birthdate', $sort);
             });
@@ -209,11 +209,11 @@ class UsersGridControl extends Control
         $columnAttended = $grid->addColumnStatus('attended', 'admin.users.users_attended');
         $columnAttended
             ->addOption(false, 'admin.users.users_attended_no')
-                ->setClass('btn-danger')
-                ->endOption()
+            ->setClass('btn-danger')
+            ->endOption()
             ->addOption(true, 'admin.users.users_attended_yes')
-                ->setClass('btn-success')
-                ->endOption()
+            ->setClass('btn-success')
+            ->endOption()
             ->onChange[] = [$this, 'changeAttended'];
         $columnAttended
             ->setSortable()
@@ -225,7 +225,7 @@ class UsersGridControl extends Control
             ->setTranslateOptions();
 
         $grid->addColumnText('unregisteredMandatoryBlocks', 'admin.users.users_not_registered_mandatory_blocks')
-            ->setRenderer(function ($row){
+            ->setRenderer(function ($row) {
                 if (!$row->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS) || !$row->isApproved())
                     return null;
 
@@ -255,11 +255,11 @@ class UsersGridControl extends Control
         }
 
 
-        $grid->addInlineEdit()->onControlAdd[] = function($container) {
+        $grid->addInlineEdit()->onControlAdd[] = function ($container) {
             $container->addSelect('paymentMethod', '', $this->preparePaymentMethodOptionsWithEmpty());
             $container->addDatePicker('paymentDate', '');
         };
-        $grid->getInlineEdit()->onSetDefaults[] = function($container, $item) {
+        $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) {
             $container->setDefaults([
                 'paymentMethod' => $item->getPaymentMethod(),
                 'paymentDate' => $item->getPaymentDate()
@@ -274,7 +274,8 @@ class UsersGridControl extends Control
         $grid->setColumnsSummary(['fee']);
     }
 
-    public function edit($id, $values) {
+    public function edit($id, $values)
+    {
         $user = $this->userRepository->findById($id);
         $user->setPaymentMethod($values['paymentMethod']);
         $user->setPaymentDate($values['paymentDate']);
@@ -285,13 +286,13 @@ class UsersGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-        }
-        else {
+        } else {
             $this->redirect('this');
         }
     }
 
-    public function changeApproved($id, $approved) {
+    public function changeApproved($id, $approved)
+    {
         $user = $this->userRepository->findById($id);
 
         $over = false;
@@ -309,8 +310,7 @@ class UsersGridControl extends Control
 
         if ($over) {
             $p->flashMessage('admin.users.users_change_approved_error', 'danger');
-        }
-        else {
+        } else {
             $user->setApproved($approved);
             $this->userRepository->save($user);
 
@@ -320,7 +320,8 @@ class UsersGridControl extends Control
         $this->redirect('this');
     }
 
-    public function changeAttended($id, $attended) {
+    public function changeAttended($id, $attended)
+    {
         $user = $this->userRepository->findById($id);
         $user->setAttended($attended);
         $this->userRepository->save($user);
@@ -331,13 +332,13 @@ class UsersGridControl extends Control
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
             $this['usersGrid']->redrawItem($id);
-        }
-        else {
+        } else {
             $this->redirect('this');
         }
     }
 
-    public function groupApprove(array $ids) {
+    public function groupApprove(array $ids)
+    {
         $users = $this->userRepository->findUsersByIds($ids);
         $rolesWithLimitedCapacity = $this->roleRepository->findAllWithLimitedCapacity();
         $unoccupiedCounts = $this->roleRepository->countUnoccupiedInRoles($rolesWithLimitedCapacity);
@@ -363,8 +364,7 @@ class UsersGridControl extends Control
 
         if ($over) {
             $p->flashMessage('admin.users.users_group_action_approve_error', 'danger');
-        }
-        else {
+        } else {
             foreach ($users as $user) {
                 $user->setApproved(true);
                 $this->userRepository->save($user);
@@ -376,7 +376,8 @@ class UsersGridControl extends Control
         $this->redirect('this');
     }
 
-    public function groupChangeRoles(array $ids, $value) {
+    public function groupChangeRoles(array $ids, $value)
+    {
         $users = $this->userRepository->findUsersByIds($ids);
         $selectedRoles = $this->roleRepository->findRolesByIds($value);
 
@@ -430,7 +431,8 @@ class UsersGridControl extends Control
         $this->redirect('this');
     }
 
-    public function groupMarkAttended(array $ids) {
+    public function groupMarkAttended(array $ids)
+    {
         $this->userRepository->setAttended($ids);
 
         $p = $this->getPresenter();
@@ -444,7 +446,8 @@ class UsersGridControl extends Control
         }
     }
 
-    public function groupMarkPaidToday(array $ids, $value) {
+    public function groupMarkPaidToday(array $ids, $value)
+    {
         foreach ($ids as $id) {
             $user = $this->userRepository->findById($id);
             if ($user->isPaying()) {
@@ -465,22 +468,26 @@ class UsersGridControl extends Control
         }
     }
 
-    public function groupGeneratePaymentProofs(array $ids) {
+    public function groupGeneratePaymentProofs(array $ids)
+    {
         $this->sessionSection->userIds = $ids;
         $this->redirect('generatepaymentproofs'); //presmerovani kvuli zruseni ajax
     }
 
-    public function groupExportRoles(array $ids) {
+    public function groupExportRoles(array $ids)
+    {
         $this->sessionSection->userIds = $ids;
         $this->redirect('exportroles'); //presmerovani kvuli zruseni ajax
     }
 
-    public function groupExportSchedules(array $ids) {
+    public function groupExportSchedules(array $ids)
+    {
         $this->sessionSection->userIds = $ids;
         $this->redirect('exportschedules'); //presmerovani kvuli zruseni ajax
     }
 
-    public function handleGeneratePaymentProofs() {
+    public function handleGeneratePaymentProofs()
+    {
         $ids = $this->session->getSection('srs')->userIds;
 
         $users = $this->userRepository->findUsersByIds($ids);
@@ -499,7 +506,8 @@ class UsersGridControl extends Control
         $this->pdfExportService->generatePaymentProofs($usersToGenerate, "doklady.pdf");
     }
 
-    public function handleExportRoles() {
+    public function handleExportRoles()
+    {
         $ids = $this->session->getSection('srs')->userIds;
 
         $users = $this->userRepository->findUsersByIds($ids);
@@ -510,7 +518,8 @@ class UsersGridControl extends Control
         $this->getPresenter()->sendResponse($response);
     }
 
-    public function handleExportSchedules() {
+    public function handleExportSchedules()
+    {
         $ids = $this->session->getSection('srs')->userIds;
 
         $users = $this->userRepository->findUsersByIds($ids);
@@ -520,14 +529,16 @@ class UsersGridControl extends Control
         $this->getPresenter()->sendResponse($response);
     }
 
-    private function preparePaymentMethodOptionsWithoutEmpty() {
+    private function preparePaymentMethodOptionsWithoutEmpty()
+    {
         $options = [];
         foreach (PaymentType::$types as $type)
             $options[$type] = 'common.payment.' . $type;
         return $options;
     }
 
-    private function preparePaymentMethodOptionsWithEmpty() {
+    private function preparePaymentMethodOptionsWithEmpty()
+    {
         $options = [];
         $options[''] = '';
         foreach (PaymentType::$types as $type)
@@ -535,7 +546,8 @@ class UsersGridControl extends Control
         return $options;
     }
 
-    private function preparePaymentMethodFilterOptions() {
+    private function preparePaymentMethodFilterOptions()
+    {
         $options = [];
         $options[''] = 'admin.common.all';
         foreach (PaymentType::$types as $type)

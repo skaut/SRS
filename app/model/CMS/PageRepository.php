@@ -56,7 +56,8 @@ class PageRepository extends EntityRepository
     /**
      * @return array
      */
-    public function findAllSlugs() {
+    public function findAllSlugs()
+    {
         $slugs = $this->createQueryBuilder('p')
             ->select('p.slug')
             ->getQuery()
@@ -68,7 +69,8 @@ class PageRepository extends EntityRepository
      * @param $id
      * @return array
      */
-    public function findOthersSlugs($id) {
+    public function findOthersSlugs($id)
+    {
         $slugs = $this->createQueryBuilder('p')
             ->select('p.slug')
             ->where('p.id != :id')
@@ -115,7 +117,8 @@ class PageRepository extends EntityRepository
     /**
      * @return array
      */
-    public function getPagesOptions() {
+    public function getPagesOptions()
+    {
         $pages = $this->createQueryBuilder('p')
             ->select('p.slug, p.name')
             ->orderBy('p.position')
@@ -155,7 +158,8 @@ class PageRepository extends EntityRepository
      * @param $prevId
      * @param $nextId
      */
-    public function sort($itemId, $prevId, $nextId) {
+    public function sort($itemId, $prevId, $nextId)
+    {
         $item = $this->find($itemId);
         $prev = $prevId ? $this->find($prevId) : null;
         $next = $nextId ? $this->find($nextId) : null;

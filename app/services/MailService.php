@@ -52,7 +52,8 @@ class MailService extends Nette\Object
         $this->roleRepository = $roleRepository;
     }
 
-    public function sendMailToRoles($rolesIds, $copy, $subject, $text) {
+    public function sendMailToRoles($rolesIds, $copy, $subject, $text)
+    {
         $users = $this->userRepository->findAllApprovedInRoles($rolesIds);
 
         $params = [

@@ -159,7 +159,8 @@ class Page
     /**
      * @param Role $role
      */
-    public function addRole($role) {
+    public function addRole($role)
+    {
         $this->roles->add($role);
     }
 

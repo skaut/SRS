@@ -126,12 +126,14 @@ abstract class WebBasePresenter extends BasePresenter
         $this->template->settings = $this->settingsRepository;
     }
 
-    public function actionExitRoleTest() {
+    public function actionExitRoleTest()
+    {
         $this->authenticator->updateRoles($this->user);
         $this->redirect(':Admin:Acl:default');
     }
 
-    private function checkInstallation() {
+    private function checkInstallation()
+    {
         try {
             if (!filter_var($this->settingsRepository->getValue(Settings::ADMIN_CREATED), FILTER_VALIDATE_BOOLEAN))
                 $this->redirect(':Install:Install:default');

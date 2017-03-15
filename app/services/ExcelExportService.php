@@ -21,7 +21,8 @@ class ExcelExportService extends Nette\Object
         $this->translator = $translator;
     }
 
-    public function exportUsersRoles($users, $roles, $filename) {
+    public function exportUsersRoles($users, $roles, $filename)
+    {
         $sheet = $this->phpExcel->getSheet(0);
 
         $row = 1;
@@ -30,7 +31,7 @@ class ExcelExportService extends Nette\Object
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
         $sheet->getColumnDimensionByColumn($column++)->setWidth('25');
 
-        foreach($roles as $role) {
+        foreach ($roles as $role) {
             $sheet->setCellValueByColumnAndRow($column, $row, $role->getName());
             $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
             $sheet->getColumnDimensionByColumn($column)->setWidth('15');
@@ -43,7 +44,7 @@ class ExcelExportService extends Nette\Object
 
             $sheet->setCellValueByColumnAndRow($column, $row, $user->getDisplayName());
 
-            foreach($roles as $role) {
+            foreach ($roles as $role) {
                 $column++;
                 if ($user->isInRole($role))
                     $sheet->setCellValueByColumnAndRow($column, $row, "X");
@@ -53,11 +54,12 @@ class ExcelExportService extends Nette\Object
         return new ExcelResponse($this->phpExcel, $filename);
     }
 
-    public function exportUsersSchedules($users, $filename) {
+    public function exportUsersSchedules($users, $filename)
+    {
         $this->phpExcel->removeSheetByIndex(0);
         $sheetNumber = 0;
 
-        foreach($users as $user) {
+        foreach ($users as $user) {
             $sheet = new \PHPExcel_Worksheet($this->phpExcel, $user->getDisplayName());
             $this->phpExcel->addSheet($sheet, $sheetNumber++);
 
@@ -104,7 +106,8 @@ class ExcelExportService extends Nette\Object
         return new ExcelResponse($this->phpExcel, $filename);
     }
 
-    public function exportUsersSchedule($user, $filename) {
+    public function exportUsersSchedule($user, $filename)
+    {
         return $this->exportUsersSchedules([$user], $filename);
     }
 }

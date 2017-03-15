@@ -31,8 +31,7 @@ class SkautIsPresenter extends ConfigurationBasePresenter
             } catch (WsdlException $ex) {
                 $this->template->access = false;
             }
-        }
-        else {
+        } else {
             $this->template->connected = false;
         }
     }

@@ -20,7 +20,8 @@ class DocumentRepository extends EntityRepository
      * @param $tags
      * @return Document[]
      */
-    public function findAllByTagsOrderedByName($tags) {
+    public function findAllByTagsOrderedByName($tags)
+    {
         return $this->createQueryBuilder('d')
             ->select('d')
             ->join('d.tags', 't')

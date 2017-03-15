@@ -58,8 +58,7 @@ class RolesForm extends Nette\Object
             $cancelRegistrationButton
                 ->setAttribute('data-toggle', 'confirmation')
                 ->setAttribute('data-content', $form->getTranslator()->translate('web.profile.cancel_registration_confirm'));
-        }
-        else {
+        } else {
             $submitButton
                 ->setDisabled()
                 ->setAttribute('data-toggle', 'tooltip')
@@ -80,7 +79,8 @@ class RolesForm extends Nette\Object
         return $form;
     }
 
-    public function processForm(Form $form, \stdClass $values) {
+    public function processForm(Form $form, \stdClass $values)
+    {
         if ($form['submit']->isSubmittedBy()) {
             $selectedRoles = $this->roleRepository->findRolesByIds($values['roles']);
 
@@ -103,8 +103,7 @@ class RolesForm extends Nette\Object
             $this->programRepository->updateUserPrograms($this->user);
 
             $this->userRepository->save($this->user);
-        }
-        elseif ($form['cancelRegistration']->isSubmittedBy()) {
+        } elseif ($form['cancelRegistration']->isSubmittedBy()) {
             $this->userRepository->remove($this->user);
         }
     }

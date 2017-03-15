@@ -15,7 +15,8 @@ class WebPresenter extends ConfigurationBasePresenter
      */
     public $webFormFactory;
 
-    public function renderDefault() {
+    public function renderDefault()
+    {
         $this->template->logo = $this->settingsRepository->getValue(Settings::LOGO);
     }
 

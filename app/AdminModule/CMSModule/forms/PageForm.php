@@ -131,7 +131,8 @@ class PageForm extends UI\Control
         return $form;
     }
 
-    public function processForm(Form $form, \stdClass $values) {
+    public function processForm(Form $form, \stdClass $values)
+    {
         $page = $this->pageRepository->findById($values['id']);
 
         $area = $values['area'];
@@ -168,7 +169,8 @@ class PageForm extends UI\Control
         $this->onPageSave($this, $submitName);
     }
 
-    private function prepareContentTypesOptions() {
+    private function prepareContentTypesOptions()
+    {
         $options = [];
         foreach (Content::$types as $type)
             $options[$type] = 'common.content.name.' . $type;

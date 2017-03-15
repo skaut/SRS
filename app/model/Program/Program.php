@@ -92,28 +92,33 @@ class Program
         }
     }
 
-    public function addAttendee($user) {
+    public function addAttendee($user)
+    {
         if (!$this->attendees->contains($user)) {
             $this->attendees->add($user);
             $user->addProgram($this);
         }
     }
 
-    public function getAttendeesCount() {
+    public function getAttendeesCount()
+    {
         return $this->attendees->count();
     }
 
-    public function removeAllAttendees() {
+    public function removeAllAttendees()
+    {
         foreach ($this->attendees as $attendee) {
             $attendee->removeProgram($this);
         }
     }
 
-    public function isAttendee(User $user) {
+    public function isAttendee(User $user)
+    {
         return $this->attendees->contains($user);
     }
 
-    public function getCapacity() {
+    public function getCapacity()
+    {
         return $this->block->getCapacity();
     }
 

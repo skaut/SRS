@@ -98,7 +98,8 @@ class RouterFactory
                 ],
                 'action' => 'default'
             ]);
-        } catch (TableNotFoundException $ex) { }
+        } catch (TableNotFoundException $ex) {
+        }
 
         $router[] = new Route('<presenter>/<action>[/<id>]', [
             'module' => 'Web',

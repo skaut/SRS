@@ -55,7 +55,8 @@ class PaymentForm extends Nette\Object
         return $form;
     }
 
-    public function processForm(Form $form, \stdClass $values) {
+    public function processForm(Form $form, \stdClass $values)
+    {
         $this->settingsRepository->setValue(Settings::ACCOUNT_NUMBER, $values['accountNumber']);
 
         $variableSymbolCode = $values['variableSymbolCode'];

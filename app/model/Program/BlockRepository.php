@@ -43,7 +43,8 @@ class BlockRepository extends EntityRepository
     /**
      * @return array
      */
-    public function findAllNames() {
+    public function findAllNames()
+    {
         $names = $this->createQueryBuilder('b')
             ->select('b.name')
             ->getQuery()
@@ -54,7 +55,8 @@ class BlockRepository extends EntityRepository
     /**
      * @return array
      */
-    public function findAllOrderedByName() {
+    public function findAllOrderedByName()
+    {
         return $this->createQueryBuilder('b')
             ->orderBy('b.name')
             ->getQuery()
@@ -64,7 +66,8 @@ class BlockRepository extends EntityRepository
     /**
      * @return array
      */
-    public function findAllUncategorizedOrderedByName() {
+    public function findAllUncategorizedOrderedByName()
+    {
         return $this->createQueryBuilder('b')
             ->where('b.category IS NULL')
             ->orderBy('b.name')
@@ -76,7 +79,8 @@ class BlockRepository extends EntityRepository
      * @param $id
      * @return array
      */
-    public function findOthersNames($id) {
+    public function findOthersNames($id)
+    {
         $names = $this->createQueryBuilder('b')
             ->select('b.name')
             ->where('b.id != :id')
@@ -91,7 +95,8 @@ class BlockRepository extends EntityRepository
      * @param bool $unassignedOnly
      * @return array
      */
-    public function findByLikeNameOrderedByName($text, $unassignedOnly = false) {
+    public function findByLikeNameOrderedByName($text, $unassignedOnly = false)
+    {
         $qb = $this->createQueryBuilder('b')
             ->select('b')
             ->where('b.name LIKE :text')->setParameter('text', '%' . $text . '%');

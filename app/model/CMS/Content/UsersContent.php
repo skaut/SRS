@@ -43,7 +43,8 @@ class UsersContent extends Content implements IContent
     /**
      * @param RoleRepository $roleRepository
      */
-    public function injectRoleRepository(RoleRepository $roleRepository) {
+    public function injectRoleRepository(RoleRepository $roleRepository)
+    {
         $this->roleRepository = $roleRepository;
     }
 

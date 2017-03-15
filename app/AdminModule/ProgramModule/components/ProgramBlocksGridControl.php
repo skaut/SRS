@@ -84,24 +84,24 @@ class ProgramBlocksGridControl extends Control
 
         $grid->addColumnText('capacity', 'admin.program.blocks_capacity')
             ->setRendererOnCondition(function ($row) {
-                    return $this->translator->translate('admin.program.blocks_capacity_unlimited');
-                }, function ($row) {
-                    return $row->getCapacity() === null;
-                }
+                return $this->translator->translate('admin.program.blocks_capacity_unlimited');
+            }, function ($row) {
+                return $row->getCapacity() === null;
+            }
             )
             ->setSortable();
 
         $columnMandatory = $grid->addColumnStatus('mandatory', 'admin.program.blocks_mandatory');
         $columnMandatory
             ->addOption(0, 'admin.program.blocks_mandatory_voluntary')
-                ->setClass('btn-primary')
-                ->endOption()
+            ->setClass('btn-primary')
+            ->endOption()
             ->addOption(1, 'admin.program.blocks_mandatory_mandatory')
-                ->setClass('btn-danger')
-                ->endOption()
+            ->setClass('btn-danger')
+            ->endOption()
             ->addOption(2, 'admin.program.blocks_mandatory_auto_register')
-                ->setClass('btn-warning')
-                ->endOption()
+            ->setClass('btn-warning')
+            ->endOption()
             ->onChange[] = [$this, 'changeMandatory'];
 
         $columnMandatory
@@ -120,8 +120,9 @@ class ProgramBlocksGridControl extends Control
             });
 
         if (($this->getPresenter()->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS) ||
-            $this->getPresenter()->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS)) &&
-            $this->settingsRepository->getValue(Settings::IS_ALLOWED_ADD_BLOCK)) {
+                $this->getPresenter()->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS)) &&
+            $this->settingsRepository->getValue(Settings::IS_ALLOWED_ADD_BLOCK)
+        ) {
             $grid->addToolbarButton('Blocks:add')
                 ->setIcon('plus')
                 ->setTitle('admin.common.add');
@@ -160,26 +161,25 @@ class ProgramBlocksGridControl extends Control
         $this->redirect('this');
     }
 
-    public function changeMandatory($id, $mandatory) {
+    public function changeMandatory($id, $mandatory)
+    {
         $block = $this->blockRepository->findById($id);
 
         $p = $this->getPresenter();
 
         if (!$p->dbuser->isAllowedModifyBlock($block)) {
             $p->flashMessage('admin.program.blocks_change_mandatory_denied', 'danger');
-        }
-        elseif ($mandatory == 2 && $block->getMandatory() != 2 &&
+        } elseif ($mandatory == 2 && $block->getMandatory() != 2 &&
             ($block->getProgramsCount() > 1 ||
                 ($block->getProgramsCount() == 1 && $this->programRepository->hasOverlappingProgram(
-                    $block->getPrograms()->first(),
-                    $block->getPrograms()->first()->getStart(),
-                    $block->getPrograms()->first()->getEnd())
+                        $block->getPrograms()->first(),
+                        $block->getPrograms()->first()->getStart(),
+                        $block->getPrograms()->first()->getEnd())
                 )
             )
         ) {
             $p->flashMessage('admin.program.blocks_change_mandatory_auto_register_not_allowed', 'danger');
-        }
-        else {
+        } else {
             //odstraneni ucastniku, pokud se odstrani automaticke prihlasovani
             if ($block->getMandatory() == 2 && $mandatory != 2) {
                 foreach ($block->getPrograms() as $program) {
@@ -202,13 +202,13 @@ class ProgramBlocksGridControl extends Control
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
             $this['programBlocksGrid']->redrawItem($id);
-        }
-        else {
+        } else {
             $this->redirect('this');
         }
     }
 
-    public function isAllowedModifyBlock($block) {
+    public function isAllowedModifyBlock($block)
+    {
         return $this->getPresenter()->dbuser->isAllowedModifyBlock($block);
     }
 }

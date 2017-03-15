@@ -70,7 +70,7 @@ class ProgramCategoriesGridControl extends Control
 
         $rolesOptions = $this->roleRepository->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]);
 
-        $grid->addInlineAdd()->onControlAdd[] = function($container) use($rolesOptions) {
+        $grid->addInlineAdd()->onControlAdd[] = function ($container) use ($rolesOptions) {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.program.categories_name_empty')
                 ->addRule(Form::IS_NOT_IN, 'admin.program.categories_name_exists', $this->categoryRepository->findAllNames());
@@ -80,14 +80,14 @@ class ProgramCategoriesGridControl extends Control
         };
         $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
 
-        $grid->addInlineEdit()->onControlAdd[] = function($container) use($rolesOptions) {
+        $grid->addInlineEdit()->onControlAdd[] = function ($container) use ($rolesOptions) {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.program.categories_name_empty');
 
             $container->addMultiSelect('registerableRoles', '', $rolesOptions)->setAttribute('class', 'datagrid-multiselect')
                 ->addRule(Form::FILLED, 'admin.program.categories_registerable_roles_empty');
         };
-        $grid->getInlineEdit()->onSetDefaults[] = function($container, $item) {
+        $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) {
             $container['name']
                 ->addRule(Form::IS_NOT_IN, 'admin.program.categories_name_exists', $this->categoryRepository->findOthersNames($item->getId()));
 
@@ -108,7 +108,8 @@ class ProgramCategoriesGridControl extends Control
             ]);
     }
 
-    public function add($values) {
+    public function add($values)
+    {
         $category = new Category();
 
         $category->setName($values['name']);

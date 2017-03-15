@@ -12,8 +12,10 @@
         //razeni contentu
         $('#contents').sortable({
             delay: 300,
-            update: function (event, ui) { },
-            start: function (event, ui) { },
+            update: function (event, ui) {
+            },
+            start: function (event, ui) {
+            },
             stop: function (event, ui) {
                 $('.tinymce').each(function () {
                     tinymce.EditorManager.execCommand('mceRemoveEditor', false, $(this).attr('id'));
@@ -22,7 +24,7 @@
 
                 var sorted = $("#contents").sortable("toArray");
                 for (var i = 0; i < sorted.length; i++) {
-                    $('#' + sorted[i]).find('input.position').val(i+1);
+                    $('#' + sorted[i]).find('input.position').val(i + 1);
                 }
             }
         });

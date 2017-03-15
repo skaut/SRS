@@ -40,7 +40,7 @@ class MailHistoryGridControl extends Control
         $grid->setPagination(false);
 
         $grid->addColumnText('recipients', 'admin.mailing.history_recipients')
-            ->setRenderer(function($row) {
+            ->setRenderer(function ($row) {
                 if ($row->getType() == Mail::TO_ROLES) {
                     $roles = [];
                     foreach ($row->getRecipientRoles() as $role) {
@@ -48,8 +48,7 @@ class MailHistoryGridControl extends Control
                     }
                     $rolesText = implode(", ", $roles);
                     return $this->translator->translate('admin.mailing.history_roles', null, ['roles' => $rolesText]);
-                }
-                else {
+                } else {
                     return $this->translator->translate('admin.mailing.history_user', null, ['name' => $row->getRecipientUser()->getDisplayName()]);
                 }
             });

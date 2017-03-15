@@ -32,11 +32,11 @@
                     {_web.application_content.registered_roles_begin}
                     {foreach $dbuser->getRoles() as $role}{$role->getName()}{sep}, {/sep}{/foreach}{_web.application_content.registered_roles_end}
                 </div>
-                {if $unapprovedRole}
-                    <div class="alert alert-warning alert-forever">{_web.application_content.unapproved_registration}</div>
-                {else}
-                    <div class="alert alert-info alert-forever">{_web.application_content.approved_registration}</div>
-                {/if}
+            {if $unapprovedRole}
+                <div class="alert alert-warning alert-forever">{_web.application_content.unapproved_registration}</div>
+            {else}
+                <div class="alert alert-info alert-forever">{_web.application_content.approved_registration}</div>
+            {/if}
             {/if}
         </div>
     </div>

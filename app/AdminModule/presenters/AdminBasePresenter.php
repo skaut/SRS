@@ -127,7 +127,8 @@ abstract class AdminBasePresenter extends BasePresenter
         $this->template->containerAttributes = '';
     }
 
-    public function checkPermission($permission) {
+    public function checkPermission($permission)
+    {
         if (!$this->user->isAllowed($this->resource, $permission)) {
             $this->flashMessage('admin.common.access_denied', 'danger', 'lock');
             $this->redirect(':Admin:Dashboard:default');

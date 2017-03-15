@@ -60,7 +60,8 @@ class ImageContent extends Content implements IContent
     /**
      * @param FilesService $filesService
      */
-    public function injectFilesService(FilesService $filesService) {
+    public function injectFilesService(FilesService $filesService)
+    {
         $this->filesService = $filesService;
     }
 
@@ -198,8 +199,7 @@ class ImageContent extends Content implements IContent
             $this->filesService->save($file, $path);
             $image = $file->toImage();
             $exists = true;
-        }
-        else if ($this->image) {
+        } else if ($this->image) {
             $path = $this->filesService->getDir() . $this->image;
             $exists = file_exists($path);
             if ($exists)
@@ -220,8 +220,7 @@ class ImageContent extends Content implements IContent
                 $this->width = ($image->getWidth() * $height) / $image->getHeight();
                 $this->height = $height;
             }
-        }
-        else {
+        } else {
             $this->width = $width;
             $this->height = $height;
         }
@@ -237,7 +236,8 @@ class ImageContent extends Content implements IContent
         return $options;
     }
 
-    private function generatePath($file) {
+    private function generatePath($file)
+    {
         return '/images/' . Random::generate(5) . '/' . Strings::webalize($file->name, '.');
     }
 }

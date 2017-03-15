@@ -274,7 +274,8 @@ class Role
         $this->pages = $pages;
     }
 
-    public function addPage(Page $page) {
+    public function addPage(Page $page)
+    {
         if (!$this->pages->contains($page))
             $page->addRole($this);
     }
@@ -311,11 +312,13 @@ class Role
         $this->registerable = $registerable;
     }
 
-    public function isRegisterableNow() {
+    public function isRegisterableNow()
+    {
         $now = new \DateTime();
         if ($this->registerable &&
             ($this->registerableFrom == null || $this->registerableFrom <= $now) &&
-            ($this->registerableTo == null || $this->registerableTo >= $now))
+            ($this->registerableTo == null || $this->registerableTo >= $now)
+        )
             return true;
         return false;
     }
@@ -384,7 +387,8 @@ class Role
         $this->capacity = $capacity;
     }
 
-    public function hasLimitedCapacity() {
+    public function hasLimitedCapacity()
+    {
         return $this->capacity !== null;
     }
 
@@ -461,7 +465,8 @@ class Role
         $this->incompatibleRoles = $incompatibleRoles;
     }
 
-    public function addIncompatibleRole($role) {
+    public function addIncompatibleRole($role)
+    {
         if (!$this->incompatibleRoles->contains($role))
             $this->incompatibleRoles->add($role);
     }
@@ -474,7 +479,8 @@ class Role
         return $this->requiredByRole;
     }
 
-    public function getRequiredByRoleTransitive() {
+    public function getRequiredByRoleTransitive()
+    {
         $allRequiredByRole = array();
         foreach ($this->requiredByRole as $requiredByRole) {
             $this->getRequiredByRoleTransitiveRec($allRequiredByRole, $requiredByRole);
@@ -482,7 +488,8 @@ class Role
         return $allRequiredByRole;
     }
 
-    private function getRequiredByRoleTransitiveRec(&$allRequiredByRole, $role) {
+    private function getRequiredByRoleTransitiveRec(&$allRequiredByRole, $role)
+    {
         if ($this == $role || in_array($role, $allRequiredByRole))
             return;
 
@@ -509,12 +516,14 @@ class Role
         $this->requiredRoles = $requiredRoles;
     }
 
-    public function addRequiredRole($role) {
+    public function addRequiredRole($role)
+    {
         if (!$this->requiredRoles->contains($role))
             $this->requiredRoles->add($role);
     }
 
-    public function getRequiredRolesTransitive() {
+    public function getRequiredRolesTransitive()
+    {
         $allRequiredRoles = [];
         foreach ($this->requiredRoles as $requiredRole) {
             $this->getRequiredRolesTransitiveRec($allRequiredRoles, $requiredRole);
@@ -522,7 +531,8 @@ class Role
         return $allRequiredRoles;
     }
 
-    private function getRequiredRolesTransitiveRec(&$allRequiredRoles, $role) {
+    private function getRequiredRolesTransitiveRec(&$allRequiredRoles, $role)
+    {
         if ($this == $role || in_array($role, $allRequiredRoles))
             return;
 
@@ -550,7 +560,8 @@ class Role
 //        $this->registerableCategories = $registerableCategories;
 //    }
 
-    public function addRegisterableCategory(Category $category) {
+    public function addRegisterableCategory(Category $category)
+    {
         if (!$this->registerableCategories->contains($category))
             $category->addRole($this);
     }

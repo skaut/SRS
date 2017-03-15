@@ -28,7 +28,8 @@ class AuthPresenter extends BasePresenter
     public $userRepository;
 
 
-    public function actionLogin($backlink = null) {
+    public function actionLogin($backlink = null)
+    {
         if ($this->getHttpRequest()->getPost() == null) {
             $loginUrl = $this->skautIsService->getLoginUrl($backlink);
             $this->redirectUrl($loginUrl);
@@ -40,7 +41,8 @@ class AuthPresenter extends BasePresenter
         $this->redirectAfterLogin($this->getParameter('ReturnUrl'));
     }
 
-    public function actionLogout() {
+    public function actionLogout()
+    {
         if ($this->user->isLoggedIn()) {
             $this->user->logout(true);
             $logoutUrl = $this->skautIsService->getLogoutUrl();
@@ -49,7 +51,8 @@ class AuthPresenter extends BasePresenter
         $this->redirect(':Web:Page:default');
     }
 
-    private function redirectAfterLogin($returnUrl) {
+    private function redirectAfterLogin($returnUrl)
+    {
         if ($returnUrl) {
             if (strpos($returnUrl, ':') !== false)
                 $this->redirect($returnUrl);
@@ -70,8 +73,7 @@ class AuthPresenter extends BasePresenter
                 if ($redirectByRole && $redirectByRole == $roleRedirect) {
                     $multipleRedirects = true;
                     break;
-                }
-                else {
+                } else {
                     $redirectByRole = $roleRedirect;
                 }
             }

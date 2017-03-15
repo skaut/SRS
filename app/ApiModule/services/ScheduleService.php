@@ -264,7 +264,8 @@ class ScheduleService extends Nette\Object
         )
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_register_programs_not_allowed'));
         elseif (!$this->settingsRepository->getValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT) &&
-            !$this->user->hasPaid() && $this->user->isPaying())
+            !$this->user->hasPaid() && $this->user->isPaying()
+        )
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_register_programs_before_payment_not_allowed'));
         elseif (!$program)
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_program_not_found'));

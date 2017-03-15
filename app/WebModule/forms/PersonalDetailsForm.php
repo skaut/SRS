@@ -97,7 +97,8 @@ class PersonalDetailsForm extends Nette\Object
         return $form;
     }
 
-    public function processForm(Form $form, \stdClass $values) {
+    public function processForm(Form $form, \stdClass $values)
+    {
         if (array_key_exists('sex', $values))
             $this->user->setSex($values['sex']);
         if (array_key_exists('firstName', $values))

@@ -44,10 +44,11 @@ class UserRepository extends EntityRepository
      * @param $text
      * @return array
      */
-    public function findNamesByLikeDisplayNameOrderedByDisplayName($text) {
+    public function findNamesByLikeDisplayNameOrderedByDisplayName($text)
+    {
         return $this->createQueryBuilder('u')
             ->select('u.id, u.displayName')
-            ->where('u.displayName LIKE :text')->setParameter('text', '%'.$text.'%')
+            ->where('u.displayName LIKE :text')->setParameter('text', '%' . $text . '%')
             ->addOrderBy('u.displayName')
             ->getQuery()
             ->getResult();
@@ -82,7 +83,8 @@ class UserRepository extends EntityRepository
      * @param $rolesIds
      * @return mixed
      */
-    public function findAllInRoles($rolesIds) {
+    public function findAllInRoles($rolesIds)
+    {
         return $this->createQueryBuilder('u')
             ->join('u.roles', 'r')
             ->where('r.id IN (:ids)')->setParameter('ids', $rolesIds)
@@ -110,7 +112,8 @@ class UserRepository extends EntityRepository
      * @param $rolesIds
      * @return mixed
      */
-    public function findAllApprovedInRoles($rolesIds) {
+    public function findAllApprovedInRoles($rolesIds)
+    {
         return $this->createQueryBuilder('u')
             ->join('u.roles', 'r')
             ->where('r.id IN (:ids)')->setParameter('ids', $rolesIds)
@@ -125,7 +128,8 @@ class UserRepository extends EntityRepository
      * @param $program
      * @return array
      */
-    public function findProgramAllowed(Program $program) {
+    public function findProgramAllowed(Program $program)
+    {
         $qb = $this->createQueryBuilder('u')
             ->leftJoin('u.programs', 'p', 'WITH', 'p.id = :pid')
             ->innerJoin('u.roles', 'r')
@@ -147,7 +151,8 @@ class UserRepository extends EntityRepository
     /**
      * @return array
      */
-    public function getLectorsOptions() {
+    public function getLectorsOptions()
+    {
         $lectors = $this->createQueryBuilder('u')
             ->select('u.id, u.displayName')
             ->join('u.roles', 'r')
@@ -168,7 +173,8 @@ class UserRepository extends EntityRepository
      * @param User $user
      * @return int[]
      */
-    public function findRegisterableCategoriesIdsByUser(User $user) {
+    public function findRegisterableCategoriesIdsByUser(User $user)
+    {
         return $this->createQueryBuilder('u')
             ->select('c.id')
             ->join('u.roles', 'r')
@@ -194,7 +200,8 @@ class UserRepository extends EntityRepository
     /**
      * @param $variableSymbolCode
      */
-    public function setVariableSymbolCode($variableSymbolCode) {
+    public function setVariableSymbolCode($variableSymbolCode)
+    {
         $this->createQueryBuilder('u')
             ->update()
             ->set('u.variableSymbol', $this->createQueryBuilder()->expr()->concat(
@@ -211,7 +218,8 @@ class UserRepository extends EntityRepository
     /**
      * @param User $user
      */
-    public function save(User $user) {
+    public function save(User $user)
+    {
         $this->_em->persist($user);
         $this->_em->flush();
     }
@@ -232,7 +240,8 @@ class UserRepository extends EntityRepository
      * @param $ids
      * @param bool $value
      */
-    public function setAttended($ids, $value = true) {
+    public function setAttended($ids, $value = true)
+    {
         $this->createQueryBuilder('u')
             ->update()
             ->set('u.attended', $value)

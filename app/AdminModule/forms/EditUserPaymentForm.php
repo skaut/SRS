@@ -21,7 +21,7 @@ class EditUserPaymentForm extends Nette\Object
     /** @var UserRepository */
     private $userRepository;
 
-     /** @var SettingsRepository */
+    /** @var SettingsRepository */
     private $settingsRepository;
 
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
@@ -70,7 +70,8 @@ class EditUserPaymentForm extends Nette\Object
         return $form;
     }
 
-    public function processForm(Form $form, \stdClass $values) {
+    public function processForm(Form $form, \stdClass $values)
+    {
         if (!$form['cancel']->isSubmittedBy()) {
             $this->user->setVariableSymbol($values['variableSymbol']);
 
@@ -84,7 +85,8 @@ class EditUserPaymentForm extends Nette\Object
         }
     }
 
-    private function preparePaymentMethodOptions() {
+    private function preparePaymentMethodOptions()
+    {
         $options = [];
         $options[''] = '';
         foreach (PaymentType::$types as $type)

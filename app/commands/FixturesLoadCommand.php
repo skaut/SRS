@@ -33,7 +33,8 @@ class FixturesLoadCommand extends Command
         $this->setDescription('Loads initial data to database.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
         try {
             $fixtures = [];
             $fixtures[] = new SettingsFixture($this->translator);

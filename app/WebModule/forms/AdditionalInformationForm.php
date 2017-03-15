@@ -53,7 +53,8 @@ class AdditionalInformationForm extends Nette\Object
         return $form;
     }
 
-    public function processForm(Form $form, \stdClass $values) {
+    public function processForm(Form $form, \stdClass $values)
+    {
         $this->user->setAbout($values['about']);
 
         if (array_key_exists('arrival', $values))

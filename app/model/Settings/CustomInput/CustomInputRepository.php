@@ -18,7 +18,8 @@ class CustomInputRepository extends EntityRepository
     /**
      * @return CustomInput[]
      */
-    public function findAllOrderedByPosition() {
+    public function findAllOrderedByPosition()
+    {
         return $this->createQueryBuilder('i')
             ->orderBy('i.position')
             ->getQuery()
@@ -65,7 +66,8 @@ class CustomInputRepository extends EntityRepository
      * @param $prevId
      * @param $nextId
      */
-    public function sort($itemId, $prevId, $nextId) {
+    public function sort($itemId, $prevId, $nextId)
+    {
         $item = $this->find($itemId);
         $prev = $prevId ? $this->find($prevId) : null;
         $next = $nextId ? $this->find($nextId) : null;

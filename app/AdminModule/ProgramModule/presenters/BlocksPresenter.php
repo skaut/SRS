@@ -82,7 +82,8 @@ class BlocksPresenter extends ProgramBasePresenter
         $this->template->block = $block;
     }
 
-    public function handleShowAttendees($programId) {
+    public function handleShowAttendees($programId)
+    {
         $this->session->getSection('srs')->programId = $programId;
 
         $this->template->programId = $programId;
@@ -93,11 +94,13 @@ class BlocksPresenter extends ProgramBasePresenter
             $this->redirect('this');
     }
 
-    public function handleDeleteProgram($programId) {
+    public function handleDeleteProgram($programId)
+    {
         $program = $this->programRepository->findById($programId);
 
         if (!$this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE) ||
-            !$this->settingsRepository->getValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE))
+            !$this->settingsRepository->getValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)
+        )
             $this->getPresenter()->flashMessage('admin.program.blocks_program_modify_schedule_not_allowed', 'danger');
         else {
             $this->programRepository->remove($program);
@@ -130,8 +133,7 @@ class BlocksPresenter extends ProgramBasePresenter
                     $this->flashMessage('admin.program.blocks_add_not_allowed', 'danger');
                     $this->redirect('Blocks:default');
                 }
-            }
-            else {
+            } else {
                 $user = $this->userRepository->findById($this->user->getId());
                 $block = $this->blockRepository->findById($values['id']);
 
@@ -146,8 +148,7 @@ class BlocksPresenter extends ProgramBasePresenter
             if ($form['submitAndContinue']->isSubmittedBy()) {
                 $id = $values['id'] ?: $this->blockRepository->findLastId();
                 $this->redirect('Blocks:edit', ['id' => $id]);
-            }
-            else
+            } else
                 $this->redirect('Blocks:default');
         };
 

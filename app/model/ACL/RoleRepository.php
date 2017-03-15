@@ -16,7 +16,8 @@ class RoleRepository extends EntityRepository
     /**
      * @param Translator $translator
      */
-    public function injectTranslator(Translator $translator) {
+    public function injectTranslator(Translator $translator)
+    {
         $this->translator = $translator;
     }
 
@@ -74,7 +75,8 @@ class RoleRepository extends EntityRepository
      * @param $id
      * @return array
      */
-    public function findOthersNames($id) {
+    public function findOthersNames($id)
+    {
         $names = $this->createQueryBuilder('b')
             ->select('b.name')
             ->where('b.id != :id')
@@ -141,7 +143,8 @@ class RoleRepository extends EntityRepository
      * @param $roles
      * @return array
      */
-    public function countUnoccupiedInRoles($roles) {
+    public function countUnoccupiedInRoles($roles)
+    {
         $count = [];
         foreach ($roles as $role) {
             $count[$role->getId()] = $this->countUnoccupiedInRole($role);
@@ -399,16 +402,17 @@ class RoleRepository extends EntityRepository
         return $options;
     }
 
-    public function save(Role $role) {
+    public function save(Role $role)
+    {
         $this->_em->persist($role);
         $this->_em->flush();
     }
 
-    public function remove(Role $role) {
+    public function remove(Role $role)
+    {
         $this->_em->remove($role);
         $this->_em->flush();
     }
-
 
 
 }

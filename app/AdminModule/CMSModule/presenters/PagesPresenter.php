@@ -38,7 +38,8 @@ class PagesPresenter extends CMSBasePresenter
     public $contentRepository;
 
 
-    public function renderContent($id, $area) {
+    public function renderContent($id, $area)
+    {
         $page = $this->pagesRepository->findById($id);
 
         $this->template->page = $page;
@@ -77,7 +78,7 @@ class PagesPresenter extends CMSBasePresenter
             }
         };
 
-        $control->onPageSaveError[] = function(PageForm $control) {
+        $control->onPageSaveError[] = function (PageForm $control) {
             $this->flashMessage('admin.cms.pages_content_save_error', 'danger');
             $this->redirect('Pages:content', ['id' => $control->id, 'area' => $control->area]);
         };

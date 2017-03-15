@@ -9,7 +9,8 @@ class ResourceRepository extends EntityRepository
     /**
      * @return string[]
      */
-    public function findAllNames() {
+    public function findAllNames()
+    {
         $names = $this->createQueryBuilder('r')
             ->select('r.name')
             ->getQuery()

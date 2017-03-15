@@ -28,7 +28,9 @@ class NewsPresenter extends CMSBasePresenter
      */
     public $newsRepository;
 
-    public function renderEdit($id) { }
+    public function renderEdit($id)
+    {
+    }
 
     protected function createComponentNewsGrid()
     {
@@ -48,8 +50,7 @@ class NewsPresenter extends CMSBasePresenter
             if ($form['submitAndContinue']->isSubmittedBy()) {
                 $id = $values['id'] ?: $this->newsRepository->findLastId();
                 $this->redirect('News:edit', ['id' => $id]);
-            }
-            else
+            } else
                 $this->redirect('News:default');
         };
 

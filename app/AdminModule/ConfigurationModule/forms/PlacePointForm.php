@@ -61,7 +61,8 @@ class PlacePointForm extends Nette\Object
         return $form;
     }
 
-    public function processForm(Form $form, \stdClass $values) {
+    public function processForm(Form $form, \stdClass $values)
+    {
         if (!$form['cancel']->isSubmittedBy()) {
             if (!$this->placePoint)
                 $this->placePoint = new PlacePoint();

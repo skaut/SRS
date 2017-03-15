@@ -19,24 +19,28 @@ class FilesService extends Nette\Object
         $this->dir = $dir;
     }
 
-    public function save($file, $path) {
+    public function save($file, $path)
+    {
         $file->move($this->dir . $path);
     }
 
-    public function delete($path) {
+    public function delete($path)
+    {
         $file = $this->dir . $path;
-        if(file_exists($file))
+        if (file_exists($file))
             unlink($file);
     }
 
-    public function resizeImage($path, $width, $height) {
+    public function resizeImage($path, $width, $height)
+    {
         $image = Image::fromFile($this->dir . $path);
         $image->resize($width, $height);
         $image->sharpen();
         $image->save($this->dir . $path);
     }
 
-    public function getDir() {
+    public function getDir()
+    {
         return $this->dir;
     }
 }

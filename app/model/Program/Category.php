@@ -83,7 +83,8 @@ class Category
         $this->registerableRoles = $registerableRoles;
     }
 
-    public function addRole(Role $role) {
+    public function addRole(Role $role)
+    {
         if (!$this->registerableRoles->contains($role))
             $this->registerableRoles->add($role);
     }

@@ -46,7 +46,8 @@ class AddRoleForm extends Nette\Object
         return $form;
     }
 
-    public function processForm(Form $form, \stdClass $values) {
+    public function processForm(Form $form, \stdClass $values)
+    {
         if (!$form['cancel']->isSubmittedBy()) {
             $role = new Role($values['name']);
 

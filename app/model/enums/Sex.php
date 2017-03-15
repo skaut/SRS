@@ -13,7 +13,8 @@ class Sex
         self::FEMALE
     ];
 
-    public static function getSexOptions() {
+    public static function getSexOptions()
+    {
         $options = [];
         foreach (self::$sex as $s) {
             $options[$s] = 'common.sex.' . $s;

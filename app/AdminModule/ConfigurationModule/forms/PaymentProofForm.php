@@ -57,7 +57,8 @@ class PaymentProofForm extends Nette\Object
         return $form;
     }
 
-    public function processForm(Form $form, \stdClass $values) {
+    public function processForm(Form $form, \stdClass $values)
+    {
         $this->settingsRepository->setValue(Settings::COMPANY, $values['company']);
         $this->settingsRepository->setValue(Settings::ICO, $values['ico']);
         $this->settingsRepository->setValue(Settings::ACCOUNTANT, $values['accountant']);

@@ -2,7 +2,7 @@
     <script>
         $(function () {
             //otevreni accordion podle url
-            if(location.hash != null && location.hash != ""){
+            if (location.hash != null && location.hash != "") {
                 $('.collapse').removeClass('in');
                 $(location.hash + '.collapse').collapse('show');
             }
@@ -59,7 +59,8 @@
                                                 </tr>
                                             {/foreach}
                                             <tr>
-                                                <td style="padding-right: 15px"><strong>{_web.profile.total}</strong></td>
+                                                <td style="padding-right: 15px"><strong>{_web.profile.total}</strong>
+                                                </td>
                                                 <td align="right"><strong>{$dbuser->getFee()},-</strong></td>
                                             </tr>
                                         </table>
@@ -101,7 +102,8 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
-                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapsePersonalDetails">
+                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion"
+                       href="#collapsePersonalDetails">
                         {_web.profile.personal_details_group}
                     </a>
                 </h4>
@@ -116,7 +118,8 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
-                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseAdditionalInformation">
+                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion"
+                       href="#collapseAdditionalInformation">
                         {_web.profile.additional_information_group}
                     </a>
                 </h4>
@@ -149,32 +152,32 @@
                             <col class="col-sm-3 col-xs-3">
 
                             <thead>
-                                <tr>
-                                    <th class="text-right">{_web.profile.from}</th>
-                                    <th class="text-right">{_web.profile.to}</th>
-                                    <th>{_web.profile.program_name}</th>
-                                    <th>{_web.profile.room}</th>
-                                    <th>{_web.profile.lector}</th>
-                                </tr>
+                            <tr>
+                                <th class="text-right">{_web.profile.from}</th>
+                                <th class="text-right">{_web.profile.to}</th>
+                                <th>{_web.profile.program_name}</th>
+                                <th>{_web.profile.room}</th>
+                                <th>{_web.profile.lector}</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                {foreach $dbuser->getPrograms() as $program}
-                                    <tr>
-                                        <td class="text-right">
-                                            {var $startDay = $program->getStart()->format('N')}
-                                            {_common.day.$startDay}
-                                            {$program->getStart()|date:"j. n. G:i"}
-                                        </td>
-                                        <td class="text-right">
-                                            {var $endDay = $program->getEnd()->format('N')}
-                                            {_common.day.$endDay}
-                                            {$program->getEnd()|date:"j. n. G:i"}
-                                        </td>
-                                        <td>{$program->getBlock()->getName()}</td>
-                                        <td>{if $program->getRoom() !== null}{$program->getRoom()->getName()}{/if}</td>
-                                        <td>{if $program->getBlock()->getLector() !== null}{$program->getBlock()->getLector()->getDisplayName()}{/if}</td>
-                                    </tr>
-                                {/foreach}
+                            {foreach $dbuser->getPrograms() as $program}
+                                <tr>
+                                    <td class="text-right">
+                                        {var $startDay = $program->getStart()->format('N')}
+                                        {_common.day.$startDay}
+                                        {$program->getStart()|date:"j. n. G:i"}
+                                    </td>
+                                    <td class="text-right">
+                                        {var $endDay = $program->getEnd()->format('N')}
+                                        {_common.day.$endDay}
+                                        {$program->getEnd()|date:"j. n. G:i"}
+                                    </td>
+                                    <td>{$program->getBlock()->getName()}</td>
+                                    <td>{if $program->getRoom() !== null}{$program->getRoom()->getName()}{/if}</td>
+                                    <td>{if $program->getBlock()->getLector() !== null}{$program->getBlock()->getLector()->getDisplayName()}{/if}</td>
+                                </tr>
+                            {/foreach}
                             </tbody>
                         </table>
                         <a n:href="exportschedule" class="btn btn-primary">{_web.profile.download_schedule}</a>

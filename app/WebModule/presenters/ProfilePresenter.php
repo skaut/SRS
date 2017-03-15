@@ -69,12 +69,14 @@ class ProfilePresenter extends WebBasePresenter
             && $this->settingsRepository->getDateValue('edit_registration_to') >= (new \DateTime())->setTime(0, 0);
     }
 
-    public function renderDefault() {
+    public function renderDefault()
+    {
         $this->template->pageName = $this->translator->translate('web.profile.title');
         $this->template->paymentMethodBank = PaymentType::BANK;
     }
 
-    public function actionGeneratePaymentProofBank() {
+    public function actionGeneratePaymentProofBank()
+    {
         $user = $this->userRepository->findById($this->user->id);
         if (!$user->getIncomeProofPrintedDate()) {
             $user->setIncomeProofPrintedDate(new \DateTime());
@@ -118,8 +120,7 @@ class ProfilePresenter extends WebBasePresenter
                 $this->authenticator->updateRoles($this->user);
 
                 $this->redirect('this#collapseSeminar');
-            }
-            elseif ($form['cancelRegistration']->isSubmittedBy()) {
+            } elseif ($form['cancelRegistration']->isSubmittedBy()) {
                 $this->redirect(':Auth:logout');
             }
         };

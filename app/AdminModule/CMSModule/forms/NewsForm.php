@@ -54,8 +54,7 @@ class NewsForm extends Nette\Object
                 'published' => $this->news->getPublished(),
                 'text' => $this->news->getText()
             ]);
-        }
-        else {
+        } else {
             $form->setDefaults([
                 'published' => new \DateTime()
             ]);
@@ -67,7 +66,8 @@ class NewsForm extends Nette\Object
         return $form;
     }
 
-    public function processForm(Form $form, \stdClass $values) {
+    public function processForm(Form $form, \stdClass $values)
+    {
         if (!$form['cancel']->isSubmittedBy()) {
             if (!$this->news)
                 $this->news = new News();

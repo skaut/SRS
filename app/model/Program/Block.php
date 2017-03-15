@@ -124,7 +124,8 @@ class Block
         $this->programs = $programs;
     }
 
-    public function getProgramsCount() {
+    public function getProgramsCount()
+    {
         return $this->programs->count();
     }
 
@@ -260,7 +261,8 @@ class Block
      * @param User $user
      * @return bool
      */
-    public function isAllowed(User $user) {
+    public function isAllowed(User $user)
+    {
         if (!$this->category)
             return true;
 
@@ -275,7 +277,8 @@ class Block
      * @param User $user
      * @return bool
      */
-    public function isAttendee(User $user) {
+    public function isAttendee(User $user)
+    {
         foreach ($this->programs as $program) {
             if ($program->isAttendee($user))
                 return true;

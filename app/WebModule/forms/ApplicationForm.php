@@ -133,7 +133,8 @@ class ApplicationForm extends Nette\Object
         return $form;
     }
 
-    public function processForm(Form $form, \stdClass $values) {
+    public function processForm(Form $form, \stdClass $values)
+    {
         if (array_key_exists('sex', $values))
             $this->user->setSex($values['sex']);
         if (array_key_exists('firstName', $values))
@@ -173,7 +174,7 @@ class ApplicationForm extends Nette\Object
                     $customInputValue = new CustomCheckboxValue();
                     break;
             }
-            $customInputValue->setValue($values['custom'. $customInput->getId()]);
+            $customInputValue->setValue($values['custom' . $customInput->getId()]);
             $customInputValue->setUser($this->user);
             $customInputValue->setInput($customInput);
             $this->customInputValueRepository->save($customInputValue);

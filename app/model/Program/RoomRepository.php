@@ -18,7 +18,8 @@ class RoomRepository extends EntityRepository
     /**
      * @return array
      */
-    public function findAllNames() {
+    public function findAllNames()
+    {
         $names = $this->createQueryBuilder('r')
             ->select('r.name')
             ->getQuery()
@@ -30,7 +31,8 @@ class RoomRepository extends EntityRepository
      * @param $id
      * @return array
      */
-    public function findOthersNames($id) {
+    public function findOthersNames($id)
+    {
         $names = $this->createQueryBuilder('r')
             ->select('r.name')
             ->where('r.id != :id')

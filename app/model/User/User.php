@@ -308,11 +308,12 @@ class User
     public function isInRole(Role $role)
     {
         return $this->roles->filter(function ($item) use ($role) {
-            return $item == $role;
-        })->count() != 0;
+                return $item == $role;
+            })->count() != 0;
     }
 
-    public function isAllowed($resource, $permission) {
+    public function isAllowed($resource, $permission)
+    {
         foreach ($this->roles as $r) {
             foreach ($r->getPermissions() as $p) {
                 if ($p->getResource()->getName() == $resource && $p->getName() == $permission)
@@ -322,7 +323,8 @@ class User
         return false;
     }
 
-    public function isAllowedModifyBlock(Block $block) {
+    public function isAllowedModifyBlock(Block $block)
+    {
         if ($this->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS))
             return true;
 
@@ -342,8 +344,8 @@ class User
     public function isPaying()
     {
         return $this->roles->filter(function ($item) {
-            return $item->getFee() == 0;
-        })->count() == 0;
+                return $item->getFee() == 0;
+            })->count() == 0;
     }
 
     public function hasPaid()
@@ -390,18 +392,21 @@ class User
         $this->programs = $programs;
     }
 
-    public function addProgram(Program $program) {
+    public function addProgram(Program $program)
+    {
         if (!$this->programs->contains($program)) {
             $this->programs->add($program);
             $program->addAttendee($this);
         }
     }
 
-    public function removeProgram(Program $program) {
+    public function removeProgram(Program $program)
+    {
         return $this->programs->removeElement($program);
     }
 
-    public function hasProgramBlock(Block $block) {
+    public function hasProgramBlock(Block $block)
+    {
         $criteria = Criteria::create()->where(
             Criteria::expr()->eq('block_id', $block->getId())
         );
@@ -574,7 +579,8 @@ class User
     /**
      * @return int
      */
-    public function getAge() {
+    public function getAge()
+    {
         return (new \DateTime())->diff($this->birthdate)->y;
     }
 
@@ -889,7 +895,8 @@ class User
      * @param CustomInput $customInput
      * @return mixed
      */
-    public function getCustomInputValue(CustomInput $customInput) {
+    public function getCustomInputValue(CustomInput $customInput)
+    {
         $criteria = Criteria::create()
             ->where(Criteria::expr()
                 ->eq('input', $customInput)
@@ -922,7 +929,7 @@ class User
     {
         $criteria = Criteria::create();
 
-        if($this->roles instanceof PersistentCollection && $this->roles->isInitialized())
+        if ($this->roles instanceof PersistentCollection && $this->roles->isInitialized())
             $criteria->where(Criteria::expr()->eq('displayArrivalDeparture', true));
         else
             $criteria->where(Criteria::expr()->eq('display_arrival_departure', true));  //problem s lazyloadingem u camelcase nazvu
@@ -930,7 +937,8 @@ class User
         return !$this->roles->matching($criteria)->isEmpty();
     }
 
-    public function getRegisterableCategories($roles = null) {
+    public function getRegisterableCategories($roles = null)
+    {
         $categories = [];
         if ($roles === null)
             $roles = $this->roles;

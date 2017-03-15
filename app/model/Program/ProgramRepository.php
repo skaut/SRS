@@ -35,7 +35,8 @@ class ProgramRepository extends EntityRepository
     /**
      * @param Program $program
      */
-    public function save(Program $program) {
+    public function save(Program $program)
+    {
         $this->_em->persist($program);
         $this->_em->flush();
     }
@@ -85,7 +86,8 @@ class ProgramRepository extends EntityRepository
      * @param Program $program
      * @return int[]
      */
-    public function findBlockedProgramsIdsByProgram(Program $program) {
+    public function findBlockedProgramsIdsByProgram(Program $program)
+    {
         return array_merge(
             $this->findOtherProgramsWithSameBlockIds($program),
             $this->findOverlappingProgramsIds($program)
@@ -98,7 +100,7 @@ class ProgramRepository extends EntityRepository
      */
     public function findOtherProgramsWithSameBlockIds(Program $program)
     {
-        $programs =  $this->createQueryBuilder('p')
+        $programs = $this->createQueryBuilder('p')
             ->select('p.id')
             ->join('p.block', 'b')
             ->where('b.id = :bid')->setParameter('bid', $program->getBlock()->getId())
@@ -133,7 +135,8 @@ class ProgramRepository extends EntityRepository
         return array_map('intval', array_map('current', $programs));
     }
 
-    public function hasOverlappingProgram(Program $program, \DateTime $start, \DateTime $end) {
+    public function hasOverlappingProgram(Program $program, \DateTime $start, \DateTime $end)
+    {
         $qb = $this->createQueryBuilder('p')
             ->select('p.id')
             ->join('p.block', 'b')
@@ -153,7 +156,8 @@ class ProgramRepository extends EntityRepository
         return !empty($qb->getQuery()->getResult());
     }
 
-    public function hasOverlappingAutoRegisterProgram(Program $program, \DateTime $start, \DateTime $end) {
+    public function hasOverlappingAutoRegisterProgram(Program $program, \DateTime $start, \DateTime $end)
+    {
         $qb = $this->createQueryBuilder('p')
             ->select('p.id')
             ->join('p.block', 'b')
@@ -177,14 +181,16 @@ class ProgramRepository extends EntityRepository
     /**
      * @param User $user
      */
-    public function updateUserPrograms(User $user) {
+    public function updateUserPrograms(User $user)
+    {
         $this->updateUsersPrograms([$user]);
     }
 
     /**
      * @param $users
      */
-    public function updateUsersPrograms($users) {
+    public function updateUsersPrograms($users)
+    {
         foreach ($users as $user) {
             $oldUsersPrograms = $user->getPrograms();
             $userAllowedPrograms = $this->findUserAllowed($user);
