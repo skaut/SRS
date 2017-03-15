@@ -2,6 +2,7 @@
 
 namespace App\WebModule\Forms;
 
+use App\Model\User\User;
 use App\Model\User\UserRepository;
 use Nette;
 use Nette\Application\UI\Form;

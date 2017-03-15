@@ -3,8 +3,6 @@
 namespace App\ApiModule\Presenters;
 
 
-use App\ApiModule\DTO\CalendarConfigDTO;
-use App\ApiModule\DTO\Schedule\ProgramAddDTO;
 use App\ApiModule\DTO\Schedule\ProgramSaveDTO;
 use App\ApiModule\DTO\Schedule\ResponseDTO;
 use App\ApiModule\Services\ScheduleService;

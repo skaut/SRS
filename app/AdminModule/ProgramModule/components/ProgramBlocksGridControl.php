@@ -42,6 +42,8 @@ class ProgramBlocksGridControl extends Control
                                 SettingsRepository $settingsRepository, UserRepository $userRepository,
                                 CategoryRepository $categoryRepository, ProgramRepository $programRepository)
     {
+        parent::__construct();
+
         $this->translator = $translator;
         $this->blockRepository = $blockRepository;
         $this->settingsRepository = $settingsRepository;

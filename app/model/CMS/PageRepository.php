@@ -90,7 +90,7 @@ class PageRepository extends EntityRepository
     }
 
     /**
-     * @param $ids
+     * @param $slugs
      * @return \Doctrine\Common\Collections\Collection
      */
     public function findPagesBySlugs($slugs)

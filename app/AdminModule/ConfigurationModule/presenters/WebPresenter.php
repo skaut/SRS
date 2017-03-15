@@ -19,7 +19,7 @@ class WebPresenter extends ConfigurationBasePresenter
         $this->template->logo = $this->settingsRepository->getValue(Settings::LOGO);
     }
 
-    protected function createComponentSettingsForm($name)
+    protected function createComponentSettingsForm()
     {
         $form = $this->webFormFactory->create();
 

@@ -20,8 +20,8 @@ class ApplicationPresenter extends ConfigurationBasePresenter
      */
     public $customInputsGridControlFactory;
 
-    protected function createComponentCustomInputsGrid($name)
+    protected function createComponentCustomInputsGrid()
     {
-        return $this->customInputsGridControlFactory->create($name);
+        return $this->customInputsGridControlFactory->create();
     }
 }

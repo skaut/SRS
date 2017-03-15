@@ -21,8 +21,8 @@ class RoomsPresenter extends ProgramBasePresenter
         $this->checkPermission(Permission::MANAGE_ROOMS);
     }
 
-    protected function createComponentRoomsGrid($name)
+    protected function createComponentRoomsGrid()
     {
-        return $this->roomsGridControlFactory->create($name);
+        return $this->roomsGridControlFactory->create();
     }
 }

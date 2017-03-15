@@ -61,12 +61,12 @@ class AclPresenter extends AdminBasePresenter
         $this->redirect(':Web:Page:default');
     }
 
-    protected function createComponentRolesGrid($name)
+    protected function createComponentRolesGrid()
     {
         return $this->rolesGridControlFactory->create();
     }
 
-    protected function createComponentAddRoleForm($name)
+    protected function createComponentAddRoleForm()
     {
         $form = $this->addRoleFormFactory->create();
 
@@ -83,7 +83,7 @@ class AclPresenter extends AdminBasePresenter
         return $form;
     }
 
-    protected function createComponentEditRoleForm($name)
+    protected function createComponentEditRoleForm()
     {
         $form = $this->editRoleFormFactory->create($this->getParameter('id'));
 

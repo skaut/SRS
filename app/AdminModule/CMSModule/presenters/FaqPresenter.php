@@ -30,7 +30,7 @@ class FaqPresenter extends CMSBasePresenter
 
     public function renderEdit($id) { }
 
-    protected function createComponentFaqGrid($name)
+    protected function createComponentFaqGrid()
     {
         return $this->faqGridControlFactory->create();
     }

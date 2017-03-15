@@ -2,16 +2,13 @@
 
 namespace App\Model\Program;
 
-use App\ApiModule\DTO\ProgramDetailDTO;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\Mapping;
-use Kdyby\Doctrine\EntityManager;
 use Kdyby\Doctrine\EntityRepository;
+
 
 class ProgramRepository extends EntityRepository
 {

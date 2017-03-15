@@ -9,11 +9,8 @@ use App\Services\Authenticator;
 use App\Services\ExcelExportService;
 use App\Services\PdfExportService;
 use App\WebModule\Forms\AdditionalInformationForm;
-use App\WebModule\Forms\AdditionalInformationFormFactory;
 use App\WebModule\Forms\PersonalDetailsForm;
-use App\WebModule\Forms\PersonalDetailsFormFactory;
 use App\WebModule\Forms\RolesForm;
-use App\WebModule\Forms\RolesFormFactory;
 use Nette\Application\UI\Form;
 
 
@@ -93,7 +90,7 @@ class ProfilePresenter extends WebBasePresenter
         $this->sendResponse($response);
     }
 
-    protected function createComponentPersonalDetailsForm($name)
+    protected function createComponentPersonalDetailsForm()
     {
         $form = $this->personalDetailsFormFactory->create($this->user->id);
 
@@ -110,7 +107,7 @@ class ProfilePresenter extends WebBasePresenter
         return $form;
     }
 
-    protected function createComponentRolesForm($name)
+    protected function createComponentRolesForm()
     {
         $form = $this->rolesFormFactory->create($this->user->id, $this->editRegistrationAllowed);
 
@@ -130,7 +127,7 @@ class ProfilePresenter extends WebBasePresenter
         return $form;
     }
 
-    protected function createComponentAdditionalInformationForm($name)
+    protected function createComponentAdditionalInformationForm()
     {
         $form = $this->additionalInformationFormFactory->create($this->user->id);
 

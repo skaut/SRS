@@ -107,17 +107,17 @@ class BlocksPresenter extends ProgramBasePresenter
         $this->redirect('this');
     }
 
-    protected function createComponentProgramBlocksGrid($name)
+    protected function createComponentProgramBlocksGrid()
     {
-        return $this->programBlocksGridControlFactory->create($name);
+        return $this->programBlocksGridControlFactory->create();
     }
 
-    protected function createComponentProgramAttendeesGrid($name)
+    protected function createComponentProgramAttendeesGrid()
     {
-        return $this->programAttendeesGridControlFactory->create($name);
+        return $this->programAttendeesGridControlFactory->create();
     }
 
-    protected function createComponentBlockForm($name)
+    protected function createComponentBlockForm()
     {
         $form = $this->blockFormFactory->create($this->getParameter('id'), $this->getUser()->getId());
 

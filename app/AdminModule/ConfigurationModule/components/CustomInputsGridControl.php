@@ -13,18 +13,16 @@ use Ublaboo\DataGrid\DataGrid;
 
 class CustomInputsGridControl extends Control
 {
-    /**
-     * @var Translator
-     */
+    /** @var Translator */
     private $translator;
 
-    /**
-     * @var CustomInputRepository
-     */
+    /** @var CustomInputRepository */
     private $customInputRepository;
 
     public function __construct(Translator $translator, CustomInputRepository $customInputRepository)
     {
+        parent::__construct();
+
         $this->translator = $translator;
         $this->customInputRepository = $customInputRepository;
     }

@@ -2,15 +2,13 @@
 
 namespace App\AdminModule\ConfigurationModule\Forms;
 
-
 use App\AdminModule\Forms\BaseForm;
 use App\Model\Settings\Place\PlacePoint;
 use App\Model\Settings\Place\PlacePointRepository;
-use App\Model\Settings\SettingsRepository;
-use Kdyby\Translation\Translator;
 use Nette;
 use Nette\Application\UI\Form;
 use VojtechDobes\NetteForms\GpsPicker;
+
 
 class PlacePointForm extends Nette\Object
 {

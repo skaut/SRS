@@ -57,7 +57,7 @@ class ApplicationContentControl extends Control
         $template->render();
     }
 
-    protected function createComponentApplicationForm($name)
+    protected function createComponentApplicationForm()
     {
         $form = $this->applicationFormFactory->create($this->getPresenter()->user->id);
 

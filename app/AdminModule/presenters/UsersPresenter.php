@@ -4,7 +4,6 @@ namespace App\AdminModule\Presenters;
 
 
 use App\AdminModule\Components\IUsersGridControlFactory;
-use App\AdminModule\Forms\EditUserForm;
 use App\AdminModule\Forms\EditUserPaymentForm;
 use App\AdminModule\Forms\EditUserSeminarForm;
 use App\Model\ACL\Permission;
@@ -131,12 +130,12 @@ class UsersPresenter extends AdminBasePresenter
         $this->pdfExportService->generatePaymentProof($user, "potvrzeni-o-prijeti-platby.pdf");
     }
 
-    protected function createComponentUsersGrid($name)
+    protected function createComponentUsersGrid()
     {
         return $this->usersGridControlFactory->create();
     }
 
-    protected function createComponentEditUserSeminarForm($name)
+    protected function createComponentEditUserSeminarForm()
     {
         $form = $this->editUserSeminarFormFactory->create($this->getParameter('id'));
 
@@ -153,7 +152,7 @@ class UsersPresenter extends AdminBasePresenter
         return $form;
     }
 
-    protected function createComponentEditUserPaymentForm($name)
+    protected function createComponentEditUserPaymentForm()
     {
         $form = $this->editUserPaymentFormFactory->create($this->getParameter('id'));
 

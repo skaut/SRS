@@ -95,7 +95,7 @@ class Permission
     }
 
     /**
-     * @return ArrayCollection
+     * @return Resource
      */
     public function getResource()
     {

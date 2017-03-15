@@ -12,18 +12,21 @@ use Ublaboo\DataGrid\DataGrid;
 
 class RoomsGridControl extends Control
 {
-    /**
-     * @var Translator
-     */
+    /** @var Translator */
     private $translator;
 
-    /**
-     * @var RoomRepository
-     */
+    /** @var RoomRepository */
     private $roomRepository;
 
+    /**
+     * RoomsGridControl constructor.
+     * @param Translator $translator
+     * @param RoomRepository $roomRepository
+     */
     public function __construct(Translator $translator, RoomRepository $roomRepository)
     {
+        parent::__construct();
+
         $this->translator = $translator;
         $this->roomRepository = $roomRepository;
     }

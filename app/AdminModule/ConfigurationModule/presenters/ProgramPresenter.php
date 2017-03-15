@@ -14,7 +14,7 @@ class ProgramPresenter extends ConfigurationBasePresenter
      */
     public $programFormFactory;
 
-    protected function createComponentProgramForm($name)
+    protected function createComponentProgramForm()
     {
         $form = $this->programFormFactory->create();
 

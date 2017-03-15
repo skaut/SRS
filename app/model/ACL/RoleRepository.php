@@ -2,13 +2,11 @@
 
 namespace App\Model\ACL;
 
-
 use App\Model\User\User;
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\Mapping;
-use Kdyby\Doctrine\EntityManager;
 use Kdyby\Doctrine\EntityRepository;
 use Kdyby\Translation\Translator;
+
 
 class RoleRepository extends EntityRepository
 {
@@ -339,6 +337,7 @@ class RoleRepository extends EntityRepository
     }
 
     /**
+     * @param array $withoutRoles
      * @return array
      */
     public function getRolesWithoutRolesOptionsWithCapacity(array $withoutRoles)

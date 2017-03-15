@@ -942,13 +942,4 @@ class User
         }
         return $categories;
     }
-
-
-    private function removeProgramsInCategory($category) {
-        foreach ($this->programs as $program) {
-            if ($program->getBlock()->getCategory() === $category) {
-                $this->programs->removeElement($program);
-            }
-        }
-    }
 }

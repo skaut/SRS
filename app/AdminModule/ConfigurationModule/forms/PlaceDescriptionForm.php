@@ -2,13 +2,12 @@
 
 namespace App\AdminModule\ConfigurationModule\Forms;
 
-
 use App\AdminModule\Forms\BaseForm;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
-use Kdyby\Translation\Translator;
 use Nette;
 use Nette\Application\UI\Form;
+
 
 class PlaceDescriptionForm extends Nette\Object
 {

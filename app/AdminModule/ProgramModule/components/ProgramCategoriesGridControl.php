@@ -36,6 +36,8 @@ class ProgramCategoriesGridControl extends Control
                                 RoleRepository $roleRepository, UserRepository $userRepository,
                                 ProgramRepository $programRepository)
     {
+        parent::__construct();
+
         $this->translator = $translator;
         $this->categoryRepository = $categoryRepository;
         $this->roleRepository = $roleRepository;

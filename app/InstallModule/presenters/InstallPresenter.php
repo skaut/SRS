@@ -3,7 +3,6 @@
 namespace App\InstallModule\Presenters;
 
 use App\Commands\FixturesLoadCommand;
-use App\Commands\InitDataCommand;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use Doctrine\DBAL\Exception\TableNotFoundException;

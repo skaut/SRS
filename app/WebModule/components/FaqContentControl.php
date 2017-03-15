@@ -45,7 +45,7 @@ class FaqContentControl extends Control
         $template->render();
     }
 
-    public function createComponentFaqForm($name)
+    public function createComponentFaqForm()
     {
         $form = $this->faqFormFactory->create($this->getPresenter()->getUser()->id);
 

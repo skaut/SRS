@@ -23,8 +23,9 @@ class PdfExportService extends Nette\Object
     private $settingsRepository;
 
     /**
-     * PrintService constructor.
+     * PdfExportService constructor.
      * @param $dir
+     * @param SettingsRepository $settingsRepository
      */
     public function __construct($dir, SettingsRepository $settingsRepository)
     {

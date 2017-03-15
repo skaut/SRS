@@ -30,12 +30,12 @@ class NewsPresenter extends CMSBasePresenter
 
     public function renderEdit($id) { }
 
-    protected function createComponentNewsGrid($name)
+    protected function createComponentNewsGrid()
     {
-        return $this->newsGridControlFactory->create($name);
+        return $this->newsGridControlFactory->create();
     }
 
-    protected function createComponentNewsForm($name)
+    protected function createComponentNewsForm()
     {
         $form = $this->newsFormFactory->create($this->getParameter('id'));
 

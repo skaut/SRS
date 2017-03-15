@@ -2,14 +2,11 @@
 
 namespace App\ApiModule\Services;
 
-
 use ApiModule\DTO\Schedule\RoomDetailDTO;
 use App\ApiModule\DTO\Schedule\BlockDetailDTO;
 use App\ApiModule\DTO\Schedule\CalendarConfigDTO;
-use App\ApiModule\DTO\Schedule\ProgramAddDTO;
 use App\ApiModule\DTO\Schedule\ProgramDetailDTO;
 use App\ApiModule\DTO\Schedule\ProgramSaveDTO;
-use App\ApiModule\DTO\Schedule\Response;
 use App\ApiModule\DTO\Schedule\ResponseDTO;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
@@ -26,6 +23,7 @@ use App\Model\User\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Kdyby\Translation\Translator;
 use Nette;
+
 
 /**
  * ScheduleService
@@ -64,6 +62,7 @@ class ScheduleService extends Nette\Object
      * @param ProgramRepository $programRepository
      * @param BlockRepository $blockRepository
      * @param RoomRepository $roomRepository
+     * @param SettingsRepository $settingsRepository
      */
     public function __construct(Translator $translator, UserRepository $userRepository,
                                 ProgramRepository $programRepository, BlockRepository $blockRepository,

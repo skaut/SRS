@@ -4,9 +4,7 @@ namespace App\AdminModule\ConfigurationModule\Presenters;
 
 
 use App\AdminModule\ConfigurationModule\Forms\PaymentForm;
-use App\AdminModule\ConfigurationModule\Forms\PaymentFormFactory;
 use App\AdminModule\ConfigurationModule\Forms\PaymentProofForm;
-use App\AdminModule\ConfigurationModule\Forms\PaymentProofFormFactory;
 use Nette\Application\UI\Form;
 
 class PaymentPresenter extends ConfigurationBasePresenter
@@ -23,7 +21,7 @@ class PaymentPresenter extends ConfigurationBasePresenter
      */
     public $paymentProofFormFactory;
 
-    protected function createComponentPaymentForm($name)
+    protected function createComponentPaymentForm()
     {
         $form = $this->paymentFormFactory->create();
 
@@ -36,7 +34,7 @@ class PaymentPresenter extends ConfigurationBasePresenter
         return $form;
     }
 
-    protected function createComponentPaymentProofForm($name)
+    protected function createComponentPaymentProofForm()
     {
         $form = $this->paymentProofFormFactory->create();
 

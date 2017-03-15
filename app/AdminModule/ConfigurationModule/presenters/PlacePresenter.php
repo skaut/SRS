@@ -2,14 +2,12 @@
 
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
-
 use App\AdminModule\ConfigurationModule\Components\IPlacePointsGridControlFactory;
 use App\AdminModule\ConfigurationModule\Forms\PlaceDescriptionForm;
 use App\AdminModule\ConfigurationModule\Forms\PlacePointForm;
-use App\AdminModule\ConfigurationModule\Forms\SeminarForm;
-use App\AdminModule\ConfigurationModule\Forms\SeminarFormFactory;
 use App\Model\Settings\Place\PlacePointRepository;
 use Nette\Application\UI\Form;
+
 
 class PlacePresenter extends ConfigurationBasePresenter
 {
@@ -43,7 +41,7 @@ class PlacePresenter extends ConfigurationBasePresenter
         $this->template->placePoint = $placePoint;
     }
 
-    protected function createComponentPlaceDescriptionForm($name)
+    protected function createComponentPlaceDescriptionForm()
     {
         $form = $this->placeDescriptionFormFactory->create();
 
@@ -56,7 +54,7 @@ class PlacePresenter extends ConfigurationBasePresenter
         return $form;
     }
 
-    protected function createComponentPlacePointForm($name)
+    protected function createComponentPlacePointForm()
     {
         $form = $this->placePointFormFactory->create($this->getParameter('id'));
 
@@ -72,8 +70,8 @@ class PlacePresenter extends ConfigurationBasePresenter
         return $form;
     }
 
-    protected function createComponentPlacePointsGrid($name)
+    protected function createComponentPlacePointsGrid()
     {
-        return $this->placePointsGridControlFactory->create($name);
+        return $this->placePointsGridControlFactory->create();
     }
 }

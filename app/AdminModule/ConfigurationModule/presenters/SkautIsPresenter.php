@@ -4,7 +4,6 @@ namespace App\AdminModule\ConfigurationModule\Presenters;
 
 
 use App\AdminModule\ConfigurationModule\Forms\SkautIsEventForm;
-use App\AdminModule\ConfigurationModule\Forms\SkautIsEventFormFactory;
 use App\Model\Settings\Settings;
 
 use Nette\Application\UI\Form;
@@ -65,7 +64,7 @@ class SkautIsPresenter extends ConfigurationBasePresenter
         $this->redirect('this');
     }
 
-    protected function createComponentSkautIsEventForm($name)
+    protected function createComponentSkautIsEventForm()
     {
         $form = $this->skautIsEventFormFactory->create();
 

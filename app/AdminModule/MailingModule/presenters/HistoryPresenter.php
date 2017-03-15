@@ -13,7 +13,7 @@ class HistoryPresenter extends MailingBasePresenter
      */
     public $mailHistoryControlGridFactory;
 
-    protected function createComponentMailHistoryGrid($name)
+    protected function createComponentMailHistoryGrid()
     {
         return $this->mailHistoryControlGridFactory->create();
     }

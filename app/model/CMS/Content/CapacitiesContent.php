@@ -29,7 +29,9 @@ class CapacitiesContent extends Content implements IContent
     private $roleRepository;
 
     /**
-     * CapacityBoxContent constructor.
+     * CapacitiesContent constructor.
+     * @param Page $page
+     * @param $area
      */
     public function __construct(Page $page, $area)
     {

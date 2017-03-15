@@ -4,9 +4,8 @@ namespace App\Model\Program;
 
 use App\Model\User\User;
 use App\Model\User\UserRepository;
-use Doctrine\ORM\Mapping;
-use Kdyby\Doctrine\EntityManager;
 use Kdyby\Doctrine\EntityRepository;
+
 
 class BlockRepository extends EntityRepository
 {

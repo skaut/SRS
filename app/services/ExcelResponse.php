@@ -27,8 +27,8 @@ class ExcelResponse extends Nette\Object implements IResponse
     }
 
     /**
-     * Sends response to output.
-     * @return void
+     * @param Nette\Http\IRequest $httpRequest
+     * @param Nette\Http\IResponse $httpResponse
      */
     function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse)
     {

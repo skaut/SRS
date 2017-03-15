@@ -14,7 +14,7 @@ class SendPresenter extends MailingBasePresenter
      */
     public $sendFormFactory;
 
-    protected function createComponentSendForm($name)
+    protected function createComponentSendForm()
     {
         $form = $this->sendFormFactory->create();
 

@@ -13,18 +13,16 @@ use Ublaboo\DataGrid\DataGrid;
 
 class MailHistoryGridControl extends Control
 {
-    /**
-     * @var Translator
-     */
+    /** @var Translator */
     private $translator;
 
-    /**
-     * @var MailRepository
-     */
+    /** @var MailRepository */
     private $mailRepository;
 
     public function __construct(Translator $translator, MailRepository $mailRepository)
     {
+        parent::__construct();
+
         $this->translator = $translator;
         $this->mailRepository = $mailRepository;
     }

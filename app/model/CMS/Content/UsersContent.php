@@ -30,7 +30,9 @@ class UsersContent extends Content implements IContent
     private $roleRepository;
 
     /**
-     * UserBoxContent constructor.
+     * UsersContent constructor.
+     * @param Page $page
+     * @param $area
      */
     public function __construct(Page $page, $area)
     {

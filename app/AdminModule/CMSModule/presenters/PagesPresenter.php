@@ -46,12 +46,12 @@ class PagesPresenter extends CMSBasePresenter
         $this->template->area = $area;
     }
 
-    protected function createComponentPagesGrid($name)
+    protected function createComponentPagesGrid()
     {
-        return $this->pagesGridControlFactory->create($name);
+        return $this->pagesGridControlFactory->create();
     }
 
-    protected function createComponentPageForm($name)
+    protected function createComponentPageForm()
     {
         $id = $this->getParameter('id');
         $area = $this->getParameter('area');
