@@ -9,6 +9,7 @@ use App\WebModule\Forms\FaqForm;
 use Nette\Application\UI\Control;
 use Nette\Forms\Form;
 
+
 class FaqContentControl extends Control
 {
     /** @var FaqForm */
@@ -19,6 +20,7 @@ class FaqContentControl extends Control
 
     /** @var RoleRepository */
     private $roleRepository;
+
 
     public function __construct(FaqForm $faqFormFactory, FaqRepository $faqRepository, RoleRepository $roleRepository)
     {

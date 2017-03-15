@@ -5,10 +5,12 @@ namespace App\WebModule\Components;
 use App\Model\ACL\RoleRepository;
 use Nette\Application\UI\Control;
 
+
 class CapacitiesContentControl extends Control
 {
     /** @var RoleRepository */
     private $roleRepository;
+
 
     public function __construct(RoleRepository $roleRepository)
     {

@@ -10,6 +10,7 @@ use App\WebModule\Forms\ApplicationForm;
 use Nette\Application\UI\Control;
 use Nette\Forms\Form;
 
+
 class ApplicationContentControl extends Control
 {
     /** @var ApplicationForm */
@@ -23,6 +24,7 @@ class ApplicationContentControl extends Control
 
     /** @var Authenticator */
     private $authenticator;
+
 
     public function __construct(ApplicationForm $applicationFormFactory, Authenticator $authenticator, UserRepository $userRepository,
                                 RoleRepository $roleRepository)

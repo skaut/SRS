@@ -18,6 +18,7 @@ use Nette\Application\UI\Form;
 use Nette\Forms\IControl;
 use Skautis\Wsdl\WsdlException;
 
+
 class ApplicationForm extends Nette\Object
 {
     /** @var User */
@@ -45,6 +46,7 @@ class ApplicationForm extends Nette\Object
 
     /** @var SkautIsService */
     private $skautIsService;
+
 
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
                                 RoleRepository $roleRepository, CustomInputRepository $customInputRepository,

@@ -6,6 +6,7 @@ use App\Model\Program\BlockRepository;
 use App\Model\Program\CategoryRepository;
 use Nette\Application\UI\Control;
 
+
 class BlocksContentControl extends Control
 {
     /** @var BlockRepository */

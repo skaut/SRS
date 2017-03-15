@@ -2,7 +2,6 @@
 
 namespace App\WebModule\Presenters;
 
-
 use App\Model\ACL\Role;
 use App\Model\Enums\PaymentType;
 use App\Services\Authenticator;

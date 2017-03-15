@@ -10,6 +10,7 @@ use Nette;
 use Nette\Application\UI\Form;
 use Skautis\Wsdl\WsdlException;
 
+
 class PersonalDetailsForm extends Nette\Object
 {
     /** @var User */
@@ -25,6 +26,7 @@ class PersonalDetailsForm extends Nette\Object
 
     /** @var SkautIsService */
     private $skautIsService;
+
 
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository, SkautIsService $skautIsService)
     {

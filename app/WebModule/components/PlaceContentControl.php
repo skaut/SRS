@@ -16,6 +16,7 @@ class PlaceContentControl extends Control
     /** @var PlacePointRepository */
     private $placePointRepository;
 
+
     public function __construct(SettingsRepository $settingsRepository, PlacePointRepository $placePointRepository)
     {
         parent::__construct();

@@ -5,10 +5,12 @@ namespace App\WebModule\Components;
 use App\Model\CMS\NewsRepository;
 use Nette\Application\UI\Control;
 
+
 class NewsContentControl extends Control
 {
     /** @var NewsRepository */
     private $newsRepository;
+
 
     public function __construct(NewsRepository $newsRepository)
     {

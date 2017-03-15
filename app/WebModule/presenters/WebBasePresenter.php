@@ -16,6 +16,7 @@ use Doctrine\DBAL\Exception\TableNotFoundException;
 use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\JavaScriptLoader;
 
+
 abstract class WebBasePresenter extends BasePresenter
 {
     /**
@@ -66,10 +67,9 @@ abstract class WebBasePresenter extends BasePresenter
      */
     public $skautIsService;
 
-    /**
-     * @var User
-     */
+    /** @var User */
     protected $dbuser;
+
 
     /**
      * @return CssLoader

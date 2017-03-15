@@ -2,13 +2,13 @@
 
 namespace App\WebModule\Forms;
 
-
 use App\Model\ACL\RoleRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use Nette;
 use Nette\Application\UI\Form;
+
 
 class RolesForm extends Nette\Object
 {
@@ -26,6 +26,7 @@ class RolesForm extends Nette\Object
 
     /** @var ProgramRepository */
     private $programRepository;
+
 
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
                                 RoleRepository $roleRepository, ProgramRepository $programRepository)
