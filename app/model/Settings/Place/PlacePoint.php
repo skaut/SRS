@@ -5,6 +5,7 @@ namespace App\Model\Settings\Place;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
+
 /**
  * @ORM\Entity(repositoryClass="PlacePointRepository")
  * @ORM\Table(name="place_point")
@@ -30,6 +31,7 @@ class PlacePoint
      * @var float
      */
     protected $gpsLon;
+
 
     /**
      * @return string

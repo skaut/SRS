@@ -4,6 +4,7 @@ namespace App\Model\Settings;
 
 use Doctrine\ORM\Mapping as ORM;
 
+
 /**
  * @ORM\Entity(repositoryClass="SettingsRepository")
  * @ORM\Table(name="settings")
@@ -44,7 +45,6 @@ class Settings
 
     const PLACE_DESCRIPTION = 'place_description';
 
-
     /**
      * @ORM\Column(type="string", unique=true)
      * @ORM\Id
@@ -57,6 +57,7 @@ class Settings
      * @var string
      */
     protected $value;
+
 
     /**
      * Settings constructor.

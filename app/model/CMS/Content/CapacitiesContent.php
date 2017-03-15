@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
 
+
 /**
  * @ORM\Entity
  * @ORM\Table(name="capacities_content")
@@ -23,10 +24,9 @@ class CapacitiesContent extends Content implements IContent
      */
     protected $roles;
 
-    /**
-     * @var RoleRepository
-     */
+    /** @var RoleRepository */
     private $roleRepository;
+
 
     /**
      * CapacitiesContent constructor.

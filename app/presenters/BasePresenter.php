@@ -4,6 +4,7 @@ namespace App\Presenters;
 
 use Nette;
 
+
 abstract class BasePresenter extends Nette\Application\UI\Presenter
 {
     /**
@@ -17,6 +18,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
      * @inject
      */
     public $translator;
+
 
     public function flashMessage($message, $type = 'info', $icon = null, $count = null, $parameters = [])
     {

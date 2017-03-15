@@ -2,8 +2,8 @@
 
 namespace App\Model\Settings\Place;
 
-
 use Kdyby\Doctrine\EntityRepository;
+
 
 class PlacePointRepository extends EntityRepository
 {

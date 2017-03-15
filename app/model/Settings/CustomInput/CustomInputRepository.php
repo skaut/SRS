@@ -4,6 +4,7 @@ namespace App\Model\Settings\CustomInput;
 
 use Kdyby\Doctrine\EntityRepository;
 
+
 class CustomInputRepository extends EntityRepository
 {
     /**

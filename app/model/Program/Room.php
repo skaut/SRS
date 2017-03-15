@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
+
 /**
  * @ORM\Entity(repositoryClass="RoomRepository")
  * @ORM\Table(name="room")
@@ -25,6 +26,7 @@ class Room
      * @var ArrayCollection
      */
     protected $programs;
+
 
     /**
      * @return int

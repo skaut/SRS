@@ -2,9 +2,9 @@
 
 namespace App\Model\CMS;
 
-
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
+
 
 /**
  * @ORM\Entity(repositoryClass="NewsRepository")
@@ -25,6 +25,7 @@ class News
      * @var \DateTime
      */
     protected $published;
+
 
     /**
      * @return int

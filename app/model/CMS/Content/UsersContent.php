@@ -2,13 +2,13 @@
 
 namespace App\Model\CMS\Content;
 
-
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\CMS\Page;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
+
 
 /**
  * @ORM\Entity
@@ -28,6 +28,7 @@ class UsersContent extends Content implements IContent
      * @var RoleRepository
      */
     private $roleRepository;
+
 
     /**
      * UsersContent constructor.

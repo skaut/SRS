@@ -2,7 +2,6 @@
 
 namespace App\Model\Mailing;
 
-
 use App\Model\User\User;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -20,6 +19,7 @@ class MailToUser extends Mail
      * @var User
      */
     protected $recipientUser;
+
 
     /**
      * @return User

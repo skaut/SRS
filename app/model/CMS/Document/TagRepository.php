@@ -2,9 +2,9 @@
 
 namespace App\Model\CMS\Document;
 
-
 use Doctrine\Common\Collections\Criteria;
 use Kdyby\Doctrine\EntityRepository;
+
 
 class TagRepository extends EntityRepository
 {

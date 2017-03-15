@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
+
 /**
  * @ORM\Entity(repositoryClass="TagRepository")
  * @ORM\Table(name="tag")
@@ -25,6 +26,7 @@ class Tag
      * @var string
      */
     protected $name;
+
 
     /**
      * Tag constructor.

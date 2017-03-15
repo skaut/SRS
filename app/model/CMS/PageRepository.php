@@ -5,6 +5,7 @@ namespace App\Model\CMS;
 use Doctrine\Common\Collections\Criteria;
 use Kdyby\Doctrine\EntityRepository;
 
+
 class PageRepository extends EntityRepository
 {
     /**

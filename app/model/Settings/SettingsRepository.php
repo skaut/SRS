@@ -8,10 +8,12 @@ use Kdyby\Doctrine\EntityRepository;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 
+
 class SettingsRepository extends EntityRepository
 {
     /** @var Cache */
     private $cache;
+
 
     public function __construct(EntityManager $em, Mapping\ClassMetadata $class, IStorage $storage)
     {

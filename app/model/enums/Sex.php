@@ -13,6 +13,7 @@ class Sex
         self::FEMALE
     ];
 
+
     public static function getSexOptions()
     {
         $options = [];

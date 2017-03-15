@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
+
 /**
  * @ORM\Entity(repositoryClass="PageRepository")
  * @ORM\Table(name="page")
@@ -54,6 +55,7 @@ class Page
      * @var ArrayCollection
      */
     protected $contents;
+
 
     /**
      * Page constructor.

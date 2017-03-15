@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
+
 /**
  * @ORM\Entity(repositoryClass="RoleRepository")
  * @ORM\Table(name="role")
@@ -164,6 +165,7 @@ class Role
      * @var string
      */
     protected $redirectAfterLogin;
+
 
     /**
      * Role constructor.

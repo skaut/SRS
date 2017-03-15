@@ -2,8 +2,8 @@
 
 namespace App\Model\CMS\Content;
 
-
 use Kdyby\Doctrine\EntityRepository;
+
 
 class ContentRepository extends EntityRepository
 {

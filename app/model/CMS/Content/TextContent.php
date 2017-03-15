@@ -2,9 +2,9 @@
 
 namespace App\Model\CMS\Content;
 
-
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
+
 
 /**
  * @ORM\Entity
@@ -19,6 +19,7 @@ class TextContent extends Content implements IContent
      * @var string
      */
     protected $text;
+
 
     /**
      * @return string

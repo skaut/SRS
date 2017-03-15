@@ -6,6 +6,7 @@ use App\Model\User\User;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
+
 /**
  * @ORM\Entity(repositoryClass="FaqRepository")
  * @ORM\Table(name="faq")

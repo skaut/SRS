@@ -5,6 +5,7 @@ namespace App\Model\ACL;
 use Doctrine\Common\Collections\Criteria;
 use Kdyby\Doctrine\EntityRepository;
 
+
 class PermissionRepository extends EntityRepository
 {
     /**

@@ -16,6 +16,7 @@ class RouterFactory
      */
     private $pageRepository;
 
+
     public function __construct(PageRepository $pageRepository)
     {
         $this->pageRepository = $pageRepository;

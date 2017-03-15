@@ -34,6 +34,7 @@ abstract class CustomInputValue
      */
     protected $user;
 
+
     /**
      * @return int
      */

@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
+
 /**
  * @ORM\Entity(repositoryClass="DocumentRepository")
  * @ORM\Table(name="document")
@@ -45,6 +46,7 @@ class Document
      * @var \DateTime
      */
     protected $timestamp;
+
 
     /**
      * @return int

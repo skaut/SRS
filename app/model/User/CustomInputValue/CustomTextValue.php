@@ -4,6 +4,7 @@ namespace App\Model\User\CustomInputValue;
 
 use Doctrine\ORM\Mapping as ORM;
 
+
 /**
  * @ORM\Entity
  * @ORM\Table(name="custom_text_value")
@@ -15,6 +16,7 @@ class CustomTextValue extends CustomInputValue implements ICustomInputValue
      * @var string
      */
     protected $value;
+
 
     public function getValue()
     {

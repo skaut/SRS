@@ -2,13 +2,13 @@
 
 namespace App\Model\CMS\Content;
 
-
 use App\Services\FilesService;
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
 use Nette\Utils\Image;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
+
 
 /**
  * @ORM\Entity
@@ -56,6 +56,7 @@ class ImageContent extends Content implements IContent
      * @var FilesService
      */
     private $filesService;
+
 
     /**
      * @param FilesService $filesService

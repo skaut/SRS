@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
+
 /**
  * @ORM\Entity(repositoryClass="ResourceRepository")
  * @ORM\Table(name="resource")
@@ -43,6 +44,7 @@ class Resource
      * @var ArrayCollection
      */
     protected $permissions;
+
 
     /**
      * Resource constructor.

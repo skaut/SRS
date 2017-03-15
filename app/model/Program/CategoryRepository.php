@@ -4,6 +4,7 @@ namespace App\Model\Program;
 
 use Kdyby\Doctrine\EntityRepository;
 
+
 class CategoryRepository extends EntityRepository
 {
     /**
@@ -15,6 +16,9 @@ class CategoryRepository extends EntityRepository
         return $this->findOneBy(['id' => $id]);
     }
 
+    /**
+     * @return array
+     */
     public function findAllOrderedByName()
     {
         return $this->createQueryBuilder('c')

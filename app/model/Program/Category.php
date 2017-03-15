@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
+
 /**
  * @ORM\Entity(repositoryClass="CategoryRepository")
  * @ORM\Table(name="category")
@@ -33,6 +34,7 @@ class Category
      * @var ArrayCollection
      */
     protected $blocks;
+
 
     /**
      * Category constructor.

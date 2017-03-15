@@ -2,11 +2,11 @@
 
 namespace App\Model\CMS\Content;
 
-
 use App\Model\CMS\Page;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 use Nette\Application\UI\Form;
+
 
 /**
  * @ORM\Entity(repositoryClass="ContentRepository")
@@ -93,6 +93,7 @@ abstract class Content implements IContent
      * @var int
      */
     protected $position = 0;
+
 
     public function __construct(Page $page, $area)
     {

@@ -14,6 +14,7 @@ class ErrorPresenter implements Nette\Application\IPresenter
     /** @var ILogger */
     private $logger;
 
+
     /**
      * ErrorPresenter constructor.
      * @param ILogger $logger
@@ -42,5 +43,4 @@ class ErrorPresenter implements Nette\Application\IPresenter
             require __DIR__ . '/templates/Error/500.phtml';
         });
     }
-
 }

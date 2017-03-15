@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\PersistentCollection;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
+
 /**
  * @ORM\Entity(repositoryClass="UserRepository")
  * @ORM\Table(name="user")
@@ -226,6 +227,7 @@ class User
      * @var string
      */
     protected $note;
+
 
     /**
      * User constructor.

@@ -2,9 +2,9 @@
 
 namespace App\Model\Mailing;
 
-
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
+
 
 /**
  * @ORM\Entity(repositoryClass="MailRepository")
@@ -36,6 +36,7 @@ abstract class Mail
      * @var \DateTime
      */
     protected $datetime;
+
 
     public function getType()
     {

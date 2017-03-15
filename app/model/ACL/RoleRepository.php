@@ -13,6 +13,7 @@ class RoleRepository extends EntityRepository
     /** @var Translator */
     private $translator;
 
+
     /**
      * @param Translator $translator
      */
