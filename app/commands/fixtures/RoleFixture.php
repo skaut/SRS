@@ -2,19 +2,18 @@
 
 namespace App\Commands\Fixtures;
 
-
 use App\Model\ACL\Role;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Kdyby\Translation\Translator;
 
+
 class RoleFixture extends AbstractFixture implements DependentFixtureInterface
 {
-    /**
-     * @var Translator
-     */
+    /** @var Translator */
     protected $translator;
+
 
     /**
      * RoleFixture constructor.

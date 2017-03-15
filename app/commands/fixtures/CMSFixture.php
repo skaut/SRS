@@ -11,12 +11,12 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Kdyby\Translation\Translator;
 
+
 class CMSFixture extends AbstractFixture implements DependentFixtureInterface
 {
-    /**
-     * @var Translator
-     */
+    /** @var Translator */
     protected $translator;
+
 
     /**
      * RoleFixture constructor.

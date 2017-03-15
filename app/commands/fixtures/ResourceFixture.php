@@ -2,14 +2,13 @@
 
 namespace App\Commands\Fixtures;
 
-
 use App\Model\ACL\Resource;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
+
 class ResourceFixture extends AbstractFixture
 {
-
     public function load(ObjectManager $manager)
     {
         $resources = [];

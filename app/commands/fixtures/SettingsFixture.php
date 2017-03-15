@@ -2,18 +2,17 @@
 
 namespace App\Commands\Fixtures;
 
-
 use App\Model\Settings\Settings;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Kdyby\Translation\Translator;
 
+
 class SettingsFixture extends AbstractFixture
 {
-    /**
-     * @var Translator
-     */
+    /** @var Translator */
     protected $translator;
+
 
     /**
      * SettingsFixture constructor.
