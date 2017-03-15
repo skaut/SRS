@@ -42,8 +42,6 @@ class Settings
     const DISPLAY_USERS_ROLES = 'display_users_roles';
     const REDIRECT_AFTER_LOGIN = 'redirect_after_login';
 
-    const PLACE_GPS_LAT = 'place_gps_lat';
-    const PLACE_GPS_LON = 'place_gps_lon';
     const PLACE_DESCRIPTION = 'place_description';
 
 
@@ -55,7 +53,7 @@ class Settings
     protected $item;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      * @var string
      */
     protected $value;

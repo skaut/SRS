@@ -17,6 +17,10 @@
                 <a href="{plink Application:default}">{_admin.configuration.menu_application}</a>
             </li>
 
+            <li {ifCurrent Place:*}class="active"{/ifCurrent}>
+                <a href="{plink Place:default}">{_admin.configuration.menu_place}</a>
+            </li>
+
             <li {ifCurrent SkautIs:*}class="active"{/ifCurrent}>
                 <a href="{plink SkautIs:default}">{_admin.configuration.menu_skautis}</a>
             </li>
