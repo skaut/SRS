@@ -2,10 +2,10 @@
 
 namespace App\Mailing;
 
-
 use Nette;
 use Ublaboo\Mailing\IComposableMail;
 use Ublaboo\Mailing\Mail;
+
 
 class TextMail extends Mail implements IComposableMail
 {
