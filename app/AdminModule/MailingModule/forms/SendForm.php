@@ -24,6 +24,7 @@ class SendForm extends Nette\Object
     /** @var RoleRepository */
     private $roleRepository;
 
+
     public function __construct(BaseForm $baseFormFactory, MailService $mailService, RoleRepository $roleRepository)
     {
         $this->baseFormFactory = $baseFormFactory;

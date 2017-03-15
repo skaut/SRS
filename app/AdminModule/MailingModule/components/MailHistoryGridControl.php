@@ -2,7 +2,6 @@
 
 namespace App\AdminModule\MailingModule\Components;
 
-
 use App\Model\Mailing\Mail;
 use App\Model\Mailing\MailRepository;
 use Kdyby\Translation\Translator;
@@ -17,6 +16,7 @@ class MailHistoryGridControl extends Control
 
     /** @var MailRepository */
     private $mailRepository;
+
 
     public function __construct(Translator $translator, MailRepository $mailRepository)
     {
