@@ -19,6 +19,7 @@ use Skautis\Wsdl\WsdlManager;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Input\ArrayInput;
 
+
 /**
  * Obsluhuje instalacniho pruvodce
  */
@@ -53,6 +54,7 @@ class InstallPresenter extends InstallBasePresenter
      * @inject
      */
     public $userRepository;
+
 
     public function renderDefault()
     {

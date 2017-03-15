@@ -2,10 +2,10 @@
 
 namespace App\InstallModule\Presenters;
 
-
 use App\Presenters\BasePresenter;
 use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\JavaScriptLoader;
+
 
 abstract class InstallBasePresenter extends BasePresenter
 {
@@ -14,6 +14,7 @@ abstract class InstallBasePresenter extends BasePresenter
      * @inject
      */
     public $translator;
+
 
     /**
      * @return CssLoader
