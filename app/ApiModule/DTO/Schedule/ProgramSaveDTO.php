@@ -3,8 +3,8 @@
 namespace App\ApiModule\DTO\Schedule;
 
 
-use Nette;
 use JMS\Serializer\Annotation as JMS;
+use Nette;
 
 class ProgramSaveDTO extends Nette\Object
 {

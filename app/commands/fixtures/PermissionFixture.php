@@ -2,10 +2,10 @@
 
 namespace App\Commands\Fixtures;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use App\Model\ACL\Permission;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use App\Model\ACL\Permission;
+use Doctrine\Common\Persistence\ObjectManager;
 
 class PermissionFixture extends AbstractFixture implements DependentFixtureInterface
 {

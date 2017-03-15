@@ -5,8 +5,8 @@ namespace App;
 use App\Model\CMS\PageRepository;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Nette;
-use Nette\Application\Routers\RouteList;
 use Nette\Application\Routers\Route;
+use Nette\Application\Routers\RouteList;
 
 
 class RouterFactory

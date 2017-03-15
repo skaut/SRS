@@ -3,8 +3,8 @@
 namespace ApiModule\DTO\Schedule;
 
 
-use Nette;
 use JMS\Serializer\Annotation as JMS;
+use Nette;
 
 class RoomDetailDTO extends Nette\Object
 {

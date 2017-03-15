@@ -3,12 +3,10 @@
 namespace VojtechDobes\NetteForms;
 
 use Nette\Forms;
-use Nette\Forms\Form;
-use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Html;
-use Traversable;
 
 
 /**

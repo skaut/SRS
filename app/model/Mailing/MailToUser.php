@@ -5,7 +5,6 @@ namespace App\Model\Mailing;
 
 
 use App\Model\User\User;
-
 use Doctrine\ORM\Mapping as ORM;
 
 

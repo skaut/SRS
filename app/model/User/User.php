@@ -8,7 +8,6 @@ use App\Model\ACL\Role;
 use App\Model\Program\Block;
 use App\Model\Program\Program;
 use App\Model\Settings\CustomInput\CustomInput;
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;

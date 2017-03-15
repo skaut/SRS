@@ -9,11 +9,10 @@ use App\Model\ACL\Resource;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\CMS\PageRepository;
-
-
 use App\Model\Program\ProgramRepository;
 use Nette;
 use Nette\Application\UI\Form;
+
 
 class EditRoleForm extends Nette\Object
 {

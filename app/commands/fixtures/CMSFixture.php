@@ -5,10 +5,10 @@ namespace App\Commands\Fixtures;
 use App\Model\ACL\Role;
 use App\Model\CMS\Content\Content;
 use App\Model\CMS\Content\TextContent;
+use App\Model\CMS\Page;
+use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\DataFixtures\AbstractFixture;
-use App\Model\CMS\Page;
 use Kdyby\Translation\Translator;
 
 class CMSFixture extends AbstractFixture implements DependentFixtureInterface

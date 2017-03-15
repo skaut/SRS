@@ -5,14 +5,11 @@ namespace App\AdminModule\ProgramModule\Components;
 
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
-
 use App\Model\Program\BlockRepository;
-
 use App\Model\Program\CategoryRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
-
 use App\Model\User\UserRepository;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;

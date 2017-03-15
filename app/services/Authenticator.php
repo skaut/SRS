@@ -3,6 +3,7 @@
 namespace App\Services;
 
 
+use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
@@ -10,7 +11,6 @@ use App\Model\User\User;
 use App\Model\User\UserRepository;
 use Nette;
 use Nette\Security as NS;
-use App\Model\ACL\Role;
 
 class Authenticator extends Nette\Object implements NS\IAuthenticator
 {

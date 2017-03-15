@@ -3,10 +3,10 @@
 namespace App\Commands\Fixtures;
 
 
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\DataFixtures\AbstractFixture;
-use Kdyby\Translation\Translator;
 use App\Model\Settings\Settings;
+use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Common\Persistence\ObjectManager;
+use Kdyby\Translation\Translator;
 
 class SettingsFixture extends AbstractFixture
 {

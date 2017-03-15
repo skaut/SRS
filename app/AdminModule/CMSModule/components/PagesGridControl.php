@@ -4,7 +4,6 @@ namespace App\AdminModule\CMSModule\Components;
 
 
 use App\Model\ACL\RoleRepository;
-
 use App\Model\CMS\Page;
 use App\Model\CMS\PageRepository;
 use Kdyby\Translation\Translator;

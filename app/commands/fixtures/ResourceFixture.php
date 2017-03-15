@@ -3,9 +3,9 @@
 namespace App\Commands\Fixtures;
 
 
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\DataFixtures\AbstractFixture;
 use App\Model\ACL\Resource;
+use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Common\Persistence\ObjectManager;
 
 class ResourceFixture extends AbstractFixture
 {

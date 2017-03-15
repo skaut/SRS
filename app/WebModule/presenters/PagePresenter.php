@@ -10,15 +10,13 @@ use App\WebModule\Components\IDocumentContentControlFactory;
 use App\WebModule\Components\IFaqContentControlFactory;
 use App\WebModule\Components\IHtmlContentControlFactory;
 use App\WebModule\Components\IImageContentControlFactory;
-
 use App\WebModule\Components\INewsContentControlFactory;
 use App\WebModule\Components\IPlaceContentControlFactory;
 use App\WebModule\Components\IProgramsContentControlFactory;
 use App\WebModule\Components\ITextContentControlFactory;
 use App\WebModule\Components\IUsersContentControlFactory;
-
-
 use Nette\Application\BadRequestException;
+
 
 class PagePresenter extends WebBasePresenter
 {

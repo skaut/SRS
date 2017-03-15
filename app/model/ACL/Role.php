@@ -5,7 +5,6 @@ namespace App\Model\ACL;
 use App\Model\CMS\Page;
 use App\Model\Program\Category;
 use Doctrine\Common\Collections\ArrayCollection;
-
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 

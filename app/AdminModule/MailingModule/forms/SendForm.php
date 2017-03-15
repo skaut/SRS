@@ -5,12 +5,11 @@ namespace App\AdminModule\MailingModule\Forms;
 use App\AdminModule\Forms\BaseForm;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
-
-
 use App\Services\MailService;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Mail\SendException;
+
 
 class SendForm extends Nette\Object
 {

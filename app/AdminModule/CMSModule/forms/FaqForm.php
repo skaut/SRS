@@ -7,8 +7,8 @@ use App\Model\CMS\Faq;
 use App\Model\CMS\FaqRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
-use Nette\Application\UI\Form;
 use Nette;
+use Nette\Application\UI\Form;
 
 class FaqForm extends Nette\Object
 {

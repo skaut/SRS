@@ -3,11 +3,11 @@
 namespace App\Commands\Fixtures;
 
 
-use Doctrine\Common\Persistence\ObjectManager;
+use App\Model\ACL\Role;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Doctrine\Common\Persistence\ObjectManager;
 use Kdyby\Translation\Translator;
-use App\Model\ACL\Role;
 
 class RoleFixture extends AbstractFixture implements DependentFixtureInterface
 {

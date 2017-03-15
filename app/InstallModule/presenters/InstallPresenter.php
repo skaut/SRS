@@ -3,9 +3,12 @@
 namespace App\InstallModule\Presenters;
 
 use App\Commands\FixturesLoadCommand;
+use App\Model\ACL\Role;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use Doctrine\DBAL\Exception\TableNotFoundException;
+use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
+use Kdyby\Console\StringOutput;
 use Kdyby\Doctrine\Console\SchemaCreateCommand;
 use Skautis\Config;
 use Skautis\Skautis;
@@ -15,9 +18,6 @@ use Skautis\Wsdl\WsdlException;
 use Skautis\Wsdl\WsdlManager;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Input\ArrayInput;
-use Kdyby\Console\StringOutput;
-use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
-use App\Model\ACL\Role;
 
 /**
  * Obsluhuje instalacniho pruvodce
