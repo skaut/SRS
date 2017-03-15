@@ -2,11 +2,11 @@
 
 namespace App\AdminModule\CMSModule\Presenters;
 
-
 use App\AdminModule\CMSModule\Components\IFaqGridControlFactory;
 use App\AdminModule\CMSModule\Forms\FaqForm;
 use App\Model\CMS\FaqRepository;
 use Nette\Application\UI\Form;
+
 
 class FaqPresenter extends CMSBasePresenter
 {
@@ -27,6 +27,7 @@ class FaqPresenter extends CMSBasePresenter
      * @inject
      */
     public $faqRepository;
+
 
     public function renderEdit($id)
     {

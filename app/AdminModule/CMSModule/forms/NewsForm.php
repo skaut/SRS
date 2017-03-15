@@ -8,6 +8,7 @@ use App\Model\CMS\NewsRepository;
 use Nette;
 use Nette\Application\UI\Form;
 
+
 class NewsForm extends Nette\Object
 {
     /** @var News */
@@ -18,6 +19,7 @@ class NewsForm extends Nette\Object
 
     /** @var NewsRepository */
     private $newsRepository;
+
 
     public function __construct(BaseForm $baseFormFactory, NewsRepository $newsRepository)
     {

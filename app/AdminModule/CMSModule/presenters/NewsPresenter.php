@@ -2,11 +2,11 @@
 
 namespace App\AdminModule\CMSModule\Presenters;
 
-
 use App\AdminModule\CMSModule\Components\INewsGridControlFactory;
 use App\AdminModule\CMSModule\Forms\NewsForm;
 use App\Model\CMS\NewsRepository;
 use Nette\Application\UI\Form;
+
 
 class NewsPresenter extends CMSBasePresenter
 {
@@ -27,6 +27,7 @@ class NewsPresenter extends CMSBasePresenter
      * @inject
      */
     public $newsRepository;
+
 
     public function renderEdit($id)
     {

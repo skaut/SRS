@@ -2,7 +2,6 @@
 
 namespace App\WebModule\Presenters;
 
-
 use App\WebModule\Components\IApplicationContentControlFactory;
 use App\WebModule\Components\IBlocksContentControlFactory;
 use App\WebModule\Components\ICapacitiesContentControlFactory;

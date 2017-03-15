@@ -2,7 +2,6 @@
 
 namespace App\AdminModule\CMSModule\Components;
 
-
 use App\Model\ACL\RoleRepository;
 use App\Model\CMS\Page;
 use App\Model\CMS\PageRepository;
@@ -11,22 +10,18 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Ublaboo\DataGrid\DataGrid;
 
+
 class PagesGridControl extends Control
 {
-    /**
-     * @var Translator
-     */
+    /** @var Translator */
     private $translator;
 
-    /**
-     * @var PageRepository
-     */
+    /** @var PageRepository */
     private $pageRepository;
 
-    /**
-     * @var RoleRepository
-     */
+    /** @var RoleRepository */
     private $roleRepository;
+
 
     public function __construct(Translator $translator, PageRepository $pageRepository, RoleRepository $roleRepository)
     {

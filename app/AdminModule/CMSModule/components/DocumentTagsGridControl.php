@@ -2,7 +2,6 @@
 
 namespace App\AdminModule\CMSModule\Components;
 
-
 use App\Model\CMS\Document\Tag;
 use App\Model\CMS\Document\TagRepository;
 use Kdyby\Translation\Translator;
@@ -10,17 +9,15 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Ublaboo\DataGrid\DataGrid;
 
+
 class DocumentTagsGridControl extends Control
 {
-    /**
-     * @var Translator
-     */
+    /** @var Translator */
     private $translator;
 
-    /**
-     * @var TagRepository
-     */
+    /** @var TagRepository */
     private $tagRepository;
+
 
     public function __construct(Translator $translator, TagRepository $tagRepository)
     {

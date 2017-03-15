@@ -11,10 +11,12 @@ use App\Model\CMS\Content\DocumentContent;
 use App\Model\CMS\Content\ImageContent;
 use App\Model\CMS\Content\UsersContent;
 use App\Model\CMS\Document\TagRepository;
+use App\Model\CMS\Page;
 use App\Model\CMS\PageRepository;
 use App\Services\FilesService;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
+
 
 class PageForm extends UI\Control
 {
@@ -26,37 +28,27 @@ class PageForm extends UI\Control
 
     public $onPageSaveError;
 
+    /** @var Page */
     private $page;
 
-    /**
-     * @var BaseForm
-     */
+    /** @var BaseForm */
     private $baseFormFactory;
 
-    /**
-     * @var PageRepository
-     */
+    /** @var PageRepository */
     private $pageRepository;
 
-    /**
-     * @var ContentRepository
-     */
+    /** @var ContentRepository */
     private $contentRepository;
 
-    /**
-     * @var RoleRepository
-     */
+    /** @var RoleRepository */
     private $roleRepository;
 
-    /**
-     * @var TagRepository
-     */
+    /** @var TagRepository */
     private $tagRepository;
 
-    /**
-     * @var FilesService
-     */
+    /** @var FilesService */
     private $filesService;
+
 
     public function __construct($id, $area, BaseForm $baseFormFactory, PageRepository $pageRepository,
                                 ContentRepository $contentRepository, RoleRepository $roleRepository,

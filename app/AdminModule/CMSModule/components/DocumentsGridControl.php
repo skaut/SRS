@@ -2,7 +2,6 @@
 
 namespace App\AdminModule\CMSModule\Components;
 
-
 use App\Model\CMS\Document\Document;
 use App\Model\CMS\Document\DocumentRepository;
 use App\Model\CMS\Document\TagRepository;
@@ -15,29 +14,24 @@ use Nette\Utils\Random;
 use Nette\Utils\Strings;
 use Ublaboo\DataGrid\DataGrid;
 
+
 class DocumentsGridControl extends Control
 {
-    /**
-     * @var Translator
-     */
+    /** @var Translator */
     private $translator;
 
-    /**
-     * @var DocumentRepository
-     */
+    /** @var DocumentRepository */
     private $documentRepository;
 
-    /**
-     * @var FilesService
-     */
+    /** @var FilesService */
     private $filesService;
 
-    /**
-     * @var TagRepository
-     */
+    /** @var TagRepository */
     private $tagRepository;
 
-    public function __construct(Translator $translator, DocumentRepository $documentRepository, TagRepository $tagRepository, FilesService $filesService)
+
+    public function __construct(Translator $translator, DocumentRepository $documentRepository,
+                                TagRepository $tagRepository, FilesService $filesService)
     {
         parent::__construct();
 

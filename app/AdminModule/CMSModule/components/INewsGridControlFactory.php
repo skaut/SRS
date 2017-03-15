@@ -2,6 +2,7 @@
 
 namespace App\AdminModule\CMSModule\Components;
 
+
 interface INewsGridControlFactory
 {
     /**
