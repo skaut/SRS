@@ -2,13 +2,13 @@
 
 namespace App\AdminModule\ProgramModule\Components;
 
-
 use App\Model\Program\Room;
 use App\Model\Program\RoomRepository;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Ublaboo\DataGrid\DataGrid;
+
 
 class RoomsGridControl extends Control
 {
@@ -17,6 +17,7 @@ class RoomsGridControl extends Control
 
     /** @var RoomRepository */
     private $roomRepository;
+
 
     /**
      * RoomsGridControl constructor.

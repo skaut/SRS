@@ -2,7 +2,6 @@
 
 namespace App\AdminModule\ProgramModule\Presenters;
 
-
 use App\AdminModule\ProgramModule\Components\IProgramAttendeesGridControlFactory;
 use App\AdminModule\ProgramModule\Components\IProgramBlocksGridControlFactory;
 use App\AdminModule\ProgramModule\Forms\BlockForm;
@@ -13,6 +12,7 @@ use App\Model\Program\ProgramRepository;
 use App\Model\Settings\Settings;
 use Nette\Application\UI\Form;
 use Nette\Http\Session;
+
 
 class BlocksPresenter extends ProgramBasePresenter
 {

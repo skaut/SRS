@@ -2,7 +2,6 @@
 
 namespace App\AdminModule\ProgramModule\Components;
 
-
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\Program\BlockRepository;
@@ -14,6 +13,7 @@ use App\Model\User\UserRepository;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Ublaboo\DataGrid\DataGrid;
+
 
 class ProgramBlocksGridControl extends Control
 {
@@ -34,6 +34,7 @@ class ProgramBlocksGridControl extends Control
 
     /** @var ProgramRepository */
     private $programRepository;
+
 
     public function __construct(Translator $translator, BlockRepository $blockRepository,
                                 SettingsRepository $settingsRepository, UserRepository $userRepository,

@@ -2,9 +2,9 @@
 
 namespace App\AdminModule\ProgramModule\Presenters;
 
-
 use App\AdminModule\ProgramModule\Components\IRoomsGridControlFactory;
 use App\Model\ACL\Permission;
+
 
 class RoomsPresenter extends ProgramBasePresenter
 {
@@ -13,6 +13,7 @@ class RoomsPresenter extends ProgramBasePresenter
      * @inject
      */
     public $roomsGridControlFactory;
+
 
     public function startup()
     {

@@ -2,9 +2,9 @@
 
 namespace App\AdminModule\ProgramModule\Presenters;
 
-
 use App\AdminModule\ProgramModule\Components\IProgramCategoriesGridControlFactory;
 use App\Model\ACL\Permission;
+
 
 class CategoriesPresenter extends ProgramBasePresenter
 {
@@ -13,6 +13,7 @@ class CategoriesPresenter extends ProgramBasePresenter
      * @inject
      */
     public $programCategoriesGridControlFactory;
+
 
     public function startup()
     {

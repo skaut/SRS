@@ -43,6 +43,7 @@ class BlockForm extends Nette\Object
     /** @var ProgramRepository */
     private $programRepository;
 
+
     public function __construct(BaseForm $baseFormFactory, BlockRepository $blockRepository,
                                 UserRepository $userRepository, CategoryRepository $categoryRepository,
                                 SettingsRepository $settingsRepository, ProgramRepository $programRepository)
