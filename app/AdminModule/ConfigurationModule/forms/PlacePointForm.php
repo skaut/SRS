@@ -21,6 +21,7 @@ class PlacePointForm extends Nette\Object
     /** @var PlacePointRepository */
     private $placePointRepository;
 
+
     public function __construct(BaseForm $baseForm, PlacePointRepository $placePointRepository)
     {
         $this->baseForm = $baseForm;

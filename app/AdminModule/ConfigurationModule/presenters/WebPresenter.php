@@ -2,10 +2,10 @@
 
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
-
 use App\AdminModule\ConfigurationModule\Forms\WebForm;
 use App\Model\Settings\Settings;
 use Nette\Application\UI\Form;
+
 
 class WebPresenter extends ConfigurationBasePresenter
 {
@@ -14,6 +14,7 @@ class WebPresenter extends ConfigurationBasePresenter
      * @inject
      */
     public $webFormFactory;
+
 
     public function renderDefault()
     {

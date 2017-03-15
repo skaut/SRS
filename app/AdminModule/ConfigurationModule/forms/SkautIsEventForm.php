@@ -21,6 +21,7 @@ class SkautIsEventForm extends Nette\Object
     /** @var SkautIsService */
     private $skautIsService;
 
+
     public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository, SkautIsService $skautIsService)
     {
         $this->baseForm = $baseForm;

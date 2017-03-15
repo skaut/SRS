@@ -11,6 +11,7 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Ublaboo\DataGrid\DataGrid;
 
+
 class CustomInputsGridControl extends Control
 {
     /** @var Translator */
@@ -18,6 +19,7 @@ class CustomInputsGridControl extends Control
 
     /** @var CustomInputRepository */
     private $customInputRepository;
+
 
     public function __construct(Translator $translator, CustomInputRepository $customInputRepository)
     {

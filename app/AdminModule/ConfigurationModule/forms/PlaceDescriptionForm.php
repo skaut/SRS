@@ -17,6 +17,7 @@ class PlaceDescriptionForm extends Nette\Object
     /** @var  SettingsRepository */
     private $settingsRepository;
 
+
     public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository)
     {
         $this->baseForm = $baseForm;

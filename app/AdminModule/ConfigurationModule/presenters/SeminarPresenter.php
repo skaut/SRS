@@ -2,9 +2,9 @@
 
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
-
 use App\AdminModule\ConfigurationModule\Forms\SeminarForm;
 use Nette\Application\UI\Form;
+
 
 class SeminarPresenter extends ConfigurationBasePresenter
 {
@@ -13,6 +13,7 @@ class SeminarPresenter extends ConfigurationBasePresenter
      * @inject
      */
     public $seminarFormFactory;
+
 
     protected function createComponentSeminarForm()
     {

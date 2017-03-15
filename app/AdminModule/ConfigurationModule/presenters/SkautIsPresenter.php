@@ -2,11 +2,11 @@
 
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
-
 use App\AdminModule\ConfigurationModule\Forms\SkautIsEventForm;
 use App\Model\Settings\Settings;
 use Nette\Application\UI\Form;
 use Skautis\Wsdl\WsdlException;
+
 
 class SkautIsPresenter extends ConfigurationBasePresenter
 {
@@ -15,6 +15,7 @@ class SkautIsPresenter extends ConfigurationBasePresenter
      * @inject
      */
     public $skautIsEventFormFactory;
+
 
     public function renderDefault()
     {

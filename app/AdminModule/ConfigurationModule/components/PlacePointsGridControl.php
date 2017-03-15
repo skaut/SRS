@@ -16,6 +16,7 @@ class PlacePointsGridControl extends Control
     /** @var PlacePointRepository */
     private $placePointRepository;
 
+
     public function __construct(Translator $translator, PlacePointRepository $placePointRepository)
     {
         parent::__construct();

@@ -2,9 +2,9 @@
 
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
-
 use App\AdminModule\ConfigurationModule\Forms\ProgramForm;
 use Nette\Application\UI\Form;
+
 
 class ProgramPresenter extends ConfigurationBasePresenter
 {
@@ -13,6 +13,7 @@ class ProgramPresenter extends ConfigurationBasePresenter
      * @inject
      */
     public $programFormFactory;
+
 
     protected function createComponentProgramForm()
     {
