@@ -2,9 +2,9 @@
 
 namespace App\ApiModule\DTO\Schedule;
 
-
 use JMS\Serializer\Annotation as JMS;
 use Nette;
+
 
 class ProgramSaveDTO extends Nette\Object
 {
@@ -31,6 +31,7 @@ class ProgramSaveDTO extends Nette\Object
      * \DateTime
      */
     private $start;
+
 
     /**
      * @return int

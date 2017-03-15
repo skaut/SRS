@@ -2,9 +2,9 @@
 
 namespace App\ApiModule\DTO\Schedule;
 
-
 use JMS\Serializer\Annotation as JMS;
 use Nette;
+
 
 class BlockDetailDTO extends Nette\Object
 {

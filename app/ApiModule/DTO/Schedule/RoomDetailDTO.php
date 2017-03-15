@@ -2,9 +2,9 @@
 
 namespace ApiModule\DTO\Schedule;
 
-
 use JMS\Serializer\Annotation as JMS;
 use Nette;
+
 
 class RoomDetailDTO extends Nette\Object
 {
@@ -19,6 +19,7 @@ class RoomDetailDTO extends Nette\Object
      * @var string
      */
     private $name;
+
 
     /**
      * @return int
