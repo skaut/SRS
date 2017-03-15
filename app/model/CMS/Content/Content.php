@@ -20,6 +20,7 @@ use Nette\Application\UI\Form;
  *     "html_content" = "HtmlContent",
  *     "faq_content" = "FaqContent",
  *     "news_content" = "NewsContent",
+ *     "place_content" = "PlaceContent",
  *     "programs_content" = "ProgramsContent",
  *     "image_content" = "ImageContent",
  *     "users_content" = "UsersContent",
@@ -36,6 +37,7 @@ abstract class Content implements IContent
     const HTML = 'html';
     const FAQ = 'faq';
     const NEWS = 'news';
+    const PLACE = 'place';
     const PROGRAMS = 'programs';
     const USERS = 'users';
     const BLOCKS = 'blocks';
@@ -52,6 +54,7 @@ abstract class Content implements IContent
         self::HTML,
         self::FAQ,
         self::NEWS,
+        self::PLACE,
         self::PROGRAMS,
         self::USERS,
         self::BLOCKS,

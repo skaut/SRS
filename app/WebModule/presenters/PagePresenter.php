@@ -12,6 +12,7 @@ use App\WebModule\Components\IHtmlContentControlFactory;
 use App\WebModule\Components\IImageContentControlFactory;
 
 use App\WebModule\Components\INewsContentControlFactory;
+use App\WebModule\Components\IPlaceContentControlFactory;
 use App\WebModule\Components\IProgramsContentControlFactory;
 use App\WebModule\Components\ITextContentControlFactory;
 use App\WebModule\Components\IUsersContentControlFactory;
@@ -68,6 +69,12 @@ class PagePresenter extends WebBasePresenter
      * @inject
      */
     public $newsContentControlFactory;
+
+    /**
+     * @var IPlaceContentControlFactory
+     * @inject
+     */
+    public $placeContentControlFactory;
 
     /**
      * @var IProgramsContentControlFactory
@@ -148,6 +155,11 @@ class PagePresenter extends WebBasePresenter
     protected function createComponentNewsContent($name)
     {
         return $this->newsContentControlFactory->create($name);
+    }
+
+    protected function createComponentPlaceContent($name)
+    {
+        return $this->placeContentControlFactory->create($name);
     }
 
     protected function createComponentProgramsContent($name)
