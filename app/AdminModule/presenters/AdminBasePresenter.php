@@ -16,6 +16,7 @@ use App\Services\SkautIsService;
 use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\JavaScriptLoader;
 
+
 abstract class AdminBasePresenter extends BasePresenter
 {
     /**

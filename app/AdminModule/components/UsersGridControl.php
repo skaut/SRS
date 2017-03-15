@@ -22,6 +22,7 @@ use Nette\Http\SessionSection;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 
+
 class UsersGridControl extends Control
 {
     /** @var Translator */

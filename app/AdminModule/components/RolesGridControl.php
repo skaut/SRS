@@ -2,7 +2,6 @@
 
 namespace App\AdminModule\Components;
 
-
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Program\ProgramRepository;
@@ -10,6 +9,7 @@ use App\Model\User\UserRepository;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Ublaboo\DataGrid\DataGrid;
+
 
 class RolesGridControl extends Control
 {
@@ -24,6 +24,7 @@ class RolesGridControl extends Control
 
     /** @var ProgramRepository */
     private $programRepository;
+
 
     public function __construct(Translator $translator, RoleRepository $roleRepository, UserRepository $userRepository,
                                 ProgramRepository $programRepository)

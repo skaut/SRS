@@ -34,6 +34,7 @@ class EditRoleForm extends Nette\Object
     /** @var ProgramRepository */
     private $programRepository;
 
+
     public function __construct(BaseForm $baseFormFactory, RoleRepository $roleRepository,
                                 PageRepository $pageRepository, PermissionRepository $permissionRepository,
                                 ProgramRepository $programRepository)

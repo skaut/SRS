@@ -7,12 +7,14 @@ use Nette;
 use Nette\Application\UI\Form;
 use Nextras\Forms\Rendering\Bs3FormRenderer;
 
+
 class BaseForm extends Nette\Object
 {
     /**
      * @var Translator
      */
     private $translator;
+
 
     public function __construct(Translator $translator)
     {

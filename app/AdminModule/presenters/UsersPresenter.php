@@ -2,7 +2,6 @@
 
 namespace App\AdminModule\Presenters;
 
-
 use App\AdminModule\Components\IUsersGridControlFactory;
 use App\AdminModule\Forms\EditUserPaymentForm;
 use App\AdminModule\Forms\EditUserSeminarForm;

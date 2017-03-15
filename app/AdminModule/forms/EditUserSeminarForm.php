@@ -2,7 +2,6 @@
 
 namespace App\AdminModule\Forms;
 
-
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Program\ProgramRepository;
@@ -43,6 +42,7 @@ class EditUserSeminarForm extends Nette\Object
 
     /** @var ProgramRepository */
     private $programRepository;
+
 
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
                                 RoleRepository $roleRepository, CustomInputRepository $customInputRepository,

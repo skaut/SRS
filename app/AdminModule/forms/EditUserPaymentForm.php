@@ -2,13 +2,13 @@
 
 namespace App\AdminModule\Forms;
 
-
 use App\Model\Enums\PaymentType;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use Nette;
 use Nette\Application\UI\Form;
+
 
 class EditUserPaymentForm extends Nette\Object
 {
@@ -23,6 +23,7 @@ class EditUserPaymentForm extends Nette\Object
 
     /** @var SettingsRepository */
     private $settingsRepository;
+
 
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
                                 SettingsRepository $settingsRepository)
