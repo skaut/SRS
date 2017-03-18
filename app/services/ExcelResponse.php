@@ -6,6 +6,11 @@ use Nette;
 use Nette\Application\IResponse;
 
 
+/**
+ * ExcelResponse.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class ExcelResponse extends Nette\Object implements IResponse
 {
     /** @var \PHPExcel */

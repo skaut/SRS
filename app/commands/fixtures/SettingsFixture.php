@@ -8,6 +8,11 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Kdyby\Translation\Translator;
 
 
+/**
+ * Vytváří počáteční nastavení.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class SettingsFixture extends AbstractFixture
 {
     /** @var Translator */
@@ -23,6 +28,10 @@ class SettingsFixture extends AbstractFixture
         $this->translator = $translator;
     }
 
+    /**
+     * Vytváří počáteční data.
+     * @param ObjectManager $manager
+     */
     public function load(ObjectManager $manager)
     {
         $today = new \DateTime();

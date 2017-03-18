@@ -5,6 +5,12 @@ namespace App\Presenters;
 use Nette;
 
 
+/**
+ * BasePresenter.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 abstract class BasePresenter extends Nette\Application\UI\Presenter
 {
     /**
@@ -20,6 +26,15 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
     public $translator;
 
 
+    /**
+     * Zobrazí přeloženou zprávu.
+     * @param $message
+     * @param string $type
+     * @param null $icon
+     * @param null $count
+     * @param array $parameters
+     * @return \stdClass
+     */
     public function flashMessage($message, $type = 'info', $icon = null, $count = null, $parameters = [])
     {
         if ($icon)

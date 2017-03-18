@@ -11,7 +11,7 @@ use Nette\Application\Responses\TextResponse;
 
 
 /**
- * API pro správu harmonogramu a zapisování programů
+ * API pro správu harmonogramu a zapisování programů.
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>

@@ -21,7 +21,10 @@ use Symfony\Component\Console\Input\ArrayInput;
 
 
 /**
- * Obsluhuje instalacniho pruvodce
+ * Obsluhuje instalačního průvodce.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class InstallPresenter extends InstallBasePresenter
 {
@@ -56,6 +59,9 @@ class InstallPresenter extends InstallBasePresenter
     public $userRepository;
 
 
+    /**
+     * Zobrazení první stránky průvodce.
+     */
     public function renderDefault()
     {
         if ($this->user->isLoggedIn()) {
@@ -73,6 +79,9 @@ class InstallPresenter extends InstallBasePresenter
         }
     }
 
+    /**
+     * Vytvoření schéma databáze a počátečních dat.
+     */
     public function handleImportSchema()
     {
         $helperSet = new HelperSet(['em' => new EntityManagerHelper($this->em)]);
@@ -106,6 +115,9 @@ class InstallPresenter extends InstallBasePresenter
         $this->redirect('admin');
     }
 
+    /**
+     * Zobrazení stránky pro vytvoření administrátora.
+     */
     public function renderAdmin()
     {
         try {
@@ -137,6 +149,9 @@ class InstallPresenter extends InstallBasePresenter
         }
     }
 
+    /**
+     * Otestování připojení ke skautIS, přesměrování na přihlašovací stránku.
+     */
     public function handleCreateAdmin()
     {
         if (!$this->checkSkautISConnection()) {
@@ -146,6 +161,9 @@ class InstallPresenter extends InstallBasePresenter
         $this->redirect(':Auth:login', ['backlink' => ':Install:Install:admin']);
     }
 
+    /**
+     * Zobrazení stránky po úspěšné instalaci.
+     */
     public function renderFinish()
     {
         try {
@@ -158,6 +176,9 @@ class InstallPresenter extends InstallBasePresenter
         }
     }
 
+    /**
+     * Zobrazení stránky pokud byla instalace dokončena dříve.
+     */
     public function renderInstalled()
     {
         try {
@@ -170,6 +191,10 @@ class InstallPresenter extends InstallBasePresenter
         }
     }
 
+    /**
+     * Vyzkouší připojení ke skautIS pomocí anonymní funkce.
+     * @return bool
+     */
     private function checkSkautISConnection()
     {
         try {

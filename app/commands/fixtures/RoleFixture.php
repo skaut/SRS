@@ -9,6 +9,11 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Kdyby\Translation\Translator;
 
 
+/**
+ * Vytváří systémové role.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class RoleFixture extends AbstractFixture implements DependentFixtureInterface
 {
     /** @var Translator */
@@ -24,6 +29,10 @@ class RoleFixture extends AbstractFixture implements DependentFixtureInterface
         $this->translator = $translator;
     }
 
+    /**
+     * Vytváří počáteční data.
+     * @param ObjectManager $manager
+     */
     public function load(ObjectManager $manager)
     {
         $roles = [];
@@ -97,6 +106,7 @@ class RoleFixture extends AbstractFixture implements DependentFixtureInterface
     }
 
     /**
+     * Vrací závislosti na jiných fixtures.
      * @return array
      */
     function getDependencies()

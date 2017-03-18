@@ -13,6 +13,11 @@ use Nette;
 use Ublaboo\Mailing\MailFactory;
 
 
+/**
+ * Služba pro rozesílání e-mailů.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class MailService extends Nette\Object
 {
     /** @var MailFactory */
@@ -31,6 +36,14 @@ class MailService extends Nette\Object
     private $roleRepository;
 
 
+    /**
+     * MailService constructor.
+     * @param MailFactory $mailFactory
+     * @param SettingsRepository $settingsRepository
+     * @param MailRepository $mailRepository
+     * @param UserRepository $userRepository
+     * @param RoleRepository $roleRepository
+     */
     public function __construct(MailFactory $mailFactory, SettingsRepository $settingsRepository,
                                 MailRepository $mailRepository, UserRepository $userRepository,
                                 RoleRepository $roleRepository)
@@ -42,6 +55,13 @@ class MailService extends Nette\Object
         $this->roleRepository = $roleRepository;
     }
 
+    /**
+     * Rozešle e-mail vybraným rolím.
+     * @param $rolesIds
+     * @param $copy
+     * @param $subject
+     * @param $text
+     */
     public function sendMailToRoles($rolesIds, $copy, $subject, $text)
     {
         $users = $this->userRepository->findAllApprovedInRoles($rolesIds);

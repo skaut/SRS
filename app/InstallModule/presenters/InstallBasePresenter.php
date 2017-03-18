@@ -7,6 +7,11 @@ use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\JavaScriptLoader;
 
 
+/**
+ * BasePresenter pro InstallModule.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 abstract class InstallBasePresenter extends BasePresenter
 {
     /**
@@ -17,6 +22,7 @@ abstract class InstallBasePresenter extends BasePresenter
 
 
     /**
+     * Načte css podle konfigurace v config.neon.
      * @return CssLoader
      */
     protected function createComponentCss()
@@ -25,6 +31,7 @@ abstract class InstallBasePresenter extends BasePresenter
     }
 
     /**
+     * Načte javascript podle konfigurace v config.neon.
      * @return JavaScriptLoader
      */
     protected function createComponentJs()

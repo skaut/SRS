@@ -6,6 +6,11 @@ use Kdyby\Translation\Translator;
 use Nette;
 
 
+/**
+ * Služba pro export do formátu XLSX.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class ExcelExportService extends Nette\Object
 {
     /** @var \PHPExcel */
@@ -15,6 +20,10 @@ class ExcelExportService extends Nette\Object
     private $translator;
 
 
+    /**
+     * ExcelExportService constructor.
+     * @param Translator $translator
+     */
     public function __construct(Translator $translator)
     {
         $this->phpExcel = new \PHPExcel();
@@ -22,6 +31,13 @@ class ExcelExportService extends Nette\Object
         $this->translator = $translator;
     }
 
+    /**
+     * Vyexportuje matici uživatelů a rolí.
+     * @param $users
+     * @param $roles
+     * @param $filename
+     * @return ExcelResponse
+     */
     public function exportUsersRoles($users, $roles, $filename)
     {
         $sheet = $this->phpExcel->getSheet(0);
@@ -55,6 +71,12 @@ class ExcelExportService extends Nette\Object
         return new ExcelResponse($this->phpExcel, $filename);
     }
 
+    /**
+     * Vyexportuje harmonogramy uživatelů, každý uživatel na zvlástním listu.
+     * @param $users
+     * @param $filename
+     * @return ExcelResponse
+     */
     public function exportUsersSchedules($users, $filename)
     {
         $this->phpExcel->removeSheetByIndex(0);
@@ -107,6 +129,12 @@ class ExcelExportService extends Nette\Object
         return new ExcelResponse($this->phpExcel, $filename);
     }
 
+    /**
+     * Vyexportuje harmonogram uživatele.
+     * @param $user
+     * @param $filename
+     * @return ExcelResponse
+     */
     public function exportUsersSchedule($user, $filename)
     {
         return $this->exportUsersSchedules([$user], $filename);

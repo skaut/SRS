@@ -13,8 +13,10 @@ use Nette\Security as NS;
 
 
 /**
- * Class Authenticator
- * @package App\Services
+ * Služba starající se o autentizaci uživatelů.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class Authenticator extends Nette\Object implements NS\IAuthenticator
 {
@@ -31,6 +33,13 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
     protected $skautIsService;
 
 
+    /**
+     * Authenticator constructor.
+     * @param UserRepository $userRepository
+     * @param RoleRepository $roleRepository
+     * @param SettingsRepository $settingsRepository
+     * @param SkautIsService $skautIsService
+     */
     public function __construct(UserRepository $userRepository, RoleRepository $roleRepository,
                                 SettingsRepository $settingsRepository, SkautIsService $skautIsService)
     {
@@ -41,6 +50,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
     }
 
     /**
+     * Autentizuje uživatele a případně vytvoří nového.
      * @param array $credentials
      * @return NS\Identity
      */
@@ -78,6 +88,11 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
         return new NS\Identity($user->getId(), $netteRoles);
     }
 
+    /**
+     * Aktualizuje údaje uživatele ze skautIS.
+     * @param User $user
+     * @param $skautISUser
+     */
     private function updateUserFromSkautIS(User $user, $skautISUser)
     {
         $skautISPerson = $this->skautIsService->getPersonDetail($skautISUser->ID_Person);
@@ -105,6 +120,11 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
             $user->setUnit(null);
     }
 
+    /**
+     * Vygeneruje variabilní symbol nového uživatele.
+     * @param \DateTime $birthDate
+     * @return string
+     */
     private function generateVariableSymbol(\DateTime $birthDate)
     {
         $variableSymbolCode = $this->settingsRepository->getValue(Settings::VARIABLE_SYMBOL_CODE);
@@ -116,6 +136,11 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
         return $variableSymbol;
     }
 
+    /**
+     * Aktualizuje role přihlášeného uživatele.
+     * @param $user
+     * @param null $testRole
+     */
     public function updateRoles($user, $testRole = null)
     {
         $dbuser = $this->userRepository->findById($user->id);

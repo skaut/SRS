@@ -6,25 +6,40 @@ use Nette;
 use Nette\Utils\Image;
 
 
+/**
+ * Služba pro správu nahraných souborů.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class FilesService extends Nette\Object
 {
+    /** @var string */
     private $dir;
 
 
     /**
      * FilesService constructor.
-     * @param $dir
+     * @param string $dir
      */
     public function __construct($dir)
     {
         $this->dir = $dir;
     }
 
+    /**
+     * Uloží soubor.
+     * @param $file
+     * @param $path
+     */
     public function save($file, $path)
     {
         $file->move($this->dir . $path);
     }
 
+    /**
+     * Odstraní soubor.
+     * @param $path
+     */
     public function delete($path)
     {
         $file = $this->dir . $path;
@@ -32,6 +47,12 @@ class FilesService extends Nette\Object
             unlink($file);
     }
 
+    /**
+     * Změní velikost obrázku.
+     * @param $path
+     * @param $width
+     * @param $height
+     */
     public function resizeImage($path, $width, $height)
     {
         $image = Image::fromFile($this->dir . $path);
@@ -40,6 +61,10 @@ class FilesService extends Nette\Object
         $image->save($this->dir . $path);
     }
 
+    /**
+     * Vrací cestu ke složce pro nahrávání souborů.
+     * @return string
+     */
     public function getDir()
     {
         return $this->dir;

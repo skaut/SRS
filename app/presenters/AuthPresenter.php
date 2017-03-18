@@ -8,6 +8,12 @@ use App\Model\User\UserRepository;
 use App\Services\SkautIsService;
 
 
+/**
+ * Presenter obsluhující přihlašování a odhlašování pomocí skautIS.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class AuthPresenter extends BasePresenter
 {
     /**
@@ -29,6 +35,10 @@ class AuthPresenter extends BasePresenter
     public $userRepository;
 
 
+    /**
+     * Přesměruje na přihlašovací stránku skautIS, nastaví přihlášení.
+     * @param null $backlink
+     */
     public function actionLogin($backlink = null)
     {
         if ($this->getHttpRequest()->getPost() == null) {
@@ -42,6 +52,9 @@ class AuthPresenter extends BasePresenter
         $this->redirectAfterLogin($this->getParameter('ReturnUrl'));
     }
 
+    /**
+     * Přesměruje na odhlašovací stránku skautIS.
+     */
     public function actionLogout()
     {
         if ($this->user->isLoggedIn()) {
@@ -49,9 +62,14 @@ class AuthPresenter extends BasePresenter
             $logoutUrl = $this->skautIsService->getLogoutUrl();
             $this->redirectUrl($logoutUrl);
         }
+
         $this->redirect(':Web:Page:default');
     }
 
+    /**
+     * Provede přesměrování po úspěšném přihlášení, v závislosti na nastavení, nastavení role nebo returnUrl.
+     * @param $returnUrl
+     */
     private function redirectAfterLogin($returnUrl)
     {
         if ($returnUrl) {

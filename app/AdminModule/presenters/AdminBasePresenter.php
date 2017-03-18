@@ -17,6 +17,11 @@ use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\JavaScriptLoader;
 
 
+/**
+ * BasePresenter pro AdminModule.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 abstract class AdminBasePresenter extends BasePresenter
 {
     /**
@@ -62,6 +67,7 @@ abstract class AdminBasePresenter extends BasePresenter
 
 
     /**
+     * Načte css podle konfigurace v config.neon.
      * @return CssLoader
      */
     protected function createComponentCss()
@@ -70,6 +76,7 @@ abstract class AdminBasePresenter extends BasePresenter
     }
 
     /**
+     * Načte javascript podle konfigurace v config.neon.
      * @return JavaScriptLoader
      */
     protected function createComponentJs()

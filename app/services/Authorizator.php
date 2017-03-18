@@ -11,11 +11,19 @@ use Nette;
 
 
 /**
- * Class Authorizator
- * @package App\Services
+ * Služba nastavující role a oprávnění.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class Authorizator extends Nette\Security\Permission
 {
+    /**
+     * Authorizator constructor.
+     * @param RoleRepository $roleRepository
+     * @param PermissionRepository $permissionRepository
+     * @param ResourceRepository $resourceRepository
+     */
     public function __construct(RoleRepository $roleRepository, PermissionRepository $permissionRepository,
                                 ResourceRepository $resourceRepository)
     {

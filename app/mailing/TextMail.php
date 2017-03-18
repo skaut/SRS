@@ -7,6 +7,11 @@ use Ublaboo\Mailing\IComposableMail;
 use Ublaboo\Mailing\Mail;
 
 
+/**
+ * Třída pro vytváření hromadných e-mailů s libovolným textem.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class TextMail extends Mail implements IComposableMail
 {
     /**

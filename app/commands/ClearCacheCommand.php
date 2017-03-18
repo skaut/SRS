@@ -8,11 +8,22 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 
+/**
+ * Příkaz pro vymazání cache.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class ClearCacheCommand extends Command
 {
+    /** @var null|string */
     private $dir;
 
 
+    /**
+     * ClearCacheCommand constructor.
+     * @param null|string $dir
+     */
     public function __construct($dir)
     {
         parent::__construct();
@@ -20,12 +31,21 @@ class ClearCacheCommand extends Command
         $this->dir = $dir;
     }
 
+    /**
+     * Nastavuje příkaz.
+     */
     protected function configure()
     {
         $this->setName('app:cache:clear');
         $this->setDescription('Clears cache, proxies and webtemp directories.');
     }
 
+    /**
+     * Spouští příkaz.
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $cacheDir = $this->dir . '/temp/cache';
@@ -52,6 +72,11 @@ class ClearCacheCommand extends Command
         }
     }
 
+    /**
+     * Maže složku.
+     * @param $path
+     * @return bool
+     */
     private function deleteDir($path)
     {
         if (is_dir($path) === true) {

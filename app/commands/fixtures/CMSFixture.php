@@ -12,6 +12,11 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Kdyby\Translation\Translator;
 
 
+/**
+ * Vytváří počáteční úvodní stránku.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class CMSFixture extends AbstractFixture implements DependentFixtureInterface
 {
     /** @var Translator */
@@ -19,7 +24,7 @@ class CMSFixture extends AbstractFixture implements DependentFixtureInterface
 
 
     /**
-     * RoleFixture constructor.
+     * CMSFixture constructor.
      * @param Translator $translator
      */
     public function __construct(Translator $translator)
@@ -27,6 +32,10 @@ class CMSFixture extends AbstractFixture implements DependentFixtureInterface
         $this->translator = $translator;
     }
 
+    /**
+     * Vytváří počáteční data.
+     * @param ObjectManager $manager
+     */
     public function load(ObjectManager $manager)
     {
         $homepage = new Page($this->translator->translate('common.cms.default.homepage_name'), '/');
@@ -50,6 +59,7 @@ class CMSFixture extends AbstractFixture implements DependentFixtureInterface
     }
 
     /**
+     * Vrací závislosti na jiných fixtures.
      * @return array
      */
     function getDependencies()
