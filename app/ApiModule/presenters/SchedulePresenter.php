@@ -11,9 +11,9 @@ use Nette\Application\Responses\TextResponse;
 
 
 /**
- * SchedulePresenter
+ * API pro správu harmonogramu a zapisování programů
  *
- * @package App\ApiModule\Presenters
+ * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class SchedulePresenter extends ApiBasePresenter
@@ -50,7 +50,7 @@ class SchedulePresenter extends ApiBasePresenter
     }
 
     /**
-     *
+     * Vrací podrobnosti o všech programech pro použití v administraci harmonogramu.
      */
     public function actionGetProgramsAdmin()
     {
@@ -62,7 +62,7 @@ class SchedulePresenter extends ApiBasePresenter
     }
 
     /**
-     *
+     * Vrací podrobnosti o programech, ke kterým má uživatel přístup, pro použití v kalendáři pro výběr programů.
      */
     public function actionGetProgramsWeb()
     {
@@ -74,7 +74,7 @@ class SchedulePresenter extends ApiBasePresenter
     }
 
     /**
-     *
+     * Vrací podrobnosti o programových blocích.
      */
     public function actionGetBlocks()
     {
@@ -86,7 +86,7 @@ class SchedulePresenter extends ApiBasePresenter
     }
 
     /**
-     *
+     * Vrací podrobnosti o místnostech.
      */
     public function actionGetRooms()
     {
@@ -98,7 +98,7 @@ class SchedulePresenter extends ApiBasePresenter
     }
 
     /**
-     *
+     * Vrací nastavení pro FullCalendar.
      */
     public function actionGetCalendarConfig()
     {
@@ -110,6 +110,7 @@ class SchedulePresenter extends ApiBasePresenter
     }
 
     /**
+     * Uloží nebo vytvoří program.
      * @param $data
      */
     public function actionSaveProgram($data)
@@ -124,6 +125,7 @@ class SchedulePresenter extends ApiBasePresenter
     }
 
     /**
+     * Smaže program.
      * @param $id
      */
     public function actionRemoveProgram($id)
@@ -136,6 +138,7 @@ class SchedulePresenter extends ApiBasePresenter
     }
 
     /**
+     * Přihlásí program uživateli.
      * @param $id
      */
     public function actionAttendProgram($id)
@@ -148,6 +151,7 @@ class SchedulePresenter extends ApiBasePresenter
     }
 
     /**
+     * Odhlásí program uživateli.
      * @param $id
      */
     public function actionUnattendProgram($id)

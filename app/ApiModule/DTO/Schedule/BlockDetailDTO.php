@@ -6,6 +6,11 @@ use JMS\Serializer\Annotation as JMS;
 use Nette;
 
 
+/**
+ * Objekt pro přenos údajů o bloku do FullCalendar.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class BlockDetailDTO extends Nette\Object
 {
     /**

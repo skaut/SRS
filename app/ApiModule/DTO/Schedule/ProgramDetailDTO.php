@@ -6,6 +6,11 @@ use JMS\Serializer\Annotation as JMS;
 use Nette;
 
 
+/**
+ * Objekt pro přenos údajů o programu do FullCalendar.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class ProgramDetailDTO extends Nette\Object
 {
     /**
