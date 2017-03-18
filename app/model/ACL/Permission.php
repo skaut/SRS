@@ -8,18 +8,53 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 
 /**
+ * Entita oprávnění.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="PermissionRepository")
  * @ORM\Table(name="permission")
  */
 class Permission
 {
+    /**
+     * Oprávnění spravovat.
+     */
     const MANAGE = 'manage';
+
+    /**
+     * Oprávnění přistupovat.
+     */
     const ACCESS = 'access';
+
+    /**
+     * Oprávnění spravovat programy, u kterých je uživatel lektor.
+     */
     const MANAGE_OWN_PROGRAMS = 'manage_own_programs';
+
+    /**
+     * Oprávnění spravovat všechny programy.
+     */
     const MANAGE_ALL_PROGRAMS = 'manage_all_programs';
+
+    /**
+     * Oprávnění spravovat harmonogram.
+     */
     const MANAGE_SCHEDULE = 'manage_schedule';
+
+    /**
+     * Oprávnění spravovat místnosti.
+     */
     const MANAGE_ROOMS = 'manage_rooms';
+
+    /**
+     * Oprávnění spravovat kategorie bloků.
+     */
     const MANAGE_CATEGORIES = 'manage_categories';
+
+    /**
+     * Oprávnění přihlašovat se na programy.
+     */
     const CHOOSE_PROGRAMS = 'choose_programs';
 
     public static $permissions = [

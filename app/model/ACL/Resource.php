@@ -8,17 +8,48 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 
 /**
+ * Entita prostředek.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="ResourceRepository")
  * @ORM\Table(name="resource")
  */
 class Resource
 {
+    /**
+     * Administrace.
+     */
     const ADMIN = 'admin';
+
+    /**
+     * Web.
+     */
     const CMS = 'cms';
+
+    /**
+     * Role.
+     */
     const ACL = 'acl';
+
+    /**
+     * Program.
+     */
     const PROGRAM = 'program';
+
+    /**
+     * Nastavení.
+     */
     const CONFIGURATION = 'configuration';
+
+    /**
+     * Uživatelé.
+     */
     const USERS = 'users';
+
+    /**
+     * Mailing.
+     */
     const MAILING = 'mailing';
 
     public static $resources = [

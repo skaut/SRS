@@ -10,19 +10,58 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 
 /**
+ * Entita role.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="RoleRepository")
  * @ORM\Table(name="role")
  */
 class Role
 {
+    /**
+     * Role nepřihlášeného uživatele.
+     */
     const GUEST = 'guest';
+
+    /**
+     * Role uživatele nepřihlášeného na seminář.
+     */
     const NONREGISTERED = 'nonregistered';
+
+    /**
+     * Role neschváleného uživatele.
+     */
     const UNAPPROVED = 'unapproved';
+
+    /**
+     * Role účastníka.
+     */
     const ATTENDEE = 'attendee';
+
+    /**
+     * Role servis týmu.
+     */
     const SERVICE_TEAM = 'service_team';
+
+    /**
+     * Role lektora.
+     */
     const LECTOR = 'lector';
+
+    /**
+     * Role organizátora.
+     */
     const ORGANIZER = 'organizer';
+
+    /**
+     * Role administrátora.
+     */
     const ADMIN = 'admin';
+
+    /**
+     * Role, která je uživateli nastavena při testování jiné role.
+     */
     const TEST = 'test';
 
     public static $roles = [
@@ -314,6 +353,10 @@ class Role
         $this->registerable = $registerable;
     }
 
+    /**
+     * Vrací true, pokud je role v tuto chvíli registrovatelná.
+     * @return bool
+     */
     public function isRegisterableNow()
     {
         $now = new \DateTime();
@@ -467,6 +510,9 @@ class Role
         $this->incompatibleRoles = $incompatibleRoles;
     }
 
+    /**
+     * @param $role
+     */
     public function addIncompatibleRole($role)
     {
         if (!$this->incompatibleRoles->contains($role))
@@ -481,6 +527,10 @@ class Role
         return $this->requiredByRole;
     }
 
+    /**
+     * Vrací všechny (tranzitivně) role, kterými je tato role vyžadována.
+     * @return array
+     */
     public function getRequiredByRoleTransitive()
     {
         $allRequiredByRole = array();
@@ -518,12 +568,19 @@ class Role
         $this->requiredRoles = $requiredRoles;
     }
 
+    /**
+     * @param $role
+     */
     public function addRequiredRole($role)
     {
         if (!$this->requiredRoles->contains($role))
             $this->requiredRoles->add($role);
     }
 
+    /**
+     * Vrací všechny (tranzitivně) vyžadované role.
+     * @return array
+     */
     public function getRequiredRolesTransitive()
     {
         $allRequiredRoles = [];

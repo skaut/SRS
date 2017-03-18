@@ -6,9 +6,15 @@ use Doctrine\Common\Collections\Criteria;
 use Kdyby\Doctrine\EntityRepository;
 
 
+/**
+ * Třída spravující oprávnění.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class PermissionRepository extends EntityRepository
 {
     /**
+     * Vrací názvy všech oprávnění.
      * @return array
      */
     public function findAllNames()
@@ -22,6 +28,7 @@ class PermissionRepository extends EntityRepository
     }
 
     /**
+     * Vrací oprávnění podle id.
      * @param $ids
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -34,6 +41,7 @@ class PermissionRepository extends EntityRepository
     }
 
     /**
+     * Vrací id oprávnění.
      * @param $permissions
      * @return array
      */
@@ -45,6 +53,7 @@ class PermissionRepository extends EntityRepository
     }
 
     /**
+     * Vrací oprávnění podle názvu oprávnění a prostředku.
      * @param $permissionName
      * @param $resourceName
      * @return Permission
