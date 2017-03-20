@@ -10,6 +10,12 @@ use Nette;
 use Nette\Application\UI\Form;
 
 
+/**
+ * Formulář pro položení otázky.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class FaqForm extends Nette\Object
 {
     /** @var User */
@@ -25,6 +31,12 @@ class FaqForm extends Nette\Object
     private $userRepository;
 
 
+    /**
+     * FaqForm constructor.
+     * @param BaseForm $baseFormFactory
+     * @param FaqRepository $faqRepository
+     * @param UserRepository $userRepository
+     */
     public function __construct(BaseForm $baseFormFactory, FaqRepository $faqRepository, UserRepository $userRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
@@ -32,6 +44,10 @@ class FaqForm extends Nette\Object
         $this->userRepository = $userRepository;
     }
 
+    /**
+     * @param $id
+     * @return Form
+     */
     public function create($id)
     {
         $this->user = $this->userRepository->findById($id);
@@ -48,6 +64,10 @@ class FaqForm extends Nette\Object
         return $form;
     }
 
+    /**
+     * @param Form $form
+     * @param \stdClass $values
+     */
     public function processForm(Form $form, \stdClass $values)
     {
         $faq = new Faq();

@@ -7,6 +7,11 @@ use App\Model\Program\CategoryRepository;
 use Nette\Application\UI\Control;
 
 
+/**
+ * Komponenta s podrobnostmi o programových blocích.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class BlocksContentControl extends Control
 {
     /** @var BlockRepository */
@@ -16,6 +21,11 @@ class BlocksContentControl extends Control
     private $categoryRepository;
 
 
+    /**
+     * BlocksContentControl constructor.
+     * @param BlockRepository $blockRepository
+     * @param CategoryRepository $categoryRepository
+     */
     public function __construct(BlockRepository $blockRepository, CategoryRepository $categoryRepository)
     {
         parent::__construct();
@@ -24,6 +34,9 @@ class BlocksContentControl extends Control
         $this->categoryRepository = $categoryRepository;
     }
 
+    /**
+     * @param $content
+     */
     public function render($content)
     {
         $template = $this->template;

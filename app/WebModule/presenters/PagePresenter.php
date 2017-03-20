@@ -17,6 +17,12 @@ use App\WebModule\Components\IUsersContentControlFactory;
 use Nette\Application\BadRequestException;
 
 
+/**
+ * Presenter obshlující dynamicky vytvářené stránky pomocí administrace.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class PagePresenter extends WebBasePresenter
 {
     /**

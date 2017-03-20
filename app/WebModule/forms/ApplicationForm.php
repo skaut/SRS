@@ -19,6 +19,12 @@ use Nette\Forms\IControl;
 use Skautis\Wsdl\WsdlException;
 
 
+/**
+ * Formulář přihlášky.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class ApplicationForm extends Nette\Object
 {
     /** @var User */
@@ -48,6 +54,16 @@ class ApplicationForm extends Nette\Object
     private $skautIsService;
 
 
+    /**
+     * ApplicationForm constructor.
+     * @param BaseForm $baseFormFactory
+     * @param UserRepository $userRepository
+     * @param RoleRepository $roleRepository
+     * @param CustomInputRepository $customInputRepository
+     * @param CustomInputValueRepository $customInputValueRepository
+     * @param ProgramRepository $programRepository
+     * @param SkautIsService $skautIsService
+     */
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
                                 RoleRepository $roleRepository, CustomInputRepository $customInputRepository,
                                 CustomInputValueRepository $customInputValueRepository,
@@ -62,6 +78,10 @@ class ApplicationForm extends Nette\Object
         $this->skautIsService = $skautIsService;
     }
 
+    /**
+     * @param $id
+     * @return Form
+     */
     public function create($id)
     {
         $this->user = $this->userRepository->findById($id);
@@ -135,6 +155,10 @@ class ApplicationForm extends Nette\Object
         return $form;
     }
 
+    /**
+     * @param Form $form
+     * @param \stdClass $values
+     */
     public function processForm(Form $form, \stdClass $values)
     {
         if (array_key_exists('sex', $values))
@@ -217,6 +241,10 @@ class ApplicationForm extends Nette\Object
         }
     }
 
+    /**
+     * Přidá vlastní pole přihlášky.
+     * @param Form $form
+     */
     private function addCustomInputs(Form $form)
     {
         foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
@@ -232,6 +260,10 @@ class ApplicationForm extends Nette\Object
         }
     }
 
+    /**
+     * Přidá select pro výběr rolí.
+     * @param Form $form
+     */
     private function addRolesSelect(Form $form)
     {
         $rolesSelect = $form->addMultiSelect('roles', 'web.application_content.roles')->setItems(
@@ -297,6 +329,10 @@ class ApplicationForm extends Nette\Object
             ->toggle('departureInput');
     }
 
+    /**
+     * Přidá pole pro zadání příjezdu a odjezdu.
+     * @param Form $form
+     */
     private function addArrivalDeparture(Form $form)
     {
         $form->addDateTimePicker('arrival', 'web.application_content.arrival')
@@ -306,6 +342,12 @@ class ApplicationForm extends Nette\Object
             ->setOption('id', 'departureInput');
     }
 
+    /**
+     * Ověří kapacity rolí.
+     * @param $field
+     * @param $args
+     * @return bool
+     */
     public function validateRolesCapacities($field, $args)
     {
         foreach ($this->roleRepository->findRolesByIds($field->getValue()) as $role) {
@@ -317,6 +359,12 @@ class ApplicationForm extends Nette\Object
         return true;
     }
 
+    /**
+     * Ověří kompatibilitu rolí.
+     * @param $field
+     * @param $args
+     * @return bool
+     */
     public function validateRolesIncompatible($field, $args)
     {
         $selectedRolesIds = $field->getValue();
@@ -333,6 +381,12 @@ class ApplicationForm extends Nette\Object
         return true;
     }
 
+    /**
+     * Ověří výběr požadovaných rolí.
+     * @param $field
+     * @param $args
+     * @return bool
+     */
     public function validateRolesRequired($field, $args)
     {
         $selectedRolesIds = $field->getValue();
@@ -349,6 +403,12 @@ class ApplicationForm extends Nette\Object
         return true;
     }
 
+    /**
+     * Ověří registrovatelnost rolí.
+     * @param $field
+     * @param $args
+     * @return bool
+     */
     public function validateRolesRegisterable($field, $args)
     {
         foreach ($this->roleRepository->findRolesByIds($field->getValue()) as $role) {
@@ -358,6 +418,11 @@ class ApplicationForm extends Nette\Object
         return true;
     }
 
+    /**
+     * Přepne zobrazení polí pro příjzed a odjezd.
+     * @param IControl $control
+     * @return bool
+     */
     public static function toggleArrivalDeparture(IControl $control)
     {
         return false;

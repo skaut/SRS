@@ -8,6 +8,12 @@ use Nette;
 use Nette\Application\UI\Form;
 
 
+/**
+ * Formulář pro zadání doplňujících informací.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class AdditionalInformationForm extends Nette\Object
 {
     /** @var User */
@@ -20,12 +26,21 @@ class AdditionalInformationForm extends Nette\Object
     private $userRepository;
 
 
+    /**
+     * AdditionalInformationForm constructor.
+     * @param BaseForm $baseFormFactory
+     * @param UserRepository $userRepository
+     */
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->userRepository = $userRepository;
     }
 
+    /**
+     * @param $id
+     * @return Form
+     */
     public function create($id)
     {
         $this->user = $this->userRepository->findById($id);
@@ -55,6 +70,10 @@ class AdditionalInformationForm extends Nette\Object
         return $form;
     }
 
+    /**
+     * @param Form $form
+     * @param \stdClass $values
+     */
     public function processForm(Form $form, \stdClass $values)
     {
         $this->user->setAbout($values['about']);

@@ -7,6 +7,11 @@ use App\Model\User\UserRepository;
 use Nette\Application\UI\Control;
 
 
+/**
+ * Komponenta s přehledem uživatelů.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class UsersContentControl extends Control
 {
     /** @var UserRepository */
@@ -16,6 +21,11 @@ class UsersContentControl extends Control
     private $roleRepository;
 
 
+    /**
+     * UsersContentControl constructor.
+     * @param UserRepository $userRepository
+     * @param RoleRepository $roleRepository
+     */
     public function __construct(UserRepository $userRepository, RoleRepository $roleRepository)
     {
         parent::__construct();
@@ -24,6 +34,9 @@ class UsersContentControl extends Control
         $this->roleRepository = $roleRepository;
     }
 
+    /**
+     * @param $content
+     */
     public function render($content)
     {
         $template = $this->template;

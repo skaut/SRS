@@ -12,6 +12,12 @@ use App\Model\User\UserRepository;
 use Nette\Application\UI\Control;
 
 
+/**
+ * Komponenta s výběrem programů.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class ProgramsContentControl extends Control
 {
     /** @var UserRepository */
@@ -24,6 +30,12 @@ class ProgramsContentControl extends Control
     private $settingsRepository;
 
 
+    /**
+     * ProgramsContentControl constructor.
+     * @param UserRepository $userRepository
+     * @param RoleRepository $roleRepository
+     * @param SettingsRepository $settingsRepository
+     */
     public function __construct(UserRepository $userRepository, RoleRepository $roleRepository,
                                 SettingsRepository $settingsRepository)
     {
@@ -34,6 +46,9 @@ class ProgramsContentControl extends Control
         $this->settingsRepository = $settingsRepository;
     }
 
+    /**
+     * @param $content
+     */
     public function render($content)
     {
         $template = $this->template;

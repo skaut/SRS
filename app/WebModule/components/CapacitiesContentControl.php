@@ -6,12 +6,21 @@ use App\Model\ACL\RoleRepository;
 use Nette\Application\UI\Control;
 
 
+/**
+ * Komponenta s kapacitami rolí.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class CapacitiesContentControl extends Control
 {
     /** @var RoleRepository */
     private $roleRepository;
 
 
+    /**
+     * CapacitiesContentControl constructor.
+     * @param RoleRepository $roleRepository
+     */
     public function __construct(RoleRepository $roleRepository)
     {
         parent::__construct();
@@ -19,6 +28,9 @@ class CapacitiesContentControl extends Control
         $this->roleRepository = $roleRepository;
     }
 
+    /**
+     * @param $content
+     */
     public function render($content)
     {
         $template = $this->template;

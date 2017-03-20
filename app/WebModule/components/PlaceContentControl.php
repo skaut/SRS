@@ -8,6 +8,11 @@ use App\Model\Settings\SettingsRepository;
 use Nette\Application\UI\Control;
 
 
+/**
+ * Komponenta s místem.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class PlaceContentControl extends Control
 {
     /** @var SettingsRepository */
@@ -17,6 +22,11 @@ class PlaceContentControl extends Control
     private $placePointRepository;
 
 
+    /**
+     * PlaceContentControl constructor.
+     * @param SettingsRepository $settingsRepository
+     * @param PlacePointRepository $placePointRepository
+     */
     public function __construct(SettingsRepository $settingsRepository, PlacePointRepository $placePointRepository)
     {
         parent::__construct();
@@ -25,6 +35,9 @@ class PlaceContentControl extends Control
         $this->placePointRepository = $placePointRepository;
     }
 
+    /**
+     * @param $content
+     */
     public function render($content)
     {
         $template = $this->template;
