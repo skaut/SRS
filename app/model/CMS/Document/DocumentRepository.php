@@ -5,9 +5,15 @@ namespace App\Model\CMS\Document;
 use Kdyby\Doctrine\EntityRepository;
 
 
+/**
+ * Třída spravující dokumenty.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class DocumentRepository extends EntityRepository
 {
     /**
+     * Vrátí dokument podle id.
      * @param $id
      * @return Document|null
      */
@@ -17,6 +23,7 @@ class DocumentRepository extends EntityRepository
     }
 
     /**
+     * Vrátí dokumenty s tagem, seřazené podle názvu.
      * @param $tags
      * @return Document[]
      */
@@ -32,6 +39,7 @@ class DocumentRepository extends EntityRepository
     }
 
     /**
+     * Uloží dokument.
      * @param Document $document
      */
     public function save(Document $document)
@@ -41,6 +49,7 @@ class DocumentRepository extends EntityRepository
     }
 
     /**
+     * Odstraní dokument.
      * @param Document $document
      */
     public function remove(Document $document)

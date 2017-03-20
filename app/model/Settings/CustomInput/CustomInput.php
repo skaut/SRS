@@ -8,6 +8,9 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 
 /**
+ * Abstraktní entita vlastní pole přihlášky.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="CustomInputRepository")
  * @ORM\Table(name="custom_input")
  * @ORM\InheritanceType("JOINED")
@@ -19,7 +22,14 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  */
 abstract class CustomInput
 {
+    /**
+     * Zaškrtávací pole.
+     */
     const CHECKBOX = 'checkbox';
+
+    /**
+     * Textové pole.
+     */
     const TEXT = 'text';
 
     public static $types = [
@@ -27,23 +37,29 @@ abstract class CustomInput
         self::TEXT
     ];
 
+    /**
+     * Typ vlastního pole.
+     */
     protected $type;
 
     use Identifier;
 
     /**
+     * Název vlastního pole.
      * @ORM\Column(type="string")
      * @var string
      */
     protected $name;
 
     /**
+     * Pořadí pole na přihlášce.
      * @ORM\Column(type="integer")
      * @var integer
      */
     protected $position;
 
     /**
+     * Hodnoty pole pro jednotlivé uživatele.
      * @ORM\OneToMany(targetEntity="\App\Model\User\CustomInputValue\CustomInputValue", mappedBy="input", cascade={"persist"})
      * @var ArrayCollection
      */

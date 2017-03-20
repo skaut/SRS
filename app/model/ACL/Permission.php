@@ -69,18 +69,21 @@ class Permission
     use Identifier;
 
     /**
+     * Název oprávnění.
      * @ORM\Column(type="string")
      * @var string
      */
     protected $name;
 
     /**
+     * Role s tímto oprávněním.
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", mappedBy="permissions", cascade={"persist"})
      * @var ArrayCollection
      */
     protected $roles;
 
     /**
+     * Prostředek oprávnění.
      * @ORM\ManyToOne(targetEntity="\App\Model\ACL\Resource", inversedBy="permissions", cascade={"persist"})
      * @var Resource
      */

@@ -6,9 +6,15 @@ use Doctrine\Common\Collections\Criteria;
 use Kdyby\Doctrine\EntityRepository;
 
 
+/**
+ * Třída spravující tagy dokumentů.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class TagRepository extends EntityRepository
 {
     /**
+     * Vrátí tag podle id.
      * @param $id
      * @return Tag|null
      */
@@ -18,6 +24,7 @@ class TagRepository extends EntityRepository
     }
 
     /**
+     * Vrátí tagy podle id.
      * @param $ids
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -30,6 +37,7 @@ class TagRepository extends EntityRepository
     }
 
     /**
+     * Vrátí id tagů.
      * @param $tags
      * @return array
      */
@@ -41,6 +49,7 @@ class TagRepository extends EntityRepository
     }
 
     /**
+     * Vrátí všechny názvy tagů.
      * @return array
      */
     public function findAllNames()
@@ -53,6 +62,7 @@ class TagRepository extends EntityRepository
     }
 
     /**
+     * Vrátí názvy tagů, kromě tagu s id.
      * @param $id
      * @return array
      */
@@ -68,6 +78,7 @@ class TagRepository extends EntityRepository
     }
 
     /**
+     * Uloží tag.
      * @param Tag $tag
      */
     public function save(Tag $tag)
@@ -77,6 +88,7 @@ class TagRepository extends EntityRepository
     }
 
     /**
+     * Odstraní tag.
      * @param Tag $tag
      */
     public function remove(Tag $tag)
@@ -86,6 +98,7 @@ class TagRepository extends EntityRepository
     }
 
     /**
+     * Vrátí seznam tagů jako možnosti pro select.
      * @return array
      */
     public function getTagsOptions()

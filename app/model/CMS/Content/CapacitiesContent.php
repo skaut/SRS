@@ -11,6 +11,9 @@ use Nette\Application\UI\Form;
 
 
 /**
+ * Entita obsahu s přehledem kapacit rolí.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity
  * @ORM\Table(name="capacities_content")
  */
@@ -19,6 +22,7 @@ class CapacitiesContent extends Content implements IContent
     protected $type = Content::CAPACITIES;
 
     /**
+     * Role, jejichž obsazenosti se vypíší.
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role")
      * @var ArrayCollection
      */
@@ -63,6 +67,11 @@ class CapacitiesContent extends Content implements IContent
         $this->roles = $roles;
     }
 
+    /**
+     * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
+     * @param Form $form
+     * @return Form
+     */
     public function addContentForm(Form $form)
     {
         parent::addContentForm($form);
@@ -76,6 +85,11 @@ class CapacitiesContent extends Content implements IContent
         return $form;
     }
 
+    /**
+     * Zpracuje při uložení stránky část formuláře týkající se obsahu.
+     * @param Form $form
+     * @param \stdClass $values
+     */
     public function contentFormSucceeded(Form $form, \stdClass $values)
     {
         parent::contentFormSucceeded($form, $values);

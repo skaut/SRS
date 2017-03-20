@@ -5,9 +5,15 @@ namespace App\Model\Settings\CustomInput;
 use Kdyby\Doctrine\EntityRepository;
 
 
+/**
+ * Třída spravující vlastní pole přihlášky.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class CustomInputRepository extends EntityRepository
 {
     /**
+     * Vrací pole podle id.
      * @param $id
      * @return CustomInput|null
      */
@@ -17,6 +23,7 @@ class CustomInputRepository extends EntityRepository
     }
 
     /**
+     * Vrací všechna pole seřazená podle pozice.
      * @return CustomInput[]
      */
     public function findAllOrderedByPosition()
@@ -28,6 +35,7 @@ class CustomInputRepository extends EntityRepository
     }
 
     /**
+     * Vrátí pozici posledního pole.
      * @return int
      */
     public function findLastPosition()
@@ -39,6 +47,7 @@ class CustomInputRepository extends EntityRepository
     }
 
     /**
+     * Uloží pole.
      * @param CustomInput $input
      */
     public function save(CustomInput $input)
@@ -51,6 +60,7 @@ class CustomInputRepository extends EntityRepository
     }
 
     /**
+     * Odstraní pole.
      * @param CustomInput $input
      */
     public function remove(CustomInput $input)
@@ -63,6 +73,7 @@ class CustomInputRepository extends EntityRepository
     }
 
     /**
+     * Přesune pole mezi pole s id prevId a nextId.
      * @param $itemId
      * @param $prevId
      * @param $nextId

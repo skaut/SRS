@@ -5,6 +5,11 @@ namespace App\Model\Settings\Place;
 use Kdyby\Doctrine\EntityRepository;
 
 
+/**
+ * Třída spravující mapové body.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class PlacePointRepository extends EntityRepository
 {
     /**

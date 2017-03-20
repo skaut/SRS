@@ -5,9 +5,16 @@ namespace App\Model\CMS;
 use Kdyby\Doctrine\EntityRepository;
 
 
+/**
+ * Třída spravující FAQ.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class FaqRepository extends EntityRepository
 {
     /**
+     * Vrací otázku podle id.
      * @param $id
      * @return Faq|null
      */
@@ -17,6 +24,7 @@ class FaqRepository extends EntityRepository
     }
 
     /**
+     * Vrací id poslední otázky.
      * @return int
      */
     public function findLastId()
@@ -28,6 +36,7 @@ class FaqRepository extends EntityRepository
     }
 
     /**
+     * Vrací poslední pozici.
      * @return int
      */
     public function findLastPosition()
@@ -39,6 +48,7 @@ class FaqRepository extends EntityRepository
     }
 
     /**
+     * Vrací publikované otázky seřazené podle pozice.
      * @return array
      */
     public function findPublishedOrderedByPosition()
@@ -47,6 +57,7 @@ class FaqRepository extends EntityRepository
     }
 
     /**
+     * Uloží otázku.
      * @param Faq $faq
      */
     public function save(Faq $faq)
@@ -59,6 +70,7 @@ class FaqRepository extends EntityRepository
     }
 
     /**
+     * Odstraní otázku.
      * @param Faq $faq
      */
     public function remove(Faq $faq)
@@ -68,6 +80,7 @@ class FaqRepository extends EntityRepository
     }
 
     /**
+     * Přesune otázku mezi otázky s id prevId a nextId.
      * @param $itemId
      * @param $prevId
      * @param $nextId

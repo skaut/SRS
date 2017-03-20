@@ -9,9 +9,16 @@ use Doctrine\Common\Collections\Criteria;
 use Kdyby\Doctrine\EntityRepository;
 
 
+/**
+ * Třída spravující uživatele.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class UserRepository extends EntityRepository
 {
     /**
+     * Vrací uživatele podle id.
      * @param $id
      * @return User|null
      */
@@ -21,6 +28,7 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Vrací uživatele podle skautISUserId.
      * @param $skautISUserId
      * @return User|null
      */
@@ -30,6 +38,7 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Vrací uživatele podle id.
      * @param $ids
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -41,6 +50,7 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Vrací jména uživatelů obsahující zadaný text, seřazená podle zobrazovaného jména.
      * @param $text
      * @return array
      */
@@ -55,6 +65,7 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Vrací uživatele, kteří se synchronizují s účastníky skautIS akce.
      * @return mixed
      */
     public function findAllSyncedWithSkautIS()
@@ -67,6 +78,7 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Vrací uživatele v roli.
      * @param Role $role
      * @return mixed
      */
@@ -80,6 +92,7 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Vrací uživatele v rolích.
      * @param $rolesIds
      * @return mixed
      */
@@ -95,6 +108,7 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Vrací schválené uživatele v roli.
      * @param $systemName
      * @return mixed
      */
@@ -109,6 +123,7 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Vrací schválené uživatele v rolích.
      * @param $rolesIds
      * @return mixed
      */
@@ -125,6 +140,7 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Vrací programy, na které se uživatel může přihlásit.
      * @param $program
      * @return array
      */
@@ -149,6 +165,7 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Vrací lektory jako možnosti pro select.
      * @return array
      */
     public function getLectorsOptions()
@@ -170,6 +187,7 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Vrací kategorie, ze kterých si uživatel může vybírat programy.
      * @param User $user
      * @return int[]
      */
@@ -185,6 +203,7 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Vrací true, pokud existuje uživatel s tímto variabilním symbolem.
      * @param $variableSymbol
      * @return bool
      */
@@ -198,6 +217,7 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Změní předvolbu variabilních symbolů.
      * @param $variableSymbolCode
      */
     public function setVariableSymbolCode($variableSymbolCode)
@@ -216,6 +236,7 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Uloží uživatele.
      * @param User $user
      */
     public function save(User $user)
@@ -225,6 +246,7 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Odstraní uživatele.
      * @param User $user
      */
     public function remove(User $user)
@@ -237,6 +259,7 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Nastaví uživatelům účast.
      * @param $ids
      * @param bool $value
      */

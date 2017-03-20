@@ -7,6 +7,12 @@ use App\Model\User\UserRepository;
 use Kdyby\Doctrine\EntityRepository;
 
 
+/**
+ * Třída spravující programové bloky.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class BlockRepository extends EntityRepository
 {
     /** @var UserRepository */
@@ -22,6 +28,7 @@ class BlockRepository extends EntityRepository
     }
 
     /**
+     * Vrací blok podle id.
      * @param $id
      * @return Block|null
      */
@@ -31,6 +38,7 @@ class BlockRepository extends EntityRepository
     }
 
     /**
+     * Vrací poslední id.
      * @return int
      */
     public function findLastId()
@@ -42,6 +50,7 @@ class BlockRepository extends EntityRepository
     }
 
     /**
+     * Vrací názvy všech bloků.
      * @return array
      */
     public function findAllNames()
@@ -54,6 +63,7 @@ class BlockRepository extends EntityRepository
     }
 
     /**
+     * Vrací všechny bloky seřazené podle názvu.
      * @return array
      */
     public function findAllOrderedByName()
@@ -65,6 +75,7 @@ class BlockRepository extends EntityRepository
     }
 
     /**
+     * Vrací všechny bloky nezařezené v kategorii, seřazené podle názvu.
      * @return array
      */
     public function findAllUncategorizedOrderedByName()
@@ -77,6 +88,7 @@ class BlockRepository extends EntityRepository
     }
 
     /**
+     * Vrací názvy ostatních bloků, kromě bloku se zadaným id.
      * @param $id
      * @return array
      */
@@ -92,6 +104,7 @@ class BlockRepository extends EntityRepository
     }
 
     /**
+     * Vrací bloky podle textu obsaženého v názvu, seřazené podle názvu.
      * @param $text
      * @param bool $unassignedOnly
      * @return array
@@ -113,6 +126,7 @@ class BlockRepository extends EntityRepository
     }
 
     /**
+     * Vrací názvy bloků, které jsou pro uživatele povinné, ale není na ně přihlášený.
      * @param User $user
      * @return array
      */
@@ -153,6 +167,7 @@ class BlockRepository extends EntityRepository
     }
 
     /**
+     * Vrací id bloků.
      * @param $blocks
      * @return array
      */
@@ -164,6 +179,7 @@ class BlockRepository extends EntityRepository
     }
 
     /**
+     * Uloží blok.
      * @param Block $block
      */
     public function save(Block $block)
@@ -173,6 +189,7 @@ class BlockRepository extends EntityRepository
     }
 
     /**
+     * Odstraní blok.
      * @param Block $block
      */
     public function remove(Block $block)

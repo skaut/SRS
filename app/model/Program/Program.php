@@ -9,6 +9,10 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 
 /**
+ * Entita program.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="ProgramRepository")
  * @ORM\Table(name="program")
  */
@@ -17,24 +21,28 @@ class Program
     use Identifier;
 
     /**
+     * Programový blok.
      * @ORM\ManyToOne(targetEntity="Block", inversedBy="programs", cascade={"persist"})
      * @var Block
      */
     protected $block;
 
     /**
+     * Účastníci programu.
      * @ORM\ManyToMany(targetEntity="\App\Model\User\User", mappedBy="programs", cascade={"persist"})
      * @var ArrayCollection
      */
     protected $attendees;
 
     /**
+     * Místnost.
      * @ORM\ManyToOne(targetEntity="Room", inversedBy="programs", cascade={"persist"})
      * @var Room
      */
     protected $room;
 
     /**
+     * Začátek programu.
      * @ORM\Column(type="datetime")
      * @var \DateTime
      */
@@ -92,6 +100,9 @@ class Program
         }
     }
 
+    /**
+     * @param $user
+     */
     public function addAttendee($user)
     {
         if (!$this->attendees->contains($user)) {
@@ -100,11 +111,18 @@ class Program
         }
     }
 
+    /**
+     * Vrací počet účastníků.
+     * @return int
+     */
     public function getAttendeesCount()
     {
         return $this->attendees->count();
     }
 
+    /**
+     * Odstraní všechny účastníky programu.
+     */
     public function removeAllAttendees()
     {
         foreach ($this->attendees as $attendee) {
@@ -112,11 +130,20 @@ class Program
         }
     }
 
+    /**
+     * Je uživatel účastník programu?
+     * @param User $user
+     * @return bool
+     */
     public function isAttendee(User $user)
     {
         return $this->attendees->contains($user);
     }
 
+    /**
+     * Vrací kapacitu programového bloku.
+     * @return mixed
+     */
     public function getCapacity()
     {
         return $this->block->getCapacity();
@@ -155,6 +182,7 @@ class Program
     }
 
     /**
+     * Vrací konec programu vypočtený podle délky bloku.
      * @return \DateTime
      */
     public function getEnd()

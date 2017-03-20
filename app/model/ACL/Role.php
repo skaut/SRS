@@ -78,96 +78,105 @@ class Role
     use Identifier;
 
     /**
+     * Název role.
      * @ORM\Column(type="string", unique=true)
      * @var string
      */
     protected $name;
 
     /**
+     * Systémový název systémové role.
      * @ORM\Column(type="string", unique=true, nullable=true)
      * @var string
      */
     protected $systemName;
 
     /**
+     * Uživatelé v roli.
      * @ORM\ManyToMany(targetEntity="\App\Model\User\User", mappedBy="roles", cascade={"persist"})
      * @var ArrayCollection
      */
     protected $users;
 
     /**
+     * Oprávnění role.
      * @ORM\ManyToMany(targetEntity="Permission", inversedBy="roles", cascade={"persist"})
      * @var ArrayCollection
      */
     protected $permissions;
 
     /**
+     * Stránky, ke kterým má role přístup.
      * @ORM\ManyToMany(targetEntity="\App\Model\CMS\Page", mappedBy="roles", cascade={"persist"})
      * @var ArrayCollection
      */
     protected $pages;
 
     /**
-     * Pokud je role systemova, nelze ji smazat
-     *
+     * Systémová role. Systémovou roli nelze odstranit.
      * @ORM\Column(type="boolean")
      * @var bool
      */
     protected $system = true;
 
     /**
-     * Lze o tuto roli zazadat pri registraci na seminar?
-     *
+     * Registrovatelná role. Lze vybrat v přihlášce.
      * @ORM\Column(type="boolean")
      * @var bool
      */
     protected $registerable = true;
 
     /**
-     * Je role po registraci rovnou schvalena?
-     *
+     * Automaticky schválit. Role nevyžaduje schválení registrace organizátory.
      * @ORM\Column(type="boolean")
      * @var bool
      */
     protected $approvedAfterRegistration = false;
 
     /**
+     * Registrovatelná od.
      * @ORM\Column(type="datetime", nullable=true)
      * @var \DateTime
      */
     protected $registerableFrom;
 
     /**
+     * Registrovatelná do.
      * @ORM\Column(type="datetime", nullable=true)
      * @var \DateTime
      */
     protected $registerableTo;
 
     /**
+     * Kapacita.
      * @ORM\Column(type="integer", nullable=true)
      * @var int
      */
     protected $capacity;
 
     /**
+     * Poplatek.
      * @ORM\Column(type="integer")
      * @var int
      */
     protected $fee = 0;
 
     /**
+     * Evidovat příjezd a odjezd.
      * @ORM\Column(type="boolean")
      * @var bool
      */
     protected $displayArrivalDeparture = false;
 
     /**
+     * Synchronizovat účastníky v roli se skautIS.
      * @ORM\Column(type="boolean")
      * @var bool
      */
     protected $syncedWithSkautIS = true;
 
     /**
+     * Role neregistrovatelné současně s touto rolí.
      * @ORM\ManyToMany(targetEntity="Role")
      * @ORM\JoinTable(name="role_role_incompatible",
      *      joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
@@ -178,12 +187,14 @@ class Role
     protected $incompatibleRoles;
 
     /**
+     * Role vyžadující tuto roli.
      * @ORM\ManyToMany(targetEntity="Role", mappedBy="requiredRoles", cascade={"persist"})
      * @var ArrayCollection
      */
     protected $requiredByRole;
 
     /**
+     * Role vyžadované touto rolí.
      * @ORM\ManyToMany(targetEntity="Role", inversedBy="requiredByRole", cascade={"persist"})
      * @ORM\JoinTable(name="role_role_required",
      *      joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
@@ -194,12 +205,14 @@ class Role
     protected $requiredRoles;
 
     /**
+     * Kategorie programů, na které se mohou účastníci v roli přihlásit.
      * @ORM\ManyToMany(targetEntity="\App\Model\Program\Category", mappedBy="registerableRoles", cascade={"persist"})
      * @var ArrayCollection
      */
     protected $registerableCategories;
 
     /**
+     * Adresa, na kterou budou uživatelé v roli přesměrováni po přihlášení.
      * @ORM\Column(type="string", nullable=true)
      * @var string
      */

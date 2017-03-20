@@ -65,12 +65,14 @@ class Resource
     use Identifier;
 
     /**
+     * Název prostředku.
      * @ORM\Column(type="string", unique=true)
      * @var string
      */
     protected $name;
 
     /**
+     * Oprávnění s tímto prostředkem.
      * @ORM\OneToMany(targetEntity="\App\Model\ACL\Permission", mappedBy="resource", cascade={"persist"})
      * @var ArrayCollection
      */

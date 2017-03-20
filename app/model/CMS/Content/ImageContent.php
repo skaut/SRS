@@ -11,6 +11,10 @@ use Nette\Utils\Strings;
 
 
 /**
+ * Entita obsahu s obrázkem.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity
  * @ORM\Table(name="image_content")
  */
@@ -18,8 +22,19 @@ class ImageContent extends Content implements IContent
 {
     protected $type = Content::IMAGE;
 
+    /**
+     * Zarovnání vlevo.
+     */
     const LEFT = 'left';
+
+    /**
+     * Zarovnání vpravo.
+     */
     const RIGHT = 'right';
+
+    /**
+     * Zarovnání na střed, bez obtékání.
+     */
     const CENTER = 'center';
 
     public static $aligns = [
@@ -29,24 +44,28 @@ class ImageContent extends Content implements IContent
     ];
 
     /**
+     * Adresa obrázku.
      * @ORM\Column(type="string", nullable=true)
      * @var string
      */
     protected $image;
 
     /**
+     * Zarovnání obrázku v textu.
      * @ORM\Column(type="string", nullable=true)
      * @var string
      */
     protected $align;
 
     /**
+     * Šířka obrázku.
      * @ORM\Column(type="integer", nullable=true)
      * @var int
      */
     protected $width;
 
     /**
+     * Výška obrázku.
      * @ORM\Column(type="integer", nullable=true)
      * @var int
      */
@@ -146,6 +165,11 @@ class ImageContent extends Content implements IContent
         $this->height = $height;
     }
 
+    /**
+     * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
+     * @param Form $form
+     * @return Form
+     */
     public function addContentForm(Form $form)
     {
         parent::addContentForm($form);
@@ -183,6 +207,11 @@ class ImageContent extends Content implements IContent
         return $form;
     }
 
+    /**
+     * Zpracuje při uložení stránky část formuláře týkající se obsahu.
+     * @param Form $form
+     * @param \stdClass $values
+     */
     public function contentFormSucceeded(Form $form, \stdClass $values)
     {
         parent::contentFormSucceeded($form, $values);
@@ -229,6 +258,10 @@ class ImageContent extends Content implements IContent
         $this->align = $values['align'];
     }
 
+    /**
+     * Vrátí možnosti zarovnání obrázku pro select.
+     * @return array
+     */
     private function prepareAlignOptions()
     {
         $options = [];
@@ -237,6 +270,11 @@ class ImageContent extends Content implements IContent
         return $options;
     }
 
+    /**
+     * Vygeneruje cestu pro uložení obrázku.
+     * @param $file
+     * @return string
+     */
     private function generatePath($file)
     {
         return '/images/' . Random::generate(5) . '/' . Strings::webalize($file->name, '.');

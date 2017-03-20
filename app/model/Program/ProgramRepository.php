@@ -10,6 +10,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Kdyby\Doctrine\EntityRepository;
 
 
+/**
+ * Třída spravující programy.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class ProgramRepository extends EntityRepository
 {
     /** @var UserRepository */
@@ -25,6 +31,7 @@ class ProgramRepository extends EntityRepository
     }
 
     /**
+     * Vrací program podle id.
      * @param $id
      * @return Program|null
      */
@@ -34,6 +41,7 @@ class ProgramRepository extends EntityRepository
     }
 
     /**
+     * Uloží program.
      * @param Program $program
      */
     public function save(Program $program)
@@ -43,6 +51,7 @@ class ProgramRepository extends EntityRepository
     }
 
     /**
+     * Odstraní program.
      * @param Program $program
      */
     public function remove(Program $program)
@@ -52,6 +61,7 @@ class ProgramRepository extends EntityRepository
     }
 
     /**
+     * Vrací id podle programů.
      * @param $programs
      * @return array
      */
@@ -63,6 +73,7 @@ class ProgramRepository extends EntityRepository
     }
 
     /**
+     * Vrací programy, na které se uživatel může přihlásit.
      * @param User $user
      * @return array
      */
@@ -84,6 +95,7 @@ class ProgramRepository extends EntityRepository
     }
 
     /**
+     * Vrací programy zablokované (programy stejného bloku a překrývající se programy) přihlášením se na program.
      * @param Program $program
      * @return int[]
      */
@@ -96,6 +108,7 @@ class ProgramRepository extends EntityRepository
     }
 
     /**
+     * Vrací programy stejného bloku.
      * @param Program $program
      * @return int[]
      */
@@ -112,6 +125,7 @@ class ProgramRepository extends EntityRepository
     }
 
     /**
+     * Vrací programy s překrývajícím se časem.
      * @param Program $program
      * @return int[]
      */
@@ -136,6 +150,13 @@ class ProgramRepository extends EntityRepository
         return array_map('intval', array_map('current', $programs));
     }
 
+    /**
+     * Překrývá se program s jiným programem?
+     * @param Program $program
+     * @param \DateTime $start
+     * @param \DateTime $end
+     * @return bool
+     */
     public function hasOverlappingProgram(Program $program, \DateTime $start, \DateTime $end)
     {
         $qb = $this->createQueryBuilder('p')
@@ -157,6 +178,13 @@ class ProgramRepository extends EntityRepository
         return !empty($qb->getQuery()->getResult());
     }
 
+    /**
+     * Překrývá se s jiným programem, který je automaticky zapisovaný.
+     * @param Program $program
+     * @param \DateTime $start
+     * @param \DateTime $end
+     * @return bool
+     */
     public function hasOverlappingAutoRegisterProgram(Program $program, \DateTime $start, \DateTime $end)
     {
         $qb = $this->createQueryBuilder('p')
@@ -180,6 +208,7 @@ class ProgramRepository extends EntityRepository
     }
 
     /**
+     * Aktualizuje programy uživatele (odhlásí nepovolené a přihlásí automaticky přihlašované).
      * @param User $user
      */
     public function updateUserPrograms(User $user)
@@ -188,6 +217,7 @@ class ProgramRepository extends EntityRepository
     }
 
     /**
+     * Aktualizuje programy uživatelů (odhlásí nepovolené a přihlásí automaticky přihlašované).
      * @param $users
      */
     public function updateUsersPrograms($users)

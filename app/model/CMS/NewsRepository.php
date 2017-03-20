@@ -5,9 +5,16 @@ namespace App\Model\CMS;
 use Kdyby\Doctrine\EntityRepository;
 
 
+/**
+ * Třída spravující aktuality.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class NewsRepository extends EntityRepository
 {
     /**
+     * Vrací aktualitu podle id.
      * @param $id
      * @return News|null
      */
@@ -17,6 +24,7 @@ class NewsRepository extends EntityRepository
     }
 
     /**
+     * Vrací id poslední aktuality.
      * @return int
      */
     public function findLastId()
@@ -28,6 +36,7 @@ class NewsRepository extends EntityRepository
     }
 
     /**
+     * Vrací posledních $maxCount publikovaných aktualit.
      * @param $maxCount
      * @return News[]
      */
@@ -42,6 +51,7 @@ class NewsRepository extends EntityRepository
     }
 
     /**
+     * Uloží aktualitu.
      * @param News $news
      */
     public function save(News $news)
@@ -51,6 +61,7 @@ class NewsRepository extends EntityRepository
     }
 
     /**
+     * Odstraní aktualitu.
      * @param News $document
      */
     public function remove(News $document)

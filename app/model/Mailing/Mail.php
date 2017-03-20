@@ -7,6 +7,9 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 
 /**
+ * Abstraktní entita e-mail.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="MailRepository")
  * @ORM\Table(name="mail")
  * @ORM\InheritanceType("JOINED")
@@ -18,26 +21,42 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  */
 abstract class Mail
 {
+    /**
+     * E-mail zaslaný uživateli.
+     */
     const TO_USER = 'user';
+
+    /**
+     * E-mail zaslaný rolím.
+     */
     const TO_ROLES = 'roles';
 
+
+    /**
+     * Typ e-mailu.
+     */
     protected $type;
 
     use Identifier;
 
     /**
+     * Předmět e-mailu.
      * @ORM\Column(type="string")
      * @var string
      */
     protected $subject;
 
     /**
+     * Datum a čas odeslání.
      * @ORM\Column(type="datetime")
      * @var \DateTime
      */
     protected $datetime;
 
 
+    /**
+     * @return mixed
+     */
     public function getType()
     {
         return $this->type;

@@ -213,7 +213,7 @@ class RoleRepository extends EntityRepository
     }
 
     /**
-     * Vrací seznam rolí pro select, kromě role se zadaným id.
+     * Vrací seznam rolí jako možnosti pro select, role specifikovaná parametrem je vynechána.
      * @param $roleId
      * @return array
      */
@@ -234,7 +234,7 @@ class RoleRepository extends EntityRepository
     }
 
     /**
-     * Vrací seznam rolí, které jsou v tuto chvíli registrovatelné, s informací o jejich obsazenosti, pro select.
+     * Vrací seznam rolí s obsazenostmi jako možnosti pro select.
      * @return array
      */
     public function getRegisterableNowOptionsWithCapacity()
@@ -280,7 +280,8 @@ class RoleRepository extends EntityRepository
     }
 
     /**
-     * Vrací seznam rolí, které jsou v tuto chvíli registrovatelné nebo je uživatel má, s informací o jejich obsazenosti, pro select.
+     * Vrací seznam rolí, které jsou v tuto chvíli registrovatelné nebo je uživatel má, s informací o jejich
+     * obsazenosti, jako možnosti pro select.
      * @param User $user
      * @return array
      */
@@ -332,7 +333,7 @@ class RoleRepository extends EntityRepository
     }
 
     /**
-     * Vrací role bez vybraných rolí.
+     * Vrací role bez vybraných rolí jako možnosti pro select.
      * @param array $withoutRoles
      * @return array
      */
@@ -361,7 +362,7 @@ class RoleRepository extends EntityRepository
     }
 
     /**
-     * Vrací seznam rolí bez vybraných rolí, s informací o obsazenosti, pro select.
+     * Vrací seznam rolí bez vybraných rolí, s informací o obsazenosti, jako možnosti pro select.
      * @param array $withoutRoles
      * @return array
      */
@@ -395,7 +396,7 @@ class RoleRepository extends EntityRepository
     }
 
     /**
-     * Vrací seznam rolí bez vybraných rolí, s informací o počtu uživatelů, pro select.
+     * Vrací seznam rolí bez vybraných rolí, s informací o počtu uživatelů, jako možnosti pro select.
      * @param array $withoutRoles
      * @return array
      */
