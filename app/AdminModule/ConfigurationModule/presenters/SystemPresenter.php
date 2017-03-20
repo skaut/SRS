@@ -2,10 +2,10 @@
 
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
-
 use App\Commands\ClearCacheCommand;
 use Kdyby\Console\StringOutput;
 use Symfony\Component\Console\Input\ArrayInput;
+
 
 class SystemPresenter extends ConfigurationBasePresenter
 {
@@ -20,6 +20,7 @@ class SystemPresenter extends ConfigurationBasePresenter
      * @inject
      */
     public $clearCacheCommand;
+
 
     public function handleClearCache()
     {

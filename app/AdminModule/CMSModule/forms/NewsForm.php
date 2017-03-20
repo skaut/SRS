@@ -8,6 +8,7 @@ use App\Model\CMS\NewsRepository;
 use Nette;
 use Nette\Application\UI\Form;
 
+
 class NewsForm extends Nette\Object
 {
     /** @var News */
@@ -18,6 +19,7 @@ class NewsForm extends Nette\Object
 
     /** @var NewsRepository */
     private $newsRepository;
+
 
     public function __construct(BaseForm $baseFormFactory, NewsRepository $newsRepository)
     {
@@ -54,8 +56,7 @@ class NewsForm extends Nette\Object
                 'published' => $this->news->getPublished(),
                 'text' => $this->news->getText()
             ]);
-        }
-        else {
+        } else {
             $form->setDefaults([
                 'published' => new \DateTime()
             ]);
@@ -67,7 +68,8 @@ class NewsForm extends Nette\Object
         return $form;
     }
 
-    public function processForm(Form $form, \stdClass $values) {
+    public function processForm(Form $form, \stdClass $values)
+    {
         if (!$form['cancel']->isSubmittedBy()) {
             if (!$this->news)
                 $this->news = new News();

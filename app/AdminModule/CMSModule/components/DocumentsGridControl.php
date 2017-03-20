@@ -2,7 +2,6 @@
 
 namespace App\AdminModule\CMSModule\Components;
 
-
 use App\Model\CMS\Document\Document;
 use App\Model\CMS\Document\DocumentRepository;
 use App\Model\CMS\Document\TagRepository;
@@ -15,29 +14,24 @@ use Nette\Utils\Random;
 use Nette\Utils\Strings;
 use Ublaboo\DataGrid\DataGrid;
 
+
 class DocumentsGridControl extends Control
 {
-    /**
-     * @var Translator
-     */
+    /** @var Translator */
     private $translator;
 
-    /**
-     * @var DocumentRepository
-     */
+    /** @var DocumentRepository */
     private $documentRepository;
 
-    /**
-     * @var FilesService
-     */
+    /** @var FilesService */
     private $filesService;
 
-    /**
-     * @var TagRepository
-     */
+    /** @var TagRepository */
     private $tagRepository;
 
-    public function __construct(Translator $translator, DocumentRepository $documentRepository, TagRepository $tagRepository, FilesService $filesService)
+
+    public function __construct(Translator $translator, DocumentRepository $documentRepository,
+                                TagRepository $tagRepository, FilesService $filesService)
     {
         parent::__construct();
 
@@ -93,7 +87,7 @@ class DocumentsGridControl extends Control
 
         $tagsOptions = $this->tagRepository->getTagsOptions();
 
-        $grid->addInlineAdd()->onControlAdd[] = function($container) use($tagsOptions) {
+        $grid->addInlineAdd()->onControlAdd[] = function ($container) use ($tagsOptions) {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.documents_name_empty');
 
@@ -107,7 +101,7 @@ class DocumentsGridControl extends Control
         };
         $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
 
-        $grid->addInlineEdit()->onControlAdd[] = function($container) use($tagsOptions) {
+        $grid->addInlineEdit()->onControlAdd[] = function ($container) use ($tagsOptions) {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.documents_name_empty');
 
@@ -118,7 +112,7 @@ class DocumentsGridControl extends Control
 
             $container->addText('description', '');
         };
-        $grid->getInlineEdit()->onSetDefaults[] = function($container, $item) {
+        $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) {
             $container->setDefaults([
                 'name' => $item->getName(),
                 'tags' => $this->tagRepository->findTagsIds($item->getTags()),
@@ -137,7 +131,8 @@ class DocumentsGridControl extends Control
             ]);
     }
 
-    public function add($values) {
+    public function add($values)
+    {
         $file = $values['file'];
         $path = $this->generatePath($file);
         $this->filesService->save($file, $path);
@@ -193,7 +188,8 @@ class DocumentsGridControl extends Control
         $this->redirect('this');
     }
 
-    private function generatePath($file) {
+    private function generatePath($file)
+    {
         return Document::PATH . '/' . Random::generate(5) . '/' . Strings::webalize($file->name, '.');
     }
 }

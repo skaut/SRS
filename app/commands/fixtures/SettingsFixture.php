@@ -2,18 +2,22 @@
 
 namespace App\Commands\Fixtures;
 
-
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\DataFixtures\AbstractFixture;
-use Kdyby\Translation\Translator;
 use App\Model\Settings\Settings;
+use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Common\Persistence\ObjectManager;
+use Kdyby\Translation\Translator;
 
+
+/**
+ * Vytváří počáteční nastavení.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class SettingsFixture extends AbstractFixture
 {
-    /**
-     * @var Translator
-     */
+    /** @var Translator */
     protected $translator;
+
 
     /**
      * SettingsFixture constructor.
@@ -24,6 +28,10 @@ class SettingsFixture extends AbstractFixture
         $this->translator = $translator;
     }
 
+    /**
+     * Vytváří počáteční data.
+     * @param ObjectManager $manager
+     */
     public function load(ObjectManager $manager)
     {
         $today = new \DateTime();

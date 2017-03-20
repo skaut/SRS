@@ -9,6 +9,7 @@ use App\Model\User\UserRepository;
 use Nette;
 use Nette\Application\UI\Form;
 
+
 class FaqForm extends Nette\Object
 {
     /** @var User */
@@ -22,6 +23,7 @@ class FaqForm extends Nette\Object
 
     /** @var UserRepository */
     private $userRepository;
+
 
     public function __construct(BaseForm $baseFormFactory, FaqRepository $faqRepository, UserRepository $userRepository)
     {

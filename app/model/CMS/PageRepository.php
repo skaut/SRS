@@ -3,11 +3,19 @@
 namespace App\Model\CMS;
 
 use Doctrine\Common\Collections\Criteria;
-use  Kdyby\Doctrine\EntityRepository;
+use Kdyby\Doctrine\EntityRepository;
 
+
+/**
+ * Třída spravující stránky.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class PageRepository extends EntityRepository
 {
     /**
+     * Vrací stránku podle id.
      * @param $id
      * @return Page|null
      */
@@ -17,6 +25,7 @@ class PageRepository extends EntityRepository
     }
 
     /**
+     * Vrací stránku podle cesty.
      * @param $slug
      * @return Page|null
      */
@@ -26,6 +35,7 @@ class PageRepository extends EntityRepository
     }
 
     /**
+     * Vrací viditelné stránky se zadaným slugem.
      * @param $slug
      * @return Page|null
      */
@@ -35,6 +45,7 @@ class PageRepository extends EntityRepository
     }
 
     /**
+     * Vrací viditelné stránky, seřazené podle pozice.
      * @return array
      */
     public function findPublishedOrderedByPosition()
@@ -43,6 +54,7 @@ class PageRepository extends EntityRepository
     }
 
     /**
+     * Vrací poslední pozici stránky.
      * @return int
      */
     public function findLastPosition()
@@ -54,9 +66,11 @@ class PageRepository extends EntityRepository
     }
 
     /**
+     * Vrací všechny cesty.
      * @return array
      */
-    public function findAllSlugs() {
+    public function findAllSlugs()
+    {
         $slugs = $this->createQueryBuilder('p')
             ->select('p.slug')
             ->getQuery()
@@ -65,10 +79,12 @@ class PageRepository extends EntityRepository
     }
 
     /**
+     * Vrací všechny cesty, kromě cesty stránky s id.
      * @param $id
      * @return array
      */
-    public function findOthersSlugs($id) {
+    public function findOthersSlugs($id)
+    {
         $slugs = $this->createQueryBuilder('p')
             ->select('p.slug')
             ->where('p.id != :id')
@@ -79,6 +95,7 @@ class PageRepository extends EntityRepository
     }
 
     /**
+     * Vrací id podle stránek.
      * @param $pages
      * @return array
      */
@@ -90,7 +107,8 @@ class PageRepository extends EntityRepository
     }
 
     /**
-     * @param $ids
+     * Vrací stránky podle cest.
+     * @param $slugs
      * @return \Doctrine\Common\Collections\Collection
      */
     public function findPagesBySlugs($slugs)
@@ -102,6 +120,7 @@ class PageRepository extends EntityRepository
     }
 
     /**
+     * Vrací cesty podle stránek.
      * @param $pages
      * @return array
      */
@@ -113,9 +132,11 @@ class PageRepository extends EntityRepository
     }
 
     /**
+     * Vrací stránky jako možnosti pro select.
      * @return array
      */
-    public function getPagesOptions() {
+    public function getPagesOptions()
+    {
         $pages = $this->createQueryBuilder('p')
             ->select('p.slug, p.name')
             ->orderBy('p.position')
@@ -130,6 +151,7 @@ class PageRepository extends EntityRepository
     }
 
     /**
+     * Uloží stránku.
      * @param Page $page
      */
     public function save(Page $page)
@@ -142,6 +164,7 @@ class PageRepository extends EntityRepository
     }
 
     /**
+     * Odstraní stránku.
      * @param Page $page
      */
     public function remove(Page $page)
@@ -151,11 +174,13 @@ class PageRepository extends EntityRepository
     }
 
     /**
+     * Přesune stránku mezi stránky s id prevId a nextId.
      * @param $itemId
      * @param $prevId
      * @param $nextId
      */
-    public function sort($itemId, $prevId, $nextId) {
+    public function sort($itemId, $prevId, $nextId)
+    {
         $item = $this->find($itemId);
         $prev = $prevId ? $this->find($prevId) : null;
         $next = $nextId ? $this->find($nextId) : null;

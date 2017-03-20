@@ -7,8 +7,9 @@ use App\Model\CMS\Faq;
 use App\Model\CMS\FaqRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
-use Nette\Application\UI\Form;
 use Nette;
+use Nette\Application\UI\Form;
+
 
 class FaqForm extends Nette\Object
 {
@@ -26,6 +27,7 @@ class FaqForm extends Nette\Object
 
     /** @var UserRepository */
     private $userRepository;
+
 
     public function __construct(BaseForm $baseFormFactory, FaqRepository $faqRepository, UserRepository $userRepository)
     {
@@ -66,8 +68,7 @@ class FaqForm extends Nette\Object
                 'answer' => $this->faq->getAnswer(),
                 'public' => $this->faq->isPublic()
             ]);
-        }
-        else {
+        } else {
             $form->setDefaults([
                 'public' => true
             ]);
@@ -79,7 +80,8 @@ class FaqForm extends Nette\Object
         return $form;
     }
 
-    public function processForm(Form $form, \stdClass $values) {
+    public function processForm(Form $form, \stdClass $values)
+    {
         if (!$form['cancel']->isSubmittedBy()) {
             if (!$this->faq) {
                 $this->faq = new Faq();

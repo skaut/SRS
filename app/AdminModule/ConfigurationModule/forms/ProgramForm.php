@@ -2,13 +2,13 @@
 
 namespace App\AdminModule\ConfigurationModule\Forms;
 
-
 use App\AdminModule\Forms\BaseForm;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use Kdyby\Translation\Translator;
 use Nette;
 use Nette\Application\UI\Form;
+
 
 class ProgramForm extends Nette\Object
 {
@@ -20,6 +20,7 @@ class ProgramForm extends Nette\Object
 
     /** @var Translator */
     private $translator;
+
 
     public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository, Translator $translator)
     {
@@ -65,7 +66,8 @@ class ProgramForm extends Nette\Object
         return $form;
     }
 
-    public function processForm(Form $form, \stdClass $values) {
+    public function processForm(Form $form, \stdClass $values)
+    {
         $this->settingsRepository->setValue(Settings::IS_ALLOWED_ADD_BLOCK, $values['isAllowedAddBlock']);
         $this->settingsRepository->setValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE, $values['isAllowedModifySchedule']);
         $this->settingsRepository->setValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS, $values['isAllowedRegisterPrograms']);
@@ -74,11 +76,13 @@ class ProgramForm extends Nette\Object
         $this->settingsRepository->setDateTimeValue(Settings::REGISTER_PROGRAMS_TO, $values['registerProgramsTo']);
     }
 
-    public function validateSeminarFromDate($field, $args) {
+    public function validateSeminarFromDate($field, $args)
+    {
         return $args[0] < $args[1];
     }
 
-    public function validateSeminarToDate($field, $args) {
+    public function validateSeminarToDate($field, $args)
+    {
         return $args[0] > $args[1];
     }
 }

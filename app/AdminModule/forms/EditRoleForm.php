@@ -9,11 +9,10 @@ use App\Model\ACL\Resource;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\CMS\PageRepository;
-
-
 use App\Model\Program\ProgramRepository;
 use Nette;
 use Nette\Application\UI\Form;
+
 
 class EditRoleForm extends Nette\Object
 {
@@ -34,6 +33,7 @@ class EditRoleForm extends Nette\Object
 
     /** @var ProgramRepository */
     private $programRepository;
+
 
     public function __construct(BaseForm $baseFormFactory, RoleRepository $roleRepository,
                                 PageRepository $pageRepository, PermissionRepository $permissionRepository,
@@ -149,7 +149,8 @@ class EditRoleForm extends Nette\Object
         return $form;
     }
 
-    public function processForm(Form $form, \stdClass $values) {
+    public function processForm(Form $form, \stdClass $values)
+    {
         if (!$form['cancel']->isSubmittedBy()) {
             $capacity = $values['capacity'] !== '' ? $values['capacity'] : null;
 
@@ -201,12 +202,14 @@ class EditRoleForm extends Nette\Object
         return $options;
     }
 
-    private function preparePermissionOption(&$optionsGroup, $permissionName, $resourceName) {
+    private function preparePermissionOption(&$optionsGroup, $permissionName, $resourceName)
+    {
         $permission = $this->permissionRepository->findByPermissionAndResourceName($permissionName, $resourceName);
         $optionsGroup[$permission->getId()] = 'common.permission_name.' . $permissionName . '.' . $resourceName;
     }
 
-    public function validateIncompatibleAndRequiredCollision($field, $args) {
+    public function validateIncompatibleAndRequiredCollision($field, $args)
+    {
         $incompatibleRoles = $this->roleRepository->findRolesByIds($args[0]);
         $requiredRoles = $this->roleRepository->findRolesByIds($args[1]);
 
@@ -233,7 +236,8 @@ class EditRoleForm extends Nette\Object
         return $valid;
     }
 
-    public function validateRedirectAllowed($field, $args) {
+    public function validateRedirectAllowed($field, $args)
+    {
         return in_array($field->getValue(), $args[0]);
     }
 }

@@ -2,10 +2,15 @@
 
 namespace ApiModule\DTO\Schedule;
 
-
-use Nette;
 use JMS\Serializer\Annotation as JMS;
+use Nette;
 
+
+/**
+ * Objekt pro přenos údajů o místnosti do FullCalendar.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class RoomDetailDTO extends Nette\Object
 {
     /**
@@ -19,6 +24,7 @@ class RoomDetailDTO extends Nette\Object
      * @var string
      */
     private $name;
+
 
     /**
      * @return int

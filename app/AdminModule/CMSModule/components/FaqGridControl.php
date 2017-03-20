@@ -2,23 +2,20 @@
 
 namespace App\AdminModule\CMSModule\Components;
 
-
 use App\Model\CMS\FaqRepository;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Ublaboo\DataGrid\DataGrid;
 
+
 class FaqGridControl extends Control
 {
-    /**
-     * @var Translator
-     */
+    /** @var Translator */
     private $translator;
 
-    /**
-     * @var FaqRepository
-     */
+    /** @var FaqRepository */
     private $faqRepository;
+
 
     public function __construct(Translator $translator, FaqRepository $faqRepository)
     {
@@ -49,11 +46,11 @@ class FaqGridControl extends Control
 
         $grid->addColumnStatus('public', 'admin.cms.faq_public')
             ->addOption(false, 'admin.cms.faq_public_private')
-                ->setClass('btn-danger')
-                ->endOption()
+            ->setClass('btn-danger')
+            ->endOption()
             ->addOption(true, 'admin.cms.faq_public_public')
-                ->setClass('btn-success')
-                ->endOption()
+            ->setClass('btn-success')
+            ->endOption()
             ->onChange[] = [$this, 'changeStatus'];
 
         $grid->addColumnText('answered', 'admin.cms.faq_answered')
@@ -104,7 +101,8 @@ class FaqGridControl extends Control
         }
     }
 
-    public function changeStatus($id, $public) {
+    public function changeStatus($id, $public)
+    {
         $faq = $this->faqRepository->findById($id);
         $faq->setPublic($public);
         $this->faqRepository->save($faq);
@@ -115,8 +113,7 @@ class FaqGridControl extends Control
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
             $this['faqGrid']->redrawItem($id);
-        }
-        else {
+        } else {
             $this->redirect('this');
         }
     }

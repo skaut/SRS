@@ -3,10 +3,12 @@
 namespace App\InstallModule\Presenters;
 
 use App\Commands\FixturesLoadCommand;
-use App\Commands\InitDataCommand;
+use App\Model\ACL\Role;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use Doctrine\DBAL\Exception\TableNotFoundException;
+use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
+use Kdyby\Console\StringOutput;
 use Kdyby\Doctrine\Console\SchemaCreateCommand;
 use Skautis\Config;
 use Skautis\Skautis;
@@ -16,12 +18,13 @@ use Skautis\Wsdl\WsdlException;
 use Skautis\Wsdl\WsdlManager;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Input\ArrayInput;
-use Kdyby\Console\StringOutput;
-use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
-use App\Model\ACL\Role;
+
 
 /**
- * Obsluhuje instalacniho pruvodce
+ * Obsluhuje instalačního průvodce.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class InstallPresenter extends InstallBasePresenter
 {
@@ -55,6 +58,10 @@ class InstallPresenter extends InstallBasePresenter
      */
     public $userRepository;
 
+
+    /**
+     * Zobrazení první stránky průvodce.
+     */
     public function renderDefault()
     {
         if ($this->user->isLoggedIn()) {
@@ -72,7 +79,11 @@ class InstallPresenter extends InstallBasePresenter
         }
     }
 
-    public function handleImportSchema() {
+    /**
+     * Vytvoření schéma databáze a počátečních dat.
+     */
+    public function handleImportSchema()
+    {
         $helperSet = new HelperSet(['em' => new EntityManagerHelper($this->em)]);
         $this->application->setHelperSet($helperSet);
 
@@ -104,6 +115,9 @@ class InstallPresenter extends InstallBasePresenter
         $this->redirect('admin');
     }
 
+    /**
+     * Zobrazení stránky pro vytvoření administrátora.
+     */
     public function renderAdmin()
     {
         try {
@@ -135,6 +149,9 @@ class InstallPresenter extends InstallBasePresenter
         }
     }
 
+    /**
+     * Otestování připojení ke skautIS, přesměrování na přihlašovací stránku.
+     */
     public function handleCreateAdmin()
     {
         if (!$this->checkSkautISConnection()) {
@@ -144,6 +161,9 @@ class InstallPresenter extends InstallBasePresenter
         $this->redirect(':Auth:login', ['backlink' => ':Install:Install:admin']);
     }
 
+    /**
+     * Zobrazení stránky po úspěšné instalaci.
+     */
     public function renderFinish()
     {
         try {
@@ -156,6 +176,9 @@ class InstallPresenter extends InstallBasePresenter
         }
     }
 
+    /**
+     * Zobrazení stránky pokud byla instalace dokončena dříve.
+     */
     public function renderInstalled()
     {
         try {
@@ -168,7 +191,12 @@ class InstallPresenter extends InstallBasePresenter
         }
     }
 
-    private function checkSkautISConnection() {
+    /**
+     * Vyzkouší připojení ke skautIS pomocí anonymní funkce.
+     * @return bool
+     */
+    private function checkSkautISConnection()
+    {
         try {
             $wsdlManager = new WsdlManager(new WebServiceFactory(), new Config($this->context->parameters['skautIS']['appId'], $this->context->parameters['skautIS']['test']));
             $skautIS = new Skautis($wsdlManager, new User($wsdlManager));

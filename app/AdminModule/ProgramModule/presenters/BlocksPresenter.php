@@ -2,7 +2,6 @@
 
 namespace App\AdminModule\ProgramModule\Presenters;
 
-
 use App\AdminModule\ProgramModule\Components\IProgramAttendeesGridControlFactory;
 use App\AdminModule\ProgramModule\Components\IProgramBlocksGridControlFactory;
 use App\AdminModule\ProgramModule\Forms\BlockForm;
@@ -13,6 +12,7 @@ use App\Model\Program\ProgramRepository;
 use App\Model\Settings\Settings;
 use Nette\Application\UI\Form;
 use Nette\Http\Session;
+
 
 class BlocksPresenter extends ProgramBasePresenter
 {
@@ -82,7 +82,8 @@ class BlocksPresenter extends ProgramBasePresenter
         $this->template->block = $block;
     }
 
-    public function handleShowAttendees($programId) {
+    public function handleShowAttendees($programId)
+    {
         $this->session->getSection('srs')->programId = $programId;
 
         $this->template->programId = $programId;
@@ -93,11 +94,13 @@ class BlocksPresenter extends ProgramBasePresenter
             $this->redirect('this');
     }
 
-    public function handleDeleteProgram($programId) {
+    public function handleDeleteProgram($programId)
+    {
         $program = $this->programRepository->findById($programId);
 
         if (!$this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE) ||
-            !$this->settingsRepository->getValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE))
+            !$this->settingsRepository->getValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)
+        )
             $this->getPresenter()->flashMessage('admin.program.blocks_program_modify_schedule_not_allowed', 'danger');
         else {
             $this->programRepository->remove($program);
@@ -107,17 +110,17 @@ class BlocksPresenter extends ProgramBasePresenter
         $this->redirect('this');
     }
 
-    protected function createComponentProgramBlocksGrid($name)
+    protected function createComponentProgramBlocksGrid()
     {
-        return $this->programBlocksGridControlFactory->create($name);
+        return $this->programBlocksGridControlFactory->create();
     }
 
-    protected function createComponentProgramAttendeesGrid($name)
+    protected function createComponentProgramAttendeesGrid()
     {
-        return $this->programAttendeesGridControlFactory->create($name);
+        return $this->programAttendeesGridControlFactory->create();
     }
 
-    protected function createComponentBlockForm($name)
+    protected function createComponentBlockForm()
     {
         $form = $this->blockFormFactory->create($this->getParameter('id'), $this->getUser()->getId());
 
@@ -130,8 +133,7 @@ class BlocksPresenter extends ProgramBasePresenter
                     $this->flashMessage('admin.program.blocks_add_not_allowed', 'danger');
                     $this->redirect('Blocks:default');
                 }
-            }
-            else {
+            } else {
                 $user = $this->userRepository->findById($this->user->getId());
                 $block = $this->blockRepository->findById($values['id']);
 
@@ -146,8 +148,7 @@ class BlocksPresenter extends ProgramBasePresenter
             if ($form['submitAndContinue']->isSubmittedBy()) {
                 $id = $values['id'] ?: $this->blockRepository->findLastId();
                 $this->redirect('Blocks:edit', ['id' => $id]);
-            }
-            else
+            } else
                 $this->redirect('Blocks:default');
         };
 

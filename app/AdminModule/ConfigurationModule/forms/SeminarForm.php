@@ -8,6 +8,7 @@ use App\Model\Settings\SettingsRepository;
 use Nette;
 use Nette\Application\UI\Form;
 
+
 class SeminarForm extends Nette\Object
 {
     /** @var BaseForm */
@@ -15,6 +16,7 @@ class SeminarForm extends Nette\Object
 
     /** @var SettingsRepository */
     private $settingsRepository;
+
 
     public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository)
     {
@@ -65,7 +67,8 @@ class SeminarForm extends Nette\Object
         return $form;
     }
 
-    public function processForm(Form $form, \stdClass $values) {
+    public function processForm(Form $form, \stdClass $values)
+    {
         $this->settingsRepository->setValue(Settings::SEMINAR_NAME, $values['seminarName']);
         $this->settingsRepository->setDateValue(Settings::SEMINAR_FROM_DATE, $values['seminarFromDate']);
         $this->settingsRepository->setDateValue(Settings::SEMINAR_TO_DATE, $values['seminarToDate']);
@@ -73,15 +76,18 @@ class SeminarForm extends Nette\Object
         $this->settingsRepository->setValue(Settings::SEMINAR_EMAIL, $values['seminarEmail']);
     }
 
-    public function validateSeminarFromDate($field, $args) {
+    public function validateSeminarFromDate($field, $args)
+    {
         return $args[0] <= $args[1];
     }
 
-    public function validateSeminarToDate($field, $args) {
+    public function validateSeminarToDate($field, $args)
+    {
         return $args[0] >= $args[1];
     }
 
-    public function validateEditRegistrationTo($field, $args) {
+    public function validateEditRegistrationTo($field, $args)
+    {
         return $args[0] < $args[1];
     }
 }

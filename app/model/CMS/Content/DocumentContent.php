@@ -2,15 +2,18 @@
 
 namespace App\Model\CMS\Content;
 
-
-
 use App\Model\CMS\Document\TagRepository;
 use App\Model\CMS\Page;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
 
+
 /**
+ * Entita obsahu s dokumenty.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity
  * @ORM\Table(name="document_content")
  */
@@ -19,16 +22,21 @@ class DocumentContent extends Content implements IContent
     protected $type = Content::DOCUMENT;
 
     /**
+     * Tagy dokumentů, které se zobrazí.
      * @ORM\ManyToMany(targetEntity="\App\Model\CMS\Document\Tag")
      * @var ArrayCollection
      */
     protected $tags;
 
-    /**
-     * @var TagRepository
-     */
+    /** @var TagRepository */
     private $tagRepository;
 
+
+    /**
+     * DocumentContent constructor.
+     * @param Page $page
+     * @param $area
+     */
     public function __construct(Page $page, $area)
     {
         parent::__construct($page, $area);
@@ -38,7 +46,8 @@ class DocumentContent extends Content implements IContent
     /**
      * @param TagRepository $tagRepository
      */
-    public function injectTagRepository(TagRepository $tagRepository) {
+    public function injectTagRepository(TagRepository $tagRepository)
+    {
         $this->tagRepository = $tagRepository;
     }
 
@@ -58,6 +67,11 @@ class DocumentContent extends Content implements IContent
         $this->tags = $tags;
     }
 
+    /**
+     * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
+     * @param Form $form
+     * @return Form
+     */
     public function addContentForm(Form $form)
     {
         parent::addContentForm($form);
@@ -70,6 +84,11 @@ class DocumentContent extends Content implements IContent
         return $form;
     }
 
+    /**
+     * Zpracuje při uložení stránky část formuláře týkající se obsahu.
+     * @param Form $form
+     * @param \stdClass $values
+     */
     public function contentFormSucceeded(Form $form, \stdClass $values)
     {
         parent::contentFormSucceeded($form, $values);

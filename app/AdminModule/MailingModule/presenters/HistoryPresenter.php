@@ -2,8 +2,8 @@
 
 namespace App\AdminModule\MailingModule\Presenters;
 
-
 use App\AdminModule\MailingModule\Components\IMailHistoryGridControlFactory;
+
 
 class HistoryPresenter extends MailingBasePresenter
 {
@@ -13,7 +13,8 @@ class HistoryPresenter extends MailingBasePresenter
      */
     public $mailHistoryControlGridFactory;
 
-    protected function createComponentMailHistoryGrid($name)
+
+    protected function createComponentMailHistoryGrid()
     {
         return $this->mailHistoryControlGridFactory->create();
     }

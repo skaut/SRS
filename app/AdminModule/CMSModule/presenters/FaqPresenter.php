@@ -2,11 +2,11 @@
 
 namespace App\AdminModule\CMSModule\Presenters;
 
-
 use App\AdminModule\CMSModule\Components\IFaqGridControlFactory;
 use App\AdminModule\CMSModule\Forms\FaqForm;
 use App\Model\CMS\FaqRepository;
 use Nette\Application\UI\Form;
+
 
 class FaqPresenter extends CMSBasePresenter
 {
@@ -28,9 +28,12 @@ class FaqPresenter extends CMSBasePresenter
      */
     public $faqRepository;
 
-    public function renderEdit($id) { }
 
-    protected function createComponentFaqGrid($name)
+    public function renderEdit($id)
+    {
+    }
+
+    protected function createComponentFaqGrid()
     {
         return $this->faqGridControlFactory->create();
     }
@@ -48,8 +51,7 @@ class FaqPresenter extends CMSBasePresenter
             if ($form['submitAndContinue']->isSubmittedBy()) {
                 $id = $values['id'] ?: $this->faqRepository->findLastId();
                 $this->redirect('Faq:edit', ['id' => $id]);
-            }
-            else
+            } else
                 $this->redirect('Faq:default');
         };
 

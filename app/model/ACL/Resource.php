@@ -6,18 +6,50 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
+
 /**
+ * Entita prostředek.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="ResourceRepository")
  * @ORM\Table(name="resource")
  */
 class Resource
 {
+    /**
+     * Administrace.
+     */
     const ADMIN = 'admin';
+
+    /**
+     * Web.
+     */
     const CMS = 'cms';
+
+    /**
+     * Role.
+     */
     const ACL = 'acl';
+
+    /**
+     * Program.
+     */
     const PROGRAM = 'program';
+
+    /**
+     * Nastavení.
+     */
     const CONFIGURATION = 'configuration';
+
+    /**
+     * Uživatelé.
+     */
     const USERS = 'users';
+
+    /**
+     * Mailing.
+     */
     const MAILING = 'mailing';
 
     public static $resources = [
@@ -33,16 +65,19 @@ class Resource
     use Identifier;
 
     /**
+     * Název prostředku.
      * @ORM\Column(type="string", unique=true)
      * @var string
      */
     protected $name;
 
     /**
+     * Oprávnění s tímto prostředkem.
      * @ORM\OneToMany(targetEntity="\App\Model\ACL\Permission", mappedBy="resource", cascade={"persist"})
      * @var ArrayCollection
      */
     protected $permissions;
+
 
     /**
      * Resource constructor.

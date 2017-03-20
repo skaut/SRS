@@ -2,6 +2,7 @@
 
 namespace App\AdminModule\ConfigurationModule\Components;
 
+
 interface IPlacePointsGridControlFactory
 {
     /**

@@ -2,29 +2,26 @@
 
 namespace App\AdminModule\MailingModule\Components;
 
-
 use App\Model\Mailing\Mail;
 use App\Model\Mailing\MailRepository;
-
-
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Ublaboo\DataGrid\DataGrid;
 
+
 class MailHistoryGridControl extends Control
 {
-    /**
-     * @var Translator
-     */
+    /** @var Translator */
     private $translator;
 
-    /**
-     * @var MailRepository
-     */
+    /** @var MailRepository */
     private $mailRepository;
+
 
     public function __construct(Translator $translator, MailRepository $mailRepository)
     {
+        parent::__construct();
+
         $this->translator = $translator;
         $this->mailRepository = $mailRepository;
     }
@@ -43,7 +40,7 @@ class MailHistoryGridControl extends Control
         $grid->setPagination(false);
 
         $grid->addColumnText('recipients', 'admin.mailing.history_recipients')
-            ->setRenderer(function($row) {
+            ->setRenderer(function ($row) {
                 if ($row->getType() == Mail::TO_ROLES) {
                     $roles = [];
                     foreach ($row->getRecipientRoles() as $role) {
@@ -51,8 +48,7 @@ class MailHistoryGridControl extends Control
                     }
                     $rolesText = implode(", ", $roles);
                     return $this->translator->translate('admin.mailing.history_roles', null, ['roles' => $rolesText]);
-                }
-                else {
+                } else {
                     return $this->translator->translate('admin.mailing.history_user', null, ['name' => $row->getRecipientUser()->getDisplayName()]);
                 }
             });

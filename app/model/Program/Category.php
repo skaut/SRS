@@ -7,7 +7,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
+
 /**
+ * Entita kategorie programového bloku.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="CategoryRepository")
  * @ORM\Table(name="category")
  */
@@ -16,23 +20,27 @@ class Category
     use Identifier;
 
     /**
+     * Název kategorie.
      * @ORM\Column(type="string", unique=true)
      * @var string
      */
     protected $name;
 
     /**
+     * Role, které si mohou přihlašovat programy z kategorie.
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="registerableCategories", cascade={"persist"})
      * @var ArrayCollection
      */
     protected $registerableRoles;
 
     /**
+     * Bloky v kategorii.
      * @ORM\OneToMany(targetEntity="Block", mappedBy="category", cascade={"persist"})
      * @ORM\OrderBy({"name" = "ASC"})
      * @var ArrayCollection
      */
     protected $blocks;
+
 
     /**
      * Category constructor.
@@ -83,7 +91,11 @@ class Category
         $this->registerableRoles = $registerableRoles;
     }
 
-    public function addRole(Role $role) {
+    /**
+     * @param Role $role
+     */
+    public function addRole(Role $role)
+    {
         if (!$this->registerableRoles->contains($role))
             $this->registerableRoles->add($role);
     }

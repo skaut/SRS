@@ -4,14 +4,20 @@ namespace App\Model\Program;
 
 use App\Model\User\User;
 use App\Model\User\UserRepository;
-use Doctrine\ORM\Mapping;
-use Kdyby\Doctrine\EntityManager;
 use Kdyby\Doctrine\EntityRepository;
 
+
+/**
+ * Třída spravující programové bloky.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class BlockRepository extends EntityRepository
 {
     /** @var UserRepository */
     private $userRepository;
+
 
     /**
      * @param UserRepository $userRepository
@@ -22,6 +28,7 @@ class BlockRepository extends EntityRepository
     }
 
     /**
+     * Vrací blok podle id.
      * @param $id
      * @return Block|null
      */
@@ -31,6 +38,7 @@ class BlockRepository extends EntityRepository
     }
 
     /**
+     * Vrací poslední id.
      * @return int
      */
     public function findLastId()
@@ -42,9 +50,11 @@ class BlockRepository extends EntityRepository
     }
 
     /**
+     * Vrací názvy všech bloků.
      * @return array
      */
-    public function findAllNames() {
+    public function findAllNames()
+    {
         $names = $this->createQueryBuilder('b')
             ->select('b.name')
             ->getQuery()
@@ -53,9 +63,11 @@ class BlockRepository extends EntityRepository
     }
 
     /**
+     * Vrací všechny bloky seřazené podle názvu.
      * @return array
      */
-    public function findAllOrderedByName() {
+    public function findAllOrderedByName()
+    {
         return $this->createQueryBuilder('b')
             ->orderBy('b.name')
             ->getQuery()
@@ -63,9 +75,11 @@ class BlockRepository extends EntityRepository
     }
 
     /**
+     * Vrací všechny bloky nezařezené v kategorii, seřazené podle názvu.
      * @return array
      */
-    public function findAllUncategorizedOrderedByName() {
+    public function findAllUncategorizedOrderedByName()
+    {
         return $this->createQueryBuilder('b')
             ->where('b.category IS NULL')
             ->orderBy('b.name')
@@ -74,10 +88,12 @@ class BlockRepository extends EntityRepository
     }
 
     /**
+     * Vrací názvy ostatních bloků, kromě bloku se zadaným id.
      * @param $id
      * @return array
      */
-    public function findOthersNames($id) {
+    public function findOthersNames($id)
+    {
         $names = $this->createQueryBuilder('b')
             ->select('b.name')
             ->where('b.id != :id')
@@ -88,11 +104,13 @@ class BlockRepository extends EntityRepository
     }
 
     /**
+     * Vrací bloky podle textu obsaženého v názvu, seřazené podle názvu.
      * @param $text
      * @param bool $unassignedOnly
      * @return array
      */
-    public function findByLikeNameOrderedByName($text, $unassignedOnly = false) {
+    public function findByLikeNameOrderedByName($text, $unassignedOnly = false)
+    {
         $qb = $this->createQueryBuilder('b')
             ->select('b')
             ->where('b.name LIKE :text')->setParameter('text', '%' . $text . '%');
@@ -108,6 +126,7 @@ class BlockRepository extends EntityRepository
     }
 
     /**
+     * Vrací názvy bloků, které jsou pro uživatele povinné, ale není na ně přihlášený.
      * @param User $user
      * @return array
      */
@@ -148,6 +167,7 @@ class BlockRepository extends EntityRepository
     }
 
     /**
+     * Vrací id bloků.
      * @param $blocks
      * @return array
      */
@@ -159,6 +179,7 @@ class BlockRepository extends EntityRepository
     }
 
     /**
+     * Uloží blok.
      * @param Block $block
      */
     public function save(Block $block)
@@ -168,6 +189,7 @@ class BlockRepository extends EntityRepository
     }
 
     /**
+     * Odstraní blok.
      * @param Block $block
      */
     public function remove(Block $block)

@@ -2,11 +2,8 @@
 
 namespace App\AdminModule\ProgramModule\Components;
 
-
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
-
-
 use App\Model\Program\Program;
 use App\Model\Program\ProgramRepository;
 use App\Model\User\User;
@@ -16,6 +13,7 @@ use Nette\Application\UI\Control;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Ublaboo\DataGrid\DataGrid;
+
 
 class ProgramAttendeesGridControl extends Control
 {
@@ -39,6 +37,7 @@ class ProgramAttendeesGridControl extends Control
 
     /** @var Program */
     private $program;
+
 
     public function __construct(Translator $translator, ProgramRepository $programRepository,
                                 UserRepository $userRepository, Session $session)
@@ -172,8 +171,7 @@ class ProgramAttendeesGridControl extends Control
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
             $p->redrawControl('programs');
-        }
-        else {
+        } else {
             $this->redirect('this');
         }
     }
@@ -199,13 +197,13 @@ class ProgramAttendeesGridControl extends Control
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
             $p->redrawControl('programs');
-        }
-        else {
+        } else {
             $this->redirect('this');
         }
     }
 
-    public function groupRegister(array $ids) {
+    public function groupRegister(array $ids)
+    {
         foreach ($ids as $id) {
             $user = $this->userRepository->findById($id);
             if (!$user->hasProgramBlock($this->program->getBlock())) {
@@ -225,7 +223,8 @@ class ProgramAttendeesGridControl extends Control
         }
     }
 
-    public function groupUnregister(array $ids) {
+    public function groupUnregister(array $ids)
+    {
         foreach ($ids as $id) {
             $user = $this->userRepository->findById($id);
             $user->removeProgram($this->program);

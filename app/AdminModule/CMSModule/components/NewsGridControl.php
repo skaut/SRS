@@ -2,23 +2,20 @@
 
 namespace App\AdminModule\CMSModule\Components;
 
-
 use App\Model\CMS\NewsRepository;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Ublaboo\DataGrid\DataGrid;
 
+
 class NewsGridControl extends Control
 {
-    /**
-     * @var Translator
-     */
+    /** @var Translator */
     private $translator;
 
-    /**
-     * @var NewsRepository
-     */
+    /** @var NewsRepository */
     private $newsRepository;
+
 
     public function __construct(Translator $translator, NewsRepository $newsRepository)
     {

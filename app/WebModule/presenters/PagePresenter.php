@@ -2,7 +2,6 @@
 
 namespace App\WebModule\Presenters;
 
-
 use App\WebModule\Components\IApplicationContentControlFactory;
 use App\WebModule\Components\IBlocksContentControlFactory;
 use App\WebModule\Components\ICapacitiesContentControlFactory;
@@ -10,15 +9,13 @@ use App\WebModule\Components\IDocumentContentControlFactory;
 use App\WebModule\Components\IFaqContentControlFactory;
 use App\WebModule\Components\IHtmlContentControlFactory;
 use App\WebModule\Components\IImageContentControlFactory;
-
 use App\WebModule\Components\INewsContentControlFactory;
 use App\WebModule\Components\IPlaceContentControlFactory;
 use App\WebModule\Components\IProgramsContentControlFactory;
 use App\WebModule\Components\ITextContentControlFactory;
 use App\WebModule\Components\IUsersContentControlFactory;
-
-
 use Nette\Application\BadRequestException;
+
 
 class PagePresenter extends WebBasePresenter
 {
@@ -117,63 +114,63 @@ class PagePresenter extends WebBasePresenter
         $this->template->sidebarVisible = $page->hasContents('sidebar');
     }
 
-    protected function createComponentApplicationContent($name)
+    protected function createComponentApplicationContent()
     {
-        return $this->applicationContentControlFactory->create($name);
+        return $this->applicationContentControlFactory->create();
     }
 
-    protected function createComponentBlocksContent($name)
+    protected function createComponentBlocksContent()
     {
-        return $this->blocksContentControlFactory->create($name);
+        return $this->blocksContentControlFactory->create();
     }
 
-    protected function createComponentCapacitiesContent($name)
+    protected function createComponentCapacitiesContent()
     {
-        return $this->capacitiesContentControlFactory->create($name);
+        return $this->capacitiesContentControlFactory->create();
     }
 
-    protected function createComponentDocumentContent($name)
+    protected function createComponentDocumentContent()
     {
-        return $this->documentContentControlFactory->create($name);
+        return $this->documentContentControlFactory->create();
     }
 
-    protected function createComponentFaqContent($name)
+    protected function createComponentFaqContent()
     {
-        return $this->faqContentControlFactory->create($name);
+        return $this->faqContentControlFactory->create();
     }
 
-    protected function createComponentHtmlContent($name)
+    protected function createComponentHtmlContent()
     {
-        return $this->htmlContentControlFactory->create($name);
+        return $this->htmlContentControlFactory->create();
     }
 
-    protected function createComponentImageContent($name)
+    protected function createComponentImageContent()
     {
-        return $this->imageContentControlFactory->create($name);
+        return $this->imageContentControlFactory->create();
     }
 
-    protected function createComponentNewsContent($name)
+    protected function createComponentNewsContent()
     {
-        return $this->newsContentControlFactory->create($name);
+        return $this->newsContentControlFactory->create();
     }
 
-    protected function createComponentPlaceContent($name)
+    protected function createComponentPlaceContent()
     {
-        return $this->placeContentControlFactory->create($name);
+        return $this->placeContentControlFactory->create();
     }
 
-    protected function createComponentProgramsContent($name)
+    protected function createComponentProgramsContent()
     {
-        return $this->programsContentControlFactory->create($name);
+        return $this->programsContentControlFactory->create();
     }
 
-    protected function createComponentTextContent($name)
+    protected function createComponentTextContent()
     {
-        return $this->textContentControlFactory->create($name);
+        return $this->textContentControlFactory->create();
     }
 
-    protected function createComponentUsersContent($name)
+    protected function createComponentUsersContent()
     {
-        return $this->usersContentControlFactory->create($name);
+        return $this->usersContentControlFactory->create();
     }
 }

@@ -5,15 +5,20 @@ namespace App\Model\User;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Role;
 use App\Model\Program\Program;
-use App\Model\Program\ProgramRepository;
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\Mapping;
-use Kdyby\Doctrine\EntityManager;
 use Kdyby\Doctrine\EntityRepository;
 
+
+/**
+ * Třída spravující uživatele.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class UserRepository extends EntityRepository
 {
     /**
+     * Vrací uživatele podle id.
      * @param $id
      * @return User|null
      */
@@ -23,6 +28,7 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Vrací uživatele podle skautISUserId.
      * @param $skautISUserId
      * @return User|null
      */
@@ -32,6 +38,7 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Vrací uživatele podle id.
      * @param $ids
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -43,19 +50,22 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Vrací jména uživatelů obsahující zadaný text, seřazená podle zobrazovaného jména.
      * @param $text
      * @return array
      */
-    public function findNamesByLikeDisplayNameOrderedByDisplayName($text) {
+    public function findNamesByLikeDisplayNameOrderedByDisplayName($text)
+    {
         return $this->createQueryBuilder('u')
             ->select('u.id, u.displayName')
-            ->where('u.displayName LIKE :text')->setParameter('text', '%'.$text.'%')
+            ->where('u.displayName LIKE :text')->setParameter('text', '%' . $text . '%')
             ->addOrderBy('u.displayName')
             ->getQuery()
             ->getResult();
     }
 
     /**
+     * Vrací uživatele, kteří se synchronizují s účastníky skautIS akce.
      * @return mixed
      */
     public function findAllSyncedWithSkautIS()
@@ -68,6 +78,7 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Vrací uživatele v roli.
      * @param Role $role
      * @return mixed
      */
@@ -81,10 +92,12 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Vrací uživatele v rolích.
      * @param $rolesIds
      * @return mixed
      */
-    public function findAllInRoles($rolesIds) {
+    public function findAllInRoles($rolesIds)
+    {
         return $this->createQueryBuilder('u')
             ->join('u.roles', 'r')
             ->where('r.id IN (:ids)')->setParameter('ids', $rolesIds)
@@ -95,6 +108,7 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Vrací schválené uživatele v roli.
      * @param $systemName
      * @return mixed
      */
@@ -109,10 +123,12 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Vrací schválené uživatele v rolích.
      * @param $rolesIds
      * @return mixed
      */
-    public function findAllApprovedInRoles($rolesIds) {
+    public function findAllApprovedInRoles($rolesIds)
+    {
         return $this->createQueryBuilder('u')
             ->join('u.roles', 'r')
             ->where('r.id IN (:ids)')->setParameter('ids', $rolesIds)
@@ -124,10 +140,12 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Vrací programy, na které se uživatel může přihlásit.
      * @param $program
      * @return array
      */
-    public function findProgramAllowed(Program $program) {
+    public function findProgramAllowed(Program $program)
+    {
         $qb = $this->createQueryBuilder('u')
             ->leftJoin('u.programs', 'p', 'WITH', 'p.id = :pid')
             ->innerJoin('u.roles', 'r')
@@ -147,9 +165,11 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Vrací lektory jako možnosti pro select.
      * @return array
      */
-    public function getLectorsOptions() {
+    public function getLectorsOptions()
+    {
         $lectors = $this->createQueryBuilder('u')
             ->select('u.id, u.displayName')
             ->join('u.roles', 'r')
@@ -167,10 +187,12 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Vrací kategorie, ze kterých si uživatel může vybírat programy.
      * @param User $user
      * @return int[]
      */
-    public function findRegisterableCategoriesIdsByUser(User $user) {
+    public function findRegisterableCategoriesIdsByUser(User $user)
+    {
         return $this->createQueryBuilder('u')
             ->select('c.id')
             ->join('u.roles', 'r')
@@ -181,6 +203,7 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Vrací true, pokud existuje uživatel s tímto variabilním symbolem.
      * @param $variableSymbol
      * @return bool
      */
@@ -194,9 +217,11 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Změní předvolbu variabilních symbolů.
      * @param $variableSymbolCode
      */
-    public function setVariableSymbolCode($variableSymbolCode) {
+    public function setVariableSymbolCode($variableSymbolCode)
+    {
         $this->createQueryBuilder('u')
             ->update()
             ->set('u.variableSymbol', $this->createQueryBuilder()->expr()->concat(
@@ -211,14 +236,17 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Uloží uživatele.
      * @param User $user
      */
-    public function save(User $user) {
+    public function save(User $user)
+    {
         $this->_em->persist($user);
         $this->_em->flush();
     }
 
     /**
+     * Odstraní uživatele.
      * @param User $user
      */
     public function remove(User $user)
@@ -231,10 +259,12 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Nastaví uživatelům účast.
      * @param $ids
      * @param bool $value
      */
-    public function setAttended($ids, $value = true) {
+    public function setAttended($ids, $value = true)
+    {
         $this->createQueryBuilder('u')
             ->update()
             ->set('u.attended', $value)

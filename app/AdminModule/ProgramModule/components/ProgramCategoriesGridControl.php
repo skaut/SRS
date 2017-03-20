@@ -2,7 +2,6 @@
 
 namespace App\AdminModule\ProgramModule\Components;
 
-
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Program\Category;
@@ -12,8 +11,8 @@ use App\Model\User\UserRepository;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-
 use Ublaboo\DataGrid\DataGrid;
+
 
 class ProgramCategoriesGridControl extends Control
 {
@@ -32,10 +31,13 @@ class ProgramCategoriesGridControl extends Control
     /** @var ProgramRepository */
     private $programRepository;
 
+
     public function __construct(Translator $translator, CategoryRepository $categoryRepository,
                                 RoleRepository $roleRepository, UserRepository $userRepository,
                                 ProgramRepository $programRepository)
     {
+        parent::__construct();
+
         $this->translator = $translator;
         $this->categoryRepository = $categoryRepository;
         $this->roleRepository = $roleRepository;
@@ -69,7 +71,7 @@ class ProgramCategoriesGridControl extends Control
 
         $rolesOptions = $this->roleRepository->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]);
 
-        $grid->addInlineAdd()->onControlAdd[] = function($container) use($rolesOptions) {
+        $grid->addInlineAdd()->onControlAdd[] = function ($container) use ($rolesOptions) {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.program.categories_name_empty')
                 ->addRule(Form::IS_NOT_IN, 'admin.program.categories_name_exists', $this->categoryRepository->findAllNames());
@@ -79,14 +81,14 @@ class ProgramCategoriesGridControl extends Control
         };
         $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
 
-        $grid->addInlineEdit()->onControlAdd[] = function($container) use($rolesOptions) {
+        $grid->addInlineEdit()->onControlAdd[] = function ($container) use ($rolesOptions) {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.program.categories_name_empty');
 
             $container->addMultiSelect('registerableRoles', '', $rolesOptions)->setAttribute('class', 'datagrid-multiselect')
                 ->addRule(Form::FILLED, 'admin.program.categories_registerable_roles_empty');
         };
-        $grid->getInlineEdit()->onSetDefaults[] = function($container, $item) {
+        $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) {
             $container['name']
                 ->addRule(Form::IS_NOT_IN, 'admin.program.categories_name_exists', $this->categoryRepository->findOthersNames($item->getId()));
 
@@ -107,7 +109,8 @@ class ProgramCategoriesGridControl extends Control
             ]);
     }
 
-    public function add($values) {
+    public function add($values)
+    {
         $category = new Category();
 
         $category->setName($values['name']);

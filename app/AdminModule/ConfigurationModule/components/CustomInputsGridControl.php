@@ -11,20 +11,20 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Ublaboo\DataGrid\DataGrid;
 
+
 class CustomInputsGridControl extends Control
 {
-    /**
-     * @var Translator
-     */
+    /** @var Translator */
     private $translator;
 
-    /**
-     * @var CustomInputRepository
-     */
+    /** @var CustomInputRepository */
     private $customInputRepository;
+
 
     public function __construct(Translator $translator, CustomInputRepository $customInputRepository)
     {
+        parent::__construct();
+
         $this->translator = $translator;
         $this->customInputRepository = $customInputRepository;
     }
@@ -54,18 +54,18 @@ class CustomInputsGridControl extends Control
 
         $customInputTypesOptions = $this->prepareCustomInputTypesOptions();
 
-        $grid->addInlineAdd()->onControlAdd[] = function($container) use($customInputTypesOptions) {
+        $grid->addInlineAdd()->onControlAdd[] = function ($container) use ($customInputTypesOptions) {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.configuration.application_input_name_empty');
             $container->addSelect('type', '', $customInputTypesOptions);
         };
         $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
 
-        $grid->addInlineEdit()->onControlAdd[] = function($container) {
+        $grid->addInlineEdit()->onControlAdd[] = function ($container) {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.configuration.application_input_name_empty');
         };
-        $grid->getInlineEdit()->onSetDefaults[] = function($container, $item) {
+        $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) {
             $container->setDefaults([
                 'name' => $item->getName()
             ]);
@@ -83,7 +83,8 @@ class CustomInputsGridControl extends Control
             ]);
     }
 
-    public function add($values) {
+    public function add($values)
+    {
         switch ($values['type']) {
             case 'text':
                 $input = new CustomText();
@@ -151,7 +152,8 @@ class CustomInputsGridControl extends Control
         }
     }
 
-    private function prepareCustomInputTypesOptions() {
+    private function prepareCustomInputTypesOptions()
+    {
         $options = [];
         foreach (CustomInput::$types as $type)
             $options[$type] = 'admin.common.custom_' . $type;

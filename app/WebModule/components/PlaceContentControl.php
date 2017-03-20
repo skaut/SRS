@@ -2,11 +2,11 @@
 
 namespace App\WebModule\Components;
 
-use App\Model\ACL\RoleRepository;
 use App\Model\Settings\Place\PlacePointRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use Nette\Application\UI\Control;
+
 
 class PlaceContentControl extends Control
 {
@@ -15,6 +15,7 @@ class PlaceContentControl extends Control
 
     /** @var PlacePointRepository */
     private $placePointRepository;
+
 
     public function __construct(SettingsRepository $settingsRepository, PlacePointRepository $placePointRepository)
     {

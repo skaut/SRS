@@ -2,21 +2,25 @@
 
 namespace App\Model\Program;
 
-use App\ApiModule\DTO\ProgramDetailDTO;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\Mapping;
-use Kdyby\Doctrine\EntityManager;
 use Kdyby\Doctrine\EntityRepository;
 
+
+/**
+ * Třída spravující programy.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class ProgramRepository extends EntityRepository
 {
     /** @var UserRepository */
     private $userRepository;
+
 
     /**
      * @param UserRepository $userRepository
@@ -27,6 +31,7 @@ class ProgramRepository extends EntityRepository
     }
 
     /**
+     * Vrací program podle id.
      * @param $id
      * @return Program|null
      */
@@ -36,14 +41,17 @@ class ProgramRepository extends EntityRepository
     }
 
     /**
+     * Uloží program.
      * @param Program $program
      */
-    public function save(Program $program) {
+    public function save(Program $program)
+    {
         $this->_em->persist($program);
         $this->_em->flush();
     }
 
     /**
+     * Odstraní program.
      * @param Program $program
      */
     public function remove(Program $program)
@@ -53,6 +61,7 @@ class ProgramRepository extends EntityRepository
     }
 
     /**
+     * Vrací id podle programů.
      * @param $programs
      * @return array
      */
@@ -64,6 +73,7 @@ class ProgramRepository extends EntityRepository
     }
 
     /**
+     * Vrací programy, na které se uživatel může přihlásit.
      * @param User $user
      * @return array
      */
@@ -85,10 +95,12 @@ class ProgramRepository extends EntityRepository
     }
 
     /**
+     * Vrací programy zablokované (programy stejného bloku a překrývající se programy) přihlášením se na program.
      * @param Program $program
      * @return int[]
      */
-    public function findBlockedProgramsIdsByProgram(Program $program) {
+    public function findBlockedProgramsIdsByProgram(Program $program)
+    {
         return array_merge(
             $this->findOtherProgramsWithSameBlockIds($program),
             $this->findOverlappingProgramsIds($program)
@@ -96,12 +108,13 @@ class ProgramRepository extends EntityRepository
     }
 
     /**
+     * Vrací programy stejného bloku.
      * @param Program $program
      * @return int[]
      */
     public function findOtherProgramsWithSameBlockIds(Program $program)
     {
-        $programs =  $this->createQueryBuilder('p')
+        $programs = $this->createQueryBuilder('p')
             ->select('p.id')
             ->join('p.block', 'b')
             ->where('b.id = :bid')->setParameter('bid', $program->getBlock()->getId())
@@ -112,6 +125,7 @@ class ProgramRepository extends EntityRepository
     }
 
     /**
+     * Vrací programy s překrývajícím se časem.
      * @param Program $program
      * @return int[]
      */
@@ -136,7 +150,15 @@ class ProgramRepository extends EntityRepository
         return array_map('intval', array_map('current', $programs));
     }
 
-    public function hasOverlappingProgram(Program $program, \DateTime $start, \DateTime $end) {
+    /**
+     * Překrývá se program s jiným programem?
+     * @param Program $program
+     * @param \DateTime $start
+     * @param \DateTime $end
+     * @return bool
+     */
+    public function hasOverlappingProgram(Program $program, \DateTime $start, \DateTime $end)
+    {
         $qb = $this->createQueryBuilder('p')
             ->select('p.id')
             ->join('p.block', 'b')
@@ -156,7 +178,15 @@ class ProgramRepository extends EntityRepository
         return !empty($qb->getQuery()->getResult());
     }
 
-    public function hasOverlappingAutoRegisterProgram(Program $program, \DateTime $start, \DateTime $end) {
+    /**
+     * Překrývá se s jiným programem, který je automaticky zapisovaný.
+     * @param Program $program
+     * @param \DateTime $start
+     * @param \DateTime $end
+     * @return bool
+     */
+    public function hasOverlappingAutoRegisterProgram(Program $program, \DateTime $start, \DateTime $end)
+    {
         $qb = $this->createQueryBuilder('p')
             ->select('p.id')
             ->join('p.block', 'b')
@@ -178,16 +208,20 @@ class ProgramRepository extends EntityRepository
     }
 
     /**
+     * Aktualizuje programy uživatele (odhlásí nepovolené a přihlásí automaticky přihlašované).
      * @param User $user
      */
-    public function updateUserPrograms(User $user) {
+    public function updateUserPrograms(User $user)
+    {
         $this->updateUsersPrograms([$user]);
     }
 
     /**
+     * Aktualizuje programy uživatelů (odhlásí nepovolené a přihlásí automaticky přihlašované).
      * @param $users
      */
-    public function updateUsersPrograms($users) {
+    public function updateUsersPrograms($users)
+    {
         foreach ($users as $user) {
             $oldUsersPrograms = $user->getPrograms();
             $userAllowedPrograms = $this->findUserAllowed($user);

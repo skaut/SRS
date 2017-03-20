@@ -2,9 +2,9 @@
 
 namespace App\AdminModule\ProgramModule\Presenters;
 
-
 use App\AdminModule\ProgramModule\Components\IRoomsGridControlFactory;
 use App\Model\ACL\Permission;
+
 
 class RoomsPresenter extends ProgramBasePresenter
 {
@@ -14,6 +14,7 @@ class RoomsPresenter extends ProgramBasePresenter
      */
     public $roomsGridControlFactory;
 
+
     public function startup()
     {
         parent::startup();
@@ -21,8 +22,8 @@ class RoomsPresenter extends ProgramBasePresenter
         $this->checkPermission(Permission::MANAGE_ROOMS);
     }
 
-    protected function createComponentRoomsGrid($name)
+    protected function createComponentRoomsGrid()
     {
-        return $this->roomsGridControlFactory->create($name);
+        return $this->roomsGridControlFactory->create();
     }
 }

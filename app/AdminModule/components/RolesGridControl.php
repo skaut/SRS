@@ -2,16 +2,14 @@
 
 namespace App\AdminModule\Components;
 
-
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\User\UserRepository;
-
-use App\Services\AttendeesService;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Ublaboo\DataGrid\DataGrid;
+
 
 class RolesGridControl extends Control
 {
@@ -26,6 +24,7 @@ class RolesGridControl extends Control
 
     /** @var ProgramRepository */
     private $programRepository;
+
 
     public function __construct(Translator $translator, RoleRepository $roleRepository, UserRepository $userRepository,
                                 ProgramRepository $programRepository)
@@ -104,7 +103,7 @@ class RolesGridControl extends Control
                 'data-toggle' => 'confirmation',
                 'data-content' => $this->translator->translate('admin.acl.roles_delete_confirm')
             ]);
-        $grid->allowRowsAction('delete', function($item) {
+        $grid->allowRowsAction('delete', function ($item) {
             return !$item->isSystem();
         });
     }
@@ -132,7 +131,8 @@ class RolesGridControl extends Control
         $this->redirect('this');
     }
 
-    public function changeRegisterable($id, $registerable) {
+    public function changeRegisterable($id, $registerable)
+    {
         $role = $this->roleRepository->findById($id);
 
         $role->setRegisterable($registerable);
@@ -144,8 +144,7 @@ class RolesGridControl extends Control
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
             $this['rolesGrid']->redrawItem($id);
-        }
-        else {
+        } else {
             $this->redirect('this');
         }
     }

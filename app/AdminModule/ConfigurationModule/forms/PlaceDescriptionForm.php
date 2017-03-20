@@ -2,13 +2,12 @@
 
 namespace App\AdminModule\ConfigurationModule\Forms;
 
-
 use App\AdminModule\Forms\BaseForm;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
-use Kdyby\Translation\Translator;
 use Nette;
 use Nette\Application\UI\Form;
+
 
 class PlaceDescriptionForm extends Nette\Object
 {
@@ -17,6 +16,7 @@ class PlaceDescriptionForm extends Nette\Object
 
     /** @var  SettingsRepository */
     private $settingsRepository;
+
 
     public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository)
     {
@@ -43,7 +43,8 @@ class PlaceDescriptionForm extends Nette\Object
         return $form;
     }
 
-    public function processForm(Form $form, \stdClass $values) {
+    public function processForm(Form $form, \stdClass $values)
+    {
         $this->settingsRepository->setValue(Settings::PLACE_DESCRIPTION, $values['placeDescription']);
     }
 }

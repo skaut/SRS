@@ -18,6 +18,7 @@ use Nette\Application\UI\Form;
 use Nette\Forms\IControl;
 use Skautis\Wsdl\WsdlException;
 
+
 class ApplicationForm extends Nette\Object
 {
     /** @var User */
@@ -45,6 +46,7 @@ class ApplicationForm extends Nette\Object
 
     /** @var SkautIsService */
     private $skautIsService;
+
 
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
                                 RoleRepository $roleRepository, CustomInputRepository $customInputRepository,
@@ -133,7 +135,8 @@ class ApplicationForm extends Nette\Object
         return $form;
     }
 
-    public function processForm(Form $form, \stdClass $values) {
+    public function processForm(Form $form, \stdClass $values)
+    {
         if (array_key_exists('sex', $values))
             $this->user->setSex($values['sex']);
         if (array_key_exists('firstName', $values))
@@ -173,7 +176,7 @@ class ApplicationForm extends Nette\Object
                     $customInputValue = new CustomCheckboxValue();
                     break;
             }
-            $customInputValue->setValue($values['custom'. $customInput->getId()]);
+            $customInputValue->setValue($values['custom' . $customInput->getId()]);
             $customInputValue->setUser($this->user);
             $customInputValue->setInput($customInput);
             $this->customInputValueRepository->save($customInputValue);

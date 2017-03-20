@@ -2,29 +2,55 @@
 
 namespace App\Services;
 
-
 use Nette;
 use Skautis\Skautis;
 use Skautis\Wsdl\WsdlException;
 
+
+/**
+ * Služba pro komunikaci se skautIS.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class SkautIsService extends Nette\Object
 {
     /** @var Skautis */
     private $skautIs;
 
+
+    /**
+     * SkautIsService constructor.
+     * @param Skautis $skautIS
+     */
     public function __construct(Skautis $skautIS)
     {
         $this->skautIs = $skautIS;
     }
 
-    public function getLoginUrl($backlink) {
+    /**
+     * Vratí url přihlašovací stránky skautIS.
+     * @param $backlink
+     * @return string
+     */
+    public function getLoginUrl($backlink)
+    {
         return $this->skautIs->getLoginUrl($backlink);
     }
 
-    public function getLogoutUrl() {
+    /**
+     * Vrátí url odhlašovací stránky skautIS.
+     * @return string
+     */
+    public function getLogoutUrl()
+    {
         return $this->skautIs->getLogoutUrl();
     }
 
+    /**
+     * Vrátí stav přihlášení uživatele, každých 5 minut obnoví přihlášení.
+     * @return bool
+     */
     public function isLoggedIn()
     {
         $logoutTime = clone($this->skautIs->getUser()->getLogoutDate());
@@ -32,24 +58,50 @@ class SkautIsService extends Nette\Object
         return $this->skautIs->getUser()->isLoggedIn($hardCheck);
     }
 
-    public function setLoginData($data) {
+    /**
+     * Nastaví údaje vrácené skautIS po úspěšném přihlášení.
+     * @param $data
+     */
+    public function setLoginData($data)
+    {
         $this->skautIs->setLoginData($data);
     }
 
-    public function getUserDetail() {
+    /**
+     * Vrátí údaje o uživateli.
+     * @return mixed
+     */
+    public function getUserDetail()
+    {
         return $this->skautIs->usr->UserDetail([
             'ID_Login' => $this->skautIs->getUser()->getLoginId()
         ]);
     }
 
-    public function getPersonDetail($personId) {
+    /**
+     * Vrátí údaje o osobě.
+     * @param $personId
+     * @return mixed
+     */
+    public function getPersonDetail($personId)
+    {
         return $this->skautIs->org->PersonDetail([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID' => $personId
         ]);
     }
 
-    public function updatePersonBasic($personId, $sex, $birthday, $firstName, $lastName, $nickName) {
+    /**
+     * Aktualizuje údaje o osobě.
+     * @param $personId
+     * @param $sex
+     * @param $birthday
+     * @param $firstName
+     * @param $lastName
+     * @param $nickName
+     */
+    public function updatePersonBasic($personId, $sex, $birthday, $firstName, $lastName, $nickName)
+    {
         $this->skautIs->org->PersonUpdateBasic([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID' => $personId,
@@ -61,7 +113,16 @@ class SkautIsService extends Nette\Object
         ], 'personUpdateBasicInput');
     }
 
-    public function updatePersonAddress($personId, $street, $city, $postcode, $state) {
+    /**
+     * Aktualizuje adresu osoby.
+     * @param $personId
+     * @param $street
+     * @param $city
+     * @param $postcode
+     * @param $state
+     */
+    public function updatePersonAddress($personId, $street, $city, $postcode, $state)
+    {
         $skautISPerson = $this->getPersonDetail($personId);
 
         $this->skautIs->org->PersonUpdateAddress([
@@ -79,40 +140,80 @@ class SkautIsService extends Nette\Object
         ], 'personUpdateAddressInput');
     }
 
-    public function getUnitId() {
+    /**
+     * Vrací id jednotky podle aktuální role uživatele.
+     * @return int|null
+     */
+    public function getUnitId()
+    {
         return $this->skautIs->getUser()->getUnitId();
     }
 
-    public function getUnitDetail($unitId) {
+    /**
+     * Vrací údaje o jednotce.
+     * @param $unitId
+     * @return mixed
+     */
+    public function getUnitDetail($unitId)
+    {
         return $this->skautIs->org->UnitDetail([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID' => $unitId
         ]);
     }
 
-    public function getDraftEvents() {
+    /**
+     * Vrací seznam neuzavřených dalších akcí.
+     * @return mixed
+     */
+    public function getDraftEvents()
+    {
         return $this->skautIs->event->EventGeneralAll([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID_EventGeneralState' => 'draft'
         ]);
     }
 
-    public function getEventDetail($eventId) {
+    /**
+     * Vrací údaje o další akci.
+     * @param $eventId
+     * @return mixed
+     */
+    public function getEventDetail($eventId)
+    {
         return $this->skautIs->event->EventGeneralDetail([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID' => $eventId
         ]);
     }
 
-    public function getEventDisplayName($eventId) {
+    /**
+     * Vrací název další akce.
+     * @param $eventId
+     * @return mixed
+     */
+    public function getEventDisplayName($eventId)
+    {
         return $this->getEventDetail($eventId)->DisplayName;
     }
 
-    public function isEventDraft($eventId) {
+    /**
+     * Vrací true, pokud je akce neuzavřená.
+     * @param $eventId
+     * @return bool
+     */
+    public function isEventDraft($eventId)
+    {
         return $this->getEventDetail($eventId)->ID_EventGeneralState == 'draft';
     }
 
-    public function syncParticipants($eventId, $participants) {
+    /**
+     * Synchronizuje účastníky.
+     * @param $eventId
+     * @param $participants
+     */
+    public function syncParticipants($eventId, $participants)
+    {
         $skautISParticipants = $this->skautIs->event->ParticipantGeneralAll([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID_EventGeneral' => $eventId
@@ -128,6 +229,10 @@ class SkautIsService extends Nette\Object
         }
     }
 
+    /**
+     * Odstraňuje účastníka ze skautIS.
+     * @param $participantId
+     */
     private function deleteParticipant($participantId)
     {
         $this->skautIs->event->ParticipantGeneralDelete([
@@ -137,6 +242,11 @@ class SkautIsService extends Nette\Object
         ]);
     }
 
+    /**
+     * Přidává účastníka do skautIS.
+     * @param $participantId
+     * @param $eventId
+     */
     private function insertParticipant($participantId, $eventId)
     {
         $this->skautIs->event->ParticipantGeneralInsert([
@@ -146,13 +256,18 @@ class SkautIsService extends Nette\Object
         ]);
     }
 
+    /**
+     * Vrací seznam neuzavřených událostí pro select.
+     * @return array
+     */
     public function getEventsOptions()
     {
         $options = [];
         try {
             foreach ($this->getDraftEvents() as $e)
                 $options[$e->ID] = $e->DisplayName;
-        } catch (WsdlException $ex) { }
+        } catch (WsdlException $ex) {
+        }
         return $options;
     }
 }

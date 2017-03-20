@@ -8,14 +8,18 @@ use App\Model\ACL\Role;
 use App\Model\Program\Block;
 use App\Model\Program\Program;
 use App\Model\Settings\CustomInput\CustomInput;
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\PersistentCollection;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
+
 /**
+ * Entita uživatele.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="UserRepository")
  * @ORM\Table(name="user")
  */
@@ -24,24 +28,28 @@ class User
     use Identifier;
 
     /**
+     * Uživatelské jméno skautIS.
      * @ORM\Column(type="string", unique=true)
      * @var string
      */
     protected $username;
 
     /**
+     * E-mail.
      * @ORM\Column(type="string")
      * @var string
      */
     protected $email;
 
     /**
+     * Role.
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="users", cascade={"persist"})
      * @var ArrayCollection
      */
     protected $roles;
 
     /**
+     * Přihlášené programy.
      * @ORM\ManyToMany(targetEntity="\App\Model\Program\Program", inversedBy="attendees", cascade={"persist"})
      * @ORM\OrderBy({"start" = "ASC"})
      * @var ArrayCollection
@@ -49,184 +57,215 @@ class User
     protected $programs;
 
     /**
+     * Schválený.
      * @ORM\Column(type="boolean")
      * @var bool
      */
     protected $approved = true;
 
     /**
+     * Jméno.
      * @ORM\Column(type="string")
      * @var string
      */
     protected $firstName;
 
     /**
+     * Příjmení.
      * @ORM\Column(type="string")
      * @var string
      */
     protected $lastName;
 
     /**
+     * Přezdívka.
      * @ORM\Column(type="string", nullable=true)
      * @var string
      */
     protected $nickName;
 
     /**
+     * Zobrazované jméno - Příjmení Jméno (Přezdívka).
      * @ORM\Column(type="string")
      * @var string
      */
     protected $displayName;
 
     /**
+     * Bezpečnostní kód.
      * @ORM\Column(type="string", nullable=true)
      * @var string
      */
     protected $securityCode;
 
     /**
+     * Propojený účet.
      * @ORM\Column(type="boolean")
      * @var bool
      */
     protected $member = false;
 
     /**
+     * Jednotka.
      * @ORM\Column(type="string", nullable=true)
      * @var string
      */
     protected $unit;
 
     /**
+     * Pohlaví.
      * @ORM\Column(type="string", nullable=true)
      * @var string
      */
     protected $sex;
 
     /**
+     * Datum narození.
      * @ORM\Column(type="date")
      * @var \DateTime
      */
     protected $birthdate;
 
     /**
+     * Id uživatele ve skautIS.
      * @ORM\Column(type="integer", unique=true, name="skautis_user_id")
      * @var int
      */
     protected $skautISUserId;
 
     /**
+     * Id osoby ve skautIS.
      * @ORM\Column(type="integer", unique=true, name="skautis_person_id")
      * @var int
      */
     protected $skautISPersonId;
 
     /**
+     * Datum prvního přihlášení.
      * @ORM\Column(type="datetime", nullable=true)
      * @var \DateTime
      */
     protected $firstLogin;
 
     /**
+     * Datum posledního přihlášení.
      * @ORM\Column(type="datetime", nullable=true)
      * @var \DateTime
      */
     protected $lastLogin;
 
     /**
+     * O mně.
      * @ORM\Column(type="text", nullable=true)
      * @var string
      */
     protected $about;
 
     /**
+     * Ulice.
      * @ORM\Column(type="string", nullable=true)
      * @var string
      */
     protected $street;
 
     /**
+     * Město.
      * @ORM\Column(type="string", nullable=true)
      * @var string
      */
     protected $city;
 
     /**
+     * Poštovní směrovací číslo.
      * @ORM\Column(type="string", nullable=true)
      * @var string
      */
     protected $postcode;
 
     /**
+     * Stát.
      * @ORM\Column(type="string", nullable=true)
      * @var string
      */
     protected $state;
 
     /**
+     * Platební metoda.
      * @ORM\Column(type="string", nullable=true)
      * @var string
      */
     protected $paymentMethod;
 
     /**
+     * Datum zaplacení.
      * @ORM\Column(type="date", nullable=true)
      * @var \DateTime
      */
     protected $paymentDate;
 
     /**
+     * Variabilní symbol.
      * @ORM\Column(type="string", nullable=true)
      * @var string
      */
     protected $variableSymbol;
 
     /**
+     * Zúčastnil se.
      * @ORM\Column(type="boolean")
      * @var bool
      */
     protected $attended = false;
 
     /**
+     * Příjezd.
      * @ORM\Column(type="datetime", nullable=true)
      * @var \DateTime
      */
     protected $arrival;
 
     /**
+     * Odjezd.
      * @ORM\Column(type="datetime", nullable=true)
      * @var \DateTime
      */
     protected $departure;
 
     /**
+     * Typ členství. NEPOUŽÍVÁ SE.
      * @ORM\Column(type="string", nullable=true)
      * @var string
      */
     protected $membershipType;
 
     /**
+     * Kategorie členství. NEPOUŽÍVÁ SE.
      * @ORM\Column(type="string", nullable=true)
      * @var string
      */
     protected $membershipCategory;
 
     /**
+     * Datum vytištění dokladu o zaplacení.
      * @ORM\Column(type="date", nullable=true)
      * @var \DateTime
      */
     protected $incomeProofPrintedDate;
 
     /**
+     * Hodnoty vlastních polí přihlášky.
      * @ORM\OneToMany(targetEntity="\App\Model\User\CustomInputValue\CustomInputValue", mappedBy="user", cascade={"persist"})
      * @var ArrayCollection
      */
     protected $customInputValues;
 
     /**
+     * Neveřejná poznámka.
      * @ORM\Column(type="text", nullable=true)
      * @var string
      */
     protected $note;
+
 
     /**
      * User constructor.
@@ -295,25 +334,44 @@ class User
         $this->roles = $roles;
     }
 
+    /**
+     * @param Role $role
+     */
     public function addRole(Role $role)
     {
         if (!$this->isInRole($role))
             $this->roles->add($role);
     }
 
+    /**
+     * @param Role $role
+     * @return bool
+     */
     public function removeRole(Role $role)
     {
         return $this->roles->removeElement($role);
     }
 
+    /**
+     * Je uživatel v roli?
+     * @param Role $role
+     * @return bool
+     */
     public function isInRole(Role $role)
     {
         return $this->roles->filter(function ($item) use ($role) {
-            return $item == $role;
-        })->count() != 0;
+                return $item == $role;
+            })->count() != 0;
     }
 
-    public function isAllowed($resource, $permission) {
+    /**
+     * Má uživatel oprávnění k prostředku?
+     * @param $resource
+     * @param $permission
+     * @return bool
+     */
+    public function isAllowed($resource, $permission)
+    {
         foreach ($this->roles as $r) {
             foreach ($r->getPermissions() as $p) {
                 if ($p->getResource()->getName() == $resource && $p->getName() == $permission)
@@ -323,7 +381,13 @@ class User
         return false;
     }
 
-    public function isAllowedModifyBlock(Block $block) {
+    /**
+     * Je uživatel oprávněn upravovat blok?
+     * @param Block $block
+     * @return bool
+     */
+    public function isAllowedModifyBlock(Block $block)
+    {
         if ($this->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS))
             return true;
 
@@ -333,6 +397,10 @@ class User
         return false;
     }
 
+    /**
+     * Vrací platící role uživatele.
+     * @return ArrayCollection|\Doctrine\Common\Collections\Collection
+     */
     public function getPayingRoles()
     {
         return $this->roles->filter(function ($item) {
@@ -340,18 +408,30 @@ class User
         });
     }
 
+    /**
+     * Je uživatel platící (nemá žádnou neplatící roli)?
+     * @return bool
+     */
     public function isPaying()
     {
         return $this->roles->filter(function ($item) {
-            return $item->getFee() == 0;
-        })->count() == 0;
+                return $item->getFee() == 0;
+            })->count() == 0;
     }
 
+    /**
+     * Má uživatel zaplaceno?
+     * @return bool
+     */
     public function hasPaid()
     {
         return $this->paymentDate !== null;
     }
 
+    /**
+     * Vrací poplatek uživatele. Pokud je platící - součet poplatků rolí.
+     * @return int
+     */
     public function getFee()
     {
         if (!$this->isPaying())
@@ -366,6 +446,10 @@ class User
         return $fee;
     }
 
+    /**
+     * Vrací poplatek slovy.
+     * @return mixed|string
+     */
     public function getFeeWords()
     {
         $numbersWords = new \Numbers_Words();
@@ -391,18 +475,33 @@ class User
         $this->programs = $programs;
     }
 
-    public function addProgram(Program $program) {
+    /**
+     * @param Program $program
+     */
+    public function addProgram(Program $program)
+    {
         if (!$this->programs->contains($program)) {
             $this->programs->add($program);
             $program->addAttendee($this);
         }
     }
 
-    public function removeProgram(Program $program) {
+    /**
+     * @param Program $program
+     * @return bool
+     */
+    public function removeProgram(Program $program)
+    {
         return $this->programs->removeElement($program);
     }
 
-    public function hasProgramBlock(Block $block) {
+    /**
+     * Má uživatel přihlášený program z bloku?
+     * @param Block $block
+     * @return bool
+     */
+    public function hasProgramBlock(Block $block)
+    {
         $criteria = Criteria::create()->where(
             Criteria::expr()->eq('block_id', $block->getId())
         );
@@ -485,6 +584,9 @@ class User
         return $this->displayName;
     }
 
+    /**
+     * Aktualizuje zobrazované jméno.
+     */
     private function updateDisplayName()
     {
         $this->displayName = $this->lastName . " " . $this->firstName;
@@ -509,6 +611,7 @@ class User
     }
 
     /**
+     * Má propojený účet?
      * @return bool
      */
     public function isMember()
@@ -575,7 +678,8 @@ class User
     /**
      * @return int
      */
-    public function getAge() {
+    public function getAge()
+    {
         return (new \DateTime())->diff($this->birthdate)->y;
     }
 
@@ -756,6 +860,7 @@ class User
     }
 
     /**
+     * Vrátí variabilní symbol bez #.
      * @return string
      */
     public function getVariableSymbol()
@@ -764,6 +869,7 @@ class User
     }
 
     /**
+     * Nastaví variabilní symbol, pokud je změněn oproti vygenerovanému, přidá se na konec #.
      * @param string $variableSymbol
      */
     public function setVariableSymbol($variableSymbol)
@@ -890,7 +996,8 @@ class User
      * @param CustomInput $customInput
      * @return mixed
      */
-    public function getCustomInputValue(CustomInput $customInput) {
+    public function getCustomInputValue(CustomInput $customInput)
+    {
         $criteria = Criteria::create()
             ->where(Criteria::expr()
                 ->eq('input', $customInput)
@@ -916,14 +1023,13 @@ class User
 
     /**
      * Je uživatel v roli, u které se eviduje příjezd a odjezd?
-     *
      * @return bool
      */
     public function hasDisplayArrivalDepartureRole()
     {
         $criteria = Criteria::create();
 
-        if($this->roles instanceof PersistentCollection && $this->roles->isInitialized())
+        if ($this->roles instanceof PersistentCollection && $this->roles->isInitialized())
             $criteria->where(Criteria::expr()->eq('displayArrivalDeparture', true));
         else
             $criteria->where(Criteria::expr()->eq('display_arrival_departure', true));  //problem s lazyloadingem u camelcase nazvu
@@ -931,7 +1037,13 @@ class User
         return !$this->roles->matching($criteria)->isEmpty();
     }
 
-    public function getRegisterableCategories($roles = null) {
+    /**
+     * Vrací kategorie, ze kterých si uživatel může přihlašovat programy.
+     * @param null $roles
+     * @return array
+     */
+    public function getRegisterableCategories($roles = null)
+    {
         $categories = [];
         if ($roles === null)
             $roles = $this->roles;
@@ -941,14 +1053,5 @@ class User
             }
         }
         return $categories;
-    }
-
-
-    private function removeProgramsInCategory($category) {
-        foreach ($this->programs as $program) {
-            if ($program->getBlock()->getCategory() === $category) {
-                $this->programs->removeElement($program);
-            }
-        }
     }
 }

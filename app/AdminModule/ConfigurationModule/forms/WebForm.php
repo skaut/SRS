@@ -2,7 +2,6 @@
 
 namespace App\AdminModule\ConfigurationModule\Forms;
 
-
 use App\AdminModule\Forms\BaseForm;
 use App\Model\CMS\PageRepository;
 use App\Model\Settings\Settings;
@@ -11,6 +10,7 @@ use App\Services\FilesService;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Utils\Strings;
+
 
 class WebForm extends Nette\Object
 {
@@ -25,6 +25,7 @@ class WebForm extends Nette\Object
 
     /** @var FilesService */
     private $filesService;
+
 
     public function __construct(BaseForm $baseFormFactory, PageRepository $pageRepository,
                                 SettingsRepository $settingsRepository, FilesService $filesService)
@@ -68,7 +69,8 @@ class WebForm extends Nette\Object
         return $form;
     }
 
-    public function processForm(Form $form, \stdClass $values) {
+    public function processForm(Form $form, \stdClass $values)
+    {
         $logo = $values['logo'];
         if ($logo->size > 0) {
             $this->filesService->delete('/logo/' . $this->settingsRepository->getValue(Settings::LOGO));

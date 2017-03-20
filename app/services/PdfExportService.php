@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-
 use App\Model\Enums\PaymentType;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
@@ -10,8 +9,16 @@ use App\Model\User\User;
 use fpdi\FPDI;
 use Nette;
 
+
+/**
+ * Služba pro export do formátu PDF.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class PdfExportService extends Nette\Object
 {
+    /** @var string */
     private $dir;
 
     /** @var \fpdi\FPDI */
@@ -22,9 +29,11 @@ class PdfExportService extends Nette\Object
     /** @var SettingsRepository */
     private $settingsRepository;
 
+
     /**
-     * PrintService constructor.
-     * @param $dir
+     * PdfExportService constructor.
+     * @param string $dir
+     * @param SettingsRepository $settingsRepository
      */
     public function __construct($dir, SettingsRepository $settingsRepository)
     {
@@ -38,11 +47,23 @@ class PdfExportService extends Nette\Object
         $this->fpdi->SetFont('verdana', '', 10);
     }
 
-    public function generatePaymentProof(User $user, $filename) {
+    /**
+     * Vygeneruje doklad uživateli doklad o zaplacení.
+     * @param User $user
+     * @param $filename
+     */
+    public function generatePaymentProof(User $user, $filename)
+    {
         $this->generatePaymentProofs([$user], $filename);
     }
 
-    public function generatePaymentProofs($users, $filename) {
+    /**
+     * Vygeneruje doklady o zaplacení pro více uživatelů.
+     * @param $users
+     * @param $filename
+     */
+    public function generatePaymentProofs($users, $filename)
+    {
         foreach ($users as $user) {
             if ($user->getPaymentMethod() == PaymentType::BANK)
                 $this->addAccountProofPage($user);
@@ -53,6 +74,10 @@ class PdfExportService extends Nette\Object
         exit;
     }
 
+    /**
+     * Vytvoří stránku s příjmovýchm dokladem.
+     * @param User $user
+     */
     private function addIncomeProofPage(User $user)
     {
         $this->configureForIncomeProof();
@@ -81,6 +106,10 @@ class PdfExportService extends Nette\Object
         $this->fpdi->Text(40, 111, iconv('UTF-8', 'WINDOWS-1250', "účastnický poplatek {$this->settingsRepository->getValue(Settings::SEMINAR_NAME)}"));
     }
 
+    /**
+     * Vytvoří stránku s potvrzením o přijetí platby.
+     * @param User $user
+     */
     private function addAccountProofPage(User $user)
     {
         $this->configureForAccountProof();
@@ -105,6 +134,9 @@ class PdfExportService extends Nette\Object
         $this->fpdi->Text(130, 119, iconv('UTF-8', 'WINDOWS-1250', "{$this->settingsRepository->getValue(Settings::ACCOUNTANT)}"));
     }
 
+    /**
+     * Nastaví šablonu pro příjmový doklad.
+     */
     private function configureForIncomeProof()
     {
         $pagecount = $this->fpdi->setSourceFile($this->dir . '/prijmovy-pokladni-doklad.pdf');
@@ -112,7 +144,9 @@ class PdfExportService extends Nette\Object
         $this->template = $template;
     }
 
-
+    /**
+     * Nastaví šablonu pro potvrzení o přijetí platby.
+     */
     private function configureForAccountProof()
     {
         $pagecount = $this->fpdi->setSourceFile($this->dir . '/potvrzeni-o-prijeti-platby.pdf');
@@ -120,6 +154,10 @@ class PdfExportService extends Nette\Object
         $this->template = $template;
     }
 
+    /**
+     * Vygeneruje dnešní datum.
+     * @return string
+     */
     private function writeToday()
     {
         $today = new \DateTime('now');

@@ -2,10 +2,15 @@
 
 namespace App\Services;
 
-
 use Nette;
 use Nette\Application\IResponse;
 
+
+/**
+ * ExcelResponse.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class ExcelResponse extends Nette\Object implements IResponse
 {
     /** @var \PHPExcel */
@@ -27,13 +32,13 @@ class ExcelResponse extends Nette\Object implements IResponse
     }
 
     /**
-     * Sends response to output.
-     * @return void
+     * @param Nette\Http\IRequest $httpRequest
+     * @param Nette\Http\IResponse $httpResponse
      */
     function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse)
     {
         $httpResponse->setContentType('application/force-download');
-        $httpResponse->setHeader('Content-Disposition', 'attachment;filename='.$this->filename);
+        $httpResponse->setHeader('Content-Disposition', 'attachment;filename=' . $this->filename);
         $httpResponse->setHeader('Content-Transfer-Encoding', 'binary');
 
         $writer = new \PHPExcel_Writer_Excel2007($this->phpExcel);

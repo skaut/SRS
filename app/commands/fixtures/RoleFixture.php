@@ -2,19 +2,23 @@
 
 namespace App\Commands\Fixtures;
 
-
-use Doctrine\Common\Persistence\ObjectManager;
+use App\Model\ACL\Role;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Doctrine\Common\Persistence\ObjectManager;
 use Kdyby\Translation\Translator;
-use App\Model\ACL\Role;
 
+
+/**
+ * Vytváří systémové role.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class RoleFixture extends AbstractFixture implements DependentFixtureInterface
 {
-    /**
-     * @var Translator
-     */
+    /** @var Translator */
     protected $translator;
+
 
     /**
      * RoleFixture constructor.
@@ -25,6 +29,10 @@ class RoleFixture extends AbstractFixture implements DependentFixtureInterface
         $this->translator = $translator;
     }
 
+    /**
+     * Vytváří počáteční data.
+     * @param ObjectManager $manager
+     */
     public function load(ObjectManager $manager)
     {
         $roles = [];
@@ -98,6 +106,7 @@ class RoleFixture extends AbstractFixture implements DependentFixtureInterface
     }
 
     /**
+     * Vrací závislosti na jiných fixtures.
      * @return array
      */
     function getDependencies()

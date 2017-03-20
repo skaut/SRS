@@ -5,12 +5,11 @@ namespace App\AdminModule\MailingModule\Forms;
 use App\AdminModule\Forms\BaseForm;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
-
-
 use App\Services\MailService;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Mail\SendException;
+
 
 class SendForm extends Nette\Object
 {
@@ -24,6 +23,7 @@ class SendForm extends Nette\Object
 
     /** @var RoleRepository */
     private $roleRepository;
+
 
     public function __construct(BaseForm $baseFormFactory, MailService $mailService, RoleRepository $roleRepository)
     {
@@ -58,7 +58,8 @@ class SendForm extends Nette\Object
         return $form;
     }
 
-    public function processForm(Form $form, \stdClass $values) {
+    public function processForm(Form $form, \stdClass $values)
+    {
         try {
             $this->mailService->sendMailToRoles($values['recipients'], $values['copy'], $values['subject'], $values['text']);
             $this->mailSuccess = true;

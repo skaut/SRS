@@ -2,9 +2,9 @@
 
 namespace App\AdminModule\MailingModule\Presenters;
 
-
 use App\AdminModule\MailingModule\Forms\SendForm;
 use Nette\Forms\Form;
+
 
 class SendPresenter extends MailingBasePresenter
 {
@@ -14,7 +14,8 @@ class SendPresenter extends MailingBasePresenter
      */
     public $sendFormFactory;
 
-    protected function createComponentSendForm($name)
+
+    protected function createComponentSendForm()
     {
         $form = $this->sendFormFactory->create();
 

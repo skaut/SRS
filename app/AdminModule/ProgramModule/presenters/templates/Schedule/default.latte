@@ -18,7 +18,8 @@
                 <img src="{$basePath}/img/spin.gif" height="52"/>
             </div>
 
-            <div ng-model="message" ng-show="message.text" class="alert alert-{{ message.type }}" style="float: left; margin-left: 15px">
+            <div ng-model="message" ng-show="message.text" class="alert alert-{{ message.type }}"
+                 style="float: left; margin-left: 15px">
                 {{ message.text }}
             </div>
         </div>
@@ -87,8 +88,10 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button ng-click="updateEvent(event, room)" class="btn btn-primary pull-left">{_admin.common.save}</button>
-                        <button ng-click="removeEvent(event)" class="btn btn-danger pull-right">{_admin.common.delete}</button>
+                        <button ng-click="updateEvent(event, room)"
+                                class="btn btn-primary pull-left">{_admin.common.save}</button>
+                        <button ng-click="removeEvent(event)"
+                                class="btn btn-danger pull-right">{_admin.common.delete}</button>
                     </div>
                 </div>
             </div>

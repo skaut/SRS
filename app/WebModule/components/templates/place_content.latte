@@ -28,23 +28,23 @@
                 var coords = [];
 
                 {foreach $points as $point}
-                    var layer = new SMap.Layer.Marker();
-                    m.addLayer(layer);
-                    layer.enable();
+                var layer = new SMap.Layer.Marker();
+                m.addLayer(layer);
+                layer.enable();
 
-                    var card = new SMap.Card();
-                    card.getHeader().innerHTML = {$point->getName()};
+                var card = new SMap.Card();
+                card.getHeader().innerHTML = {$point->getName()};
 
-                    var options = {
-                        title: {$point->getName()}
-                    };
+                var options = {
+                    title: {$point->getName()}
+                };
 
-                    var gps = SMap.Coords.fromWGS84({$point->getGpsLon()}, {$point->getGpsLat()});
-                    coords.push(gps);
+                var gps = SMap.Coords.fromWGS84({$point->getGpsLon()}, {$point->getGpsLat()});
+                coords.push(gps);
 
-                    var marker = new SMap.Marker(gps, "", options);
-                    marker.decorate(SMap.Marker.Feature.Card, card);
-                    layer.addMarker(marker);
+                var marker = new SMap.Marker(gps, "", options);
+                marker.decorate(SMap.Marker.Feature.Card, card);
+                layer.addMarker(marker);
                 {/foreach}
 
                 var center = m.computeCenterZoom(coords, false);

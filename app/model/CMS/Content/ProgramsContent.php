@@ -4,7 +4,12 @@ namespace App\Model\CMS\Content;
 
 use Doctrine\ORM\Mapping as ORM;
 
+
 /**
+ * Entita obsahu s výběrem programů.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity
  * @ORM\Table(name="programs_content")
  */

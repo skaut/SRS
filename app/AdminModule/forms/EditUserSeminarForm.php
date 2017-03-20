@@ -2,26 +2,20 @@
 
 namespace App\AdminModule\Forms;
 
-
-
-
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
-
-
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
-
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
 use App\Model\User\CustomInputValue\CustomInputValueRepository;
 use App\Model\User\CustomInputValue\CustomTextValue;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
-
 use Nette;
 use Nette\Application\UI\Form;
+
 
 class EditUserSeminarForm extends Nette\Object
 {
@@ -48,6 +42,7 @@ class EditUserSeminarForm extends Nette\Object
 
     /** @var ProgramRepository */
     private $programRepository;
+
 
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
                                 RoleRepository $roleRepository, CustomInputRepository $customInputRepository,
@@ -135,7 +130,8 @@ class EditUserSeminarForm extends Nette\Object
         return $form;
     }
 
-    public function processForm(Form $form, \stdClass $values) {
+    public function processForm(Form $form, \stdClass $values)
+    {
         if (!$form['cancel']->isSubmittedBy()) {
             $this->user->setRoles($this->roleRepository->findRolesByIds($values['roles']));
             $this->user->setApproved($values['approved']);

@@ -2,17 +2,21 @@
 
 namespace App\Mailing;
 
-
 use Nette;
 use Ublaboo\Mailing\IComposableMail;
 use Ublaboo\Mailing\Mail;
 
+
+/**
+ * Třída pro vytváření hromadných e-mailů s libovolným textem.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class TextMail extends Mail implements IComposableMail
 {
     /**
      * @param  Nette\Mail\Message $message
      * @param  mixed $params
-     * @return mixed
      */
     public function compose(Nette\Mail\Message $message, $params = NULL)
     {

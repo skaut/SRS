@@ -8,6 +8,7 @@ use App\Model\ACL\RoleRepository;
 use Nette;
 use Nette\Application\UI\Form;
 
+
 class AddRoleForm extends Nette\Object
 {
     /** @var BaseForm */
@@ -15,6 +16,7 @@ class AddRoleForm extends Nette\Object
 
     /** @var RoleRepository */
     private $roleRepository;
+
 
     public function __construct(BaseForm $baseFormFactory, RoleRepository $roleRepository)
     {
@@ -46,7 +48,8 @@ class AddRoleForm extends Nette\Object
         return $form;
     }
 
-    public function processForm(Form $form, \stdClass $values) {
+    public function processForm(Form $form, \stdClass $values)
+    {
         if (!$form['cancel']->isSubmittedBy()) {
             $role = new Role($values['name']);
 

@@ -2,10 +2,15 @@
 
 namespace App\ApiModule\DTO\Schedule;
 
-
-use Nette;
 use JMS\Serializer\Annotation as JMS;
+use Nette;
 
+
+/**
+ * Objekt pro přenos konfigurace do FullCalendar.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class CalendarConfigDTO extends Nette\Object
 {
     /**

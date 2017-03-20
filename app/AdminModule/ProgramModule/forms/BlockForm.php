@@ -15,7 +15,7 @@ use App\Model\User\User;
 use App\Model\User\UserRepository;
 use Nette;
 use Nette\Application\UI\Form;
-use Nette\Forms\IControl;
+
 
 class BlockForm extends Nette\Object
 {
@@ -42,6 +42,7 @@ class BlockForm extends Nette\Object
 
     /** @var ProgramRepository */
     private $programRepository;
+
 
     public function __construct(BaseForm $baseFormFactory, BlockRepository $blockRepository,
                                 UserRepository $userRepository, CategoryRepository $categoryRepository,
@@ -134,8 +135,7 @@ class BlockForm extends Nette\Object
                 'description' => $this->block->getDescription(),
                 'tools' => $this->block->getTools()
             ]);
-        }
-        else {
+        } else {
             $form['name']->addRule(Form::IS_NOT_IN, 'admin.program.blocks_name_exists', $this->blockRepository->findAllNames());
         }
 
@@ -145,7 +145,8 @@ class BlockForm extends Nette\Object
         return $form;
     }
 
-    public function processForm(Form $form, \stdClass $values) {
+    public function processForm(Form $form, \stdClass $values)
+    {
         if (!$form['cancel']->isSubmittedBy()) {
             if (!$this->block) {
                 if (!$this->settingsRepository->getValue(Settings::IS_ALLOWED_ADD_BLOCK))
@@ -201,9 +202,9 @@ class BlockForm extends Nette\Object
         if ($this->block) {
             if ($this->block->getMandatory() != 2 && ($this->block->getProgramsCount() > 1 ||
                     ($this->block->getProgramsCount() == 1 && $this->programRepository->hasOverlappingProgram(
-                        $this->block->getPrograms()->first(),
-                        $this->block->getPrograms()->first()->getStart(),
-                        $this->block->getPrograms()->first()->getEnd())
+                            $this->block->getPrograms()->first(),
+                            $this->block->getPrograms()->first()->getStart(),
+                            $this->block->getPrograms()->first()->getEnd())
                     )
                 )
             )

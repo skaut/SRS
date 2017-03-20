@@ -16,6 +16,12 @@ use Doctrine\DBAL\Exception\TableNotFoundException;
 use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\JavaScriptLoader;
 
+
+/**
+ * BasePresenter pro WebModule.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 abstract class WebBasePresenter extends BasePresenter
 {
     /**
@@ -66,12 +72,12 @@ abstract class WebBasePresenter extends BasePresenter
      */
     public $skautIsService;
 
-    /**
-     * @var User
-     */
+    /** @var User */
     protected $dbuser;
 
+
     /**
+     * Načte css podle konfigurace v config.neon.
      * @return CssLoader
      */
     protected function createComponentCss()
@@ -80,6 +86,7 @@ abstract class WebBasePresenter extends BasePresenter
     }
 
     /**
+     * Načte javascript podle konfigurace v config.neon.
      * @return JavaScriptLoader
      */
     protected function createComponentJs()
@@ -126,12 +133,14 @@ abstract class WebBasePresenter extends BasePresenter
         $this->template->settings = $this->settingsRepository;
     }
 
-    public function actionExitRoleTest() {
+    public function actionExitRoleTest()
+    {
         $this->authenticator->updateRoles($this->user);
         $this->redirect(':Admin:Acl:default');
     }
 
-    private function checkInstallation() {
+    private function checkInstallation()
+    {
         try {
             if (!filter_var($this->settingsRepository->getValue(Settings::ADMIN_CREATED), FILTER_VALIDATE_BOOLEAN))
                 $this->redirect(':Install:Install:default');

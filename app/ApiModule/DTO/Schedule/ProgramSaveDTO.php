@@ -2,10 +2,15 @@
 
 namespace App\ApiModule\DTO\Schedule;
 
-
-use Nette;
 use JMS\Serializer\Annotation as JMS;
+use Nette;
 
+
+/**
+ * Objekt pro přenos údajů o nově vytvořeném bloku z FullCalendar.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class ProgramSaveDTO extends Nette\Object
 {
     /**
@@ -31,6 +36,7 @@ class ProgramSaveDTO extends Nette\Object
      * \DateTime
      */
     private $start;
+
 
     /**
      * @return int

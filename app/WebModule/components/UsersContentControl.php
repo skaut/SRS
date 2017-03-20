@@ -2,22 +2,19 @@
 
 namespace App\WebModule\Components;
 
-
 use App\Model\ACL\RoleRepository;
 use App\Model\User\UserRepository;
 use Nette\Application\UI\Control;
 
+
 class UsersContentControl extends Control
 {
-    /**
-     * @var UserRepository
-     */
+    /** @var UserRepository */
     private $userRepository;
 
-    /**
-     * @var RoleRepository
-     */
+    /** @var RoleRepository */
     private $roleRepository;
+
 
     public function __construct(UserRepository $userRepository, RoleRepository $roleRepository)
     {

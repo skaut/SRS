@@ -8,11 +8,25 @@ use Kdyby\Doctrine\EntityRepository;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 
+
+/**
+ * Třída spravující nastavení.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class SettingsRepository extends EntityRepository
 {
     /** @var Cache */
     private $cache;
 
+
+    /**
+     * SettingsRepository constructor.
+     * @param EntityManager $em
+     * @param Mapping\ClassMetadata $class
+     * @param IStorage $storage
+     */
     public function __construct(EntityManager $em, Mapping\ClassMetadata $class, IStorage $storage)
     {
         parent::__construct($em, $class);
@@ -20,6 +34,7 @@ class SettingsRepository extends EntityRepository
     }
 
     /**
+     * Vrátí hodnotu položky.
      * @param $item
      * @return mixed
      * @throws SettingsException
@@ -41,6 +56,7 @@ class SettingsRepository extends EntityRepository
     }
 
     /**
+     * Vrátí hodnotu položky typu datum.
      * @param $item
      * @return \DateTime
      */
@@ -50,6 +66,7 @@ class SettingsRepository extends EntityRepository
     }
 
     /**
+     * Vrátí hodnotu položky typu datum a čas.
      * @param $item
      * @return \DateTime
      */
@@ -59,6 +76,7 @@ class SettingsRepository extends EntityRepository
     }
 
     /**
+     * Nastavení hodnoty položky.
      * @param $item
      * @param $value
      * @throws SettingsException
@@ -76,6 +94,7 @@ class SettingsRepository extends EntityRepository
     }
 
     /**
+     * Nastavení hodnoty položky typu datum.
      * @param $item
      * @param \DateTime $value
      */
@@ -85,6 +104,7 @@ class SettingsRepository extends EntityRepository
     }
 
     /**
+     * Nastavení hodnoty položky typu datum a čas.
      * @param $item
      * @param \DateTime $value
      */

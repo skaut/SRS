@@ -9,6 +9,7 @@ use App\Model\User\UserRepository;
 use Nette;
 use Nette\Application\UI\Form;
 
+
 class PaymentForm extends Nette\Object
 {
     /** @var BaseForm */
@@ -19,6 +20,7 @@ class PaymentForm extends Nette\Object
 
     /** @var UserRepository */
     private $userRepository;
+
 
     public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository, UserRepository $userRepository)
     {
@@ -55,7 +57,8 @@ class PaymentForm extends Nette\Object
         return $form;
     }
 
-    public function processForm(Form $form, \stdClass $values) {
+    public function processForm(Form $form, \stdClass $values)
+    {
         $this->settingsRepository->setValue(Settings::ACCOUNT_NUMBER, $values['accountNumber']);
 
         $variableSymbolCode = $values['variableSymbolCode'];

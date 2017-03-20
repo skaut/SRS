@@ -2,18 +2,14 @@
 
 namespace App\WebModule\Presenters;
 
-
 use App\Model\ACL\Role;
 use App\Model\Enums\PaymentType;
 use App\Services\Authenticator;
 use App\Services\ExcelExportService;
 use App\Services\PdfExportService;
 use App\WebModule\Forms\AdditionalInformationForm;
-use App\WebModule\Forms\AdditionalInformationFormFactory;
 use App\WebModule\Forms\PersonalDetailsForm;
-use App\WebModule\Forms\PersonalDetailsFormFactory;
 use App\WebModule\Forms\RolesForm;
-use App\WebModule\Forms\RolesFormFactory;
 use Nette\Application\UI\Form;
 
 
@@ -72,12 +68,14 @@ class ProfilePresenter extends WebBasePresenter
             && $this->settingsRepository->getDateValue('edit_registration_to') >= (new \DateTime())->setTime(0, 0);
     }
 
-    public function renderDefault() {
+    public function renderDefault()
+    {
         $this->template->pageName = $this->translator->translate('web.profile.title');
         $this->template->paymentMethodBank = PaymentType::BANK;
     }
 
-    public function actionGeneratePaymentProofBank() {
+    public function actionGeneratePaymentProofBank()
+    {
         $user = $this->userRepository->findById($this->user->id);
         if (!$user->getIncomeProofPrintedDate()) {
             $user->setIncomeProofPrintedDate(new \DateTime());
@@ -93,7 +91,7 @@ class ProfilePresenter extends WebBasePresenter
         $this->sendResponse($response);
     }
 
-    protected function createComponentPersonalDetailsForm($name)
+    protected function createComponentPersonalDetailsForm()
     {
         $form = $this->personalDetailsFormFactory->create($this->user->id);
 
@@ -110,7 +108,7 @@ class ProfilePresenter extends WebBasePresenter
         return $form;
     }
 
-    protected function createComponentRolesForm($name)
+    protected function createComponentRolesForm()
     {
         $form = $this->rolesFormFactory->create($this->user->id, $this->editRegistrationAllowed);
 
@@ -121,8 +119,7 @@ class ProfilePresenter extends WebBasePresenter
                 $this->authenticator->updateRoles($this->user);
 
                 $this->redirect('this#collapseSeminar');
-            }
-            elseif ($form['cancelRegistration']->isSubmittedBy()) {
+            } elseif ($form['cancelRegistration']->isSubmittedBy()) {
                 $this->redirect(':Auth:logout');
             }
         };
@@ -130,7 +127,7 @@ class ProfilePresenter extends WebBasePresenter
         return $form;
     }
 
-    protected function createComponentAdditionalInformationForm($name)
+    protected function createComponentAdditionalInformationForm()
     {
         $form = $this->additionalInformationFormFactory->create($this->user->id);
 

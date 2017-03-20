@@ -2,15 +2,11 @@
 
 namespace App\AdminModule\ConfigurationModule\Components;
 
-use App\Model\Settings\CustomInput\CustomCheckbox;
-use App\Model\Settings\CustomInput\CustomInput;
-use App\Model\Settings\CustomInput\CustomInputRepository;
-use App\Model\Settings\CustomInput\CustomText;
 use App\Model\Settings\Place\PlacePointRepository;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
-use Nette\Application\UI\Form;
 use Ublaboo\DataGrid\DataGrid;
+
 
 class PlacePointsGridControl extends Control
 {
@@ -20,8 +16,11 @@ class PlacePointsGridControl extends Control
     /** @var PlacePointRepository */
     private $placePointRepository;
 
+
     public function __construct(Translator $translator, PlacePointRepository $placePointRepository)
     {
+        parent::__construct();
+
         $this->translator = $translator;
         $this->placePointRepository = $placePointRepository;
     }

@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-
+use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
@@ -10,8 +10,14 @@ use App\Model\User\User;
 use App\Model\User\UserRepository;
 use Nette;
 use Nette\Security as NS;
-use App\Model\ACL\Role;
 
+
+/**
+ * Služba starající se o autentizaci uživatelů.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class Authenticator extends Nette\Object implements NS\IAuthenticator
 {
     /** @var UserRepository */
@@ -26,6 +32,14 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
     /** @var SkautIsService */
     protected $skautIsService;
 
+
+    /**
+     * Authenticator constructor.
+     * @param UserRepository $userRepository
+     * @param RoleRepository $roleRepository
+     * @param SettingsRepository $settingsRepository
+     * @param SkautIsService $skautIsService
+     */
     public function __construct(UserRepository $userRepository, RoleRepository $roleRepository,
                                 SettingsRepository $settingsRepository, SkautIsService $skautIsService)
     {
@@ -36,6 +50,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
     }
 
     /**
+     * Autentizuje uživatele a případně vytvoří nového.
      * @param array $credentials
      * @return NS\Identity
      */
@@ -65,8 +80,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
         if ($user->isApproved()) {
             foreach ($user->getRoles() as $role)
                 $netteRoles[] = $role->getName();
-        }
-        else {
+        } else {
             $roleUnapproved = $this->roleRepository->findBySystemName(Role::UNAPPROVED);
             $netteRoles[] = $roleUnapproved->getName();
         }
@@ -74,7 +88,13 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
         return new NS\Identity($user->getId(), $netteRoles);
     }
 
-    private function updateUserFromSkautIS(User $user, $skautISUser) {
+    /**
+     * Aktualizuje údaje uživatele ze skautIS.
+     * @param User $user
+     * @param $skautISUser
+     */
+    private function updateUserFromSkautIS(User $user, $skautISUser)
+    {
         $skautISPerson = $this->skautIsService->getPersonDetail($skautISUser->ID_Person);
 
         $user->setSkautISUserId($skautISUser->ID);
@@ -100,7 +120,13 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
             $user->setUnit(null);
     }
 
-    private function generateVariableSymbol(\DateTime $birthDate) {
+    /**
+     * Vygeneruje variabilní symbol nového uživatele.
+     * @param \DateTime $birthDate
+     * @return string
+     */
+    private function generateVariableSymbol(\DateTime $birthDate)
+    {
         $variableSymbolCode = $this->settingsRepository->getValue(Settings::VARIABLE_SYMBOL_CODE);
         $variableSymbol = $variableSymbolCode . $birthDate->format('ymd');
 
@@ -110,7 +136,13 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
         return $variableSymbol;
     }
 
-    public function updateRoles($user, $testRole = null) {
+    /**
+     * Aktualizuje role přihlášeného uživatele.
+     * @param $user
+     * @param null $testRole
+     */
+    public function updateRoles($user, $testRole = null)
+    {
         $dbuser = $this->userRepository->findById($user->id);
 
         $netteRoles = [];
@@ -123,8 +155,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
                 $roleUnapproved = $this->roleRepository->findBySystemName(Role::UNAPPROVED);
                 $netteRoles[] = $roleUnapproved->getName();
             }
-        }
-        else {
+        } else {
             $netteRoles[] = Role::TEST;
             $netteRoles[] = $testRole->getName();
         }

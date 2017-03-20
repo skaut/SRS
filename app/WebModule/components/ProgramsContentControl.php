@@ -11,6 +11,7 @@ use App\Model\Settings\SettingsRepository;
 use App\Model\User\UserRepository;
 use Nette\Application\UI\Control;
 
+
 class ProgramsContentControl extends Control
 {
     /** @var UserRepository */
@@ -21,6 +22,7 @@ class ProgramsContentControl extends Control
 
     /** @var SettingsRepository */
     private $settingsRepository;
+
 
     public function __construct(UserRepository $userRepository, RoleRepository $roleRepository,
                                 SettingsRepository $settingsRepository)

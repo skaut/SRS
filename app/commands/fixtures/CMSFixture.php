@@ -5,21 +5,26 @@ namespace App\Commands\Fixtures;
 use App\Model\ACL\Role;
 use App\Model\CMS\Content\Content;
 use App\Model\CMS\Content\TextContent;
+use App\Model\CMS\Page;
+use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\DataFixtures\AbstractFixture;
-use App\Model\CMS\Page;
 use Kdyby\Translation\Translator;
 
+
+/**
+ * Vytváří počáteční úvodní stránku.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class CMSFixture extends AbstractFixture implements DependentFixtureInterface
 {
-    /**
-     * @var Translator
-     */
+    /** @var Translator */
     protected $translator;
 
+
     /**
-     * RoleFixture constructor.
+     * CMSFixture constructor.
      * @param Translator $translator
      */
     public function __construct(Translator $translator)
@@ -27,6 +32,10 @@ class CMSFixture extends AbstractFixture implements DependentFixtureInterface
         $this->translator = $translator;
     }
 
+    /**
+     * Vytváří počáteční data.
+     * @param ObjectManager $manager
+     */
     public function load(ObjectManager $manager)
     {
         $homepage = new Page($this->translator->translate('common.cms.default.homepage_name'), '/');
@@ -50,6 +59,7 @@ class CMSFixture extends AbstractFixture implements DependentFixtureInterface
     }
 
     /**
+     * Vrací závislosti na jiných fixtures.
      * @return array
      */
     function getDependencies()

@@ -2,9 +2,9 @@
 
 namespace App\AdminModule\ProgramModule\Presenters;
 
-
 use App\AdminModule\ProgramModule\Components\IProgramCategoriesGridControlFactory;
 use App\Model\ACL\Permission;
+
 
 class CategoriesPresenter extends ProgramBasePresenter
 {
@@ -14,6 +14,7 @@ class CategoriesPresenter extends ProgramBasePresenter
      */
     public $programCategoriesGridControlFactory;
 
+
     public function startup()
     {
         parent::startup();
@@ -21,8 +22,8 @@ class CategoriesPresenter extends ProgramBasePresenter
         $this->checkPermission(Permission::MANAGE_CATEGORIES);
     }
 
-    protected function createComponentProgramCategoriesGrid($name)
+    protected function createComponentProgramCategoriesGrid()
     {
-        return $this->programCategoriesGridControlFactory->create($name);
+        return $this->programCategoriesGridControlFactory->create();
     }
 }

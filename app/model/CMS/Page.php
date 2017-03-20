@@ -10,7 +10,12 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
+
 /**
+ * Entita stránky.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="PageRepository")
  * @ORM\Table(name="page")
  */
@@ -19,41 +24,48 @@ class Page
     use Identifier;
 
     /**
+     * Název stránky.
      * @ORM\Column(type="string")
      * @var string
      */
     protected $name;
 
     /**
+     * Cesta stránky.
      * @ORM\Column(type="string", unique=true)
      * @var string
      */
     protected $slug;
 
     /**
+     * Pořadí v menu.
      * @ORM\Column(type="integer")
      * @var int
      */
     protected $position = 0;
 
     /**
+     * Viditelná.
      * @ORM\Column(type="boolean")
      * @var bool
      */
     protected $public = false;
 
     /**
+     * Role, které mají na stránku přístup.
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="pages", cascade={"persist"})
      * @var ArrayCollection
      */
     protected $roles;
 
     /**
+     * Obsahy na stránce.
      * @ORM\OneToMany(targetEntity="\App\Model\CMS\Content\Content", mappedBy="page", cascade={"persist"})
      * @ORM\OrderBy({"position" = "ASC"})
      * @var ArrayCollection
      */
     protected $contents;
+
 
     /**
      * Page constructor.
@@ -159,10 +171,17 @@ class Page
     /**
      * @param Role $role
      */
-    public function addRole($role) {
+    public function addRole($role)
+    {
         $this->roles->add($role);
     }
 
+    /**
+     * Vrací obsahy v oblasti.
+     * @param null $area
+     * @return ArrayCollection|\Doctrine\Common\Collections\Collection
+     * @throws PageException
+     */
     public function getContents($area = null)
     {
         if ($area === null)
@@ -175,6 +194,12 @@ class Page
         return $this->contents->matching($criteria);
     }
 
+    /**
+     * Má stránka nějaký obsah v oblasti?
+     * @param $area
+     * @return bool
+     * @throws PageException
+     */
     public function hasContents($area)
     {
         if (!in_array($area, Content::$areas))
@@ -184,6 +209,9 @@ class Page
         return !$this->contents->matching($criteria)->isEmpty();
     }
 
+    /**
+     * @param $content
+     */
     public function addContent($content)
     {
         $criteria = Criteria::create()
@@ -192,6 +220,11 @@ class Page
         $this->contents->add($content);
     }
 
+    /**
+     * Je stránka viditelná pro uživatele v rolích?
+     * @param $roleNames
+     * @return bool
+     */
     public function isAllowedForRoles($roleNames)
     {
         foreach ($roleNames as $roleName) {

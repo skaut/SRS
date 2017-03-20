@@ -6,6 +6,7 @@ use App\Model\Program\BlockRepository;
 use App\Model\Program\CategoryRepository;
 use Nette\Application\UI\Control;
 
+
 class BlocksContentControl extends Control
 {
     /** @var BlockRepository */
@@ -29,7 +30,7 @@ class BlocksContentControl extends Control
         $template->setFile(__DIR__ . '/templates/blocks_content.latte');
 
         $template->heading = $content->getHeading();
-        $template->categories =  $this->categoryRepository->findAllOrderedByName();
+        $template->categories = $this->categoryRepository->findAllOrderedByName();
         $template->allBlocks = $this->blockRepository->findAllOrderedByName();
         $template->uncategorizedBlocks = $this->blockRepository->findAllUncategorizedOrderedByName();
 
@@ -43,8 +44,7 @@ class BlocksContentControl extends Control
                 $this->template->selectedCategoryId = $selectedBlock->getCategory()->getId();
             else
                 $this->template->selectedCategoryId = 'uncategorized';
-        }
-        else {
+        } else {
             $this->template->selectedBlockId = null;
             $this->template->selectedCategoryId = null;
         }

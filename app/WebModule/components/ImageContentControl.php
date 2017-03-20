@@ -4,6 +4,7 @@ namespace App\WebModule\Components;
 
 use Nette\Application\UI\Control;
 
+
 class ImageContentControl extends Control
 {
     public function render($content)

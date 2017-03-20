@@ -5,24 +5,63 @@ namespace App\Model\ACL;
 use App\Model\CMS\Page;
 use App\Model\Program\Category;
 use Doctrine\Common\Collections\ArrayCollection;
-
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
+
 /**
+ * Entita role.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="RoleRepository")
  * @ORM\Table(name="role")
  */
 class Role
 {
+    /**
+     * Role nepřihlášeného uživatele.
+     */
     const GUEST = 'guest';
+
+    /**
+     * Role uživatele nepřihlášeného na seminář.
+     */
     const NONREGISTERED = 'nonregistered';
+
+    /**
+     * Role neschváleného uživatele.
+     */
     const UNAPPROVED = 'unapproved';
+
+    /**
+     * Role účastníka.
+     */
     const ATTENDEE = 'attendee';
+
+    /**
+     * Role servis týmu.
+     */
     const SERVICE_TEAM = 'service_team';
+
+    /**
+     * Role lektora.
+     */
     const LECTOR = 'lector';
+
+    /**
+     * Role organizátora.
+     */
     const ORGANIZER = 'organizer';
+
+    /**
+     * Role administrátora.
+     */
     const ADMIN = 'admin';
+
+    /**
+     * Role, která je uživateli nastavena při testování jiné role.
+     */
     const TEST = 'test';
 
     public static $roles = [
@@ -39,96 +78,105 @@ class Role
     use Identifier;
 
     /**
+     * Název role.
      * @ORM\Column(type="string", unique=true)
      * @var string
      */
     protected $name;
 
     /**
+     * Systémový název systémové role.
      * @ORM\Column(type="string", unique=true, nullable=true)
      * @var string
      */
     protected $systemName;
 
     /**
+     * Uživatelé v roli.
      * @ORM\ManyToMany(targetEntity="\App\Model\User\User", mappedBy="roles", cascade={"persist"})
      * @var ArrayCollection
      */
     protected $users;
 
     /**
+     * Oprávnění role.
      * @ORM\ManyToMany(targetEntity="Permission", inversedBy="roles", cascade={"persist"})
      * @var ArrayCollection
      */
     protected $permissions;
 
     /**
+     * Stránky, ke kterým má role přístup.
      * @ORM\ManyToMany(targetEntity="\App\Model\CMS\Page", mappedBy="roles", cascade={"persist"})
      * @var ArrayCollection
      */
     protected $pages;
 
     /**
-     * Pokud je role systemova, nelze ji smazat
-     *
+     * Systémová role. Systémovou roli nelze odstranit.
      * @ORM\Column(type="boolean")
      * @var bool
      */
     protected $system = true;
 
     /**
-     * Lze o tuto roli zazadat pri registraci na seminar?
-     *
+     * Registrovatelná role. Lze vybrat v přihlášce.
      * @ORM\Column(type="boolean")
      * @var bool
      */
     protected $registerable = true;
 
     /**
-     * Je role po registraci rovnou schvalena?
-     *
+     * Automaticky schválit. Role nevyžaduje schválení registrace organizátory.
      * @ORM\Column(type="boolean")
      * @var bool
      */
     protected $approvedAfterRegistration = false;
 
     /**
+     * Registrovatelná od.
      * @ORM\Column(type="datetime", nullable=true)
      * @var \DateTime
      */
     protected $registerableFrom;
 
     /**
+     * Registrovatelná do.
      * @ORM\Column(type="datetime", nullable=true)
      * @var \DateTime
      */
     protected $registerableTo;
 
     /**
+     * Kapacita.
      * @ORM\Column(type="integer", nullable=true)
      * @var int
      */
     protected $capacity;
 
     /**
+     * Poplatek.
      * @ORM\Column(type="integer")
      * @var int
      */
     protected $fee = 0;
 
     /**
+     * Evidovat příjezd a odjezd.
      * @ORM\Column(type="boolean")
      * @var bool
      */
     protected $displayArrivalDeparture = false;
 
     /**
+     * Synchronizovat účastníky v roli se skautIS.
      * @ORM\Column(type="boolean")
      * @var bool
      */
     protected $syncedWithSkautIS = true;
 
     /**
+     * Role neregistrovatelné současně s touto rolí.
      * @ORM\ManyToMany(targetEntity="Role")
      * @ORM\JoinTable(name="role_role_incompatible",
      *      joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
@@ -139,12 +187,14 @@ class Role
     protected $incompatibleRoles;
 
     /**
+     * Role vyžadující tuto roli.
      * @ORM\ManyToMany(targetEntity="Role", mappedBy="requiredRoles", cascade={"persist"})
      * @var ArrayCollection
      */
     protected $requiredByRole;
 
     /**
+     * Role vyžadované touto rolí.
      * @ORM\ManyToMany(targetEntity="Role", inversedBy="requiredByRole", cascade={"persist"})
      * @ORM\JoinTable(name="role_role_required",
      *      joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
@@ -155,16 +205,19 @@ class Role
     protected $requiredRoles;
 
     /**
+     * Kategorie programů, na které se mohou účastníci v roli přihlásit.
      * @ORM\ManyToMany(targetEntity="\App\Model\Program\Category", mappedBy="registerableRoles", cascade={"persist"})
      * @var ArrayCollection
      */
     protected $registerableCategories;
 
     /**
+     * Adresa, na kterou budou uživatelé v roli přesměrováni po přihlášení.
      * @ORM\Column(type="string", nullable=true)
      * @var string
      */
     protected $redirectAfterLogin;
+
 
     /**
      * Role constructor.
@@ -275,7 +328,8 @@ class Role
         $this->pages = $pages;
     }
 
-    public function addPage(Page $page) {
+    public function addPage(Page $page)
+    {
         if (!$this->pages->contains($page))
             $page->addRole($this);
     }
@@ -312,11 +366,17 @@ class Role
         $this->registerable = $registerable;
     }
 
-    public function isRegisterableNow() {
+    /**
+     * Vrací true, pokud je role v tuto chvíli registrovatelná.
+     * @return bool
+     */
+    public function isRegisterableNow()
+    {
         $now = new \DateTime();
         if ($this->registerable &&
             ($this->registerableFrom == null || $this->registerableFrom <= $now) &&
-            ($this->registerableTo == null || $this->registerableTo >= $now))
+            ($this->registerableTo == null || $this->registerableTo >= $now)
+        )
             return true;
         return false;
     }
@@ -385,7 +445,8 @@ class Role
         $this->capacity = $capacity;
     }
 
-    public function hasLimitedCapacity() {
+    public function hasLimitedCapacity()
+    {
         return $this->capacity !== null;
     }
 
@@ -462,7 +523,11 @@ class Role
         $this->incompatibleRoles = $incompatibleRoles;
     }
 
-    public function addIncompatibleRole($role) {
+    /**
+     * @param $role
+     */
+    public function addIncompatibleRole($role)
+    {
         if (!$this->incompatibleRoles->contains($role))
             $this->incompatibleRoles->add($role);
     }
@@ -475,7 +540,12 @@ class Role
         return $this->requiredByRole;
     }
 
-    public function getRequiredByRoleTransitive() {
+    /**
+     * Vrací všechny (tranzitivně) role, kterými je tato role vyžadována.
+     * @return array
+     */
+    public function getRequiredByRoleTransitive()
+    {
         $allRequiredByRole = array();
         foreach ($this->requiredByRole as $requiredByRole) {
             $this->getRequiredByRoleTransitiveRec($allRequiredByRole, $requiredByRole);
@@ -483,7 +553,8 @@ class Role
         return $allRequiredByRole;
     }
 
-    private function getRequiredByRoleTransitiveRec(&$allRequiredByRole, $role) {
+    private function getRequiredByRoleTransitiveRec(&$allRequiredByRole, $role)
+    {
         if ($this == $role || in_array($role, $allRequiredByRole))
             return;
 
@@ -510,12 +581,21 @@ class Role
         $this->requiredRoles = $requiredRoles;
     }
 
-    public function addRequiredRole($role) {
+    /**
+     * @param $role
+     */
+    public function addRequiredRole($role)
+    {
         if (!$this->requiredRoles->contains($role))
             $this->requiredRoles->add($role);
     }
 
-    public function getRequiredRolesTransitive() {
+    /**
+     * Vrací všechny (tranzitivně) vyžadované role.
+     * @return array
+     */
+    public function getRequiredRolesTransitive()
+    {
         $allRequiredRoles = [];
         foreach ($this->requiredRoles as $requiredRole) {
             $this->getRequiredRolesTransitiveRec($allRequiredRoles, $requiredRole);
@@ -523,7 +603,8 @@ class Role
         return $allRequiredRoles;
     }
 
-    private function getRequiredRolesTransitiveRec(&$allRequiredRoles, $role) {
+    private function getRequiredRolesTransitiveRec(&$allRequiredRoles, $role)
+    {
         if ($this == $role || in_array($role, $allRequiredRoles))
             return;
 
@@ -551,7 +632,8 @@ class Role
 //        $this->registerableCategories = $registerableCategories;
 //    }
 
-    public function addRegisterableCategory(Category $category) {
+    public function addRegisterableCategory(Category $category)
+    {
         if (!$this->registerableCategories->contains($category))
             $category->addRole($this);
     }

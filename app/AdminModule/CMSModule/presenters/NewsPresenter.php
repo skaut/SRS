@@ -2,11 +2,11 @@
 
 namespace App\AdminModule\CMSModule\Presenters;
 
-
 use App\AdminModule\CMSModule\Components\INewsGridControlFactory;
 use App\AdminModule\CMSModule\Forms\NewsForm;
 use App\Model\CMS\NewsRepository;
 use Nette\Application\UI\Form;
+
 
 class NewsPresenter extends CMSBasePresenter
 {
@@ -28,14 +28,17 @@ class NewsPresenter extends CMSBasePresenter
      */
     public $newsRepository;
 
-    public function renderEdit($id) { }
 
-    protected function createComponentNewsGrid($name)
+    public function renderEdit($id)
     {
-        return $this->newsGridControlFactory->create($name);
     }
 
-    protected function createComponentNewsForm($name)
+    protected function createComponentNewsGrid()
+    {
+        return $this->newsGridControlFactory->create();
+    }
+
+    protected function createComponentNewsForm()
     {
         $form = $this->newsFormFactory->create($this->getParameter('id'));
 
@@ -48,8 +51,7 @@ class NewsPresenter extends CMSBasePresenter
             if ($form['submitAndContinue']->isSubmittedBy()) {
                 $id = $values['id'] ?: $this->newsRepository->findLastId();
                 $this->redirect('News:edit', ['id' => $id]);
-            }
-            else
+            } else
                 $this->redirect('News:default');
         };
 

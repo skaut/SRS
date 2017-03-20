@@ -2,7 +2,6 @@
 
 namespace App\AdminModule\ProgramModule\Components;
 
-
 use App\Model\Program\Room;
 use App\Model\Program\RoomRepository;
 use Kdyby\Translation\Translator;
@@ -10,20 +9,25 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Ublaboo\DataGrid\DataGrid;
 
+
 class RoomsGridControl extends Control
 {
-    /**
-     * @var Translator
-     */
+    /** @var Translator */
     private $translator;
 
-    /**
-     * @var RoomRepository
-     */
+    /** @var RoomRepository */
     private $roomRepository;
 
+
+    /**
+     * RoomsGridControl constructor.
+     * @param Translator $translator
+     * @param RoomRepository $roomRepository
+     */
     public function __construct(Translator $translator, RoomRepository $roomRepository)
     {
+        parent::__construct();
+
         $this->translator = $translator;
         $this->roomRepository = $roomRepository;
     }
@@ -43,18 +47,18 @@ class RoomsGridControl extends Control
 
         $grid->addColumnText('name', 'admin.program.rooms_name');
 
-        $grid->addInlineAdd()->onControlAdd[] = function($container) {
+        $grid->addInlineAdd()->onControlAdd[] = function ($container) {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.program.rooms_name_empty')
                 ->addRule(Form::IS_NOT_IN, 'admin.program.rooms_name_exists', $this->roomRepository->findAllNames());
         };
         $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
 
-        $grid->addInlineEdit()->onControlAdd[] = function($container) {
+        $grid->addInlineEdit()->onControlAdd[] = function ($container) {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.program.rooms_name_empty');
         };
-        $grid->getInlineEdit()->onSetDefaults[] = function($container, $item) {
+        $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) {
             $container['name']
                 ->addRule(Form::IS_NOT_IN, 'admin.program.rooms_name_exists', $this->roomRepository->findOthersNames($item->getId()));
 
@@ -74,7 +78,8 @@ class RoomsGridControl extends Control
             ]);
     }
 
-    public function add($values) {
+    public function add($values)
+    {
         $room = new Room();
 
         $room->setName($values['name']);

@@ -2,9 +2,9 @@
 
 namespace App\AdminModule\CMSModule\Presenters;
 
-
 use App\AdminModule\CMSModule\Components\IDocumentsGridControlFactory;
 use App\AdminModule\CMSModule\Components\IDocumentTagsGridControlFactory;
+
 
 class DocumentsPresenter extends CMSBasePresenter
 {
@@ -21,13 +21,13 @@ class DocumentsPresenter extends CMSBasePresenter
     public $documentTagsGridControlFactory;
 
 
-    protected function createComponentDocumentsGrid($name)
+    protected function createComponentDocumentsGrid()
     {
-        return $this->documentsGridControlFactory->create($name);
+        return $this->documentsGridControlFactory->create();
     }
 
-    protected function createComponentDocumentTagsGrid($name)
+    protected function createComponentDocumentTagsGrid()
     {
-        return $this->documentTagsGridControlFactory->create($name);
+        return $this->documentTagsGridControlFactory->create();
     }
 }

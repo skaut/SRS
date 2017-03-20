@@ -5,10 +5,12 @@ namespace App\WebModule\Components;
 use App\Model\CMS\Document\DocumentRepository;
 use Nette\Application\UI\Control;
 
+
 class DocumentContentControl extends Control
 {
     /** @var DocumentRepository */
     private $documentRepository;
+
 
     public function __construct(DocumentRepository $documentRepository)
     {

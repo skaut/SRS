@@ -2,9 +2,11 @@
 
 namespace App\WebModule\Forms;
 
+use App\Model\User\User;
 use App\Model\User\UserRepository;
 use Nette;
 use Nette\Application\UI\Form;
+
 
 class AdditionalInformationForm extends Nette\Object
 {
@@ -16,6 +18,7 @@ class AdditionalInformationForm extends Nette\Object
 
     /** @var UserRepository */
     private $userRepository;
+
 
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository)
     {
@@ -52,7 +55,8 @@ class AdditionalInformationForm extends Nette\Object
         return $form;
     }
 
-    public function processForm(Form $form, \stdClass $values) {
+    public function processForm(Form $form, \stdClass $values)
+    {
         $this->user->setAbout($values['about']);
 
         if (array_key_exists('arrival', $values))

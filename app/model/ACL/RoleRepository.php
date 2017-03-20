@@ -2,27 +2,33 @@
 
 namespace App\Model\ACL;
 
-
 use App\Model\User\User;
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\Mapping;
-use Kdyby\Doctrine\EntityManager;
 use Kdyby\Doctrine\EntityRepository;
 use Kdyby\Translation\Translator;
 
+
+/**
+ * Třída spravující role.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class RoleRepository extends EntityRepository
 {
     /** @var Translator */
     private $translator;
 
+
     /**
      * @param Translator $translator
      */
-    public function injectTranslator(Translator $translator) {
+    public function injectTranslator(Translator $translator)
+    {
         $this->translator = $translator;
     }
 
     /**
+     * Vrací roli podle id.
      * @param $id
      * @return Role|null
      */
@@ -32,6 +38,7 @@ class RoleRepository extends EntityRepository
     }
 
     /**
+     * Vrací roli podle názvu.
      * @param $name
      * @return Role|null
      */
@@ -41,6 +48,7 @@ class RoleRepository extends EntityRepository
     }
 
     /**
+     * Vrací systémovou roli podle systémového názvu.
      * @param $name
      * @return Role|null
      */
@@ -50,6 +58,7 @@ class RoleRepository extends EntityRepository
     }
 
     /**
+     * Vrací id naposledy přidané role.
      * @return int
      */
     public function findLastId()
@@ -61,6 +70,7 @@ class RoleRepository extends EntityRepository
     }
 
     /**
+     * Vrací názvy všech rolí.
      * @return string[]
      */
     public function findAllNames()
@@ -73,10 +83,12 @@ class RoleRepository extends EntityRepository
     }
 
     /**
+     * Vrací názvy rolí, kromě role se zadaným id.
      * @param $id
      * @return array
      */
-    public function findOthersNames($id) {
+    public function findOthersNames($id)
+    {
         $names = $this->createQueryBuilder('b')
             ->select('b.name')
             ->where('b.id != :id')
@@ -87,8 +99,7 @@ class RoleRepository extends EntityRepository
     }
 
     /**
-     * Vraci vsechny registrovatelne role.
-     *
+     * Vrací registrovatelné role.
      * @return array
      */
     public function findAllRegisterable()
@@ -97,6 +108,7 @@ class RoleRepository extends EntityRepository
     }
 
     /**
+     * Vrací role s omezenou kapacitou.
      * @return \Doctrine\Common\Collections\Collection
      */
     public function findAllWithLimitedCapacity()
@@ -107,6 +119,7 @@ class RoleRepository extends EntityRepository
     }
 
     /**
+     * Vrací role, u kterých se eviduje příjezd a odjezd.
      * @return \Doctrine\Common\Collections\Collection
      */
     public function findAllWithArrivalDeparture()
@@ -117,6 +130,7 @@ class RoleRepository extends EntityRepository
     }
 
     /**
+     * Vrací role podle id.
      * @param $ids
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -129,6 +143,7 @@ class RoleRepository extends EntityRepository
     }
 
     /**
+     * Vrací počet volných míst v roli nebo null u rolí s neomezenou kapacitou.
      * @param Role $role
      * @return int|null
      */
@@ -140,10 +155,12 @@ class RoleRepository extends EntityRepository
     }
 
     /**
+     * Vrací počet volných míst v rolích nebo null u rolí s neomezenou kapacitou.
      * @param $roles
      * @return array
      */
-    public function countUnoccupiedInRoles($roles) {
+    public function countUnoccupiedInRoles($roles)
+    {
         $count = [];
         foreach ($roles as $role) {
             $count[$role->getId()] = $this->countUnoccupiedInRole($role);
@@ -152,6 +169,7 @@ class RoleRepository extends EntityRepository
     }
 
     /**
+     * Vrací počet schválených uživatelů v roli.
      * @param Role $role
      * @return int
      */
@@ -166,6 +184,7 @@ class RoleRepository extends EntityRepository
     }
 
     /**
+     * Vrací počet schválených uživatelů v rolích.
      * @param $roles
      * @return array
      */
@@ -182,6 +201,7 @@ class RoleRepository extends EntityRepository
     }
 
     /**
+     * Vrací id rolí.
      * @param $roles
      * @return array
      */
@@ -193,6 +213,7 @@ class RoleRepository extends EntityRepository
     }
 
     /**
+     * Vrací seznam rolí jako možnosti pro select, role specifikovaná parametrem je vynechána.
      * @param $roleId
      * @return array
      */
@@ -213,6 +234,7 @@ class RoleRepository extends EntityRepository
     }
 
     /**
+     * Vrací seznam rolí s obsazenostmi jako možnosti pro select.
      * @return array
      */
     public function getRegisterableNowOptionsWithCapacity()
@@ -234,8 +256,7 @@ class RoleRepository extends EntityRepository
     }
 
     /**
-     * Vraci role, ktere jsou aktualne registrovatelne, serazene podle nazvu.
-     *
+     * Vraci role, ktere jsou tuto chvíli registrovatelné, seřazené podle názvu.
      * @return array
      */
     public function findAllRegisterableNowOrderedByName()
@@ -259,6 +280,8 @@ class RoleRepository extends EntityRepository
     }
 
     /**
+     * Vrací seznam rolí, které jsou v tuto chvíli registrovatelné nebo je uživatel má, s informací o jejich
+     * obsazenosti, jako možnosti pro select.
      * @param User $user
      * @return array
      */
@@ -281,8 +304,7 @@ class RoleRepository extends EntityRepository
     }
 
     /**
-     * Vraci role, ktere jsou aktualne registrovatelne nebo uz je uzivatel ma, serazene podle nazvu.
-     *
+     * Vrací role, které jsou v tuto chvíli registrovatelné nebo je uživatel má, seřazené podle názvu.
      * @param User $user
      * @return array
      */
@@ -311,6 +333,7 @@ class RoleRepository extends EntityRepository
     }
 
     /**
+     * Vrací role bez vybraných rolí jako možnosti pro select.
      * @param array $withoutRoles
      * @return array
      */
@@ -339,6 +362,8 @@ class RoleRepository extends EntityRepository
     }
 
     /**
+     * Vrací seznam rolí bez vybraných rolí, s informací o obsazenosti, jako možnosti pro select.
+     * @param array $withoutRoles
      * @return array
      */
     public function getRolesWithoutRolesOptionsWithCapacity(array $withoutRoles)
@@ -371,6 +396,7 @@ class RoleRepository extends EntityRepository
     }
 
     /**
+     * Vrací seznam rolí bez vybraných rolí, s informací o počtu uživatelů, jako možnosti pro select.
      * @param array $withoutRoles
      * @return array
      */
@@ -400,16 +426,23 @@ class RoleRepository extends EntityRepository
         return $options;
     }
 
-    public function save(Role $role) {
+    /**
+     * Uloží roli.
+     * @param Role $role
+     */
+    public function save(Role $role)
+    {
         $this->_em->persist($role);
         $this->_em->flush();
     }
 
-    public function remove(Role $role) {
+    /**
+     * Odstraní roli.
+     * @param Role $role
+     */
+    public function remove(Role $role)
+    {
         $this->_em->remove($role);
         $this->_em->flush();
     }
-
-
-
 }

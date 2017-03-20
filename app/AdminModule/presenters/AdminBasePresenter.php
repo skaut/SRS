@@ -16,6 +16,12 @@ use App\Services\SkautIsService;
 use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\JavaScriptLoader;
 
+
+/**
+ * BasePresenter pro AdminModule.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 abstract class AdminBasePresenter extends BasePresenter
 {
     /**
@@ -61,6 +67,7 @@ abstract class AdminBasePresenter extends BasePresenter
 
 
     /**
+     * Načte css podle konfigurace v config.neon.
      * @return CssLoader
      */
     protected function createComponentCss()
@@ -69,6 +76,7 @@ abstract class AdminBasePresenter extends BasePresenter
     }
 
     /**
+     * Načte javascript podle konfigurace v config.neon.
      * @return JavaScriptLoader
      */
     protected function createComponentJs()
@@ -127,7 +135,8 @@ abstract class AdminBasePresenter extends BasePresenter
         $this->template->containerAttributes = '';
     }
 
-    public function checkPermission($permission) {
+    public function checkPermission($permission)
+    {
         if (!$this->user->isAllowed($this->resource, $permission)) {
             $this->flashMessage('admin.common.access_denied', 'danger', 'lock');
             $this->redirect(':Admin:Dashboard:default');

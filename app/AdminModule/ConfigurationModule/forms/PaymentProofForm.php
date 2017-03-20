@@ -8,6 +8,7 @@ use App\Model\Settings\SettingsRepository;
 use Nette;
 use Nette\Application\UI\Form;
 
+
 class PaymentProofForm extends Nette\Object
 {
     /** @var BaseForm */
@@ -15,6 +16,7 @@ class PaymentProofForm extends Nette\Object
 
     /** @var SettingsRepository */
     private $settingsRepository;
+
 
     public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository)
     {
@@ -57,7 +59,8 @@ class PaymentProofForm extends Nette\Object
         return $form;
     }
 
-    public function processForm(Form $form, \stdClass $values) {
+    public function processForm(Form $form, \stdClass $values)
+    {
         $this->settingsRepository->setValue(Settings::COMPANY, $values['company']);
         $this->settingsRepository->setValue(Settings::ICO, $values['ico']);
         $this->settingsRepository->setValue(Settings::ACCOUNTANT, $values['accountant']);

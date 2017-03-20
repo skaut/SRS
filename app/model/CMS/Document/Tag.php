@@ -6,7 +6,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
+
 /**
+ * Entita tagu pro dokumenty.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="TagRepository")
  * @ORM\Table(name="tag")
  */
@@ -15,16 +20,19 @@ class Tag
     use Identifier;
 
     /**
+     * Dokumenty s tagem.
      * @ORM\ManyToMany(targetEntity="Document", mappedBy="tags", cascade={"persist"})
      * @var ArrayCollection
      */
     protected $documents;
 
     /**
+     * Název tagu.
      * @ORM\Column(type="string", unique=true)
      * @var string
      */
     protected $name;
+
 
     /**
      * Tag constructor.

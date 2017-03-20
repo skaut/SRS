@@ -2,13 +2,23 @@
 
 namespace App\Commands\Fixtures;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use App\Model\ACL\Permission;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use App\Model\ACL\Permission;
+use Doctrine\Common\Persistence\ObjectManager;
 
+
+/**
+ * Vytváří oprávnění.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class PermissionFixture extends AbstractFixture implements DependentFixtureInterface
 {
+    /**
+     * Vytváří počáteční data.
+     * @param ObjectManager $manager
+     */
     public function load(ObjectManager $manager)
     {
         $permissions = [];
@@ -37,6 +47,7 @@ class PermissionFixture extends AbstractFixture implements DependentFixtureInter
     }
 
     /**
+     * Vrací závislosti na jiných fixtures.
      * @return array
      */
     function getDependencies()

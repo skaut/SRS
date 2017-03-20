@@ -4,9 +4,16 @@ namespace App\Model\Program;
 
 use Kdyby\Doctrine\EntityRepository;
 
+
+/**
+ * Třída spravující místnosti.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class RoomRepository extends EntityRepository
 {
     /**
+     * Vrací místnost podle id.
      * @param $id
      * @return Room|null
      */
@@ -16,9 +23,11 @@ class RoomRepository extends EntityRepository
     }
 
     /**
+     * Vrací názvy všech místností.
      * @return array
      */
-    public function findAllNames() {
+    public function findAllNames()
+    {
         $names = $this->createQueryBuilder('r')
             ->select('r.name')
             ->getQuery()
@@ -27,10 +36,12 @@ class RoomRepository extends EntityRepository
     }
 
     /**
+     * Vrací názvy místností, kromě místnosti s id.
      * @param $id
      * @return array
      */
-    public function findOthersNames($id) {
+    public function findOthersNames($id)
+    {
         $names = $this->createQueryBuilder('r')
             ->select('r.name')
             ->where('r.id != :id')
@@ -41,6 +52,7 @@ class RoomRepository extends EntityRepository
     }
 
     /**
+     * Uloží místnost.
      * @param Room $room
      */
     public function save(Room $room)
@@ -50,6 +62,7 @@ class RoomRepository extends EntityRepository
     }
 
     /**
+     * Odstraní místnost.
      * @param Room $room
      */
     public function remove(Room $room)
@@ -64,6 +77,7 @@ class RoomRepository extends EntityRepository
     }
 
     /**
+     * Je v místnosti jiný program ve stejnou dobu?
      * @param Room $room
      * @param Program $program
      * @param \DateTime $start

@@ -4,9 +4,16 @@ namespace App\Model\User\CustomInputValue;
 
 use Kdyby\Doctrine\EntityRepository;
 
+
+/**
+ * Třída spravující hodnoty vlastních polí přihlášky.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class CustomInputValueRepository extends EntityRepository
 {
     /**
+     * Vrací hodnotu vlastního pole přihlášky podle id.
      * @param $id
      * @return CustomInputValue|null
      */
@@ -16,6 +23,7 @@ class CustomInputValueRepository extends EntityRepository
     }
 
     /**
+     * Uloží hodnotu vlastního pole přihlášky.
      * @param CustomInputValue $value
      */
     public function save(CustomInputValue $value)
@@ -25,6 +33,7 @@ class CustomInputValueRepository extends EntityRepository
     }
 
     /**
+     * Odstraní hodnotu vlastního pole přihlášky.
      * @param CustomInputValue $value
      */
     public function remove(CustomInputValue $value)

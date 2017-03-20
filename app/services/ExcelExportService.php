@@ -2,10 +2,15 @@
 
 namespace App\Services;
 
-
 use Kdyby\Translation\Translator;
 use Nette;
 
+
+/**
+ * Služba pro export do formátu XLSX.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class ExcelExportService extends Nette\Object
 {
     /** @var \PHPExcel */
@@ -14,6 +19,11 @@ class ExcelExportService extends Nette\Object
     /** @var Translator */
     private $translator;
 
+
+    /**
+     * ExcelExportService constructor.
+     * @param Translator $translator
+     */
     public function __construct(Translator $translator)
     {
         $this->phpExcel = new \PHPExcel();
@@ -21,7 +31,15 @@ class ExcelExportService extends Nette\Object
         $this->translator = $translator;
     }
 
-    public function exportUsersRoles($users, $roles, $filename) {
+    /**
+     * Vyexportuje matici uživatelů a rolí.
+     * @param $users
+     * @param $roles
+     * @param $filename
+     * @return ExcelResponse
+     */
+    public function exportUsersRoles($users, $roles, $filename)
+    {
         $sheet = $this->phpExcel->getSheet(0);
 
         $row = 1;
@@ -30,7 +48,7 @@ class ExcelExportService extends Nette\Object
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
         $sheet->getColumnDimensionByColumn($column++)->setWidth('25');
 
-        foreach($roles as $role) {
+        foreach ($roles as $role) {
             $sheet->setCellValueByColumnAndRow($column, $row, $role->getName());
             $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
             $sheet->getColumnDimensionByColumn($column)->setWidth('15');
@@ -43,7 +61,7 @@ class ExcelExportService extends Nette\Object
 
             $sheet->setCellValueByColumnAndRow($column, $row, $user->getDisplayName());
 
-            foreach($roles as $role) {
+            foreach ($roles as $role) {
                 $column++;
                 if ($user->isInRole($role))
                     $sheet->setCellValueByColumnAndRow($column, $row, "X");
@@ -53,11 +71,18 @@ class ExcelExportService extends Nette\Object
         return new ExcelResponse($this->phpExcel, $filename);
     }
 
-    public function exportUsersSchedules($users, $filename) {
+    /**
+     * Vyexportuje harmonogramy uživatelů, každý uživatel na zvlástním listu.
+     * @param $users
+     * @param $filename
+     * @return ExcelResponse
+     */
+    public function exportUsersSchedules($users, $filename)
+    {
         $this->phpExcel->removeSheetByIndex(0);
         $sheetNumber = 0;
 
-        foreach($users as $user) {
+        foreach ($users as $user) {
             $sheet = new \PHPExcel_Worksheet($this->phpExcel, $user->getDisplayName());
             $this->phpExcel->addSheet($sheet, $sheetNumber++);
 
@@ -104,7 +129,14 @@ class ExcelExportService extends Nette\Object
         return new ExcelResponse($this->phpExcel, $filename);
     }
 
-    public function exportUsersSchedule($user, $filename) {
+    /**
+     * Vyexportuje harmonogram uživatele.
+     * @param $user
+     * @param $filename
+     * @return ExcelResponse
+     */
+    public function exportUsersSchedule($user, $filename)
+    {
         return $this->exportUsersSchedules([$user], $filename);
     }
 }

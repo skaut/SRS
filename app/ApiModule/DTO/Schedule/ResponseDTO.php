@@ -2,10 +2,15 @@
 
 namespace App\ApiModule\DTO\Schedule;
 
-
-use Nette;
 use JMS\Serializer\Annotation as JMS;
+use Nette;
 
+
+/**
+ * Objekt pro přenos stavu do FullCalendar.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class ResponseDTO extends Nette\Object
 {
     /**
@@ -25,6 +30,7 @@ class ResponseDTO extends Nette\Object
      * @var ProgramDetailDTO
      */
     private $program;
+
 
     /**
      * @return string

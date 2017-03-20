@@ -2,14 +2,11 @@
 
 namespace App\ApiModule\Services;
 
-
 use ApiModule\DTO\Schedule\RoomDetailDTO;
 use App\ApiModule\DTO\Schedule\BlockDetailDTO;
 use App\ApiModule\DTO\Schedule\CalendarConfigDTO;
-use App\ApiModule\DTO\Schedule\ProgramAddDTO;
 use App\ApiModule\DTO\Schedule\ProgramDetailDTO;
 use App\ApiModule\DTO\Schedule\ProgramSaveDTO;
-use App\ApiModule\DTO\Schedule\Response;
 use App\ApiModule\DTO\Schedule\ResponseDTO;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
@@ -27,10 +24,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Kdyby\Translation\Translator;
 use Nette;
 
+
 /**
- * ScheduleService
+ * Služba pro zpracování požadavků z API pro správu harmonogramu a zapisování programů.
  *
- * @package App\ApiModule\Services
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class ScheduleService extends Nette\Object
@@ -64,6 +61,7 @@ class ScheduleService extends Nette\Object
      * @param ProgramRepository $programRepository
      * @param BlockRepository $blockRepository
      * @param RoomRepository $roomRepository
+     * @param SettingsRepository $settingsRepository
      */
     public function __construct(Translator $translator, UserRepository $userRepository,
                                 ProgramRepository $programRepository, BlockRepository $blockRepository,
@@ -86,6 +84,7 @@ class ScheduleService extends Nette\Object
     }
 
     /**
+     * Vrací podrobnosti o všech programech pro použití v administraci harmonogramu.
      * @return ProgramDetailDTO[]
      */
     public function getProgramsAdmin()
@@ -98,6 +97,7 @@ class ScheduleService extends Nette\Object
     }
 
     /**
+     * Vrací podrobnosti o programech, ke kterým má uživatel přístup, pro použití v kalendáři pro výběr programů.
      * @return ProgramDetailDTO[]
      */
     public function getProgramsWeb()
@@ -124,6 +124,7 @@ class ScheduleService extends Nette\Object
     }
 
     /**
+     * Vrací podrobnosti o programových blocích.
      * @return BlockDetailDTO[]
      */
     public function getBlocks()
@@ -136,6 +137,7 @@ class ScheduleService extends Nette\Object
     }
 
     /**
+     * Vrací podrobnosti o místnostech.
      * @return RoomDetailDTO[]
      */
     public function getRooms()
@@ -148,6 +150,7 @@ class ScheduleService extends Nette\Object
     }
 
     /**
+     * Vrací nastavení pro FullCalendar.
      * @return CalendarConfigDTO
      */
     public function getCalendarConfig()
@@ -168,6 +171,7 @@ class ScheduleService extends Nette\Object
     }
 
     /**
+     * Uloží nebo vytvoří program.
      * @param ProgramSaveDTO $programSaveDTO
      * @return ResponseDTO
      */
@@ -220,6 +224,7 @@ class ScheduleService extends Nette\Object
     }
 
     /**
+     * Smaže program.
      * @param $programId
      * @return ResponseDTO
      */
@@ -250,6 +255,11 @@ class ScheduleService extends Nette\Object
         return $responseDTO;
     }
 
+    /**
+     * Přihlásí program uživateli.
+     * @param $programId
+     * @return ResponseDTO
+     */
     public function attendProgram($programId)
     {
         $program = $this->programRepository->find($programId);
@@ -265,7 +275,8 @@ class ScheduleService extends Nette\Object
         )
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_register_programs_not_allowed'));
         elseif (!$this->settingsRepository->getValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT) &&
-            !$this->user->hasPaid() && $this->user->isPaying())
+            !$this->user->hasPaid() && $this->user->isPaying()
+        )
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_register_programs_before_payment_not_allowed'));
         elseif (!$program)
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_program_not_found'));
@@ -296,6 +307,11 @@ class ScheduleService extends Nette\Object
         return $responseDTO;
     }
 
+    /**
+     * Odhlásí program uživateli.
+     * @param $programId
+     * @return ResponseDTO
+     */
     public function unattendProgram($programId)
     {
         $program = $this->programRepository->find($programId);
@@ -329,6 +345,7 @@ class ScheduleService extends Nette\Object
     }
 
     /**
+     * Převede Program na ProgramDetailDTO.
      * @param Program $program
      * @return ProgramDetailDTO
      */
@@ -347,6 +364,7 @@ class ScheduleService extends Nette\Object
     }
 
     /**
+     * Převede Block na BlockDetailDTO.
      * @param Block $block
      * @return BlockDetailDTO
      */
@@ -374,6 +392,7 @@ class ScheduleService extends Nette\Object
     }
 
     /**
+     * Převede Room na RoomDetailDTO.
      * @param Room $room
      * @return RoomDetailDTO
      */

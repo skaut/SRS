@@ -13,6 +13,13 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+
+/**
+ * Příkaz pro vytvoření počátečních dat.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class FixturesLoadCommand extends Command
 {
     /**
@@ -27,13 +34,24 @@ class FixturesLoadCommand extends Command
      */
     public $translator;
 
+
+    /**
+     * Nastavuje příkaz.
+     */
     protected function configure()
     {
         $this->setName('app:fixtures:load');
         $this->setDescription('Loads initial data to database.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    /**
+     * Spouští příkaz.
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int
+     */
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
         try {
             $fixtures = [];
             $fixtures[] = new SettingsFixture($this->translator);

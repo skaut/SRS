@@ -9,17 +9,25 @@ use App\Model\ACL\RoleRepository;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Nette;
 
+
 /**
- * Class Authorizator
- * @package App\Services
+ * Služba nastavující role a oprávnění.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class Authorizator extends Nette\Security\Permission
 {
+    /**
+     * Authorizator constructor.
+     * @param RoleRepository $roleRepository
+     * @param PermissionRepository $permissionRepository
+     * @param ResourceRepository $resourceRepository
+     */
     public function __construct(RoleRepository $roleRepository, PermissionRepository $permissionRepository,
                                 ResourceRepository $resourceRepository)
     {
-        //role pouzivana pri testovani jine role
-        $this->addRole(Role::TEST);
+        $this->addRole(Role::TEST); //role pouzivana pri testovani jine role
 
         try {
             foreach ($resourceRepository->findAllNames() as $resourceName) {
@@ -31,6 +39,8 @@ class Authorizator extends Nette\Security\Permission
             foreach ($permissionRepository->findAllNames() as $permission) {
                 $this->allow($permission['roleName'], $permission['resourceName'], $permission['name']);
             }
-        } catch (TableNotFoundException $ex) { } //prvni spusteni pred vytvorenim databaze
+        } catch (TableNotFoundException $ex) {
+            //prvni spusteni pred vytvorenim databaze
+        }
     }
 }

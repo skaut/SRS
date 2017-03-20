@@ -2,10 +2,8 @@
 
 namespace App\Services;
 
-
 use App\Mailing\TextMail;
 use App\Model\ACL\RoleRepository;
-
 use App\Model\Mailing\MailRepository;
 use App\Model\Mailing\MailToRoles;
 use App\Model\Settings\Settings;
@@ -14,34 +12,38 @@ use App\Model\User\UserRepository;
 use Nette;
 use Ublaboo\Mailing\MailFactory;
 
+
+/**
+ * Služba pro rozesílání e-mailů.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class MailService extends Nette\Object
 {
-    /**
-     * @var MailFactory
-     */
+    /** @var MailFactory */
     private $mailFactory;
 
-    /**
-     * @var SettingsRepository
-     */
+    /** @var SettingsRepository */
     private $settingsRepository;
 
-    /**
-     * @var MailRepository
-     */
+    /** @var MailRepository */
     private $mailRepository;
 
-    /**
-     * @var UserRepository
-     */
+    /** @var UserRepository */
     private $userRepository;
 
-    /**
-     * @var RoleRepository
-     */
+    /** @var RoleRepository */
     private $roleRepository;
 
 
+    /**
+     * MailService constructor.
+     * @param MailFactory $mailFactory
+     * @param SettingsRepository $settingsRepository
+     * @param MailRepository $mailRepository
+     * @param UserRepository $userRepository
+     * @param RoleRepository $roleRepository
+     */
     public function __construct(MailFactory $mailFactory, SettingsRepository $settingsRepository,
                                 MailRepository $mailRepository, UserRepository $userRepository,
                                 RoleRepository $roleRepository)
@@ -53,7 +55,15 @@ class MailService extends Nette\Object
         $this->roleRepository = $roleRepository;
     }
 
-    public function sendMailToRoles($rolesIds, $copy, $subject, $text) {
+    /**
+     * Rozešle e-mail vybraným rolím.
+     * @param $rolesIds
+     * @param $copy
+     * @param $subject
+     * @param $text
+     */
+    public function sendMailToRoles($rolesIds, $copy, $subject, $text)
+    {
         $users = $this->userRepository->findAllApprovedInRoles($rolesIds);
 
         $params = [

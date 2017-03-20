@@ -2,10 +2,9 @@
 
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
-
 use App\AdminModule\ConfigurationModule\Forms\SeminarForm;
-use App\AdminModule\ConfigurationModule\Forms\SeminarFormFactory;
 use Nette\Application\UI\Form;
+
 
 class SeminarPresenter extends ConfigurationBasePresenter
 {
@@ -15,7 +14,8 @@ class SeminarPresenter extends ConfigurationBasePresenter
      */
     public $seminarFormFactory;
 
-    protected function createComponentSeminarForm($name)
+
+    protected function createComponentSeminarForm()
     {
         $form = $this->seminarFormFactory->create();
 

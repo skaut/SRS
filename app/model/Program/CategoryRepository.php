@@ -4,9 +4,16 @@ namespace App\Model\Program;
 
 use Kdyby\Doctrine\EntityRepository;
 
+
+/**
+ * Třída spravující kategorie programových bloků.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class CategoryRepository extends EntityRepository
 {
     /**
+     * Vrací kategorii podle id.
      * @param $id
      * @return Category|null
      */
@@ -15,7 +22,12 @@ class CategoryRepository extends EntityRepository
         return $this->findOneBy(['id' => $id]);
     }
 
-    public function findAllOrderedByName() {
+    /**
+     * Vrací kategorie seřazené podle názvu.
+     * @return array
+     */
+    public function findAllOrderedByName()
+    {
         return $this->createQueryBuilder('c')
             ->orderBy('c.name')
             ->getQuery()
@@ -23,9 +35,11 @@ class CategoryRepository extends EntityRepository
     }
 
     /**
+     * Vrací názvy všech kategorií.
      * @return array
      */
-    public function findAllNames() {
+    public function findAllNames()
+    {
         $names = $this->createQueryBuilder('c')
             ->select('c.name')
             ->getQuery()
@@ -34,10 +48,12 @@ class CategoryRepository extends EntityRepository
     }
 
     /**
+     * Vrací názvy kategorií, kromě kategorie s id.
      * @param $id
      * @return array
      */
-    public function findOthersNames($id) {
+    public function findOthersNames($id)
+    {
         $names = $this->createQueryBuilder('c')
             ->select('c.name')
             ->where('c.id != :id')
@@ -48,9 +64,11 @@ class CategoryRepository extends EntityRepository
     }
 
     /**
+     * Vrací kategorie jako možnosti pro select.
      * @return array
      */
-    public function getCategoriesOptions() {
+    public function getCategoriesOptions()
+    {
         $categories = $this->createQueryBuilder('c')
             ->select('c.id, c.name')
             ->orderBy('c.name')
@@ -65,6 +83,7 @@ class CategoryRepository extends EntityRepository
     }
 
     /**
+     * Uloží kategorii.
      * @param Category $category
      */
     public function save(Category $category)
@@ -74,6 +93,7 @@ class CategoryRepository extends EntityRepository
     }
 
     /**
+     * Odstraní kategorii.
      * @param Category $category
      */
     public function remove(Category $category)

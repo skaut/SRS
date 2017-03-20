@@ -5,7 +5,14 @@ namespace App\Model\Enums;
 
 class Sex
 {
+    /**
+     * Muž.
+     */
     const MALE = 'male';
+
+    /**
+     * Žena.
+     */
     const FEMALE = 'female';
 
     public static $sex = [
@@ -13,7 +20,13 @@ class Sex
         self::FEMALE
     ];
 
-    public static function getSexOptions() {
+
+    /**
+     * Vrací možnosti pohlaví pro select.
+     * @return array
+     */
+    public static function getSexOptions()
+    {
         $options = [];
         foreach (self::$sex as $s) {
             $options[$s] = 'common.sex.' . $s;

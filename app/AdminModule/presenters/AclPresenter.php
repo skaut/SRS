@@ -2,7 +2,6 @@
 
 namespace App\AdminModule\Presenters;
 
-
 use App\AdminModule\Components\IRolesGridControlFactory;
 use App\AdminModule\ProgramModule\Forms\AddRoleForm;
 use App\AdminModule\ProgramModule\Forms\EditRoleForm;
@@ -10,6 +9,7 @@ use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Services\Authenticator;
 use Nette\Forms\Form;
+
 
 class AclPresenter extends AdminBasePresenter
 {
@@ -47,13 +47,15 @@ class AclPresenter extends AdminBasePresenter
         $this->checkPermission(Permission::MANAGE);
     }
 
-    public function renderEdit($id) {
+    public function renderEdit($id)
+    {
         $role = $this->roleRepository->findById($id);
 
         $this->template->editedRole = $role;
     }
 
-    public function actionTest($id) {
+    public function actionTest($id)
+    {
         $role = $this->roleRepository->findById($id);
 
         $this->authenticator->updateRoles($this->getPresenter()->user, $role);
@@ -61,12 +63,12 @@ class AclPresenter extends AdminBasePresenter
         $this->redirect(':Web:Page:default');
     }
 
-    protected function createComponentRolesGrid($name)
+    protected function createComponentRolesGrid()
     {
         return $this->rolesGridControlFactory->create();
     }
 
-    protected function createComponentAddRoleForm($name)
+    protected function createComponentAddRoleForm()
     {
         $form = $this->addRoleFormFactory->create();
 
@@ -83,7 +85,7 @@ class AclPresenter extends AdminBasePresenter
         return $form;
     }
 
-    protected function createComponentEditRoleForm($name)
+    protected function createComponentEditRoleForm()
     {
         $form = $this->editRoleFormFactory->create($this->getParameter('id'));
 
@@ -96,8 +98,7 @@ class AclPresenter extends AdminBasePresenter
             if ($form['submitAndContinue']->isSubmittedBy()) {
                 $id = $values['id'];
                 $this->redirect('Acl:edit', ['id' => $id]);
-            }
-            else
+            } else
                 $this->redirect('Acl:default');
         };
 

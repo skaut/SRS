@@ -21,6 +21,7 @@ class SkautIsEventForm extends Nette\Object
     /** @var SkautIsService */
     private $skautIsService;
 
+
     public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository, SkautIsService $skautIsService)
     {
         $this->baseForm = $baseForm;
@@ -46,7 +47,8 @@ class SkautIsEventForm extends Nette\Object
         return $form;
     }
 
-    public function processForm(Form $form, \stdClass $values) {
+    public function processForm(Form $form, \stdClass $values)
+    {
         $eventId = $values['skautisEvent'];
 
         $this->settingsRepository->setValue(Settings::SKAUTIS_EVENT_ID, $eventId);
