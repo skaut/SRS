@@ -11,6 +11,12 @@ use Nette\Application\UI\Control;
 use Nette\Forms\Form;
 
 
+/**
+ * Komponenta s přihláškou.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class ApplicationContentControl extends Control
 {
     /** @var ApplicationForm */
@@ -26,6 +32,13 @@ class ApplicationContentControl extends Control
     private $authenticator;
 
 
+    /**
+     * ApplicationContentControl constructor.
+     * @param ApplicationForm $applicationFormFactory
+     * @param Authenticator $authenticator
+     * @param UserRepository $userRepository
+     * @param RoleRepository $roleRepository
+     */
     public function __construct(ApplicationForm $applicationFormFactory, Authenticator $authenticator, UserRepository $userRepository,
                                 RoleRepository $roleRepository)
     {
@@ -37,6 +50,9 @@ class ApplicationContentControl extends Control
         $this->roleRepository = $roleRepository;
     }
 
+    /**
+     * @param $content
+     */
     public function render($content)
     {
         $template = $this->template;
@@ -59,6 +75,9 @@ class ApplicationContentControl extends Control
         $template->render();
     }
 
+    /**
+     * @return \Nette\Application\UI\Form
+     */
     protected function createComponentApplicationForm()
     {
         $form = $this->applicationFormFactory->create($this->getPresenter()->user->id);

@@ -3,6 +3,12 @@
 namespace App\WebModule\Components;
 
 
+/**
+ * Rozhraní komponenty s FAQ.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 interface IFaqContentControlFactory
 {
     /**

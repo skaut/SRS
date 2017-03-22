@@ -133,12 +133,18 @@ abstract class WebBasePresenter extends BasePresenter
         $this->template->settings = $this->settingsRepository;
     }
 
+    /**
+     * Ukončí testování role.
+     */
     public function actionExitRoleTest()
     {
         $this->authenticator->updateRoles($this->user);
         $this->redirect(':Admin:Acl:default');
     }
 
+    /**
+     * Zkontroluje stav instalace.
+     */
     private function checkInstallation()
     {
         try {

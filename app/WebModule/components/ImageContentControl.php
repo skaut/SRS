@@ -5,8 +5,17 @@ namespace App\WebModule\Components;
 use Nette\Application\UI\Control;
 
 
+/**
+ * Komponenta s obrázkem.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class ImageContentControl extends Control
 {
+    /**
+     * @param $content
+     */
     public function render($content)
     {
         $template = $this->template;

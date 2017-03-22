@@ -11,6 +11,12 @@ use Nette\Application\UI\Form;
 use Skautis\Wsdl\WsdlException;
 
 
+/**
+ * Formulář pro úpravu osobních údajů.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class PersonalDetailsForm extends Nette\Object
 {
     /** @var User */
@@ -28,6 +34,12 @@ class PersonalDetailsForm extends Nette\Object
     private $skautIsService;
 
 
+    /**
+     * PersonalDetailsForm constructor.
+     * @param BaseForm $baseFormFactory
+     * @param UserRepository $userRepository
+     * @param SkautIsService $skautIsService
+     */
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository, SkautIsService $skautIsService)
     {
         $this->baseFormFactory = $baseFormFactory;
@@ -35,6 +47,10 @@ class PersonalDetailsForm extends Nette\Object
         $this->skautIsService = $skautIsService;
     }
 
+    /**
+     * @param $id
+     * @return Form
+     */
     public function create($id)
     {
         $this->user = $this->userRepository->findById($id);
@@ -99,6 +115,10 @@ class PersonalDetailsForm extends Nette\Object
         return $form;
     }
 
+    /**
+     * @param Form $form
+     * @param \stdClass $values
+     */
     public function processForm(Form $form, \stdClass $values)
     {
         if (array_key_exists('sex', $values))

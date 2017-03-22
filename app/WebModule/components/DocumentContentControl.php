@@ -6,12 +6,22 @@ use App\Model\CMS\Document\DocumentRepository;
 use Nette\Application\UI\Control;
 
 
+/**
+ * Komponenta s dokumenty.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class DocumentContentControl extends Control
 {
     /** @var DocumentRepository */
     private $documentRepository;
 
 
+    /**
+     * DocumentContentControl constructor.
+     * @param DocumentRepository $documentRepository
+     */
     public function __construct(DocumentRepository $documentRepository)
     {
         parent::__construct();
@@ -19,6 +29,9 @@ class DocumentContentControl extends Control
         $this->documentRepository = $documentRepository;
     }
 
+    /**
+     * @param $content
+     */
     public function render($content)
     {
         $template = $this->template;

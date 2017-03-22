@@ -10,6 +10,12 @@ use Nette\Application\UI\Control;
 use Nette\Forms\Form;
 
 
+/**
+ * Komponenta s FAQ.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class FaqContentControl extends Control
 {
     /** @var FaqForm */
@@ -22,6 +28,12 @@ class FaqContentControl extends Control
     private $roleRepository;
 
 
+    /**
+     * FaqContentControl constructor.
+     * @param FaqForm $faqFormFactory
+     * @param FaqRepository $faqRepository
+     * @param RoleRepository $roleRepository
+     */
     public function __construct(FaqForm $faqFormFactory, FaqRepository $faqRepository, RoleRepository $roleRepository)
     {
         parent::__construct();
@@ -31,6 +43,9 @@ class FaqContentControl extends Control
         $this->roleRepository = $roleRepository;
     }
 
+    /**
+     * @param $content
+     */
     public function render($content)
     {
         $template = $this->template;
@@ -47,6 +62,9 @@ class FaqContentControl extends Control
         $template->render();
     }
 
+    /**
+     * @return \Nette\Application\UI\Form
+     */
     public function createComponentFaqForm()
     {
         $form = $this->faqFormFactory->create($this->getPresenter()->getUser()->id);

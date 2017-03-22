@@ -10,6 +10,11 @@ use Nette;
 use Nette\Application\UI\Form;
 
 
+/**
+ * Formulář pro změnu rolí.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class RolesForm extends Nette\Object
 {
     /** @var User */
@@ -28,6 +33,13 @@ class RolesForm extends Nette\Object
     private $programRepository;
 
 
+    /**
+     * RolesForm constructor.
+     * @param BaseForm $baseFormFactory
+     * @param UserRepository $userRepository
+     * @param RoleRepository $roleRepository
+     * @param ProgramRepository $programRepository
+     */
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
                                 RoleRepository $roleRepository, ProgramRepository $programRepository)
     {
@@ -37,6 +49,11 @@ class RolesForm extends Nette\Object
         $this->programRepository = $programRepository;
     }
 
+    /**
+     * @param $id
+     * @param $enabled
+     * @return Form
+     */
     public function create($id, $enabled)
     {
         $this->user = $this->userRepository->findById($id);
@@ -80,6 +97,10 @@ class RolesForm extends Nette\Object
         return $form;
     }
 
+    /**
+     * @param Form $form
+     * @param \stdClass $values
+     */
     public function processForm(Form $form, \stdClass $values)
     {
         if ($form['submit']->isSubmittedBy()) {
@@ -109,6 +130,11 @@ class RolesForm extends Nette\Object
         }
     }
 
+    /**
+     * Přidá select pro výběr rolí.
+     * @param Form $form
+     * @param $enabled
+     */
     private function addRolesSelect(Form $form, $enabled)
     {
         $rolesSelect = $form->addMultiSelect('roles', 'web.profile.roles')->setItems(
@@ -167,6 +193,12 @@ class RolesForm extends Nette\Object
         }
     }
 
+    /**
+     * Ověří kapacitu rolí.
+     * @param $field
+     * @param $args
+     * @return bool
+     */
     public function validateRolesCapacities($field, $args)
     {
         foreach ($this->roleRepository->findRolesByIds($field->getValue()) as $role) {
@@ -178,6 +210,12 @@ class RolesForm extends Nette\Object
         return true;
     }
 
+    /**
+     * Ověří kompatibilitu rolí.
+     * @param $field
+     * @param $args
+     * @return bool
+     */
     public function validateRolesIncompatible($field, $args)
     {
         $selectedRolesIds = $field->getValue();
@@ -194,6 +232,12 @@ class RolesForm extends Nette\Object
         return true;
     }
 
+    /**
+     * Ověří výběr vyžadovaných rolí.
+     * @param $field
+     * @param $args
+     * @return bool
+     */
     public function validateRolesRequired($field, $args)
     {
         $selectedRolesIds = $field->getValue();
@@ -210,6 +254,12 @@ class RolesForm extends Nette\Object
         return true;
     }
 
+    /**
+     * Ověří registrovatelnost rolí.
+     * @param $field
+     * @param $args
+     * @return bool
+     */
     public function validateRolesRegisterable($field, $args)
     {
         foreach ($this->roleRepository->findRolesByIds($field->getValue()) as $role) {

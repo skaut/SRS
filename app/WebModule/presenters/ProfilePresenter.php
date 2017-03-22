@@ -13,6 +13,12 @@ use App\WebModule\Forms\RolesForm;
 use Nette\Application\UI\Form;
 
 
+/**
+ * Presenter obsluhující profil uživatele.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class ProfilePresenter extends WebBasePresenter
 {
     /**
@@ -74,6 +80,9 @@ class ProfilePresenter extends WebBasePresenter
         $this->template->paymentMethodBank = PaymentType::BANK;
     }
 
+    /**
+     * Vygeneruje potvrzení o přijetí platby.
+     */
     public function actionGeneratePaymentProofBank()
     {
         $user = $this->userRepository->findById($this->user->id);
@@ -84,6 +93,9 @@ class ProfilePresenter extends WebBasePresenter
         $this->pdfExportService->generatePaymentProof($user, "potvrzeni-o-prijeti-platby.pdf");
     }
 
+    /**
+     * Vyexportuje rozvrh uživatele.
+     */
     public function actionExportSchedule()
     {
         $user = $this->userRepository->findById($this->user->id);
