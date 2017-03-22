@@ -43,9 +43,9 @@
                 <th>{_admin.program.blocks_mandatory}</th>
                 <td>
                     {if $block->getMandatory() == 0}
-                        {_admin.program.blocks_mandatory_mandatory}
-                    {elseif $block->getMandatory() == 1}
                         {_admin.program.blocks_mandatory_voluntary}
+                    {elseif $block->getMandatory() == 1}
+                        {_admin.program.blocks_mandatory_mandatory}
                     {else}
                         {_admin.program.blocks_mandatory_auto_register}
                     {/if}
