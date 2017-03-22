@@ -239,7 +239,7 @@ class UsersGridControl extends Control
             });
 
         foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
-            $grid->addColumnText('customInput' . $customInput->getId(), $customInput->getName())
+            $grid->addColumnText('customInput' . $customInput->getId(), $this->truncate($customInput->getName(), 35))
                 ->setRenderer(function ($row) use ($customInput) {
                     $customInputValue = $row->getCustomInputValue($customInput);
                     if ($customInputValue) {
@@ -554,5 +554,15 @@ class UsersGridControl extends Control
         foreach (PaymentType::$types as $type)
             $options[$type] = 'common.payment.' . $type;
         return $options;
+    }
+
+    private function truncate($text, $length) {
+        if (strlen($text) > $length) {
+            $text = $text . " ";
+            $text = substr($text, 0, $length);
+            $text = substr($text, 0, strrpos($text, ' '));
+            $text = $text . "...";
+        }
+        return $text;
     }
 }
