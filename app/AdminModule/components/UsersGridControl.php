@@ -239,12 +239,12 @@ class UsersGridControl extends Control
             });
 
         foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
-            $grid->addColumnText('customInput' . $customInput->getId(), $this->truncate($customInput->getName(), 35))
+            $grid->addColumnText('customInput' . $customInput->getId(), $this->truncate($customInput->getName(), 20))
                 ->setRenderer(function ($row) use ($customInput) {
                     $customInputValue = $row->getCustomInputValue($customInput);
                     if ($customInputValue) {
                         if ($customInputValue->getInput()->getType() == CustomInput::TEXT)
-                            return $customInputValue->getValue();
+                            return $this->truncate($customInputValue->getValue(), 20);
                         else {
                             return $customInputValue->getValue() ?
                                 $this->translator->translate('admin.common.yes') :
