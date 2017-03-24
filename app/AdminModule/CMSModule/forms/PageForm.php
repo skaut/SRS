@@ -18,18 +18,41 @@ use Nette\Application\UI;
 use Nette\Application\UI\Form;
 
 
+/**
+ * Komponenta s formulářem pro úpravu obsahu stránky.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class PageForm extends UI\Control
 {
+    /**
+     * Id upravované stránky.
+     * @var int
+     */
     public $id;
 
+    /**
+     * Upravovaná stránka.
+     * @var Page
+     */
+    private $page;
+
+    /**
+     * Upravovaná oblast.
+     * @var string
+     */
     public $area;
 
+    /**
+     * Událost při uložení formuláře.
+     */
     public $onPageSave;
 
+    /**
+     * Událost při chybě ukládání stránky.
+     */
     public $onPageSaveError;
-
-    /** @var Page */
-    private $page;
 
     /** @var BaseForm */
     private $baseFormFactory;
@@ -50,6 +73,17 @@ class PageForm extends UI\Control
     private $filesService;
 
 
+    /**
+     * PageForm constructor.
+     * @param $id
+     * @param $area
+     * @param BaseForm $baseFormFactory
+     * @param PageRepository $pageRepository
+     * @param ContentRepository $contentRepository
+     * @param RoleRepository $roleRepository
+     * @param TagRepository $tagRepository
+     * @param FilesService $filesService
+     */
     public function __construct($id, $area, BaseForm $baseFormFactory, PageRepository $pageRepository,
                                 ContentRepository $contentRepository, RoleRepository $roleRepository,
                                 TagRepository $tagRepository, FilesService $filesService)
@@ -69,6 +103,9 @@ class PageForm extends UI\Control
         $this->page = $this->pageRepository->findById($id);
     }
 
+    /**
+     * Vykreslí komponentu.
+     */
     public function render()
     {
         $this->template->setFile(__DIR__ . '/templates/page_form.latte');
@@ -79,6 +116,10 @@ class PageForm extends UI\Control
         $this->template->render();
     }
 
+    /**
+     * Vytvoří komponentu.
+     * @return Form
+     */
     public function createComponentForm()
     {
         $form = $this->baseFormFactory->create();
@@ -123,6 +164,11 @@ class PageForm extends UI\Control
         return $form;
     }
 
+    /**
+     * Zpracuje formulář.
+     * @param Form $form
+     * @param \stdClass $values
+     */
     public function processForm(Form $form, \stdClass $values)
     {
         $page = $this->pageRepository->findById($values['id']);
@@ -161,6 +207,10 @@ class PageForm extends UI\Control
         $this->onPageSave($this, $submitName);
     }
 
+    /**
+     * Připraví možnosti obsahů stránky pro select.
+     * @return array
+     */
     private function prepareContentTypesOptions()
     {
         $options = [];

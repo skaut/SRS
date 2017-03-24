@@ -11,6 +11,11 @@ use Nette\Application\UI\Form;
 use Ublaboo\DataGrid\DataGrid;
 
 
+/**
+ * Komponenta pro správu stránek.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class PagesGridControl extends Control
 {
     /** @var Translator */
@@ -23,6 +28,12 @@ class PagesGridControl extends Control
     private $roleRepository;
 
 
+    /**
+     * PagesGridControl constructor.
+     * @param Translator $translator
+     * @param PageRepository $pageRepository
+     * @param RoleRepository $roleRepository
+     */
     public function __construct(Translator $translator, PageRepository $pageRepository, RoleRepository $roleRepository)
     {
         parent::__construct();
@@ -32,11 +43,18 @@ class PagesGridControl extends Control
         $this->roleRepository = $roleRepository;
     }
 
+    /**
+     * Vykreslí komponentu.
+     */
     public function render()
     {
         $this->template->render(__DIR__ . '/templates/pages_grid.latte');
     }
 
+    /**
+     * Vytvoří komponentu.
+     * @param $name
+     */
     public function createComponentPagesGrid($name)
     {
         $grid = new DataGrid($this, $name);
@@ -141,6 +159,10 @@ class PagesGridControl extends Control
         });
     }
 
+    /**
+     * Zpracuje přidání stránky.
+     * @param $values
+     */
     public function add($values)
     {
         $page = new Page($values['name'], $values['slug']);
@@ -156,6 +178,11 @@ class PagesGridControl extends Control
         $this->redirect('this');
     }
 
+    /**
+     * Zpracuje upravení stránky.
+     * @param $id
+     * @param $values
+     */
     public function edit($id, $values)
     {
         $page = $this->pageRepository->findById($id);
@@ -173,6 +200,10 @@ class PagesGridControl extends Control
         $this->redirect('this');
     }
 
+    /**
+     * Zpracuje odstranění stránky.
+     * @param $id
+     */
     public function handleDelete($id)
     {
         $page = $this->pageRepository->findById($id);
@@ -183,6 +214,12 @@ class PagesGridControl extends Control
         $this->redirect('this');
     }
 
+    /**
+     * Přesune stránku s $item_id mezi $prev_id a $next_id.
+     * @param $item_id
+     * @param $prev_id
+     * @param $next_id
+     */
     public function handleSort($item_id, $prev_id, $next_id)
     {
         $this->pageRepository->sort($item_id, $prev_id, $next_id);
@@ -198,6 +235,11 @@ class PagesGridControl extends Control
         }
     }
 
+    /**
+     * Změní viditelnost stránky.
+     * @param $id
+     * @param $public
+     */
     public function changeStatus($id, $public)
     {
         $p = $this->getPresenter();

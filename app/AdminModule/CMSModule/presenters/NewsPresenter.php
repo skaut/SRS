@@ -8,6 +8,12 @@ use App\Model\CMS\NewsRepository;
 use Nette\Application\UI\Form;
 
 
+/**
+ * Presenter starající se o správu aktualit.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class NewsPresenter extends CMSBasePresenter
 {
     /**

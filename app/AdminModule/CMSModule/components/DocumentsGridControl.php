@@ -15,6 +15,11 @@ use Nette\Utils\Strings;
 use Ublaboo\DataGrid\DataGrid;
 
 
+/**
+ * Komponenta pro správu dokumentů.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class DocumentsGridControl extends Control
 {
     /** @var Translator */
@@ -30,6 +35,13 @@ class DocumentsGridControl extends Control
     private $tagRepository;
 
 
+    /**
+     * DocumentsGridControl constructor.
+     * @param Translator $translator
+     * @param DocumentRepository $documentRepository
+     * @param TagRepository $tagRepository
+     * @param FilesService $filesService
+     */
     public function __construct(Translator $translator, DocumentRepository $documentRepository,
                                 TagRepository $tagRepository, FilesService $filesService)
     {
@@ -41,11 +53,18 @@ class DocumentsGridControl extends Control
         $this->filesService = $filesService;
     }
 
+    /**
+     * Vykreslí komponentu.
+     */
     public function render()
     {
         $this->template->render(__DIR__ . '/templates/documents_grid.latte');
     }
 
+    /**
+     * Vytvoří komponentu.
+     * @param $name
+     */
     public function createComponentDocumentsGrid($name)
     {
         $grid = new DataGrid($this, $name);
@@ -131,6 +150,10 @@ class DocumentsGridControl extends Control
             ]);
     }
 
+    /**
+     * Zpracuje přidání dokumentu.
+     * @param $values
+     */
     public function add($values)
     {
         $file = $values['file'];
@@ -152,6 +175,11 @@ class DocumentsGridControl extends Control
         $this->redirect('this');
     }
 
+    /**
+     * Zpracuje úpravu dokumentu.
+     * @param $id
+     * @param $values
+     */
     public function edit($id, $values)
     {
         $document = $this->documentRepository->findById($id);
@@ -177,6 +205,10 @@ class DocumentsGridControl extends Control
         $this->redirect('this');
     }
 
+    /**
+     * Zpracuje odstranění dokumentu.
+     * @param $id
+     */
     public function handleDelete($id)
     {
         $document = $this->documentRepository->findById($id);
@@ -188,6 +220,11 @@ class DocumentsGridControl extends Control
         $this->redirect('this');
     }
 
+    /**
+     * Vygeneruje cestu dokumentu.
+     * @param $file
+     * @return string
+     */
     private function generatePath($file)
     {
         return Document::PATH . '/' . Random::generate(5) . '/' . Strings::webalize($file->name, '.');

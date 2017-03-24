@@ -7,6 +7,11 @@ use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 
 
+/**
+ * BasePresenter pro CMSModule.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 abstract class CMSBasePresenter extends AdminBasePresenter
 {
     protected $resource = Resource::CMS;

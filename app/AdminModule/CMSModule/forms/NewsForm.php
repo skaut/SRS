@@ -9,9 +9,18 @@ use Nette;
 use Nette\Application\UI\Form;
 
 
+/**
+ * Formulář pro úpravu aktuality.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class NewsForm extends Nette\Object
 {
-    /** @var News */
+    /**
+     * Upravovaná aktualita.
+     * @var News
+     */
     private $news;
 
     /** @var BaseForm */
@@ -21,12 +30,22 @@ class NewsForm extends Nette\Object
     private $newsRepository;
 
 
+    /**
+     * NewsForm constructor.
+     * @param BaseForm $baseFormFactory
+     * @param NewsRepository $newsRepository
+     */
     public function __construct(BaseForm $baseFormFactory, NewsRepository $newsRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->newsRepository = $newsRepository;
     }
 
+    /**
+     * Vytvoří formulář.
+     * @param $id
+     * @return Form
+     */
     public function create($id)
     {
         $this->news = $this->newsRepository->findById($id);
@@ -68,6 +87,11 @@ class NewsForm extends Nette\Object
         return $form;
     }
 
+    /**
+     * Zpracuje formulář.
+     * @param Form $form
+     * @param \stdClass $values
+     */
     public function processForm(Form $form, \stdClass $values)
     {
         if (!$form['cancel']->isSubmittedBy()) {
