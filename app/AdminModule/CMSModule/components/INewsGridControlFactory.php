@@ -3,9 +3,15 @@
 namespace App\AdminModule\CMSModule\Components;
 
 
+/**
+ * Rozhraní komponenty pro správu aktualit.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 interface INewsGridControlFactory
 {
     /**
+     * Vytvoří komponentu.
      * @return NewsGridControl
      */
     function create();

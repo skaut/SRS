@@ -8,6 +8,11 @@ use Nette\Application\UI\Control;
 use Ublaboo\DataGrid\DataGrid;
 
 
+/**
+ * Komponenta pro správu častých otázek.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class FaqGridControl extends Control
 {
     /** @var Translator */
@@ -17,6 +22,11 @@ class FaqGridControl extends Control
     private $faqRepository;
 
 
+    /**
+     * FaqGridControl constructor.
+     * @param Translator $translator
+     * @param FaqRepository $faqRepository
+     */
     public function __construct(Translator $translator, FaqRepository $faqRepository)
     {
         parent::__construct();
@@ -25,11 +35,18 @@ class FaqGridControl extends Control
         $this->faqRepository = $faqRepository;
     }
 
+    /**
+     * Vykreslí komponentu.
+     */
     public function render()
     {
         $this->template->render(__DIR__ . '/templates/faq_grid.latte');
     }
 
+    /**
+     * Vytvoří komponentu.
+     * @param $name
+     */
     public function createComponentFaqGrid($name)
     {
         $grid = new DataGrid($this, $name);
@@ -76,6 +93,10 @@ class FaqGridControl extends Control
             ]);
     }
 
+    /**
+     * Zpracuje odstranění otázky.
+     * @param $id
+     */
     public function handleDelete($id)
     {
         $faq = $this->faqRepository->findById($id);
@@ -86,6 +107,12 @@ class FaqGridControl extends Control
         $this->redirect('this');
     }
 
+    /**
+     * Přesuee otázku $item_id mezi $prev_id a $next_id.
+     * @param $item_id
+     * @param $prev_id
+     * @param $next_id
+     */
     public function handleSort($item_id, $prev_id, $next_id)
     {
         $this->faqRepository->sort($item_id, $prev_id, $next_id);
@@ -101,6 +128,11 @@ class FaqGridControl extends Control
         }
     }
 
+    /**
+     * Změní viditelnost otázky.
+     * @param $id
+     * @param $public
+     */
     public function changeStatus($id, $public)
     {
         $faq = $this->faqRepository->findById($id);

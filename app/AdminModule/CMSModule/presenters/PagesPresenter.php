@@ -10,6 +10,12 @@ use App\Model\CMS\Content\ContentRepository;
 use App\Model\CMS\PageRepository;
 
 
+/**
+ * Presenter starající se o správu stránek.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class PagesPresenter extends CMSBasePresenter
 {
     /**

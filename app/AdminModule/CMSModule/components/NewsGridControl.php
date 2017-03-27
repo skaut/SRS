@@ -8,6 +8,11 @@ use Nette\Application\UI\Control;
 use Ublaboo\DataGrid\DataGrid;
 
 
+/**
+ * Komponenta pro správu aktualit.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class NewsGridControl extends Control
 {
     /** @var Translator */
@@ -17,6 +22,11 @@ class NewsGridControl extends Control
     private $newsRepository;
 
 
+    /**
+     * NewsGridControl constructor.
+     * @param Translator $translator
+     * @param NewsRepository $newsRepository
+     */
     public function __construct(Translator $translator, NewsRepository $newsRepository)
     {
         parent::__construct();
@@ -25,11 +35,18 @@ class NewsGridControl extends Control
         $this->newsRepository = $newsRepository;
     }
 
+    /**
+     * Vykreslí komponentu.
+     */
     public function render()
     {
         $this->template->render(__DIR__ . '/templates/news_grid.latte');
     }
 
+    /**
+     * Vytvoří komponentu.
+     * @param $name
+     */
     public function createComponentNewsGrid($name)
     {
         $grid = new DataGrid($this, $name);
@@ -61,6 +78,10 @@ class NewsGridControl extends Control
             ]);
     }
 
+    /**
+     * Zpracuje odstranění aktuality.
+     * @param $id
+     */
     public function handleDelete($id)
     {
         $news = $this->newsRepository->findById($id);

@@ -10,6 +10,11 @@ use Nette\Application\UI\Form;
 use Ublaboo\DataGrid\DataGrid;
 
 
+/**
+ * Komponenta pro správu štítků dokumentů.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class DocumentTagsGridControl extends Control
 {
     /** @var Translator */
@@ -19,6 +24,11 @@ class DocumentTagsGridControl extends Control
     private $tagRepository;
 
 
+    /**
+     * DocumentTagsGridControl constructor.
+     * @param Translator $translator
+     * @param TagRepository $tagRepository
+     */
     public function __construct(Translator $translator, TagRepository $tagRepository)
     {
         parent::__construct();
@@ -27,11 +37,18 @@ class DocumentTagsGridControl extends Control
         $this->tagRepository = $tagRepository;
     }
 
+    /**
+     * Vykreslí komponentu.
+     */
     public function render()
     {
         $this->template->render(__DIR__ . '/templates/document_tags_grid.latte');
     }
 
+    /**
+     * Vytvoří komponentu.
+     * @param $name
+     */
     public function createComponentDocumentTagsGrid($name)
     {
         $grid = new DataGrid($this, $name);
@@ -76,6 +93,10 @@ class DocumentTagsGridControl extends Control
             ]);
     }
 
+    /**
+     * Zpracuje přidání štítku dokumentu.
+     * @param $values
+     */
     public function add($values)
     {
         $tag = new Tag();
@@ -89,6 +110,11 @@ class DocumentTagsGridControl extends Control
         $this->redirect('this');
     }
 
+    /**
+     * Zpracuje úpravu štítku dokumentu.
+     * @param $id
+     * @param $values
+     */
     public function edit($id, $values)
     {
         $tag = $this->tagRepository->findById($id);
@@ -102,6 +128,10 @@ class DocumentTagsGridControl extends Control
         $this->redirect('this');
     }
 
+    /**
+     * Zpracuje odstranění štítku dokumentu.
+     * @param $id
+     */
     public function handleDelete($id)
     {
         $tag = $this->tagRepository->findById($id);

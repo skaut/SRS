@@ -11,12 +11,24 @@ use Nette;
 use Nette\Application\UI\Form;
 
 
+/**
+ * Formulář pro úpravu otázky.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class FaqForm extends Nette\Object
 {
-    /** @var Faq */
+    /**
+     * Upravovaná otázka.
+     * @var Faq
+     */
     private $faq;
 
-    /** @var  User */
+    /**
+     * Přihlášený uživatel.
+     * @var  User
+     */
     private $user;
 
     /** @var BaseForm */
@@ -29,6 +41,12 @@ class FaqForm extends Nette\Object
     private $userRepository;
 
 
+    /**
+     * FaqForm constructor.
+     * @param BaseForm $baseFormFactory
+     * @param FaqRepository $faqRepository
+     * @param UserRepository $userRepository
+     */
     public function __construct(BaseForm $baseFormFactory, FaqRepository $faqRepository, UserRepository $userRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
@@ -36,6 +54,12 @@ class FaqForm extends Nette\Object
         $this->userRepository = $userRepository;
     }
 
+    /**
+     * Vytvoří formulář.
+     * @param $id
+     * @param $userId
+     * @return Form
+     */
     public function create($id, $userId)
     {
         $this->faq = $this->faqRepository->findById($id);
@@ -80,6 +104,11 @@ class FaqForm extends Nette\Object
         return $form;
     }
 
+    /**
+     * Zpracuje formulář.
+     * @param Form $form
+     * @param \stdClass $values
+     */
     public function processForm(Form $form, \stdClass $values)
     {
         if (!$form['cancel']->isSubmittedBy()) {
