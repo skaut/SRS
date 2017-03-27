@@ -142,6 +142,11 @@ ul.no-margin {
     margin: 10px auto;
 }
 
+/* news content */
+.news-content .panel-body {
+    word-wrap: break-word;
+}
+
 /* programs content */
 .programs-content .notifications .alert {
     padding: 6px 15px;
