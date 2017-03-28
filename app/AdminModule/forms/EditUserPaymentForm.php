@@ -10,9 +10,18 @@ use Nette;
 use Nette\Application\UI\Form;
 
 
+/**
+ * Formulář pro úpravu údajů o platbě uživatele.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class EditUserPaymentForm extends Nette\Object
 {
-    /** @var User */
+    /**
+     * Upravovaný uživatel.
+     * @var User
+     */
     private $user;
 
     /** @var BaseForm */
@@ -25,6 +34,12 @@ class EditUserPaymentForm extends Nette\Object
     private $settingsRepository;
 
 
+    /**
+     * EditUserPaymentForm constructor.
+     * @param BaseForm $baseFormFactory
+     * @param UserRepository $userRepository
+     * @param SettingsRepository $settingsRepository
+     */
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
                                 SettingsRepository $settingsRepository)
     {
@@ -33,6 +48,11 @@ class EditUserPaymentForm extends Nette\Object
         $this->settingsRepository = $settingsRepository;
     }
 
+    /**
+     * Vytvoří formulář.
+     * @param $id
+     * @return Form
+     */
     public function create($id)
     {
         $this->user = $this->userRepository->findById($id);
@@ -71,6 +91,11 @@ class EditUserPaymentForm extends Nette\Object
         return $form;
     }
 
+    /**
+     * Zpracuje formulář.
+     * @param Form $form
+     * @param \stdClass $values
+     */
     public function processForm(Form $form, \stdClass $values)
     {
         if (!$form['cancel']->isSubmittedBy()) {
@@ -86,6 +111,10 @@ class EditUserPaymentForm extends Nette\Object
         }
     }
 
+    /**
+     * Vrátí platební metody jako možnosti pro select.
+     * @return array
+     */
     private function preparePaymentMethodOptions()
     {
         $options = [];

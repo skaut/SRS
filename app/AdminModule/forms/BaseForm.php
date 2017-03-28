@@ -8,19 +8,30 @@ use Nette\Application\UI\Form;
 use Nextras\Forms\Rendering\Bs3FormRenderer;
 
 
+/**
+ * BaseForm pro AdminModule.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class BaseForm extends Nette\Object
 {
-    /**
-     * @var Translator
-     */
+    /** @var Translator */
     private $translator;
 
 
+    /**
+     * BaseForm constructor.
+     * @param Translator $translator
+     */
     public function __construct(Translator $translator)
     {
         $this->translator = $translator;
     }
 
+    /**
+     * Vytvoří formulář.
+     * @return Form
+     */
     public function create()
     {
         $form = new Form;

@@ -29,6 +29,7 @@ class BaseForm extends Nette\Object
     }
 
     /**
+     * Vytvoří formulář.
      * @return Form
      */
     public function create()

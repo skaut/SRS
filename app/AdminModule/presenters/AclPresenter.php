@@ -11,6 +11,12 @@ use App\Services\Authenticator;
 use Nette\Forms\Form;
 
 
+/**
+ * Presenter obsluhující správu rolí.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class AclPresenter extends AdminBasePresenter
 {
     protected $resource = Resource::ACL;
@@ -47,6 +53,9 @@ class AclPresenter extends AdminBasePresenter
         $this->checkPermission(Permission::MANAGE);
     }
 
+    /**
+     * @param $id
+     */
     public function renderEdit($id)
     {
         $role = $this->roleRepository->findById($id);
@@ -54,6 +63,10 @@ class AclPresenter extends AdminBasePresenter
         $this->template->editedRole = $role;
     }
 
+    /**
+     * Zapne testování role.
+     * @param $id
+     */
     public function actionTest($id)
     {
         $role = $this->roleRepository->findById($id);
@@ -63,11 +76,17 @@ class AclPresenter extends AdminBasePresenter
         $this->redirect(':Web:Page:default');
     }
 
+    /**
+     * @return \App\AdminModule\Components\RolesGridControl
+     */
     protected function createComponentRolesGrid()
     {
         return $this->rolesGridControlFactory->create();
     }
 
+    /**
+     * @return \Nette\Application\UI\Form
+     */
     protected function createComponentAddRoleForm()
     {
         $form = $this->addRoleFormFactory->create();
@@ -85,6 +104,9 @@ class AclPresenter extends AdminBasePresenter
         return $form;
     }
 
+    /**
+     * @return \Nette\Application\UI\Form
+     */
     protected function createComponentEditRoleForm()
     {
         $form = $this->editRoleFormFactory->create($this->getParameter('id'));

@@ -11,6 +11,11 @@ use Nette\Application\UI\Control;
 use Ublaboo\DataGrid\DataGrid;
 
 
+/**
+ * Komponenta pro správu rolí.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class RolesGridControl extends Control
 {
     /** @var Translator */
@@ -26,6 +31,13 @@ class RolesGridControl extends Control
     private $programRepository;
 
 
+    /**
+     * RolesGridControl constructor.
+     * @param Translator $translator
+     * @param RoleRepository $roleRepository
+     * @param UserRepository $userRepository
+     * @param ProgramRepository $programRepository
+     */
     public function __construct(Translator $translator, RoleRepository $roleRepository, UserRepository $userRepository,
                                 ProgramRepository $programRepository)
     {
@@ -37,11 +49,18 @@ class RolesGridControl extends Control
         $this->programRepository = $programRepository;
     }
 
+    /**
+     * Vykreslí komponentu.
+     */
     public function render()
     {
         $this->template->render(__DIR__ . '/templates/roles_grid.latte');
     }
 
+    /**
+     * Vytvoří komponentu.
+     * @param $name
+     */
     public function createComponentRolesGrid($name)
     {
         $grid = new DataGrid($this, $name);
@@ -108,6 +127,10 @@ class RolesGridControl extends Control
         });
     }
 
+    /**
+     * Zpracuje odstranění role.
+     * @param $id
+     */
     public function handleDelete($id)
     {
         $role = $this->roleRepository->findById($id);
@@ -131,6 +154,11 @@ class RolesGridControl extends Control
         $this->redirect('this');
     }
 
+    /**
+     * Změní registrovatelnost role.
+     * @param $id
+     * @param $registerable
+     */
     public function changeRegisterable($id, $registerable)
     {
         $role = $this->roleRepository->findById($id);
