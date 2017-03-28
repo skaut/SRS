@@ -14,9 +14,18 @@ use Nette;
 use Nette\Application\UI\Form;
 
 
+/**
+ * Formulář pro úpravu role.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class EditRoleForm extends Nette\Object
 {
-    /** @var Role */
+    /**
+     * Upravovaná role.
+     * @var Role
+     */
     private $role;
 
     /** @var BaseForm */
@@ -35,6 +44,14 @@ class EditRoleForm extends Nette\Object
     private $programRepository;
 
 
+    /**
+     * EditRoleForm constructor.
+     * @param BaseForm $baseFormFactory
+     * @param RoleRepository $roleRepository
+     * @param PageRepository $pageRepository
+     * @param PermissionRepository $permissionRepository
+     * @param ProgramRepository $programRepository
+     */
     public function __construct(BaseForm $baseFormFactory, RoleRepository $roleRepository,
                                 PageRepository $pageRepository, PermissionRepository $permissionRepository,
                                 ProgramRepository $programRepository)
@@ -46,6 +63,11 @@ class EditRoleForm extends Nette\Object
         $this->programRepository = $programRepository;
     }
 
+    /**
+     * Vytvoří formulář.
+     * @param $id
+     * @return Form
+     */
     public function create($id)
     {
         $this->role = $this->roleRepository->findById($id);
@@ -149,6 +171,11 @@ class EditRoleForm extends Nette\Object
         return $form;
     }
 
+    /**
+     * Zpracuje formulář.
+     * @param Form $form
+     * @param \stdClass $values
+     */
     public function processForm(Form $form, \stdClass $values)
     {
         if (!$form['cancel']->isSubmittedBy()) {
@@ -176,6 +203,10 @@ class EditRoleForm extends Nette\Object
         }
     }
 
+    /**
+     * Vrátí možná oprávnění jako možnosti pro select.
+     * @return array
+     */
     private function preparePermissionsOptions()
     {
         $options = [];
@@ -202,12 +233,24 @@ class EditRoleForm extends Nette\Object
         return $options;
     }
 
+    /**
+     * Připraví oprávnění jako možnost pro select.
+     * @param $optionsGroup
+     * @param $permissionName
+     * @param $resourceName
+     */
     private function preparePermissionOption(&$optionsGroup, $permissionName, $resourceName)
     {
         $permission = $this->permissionRepository->findByPermissionAndResourceName($permissionName, $resourceName);
         $optionsGroup[$permission->getId()] = 'common.permission_name.' . $permissionName . '.' . $resourceName;
     }
 
+    /**
+     * Ověří kolize mezi vyžadovanými a nekompatibilními rolemi.
+     * @param $field
+     * @param $args
+     * @return bool
+     */
     public function validateIncompatibleAndRequiredCollision($field, $args)
     {
         $incompatibleRoles = $this->roleRepository->findRolesByIds($args[0]);
@@ -236,6 +279,12 @@ class EditRoleForm extends Nette\Object
         return $valid;
     }
 
+    /**
+     * Ověří, zda stránka, kam mají být uživatelé přesměrování po přihlášení, je pro ně viditelná.
+     * @param $field
+     * @param $args
+     * @return bool
+     */
     public function validateRedirectAllowed($field, $args)
     {
         return in_array($field->getValue(), $args[0]);

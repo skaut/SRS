@@ -9,6 +9,12 @@ use Nette;
 use Nette\Application\UI\Form;
 
 
+/**
+ * Formulář pro nastavení dokladů.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class PaymentProofForm extends Nette\Object
 {
     /** @var BaseForm */
@@ -18,12 +24,21 @@ class PaymentProofForm extends Nette\Object
     private $settingsRepository;
 
 
+    /**
+     * PaymentProofForm constructor.
+     * @param BaseForm $baseForm
+     * @param SettingsRepository $settingsRepository
+     */
     public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository)
     {
         $this->baseForm = $baseForm;
         $this->settingsRepository = $settingsRepository;
     }
 
+    /**
+     * Vytvoří formulář.
+     * @return Form
+     */
     public function create()
     {
         $form = $this->baseForm->create();
@@ -59,6 +74,11 @@ class PaymentProofForm extends Nette\Object
         return $form;
     }
 
+    /**
+     * Zpracuje formulář.
+     * @param Form $form
+     * @param \stdClass $values
+     */
     public function processForm(Form $form, \stdClass $values)
     {
         $this->settingsRepository->setValue(Settings::COMPANY, $values['company']);

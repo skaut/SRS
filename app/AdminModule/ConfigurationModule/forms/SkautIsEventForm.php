@@ -10,6 +10,12 @@ use Nette;
 use Nette\Application\UI\Form;
 
 
+/**
+ * Formulár pro nastavení propojení se skautIS akcí.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class SkautIsEventForm extends Nette\Object
 {
     /** @var BaseForm */
@@ -22,6 +28,12 @@ class SkautIsEventForm extends Nette\Object
     private $skautIsService;
 
 
+    /**
+     * SkautIsEventForm constructor.
+     * @param BaseForm $baseForm
+     * @param SettingsRepository $settingsRepository
+     * @param SkautIsService $skautIsService
+     */
     public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository, SkautIsService $skautIsService)
     {
         $this->baseForm = $baseForm;
@@ -29,6 +41,10 @@ class SkautIsEventForm extends Nette\Object
         $this->skautIsService = $skautIsService;
     }
 
+    /**
+     * Vytvoří formulář.
+     * @return Form
+     */
     public function create()
     {
         $form = $this->baseForm->create();
@@ -47,6 +63,11 @@ class SkautIsEventForm extends Nette\Object
         return $form;
     }
 
+    /**
+     * Zpracuje formulář.
+     * @param Form $form
+     * @param \stdClass $values
+     */
     public function processForm(Form $form, \stdClass $values)
     {
         $eventId = $values['skautisEvent'];

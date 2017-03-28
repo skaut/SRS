@@ -23,6 +23,11 @@ use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 
 
+/**
+ * Komponenta pro správu rolí.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class UsersGridControl extends Control
 {
     /** @var Translator */
@@ -59,6 +64,19 @@ class UsersGridControl extends Control
     private $excelExportService;
 
 
+    /**
+     * UsersGridControl constructor.
+     * @param Translator $translator
+     * @param UserRepository $userRepository
+     * @param SettingsRepository $settingsRepository
+     * @param CustomInputRepository $customInputRepository
+     * @param RoleRepository $roleRepository
+     * @param ProgramRepository $programRepository
+     * @param BlockRepository $blockRepository
+     * @param PdfExportService $pdfExportService
+     * @param ExcelExportService $excelExportService
+     * @param Session $session
+     */
     public function __construct(Translator $translator, UserRepository $userRepository,
                                 SettingsRepository $settingsRepository, CustomInputRepository $customInputRepository,
                                 RoleRepository $roleRepository, ProgramRepository $programRepository,
@@ -81,11 +99,18 @@ class UsersGridControl extends Control
         $this->sessionSection = $session->getSection('srs');
     }
 
+    /**
+     * Vykreslí komponentu.
+     */
     public function render()
     {
         $this->template->render(__DIR__ . '/templates/users_grid.latte');
     }
 
+    /**
+     * Vytvoří komponentu.
+     * @param $name
+     */
     public function createComponentUsersGrid($name)
     {
         $grid = new DataGrid($this, $name);
@@ -275,6 +300,11 @@ class UsersGridControl extends Control
         $grid->setColumnsSummary(['fee']);
     }
 
+    /**
+     * Upraví údaje o platbš uživatele.
+     * @param $id
+     * @param $values
+     */
     public function edit($id, $values)
     {
         $user = $this->userRepository->findById($id);
@@ -292,6 +322,11 @@ class UsersGridControl extends Control
         }
     }
 
+    /**
+     * Změní stav uživatele.
+     * @param $id
+     * @param $approved
+     */
     public function changeApproved($id, $approved)
     {
         $user = $this->userRepository->findById($id);
@@ -321,6 +356,11 @@ class UsersGridControl extends Control
         $this->redirect('this');
     }
 
+    /**
+     * Změní účast uživatele na semináři.
+     * @param $id
+     * @param $attended
+     */
     public function changeAttended($id, $attended)
     {
         $user = $this->userRepository->findById($id);
@@ -338,6 +378,10 @@ class UsersGridControl extends Control
         }
     }
 
+    /**
+     * Hromadně schválí uživatele.
+     * @param array $ids
+     */
     public function groupApprove(array $ids)
     {
         $users = $this->userRepository->findUsersByIds($ids);
@@ -377,6 +421,11 @@ class UsersGridControl extends Control
         $this->redirect('this');
     }
 
+    /**
+     * Hromadně nastaví role.
+     * @param array $ids
+     * @param $value
+     */
     public function groupChangeRoles(array $ids, $value)
     {
         $users = $this->userRepository->findUsersByIds($ids);
@@ -432,6 +481,10 @@ class UsersGridControl extends Control
         $this->redirect('this');
     }
 
+    /**
+     * Hromadně označí uživatele jako zúčastněné.
+     * @param array $ids
+     */
     public function groupMarkAttended(array $ids)
     {
         $this->userRepository->setAttended($ids);
@@ -447,6 +500,11 @@ class UsersGridControl extends Control
         }
     }
 
+    /**
+     * Hromadně označí uživatele jako zaplacené dnes.
+     * @param array $ids
+     * @param $value
+     */
     public function groupMarkPaidToday(array $ids, $value)
     {
         foreach ($ids as $id) {
@@ -469,24 +527,68 @@ class UsersGridControl extends Control
         }
     }
 
+    /**
+     * Hromadně vygeneruje potvrzení o zaplacení.
+     * @param array $ids
+     */
     public function groupGeneratePaymentProofs(array $ids)
     {
         $this->sessionSection->userIds = $ids;
         $this->redirect('generatepaymentproofs'); //presmerovani kvuli zruseni ajax
     }
 
+    /**
+     * Hromadně vyexportuje seznam uživatelů s rolemi.
+     * @param array $ids
+     */
     public function groupExportRoles(array $ids)
     {
         $this->sessionSection->userIds = $ids;
         $this->redirect('exportroles'); //presmerovani kvuli zruseni ajax
     }
 
+    /**
+     * Zpracuje export seznamu uživatelů s rolemi.
+     */
+    public function handleExportRoles()
+    {
+        $ids = $this->session->getSection('srs')->userIds;
+
+        $users = $this->userRepository->findUsersByIds($ids);
+        $roles = $this->roleRepository->findAll();
+
+        $response = $this->excelExportService->exportUsersRoles($users, $roles, "role-uzivatelu.xlsx");
+
+        $this->getPresenter()->sendResponse($response);
+    }
+
+    /**
+     * Hromadně vyexportuje harmonogramy uživatelů.
+     * @param array $ids
+     */
     public function groupExportSchedules(array $ids)
     {
         $this->sessionSection->userIds = $ids;
         $this->redirect('exportschedules'); //presmerovani kvuli zruseni ajax
     }
 
+    /**
+     * Zpracuje export harmonogramů uživatelů.
+     */
+    public function handleExportSchedules()
+    {
+        $ids = $this->session->getSection('srs')->userIds;
+
+        $users = $this->userRepository->findUsersByIds($ids);
+
+        $response = $this->excelExportService->exportUsersSchedules($users, "harmonogramy-uzivatelu.xlsx");
+
+        $this->getPresenter()->sendResponse($response);
+    }
+
+    /**
+     * Vygeneruje doklady o zaplacení.
+     */
     public function handleGeneratePaymentProofs()
     {
         $ids = $this->session->getSection('srs')->userIds;
@@ -507,29 +609,10 @@ class UsersGridControl extends Control
         $this->pdfExportService->generatePaymentProofs($usersToGenerate, "doklady.pdf");
     }
 
-    public function handleExportRoles()
-    {
-        $ids = $this->session->getSection('srs')->userIds;
-
-        $users = $this->userRepository->findUsersByIds($ids);
-        $roles = $this->roleRepository->findAll();
-
-        $response = $this->excelExportService->exportUsersRoles($users, $roles, "role-uzivatelu.xlsx");
-
-        $this->getPresenter()->sendResponse($response);
-    }
-
-    public function handleExportSchedules()
-    {
-        $ids = $this->session->getSection('srs')->userIds;
-
-        $users = $this->userRepository->findUsersByIds($ids);
-
-        $response = $this->excelExportService->exportUsersSchedules($users, "harmonogramy-uzivatelu.xlsx");
-
-        $this->getPresenter()->sendResponse($response);
-    }
-
+    /**
+     * Vrátí platební metody jako možnosti pro select. Bez prázdné možnosti.
+     * @return array
+     */
     private function preparePaymentMethodOptionsWithoutEmpty()
     {
         $options = [];
@@ -538,6 +621,10 @@ class UsersGridControl extends Control
         return $options;
     }
 
+    /**
+     * Vrátí platební metody jako možnosti pro select. S prázdnou možností.
+     * @return array
+     */
     private function preparePaymentMethodOptionsWithEmpty()
     {
         $options = [];
@@ -547,6 +634,10 @@ class UsersGridControl extends Control
         return $options;
     }
 
+    /**
+     * Vrátí platební metody jako možnosti pro filtr.
+     * @return array
+     */
     private function preparePaymentMethodFilterOptions()
     {
         $options = [];
@@ -556,6 +647,12 @@ class UsersGridControl extends Control
         return $options;
     }
 
+    /**
+     * Zkrátí $text na $length znaků a doplní '...'.
+     * @param $text
+     * @param $length
+     * @return bool|string
+     */
     private function truncate($text, $length) {
         if (strlen($text) > $length) {
             $text = $text . " ";

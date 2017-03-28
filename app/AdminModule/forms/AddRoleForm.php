@@ -9,6 +9,12 @@ use Nette;
 use Nette\Application\UI\Form;
 
 
+/**
+ * Formulář pro vytvoření role.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class AddRoleForm extends Nette\Object
 {
     /** @var BaseForm */
@@ -18,12 +24,21 @@ class AddRoleForm extends Nette\Object
     private $roleRepository;
 
 
+    /**
+     * AddRoleForm constructor.
+     * @param BaseForm $baseFormFactory
+     * @param RoleRepository $roleRepository
+     */
     public function __construct(BaseForm $baseFormFactory, RoleRepository $roleRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->roleRepository = $roleRepository;
     }
 
+    /**
+     * Vytvoří formulář.
+     * @return Form
+     */
     public function create()
     {
         $form = $this->baseFormFactory->create();
@@ -48,6 +63,11 @@ class AddRoleForm extends Nette\Object
         return $form;
     }
 
+    /**
+     * Zpracuje formulář.
+     * @param Form $form
+     * @param \stdClass $values
+     */
     public function processForm(Form $form, \stdClass $values)
     {
         if (!$form['cancel']->isSubmittedBy()) {

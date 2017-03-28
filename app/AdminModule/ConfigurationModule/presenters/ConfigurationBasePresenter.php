@@ -7,6 +7,11 @@ use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 
 
+/**
+ * Basepresenter pro ConfigurationModule.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 abstract class ConfigurationBasePresenter extends AdminBasePresenter
 {
     protected $resource = Resource::CONFIGURATION;

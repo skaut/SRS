@@ -17,9 +17,18 @@ use Nette;
 use Nette\Application\UI\Form;
 
 
+/**
+ * Formulář pro úpravu podrobností o účasti uživatele na semináři.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class EditUserSeminarForm extends Nette\Object
 {
-    /** @var User */
+    /**
+     * Upravovaný uživatel.
+     * @var User
+     */
     private $user;
 
     /** @var BaseForm */
@@ -44,6 +53,16 @@ class EditUserSeminarForm extends Nette\Object
     private $programRepository;
 
 
+    /**
+     * EditUserSeminarForm constructor.
+     * @param BaseForm $baseFormFactory
+     * @param UserRepository $userRepository
+     * @param RoleRepository $roleRepository
+     * @param CustomInputRepository $customInputRepository
+     * @param CustomInputValueRepository $customInputValueRepository
+     * @param SettingsRepository $settingsRepository
+     * @param ProgramRepository $programRepository
+     */
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
                                 RoleRepository $roleRepository, CustomInputRepository $customInputRepository,
                                 CustomInputValueRepository $customInputValueRepository,
@@ -58,6 +77,11 @@ class EditUserSeminarForm extends Nette\Object
         $this->programRepository = $programRepository;
     }
 
+    /**
+     * Vytvoří formulář.
+     * @param $id
+     * @return Form
+     */
     public function create($id)
     {
         $this->user = $this->userRepository->findById($id);
@@ -130,6 +154,11 @@ class EditUserSeminarForm extends Nette\Object
         return $form;
     }
 
+    /**
+     * Zpracuje formulář.
+     * @param Form $form
+     * @param \stdClass $values
+     */
     public function processForm(Form $form, \stdClass $values)
     {
         if (!$form['cancel']->isSubmittedBy()) {
@@ -175,6 +204,12 @@ class EditUserSeminarForm extends Nette\Object
         }
     }
 
+    /**
+     * Ověří obsazenost rolí.
+     * @param $field
+     * @param $args
+     * @return bool
+     */
     public function validateRolesCapacities($field, $args)
     {
         $approved = $args[0];
@@ -189,6 +224,12 @@ class EditUserSeminarForm extends Nette\Object
         return true;
     }
 
+    /**
+     * Ověří kombinaci role "Neregistrovaný" s ostatními rolemi.
+     * @param $field
+     * @param $args
+     * @return bool
+     */
     public function validateRolesCombination($field, $args)
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());

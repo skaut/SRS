@@ -15,6 +15,11 @@ use Nette\Application\UI\Control;
 use Ublaboo\DataGrid\DataGrid;
 
 
+/**
+ * Komponenta pro správu programových bloků.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class ProgramBlocksGridControl extends Control
 {
     /** @var Translator */
@@ -36,6 +41,15 @@ class ProgramBlocksGridControl extends Control
     private $programRepository;
 
 
+    /**
+     * ProgramBlocksGridControl constructor.
+     * @param Translator $translator
+     * @param BlockRepository $blockRepository
+     * @param SettingsRepository $settingsRepository
+     * @param UserRepository $userRepository
+     * @param CategoryRepository $categoryRepository
+     * @param ProgramRepository $programRepository
+     */
     public function __construct(Translator $translator, BlockRepository $blockRepository,
                                 SettingsRepository $settingsRepository, UserRepository $userRepository,
                                 CategoryRepository $categoryRepository, ProgramRepository $programRepository)
@@ -50,11 +64,18 @@ class ProgramBlocksGridControl extends Control
         $this->programRepository = $programRepository;
     }
 
+    /**
+     * Vykreslí komponentu.
+     */
     public function render()
     {
         $this->template->render(__DIR__ . '/templates/program_blocks_grid.latte');
     }
 
+    /**
+     * Vytvoří komponentu.
+     * @param $name
+     */
     public function createComponentProgramBlocksGrid($name)
     {
         $grid = new DataGrid($this, $name);
@@ -146,6 +167,10 @@ class ProgramBlocksGridControl extends Control
         $grid->allowRowsAction('delete', [$this, 'isAllowedModifyBlock']);
     }
 
+    /**
+     * Odstraní programový blok.
+     * @param $id
+     */
     public function handleDelete($id)
     {
         $block = $this->blockRepository->findById($id);
@@ -162,6 +187,11 @@ class ProgramBlocksGridControl extends Control
         $this->redirect('this');
     }
 
+    /**
+     * Změní povinnost bloku.
+     * @param $id
+     * @param $mandatory
+     */
     public function changeMandatory($id, $mandatory)
     {
         $block = $this->blockRepository->findById($id);
@@ -208,6 +238,11 @@ class ProgramBlocksGridControl extends Control
         }
     }
 
+    /**
+     * Vrací true, pokud je uživatel oprávněn upravovat programový blok.
+     * @param $block
+     * @return mixed
+     */
     public function isAllowedModifyBlock($block)
     {
         return $this->getPresenter()->dbuser->isAllowedModifyBlock($block);

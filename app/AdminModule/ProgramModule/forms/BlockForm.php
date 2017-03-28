@@ -17,12 +17,24 @@ use Nette;
 use Nette\Application\UI\Form;
 
 
+/**
+ * Formulář pro úpravu programového bloku.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class BlockForm extends Nette\Object
 {
-    /** @var User */
+    /**
+     * Přihlášený uživatel.
+     * @var User
+     */
     private $user;
 
-    /** @var Block */
+    /**
+     * Upravovaný programový blok.
+     * @var Block
+     */
     private $block;
 
     /** @var BaseForm */
@@ -44,6 +56,15 @@ class BlockForm extends Nette\Object
     private $programRepository;
 
 
+    /**
+     * BlockForm constructor.
+     * @param BaseForm $baseFormFactory
+     * @param BlockRepository $blockRepository
+     * @param UserRepository $userRepository
+     * @param CategoryRepository $categoryRepository
+     * @param SettingsRepository $settingsRepository
+     * @param ProgramRepository $programRepository
+     */
     public function __construct(BaseForm $baseFormFactory, BlockRepository $blockRepository,
                                 UserRepository $userRepository, CategoryRepository $categoryRepository,
                                 SettingsRepository $settingsRepository, ProgramRepository $programRepository)
@@ -56,6 +77,12 @@ class BlockForm extends Nette\Object
         $this->programRepository = $programRepository;
     }
 
+    /**
+     * Vytvoří formulář.
+     * @param $id
+     * @param $userId
+     * @return Form
+     */
     public function create($id, $userId)
     {
         $this->block = $this->blockRepository->findById($id);
@@ -145,6 +172,11 @@ class BlockForm extends Nette\Object
         return $form;
     }
 
+    /**
+     * Zpracuje formulář.
+     * @param Form $form
+     * @param \stdClass $values
+     */
     public function processForm(Form $form, \stdClass $values)
     {
         if (!$form['cancel']->isSubmittedBy()) {
@@ -197,6 +229,12 @@ class BlockForm extends Nette\Object
         }
     }
 
+    /**
+     * Ověří, zda může být program automaticky přihlašovaný.
+     * @param $field
+     * @param $args
+     * @return bool
+     */
     public function validateAutoRegister($field, $args)
     {
         if ($this->block) {

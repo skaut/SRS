@@ -12,6 +12,12 @@ use Nette\Application\UI\Form;
 use Nette\Utils\Strings;
 
 
+/**
+ * Formulář pro nastavení webové prezentace.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class WebForm extends Nette\Object
 {
     /** @var BaseForm */
@@ -27,6 +33,13 @@ class WebForm extends Nette\Object
     private $filesService;
 
 
+    /**
+     * WebForm constructor.
+     * @param BaseForm $baseFormFactory
+     * @param PageRepository $pageRepository
+     * @param SettingsRepository $settingsRepository
+     * @param FilesService $filesService
+     */
     public function __construct(BaseForm $baseFormFactory, PageRepository $pageRepository,
                                 SettingsRepository $settingsRepository, FilesService $filesService)
     {
@@ -36,6 +49,10 @@ class WebForm extends Nette\Object
         $this->filesService = $filesService;
     }
 
+    /**
+     * Vytvoří formulář.
+     * @return Form
+     */
     public function create()
     {
         $form = $this->baseFormFactory->create();
@@ -69,6 +86,11 @@ class WebForm extends Nette\Object
         return $form;
     }
 
+    /**
+     * Zpracuje formulář.
+     * @param Form $form
+     * @param \stdClass $values
+     */
     public function processForm(Form $form, \stdClass $values)
     {
         $logo = $values['logo'];

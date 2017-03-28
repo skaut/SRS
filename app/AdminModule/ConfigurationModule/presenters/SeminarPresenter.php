@@ -6,6 +6,12 @@ use App\AdminModule\ConfigurationModule\Forms\SeminarForm;
 use Nette\Application\UI\Form;
 
 
+/**
+ * Presenter obsluhující nastavení semináře.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class SeminarPresenter extends ConfigurationBasePresenter
 {
     /**

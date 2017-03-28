@@ -14,6 +14,12 @@ use Nette\Application\UI\Form;
 use Nette\Http\Session;
 
 
+/**
+ * Presenter obsluhující správu programových bloků.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class BlocksPresenter extends ProgramBasePresenter
 {
     /**
@@ -60,6 +66,9 @@ class BlocksPresenter extends ProgramBasePresenter
         $this->session->getSection('srs')->programId = 0;
     }
 
+    /**
+     * @param $id
+     */
     public function renderDetail($id)
     {
         $block = $this->blockRepository->findById($id);
@@ -70,6 +79,9 @@ class BlocksPresenter extends ProgramBasePresenter
             $this->settingsRepository->getValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE);
     }
 
+    /**
+     * @param $id
+     */
     public function renderEdit($id)
     {
         $block = $this->blockRepository->findById($id);
@@ -82,6 +94,10 @@ class BlocksPresenter extends ProgramBasePresenter
         $this->template->block = $block;
     }
 
+    /**
+     * Zobrazí přehled účastníků u vybraného programu.
+     * @param $programId
+     */
     public function handleShowAttendees($programId)
     {
         $this->session->getSection('srs')->programId = $programId;
@@ -94,6 +110,10 @@ class BlocksPresenter extends ProgramBasePresenter
             $this->redirect('this');
     }
 
+    /**
+     * Odstraní vybraný program.
+     * @param $programId
+     */
     public function handleDeleteProgram($programId)
     {
         $program = $this->programRepository->findById($programId);

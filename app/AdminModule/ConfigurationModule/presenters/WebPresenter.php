@@ -7,6 +7,12 @@ use App\Model\Settings\Settings;
 use Nette\Application\UI\Form;
 
 
+/**
+ * Presenter obsluhující nastavení webové prezentace.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class WebPresenter extends ConfigurationBasePresenter
 {
     /**

@@ -16,6 +16,12 @@ use App\Services\PdfExportService;
 use Nette\Application\UI\Form;
 
 
+/**
+ * Presenter obsluhující správu uživatelů.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class UsersPresenter extends AdminBasePresenter
 {
     protected $resource = Resource::USERS;
@@ -68,6 +74,9 @@ class UsersPresenter extends AdminBasePresenter
         $this->template->editPayment = false;
     }
 
+    /**
+     * @param $id
+     */
     public function renderDetail($id)
     {
         $this->template->sidebarVisible = true;
@@ -84,12 +93,19 @@ class UsersPresenter extends AdminBasePresenter
         $this->template->paymentMethodBank = PaymentType::BANK;
     }
 
+    /**
+     * Zpracuje fulltext vyhledávání v displayName uživatelů.
+     * @param $text
+     */
     public function handleSearch($text)
     {
         $this->template->results = $this->userRepository->findNamesByLikeDisplayNameOrderedByDisplayName($text);
         $this->redrawControl('results');
     }
 
+    /**
+     * Zobrazí formulář pro editaci údajů o účasti uživatele na semináři.
+     */
     public function handleEditSeminar()
     {
         $this->template->editSeminar = true;
@@ -101,6 +117,9 @@ class UsersPresenter extends AdminBasePresenter
         }
     }
 
+    /**
+     * Zobrazí formulář pro editaci údajů o platbě uživatele.
+     */
     public function handleEditPayment()
     {
         $this->template->editPayment = true;
@@ -112,6 +131,10 @@ class UsersPresenter extends AdminBasePresenter
         }
     }
 
+    /**
+     * Vygeneruje příjmový pokladní doklad.
+     * @param $id
+     */
     public function actionGeneratePaymentProofCash($id)
     {
         $user = $this->userRepository->findById($id);
@@ -122,6 +145,10 @@ class UsersPresenter extends AdminBasePresenter
         $this->pdfExportService->generatePaymentProof($user, "prijmovy-pokladni-doklad.pdf");
     }
 
+    /**
+     * Vygeneruje potvrzení o přijetí platby.
+     * @param $id
+     */
     public function actionGeneratePaymentProofBank($id)
     {
         $user = $this->userRepository->findById($id);

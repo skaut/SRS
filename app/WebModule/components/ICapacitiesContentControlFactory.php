@@ -4,7 +4,7 @@ namespace App\WebModule\Components;
 
 
 /**
- * Rozhraní komponenty s kapacitami rolí.
+ * Factory komponenty s kapacitami rolí.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */

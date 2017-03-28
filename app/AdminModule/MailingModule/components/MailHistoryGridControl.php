@@ -9,6 +9,11 @@ use Nette\Application\UI\Control;
 use Ublaboo\DataGrid\DataGrid;
 
 
+/**
+ * Komponenta pro výpis historie e-mailů.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class MailHistoryGridControl extends Control
 {
     /** @var Translator */
@@ -18,6 +23,11 @@ class MailHistoryGridControl extends Control
     private $mailRepository;
 
 
+    /**
+     * MailHistoryGridControl constructor.
+     * @param Translator $translator
+     * @param MailRepository $mailRepository
+     */
     public function __construct(Translator $translator, MailRepository $mailRepository)
     {
         parent::__construct();
@@ -26,11 +36,18 @@ class MailHistoryGridControl extends Control
         $this->mailRepository = $mailRepository;
     }
 
+    /**
+     * Vykreslí komponentu.
+     */
     public function render()
     {
         $this->template->render(__DIR__ . '/templates/mail_history_grid.latte');
     }
 
+    /**
+     * Vytvoří komponentu.
+     * @param $name
+     */
     public function createComponentMailHistoryGrid($name)
     {
         $grid = new DataGrid($this, $name);

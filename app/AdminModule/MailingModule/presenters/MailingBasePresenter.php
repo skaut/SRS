@@ -7,6 +7,11 @@ use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 
 
+/**
+ * Basepresenter pro MailingModule.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 abstract class MailingBasePresenter extends AdminBasePresenter
 {
     protected $resource = Resource::MAILING;

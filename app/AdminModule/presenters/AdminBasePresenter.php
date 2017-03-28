@@ -61,6 +61,7 @@ abstract class AdminBasePresenter extends BasePresenter
     public $skautIsService;
 
     /**
+     * Přihlášený uživatel.
      * @var User
      */
     public $dbuser;
@@ -135,6 +136,10 @@ abstract class AdminBasePresenter extends BasePresenter
         $this->template->containerAttributes = '';
     }
 
+    /**
+     * Kontroluje oprávnění uživatele a případně jej přesměruje.
+     * @param $permission
+     */
     public function checkPermission($permission)
     {
         if (!$this->user->isAllowed($this->resource, $permission)) {

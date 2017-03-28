@@ -6,6 +6,12 @@ use App\AdminModule\MailingModule\Forms\SendForm;
 use Nette\Forms\Form;
 
 
+/**
+ * Presenter obsluhující rozesílání e-mailu vytvořeného ve formuláři.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class SendPresenter extends MailingBasePresenter
 {
     /**

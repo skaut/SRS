@@ -16,7 +16,10 @@ use Nette\Application\UI\Form;
  */
 class AdditionalInformationForm extends Nette\Object
 {
-    /** @var User */
+    /**
+     * Přihlášený uživatel.
+     * @var User
+     */
     private $user;
 
     /** @var BaseForm */
@@ -38,6 +41,7 @@ class AdditionalInformationForm extends Nette\Object
     }
 
     /**
+     * Vytvoří formulář.
      * @param $id
      * @return Form
      */
@@ -71,6 +75,7 @@ class AdditionalInformationForm extends Nette\Object
     }
 
     /**
+     * Zpracuje formulář.
      * @param Form $form
      * @param \stdClass $values
      */

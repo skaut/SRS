@@ -10,6 +10,11 @@ use Nette\Application\UI\Form;
 use Ublaboo\DataGrid\DataGrid;
 
 
+/**
+ * Komponenta pro správu místností.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class RoomsGridControl extends Control
 {
     /** @var Translator */
@@ -32,11 +37,18 @@ class RoomsGridControl extends Control
         $this->roomRepository = $roomRepository;
     }
 
+    /**
+     * Vykreslí komponentu.
+     */
     public function render()
     {
         $this->template->render(__DIR__ . '/templates/rooms_grid.latte');
     }
 
+    /**
+     * Vytvoří komponentu.
+     * @param $name
+     */
     public function createComponentRoomsGrid($name)
     {
         $grid = new DataGrid($this, $name);
@@ -78,6 +90,10 @@ class RoomsGridControl extends Control
             ]);
     }
 
+    /**
+     * Zpracuje přidání místnosti.
+     * @param $values
+     */
     public function add($values)
     {
         $room = new Room();
@@ -92,6 +108,11 @@ class RoomsGridControl extends Control
         $this->redirect('this');
     }
 
+    /**
+     * Zpracuje úpravu místnosti.
+     * @param $id
+     * @param $values
+     */
     public function edit($id, $values)
     {
         $room = $this->roomRepository->findById($id);
@@ -106,6 +127,10 @@ class RoomsGridControl extends Control
         $this->redirect('this');
     }
 
+    /**
+     * Odstraní místnost.
+     * @param $id
+     */
     public function handleDelete($id)
     {
         $room = $this->roomRepository->findById($id);

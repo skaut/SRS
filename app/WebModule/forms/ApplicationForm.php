@@ -27,7 +27,10 @@ use Skautis\Wsdl\WsdlException;
  */
 class ApplicationForm extends Nette\Object
 {
-    /** @var User */
+    /**
+     * Přihlášený uživatel.
+     * @var User
+     */
     private $user;
 
     public $onSkautIsError;
@@ -79,6 +82,7 @@ class ApplicationForm extends Nette\Object
     }
 
     /**
+     * Vytvoří formulář.
      * @param $id
      * @return Form
      */
@@ -156,6 +160,7 @@ class ApplicationForm extends Nette\Object
     }
 
     /**
+     * Zpracuje formulář.
      * @param Form $form
      * @param \stdClass $values
      */

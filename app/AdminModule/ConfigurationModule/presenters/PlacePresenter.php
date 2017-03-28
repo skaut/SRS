@@ -9,6 +9,11 @@ use App\Model\Settings\Place\PlacePointRepository;
 use Nette\Application\UI\Form;
 
 
+/**
+ * Presenter obsluhující nastavení místa semináře.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class PlacePresenter extends ConfigurationBasePresenter
 {
     /**
@@ -36,6 +41,9 @@ class PlacePresenter extends ConfigurationBasePresenter
     public $placePointsGridControlFactory;
 
 
+    /**
+     * @param $id
+     */
     public function renderEdit($id)
     {
         $placePoint = $this->placePointRepository->findById($id);

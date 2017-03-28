@@ -6,6 +6,11 @@ use App\AdminModule\ProgramModule\Components\IProgramCategoriesGridControlFactor
 use App\Model\ACL\Permission;
 
 
+/**
+ * Presenter obsluhující správu kategorií.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class CategoriesPresenter extends ProgramBasePresenter
 {
     /**

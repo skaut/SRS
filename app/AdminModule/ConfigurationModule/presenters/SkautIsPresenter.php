@@ -8,6 +8,12 @@ use Nette\Application\UI\Form;
 use Skautis\Wsdl\WsdlException;
 
 
+/**
+ * Presenter obsluhující nastavení propojení se skautIS akcí.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class SkautIsPresenter extends ConfigurationBasePresenter
 {
     /**
@@ -37,6 +43,9 @@ class SkautIsPresenter extends ConfigurationBasePresenter
         }
     }
 
+    /**
+     * Zruší propojení s akcí ve skautIS.
+     */
     public function handleDisconnect()
     {
         $this->settingsRepository->setValue(Settings::SKAUTIS_EVENT_ID, null);
@@ -47,6 +56,9 @@ class SkautIsPresenter extends ConfigurationBasePresenter
         $this->redirect('this');
     }
 
+    /**
+     * Synchronizuje účastníky s účastníky ve skautIS.
+     */
     public function handleSyncParticipants()
     {
         $participants = $this->userRepository->findAllSyncedWithSkautIS();

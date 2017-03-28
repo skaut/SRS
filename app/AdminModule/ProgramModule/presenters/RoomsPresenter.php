@@ -6,6 +6,11 @@ use App\AdminModule\ProgramModule\Components\IRoomsGridControlFactory;
 use App\Model\ACL\Permission;
 
 
+/**
+ * Presenter obsluhující správu místností.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class RoomsPresenter extends ProgramBasePresenter
 {
     /**
