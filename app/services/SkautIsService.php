@@ -150,6 +150,35 @@ class SkautIsService extends Nette\Object
     }
 
     /**
+     * Vrací platné členství typu "řádné" nebo "čestné", pokud osoba žádné nemá vrací null.
+     * @param $personId
+     * @return \stdClass|null
+     */
+    public function getValidMembership($personId)
+    {
+        $membership = $this->skautIs->org->MembershipAllPerson([
+            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
+            'ID_Person' => $personId,
+            'ID_MembershipType' => 'radne',
+            'IsValid' => true
+        ]);
+
+        if ($membership == new \stdClass()) {
+            $membership = $this->skautIs->org->MembershipAllPerson([
+                'ID_Login' => $this->skautIs->getUser()->getLoginId(),
+                'ID_Person' => $personId,
+                'ID_MembershipType' => 'cestne',
+                'IsValid' => true
+            ]);
+
+            if ($membership == new \stdClass())
+                return null;
+        }
+
+        return $membership->MembershipAllOutput;
+    }
+
+    /**
      * Vrací údaje o jednotce.
      * @param $unitId
      * @return mixed

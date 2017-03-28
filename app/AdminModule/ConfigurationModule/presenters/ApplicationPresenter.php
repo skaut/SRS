@@ -34,6 +34,7 @@ class ApplicationPresenter extends ConfigurationBasePresenter
      */
     public $applicationFormFactory;
 
+
     /**
      * @return CustomInputsGridControl
      */
