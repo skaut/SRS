@@ -4,7 +4,7 @@ namespace App\AdminModule\ConfigurationModule\Components;
 
 
 /**
- * Rozhraní komponenty pro správu mapových bodů.
+ * Factory komponenty pro správu mapových bodů.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */

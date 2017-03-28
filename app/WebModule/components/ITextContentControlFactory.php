@@ -4,7 +4,7 @@ namespace App\WebModule\Components;
 
 
 /**
- * Rozhraní komponenty s textem.
+ * Factory komponenty s textem.
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>

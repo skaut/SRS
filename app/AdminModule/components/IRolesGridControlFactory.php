@@ -4,7 +4,7 @@ namespace App\AdminModule\Components;
 
 
 /**
- * Rozhraní komponenty pro správu rolí.
+ * Factory komponenty pro správu rolí.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */

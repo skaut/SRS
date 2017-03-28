@@ -4,7 +4,7 @@ namespace App\AdminModule\CMSModule\Components;
 
 
 /**
- * Rozhraní komponenty pro správu štítků dokumentů.
+ * Factory komponenty pro správu štítků dokumentů.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */

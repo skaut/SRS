@@ -4,7 +4,7 @@ namespace App\AdminModule\CMSModule\Components;
 
 
 /**
- * Rozhraní komponenty pro správu dokumentů.
+ * Factory komponenty pro správu dokumentů.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */

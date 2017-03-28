@@ -4,7 +4,7 @@ namespace App\WebModule\Components;
 
 
 /**
- * Rozhraní komponenty s přihláškou.
+ * Factory komponenty s přihláškou.
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
