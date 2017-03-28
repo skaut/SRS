@@ -126,6 +126,11 @@ class Settings
     const EDIT_REGISTRATION_TO = 'edit_registration_to';
 
     /**
+     * Text souhlasu u přihlášky.
+     */
+    const APPLICATION_AGREEMENT = 'application_agreement';
+
+    /**
      * Zobrazovat role přihlášeného uživatele.
      */
     const DISPLAY_USERS_ROLES = 'display_users_roles';

@@ -131,7 +131,6 @@ application_content:
     capacity_occupied: "Všechna místa v některé roli jsou obsazena."
     arrival: "Příjezd"
     departure: "Odjezd"
-    agreement: "Souhlasím, že uvedené údaje budou poskytnuty lektorům pro účely semináře."
     agreement_empty: "Musíte souhlasit s poskytnutím údajů."
     register: "Registrovat"
     register_synchronization_failed: "Synchronizace se skautIS se nepodařila. Zkuste se znovu přihlásit a upravit údaje v profilu."

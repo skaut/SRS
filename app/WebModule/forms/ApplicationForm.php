@@ -7,6 +7,8 @@ use App\Model\ACL\RoleRepository;
 use App\Model\Enums\Sex;
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\CustomInput\CustomInputRepository;
+use App\Model\Settings\Settings;
+use App\Model\Settings\SettingsRepository;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
 use App\Model\User\CustomInputValue\CustomInputValueRepository;
 use App\Model\User\CustomInputValue\CustomTextValue;
@@ -56,6 +58,9 @@ class ApplicationForm extends Nette\Object
     /** @var SkautIsService */
     private $skautIsService;
 
+    /** @var SettingsRepository */
+    private $settingsRepository;
+
 
     /**
      * ApplicationForm constructor.
@@ -66,11 +71,13 @@ class ApplicationForm extends Nette\Object
      * @param CustomInputValueRepository $customInputValueRepository
      * @param ProgramRepository $programRepository
      * @param SkautIsService $skautIsService
+     * @param SettingsRepository $settingsRepository
      */
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
                                 RoleRepository $roleRepository, CustomInputRepository $customInputRepository,
                                 CustomInputValueRepository $customInputValueRepository,
-                                ProgramRepository $programRepository, SkautIsService $skautIsService)
+                                ProgramRepository $programRepository, SkautIsService $skautIsService,
+                                SettingsRepository $settingsRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->userRepository = $userRepository;
@@ -79,6 +86,7 @@ class ApplicationForm extends Nette\Object
         $this->customInputValueRepository = $customInputValueRepository;
         $this->programRepository = $programRepository;
         $this->skautIsService = $skautIsService;
+        $this->settingsRepository = $settingsRepository;
     }
 
     /**
@@ -136,7 +144,7 @@ class ApplicationForm extends Nette\Object
 
         $this->addArrivalDeparture($form);
 
-        $form->addCheckbox('agreement', 'web.application_content.agreement')
+        $form->addCheckbox('agreement', $this->settingsRepository->getValue(Settings::APPLICATION_AGREEMENT))
             ->addRule(Form::FILLED, 'web.application_content.agreement_empty');
 
         $form->addSubmit('submit', 'web.application_content.register');

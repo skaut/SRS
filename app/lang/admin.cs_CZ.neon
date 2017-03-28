@@ -434,6 +434,8 @@ configuration:
     print_location: "Místo"
     print_location_empty: "Zadejte místo."
 
+    application_heading: "Přihláška"
+    application_agreement: "Text souhlasu s podmínkami"
     custom_inputs_heading: "Vlastní pole"
     custom_inputs_name: "Název"
     custom_inputs_type: "Typ"

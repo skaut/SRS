@@ -75,6 +75,7 @@ settings:
         accountant: "Konfigurace -> Platba a doklady -> Pokladník"
         print_location: "Konfigurace -> Platba a doklady -> Místo"
         account_number: "Konfigurace -> Platba a doklady -> Číslo účtu"
+        application_agreement: "Souhlasím se zpracováním mých osobních údajů pro potřeby účasti na této akci v rozsahu a dle pravidel daných přihláškou člena do organizace. Souhlasím s pořizování foto, audio a video záznamů z akce a souhlasím s jejich využítím pro potřeby Junáka - českého skauta. Tím není dotčeno mé právo pro konkrétní situaci souhlas omezit nebo vyloučit, a to sdělením vedoucímu programu předem. Osobní údaje jsou zpracovávány v souladu se zákonem č. 101/2000 Sb. na ochranu osobních údajů."
 
 cms:
     default:

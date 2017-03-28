@@ -69,11 +69,13 @@ class SettingsFixture extends AbstractFixture
         $settings[] = new Settings(Settings::REGISTER_PROGRAMS_FROM, $yesterday->format(\DateTime::ISO8601));
         $settings[] = new Settings(Settings::REGISTER_PROGRAMS_TO, $today->format(\DateTime::ISO8601));
         $settings[] = new Settings(Settings::EDIT_REGISTRATION_TO, $yesterday->format('Y-m-d'));
+        $settings[] = new Settings(Settings::APPLICATION_AGREEMENT, $this->translator->translate('common.settings.default_value.application_agreement'));
 
         $settings[] = new Settings(Settings::DISPLAY_USERS_ROLES, '1');
         $settings[] = new Settings(Settings::REDIRECT_AFTER_LOGIN, '/');
 
         $settings[] = new Settings(Settings::PLACE_DESCRIPTION, null);
+
 
         foreach ($settings as $setting) {
             $manager->persist($setting);
