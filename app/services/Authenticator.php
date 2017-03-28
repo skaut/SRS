@@ -113,11 +113,11 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
         $user->setLastLogin(new \DateTime());
         $user->setMember($skautISUser->HasMembership);
 
-        $skautISUnitId = $this->skautIsService->getUnitId();
-        if ($skautISUnitId != null)
-            $user->setUnit($this->skautIsService->getUnitDetail($skautISUnitId)->RegistrationNumber);
-        else
+        $validMembership = $this->skautIsService->getValidMembership($user->getSkautISPersonId());
+        if ($validMembership == null)
             $user->setUnit(null);
+        else
+            $user->setUnit($validMembership->RegistrationNumber);
     }
 
     /**
