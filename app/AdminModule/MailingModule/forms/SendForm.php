@@ -11,8 +11,17 @@ use Nette\Application\UI\Form;
 use Nette\Mail\SendException;
 
 
+/**
+ * Formulář pro vytvoření e-mailu.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class SendForm extends Nette\Object
 {
+    /**
+     * Událost po úspěšně odeslaném e-mailu.
+     */
     public $mailSuccess;
 
     /** @var BaseForm */
@@ -25,6 +34,12 @@ class SendForm extends Nette\Object
     private $roleRepository;
 
 
+    /**
+     * SendForm constructor.
+     * @param BaseForm $baseFormFactory
+     * @param MailService $mailService
+     * @param RoleRepository $roleRepository
+     */
     public function __construct(BaseForm $baseFormFactory, MailService $mailService, RoleRepository $roleRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
@@ -32,6 +47,10 @@ class SendForm extends Nette\Object
         $this->roleRepository = $roleRepository;
     }
 
+    /**
+     * Vytvoří formulář.
+     * @return Form
+     */
     public function create()
     {
         $form = $this->baseFormFactory->create();
@@ -58,6 +77,11 @@ class SendForm extends Nette\Object
         return $form;
     }
 
+    /**
+     * Zpracuje formulář.
+     * @param Form $form
+     * @param \stdClass $values
+     */
     public function processForm(Form $form, \stdClass $values)
     {
         try {
