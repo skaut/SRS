@@ -10,6 +10,12 @@ use Nette;
 use Nette\Application\UI\Form;
 
 
+/**
+ * Formulář pro nastavení programu.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class ProgramForm extends Nette\Object
 {
     /** @var BaseForm */
@@ -22,6 +28,12 @@ class ProgramForm extends Nette\Object
     private $translator;
 
 
+    /**
+     * ProgramForm constructor.
+     * @param BaseForm $baseForm
+     * @param SettingsRepository $settingsRepository
+     * @param Translator $translator
+     */
     public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository, Translator $translator)
     {
         $this->baseForm = $baseForm;
@@ -29,6 +41,10 @@ class ProgramForm extends Nette\Object
         $this->translator = $translator;
     }
 
+    /**
+     * Vytvoří formulář.
+     * @return Form
+     */
     public function create()
     {
         $form = $this->baseForm->create();
@@ -47,8 +63,8 @@ class ProgramForm extends Nette\Object
         $registerProgramsTo = $form->addDateTimePicker('registerProgramsTo', 'admin.configuration.register_programs_to')
             ->addRule(Form::FILLED, 'admin.configuration.register_programs_to_empty');
 
-        $registerProgramsFrom->addRule([$this, 'validateSeminarFromDate'], 'admin.configuration.register_programs_from_after_to', [$registerProgramsFrom, $registerProgramsTo]);
-        $registerProgramsTo->addRule([$this, 'validateSeminarToDate'], 'admin.configuration.register_programs_to_before_from', [$registerProgramsTo, $registerProgramsFrom]);
+        $registerProgramsFrom->addRule([$this, 'validateRegisterProgramsFrom'], 'admin.configuration.register_programs_from_after_to', [$registerProgramsFrom, $registerProgramsTo]);
+        $registerProgramsTo->addRule([$this, 'validateRegisterProgramsTo'], 'admin.configuration.register_programs_to_before_from', [$registerProgramsTo, $registerProgramsFrom]);
 
         $form->addSubmit('submit', 'admin.common.save');
 
@@ -66,6 +82,11 @@ class ProgramForm extends Nette\Object
         return $form;
     }
 
+    /**
+     * Zpracuje formulář.
+     * @param Form $form
+     * @param \stdClass $values
+     */
     public function processForm(Form $form, \stdClass $values)
     {
         $this->settingsRepository->setValue(Settings::IS_ALLOWED_ADD_BLOCK, $values['isAllowedAddBlock']);
@@ -76,12 +97,24 @@ class ProgramForm extends Nette\Object
         $this->settingsRepository->setDateTimeValue(Settings::REGISTER_PROGRAMS_TO, $values['registerProgramsTo']);
     }
 
-    public function validateSeminarFromDate($field, $args)
+    /**
+     * Ověří, že otevření zapisování programů je dříve než uzavření.
+     * @param $field
+     * @param $args
+     * @return bool
+     */
+    public function validateRegisterProgramsFrom($field, $args)
     {
         return $args[0] < $args[1];
     }
 
-    public function validateSeminarToDate($field, $args)
+    /**
+     * Ověří, že uzavření zapisování programů je později než otevření.
+     * @param $field
+     * @param $args
+     * @return bool
+     */
+    public function validateRegisterProgramsTo($field, $args)
     {
         return $args[0] > $args[1];
     }

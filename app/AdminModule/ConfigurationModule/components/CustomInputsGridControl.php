@@ -12,6 +12,11 @@ use Nette\Application\UI\Form;
 use Ublaboo\DataGrid\DataGrid;
 
 
+/**
+ * Komponenta pro správu vlastních polí přihlášky.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class CustomInputsGridControl extends Control
 {
     /** @var Translator */
@@ -21,6 +26,11 @@ class CustomInputsGridControl extends Control
     private $customInputRepository;
 
 
+    /**
+     * CustomInputsGridControl constructor.
+     * @param Translator $translator
+     * @param CustomInputRepository $customInputRepository
+     */
     public function __construct(Translator $translator, CustomInputRepository $customInputRepository)
     {
         parent::__construct();
@@ -29,11 +39,18 @@ class CustomInputsGridControl extends Control
         $this->customInputRepository = $customInputRepository;
     }
 
+    /**
+     * Vykreslí komponentu.
+     */
     public function render()
     {
         $this->template->render(__DIR__ . '/templates/custom_inputs_grid.latte');
     }
 
+    /**
+     * Vytvoří komponentu.
+     * @param $name
+     */
     public function createComponentCustomInputsGrid($name)
     {
         $grid = new DataGrid($this, $name);
@@ -83,6 +100,10 @@ class CustomInputsGridControl extends Control
             ]);
     }
 
+    /**
+     * Zpracuje přidání vlastního pole.
+     * @param $values
+     */
     public function add($values)
     {
         switch ($values['type']) {
@@ -109,6 +130,11 @@ class CustomInputsGridControl extends Control
         }
     }
 
+    /**
+     * Zpracuje úpravu vlastního pole.
+     * @param $id
+     * @param $values
+     */
     public function edit($id, $values)
     {
         $input = $this->customInputRepository->findById($id);
@@ -127,6 +153,10 @@ class CustomInputsGridControl extends Control
         }
     }
 
+    /**
+     * Zpracuje odstranění vlastního pole.
+     * @param $id
+     */
     public function handleDelete($id)
     {
         $input = $this->customInputRepository->findById($id);
@@ -137,6 +167,12 @@ class CustomInputsGridControl extends Control
         $this->redirect('this');
     }
 
+    /**
+     * Přesune vlastní pole s id $item_id mezi $prev_id a $next_id.
+     * @param $item_id
+     * @param $prev_id
+     * @param $next_id
+     */
     public function handleSort($item_id, $prev_id, $next_id)
     {
         $this->customInputRepository->sort($item_id, $prev_id, $next_id);
@@ -152,6 +188,10 @@ class CustomInputsGridControl extends Control
         }
     }
 
+    /**
+     * Vrátí typy vlastních polí jako možnosti pro select.
+     * @return array
+     */
     private function prepareCustomInputTypesOptions()
     {
         $options = [];

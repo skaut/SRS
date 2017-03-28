@@ -9,6 +9,12 @@ use Nette;
 use Nette\Application\UI\Form;
 
 
+/**
+ * Formulář pro nastavení semináře.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class SeminarForm extends Nette\Object
 {
     /** @var BaseForm */
@@ -18,12 +24,21 @@ class SeminarForm extends Nette\Object
     private $settingsRepository;
 
 
+    /**
+     * SeminarForm constructor.
+     * @param BaseForm $baseForm
+     * @param SettingsRepository $settingsRepository
+     */
     public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository)
     {
         $this->baseForm = $baseForm;
         $this->settingsRepository = $settingsRepository;
     }
 
+    /**
+     * Vytvoří formulář.
+     * @return Form
+     */
     public function create()
     {
         $form = $this->baseForm->create();
@@ -67,6 +82,11 @@ class SeminarForm extends Nette\Object
         return $form;
     }
 
+    /**
+     * Zpracuje formulář.
+     * @param Form $form
+     * @param \stdClass $values
+     */
     public function processForm(Form $form, \stdClass $values)
     {
         $this->settingsRepository->setValue(Settings::SEMINAR_NAME, $values['seminarName']);
@@ -76,16 +96,34 @@ class SeminarForm extends Nette\Object
         $this->settingsRepository->setValue(Settings::SEMINAR_EMAIL, $values['seminarEmail']);
     }
 
+    /**
+     * Ověří, že datum začátku semináře je dříve než konce.
+     * @param $field
+     * @param $args
+     * @return bool
+     */
     public function validateSeminarFromDate($field, $args)
     {
         return $args[0] <= $args[1];
     }
 
+    /**
+     * Ověří, že datum konce semináře je později než začátku.
+     * @param $field
+     * @param $args
+     * @return bool
+     */
     public function validateSeminarToDate($field, $args)
     {
         return $args[0] >= $args[1];
     }
 
+    /**
+     * Ověří, že datum uzavření registrace je dříve než začátek semináře.
+     * @param $field
+     * @param $args
+     * @return bool
+     */
     public function validateEditRegistrationTo($field, $args)
     {
         return $args[0] < $args[1];

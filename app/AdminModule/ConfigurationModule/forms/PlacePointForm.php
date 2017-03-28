@@ -10,6 +10,11 @@ use Nette\Application\UI\Form;
 use VojtechDobes\NetteForms\GpsPicker;
 
 
+/**
+ * Formulář pro úpravu mapového bodu.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class PlacePointForm extends Nette\Object
 {
     /** @var PlacePoint */
@@ -22,12 +27,22 @@ class PlacePointForm extends Nette\Object
     private $placePointRepository;
 
 
+    /**
+     * PlacePointForm constructor.
+     * @param BaseForm $baseForm
+     * @param PlacePointRepository $placePointRepository
+     */
     public function __construct(BaseForm $baseForm, PlacePointRepository $placePointRepository)
     {
         $this->baseForm = $baseForm;
         $this->placePointRepository = $placePointRepository;
     }
 
+    /**
+     * Vytvoří formulář.
+     * @param $id
+     * @return Form
+     */
     public function create($id)
     {
         $this->placePoint = $this->placePointRepository->findById($id);
@@ -62,6 +77,11 @@ class PlacePointForm extends Nette\Object
         return $form;
     }
 
+    /**
+     * Zpracuje formulář.
+     * @param Form $form
+     * @param \stdClass $values
+     */
     public function processForm(Form $form, \stdClass $values)
     {
         if (!$form['cancel']->isSubmittedBy()) {

@@ -7,6 +7,12 @@ use Kdyby\Console\StringOutput;
 use Symfony\Component\Console\Input\ArrayInput;
 
 
+/**
+ * Presenter obsluhující nastavení systému.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class SystemPresenter extends ConfigurationBasePresenter
 {
     /**
@@ -22,6 +28,9 @@ class SystemPresenter extends ConfigurationBasePresenter
     public $clearCacheCommand;
 
 
+    /**
+     * Promaže cache.
+     */
     public function handleClearCache()
     {
         $this->application->add($this->clearCacheCommand);

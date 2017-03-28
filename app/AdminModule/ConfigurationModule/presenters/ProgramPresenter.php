@@ -6,6 +6,12 @@ use App\AdminModule\ConfigurationModule\Forms\ProgramForm;
 use Nette\Application\UI\Form;
 
 
+/**
+ * Presenter obsluhující nastavení programu.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class ProgramPresenter extends ConfigurationBasePresenter
 {
     /**

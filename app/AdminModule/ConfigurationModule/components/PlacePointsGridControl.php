@@ -8,6 +8,11 @@ use Nette\Application\UI\Control;
 use Ublaboo\DataGrid\DataGrid;
 
 
+/**
+ * Komponenta pro správu mapových bodů.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class PlacePointsGridControl extends Control
 {
     /** @var Translator */
@@ -17,6 +22,11 @@ class PlacePointsGridControl extends Control
     private $placePointRepository;
 
 
+    /**
+     * PlacePointsGridControl constructor.
+     * @param Translator $translator
+     * @param PlacePointRepository $placePointRepository
+     */
     public function __construct(Translator $translator, PlacePointRepository $placePointRepository)
     {
         parent::__construct();
@@ -25,11 +35,18 @@ class PlacePointsGridControl extends Control
         $this->placePointRepository = $placePointRepository;
     }
 
+    /**
+     * Vykreslí komponentu.
+     */
     public function render()
     {
         $this->template->render(__DIR__ . '/templates/place_points_grid.latte');
     }
 
+    /**
+     * Vytvoří komponentu.
+     * @param $name
+     */
     public function createComponentPlacePointsGrid($name)
     {
         $grid = new DataGrid($this, $name);
@@ -67,6 +84,10 @@ class PlacePointsGridControl extends Control
             ]);
     }
 
+    /**
+     * Zpracuje odstranění mapového bodu.
+     * @param $id
+     */
     public function handleDelete($id)
     {
         $input = $this->placePointRepository->findById($id);

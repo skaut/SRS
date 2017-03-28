@@ -9,6 +9,11 @@ use Nette;
 use Nette\Application\UI\Form;
 
 
+/**
+ * Formulář pro nastavení popisu cesty.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class PlaceDescriptionForm extends Nette\Object
 {
     /** @var BaseForm */
@@ -18,12 +23,21 @@ class PlaceDescriptionForm extends Nette\Object
     private $settingsRepository;
 
 
+    /**
+     * PlaceDescriptionForm constructor.
+     * @param BaseForm $baseForm
+     * @param SettingsRepository $settingsRepository
+     */
     public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository)
     {
         $this->baseForm = $baseForm;
         $this->settingsRepository = $settingsRepository;
     }
 
+    /**
+     * Vytvoří formulář.
+     * @return Form
+     */
     public function create()
     {
         $form = $this->baseForm->create();
@@ -43,6 +57,11 @@ class PlaceDescriptionForm extends Nette\Object
         return $form;
     }
 
+    /**
+     * Zpracuje formulář.
+     * @param Form $form
+     * @param \stdClass $values
+     */
     public function processForm(Form $form, \stdClass $values)
     {
         $this->settingsRepository->setValue(Settings::PLACE_DESCRIPTION, $values['placeDescription']);

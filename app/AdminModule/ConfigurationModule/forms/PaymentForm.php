@@ -10,6 +10,12 @@ use Nette;
 use Nette\Application\UI\Form;
 
 
+/**
+ * Formulář pro nastavení platby.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class PaymentForm extends Nette\Object
 {
     /** @var BaseForm */
@@ -22,6 +28,12 @@ class PaymentForm extends Nette\Object
     private $userRepository;
 
 
+    /**
+     * PaymentForm constructor.
+     * @param BaseForm $baseForm
+     * @param SettingsRepository $settingsRepository
+     * @param UserRepository $userRepository
+     */
     public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository, UserRepository $userRepository)
     {
         $this->baseForm = $baseForm;
@@ -29,6 +41,10 @@ class PaymentForm extends Nette\Object
         $this->userRepository = $userRepository;
     }
 
+    /**
+     * Vytvoří formulář.
+     * @return Form
+     */
     public function create()
     {
         $form = $this->baseForm->create();
@@ -57,6 +73,11 @@ class PaymentForm extends Nette\Object
         return $form;
     }
 
+    /**
+     * Zpracuje formulář.
+     * @param Form $form
+     * @param \stdClass $values
+     */
     public function processForm(Form $form, \stdClass $values)
     {
         $this->settingsRepository->setValue(Settings::ACCOUNT_NUMBER, $values['accountNumber']);
