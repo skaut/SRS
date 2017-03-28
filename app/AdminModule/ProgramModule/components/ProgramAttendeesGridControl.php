@@ -15,8 +15,25 @@ use Nette\Http\SessionSection;
 use Ublaboo\DataGrid\DataGrid;
 
 
+/**
+ * Komponenta pro správu účastníků programu.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class ProgramAttendeesGridControl extends Control
 {
+    /**
+     * Aktuální program.
+     * @var Program
+     */
+    private $program;
+
+    /**
+     * Přihlášený uživatel.
+     * @var User
+     */
+    private $user;
+
     /** @var Translator */
     private $translator;
 
@@ -32,13 +49,14 @@ class ProgramAttendeesGridControl extends Control
     /** @var SessionSection */
     private $sessionSection;
 
-    /** @var User */
-    private $user;
 
-    /** @var Program */
-    private $program;
-
-
+    /**
+     * ProgramAttendeesGridControl constructor.
+     * @param Translator $translator
+     * @param ProgramRepository $programRepository
+     * @param UserRepository $userRepository
+     * @param Session $session
+     */
     public function __construct(Translator $translator, ProgramRepository $programRepository,
                                 UserRepository $userRepository, Session $session)
     {
@@ -52,11 +70,18 @@ class ProgramAttendeesGridControl extends Control
         $this->sessionSection = $session->getSection('srs');
     }
 
+    /**
+     * Vykreslí komponentu.
+     */
     public function render()
     {
         $this->template->render(__DIR__ . '/templates/program_attendees_grid.latte');
     }
 
+    /**
+     * Vytvoří komponentu.
+     * @param $name
+     */
     public function createComponentProgramAttendeesGrid($name)
     {
         $programId = $this->getPresenter()->getParameter('programId');
@@ -81,7 +106,6 @@ class ProgramAttendeesGridControl extends Control
                 ->leftJoin('u.programs', 'p', 'WITH', 'p.id = :pid')
                 ->innerJoin('u.roles', 'r')
                 ->innerJoin('r.permissions', 'per')
-//                ->where('u.approved = true')
                 ->andWhere('per.name = :permission')
                 ->setParameter('pid', $programId)
                 ->setParameter('permission', Permission::CHOOSE_PROGRAMS)
@@ -148,6 +172,10 @@ class ProgramAttendeesGridControl extends Control
         }
     }
 
+    /**
+     * Přihlásí uživatele na program.
+     * @param $id
+     */
     public function handleRegister($id)
     {
         $editedUser = $this->userRepository->findById($id);
@@ -176,6 +204,10 @@ class ProgramAttendeesGridControl extends Control
         }
     }
 
+    /**
+     * Odhlásí uživatele z programu.
+     * @param $id
+     */
     public function handleUnregister($id)
     {
         $editedUser = $this->userRepository->findById($id);
@@ -202,6 +234,10 @@ class ProgramAttendeesGridControl extends Control
         }
     }
 
+    /**
+     * Hromadně přihlásí program uživatelům.
+     * @param array $ids
+     */
     public function groupRegister(array $ids)
     {
         foreach ($ids as $id) {
@@ -223,6 +259,10 @@ class ProgramAttendeesGridControl extends Control
         }
     }
 
+    /**
+     * Hromadně odhlásí program uživatelům.
+     * @param array $ids
+     */
     public function groupUnregister(array $ids)
     {
         foreach ($ids as $id) {

@@ -14,6 +14,11 @@ use Nette\Application\UI\Form;
 use Ublaboo\DataGrid\DataGrid;
 
 
+/**
+ * Komponenta pro správu kategorií.
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class ProgramCategoriesGridControl extends Control
 {
     /** @var Translator */
@@ -32,6 +37,14 @@ class ProgramCategoriesGridControl extends Control
     private $programRepository;
 
 
+    /**
+     * ProgramCategoriesGridControl constructor.
+     * @param Translator $translator
+     * @param CategoryRepository $categoryRepository
+     * @param RoleRepository $roleRepository
+     * @param UserRepository $userRepository
+     * @param ProgramRepository $programRepository
+     */
     public function __construct(Translator $translator, CategoryRepository $categoryRepository,
                                 RoleRepository $roleRepository, UserRepository $userRepository,
                                 ProgramRepository $programRepository)
@@ -45,11 +58,18 @@ class ProgramCategoriesGridControl extends Control
         $this->programRepository = $programRepository;
     }
 
+    /**
+     * Vykreslí komponentu.
+     */
     public function render()
     {
         $this->template->render(__DIR__ . '/templates/program_categories_grid.latte');
     }
 
+    /**
+     * Vytvoří komponentu.
+     * @param $name
+     */
     public function createComponentProgramCategoriesGrid($name)
     {
         $grid = new DataGrid($this, $name);
@@ -109,6 +129,10 @@ class ProgramCategoriesGridControl extends Control
             ]);
     }
 
+    /**
+     * Zpracuje přidání kategorie.
+     * @param $values
+     */
     public function add($values)
     {
         $category = new Category();
@@ -124,6 +148,11 @@ class ProgramCategoriesGridControl extends Control
         $this->redirect('this');
     }
 
+    /**
+     * Zpracuje úpravu kategorie.
+     * @param $id
+     * @param $values
+     */
     public function edit($id, $values)
     {
         $category = $this->categoryRepository->findById($id);
@@ -143,6 +172,10 @@ class ProgramCategoriesGridControl extends Control
         $this->redirect('this');
     }
 
+    /**
+     * Odstraní kategorii.
+     * @param $id
+     */
     public function handleDelete($id)
     {
         $category = $this->categoryRepository->findById($id);

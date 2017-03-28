@@ -3,6 +3,12 @@
 namespace App\AdminModule\ProgramModule\Presenters;
 
 
+/**
+ * Presenter obsluhjící správu harmonogramu.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
 class SchedulePresenter extends ProgramBasePresenter
 {
     public function renderDefault()
