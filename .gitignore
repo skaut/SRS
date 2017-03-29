@@ -5,5 +5,5 @@ composer.phar
 deployment.ini
 deployment.log
 !.gitignore
-/vendor/*
+/vendor
 !/vendor/.gitignore
