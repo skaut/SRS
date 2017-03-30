@@ -13,5 +13,5 @@ interface IBlocksContentControlFactory
     /**
      * @return BlocksContentControl
      */
-    function create();
+    public function create();
 }

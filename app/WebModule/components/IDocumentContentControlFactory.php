@@ -14,5 +14,5 @@ interface IDocumentContentControlFactory
     /**
      * @return DocumentContentControl
      */
-    function create();
+    public function create();
 }

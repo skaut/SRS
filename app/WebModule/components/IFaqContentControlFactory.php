@@ -14,5 +14,5 @@ interface IFaqContentControlFactory
     /**
      * @return FaqContentControl
      */
-    function create();
+    public function create();
 }

@@ -14,5 +14,5 @@ interface IMailHistoryGridControlFactory
      * Vytvoří komponentu.
      * @return MailHistoryGridControl
      */
-    function create();
+    public function create();
 }

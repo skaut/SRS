@@ -13,5 +13,5 @@ interface IUsersContentControlFactory
     /**
      * @return UsersContentControl
      */
-    function create();
+    public function create();
 }
