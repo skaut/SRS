@@ -67,7 +67,7 @@ class RolesGridControl extends Control
         $grid->setTranslator($this->translator);
         $grid->setDataSource($this->roleRepository->createQueryBuilder('r'));
         $grid->setDefaultSort(['name' => 'ASC']);
-        $grid->setPagination(false);
+        $grid->setPagination(FALSE);
 
 
         $grid->addColumnText('name', 'admin.acl.roles_name');
@@ -79,10 +79,10 @@ class RolesGridControl extends Control
             ]);
 
         $grid->addColumnStatus('registerable', 'admin.acl.roles_registerable')
-            ->addOption(false, 'admin.acl.roles_registerable_nonregisterable')
+            ->addOption(FALSE, 'admin.acl.roles_registerable_nonregisterable')
             ->setClass('btn-danger')
             ->endOption()
-            ->addOption(true, 'admin.acl.roles_registerable_registerable')
+            ->addOption(TRUE, 'admin.acl.roles_registerable_registerable')
             ->setClass('btn-success')
             ->endOption()
             ->onChange[] = [$this, 'changeRegisterable'];
@@ -96,7 +96,7 @@ class RolesGridControl extends Control
         $grid->addColumnText('occupancy', 'admin.acl.roles_occupancy')->setRenderer(
             function ($row) {
                 $capacity = $row->getCapacity();
-                if ($capacity === null)
+                if ($capacity === NULL)
                     return $this->roleRepository->countApprovedUsersInRole($row);
                 return $this->roleRepository->countApprovedUsersInRole($row) . "/" . $capacity;
             }

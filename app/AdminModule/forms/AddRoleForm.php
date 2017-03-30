@@ -75,7 +75,7 @@ class AddRoleForm extends Nette\Object
 
             $parent = $this->roleRepository->findById($values['parent']);
 
-            $role->setSystem(false);
+            $role->setSystem(FALSE);
 
             if ($parent) {
                 foreach ($parent->getPermissions() as $permission)

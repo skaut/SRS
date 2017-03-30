@@ -54,7 +54,7 @@ class NewsGridControl extends Control
         $grid->setTranslator($this->translator);
         $grid->setDataSource($this->newsRepository->createQueryBuilder('n'));
         $grid->setDefaultSort(['published' => 'DESC']);
-        $grid->setPagination(false);
+        $grid->setPagination(FALSE);
 
         $grid->addColumnDateTime('published', 'admin.cms.news_published')
             ->setFormat('j. n. Y H:i');

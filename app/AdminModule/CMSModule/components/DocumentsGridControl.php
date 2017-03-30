@@ -71,7 +71,7 @@ class DocumentsGridControl extends Control
         $grid->setTranslator($this->translator);
         $grid->setDataSource($this->documentRepository->createQueryBuilder('d'));
         $grid->setDefaultSort(['name' => 'ASC']);
-        $grid->setPagination(false);
+        $grid->setPagination(FALSE);
 
         $grid->addColumnText('name', 'admin.cms.documents_name');
 

@@ -109,14 +109,14 @@ class ScheduleService extends Nette\Object
             $programDetailDTO->setAttendeesCount($program->getAttendeesCount());
             $programDetailDTO->setUserAttends($program->isAttendee($this->user));
             $programDetailDTO->setBlocks($this->programRepository->findBlockedProgramsIdsByProgram($program));
-            $programDetailDTO->setBlocked(false);
+            $programDetailDTO->setBlocked(FALSE);
             $programDetailDTOs[] = $programDetailDTO;
         }
 
         foreach ($programDetailDTOs as $p1) {
             foreach ($programDetailDTOs as $p2) {
                 if ($p1 != $p2 && $p1->isUserAttends() && in_array($p2->getId(), $p1->getBlocks()))
-                    $p2->setBlocked(true);
+                    $p2->setBlocked(TRUE);
             }
         }
 
@@ -186,7 +186,7 @@ class ScheduleService extends Nette\Object
         $responseDTO->setStatus('danger');
 
         $block = $this->blockRepository->findById($programSaveDTO->getBlockId());
-        $room = $programSaveDTO->getRoomId() ? $this->roomRepository->findById($programSaveDTO->getRoomId()) : null;
+        $room = $programSaveDTO->getRoomId() ? $this->roomRepository->findById($programSaveDTO->getRoomId()) : NULL;
         $start = $programSaveDTO->getStart();
         $end = clone $start;
         $end->add(new \DateInterval('PT' . $block->getDuration() . 'M'));
@@ -196,7 +196,7 @@ class ScheduleService extends Nette\Object
         elseif (!$this->settingsRepository->getValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE))
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_not_allowed_modfify'));
         elseif ($room && $this->roomRepository->hasOverlappingProgram($room, $program, $start, $end))
-            $responseDTO->setMessage($this->translator->translate('common.api.schedule_room_occupied', null, ['name' => $room->getName()]));
+            $responseDTO->setMessage($this->translator->translate('common.api.schedule_room_occupied', NULL, ['name' => $room->getName()]));
         elseif ($block->getMandatory() == 2 && $this->programRepository->hasOverlappingProgram($program, $start, $end))
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_auto_register_not_allowed'));
         elseif ($this->programRepository->hasOverlappingAutoRegisterProgram($program, $start, $end))
@@ -282,7 +282,7 @@ class ScheduleService extends Nette\Object
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_program_not_found'));
         elseif ($this->user->getPrograms()->contains($program))
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_program_already_registered'));
-        elseif ($program->getCapacity() !== null && $program->getCapacity() <= $program->getAttendeesCount())
+        elseif ($program->getCapacity() !== NULL && $program->getCapacity() <= $program->getAttendeesCount())
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_program_no_vacancies'));
         elseif (!(new ArrayCollection($this->programRepository->findUserAllowed($this->user)))->contains($program))
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_program_category_not_allowed'));
@@ -358,7 +358,7 @@ class ScheduleService extends Nette\Object
         $programDetailDTO->setStart($program->getStart()->format(DATE_ISO8601));
         $programDetailDTO->setEnd($program->getEnd()->format(DATE_ISO8601));
         $programDetailDTO->setBlockId($program->getBlock()->getId());
-        $programDetailDTO->setRoomId($program->getRoom() ? $program->getRoom()->getId() : null);
+        $programDetailDTO->setRoomId($program->getRoom() ? $program->getRoom()->getId() : NULL);
 
         return $programDetailDTO;
     }

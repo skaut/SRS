@@ -160,7 +160,7 @@ class SkautIsService extends Nette\Object
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID_Person' => $personId,
             'ID_MembershipType' => 'radne',
-            'IsValid' => true
+            'IsValid' => TRUE
         ]);
 
         if ($membership == new \stdClass()) {
@@ -168,11 +168,11 @@ class SkautIsService extends Nette\Object
                 'ID_Login' => $this->skautIs->getUser()->getLoginId(),
                 'ID_Person' => $personId,
                 'ID_MembershipType' => 'cestne',
-                'IsValid' => true
+                'IsValid' => TRUE
             ]);
 
             if ($membership == new \stdClass())
-                return null;
+                return NULL;
         }
 
         return $membership->MembershipAllOutput;
@@ -267,7 +267,7 @@ class SkautIsService extends Nette\Object
         $this->skautIs->event->ParticipantGeneralDelete([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID' => $participantId,
-            'DeletePerson' => false
+            'DeletePerson' => FALSE
         ]);
     }
 

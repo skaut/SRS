@@ -90,7 +90,7 @@ abstract class AdminBasePresenter extends BasePresenter
         parent::startup();
 
         if ($this->user->isLoggedIn() && !$this->skautIsService->isLoggedIn())
-            $this->user->logout(true);
+            $this->user->logout(TRUE);
 
         $this->user->setAuthorizator($this->authorizator);
 
@@ -129,7 +129,7 @@ abstract class AdminBasePresenter extends BasePresenter
         $this->template->footer = $this->settingsRepository->getValue(Settings::FOOTER);
         $this->template->seminarName = $this->settingsRepository->getValue(Settings::SEMINAR_NAME);
 
-        $this->template->sidebarVisible = false;
+        $this->template->sidebarVisible = FALSE;
 
         $this->template->settings = $this->settingsRepository;
 

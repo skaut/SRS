@@ -49,7 +49,7 @@ class Page
      * @ORM\Column(type="boolean")
      * @var bool
      */
-    protected $public = false;
+    protected $public = FALSE;
 
     /**
      * Role, které mají na stránku přístup.
@@ -182,9 +182,9 @@ class Page
      * @return ArrayCollection|\Doctrine\Common\Collections\Collection
      * @throws PageException
      */
-    public function getContents($area = null)
+    public function getContents($area = NULL)
     {
-        if ($area === null)
+        if ($area === NULL)
             return $this->contents;
         if (!in_array($area, Content::$areas))
             throw new PageException("Area {$area} not defined.");
@@ -230,9 +230,9 @@ class Page
         foreach ($roleNames as $roleName) {
             foreach ($this->roles as $role) {
                 if ($roleName == $role->getName())
-                    return true;
+                    return TRUE;
             }
         }
-        return false;
+        return FALSE;
     }
 }

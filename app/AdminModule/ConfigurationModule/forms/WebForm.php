@@ -99,7 +99,7 @@ class WebForm extends Nette\Object
 
             $logoName = Strings::webalize($logo->name, '.');
             $this->filesService->save($logo, '/logo/' . $logoName);
-            $this->filesService->resizeImage('/logo/' . $logoName, null, 100);
+            $this->filesService->resizeImage('/logo/' . $logoName, NULL, 100);
 
             $this->settingsRepository->setValue(Settings::LOGO, $logoName);
         }

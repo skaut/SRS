@@ -166,10 +166,10 @@ class UsersGridControl extends Control
 
         $columnApproved = $grid->addColumnStatus('approved', 'admin.users.users_approved');
         $columnApproved
-            ->addOption(false, 'admin.users.users_approved_unapproved')
+            ->addOption(FALSE, 'admin.users.users_approved_unapproved')
             ->setClass('btn-danger')
             ->endOption()
-            ->addOption(true, 'admin.users.users_approved_approved')
+            ->addOption(TRUE, 'admin.users.users_approved_approved')
             ->setClass('btn-success')
             ->endOption()
             ->onChange[] = [$this, 'changeApproved'];
@@ -190,7 +190,7 @@ class UsersGridControl extends Control
                         $this->translator->translate('admin.users.users_membership_no') :
                         $this->translator->translate('admin.users.users_membership_not_connected'));
             }, function ($row) {
-                return $row->getUnit() === null;
+                return $row->getUnit() === NULL;
             }
             )
             ->setSortable()
@@ -217,7 +217,7 @@ class UsersGridControl extends Control
             ->setRenderer(function ($row) {
                 if ($row->getPaymentMethod())
                     return $this->translator->translate('common.payment.' . $row->getPaymentMethod());
-                return null;
+                return NULL;
             })
             ->setSortable()
             ->setFilterSelect($this->preparePaymentMethodFilterOptions())
@@ -234,10 +234,10 @@ class UsersGridControl extends Control
 
         $columnAttended = $grid->addColumnStatus('attended', 'admin.users.users_attended');
         $columnAttended
-            ->addOption(false, 'admin.users.users_attended_no')
+            ->addOption(FALSE, 'admin.users.users_attended_no')
             ->setClass('btn-danger')
             ->endOption()
-            ->addOption(true, 'admin.users.users_attended_yes')
+            ->addOption(TRUE, 'admin.users.users_attended_yes')
             ->setClass('btn-success')
             ->endOption()
             ->onChange[] = [$this, 'changeAttended'];
@@ -253,7 +253,7 @@ class UsersGridControl extends Control
         $grid->addColumnText('unregisteredMandatoryBlocks', 'admin.users.users_not_registered_mandatory_blocks')
             ->setRenderer(function ($row) {
                 if (!$row->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS) || !$row->isApproved())
-                    return null;
+                    return NULL;
 
                 $unregisteredMandatoryBlocksNames = $this->blockRepository->findUserMandatoryNotRegisteredNames($row);
                 $unregisteredMandatoryBlocksNamesText = implode(', ', $unregisteredMandatoryBlocksNames);
@@ -276,7 +276,7 @@ class UsersGridControl extends Control
                                 $this->translator->translate('admin.common.no');
                         }
                     }
-                    return null;
+                    return NULL;
                 });
         }
 
@@ -331,12 +331,12 @@ class UsersGridControl extends Control
     {
         $user = $this->userRepository->findById($id);
 
-        $over = false;
+        $over = FALSE;
         if ($approved && !$user->isApproved()) {
             foreach ($user->getRoles() as $role) {
                 $count = $this->roleRepository->countUnoccupiedInRole($role);
-                if ($count !== null && $count < 1) {
-                    $over = true;
+                if ($count !== NULL && $count < 1) {
+                    $over = TRUE;
                     break;
                 }
             }
@@ -397,10 +397,10 @@ class UsersGridControl extends Control
             }
         }
 
-        $over = false;
+        $over = FALSE;
         foreach ($unoccupiedCounts as $count) {
             if ($count < 0) {
-                $over = true;
+                $over = TRUE;
                 break;
             }
         }
@@ -411,7 +411,7 @@ class UsersGridControl extends Control
             $p->flashMessage('admin.users.users_group_action_approve_error', 'danger');
         } else {
             foreach ($users as $user) {
-                $user->setApproved(true);
+                $user->setApproved(TRUE);
                 $this->userRepository->save($user);
             }
 
@@ -433,19 +433,19 @@ class UsersGridControl extends Control
 
         $p = $this->getPresenter();
 
-        $error = false;
+        $error = FALSE;
 
         //neni vybrana zadna role
         if ($selectedRoles->isEmpty()) {
             $p->flashMessage('admin.users.users_group_action_change_roles_error_empty', 'danger');
-            $error = true;
+            $error = TRUE;
         }
 
         //pokud je vybrana role neregistrovany, nesmi byt zadna vybrana jina role
         $nonregisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
         if ($selectedRoles->contains($nonregisteredRole) && $selectedRoles->count() > 1) {
             $p->flashMessage('admin.users.users_group_action_change_roles_error_nonregistered', 'danger');
-            $error = true;
+            $error = TRUE;
         }
 
         //v rolich musi byt dostatek volnych mist
@@ -461,7 +461,7 @@ class UsersGridControl extends Control
         foreach ($unoccupiedCounts as $count) {
             if ($count < 0) {
                 $p->flashMessage('admin.users.users_group_action_change_roles_error_capacity', 'danger');
-                $error = true;
+                $error = TRUE;
                 break;
             }
         }

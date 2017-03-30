@@ -53,7 +53,7 @@ class FaqRepository extends EntityRepository
      */
     public function findPublishedOrderedByPosition()
     {
-        return $this->findBy(['public' => true], ['position' => 'ASC']);
+        return $this->findBy(['public' => TRUE], ['position' => 'ASC']);
     }
 
     /**
@@ -88,8 +88,8 @@ class FaqRepository extends EntityRepository
     public function sort($itemId, $prevId, $nextId)
     {
         $item = $this->find($itemId);
-        $prev = $prevId ? $this->find($prevId) : null;
-        $next = $nextId ? $this->find($nextId) : null;
+        $prev = $prevId ? $this->find($prevId) : NULL;
+        $next = $nextId ? $this->find($nextId) : NULL;
 
         $itemsToMoveUp = $this->createQueryBuilder('i')
             ->where('i.position <= :position')

@@ -263,7 +263,7 @@ class UserRepository extends EntityRepository
      * @param $ids
      * @param bool $value
      */
-    public function setAttended($ids, $value = true)
+    public function setAttended($ids, $value = TRUE)
     {
         $this->createQueryBuilder('u')
             ->update()
