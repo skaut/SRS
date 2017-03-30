@@ -92,7 +92,7 @@ class InstallPresenter extends InstallBasePresenter
 
         $output = new StringOutput();
         $input = new ArrayInput([
-            'command' => 'orm:schema-tool:create'
+            'command' => 'migrations:migrate'
         ]);
         $result = $this->application->run($input, $output);
 

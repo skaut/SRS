@@ -1,0 +1,37 @@
+version: '2'
+
+services:
+    app:
+        container_name: srs.app
+        image: fmasa/lebeda:7.1
+        volumes:
+            - www:/var/www
+            - .:/var/www/html
+            - /var/www/html/temp
+        ports:
+            - 80:80
+        environment:
+            DEVELOPMENT_MACHINE: 'true'
+        networks:
+            main:
+                aliases:
+                    - srs.loc
+
+    mysql:
+        container_name: srs.mysql
+        image: mysql:5.7
+        volumes:
+            - mysql:/var/lib/mysql
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
+            MYSQL_DATABASE: srs
+        networks:
+            main:
+                aliases:
+                    - mysql
+volumes:
+    mysql:
+    www:
+
+networks:
+    main:
