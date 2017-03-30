@@ -271,6 +271,20 @@ CREATE TABLE `permission` (
   CONSTRAINT `FK_E04992AA89329D25` FOREIGN KEY (`resource_id`) REFERENCES `resource` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+CREATE TABLE `place_content` (
+  `id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `FK_CA092752BF396750` FOREIGN KEY (`id`) REFERENCES `content` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE `place_point` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `gps_lat` double NOT NULL,
+  `gps_lon` double NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 CREATE TABLE `program` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `block_id` int(11) DEFAULT NULL,
