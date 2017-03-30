@@ -54,7 +54,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
      * @param array $credentials
      * @return NS\Identity
      */
-    function authenticate(array $credentials)
+    public function authenticate(array $credentials)
     {
         $skautISUser = $this->skautIsService->getUserDetail();
 

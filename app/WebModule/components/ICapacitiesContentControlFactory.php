@@ -13,5 +13,5 @@ interface ICapacitiesContentControlFactory
     /**
      * @return CapacitiesContentControl
      */
-    function create();
+    public function create();
 }

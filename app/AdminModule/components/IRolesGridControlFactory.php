@@ -14,5 +14,5 @@ interface IRolesGridControlFactory
      * Vytvoří komponentu.
      * @return RolesGridControl
      */
-    function create();
+    public function create();
 }

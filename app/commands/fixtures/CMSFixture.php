@@ -62,7 +62,7 @@ class CMSFixture extends AbstractFixture implements DependentFixtureInterface
      * Vrací závislosti na jiných fixtures.
      * @return array
      */
-    function getDependencies()
+    public function getDependencies()
     {
         return ['App\Commands\Fixtures\RoleFixture'];
     }

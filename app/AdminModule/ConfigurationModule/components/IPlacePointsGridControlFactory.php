@@ -14,5 +14,5 @@ interface IPlacePointsGridControlFactory
      * Vytvoří komponentu.
      * @return PlacePointsGridControl
      */
-    function create();
+    public function create();
 }

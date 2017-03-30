@@ -14,5 +14,5 @@ interface IApplicationContentControlFactory
     /**
      * @return ApplicationContentControl
      */
-    function create();
+    public function create();
 }

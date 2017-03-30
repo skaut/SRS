@@ -17,5 +17,5 @@ interface IPageFormFactory
      * @param $area
      * @return mixed
      */
-    function create($id, $area);
+    public function create($id, $area);
 }
