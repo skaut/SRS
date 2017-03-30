@@ -1,0 +1,12 @@
+parameters:
+    database:
+        host: mysql
+        dbname: srs
+        user: root
+        password:
+
+    skautIS:
+        appId: skaut_is_app_id
+        test: true
+
+
