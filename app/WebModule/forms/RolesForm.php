@@ -112,11 +112,11 @@ class RolesForm extends Nette\Object
             $selectedRoles = $this->roleRepository->findRolesByIds($values['roles']);
 
             //pokud si uživatel přidá roli, která vyžaduje schválení, stane se neschválený
-            $approved = true;
+            $approved = TRUE;
             if ($approved) {
                 foreach ($selectedRoles as $role) {
                     if (!$role->isApprovedAfterRegistration() && !$this->user->getRoles()->contains($role)) {
-                        $approved = false;
+                        $approved = FALSE;
                         break;
                     }
                 }
@@ -156,7 +156,7 @@ class RolesForm extends Nette\Object
             if (count($incompatibleRoles) > 0) {
                 $messageThis = $role->getName();
 
-                $first = true;
+                $first = TRUE;
                 $messageOthers = "";
                 foreach ($incompatibleRoles as $incompatibleRole) {
                     if ($incompatibleRole->isRegisterableNow()) {
@@ -165,10 +165,10 @@ class RolesForm extends Nette\Object
                         else
                             $messageOthers .= ", " . $incompatibleRole->getName();
                     }
-                    $first = false;
+                    $first = FALSE;
                 }
                 $rolesSelect->addRule([$this, 'validateRolesIncompatible'],
-                    $form->getTranslator()->translate('web.profile.incompatible_roles_selected', null,
+                    $form->getTranslator()->translate('web.profile.incompatible_roles_selected', NULL,
                         ['role' => $messageThis, 'incompatibleRoles' => $messageOthers]
                     ),
                     [$role]
@@ -179,17 +179,17 @@ class RolesForm extends Nette\Object
             if (count($requiredRoles) > 0) {
                 $messageThis = $role->getName();
 
-                $first = true;
+                $first = TRUE;
                 $messageOthers = "";
                 foreach ($requiredRoles as $requiredRole) {
                     if ($first)
                         $messageOthers .= $requiredRole->getName();
                     else
                         $messageOthers .= ", " . $requiredRole->getName();
-                    $first = false;
+                    $first = FALSE;
                 }
                 $rolesSelect->addRule([$this, 'validateRolesRequired'],
-                    $form->getTranslator()->translate('web.profile.required_roles_not_selected', null,
+                    $form->getTranslator()->translate('web.profile.required_roles_not_selected', NULL,
                         ['role' => $messageThis, 'requiredRoles' => $messageOthers]
                     ),
                     [$role]
@@ -209,10 +209,10 @@ class RolesForm extends Nette\Object
         foreach ($this->roleRepository->findRolesByIds($field->getValue()) as $role) {
             if ($role->hasLimitedCapacity()) {
                 if ($this->roleRepository->countUnoccupiedInRole($role) < 1 && !$this->user->isInRole($role))
-                    return false;
+                    return FALSE;
             }
         }
-        return true;
+        return TRUE;
     }
 
     /**
@@ -227,14 +227,14 @@ class RolesForm extends Nette\Object
         $testRole = $args[0];
 
         if (!in_array($testRole->getId(), $selectedRolesIds))
-            return true;
+            return TRUE;
 
         foreach ($testRole->getIncompatibleRoles() as $incompatibleRole) {
             if (in_array($incompatibleRole->getId(), $selectedRolesIds))
-                return false;
+                return FALSE;
         }
 
-        return true;
+        return TRUE;
     }
 
     /**
@@ -249,14 +249,14 @@ class RolesForm extends Nette\Object
         $testRole = $args[0];
 
         if (!in_array($testRole->getId(), $selectedRolesIds))
-            return true;
+            return TRUE;
 
         foreach ($testRole->getRequiredRolesTransitive() as $requiredRole) {
             if (!in_array($requiredRole->getId(), $selectedRolesIds))
-                return false;
+                return FALSE;
         }
 
-        return true;
+        return TRUE;
     }
 
     /**
@@ -269,9 +269,9 @@ class RolesForm extends Nette\Object
     {
         foreach ($this->roleRepository->findRolesByIds($field->getValue()) as $role) {
             if (!$role->isRegisterableNow() && !$this->user->isInRole($role))
-                return false;
+                return FALSE;
         }
-        return true;
+        return TRUE;
     }
 }
 

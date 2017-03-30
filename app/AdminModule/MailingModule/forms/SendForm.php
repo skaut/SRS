@@ -86,9 +86,9 @@ class SendForm extends Nette\Object
     {
         try {
             $this->mailService->sendMailToRoles($values['recipients'], $values['copy'], $values['subject'], $values['text']);
-            $this->mailSuccess = true;
+            $this->mailSuccess = TRUE;
         } catch (SendException $ex) {
-            $this->mailSuccess = false;
+            $this->mailSuccess = FALSE;
         }
     }
 }

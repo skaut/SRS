@@ -33,53 +33,53 @@ class RouterFactory
 
         $router[] = new Route('api/<presenter>/<action>[/<id>]', [
             'module' => 'Api',
-            'presenter' => null,
-            'action' => null,
-            'id' => null,
-            'area' => null
+            'presenter' => NULL,
+            'action' => NULL,
+            'id' => NULL,
+            'area' => NULL
         ]);
 
         $router[] = new Route('admin/cms/<presenter>/<action>[/<id>][/<area>]', [
             'module' => 'Admin:CMS',
             'presenter' => 'Page',
             'action' => 'default',
-            'id' => null,
-            'area' => null
+            'id' => NULL,
+            'area' => NULL
         ]);
 
         $router[] = new Route('admin/program/<presenter>/<action>[/<id>]', [
             'module' => 'Admin:Program',
             'presenter' => 'Block',
             'action' => 'default',
-            'id' => null
+            'id' => NULL
         ]);
 
         $router[] = new Route('admin/mailing/<presenter>/<action>[/<id>]', [
             'module' => 'Admin:Mailing',
             'presenter' => 'Auto',
             'action' => 'default',
-            'id' => null
+            'id' => NULL
         ]);
 
         $router[] = new Route('admin/configuration/<presenter>/<action>[/<id>]', [
             'module' => 'Admin:Configuration',
             'presenter' => 'Seminar',
             'action' => 'default',
-            'id' => null
+            'id' => NULL
         ]);
 
         $router[] = new Route('admin/<presenter>/<action>[/<id>]', [
             'module' => 'Admin',
             'presenter' => 'Dashboard',
             'action' => 'default',
-            'id' => null
+            'id' => NULL
         ]);
 
         $router[] = new Route('install/<action>/<id>/', [
             'module' => 'Install',
             'presenter' => 'Install',
             'action' => 'default',
-            'id' => null
+            'id' => NULL
         ]);
 
         $router[] = new Route('login/', 'Auth:login');
@@ -106,7 +106,7 @@ class RouterFactory
             'module' => 'Web',
             'presenter' => 'Page',
             'action' => 'default',
-            'id' => null
+            'id' => NULL
         ]);
 
         return $router;

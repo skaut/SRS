@@ -85,7 +85,7 @@ class ProgramBlocksGridControl extends Control
             ->addSelect('c')->leftJoin('b.category', 'c')
         );
         $grid->setDefaultSort(['name' => 'ASC']);
-        $grid->setPagination(false);
+        $grid->setPagination(FALSE);
 
 
         $grid->addColumnText('name', 'admin.program.blocks_name')
@@ -108,7 +108,7 @@ class ProgramBlocksGridControl extends Control
             ->setRendererOnCondition(function ($row) {
                 return $this->translator->translate('admin.program.blocks_capacity_unlimited');
             }, function ($row) {
-                return $row->getCapacity() === null;
+                return $row->getCapacity() === NULL;
             }
             )
             ->setSortable();

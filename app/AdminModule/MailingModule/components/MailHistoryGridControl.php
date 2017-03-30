@@ -54,7 +54,7 @@ class MailHistoryGridControl extends Control
         $grid->setTranslator($this->translator);
         $grid->setDataSource($this->mailRepository->createQueryBuilder('m'));
         $grid->setDefaultSort(['datetime' => 'DESC']);
-        $grid->setPagination(false);
+        $grid->setPagination(FALSE);
 
         $grid->addColumnText('recipients', 'admin.mailing.history_recipients')
             ->setRenderer(function ($row) {
@@ -64,9 +64,9 @@ class MailHistoryGridControl extends Control
                         $roles[] = $role->getName();
                     }
                     $rolesText = implode(", ", $roles);
-                    return $this->translator->translate('admin.mailing.history_roles', null, ['roles' => $rolesText]);
+                    return $this->translator->translate('admin.mailing.history_roles', NULL, ['roles' => $rolesText]);
                 } else {
-                    return $this->translator->translate('admin.mailing.history_user', null, ['name' => $row->getRecipientUser()->getDisplayName()]);
+                    return $this->translator->translate('admin.mailing.history_user', NULL, ['name' => $row->getRecipientUser()->getDisplayName()]);
                 }
             });
 

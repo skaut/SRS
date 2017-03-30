@@ -94,7 +94,7 @@ class FaqForm extends Nette\Object
             ]);
         } else {
             $form->setDefaults([
-                'public' => true
+                'public' => TRUE
             ]);
         }
 

@@ -49,7 +49,7 @@ class BlocksContentControl extends Control
 
         $selectedBlockId = $this->getPresenter()->getParameter('blockId');
 
-        if ($selectedBlockId != null) {
+        if ($selectedBlockId != NULL) {
             $selectedBlock = $this->blockRepository->findById($selectedBlockId);
             $this->template->selectedBlockId = $selectedBlockId;
             $this->template->selectedBlock = $selectedBlock;
@@ -58,8 +58,8 @@ class BlocksContentControl extends Control
             else
                 $this->template->selectedCategoryId = 'uncategorized';
         } else {
-            $this->template->selectedBlockId = null;
-            $this->template->selectedCategoryId = null;
+            $this->template->selectedBlockId = NULL;
+            $this->template->selectedCategoryId = NULL;
         }
 
         $template->render();

@@ -28,6 +28,6 @@ abstract class MailingBasePresenter extends AdminBasePresenter
     {
         parent::beforeRender();
 
-        $this->template->sidebarVisible = true;
+        $this->template->sidebarVisible = TRUE;
     }
 }

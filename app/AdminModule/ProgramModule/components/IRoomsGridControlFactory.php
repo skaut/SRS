@@ -14,5 +14,5 @@ interface IRoomsGridControlFactory
      * Vytvoří komponentu.
      * @return RoomsGridControl
      */
-    function create();
+    public function create();
 }

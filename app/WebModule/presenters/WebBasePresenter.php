@@ -101,11 +101,11 @@ abstract class WebBasePresenter extends BasePresenter
         $this->checkInstallation();
 
         if ($this->user->isLoggedIn() && !$this->skautIsService->isLoggedIn())
-            $this->user->logout(true);
+            $this->user->logout(TRUE);
 
         $this->user->setAuthorizator($this->authorizator);
 
-        $this->dbuser = $this->user->isLoggedIn() ? $this->userRepository->findById($this->user->id) : null;
+        $this->dbuser = $this->user->isLoggedIn() ? $this->userRepository->findById($this->user->id) : NULL;
     }
 
     public function beforeRender()
@@ -128,7 +128,7 @@ abstract class WebBasePresenter extends BasePresenter
         $this->template->displayUsersRoles = $this->settingsRepository->getValue(Settings::DISPLAY_USERS_ROLES);
 
         $this->template->pages = $this->pageRepository->findPublishedOrderedByPosition();
-        $this->template->sidebarVisible = false;
+        $this->template->sidebarVisible = FALSE;
 
         $this->template->settings = $this->settingsRepository;
     }

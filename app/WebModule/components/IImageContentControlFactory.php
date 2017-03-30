@@ -14,5 +14,5 @@ interface IImageContentControlFactory
     /**
      * @return ImageContentControl
      */
-    function create();
+    public function create();
 }

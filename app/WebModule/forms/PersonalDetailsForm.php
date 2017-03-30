@@ -64,7 +64,7 @@ class PersonalDetailsForm extends Nette\Object
         $form->addHidden('id');
 
         $inputSex = $form->addRadioList('sex', 'web.profile.sex', Sex::getSexOptions());
-        $inputSex->getSeparatorPrototype()->setName(null);
+        $inputSex->getSeparatorPrototype()->setName(NULL);
 
         $inputFirstName = $form->addText('firstName', 'web.profile.firstname')
             ->addRule(Form::FILLED, 'web.profile.firstname_empty');

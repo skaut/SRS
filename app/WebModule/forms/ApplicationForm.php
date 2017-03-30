@@ -103,7 +103,7 @@ class ApplicationForm extends Nette\Object
         $form->addHidden('id');
 
         $inputSex = $form->addRadioList('sex', 'web.application_content.sex', Sex::getSexOptions());
-        $inputSex->getSeparatorPrototype()->setName(null);
+        $inputSex->getSeparatorPrototype()->setName(NULL);
 
         $inputFirstName = $form->addText('firstName', 'web.application_content.firstname')
             ->addRule(Form::FILLED, 'web.application_content.firstname_empty');
@@ -197,7 +197,7 @@ class ApplicationForm extends Nette\Object
 
         foreach ($roles as $role) {
             if (!$role->isApprovedAfterRegistration()) {
-                $this->user->setApproved(false);
+                $this->user->setApproved(FALSE);
                 break;
             }
         }
@@ -292,7 +292,7 @@ class ApplicationForm extends Nette\Object
             if (count($incompatibleRoles) > 0) {
                 $messageThis = $role->getName();
 
-                $first = true;
+                $first = TRUE;
                 $messageOthers = "";
                 foreach ($incompatibleRoles as $incompatibleRole) {
                     if ($incompatibleRole->isRegisterableNow()) {
@@ -301,10 +301,10 @@ class ApplicationForm extends Nette\Object
                         else
                             $messageOthers .= ", " . $incompatibleRole->getName();
                     }
-                    $first = false;
+                    $first = FALSE;
                 }
                 $rolesSelect->addRule([$this, 'validateRolesIncompatible'],
-                    $form->getTranslator()->translate('web.application_content.incompatible_roles_selected', null,
+                    $form->getTranslator()->translate('web.application_content.incompatible_roles_selected', NULL,
                         ['role' => $messageThis, 'incompatibleRoles' => $messageOthers]
                     ),
                     [$role]
@@ -315,17 +315,17 @@ class ApplicationForm extends Nette\Object
             if (count($requiredRoles) > 0) {
                 $messageThis = $role->getName();
 
-                $first = true;
+                $first = TRUE;
                 $messageOthers = "";
                 foreach ($requiredRoles as $requiredRole) {
                     if ($first)
                         $messageOthers .= $requiredRole->getName();
                     else
                         $messageOthers .= ", " . $requiredRole->getName();
-                    $first = false;
+                    $first = FALSE;
                 }
                 $rolesSelect->addRule([$this, 'validateRolesRequired'],
-                    $form->getTranslator()->translate('web.application_content.required_roles_not_selected', null,
+                    $form->getTranslator()->translate('web.application_content.required_roles_not_selected', NULL,
                         ['role' => $messageThis, 'requiredRoles' => $messageOthers]
                     ),
                     [$role]
@@ -366,10 +366,10 @@ class ApplicationForm extends Nette\Object
         foreach ($this->roleRepository->findRolesByIds($field->getValue()) as $role) {
             if ($role->hasLimitedCapacity()) {
                 if ($this->roleRepository->countUnoccupiedInRole($role) < 1)
-                    return false;
+                    return FALSE;
             }
         }
-        return true;
+        return TRUE;
     }
 
     /**
@@ -384,14 +384,14 @@ class ApplicationForm extends Nette\Object
         $testRole = $args[0];
 
         if (!in_array($testRole->getId(), $selectedRolesIds))
-            return true;
+            return TRUE;
 
         foreach ($testRole->getIncompatibleRoles() as $incompatibleRole) {
             if (in_array($incompatibleRole->getId(), $selectedRolesIds))
-                return false;
+                return FALSE;
         }
 
-        return true;
+        return TRUE;
     }
 
     /**
@@ -406,14 +406,14 @@ class ApplicationForm extends Nette\Object
         $testRole = $args[0];
 
         if (!in_array($testRole->getId(), $selectedRolesIds))
-            return true;
+            return TRUE;
 
         foreach ($testRole->getRequiredRolesTransitive() as $requiredRole) {
             if (!in_array($requiredRole->getId(), $selectedRolesIds))
-                return false;
+                return FALSE;
         }
 
-        return true;
+        return TRUE;
     }
 
     /**
@@ -426,9 +426,9 @@ class ApplicationForm extends Nette\Object
     {
         foreach ($this->roleRepository->findRolesByIds($field->getValue()) as $role) {
             if (!$role->isRegisterableNow())
-                return false;
+                return FALSE;
         }
-        return true;
+        return TRUE;
     }
 
     /**
@@ -438,6 +438,6 @@ class ApplicationForm extends Nette\Object
      */
     public static function toggleArrivalDeparture(IControl $control)
     {
-        return false;
+        return FALSE;
     }
 }

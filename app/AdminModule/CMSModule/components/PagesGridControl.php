@@ -62,7 +62,7 @@ class PagesGridControl extends Control
         $grid->setSortable();
         $grid->setSortableHandler('pagesGrid:sort!');
         $grid->setDataSource($this->pageRepository->createQueryBuilder('p')->orderBy('p.position'));
-        $grid->setPagination(false);
+        $grid->setPagination(FALSE);
 
 
         $grid->addColumnText('name', 'admin.cms.pages_name');
@@ -70,10 +70,10 @@ class PagesGridControl extends Control
         $grid->addColumnText('slug', 'admin.cms.pages_slug');
 
         $grid->addColumnStatus('public', 'admin.cms.pages_public')
-            ->addOption(false, 'admin.cms.pages_public_private')
+            ->addOption(FALSE, 'admin.cms.pages_public_private')
             ->setClass('btn-danger')
             ->endOption()
-            ->addOption(true, 'admin.cms.pages_public_public')
+            ->addOption(TRUE, 'admin.cms.pages_public_public')
             ->setClass('btn-success')
             ->endOption()
             ->onChange[] = [$this, 'changeStatus'];
@@ -94,8 +94,8 @@ class PagesGridControl extends Control
 
         $rolesOptions = $this->roleRepository->getRolesWithoutRolesOptions([]);
         $publicOptions = [
-            false => 'admin.cms.pages_public_private',
-            true => 'admin.cms.pages_public_public'
+            FALSE => 'admin.cms.pages_public_private',
+            TRUE => 'admin.cms.pages_public_public'
         ];
 
         $grid->addInlineAdd()->onControlAdd[] = function ($container) use ($rolesOptions, $publicOptions) {

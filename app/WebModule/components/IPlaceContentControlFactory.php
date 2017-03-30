@@ -14,5 +14,5 @@ interface IPlaceContentControlFactory
     /**
      * @return PlaceContentControl
      */
-    function create();
+    public function create();
 }

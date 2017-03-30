@@ -52,7 +52,7 @@ class PlacePointsGridControl extends Control
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
         $grid->setDataSource($this->placePointRepository->createQueryBuilder('p')->orderBy('p.name'));
-        $grid->setPagination(false);
+        $grid->setPagination(FALSE);
 
 
         $grid->addColumnText('name', 'admin.configuration.place_points_name');

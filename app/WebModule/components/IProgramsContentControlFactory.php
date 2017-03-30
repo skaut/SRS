@@ -14,5 +14,5 @@ interface IProgramsContentControlFactory
     /**
      * @return ProgramsContentControl
      */
-    function create();
+    public function create();
 }

@@ -14,5 +14,5 @@ interface IFaqGridControlFactory
      * Vytvoří komponentu.
      * @return FaqGridControl
      */
-    function create();
+    public function create();
 }

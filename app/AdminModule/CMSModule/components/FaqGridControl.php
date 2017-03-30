@@ -54,7 +54,7 @@ class FaqGridControl extends Control
         $grid->setSortable();
         $grid->setSortableHandler('faqGrid:sort!');
         $grid->setDataSource($this->faqRepository->createQueryBuilder('f')->orderBy('f.position'));
-        $grid->setPagination(false);
+        $grid->setPagination(FALSE);
 
 
         $grid->addColumnText('question', 'admin.cms.faq_question');
@@ -62,18 +62,18 @@ class FaqGridControl extends Control
         $grid->addColumnText('author', 'admin.cms.faq_author', 'author.displayName');
 
         $grid->addColumnStatus('public', 'admin.cms.faq_public')
-            ->addOption(false, 'admin.cms.faq_public_private')
+            ->addOption(FALSE, 'admin.cms.faq_public_private')
             ->setClass('btn-danger')
             ->endOption()
-            ->addOption(true, 'admin.cms.faq_public_public')
+            ->addOption(TRUE, 'admin.cms.faq_public_public')
             ->setClass('btn-success')
             ->endOption()
             ->onChange[] = [$this, 'changeStatus'];
 
         $grid->addColumnText('answered', 'admin.cms.faq_answered')
             ->setReplacement([
-                false => $this->translator->translate('admin.common.no'),
-                true => $this->translator->translate('admin.common.yes')
+                FALSE => $this->translator->translate('admin.common.no'),
+                TRUE => $this->translator->translate('admin.common.yes')
             ]);
 
 

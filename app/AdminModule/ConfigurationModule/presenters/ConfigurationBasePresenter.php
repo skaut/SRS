@@ -28,6 +28,6 @@ abstract class ConfigurationBasePresenter extends AdminBasePresenter
     {
         parent::beforeRender();
 
-        $this->template->sidebarVisible = true;
+        $this->template->sidebarVisible = TRUE;
     }
 }

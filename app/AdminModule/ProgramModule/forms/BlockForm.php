@@ -120,7 +120,7 @@ class BlockForm extends Nette\Object
             ->addCondition(Form::FILLED)->addRule(Form::NUMERIC, 'admin.program.blocks_capacity_format');
 
         $form->addCheckbox('mandatory', 'admin.program.blocks_mandatory_form')
-            ->addCondition(Form::EQUAL, true)
+            ->addCondition(Form::EQUAL, TRUE)
             ->toggle('autoRegisterCheckbox');
 
         $form->addCheckbox('autoRegister', 'admin.program.blocks_auto_register')
@@ -152,8 +152,8 @@ class BlockForm extends Nette\Object
             $form->setDefaults([
                 'id' => $id,
                 'name' => $this->block->getName(),
-                'category' => $this->block->getCategory() ? $this->block->getCategory()->getId() : null,
-                'lector' => $this->block->getLector() ? $this->block->getLector()->getId() : null,
+                'category' => $this->block->getCategory() ? $this->block->getCategory()->getId() : NULL,
+                'lector' => $this->block->getLector() ? $this->block->getLector()->getId() : NULL,
                 'duration' => $this->block->getDuration(),
                 'capacity' => $this->block->getCapacity(),
                 'mandatory' => $this->block->getMandatory() > 0,
@@ -190,9 +190,9 @@ class BlockForm extends Nette\Object
             $oldMandatory = $this->block->getMandatory();
             $oldCategory = $this->block->getCategory();
 
-            $category = $values['category'] != '' ? $this->categoryRepository->findById($values['category']) : null;
-            $lector = $values['lector'] != '' ? $this->userRepository->findById($values['lector']) : null;
-            $capacity = $values['capacity'] !== '' ? $values['capacity'] : null;
+            $category = $values['category'] != '' ? $this->categoryRepository->findById($values['category']) : NULL;
+            $lector = $values['lector'] != '' ? $this->userRepository->findById($values['lector']) : NULL;
+            $capacity = $values['capacity'] !== '' ? $values['capacity'] : NULL;
 
             $this->block->setName($values['name']);
             $this->block->setCategory($category);
@@ -246,8 +246,8 @@ class BlockForm extends Nette\Object
                     )
                 )
             )
-                return false;
+                return FALSE;
         }
-        return true;
+        return TRUE;
     }
 }

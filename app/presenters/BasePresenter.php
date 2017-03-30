@@ -35,7 +35,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
      * @param array $parameters
      * @return \stdClass
      */
-    public function flashMessage($message, $type = 'info', $icon = null, $count = null, $parameters = [])
+    public function flashMessage($message, $type = 'info', $icon = NULL, $count = NULL, $parameters = [])
     {
         if ($icon)
             return parent::flashMessage('<span class="fa fa-' . $icon . '"></span> ' .

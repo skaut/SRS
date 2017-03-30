@@ -26,20 +26,20 @@ class SkautIsPresenter extends ConfigurationBasePresenter
     public function renderDefault()
     {
         $eventId = $this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_ID);
-        if ($eventId !== null) {
+        if ($eventId !== NULL) {
             $this->template->event = $this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_NAME);
-            $this->template->connected = true;
-            $this->template->access = true;
-            $this->template->closed = false;
+            $this->template->connected = TRUE;
+            $this->template->access = TRUE;
+            $this->template->closed = FALSE;
 
             try {
                 if (!$this->skautIsService->isEventDraft($eventId))
-                    $this->template->closed = true;
+                    $this->template->closed = TRUE;
             } catch (WsdlException $ex) {
-                $this->template->access = false;
+                $this->template->access = FALSE;
             }
         } else {
-            $this->template->connected = false;
+            $this->template->connected = FALSE;
         }
     }
 
@@ -48,8 +48,8 @@ class SkautIsPresenter extends ConfigurationBasePresenter
      */
     public function handleDisconnect()
     {
-        $this->settingsRepository->setValue(Settings::SKAUTIS_EVENT_ID, null);
-        $this->settingsRepository->setValue(Settings::SKAUTIS_EVENT_NAME, null);
+        $this->settingsRepository->setValue(Settings::SKAUTIS_EVENT_ID, NULL);
+        $this->settingsRepository->setValue(Settings::SKAUTIS_EVENT_NAME, NULL);
 
         $this->flashMessage('admin.configuration.skautis_event_disconnect_successful', 'success');
 

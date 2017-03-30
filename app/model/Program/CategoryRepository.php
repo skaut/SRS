@@ -99,7 +99,7 @@ class CategoryRepository extends EntityRepository
     public function remove(Category $category)
     {
         foreach ($category->getBlocks() as $block) {
-            $block->setCategory(null);
+            $block->setCategory(NULL);
             $this->_em->persist($block);
         }
 

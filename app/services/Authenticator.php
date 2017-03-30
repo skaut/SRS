@@ -54,12 +54,12 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
      * @param array $credentials
      * @return NS\Identity
      */
-    function authenticate(array $credentials)
+    public function authenticate(array $credentials)
     {
         $skautISUser = $this->skautIsService->getUserDetail();
 
         $user = $this->userRepository->findBySkautISUserId($skautISUser->ID);
-        $newUser = $user === null;
+        $newUser = $user === NULL;
 
         if ($newUser) {
             $user = new User($skautISUser->UserName);
@@ -114,8 +114,8 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
         $user->setMember($skautISUser->HasMembership);
 
         $validMembership = $this->skautIsService->getValidMembership($user->getSkautISPersonId());
-        if ($validMembership == null)
-            $user->setUnit(null);
+        if ($validMembership == NULL)
+            $user->setUnit(NULL);
         else
             $user->setUnit($validMembership->RegistrationNumber);
     }
@@ -141,7 +141,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
      * @param $user
      * @param null $testRole
      */
-    public function updateRoles($user, $testRole = null)
+    public function updateRoles($user, $testRole = NULL)
     {
         $dbuser = $this->userRepository->findById($user->id);
 

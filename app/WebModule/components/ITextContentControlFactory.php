@@ -14,5 +14,5 @@ interface ITextContentControlFactory
     /**
      * @return TextContentControl
      */
-    function create();
+    public function create();
 }

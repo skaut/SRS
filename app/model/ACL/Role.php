@@ -117,21 +117,21 @@ class Role
      * @ORM\Column(type="boolean")
      * @var bool
      */
-    protected $system = true;
+    protected $system = TRUE;
 
     /**
      * Registrovatelná role. Lze vybrat v přihlášce.
      * @ORM\Column(type="boolean")
      * @var bool
      */
-    protected $registerable = true;
+    protected $registerable = TRUE;
 
     /**
      * Automaticky schválit. Role nevyžaduje schválení registrace organizátory.
      * @ORM\Column(type="boolean")
      * @var bool
      */
-    protected $approvedAfterRegistration = false;
+    protected $approvedAfterRegistration = FALSE;
 
     /**
      * Registrovatelná od.
@@ -166,14 +166,14 @@ class Role
      * @ORM\Column(type="boolean")
      * @var bool
      */
-    protected $displayArrivalDeparture = false;
+    protected $displayArrivalDeparture = FALSE;
 
     /**
      * Synchronizovat účastníky v roli se skautIS.
      * @ORM\Column(type="boolean")
      * @var bool
      */
-    protected $syncedWithSkautIS = true;
+    protected $syncedWithSkautIS = TRUE;
 
     /**
      * Role neregistrovatelné současně s touto rolí.
@@ -374,11 +374,11 @@ class Role
     {
         $now = new \DateTime();
         if ($this->registerable &&
-            ($this->registerableFrom == null || $this->registerableFrom <= $now) &&
-            ($this->registerableTo == null || $this->registerableTo >= $now)
+            ($this->registerableFrom == NULL || $this->registerableFrom <= $now) &&
+            ($this->registerableTo == NULL || $this->registerableTo >= $now)
         )
-            return true;
-        return false;
+            return TRUE;
+        return FALSE;
     }
 
     /**
@@ -447,7 +447,7 @@ class Role
 
     public function hasLimitedCapacity()
     {
-        return $this->capacity !== null;
+        return $this->capacity !== NULL;
     }
 
     /**
@@ -546,7 +546,7 @@ class Role
      */
     public function getRequiredByRoleTransitive()
     {
-        $allRequiredByRole = array();
+        $allRequiredByRole = [];
         foreach ($this->requiredByRole as $requiredByRole) {
             $this->getRequiredByRoleTransitiveRec($allRequiredByRole, $requiredByRole);
         }
@@ -623,14 +623,14 @@ class Role
         return $this->registerableCategories;
     }
 
-//    //nefunguje z inverse side, zatim neni potreba
-//    /**
-//     * @param ArrayCollection $registerableCategories
-//     */
-//    public function setRegisterableCategories($registerableCategories)
-//    {
-//        $this->registerableCategories = $registerableCategories;
-//    }
+    //    //nefunguje z inverse side, zatim neni potreba
+    //    /**
+    //     * @param ArrayCollection $registerableCategories
+    //     */
+    //    public function setRegisterableCategories($registerableCategories)
+    //    {
+    //        $this->registerableCategories = $registerableCategories;
+    //    }
 
     public function addRegisterableCategory(Category $category)
     {

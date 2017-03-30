@@ -14,5 +14,5 @@ interface IHtmlContentControlFactory
     /**
      * @return HtmlContentControl
      */
-    function create();
+    public function create();
 }

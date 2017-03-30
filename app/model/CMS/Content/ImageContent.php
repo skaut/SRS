@@ -218,17 +218,17 @@ class ImageContent extends Content implements IContent
         $values = $values[$this->getContentFormName()];
 
         $file = $values['image'];
-        $width = $values['width'] !== '' ? $values['width'] : null;
-        $height = $values['height'] !== '' ? $values['height'] : null;
+        $width = $values['width'] !== '' ? $values['width'] : NULL;
+        $height = $values['height'] !== '' ? $values['height'] : NULL;
 
-        $exists = false;
+        $exists = FALSE;
 
         if ($file->size > 0) {
             $path = $this->generatePath($file);
             $this->image = $path;
             $this->filesService->save($file, $path);
             $image = $file->toImage();
-            $exists = true;
+            $exists = TRUE;
         } else if ($this->image) {
             $path = $this->filesService->getDir() . $this->image;
             $exists = file_exists($path);

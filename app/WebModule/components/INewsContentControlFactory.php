@@ -14,5 +14,5 @@ interface INewsContentControlFactory
     /**
      * @return NewsContentControl
      */
-    function create();
+    public function create();
 }

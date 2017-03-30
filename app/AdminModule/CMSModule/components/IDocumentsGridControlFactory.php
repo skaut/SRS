@@ -14,5 +14,5 @@ interface IDocumentsGridControlFactory
      * Vytvoří komponentu.
      * @return DocumentsGridControl
      */
-    function create();
+    public function create();
 }

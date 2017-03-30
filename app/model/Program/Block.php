@@ -285,13 +285,13 @@ class Block
     public function isAllowed(User $user)
     {
         if (!$this->category)
-            return true;
+            return TRUE;
 
         foreach ($user->getRoles() as $role) {
             if ($role->getRegisterableCategories()->contains($this->category))
-                return true;
+                return TRUE;
         }
-        return false;
+        return FALSE;
     }
 
     /**
@@ -303,8 +303,8 @@ class Block
     {
         foreach ($this->programs as $program) {
             if ($program->isAttendee($user))
-                return true;
+                return TRUE;
         }
-        return false;
+        return FALSE;
     }
 }
