@@ -179,7 +179,7 @@ class EditRoleForm extends Nette\Object
     public function processForm(Form $form, \stdClass $values)
     {
         if (!$form['cancel']->isSubmittedBy()) {
-            $capacity = $values['capacity'] !== '' ? $values['capacity'] : null;
+            $capacity = $values['capacity'] !== '' ? $values['capacity'] : NULL;
 
             $this->role->setName($values['name']);
             $this->role->setRegisterable($values['registerable']);
@@ -261,12 +261,12 @@ class EditRoleForm extends Nette\Object
         $this->role->setIncompatibleRoles($incompatibleRoles);
         $this->role->setRequiredRoles($requiredRoles);
 
-        $valid = true;
+        $valid = TRUE;
 
         foreach ($this->roleRepository->findAll() as $role) {
             foreach ($role->getRequiredRolesTransitive() as $requiredRole) {
                 if ($role->getIncompatibleRoles()->contains($requiredRole)) {
-                    $valid = false;
+                    $valid = FALSE;
                     break;
                 }
             }

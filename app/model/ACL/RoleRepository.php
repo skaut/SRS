@@ -104,7 +104,7 @@ class RoleRepository extends EntityRepository
      */
     public function findAllRegisterable()
     {
-        return $this->findBy(['registerable' => true]);
+        return $this->findBy(['registerable' => TRUE]);
     }
 
     /**
@@ -114,7 +114,7 @@ class RoleRepository extends EntityRepository
     public function findAllWithLimitedCapacity()
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->neq('capacity', null));
+            ->where(Criteria::expr()->neq('capacity', NULL));
         return $this->matching($criteria);
     }
 
@@ -125,7 +125,7 @@ class RoleRepository extends EntityRepository
     public function findAllWithArrivalDeparture()
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('displayArrivalDeparture', true));
+            ->where(Criteria::expr()->eq('displayArrivalDeparture', TRUE));
         return $this->matching($criteria);
     }
 
@@ -149,8 +149,8 @@ class RoleRepository extends EntityRepository
      */
     public function countUnoccupiedInRole(Role $role)
     {
-        if ($role->getCapacity() === null)
-            return null;
+        if ($role->getCapacity() === NULL)
+            return NULL;
         return $role->getCapacity() - $this->countApprovedUsersInRole($role);
     }
 
@@ -244,7 +244,7 @@ class RoleRepository extends EntityRepository
         $options = [];
         foreach ($roles as $role) {
             if ($role->hasLimitedCapacity())
-                $options[$role->getId()] = $this->translator->translate('web.common.role_option', null, [
+                $options[$role->getId()] = $this->translator->translate('web.common.role_option', NULL, [
                     'role' => $role->getName(),
                     'occupied' => $this->countApprovedUsersInRole($role),
                     'total' => $role->getCapacity()
@@ -264,7 +264,7 @@ class RoleRepository extends EntityRepository
         return $this->createQueryBuilder('r')
             ->select('r')
             ->where($this->createQueryBuilder()->expr()->andX(
-                $this->createQueryBuilder()->expr()->eq('r.registerable', true),
+                $this->createQueryBuilder()->expr()->eq('r.registerable', TRUE),
                 $this->createQueryBuilder()->expr()->orX(
                     $this->createQueryBuilder()->expr()->lte('r.registerableFrom', 'CURRENT_TIMESTAMP()'),
                     $this->createQueryBuilder()->expr()->isNull('r.registerableFrom')
@@ -292,7 +292,7 @@ class RoleRepository extends EntityRepository
         $options = [];
         foreach ($roles as $role) {
             if ($role->hasLimitedCapacity())
-                $options[$role->getId()] = $this->translator->translate('web.common.role_option', null, [
+                $options[$role->getId()] = $this->translator->translate('web.common.role_option', NULL, [
                     'role' => $role->getName(),
                     'occupied' => $this->countApprovedUsersInRole($role),
                     'total' => $role->getCapacity()
@@ -315,7 +315,7 @@ class RoleRepository extends EntityRepository
             ->leftJoin('r.users', 'u')
             ->where($this->createQueryBuilder()->expr()->orX(
                 $this->createQueryBuilder()->expr()->andX(
-                    $this->createQueryBuilder()->expr()->eq('r.registerable', true),
+                    $this->createQueryBuilder()->expr()->eq('r.registerable', TRUE),
                     $this->createQueryBuilder()->expr()->orX(
                         $this->createQueryBuilder()->expr()->lte('r.registerableFrom', 'CURRENT_TIMESTAMP()'),
                         $this->createQueryBuilder()->expr()->isNull('r.registerableFrom')
@@ -384,7 +384,7 @@ class RoleRepository extends EntityRepository
         $options = [];
         foreach ($roles as $role) {
             if ($role->hasLimitedCapacity())
-                $options[$role->getId()] = $this->translator->translate('web.common.role_option', null, [
+                $options[$role->getId()] = $this->translator->translate('web.common.role_option', NULL, [
                     'role' => $role->getName(),
                     'occupied' => $this->countApprovedUsersInRole($role),
                     'total' => $role->getCapacity()

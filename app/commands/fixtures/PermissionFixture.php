@@ -52,6 +52,6 @@ class PermissionFixture extends AbstractFixture implements DependentFixtureInter
      */
     function getDependencies()
     {
-        return array('App\Commands\Fixtures\ResourceFixture');
+        return ['App\Commands\Fixtures\ResourceFixture'];
     }
 }

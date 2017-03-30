@@ -65,7 +65,7 @@ class InstallPresenter extends InstallBasePresenter
     public function renderDefault()
     {
         if ($this->user->isLoggedIn()) {
-            $this->user->logout(true);
+            $this->user->logout(TRUE);
         }
 
         try {
@@ -140,10 +140,10 @@ class InstallPresenter extends InstallBasePresenter
             $adminRole = $this->roleRepository->findBySystemName(Role::ADMIN);
             $user->addRole($adminRole);
 
-            $this->settingsRepository->setValue(Settings::ADMIN_CREATED, true);
+            $this->settingsRepository->setValue(Settings::ADMIN_CREATED, TRUE);
 
             $this->em->flush();
-            $this->user->logout(true);
+            $this->user->logout(TRUE);
 
             $this->redirect('finish');
         }
@@ -202,8 +202,8 @@ class InstallPresenter extends InstallBasePresenter
             $skautIS = new Skautis($wsdlManager, new User($wsdlManager));
             $skautIS->org->UnitAllRegistry();
         } catch (WsdlException $ex) {
-            return false;
+            return FALSE;
         }
-        return true;
+        return TRUE;
     }
 }

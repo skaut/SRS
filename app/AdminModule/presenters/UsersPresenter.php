@@ -70,8 +70,8 @@ class UsersPresenter extends AdminBasePresenter
         $this->checkPermission(Permission::MANAGE);
 
         $this->template->results = [];
-        $this->template->editSeminar = false;
-        $this->template->editPayment = false;
+        $this->template->editSeminar = FALSE;
+        $this->template->editPayment = FALSE;
     }
 
     /**
@@ -79,7 +79,7 @@ class UsersPresenter extends AdminBasePresenter
      */
     public function renderDetail($id)
     {
-        $this->template->sidebarVisible = true;
+        $this->template->sidebarVisible = TRUE;
         $this->template->detailUser = $this->userRepository->findById($id);
 
         $this->template->customInputs = $this->customInputRepository->findAllOrderedByPosition();
@@ -108,7 +108,7 @@ class UsersPresenter extends AdminBasePresenter
      */
     public function handleEditSeminar()
     {
-        $this->template->editSeminar = true;
+        $this->template->editSeminar = TRUE;
 
         if ($this->isAjax()) {
             $this->redrawControl('userDetail');
@@ -122,7 +122,7 @@ class UsersPresenter extends AdminBasePresenter
      */
     public function handleEditPayment()
     {
-        $this->template->editPayment = true;
+        $this->template->editPayment = TRUE;
 
         if ($this->isAjax()) {
             $this->redrawControl('userDetail');

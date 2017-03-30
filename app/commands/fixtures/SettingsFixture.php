@@ -53,8 +53,8 @@ class SettingsFixture extends AbstractFixture
         $settings[] = new Settings(Settings::IS_ALLOWED_REGISTER_PROGRAMS, '0');
         $settings[] = new Settings(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, '0');
 
-        $settings[] = new Settings(Settings::SKAUTIS_EVENT_ID, null);
-        $settings[] = new Settings(Settings::SKAUTIS_EVENT_NAME, null);
+        $settings[] = new Settings(Settings::SKAUTIS_EVENT_ID, NULL);
+        $settings[] = new Settings(Settings::SKAUTIS_EVENT_NAME, NULL);
 
         $settings[] = new Settings(Settings::LOGO, 'logo.png');
         $settings[] = new Settings(Settings::FOOTER, $this->translator->translate('common.settings.default_value.footer', ['year' => $today->format('Y')]));
@@ -74,7 +74,7 @@ class SettingsFixture extends AbstractFixture
         $settings[] = new Settings(Settings::DISPLAY_USERS_ROLES, '1');
         $settings[] = new Settings(Settings::REDIRECT_AFTER_LOGIN, '/');
 
-        $settings[] = new Settings(Settings::PLACE_DESCRIPTION, null);
+        $settings[] = new Settings(Settings::PLACE_DESCRIPTION, NULL);
 
 
         foreach ($settings as $setting) {

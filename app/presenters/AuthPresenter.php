@@ -39,9 +39,9 @@ class AuthPresenter extends BasePresenter
      * Přesměruje na přihlašovací stránku skautIS, nastaví přihlášení.
      * @param null $backlink
      */
-    public function actionLogin($backlink = null)
+    public function actionLogin($backlink = NULL)
     {
-        if ($this->getHttpRequest()->getPost() == null) {
+        if ($this->getHttpRequest()->getPost() == NULL) {
             $loginUrl = $this->skautIsService->getLoginUrl($backlink);
             $this->redirectUrl($loginUrl);
         }
@@ -58,7 +58,7 @@ class AuthPresenter extends BasePresenter
     public function actionLogout()
     {
         if ($this->user->isLoggedIn()) {
-            $this->user->logout(true);
+            $this->user->logout(TRUE);
             $logoutUrl = $this->skautIsService->getLogoutUrl();
             $this->redirectUrl($logoutUrl);
         }
@@ -73,7 +73,7 @@ class AuthPresenter extends BasePresenter
     private function redirectAfterLogin($returnUrl)
     {
         if ($returnUrl) {
-            if (strpos($returnUrl, ':') !== false)
+            if (strpos($returnUrl, ':') !== FALSE)
                 $this->redirect($returnUrl);
             else
                 $this->redirectUrl($returnUrl);
@@ -82,15 +82,15 @@ class AuthPresenter extends BasePresenter
         //pokud neni navratova adresa, presmerovani podle role
         $user = $this->userRepository->findById($this->user->id);
 
-        $redirectByRole = null;
-        $multipleRedirects = false;
+        $redirectByRole = NULL;
+        $multipleRedirects = FALSE;
 
         foreach ($user->getRoles() as $role) {
             if ($role->getRedirectAfterLogin()) {
                 $roleRedirect = $role->getRedirectAfterLogin();
 
                 if ($redirectByRole && $redirectByRole == $roleRedirect) {
-                    $multipleRedirects = true;
+                    $multipleRedirects = TRUE;
                     break;
                 } else {
                     $redirectByRole = $roleRedirect;

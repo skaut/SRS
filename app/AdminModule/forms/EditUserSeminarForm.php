@@ -217,11 +217,11 @@ class EditUserSeminarForm extends Nette\Object
             foreach ($this->roleRepository->findRolesByIds($field->getValue()) as $role) {
                 if ($role->hasLimitedCapacity()) {
                     if ($this->roleRepository->countUnoccupiedInRole($role) < 1 && !$this->user->isInRole($role))
-                        return false;
+                        return FALSE;
                 }
             }
         }
-        return true;
+        return TRUE;
     }
 
     /**
@@ -236,8 +236,8 @@ class EditUserSeminarForm extends Nette\Object
         $nonregisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
 
         if ($selectedRoles->contains($nonregisteredRole) && $selectedRoles->count() > 1)
-            return false;
+            return FALSE;
 
-        return true;
+        return TRUE;
     }
 }

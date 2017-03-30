@@ -76,7 +76,7 @@ class ProgramCategoriesGridControl extends Control
         $grid->setTranslator($this->translator);
         $grid->setDataSource($this->categoryRepository->createQueryBuilder('c'));
         $grid->setDefaultSort(['name' => 'ASC']);
-        $grid->setPagination(false);
+        $grid->setPagination(FALSE);
 
         $grid->addColumnText('name', 'admin.program.categories_name');
 

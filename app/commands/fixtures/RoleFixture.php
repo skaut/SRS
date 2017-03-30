@@ -42,19 +42,19 @@ class RoleFixture extends AbstractFixture implements DependentFixtureInterface
         }
 
         $guest = $roles[Role::GUEST];
-        $guest->setRegisterable(false);
-        $guest->setSyncedWithSkautIS(false);
+        $guest->setRegisterable(FALSE);
+        $guest->setSyncedWithSkautIS(FALSE);
 
         $nonregistered = $roles[Role::NONREGISTERED];
-        $nonregistered->setRegisterable(false);
-        $nonregistered->setSyncedWithSkautIS(false);
+        $nonregistered->setRegisterable(FALSE);
+        $nonregistered->setSyncedWithSkautIS(FALSE);
 
         $unapproved = $roles[Role::UNAPPROVED];
-        $unapproved->setRegisterable(false);
-        $unapproved->setSyncedWithSkautIS(false);
+        $unapproved->setRegisterable(FALSE);
+        $unapproved->setSyncedWithSkautIS(FALSE);
 
         $attendee = $roles[Role::ATTENDEE];
-        $attendee->setApprovedAfterRegistration(true);
+        $attendee->setApprovedAfterRegistration(TRUE);
         $attendee->addPermission($this->getReference('program_choose_programs'));
 
         $serviceTeam = $roles[Role::SERVICE_TEAM];
@@ -81,7 +81,7 @@ class RoleFixture extends AbstractFixture implements DependentFixtureInterface
         $organizer->addPermission($this->getReference('mailing_manage'));
 
         $admin = $roles[Role::ADMIN];
-        $admin->setRegisterable(false);
+        $admin->setRegisterable(FALSE);
         $admin->addPermission($this->getReference('admin_access'));
         $admin->addPermission($this->getReference('acl_manage'));
         $admin->addPermission($this->getReference('cms_manage'));
@@ -111,6 +111,6 @@ class RoleFixture extends AbstractFixture implements DependentFixtureInterface
      */
     function getDependencies()
     {
-        return array('App\Commands\Fixtures\PermissionFixture');
+        return ['App\Commands\Fixtures\PermissionFixture'];
     }
 }

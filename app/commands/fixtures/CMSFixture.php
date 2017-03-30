@@ -40,7 +40,7 @@ class CMSFixture extends AbstractFixture implements DependentFixtureInterface
     {
         $homepage = new Page($this->translator->translate('common.cms.default.homepage_name'), '/');
         $homepage->setPosition(1);
-        $homepage->setPublic(true);
+        $homepage->setPublic(TRUE);
 
         foreach (Role::$roles as $role) {
             $homepage->addRole($this->getReference($role));
@@ -64,6 +64,6 @@ class CMSFixture extends AbstractFixture implements DependentFixtureInterface
      */
     function getDependencies()
     {
-        return array('App\Commands\Fixtures\RoleFixture');
+        return ['App\Commands\Fixtures\RoleFixture'];
     }
 }

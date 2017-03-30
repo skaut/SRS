@@ -79,7 +79,7 @@ class ClearCacheCommand extends Command
      */
     private function deleteDir($path)
     {
-        if (is_dir($path) === true) {
+        if (is_dir($path) === TRUE) {
             $files = array_diff(scandir($path), ['.', '..']);
 
             foreach ($files as $file) {
@@ -87,10 +87,10 @@ class ClearCacheCommand extends Command
             }
 
             return @rmdir($path);
-        } else if (is_file($path) === true) {
+        } else if (is_file($path) === TRUE) {
             return @unlink($path);
         }
 
-        return false;
+        return FALSE;
     }
 }

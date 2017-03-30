@@ -55,7 +55,7 @@ class DocumentTagsGridControl extends Control
         $grid->setTranslator($this->translator);
         $grid->setDataSource($this->tagRepository->createQueryBuilder('t'));
         $grid->setDefaultSort(['name' => 'ASC']);
-        $grid->setPagination(false);
+        $grid->setPagination(FALSE);
 
 
         $grid->addColumnText('name', 'admin.cms.tags_name');

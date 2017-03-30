@@ -58,7 +58,7 @@ class CustomInputsGridControl extends Control
         $grid->setSortable();
         $grid->setSortableHandler('customInputsGrid:sort!');
         $grid->setDataSource($this->customInputRepository->createQueryBuilder('i')->orderBy('i.position'));
-        $grid->setPagination(false);
+        $grid->setPagination(FALSE);
 
 
         $grid->addColumnText('name', 'admin.configuration.custom_inputs_name');

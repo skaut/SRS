@@ -45,12 +45,12 @@ class ExcelExportService extends Nette\Object
         $row = 1;
         $column = 0;
 
-        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(FALSE);
         $sheet->getColumnDimensionByColumn($column++)->setWidth('25');
 
         foreach ($roles as $role) {
             $sheet->setCellValueByColumnAndRow($column, $row, $role->getName());
-            $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+            $sheet->getColumnDimensionByColumn($column)->setAutoSize(FALSE);
             $sheet->getColumnDimensionByColumn($column)->setWidth('15');
             $column++;
         }
@@ -90,28 +90,28 @@ class ExcelExportService extends Nette\Object
             $column = 0;
 
             $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.schedule.from'));
-            $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
-            $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+            $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(TRUE);
+            $sheet->getColumnDimensionByColumn($column)->setAutoSize(FALSE);
             $sheet->getColumnDimensionByColumn($column++)->setWidth('15');
 
             $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.schedule.to'));
-            $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
-            $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+            $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(TRUE);
+            $sheet->getColumnDimensionByColumn($column)->setAutoSize(FALSE);
             $sheet->getColumnDimensionByColumn($column++)->setWidth('15');
 
             $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.schedule.program_name'));
-            $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
-            $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+            $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(TRUE);
+            $sheet->getColumnDimensionByColumn($column)->setAutoSize(FALSE);
             $sheet->getColumnDimensionByColumn($column++)->setWidth('30');
 
             $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.schedule.room'));
-            $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
-            $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+            $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(TRUE);
+            $sheet->getColumnDimensionByColumn($column)->setAutoSize(FALSE);
             $sheet->getColumnDimensionByColumn($column++)->setWidth('25');
 
             $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.schedule.lector'));
-            $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
-            $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+            $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(TRUE);
+            $sheet->getColumnDimensionByColumn($column)->setAutoSize(FALSE);
             $sheet->getColumnDimensionByColumn($column++)->setWidth('25');
 
             foreach ($user->getPrograms() as $program) {
@@ -121,8 +121,8 @@ class ExcelExportService extends Nette\Object
                 $sheet->setCellValueByColumnAndRow($column++, $row, $program->getStart()->format("j. n. H:i"));
                 $sheet->setCellValueByColumnAndRow($column++, $row, $program->getEnd()->format("j. n. H:i"));
                 $sheet->setCellValueByColumnAndRow($column++, $row, $program->getBlock()->getName());
-                $sheet->setCellValueByColumnAndRow($column++, $row, $program->getRoom() ? $program->getRoom()->getName() : null);
-                $sheet->setCellValueByColumnAndRow($column++, $row, $program->getBlock()->getLector() ? $program->getBlock()->getLector()->getDisplayName() : null);
+                $sheet->setCellValueByColumnAndRow($column++, $row, $program->getRoom() ? $program->getRoom()->getName() : NULL);
+                $sheet->setCellValueByColumnAndRow($column++, $row, $program->getBlock()->getLector() ? $program->getBlock()->getLector()->getDisplayName() : NULL);
             }
         }
 

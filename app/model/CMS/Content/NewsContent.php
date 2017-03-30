@@ -71,6 +71,6 @@ class NewsContent extends Content implements IContent
     {
         parent::contentFormSucceeded($form, $values);
         $values = $values[$this->getContentFormName()];
-        $this->count = $values['count'] !== '' ? $values['count'] : null;
+        $this->count = $values['count'] !== '' ? $values['count'] : NULL;
     }
 }

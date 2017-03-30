@@ -61,7 +61,7 @@ class User
      * @ORM\Column(type="boolean")
      * @var bool
      */
-    protected $approved = true;
+    protected $approved = TRUE;
 
     /**
      * Jméno.
@@ -103,7 +103,7 @@ class User
      * @ORM\Column(type="boolean")
      * @var bool
      */
-    protected $member = false;
+    protected $member = FALSE;
 
     /**
      * Jednotka.
@@ -215,7 +215,7 @@ class User
      * @ORM\Column(type="boolean")
      * @var bool
      */
-    protected $attended = false;
+    protected $attended = FALSE;
 
     /**
      * Příjezd.
@@ -361,7 +361,7 @@ class User
     {
         return $this->roles->filter(function ($item) use ($role) {
                 return $item == $role;
-            })->count() != 0;
+        })->count() != 0;
     }
 
     /**
@@ -375,10 +375,10 @@ class User
         foreach ($this->roles as $r) {
             foreach ($r->getPermissions() as $p) {
                 if ($p->getResource()->getName() == $resource && $p->getName() == $permission)
-                    return true;
+                    return TRUE;
             }
         }
-        return false;
+        return FALSE;
     }
 
     /**
@@ -389,12 +389,12 @@ class User
     public function isAllowedModifyBlock(Block $block)
     {
         if ($this->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS))
-            return true;
+            return TRUE;
 
         if ($this->isAllowed(Resource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS) && $block->getLector() == $this)
-            return true;
+            return TRUE;
 
-        return false;
+        return FALSE;
     }
 
     /**
@@ -416,7 +416,7 @@ class User
     {
         return $this->roles->filter(function ($item) {
                 return $item->getFee() == 0;
-            })->count() == 0;
+        })->count() == 0;
     }
 
     /**
@@ -425,7 +425,7 @@ class User
      */
     public function hasPaid()
     {
-        return $this->paymentDate !== null;
+        return $this->paymentDate !== NULL;
     }
 
     /**
@@ -590,7 +590,7 @@ class User
     private function updateDisplayName()
     {
         $this->displayName = $this->lastName . " " . $this->firstName;
-        if ($this->nickName != null)
+        if ($this->nickName != NULL)
             $this->displayName .= " (" . $this->nickName . ")";
     }
 
@@ -1030,9 +1030,9 @@ class User
         $criteria = Criteria::create();
 
         if ($this->roles instanceof PersistentCollection && $this->roles->isInitialized())
-            $criteria->where(Criteria::expr()->eq('displayArrivalDeparture', true));
+            $criteria->where(Criteria::expr()->eq('displayArrivalDeparture', TRUE));
         else
-            $criteria->where(Criteria::expr()->eq('display_arrival_departure', true));  //problem s lazyloadingem u camelcase nazvu
+            $criteria->where(Criteria::expr()->eq('display_arrival_departure', TRUE));  //problem s lazyloadingem u camelcase nazvu
 
         return !$this->roles->matching($criteria)->isEmpty();
     }
@@ -1042,10 +1042,10 @@ class User
      * @param null $roles
      * @return array
      */
-    public function getRegisterableCategories($roles = null)
+    public function getRegisterableCategories($roles = NULL)
     {
         $categories = [];
-        if ($roles === null)
+        if ($roles === NULL)
             $roles = $this->roles;
         foreach ($roles as $role) {
             foreach ($role->getRegisterableCategories() as $category) {

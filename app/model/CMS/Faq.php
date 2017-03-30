@@ -45,7 +45,7 @@ class Faq
      * @ORM\Column(type="boolean")
      * @var bool
      */
-    protected $public = false;
+    protected $public = FALSE;
 
     /**
      * Pozice otázky.

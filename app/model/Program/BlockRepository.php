@@ -109,7 +109,7 @@ class BlockRepository extends EntityRepository
      * @param bool $unassignedOnly
      * @return array
      */
-    public function findByLikeNameOrderedByName($text, $unassignedOnly = false)
+    public function findByLikeNameOrderedByName($text, $unassignedOnly = FALSE)
     {
         $qb = $this->createQueryBuilder('b')
             ->select('b')

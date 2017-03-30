@@ -42,11 +42,11 @@ class SettingsRepository extends EntityRepository
     public function getValue($item)
     {
         $value = $this->cache->load($item);
-        if ($value !== null)
+        if ($value !== NULL)
             return $value;
 
         $settings = $this->findOneBy(['item' => $item]);
-        if ($settings === null)
+        if ($settings === NULL)
             throw new SettingsException("Item {$item} was not found in table Settings.");
 
         $value = $settings->getValue();
@@ -84,7 +84,7 @@ class SettingsRepository extends EntityRepository
     public function setValue($item, $value)
     {
         $settings = $this->findOneBy(['item' => $item]);
-        if ($settings === null)
+        if ($settings === NULL)
             throw new SettingsException("Item {$item} was not found in table Settings.");
 
         $settings->setValue($value);
