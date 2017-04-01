@@ -8,7 +8,6 @@ schema:
     create_schema: "Vytvořit tabulky"
     schema_already_created: "Schéma databáze již bylo vytvořeno."
     schema_create_unsuccessful: "Tabulky se nepodařilo vytvořit. Zkontrolujte, zda nebyly vytvořeny dříve, a případně je odstraňte."
-    data_import_unsuccessful: "Nepodařilo se načíst počáteční data."
 
 admin:
     heading: "Nastavení administrátora"

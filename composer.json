@@ -10,7 +10,6 @@
         "kdyby/translation": "dev-master",
         "kdyby/console": "^2.6",
 
-        "doctrine/data-fixtures": "^1.2",
         "zenify/doctrine-migrations": "^3.0",
 
         "nextras/forms": "^2.0",
