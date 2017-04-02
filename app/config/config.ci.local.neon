@@ -6,7 +6,7 @@ parameters:
         password:
 
     skautIS:
-        appId: skaut_is_app_id
+        appId: 31153c75-6c74-49ab-8660-123786a11a3b
         test: true
 
 
