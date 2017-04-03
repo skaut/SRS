@@ -1,36 +1,5 @@
 name: "SRS"
 
-role:
-    guest: "guest"
-    nonregistered: "Nepřihlášený"
-    unapproved: "Neschválený"
-    attendee: "Účastník"
-    service_team: "Servis tým"
-    lector: "Lektor"
-    organizer: "Organizátor"
-    admin: "Administrátor"
-
-resource:
-    admin: "Administrace"
-    cms: "CMS"
-    acl: "Práva a role"
-    program: "Program"
-    room: "Místnosti"
-    category: "Kategorie"
-    configuration: "Konfigurace"
-    users: "Uživatelé"
-    mailing: "Mailing"
-
-permission:
-    manage: "Spravovat"
-    access: "Přístup"
-    manage_own_programs: "Spravovat vlastní programy"
-    manage_all_programs: "Spravovat všechny programy"
-    manage_rooms: "Spravovat místnosti"
-    manage_categories: "Spravovat kategorie"
-    manage_schedule: "Upravovat harmonogram"
-    choose_programs: "Vybírat si programy"
-
 permission_group:
     web: "Web"
     admin: "Administrace"
@@ -64,24 +33,6 @@ permission_name:
 
     manage_rooms:
         program: "Spravovat místnosti"
-
-settings:
-    default_value:
-        seminar_name: "Název semináře"
-        seminar_email: "srs@skauting.cz"
-        footer: "© %year% SRS"
-        company: "Konfigurace -> Platba a doklady -> Firma"
-        ico: "Konfigurace -> Platba a doklady -> IČ"
-        accountant: "Konfigurace -> Platba a doklady -> Pokladník"
-        print_location: "Konfigurace -> Platba a doklady -> Místo"
-        account_number: "Konfigurace -> Platba a doklady -> Číslo účtu"
-        application_agreement: "Souhlasím se zpracováním mých osobních údajů pro potřeby účasti na této akci v rozsahu a dle pravidel daných přihláškou člena do organizace. Souhlasím s pořizování foto, audio a video záznamů z akce a souhlasím s jejich využítím pro potřeby Junáka - českého skauta. Tím není dotčeno mé právo pro konkrétní situaci souhlas omezit nebo vyloučit, a to sdělením vedoucímu programu předem. Osobní údaje jsou zpracovávány v souladu se zákonem č. 101/2000 Sb. na ochranu osobních údajů."
-
-cms:
-    default:
-        homepage_name: "Homepage"
-        homepage_heading: "Úspěšně jste nainstalovali SRS. Gratulujeme!"
-        homepage_text: "<p>Obsah této stránky můžete změnit v administraci v sekci Web.</p>"
 
 content:
     name:
