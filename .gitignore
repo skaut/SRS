@@ -1,9 +1,9 @@
 *~
-composer.lock
-.idea
-composer.phar
-deployment.ini
-deployment.log
-!.gitignore
+/composer.lock
+/.idea
+/composer.phar
+/deployment.ini
+/deployment.log
 /vendor
-!/vendor/.gitignore
+!.gitignore
+
