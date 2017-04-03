@@ -13,6 +13,7 @@ Allow from all
 
     RewriteCond %{HTTPS} !=on
     RewriteCond %{HTTP_HOST} !=localhost
+    RewriteCond %{HTTP_HOST} !=srs.loc
     RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
 	# prevents files starting with dot to be viewed by browser
