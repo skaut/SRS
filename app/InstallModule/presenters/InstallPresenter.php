@@ -32,12 +32,6 @@ class InstallPresenter extends InstallBasePresenter
     public $application;
 
     /**
-     * @var \Kdyby\Doctrine\EntityManager
-     * @inject
-     */
-    public $em;
-
-    /**
      * @var \App\Model\Settings\SettingsRepository
      * @inject
      */
@@ -123,7 +117,8 @@ class InstallPresenter extends InstallBasePresenter
 
             $this->settingsRepository->setValue(Settings::ADMIN_CREATED, TRUE);
 
-            $this->em->flush();
+            $this->userRepository->save($user);
+
             $this->user->logout(TRUE);
 
             $this->redirect('finish');
