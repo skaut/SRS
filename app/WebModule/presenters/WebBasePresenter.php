@@ -13,6 +13,10 @@ use App\Services\Authenticator;
 use App\Services\Authorizator;
 use App\Services\SkautIsService;
 use Doctrine\DBAL\Exception\TableNotFoundException;
+use Kdyby\Console\StringOutput;
+use Nette\Caching\Cache;
+use Nette\Caching\IStorage;
+use Symfony\Component\Console\Input\ArrayInput;
 use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\JavaScriptLoader;
 
@@ -35,6 +39,12 @@ abstract class WebBasePresenter extends BasePresenter
      * @inject
      */
     public $authenticator;
+
+    /**
+     * @var \Kdyby\Console\Application
+     * @inject
+     */
+    public $application;
 
     /**
      * @var \App\Model\ACL\ResourceRepository
@@ -72,8 +82,21 @@ abstract class WebBasePresenter extends BasePresenter
      */
     public $skautIsService;
 
-    /** @var User */
+    /**
+     * @var User
+     */
     protected $dbuser;
+
+    /**
+     * @var Cache
+     */
+    protected $cache;
+
+    /**
+     * @var IStorage
+     * @inject
+     */
+    public $storage;
 
 
     /**
@@ -97,6 +120,8 @@ abstract class WebBasePresenter extends BasePresenter
     public function startup()
     {
         parent::startup();
+
+        $this->cache = new Cache($this->storage, 'Migrations');
 
         $this->checkInstallation();
 
@@ -154,6 +179,18 @@ abstract class WebBasePresenter extends BasePresenter
             $this->redirect(':Install:Install:default');
         } catch (SettingsException $ex) {
             $this->redirect(':Install:Install:default');
+        }
+
+        $migrated = $this->cache->load('migrated');
+        if ($migrated === NULL) {
+            $output = new StringOutput();
+            $input = new ArrayInput([
+                'command' => 'migrations:migrate',
+                '--no-interaction' => TRUE
+            ]);
+            $result = $this->application->run($input, $output);
+
+            $this->cache->save('migrated', new \DateTime());
         }
     }
 }
