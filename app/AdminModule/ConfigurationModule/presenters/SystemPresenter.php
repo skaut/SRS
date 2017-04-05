@@ -3,6 +3,7 @@
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
 use App\Commands\ClearCacheCommand;
+use Kdyby\Console\Application;
 use Kdyby\Console\StringOutput;
 use Symfony\Component\Console\Input\ArrayInput;
 
@@ -16,7 +17,7 @@ use Symfony\Component\Console\Input\ArrayInput;
 class SystemPresenter extends ConfigurationBasePresenter
 {
     /**
-     * @var \Kdyby\Console\Application
+     * @var Application
      * @inject
      */
     public $application;
