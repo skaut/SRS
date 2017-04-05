@@ -16,13 +16,13 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ClearCacheCommand extends Command
 {
-    /** @var null|string */
+    /** @var string */
     private $dir;
 
 
     /**
      * ClearCacheCommand constructor.
-     * @param null|string $dir
+     * @param string $dir
      */
     public function __construct($dir)
     {
