@@ -56,18 +56,22 @@ class DatabaseService
      */
     public function update()
     {
-        $migrated = $this->cache->load('updated');
-        if ($migrated === NULL) {
-            $this->cache->save('updated', new \DateTime());
+        if ($this->cache->load('updated') === NULL) {
+            $this->cache->save('lock', function () {
+                if ($this->cache->load('updated') === NULL) {
+                    $this->cache->save('updated', new \DateTime());
 
-            $this->backup();
+                    $this->backup();
 
-            $output = new StringOutput();
-            $input = new ArrayInput([
-                'command' => 'migrations:migrate',
-                '--no-interaction' => TRUE
-            ]);
-            $result = $this->application->run($input, $output);
+                    $output = new StringOutput();
+                    $input = new ArrayInput([
+                        'command' => 'migrations:migrate',
+                        '--no-interaction' => TRUE
+                    ]);
+                    $result = $this->application->run($input, $output);
+                }
+                return true;
+            });
         }
     }
 
