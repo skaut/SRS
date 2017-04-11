@@ -70,7 +70,7 @@ class DatabaseService
                     ]);
                     $result = $this->application->run($input, $output);
                 }
-                return true;
+                return TRUE;
             });
         }
     }
