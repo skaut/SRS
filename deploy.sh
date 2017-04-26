@@ -8,7 +8,7 @@ echo ""
 echo "Aktualizuji composer"
 echo "--------------------"
 composer self-update
-composer install --no-dev
+composer update --no-dev
 echo ""
 
 echo "Synchronizuji na FTP"

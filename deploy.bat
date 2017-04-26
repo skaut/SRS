@@ -8,7 +8,7 @@ ECHO.
 ECHO Aktualizuji composer
 ECHO --------------------
 call composer self-update
-call composer install --no-dev
+call composer update --no-dev
 ECHO.
 
 ECHO Synchronizuji na FTP
