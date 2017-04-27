@@ -1,6 +1,7 @@
 <?php
 
-//require '.maintenance.php';
+if (file_exists('../.deployment.running'))
+    require '.maintenance.php';
 
 $container = require __DIR__ . '/../app/bootstrap.php';
 

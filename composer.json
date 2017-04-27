@@ -16,7 +16,7 @@
 
         "nextras/forms": "^2.0",
 
-        "ublaboo/datagrid": "^5.1",
+        "ublaboo/datagrid": "^5.2",
         "ublaboo/mailing": "^1.1",
 
         "janmarek/webloader": "dev-master",
