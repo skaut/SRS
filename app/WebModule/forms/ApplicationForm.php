@@ -205,6 +205,13 @@ class ApplicationForm extends Nette\Object
         $this->user->setRoles($roles);
 
         foreach ($this->customInputRepository->findAll() as $customInput) {
+            $customInputValue = $this->user->getCustomInputValue($customInput);
+
+            if ($customInputValue) {
+                $customInputValue->setValue($values['custom' . $customInput->getId()]);
+                continue;
+            }
+
             switch ($customInput->getType()) {
                 case 'text':
                     $customInputValue = new CustomTextValue();
