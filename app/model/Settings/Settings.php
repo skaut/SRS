@@ -106,9 +106,14 @@ class Settings
     const ACCOUNT_NUMBER = 'account_number';
 
     /**
-     * Předvolba variabilního symbolu. 2 číslice před generovaným variabilním symbolem.
+     * Předvolba variabilního symbolu. 0-4 číslice před generovaným variabilním symbolem.
      */
     const VARIABLE_SYMBOL_CODE = 'variable_symbol_code';
+
+    /**
+     * Typ generování variablního symbolu - datum narození / pořadí přihlášky.
+     */
+    const VARIABLE_SYMBOL_TYPE = 'variable_symbol_type';
 
     /**
      * Přihlašování na programy od.

@@ -63,9 +63,9 @@ class EditUserPaymentForm extends Nette\Object
 
         $form->addText('variableSymbol', 'admin.users.users_variable_symbol')
             ->addRule(Form::FILLED)
-            ->addRule(Form::PATTERN, 'admin.users.users_edit_variable_symbol_format', '^\d{8}$');
+            ->addRule(Form::PATTERN, 'admin.users.users_edit_variable_symbol_format', '^\d{1,10}$');
 
-        $form->addSelect('paymentMethod', 'Platební metoda', $this->preparePaymentMethodOptions());
+        $form->addSelect('paymentMethod', 'admin.users.users_payment_method', $this->preparePaymentMethodOptions());
 
         $form->addDatePicker('paymentDate', 'admin.users.users_payment_date');
 

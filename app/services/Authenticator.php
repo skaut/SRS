@@ -63,7 +63,6 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
 
         if ($newUser) {
             $user = new User($skautISUser->UserName);
-            $user->setFirstLogin(new \DateTime());
             $roleNonregistered = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
             $user->addRole($roleNonregistered);
         }
