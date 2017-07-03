@@ -883,24 +883,19 @@ class User
     }
 
     /**
-     * Vrátí variabilní symbol bez #.
      * @return string
      */
     public function getVariableSymbol()
     {
-        return substr($this->variableSymbol, 0, 8);
+        return $this->variableSymbol;
     }
 
     /**
-     * Nastaví variabilní symbol, pokud je změněn oproti vygenerovanému, přidá se na konec #.
      * @param string $variableSymbol
      */
     public function setVariableSymbol($variableSymbol)
     {
-        if (!$this->variableSymbol)
-            $this->variableSymbol = $variableSymbol;
-        elseif (substr($this->variableSymbol, 0, 8) != $variableSymbol)
-            $this->variableSymbol = $variableSymbol . '#';
+        $this->variableSymbol = $variableSymbol;
     }
 
     /**
