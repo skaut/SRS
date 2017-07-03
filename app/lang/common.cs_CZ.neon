@@ -80,6 +80,10 @@ sex:
     male: "Muž"
     female: "Žena"
 
+variable_symbol_type:
+    birth_date: Datum narození
+    order: Pořadí přihlášky
+
 day:
     1: "Po"
     2: "Út"

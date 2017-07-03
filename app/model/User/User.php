@@ -141,11 +141,18 @@ class User
     protected $skautISPersonId;
 
     /**
-     * Datum prvního přihlášení.
+     * Pořadí přihlášky.
+     * @ORM\Column(type="integer", nullable=true)
+     * @var int
+     */
+    protected $applicationOrder;
+
+    /**
+     * Datum podání přihlášky.
      * @ORM\Column(type="datetime", nullable=true)
      * @var \DateTime
      */
-    protected $firstLogin;
+    protected $applicationDate;
 
     /**
      * Datum posledního přihlášení.
@@ -716,19 +723,35 @@ class User
     }
 
     /**
-     * @return \DateTime
+     * @return int
      */
-    public function getFirstLogin()
+    public function getApplicationOrder()
     {
-        return $this->firstLogin;
+        return $this->applicationOrder;
     }
 
     /**
-     * @param \DateTime $firstLogin
+     * @param int $applicationOrder
      */
-    public function setFirstLogin($firstLogin)
+    public function setApplicationOrder($applicationOrder)
     {
-        $this->firstLogin = $firstLogin;
+        $this->applicationOrder = $applicationOrder;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getApplicationDate()
+    {
+        return $this->applicationDate;
+    }
+
+    /**
+     * @param \DateTime $applicationDate
+     */
+    public function setApplicationDate($applicationDate)
+    {
+        $this->applicationDate = $applicationDate;
     }
 
     /**
@@ -860,24 +883,19 @@ class User
     }
 
     /**
-     * Vrátí variabilní symbol bez #.
      * @return string
      */
     public function getVariableSymbol()
     {
-        return substr($this->variableSymbol, 0, 8);
+        return $this->variableSymbol;
     }
 
     /**
-     * Nastaví variabilní symbol, pokud je změněn oproti vygenerovanému, přidá se na konec #.
      * @param string $variableSymbol
      */
     public function setVariableSymbol($variableSymbol)
     {
-        if (!$this->variableSymbol)
-            $this->variableSymbol = $variableSymbol;
-        elseif (substr($this->variableSymbol, 0, 8) != $variableSymbol)
-            $this->variableSymbol = $variableSymbol . '#';
+        $this->variableSymbol = $variableSymbol;
     }
 
     /**

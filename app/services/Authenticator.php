@@ -59,20 +59,14 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
         $skautISUser = $this->skautIsService->getUserDetail();
 
         $user = $this->userRepository->findBySkautISUserId($skautISUser->ID);
-        $newUser = $user === NULL;
 
-        if ($newUser) {
+        if ($user === NULL) {
             $user = new User($skautISUser->UserName);
-            $user->setFirstLogin(new \DateTime());
             $roleNonregistered = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
             $user->addRole($roleNonregistered);
         }
 
         $this->updateUserFromSkautIS($user, $skautISUser);
-
-        if ($newUser) {
-            $user->setVariableSymbol($this->generateVariableSymbol($user->getBirthdate()));
-        }
 
         $this->userRepository->save($user);
 
@@ -118,22 +112,6 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
             $user->setUnit(NULL);
         else
             $user->setUnit($validMembership->RegistrationNumber);
-    }
-
-    /**
-     * Vygeneruje variabilní symbol nového uživatele.
-     * @param \DateTime $birthDate
-     * @return string
-     */
-    private function generateVariableSymbol(\DateTime $birthDate)
-    {
-        $variableSymbolCode = $this->settingsRepository->getValue(Settings::VARIABLE_SYMBOL_CODE);
-        $variableSymbol = $variableSymbolCode . $birthDate->format('ymd');
-
-        while ($this->userRepository->variableSymbolExists($variableSymbol))
-            $variableSymbol = str_pad(++$variableSymbol, 8, '0', STR_PAD_LEFT);
-
-        return $variableSymbol;
     }
 
     /**

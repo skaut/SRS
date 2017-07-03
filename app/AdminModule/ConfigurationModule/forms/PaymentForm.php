@@ -3,6 +3,7 @@
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
+use App\Model\Enums\VariableSymbolType;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\UserRepository;
@@ -57,15 +58,18 @@ class PaymentForm extends Nette\Object
             ->addRule(Form::FILLED, 'admin.configuration.account_number_empty')
             ->addRule(Form::PATTERN, 'admin.configuration.account_number_format', '^(\d{1,6}-|)\d{2,10}\/\d{4}$');
 
-        $form->addText('variableSymbolCode', 'admin.configuration.variable_symbol_code', 2)
-            ->addRule(Form::FILLED, 'admin.configuration.variable_symbol_code_empty')
-            ->addRule(Form::PATTERN, 'admin.configuration.variable_symbol_code_format', '^\d{2}$');
+        $form->addText('variableSymbolCode', 'admin.configuration.variable_symbol_code')
+            ->setRequired(false)
+            ->addRule(Form::PATTERN, 'admin.configuration.variable_symbol_code_format', '^\d{0,4}$');
+
+        $form->addSelect('variableSymbolType', 'admin.configuration.variable_symbol_type', $this->prepareVariableSympolTypeOptions());
 
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
             'accountNumber' => $this->settingsRepository->getValue(Settings::ACCOUNT_NUMBER),
-            'variableSymbolCode' => $this->settingsRepository->getValue(Settings::VARIABLE_SYMBOL_CODE)
+            'variableSymbolCode' => $this->settingsRepository->getValue(Settings::VARIABLE_SYMBOL_CODE),
+            'variableSymbolType' => $this->settingsRepository->getValue(Settings::VARIABLE_SYMBOL_TYPE)
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -81,11 +85,19 @@ class PaymentForm extends Nette\Object
     public function processForm(Form $form, \stdClass $values)
     {
         $this->settingsRepository->setValue(Settings::ACCOUNT_NUMBER, $values['accountNumber']);
+        $this->settingsRepository->setValue(Settings::VARIABLE_SYMBOL_CODE,  $values['variableSymbolCode']);
+        $this->settingsRepository->setValue(Settings::VARIABLE_SYMBOL_TYPE, $values['variableSymbolType']);
+    }
 
-        $variableSymbolCode = $values['variableSymbolCode'];
-        if ($variableSymbolCode != $this->settingsRepository->getValue(Settings::VARIABLE_SYMBOL_CODE)) {
-            $this->settingsRepository->setValue(Settings::VARIABLE_SYMBOL_CODE, $variableSymbolCode);
-            $this->userRepository->setVariableSymbolCode($variableSymbolCode);
-        }
+    /**
+     * Vrátí typy generování variabilního symbolu jako možnosti pro select.
+     * @return array
+     */
+    private function prepareVariableSympolTypeOptions()
+    {
+        $options = [];
+        foreach (VariableSymbolType::$types as $type)
+            $options[$type] = 'common.variable_symbol_type.' . $type;
+        return $options;
     }
 }

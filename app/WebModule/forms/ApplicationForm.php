@@ -5,6 +5,7 @@ namespace App\WebModule\Forms;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Enums\Sex;
+use App\Model\Enums\VariableSymbolType;
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\Settings;
@@ -18,6 +19,7 @@ use App\Services\SkautIsService;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\IControl;
+use PhpCollection\Set;
 use Skautis\Wsdl\WsdlException;
 
 
@@ -232,6 +234,10 @@ class ApplicationForm extends Nette\Object
         if (array_key_exists('departure', $values))
             $this->user->setDeparture($values['departure']);
 
+        $this->user->setApplicationOrder($this->userRepository->findLastApplicationOrder()+1);
+        $this->user->setApplicationDate(new \DateTime());
+
+        $this->user->setVariableSymbol($this->generateVariableSymbol());
 
         $this->userRepository->save($this->user);
 
@@ -446,5 +452,33 @@ class ApplicationForm extends Nette\Object
     public static function toggleArrivalDeparture(IControl $control)
     {
         return FALSE;
+    }
+
+    /**
+     * Vygeneruje variabilní symbol.
+     * @return string
+     */
+    private function generateVariableSymbol() {
+        $variableSymbolCode = $this->settingsRepository->getValue(Settings::VARIABLE_SYMBOL_CODE);
+        $variableSymbol = "";
+
+        switch ($this->settingsRepository->getValue(Settings::VARIABLE_SYMBOL_TYPE)) {
+            case VariableSymbolType::BIRTH_DATE:
+                $variableSymbolDate = $this->user->getBirthdate()->format('ymd');
+                $variableSymbol = $variableSymbolCode . $variableSymbolDate;
+
+                while ($this->userRepository->variableSymbolExists($variableSymbol)) {
+                    $variableSymbolDate = str_pad($variableSymbolDate + 1, 6, 0, STR_PAD_LEFT);
+                    $variableSymbol = $variableSymbolCode . $variableSymbolDate;
+                }
+
+                break;
+
+            case VariableSymbolType::ORDER:
+                $variableSymbol = $variableSymbolCode . str_pad($this->user->getApplicationOrder(), 6, '0', STR_PAD_LEFT);
+                break;
+        }
+
+        return $variableSymbol;
     }
 }

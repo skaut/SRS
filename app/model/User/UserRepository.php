@@ -203,6 +203,18 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Vrací pořadí poslední odeslané přihlášky.
+     * @return int
+     */
+    public function findLastApplicationOrder()
+    {
+        return $this->createQueryBuilder('u')
+            ->select('MAX(u.applicationOrder)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
      * Vrací true, pokud existuje uživatel s tímto variabilním symbolem.
      * @param $variableSymbol
      * @return bool
@@ -214,25 +226,6 @@ class UserRepository extends EntityRepository
             ->getQuery()
             ->getResult();
         return !empty($res);
-    }
-
-    /**
-     * Změní předvolbu variabilních symbolů.
-     * @param $variableSymbolCode
-     */
-    public function setVariableSymbolCode($variableSymbolCode)
-    {
-        $this->createQueryBuilder('u')
-            ->update()
-            ->set('u.variableSymbol', $this->createQueryBuilder()->expr()->concat(
-                ':code',
-                $this->createQueryBuilder()->expr()->substring('u.variableSymbol', 3, 6)
-            ))
-            ->setParameter('code', $variableSymbolCode)
-            ->where('u.variableSymbol NOT LIKE :edited')
-            ->setParameter('edited', '%#')
-            ->getQuery()
-            ->execute();
     }
 
     /**

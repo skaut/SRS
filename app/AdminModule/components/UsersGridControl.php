@@ -229,7 +229,7 @@ class UsersGridControl extends Control
         $grid->addColumnDateTime('incomeProofPrintedDate', 'admin.users.users_income_proof_printed_date')
             ->setSortable();
 
-        $grid->addColumnDateTime('firstLogin', 'admin.users.users_first_login')
+        $grid->addColumnDateTime('applicationDate', 'admin.users.users_application_date')
             ->setSortable();
 
         $columnAttended = $grid->addColumnStatus('attended', 'admin.users.users_attended');
