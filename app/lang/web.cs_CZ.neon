@@ -49,6 +49,7 @@ profile:
     roles_update_successful: "Role byly úspěšně upraveny."
 
     personal_details_group: "Osobní údaje"
+    photo: "Fotka"
     sex: "Pohlaví"
     firstname: "Jméno"
     firstname_empty: "Zadejte jméno."

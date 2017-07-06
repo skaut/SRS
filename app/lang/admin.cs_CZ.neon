@@ -242,6 +242,7 @@ program:
 users:
     users_heading: "Uživatelé"
     users_name: "Jméno"
+    users_photo: "Fotka"
     users_username: "Uživatelské jméno"
     users_firstname: "Jméno"
     users_lastname: "Příjmení"

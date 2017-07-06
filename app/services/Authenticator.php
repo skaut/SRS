@@ -32,6 +32,9 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
     /** @var SkautIsService */
     protected $skautIsService;
 
+    /** @var FilesService */
+    private $filesService;
+
 
     /**
      * Authenticator constructor.
@@ -39,14 +42,17 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
      * @param RoleRepository $roleRepository
      * @param SettingsRepository $settingsRepository
      * @param SkautIsService $skautIsService
+     * @param FilesService $filesService
      */
     public function __construct(UserRepository $userRepository, RoleRepository $roleRepository,
-                                SettingsRepository $settingsRepository, SkautIsService $skautIsService)
+                                SettingsRepository $settingsRepository, SkautIsService $skautIsService,
+                                FilesService $filesService)
     {
         $this->userRepository = $userRepository;
         $this->roleRepository = $roleRepository;
         $this->settingsRepository = $settingsRepository;
         $this->skautIsService = $skautIsService;
+        $this->filesService = $filesService;
     }
 
     /**
@@ -112,6 +118,21 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
             $user->setUnit(NULL);
         else
             $user->setUnit($validMembership->RegistrationNumber);
+
+        $photoUpdate = new \DateTime($skautISPerson->PhotoUpdate);
+        if ($user->getPhotoUpdate() === null || $photoUpdate->diff($user->getPhotoUpdate())->s >= 1) {
+            $photo = $this->skautIsService->getPersonPhoto($skautISUser->ID_Person, "normal");
+            if ($photo->ID_PersonPhotoNormal) {
+                $fileName = $user->getId() . $photo->PhotoExtension;
+                $path = User::PHOTO_PATH . "/" . $fileName;
+                $this->filesService->create($path, $photo->PhotoNormalContent);
+                $user->setPhoto($fileName);
+            }
+            else {
+                $user->setPhoto(null);
+            }
+            $user->setPhotoUpdate($photoUpdate);
+        }
     }
 
     /**

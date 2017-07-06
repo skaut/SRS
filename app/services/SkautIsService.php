@@ -91,6 +91,15 @@ class SkautIsService extends Nette\Object
         ]);
     }
 
+    public function getPersonPhoto($personId, $size)
+    {
+        return $this->skautIs->org->PersonPhoto([
+            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
+            'ID' => $personId,
+            'Size' => $size
+        ]);
+    }
+
     /**
      * Aktualizuje údaje o osobě.
      * @param $personId
