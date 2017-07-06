@@ -48,6 +48,18 @@ class FilesService extends Nette\Object
     }
 
     /**
+     * Vytvoří soubor s daným obsahem.
+     * @param $path
+     * @param $content
+     */
+    public function create($path, $content)
+    {
+        $file = fopen($this->dir . $path, 'wb' );
+        fwrite($file, $content);
+        fclose($file);
+    }
+
+     /**
      * Změní velikost obrázku.
      * @param $path
      * @param $width

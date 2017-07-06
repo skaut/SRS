@@ -25,6 +25,11 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  */
 class User
 {
+    /**
+     * Adresář pro ukládání profilových fotek.
+     */
+    const PHOTO_PATH = "/user_photos";
+
     use Identifier;
 
     /**
@@ -272,6 +277,20 @@ class User
      * @var string
      */
     protected $note;
+
+    /**
+     * Fotka.
+     * @ORM\Column(type="string", nullable=true)
+     * @var string
+     */
+    protected $photo;
+
+    /**
+     * Datum aktualizace fotky.
+     * @ORM\Column(type="datetime", nullable=true)
+     * @var \DateTime
+     */
+    protected $photoUpdate;
 
 
     /**
@@ -1037,6 +1056,38 @@ class User
     public function setNote($note)
     {
         $this->note = $note;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhoto()
+    {
+        return $this->photo;
+    }
+
+    /**
+     * @param string $photo
+     */
+    public function setPhoto($photo)
+    {
+        $this->photo = $photo;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getPhotoUpdate()
+    {
+        return $this->photoUpdate;
+    }
+
+    /**
+     * @param \DateTime $photoUpdate
+     */
+    public function setPhotoUpdate($photoUpdate)
+    {
+        $this->photoUpdate = $photoUpdate;
     }
 
     /**
