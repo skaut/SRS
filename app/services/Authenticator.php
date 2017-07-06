@@ -120,7 +120,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
             $user->setUnit($validMembership->RegistrationNumber);
 
         $photoUpdate = new \DateTime($skautISPerson->PhotoUpdate);
-        if ($user->getPhotoUpdate() === null || $photoUpdate->diff($user->getPhotoUpdate())->s >= 1) {
+        if ($user->getPhotoUpdate() === NULL || $photoUpdate->diff($user->getPhotoUpdate())->s >= 1) {
             $photo = $this->skautIsService->getPersonPhoto($skautISUser->ID_Person, "normal");
             if ($photo->ID_PersonPhotoNormal) {
                 $fileName = $user->getId() . $photo->PhotoExtension;
@@ -129,7 +129,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
                 $user->setPhoto($fileName);
             }
             else {
-                $user->setPhoto(null);
+                $user->setPhoto(NULL);
             }
             $user->setPhotoUpdate($photoUpdate);
         }
