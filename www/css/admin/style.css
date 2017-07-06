@@ -2,7 +2,7 @@ body {
     min-width: 950px;
 }
 
-.container-fluid {
+#content {
     overflow-x: hidden;
 }
 
