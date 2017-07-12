@@ -2,10 +2,6 @@ body {
     min-width: 950px;
 }
 
-#content {
-    overflow-x: hidden;
-}
-
 #flashes {
     position: fixed;
     top: 65px;
@@ -60,7 +56,6 @@ body {
 /* odebrani ramecku kolem datagridu, pridani scrollbaru */
 .datagrid {
     padding: 0 !important;
-    overflow-x: auto;
 }
 
 /* oprava select a multiselect v inline editaci */
