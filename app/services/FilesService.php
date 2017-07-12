@@ -54,7 +54,13 @@ class FilesService extends Nette\Object
      */
     public function create($path, $content)
     {
-        $file = fopen($this->dir . $path, 'wb' );
+        $absPath = $this->dir . $path;
+        $dirname = dirname($absPath);
+
+        if (!is_dir($dirname))
+            mkdir($dirname, 0755, true);
+
+        $file = fopen($absPath, 'wb' );
         fwrite($file, $content);
         fclose($file);
     }
