@@ -58,7 +58,7 @@ class FilesService extends Nette\Object
         $dirname = dirname($absPath);
 
         if (!is_dir($dirname))
-            mkdir($dirname, 0755, true);
+            mkdir($dirname, 0755, TRUE);
 
         $file = fopen($absPath, 'wb' );
         fwrite($file, $content);
