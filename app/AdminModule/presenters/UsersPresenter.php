@@ -3,7 +3,9 @@
 namespace App\AdminModule\Presenters;
 
 use App\AdminModule\Components\IUsersGridControlFactory;
+use App\AdminModule\Forms\AddLectorForm;
 use App\AdminModule\Forms\EditUserPaymentForm;
+use App\AdminModule\Forms\EditUserPersonalDetailsForm;
 use App\AdminModule\Forms\EditUserSeminarForm;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
@@ -31,6 +33,18 @@ class UsersPresenter extends AdminBasePresenter
      * @inject
      */
     public $usersGridControlFactory;
+
+    /**
+     * @var AddLectorForm
+     * @inject
+     */
+    public $addLectorFormFactory;
+
+    /**
+     * @var EditUserPersonalDetailsForm
+     * @inject
+     */
+    public $editUserPersonalDetailsFormFactory;
 
     /**
      * @var EditUserSeminarForm
@@ -70,6 +84,7 @@ class UsersPresenter extends AdminBasePresenter
         $this->checkPermission(Permission::MANAGE);
 
         $this->template->results = [];
+        $this->template->editPersonalDetails = FALSE;
         $this->template->editSeminar = FALSE;
         $this->template->editPayment = FALSE;
     }
@@ -101,6 +116,20 @@ class UsersPresenter extends AdminBasePresenter
     {
         $this->template->results = $this->userRepository->findNamesByLikeDisplayNameOrderedByDisplayName($text);
         $this->redrawControl('results');
+    }
+
+    /**
+     * Zobrazí formulář pro editaci osobních údajů uživatele.
+     */
+    public function handleEditPersonalDetails()
+    {
+        $this->template->editPersonalDetails = TRUE;
+
+        if ($this->isAjax()) {
+            $this->redrawControl('userDetail');
+        } else {
+            $this->redirect('this');
+        }
     }
 
     /**
@@ -162,6 +191,38 @@ class UsersPresenter extends AdminBasePresenter
     protected function createComponentUsersGrid()
     {
         return $this->usersGridControlFactory->create();
+    }
+
+    protected function createComponentAddLectorForm()
+    {
+        $form = $this->addLectorFormFactory->create($this->getParameter('id'));
+
+        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+            if ($form['cancel']->isSubmittedBy()) {
+                $this->redirect('Users:default');
+            } else {
+                $this->flashMessage('admin.users.users_saved', 'success');
+                $this->redirect('Users:default');
+            }
+        };
+
+        return $form;
+    }
+
+    protected function createComponentEditUserPersonalDetailsForm()
+    {
+        $form = $this->editUserPersonalDetailsFormFactory->create($this->getParameter('id'));
+
+        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+            if ($form['cancel']->isSubmittedBy()) {
+                $this->redirect('this');
+            } else {
+                $this->flashMessage('admin.users.users_saved', 'success');
+                $this->redirect('this');
+            }
+        };
+
+        return $form;
     }
 
     protected function createComponentEditUserSeminarForm()

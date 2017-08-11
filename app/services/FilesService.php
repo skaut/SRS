@@ -80,6 +80,28 @@ class FilesService extends Nette\Object
     }
 
     /**
+     * Změní velikost a ořízne obrázek.
+     * @param $path
+     * @param $width
+     * @param $height
+     */
+    public function resizeAndCropImage($path, $width, $height)
+    {
+        $image = Image::fromFile($this->dir . $path);
+
+        if ($image->getWidth() / $width > $image->getHeight() / $height)
+            $image->resize(NULL, $height);
+        else
+            $image->resize($width, NULL);
+
+        $image->sharpen();
+
+        $image->crop(($image->getWidth() - $width) / 2, ($image->getHeight() - $height) / 2, $width, $height);
+
+        $image->save($this->dir . $path);
+    }
+
+    /**
      * Vrací cestu ke složce pro nahrávání souborů.
      * @return string
      */

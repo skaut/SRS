@@ -34,14 +34,14 @@ class User
 
     /**
      * Uživatelské jméno skautIS.
-     * @ORM\Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true, nullable=true)
      * @var string
      */
     protected $username;
 
     /**
      * E-mail.
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      * @var string
      */
     protected $email;
@@ -126,21 +126,21 @@ class User
 
     /**
      * Datum narození.
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date", nullable=true)
      * @var \DateTime
      */
     protected $birthdate;
 
     /**
      * Id uživatele ve skautIS.
-     * @ORM\Column(type="integer", unique=true, name="skautis_user_id")
+     * @ORM\Column(type="integer", unique=true, nullable=true, name="skautis_user_id")
      * @var int
      */
     protected $skautISUserId;
 
     /**
      * Id osoby ve skautIS.
-     * @ORM\Column(type="integer", unique=true, name="skautis_person_id")
+     * @ORM\Column(type="integer", unique=true, nullable=true, name="skautis_person_id")
      * @var int
      */
     protected $skautISPersonId;
@@ -295,11 +295,9 @@ class User
 
     /**
      * User constructor.
-     * @param string $username
      */
-    public function __construct($username)
+    public function __construct()
     {
-        $this->username = $username;
         $this->roles = new ArrayCollection();
         $this->programs = new ArrayCollection();
     }
@@ -651,6 +649,14 @@ class User
     public function setMember($member)
     {
         $this->member = $member;
+    }
+
+    /**
+     * Je bez skautIS účtu?
+     * @return bool
+     */
+    public function isExternal() {
+        return $this->username === NULL;
     }
 
     /**

@@ -188,7 +188,12 @@ class UsersGridControl extends Control
                     ->style('color: red')
                     ->setText($row->isMember() ?
                         $this->translator->translate('admin.users.users_membership_no') :
-                        $this->translator->translate('admin.users.users_membership_not_connected'));
+                        (
+                            $row->isExternal() ?
+                                $this->translator->translate('admin.users.users_membership_external') :
+                                $this->translator->translate('admin.users.users_membership_not_connected')
+                        )
+                    );
             }, function ($row) {
                 return $row->getUnit() === NULL;
             }
@@ -281,6 +286,10 @@ class UsersGridControl extends Control
         }
 
 
+        $grid->addToolbarButton('Users:add')
+            ->setIcon('plus')
+            ->setText('admin.users.users_add_lector');
+
         $grid->addInlineEdit()->onControlAdd[] = function ($container) {
             $container->addSelect('paymentMethod', '', $this->preparePaymentMethodOptionsWithEmpty());
             $container->addDatePicker('paymentDate', '');
@@ -296,6 +305,18 @@ class UsersGridControl extends Control
 
         $grid->addAction('detail', 'admin.common.detail', 'Users:detail')
             ->setClass('btn btn-xs btn-primary');
+
+        $grid->addAction('delete', '', 'delete!')
+            ->setIcon('trash')
+            ->setTitle('admin.common.delete')
+            ->setClass('btn btn-xs btn-danger')
+            ->addAttributes([
+                'data-toggle' => 'confirmation',
+                'data-content' => $this->translator->translate('admin.users.users_delete_confirm')
+            ]);
+        $grid->allowRowsAction('delete', function ($item) {
+            return $item->isExternal();
+        });
 
         $grid->setColumnsSummary(['fee']);
     }
@@ -320,6 +341,21 @@ class UsersGridControl extends Control
         } else {
             $this->redirect('this');
         }
+    }
+
+    /**
+     * Zpracuje odstranění uživatele.
+     * @param $id
+     */
+    public function handleDelete($id)
+    {
+        $user = $this->userRepository->findById($id);
+
+        $this->userRepository->remove($user); //TODO kontrola odstraneni, pokud ma program
+
+        $this->getPresenter()->flashMessage('admin.users.users_deleted', 'success');
+
+        $this->redirect('this');
     }
 
     /**

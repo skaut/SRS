@@ -167,10 +167,12 @@ services:
     - App\WebModule\Forms\RolesForm
 
     - App\AdminModule\Forms\BaseForm
-    - App\AdminModule\Forms\EditUserSeminarForm
+    - App\AdminModule\Forms\AddLectorForm
+    - App\AdminModule\Forms\AddRoleForm
+    - App\AdminModule\Forms\EditRoleForm
     - App\AdminModule\Forms\EditUserPaymentForm
-    - App\AdminModule\ProgramModule\Forms\AddRoleForm
-    - App\AdminModule\ProgramModule\Forms\EditRoleForm
+    - App\AdminModule\Forms\EditUserPersonalDetailsForm
+    - App\AdminModule\Forms\EditUserSeminarForm
     - App\AdminModule\CMSModule\Forms\FaqForm
     pageFormFactory:
         class: App\AdminModule\CMSModule\Forms\PageForm(%id%, %area%, ...)
