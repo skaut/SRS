@@ -3,8 +3,8 @@
 namespace App\AdminModule\Presenters;
 
 use App\AdminModule\Components\IRolesGridControlFactory;
-use App\AdminModule\ProgramModule\Forms\AddRoleForm;
-use App\AdminModule\ProgramModule\Forms\EditRoleForm;
+use App\AdminModule\Forms\AddRoleForm;
+use App\AdminModule\Forms\EditRoleForm;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Services\Authenticator;

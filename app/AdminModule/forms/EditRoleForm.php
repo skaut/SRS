@@ -1,8 +1,7 @@
 <?php
 
-namespace App\AdminModule\ProgramModule\Forms;
+namespace App\AdminModule\Forms;
 
-use App\AdminModule\Forms\BaseForm;
 use App\Model\ACL\Permission;
 use App\Model\ACL\PermissionRepository;
 use App\Model\ACL\Resource;

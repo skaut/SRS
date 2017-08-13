@@ -126,7 +126,7 @@ class EditUserSeminarForm extends Nette\Object
             }
         }
 
-        $form->addTextArea('about', 'admin.users.users_about_me')->setDisabled();
+        $form->addTextArea('about', 'admin.users.users_about_me');
 
         $form->addTextArea('privateNote', 'admin.users.users_private_note');
 
@@ -193,6 +193,8 @@ class EditUserSeminarForm extends Nette\Object
 
             if (array_key_exists('departure', $values))
                 $this->user->setDeparture($values['departure']);
+
+            $this->user->setAbout($values['about']);
 
             $this->user->setNote($values['privateNote']);
 

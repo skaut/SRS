@@ -37,7 +37,7 @@ class Block
 
     /**
      * Lektor.
-     * @ORM\ManyToOne(targetEntity="\App\Model\User\User", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="\App\Model\User\User", inversedBy="lecturersBlocks", cascade={"persist"})
      * @var User
      */
     protected $lector;

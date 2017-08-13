@@ -247,6 +247,9 @@ class UserRepository extends EntityRepository
         foreach ($user->getCustomInputValues() as $customInputValue)
             $this->_em->remove($customInputValue);
 
+        foreach ($user->getLecturersBlocks() as $block)
+            $block->setLector(NULL);
+
         $this->_em->remove($user);
         $this->_em->flush();
     }

@@ -1,8 +1,7 @@
 <?php
 
-namespace App\AdminModule\ProgramModule\Forms;
+namespace App\AdminModule\Forms;
 
-use App\AdminModule\Forms\BaseForm;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use Nette;
