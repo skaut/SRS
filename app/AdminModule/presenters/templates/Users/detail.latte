@@ -3,73 +3,82 @@
 {block main}
     <h2>{_admin.users.users_detail_heading, ['name' => $detailUser->getDisplayName()]}</h2>
 
-    <h3>{_admin.users.users_detail_personal_details}</h3>
-    <div class="well">
-        <table class="table table-form">
-            <col class="col-sm-3 col-xs-3">
-            <col class="col-sm-9 col-xs-9">
-
-            {if $detailUser->getPhoto()}
-                <tr>
-                    <th>{_admin.users.users_photo}</th>
-                    <td><img src="{$basePath}/files/user_photos/{$detailUser->getPhoto()}"/></td>
-                </tr>
-            {/if}
-
-            <tr>
-                <th>{_admin.users.users_username}</th>
-                <td>{$detailUser->getUserName()}</td>
-            </tr>
-
-            <tr>
-                <th>{_admin.users.users_firstname}</th>
-                <td>{$detailUser->getFirstName()}</td>
-            </tr>
-
-            <tr>
-                <th>{_admin.users.users_lastname}</th>
-                <td>{$detailUser->getLastName()}</td>
-            </tr>
-
-            <tr>
-                <th>{_admin.users.users_nickname}</th>
-                <td>{$detailUser->getNickName()}</td>
-            </tr>
-
-            <tr>
-                <th>{_admin.users.users_email}</th>
-                <td><a href="mailto:{$detailUser->getEmail()}">{$detailUser->getEmail()}</a></td>
-            </tr>
-
-            <tr>
-                <th>{_admin.users.users_birthdate}</th>
-                <td>{$detailUser->getBirthdate()|date:'j. n. Y'}</td>
-            </tr>
-
-            <tr>
-                <th>{_admin.users.users_age}</th>
-                <td>{$detailUser->getAge()}</td>
-            </tr>
-
-            <tr>
-                <th>{_admin.users.users_address}</th>
-                <td>{$detailUser->getStreet()}, {$detailUser->getCity()}, {$detailUser->getPostcode()}</td>
-            </tr>
-
-            <tr>
-                <th>{_admin.users.users_application_date}</th>
-                <td>{$detailUser->getApplicationDate()|date:'j. n. Y H:i'}</td>
-            </tr>
-
-            <tr>
-                <th>{_admin.users.users_last_login}</th>
-                <td>{$detailUser->getLastLogin()|date:'j. n. Y H:i'}</td>
-            </tr>
-
-        </table>
-    </div>
-
     {snippet userDetail}
+        <h3>{_admin.users.users_detail_personal_details}</h3>
+        <div class="well">
+            {if !$editPersonalDetails}
+                <table class="table table-form">
+                    <col class="col-sm-3 col-xs-3">
+                    <col class="col-sm-9 col-xs-9">
+
+                    {if $detailUser->getPhoto()}
+                        <tr>
+                            <th>{_admin.users.users_photo}</th>
+                            <td><img src="{$basePath}/files/user_photos/{$detailUser->getPhoto()}"/></td>
+                        </tr>
+                    {/if}
+
+                    <tr>
+                        <th>{_admin.users.users_username}</th>
+                        <td>{$detailUser->getUserName()}</td>
+                    </tr>
+
+                    <tr>
+                        <th>{_admin.users.users_firstname}</th>
+                        <td>{$detailUser->getFirstName()}</td>
+                    </tr>
+
+                    <tr>
+                        <th>{_admin.users.users_lastname}</th>
+                        <td>{$detailUser->getLastName()}</td>
+                    </tr>
+
+                    <tr>
+                        <th>{_admin.users.users_nickname}</th>
+                        <td>{$detailUser->getNickName()}</td>
+                    </tr>
+
+                    <tr>
+                        <th>{_admin.users.users_email}</th>
+                        <td><a href="mailto:{$detailUser->getEmail()}">{$detailUser->getEmail()}</a></td>
+                    </tr>
+
+                    <tr>
+                        <th>{_admin.users.users_birthdate}</th>
+                        <td>{$detailUser->getBirthdate()|date:'j. n. Y'}</td>
+                    </tr>
+
+                    <tr>
+                        <th>{_admin.users.users_age}</th>
+                        <td>{$detailUser->getAge()}</td>
+                    </tr>
+
+                    <tr>
+                        <th>{_admin.users.users_address}</th>
+                        <td>
+                            {if !(empty($detailUser->getStreet()) || empty($detailUser->getCity()) || empty($detailUser->getPostcode()))}
+                                {$detailUser->getStreet()}, {$detailUser->getCity()}, {$detailUser->getPostcode()}
+                            {/if}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th>{_admin.users.users_last_login}</th>
+                        <td>{$detailUser->getLastLogin()|date:'j. n. Y H:i'}</td>
+                    </tr>
+
+                    {if $detailUser->isExternal()}
+                        <tr>
+                            <td></td>
+                            <td><a n:href="editPersonalDetails!" class="btn btn-default ajax">{_admin.common.edit}</a></td>
+                        </tr>
+                    {/if}
+                </table>
+            {else}
+                {control editUserPersonalDetailsForm}
+            {/if}
+        </div>
+
         <h3>{_admin.users.users_detail_seminar}</h3>
         <div class="well">
             {if !$editSeminar}
@@ -80,6 +89,11 @@
                     <tr>
                         <th>{_admin.users.users_roles}</th>
                         <td>{foreach $detailUser->getRoles() as $role}{$role->getName()}{sep}, {/sep}{/foreach}</td>
+                    </tr>
+
+                    <tr>
+                        <th>{_admin.users.users_application_date}</th>
+                        <td>{$detailUser->getApplicationDate()|date:'j. n. Y H:i'}</td>
                     </tr>
 
                     <tr>

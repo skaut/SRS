@@ -351,7 +351,7 @@ class UsersGridControl extends Control
     {
         $user = $this->userRepository->findById($id);
 
-        $this->userRepository->remove($user); //TODO kontrola odstraneni, pokud ma program
+        $this->userRepository->remove($user);
 
         $this->getPresenter()->flashMessage('admin.users.users_deleted', 'success');
 

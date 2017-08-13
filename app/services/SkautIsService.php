@@ -263,7 +263,7 @@ class SkautIsService extends Nette\Object
         }
 
         foreach ($participants as $p) {
-            if ($p->getSkautISPersonId() !== NULL)
+            if (!$p->isExternal())
                 $this->insertParticipant($p->getSkautISPersonId(), $eventId);
         }
     }

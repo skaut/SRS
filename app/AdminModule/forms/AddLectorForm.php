@@ -84,8 +84,6 @@ class AddLectorForm extends Nette\Object
             ->addCondition(Form::FILLED)
             ->addRule(Form::PATTERN, 'web.application_content.postcode_format', '^\d{3} ?\d{2}$');
 
-        $form->addText('state', 'admin.users.users_state');
-
         $form->addTextArea('about', 'admin.users.users_about_me');
 
         $form->addTextArea('privateNote', 'admin.users.users_private_note');
@@ -115,11 +113,10 @@ class AddLectorForm extends Nette\Object
             $user->setLastName($values['lastName']);
             $user->setNickName($values['nickName']);
             $user->setEmail($values['email']);
-            $user->setBirthdate(new \DateTime($values['birthdate']));
+            $user->setBirthdate($values['birthdate'] !== NULL ? new \DateTime($values['birthdate']) : NULL);
             $user->setStreet($values['street']);
             $user->setCity($values['city']);
             $user->setPostcode($values['postcode']);
-            $user->setState($values['state']);
             $user->setAbout($values['about']);
             $user->setNote($values['privateNote']);
 

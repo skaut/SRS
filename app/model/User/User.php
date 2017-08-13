@@ -62,6 +62,13 @@ class User
     protected $programs;
 
     /**
+     * Lektorované bloky.
+     * @ORM\OneToMany(targetEntity="\App\Model\Program\Block", mappedBy="lector", cascade={"persist"})
+     * @var ArrayCollection
+     */
+    protected $lecturersBlocks;
+
+    /**
      * Schválený.
      * @ORM\Column(type="boolean")
      * @var bool
@@ -500,6 +507,22 @@ class User
     }
 
     /**
+     * @return ArrayCollection
+     */
+    public function getLecturersBlocks()
+    {
+        return $this->lecturersBlocks;
+    }
+
+    /**
+     * @param ArrayCollection $lecturersBlocks
+     */
+    public function setLecturersBlocks($lecturersBlocks)
+    {
+        $this->lecturersBlocks = $lecturersBlocks;
+    }
+
+    /**
      * @param Program $program
      */
     public function addProgram(Program $program)
@@ -712,7 +735,7 @@ class User
      */
     public function getAge()
     {
-        return (new \DateTime())->diff($this->birthdate)->y;
+        return $this->birthdate !== NULL ? (new \DateTime())->diff($this->birthdate)->y : NULL;
     }
 
     /**
