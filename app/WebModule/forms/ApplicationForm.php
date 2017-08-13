@@ -292,8 +292,10 @@ class ApplicationForm extends Nette\Object
      */
     private function addRolesSelect(Form $form)
     {
+        $registerableOptions = $this->roleRepository->getRegisterableNowOptionsWithCapacity();
+
         $rolesSelect = $form->addMultiSelect('roles', 'web.application_content.roles')->setItems(
-            $this->roleRepository->getRegisterableNowOptionsWithCapacity()
+            $registerableOptions
         )
             ->addRule(Form::FILLED, 'web.application_content.roles_empty')
             ->addRule([$this, 'validateRolesCapacities'], 'web.application_content.capacity_occupied')
@@ -353,6 +355,12 @@ class ApplicationForm extends Nette\Object
         $rolesSelect->addCondition(ApplicationForm::class . '::toggleArrivalDeparture', $ids)
             ->toggle('arrivalInput')
             ->toggle('departureInput');
+
+        if (count($registerableOptions) == 1) {
+            $form->setDefaults([
+                'roles' => array_keys($registerableOptions)
+            ]);
+        }
     }
 
     /**
