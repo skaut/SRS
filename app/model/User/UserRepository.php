@@ -165,6 +165,19 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Vrací uživatele jako možnosti pro select.
+     * @return array
+     */
+    public function getUsersOptions()
+    {
+        $options = [];
+        foreach ($this->findAll() as $user) {
+            $options[$user->getId()] = $user->getDisplayName();
+        }
+        return $options;
+    }
+
+    /**
      * Vrací lektory jako možnosti pro select.
      * @return array
      */

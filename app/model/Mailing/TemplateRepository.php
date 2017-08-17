@@ -6,7 +6,7 @@ use Kdyby\Doctrine\EntityRepository;
 
 
 /**
- * Třída spravující historii e-mailů.
+ * Třída spravující šablony automatických e-mailů.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */

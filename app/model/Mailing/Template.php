@@ -7,7 +7,7 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 
 /**
- * Entita šablona e-mailu.
+ * Entita šablona automatického e-mailu.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="TemplateRepository")

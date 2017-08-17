@@ -5,6 +5,7 @@ namespace App\AdminModule\MailingModule\Forms;
 use App\AdminModule\Forms\BaseForm;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
+use App\Model\User\UserRepository;
 use App\Services\MailService;
 use Nette;
 use Nette\Application\UI\Form;
@@ -33,18 +34,24 @@ class SendForm extends Nette\Object
     /** @var RoleRepository */
     private $roleRepository;
 
+    /** @var UserRepository */
+    private $userRepository;
+
 
     /**
      * SendForm constructor.
      * @param BaseForm $baseFormFactory
      * @param MailService $mailService
      * @param RoleRepository $roleRepository
+     * @param UserRepository $userRepository
      */
-    public function __construct(BaseForm $baseFormFactory, MailService $mailService, RoleRepository $roleRepository)
+    public function __construct(BaseForm $baseFormFactory, MailService $mailService, RoleRepository $roleRepository,
+                                UserRepository $userRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->mailService = $mailService;
         $this->roleRepository = $roleRepository;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -55,8 +62,19 @@ class SendForm extends Nette\Object
     {
         $form = $this->baseFormFactory->create();
 
-        $form->addMultiSelect('recipients', 'admin.mailing.send_recipients',
-            $this->roleRepository->getRolesWithoutRolesOptionsWithUsersCount([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]))
+        $recipientRolesMultiSelect = $form->addMultiSelect('recipientRoles', 'admin.mailing.send_recipient_roles',
+            $this->roleRepository->getRolesWithoutRolesOptionsWithUsersCount([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]));
+
+        $recipientUsersMultiSelect = $form->addMultiSelect('recipientUsers', 'admin.mailing.send_recipient_users',
+            $this->userRepository->getUsersOptions())
+            ->setAttribute('data-live-search', 'true');
+
+        $recipientRolesMultiSelect
+            ->addConditionOn($recipientUsersMultiSelect, Form::BLANK)
+            ->addRule(Form::FILLED, 'admin.mailing.send_recipients_empty');
+
+        $recipientUsersMultiSelect
+            ->addConditionOn($recipientRolesMultiSelect, Form::BLANK)
             ->addRule(Form::FILLED, 'admin.mailing.send_recipients_empty');
 
         $form->addText('copy', 'admin.mailing.send_copy')
@@ -85,7 +103,8 @@ class SendForm extends Nette\Object
     public function processForm(Form $form, \stdClass $values)
     {
         try {
-            $this->mailService->sendMailToRoles($values['recipients'], $values['copy'], $values['subject'], $values['text']);
+            $this->mailService->sendMail($values['recipientRoles'], $values['recipientUsers'], $values['copy'],
+                $values['subject'], $values['text']);
             $this->mailSuccess = TRUE;
         } catch (SendException $ex) {
             $this->mailSuccess = FALSE;

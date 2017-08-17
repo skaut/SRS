@@ -376,8 +376,9 @@ mailing:
     menu_history: "Historie"
 
     send_heading: "Rozeslat e-mail"
-    send_recipients: "Příjemci"
-    send_recipients_empty: "Vyberte alespoň jednu roli."
+    send_recipient_roles: "Příjemci - role"
+    send_recipient_users: "Příjemci - uživatelé"
+    send_recipients_empty: "Vyberte alespoň jednu roli nebo jednoho uživatele."
     send_copy: "Zaslat kopii na"
     send_copy_format: "Zadejte e-mail."
     send_subject: "Předmět"
@@ -390,9 +391,8 @@ mailing:
     history_heading: "Historie"
     history_datetime: "Odesláno"
     history_subject: "Předmět"
-    history_recipients: "Příjemci"
-    history_roles: "Role: %roles%"
-    history_user: "Uživatel: %name%"
+    history_recipient_roles: "Příjemci - role"
+    history_recipient_users: "Příjemci - uživatelé"
 
 configuration:
     menu_seminar: "Seminář"
