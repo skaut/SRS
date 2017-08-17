@@ -85,6 +85,7 @@ class SendForm extends Nette\Object
             ->addRule(Form::FILLED, 'admin.mailing.send_subject_empty');
 
         $form->addTextArea('text', 'admin.mailing.send_text')
+            ->addRule(Form::FILLED, 'admin.mailing.send_text_empty')
             ->setAttribute('class', 'tinymce-paragraph');
 
         $form->addSubmit('submit', 'admin.mailing.send_send');

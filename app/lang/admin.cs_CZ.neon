@@ -384,6 +384,7 @@ mailing:
     send_subject: "Předmět"
     send_subject_empty: "Zadejte předmět."
     send_text: "Text e-mailu"
+    send_text_empty: "Zadejte text e-mailu."
     send_send: "Odeslat"
     send_sent: "E-mail byl úspěšně rozeslán."
     send_error: "Při odesílání e-mailu došlo k chybě."

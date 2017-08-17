@@ -65,23 +65,23 @@ class MailService extends Nette\Object
      */
     public function sendMail($rolesIds, $usersIds, $copy, $subject, $text)
     {
-        $recipients = new ArrayCollection();
+        $recipients = [];
 
         foreach ($this->userRepository->findAllApprovedInRoles($rolesIds) as $user) {
-            if (!$recipients->contains($user))
-                $recipients->add($user);
+            if (!in_array($user, $recipients))
+                $recipients[] = $user;
         }
 
         $users = $this->userRepository->findUsersByIds($usersIds);
         foreach ($users as $user) {
-            if (!$recipients->contains($user))
-                $recipients->add($user);
+            if (!in_array($user, $recipients))
+                $recipients[] = $user;
         }
 
         $params = [
             'fromEmail' => $this->settingsRepository->getValue(Settings::SEMINAR_EMAIL),
             'fromName' => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-            'recipients' => $users,
+            'recipients' => $recipients,
             'copy' => $copy,
             'subject' => $subject,
             'text' => $text
@@ -94,6 +94,7 @@ class MailService extends Nette\Object
         $mailLog->setRecipientRoles($this->roleRepository->findRolesByIds($rolesIds));
         $mailLog->setRecipientUsers($users);
         $mailLog->setSubject($subject);
+        $mailLog->setText($text);
         $mailLog->setDatetime(new \DateTime());
         $this->mailRepository->save($mailLog);
     }
