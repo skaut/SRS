@@ -54,20 +54,24 @@ class MailHistoryGridControl extends Control
         $grid->setTranslator($this->translator);
         $grid->setDataSource($this->mailRepository->createQueryBuilder('m'));
         $grid->setDefaultSort(['datetime' => 'DESC']);
-        $grid->setPagination(FALSE);
+        $grid->setPagination(TRUE);
 
-        $grid->addColumnText('recipients', 'admin.mailing.history_recipients')
+        $grid->addColumnText('recipientRoles', 'admin.mailing.history_recipient_roles')
             ->setRenderer(function ($row) {
-                if ($row->getType() == Mail::TO_ROLES) {
-                    $roles = [];
-                    foreach ($row->getRecipientRoles() as $role) {
-                        $roles[] = $role->getName();
-                    }
-                    $rolesText = implode(", ", $roles);
-                    return $this->translator->translate('admin.mailing.history_roles', NULL, ['roles' => $rolesText]);
-                } else {
-                    return $this->translator->translate('admin.mailing.history_user', NULL, ['name' => $row->getRecipientUser()->getDisplayName()]);
+                $roles = [];
+                foreach ($row->getRecipientRoles() as $role) {
+                    $roles[] = $role->getName();
                 }
+                return implode(", ", $roles);
+            });
+
+        $grid->addColumnText('recipientUsers', 'admin.mailing.history_recipient_users')
+            ->setRenderer(function ($row) {
+                $users = [];
+                foreach ($row->getRecipientUsers() as $user) {
+                    $users[] = $user->getDisplayName();
+                }
+                return implode(", ", $users);
             });
 
         $grid->addColumnText('subject', 'admin.mailing.history_subject');

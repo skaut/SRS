@@ -4,11 +4,12 @@ namespace App\Services;
 
 use App\Mailing\TextMail;
 use App\Model\ACL\RoleRepository;
+use App\Model\Mailing\Mail;
 use App\Model\Mailing\MailRepository;
-use App\Model\Mailing\MailToRoles;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Nette;
 use Ublaboo\Mailing\MailFactory;
 
@@ -56,20 +57,31 @@ class MailService extends Nette\Object
     }
 
     /**
-     * Rozešle e-mail vybraným rolím.
+     * Rozešle e-mail.
      * @param $rolesIds
      * @param $copy
      * @param $subject
      * @param $text
      */
-    public function sendMailToRoles($rolesIds, $copy, $subject, $text)
+    public function sendMail($rolesIds, $usersIds, $copy, $subject, $text)
     {
-        $users = $this->userRepository->findAllApprovedInRoles($rolesIds);
+        $recipients = [];
+
+        foreach ($this->userRepository->findAllApprovedInRoles($rolesIds) as $user) {
+            if (!in_array($user, $recipients))
+                $recipients[] = $user;
+        }
+
+        $users = $this->userRepository->findUsersByIds($usersIds);
+        foreach ($users as $user) {
+            if (!in_array($user, $recipients))
+                $recipients[] = $user;
+        }
 
         $params = [
             'fromEmail' => $this->settingsRepository->getValue(Settings::SEMINAR_EMAIL),
             'fromName' => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-            'recipients' => $users,
+            'recipients' => $recipients,
             'copy' => $copy,
             'subject' => $subject,
             'text' => $text
@@ -78,9 +90,11 @@ class MailService extends Nette\Object
         $mail = $this->mailFactory->createByType(TextMail::class, $params);
         $mail->send();
 
-        $mailLog = new MailToRoles();
+        $mailLog = new Mail();
         $mailLog->setRecipientRoles($this->roleRepository->findRolesByIds($rolesIds));
+        $mailLog->setRecipientUsers($users);
         $mailLog->setSubject($subject);
+        $mailLog->setText($text);
         $mailLog->setDatetime(new \DateTime());
         $this->mailRepository->save($mailLog);
     }
