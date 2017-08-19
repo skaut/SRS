@@ -108,6 +108,10 @@ services:
         class: App\Model\Mailing\MailRepository
         tags:
             doctrine.repositoryEntity: App\Model\Mailing\Mail
+    templateRepository:
+        class: App\Model\Mailing\TemplateRepository
+        tags:
+            doctrine.repositoryEntity: App\Model\Mailing\Template
     blockRepository:
         class: App\Model\Program\BlockRepository
         inject: yes
@@ -180,6 +184,7 @@ services:
         parameters: [id, area]
     - App\AdminModule\CMSModule\Forms\NewsForm
     - App\AdminModule\ConfigurationModule\Forms\ApplicationForm
+    - App\AdminModule\ConfigurationModule\Forms\MailingForm
     - App\AdminModule\ConfigurationModule\Forms\PaymentForm
     - App\AdminModule\ConfigurationModule\Forms\PaymentProofForm
     - App\AdminModule\ConfigurationModule\Forms\PlaceDescriptionForm
@@ -198,8 +203,10 @@ services:
     - App\AdminModule\CMSModule\Components\IPagesGridControlFactory
     - App\AdminModule\ConfigurationModule\Components\ICustomInputsGridControlFactory
     - App\AdminModule\ConfigurationModule\Components\IPlacePointsGridControlFactory
+    - App\AdminModule\MailingModule\Forms\EditMailTemplateForm
     - App\AdminModule\MailingModule\Forms\SendForm
     - App\AdminModule\MailingModule\Components\IMailHistoryGridControlFactory
+    - App\AdminModule\MailingModule\Components\IMailTemplatesGridControlFactory
     - App\AdminModule\ProgramModule\Components\IProgramBlocksGridControlFactory
     - App\AdminModule\ProgramModule\Components\IProgramCategoriesGridControlFactory
     - App\AdminModule\ProgramModule\Components\IProgramAttendeesGridControlFactory

@@ -120,3 +120,15 @@ export:
         program_name: "Název programu"
         room: "Místnost"
         lector: "Lektor"
+
+mailing:
+    template_type:
+        sign_in: "Potvrzení přihlášení se přes skautIS"
+        registration: "Potvrzení registrace"
+        registration_canceled: "Potvrzení zrušení registrace"
+        role_changed: "Potvrzení změny rolí"
+        subevent_changed: "Potvrzení změny podakcí"
+        payment_confirmed: "Potvrzení přijetí platby"
+        maturity_notice: "Připomínka splatnosti"
+        program_registered: "Přihlášení na program"
+        program_unregistered: "Odhlášení z programu"
