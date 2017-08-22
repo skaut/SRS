@@ -125,17 +125,19 @@ class MailService extends Nette\Object
     {
         $template = $this->templateRepository->findByType($type);
 
-        $subject = $template->getSubject();
-        $text = $template->getText();
+        if ($template->isActive()) {
+            $subject = $template->getSubject();
+            $text = $template->getText();
 
-        foreach ($template->getVariables() as $variable) {
-            $variableName = '%' . $this->translator->translate('common.mailing.variable_name.' . $variable->getName()) . '%';
-            $value = $parameters[$variable->getName()];
+            foreach ($template->getVariables() as $variable) {
+                $variableName = '%' . $this->translator->translate('common.mailing.variable_name.' . $variable->getName()) . '%';
+                $value = $parameters[$variable->getName()];
 
-            $subject = str_replace($variableName, $value, $subject);
-            $text = str_replace($variableName, $value, $text);
+                $subject = str_replace($variableName, $value, $subject);
+                $text = str_replace($variableName, $value, $text);
+            }
+
+            $this->sendMail($recipientsRoles, $recipientsUsers, $copy, $subject, $text, $automatic);
         }
-
-        $this->sendMail($recipientsRoles, $recipientsUsers, $copy, $subject, $text, $automatic);
     }
 }

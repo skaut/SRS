@@ -3,9 +3,15 @@
 namespace App\AdminModule\Forms;
 
 use App\Model\Enums\PaymentType;
+use App\Model\Mailing\Mail;
+use App\Model\Mailing\Template;
+use App\Model\Mailing\TemplateVariable;
+use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
+use App\Services\MailService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Nette;
 use Nette\Application\UI\Form;
 
@@ -33,19 +39,24 @@ class EditUserPaymentForm extends Nette\Object
     /** @var SettingsRepository */
     private $settingsRepository;
 
+    /** @var MailService */
+    private $mailService;
+
 
     /**
      * EditUserPaymentForm constructor.
      * @param BaseForm $baseFormFactory
      * @param UserRepository $userRepository
      * @param SettingsRepository $settingsRepository
+     * @param MailService $mailService
      */
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
-                                SettingsRepository $settingsRepository)
+                                SettingsRepository $settingsRepository, MailService $mailService)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->userRepository = $userRepository;
         $this->settingsRepository = $settingsRepository;
+        $this->mailService = $mailService;
     }
 
     /**
@@ -99,15 +110,20 @@ class EditUserPaymentForm extends Nette\Object
     public function processForm(Form $form, \stdClass $values)
     {
         if (!$form['cancel']->isSubmittedBy()) {
+            $oldPaymentDate = $this->user->getPaymentDate();
+
             $this->user->setVariableSymbol($values['variableSymbol']);
-
             $this->user->setPaymentMethod($values['paymentMethod']);
-
             $this->user->setPaymentDate($values['paymentDate']);
-
             $this->user->setIncomeProofPrintedDate($values['incomeProofPrintedDate']);
 
             $this->userRepository->save($this->user);
+
+            if ($values['paymentDate'] !== NULL && $oldPaymentDate === NULL) {
+                $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::PAYMENT_CONFIRMED, [
+                    TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)
+                ]);
+            }
         }
     }
 

@@ -4,10 +4,16 @@ namespace App\AdminModule\ProgramModule\Components;
 
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
+use App\Model\Mailing\Template;
+use App\Model\Mailing\TemplateVariable;
 use App\Model\Program\Program;
 use App\Model\Program\ProgramRepository;
+use App\Model\Settings\Settings;
+use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
+use App\Services\MailService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
@@ -43,6 +49,12 @@ class ProgramAttendeesGridControl extends Control
     /** @var UserRepository */
     private $userRepository;
 
+    /** @var SettingsRepository */
+    private $settingsRepository;
+
+    /** @var MailService */
+    private $mailService;
+
     /** @var Session */
     private $session;
 
@@ -55,16 +67,21 @@ class ProgramAttendeesGridControl extends Control
      * @param Translator $translator
      * @param ProgramRepository $programRepository
      * @param UserRepository $userRepository
+     * @param SettingsRepository $settingsRepository
+     * @param MailService $mailService
      * @param Session $session
      */
     public function __construct(Translator $translator, ProgramRepository $programRepository,
-                                UserRepository $userRepository, Session $session)
+                                UserRepository $userRepository, SettingsRepository $settingsRepository,
+                                MailService $mailService, Session $session)
     {
         parent::__construct();
 
         $this->translator = $translator;
         $this->programRepository = $programRepository;
         $this->userRepository = $userRepository;
+        $this->settingsRepository = $settingsRepository;
+        $this->mailService = $mailService;
 
         $this->session = $session;
         $this->sessionSection = $session->getSection('srs');
@@ -193,6 +210,11 @@ class ProgramAttendeesGridControl extends Control
             $editedUser->addProgram($program);
             $this->userRepository->save($editedUser);
 
+            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$editedUser]), '', Template::PROGRAM_REGISTERED, [
+                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
+                TemplateVariable::PROGRAM_NAME => $program->getBlock()->getName()
+            ]);
+
             $p->flashMessage('admin.program.blocks_attendees_registered', 'success');
         }
 
@@ -222,6 +244,11 @@ class ProgramAttendeesGridControl extends Control
         else {
             $editedUser->removeProgram($program);
             $this->userRepository->save($editedUser);
+
+            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$editedUser]), '', Template::PROGRAM_UNREGISTERED, [
+                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
+                TemplateVariable::PROGRAM_NAME => $program->getBlock()->getName()
+            ]);
 
             $p->flashMessage('admin.program.blocks_attendees_unregistered', 'success');
         }
