@@ -3,9 +3,15 @@
 namespace App\WebModule\Forms;
 
 use App\Model\ACL\RoleRepository;
+use App\Model\Mailing\Template;
+use App\Model\Mailing\TemplateVariable;
 use App\Model\Program\ProgramRepository;
+use App\Model\Settings\Settings;
+use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
+use App\Services\MailService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Nette;
 use Nette\Application\UI\Form;
 
@@ -35,6 +41,12 @@ class RolesForm extends Nette\Object
     /** @var ProgramRepository */
     private $programRepository;
 
+    /** @var SettingsRepository */
+    private $settingsRepository;
+
+    /** @var MailService */
+    private $mailService;
+
 
     /**
      * RolesForm constructor.
@@ -42,14 +54,19 @@ class RolesForm extends Nette\Object
      * @param UserRepository $userRepository
      * @param RoleRepository $roleRepository
      * @param ProgramRepository $programRepository
+     * @param SettingsRepository $settingsRepository
+     * @param MailService $mailService
      */
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
-                                RoleRepository $roleRepository, ProgramRepository $programRepository)
+                                RoleRepository $roleRepository, ProgramRepository $programRepository,
+                                SettingsRepository $settingsRepository, MailService $mailService)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->userRepository = $userRepository;
         $this->roleRepository = $roleRepository;
         $this->programRepository = $programRepository;
+        $this->settingsRepository = $settingsRepository;
+        $this->mailService = $mailService;
     }
 
     /**
@@ -130,7 +147,28 @@ class RolesForm extends Nette\Object
             $this->programRepository->updateUserPrograms($this->user);
 
             $this->userRepository->save($this->user);
+
+            $rolesNames = "";
+            $first = TRUE;
+            foreach ($this->user->getRoles() as $role) {
+                if ($first) {
+                    $rolesNames = $role->getName();
+                    $first = FALSE;
+                }
+                else {
+                    $rolesNames .= ', ' . $role->getName();
+                }
+            }
+
+            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::ROLE_CHANGED, [
+                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
+                TemplateVariable::USERS_ROLES => $rolesNames
+            ]);
         } elseif ($form['cancelRegistration']->isSubmittedBy()) {
+            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::REGISTRATION_CANCELED, [
+                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)
+            ]);
+
             $this->userRepository->remove($this->user);
         }
     }

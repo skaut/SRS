@@ -371,9 +371,21 @@ acl:
     roles_edit_heading: "Úprava role: %name%"
 
 mailing:
-    menu_auto: "Automatické e-maily"
+    menu_templates: "Automatické e-maily"
     menu_send: "Rozeslat e-mail"
     menu_history: "Historie"
+
+    templates_heading: "Automatické e-maily"
+    templates_type: "Šablona e-mailu"
+    templates_active: "aktivní"
+    templates_active_active: "Aktivní"
+    templates_active_inactive: "Neaktivní"
+    templates_changed_active: "E-mail byl úspěšně aktivován/deaktivován."
+    templates_subject: "Předmět"
+    templates_text: "Text"
+    templates_variables: "Dostupné proměnné"
+    templates_saved: "Šablona byla úspěšně uložena."
+    templates_edit_heading: "Úprava šablony: %type%"
 
     send_heading: "Rozeslat e-mail"
     send_recipient_roles: "Příjemci - role"
@@ -394,6 +406,7 @@ mailing:
     history_subject: "Předmět"
     history_recipient_roles: "Příjemci - role"
     history_recipient_users: "Příjemci - uživatelé"
+    history_automatic: "Automatický"
 
 configuration:
     menu_seminar: "Seminář"
@@ -401,6 +414,7 @@ configuration:
     menu_payment: "Platba a doklady"
     menu_application: "Přihláška"
     menu_place: "Místo"
+    menu_mailing: "Mailing"
     menu_skautis: "SkautIS"
     menu_web: "Web"
     menu_system: "Systém"
@@ -417,9 +431,6 @@ configuration:
     edit_registration_to: "Odhlášení a změna role povolena do"
     edit_registration_to_empty: "Zadejte datum, do kdy je povoleno odhlášení a změna role."
     edit_registration_to_after_from: "Datum, do kdy je povoleno odhlášení a změna role, musí být před začátkem semináře."
-    seminar_email: "E-mail pro mailing"
-    seminar_email_empty: "Zadejte e-mail."
-    seminar_email_format: "Zadejte e-mail ve správném formátu."
 
     program_heading: "Program"
     is_allowed_add_block: "povolit vytváření programových bloků"
@@ -475,6 +486,11 @@ configuration:
     place_points_delete_confirm: "Opravdu chcete mapový bod odstranit?"
     place_points_deleted: "Mapový bod byl úspěšně odstraněn."
     place_points_saved: "Mapový bod byl úspěšně uložen."
+
+    mailing_heading: "Mailing"
+    mailing_email: "E-mail pro mailing"
+    mailing_email_empty: "Zadejte e-mail."
+    mailing_email_format: "Zadejte e-mail ve správném formátu."
 
     skautis_event_heading: "Propojení s akcí ve skautIS"
     skautis_event: "Akce ve skautIS"

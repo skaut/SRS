@@ -21,14 +21,9 @@ class Template
     const SIGN_IN = 'sign_in';
 
     /**
-     * Potvrzení automaticky schválené registrace.
+     * Potvrzení automaticky registrace.
      */
-    const REGISTRATION_APPROVED = 'registration_approved';
-
-    /**
-     * Potvrzení neschválené registrace.
-     */
-    const REGISTRATION_UNAPPROVED = 'registration_unapproved';
+    const REGISTRATION = 'registration';
 
     /**
      * Odhlášení ze semináře.
@@ -70,7 +65,7 @@ class Template
 
     /**
      * Typ e-mailu.
-     * @ORM\Column("string")
+     * @ORM\Column(type="string")
      * @var string
      */
     protected $type;
@@ -95,6 +90,13 @@ class Template
      * @var bool
      */
     protected $active;
+
+    /**
+     * Proměnné použitelné v šabloně.
+     * @ORM\ManyToMany(targetEntity="\App\Model\Mailing\TemplateVariable")
+     * @var ArrayCollection
+     */
+    protected $variables;
 
 
     /**
@@ -167,5 +169,21 @@ class Template
     public function setActive($active)
     {
         $this->active = $active;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getVariables()
+    {
+        return $this->variables;
+    }
+
+    /**
+     * @param ArrayCollection $variables
+     */
+    public function setVariables($variables)
+    {
+        $this->variables = $variables;
     }
 }

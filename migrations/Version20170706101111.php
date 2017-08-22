@@ -15,7 +15,6 @@ class Version20170706101111 extends AbstractMigration
      */
     public function up(Schema $schema)
     {
-        // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('ALTER TABLE user ADD photo VARCHAR(255) DEFAULT NULL, ADD photo_update DATETIME DEFAULT NULL');
@@ -26,9 +25,5 @@ class Version20170706101111 extends AbstractMigration
      */
     public function down(Schema $schema)
     {
-        // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
-
-        $this->addSql('ALTER TABLE user DROP photo, DROP photo_update');
     }
 }

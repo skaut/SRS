@@ -6,6 +6,8 @@ use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Enums\Sex;
 use App\Model\Enums\VariableSymbolType;
+use App\Model\Mailing\Template;
+use App\Model\Mailing\TemplateVariable;
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\Settings;
@@ -15,7 +17,9 @@ use App\Model\User\CustomInputValue\CustomInputValueRepository;
 use App\Model\User\CustomInputValue\CustomTextValue;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
+use App\Services\MailService;
 use App\Services\SkautIsService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\IControl;
@@ -63,6 +67,9 @@ class ApplicationForm extends Nette\Object
     /** @var SettingsRepository */
     private $settingsRepository;
 
+    /** @var MailService */
+    private $mailService;
+
 
     /**
      * ApplicationForm constructor.
@@ -74,12 +81,13 @@ class ApplicationForm extends Nette\Object
      * @param ProgramRepository $programRepository
      * @param SkautIsService $skautIsService
      * @param SettingsRepository $settingsRepository
+     * @param MailService $mailService
      */
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
                                 RoleRepository $roleRepository, CustomInputRepository $customInputRepository,
                                 CustomInputValueRepository $customInputValueRepository,
                                 ProgramRepository $programRepository, SkautIsService $skautIsService,
-                                SettingsRepository $settingsRepository)
+                                SettingsRepository $settingsRepository, MailService $mailService)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->userRepository = $userRepository;
@@ -89,6 +97,7 @@ class ApplicationForm extends Nette\Object
         $this->programRepository = $programRepository;
         $this->skautIsService = $skautIsService;
         $this->settingsRepository = $settingsRepository;
+        $this->mailService = $mailService;
     }
 
     /**
@@ -265,6 +274,11 @@ class ApplicationForm extends Nette\Object
         } catch (WsdlException $ex) {
             $this->onSkautIsError();
         }
+
+        $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::REGISTRATION, [
+            TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
+            TemplateVariable::EDIT_REGISTRATION_TO => $this->settingsRepository->getValue(Settings::EDIT_REGISTRATION_TO)
+        ]);
     }
 
     /**

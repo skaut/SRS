@@ -1,9 +1,9 @@
 {block sidebar}
     <div class="well">
         <ul class="nav nav-pills nav-stacked">
-            {*<li {ifCurrent Auto:*}{*class="active"{/ifCurrent}>*} {* TODO mailing *}
-            {*<a href="{plink Auto:default}">{_admin.mailing.menu_auto}</a>*}
-            {*</li>*}
+            <li {ifCurrent Templates:*}class="active"{/ifCurrent}>
+                <a href="{plink Templates:default}">{_admin.mailing.menu_templates}</a>
+            </li>
 
             <li {ifCurrent Send:*}class="active"{/ifCurrent}>
                 <a href="{plink Send:default}">{_admin.mailing.menu_send}</a>

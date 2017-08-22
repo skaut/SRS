@@ -21,6 +21,10 @@
                 <a href="{plink Place:default}">{_admin.configuration.menu_place}</a>
             </li>
 
+            <li {ifCurrent Mailing:*}class="active"{/ifCurrent}>
+                <a href="{plink Mailing:default}">{_admin.configuration.menu_mailing}</a>
+            </li>
+
             <li {ifCurrent SkautIs:*}class="active"{/ifCurrent}>
                 <a href="{plink SkautIs:default}">{_admin.configuration.menu_skautis}</a>
             </li>

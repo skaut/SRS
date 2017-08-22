@@ -104,8 +104,10 @@ class SendForm extends Nette\Object
     public function processForm(Form $form, \stdClass $values)
     {
         try {
-            $this->mailService->sendMail($values['recipientRoles'], $values['recipientUsers'], $values['copy'],
-                $values['subject'], $values['text']);
+            $recipientsRoles = $this->roleRepository->findRolesByIds($values['recipientRoles']);
+            $recipientsUsers = $this->userRepository->findUsersByIds($values['recipientUsers']);
+
+            $this->mailService->sendMail($recipientsRoles, $recipientsUsers, $values['copy'], $values['subject'], $values['text']);
             $this->mailSuccess = TRUE;
         } catch (SendException $ex) {
             $this->mailSuccess = FALSE;
