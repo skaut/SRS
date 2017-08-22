@@ -406,6 +406,7 @@ mailing:
     history_subject: "Předmět"
     history_recipient_roles: "Příjemci - role"
     history_recipient_users: "Příjemci - uživatelé"
+    history_automatic: "Automatický"
 
 configuration:
     menu_seminar: "Seminář"

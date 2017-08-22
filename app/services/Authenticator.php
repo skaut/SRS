@@ -66,10 +66,12 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
 
         $user = $this->userRepository->findBySkautISUserId($skautISUser->ID);
 
+        $firstLogin = FALSE;
         if ($user === NULL) {
             $user = new User();
             $roleNonregistered = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
             $user->addRole($roleNonregistered);
+            $firstLogin = TRUE;
         }
 
         $this->updateUserFromSkautIS($user, $skautISUser);
@@ -85,7 +87,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
             $netteRoles[] = $roleUnapproved->getName();
         }
 
-        return new NS\Identity($user->getId(), $netteRoles);
+        return new NS\Identity($user->getId(), $netteRoles, ['firstLogin' => $firstLogin]);
     }
 
     /**

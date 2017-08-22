@@ -6,10 +6,12 @@ use App\Mailing\TextMail;
 use App\Model\ACL\RoleRepository;
 use App\Model\Mailing\Mail;
 use App\Model\Mailing\MailRepository;
+use App\Model\Mailing\TemplateRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Kdyby\Translation\Translator;
 use Nette;
 use Ublaboo\Mailing\MailFactory;
 
@@ -36,6 +38,12 @@ class MailService extends Nette\Object
     /** @var RoleRepository */
     private $roleRepository;
 
+    /** @var TemplateRepository */
+    private $templateRepository;
+
+    /** @var Translator */
+    private $translator;
+
 
     /**
      * MailService constructor.
@@ -44,36 +52,41 @@ class MailService extends Nette\Object
      * @param MailRepository $mailRepository
      * @param UserRepository $userRepository
      * @param RoleRepository $roleRepository
+     * @param TemplateRepository $templateRepository
+     * @param Translator $translator
      */
     public function __construct(MailFactory $mailFactory, SettingsRepository $settingsRepository,
                                 MailRepository $mailRepository, UserRepository $userRepository,
-                                RoleRepository $roleRepository)
+                                RoleRepository $roleRepository, TemplateRepository $templateRepository,
+                                Translator $translator)
     {
         $this->mailFactory = $mailFactory;
         $this->settingsRepository = $settingsRepository;
         $this->mailRepository = $mailRepository;
         $this->userRepository = $userRepository;
         $this->roleRepository = $roleRepository;
+        $this->templateRepository = $templateRepository;
+        $this->translator = $translator;
     }
 
     /**
      * Rozešle e-mail.
-     * @param $rolesIds
+     * @param $recipientsRoles
+     * @param $recipientsUsers
      * @param $copy
      * @param $subject
      * @param $text
      */
-    public function sendMail($rolesIds, $usersIds, $copy, $subject, $text)
+    public function sendMail($recipientsRoles, $recipientsUsers, $copy, $subject, $text, $automatic = FALSE)
     {
         $recipients = [];
 
-        foreach ($this->userRepository->findAllApprovedInRoles($rolesIds) as $user) {
+        foreach ($this->userRepository->findAllApprovedInRoles($this->roleRepository->findRolesIds($recipientsRoles)) as $user) {
             if (!in_array($user, $recipients))
                 $recipients[] = $user;
         }
 
-        $users = $this->userRepository->findUsersByIds($usersIds);
-        foreach ($users as $user) {
+        foreach ($recipientsUsers as $user) {
             if (!in_array($user, $recipients))
                 $recipients[] = $user;
         }
@@ -91,11 +104,38 @@ class MailService extends Nette\Object
         $mail->send();
 
         $mailLog = new Mail();
-        $mailLog->setRecipientRoles($this->roleRepository->findRolesByIds($rolesIds));
-        $mailLog->setRecipientUsers($users);
+        $mailLog->setRecipientRoles($recipientsRoles);
+        $mailLog->setRecipientUsers($recipientsUsers);
         $mailLog->setSubject($subject);
         $mailLog->setText($text);
         $mailLog->setDatetime(new \DateTime());
+        $mailLog->setAutomatic($automatic);
         $this->mailRepository->save($mailLog);
+    }
+
+    /**
+     * Rozešle e-mail podle šablony.
+     * @param $recipientsRoles
+     * @param $recipientsUsers
+     * @param $copy
+     * @param $type
+     * @param $parameters
+     */
+    public function sendMailFromTemplate($recipientsRoles, $recipientsUsers, $copy, $type, $parameters, $automatic = TRUE)
+    {
+        $template = $this->templateRepository->findByType($type);
+
+        $subject = $template->getSubject();
+        $text = $template->getText();
+
+        foreach ($template->getVariables() as $variable) {
+            $variableName = '%' . $this->translator->translate('common.mailing.variable_name.' . $variable->getName()) . '%';
+            $value = $parameters[$variable->getName()];
+
+            $subject = str_replace($variableName, $value, $subject);
+            $text = str_replace($variableName, $value, $text);
+        }
+
+        $this->sendMail($recipientsRoles, $recipientsUsers, $copy, $subject, $text, $automatic);
     }
 }

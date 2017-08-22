@@ -23,6 +23,16 @@ class TemplateRepository extends EntityRepository
     }
 
     /**
+     * Vrací šablonu podle typu.
+     * @param $type
+     * @return Template|null
+     */
+    public function findByType($type)
+    {
+        return $this->findOneBy(['type' => $type]);
+    }
+
+    /**
      * Uloží šablonu e-mailu.
      * @param Template $template
      */

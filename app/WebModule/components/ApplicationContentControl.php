@@ -39,8 +39,8 @@ class ApplicationContentControl extends Control
      * @param UserRepository $userRepository
      * @param RoleRepository $roleRepository
      */
-    public function __construct(ApplicationForm $applicationFormFactory, Authenticator $authenticator, UserRepository $userRepository,
-                                RoleRepository $roleRepository)
+    public function __construct(ApplicationForm $applicationFormFactory, Authenticator $authenticator,
+                                UserRepository $userRepository, RoleRepository $roleRepository)
     {
         parent::__construct();
 
