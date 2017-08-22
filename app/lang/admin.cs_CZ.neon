@@ -376,11 +376,16 @@ mailing:
     menu_history: "Historie"
 
     templates_heading: "Automatické e-maily"
-    templates_type: "Typ e-mailu"
-    templates_active: "Aktivní"
+    templates_type: "Šablona e-mailu"
+    templates_active: "aktivní"
     templates_active_active: "Aktivní"
     templates_active_inactive: "Neaktivní"
     templates_changed_active: "E-mail byl úspěšně aktivován/deaktivován."
+    templates_subject: "Předmět"
+    templates_text: "Text"
+    templates_variables: "Dostupné proměnné"
+    templates_saved: "Šablona byla úspěšně uložena."
+    templates_edit_heading: "Úprava šablony: %type%"
 
     send_heading: "Rozeslat e-mail"
     send_recipient_roles: "Příjemci - role"

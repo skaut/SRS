@@ -132,3 +132,19 @@ mailing:
         maturity_notice: "Připomínka splatnosti"
         program_registered: "Přihlášení na program"
         program_unregistered: "Odhlášení z programu"
+
+    variable_name:
+        seminar_name: "nazev-seminare"
+        edit_registration_to: "zmena-registrace-do"
+        users_roles: "role"
+        users_subevents: "podakce"
+        maturity: "splatnost"
+        program_name: "nazev-programu"
+
+    variable_description:
+        seminar_name: "název semináře"
+        edit_registration_to: "odhlášení a změna role povolena do"
+        users_roles: "role uživatele"
+        users_subevents: "podakce uživatele"
+        maturity: "termín splatnosti"
+        program_name: "název programu"

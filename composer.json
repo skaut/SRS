@@ -16,11 +16,11 @@
 
         "nextras/forms": "^2.0",
 
-        "ublaboo/datagrid": "^5.2",
+        "ublaboo/datagrid": "5.4.2",    //upravene assets kvuli multiselect
         "ublaboo/mailing": "^1.1",
 
         "janmarek/webloader": "dev-master",
-        "jms/serializer": "^1.7",
+        "jms/serializer": "^1.8",
 
         "skautis/skautis": "^2.1",
         "skautis/nette": "^2.0",

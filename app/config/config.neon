@@ -203,7 +203,7 @@ services:
     - App\AdminModule\CMSModule\Components\IPagesGridControlFactory
     - App\AdminModule\ConfigurationModule\Components\ICustomInputsGridControlFactory
     - App\AdminModule\ConfigurationModule\Components\IPlacePointsGridControlFactory
-    - App\AdminModule\MailingModule\Forms\EditMailTemplateForm
+    - App\AdminModule\MailingModule\Forms\EditTemplateForm
     - App\AdminModule\MailingModule\Forms\SendForm
     - App\AdminModule\MailingModule\Components\IMailHistoryGridControlFactory
     - App\AdminModule\MailingModule\Components\IMailTemplatesGridControlFactory
