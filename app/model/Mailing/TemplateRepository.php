@@ -13,6 +13,26 @@ use Kdyby\Doctrine\EntityRepository;
 class TemplateRepository extends EntityRepository
 {
     /**
+     * Vrací šablonu podle id.
+     * @param $id
+     * @return Template|null
+     */
+    public function findById($id)
+    {
+        return $this->findOneBy(['id' => $id]);
+    }
+
+    /**
+     * Vrací šablonu podle typu.
+     * @param $type
+     * @return Template|null
+     */
+    public function findByType($type)
+    {
+        return $this->findOneBy(['type' => $type]);
+    }
+
+    /**
      * Uloží šablonu e-mailu.
      * @param Template $template
      */

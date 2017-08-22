@@ -170,9 +170,15 @@ class UserRepository extends EntityRepository
      */
     public function getUsersOptions()
     {
+        $users = $this->createQueryBuilder('u')
+            ->select('u.id, u.displayName')
+            ->orderBy('u.displayName')
+            ->getQuery()
+            ->getResult();
+
         $options = [];
-        foreach ($this->findAll() as $user) {
-            $options[$user->getId()] = $user->getDisplayName();
+        foreach ($users as $user) {
+            $options[$user['id']] = $user['displayName'];
         }
         return $options;
     }

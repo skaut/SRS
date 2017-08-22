@@ -7,14 +7,20 @@ use App\Model\ACL\Resource;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Enums\PaymentType;
+use App\Model\Mailing\Mail;
+use App\Model\Mailing\Template;
+use App\Model\Mailing\TemplateVariable;
 use App\Model\Program\BlockRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
+use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\UserRepository;
 use App\Services\ExcelExportService;
+use App\Services\MailService;
 use App\Services\PdfExportService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
@@ -63,6 +69,9 @@ class UsersGridControl extends Control
     /** @var ExcelExportService */
     private $excelExportService;
 
+    /** @var MailService */
+    private $mailService;
+
 
     /**
      * UsersGridControl constructor.
@@ -75,13 +84,14 @@ class UsersGridControl extends Control
      * @param BlockRepository $blockRepository
      * @param PdfExportService $pdfExportService
      * @param ExcelExportService $excelExportService
+     * @param MailService $mailService
      * @param Session $session
      */
     public function __construct(Translator $translator, UserRepository $userRepository,
                                 SettingsRepository $settingsRepository, CustomInputRepository $customInputRepository,
                                 RoleRepository $roleRepository, ProgramRepository $programRepository,
                                 BlockRepository $blockRepository, PdfExportService $pdfExportService,
-                                ExcelExportService $excelExportService, Session $session)
+                                ExcelExportService $excelExportService, MailService $mailService, Session $session)
     {
         parent::__construct();
 
@@ -94,6 +104,7 @@ class UsersGridControl extends Control
         $this->blockRepository = $blockRepository;
         $this->pdfExportService = $pdfExportService;
         $this->excelExportService = $excelExportService;
+        $this->mailService = $mailService;
 
         $this->session = $session;
         $this->sessionSection = $session->getSection('srs');
@@ -549,6 +560,10 @@ class UsersGridControl extends Control
                 $user->setPaymentMethod($value);
                 $user->setPaymentDate(new \DateTime());
                 $this->userRepository->save($user);
+
+                $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$user]), '', Template::PAYMENT_CONFIRMED, [
+                    TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)
+                ]);
             }
         }
 

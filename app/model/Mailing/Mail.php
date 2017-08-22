@@ -53,6 +53,13 @@ class Mail
      */
     protected $datetime;
 
+    /**
+     * Automatický e-mail.
+     * @ORM\Column(type="boolean")
+     * @var bool
+     */
+    protected $automatic = FALSE;
+
 
     /**
      * @return int
@@ -140,5 +147,21 @@ class Mail
     public function setDatetime($datetime)
     {
         $this->datetime = $datetime;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAutomatic()
+    {
+        return $this->automatic;
+    }
+
+    /**
+     * @param bool $automatic
+     */
+    public function setAutomatic($automatic)
+    {
+        $this->automatic = $automatic;
     }
 }

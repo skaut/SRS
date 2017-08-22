@@ -120,3 +120,31 @@ export:
         program_name: "Název programu"
         room: "Místnost"
         lector: "Lektor"
+
+mailing:
+    template_type:
+        sign_in: "Potvrzení přihlášení se přes skautIS"
+        registration: "Potvrzení registrace"
+        registration_canceled: "Potvrzení zrušení registrace"
+        role_changed: "Potvrzení změny rolí"
+        subevent_changed: "Potvrzení změny podakcí"
+        payment_confirmed: "Potvrzení přijetí platby"
+        maturity_notice: "Připomínka splatnosti"
+        program_registered: "Přihlášení na program"
+        program_unregistered: "Odhlášení z programu"
+
+    variable_name:
+        seminar_name: "nazev-seminare"
+        edit_registration_to: "zmena-registrace-do"
+        users_roles: "role"
+        users_subevents: "podakce"
+        maturity: "splatnost"
+        program_name: "nazev-programu"
+
+    variable_description:
+        seminar_name: "název semináře"
+        edit_registration_to: "odhlášení a změna role povolena do"
+        users_roles: "role uživatele"
+        users_subevents: "podakce uživatele"
+        maturity: "termín splatnosti"
+        program_name: "název programu"

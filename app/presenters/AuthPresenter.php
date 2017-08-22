@@ -2,10 +2,14 @@
 
 namespace App\Presenters;
 
+use App\Model\Mailing\Template;
+use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\UserRepository;
+use App\Services\MailService;
 use App\Services\SkautIsService;
+use Doctrine\Common\Collections\ArrayCollection;
 
 
 /**
@@ -34,6 +38,12 @@ class AuthPresenter extends BasePresenter
      */
     public $userRepository;
 
+    /**
+     * @var MailService
+     * @inject
+     */
+    public $mailService;
+
 
     /**
      * Přesměruje na přihlašovací stránku skautIS, nastaví přihlášení.
@@ -49,6 +59,15 @@ class AuthPresenter extends BasePresenter
         $this->skautIsService->setLoginData($_POST);
         $this->user->login();
         $this->user->setExpiration('+30 minutes');
+
+        if ($this->user->identity->data['firstLogin']) {
+            $user = $this->userRepository->findById($this->user->id);
+
+            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$user]), '', Template::SIGN_IN, [
+                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)
+            ]);
+        }
+
         $this->redirectAfterLogin($this->getParameter('ReturnUrl'));
     }
 

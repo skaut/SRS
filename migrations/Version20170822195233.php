@@ -8,16 +8,17 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-class Version20170810151002 extends AbstractMigration
+class Version20170822195233 extends AbstractMigration
 {
     /**
      * @param Schema $schema
      */
     public function up(Schema $schema)
     {
+        // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE user CHANGE username username VARCHAR(255) DEFAULT NULL, CHANGE email email VARCHAR(255) DEFAULT NULL, CHANGE birthdate birthdate DATE DEFAULT NULL, CHANGE skautis_user_id skautis_user_id INT DEFAULT NULL, CHANGE skautis_person_id skautis_person_id INT DEFAULT NULL');
+        $this->addSql('ALTER TABLE mail ADD automatic TINYINT(1) NOT NULL');
     }
 
     /**
@@ -25,5 +26,9 @@ class Version20170810151002 extends AbstractMigration
      */
     public function down(Schema $schema)
     {
+        // this down() migration is auto-generated, please modify it to your needs
+        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
+
+        $this->addSql('ALTER TABLE mail DROP automatic');
     }
 }

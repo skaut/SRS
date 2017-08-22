@@ -12,6 +12,8 @@ class Version20170301173409 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
+        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
+            
         $dump = file_get_contents(__DIR__ . '/initial_schema.sql');
 
         $statement = '';

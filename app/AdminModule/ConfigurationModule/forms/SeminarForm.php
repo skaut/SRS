@@ -63,18 +63,13 @@ class SeminarForm extends Nette\Object
         $seminarToDate->addRule([$this, 'validateSeminarToDate'], 'admin.configuration.seminar_to_date_before_from', [$seminarToDate, $seminarFromDate]);
         $editRegistrationTo->addRule([$this, 'validateEditRegistrationTo'], 'admin.configuration.edit_registration_to_after_from', [$editRegistrationTo, $seminarFromDate]);
 
-        $form->addText('seminarEmail', 'admin.configuration.seminar_email')
-            ->addRule(Form::FILLED, 'admin.configuration.seminar_email_empty')
-            ->addRule(Form::EMAIL, 'admin.configuration.seminar_email_format');
-
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
             'seminarName' => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
             'seminarFromDate' => $this->settingsRepository->getDateValue(Settings::SEMINAR_FROM_DATE),
             'seminarToDate' => $this->settingsRepository->getDateValue(Settings::SEMINAR_TO_DATE),
-            'editRegistrationTo' => $this->settingsRepository->getDateValue(Settings::EDIT_REGISTRATION_TO),
-            'seminarEmail' => $this->settingsRepository->getValue(Settings::SEMINAR_EMAIL)
+            'editRegistrationTo' => $this->settingsRepository->getDateValue(Settings::EDIT_REGISTRATION_TO)
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -93,7 +88,6 @@ class SeminarForm extends Nette\Object
         $this->settingsRepository->setDateValue(Settings::SEMINAR_FROM_DATE, $values['seminarFromDate']);
         $this->settingsRepository->setDateValue(Settings::SEMINAR_TO_DATE, $values['seminarToDate']);
         $this->settingsRepository->setDateValue(Settings::EDIT_REGISTRATION_TO, $values['editRegistrationTo']);
-        $this->settingsRepository->setValue(Settings::SEMINAR_EMAIL, $values['seminarEmail']);
     }
 
     /**
