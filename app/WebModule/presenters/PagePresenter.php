@@ -9,6 +9,7 @@ use App\WebModule\Components\IDocumentContentControlFactory;
 use App\WebModule\Components\IFaqContentControlFactory;
 use App\WebModule\Components\IHtmlContentControlFactory;
 use App\WebModule\Components\IImageContentControlFactory;
+use App\WebModule\Components\ILectorsContentControlFactory;
 use App\WebModule\Components\INewsContentControlFactory;
 use App\WebModule\Components\IPlaceContentControlFactory;
 use App\WebModule\Components\IProgramsContentControlFactory;
@@ -97,6 +98,12 @@ class PagePresenter extends WebBasePresenter
      */
     public $usersContentControlFactory;
 
+    /**
+     * @var ILectorsContentControlFactory
+     * @inject
+     */
+    public $lectorsContentControlFactory;
+
 
     public function renderDefault($slug)
     {
@@ -178,5 +185,10 @@ class PagePresenter extends WebBasePresenter
     protected function createComponentUsersContent()
     {
         return $this->usersContentControlFactory->create();
+    }
+
+    protected function createComponentLectorsContent()
+    {
+        return $this->lectorsContentControlFactory->create();
     }
 }

@@ -1,0 +1,58 @@
+<div class="lectors-content">
+    <div class="row">
+        <div class="col-sm-12">
+            <h3 n:ifcontent>{$heading}</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            {foreach $lectors as $lector}
+                <h4>{$lector->getDisplayName()}</h4>
+                <div class="well">
+                    <table class="table table-form">
+                        <tr>
+                            <td>
+                                {if $lector->getPhoto()}
+                                    <img src="{$basePath}/files/user_photos/{$lector->getPhoto()}"/>
+                                {/if}
+                            </td>
+                            <td>
+                                <table class="table table-form" style="background-color: transparent">
+                                    <col class="col-sm-3 col-xs-3">
+                                    <col class="col-sm-9 col-xs-9">
+
+                                    {if $lector->getAbout()}
+                                        <tr>
+                                            <th >{_web.lectors_content.about_me}</th>
+                                            <td>{$lector->getAbout()}</td>
+                                        </tr>
+                                    {/if}
+
+                                    {if $lector->getLecturersBlocks()->count() > 0}
+                                        <tr>
+                                            <th>{_web.lectors_content.blocks}</th>
+                                            <td>
+                                                <ul class="no-bullets no-margin">
+                                                    {foreach $lector->getLecturersBlocks() as $block}
+                                                        <li>
+                                                            <strong>{$block->getName()}</strong>
+                                                            {if $block->getPerex()}
+                                                                -
+                                                                {$block->getPerex()}
+                                                            {/if}
+                                                        </li>
+                                                    {/foreach}
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                    {/if}
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            {/foreach}
+        </div>
+    </div>
+</div>

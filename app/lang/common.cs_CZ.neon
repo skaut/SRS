@@ -46,6 +46,7 @@ content:
         place: "Místo"
         programs: "Výběr programů"
         users: "Přehled uživatelů"
+        lectors: "Přehled lektorů"
         blocks: "Program semináře"
         capacities: "Kapacita semináře"
 
@@ -60,6 +61,7 @@ content:
         place: "Místo"
         programs: "Výběr programů"
         users: "Přehled uživatelů"
+        lectors: "Přehled lektorů"
         blocks: "Program semináře"
         capacities: "Kapacita semináře"
 
