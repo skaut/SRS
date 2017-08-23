@@ -3,9 +3,16 @@
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
+use App\Model\Mailing\Template;
+use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
+use App\Model\User\User;
+use App\Model\User\UserRepository;
+use App\Services\MailService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Nette;
+use Nette\Application\LinkGenerator;
 use Nette\Application\UI\Form;
 
 
@@ -17,30 +24,60 @@ use Nette\Application\UI\Form;
  */
 class MailingForm extends Nette\Object
 {
+    /**
+     * Přihlášený uživatel.
+     * @var User
+     */
+    private $user;
+
+    /**
+     * Událost při změně e-mailu.
+     */
+    public $onEmailChange;
+
     /** @var BaseForm */
     private $baseForm;
 
     /** @var SettingsRepository */
     private $settingsRepository;
 
+    /** @var UserRepository */
+    private $userRepository;
+
+    /** @var MailService */
+    private $mailService;
+
+    /** @var LinkGenerator */
+    private $linkGenerator;
+
 
     /**
      * MailingForm constructor.
      * @param BaseForm $baseForm
      * @param SettingsRepository $settingsRepository
+     *
+     * @param MailService $mailService
+     * @param LinkGenerator $linkGenerator
      */
-    public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository)
+    public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository,
+                                UserRepository $userRepository, MailService $mailService, LinkGenerator $linkGenerator)
     {
         $this->baseForm = $baseForm;
         $this->settingsRepository = $settingsRepository;
+        $this->userRepository = $userRepository;
+        $this->mailService = $mailService;
+        $this->linkGenerator = $linkGenerator;
     }
 
     /**
      * Vytvoří formulář.
+     * @param $id
      * @return Form
      */
-    public function create()
+    public function create($id)
     {
+        $this->user = $this->userRepository->findById($id);
+
         $form = $this->baseForm->create();
 
         $renderer = $form->getRenderer();
@@ -69,6 +106,21 @@ class MailingForm extends Nette\Object
      */
     public function processForm(Form $form, \stdClass $values)
     {
-        $this->settingsRepository->setValue(Settings::SEMINAR_EMAIL, $values['seminarEmail']);
+        if ($this->settingsRepository->getValue(Settings::SEMINAR_EMAIL) != $values['seminarEmail']) {
+            $this->settingsRepository->setValue(Settings::SEMINAR_EMAIL_UNVERIFIED, $values['seminarEmail']);
+
+            $verificationCode = substr(md5(uniqid(mt_rand(), TRUE)), 0, 8);
+            $this->settingsRepository->setValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE, $verificationCode);
+
+            $link = $this->linkGenerator->link('Admin:Configuration:Mailing:verify', ['code' => $verificationCode]);
+
+            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '',
+                Template::EMAIL_VERIFICATION, [
+                    TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
+                    TemplateVariable::EMAIL_VERIFICATION_LINK => $link],
+                TRUE);
+
+            $this->onEmailChange();
+        }
     }
 }

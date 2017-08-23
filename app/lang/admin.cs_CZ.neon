@@ -491,6 +491,9 @@ configuration:
     mailing_email: "E-mail pro mailing"
     mailing_email_empty: "Zadejte e-mail."
     mailing_email_format: "Zadejte e-mail ve správném formátu."
+    mailing_email_verification_needed: "Na zadaný e-mail byl zaslán ověřovací odkaz."
+    mailing_email_verification_success: "E-mail byl úspěšně ověřen."
+    mailing_email_verification_error: "E-mail se nepodařilo ověřit."
 
     skautis_event_heading: "Propojení s akcí ve skautIS"
     skautis_event: "Akce ve skautIS"

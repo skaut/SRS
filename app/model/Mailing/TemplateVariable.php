@@ -45,6 +45,11 @@ class TemplateVariable
      */
     const PROGRAM_NAME = 'program_name';
 
+    /**
+     * Odkaz pro potvrzení změny e-mailu.
+     */
+    const EMAIL_VERIFICATION_LINK = 'email_verification_link';
+
 
     use Identifier;
 
