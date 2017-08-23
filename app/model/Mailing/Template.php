@@ -60,6 +60,11 @@ class Template
      */
     const PROGRAM_UNREGISTERED = 'program_unregistered';
 
+    /**
+     * Ověření e-mailu.
+     */
+    const EMAIL_VERIFICATION = 'email_verification';
+
 
     use Identifier;
 

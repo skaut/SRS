@@ -132,6 +132,7 @@ mailing:
         maturity_notice: "Připomínka splatnosti"
         program_registered: "Přihlášení na program"
         program_unregistered: "Odhlášení z programu"
+        email_verification: "Ověření změny e-mailu semináře"
 
     variable_name:
         seminar_name: "nazev-seminare"
@@ -140,6 +141,7 @@ mailing:
         users_subevents: "podakce"
         maturity: "splatnost"
         program_name: "nazev-programu"
+        email_verification_link: "overovaci-odkaz"
 
     variable_description:
         seminar_name: "název semináře"
@@ -148,3 +150,4 @@ mailing:
         users_subevents: "podakce uživatele"
         maturity: "termín splatnosti"
         program_name: "název programu"
+        email_verification_link: "ověřovací odkaz"
