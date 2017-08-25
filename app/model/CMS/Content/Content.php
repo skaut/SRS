@@ -28,6 +28,7 @@ use Nette\Application\UI\Form;
  *     "programs_content" = "ProgramsContent",
  *     "image_content" = "ImageContent",
  *     "users_content" = "UsersContent",
+ *     "lectors_content" = "LectorsContent",
  *     "blocks_content" = "BlocksContent",
  *     "capacities_content" = "CapacitiesContent"
  * })
@@ -85,6 +86,11 @@ abstract class Content implements IContent
     const USERS = 'users';
 
     /**
+     * LectorsContent.
+     */
+    const LECTORS = 'lectors';
+
+    /**
      * BlocksContent.
      */
     const BLOCKS = 'blocks';
@@ -116,6 +122,7 @@ abstract class Content implements IContent
         self::PLACE,
         self::PROGRAMS,
         self::USERS,
+        self::LECTORS,
         self::BLOCKS,
         self::CAPACITIES
     ];

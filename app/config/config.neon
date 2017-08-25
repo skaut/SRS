@@ -163,6 +163,7 @@ services:
     - App\WebModule\Components\IProgramsContentControlFactory
     - App\WebModule\Components\ITextContentControlFactory
     - App\WebModule\Components\IUsersContentControlFactory
+    - App\WebModule\Components\ILectorsContentControlFactory
     - App\WebModule\Forms\BaseForm
     - App\WebModule\Forms\AdditionalInformationForm
     - App\WebModule\Forms\ApplicationForm

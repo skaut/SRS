@@ -189,6 +189,9 @@ programs_content:
     help_legend_optional: "Programy, na které se lze přihlásit."
     help_legend_mandatory: "Programy, které jsou povinné."
 
-
 users_content:
     list_empty: "Žádný uživatel k zobrazení."
+
+lectors_content:
+    about_me: "O mně"
+    blocks: "Programové bloky"
