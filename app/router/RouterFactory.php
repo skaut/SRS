@@ -61,6 +61,13 @@ class RouterFactory
             'id' => NULL
         ]);
 
+        $router[] = new Route('admin/structure/<presenter>/<action>[/<id>]', [
+            'module' => 'Admin:Structure',
+            'presenter' => 'Subevents',
+            'action' => 'default',
+            'id' => NULL
+        ]);
+
         $router[] = new Route('admin/configuration/<presenter>/<action>[/<id>]', [
             'module' => 'Admin:Configuration',
             'presenter' => 'Seminar',
