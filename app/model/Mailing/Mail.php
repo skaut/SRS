@@ -27,7 +27,7 @@ class Mail
 
     /**
      * Uživatelé, kterém byl e-mail odeslán.
-     * @ORM\ManyToMany(targetEntity="App\Model\User\User")
+     * @ORM\ManyToMany(targetEntity="\App\Model\User\User")
      * @var ArrayCollection
      */
     protected $recipientUsers;

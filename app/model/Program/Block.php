@@ -52,7 +52,7 @@ class Block
 
     /**
      * Podakce bloku.
-     * @ORM\ManyToOne(targetEntity="Subevent", inversedBy="blocks", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="\App\Model\Structure\Subevent", inversedBy="blocks", cascade={"persist"})
      * @var Subevent
      */
     protected $subevent;

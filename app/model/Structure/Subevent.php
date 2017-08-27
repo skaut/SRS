@@ -34,7 +34,7 @@ class Subevent
 
     /**
      * Bloky v podakci.
-     * @ORM\OneToMany(targetEntity="Block", mappedBy="subevent", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="\App\Model\Program\Block", mappedBy="subevent", cascade={"persist"})
      * @ORM\OrderBy({"name" = "ASC"})
      * @var ArrayCollection
      */
