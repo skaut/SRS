@@ -55,7 +55,7 @@ class MailingForm extends Nette\Object
      * MailingForm constructor.
      * @param BaseForm $baseForm
      * @param SettingsRepository $settingsRepository
-     *
+     * @param UserRepository $userRepository
      * @param MailService $mailService
      * @param LinkGenerator $linkGenerator
      */

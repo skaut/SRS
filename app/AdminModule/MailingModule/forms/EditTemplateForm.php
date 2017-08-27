@@ -47,6 +47,7 @@ class EditTemplateForm extends Nette\Object
 
     /**
      * Vytvoří formulář.
+     * @param $id
      * @return Form
      */
     public function create($id)

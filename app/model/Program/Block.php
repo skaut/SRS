@@ -2,6 +2,7 @@
 
 namespace App\Model\Program;
 
+use App\Model\Structure\Subevent;
 use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -48,6 +49,13 @@ class Block
      * @var Category
      */
     protected $category;
+
+    /**
+     * Podakce bloku.
+     * @ORM\ManyToOne(targetEntity="Subevent", inversedBy="blocks", cascade={"persist"})
+     * @var Subevent
+     */
+    protected $subevent;
 
     /**
      * Povinnost. 0 - nepovinný, 1 - povinný, 2 - automaticky zapisovaný.
@@ -179,6 +187,22 @@ class Block
     public function setCategory($category)
     {
         $this->category = $category;
+    }
+
+    /**
+     * @return Subevent
+     */
+    public function getSubevent()
+    {
+        return $this->subevent;
+    }
+
+    /**
+     * @param Subevent $subevent
+     */
+    public function setSubevent($subevent)
+    {
+        $this->subevent = $subevent;
     }
 
     /**

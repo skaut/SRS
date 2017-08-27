@@ -47,6 +47,13 @@ class User
     protected $email;
 
     /**
+     * Přihlášky.
+     * @ORM\OneToMany(targetEntity="Application", mappedBy="user", cascade={"persist"})
+     * @var ArrayCollection
+     */
+    protected $applications;
+
+    /**
      * Role.
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="users", cascade={"persist"})
      * @var ArrayCollection
@@ -160,13 +167,6 @@ class User
     protected $applicationOrder;
 
     /**
-     * Datum podání přihlášky.
-     * @ORM\Column(type="datetime", nullable=true)
-     * @var \DateTime
-     */
-    protected $applicationDate;
-
-    /**
      * Datum posledního přihlášení.
      * @ORM\Column(type="datetime", nullable=true)
      * @var \DateTime
@@ -207,20 +207,6 @@ class User
      * @var string
      */
     protected $state;
-
-    /**
-     * Platební metoda.
-     * @ORM\Column(type="string", nullable=true)
-     * @var string
-     */
-    protected $paymentMethod;
-
-    /**
-     * Datum zaplacení.
-     * @ORM\Column(type="date", nullable=true)
-     * @var \DateTime
-     */
-    protected $paymentDate;
 
     /**
      * Variabilní symbol.
@@ -422,7 +408,7 @@ class User
         if ($this->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS))
             return TRUE;
 
-        if ($this->isAllowed(Resource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS) && $block->getLector() == $this)
+        if ($this->isAllowed(Resource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS) && $block->getLector() === $this)
             return TRUE;
 
         return FALSE;
@@ -456,7 +442,7 @@ class User
      */
     public function hasPaid()
     {
-        return $this->paymentDate !== NULL;
+        return $this->paymentDate !== NULL; //TODO
     }
 
     /**
@@ -488,6 +474,22 @@ class User
         $feeWord = iconv('windows-1250', 'UTF-8', $feeWord);
         $feeWord = str_replace(" ", "", $feeWord);
         return $feeWord;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getApplications()
+    {
+        return $this->applications;
+    }
+
+    /**
+     * @param ArrayCollection $applications
+     */
+    public function setApplications($applications)
+    {
+        $this->applications = $applications;
     }
 
     /**
@@ -789,22 +791,6 @@ class User
     /**
      * @return \DateTime
      */
-    public function getApplicationDate()
-    {
-        return $this->applicationDate;
-    }
-
-    /**
-     * @param \DateTime $applicationDate
-     */
-    public function setApplicationDate($applicationDate)
-    {
-        $this->applicationDate = $applicationDate;
-    }
-
-    /**
-     * @return \DateTime
-     */
     public function getLastLogin()
     {
         return $this->lastLogin;
@@ -896,38 +882,6 @@ class User
     public function setState($state)
     {
         $this->state = $state;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPaymentMethod()
-    {
-        return $this->paymentMethod;
-    }
-
-    /**
-     * @param string $paymentMethod
-     */
-    public function setPaymentMethod($paymentMethod)
-    {
-        $this->paymentMethod = $paymentMethod;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getPaymentDate()
-    {
-        return $this->paymentDate;
-    }
-
-    /**
-     * @param \DateTime $paymentDate
-     */
-    public function setPaymentDate($paymentDate)
-    {
-        $this->paymentDate = $paymentDate;
     }
 
     /**

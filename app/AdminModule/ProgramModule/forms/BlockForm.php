@@ -221,7 +221,7 @@ class BlockForm extends Nette\Object
             }
 
             //aktualizace ucastniku pri zmene kategorie
-            if ($oldMandatory == $this->block->getMandatory() && $this->block->getCategory() != $oldCategory) {
+            if ($oldMandatory == $this->block->getMandatory() && $this->block->getCategory() !== $oldCategory) {
                 $this->programRepository->updateUsersPrograms($this->userRepository->findAll());
             }
 

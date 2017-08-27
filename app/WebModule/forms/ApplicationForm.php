@@ -23,7 +23,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\IControl;
-use PhpCollection\Set;
 use Skautis\Wsdl\WsdlException;
 
 

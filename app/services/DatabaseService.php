@@ -41,6 +41,9 @@ class DatabaseService
     /**
      * DatabaseService constructor.
      * @param string $dir
+     * @param Application $application
+     * @param Container $container
+     * @param IStorage $storage
      */
     public function __construct($dir, Application $application, Container $container, IStorage $storage)
     {
