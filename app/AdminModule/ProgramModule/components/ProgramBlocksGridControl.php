@@ -100,7 +100,7 @@ class ProgramBlocksGridControl extends Control
             ->setSortable('l.displayName')
             ->setFilterMultiSelect($this->userRepository->getLectorsOptions(), 'l.id');
 
-        $grid->addColumnText('duration', 'admin.program.blocks_duration')
+        $grid->addColumnNumber('duration', 'admin.program.blocks_duration')
             ->setSortable()
             ->setFilterText();
 
@@ -136,7 +136,7 @@ class ProgramBlocksGridControl extends Control
             ])
             ->setTranslateOptions();
 
-        $grid->addColumnText('programsCount', 'admin.program.blocks_programs_count')
+        $grid->addColumnNumber('programsCount', 'admin.program.blocks_programs_count')
             ->setRenderer(function ($row) {
                 return $row->getProgramsCount();
             });

@@ -3,6 +3,7 @@
 namespace App\AdminModule\StructureModule\Presenters;
 
 use App\AdminModule\ProgramModule\Components\IRoomsGridControlFactory;
+use App\AdminModule\StructureModule\Components\ISubeventsGridControlFactory;
 use App\Model\ACL\Permission;
 
 
@@ -13,5 +14,15 @@ use App\Model\ACL\Permission;
  */
 class SubeventsPresenter extends StructureBasePresenter
 {
+    /**
+     * @var ISubeventsGridControlFactory
+     * @inject
+     */
+    public $subeventsGridControlFactory;
 
+
+    protected function createComponentSubeventsGrid()
+    {
+        return $this->subeventsGridControlFactory->create();
+    }
 }

@@ -30,7 +30,7 @@ class Discount
      * @ORM\Column(type="string")
      * @var string
      */
-    protected $operator;
+    protected $conditionOperator;
 
     /**
      * Sleva.
@@ -67,17 +67,17 @@ class Discount
     /**
      * @return string
      */
-    public function getOperator()
+    public function getConditionOperator()
     {
-        return $this->operator;
+        return $this->conditionOperator;
     }
 
     /**
-     * @param string $operator
+     * @param string $conditionOperator
      */
-    public function setOperator($operator)
+    public function setConditionOperator($conditionOperator)
     {
-        $this->operator = $operator;
+        $this->conditionOperator = $conditionOperator;
     }
 
     /**

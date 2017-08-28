@@ -212,7 +212,7 @@ class UsersGridControl extends Control
             ->setSortable()
             ->setFilterText();
 
-        $grid->addColumnText('age', 'admin.users.users_age')
+        $grid->addColumnNumber('age', 'admin.users.users_age')
             ->setSortable()
             ->setSortableCallback(function ($qb, $sort) {
                 $sort = $sort['age'] == 'DESC' ? 'ASC' : 'DESC';

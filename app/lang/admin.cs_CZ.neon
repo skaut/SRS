@@ -33,6 +33,7 @@ menu:
     users: "Uživatelé"
     acl: "Role"
     mailing: "Mailing"
+    structure: "Struktura akce"
     configuration: "Nastavení"
 
 dashboard:
@@ -407,6 +408,14 @@ mailing:
     history_recipient_roles: "Příjemci - role"
     history_recipient_users: "Příjemci - uživatelé"
     history_automatic: "Automatický"
+
+structure:
+    menu_subevents: "Podakce"
+    menu_discounts: "Slevy"
+
+    subevents_heading: "Podakce"
+
+    discounts_heading: "Slevy"
 
 configuration:
     menu_seminar: "Seminář"

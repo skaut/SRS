@@ -227,6 +227,7 @@ class EditRoleForm extends Nette\Object
         $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, Resource::USERS);
         $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, Resource::ACL);
         $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, Resource::MAILING);
+        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, Resource::STRUCTURE);
         $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, Resource::CONFIGURATION);
 
         return $options;

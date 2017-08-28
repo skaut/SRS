@@ -102,7 +102,7 @@ class RolesGridControl extends Control
             }
         );
 
-        $grid->addColumnText('fee', 'admin.acl.roles_fee');
+        $grid->addColumnNumber('fee', 'admin.acl.roles_fee');
 
 
         $grid->addToolbarButton('Acl:add')

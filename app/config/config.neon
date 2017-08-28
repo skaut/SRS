@@ -142,6 +142,14 @@ services:
         class: App\Model\Settings\SettingsRepository
         tags:
             doctrine.repositoryEntity: App\Model\Settings\Settings
+    discountRepository:
+        class: App\Model\Structure\DiscountRepository
+        tags:
+            doctrine.repositoryEntity: App\Model\Structure\Discount
+    subeventRepository:
+        class: App\Model\Structure\SubeventRepository
+        tags:
+            doctrine.repositoryEntity: App\Model\Structure\Subevent
     userRepository:
         class: App\Model\User\UserRepository
         tags:
@@ -212,6 +220,8 @@ services:
     - App\AdminModule\ProgramModule\Components\IProgramCategoriesGridControlFactory
     - App\AdminModule\ProgramModule\Components\IProgramAttendeesGridControlFactory
     - App\AdminModule\ProgramModule\Components\IRoomsGridControlFactory
+    - App\AdminModule\StructureModule\Components\IDiscountsGridControlFactory
+    - App\AdminModule\StructureModule\Components\ISubeventsGridControlFactory
 
 webloader:
     css:

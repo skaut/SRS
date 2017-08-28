@@ -3,6 +3,7 @@
 namespace App\AdminModule\StructureModule\Presenters;
 
 use App\AdminModule\ProgramModule\Components\IRoomsGridControlFactory;
+use App\AdminModule\StructureModule\Components\IDiscountsGridControlFactory;
 use App\Model\ACL\Permission;
 
 
@@ -13,5 +14,15 @@ use App\Model\ACL\Permission;
  */
 class DiscountsPresenter extends StructureBasePresenter
 {
+    /**
+     * @var IDiscountsGridControlFactory
+     * @inject
+     */
+    public $discountsGridControlFactory;
 
+
+    protected function createComponentDiscountsGrid()
+    {
+        return $this->discountsGridControlFactory->create();
+    }
 }
