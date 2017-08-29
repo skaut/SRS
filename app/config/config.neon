@@ -172,12 +172,31 @@ services:
     - App\WebModule\Components\ITextContentControlFactory
     - App\WebModule\Components\IUsersContentControlFactory
     - App\WebModule\Components\ILectorsContentControlFactory
+
     - App\WebModule\Forms\BaseForm
     - App\WebModule\Forms\AdditionalInformationForm
     - App\WebModule\Forms\ApplicationForm
     - App\WebModule\Forms\FaqForm
     - App\WebModule\Forms\PersonalDetailsForm
     - App\WebModule\Forms\RolesForm
+
+    - App\AdminModule\Components\IRolesGridControlFactory
+    - App\AdminModule\Components\IUsersGridControlFactory
+    - App\AdminModule\CMSModule\Components\IDocumentsGridControlFactory
+    - App\AdminModule\CMSModule\Components\IDocumentTagsGridControlFactory
+    - App\AdminModule\CMSModule\Components\IFaqGridControlFactory
+    - App\AdminModule\CMSModule\Components\INewsGridControlFactory
+    - App\AdminModule\CMSModule\Components\IPagesGridControlFactory
+    - App\AdminModule\ConfigurationModule\Components\ICustomInputsGridControlFactory
+    - App\AdminModule\ConfigurationModule\Components\IPlacePointsGridControlFactory
+    - App\AdminModule\MailingModule\Components\IMailHistoryGridControlFactory
+    - App\AdminModule\MailingModule\Components\IMailTemplatesGridControlFactory
+    - App\AdminModule\ProgramModule\Components\IProgramBlocksGridControlFactory
+    - App\AdminModule\ProgramModule\Components\IProgramCategoriesGridControlFactory
+    - App\AdminModule\ProgramModule\Components\IProgramAttendeesGridControlFactory
+    - App\AdminModule\ProgramModule\Components\IRoomsGridControlFactory
+    - App\AdminModule\StructureModule\Components\IDiscountsGridControlFactory
+    - App\AdminModule\StructureModule\Components\ISubeventsGridControlFactory
 
     - App\AdminModule\Forms\BaseForm
     - App\AdminModule\Forms\AddLectorForm
@@ -203,25 +222,10 @@ services:
     - App\AdminModule\ConfigurationModule\Forms\SkautIsEventForm
     - App\AdminModule\ConfigurationModule\Forms\WebForm
     - App\AdminModule\ProgramModule\Forms\BlockForm
-    - App\AdminModule\Components\IRolesGridControlFactory
-    - App\AdminModule\Components\IUsersGridControlFactory
-    - App\AdminModule\CMSModule\Components\IDocumentsGridControlFactory
-    - App\AdminModule\CMSModule\Components\IDocumentTagsGridControlFactory
-    - App\AdminModule\CMSModule\Components\IFaqGridControlFactory
-    - App\AdminModule\CMSModule\Components\INewsGridControlFactory
-    - App\AdminModule\CMSModule\Components\IPagesGridControlFactory
-    - App\AdminModule\ConfigurationModule\Components\ICustomInputsGridControlFactory
-    - App\AdminModule\ConfigurationModule\Components\IPlacePointsGridControlFactory
     - App\AdminModule\MailingModule\Forms\EditTemplateForm
     - App\AdminModule\MailingModule\Forms\SendForm
-    - App\AdminModule\MailingModule\Components\IMailHistoryGridControlFactory
-    - App\AdminModule\MailingModule\Components\IMailTemplatesGridControlFactory
-    - App\AdminModule\ProgramModule\Components\IProgramBlocksGridControlFactory
-    - App\AdminModule\ProgramModule\Components\IProgramCategoriesGridControlFactory
-    - App\AdminModule\ProgramModule\Components\IProgramAttendeesGridControlFactory
-    - App\AdminModule\ProgramModule\Components\IRoomsGridControlFactory
-    - App\AdminModule\StructureModule\Components\IDiscountsGridControlFactory
-    - App\AdminModule\StructureModule\Components\ISubeventsGridControlFactory
+    - App\AdminModule\StructureModule\Forms\DiscountForm
+    - App\AdminModule\StructureModule\Forms\SubeventForm
 
 webloader:
     css:

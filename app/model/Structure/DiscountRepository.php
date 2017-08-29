@@ -12,5 +12,13 @@ use Kdyby\Doctrine\EntityRepository;
  */
 class DiscountRepository extends EntityRepository
 {
-
+    /**
+     * Vrací slevu podle id.
+     * @param $id
+     * @return Discount|null
+     */
+    public function findById($id)
+    {
+        return $this->findOneBy(['id' => $id]);
+    }
 }

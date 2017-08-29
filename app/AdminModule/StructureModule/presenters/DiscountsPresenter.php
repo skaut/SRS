@@ -2,9 +2,9 @@
 
 namespace App\AdminModule\StructureModule\Presenters;
 
-use App\AdminModule\ProgramModule\Components\IRoomsGridControlFactory;
 use App\AdminModule\StructureModule\Components\IDiscountsGridControlFactory;
-use App\Model\ACL\Permission;
+use App\AdminModule\StructureModule\Forms\DiscountForm;
+use Nette\Forms\Form;
 
 
 /**
@@ -20,9 +20,29 @@ class DiscountsPresenter extends StructureBasePresenter
      */
     public $discountsGridControlFactory;
 
+    /**
+     * @var DiscountForm
+     * @inject
+     */
+    public $discountFormFactory;
+
 
     protected function createComponentDiscountsGrid()
     {
         return $this->discountsGridControlFactory->create();
+    }
+
+    protected function createComponentDiscountForm()
+    {
+        $form = $this->discountFormFactory->create($this->getParameter('id'));
+
+        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+            if (!$form['cancel']->isSubmittedBy())
+                $this->flashMessage('admin.structure.discounts_saved', 'success');
+
+            $this->redirect('Discount:default');
+        };
+
+        return $form;
     }
 }

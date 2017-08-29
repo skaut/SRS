@@ -414,6 +414,11 @@ structure:
     menu_discounts: "Slevy"
 
     subevents_heading: "Podakce"
+    subevents_name: "Název"
+    subevents_implicit: "Implicitní"
+    subevents_fee: "Poplatek"
+    subevents_capacity: "Kapacita"
+    subevents_capacity_unlimited: "Neomezená"
 
     discounts_heading: "Slevy"
 
