@@ -24,7 +24,7 @@ use Nette\Application\UI\Form;
 class SubeventForm extends Nette\Object
 {
     /**
-     * Upravovaná role.
+     * Upravovaná podakce.
      * @var Subevent
      */
     private $subevent;
@@ -61,7 +61,7 @@ class SubeventForm extends Nette\Object
 
         $form->addText('name', 'admin.structure.subevents_name')
             ->addRule(Form::FILLED, 'admin.structure.subevents_name_empty')
-            ->addRule(Form::IS_NOT_IN, 'admin.structure.subevents_name_exists', $this->roleRepository->findOthersNames($id));
+            ->addRule(Form::IS_NOT_IN, 'admin.structure.subevents_name_exists', $this->subeventRepository->findOthersNames($id));
 
         $form->addText('capacity', 'admin.structure.subevents_capacity')
             ->setAttribute('data-toggle', 'tooltip')

@@ -181,15 +181,33 @@ class Subevent
     }
 
     /**
-     * @param ArrayCollection $incompatibleSubevents
+     * @param $incompatibleSubevents
      */
     public function setIncompatibleSubevents($incompatibleSubevents)
     {
+        foreach ($this->getIncompatibleSubevents() as $subevent) {
+            if (!$incompatibleSubevents->contains($subevent))
+                $subevent->getIncompatibleSubevents()->removeElement($this);
+        }
+        foreach ($incompatibleSubevents as $subevent) {
+            if (!$subevent->getIncompatibleSubevents()->contains($this))
+                $subevent->getIncompatibleSubevents()->add($this);
+        }
+
         $this->incompatibleSubevents = $incompatibleSubevents;
     }
 
     /**
-     * @return mixed
+     * @param $subevent
+     */
+    public function addIncompatibleSubevent($subevent)
+    {
+        if (!$this->incompatibleSubevents->contains($subevent))
+            $this->incompatibleSubevents->add($subevent);
+    }
+
+    /**
+     * @return ArrayCollection
      */
     public function getRequiredBySubevent()
     {
@@ -197,11 +215,28 @@ class Subevent
     }
 
     /**
-     * @param mixed $requiredBySubevent
+     * Vrací všechny (tranzitivně) podakce, kterými je tato podakce vyžadována.
+     * @return array
      */
-    public function setRequiredBySubevent($requiredBySubevent)
+    public function getRequiredBySubeventTransitive()
     {
-        $this->requiredBySubevent = $requiredBySubevent;
+        $allRequiredBySubevent = [];
+        foreach ($this->requiredBySubevent as $requiredBySubevent) {
+            $this->getRequiredBySubeventTransitiveRec($allRequiredBySubevent, $requiredBySubevent);
+        }
+        return $allRequiredBySubevent;
+    }
+
+    private function getRequiredBySubeventTransitiveRec(&$allRequiredBySubevent, $subevent)
+    {
+        if ($this == $subevent || in_array($subevent, $allRequiredBySubevent))
+            return;
+
+        $allRequiredBySubevent[] = $subevent;
+
+        foreach ($subevent->requiredBySubevent as $requiredBySubevent) {
+            $this->getRequiredBySubeventTransitiveRec($allRequiredBySubevent, $requiredBySubevent);
+        }
     }
 
     /**
@@ -213,10 +248,44 @@ class Subevent
     }
 
     /**
-     * @param ArrayCollection $requiredSubevents
+     * @param $requiredSubevents
      */
     public function setRequiredSubevents($requiredSubevents)
     {
         $this->requiredSubevents = $requiredSubevents;
+    }
+
+    /**
+     * @param $subevent
+     */
+    public function addRequiredSubevent($subevent)
+    {
+        if (!$this->requiredSubevents->contains($subevent))
+            $this->requiredSubevents->add($subevent);
+    }
+
+    /**
+     * Vrací všechny (tranzitivně) vyžadované podakce.
+     * @return array
+     */
+    public function getRequiredSubeventsTransitive()
+    {
+        $allRequiredSubevents = [];
+        foreach ($this->requiredSubevents as $requiredSubevent) {
+            $this->getRequiredSubeventsTransitiveRec($allRequiredSubevents, $requiredSubevent);
+        }
+        return $allRequiredSubevents;
+    }
+
+    private function getRequiredSubeventsTransitiveRec(&$allRequiredSubevents, $subevent)
+    {
+        if ($this == $subevent || in_array($subevent, $allRequiredSubevents))
+            return;
+
+        $allRequiredSubevents[] = $subevent;
+
+        foreach ($subevent->requiredSubevents as $requiredSubevent) {
+            $this->getRequiredSubeventsTransitiveRec($allRequiredSubevents, $requiredSubevent);
+        }
     }
 }

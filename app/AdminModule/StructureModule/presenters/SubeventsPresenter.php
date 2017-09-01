@@ -4,6 +4,7 @@ namespace App\AdminModule\StructureModule\Presenters;
 
 use App\AdminModule\StructureModule\Components\ISubeventsGridControlFactory;
 use App\AdminModule\StructureModule\Forms\SubeventForm;
+use App\Model\Structure\SubeventRepository;
 use Nette\Forms\Form;
 
 
@@ -26,6 +27,22 @@ class SubeventsPresenter extends StructureBasePresenter
      */
     public $subeventFormFactory;
 
+    /**
+     * @var SubeventRepository
+     * @inject
+     */
+    public $subeventRepository;
+
+
+    /**
+     * @param $id
+     */
+    public function renderEdit($id)
+    {
+        $subevent = $this->subeventRepository->findById($id);
+
+        $this->template->editedSubevent = $subevent;
+    }
 
     protected function createComponentSubeventsGrid()
     {
