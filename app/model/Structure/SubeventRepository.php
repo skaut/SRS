@@ -106,6 +106,19 @@ class SubeventRepository extends EntityRepository
     }
 
     /**
+     * Vrací počet vytvořených podakcí.
+     * @return int
+     */
+    public function countExplicitSubevents()
+    {
+        return $this->createQueryBuilder('s')
+            ->select('COUNT(s.id)')
+            ->where('s.implicit = FALSE')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
      * Vrací seznam podakcí jako možnosti pro select.
      * @return array
      */

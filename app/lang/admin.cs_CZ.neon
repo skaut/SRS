@@ -155,6 +155,8 @@ program:
     blocks_name: "Název"
     blocks_name_empty: "Zadejte název."
     blocks_name_exists: "Programový blok s tímto názvem již existuje."
+    blocks_subevent: "Podakce"
+    blocks_subevent_empty: "Vyberte podakci."
     blocks_category: "Kategorie"
     blocks_lector: "Lektor"
     blocks_duration: "Délka"

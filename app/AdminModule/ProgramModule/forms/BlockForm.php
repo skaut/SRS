@@ -11,6 +11,7 @@ use App\Model\Program\CategoryRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
+use App\Model\Structure\SubeventRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use Nette;
@@ -37,6 +38,12 @@ class BlockForm extends Nette\Object
      */
     private $block;
 
+    /**
+     * Počet vytvořených podakcí.
+     * @var int
+     */
+    private $subeventsCount;
+
     /** @var BaseForm */
     private $baseFormFactory;
 
@@ -55,6 +62,9 @@ class BlockForm extends Nette\Object
     /** @var ProgramRepository */
     private $programRepository;
 
+    /** @var SubeventRepository */
+    private $subeventRepository;
+
 
     /**
      * BlockForm constructor.
@@ -67,7 +77,8 @@ class BlockForm extends Nette\Object
      */
     public function __construct(BaseForm $baseFormFactory, BlockRepository $blockRepository,
                                 UserRepository $userRepository, CategoryRepository $categoryRepository,
-                                SettingsRepository $settingsRepository, ProgramRepository $programRepository)
+                                SettingsRepository $settingsRepository, ProgramRepository $programRepository,
+                                SubeventRepository $subeventRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->blockRepository = $blockRepository;
@@ -75,6 +86,7 @@ class BlockForm extends Nette\Object
         $this->categoryRepository = $categoryRepository;
         $this->settingsRepository = $settingsRepository;
         $this->programRepository = $programRepository;
+        $this->subeventRepository = $subeventRepository;
     }
 
     /**
@@ -88,12 +100,20 @@ class BlockForm extends Nette\Object
         $this->block = $this->blockRepository->findById($id);
         $this->user = $this->userRepository->findById($userId);
 
+        $this->subeventsCount = $this->subeventRepository->countExplicitSubevents();
+
         $form = $this->baseFormFactory->create();
 
         $form->addHidden('id');
 
         $form->addText('name', 'admin.program.blocks_name')
             ->addRule(Form::FILLED, 'admin.program.blocks_name_empty');
+
+        if ($this->subeventsCount > 0) {
+            $form->addSelect('subevent', 'admin.program.blocks_subevent', $this->subeventRepository->getSubeventsOptions())
+                ->setPrompt('')
+                ->addRule(Form::FILLED, 'admin.program.blocks_subevent_empty');
+        }
 
         $form->addSelect('category', 'admin.program.blocks_category', $this->categoryRepository->getCategoriesOptions())
             ->setPrompt('');
@@ -162,6 +182,12 @@ class BlockForm extends Nette\Object
                 'description' => $this->block->getDescription(),
                 'tools' => $this->block->getTools()
             ]);
+
+            if ($this->subeventsCount > 0) {
+                $form->setDefaults([
+                    'subevent' => $this->block->getSubevent() ? $this->block->getSubevent()->getId() : NULL
+                ]);
+            }
         } else {
             $form['name']->addRule(Form::IS_NOT_IN, 'admin.program.blocks_name_exists', $this->blockRepository->findAllNames());
         }
@@ -203,6 +229,14 @@ class BlockForm extends Nette\Object
             $this->block->setPerex($values['perex']);
             $this->block->setDescription($values['description']);
             $this->block->setTools($values['tools']);
+
+            if ($this->subeventsCount > 0) {
+                $subevent = $values['subevent'] != '' ? $this->subeventRepository->findById($values['subevent']) : NULL;
+                $this->block->setSubevent($subevent);
+            }
+            else {
+                $this->block->setSubevent($this->subeventRepository->findImplicit());
+            }
 
             $this->blockRepository->save($this->block);
 

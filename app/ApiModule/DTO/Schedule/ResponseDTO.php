@@ -26,7 +26,7 @@ class ResponseDTO extends Nette\Object
     private $status;
 
     /**
-     * @JMS\Type("\App\ApiModule\DTO\Schedule\ProgramDetailDTO")
+     * @JMS\Type("App\ApiModule\DTO\Schedule\ProgramDetailDTO")
      * @var ProgramDetailDTO
      */
     private $program;
