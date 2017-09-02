@@ -5,6 +5,7 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseForm;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
+use App\Model\Structure\SubeventRepository;
 use Nette;
 use Nette\Application\UI\Form;
 
@@ -23,16 +24,22 @@ class SeminarForm extends Nette\Object
     /** @var SettingsRepository */
     private $settingsRepository;
 
+    /** @var SubeventRepository */
+    private $subeventRepository;
+
 
     /**
      * SeminarForm constructor.
      * @param BaseForm $baseForm
      * @param SettingsRepository $settingsRepository
+     * @param SubeventRepository $subeventRepository
      */
-    public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository)
+    public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository,
+                                SubeventRepository $subeventRepository)
     {
         $this->baseForm = $baseForm;
         $this->settingsRepository = $settingsRepository;
+        $this->subeventRepository = $subeventRepository;
     }
 
     /**
@@ -85,6 +92,10 @@ class SeminarForm extends Nette\Object
     public function processForm(Form $form, \stdClass $values)
     {
         $this->settingsRepository->setValue(Settings::SEMINAR_NAME, $values['seminarName']);
+        $implicitSubevent = $this->subeventRepository->findImplicit();
+        $implicitSubevent->setName($values['seminarName']);
+        $this->subeventRepository->save($implicitSubevent);
+
         $this->settingsRepository->setDateValue(Settings::SEMINAR_FROM_DATE, $values['seminarFromDate']);
         $this->settingsRepository->setDateValue(Settings::SEMINAR_TO_DATE, $values['seminarToDate']);
         $this->settingsRepository->setDateValue(Settings::EDIT_REGISTRATION_TO, $values['editRegistrationTo']);
