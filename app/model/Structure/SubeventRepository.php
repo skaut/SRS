@@ -2,6 +2,7 @@
 
 namespace App\Model\Structure;
 
+use App\Model\Enums\ApplicationStates;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Kdyby\Doctrine\EntityRepository;
@@ -22,6 +23,28 @@ class SubeventRepository extends EntityRepository
     public function findById($id)
     {
         return $this->findOneBy(['id' => $id]);
+    }
+
+    /**
+     * Vrací implicitní podakci.
+     * @return Subevent
+     */
+    public function findImplicit()
+    {
+        return $this->findOneBy(['implicit' => TRUE]);
+    }
+
+    /**
+     * Vrací názvy všech podakcí.
+     * @return string[]
+     */
+    public function findAllNames()
+    {
+        $names = $this->createQueryBuilder('s')
+            ->select('s.name')
+            ->getQuery()
+            ->getScalarResult();
+        return array_map('current', $names);
     }
 
     /**
@@ -74,10 +97,31 @@ class SubeventRepository extends EntityRepository
     {
         return $this->createQueryBuilder('s')
             ->select('COUNT(u.id)')
-            ->leftJoin('s.users', 'u', 'WITH', 'u.approved = true')
+            ->leftJoin('s.applications', 'a', 'WITH',
+                'a.state = \'' . ApplicationStates::WAITING_FOR_PAYMENT . '\' OR a.state = \'' . ApplicationStates::PAID . '\'')
+            ->leftJoin('a.user', 'u', 'WITH', 'u.approved = TRUE')
             ->where('s.id = :id')->setParameter('id', $subevent->getId())
             ->getQuery()
-            ->getSingleScalarResult(); //TODO
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * Vrací seznam podakcí jako možnosti pro select.
+     * @return array
+     */
+    public function getSubeventsOptions()
+    {
+        $subevents = $this->createQueryBuilder('s')
+            ->select('s.id, s.name')
+            ->orderBy('s.name')
+            ->getQuery()
+            ->getResult();
+
+        $options = [];
+        foreach ($subevents as $subevent) {
+            $options[$subevent['id']] = $subevent['name'];
+        }
+        return $options;
     }
 
     /**

@@ -59,22 +59,37 @@ class SubeventForm extends Nette\Object
 
         $form->addHidden('id');
 
-        $form->addText('name', 'admin.structure.subevents_name')
-            ->addRule(Form::FILLED, 'admin.structure.subevents_name_empty')
-            ->addRule(Form::IS_NOT_IN, 'admin.structure.subevents_name_exists', $this->subeventRepository->findOthersNames($id));
+        $nameText = $form->addText('name', 'admin.structure.subevents_name')
+            ->addRule(Form::FILLED, 'admin.structure.subevents_name_empty');
 
-        $form->addText('capacity', 'admin.structure.subevents_capacity')
+        $capacityText = $form->addText('capacity', 'admin.structure.subevents_capacity')
             ->setAttribute('data-toggle', 'tooltip')
-            ->setAttribute('title', $form->getTranslator()->translate('admin.structure.subevents_capacity_note'))
-            ->addCondition(Form::FILLED)
-            ->addRule(Form::INTEGER, 'admin.structure.subevents_format')
-            ->addRule(Form::MIN, 'admin.structure.subevents_capacity_low', $this->subeventRepository->countApprovedUsersInSubevent($this->subevent));
+            ->setAttribute('title', $form->getTranslator()->translate('admin.structure.subevents_capacity_note'));
 
         $form->addText('fee', 'admin.structure.subevents_fee')
             ->addCondition(Form::FILLED)
             ->addRule(Form::INTEGER, 'admin.structure.subevents_fee_format');
 
-        $subeventsOptions = $this->subeventRepository->getSubeventsWithoutSubeventOptions($this->subevent->getId());
+        if ($this->subevent) {
+            $nameText->addRule(Form::IS_NOT_IN, 'admin.structure.subevents_name_exists', $this->subeventRepository->findOthersNames($id));
+            $capacityText
+                ->addCondition(Form::FILLED)
+                ->addRule(Form::INTEGER, 'admin.structure.subevents_capacity_format')
+                ->addRule(Form::MIN, 'admin.structure.subevents_capacity_low', $this->subeventRepository->countApprovedUsersInSubevent($this->subevent));
+
+            $subeventsOptions = $this->subeventRepository->getSubeventsWithoutSubeventOptions($this->subevent->getId());
+        }
+        else {
+            $nameText->addRule(Form::IS_NOT_IN, 'admin.structure.subevents_name_exists', $this->subeventRepository->findAllNames());
+            $capacityText
+                ->addCondition(Form::FILLED)
+                ->addRule(Form::INTEGER, 'admin.structure.subevents_capacity_format')
+                ->addRule(Form::MIN, 'admin.structure.subevents_capacity_low', 0);
+
+            $subeventsOptions = $this->subeventRepository->getSubeventsOptions();
+        }
+
+
 
         $incompatibleSubeventsSelect = $form->addMultiSelect('incompatibleSubevents', 'admin.structure.subevents_incompatible_subevents', $subeventsOptions);
 
@@ -95,6 +110,7 @@ class SubeventForm extends Nette\Object
         $form->addSubmit('cancel', 'admin.common.cancel')
             ->setValidationScope([])
             ->setAttribute('class', 'btn btn-warning');
+
 
         if ($this->subevent) {
             $form->setDefaults([
@@ -148,8 +164,17 @@ class SubeventForm extends Nette\Object
 
         $this->subeventRepository->getEntityManager()->getConnection()->beginTransaction();
 
-        $this->subevent->setIncompatibleSubevents($incompatibleSubevents);
-        $this->subevent->setRequiredSubevents($requiredSubevents);
+        if ($this->subevent) {
+            $editedSubevent = $this->subevent;
+        }
+        else {
+            $editedSubevent = new Subevent();
+            $editedSubevent->setName(md5(mt_rand()));
+            $this->subeventRepository->save($editedSubevent);
+        }
+
+        $editedSubevent->setIncompatibleSubevents($incompatibleSubevents);
+        $editedSubevent->setRequiredSubevents($requiredSubevents);
 
         $valid = TRUE;
 
@@ -163,6 +188,8 @@ class SubeventForm extends Nette\Object
             if (!$valid)
                 break;
         }
+
+        $this->subeventRepository->save($editedSubevent);
 
         $this->subeventRepository->getEntityManager()->getConnection()->rollBack();
 

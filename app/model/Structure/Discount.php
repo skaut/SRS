@@ -41,6 +41,14 @@ class Discount
 
 
     /**
+     * Discount constructor.
+     */
+    public function __construct()
+    {
+        $this->conditionSubevents = new ArrayCollection();
+    }
+
+    /**
      * @return int
      */
     public function getId()

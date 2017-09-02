@@ -34,6 +34,14 @@ class Room
 
 
     /**
+     * Room constructor.
+     */
+    public function __construct()
+    {
+        $this->programs = new ArrayCollection();
+    }
+
+    /**
      * @return int
      */
     public function getId()

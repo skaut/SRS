@@ -62,6 +62,15 @@ class Mail
 
 
     /**
+     * Mail constructor.
+     */
+    public function __construct()
+    {
+        $this->recipientRoles = new ArrayCollection();
+        $this->recipientUsers = new ArrayCollection();
+    }
+
+    /**
      * @return int
      */
     public function getId()

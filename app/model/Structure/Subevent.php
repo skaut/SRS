@@ -33,6 +33,13 @@ class Subevent
     protected $implicit = FALSE;
 
     /**
+     * Přihlášky.
+     * @ORM\ManyToMany(targetEntity="\App\Model\User\Application", mappedBy="subevents", cascade={"persist"})
+     * @var ArrayCollection
+     */
+    protected $applications;
+
+    /**
      * Bloky v podakci.
      * @ORM\OneToMany(targetEntity="\App\Model\Program\Block", mappedBy="subevent", cascade={"persist"})
      * @ORM\OrderBy({"name" = "ASC"})
@@ -83,6 +90,18 @@ class Subevent
      */
     protected $requiredSubevents;
 
+
+    /**
+     * Subevent constructor.
+     */
+    public function __construct()
+    {
+        $this->applications = new ArrayCollection();
+        $this->blocks = new ArrayCollection();
+        $this->incompatibleSubevents = new ArrayCollection();
+        $this->requiredBySubevent = new ArrayCollection();
+        $this->requiredSubevents = new ArrayCollection();
+    }
 
     /**
      * @return int

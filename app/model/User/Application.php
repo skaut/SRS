@@ -27,7 +27,7 @@ class Application
 
     /**
      * Podakce.
-     * @ORM\ManyToMany(targetEntity="\App\Model\Structure\Subevent")
+     * @ORM\ManyToMany(targetEntity="\App\Model\Structure\Subevent", inversedBy="applications", cascade={"persist"})
      * @var ArrayCollection
      */
     protected $subevents;
@@ -60,6 +60,14 @@ class Application
      */
     protected $state;
 
+
+    /**
+     * Application constructor.
+     */
+    public function __construct()
+    {
+        $this->subevents = new ArrayCollection();
+    }
 
     /**
      * @return int

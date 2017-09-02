@@ -106,6 +106,14 @@ class Template
 
 
     /**
+     * Template constructor.
+     */
+    public function __construct()
+    {
+        $this->variables = new ArrayCollection();
+    }
+
+    /**
      * @return int
      */
     public function getId()

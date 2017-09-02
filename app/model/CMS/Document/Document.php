@@ -61,6 +61,14 @@ class Document
 
 
     /**
+     * Document constructor.
+     */
+    public function __construct()
+    {
+        $this->tags = new ArrayCollection();
+    }
+
+    /**
      * @return int
      */
     public function getId()

@@ -57,7 +57,7 @@ class SubeventsPresenter extends StructureBasePresenter
             if (!$form['cancel']->isSubmittedBy())
                 $this->flashMessage('admin.structure.subevents_saved', 'success');
 
-            $this->redirect('Subevent:default');
+            $this->redirect('Subevents:default');
         };
 
         return $form;

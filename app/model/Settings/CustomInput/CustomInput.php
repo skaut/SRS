@@ -67,6 +67,22 @@ abstract class CustomInput
 
 
     /**
+     * CustomInput constructor.
+     */
+    public function __construct()
+    {
+        $this->customInputValues = new ArrayCollection();
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * @return string
      */
     public function getName()

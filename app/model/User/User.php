@@ -291,8 +291,10 @@ class User
      */
     public function __construct()
     {
+        $this->applications = new ArrayCollection();
         $this->roles = new ArrayCollection();
         $this->programs = new ArrayCollection();
+        $this->lecturersBlocks = new ArrayCollection();
     }
 
     /**
