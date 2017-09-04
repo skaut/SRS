@@ -229,24 +229,24 @@ class UsersGridControl extends Control
             ->setSortable()
             ->setFilterText();
 
-        $grid->addColumnText('paymentMethod', 'admin.users.users_payment_method')
-            ->setRenderer(function ($row) {
-                if ($row->getPaymentMethod())
-                    return $this->translator->translate('common.payment.' . $row->getPaymentMethod());
-                return NULL;
-            })
-            ->setSortable()
-            ->setFilterSelect($this->preparePaymentMethodFilterOptions())
-            ->setTranslateOptions();
+//        $grid->addColumnText('paymentMethod', 'admin.users.users_payment_method')
+//            ->setRenderer(function ($row) {
+//                if ($row->getPaymentMethod())
+//                    return $this->translator->translate('common.payment.' . $row->getPaymentMethod());
+//                return NULL;
+//            })
+//            ->setSortable()
+//            ->setFilterSelect($this->preparePaymentMethodFilterOptions())
+//            ->setTranslateOptions();
 
-        $grid->addColumnDateTime('paymentDate', 'admin.users.users_payment_date')
-            ->setSortable();
+//        $grid->addColumnDateTime('paymentDate', 'admin.users.users_payment_date')
+//            ->setSortable();
 
-        $grid->addColumnDateTime('incomeProofPrintedDate', 'admin.users.users_income_proof_printed_date')
-            ->setSortable();
+//        $grid->addColumnDateTime('incomeProofPrintedDate', 'admin.users.users_income_proof_printed_date')
+//            ->setSortable();
 
-        $grid->addColumnDateTime('applicationDate', 'admin.users.users_application_date')
-            ->setSortable();
+//        $grid->addColumnDateTime('applicationDate', 'admin.users.users_application_date')
+//            ->setSortable();
 
         $columnAttended = $grid->addColumnStatus('attended', 'admin.users.users_attended');
         $columnAttended

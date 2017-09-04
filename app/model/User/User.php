@@ -251,13 +251,6 @@ class User
     protected $membershipCategory;
 
     /**
-     * Datum vytištění dokladu o zaplacení.
-     * @ORM\Column(type="date", nullable=true)
-     * @var \DateTime
-     */
-    protected $incomeProofPrintedDate;
-
-    /**
      * Hodnoty vlastních polí přihlášky.
      * @ORM\OneToMany(targetEntity="\App\Model\User\CustomInputValue\CustomInputValue", mappedBy="user", cascade={"persist"})
      * @var ArrayCollection
@@ -492,15 +485,6 @@ class User
     public function setApplications($applications)
     {
         $this->applications = $applications;
-    }
-
-    /**
-     * @param Application $application
-     */
-    public function addApplication(Application $application)
-    {
-        if (!$this->applications->contains($application))
-            $this->applications->add($application);
     }
 
     /**
@@ -989,22 +973,6 @@ class User
     public function setMembershipCategory($membershipCategory)
     {
         $this->membershipCategory = $membershipCategory;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getIncomeProofPrintedDate()
-    {
-        return $this->incomeProofPrintedDate;
-    }
-
-    /**
-     * @param \DateTime $incomeProofPrintedDate
-     */
-    public function setIncomeProofPrintedDate($incomeProofPrintedDate)
-    {
-        $this->incomeProofPrintedDate = $incomeProofPrintedDate;
     }
 
     /**

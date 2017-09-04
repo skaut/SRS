@@ -4,9 +4,12 @@ namespace App\Model\Program;
 
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
+use App\Model\Enums\ApplicationStates;
+use App\Model\Structure\SubeventRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Kdyby\Doctrine\EntityRepository;
 
 
@@ -84,12 +87,26 @@ class ProgramRepository extends EntityRepository
 
         $registerableCategoriesIds = $this->userRepository->findRegisterableCategoriesIdsByUser($user);
 
+        $registerableSubeventsIds = [];
+
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->orX(
+                Criteria::expr()->eq('state', ApplicationStates::WAITING_FOR_PAYMENT),
+                Criteria::expr()->eq('state', ApplicationStates::PAID)
+            ));
+
+        foreach ($user->getApplications()->matching($criteria) as $application) {
+            foreach ($application->getSubevents() as $subevent)
+                $registerableSubeventsIds[] = $subevent->getId();
+        }
+
         return $this->createQueryBuilder('p')
             ->select('p')
             ->join('p.block', 'b')
             ->leftJoin('b.category', 'c')
-            ->where('c.id IN (:ids)')->setParameter('ids', $registerableCategoriesIds)
-            ->orWhere('b.category IS NULL')
+            ->leftJoin('b.subevent', 's')
+            ->where('(b.category IS NULL OR c.id IN (:cids))')->setParameter('cids', $registerableCategoriesIds)
+            ->andWhere('s.id IN (:sids)')->setParameter('sids', $registerableSubeventsIds)
             ->getQuery()
             ->getResult();
     }

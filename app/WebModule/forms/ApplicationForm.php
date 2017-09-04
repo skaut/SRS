@@ -15,6 +15,7 @@ use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\Application;
+use App\Model\User\ApplicationRepository;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
 use App\Model\User\CustomInputValue\CustomInputValueRepository;
 use App\Model\User\CustomInputValue\CustomTextValue;
@@ -81,6 +82,9 @@ class ApplicationForm extends Nette\Object
     /** @var SubeventRepository */
     private $subeventRepository;
 
+    /** @var ApplicationRepository */
+    private $applicationRepository;
+
 
     /**
      * ApplicationForm constructor.
@@ -94,13 +98,14 @@ class ApplicationForm extends Nette\Object
      * @param SettingsRepository $settingsRepository
      * @param MailService $mailService
      * @param SubeventRepository $subeventRepository
+     * @param ApplicationRepository $applicationRepository
      */
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
                                 RoleRepository $roleRepository, CustomInputRepository $customInputRepository,
                                 CustomInputValueRepository $customInputValueRepository,
                                 ProgramRepository $programRepository, SkautIsService $skautIsService,
                                 SettingsRepository $settingsRepository, MailService $mailService,
-                                SubeventRepository $subeventRepository)
+                                SubeventRepository $subeventRepository, ApplicationRepository $applicationRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->userRepository = $userRepository;
@@ -112,6 +117,7 @@ class ApplicationForm extends Nette\Object
         $this->settingsRepository = $settingsRepository;
         $this->mailService = $mailService;
         $this->subeventRepository = $subeventRepository;
+        $this->applicationRepository = $applicationRepository;
     }
 
     /**
@@ -226,11 +232,12 @@ class ApplicationForm extends Nette\Object
 
         $application = new Application();
 
+        $application->setUser($this->user);
+        $application->setSubevents($subevents);
         $application->setApplicationDate(new \DateTime());
         $application->setState(ApplicationStates::WAITING_FOR_PAYMENT);
-        $application->setSubevents($subevents);
 
-        $this->user->addApplication($application);
+        $this->applicationRepository->save($application);
 
 
         $roles = $this->roleRepository->findRolesByIds($values['roles']);

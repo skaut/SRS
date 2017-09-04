@@ -12,4 +12,13 @@ use Kdyby\Doctrine\EntityRepository;
  */
 class ApplicationRepository extends EntityRepository
 {
+    /**
+     * Uloží přihlášku.
+     * @param Application $application
+     */
+    public function save(Application $application)
+    {
+        $this->_em->persist($application);
+        $this->_em->flush();
+    }
 }

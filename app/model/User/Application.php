@@ -54,6 +54,13 @@ class Application
     protected $paymentDate;
 
     /**
+     * Datum vytištění dokladu o zaplacení.
+     * @ORM\Column(type="date", nullable=true)
+     * @var \DateTime
+     */
+    protected $incomeProofPrintedDate;
+
+    /**
      * Stav přihlášky.
      * @ORM\Column(type="string")
      * @var string
@@ -155,6 +162,22 @@ class Application
     public function setPaymentDate($paymentDate)
     {
         $this->paymentDate = $paymentDate;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getIncomeProofPrintedDate()
+    {
+        return $this->incomeProofPrintedDate;
+    }
+
+    /**
+     * @param \DateTime $incomeProofPrintedDate
+     */
+    public function setIncomeProofPrintedDate($incomeProofPrintedDate)
+    {
+        $this->incomeProofPrintedDate = $incomeProofPrintedDate;
     }
 
     /**
