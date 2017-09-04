@@ -148,6 +148,7 @@ services:
             doctrine.repositoryEntity: App\Model\Structure\Discount
     subeventRepository:
         class: App\Model\Structure\SubeventRepository
+        inject: yes
         tags:
             doctrine.repositoryEntity: App\Model\Structure\Subevent
     userRepository:

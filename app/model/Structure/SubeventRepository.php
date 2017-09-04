@@ -6,6 +6,7 @@ use App\Model\Enums\ApplicationStates;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Kdyby\Doctrine\EntityRepository;
+use Kdyby\Translation\Translator;
 
 
 /**
@@ -15,6 +16,18 @@ use Kdyby\Doctrine\EntityRepository;
  */
 class SubeventRepository extends EntityRepository
 {
+    /** @var Translator */
+    private $translator;
+
+
+    /**
+     * @param Translator $translator
+     */
+    public function injectTranslator(Translator $translator)
+    {
+        $this->translator = $translator;
+    }
+
     /**
      * Vrací podakci podle id.
      * @param $id
@@ -45,6 +58,19 @@ class SubeventRepository extends EntityRepository
             ->getQuery()
             ->getScalarResult();
         return array_map('current', $names);
+    }
+
+    /**
+     * Vrací vytvořené podakce, seřazené podle názvu.
+     * @return array
+     */
+    public function findAllExplicitOrderedByName()
+    {
+        return $this->createQueryBuilder('s')
+            ->where('s.implicit = FALSE')
+            ->orderBy('s.name')
+            ->getQuery()
+            ->getResult();
     }
 
     /**
@@ -86,6 +112,18 @@ class SubeventRepository extends EntityRepository
         return array_map(function ($o) {
             return $o->getId();
         }, $subevents->toArray());
+    }
+
+    /**
+     * Vrací počet volných míst v podakci nebo null u podakce s neomezenou kapacitou.
+     * @param Subevent $subevent
+     * @return int|null
+     */
+    public function countUnoccupiedInSubevent(Subevent $subevent)
+    {
+        if ($subevent->getCapacity() === NULL)
+            return NULL;
+        return $subevent->getCapacity() - $this->countApprovedUsersInSubevent($subevent);
     }
 
     /**
@@ -154,6 +192,31 @@ class SubeventRepository extends EntityRepository
         $options = [];
         foreach ($subevents as $subevent) {
             $options[$subevent['id']] = $subevent['name'];
+        }
+        return $options;
+    }
+
+    /**
+     * Vrací seznam podakcí, s informací o obsazenosti, jako možnosti pro select
+     * @return array
+     */
+    public function getExplicitOptionsWithCapacity() {
+        $subevents = $this->createQueryBuilder('s')
+            ->where('s.implicit = FALSE')
+            ->orderBy('s.name')
+            ->getQuery()
+            ->getResult();
+
+        $options = [];
+        foreach ($subevents as $subevent) {
+            if ($subevent->hasLimitedCapacity())
+                $options[$subevent->getId()] = $this->translator->translate('web.common.subevent_option', NULL, [
+                    'subevent' => $subevent->getName(),
+                    'occupied' => $this->countApprovedUsersInSubevent($subevent),
+                    'total' => $subevent->getCapacity()
+                ]);
+            else
+                $options[$subevent->getId()] = $subevent->getName();
         }
         return $options;
     }

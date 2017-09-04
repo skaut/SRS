@@ -495,6 +495,15 @@ class User
     }
 
     /**
+     * @param Application $application
+     */
+    public function addApplication(Application $application)
+    {
+        if (!$this->applications->contains($application))
+            $this->applications->add($application);
+    }
+
+    /**
      * @return ArrayCollection
      */
     public function getPrograms()

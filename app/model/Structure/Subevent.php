@@ -192,6 +192,14 @@ class Subevent
     }
 
     /**
+     * @return bool
+     */
+    public function hasLimitedCapacity()
+    {
+        return $this->capacity !== NULL;
+    }
+
+    /**
      * @return ArrayCollection
      */
     public function getIncompatibleSubevents()

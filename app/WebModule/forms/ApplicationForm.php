@@ -4,6 +4,7 @@ namespace App\WebModule\Forms;
 
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
+use App\Model\Enums\ApplicationStates;
 use App\Model\Enums\Sex;
 use App\Model\Enums\VariableSymbolType;
 use App\Model\Mailing\Template;
@@ -12,6 +13,8 @@ use App\Model\Program\ProgramRepository;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
+use App\Model\Structure\SubeventRepository;
+use App\Model\User\Application;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
 use App\Model\User\CustomInputValue\CustomInputValueRepository;
 use App\Model\User\CustomInputValue\CustomTextValue;
@@ -42,6 +45,12 @@ class ApplicationForm extends Nette\Object
 
     public $onSkautIsError;
 
+    /**
+     * Počet vytvořených podakcí.
+     * @var int
+     */
+    private $subeventsCount;
+
     /** @var BaseForm */
     private $baseFormFactory;
 
@@ -69,6 +78,9 @@ class ApplicationForm extends Nette\Object
     /** @var MailService */
     private $mailService;
 
+    /** @var SubeventRepository */
+    private $subeventRepository;
+
 
     /**
      * ApplicationForm constructor.
@@ -81,12 +93,14 @@ class ApplicationForm extends Nette\Object
      * @param SkautIsService $skautIsService
      * @param SettingsRepository $settingsRepository
      * @param MailService $mailService
+     * @param SubeventRepository $subeventRepository
      */
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
                                 RoleRepository $roleRepository, CustomInputRepository $customInputRepository,
                                 CustomInputValueRepository $customInputValueRepository,
                                 ProgramRepository $programRepository, SkautIsService $skautIsService,
-                                SettingsRepository $settingsRepository, MailService $mailService)
+                                SettingsRepository $settingsRepository, MailService $mailService,
+                                SubeventRepository $subeventRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->userRepository = $userRepository;
@@ -97,6 +111,7 @@ class ApplicationForm extends Nette\Object
         $this->skautIsService = $skautIsService;
         $this->settingsRepository = $settingsRepository;
         $this->mailService = $mailService;
+        $this->subeventRepository = $subeventRepository;
     }
 
     /**
@@ -107,6 +122,8 @@ class ApplicationForm extends Nette\Object
     public function create($id)
     {
         $this->user = $this->userRepository->findById($id);
+
+        $this->subeventsCount = $this->subeventRepository->countExplicitSubevents();
 
         $form = $this->baseFormFactory->create();
 
@@ -149,6 +166,8 @@ class ApplicationForm extends Nette\Object
             ->addRule(Form::FILLED, 'web.application_content.state_empty');
 
         $this->addCustomInputs($form);
+
+        $this->addSubeventsSelect($form);
 
         $this->addRolesSelect($form);
 
@@ -201,6 +220,19 @@ class ApplicationForm extends Nette\Object
         $this->user->setState($values['state']);
 
 
+        $subevents = $this->subeventRepository->countExplicitSubevents() > 0
+            ? $this->subeventRepository->findSubeventsByIds($values['subevents'])
+            : new ArrayCollection([$this->subeventRepository->findImplicit()]);
+
+        $application = new Application();
+
+        $application->setApplicationDate(new \DateTime());
+        $application->setState(ApplicationStates::WAITING_FOR_PAYMENT);
+        $application->setSubevents($subevents);
+
+        $this->user->addApplication($application);
+
+
         $roles = $this->roleRepository->findRolesByIds($values['roles']);
 
         $this->user->removeRole($this->roleRepository->findBySystemName(Role::NONREGISTERED));
@@ -243,7 +275,6 @@ class ApplicationForm extends Nette\Object
             $this->user->setDeparture($values['departure']);
 
         $this->user->setApplicationOrder($this->userRepository->findLastApplicationOrder()+1);
-        $this->user->setApplicationDate(new \DateTime());
 
         $this->user->setVariableSymbol($this->generateVariableSymbol());
 
@@ -300,6 +331,70 @@ class ApplicationForm extends Nette\Object
     }
 
     /**
+     * Přidá select pro výběr podakcí.
+     * @param Form $form
+     */
+    private function addSubeventsSelect(Form $form)
+    {
+        if ($this->subeventRepository->countExplicitSubevents() > 0) {
+            $subeventsOptions = $this->subeventRepository->getExplicitOptionsWithCapacity();
+
+            $subeventsSelect = $form->addMultiSelect('subevents', 'web.application_content.subevents')->setItems(
+                $subeventsOptions
+            )
+                ->addRule(Form::FILLED, 'web.application_content.subevents_empty')
+                ->addRule([$this, 'validateSubeventsCapacities'], 'web.application_content.subevents_capacity_occupied');
+
+            //generovani chybovych hlasek pro vsechny kombinace podakci
+            foreach ($this->subeventRepository->findAllExplicitOrderedByName() as $subevent) {
+                $incompatibleSubevents = $subevent->getIncompatibleSubevents();
+                if (count($incompatibleSubevents) > 0) {
+                    $messageThis = $subevent->getName();
+
+                    $first = TRUE;
+                    $messageOthers = "";
+                    foreach ($incompatibleSubevents as $incompatibleSubevent) {
+                        if ($first) {
+                            $messageOthers .= $incompatibleSubevent->getName();
+                        }
+                        else {
+                            $messageOthers .= ", " . $incompatibleSubevent->getName();
+                        }
+                        $first = FALSE;
+                    }
+                    $subeventsSelect->addRule([$this, 'validateSubeventsIncompatible'],
+                        $form->getTranslator()->translate('web.application_content.incompatible_subevents_selected', NULL,
+                            ['subevent' => $messageThis, 'incompatibleSubevents' => $messageOthers]
+                        ),
+                        [$subevent]
+                    );
+                }
+
+                $requiredSubevents = $subevent->getRequiredSubeventsTransitive();
+                if (count($requiredSubevents) > 0) {
+                    $messageThis = $subevent->getName();
+
+                    $first = TRUE;
+                    $messageOthers = "";
+                    foreach ($requiredSubevents as $requiredSubevent) {
+                        if ($first)
+                            $messageOthers .= $requiredSubevent->getName();
+                        else
+                            $messageOthers .= ", " . $requiredSubevent->getName();
+                        $first = FALSE;
+                    }
+                    $subeventsSelect->addRule([$this, 'validateSubeventsRequired'],
+                        $form->getTranslator()->translate('web.application_content.required_subevents_not_selected', NULL,
+                            ['subevent' => $messageThis, 'requiredSubevents' => $messageOthers]
+                        ),
+                        [$subevent]
+                    );
+                }
+            }
+        }
+    }
+
+    /**
      * Přidá select pro výběr rolí.
      * @param Form $form
      */
@@ -311,7 +406,7 @@ class ApplicationForm extends Nette\Object
             $registerableOptions
         )
             ->addRule(Form::FILLED, 'web.application_content.roles_empty')
-            ->addRule([$this, 'validateRolesCapacities'], 'web.application_content.capacity_occupied')
+            ->addRule([$this, 'validateRolesCapacities'], 'web.application_content.roles_capacity_occupied')
             ->addRule([$this, 'validateRolesRegisterable'], 'web.application_content.role_is_not_registerable');
 
         //generovani chybovych hlasek pro vsechny kombinace roli
@@ -369,6 +464,7 @@ class ApplicationForm extends Nette\Object
             ->toggle('arrivalInput')
             ->toggle('departureInput');
 
+        //pokud je na vyber jen jedna role, je oznacena
         if (count($registerableOptions) == 1) {
             $form->setDefaults([
                 'roles' => array_keys($registerableOptions)
@@ -390,6 +486,23 @@ class ApplicationForm extends Nette\Object
     }
 
     /**
+     * Ověří kapacity podakcí.
+     * @param $field
+     * @param $args
+     * @return bool
+     */
+    public function validateSubeventsCapacities($field, $args)
+    {
+        foreach ($this->subeventRepository->findSubeventsByIds($field->getValue()) as $subevent) {
+            if ($subevent->hasLimitedCapacity()) {
+                if ($this->subeventRepository->countUnoccupiedInSubevent($subevent) < 1)
+                    return FALSE;
+            }
+        }
+        return TRUE;
+    }
+
+    /**
      * Ověří kapacity rolí.
      * @param $field
      * @param $args
@@ -403,6 +516,50 @@ class ApplicationForm extends Nette\Object
                     return FALSE;
             }
         }
+        return TRUE;
+    }
+
+    /**
+     * Ověří kompatibilitu podakcí.
+     * @param $field
+     * @param $args
+     * @return bool
+     */
+    public function validateSubeventsIncompatible($field, $args)
+    {
+        $selectedSubeventsIds = $field->getValue();
+        $testSubevent = $args[0];
+
+        if (!in_array($testSubevent->getId(), $selectedSubeventsIds))
+            return TRUE;
+
+        foreach ($testSubevent->getIncompatibleSubevents() as $incompatibleSubevent) {
+            if (in_array($incompatibleSubevent->getId(), $selectedSubeventsIds))
+                return FALSE;
+        }
+
+        return TRUE;
+    }
+
+    /**
+     * Ověří výběr požadovaných podakcí.
+     * @param $field
+     * @param $args
+     * @return bool
+     */
+    public function validateSubeventsRequired($field, $args)
+    {
+        $selectedSubeventsIds = $field->getValue();
+        $testSubevent = $args[0];
+
+        if (!in_array($testSubevent->getId(), $selectedSubeventsIds))
+            return TRUE;
+
+        foreach ($testSubevent->getRequiredSubeventsTransitive() as $requiredSubevent) {
+            if (!in_array($requiredSubevent->getId(), $selectedSubeventsIds))
+                return FALSE;
+        }
+
         return TRUE;
     }
 

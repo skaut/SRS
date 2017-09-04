@@ -445,6 +445,9 @@ class Role
         $this->capacity = $capacity;
     }
 
+    /**
+     * @return bool
+     */
     public function hasLimitedCapacity()
     {
         return $this->capacity !== NULL;
