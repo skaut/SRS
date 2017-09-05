@@ -89,13 +89,7 @@ class ProgramRepository extends EntityRepository
 
         $registerableSubeventsIds = [];
 
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->orX(
-                Criteria::expr()->eq('state', ApplicationStates::WAITING_FOR_PAYMENT),
-                Criteria::expr()->eq('state', ApplicationStates::PAID)
-            ));
-
-        foreach ($user->getApplications()->matching($criteria) as $application) {
+        foreach ($user->getNotCanceledApplications() as $application) {
             foreach ($application->getSubevents() as $subevent)
                 $registerableSubeventsIds[] = $subevent->getId();
         }

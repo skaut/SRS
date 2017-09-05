@@ -87,25 +87,15 @@ class RolesForm extends Nette\Object
 
         $submitButton = $form->addSubmit('submit', 'web.profile.update_roles');
 
-        $cancelRegistrationButton = $form->addSubmit('cancelRegistration', 'web.profile.cancel_registration')
-            ->setAttribute('class', 'btn-danger');
-
         if ($enabled) {
             $submitButton
                 ->setAttribute('data-toggle', 'confirmation')
                 ->setAttribute('data-content', $form->getTranslator()->translate('web.profile.change_roles_confirm'));
-            $cancelRegistrationButton
-                ->setAttribute('data-toggle', 'confirmation')
-                ->setAttribute('data-content', $form->getTranslator()->translate('web.profile.cancel_registration_confirm'));
         } else {
             $submitButton
                 ->setDisabled()
                 ->setAttribute('data-toggle', 'tooltip')
                 ->setAttribute('title', $form->getTranslator()->translate('web.profile.change_roles_disabled'));
-            $cancelRegistrationButton
-                ->setDisabled()
-                ->setAttribute('data-toggle', 'tooltip')
-                ->setAttribute('title', $form->getTranslator()->translate('web.profile.cancel_registration_disabled'));
         }
 
         $form->setDefaults([
@@ -125,52 +115,44 @@ class RolesForm extends Nette\Object
      */
     public function processForm(Form $form, \stdClass $values)
     {
-        if ($form['submit']->isSubmittedBy()) {
-            $selectedRoles = $this->roleRepository->findRolesByIds($values['roles']);
+        $selectedRoles = $this->roleRepository->findRolesByIds($values['roles']);
 
-            //pokud si uživatel přidá roli, která vyžaduje schválení, stane se neschválený
-            $approved = TRUE;
-            if ($approved) {
-                foreach ($selectedRoles as $role) {
-                    if (!$role->isApprovedAfterRegistration() && !$this->user->getRoles()->contains($role)) {
-                        $approved = FALSE;
-                        break;
-                    }
+        //pokud si uživatel přidá roli, která vyžaduje schválení, stane se neschválený
+        $approved = TRUE;
+        if ($approved) {
+            foreach ($selectedRoles as $role) {
+                if (!$role->isApprovedAfterRegistration() && !$this->user->getRoles()->contains($role)) {
+                    $approved = FALSE;
+                    break;
                 }
             }
-
-            $this->user->setRoles($selectedRoles);
-            $this->user->setApproved($approved);
-
-            $this->userRepository->save($this->user);
-
-            $this->programRepository->updateUserPrograms($this->user);
-
-            $this->userRepository->save($this->user);
-
-            $rolesNames = "";
-            $first = TRUE;
-            foreach ($this->user->getRoles() as $role) {
-                if ($first) {
-                    $rolesNames = $role->getName();
-                    $first = FALSE;
-                }
-                else {
-                    $rolesNames .= ', ' . $role->getName();
-                }
-            }
-
-            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::ROLE_CHANGED, [
-                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-                TemplateVariable::USERS_ROLES => $rolesNames
-            ]);
-        } elseif ($form['cancelRegistration']->isSubmittedBy()) {
-            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::REGISTRATION_CANCELED, [
-                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)
-            ]);
-
-            $this->userRepository->remove($this->user);
         }
+
+        $this->user->setRoles($selectedRoles);
+        $this->user->setApproved($approved);
+
+        $this->userRepository->save($this->user);
+
+        $this->programRepository->updateUserPrograms($this->user);
+
+        $this->userRepository->save($this->user);
+
+        $rolesNames = "";
+        $first = TRUE;
+        foreach ($this->user->getRoles() as $role) {
+            if ($first) {
+                $rolesNames = $role->getName();
+                $first = FALSE;
+            }
+            else {
+                $rolesNames .= ', ' . $role->getName();
+            }
+        }
+
+        $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::ROLE_CHANGED, [
+            TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
+            TemplateVariable::USERS_ROLES => $rolesNames
+        ]);
     }
 
     /**
@@ -184,7 +166,7 @@ class RolesForm extends Nette\Object
             $this->roleRepository->getRegisterableNowOrUsersOptionsWithCapacity($this->user)
         )
             ->addRule(Form::FILLED, 'web.profile.roles_empty')
-            ->addRule([$this, 'validateRolesCapacities'], 'web.profile.capacity_occupied')
+            ->addRule([$this, 'validateRolesCapacities'], 'web.profile.roles_capacity_occupied')
             ->addRule([$this, 'validateRolesRegisterable'], 'web.profile.role_is_not_registerable')
             ->setDisabled(!$enabled);
 

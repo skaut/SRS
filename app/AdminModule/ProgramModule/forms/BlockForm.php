@@ -215,6 +215,7 @@ class BlockForm extends Nette\Object
 
             $oldMandatory = $this->block->getMandatory();
             $oldCategory = $this->block->getCategory();
+            $oldSubevent = $this->block->getSubevent();
 
             $category = $values['category'] != '' ? $this->categoryRepository->findById($values['category']) : NULL;
             $lector = $values['lector'] != '' ? $this->userRepository->findById($values['lector']) : NULL;
@@ -254,8 +255,10 @@ class BlockForm extends Nette\Object
                 }
             }
 
-            //aktualizace ucastniku pri zmene kategorie
-            if ($oldMandatory == $this->block->getMandatory() && $this->block->getCategory() !== $oldCategory) {
+            //aktualizace ucastniku pri zmene kategorie nebo podakce
+            if ($oldMandatory == $this->block->getMandatory() && (
+                $this->block->getCategory() !== $oldCategory) || ($this->block->getSubevent() !== $oldSubevent)
+            ) {
                 $this->programRepository->updateUsersPrograms($this->userRepository->findAll());
             }
 

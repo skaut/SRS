@@ -5,6 +5,7 @@ namespace App\Model\User;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\ACL\Role;
+use App\Model\Enums\ApplicationStates;
 use App\Model\Program\Block;
 use App\Model\Program\Program;
 use App\Model\Settings\CustomInput\CustomInput;
@@ -410,73 +411,25 @@ class User
     }
 
     /**
-     * Vrací platící role uživatele.
-     * @return ArrayCollection|\Doctrine\Common\Collections\Collection
-     */
-    public function getPayingRoles()
-    {
-        return $this->roles->filter(function ($item) {
-            return $item->getFee() > 0;
-        });
-    }
-
-    /**
-     * Je uživatel platící (nemá žádnou neplatící roli)?
-     * @return bool
-     */
-    public function isPaying()
-    {
-        return $this->roles->filter(function ($item) {
-                return $item->getFee() == 0;
-        })->count() == 0;
-    }
-
-    /**
-     * Má uživatel zaplaceno?
-     * @return bool
-     */
-    public function hasPaid()
-    {
-        return $this->paymentDate !== NULL; //TODO
-    }
-
-    /**
-     * Vrací poplatek uživatele. Pokud je platící - součet poplatků rolí.
-     * @return int
-     */
-    public function getFee()
-    {
-        if (!$this->isPaying())
-            return 0;
-
-        $fee = 0;
-
-        foreach ($this->getPayingRoles() as $role) {
-            $fee += $role->getFee();
-        }
-
-        return $fee;
-    }
-
-    /**
-     * Vrací poplatek slovy.
-     * @return mixed|string
-     */
-    public function getFeeWords()
-    {
-        $numbersWords = new \Numbers_Words();
-        $feeWord = $numbersWords->toWords($this->getFee(), 'cs');
-        $feeWord = iconv('windows-1250', 'UTF-8', $feeWord);
-        $feeWord = str_replace(" ", "", $feeWord);
-        return $feeWord;
-    }
-
-    /**
      * @return ArrayCollection
      */
     public function getApplications()
     {
         return $this->applications;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getNotCanceledApplications()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->orX(
+                Criteria::expr()->eq('state', ApplicationStates::WAITING_FOR_PAYMENT),
+                Criteria::expr()->eq('state', ApplicationStates::PAID)
+            ));
+
+        return $this->applications->matching($criteria);
     }
 
     /**
@@ -1084,5 +1037,88 @@ class User
             }
         }
         return $categories;
+    }
+
+    /**
+     * Vrací platící role uživatele.
+     * @return ArrayCollection|\Doctrine\Common\Collections\Collection
+     */
+    public function getPayingRoles()
+    {
+        return $this->roles->filter(function ($item) {
+            return $item->getFee() > 0;
+        });
+    }
+
+    /**
+     * Je uživatel platící (nemá žádnou neplatící roli)?
+     * @return bool
+     */
+    public function isPaying()
+    {
+        //TODO
+        return $this->roles->filter(function ($item) {
+                return $item->getFee() == 0;
+            })->count() == 0;
+    }
+
+    /**
+     * Vrací poplatek uživatele. Pokud je platící - součet poplatků rolí.
+     * @return int
+     */
+    public function getFee()
+    {
+        //TODO
+        if (!$this->isPaying())
+            return 0;
+
+        $fee = 0;
+
+        foreach ($this->getPayingRoles() as $role) {
+            $fee += $role->getFee();
+        }
+
+        return $fee;
+    }
+
+    /**
+     * Vrací poplatek slovy.
+     * @return mixed|string
+     */
+    public function getFeeWords()
+    {
+        $numbersWords = new \Numbers_Words();
+        $feeWord = $numbersWords->toWords($this->getFee(), 'cs');
+        $feeWord = iconv('windows-1250', 'UTF-8', $feeWord);
+        $feeWord = str_replace(" ", "", $feeWord);
+        return $feeWord;
+    }
+
+    /**
+     * Vrací zda uživatel zaplatil nějakou registraci.
+     * @return bool
+     */
+    public function hasPaidAnyApplication()
+    {
+        $criteria = Criteria::create()->where(Criteria::expr()->eq('state', ApplicationStates::PAID));
+
+        if ($this->applications->matching($criteria)->isEmpty())
+            return FALSE;
+
+        return TRUE;
+    }
+
+    /**
+     * Vrací zda uživatel zaplatil všechny registrace.
+     * @return bool
+     */
+    public function hasPaidEveryApplication()
+    {
+        $criteria = Criteria::create()->where(Criteria::expr()->eq('state', ApplicationStates::WAITING_FOR_PAYMENT));
+
+        if ($this->applications->matching($criteria)->isEmpty())
+            return TRUE;
+
+        return FALSE;
     }
 }

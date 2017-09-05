@@ -4,12 +4,19 @@ namespace App\WebModule\Presenters;
 
 use App\Model\ACL\Role;
 use App\Model\Enums\PaymentType;
+use App\Model\Mailing\Template;
+use App\Model\Mailing\TemplateVariable;
+use App\Model\Settings\Settings;
+use App\Model\Structure\SubeventRepository;
 use App\Services\Authenticator;
 use App\Services\ExcelExportService;
+use App\Services\MailService;
 use App\Services\PdfExportService;
 use App\WebModule\Forms\AdditionalInformationForm;
 use App\WebModule\Forms\PersonalDetailsForm;
 use App\WebModule\Forms\RolesForm;
+use App\WebModule\Forms\SubeventsForm;
+use Doctrine\Common\Collections\ArrayCollection;
 use Nette\Application\UI\Form;
 
 
@@ -26,6 +33,12 @@ class ProfilePresenter extends WebBasePresenter
      * @inject
      */
     public $personalDetailsFormFactory;
+
+    /**
+     * @var SubeventsForm
+     * @inject
+     */
+    public $subeventsFormFactory;
 
     /**
      * @var RolesForm
@@ -57,6 +70,18 @@ class ProfilePresenter extends WebBasePresenter
      */
     public $authenticator;
 
+    /**
+     * @var SubeventRepository
+     * @inject
+     */
+    public $subeventRepository;
+
+    /**
+     * @var MailService
+     * @inject
+     */
+    public $mailService;
+
     private $editRegistrationAllowed;
 
 
@@ -70,7 +95,7 @@ class ProfilePresenter extends WebBasePresenter
         }
 
         $nonregisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
-        $this->editRegistrationAllowed = !$this->dbuser->isInRole($nonregisteredRole) && !$this->dbuser->hasPaid()
+        $this->editRegistrationAllowed = !$this->dbuser->isInRole($nonregisteredRole) && !$this->dbuser->hasPaidAnyApplication()
             && $this->settingsRepository->getDateValue('edit_registration_to') >= (new \DateTime())->setTime(0, 0);
     }
 
@@ -78,6 +103,22 @@ class ProfilePresenter extends WebBasePresenter
     {
         $this->template->pageName = $this->translator->translate('web.profile.title');
         $this->template->paymentMethodBank = PaymentType::BANK;
+        $this->template->editRegistrationAllowed = $this->editRegistrationAllowed;
+        $this->template->subeventsCount = $this->subeventRepository->countExplicitSubevents();
+    }
+
+    /**
+     * Odhlásí uživatele ze semináře.
+     */
+    public function actionCancelRegistration()
+    {
+        $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->dbuser]), '', Template::REGISTRATION_CANCELED, [
+            TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)
+        ]);
+
+        $this->userRepository->remove($this->dbuser);
+
+        $this->redirect(':Auth:logout');
     }
 
     /**
@@ -86,7 +127,7 @@ class ProfilePresenter extends WebBasePresenter
     public function actionGeneratePaymentProofBank()
     {
         $user = $this->userRepository->findById($this->user->id);
-        if (!$user->getIncomeProofPrintedDate()) {
+        if (!$user->getIncomeProofPrintedDate()) { //TODO
             $user->setIncomeProofPrintedDate(new \DateTime());
             $this->userRepository->save($user);
         }
@@ -120,20 +161,33 @@ class ProfilePresenter extends WebBasePresenter
         return $form;
     }
 
+    protected function createComponentSubeventsForm()
+    {
+        $editSubeventsAllowed = FALSE; //TODO
+
+        $form = $this->subeventsFormFactory->create($this->user->id, $editSubeventsAllowed);
+
+        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+            $this->flashMessage('web.profile.subevents_update_successful', 'success');
+
+            $this->authenticator->updateRoles($this->user);
+
+            $this->redirect('this#collapseSeminar');
+        };
+
+        return $form;
+    }
+
     protected function createComponentRolesForm()
     {
         $form = $this->rolesFormFactory->create($this->user->id, $this->editRegistrationAllowed);
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) {
-            if ($form['submit']->isSubmittedBy()) {
-                $this->flashMessage('web.profile.roles_update_successful', 'success');
+            $this->flashMessage('web.profile.roles_update_successful', 'success');
 
-                $this->authenticator->updateRoles($this->user);
+            $this->authenticator->updateRoles($this->user);
 
-                $this->redirect('this#collapseSeminar');
-            } elseif ($form['cancelRegistration']->isSubmittedBy()) {
-                $this->redirect(':Auth:logout');
-            }
+            $this->redirect('this#collapseSeminar');
         };
 
         return $form;

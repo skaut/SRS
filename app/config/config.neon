@@ -184,6 +184,7 @@ services:
     - App\WebModule\Forms\FaqForm
     - App\WebModule\Forms\PersonalDetailsForm
     - App\WebModule\Forms\RolesForm
+    - App\WebModule\Forms\SubeventsForm
 
     - App\AdminModule\Components\IRolesGridControlFactory
     - App\AdminModule\Components\IUsersGridControlFactory

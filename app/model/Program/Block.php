@@ -308,14 +308,31 @@ class Block
      */
     public function isAllowed(User $user)
     {
-        if (!$this->category)
-            return TRUE;
+        $result = TRUE;
 
-        foreach ($user->getRoles() as $role) {
-            if ($role->getRegisterableCategories()->contains($this->category))
-                return TRUE;
+        if ($this->category) {
+            $tmp = FALSE;
+            foreach ($user->getRoles() as $role) {
+                if ($role->getRegisterableCategories()->contains($this->category)) {
+                    $tmp = TRUE;
+                    break;
+                }
+            }
+            if (!$tmp)
+                $result = FALSE;
         }
-        return FALSE;
+
+        $tmp = FALSE;
+        foreach ($user->getNotCanceledApplications() as $application) {
+            if ($application->getSubevents()->contains($this->subevent)) {
+                $tmp = TRUE;
+                break;
+            }
+        }
+        if (!$tmp)
+            $result = FALSE;
+
+        return $result;
     }
 
     /**

@@ -235,7 +235,7 @@ class ApplicationForm extends Nette\Object
         $application->setUser($this->user);
         $application->setSubevents($subevents);
         $application->setApplicationDate(new \DateTime());
-        $application->setState(ApplicationStates::WAITING_FOR_PAYMENT);
+        $application->setState(ApplicationStates::WAITING_FOR_PAYMENT); //TODO PAID u neplacene
 
         $this->applicationRepository->save($application);
 
