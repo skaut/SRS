@@ -93,6 +93,7 @@ class ProgramBlocksGridControl extends Control
         );
         $grid->setDefaultSort(['name' => 'ASC']);
         $grid->setPagination(FALSE);
+        $grid->setColumnsHideable();
 
 
         $grid->addColumnText('name', 'admin.program.blocks_name')
