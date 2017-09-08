@@ -58,7 +58,7 @@ class ApplicationsGridControl extends Control
      */
     public function render()
     {
-        $this->template->render(__DIR__ . '/templates/documents_grid.latte');
+        $this->template->render(__DIR__ . '/templates/applications_grid.latte');
     }
 
     /**
@@ -69,42 +69,22 @@ class ApplicationsGridControl extends Control
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
-        $grid->setDataSource($this->documentRepository->createQueryBuilder('d'));
-        $grid->setDefaultSort(['name' => 'ASC']);
+        $grid->setDataSource($this->applicationRepository->createQueryBuilder('a'));
         $grid->setPagination(FALSE);
-
-        $grid->addColumnText('name', 'admin.cms.documents_name');
-
-        $grid->addColumnText('tags', 'admin.cms.documents_tags')
-            ->setRenderer(function ($row) {
-                $tags = Html::el();
-                foreach ($row->getTags() as $tag) {
-                    $tags->addHtml(Html::el('span')
-                        ->setAttribute('class', 'label label-primary')
-                        ->setText($tag->getName()));
-                    $tags->addHtml(Html::el()->setText(' '));
-                }
-                return $tags;
-            });
-
-        $grid->addColumnText('file', 'admin.cms.documents_file')
-            ->setRenderer(function ($row) {
-                return Html::el()
-                    ->addHtml(Html::el('span')->setAttribute('class', 'fa fa-download'))
-                    ->addText(' ')
-                    ->addHtml(Html::el('a')
-                        ->setAttribute('href', '../../../files' . $row->getFile())
-                        ->setAttribute('target', '_blank')
-                        ->addText($this->translator->translate('admin.cms.documents_download'))
-                    );
-            });
-
-        $grid->addColumnText('description', 'admin.cms.documents_description');
 
         $grid->addColumnDateTime('timestamp', 'admin.cms.documents_timestamp')
             ->setFormat('j. n. Y H:i');
 
-        $tagsOptions = $this->tagRepository->getTagsOptions();
+        $grid->addColumnText('roles', 'admin.cms.documents_name');
+
+        $grid->addColumnText('subevents', 'admin.cms.documents_description');
+
+        $grid->addColumnDateTime('maturity', 'admin.cms.documents_timestamp')
+            ->setFormat('j. n. Y');
+
+
+        $rolesOptions = $this->rolesRepository->get...();
+        $subeventsOptions = $this->tagRepository->getTagsOptions();
 
         $grid->addInlineAdd()->onControlAdd[] = function ($container) use ($tagsOptions) {
             $container->addText('name', '')
@@ -139,15 +119,6 @@ class ApplicationsGridControl extends Control
             ]);
         };
         $grid->getInlineEdit()->onSubmit[] = [$this, 'edit'];
-
-        $grid->addAction('delete', '', 'delete!')
-            ->setIcon('trash')
-            ->setTitle('admin.common.delete')
-            ->setClass('btn btn-xs btn-danger')
-            ->addAttributes([
-                'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('admin.cms.documents_delete_confirm')
-            ]);
     }
 
     /**
@@ -201,21 +172,6 @@ class ApplicationsGridControl extends Control
         $this->documentRepository->save($document);
 
         $this->getPresenter()->flashMessage('admin.cms.documents_saved', 'success');
-
-        $this->redirect('this');
-    }
-
-    /**
-     * Zpracuje odstranění dokumentu.
-     * @param $id
-     */
-    public function handleDelete($id)
-    {
-        $document = $this->documentRepository->findById($id);
-        $this->filesService->delete($document->getFile());
-        $this->documentRepository->remove($document);
-
-        $this->getPresenter()->flashMessage('admin.cms.documents_deleted', 'success');
 
         $this->redirect('this');
     }
