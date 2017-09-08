@@ -177,6 +177,7 @@ services:
     - App\WebModule\Components\ITextContentControlFactory
     - App\WebModule\Components\IUsersContentControlFactory
     - App\WebModule\Components\ILectorsContentControlFactory
+    - App\WebModule\Components\IApplicationsGridControlFactory
 
     - App\WebModule\Forms\BaseForm
     - App\WebModule\Forms\AdditionalInformationForm
