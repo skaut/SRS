@@ -161,13 +161,6 @@ class User
     protected $skautISPersonId;
 
     /**
-     * Pořadí přihlášky.
-     * @ORM\Column(type="integer", nullable=true)
-     * @var int
-     */
-    protected $applicationOrder;
-
-    /**
      * Datum posledního přihlášení.
      * @ORM\Column(type="datetime", nullable=true)
      * @var \DateTime
@@ -208,13 +201,6 @@ class User
      * @var string
      */
     protected $state;
-
-    /**
-     * Variabilní symbol.
-     * @ORM\Column(type="string", nullable=true)
-     * @var string
-     */
-    protected $variableSymbol;
 
     /**
      * Zúčastnil se.
@@ -721,22 +707,6 @@ class User
     }
 
     /**
-     * @return int
-     */
-    public function getApplicationOrder()
-    {
-        return $this->applicationOrder;
-    }
-
-    /**
-     * @param int $applicationOrder
-     */
-    public function setApplicationOrder($applicationOrder)
-    {
-        $this->applicationOrder = $applicationOrder;
-    }
-
-    /**
      * @return \DateTime
      */
     public function getLastLogin()
@@ -830,22 +800,6 @@ class User
     public function setState($state)
     {
         $this->state = $state;
-    }
-
-    /**
-     * @return string
-     */
-    public function getVariableSymbol()
-    {
-        return $this->variableSymbol;
-    }
-
-    /**
-     * @param string $variableSymbol
-     */
-    public function setVariableSymbol($variableSymbol)
-    {
-        $this->variableSymbol = $variableSymbol;
     }
 
     /**

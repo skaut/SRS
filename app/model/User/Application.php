@@ -33,11 +33,32 @@ class Application
     protected $subevents;
 
     /**
+     * Variabilní symbol.
+     * @ORM\Column(type="string", nullable=true)
+     * @var string
+     */
+    protected $variableSymbol;
+
+    /**
+     * Pořadí přihlášky.
+     * @ORM\Column(type="integer", nullable=true)
+     * @var int
+     */
+    protected $applicationOrder;
+
+    /**
      * Datum podání přihlášky.
      * @ORM\Column(type="datetime")
      * @var \DateTime
      */
     protected $applicationDate;
+
+    /**
+     * Datum splatnosti.
+     * @ORM\Column(type="date", nullable=true)
+     * @var \DateTime
+     */
+    protected $maturityDate;
 
     /**
      * Platební metoda.
@@ -117,6 +138,38 @@ class Application
     }
 
     /**
+     * @return string
+     */
+    public function getVariableSymbol()
+    {
+        return $this->variableSymbol;
+    }
+
+    /**
+     * @param string $variableSymbol
+     */
+    public function setVariableSymbol($variableSymbol)
+    {
+        $this->variableSymbol = $variableSymbol;
+    }
+
+    /**
+     * @return int
+     */
+    public function getApplicationOrder()
+    {
+        return $this->applicationOrder;
+    }
+
+    /**
+     * @param int $applicationOrder
+     */
+    public function setApplicationOrder($applicationOrder)
+    {
+        $this->applicationOrder = $applicationOrder;
+    }
+
+    /**
      * @return \DateTime
      */
     public function getApplicationDate()
@@ -130,6 +183,22 @@ class Application
     public function setApplicationDate($applicationDate)
     {
         $this->applicationDate = $applicationDate;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getMaturityDate()
+    {
+        return $this->maturityDate;
+    }
+
+    /**
+     * @param \DateTime $maturityDate
+     */
+    public function setMaturityDate($maturityDate)
+    {
+        $this->maturityDate = $maturityDate;
     }
 
     /**

@@ -236,6 +236,9 @@ class ApplicationForm extends Nette\Object
         $application->setSubevents($subevents);
         $application->setApplicationDate(new \DateTime());
         $application->setState(ApplicationStates::WAITING_FOR_PAYMENT); //TODO PAID u neplacene
+        $application->setApplicationOrder($this->userRepository->findLastApplicationOrder()+1); //TODO
+        $application->setVariableSymbol($this->generateVariableSymbol());
+        //TODO maturity
 
         $this->applicationRepository->save($application);
 
@@ -280,10 +283,6 @@ class ApplicationForm extends Nette\Object
 
         if (array_key_exists('departure', $values))
             $this->user->setDeparture($values['departure']);
-
-        $this->user->setApplicationOrder($this->userRepository->findLastApplicationOrder()+1);
-
-        $this->user->setVariableSymbol($this->generateVariableSymbol());
 
         $this->userRepository->save($this->user);
 
