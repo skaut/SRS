@@ -673,6 +673,7 @@ class ApplicationForm extends Nette\Object
      * @return \DateTime|null
      */
     private function countMaturityDate() {
+        //TODO neomezena splatnost
         switch ($this->settingsRepository->getValue(Settings::MATURITY_TYPE)) {
             case MaturityType::DATE:
                 return $this->settingsRepository->getDateValue(Settings::MATURITY_DATE);

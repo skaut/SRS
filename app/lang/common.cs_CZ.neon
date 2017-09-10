@@ -87,6 +87,11 @@ variable_symbol_type:
     birth_date: Datum narození
     order: Pořadí přihlášky
 
+maturity_type:
+    date: "Datum"
+    days: "Počet dní"
+    work_days: "Počet pracovních dní"
+
 day:
     1: "Po"
     2: "Út"
