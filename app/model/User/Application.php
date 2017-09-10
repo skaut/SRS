@@ -88,6 +88,13 @@ class Application
      */
     protected $state;
 
+    /**
+     * První přihláška uživatele.
+     * @ORM\Column(type="boolean")
+     * @var bool
+     */
+    protected $first = FALSE;
+
 
     /**
      * Application constructor.
@@ -263,5 +270,21 @@ class Application
     public function setState($state)
     {
         $this->state = $state;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFirst()
+    {
+        return $this->first;
+    }
+
+    /**
+     * @param mixed $first
+     */
+    public function setFirst($first)
+    {
+        $this->first = $first;
     }
 }

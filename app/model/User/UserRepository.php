@@ -228,18 +228,6 @@ class UserRepository extends EntityRepository
     }
 
     /**
-     * Vrací pořadí poslední odeslané přihlášky.
-     * @return int
-     */
-    public function findLastApplicationOrder()
-    {
-        return $this->createQueryBuilder('u')
-            ->select('MAX(u.applicationOrder)')
-            ->getQuery()
-            ->getSingleScalarResult();
-    }
-
-    /**
      * Vrací true, pokud existuje uživatel s tímto variabilním symbolem.
      * @param $variableSymbol
      * @return bool

@@ -160,6 +160,26 @@ class Settings
      */
     const PLACE_DESCRIPTION = 'place_description';
 
+    /**
+     * Způsob výpočtu splatnosti.
+     */
+    const MATURITY_TYPE = 'maturity_type';
+
+    /**
+     * Datum splatnosti.
+     */
+    const MATURITY_DATE = 'maturity_date';
+
+    /**
+     * Počet dní pro výpočet splatnosti.
+     */
+    const MATURITY_DAYS = 'maturity_days';
+
+    /**
+     * Počet pracovních dní pro výpočet splatnosti.
+     */
+    const MATURITY_WORK_DAYS = 'maturity_work_days';
+
 
     /**
      * Název položky nastavení.

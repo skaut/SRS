@@ -157,57 +157,57 @@ class SubeventsForm extends Nette\Object
      */
     private function addSubeventsSelect(Form $form, $enabled)
     {
-        $subeventsSelect = $form->addMultiSelect('subevents', 'web.profile.subevents')->setItems(
-            $this->subeventRepository->getUsersNotRegisteredOptionsWithCapacity($this->user)
-        )
-            ->addRule(Form::FILLED, 'web.profile.subevents_empty')
-            ->addRule([$this, 'validateSubeventsCapacities'], 'web.profile.subevents_capacity_occupied')
-            ->setDisabled(!$enabled);
-
-        //generovani chybovych hlasek pro vsechny kombinace podakci
-        foreach ($this->subeventRepository->findAllExplicitOrderedByName() as $subevent) {
-            $incompatibleSubevents = $subevent->getIncompatibleSubevent();
-            if (count($incompatibleSubevents) > 0) {
-                $messageThis = $subevent->getName();
-
-                $first = TRUE;
-                $messageOthers = "";
-                foreach ($incompatibleSubevents as $incompatibleSubevent) {
-                    if ($first)
-                        $messageOthers .= $incompatibleSubevent->getName();
-                    else
-                        $messageOthers .= ", " . $incompatibleSubevent->getName();
-                    $first = FALSE;
-                }
-                $subeventsSelect->addRule([$this, 'validateSubeventsIncompatible'],
-                    $form->getTranslator()->translate('web.profile.incompatible_subevents_selected', NULL,
-                        ['subevent' => $messageThis, 'incompatibleSubevents' => $messageOthers]
-                    ),
-                    [$subevent]
-                );
-            }
-
-            $requiredSubevents = $subevent->getRequiredSubeventsTransitive();
-            if (count($requiredSubevents) > 0) {
-                $messageThis = $subevent->getName();
-
-                $first = TRUE;
-                $messageOthers = "";
-                foreach ($requiredSubevents as $requiredSubevent) {
-                    if ($first)
-                        $messageOthers .= $requiredSubevent->getName();
-                    else
-                        $messageOthers .= ", " . $requiredSubevent->getName();
-                    $first = FALSE;
-                }
-                $subeventsSelect->addRule([$this, 'validateSubeventsRequired'],
-                    $form->getTranslator()->translate('web.profile.required_subevents_not_selected', NULL,
-                        ['subevent' => $messageThis, 'requiredSubevents' => $messageOthers]
-                    ),
-                    [$subevent]
-                );
-            }
-        }
+//        $subeventsSelect = $form->addMultiSelect('subevents', 'web.profile.subevents')->setItems(
+//            $this->subeventRepository->getUsersNotRegisteredOptionsWithCapacity($this->user)
+//        )
+//            ->addRule(Form::FILLED, 'web.profile.subevents_empty')
+//            ->addRule([$this, 'validateSubeventsCapacities'], 'web.profile.subevents_capacity_occupied')
+//            ->setDisabled(!$enabled);
+//
+//        //generovani chybovych hlasek pro vsechny kombinace podakci
+//        foreach ($this->subeventRepository->findAllExplicitOrderedByName() as $subevent) {
+//            $incompatibleSubevents = $subevent->getIncompatibleSubevent();
+//            if (count($incompatibleSubevents) > 0) {
+//                $messageThis = $subevent->getName();
+//
+//                $first = TRUE;
+//                $messageOthers = "";
+//                foreach ($incompatibleSubevents as $incompatibleSubevent) {
+//                    if ($first)
+//                        $messageOthers .= $incompatibleSubevent->getName();
+//                    else
+//                        $messageOthers .= ", " . $incompatibleSubevent->getName();
+//                    $first = FALSE;
+//                }
+//                $subeventsSelect->addRule([$this, 'validateSubeventsIncompatible'],
+//                    $form->getTranslator()->translate('web.profile.incompatible_subevents_selected', NULL,
+//                        ['subevent' => $messageThis, 'incompatibleSubevents' => $messageOthers]
+//                    ),
+//                    [$subevent]
+//                );
+//            }
+//
+//            $requiredSubevents = $subevent->getRequiredSubeventsTransitive();
+//            if (count($requiredSubevents) > 0) {
+//                $messageThis = $subevent->getName();
+//
+//                $first = TRUE;
+//                $messageOthers = "";
+//                foreach ($requiredSubevents as $requiredSubevent) {
+//                    if ($first)
+//                        $messageOthers .= $requiredSubevent->getName();
+//                    else
+//                        $messageOthers .= ", " . $requiredSubevent->getName();
+//                    $first = FALSE;
+//                }
+//                $subeventsSelect->addRule([$this, 'validateSubeventsRequired'],
+//                    $form->getTranslator()->translate('web.profile.required_subevents_not_selected', NULL,
+//                        ['subevent' => $messageThis, 'requiredSubevents' => $messageOthers]
+//                    ),
+//                    [$subevent]
+//                );
+//            }
+//        }
     }
 
     /**

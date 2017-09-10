@@ -2,6 +2,7 @@
 
 namespace App\Model\User;
 
+use App\Model\Settings\SettingsRepository;
 use Kdyby\Doctrine\EntityRepository;
 
 
@@ -20,5 +21,17 @@ class ApplicationRepository extends EntityRepository
     {
         $this->_em->persist($application);
         $this->_em->flush();
+    }
+
+    /**
+     * Vrací pořadí poslední odeslané přihlášky.
+     * @return int
+     */
+    public function findLastApplicationOrder()
+    {
+        return $this->createQueryBuilder('a')
+            ->select('MAX(a.applicationOrder)')
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 }

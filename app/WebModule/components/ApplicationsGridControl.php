@@ -83,14 +83,14 @@ class ApplicationsGridControl extends Control
             ->setFormat('j. n. Y');
 
 
-        $rolesOptions = $this->rolesRepository->get...();
+        $rolesOptions = NULL; //$this->rolesRepository->get...();
         $subeventsOptions = $this->tagRepository->getTagsOptions();
 
-        $grid->addInlineAdd()->onControlAdd[] = function ($container) use ($tagsOptions) {
+        $grid->addInlineAdd()->onControlAdd[] = function ($container) use ($rolesOptions) {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.documents_name_empty');
 
-            $container->addMultiSelect('tags', '', $tagsOptions)->setAttribute('class', 'datagrid-multiselect')
+            $container->addMultiSelect('tags', '', $rolesOptions)->setAttribute('class', 'datagrid-multiselect')
                 ->addRule(Form::FILLED, 'admin.cms.documents_tags_empty');
 
             $container->addUpload('file', '')->setAttribute('class', 'datagrid-upload')
@@ -100,11 +100,11 @@ class ApplicationsGridControl extends Control
         };
         $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
 
-        $grid->addInlineEdit()->onControlAdd[] = function ($container) use ($tagsOptions) {
+        $grid->addInlineEdit()->onControlAdd[] = function ($container) use ($rolesOptions) {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.documents_name_empty');
 
-            $container->addMultiSelect('tags', '', $tagsOptions)->setAttribute('class', 'datagrid-multiselect')
+            $container->addMultiSelect('tags', '', $rolesOptions)->setAttribute('class', 'datagrid-multiselect')
                 ->addRule(Form::FILLED, 'admin.cms.documents_tags_empty');
 
             $container->addUpload('file', '')->setAttribute('class', 'datagrid-upload');
