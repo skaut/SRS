@@ -92,6 +92,10 @@ maturity_type:
     days: "Počet dní"
     work_days: "Počet pracovních dní"
 
+condition_operator:
+    and: "A"
+    or: "Nebo"
+
 day:
     1: "Po"
     2: "Út"

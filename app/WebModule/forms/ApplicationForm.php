@@ -240,7 +240,7 @@ class ApplicationForm extends Nette\Object
         $application->setApplicationOrder($this->applicationRepository->findLastApplicationOrder()+1);
         $application->setMaturityDate($this->countMaturityDate());
         $application->setFirst(TRUE);
-        $application->setVariableSymbol($this->generateVariableSymbol($application->getApplicationOrder()));
+        $application->setVariableSymbol($this->generateVariableSymbol());
 
         $this->applicationRepository->save($application);
 
@@ -638,54 +638,5 @@ class ApplicationForm extends Nette\Object
     public static function toggleArrivalDeparture(IControl $control)
     {
         return FALSE;
-    }
-
-    /**
-     * Vygeneruje variabilní symbol.
-     * @return string
-     */
-    private function generateVariableSymbol($applicationOrder) {
-        $variableSymbolCode = $this->settingsRepository->getValue(Settings::VARIABLE_SYMBOL_CODE);
-        $variableSymbol = "";
-
-        switch ($this->settingsRepository->getValue(Settings::VARIABLE_SYMBOL_TYPE)) {
-            case VariableSymbolType::BIRTH_DATE:
-                $variableSymbolDate = $this->user->getBirthdate()->format('ymd');
-                $variableSymbol = $variableSymbolCode . $variableSymbolDate;
-
-                while ($this->userRepository->variableSymbolExists($variableSymbol)) {
-                    $variableSymbolDate = str_pad($variableSymbolDate + 1, 6, 0, STR_PAD_LEFT);
-                    $variableSymbol = $variableSymbolCode . $variableSymbolDate;
-                }
-
-                break;
-
-            case VariableSymbolType::ORDER:
-                $variableSymbol = $variableSymbolCode . str_pad($applicationOrder, 6, '0', STR_PAD_LEFT);
-                break;
-        }
-
-        return $variableSymbol;
-    }
-
-    /**
-     * Vypočítá datum splatnosti podle zvolené metody.
-     * @return \DateTime|null
-     */
-    private function countMaturityDate() {
-        //TODO neomezena splatnost
-        switch ($this->settingsRepository->getValue(Settings::MATURITY_TYPE)) {
-            case MaturityType::DATE:
-                return $this->settingsRepository->getDateValue(Settings::MATURITY_DATE);
-
-            case MaturityType::DAYS:
-                return (new \DateTime())->modify('+' . $this->settingsRepository->getValue(Settings::MATURITY_DAYS) . ' days');
-
-            case MaturityType::WORK_DAYS:
-                $currentDate = (new \DateTime())->format('Y-m-d');
-                $workDays = $this->settingsRepository->getValue(Settings::MATURITY_WORK_DAYS);
-                return new \DateTime(date('Y-m-d', strftime($currentDate . ' +' . $workDays . ' Weekday')));
-        }
-        return NULL;
     }
 }

@@ -437,6 +437,15 @@ structure:
     subevents_edit_heading: "Úprava podakce: %name%"
 
     discounts_heading: "Slevy"
+    discounts_condition_subevents: "Podmínka - podakce"
+    discounts_condition_subevents_empty: "Vyberte podakce."
+    discounts_condition_operator: "Podmínka - operátor"
+    discounts_discount: "Sleva"
+    discounts_discount_empty: "Zadejte výši slevy."
+    discounts_discount_format: "Zadejte číslo."
+    discounts_saved: "Sleva byla úspěšně uložena."
+    discounts_delete_confirm: "Opravdu chcete slevu odstranit?"
+    discounts_deleted: "Sleva byla úspěšně odstraněna."
 
 configuration:
     menu_seminar: "Seminář"

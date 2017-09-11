@@ -21,4 +21,24 @@ class DiscountRepository extends EntityRepository
     {
         return $this->findOneBy(['id' => $id]);
     }
+
+    /**
+     * Uloží slevu.
+     * @param Discount $discount
+     */
+    public function save(Discount $discount)
+    {
+        $this->_em->persist($discount);
+        $this->_em->flush();
+    }
+
+    /**
+     * Odstraní slevu.
+     * @param Discount $discount
+     */
+    public function remove(Discount $discount)
+    {
+        $this->_em->remove($discount);
+        $this->_em->flush();
+    }
 }

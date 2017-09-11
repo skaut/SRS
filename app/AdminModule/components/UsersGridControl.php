@@ -225,9 +225,10 @@ class UsersGridControl extends Control
 
         $grid->addColumnNumber('fee', 'admin.users.users_fee');
 
-        $grid->addColumnText('variableSymbol', 'admin.users.users_variable_symbol')
-            ->setSortable()
-            ->setFilterText();
+        //TODO
+//        $grid->addColumnText('variableSymbol', 'admin.users.users_variable_symbol')
+//            ->setSortable()
+//            ->setFilterText();
 
 //        $grid->addColumnText('paymentMethod', 'admin.users.users_payment_method')
 //            ->setRenderer(function ($row) {

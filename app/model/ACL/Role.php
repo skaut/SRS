@@ -156,7 +156,7 @@ class Role
 
     /**
      * Poplatek.
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      * @var int
      */
     protected $fee = 0;

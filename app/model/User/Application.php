@@ -33,6 +33,13 @@ class Application
     protected $subevents;
 
     /**
+     * Poplatek.
+     * @ORM\Column(type="integer")
+     * @var int
+     */
+    protected $fee;
+
+    /**
      * Variabilní symbol.
      * @ORM\Column(type="string", nullable=true)
      * @var string
