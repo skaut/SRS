@@ -100,7 +100,7 @@ class Application
      * @ORM\Column(type="boolean")
      * @var bool
      */
-    protected $first = FALSE;
+    protected $first = TRUE;
 
 
     /**
@@ -149,6 +149,35 @@ class Application
     public function setSubevents($subevents)
     {
         $this->subevents = $subevents;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFee()
+    {
+        return $this->fee;
+    }
+
+    /**
+     * Vrací poplatek slovy.
+     * @return mixed|string
+     */
+    public function getFeeWords()
+    {
+        $numbersWords = new \Numbers_Words();
+        $feeWord = $numbersWords->toWords($this->getFee(), 'cs');
+        $feeWord = iconv('windows-1250', 'UTF-8', $feeWord);
+        $feeWord = str_replace(" ", "", $feeWord);
+        return $feeWord;
+    }
+
+    /**
+     * @param int $fee
+     */
+    public function setFee($fee)
+    {
+        $this->fee = $fee;
     }
 
     /**
@@ -282,7 +311,7 @@ class Application
     /**
      * @return mixed
      */
-    public function getFirst()
+    public function isFirst()
     {
         return $this->first;
     }

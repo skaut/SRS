@@ -22,6 +22,7 @@ use App\Model\User\CustomInputValue\CustomInputValueRepository;
 use App\Model\User\CustomInputValue\CustomTextValue;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
+use App\Services\ApplicationService;
 use App\Services\MailService;
 use App\Services\SkautIsService;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -86,6 +87,9 @@ class ApplicationForm extends Nette\Object
     /** @var ApplicationRepository */
     private $applicationRepository;
 
+    /** @var ApplicationService */
+    private $applicationService;
+
 
     /**
      * ApplicationForm constructor.
@@ -100,13 +104,15 @@ class ApplicationForm extends Nette\Object
      * @param MailService $mailService
      * @param SubeventRepository $subeventRepository
      * @param ApplicationRepository $applicationRepository
+     * @param ApplicationService $applicationService
      */
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
                                 RoleRepository $roleRepository, CustomInputRepository $customInputRepository,
                                 CustomInputValueRepository $customInputValueRepository,
                                 ProgramRepository $programRepository, SkautIsService $skautIsService,
                                 SettingsRepository $settingsRepository, MailService $mailService,
-                                SubeventRepository $subeventRepository, ApplicationRepository $applicationRepository)
+                                SubeventRepository $subeventRepository, ApplicationRepository $applicationRepository,
+                                ApplicationService $applicationService)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->userRepository = $userRepository;
@@ -119,6 +125,7 @@ class ApplicationForm extends Nette\Object
         $this->mailService = $mailService;
         $this->subeventRepository = $subeventRepository;
         $this->applicationRepository = $applicationRepository;
+        $this->applicationService = $applicationService;
     }
 
     /**
@@ -226,25 +233,7 @@ class ApplicationForm extends Nette\Object
         $this->user->setPostcode($values['postcode']);
         $this->user->setState($values['state']);
 
-
-        $subevents = $this->subeventRepository->countExplicitSubevents() > 0
-            ? $this->subeventRepository->findSubeventsByIds($values['subevents'])
-            : new ArrayCollection([$this->subeventRepository->findImplicit()]);
-
-        $application = new Application();
-
-        $application->setUser($this->user);
-        $application->setSubevents($subevents);
-        $application->setApplicationDate(new \DateTime());
-        $application->setState(ApplicationStates::WAITING_FOR_PAYMENT); //TODO PAID u neplacene
-        $application->setApplicationOrder($this->applicationRepository->findLastApplicationOrder()+1);
-        $application->setMaturityDate($this->countMaturityDate());
-        $application->setFirst(TRUE);
-        $application->setVariableSymbol($this->generateVariableSymbol());
-
-        $this->applicationRepository->save($application);
-
-
+        //role
         $roles = $this->roleRepository->findRolesByIds($values['roles']);
 
         $this->user->removeRole($this->roleRepository->findBySystemName(Role::NONREGISTERED));
@@ -258,6 +247,7 @@ class ApplicationForm extends Nette\Object
 
         $this->user->setRoles($roles);
 
+        //vlastni pole
         foreach ($this->customInputRepository->findAll() as $customInput) {
             $customInputValue = $this->user->getCustomInputValue($customInput);
 
@@ -280,18 +270,42 @@ class ApplicationForm extends Nette\Object
             $this->customInputValueRepository->save($customInputValue);
         }
 
+        //prijezd, odjezd
         if (array_key_exists('arrival', $values))
             $this->user->setArrival($values['arrival']);
 
         if (array_key_exists('departure', $values))
             $this->user->setDeparture($values['departure']);
 
+        //podakce
+        $subevents = $this->subeventRepository->countExplicitSubevents() > 0
+            ? $this->subeventRepository->findSubeventsByIds($values['subevents'])
+            : new ArrayCollection([$this->subeventRepository->findImplicit()]);
+
+        $application = new Application();
+
+        $fee = $this->applicationService->countFee($roles, $subevents);
+
+        $application->setUser($this->user);
+        $application->setSubevents($subevents);
+        $application->setApplicationDate(new \DateTime());
+        $application->setApplicationOrder($this->applicationRepository->findLastApplicationOrder() + 1);
+        $application->setMaturityDate($this->applicationService->countMaturityDate());
+        $application->setVariableSymbol($this->applicationService->generateVariableSymbol($this->user));
+        $application->setFee($fee);
+        $application->setState($fee == 0 ? ApplicationStates::PAID : ApplicationStates::WAITING_FOR_PAYMENT);
+
+        $this->applicationRepository->save($application);
+
+
         $this->userRepository->save($this->user);
 
+        //prihlaseni automatickz prihlasovanych programu
         $this->programRepository->updateUserPrograms($this->user);
 
         $this->userRepository->save($this->user);
 
+        //aktualizace udaju ve skautis
         try {
             $this->skautIsService->updatePersonBasic(
                 $this->user->getSkautISPersonId(),
@@ -313,6 +327,7 @@ class ApplicationForm extends Nette\Object
             $this->onSkautIsError();
         }
 
+        //odeslani potvrzovaciho mailu
         $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::REGISTRATION, [
             TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
             TemplateVariable::EDIT_REGISTRATION_TO => $this->settingsRepository->getValue(Settings::EDIT_REGISTRATION_TO)

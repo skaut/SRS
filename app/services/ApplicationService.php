@@ -63,7 +63,7 @@ class ApplicationService extends Nette\Object
      * @param User $user
      * @return string
      */
-    private function generateVariableSymbol(User $user) {
+    public function generateVariableSymbol(User $user) {
         $variableSymbolCode = $this->settingsRepository->getValue(Settings::VARIABLE_SYMBOL_CODE);
         $variableSymbol = "";
 
@@ -92,7 +92,7 @@ class ApplicationService extends Nette\Object
      * Vypočítá datum splatnosti podle zvolené metody.
      * @return \DateTime|null
      */
-    private function countMaturityDate() {
+    public function countMaturityDate() {
         //TODO neomezena splatnost
         switch ($this->settingsRepository->getValue(Settings::MATURITY_TYPE)) {
             case MaturityType::DATE:
@@ -112,18 +112,22 @@ class ApplicationService extends Nette\Object
     /**
      * Vypočítá poplatek.
      * @param User $user
+     * @return int
      */
-    private function countFee($roles, $subevents, $first) {
+    public function countFee($roles, $subevents, $first = TRUE) {
         $fee = 0;
 
         if ($roles !== NULL) {
+            $subeventsFeeRole = FALSE;
+
             foreach ($roles as $role) {
                 //cena podle podakci
                 if ($role->getFee() === NULL) {
-                    if ($subevents !== NULL) {
+                    if ($subevents !== NULL && !$subeventsFeeRole) {
                         foreach ($subevents as $subevent) {
                             $fee += $subevent->getFee();
                         }
+                        $subeventsFeeRole = TRUE;
                     }
                 }
                 //neplatici role
@@ -143,7 +147,7 @@ class ApplicationService extends Nette\Object
                 case ConditionOperator::OPERATOR_AND:
                     $res = TRUE;
                     foreach ($discount->getConditionSubevents() as $conditionSubevent) {
-                        if (!in_array($conditionSubevent, $subevents)) {
+                        if (!$subevents->contains($conditionSubevent)) {
                             $res = FALSE;
                             break;
                         }
@@ -154,7 +158,7 @@ class ApplicationService extends Nette\Object
 
                 case ConditionOperator::OPERATOR_OR:
                     foreach ($discount->getConditionSubevents() as $conditionSubevent) {
-                        if (in_array($conditionSubevent, $subevents)) {
+                        if ($subevents->contains($conditionSubevent)) {
                             $fee -= $discount->getDiscount();
                             break;
                         }

@@ -71,6 +71,11 @@ class Settings
     const IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT = 'is_allowed_register_programs_before_payment';
 
     /**
+     * Povoleno přidávání podakcí po zaplacení.
+     */
+    const IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT = 'is_allowed_add_subevents_after_payment';
+
+    /**
      * Id propojené skautIS akce.
      */
     const SKAUTIS_EVENT_ID = 'skautis_event_id';

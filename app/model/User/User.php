@@ -994,67 +994,39 @@ class User
     }
 
     /**
-     * Vrací platící role uživatele.
-     * @return ArrayCollection|\Doctrine\Common\Collections\Collection
-     */
-    public function getPayingRoles()
-    {
-        return $this->roles->filter(function ($item) {
-            return $item->getFee() > 0;
-        });
-    }
-
-    /**
-     * Je uživatel platící (nemá žádnou neplatící roli)?
+     * Je uživatel platící?
      * @return bool
      */
     public function isPaying()
     {
-        //TODO
-        return $this->roles->filter(function ($item) {
-                return $item->getFee() == 0;
-            })->count() == 0;
+        return $this->getFee() != 0;
     }
 
     /**
-     * Vrací poplatek uživatele. Pokud je platící - součet poplatků rolí.
+     * Vrací poplatek uživatele.
      * @return int
      */
     public function getFee()
     {
-        //TODO
-        if (!$this->isPaying())
-            return 0;
-
         $fee = 0;
-
-        foreach ($this->getPayingRoles() as $role) {
-            $fee += $role->getFee();
+        foreach ($this->getNotCanceledApplications() as $application) {
+            $fee += $application->getFee();
         }
-
         return $fee;
     }
 
     /**
-     * Vrací poplatek slovy.
-     * @return mixed|string
-     */
-    public function getFeeWords()
-    {
-        $numbersWords = new \Numbers_Words();
-        $feeWord = $numbersWords->toWords($this->getFee(), 'cs');
-        $feeWord = iconv('windows-1250', 'UTF-8', $feeWord);
-        $feeWord = str_replace(" ", "", $feeWord);
-        return $feeWord;
-    }
-
-    /**
-     * Vrací zda uživatel zaplatil nějakou registraci.
+     * Vrací zda uživatel zaplatil první registraci.
      * @return bool
      */
-    public function hasPaidAnyApplication()
+    public function hasPaidFirstApplication()
     {
-        $criteria = Criteria::create()->where(Criteria::expr()->eq('state', ApplicationStates::PAID));
+        $criteria = Criteria::create()->where(
+            Criteria::expr()->andX(
+                Criteria::expr()->eq('state', ApplicationStates::PAID),
+                Criteria::expr()->eq('first', TRUE)
+            )
+        );
 
         if ($this->applications->matching($criteria)->isEmpty())
             return FALSE;

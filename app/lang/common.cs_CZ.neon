@@ -92,6 +92,12 @@ maturity_type:
     days: "Počet dní"
     work_days: "Počet pracovních dní"
 
+application_state:
+    waiting_for_payment: "Čeká na platbu"
+    canceled_not_paid: "Zrušeno (nezaplaceno)"
+    canceled: "Zrušeno"
+    paid: "Zaplaceno"
+
 condition_operator:
     and: "A"
     or: "Nebo"

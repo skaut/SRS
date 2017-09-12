@@ -44,86 +44,31 @@
                         </tr>
 
                         {if $dbuser->isPaying()}
-                            {var $usersPayingRoles = $dbuser->getPayingRoles()}
-                            <tr>
-                                <th>{_web.profile.fee}</th>
-                                {if $usersPayingRoles->count() == 1}
-                                    <td>{$dbuser->getFee()},-</td>
-                                {elseif $usersPayingRoles->count() > 1}
-                                    <td>
-                                        <table>
-                                            {foreach $usersPayingRoles as $usersPayingRole}
-                                                <tr>
-                                                    <td style="padding-right: 15px">{$usersPayingRole->getName()}</td>
-                                                    <td align="right">{$usersPayingRole->getFee()},-</td>
-                                                </tr>
-                                            {/foreach}
-                                            <tr>
-                                                <td style="padding-right: 15px"><strong>{_web.profile.total}</strong>
-                                                </td>
-                                                <td align="right"><strong>{$dbuser->getFee()},-</strong></td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                {/if}
-                            </tr>
-
-                            {*TODO*}
-                            {*<tr>*}
-                                {*<th>{_web.profile.variable_symbol}</th>*}
-                                {*<td>{$dbuser->getVariableSymbol()}</td>*}
-                            {*</tr>*}
-
                             <tr>
                                 <th>{_web.profile.account_number}</th>
                                 <td>{$settings->getValue('account_number')}</td>
                             </tr>
-
-                            {*TODO*}
-                            {*<tr>*}
-                                {*<th>{_web.profile.fee_paid_date}</th>*}
-                                {*<td>*}
-                                    {*{if $dbuser->getPaymentDate() !== null}*}
-                                        {*{$dbuser->getPaymentDate()|date:"j. n. Y"}*}
-                                        {*{if $dbuser->getPaymentMethod() == $paymentMethodBank}*}
-                                            {*- <a n:href="generatepaymentproofbank">{_web.profile.print_proof}</a>*}
-                                        {*{/if}*}
-                                    {*{else}*}
-                                        {*{_web.profile.fee_not_paid}*}
-                                    {*{/if}*}
-                                {*</td>*}
-                            {*</tr>*}
                         {/if}
                     </table>
 
-                    {if $subeventsCount > 0}
-                        {control subeventsForm}
+                    <br>
+
+                    {control applicationsGrid}
+
+                    <br>
+
+                    {if $editRegistrationAllowed}
+                        <a n:href="cancelRegistration" class="btn btn-danger" data-toggle="confirmation"
+                                                       data-content="{_web.profile.cancel_registration_confirm}">
+                            {_web.profile.cancel_registration}
+                        </a>
+                    {else}
+                        <a n:href="cancelRegistration" class="btn btn-danger" data-toggle="tooltip"
+                                                       title="{_web.profile.cancel_registration_disabled}"
+                                                       disabled="true">
+                            {_web.profile.cancel_registration}
+                        </a>
                     {/if}
-
-                    {control rolesForm}
-
-                    <table class="table table-form">
-                        <col class="col-sm-3 col-xs-3">
-                        <col class="col-sm-9 col-xs-9">
-
-                        <tr>
-                            <td></td>
-                            <td>
-                                {if $editRegistrationAllowed}
-                                    <a n:href="cancelRegistration" class="btn btn-danger" data-toggle="confirmation"
-                                                                   data-content="{_web.profile.cancel_registration_confirm}">
-                                        {_web.profile.cancel_registration}
-                                    </a>
-                                {else}
-                                    <a n:href="cancelRegistration" class="btn btn-danger" data-toggle="tooltip"
-                                                                   title="{_web.profile.cancel_registration_disabled}"
-                                                                   disabled="true">
-                                        {_web.profile.cancel_registration}
-                                    </a>
-                                {/if}
-                            </td>
-                        </tr>
-                    </table>
                 </div>
             </div>
         </div>

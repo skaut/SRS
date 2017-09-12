@@ -205,3 +205,36 @@ body {
     padding: 15px;
 }
 
+/* odebrani ramecku kolem datagridu */
+.datagrid {
+    padding: 0 !important;
+}
+
+/* oprava select a multiselect v inline editaci */
+.datagrid-inline-edit .bootstrap-select {
+    padding-bottom: 0 !important;
+    padding-top: 0 !important;
+}
+
+.datagrid-inline-edit .bootstrap-select .btn {
+    font-size: 12px !important;
+    padding: 4px 12px 4px 12px !important;
+}
+
+.datagrid-inline-edit .bootstrap-select li {
+    font-size: 12px !important;
+}
+
+.datagrid-multiselect .btn {
+    font-size: 12px !important;
+    padding: 4px 12px 5px 12px !important;
+}
+
+.datagrid-multiselect li {
+    font-size: 12px !important;
+}
+
+/* oprava barvy chybove hlasky u poli v datagridu */
+.datagrid .text-danger {
+    color: #a94442 !important;
+}

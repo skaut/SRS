@@ -12,6 +12,8 @@ use App\Services\Authenticator;
 use App\Services\ExcelExportService;
 use App\Services\MailService;
 use App\Services\PdfExportService;
+use App\WebModule\Components\ApplicationsGridControl;
+use App\WebModule\Components\IApplicationsGridControlFactory;
 use App\WebModule\Forms\AdditionalInformationForm;
 use App\WebModule\Forms\PersonalDetailsForm;
 use App\WebModule\Forms\RolesForm;
@@ -35,16 +37,10 @@ class ProfilePresenter extends WebBasePresenter
     public $personalDetailsFormFactory;
 
     /**
-     * @var SubeventsForm
+     * @var IApplicationsGridControlFactory
      * @inject
      */
-    public $subeventsFormFactory;
-
-    /**
-     * @var RolesForm
-     * @inject
-     */
-    public $rolesFormFactory;
+    public $applicationsGridControlFactory;
 
     /**
      * @var AdditionalInformationForm
@@ -82,8 +78,6 @@ class ProfilePresenter extends WebBasePresenter
      */
     public $mailService;
 
-    private $editRegistrationAllowed;
-
 
     public function startup()
     {
@@ -93,18 +87,17 @@ class ProfilePresenter extends WebBasePresenter
             $this->flashMessage('web.common.login_required', 'danger', 'lock');
             $this->redirect(':Web:Page:default');
         }
-
-        $nonregisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
-        $this->editRegistrationAllowed = !$this->dbuser->isInRole($nonregisteredRole) && !$this->dbuser->hasPaidAnyApplication()
-            && $this->settingsRepository->getDateValue('edit_registration_to') >= (new \DateTime())->setTime(0, 0);
     }
 
     public function renderDefault()
     {
         $this->template->pageName = $this->translator->translate('web.profile.title');
         $this->template->paymentMethodBank = PaymentType::BANK;
-        $this->template->editRegistrationAllowed = $this->editRegistrationAllowed;
-        $this->template->subeventsCount = $this->subeventRepository->countExplicitSubevents();
+
+        $nonregisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
+        $this->template->editRegistrationAllowed = !$this->dbuser->isInRole($nonregisteredRole)
+            && !$this->dbuser->hasPaidFirstApplication()
+            && $this->settingsRepository->getDateValue('edit_registration_to') >= (new \DateTime())->setTime(0, 0);
     }
 
     /**
@@ -119,19 +112,6 @@ class ProfilePresenter extends WebBasePresenter
         $this->userRepository->remove($this->dbuser);
 
         $this->redirect(':Auth:logout');
-    }
-
-    /**
-     * Vygeneruje potvrzení o přijetí platby.
-     */
-    public function actionGeneratePaymentProofBank()
-    {
-        $user = $this->userRepository->findById($this->user->id);
-        if (!$user->getIncomeProofPrintedDate()) { //TODO
-            $user->setIncomeProofPrintedDate(new \DateTime());
-            $this->userRepository->save($user);
-        }
-        $this->pdfExportService->generatePaymentProof($user, "potvrzeni-o-prijeti-platby.pdf");
     }
 
     /**
@@ -161,37 +141,37 @@ class ProfilePresenter extends WebBasePresenter
         return $form;
     }
 
-    protected function createComponentSubeventsForm()
-    {
-        $editSubeventsAllowed = FALSE; //TODO
-
-        $form = $this->subeventsFormFactory->create($this->user->id, $editSubeventsAllowed);
-
-        $form->onSuccess[] = function (Form $form, \stdClass $values) {
-            $this->flashMessage('web.profile.subevents_update_successful', 'success');
-
-            $this->authenticator->updateRoles($this->user);
-
-            $this->redirect('this#collapseSeminar');
-        };
-
-        return $form;
-    }
-
-    protected function createComponentRolesForm()
-    {
-        $form = $this->rolesFormFactory->create($this->user->id, $this->editRegistrationAllowed);
-
-        $form->onSuccess[] = function (Form $form, \stdClass $values) {
-            $this->flashMessage('web.profile.roles_update_successful', 'success');
-
-            $this->authenticator->updateRoles($this->user);
-
-            $this->redirect('this#collapseSeminar');
-        };
-
-        return $form;
-    }
+//    protected function createComponentSubeventsForm()
+//    {
+//        $editSubeventsAllowed = FALSE; //TODO
+//
+//        $form = $this->subeventsFormFactory->create($this->user->id, $editSubeventsAllowed);
+//
+//        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+//            $this->flashMessage('web.profile.subevents_update_successful', 'success');
+//
+//            $this->authenticator->updateRoles($this->user);
+//
+//            $this->redirect('this#collapseSeminar');
+//        };
+//
+//        return $form;
+//    }
+//
+//    protected function createComponentRolesForm()
+//    {
+//        $form = $this->rolesFormFactory->create($this->user->id, $this->editRegistrationAllowed);
+//
+//        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+//            $this->flashMessage('web.profile.roles_update_successful', 'success');
+//
+//            $this->authenticator->updateRoles($this->user);
+//
+//            $this->redirect('this#collapseSeminar');
+//        };
+//
+//        return $form;
+//    }
 
     protected function createComponentAdditionalInformationForm()
     {
@@ -204,5 +184,10 @@ class ProfilePresenter extends WebBasePresenter
         };
 
         return $form;
+    }
+
+    protected function createComponentApplicationsGrid()
+    {
+        return $this->applicationsGridControlFactory->create();
     }
 }
