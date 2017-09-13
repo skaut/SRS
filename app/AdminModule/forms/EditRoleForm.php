@@ -103,7 +103,7 @@ class EditRoleForm extends Nette\Object
 
         $form->addCheckbox('displayArrivalDeparture', 'admin.acl.roles_display_arrival_departure');
 
-        $form->addCheckbox('feeFromSubevents', 'admin.acl.roles_fee_from_subevents')
+        $form->addCheckbox('feeFromSubevents', 'admin.acl.roles_fee_from_subevents_checkbox')
             ->addCondition(Form::EQUAL, FALSE)
             ->toggle('fee');
 

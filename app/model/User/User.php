@@ -16,6 +16,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\PersistentCollection;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
+use Nette\DateTime;
 
 
 /**
@@ -416,6 +417,18 @@ class User
                 Criteria::expr()->eq('state', ApplicationStates::WAITING_FOR_PAYMENT),
                 Criteria::expr()->eq('state', ApplicationStates::PAID)
             ));
+
+        return $this->applications->matching($criteria);
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getWaitingForPaymentApplications()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('state', ApplicationStates::WAITING_FOR_PAYMENT));
+
 
         return $this->applications->matching($criteria);
     }
@@ -1015,6 +1028,47 @@ class User
             $fee += $application->getFee();
         }
         return $fee;
+    }
+
+    /**
+     * Vrací částku, která zbývá uhradit.
+     * @return int
+     */
+    public function getFeeRemaining()
+    {
+        $fee = 0;
+        foreach ($this->getWaitingForPaymentApplications() as $application) {
+            $fee += $application->getFee();
+        }
+        return $fee;
+    }
+
+    /**
+     * Vrací datum první přihlášky.
+     * @return \DateTime|null
+     */
+    public function getFirstApplicationDate()
+    {
+        $minDate = NULL;
+        foreach ($this->applications as $application) {
+            if ($minDate === NULL || $minDate > $application->getApplicationDate())
+                $minDate = $application->getApplicationDate();
+        }
+        return $minDate;
+    }
+
+    /**
+     * Vrací datum poslední platby.
+     * @return \DateTime|null
+     */
+    public function getLastPaymentDate()
+    {
+        $maxDate = NULL;
+        foreach ($this->applications as $application) {
+            if ($maxDate === NULL || $maxDate < $application->getPaymentDate())
+                $maxDate = $application->getPaymentDate();
+        }
+        return $maxDate;
     }
 
     /**

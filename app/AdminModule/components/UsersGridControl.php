@@ -16,6 +16,8 @@ use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
+use App\Model\Structure\SubeventRepository;
+use App\Model\User\ApplicationRepository;
 use App\Model\User\UserRepository;
 use App\Services\ExcelExportService;
 use App\Services\MailService;
@@ -72,6 +74,12 @@ class UsersGridControl extends Control
     /** @var MailService */
     private $mailService;
 
+    /** @var SubeventRepository */
+    private $subeventRepository;
+
+    /** @var ApplicationRepository */
+    private $applicationRepository;
+
 
     /**
      * UsersGridControl constructor.
@@ -86,12 +94,15 @@ class UsersGridControl extends Control
      * @param ExcelExportService $excelExportService
      * @param MailService $mailService
      * @param Session $session
+     * @param SubeventRepository $subeventRepository
+     * @param ApplicationRepository $applicationRepository
      */
     public function __construct(Translator $translator, UserRepository $userRepository,
                                 SettingsRepository $settingsRepository, CustomInputRepository $customInputRepository,
                                 RoleRepository $roleRepository, ProgramRepository $programRepository,
                                 BlockRepository $blockRepository, PdfExportService $pdfExportService,
-                                ExcelExportService $excelExportService, MailService $mailService, Session $session)
+                                ExcelExportService $excelExportService, MailService $mailService, Session $session,
+                                SubeventRepository $subeventRepository, ApplicationRepository $applicationRepository)
     {
         parent::__construct();
 
@@ -105,6 +116,8 @@ class UsersGridControl extends Control
         $this->pdfExportService = $pdfExportService;
         $this->excelExportService = $excelExportService;
         $this->mailService = $mailService;
+        $this->subeventRepository = $subeventRepository;
+        $this->applicationRepository = $applicationRepository;
 
         $this->session = $session;
         $this->sessionSection = $session->getSection('srs');
@@ -175,6 +188,23 @@ class UsersGridControl extends Control
                 $qb->join('u.roles', 'r')->where('r.id IN (:ids)')->setParameter(':ids', $values);
             });
 
+        $grid->addColumnText('subevents', 'admin.users.users_subevents', 'subevents')
+            ->setRenderer(function ($row) {
+                $subevents = [];
+                foreach ($row->getSubevents() as $subevent) {
+                    $subevents[] = $subevent->getName();
+                }
+                return implode(", ", $subevents);
+            })
+            ->setFilterMultiSelect($this->subeventRepository->getExplicitOptions())
+            ->setCondition(function ($qb, $values) {
+                $qb
+                    ->join('u.applications', 'a')
+                    ->join('a.subevents', 's')
+                    ->where('s.id IN (:ids)')
+                    ->setParameter(':ids', $values);
+            });
+
         $columnApproved = $grid->addColumnStatus('approved', 'admin.users.users_approved');
         $columnApproved
             ->addOption(FALSE, 'admin.users.users_approved_unapproved')
@@ -225,29 +255,54 @@ class UsersGridControl extends Control
 
         $grid->addColumnNumber('fee', 'admin.users.users_fee');
 
-        //TODO
-//        $grid->addColumnText('variableSymbol', 'admin.users.users_variable_symbol')
-//            ->setSortable()
-//            ->setFilterText();
+        $grid->addColumnNumber('feeRemaining', 'admin.users.users_fee_remaining');
 
-//        $grid->addColumnText('paymentMethod', 'admin.users.users_payment_method')
-//            ->setRenderer(function ($row) {
-//                if ($row->getPaymentMethod())
-//                    return $this->translator->translate('common.payment.' . $row->getPaymentMethod());
-//                return NULL;
-//            })
-//            ->setSortable()
-//            ->setFilterSelect($this->preparePaymentMethodFilterOptions())
-//            ->setTranslateOptions();
+        $grid->addColumnText('variableSymbol', 'admin.users.users_variable_symbol')
+            ->setRenderer(function ($row) {
+                $variableSymbols = [];
+                foreach ($row->getApplications() as $application) {
+                    $variableSymbols[] = $application->getVariableSymbol();
+                }
+                return implode(", ", $variableSymbols);
+            })
+            ->setFilterText()
+            ->setCondition(function ($qb, $value) {
+                $qb
+                    ->join('u.applications', 'a')
+                    ->where('a.variableSymbol LIKE :variableSymbol')
+                    ->setParameter(':variableSymbol', $value . '%');
+            });
 
-//        $grid->addColumnDateTime('paymentDate', 'admin.users.users_payment_date')
-//            ->setSortable();
+        $grid->addColumnText('paymentMethod', 'admin.users.users_payment_method')
+            ->setRenderer(function ($row) {
+                $paymentMethod = NULL;
+
+                foreach ($row->getApplications() as $application) {
+                    $currentPaymentMethod = $application->getPaymentMethod();
+                    if ($currentPaymentMethod) {
+                        if ($paymentMethod === NULL) {
+                            $paymentMethod = $currentPaymentMethod;
+                            continue;
+                        }
+                        if ($paymentMethod != $currentPaymentMethod) {
+                            return $this->translator->translate('common.payment.mixed');
+                        }
+                    }
+                }
+
+                if ($paymentMethod)
+                    return $this->translator->translate('common.payment.' . $paymentMethod);
+
+                return NULL;
+            });
+
+        $grid->addColumnDateTime('lastPaymentDate', 'admin.users.users_last_payment_date');
 
 //        $grid->addColumnDateTime('incomeProofPrintedDate', 'admin.users.users_income_proof_printed_date')
 //            ->setSortable();
 
-//        $grid->addColumnDateTime('applicationDate', 'admin.users.users_application_date')
-//            ->setSortable();
+        $grid->addColumnDateTime('firstApplicationDate', 'admin.users.users_first_application_date')
+            ->setFormat('j. n. Y H:i');
 
         $columnAttended = $grid->addColumnStatus('attended', 'admin.users.users_attended');
         $columnAttended
@@ -302,19 +357,6 @@ class UsersGridControl extends Control
             ->setIcon('plus')
             ->setText('admin.users.users_add_lector');
 
-        $grid->addInlineEdit()->onControlAdd[] = function ($container) {
-            $container->addSelect('paymentMethod', '', $this->preparePaymentMethodOptionsWithEmpty());
-            $container->addDatePicker('paymentDate', '');
-        };
-        $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) {
-            $container->setDefaults([
-                'paymentMethod' => $item->getPaymentMethod(),
-                'paymentDate' => $item->getPaymentDate()
-            ]);
-        };
-        $grid->getInlineEdit()->onSubmit[] = [$this, 'edit'];
-
-
         $grid->addAction('detail', 'admin.common.detail', 'Users:detail')
             ->setClass('btn btn-xs btn-primary');
 
@@ -331,28 +373,6 @@ class UsersGridControl extends Control
         });
 
         $grid->setColumnsSummary(['fee']);
-    }
-
-    /**
-     * Upraví údaje o platbš uživatele.
-     * @param $id
-     * @param $values
-     */
-    public function edit($id, $values)
-    {
-        $user = $this->userRepository->findById($id);
-        $user->setPaymentMethod($values['paymentMethod']);
-        $user->setPaymentDate($values['paymentDate']);
-        $this->userRepository->save($user);
-
-        $p = $this->getPresenter();
-        $p->flashMessage('admin.users.users_saved', 'success');
-
-        if ($p->isAjax()) {
-            $p->redrawControl('flashes');
-        } else {
-            $this->redirect('this');
-        }
     }
 
     /**
@@ -555,6 +575,7 @@ class UsersGridControl extends Control
      */
     public function groupMarkPaidToday(array $ids, $value)
     {
+        //TODO
         foreach ($ids as $id) {
             $user = $this->userRepository->findById($id);
             if ($user->isPaying()) {
@@ -585,6 +606,7 @@ class UsersGridControl extends Control
      */
     public function groupGeneratePaymentProofs(array $ids)
     {
+        //TODO
         $this->sessionSection->userIds = $ids;
         $this->redirect('generatepaymentproofs'); //presmerovani kvuli zruseni ajax
     }
@@ -643,6 +665,7 @@ class UsersGridControl extends Control
      */
     public function handleGeneratePaymentProofs()
     {
+        //TODO
         $ids = $this->session->getSection('srs')->userIds;
 
         $users = $this->userRepository->findUsersByIds($ids);
@@ -668,32 +691,6 @@ class UsersGridControl extends Control
     private function preparePaymentMethodOptionsWithoutEmpty()
     {
         $options = [];
-        foreach (PaymentType::$types as $type)
-            $options[$type] = 'common.payment.' . $type;
-        return $options;
-    }
-
-    /**
-     * Vrátí platební metody jako možnosti pro select. S prázdnou možností.
-     * @return array
-     */
-    private function preparePaymentMethodOptionsWithEmpty()
-    {
-        $options = [];
-        $options[''] = '';
-        foreach (PaymentType::$types as $type)
-            $options[$type] = 'common.payment.' . $type;
-        return $options;
-    }
-
-    /**
-     * Vrátí platební metody jako možnosti pro filtr.
-     * @return array
-     */
-    private function preparePaymentMethodFilterOptions()
-    {
-        $options = [];
-        $options[''] = 'admin.common.all';
         foreach (PaymentType::$types as $type)
             $options[$type] = 'common.payment.' . $type;
         return $options;

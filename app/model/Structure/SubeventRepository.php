@@ -198,6 +198,24 @@ class SubeventRepository extends EntityRepository
     }
 
     /**
+     * Vrací seznam podakcí, jako možnosti pro select
+     * @return array
+     */
+    public function getExplicitOptions() {
+        $subevents = $this->createQueryBuilder('s')
+            ->where('s.implicit = FALSE')
+            ->orderBy('s.name')
+            ->getQuery()
+            ->getResult();
+
+        $options = [];
+        foreach ($subevents as $subevent) {
+            $options[$subevent->getId()] = $subevent->getName();
+        }
+        return $options;
+    }
+
+    /**
      * Vrací seznam podakcí, s informací o obsazenosti, jako možnosti pro select
      * @return array
      */

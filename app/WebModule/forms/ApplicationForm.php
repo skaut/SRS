@@ -181,9 +181,9 @@ class ApplicationForm extends Nette\Object
 
         $this->addCustomInputs($form);
 
-        $this->addSubeventsSelect($form);
-
         $this->addRolesSelect($form);
+
+        $this->addSubeventsSelect($form);
 
         $this->addArrivalDeparture($form);
 
