@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Mailing\TextMail;
+use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Enums\ConditionOperator;
 use App\Model\Enums\MaturityType;
@@ -13,6 +14,7 @@ use App\Model\Mailing\TemplateRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\DiscountRepository;
+use App\Model\Structure\SubeventRepository;
 use App\Model\User\ApplicationRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
@@ -41,6 +43,12 @@ class ApplicationService extends Nette\Object
     /** @var DiscountRepository */
     private $discountRepository;
 
+    /** @var RoleRepository */
+    private $roleRepository;
+
+    /** @var SubeventRepository */
+    private $subeventRepository;
+
 
     /**
      * ApplicationService constructor.
@@ -48,14 +56,18 @@ class ApplicationService extends Nette\Object
      * @param ApplicationRepository $applicationRepository
      * @param UserRepository $userRepository
      * @param DiscountRepository $discountRepository
+     * @param RoleRepository $roleRepository
      */
     public function __construct(SettingsRepository $settingsRepository, ApplicationRepository $applicationRepository,
-                                UserRepository $userRepository, DiscountRepository $discountRepository)
+                                UserRepository $userRepository, DiscountRepository $discountRepository,
+                                RoleRepository $roleRepository, SubeventRepository $subeventRepository)
     {
         $this->settingsRepository = $settingsRepository;
         $this->applicationRepository = $applicationRepository;
         $this->userRepository = $userRepository;
         $this->discountRepository = $discountRepository;
+        $this->roleRepository = $roleRepository;
+        $this->subeventRepository = $subeventRepository;
     }
 
     /**
@@ -111,7 +123,9 @@ class ApplicationService extends Nette\Object
 
     /**
      * Vypočítá poplatek.
-     * @param User $user
+     * @param $roles
+     * @param $subevents
+     * @param bool $first
      * @return int
      */
     public function countFee($roles, $subevents, $first = TRUE) {
@@ -168,5 +182,42 @@ class ApplicationService extends Nette\Object
         }
 
         return $fee;
+    }
+
+    /**
+     * Může uživatel měnit registraci?
+     * @param User $user
+     * @return bool
+     */
+    public function isAllowedEditRegistration(User $user)
+    {
+        $nonregisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
+        return !$user->isInRole($nonregisteredRole)
+            && !$user->hasPaidFirstApplication()
+            && $this->settingsRepository->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new \DateTime())->setTime(0, 0);
+    }
+
+    /**
+     * Může uživatel dodatečně přidávat podakce?
+     * @param User $user
+     * @return bool
+     */
+    public function isAllowedAddSubevents(User $user)
+    {
+        return $user->hasPaidFirstApplication()
+            && $this->subeventRepository->countExplicitSubevents() > 0
+            && $this->settingsRepository->getValue(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT)
+            && $this->settingsRepository->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new \DateTime())->setTime(0, 0);
+    }
+
+    /**
+     * Může uživatel upravovat první přihlášku?
+     * @param User $user
+     * @return bool
+     */
+    public function isAllowedEditFirstApplication(User $user)
+    {
+        return !$user->hasPaidFirstApplication()
+            && $this->settingsRepository->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new \DateTime())->setTime(0, 0);
     }
 }

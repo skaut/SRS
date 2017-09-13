@@ -9,6 +9,8 @@ use App\Model\Enums\ApplicationStates;
 use App\Model\Program\Block;
 use App\Model\Program\Program;
 use App\Model\Settings\CustomInput\CustomInput;
+use App\Model\Structure\Subevent;
+use App\Model\Structure\SubeventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
@@ -1013,6 +1015,31 @@ class User
             $fee += $application->getFee();
         }
         return $fee;
+    }
+
+    /**
+     * Vrací podakce uživatele.
+     * @return ArrayCollection
+     */
+    public function getSubevents()
+    {
+        $subevents = new ArrayCollection();
+        foreach ($this->applications as $application) {
+            foreach ($application->getSubevents() as $subevent) {
+                $subevents->add($subevent);
+            }
+        }
+        return $subevents;
+    }
+
+    /**
+     * Vrací, zda je uživatel přihlášen na podakci.
+     * @param Subevent $subevent
+     * @return bool
+     */
+    public function hasSubevent(Subevent $subevent)
+    {
+        return $this->getSubevents()->contains($subevent);
     }
 
     /**

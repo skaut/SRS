@@ -14,6 +14,16 @@ use Kdyby\Doctrine\EntityRepository;
 class ApplicationRepository extends EntityRepository
 {
     /**
+     * Vrací přihlášku podle id.
+     * @param $id
+     * @return Application|null
+     */
+    public function findById($id)
+    {
+        return $this->findOneBy(['id' => $id]);
+    }
+
+    /**
      * Uloží přihlášku.
      * @param Application $application
      */

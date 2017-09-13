@@ -8,6 +8,7 @@ use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Settings;
 use App\Model\Structure\SubeventRepository;
+use App\Services\ApplicationService;
 use App\Services\Authenticator;
 use App\Services\ExcelExportService;
 use App\Services\MailService;
@@ -78,6 +79,12 @@ class ProfilePresenter extends WebBasePresenter
      */
     public $mailService;
 
+    /**
+     * @var ApplicationService
+     * @inject
+     */
+    public $applicationService;
+
 
     public function startup()
     {
@@ -93,11 +100,7 @@ class ProfilePresenter extends WebBasePresenter
     {
         $this->template->pageName = $this->translator->translate('web.profile.title');
         $this->template->paymentMethodBank = PaymentType::BANK;
-
-        $nonregisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
-        $this->template->editRegistrationAllowed = !$this->dbuser->isInRole($nonregisteredRole)
-            && !$this->dbuser->hasPaidFirstApplication()
-            && $this->settingsRepository->getDateValue('edit_registration_to') >= (new \DateTime())->setTime(0, 0);
+        $this->template->editRegistrationAllowed = $this->applicationService->isAllowedEditRegistration($this->dbuser);
     }
 
     /**

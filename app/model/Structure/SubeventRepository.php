@@ -3,6 +3,7 @@
 namespace App\Model\Structure;
 
 use App\Model\Enums\ApplicationStates;
+use App\Model\User\User;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Kdyby\Doctrine\EntityRepository;
@@ -206,6 +207,44 @@ class SubeventRepository extends EntityRepository
             ->orderBy('s.name')
             ->getQuery()
             ->getResult();
+
+        $options = [];
+        foreach ($subevents as $subevent) {
+            if ($subevent->hasLimitedCapacity())
+                $options[$subevent->getId()] = $this->translator->translate('web.common.subevent_option', NULL, [
+                    'subevent' => $subevent->getName(),
+                    'occupied' => $this->countApprovedUsersInSubevent($subevent),
+                    'total' => $subevent->getCapacity()
+                ]);
+            else
+                $options[$subevent->getId()] = $subevent->getName();
+        }
+        return $options;
+    }
+
+    /**
+     * Vrací seznam podakcí, kromě podakcí uživatele, s informací o obsazenosti, jako možnosti pro select.
+     * @param User $user
+     * @return array
+     */
+    public function getNonRegisteredExplicitOptionsWithCapacity(User $user)
+    {
+        $usersSubevents = $user->getSubevents();
+        $usersSubeventsIds = $this->findSubeventsIds($usersSubevents);
+
+        if (empty($usersSubeventsIds))
+            $subevents = $this->createQueryBuilder('s')
+                ->where('s.implicit = FALSE')
+                ->orderBy('s.name')
+                ->getQuery()
+                ->getResult();
+        else
+            $subevents = $this->createQueryBuilder('s')
+                ->where('s.implicit = FALSE')
+                ->andWhere('s.id NOT IN (:subevents)')->setParameter('subevents', $usersSubeventsIds)
+                ->orderBy('s.name')
+                ->getQuery()
+                ->getResult();
 
         $options = [];
         foreach ($subevents as $subevent) {
