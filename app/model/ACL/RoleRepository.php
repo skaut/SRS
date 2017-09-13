@@ -89,9 +89,9 @@ class RoleRepository extends EntityRepository
      */
     public function findOthersNames($id)
     {
-        $names = $this->createQueryBuilder('b')
-            ->select('b.name')
-            ->where('b.id != :id')
+        $names = $this->createQueryBuilder('r')
+            ->select('r.name')
+            ->where('r.id != :id')
             ->setParameter('id', $id)
             ->getQuery()
             ->getScalarResult();

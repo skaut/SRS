@@ -27,7 +27,7 @@ class Mail
 
     /**
      * Uživatelé, kterém byl e-mail odeslán.
-     * @ORM\ManyToMany(targetEntity="App\Model\User\User")
+     * @ORM\ManyToMany(targetEntity="\App\Model\User\User")
      * @var ArrayCollection
      */
     protected $recipientUsers;
@@ -60,6 +60,15 @@ class Mail
      */
     protected $automatic = FALSE;
 
+
+    /**
+     * Mail constructor.
+     */
+    public function __construct()
+    {
+        $this->recipientRoles = new ArrayCollection();
+        $this->recipientUsers = new ArrayCollection();
+    }
 
     /**
      * @return int

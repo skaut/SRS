@@ -4,6 +4,8 @@ namespace App\WebModule\Forms;
 
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
+use App\Model\Enums\ApplicationStates;
+use App\Model\Enums\MaturityType;
 use App\Model\Enums\Sex;
 use App\Model\Enums\VariableSymbolType;
 use App\Model\Mailing\Template;
@@ -12,18 +14,21 @@ use App\Model\Program\ProgramRepository;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
+use App\Model\Structure\SubeventRepository;
+use App\Model\User\Application;
+use App\Model\User\ApplicationRepository;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
 use App\Model\User\CustomInputValue\CustomInputValueRepository;
 use App\Model\User\CustomInputValue\CustomTextValue;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
+use App\Services\ApplicationService;
 use App\Services\MailService;
 use App\Services\SkautIsService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\IControl;
-use PhpCollection\Set;
 use Skautis\Wsdl\WsdlException;
 
 
@@ -42,6 +47,12 @@ class ApplicationForm extends Nette\Object
     private $user;
 
     public $onSkautIsError;
+
+    /**
+     * Počet vytvořených podakcí.
+     * @var int
+     */
+    private $subeventsCount;
 
     /** @var BaseForm */
     private $baseFormFactory;
@@ -70,6 +81,15 @@ class ApplicationForm extends Nette\Object
     /** @var MailService */
     private $mailService;
 
+    /** @var SubeventRepository */
+    private $subeventRepository;
+
+    /** @var ApplicationRepository */
+    private $applicationRepository;
+
+    /** @var ApplicationService */
+    private $applicationService;
+
 
     /**
      * ApplicationForm constructor.
@@ -82,12 +102,17 @@ class ApplicationForm extends Nette\Object
      * @param SkautIsService $skautIsService
      * @param SettingsRepository $settingsRepository
      * @param MailService $mailService
+     * @param SubeventRepository $subeventRepository
+     * @param ApplicationRepository $applicationRepository
+     * @param ApplicationService $applicationService
      */
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
                                 RoleRepository $roleRepository, CustomInputRepository $customInputRepository,
                                 CustomInputValueRepository $customInputValueRepository,
                                 ProgramRepository $programRepository, SkautIsService $skautIsService,
-                                SettingsRepository $settingsRepository, MailService $mailService)
+                                SettingsRepository $settingsRepository, MailService $mailService,
+                                SubeventRepository $subeventRepository, ApplicationRepository $applicationRepository,
+                                ApplicationService $applicationService)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->userRepository = $userRepository;
@@ -98,6 +123,9 @@ class ApplicationForm extends Nette\Object
         $this->skautIsService = $skautIsService;
         $this->settingsRepository = $settingsRepository;
         $this->mailService = $mailService;
+        $this->subeventRepository = $subeventRepository;
+        $this->applicationRepository = $applicationRepository;
+        $this->applicationService = $applicationService;
     }
 
     /**
@@ -108,6 +136,8 @@ class ApplicationForm extends Nette\Object
     public function create($id)
     {
         $this->user = $this->userRepository->findById($id);
+
+        $this->subeventsCount = $this->subeventRepository->countExplicitSubevents();
 
         $form = $this->baseFormFactory->create();
 
@@ -152,6 +182,8 @@ class ApplicationForm extends Nette\Object
         $this->addCustomInputs($form);
 
         $this->addRolesSelect($form);
+
+        $this->addSubeventsSelect($form);
 
         $this->addArrivalDeparture($form);
 
@@ -201,7 +233,7 @@ class ApplicationForm extends Nette\Object
         $this->user->setPostcode($values['postcode']);
         $this->user->setState($values['state']);
 
-
+        //role
         $roles = $this->roleRepository->findRolesByIds($values['roles']);
 
         $this->user->removeRole($this->roleRepository->findBySystemName(Role::NONREGISTERED));
@@ -215,6 +247,7 @@ class ApplicationForm extends Nette\Object
 
         $this->user->setRoles($roles);
 
+        //vlastni pole
         foreach ($this->customInputRepository->findAll() as $customInput) {
             $customInputValue = $this->user->getCustomInputValue($customInput);
 
@@ -237,23 +270,42 @@ class ApplicationForm extends Nette\Object
             $this->customInputValueRepository->save($customInputValue);
         }
 
+        //prijezd, odjezd
         if (array_key_exists('arrival', $values))
             $this->user->setArrival($values['arrival']);
 
         if (array_key_exists('departure', $values))
             $this->user->setDeparture($values['departure']);
 
-        $this->user->setApplicationOrder($this->userRepository->findLastApplicationOrder()+1);
-        $this->user->setApplicationDate(new \DateTime());
+        //podakce
+        $subevents = $this->subeventRepository->countExplicitSubevents() > 0
+            ? $this->subeventRepository->findSubeventsByIds($values['subevents'])
+            : new ArrayCollection([$this->subeventRepository->findImplicit()]);
 
-        $this->user->setVariableSymbol($this->generateVariableSymbol());
+        $application = new Application();
+
+        $fee = $this->applicationService->countFee($roles, $subevents);
+
+        $application->setUser($this->user);
+        $application->setSubevents($subevents);
+        $application->setApplicationDate(new \DateTime());
+        $application->setApplicationOrder($this->applicationRepository->findLastApplicationOrder() + 1);
+        $application->setMaturityDate($this->applicationService->countMaturityDate());
+        $application->setVariableSymbol($this->applicationService->generateVariableSymbol($this->user));
+        $application->setFee($fee);
+        $application->setState($fee == 0 ? ApplicationStates::PAID : ApplicationStates::WAITING_FOR_PAYMENT);
+
+        $this->applicationRepository->save($application);
+
 
         $this->userRepository->save($this->user);
 
+        //prihlaseni automatickz prihlasovanych programu
         $this->programRepository->updateUserPrograms($this->user);
 
         $this->userRepository->save($this->user);
 
+        //aktualizace udaju ve skautis
         try {
             $this->skautIsService->updatePersonBasic(
                 $this->user->getSkautISPersonId(),
@@ -275,6 +327,7 @@ class ApplicationForm extends Nette\Object
             $this->onSkautIsError();
         }
 
+        //odeslani potvrzovaciho mailu
         $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::REGISTRATION, [
             TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
             TemplateVariable::EDIT_REGISTRATION_TO => $this->settingsRepository->getValue(Settings::EDIT_REGISTRATION_TO)
@@ -301,6 +354,70 @@ class ApplicationForm extends Nette\Object
     }
 
     /**
+     * Přidá select pro výběr podakcí.
+     * @param Form $form
+     */
+    private function addSubeventsSelect(Form $form)
+    {
+        if ($this->subeventRepository->countExplicitSubevents() > 0) {
+            $subeventsOptions = $this->subeventRepository->getExplicitOptionsWithCapacity();
+
+            $subeventsSelect = $form->addMultiSelect('subevents', 'web.application_content.subevents')->setItems(
+                $subeventsOptions
+            )
+                ->addRule(Form::FILLED, 'web.application_content.subevents_empty')
+                ->addRule([$this, 'validateSubeventsCapacities'], 'web.application_content.subevents_capacity_occupied');
+
+            //generovani chybovych hlasek pro vsechny kombinace podakci
+            foreach ($this->subeventRepository->findAllExplicitOrderedByName() as $subevent) {
+                $incompatibleSubevents = $subevent->getIncompatibleSubevents();
+                if (count($incompatibleSubevents) > 0) {
+                    $messageThis = $subevent->getName();
+
+                    $first = TRUE;
+                    $messageOthers = "";
+                    foreach ($incompatibleSubevents as $incompatibleSubevent) {
+                        if ($first) {
+                            $messageOthers .= $incompatibleSubevent->getName();
+                        }
+                        else {
+                            $messageOthers .= ", " . $incompatibleSubevent->getName();
+                        }
+                        $first = FALSE;
+                    }
+                    $subeventsSelect->addRule([$this, 'validateSubeventsIncompatible'],
+                        $form->getTranslator()->translate('web.application_content.incompatible_subevents_selected', NULL,
+                            ['subevent' => $messageThis, 'incompatibleSubevents' => $messageOthers]
+                        ),
+                        [$subevent]
+                    );
+                }
+
+                $requiredSubevents = $subevent->getRequiredSubeventsTransitive();
+                if (count($requiredSubevents) > 0) {
+                    $messageThis = $subevent->getName();
+
+                    $first = TRUE;
+                    $messageOthers = "";
+                    foreach ($requiredSubevents as $requiredSubevent) {
+                        if ($first)
+                            $messageOthers .= $requiredSubevent->getName();
+                        else
+                            $messageOthers .= ", " . $requiredSubevent->getName();
+                        $first = FALSE;
+                    }
+                    $subeventsSelect->addRule([$this, 'validateSubeventsRequired'],
+                        $form->getTranslator()->translate('web.application_content.required_subevents_not_selected', NULL,
+                            ['subevent' => $messageThis, 'requiredSubevents' => $messageOthers]
+                        ),
+                        [$subevent]
+                    );
+                }
+            }
+        }
+    }
+
+    /**
      * Přidá select pro výběr rolí.
      * @param Form $form
      */
@@ -312,7 +429,7 @@ class ApplicationForm extends Nette\Object
             $registerableOptions
         )
             ->addRule(Form::FILLED, 'web.application_content.roles_empty')
-            ->addRule([$this, 'validateRolesCapacities'], 'web.application_content.capacity_occupied')
+            ->addRule([$this, 'validateRolesCapacities'], 'web.application_content.roles_capacity_occupied')
             ->addRule([$this, 'validateRolesRegisterable'], 'web.application_content.role_is_not_registerable');
 
         //generovani chybovych hlasek pro vsechny kombinace roli
@@ -370,6 +487,7 @@ class ApplicationForm extends Nette\Object
             ->toggle('arrivalInput')
             ->toggle('departureInput');
 
+        //pokud je na vyber jen jedna role, je oznacena
         if (count($registerableOptions) == 1) {
             $form->setDefaults([
                 'roles' => array_keys($registerableOptions)
@@ -391,6 +509,23 @@ class ApplicationForm extends Nette\Object
     }
 
     /**
+     * Ověří kapacity podakcí.
+     * @param $field
+     * @param $args
+     * @return bool
+     */
+    public function validateSubeventsCapacities($field, $args)
+    {
+        foreach ($this->subeventRepository->findSubeventsByIds($field->getValue()) as $subevent) {
+            if ($subevent->hasLimitedCapacity()) {
+                if ($this->subeventRepository->countUnoccupiedInSubevent($subevent) < 1)
+                    return FALSE;
+            }
+        }
+        return TRUE;
+    }
+
+    /**
      * Ověří kapacity rolí.
      * @param $field
      * @param $args
@@ -404,6 +539,50 @@ class ApplicationForm extends Nette\Object
                     return FALSE;
             }
         }
+        return TRUE;
+    }
+
+    /**
+     * Ověří kompatibilitu podakcí.
+     * @param $field
+     * @param $args
+     * @return bool
+     */
+    public function validateSubeventsIncompatible($field, $args)
+    {
+        $selectedSubeventsIds = $field->getValue();
+        $testSubevent = $args[0];
+
+        if (!in_array($testSubevent->getId(), $selectedSubeventsIds))
+            return TRUE;
+
+        foreach ($testSubevent->getIncompatibleSubevents() as $incompatibleSubevent) {
+            if (in_array($incompatibleSubevent->getId(), $selectedSubeventsIds))
+                return FALSE;
+        }
+
+        return TRUE;
+    }
+
+    /**
+     * Ověří výběr požadovaných podakcí.
+     * @param $field
+     * @param $args
+     * @return bool
+     */
+    public function validateSubeventsRequired($field, $args)
+    {
+        $selectedSubeventsIds = $field->getValue();
+        $testSubevent = $args[0];
+
+        if (!in_array($testSubevent->getId(), $selectedSubeventsIds))
+            return TRUE;
+
+        foreach ($testSubevent->getRequiredSubeventsTransitive() as $requiredSubevent) {
+            if (!in_array($requiredSubevent->getId(), $selectedSubeventsIds))
+                return FALSE;
+        }
+
         return TRUE;
     }
 
@@ -474,33 +653,5 @@ class ApplicationForm extends Nette\Object
     public static function toggleArrivalDeparture(IControl $control)
     {
         return FALSE;
-    }
-
-    /**
-     * Vygeneruje variabilní symbol.
-     * @return string
-     */
-    private function generateVariableSymbol() {
-        $variableSymbolCode = $this->settingsRepository->getValue(Settings::VARIABLE_SYMBOL_CODE);
-        $variableSymbol = "";
-
-        switch ($this->settingsRepository->getValue(Settings::VARIABLE_SYMBOL_TYPE)) {
-            case VariableSymbolType::BIRTH_DATE:
-                $variableSymbolDate = $this->user->getBirthdate()->format('ymd');
-                $variableSymbol = $variableSymbolCode . $variableSymbolDate;
-
-                while ($this->userRepository->variableSymbolExists($variableSymbol)) {
-                    $variableSymbolDate = str_pad($variableSymbolDate + 1, 6, 0, STR_PAD_LEFT);
-                    $variableSymbol = $variableSymbolCode . $variableSymbolDate;
-                }
-
-                break;
-
-            case VariableSymbolType::ORDER:
-                $variableSymbol = $variableSymbolCode . str_pad($this->user->getApplicationOrder(), 6, '0', STR_PAD_LEFT);
-                break;
-        }
-
-        return $variableSymbol;
     }
 }

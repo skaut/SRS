@@ -5,14 +5,18 @@ namespace App\Model\User;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\ACL\Role;
+use App\Model\Enums\ApplicationStates;
 use App\Model\Program\Block;
 use App\Model\Program\Program;
 use App\Model\Settings\CustomInput\CustomInput;
+use App\Model\Structure\Subevent;
+use App\Model\Structure\SubeventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\PersistentCollection;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
+use Nette\DateTime;
 
 
 /**
@@ -45,6 +49,13 @@ class User
      * @var string
      */
     protected $email;
+
+    /**
+     * Přihlášky.
+     * @ORM\OneToMany(targetEntity="Application", mappedBy="user", cascade={"persist"})
+     * @var ArrayCollection
+     */
+    protected $applications;
 
     /**
      * Role.
@@ -153,20 +164,6 @@ class User
     protected $skautISPersonId;
 
     /**
-     * Pořadí přihlášky.
-     * @ORM\Column(type="integer", nullable=true)
-     * @var int
-     */
-    protected $applicationOrder;
-
-    /**
-     * Datum podání přihlášky.
-     * @ORM\Column(type="datetime", nullable=true)
-     * @var \DateTime
-     */
-    protected $applicationDate;
-
-    /**
      * Datum posledního přihlášení.
      * @ORM\Column(type="datetime", nullable=true)
      * @var \DateTime
@@ -209,27 +206,6 @@ class User
     protected $state;
 
     /**
-     * Platební metoda.
-     * @ORM\Column(type="string", nullable=true)
-     * @var string
-     */
-    protected $paymentMethod;
-
-    /**
-     * Datum zaplacení.
-     * @ORM\Column(type="date", nullable=true)
-     * @var \DateTime
-     */
-    protected $paymentDate;
-
-    /**
-     * Variabilní symbol.
-     * @ORM\Column(type="string", nullable=true)
-     * @var string
-     */
-    protected $variableSymbol;
-
-    /**
      * Zúčastnil se.
      * @ORM\Column(type="boolean")
      * @var bool
@@ -265,13 +241,6 @@ class User
     protected $membershipCategory;
 
     /**
-     * Datum vytištění dokladu o zaplacení.
-     * @ORM\Column(type="date", nullable=true)
-     * @var \DateTime
-     */
-    protected $incomeProofPrintedDate;
-
-    /**
      * Hodnoty vlastních polí přihlášky.
      * @ORM\OneToMany(targetEntity="\App\Model\User\CustomInputValue\CustomInputValue", mappedBy="user", cascade={"persist"})
      * @var ArrayCollection
@@ -305,8 +274,10 @@ class User
      */
     public function __construct()
     {
+        $this->applications = new ArrayCollection();
         $this->roles = new ArrayCollection();
         $this->programs = new ArrayCollection();
+        $this->lecturersBlocks = new ArrayCollection();
     }
 
     /**
@@ -422,72 +393,52 @@ class User
         if ($this->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS))
             return TRUE;
 
-        if ($this->isAllowed(Resource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS) && $block->getLector() == $this)
+        if ($this->isAllowed(Resource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS) && $block->getLector() === $this)
             return TRUE;
 
         return FALSE;
     }
 
     /**
-     * Vrací platící role uživatele.
-     * @return ArrayCollection|\Doctrine\Common\Collections\Collection
+     * @return ArrayCollection
      */
-    public function getPayingRoles()
+    public function getApplications()
     {
-        return $this->roles->filter(function ($item) {
-            return $item->getFee() > 0;
-        });
+        return $this->applications;
     }
 
     /**
-     * Je uživatel platící (nemá žádnou neplatící roli)?
-     * @return bool
+     * @return ArrayCollection
      */
-    public function isPaying()
+    public function getNotCanceledApplications()
     {
-        return $this->roles->filter(function ($item) {
-                return $item->getFee() == 0;
-        })->count() == 0;
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->orX(
+                Criteria::expr()->eq('state', ApplicationStates::WAITING_FOR_PAYMENT),
+                Criteria::expr()->eq('state', ApplicationStates::PAID)
+            ));
+
+        return $this->applications->matching($criteria);
     }
 
     /**
-     * Má uživatel zaplaceno?
-     * @return bool
+     * @return ArrayCollection
      */
-    public function hasPaid()
+    public function getWaitingForPaymentApplications()
     {
-        return $this->paymentDate !== NULL;
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('state', ApplicationStates::WAITING_FOR_PAYMENT));
+
+
+        return $this->applications->matching($criteria);
     }
 
     /**
-     * Vrací poplatek uživatele. Pokud je platící - součet poplatků rolí.
-     * @return int
+     * @param ArrayCollection $applications
      */
-    public function getFee()
+    public function setApplications($applications)
     {
-        if (!$this->isPaying())
-            return 0;
-
-        $fee = 0;
-
-        foreach ($this->getPayingRoles() as $role) {
-            $fee += $role->getFee();
-        }
-
-        return $fee;
-    }
-
-    /**
-     * Vrací poplatek slovy.
-     * @return mixed|string
-     */
-    public function getFeeWords()
-    {
-        $numbersWords = new \Numbers_Words();
-        $feeWord = $numbersWords->toWords($this->getFee(), 'cs');
-        $feeWord = iconv('windows-1250', 'UTF-8', $feeWord);
-        $feeWord = str_replace(" ", "", $feeWord);
-        return $feeWord;
+        $this->applications = $applications;
     }
 
     /**
@@ -771,38 +722,6 @@ class User
     }
 
     /**
-     * @return int
-     */
-    public function getApplicationOrder()
-    {
-        return $this->applicationOrder;
-    }
-
-    /**
-     * @param int $applicationOrder
-     */
-    public function setApplicationOrder($applicationOrder)
-    {
-        $this->applicationOrder = $applicationOrder;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getApplicationDate()
-    {
-        return $this->applicationDate;
-    }
-
-    /**
-     * @param \DateTime $applicationDate
-     */
-    public function setApplicationDate($applicationDate)
-    {
-        $this->applicationDate = $applicationDate;
-    }
-
-    /**
      * @return \DateTime
      */
     public function getLastLogin()
@@ -899,54 +818,6 @@ class User
     }
 
     /**
-     * @return string
-     */
-    public function getPaymentMethod()
-    {
-        return $this->paymentMethod;
-    }
-
-    /**
-     * @param string $paymentMethod
-     */
-    public function setPaymentMethod($paymentMethod)
-    {
-        $this->paymentMethod = $paymentMethod;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getPaymentDate()
-    {
-        return $this->paymentDate;
-    }
-
-    /**
-     * @param \DateTime $paymentDate
-     */
-    public function setPaymentDate($paymentDate)
-    {
-        $this->paymentDate = $paymentDate;
-    }
-
-    /**
-     * @return string
-     */
-    public function getVariableSymbol()
-    {
-        return $this->variableSymbol;
-    }
-
-    /**
-     * @param string $variableSymbol
-     */
-    public function setVariableSymbol($variableSymbol)
-    {
-        $this->variableSymbol = $variableSymbol;
-    }
-
-    /**
      * @return bool
      */
     public function isAttended()
@@ -1024,22 +895,6 @@ class User
     public function setMembershipCategory($membershipCategory)
     {
         $this->membershipCategory = $membershipCategory;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getIncomeProofPrintedDate()
-    {
-        return $this->incomeProofPrintedDate;
-    }
-
-    /**
-     * @param \DateTime $incomeProofPrintedDate
-     */
-    public function setIncomeProofPrintedDate($incomeProofPrintedDate)
-    {
-        $this->incomeProofPrintedDate = $incomeProofPrintedDate;
     }
 
     /**
@@ -1151,5 +1006,126 @@ class User
             }
         }
         return $categories;
+    }
+
+    /**
+     * Je uživatel platící?
+     * @return bool
+     */
+    public function isPaying()
+    {
+        return $this->getFee() != 0;
+    }
+
+    /**
+     * Vrací poplatek uživatele.
+     * @return int
+     */
+    public function getFee()
+    {
+        $fee = 0;
+        foreach ($this->getNotCanceledApplications() as $application) {
+            $fee += $application->getFee();
+        }
+        return $fee;
+    }
+
+    /**
+     * Vrací částku, která zbývá uhradit.
+     * @return int
+     */
+    public function getFeeRemaining()
+    {
+        $fee = 0;
+        foreach ($this->getWaitingForPaymentApplications() as $application) {
+            $fee += $application->getFee();
+        }
+        return $fee;
+    }
+
+    /**
+     * Vrací datum první přihlášky.
+     * @return \DateTime|null
+     */
+    public function getFirstApplicationDate()
+    {
+        $minDate = NULL;
+        foreach ($this->applications as $application) {
+            if ($minDate === NULL || $minDate > $application->getApplicationDate())
+                $minDate = $application->getApplicationDate();
+        }
+        return $minDate;
+    }
+
+    /**
+     * Vrací datum poslední platby.
+     * @return \DateTime|null
+     */
+    public function getLastPaymentDate()
+    {
+        $maxDate = NULL;
+        foreach ($this->applications as $application) {
+            if ($maxDate === NULL || $maxDate < $application->getPaymentDate())
+                $maxDate = $application->getPaymentDate();
+        }
+        return $maxDate;
+    }
+
+    /**
+     * Vrací podakce uživatele.
+     * @return ArrayCollection
+     */
+    public function getSubevents()
+    {
+        $subevents = new ArrayCollection();
+        foreach ($this->applications as $application) {
+            foreach ($application->getSubevents() as $subevent) {
+                $subevents->add($subevent);
+            }
+        }
+        return $subevents;
+    }
+
+    /**
+     * Vrací, zda je uživatel přihlášen na podakci.
+     * @param Subevent $subevent
+     * @return bool
+     */
+    public function hasSubevent(Subevent $subevent)
+    {
+        return $this->getSubevents()->contains($subevent);
+    }
+
+    /**
+     * Vrací zda uživatel zaplatil první registraci.
+     * @return bool
+     */
+    public function hasPaidFirstApplication()
+    {
+        $criteria = Criteria::create()->where(
+            Criteria::expr()->andX(
+                Criteria::expr()->eq('state', ApplicationStates::PAID),
+                Criteria::expr()->eq('first', TRUE)
+            )
+        );
+
+        if ($this->applications->matching($criteria)->isEmpty())
+            return FALSE;
+
+        return TRUE;
+    }
+
+    /**
+     * Vrací zda uživatel zaplatil všechny registrace.
+     * @return bool
+     */
+    public function hasPaidEveryApplication()
+    {
+        $criteria = Criteria::create()->where(Criteria::expr()->eq('state', ApplicationStates::WAITING_FOR_PAYMENT));
+
+        if ($this->applications->matching($criteria)->isEmpty())
+            return TRUE;
+
+        return FALSE;
     }
 }

@@ -9,6 +9,7 @@ use App\Model\Program\CategoryRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
+use App\Model\Structure\SubeventRepository;
 use App\Model\User\UserRepository;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
@@ -40,6 +41,9 @@ class ProgramBlocksGridControl extends Control
     /** @var ProgramRepository */
     private $programRepository;
 
+    /** @var SubeventRepository */
+    private $subeventRepository;
+
 
     /**
      * ProgramBlocksGridControl constructor.
@@ -52,7 +56,8 @@ class ProgramBlocksGridControl extends Control
      */
     public function __construct(Translator $translator, BlockRepository $blockRepository,
                                 SettingsRepository $settingsRepository, UserRepository $userRepository,
-                                CategoryRepository $categoryRepository, ProgramRepository $programRepository)
+                                CategoryRepository $categoryRepository, ProgramRepository $programRepository,
+                                SubeventRepository $subeventRepository)
     {
         parent::__construct();
 
@@ -62,6 +67,7 @@ class ProgramBlocksGridControl extends Control
         $this->userRepository = $userRepository;
         $this->categoryRepository = $categoryRepository;
         $this->programRepository = $programRepository;
+        $this->subeventRepository = $subeventRepository;
     }
 
     /**
@@ -83,14 +89,20 @@ class ProgramBlocksGridControl extends Control
         $grid->setDataSource($this->blockRepository->createQueryBuilder('b')
             ->addSelect('l')->leftJoin('b.lector', 'l')
             ->addSelect('c')->leftJoin('b.category', 'c')
+            ->addSelect('s')->leftJoin('b.subevent', 's')
         );
         $grid->setDefaultSort(['name' => 'ASC']);
         $grid->setPagination(FALSE);
+        $grid->setColumnsHideable();
 
 
         $grid->addColumnText('name', 'admin.program.blocks_name')
             ->setSortable()
             ->setFilterText();
+
+        $grid->addColumnText('subevent', 'admin.program.blocks_subevent', 'subevent.name')
+            ->setSortable('s.name')
+            ->setFilterMultiSelect($this->subeventRepository->getSubeventsOptions(), 's.id');
 
         $grid->addColumnText('category', 'admin.program.blocks_category', 'category.name')
             ->setSortable('c.name')
@@ -100,7 +112,7 @@ class ProgramBlocksGridControl extends Control
             ->setSortable('l.displayName')
             ->setFilterMultiSelect($this->userRepository->getLectorsOptions(), 'l.id');
 
-        $grid->addColumnText('duration', 'admin.program.blocks_duration')
+        $grid->addColumnNumber('duration', 'admin.program.blocks_duration')
             ->setSortable()
             ->setFilterText();
 
@@ -136,7 +148,7 @@ class ProgramBlocksGridControl extends Control
             ])
             ->setTranslateOptions();
 
-        $grid->addColumnText('programsCount', 'admin.program.blocks_programs_count')
+        $grid->addColumnNumber('programsCount', 'admin.program.blocks_programs_count')
             ->setRenderer(function ($row) {
                 return $row->getProgramsCount();
             });

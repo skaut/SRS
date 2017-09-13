@@ -76,6 +76,7 @@ class MailService extends Nette\Object
      * @param $copy
      * @param $subject
      * @param $text
+     * @param bool $automatic
      */
     public function sendMail($recipientsRoles, $recipientsUsers, $copy, $subject, $text, $automatic = FALSE)
     {
@@ -120,6 +121,7 @@ class MailService extends Nette\Object
      * @param $copy
      * @param $type
      * @param $parameters
+     * @param bool $automatic
      */
     public function sendMailFromTemplate($recipientsRoles, $recipientsUsers, $copy, $type, $parameters, $automatic = TRUE)
     {

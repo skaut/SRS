@@ -2,7 +2,6 @@
 
 namespace App\InstallModule\Presenters;
 
-use App\Commands\FixturesLoadCommand;
 use App\Model\ACL\Role;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;

@@ -103,7 +103,12 @@ class EditRoleForm extends Nette\Object
 
         $form->addCheckbox('displayArrivalDeparture', 'admin.acl.roles_display_arrival_departure');
 
+        $form->addCheckbox('feeFromSubevents', 'admin.acl.roles_fee_from_subevents_checkbox')
+            ->addCondition(Form::EQUAL, FALSE)
+            ->toggle('fee');
+
         $form->addText('fee', 'admin.acl.roles_fee')
+            ->setOption('id', 'fee')
             ->addCondition(Form::FILLED)
             ->addRule(Form::INTEGER, 'admin.acl.roles_fee_format');
 
@@ -156,6 +161,7 @@ class EditRoleForm extends Nette\Object
             'approvedAfterRegistration' => $this->role->isApprovedAfterRegistration(),
             'syncedWithSkautIs' => $this->role->isSyncedWithSkautIS(),
             'displayArrivalDeparture' => $this->role->isDisplayArrivalDeparture(),
+            'feeFromSubevents' => $this->role->getFee() === NULL,
             'fee' => $this->role->getFee(),
             'permissions' => $this->permissionRepository->findPermissionsIds($this->role->getPermissions()),
             'pages' => $this->pageRepository->findPagesSlugs($this->role->getPages()),
@@ -188,12 +194,16 @@ class EditRoleForm extends Nette\Object
             $this->role->setApprovedAfterRegistration($values['approvedAfterRegistration']);
             $this->role->setSyncedWithSkautIS($values['syncedWithSkautIs']);
             $this->role->setDisplayArrivalDeparture($values['displayArrivalDeparture']);
-            $this->role->setFee($values['fee']);
             $this->role->setPermissions($this->permissionRepository->findPermissionsByIds($values['permissions']));
             $this->role->setPages($this->pageRepository->findPagesBySlugs($values['pages']));
             $this->role->setRedirectAfterLogin($values['redirectAfterLogin']);
             $this->role->setIncompatibleRoles($this->roleRepository->findRolesByIds($values['incompatibleRoles']));
             $this->role->setRequiredRoles($this->roleRepository->findRolesByIds($values['requiredRoles']));
+
+            if ($values['feeFromSubevents'])
+                $this->role->setFee(NULL);
+            else
+                $this->role->setFee($values['fee']);
 
             $this->roleRepository->save($this->role);
 
@@ -227,6 +237,7 @@ class EditRoleForm extends Nette\Object
         $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, Resource::USERS);
         $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, Resource::ACL);
         $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, Resource::MAILING);
+        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, Resource::STRUCTURE);
         $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, Resource::CONFIGURATION);
 
         return $options;

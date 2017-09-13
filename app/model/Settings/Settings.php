@@ -71,6 +71,11 @@ class Settings
     const IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT = 'is_allowed_register_programs_before_payment';
 
     /**
+     * Povoleno přidávání podakcí po zaplacení.
+     */
+    const IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT = 'is_allowed_add_subevents_after_payment';
+
+    /**
      * Id propojené skautIS akce.
      */
     const SKAUTIS_EVENT_ID = 'skautis_event_id';
@@ -159,6 +164,26 @@ class Settings
      * Popis místa a cesty.
      */
     const PLACE_DESCRIPTION = 'place_description';
+
+    /**
+     * Způsob výpočtu splatnosti.
+     */
+    const MATURITY_TYPE = 'maturity_type';
+
+    /**
+     * Datum splatnosti.
+     */
+    const MATURITY_DATE = 'maturity_date';
+
+    /**
+     * Počet dní pro výpočet splatnosti.
+     */
+    const MATURITY_DAYS = 'maturity_days';
+
+    /**
+     * Počet pracovních dní pro výpočet splatnosti.
+     */
+    const MATURITY_WORK_DAYS = 'maturity_work_days';
 
 
     /**

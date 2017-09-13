@@ -14,6 +14,7 @@ permission_name:
         users: "Spravovat uživatele"
         acl: "Spravovat role"
         mailing: "Spravovat mailing"
+        structure: "Spravovat strukturu semináře"
         configuration: "Spravovat konfiguraci"
 
     choose_programs:
@@ -77,6 +78,7 @@ align:
 payment:
     cash: "Hotovost"
     bank: "Na účet"
+    mixed: "Smíšená"
 
 sex:
     male: "Muž"
@@ -85,6 +87,21 @@ sex:
 variable_symbol_type:
     birth_date: Datum narození
     order: Pořadí přihlášky
+
+maturity_type:
+    date: "Datum"
+    days: "Počet dní"
+    work_days: "Počet pracovních dní"
+
+application_state:
+    waiting_for_payment: "Čeká na platbu"
+    canceled_not_paid: "Zrušeno (nezaplaceno)"
+    canceled: "Zrušeno"
+    paid: "Zaplaceno"
+
+condition_operator:
+    and: "A"
+    or: "Nebo"
 
 day:
     1: "Po"

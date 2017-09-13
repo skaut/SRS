@@ -4,6 +4,7 @@ namespace App\Model\User;
 
 use App\Model\ACL\Permission;
 use App\Model\ACL\Role;
+use App\Model\Enums\ApplicationStates;
 use App\Model\Program\Program;
 use Doctrine\Common\Collections\Criteria;
 use Kdyby\Doctrine\EntityRepository;
@@ -140,7 +141,7 @@ class UserRepository extends EntityRepository
     }
 
     /**
-     * Vrací programy, na které se uživatel může přihlásit.
+     * Vrací uživatele, kteří se mohou na program přihlásit.
      * @param $program
      * @return array
      */
@@ -150,9 +151,14 @@ class UserRepository extends EntityRepository
             ->leftJoin('u.programs', 'p', 'WITH', 'p.id = :pid')
             ->innerJoin('u.roles', 'r')
             ->innerJoin('r.permissions', 'per')
+            ->innerJoin('u.applications', 'a')
+            ->innerJoin('a.subevents', 's')
             ->where('per.name = :permission')
+            ->andWhere('s.id = :sid')
+            ->andWhere('(a.state = \'' . ApplicationStates::PAID . '\' OR a.state = \'' . ApplicationStates::WAITING_FOR_PAYMENT . '\')')
             ->setParameter('pid', $program->getId())
-            ->setParameter('permission', Permission::CHOOSE_PROGRAMS);
+            ->setParameter('permission', Permission::CHOOSE_PROGRAMS)
+            ->setParameter('sid', $program->getBlock()->getSubevent()->getId());
 
         if ($program->getBlock()->getCategory()) {
             $qb = $qb->innerJoin('r.registerableCategories', 'c')
@@ -222,18 +228,6 @@ class UserRepository extends EntityRepository
     }
 
     /**
-     * Vrací pořadí poslední odeslané přihlášky.
-     * @return int
-     */
-    public function findLastApplicationOrder()
-    {
-        return $this->createQueryBuilder('u')
-            ->select('MAX(u.applicationOrder)')
-            ->getQuery()
-            ->getSingleScalarResult();
-    }
-
-    /**
      * Vrací true, pokud existuje uživatel s tímto variabilním symbolem.
      * @param $variableSymbol
      * @return bool
@@ -265,6 +259,9 @@ class UserRepository extends EntityRepository
     {
         foreach ($user->getCustomInputValues() as $customInputValue)
             $this->_em->remove($customInputValue);
+
+        foreach ($user->getApplications() as $application)
+            $this->_em->remove($application);
 
         foreach ($user->getLecturersBlocks() as $block)
             $block->setLector(NULL);

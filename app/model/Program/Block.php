@@ -2,6 +2,7 @@
 
 namespace App\Model\Program;
 
+use App\Model\Structure\Subevent;
 use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -48,6 +49,13 @@ class Block
      * @var Category
      */
     protected $category;
+
+    /**
+     * Podakce bloku.
+     * @ORM\ManyToOne(targetEntity="\App\Model\Structure\Subevent", inversedBy="blocks", cascade={"persist"})
+     * @var Subevent
+     */
+    protected $subevent;
 
     /**
      * Povinnost. 0 - nepovinný, 1 - povinný, 2 - automaticky zapisovaný.
@@ -182,6 +190,22 @@ class Block
     }
 
     /**
+     * @return Subevent
+     */
+    public function getSubevent()
+    {
+        return $this->subevent;
+    }
+
+    /**
+     * @param Subevent $subevent
+     */
+    public function setSubevent($subevent)
+    {
+        $this->subevent = $subevent;
+    }
+
+    /**
      * @return int
      */
     public function getMandatory()
@@ -284,14 +308,31 @@ class Block
      */
     public function isAllowed(User $user)
     {
-        if (!$this->category)
-            return TRUE;
+        $result = TRUE;
 
-        foreach ($user->getRoles() as $role) {
-            if ($role->getRegisterableCategories()->contains($this->category))
-                return TRUE;
+        if ($this->category) {
+            $tmp = FALSE;
+            foreach ($user->getRoles() as $role) {
+                if ($role->getRegisterableCategories()->contains($this->category)) {
+                    $tmp = TRUE;
+                    break;
+                }
+            }
+            if (!$tmp)
+                $result = FALSE;
         }
-        return FALSE;
+
+        $tmp = FALSE;
+        foreach ($user->getNotCanceledApplications() as $application) {
+            if ($application->getSubevents()->contains($this->subevent)) {
+                $tmp = TRUE;
+                break;
+            }
+        }
+        if (!$tmp)
+            $result = FALSE;
+
+        return $result;
     }
 
     /**

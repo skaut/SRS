@@ -102,7 +102,12 @@ class RolesGridControl extends Control
             }
         );
 
-        $grid->addColumnText('fee', 'admin.acl.roles_fee');
+        $grid->addColumnText('fee', 'admin.acl.roles_fee')
+            ->setRendererOnCondition(function ($row) {
+                return $this->translator->translate('admin.acl.roles_fee_from_subevents');
+            }, function ($row) {
+                return $row->getFee() === NULL;
+            });
 
 
         $grid->addToolbarButton('Acl:add')

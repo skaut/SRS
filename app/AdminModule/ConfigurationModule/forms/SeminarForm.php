@@ -5,6 +5,7 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseForm;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
+use App\Model\Structure\SubeventRepository;
 use Nette;
 use Nette\Application\UI\Form;
 
@@ -23,16 +24,22 @@ class SeminarForm extends Nette\Object
     /** @var SettingsRepository */
     private $settingsRepository;
 
+    /** @var SubeventRepository */
+    private $subeventRepository;
+
 
     /**
      * SeminarForm constructor.
      * @param BaseForm $baseForm
      * @param SettingsRepository $settingsRepository
+     * @param SubeventRepository $subeventRepository
      */
-    public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository)
+    public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository,
+                                SubeventRepository $subeventRepository)
     {
         $this->baseForm = $baseForm;
         $this->settingsRepository = $settingsRepository;
+        $this->subeventRepository = $subeventRepository;
     }
 
     /**
@@ -59,6 +66,8 @@ class SeminarForm extends Nette\Object
         $editRegistrationTo = $form->addDatePicker('editRegistrationTo', 'admin.configuration.edit_registration_to')
             ->addRule(Form::FILLED, 'admin.configuration.edit_registration_to_empty');
 
+        $form->addCheckbox('isAllowedAddSubeventsAfterPayment', 'admin.configuration.is_allowed_add_subevents_after_payment');
+
         $seminarFromDate->addRule([$this, 'validateSeminarFromDate'], 'admin.configuration.seminar_from_date_after_to', [$seminarFromDate, $seminarToDate]);
         $seminarToDate->addRule([$this, 'validateSeminarToDate'], 'admin.configuration.seminar_to_date_before_from', [$seminarToDate, $seminarFromDate]);
         $editRegistrationTo->addRule([$this, 'validateEditRegistrationTo'], 'admin.configuration.edit_registration_to_after_from', [$editRegistrationTo, $seminarFromDate]);
@@ -69,7 +78,8 @@ class SeminarForm extends Nette\Object
             'seminarName' => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
             'seminarFromDate' => $this->settingsRepository->getDateValue(Settings::SEMINAR_FROM_DATE),
             'seminarToDate' => $this->settingsRepository->getDateValue(Settings::SEMINAR_TO_DATE),
-            'editRegistrationTo' => $this->settingsRepository->getDateValue(Settings::EDIT_REGISTRATION_TO)
+            'editRegistrationTo' => $this->settingsRepository->getDateValue(Settings::EDIT_REGISTRATION_TO),
+            'isAllowedAddSubeventsAfterPayment' => $this->settingsRepository->getValue(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -85,9 +95,14 @@ class SeminarForm extends Nette\Object
     public function processForm(Form $form, \stdClass $values)
     {
         $this->settingsRepository->setValue(Settings::SEMINAR_NAME, $values['seminarName']);
+        $implicitSubevent = $this->subeventRepository->findImplicit();
+        $implicitSubevent->setName($values['seminarName']);
+        $this->subeventRepository->save($implicitSubevent);
+
         $this->settingsRepository->setDateValue(Settings::SEMINAR_FROM_DATE, $values['seminarFromDate']);
         $this->settingsRepository->setDateValue(Settings::SEMINAR_TO_DATE, $values['seminarToDate']);
         $this->settingsRepository->setDateValue(Settings::EDIT_REGISTRATION_TO, $values['editRegistrationTo']);
+        $this->settingsRepository->setValue(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT, $values['isAllowedAddSubeventsAfterPayment']);
     }
 
     /**

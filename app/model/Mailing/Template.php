@@ -2,6 +2,7 @@
 
 namespace App\Model\Mailing;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
@@ -103,6 +104,14 @@ class Template
      */
     protected $variables;
 
+
+    /**
+     * Template constructor.
+     */
+    public function __construct()
+    {
+        $this->variables = new ArrayCollection();
+    }
 
     /**
      * @return int
