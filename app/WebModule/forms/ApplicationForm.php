@@ -4,7 +4,7 @@ namespace App\WebModule\Forms;
 
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
-use App\Model\Enums\ApplicationStates;
+use App\Model\Enums\ApplicationState;
 use App\Model\Enums\MaturityType;
 use App\Model\Enums\Sex;
 use App\Model\Enums\VariableSymbolType;
@@ -293,7 +293,7 @@ class ApplicationForm extends Nette\Object
         $application->setMaturityDate($this->applicationService->countMaturityDate());
         $application->setVariableSymbol($this->applicationService->generateVariableSymbol($this->user));
         $application->setFee($fee);
-        $application->setState($fee == 0 ? ApplicationStates::PAID : ApplicationStates::WAITING_FOR_PAYMENT);
+        $application->setState($fee == 0 ? ApplicationState::PAID : ApplicationState::WAITING_FOR_PAYMENT);
 
         $this->applicationRepository->save($application);
 

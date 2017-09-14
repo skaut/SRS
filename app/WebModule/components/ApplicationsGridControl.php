@@ -5,12 +5,8 @@ namespace App\WebModule\Components;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Enums\ApplicationState;
-use App\Model\Enums\ApplicationStates;
 use App\Model\Enums\PaymentType;
-use App\Model\Mailing\Template;
-use App\Model\Mailing\TemplateVariable;
 use App\Model\Program\ProgramRepository;
-use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\Subevent;
 use App\Model\Structure\SubeventRepository;
@@ -20,16 +16,10 @@ use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\Authenticator;
 use App\Services\MailService;
-use Doctrine\Common\Collections\ArrayCollection;
-use function GuzzleHttp\Promise\all;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Utils\Html;
-use Nette\Utils\Random;
-use Nette\Utils\Strings;
 use Ublaboo\DataGrid\DataGrid;
-use function ZendTest\Code\Reflection\TestAsset\function1;
 
 
 /**
@@ -206,7 +196,7 @@ class ApplicationsGridControl extends Control
         }
 
         $grid->addAction('generatePaymentProofBank', 'web.profile.applications_download_payment_proof');
-        $grid->allowRowsAction('generatePaymentProofBank', function($item) {
+        $grid->allowRowsAction('generatePaymentProofBank', function ($item) {
             return $item->getPaymentMethod() == PaymentType::BANK;
         });
 
@@ -285,7 +275,7 @@ class ApplicationsGridControl extends Control
         $application->setMaturityDate($this->applicationService->countMaturityDate());
         $application->setVariableSymbol($this->applicationService->generateVariableSymbol($this->user));
         $application->setFee($fee);
-        $application->setState($fee == 0 ? ApplicationStates::PAID : ApplicationStates::WAITING_FOR_PAYMENT);
+        $application->setState($fee == 0 ? ApplicationState::PAID : ApplicationState::WAITING_FOR_PAYMENT);
         $application->setFirst(FALSE);
         $this->applicationRepository->save($application);
 
@@ -459,7 +449,7 @@ class ApplicationsGridControl extends Control
         if ($this->subeventRepository->countExplicitSubevents() > 0)
             $application->setSubevents($selectedSubevents);
         $application->setFee($fee);
-        $application->setState($fee == 0 ? ApplicationStates::PAID : ApplicationStates::WAITING_FOR_PAYMENT);
+        $application->setState($fee == 0 ? ApplicationState::PAID : ApplicationState::WAITING_FOR_PAYMENT);
         $this->applicationRepository->save($application);
 
         $this->programRepository->updateUserPrograms($this->user);

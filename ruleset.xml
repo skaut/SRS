@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<ruleset name="hskauting">
+<ruleset name="srs">
     <rule ref="Generic.Arrays.DisallowLongArraySyntax"/><!-- [] instead of array() -->
     <rule ref="Generic.Files.EndFileNewline"/><!-- Empty line at the end (Nette does that) -->
     <rule ref="Generic.PHP.UpperCaseConstant"/><!-- TRUE, FALSE, NULL -->
