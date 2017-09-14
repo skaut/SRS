@@ -81,20 +81,14 @@
 
         <h3>{_admin.users.users_detail_seminar}</h3>
         <div class="well">
+            {control applicationsGrid}
+
+            <br>
+
             {if !$editSeminar}
                 <table class="table table-form">
                     <col class="col-sm-3 col-xs-3">
                     <col class="col-sm-9 col-xs-9">
-
-                    <tr>
-                        <th>{_admin.users.users_roles}</th>
-                        <td>{foreach $detailUser->getRoles() as $role}{$role->getName()}{sep}, {/sep}{/foreach}</td>
-                    </tr>
-
-                    <tr>
-                        <th>{_admin.users.users_application_date}</th>
-                        <td>{$detailUser->getApplicationDate()|date:'j. n. Y H:i'}</td>
-                    </tr>
 
                     <tr>
                         <th>{_admin.users.users_approved_detail}</th>
@@ -167,62 +161,5 @@
                 {control editUserSeminarForm}
             {/if}
         </div>
-
-        {if $detailUser->isPaying()}
-            <h3>{_admin.users.users_detail_payment}</h3>
-            <div class="well">
-                {if !$editPayment}
-                    <table class="table table-form">
-                        <col class="col-sm-3 col-xs-3">
-                        <col class="col-sm-9 col-xs-9">
-
-                        <tr>
-                            <th>{_admin.users.users_fee}</th>
-                            <td>{$detailUser->getFee()}</td>
-                        </tr>
-
-                        <tr>
-                            <th>{_admin.users.users_variable_symbol}</th>
-                            <td>{$detailUser->getVariableSymbol()}</td>
-                        </tr>
-
-                        <tr>
-                            <th>{_admin.users.users_payment_method}</th>
-                            <td>{if $detailUser->getPaymentMethod()}{_'common.payment.' . $detailUser->getPaymentMethod()}{/if}</td>
-                        </tr>
-
-                        <tr>
-                            <th>{_admin.users.users_payment_date}</th>
-                            <td>{if $detailUser->getPaymentDate()}{$detailUser->getPaymentDate()|date:'j. n. Y'}{/if}</td>
-                        </tr>
-
-                        <tr>
-                            <th>{_admin.users.users_income_proof_printed_date}</th>
-                            <td>{if $detailUser->getIncomeProofPrintedDate()}{$detailUser->getIncomeProofPrintedDate()|date:'j. n. Y'}{/if}</td>
-                        </tr>
-
-                        <tr>
-                            <td></td>
-                            <td>
-                                <a n:href="editPayment!" class="btn btn-default ajax">{_admin.common.edit}</a>
-                                {if $detailUser->getPaymentDate() != null}
-                                    {if $detailUser->getPaymentMethod() == $paymentMethodBank}
-                                        <a class="btn btn-default" n:href="generatePaymentProofBank $detailUser->getId()">
-                                            {_admin.users.users_detail_generate_payment_proof_bank}
-                                        </a>
-                                    {elseif $detailUser->getPaymentMethod() == $paymentMethodCash}
-                                        <a class="btn btn-default" n:href="generatePaymentProofCash $detailUser->getId()">
-                                            {_admin.users.users_detail_generate_payment_proof_cash}
-                                        </a>
-                                    {/if}
-                                {/if}
-                            </td>
-                        </tr>
-                    </table>
-                {else}
-                    {control editUserPaymentForm}
-                {/if}
-            </div>
-        {/if}
     {/snippet}
 {/block}

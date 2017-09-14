@@ -144,38 +144,6 @@ class ProfilePresenter extends WebBasePresenter
         return $form;
     }
 
-//    protected function createComponentSubeventsForm()
-//    {
-//        $editSubeventsAllowed = FALSE; //TODO
-//
-//        $form = $this->subeventsFormFactory->create($this->user->id, $editSubeventsAllowed);
-//
-//        $form->onSuccess[] = function (Form $form, \stdClass $values) {
-//            $this->flashMessage('web.profile.subevents_update_successful', 'success');
-//
-//            $this->authenticator->updateRoles($this->user);
-//
-//            $this->redirect('this#collapseSeminar');
-//        };
-//
-//        return $form;
-//    }
-//
-//    protected function createComponentRolesForm()
-//    {
-//        $form = $this->rolesFormFactory->create($this->user->id, $this->editRegistrationAllowed);
-//
-//        $form->onSuccess[] = function (Form $form, \stdClass $values) {
-//            $this->flashMessage('web.profile.roles_update_successful', 'success');
-//
-//            $this->authenticator->updateRoles($this->user);
-//
-//            $this->redirect('this#collapseSeminar');
-//        };
-//
-//        return $form;
-//    }
-
     protected function createComponentAdditionalInformationForm()
     {
         $form = $this->additionalInformationFormFactory->create($this->user->id);

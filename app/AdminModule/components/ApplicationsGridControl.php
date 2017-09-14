@@ -1,6 +1,6 @@
 <?php
 
-namespace App\WebModule\Components;
+namespace App\AdminModule\Components;
 
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
@@ -23,7 +23,7 @@ use Ublaboo\DataGrid\DataGrid;
 
 
 /**
- * Komponenta pro správu vlastních přihlášek.
+ * Komponenta pro správu přihlášek.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
@@ -108,7 +108,7 @@ class ApplicationsGridControl extends Control
      */
     public function createComponentApplicationsGrid($name)
     {
-        $this->user = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
+        $this->user = $this->userRepository->findById($this->getPresenter()->getParameter('id'));
 
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -151,6 +151,12 @@ class ApplicationsGridControl extends Control
         $grid->addColumnDateTime('maturityDate', 'web.profile.applications_maturity_date')
             ->setFormat('j. n. Y');
 
+        $grid->addColumnText('paymentMethod', 'admin.users.users_payment_method');
+
+        $grid->addColumnDateTime('paymentDate', 'admin.users.users_payment_date');
+
+        $grid->addColumnDateTime('incomeProofPrintedDate', 'admin.users.users_income_proof_printed_date');
+
         $grid->addColumnText('state', 'web.profile.applications_state')
             ->setRenderer(function ($row) {
                 $state = $this->translator->translate('common.application_state.' . $row->getState());
@@ -161,7 +167,14 @@ class ApplicationsGridControl extends Control
                 return $state;
             });
 
-        if ($this->applicationService->isAllowedAddSubevents($this->user)) {
+        //TODO editace VS, platebni metoda, datum zaplaceni, datum vytisteni dokladu, mail pri potvrzeni platby
+//        if ($values['paymentDate'] !== NULL && $oldPaymentDate === NULL) {
+//            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::PAYMENT_CONFIRMED, [
+//                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)
+//            ]);
+//        }
+
+        if ($this->subeventRepository->countExplicitSubevents() > 0) {
             $grid->addInlineAdd()->onControlAdd[] = function ($container) {
                 $subeventsSelect = $container->addMultiSelect('subevents', '', $this->subeventRepository->getNonRegisteredExplicitOptionsWithCapacity($this->user))
                     ->setAttribute('class', 'datagrid-multiselect')
@@ -171,27 +184,35 @@ class ApplicationsGridControl extends Control
             $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
         }
 
-        if ($this->applicationService->isAllowedEditFirstApplication($this->user)) {
-            $grid->addInlineEdit()->onControlAdd[] = function ($container) {
-                $rolesSelect = $container->addMultiSelect('roles', '', $this->roleRepository->getRegisterableNowOrUsersOptionsWithCapacity($this->user))
-                    ->setAttribute('class', 'datagrid-multiselect')
-                    ->addRule(Form::FILLED, 'web.profile.applications_roles_empty');
+        $grid->addInlineEdit()->onControlAdd[] = function ($container) {
+            $rolesSelect = $container->addMultiSelect('roles', '', $this->roleRepository->getRegisterableNowOrUsersOptionsWithCapacity($this->user))
+                ->setAttribute('class', 'datagrid-multiselect')
+                ->addRule(Form::FILLED, 'web.profile.applications_roles_empty');
 
-                if ($this->subeventRepository->countExplicitSubevents() > 0) {
-                    $subeventsSelect = $container->addMultiSelect('subevents', '', $this->subeventRepository->getExplicitOptionsWithCapacity())
-                        ->setAttribute('class', 'datagrid-multiselect')
-                        ->addRule(Form::FILLED, 'web.profile.applications_subevents_empty');
-                }
-            };
-            $grid->getInlineEdit()->setText($this->translator->translate('web.profile.applications_edit'));
-            $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) {
-                $container->setDefaults([
-                    'roles' => $this->roleRepository->findRolesIds($item->getUser()->getRoles()),
-                    'subevents' => $this->subeventRepository->findSubeventsIds($item->getSubevents())
-                ]);
-            };
-            $grid->getInlineEdit()->onSubmit[] = [$this, 'edit'];
-        }
+            if ($this->subeventRepository->countExplicitSubevents() > 0) {
+                $subeventsSelect = $container->addMultiSelect('subevents', '', $this->subeventRepository->getExplicitOptionsWithCapacity())
+                    ->setAttribute('class', 'datagrid-multiselect')
+                    ->addRule(Form::FILLED, 'web.profile.applications_subevents_empty');
+            }
+
+            $container->addText('variableSymbol', 'admin.users.users_variable_symbol')
+                ->addRule(Form::FILLED)
+                ->addRule(Form::PATTERN, 'admin.users.users_edit_variable_symbol_format', '^\d{1,10}$');
+
+            $container->addSelect('paymentMethod', 'admin.users.users_payment_method', $this->preparePaymentMethodOptions());
+
+            $container->addDatePicker('paymentDate', 'admin.users.users_payment_date');
+
+            $container->addDatePicker('incomeProofPrintedDate', 'admin.users.users_income_proof_printed_date');
+        };
+        $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) {
+            $container->setDefaults([
+                'roles' => $this->roleRepository->findRolesIds($item->getUser()->getRoles()),
+                'subevents' => $this->subeventRepository->findSubeventsIds($item->getSubevents())
+            ]);
+        };
+        $grid->getInlineEdit()->onSubmit[] = [$this, 'edit'];
+
 
         $grid->addAction('generatePaymentProofBank', 'web.profile.applications_download_payment_proof');
         $grid->allowRowsAction('generatePaymentProofBank', function ($item) {
@@ -611,4 +632,19 @@ class ApplicationsGridControl extends Control
 
         return TRUE;
     }
+
+    /**
+     * Vrátí platební metody jako možnosti pro select.
+     * @return array
+     */
+    private function preparePaymentMethodOptions()
+    {
+        $options = [];
+        $options[''] = '';
+        foreach (PaymentType::$types as $type)
+            $options[$type] = 'common.payment.' . $type;
+        return $options;
+    }
 }
+
+

@@ -186,6 +186,7 @@ services:
     - App\WebModule\Forms\FaqForm
     - App\WebModule\Forms\PersonalDetailsForm
 
+    - App\AdminModule\Components\IApplicationsGridControlFactory
     - App\AdminModule\Components\IRolesGridControlFactory
     - App\AdminModule\Components\IUsersGridControlFactory
     - App\AdminModule\CMSModule\Components\IDocumentsGridControlFactory
@@ -208,7 +209,6 @@ services:
     - App\AdminModule\Forms\AddLectorForm
     - App\AdminModule\Forms\AddRoleForm
     - App\AdminModule\Forms\EditRoleForm
-    - App\AdminModule\Forms\EditUserPaymentForm
     - App\AdminModule\Forms\EditUserPersonalDetailsForm
     - App\AdminModule\Forms\EditUserSeminarForm
     - App\AdminModule\CMSModule\Forms\FaqForm
