@@ -5,12 +5,11 @@ namespace App\Model\User;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\ACL\Role;
-use App\Model\Enums\ApplicationStates;
+use App\Model\Enums\ApplicationState;
 use App\Model\Program\Block;
 use App\Model\Program\Program;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Structure\Subevent;
-use App\Model\Structure\SubeventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
@@ -414,8 +413,8 @@ class User
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->orX(
-                Criteria::expr()->eq('state', ApplicationStates::WAITING_FOR_PAYMENT),
-                Criteria::expr()->eq('state', ApplicationStates::PAID)
+                Criteria::expr()->eq('state', ApplicationState::WAITING_FOR_PAYMENT),
+                Criteria::expr()->eq('state', ApplicationState::PAID)
             ));
 
         return $this->applications->matching($criteria);
@@ -427,7 +426,7 @@ class User
     public function getWaitingForPaymentApplications()
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('state', ApplicationStates::WAITING_FOR_PAYMENT));
+            ->where(Criteria::expr()->eq('state', ApplicationState::WAITING_FOR_PAYMENT));
 
 
         return $this->applications->matching($criteria);
@@ -1104,7 +1103,7 @@ class User
     {
         $criteria = Criteria::create()->where(
             Criteria::expr()->andX(
-                Criteria::expr()->eq('state', ApplicationStates::PAID),
+                Criteria::expr()->eq('state', ApplicationState::PAID),
                 Criteria::expr()->eq('first', TRUE)
             )
         );
@@ -1121,7 +1120,7 @@ class User
      */
     public function hasPaidEveryApplication()
     {
-        $criteria = Criteria::create()->where(Criteria::expr()->eq('state', ApplicationStates::WAITING_FOR_PAYMENT));
+        $criteria = Criteria::create()->where(Criteria::expr()->eq('state', ApplicationState::WAITING_FOR_PAYMENT));
 
         if ($this->applications->matching($criteria)->isEmpty())
             return TRUE;

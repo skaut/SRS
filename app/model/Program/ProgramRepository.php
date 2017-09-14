@@ -4,7 +4,7 @@ namespace App\Model\Program;
 
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
-use App\Model\Enums\ApplicationStates;
+use App\Model\Enums\ApplicationState;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;

@@ -4,7 +4,7 @@ namespace App\AdminModule\ProgramModule\Components;
 
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
-use App\Model\Enums\ApplicationStates;
+use App\Model\Enums\ApplicationState;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Program\Program;
@@ -128,7 +128,7 @@ class ProgramAttendeesGridControl extends Control
                 ->innerJoin('a.subevents', 's')
                 ->where('per.name = :permission')
                 ->andWhere('s.id = :sid')
-                ->andWhere('(a.state = \'' . ApplicationStates::PAID . '\' OR a.state = \'' . ApplicationStates::WAITING_FOR_PAYMENT . '\')')
+                ->andWhere('(a.state = \'' . ApplicationState::PAID . '\' OR a.state = \'' . ApplicationState::WAITING_FOR_PAYMENT . '\')')
                 ->setParameter('pid', $program->getId())
                 ->setParameter('permission', Permission::CHOOSE_PROGRAMS)
                 ->setParameter('sid', $program->getBlock()->getSubevent()->getId())

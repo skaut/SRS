@@ -2,7 +2,7 @@
 
 namespace App\Model\Structure;
 
-use App\Model\Enums\ApplicationStates;
+use App\Model\Enums\ApplicationState;
 use App\Model\User\User;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -137,7 +137,7 @@ class SubeventRepository extends EntityRepository
         return $this->createQueryBuilder('s')
             ->select('COUNT(u.id)')
             ->leftJoin('s.applications', 'a', 'WITH',
-                'a.state = \'' . ApplicationStates::WAITING_FOR_PAYMENT . '\' OR a.state = \'' . ApplicationStates::PAID . '\'')
+                'a.state = \'' . ApplicationState::WAITING_FOR_PAYMENT . '\' OR a.state = \'' . ApplicationState::PAID . '\'')
             ->leftJoin('a.user', 'u', 'WITH', 'u.approved = TRUE')
             ->where('s.id = :id')->setParameter('id', $subevent->getId())
             ->getQuery()

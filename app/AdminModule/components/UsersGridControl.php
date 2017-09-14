@@ -230,9 +230,9 @@ class UsersGridControl extends Control
                     ->setText($row->isMember() ?
                         $this->translator->translate('admin.users.users_membership_no') :
                         (
-                            $row->isExternal() ?
-                                $this->translator->translate('admin.users.users_membership_external') :
-                                $this->translator->translate('admin.users.users_membership_not_connected')
+                        $row->isExternal() ?
+                            $this->translator->translate('admin.users.users_membership_external') :
+                            $this->translator->translate('admin.users.users_membership_not_connected')
                         )
                     );
             }, function ($row) {
@@ -702,7 +702,8 @@ class UsersGridControl extends Control
      * @param $length
      * @return bool|string
      */
-    private function truncate($text, $length) {
+    private function truncate($text, $length)
+    {
         if (strlen($text) > $length) {
             $text = $text . " ";
             $text = substr($text, 0, $length);

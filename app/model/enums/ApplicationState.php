@@ -3,7 +3,7 @@
 namespace App\Model\Enums;
 
 
-class ApplicationStates
+class ApplicationState
 {
     /**
      * Čeká na platbu.

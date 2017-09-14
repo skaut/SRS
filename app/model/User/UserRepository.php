@@ -4,7 +4,7 @@ namespace App\Model\User;
 
 use App\Model\ACL\Permission;
 use App\Model\ACL\Role;
-use App\Model\Enums\ApplicationStates;
+use App\Model\Enums\ApplicationState;
 use App\Model\Program\Program;
 use Doctrine\Common\Collections\Criteria;
 use Kdyby\Doctrine\EntityRepository;
@@ -155,7 +155,7 @@ class UserRepository extends EntityRepository
             ->innerJoin('a.subevents', 's')
             ->where('per.name = :permission')
             ->andWhere('s.id = :sid')
-            ->andWhere('(a.state = \'' . ApplicationStates::PAID . '\' OR a.state = \'' . ApplicationStates::WAITING_FOR_PAYMENT . '\')')
+            ->andWhere('(a.state = \'' . ApplicationState::PAID . '\' OR a.state = \'' . ApplicationState::WAITING_FOR_PAYMENT . '\')')
             ->setParameter('pid', $program->getId())
             ->setParameter('permission', Permission::CHOOSE_PROGRAMS)
             ->setParameter('sid', $program->getBlock()->getSubevent()->getId());
