@@ -39,10 +39,10 @@ class BlockForm extends Nette\Object
     private $block;
 
     /**
-     * Počet vytvořených podakcí.
+     * Jsou vytvořené podakce.
      * @var int
      */
-    private $subeventsCount;
+    private $subeventsExists;
 
     /** @var BaseForm */
     private $baseFormFactory;
@@ -100,7 +100,7 @@ class BlockForm extends Nette\Object
         $this->block = $this->blockRepository->findById($id);
         $this->user = $this->userRepository->findById($userId);
 
-        $this->subeventsCount = $this->subeventRepository->countExplicitSubevents();
+        $this->subeventsExists = $this->subeventRepository->explicitSubeventsExists();
 
         $form = $this->baseFormFactory->create();
 
@@ -109,7 +109,7 @@ class BlockForm extends Nette\Object
         $form->addText('name', 'admin.program.blocks_name')
             ->addRule(Form::FILLED, 'admin.program.blocks_name_empty');
 
-        if ($this->subeventsCount > 0) {
+        if ($this->subeventsExists) {
             $form->addSelect('subevent', 'admin.program.blocks_subevent', $this->subeventRepository->getSubeventsOptions())
                 ->setPrompt('')
                 ->addRule(Form::FILLED, 'admin.program.blocks_subevent_empty');
@@ -183,7 +183,7 @@ class BlockForm extends Nette\Object
                 'tools' => $this->block->getTools()
             ]);
 
-            if ($this->subeventsCount > 0) {
+            if ($this->subeventsExists) {
                 $form->setDefaults([
                     'subevent' => $this->block->getSubevent() ? $this->block->getSubevent()->getId() : NULL
                 ]);
@@ -231,7 +231,7 @@ class BlockForm extends Nette\Object
             $this->block->setDescription($values['description']);
             $this->block->setTools($values['tools']);
 
-            if ($this->subeventsCount > 0) {
+            if ($this->subeventsExists) {
                 $subevent = $values['subevent'] != '' ? $this->subeventRepository->findById($values['subevent']) : NULL;
                 $this->block->setSubevent($subevent);
             }

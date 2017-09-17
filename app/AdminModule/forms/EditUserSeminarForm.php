@@ -2,8 +2,6 @@
 
 namespace App\AdminModule\Forms;
 
-use App\Model\ACL\Role;
-use App\Model\ACL\RoleRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
@@ -37,9 +35,6 @@ class EditUserSeminarForm extends Nette\Object
     /** @var UserRepository */
     private $userRepository;
 
-    /** @var RoleRepository */
-    private $roleRepository;
-
     /** @var CustomInputRepository */
     private $customInputRepository;
 
@@ -57,20 +52,18 @@ class EditUserSeminarForm extends Nette\Object
      * EditUserSeminarForm constructor.
      * @param BaseForm $baseFormFactory
      * @param UserRepository $userRepository
-     * @param RoleRepository $roleRepository
      * @param CustomInputRepository $customInputRepository
      * @param CustomInputValueRepository $customInputValueRepository
      * @param SettingsRepository $settingsRepository
      * @param ProgramRepository $programRepository
      */
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
-                                RoleRepository $roleRepository, CustomInputRepository $customInputRepository,
+                                CustomInputRepository $customInputRepository,
                                 CustomInputValueRepository $customInputValueRepository,
                                 SettingsRepository $settingsRepository, ProgramRepository $programRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->userRepository = $userRepository;
-        $this->roleRepository = $roleRepository;
         $this->customInputRepository = $customInputRepository;
         $this->customInputValueRepository = $customInputValueRepository;
         $this->settingsRepository = $settingsRepository;
@@ -90,15 +83,7 @@ class EditUserSeminarForm extends Nette\Object
 
         $form->addHidden('id');
 
-        $rolesSelect = $form->addMultiSelect('roles', 'admin.users.users_roles',
-            $this->roleRepository->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED]));
-
-        $approvedCheckbox = $form->addCheckbox('approved', 'admin.users.users_approved_form');
-
-        $rolesSelect
-            ->addRule(Form::FILLED, 'admin.users.users_edit_roles_empty')
-            ->addRule([$this, 'validateRolesCapacities'], 'admin.users.users_edit_roles_occupied', [$approvedCheckbox])
-            ->addRule([$this, 'validateRolesCombination'], 'admin.users.users_edit_roles_nonregistered');
+        $form->addCheckbox('approved', 'admin.users.users_approved_form');
 
         $form->addCheckbox('attended', 'admin.users.users_attended_form');
 
@@ -139,7 +124,6 @@ class EditUserSeminarForm extends Nette\Object
 
         $form->setDefaults([
             'id' => $id,
-            'roles' => $this->roleRepository->findRolesIds($this->user->getRoles()),
             'approved' => $this->user->isApproved(),
             'attended' => $this->user->isAttended(),
             'arrival' => $this->user->getArrival(),
@@ -162,7 +146,6 @@ class EditUserSeminarForm extends Nette\Object
     public function processForm(Form $form, \stdClass $values)
     {
         if (!$form['cancel']->isSubmittedBy()) {
-            $this->user->setRoles($this->roleRepository->findRolesByIds($values['roles']));
             $this->user->setApproved($values['approved']);
             $this->user->setAttended($values['attended']);
 
@@ -204,42 +187,5 @@ class EditUserSeminarForm extends Nette\Object
 
             $this->userRepository->save($this->user);
         }
-    }
-
-    /**
-     * Ověří obsazenost rolí.
-     * @param $field
-     * @param $args
-     * @return bool
-     */
-    public function validateRolesCapacities($field, $args)
-    {
-        $approved = $args[0];
-        if ($approved) {
-            foreach ($this->roleRepository->findRolesByIds($field->getValue()) as $role) {
-                if ($role->hasLimitedCapacity()) {
-                    if ($this->roleRepository->countUnoccupiedInRole($role) < 1 && !$this->user->isInRole($role))
-                        return FALSE;
-                }
-            }
-        }
-        return TRUE;
-    }
-
-    /**
-     * Ověří kombinaci role "Neregistrovaný" s ostatními rolemi.
-     * @param $field
-     * @param $args
-     * @return bool
-     */
-    public function validateRolesCombination($field, $args)
-    {
-        $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
-        $nonregisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
-
-        if ($selectedRoles->contains($nonregisteredRole) && $selectedRoles->count() > 1)
-            return FALSE;
-
-        return TRUE;
     }
 }

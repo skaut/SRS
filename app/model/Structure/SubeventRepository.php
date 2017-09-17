@@ -158,6 +158,15 @@ class SubeventRepository extends EntityRepository
     }
 
     /**
+     * Vrací, zda jsou vytvořeny podakce.
+     * @return bool
+     */
+    public function explicitSubeventsExists()
+    {
+        return $this->countExplicitSubevents() > 0;
+    }
+
+    /**
      * Vrací seznam podakcí jako možnosti pro select.
      * @return array
      */

@@ -2,9 +2,9 @@
 
 namespace App\AdminModule\Presenters;
 
+use App\AdminModule\Components\IApplicationsGridControlFactory;
 use App\AdminModule\Components\IUsersGridControlFactory;
 use App\AdminModule\Forms\AddLectorForm;
-use App\AdminModule\Forms\EditUserPaymentForm;
 use App\AdminModule\Forms\EditUserPersonalDetailsForm;
 use App\AdminModule\Forms\EditUserSeminarForm;
 use App\Model\ACL\Permission;
@@ -53,10 +53,10 @@ class UsersPresenter extends AdminBasePresenter
     public $editUserSeminarFormFactory;
 
     /**
-     * @var EditUserPaymentForm
+     * @var IApplicationsGridControlFactory
      * @inject
      */
-    public $editUserPaymentFormFactory;
+    public $applicationsGridControlFactory;
 
     /**
      * @var PdfExportService
@@ -160,33 +160,33 @@ class UsersPresenter extends AdminBasePresenter
         }
     }
 
-    /**
-     * Vygeneruje příjmový pokladní doklad.
-     * @param $id
-     */
-    public function actionGeneratePaymentProofCash($id)
-    {
-        $user = $this->userRepository->findById($id);
-        if (!$user->getIncomeProofPrintedDate()) {
-            $user->setIncomeProofPrintedDate(new \DateTime());
-            $this->userRepository->save($user);
-        }
-        $this->pdfExportService->generatePaymentProof($user, "prijmovy-pokladni-doklad.pdf");
-    }
-
-    /**
-     * Vygeneruje potvrzení o přijetí platby.
-     * @param $id
-     */
-    public function actionGeneratePaymentProofBank($id)
-    {
-        $user = $this->userRepository->findById($id);
-        if (!$user->getIncomeProofPrintedDate()) {
-            $user->setIncomeProofPrintedDate(new \DateTime());
-            $this->userRepository->save($user);
-        }
-        $this->pdfExportService->generatePaymentProof($user, "potvrzeni-o-prijeti-platby.pdf");
-    }
+//    /**
+//     * Vygeneruje příjmový pokladní doklad.
+//     * @param $id
+//     */
+//    public function actionGeneratePaymentProofCash($id)
+//    {
+//        $user = $this->userRepository->findById($id);
+//        if (!$user->getIncomeProofPrintedDate()) {
+//            $user->setIncomeProofPrintedDate(new \DateTime());
+//            $this->userRepository->save($user);
+//        }
+//        $this->pdfExportService->generatePaymentProof($user, "prijmovy-pokladni-doklad.pdf");
+//    }
+//
+//    /**
+//     * Vygeneruje potvrzení o přijetí platby.
+//     * @param $id
+//     */
+//    public function actionGeneratePaymentProofBank($id)
+//    {
+//        $user = $this->userRepository->findById($id);
+//        if (!$user->getIncomeProofPrintedDate()) {
+//            $user->setIncomeProofPrintedDate(new \DateTime());
+//            $this->userRepository->save($user);
+//        }
+//        $this->pdfExportService->generatePaymentProof($user, "potvrzeni-o-prijeti-platby.pdf");
+//    }
 
     protected function createComponentUsersGrid()
     {
@@ -241,19 +241,8 @@ class UsersPresenter extends AdminBasePresenter
         return $form;
     }
 
-    protected function createComponentEditUserPaymentForm()
+    protected function createComponentApplicationsGrid()
     {
-        $form = $this->editUserPaymentFormFactory->create($this->getParameter('id'));
-
-        $form->onSuccess[] = function (Form $form, \stdClass $values) {
-            if ($form['cancel']->isSubmittedBy()) {
-                $this->redirect('this');
-            } else {
-                $this->flashMessage('admin.users.users_saved', 'success');
-                $this->redirect('this');
-            }
-        };
-
-        return $form;
+        return $this->applicationsGridControlFactory->create();
     }
 }

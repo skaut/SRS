@@ -49,10 +49,10 @@ class ApplicationForm extends Nette\Object
     public $onSkautIsError;
 
     /**
-     * Počet vytvořených podakcí.
-     * @var int
+     * Jsou vytvořené podakce.
+     * @var bool
      */
-    private $subeventsCount;
+    private $subeventsExists;
 
     /** @var BaseForm */
     private $baseFormFactory;
@@ -137,7 +137,7 @@ class ApplicationForm extends Nette\Object
     {
         $this->user = $this->userRepository->findById($id);
 
-        $this->subeventsCount = $this->subeventRepository->countExplicitSubevents();
+        $this->subeventsExists = $this->subeventRepository->explicitSubeventsExists();
 
         $form = $this->baseFormFactory->create();
 
@@ -278,7 +278,7 @@ class ApplicationForm extends Nette\Object
             $this->user->setDeparture($values['departure']);
 
         //podakce
-        $subevents = $this->subeventRepository->countExplicitSubevents() > 0
+        $subevents = $this->subeventRepository->explicitSubeventsExists()
             ? $this->subeventRepository->findSubeventsByIds($values['subevents'])
             : new ArrayCollection([$this->subeventRepository->findImplicit()]);
 
@@ -359,7 +359,7 @@ class ApplicationForm extends Nette\Object
      */
     private function addSubeventsSelect(Form $form)
     {
-        if ($this->subeventRepository->countExplicitSubevents() > 0) {
+        if ($this->subeventRepository->explicitSubeventsExists()) {
             $subeventsOptions = $this->subeventRepository->getExplicitOptionsWithCapacity();
 
             $subeventsSelect = $form->addMultiSelect('subevents', 'web.application_content.subevents')->setItems(
