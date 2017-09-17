@@ -195,7 +195,9 @@ class ApplicationsGridControl extends Control
 
         $grid->addAction('generatePaymentProofBank', 'web.profile.applications_download_payment_proof');
         $grid->allowRowsAction('generatePaymentProofBank', function ($item) {
-            return $item->getPaymentMethod() == PaymentType::BANK;
+            return $item->getState() == ApplicationState::PAID
+                && $item->getPaymentMethod() == PaymentType::BANK
+                && $item->getPaymentDate();
         });
 
         $grid->setColumnsSummary(['fee']);
@@ -422,20 +424,18 @@ class ApplicationsGridControl extends Control
                     $this->redirect('this');
                 }
             }
+        }
 
-
-            //pokud si uživatel přidá roli, která vyžaduje schválení, stane se neschválený
-            $approved = TRUE;
-            if ($approved) {
-                foreach ($selectedRoles as $role) {
-                    if (!$role->isApprovedAfterRegistration() && !$this->user->getRoles()->contains($role)) {
-                        $approved = FALSE;
-                        break;
-                    }
+        //pokud si uživatel přidá roli, která vyžaduje schválení, stane se neschválený
+        $approved = TRUE;
+        if ($approved) {
+            foreach ($selectedRoles as $role) {
+                if (!$role->isApprovedAfterRegistration() && !$this->user->getRoles()->contains($role)) {
+                    $approved = FALSE;
+                    break;
                 }
             }
         }
-
 
         //zpracovani zmen
         $this->user->setRoles($selectedRoles);
@@ -447,7 +447,9 @@ class ApplicationsGridControl extends Control
         if ($this->subeventRepository->explicitSubeventsExists())
             $application->setSubevents($selectedSubevents);
         $application->setFee($fee);
-        $application->setState($fee == 0 ? ApplicationState::PAID : ApplicationState::WAITING_FOR_PAYMENT);
+        $application->setState($fee == 0 || $application->getPaymentDate()
+            ? ApplicationState::PAID
+            : ApplicationState::WAITING_FOR_PAYMENT);
         $this->applicationRepository->save($application);
 
         $this->programRepository->updateUserPrograms($this->user);

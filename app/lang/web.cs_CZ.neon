@@ -46,7 +46,7 @@ profile:
     applications_required_subevents_not_selected: "K podakci %subevent% musíte mít vybrané podakce: %requiredSubevents%."
     applications_incompatible_subevents_selected: "Není možné kombinovat podakci %subevent% s podakcemi: %incompatibleSubevents%."
     applications_subevents_empty: "Musí být vybrána alespoň jedna podakce."
-    applications_subevents_capacity_occupied: "Všechna místa v některé podakci jsou obsazena."
+    applications_subevents_capacity_occupied: "Všechna místa na některé podakci jsou obsazena."
     applications_fee: "Poplatek"
     applications_variable_symbol: "Variabilní symbol"
     applications_maturity_date: "Datum splatnosti"

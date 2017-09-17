@@ -12,6 +12,7 @@ use App\Model\Structure\Subevent;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\Application;
 use App\Model\User\ApplicationRepository;
+use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\Authenticator;
@@ -118,10 +119,10 @@ class ApplicationsGridControl extends Control
         );
         $grid->setPagination(FALSE);
 
-        $grid->addColumnDateTime('applicationDate', 'web.profile.applications_application_date')
+        $grid->addColumnDateTime('applicationDate', 'admin.users.users_applications_application_date')
             ->setFormat('j. n. Y H:i');
 
-        $grid->addColumnText('roles', 'web.profile.applications_roles')
+        $grid->addColumnText('roles', 'admin.users.users_applications_roles')
             ->setRenderer(function ($row) {
                 if (!$row->isFirst())
                     return "";
@@ -134,7 +135,7 @@ class ApplicationsGridControl extends Control
             });
 
         if ($this->subeventRepository->explicitSubeventsExists()) {
-            $grid->addColumnText('subevents', 'web.profile.applications_subevents')
+            $grid->addColumnText('subevents', 'admin.users.users_applications_subevents')
                 ->setRenderer(function ($row) {
                     $subevents = [];
                     foreach ($row->getSubevents() as $subevent) {
@@ -144,27 +145,28 @@ class ApplicationsGridControl extends Control
                 });
         }
 
-        $grid->addColumnNumber('fee', 'web.profile.applications_fee');
+        $grid->addColumnNumber('fee', 'admin.users.users_applications_fee');
 
-        $grid->addColumnText('variable_symbol', 'web.profile.applications_variable_symbol');
+        $grid->addColumnText('variableSymbol', 'admin.users.users_applications_variable_symbol');
 
-        $grid->addColumnDateTime('maturityDate', 'web.profile.applications_maturity_date')
+        $grid->addColumnDateTime('maturityDate', 'admin.users.users_applications_maturity_date')
             ->setFormat('j. n. Y');
 
-        $grid->addColumnText('paymentMethod', 'admin.users.users_payment_method');
-
-        $grid->addColumnDateTime('paymentDate', 'admin.users.users_payment_date');
-
-        $grid->addColumnDateTime('incomeProofPrintedDate', 'admin.users.users_income_proof_printed_date');
-
-        $grid->addColumnText('state', 'web.profile.applications_state')
+        $grid->addColumnText('paymentMethod', 'admin.users.users_applications_payment_method')
             ->setRenderer(function ($row) {
-                $state = $this->translator->translate('common.application_state.' . $row->getState());
+                $paymentMethod = $row->getPaymentMethod();
+                if ($paymentMethod)
+                    return $this->translator->translate('common.payment.' . $paymentMethod);
+                return NULL;
+            });
 
-                if ($row->getState() == ApplicationState::PAID && $row->getPaymentDate() !== NULL)
-                    $state .= ' (' . $row->getPaymentDate()->format('j. n. Y') . ')';
+        $grid->addColumnDateTime('paymentDate', 'admin.users.users_applications_payment_date');
 
-                return $state;
+        $grid->addColumnDateTime('incomeProofPrintedDate', 'admin.users.users_applications_income_proof_printed_date');
+
+        $grid->addColumnText('state', 'admin.users.users_applications_state')
+            ->setRenderer(function ($row) {
+                return $this->translator->translate('common.application_state.' . $row->getState());
             });
 
         //TODO editace VS, platebni metoda, datum zaplaceni, datum vytisteni dokladu, mail pri potvrzeni platby
@@ -176,26 +178,28 @@ class ApplicationsGridControl extends Control
 
         if ($this->subeventRepository->explicitSubeventsExists()) {
             $grid->addInlineAdd()->onControlAdd[] = function ($container) {
-                $subeventsSelect = $container->addMultiSelect('subevents', '', $this->subeventRepository->getNonRegisteredExplicitOptionsWithCapacity($this->user))
-                    ->setAttribute('class', 'datagrid-multiselect')
-                    ->addRule(Form::FILLED, 'web.profile.applications_subevents_empty');
+                $rolesSelect = $container->addMultiSelect('roles', '', $this->roleRepository->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED]))
+                    ->setAttribute('class', 'datagrid-multiselect');
+
+                if ($this->subeventRepository->explicitSubeventsExists()) {
+                    $subeventsSelect = $container->addMultiSelect('subevents', '', $this->subeventRepository->getNonRegisteredExplicitOptionsWithCapacity($this->user))
+                        ->setAttribute('class', 'datagrid-multiselect');
+                }
             };
-            $grid->getInlineAdd()->setText($this->translator->translate('web.profile.applications_add_subevents'));
             $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
         }
 
         $grid->addInlineEdit()->onControlAdd[] = function ($container) {
-            $rolesSelect = $container->addMultiSelect('roles', '', $this->roleRepository->getRegisterableNowOrUsersOptionsWithCapacity($this->user))
+            $rolesSelect = $container->addMultiSelect('roles', '', $this->roleRepository->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED]))
                 ->setAttribute('class', 'datagrid-multiselect');
 
             if ($this->subeventRepository->explicitSubeventsExists()) {
                 $subeventsSelect = $container->addMultiSelect('subevents', '', $this->subeventRepository->getExplicitOptionsWithCapacity())
-                    ->setAttribute('class', 'datagrid-multiselect')
-                    ->addRule(Form::FILLED, 'web.profile.applications_subevents_empty');
+                    ->setAttribute('class', 'datagrid-multiselect');
             }
 
             $container->addText('variableSymbol', 'admin.users.users_variable_symbol')
-                ->addRule(Form::FILLED)
+                ->addRule(Form::FILLED, 'admin.users.users_applications_variable_symbol_empty')
                 ->addRule(Form::PATTERN, 'admin.users.users_edit_variable_symbol_format', '^\d{1,10}$');
 
             $container->addSelect('paymentMethod', 'admin.users.users_payment_method', $this->preparePaymentMethodOptions());
@@ -203,19 +207,35 @@ class ApplicationsGridControl extends Control
             $container->addDatePicker('paymentDate', 'admin.users.users_payment_date');
 
             $container->addDatePicker('incomeProofPrintedDate', 'admin.users.users_income_proof_printed_date');
+
+            $container->addDatePicker('maturityDate', 'admin.users.users_maturity_date');
         };
         $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) {
             $container->setDefaults([
-                'roles' => $this->roleRepository->findRolesIds($item->getUser()->getRoles()),
-                'subevents' => $this->subeventRepository->findSubeventsIds($item->getSubevents())
+                'roles' => $item->isFirst() ? $this->roleRepository->findRolesIds($item->getUser()->getRoles()) : NULL,
+                'subevents' => $this->subeventRepository->findSubeventsIds($item->getSubevents()),
+                'variableSymbol' => $item->getVariableSymbol(),
+                'paymentMethod' => $item->getPaymentMethod(),
+                'paymentDate' => $item->getPaymentDate(),
+                'incomeProofPrintedDate' => $item->getIncomeProofPrintedDate(),
+                'maturityDate' => $item->getMaturityDate()
             ]);
         };
         $grid->getInlineEdit()->onSubmit[] = [$this, 'edit'];
 
 
-        $grid->addAction('generatePaymentProofBank', 'web.profile.applications_download_payment_proof');
+        $grid->addAction('generatePaymentProofCash', 'admin.users.users_applications_download_payment_proof_cash');
+        $grid->allowRowsAction('generatePaymentProofCash', function ($item) {
+            return $item->getState() == ApplicationState::PAID
+                &&$item->getPaymentMethod() == PaymentType::CASH
+                && $item->getPaymentDate();
+        });
+
+        $grid->addAction('generatePaymentProofBank', 'admin.users.users_applications_download_payment_proof_bank');
         $grid->allowRowsAction('generatePaymentProofBank', function ($item) {
-            return $item->getPaymentMethod() == PaymentType::BANK;
+            return $item->getState() == ApplicationState::PAID
+                && $item->getPaymentMethod() == PaymentType::BANK
+                && $item->getPaymentDate();
         });
 
         $grid->setColumnsSummary(['fee']);
@@ -227,29 +247,69 @@ class ApplicationsGridControl extends Control
      */
     public function add($values)
     {
-        $selectedSubevents = $this->subeventRepository->findSubeventsByIds($values['subevents']);
-        $selectedAndUsersSubevents = $this->user->getSubevents();
-        foreach ($selectedSubevents as $subevent)
-            $selectedAndUsersSubevents->add($subevent);
+        $selectedRoles = $this->roleRepository->findRolesByIds($values['roles']);
 
-        //kontrola podakci
-        if (!$this->checkSubeventsCapacities($selectedSubevents)) {
-            $this->getPresenter()->flashMessage('web.profile.applications_subevents_capacity_occupied', 'danger');
-            $this->redirect('this');
+        //kontrola roli
+        if ($this->user->getApplications()->isEmpty()) {
+            if (!$this->validateRolesEmpty($selectedRoles)) {
+                $this->getPresenter()->flashMessage('admin.users.users_applications_roles_empty', 'danger');
+                $this->redirect('this');
+            }
+
+            if (!$this->validateRolesCapacities($selectedRoles)) {
+                $this->getPresenter()->flashMessage('admin.users.users_applications_roles_occupied', 'danger');
+                $this->redirect('this');
+            }
+
+            if (!$this->validateRolesCombination($selectedRoles)) {
+                $this->getPresenter()->flashMessage('admin.users.users_applications_roles_nonregistered', 'danger');
+                $this->redirect('this');
+            }
         }
+        else {
+            if ($this->validateRolesEmpty($selectedRoles)) {
+                $this->getPresenter()->flashMessage('admin.users.users_applications_roles_not_empty', 'danger');
+                $this->redirect('this');
+            }
+        }
+
+        if ($this->subeventRepository->explicitSubeventsExists()) {
+            $selectedSubevents = $this->subeventRepository->findSubeventsByIds($values['subevents']);
+            $selectedAndUsersSubevents = $this->user->getSubevents();
+            foreach ($selectedSubevents as $subevent)
+                $selectedAndUsersSubevents->add($subevent);
+
+            //kontrola podakci
+            if (!$this->validateSubeventsCapacities($selectedSubevents)) {
+                $this->getPresenter()->flashMessage('admin.users.users_applications_subevents_occupied', 'danger');
+                $this->redirect('this');
+            }
+        }
+
 
         //zpracovani zmen
         $application = new Application();
-        $fee = $this->applicationService->countFee($this->user->getRoles(), $selectedSubevents, FALSE);
+
+        if ($this->user->getApplications()->isEmpty()) {
+            $this->user->setRoles($selectedRoles);
+            $this->userRepository->save($this->user);
+            $application->setFirst(TRUE);
+        }
+        else {
+            $application->setFirst(FALSE);
+        }
+
+        $fee = $this->applicationService->countFee($selectedRoles, $selectedSubevents);
+
         $application->setUser($this->user);
-        $application->setSubevents($selectedSubevents);
+        if ($this->subeventRepository->explicitSubeventsExists())
+            $application->setSubevents($selectedSubevents);
         $application->setApplicationDate(new \DateTime());
         $application->setApplicationOrder($this->applicationRepository->findLastApplicationOrder() + 1);
         $application->setMaturityDate($this->applicationService->countMaturityDate());
         $application->setVariableSymbol($this->applicationService->generateVariableSymbol($this->user));
         $application->setFee($fee);
         $application->setState($fee == 0 ? ApplicationState::PAID : ApplicationState::WAITING_FOR_PAYMENT);
-        $application->setFirst(FALSE);
         $this->applicationRepository->save($application);
 
         $this->programRepository->updateUserPrograms($this->user);
@@ -273,7 +333,7 @@ class ApplicationsGridControl extends Control
 //            TemplateVariable::USERS_ROLES => $rolesNames
 //        ]);
 
-        $this->getPresenter()->flashMessage('web.profile.applications_add_subevents_successful', 'success');
+        $this->getPresenter()->flashMessage('admin.users.users_applications_saved', 'success');
         $this->redirect('this');
     }
 
@@ -286,96 +346,62 @@ class ApplicationsGridControl extends Control
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($values['roles']);
 
-        //kontrola roli
-        if (!$this->checkRolesCapacities($selectedRoles)) {
-            $this->getPresenter()->flashMessage('web.profile.applications_roles_capacity_occupied', 'danger');
-            $this->redirect('this');
-        }
+        $application = $this->applicationRepository->findById($id);
 
-        if (!$this->checkRolesRegisterable($selectedRoles)) {
-            $this->getPresenter()->flashMessage('web.profile.applications_role_is_not_registerable', 'danger');
-            $this->redirect('this');
+        //kontrola roli
+        if ($application->isFirst()) {
+            if (!$this->validateRolesEmpty($selectedRoles)) {
+                $this->getPresenter()->flashMessage('admin.users.users_applications_roles_empty', 'danger');
+                $this->redirect('this');
+            }
+
+            if (!$this->validateRolesCapacities($selectedRoles)) {
+                $this->getPresenter()->flashMessage('admin.users.users_applications_roles_occupied', 'danger');
+                $this->redirect('this');
+            }
+
+            if (!$this->validateRolesCombination($selectedRoles)) {
+                $this->getPresenter()->flashMessage('admin.users.users_applications_roles_nonregistered', 'danger');
+                $this->redirect('this');
+            }
+        }
+        else {
+            if ($this->validateRolesEmpty($selectedRoles)) {
+                $this->getPresenter()->flashMessage('admin.users.users_applications_roles_not_empty', 'danger');
+                $this->redirect('this');
+            }
         }
 
         if ($this->subeventRepository->explicitSubeventsExists()) {
             $selectedSubevents = $this->subeventRepository->findSubeventsByIds($values['subevents']);
 
             //kontrola podakci
-            if (!$this->checkSubeventsCapacities($selectedSubevents)) {
-                $this->getPresenter()->flashMessage('web.profile.applications_subevents_capacity_occupied', 'danger');
+            if (!$this->validateSubeventsCapacities($selectedSubevents)) {
+                $this->getPresenter()->flashMessage('admin.users.users_applications_subevents_occupied', 'danger');
                 $this->redirect('this');
-            }
-
-            foreach ($this->subeventRepository->findAllExplicitOrderedByName() as $subevent) {
-                $incompatibleSubevents = $subevent->getIncompatibleSubevents();
-                if (count($incompatibleSubevents) > 0 && !$this->checkSubeventsIncompatible($selectedSubevents, $subevent)) {
-                    $messageThis = $subevent->getName();
-
-                    $first = TRUE;
-                    $messageOthers = "";
-                    foreach ($incompatibleSubevents as $incompatibleSubevent) {
-                        if ($first)
-                            $messageOthers .= $incompatibleSubevent->getName();
-                        else
-                            $messageOthers .= ", " . $incompatibleSubevent->getName();
-
-                        $first = FALSE;
-                    }
-
-                    $message = $this->translator->translate('web.profile.applications_incompatible_subevents_selected', NULL,
-                        ['subevent' => $messageThis, 'incompatibleSubevents' => $messageOthers]
-                    );
-                    $this->getPresenter()->flashMessage($message, 'danger');
-                    $this->redirect('this');
-                }
-
-                $requiredSubevents = $subevent->getRequiredSubeventsTransitive();
-                if (count($requiredSubevents) > 0 && !$this->checkSubeventsRequired($selectedSubevents, $subevent)) {
-                    $messageThis = $subevent->getName();
-
-                    $first = TRUE;
-                    $messageOthers = "";
-                    foreach ($requiredSubevents as $requiredSubevent) {
-                        if ($first)
-                            $messageOthers .= $requiredSubevent->getName();
-                        else
-                            $messageOthers .= ", " . $requiredSubevent->getName();
-                        $first = FALSE;
-                    }
-
-                    $message = $this->translator->translate('web.profile.applications_required_subevents_not_selected', NULL,
-                        ['subevent' => $messageThis, 'requiredSubevents' => $messageOthers]
-                    );
-                    $this->getPresenter()->flashMessage($message, 'danger');
-                    $this->redirect('this');
-                }
-            }
-
-
-            //pokud si uživatel přidá roli, která vyžaduje schválení, stane se neschválený
-            $approved = TRUE;
-            if ($approved) {
-                foreach ($selectedRoles as $role) {
-                    if (!$role->isApprovedAfterRegistration() && !$this->user->getRoles()->contains($role)) {
-                        $approved = FALSE;
-                        break;
-                    }
-                }
             }
         }
 
 
         //zpracovani zmen
-        $this->user->setRoles($selectedRoles);
-        $this->user->setApproved($approved);
-        $this->userRepository->save($this->user);
+        if ($application->isFirst()) {
+            $this->user->setRoles($selectedRoles);
+            $this->userRepository->save($this->user);
+        }
 
         $fee = $this->applicationService->countFee($selectedRoles, $selectedSubevents);
-        $application = $this->applicationRepository->findById($id);
+
         if ($this->subeventRepository->explicitSubeventsExists())
             $application->setSubevents($selectedSubevents);
+        $application->setVariableSymbol($values['variableSymbol']);
+        $application->setPaymentMethod($values['paymentMethod']);
+        $application->setPaymentDate($values['paymentDate']);
+        $application->setIncomeProofPrintedDate($values['incomeProofPrintedDate']);
+        $application->setMaturityDate($values['maturityDate']);
         $application->setFee($fee);
-        $application->setState($fee == 0 ? ApplicationState::PAID : ApplicationState::WAITING_FOR_PAYMENT);
+        $application->setState($fee == 0 || $application->getPaymentDate()
+            ? ApplicationState::PAID
+            : ApplicationState::WAITING_FOR_PAYMENT);
         $this->applicationRepository->save($application);
 
         $this->programRepository->updateUserPrograms($this->user);
@@ -401,8 +427,21 @@ class ApplicationsGridControl extends Control
 
         $this->authenticator->updateRoles($this->getPresenter()->getUser());
 
-        $this->getPresenter()->flashMessage('web.profile.applications_edit_successful', 'success');
+        $this->getPresenter()->flashMessage('admin.users.users_applications_saved', 'success');
         $this->redirect('this');
+    }
+
+    /**
+     * Vygeneruje příjmový pokladní doklad.
+     */
+    public function handleGeneratePaymentProofCash($id)
+    {
+        //TODO generovani potvrzeni o zaplaceni
+//        if (!$this->user->getIncomeProofPrintedDate()) {
+//            $this->user->setIncomeProofPrintedDate(new \DateTime());
+//            $this->userRepository->save($user);
+//        }
+//        $this->pdfExportService->generatePaymentProof($user, "potvrzeni-o-prijeti-platby.pdf");
     }
 
     /**
@@ -456,13 +495,11 @@ class ApplicationsGridControl extends Control
 
     /**
      * Ověří kombinaci role "Neregistrovaný" s ostatními rolemi.
-     * @param $field
-     * @param $args
+     * @param $selectedRoles
      * @return bool
      */
     public function validateRolesCombination($selectedRoles)
     {
-        $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
         $nonregisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
 
         if ($selectedRoles->contains($nonregisteredRole) && $selectedRoles->count() > 1)
@@ -471,8 +508,17 @@ class ApplicationsGridControl extends Control
         return TRUE;
     }
 
-    public function validateAdditionalApplicationRoles($selectedRoles, $first) {
-        //TODO
+    /**
+     * Ověří, že je vybrána alespoň jedna role.
+     * @param $selectedRoles
+     * @return bool
+     */
+    public function validateRolesEmpty($selectedRoles)
+    {
+        if ($selectedRoles->isEmpty())
+            return FALSE;
+
+        return TRUE;
     }
 
     /**
