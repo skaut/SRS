@@ -205,7 +205,7 @@ class ApplicationService extends Nette\Object
     public function isAllowedAddSubevents(User $user)
     {
         return $user->hasPaidFirstApplication()
-            && $this->subeventRepository->countExplicitSubevents() > 0
+            && $this->subeventRepository->explicitSubeventsExists()
             && $this->settingsRepository->getValue(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT)
             && $this->settingsRepository->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new \DateTime())->setTime(0, 0);
     }

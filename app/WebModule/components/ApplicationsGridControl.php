@@ -133,7 +133,7 @@ class ApplicationsGridControl extends Control
                 return implode(", ", $roles);
             });
 
-        if ($this->subeventRepository->countExplicitSubevents() > 0) {
+        if ($this->subeventRepository->explicitSubeventsExists()) {
             $grid->addColumnText('subevents', 'web.profile.applications_subevents')
                 ->setRenderer(function ($row) {
                     $subevents = [];
@@ -177,7 +177,7 @@ class ApplicationsGridControl extends Control
                     ->setAttribute('class', 'datagrid-multiselect')
                     ->addRule(Form::FILLED, 'web.profile.applications_roles_empty');
 
-                if ($this->subeventRepository->countExplicitSubevents() > 0) {
+                if ($this->subeventRepository->explicitSubeventsExists()) {
                     $subeventsSelect = $container->addMultiSelect('subevents', '', $this->subeventRepository->getExplicitOptionsWithCapacity())
                         ->setAttribute('class', 'datagrid-multiselect')
                         ->addRule(Form::FILLED, 'web.profile.applications_subevents_empty');
@@ -213,14 +213,14 @@ class ApplicationsGridControl extends Control
             $selectedAndUsersSubevents->add($subevent);
 
         //kontrola podakci
-        if (!$this->checkSubeventsCapacities($selectedSubevents)) {
+        if (!$this->validateSubeventsCapacities($selectedSubevents)) {
             $this->getPresenter()->flashMessage('web.profile.applications_subevents_capacity_occupied', 'danger');
             $this->redirect('this');
         }
 
         foreach ($this->subeventRepository->findAllExplicitOrderedByName() as $subevent) {
             $incompatibleSubevents = $subevent->getIncompatibleSubevents();
-            if (count($incompatibleSubevents) > 0 && !$this->checkSubeventsIncompatible($selectedAndUsersSubevents, $subevent)) {
+            if (count($incompatibleSubevents) > 0 && !$this->validateSubeventsIncompatible($selectedAndUsersSubevents, $subevent)) {
                 $messageThis = $subevent->getName();
 
                 $first = TRUE;
@@ -242,7 +242,7 @@ class ApplicationsGridControl extends Control
             }
 
             $requiredSubevents = $subevent->getRequiredSubeventsTransitive();
-            if (count($requiredSubevents) > 0 && !$this->checkSubeventsRequired($selectedAndUsersSubevents, $subevent)) {
+            if (count($requiredSubevents) > 0 && !$this->validateSubeventsRequired($selectedAndUsersSubevents, $subevent)) {
                 $messageThis = $subevent->getName();
 
                 $first = TRUE;
@@ -312,19 +312,19 @@ class ApplicationsGridControl extends Control
         $selectedRoles = $this->roleRepository->findRolesByIds($values['roles']);
 
         //kontrola roli
-        if (!$this->checkRolesCapacities($selectedRoles)) {
+        if (!$this->validateRolesCapacities($selectedRoles)) {
             $this->getPresenter()->flashMessage('web.profile.applications_roles_capacity_occupied', 'danger');
             $this->redirect('this');
         }
 
-        if (!$this->checkRolesRegisterable($selectedRoles)) {
+        if (!$this->validateRolesRegisterable($selectedRoles)) {
             $this->getPresenter()->flashMessage('web.profile.applications_role_is_not_registerable', 'danger');
             $this->redirect('this');
         }
 
         foreach ($this->roleRepository->findAllRegisterableNowOrUsersOrderedByName($this->user) as $role) {
             $incompatibleRoles = $role->getIncompatibleRoles();
-            if (count($incompatibleRoles) > 0 && !$this->checkRolesIncompatible($selectedRoles, $role)) {
+            if (count($incompatibleRoles) > 0 && !$this->validateRolesIncompatible($selectedRoles, $role)) {
                 $messageThis = $role->getName();
 
                 $first = TRUE;
@@ -347,7 +347,7 @@ class ApplicationsGridControl extends Control
             }
 
             $requiredRoles = $role->getRequiredRolesTransitive();
-            if (count($requiredRoles) > 0 && !$this->checkRolesRequired($selectedRoles, $role)) {
+            if (count($requiredRoles) > 0 && !$this->validateRolesRequired($selectedRoles, $role)) {
                 $messageThis = $role->getName();
 
                 $first = TRUE;
@@ -369,18 +369,18 @@ class ApplicationsGridControl extends Control
         }
 
 
-        if ($this->subeventRepository->countExplicitSubevents() > 0) {
+        if ($this->subeventRepository->explicitSubeventsExists()) {
             $selectedSubevents = $this->subeventRepository->findSubeventsByIds($values['subevents']);
 
             //kontrola podakci
-            if (!$this->checkSubeventsCapacities($selectedSubevents)) {
+            if (!$this->validateSubeventsCapacities($selectedSubevents)) {
                 $this->getPresenter()->flashMessage('web.profile.applications_subevents_capacity_occupied', 'danger');
                 $this->redirect('this');
             }
 
             foreach ($this->subeventRepository->findAllExplicitOrderedByName() as $subevent) {
                 $incompatibleSubevents = $subevent->getIncompatibleSubevents();
-                if (count($incompatibleSubevents) > 0 && !$this->checkSubeventsIncompatible($selectedSubevents, $subevent)) {
+                if (count($incompatibleSubevents) > 0 && !$this->validateSubeventsIncompatible($selectedSubevents, $subevent)) {
                     $messageThis = $subevent->getName();
 
                     $first = TRUE;
@@ -402,7 +402,7 @@ class ApplicationsGridControl extends Control
                 }
 
                 $requiredSubevents = $subevent->getRequiredSubeventsTransitive();
-                if (count($requiredSubevents) > 0 && !$this->checkSubeventsRequired($selectedSubevents, $subevent)) {
+                if (count($requiredSubevents) > 0 && !$this->validateSubeventsRequired($selectedSubevents, $subevent)) {
                     $messageThis = $subevent->getName();
 
                     $first = TRUE;
@@ -444,7 +444,7 @@ class ApplicationsGridControl extends Control
 
         $fee = $this->applicationService->countFee($selectedRoles, $selectedSubevents);
         $application = $this->applicationRepository->findById($id);
-        if ($this->subeventRepository->countExplicitSubevents() > 0)
+        if ($this->subeventRepository->explicitSubeventsExists())
             $application->setSubevents($selectedSubevents);
         $application->setFee($fee);
         $application->setState($fee == 0 ? ApplicationState::PAID : ApplicationState::WAITING_FOR_PAYMENT);
@@ -495,7 +495,7 @@ class ApplicationsGridControl extends Control
      * @param $selectedRoles
      * @return bool
      */
-    public function checkRolesCapacities($selectedRoles)
+    public function validateRolesCapacities($selectedRoles)
     {
         foreach ($selectedRoles as $role) {
             if ($role->hasLimitedCapacity()) {
@@ -512,7 +512,7 @@ class ApplicationsGridControl extends Control
      * @param $testRole
      * @return bool
      */
-    public function checkRolesIncompatible($selectedRoles, Role $testRole)
+    public function validateRolesIncompatible($selectedRoles, Role $testRole)
     {
         if (!$selectedRoles->contains($testRole))
             return TRUE;
@@ -531,7 +531,7 @@ class ApplicationsGridControl extends Control
      * @param $testRole
      * @return bool
      */
-    public function checkRolesRequired($selectedRoles, Role $testRole)
+    public function validateRolesRequired($selectedRoles, Role $testRole)
     {
         if (!$selectedRoles->contains($testRole))
             return TRUE;
@@ -549,7 +549,7 @@ class ApplicationsGridControl extends Control
      * @param $selectedRoles
      * @return bool
      */
-    public function checkRolesRegisterable($selectedRoles)
+    public function validateRolesRegisterable($selectedRoles)
     {
         foreach ($selectedRoles as $role) {
             if (!$role->isRegisterableNow() && !$this->user->isInRole($role))
@@ -563,7 +563,7 @@ class ApplicationsGridControl extends Control
      * @param $selectedSubevents
      * @return bool
      */
-    public function checkSubeventsCapacities($selectedSubevents)
+    public function validateSubeventsCapacities($selectedSubevents)
     {
         foreach ($selectedSubevents as $subevent) {
             if ($subevent->hasLimitedCapacity()) {
@@ -580,7 +580,7 @@ class ApplicationsGridControl extends Control
      * @param Subevent $testSubevent
      * @return bool
      */
-    public function checkSubeventsIncompatible($selectedSubevents, Subevent $testSubevent)
+    public function validateSubeventsIncompatible($selectedSubevents, Subevent $testSubevent)
     {
         if (!$selectedSubevents->contains($testSubevent))
             return TRUE;
@@ -599,7 +599,7 @@ class ApplicationsGridControl extends Control
      * @param Subevent $testSubevent
      * @return bool
      */
-    public function checkSubeventsRequired($selectedSubevents, Subevent $testSubevent)
+    public function validateSubeventsRequired($selectedSubevents, Subevent $testSubevent)
     {
         if (!$selectedSubevents->contains($testSubevent))
             return TRUE;

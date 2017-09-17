@@ -188,41 +188,4 @@ class EditUserSeminarForm extends Nette\Object
             $this->userRepository->save($this->user);
         }
     }
-
-//    /**
-//     * Ověří obsazenost rolí.
-//     * @param $field
-//     * @param $args
-//     * @return bool
-//     */
-//    public function validateRolesCapacities($field, $args)
-//    {
-//        $approved = $args[0];
-//        if ($approved) {
-//            foreach ($this->roleRepository->findRolesByIds($field->getValue()) as $role) {
-//                if ($role->hasLimitedCapacity()) {
-//                    if ($this->roleRepository->countUnoccupiedInRole($role) < 1 && !$this->user->isInRole($role))
-//                        return FALSE;
-//                }
-//            }
-//        }
-//        return TRUE;
-//    }
-//
-//    /**
-//     * Ověří kombinaci role "Neregistrovaný" s ostatními rolemi.
-//     * @param $field
-//     * @param $args
-//     * @return bool
-//     */
-//    public function validateRolesCombination($field, $args)
-//    {
-//        $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
-//        $nonregisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
-//
-//        if ($selectedRoles->contains($nonregisteredRole) && $selectedRoles->count() > 1)
-//            return FALSE;
-//
-//        return TRUE;
-//    }
 }
