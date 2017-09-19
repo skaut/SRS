@@ -2,9 +2,12 @@
 
 namespace App\Services;
 
+use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
+use App\Model\User\Application;
+use App\Model\User\ApplicationRepository;
 use App\Model\User\User;
 use fpdi\FPDI;
 use Nette;
@@ -29,17 +32,21 @@ class PdfExportService extends Nette\Object
     /** @var SettingsRepository */
     private $settingsRepository;
 
+    /** @var ApplicationRepository */
+    private $applicationRepository;
+
 
     /**
      * PdfExportService constructor.
      * @param string $dir
      * @param SettingsRepository $settingsRepository
      */
-    public function __construct($dir, SettingsRepository $settingsRepository)
+    public function __construct($dir, SettingsRepository $settingsRepository, ApplicationRepository $applicationRepository)
     {
         $this->dir = $dir;
 
         $this->settingsRepository = $settingsRepository;
+        $this->applicationRepository = $applicationRepository;
 
         $this->fpdi = new FPDI();
         $this->fpdi->fontpath = $dir . '/fonts/';
@@ -48,13 +55,49 @@ class PdfExportService extends Nette\Object
     }
 
     /**
-     * Vygeneruje doklad uživateli doklad o zaplacení.
+     * Vygeneruje doklad o zaplacení pro přihlášku.
+     * @param Application $application
+     * @param $filename
+     */
+    public function generateApplicationsPaymentProof(Application $application, $filename)
+    {
+        $this->prepareApplicationsPaymentProof($application);
+        $this->fpdi->Output($filename, 'D');
+        exit;
+    }
+
+    private function prepareApplicationsPaymentProof(Application $application)
+    {
+        if ($application->getState() == ApplicationState::PAID) {
+            if ($application->getPaymentMethod() == PaymentType::BANK)
+                $this->addAccountProofPage($application);
+            else if ($application->getPaymentMethod() == PaymentType::CASH)
+                $this->addIncomeProofPage($application);
+
+            if (!$application->getIncomeProofPrintedDate() && $application->getPaymentDate()) {
+                $application->setIncomeProofPrintedDate(new \DateTime());
+                $this->applicationRepository->save($application);
+            }
+        }
+    }
+
+    /**
+     * Vygeneruje doklady o zaplacení pro uživatele.
      * @param User $user
      * @param $filename
      */
-    public function generatePaymentProof(User $user, $filename)
+    public function generateUsersPaymentProof(User $user, $filename)
     {
-        $this->generatePaymentProofs([$user], $filename);
+        $this->prepareUsersPaymentProof($user);
+        $this->fpdi->Output($filename, 'D');
+        exit;
+    }
+
+    private function prepareUsersPaymentProof(User $user)
+    {
+        foreach ($user->getApplications() as $application) {
+            $this->prepareApplicationsPaymentProof($application);
+        }
     }
 
     /**
@@ -62,23 +105,25 @@ class PdfExportService extends Nette\Object
      * @param $users
      * @param $filename
      */
-    public function generatePaymentProofs($users, $filename)
+    public function generateUsersPaymentProofs($users, $filename)
     {
-        foreach ($users as $user) {
-            if ($user->getPaymentMethod() == PaymentType::BANK)
-                $this->addAccountProofPage($user);
-            else if ($user->getPaymentMethod() == PaymentType::CASH)
-                $this->addIncomeProofPage($user);
-        }
+        $this->prepareUsersPaymentProofs($users);
         $this->fpdi->Output($filename, 'D');
         exit;
     }
 
+    private function prepareUsersPaymentProofs($users)
+    {
+        foreach ($users as $user) {
+            $this->prepareUsersPaymentProof($user);
+        }
+    }
+
     /**
      * Vytvoří stránku s příjmovýchm dokladem.
-     * @param User $user
+     * @param Application $application
      */
-    private function addIncomeProofPage(User $user)
+    private function addIncomeProofPage(Application $application)
     {
         $this->configureForIncomeProof();
 
@@ -92,25 +137,25 @@ class PdfExportService extends Nette\Object
         $this->fpdi->Line(135, 54, 175, 54);
         $this->fpdi->Line(135, 64, 175, 64);
 
-        $this->fpdi->Text(133, 41, iconv('UTF-8', 'WINDOWS-1250', $user->getPaymentDate()->format("j. n. Y")));
+        $this->fpdi->Text(133, 41, iconv('UTF-8', 'WINDOWS-1250', $application->getPaymentDate()->format("j. n. Y")));
 
         $this->fpdi->MultiCell(68, 4.5, iconv('UTF-8', 'WINDOWS-1250', $this->settingsRepository->getValue(Settings::COMPANY)));
         $this->fpdi->Text(35, 71, iconv('UTF-8', 'WINDOWS-1250', $this->settingsRepository->getValue(Settings::ICO)));
         $this->fpdi->Text(35, 77, iconv('UTF-8', 'WINDOWS-1250', '---------------')); //DIC
-        $this->fpdi->Text(140, 76, iconv('UTF-8', 'WINDOWS-1250', '== ' . $user->getFee() . ' =='));
-        $this->fpdi->Text(38, 86, iconv('UTF-8', 'WINDOWS-1250', '== ' . $user->getFeeWords() . ' =='));
+        $this->fpdi->Text(140, 76, iconv('UTF-8', 'WINDOWS-1250', '== ' . $application->getFee() . ' =='));
+        $this->fpdi->Text(38, 86, iconv('UTF-8', 'WINDOWS-1250', '== ' . $application->getFeeWords() . ' =='));
 
         $this->fpdi->Text(40, 98, iconv('UTF-8', 'WINDOWS-1250',
-            "{$user->getFirstName()} {$user->getLastName()}, {$user->getStreet()}, {$user->getCity()}, {$user->getPostcode()}"));
+            "{$application->getUser()->getFirstName()} {$application->getUser()->getLastName()}, {$application->getUser()->getStreet()}, {$application->getUser()->getCity()}, {$application->getUser()->getPostcode()}"));
 
         $this->fpdi->Text(40, 111, iconv('UTF-8', 'WINDOWS-1250', "účastnický poplatek {$this->settingsRepository->getValue(Settings::SEMINAR_NAME)}"));
     }
 
     /**
      * Vytvoří stránku s potvrzením o přijetí platby.
-     * @param User $user
+     * @param Application $application
      */
-    private function addAccountProofPage(User $user)
+    private function addAccountProofPage(Application $application)
     {
         $this->configureForAccountProof();
 
@@ -123,10 +168,10 @@ class PdfExportService extends Nette\Object
 
         $this->fpdi->Text(70, 71, iconv('UTF-8', 'WINDOWS-1250', $this->settingsRepository->getValue(Settings::ACCOUNT_NUMBER)));
 
-        $this->fpdi->Text(70, 78, iconv('UTF-8', 'WINDOWS-1250', $user->getFee() . ' Kč, slovy =' . $user->getFeeWords() . '='));
+        $this->fpdi->Text(70, 78, iconv('UTF-8', 'WINDOWS-1250', $application->getFee() . ' Kč, slovy =' . $application->getFeeWords() . '='));
         $this->fpdi->Text(70, 85, iconv('UTF-8', 'WINDOWS-1250', 'účastnický poplatek ' . $this->settingsRepository->getValue(Settings::SEMINAR_NAME)));
-        $this->fpdi->Text(70, 92, iconv('UTF-8', 'WINDOWS-1250', "{$user->getFirstName()} {$user->getLastName()}"));
-        $this->fpdi->Text(70, 99, iconv('UTF-8', 'WINDOWS-1250', "{$user->getStreet()}, {$user->getCity()}, {$user->getPostcode()}"));
+        $this->fpdi->Text(70, 92, iconv('UTF-8', 'WINDOWS-1250', "{$application->getUser()->getFirstName()} {$application->getUser()->getLastName()}"));
+        $this->fpdi->Text(70, 99, iconv('UTF-8', 'WINDOWS-1250', "{$application->getUser()->getStreet()}, {$application->getUser()->getCity()}, {$application->getUser()->getPostcode()}"));
 
         $this->fpdi->Text(31, 111, iconv('UTF-8', 'WINDOWS-1250', "{$this->settingsRepository->getValue(Settings::PRINT_LOCATION)}"));
         $this->fpdi->Text(75, 111, iconv('UTF-8', 'WINDOWS-1250', "{$this->writeToday()}"));

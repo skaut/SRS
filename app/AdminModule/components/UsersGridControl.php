@@ -6,6 +6,7 @@ use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
+use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
 use App\Model\Mailing\Mail;
 use App\Model\Mailing\Template;
@@ -19,6 +20,7 @@ use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\ApplicationRepository;
 use App\Model\User\UserRepository;
+use App\Services\ApplicationService;
 use App\Services\ExcelExportService;
 use App\Services\MailService;
 use App\Services\PdfExportService;
@@ -80,6 +82,9 @@ class UsersGridControl extends Control
     /** @var ApplicationRepository */
     private $applicationRepository;
 
+    /** @var ApplicationService */
+    private $applicationService;
+
 
     /**
      * UsersGridControl constructor.
@@ -96,13 +101,15 @@ class UsersGridControl extends Control
      * @param Session $session
      * @param SubeventRepository $subeventRepository
      * @param ApplicationRepository $applicationRepository
+     * @param ApplicationService $applicationService
      */
     public function __construct(Translator $translator, UserRepository $userRepository,
                                 SettingsRepository $settingsRepository, CustomInputRepository $customInputRepository,
                                 RoleRepository $roleRepository, ProgramRepository $programRepository,
                                 BlockRepository $blockRepository, PdfExportService $pdfExportService,
                                 ExcelExportService $excelExportService, MailService $mailService, Session $session,
-                                SubeventRepository $subeventRepository, ApplicationRepository $applicationRepository)
+                                SubeventRepository $subeventRepository, ApplicationRepository $applicationRepository,
+                                ApplicationService $applicationService)
     {
         parent::__construct();
 
@@ -118,7 +125,7 @@ class UsersGridControl extends Control
         $this->mailService = $mailService;
         $this->subeventRepository = $subeventRepository;
         $this->applicationRepository = $applicationRepository;
-
+        $this->applicationService = $applicationService;
         $this->session = $session;
         $this->sessionSection = $session->getSection('srs');
     }
@@ -408,6 +415,15 @@ class UsersGridControl extends Control
                     break;
                 }
             }
+            if (!$over) {
+                foreach ($user->getSubevents() as $subevent) {
+                    $count = $this->subeventRepository->countUnoccupiedInSubevent($subevent);
+                    if ($count !== NULL && $count < 1) {
+                        $over = TRUE;
+                        break;
+                    }
+                }
+            }
         }
 
         $p = $this->getPresenter();
@@ -453,23 +469,39 @@ class UsersGridControl extends Control
     public function groupApprove(array $ids)
     {
         $users = $this->userRepository->findUsersByIds($ids);
+
         $rolesWithLimitedCapacity = $this->roleRepository->findAllWithLimitedCapacity();
-        $unoccupiedCounts = $this->roleRepository->countUnoccupiedInRoles($rolesWithLimitedCapacity);
+        $rolesUnoccupiedCounts = $this->roleRepository->countUnoccupiedInRoles($rolesWithLimitedCapacity);
+
+        $subeventsWithLimitedCapacity = $this->subeventRepository->findAllWithLimitedCapacity();
+        $subeventsUnoccupiedCounts = $this->subeventRepository->countUnoccupiedInSubevents($subeventsWithLimitedCapacity);
 
         foreach ($users as $user) {
             if (!$user->isApproved()) {
                 foreach ($user->getRoles() as $role) {
                     if ($role->hasLimitedCapacity())
-                        $unoccupiedCounts[$role->getId()]--;
+                        $rolesUnoccupiedCounts[$role->getId()]--;
+                }
+                foreach ($user->getSubevents() as $subevent) {
+                    if ($subevent->hasLimitedCapacity())
+                        $subeventsUnoccupiedCounts[$subevent->getId()]--;
                 }
             }
         }
 
         $over = FALSE;
-        foreach ($unoccupiedCounts as $count) {
+        foreach ($rolesUnoccupiedCounts as $count) {
             if ($count < 0) {
                 $over = TRUE;
                 break;
+            }
+        }
+        if (!$over) {
+            foreach ($subeventsUnoccupiedCounts as $count) {
+                if ($count < 0) {
+                    $over = TRUE;
+                    break;
+                }
             }
         }
 
@@ -538,6 +570,19 @@ class UsersGridControl extends Control
             foreach ($users as $user) {
                 $user->setRoles($selectedRoles);
                 $this->userRepository->save($user);
+
+                foreach ($user->getApplications() as $application) {
+                    $fee = $this->applicationService->countFee($selectedRoles, $application->getSubevents(),
+                        $application->isFirst()
+                    );
+
+                    $application->setFee($fee);
+                    $application->setState($fee == 0 || $application->getPaymentDate()
+                        ? ApplicationState::PAID
+                        : ApplicationState::WAITING_FOR_PAYMENT);
+
+                    $this->applicationRepository->save($application);
+                }
             }
 
             $this->programRepository->updateUsersPrograms($users->toArray());
@@ -575,17 +620,19 @@ class UsersGridControl extends Control
      */
     public function groupMarkPaidToday(array $ids, $value)
     {
-        //TODO
         foreach ($ids as $id) {
             $user = $this->userRepository->findById($id);
-            if ($user->isPaying()) {
-                $user->setPaymentMethod($value);
-                $user->setPaymentDate(new \DateTime());
-                $this->userRepository->save($user);
+            foreach ($user->getApplications() as $application) {
+                if ($application->getState() == ApplicationState::WAITING_FOR_PAYMENT) {
+                    $application->setPaymentMethod($value);
+                    $application->setPaymentDate(new \DateTime());
+                    $application->setState(ApplicationState::PAID);
+                    $this->applicationRepository->save($application);
 
-                $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$user]), '', Template::PAYMENT_CONFIRMED, [
-                    TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)
-                ]);
+                    $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$user]), '', Template::PAYMENT_CONFIRMED, [
+                        TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)
+                    ]);
+                }
             }
         }
 
@@ -606,7 +653,6 @@ class UsersGridControl extends Control
      */
     public function groupGeneratePaymentProofs(array $ids)
     {
-        //TODO
         $this->sessionSection->userIds = $ids;
         $this->redirect('generatepaymentproofs'); //presmerovani kvuli zruseni ajax
     }
@@ -665,23 +711,9 @@ class UsersGridControl extends Control
      */
     public function handleGeneratePaymentProofs()
     {
-        //TODO
         $ids = $this->session->getSection('srs')->userIds;
-
         $users = $this->userRepository->findUsersByIds($ids);
-        $usersToGenerate = [];
-
-        foreach ($users as $user) {
-            if ($user->getPaymentDate()) {
-                if (!$user->getIncomeProofPrintedDate()) {
-                    $user->setIncomeProofPrintedDate(new \DateTime());
-                    $this->userRepository->save($user);
-                }
-                $usersToGenerate[] = $user;
-            }
-        }
-
-        $this->pdfExportService->generatePaymentProofs($usersToGenerate, "doklady.pdf");
+        $this->pdfExportService->generateUsersPaymentProofs($users, "doklady.pdf");
     }
 
     /**

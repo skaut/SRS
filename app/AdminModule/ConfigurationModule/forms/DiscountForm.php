@@ -1,21 +1,13 @@
 <?php
 
-namespace App\AdminModule\StructureModule\Forms;
+namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
-use App\Model\ACL\Permission;
-use App\Model\ACL\PermissionRepository;
-use App\Model\ACL\Resource;
-use App\Model\ACL\Role;
-use App\Model\ACL\RoleRepository;
-use App\Model\CMS\PageRepository;
-use App\Model\Program\ProgramRepository;
 use App\Model\Structure\Discount;
 use App\Model\Structure\DiscountRepository;
 use App\Model\Structure\SubeventRepository;
 use Nette;
 use Nette\Application\UI\Form;
-use function Symfony\Component\Debug\Tests\testHeader;
 
 
 /**
@@ -67,13 +59,13 @@ class DiscountForm extends Nette\Object
 
         $form->addHidden('id');
 
-        $form->addSelect('conditionOperator', 'admin.structure.discounts_condition_operator', $this->prepareOperatorOptions());
+        $form->addSelect('conditionOperator', 'admin.configuration.discounts_condition_operator', $this->prepareOperatorOptions());
 
-        $form->addMultiSelect('conditionSubevents', 'admin.structure.discounts_condition_subevents', $this->prepareSubeventsOptions());
+        $form->addMultiSelect('conditionSubevents', 'admin.configuration.discounts_condition_subevents', $this->prepareSubeventsOptions());
 
-        $form->addText('discount', 'admin.structure.discounts_discount')
+        $form->addText('discount', 'admin.configuration.discounts_discount')
             ->addCondition(Form::FILLED)
-            ->addRule(Form::INTEGER, 'admin.structure.discounts_discount_format');
+            ->addRule(Form::INTEGER, 'admin.configuration.discounts_discount_format');
 
 
         $form->addSubmit('submit', 'admin.common.save');

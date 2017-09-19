@@ -14,7 +14,6 @@ permission_name:
         users: "Spravovat uživatele"
         acl: "Spravovat role"
         mailing: "Spravovat mailing"
-        structure: "Spravovat strukturu semináře"
         configuration: "Spravovat konfiguraci"
 
     choose_programs:

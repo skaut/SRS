@@ -407,6 +407,7 @@ class User
     }
 
     /**
+     * Vrátí nezrušené přihlášky.
      * @return ArrayCollection
      */
     public function getNotCanceledApplications()
@@ -421,6 +422,19 @@ class User
     }
 
     /**
+     * Vrátí zaplacené přihlášky.
+     * @return ArrayCollection
+     */
+    public function getPaidApplications()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('state', ApplicationState::PAID));
+
+        return $this->applications->matching($criteria);
+    }
+
+    /**
+     * Vrátí přihlášky čekající na platbu.
      * @return ArrayCollection
      */
     public function getWaitingForPaymentApplications()
@@ -428,8 +442,33 @@ class User
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('state', ApplicationState::WAITING_FOR_PAYMENT));
 
-
         return $this->applications->matching($criteria);
+    }
+
+    /**
+     * Vrátí první přihlášku.
+     * @return Application
+     */
+    public function getFirstApplication()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('first', TRUE));
+
+        return $this->applications->matching($criteria)->first();
+    }
+
+    /**
+     * Vrátí přihlášku, ve které je požadovaná podakce.
+     * @param Subevent $subevent
+     * @return mixed|null
+     */
+    public function getApplicationWithSubevent(Subevent $subevent)
+    {
+        foreach ($this->applications as $application) {
+            if ($application->getSubevents()->contains($subevent))
+                return $application;
+        }
+        return NULL;
     }
 
     /**

@@ -1,15 +1,8 @@
 <?php
 
-namespace App\AdminModule\StructureModule\Forms;
+namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
-use App\Model\ACL\Permission;
-use App\Model\ACL\PermissionRepository;
-use App\Model\ACL\Resource;
-use App\Model\ACL\Role;
-use App\Model\ACL\RoleRepository;
-use App\Model\CMS\PageRepository;
-use App\Model\Program\ProgramRepository;
 use App\Model\Structure\Subevent;
 use App\Model\Structure\SubeventRepository;
 use Nette;
@@ -59,51 +52,51 @@ class SubeventForm extends Nette\Object
 
         $form->addHidden('id');
 
-        $nameText = $form->addText('name', 'admin.structure.subevents_name')
-            ->addRule(Form::FILLED, 'admin.structure.subevents_name_empty');
+        $nameText = $form->addText('name', 'admin.configuration.subevents_name')
+            ->addRule(Form::FILLED, 'admin.configuration.subevents_name_empty');
 
-        $capacityText = $form->addText('capacity', 'admin.structure.subevents_capacity')
+        $capacityText = $form->addText('capacity', 'admin.configuration.subevents_capacity')
             ->setAttribute('data-toggle', 'tooltip')
-            ->setAttribute('title', $form->getTranslator()->translate('admin.structure.subevents_capacity_note'));
+            ->setAttribute('title', $form->getTranslator()->translate('admin.configuration.subevents_capacity_note'));
 
-        $form->addText('fee', 'admin.structure.subevents_fee')
+        $form->addText('fee', 'admin.configuration.subevents_fee')
             ->addCondition(Form::FILLED)
-            ->addRule(Form::INTEGER, 'admin.structure.subevents_fee_format');
+            ->addRule(Form::INTEGER, 'admin.configuration.subevents_fee_format');
 
         if ($this->subevent) {
-            $nameText->addRule(Form::IS_NOT_IN, 'admin.structure.subevents_name_exists', $this->subeventRepository->findOthersNames($id));
+            $nameText->addRule(Form::IS_NOT_IN, 'admin.configuration.subevents_name_exists', $this->subeventRepository->findOthersNames($id));
             $capacityText
                 ->addCondition(Form::FILLED)
-                ->addRule(Form::INTEGER, 'admin.structure.subevents_capacity_format')
-                ->addRule(Form::MIN, 'admin.structure.subevents_capacity_low', $this->subeventRepository->countApprovedUsersInSubevent($this->subevent));
+                ->addRule(Form::INTEGER, 'admin.configuration.subevents_capacity_format')
+                ->addRule(Form::MIN, 'admin.configuration.subevents_capacity_low', $this->subeventRepository->countApprovedUsersInSubevent($this->subevent));
 
             $subeventsOptions = $this->subeventRepository->getSubeventsWithoutSubeventOptions($this->subevent->getId());
         }
         else {
-            $nameText->addRule(Form::IS_NOT_IN, 'admin.structure.subevents_name_exists', $this->subeventRepository->findAllNames());
+            $nameText->addRule(Form::IS_NOT_IN, 'admin.configuration.subevents_name_exists', $this->subeventRepository->findAllNames());
             $capacityText
                 ->addCondition(Form::FILLED)
-                ->addRule(Form::INTEGER, 'admin.structure.subevents_capacity_format')
-                ->addRule(Form::MIN, 'admin.structure.subevents_capacity_low', 0);
+                ->addRule(Form::INTEGER, 'admin.configuration.subevents_capacity_format')
+                ->addRule(Form::MIN, 'admin.configuration.subevents_capacity_low', 0);
 
             $subeventsOptions = $this->subeventRepository->getSubeventsOptions();
         }
 
 
 
-        $incompatibleSubeventsSelect = $form->addMultiSelect('incompatibleSubevents', 'admin.structure.subevents_incompatible_subevents', $subeventsOptions);
+        $incompatibleSubeventsSelect = $form->addMultiSelect('incompatibleSubevents', 'admin.configuration.subevents_incompatible_subevents', $subeventsOptions);
 
-        $requiredSubeventsSelect = $form->addMultiSelect('requiredSubevents', 'admin.structure.subevents_required_subevents', $subeventsOptions);
+        $requiredSubeventsSelect = $form->addMultiSelect('requiredSubevents', 'admin.configuration.subevents_required_subevents', $subeventsOptions);
 
         $incompatibleSubeventsSelect
             ->addCondition(Form::FILLED)
             ->addRule([$this, 'validateIncompatibleAndRequiredCollision'],
-                'admin.structure.subevents_incompatible_collision', [$incompatibleSubeventsSelect, $requiredSubeventsSelect]);
+                'admin.configuration.subevents_incompatible_collision', [$incompatibleSubeventsSelect, $requiredSubeventsSelect]);
 
         $requiredSubeventsSelect
             ->addCondition(Form::FILLED)
             ->addRule([$this, 'validateIncompatibleAndRequiredCollision'],
-                'admin.structure.subevents_required_collision', [$incompatibleSubeventsSelect, $requiredSubeventsSelect]);
+                'admin.configuration.subevents_required_collision', [$incompatibleSubeventsSelect, $requiredSubeventsSelect]);
 
         $form->addSubmit('submit', 'admin.common.save');
 

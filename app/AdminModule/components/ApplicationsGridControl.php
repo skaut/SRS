@@ -17,6 +17,7 @@ use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\Authenticator;
 use App\Services\MailService;
+use App\Services\PdfExportService;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
@@ -63,6 +64,9 @@ class ApplicationsGridControl extends Control
     /** @var User */
     private $user;
 
+    /** @var PdfExportService */
+    private $pdfExportService;
+
 
     /**
      * ApplicationsGridControl constructor.
@@ -74,12 +78,16 @@ class ApplicationsGridControl extends Control
      * @param ApplicationService $applicationService
      * @param ProgramRepository $programRepository
      * @param MailService $mailService
+     * @param SettingsRepository $settingsRepository
+     * @param Authenticator $authenticator
+     * @param PdfExportService $pdfExportService
      */
     public function __construct(Translator $translator, ApplicationRepository $applicationRepository,
                                 UserRepository $userRepository, RoleRepository $roleRepository,
                                 SubeventRepository $subeventRepository, ApplicationService $applicationService,
                                 ProgramRepository $programRepository, MailService $mailService,
-                                SettingsRepository $settingsRepository, Authenticator $authenticator)
+                                SettingsRepository $settingsRepository, Authenticator $authenticator,
+                                PdfExportService $pdfExportService)
     {
         parent::__construct();
 
@@ -93,6 +101,7 @@ class ApplicationsGridControl extends Control
         $this->mailService = $mailService;
         $this->settingsRepository = $settingsRepository;
         $this->authenticator = $authenticator;
+        $this->pdfExportService = $pdfExportService;
     }
 
     /**
@@ -169,7 +178,7 @@ class ApplicationsGridControl extends Control
                 return $this->translator->translate('common.application_state.' . $row->getState());
             });
 
-        //TODO editace VS, platebni metoda, datum zaplaceni, datum vytisteni dokladu, mail pri potvrzeni platby
+        //TODO mail pri potvrzeni platby
 //        if ($values['paymentDate'] !== NULL && $oldPaymentDate === NULL) {
 //            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::PAYMENT_CONFIRMED, [
 //                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)
@@ -380,6 +389,11 @@ class ApplicationsGridControl extends Control
                 $this->getPresenter()->flashMessage('admin.users.users_applications_subevents_occupied', 'danger');
                 $this->redirect('this');
             }
+
+            if(!$this->validateSubeventsRegistered($selectedSubevents, $this->user, $application->getId())) {
+                $this->getPresenter()->flashMessage('admin.users.users_applications_subevents_registered', 'danger');
+                $this->redirect('this');
+            }
         }
 
 
@@ -389,8 +403,6 @@ class ApplicationsGridControl extends Control
             $this->userRepository->save($this->user);
         }
 
-        $fee = $this->applicationService->countFee($selectedRoles, $selectedSubevents);
-
         if ($this->subeventRepository->explicitSubeventsExists())
             $application->setSubevents($selectedSubevents);
         $application->setVariableSymbol($values['variableSymbol']);
@@ -398,11 +410,28 @@ class ApplicationsGridControl extends Control
         $application->setPaymentDate($values['paymentDate']);
         $application->setIncomeProofPrintedDate($values['incomeProofPrintedDate']);
         $application->setMaturityDate($values['maturityDate']);
-        $application->setFee($fee);
-        $application->setState($fee == 0 || $application->getPaymentDate()
-            ? ApplicationState::PAID
-            : ApplicationState::WAITING_FOR_PAYMENT);
-        $this->applicationRepository->save($application);
+
+        if ($application->isFirst()) {
+            foreach ($this->user->getApplications() as $application) {
+                if ($application->isFirst())
+                    $fee = $this->applicationService->countFee($selectedRoles, $selectedSubevents);
+                else
+                    $fee = $this->applicationService->countFee($selectedRoles, $application->getSubevents(), FALSE);
+                $application->setFee($fee);
+                $application->setState($fee == 0 || $application->getPaymentDate()
+                    ? ApplicationState::PAID
+                    : ApplicationState::WAITING_FOR_PAYMENT);
+                $this->applicationRepository->save($application);
+            }
+        }
+        else {
+            $fee = $this->applicationService->countFee($this->user->getRoles(), $selectedSubevents, FALSE);
+            $application->setFee($fee);
+            $application->setState($fee == 0 || $application->getPaymentDate()
+                ? ApplicationState::PAID
+                : ApplicationState::WAITING_FOR_PAYMENT);
+            $this->applicationRepository->save($application);
+        }
 
         $this->programRepository->updateUserPrograms($this->user);
         $this->userRepository->save($this->user);
@@ -425,8 +454,6 @@ class ApplicationsGridControl extends Control
 //            TemplateVariable::USERS_ROLES => $rolesNames
 //        ]);
 
-        $this->authenticator->updateRoles($this->getPresenter()->getUser());
-
         $this->getPresenter()->flashMessage('admin.users.users_applications_saved', 'success');
         $this->redirect('this');
     }
@@ -436,12 +463,10 @@ class ApplicationsGridControl extends Control
      */
     public function handleGeneratePaymentProofCash($id)
     {
-        //TODO generovani potvrzeni o zaplaceni
-//        if (!$this->user->getIncomeProofPrintedDate()) {
-//            $this->user->setIncomeProofPrintedDate(new \DateTime());
-//            $this->userRepository->save($user);
-//        }
-//        $this->pdfExportService->generatePaymentProof($user, "potvrzeni-o-prijeti-platby.pdf");
+        $this->pdfExportService->generateApplicationsPaymentProof(
+            $application = $this->applicationRepository->findById($id),
+            "prijmovy-pokladni-doklad.pdf"
+        );
     }
 
     /**
@@ -449,12 +474,10 @@ class ApplicationsGridControl extends Control
      */
     public function handleGeneratePaymentProofBank($id)
     {
-        //TODO generovani potvrzeni o zaplaceni
-//        if (!$this->user->getIncomeProofPrintedDate()) {
-//            $this->user->setIncomeProofPrintedDate(new \DateTime());
-//            $this->userRepository->save($user);
-//        }
-//        $this->pdfExportService->generatePaymentProof($user, "potvrzeni-o-prijeti-platby.pdf");
+        $this->pdfExportService->generateApplicationsPaymentProof(
+            $application = $this->applicationRepository->findById($id),
+            "potvrzeni-o-prijeti-platby.pdf"
+        );
     }
 
     /**
@@ -470,6 +493,23 @@ class ApplicationsGridControl extends Control
                     if ($this->subeventRepository->countUnoccupiedInSubevent($subevent) < 1 && !$this->user->hasSubevent($subevent))
                         return FALSE;
                 }
+            }
+        }
+        return TRUE;
+    }
+
+    /**
+     * Ověří, zda uživatel podakci již nemá.
+     * @param $selectedSubevents
+     * @param User $user
+     * @return bool
+     */
+    public function validateSubeventsRegistered($selectedSubevents, User $user, $applicationId)
+    {
+        foreach ($selectedSubevents as $subevent) {
+            foreach ($user->getApplications() as $application) {
+                if ($application->getId() != $applicationId && $application->getSubevents()->contains($subevent))
+                    return FALSE;
             }
         }
         return TRUE;

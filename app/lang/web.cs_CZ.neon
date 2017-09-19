@@ -185,7 +185,6 @@ programs_content:
     login_required_end: "."
     register_programs_not_allowed: "Zapisování programů není v tuto chvíli povoleno."
     unapproved_register_programs: "Vaše role nemá právo zapisovat si programy."
-    register_programs_not_allowed_before_payment: "Zapisování programů je povoleno až po zaplacení poplatku."
     mandatory_programs_not_registered: "Máte nepřihlášené povinné programy (v kalendáři červeně). Prosíme, zapište si je."
     category: "Kategorie"
     lector: "Lektor"
@@ -199,7 +198,7 @@ programs_content:
     help_text: "Kliknutím na program se zobrazí možnost přihlášení/odhlášení a další informace o programu."
     help_legend: "Typy programů"
     help_legend_attends: "Programy, které máte přihlášené."
-    help_legend_blocked: "Programy, na které se nelze přihlásit (např. obsazené)."
+    help_legend_blocked: "Programy, na které se nelze přihlásit (máte přihlášený stejný program, je obsazený nebo jej nemáte zaplacený)."
     help_legend_optional: "Programy, na které se lze přihlásit."
     help_legend_mandatory: "Programy, které jsou povinné."
 

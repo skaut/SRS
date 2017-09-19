@@ -47,13 +47,6 @@
                             <a href="{plink :Admin:Mailing:Templates:default}">{_admin.menu.mailing}</a>
                         </li>
                     {/if}
-                    {if $user->isAllowed($resourceStructure, $permissionManage)}
-                        <li n:class="
-                                $presenter->isLinkCurrent(':Admin:Structure:Subevents:*') ||
-                                $presenter->isLinkCurrent(':Admin:Structure:Discounts:*') ? active">
-                            <a href="{plink :Admin:Structure:Subevents:default}">{_admin.menu.structure}</a>
-                        </li>
-                    {/if}
                     {if $user->isAllowed($resourceConfiguration, $permissionManage)}
                         <li n:class="
                                 $presenter->isLinkCurrent(':Admin:Configuration:Application:*') ||
@@ -64,7 +57,9 @@
                                 $presenter->isLinkCurrent(':Admin:Configuration:Seminar:*') ||
                                 $presenter->isLinkCurrent(':Admin:Configuration:SkautIs:*') ||
                                 $presenter->isLinkCurrent(':Admin:Configuration:Web:*') ||
-                                $presenter->isLinkCurrent(':Admin:Configuration:System:*') ? active">
+                                $presenter->isLinkCurrent(':Admin:Configuration:System:*') ||
+                                $presenter->isLinkCurrent(':Admin:Configuration:Subevents:*') ||
+                                $presenter->isLinkCurrent(':Admin:Configuration:Discounts:*') ? active">
                             <a href="{plink :Admin:Configuration:Seminar:default}">{_admin.menu.configuration}</a>
                         </li>
                     {/if}

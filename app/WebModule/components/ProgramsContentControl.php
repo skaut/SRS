@@ -67,12 +67,6 @@ class ProgramsContentControl extends Control
 
         $template->userHasPermission = $user->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS);
 
-        if ($user->isLoggedIn()) {
-            $dbuser = $this->userRepository->findById($this->presenter->user->id);
-            $template->userNotPaid = !$this->settingsRepository->getValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT) &&
-                !$dbuser->hasPaid() && $dbuser->isPaying();
-        }
-
         $template->render();
     }
 }

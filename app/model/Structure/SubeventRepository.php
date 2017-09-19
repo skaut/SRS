@@ -116,6 +116,17 @@ class SubeventRepository extends EntityRepository
     }
 
     /**
+     * Vrací podakce s omezenou kapacitou.
+     * @return Collection
+     */
+    public function findAllWithLimitedCapacity()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->neq('capacity', NULL));
+        return $this->matching($criteria);
+    }
+
+    /**
      * Vrací počet volných míst v podakci nebo null u podakce s neomezenou kapacitou.
      * @param Subevent $subevent
      * @return int|null
@@ -125,6 +136,20 @@ class SubeventRepository extends EntityRepository
         if ($subevent->getCapacity() === NULL)
             return NULL;
         return $subevent->getCapacity() - $this->countApprovedUsersInSubevent($subevent);
+    }
+
+    /**
+     * Vrací počet volných míst v podakcích nebo null u podakcí s neomezenou kapacitou.
+     * @param $subevents
+     * @return array
+     */
+    public function countUnoccupiedInSubevents($subevents)
+    {
+        $counts = [];
+        foreach ($subevents as $subevent) {
+            $counts[$subevent->getId()] = $this->countUnoccupiedInSubevent($subevent);
+        }
+        return $counts;
     }
 
     /**

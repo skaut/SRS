@@ -1,6 +1,6 @@
 <?php
 
-namespace App\AdminModule\StructureModule\Components;
+namespace App\AdminModule\ConfigurationModule\Components;
 
 
 /**

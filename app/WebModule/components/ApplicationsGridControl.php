@@ -12,10 +12,12 @@ use App\Model\Structure\Subevent;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\Application;
 use App\Model\User\ApplicationRepository;
+use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\Authenticator;
 use App\Services\MailService;
+use App\Services\PdfExportService;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
@@ -62,6 +64,9 @@ class ApplicationsGridControl extends Control
     /** @var User */
     private $user;
 
+    /** @var PdfExportService */
+    private $pdfExportService;
+
 
     /**
      * ApplicationsGridControl constructor.
@@ -73,12 +78,16 @@ class ApplicationsGridControl extends Control
      * @param ApplicationService $applicationService
      * @param ProgramRepository $programRepository
      * @param MailService $mailService
+     * @param SettingsRepository $settingsRepository
+     * @param Authenticator $authenticator
+     * @param PdfExportService $pdfExportService
      */
     public function __construct(Translator $translator, ApplicationRepository $applicationRepository,
                                 UserRepository $userRepository, RoleRepository $roleRepository,
                                 SubeventRepository $subeventRepository, ApplicationService $applicationService,
                                 ProgramRepository $programRepository, MailService $mailService,
-                                SettingsRepository $settingsRepository, Authenticator $authenticator)
+                                SettingsRepository $settingsRepository, Authenticator $authenticator,
+                                PdfExportService $pdfExportService)
     {
         parent::__construct();
 
@@ -92,6 +101,7 @@ class ApplicationsGridControl extends Control
         $this->mailService = $mailService;
         $this->settingsRepository = $settingsRepository;
         $this->authenticator = $authenticator;
+        $this->pdfExportService = $pdfExportService;
     }
 
     /**
@@ -484,12 +494,10 @@ class ApplicationsGridControl extends Control
      */
     public function handleGeneratePaymentProofBank($id)
     {
-        //TODO generovani potvrzeni o zaplaceni
-//        if (!$this->user->getIncomeProofPrintedDate()) {
-//            $this->user->setIncomeProofPrintedDate(new \DateTime());
-//            $this->userRepository->save($user);
-//        }
-//        $this->pdfExportService->generatePaymentProof($user, "potvrzeni-o-prijeti-platby.pdf");
+        $this->pdfExportService->generateApplicationsPaymentProof(
+            $this->applicationRepository->findById($id),
+            "potvrzeni-o-prijeti-platby.pdf"
+        );
     }
 
     /**
