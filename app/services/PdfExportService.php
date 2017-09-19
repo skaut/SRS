@@ -121,7 +121,7 @@ class PdfExportService extends Nette\Object
 
     /**
      * Vytvoří stránku s příjmovýchm dokladem.
-     * @param User $user
+     * @param Application $application
      */
     private function addIncomeProofPage(Application $application)
     {
@@ -137,23 +137,23 @@ class PdfExportService extends Nette\Object
         $this->fpdi->Line(135, 54, 175, 54);
         $this->fpdi->Line(135, 64, 175, 64);
 
-        $this->fpdi->Text(133, 41, iconv('UTF-8', 'WINDOWS-1250', $user->getPaymentDate()->format("j. n. Y")));
+        $this->fpdi->Text(133, 41, iconv('UTF-8', 'WINDOWS-1250', $application->getPaymentDate()->format("j. n. Y")));
 
         $this->fpdi->MultiCell(68, 4.5, iconv('UTF-8', 'WINDOWS-1250', $this->settingsRepository->getValue(Settings::COMPANY)));
         $this->fpdi->Text(35, 71, iconv('UTF-8', 'WINDOWS-1250', $this->settingsRepository->getValue(Settings::ICO)));
         $this->fpdi->Text(35, 77, iconv('UTF-8', 'WINDOWS-1250', '---------------')); //DIC
-        $this->fpdi->Text(140, 76, iconv('UTF-8', 'WINDOWS-1250', '== ' . $user->getFee() . ' =='));
-        $this->fpdi->Text(38, 86, iconv('UTF-8', 'WINDOWS-1250', '== ' . $user->getFeeWords() . ' =='));
+        $this->fpdi->Text(140, 76, iconv('UTF-8', 'WINDOWS-1250', '== ' . $application->getFee() . ' =='));
+        $this->fpdi->Text(38, 86, iconv('UTF-8', 'WINDOWS-1250', '== ' . $application->getFeeWords() . ' =='));
 
         $this->fpdi->Text(40, 98, iconv('UTF-8', 'WINDOWS-1250',
-            "{$user->getFirstName()} {$user->getLastName()}, {$user->getStreet()}, {$user->getCity()}, {$user->getPostcode()}"));
+            "{$application->getUser()->getFirstName()} {$application->getUser()->getLastName()}, {$application->getUser()->getStreet()}, {$application->getUser()->getCity()}, {$application->getUser()->getPostcode()}"));
 
         $this->fpdi->Text(40, 111, iconv('UTF-8', 'WINDOWS-1250', "účastnický poplatek {$this->settingsRepository->getValue(Settings::SEMINAR_NAME)}"));
     }
 
     /**
      * Vytvoří stránku s potvrzením o přijetí platby.
-     * @param User $user
+     * @param Application $application
      */
     private function addAccountProofPage(Application $application)
     {
@@ -168,10 +168,10 @@ class PdfExportService extends Nette\Object
 
         $this->fpdi->Text(70, 71, iconv('UTF-8', 'WINDOWS-1250', $this->settingsRepository->getValue(Settings::ACCOUNT_NUMBER)));
 
-        $this->fpdi->Text(70, 78, iconv('UTF-8', 'WINDOWS-1250', $user->getFee() . ' Kč, slovy =' . $user->getFeeWords() . '='));
+        $this->fpdi->Text(70, 78, iconv('UTF-8', 'WINDOWS-1250', $application->getFee() . ' Kč, slovy =' . $application->getFeeWords() . '='));
         $this->fpdi->Text(70, 85, iconv('UTF-8', 'WINDOWS-1250', 'účastnický poplatek ' . $this->settingsRepository->getValue(Settings::SEMINAR_NAME)));
-        $this->fpdi->Text(70, 92, iconv('UTF-8', 'WINDOWS-1250', "{$user->getFirstName()} {$user->getLastName()}"));
-        $this->fpdi->Text(70, 99, iconv('UTF-8', 'WINDOWS-1250', "{$user->getStreet()}, {$user->getCity()}, {$user->getPostcode()}"));
+        $this->fpdi->Text(70, 92, iconv('UTF-8', 'WINDOWS-1250', "{$application->getUser()->getFirstName()} {$application->getUser()->getLastName()}"));
+        $this->fpdi->Text(70, 99, iconv('UTF-8', 'WINDOWS-1250', "{$application->getUser()->getStreet()}, {$application->getUser()->getCity()}, {$application->getUser()->getPostcode()}"));
 
         $this->fpdi->Text(31, 111, iconv('UTF-8', 'WINDOWS-1250', "{$this->settingsRepository->getValue(Settings::PRINT_LOCATION)}"));
         $this->fpdi->Text(75, 111, iconv('UTF-8', 'WINDOWS-1250', "{$this->writeToday()}"));

@@ -17,6 +17,7 @@ use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\Authenticator;
 use App\Services\MailService;
+use App\Services\PdfExportService;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
@@ -63,6 +64,9 @@ class ApplicationsGridControl extends Control
     /** @var User */
     private $user;
 
+    /** @var PdfExportService */
+    private $pdfExportService;
+
 
     /**
      * ApplicationsGridControl constructor.
@@ -74,12 +78,16 @@ class ApplicationsGridControl extends Control
      * @param ApplicationService $applicationService
      * @param ProgramRepository $programRepository
      * @param MailService $mailService
+     * @param SettingsRepository $settingsRepository
+     * @param Authenticator $authenticator
+     * @param PdfExportService $pdfExportService
      */
     public function __construct(Translator $translator, ApplicationRepository $applicationRepository,
                                 UserRepository $userRepository, RoleRepository $roleRepository,
                                 SubeventRepository $subeventRepository, ApplicationService $applicationService,
                                 ProgramRepository $programRepository, MailService $mailService,
-                                SettingsRepository $settingsRepository, Authenticator $authenticator)
+                                SettingsRepository $settingsRepository, Authenticator $authenticator,
+                                PdfExportService $pdfExportService)
     {
         parent::__construct();
 
@@ -93,6 +101,7 @@ class ApplicationsGridControl extends Control
         $this->mailService = $mailService;
         $this->settingsRepository = $settingsRepository;
         $this->authenticator = $authenticator;
+        $this->pdfExportService = $pdfExportService;
     }
 
     /**
@@ -381,7 +390,7 @@ class ApplicationsGridControl extends Control
                 $this->redirect('this');
             }
 
-            if(!$this->validateSubeventsRegistered($selectedSubevents, $this->user)) {
+            if(!$this->validateSubeventsRegistered($selectedSubevents, $this->user, $application->getId())) {
                 $this->getPresenter()->flashMessage('admin.users.users_applications_subevents_registered', 'danger');
                 $this->redirect('this');
             }
@@ -495,11 +504,13 @@ class ApplicationsGridControl extends Control
      * @param User $user
      * @return bool
      */
-    public function validateSubeventsRegistered($selectedSubevents, User $user)
+    public function validateSubeventsRegistered($selectedSubevents, User $user, $applicationId)
     {
         foreach ($selectedSubevents as $subevent) {
-            if ($user->getSubevents()->contains($subevent))
-                return FALSE;
+            foreach ($user->getApplications() as $application) {
+                if ($application->getId() != $applicationId && $application->getSubevents()->contains($subevent))
+                    return FALSE;
+            }
         }
         return TRUE;
     }
