@@ -1,9 +1,9 @@
 <?php
 
-namespace App\AdminModule\StructureModule\Presenters;
+namespace App\AdminModule\ConfigurationModule\Presenters;
 
-use App\AdminModule\StructureModule\Components\IDiscountsGridControlFactory;
-use App\AdminModule\StructureModule\Forms\DiscountForm;
+use App\AdminModule\ConfigurationModule\Components\IDiscountsGridControlFactory;
+use App\AdminModule\ConfigurationModule\Forms\DiscountForm;
 use Nette\Forms\Form;
 
 
@@ -12,7 +12,7 @@ use Nette\Forms\Form;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class DiscountsPresenter extends StructureBasePresenter
+class DiscountsPresenter extends ConfigurationBasePresenter
 {
     /**
      * @var IDiscountsGridControlFactory
@@ -38,7 +38,7 @@ class DiscountsPresenter extends StructureBasePresenter
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) {
             if (!$form['cancel']->isSubmittedBy())
-                $this->flashMessage('admin.structure.discounts_saved', 'success');
+                $this->flashMessage('admin.configuration.discounts_saved', 'success');
 
             $this->redirect('Discount:default');
         };

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\AdminModule\StructureModule\Presenters;
+namespace App\AdminModule\ConfigurationModule\Presenters;
 
-use App\AdminModule\StructureModule\Components\ISubeventsGridControlFactory;
-use App\AdminModule\StructureModule\Forms\SubeventForm;
+use App\AdminModule\ConfigurationModule\Components\ISubeventsGridControlFactory;
+use App\AdminModule\ConfigurationModule\Forms\SubeventForm;
 use App\Model\Structure\SubeventRepository;
 use Nette\Forms\Form;
 
@@ -13,7 +13,7 @@ use Nette\Forms\Form;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class SubeventsPresenter extends StructureBasePresenter
+class SubeventsPresenter extends ConfigurationBasePresenter
 {
     /**
      * @var ISubeventsGridControlFactory
@@ -55,7 +55,7 @@ class SubeventsPresenter extends StructureBasePresenter
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) {
             if (!$form['cancel']->isSubmittedBy())
-                $this->flashMessage('admin.structure.subevents_saved', 'success');
+                $this->flashMessage('admin.configuration.subevents_saved', 'success');
 
             $this->redirect('Subevents:default');
         };

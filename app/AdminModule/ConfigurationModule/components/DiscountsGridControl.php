@@ -1,6 +1,6 @@
 <?php
 
-namespace App\AdminModule\StructureModule\Components;
+namespace App\AdminModule\ConfigurationModule\Components;
 
 use App\Model\Enums\ConditionOperator;
 use App\Model\Structure\Discount;
@@ -65,7 +65,7 @@ class DiscountsGridControl extends Control
         $grid->setPagination(FALSE);
 
 
-        $grid->addColumnText('conditionSubevents', 'admin.structure.discounts_condition_subevents')
+        $grid->addColumnText('conditionSubevents', 'admin.configuration.discounts_condition_subevents')
             ->setRenderer(function ($row) {
                 $subevents = [];
                 foreach ($row->getConditionSubevents() as $subevent) {
@@ -74,11 +74,11 @@ class DiscountsGridControl extends Control
                 return implode(", ", $subevents);
             });
 
-        $grid->addColumnText('conditionOperator', 'admin.structure.discounts_condition_operator')
+        $grid->addColumnText('conditionOperator', 'admin.configuration.discounts_condition_operator')
             ->setRenderer(function ($row) {
                 return $this->translator->translate('common.condition_operator.' . $row->getConditionOperator());
             });
-        $grid->addColumnText('discount', 'admin.structure.discounts_discount');
+        $grid->addColumnText('discount', 'admin.configuration.discounts_discount');
 
 
         $subeventsOptions = $this->subeventRepository->getSubeventsOptions();
@@ -86,27 +86,27 @@ class DiscountsGridControl extends Control
 
         $grid->addInlineAdd()->onControlAdd[] = function ($container) use ($subeventsOptions, $operatorsOptions) {
             $container->addMultiSelect('conditionSubevents', '', $subeventsOptions)->setAttribute('class', 'datagrid-multiselect')
-                ->addRule(Form::FILLED, 'admin.structure.discounts_condition_subevents_empty');
+                ->addRule(Form::FILLED, 'admin.configuration.discounts_condition_subevents_empty');
 
             $container->addSelect('conditionOperator', '', $operatorsOptions)
                 ->setDefaultValue(ConditionOperator::OPERATOR_AND);
 
             $container->addText('discount', '')
-                ->addRule(Form::FILLED, 'admin.structure.discounts_discount_empty')
-                ->addRule(Form::INTEGER, 'admin.structure.discounts_discount_format')
+                ->addRule(Form::FILLED, 'admin.configuration.discounts_discount_empty')
+                ->addRule(Form::INTEGER, 'admin.configuration.discounts_discount_format')
                 ->setDefaultValue(0);
         };
         $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
 
         $grid->addInlineEdit()->onControlAdd[] = function ($container) use ($subeventsOptions, $operatorsOptions) {
             $container->addMultiSelect('conditionSubevents', '', $subeventsOptions)->setAttribute('class', 'datagrid-multiselect')
-                ->addRule(Form::FILLED, 'admin.structure.discounts_condition_subevents_empty');
+                ->addRule(Form::FILLED, 'admin.configuration.discounts_condition_subevents_empty');
 
             $container->addSelect('conditionOperator', '', $operatorsOptions);
 
             $container->addText('discount', '')
-                ->addRule(Form::FILLED, 'admin.structure.discounts_discount_empty')
-                ->addRule(Form::INTEGER, 'admin.structure.discounts_discount_format');
+                ->addRule(Form::FILLED, 'admin.configuration.discounts_discount_empty')
+                ->addRule(Form::INTEGER, 'admin.configuration.discounts_discount_format');
         };
         $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) {
             $container->setDefaults([
@@ -123,7 +123,7 @@ class DiscountsGridControl extends Control
             ->setClass('btn btn-xs btn-danger')
             ->addAttributes([
                 'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('admin.structure.discounts_delete_confirm')
+                'data-content' => $this->translator->translate('admin.configuration.discounts_delete_confirm')
             ]);
     }
 
@@ -141,7 +141,7 @@ class DiscountsGridControl extends Control
 
         $this->discountRepository->save($discount);
 
-        $this->getPresenter()->flashMessage('admin.structure.discounts_saved', 'success');
+        $this->getPresenter()->flashMessage('admin.configuration.discounts_saved', 'success');
 
         $this->redirect('this');
     }
@@ -161,7 +161,7 @@ class DiscountsGridControl extends Control
 
         $this->discountRepository->save($discount);
 
-        $this->getPresenter()->flashMessage('admin.structure.discounts_saved', 'success');
+        $this->getPresenter()->flashMessage('admin.configuration.discounts_saved', 'success');
 
         $this->redirect('this');
     }
@@ -175,7 +175,7 @@ class DiscountsGridControl extends Control
         $discount = $this->discountRepository->findById($id);
         $this->discountRepository->remove($discount);
 
-        $this->getPresenter()->flashMessage('admin.structure.discounts_deleted', 'success');
+        $this->getPresenter()->flashMessage('admin.configuration.discounts_deleted', 'success');
 
         $this->redirect('this');
     }

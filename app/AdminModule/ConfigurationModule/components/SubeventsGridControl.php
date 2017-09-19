@@ -1,8 +1,7 @@
 <?php
 
-namespace App\AdminModule\StructureModule\Components;
+namespace App\AdminModule\ConfigurationModule\Components;
 
-use App\Model\ACL\Role;
 use App\Model\Program\BlockRepository;
 use App\Model\Structure\SubeventRepository;
 use Kdyby\Translation\Translator;
@@ -64,19 +63,19 @@ class SubeventsGridControl extends Control
         $grid->setPagination(FALSE);
 
 
-        $grid->addColumnText('name', 'admin.structure.subevents_name');
+        $grid->addColumnText('name', 'admin.configuration.subevents_name');
 
-        $grid->addColumnText('implicit', 'admin.structure.subevents_implicit')
+        $grid->addColumnText('implicit', 'admin.configuration.subevents_implicit')
             ->setReplacement([
                 '0' => $this->translator->translate('admin.common.no'),
                 '1' => $this->translator->translate('admin.common.yes')
             ]);
 
-        $grid->addColumnNumber('fee', 'admin.structure.subevents_fee');
+        $grid->addColumnNumber('fee', 'admin.configuration.subevents_fee');
 
-        $grid->addColumnText('capacity', 'admin.structure.subevents_capacity')
+        $grid->addColumnText('capacity', 'admin.configuration.subevents_capacity')
             ->setRendererOnCondition(function ($row) {
-                return $this->translator->translate('admin.structure.subevents_capacity_unlimited');
+                return $this->translator->translate('admin.configuration.subevents_capacity_unlimited');
             }, function ($row) {
                 return $row->getCapacity() === NULL;
             }
@@ -98,7 +97,7 @@ class SubeventsGridControl extends Control
             ->setClass('btn btn-xs btn-danger')
             ->addAttributes([
                 'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('admin.structure.subevents_delete_confirm')
+                'data-content' => $this->translator->translate('admin.configuration.subevents_delete_confirm')
             ]);
         $grid->allowRowsAction('delete', function ($item) {
             return !$item->isImplicit();
@@ -123,7 +122,7 @@ class SubeventsGridControl extends Control
 
         $this->subeventRepository->remove($subevent);
 
-        $this->getPresenter()->flashMessage('admin.structure.subevents_deleted', 'success');
+        $this->getPresenter()->flashMessage('admin.configuration.subevents_deleted', 'success');
 
         $this->redirect('this');
     }

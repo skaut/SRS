@@ -195,15 +195,15 @@ services:
     - App\AdminModule\CMSModule\Components\INewsGridControlFactory
     - App\AdminModule\CMSModule\Components\IPagesGridControlFactory
     - App\AdminModule\ConfigurationModule\Components\ICustomInputsGridControlFactory
+    - App\AdminModule\ConfigurationModule\Components\IDiscountsGridControlFactory
     - App\AdminModule\ConfigurationModule\Components\IPlacePointsGridControlFactory
+    - App\AdminModule\ConfigurationModule\Components\ISubeventsGridControlFactory
     - App\AdminModule\MailingModule\Components\IMailHistoryGridControlFactory
     - App\AdminModule\MailingModule\Components\IMailTemplatesGridControlFactory
     - App\AdminModule\ProgramModule\Components\IProgramBlocksGridControlFactory
     - App\AdminModule\ProgramModule\Components\IProgramCategoriesGridControlFactory
     - App\AdminModule\ProgramModule\Components\IProgramAttendeesGridControlFactory
     - App\AdminModule\ProgramModule\Components\IRoomsGridControlFactory
-    - App\AdminModule\StructureModule\Components\IDiscountsGridControlFactory
-    - App\AdminModule\StructureModule\Components\ISubeventsGridControlFactory
 
     - App\AdminModule\Forms\BaseForm
     - App\AdminModule\Forms\AddLectorForm
@@ -218,6 +218,7 @@ services:
         parameters: [id, area]
     - App\AdminModule\CMSModule\Forms\NewsForm
     - App\AdminModule\ConfigurationModule\Forms\ApplicationForm
+    - App\AdminModule\ConfigurationModule\Forms\DiscountForm
     - App\AdminModule\ConfigurationModule\Forms\MailingForm
     - App\AdminModule\ConfigurationModule\Forms\PaymentForm
     - App\AdminModule\ConfigurationModule\Forms\PaymentProofForm
@@ -226,12 +227,11 @@ services:
     - App\AdminModule\ConfigurationModule\Forms\ProgramForm
     - App\AdminModule\ConfigurationModule\Forms\SeminarForm
     - App\AdminModule\ConfigurationModule\Forms\SkautIsEventForm
+    - App\AdminModule\ConfigurationModule\Forms\SubeventForm
     - App\AdminModule\ConfigurationModule\Forms\WebForm
     - App\AdminModule\ProgramModule\Forms\BlockForm
     - App\AdminModule\MailingModule\Forms\EditTemplateForm
     - App\AdminModule\MailingModule\Forms\SendForm
-    - App\AdminModule\StructureModule\Forms\DiscountForm
-    - App\AdminModule\StructureModule\Forms\SubeventForm
 
 webloader:
     css:

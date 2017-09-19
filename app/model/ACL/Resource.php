@@ -52,11 +52,6 @@ class Resource
      */
     const MAILING = 'mailing';
 
-    /**
-     * Struktura semináře.
-     */
-    const STRUCTURE = 'structure';
-
     public static $resources = [
         self::ADMIN,
         self::CMS,
@@ -64,8 +59,7 @@ class Resource
         self::PROGRAM,
         self::CONFIGURATION,
         self::USERS,
-        self::MAILING,
-        self::STRUCTURE
+        self::MAILING
     ];
 
     use Identifier;

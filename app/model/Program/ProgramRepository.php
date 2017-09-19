@@ -4,12 +4,9 @@ namespace App\Model\Program;
 
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
-use App\Model\Enums\ApplicationState;
-use App\Model\Structure\SubeventRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Criteria;
 use Kdyby\Doctrine\EntityRepository;
 
 
