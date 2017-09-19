@@ -114,7 +114,7 @@ class MailingForm extends Nette\Object
 
             $link = $this->linkGenerator->link('Admin:Configuration:Mailing:verify', ['code' => $verificationCode]);
 
-            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '',
+            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection(), $values['seminarEmail'],
                 Template::EMAIL_VERIFICATION, [
                     TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
                     TemplateVariable::EMAIL_VERIFICATION_LINK => $link],
