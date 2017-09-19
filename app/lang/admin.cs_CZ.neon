@@ -554,7 +554,7 @@ configuration:
     mailing_email: "E-mail pro mailing"
     mailing_email_empty: "Zadejte e-mail."
     mailing_email_format: "Zadejte e-mail ve správném formátu."
-    mailing_email_verification_needed: "Na zadaný e-mail byl zaslán ověřovací odkaz."
+    mailing_email_verification_needed: "Změna e-mailu čeká na ověření. Ověřit ji můžete pomocí odkazu zaslaného na nový e-mail."
     mailing_email_verification_success: "E-mail byl úspěšně ověřen."
     mailing_email_verification_error: "E-mail se nepodařilo ověřit."
 

@@ -30,11 +30,6 @@ class MailingForm extends Nette\Object
      */
     private $user;
 
-    /**
-     * Událost při změně e-mailu.
-     */
-    public $onEmailChange;
-
     /** @var BaseForm */
     private $baseForm;
 
@@ -119,8 +114,6 @@ class MailingForm extends Nette\Object
                     TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
                     TemplateVariable::EMAIL_VERIFICATION_LINK => $link],
                 TRUE);
-
-            $this->onEmailChange();
         }
     }
 }
