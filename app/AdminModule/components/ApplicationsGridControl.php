@@ -178,7 +178,7 @@ class ApplicationsGridControl extends Control
                 return $this->translator->translate('common.application_state.' . $row->getState());
             });
 
-        //TODO editace VS, platebni metoda, datum zaplaceni, datum vytisteni dokladu, mail pri potvrzeni platby
+        //TODO mail pri potvrzeni platby
 //        if ($values['paymentDate'] !== NULL && $oldPaymentDate === NULL) {
 //            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::PAYMENT_CONFIRMED, [
 //                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)

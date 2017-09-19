@@ -257,7 +257,7 @@ function setColor(event) {
     if (event.user_attends) {
         event.color = COLOR_ATTENDS;
     }
-    else if (!userAllowedRegisterPrograms || (event.block.capacity !== null && event.attendees_count >= event.block.capacity) || event.blocked) {
+    else if (!userAllowedRegisterPrograms || (event.block.capacity !== null && event.attendees_count >= event.block.capacity) || event.blocked || !event.paid) {
         event.color = COLOR_BLOCKED;
     }
     else if (event.block.mandatory) {

@@ -73,6 +73,12 @@ class ProgramDetailDTO extends Nette\Object
      */
     private $blocked;
 
+    /**
+     * @JMS\Type("boolean")
+     * @var bool
+     */
+    private $paid;
+
 
     /**
      * @return int
@@ -232,5 +238,21 @@ class ProgramDetailDTO extends Nette\Object
     public function setBlocked($blocked)
     {
         $this->blocked = $blocked;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPaid()
+    {
+        return $this->paid;
+    }
+
+    /**
+     * @param bool $paid
+     */
+    public function setPaid($paid)
+    {
+        $this->paid = $paid;
     }
 }

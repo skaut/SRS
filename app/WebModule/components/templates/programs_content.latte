@@ -36,13 +36,9 @@
                 <div class="alert alert-warning alert-forever">
                     {_web.programs_content.register_programs_not_allowed}
                 </div>
-            {elseif $userNotPaid}
-                <div class="alert alert-warning alert-forever">
-                    {_web.programs_content.register_programs_not_allowed_before_payment}
-                </div>
             {/if}
 
-            {var $userAllowedRegisterPrograms = $registerProgramsAllowed && $userHasPermission && !$userNotPaid}
+            {var $userAllowedRegisterPrograms = $registerProgramsAllowed && $userHasPermission}
 
                 <script>
                     var userAllowedRegisterPrograms = {$userAllowedRegisterPrograms};
@@ -123,7 +119,7 @@
 
                                 <div class="modal-footer">
                                     {if $userAllowedRegisterPrograms}
-                                        <button ng-hide="event.user_attends || event.blocked || event.occupied"
+                                        <button ng-hide="event.user_attends || event.blocked || event.occupied || !event.paid"
                                                 ng-click="attend(event)"
                                                 class="btn btn-success pull-left">
                                             {_web.programs_content.register}
