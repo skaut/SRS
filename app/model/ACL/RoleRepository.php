@@ -161,11 +161,11 @@ class RoleRepository extends EntityRepository
      */
     public function countUnoccupiedInRoles($roles)
     {
-        $count = [];
+        $counts = [];
         foreach ($roles as $role) {
-            $count[$role->getId()] = $this->countUnoccupiedInRole($role);
+            $counts[$role->getId()] = $this->countUnoccupiedInRole($role);
         }
-        return $count;
+        return $counts;
     }
 
     /**

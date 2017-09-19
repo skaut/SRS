@@ -415,6 +415,15 @@ class UsersGridControl extends Control
                     break;
                 }
             }
+            if (!$over) {
+                foreach ($user->getSubevents() as $subevent) {
+                    $count = $this->subeventRepository->countUnoccupiedInSubevent($subevent);
+                    if ($count !== NULL && $count < 1) {
+                        $over = TRUE;
+                        break;
+                    }
+                }
+            }
         }
 
         $p = $this->getPresenter();
@@ -460,23 +469,39 @@ class UsersGridControl extends Control
     public function groupApprove(array $ids)
     {
         $users = $this->userRepository->findUsersByIds($ids);
+
         $rolesWithLimitedCapacity = $this->roleRepository->findAllWithLimitedCapacity();
-        $unoccupiedCounts = $this->roleRepository->countUnoccupiedInRoles($rolesWithLimitedCapacity);
+        $rolesUnoccupiedCounts = $this->roleRepository->countUnoccupiedInRoles($rolesWithLimitedCapacity);
+
+        $subeventsWithLimitedCapacity = $this->subeventRepository->findAllWithLimitedCapacity();
+        $subeventsUnoccupiedCounts = $this->subeventRepository->countUnoccupiedInSubevents($subeventsWithLimitedCapacity);
 
         foreach ($users as $user) {
             if (!$user->isApproved()) {
                 foreach ($user->getRoles() as $role) {
                     if ($role->hasLimitedCapacity())
-                        $unoccupiedCounts[$role->getId()]--;
+                        $rolesUnoccupiedCounts[$role->getId()]--;
+                }
+                foreach ($user->getSubevents() as $subevent) {
+                    if ($subevent->hasLimitedCapacity())
+                        $subeventsUnoccupiedCounts[$subevent->getId()]--;
                 }
             }
         }
 
         $over = FALSE;
-        foreach ($unoccupiedCounts as $count) {
+        foreach ($rolesUnoccupiedCounts as $count) {
             if ($count < 0) {
                 $over = TRUE;
                 break;
+            }
+        }
+        if (!$over) {
+            foreach ($subeventsUnoccupiedCounts as $count) {
+                if ($count < 0) {
+                    $over = TRUE;
+                    break;
+                }
             }
         }
 
@@ -595,17 +620,19 @@ class UsersGridControl extends Control
      */
     public function groupMarkPaidToday(array $ids, $value)
     {
-        //TODO
         foreach ($ids as $id) {
             $user = $this->userRepository->findById($id);
-            if ($user->isPaying()) {
-                $user->setPaymentMethod($value);
-                $user->setPaymentDate(new \DateTime());
-                $this->userRepository->save($user);
+            foreach ($user->getApplications() as $application) {
+                if ($application->getState() == ApplicationState::WAITING_FOR_PAYMENT) {
+                    $application->setPaymentMethod($value);
+                    $application->setPaymentDate(new \DateTime());
+                    $application->setState(ApplicationState::PAID);
+                    $this->applicationRepository->save($application);
 
-                $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$user]), '', Template::PAYMENT_CONFIRMED, [
-                    TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)
-                ]);
+                    $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$user]), '', Template::PAYMENT_CONFIRMED, [
+                        TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)
+                    ]);
+                }
             }
         }
 
@@ -626,7 +653,6 @@ class UsersGridControl extends Control
      */
     public function groupGeneratePaymentProofs(array $ids)
     {
-        //TODO
         $this->sessionSection->userIds = $ids;
         $this->redirect('generatepaymentproofs'); //presmerovani kvuli zruseni ajax
     }

@@ -74,7 +74,7 @@ class PdfExportService extends Nette\Object
             else if ($application->getPaymentMethod() == PaymentType::CASH)
                 $this->addIncomeProofPage($application);
 
-            if (!$application->getIncomeProofPrintedDate()) {
+            if (!$application->getIncomeProofPrintedDate() && $application->getPaymentDate()) {
                 $application->setIncomeProofPrintedDate(new \DateTime());
                 $this->applicationRepository->save($application);
             }

@@ -12,6 +12,7 @@ use App\Model\Structure\Subevent;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\Application;
 use App\Model\User\ApplicationRepository;
+use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\Authenticator;
