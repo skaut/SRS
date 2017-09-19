@@ -2,9 +2,12 @@
 
 namespace App\Services;
 
+use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
+use App\Model\User\Application;
+use App\Model\User\ApplicationRepository;
 use App\Model\User\User;
 use fpdi\FPDI;
 use Nette;
@@ -29,17 +32,21 @@ class PdfExportService extends Nette\Object
     /** @var SettingsRepository */
     private $settingsRepository;
 
+    /** @var ApplicationRepository */
+    private $applicationRepository;
+
 
     /**
      * PdfExportService constructor.
      * @param string $dir
      * @param SettingsRepository $settingsRepository
      */
-    public function __construct($dir, SettingsRepository $settingsRepository)
+    public function __construct($dir, SettingsRepository $settingsRepository, ApplicationRepository $applicationRepository)
     {
         $this->dir = $dir;
 
         $this->settingsRepository = $settingsRepository;
+        $this->applicationRepository = $applicationRepository;
 
         $this->fpdi = new FPDI();
         $this->fpdi->fontpath = $dir . '/fonts/';
@@ -48,13 +55,49 @@ class PdfExportService extends Nette\Object
     }
 
     /**
-     * Vygeneruje doklad uživateli doklad o zaplacení.
+     * Vygeneruje doklad o zaplacení pro přihlášku.
+     * @param Application $application
+     * @param $filename
+     */
+    public function generateApplicationsPaymentProof(Application $application, $filename)
+    {
+        $this->prepareApplicationsPaymentProof($application);
+        $this->fpdi->Output($filename, 'D');
+        exit;
+    }
+
+    private function prepareApplicationsPaymentProof(Application $application)
+    {
+        if ($application->getState() == ApplicationState::PAID) {
+            if ($application->getPaymentMethod() == PaymentType::BANK)
+                $this->addAccountProofPage($application);
+            else if ($application->getPaymentMethod() == PaymentType::CASH)
+                $this->addIncomeProofPage($application);
+
+            if (!$application->getIncomeProofPrintedDate()) {
+                $application->setIncomeProofPrintedDate(new \DateTime());
+                $this->applicationRepository->save($application);
+            }
+        }
+    }
+
+    /**
+     * Vygeneruje doklady o zaplacení pro uživatele.
      * @param User $user
      * @param $filename
      */
-    public function generatePaymentProof(User $user, $filename)
+    public function generateUsersPaymentProof(User $user, $filename)
     {
-        $this->generatePaymentProofs([$user], $filename);
+        $this->prepareUsersPaymentProof($user);
+        $this->fpdi->Output($filename, 'D');
+        exit;
+    }
+
+    private function prepareUsersPaymentProof(User $user)
+    {
+        foreach ($user->getApplications() as $application) {
+            $this->prepareApplicationsPaymentProof($application);
+        }
     }
 
     /**
@@ -62,23 +105,25 @@ class PdfExportService extends Nette\Object
      * @param $users
      * @param $filename
      */
-    public function generatePaymentProofs($users, $filename)
+    public function generateUsersPaymentProofs($users, $filename)
     {
-        foreach ($users as $user) {
-            if ($user->getPaymentMethod() == PaymentType::BANK)
-                $this->addAccountProofPage($user);
-            else if ($user->getPaymentMethod() == PaymentType::CASH)
-                $this->addIncomeProofPage($user);
-        }
+        $this->prepareUsersPaymentProofs($users);
         $this->fpdi->Output($filename, 'D');
         exit;
+    }
+
+    private function prepareUsersPaymentProofs($users)
+    {
+        foreach ($users as $user) {
+            $this->prepareUsersPaymentProof($user);
+        }
     }
 
     /**
      * Vytvoří stránku s příjmovýchm dokladem.
      * @param User $user
      */
-    private function addIncomeProofPage(User $user)
+    private function addIncomeProofPage(Application $application)
     {
         $this->configureForIncomeProof();
 
@@ -110,7 +155,7 @@ class PdfExportService extends Nette\Object
      * Vytvoří stránku s potvrzením o přijetí platby.
      * @param User $user
      */
-    private function addAccountProofPage(User $user)
+    private function addAccountProofPage(Application $application)
     {
         $this->configureForAccountProof();
 

@@ -428,8 +428,18 @@ class User
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('state', ApplicationState::WAITING_FOR_PAYMENT));
 
-
         return $this->applications->matching($criteria);
+    }
+
+    /**
+     * @return Application
+     */
+    public function getFirstApplication()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('first', TRUE));
+
+        return $this->applications->matching($criteria)->first();
     }
 
     /**

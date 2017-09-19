@@ -329,6 +329,7 @@ users:
     users_applications_roles_not_empty: "Role je možné vybírat jen u první přihlášky."
     users_applications_subevents: "Podakce"
     users_applications_subevents_occupied: "Všechna místa na některé podakci jsou obsazena."
+    users_applications_subevents_registered: "Na některou ze zvolených podakcí je uživatel již přihlášen."
     users_applications_fee: "Cena"
     users_applications_variable_symbol: "Variabilní symbol"
     users_applications_variable_symbol_empty: "Zadejte variabilní symbol."

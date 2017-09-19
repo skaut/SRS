@@ -484,12 +484,10 @@ class ApplicationsGridControl extends Control
      */
     public function handleGeneratePaymentProofBank($id)
     {
-        //TODO generovani potvrzeni o zaplaceni
-//        if (!$this->user->getIncomeProofPrintedDate()) {
-//            $this->user->setIncomeProofPrintedDate(new \DateTime());
-//            $this->userRepository->save($user);
-//        }
-//        $this->pdfExportService->generatePaymentProof($user, "potvrzeni-o-prijeti-platby.pdf");
+        $this->pdfExportService->generateApplicationsPaymentProof(
+            $this->applicationRepository->findById($id),
+            "potvrzeni-o-prijeti-platby.pdf"
+        );
     }
 
     /**

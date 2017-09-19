@@ -6,6 +6,7 @@ use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
+use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
 use App\Model\Mailing\Mail;
 use App\Model\Mailing\Template;
@@ -19,6 +20,7 @@ use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\ApplicationRepository;
 use App\Model\User\UserRepository;
+use App\Services\ApplicationService;
 use App\Services\ExcelExportService;
 use App\Services\MailService;
 use App\Services\PdfExportService;
@@ -80,6 +82,9 @@ class UsersGridControl extends Control
     /** @var ApplicationRepository */
     private $applicationRepository;
 
+    /** @var ApplicationService */
+    private $applicationService;
+
 
     /**
      * UsersGridControl constructor.
@@ -96,13 +101,15 @@ class UsersGridControl extends Control
      * @param Session $session
      * @param SubeventRepository $subeventRepository
      * @param ApplicationRepository $applicationRepository
+     * @param ApplicationService $applicationService
      */
     public function __construct(Translator $translator, UserRepository $userRepository,
                                 SettingsRepository $settingsRepository, CustomInputRepository $customInputRepository,
                                 RoleRepository $roleRepository, ProgramRepository $programRepository,
                                 BlockRepository $blockRepository, PdfExportService $pdfExportService,
                                 ExcelExportService $excelExportService, MailService $mailService, Session $session,
-                                SubeventRepository $subeventRepository, ApplicationRepository $applicationRepository)
+                                SubeventRepository $subeventRepository, ApplicationRepository $applicationRepository,
+                                ApplicationService $applicationService)
     {
         parent::__construct();
 
@@ -118,7 +125,7 @@ class UsersGridControl extends Control
         $this->mailService = $mailService;
         $this->subeventRepository = $subeventRepository;
         $this->applicationRepository = $applicationRepository;
-
+        $this->applicationService = $applicationService;
         $this->session = $session;
         $this->sessionSection = $session->getSection('srs');
     }
@@ -538,6 +545,19 @@ class UsersGridControl extends Control
             foreach ($users as $user) {
                 $user->setRoles($selectedRoles);
                 $this->userRepository->save($user);
+
+                foreach ($user->getApplications() as $application) {
+                    $fee = $this->applicationService->countFee($selectedRoles, $application->getSubevents(),
+                        $application->isFirst()
+                    );
+
+                    $application->setFee($fee);
+                    $application->setState($fee == 0 || $application->getPaymentDate()
+                        ? ApplicationState::PAID
+                        : ApplicationState::WAITING_FOR_PAYMENT);
+
+                    $this->applicationRepository->save($application);
+                }
             }
 
             $this->programRepository->updateUsersPrograms($users->toArray());
@@ -665,23 +685,9 @@ class UsersGridControl extends Control
      */
     public function handleGeneratePaymentProofs()
     {
-        //TODO
         $ids = $this->session->getSection('srs')->userIds;
-
         $users = $this->userRepository->findUsersByIds($ids);
-        $usersToGenerate = [];
-
-        foreach ($users as $user) {
-            if ($user->getPaymentDate()) {
-                if (!$user->getIncomeProofPrintedDate()) {
-                    $user->setIncomeProofPrintedDate(new \DateTime());
-                    $this->userRepository->save($user);
-                }
-                $usersToGenerate[] = $user;
-            }
-        }
-
-        $this->pdfExportService->generatePaymentProofs($usersToGenerate, "doklady.pdf");
+        $this->pdfExportService->generateUsersPaymentProofs($users, "doklady.pdf");
     }
 
     /**
