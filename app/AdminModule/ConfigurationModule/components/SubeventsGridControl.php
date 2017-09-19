@@ -100,7 +100,7 @@ class SubeventsGridControl extends Control
                 'data-content' => $this->translator->translate('admin.configuration.subevents_delete_confirm')
             ]);
         $grid->allowRowsAction('delete', function ($item) {
-            return !$item->isImplicit();
+            return !$item->isImplicit() && $item->getBlocks()->isEmpty();
         });
     }
 

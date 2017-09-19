@@ -472,7 +472,7 @@ configuration:
     subevents_heading: "Podakce"
     subevents_name: "Název"
     subevents_name_empty: "Zadejte název."
-    subevents_implicit: "Implicitní"
+    subevents_implicit: "Skrytá"
     subevents_fee: "Cena"
     subevents_fee_format: "Zadejte číslo."
     subevents_capacity: "Kapacita"
