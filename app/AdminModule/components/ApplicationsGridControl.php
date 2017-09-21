@@ -18,6 +18,7 @@ use App\Services\ApplicationService;
 use App\Services\Authenticator;
 use App\Services\MailService;
 use App\Services\PdfExportService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
@@ -187,7 +188,7 @@ class ApplicationsGridControl extends Control
 
         if ($this->subeventRepository->explicitSubeventsExists()) {
             $grid->addInlineAdd()->onControlAdd[] = function ($container) {
-                $rolesSelect = $container->addMultiSelect('roles', '', $this->roleRepository->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED]))
+                $rolesSelect = $container->addMultiSelect('roles', '', $this->roleRepository->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]))
                     ->setAttribute('class', 'datagrid-multiselect');
 
                 if ($this->subeventRepository->explicitSubeventsExists()) {
@@ -199,7 +200,7 @@ class ApplicationsGridControl extends Control
         }
 
         $grid->addInlineEdit()->onControlAdd[] = function ($container) {
-            $rolesSelect = $container->addMultiSelect('roles', '', $this->roleRepository->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED]))
+            $rolesSelect = $container->addMultiSelect('roles', '', $this->roleRepository->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]))
                 ->setAttribute('class', 'datagrid-multiselect');
 
             if ($this->subeventRepository->explicitSubeventsExists()) {
@@ -269,11 +270,6 @@ class ApplicationsGridControl extends Control
                 $this->getPresenter()->flashMessage('admin.users.users_applications_roles_occupied', 'danger');
                 $this->redirect('this');
             }
-
-            if (!$this->validateRolesCombination($selectedRoles)) {
-                $this->getPresenter()->flashMessage('admin.users.users_applications_roles_nonregistered', 'danger');
-                $this->redirect('this');
-            }
         }
         else {
             if ($this->validateRolesEmpty($selectedRoles)) {
@@ -284,11 +280,13 @@ class ApplicationsGridControl extends Control
 
         if ($this->subeventRepository->explicitSubeventsExists()) {
             $selectedSubevents = $this->subeventRepository->findSubeventsByIds($values['subevents']);
-            $selectedAndUsersSubevents = $this->user->getSubevents();
-            foreach ($selectedSubevents as $subevent)
-                $selectedAndUsersSubevents->add($subevent);
 
             //kontrola podakci
+            if (!$this->validateSubeventsEmpty($selectedSubevents)) {
+                $this->getPresenter()->flashMessage('admin.users.users_applications_subevents_empty', 'danger');
+                $this->redirect('this');
+            }
+
             if (!$this->validateSubeventsCapacities($selectedSubevents)) {
                 $this->getPresenter()->flashMessage('admin.users.users_applications_subevents_occupied', 'danger');
                 $this->redirect('this');
@@ -313,6 +311,8 @@ class ApplicationsGridControl extends Control
         $application->setUser($this->user);
         if ($this->subeventRepository->explicitSubeventsExists())
             $application->setSubevents($selectedSubevents);
+        else
+            $application->setSubevents(new ArrayCollection([$this->subeventRepository->findImplicit()]));
         $application->setApplicationDate(new \DateTime());
         $application->setApplicationOrder($this->applicationRepository->findLastApplicationOrder() + 1);
         $application->setMaturityDate($this->applicationService->countMaturityDate());
@@ -368,11 +368,6 @@ class ApplicationsGridControl extends Control
                 $this->getPresenter()->flashMessage('admin.users.users_applications_roles_occupied', 'danger');
                 $this->redirect('this');
             }
-
-            if (!$this->validateRolesCombination($selectedRoles)) {
-                $this->getPresenter()->flashMessage('admin.users.users_applications_roles_nonregistered', 'danger');
-                $this->redirect('this');
-            }
         }
         else {
             if ($this->validateRolesEmpty($selectedRoles)) {
@@ -385,6 +380,11 @@ class ApplicationsGridControl extends Control
             $selectedSubevents = $this->subeventRepository->findSubeventsByIds($values['subevents']);
 
             //kontrola podakci
+            if (!$this->validateSubeventsEmpty($selectedSubevents)) {
+                $this->getPresenter()->flashMessage('admin.users.users_applications_subevents_empty', 'danger');
+                $this->redirect('this');
+            }
+
             if (!$this->validateSubeventsCapacities($selectedSubevents)) {
                 $this->getPresenter()->flashMessage('admin.users.users_applications_subevents_occupied', 'danger');
                 $this->redirect('this');
@@ -481,6 +481,18 @@ class ApplicationsGridControl extends Control
     }
 
     /**
+     * Ověří, že je vybrána alespoň jedna podakce.
+     * @param $selectedSubevents
+     * @return bool
+     */
+    public function validateSubeventsEmpty($selectedSubevents)
+    {
+        if ($selectedSubevents->isEmpty())
+            return FALSE;
+        return TRUE;
+    }
+
+    /**
      * Ověří obsazenost podakcí.
      * @param $selectedSubevents
      * @return bool
@@ -534,21 +546,6 @@ class ApplicationsGridControl extends Control
     }
 
     /**
-     * Ověří kombinaci role "Neregistrovaný" s ostatními rolemi.
-     * @param $selectedRoles
-     * @return bool
-     */
-    public function validateRolesCombination($selectedRoles)
-    {
-        $nonregisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
-
-        if ($selectedRoles->contains($nonregisteredRole) && $selectedRoles->count() > 1)
-            return FALSE;
-
-        return TRUE;
-    }
-
-    /**
      * Ověří, že je vybrána alespoň jedna role.
      * @param $selectedRoles
      * @return bool
@@ -557,7 +554,6 @@ class ApplicationsGridControl extends Control
     {
         if ($selectedRoles->isEmpty())
             return FALSE;
-
         return TRUE;
     }
 
