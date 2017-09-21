@@ -115,7 +115,7 @@ class ApplicationService extends Nette\Object
             case MaturityType::WORK_DAYS:
                 $currentDate = (new \DateTime())->format('Y-m-d');
                 $workDays = $this->settingsRepository->getValue(Settings::MATURITY_WORK_DAYS);
-                return new \DateTime(date('Y-m-d', strftime($currentDate . ' +' . $workDays . ' Weekday')));
+                return new \DateTime(date('Y-m-d', strtotime($currentDate . ' +' . $workDays . ' Weekday')));
         }
         return NULL;
     }

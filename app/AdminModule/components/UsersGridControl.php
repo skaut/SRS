@@ -155,7 +155,7 @@ class UsersGridControl extends Control
             ->onSelect[] = [$this, 'groupApprove'];
 
         $grid->addGroupMultiSelectAction('admin.users.users_group_action_change_roles',
-            $this->roleRepository->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED]))
+            $this->roleRepository->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]))
             ->onSelect[] = [$this, 'groupChangeRoles'];
 
         $grid->addGroupAction('admin.users.users_group_action_mark_attended')
@@ -538,13 +538,6 @@ class UsersGridControl extends Control
         //neni vybrana zadna role
         if ($selectedRoles->isEmpty()) {
             $p->flashMessage('admin.users.users_group_action_change_roles_error_empty', 'danger');
-            $error = TRUE;
-        }
-
-        //pokud je vybrana role neregistrovany, nesmi byt zadna vybrana jina role
-        $nonregisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
-        if ($selectedRoles->contains($nonregisteredRole) && $selectedRoles->count() > 1) {
-            $p->flashMessage('admin.users.users_group_action_change_roles_error_nonregistered', 'danger');
             $error = TRUE;
         }
 

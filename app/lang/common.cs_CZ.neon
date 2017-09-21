@@ -88,6 +88,7 @@ variable_symbol_type:
     order: Pořadí přihlášky
 
 maturity_type:
+    unlimited: "Neomezená"
     date: "Datum"
     days: "Počet dní"
     work_days: "Počet pracovních dní"

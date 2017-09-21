@@ -30,11 +30,6 @@ class MailingForm extends Nette\Object
      */
     private $user;
 
-    /**
-     * Událost při změně e-mailu.
-     */
-    public $onEmailChange;
-
     /** @var BaseForm */
     private $baseForm;
 
@@ -114,13 +109,11 @@ class MailingForm extends Nette\Object
 
             $link = $this->linkGenerator->link('Admin:Configuration:Mailing:verify', ['code' => $verificationCode]);
 
-            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '',
+            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection(), $values['seminarEmail'],
                 Template::EMAIL_VERIFICATION, [
                     TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
                     TemplateVariable::EMAIL_VERIFICATION_LINK => $link],
                 TRUE);
-
-            $this->onEmailChange();
         }
     }
 }
