@@ -248,6 +248,25 @@ class ApplicationsGridControl extends Control
                 && $item->getPaymentDate();
         });
 
+        $grid->addAction('cancelRegistration', 'admin.users.users_applications_cancel_registration')
+            ->addAttributes([
+                'data-toggle' => 'confirmation',
+                'data-content' => $this->translator->translate('admin.users.users_applications_cancel_registration_confirm')
+            ]);
+        $grid->allowRowsAction('cancelRegistration', function ($item) {
+            return $item->isFirst();
+        });
+
+        $grid->addAction('cancelApplication', 'admin.users.users_applications_cancel_application')
+            ->addAttributes([
+                'data-toggle' => 'confirmation',
+                'data-content' => $this->translator->translate('admin.users.users_applications_cancel_application_confirm')
+            ]);
+        $grid->allowRowsAction('cancelApplication', function ($item) {
+            return !$item->isFirst()
+                && ($item->getState() == ApplicationState::PAID || $item->getState() == ApplicationState::WAITING_FOR_PAYMENT);
+        });
+
         $grid->setColumnsSummary(['fee']);
     }
 
@@ -460,6 +479,7 @@ class ApplicationsGridControl extends Control
 
     /**
      * Vygeneruje příjmový pokladní doklad.
+     * @param $id
      */
     public function handleGeneratePaymentProofCash($id)
     {
@@ -471,6 +491,7 @@ class ApplicationsGridControl extends Control
 
     /**
      * Vygeneruje potvrzení o přijetí platby.
+     * @param $id
      */
     public function handleGeneratePaymentProofBank($id)
     {
@@ -481,11 +502,53 @@ class ApplicationsGridControl extends Control
     }
 
     /**
+     * Odhlásí uživatele ze semináře.
+     * @param $id
+     */
+    public function handleCancelRegistration($id)
+    {
+        $user = $this->applicationRepository->findById($id)->getUser();
+
+        $user->setRoles(new ArrayCollection([$this->roleRepository->findBySystemName(Role::NONREGISTERED)]));
+        foreach ($user->getApplications() as $application) {
+            $this->applicationRepository->remove($application);
+        }
+        $this->userRepository->save($user);
+
+        $this->programRepository->updateUserPrograms($user);
+        $this->userRepository->save($user);
+
+        $this->getPresenter()->flashMessage('admin.users.users_applications_registration_canceled', 'success');
+
+        $this->redirect('this');
+    }
+
+    /**
+     * Zruší přihlášku.
+     * @param $id
+     */
+    public function handleCancelApplication($id)
+    {
+        $application = $this->applicationRepository->findById($id);
+        $user = $application->getUser();
+
+        $application->setState(ApplicationState::CANCELED);
+        $this->applicationRepository->save($application);
+
+        $this->programRepository->updateUserPrograms($user);
+        $this->userRepository->save($user);
+
+        $this->getPresenter()->flashMessage('admin.users.users_applications_application_canceled', 'success');
+
+        $this->redirect('this');
+    }
+
+    /**
      * Ověří, že je vybrána alespoň jedna podakce.
      * @param $selectedSubevents
      * @return bool
      */
-    public function validateSubeventsEmpty($selectedSubevents)
+    private function validateSubeventsEmpty($selectedSubevents)
     {
         if ($selectedSubevents->isEmpty())
             return FALSE;
@@ -497,7 +560,7 @@ class ApplicationsGridControl extends Control
      * @param $selectedSubevents
      * @return bool
      */
-    public function validateSubeventsCapacities($selectedSubevents)
+    private function validateSubeventsCapacities($selectedSubevents)
     {
         if ($this->user->isApproved()) {
             foreach ($selectedSubevents as $subevent) {
@@ -516,7 +579,7 @@ class ApplicationsGridControl extends Control
      * @param User $user
      * @return bool
      */
-    public function validateSubeventsRegistered($selectedSubevents, User $user, $applicationId)
+    private function validateSubeventsRegistered($selectedSubevents, User $user, $applicationId)
     {
         foreach ($selectedSubevents as $subevent) {
             foreach ($user->getApplications() as $application) {
@@ -532,7 +595,7 @@ class ApplicationsGridControl extends Control
      * @param $selectedRoles
      * @return bool
      */
-    public function validateRolesCapacities($selectedRoles)
+    private function validateRolesCapacities($selectedRoles)
     {
         if ($this->user->isApproved()) {
             foreach ($selectedRoles as $role) {
@@ -550,7 +613,7 @@ class ApplicationsGridControl extends Control
      * @param $selectedRoles
      * @return bool
      */
-    public function validateRolesEmpty($selectedRoles)
+    private function validateRolesEmpty($selectedRoles)
     {
         if ($selectedRoles->isEmpty())
             return FALSE;

@@ -24,6 +24,18 @@ class ApplicationRepository extends EntityRepository
     }
 
     /**
+     * Vrací pořadí poslední odeslané přihlášky.
+     * @return int
+     */
+    public function findLastApplicationOrder()
+    {
+        return $this->createQueryBuilder('a')
+            ->select('MAX(a.applicationOrder)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
      * Uloží přihlášku.
      * @param Application $application
      */
@@ -34,14 +46,12 @@ class ApplicationRepository extends EntityRepository
     }
 
     /**
-     * Vrací pořadí poslední odeslané přihlášky.
-     * @return int
+     * Odstraní přihlášku.
+     * @param Application $application
      */
-    public function findLastApplicationOrder()
+    public function remove(Application $application)
     {
-        return $this->createQueryBuilder('a')
-            ->select('MAX(a.applicationOrder)')
-            ->getQuery()
-            ->getSingleScalarResult();
+        $this->_em->remove($application);
+        $this->_em->flush();
     }
 }
