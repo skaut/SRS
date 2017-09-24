@@ -2,6 +2,7 @@
 
 namespace App\Model\User;
 
+use App\Model\Enums\ApplicationState;
 use App\Model\Settings\SettingsRepository;
 use Kdyby\Doctrine\EntityRepository;
 
@@ -33,6 +34,18 @@ class ApplicationRepository extends EntityRepository
             ->select('MAX(a.applicationOrder)')
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    /**
+     * Vrací přihlášky čekající na platbu.
+     * @return Application[]
+     */
+    public function findWaitingForPaymentApplications()
+    {
+        return $this->createQueryBuilder('a')
+            ->where('a.state = :state')->setParameter('state', ApplicationState::WAITING_FOR_PAYMENT)
+            ->getQuery()
+            ->getResult();
     }
 
     /**
