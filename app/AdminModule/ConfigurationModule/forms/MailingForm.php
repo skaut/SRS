@@ -107,7 +107,7 @@ class MailingForm extends Nette\Object
             $verificationCode = substr(md5(uniqid(mt_rand(), TRUE)), 0, 8);
             $this->settingsRepository->setValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE, $verificationCode);
 
-            $link = $this->linkGenerator->link('Admin:Configuration:Mailing:verify', ['code' => $verificationCode]);
+            $link = $this->linkGenerator->link('Action:Mailing:verify', ['code' => $verificationCode]);
 
             $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection(), $values['seminarEmail'],
                 Template::EMAIL_VERIFICATION, [
