@@ -1117,8 +1117,11 @@ class User
     {
         $subevents = new ArrayCollection();
         foreach ($this->applications as $application) {
-            foreach ($application->getSubevents() as $subevent) {
-                $subevents->add($subevent);
+            if ($application->getState() == ApplicationState::PAID
+                || $application->getState() == ApplicationState::WAITING_FOR_PAYMENT) {
+                foreach ($application->getSubevents() as $subevent) {
+                    $subevents->add($subevent);
+                }
             }
         }
         return $subevents;

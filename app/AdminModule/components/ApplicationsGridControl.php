@@ -583,7 +583,10 @@ class ApplicationsGridControl extends Control
     {
         foreach ($selectedSubevents as $subevent) {
             foreach ($user->getApplications() as $application) {
-                if ($application->getId() != $applicationId && $application->getSubevents()->contains($subevent))
+                if ($application->getId() != $applicationId
+                    && ($application->getState() == ApplicationState::PAID
+                        || $application->getState() == ApplicationState::WAITING_FOR_PAYMENT)
+                    && $application->getSubevents()->contains($subevent))
                     return FALSE;
             }
         }
