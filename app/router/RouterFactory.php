@@ -35,8 +35,14 @@ class RouterFactory
             'module' => 'Api',
             'presenter' => NULL,
             'action' => NULL,
-            'id' => NULL,
-            'area' => NULL
+            'id' => NULL
+        ]);
+
+        $router[] = new Route('action/<presenter>/<action>[/<id>]', [
+            'module' => 'Action',
+            'presenter' => NULL,
+            'action' => NULL,
+            'id' => NULL
         ]);
 
         $router[] = new Route('admin/cms/<presenter>/<action>[/<id>][/<area>]', [

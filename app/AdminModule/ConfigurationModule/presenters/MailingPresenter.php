@@ -33,28 +33,6 @@ class MailingPresenter extends ConfigurationBasePresenter
         $this->template->waiting = $this->settingsRepository->getValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE) !== NULL;
     }
 
-    /**
-     * Ověří e-mail semináře.
-     * @param $code
-     */
-    public function actionVerify($code)
-    {
-        if ($code == $this->settingsRepository->getValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE)) {
-            $newEmail = $this->settingsRepository->getValue(Settings::SEMINAR_EMAIL_UNVERIFIED);
-            $this->settingsRepository->setValue(Settings::SEMINAR_EMAIL, $newEmail);
-
-            $this->settingsRepository->setValue(Settings::SEMINAR_EMAIL_UNVERIFIED, NULL);
-            $this->settingsRepository->setValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE, NULL);
-
-            $this->flashMessage('admin.configuration.mailing_email_verification_success', 'success');
-        }
-        else {
-            $this->flashMessage('admin.configuration.mailing_email_verification_error', 'danger');
-        }
-
-        $this->redirect('Mailing:default');
-    }
-
     protected function createComponentMailingForm()
     {
         $form = $this->mailingFormFactory->create($this->user->getId());
