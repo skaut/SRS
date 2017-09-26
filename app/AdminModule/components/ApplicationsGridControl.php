@@ -6,7 +6,10 @@ use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
+use App\Model\Mailing\Template;
+use App\Model\Mailing\TemplateVariable;
 use App\Model\Program\ProgramRepository;
+use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\Subevent;
 use App\Model\Structure\SubeventRepository;
@@ -178,13 +181,6 @@ class ApplicationsGridControl extends Control
             ->setRenderer(function ($row) {
                 return $this->translator->translate('common.application_state.' . $row->getState());
             });
-
-        //TODO mail pri potvrzeni platby
-//        if ($values['paymentDate'] !== NULL && $oldPaymentDate === NULL) {
-//            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::PAYMENT_CONFIRMED, [
-//                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)
-//            ]);
-//        }
 
         if ($this->subeventRepository->explicitSubeventsExists()) {
             $grid->addInlineAdd()->onControlAdd[] = function ($container) {
@@ -397,6 +393,7 @@ class ApplicationsGridControl extends Control
             }
         }
 
+        $oldPaymentDate = $application->getPaymentDate();
 
         //zpracovani zmen
         if ($application->isFirst()) {
@@ -436,6 +433,12 @@ class ApplicationsGridControl extends Control
 
         $this->programRepository->updateUserPrograms($this->user);
         $this->userRepository->save($this->user);
+
+        if ($values['paymentDate'] !== NULL && $oldPaymentDate === NULL) {
+            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::PAYMENT_CONFIRMED, [
+                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)
+            ]);
+        }
 
         $this->getPresenter()->flashMessage('admin.users.users_applications_saved', 'success');
         $this->redirect('this');
