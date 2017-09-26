@@ -82,9 +82,9 @@ class MaturityPresenter extends ActionBasePresenter
             $date = (new \DateTime())->setTime(0, 0)->modify('+' . $maturityReminder . ' days');
 
             if ($date == $maturityDate) {
-                $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::MATURITY_REMINDER, [
+                $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$application->getUser()]), '', Template::MATURITY_REMINDER, [
                     TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-                    TemplateVariable::MATURITY => $maturityDate
+                    TemplateVariable::MATURITY => $maturityDate->format('j. n. Y')
                 ]);
             }
         }

@@ -107,13 +107,18 @@ class ProfilePresenter extends WebBasePresenter
      */
     public function actionCancelRegistration()
     {
-        $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->dbuser]), '', Template::REGISTRATION_CANCELED, [
-            TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)
-        ]);
+        if ($this->applicationService->isAllowedEditRegistration($this->dbuser)) {
+            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->dbuser]), '', Template::REGISTRATION_CANCELED, [
+                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)
+            ]);
 
-        $this->userRepository->remove($this->dbuser);
+            $this->userRepository->remove($this->dbuser);
 
-        $this->redirect(':Auth:logout');
+            $this->redirect(':Auth:logout');
+        }
+        else {
+            $this->redirect(':Web:Profile:default');
+        }
     }
 
     /**
