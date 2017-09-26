@@ -185,6 +185,11 @@ class Settings
      */
     const MATURITY_WORK_DAYS = 'maturity_work_days';
 
+    /**
+     * Počet dní, kdy zaslat připomenutí splatnosti.
+     */
+    const MATURITY_REMINDER = 'maturity_reminder';
+
 
     /**
      * Název položky nastavení.

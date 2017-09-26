@@ -6,7 +6,10 @@ use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
+use App\Model\Mailing\Template;
+use App\Model\Mailing\TemplateVariable;
 use App\Model\Program\ProgramRepository;
+use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\Subevent;
 use App\Model\Structure\SubeventRepository;
@@ -179,13 +182,6 @@ class ApplicationsGridControl extends Control
                 return $this->translator->translate('common.application_state.' . $row->getState());
             });
 
-        //TODO mail pri potvrzeni platby
-//        if ($values['paymentDate'] !== NULL && $oldPaymentDate === NULL) {
-//            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::PAYMENT_CONFIRMED, [
-//                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)
-//            ]);
-//        }
-
         if ($this->subeventRepository->explicitSubeventsExists()) {
             $grid->addInlineAdd()->onControlAdd[] = function ($container) {
                 $rolesSelect = $container->addMultiSelect('roles', '', $this->roleRepository->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]))
@@ -343,24 +339,6 @@ class ApplicationsGridControl extends Control
         $this->programRepository->updateUserPrograms($this->user);
         $this->userRepository->save($this->user);
 
-//        $rolesNames = "";
-//        $first = TRUE;
-//        foreach ($this->user->getRoles() as $role) {
-//            if ($first) {
-//                $rolesNames = $role->getName();
-//                $first = FALSE;
-//            }
-//            else {
-//                $rolesNames .= ', ' . $role->getName();
-//            }
-//        }
-
-        //TODO mail vcetne podakci
-//        $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::ROLE_CHANGED, [
-//            TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-//            TemplateVariable::USERS_ROLES => $rolesNames
-//        ]);
-
         $this->getPresenter()->flashMessage('admin.users.users_applications_saved', 'success');
         $this->redirect('this');
     }
@@ -415,6 +393,7 @@ class ApplicationsGridControl extends Control
             }
         }
 
+        $oldPaymentDate = $application->getPaymentDate();
 
         //zpracovani zmen
         if ($application->isFirst()) {
@@ -455,23 +434,11 @@ class ApplicationsGridControl extends Control
         $this->programRepository->updateUserPrograms($this->user);
         $this->userRepository->save($this->user);
 
-//        $rolesNames = "";
-//        $first = TRUE;
-//        foreach ($this->user->getRoles() as $role) {
-//            if ($first) {
-//                $rolesNames = $role->getName();
-//                $first = FALSE;
-//            }
-//            else {
-//                $rolesNames .= ', ' . $role->getName();
-//            }
-//        }
-
-        //TODO mail vcetne podakci
-//        $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::ROLE_CHANGED, [
-//            TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-//            TemplateVariable::USERS_ROLES => $rolesNames
-//        ]);
+        if ($values['paymentDate'] !== NULL && $oldPaymentDate === NULL) {
+            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::PAYMENT_CONFIRMED, [
+                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)
+            ]);
+        }
 
         $this->getPresenter()->flashMessage('admin.users.users_applications_saved', 'success');
         $this->redirect('this');

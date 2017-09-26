@@ -615,6 +615,9 @@ class UsersGridControl extends Control
     {
         foreach ($ids as $id) {
             $user = $this->userRepository->findById($id);
+
+            $paidToday = FALSE;
+
             foreach ($user->getApplications() as $application) {
                 if ($application->getState() == ApplicationState::WAITING_FOR_PAYMENT) {
                     $application->setPaymentMethod($value);
@@ -622,10 +625,14 @@ class UsersGridControl extends Control
                     $application->setState(ApplicationState::PAID);
                     $this->applicationRepository->save($application);
 
-                    $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$user]), '', Template::PAYMENT_CONFIRMED, [
-                        TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)
-                    ]);
+                    $paidToday = TRUE;
                 }
+            }
+
+            if ($paidToday) {
+                $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$user]), '', Template::PAYMENT_CONFIRMED, [
+                    TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)
+                ]);
             }
         }
 
