@@ -343,24 +343,6 @@ class ApplicationsGridControl extends Control
         $this->programRepository->updateUserPrograms($this->user);
         $this->userRepository->save($this->user);
 
-//        $rolesNames = "";
-//        $first = TRUE;
-//        foreach ($this->user->getRoles() as $role) {
-//            if ($first) {
-//                $rolesNames = $role->getName();
-//                $first = FALSE;
-//            }
-//            else {
-//                $rolesNames .= ', ' . $role->getName();
-//            }
-//        }
-
-        //TODO mail vcetne podakci
-//        $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::ROLE_CHANGED, [
-//            TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-//            TemplateVariable::USERS_ROLES => $rolesNames
-//        ]);
-
         $this->getPresenter()->flashMessage('admin.users.users_applications_saved', 'success');
         $this->redirect('this');
     }
@@ -454,24 +436,6 @@ class ApplicationsGridControl extends Control
 
         $this->programRepository->updateUserPrograms($this->user);
         $this->userRepository->save($this->user);
-
-//        $rolesNames = "";
-//        $first = TRUE;
-//        foreach ($this->user->getRoles() as $role) {
-//            if ($first) {
-//                $rolesNames = $role->getName();
-//                $first = FALSE;
-//            }
-//            else {
-//                $rolesNames .= ', ' . $role->getName();
-//            }
-//        }
-
-        //TODO mail vcetne podakci
-//        $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::ROLE_CHANGED, [
-//            TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-//            TemplateVariable::USERS_ROLES => $rolesNames
-//        ]);
 
         $this->getPresenter()->flashMessage('admin.users.users_applications_saved', 'success');
         $this->redirect('this');

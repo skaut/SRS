@@ -406,6 +406,12 @@ class User
         return $this->applications;
     }
 
+    public function addApplication($application)
+    {
+        if (!$this->applications->contains($application))
+            $this->applications->add($application);
+    }
+
     /**
      * Vrátí nezrušené přihlášky.
      * @return ArrayCollection

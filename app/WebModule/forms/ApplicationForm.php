@@ -283,9 +283,7 @@ class ApplicationForm extends Nette\Object
             : new ArrayCollection([$this->subeventRepository->findImplicit()]);
 
         $application = new Application();
-
         $fee = $this->applicationService->countFee($roles, $subevents);
-
         $application->setUser($this->user);
         $application->setSubevents($subevents);
         $application->setApplicationDate(new \DateTime());
@@ -294,15 +292,13 @@ class ApplicationForm extends Nette\Object
         $application->setVariableSymbol($this->applicationService->generateVariableSymbol($this->user));
         $application->setFee($fee);
         $application->setState($fee == 0 ? ApplicationState::PAID : ApplicationState::WAITING_FOR_PAYMENT);
-
         $this->applicationRepository->save($application);
 
-
+        $this->user->addApplication($application);
         $this->userRepository->save($this->user);
 
-        //prihlaseni automatickz prihlasovanych programu
+        //prihlaseni automaticke prihlasovanych programu
         $this->programRepository->updateUserPrograms($this->user);
-
         $this->userRepository->save($this->user);
 
         //aktualizace udaju ve skautis
@@ -330,7 +326,7 @@ class ApplicationForm extends Nette\Object
         //odeslani potvrzovaciho mailu
         $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::REGISTRATION, [
             TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-            TemplateVariable::EDIT_REGISTRATION_TO => $this->settingsRepository->getValue(Settings::EDIT_REGISTRATION_TO)
+            TemplateVariable::EDIT_REGISTRATION_TO => $this->settingsRepository->getDateValue(Settings::EDIT_REGISTRATION_TO)->format('j. n. Y')
         ]);
     }
 

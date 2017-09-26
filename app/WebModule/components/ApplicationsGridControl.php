@@ -6,7 +6,10 @@ use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
+use App\Model\Mailing\Template;
+use App\Model\Mailing\TemplateVariable;
 use App\Model\Program\ProgramRepository;
+use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\Subevent;
 use App\Model\Structure\SubeventRepository;
@@ -18,6 +21,7 @@ use App\Services\ApplicationService;
 use App\Services\Authenticator;
 use App\Services\MailService;
 use App\Services\PdfExportService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
@@ -289,26 +293,22 @@ class ApplicationsGridControl extends Control
         $application->setFirst(FALSE);
         $this->applicationRepository->save($application);
 
+        $this->user->addApplication($application);
+        $this->userRepository->save($this->user);
+
         $this->programRepository->updateUserPrograms($this->user);
         $this->userRepository->save($this->user);
 
-//        $rolesNames = "";
-//        $first = TRUE;
-//        foreach ($this->user->getRoles() as $role) {
-//            if ($first) {
-//                $rolesNames = $role->getName();
-//                $first = FALSE;
-//            }
-//            else {
-//                $rolesNames .= ', ' . $role->getName();
-//            }
-//        }
+        //zaslani potvrzovaciho e-mailu
+        $subeventsNames = [];
+        foreach ($this->user->getSubevents() as $subevent) {
+            $subeventsNames[] = $subevent->getName();
+        }
 
-        //TODO mail vcetne podakci
-//        $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::ROLE_CHANGED, [
-//            TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-//            TemplateVariable::USERS_ROLES => $rolesNames
-//        ]);
+        $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::SUBEVENT_ADDED, [
+            TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
+            TemplateVariable::USERS_SUBEVENTS => implode(', ', $subeventsNames)
+        ]);
 
         $this->getPresenter()->flashMessage('web.profile.applications_add_subevents_successful', 'success');
         $this->redirect('this');
@@ -465,23 +465,22 @@ class ApplicationsGridControl extends Control
         $this->programRepository->updateUserPrograms($this->user);
         $this->userRepository->save($this->user);
 
-//        $rolesNames = "";
-//        $first = TRUE;
-//        foreach ($this->user->getRoles() as $role) {
-//            if ($first) {
-//                $rolesNames = $role->getName();
-//                $first = FALSE;
-//            }
-//            else {
-//                $rolesNames .= ', ' . $role->getName();
-//            }
-//        }
+        //zaslani potvrzovaciho e-mailu
+        $rolesNames = [];
+        foreach ($this->user->getRoles() as $role) {
+            $rolesNames[] = $role->getName();
+        }
 
-        //TODO mail vcetne podakci
-//        $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::ROLE_CHANGED, [
-//            TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-//            TemplateVariable::USERS_ROLES => $rolesNames
-//        ]);
+        $subeventsNames = [];
+        foreach ($this->user->getSubevents() as $subevent) {
+            $subeventsNames[] = $subevent->getName();
+        }
+
+        $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::REGISTRATION_CHANGED, [
+            TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
+            TemplateVariable::USERS_ROLES => implode(', ', $rolesNames),
+            TemplateVariable::USERS_SUBEVENTS => implode(', ', $subeventsNames)
+        ]);
 
         $this->authenticator->updateRoles($this->getPresenter()->getUser());
 
