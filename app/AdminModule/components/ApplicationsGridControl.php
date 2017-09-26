@@ -188,7 +188,7 @@ class ApplicationsGridControl extends Control
                     ->setAttribute('class', 'datagrid-multiselect');
 
                 if ($this->subeventRepository->explicitSubeventsExists()) {
-                    $subeventsSelect = $container->addMultiSelect('subevents', '', $this->subeventRepository->getNonRegisteredExplicitOptionsWithCapacity($this->user))
+                    $subeventsSelect = $container->addMultiSelect('subevents', '', $this->subeventRepository->getNonRegisteredSubeventsOptionsWithCapacity($this->user))
                         ->setAttribute('class', 'datagrid-multiselect');
                 }
             };
@@ -200,7 +200,7 @@ class ApplicationsGridControl extends Control
                 ->setAttribute('class', 'datagrid-multiselect');
 
             if ($this->subeventRepository->explicitSubeventsExists()) {
-                $subeventsSelect = $container->addMultiSelect('subevents', '', $this->subeventRepository->getExplicitOptionsWithCapacity())
+                $subeventsSelect = $container->addMultiSelect('subevents', '', $this->subeventRepository->getSubeventsOptionsWithCapacity())
                     ->setAttribute('class', 'datagrid-multiselect');
             }
 

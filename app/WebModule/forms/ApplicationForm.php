@@ -278,7 +278,7 @@ class ApplicationForm extends Nette\Object
             $this->user->setDeparture($values['departure']);
 
         //podakce
-        $subevents = $this->subeventRepository->explicitSubeventsExists()
+        $subevents = $this->subeventRepository->explicitSubeventsExists() && !empty($values['subevents'])
             ? $this->subeventRepository->findSubeventsByIds($values['subevents'])
             : new ArrayCollection([$this->subeventRepository->findImplicit()]);
 
@@ -361,7 +361,7 @@ class ApplicationForm extends Nette\Object
             $subeventsSelect = $form->addMultiSelect('subevents', 'web.application_content.subevents')->setItems(
                 $subeventsOptions
             )
-                ->addRule(Form::FILLED, 'web.application_content.subevents_empty')
+                ->addCondition(Form::FILLED)
                 ->addRule([$this, 'validateSubeventsCapacities'], 'web.application_content.subevents_capacity_occupied');
 
             //generovani chybovych hlasek pro vsechny kombinace podakci

@@ -192,9 +192,13 @@ class ApplicationsGridControl extends Control
                     ->addRule(Form::FILLED, 'web.profile.applications_roles_empty');
 
                 if ($this->subeventRepository->explicitSubeventsExists()) {
-                    $subeventsSelect = $container->addMultiSelect('subevents', '', $this->subeventRepository->getExplicitOptionsWithCapacity())
-                        ->setAttribute('class', 'datagrid-multiselect')
-                        ->addRule(Form::FILLED, 'web.profile.applications_subevents_empty');
+                    if ($this->user->getSubevents()->contains($this->subeventRepository->findImplicit()))
+                        $options = $this->subeventRepository->getSubeventsOptionsWithCapacity();
+                    else
+                        $options = $this->subeventRepository->getExplicitOptionsWithCapacity();
+
+                    $subeventsSelect = $container->addMultiSelect('subevents', '', $options)
+                        ->setAttribute('class', 'datagrid-multiselect');
                 }
             };
             $grid->getInlineEdit()->setText($this->translator->translate('web.profile.applications_edit'));
@@ -454,8 +458,12 @@ class ApplicationsGridControl extends Control
 
         $fee = $this->applicationService->countFee($selectedRoles, $selectedSubevents);
         $application = $this->applicationRepository->findById($id);
-        if ($this->subeventRepository->explicitSubeventsExists())
+
+        if ($this->subeventRepository->explicitSubeventsExists() && !empty($values['subevents']))
             $application->setSubevents($selectedSubevents);
+        else
+            $application->setSubevents(new ArrayCollection([$this->subeventRepository->findImplicit()]));
+
         $application->setFee($fee);
         $application->setState($fee == 0 || $application->getPaymentDate()
             ? ApplicationState::PAID
