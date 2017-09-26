@@ -148,7 +148,7 @@ mailing:
         registration_changed: "Potvrzení změny registrace"
         subevent_added: "Potvrzení přidání podakcí"
         payment_confirmed: "Potvrzení přijetí platby"
-        maturity_notice: "Připomínka splatnosti"
+        maturity_reminder: "Připomínka splatnosti"
         program_registered: "Přihlášení na program"
         program_unregistered: "Odhlášení z programu"
         email_verification: "Ověření změny e-mailu semináře"

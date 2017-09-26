@@ -71,17 +71,22 @@ class PaymentForm extends Nette\Object
         $maturityTypeSelect->addCondition($form::EQUAL, MaturityType::WORK_DAYS)->toggle('maturity-work-days');
 
         $form->addDatePicker('maturityDate', 'admin.configuration.maturity_date')
-            ->setOption('id', 'maturity-date');
+            ->setOption('id', 'maturity-date')
+            ->addRule(Form::FILLED, 'admin.configuration.maturity_date_empty');
 
         $form->addText('maturityDays', 'admin.configuration.maturity_days')
             ->setOption('id', 'maturity-days')
-            ->addCondition(Form::FILLED)
+            ->addRule(Form::FILLED, 'admin.configuration.maturity_days_empty')
             ->addRule(Form::INTEGER, 'admin.configuration.maturity_days_format');
 
         $form->addText('maturityWorkDays', 'admin.configuration.maturity_work_days')
             ->setOption('id', 'maturity-work-days')
-            ->addCondition(Form::FILLED)
+            ->addRule(Form::FILLED, 'admin.configuration.maturity_work_days_empty')
             ->addRule(Form::INTEGER, 'admin.configuration.maturity_work_days_format');
+
+        $form->addText('maturityReminder', 'admin.configuration.maturity_reminder')
+            ->addRule(Form::FILLED, 'admin.configuration.maturity_reminder_empty')
+            ->addRule(Form::INTEGER, 'admin.configuration.maturity_reminder_format');
 
 
         $form->addSubmit('submit', 'admin.common.save');
@@ -93,7 +98,8 @@ class PaymentForm extends Nette\Object
             'maturityType' => $this->settingsRepository->getValue(Settings::MATURITY_TYPE),
             'maturityDate' => $this->settingsRepository->getValue(Settings::MATURITY_DATE),
             'maturityDays' => $this->settingsRepository->getValue(Settings::MATURITY_DAYS),
-            'maturityWorkDays' => $this->settingsRepository->getValue(Settings::MATURITY_WORK_DAYS)
+            'maturityWorkDays' => $this->settingsRepository->getValue(Settings::MATURITY_WORK_DAYS),
+            'maturityReminder' => $this->settingsRepository->getValue(Settings::MATURITY_REMINDER)
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -121,6 +127,8 @@ class PaymentForm extends Nette\Object
 
         if (array_key_exists('maturityWorkDays', $values))
             $this->settingsRepository->setValue(Settings::MATURITY_WORK_DAYS, $values['maturityWorkDays']);
+
+        $this->settingsRepository->setValue(Settings::MATURITY_REMINDER, $values['maturityReminder']);
     }
 
     /**

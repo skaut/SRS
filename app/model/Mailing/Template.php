@@ -49,7 +49,7 @@ class Template
     /**
      * Upozornění na splatnost.
      */
-    const MATURITY_NOTICE = 'maturity_notice';
+    const MATURITY_REMINDER = 'maturity_reminder';
 
     /**
      * Účastníkovi byl zapsán program.
