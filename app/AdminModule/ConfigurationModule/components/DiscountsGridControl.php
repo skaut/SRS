@@ -81,50 +81,50 @@ class DiscountsGridControl extends Control
         $grid->addColumnText('discount', 'admin.configuration.discounts_discount');
 
 
-        $subeventsOptions = $this->subeventRepository->getSubeventsOptions();
-        $operatorsOptions = $this->prepareConditionOperatorOptions();
-
-        $grid->addInlineAdd()->onControlAdd[] = function ($container) use ($subeventsOptions, $operatorsOptions) {
-            $container->addMultiSelect('conditionSubevents', '', $subeventsOptions)->setAttribute('class', 'datagrid-multiselect')
-                ->addRule(Form::FILLED, 'admin.configuration.discounts_condition_subevents_empty');
-
-            $container->addSelect('conditionOperator', '', $operatorsOptions)
-                ->setDefaultValue(ConditionOperator::OPERATOR_AND);
-
-            $container->addText('discount', '')
-                ->addRule(Form::FILLED, 'admin.configuration.discounts_discount_empty')
-                ->addRule(Form::INTEGER, 'admin.configuration.discounts_discount_format')
-                ->setDefaultValue(0);
-        };
-        $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
-
-        $grid->addInlineEdit()->onControlAdd[] = function ($container) use ($subeventsOptions, $operatorsOptions) {
-            $container->addMultiSelect('conditionSubevents', '', $subeventsOptions)->setAttribute('class', 'datagrid-multiselect')
-                ->addRule(Form::FILLED, 'admin.configuration.discounts_condition_subevents_empty');
-
-            $container->addSelect('conditionOperator', '', $operatorsOptions);
-
-            $container->addText('discount', '')
-                ->addRule(Form::FILLED, 'admin.configuration.discounts_discount_empty')
-                ->addRule(Form::INTEGER, 'admin.configuration.discounts_discount_format');
-        };
-        $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) {
-            $container->setDefaults([
-                'conditionSubevents' => $this->subeventRepository->findSubeventsIds($item->getConditionSubevents()),
-                'conditionOperator' => $item->getConditionOperator(),
-                'discount' => $item->getDiscount()
-            ]);
-        };
-        $grid->getInlineEdit()->onSubmit[] = [$this, 'edit'];
-
-        $grid->addAction('delete', '', 'delete!')
-            ->setIcon('trash')
-            ->setTitle('admin.common.delete')
-            ->setClass('btn btn-xs btn-danger')
-            ->addAttributes([
-                'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('admin.configuration.discounts_delete_confirm')
-            ]);
+//        $subeventsOptions = $this->subeventRepository->getSubeventsOptions();
+//        $operatorsOptions = $this->prepareConditionOperatorOptions();
+//
+//        $grid->addInlineAdd()->onControlAdd[] = function ($container) use ($subeventsOptions, $operatorsOptions) {
+//            $container->addMultiSelect('conditionSubevents', '', $subeventsOptions)->setAttribute('class', 'datagrid-multiselect')
+//                ->addRule(Form::FILLED, 'admin.configuration.discounts_condition_subevents_empty');
+//
+//            $container->addSelect('conditionOperator', '', $operatorsOptions)
+//                ->setDefaultValue(ConditionOperator::OPERATOR_AND);
+//
+//            $container->addText('discount', '')
+//                ->addRule(Form::FILLED, 'admin.configuration.discounts_discount_empty')
+//                ->addRule(Form::INTEGER, 'admin.configuration.discounts_discount_format')
+//                ->setDefaultValue(0);
+//        };
+//        $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
+//
+//        $grid->addInlineEdit()->onControlAdd[] = function ($container) use ($subeventsOptions, $operatorsOptions) {
+//            $container->addMultiSelect('conditionSubevents', '', $subeventsOptions)->setAttribute('class', 'datagrid-multiselect')
+//                ->addRule(Form::FILLED, 'admin.configuration.discounts_condition_subevents_empty');
+//
+//            $container->addSelect('conditionOperator', '', $operatorsOptions);
+//
+//            $container->addText('discount', '')
+//                ->addRule(Form::FILLED, 'admin.configuration.discounts_discount_empty')
+//                ->addRule(Form::INTEGER, 'admin.configuration.discounts_discount_format');
+//        };
+//        $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) {
+//            $container->setDefaults([
+//                'conditionSubevents' => $this->subeventRepository->findSubeventsIds($item->getConditionSubevents()),
+//                'conditionOperator' => $item->getConditionOperator(),
+//                'discount' => $item->getDiscount()
+//            ]);
+//        };
+//        $grid->getInlineEdit()->onSubmit[] = [$this, 'edit'];
+//
+//        $grid->addAction('delete', '', 'delete!')
+//            ->setIcon('trash')
+//            ->setTitle('admin.common.delete')
+//            ->setClass('btn btn-xs btn-danger')
+//            ->addAttributes([
+//                'data-toggle' => 'confirmation',
+//                'data-content' => $this->translator->translate('admin.configuration.discounts_delete_confirm')
+//            ]);
     }
 
     /**

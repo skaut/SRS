@@ -49,6 +49,9 @@ class ApplicationService extends Nette\Object
     /** @var SubeventRepository */
     private $subeventRepository;
 
+    /** @var DiscountService */
+    private $discountService;
+
 
     /**
      * ApplicationService constructor.
@@ -57,10 +60,13 @@ class ApplicationService extends Nette\Object
      * @param UserRepository $userRepository
      * @param DiscountRepository $discountRepository
      * @param RoleRepository $roleRepository
+     * @param SubeventRepository $subeventRepository
+     * @param DiscountService $discountService
      */
     public function __construct(SettingsRepository $settingsRepository, ApplicationRepository $applicationRepository,
                                 UserRepository $userRepository, DiscountRepository $discountRepository,
-                                RoleRepository $roleRepository, SubeventRepository $subeventRepository)
+                                RoleRepository $roleRepository, SubeventRepository $subeventRepository,
+                                DiscountService $discountService)
     {
         $this->settingsRepository = $settingsRepository;
         $this->applicationRepository = $applicationRepository;
@@ -68,6 +74,7 @@ class ApplicationService extends Nette\Object
         $this->discountRepository = $discountRepository;
         $this->roleRepository = $roleRepository;
         $this->subeventRepository = $subeventRepository;
+        $this->discountService = $discountService;
     }
 
     /**
@@ -154,31 +161,7 @@ class ApplicationService extends Nette\Object
             }
         }
 
-        //sleva
-        foreach ($this->discountRepository->findAll() as $discount) {
-            switch ($discount->getConditionOperator()) {
-                case ConditionOperator::OPERATOR_AND:
-                    $res = TRUE;
-                    foreach ($discount->getConditionSubevents() as $conditionSubevent) {
-                        if (!$subevents->contains($conditionSubevent)) {
-                            $res = FALSE;
-                            break;
-                        }
-                    }
-                    if ($res)
-                        $fee -= $discount->getDiscount();
-                    break;
-
-                case ConditionOperator::OPERATOR_OR:
-                    foreach ($discount->getConditionSubevents() as $conditionSubevent) {
-                        if ($subevents->contains($conditionSubevent)) {
-                            $fee -= $discount->getDiscount();
-                            break;
-                        }
-                    }
-                    break;
-            }
-        }
+        $fee -= $this->discountService->countDiscount($this->subeventRepository->findSubeventsIds($subevents));
 
         return $fee;
     }

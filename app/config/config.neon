@@ -60,6 +60,7 @@ services:
     - App\Services\ApplicationService
     - App\Services\Authorizator
     - App\Services\DatabaseService(%appDir%/..)
+    - App\Services\DiscountService
     - App\Services\ExcelExportService
     - App\Services\FilesService(%wwwDir%/files)
     - App\Services\MailService
