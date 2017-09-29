@@ -498,6 +498,7 @@ class ApplicationsGridControl extends Control
 
     /**
      * Vygeneruje potvrzení o přijetí platby.
+     * @param $id
      */
     public function handleGeneratePaymentProofBank($id)
     {

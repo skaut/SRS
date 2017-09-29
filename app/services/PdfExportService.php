@@ -40,6 +40,7 @@ class PdfExportService extends Nette\Object
      * PdfExportService constructor.
      * @param string $dir
      * @param SettingsRepository $settingsRepository
+     * @param ApplicationRepository $applicationRepository
      */
     public function __construct($dir, SettingsRepository $settingsRepository, ApplicationRepository $applicationRepository)
     {

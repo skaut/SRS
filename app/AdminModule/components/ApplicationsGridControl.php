@@ -544,6 +544,7 @@ class ApplicationsGridControl extends Control
      * Ověří, zda uživatel podakci již nemá.
      * @param $selectedSubevents
      * @param User $user
+     * @param $applicationId
      * @return bool
      */
     private function validateSubeventsRegistered($selectedSubevents, User $user, $applicationId)

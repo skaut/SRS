@@ -39,6 +39,7 @@ class DiscountsGridControl extends Control
      * @param Translator $translator
      * @param DiscountRepository $discountRepository
      * @param SubeventRepository $subeventRepository
+     * @param DiscountService $discountService
      */
     public function __construct(Translator $translator, DiscountRepository $discountRepository,
                                 SubeventRepository $subeventRepository, DiscountService $discountService)
