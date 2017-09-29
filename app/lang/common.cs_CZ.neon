@@ -100,8 +100,8 @@ application_state:
     paid: "Zaplaceno"
 
 condition_operator:
-    and: "A"
-    or: "Nebo"
+    and: "a"
+    or: "nebo"
 
 day:
     1: "Po"

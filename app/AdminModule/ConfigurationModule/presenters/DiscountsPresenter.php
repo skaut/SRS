@@ -4,6 +4,7 @@ namespace App\AdminModule\ConfigurationModule\Presenters;
 
 use App\AdminModule\ConfigurationModule\Components\IDiscountsGridControlFactory;
 use App\AdminModule\ConfigurationModule\Forms\DiscountForm;
+use App\AdminModule\ConfigurationModule\Forms\IDiscountFormFactory;
 use Nette\Forms\Form;
 
 
@@ -21,7 +22,7 @@ class DiscountsPresenter extends ConfigurationBasePresenter
     public $discountsGridControlFactory;
 
     /**
-     * @var DiscountForm
+     * @var IDiscountFormFactory
      * @inject
      */
     public $discountFormFactory;
@@ -34,15 +35,22 @@ class DiscountsPresenter extends ConfigurationBasePresenter
 
     protected function createComponentDiscountForm()
     {
-        $form = $this->discountFormFactory->create($this->getParameter('id'));
+        $control = $this->discountFormFactory->create($this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) {
-            if (!$form['cancel']->isSubmittedBy())
-                $this->flashMessage('admin.configuration.discounts_saved', 'success');
-
-            $this->redirect('Discount:default');
+        $control->onDiscountSave[] = function (DiscountForm $control) {
+            $this->flashMessage('admin.configuration.discounts_saved', 'success');
+            $this->redirect('Discounts:default');
         };
 
-        return $form;
+        $control->onConditionError[] = function (DiscountForm $control) {
+            $this->flashMessage('admin.configuration.discounts_condition_format', 'danger');
+
+            if ($control->id)
+                $this->redirect('Discounts:edit', ['id' => $control->id]);
+            else
+                $this->redirect('Discounts:add');
+        };
+
+        return $control;
     }
 }

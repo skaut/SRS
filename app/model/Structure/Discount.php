@@ -16,21 +16,22 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  */
 class Discount
 {
+    const SUBEVENT_ID = 'subevent_id';
+    const OPERATOR_OR = 'or';
+    const OPERATOR_AND = 'and';
+    const LEFT_PARENTHESIS = '(';
+    const RIGHT_PARENTHESIS = ')';
+    const END = '';
+
+
     use Identifier;
 
     /**
-     * Podmínka - přihlášené podakce.
-     * @ORM\ManyToMany(targetEntity="\App\Model\Structure\Subevent")
-     * @var ArrayCollection
-     */
-    protected $conditionSubevents;
-
-    /**
-     * Podmínka - operátor.
+     * Podmínka.
      * @ORM\Column(type="string")
      * @var string
      */
-    protected $conditionOperator;
+    protected $discountCondition;
 
     /**
      * Sleva.
@@ -57,35 +58,19 @@ class Discount
     }
 
     /**
-     * @return ArrayCollection
-     */
-    public function getConditionSubevents()
-    {
-        return $this->conditionSubevents;
-    }
-
-    /**
-     * @param ArrayCollection $conditionSubevents
-     */
-    public function setConditionSubevents($conditionSubevents)
-    {
-        $this->conditionSubevents = $conditionSubevents;
-    }
-
-    /**
      * @return string
      */
-    public function getConditionOperator()
+    public function getDiscountCondition()
     {
-        return $this->conditionOperator;
+        return $this->discountCondition;
     }
 
     /**
-     * @param string $conditionOperator
+     * @param string $discountCondition
      */
-    public function setConditionOperator($conditionOperator)
+    public function setDiscountCondition($discountCondition)
     {
-        $this->conditionOperator = $conditionOperator;
+        $this->discountCondition = $discountCondition;
     }
 
     /**
