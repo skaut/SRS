@@ -19,7 +19,7 @@ class DiscountService extends Nette\Object
 {
     /**
      * Tokeny podmínky.
-     * @var string[]
+     * @var array
      */
     private $symbols;
 

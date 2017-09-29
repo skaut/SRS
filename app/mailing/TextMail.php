@@ -17,6 +17,7 @@ class TextMail extends Mail implements IComposableMail
     /**
      * @param  Nette\Mail\Message $message
      * @param  mixed $params
+     * @return void
      */
     public function compose(Nette\Mail\Message $message, $params = NULL)
     {

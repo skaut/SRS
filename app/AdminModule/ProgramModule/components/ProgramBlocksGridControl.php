@@ -53,6 +53,7 @@ class ProgramBlocksGridControl extends Control
      * @param UserRepository $userRepository
      * @param CategoryRepository $categoryRepository
      * @param ProgramRepository $programRepository
+     * @param SubeventRepository $subeventRepository
      */
     public function __construct(Translator $translator, BlockRepository $blockRepository,
                                 SettingsRepository $settingsRepository, UserRepository $userRepository,
