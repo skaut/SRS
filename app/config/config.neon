@@ -219,7 +219,10 @@ services:
         parameters: [id, area]
     - App\AdminModule\CMSModule\Forms\NewsForm
     - App\AdminModule\ConfigurationModule\Forms\ApplicationForm
-    - App\AdminModule\ConfigurationModule\Forms\DiscountForm
+    discountFormFactory:
+        class: App\AdminModule\ConfigurationModule\Forms\DiscountForm(%id%, ...)
+        implement: App\AdminModule\ConfigurationModule\Forms\IDiscountFormFactory
+        parameters: [id]
     - App\AdminModule\ConfigurationModule\Forms\MailingForm
     - App\AdminModule\ConfigurationModule\Forms\PaymentForm
     - App\AdminModule\ConfigurationModule\Forms\PaymentProofForm

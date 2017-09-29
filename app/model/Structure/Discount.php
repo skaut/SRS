@@ -21,7 +21,7 @@ class Discount
     const OPERATOR_AND = 'and';
     const LEFT_PARENTHESIS = '(';
     const RIGHT_PARENTHESIS = ')';
-    const END = 'end';
+    const END = '';
 
 
     use Identifier;
@@ -31,7 +31,7 @@ class Discount
      * @ORM\Column(type="string")
      * @var string
      */
-    protected $condition;
+    protected $discountCondition;
 
     /**
      * Sleva.
@@ -60,17 +60,17 @@ class Discount
     /**
      * @return string
      */
-    public function getCondition()
+    public function getDiscountCondition()
     {
-        return $this->condition;
+        return $this->discountCondition;
     }
 
     /**
-     * @param string $condition
+     * @param string $discountCondition
      */
-    public function setCondition($condition)
+    public function setDiscountCondition($discountCondition)
     {
-        $this->condition = $condition;
+        $this->discountCondition = $discountCondition;
     }
 
     /**

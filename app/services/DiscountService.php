@@ -4,7 +4,9 @@ namespace App\Services;
 
 use App\Model\Structure\Discount;
 use App\Model\Structure\DiscountRepository;
+use App\Model\Structure\SubeventRepository;
 use InvalidArgumentException;
+use Kdyby\Translation\Translator;
 use Nette;
 
 
@@ -25,7 +27,7 @@ class DiscountService extends Nette\Object
      * Aktuálně zpracovávaný token.
      * @var int
      */
-    private $currentSymbol = 0;
+    private $currentSymbol;
 
     /**
      * Id zvolených podakcí.
@@ -36,14 +38,25 @@ class DiscountService extends Nette\Object
     /** @var DiscountRepository */
     private $discountRepository;
 
+    /** @var SubeventRepository */
+    private $subeventRepository;
+
+    /** @var Translator */
+    private $translator;
+
 
     /**
      * DiscountService constructor.
      * @param DiscountRepository $discountRepository
+     * @param SubeventRepository $subeventRepository
+     * @param Translator $translator
      */
-    public function __construct(DiscountRepository $discountRepository)
+    public function __construct(DiscountRepository $discountRepository, SubeventRepository $subeventRepository,
+                                Translator $translator)
     {
         $this->discountRepository = $discountRepository;
+        $this->subeventRepository = $subeventRepository;
+        $this->translator = $translator;
     }
 
     /**
@@ -55,21 +68,16 @@ class DiscountService extends Nette\Object
         $totalDiscount = 0;
 
         foreach ($this->discountRepository->findAll() as $discount) {
-            $tokens = explode('|', $discount->getCondition());
-
-            $this->symbols = [];
-            foreach ($tokens as $token) {
-                if (is_numeric($token))
-                    $this->symbols[] = ['symbol' => Discount::SUBEVENT_ID, 'value' => $token];
-                else
-                    $this->symbols[] = ['symbol' => $token];
-            }
-
-            $this->symbols[] = ['symbol' => Discount::END];
+            $this->tokenize($discount->getDiscountCondition());
 
             $this->selectedSubeventsIds = $selectedSubeventsIds;
 
-            $this->parseExpression($result);
+            try {
+                $this->parseExpression($result);
+            }
+            catch (InvalidArgumentException $exception) {
+                continue;
+            }
 
             if ($result)
                 $totalDiscount += $discount->getDiscount();
@@ -83,18 +91,8 @@ class DiscountService extends Nette\Object
      * @param $condition
      * @return bool
      */
-    public function validateDiscountCondition($condition) {
-        $tokens = explode('|', $condition);
-
-        $this->symbols = [];
-        foreach ($tokens as $token) {
-            if (is_int($token))
-                $this->symbols[] = ['symbol' => Discount::SUBEVENT_ID, 'value' => $token];
-            else
-                $this->symbols[] = ['symbol' => $token];
-        }
-
-        $this->symbols[] = ['symbol' => Discount::END];
+    public function validateCondition($condition) {
+        $this->tokenize($condition);
 
         $this->selectedSubeventsIds = [];
 
@@ -106,6 +104,55 @@ class DiscountService extends Nette\Object
         }
 
         return TRUE;
+    }
+
+    /**
+     * Převede podmínku na text.
+     * @param $condition
+     * @return string
+     */
+    public function convertConditionToText($condition) {
+        $this->tokenize($condition);
+
+        $text = '';
+
+        foreach ($this->symbols as $symbol) {
+            switch ($symbol['symbol']) {
+                case Discount::LEFT_PARENTHESIS:
+                case Discount::RIGHT_PARENTHESIS:
+                    $text .= $symbol['symbol'];
+                    break;
+
+                case Discount::OPERATOR_AND:
+                case Discount::OPERATOR_OR:
+                    $text .= ' ' . $this->translator->translate('common.condition_operator.' . $symbol['symbol']) . ' ';
+                    break;
+
+                case Discount::SUBEVENT_ID:
+                    $subevent = $this->subeventRepository->findById($symbol['value']);
+                    if ($subevent === NULL)
+                        $text .= '"' . $this->translator->translate('admin.configuration.subevents_invalid_subevent') . '"';
+                    else
+                        $text .= '"' . $subevent->getName() . '"';
+                    break;
+            }
+        }
+
+        return $text;
+    }
+
+    private function tokenize($condition) {
+        $tokens = explode('|', $condition);
+
+        $this->symbols = [];
+        foreach ($tokens as $token) {
+            if (is_numeric($token))
+                $this->symbols[] = ['symbol' => Discount::SUBEVENT_ID, 'value' => $token];
+            else
+                $this->symbols[] = ['symbol' => $token];
+        }
+
+        $this->currentSymbol = 0;
     }
 
     private function nextSymbol() {
@@ -128,7 +175,7 @@ class DiscountService extends Nette\Object
     }
 
     private function acceptSubevent(&$sValue) {
-        if ($this->symbol() == Discount::SUBEVENT_ID) {
+        if ($this->symbol() == Discount::SUBEVENT_ID && $this->subeventRepository->findById($this->symbolValue()) !== NULL) {
             $sValue = in_array($this->symbolValue(), $this->selectedSubeventsIds) ? 1 : 0;
             $this->nextSymbol();
         }

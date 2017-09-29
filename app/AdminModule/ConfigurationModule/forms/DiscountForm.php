@@ -6,22 +6,39 @@ use App\AdminModule\Forms\BaseForm;
 use App\Model\Structure\Discount;
 use App\Model\Structure\DiscountRepository;
 use App\Model\Structure\SubeventRepository;
-use Nette;
+use App\Services\DiscountService;
+use Nette\Application\UI;
 use Nette\Application\UI\Form;
 
 
 /**
- * Formulář pro úpravu slevy.
+ * Komponenta s formulářem pro úpravu slevy.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class DiscountForm extends Nette\Object
+class DiscountForm extends UI\Control
 {
+    /**
+     * Id upravované slevy.
+     * @var int
+     */
+    public $id;
+
     /**
      * Upravovaná sleva.
      * @var Discount
      */
     private $discount;
+
+    /**
+     * Událost při uložení formuláře.
+     */
+    public $onDiscountSave;
+
+    /**
+     * Událost při chybě podmínky.
+     */
+    public $onConditionError;
 
     /** @var BaseForm */
     private $baseFormFactory;
@@ -32,41 +49,62 @@ class DiscountForm extends Nette\Object
     /** @var SubeventRepository */
     private $subeventRepository;
 
+    /** @var DiscountService */
+    private $discountService;
+
 
     /**
      * DiscountForm constructor.
+     * @param $id
      * @param BaseForm $baseFormFactory
      * @param DiscountRepository $discountRepository
+     * @param SubeventRepository $subeventRepository
+     * @param DiscountService $discountService
      */
-    public function __construct(BaseForm $baseFormFactory, DiscountRepository $discountRepository,
-                                SubeventRepository $subeventRepository)
+    public function __construct($id, BaseForm $baseFormFactory, DiscountRepository $discountRepository,
+                                SubeventRepository $subeventRepository, DiscountService $discountService)
     {
+        parent::__construct();
+
         $this->baseFormFactory = $baseFormFactory;
         $this->discountRepository = $discountRepository;
         $this->subeventRepository = $subeventRepository;
+        $this->discountService = $discountService;
+
+        $this->id = $id;
+        $this->discount = $this->discountRepository->findById($id);
+    }
+
+    /**
+     * Vykreslí komponentu.
+     */
+    public function render()
+    {
+        $this->template->setFile(__DIR__ . '/templates/discount_form.latte');
+
+        $this->template->subevents = $this->subeventRepository->findAll();
+
+        $this->template->render();
     }
 
     /**
      * Vytvoří formulář.
-     * @param $id
      * @return Form
      */
-    public function create($id)
+    public function createComponentForm()
     {
-        $this->discount = $this->discountRepository->findById($id);
-
         $form = $this->baseFormFactory->create();
 
         $form->addHidden('id');
 
-        $form->addSelect('conditionOperator', 'admin.configuration.discounts_condition_operator', $this->prepareOperatorOptions());
+        $form->addHidden('condition');
 
-        $form->addMultiSelect('conditionSubevents', 'admin.configuration.discounts_condition_subevents', $this->prepareSubeventsOptions());
+        $form->addText('conditionText', 'admin.configuration.discounts_condition')
+            ->setDisabled(TRUE);
 
         $form->addText('discount', 'admin.configuration.discounts_discount')
-            ->addCondition(Form::FILLED)
+            ->addRule(Form::FILLED, 'admin.configuration.discounts_discount_empty')
             ->addRule(Form::INTEGER, 'admin.configuration.discounts_discount_format');
-
 
         $form->addSubmit('submit', 'admin.common.save');
 
@@ -77,13 +115,12 @@ class DiscountForm extends Nette\Object
 
         if ($this->discount) {
             $form->setDefaults([
-                'id' => $id,
-                'conditionOperator' => $this->discount->getConditionOperator(),
-                'conditionSubevents' => $this->discount->getConditionSubevents(),
+                'id' => $this->id,
+                'conditionText' => $this->discountService->convertConditionToText($this->discount->getDiscountCondition()),
+                'condition' => $this->discount->getDiscountCondition(),
                 'discount' => $this->discount->getDiscount()
             ]);
         }
-
 
         $form->onSuccess[] = [$this, 'processForm'];
 
@@ -97,15 +134,22 @@ class DiscountForm extends Nette\Object
      */
     public function processForm(Form $form, \stdClass $values)
     {
-        if (!$form['cancel']->isSubmittedBy()) {
-            if (!$this->discount)
-                $this->discount = new Discount();
+        $this->id = $values['id'];
 
-            $this->discount->setConditionOperator($values['conditionOperator']);
-            $this->discount->setConditionSubevents($this->subeventRepository->findSubeventsByIds($values['conditionSubevents']));
+        if ($this->discountService->validateCondition(($values['condition']))) {
+            if (!$this->id)
+                $this->discount = new Discount();
+            else
+                $this->discount = $this->discountRepository->findById($this->id);
+
+            $this->discount->setDiscountCondition($values['condition']);
             $this->discount->setDiscount($values['discount']);
 
             $this->discountRepository->save($this->discount);
+
+            $this->onDiscountSave($this);
         }
+        else
+            $this->onConditionError($this);
     }
 }
