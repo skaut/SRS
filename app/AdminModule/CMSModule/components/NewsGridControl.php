@@ -59,6 +59,13 @@ class NewsGridControl extends Control
         $grid->addColumnDateTime('published', 'admin.cms.news_published')
             ->setFormat('j. n. Y H:i');
 
+        $grid->addColumnText('pinned', 'admin.cms.news_pinned')
+            ->setRenderer(function ($row) {
+                return $row->isPinned()
+                    ? $this->translator->translate('admin.common.yes')
+                    : $this->translator->translate('admin.common.no');
+            });
+
         $grid->addColumnText('text', 'admin.cms.news_text');
 
 

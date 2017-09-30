@@ -92,6 +92,8 @@ cms:
     news_heading: "Aktuality"
     news_published: "Zveřejnit"
     news_published_empty: "Zadejte čas zveřejnění."
+    news_pinned: "Připíchnutá nahoru"
+    news_edit_pinned: "připíchnout nahoru"
     news_text: "Text"
     news_text_empty: "Zadejte text aktuality."
     news_saved: "Aktualita byla úspěšně uložena."
