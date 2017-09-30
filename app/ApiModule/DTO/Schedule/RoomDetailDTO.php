@@ -25,6 +25,12 @@ class RoomDetailDTO extends Nette\Object
      */
     private $name;
 
+    /**
+     * @JMS\Type("integer")
+     * @var integer
+     */
+    private $capacity;
+
 
     /**
      * @return int
@@ -56,5 +62,21 @@ class RoomDetailDTO extends Nette\Object
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCapacity()
+    {
+        return $this->capacity;
+    }
+
+    /**
+     * @param int $capacity
+     */
+    public function setCapacity($capacity)
+    {
+        $this->capacity = $capacity;
     }
 }

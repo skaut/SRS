@@ -139,6 +139,7 @@ export:
         program_name: "Název programu"
         room: "Místnost"
         lector: "Lektor"
+        occupancy: "Obsazenost"
 
 mailing:
     template_type:

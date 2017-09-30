@@ -81,6 +81,16 @@
                             </colgroup>
 
                             <tr>
+                                <th></th>
+                                <td>
+                                    <span ng-show="event.room.capacity < event.block.capacity" class="text-warning">
+                                        <i class="fa fa-exclamation-triangle"></i>
+                                        {_admin.program.schedule_room_capacity_warning}
+                                    </span>
+                                </td>
+                            </tr>
+
+                            <tr>
                                 <th>{_admin.program.schedule_capacity}</th>
                                 <td>{{ event.block.capacity }}</td>
                             </tr>

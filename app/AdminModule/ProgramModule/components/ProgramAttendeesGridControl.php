@@ -111,7 +111,6 @@ class ProgramAttendeesGridControl extends Control
 
         $grid = new DataGrid($this, $name);
 
-
         if (!$program) {
             $grid->setDataSource([]);
         } else {
