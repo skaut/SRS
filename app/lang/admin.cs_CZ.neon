@@ -217,6 +217,7 @@ program:
     schedule_category: "Kategorie"
     schedule_lector: "Lektor"
     schedule_room: "Místnost"
+    schedule_room_capacity_warning: "Kapacita místnosti je menší než kapacita bloku."
     schedule_capacity: "Kapacita"
     schedule_programs_count: "Zařazeno"
     schedule_program_settings: "Nastavení programu"

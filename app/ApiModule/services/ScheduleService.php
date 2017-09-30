@@ -405,6 +405,7 @@ class ScheduleService extends Nette\Object
 
         $roomDetailDTO->setId($room->getId());
         $roomDetailDTO->setName($room->getName());
+        $roomDetailDTO->setCapacity($room->getCapacity());
 
         return $roomDetailDTO;
     }
