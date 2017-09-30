@@ -57,6 +57,8 @@ class NewsForm extends Nette\Object
         $form->addDateTimePicker('published', 'admin.cms.news_published')
             ->addRule(Form::FILLED, 'admin.cms.news_published_empty');
 
+        $form->addCheckbox('pinned', 'admin.cms.news_edit_pinned');
+
         $form->addTextArea('text', 'admin.cms.news_text')
             ->addRule(Form::FILLED, 'admin.cms.news_text_empty')
             ->setAttribute('class', 'tinymce-paragraph');
@@ -73,6 +75,7 @@ class NewsForm extends Nette\Object
             $form->setDefaults([
                 'id' => $id,
                 'published' => $this->news->getPublished(),
+                'pinned' => $this->news->isPinned(),
                 'text' => $this->news->getText()
             ]);
         } else {
@@ -100,6 +103,7 @@ class NewsForm extends Nette\Object
 
             $this->news->setText($values['text']);
             $this->news->setPublished($values['published']);
+            $this->news->setPinned($values['pinned']);
 
             $this->newsRepository->save($this->news);
         }

@@ -38,7 +38,7 @@ class NewsContentControl extends Control
         $template->setFile(__DIR__ . '/templates/news_content.latte');
 
         $template->heading = $content->getHeading();
-        $template->news = $this->newsRepository->findPublishedOrderedByDate($content->getCount());
+        $template->news = $this->newsRepository->findPublishedOrderedByPinnedAndDate($content->getCount());
 
         $template->render();
     }

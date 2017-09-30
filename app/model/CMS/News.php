@@ -32,6 +32,13 @@ class News
      */
     protected $published;
 
+    /**
+     * Připíchnutá nahoru.
+     * @ORM\Column(type="boolean")
+     * @var bool
+     */
+    protected $pinned = FALSE;
+
 
     /**
      * @return int
@@ -71,5 +78,21 @@ class News
     public function setPublished($published)
     {
         $this->published = $published;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPinned()
+    {
+        return $this->pinned;
+    }
+
+    /**
+     * @param bool $pinned
+     */
+    public function setPinned($pinned)
+    {
+        $this->pinned = $pinned;
     }
 }
