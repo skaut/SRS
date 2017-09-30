@@ -243,16 +243,11 @@ class ApplicationsGridControl extends Control
             if (count($incompatibleSubevents) > 0 && !$this->validateSubeventsIncompatible($selectedAndUsersSubevents, $subevent)) {
                 $messageThis = $subevent->getName();
 
-                $first = TRUE;
-                $messageOthers = "";
+                $incompatibleSubeventsNames = [];
                 foreach ($incompatibleSubevents as $incompatibleSubevent) {
-                    if ($first)
-                        $messageOthers .= $incompatibleSubevent->getName();
-                    else
-                        $messageOthers .= ", " . $incompatibleSubevent->getName();
-
-                    $first = FALSE;
+                    $incompatibleSubeventsNames[] = $incompatibleSubevent->getName();
                 }
+                $messageOthers = implode(', ', $incompatibleSubeventsNames);
 
                 $message = $this->translator->translate('web.profile.applications_incompatible_subevents_selected', NULL,
                     ['subevent' => $messageThis, 'incompatibleSubevents' => $messageOthers]
@@ -265,15 +260,11 @@ class ApplicationsGridControl extends Control
             if (count($requiredSubevents) > 0 && !$this->validateSubeventsRequired($selectedAndUsersSubevents, $subevent)) {
                 $messageThis = $subevent->getName();
 
-                $first = TRUE;
-                $messageOthers = "";
+                $requiredSubeventsNames = [];
                 foreach ($requiredSubevents as $requiredSubevent) {
-                    if ($first)
-                        $messageOthers .= $requiredSubevent->getName();
-                    else
-                        $messageOthers .= ", " . $requiredSubevent->getName();
-                    $first = FALSE;
+                    $requiredSubeventsNames[] = $requiredSubevent->getName();
                 }
+                $messageOthers = implode(', ', $requiredSubeventsNames);
 
                 $message = $this->translator->translate('web.profile.applications_required_subevents_not_selected', NULL,
                     ['subevent' => $messageThis, 'requiredSubevents' => $messageOthers]
@@ -343,17 +334,11 @@ class ApplicationsGridControl extends Control
             if (count($incompatibleRoles) > 0 && !$this->validateRolesIncompatible($selectedRoles, $role)) {
                 $messageThis = $role->getName();
 
-                $first = TRUE;
-                $messageOthers = "";
+                $incompatibleRolesNames = [];
                 foreach ($incompatibleRoles as $incompatibleRole) {
-                    if ($incompatibleRole->isRegisterableNow()) {
-                        if ($first)
-                            $messageOthers .= $incompatibleRole->getName();
-                        else
-                            $messageOthers .= ", " . $incompatibleRole->getName();
-                    }
-                    $first = FALSE;
+                    $incompatibleRolesNames[] = $incompatibleRole->getName();
                 }
+                $messageOthers = implode(', ', $incompatibleRolesNames);
 
                 $message = $this->translator->translate('web.profile.applications_incompatible_roles_selected', NULL,
                     ['role' => $messageThis, 'incompatibleRoles' => $messageOthers]
@@ -366,15 +351,11 @@ class ApplicationsGridControl extends Control
             if (count($requiredRoles) > 0 && !$this->validateRolesRequired($selectedRoles, $role)) {
                 $messageThis = $role->getName();
 
-                $first = TRUE;
-                $messageOthers = "";
+                $requiredRolesNames = [];
                 foreach ($requiredRoles as $requiredRole) {
-                    if ($first)
-                        $messageOthers .= $requiredRole->getName();
-                    else
-                        $messageOthers .= ", " . $requiredRole->getName();
-                    $first = FALSE;
+                    $requiredRolesNames[] = $requiredRole->getName();
                 }
+                $messageOthers = implode(', ', $requiredRolesNames);
 
                 $message = $this->translator->translate('web.profile.applications_required_roles_not_selected', NULL,
                     ['role' => $messageThis, 'requiredRoles' => $messageOthers]
@@ -399,16 +380,11 @@ class ApplicationsGridControl extends Control
                 if (count($incompatibleSubevents) > 0 && !$this->validateSubeventsIncompatible($selectedSubevents, $subevent)) {
                     $messageThis = $subevent->getName();
 
-                    $first = TRUE;
-                    $messageOthers = "";
+                    $incompatibleSubeventsNames = [];
                     foreach ($incompatibleSubevents as $incompatibleSubevent) {
-                        if ($first)
-                            $messageOthers .= $incompatibleSubevent->getName();
-                        else
-                            $messageOthers .= ", " . $incompatibleSubevent->getName();
-
-                        $first = FALSE;
+                        $incompatibleSubeventsNames[] = $incompatibleSubevent->getName();
                     }
+                    $messageOthers = implode(', ', $incompatibleSubeventsNames);
 
                     $message = $this->translator->translate('web.profile.applications_incompatible_subevents_selected', NULL,
                         ['subevent' => $messageThis, 'incompatibleSubevents' => $messageOthers]
@@ -421,15 +397,11 @@ class ApplicationsGridControl extends Control
                 if (count($requiredSubevents) > 0 && !$this->validateSubeventsRequired($selectedSubevents, $subevent)) {
                     $messageThis = $subevent->getName();
 
-                    $first = TRUE;
-                    $messageOthers = "";
+                    $requiredSubeventsNames = [];
                     foreach ($requiredSubevents as $requiredSubevent) {
-                        if ($first)
-                            $messageOthers .= $requiredSubevent->getName();
-                        else
-                            $messageOthers .= ", " . $requiredSubevent->getName();
-                        $first = FALSE;
+                        $requiredSubeventsNames[] = $requiredSubevent->getName();
                     }
+                    $messageOthers = implode(', ', $requiredSubeventsNames);
 
                     $message = $this->translator->translate('web.profile.applications_required_subevents_not_selected', NULL,
                         ['subevent' => $messageThis, 'requiredSubevents' => $messageOthers]
