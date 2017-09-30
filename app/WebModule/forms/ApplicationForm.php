@@ -370,17 +370,12 @@ class ApplicationForm extends Nette\Object
                 if (count($incompatibleSubevents) > 0) {
                     $messageThis = $subevent->getName();
 
-                    $first = TRUE;
-                    $messageOthers = "";
+                    $incompatibleSubeventsNames = [];
                     foreach ($incompatibleSubevents as $incompatibleSubevent) {
-                        if ($first) {
-                            $messageOthers .= $incompatibleSubevent->getName();
-                        }
-                        else {
-                            $messageOthers .= ", " . $incompatibleSubevent->getName();
-                        }
-                        $first = FALSE;
+                        $incompatibleSubeventsNames[] = $incompatibleSubevent->getName();
                     }
+                    $messageOthers = implode(', ', $incompatibleSubeventsNames);
+
                     $subeventsSelect->addRule([$this, 'validateSubeventsIncompatible'],
                         $form->getTranslator()->translate('web.application_content.incompatible_subevents_selected', NULL,
                             ['subevent' => $messageThis, 'incompatibleSubevents' => $messageOthers]
@@ -393,15 +388,12 @@ class ApplicationForm extends Nette\Object
                 if (count($requiredSubevents) > 0) {
                     $messageThis = $subevent->getName();
 
-                    $first = TRUE;
-                    $messageOthers = "";
+                    $requiredSubeventsNames = [];
                     foreach ($requiredSubevents as $requiredSubevent) {
-                        if ($first)
-                            $messageOthers .= $requiredSubevent->getName();
-                        else
-                            $messageOthers .= ", " . $requiredSubevent->getName();
-                        $first = FALSE;
+                        $requiredSubeventsNames[] = $requiredSubevent->getName();
                     }
+                    $messageOthers = implode(', ', $requiredSubeventsNames);
+
                     $subeventsSelect->addRule([$this, 'validateSubeventsRequired'],
                         $form->getTranslator()->translate('web.application_content.required_subevents_not_selected', NULL,
                             ['subevent' => $messageThis, 'requiredSubevents' => $messageOthers]
@@ -434,17 +426,12 @@ class ApplicationForm extends Nette\Object
             if (count($incompatibleRoles) > 0) {
                 $messageThis = $role->getName();
 
-                $first = TRUE;
-                $messageOthers = "";
+                $incompatibleRolesNames = [];
                 foreach ($incompatibleRoles as $incompatibleRole) {
-                    if ($incompatibleRole->isRegisterableNow()) {
-                        if ($first)
-                            $messageOthers .= $incompatibleRole->getName();
-                        else
-                            $messageOthers .= ", " . $incompatibleRole->getName();
-                    }
-                    $first = FALSE;
+                    $incompatibleRolesNames[] = $incompatibleRole->getName();
                 }
+                $messageOthers = implode(', ', $incompatibleRolesNames);
+
                 $rolesSelect->addRule([$this, 'validateRolesIncompatible'],
                     $form->getTranslator()->translate('web.application_content.incompatible_roles_selected', NULL,
                         ['role' => $messageThis, 'incompatibleRoles' => $messageOthers]
@@ -457,15 +444,12 @@ class ApplicationForm extends Nette\Object
             if (count($requiredRoles) > 0) {
                 $messageThis = $role->getName();
 
-                $first = TRUE;
-                $messageOthers = "";
+                $requiredRolesNames = [];
                 foreach ($requiredRoles as $requiredRole) {
-                    if ($first)
-                        $messageOthers .= $requiredRole->getName();
-                    else
-                        $messageOthers .= ", " . $requiredRole->getName();
-                    $first = FALSE;
+                    $requiredRolesNames[] = $requiredRole->getName();
                 }
+                $messageOthers = implode(', ', $requiredRolesNames);
+
                 $rolesSelect->addRule([$this, 'validateRolesRequired'],
                     $form->getTranslator()->translate('web.application_content.required_roles_not_selected', NULL,
                         ['role' => $messageThis, 'requiredRoles' => $messageOthers]
