@@ -4,7 +4,12 @@ SET foreign_key_checks = 0;
 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
 INSERT INTO `content` (`id`, `page_id`, `heading`, `area`, `position`, `type`) VALUES
-  (1, 1, 'Úspěšně jste nainstalovali SRS. Gratulujeme!', 'main', 1, 'text_content');
+  (1, 1, 'Úspěšně jste nainstalovali SRS. Gratulujeme!', 'main', 1, 'text_content'),
+  (2, 1, 'Pořadatel', 'sidebar', 1, 'text_content'),
+  (3, 1, '', 'sidebar', 2, 'image_content');
+
+INSERT INTO `image_content` (`id`, `image`, `align`, `width`, `height`) VALUES
+  (3, '/logo/skaut.png', 'center', 120, 150);
 
 INSERT INTO `page` (`id`, `name`, `slug`, `position`, `public`) VALUES
   (1, 'Homepage', '/', 1, 1);
@@ -114,4 +119,5 @@ INSERT INTO `settings` (`item`, `value`) VALUES
   ('variable_symbol_code', '');
 
 INSERT INTO `text_content` (`id`, `text`) VALUES
-  (1, '<p>Obsah této stránky můžete změnit v administraci v sekci Web.</p>');
+  (1, '<p>Obsah této stránky můžete změnit v administraci v sekci Web.</p>'),
+  (2, '<p>Junák – český skaut</p>');
