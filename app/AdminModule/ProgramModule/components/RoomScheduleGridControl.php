@@ -5,6 +5,7 @@ namespace App\AdminModule\ProgramModule\Components;
 use App\Model\Program\ProgramRepository;
 use App\Model\Program\Room;
 use App\Model\Program\RoomRepository;
+use App\Services\ExcelExportService;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
@@ -33,6 +34,9 @@ class RoomScheduleGridControl extends Control
     /** @var ProgramRepository */
     private $programRepository;
 
+    /** @var ExcelExportService */
+    private $excelExportService;
+
 
     /**
      * RoomScheduleGridControl constructor.
@@ -41,13 +45,14 @@ class RoomScheduleGridControl extends Control
      * @param ProgramRepository $programRepository
      */
     public function __construct(Translator $translator, RoomRepository $roomRepository,
-                                ProgramRepository $programRepository)
+                                ProgramRepository $programRepository, ExcelExportService $excelExportService)
     {
         parent::__construct();
 
         $this->translator = $translator;
         $this->roomRepository = $roomRepository;
         $this->programRepository = $programRepository;
+        $this->excelExportService = $excelExportService;
     }
 
     /**
@@ -75,13 +80,13 @@ class RoomScheduleGridControl extends Control
         $grid->setDefaultSort(['start' => 'ASC']);
         $grid->setPagination(FALSE);
 
-        $grid->addColumnText('name', 'admin.program.rooms_schedule_program_name', 'block.name');
-
         $grid->addColumnDateTime('start', 'admin.program.rooms_schedule_program_start')
             ->setFormat('j. n. Y H:i');;
 
         $grid->addColumnDateTime('end', 'admin.program.rooms_schedule_program_end')
             ->setFormat('j. n. Y H:i');;
+
+        $grid->addColumnText('name', 'admin.program.rooms_schedule_program_name', 'block.name');
 
         $grid->addColumnText('occupancy', 'admin.program.rooms_schedule_occupancy')
             ->setRenderer(
@@ -94,10 +99,14 @@ class RoomScheduleGridControl extends Control
             );
 
 
-        $grid->addToolbarButton('exportRoomSchedule!', 'admin.program.rooms_schedule_download_schedule');
+        $grid->addToolbarButton('exportRoomsSchedule!', 'admin.program.rooms_schedule_download_schedule');
     }
 
-    public function handleExportRoomSchedule() {
+    public function handleExportRoomsSchedule() {
+        $this->room = $this->roomRepository->findById($this->getPresenter()->getParameter('id'));
 
+        $response = $this->excelExportService->exportRoomsSchedule($this->room, 'harmonogram-mistnosti.xlsx');
+
+        $this->getPresenter()->sendResponse($response);
     }
 }

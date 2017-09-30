@@ -35,6 +35,7 @@ class Room
     /**
      * Programy v místnosti.
      * @ORM\OneToMany(targetEntity="Program", mappedBy="room", cascade={"persist"})
+     * @ORM\OrderBy({"start" = "ASC"})
      * @var ArrayCollection
      */
     protected $programs;

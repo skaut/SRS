@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Model\Program\Room;
+use Doctrine\Common\Collections\Criteria;
 use Kdyby\Translation\Translator;
 use Nette;
 
@@ -138,5 +140,54 @@ class ExcelExportService extends Nette\Object
     public function exportUsersSchedule($user, $filename)
     {
         return $this->exportUsersSchedules([$user], $filename);
+    }
+
+    /**
+     * Vyexportuje harmonogram místnosti.
+     * @param Room $room
+     * @param $filename
+     * @return ExcelResponse
+     */
+    public function exportRoomsSchedule(Room $room, $filename)
+    {
+        $sheet = $this->phpExcel->getSheet(0);
+
+        $row = 1;
+        $column = 0;
+
+        $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.schedule.from'));
+        $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(TRUE);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(FALSE);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth('15');
+
+        $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.schedule.to'));
+        $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(TRUE);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(FALSE);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth('15');
+
+        $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.schedule.program_name'));
+        $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(TRUE);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(FALSE);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth('30');
+
+        $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.schedule.occupancy'));
+        $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(TRUE);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(FALSE);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth('15');
+
+        foreach ($room->getPrograms() as $program) {
+            $row++;
+            $column = 0;
+
+            $sheet->setCellValueByColumnAndRow($column++, $row, $program->getStart()->format("j. n. H:i"));
+            $sheet->setCellValueByColumnAndRow($column++, $row, $program->getEnd()->format("j. n. H:i"));
+            $sheet->setCellValueByColumnAndRow($column++, $row, $program->getBlock()->getName());
+            $sheet->setCellValueByColumnAndRow($column++, $row, $room->getCapacity() !== NULL
+                ? $program->getAttendeesCount() . '/' . $room->getCapacity()
+                : $program->getAttendeesCount()
+            );
+        }
+
+        return new ExcelResponse($this->phpExcel, $filename);
     }
 }
