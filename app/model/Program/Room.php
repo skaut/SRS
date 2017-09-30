@@ -26,6 +26,13 @@ class Room
     protected $name;
 
     /**
+     * Kapacita.
+     * @ORM\Column(type="integer", nullable=true)
+     * @var int
+     */
+    protected $capacity;
+
+    /**
      * Programy v místnosti.
      * @ORM\OneToMany(targetEntity="Program", mappedBy="room", cascade={"persist"})
      * @var ArrayCollection
@@ -63,6 +70,22 @@ class Room
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCapacity()
+    {
+        return $this->capacity;
+    }
+
+    /**
+     * @param int $capacity
+     */
+    public function setCapacity($capacity)
+    {
+        $this->capacity = $capacity;
     }
 
     /**

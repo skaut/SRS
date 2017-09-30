@@ -2,8 +2,10 @@
 
 namespace App\AdminModule\ProgramModule\Presenters;
 
+use App\AdminModule\ProgramModule\Components\IRoomScheduleGridControlFactory;
 use App\AdminModule\ProgramModule\Components\IRoomsGridControlFactory;
 use App\Model\ACL\Permission;
+use App\Model\Program\RoomRepository;
 
 
 /**
@@ -14,10 +16,22 @@ use App\Model\ACL\Permission;
 class RoomsPresenter extends ProgramBasePresenter
 {
     /**
+     * @var RoomRepository
+     * @inject
+     */
+    public $roomRepository;
+
+    /**
      * @var IRoomsGridControlFactory
      * @inject
      */
     public $roomsGridControlFactory;
+
+    /**
+     * @var IRoomScheduleGridControlFactory
+     * @inject
+     */
+    public $roomScheduleGridControlFactory;
 
 
     public function startup()
@@ -27,8 +41,23 @@ class RoomsPresenter extends ProgramBasePresenter
         $this->checkPermission(Permission::MANAGE_ROOMS);
     }
 
+    /**
+     * @param $id
+     */
+    public function renderDetail($id)
+    {
+        $room = $this->roomRepository->findById($id);
+
+        $this->template->room = $room;
+    }
+
     protected function createComponentRoomsGrid()
     {
         return $this->roomsGridControlFactory->create();
+    }
+
+    protected function createComponentRoomScheduleGrid()
+    {
+        return $this->roomScheduleGridControlFactory->create();
     }
 }

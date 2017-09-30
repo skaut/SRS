@@ -205,6 +205,7 @@ services:
     - App\AdminModule\ProgramModule\Components\IProgramCategoriesGridControlFactory
     - App\AdminModule\ProgramModule\Components\IProgramAttendeesGridControlFactory
     - App\AdminModule\ProgramModule\Components\IRoomsGridControlFactory
+    - App\AdminModule\ProgramModule\Components\IRoomScheduleGridControlFactory
 
     - App\AdminModule\Forms\BaseForm
     - App\AdminModule\Forms\AddLectorForm

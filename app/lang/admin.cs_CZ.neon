@@ -237,9 +237,18 @@ program:
     rooms_name: "Název"
     rooms_name_empty: "Zadejte název místnosti."
     rooms_name_exists: "Místnost s tímo názvem již existuje."
+    rooms_capacity: "Kapacita"
+    rooms_capacity_format: "Zadejte číslo nebo nechte pole prázdné."
+    rooms_capacity_unlimited: "Neomezená"
     rooms_saved: "Místnost byla úspěšně uložena."
     rooms_delete_confirm: "Odstraněním místnosti odeberete místnost všem programům. Opravdu chcete místnost odstranit?"
     rooms_deleted: "Místnost byla úspěšně odstraněna."
+    rooms_detail_heading: "Detail místnosti: %name%"
+    rooms_schedule_program_name: "Název programu"
+    rooms_schedule_program_start: "Od"
+    rooms_schedule_program_end: "Do"
+    rooms_schedule_occupancy: "Obsazenost"
+    rooms_schedule_download_schedule: "Stáhnout harmonogram"
 
 users:
     users_heading: "Uživatelé"

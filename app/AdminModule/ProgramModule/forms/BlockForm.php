@@ -138,7 +138,8 @@ class BlockForm extends Nette\Object
         $form->addText('capacity', 'admin.program.blocks_capacity')
             ->setAttribute('data-toggle', 'tooltip')
             ->setAttribute('title', $form->getTranslator()->translate('admin.program.blocks_capacity_note'))
-            ->addCondition(Form::FILLED)->addRule(Form::NUMERIC, 'admin.program.blocks_capacity_format');
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::INTEGER, 'admin.program.blocks_capacity_format');
 
         $form->addCheckbox('mandatory', 'admin.program.blocks_mandatory_form')
             ->addCondition(Form::EQUAL, TRUE)
@@ -152,7 +153,8 @@ class BlockForm extends Nette\Object
             ->addRule([$this, 'validateAutoRegister'], 'admin.program.blocks_auto_register_not_allowed');
 
         $form->addTextArea('perex', 'admin.program.blocks_perex_form')
-            ->addCondition(Form::FILLED)->addRule(Form::MAX_LENGTH, 'admin.program.blocks_perex_length', 160);
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::MAX_LENGTH, 'admin.program.blocks_perex_length', 160);
 
         $form->addTextArea('description', 'admin.program.blocks_description')
             ->setAttribute('class', 'tinymce-paragraph');
