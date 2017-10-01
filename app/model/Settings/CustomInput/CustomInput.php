@@ -63,7 +63,7 @@ abstract class CustomInput
      * @ORM\Column(type="boolean")
      * @var bool
      */
-    protected $mandatory;
+    protected $mandatory = FALSE;
 
     /**
      * Pořadí pole na přihlášce.
