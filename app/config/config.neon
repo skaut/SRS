@@ -220,6 +220,7 @@ services:
         parameters: [id, area]
     - App\AdminModule\CMSModule\Forms\NewsForm
     - App\AdminModule\ConfigurationModule\Forms\ApplicationForm
+    - App\AdminModule\ConfigurationModule\Forms\CustomInputForm
     discountFormFactory:
         class: App\AdminModule\ConfigurationModule\Forms\DiscountForm(%id%, ...)
         implement: App\AdminModule\ConfigurationModule\Forms\IDiscountFormFactory

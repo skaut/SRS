@@ -68,27 +68,24 @@ class CustomInputsGridControl extends Control
                 return $this->translator->translate('admin.common.custom_' . $row->getType());
             });
 
+        $grid->addColumnText('mandatory', 'admin.configuration.custom_inputs_mandatory')
+            ->setRenderer(function ($row) {
+                return $row->isMandatory()
+                    ? $this->translator->translate('admin.common.yes')
+                    : $this->translator->translate('admin.common.no');
+            });
 
-        $customInputTypesOptions = $this->prepareCustomInputTypesOptions();
+        $grid->addColumnText('options', 'admin.configuration.custom_inputs_options')
+            ->setRenderer(function ($row) {
+                return $row->getType() == CustomInput::SELECT ? $row->getOptions() : NULL;
+            });
 
-        $grid->addInlineAdd()->onControlAdd[] = function ($container) use ($customInputTypesOptions) {
-            $container->addText('name', '')
-                ->addRule(Form::FILLED, 'admin.configuration.application_input_name_empty');
-            $container->addSelect('type', '', $customInputTypesOptions);
-        };
-        $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
 
-        $grid->addInlineEdit()->onControlAdd[] = function ($container) {
-            $container->addText('name', '')
-                ->addRule(Form::FILLED, 'admin.configuration.application_input_name_empty');
-        };
-        $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) {
-            $container->setDefaults([
-                'name' => $item->getName()
-            ]);
-        };
-        $grid->getInlineEdit()->onSubmit[] = [$this, 'edit'];
+        $grid->addToolbarButton('Application:add')
+            ->setIcon('plus')
+            ->setTitle('admin.common.add');
 
+        $grid->addAction('edit', 'admin.common.edit', 'Application:edit');
 
         $grid->addAction('delete', '', 'delete!')
             ->setIcon('trash')
@@ -96,61 +93,8 @@ class CustomInputsGridControl extends Control
             ->setClass('btn btn-xs btn-danger')
             ->addAttributes([
                 'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('admin.configuration.application_input_delete_confirm')
+                'data-content' => $this->translator->translate('admin.configuration.custom_inputs_delete_confirm')
             ]);
-    }
-
-    /**
-     * Zpracuje přidání vlastního pole.
-     * @param $values
-     */
-    public function add($values)
-    {
-        switch ($values['type']) {
-            case 'text':
-                $input = new CustomText();
-                break;
-            case 'checkbox':
-                $input = new CustomCheckbox();
-                break;
-        }
-
-        $input->setName($values['name']);
-
-        $this->customInputRepository->save($input);
-
-        $p = $this->getPresenter();
-        $p->flashMessage('admin.configuration.application_input_saved', 'success');
-
-        if ($p->isAjax()) {
-            $p->redrawControl('flashes');
-            $this['customInputsGrid']->reload();
-        } else {
-            $this->redirect('this');
-        }
-    }
-
-    /**
-     * Zpracuje úpravu vlastního pole.
-     * @param $id
-     * @param $values
-     */
-    public function edit($id, $values)
-    {
-        $input = $this->customInputRepository->findById($id);
-
-        $input->setName($values['name']);
-
-        $this->customInputRepository->save($input);
-
-        $p = $this->getPresenter();
-        $p->flashMessage('admin.configuration.application_input_saved', 'success');
-
-        if ($p->isAjax()) {
-            $p->redrawControl('flashes');
-        } else {
-            $this->redirect('this');
-        }
     }
 
     /**
@@ -162,7 +106,7 @@ class CustomInputsGridControl extends Control
         $input = $this->customInputRepository->findById($id);
         $this->customInputRepository->remove($input);
 
-        $this->getPresenter()->flashMessage('admin.configuration.application_input_deleted', 'success');
+        $this->getPresenter()->flashMessage('admin.configuration.custom_inputs_deleted', 'success');
 
         $this->redirect('this');
     }
@@ -178,7 +122,7 @@ class CustomInputsGridControl extends Control
         $this->customInputRepository->sort($item_id, $prev_id, $next_id);
 
         $p = $this->getPresenter();
-        $p->flashMessage('admin.configuration.application_inputs_order_saved', 'success');
+        $p->flashMessage('admin.configuration.custom_inputs_order_saved', 'success');
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
@@ -186,17 +130,5 @@ class CustomInputsGridControl extends Control
         } else {
             $this->redirect('this');
         }
-    }
-
-    /**
-     * Vrátí typy vlastních polí jako možnosti pro select.
-     * @return array
-     */
-    private function prepareCustomInputTypesOptions()
-    {
-        $options = [];
-        foreach (CustomInput::$types as $type)
-            $options[$type] = 'admin.common.custom_' . $type;
-        return $options;
     }
 }

@@ -8,9 +8,11 @@ use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
 use App\Model\User\CustomInputValue\CustomInputValueRepository;
+use App\Model\User\CustomInputValue\CustomSelectValue;
 use App\Model\User\CustomInputValue\CustomTextValue;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
+use function GuzzleHttp\Promise\queue;
 use Nette;
 use Nette\Application\UI\Form;
 
@@ -97,18 +99,21 @@ class EditUserSeminarForm extends Nette\Object
             $customInputValue = $this->user->getCustomInputValue($customInput);
 
             switch ($customInput->getType()) {
-                case 'text':
-                    $customText = $form->addText('custom' . $customInput->getId(), $customInput->getName());
-                    if ($customInputValue)
-                        $customText->setDefaultValue($customInputValue->getValue());
+                case CustomInput::TEXT:
+                    $custom = $form->addText('custom' . $customInput->getId(), $customInput->getName());
                     break;
 
-                case 'checkbox':
-                    $customCheckbox = $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName());
-                    if ($customInputValue)
-                        $customCheckbox->setDefaultValue($customInputValue->getValue());
+                case CustomInput::CHECKBOX:
+                    $custom = $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName());
+                    break;
+
+                case CustomInput::SELECT:
+                    $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->prepareSelectOptions());
                     break;
             }
+
+            if ($customInputValue)
+                $custom->setDefaultValue($customInputValue->getValue());
         }
 
         $form->addTextArea('about', 'admin.users.users_about_me');
@@ -163,6 +168,9 @@ class EditUserSeminarForm extends Nette\Object
                         break;
                     case CustomInput::CHECKBOX:
                         $customInputValue = new CustomCheckboxValue();
+                        break;
+                    case CustomInput::SELECT:
+                        $customInputValue = new CustomSelectValue();
                         break;
                 }
                 $customInputValue->setValue($values['custom' . $customInput->getId()]);

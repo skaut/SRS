@@ -82,6 +82,7 @@ profile:
     personal_details_update_successful: "Osobní údaje úspěšně aktualizovány."
 
     additional_information_group: "Doplňující informace"
+    custom_input_empty: "Pole je povinné."
     about_me: "O mně"
     arrival: "Příjezd"
     departure: "Odjezd"
@@ -133,6 +134,7 @@ application_content:
     postcode_format: "Zadejte PSČ ve správném formátu."
     state: "Stát"
     state_empty: "Zadejte stát."
+    custom_input_empty: "Pole je povinné."
     subevents: "Podakce"
     required_subevents_not_selected: "K podakci %subevent% musíte mít vybrané podakce: %requiredSubevents%."
     incompatible_subevents_selected: "Není možné kombinovat podakci %subevent% s podakcemi: %incompatibleSubevents%."

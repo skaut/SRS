@@ -5,6 +5,7 @@ namespace App\AdminModule\ConfigurationModule\Presenters;
 use App\AdminModule\ConfigurationModule\Components\CustomInputsGridControl;
 use App\AdminModule\ConfigurationModule\Components\ICustomInputsGridControlFactory;
 use App\AdminModule\ConfigurationModule\Forms\ApplicationForm;
+use App\AdminModule\ConfigurationModule\Forms\CustomInputForm;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use Nette\Application\UI\Form;
 
@@ -34,6 +35,20 @@ class ApplicationPresenter extends ConfigurationBasePresenter
      */
     public $applicationFormFactory;
 
+    /**
+     * @var CustomInputForm
+     * @inject
+     */
+    public $customInputFormFactory;
+
+
+    /**
+     * @param $id
+     */
+    public function renderEdit($id)
+    {
+        $this->template->customInput = $this->customInputRepository->findById($id);
+    }
 
     /**
      * @return CustomInputsGridControl
@@ -54,6 +69,23 @@ class ApplicationPresenter extends ConfigurationBasePresenter
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');
+        };
+
+        return $form;
+    }
+
+    /**
+     * @return Form
+     */
+    protected function createComponentCustomInputForm()
+    {
+        $form = $this->customInputFormFactory->create($this->getParameter('id'));
+
+        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+            if (!$form['cancel']->isSubmittedBy())
+                $this->flashMessage('admin.configuration.custom_inputs_saved', 'success');
+
+            $this->redirect('Application:default');
         };
 
         return $form;

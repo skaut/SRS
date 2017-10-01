@@ -11,6 +11,7 @@ use App\Model\Enums\VariableSymbolType;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Program\ProgramRepository;
+use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
@@ -19,6 +20,7 @@ use App\Model\User\Application;
 use App\Model\User\ApplicationRepository;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
 use App\Model\User\CustomInputValue\CustomInputValueRepository;
+use App\Model\User\CustomInputValue\CustomSelectValue;
 use App\Model\User\CustomInputValue\CustomTextValue;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
@@ -257,11 +259,16 @@ class ApplicationForm extends Nette\Object
             }
 
             switch ($customInput->getType()) {
-                case 'text':
+                case CustomInput::TEXT:
                     $customInputValue = new CustomTextValue();
                     break;
-                case 'checkbox':
+
+                case CustomInput::CHECKBOX:
                     $customInputValue = new CustomCheckboxValue();
+                    break;
+
+                case CustomInput::SELECT:
+                    $customInputValue = new CustomSelectValue();
                     break;
             }
             $customInputValue->setValue($values['custom' . $customInput->getId()]);
@@ -338,14 +345,21 @@ class ApplicationForm extends Nette\Object
     {
         foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
             switch ($customInput->getType()) {
-                case 'text':
-                    $form->addText('custom' . $customInput->getId(), $customInput->getName());
+                case CustomInput::TEXT:
+                    $custom = $form->addText('custom' . $customInput->getId(), $customInput->getName());
                     break;
 
-                case 'checkbox':
-                    $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName());
+                case CustomInput::CHECKBOX:
+                    $custom = $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName());
+                    break;
+
+                case CustomInput::SELECT:
+                    $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->prepareSelectOptions());
                     break;
             }
+
+            if ($customInput->isMandatory())
+                $custom->addRule(Form::FILLED, 'web.application_content.custom_input_empty');
         }
     }
 

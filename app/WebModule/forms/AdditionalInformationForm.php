@@ -2,8 +2,15 @@
 
 namespace App\WebModule\Forms;
 
+use App\Model\Enums\ApplicationState;
+use App\Model\Settings\CustomInput\CustomInput;
+use App\Model\Settings\CustomInput\CustomInputRepository;
+use App\Model\User\CustomInputValue\CustomCheckboxValue;
+use App\Model\User\CustomInputValue\CustomSelectValue;
+use App\Model\User\CustomInputValue\CustomTextValue;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
+use App\Services\ApplicationService;
 use Nette;
 use Nette\Application\UI\Form;
 
@@ -28,16 +35,25 @@ class AdditionalInformationForm extends Nette\Object
     /** @var UserRepository */
     private $userRepository;
 
+    /** @var CustomInputRepository */
+    private $customInputRepository;
+
+    /** @var ApplicationService */
+    private $applicationService;
+
 
     /**
      * AdditionalInformationForm constructor.
      * @param BaseForm $baseFormFactory
      * @param UserRepository $userRepository
      */
-    public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository)
+    public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
+                                CustomInputRepository $customInputRepository, ApplicationService $applicationService)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->userRepository = $userRepository;
+        $this->customInputRepository = $customInputRepository;
+        $this->applicationService = $applicationService;
     }
 
     /**
@@ -52,6 +68,33 @@ class AdditionalInformationForm extends Nette\Object
         $form = $this->baseFormFactory->create();
 
         $form->addHidden('id');
+
+        foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
+            $customInputValue = $this->user->getCustomInputValue($customInput);
+
+            switch ($customInput->getType()) {
+                case CustomInput::TEXT:
+                    $custom = $form->addText('custom' . $customInput->getId(), $customInput->getName());
+                    break;
+
+                case CustomInput::CHECKBOX:
+                    $custom = $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName());
+                    break;
+
+                case CustomInput::SELECT:
+                    $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->prepareSelectOptions());
+                    break;
+            }
+
+            if ($customInput->isMandatory())
+                $custom->addRule(Form::FILLED, 'web.profile.custom_input_empty');
+
+            if (!$this->applicationService->isAllowedEditCustomInputs())
+                $custom->setDisabled();
+
+            if ($customInputValue)
+                $custom->setDefaultValue($customInputValue->getValue());
+        }
 
         $form->addTextArea('about', 'web.profile.about_me');
 
@@ -81,6 +124,33 @@ class AdditionalInformationForm extends Nette\Object
      */
     public function processForm(Form $form, \stdClass $values)
     {
+        if ($this->applicationService->isAllowedEditCustomInputs()) {
+            foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
+                $customInputValue = $this->user->getCustomInputValue($customInput);
+
+                if ($customInputValue) {
+                    $customInputValue->setValue($values['custom' . $customInput->getId()]);
+                    continue;
+                }
+
+                switch ($customInput->getType()) {
+                    case CustomInput::TEXT:
+                        $customInputValue = new CustomTextValue();
+                        break;
+                    case CustomInput::CHECKBOX:
+                        $customInputValue = new CustomCheckboxValue();
+                        break;
+                    case CustomInput::SELECT:
+                        $customInputValue = new CustomSelectValue();
+                        break;
+                }
+                $customInputValue->setValue($values['custom' . $customInput->getId()]);
+                $customInputValue->setUser($this->user);
+                $customInputValue->setInput($customInput);
+                $this->customInputValueRepository->save($customInputValue);
+            }
+        }
+
         $this->user->setAbout($values['about']);
 
         if (array_key_exists('arrival', $values))
