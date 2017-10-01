@@ -202,4 +202,12 @@ class ApplicationService extends Nette\Object
         return !$user->hasPaidFirstApplication()
             && $this->settingsRepository->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new \DateTime())->setTime(0, 0);
     }
+
+    /**
+     * Může uživatel upravovat vlastní pole přihlášky?
+     * @return bool
+     */
+    public function isAllowedEditCustomInputs() {
+        return $this->settingsRepository->getDateValue(Settings::EDIT_CUSTOM_INPUTS_TO) >= (new \DateTime())->setTime(0, 0);
+    }
 }

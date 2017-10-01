@@ -100,6 +100,7 @@ class UsersPresenter extends AdminBasePresenter
         $this->template->customInputs = $this->customInputRepository->findAllOrderedByPosition();
         $this->template->customInputTypeText = CustomInput::TEXT;
         $this->template->customInputTypeCheckbox = CustomInput::CHECKBOX;
+        $this->template->customInputTypeSelect = CustomInput::SELECT;
 
         $this->template->roleAdminName = $this->roleRepository->findBySystemName(Role::ADMIN)->getName();
         $this->template->roleOrganizerName = $this->roleRepository->findBySystemName(Role::ORGANIZER)->getName();

@@ -39,4 +39,22 @@ class CustomSelect extends CustomInput
     {
         $this->options = $options;
     }
+
+    /**
+     * Vrátí možnosti jako možnosti pro select.
+     * @return array
+     */
+    public function prepareSelectOptions()
+    {
+        $options = [];
+
+        if (!$this->isMandatory())
+            $options[NULL] = '';
+
+        $optionaArray = explode(', ', $this->options);
+        for($i = 0; $i < count($optionaArray); $i++)
+            $options[$i] = $optionaArray[$i];
+
+        return $options;
+    }
 }

@@ -190,6 +190,11 @@ class Settings
      */
     const MATURITY_REMINDER = 'maturity_reminder';
 
+    /**
+     * Úprava vlastních polí povolena do.
+     */
+    const EDIT_CUSTOM_INPUTS_TO = 'edit_custom_inputs_to';
+
 
     /**
      * Název položky nastavení.

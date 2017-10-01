@@ -555,6 +555,8 @@ configuration:
 
     application_heading: "Přihláška"
     application_agreement: "Text souhlasu s podmínkami"
+    application_edit_custom_inputs_to: "Úprava vlastních polí povolena do"
+    application_edit_custom_inputs_to_empty: "Zadejte datum, do kdy je povolena úprava vlastních polí."
     custom_inputs_heading: "Vlastní pole"
     custom_inputs_name: "Název"
     custom_inputs_name_empty: "Zadejte název pole."

@@ -127,15 +127,20 @@
                             <td>
                                 {var $customInputValue = $detailUser->getCustomInputValue($customInput)}
                                 {if $customInputValue}
-                                    {if $customInput->getType() == $customInputTypeText}
-                                        {$customInputValue->getValue()}
-                                    {elseif $customInput->getType() == $customInputTypeCheckbox}
-                                        {if $customInputValue->getValue()}
-                                            {_admin.common.yes}
-                                        {else}
-                                            {_admin.common.no}
-                                        {/if}
-                                    {/if}
+                                    {switch $customInput->getType()}
+                                        {case $customInputTypeText}
+                                            {$customInputValue->getValue()}
+                                        {case $customInputTypeCheckbox}
+                                            {if $customInputValue->getValue()}
+                                                {_admin.common.yes}
+                                            {else}
+                                                {_admin.common.no}
+                                            {/if}
+                                        {case $customInputTypeSelect}
+                                            {if $customInputValue->getValue() !== NULL}
+                                                {$customInputValue->getValueOption()}
+                                            {/if}
+                                    {/switch}
                                 {/if}
                             </td>
                         </tr>

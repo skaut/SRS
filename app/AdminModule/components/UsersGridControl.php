@@ -347,12 +347,17 @@ class UsersGridControl extends Control
                 ->setRenderer(function ($row) use ($customInput) {
                     $customInputValue = $row->getCustomInputValue($customInput);
                     if ($customInputValue) {
-                        if ($customInputValue->getInput()->getType() == CustomInput::TEXT)
-                            return $this->truncate($customInputValue->getValue(), 20);
-                        else {
-                            return $customInputValue->getValue() ?
-                                $this->translator->translate('admin.common.yes') :
-                                $this->translator->translate('admin.common.no');
+                        switch ($customInputValue->getInput()->getType()) {
+                            case CustomInput::TEXT:
+                                return $this->truncate($customInputValue->getValue(), 20);
+
+                            case CustomInput::CHECKBOX:
+                                return $customInputValue->getValue()
+                                    ? $this->translator->translate('admin.common.yes')
+                                    : $this->translator->translate('admin.common.no');
+
+                            case CustomInput::SELECT:
+                                return $customInputValue->getValueOption();
                         }
                     }
                     return NULL;

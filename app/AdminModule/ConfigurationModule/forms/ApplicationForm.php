@@ -45,10 +45,14 @@ class ApplicationForm extends Nette\Object
         $form->addTextArea('applicationAgreement', 'admin.configuration.application_agreement')
             ->setAttribute('rows', 5);
 
+        $form->addDatePicker('editCustomInputsTo', 'admin.configuration.application_edit_custom_inputs_to')
+            ->addRule(Form::FILLED, 'admin.configuration.application_edit_custom_inputs_to_empty');
+
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'applicationAgreement' => $this->settingsRepository->getValue(Settings::APPLICATION_AGREEMENT)
+            'applicationAgreement' => $this->settingsRepository->getValue(Settings::APPLICATION_AGREEMENT),
+            'editCustomInputsTo' => $this->settingsRepository->getDateValue(Settings::EDIT_CUSTOM_INPUTS_TO)
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -64,5 +68,6 @@ class ApplicationForm extends Nette\Object
     public function processForm(Form $form, \stdClass $values)
     {
         $this->settingsRepository->setValue(Settings::APPLICATION_AGREEMENT, $values['applicationAgreement']);
+        $this->settingsRepository->setValue(Settings::EDIT_CUSTOM_INPUTS_TO, $values['editCustomInputsTo']);
     }
 }
