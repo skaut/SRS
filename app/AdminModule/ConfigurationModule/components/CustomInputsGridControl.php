@@ -68,12 +68,15 @@ class CustomInputsGridControl extends Control
                 return $this->translator->translate('admin.common.custom_' . $row->getType());
             });
 
-        $grid->addColumnText('mandatory', 'admin.configuration.custom_inputs_mandatory')
-            ->setRenderer(function ($row) {
-                return $row->isMandatory()
-                    ? $this->translator->translate('admin.common.yes')
-                    : $this->translator->translate('admin.common.no');
-            });
+        $columnMandatory = $grid->addColumnStatus('mandatory', 'admin.configuration.custom_inputs_mandatory');
+        $columnMandatory
+            ->addOption(FALSE, 'admin.configuration.custom_inputs_mandatory_voluntary')
+            ->setClass('btn-primary')
+            ->endOption()
+            ->addOption(TRUE, 'admin.configuration.custom_inputs_mandatory_mandatory')
+            ->setClass('btn-danger')
+            ->endOption()
+            ->onChange[] = [$this, 'changeMandatory'];
 
         $grid->addColumnText('options', 'admin.configuration.custom_inputs_options')
             ->setRenderer(function ($row) {
@@ -127,6 +130,28 @@ class CustomInputsGridControl extends Control
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
             $this['customInputsGrid']->reload();
+        } else {
+            $this->redirect('this');
+        }
+    }
+
+    /**
+     * Změní povinnost pole.
+     * @param $id
+     * @param $mandatory
+     */
+    public function changeMandatory($id, $mandatory)
+    {
+        $customInput = $this->customInputRepository->findById($id);
+        $customInput->setMandatory($mandatory);
+        $this->customInputRepository->save($customInput);
+
+        $p = $this->getPresenter();
+        $p->flashMessage('admin.configuration.custom_inputs_changed_mandatory', 'success');
+
+        if ($p->isAjax()) {
+            $p->redrawControl('flashes');
+            $this['customInputsGrid']->redrawItem($id);
         } else {
             $this->redirect('this');
         }
