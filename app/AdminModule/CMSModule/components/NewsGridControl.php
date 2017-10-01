@@ -59,12 +59,15 @@ class NewsGridControl extends Control
         $grid->addColumnDateTime('published', 'admin.cms.news_published')
             ->setFormat('j. n. Y H:i');
 
-        $grid->addColumnText('pinned', 'admin.cms.news_pinned')
-            ->setRenderer(function ($row) {
-                return $row->isPinned()
-                    ? $this->translator->translate('admin.common.yes')
-                    : $this->translator->translate('admin.common.no');
-            });
+        $columnMandatory = $grid->addColumnStatus('pinned', 'admin.cms.news_pinned');
+        $columnMandatory
+            ->addOption(FALSE, 'admin.cms.news_pinned_unpinned')
+            ->setClass('btn-primary')
+            ->endOption()
+            ->addOption(TRUE, 'admin.cms.news_pinned_pinned')
+            ->setClass('btn-warning')
+            ->endOption()
+            ->onChange[] = [$this, 'changePinned'];
 
         $grid->addColumnText('text', 'admin.cms.news_text');
 
@@ -97,5 +100,27 @@ class NewsGridControl extends Control
         $this->getPresenter()->flashMessage('admin.cms.news_deleted', 'success');
 
         $this->redirect('this');
+    }
+
+    /**
+     * Změní připíchnutí aktuality.
+     * @param $id
+     * @param $pinned
+     */
+    public function changePinned($id, $pinned)
+    {
+        $news = $this->newsRepository->findById($id);
+        $news->setPinned($pinned);
+        $this->newsRepository->save($news);
+
+        $p = $this->getPresenter();
+        $p->flashMessage('admin.cms.news_changed_pinned', 'success');
+
+        if ($p->isAjax()) {
+            $p->redrawControl('flashes');
+            $this['newsGrid']->redrawItem($id);
+        } else {
+            $this->redirect('this');
+        }
     }
 }
