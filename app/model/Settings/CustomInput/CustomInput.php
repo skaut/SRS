@@ -17,24 +17,31 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({
  *     "custom_checkbox" = "CustomCheckbox",
- *     "custom_text" = "CustomText"
+ *     "custom_text" = "CustomText",
+ *     "custom_select" = "CustomSelect"
  * })
  */
 abstract class CustomInput
 {
+    /**
+     * Textové pole.
+     */
+    const TEXT = 'text';
+
     /**
      * Zaškrtávací pole.
      */
     const CHECKBOX = 'checkbox';
 
     /**
-     * Textové pole.
+     * Výběrové pole.
      */
-    const TEXT = 'text';
+    const SELECT = 'select';
 
     public static $types = [
+        self::TEXT,
         self::CHECKBOX,
-        self::TEXT
+        self::SELECT
     ];
 
     /**
@@ -50,6 +57,13 @@ abstract class CustomInput
      * @var string
      */
     protected $name;
+
+    /**
+     * Povinné pole.
+     * @ORM\Column(type="boolean")
+     * @var bool
+     */
+    protected $mandatory;
 
     /**
      * Pořadí pole na přihlášce.
@@ -96,6 +110,22 @@ abstract class CustomInput
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMandatory()
+    {
+        return $this->mandatory;
+    }
+
+    /**
+     * @param bool $mandatory
+     */
+    public function setMandatory($mandatory)
+    {
+        $this->mandatory = $mandatory;
     }
 
     /**
