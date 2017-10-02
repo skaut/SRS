@@ -324,6 +324,7 @@ users:
     users_group_action_mark_attended: "Označit jako přítomné"
     users_group_action_marked_attended: "Vybraní uživatelé byli úspěšně označeni jako přítomní."
     users_group_action_generate_payment_proofs: "Vygenerovat doklady o zaplacení"
+    users_group_action_export_users: "Vyexportovat seznam uživatelů"
     users_group_action_export_roles: "Vyexportovat seznam s rolemi"
     users_group_action_export_schedules: "Vyexportovat harmonogramy"
     users_group_action_change_roles: "Nastavit role"

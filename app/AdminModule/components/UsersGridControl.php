@@ -167,6 +167,9 @@ class UsersGridControl extends Control
         $grid->addGroupAction('admin.users.users_group_action_generate_payment_proofs')
             ->onSelect[] = [$this, 'groupGeneratePaymentProofs'];
 
+        $grid->addGroupAction('admin.users.users_group_action_export_users')
+            ->onSelect[] = [$this, 'groupExportUsers'];
+
         $grid->addGroupAction('admin.users.users_group_action_export_roles')
             ->onSelect[] = [$this, 'groupExportRoles'];
 
@@ -660,6 +663,30 @@ class UsersGridControl extends Control
     {
         $this->sessionSection->userIds = $ids;
         $this->redirect('generatepaymentproofs'); //presmerovani kvuli zruseni ajax
+    }
+
+    /**
+     * Hromadně vyexportuje seznam uživatelů.
+     * @param array $ids
+     */
+    public function groupExportUsers(array $ids)
+    {
+        $this->sessionSection->userIds = $ids;
+        $this->redirect('exportusers'); //presmerovani kvuli zruseni ajax
+    }
+
+    /**
+     * Zpracuje export seznamu uživatelů.
+     */
+    public function handleExportUsers()
+    {
+        $ids = $this->session->getSection('srs')->userIds;
+
+        $users = $this->userRepository->findUsersByIds($ids);
+
+        $response = $this->excelExportService->exportUsersList($users, "seznam-uzivatelu.xlsx");
+
+        $this->getPresenter()->sendResponse($response);
     }
 
     /**
