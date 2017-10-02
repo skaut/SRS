@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Model\ACL\Permission;
+use App\Model\ACL\Resource;
 use App\Model\Program\BlockRepository;
 use App\Model\Program\Room;
 use App\Model\Settings\CustomInput\CustomInput;
@@ -348,7 +350,7 @@ class ExcelExportService extends Nette\Object
                 : $this->translator->translate('common.export.common.no')
             );
 
-            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getUnit() !== NULL
+            $sheet->getCellByColumnAndRow($column++, $row)->setValueExplicit($user->getUnit() !== NULL
                 ? $user->getUnit()
                 : (
                     $user->isMember()
@@ -403,7 +405,12 @@ class ExcelExportService extends Nette\Object
                 : $this->translator->translate('common.export.common.no')
             );
 
-            $sheet->setCellValueByColumnAndRow($column++, $row, implode(', ', $this->blockRepository->findUserMandatoryNotRegisteredNames($user)));
+            $sheet->setCellValueByColumnAndRow($column++, $row,
+                ($user->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS) && $user->isApproved())
+                    ? implode(', ', $this->blockRepository->findUserMandatoryNotRegisteredNames($user))
+                    : ''
+            );
+
 
             foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
                 $customInputValue = $user->getCustomInputValue($customInput);
