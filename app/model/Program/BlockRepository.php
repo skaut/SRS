@@ -143,6 +143,8 @@ class BlockRepository extends EntityRepository
             ->getQuery()
             ->getResult();
 
+        $usersSubevents = $user->getSubevents();
+
         $qb = $this->createQueryBuilder('b')
             ->select('b.name')
             ->leftJoin('b.category', 'c')
@@ -150,8 +152,10 @@ class BlockRepository extends EntityRepository
                 'c.id IN (:ids)',
                 'b.category IS NULL'
             ))
+            ->andWhere('b.subevent IN (:usersSubevents)')
             ->andWhere('b.mandatory > 0')
-            ->setParameter('ids', $registerableCategoriesIds);
+            ->setParameter('ids', $registerableCategoriesIds)
+            ->setParameter('usersSubevents', $usersSubevents);
 
         if (!empty($usersBlocks)) {
             $qb = $qb
