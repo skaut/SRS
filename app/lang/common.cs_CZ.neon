@@ -133,6 +133,31 @@ api:
     schedule_auto_register_not_allowed: "Automaticky přihlašovaný program nesmí být ve stejnou dobu jako jiný program."
 
 export:
+    common:
+        yes: "Ano"
+        no: "Ne"
+
+    user:
+        display_name: "Jméno"
+        username: "Uživatelské jméno"
+        roles: "Role"
+        subevents: "Podakce"
+        approved: "Schválený"
+        membership: "Členství"
+        membership_no: "nečlen"
+        membership_not_connected: "nepropojený účet"
+        membership_external: "externí lektor"
+        age: "Věk"
+        city: "Město"
+        fee: "Cena"
+        fee_remaining: "Zbývá doplatit"
+        variable_symbol: "Variabilní symbol"
+        payment_method: "Platební metoda"
+        payment_date: "Datum poslední platby"
+        first_application_date: "Datum první přihlášky"
+        attended: "Přítomen"
+        not_registared_mandatory_blocks: "Nepřihlášené povinné bloky"
+
     schedule:
         from: "Od"
         to: "Do"
