@@ -366,6 +366,18 @@ class User
     }
 
     /**
+     * Vrátí role uživatele oddělené čárkou.
+     * @return string
+     */
+    public function getRolesText() {
+        $rolesNames = [];
+        foreach ($this->roles as $role) {
+            $rolesNames[] = $role->getName();
+        }
+        return implode(', ', $rolesNames);
+    }
+
+    /**
      * Má uživatel oprávnění k prostředku?
      * @param $resource
      * @param $permission
@@ -1134,6 +1146,18 @@ class User
     }
 
     /**
+     * Vrátí podakce uživatele oddělené čárkou.
+     * @return string
+     */
+    public function getSubeventsText() {
+        $subeventsNames = [];
+        foreach ($this->getSubevents() as $subevent) {
+            $subeventsNames[] = $subevent->getName();
+        }
+        return implode(', ', $subeventsNames);
+    }
+
+    /**
      * Vrací, zda je uživatel přihlášen na podakci.
      * @param Subevent $subevent
      * @return bool
@@ -1174,5 +1198,17 @@ class User
             return TRUE;
 
         return FALSE;
+    }
+
+    /**
+     * Vrátí variabilní symboly oddělené čárkou.
+     * @return string
+     */
+    public function getVariableSymbolsText()
+    {
+        $variableSymbols = [];
+        foreach ($this->applications as $application)
+            $variableSymbols[] = $application->getVariableSymbol();
+        return implode(', ', $variableSymbols);
     }
 }

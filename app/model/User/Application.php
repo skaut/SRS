@@ -152,6 +152,18 @@ class Application
     }
 
     /**
+     * Vrací podakce oddělené čárkou.
+     * @return string
+     */
+    public function getSubeventsText()
+    {
+        $subeventsNames = [];
+        foreach ($this->subevents as $subevent)
+            $subeventsNames[] = $subevent->getName();
+        return implode(', ', $subeventsNames);
+    }
+
+    /**
      * @return int
      */
     public function getFee()

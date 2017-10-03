@@ -24,6 +24,7 @@ use App\Services\ApplicationService;
 use App\Services\ExcelExportService;
 use App\Services\MailService;
 use App\Services\PdfExportService;
+use App\Services\UserService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
@@ -85,6 +86,9 @@ class UsersGridControl extends Control
     /** @var ApplicationService */
     private $applicationService;
 
+    /** @var UserService */
+    private $userService;
+
 
     /**
      * UsersGridControl constructor.
@@ -102,6 +106,7 @@ class UsersGridControl extends Control
      * @param SubeventRepository $subeventRepository
      * @param ApplicationRepository $applicationRepository
      * @param ApplicationService $applicationService
+     * @param UserService $userService
      */
     public function __construct(Translator $translator, UserRepository $userRepository,
                                 SettingsRepository $settingsRepository, CustomInputRepository $customInputRepository,
@@ -109,7 +114,7 @@ class UsersGridControl extends Control
                                 BlockRepository $blockRepository, PdfExportService $pdfExportService,
                                 ExcelExportService $excelExportService, MailService $mailService, Session $session,
                                 SubeventRepository $subeventRepository, ApplicationRepository $applicationRepository,
-                                ApplicationService $applicationService)
+                                ApplicationService $applicationService, UserService $userService)
     {
         parent::__construct();
 
@@ -126,6 +131,7 @@ class UsersGridControl extends Control
         $this->subeventRepository = $subeventRepository;
         $this->applicationRepository = $applicationRepository;
         $this->applicationService = $applicationService;
+        $this->userService = $userService;
         $this->session = $session;
         $this->sessionSection = $session->getSection('srs');
     }
@@ -185,27 +191,13 @@ class UsersGridControl extends Control
             ->setSortable()
             ->setFilterText();
 
-        $grid->addColumnText('roles', 'admin.users.users_roles', 'roles')
-            ->setRenderer(function ($row) {
-                $roles = [];
-                foreach ($row->getRoles() as $role) {
-                    $roles[] = $role->getName();
-                }
-                return implode(", ", $roles);
-            })
+        $grid->addColumnText('roles', 'admin.users.users_roles', 'rolesText')
             ->setFilterMultiSelect($this->roleRepository->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED]))
             ->setCondition(function ($qb, $values) {
                 $qb->join('u.roles', 'r')->where('r.id IN (:ids)')->setParameter(':ids', $values);
             });
 
-        $grid->addColumnText('subevents', 'admin.users.users_subevents', 'subevents')
-            ->setRenderer(function ($row) {
-                $subevents = [];
-                foreach ($row->getSubevents() as $subevent) {
-                    $subevents[] = $subevent->getName();
-                }
-                return implode(", ", $subevents);
-            })
+        $grid->addColumnText('subevents', 'admin.users.users_subevents', 'subeventsText')
             ->setFilterMultiSelect($this->subeventRepository->getExplicitOptions())
             ->setCondition(function ($qb, $values) {
                 $qb
@@ -237,14 +229,7 @@ class UsersGridControl extends Control
             ->setRendererOnCondition(function ($row) {
                 return Html::el('span')
                     ->style('color: red')
-                    ->setText($row->isMember() ?
-                        $this->translator->translate('admin.users.users_membership_no') :
-                        (
-                        $row->isExternal() ?
-                            $this->translator->translate('admin.users.users_membership_external') :
-                            $this->translator->translate('admin.users.users_membership_not_connected')
-                        )
-                    );
+                    ->setText($this->userService->getMembershipText($row));
             }, function ($row) {
                 return $row->getUnit() === NULL;
             }
@@ -267,14 +252,7 @@ class UsersGridControl extends Control
 
         $grid->addColumnNumber('feeRemaining', 'admin.users.users_fee_remaining');
 
-        $grid->addColumnText('variableSymbol', 'admin.users.users_variable_symbol')
-            ->setRenderer(function ($row) {
-                $variableSymbols = [];
-                foreach ($row->getApplications() as $application) {
-                    $variableSymbols[] = $application->getVariableSymbol();
-                }
-                return implode(", ", $variableSymbols);
-            })
+        $grid->addColumnText('variableSymbol', 'admin.users.users_variable_symbol', 'variableSymbolsText')
             ->setFilterText()
             ->setCondition(function ($qb, $value) {
                 $qb
@@ -285,31 +263,13 @@ class UsersGridControl extends Control
 
         $grid->addColumnText('paymentMethod', 'admin.users.users_payment_method')
             ->setRenderer(function ($row) {
-                $paymentMethod = NULL;
-
-                foreach ($row->getApplications() as $application) {
-                    $currentPaymentMethod = $application->getPaymentMethod();
-                    if ($currentPaymentMethod) {
-                        if ($paymentMethod === NULL) {
-                            $paymentMethod = $currentPaymentMethod;
-                            continue;
-                        }
-                        if ($paymentMethod != $currentPaymentMethod) {
-                            return $this->translator->translate('common.payment.mixed');
-                        }
-                    }
-                }
-
-                if ($paymentMethod)
-                    return $this->translator->translate('common.payment.' . $paymentMethod);
-
-                return NULL;
+                return $this->userService->getPaymentMethodText($row);
             });
 
         $grid->addColumnDateTime('lastPaymentDate', 'admin.users.users_last_payment_date');
 
-//        $grid->addColumnDateTime('incomeProofPrintedDate', 'admin.users.users_income_proof_printed_date')
-//            ->setSortable();
+        //        $grid->addColumnDateTime('incomeProofPrintedDate', 'admin.users.users_income_proof_printed_date')
+        //            ->setSortable();
 
         $grid->addColumnDateTime('firstApplicationDate', 'admin.users.users_first_application_date')
             ->setFormat('j. n. Y H:i');

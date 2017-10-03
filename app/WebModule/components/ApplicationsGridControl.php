@@ -148,14 +148,7 @@ class ApplicationsGridControl extends Control
             });
 
         if ($this->subeventRepository->explicitSubeventsExists()) {
-            $grid->addColumnText('subevents', 'web.profile.applications_subevents')
-                ->setRenderer(function ($row) {
-                    $subevents = [];
-                    foreach ($row->getSubevents() as $subevent) {
-                        $subevents[] = $subevent->getName();
-                    }
-                    return implode(", ", $subevents);
-                });
+            $grid->addColumnText('subevents', 'web.profile.applications_subevents', 'subeventsText');
         }
 
         $grid->addColumnNumber('fee', 'web.profile.applications_fee');
@@ -295,14 +288,9 @@ class ApplicationsGridControl extends Control
         $this->userRepository->save($this->user);
 
         //zaslani potvrzovaciho e-mailu
-        $subeventsNames = [];
-        foreach ($this->user->getSubevents() as $subevent) {
-            $subeventsNames[] = $subevent->getName();
-        }
-
         $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::SUBEVENT_ADDED, [
             TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-            TemplateVariable::USERS_SUBEVENTS => implode(', ', $subeventsNames)
+            TemplateVariable::USERS_SUBEVENTS => $this->user->getSubeventsText()
         ]);
 
         $this->getPresenter()->flashMessage('web.profile.applications_add_subevents_successful', 'success');

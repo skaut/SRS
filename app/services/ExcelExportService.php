@@ -35,21 +35,26 @@ class ExcelExportService extends Nette\Object
     /** @var BlockRepository */
     private $blockRepository;
 
+    /** @var UserService */
+    private $userService;
+
 
     /**
      * ExcelExportService constructor.
      * @param Translator $translator
      * @param CustomInputRepository $customInputRepository
      * @param BlockRepository $blockRepository
+     * @param UserService $userService
      */
     public function __construct(Translator $translator, CustomInputRepository $customInputRepository,
-                                BlockRepository $blockRepository)
+                                BlockRepository $blockRepository, UserService $userService)
     {
         $this->phpExcel = new \PHPExcel();
 
         $this->translator = $translator;
         $this->customInputRepository = $customInputRepository;
         $this->blockRepository = $blockRepository;
+        $this->userService = $userService;
     }
 
     /**
@@ -304,8 +309,8 @@ class ExcelExportService extends Nette\Object
 
         foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
             $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate($customInput->getName()));
-            $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
-            $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+            $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(TRUE);
+            $sheet->getColumnDimensionByColumn($column)->setAutoSize(FALSE);
 
             switch ($customInput->getType()) {
                 case CustomInput::TEXT:
@@ -335,34 +340,17 @@ class ExcelExportService extends Nette\Object
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->getUsername());
 
-            $roles = [];
-            foreach ($user->getRoles() as $role)
-                $roles[] = $role->getName();
-            $sheet->setCellValueByColumnAndRow($column++, $row, implode(", ", $roles));
+            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getRolesText());
 
-            $subevents = [];
-            foreach ($user->getSubevents() as $subevent)
-                $subevents[] = $subevent->getName();
-            $sheet->setCellValueByColumnAndRow($column++, $row, implode(", ", $subevents));
+            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getSubeventsText());
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->isApproved()
                 ? $this->translator->translate('common.export.common.yes')
                 : $this->translator->translate('common.export.common.no')
             );
 
-            $sheet->getCellByColumnAndRow($column++, $row)->setValueExplicit($user->getUnit() !== NULL
-                ? $user->getUnit()
-                : (
-                    $user->isMember()
-                        ? $this->translator->translate('common.export.user.membership_no')
-                        : (
-                            $user->isExternal()
-                                ? $this->translator->translate('common.export.user.membership_external')
-                                : $this->translator->translate('common.export.user.membership_not_connected')
-                        )
-                ),
-                PHPExcel_Cell_DataType::TYPE_STRING
-            );
+            $sheet->getCellByColumnAndRow($column++, $row)
+                ->setValueExplicit($this->userService->getMembershipText($user), PHPExcel_Cell_DataType::TYPE_STRING);
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->getAge());
 
@@ -372,29 +360,9 @@ class ExcelExportService extends Nette\Object
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->getFeeRemaining());
 
-            $variableSymbols = [];
-            foreach ($user->getApplications() as $application)
-                $variableSymbols[] = $application->getVariableSymbol();
-            $sheet->setCellValueByColumnAndRow($column++, $row, implode(", ", $variableSymbols));
+            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getVariableSymbolsText());
 
-            $paymentMethod = NULL;
-            $paymentMethodName = NULL;
-            foreach ($user->getApplications() as $application) {
-                $currentPaymentMethod = $application->getPaymentMethod();
-                if ($currentPaymentMethod) {
-                    if ($paymentMethod === NULL) {
-                        $paymentMethod = $currentPaymentMethod;
-                        continue;
-                    }
-                    if ($paymentMethod != $currentPaymentMethod) {
-                        $paymentMethodName = $this->translator->translate('common.payment.mixed');
-                        break;
-                    }
-                }
-            }
-            if ($paymentMethod && !$paymentMethodName)
-                $paymentMethodName = $this->translator->translate('common.payment.' . $paymentMethod);
-            $sheet->setCellValueByColumnAndRow($column++, $row, $paymentMethodName);
+            $sheet->setCellValueByColumnAndRow($column++, $row, $this->userService->getPaymentMethodText($user));
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->getLastPaymentDate() !== NULL ? $user->getLastPaymentDate()->format("j. n. Y") : '');
 
