@@ -52,6 +52,7 @@ class AdditionalInformationForm extends Nette\Object
      * @param UserRepository $userRepository
      * @param CustomInputRepository $customInputRepository
      * @param ApplicationService $applicationService
+     * @param CustomInputValueRepository $customInputValueRepository
      */
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
                                 CustomInputRepository $customInputRepository, ApplicationService $applicationService,
