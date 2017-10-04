@@ -105,7 +105,7 @@ class RoomScheduleGridControl extends Control
     public function handleExportRoomsSchedule() {
         $this->room = $this->roomRepository->findById($this->getPresenter()->getParameter('id'));
 
-        $response = $this->excelExportService->exportRoomsSchedule($this->room, 'harmonogram-mistnosti.xlsx');
+        $response = $this->excelExportService->exportRoomSchedule($this->room, 'harmonogram-mistnosti.xlsx');
 
         $this->getPresenter()->sendResponse($response);
     }

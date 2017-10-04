@@ -11,8 +11,11 @@ use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\UserRepository;
+use App\Services\ExcelExportService;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
+use Nette\Http\Session;
+use Nette\Http\SessionSection;
 use Ublaboo\DataGrid\DataGrid;
 
 
@@ -44,6 +47,15 @@ class ProgramBlocksGridControl extends Control
     /** @var SubeventRepository */
     private $subeventRepository;
 
+    /** @var ExcelExportService */
+    private $excelExportService;
+
+    /** @var Session */
+    private $session;
+
+    /** @var SessionSection */
+    private $sessionSection;
+
 
     /**
      * ProgramBlocksGridControl constructor.
@@ -54,11 +66,13 @@ class ProgramBlocksGridControl extends Control
      * @param CategoryRepository $categoryRepository
      * @param ProgramRepository $programRepository
      * @param SubeventRepository $subeventRepository
+     * @param Session $session
      */
     public function __construct(Translator $translator, BlockRepository $blockRepository,
                                 SettingsRepository $settingsRepository, UserRepository $userRepository,
                                 CategoryRepository $categoryRepository, ProgramRepository $programRepository,
-                                SubeventRepository $subeventRepository)
+                                SubeventRepository $subeventRepository, ExcelExportService $excelExportService,
+                                Session $session)
     {
         parent::__construct();
 
@@ -69,6 +83,10 @@ class ProgramBlocksGridControl extends Control
         $this->categoryRepository = $categoryRepository;
         $this->programRepository = $programRepository;
         $this->subeventRepository = $subeventRepository;
+        $this->excelExportService = $excelExportService;
+
+        $this->session = $session;
+        $this->sessionSection = $session->getSection('srs');
     }
 
     /**
@@ -95,6 +113,10 @@ class ProgramBlocksGridControl extends Control
         $grid->setDefaultSort(['name' => 'ASC']);
         $grid->setPagination(FALSE);
         $grid->setColumnsHideable();
+
+
+        $grid->addGroupAction('admin.program.blocks_group_action_export_blocks_attendees')
+            ->onSelect[] = [$this, 'groupExportBlocksAttendees'];
 
 
         $grid->addColumnText('name', 'admin.program.blocks_name')
@@ -249,6 +271,30 @@ class ProgramBlocksGridControl extends Control
         } else {
             $this->redirect('this');
         }
+    }
+
+    /**
+     * Hromadně vyexportuje seznam uživatelů, kteří mají blok zapsaný.
+     * @param array $ids
+     */
+    public function groupExportBlocksAttendees(array $ids)
+    {
+        $this->sessionSection->blockIds = $ids;
+        $this->redirect('exportblocksattendees'); //presmerovani kvuli zruseni ajax
+    }
+
+    /**
+     * Zpracuje export seznamu uživatelů, kteří mají blok zapsaný.
+     */
+    public function handleExportBlocksAttendees()
+    {
+        $ids = $this->session->getSection('srs')->blockIds;
+
+        $blocks = $this->blockRepository->findBlocksByIds($ids);
+
+        $response = $this->excelExportService->exportBlocksAttendees($blocks, "ucastnici-bloku.xlsx");
+
+        $this->getPresenter()->sendResponse($response);
     }
 
     /**

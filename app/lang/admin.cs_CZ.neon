@@ -187,6 +187,7 @@ program:
     blocks_description: "Detailní popis"
     blocks_tools: "Pomůcky"
     blocks_saved: "Programový blok byl úspěšně uložen."
+    blocks_group_action_export_blocks_attendees: "Vyexportovat seznamy účastníků"
     blocks_changed_mandatory: "Povinnost programového bloku byla úspěšně upravena."
     blocks_change_mandatory_denied: "Nemáte oprávnění k úpravě tohoto programového bloku."
     blocks_change_mandatory_auto_register_not_allowed: "Program nemůže být automaticky přihlašovaný, protože je v harmonogramu vícekrát nebo ve stejnou dobu jako jiný program."

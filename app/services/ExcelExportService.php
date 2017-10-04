@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
+use App\Model\Program\Block;
 use App\Model\Program\BlockRepository;
 use App\Model\Program\Room;
 use App\Model\Settings\CustomInput\CustomInput;
@@ -161,7 +162,7 @@ class ExcelExportService extends Nette\Object
      * @param $filename
      * @return ExcelResponse
      */
-    public function exportUsersSchedule($user, $filename)
+    public function exportUserSchedule($user, $filename)
     {
         return $this->exportUsersSchedules([$user], $filename);
     }
@@ -172,7 +173,7 @@ class ExcelExportService extends Nette\Object
      * @param $filename
      * @return ExcelResponse
      */
-    public function exportRoomsSchedule(Room $room, $filename)
+    public function exportRoomSchedule(Room $room, $filename)
     {
         $sheet = $this->phpExcel->getSheet(0);
 
@@ -408,4 +409,69 @@ class ExcelExportService extends Nette\Object
         }
         return new ExcelResponse($this->phpExcel, $filename);
     }
+
+    /**
+     * @param Collection|Block[] $blocks
+     * @param $filename
+     * @return ExcelResponse
+     */
+    public function exportBlocksAttendees($blocks, $filename)
+    {
+        $this->phpExcel->removeSheetByIndex(0);
+        $sheetNumber = 0;
+
+        foreach ($blocks as $block) {
+            $sheet = new \PHPExcel_Worksheet($this->phpExcel, $this->truncate($block->getName(), 29));
+            $this->phpExcel->addSheet($sheet, $sheetNumber++);
+
+            $row = 1;
+            $column = 0;
+
+            $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.display_name'));
+            $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(TRUE);
+            $sheet->getColumnDimensionByColumn($column)->setAutoSize(FALSE);
+            $sheet->getColumnDimensionByColumn($column++)->setWidth('15');
+
+            $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.email'));
+            $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(TRUE);
+            $sheet->getColumnDimensionByColumn($column)->setAutoSize(FALSE);
+            $sheet->getColumnDimensionByColumn($column++)->setWidth('15');
+
+            $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.address'));
+            $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(TRUE);
+            $sheet->getColumnDimensionByColumn($column)->setAutoSize(FALSE);
+            $sheet->getColumnDimensionByColumn($column++)->setWidth('30');
+
+            $criteria = Criteria::create()->orderBy(['displayName', 'ASC']);
+
+            foreach ($block->getAttendees()->matching($criteria) as $attendee) {
+                $row++;
+                $column = 0;
+
+                $sheet->setCellValueByColumnAndRow($column++, $row, $attendee->getDisplayName());
+                $sheet->setCellValueByColumnAndRow($column++, $row, $attendee->getEmail());
+                $sheet->setCellValueByColumnAndRow($column++, $row, $attendee->getAddress());
+            }
+        }
+
+        return new ExcelResponse($this->phpExcel, $filename);
+    }
+
+    /**
+     * Zkrátí $text na $length znaků a doplní '...'.
+     * @param $text
+     * @param $length
+     * @return bool|string
+     */
+    private function truncate($text, $length)
+    {
+        if (strlen($text) > $length) {
+            $text = $text . " ";
+            $text = substr($text, 0, $length);
+            $text = substr($text, 0, strrpos($text, ' '));
+            $text = $text . "...";
+        }
+        return $text;
+    }
 }
+

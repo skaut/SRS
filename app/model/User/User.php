@@ -14,6 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\PersistentCollection;
+use function GuzzleHttp\Psr7\str;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 use Nette\DateTime;
 
@@ -863,6 +864,17 @@ class User
     public function getState()
     {
         return $this->state;
+    }
+
+    /**
+     * Vrátí adresu uživatele.
+     * @return null|string
+     */
+    public function getAddress()
+    {
+        if (empty($this->street) || empty($this->city) || empty($this->postcode))
+            return NULL;
+        return $this->street . ', ' . $this->city . ', ' . $this->postcode;
     }
 
     /**

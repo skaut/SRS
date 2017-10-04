@@ -132,6 +132,7 @@ class UsersGridControl extends Control
         $this->applicationRepository = $applicationRepository;
         $this->applicationService = $applicationService;
         $this->userService = $userService;
+
         $this->session = $session;
         $this->sessionSection = $session->getSection('srs');
     }
