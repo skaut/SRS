@@ -4,6 +4,8 @@ namespace App\ActionModule\Presenters;
 
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
+use App\Model\ACL\Role;
+use App\Model\ACL\RoleRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
@@ -50,6 +52,12 @@ class MaturityPresenter extends ActionBasePresenter
     public $settingsRepository;
 
     /**
+     * @var RoleRepository
+     * @inject
+     */
+    public $roleRepository;
+
+    /**
      * @var MailService
      * @inject
      */
@@ -62,6 +70,7 @@ class MaturityPresenter extends ActionBasePresenter
     public function actionCheck()
     {
         foreach ($this->applicationRepository->findWaitingForPaymentApplications() as $application) {
+            //kontrola splatnosti
             $maturityDate = $application->getMaturityDate();
             if ($maturityDate === NULL)
                 continue;
@@ -69,14 +78,27 @@ class MaturityPresenter extends ActionBasePresenter
             $date = (new \DateTime())->setTime(0, 0);
 
             if ($date > $maturityDate) {
-                $application->setState(ApplicationState::CANCELED_NOT_PAID);
-                $this->applicationRepository->save($application);
+                $this->userRepository->getEntityManager()->transactional(function($em) use($application) {
+                    if ($application->isFirst()) {
+                        $user = $application->getUser();
 
-                $this->programRepository->updateUserPrograms($application->getUser());
-                $this->userRepository->save($application->getUser());
+                        $user->setRoles(new ArrayCollection([$this->roleRepository->findBySystemName(Role::NONREGISTERED)]));
+                        foreach ($user->getApplications() as $application) {
+                            $this->applicationRepository->remove($application);
+                        }
+                        $this->userRepository->save($user);
+                    }
+                    else {
+                        $application->setState(ApplicationState::CANCELED_NOT_PAID);
+                        $this->applicationRepository->save($application);
+                    }
+
+                    $this->programRepository->updateUserPrograms($application->getUser());
+                    $this->userRepository->save($application->getUser());
+                });
             }
 
-
+            //pripominka splatnosti
             $maturityReminder = $this->settingsRepository->getValue(Settings::MATURITY_REMINDER);
 
             $date = (new \DateTime())->setTime(0, 0)->modify('+' . $maturityReminder . ' days');

@@ -157,18 +157,18 @@ class ProgramCategoriesGridControl extends Control
     {
         $category = $this->categoryRepository->findById($id);
 
-        $category->setName($values['name']);
-        $category->setRegisterableRoles($this->roleRepository->findRolesByIds($values['registerableRoles']));
+        $this->categoryRepository->getEntityManager()->transactional(function($em) use($category, $values) {
+            $category->setName($values['name']);
+            $category->setRegisterableRoles($this->roleRepository->findRolesByIds($values['registerableRoles']));
 
-        $this->categoryRepository->save($category);
+            $this->categoryRepository->save($category);
 
-        $this->programRepository->updateUsersPrograms($this->userRepository->findAll());
+            $this->programRepository->updateUsersPrograms($this->userRepository->findAll());
 
-        $this->categoryRepository->save($category);
+            $this->categoryRepository->save($category);
+        });
 
-        $p = $this->getPresenter();
-        $p->flashMessage('admin.program.categories_saved', 'success');
-
+        $this->getPresenter()->flashMessage('admin.program.categories_saved', 'success');
         $this->redirect('this');
     }
 
@@ -179,13 +179,15 @@ class ProgramCategoriesGridControl extends Control
     public function handleDelete($id)
     {
         $category = $this->categoryRepository->findById($id);
-        $this->categoryRepository->remove($category);
 
-        $this->programRepository->updateUsersPrograms($this->userRepository->findAll());
-        $this->programRepository->getEntityManager()->flush();
+        $this->categoryRepository->getEntityManager()->transactional(function($em) use($category) {
+            $this->categoryRepository->remove($category);
+
+            $this->programRepository->updateUsersPrograms($this->userRepository->findAll());
+            $this->programRepository->getEntityManager()->flush();
+        });
 
         $this->getPresenter()->flashMessage('admin.program.categories_deleted', 'success');
-
         $this->redirect('this');
     }
 }

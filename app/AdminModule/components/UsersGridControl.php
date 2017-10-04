@@ -529,31 +529,32 @@ class UsersGridControl extends Control
         }
 
         if (!$error) {
-            foreach ($users as $user) {
-                $user->setRoles($selectedRoles);
-                $this->userRepository->save($user);
+            $this->userRepository->getEntityManager()->transactional(function($em) use($selectedRoles, $users, $p) {
+                foreach ($users as $user) {
+                    $user->setRoles($selectedRoles);
+                    $this->userRepository->save($user);
 
-                foreach ($user->getApplications() as $application) {
-                    $fee = $this->applicationService->countFee($selectedRoles, $application->getSubevents(),
-                        $application->isFirst()
-                    );
+                    foreach ($user->getApplications() as $application) {
+                        $fee = $this->applicationService->countFee($selectedRoles, $application->getSubevents(),
+                            $application->isFirst()
+                        );
 
-                    $application->setFee($fee);
-                    $application->setState($fee == 0 || $application->getPaymentDate()
-                        ? ApplicationState::PAID
-                        : ApplicationState::WAITING_FOR_PAYMENT);
+                        $application->setFee($fee);
+                        $application->setState($fee == 0 || $application->getPaymentDate()
+                            ? ApplicationState::PAID
+                            : ApplicationState::WAITING_FOR_PAYMENT);
 
-                    $this->applicationRepository->save($application);
+                        $this->applicationRepository->save($application);
+                    }
                 }
-            }
 
-            $this->programRepository->updateUsersPrograms($users->toArray());
-            $this->userRepository->getEntityManager()->flush();
+                $this->programRepository->updateUsersPrograms($users->toArray());
+                $this->userRepository->getEntityManager()->flush();
+            });
 
             $p->flashMessage('admin.users.users_group_action_changed_roles', 'success');
+            $this->redirect('this');
         }
-
-        $this->redirect('this');
     }
 
     /**

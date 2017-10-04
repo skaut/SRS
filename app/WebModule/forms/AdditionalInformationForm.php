@@ -133,40 +133,42 @@ class AdditionalInformationForm extends Nette\Object
      */
     public function processForm(Form $form, \stdClass $values)
     {
-        if ($this->applicationService->isAllowedEditCustomInputs()) {
-            foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
-                $customInputValue = $this->user->getCustomInputValue($customInput);
+        $this->userRepository->getEntityManager()->transactional(function($em) use($values) {
+            if ($this->applicationService->isAllowedEditCustomInputs()) {
+                foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
+                    $customInputValue = $this->user->getCustomInputValue($customInput);
 
-                if ($customInputValue) {
+                    if ($customInputValue) {
+                        $customInputValue->setValue($values['custom' . $customInput->getId()]);
+                        continue;
+                    }
+
+                    switch ($customInput->getType()) {
+                        case CustomInput::TEXT:
+                            $customInputValue = new CustomTextValue();
+                            break;
+                        case CustomInput::CHECKBOX:
+                            $customInputValue = new CustomCheckboxValue();
+                            break;
+                        case CustomInput::SELECT:
+                            $customInputValue = new CustomSelectValue();
+                            break;
+                    }
                     $customInputValue->setValue($values['custom' . $customInput->getId()]);
-                    continue;
+                    $customInputValue->setUser($this->user);
+                    $customInputValue->setInput($customInput);
+                    $this->customInputValueRepository->save($customInputValue);
                 }
-
-                switch ($customInput->getType()) {
-                    case CustomInput::TEXT:
-                        $customInputValue = new CustomTextValue();
-                        break;
-                    case CustomInput::CHECKBOX:
-                        $customInputValue = new CustomCheckboxValue();
-                        break;
-                    case CustomInput::SELECT:
-                        $customInputValue = new CustomSelectValue();
-                        break;
-                }
-                $customInputValue->setValue($values['custom' . $customInput->getId()]);
-                $customInputValue->setUser($this->user);
-                $customInputValue->setInput($customInput);
-                $this->customInputValueRepository->save($customInputValue);
             }
-        }
 
-        $this->user->setAbout($values['about']);
+            $this->user->setAbout($values['about']);
 
-        if (array_key_exists('arrival', $values))
-            $this->user->setArrival($values['arrival']);
-        if (array_key_exists('departure', $values))
-            $this->user->setDeparture($values['departure']);
+            if (array_key_exists('arrival', $values))
+                $this->user->setArrival($values['arrival']);
+            if (array_key_exists('departure', $values))
+                $this->user->setDeparture($values['departure']);
 
-        $this->userRepository->save($this->user);
+            $this->userRepository->save($this->user);
+        });
     }
 }

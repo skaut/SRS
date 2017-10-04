@@ -2,6 +2,7 @@
 
 namespace App\Model\Program;
 
+use Doctrine\Common\Collections\Criteria;
 use Kdyby\Doctrine\EntityRepository;
 
 
@@ -49,6 +50,18 @@ class RoomRepository extends EntityRepository
             ->getQuery()
             ->getScalarResult();
         return array_map('current', $names);
+    }
+
+    /**
+     * Vrací místnosti podle id.
+     * @param $ids
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function findRoomsByIds($ids)
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->in('id', $ids));
+        return $this->matching($criteria);
     }
 
     /**

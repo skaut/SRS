@@ -151,49 +151,51 @@ class EditUserSeminarForm extends Nette\Object
     public function processForm(Form $form, \stdClass $values)
     {
         if (!$form['cancel']->isSubmittedBy()) {
-            $this->user->setApproved($values['approved']);
-            $this->user->setAttended($values['attended']);
+            $this->userRepository->getEntityManager()->transactional(function($em) use($values) {
+                $this->user->setApproved($values['approved']);
+                $this->user->setAttended($values['attended']);
 
-            foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
-                $customInputValue = $this->user->getCustomInputValue($customInput);
+                foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
+                    $customInputValue = $this->user->getCustomInputValue($customInput);
 
-                if ($customInputValue) {
+                    if ($customInputValue) {
+                        $customInputValue->setValue($values['custom' . $customInput->getId()]);
+                        continue;
+                    }
+
+                    switch ($customInput->getType()) {
+                        case CustomInput::TEXT:
+                            $customInputValue = new CustomTextValue();
+                            break;
+                        case CustomInput::CHECKBOX:
+                            $customInputValue = new CustomCheckboxValue();
+                            break;
+                        case CustomInput::SELECT:
+                            $customInputValue = new CustomSelectValue();
+                            break;
+                    }
                     $customInputValue->setValue($values['custom' . $customInput->getId()]);
-                    continue;
+                    $customInputValue->setUser($this->user);
+                    $customInputValue->setInput($customInput);
+                    $this->customInputValueRepository->save($customInputValue);
                 }
 
-                switch ($customInput->getType()) {
-                    case CustomInput::TEXT:
-                        $customInputValue = new CustomTextValue();
-                        break;
-                    case CustomInput::CHECKBOX:
-                        $customInputValue = new CustomCheckboxValue();
-                        break;
-                    case CustomInput::SELECT:
-                        $customInputValue = new CustomSelectValue();
-                        break;
-                }
-                $customInputValue->setValue($values['custom' . $customInput->getId()]);
-                $customInputValue->setUser($this->user);
-                $customInputValue->setInput($customInput);
-                $this->customInputValueRepository->save($customInputValue);
-            }
+                if (array_key_exists('arrival', $values))
+                    $this->user->setArrival($values['arrival']);
 
-            if (array_key_exists('arrival', $values))
-                $this->user->setArrival($values['arrival']);
+                if (array_key_exists('departure', $values))
+                    $this->user->setDeparture($values['departure']);
 
-            if (array_key_exists('departure', $values))
-                $this->user->setDeparture($values['departure']);
+                $this->user->setAbout($values['about']);
 
-            $this->user->setAbout($values['about']);
+                $this->user->setNote($values['privateNote']);
 
-            $this->user->setNote($values['privateNote']);
+                $this->userRepository->save($this->user);
 
-            $this->userRepository->save($this->user);
+                $this->programRepository->updateUserPrograms($this->user);
 
-            $this->programRepository->updateUserPrograms($this->user);
-
-            $this->userRepository->save($this->user);
+                $this->userRepository->save($this->user);
+            });
         }
     }
 }

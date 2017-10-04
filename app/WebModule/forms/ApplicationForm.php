@@ -219,122 +219,124 @@ class ApplicationForm extends Nette\Object
      */
     public function processForm(Form $form, \stdClass $values)
     {
-        if (array_key_exists('sex', $values))
-            $this->user->setSex($values['sex']);
-        if (array_key_exists('firstName', $values))
-            $this->user->setFirstName($values['firstName']);
-        if (array_key_exists('lastName', $values))
-            $this->user->setLastName($values['lastName']);
-        if (array_key_exists('nickName', $values))
-            $this->user->setNickName($values['nickName']);
-        if (array_key_exists('birthdate', $values))
-            $this->user->setBirthdate($values['birthdate']);
+        $this->applicationRepository->getEntityManager()->transactional(function($em) use($values) {
+            if (array_key_exists('sex', $values))
+                $this->user->setSex($values['sex']);
+            if (array_key_exists('firstName', $values))
+                $this->user->setFirstName($values['firstName']);
+            if (array_key_exists('lastName', $values))
+                $this->user->setLastName($values['lastName']);
+            if (array_key_exists('nickName', $values))
+                $this->user->setNickName($values['nickName']);
+            if (array_key_exists('birthdate', $values))
+                $this->user->setBirthdate($values['birthdate']);
 
-        $this->user->setStreet($values['street']);
-        $this->user->setCity($values['city']);
-        $this->user->setPostcode($values['postcode']);
-        $this->user->setState($values['state']);
+            $this->user->setStreet($values['street']);
+            $this->user->setCity($values['city']);
+            $this->user->setPostcode($values['postcode']);
+            $this->user->setState($values['state']);
 
-        //role
-        $roles = $this->roleRepository->findRolesByIds($values['roles']);
+            //role
+            $roles = $this->roleRepository->findRolesByIds($values['roles']);
 
-        $this->user->removeRole($this->roleRepository->findBySystemName(Role::NONREGISTERED));
+            $this->user->removeRole($this->roleRepository->findBySystemName(Role::NONREGISTERED));
 
-        foreach ($roles as $role) {
-            if (!$role->isApprovedAfterRegistration()) {
-                $this->user->setApproved(FALSE);
-                break;
+            foreach ($roles as $role) {
+                if (!$role->isApprovedAfterRegistration()) {
+                    $this->user->setApproved(FALSE);
+                    break;
+                }
             }
-        }
 
-        $this->user->setRoles($roles);
+            $this->user->setRoles($roles);
 
-        //vlastni pole
-        foreach ($this->customInputRepository->findAll() as $customInput) {
-            $customInputValue = $this->user->getCustomInputValue($customInput);
+            //vlastni pole
+            foreach ($this->customInputRepository->findAll() as $customInput) {
+                $customInputValue = $this->user->getCustomInputValue($customInput);
 
-            if ($customInputValue) {
+                if ($customInputValue) {
+                    $customInputValue->setValue($values['custom' . $customInput->getId()]);
+                    continue;
+                }
+
+                switch ($customInput->getType()) {
+                    case CustomInput::TEXT:
+                        $customInputValue = new CustomTextValue();
+                        break;
+
+                    case CustomInput::CHECKBOX:
+                        $customInputValue = new CustomCheckboxValue();
+                        break;
+
+                    case CustomInput::SELECT:
+                        $customInputValue = new CustomSelectValue();
+                        break;
+                }
                 $customInputValue->setValue($values['custom' . $customInput->getId()]);
-                continue;
+                $customInputValue->setUser($this->user);
+                $customInputValue->setInput($customInput);
+                $this->customInputValueRepository->save($customInputValue);
             }
 
-            switch ($customInput->getType()) {
-                case CustomInput::TEXT:
-                    $customInputValue = new CustomTextValue();
-                    break;
+            //prijezd, odjezd
+            if (array_key_exists('arrival', $values))
+                $this->user->setArrival($values['arrival']);
 
-                case CustomInput::CHECKBOX:
-                    $customInputValue = new CustomCheckboxValue();
-                    break;
+            if (array_key_exists('departure', $values))
+                $this->user->setDeparture($values['departure']);
 
-                case CustomInput::SELECT:
-                    $customInputValue = new CustomSelectValue();
-                    break;
+            //podakce
+            $subevents = $this->subeventRepository->explicitSubeventsExists() && !empty($values['subevents'])
+                ? $this->subeventRepository->findSubeventsByIds($values['subevents'])
+                : new ArrayCollection([$this->subeventRepository->findImplicit()]);
+
+            $application = new Application();
+            $fee = $this->applicationService->countFee($roles, $subevents);
+            $application->setUser($this->user);
+            $application->setSubevents($subevents);
+            $application->setApplicationDate(new \DateTime());
+            $application->setApplicationOrder($this->applicationRepository->findLastApplicationOrder() + 1);
+            $application->setMaturityDate($this->applicationService->countMaturityDate());
+            $application->setVariableSymbol($this->applicationService->generateVariableSymbol($this->user));
+            $application->setFee($fee);
+            $application->setState($fee == 0 ? ApplicationState::PAID : ApplicationState::WAITING_FOR_PAYMENT);
+            $this->applicationRepository->save($application);
+
+            $this->user->addApplication($application);
+            $this->userRepository->save($this->user);
+
+            //prihlaseni automaticke prihlasovanych programu
+            $this->programRepository->updateUserPrograms($this->user);
+            $this->userRepository->save($this->user);
+
+            //aktualizace udaju ve skautis
+            try {
+                $this->skautIsService->updatePersonBasic(
+                    $this->user->getSkautISPersonId(),
+                    $this->user->getSex(),
+                    $this->user->getBirthdate(),
+                    $this->user->getFirstName(),
+                    $this->user->getLastName(),
+                    $this->user->getNickName()
+                );
+
+                $this->skautIsService->updatePersonAddress(
+                    $this->user->getSkautISPersonId(),
+                    $this->user->getStreet(),
+                    $this->user->getCity(),
+                    $this->user->getPostcode(),
+                    $this->user->getState()
+                );
+            } catch (WsdlException $ex) {
+                $this->onSkautIsError();
             }
-            $customInputValue->setValue($values['custom' . $customInput->getId()]);
-            $customInputValue->setUser($this->user);
-            $customInputValue->setInput($customInput);
-            $this->customInputValueRepository->save($customInputValue);
-        }
 
-        //prijezd, odjezd
-        if (array_key_exists('arrival', $values))
-            $this->user->setArrival($values['arrival']);
-
-        if (array_key_exists('departure', $values))
-            $this->user->setDeparture($values['departure']);
-
-        //podakce
-        $subevents = $this->subeventRepository->explicitSubeventsExists() && !empty($values['subevents'])
-            ? $this->subeventRepository->findSubeventsByIds($values['subevents'])
-            : new ArrayCollection([$this->subeventRepository->findImplicit()]);
-
-        $application = new Application();
-        $fee = $this->applicationService->countFee($roles, $subevents);
-        $application->setUser($this->user);
-        $application->setSubevents($subevents);
-        $application->setApplicationDate(new \DateTime());
-        $application->setApplicationOrder($this->applicationRepository->findLastApplicationOrder() + 1);
-        $application->setMaturityDate($this->applicationService->countMaturityDate());
-        $application->setVariableSymbol($this->applicationService->generateVariableSymbol($this->user));
-        $application->setFee($fee);
-        $application->setState($fee == 0 ? ApplicationState::PAID : ApplicationState::WAITING_FOR_PAYMENT);
-        $this->applicationRepository->save($application);
-
-        $this->user->addApplication($application);
-        $this->userRepository->save($this->user);
-
-        //prihlaseni automaticke prihlasovanych programu
-        $this->programRepository->updateUserPrograms($this->user);
-        $this->userRepository->save($this->user);
-
-        //aktualizace udaju ve skautis
-        try {
-            $this->skautIsService->updatePersonBasic(
-                $this->user->getSkautISPersonId(),
-                $this->user->getSex(),
-                $this->user->getBirthdate(),
-                $this->user->getFirstName(),
-                $this->user->getLastName(),
-                $this->user->getNickName()
-            );
-
-            $this->skautIsService->updatePersonAddress(
-                $this->user->getSkautISPersonId(),
-                $this->user->getStreet(),
-                $this->user->getCity(),
-                $this->user->getPostcode(),
-                $this->user->getState()
-            );
-        } catch (WsdlException $ex) {
-            $this->onSkautIsError();
-        }
-
-        //odeslani potvrzovaciho mailu
-        $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::REGISTRATION, [
-            TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-            TemplateVariable::EDIT_REGISTRATION_TO => $this->settingsRepository->getDateValue(Settings::EDIT_REGISTRATION_TO)->format('j. n. Y')
-        ]);
+            //odeslani potvrzovaciho mailu
+            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::REGISTRATION, [
+                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
+                TemplateVariable::EDIT_REGISTRATION_TO => $this->settingsRepository->getDateValue(Settings::EDIT_REGISTRATION_TO)->format('j. n. Y')
+            ]);
+        });
     }
 
     /**

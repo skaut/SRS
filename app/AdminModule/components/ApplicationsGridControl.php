@@ -303,34 +303,35 @@ class ApplicationsGridControl extends Control
 
 
         //zpracovani zmen
-        $application = new Application();
+        $this->applicationRepository->getEntityManager()->transactional(function($em) use($selectedRoles, $selectedSubevents) {
+            $application = new Application();
 
-        if ($this->user->getApplications()->isEmpty()) {
-            $this->user->setRoles($selectedRoles);
+            if ($this->user->getApplications()->isEmpty()) {
+                $this->user->setRoles($selectedRoles);
+                $this->userRepository->save($this->user);
+                $application->setFirst(TRUE);
+                $fee = $this->applicationService->countFee($selectedRoles, $selectedSubevents);
+            } else {
+                $application->setFirst(FALSE);
+                $fee = $this->applicationService->countFee($this->user->getRoles(), $selectedSubevents, FALSE);
+            }
+
+            $application->setUser($this->user);
+            if ($this->subeventRepository->explicitSubeventsExists())
+                $application->setSubevents($selectedSubevents);
+            else
+                $application->setSubevents(new ArrayCollection([$this->subeventRepository->findImplicit()]));
+            $application->setApplicationDate(new \DateTime());
+            $application->setApplicationOrder($this->applicationRepository->findLastApplicationOrder() + 1);
+            $application->setMaturityDate($this->applicationService->countMaturityDate());
+            $application->setVariableSymbol($this->applicationService->generateVariableSymbol($this->user));
+            $application->setFee($fee);
+            $application->setState($fee == 0 ? ApplicationState::PAID : ApplicationState::WAITING_FOR_PAYMENT);
+            $this->applicationRepository->save($application);
+
+            $this->programRepository->updateUserPrograms($this->user);
             $this->userRepository->save($this->user);
-            $application->setFirst(TRUE);
-        }
-        else {
-            $application->setFirst(FALSE);
-        }
-
-        $fee = $this->applicationService->countFee($selectedRoles, $selectedSubevents);
-
-        $application->setUser($this->user);
-        if ($this->subeventRepository->explicitSubeventsExists())
-            $application->setSubevents($selectedSubevents);
-        else
-            $application->setSubevents(new ArrayCollection([$this->subeventRepository->findImplicit()]));
-        $application->setApplicationDate(new \DateTime());
-        $application->setApplicationOrder($this->applicationRepository->findLastApplicationOrder() + 1);
-        $application->setMaturityDate($this->applicationService->countMaturityDate());
-        $application->setVariableSymbol($this->applicationService->generateVariableSymbol($this->user));
-        $application->setFee($fee);
-        $application->setState($fee == 0 ? ApplicationState::PAID : ApplicationState::WAITING_FOR_PAYMENT);
-        $this->applicationRepository->save($application);
-
-        $this->programRepository->updateUserPrograms($this->user);
-        $this->userRepository->save($this->user);
+        });
 
         $this->getPresenter()->flashMessage('admin.users.users_applications_saved', 'success');
         $this->redirect('this');
@@ -386,52 +387,53 @@ class ApplicationsGridControl extends Control
             }
         }
 
-        $oldPaymentDate = $application->getPaymentDate();
-
         //zpracovani zmen
-        if ($application->isFirst()) {
-            $this->user->setRoles($selectedRoles);
-            $this->userRepository->save($this->user);
-        }
+        $this->applicationRepository->getEntityManager()->transactional(function($em) use($selectedRoles, $selectedSubevents, $application, $values) {
+            $oldPaymentDate = $application->getPaymentDate();
 
-        if ($this->subeventRepository->explicitSubeventsExists())
-            $application->setSubevents($selectedSubevents);
-        $application->setVariableSymbol($values['variableSymbol']);
-        $application->setPaymentMethod($values['paymentMethod']);
-        $application->setPaymentDate($values['paymentDate']);
-        $application->setIncomeProofPrintedDate($values['incomeProofPrintedDate']);
-        $application->setMaturityDate($values['maturityDate']);
+            if ($application->isFirst()) {
+                $this->user->setRoles($selectedRoles);
+                $this->userRepository->save($this->user);
+            }
 
-        if ($application->isFirst()) {
-            foreach ($this->user->getApplications() as $application) {
-                if ($application->isFirst())
-                    $fee = $this->applicationService->countFee($selectedRoles, $selectedSubevents);
-                else
-                    $fee = $this->applicationService->countFee($selectedRoles, $application->getSubevents(), FALSE);
+            if ($this->subeventRepository->explicitSubeventsExists())
+                $application->setSubevents($selectedSubevents);
+            $application->setVariableSymbol($values['variableSymbol']);
+            $application->setPaymentMethod($values['paymentMethod']);
+            $application->setPaymentDate($values['paymentDate']);
+            $application->setIncomeProofPrintedDate($values['incomeProofPrintedDate']);
+            $application->setMaturityDate($values['maturityDate']);
+
+            if ($application->isFirst()) {
+                foreach ($this->user->getApplications() as $application) {
+                    if ($application->isFirst())
+                        $fee = $this->applicationService->countFee($selectedRoles, $selectedSubevents);
+                    else
+                        $fee = $this->applicationService->countFee($selectedRoles, $application->getSubevents(), FALSE);
+                    $application->setFee($fee);
+                    $application->setState($fee == 0 || $application->getPaymentDate()
+                        ? ApplicationState::PAID
+                        : ApplicationState::WAITING_FOR_PAYMENT);
+                    $this->applicationRepository->save($application);
+                }
+            } else {
+                $fee = $this->applicationService->countFee($this->user->getRoles(), $selectedSubevents, FALSE);
                 $application->setFee($fee);
                 $application->setState($fee == 0 || $application->getPaymentDate()
                     ? ApplicationState::PAID
                     : ApplicationState::WAITING_FOR_PAYMENT);
                 $this->applicationRepository->save($application);
             }
-        }
-        else {
-            $fee = $this->applicationService->countFee($this->user->getRoles(), $selectedSubevents, FALSE);
-            $application->setFee($fee);
-            $application->setState($fee == 0 || $application->getPaymentDate()
-                ? ApplicationState::PAID
-                : ApplicationState::WAITING_FOR_PAYMENT);
-            $this->applicationRepository->save($application);
-        }
 
-        $this->programRepository->updateUserPrograms($this->user);
-        $this->userRepository->save($this->user);
+            $this->programRepository->updateUserPrograms($this->user);
+            $this->userRepository->save($this->user);
 
-        if ($values['paymentDate'] !== NULL && $oldPaymentDate === NULL) {
-            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::PAYMENT_CONFIRMED, [
-                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)
-            ]);
-        }
+            if ($values['paymentDate'] !== NULL && $oldPaymentDate === NULL) {
+                $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::PAYMENT_CONFIRMED, [
+                    TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)
+                ]);
+            }
+        });
 
         $this->getPresenter()->flashMessage('admin.users.users_applications_saved', 'success');
         $this->redirect('this');
@@ -469,17 +471,18 @@ class ApplicationsGridControl extends Control
     {
         $user = $this->applicationRepository->findById($id)->getUser();
 
-        $user->setRoles(new ArrayCollection([$this->roleRepository->findBySystemName(Role::NONREGISTERED)]));
-        foreach ($user->getApplications() as $application) {
-            $this->applicationRepository->remove($application);
-        }
-        $this->userRepository->save($user);
+        $this->applicationRepository->getEntityManager()->transactional(function($em) use($user) {
+            $user->setRoles(new ArrayCollection([$this->roleRepository->findBySystemName(Role::NONREGISTERED)]));
+            foreach ($user->getApplications() as $application) {
+                $this->applicationRepository->remove($application);
+            }
+            $this->userRepository->save($user);
 
-        $this->programRepository->updateUserPrograms($user);
-        $this->userRepository->save($user);
+            $this->programRepository->updateUserPrograms($user);
+            $this->userRepository->save($user);
+        });
 
         $this->getPresenter()->flashMessage('admin.users.users_applications_registration_canceled', 'success');
-
         $this->redirect('this');
     }
 
@@ -492,14 +495,15 @@ class ApplicationsGridControl extends Control
         $application = $this->applicationRepository->findById($id);
         $user = $application->getUser();
 
-        $application->setState(ApplicationState::CANCELED);
-        $this->applicationRepository->save($application);
+        $this->applicationRepository->getEntityManager()->transactional(function($em) use($application, $user) {
+            $application->setState(ApplicationState::CANCELED);
+            $this->applicationRepository->save($application);
 
-        $this->programRepository->updateUserPrograms($user);
-        $this->userRepository->save($user);
+            $this->programRepository->updateUserPrograms($user);
+            $this->userRepository->save($user);
+        });
 
         $this->getPresenter()->flashMessage('admin.users.users_applications_application_canceled', 'success');
-
         $this->redirect('this');
     }
 
