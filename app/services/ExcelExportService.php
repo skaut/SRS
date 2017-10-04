@@ -430,17 +430,17 @@ class ExcelExportService extends Nette\Object
             $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.display_name'));
             $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(TRUE);
             $sheet->getColumnDimensionByColumn($column)->setAutoSize(FALSE);
-            $sheet->getColumnDimensionByColumn($column++)->setWidth('15');
+            $sheet->getColumnDimensionByColumn($column++)->setWidth('30');
 
             $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.email'));
             $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(TRUE);
             $sheet->getColumnDimensionByColumn($column)->setAutoSize(FALSE);
-            $sheet->getColumnDimensionByColumn($column++)->setWidth('15');
+            $sheet->getColumnDimensionByColumn($column++)->setWidth('30');
 
             $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.address'));
             $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(TRUE);
             $sheet->getColumnDimensionByColumn($column)->setAutoSize(FALSE);
-            $sheet->getColumnDimensionByColumn($column++)->setWidth('30');
+            $sheet->getColumnDimensionByColumn($column++)->setWidth('40');
 
             $criteria = Criteria::create()->orderBy(['displayName', 'ASC']);
 
