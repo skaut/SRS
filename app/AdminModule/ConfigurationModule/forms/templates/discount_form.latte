@@ -36,6 +36,8 @@
                 buttonRightParenthesis.removeClass('disabled');
             else
                 buttonRightParenthesis.addClass('disabled');
+
+            conditionText.get(0).scrollLeft = conditionText.get(0).scrollWidth;
         });
 
         buttonAnd.on('click', function () {
@@ -47,6 +49,8 @@
             buttonOr.addClass('disabled');
             buttonLeftParenthesis.removeClass('disabled');
             buttonRightParenthesis.addClass('disabled');
+
+            conditionText.get(0).scrollLeft = conditionText.get(0).scrollWidth;
         });
 
         buttonOr.on('click', function () {
@@ -58,6 +62,8 @@
             buttonOr.addClass('disabled');
             buttonLeftParenthesis.removeClass('disabled');
             buttonRightParenthesis.addClass('disabled');
+
+            conditionText.get(0).scrollLeft = conditionText.get(0).scrollWidth;
         });
 
         buttonLeftParenthesis.on('click', function () {
@@ -71,6 +77,8 @@
             buttonOr.addClass('disabled');
             buttonLeftParenthesis.removeClass('disabled');
             buttonRightParenthesis.addClass('disabled');
+
+            conditionText.get(0).scrollLeft = conditionText.get(0).scrollWidth;
         });
 
         buttonRightParenthesis.on('click', function () {
@@ -87,6 +95,8 @@
                 buttonRightParenthesis.removeClass('disabled');
             else
                 buttonRightParenthesis.addClass('disabled');
+
+            conditionText.get(0).scrollLeft = conditionText.get(0).scrollWidth;
         });
 
         buttonClear.on('click', function () {
@@ -98,6 +108,8 @@
             buttonOr.addClass('disabled');
             buttonLeftParenthesis.removeClass('disabled');
             buttonRightParenthesis.addClass('disabled');
+
+            conditionText.get(0).scrollLeft = conditionText.get(0).scrollWidth;
         });
     });
 </script>
