@@ -100,7 +100,7 @@ class DiscountForm extends UI\Control
         $form->addHidden('condition');
 
         $form->addText('conditionText', 'admin.configuration.discounts_condition')
-            ->setDisabled(TRUE);
+            ->setAttribute('readonly', TRUE);
 
         $form->addText('discount', 'admin.configuration.discounts_discount')
             ->addRule(Form::FILLED, 'admin.configuration.discounts_discount_empty')
