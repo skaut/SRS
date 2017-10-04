@@ -69,11 +69,13 @@ class MaturityPresenter extends ActionBasePresenter
             $date = (new \DateTime())->setTime(0, 0);
 
             if ($date > $maturityDate) {
-                $application->setState(ApplicationState::CANCELED_NOT_PAID);
-                $this->applicationRepository->save($application);
+                $this->userRepository->getEntityManager()->transactional(function($em) use($application) {
+                    $application->setState(ApplicationState::CANCELED_NOT_PAID);
+                    $this->applicationRepository->save($application);
 
-                $this->programRepository->updateUserPrograms($application->getUser());
-                $this->userRepository->save($application->getUser());
+                    $this->programRepository->updateUserPrograms($application->getUser());
+                    $this->userRepository->save($application->getUser());
+                });
             }
 
 

@@ -209,63 +209,64 @@ class BlockForm extends Nette\Object
     public function processForm(Form $form, \stdClass $values)
     {
         if (!$form['cancel']->isSubmittedBy()) {
-            if (!$this->block) {
-                if (!$this->settingsRepository->getValue(Settings::IS_ALLOWED_ADD_BLOCK))
+            $this->blockRepository->getEntityManager()->transactional(function($em) use($values) {
+                if (!$this->block) {
+                    if (!$this->settingsRepository->getValue(Settings::IS_ALLOWED_ADD_BLOCK))
+                        return;
+                    $this->block = new Block();
+                } else if (!$this->user->isAllowedModifyBlock($this->block))
                     return;
-                $this->block = new Block();
-            } else if (!$this->user->isAllowedModifyBlock($this->block))
-                return;
 
-            $oldMandatory = $this->block->getMandatory();
-            $oldCategory = $this->block->getCategory();
-            $oldSubevent = $this->block->getSubevent();
+                $oldMandatory = $this->block->getMandatory();
+                $oldCategory = $this->block->getCategory();
+                $oldSubevent = $this->block->getSubevent();
 
-            $category = $values['category'] != '' ? $this->categoryRepository->findById($values['category']) : NULL;
-            $lector = $values['lector'] != '' ? $this->userRepository->findById($values['lector']) : NULL;
-            $capacity = $values['capacity'] !== '' ? $values['capacity'] : NULL;
+                $category = $values['category'] != '' ? $this->categoryRepository->findById($values['category']) : null;
+                $lector = $values['lector'] != '' ? $this->userRepository->findById($values['lector']) : null;
+                $capacity = $values['capacity'] !== '' ? $values['capacity'] : null;
 
-            $this->block->setName($values['name']);
-            $this->block->setCategory($category);
-            $this->block->setLector($lector);
-            $this->block->setDuration($values['duration']);
-            $this->block->setCapacity($capacity);
-            $this->block->setMandatory($values['mandatory'] ? ((array_key_exists('autoRegister', $values) && $values['autoRegister']) ? 2 : 1) : 0);
-            $this->block->setPerex($values['perex']);
-            $this->block->setDescription($values['description']);
-            $this->block->setTools($values['tools']);
+                $this->block->setName($values['name']);
+                $this->block->setCategory($category);
+                $this->block->setLector($lector);
+                $this->block->setDuration($values['duration']);
+                $this->block->setCapacity($capacity);
+                $this->block->setMandatory($values['mandatory'] ? ((array_key_exists('autoRegister', $values) && $values['autoRegister']) ? 2 : 1) : 0);
+                $this->block->setPerex($values['perex']);
+                $this->block->setDescription($values['description']);
+                $this->block->setTools($values['tools']);
 
-            if ($this->subeventsExists) {
-                $subevent = $values['subevent'] != '' ? $this->subeventRepository->findById($values['subevent']) : NULL;
-                $this->block->setSubevent($subevent);
-            }
-            else {
-                $this->block->setSubevent($this->subeventRepository->findImplicit());
-            }
-
-            $this->blockRepository->save($this->block);
-
-            //odstraneni ucastniku, pokud se odstrani automaticke prihlasovani
-            if ($oldMandatory == 2 && $this->block->getMandatory() != 2) {
-                foreach ($this->block->getPrograms() as $program) {
-                    $program->removeAllAttendees();
+                if ($this->subeventsExists) {
+                    $subevent = $values['subevent'] != '' ? $this->subeventRepository->findById($values['subevent']) : null;
+                    $this->block->setSubevent($subevent);
+                } else {
+                    $this->block->setSubevent($this->subeventRepository->findImplicit());
                 }
-            }
 
-            //pridani ucastniku, pokud je pridano automaticke prihlaseni
-            if ($oldMandatory != 2 && $this->block->getMandatory() == 2) {
-                foreach ($this->block->getPrograms() as $program) {
-                    $program->setAttendees($this->userRepository->findProgramAllowed($program));
+                $this->blockRepository->save($this->block);
+
+                //odstraneni ucastniku, pokud se odstrani automaticke prihlasovani
+                if ($oldMandatory == 2 && $this->block->getMandatory() != 2) {
+                    foreach ($this->block->getPrograms() as $program) {
+                        $program->removeAllAttendees();
+                    }
                 }
-            }
 
-            //aktualizace ucastniku pri zmene kategorie nebo podakce
-            if ($oldMandatory == $this->block->getMandatory() && (
-                $this->block->getCategory() !== $oldCategory) || ($this->block->getSubevent() !== $oldSubevent)
-            ) {
-                $this->programRepository->updateUsersPrograms($this->userRepository->findAll());
-            }
+                //pridani ucastniku, pokud je pridano automaticke prihlaseni
+                if ($oldMandatory != 2 && $this->block->getMandatory() == 2) {
+                    foreach ($this->block->getPrograms() as $program) {
+                        $program->setAttendees($this->userRepository->findProgramAllowed($program));
+                    }
+                }
 
-            $this->blockRepository->save($this->block);
+                //aktualizace ucastniku pri zmene kategorie nebo podakce
+                if ($oldMandatory == $this->block->getMandatory() && (
+                        $this->block->getCategory() !== $oldCategory) || ($this->block->getSubevent() !== $oldSubevent)
+                ) {
+                    $this->programRepository->updateUsersPrograms($this->userRepository->findAll());
+                }
+
+                $this->blockRepository->save($this->block);
+            });
         }
     }
 

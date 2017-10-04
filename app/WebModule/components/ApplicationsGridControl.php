@@ -268,30 +268,32 @@ class ApplicationsGridControl extends Control
         }
 
         //zpracovani zmen
-        $application = new Application();
-        $fee = $this->applicationService->countFee($this->user->getRoles(), $selectedSubevents, FALSE);
-        $application->setUser($this->user);
-        $application->setSubevents($selectedSubevents);
-        $application->setApplicationDate(new \DateTime());
-        $application->setApplicationOrder($this->applicationRepository->findLastApplicationOrder() + 1);
-        $application->setMaturityDate($this->applicationService->countMaturityDate());
-        $application->setVariableSymbol($this->applicationService->generateVariableSymbol($this->user));
-        $application->setFee($fee);
-        $application->setState($fee == 0 ? ApplicationState::PAID : ApplicationState::WAITING_FOR_PAYMENT);
-        $application->setFirst(FALSE);
-        $this->applicationRepository->save($application);
+        $this->applicationRepository->getEntityManager()->transactional(function($em) use($selectedSubevents) {
+            $application = new Application();
+            $fee = $this->applicationService->countFee($this->user->getRoles(), $selectedSubevents, FALSE);
+            $application->setUser($this->user);
+            $application->setSubevents($selectedSubevents);
+            $application->setApplicationDate(new \DateTime());
+            $application->setApplicationOrder($this->applicationRepository->findLastApplicationOrder() + 1);
+            $application->setMaturityDate($this->applicationService->countMaturityDate());
+            $application->setVariableSymbol($this->applicationService->generateVariableSymbol($this->user));
+            $application->setFee($fee);
+            $application->setState($fee == 0 ? ApplicationState::PAID : ApplicationState::WAITING_FOR_PAYMENT);
+            $application->setFirst(FALSE);
+            $this->applicationRepository->save($application);
 
-        $this->user->addApplication($application);
-        $this->userRepository->save($this->user);
+            $this->user->addApplication($application);
+            $this->userRepository->save($this->user);
 
-        $this->programRepository->updateUserPrograms($this->user);
-        $this->userRepository->save($this->user);
+            $this->programRepository->updateUserPrograms($this->user);
+            $this->userRepository->save($this->user);
 
-        //zaslani potvrzovaciho e-mailu
-        $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::SUBEVENT_ADDED, [
-            TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-            TemplateVariable::USERS_SUBEVENTS => $this->user->getSubeventsText()
-        ]);
+            //zaslani potvrzovaciho e-mailu
+            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::SUBEVENT_ADDED, [
+                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
+                TemplateVariable::USERS_SUBEVENTS => $this->user->getSubeventsText()
+            ]);
+        });
 
         $this->getPresenter()->flashMessage('web.profile.applications_add_subevents_successful', 'success');
         $this->redirect('this');
@@ -412,45 +414,47 @@ class ApplicationsGridControl extends Control
         }
 
         //zpracovani zmen
-        $this->user->setRoles($selectedRoles);
-        $this->user->setApproved($approved);
-        $this->userRepository->save($this->user);
+        $this->applicationRepository->getEntityManager()->transactional(function($em) use($id, $selectedRoles, $selectedSubevents, $approved) {
+            $this->user->setRoles($selectedRoles);
+            $this->user->setApproved($approved);
+            $this->userRepository->save($this->user);
 
-        $fee = $this->applicationService->countFee($selectedRoles, $selectedSubevents);
-        $application = $this->applicationRepository->findById($id);
+            $fee = $this->applicationService->countFee($selectedRoles, $selectedSubevents);
+            $application = $this->applicationRepository->findById($id);
 
-        if ($this->subeventRepository->explicitSubeventsExists() && !empty($values['subevents']))
-            $application->setSubevents($selectedSubevents);
-        else
-            $application->setSubevents(new ArrayCollection([$this->subeventRepository->findImplicit()]));
+            if ($this->subeventRepository->explicitSubeventsExists() && !empty($values['subevents']))
+                $application->setSubevents($selectedSubevents);
+            else
+                $application->setSubevents(new ArrayCollection([$this->subeventRepository->findImplicit()]));
 
-        $application->setFee($fee);
-        $application->setState($fee == 0 || $application->getPaymentDate()
-            ? ApplicationState::PAID
-            : ApplicationState::WAITING_FOR_PAYMENT);
-        $this->applicationRepository->save($application);
+            $application->setFee($fee);
+            $application->setState($fee == 0 || $application->getPaymentDate()
+                ? ApplicationState::PAID
+                : ApplicationState::WAITING_FOR_PAYMENT);
+            $this->applicationRepository->save($application);
 
-        $this->programRepository->updateUserPrograms($this->user);
-        $this->userRepository->save($this->user);
+            $this->programRepository->updateUserPrograms($this->user);
+            $this->userRepository->save($this->user);
 
-        //zaslani potvrzovaciho e-mailu
-        $rolesNames = [];
-        foreach ($this->user->getRoles() as $role) {
-            $rolesNames[] = $role->getName();
-        }
+            //zaslani potvrzovaciho e-mailu
+            $rolesNames = [];
+            foreach ($this->user->getRoles() as $role) {
+                $rolesNames[] = $role->getName();
+            }
 
-        $subeventsNames = [];
-        foreach ($this->user->getSubevents() as $subevent) {
-            $subeventsNames[] = $subevent->getName();
-        }
+            $subeventsNames = [];
+            foreach ($this->user->getSubevents() as $subevent) {
+                $subeventsNames[] = $subevent->getName();
+            }
 
-        $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::REGISTRATION_CHANGED, [
-            TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-            TemplateVariable::USERS_ROLES => implode(', ', $rolesNames),
-            TemplateVariable::USERS_SUBEVENTS => implode(', ', $subeventsNames)
-        ]);
+            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::REGISTRATION_CHANGED, [
+                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
+                TemplateVariable::USERS_ROLES => implode(', ', $rolesNames),
+                TemplateVariable::USERS_SUBEVENTS => implode(', ', $subeventsNames)
+            ]);
 
-        $this->authenticator->updateRoles($this->getPresenter()->getUser());
+            $this->authenticator->updateRoles($this->getPresenter()->getUser());
+        });
 
         $this->getPresenter()->flashMessage('web.profile.applications_edit_successful', 'success');
         $this->redirect('this');
