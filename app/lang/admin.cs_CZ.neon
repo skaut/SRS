@@ -249,6 +249,7 @@ program:
     rooms_capacity_format: "Zadejte číslo nebo nechte pole prázdné."
     rooms_capacity_unlimited: "Neomezená"
     rooms_saved: "Místnost byla úspěšně uložena."
+    rooms_group_action_export_rooms_schedules: "Vyexportovat harmonogramy místností."
     rooms_delete_confirm: "Odstraněním místnosti odeberete místnost všem programům. Opravdu chcete místnost odstranit?"
     rooms_deleted: "Místnost byla úspěšně odstraněna."
     rooms_detail_heading: "Detail místnosti: %name%"

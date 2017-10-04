@@ -4,9 +4,12 @@ namespace App\AdminModule\ProgramModule\Components;
 
 use App\Model\Program\Room;
 use App\Model\Program\RoomRepository;
+use App\Services\ExcelExportService;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\Http\Session;
+use Nette\Http\SessionSection;
 use Ublaboo\DataGrid\DataGrid;
 
 
@@ -23,18 +26,32 @@ class RoomsGridControl extends Control
     /** @var RoomRepository */
     private $roomRepository;
 
+    /** @var ExcelExportService */
+    private $excelExportService;
+
+    /** @var Session */
+    private $session;
+
+    /** @var SessionSection */
+    private $sessionSection;
+
 
     /**
      * RoomsGridControl constructor.
      * @param Translator $translator
      * @param RoomRepository $roomRepository
      */
-    public function __construct(Translator $translator, RoomRepository $roomRepository)
+    public function __construct(Translator $translator, RoomRepository $roomRepository,
+                                ExcelExportService $excelExportService, Session $session)
     {
         parent::__construct();
 
         $this->translator = $translator;
         $this->roomRepository = $roomRepository;
+        $this->excelExportService = $excelExportService;
+
+        $this->session = $session;
+        $this->sessionSection = $session->getSection('srs');
     }
 
     /**
@@ -56,6 +73,11 @@ class RoomsGridControl extends Control
         $grid->setDataSource($this->roomRepository->createQueryBuilder('r'));
         $grid->setDefaultSort(['name' => 'ASC']);
         $grid->setPagination(FALSE);
+
+
+        $grid->addGroupAction('admin.program.rooms_group_action_export_rooms_schedules')
+            ->onSelect[] = [$this, 'groupExportRoomsSchedules'];
+
 
         $grid->addColumnText('name', 'admin.program.rooms_name');
 
@@ -160,5 +182,29 @@ class RoomsGridControl extends Control
         $this->getPresenter()->flashMessage('admin.program.rooms_deleted', 'success');
 
         $this->redirect('this');
+    }
+
+    /**
+     * Hromadně vyexportuje harmonogramy místností.
+     * @param array $ids
+     */
+    public function groupExportRoomsSchedules(array $ids)
+    {
+        $this->sessionSection->roomIds = $ids;
+        $this->redirect('exportroomsschedules'); //presmerovani kvuli zruseni ajax
+    }
+
+    /**
+     * Zpracuje export harmonogramů místností.
+     */
+    public function handleExportRoomsSchedules()
+    {
+        $ids = $this->session->getSection('srs')->roomIds;
+
+        $blocks = $this->roomRepository->findRoomsByIds($ids);
+
+        $response = $this->excelExportService->exportRoomsSchedules($blocks, "harmonogramy-mistnosti.xlsx");
+
+        $this->getPresenter()->sendResponse($response);
     }
 }
