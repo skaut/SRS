@@ -185,7 +185,7 @@ class EditRoleForm extends Nette\Object
     {
         if (!$form['cancel']->isSubmittedBy()) {
             $this->roleRepository->getEntityManager()->transactional(function($em) use($values) {
-                $capacity = $values['capacity'] !== '' ? $values['capacity'] : null;
+                $capacity = $values['capacity'] !== '' ? $values['capacity'] : NULL;
 
                 $this->role->setName($values['name']);
                 $this->role->setRegisterable($values['registerable']);
@@ -202,7 +202,7 @@ class EditRoleForm extends Nette\Object
                 $this->role->setRequiredRoles($this->roleRepository->findRolesByIds($values['requiredRoles']));
 
                 if ($values['feeFromSubevents'])
-                    $this->role->setFee(null);
+                    $this->role->setFee(NULL);
                 else
                     $this->role->setFee($values['fee']);
 

@@ -221,9 +221,9 @@ class BlockForm extends Nette\Object
                 $oldCategory = $this->block->getCategory();
                 $oldSubevent = $this->block->getSubevent();
 
-                $category = $values['category'] != '' ? $this->categoryRepository->findById($values['category']) : null;
-                $lector = $values['lector'] != '' ? $this->userRepository->findById($values['lector']) : null;
-                $capacity = $values['capacity'] !== '' ? $values['capacity'] : null;
+                $category = $values['category'] != '' ? $this->categoryRepository->findById($values['category']) : NULL;
+                $lector = $values['lector'] != '' ? $this->userRepository->findById($values['lector']) : NULL;
+                $capacity = $values['capacity'] !== '' ? $values['capacity'] : NULL;
 
                 $this->block->setName($values['name']);
                 $this->block->setCategory($category);
@@ -236,7 +236,7 @@ class BlockForm extends Nette\Object
                 $this->block->setTools($values['tools']);
 
                 if ($this->subeventsExists) {
-                    $subevent = $values['subevent'] != '' ? $this->subeventRepository->findById($values['subevent']) : null;
+                    $subevent = $values['subevent'] != '' ? $this->subeventRepository->findById($values['subevent']) : NULL;
                     $this->block->setSubevent($subevent);
                 } else {
                     $this->block->setSubevent($this->subeventRepository->findImplicit());
