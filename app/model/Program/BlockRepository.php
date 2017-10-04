@@ -4,6 +4,7 @@ namespace App\Model\Program;
 
 use App\Model\User\User;
 use App\Model\User\UserRepository;
+use Doctrine\Common\Collections\Criteria;
 use Kdyby\Doctrine\EntityRepository;
 
 
@@ -180,6 +181,18 @@ class BlockRepository extends EntityRepository
         return array_map(function ($o) {
             return $o->getId();
         }, $blocks->toArray());
+    }
+
+    /**
+     * Vrací bloky podle id.
+     * @param $ids
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function findBlocksByIds($ids)
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->in('id', $ids));
+        return $this->matching($criteria);
     }
 
     /**

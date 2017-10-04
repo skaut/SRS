@@ -148,14 +148,7 @@ class ApplicationsGridControl extends Control
             });
 
         if ($this->subeventRepository->explicitSubeventsExists()) {
-            $grid->addColumnText('subevents', 'admin.users.users_applications_subevents')
-                ->setRenderer(function ($row) {
-                    $subevents = [];
-                    foreach ($row->getSubevents() as $subevent) {
-                        $subevents[] = $subevent->getName();
-                    }
-                    return implode(", ", $subevents);
-                });
+            $grid->addColumnText('subevents', 'admin.users.users_applications_subevents', 'subeventsText');
         }
 
         $grid->addColumnNumber('fee', 'admin.users.users_applications_fee');

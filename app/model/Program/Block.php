@@ -149,6 +149,21 @@ class Block
     }
 
     /**
+     * Vrací seznam účastníků bloku.
+     * @return ArrayCollection
+     */
+    public function getAttendees()
+    {
+        $attendees = new ArrayCollection();
+        foreach ($this->programs as $program) {
+            foreach ($program->getAttendees() as $attendee) {
+                $attendees->add($attendee);
+            }
+        }
+        return $attendees;
+    }
+
+    /**
      * Vrací počet programů bloku.
      * @return int
      */

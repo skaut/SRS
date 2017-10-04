@@ -55,11 +55,7 @@
 
                     <tr>
                         <th>{_admin.users.users_address}</th>
-                        <td>
-                            {if !(empty($detailUser->getStreet()) || empty($detailUser->getCity()) || empty($detailUser->getPostcode()))}
-                                {$detailUser->getStreet()}, {$detailUser->getCity()}, {$detailUser->getPostcode()}
-                            {/if}
-                        </td>
+                        <td>{$detailUser->getAddress()}</td>
                     </tr>
 
                     <tr>

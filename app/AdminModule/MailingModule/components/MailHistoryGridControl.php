@@ -56,23 +56,9 @@ class MailHistoryGridControl extends Control
         $grid->setDefaultSort(['datetime' => 'DESC']);
         $grid->setPagination(TRUE);
 
-        $grid->addColumnText('recipientRoles', 'admin.mailing.history_recipient_roles')
-            ->setRenderer(function ($row) {
-                $roles = [];
-                foreach ($row->getRecipientRoles() as $role) {
-                    $roles[] = $role->getName();
-                }
-                return implode(", ", $roles);
-            });
+        $grid->addColumnText('recipientRoles', 'admin.mailing.history_recipient_roles', 'recipientRolesText');
 
-        $grid->addColumnText('recipientUsers', 'admin.mailing.history_recipient_users')
-            ->setRenderer(function ($row) {
-                $users = [];
-                foreach ($row->getRecipientUsers() as $user) {
-                    $users[] = $user->getDisplayName();
-                }
-                return implode(", ", $users);
-            });
+        $grid->addColumnText('recipientUsers', 'admin.mailing.history_recipient_users', 'recipientUsersText');
 
         $grid->addColumnText('subject', 'admin.mailing.history_subject');
 

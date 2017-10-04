@@ -14,6 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\PersistentCollection;
+use function GuzzleHttp\Psr7\str;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 use Nette\DateTime;
 
@@ -363,6 +364,18 @@ class User
         return $this->roles->filter(function ($item) use ($role) {
                 return $item == $role;
         })->count() != 0;
+    }
+
+    /**
+     * Vrátí role uživatele oddělené čárkou.
+     * @return string
+     */
+    public function getRolesText() {
+        $rolesNames = [];
+        foreach ($this->roles as $role) {
+            $rolesNames[] = $role->getName();
+        }
+        return implode(', ', $rolesNames);
     }
 
     /**
@@ -854,6 +867,17 @@ class User
     }
 
     /**
+     * Vrátí adresu uživatele.
+     * @return null|string
+     */
+    public function getAddress()
+    {
+        if (empty($this->street) || empty($this->city) || empty($this->postcode))
+            return NULL;
+        return $this->street . ', ' . $this->city . ', ' . $this->postcode;
+    }
+
+    /**
      * @param string $state
      */
     public function setState($state)
@@ -1134,6 +1158,18 @@ class User
     }
 
     /**
+     * Vrátí podakce uživatele oddělené čárkou.
+     * @return string
+     */
+    public function getSubeventsText() {
+        $subeventsNames = [];
+        foreach ($this->getSubevents() as $subevent) {
+            $subeventsNames[] = $subevent->getName();
+        }
+        return implode(', ', $subeventsNames);
+    }
+
+    /**
      * Vrací, zda je uživatel přihlášen na podakci.
      * @param Subevent $subevent
      * @return bool
@@ -1174,5 +1210,17 @@ class User
             return TRUE;
 
         return FALSE;
+    }
+
+    /**
+     * Vrátí variabilní symboly oddělené čárkou.
+     * @return string
+     */
+    public function getVariableSymbolsText()
+    {
+        $variableSymbols = [];
+        foreach ($this->applications as $application)
+            $variableSymbols[] = $application->getVariableSymbol();
+        return implode(', ', $variableSymbols);
     }
 }

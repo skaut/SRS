@@ -95,6 +95,19 @@ class Mail
     }
 
     /**
+     * Vrací příjemce (role) oddělené čárkou.
+     * @return string
+     */
+    public function getRecipientRolesText()
+    {
+        $rolesNames = [];
+        foreach ($this->recipientRoles as $role) {
+            $rolesNames[] = $role->getName();
+        }
+        return implode(', ', $rolesNames);
+    }
+
+    /**
      * @return ArrayCollection
      */
     public function getRecipientUsers()
@@ -108,6 +121,19 @@ class Mail
     public function setRecipientUsers($recipientUsers)
     {
         $this->recipientUsers = $recipientUsers;
+    }
+
+    /**
+     * Vrací příjemce (uživatele) oddělené čárkou.
+     * @return string
+     */
+    public function getRecipientUsersText()
+    {
+        $usersNames = [];
+        foreach ($this->recipientUsers as $user) {
+            $usersNames[] = $user->getDisplayName();
+        }
+        return implode(', ', $usersNames);
     }
 
     /**
