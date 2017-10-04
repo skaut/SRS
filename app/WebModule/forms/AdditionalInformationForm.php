@@ -6,6 +6,7 @@ use App\Model\Enums\ApplicationState;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
+use App\Model\User\CustomInputValue\CustomInputValueRepository;
 use App\Model\User\CustomInputValue\CustomSelectValue;
 use App\Model\User\CustomInputValue\CustomTextValue;
 use App\Model\User\User;
@@ -41,19 +42,26 @@ class AdditionalInformationForm extends Nette\Object
     /** @var ApplicationService */
     private $applicationService;
 
+    /** @var CustomInputValueRepository */
+    private $customInputValueRepository;
+
 
     /**
      * AdditionalInformationForm constructor.
      * @param BaseForm $baseFormFactory
      * @param UserRepository $userRepository
+     * @param CustomInputRepository $customInputRepository
+     * @param ApplicationService $applicationService
      */
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
-                                CustomInputRepository $customInputRepository, ApplicationService $applicationService)
+                                CustomInputRepository $customInputRepository, ApplicationService $applicationService,
+                                CustomInputValueRepository $customInputValueRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->userRepository = $userRepository;
         $this->customInputRepository = $customInputRepository;
         $this->applicationService = $applicationService;
+        $this->customInputValueRepository = $customInputValueRepository;
     }
 
     /**
