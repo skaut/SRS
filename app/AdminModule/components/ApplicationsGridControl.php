@@ -310,11 +310,11 @@ class ApplicationsGridControl extends Control
                 $this->user->setRoles($selectedRoles);
                 $this->userRepository->save($this->user);
                 $application->setFirst(TRUE);
+                $fee = $this->applicationService->countFee($selectedRoles, $selectedSubevents);
             } else {
                 $application->setFirst(FALSE);
+                $fee = $this->applicationService->countFee($this->user->getRoles(), $selectedSubevents, FALSE);
             }
-
-            $fee = $this->applicationService->countFee($selectedRoles, $selectedSubevents);
 
             $application->setUser($this->user);
             if ($this->subeventRepository->explicitSubeventsExists())
@@ -409,7 +409,7 @@ class ApplicationsGridControl extends Control
                     if ($application->isFirst())
                         $fee = $this->applicationService->countFee($selectedRoles, $selectedSubevents);
                     else
-                        $fee = $this->applicationService->countFee($selectedRoles, $application->getSubevents(), false);
+                        $fee = $this->applicationService->countFee($selectedRoles, $application->getSubevents(), FALSE);
                     $application->setFee($fee);
                     $application->setState($fee == 0 || $application->getPaymentDate()
                         ? ApplicationState::PAID
@@ -417,7 +417,7 @@ class ApplicationsGridControl extends Control
                     $this->applicationRepository->save($application);
                 }
             } else {
-                $fee = $this->applicationService->countFee($this->user->getRoles(), $selectedSubevents, false);
+                $fee = $this->applicationService->countFee($this->user->getRoles(), $selectedSubevents, FALSE);
                 $application->setFee($fee);
                 $application->setState($fee == 0 || $application->getPaymentDate()
                     ? ApplicationState::PAID
