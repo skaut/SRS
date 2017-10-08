@@ -99,7 +99,7 @@ class DiscountForm extends UI\Control
 
         $form->addHidden('condition');
 
-        $form->addText('conditionText', 'admin.configuration.discounts_condition')
+        $form->addTextArea('conditionText', 'admin.configuration.discounts_condition')
             ->setAttribute('readonly', TRUE);
 
         $form->addText('discount', 'admin.configuration.discounts_discount')
