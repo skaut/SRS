@@ -11,6 +11,7 @@ use App\WebModule\Components\IHtmlContentControlFactory;
 use App\WebModule\Components\IImageContentControlFactory;
 use App\WebModule\Components\ILectorsContentControlFactory;
 use App\WebModule\Components\INewsContentControlFactory;
+use App\WebModule\Components\IOrganizerContentControlFactory;
 use App\WebModule\Components\IPlaceContentControlFactory;
 use App\WebModule\Components\IProgramsContentControlFactory;
 use App\WebModule\Components\ITextContentControlFactory;
@@ -104,6 +105,12 @@ class PagePresenter extends WebBasePresenter
      */
     public $lectorsContentControlFactory;
 
+    /**
+     * @var IOrganizerContentControlFactory
+     * @inject
+     */
+    public $organizerContentControlFactory;
+
 
     public function renderDefault($slug)
     {
@@ -190,5 +197,10 @@ class PagePresenter extends WebBasePresenter
     protected function createComponentLectorsContent()
     {
         return $this->lectorsContentControlFactory->create();
+    }
+
+    protected function createComponentOrganizerContent()
+    {
+        return $this->organizerContentControlFactory->create();
     }
 }

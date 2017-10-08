@@ -181,6 +181,7 @@ services:
     - App\WebModule\Components\IUsersContentControlFactory
     - App\WebModule\Components\ILectorsContentControlFactory
     - App\WebModule\Components\IApplicationsGridControlFactory
+    - App\WebModule\Components\IOrganizerContentControlFactory
 
     - App\WebModule\Forms\BaseForm
     - App\WebModule\Forms\AdditionalInformationForm

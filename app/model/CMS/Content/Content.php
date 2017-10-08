@@ -30,7 +30,8 @@ use Nette\Application\UI\Form;
  *     "users_content" = "UsersContent",
  *     "lectors_content" = "LectorsContent",
  *     "blocks_content" = "BlocksContent",
- *     "capacities_content" = "CapacitiesContent"
+ *     "capacities_content" = "CapacitiesContent",
+ *     "organizer_content" = "OrganizerContent"
  * })
  */
 abstract class Content implements IContent
@@ -100,6 +101,11 @@ abstract class Content implements IContent
      */
     const CAPACITIES = 'capacities';
 
+    /**
+     * OrganizerContent
+     */
+    const ORGANIZER = 'organizer';
+
 
     /**
      * Hlavní oblast stránky.
@@ -110,6 +116,7 @@ abstract class Content implements IContent
      * Postranní panel stránky.
      */
     const SIDEBAR = 'sidebar';
+
 
     public static $types = [
         self::TEXT,
@@ -124,7 +131,8 @@ abstract class Content implements IContent
         self::USERS,
         self::LECTORS,
         self::BLOCKS,
-        self::CAPACITIES
+        self::CAPACITIES,
+        self::ORGANIZER
     ];
 
     public static $areas = [

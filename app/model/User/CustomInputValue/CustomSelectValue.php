@@ -16,7 +16,7 @@ class CustomSelectValue extends CustomInputValue implements ICustomInputValue
 {
     /**
      * Vybraná položka výběrového pole přihlášky.
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      * @var int
      */
     protected $value;

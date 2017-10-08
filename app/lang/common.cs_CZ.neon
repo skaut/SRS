@@ -49,6 +49,7 @@ content:
         lectors: "Přehled lektorů"
         blocks: "Program semináře"
         capacities: "Kapacita semináře"
+        organizer: "Pořadatel"
 
     default_heading:
         text: ""
@@ -64,6 +65,7 @@ content:
         lectors: "Přehled lektorů"
         blocks: "Program semináře"
         capacities: "Kapacita semináře"
+        organizer: "Pořadatel"
 
 area:
     main: "Hlavní oblast"
