@@ -13,12 +13,14 @@
                 <a href="{plink Subevents:default}">{_admin.configuration.menu_subevents}</a>
             </li>
 
+            {if $explicitSubeventsExists}
+                <li {ifCurrent Discounts:*}class="active"{/ifCurrent}>
+                    <a href="{plink Discounts:default}">{_admin.configuration.menu_discounts}</a>
+                </li>
+            {/if}
+
             <li {ifCurrent Payment:*}class="active"{/ifCurrent}>
                 <a href="{plink Payment:default}">{_admin.configuration.menu_payment}</a>
-            </li>
-
-            <li {ifCurrent Discounts:*}class="active"{/ifCurrent}>
-                <a href="{plink Discounts:default}">{_admin.configuration.menu_discounts}</a>
             </li>
 
             <li {ifCurrent Application:*}class="active"{/ifCurrent}>

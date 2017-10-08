@@ -1,7 +1,7 @@
 <script>
     $(function () {
         var condition = $('input[name=condition]');
-        var conditionText = $('input[name=conditionText]');
+        var conditionText = $('textarea[name=conditionText]');
 
         var buttonSubevent = $('#button-subevent');
         var buttonSubevents = $('.button-subevents');
@@ -36,8 +36,6 @@
                 buttonRightParenthesis.removeClass('disabled');
             else
                 buttonRightParenthesis.addClass('disabled');
-
-            conditionText.get(0).scrollLeft = conditionText.get(0).scrollWidth;
         });
 
         buttonAnd.on('click', function () {
@@ -49,8 +47,6 @@
             buttonOr.addClass('disabled');
             buttonLeftParenthesis.removeClass('disabled');
             buttonRightParenthesis.addClass('disabled');
-
-            conditionText.get(0).scrollLeft = conditionText.get(0).scrollWidth;
         });
 
         buttonOr.on('click', function () {
@@ -62,8 +58,6 @@
             buttonOr.addClass('disabled');
             buttonLeftParenthesis.removeClass('disabled');
             buttonRightParenthesis.addClass('disabled');
-
-            conditionText.get(0).scrollLeft = conditionText.get(0).scrollWidth;
         });
 
         buttonLeftParenthesis.on('click', function () {
@@ -77,8 +71,6 @@
             buttonOr.addClass('disabled');
             buttonLeftParenthesis.removeClass('disabled');
             buttonRightParenthesis.addClass('disabled');
-
-            conditionText.get(0).scrollLeft = conditionText.get(0).scrollWidth;
         });
 
         buttonRightParenthesis.on('click', function () {
@@ -95,21 +87,19 @@
                 buttonRightParenthesis.removeClass('disabled');
             else
                 buttonRightParenthesis.addClass('disabled');
-
-            conditionText.get(0).scrollLeft = conditionText.get(0).scrollWidth;
         });
 
         buttonClear.on('click', function () {
             condition.val('');
             conditionText.val('');
 
+            openedParenthesisCount = 0;
+
             buttonSubevent.removeClass('disabled');
             buttonAnd.addClass('disabled');
             buttonOr.addClass('disabled');
             buttonLeftParenthesis.removeClass('disabled');
             buttonRightParenthesis.addClass('disabled');
-
-            conditionText.get(0).scrollLeft = conditionText.get(0).scrollWidth;
         });
     });
 </script>
@@ -128,10 +118,16 @@
         </div>
 
         <div class="col-sm-9 col-xs-9">
-            <div class="input-group">
-                {input $input}
+            {input $input}
+        </div>
+    </div>
 
-                <span class="input-group-btn">
+    <div class="form-group">
+        <div class="col-sm-3 col-xs-3 control-label"></div>
+
+        <div class="col-sm-9 col-xs-9">
+            <div class="btn-group">
+                <div class="btn-group">
                     <a href="#" id="button-subevent" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                         Podakce <span class="caret"></span>
                     </a>
@@ -144,17 +140,17 @@
                             </li>
                         {/foreach}
                     </ul>
+                </div>
 
-                    <a href="#" id="button-and" class="btn btn-default">{_common.condition_operator.and}</a>
-                    <a href="#" id="button-or" class="btn btn-default">{_common.condition_operator.or}</a>
+                <a href="#" id="button-and" class="btn btn-default">{_common.condition_operator.and}</a>
+                <a href="#" id="button-or" class="btn btn-default">{_common.condition_operator.or}</a>
 
-                    <a href="#" id="button-left-parenthesis"  class="btn btn-default">(</a>
-                    <a href="#" id="button-right-parenthesis" class="btn btn-default">)</a>
+                <a href="#" id="button-left-parenthesis"  class="btn btn-default">(</a>
+                <a href="#" id="button-right-parenthesis" class="btn btn-default">)</a>
+            </div>
 
-                    <a href="#" id="button-clear" class="btn btn-danger btn-last">
-                        <span class="fa fa-remove"></span>
-                    </a>
-                </span>
+            <div class="btn-group">
+                <a href="#" id="button-clear" class="btn btn-danger btn-last"><span class="fa fa-remove"></span></a>
             </div>
         </div>
     </div>
