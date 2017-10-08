@@ -204,19 +204,21 @@
                                     </a>
                                 </div>
 
+                                {if $explicitSubeventsExists}
+                                    <div class="col-sm-2 col-xs-2">
+                                        <a href="{plink Configuration:Discounts:default}" class="btn btn-default btn-sm btn-block">
+                                            <span class="fa fa-2x fa-money"></span>
+                                            <br>
+                                            {_admin.configuration.menu_discounts}
+                                        </a>
+                                    </div>
+                                {/if}
+
                                 <div class="col-sm-2 col-xs-2">
                                     <a href="{plink Configuration:Payment:default}" class="btn btn-default btn-sm btn-block">
                                         <span class="fa fa-2x fa-money"></span>
                                         <br>
                                         {_admin.configuration.menu_payment}
-                                    </a>
-                                </div>
-
-                                <div class="col-sm-2 col-xs-2">
-                                    <a href="{plink Configuration:Discounts:default}" class="btn btn-default btn-sm btn-block">
-                                        <span class="fa fa-2x fa-money"></span>
-                                        <br>
-                                        {_admin.configuration.menu_discounts}
                                     </a>
                                 </div>
 
