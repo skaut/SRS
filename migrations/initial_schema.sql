@@ -242,6 +242,13 @@ CREATE TABLE `news_content` (
   CONSTRAINT `FK_A9212C4FBF396750` FOREIGN KEY (`id`) REFERENCES `content` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+CREATE TABLE `organizer_content` (
+  `id` int(11) NOT NULL,
+  `organizer` VARCHAR(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `FK_B7F48760BF396750` FOREIGN KEY (`id`) REFERENCES `content` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 CREATE TABLE `page` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,

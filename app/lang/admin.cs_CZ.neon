@@ -89,6 +89,7 @@ cms:
     pages_content_news_count_note: "Pokud necháte počet prázdný, zobrazí se všechny aktuality."
     pages_content_text: "Text"
     pages_content_users_roles: "Zobrazované role"
+    pages_content_organizer: "Pořadatel"
 
     news_heading: "Aktuality"
     news_published: "Zveřejnit"
