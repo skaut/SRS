@@ -187,6 +187,7 @@ programs_content:
     login_required_end: "."
     register_programs_not_allowed: "Zapisování programů není v tuto chvíli povoleno."
     unapproved_register_programs: "Vaše role nemá právo zapisovat si programy."
+    register_programs_allowed_after_payment: "Zápis programů je možný až po zaplacení."
     mandatory_programs_not_registered: "Máte nepřihlášené povinné programy (v kalendáři červeně). Prosíme, zapište si je."
     category: "Kategorie"
     lector: "Lektor"

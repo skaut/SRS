@@ -36,6 +36,10 @@
                 <div class="alert alert-warning alert-forever">
                     {_web.programs_content.register_programs_not_allowed}
                 </div>
+            {elseif $userWaitingForPayment}
+                <div class="alert alert-warning alert-forever">
+                    {_web.programs_content.register_programs_allowed_after_payment}
+                </div>
             {/if}
 
             {var $userAllowedRegisterPrograms = $registerProgramsAllowed && $userHasPermission}
