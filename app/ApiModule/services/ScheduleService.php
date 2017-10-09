@@ -380,6 +380,7 @@ class ScheduleService extends Nette\Object
         $blockDetailDTO->setCategory($block->getCategory() ? $block->getCategory()->getName() : '');
         $blockDetailDTO->setLector($block->getLector() ? $block->getLector()->getDisplayName() : '');
         $blockDetailDTO->setAboutLector($block->getLector() ? $block->getLector()->getAbout() : '');
+        $blockDetailDTO->setLectorPhoto($block->getLector() ? $block->getLector()->getPhoto() : NULL);
         $blockDetailDTO->setDurationHours(floor($block->getDuration() / 60));
         $blockDetailDTO->setDurationMinutes($block->getDuration() % 60);
         $blockDetailDTO->setCapacity($block->getCapacity());
