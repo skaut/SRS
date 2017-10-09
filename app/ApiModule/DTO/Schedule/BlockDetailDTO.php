@@ -44,6 +44,12 @@ class BlockDetailDTO extends Nette\Object
     private $aboutLector;
 
     /**
+     * @JMS\Type("string")
+     * @var string
+     */
+    private $lectorPhoto;
+
+    /**
      * @JMS\Type("int")
      * @var int
      */
@@ -182,6 +188,22 @@ class BlockDetailDTO extends Nette\Object
     public function setAboutLector($aboutLector)
     {
         $this->aboutLector = $aboutLector;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLectorPhoto()
+    {
+        return $this->lectorPhoto;
+    }
+
+    /**
+     * @param string $lectorPhoto
+     */
+    public function setLectorPhoto($lectorPhoto)
+    {
+        $this->lectorPhoto = $lectorPhoto;
     }
 
     /**

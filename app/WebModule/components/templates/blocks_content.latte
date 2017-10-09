@@ -99,7 +99,13 @@
 
                     {if $selectedBlock->getLector() && $selectedBlock->getLector()->getAbout()}
                         <h5>{_web.blocks_content.about_lector}</h5>
-                        <p>{$selectedBlock->getLector()->getAbout()}</p>
+                        <p>
+                            {if $selectedBlock->getLector()->getPhoto()}
+                                <img src="{$basePath}/files/user_photos/{$selectedBlock->getLector()->getPhoto()}"
+                                     style="float: left; margin: 0 10px 10px 0;"/>
+                            {/if}
+                            {$selectedBlock->getLector()->getAbout()}
+                        </p>
                     {/if}
                 </div>
             {else}

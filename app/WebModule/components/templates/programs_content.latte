@@ -118,7 +118,12 @@
                                     <div ng-bind-html="event.block.description"></div>
 
                                     <h5><strong>{_web.programs_content.about_lector}</strong></h5>
-                                    <p>{{ event.block.about_lector }}</p>
+                                    <p>
+                                        <img ng-src="{$basePath}/files/user_photos/{{ event.block.lector_photo }}"
+                                             ng-if="event.block.lector_photo"
+                                             style="float: left; margin: 0 10px 10px 0;"/>
+                                        {{ event.block.about_lector }}
+                                    </p>
                                 </div>
 
                                 <div class="modal-footer">
