@@ -21,6 +21,7 @@ use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
+use App\Services\ProgramService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Kdyby\Translation\Translator;
 use Nette;
@@ -54,6 +55,9 @@ class ScheduleService extends Nette\Object
     /** @var SettingsRepository */
     private $settingsRepository;
 
+    /** @var ProgramService */
+    private $programService;
+
 
     /**
      * ScheduleService constructor.
@@ -63,10 +67,12 @@ class ScheduleService extends Nette\Object
      * @param BlockRepository $blockRepository
      * @param RoomRepository $roomRepository
      * @param SettingsRepository $settingsRepository
+     * @param ProgramService $programService
      */
     public function __construct(Translator $translator, UserRepository $userRepository,
                                 ProgramRepository $programRepository, BlockRepository $blockRepository,
-                                RoomRepository $roomRepository, SettingsRepository $settingsRepository)
+                                RoomRepository $roomRepository, SettingsRepository $settingsRepository,
+                                ProgramService $programService)
     {
         $this->translator = $translator;
         $this->userRepository = $userRepository;
@@ -74,6 +80,7 @@ class ScheduleService extends Nette\Object
         $this->blockRepository = $blockRepository;
         $this->roomRepository = $roomRepository;
         $this->settingsRepository = $settingsRepository;
+        $this->programService = $programService;
     }
 
     /**
@@ -272,10 +279,7 @@ class ScheduleService extends Nette\Object
 
         if (!$this->user->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS))
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_user_not_allowed_register_programs'));
-        elseif (!($this->settingsRepository->getValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS) &&
-            $this->settingsRepository->getDateTimeValue(Settings::REGISTER_PROGRAMS_FROM) <= new \DateTime() &&
-            $this->settingsRepository->getDateTimeValue(Settings::REGISTER_PROGRAMS_TO) >= new \DateTime())
-        )
+        elseif (!$this->programService->isAllowedRegisterPrograms())
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_register_programs_not_allowed'));
         elseif (!$this->settingsRepository->getValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT) &&
             $this->user->getApplicationWithSubevent($program->getBlock()->getSubevent())->getState() != ApplicationState::PAID
@@ -322,10 +326,7 @@ class ScheduleService extends Nette\Object
         $responseDTO = new ResponseDTO();
         $responseDTO->setStatus('danger');
 
-        if (!($this->settingsRepository->getValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS) &&
-            $this->settingsRepository->getDateTimeValue(Settings::REGISTER_PROGRAMS_FROM) <= new \DateTime() &&
-            $this->settingsRepository->getDateTimeValue(Settings::REGISTER_PROGRAMS_TO) >= new \DateTime())
-        )
+        if (!$this->programService->isAllowedRegisterPrograms())
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_register_programs_not_allowed'));
         elseif (!$program)
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_program_not_found'));

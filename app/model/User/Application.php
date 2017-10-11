@@ -68,6 +68,13 @@ class Application
     protected $maturityDate;
 
     /**
+     * Datum zrušení nezaplacené přihlášky.
+     * @ORM\Column(type="date", nullable=true)
+     * @var \DateTime
+     */
+    protected $cancelDate;
+
+    /**
      * Platební metoda.
      * @ORM\Column(type="string", nullable=true)
      * @var string
@@ -254,6 +261,22 @@ class Application
     public function setMaturityDate($maturityDate)
     {
         $this->maturityDate = $maturityDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCancelDate()
+    {
+        return $this->cancelDate;
+    }
+
+    /**
+     * @param mixed $cancelDate
+     */
+    public function setCancelDate($cancelDate)
+    {
+        $this->cancelDate = $cancelDate;
     }
 
     /**

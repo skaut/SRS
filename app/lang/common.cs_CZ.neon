@@ -95,6 +95,11 @@ maturity_type:
     days: "Počet dní"
     work_days: "Počet pracovních dní"
 
+register_programs_type:
+    allowed: "Povoleno"
+    not_allowed: "Zakázáno"
+    allowed_from_to: "Od do"
+
 application_state:
     waiting_for_payment: "Čeká na platbu"
     canceled_not_paid: "Zrušeno (nezaplaceno)"
