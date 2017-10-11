@@ -61,11 +61,6 @@ class Settings
     const IS_ALLOWED_MODIFY_SCHEDULE = 'is_allowed_modify_schedule';
 
     /**
-     * Povoleno přihlašovat se na programy.
-     */
-    const IS_ALLOWED_REGISTER_PROGRAMS = 'is_allowed_register_programs';
-
-    /**
      * Povoleno přihlašovat se na programy před zaplacením.
      */
     const IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT = 'is_allowed_register_programs_before_payment';
@@ -131,6 +126,11 @@ class Settings
     const VARIABLE_SYMBOL_TYPE = 'variable_symbol_type';
 
     /**
+     * Způsob povolení zápisu na programy.
+     */
+    const REGISTER_PROGRAMS_TYPE = 'register_programs_type';
+
+    /**
      * Přihlašování na programy od.
      */
     const REGISTER_PROGRAMS_FROM = 'register_programs_from';
@@ -189,6 +189,11 @@ class Settings
      * Počet dní, kdy zaslat připomenutí splatnosti.
      */
     const MATURITY_REMINDER = 'maturity_reminder';
+
+    /**
+     * Počet dní od splatnosti, kdy zrušit nezaplacené registrace.
+     */
+    const CANCEL_REGISTRATION_AFTER_MATURITY = 'cancel_registration_after_maturity';
 
     /**
      * Úprava vlastních polí povolena do.

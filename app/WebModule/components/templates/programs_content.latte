@@ -34,7 +34,17 @@
                 </div>
             {elseif !$registerProgramsAllowed}
                 <div class="alert alert-warning alert-forever">
-                    {_web.programs_content.register_programs_not_allowed}
+                    {if $registerProgramsNotAllowed}
+                        {_web.programs_content.register_programs_not_allowed}
+                    {else}
+                        {if $registerProgramsFrom !== null && $registerProgramsTo !== null}
+                            {_web.programs_content.register_programs_allowed_from_to, ['from' => $registerProgramsFrom->format('j. n. Y G:i'), 'to' => $registerProgramsTo->format('j. n. Y G:i')]}
+                        {elseif $registerProgramsFrom === null && $registerProgramsTo !== null}
+                            {_web.programs_content.register_programs_was_allowed_to, ['to' => $registerProgramsTo->format('j. n. Y G:i')]}
+                        {elseif $registerProgramsFrom !== null && $registerProgramsTo === null}
+                            {_web.programs_content.register_programs_is_allowed_from, ['from' => $registerProgramsFrom->format('j. n. Y G:i')]}
+                        {/if}
+                    {/if}
                 </div>
             {elseif $userWaitingForPayment}
                 <div class="alert alert-warning alert-forever">

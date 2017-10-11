@@ -65,6 +65,7 @@ services:
     - App\Services\FilesService(%wwwDir%/files)
     - App\Services\MailService
     - App\Services\PdfExportService(%wwwDir%/pdf)
+    - App\Services\ProgramService
     - App\Services\UserService
     - App\Services\SkautIsService
     - App\Commands\ClearCacheCommand(%appDir%/..)

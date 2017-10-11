@@ -6,9 +6,11 @@ use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
+use App\Model\Enums\RegisterProgramsType;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\UserRepository;
+use App\Services\ProgramService;
 use Nette\Application\UI\Control;
 
 
@@ -29,21 +31,26 @@ class ProgramsContentControl extends Control
     /** @var SettingsRepository */
     private $settingsRepository;
 
+    /** @var ProgramService */
+    private $programService;
+
 
     /**
      * ProgramsContentControl constructor.
      * @param UserRepository $userRepository
      * @param RoleRepository $roleRepository
      * @param SettingsRepository $settingsRepository
+     * @param ProgramService $programService
      */
     public function __construct(UserRepository $userRepository, RoleRepository $roleRepository,
-                                SettingsRepository $settingsRepository)
+                                SettingsRepository $settingsRepository, ProgramService $programService)
     {
         parent::__construct();
 
         $this->userRepository = $userRepository;
         $this->roleRepository = $roleRepository;
         $this->settingsRepository = $settingsRepository;
+        $this->programService = $programService;
     }
 
     /**
@@ -58,9 +65,11 @@ class ProgramsContentControl extends Control
 
         $template->backlink = $this->getPresenter()->getHttpRequest()->getUrl()->getPath();
 
-        $template->registerProgramsAllowed = $this->settingsRepository->getValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS) &&
-            $this->settingsRepository->getDateTimeValue(Settings::REGISTER_PROGRAMS_FROM) <= new \DateTime() &&
-            $this->settingsRepository->getDateTimeValue(Settings::REGISTER_PROGRAMS_TO) >= new \DateTime();
+        $template->registerProgramsAllowed = $this->programService->isAllowedRegisterPrograms();
+        $template->registerProgramsNotAllowed = $this->settingsRepository->getValue(Settings::REGISTER_PROGRAMS_TYPE) == RegisterProgramsType::NOT_ALLOWED;
+        $template->registerProgramsAllowedFromTo = $this->settingsRepository->getValue(Settings::REGISTER_PROGRAMS_TYPE) == RegisterProgramsType::ALLOWED_FROM_TO;
+        $template->registerProgramsFrom = $this->settingsRepository->getDateTimeValue(Settings::REGISTER_PROGRAMS_FROM);
+        $template->registerProgramsTo = $this->settingsRepository->getDateTimeValue(Settings::REGISTER_PROGRAMS_TO);
 
         $user = $this->getPresenter()->user;
         $template->guestRole = $user->isInRole($this->roleRepository->findBySystemName(Role::GUEST)->getName());
