@@ -110,7 +110,7 @@ class ExcelExportService extends Nette\Object
         $sheetNumber = 0;
 
         foreach ($users as $user) {
-            $sheet = new \PHPExcel_Worksheet($this->phpExcel, $user->getDisplayName());
+            $sheet = new \PHPExcel_Worksheet($this->phpExcel, $this->truncate($user->getDisplayName(), 28));
             $this->phpExcel->addSheet($sheet, $sheetNumber++);
 
             $row = 1;
@@ -178,7 +178,7 @@ class ExcelExportService extends Nette\Object
         $sheetNumber = 0;
 
         foreach ($rooms as $room) {
-            $sheet = new \PHPExcel_Worksheet($this->phpExcel, $room->getName());
+            $sheet = new \PHPExcel_Worksheet($this->phpExcel, $this->truncate($room->getName(), 28));
             $this->phpExcel->addSheet($sheet, $sheetNumber++);
 
             $row = 1;
@@ -437,7 +437,7 @@ class ExcelExportService extends Nette\Object
         $sheetNumber = 0;
 
         foreach ($blocks as $block) {
-            $sheet = new \PHPExcel_Worksheet($this->phpExcel, $this->truncate($block->getName(), 29));
+            $sheet = new \PHPExcel_Worksheet($this->phpExcel, $this->truncate($block->getName(), 28));
             $this->phpExcel->addSheet($sheet, $sheetNumber++);
 
             $row = 1;
@@ -483,8 +483,8 @@ class ExcelExportService extends Nette\Object
     {
         if (strlen($text) > $length) {
             $text = $text . " ";
-            $text = substr($text, 0, $length);
-            $text = substr($text, 0, strrpos($text, ' '));
+            $text = mb_substr($text, 0, $length, 'UTF-8');
+            $text = mb_substr($text, 0, strrpos($text, ' '), 'UTF-8');
             $text = $text . "...";
         }
         return $text;
