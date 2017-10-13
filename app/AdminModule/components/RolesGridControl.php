@@ -149,6 +149,7 @@ class RolesGridControl extends Control
             foreach ($usersInRole as $user) {
                 if ($user->getRoles()->isEmpty()) {
                     $user->addRole($this->roleRepository->findBySystemName(Role::NONREGISTERED));
+                    $user->setApproved(TRUE);
                     $this->userRepository->save($user);
                 }
             }
