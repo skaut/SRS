@@ -8,7 +8,7 @@ INSERT INTO `content` (`id`, `page_id`, `heading`, `area`, `position`, `type`) V
   (2, 1, 'Pořadatel', 'sidebar', 1, 'organizer_content');
 
 INSERT INTO `organizer_content` (`id`, `organizer`) VALUES
-  (2, 'Junák - český skaut, z. s.');
+  (2, 'Akci pořádá Junák - český skaut, z. s.');
 
 INSERT INTO `page` (`id`, `name`, `slug`, `position`, `public`) VALUES
   (1, 'Homepage', '/', 1, 1);
@@ -90,29 +90,29 @@ INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
   (8, 13);
 
 INSERT INTO `settings` (`item`, `value`) VALUES
-  ('account_number', 'Konfigurace -> Platba a doklady -> Číslo účtu'),
-  ('accountant', 'Konfigurace -> Platba a doklady -> Pokladník'),
+  ('account_number', ''),
+  ('accountant', ''),
   ('admin_created', '0'),
   ('application_agreement', 'Souhlasím se zpracováním mých osobních údajů pro potřeby účasti na této akci v rozsahu a dle pravidel daných přihláškou člena do organizace. Souhlasím s pořizování foto, audio a video záznamů z akce a souhlasím s jejich využítím pro potřeby Junáka - českého skauta. Tím není dotčeno mé právo pro konkrétní situaci souhlas omezit nebo vyloučit, a to sdělením vedoucímu programu předem. Osobní údaje jsou zpracovávány v souladu se zákonem č. 101/2000 Sb. na ochranu osobních údajů.'),
-  ('company', 'Konfigurace -> Platba a doklady -> Firma'),
+  ('company', ''),
   ('display_users_roles', '1'),
-  ('edit_registration_to', '2017-03-31'),
-  ('footer', '© 2017 SRS'),
-  ('ico', 'Konfigurace -> Platba a doklady -> IČ'),
+  ('edit_registration_to', CURDATE()),
+  ('footer', CONCAT('© ', YEAR(CURDATE()), ' SRS')),
+  ('ico', ''),
   ('is_allowed_add_block', '1'),
   ('is_allowed_modify_schedule', '1'),
   ('is_allowed_register_programs', '0'),
   ('is_allowed_register_programs_before_payment', '0'),
   ('logo', 'logo.png'),
   ('place_description', NULL),
-  ('print_location', 'Konfigurace -> Platba a doklady -> Místo'),
+  ('print_location', ''),
   ('redirect_after_login', '/'),
-  ('register_programs_from', '2017-03-31T00:07:13+0200'),
-  ('register_programs_to', '2017-04-01T00:07:13+0200'),
+  ('register_programs_from', NULL),
+  ('register_programs_to', NULL),
   ('seminar_email', 'srs@skauting.cz'),
-  ('seminar_from_date', '2017-04-01'),
+  ('seminar_from_date', CURDATE() + 1),
   ('seminar_name', 'Název semináře'),
-  ('seminar_to_date', '2017-04-02'),
+  ('seminar_to_date', CURDATE() + 2),
   ('skautis_event_id', NULL),
   ('skautis_event_name', NULL),
   ('variable_symbol_code', '');
