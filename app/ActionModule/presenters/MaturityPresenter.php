@@ -69,7 +69,6 @@ class MaturityPresenter extends ActionBasePresenter
      */
     public function actionCheck()
     {
-        //TODO: kontrola
         $cancelRegistration = $this->settingsRepository->getValue(Settings::MATURITY_REMINDER);
         if ($cancelRegistration !== NULL)
             $cancelRegistrationDate = (new \DateTime())->setTime(0, 0)->modify('-' . $cancelRegistration . ' days');
