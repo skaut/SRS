@@ -100,7 +100,7 @@ class SubeventsGridControl extends Control
                 'data-content' => $this->translator->translate('admin.configuration.subevents_delete_confirm')
             ]);
         $grid->allowRowsAction('delete', function ($item) {
-            return !$item->isImplicit() && $item->getBlocks()->isEmpty();
+            return !$item->isImplicit();
         });
     }
 
@@ -112,17 +112,13 @@ class SubeventsGridControl extends Control
     {
         $subevent = $this->subeventRepository->findById($id);
 
-        $blocksInSubevent = $subevent->getBlocks();
-        $implicitSubevent = $this->subeventRepository->findImplicit();
-
-        foreach ($blocksInSubevent as $block) {
-            $block->setSubevent($implicitSubevent);
-            $this->blockRepository->save($block);
+        if ($subevent->getBlocks()->isEmpty()) {
+            $this->subeventRepository->remove($subevent);
+            $this->getPresenter()->flashMessage('admin.configuration.subevents_deleted', 'success');
         }
-
-        $this->subeventRepository->remove($subevent);
-
-        $this->getPresenter()->flashMessage('admin.configuration.subevents_deleted', 'success');
+        else {
+            $this->getPresenter()->flashMessage('admin.configuration.subevents_deleted_error', 'danger');
+        }
 
         $this->redirect('this');
     }
