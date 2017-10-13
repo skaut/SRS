@@ -19,7 +19,7 @@ use Nette\Application\UI\Form;
 class SkautIsEventForm extends Nette\Object
 {
     /** @var BaseForm */
-    private $baseForm;
+    private $baseFormFactory;
 
     /** @var SettingsRepository */
     private $settingsRepository;
@@ -36,7 +36,7 @@ class SkautIsEventForm extends Nette\Object
      */
     public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository, SkautIsService $skautIsService)
     {
-        $this->baseForm = $baseForm;
+        $this->baseFormFactory = $baseForm;
         $this->settingsRepository = $settingsRepository;
         $this->skautIsService = $skautIsService;
     }
@@ -47,7 +47,7 @@ class SkautIsEventForm extends Nette\Object
      */
     public function create()
     {
-        $form = $this->baseForm->create();
+        $form = $this->baseFormFactory->create();
 
         $renderer = $form->getRenderer();
         $renderer->wrappers['control']['container'] = 'div class="col-sm-7 col-xs-7"';

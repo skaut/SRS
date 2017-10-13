@@ -229,7 +229,9 @@ services:
         implement: App\AdminModule\ConfigurationModule\Forms\IDiscountFormFactory
         parameters: [id]
     - App\AdminModule\ConfigurationModule\Forms\MailingForm
-    - App\AdminModule\ConfigurationModule\Forms\PaymentForm
+    paymentFormFactory:
+        class: App\AdminModule\ConfigurationModule\Forms\PaymentForm
+        implement: App\AdminModule\ConfigurationModule\Forms\IPaymentFormFactory
     - App\AdminModule\ConfigurationModule\Forms\PaymentProofForm
     - App\AdminModule\ConfigurationModule\Forms\PlaceDescriptionForm
     - App\AdminModule\ConfigurationModule\Forms\PlacePointForm

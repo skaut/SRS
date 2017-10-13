@@ -8,7 +8,7 @@ use App\Model\Enums\VariableSymbolType;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\UserRepository;
-use Nette;
+use Nette\Application\UI;
 use Nette\Application\UI\Form;
 
 
@@ -18,10 +18,15 @@ use Nette\Application\UI\Form;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class PaymentForm extends Nette\Object
+class PaymentForm extends UI\Control
 {
     /** @var BaseForm */
-    private $baseForm;
+    private $baseFormFactory;
+
+    /**
+     * Událost při uložení formuláře.
+     */
+    public $onSave;
 
     /** @var SettingsRepository */
     private $settingsRepository;
@@ -38,18 +43,29 @@ class PaymentForm extends Nette\Object
      */
     public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository, UserRepository $userRepository)
     {
-        $this->baseForm = $baseForm;
+        parent::__construct();
+
+        $this->baseFormFactory = $baseForm;
         $this->settingsRepository = $settingsRepository;
         $this->userRepository = $userRepository;
+    }
+
+    /**
+     * Vykreslí komponentu.
+     */
+    public function render()
+    {
+        $this->template->setFile(__DIR__ . '/templates/payment_form.latte');
+        $this->template->render();
     }
 
     /**
      * Vytvoří formulář.
      * @return Form
      */
-    public function create()
+    public function createComponentForm()
     {
-        $form = $this->baseForm->create();
+        $form = $this->baseFormFactory->create();
 
         $renderer = $form->getRenderer();
         $renderer->wrappers['control']['container'] = 'div class="col-sm-7 col-xs-7"';
@@ -147,6 +163,8 @@ class PaymentForm extends Nette\Object
 
         if (array_key_exists('cancelRegistrationAfterMaturity', $values))
             $this->settingsRepository->setValue(Settings::CANCEL_REGISTRATION_AFTER_MATURITY, $values['cancelRegistrationAfterMaturity'] ?: NULL);
+
+        $this->onSave($this);
     }
 
     /**

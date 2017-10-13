@@ -1,0 +1,98 @@
+{form form class => form-horizontal}
+    <div class="form-group required">
+        {var $input = $form->getComponent('accountNumber')}
+
+        <div class="col-sm-5 col-xs-5 control-label">
+            <label for="{$input->htmlId}">
+                {_$input->caption}
+            </label>
+        </div>
+
+        <div class="col-sm-7 col-xs-7">
+            {input $input}
+        </div>
+    </div>
+
+    <div class="form-group">
+        {var $input = $form->getComponent('variableSymbolCode')}
+
+        <div class="col-sm-5 col-xs-5 control-label">
+            <label for="{$input->htmlId}">
+                {_$input->caption}
+            </label>
+        </div>
+
+        <div class="col-sm-7 col-xs-7">
+            {input $input}
+        </div>
+    </div>
+
+    <div class="form-group">
+        {var $input = $form->getComponent('variableSymbolType')}
+
+        <div class="col-sm-5 col-xs-5 control-label">
+            <label for="{$input->htmlId}">
+                {_$input->caption}
+            </label>
+        </div>
+
+        <div class="col-sm-7 col-xs-7">
+            {input $input}
+        </div>
+    </div>
+
+    <div class="form-group">
+        {var $input = $form->getComponent('maturityType')}
+
+        <div class="col-sm-5 col-xs-5 control-label">
+            <label for="{$input->htmlId}">
+                {_$input->caption}
+            </label>
+        </div>
+
+        <div class="col-sm-4 col-xs-4">
+            {input $input}
+        </div>
+
+        <div class="col-sm-3 col-xs-3">
+            <div id="maturity-date">{input $form->getComponent('maturityDate')}</div>
+            <div id="maturity-days">{input $form->getComponent('maturityDays')}</div>
+            <div id="maturity-work-days">{input $form->getComponent('maturityWorkDays')}</div>
+        </div>
+    </div>
+
+    <div class="form-group" id="maturity-reminder">
+        {var $input = $form->getComponent('maturityReminder')}
+
+        <div class="col-sm-5 col-xs-5 control-label">
+            <label for="{$input->htmlId}">
+                {_$input->caption}
+            </label>
+        </div>
+
+        <div class="col-sm-7 col-xs-7">
+            {input $input}
+        </div>
+    </div>
+
+    <div class="form-group" id="cancel-registration-after-maturity">
+        {var $input = $form->getComponent('cancelRegistrationAfterMaturity')}
+
+        <div class="col-sm-5 col-xs-5 control-label">
+            <label for="{$input->htmlId}">
+                {_$input->caption}
+            </label>
+        </div>
+
+        <div class="col-sm-7 col-xs-7">
+            {input $input}
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-5 col-xs-5"></div>
+        <div class="col-sm-7 col-xs-7">
+            {input submit class => 'btn btn-primary button'}
+        </div>
+    </div>
+{/form}

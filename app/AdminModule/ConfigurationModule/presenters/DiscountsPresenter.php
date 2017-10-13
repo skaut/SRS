@@ -37,7 +37,7 @@ class DiscountsPresenter extends ConfigurationBasePresenter
     {
         $control = $this->discountFormFactory->create($this->getParameter('id'));
 
-        $control->onDiscountSave[] = function (DiscountForm $control) {
+        $control->onSave[] = function () {
             $this->flashMessage('admin.configuration.discounts_saved', 'success');
             $this->redirect('Discounts:default');
         };
