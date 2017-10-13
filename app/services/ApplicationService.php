@@ -91,7 +91,7 @@ class ApplicationService extends Nette\Object
                 $variableSymbolDate = $user->getBirthdate()->format('ymd');
                 $variableSymbol = $variableSymbolCode . $variableSymbolDate;
 
-                while ($this->userRepository->variableSymbolExists($variableSymbol)) {
+                while ($this->applicationRepository->variableSymbolExists($variableSymbol)) {
                     $variableSymbolDate = str_pad($variableSymbolDate + 1, 6, 0, STR_PAD_LEFT);
                     $variableSymbol = $variableSymbolCode . $variableSymbolDate;
                 }

@@ -49,6 +49,20 @@ class ApplicationRepository extends EntityRepository
     }
 
     /**
+     * Vrací true, pokud existuje přihláška s tímto variabilním symbolem.
+     * @param $variableSymbol
+     * @return bool
+     */
+    public function variableSymbolExists($variableSymbol)
+    {
+        $res = $this->createQueryBuilder('a')
+            ->where('a.variableSymbol = :vs')->setParameter('vs', $variableSymbol)
+            ->getQuery()
+            ->getResult();
+        return !empty($res);
+    }
+
+    /**
      * Uloží přihlášku.
      * @param Application $application
      */

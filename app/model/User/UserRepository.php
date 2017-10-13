@@ -228,20 +228,6 @@ class UserRepository extends EntityRepository
     }
 
     /**
-     * Vrací true, pokud existuje uživatel s tímto variabilním symbolem.
-     * @param $variableSymbol
-     * @return bool
-     */
-    public function variableSymbolExists($variableSymbol)
-    {
-        $res = $this->createQueryBuilder('u')
-            ->where('u.variableSymbol LIKE :vs')->setParameter('vs', $variableSymbol . '%')
-            ->getQuery()
-            ->getResult();
-        return !empty($res);
-    }
-
-    /**
      * Uloží uživatele.
      * @param User $user
      */
