@@ -237,7 +237,10 @@ class ApplicationForm extends Nette\Object
             $this->user->setState($values['state']);
 
             //role
-            $roles = $this->roleRepository->findRolesByIds($values['roles']);
+            if (array_key_exists('roles', $values))
+                $roles = $this->roleRepository->findRolesByIds($values['roles']);
+            else
+                $roles = $this->roleRepository->findAllRegisterableNowOrderedByName();
 
             $this->user->removeRole($this->roleRepository->findBySystemName(Role::NONREGISTERED));
 
@@ -377,7 +380,7 @@ class ApplicationForm extends Nette\Object
             $subeventsSelect = $form->addMultiSelect('subevents', 'web.application_content.subevents')->setItems(
                 $subeventsOptions
             )
-                ->addCondition(Form::FILLED)
+                ->addRule(Form::FILLED, 'web.application_content.subevents_empty')
                 ->addRule([$this, 'validateSubeventsCapacities'], 'web.application_content.subevents_capacity_occupied');
 
             //generovani chybovych hlasek pro vsechny kombinace podakci
@@ -485,9 +488,8 @@ class ApplicationForm extends Nette\Object
 
         //pokud je na vyber jen jedna role, je oznacena
         if (count($registerableOptions) == 1) {
-            $form->setDefaults([
-                'roles' => array_keys($registerableOptions)
-            ]);
+            $rolesSelect->setDisabled(TRUE);
+            $rolesSelect->setDefaultValue(array_keys($registerableOptions));
         }
     }
 

@@ -89,6 +89,7 @@ class MaturityPresenter extends ActionBasePresenter
                         $user = $application->getUser();
 
                         $user->setRoles(new ArrayCollection([$this->roleRepository->findBySystemName(Role::NONREGISTERED)]));
+                        $user->setApproved(TRUE);
                         foreach ($user->getApplications() as $application) {
                             $this->applicationRepository->remove($application);
                         }
