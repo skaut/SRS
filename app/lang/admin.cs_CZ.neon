@@ -510,6 +510,7 @@ configuration:
     subevents_saved: "Podakce byla úspěšně uložena."
     subevents_delete_confirm: "Opravdu chcete podakci odstranit?"
     subevents_deleted: "Podakce byla úspěšně odstraněna."
+    subevents_deleted_error: "Podakce nebyla odstraněna, zkontrolujte, zda není přiřazena programovému bloku."
     subevents_add_heading: "Nová podakce"
     subevents_edit_heading: "Úprava podakce: %name%"
 

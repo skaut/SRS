@@ -7,12 +7,10 @@
                     <strong>
                         {$dbuser->getUsername()}
                     </strong>
-                    {if $displayUsersRoles}
-                        {_web.common.logged_in_roles, count($user->roles)}
-                        <strong>
-                            {foreach $user->roles as $role}{if $role != $testRole}{$role}{sep}, {/sep}{/if}{/foreach}
-                        </strong>
-                    {/if}
+                    {_web.common.logged_in_roles, count($user->roles)}
+                    <strong>
+                        {foreach $user->roles as $role}{if $role != $testRole}{$role}{sep}, {/sep}{/if}{/foreach}
+                    </strong>
                 </li>
 
                 {if !$dbuser->isMember()}

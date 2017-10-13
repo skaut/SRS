@@ -151,11 +151,6 @@ class Settings
     const APPLICATION_AGREEMENT = 'application_agreement';
 
     /**
-     * Zobrazovat role přihlášeného uživatele.
-     */
-    const DISPLAY_USERS_ROLES = 'display_users_roles';
-
-    /**
      * Stránka, na kterou budou přesměrováni uživatelé po přihlášení, pokud není jinak specifikováno u jejich role.
      */
     const REDIRECT_AFTER_LOGIN = 'redirect_after_login';
