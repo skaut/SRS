@@ -4,6 +4,9 @@ namespace App\WebModule\Components;
 
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
+use App\Model\Settings\Settings;
+use App\Model\Settings\SettingsRepository;
+use App\Model\Structure\SubeventRepository;
 use App\Model\User\UserRepository;
 use App\Services\Authenticator;
 use App\WebModule\Forms\ApplicationForm;
@@ -31,6 +34,12 @@ class ApplicationContentControl extends Control
     /** @var Authenticator */
     private $authenticator;
 
+    /** @var SettingsRepository */
+    private $settingsRepository;
+
+    /** @var SubeventRepository */
+    private $subeventRepository;
+
 
     /**
      * ApplicationContentControl constructor.
@@ -38,9 +47,12 @@ class ApplicationContentControl extends Control
      * @param Authenticator $authenticator
      * @param UserRepository $userRepository
      * @param RoleRepository $roleRepository
+     * @param SettingsRepository $settingsRepository
+     * @param SubeventRepository $subeventRepository
      */
     public function __construct(ApplicationForm $applicationFormFactory, Authenticator $authenticator,
-                                UserRepository $userRepository, RoleRepository $roleRepository)
+                                UserRepository $userRepository, RoleRepository $roleRepository,
+                                SettingsRepository $settingsRepository, SubeventRepository $subeventRepository)
     {
         parent::__construct();
 
@@ -48,6 +60,8 @@ class ApplicationContentControl extends Control
         $this->authenticator = $authenticator;
         $this->userRepository = $userRepository;
         $this->roleRepository = $roleRepository;
+        $this->settingsRepository = $settingsRepository;
+        $this->subeventRepository = $subeventRepository;
     }
 
     /**
@@ -69,6 +83,8 @@ class ApplicationContentControl extends Control
         if ($user->isLoggedIn()) {
             $template->unapprovedRole = $user->isInRole($this->roleRepository->findBySystemName(Role::UNAPPROVED)->getName());
             $template->nonregisteredRole = $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED)->getName());
+            $template->bankAccount = $this->settingsRepository->getValue(Settings::ACCOUNT_NUMBER);
+            $template->subeventsExists = $this->subeventRepository->explicitSubeventsExists();
             $template->dbuser = $this->userRepository->findById($user->id);
         }
 

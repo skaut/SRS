@@ -573,6 +573,20 @@ class User
     }
 
     /**
+     * Má pouze automaticky schválené role?
+     * @return bool
+     */
+    public function isApprovedAfterRegistration()
+    {
+        foreach ($this->roles as $role) {
+            if (!$role->isApprovedAfterRegistration()) {
+                return FALSE;
+            }
+        }
+        return TRUE;
+    }
+
+    /**
      * @param bool $approved
      */
     public function setApproved($approved)

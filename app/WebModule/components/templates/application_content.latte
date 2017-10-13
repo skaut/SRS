@@ -28,15 +28,60 @@
                     {control applicationForm}
                 </div>
             {else}
-                <div class="alert alert-info alert-forever">
-                    {_web.application_content.registered_roles_begin}
-                    {foreach $dbuser->getRoles() as $role}{$role->getName()}{sep}, {/sep}{/foreach}{_web.application_content.registered_roles_end}
-                </div>
-            {if $unapprovedRole}
-                <div class="alert alert-warning alert-forever">{_web.application_content.unapproved_registration}</div>
-            {else}
-                <div class="alert alert-info alert-forever">{_web.application_content.approved_registration}</div>
-            {/if}
+                {if $unapprovedRole}
+                    <div class="alert alert-warning alert-forever">
+                        {_web.application_content.unapproved_registration, ['roles' => $dbuser->getRolesText()]}
+                    </div>
+                {elseif !$dbuser->isPaying()}
+                    <div class="alert alert-info alert-forever">
+                        {_web.application_content.approved_registration_not_paying, ['roles' => $dbuser->getRolesText()]}
+                    </div>
+                {elseif $dbuser->hasPaidEveryApplication()}
+                    <div class="alert alert-info alert-forever">
+                        {_web.application_content.approved_registration_paid, ['roles' => $dbuser->getRolesText()]}
+                    </div>
+                {else}
+                    <div class="alert alert-info alert-forever">
+                        {_web.application_content.approved_registration_not_paid, ['account' => $bankAccount]}
+
+                        <br><br>
+
+                        <table class="table table-bordered table-striped" style="background-color: #ffffff">
+                            <thead>
+                                <tr>
+                                    <th>{_web.application_content.application_date}</th>
+                                    <th>{_web.application_content.application_roles}</th>
+                                    {if $subeventsExists}
+                                        <th>{_web.application_content.application_subevents}</th>
+                                    {/if}
+                                    <th>{_web.application_content.application_fee}</th>
+                                    <th>{_web.application_content.application_variable_symbol}</th>
+                                    <th>{_web.application_content.application_maturity_date}</th>
+                                    <th>{_web.application_content.application_state}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {foreach $dbuser->getNotCanceledApplications() as $application}
+                                    <tr>
+                                        <td>{$application->getApplicationDate()->format('j. n. Y')}</td>
+                                        <td>
+                                            {if $application->isFirst()}
+                                                {$dbuser->getRolesText()}
+                                            {/if}
+                                        </td>
+                                        {if $subeventsExists}
+                                            <td>{$application->getSubeventsText()}</td>
+                                        {/if}
+                                        <td>{$application->getFee()}</td>
+                                        <td>{$application->getVariableSymbol()}</td>
+                                        <td>{$application->getMaturityDate()->format('j. n. Y')}</td>
+                                        <td>{_'common.application_state.'.$application->getState()}</td>
+                                    </tr>
+                                {/foreach}
+                            </tbody>
+                        </table>
+                    </div>
+                {/if}
             {/if}
         </div>
     </div>
