@@ -49,7 +49,7 @@ profile:
     applications_subevents_capacity_occupied: "Všechna místa na některé podakci jsou obsazena."
     applications_fee: "Poplatek"
     applications_variable_symbol: "Variabilní symbol"
-    applications_maturity_date: "Datum splatnosti"
+    applications_maturity_date: "Splatnost"
     applications_state: "Stav"
     applications_add_subevents: "Přidat podakce"
     applications_add_subevents_successful: "Podakce byly úspěšně přidány."
@@ -152,6 +152,14 @@ application_content:
     register: "Registrovat"
     register_synchronization_failed: "Synchronizace se skautIS se nepodařila. Zkuste se znovu přihlásit a upravit údaje v profilu."
     register_successful: "Registrace byla úspěšně odeslána."
+
+    application_date: "Datum přihlášky"
+    application_roles: "Role"
+    application_subevents: "Podakce"
+    application_fee: "Poplatek"
+    application_variable_symbol: "Variabilní symbol"
+    application_maturity_date: "Splatnost"
+    application_state: "Stav"
 
 blocks_content:
     uncategorized: "Nezařazené"

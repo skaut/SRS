@@ -49,19 +49,21 @@
                         <table class="table table-bordered table-striped" style="background-color: #ffffff">
                             <thead>
                                 <tr>
-                                    <th>Role</th>
+                                    <th>{_web.application_content.application_date}</th>
+                                    <th>{_web.application_content.application_roles}</th>
                                     {if $subeventsExists}
-                                        <th>Podakce</th>
+                                        <th>{_web.application_content.application_subevents}</th>
                                     {/if}
-                                    <th>Poplatek</th>
-                                    <th>Variabilní symbol</th>
-                                    <th>Splatnost</th>
-                                    <th>Stav</th>
+                                    <th>{_web.application_content.application_fee}</th>
+                                    <th>{_web.application_content.application_variable_symbol}</th>
+                                    <th>{_web.application_content.application_maturity_date}</th>
+                                    <th>{_web.application_content.application_state}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {foreach $dbuser->getNotCanceledApplications() as $application}
                                     <tr>
+                                        <td>{$application->getApplicationDate()->format('j. n. Y')}</td>
                                         <td>
                                             {if $application->isFirst()}
                                                 {$dbuser->getRolesText()}
