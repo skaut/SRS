@@ -71,14 +71,11 @@ class WebForm extends Nette\Object
         $form->addSelect('redirectAfterLogin', 'admin.configuration.web_redirect_after_login', $this->pageRepository->getPagesOptions())
             ->addRule(Form::FILLED, 'admin.configuration.web_redirect_after_login_empty');
 
-        $form->addCheckbox('displayUsersRoles', 'admin.configuration.web_display_users_roles');
-
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
             'footer' => $this->settingsRepository->getValue(Settings::FOOTER),
-            'redirectAfterLogin' => $this->settingsRepository->getValue(Settings::REDIRECT_AFTER_LOGIN),
-            'displayUsersRoles' => $this->settingsRepository->getValue(Settings::DISPLAY_USERS_ROLES)
+            'redirectAfterLogin' => $this->settingsRepository->getValue(Settings::REDIRECT_AFTER_LOGIN)
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -106,6 +103,5 @@ class WebForm extends Nette\Object
 
         $this->settingsRepository->setValue(Settings::FOOTER, $values['footer']);
         $this->settingsRepository->setValue(Settings::REDIRECT_AFTER_LOGIN, $values['redirectAfterLogin']);
-        $this->settingsRepository->setValue(Settings::DISPLAY_USERS_ROLES, $values['displayUsersRoles']);
     }
 }
