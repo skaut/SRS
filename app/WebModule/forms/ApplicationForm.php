@@ -380,7 +380,7 @@ class ApplicationForm extends Nette\Object
             $subeventsSelect = $form->addMultiSelect('subevents', 'web.application_content.subevents')->setItems(
                 $subeventsOptions
             )
-                ->addCondition(Form::FILLED)
+                ->addRule(Form::FILLED, 'web.application_content.subevents_empty')
                 ->addRule([$this, 'validateSubeventsCapacities'], 'web.application_content.subevents_capacity_occupied');
 
             //generovani chybovych hlasek pro vsechny kombinace podakci
