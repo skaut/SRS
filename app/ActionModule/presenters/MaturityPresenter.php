@@ -69,15 +69,21 @@ class MaturityPresenter extends ActionBasePresenter
      */
     public function actionCheck()
     {
+        $cancelRegistration = $this->settingsRepository->getValue(Settings::MATURITY_REMINDER);
+        if ($cancelRegistration !== NULL)
+            $cancelRegistrationDate = (new \DateTime())->setTime(0, 0)->modify('-' . $cancelRegistration . ' days');
+
+        $maturityReminder = $this->settingsRepository->getValue(Settings::MATURITY_REMINDER);
+        if ($maturityReminder !== NULL)
+            $maturityReminderDate = (new \DateTime())->setTime(0, 0)->modify('+' . $maturityReminder . ' days');
+
         foreach ($this->applicationRepository->findWaitingForPaymentApplications() as $application) {
-            //kontrola splatnosti
             $maturityDate = $application->getMaturityDate();
             if ($maturityDate === NULL)
                 continue;
 
-            $date = (new \DateTime())->setTime(0, 0);
-
-            if ($date > $maturityDate) {
+            //zrušení registrace
+            if ($cancelRegistration !== NULL && $cancelRegistrationDate > $maturityDate) {
                 $this->userRepository->getEntityManager()->transactional(function($em) use($application) {
                     if ($application->isFirst()) {
                         $user = $application->getUser();
@@ -96,14 +102,11 @@ class MaturityPresenter extends ActionBasePresenter
                     $this->programRepository->updateUserPrograms($application->getUser());
                     $this->userRepository->save($application->getUser());
                 });
+                continue;
             }
 
-            //pripominka splatnosti
-            $maturityReminder = $this->settingsRepository->getValue(Settings::MATURITY_REMINDER);
-
-            $date = (new \DateTime())->setTime(0, 0)->modify('+' . $maturityReminder . ' days');
-
-            if ($date == $maturityDate) {
+            //připomenutí splatnosti
+            if ($maturityReminder !== NULL && $maturityReminderDate == $maturityDate) {
                 $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$application->getUser()]), '', Template::MATURITY_REMINDER, [
                     TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
                     TemplateVariable::MATURITY => $maturityDate->format('j. n. Y')

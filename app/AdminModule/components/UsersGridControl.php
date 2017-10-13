@@ -732,8 +732,8 @@ class UsersGridControl extends Control
     {
         if (strlen($text) > $length) {
             $text = $text . " ";
-            $text = substr($text, 0, $length);
-            $text = substr($text, 0, strrpos($text, ' '));
+            $text = mb_substr($text, 0, $length, 'UTF-8');
+            $text = mb_substr($text, 0, strrpos($text, ' '), 'UTF-8');
             $text = $text . "...";
         }
         return $text;

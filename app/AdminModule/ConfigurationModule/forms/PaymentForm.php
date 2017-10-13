@@ -8,7 +8,7 @@ use App\Model\Enums\VariableSymbolType;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\UserRepository;
-use Nette;
+use Nette\Application\UI;
 use Nette\Application\UI\Form;
 
 
@@ -18,10 +18,15 @@ use Nette\Application\UI\Form;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class PaymentForm extends Nette\Object
+class PaymentForm extends UI\Control
 {
     /** @var BaseForm */
-    private $baseForm;
+    private $baseFormFactory;
+
+    /**
+     * Událost při uložení formuláře.
+     */
+    public $onSave;
 
     /** @var SettingsRepository */
     private $settingsRepository;
@@ -38,18 +43,29 @@ class PaymentForm extends Nette\Object
      */
     public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository, UserRepository $userRepository)
     {
-        $this->baseForm = $baseForm;
+        parent::__construct();
+
+        $this->baseFormFactory = $baseForm;
         $this->settingsRepository = $settingsRepository;
         $this->userRepository = $userRepository;
+    }
+
+    /**
+     * Vykreslí komponentu.
+     */
+    public function render()
+    {
+        $this->template->setFile(__DIR__ . '/templates/payment_form.latte');
+        $this->template->render();
     }
 
     /**
      * Vytvoří formulář.
      * @return Form
      */
-    public function create()
+    public function createComponentForm()
     {
-        $form = $this->baseForm->create();
+        $form = $this->baseFormFactory->create();
 
         $renderer = $form->getRenderer();
         $renderer->wrappers['control']['container'] = 'div class="col-sm-7 col-xs-7"';
@@ -66,9 +82,18 @@ class PaymentForm extends Nette\Object
         $form->addSelect('variableSymbolType', 'admin.configuration.variable_symbol_type', $this->prepareVariableSympolTypeOptions());
 
         $maturityTypeSelect = $form->addSelect('maturityType', 'admin.configuration.maturity_type', $this->prepareMaturityTypeOptions());
-        $maturityTypeSelect->addCondition($form::EQUAL, MaturityType::DATE)->toggle('maturity-date');
-        $maturityTypeSelect->addCondition($form::EQUAL, MaturityType::DAYS)->toggle('maturity-days');
-        $maturityTypeSelect->addCondition($form::EQUAL, MaturityType::WORK_DAYS)->toggle('maturity-work-days');
+        $maturityTypeSelect->addCondition($form::EQUAL, MaturityType::DATE)
+            ->toggle('maturity-date')
+            ->toggle('maturity-reminder')
+            ->toggle('cancel-registration-after-maturity');
+        $maturityTypeSelect->addCondition($form::EQUAL, MaturityType::DAYS)
+            ->toggle('maturity-days')
+            ->toggle('maturity-reminder')
+            ->toggle('cancel-registration-after-maturity');
+        $maturityTypeSelect->addCondition($form::EQUAL, MaturityType::WORK_DAYS)
+            ->toggle('maturity-work-days')
+            ->toggle('maturity-reminder')
+            ->toggle('cancel-registration-after-maturity');
 
         $form->addDatePicker('maturityDate', 'admin.configuration.maturity_date')
             ->setOption('id', 'maturity-date');
@@ -84,9 +109,14 @@ class PaymentForm extends Nette\Object
             ->addRule(Form::INTEGER, 'admin.configuration.maturity_work_days_format');
 
         $form->addText('maturityReminder', 'admin.configuration.maturity_reminder')
-            ->addRule(Form::FILLED, 'admin.configuration.maturity_reminder_empty')
+            ->setOption('id', 'maturity-reminder')
+            ->addCondition(Form::FILLED)
             ->addRule(Form::INTEGER, 'admin.configuration.maturity_reminder_format');
 
+        $form->addText('cancelRegistrationAfterMaturity', 'admin.configuration.cancel_registration_after_maturity')
+            ->setOption('id', 'cancel-registration-after-maturity')
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::INTEGER, 'admin.configuration.cancel_registration_after_maturity_format');
 
         $form->addSubmit('submit', 'admin.common.save');
 
@@ -98,7 +128,8 @@ class PaymentForm extends Nette\Object
             'maturityDate' => $this->settingsRepository->getDateValue(Settings::MATURITY_DATE),
             'maturityDays' => $this->settingsRepository->getValue(Settings::MATURITY_DAYS),
             'maturityWorkDays' => $this->settingsRepository->getValue(Settings::MATURITY_WORK_DAYS),
-            'maturityReminder' => $this->settingsRepository->getValue(Settings::MATURITY_REMINDER)
+            'maturityReminder' => $this->settingsRepository->getValue(Settings::MATURITY_REMINDER),
+            'cancelRegistrationAfterMaturity' => $this->settingsRepository->getValue(Settings::CANCEL_REGISTRATION_AFTER_MATURITY)
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -127,7 +158,13 @@ class PaymentForm extends Nette\Object
         if (array_key_exists('maturityWorkDays', $values))
             $this->settingsRepository->setValue(Settings::MATURITY_WORK_DAYS, $values['maturityWorkDays'] ?: 0);
 
-        $this->settingsRepository->setValue(Settings::MATURITY_REMINDER, $values['maturityReminder']);
+        if (array_key_exists('maturityReminder', $values))
+            $this->settingsRepository->setValue(Settings::MATURITY_REMINDER, $values['maturityReminder'] ?: NULL);
+
+        if (array_key_exists('cancelRegistrationAfterMaturity', $values))
+            $this->settingsRepository->setValue(Settings::CANCEL_REGISTRATION_AFTER_MATURITY, $values['cancelRegistrationAfterMaturity'] ?: NULL);
+
+        $this->onSave($this);
     }
 
     /**

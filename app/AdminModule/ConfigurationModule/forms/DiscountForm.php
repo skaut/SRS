@@ -33,7 +33,7 @@ class DiscountForm extends UI\Control
     /**
      * Událost při uložení formuláře.
      */
-    public $onDiscountSave;
+    public $onSave;
 
     /**
      * Událost při chybě podmínky.
@@ -147,7 +147,7 @@ class DiscountForm extends UI\Control
 
             $this->discountRepository->save($this->discount);
 
-            $this->onDiscountSave($this);
+            $this->onSave($this);
         }
         else
             $this->onConditionError($this);

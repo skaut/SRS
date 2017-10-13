@@ -17,7 +17,7 @@ use Nette\Application\UI\Form;
 class PlaceDescriptionForm extends Nette\Object
 {
     /** @var BaseForm */
-    private $baseForm;
+    private $baseFormFactory;
 
     /** @var  SettingsRepository */
     private $settingsRepository;
@@ -30,7 +30,7 @@ class PlaceDescriptionForm extends Nette\Object
      */
     public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository)
     {
-        $this->baseForm = $baseForm;
+        $this->baseFormFactory = $baseForm;
         $this->settingsRepository = $settingsRepository;
     }
 
@@ -40,7 +40,7 @@ class PlaceDescriptionForm extends Nette\Object
      */
     public function create()
     {
-        $form = $this->baseForm->create();
+        $form = $this->baseFormFactory->create();
 
         $form->addTextArea('placeDescription', 'admin.configuration.place_description')
             ->setAttribute('class', 'tinymce-paragraph');

@@ -21,7 +21,7 @@ class PlacePointForm extends Nette\Object
     private $placePoint;
 
     /** @var BaseForm */
-    private $baseForm;
+    private $baseFormFactory;
 
     /** @var PlacePointRepository */
     private $placePointRepository;
@@ -34,7 +34,7 @@ class PlacePointForm extends Nette\Object
      */
     public function __construct(BaseForm $baseForm, PlacePointRepository $placePointRepository)
     {
-        $this->baseForm = $baseForm;
+        $this->baseFormFactory = $baseForm;
         $this->placePointRepository = $placePointRepository;
     }
 
@@ -47,7 +47,7 @@ class PlacePointForm extends Nette\Object
     {
         $this->placePoint = $this->placePointRepository->findById($id);
 
-        $form = $this->baseForm->create();
+        $form = $this->baseFormFactory->create();
 
         $form->addText('name', 'admin.configuration.place_points_name')
             ->addRule(Form::FILLED, 'admin.configuration.place_points_name_empty');

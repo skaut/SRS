@@ -31,7 +31,7 @@ class MailingForm extends Nette\Object
     private $user;
 
     /** @var BaseForm */
-    private $baseForm;
+    private $baseFormFactory;
 
     /** @var SettingsRepository */
     private $settingsRepository;
@@ -57,7 +57,7 @@ class MailingForm extends Nette\Object
     public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository,
                                 UserRepository $userRepository, MailService $mailService, LinkGenerator $linkGenerator)
     {
-        $this->baseForm = $baseForm;
+        $this->baseFormFactory = $baseForm;
         $this->settingsRepository = $settingsRepository;
         $this->userRepository = $userRepository;
         $this->mailService = $mailService;
@@ -73,7 +73,7 @@ class MailingForm extends Nette\Object
     {
         $this->user = $this->userRepository->findById($id);
 
-        $form = $this->baseForm->create();
+        $form = $this->baseFormFactory->create();
 
         $renderer = $form->getRenderer();
         $renderer->wrappers['control']['container'] = 'div class="col-sm-7 col-xs-7"';
