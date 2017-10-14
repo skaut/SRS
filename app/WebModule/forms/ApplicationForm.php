@@ -388,7 +388,7 @@ class ApplicationForm extends Nette\Object
                 ->setRequired(FALSE)
                 ->addRule([$this, 'validateSubeventsCapacities'], 'web.application_content.subevents_capacity_occupied');
             $subeventsSelect
-                ->addConditionOn($form['roles'], [$this, 'areSubeventsRequired'])
+                ->addConditionOn($form['roles'], [$this, 'toggleSubeventsRequired'])
                 ->addRule(Form::FILLED, 'web.application_content.subevents_empty');
 
             //generovani chybovych hlasek pro vsechny kombinace podakci
@@ -657,7 +657,7 @@ class ApplicationForm extends Nette\Object
      * @param $args
      * @return bool
      */
-    public function areSubeventsRequired($field, $args)
+    public function toggleSubeventsRequired($field, $args)
     {
         $rolesWithSubevents = $this->roleRepository->findRolesIds($this->roleRepository->findAllWithSubevents());
         foreach ($field->getValue() as $roleId)
