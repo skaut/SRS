@@ -110,7 +110,7 @@ class MaturityPresenter extends ActionBasePresenter
             if ($maturityReminder !== NULL && $maturityReminderDate == $maturityDate) {
                 $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$application->getUser()]), '', Template::MATURITY_REMINDER, [
                     TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-                    TemplateVariable::MATURITY => $maturityDate->format('j. n. Y')
+                    TemplateVariable::APPLICATION_MATURITY => $maturityDate->format('j. n. Y')
                 ]);
             }
         }

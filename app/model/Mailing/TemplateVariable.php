@@ -21,11 +21,6 @@ class TemplateVariable
     const SEMINAR_NAME = 'seminar_name';
 
     /**
-     * Odhlášení ze semináře a změna rolí povolena do.
-     */
-    const EDIT_REGISTRATION_TO = 'edit_registration_to';
-
-    /**
      * Role uživatele.
      */
     const USERS_ROLES = 'users_roles';
@@ -36,19 +31,45 @@ class TemplateVariable
     const USERS_SUBEVENTS = 'users_subevents';
 
     /**
-     * Splatnost.
-     */
-    const MATURITY = 'maturity';
-
-    /**
      * Název programu.
      */
     const PROGRAM_NAME = 'program_name';
 
     /**
+     * Podakce přihlášky.
+     */
+    const APPLICATION_SUBEVENTS = 'application_subevents';
+
+    /**
+     * Splatnost přihlášky.
+     */
+    const APPLICATION_MATURITY = 'application_maturity';
+
+    /**
+     * Poplatek přihlášky.
+     */
+    const APPLICATION_FEE = 'application_fee';
+
+    /**
+     * Variabilní symbol přihlášky.
+     */
+    const APPLICATION_VARIABLE_SYMBOL = 'application_variable_symbol';
+
+    /**
+     * Odhlášení ze semináře a změna rolí povolena do.
+     */
+    const EDIT_REGISTRATION_TO = 'edit_registration_to';
+
+    /**
+     * Bankovní účet pro platbu.
+     */
+    const BANK_ACCOUNT = 'bank_account';
+
+    /**
      * Odkaz pro potvrzení změny e-mailu.
      */
     const EMAIL_VERIFICATION_LINK = 'email_verification_link';
+
 
 
     use Identifier;
