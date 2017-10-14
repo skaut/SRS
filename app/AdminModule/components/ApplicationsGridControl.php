@@ -430,7 +430,8 @@ class ApplicationsGridControl extends Control
 
             if ($values['paymentDate'] !== NULL && $oldPaymentDate === NULL) {
                 $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::PAYMENT_CONFIRMED, [
-                    TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)
+                    TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
+                    TemplateVariable::APPLICATION_SUBEVENTS => $application->getSubeventsText()
                 ]);
             }
         });

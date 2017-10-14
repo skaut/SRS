@@ -146,6 +146,9 @@ export:
 
     user:
         display_name: "Jméno"
+        first_name: "Jméno"
+        last_name: "Příjmení"
+        nickname: "Přezdívka"
         username: "Uživatelské jméno"
         roles: "Role"
         subevents: "Podakce"
@@ -190,18 +193,26 @@ mailing:
 
     variable_name:
         seminar_name: "nazev-seminare"
-        edit_registration_to: "zmena-registrace-do"
         users_roles: "role"
         users_subevents: "podakce"
-        maturity: "splatnost"
         program_name: "nazev-programu"
+        application_subevents: "podakce"
+        application_maturity: "splatnost"
+        application_fee: "poplatek"
+        application_variable_symbol: "variabilni-symbol"
+        edit_registration_to: "zmena-registrace-do"
+        bank_account: "cislo-uctu"
         email_verification_link: "overovaci-odkaz"
 
     variable_description:
         seminar_name: "název semináře"
-        edit_registration_to: "odhlášení a změna role povolena do"
         users_roles: "role uživatele"
         users_subevents: "podakce uživatele"
-        maturity: "termín splatnosti"
         program_name: "název programu"
+        application_subevents: "podakce přihlášky"
+        application_maturity: "splatnost"
+        application_fee: "poplatek"
+        application_variable_symbol: "variabilní symbol"
+        edit_registration_to: "odhlášení, změna rolí a změna podakcí povolena do"
+        bank_account: "číslo účtu"
         email_verification_link: "ověřovací odkaz"
