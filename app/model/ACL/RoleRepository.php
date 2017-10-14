@@ -130,6 +130,17 @@ class RoleRepository extends EntityRepository
     }
 
     /**
+     * Vrací role, u kterých je cena počítána podle podakcí.
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function findAllWithSubevents()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('fee', NULL));
+        return $this->matching($criteria);
+    }
+
+    /**
      * Vrací role podle id.
      * @param $ids
      * @return \Doctrine\Common\Collections\Collection

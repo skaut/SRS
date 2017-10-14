@@ -383,9 +383,13 @@ class ApplicationForm extends Nette\Object
 
             $subeventsSelect = $form->addMultiSelect('subevents', 'web.application_content.subevents')->setItems(
                 $subeventsOptions
-            )
-                ->addRule(Form::FILLED, 'web.application_content.subevents_empty')
+            );
+            $subeventsSelect
+                ->setRequired(FALSE)
                 ->addRule([$this, 'validateSubeventsCapacities'], 'web.application_content.subevents_capacity_occupied');
+            $subeventsSelect
+                ->addConditionOn($form['roles'], [$this, 'areSubeventsRequired'])
+                ->addRule(Form::FILLED, 'web.application_content.subevents_empty');
 
             //generovani chybovych hlasek pro vsechny kombinace podakci
             foreach ($this->subeventRepository->findAllExplicitOrderedByName() as $subevent) {
@@ -645,6 +649,21 @@ class ApplicationForm extends Nette\Object
                 return FALSE;
         }
         return TRUE;
+    }
+
+    /**
+     * Vrací, zda je výběr podakcí povinný pro kombinaci rolí.
+     * @param $field
+     * @param $args
+     * @return bool
+     */
+    public function areSubeventsRequired($field, $args)
+    {
+        $rolesWithSubevents = $this->roleRepository->findRolesIds($this->roleRepository->findAllWithSubevents());
+        foreach ($field->getValue() as $roleId)
+            if (in_array($roleId, $rolesWithSubevents))
+                return TRUE;
+        return FALSE;
     }
 
     /**
