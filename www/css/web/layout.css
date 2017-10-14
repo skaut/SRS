@@ -123,6 +123,12 @@ ul.no-margin {
     margin-bottom: 0;
 }
 
+/* application content */
+.application-content .control-label .required::after {
+    content:" *";
+    color: red;
+}
+
 /* image content */
 .image-wrapper {
     margin: 10px 0;
