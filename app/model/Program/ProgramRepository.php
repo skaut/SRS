@@ -103,6 +103,24 @@ class ProgramRepository extends EntityRepository
     }
 
     /**
+     * Vrací programy, na které je uživatel zapsaný a jsou v danné kategorii.
+     * @param User $user
+     * @param Category $category
+     * @return array
+     */
+    public function findUserRegisteredAndInCategory(User $user, Category $category)
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p')
+            ->join('p.block', 'b')
+            ->join('p.attendees', 'a')
+            ->where('b.category = :category')->setParameter('category', $category)
+            ->andWhere('a = :user')->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * Vrací programy zablokované (programy stejného bloku a překrývající se programy) přihlášením se na program.
      * @param Program $program
      * @return int[]

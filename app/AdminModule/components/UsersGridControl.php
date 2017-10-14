@@ -177,6 +177,9 @@ class UsersGridControl extends Control
         $grid->addGroupAction('admin.users.users_group_action_export_users')
             ->onSelect[] = [$this, 'groupExportUsers'];
 
+        $grid->addGroupAction('admin.users.users_group_action_export_subevents_and_categories')
+            ->onSelect[] = [$this, 'groupExportSubeventsAndCategories'];
+
         $grid->addGroupAction('admin.users.users_group_action_export_roles')
             ->onSelect[] = [$this, 'groupExportRoles'];
 
@@ -667,6 +670,30 @@ class UsersGridControl extends Control
         $roles = $this->roleRepository->findAll();
 
         $response = $this->excelExportService->exportUsersRoles($users, $roles, "role-uzivatelu.xlsx");
+
+        $this->getPresenter()->sendResponse($response);
+    }
+
+    /**
+     * Hromadně vyexportuje seznam uživatelů s podakcemi a programy podle kategorií.
+     * @param array $ids
+     */
+    public function groupExportSubeventsAndCategories(array $ids)
+    {
+        $this->sessionSection->userIds = $ids;
+        $this->redirect('exportsubeventsandcategories'); //presmerovani kvuli zruseni ajax
+    }
+
+    /**
+     * Zpracuje export seznamu uživatelů s podakcemi a programy podle kategorií.
+     */
+    public function handleExportSubeventsAndCategories()
+    {
+        $ids = $this->session->getSection('srs')->userIds;
+
+        $users = $this->userRepository->findUsersByIds($ids);
+
+        $response = $this->excelExportService->exportUsersSubeventsAndCategories($users, "podakce-a-kategorie.xlsx");
 
         $this->getPresenter()->sendResponse($response);
     }

@@ -6,9 +6,12 @@ use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\Program\Block;
 use App\Model\Program\BlockRepository;
+use App\Model\Program\CategoryRepository;
+use App\Model\Program\ProgramRepository;
 use App\Model\Program\Room;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
+use App\Model\Structure\SubeventRepository;
 use App\Model\User\User;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -39,6 +42,15 @@ class ExcelExportService extends Nette\Object
     /** @var UserService */
     private $userService;
 
+    /** @var SubeventRepository */
+    private $subeventRepository;
+
+    /** @var CategoryRepository */
+    private $categoryRepository;
+
+    /** @var ProgramRepository */
+    private $programRepository;
+
 
     /**
      * ExcelExportService constructor.
@@ -48,7 +60,9 @@ class ExcelExportService extends Nette\Object
      * @param UserService $userService
      */
     public function __construct(Translator $translator, CustomInputRepository $customInputRepository,
-                                BlockRepository $blockRepository, UserService $userService)
+                                BlockRepository $blockRepository, UserService $userService,
+                                SubeventRepository $subeventRepository, CategoryRepository $categoryRepository,
+                                ProgramRepository $programRepository)
     {
         $this->phpExcel = new \PHPExcel();
 
@@ -56,6 +70,9 @@ class ExcelExportService extends Nette\Object
         $this->customInputRepository = $customInputRepository;
         $this->blockRepository = $blockRepository;
         $this->userService = $userService;
+        $this->subeventRepository = $subeventRepository;
+        $this->categoryRepository = $categoryRepository;
+        $this->programRepository = $programRepository;
     }
 
     /**
@@ -421,6 +438,89 @@ class ExcelExportService extends Nette\Object
                     $value = '';
 
                 $sheet->setCellValueByColumnAndRow($column++, $row, $value);
+            }
+        }
+        return new ExcelResponse($this->phpExcel, $filename);
+    }
+
+    /**
+     * @param Collection|User[] $users
+     * @param $filename
+     * @return ExcelResponse
+     */
+    public function exportUsersSubeventsAndCategories($users, $filename) {
+        $sheet = $this->phpExcel->getSheet(0);
+
+        $row = 1;
+        $column = 0;
+
+        $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.variable_symbol'));
+        $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(TRUE);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(FALSE);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth('20');
+
+        $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.first_name'));
+        $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(TRUE);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(FALSE);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth('20');
+
+        $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.last_name'));
+        $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(TRUE);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(FALSE);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth('20');
+
+        $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.nickname'));
+        $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(TRUE);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(FALSE);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth('20');
+
+        foreach ($this->subeventRepository->findAllExplicitOrderedByName() as $subevent) {
+            $sheet->setCellValueByColumnAndRow($column, $row, $subevent->getName());
+            $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(TRUE);
+            $sheet->getColumnDimensionByColumn($column)->setAutoSize(FALSE);
+            $sheet->getColumnDimensionByColumn($column++)->setWidth('10');
+        }
+
+        foreach ($this->categoryRepository->findAll() as $category) {
+            $sheet->setCellValueByColumnAndRow($column, $row, $category->getName() . ' - ' . $this->translator->translate('common.export.schedule.program_name'));
+            $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(TRUE);
+            $sheet->getColumnDimensionByColumn($column)->setAutoSize(FALSE);
+            $sheet->getColumnDimensionByColumn($column++)->setWidth('20');
+
+            $sheet->setCellValueByColumnAndRow($column, $row, $category->getName() . ' - ' . $this->translator->translate('common.export.schedule.room'));
+            $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(TRUE);
+            $sheet->getColumnDimensionByColumn($column)->setAutoSize(FALSE);
+            $sheet->getColumnDimensionByColumn($column++)->setWidth('10');
+        }
+
+        foreach ($users as $user) {
+            $row++;
+            $column = 0;
+
+            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getVariableSymbolsText());
+
+            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getFirstName());
+
+            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getLastName());
+
+            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getNickname());
+
+            foreach ($this->subeventRepository->findAllExplicitOrderedByName() as $subevent) {
+                $sheet->setCellValueByColumnAndRow($column++, $row, $user->hasSubevent($subevent)
+                    ? $this->translator->translate('common.export.common.yes')
+                    : $this->translator->translate('common.export.common.no'));
+            }
+
+            foreach ($this->categoryRepository->findAll() as $category) {
+                $blocks = [];
+                $rooms = [];
+                foreach ($this->programRepository->findUserRegisteredAndInCategory($user, $category) as $program) {
+                    $blocks[] = $program->getBlock()->getName();
+                    $rooms[] = $program->getRoom() ? $program->getRoom()->getName() : "";
+                }
+
+                $sheet->setCellValueByColumnAndRow($column++, $row, implode(', ', $blocks));
+                $sheet->setCellValueByColumnAndRow($column++, $row, implode(', ', $rooms));
             }
         }
         return new ExcelResponse($this->phpExcel, $filename);

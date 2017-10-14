@@ -146,6 +146,9 @@ export:
 
     user:
         display_name: "Jméno"
+        first_name: "Jméno"
+        last_name: "Příjmení"
+        nickname: "Přezdívka"
         username: "Uživatelské jméno"
         roles: "Role"
         subevents: "Podakce"
