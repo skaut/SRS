@@ -138,7 +138,7 @@ application_content:
     subevents: "Podakce"
     required_subevents_not_selected: "K podakci %subevent% musíte mít vybrané podakce: %requiredSubevents%."
     incompatible_subevents_selected: "Není možné kombinovat podakci %subevent% s podakcemi: %incompatibleSubevents%."
-    subevents_empty: "Musí být vybrána alespoň jedna podakce."
+    subevents_empty: "Ke zvoleným rolím musí být vybrána alespoň jedna podakce."
     subevents_capacity_occupied: "Všechna místa v některé podakci jsou obsazena."
     roles: "Role"
     required_roles_not_selected: "K roli %role% musíte mít vybrané role: %requiredRoles%."
