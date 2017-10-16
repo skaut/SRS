@@ -265,6 +265,7 @@ class ApplicationsGridControl extends Control
     public function add($values)
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($values['roles']);
+        $selectedSubevents = NULL;
 
         //kontrola roli
         if ($this->user->getApplications()->isEmpty()) {
