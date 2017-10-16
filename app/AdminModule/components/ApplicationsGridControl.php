@@ -175,18 +175,17 @@ class ApplicationsGridControl extends Control
                 return $this->translator->translate('common.application_state.' . $row->getState());
             });
 
-        if ($this->subeventRepository->explicitSubeventsExists()) {
-            $grid->addInlineAdd()->onControlAdd[] = function ($container) {
-                $rolesSelect = $container->addMultiSelect('roles', '', $this->roleRepository->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]))
-                    ->setAttribute('class', 'datagrid-multiselect');
 
-                if ($this->subeventRepository->explicitSubeventsExists()) {
-                    $subeventsSelect = $container->addMultiSelect('subevents', '', $this->subeventRepository->getNonRegisteredSubeventsOptionsWithCapacity($this->user))
-                        ->setAttribute('class', 'datagrid-multiselect');
-                }
-            };
-            $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
-        }
+        $grid->addInlineAdd()->onControlAdd[] = function ($container) {
+            $rolesSelect = $container->addMultiSelect('roles', '', $this->roleRepository->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]))
+                ->setAttribute('class', 'datagrid-multiselect');
+
+            if ($this->subeventRepository->explicitSubeventsExists()) {
+                $subeventsSelect = $container->addMultiSelect('subevents', '', $this->subeventRepository->getNonRegisteredSubeventsOptionsWithCapacity($this->user))
+                    ->setAttribute('class', 'datagrid-multiselect');
+            }
+        };
+        $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
 
         $grid->addInlineEdit()->onControlAdd[] = function ($container) {
             $rolesSelect = $container->addMultiSelect('roles', '', $this->roleRepository->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]))
