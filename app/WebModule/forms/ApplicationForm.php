@@ -334,11 +334,13 @@ class ApplicationForm extends Nette\Object
                 $this->onSkautIsError();
             }
 
+            $editRegistrationTo = $this->settingsRepository->getDateValue(Settings::EDIT_REGISTRATION_TO);
+
             //odeslani potvrzovaciho mailu
             $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::REGISTRATION, [
                 TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-                TemplateVariable::EDIT_REGISTRATION_TO => $this->settingsRepository->getDateValue(Settings::EDIT_REGISTRATION_TO)->format('j. n. Y'),
-                TemplateVariable::APPLICATION_MATURITY => $application->getMaturityDate()->format('j. n. Y'),
+                TemplateVariable::EDIT_REGISTRATION_TO => $editRegistrationTo !== NULL ? $editRegistrationTo->format('j. n. Y') : '',
+                TemplateVariable::APPLICATION_MATURITY => $application->getMaturityDate() !== NULL ? $application->getMaturityDate()->format('j. n. Y') : '',
                 TemplateVariable::APPLICATION_FEE => $application->getFee(),
                 TemplateVariable::APPLICATION_VARIABLE_SYMBOL => $application->getVariableSymbol(),
                 TemplateVariable::BANK_ACCOUNT => $this->settingsRepository->getValue(Settings::ACCOUNT_NUMBER)
