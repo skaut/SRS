@@ -4,6 +4,7 @@ namespace App\AdminModule\ConfigurationModule\Presenters;
 
 use App\AdminModule\ConfigurationModule\Components\ISubeventsGridControlFactory;
 use App\AdminModule\ConfigurationModule\Forms\SubeventForm;
+use App\AdminModule\ConfigurationModule\Forms\SubeventsForm;
 use App\Model\Structure\SubeventRepository;
 use Nette\Forms\Form;
 
@@ -26,6 +27,12 @@ class SubeventsPresenter extends ConfigurationBasePresenter
      * @inject
      */
     public $subeventFormFactory;
+
+    /**
+     * @var SubeventsForm
+     * @inject
+     */
+    public $subeventsFormFactory;
 
     /**
      * @var SubeventRepository
@@ -58,6 +65,18 @@ class SubeventsPresenter extends ConfigurationBasePresenter
                 $this->flashMessage('admin.configuration.subevents_saved', 'success');
 
             $this->redirect('Subevents:default');
+        };
+
+        return $form;
+    }
+
+    protected function createComponentSubeventsForm()
+    {
+        $form = $this->subeventsFormFactory->create($this->getParameter('id'));
+
+        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+            $this->flashMessage('admin.configuration.configuration_saved', 'success');
+            $this->redirect('this');
         };
 
         return $form;

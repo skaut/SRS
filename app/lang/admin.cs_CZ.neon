@@ -479,7 +479,6 @@ configuration:
     seminar_to_date_empty: "Zadejte konec semináře."
     seminar_to_date_before_from: "Konec semináře nesmí být později než začátek semináře."
     edit_registration_to: "Odhlášení, změna rolí a změna podakcí povolena do"
-    is_allowed_add_subevents_after_payment: "povolit přidávání podakcí po zaplacení"
     edit_registration_to_empty: "Zadejte datum, do kdy je povoleno odhlášení a změna role."
     edit_registration_to_after_from: "Datum, do kdy je povoleno odhlášení a změna role, musí být před začátkem semináře."
 
@@ -514,6 +513,8 @@ configuration:
     subevents_deleted_error: "Podakce nebyla odstraněna, zkontrolujte, zda není přiřazena programovému bloku."
     subevents_add_heading: "Nová podakce"
     subevents_edit_heading: "Úprava podakce: %name%"
+    subevents_configuration_heading: "Nastavení podakcí"
+    is_allowed_add_subevents_after_payment: "povolit přidávání podakcí po zaplacení"
 
     discounts_heading: "Slevy"
     discounts_condition: "Podmínka"

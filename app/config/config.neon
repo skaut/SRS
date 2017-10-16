@@ -239,6 +239,7 @@ services:
     - App\AdminModule\ConfigurationModule\Forms\SeminarForm
     - App\AdminModule\ConfigurationModule\Forms\SkautIsEventForm
     - App\AdminModule\ConfigurationModule\Forms\SubeventForm
+    - App\AdminModule\ConfigurationModule\Forms\SubeventsForm
     - App\AdminModule\ConfigurationModule\Forms\WebForm
     - App\AdminModule\ProgramModule\Forms\BlockForm
     - App\AdminModule\MailingModule\Forms\EditTemplateForm
