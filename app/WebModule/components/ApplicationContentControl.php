@@ -88,6 +88,9 @@ class ApplicationContentControl extends Control
             $template->dbuser = $this->userRepository->findById($user->id);
         }
 
+        $template->explicitSubeventsExists = $this->subeventRepository->explicitSubeventsExists();
+        $template->rolesWithSubevents = json_encode($this->roleRepository->findRolesIds($this->roleRepository->findAllWithSubevents()));
+
         $template->render();
     }
 
