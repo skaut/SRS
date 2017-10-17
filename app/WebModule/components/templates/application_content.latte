@@ -24,6 +24,25 @@
                     };
                 </script>
 
+                {if $explicitSubeventsExists}
+                    <script>
+                        $(function(){
+                            $("select[name='roles']").on("change", function() {
+                                changeSubeventsRequired();
+                            });
+                            changeSubeventsRequired();
+                        });
+
+                        function changeSubeventsRequired() {
+                            if ($("select[name='roles']").val() === 1) {
+                                $("label[for='frm-applicationContent-applicationForm-subevents']").addClass('required');
+                            } else {
+                                $("label[for='frm-applicationContent-applicationForm-subevents']").removeClass('required');
+                            }
+                        }
+                    </script>
+                {/if}
+
                 <div class="well">
                     {control applicationForm}
                 </div>
