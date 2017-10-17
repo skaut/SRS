@@ -109,7 +109,7 @@ INSERT INTO `settings` (`item`, `value`) VALUES
   ('redirect_after_login', '/'),
   ('register_programs_from', NULL),
   ('register_programs_to', NULL),
-  ('seminar_email', 'srs@skauting.cz'),
+  ('seminar_email', 'srs@skaut.cz'),
   ('seminar_from_date', CURDATE() + 1),
   ('seminar_name', 'Název semináře'),
   ('seminar_to_date', CURDATE() + 2),
