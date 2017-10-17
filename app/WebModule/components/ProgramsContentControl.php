@@ -74,9 +74,11 @@ class ProgramsContentControl extends Control
         $user = $this->getPresenter()->user;
         $template->guestRole = $user->isInRole($this->roleRepository->findBySystemName(Role::GUEST)->getName());
 
-        $template->userHasPermission = $user->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS);
-        $template->userWaitingForPayment = !$this->settingsRepository->getValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT)
-            && $this->userRepository->findById($user->getId())->getWaitingForPaymentApplications()->count() > 0;
+        if ($user->isLoggedIn()) {
+            $template->userHasPermission = $user->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS);
+            $template->userWaitingForPayment = !$this->settingsRepository->getValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT)
+                && $this->userRepository->findById($user->getId())->getWaitingForPaymentApplications()->count() > 0;
+        }
 
         $template->render();
     }
