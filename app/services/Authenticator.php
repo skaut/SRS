@@ -125,7 +125,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
         if ($user->getPhotoUpdate() === NULL || $photoUpdate->diff($user->getPhotoUpdate())->s >= 1) {
             $photo = $this->skautIsService->getPersonPhoto($skautISUser->ID_Person, "normal");
             if ($photo->ID_PersonPhotoNormal) {
-                $fileName = $user->getId() . $photo->PhotoExtension;
+                $fileName = $photo->ID . $photo->PhotoExtension;
                 $path = User::PHOTO_PATH . "/" . $fileName;
                 $this->filesService->create($path, $photo->PhotoNormalContent);
                 $user->setPhoto($fileName);

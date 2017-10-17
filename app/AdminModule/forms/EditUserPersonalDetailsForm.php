@@ -152,10 +152,10 @@ class EditUserPersonalDetailsForm extends Nette\Object
                 $photo = $values['newPhoto'];
                 if ($photo->size > 0) {
                     $photoExtension = image_type_to_extension(getimagesizefromstring($photo->getContents())[2]);
-                    $photoName = $this->user->getId() . $photoExtension;
+                    $photoName = 'ext_' . $this->user->getId() . $photoExtension;
 
-                    $this->filesService->save($photo, '/user_photos/' . $photoName);
-                    $this->filesService->resizeAndCropImage('/user_photos/' . $photoName, 135, 180);
+                    $this->filesService->save($photo, User::PHOTO_PATH . '/' . $photoName);
+                    $this->filesService->resizeAndCropImage(User::PHOTO_PATH . '/' . $photoName, 135, 180);
 
                     $this->user->setPhoto($photoName);
                 }
