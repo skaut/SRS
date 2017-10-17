@@ -200,9 +200,13 @@ class ApplicationsGridControl extends Control
                 ->addRule(Form::FILLED, 'admin.users.users_applications_variable_symbol_empty')
                 ->addRule(Form::PATTERN, 'admin.users.users_edit_variable_symbol_format', '^\d{1,10}$');
 
-            $container->addSelect('paymentMethod', 'admin.users.users_payment_method', $this->preparePaymentMethodOptions());
+            $paymentMethodSelect = $container->addSelect('paymentMethod', 'admin.users.users_payment_method', $this->preparePaymentMethodOptions());
 
             $container->addDatePicker('paymentDate', 'admin.users.users_payment_date');
+
+            $paymentMethodSelect
+                ->addConditionOn($container['paymentDate'], Form::FILLED)
+                ->addRule(Form::FILLED, 'admin.users.users_applications_payment_method_empty');
 
             $container->addDatePicker('incomeProofPrintedDate', 'admin.users.users_income_proof_printed_date');
 

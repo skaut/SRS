@@ -355,6 +355,7 @@ users:
     users_applications_variable_symbol_format: "Zadejte 1-10 číslic."
     users_applications_maturity_date: "Splatnost"
     users_applications_payment_method: "Platební metoda"
+    users_applications_payment_method_empty: "Vyberte platební metodu."
     users_applications_payment_date: "Zaplaceno dne"
     users_applications_income_proof_printed_date: "Doklad vytištěn"
     users_applications_state: "Stav"
