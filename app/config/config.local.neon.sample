@@ -9,4 +9,10 @@ parameters:
         appId: skaut_is_app_id
         test: false
 
-
+mail:
+    smtp: false
+    host:
+    port:
+    username:
+    password:
+    secure:
