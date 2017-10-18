@@ -69,7 +69,7 @@ class MaturityPresenter extends ActionBasePresenter
      */
     public function actionCheck()
     {
-        $cancelRegistration = $this->settingsRepository->getValue(Settings::MATURITY_REMINDER);
+        $cancelRegistration = $this->settingsRepository->getValue(Settings::CANCEL_REGISTRATION_AFTER_MATURITY);
         if ($cancelRegistration !== NULL)
             $cancelRegistrationDate = (new \DateTime())->setTime(0, 0)->modify('-' . $cancelRegistration . ' days');
 
@@ -94,6 +94,10 @@ class MaturityPresenter extends ActionBasePresenter
                             $this->applicationRepository->remove($application);
                         }
                         $this->userRepository->save($user);
+
+                        $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$user]), '', Template::REGISTRATION_CANCELED, [
+                            TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)
+                        ]);
                     }
                     else {
                         $application->setState(ApplicationState::CANCELED_NOT_PAID);

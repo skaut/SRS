@@ -486,6 +486,10 @@ class ApplicationsGridControl extends Control
 
             $this->programRepository->updateUserPrograms($user);
             $this->userRepository->save($user);
+
+            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$user]), '', Template::REGISTRATION_CANCELED, [
+                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)
+            ]);
         });
 
         $this->getPresenter()->flashMessage('admin.users.users_applications_registration_canceled', 'success');
