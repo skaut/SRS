@@ -394,7 +394,8 @@ class ExcelExportService extends Nette\Object
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->getFeeRemaining());
 
-            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getVariableSymbolsText());
+            $sheet->getCellByColumnAndRow($column++, $row)
+                ->setValueExplicit($user->getVariableSymbolsText(), PHPExcel_Cell_DataType::TYPE_STRING);
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $this->userService->getPaymentMethodText($user));
 
@@ -497,7 +498,9 @@ class ExcelExportService extends Nette\Object
             $row++;
             $column = 0;
 
-            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getVariableSymbolsText());
+            $sheet->getCellByColumnAndRow($column++, $row)
+                ->setValueExplicit($user->getFirstApplication() ? $user->getFirstApplication()->getVariableSymbol() : '',
+                    PHPExcel_Cell_DataType::TYPE_STRING);
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->getFirstName());
 
