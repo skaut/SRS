@@ -153,16 +153,20 @@ class PaymentForm extends UI\Control
             $this->settingsRepository->setDateValue(Settings::MATURITY_DATE, $values['maturityDate'] ?: (new \DateTime())->setTime(0, 0));
 
         if (array_key_exists('maturityDays', $values))
-            $this->settingsRepository->setValue(Settings::MATURITY_DAYS, $values['maturityDays'] ?: 0);
+            $this->settingsRepository->setValue(Settings::MATURITY_DAYS,
+                $values['maturityDays'] !== '' ? $values['maturityDays'] : 0);
 
         if (array_key_exists('maturityWorkDays', $values))
-            $this->settingsRepository->setValue(Settings::MATURITY_WORK_DAYS, $values['maturityWorkDays'] ?: 0);
+            $this->settingsRepository->setValue(Settings::MATURITY_WORK_DAYS,
+                $values['maturityWorkDays'] !== '' ? $values['maturityWorkDays'] : 0);
 
         if (array_key_exists('maturityReminder', $values))
-            $this->settingsRepository->setValue(Settings::MATURITY_REMINDER, $values['maturityReminder'] ?: NULL);
+            $this->settingsRepository->setValue(Settings::MATURITY_REMINDER,
+                $values['maturityReminder'] !== '' ? $values['maturityReminder'] : NULL);
 
         if (array_key_exists('cancelRegistrationAfterMaturity', $values))
-            $this->settingsRepository->setValue(Settings::CANCEL_REGISTRATION_AFTER_MATURITY, $values['cancelRegistrationAfterMaturity'] ?: NULL);
+            $this->settingsRepository->setValue(Settings::CANCEL_REGISTRATION_AFTER_MATURITY,
+                $values['cancelRegistrationAfterMaturity'] !== '' ? $values['cancelRegistrationAfterMaturity'] : NULL);
 
         $this->onSave($this);
     }
