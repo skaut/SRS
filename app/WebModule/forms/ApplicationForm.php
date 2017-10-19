@@ -181,13 +181,13 @@ class ApplicationForm extends Nette\Object
         $form->addText('state', 'web.application_content.state')
             ->addRule(Form::FILLED, 'web.application_content.state_empty');
 
-        $this->addCustomInputs($form);
-
         $this->addRolesSelect($form);
 
         $this->addSubeventsSelect($form);
 
         $this->addArrivalDeparture($form);
+
+        $this->addCustomInputs($form);
 
         $form->addCheckbox('agreement', $this->settingsRepository->getValue(Settings::APPLICATION_AGREEMENT))
             ->addRule(Form::FILLED, 'web.application_content.agreement_empty');
