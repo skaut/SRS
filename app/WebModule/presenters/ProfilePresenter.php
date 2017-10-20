@@ -99,26 +99,6 @@ class ProfilePresenter extends WebBasePresenter
     {
         $this->template->pageName = $this->translator->translate('web.profile.title');
         $this->template->paymentMethodBank = PaymentType::BANK;
-        $this->template->editRegistrationAllowed = $this->applicationService->isAllowedEditRegistration($this->dbuser);
-    }
-
-    /**
-     * Odhlásí uživatele ze semináře.
-     */
-    public function actionCancelRegistration()
-    {
-        if ($this->applicationService->isAllowedEditRegistration($this->dbuser)) {
-            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->dbuser]), '', Template::REGISTRATION_CANCELED, [
-                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)
-            ]);
-
-            $this->userRepository->remove($this->dbuser);
-
-            $this->redirect(':Auth:logout');
-        }
-        else {
-            $this->redirect(':Web:Profile:default');
-        }
     }
 
     /**

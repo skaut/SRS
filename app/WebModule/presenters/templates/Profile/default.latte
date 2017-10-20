@@ -53,19 +53,6 @@
 
                     <br>
                     {control applicationsGrid}
-                    <br>
-
-                    {if $editRegistrationAllowed}
-                        <a n:href="cancelRegistration" class="btn btn-danger" data-toggle="confirmation"
-                                                       data-content="{_web.profile.cancel_registration_confirm}">
-                            {_web.profile.cancel_registration}
-                        </a>
-                    {else}
-                        <a href="#" class="btn btn-danger" data-toggle="tooltip" disabled="true"
-                                                       title="{_web.profile.cancel_registration_disabled}">
-                            {_web.profile.cancel_registration}
-                        </a>
-                    {/if}
                 </div>
             </div>
         </div>
