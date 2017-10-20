@@ -244,7 +244,7 @@ class ApplicationsGridControl extends Control
             ->addAttributes([
                 'data-toggle' => 'confirmation',
                 'data-content' => $this->translator->translate('admin.users.users_applications_cancel_registration_confirm')
-            ]);
+            ])->setClass('btn btn-xs btn-danger');
         $grid->allowRowsAction('cancelRegistration', function ($item) {
             return $item->isFirst();
         });
@@ -253,7 +253,7 @@ class ApplicationsGridControl extends Control
             ->addAttributes([
                 'data-toggle' => 'confirmation',
                 'data-content' => $this->translator->translate('admin.users.users_applications_cancel_application_confirm')
-            ]);
+            ])->setClass('btn btn-xs btn-danger');
         $grid->allowRowsAction('cancelApplication', function ($item) {
             return !$item->isFirst()
                 && ($item->getState() == ApplicationState::PAID || $item->getState() == ApplicationState::WAITING_FOR_PAYMENT);

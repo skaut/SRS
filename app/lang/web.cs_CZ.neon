@@ -29,9 +29,6 @@ profile:
     nonregistered: "Neúčastníte se"
     unapproved: "Vaše registrace zatím nebyla potvrzena"
     account_number: "Poplatek uhraďte na účet"
-    cancel_registration: "Odhlásit se ze semináře"
-    cancel_registration_confirm: "Opravdu se chcete odhlásit ze semináře?"
-    cancel_registration_disabled: "Odhlášení ze semináře již není možné nebo nejste na seminář registrováni."
     change_roles_confirm: "Pokud nová role vyžaduje schválení organizátora, budete Vám nastavena role \"Neschválený\". Opravdu chcete pokračovat?"
     change_roles_disabled: "Změna rolí již není možná nebo nejste na seminář registrováni."
 
@@ -55,6 +52,11 @@ profile:
     applications_add_subevents_successful: "Podakce byly úspěšně přidány."
     applications_edit: "Upravit přihlášku"
     applications_edit_successful: "Přihláška byla úspěšně upravena."
+    applications_cancel_registration: "Odhlásit se ze semináře"
+    applications_cancel_registration_confirm: "Opravdu se chcete odhlásit z celého semináře?"
+    applications_cancel_application: "Zrušit přihlášku"
+    applications_cancel_application_confirm: "Opravdu chcete zrušit dodatečnou přihlášku?"
+    applications_application_canceled: "Dodatečná přihláška byla úspěšně zrušena."
     applications_download_payment_proof: "Stáhnout potvrzení"
 
     personal_details_group: "Osobní údaje"

@@ -211,6 +211,24 @@ class ApplicationsGridControl extends Control
                 && $item->getPaymentDate();
         });
 
+        $grid->addAction('cancelRegistration', 'web.profile.applications_cancel_registration')
+            ->addAttributes([
+                'data-toggle' => 'confirmation',
+                'data-content' => $this->translator->translate('web.profile.applications_cancel_registration_confirm')
+            ])->setClass('btn btn-xs btn-danger');
+        $grid->allowRowsAction('cancelRegistration', function ($item) {
+            return $item->isFirst() && $this->applicationService->isAllowedCancelApplication($item);
+        });
+
+        $grid->addAction('cancelApplication', 'web.profile.applications_cancel_application')
+            ->addAttributes([
+                'data-toggle' => 'confirmation',
+                'data-content' => $this->translator->translate('web.profile.applications_cancel_application_confirm')
+            ])->setClass('btn btn-xs btn-danger');
+        $grid->allowRowsAction('cancelApplication', function ($item) {
+            return !$item->isFirst() && $this->applicationService->isAllowedCancelApplication($item);
+        });
+
         $grid->setColumnsSummary(['fee']);
     }
 
@@ -483,6 +501,55 @@ class ApplicationsGridControl extends Control
     }
 
     /**
+     * Odhlásí uživatele ze semináře.
+     * @param $id
+     */
+    public function handleCancelRegistration($id)
+    {
+        $application = $this->applicationRepository->findById($id);
+
+        if ($this->applicationService->isAllowedCancelApplication($application)) {
+            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$application->getUser()]), '', Template::REGISTRATION_CANCELED, [
+                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)
+            ]);
+
+            $p = $this->getPresenter();
+
+            $this->userRepository->remove($application->getUser());
+
+            $p->redirect(':Auth:logout');
+        }
+        else {
+            $this->redirect('this');
+        }
+    }
+
+    /**
+     * Zruší přihlášku.
+     * @param $id
+     */
+    public function handleCancelApplication($id)
+    {
+        $application = $this->applicationRepository->findById($id);
+
+        if ($this->applicationService->isAllowedCancelApplication($application)) {
+            $user = $application->getUser();
+
+            $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($application, $user) {
+                $application->setState(ApplicationState::CANCELED);
+                $this->applicationRepository->save($application);
+
+                $this->programRepository->updateUserPrograms($user);
+                $this->userRepository->save($user);
+            });
+
+            $this->getPresenter()->flashMessage('web.profile.applications_application_canceled', 'success');
+        }
+
+        $this->redirect('this');
+    }
+
+    /**
      * Ověří, že je vybrána alespoň jedna podakce.
      * @param $selectedSubevents
      * @return bool
@@ -616,3 +683,4 @@ class ApplicationsGridControl extends Control
         return TRUE;
     }
 }
+

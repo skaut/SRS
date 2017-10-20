@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Mailing\TextMail;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
+use App\Model\Enums\ApplicationState;
 use App\Model\Enums\ConditionOperator;
 use App\Model\Enums\MaturityType;
 use App\Model\Enums\VariableSymbolType;
@@ -15,6 +16,7 @@ use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\DiscountRepository;
 use App\Model\Structure\SubeventRepository;
+use App\Model\User\Application;
 use App\Model\User\ApplicationRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
@@ -167,19 +169,6 @@ class ApplicationService extends Nette\Object
     }
 
     /**
-     * Může uživatel měnit registraci?
-     * @param User $user
-     * @return bool
-     */
-    public function isAllowedEditRegistration(User $user)
-    {
-        $nonregisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
-        return !$user->isInRole($nonregisteredRole)
-            && !$user->hasPaidFirstApplication()
-            && $this->settingsRepository->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new \DateTime())->setTime(0, 0);
-    }
-
-    /**
      * Může uživatel dodatečně přidávat podakce?
      * @param User $user
      * @return bool
@@ -200,6 +189,17 @@ class ApplicationService extends Nette\Object
     public function isAllowedEditFirstApplication(User $user)
     {
         return !$user->hasPaidFirstApplication()
+            && $this->settingsRepository->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new \DateTime())->setTime(0, 0);
+    }
+
+    /**
+     * Je uživateli povoleno zrušit přihlášku?
+     * @param Application $application
+     * @return bool
+     */
+    public function isAllowedCancelApplication(Application $application)
+    {
+        return $application->getState() == ApplicationState::WAITING_FOR_PAYMENT
             && $this->settingsRepository->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new \DateTime())->setTime(0, 0);
     }
 
