@@ -202,7 +202,7 @@ class UsersGridControl extends Control
             });
 
         $grid->addColumnText('subevents', 'admin.users.users_subevents', 'subeventsText')
-            ->setFilterMultiSelect($this->subeventRepository->getExplicitOptions())
+            ->setFilterMultiSelect($this->subeventRepository->getSubeventsOptions())
             ->setCondition(function ($qb, $values) {
                 $qb
                     ->join('u.applications', 'a')
