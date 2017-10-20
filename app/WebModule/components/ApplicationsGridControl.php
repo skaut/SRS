@@ -414,7 +414,7 @@ class ApplicationsGridControl extends Control
         }
 
         //zpracovani zmen
-        $this->applicationRepository->getEntityManager()->transactional(function($em) use($id, $selectedRoles, $selectedSubevents, $approved) {
+        $this->applicationRepository->getEntityManager()->transactional(function($em) use($id, $selectedRoles, $selectedSubevents, $approved, $values) {
             $this->user->setRoles($selectedRoles);
             $this->user->setApproved($approved);
             $this->userRepository->save($this->user);
