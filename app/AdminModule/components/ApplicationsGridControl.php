@@ -415,9 +415,8 @@ class ApplicationsGridControl extends Control
                     else
                         $fee = $this->applicationService->countFee($selectedRoles, $application->getSubevents(), FALSE);
                     $application->setFee($fee);
-                    $application->setState($fee == 0 || $application->getPaymentDate()
-                        ? ApplicationState::PAID
-                        : ApplicationState::WAITING_FOR_PAYMENT);
+                    if ($application->getState() == ApplicationState::WAITING_FOR_PAYMENT || $application->getState() == ApplicationState::PAID)
+                        $application->setState($fee == 0 || $application->getPaymentDate() ? ApplicationState::PAID : ApplicationState::WAITING_FOR_PAYMENT);
                     $this->applicationRepository->save($application);
                 }
             } else {
