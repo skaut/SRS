@@ -226,6 +226,11 @@ class ApplicationsGridControl extends Control
             $selectedAndUsersSubevents->add($subevent);
 
         //kontrola podakci
+        if (!$this->validateSubeventsEmpty($selectedSubevents)) {
+            $this->getPresenter()->flashMessage('web.profile.applications_subevents_empty', 'danger');
+            $this->redirect('this');
+        }
+
         if (!$this->validateSubeventsCapacities($selectedSubevents)) {
             $this->getPresenter()->flashMessage('web.profile.applications_subevents_capacity_occupied', 'danger');
             $this->redirect('this');
@@ -360,6 +365,11 @@ class ApplicationsGridControl extends Control
             $selectedSubevents = $this->subeventRepository->findSubeventsByIds($values['subevents']);
 
             //kontrola podakci
+            if (!$this->validateSubeventsEmpty($selectedSubevents)) {
+                $this->getPresenter()->flashMessage('web.profile.applications_subevents_empty', 'danger');
+                $this->redirect('this');
+            }
+
             if (!$this->validateSubeventsCapacities($selectedSubevents)) {
                 $this->getPresenter()->flashMessage('web.profile.applications_subevents_capacity_occupied', 'danger');
                 $this->redirect('this');
@@ -470,6 +480,18 @@ class ApplicationsGridControl extends Control
             $this->applicationRepository->findById($id),
             "potvrzeni-o-prijeti-platby.pdf"
         );
+    }
+
+    /**
+     * Ověří, že je vybrána alespoň jedna podakce.
+     * @param $selectedSubevents
+     * @return bool
+     */
+    private function validateSubeventsEmpty($selectedSubevents)
+    {
+        if ($selectedSubevents->isEmpty())
+            return FALSE;
+        return TRUE;
     }
 
     /**
