@@ -66,6 +66,7 @@ class ProgramBlocksGridControl extends Control
      * @param CategoryRepository $categoryRepository
      * @param ProgramRepository $programRepository
      * @param SubeventRepository $subeventRepository
+     * @param ExcelExportService $excelExportService
      * @param Session $session
      */
     public function __construct(Translator $translator, BlockRepository $blockRepository,

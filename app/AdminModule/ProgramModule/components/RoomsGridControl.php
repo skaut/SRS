@@ -40,6 +40,8 @@ class RoomsGridControl extends Control
      * RoomsGridControl constructor.
      * @param Translator $translator
      * @param RoomRepository $roomRepository
+     * @param ExcelExportService $excelExportService
+     * @param Session $session
      */
     public function __construct(Translator $translator, RoomRepository $roomRepository,
                                 ExcelExportService $excelExportService, Session $session)

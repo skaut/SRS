@@ -58,6 +58,9 @@ class ExcelExportService extends Nette\Object
      * @param CustomInputRepository $customInputRepository
      * @param BlockRepository $blockRepository
      * @param UserService $userService
+     * @param SubeventRepository $subeventRepository
+     * @param CategoryRepository $categoryRepository
+     * @param ProgramRepository $programRepository
      */
     public function __construct(Translator $translator, CustomInputRepository $customInputRepository,
                                 BlockRepository $blockRepository, UserService $userService,
