@@ -200,7 +200,8 @@ class UsersGridControl extends Control
             ->setFilterMultiSelect($this->roleRepository->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED]))
             ->setCondition(function ($qb, $values) {
                 $qb->join('u.roles', 'r')
-                    ->andWhere('r.id IN (' . implode(', ', $values) . ')');
+                    ->andWhere('r.id IN (:rids)')
+                    ->setParameter('rids', $values);
             });
 
         $grid->addColumnText('subevents', 'admin.users.users_subevents', 'subeventsText')
@@ -208,7 +209,8 @@ class UsersGridControl extends Control
             ->setCondition(function ($qb, $values) {
                 $qb->join('u.applications', 'aSubevents')
                     ->join('aSubevents.subevents', 's')
-                    ->andWhere('s.id IN (' . implode(', ', $values) . ')');
+                    ->andWhere('s.id IN (:sids)')
+                    ->setParameter('sids', $values);
             });
 
         $columnApproved = $grid->addColumnStatus('approved', 'admin.users.users_approved');
