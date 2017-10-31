@@ -43,6 +43,7 @@ class RoomScheduleGridControl extends Control
      * @param Translator $translator
      * @param RoomRepository $roomRepository
      * @param ProgramRepository $programRepository
+     * @param ExcelExportService $excelExportService
      */
     public function __construct(Translator $translator, RoomRepository $roomRepository,
                                 ProgramRepository $programRepository, ExcelExportService $excelExportService)
