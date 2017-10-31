@@ -154,8 +154,7 @@ class UsersGridControl extends Control
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
-        $grid->setDataSource($this->userRepository->createQueryBuilder('u')
-            ->leftJoin('u.applications', 'a', Expr\Join::WITH, 'a.first = true'));
+        $grid->setDataSource($this->userRepository->createQueryBuilder('u'));
         $grid->setDefaultSort(['displayName' => 'ASC']);
         $grid->setColumnsHideable();
 
@@ -200,17 +199,16 @@ class UsersGridControl extends Control
         $grid->addColumnText('roles', 'admin.users.users_roles', 'rolesText')
             ->setFilterMultiSelect($this->roleRepository->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED]))
             ->setCondition(function ($qb, $values) {
-                $qb->join('u.roles', 'r')->where('r.id IN (:ids)')->setParameter(':ids', $values);
+                $qb->join('u.roles', 'r')
+                    ->andWhere('r.id IN (' . implode(', ', $values) . ')');
             });
 
         $grid->addColumnText('subevents', 'admin.users.users_subevents', 'subeventsText')
             ->setFilterMultiSelect($this->subeventRepository->getSubeventsOptions())
             ->setCondition(function ($qb, $values) {
-                $qb
-                    ->join('u.applications', 'a')
-                    ->join('a.subevents', 's')
-                    ->where('s.id IN (:ids)')
-                    ->setParameter(':ids', $values);
+                $qb->join('u.applications', 'aSubevents')
+                    ->join('aSubevents.subevents', 's')
+                    ->andWhere('s.id IN (' . implode(', ', $values) . ')');
             });
 
         $columnApproved = $grid->addColumnStatus('approved', 'admin.users.users_approved');
@@ -261,9 +259,8 @@ class UsersGridControl extends Control
         $grid->addColumnText('variableSymbol', 'admin.users.users_variable_symbol', 'variableSymbolsText')
             ->setFilterText()
             ->setCondition(function ($qb, $value) {
-                $qb
-                    ->join('u.applications', 'a')
-                    ->where('a.variableSymbol LIKE :variableSymbol')
+                $qb->join('u.applications', 'aVariableSymbol')
+                    ->andWhere('aVariableSymbol.variableSymbol LIKE :variableSymbol')
                     ->setParameter(':variableSymbol', $value . '%');
             });
 
@@ -278,7 +275,11 @@ class UsersGridControl extends Control
         //            ->setSortable();
 
         $grid->addColumnDateTime('firstApplicationDate', 'admin.users.users_first_application_date')
-            ->setSortable('a.applicationDate')
+            ->setSortable()
+            ->setSortableCallback(function ($qb, $sort) {
+                $qb->leftJoin('u.applications', 'aFirstApplicationDate', Expr\Join::WITH, 'aFirstApplicationDate.first = true')
+                    ->orderBy('aFirstApplicationDate.applicationDate', $sort['firstApplicationDate']);
+            })
             ->setFormat('j. n. Y H:i');
 
         $columnAttended = $grid->addColumnStatus('attended', 'admin.users.users_attended');
