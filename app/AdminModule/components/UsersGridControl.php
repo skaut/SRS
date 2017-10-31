@@ -26,6 +26,7 @@ use App\Services\MailService;
 use App\Services\PdfExportService;
 use App\Services\UserService;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Query\Expr;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
@@ -153,7 +154,8 @@ class UsersGridControl extends Control
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
-        $grid->setDataSource($this->userRepository->createQueryBuilder('u'));
+        $grid->setDataSource($this->userRepository->createQueryBuilder('u')
+            ->leftJoin('u.applications', 'a', Expr\Join::WITH, 'a.first = true'));
         $grid->setDefaultSort(['displayName' => 'ASC']);
         $grid->setColumnsHideable();
 
@@ -276,6 +278,7 @@ class UsersGridControl extends Control
         //            ->setSortable();
 
         $grid->addColumnDateTime('firstApplicationDate', 'admin.users.users_first_application_date')
+            ->setSortable('a.applicationDate')
             ->setFormat('j. n. Y H:i');
 
         $columnAttended = $grid->addColumnStatus('attended', 'admin.users.users_attended');
