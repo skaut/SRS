@@ -73,14 +73,15 @@ class SubeventsGridControl extends Control
 
         $grid->addColumnNumber('fee', 'admin.configuration.subevents_fee');
 
-        $grid->addColumnText('capacity', 'admin.configuration.subevents_capacity')
-            ->setRendererOnCondition(function ($row) {
-                return $this->translator->translate('admin.configuration.subevents_capacity_unlimited');
-            }, function ($row) {
-                return $row->getCapacity() === NULL;
-            }
+        $grid->addColumnText('capacity', 'admin.configuration.subevents_occupancy')
+            ->setRenderer(
+                function ($row) {
+                    $capacity = $row->getCapacity();
+                    if ($capacity === NULL)
+                        return $this->subeventRepository->countApprovedUsersInSubevent($row);
+                    return $this->subeventRepository->countApprovedUsersInSubevent($row) . "/" . $capacity;
+                }
             );
-
 
         $grid->addToolbarButton('Subevents:add')
             ->setIcon('plus')
