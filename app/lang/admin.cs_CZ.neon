@@ -273,6 +273,8 @@ users:
     users_lastname: "Příjmení"
     users_lastname_empty: "Zadejte příjmení."
     users_nickname: "Přezdívka"
+    users_degree_pre: "Titul před jménem"
+    users_degree_post: "Titul za jménem"
     users_email: "E-mail"
     users_email_format: "Zadejte e-mail ve správném formátu."
     users_birthdate: "Datum narození"

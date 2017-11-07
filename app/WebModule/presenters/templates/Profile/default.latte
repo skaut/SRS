@@ -145,7 +145,7 @@
                                         </td>
                                         <td>{$program->getBlock()->getName()}</td>
                                         <td>{if $program->getRoom() !== null}{$program->getRoom()->getName()}{/if}</td>
-                                        <td>{if $program->getBlock()->getLector() !== null}{$program->getBlock()->getLector()->getDisplayName()}{/if}</td>
+                                        <td>{if $program->getBlock()->getLector() !== null}{$program->getBlock()->getLector()->getLectorName()}{/if}</td>
                                     </tr>
                                 {/foreach}
                             </tbody>

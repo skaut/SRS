@@ -10,7 +10,7 @@
         "kdyby/translation": "^2.4",
         "kdyby/console": "^2.7",
 
-        "nettrine/migrations": "^0.1",
+        "zenify/doctrine-migrations": "^3.0",
 
         "dg/MySQL-dump": "^1.4",
 

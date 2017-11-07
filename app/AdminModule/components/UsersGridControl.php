@@ -157,7 +157,7 @@ class UsersGridControl extends Control
         $grid->setDataSource($this->userRepository->createQueryBuilder('u'));
         $grid->setDefaultSort(['displayName' => 'ASC']);
         $grid->setColumnsHideable();
-        $grid->setItemsPerPageList([25, 50, 100, 250, 500, 1000]);
+        $grid->setItemsPerPageList([25, 50, 100, 250, 500]);
 
         $grid->addGroupAction('admin.users.users_group_action_approve')
             ->onSelect[] = [$this, 'groupApprove'];

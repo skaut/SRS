@@ -88,6 +88,10 @@ class EditUserPersonalDetailsForm extends Nette\Object
 
         $form->addText('nickName', 'admin.users.users_nickname');
 
+        $form->addText('degreePre', 'admin.users.users_degree_pre');
+
+        $form->addText('degreePost', 'admin.users.users_degree_post');
+
         $form->addText('email', 'admin.users.users_email')
             ->addCondition(Form::FILLED)
             ->addRule(Form::EMAIL, 'admin.users.users_email_format');
@@ -116,6 +120,8 @@ class EditUserPersonalDetailsForm extends Nette\Object
             'firstName' => $this->user->getFirstName(),
             'lastName' => $this->user->getLastName(),
             'nickName' => $this->user->getNickName(),
+            'degreePre' => $this->user->getDegreePre(),
+            'degreePost' => $this->user->getDegreePost(),
             'email' => $this->user->getEmail(),
             'birthdate' => $this->user->getBirthdate(),
             'street' => $this->user->getStreet(),
@@ -140,6 +146,8 @@ class EditUserPersonalDetailsForm extends Nette\Object
             $this->user->setFirstName($values['firstName']);
             $this->user->setLastName($values['lastName']);
             $this->user->setNickName($values['nickName']);
+            $this->user->setDegreePre($values['degreePre']);
+            $this->user->setDegreePost($values['degreePost']);
             $this->user->setEmail($values['email']);
             $this->user->setBirthdate($values['birthdate']);
             $this->user->setStreet($values['street']);

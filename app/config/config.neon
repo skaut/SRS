@@ -10,7 +10,9 @@ extensions:
     console: Kdyby\Console\DI\ConsoleExtension
     events: Kdyby\Events\DI\EventsExtension
     annotations: Kdyby\Annotations\DI\AnnotationsExtension
-    migrations: Nettrine\Migrations\DI\MigrationsExtension
+    - Arachne\ContainerAdapter\DI\ContainerAdapterExtension
+    - Arachne\EventDispatcher\DI\EventDispatcherExtension
+    migrations: Zenify\DoctrineMigrations\DI\MigrationsExtension
     doctrine: Kdyby\Doctrine\DI\OrmExtension
     webloader: WebLoader\Nette\Extension
     skautis: Skautis\Nette\SkautisExtension
@@ -49,13 +51,6 @@ mailing:
 translation:
     default: cs
     fallback: [cs_CZ, cs]
-
-decorator:
-    Doctrine\DBAL\Migrations\Tools\Console\Command\AbstractCommand:
-        tags: [ kdyby.console.command ]
-
-    Symfony\Component\Console\Helper\Helper:
-        tags: [ kdyby.console.helper ]
 
 services:
     - App\RouterFactory
