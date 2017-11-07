@@ -108,11 +108,33 @@ class User
     protected $nickName;
 
     /**
+     * Titul před jménem.
+     * @ORM\Column(type="string", nullable=true)
+     * @var string
+     */
+
+    protected $degreePre;
+
+    /**
+     * Titul za jménem.
+     * @ORM\Column(type="string", nullable=true)
+     * @var string
+     */
+    protected $degreePost;
+
+    /**
      * Zobrazované jméno - Příjmení Jméno (Přezdívka).
      * @ORM\Column(type="string")
      * @var string
      */
     protected $displayName;
+
+    /**
+     * Zobrazované jméno lektora, včetně titulů.
+     * @ORM\Column(type="string", nullable=true)
+     * @var string
+     */
+    protected $lectorName;
 
     /**
      * Bezpečnostní kód.
@@ -609,6 +631,7 @@ class User
     {
         $this->firstName = $firstName;
         $this->updateDisplayName();
+        $this->updateLectorName();
     }
 
     /**
@@ -626,6 +649,7 @@ class User
     {
         $this->lastName = $lastName;
         $this->updateDisplayName();
+        $this->updateLectorName();
     }
 
     /**
@@ -643,6 +667,41 @@ class User
     {
         $this->nickName = $nickName;
         $this->updateDisplayName();
+        $this->updateLectorName();
+    }
+
+    /**
+     * @return string
+     */
+    public function getDegreePre()
+    {
+        return $this->degreePre;
+    }
+
+    /**
+     * @param string $degreePre
+     */
+    public function setDegreePre($degreePre)
+    {
+        $this->degreePre = $degreePre;
+        $this->updateLectorName();
+    }
+
+    /**
+     * @return string
+     */
+    public function getDegreePost()
+    {
+        return $this->degreePost;
+    }
+
+    /**
+     * @param string $degreePost
+     */
+    public function setDegreePost($degreePost)
+    {
+        $this->degreePost = $degreePost;
+        $this->updateLectorName();
     }
 
     /**
@@ -658,9 +717,32 @@ class User
      */
     private function updateDisplayName()
     {
-        $this->displayName = $this->lastName . " " . $this->firstName;
+        $this->displayName = $this->lastName . ' ' . $this->firstName;
         if ($this->nickName != NULL)
-            $this->displayName .= " (" . $this->nickName . ")";
+            $this->displayName .= ' (' . $this->nickName . ')';
+    }
+
+    /**
+     * @return string
+     */
+    public function getLectorName()
+    {
+        return $this->lectorName;
+    }
+
+    /**
+     * Aktualizuje jméno lektora.
+     */
+    public function updateLectorName()
+    {
+        $this->lectorName = '';
+        if ($this->degreePre != NULL)
+            $this->lectorName .= $this->degreePre . ' ';
+        $this->lectorName .= $this->firstName . ' ' . $this->lastName;
+        if ($this->degreePost != NULL)
+            $this->lectorName .= ', ' . $this->degreePost;
+        if ($this->nickName != NULL)
+            $this->lectorName .= ' (' . $this->nickName . ')';
     }
 
     /**

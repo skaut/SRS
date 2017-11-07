@@ -38,6 +38,20 @@
                         <td>{$detailUser->getNickName()}</td>
                     </tr>
 
+                    {if $detailUser->getDegreePre() != NULL}
+                        <tr>
+                            <th>{_admin.users.users_degree_pre}</th>
+                            <td>{$detailUser->getDegreePre()}</td>
+                        </tr>
+                    {/if}
+
+                    {if $detailUser->getDegreePost() != NULL}
+                        <tr>
+                            <th>{_admin.users.users_degree_post}</th>
+                            <td>{$detailUser->getDegreePost()}</td>
+                        </tr>
+                    {/if}
+
                     <tr>
                         <th>{_admin.users.users_email}</th>
                         <td><a href="mailto:{$detailUser->getEmail()}">{$detailUser->getEmail()}</a></td>

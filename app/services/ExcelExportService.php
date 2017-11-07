@@ -169,7 +169,7 @@ class ExcelExportService extends Nette\Object
                 $sheet->setCellValueByColumnAndRow($column++, $row, $program->getEnd()->format("j. n. H:i"));
                 $sheet->setCellValueByColumnAndRow($column++, $row, $program->getBlock()->getName());
                 $sheet->setCellValueByColumnAndRow($column++, $row, $program->getRoom() ? $program->getRoom()->getName() : NULL);
-                $sheet->setCellValueByColumnAndRow($column++, $row, $program->getBlock()->getLector() ? $program->getBlock()->getLector()->getDisplayName() : NULL);
+                $sheet->setCellValueByColumnAndRow($column++, $row, $program->getBlock()->getLector() ? $program->getBlock()->getLector()->getLectorName() : NULL);
             }
         }
 
