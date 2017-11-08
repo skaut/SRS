@@ -68,6 +68,10 @@ class AddLectorForm extends Nette\Object
 
         $form->addText('nickName', 'admin.users.users_nickname');
 
+        $form->addText('degreePre', 'admin.users.users_degree_pre');
+
+        $form->addText('degreePost', 'admin.users.users_degree_post');
+
         $form->addText('email', 'admin.users.users_email')
             ->addCondition(Form::FILLED)
             ->addRule(Form::EMAIL, 'admin.users.users_email_format');
@@ -112,6 +116,8 @@ class AddLectorForm extends Nette\Object
             $user->setFirstName($values['firstName']);
             $user->setLastName($values['lastName']);
             $user->setNickName($values['nickName']);
+            $user->setDegreePre($values['degreePre']);
+            $user->setDegreePost($values['degreePost']);
             $user->setEmail($values['email']);
             $user->setBirthdate($values['birthdate'] !== NULL ? new \DateTime($values['birthdate']) : NULL);
             $user->setStreet($values['street']);
