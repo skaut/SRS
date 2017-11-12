@@ -17,7 +17,7 @@ class SkautIsEventType
 
     public static $types = [
         self::GENERAL
-//        self::EDUCATION
+        // self::EDUCATION
     ];
 
 
