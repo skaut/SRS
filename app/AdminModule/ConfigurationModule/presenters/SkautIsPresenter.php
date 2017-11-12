@@ -3,7 +3,11 @@
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
 use App\AdminModule\ConfigurationModule\Forms\SkautIsEventForm;
+use App\Model\Enums\SkautIsEventType;
 use App\Model\Settings\Settings;
+use App\Services\SkautIsEventEducationService;
+use App\Services\SkautIsEventGeneralService;
+use App\Services\SkautIsEventService;
 use Nette\Application\UI\Form;
 use Skautis\Wsdl\WsdlException;
 
@@ -22,6 +26,41 @@ class SkautIsPresenter extends ConfigurationBasePresenter
      */
     public $skautIsEventFormFactory;
 
+    /**
+     * @var SkautIsEventGeneralService
+     * @inject
+     */
+    public $skautIsEventGeneralService;
+
+    /**
+     * @var SkautIsEventEducationService
+     * @inject
+     */
+    public $skautIsEventEducationService;
+
+    /**
+     * @var SkautIsEventService
+     */
+    private $skautIsEventService;
+
+
+    public function startup()
+    {
+        parent::startup();
+
+        $eventId = $this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_ID);
+        if ($eventId !== NULL) {
+            switch ($this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_TYPE)) {
+                case SkautIsEventType::GENERAL:
+                    $this->skautIsEventService = $this->skautIsEventGeneralService;
+                    break;
+
+                case SkautIsEventType::EDUCATION:
+                    $this->skautIsEventService = $this->skautIsEventEducationService;
+                    break;
+            }
+        }
+    }
 
     public function renderDefault()
     {
@@ -33,7 +72,7 @@ class SkautIsPresenter extends ConfigurationBasePresenter
             $this->template->closed = FALSE;
 
             try {
-                if (!$this->skautIsService->isEventDraft($eventId))
+                if (!$this->skautIsEventService->isEventDraft($eventId))
                     $this->template->closed = TRUE;
             } catch (WsdlException $ex) {
                 $this->template->access = FALSE;
@@ -66,7 +105,7 @@ class SkautIsPresenter extends ConfigurationBasePresenter
         $eventId = $this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_ID);
 
         try {
-            $this->skautIsService->syncParticipants($eventId, $participants);
+            $this->skautIsEventService->syncEventParticipants($eventId, $participants);
             $this->flashMessage('admin.configuration.skautis_event_sync_successful', 'success');
         } catch (WsdlException $ex) {
             $this->flashMessage('admin.configuration.skautis_event_sync_unsuccessful', 'danger');

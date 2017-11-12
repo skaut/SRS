@@ -606,7 +606,8 @@ configuration:
     mailing_email_verification_error: "E-mail se nepodařilo ověřit."
 
     skautis_event_heading: "Propojení s akcí ve skautIS"
-    skautis_event: "Akce ve skautIS"
+    skautis_event_type: "Typ skautIS akce"
+    skautis_event: "Akce"
     skautis_event_empty: "Vyberte akci ze seznamu."
     skautis_event_name: "Systém je propojen s akcí: %name%."
     skautis_event_note: "V sezmanu akcí jsou neuzavřené akce, na které máte ve SkautIS oprávnění, pokud se Vám akce v seznamu nezobrazuje, nechte synchronizaci nastavit někoho s patřičnými právy."
