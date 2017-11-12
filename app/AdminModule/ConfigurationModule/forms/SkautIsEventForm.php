@@ -3,8 +3,11 @@
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
+use App\Model\Enums\SkautIsEventType;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
+use App\Services\SkautIsEventEducationService;
+use App\Services\SkautIsEventGeneralService;
 use App\Services\SkautIsService;
 use Nette;
 use Nette\Application\UI\Form;
@@ -27,6 +30,12 @@ class SkautIsEventForm extends Nette\Object
     /** @var SkautIsService */
     private $skautIsService;
 
+    /** @var SkautIsEventGeneralService */
+    private $skautIsEventGeneralService;
+
+    /** @var SkautIsEventEducationService */
+    private $skautIsEventEducationService;
+
 
     /**
      * SkautIsEventForm constructor.
@@ -34,11 +43,14 @@ class SkautIsEventForm extends Nette\Object
      * @param SettingsRepository $settingsRepository
      * @param SkautIsService $skautIsService
      */
-    public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository, SkautIsService $skautIsService)
+    public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository,
+                                SkautIsEventGeneralService $skautIsEventGeneralService,
+                                SkautIsEventEducationService $skautIsEventEducationService)
     {
         $this->baseFormFactory = $baseForm;
         $this->settingsRepository = $settingsRepository;
-        $this->skautIsService = $skautIsService;
+        $this->skautIsEventGeneralService = $skautIsEventGeneralService;
+        $this->skautIsEventEducationService = $skautIsEventEducationService;
     }
 
     /**
@@ -53,10 +65,26 @@ class SkautIsEventForm extends Nette\Object
         $renderer->wrappers['control']['container'] = 'div class="col-sm-7 col-xs-7"';
         $renderer->wrappers['label']['container'] = 'div class="col-sm-5 col-xs-5 control-label"';
 
-        $form->addSelect('skautisEvent', 'admin.configuration.skautis_event', $this->skautIsService->getEventsOptions())
-            ->addRule(Form::FILLED, 'admin.configuration.skautis_event_empty');
+        $eventTypeSelect = $form->addSelect('skautisEventType', 'admin.configuration.skautis_event_type',
+            SkautIsEventType::getSkautIsEventTypesOptions());
+        $eventTypeSelect->addCondition($form::EQUAL, SkautIsEventType::GENERAL)
+            ->toggle('event-general');
+        $eventTypeSelect->addCondition($form::EQUAL, SkautIsEventType::EDUCATION)
+            ->toggle('event-education');
+
+        $form->addSelect('skautisEventGeneral', 'admin.configuration.skautis_event',
+            $this->skautIsEventGeneralService->getEventsOptions())
+            ->setOption('id', 'event-general');
+
+        $form->addSelect('skautisEventEducation', 'admin.configuration.skautis_event',
+            $this->skautIsEventEducationService->getEventsOptions())
+            ->setOption('id', 'event-education');
 
         $form->addSubmit('submit', 'admin.common.save');
+
+        $form->setDefaults([
+            'skautisEventType' => $this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_TYPE)
+        ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
 
@@ -70,9 +98,27 @@ class SkautIsEventForm extends Nette\Object
      */
     public function processForm(Form $form, \stdClass $values)
     {
-        $eventId = $values['skautisEvent'];
+        $eventId = NULL;
+        $eventName = NULL;
+        $eventType = $values['skautisEventType'];
 
-        $this->settingsRepository->setValue(Settings::SKAUTIS_EVENT_ID, $eventId);
-        $this->settingsRepository->setValue(Settings::SKAUTIS_EVENT_NAME, $this->skautIsService->getEventDisplayName($eventId));
+        switch($eventType) {
+            case SkautIsEventType::GENERAL:
+                $eventId = $values['skautisEventGeneral'];
+                $eventName = $this->skautIsEventGeneralService->getEventDisplayName($eventId);
+                break;
+
+            case SkautIsEventType::EDUCATION:
+                $eventId = $values['skautisEventEducation'];
+                $eventName = $this->skautIsEventEducationService->getEventDisplayName($eventId);
+                break;
+        }
+
+        $this->settingsRepository->setValue(Settings::SKAUTIS_EVENT_TYPE, $eventType);
+
+        if ($eventId !== NULL) {
+            $this->settingsRepository->setValue(Settings::SKAUTIS_EVENT_ID, $eventId);
+            $this->settingsRepository->setValue(Settings::SKAUTIS_EVENT_NAME, $eventName);
+        }
     }
 }

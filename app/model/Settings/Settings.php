@@ -76,6 +76,11 @@ class Settings
     const SKAUTIS_EVENT_ID = 'skautis_event_id';
 
     /**
+     * Typ propojené skautIS akce.
+     */
+    const SKAUTIS_EVENT_TYPE = 'skautis_event_type';
+
+    /**
      * Název propojené skautIS akce.
      */
     const SKAUTIS_EVENT_NAME = 'skautis_event_name';

@@ -100,6 +100,10 @@ register_programs_type:
     not_allowed: "Zakázáno"
     allowed_from_to: "Od do"
 
+skautis_event_type:
+    general: "Obecná akce"
+    education: "Vzdělávací akce"
+
 application_state:
     waiting_for_payment: "Čeká na platbu"
     canceled_not_paid: "Zrušeno (nezaplaceno)"

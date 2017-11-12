@@ -76,7 +76,7 @@ class PaymentForm extends UI\Control
             ->addRule(Form::PATTERN, 'admin.configuration.account_number_format', '^(\d{1,6}-|)\d{2,10}\/\d{4}$');
 
         $form->addText('variableSymbolCode', 'admin.configuration.variable_symbol_code')
-            ->setRequired(FALSE)
+            ->addCondition(Form::FILLED)
             ->addRule(Form::PATTERN, 'admin.configuration.variable_symbol_code_format', '^\d{0,4}$');
 
         $form->addSelect('variableSymbolType', 'admin.configuration.variable_symbol_type', $this->prepareVariableSympolTypeOptions());

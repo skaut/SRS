@@ -67,6 +67,8 @@ services:
     - App\Services\ProgramService
     - App\Services\UserService
     - App\Services\SkautIsService
+    - App\Services\SkautIsEventGeneralService
+    - App\Services\SkautIsEventEducationService
     - App\Commands\ClearCacheCommand(%appDir%/..)
     - App\ApiModule\Services\ScheduleService
 
