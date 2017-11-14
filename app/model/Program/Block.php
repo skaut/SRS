@@ -351,7 +351,7 @@ class Block
     }
 
     /**
-     * Účasní se uživatel programu bloku?
+     * Účastní se uživatel programu bloku?
      * @param User $user
      * @return bool
      */

@@ -119,7 +119,7 @@ class ScheduleService extends Nette\Object
             $programDetailDTO->setBlocks($this->programRepository->findBlockedProgramsIdsByProgram($program));
             $programDetailDTO->setBlocked(FALSE);
             $programDetailDTO->setPaid($programPaid = $this->settingsRepository->getValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT)
-                || $this->user->getApplicationWithSubevent($program->getBlock()->getSubevent())->getState() == ApplicationState::PAID);
+                || $this->user->hasPaidSubevent($program->getBlock()->getSubevent()));
             $programDetailDTOs[] = $programDetailDTO;
         }
 
@@ -282,7 +282,7 @@ class ScheduleService extends Nette\Object
         elseif (!$this->programService->isAllowedRegisterPrograms())
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_register_programs_not_allowed'));
         elseif (!$this->settingsRepository->getValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT) &&
-            $this->user->getApplicationWithSubevent($program->getBlock()->getSubevent())->getState() != ApplicationState::PAID
+            !$this->user->hasPaidSubevent($program->getBlock()->getSubevent())
         )
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_register_programs_before_payment_not_allowed'));
         elseif (!$program)

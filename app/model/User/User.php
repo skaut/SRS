@@ -6,6 +6,7 @@ use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\ACL\Role;
 use App\Model\Enums\ApplicationState;
+use App\Model\Enums\PaymentType;
 use App\Model\Program\Block;
 use App\Model\Program\Program;
 use App\Model\Settings\CustomInput\CustomInput;
@@ -499,17 +500,19 @@ class User
     }
 
     /**
-     * Vrátí přihlášku, ve které je požadovaná podakce.
+     * Vrácí, zda má uživatel zaplacenou přihlášku s podakcí.
      * @param Subevent $subevent
-     * @return mixed|null
+     * @return bool
      */
-    public function getApplicationWithSubevent(Subevent $subevent)
+    public function hasPaidSubevent(Subevent $subevent)
     {
-        foreach ($this->applications as $application) {
+        $criteria = Criteria::create()->where(Criteria::expr()->eq('state', ApplicationState::PAID));
+
+        foreach ($this->applications->matching($criteria) as $application) {
             if ($application->getSubevents()->contains($subevent))
-                return $application;
+                return TRUE;
         }
-        return NULL;
+        return FALSE;
     }
 
     /**
