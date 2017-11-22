@@ -14,7 +14,7 @@ script:
 before_deploy:
   - mv app/config/config.local.neon.sample app/config/config.local.neon
   - rm -f app/config/config.ci.local.neon
-  - zip -r SRS app libs log migrations temp vendor www README.md
+  - zip -r SRS app backup libs log migrations temp vendor www README.md
 
 deploy:
   provider: releases
