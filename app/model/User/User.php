@@ -39,7 +39,7 @@ class User
 
     /**
      * Uživatelské jméno skautIS.
-     * @ORM\Column(type="string", unique=true, nullable=true)
+     * @ORM\Column(type="string", unique=true, nullable=true, options={"collation":"utf8_bin"})
      * @var string
      */
     protected $username;
