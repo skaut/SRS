@@ -31,6 +31,7 @@
 
         "twbs/bootstrap": "^3.3",
         "kartik-v/bootstrap-fileinput": "^4.4",
+        "lukyrys/nette-forms-gpspicker": "^1.4",
 
         "pear/numbers_words": "^0.18.1"
 	},
