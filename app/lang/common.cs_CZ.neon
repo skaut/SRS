@@ -173,6 +173,7 @@ export:
         first_application_date: "Datum první přihlášky"
         attended: "Přítomen"
         not_registared_mandatory_blocks: "Nepřihlášené povinné bloky"
+        private_note: "Neveřejná poznámka"
 
     schedule:
         from: "Od"

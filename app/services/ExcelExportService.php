@@ -369,6 +369,11 @@ class ExcelExportService extends Nette\Object
             $sheet->getColumnDimensionByColumn($column++)->setWidth($width);
         }
 
+        $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.private_note'));
+        $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(TRUE);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(FALSE);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth('60');
+
         foreach ($users as $user) {
             $row++;
             $column = 0;
@@ -417,7 +422,6 @@ class ExcelExportService extends Nette\Object
                     : ''
             );
 
-
             foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
                 $customInputValue = $user->getCustomInputValue($customInput);
 
@@ -443,6 +447,9 @@ class ExcelExportService extends Nette\Object
 
                 $sheet->setCellValueByColumnAndRow($column++, $row, $value);
             }
+
+            $sheet->setCellValueByColumnAndRow($column, $row, $user->getNote());
+            $sheet->getStyleByColumnAndRow($column++, $row)->getAlignment()->setWrapText(TRUE);
         }
         return new ExcelResponse($this->phpExcel, $filename);
     }
