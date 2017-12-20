@@ -337,6 +337,8 @@ class UsersGridControl extends Control
                 });
         }
 
+        $grid->addColumnText('note', 'admin.users.users_private_note')
+            ->setFilterText();
 
         $grid->addToolbarButton('Users:add')
             ->setIcon('plus')
