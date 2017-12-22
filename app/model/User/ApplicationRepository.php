@@ -25,18 +25,6 @@ class ApplicationRepository extends EntityRepository
     }
 
     /**
-     * Vrací pořadí poslední odeslané přihlášky.
-     * @return int
-     */
-    public function findLastApplicationOrder()
-    {
-        return $this->createQueryBuilder('a')
-            ->select('MAX(a.applicationOrder)')
-            ->getQuery()
-            ->getSingleScalarResult();
-    }
-
-    /**
      * Vrací přihlášky čekající na platbu.
      * @return Application[]
      */

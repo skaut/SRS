@@ -2,16 +2,9 @@
 
 namespace App\Services;
 
-use App\Mailing\TextMail;
-use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Enums\ApplicationState;
-use App\Model\Enums\ConditionOperator;
 use App\Model\Enums\MaturityType;
-use App\Model\Enums\VariableSymbolType;
-use App\Model\Mailing\Mail;
-use App\Model\Mailing\MailRepository;
-use App\Model\Mailing\TemplateRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\DiscountRepository;
@@ -20,10 +13,7 @@ use App\Model\User\Application;
 use App\Model\User\ApplicationRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Kdyby\Translation\Translator;
 use Nette;
-use Ublaboo\Mailing\MailFactory;
 
 
 /**
@@ -81,37 +71,19 @@ class ApplicationService extends Nette\Object
 
     /**
      * Vygeneruje variabilní symbol.
-     * @param User $user
+     * @param Application $application
      * @return string
+     * @throws \App\Model\Settings\SettingsException
      */
-    public function generateVariableSymbol(User $user) {
+    public function generateVariableSymbol(Application $application) {
         $variableSymbolCode = $this->settingsRepository->getValue(Settings::VARIABLE_SYMBOL_CODE);
-        $variableSymbol = "";
-
-        switch ($this->settingsRepository->getValue(Settings::VARIABLE_SYMBOL_TYPE)) {
-            case VariableSymbolType::BIRTH_DATE:
-                $variableSymbolDate = $user->getBirthdate()->format('ymd');
-                $variableSymbol = $variableSymbolCode . $variableSymbolDate;
-
-                while ($this->applicationRepository->variableSymbolExists($variableSymbol)) {
-                    $variableSymbolDate = str_pad($variableSymbolDate + 1, 6, 0, STR_PAD_LEFT);
-                    $variableSymbol = $variableSymbolCode . $variableSymbolDate;
-                }
-
-                break;
-
-            case VariableSymbolType::ORDER:
-                $applicationOrder = $this->applicationRepository->findLastApplicationOrder()+1;
-                $variableSymbol = $variableSymbolCode . str_pad($applicationOrder, 6, '0', STR_PAD_LEFT);
-                break;
-        }
-
-        return $variableSymbol;
+        return $variableSymbolCode . str_pad($application->getId(), 6, '0', STR_PAD_LEFT);
     }
 
     /**
      * Vypočítá datum splatnosti podle zvolené metody.
      * @return \DateTime|null
+     * @throws \App\Model\Settings\SettingsException
      */
     public function countMaturityDate() {
         switch ($this->settingsRepository->getValue(Settings::MATURITY_TYPE)) {
@@ -172,6 +144,7 @@ class ApplicationService extends Nette\Object
      * Může uživatel dodatečně přidávat podakce?
      * @param User $user
      * @return bool
+     * @throws \App\Model\Settings\SettingsException
      */
     public function isAllowedAddSubevents(User $user)
     {
