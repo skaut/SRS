@@ -126,11 +126,6 @@ class Settings
     const VARIABLE_SYMBOL_CODE = 'variable_symbol_code';
 
     /**
-     * Typ generování variablního symbolu - datum narození / pořadí přihlášky.
-     */
-    const VARIABLE_SYMBOL_TYPE = 'variable_symbol_type';
-
-    /**
      * Způsob povolení zápisu na programy.
      */
     const REGISTER_PROGRAMS_TYPE = 'register_programs_type';

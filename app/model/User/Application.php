@@ -47,13 +47,6 @@ class Application
     protected $variableSymbol;
 
     /**
-     * Pořadí přihlášky.
-     * @ORM\Column(type="integer", nullable=true)
-     * @var int
-     */
-    protected $applicationOrder;
-
-    /**
      * Datum podání přihlášky.
      * @ORM\Column(type="datetime")
      * @var \DateTime
@@ -206,22 +199,6 @@ class Application
     public function setVariableSymbol($variableSymbol)
     {
         $this->variableSymbol = $variableSymbol;
-    }
-
-    /**
-     * @return int
-     */
-    public function getApplicationOrder()
-    {
-        return $this->applicationOrder;
-    }
-
-    /**
-     * @param int $applicationOrder
-     */
-    public function setApplicationOrder($applicationOrder)
-    {
-        $this->applicationOrder = $applicationOrder;
     }
 
     /**

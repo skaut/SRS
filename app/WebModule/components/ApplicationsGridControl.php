@@ -297,12 +297,13 @@ class ApplicationsGridControl extends Control
             $application->setUser($this->user);
             $application->setSubevents($selectedSubevents);
             $application->setApplicationDate(new \DateTime());
-            $application->setApplicationOrder($this->applicationRepository->findLastApplicationOrder() + 1);
             $application->setMaturityDate($this->applicationService->countMaturityDate());
-            $application->setVariableSymbol($this->applicationService->generateVariableSymbol($this->user));
             $application->setFee($fee);
             $application->setState($fee == 0 ? ApplicationState::PAID : ApplicationState::WAITING_FOR_PAYMENT);
             $application->setFirst(FALSE);
+            $this->applicationRepository->save($application);
+
+            $application->setVariableSymbol($this->applicationService->generateVariableSymbol($application));
             $this->applicationRepository->save($application);
 
             $this->user->addApplication($application);
