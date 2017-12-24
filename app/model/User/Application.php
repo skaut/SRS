@@ -26,6 +26,13 @@ class Application
     protected $user;
 
     /**
+     * Role.
+     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role")
+     * @var ArrayCollection
+     */
+    protected $roles;
+
+    /**
      * Podakce.
      * @ORM\ManyToMany(targetEntity="\App\Model\Structure\Subevent", inversedBy="applications", cascade={"persist"})
      * @var ArrayCollection
@@ -41,8 +48,8 @@ class Application
 
     /**
      * Variabilní symbol.
-     * @ORM\Column(type="string", nullable=true)
-     * @var string
+     * @ORM\ManyToOne(targetEntity="VariableSymbol", cascade={"persist"})
+     * @var VariableSymbol
      */
     protected $variableSymbol;
 
@@ -94,6 +101,26 @@ class Application
      * @var bool
      */
     protected $first = TRUE;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
+     * @var User
+     */
+    protected $createdBy;
+
+    /**
+     * Platnost záznamu od.
+     * @ORM\Column(type="datetime")
+     * @var \DateTime
+     */
+    protected $validFrom;
+
+    /**
+     * Platnost záznamu do.
+     * @ORM\Column(type="datetime")
+     * @var \DateTime
+     */
+    protected $validTo;
 
 
     /**
@@ -186,17 +213,17 @@ class Application
     }
 
     /**
-     * @return string
+     * @return VariableSymbol|null
      */
-    public function getVariableSymbol()
+    public function getVariableSymbol(): ?VariableSymbol
     {
         return $this->variableSymbol;
     }
 
     /**
-     * @param string $variableSymbol
+     * @param VariableSymbol $variableSymbol
      */
-    public function setVariableSymbol($variableSymbol)
+    public function setVariableSymbol(VariableSymbol $variableSymbol)
     {
         $this->variableSymbol = $variableSymbol;
     }
@@ -311,5 +338,53 @@ class Application
     public function setFirst($first)
     {
         $this->first = $first;
+    }
+
+    /**
+     * @return User
+     */
+    public function getCreatedBy(): User
+    {
+        return $this->createdBy;
+    }
+
+    /**
+     * @param User $createdBy
+     */
+    public function setCreatedBy(User $createdBy)
+    {
+        $this->createdBy = $createdBy;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getValidFrom(): \DateTime
+    {
+        return $this->validFrom;
+    }
+
+    /**
+     * @param \DateTime $validFrom
+     */
+    public function setValidFrom(\DateTime $validFrom)
+    {
+        $this->validFrom = $validFrom;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getValidTo(): \DateTime
+    {
+        return $this->validTo;
+    }
+
+    /**
+     * @param \DateTime $validTo
+     */
+    public function setValidTo(\DateTime $validTo)
+    {
+        $this->validTo = $validTo;
     }
 }

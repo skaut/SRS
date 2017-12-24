@@ -158,6 +158,10 @@ services:
         class: App\Model\User\ApplicationRepository
         tags:
             doctrine.repositoryEntity: App\Model\User\Application
+    variableSymbolRepository:
+        class: App\Model\User\VariableSymbolRepository
+        tags:
+            doctrine.repositoryEntity: App\Model\User\VariableSymbol
     userRepository:
         class: App\Model\User\UserRepository
         tags:

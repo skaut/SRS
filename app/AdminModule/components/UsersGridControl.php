@@ -268,8 +268,8 @@ class UsersGridControl extends Control
 
         $grid->addColumnText('variableSymbol', 'admin.users.users_variable_symbol', 'variableSymbolsText')
             ->setFilterText()
-            ->setCondition(function ($qb, $value) {
-                $qb->join('u.applications', 'aVariableSymbol')
+            ->setCondition(function ($qb, $value) { //TODO
+                $qb->join('u.applications', 'aVariableSymbol')->join('aVariableSymbol.variableSymbol')
                     ->andWhere('aVariableSymbol.variableSymbol LIKE :variableSymbol')
                     ->setParameter(':variableSymbol', $value . '%');
             });
@@ -281,12 +281,9 @@ class UsersGridControl extends Control
 
         $grid->addColumnDateTime('lastPaymentDate', 'admin.users.users_last_payment_date');
 
-        //        $grid->addColumnDateTime('incomeProofPrintedDate', 'admin.users.users_income_proof_printed_date')
-        //            ->setSortable();
-
         $grid->addColumnDateTime('firstApplicationDate', 'admin.users.users_first_application_date')
             ->setSortable()
-            ->setSortableCallback(function ($qb, $sort) {
+            ->setSortableCallback(function ($qb, $sort) { //TODO
                 $qb->leftJoin('u.applications', 'aFirstApplicationDate', Expr\Join::WITH, 'aFirstApplicationDate.first = true')
                     ->orderBy('aFirstApplicationDate.applicationDate', $sort['firstApplicationDate']);
             })

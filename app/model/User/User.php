@@ -184,6 +184,13 @@ class User
     protected $skautISPersonId;
 
     /**
+     * Datum prvního přihlášení.
+     * @ORM\Column(type="datetime", nullable=true)
+     * @var \DateTime
+     */
+    protected $firstLogin;
+
+    /**
      * Datum posledního přihlášení.
      * @ORM\Column(type="datetime", nullable=true)
      * @var \DateTime
@@ -1319,7 +1326,8 @@ class User
     {
         $variableSymbols = [];
         foreach ($this->applications as $application)
-            $variableSymbols[] = $application->getVariableSymbol();
+            if ($application->getVariableSymbol())
+                $variableSymbols[] = $application->getVariableSymbol()->getVariableSymbol();
         return implode(', ', $variableSymbols);
     }
 }
