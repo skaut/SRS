@@ -101,6 +101,9 @@ class ProgramBlocksGridControl extends Control
     /**
      * Vytvoří komponentu.
      * @param $name
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Ublaboo\DataGrid\Exception\DataGridColumnStatusException
+     * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
     public function createComponentProgramBlocksGrid($name)
     {
@@ -206,6 +209,7 @@ class ProgramBlocksGridControl extends Control
     /**
      * Odstraní programový blok.
      * @param $id
+     * @throws \Nette\Application\AbortException
      */
     public function handleDelete($id)
     {
@@ -227,6 +231,7 @@ class ProgramBlocksGridControl extends Control
      * Změní povinnost bloku.
      * @param $id
      * @param $mandatory
+     * @throws \Nette\Application\AbortException
      */
     public function changeMandatory($id, $mandatory)
     {
@@ -277,6 +282,7 @@ class ProgramBlocksGridControl extends Control
     /**
      * Hromadně vyexportuje seznam uživatelů, kteří mají blok zapsaný.
      * @param array $ids
+     * @throws \Nette\Application\AbortException
      */
     public function groupExportBlocksAttendees(array $ids)
     {

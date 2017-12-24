@@ -56,11 +56,12 @@ class SettingsRepository extends EntityRepository
     }
 
     /**
-     * Vrátí hodnotu položky typu datum.
+     * Vrátí hodnotu položky typu datum a čas.
      * @param $item
      * @return \DateTime
+     * @throws SettingsException
      */
-    public function getDateValue($item)
+    public function getDateTimeValue($item)
     {
         $value = $this->getValue($item);
         if ($value === NULL)
@@ -69,16 +70,17 @@ class SettingsRepository extends EntityRepository
     }
 
     /**
-     * Vrátí hodnotu položky typu datum a čas.
+     * Nastavení hodnoty položky typu datum.
      * @param $item
-     * @return \DateTime
+     * @param \DateTime|null $value
+     * @throws SettingsException
      */
-    public function getDateTimeValue($item)
+    public function setDateValue($item, $value)
     {
-        $value = $this->getValue($item);
         if ($value === NULL)
-            return NULL;
-        return new \DateTime($value);
+            $this->setValue($item, NULL);
+        else
+            $this->setValue($item, $value->format('Y-m-d'));
     }
 
     /**
@@ -100,22 +102,24 @@ class SettingsRepository extends EntityRepository
     }
 
     /**
-     * Nastavení hodnoty položky typu datum.
+     * Vrátí hodnotu položky typu datum.
      * @param $item
-     * @param \DateTime|null $value
+     * @return \DateTime
+     * @throws SettingsException
      */
-    public function setDateValue($item, $value)
+    public function getDateValue($item)
     {
+        $value = $this->getValue($item);
         if ($value === NULL)
-            $this->setValue($item, NULL);
-        else
-            $this->setValue($item, $value->format('Y-m-d'));
+            return NULL;
+        return new \DateTime($value);
     }
 
     /**
      * Nastavení hodnoty položky typu datum a čas.
      * @param $item
      * @param \DateTime|null $value
+     * @throws SettingsException
      */
     public function setDateTimeValue($item, $value)
     {

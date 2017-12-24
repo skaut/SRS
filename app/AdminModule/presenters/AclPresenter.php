@@ -20,32 +20,29 @@ use Nette\Forms\Form;
 class AclPresenter extends AdminBasePresenter
 {
     protected $resource = Resource::ACL;
-
+    
     /**
      * @var AddRoleForm
      * @inject
      */
     public $addRoleFormFactory;
-
     /**
      * @var EditRoleForm
      * @inject
      */
     public $editRoleFormFactory;
-
     /**
      * @var IRolesGridControlFactory
      * @inject
      */
     public $rolesGridControlFactory;
-
     /**
      * @var Authenticator
      * @inject
      */
     public $authenticator;
 
-
+    
     public function startup()
     {
         parent::startup();
@@ -66,6 +63,7 @@ class AclPresenter extends AdminBasePresenter
     /**
      * Zapne testování role.
      * @param $id
+     * @throws \Nette\Application\AbortException
      */
     public function actionTest($id)
     {
@@ -106,6 +104,8 @@ class AclPresenter extends AdminBasePresenter
 
     /**
      * @return \Nette\Application\UI\Form
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     protected function createComponentEditRoleForm()
     {

@@ -102,7 +102,7 @@ abstract class WebBasePresenter extends BasePresenter
     {
         return $this->webLoader->createJavaScriptLoader('web');
     }
-
+    
     public function startup()
     {
         parent::startup();

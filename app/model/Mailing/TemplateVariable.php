@@ -71,7 +71,6 @@ class TemplateVariable
     const EMAIL_VERIFICATION_LINK = 'email_verification_link';
 
 
-
     use Identifier;
 
     /**

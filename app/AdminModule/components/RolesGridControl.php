@@ -6,6 +6,7 @@ use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\User\UserRepository;
+use App\Services\ProgramService;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Ublaboo\DataGrid\DataGrid;
@@ -30,6 +31,9 @@ class RolesGridControl extends Control
     /** @var ProgramRepository */
     private $programRepository;
 
+    /** @var ProgramService */
+    private $programService;
+
 
     /**
      * RolesGridControl constructor.
@@ -37,9 +41,10 @@ class RolesGridControl extends Control
      * @param RoleRepository $roleRepository
      * @param UserRepository $userRepository
      * @param ProgramRepository $programRepository
+     * @param ProgramService $programService
      */
     public function __construct(Translator $translator, RoleRepository $roleRepository, UserRepository $userRepository,
-                                ProgramRepository $programRepository)
+                                ProgramRepository $programRepository, ProgramService $programService)
     {
         parent::__construct();
 
@@ -47,6 +52,7 @@ class RolesGridControl extends Control
         $this->roleRepository = $roleRepository;
         $this->userRepository = $userRepository;
         $this->programRepository = $programRepository;
+        $this->programService = $programService;
     }
 
     /**
@@ -60,6 +66,8 @@ class RolesGridControl extends Control
     /**
      * Vytvoří komponentu.
      * @param $name
+     * @throws \Ublaboo\DataGrid\Exception\DataGridColumnStatusException
+     * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
     public function createComponentRolesGrid($name)
     {
@@ -136,6 +144,8 @@ class RolesGridControl extends Control
     /**
      * Zpracuje odstranění role.
      * @param $id
+     * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     public function handleDelete($id)
     {
@@ -143,7 +153,7 @@ class RolesGridControl extends Control
 
         $usersInRole = $this->userRepository->findAllInRole($role);
 
-        $this->roleRepository->getEntityManager()->transactional(function($em) use($role, $usersInRole) {
+        $this->roleRepository->getEntityManager()->transactional(function ($em) use ($role, $usersInRole) {
             $this->roleRepository->remove($role);
 
             foreach ($usersInRole as $user) {
@@ -154,8 +164,7 @@ class RolesGridControl extends Control
                 }
             }
 
-            $this->programRepository->updateUsersPrograms($this->userRepository->findAll());
-            $this->programRepository->getEntityManager()->flush();
+            $this->programService->updateUsersPrograms($this->userRepository->findAll());
         });
 
         $this->getPresenter()->flashMessage('admin.acl.roles_deleted', 'success');
@@ -166,6 +175,7 @@ class RolesGridControl extends Control
      * Změní registrovatelnost role.
      * @param $id
      * @param $registerable
+     * @throws \Nette\Application\AbortException
      */
     public function changeRegisterable($id, $registerable)
     {

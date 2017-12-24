@@ -2,15 +2,6 @@
 
 namespace App\AdminModule\Forms;
 
-use App\Model\ACL\Role;
-use App\Model\ACL\RoleRepository;
-use App\Model\Program\ProgramRepository;
-use App\Model\Settings\CustomInput\CustomInput;
-use App\Model\Settings\CustomInput\CustomInputRepository;
-use App\Model\Settings\SettingsRepository;
-use App\Model\User\CustomInputValue\CustomCheckboxValue;
-use App\Model\User\CustomInputValue\CustomInputValueRepository;
-use App\Model\User\CustomInputValue\CustomTextValue;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\FilesService;
@@ -139,6 +130,7 @@ class EditUserPersonalDetailsForm extends Nette\Object
      * Zpracuje formulář.
      * @param Form $form
      * @param \stdClass $values
+     * @throws Nette\Utils\UnknownImageFileException
      */
     public function processForm(Form $form, \stdClass $values)
     {

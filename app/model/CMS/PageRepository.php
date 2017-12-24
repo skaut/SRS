@@ -56,6 +56,7 @@ class PageRepository extends EntityRepository
     /**
      * Vrací poslední pozici stránky.
      * @return int
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findLastPosition()
     {
@@ -153,6 +154,7 @@ class PageRepository extends EntityRepository
     /**
      * Uloží stránku.
      * @param Page $page
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function save(Page $page)
     {
@@ -166,6 +168,7 @@ class PageRepository extends EntityRepository
     /**
      * Odstraní stránku.
      * @param Page $page
+     * @throws \App\Model\Page\PageException
      */
     public function remove(Page $page)
     {

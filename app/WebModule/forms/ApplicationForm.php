@@ -24,6 +24,7 @@ use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\MailService;
+use App\Services\ProgramService;
 use App\Services\SkautIsService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Nette;
@@ -90,6 +91,9 @@ class ApplicationForm extends Nette\Object
     /** @var ApplicationService */
     private $applicationService;
 
+    /** @var ProgramService */
+    private $programService;
+
 
     /**
      * ApplicationForm constructor.
@@ -105,6 +109,7 @@ class ApplicationForm extends Nette\Object
      * @param SubeventRepository $subeventRepository
      * @param ApplicationRepository $applicationRepository
      * @param ApplicationService $applicationService
+     * @param ProgramService $programService
      */
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
                                 RoleRepository $roleRepository, CustomInputRepository $customInputRepository,
@@ -112,7 +117,7 @@ class ApplicationForm extends Nette\Object
                                 ProgramRepository $programRepository, SkautIsService $skautIsService,
                                 SettingsRepository $settingsRepository, MailService $mailService,
                                 SubeventRepository $subeventRepository, ApplicationRepository $applicationRepository,
-                                ApplicationService $applicationService)
+                                ApplicationService $applicationService, ProgramService $programService)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->userRepository = $userRepository;
@@ -126,12 +131,15 @@ class ApplicationForm extends Nette\Object
         $this->subeventRepository = $subeventRepository;
         $this->applicationRepository = $applicationRepository;
         $this->applicationService = $applicationService;
+        $this->programService = $programService;
     }
 
     /**
      * Vytvoří formulář.
      * @param $id
      * @return Form
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function create($id)
     {
@@ -214,10 +222,11 @@ class ApplicationForm extends Nette\Object
      * Zpracuje formulář.
      * @param Form $form
      * @param \stdClass $values
+     * @throws \Throwable
      */
     public function processForm(Form $form, \stdClass $values)
     {
-        $this->applicationRepository->getEntityManager()->transactional(function($em) use($values) {
+        $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($values) {
             if (array_key_exists('sex', $values))
                 $this->user->setSex($values['sex']);
             if (array_key_exists('firstName', $values))
@@ -308,8 +317,7 @@ class ApplicationForm extends Nette\Object
             $this->userRepository->save($this->user);
 
             //prihlaseni automaticke prihlasovanych programu
-            $this->programRepository->updateUserPrograms($this->user);
-            $this->userRepository->save($this->user);
+            $this->programService->updateUserPrograms($this->user);
 
             //aktualizace udaju ve skautis
             try {
@@ -336,7 +344,7 @@ class ApplicationForm extends Nette\Object
             $editRegistrationTo = $this->settingsRepository->getDateValue(Settings::EDIT_REGISTRATION_TO);
 
             //odeslani potvrzovaciho mailu
-            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::REGISTRATION, [
+            $this->mailService->sendMailFromTemplate($this->user, '', Template::REGISTRATION, [
                 TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
                 TemplateVariable::EDIT_REGISTRATION_TO => $editRegistrationTo !== NULL ? $editRegistrationTo->format('j. n. Y') : '',
                 TemplateVariable::APPLICATION_MATURITY => $application->getMaturityDate() !== NULL ? $application->getMaturityDate()->format('j. n. Y') : '',
@@ -372,10 +380,11 @@ class ApplicationForm extends Nette\Object
                 $custom->addRule(Form::FILLED, 'web.application_content.custom_input_empty');
         }
     }
-
+    
     /**
      * Přidá select pro výběr podakcí.
      * @param Form $form
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     private function addSubeventsSelect(Form $form)
     {
@@ -436,6 +445,7 @@ class ApplicationForm extends Nette\Object
     /**
      * Přidá select pro výběr rolí.
      * @param Form $form
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     private function addRolesSelect(Form $form)
     {
@@ -514,12 +524,13 @@ class ApplicationForm extends Nette\Object
         $form->addDateTimePicker('departure', 'web.application_content.departure')
             ->setOption('id', 'departureInput');
     }
-
+    
     /**
      * Ověří kapacity podakcí.
      * @param $field
      * @param $args
      * @return bool
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function validateSubeventsCapacities($field, $args)
     {
@@ -537,6 +548,7 @@ class ApplicationForm extends Nette\Object
      * @param $field
      * @param $args
      * @return bool
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function validateRolesCapacities($field, $args)
     {
@@ -666,7 +678,7 @@ class ApplicationForm extends Nette\Object
                 return TRUE;
         return FALSE;
     }
-
+    
     /**
      * Přepne zobrazení polí pro příjzed a odjezd.
      * @param IControl $control

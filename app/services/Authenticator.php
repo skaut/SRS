@@ -19,6 +19,9 @@ use Nette\Security as NS;
  */
 class Authenticator extends Nette\Object implements NS\IAuthenticator
 {
+    /** @var SkautIsService */
+    protected $skautIsService;
+
     /** @var UserRepository */
     private $userRepository;
 
@@ -27,9 +30,6 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
 
     /** @var SettingsRepository */
     private $settingsRepository;
-
-    /** @var SkautIsService */
-    protected $skautIsService;
 
     /** @var FilesService */
     private $filesService;
@@ -129,8 +129,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
                 $path = User::PHOTO_PATH . "/" . $fileName;
                 $this->filesService->create($path, $photo->PhotoNormalContent);
                 $user->setPhoto($fileName);
-            }
-            else {
+            } else {
                 $user->setPhoto(NULL);
             }
             $user->setPhotoUpdate($photoUpdate);
@@ -140,7 +139,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
     /**
      * Aktualizuje role přihlášeného uživatele.
      * @param $user
-     * @param null $testRole
+     * @param Role $testRole
      */
     public function updateRoles($user, $testRole = NULL)
     {

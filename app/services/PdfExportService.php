@@ -93,14 +93,14 @@ class PdfExportService extends Nette\Object
         $this->fpdi->Output($filename, 'D');
         exit;
     }
-
+    
     private function prepareUsersPaymentProof(User $user)
     {
         foreach ($user->getApplications() as $application) {
             $this->prepareApplicationsPaymentProof($application);
         }
     }
-
+    
     /**
      * Vygeneruje doklady o zaplacení pro více uživatelů.
      * @param $users
@@ -123,6 +123,7 @@ class PdfExportService extends Nette\Object
     /**
      * Vytvoří stránku s příjmovýchm dokladem.
      * @param Application $application
+     * @throws \App\Model\Settings\SettingsException
      */
     private function addIncomeProofPage(Application $application)
     {
@@ -151,10 +152,11 @@ class PdfExportService extends Nette\Object
 
         $this->fpdi->Text(40, 111, iconv('UTF-8', 'WINDOWS-1250', "účastnický poplatek {$this->settingsRepository->getValue(Settings::SEMINAR_NAME)}"));
     }
-
+    
     /**
      * Vytvoří stránku s potvrzením o přijetí platby.
      * @param Application $application
+     * @throws \App\Model\Settings\SettingsException
      */
     private function addAccountProofPage(Application $application)
     {
@@ -189,7 +191,7 @@ class PdfExportService extends Nette\Object
         $template = $this->fpdi->importPage(1, '/MediaBox');
         $this->template = $template;
     }
-
+    
     /**
      * Nastaví šablonu pro potvrzení o přijetí platby.
      */

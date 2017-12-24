@@ -119,7 +119,6 @@ services:
             doctrine.repositoryEntity: App\Model\Mailing\Template
     blockRepository:
         class: App\Model\Program\BlockRepository
-        inject: yes
         tags:
             doctrine.repositoryEntity: App\Model\Program\Block
     categoryRepository:
@@ -128,7 +127,6 @@ services:
             doctrine.repositoryEntity: App\Model\Program\Category
     programRepository:
         class: App\Model\Program\ProgramRepository
-        inject: yes
         tags:
             doctrine.repositoryEntity: App\Model\Program\Program
     roomRepository:

@@ -9,6 +9,7 @@ use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\CMS\PageRepository;
 use App\Model\Program\ProgramRepository;
+use App\Services\ProgramService;
 use Nette;
 use Nette\Application\UI\Form;
 
@@ -42,6 +43,9 @@ class EditRoleForm extends Nette\Object
     /** @var ProgramRepository */
     private $programRepository;
 
+    /** @var ProgramService */
+    private $programService;
+
 
     /**
      * EditRoleForm constructor.
@@ -50,22 +54,26 @@ class EditRoleForm extends Nette\Object
      * @param PageRepository $pageRepository
      * @param PermissionRepository $permissionRepository
      * @param ProgramRepository $programRepository
+     * @param ProgramService $programService
      */
     public function __construct(BaseForm $baseFormFactory, RoleRepository $roleRepository,
                                 PageRepository $pageRepository, PermissionRepository $permissionRepository,
-                                ProgramRepository $programRepository)
+                                ProgramRepository $programRepository, ProgramService $programService)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->roleRepository = $roleRepository;
         $this->pageRepository = $pageRepository;
         $this->permissionRepository = $permissionRepository;
         $this->programRepository = $programRepository;
+        $this->programService = $programService;
     }
 
     /**
      * Vytvoří formulář.
      * @param $id
      * @return Form
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function create($id)
     {
@@ -180,11 +188,12 @@ class EditRoleForm extends Nette\Object
      * Zpracuje formulář.
      * @param Form $form
      * @param \stdClass $values
+     * @throws \Throwable
      */
     public function processForm(Form $form, \stdClass $values)
     {
         if (!$form['cancel']->isSubmittedBy()) {
-            $this->roleRepository->getEntityManager()->transactional(function($em) use($values) {
+            $this->roleRepository->getEntityManager()->transactional(function ($em) use ($values) {
                 $capacity = $values['capacity'] !== '' ? $values['capacity'] : NULL;
 
                 $this->role->setName($values['name']);
@@ -208,8 +217,7 @@ class EditRoleForm extends Nette\Object
 
                 $this->roleRepository->save($this->role);
 
-                $this->programRepository->updateUsersPrograms($this->role->getUsers());
-                $this->roleRepository->save($this->role);
+                $this->programService->updateUsersPrograms($this->role->getUsers());
             });
         }
     }
@@ -217,6 +225,8 @@ class EditRoleForm extends Nette\Object
     /**
      * Vrátí možná oprávnění jako možnosti pro select.
      * @return array
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     private function preparePermissionsOptions()
     {
@@ -249,6 +259,8 @@ class EditRoleForm extends Nette\Object
      * @param $optionsGroup
      * @param $permissionName
      * @param $resourceName
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     private function preparePermissionOption(&$optionsGroup, $permissionName, $resourceName)
     {
@@ -261,6 +273,7 @@ class EditRoleForm extends Nette\Object
      * @param $field
      * @param $args
      * @return bool
+     * @throws \Doctrine\DBAL\ConnectionException
      */
     public function validateIncompatibleAndRequiredCollision($field, $args)
     {

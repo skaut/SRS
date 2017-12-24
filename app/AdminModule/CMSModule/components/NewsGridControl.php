@@ -46,6 +46,8 @@ class NewsGridControl extends Control
     /**
      * Vytvoří komponentu.
      * @param $name
+     * @throws \Ublaboo\DataGrid\Exception\DataGridColumnStatusException
+     * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
     public function createComponentNewsGrid($name)
     {
@@ -91,6 +93,7 @@ class NewsGridControl extends Control
     /**
      * Zpracuje odstranění aktuality.
      * @param $id
+     * @throws \Nette\Application\AbortException
      */
     public function handleDelete($id)
     {
@@ -106,6 +109,7 @@ class NewsGridControl extends Control
      * Změní připíchnutí aktuality.
      * @param $id
      * @param $pinned
+     * @throws \Nette\Application\AbortException
      */
     public function changePinned($id, $pinned)
     {

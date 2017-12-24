@@ -34,6 +34,7 @@ class ExcelResponse extends Nette\Object implements IResponse
     /**
      * @param Nette\Http\IRequest $httpRequest
      * @param Nette\Http\IResponse $httpResponse
+     * @throws \PHPExcel_Writer_Exception
      */
     public function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse)
     {

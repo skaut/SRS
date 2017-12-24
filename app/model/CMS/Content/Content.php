@@ -276,14 +276,6 @@ abstract class Content implements IContent
     }
 
     /**
-     * @return string
-     */
-    public function getContentFormName()
-    {
-        return $this->type . "_" . $this->id;
-    }
-
-    /**
      * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
      * @param Form $form
      * @return Form
@@ -311,6 +303,14 @@ abstract class Content implements IContent
         ]);
 
         return $form;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContentFormName()
+    {
+        return $this->type . "_" . $this->id;
     }
 
     /**

@@ -32,11 +32,6 @@ class Template
     const REGISTRATION_CANCELED = 'registration_canceled';
 
     /**
-     * Potvrzení změny registrace.
-     */
-    const REGISTRATION_CHANGED = 'registration_changed';
-
-    /**
      * Potvrzení přidání podakcí.
      */
     const SUBEVENT_ADDED = 'subevent_added';
@@ -62,9 +57,24 @@ class Template
     const PROGRAM_UNREGISTERED = 'program_unregistered';
 
     /**
-     * Ověření e-mailu.
+     * Ověření e-mailu pro mailing.
      */
     const EMAIL_VERIFICATION = 'email_verification';
+
+    /**
+     * Potvrzení změny vlastního pole.
+     */
+    const CUSTOM_INPUT_VALUE_CHANGED = 'custom_input_value_changed';
+
+    /**
+     * Potvrzení změny rolí.
+     */
+    const ROLES_CHANGED = 'roles_changed';
+
+    /**
+     * Potvrzení změny podakcí.
+     */
+    const SUBEVENTS_CHANGED = 'subevents_changed';
 
 
     use Identifier;
@@ -103,6 +113,27 @@ class Template
      * @var ArrayCollection
      */
     protected $variables;
+
+    /**
+     * Zaslat uživateli.
+     * @ORM\Column(type="boolean")
+     * @var bool
+     */
+    protected $sendToUser;
+
+    /**
+     * Zaslat pořadateli.
+     * @ORM\Column(type="boolean")
+     * @var bool
+     */
+    protected $sendToOrganizer;
+
+    /**
+     * Systémový e-mail. Nelze u něj měnit příjemce.
+     * @ORM\Column(type="boolean")
+     * @var bool
+     */
+    protected $system;
 
 
     /**
@@ -199,5 +230,53 @@ class Template
     public function setVariables($variables)
     {
         $this->variables = $variables;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSendToUser()
+    {
+        return $this->sendToUser;
+    }
+
+    /**
+     * @param bool $sendToUser
+     */
+    public function setSendToUser($sendToUser)
+    {
+        $this->sendToUser = $sendToUser;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSendToOrganizer()
+    {
+        return $this->sendToOrganizer;
+    }
+
+    /**
+     * @param bool $sendToOrganizer
+     */
+    public function setSendToOrganizer($sendToOrganizer)
+    {
+        $this->sendToOrganizer = $sendToOrganizer;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSystem()
+    {
+        return $this->system;
+    }
+
+    /**
+     * @param bool $system
+     */
+    public function setSystem($system)
+    {
+        $this->system = $system;
     }
 }

@@ -14,7 +14,6 @@ use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\MailService;
-use Doctrine\Common\Collections\ArrayCollection;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
@@ -99,6 +98,7 @@ class ProgramAttendeesGridControl extends Control
     /**
      * Vytvoří komponentu.
      * @param $name
+     * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
     public function createComponentProgramAttendeesGrid($name)
     {
@@ -197,6 +197,10 @@ class ProgramAttendeesGridControl extends Control
     /**
      * Přihlásí uživatele na program.
      * @param $id
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Nette\Application\AbortException
+     * @throws \Ublaboo\Mailing\Exception\MailingException
+     * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
      */
     public function handleRegister($id)
     {
@@ -215,7 +219,7 @@ class ProgramAttendeesGridControl extends Control
             $editedUser->addProgram($program);
             $this->userRepository->save($editedUser);
 
-            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$editedUser]), '', Template::PROGRAM_REGISTERED, [
+            $this->mailService->sendMailFromTemplate($editedUser, '', Template::PROGRAM_REGISTERED, [
                 TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
                 TemplateVariable::PROGRAM_NAME => $program->getBlock()->getName()
             ]);
@@ -234,6 +238,10 @@ class ProgramAttendeesGridControl extends Control
     /**
      * Odhlásí uživatele z programu.
      * @param $id
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Nette\Application\AbortException
+     * @throws \Ublaboo\Mailing\Exception\MailingException
+     * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
      */
     public function handleUnregister($id)
     {
@@ -250,7 +258,7 @@ class ProgramAttendeesGridControl extends Control
             $editedUser->removeProgram($program);
             $this->userRepository->save($editedUser);
 
-            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$editedUser]), '', Template::PROGRAM_UNREGISTERED, [
+            $this->mailService->sendMailFromTemplate($editedUser, '', Template::PROGRAM_UNREGISTERED, [
                 TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
                 TemplateVariable::PROGRAM_NAME => $program->getBlock()->getName()
             ]);
@@ -269,6 +277,7 @@ class ProgramAttendeesGridControl extends Control
     /**
      * Hromadně přihlásí program uživatelům.
      * @param array $ids
+     * @throws \Nette\Application\AbortException
      */
     public function groupRegister(array $ids)
     {
@@ -294,6 +303,7 @@ class ProgramAttendeesGridControl extends Control
     /**
      * Hromadně odhlásí program uživatelům.
      * @param array $ids
+     * @throws \Nette\Application\AbortException
      */
     public function groupUnregister(array $ids)
     {

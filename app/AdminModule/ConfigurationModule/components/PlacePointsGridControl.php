@@ -46,6 +46,7 @@ class PlacePointsGridControl extends Control
     /**
      * Vytvoří komponentu.
      * @param $name
+     * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
     public function createComponentPlacePointsGrid($name)
     {
@@ -87,6 +88,7 @@ class PlacePointsGridControl extends Control
     /**
      * Zpracuje odstranění mapového bodu.
      * @param $id
+     * @throws \Nette\Application\AbortException
      */
     public function handleDelete($id)
     {

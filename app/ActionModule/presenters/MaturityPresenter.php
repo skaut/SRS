@@ -2,8 +2,6 @@
 
 namespace App\ActionModule\Presenters;
 
-use App\Model\ACL\Permission;
-use App\Model\ACL\Resource;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Enums\ApplicationState;
@@ -12,12 +10,11 @@ use App\Model\Mailing\TemplateVariable;
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
-use App\Model\Structure\SubeventRepository;
 use App\Model\User\ApplicationRepository;
 use App\Model\User\UserRepository;
 use App\Services\MailService;
+use App\Services\ProgramService;
 use Doctrine\Common\Collections\ArrayCollection;
-use Nette\Application\Responses\TextResponse;
 
 
 /**
@@ -63,6 +60,12 @@ class MaturityPresenter extends ActionBasePresenter
      */
     public $mailService;
 
+    /**
+     * @var ProgramService
+     * @inject
+     */
+    public $programService;
+
 
     /**
      * Zkontroluje splatnost přihlášek.
@@ -84,7 +87,7 @@ class MaturityPresenter extends ActionBasePresenter
 
             //zrušení registrace
             if ($cancelRegistration !== NULL && $cancelRegistrationDate > $maturityDate) {
-                $this->userRepository->getEntityManager()->transactional(function($em) use($application) {
+                $this->userRepository->getEntityManager()->transactional(function ($em) use ($application) {
                     if ($application->isFirst()) {
                         $user = $application->getUser();
 
@@ -95,24 +98,22 @@ class MaturityPresenter extends ActionBasePresenter
                         }
                         $this->userRepository->save($user);
 
-                        $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$user]), '', Template::REGISTRATION_CANCELED, [
+                        $this->mailService->sendMailFromTemplate($user, '', Template::REGISTRATION_CANCELED, [
                             TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)
                         ]);
-                    }
-                    else {
+                    } else {
                         $application->setState(ApplicationState::CANCELED_NOT_PAID);
                         $this->applicationRepository->save($application);
                     }
 
-                    $this->programRepository->updateUserPrograms($application->getUser());
-                    $this->userRepository->save($application->getUser());
+                    $this->programService->updateUserPrograms($application->getUser());
                 });
                 continue;
             }
 
             //připomenutí splatnosti
             if ($maturityReminder !== NULL && $maturityReminderDate == $maturityDate) {
-                $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$application->getUser()]), '', Template::MATURITY_REMINDER, [
+                $this->mailService->sendMailFromTemplate($application->getUser(), '', Template::MATURITY_REMINDER, [
                     TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
                     TemplateVariable::APPLICATION_MATURITY => $maturityDate->format('j. n. Y')
                 ]);

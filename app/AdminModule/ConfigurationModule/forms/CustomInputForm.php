@@ -100,6 +100,7 @@ class CustomInputForm extends Nette\Object
      * Zpracuje formulář.
      * @param Form $form
      * @param \stdClass $values
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function processForm(Form $form, \stdClass $values)
     {

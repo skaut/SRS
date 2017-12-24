@@ -107,6 +107,7 @@ class AddLectorForm extends Nette\Object
      * Zpracuje formulář.
      * @param Form $form
      * @param \stdClass $values
+     * @throws Nette\Utils\UnknownImageFileException
      */
     public function processForm(Form $form, \stdClass $values)
     {

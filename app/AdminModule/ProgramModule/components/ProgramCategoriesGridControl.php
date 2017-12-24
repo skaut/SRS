@@ -8,6 +8,7 @@ use App\Model\Program\Category;
 use App\Model\Program\CategoryRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\User\UserRepository;
+use App\Services\ProgramService;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
@@ -36,6 +37,9 @@ class ProgramCategoriesGridControl extends Control
     /** @var ProgramRepository */
     private $programRepository;
 
+    /** @var ProgramService */
+    private $programService;
+
 
     /**
      * ProgramCategoriesGridControl constructor.
@@ -44,10 +48,11 @@ class ProgramCategoriesGridControl extends Control
      * @param RoleRepository $roleRepository
      * @param UserRepository $userRepository
      * @param ProgramRepository $programRepository
+     * @param ProgramService $programService
      */
     public function __construct(Translator $translator, CategoryRepository $categoryRepository,
                                 RoleRepository $roleRepository, UserRepository $userRepository,
-                                ProgramRepository $programRepository)
+                                ProgramRepository $programRepository, ProgramService $programService)
     {
         parent::__construct();
 
@@ -56,6 +61,7 @@ class ProgramCategoriesGridControl extends Control
         $this->roleRepository = $roleRepository;
         $this->userRepository = $userRepository;
         $this->programRepository = $programRepository;
+        $this->programService = $programService;
     }
 
     /**
@@ -69,6 +75,7 @@ class ProgramCategoriesGridControl extends Control
     /**
      * Vytvoří komponentu.
      * @param $name
+     * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
     public function createComponentProgramCategoriesGrid($name)
     {
@@ -132,6 +139,7 @@ class ProgramCategoriesGridControl extends Control
     /**
      * Zpracuje přidání kategorie.
      * @param $values
+     * @throws \Nette\Application\AbortException
      */
     public function add($values)
     {
@@ -152,18 +160,20 @@ class ProgramCategoriesGridControl extends Control
      * Zpracuje úpravu kategorie.
      * @param $id
      * @param $values
+     * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     public function edit($id, $values)
     {
         $category = $this->categoryRepository->findById($id);
 
-        $this->categoryRepository->getEntityManager()->transactional(function($em) use($category, $values) {
+        $this->categoryRepository->getEntityManager()->transactional(function ($em) use ($category, $values) {
             $category->setName($values['name']);
             $category->setRegisterableRoles($this->roleRepository->findRolesByIds($values['registerableRoles']));
 
             $this->categoryRepository->save($category);
 
-            $this->programRepository->updateUsersPrograms($this->userRepository->findAll());
+            $this->programService->updateUsersPrograms($this->userRepository->findAll());
 
             $this->categoryRepository->save($category);
         });
@@ -175,16 +185,17 @@ class ProgramCategoriesGridControl extends Control
     /**
      * Odstraní kategorii.
      * @param $id
+     * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     public function handleDelete($id)
     {
         $category = $this->categoryRepository->findById($id);
 
-        $this->categoryRepository->getEntityManager()->transactional(function($em) use($category) {
+        $this->categoryRepository->getEntityManager()->transactional(function ($em) use ($category) {
             $this->categoryRepository->remove($category);
 
-            $this->programRepository->updateUsersPrograms($this->userRepository->findAll());
-            $this->programRepository->getEntityManager()->flush();
+            $this->programService->updateUsersPrograms($this->userRepository->findAll());
         });
 
         $this->getPresenter()->flashMessage('admin.program.categories_deleted', 'success');

@@ -27,49 +27,42 @@ use Nette\Application\UI\Form;
 class UsersPresenter extends AdminBasePresenter
 {
     protected $resource = Resource::USERS;
-
+    
     /**
      * @var IUsersGridControlFactory
      * @inject
      */
     public $usersGridControlFactory;
-
     /**
      * @var AddLectorForm
      * @inject
      */
     public $addLectorFormFactory;
-
     /**
      * @var EditUserPersonalDetailsForm
      * @inject
      */
     public $editUserPersonalDetailsFormFactory;
-
     /**
      * @var EditUserSeminarForm
      * @inject
      */
     public $editUserSeminarFormFactory;
-
     /**
      * @var IApplicationsGridControlFactory
      * @inject
      */
     public $applicationsGridControlFactory;
-
     /**
      * @var PdfExportService
      * @inject
      */
     public $pdfExportService;
-
     /**
      * @var ExcelExportService
      * @inject
      */
     public $excelExportService;
-
     /**
      * @var CustomInputRepository
      * @inject
@@ -77,6 +70,9 @@ class UsersPresenter extends AdminBasePresenter
     public $customInputRepository;
 
 
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     public function startup()
     {
         parent::startup();
@@ -121,6 +117,7 @@ class UsersPresenter extends AdminBasePresenter
 
     /**
      * Zobrazí formulář pro editaci osobních údajů uživatele.
+     * @throws \Nette\Application\AbortException
      */
     public function handleEditPersonalDetails()
     {
@@ -135,6 +132,7 @@ class UsersPresenter extends AdminBasePresenter
 
     /**
      * Zobrazí formulář pro editaci údajů o účasti uživatele na semináři.
+     * @throws \Nette\Application\AbortException
      */
     public function handleEditSeminar()
     {
@@ -149,6 +147,7 @@ class UsersPresenter extends AdminBasePresenter
 
     /**
      * Zobrazí formulář pro editaci údajů o platbě uživatele.
+     * @throws \Nette\Application\AbortException
      */
     public function handleEditPayment()
     {

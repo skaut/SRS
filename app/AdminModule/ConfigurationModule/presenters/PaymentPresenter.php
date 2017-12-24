@@ -3,7 +3,6 @@
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
 use App\AdminModule\ConfigurationModule\Forms\IPaymentFormFactory;
-use App\AdminModule\ConfigurationModule\Forms\PaymentForm;
 use App\AdminModule\ConfigurationModule\Forms\PaymentProofForm;
 use Nette\Application\UI\Form;
 

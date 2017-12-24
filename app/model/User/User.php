@@ -6,7 +6,6 @@ use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\ACL\Role;
 use App\Model\Enums\ApplicationState;
-use App\Model\Enums\PaymentType;
 use App\Model\Program\Block;
 use App\Model\Program\Program;
 use App\Model\Settings\CustomInput\CustomInput;
@@ -15,9 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\PersistentCollection;
-use function GuzzleHttp\Psr7\str;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
-use Nette\DateTime;
 
 
 /**
@@ -386,14 +383,15 @@ class User
     {
         return $this->roles->filter(function ($item) use ($role) {
                 return $item == $role;
-        })->count() != 0;
+            })->count() != 0;
     }
 
     /**
      * Vrátí role uživatele oddělené čárkou.
      * @return string
      */
-    public function getRolesText() {
+    public function getRolesText()
+    {
         $rolesNames = [];
         foreach ($this->roles as $role) {
             $rolesNames[] = $role->getName();
@@ -785,7 +783,8 @@ class User
      * Je bez skautIS účtu?
      * @return bool
      */
-    public function isExternal() {
+    public function isExternal()
+    {
         return $this->username === NULL;
     }
 
@@ -966,6 +965,14 @@ class User
     }
 
     /**
+     * @param string $state
+     */
+    public function setState($state)
+    {
+        $this->state = $state;
+    }
+
+    /**
      * Vrátí adresu uživatele.
      * @return null|string
      */
@@ -974,14 +981,6 @@ class User
         if (empty($this->street) || empty($this->city) || empty($this->postcode))
             return NULL;
         return $this->street . ', ' . $this->city . ', ' . $this->postcode;
-    }
-
-    /**
-     * @param string $state
-     */
-    public function setState($state)
-    {
-        $this->state = $state;
     }
 
     /**
@@ -1260,7 +1259,8 @@ class User
      * Vrátí podakce uživatele oddělené čárkou.
      * @return string
      */
-    public function getSubeventsText() {
+    public function getSubeventsText()
+    {
         $subeventsNames = [];
         foreach ($this->getSubevents() as $subevent) {
             $subeventsNames[] = $subevent->getName();

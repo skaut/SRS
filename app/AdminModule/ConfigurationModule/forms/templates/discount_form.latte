@@ -40,7 +40,7 @@
 
         buttonAnd.on('click', function () {
             condition.val(condition.val() + 'and|');
-            conditionText.val(conditionText.val() + ' ' + {_common.condition_operator.and} + ' ');
+            conditionText.val(conditionText.val() + ' ' + {_common.condition_operator.and} +' ');
 
             buttonSubevent.removeClass('disabled');
             buttonAnd.addClass('disabled');
@@ -51,7 +51,7 @@
 
         buttonOr.on('click', function () {
             condition.val(condition.val() + 'or|');
-            conditionText.val(conditionText.val() + ' ' + {_common.condition_operator.or} + ' ');
+            conditionText.val(conditionText.val() + ' ' + {_common.condition_operator.or} +' ');
 
             buttonSubevent.removeClass('disabled');
             buttonAnd.addClass('disabled');
@@ -134,7 +134,8 @@
                     <ul class="dropdown-menu">
                         {foreach $subevents as $subevent}
                             <li>
-                                <a href="#" class="button-subevents" data-id="{$subevent->getId()}" data-name="{$subevent->getName()}">
+                                <a href="#" class="button-subevents" data-id="{$subevent->getId()}"
+                                   data-name="{$subevent->getName()}">
                                     {$subevent->getName()}
                                 </a>
                             </li>
@@ -145,7 +146,7 @@
                 <a href="#" id="button-and" class="btn btn-default">{_common.condition_operator.and}</a>
                 <a href="#" id="button-or" class="btn btn-default">{_common.condition_operator.or}</a>
 
-                <a href="#" id="button-left-parenthesis"  class="btn btn-default">(</a>
+                <a href="#" id="button-left-parenthesis" class="btn btn-default">(</a>
                 <a href="#" id="button-right-parenthesis" class="btn btn-default">)</a>
             </div>
 

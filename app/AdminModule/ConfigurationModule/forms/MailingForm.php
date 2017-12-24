@@ -10,7 +10,6 @@ use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\MailService;
-use Doctrine\Common\Collections\ArrayCollection;
 use Nette;
 use Nette\Application\LinkGenerator;
 use Nette\Application\UI\Form;
@@ -68,6 +67,7 @@ class MailingForm extends Nette\Object
      * Vytvoří formulář.
      * @param $id
      * @return Form
+     * @throws \App\Model\Settings\SettingsException
      */
     public function create($id)
     {
@@ -98,6 +98,10 @@ class MailingForm extends Nette\Object
      * Zpracuje formulář.
      * @param Form $form
      * @param \stdClass $values
+     * @throws Nette\Application\UI\InvalidLinkException
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Ublaboo\Mailing\Exception\MailingException
+     * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
      */
     public function processForm(Form $form, \stdClass $values)
     {
@@ -109,7 +113,7 @@ class MailingForm extends Nette\Object
 
             $link = $this->linkGenerator->link('Action:Mailing:verify', ['code' => $verificationCode]);
 
-            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection(), $values['seminarEmail'],
+            $this->mailService->sendMailFromTemplate(NULL, $values['seminarEmail'],
                 Template::EMAIL_VERIFICATION, [
                     TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
                     TemplateVariable::EMAIL_VERIFICATION_LINK => $link],

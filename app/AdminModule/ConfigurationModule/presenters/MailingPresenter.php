@@ -29,7 +29,8 @@ class MailingPresenter extends ConfigurationBasePresenter
     public $settingsRepository;
 
 
-    public function renderDefault() {
+    public function renderDefault()
+    {
         $this->template->waiting = $this->settingsRepository->getValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE) !== NULL;
     }
 

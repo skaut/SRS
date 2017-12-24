@@ -57,6 +57,7 @@ class SendForm extends Nette\Object
     /**
      * Vytvoří formulář.
      * @return Form
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function create()
     {
@@ -100,6 +101,9 @@ class SendForm extends Nette\Object
      * Zpracuje formulář.
      * @param Form $form
      * @param \stdClass $values
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Ublaboo\Mailing\Exception\MailingException
+     * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
      */
     public function processForm(Form $form, \stdClass $values)
     {

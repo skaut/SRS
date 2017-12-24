@@ -45,6 +45,7 @@ class ProgramForm extends Nette\Object
     /**
      * Vytvoří formulář.
      * @return Form
+     * @throws \App\Model\Settings\SettingsException
      */
     public function create()
     {
@@ -100,6 +101,7 @@ class ProgramForm extends Nette\Object
      * Zpracuje formulář.
      * @param Form $form
      * @param \stdClass $values
+     * @throws \App\Model\Settings\SettingsException
      */
     public function processForm(Form $form, \stdClass $values)
     {

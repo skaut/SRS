@@ -68,6 +68,7 @@ class BlocksPresenter extends ProgramBasePresenter
 
     /**
      * @param $id
+     * @throws \App\Model\Settings\SettingsException
      */
     public function renderDetail($id)
     {
@@ -81,6 +82,7 @@ class BlocksPresenter extends ProgramBasePresenter
 
     /**
      * @param $id
+     * @throws \Nette\Application\AbortException
      */
     public function renderEdit($id)
     {
@@ -97,6 +99,7 @@ class BlocksPresenter extends ProgramBasePresenter
     /**
      * Zobrazí přehled účastníků u vybraného programu.
      * @param $programId
+     * @throws \Nette\Application\AbortException
      */
     public function handleShowAttendees($programId)
     {
@@ -113,6 +116,8 @@ class BlocksPresenter extends ProgramBasePresenter
     /**
      * Odstraní vybraný program.
      * @param $programId
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Nette\Application\AbortException
      */
     public function handleDeleteProgram($programId)
     {

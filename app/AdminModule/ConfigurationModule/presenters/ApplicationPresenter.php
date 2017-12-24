@@ -60,6 +60,7 @@ class ApplicationPresenter extends ConfigurationBasePresenter
 
     /**
      * @return Form
+     * @throws \App\Model\Settings\SettingsException
      */
     protected function createComponentApplicationForm()
     {

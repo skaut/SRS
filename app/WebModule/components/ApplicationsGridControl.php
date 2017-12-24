@@ -21,6 +21,8 @@ use App\Services\ApplicationService;
 use App\Services\Authenticator;
 use App\Services\MailService;
 use App\Services\PdfExportService;
+use App\Services\ProgramService;
+use App\Services\UserService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
@@ -71,6 +73,12 @@ class ApplicationsGridControl extends Control
     /** @var PdfExportService */
     private $pdfExportService;
 
+    /** @var ProgramService */
+    private $programService;
+
+    /** @var UserService */
+    private $userService;
+
 
     /**
      * ApplicationsGridControl constructor.
@@ -85,13 +93,16 @@ class ApplicationsGridControl extends Control
      * @param SettingsRepository $settingsRepository
      * @param Authenticator $authenticator
      * @param PdfExportService $pdfExportService
+     * @param ProgramService $programService
+     * @param UserService $userService
      */
     public function __construct(Translator $translator, ApplicationRepository $applicationRepository,
                                 UserRepository $userRepository, RoleRepository $roleRepository,
                                 SubeventRepository $subeventRepository, ApplicationService $applicationService,
                                 ProgramRepository $programRepository, MailService $mailService,
                                 SettingsRepository $settingsRepository, Authenticator $authenticator,
-                                PdfExportService $pdfExportService)
+                                PdfExportService $pdfExportService, ProgramService $programService,
+                                UserService $userService)
     {
         parent::__construct();
 
@@ -106,6 +117,8 @@ class ApplicationsGridControl extends Control
         $this->settingsRepository = $settingsRepository;
         $this->authenticator = $authenticator;
         $this->pdfExportService = $pdfExportService;
+        $this->programService = $programService;
+        $this->userService = $userService;
     }
 
     /**
@@ -119,6 +132,9 @@ class ApplicationsGridControl extends Control
     /**
      * Vytvoří komponentu.
      * @param $name
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
     public function createComponentApplicationsGrid($name)
     {
@@ -170,7 +186,7 @@ class ApplicationsGridControl extends Control
 
         if ($this->applicationService->isAllowedAddSubevents($this->user)) {
             $grid->addInlineAdd()->onControlAdd[] = function ($container) {
-                $subeventsSelect = $container->addMultiSelect('subevents', '', $this->subeventRepository->getNonRegisteredExplicitOptionsWithCapacity($this->user))
+                $container->addMultiSelect('subevents', '', $this->subeventRepository->getNonRegisteredExplicitOptionsWithCapacity($this->user))
                     ->setAttribute('class', 'datagrid-multiselect')
                     ->addRule(Form::FILLED, 'web.profile.applications_subevents_empty');
             };
@@ -180,7 +196,7 @@ class ApplicationsGridControl extends Control
 
         if ($this->applicationService->isAllowedEditFirstApplication($this->user)) {
             $grid->addInlineEdit()->onControlAdd[] = function ($container) {
-                $rolesSelect = $container->addMultiSelect('roles', '', $this->roleRepository->getRegisterableNowOrUsersOptionsWithCapacity($this->user))
+                $container->addMultiSelect('roles', '', $this->roleRepository->getRegisterableNowOrUsersOptionsWithCapacity($this->user))
                     ->setAttribute('class', 'datagrid-multiselect')
                     ->addRule(Form::FILLED, 'web.profile.applications_roles_empty');
 
@@ -190,7 +206,7 @@ class ApplicationsGridControl extends Control
                     else
                         $options = $this->subeventRepository->getExplicitOptionsWithCapacity();
 
-                    $subeventsSelect = $container->addMultiSelect('subevents', '', $options)
+                    $container->addMultiSelect('subevents', '', $options)
                         ->setAttribute('class', 'datagrid-multiselect');
                 }
             };
@@ -235,6 +251,9 @@ class ApplicationsGridControl extends Control
     /**
      * Zpracuje přidání podakcí.
      * @param $values
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     public function add($values)
     {
@@ -291,7 +310,7 @@ class ApplicationsGridControl extends Control
         }
 
         //zpracovani zmen
-        $this->applicationRepository->getEntityManager()->transactional(function($em) use($selectedSubevents) {
+        $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($selectedSubevents) {
             $application = new Application();
             $fee = $this->applicationService->countFee($this->user->getRoles(), $selectedSubevents, FALSE);
             $application->setUser($this->user);
@@ -309,11 +328,10 @@ class ApplicationsGridControl extends Control
             $this->user->addApplication($application);
             $this->userRepository->save($this->user);
 
-            $this->programRepository->updateUserPrograms($this->user);
-            $this->userRepository->save($this->user);
+            $this->programService->updateUserPrograms($this->user);
 
             //zaslani potvrzovaciho e-mailu
-            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::SUBEVENT_ADDED, [
+            $this->mailService->sendMailFromTemplate($this->user, '', Template::SUBEVENT_ADDED, [
                 TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
                 TemplateVariable::USERS_SUBEVENTS => $this->user->getSubeventsText()
             ]);
@@ -327,6 +345,9 @@ class ApplicationsGridControl extends Control
      * Zpracuje úpravu přihlášky.
      * @param $id
      * @param $values
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     public function edit($id, $values)
     {
@@ -431,24 +452,8 @@ class ApplicationsGridControl extends Control
             }
         }
 
-        //pokud si uživatel přidá roli, která vyžaduje schválení, stane se neschválený
-        $approved = TRUE;
-        if ($approved) {
-            foreach ($selectedRoles as $role) {
-                if (!$role->isApprovedAfterRegistration() && !$this->user->getRoles()->contains($role)) {
-                    $approved = FALSE;
-                    break;
-                }
-            }
-        }
-
         //zpracovani zmen
-        $this->applicationRepository->getEntityManager()->transactional(function($em) use($id, $selectedRoles, $selectedSubevents, $approved, $values) {
-            $this->user->setRoles($selectedRoles);
-            $this->user->setApproved($approved);
-            $this->userRepository->save($this->user);
-
-            $fee = $this->applicationService->countFee($selectedRoles, $selectedSubevents);
+        $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($id, $selectedRoles, $selectedSubevents, $values) {
             $application = $this->applicationRepository->findById($id);
 
             if ($this->subeventRepository->explicitSubeventsExists() && !empty($values['subevents']))
@@ -456,29 +461,18 @@ class ApplicationsGridControl extends Control
             else
                 $application->setSubevents(new ArrayCollection([$this->subeventRepository->findImplicit()]));
 
-            $application->setFee($fee);
-            $application->setState($fee == 0 || $application->getPaymentDate()
-                ? ApplicationState::PAID
-                : ApplicationState::WAITING_FOR_PAYMENT);
-            $this->applicationRepository->save($application);
+            $this->userService->changeRoles($this->user, $selectedRoles);
 
-            $this->programRepository->updateUserPrograms($this->user);
-            $this->userRepository->save($this->user);
+            $this->programService->updateUserPrograms($this->user);
 
             //zaslani potvrzovaciho e-mailu
-            $rolesNames = [];
-            foreach ($this->user->getRoles() as $role) {
-                $rolesNames[] = $role->getName();
-            }
-
             $subeventsNames = [];
             foreach ($this->user->getSubevents() as $subevent) {
                 $subeventsNames[] = $subevent->getName();
             }
 
-            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::REGISTRATION_CHANGED, [
+            $this->mailService->sendMailFromTemplate($this->user, '', Template::SUBEVENTS_CHANGED, [
                 TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-                TemplateVariable::USERS_ROLES => implode(', ', $rolesNames),
                 TemplateVariable::USERS_SUBEVENTS => implode(', ', $subeventsNames)
             ]);
 
@@ -504,13 +498,17 @@ class ApplicationsGridControl extends Control
     /**
      * Odhlásí uživatele ze semináře.
      * @param $id
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Nette\Application\AbortException
+     * @throws \Ublaboo\Mailing\Exception\MailingException
+     * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
      */
     public function handleCancelRegistration($id)
     {
         $application = $this->applicationRepository->findById($id);
 
         if ($this->applicationService->isAllowedCancelApplication($application)) {
-            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$application->getUser()]), '', Template::REGISTRATION_CANCELED, [
+            $this->mailService->sendMailFromTemplate($application->getUser(), '', Template::REGISTRATION_CANCELED, [
                 TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)
             ]);
 
@@ -519,8 +517,7 @@ class ApplicationsGridControl extends Control
             $this->userRepository->remove($application->getUser());
 
             $p->redirect(':Auth:logout');
-        }
-        else {
+        } else {
             $this->redirect('this');
         }
     }
@@ -528,6 +525,9 @@ class ApplicationsGridControl extends Control
     /**
      * Zruší přihlášku.
      * @param $id
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     public function handleCancelApplication($id)
     {
@@ -540,8 +540,7 @@ class ApplicationsGridControl extends Control
                 $application->setState(ApplicationState::CANCELED);
                 $this->applicationRepository->save($application);
 
-                $this->programRepository->updateUserPrograms($user);
-                $this->userRepository->save($user);
+                $this->programService->updateUserPrograms($user);
             });
 
             $this->getPresenter()->flashMessage('web.profile.applications_application_canceled', 'success');
@@ -561,11 +560,12 @@ class ApplicationsGridControl extends Control
             return FALSE;
         return TRUE;
     }
-
+    
     /**
      * Ověří kapacitu rolí.
      * @param $selectedRoles
      * @return bool
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function validateRolesCapacities($selectedRoles)
     {
@@ -615,7 +615,7 @@ class ApplicationsGridControl extends Control
 
         return TRUE;
     }
-
+    
     /**
      * Ověří registrovatelnost rolí.
      * @param $selectedRoles
@@ -634,6 +634,7 @@ class ApplicationsGridControl extends Control
      * Ověří kapacitu podakcí.
      * @param $selectedSubevents
      * @return bool
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function validateSubeventsCapacities($selectedSubevents)
     {

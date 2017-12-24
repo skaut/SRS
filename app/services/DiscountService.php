@@ -64,7 +64,8 @@ class DiscountService extends Nette\Object
      * @param $selectedSubeventsIds
      * @return int
      */
-    public function countDiscount($selectedSubeventsIds) {
+    public function countDiscount($selectedSubeventsIds)
+    {
         $totalDiscount = 0;
 
         foreach ($this->discountRepository->findAll() as $discount) {
@@ -74,8 +75,7 @@ class DiscountService extends Nette\Object
 
             try {
                 $this->parseExpression($result);
-            }
-            catch (InvalidArgumentException $exception) {
+            } catch (InvalidArgumentException $exception) {
                 continue;
             }
 
@@ -91,15 +91,15 @@ class DiscountService extends Nette\Object
      * @param $condition
      * @return bool
      */
-    public function validateCondition($condition) {
+    public function validateCondition($condition)
+    {
         $this->tokenize($condition);
 
         $this->selectedSubeventsIds = [];
 
         try {
             $this->parseExpression($result);
-        }
-        catch (InvalidArgumentException $exception) {
+        } catch (InvalidArgumentException $exception) {
             return FALSE;
         }
 
@@ -111,7 +111,8 @@ class DiscountService extends Nette\Object
      * @param $condition
      * @return string
      */
-    public function convertConditionToText($condition) {
+    public function convertConditionToText($condition)
+    {
         $this->tokenize($condition);
 
         $text = '';
@@ -141,7 +142,8 @@ class DiscountService extends Nette\Object
         return $text;
     }
 
-    private function tokenize($condition) {
+    private function tokenize($condition)
+    {
         $tokens = explode('|', $condition);
 
         $this->symbols = [];
@@ -155,35 +157,40 @@ class DiscountService extends Nette\Object
         $this->currentSymbol = 0;
     }
 
-    private function nextSymbol() {
+    private function nextSymbol()
+    {
         $this->currentSymbol++;
     }
 
-    private function symbol() {
+    private function symbol()
+    {
         return $this->symbols[$this->currentSymbol]['symbol'];
     }
 
-    private function symbolValue() {
+    private function symbolValue()
+    {
         return $this->symbols[$this->currentSymbol]['value'];
     }
 
-    private function accept($symbol) {
+    private function accept($symbol)
+    {
         if ($this->symbol() == $symbol)
             $this->nextSymbol();
         else
             throw new InvalidArgumentException;
     }
 
-    private function acceptSubevent(&$sValue) {
+    private function acceptSubevent(&$sValue)
+    {
         if ($this->symbol() == Discount::SUBEVENT_ID && $this->subeventRepository->findById($this->symbolValue()) !== NULL) {
             $sValue = in_array($this->symbolValue(), $this->selectedSubeventsIds) ? 1 : 0;
             $this->nextSymbol();
-        }
-        else
+        } else
             throw new InvalidArgumentException;
     }
 
-    private function parseExpression(&$sValue) {
+    private function parseExpression(&$sValue)
+    {
         switch ($this->symbol()) {
             case Discount::SUBEVENT_ID:
             case Discount::LEFT_PARENTHESIS:
@@ -197,7 +204,8 @@ class DiscountService extends Nette\Object
         }
     }
 
-    private function parseExpression_($dValue, &$sValue) {
+    private function parseExpression_($dValue, &$sValue)
+    {
         switch ($this->symbol()) {
             case Discount::OPERATOR_OR:
                 $this->accept(Discount::OPERATOR_OR);
@@ -216,7 +224,8 @@ class DiscountService extends Nette\Object
         }
     }
 
-    private function parseTerm(&$sValue) {
+    private function parseTerm(&$sValue)
+    {
         switch ($this->symbol()) {
             case Discount::SUBEVENT_ID:
             case Discount::LEFT_PARENTHESIS:
@@ -230,7 +239,8 @@ class DiscountService extends Nette\Object
         }
     }
 
-    private function parseTerm_($dValue, &$sValue) {
+    private function parseTerm_($dValue, &$sValue)
+    {
         switch ($this->symbol()) {
             case Discount::OPERATOR_AND:
                 $this->accept(Discount::OPERATOR_AND);
@@ -250,7 +260,8 @@ class DiscountService extends Nette\Object
         }
     }
 
-    private function parseFactor(&$sValue) {
+    private function parseFactor(&$sValue)
+    {
         switch ($this->symbol()) {
             case Discount::SUBEVENT_ID:
                 $this->acceptSubevent($sValue);

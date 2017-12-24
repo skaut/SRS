@@ -8,7 +8,6 @@ use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
-use App\Model\Mailing\Mail;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Program\BlockRepository;
@@ -24,8 +23,8 @@ use App\Services\ApplicationService;
 use App\Services\ExcelExportService;
 use App\Services\MailService;
 use App\Services\PdfExportService;
+use App\Services\ProgramService;
 use App\Services\UserService;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query\Expr;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
@@ -90,6 +89,9 @@ class UsersGridControl extends Control
     /** @var UserService */
     private $userService;
 
+    /** @var ProgramService */
+    private $programService;
+
 
     /**
      * UsersGridControl constructor.
@@ -108,6 +110,7 @@ class UsersGridControl extends Control
      * @param ApplicationRepository $applicationRepository
      * @param ApplicationService $applicationService
      * @param UserService $userService
+     * @param ProgramService $programService
      */
     public function __construct(Translator $translator, UserRepository $userRepository,
                                 SettingsRepository $settingsRepository, CustomInputRepository $customInputRepository,
@@ -115,7 +118,8 @@ class UsersGridControl extends Control
                                 BlockRepository $blockRepository, PdfExportService $pdfExportService,
                                 ExcelExportService $excelExportService, MailService $mailService, Session $session,
                                 SubeventRepository $subeventRepository, ApplicationRepository $applicationRepository,
-                                ApplicationService $applicationService, UserService $userService)
+                                ApplicationService $applicationService, UserService $userService,
+                                ProgramService $programService)
     {
         parent::__construct();
 
@@ -133,6 +137,7 @@ class UsersGridControl extends Control
         $this->applicationRepository = $applicationRepository;
         $this->applicationService = $applicationService;
         $this->userService = $userService;
+        $this->programService = $programService;
 
         $this->session = $session;
         $this->sessionSection = $session->getSection('srs');
@@ -149,6 +154,9 @@ class UsersGridControl extends Control
     /**
      * Vytvoří komponentu.
      * @param $name
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Ublaboo\DataGrid\Exception\DataGridColumnStatusException
+     * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
     public function createComponentUsersGrid($name)
     {
@@ -307,7 +315,7 @@ class UsersGridControl extends Control
                 if (!$row->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS) || !$row->isApproved())
                     return NULL;
 
-                $unregisteredMandatoryBlocksNames = $this->blockRepository->findUserMandatoryNotRegisteredNames($row);
+                $unregisteredMandatoryBlocksNames = $this->programService->getUnregisteredUserMandatoryBlocksNames($row);
                 $unregisteredMandatoryBlocksNamesText = implode(', ', $unregisteredMandatoryBlocksNames);
                 return Html::el('span')
                     ->setAttribute('data-toggle', 'tooltip')
@@ -365,6 +373,7 @@ class UsersGridControl extends Control
     /**
      * Zpracuje odstranění uživatele.
      * @param $id
+     * @throws \Nette\Application\AbortException
      */
     public function handleDelete($id)
     {
@@ -381,6 +390,8 @@ class UsersGridControl extends Control
      * Změní stav uživatele.
      * @param $id
      * @param $approved
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Nette\Application\AbortException
      */
     public function changeApproved($id, $approved)
     {
@@ -424,6 +435,7 @@ class UsersGridControl extends Control
      * Změní účast uživatele na semináři.
      * @param $id
      * @param $attended
+     * @throws \Nette\Application\AbortException
      */
     public function changeAttended($id, $attended)
     {
@@ -445,6 +457,8 @@ class UsersGridControl extends Control
     /**
      * Hromadně schválí uživatele.
      * @param array $ids
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Nette\Application\AbortException
      */
     public function groupApprove(array $ids)
     {
@@ -505,6 +519,9 @@ class UsersGridControl extends Control
      * Hromadně nastaví role.
      * @param array $ids
      * @param $value
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     public function groupChangeRoles(array $ids, $value)
     {
@@ -540,27 +557,10 @@ class UsersGridControl extends Control
         }
 
         if (!$error) {
-            $this->userRepository->getEntityManager()->transactional(function($em) use($selectedRoles, $users, $p) {
+            $this->userRepository->getEntityManager()->transactional(function ($em) use ($selectedRoles, $users, $p) {
                 foreach ($users as $user) {
-                    $user->setRoles($selectedRoles);
-                    $this->userRepository->save($user);
-
-                    foreach ($user->getApplications() as $application) {
-                        $fee = $this->applicationService->countFee($selectedRoles, $application->getSubevents(),
-                            $application->isFirst()
-                        );
-
-                        $application->setFee($fee);
-                        $application->setState($fee == 0 || $application->getPaymentDate()
-                            ? ApplicationState::PAID
-                            : ApplicationState::WAITING_FOR_PAYMENT);
-
-                        $this->applicationRepository->save($application);
-                    }
+                    $this->userService->changeRoles($user, $selectedRoles, TRUE);
                 }
-
-                $this->programRepository->updateUsersPrograms($users->toArray());
-                $this->userRepository->getEntityManager()->flush();
             });
 
             $p->flashMessage('admin.users.users_group_action_changed_roles', 'success');
@@ -571,6 +571,7 @@ class UsersGridControl extends Control
     /**
      * Hromadně označí uživatele jako zúčastněné.
      * @param array $ids
+     * @throws \Nette\Application\AbortException
      */
     public function groupMarkAttended(array $ids)
     {
@@ -591,6 +592,10 @@ class UsersGridControl extends Control
      * Hromadně označí uživatele jako zaplacené dnes.
      * @param array $ids
      * @param $value
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Nette\Application\AbortException
+     * @throws \Ublaboo\Mailing\Exception\MailingException
+     * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
      */
     public function groupMarkPaidToday(array $ids, $value)
     {
@@ -604,7 +609,7 @@ class UsersGridControl extends Control
                     $application->setState(ApplicationState::PAID);
                     $this->applicationRepository->save($application);
 
-                    $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$user]), '', Template::PAYMENT_CONFIRMED, [
+                    $this->mailService->sendMailFromTemplate($user, '', Template::PAYMENT_CONFIRMED, [
                         TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
                         TemplateVariable::APPLICATION_SUBEVENTS => $application->getSubeventsText()
                     ]);
@@ -626,6 +631,7 @@ class UsersGridControl extends Control
     /**
      * Hromadně vygeneruje potvrzení o zaplacení.
      * @param array $ids
+     * @throws \Nette\Application\AbortException
      */
     public function groupGeneratePaymentProofs(array $ids)
     {
@@ -636,6 +642,7 @@ class UsersGridControl extends Control
     /**
      * Hromadně vyexportuje seznam uživatelů.
      * @param array $ids
+     * @throws \Nette\Application\AbortException
      */
     public function groupExportUsers(array $ids)
     {
@@ -660,6 +667,7 @@ class UsersGridControl extends Control
     /**
      * Hromadně vyexportuje seznam uživatelů s rolemi.
      * @param array $ids
+     * @throws \Nette\Application\AbortException
      */
     public function groupExportRoles(array $ids)
     {
@@ -685,6 +693,7 @@ class UsersGridControl extends Control
     /**
      * Hromadně vyexportuje seznam uživatelů s podakcemi a programy podle kategorií.
      * @param array $ids
+     * @throws \Nette\Application\AbortException
      */
     public function groupExportSubeventsAndCategories(array $ids)
     {
@@ -709,6 +718,7 @@ class UsersGridControl extends Control
     /**
      * Hromadně vyexportuje harmonogramy uživatelů.
      * @param array $ids
+     * @throws \Nette\Application\AbortException
      */
     public function groupExportSchedules(array $ids)
     {

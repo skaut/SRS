@@ -3,7 +3,6 @@
 namespace App\Model\User;
 
 use App\Model\Enums\ApplicationState;
-use App\Model\Settings\SettingsRepository;
 use Kdyby\Doctrine\EntityRepository;
 
 

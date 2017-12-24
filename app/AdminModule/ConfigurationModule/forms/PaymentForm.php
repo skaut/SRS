@@ -19,14 +19,14 @@ use Nette\Application\UI\Form;
  */
 class PaymentForm extends UI\Control
 {
-    /** @var BaseForm */
-    private $baseFormFactory;
-
     /**
      * Událost při uložení formuláře.
      */
     public $onSave;
 
+    /** @var BaseForm */
+    private $baseFormFactory;
+ 
     /** @var SettingsRepository */
     private $settingsRepository;
 
@@ -61,6 +61,7 @@ class PaymentForm extends UI\Control
     /**
      * Vytvoří formulář.
      * @return Form
+     * @throws \App\Model\Settings\SettingsException
      */
     public function createComponentForm()
     {
@@ -137,11 +138,12 @@ class PaymentForm extends UI\Control
      * Zpracuje formulář.
      * @param Form $form
      * @param \stdClass $values
+     * @throws \App\Model\Settings\SettingsException
      */
     public function processForm(Form $form, \stdClass $values)
     {
         $this->settingsRepository->setValue(Settings::ACCOUNT_NUMBER, $values['accountNumber']);
-        $this->settingsRepository->setValue(Settings::VARIABLE_SYMBOL_CODE,  $values['variableSymbolCode']);
+        $this->settingsRepository->setValue(Settings::VARIABLE_SYMBOL_CODE, $values['variableSymbolCode']);
         $this->settingsRepository->setValue(Settings::MATURITY_TYPE, $values['maturityType']);
 
         if (array_key_exists('maturityDate', $values))

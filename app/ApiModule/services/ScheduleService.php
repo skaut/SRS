@@ -10,7 +10,6 @@ use App\ApiModule\DTO\Schedule\ProgramSaveDTO;
 use App\ApiModule\DTO\Schedule\ResponseDTO;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
-use App\Model\Enums\ApplicationState;
 use App\Model\Program\Block;
 use App\Model\Program\BlockRepository;
 use App\Model\Program\Program;
@@ -107,6 +106,7 @@ class ScheduleService extends Nette\Object
     /**
      * Vrací podrobnosti o programech, ke kterým má uživatel přístup, pro použití v kalendáři pro výběr programů.
      * @return ProgramDetailDTO[]
+     * @throws \App\Model\Settings\SettingsException
      */
     public function getProgramsWeb()
     {
@@ -162,6 +162,7 @@ class ScheduleService extends Nette\Object
     /**
      * Vrací nastavení pro FullCalendar.
      * @return CalendarConfigDTO
+     * @throws \App\Model\Settings\SettingsException
      */
     public function getCalendarConfig()
     {
@@ -184,6 +185,7 @@ class ScheduleService extends Nette\Object
      * Uloží nebo vytvoří program.
      * @param ProgramSaveDTO $programSaveDTO
      * @return ResponseDTO
+     * @throws \App\Model\Settings\SettingsException
      */
     public function saveProgram(ProgramSaveDTO $programSaveDTO)
     {
@@ -237,6 +239,7 @@ class ScheduleService extends Nette\Object
      * Smaže program.
      * @param $programId
      * @return ResponseDTO
+     * @throws \App\Model\Settings\SettingsException
      */
     public function removeProgram($programId)
     {
@@ -269,6 +272,7 @@ class ScheduleService extends Nette\Object
      * Přihlásí program uživateli.
      * @param $programId
      * @return ResponseDTO
+     * @throws \App\Model\Settings\SettingsException
      */
     public function attendProgram($programId)
     {
@@ -318,6 +322,7 @@ class ScheduleService extends Nette\Object
      * Odhlásí program uživateli.
      * @param $programId
      * @return ResponseDTO
+     * @throws \App\Model\Settings\SettingsException
      */
     public function unattendProgram($programId)
     {

@@ -66,6 +66,8 @@ class ApplicationContentControl extends Control
 
     /**
      * @param $content
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function render($content)
     {
@@ -96,6 +98,8 @@ class ApplicationContentControl extends Control
 
     /**
      * @return \Nette\Application\UI\Form
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     protected function createComponentApplicationForm()
     {

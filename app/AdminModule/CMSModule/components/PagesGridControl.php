@@ -54,6 +54,8 @@ class PagesGridControl extends Control
     /**
      * Vytvoří komponentu.
      * @param $name
+     * @throws \Ublaboo\DataGrid\Exception\DataGridColumnStatusException
+     * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
     public function createComponentPagesGrid($name)
     {
@@ -162,6 +164,8 @@ class PagesGridControl extends Control
     /**
      * Zpracuje přidání stránky.
      * @param $values
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Nette\Application\AbortException
      */
     public function add($values)
     {
@@ -182,6 +186,8 @@ class PagesGridControl extends Control
      * Zpracuje upravení stránky.
      * @param $id
      * @param $values
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Nette\Application\AbortException
      */
     public function edit($id, $values)
     {
@@ -203,6 +209,8 @@ class PagesGridControl extends Control
     /**
      * Zpracuje odstranění stránky.
      * @param $id
+     * @throws \App\Model\Page\PageException
+     * @throws \Nette\Application\AbortException
      */
     public function handleDelete($id)
     {
@@ -219,6 +227,7 @@ class PagesGridControl extends Control
      * @param $item_id
      * @param $prev_id
      * @param $next_id
+     * @throws \Nette\Application\AbortException
      */
     public function handleSort($item_id, $prev_id, $next_id)
     {
@@ -239,15 +248,18 @@ class PagesGridControl extends Control
      * Změní viditelnost stránky.
      * @param $id
      * @param $public
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Nette\Application\AbortException
      */
     public function changeStatus($id, $public)
     {
         $p = $this->getPresenter();
 
-        if ($this->pageRepository->findById($id)->getSlug() == '/' && !$public) {
+        $page = $this->pageRepository->findById($id);
+
+        if ($page->getSlug() == '/' && !$public) {
             $p->flashMessage('admin.cms.pages_change_public_denied', 'danger');
         } else {
-            $page = $this->pageRepository->findById($id);
             $page->setPublic($public);
             $this->pageRepository->save($page);
 

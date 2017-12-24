@@ -23,11 +23,6 @@ class DatabaseService
     public $application;
 
     /**
-     * @var Cache
-     */
-    protected $cache;
-
-    /**
      * @var Container
      */
     public $container;
@@ -37,7 +32,12 @@ class DatabaseService
      */
     public $dir;
 
+    /**
+     * @var Cache
+     */
+    protected $cache;
 
+    
     /**
      * DatabaseService constructor.
      * @param string $dir
@@ -71,7 +71,7 @@ class DatabaseService
                         'command' => 'migrations:migrate',
                         '--no-interaction' => TRUE
                     ]);
-                    $result = $this->application->run($input, $output);
+                    $this->application->run($input, $output);
                 }
                 return TRUE;
             });

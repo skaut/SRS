@@ -43,6 +43,7 @@ class SubeventForm extends Nette\Object
      * Vytvoří formulář.
      * @param $id
      * @return Form
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function create($id)
     {
@@ -71,8 +72,7 @@ class SubeventForm extends Nette\Object
                 ->addRule(Form::MIN, 'admin.configuration.subevents_capacity_low', $this->subeventRepository->countApprovedUsersInSubevent($this->subevent));
 
             $subeventsOptions = $this->subeventRepository->getSubeventsWithoutSubeventOptions($this->subevent->getId());
-        }
-        else {
+        } else {
             $nameText->addRule(Form::IS_NOT_IN, 'admin.configuration.subevents_name_exists', $this->subeventRepository->findAllNames());
             $capacityText
                 ->addCondition(Form::FILLED)
@@ -81,7 +81,6 @@ class SubeventForm extends Nette\Object
 
             $subeventsOptions = $this->subeventRepository->getSubeventsOptions();
         }
-
 
 
         $incompatibleSubeventsSelect = $form->addMultiSelect('incompatibleSubevents', 'admin.configuration.subevents_incompatible_subevents', $subeventsOptions);
@@ -149,6 +148,7 @@ class SubeventForm extends Nette\Object
      * @param $field
      * @param $args
      * @return bool
+     * @throws \Doctrine\DBAL\ConnectionException
      */
     public function validateIncompatibleAndRequiredCollision($field, $args)
     {
@@ -159,8 +159,7 @@ class SubeventForm extends Nette\Object
 
         if ($this->subevent) {
             $editedSubevent = $this->subevent;
-        }
-        else {
+        } else {
             $editedSubevent = new Subevent();
             $editedSubevent->setName(md5(mt_rand()));
             $this->subeventRepository->save($editedSubevent);

@@ -46,6 +46,8 @@ class FaqGridControl extends Control
     /**
      * Vytvoří komponentu.
      * @param $name
+     * @throws \Ublaboo\DataGrid\Exception\DataGridColumnStatusException
+     * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
     public function createComponentFaqGrid($name)
     {
@@ -96,6 +98,7 @@ class FaqGridControl extends Control
     /**
      * Zpracuje odstranění otázky.
      * @param $id
+     * @throws \Nette\Application\AbortException
      */
     public function handleDelete($id)
     {
@@ -112,6 +115,7 @@ class FaqGridControl extends Control
      * @param $item_id
      * @param $prev_id
      * @param $next_id
+     * @throws \Nette\Application\AbortException
      */
     public function handleSort($item_id, $prev_id, $next_id)
     {
@@ -132,6 +136,8 @@ class FaqGridControl extends Control
      * Změní viditelnost otázky.
      * @param $id
      * @param $public
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Nette\Application\AbortException
      */
     public function changeStatus($id, $public)
     {

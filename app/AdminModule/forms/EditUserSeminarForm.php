@@ -12,7 +12,7 @@ use App\Model\User\CustomInputValue\CustomSelectValue;
 use App\Model\User\CustomInputValue\CustomTextValue;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
-use function GuzzleHttp\Promise\queue;
+use App\Services\ProgramService;
 use Nette;
 use Nette\Application\UI\Form;
 
@@ -49,6 +49,9 @@ class EditUserSeminarForm extends Nette\Object
     /** @var ProgramRepository */
     private $programRepository;
 
+    /** @var ProgramService */
+    private $programService;
+
 
     /**
      * EditUserSeminarForm constructor.
@@ -58,11 +61,13 @@ class EditUserSeminarForm extends Nette\Object
      * @param CustomInputValueRepository $customInputValueRepository
      * @param SettingsRepository $settingsRepository
      * @param ProgramRepository $programRepository
+     * @param ProgramService $programService
      */
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
                                 CustomInputRepository $customInputRepository,
                                 CustomInputValueRepository $customInputValueRepository,
-                                SettingsRepository $settingsRepository, ProgramRepository $programRepository)
+                                SettingsRepository $settingsRepository, ProgramRepository $programRepository,
+                                ProgramService $programService)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->userRepository = $userRepository;
@@ -70,6 +75,7 @@ class EditUserSeminarForm extends Nette\Object
         $this->customInputValueRepository = $customInputValueRepository;
         $this->settingsRepository = $settingsRepository;
         $this->programRepository = $programRepository;
+        $this->programService = $programService;
     }
 
     /**
@@ -147,11 +153,12 @@ class EditUserSeminarForm extends Nette\Object
      * Zpracuje formulář.
      * @param Form $form
      * @param \stdClass $values
+     * @throws \Throwable
      */
     public function processForm(Form $form, \stdClass $values)
     {
         if (!$form['cancel']->isSubmittedBy()) {
-            $this->userRepository->getEntityManager()->transactional(function($em) use($values) {
+            $this->userRepository->getEntityManager()->transactional(function ($em) use ($values) {
                 $this->user->setApproved($values['approved']);
                 $this->user->setAttended($values['attended']);
 
@@ -192,9 +199,7 @@ class EditUserSeminarForm extends Nette\Object
 
                 $this->userRepository->save($this->user);
 
-                $this->programRepository->updateUserPrograms($this->user);
-
-                $this->userRepository->save($this->user);
+                $this->programService->updateUserPrograms($this->user);
             });
         }
     }

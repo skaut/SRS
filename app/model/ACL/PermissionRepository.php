@@ -57,6 +57,8 @@ class PermissionRepository extends EntityRepository
      * @param $permissionName
      * @param $resourceName
      * @return Permission
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findByPermissionAndResourceName($permissionName, $resourceName)
     {

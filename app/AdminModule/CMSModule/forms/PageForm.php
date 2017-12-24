@@ -31,24 +31,24 @@ class PageForm extends UI\Control
      * @var int
      */
     public $id;
-
+    
     /**
      * Upravovaná stránka.
      * @var Page
      */
     private $page;
-
+    
     /**
      * Upravovaná oblast.
      * @var string
      */
     public $area;
-
+    
     /**
      * Událost při uložení formuláře.
      */
     public $onPageSave;
-
+    
     /**
      * Událost při chybě ukládání stránky.
      */
@@ -119,6 +119,7 @@ class PageForm extends UI\Control
     /**
      * Vytvoří komponentu.
      * @return Form
+     * @throws \App\Model\Page\PageException
      */
     public function createComponentForm()
     {
@@ -168,6 +169,8 @@ class PageForm extends UI\Control
      * Zpracuje formulář.
      * @param Form $form
      * @param \stdClass $values
+     * @throws \App\Model\Page\PageException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function processForm(Form $form, \stdClass $values)
     {

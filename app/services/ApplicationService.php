@@ -75,7 +75,8 @@ class ApplicationService extends Nette\Object
      * @return string
      * @throws \App\Model\Settings\SettingsException
      */
-    public function generateVariableSymbol(Application $application) {
+    public function generateVariableSymbol(Application $application)
+    {
         $variableSymbolCode = $this->settingsRepository->getValue(Settings::VARIABLE_SYMBOL_CODE);
         return $variableSymbolCode . str_pad($application->getId(), 6, '0', STR_PAD_LEFT);
     }
@@ -85,7 +86,8 @@ class ApplicationService extends Nette\Object
      * @return \DateTime|null
      * @throws \App\Model\Settings\SettingsException
      */
-    public function countMaturityDate() {
+    public function countMaturityDate()
+    {
         switch ($this->settingsRepository->getValue(Settings::MATURITY_TYPE)) {
             case MaturityType::DATE:
                 return $this->settingsRepository->getDateValue(Settings::MATURITY_DATE);
@@ -108,7 +110,8 @@ class ApplicationService extends Nette\Object
      * @param bool $first
      * @return int
      */
-    public function countFee($roles, $subevents, $first = TRUE) {
+    public function countFee($roles, $subevents, $first = TRUE)
+    {
         $fee = 0;
 
         if ($roles !== NULL) {
@@ -123,12 +126,10 @@ class ApplicationService extends Nette\Object
                         }
                         $subeventsFeeRole = TRUE;
                     }
-                }
-                //neplatici role
+                } //neplatici role
                 elseif ($role->getFee() == 0) {
                     return 0;
-                }
-                //role s pevnym poplatkem
+                } //role s pevnym poplatkem
                 elseif ($first) {
                     $fee += $role->getFee();
                 }
@@ -145,6 +146,7 @@ class ApplicationService extends Nette\Object
      * @param User $user
      * @return bool
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function isAllowedAddSubevents(User $user)
     {
@@ -158,6 +160,7 @@ class ApplicationService extends Nette\Object
      * Může uživatel upravovat první přihlášku?
      * @param User $user
      * @return bool
+     * @throws \App\Model\Settings\SettingsException
      */
     public function isAllowedEditFirstApplication(User $user)
     {
@@ -169,6 +172,7 @@ class ApplicationService extends Nette\Object
      * Je uživateli povoleno zrušit přihlášku?
      * @param Application $application
      * @return bool
+     * @throws \App\Model\Settings\SettingsException
      */
     public function isAllowedCancelApplication(Application $application)
     {
@@ -179,8 +183,10 @@ class ApplicationService extends Nette\Object
     /**
      * Může uživatel upravovat vlastní pole přihlášky?
      * @return bool
+     * @throws \App\Model\Settings\SettingsException
      */
-    public function isAllowedEditCustomInputs() {
+    public function isAllowedEditCustomInputs()
+    {
         return $this->settingsRepository->getDateValue(Settings::EDIT_CUSTOM_INPUTS_TO) >= (new \DateTime())->setTime(0, 0);
     }
 }

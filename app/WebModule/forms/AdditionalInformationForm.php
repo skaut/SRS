@@ -2,7 +2,6 @@
 
 namespace App\WebModule\Forms;
 
-use App\Model\Enums\ApplicationState;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
@@ -69,6 +68,7 @@ class AdditionalInformationForm extends Nette\Object
      * Vytvoří formulář.
      * @param $id
      * @return Form
+     * @throws \App\Model\Settings\SettingsException
      */
     public function create($id)
     {
@@ -130,10 +130,11 @@ class AdditionalInformationForm extends Nette\Object
      * Zpracuje formulář.
      * @param Form $form
      * @param \stdClass $values
+     * @throws \Throwable
      */
     public function processForm(Form $form, \stdClass $values)
     {
-        $this->userRepository->getEntityManager()->transactional(function($em) use($values) {
+        $this->userRepository->getEntityManager()->transactional(function ($em) use ($values) {
             if ($this->applicationService->isAllowedEditCustomInputs()) {
                 foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
                     $customInputValue = $this->user->getCustomInputValue($customInput);

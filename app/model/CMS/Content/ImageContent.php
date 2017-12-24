@@ -21,22 +21,22 @@ use Nette\Utils\Strings;
 class ImageContent extends Content implements IContent
 {
     protected $type = Content::IMAGE;
-
+    
     /**
      * Zarovnání vlevo.
      */
     const LEFT = 'left';
-
+    
     /**
      * Zarovnání vpravo.
      */
     const RIGHT = 'right';
-
+    
     /**
      * Zarovnání na střed, bez obtékání.
      */
     const CENTER = 'center';
-
+    
     public static $aligns = [
         self::LEFT,
         self::RIGHT,
@@ -76,7 +76,6 @@ class ImageContent extends Content implements IContent
      */
     private $filesService;
 
-
     /**
      * @param FilesService $filesService
      */
@@ -84,7 +83,7 @@ class ImageContent extends Content implements IContent
     {
         $this->filesService = $filesService;
     }
-
+    
     /**
      * @return array
      */
@@ -211,6 +210,7 @@ class ImageContent extends Content implements IContent
      * Zpracuje při uložení stránky část formuláře týkající se obsahu.
      * @param Form $form
      * @param \stdClass $values
+     * @throws \Nette\Utils\UnknownImageFileException
      */
     public function contentFormSucceeded(Form $form, \stdClass $values)
     {
@@ -269,7 +269,7 @@ class ImageContent extends Content implements IContent
             $options[$align] = 'common.align.' . $align;
         return $options;
     }
-
+    
     /**
      * Vygeneruje cestu pro uložení obrázku.
      * @param $file

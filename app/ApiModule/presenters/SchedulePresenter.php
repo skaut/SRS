@@ -112,6 +112,8 @@ class SchedulePresenter extends ApiBasePresenter
     /**
      * Uloží nebo vytvoří program.
      * @param $data
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Nette\Application\AbortException
      */
     public function actionSaveProgram($data)
     {
@@ -127,6 +129,8 @@ class SchedulePresenter extends ApiBasePresenter
     /**
      * Smaže program.
      * @param $id
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Nette\Application\AbortException
      */
     public function actionRemoveProgram($id)
     {
@@ -140,6 +144,8 @@ class SchedulePresenter extends ApiBasePresenter
     /**
      * Přihlásí program uživateli.
      * @param $id
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Nette\Application\AbortException
      */
     public function actionAttendProgram($id)
     {
@@ -153,6 +159,8 @@ class SchedulePresenter extends ApiBasePresenter
     /**
      * Odhlásí program uživateli.
      * @param $id
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Nette\Application\AbortException
      */
     public function actionUnattendProgram($id)
     {

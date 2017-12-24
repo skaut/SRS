@@ -2,7 +2,6 @@
 
 namespace App\AdminModule\MailingModule\Components;
 
-use App\Model\Mailing\Mail;
 use App\Model\Mailing\MailRepository;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;

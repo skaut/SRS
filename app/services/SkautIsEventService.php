@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Services;
+
 use App\Model\User\User;
 use Skautis\Skautis;
 use Skautis\Wsdl\WsdlException;
@@ -50,7 +51,8 @@ abstract class SkautIsEventService
      * @param $eventId
      * @return string
      */
-    public function getEventDisplayName($eventId) {
+    public function getEventDisplayName($eventId)
+    {
         return $this->getEventDetail($eventId)->DisplayName;
     }
 
@@ -65,7 +67,8 @@ abstract class SkautIsEventService
      * Vrací seznam neuzavřených akcí pro select.
      * @return array
      */
-    public function getEventsOptions() {
+    public function getEventsOptions()
+    {
         $options = [];
         try {
             foreach ($this->getDraftEvents() as $e)
@@ -81,7 +84,7 @@ abstract class SkautIsEventService
      * @return mixed
      */
     abstract protected function getEventDetail($eventId);
-
+    
     /**
      * Vrátí všehny účastníky skautIS akce.
      * @param $eventId
@@ -101,7 +104,7 @@ abstract class SkautIsEventService
      * @param $participantId
      */
     abstract protected function deleteParticipant($participantId);
-
+    
     /**
      * Vrací seznam neuzavřených akcí.
      * @return mixed

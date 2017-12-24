@@ -2,11 +2,7 @@
 
 namespace App\WebModule\Presenters;
 
-use App\Model\ACL\Role;
 use App\Model\Enums\PaymentType;
-use App\Model\Mailing\Template;
-use App\Model\Mailing\TemplateVariable;
-use App\Model\Settings\Settings;
 use App\Model\Structure\SubeventRepository;
 use App\Services\ApplicationService;
 use App\Services\Authenticator;
@@ -16,9 +12,6 @@ use App\Services\PdfExportService;
 use App\WebModule\Components\IApplicationsGridControlFactory;
 use App\WebModule\Forms\AdditionalInformationForm;
 use App\WebModule\Forms\PersonalDetailsForm;
-use App\WebModule\Forms\RolesForm;
-use App\WebModule\Forms\SubeventsForm;
-use Doctrine\Common\Collections\ArrayCollection;
 use Nette\Application\UI\Form;
 
 
@@ -85,6 +78,9 @@ class ProfilePresenter extends WebBasePresenter
     public $applicationService;
 
 
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     public function startup()
     {
         parent::startup();
@@ -103,6 +99,8 @@ class ProfilePresenter extends WebBasePresenter
 
     /**
      * Vyexportuje rozvrh uživatele.
+     * @throws \Nette\Application\AbortException
+     * @throws \PHPExcel_Exception
      */
     public function actionExportSchedule()
     {

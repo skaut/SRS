@@ -114,7 +114,7 @@ class SubeventRepository extends EntityRepository
             return $o->getId();
         }, $subevents->toArray());
     }
-
+    
     /**
      * Vrací podakce s omezenou kapacitou.
      * @return Collection
@@ -130,6 +130,7 @@ class SubeventRepository extends EntityRepository
      * Vrací počet volných míst v podakci nebo null u podakce s neomezenou kapacitou.
      * @param Subevent $subevent
      * @return int|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function countUnoccupiedInSubevent(Subevent $subevent)
     {
@@ -142,6 +143,7 @@ class SubeventRepository extends EntityRepository
      * Vrací počet volných míst v podakcích nebo null u podakcí s neomezenou kapacitou.
      * @param $subevents
      * @return array
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function countUnoccupiedInSubevents($subevents)
     {
@@ -156,6 +158,7 @@ class SubeventRepository extends EntityRepository
      * Vrací počet schválených uživatelů v podakci.
      * @param Subevent $subevent
      * @return int
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function countApprovedUsersInSubevent(Subevent $subevent)
     {
@@ -172,6 +175,7 @@ class SubeventRepository extends EntityRepository
     /**
      * Vrací počet vytvořených podakcí.
      * @return int
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function countExplicitSubevents()
     {
@@ -185,12 +189,13 @@ class SubeventRepository extends EntityRepository
     /**
      * Vrací, zda jsou vytvořeny podakce.
      * @return bool
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function explicitSubeventsExists()
     {
         return $this->countExplicitSubevents() > 0;
     }
-
+    
     /**
      * Vrací seznam podakcí jako možnosti pro select.
      * @return array
@@ -235,7 +240,8 @@ class SubeventRepository extends EntityRepository
      * Vrací seznam podakcí, jako možnosti pro select
      * @return array
      */
-    public function getExplicitOptions() {
+    public function getExplicitOptions()
+    {
         $subevents = $this->createQueryBuilder('s')
             ->where('s.implicit = FALSE')
             ->orderBy('s.name')
@@ -252,8 +258,10 @@ class SubeventRepository extends EntityRepository
     /**
      * Vrací seznam podakcí, s informací o obsazenosti, jako možnosti pro select
      * @return array
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getSubeventsOptionsWithCapacity() {
+    public function getSubeventsOptionsWithCapacity()
+    {
         $subevents = $this->createQueryBuilder('s')
             ->orderBy('s.name')
             ->getQuery()
@@ -276,8 +284,10 @@ class SubeventRepository extends EntityRepository
     /**
      * Vrací seznam podakcí, s informací o obsazenosti, jako možnosti pro select
      * @return array
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getExplicitOptionsWithCapacity() {
+    public function getExplicitOptionsWithCapacity()
+    {
         $subevents = $this->createQueryBuilder('s')
             ->where('s.implicit = FALSE')
             ->orderBy('s.name')
@@ -302,6 +312,7 @@ class SubeventRepository extends EntityRepository
      * Vrací seznam podakcí, kromě podakcí uživatele, s informací o obsazenosti, jako možnosti pro select.
      * @param User $user
      * @return array
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getNonRegisteredSubeventsOptionsWithCapacity(User $user)
     {
@@ -338,6 +349,7 @@ class SubeventRepository extends EntityRepository
      * Vrací seznam podakcí, kromě podakcí uživatele, s informací o obsazenosti, jako možnosti pro select.
      * @param User $user
      * @return array
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getNonRegisteredExplicitOptionsWithCapacity(User $user)
     {
