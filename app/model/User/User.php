@@ -450,6 +450,14 @@ class User
     }
 
     /**
+     * @return bool
+     */
+    public function isAllowedRegisterPrograms()
+    {
+        return $this->isApproved() && $this->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS);
+    }
+
+    /**
      * @return Collection
      */
     public function getApplications()
@@ -522,6 +530,24 @@ class User
     }
 
     /**
+     * Vrátí přihlášky, které jsou zaplacené nebo zdarma.
+     * @return Collection|Application[]
+     */
+    public function getPaidAndFreeApplications(): Collection
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->andX(
+                Criteria::expr()->isNull('validTo'),
+                Criteria::expr()->orX(
+                    Criteria::expr()->eq('state', ApplicationState::PAID),
+                    Criteria::expr()->eq('state', ApplicationState::PAID_FREE)
+                )
+            ));
+
+        return $this->applications->matching($criteria);
+    }
+
+    /**
      * Vrátí přihlášky čekající na platbu.
      * @return Collection
      */
@@ -543,11 +569,11 @@ class User
      */
     public function hasPaidSubevent(Subevent $subevent)
     {
-        $subeventsApplications = $this->getNotCanceledSubeventsApplications();
+        foreach ($this->getPaidAndFreeApplications() as $application)
+            if ($application->getType() == Application::SUBEVENTS && $application->getSubevents->contains($subevent))
+                return TRUE;
 
-        return $subeventsApplications->map(function (SubeventsApplication $application) {
-            return $application->getSubevents();
-        })->contains($subevent); //TODO kontrola
+        return FALSE;
     }
 
     /**
@@ -1169,12 +1195,8 @@ class User
      */
     public function hasDisplayArrivalDepartureRole()
     {
-        $criteria = Criteria::create();
-
-        if ($this->roles instanceof PersistentCollection && $this->roles->isInitialized())
-            $criteria->where(Criteria::expr()->eq('displayArrivalDeparture', TRUE));
-        else
-            $criteria->where(Criteria::expr()->eq('display_arrival_departure', TRUE));  //problem s lazyloadingem u camelcase nazvu
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('displayArrivalDeparture', TRUE));
 
         return !$this->roles->matching($criteria)->isEmpty();
     }
@@ -1248,9 +1270,11 @@ class User
      */
     public function getSubevents(): Collection
     {
-        $subevents = $this->getNotCanceledSubeventsApplications()->map(function (SubeventsApplication $application) {
-            return $application->getSubevents(); //TODO kontrola
-        });
+        $subevents = new ArrayCollection();
+
+        foreach ($this->getNotCanceledSubeventsApplications() as $application)
+            foreach ($application->getSubevents() as $subevent)
+                $subevents->add($subevent);
 
         return $subevents;
     }

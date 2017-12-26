@@ -396,7 +396,7 @@ class ScheduleService extends Nette\Object
         $blockDetailDTO->setDescription($block->getDescription());
         $blockDetailDTO->setProgramsCount($block->getProgramsCount());
         $blockDetailDTO->setUserAttends($block->isAttendee($this->user));
-        $blockDetailDTO->setUserAllowed($block->isAllowed($this->user));
+        $blockDetailDTO->setUserAllowed($block->isAllowed($this->user)); //TODO kontrola povolení zapisování před zaplacením
 
         return $blockDetailDTO;
     }

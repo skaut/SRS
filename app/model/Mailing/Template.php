@@ -23,7 +23,7 @@ class Template
     const SIGN_IN = 'sign_in';
 
     /**
-     * Potvrzení automaticky registrace.
+     * Potvrzení registrace.
      */
     const REGISTRATION = 'registration';
 

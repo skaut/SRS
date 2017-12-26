@@ -183,40 +183,31 @@ class ApplicationService extends Nette\Object
 
             foreach ($user->getValidApplications() as $application) {
                 if ($application->getType() == Application::ROLES) {
-                    $application->setValidTo(new \DateTime());
-                    $this->applicationRepository->save($application);
-
-                    $newApplication = new RolesApplication();
-                    $newApplication->setUser($user);
+                    $newApplication = clone $application;
                     $newApplication->setRoles($roles);
-                    $newApplication->setApplicationDate($application->getApplicationDate());
                     $newApplication->setFee($this->countRolesFee($roles));
-                    $newApplication->setMaturityDate($application->getMaturityDate());
                     $newApplication->setState($this->getApplicationState($newApplication));
-                    $newApplication->setVariableSymbol($application->getVariableSymbol());
                     $newApplication->setCreatedBy($createdBy);
                     $newApplication->setValidFrom(new \DateTime());
                     $this->applicationRepository->save($newApplication);
+
+                    $application->setValidTo(new \DateTime());
+                    $this->applicationRepository->save($application);
 
                     $user->addApplication($newApplication);
                 } else {
                     $fee = $this->countSubeventsFee($roles, $application->getSubevents());
 
                     if ($application->getFee() != $fee) {
-                        $application->setValidTo(new \DateTime());
-                        $this->applicationRepository->save($application);
-
-                        $newApplication = new SubeventsApplication();
-                        $newApplication->setUser($user);
-                        $newApplication->setSubevents($application->getSubevents());
-                        $newApplication->setApplicationDate($application->getApplicationDate());
+                        $newApplication = clone $application;
                         $newApplication->setFee($fee);
-                        $newApplication->setMaturityDate($application->getMaturityDate());
                         $newApplication->setState($this->getApplicationState($newApplication));
-                        $newApplication->setVariableSymbol($application->getVariableSymbol());
                         $newApplication->setCreatedBy($createdBy);
                         $newApplication->setValidFrom(new \DateTime());
                         $this->applicationRepository->save($newApplication);
+
+                        $application->setValidTo(new \DateTime());
+                        $this->applicationRepository->save($application);
 
                         $user->addApplication($newApplication);
                     }
@@ -243,7 +234,31 @@ class ApplicationService extends Nette\Object
     public function cancelRegistration(User $user, User $createdBy): void
     {
         $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($user, $createdBy) {
+            $user->setApproved(TRUE);
+            $user->getRoles()->clear();
+            $user->addRole($this->roleRepository->findBySystemName(Role::NONREGISTERED));
+            $this->userRepository->save($user);
 
+            foreach ($user->getValidApplications() as $application) {
+                $newApplication = clone $application;
+                $newApplication->setState(ApplicationState::CANCELED);
+                $newApplication->setCreatedBy($createdBy);
+                $newApplication->setValidFrom(new \DateTime());
+                $this->applicationRepository->save($newApplication);
+
+                $application->setValidTo(new \DateTime());
+                $this->applicationRepository->save($application);
+            }
+
+            $this->userRepository->save($user);
+
+            $this->programService->updateUserPrograms($user);
+
+            //TODO mail
+//            $this->mailService->sendMailFromTemplate($user, '', Template::REGISTRATION_CANCELED, [
+//                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
+//                TemplateVariable::USERS_ROLES => implode(', ', $roles->map(function (Role $role) {return $role->getName();})->toArray())
+//            ]);
         });
     }
 
@@ -253,7 +268,7 @@ class ApplicationService extends Nette\Object
      * @param User $createdBy
      * @throws \Throwable
      */
-    public function addSubevents(User $user, Collection $subevents, User $createdBy): void
+    public function addSubeventsApplication(User $user, Collection $subevents, User $createdBy): void
     {
         $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($user, $subevents, $createdBy) {
             //TODO
@@ -266,7 +281,7 @@ class ApplicationService extends Nette\Object
      * @param User $createdBy
      * @throws \Throwable
      */
-    public function updateSubevents(Application $application, Collection $subevents, User $createdBy): void
+    public function updateSubeventsApplication(Application $application, Collection $subevents, User $createdBy): void
     {
         $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($application, $subevents, $createdBy) {
             //TODO
@@ -278,7 +293,7 @@ class ApplicationService extends Nette\Object
      * @param User $createdBy
      * @throws \Throwable
      */
-    public function cancelSubevents(Application $application, User $createdBy): void
+    public function cancelSubeventsApplication(Application $application, User $createdBy): void
     {
         $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($application, $createdBy) {
             //TODO
@@ -495,7 +510,8 @@ class ApplicationService extends Nette\Object
      */
     public function isAllowedEditRegistration(User $user)
     {
-        return !$user->hasPaidAnyApplication()
+        return !$user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))
+            && !$user->hasPaidAnyApplication()
             && $this->settingsRepository->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new \DateTime())->setTime(0, 0);
     }
 

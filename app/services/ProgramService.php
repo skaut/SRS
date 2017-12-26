@@ -147,4 +147,13 @@ class ProgramService extends Nette\Object
     {
         return $this->getUnregisteredUserMandatoryBlocks($user)->map(function (Block $block) {return $block->getName();});
     }
+
+    /**
+     * @param User $user
+     * @return string
+     */
+    public function getUnregisteredUserMandatoryBlocksNamesText(User $user): string
+    {
+        return implode(', ', $this->getUnregisteredUserMandatoryBlocksNames($user)->toArray());
+    }
 }

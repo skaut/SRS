@@ -18,6 +18,7 @@ use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\ApplicationRepository;
+use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\ExcelExportService;
@@ -26,6 +27,7 @@ use App\Services\PdfExportService;
 use App\Services\ProgramService;
 use App\Services\UserService;
 use Doctrine\ORM\Query\Expr;
+use Doctrine\ORM\QueryBuilder;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
@@ -172,22 +174,22 @@ class UsersGridControl extends Control
 
         $grid->addGroupMultiSelectAction('admin.users.users_group_action_change_roles',
             $this->roleRepository->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]))
-            ->onSelect[] = [$this, 'groupChangeRoles'];
+            ->onSelect[] = [$this, 'groupChangeRoles']; //TODO
 
         $grid->addGroupAction('admin.users.users_group_action_mark_attended')
             ->onSelect[] = [$this, 'groupMarkAttended'];
 
         $grid->addGroupAction('admin.users.users_group_action_mark_paid_today', $this->preparePaymentMethodOptionsWithoutEmpty())
-            ->onSelect[] = [$this, 'groupMarkPaidToday'];
+            ->onSelect[] = [$this, 'groupMarkPaidToday']; //TODO
 
         $grid->addGroupAction('admin.users.users_group_action_generate_payment_proofs')
             ->onSelect[] = [$this, 'groupGeneratePaymentProofs'];
 
         $grid->addGroupAction('admin.users.users_group_action_export_users')
-            ->onSelect[] = [$this, 'groupExportUsers'];
+            ->onSelect[] = [$this, 'groupExportUsers']; //TODO kontrola
 
         $grid->addGroupAction('admin.users.users_group_action_export_subevents_and_categories')
-            ->onSelect[] = [$this, 'groupExportSubeventsAndCategories'];
+            ->onSelect[] = [$this, 'groupExportSubeventsAndCategories']; //TODO kontrola
 
         $grid->addGroupAction('admin.users.users_group_action_export_roles')
             ->onSelect[] = [$this, 'groupExportRoles'];
@@ -246,14 +248,13 @@ class UsersGridControl extends Control
                     ->setText($this->userService->getMembershipText($row));
             }, function ($row) {
                 return $row->getUnit() === NULL;
-            }
-            )
+            })
             ->setSortable()
             ->setFilterText();
 
         $grid->addColumnNumber('age', 'admin.users.users_age')
             ->setSortable()
-            ->setSortableCallback(function ($qb, $sort) {
+            ->setSortableCallback(function (QueryBuilder $qb, $sort) {
                 $sort = $sort['age'] == 'DESC' ? 'ASC' : 'DESC';
                 $qb->orderBy('u.birthdate', $sort);
             });
@@ -268,9 +269,10 @@ class UsersGridControl extends Control
 
         $grid->addColumnText('variableSymbol', 'admin.users.users_variable_symbol', 'variableSymbolsText')
             ->setFilterText()
-            ->setCondition(function ($qb, $value) { //TODO
-                $qb->join('u.applications', 'aVariableSymbol')->join('aVariableSymbol.variableSymbol')
-                    ->andWhere('aVariableSymbol.variableSymbol LIKE :variableSymbol')
+            ->setCondition(function (QueryBuilder $qb, $value) { //TODO kontrola
+                $qb->join('u.applications', 'aVariableSymbol')
+                    ->join('aVariableSymbol.variableSymbol', 'avsVariableSymbol')
+                    ->andWhere('avsVariableSymbol.variableSymbol LIKE :variableSymbol')
                     ->setParameter(':variableSymbol', $value . '%');
             });
 
@@ -279,11 +281,11 @@ class UsersGridControl extends Control
                 return $this->userService->getPaymentMethodText($row);
             });
 
-        $grid->addColumnDateTime('lastPaymentDate', 'admin.users.users_last_payment_date');
+        $grid->addColumnDateTime('lastPaymentDate', 'admin.users.users_last_payment_date'); //TODO kontrola
 
         $grid->addColumnDateTime('firstApplicationDate', 'admin.users.users_first_application_date')
             ->setSortable()
-            ->setSortableCallback(function ($qb, $sort) { //TODO
+            ->setSortableCallback(function ($qb, $sort) { //TODO kontrola
                 $qb->leftJoin('u.applications', 'aFirstApplicationDate', Expr\Join::WITH, 'aFirstApplicationDate.first = true')
                     ->orderBy('aFirstApplicationDate.applicationDate', $sort['firstApplicationDate']);
             })
@@ -308,21 +310,20 @@ class UsersGridControl extends Control
             ->setTranslateOptions();
 
         $grid->addColumnText('unregisteredMandatoryBlocks', 'admin.users.users_not_registered_mandatory_blocks')
-            ->setRenderer(function ($row) {
-                if (!$row->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS) || !$row->isApproved())
+            ->setRenderer(function (User $row) {
+                if (!$row->isAllowedRegisterPrograms())
                     return NULL;
 
-                $unregisteredMandatoryBlocksNames = $this->programService->getUnregisteredUserMandatoryBlocksNames($row);
-                $unregisteredMandatoryBlocksNamesText = implode(', ', $unregisteredMandatoryBlocksNames);
+                $unregisteredUserMandatoryBlocks = $this->programService->getUnregisteredUserMandatoryBlocksNames($row);
                 return Html::el('span')
                     ->setAttribute('data-toggle', 'tooltip')
-                    ->setAttribute('title', $unregisteredMandatoryBlocksNamesText)
-                    ->setText(count($unregisteredMandatoryBlocksNames));
+                    ->setAttribute('title', implode(', ', $unregisteredUserMandatoryBlocks->toArray()))
+                    ->setText($unregisteredUserMandatoryBlocks->count());
             });
 
         foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
             $grid->addColumnText('customInput' . $customInput->getId(), $this->truncate($customInput->getName(), 20))
-                ->setRenderer(function ($row) use ($customInput) {
+                ->setRenderer(function (User $row) use ($customInput) {
                     $customInputValue = $row->getCustomInputValue($customInput);
                     if ($customInputValue) {
                         switch ($customInputValue->getInput()->getType()) {
@@ -360,7 +361,7 @@ class UsersGridControl extends Control
                 'data-toggle' => 'confirmation',
                 'data-content' => $this->translator->translate('admin.users.users_delete_confirm')
             ]);
-        $grid->allowRowsAction('delete', function ($item) {
+        $grid->allowRowsAction('delete', function (User $item) {
             return $item->isExternal();
         });
 
