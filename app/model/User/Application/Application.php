@@ -42,25 +42,18 @@ abstract class Application
     use Identifier;
 
     /**
+     * Id přihlášky.
+     * @ORM\Column(type="integer", nullable=true)
+     * @var int
+     */
+    protected $applicationId;
+
+    /**
      * Uživatel.
      * @ORM\ManyToOne(targetEntity="User", inversedBy="applications", cascade={"persist"})
      * @var User
      */
     protected $user;
-
-    /**
-     * Role.
-     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role")
-     * @var Collection
-     */
-    protected $roles;
-
-    /**
-     * Podakce.
-     * @ORM\ManyToMany(targetEntity="\App\Model\Structure\Subevent", inversedBy="applications", cascade={"persist"})
-     * @var Collection
-     */
-    protected $subevents;
 
     /**
      * Poplatek.
@@ -145,6 +138,22 @@ abstract class Application
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getApplicationId(): int
+    {
+        return $this->applicationId;
+    }
+
+    /**
+     * @param int $applicationId
+     */
+    public function setApplicationId(int $applicationId): void
+    {
+        $this->applicationId = $applicationId;
     }
 
     /**

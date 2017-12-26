@@ -344,6 +344,9 @@ class ApplicationService extends Nette\Object
         $application->setValidFrom(new \DateTime());
         $this->applicationRepository->save($application);
 
+        $application->setApplicationId($application->getId());
+        $this->applicationRepository->save($application);
+
         $user->addApplication($application);
         $this->userRepository->save($user);
 
@@ -370,6 +373,9 @@ class ApplicationService extends Nette\Object
         $application->setVariableSymbol($this->generateVariableSymbol());
         $application->setCreatedBy($createdBy);
         $application->setValidFrom(new \DateTime());
+        $this->applicationRepository->save($application);
+
+        $application->setApplicationId($application->getId());
         $this->applicationRepository->save($application);
 
         $user->addApplication($application);
