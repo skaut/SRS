@@ -675,4 +675,28 @@ class Role
     {
         $this->redirectAfterLogin = $redirectAfterLogin;
     }
+
+    /**
+     * @return int
+     */
+    public function countUsers(): int
+    {
+        return $this->users->count();
+    }
+
+    /**
+     * @return int|null
+     */
+    public function countUnoccupied(): ?int
+    {
+        return $this->capacity ? $this->capacity - $this->countUsers() : NULL;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOccupancyText(): string
+    {
+        return $this->capacity ? $this->countUsers() . '/' . $this->capacity : $this->countUsers();
+    }
 }

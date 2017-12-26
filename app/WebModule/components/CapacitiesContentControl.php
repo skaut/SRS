@@ -37,7 +37,7 @@ class CapacitiesContentControl extends Control
         $template->setFile(__DIR__ . '/templates/capacities_content.latte');
 
         $template->heading = $content->getHeading();
-        $template->roles = $this->roleRepository->countApprovedUsersInRoles($content->getRoles());
+        $template->roles = $this->roleRepository->countUsersInRoles($content->getRoles());
 
         $template->render();
     }

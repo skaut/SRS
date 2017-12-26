@@ -23,9 +23,6 @@ class UserService extends Nette\Object
     /** @var Translator */
     private $translator;
 
-    /** @var ProgramService */
-    private $programService;
-
     /** @var UserRepository */
     private $userRepository;
 
@@ -40,11 +37,10 @@ class UserService extends Nette\Object
      * @param UserRepository $userRepository
      * @param ApplicationRepository $applicationRepository
      */
-    public function __construct(Translator $translator, ProgramService $programService, UserRepository $userRepository,
+    public function __construct(Translator $translator, UserRepository $userRepository,
                                 ApplicationRepository $applicationRepository)
     {
         $this->translator = $translator;
-        $this->programService = $programService;
         $this->userRepository = $userRepository;
         $this->applicationRepository = $applicationRepository;
     }

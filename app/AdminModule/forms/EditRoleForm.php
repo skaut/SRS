@@ -103,7 +103,7 @@ class EditRoleForm extends Nette\Object
             ->setAttribute('title', $form->getTranslator()->translate('admin.acl.roles_capacity_note'))
             ->addCondition(Form::FILLED)
             ->addRule(Form::INTEGER, 'admin.acl.roles_capacity_format')
-            ->addRule(Form::MIN, 'admin.acl.roles_capacity_low', $this->roleRepository->countApprovedUsersInRole($this->role));
+            ->addRule(Form::MIN, 'admin.acl.roles_capacity_low', $this->role->countUsers());
 
         $form->addCheckbox('approvedAfterRegistration', 'admin.acl.roles_approved_after_registration');
 

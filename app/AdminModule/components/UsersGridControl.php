@@ -388,45 +388,23 @@ class UsersGridControl extends Control
      * Změní stav uživatele.
      * @param $id
      * @param $approved
-     * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Nette\Application\AbortException
      */
     public function changeApproved($id, $approved)
     {
         $user = $this->userRepository->findById($id);
-
-        $over = FALSE;
-        if ($approved && !$user->isApproved()) {
-            foreach ($user->getRoles() as $role) {
-                $count = $this->roleRepository->countUnoccupiedInRole($role);
-                if ($count !== NULL && $count < 1) {
-                    $over = TRUE;
-                    break;
-                }
-            }
-            if (!$over) {
-                foreach ($user->getSubevents() as $subevent) {
-                    $count = $this->subeventRepository->countUnoccupiedInSubevent($subevent);
-                    if ($count !== NULL && $count < 1) {
-                        $over = TRUE;
-                        break;
-                    }
-                }
-            }
-        }
+        $user->setApproved($approved);
+        $this->userRepository->save($user);
 
         $p = $this->getPresenter();
+        $p->flashMessage('admin.users.users_changed_approved', 'success');
 
-        if ($over) {
-            $p->flashMessage('admin.users.users_change_approved_error', 'danger');
+        if ($p->isAjax()) {
+            $p->redrawControl('flashes');
+            $this['usersGrid']->redrawItem($id);
         } else {
-            $user->setApproved($approved);
-            $this->userRepository->save($user);
-
-            $p->flashMessage('admin.users.users_changed_approved', 'success');
+            $this->redirect('this');
         }
-
-        $this->redirect('this');
     }
 
     /**
@@ -455,61 +433,18 @@ class UsersGridControl extends Control
     /**
      * Hromadně schválí uživatele.
      * @param array $ids
-     * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Nette\Application\AbortException
      */
     public function groupApprove(array $ids)
     {
         $users = $this->userRepository->findUsersByIds($ids);
 
-        $rolesWithLimitedCapacity = $this->roleRepository->findAllWithLimitedCapacity();
-        $rolesUnoccupiedCounts = $this->roleRepository->countUnoccupiedInRoles($rolesWithLimitedCapacity);
-
-        $subeventsWithLimitedCapacity = $this->subeventRepository->findAllWithLimitedCapacity();
-        $subeventsUnoccupiedCounts = $this->subeventRepository->countUnoccupiedInSubevents($subeventsWithLimitedCapacity);
-
         foreach ($users as $user) {
-            if (!$user->isApproved()) {
-                foreach ($user->getRoles() as $role) {
-                    if ($role->hasLimitedCapacity())
-                        $rolesUnoccupiedCounts[$role->getId()]--;
-                }
-                foreach ($user->getSubevents() as $subevent) {
-                    if ($subevent->hasLimitedCapacity())
-                        $subeventsUnoccupiedCounts[$subevent->getId()]--;
-                }
-            }
+            $user->setApproved(TRUE);
+            $this->userRepository->save($user);
         }
 
-        $over = FALSE;
-        foreach ($rolesUnoccupiedCounts as $count) {
-            if ($count < 0) {
-                $over = TRUE;
-                break;
-            }
-        }
-        if (!$over) {
-            foreach ($subeventsUnoccupiedCounts as $count) {
-                if ($count < 0) {
-                    $over = TRUE;
-                    break;
-                }
-            }
-        }
-
-        $p = $this->getPresenter();
-
-        if ($over) {
-            $p->flashMessage('admin.users.users_group_action_approve_error', 'danger');
-        } else {
-            foreach ($users as $user) {
-                $user->setApproved(TRUE);
-                $this->userRepository->save($user);
-            }
-
-            $p->flashMessage('admin.users.users_group_action_approved', 'success');
-        }
-
+        $this->getPresenter()->flashMessage('admin.users.users_group_action_approved', 'success');
         $this->redirect('this');
     }
 
@@ -517,8 +452,6 @@ class UsersGridControl extends Control
      * Hromadně nastaví role.
      * @param array $ids
      * @param $value
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Nette\Application\AbortException
      * @throws \Throwable
      */
     public function groupChangeRoles(array $ids, $value)
@@ -528,42 +461,46 @@ class UsersGridControl extends Control
 
         $p = $this->getPresenter();
 
-        $error = FALSE;
-
         //neni vybrana zadna role
         if ($selectedRoles->isEmpty()) {
             $p->flashMessage('admin.users.users_group_action_change_roles_error_empty', 'danger');
-            $error = TRUE;
+            return;
         }
 
         //v rolich musi byt dostatek volnych mist
-        $unoccupiedCounts = $this->roleRepository->countUnoccupiedInRoles($selectedRoles);
-        foreach ($selectedRoles as $role) {
-            if ($role->hasLimitedCapacity()) {
-                foreach ($users as $user) {
-                    if ($user->isApproved() && !$user->isInRole($role))
-                        $unoccupiedCounts[$role->getId()]--;
-                }
+        $capacitiesOk = $selectedRoles->forAll(function (int $key, Role $role) use ($users) {
+            if (!$role->hasLimitedCapacity())
+                return TRUE;
+
+            $capacityNeeded = $users->count();
+
+            if ($capacityNeeded <= $role->getCapacity())
+                return TRUE;
+
+            foreach ($users as $user) {
+                if ($user->isInRole($role))
+                    $capacityNeeded--;
             }
-        }
-        foreach ($unoccupiedCounts as $count) {
-            if ($count < 0) {
-                $p->flashMessage('admin.users.users_group_action_change_roles_error_capacity', 'danger');
-                $error = TRUE;
-                break;
-            }
+
+            if ($capacityNeeded <= $role->getCapacity())
+                return TRUE;
+
+            return FALSE;
+        });
+
+        if (!$capacitiesOk) {
+            $p->flashMessage('admin.users.users_group_action_change_roles_error_capacity', 'danger');
+            return;
         }
 
-        if (!$error) {
-            $this->userRepository->getEntityManager()->transactional(function ($em) use ($selectedRoles, $users, $p) {
-                foreach ($users as $user) {
-                    $this->userService->changeRoles($user, $selectedRoles, TRUE);
-                }
-            });
+        $this->userRepository->getEntityManager()->transactional(function ($em) use ($selectedRoles, $users, $p) {
+            foreach ($users as $user) {
+                $this->applicationService->updateRoles($user, $selectedRoles, $this->userRepository->findById($p->getUser()->id),TRUE);
+            }
 
             $p->flashMessage('admin.users.users_group_action_changed_roles', 'success');
             $this->redirect('this');
-        }
+        });
     }
 
     /**

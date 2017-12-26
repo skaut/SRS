@@ -101,15 +101,7 @@ class RolesGridControl extends Control
         $grid->addColumnDateTime('registerableTo', 'admin.acl.roles_registerable_to')
             ->setFormat('j. n. Y H:i');
 
-        $grid->addColumnText('occupancy', 'admin.acl.roles_occupancy')
-            ->setRenderer(
-                function ($row) {
-                    $capacity = $row->getCapacity();
-                    if ($capacity === NULL)
-                        return $this->roleRepository->countApprovedUsersInRole($row);
-                    return $this->roleRepository->countApprovedUsersInRole($row) . "/" . $capacity;
-                }
-            );
+        $grid->addColumnText('occupancy', 'admin.acl.roles_occupancy', 'occupancy_text');
 
         $grid->addColumnText('fee', 'admin.acl.roles_fee')
             ->setRendererOnCondition(function ($row) {

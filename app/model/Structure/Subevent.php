@@ -5,6 +5,7 @@ namespace App\Model\Structure;
 use App\Model\ACL\Role;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
@@ -350,5 +351,39 @@ class Subevent
             $requiredSubeventsNames[] = $requiredSubevent->getName();
         }
         return implode(', ', $requiredSubeventsNames);
+    }
+
+    /**
+     * @return int
+     */
+    public function countUsers(): int
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->andX(
+                Criteria::expr()->isNull('validTo'),
+                Criteria::expr()->orX(
+                    Criteria::expr()->eq('state', ApplicationState::WAITING_FOR_PAYMENT),
+                    Criteria::expr()->eq('state', ApplicationState::PAID),
+                    Criteria::expr()->eq('state', ApplicationState::PAID_FREE)
+                )
+            ));
+
+        return $this->applications->matching($criteria)->count();
+    }
+
+    /**
+     * @return int|null
+     */
+    public function countUnoccupied(): ?int
+    {
+        return $this->capacity ? $this->capacity - $this->countUsers() : NULL;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOccupancyText(): string
+    {
+        return $this->capacity ? $this->countUsers() . '/' . $this->capacity : $this->countUsers();
     }
 }

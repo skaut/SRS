@@ -408,15 +408,6 @@ class User
     }
 
     /**
-     * Vrací, zda má uživatel nějakou roli, která nemá cenu podle podakcí.
-     * @return bool
-     */
-    public function hasFixedFeeRole(): bool
-    {
-        return !$this->roles->forAll(function (int $key, Role $role) {return $role->getFee() === NULL;});
-    }
-
-    /**
      * Má uživatel oprávnění k prostředku?
      * @param $resource
      * @param $permission
@@ -489,17 +480,9 @@ class User
      */
     public function getNotCanceledApplications(): Collection
     {
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->andX(
-                Criteria::expr()->isNull('validTo'),
-                Criteria::expr()->orX(
-                    Criteria::expr()->eq('state', ApplicationState::WAITING_FOR_PAYMENT),
-                    Criteria::expr()->eq('state', ApplicationState::PAID),
-                    Criteria::expr()->eq('state', ApplicationState::PAID_FREE)
-                )
-            ));
-
-        return $this->applications->matching($criteria);
+        return $this->getValidApplications()->filter(function (Application $application) {
+            return !$application->isCanceled();
+        });
     }
 
     /**
@@ -508,8 +491,7 @@ class User
      */
     public function getNotCanceledSubeventsApplications(): Collection
     {
-        $applications = $this->getNotCanceledApplications();
-        return $applications->filter(function (Application $application) {
+        return $this->getNotCanceledApplications()->filter(function (Application $application) {
             return $application->getType() == Application::SUBEVENTS;
         });
     }
@@ -560,20 +542,6 @@ class User
             ));
 
         return $this->applications->matching($criteria);
-    }
-
-    /**
-     * Vrácí, zda má uživatel zaplacenou přihlášku s podakcí.
-     * @param Subevent $subevent
-     * @return bool
-     */
-    public function hasPaidSubevent(Subevent $subevent)
-    {
-        foreach ($this->getPaidAndFreeApplications() as $application)
-            if ($application->getType() == Application::SUBEVENTS && $application->getSubevents->contains($subevent))
-                return TRUE;
-
-        return FALSE;
     }
 
     /**
@@ -1234,6 +1202,29 @@ class User
             $fee += $application->getFee();
         }
         return $fee;
+    }
+
+    /**
+     * Vrací, zda má uživatel nějakou roli, která nemá cenu podle podakcí.
+     * @return bool
+     */
+    public function hasFixedFeeRole(): bool
+    {
+        return $this->roles->exists(function (int $key, Role $role) {return $role->getFee() !== NULL;});
+    }
+
+    /**
+     * Vrácí, zda má uživatel zaplacenou přihlášku s podakcí.
+     * @param Subevent $subevent
+     * @return bool
+     */
+    public function hasPaidSubevent(Subevent $subevent)
+    {
+        foreach ($this->getPaidAndFreeApplications() as $application)
+            if ($application->getType() == Application::SUBEVENTS && $application->getSubevents->contains($subevent))
+                return TRUE;
+
+        return FALSE;
     }
 
     /**

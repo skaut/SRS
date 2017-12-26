@@ -34,16 +34,36 @@ class Validators
     }
 
     /**
+     * Ověří, že není vybrána role "Neregistrovaný".
+     * @param Collection|Role[] $selectedRoles
+     * @param User $user
+     * @return bool
+     */
+    public function validateRolesNonregistered(Collection $selectedRoles, User $user): bool
+    {
+        $nonregisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
+
+        if ($selectedRoles->contains($nonregisteredRole)) {
+            if ($user->isInRole($nonregisteredRole) && $selectedRoles->count() == 1)
+                return TRUE;
+            else
+                return FALSE;
+        }
+
+        return TRUE;
+    }
+
+    /**
      * Ověří kapacitu rolí.
      * @param Collection|Role[] $selectedRoles
+     * @param User $user
      * @return bool
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function validateRolesCapacities(Collection $selectedRoles, User $user): bool
     {
         foreach ($selectedRoles as $role) {
             if ($role->hasLimitedCapacity() && !$user->isInRole($role)
-                && $this->roleRepository->countUnoccupiedInRole($role) < 1)
+                && $role->countUnoccupied() < 1)
                     return FALSE;
         }
 
@@ -127,7 +147,7 @@ class Validators
     {
         foreach ($selectedSubevents as $subevent) {
             if ($subevent->hasLimitedCapacity() && !$user->hasSubevent($subevent)
-                && $this->subeventRepository->countUnoccupiedInSubevent($subevent) < 1)
+                && $subevent->countUnoccupied() < 1)
                 return FALSE;
         }
 

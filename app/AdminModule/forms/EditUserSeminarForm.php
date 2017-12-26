@@ -2,6 +2,8 @@
 
 namespace App\AdminModule\Forms;
 
+use App\Model\ACL\Role;
+use App\Model\ACL\RoleRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
@@ -12,9 +14,12 @@ use App\Model\User\CustomInputValue\CustomSelectValue;
 use App\Model\User\CustomInputValue\CustomTextValue;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
+use App\Services\ApplicationService;
 use App\Services\ProgramService;
+use App\Utils\Validators;
 use Nette;
 use Nette\Application\UI\Form;
+use PhpCollection\Set;
 
 
 /**
@@ -43,14 +48,14 @@ class EditUserSeminarForm extends Nette\Object
     /** @var CustomInputValueRepository */
     private $customInputValueRepository;
 
-    /** @var SettingsRepository */
-    private $settingsRepository;
+    /** @var RoleRepository */
+    private $roleRepository;
 
-    /** @var ProgramRepository */
-    private $programRepository;
+    /** @var ApplicationService */
+    private $applicationService;
 
-    /** @var ProgramService */
-    private $programService;
+    /** @var Validators */
+    private $validators;
 
 
     /**
@@ -59,29 +64,29 @@ class EditUserSeminarForm extends Nette\Object
      * @param UserRepository $userRepository
      * @param CustomInputRepository $customInputRepository
      * @param CustomInputValueRepository $customInputValueRepository
-     * @param SettingsRepository $settingsRepository
-     * @param ProgramRepository $programRepository
-     * @param ProgramService $programService
+     * @param RoleRepository $roleRepository
+     * @param ApplicationService $applicationService
      */
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
                                 CustomInputRepository $customInputRepository,
                                 CustomInputValueRepository $customInputValueRepository,
-                                SettingsRepository $settingsRepository, ProgramRepository $programRepository,
-                                ProgramService $programService)
+                                RoleRepository $roleRepository, ApplicationService $applicationService,
+                                Validators $validators)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->userRepository = $userRepository;
         $this->customInputRepository = $customInputRepository;
         $this->customInputValueRepository = $customInputValueRepository;
-        $this->settingsRepository = $settingsRepository;
-        $this->programRepository = $programRepository;
-        $this->programService = $programService;
+        $this->roleRepository = $roleRepository;
+        $this->applicationService = $applicationService;
+        $this->validators = $validators;
     }
 
     /**
      * Vytvoří formulář.
      * @param $id
      * @return Form
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function create($id)
     {
@@ -91,13 +96,18 @@ class EditUserSeminarForm extends Nette\Object
 
         $form->addHidden('id');
 
+        $form->addMultiSelect('roles', 'admin.users.users_roles',
+            $this->roleRepository->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED]))
+            ->addRule(Form::FILLED, 'admin.users.users_edit_roles_empty')
+            ->addRule([$this, 'validateRolesNonregistered'], 'admin.users.users_edit_roles_nonregistered')
+            ->addRule([$this, 'validateRolesCapacities'], 'admin.users.users_edit_roles_occupied');
+
         $form->addCheckbox('approved', 'admin.users.users_approved_form');
 
         $form->addCheckbox('attended', 'admin.users.users_attended_form');
 
         if ($this->user->hasDisplayArrivalDepartureRole()) {
             $form->addDateTimePicker('arrival', 'admin.users.users_arrival');
-
             $form->addDateTimePicker('departure', 'admin.users.users_departure');
         }
 
@@ -135,6 +145,7 @@ class EditUserSeminarForm extends Nette\Object
 
         $form->setDefaults([
             'id' => $id,
+            'roles' => $this->roleRepository->findRolesIds($this->user->getRoles()),
             'approved' => $this->user->isApproved(),
             'attended' => $this->user->isAttended(),
             'arrival' => $this->user->getArrival(),
@@ -157,8 +168,25 @@ class EditUserSeminarForm extends Nette\Object
      */
     public function processForm(Form $form, \stdClass $values)
     {
-        if (!$form['cancel']->isSubmittedBy()) {
-            $this->userRepository->getEntityManager()->transactional(function ($em) use ($values) {
+        if(!$form['cancel']->isSubmittedBy()) {
+            $loggedUser = $this->userRepository->findById($form->getPresenter()->user->id);
+
+            $this->userRepository->getEntityManager()->transactional(function ($em) use ($values, $loggedUser) {
+                $selectedRoles = $this->roleRepository->findRolesByIds($values['roles']);
+
+                $rolesChanged = TRUE;
+
+                if ($selectedRoles->count() == $this->user->getRoles()->count()) {
+                    $selectedRolesArray = $selectedRoles->map(function (Role $role) {return $role->getId();})->toArray();
+                    $usersRolesArray = $this->user->getRoles()->map(function (Role $role) {return $role->getId();})->toArray();
+
+                    if (array_diff($selectedRolesArray, $usersRolesArray) === array_diff($usersRolesArray, $selectedRolesArray))
+                        $rolesChanged = FALSE;
+                }
+
+                if ($rolesChanged)
+                    $this->applicationService->updateRoles($this->user, $selectedRoles,  $loggedUser);
+
                 $this->user->setApproved($values['approved']);
                 $this->user->setAttended($values['attended']);
 
@@ -198,9 +226,33 @@ class EditUserSeminarForm extends Nette\Object
                 $this->user->setNote($values['privateNote']);
 
                 $this->userRepository->save($this->user);
-
-                $this->programService->updateUserPrograms($this->user);
             });
         }
+    }
+
+    /**
+     * Ověří, že není vybrána role "Neregistrovaný".
+     * @param $field
+     * @param $args
+     * @return bool
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function validateRolesNonregistered($field, $args)
+    {
+        $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
+        return $this->validators->validateRolesNonregistered($selectedRoles, $this->user);
+    }
+
+    /**
+     * Ověří kapacitu rolí.
+     * @param $field
+     * @param $args
+     * @return bool
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function validateRolesCapacities($field, $args)
+    {
+        $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
+        return $this->validators->validateRolesCapacities($selectedRoles, $this->user);
     }
 }

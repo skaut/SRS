@@ -232,16 +232,6 @@ class ApplicationsGridControl extends Control
                 && $item->getPaymentDate();
         });
 
-        $grid->addAction('cancelRegistration', 'admin.users.users_applications_cancel_registration')
-            ->addAttributes([
-                'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('admin.users.users_applications_cancel_registration_confirm')
-            ])->setClass('btn btn-xs btn-danger');
-        $grid->allowRowsAction('cancelRegistration', function (Application $item) {
-            return $item->getType() == Application::ROLES
-                && !($item->getState() == ApplicationState::CANCELED || $item->getState() == ApplicationState::CANCELED_NOT_PAID);
-        });
-
         $grid->addAction('cancelApplication', 'admin.users.users_applications_cancel_application')
             ->addAttributes([
                 'data-toggle' => 'confirmation',
@@ -252,7 +242,9 @@ class ApplicationsGridControl extends Control
                 && !($item->getState() == ApplicationState::CANCELED || $item->getState() == ApplicationState::CANCELED_NOT_PAID);
         });
 
-        $grid->setColumnsSummary(['fee']);
+        $grid->setColumnsSummary(['fee'], function(Application $item, $column) {
+            return $item->isCanceled() ? 0 : $item->getFee();
+        });
     }
 
     /**
@@ -464,35 +456,6 @@ class ApplicationsGridControl extends Control
     }
 
     /**
-     * Odhlásí uživatele ze semináře.
-     * @param $id
-     * @throws \Nette\Application\AbortException
-     * @throws \Throwable
-     */
-    public function handleCancelRegistration($id)
-    {
-        $user = $this->applicationRepository->findById($id)->getUser();
-
-        $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($user) {
-            $user->setRoles(new ArrayCollection([$this->roleRepository->findBySystemName(Role::NONREGISTERED)]));
-            $user->setApproved(TRUE);
-            foreach ($user->getApplications() as $application) {
-                $this->applicationRepository->remove($application);
-            }
-            $this->userRepository->save($user);
-
-            $this->programService->updateUserPrograms($user);
-
-            $this->mailService->sendMailFromTemplate($user, '', Template::REGISTRATION_CANCELED, [
-                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)
-            ]);
-        });
-
-        $this->getPresenter()->flashMessage('admin.users.users_applications_registration_canceled', 'success');
-        $this->redirect('this');
-    }
-
-    /**
      * Zruší přihlášku.
      * @param $id
      * @throws \Nette\Application\AbortException
@@ -537,7 +500,7 @@ class ApplicationsGridControl extends Control
         if ($this->user->isApproved()) {
             foreach ($selectedSubevents as $subevent) {
                 if ($subevent->hasLimitedCapacity()) {
-                    if ($this->subeventRepository->countUnoccupiedInSubevent($subevent) < 1 && !$this->user->hasSubevent($subevent))
+                    if ($subevent->countUnoccupied() < 1 && !$this->user->hasSubevent($subevent))
                         return FALSE;
                 }
             }
@@ -563,37 +526,6 @@ class ApplicationsGridControl extends Control
                     return FALSE;
             }
         }
-        return TRUE;
-    }
-
-    /**
-     * Ověří obsazenost rolí.
-     * @param $selectedRoles
-     * @return bool
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     */
-    private function validateRolesCapacities($selectedRoles)
-    {
-        if ($this->user->isApproved()) {
-            foreach ($selectedRoles as $role) {
-                if ($role->hasLimitedCapacity()) {
-                    if ($this->roleRepository->countUnoccupiedInRole($role) < 1 && !$this->user->isInRole($role))
-                        return FALSE;
-                }
-            }
-        }
-        return TRUE;
-    }
-
-    /**
-     * Ověří, že je vybrána alespoň jedna role.
-     * @param $selectedRoles
-     * @return bool
-     */
-    private function validateRolesEmpty($selectedRoles)
-    {
-        if ($selectedRoles->isEmpty())
-            return FALSE;
         return TRUE;
     }
 

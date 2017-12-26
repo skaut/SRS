@@ -28,9 +28,6 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
     /** @var RoleRepository */
     private $roleRepository;
 
-    /** @var SettingsRepository */
-    private $settingsRepository;
-
     /** @var FilesService */
     private $filesService;
 
@@ -44,12 +41,10 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
      * @param FilesService $filesService
      */
     public function __construct(UserRepository $userRepository, RoleRepository $roleRepository,
-                                SettingsRepository $settingsRepository, SkautIsService $skautIsService,
-                                FilesService $filesService)
+                                SkautIsService $skautIsService, FilesService $filesService)
     {
         $this->userRepository = $userRepository;
         $this->roleRepository = $roleRepository;
-        $this->settingsRepository = $settingsRepository;
         $this->skautIsService = $skautIsService;
         $this->filesService = $filesService;
     }

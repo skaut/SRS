@@ -2,6 +2,7 @@
 
 namespace App\Model\User;
 
+use App\Model\Enums\ApplicationState;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -375,5 +376,13 @@ abstract class Application
     public function setValidTo(?\DateTime $validTo)
     {
         $this->validTo = $validTo;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCanceled(): bool
+    {
+        return $this->state == ApplicationState::CANCELED || $this->state == ApplicationState::CANCELED_NOT_PAID;
     }
 }

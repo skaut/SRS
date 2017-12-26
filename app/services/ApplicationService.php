@@ -6,7 +6,6 @@ use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\MaturityType;
-use App\Model\Mailing\Mail;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Settings;
@@ -24,10 +23,8 @@ use App\Model\User\VariableSymbol;
 use App\Model\User\VariableSymbolRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use function foo\func;
 use Kdyby\Translation\Translator;
 use Nette;
-use Psr\Log\NullLogger;
 
 
 /**
@@ -162,45 +159,30 @@ class ApplicationService extends Nette\Object
     public function updateRoles(User $user, Collection $roles, User $createdBy, bool $approve = FALSE): void
     {
         $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($user, $roles, $createdBy, $approve) {
-            if ($approve) {
-                $user->setApproved(TRUE);
-            } else {
-                if ($user->isApproved()) {
-                    foreach ($roles as $role) {
-                        if (!$role->isApprovedAfterRegistration() && !$user->isInRole($role)) {
-                            $user->setApproved(FALSE);
-                            break;
-                        }
-                    }
-                } else {
-                    if ($roles->forAll(function (int $key, Role $role) {return $role->isApprovedAfterRegistration();}))
-                        $user->setApproved(TRUE);
-                }
-            }
+            $oldRoles = $user->getRoles();
 
             $user->setRoles($roles);
             $this->userRepository->save($user);
 
-            foreach ($user->getValidApplications() as $application) {
-                if ($application->getType() == Application::ROLES) {
-                    $newApplication = clone $application;
-                    $newApplication->setRoles($roles);
-                    $newApplication->setFee($this->countRolesFee($roles));
-                    $newApplication->setState($this->getApplicationState($newApplication));
-                    $newApplication->setCreatedBy($createdBy);
-                    $newApplication->setValidFrom(new \DateTime());
-                    $this->applicationRepository->save($newApplication);
+            if ($oldRoles->contains($this->roleRepository->findBySystemName(Role::NONREGISTERED))) {
+                $this->createRolesApplication($user, $roles, $createdBy, $approve);
+                $this->createSubeventsApplication($user, new ArrayCollection([$this->subeventRepository->findImplicit()]), $createdBy);
+            } else {
+                if ($roles->forAll(function (int $key, Role $role) {
+                    return $role->isApprovedAfterRegistration();
+                })) {
+                    $user->setApproved(TRUE);
+                } elseif (!$approve && $roles->exists(function (int $key, Role $role) use ($oldRoles) {
+                        return !$role->isApprovedAfterRegistration() && !$oldRoles->contains($role);
+                    })) {
+                    $user->setApproved(FALSE);
+                }
 
-                    $application->setValidTo(new \DateTime());
-                    $this->applicationRepository->save($application);
-
-                    $user->addApplication($newApplication);
-                } else {
-                    $fee = $this->countSubeventsFee($roles, $application->getSubevents());
-
-                    if ($application->getFee() != $fee) {
+                foreach ($user->getNotCanceledApplications() as $application) {
+                    if ($application->getType() == Application::ROLES) {
                         $newApplication = clone $application;
-                        $newApplication->setFee($fee);
+                        $newApplication->setRoles($roles);
+                        $newApplication->setFee($this->countRolesFee($roles));
                         $newApplication->setState($this->getApplicationState($newApplication));
                         $newApplication->setCreatedBy($createdBy);
                         $newApplication->setValidFrom(new \DateTime());
@@ -210,11 +192,27 @@ class ApplicationService extends Nette\Object
                         $this->applicationRepository->save($application);
 
                         $user->addApplication($newApplication);
+                    } else {
+                        $fee = $this->countSubeventsFee($roles, $application->getSubevents());
+
+                        if ($application->getFee() != $fee) {
+                            $newApplication = clone $application;
+                            $newApplication->setFee($fee);
+                            $newApplication->setState($this->getApplicationState($newApplication));
+                            $newApplication->setCreatedBy($createdBy);
+                            $newApplication->setValidFrom(new \DateTime());
+                            $this->applicationRepository->save($newApplication);
+
+                            $application->setValidTo(new \DateTime());
+                            $this->applicationRepository->save($application);
+
+                            $user->addApplication($newApplication);
+                        }
                     }
                 }
-            }
 
-            $this->userRepository->save($user);
+                $this->userRepository->save($user);
+            }
 
             $this->programService->updateUserPrograms($user);
 
@@ -239,7 +237,7 @@ class ApplicationService extends Nette\Object
             $user->addRole($this->roleRepository->findBySystemName(Role::NONREGISTERED));
             $this->userRepository->save($user);
 
-            foreach ($user->getValidApplications() as $application) {
+            foreach ($user->getNotCanceledApplications() as $application) {
                 $newApplication = clone $application;
                 $newApplication->setState(ApplicationState::CANCELED);
                 $newApplication->setCreatedBy($createdBy);
@@ -325,14 +323,11 @@ class ApplicationService extends Nette\Object
      */
     private function createRolesApplication(User $user, Collection $roles, User $createdBy, bool $approve = FALSE): RolesApplication
     {
-        if ($user->isApproved() && !$approve) {
-            foreach ($roles as $role) {
-                if (!$role->isApprovedAfterRegistration()) {
-                    $user->setApproved(FALSE);
-                    break;
-                }
-            }
-        }
+        $user->setApproved(TRUE);
+        if (!$approve && $roles->exists(function (int $key, Role $role) {
+                return !$role->isApprovedAfterRegistration();
+            }))
+            $user->setApproved(FALSE);
 
         $user->setRoles($roles);
         $this->userRepository->save($user);
@@ -363,7 +358,7 @@ class ApplicationService extends Nette\Object
      * @throws \App\Model\Settings\SettingsException
      */
     private function createSubeventsApplication(User $user, Collection $subevents,
-                                               User $createdBy): SubeventsApplication
+                                                User $createdBy): SubeventsApplication
     {
         $application = new SubeventsApplication();
         $application->setUser($user);
@@ -463,6 +458,8 @@ class ApplicationService extends Nette\Object
                 return $fee;
             }
         }
+
+        //TODO sleva
 
         return $fee;
     }

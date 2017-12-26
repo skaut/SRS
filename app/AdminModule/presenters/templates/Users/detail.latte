@@ -102,6 +102,11 @@
                     <col class="col-sm-9 col-xs-9">
 
                     <tr>
+                        <th>{_admin.users.users_roles}</th>
+                        <td>{$detailUser->getRolesText()}</td>
+                    </tr>
+
+                    <tr>
                         <th>{_admin.users.users_approved_detail}</th>
                         <td>{if $detailUser->isApproved()}
                                 {_admin.common.yes}
@@ -160,17 +165,29 @@
 
                     <tr>
                         <th>{_admin.users.users_about_me}</th>
-                        <td>{$detailUser->getAbout()}</td>
+                        <td>{$detailUser->getAbout()|breaklines}</td>
                     </tr>
 
                     <tr>
-                        <th>{_admin.users.users_private_note|breaklines}</th>
-                        <td>{$detailUser->getNote()}</td>
+                        <th>{_admin.users.users_private_note}</th>
+                        <td>{$detailUser->getNote()|breaklines}</td>
                     </tr>
 
                     <tr>
                         <td></td>
-                        <td><a n:href="editSeminar!" class="btn btn-default ajax">{_admin.common.edit}</a></td>
+                        <td>
+                            <a n:href="editSeminar!" class="btn btn-default ajax">{_admin.common.edit}</a>
+                            {if $registered}
+                                <a n:href="cancelRegistration!" class="btn btn-danger" data-toggle="confirmation"
+                                                                data-content="{_admin.users.users_cancel_registration_confirm}">
+                                    {_admin.users.users_cancel_registration}
+                                </a>
+                            {else}
+                                <a href="#" class="btn btn-danger" disabled="true">
+                                    {_admin.users.users_cancel_registration}
+                                </a>
+                            {/if}
+                        </td>
                     </tr>
                 </table>
             {else}

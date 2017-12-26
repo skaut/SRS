@@ -2,6 +2,7 @@
 
 namespace App\WebModule\Forms;
 
+use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\User\User;
@@ -141,8 +142,18 @@ class RolesForm extends Nette\Object
     {
         if ($form['submit']->isSubmittedBy()) {
             $selectedRoles = $this->roleRepository->findRolesByIds($values['roles']);
+
+            if ($selectedRoles->count() == $this->user->getRoles()->count()) {
+                $selectedRolesArray = $selectedRoles->map(function (Role $role) {return $role->getId();})->toArray();
+                $usersRolesArray = $this->user->getRoles()->map(function (Role $role) {return $role->getId();})->toArray();
+
+                if (array_diff($selectedRolesArray, $usersRolesArray) === array_diff($usersRolesArray, $selectedRolesArray))
+                    return;
+            }
+
             $this->applicationService->updateRoles($this->user, $selectedRoles, $this->user);
-        } elseif ($form['cancelRegistration']->isSubmittedBy()) {
+        }
+        elseif ($form['cancelRegistration']->isSubmittedBy()) {
             $this->applicationService->cancelRegistration($this->user, $this->user);
         }
     }

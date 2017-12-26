@@ -242,7 +242,9 @@ class ApplicationsGridControl extends Control
             return $item->getType() == Application::SUBEVENTS;
         });
 
-        $grid->setColumnsSummary(['fee']);
+        $grid->setColumnsSummary(['fee'], function(Application $item, $column) {
+            return $item->isCanceled() ? 0 : $item->getFee();
+        });
     }
 
     /**

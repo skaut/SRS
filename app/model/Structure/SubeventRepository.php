@@ -118,63 +118,6 @@ class SubeventRepository extends EntityRepository
     }
     
     /**
-     * Vrací podakce s omezenou kapacitou.
-     * @return Collection
-     */
-    public function findAllWithLimitedCapacity()
-    {
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->neq('capacity', NULL));
-        return $this->matching($criteria);
-    }
-
-    /**
-     * Vrací počet volných míst v podakci nebo null u podakce s neomezenou kapacitou.
-     * @param Subevent $subevent
-     * @return int|null
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     */
-    public function countUnoccupiedInSubevent(Subevent $subevent)
-    {
-        if ($subevent->getCapacity() === NULL)
-            return NULL;
-        return $subevent->getCapacity() - $this->countApprovedUsersInSubevent($subevent);
-    }
-
-    /**
-     * Vrací počet volných míst v podakcích nebo null u podakcí s neomezenou kapacitou.
-     * @param $subevents
-     * @return array
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     */
-    public function countUnoccupiedInSubevents($subevents)
-    {
-        $counts = [];
-        foreach ($subevents as $subevent) {
-            $counts[$subevent->getId()] = $this->countUnoccupiedInSubevent($subevent);
-        }
-        return $counts;
-    }
-
-    /**
-     * Vrací počet schválených uživatelů v podakci.
-     * @param Subevent $subevent
-     * @return int
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     */
-    public function countApprovedUsersInSubevent(Subevent $subevent)
-    {
-        return $this->createQueryBuilder('s')
-            ->select('COUNT(u.id)')
-            ->leftJoin('s.applications', 'a', 'WITH',
-                'a.state = \'' . ApplicationState::WAITING_FOR_PAYMENT . '\' OR a.state = \'' . ApplicationState::PAID . '\'')
-            ->leftJoin('a.user', 'u', 'WITH', 'u.approved = TRUE')
-            ->where('s.id = :id')->setParameter('id', $subevent->getId())
-            ->getQuery()
-            ->getSingleScalarResult();
-    }
-
-    /**
      * Vrací počet vytvořených podakcí.
      * @return int
      * @throws \Doctrine\ORM\NonUniqueResultException
@@ -260,7 +203,6 @@ class SubeventRepository extends EntityRepository
     /**
      * Vrací seznam podakcí, s informací o obsazenosti, jako možnosti pro select
      * @return array
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getSubeventsOptionsWithCapacity()
     {
@@ -274,7 +216,7 @@ class SubeventRepository extends EntityRepository
             if ($subevent->hasLimitedCapacity())
                 $options[$subevent->getId()] = $this->translator->translate('web.common.subevent_option', NULL, [
                     'subevent' => $subevent->getName(),
-                    'occupied' => $this->countApprovedUsersInSubevent($subevent),
+                    'occupied' => $subevent->countUsers(),
                     'total' => $subevent->getCapacity()
                 ]);
             else
@@ -286,7 +228,6 @@ class SubeventRepository extends EntityRepository
     /**
      * Vrací seznam podakcí, s informací o obsazenosti, jako možnosti pro select
      * @return array
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getExplicitOptionsWithCapacity()
     {
@@ -301,7 +242,7 @@ class SubeventRepository extends EntityRepository
             if ($subevent->hasLimitedCapacity())
                 $options[$subevent->getId()] = $this->translator->translate('web.common.subevent_option', NULL, [
                     'subevent' => $subevent->getName(),
-                    'occupied' => $this->countApprovedUsersInSubevent($subevent),
+                    'occupied' => $subevent->countUsers(),
                     'total' => $subevent->getCapacity()
                 ]);
             else
@@ -314,7 +255,6 @@ class SubeventRepository extends EntityRepository
      * Vrací seznam podakcí, kromě podakcí uživatele, s informací o obsazenosti, jako možnosti pro select.
      * @param User $user
      * @return array
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getNonRegisteredSubeventsOptionsWithCapacity(User $user)
     {
@@ -338,7 +278,7 @@ class SubeventRepository extends EntityRepository
             if ($subevent->hasLimitedCapacity())
                 $options[$subevent->getId()] = $this->translator->translate('web.common.subevent_option', NULL, [
                     'subevent' => $subevent->getName(),
-                    'occupied' => $this->countApprovedUsersInSubevent($subevent),
+                    'occupied' => $subevent->countUsers(),
                     'total' => $subevent->getCapacity()
                 ]);
             else
@@ -351,7 +291,6 @@ class SubeventRepository extends EntityRepository
      * Vrací seznam podakcí, kromě podakcí uživatele, s informací o obsazenosti, jako možnosti pro select.
      * @param User $user
      * @return array
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getNonRegisteredExplicitOptionsWithCapacity(User $user)
     {
@@ -377,7 +316,7 @@ class SubeventRepository extends EntityRepository
             if ($subevent->hasLimitedCapacity())
                 $options[$subevent->getId()] = $this->translator->translate('web.common.subevent_option', NULL, [
                     'subevent' => $subevent->getName(),
-                    'occupied' => $this->countApprovedUsersInSubevent($subevent),
+                    'occupied' => $subevent->countUsers(),
                     'total' => $subevent->getCapacity()
                 ]);
             else

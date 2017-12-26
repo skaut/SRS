@@ -69,7 +69,7 @@ class SubeventForm extends Nette\Object
             $capacityText
                 ->addCondition(Form::FILLED)
                 ->addRule(Form::INTEGER, 'admin.configuration.subevents_capacity_format')
-                ->addRule(Form::MIN, 'admin.configuration.subevents_capacity_low', $this->subeventRepository->countApprovedUsersInSubevent($this->subevent));
+                ->addRule(Form::MIN, 'admin.configuration.subevents_capacity_low', $this->subevent->countUsers());
 
             $subeventsOptions = $this->subeventRepository->getSubeventsWithoutSubeventOptions($this->subevent->getId());
         } else {

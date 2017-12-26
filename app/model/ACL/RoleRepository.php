@@ -156,59 +156,15 @@ class RoleRepository extends EntityRepository
     }
 
     /**
-     * Vrací počet volných míst v rolích nebo null u rolí s neomezenou kapacitou.
-     * @param $roles
-     * @return array
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     */
-    public function countUnoccupiedInRoles($roles) : array
-    {
-        $counts = [];
-        foreach ($roles as $role) {
-            $counts[$role->getId()] = $this->countUnoccupiedInRole($role);
-        }
-        return $counts;
-    }
-
-    /**
-     * Vrací počet volných míst v roli nebo null u rolí s neomezenou kapacitou.
-     * @param Role $role
-     * @return int|null
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     */
-    public function countUnoccupiedInRole(Role $role) : ?int
-    {
-        if ($role->getCapacity() === NULL)
-            return NULL;
-        return $role->getCapacity() - $this->countApprovedUsersInRole($role);
-    }
-
-    /**
-     * Vrací počet schválených uživatelů v roli.
-     * @param Role $role
-     * @return int
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     */
-    public function countApprovedUsersInRole(Role $role) : int
-    {
-        return $this->createQueryBuilder('r')
-            ->select('COUNT(u.id)')
-            ->leftJoin('r.users', 'u', 'WITH', 'u.approved = true')
-            ->where('r.id = :id')->setParameter('id', $role->getId())
-            ->getQuery()
-            ->getSingleScalarResult();
-    }
-
-    /**
-     * Vrací počet schválených uživatelů v rolích.
+     * Vrací role s počty uživatelů.
      * @param $roles
      * @return array
      */
-    public function countApprovedUsersInRoles($roles) : array
+    public function countUsersInRoles($roles) : array
     {
         return $this->createQueryBuilder('r')
             ->select('r.name, r.capacity, COUNT(u.id) AS usersCount')
-            ->leftJoin('r.users', 'u', 'WITH', 'u.approved = true')
+            ->leftJoin('r.users', 'u')
             ->where('r.id IN (:ids)')->setParameter('ids', $this->findRolesIds($roles))
             ->groupBy('r.id')
             ->orderBy('r.name')
@@ -263,7 +219,7 @@ class RoleRepository extends EntityRepository
             if ($role->hasLimitedCapacity())
                 $options[$role->getId()] = $this->translator->translate('web.common.role_option', NULL, [
                     'role' => $role->getName(),
-                    'occupied' => $this->countApprovedUsersInRole($role),
+                    'occupied' => $role->countUsers(),
                     'total' => $role->getCapacity()
                 ]);
             else
@@ -312,7 +268,7 @@ class RoleRepository extends EntityRepository
             if ($role->hasLimitedCapacity())
                 $options[$role->getId()] = $this->translator->translate('web.common.role_option', NULL, [
                     'role' => $role->getName(),
-                    'occupied' => $this->countApprovedUsersInRole($role),
+                    'occupied' => $role->countUsers(),
                     'total' => $role->getCapacity()
                 ]);
             else
@@ -405,7 +361,7 @@ class RoleRepository extends EntityRepository
             if ($role->hasLimitedCapacity())
                 $options[$role->getId()] = $this->translator->translate('web.common.role_option', NULL, [
                     'role' => $role->getName(),
-                    'occupied' => $this->countApprovedUsersInRole($role),
+                    'occupied' => $role->countUsers(),
                     'total' => $role->getCapacity()
                 ]);
             else
@@ -438,7 +394,7 @@ class RoleRepository extends EntityRepository
         $options = [];
         foreach ($roles as $role) {
             $options[$role->getId()] = $this->translator->translate('admin.common.role_option',
-                $this->countApprovedUsersInRole($role), [
+                $role->countUsers(), [
                     'role' => $role->getName()
                 ]
             );
