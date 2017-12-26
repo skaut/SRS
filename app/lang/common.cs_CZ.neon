@@ -105,6 +105,7 @@ application_state:
     canceled_not_paid: "Zrušeno (nezaplaceno)"
     canceled: "Zrušeno"
     paid: "Zaplaceno"
+    paid_free: "Zaplaceno (zdarma)"
 
 condition_operator:
     and: "a"

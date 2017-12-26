@@ -4,6 +4,7 @@ namespace App\Model\Program;
 
 use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
@@ -30,7 +31,7 @@ class Program
     /**
      * Účastníci programu.
      * @ORM\ManyToMany(targetEntity="\App\Model\User\User", mappedBy="programs", cascade={"persist"})
-     * @var ArrayCollection
+     * @var Collection
      */
     protected $attendees;
 
@@ -82,7 +83,7 @@ class Program
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
     public function getAttendees()
     {
@@ -90,9 +91,9 @@ class Program
     }
 
     /**
-     * @param ArrayCollection $attendees
+     * @param Collection $attendees
      */
-    public function setAttendees($attendees)
+    public function setAttendees(Collection $attendees)
     {
         $this->removeAllAttendees();
         foreach ($attendees as $attendee) {

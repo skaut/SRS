@@ -6,6 +6,7 @@ use App\Model\ACL\Role;
 use App\Model\CMS\Content\Content;
 use App\Model\Page\PageException;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
@@ -54,7 +55,7 @@ class Page
     /**
      * Role, které mají na stránku přístup.
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="pages", cascade={"persist"})
-     * @var ArrayCollection
+     * @var Collection
      */
     protected $roles;
 
@@ -62,7 +63,7 @@ class Page
      * Obsahy na stránce.
      * @ORM\OneToMany(targetEntity="\App\Model\CMS\Content\Content", mappedBy="page", cascade={"persist"})
      * @ORM\OrderBy({"position" = "ASC"})
-     * @var ArrayCollection
+     * @var Collection
      */
     protected $contents;
 
@@ -153,7 +154,7 @@ class Page
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
     public function getRoles()
     {
@@ -161,7 +162,7 @@ class Page
     }
 
     /**
-     * @param ArrayCollection $roles
+     * @param Collection $roles
      */
     public function setRoles($roles)
     {
@@ -179,7 +180,7 @@ class Page
     /**
      * Vrací obsahy v oblasti.
      * @param null $area
-     * @return ArrayCollection|\Doctrine\Common\Collections\Collection
+     * @return Collection
      * @throws PageException
      */
     public function getContents($area = NULL)

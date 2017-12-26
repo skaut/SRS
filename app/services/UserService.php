@@ -50,57 +50,6 @@ class UserService extends Nette\Object
     }
 
     /**
-     * Změní role uživatele.
-     * @param User $user
-     * @param $roles
-     * @param bool $approved
-     */
-    public function changeRoles(User $user, $roles, $approved = FALSE)
-    {
-        if (!$approved && $user->isApproved()) {
-            foreach ($roles as $role) {
-                if (!$role->isApprovedAfterRegistration() && !$user->isInRole($role)) {
-                    $user->setApproved(FALSE);
-                    break;
-                }
-            }
-        }
-
-        $user->setRoles($roles);
-
-        $this->userRepository->save($user);
-
-        foreach ($user->getApplications() as $application) {
-            $fee = $this->applicationService->countFee($roles, $application->getSubevents(), $application->isFirst());
-
-            $application->setFee($fee);
-            $application->setState($fee == 0 || $application->getPaymentDate()
-                ? ApplicationState::PAID
-                : ApplicationState::WAITING_FOR_PAYMENT);
-
-            $this->applicationRepository->save($application);
-        }
-
-        $this->programService->updateUserPrograms($user);
-
-        //zaslání potvrzovacího e-mailu
-        $rolesNames = [];
-        foreach ($this->user->getRoles() as $role) {
-            $rolesNames[] = $role->getName();
-        }
-
-        $this->mailService->sendMailFromTemplate($this->user, '', Template::ROLES_CHANGED, [
-            TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-            TemplateVariable::USERS_ROLES => implode(', ', $rolesNames)
-        ]);
-    }
-
-    public function cancelRegistration()
-    {
-        //TODO
-    }
-
-    /**
      * @param User $user
      * @return string
      */

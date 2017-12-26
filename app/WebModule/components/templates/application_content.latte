@@ -71,6 +71,7 @@
 
                         <br><br>
 
+                        {*TODO tabulka s přehledem cen*}
                         <table class="table table-bordered table-striped" style="background-color: #ffffff">
                             <thead>
                                 <tr>
@@ -90,16 +91,14 @@
                                     <tr>
                                         <td>{$application->getApplicationDate()->format('j. n. Y')}</td>
                                         <td>
-                                            {if $application->isFirst()}
-                                                {$dbuser->getRolesText()}
-                                            {/if}
+
                                         </td>
                                         {if $subeventsExists}
                                             <td>{$application->getSubeventsText()}</td>
                                         {/if}
                                         <td>{$application->getFee()}</td>
-                                        <td>{$application->getVariableSymbol()}</td>
-                                        <td>{$application->getMaturityDate()->format('j. n. Y')}</td>
+                                        <td>{$application->getVariableSymbolText()}</td>
+                                        {*<td>{$application->getMaturityDate()->format('j. n. Y')}</td>*}
                                         <td>{_'common.application_state.'.$application->getState()}</td>
                                     </tr>
                                 {/foreach}

@@ -368,7 +368,7 @@ class UsersGridControl extends Control
     }
 
     /**
-     * Zpracuje odstranění uživatele.
+     * Zpracuje odstranění externího uživatele.
      * @param $id
      * @throws \Nette\Application\AbortException
      */

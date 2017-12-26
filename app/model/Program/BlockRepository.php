@@ -3,6 +3,9 @@
 namespace App\Model\Program;
 
 
+use App\Model\User\User;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Kdyby\Doctrine\EntityRepository;
 
@@ -117,18 +120,18 @@ class BlockRepository extends EntityRepository
     /**
      * Vrací bloky, které jsou pro uživatele povinné a není na ně přihlášený.
      * @param User $user
-     * @param $categoriesIds
-     * @param $subevents
-     * @return array
+     * @param Collection $categories
+     * @param Collection $subevents
+     * @return Collection|Block[]
      */
-    public function findMandatoryForCategoriesAndSubevents($user, $categoriesIds, $subevents)
+    public function findMandatoryForCategoriesAndSubevents(User $user, Collection $categories, Collection $subevents): Collection
     {
         $usersBlocks = $this->createQueryBuilder('b')
             ->select('b')
             ->leftJoin('b.programs', 'p')
             ->leftJoin('p.attendees', 'u')
-            ->where('u.id = :uid')
-            ->setParameter('uid', $user->getId())
+            ->where('u = :user')
+            ->setParameter('user', $user)
             ->getQuery()
             ->getResult();
 
@@ -136,12 +139,12 @@ class BlockRepository extends EntityRepository
             ->select('b')
             ->leftJoin('b.category', 'c')
             ->where($this->createQueryBuilder()->expr()->orX(
-                'c.id IN (:ids)',
+                'c IN (:categories)',
                 'b.category IS NULL'
             ))
             ->andWhere('b.subevent IN (:usersSubevents)')
             ->andWhere('b.mandatory > 0')
-            ->setParameter('ids', $categoriesIds)
+            ->setParameter('categories', $categories)
             ->setParameter('usersSubevents', $subevents);
 
         if (!empty($usersBlocks)) {
@@ -150,8 +153,7 @@ class BlockRepository extends EntityRepository
                 ->setParameter('usersBlocks', $usersBlocks);
         }
 
-        return $qb->getQuery()
-            ->getResult();
+        return new ArrayCollection($qb->getQuery()->getResult());
     }
 
     /**

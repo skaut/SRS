@@ -3,6 +3,7 @@
 namespace App\Model\Mailing;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
@@ -110,7 +111,7 @@ class Template
     /**
      * Proměnné použitelné v šabloně.
      * @ORM\ManyToMany(targetEntity="\App\Model\Mailing\TemplateVariable")
-     * @var ArrayCollection
+     * @var Collection
      */
     protected $variables;
 
@@ -217,7 +218,7 @@ class Template
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
     public function getVariables()
     {
@@ -225,7 +226,7 @@ class Template
     }
 
     /**
-     * @param ArrayCollection $variables
+     * @param Collection $variables
      */
     public function setVariables($variables)
     {

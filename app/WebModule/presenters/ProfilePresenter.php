@@ -12,6 +12,7 @@ use App\Services\PdfExportService;
 use App\WebModule\Components\IApplicationsGridControlFactory;
 use App\WebModule\Forms\AdditionalInformationForm;
 use App\WebModule\Forms\PersonalDetailsForm;
+use App\WebModule\Forms\RolesForm;
 use Nette\Application\UI\Form;
 
 
@@ -30,16 +31,22 @@ class ProfilePresenter extends WebBasePresenter
     public $personalDetailsFormFactory;
 
     /**
-     * @var IApplicationsGridControlFactory
-     * @inject
-     */
-    public $applicationsGridControlFactory;
-
-    /**
      * @var AdditionalInformationForm
      * @inject
      */
     public $additionalInformationFormFactory;
+
+    /**
+     * @var RolesForm
+     * @inject
+     */
+    public $rolesFormFactory;
+
+    /**
+     * @var IApplicationsGridControlFactory
+     * @inject
+     */
+    public $applicationsGridControlFactory;
 
     /**
      * @var PdfExportService
@@ -52,12 +59,6 @@ class ProfilePresenter extends WebBasePresenter
      * @inject
      */
     public $excelExportService;
-
-    /**
-     * @var Authenticator
-     * @inject
-     */
-    public $authenticator;
 
     /**
      * @var SubeventRepository
@@ -76,6 +77,12 @@ class ProfilePresenter extends WebBasePresenter
      * @inject
      */
     public $applicationService;
+
+    /**
+     * @var Authenticator
+     * @inject
+     */
+    public $authenticator;
 
 
     /**
@@ -136,6 +143,22 @@ class ProfilePresenter extends WebBasePresenter
             $this->redirect('this#collapseAdditionalInformation');
         };
 
+        return $form;
+    }
+
+    protected function createComponentRolesForm()
+    {
+        $form = $this->rolesFormFactory->create($this->user->id);
+
+        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+            if ($form['submit']->isSubmittedBy())
+                $this->flashMessage('web.profile.roles_changed', 'success');
+            elseif ($form['cancelRegistration']->isSubmittedBy())
+                $this->flashMessage('web.profile.registration_canceled', 'success');
+
+            $this->authenticator->updateRoles($this->user);
+            $this->redirect('this#collapseSeminar');
+        };
         return $form;
     }
 

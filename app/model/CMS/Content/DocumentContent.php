@@ -5,6 +5,7 @@ namespace App\Model\CMS\Content;
 use App\Model\CMS\Document\TagRepository;
 use App\Model\CMS\Page;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
 
@@ -24,7 +25,7 @@ class DocumentContent extends Content implements IContent
     /**
      * Tagy dokumentů, které se zobrazí.
      * @ORM\ManyToMany(targetEntity="\App\Model\CMS\Document\Tag")
-     * @var ArrayCollection
+     * @var Collection
      */
     protected $tags;
 
@@ -52,7 +53,7 @@ class DocumentContent extends Content implements IContent
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
     public function getTags()
     {
@@ -60,7 +61,7 @@ class DocumentContent extends Content implements IContent
     }
 
     /**
-     * @param ArrayCollection $tags
+     * @param Collection $tags
      */
     public function setTags($tags)
     {

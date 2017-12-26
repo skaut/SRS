@@ -3,6 +3,7 @@
 namespace App\Model\CMS\Document;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
@@ -27,7 +28,7 @@ class Document
     /**
      * Tagy dokumentu.
      * @ORM\ManyToMany(targetEntity="Tag", inversedBy="documents", cascade={"persist"})
-     * @var ArrayCollection
+     * @var Collection
      */
     protected $tags;
 
@@ -77,7 +78,7 @@ class Document
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
     public function getTags()
     {
@@ -85,7 +86,7 @@ class Document
     }
 
     /**
-     * @param ArrayCollection $tags
+     * @param Collection $tags
      */
     public function setTags($tags)
     {

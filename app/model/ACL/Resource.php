@@ -3,6 +3,7 @@
 namespace App\Model\ACL;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
@@ -74,7 +75,7 @@ class Resource
     /**
      * Oprávnění s tímto prostředkem.
      * @ORM\OneToMany(targetEntity="\App\Model\ACL\Permission", mappedBy="resource", cascade={"persist"})
-     * @var ArrayCollection
+     * @var Collection
      */
     protected $permissions;
 
@@ -114,7 +115,7 @@ class Resource
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
     public function getPermissions()
     {
@@ -122,7 +123,7 @@ class Resource
     }
 
     /**
-     * @param ArrayCollection $permissions
+     * @param Collection $permissions
      */
     public function setPermissions($permissions)
     {

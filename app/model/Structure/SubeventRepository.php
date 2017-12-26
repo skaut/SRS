@@ -4,6 +4,7 @@ namespace App\Model\Structure;
 
 use App\Model\Enums\ApplicationState;
 use App\Model\User\User;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Kdyby\Doctrine\EntityRepository;
@@ -63,15 +64,16 @@ class SubeventRepository extends EntityRepository
 
     /**
      * Vrací vytvořené podakce, seřazené podle názvu.
-     * @return array
+     * @return Collection|Subevent[]
      */
     public function findAllExplicitOrderedByName()
     {
-        return $this->createQueryBuilder('s')
+        $result = $this->createQueryBuilder('s')
             ->where('s.implicit = FALSE')
             ->orderBy('s.name')
             ->getQuery()
             ->getResult();
+        return new ArrayCollection($result);
     }
 
     /**

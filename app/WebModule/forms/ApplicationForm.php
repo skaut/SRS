@@ -26,6 +26,7 @@ use App\Services\ApplicationService;
 use App\Services\MailService;
 use App\Services\ProgramService;
 use App\Services\SkautIsService;
+use App\Utils\Validators;
 use Doctrine\Common\Collections\ArrayCollection;
 use Nette;
 use Nette\Application\UI\Form;
@@ -94,6 +95,9 @@ class ApplicationForm extends Nette\Object
     /** @var ProgramService */
     private $programService;
 
+    /** @var Validators */
+    private $validators;
+
 
     /**
      * ApplicationForm constructor.
@@ -117,7 +121,8 @@ class ApplicationForm extends Nette\Object
                                 ProgramRepository $programRepository, SkautIsService $skautIsService,
                                 SettingsRepository $settingsRepository, MailService $mailService,
                                 SubeventRepository $subeventRepository, ApplicationRepository $applicationRepository,
-                                ApplicationService $applicationService, ProgramService $programService)
+                                ApplicationService $applicationService, ProgramService $programService,
+                                Validators $validators)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->userRepository = $userRepository;
@@ -132,6 +137,7 @@ class ApplicationForm extends Nette\Object
         $this->applicationRepository = $applicationRepository;
         $this->applicationService = $applicationService;
         $this->programService = $programService;
+        $this->validators = $validators;
     }
 
     /**
@@ -243,23 +249,6 @@ class ApplicationForm extends Nette\Object
             $this->user->setPostcode($values['postcode']);
             $this->user->setState($values['state']);
 
-            //role
-            if (array_key_exists('roles', $values))
-                $roles = $this->roleRepository->findRolesByIds($values['roles']);
-            else
-                $roles = $this->roleRepository->findAllRegisterableNowOrderedByName();
-
-            $this->user->removeRole($this->roleRepository->findBySystemName(Role::NONREGISTERED));
-
-            foreach ($roles as $role) {
-                if (!$role->isApprovedAfterRegistration()) {
-                    $this->user->setApproved(FALSE);
-                    break;
-                }
-            }
-
-            $this->user->setRoles($roles);
-
             //vlastni pole
             foreach ($this->customInputRepository->findAll() as $customInput) {
                 $customInputValue = $this->user->getCustomInputValue($customInput);
@@ -295,31 +284,18 @@ class ApplicationForm extends Nette\Object
             if (array_key_exists('departure', $values))
                 $this->user->setDeparture($values['departure']);
 
+            //role
+            if (array_key_exists('roles', $values))
+                $roles = $this->roleRepository->findRolesByIds($values['roles']);
+            else
+                $roles = $this->roleRepository->findAllRegisterableNowOrderedByName();
+
             //podakce
             $subevents = $this->subeventRepository->explicitSubeventsExists() && !empty($values['subevents'])
                 ? $this->subeventRepository->findSubeventsByIds($values['subevents'])
                 : new ArrayCollection([$this->subeventRepository->findImplicit()]);
 
-            $application = new Application();
-            $fee = $this->applicationService->countFee($roles, $subevents);
-            $application->setUser($this->user);
-            $application->setSubevents($subevents);
-            $application->setApplicationDate(new \DateTime());
-            $application->setMaturityDate($this->applicationService->countMaturityDate());
-            $application->setFee($fee);
-            $application->setState($fee == 0 ? ApplicationState::PAID : ApplicationState::WAITING_FOR_PAYMENT);
-            $this->applicationRepository->save($application);
-
-            $application->setVariableSymbol($this->applicationService->generateVariableSymbol($application));
-            $this->applicationRepository->save($application);
-
-            $this->user->addApplication($application);
-            $this->userRepository->save($this->user);
-
-            //prihlaseni automaticke prihlasovanych programu
-            $this->programService->updateUserPrograms($this->user);
-
-            //aktualizace udaju ve skautis
+            //aktualizace udaju ve skautIS
             try {
                 $this->skautIsService->updatePersonBasic(
                     $this->user->getSkautISPersonId(),
@@ -341,17 +317,8 @@ class ApplicationForm extends Nette\Object
                 $this->onSkautIsError();
             }
 
-            $editRegistrationTo = $this->settingsRepository->getDateValue(Settings::EDIT_REGISTRATION_TO);
-
-            //odeslani potvrzovaciho mailu
-            $this->mailService->sendMailFromTemplate($this->user, '', Template::REGISTRATION, [
-                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-                TemplateVariable::EDIT_REGISTRATION_TO => $editRegistrationTo !== NULL ? $editRegistrationTo->format('j. n. Y') : '',
-                TemplateVariable::APPLICATION_MATURITY => $application->getMaturityDate() !== NULL ? $application->getMaturityDate()->format('j. n. Y') : '',
-                TemplateVariable::APPLICATION_FEE => $application->getFee(),
-                TemplateVariable::APPLICATION_VARIABLE_SYMBOL => $application->getVariableSymbol(),
-                TemplateVariable::BANK_ACCOUNT => $this->settingsRepository->getValue(Settings::ACCOUNT_NUMBER)
-            ]);
+            //vytvoreni prihlasky
+            $this->applicationService->register($this->user, $roles, $subevents, $this->user);
         });
     }
 
@@ -403,37 +370,19 @@ class ApplicationForm extends Nette\Object
 
             //generovani chybovych hlasek pro vsechny kombinace podakci
             foreach ($this->subeventRepository->findAllExplicitOrderedByName() as $subevent) {
-                $incompatibleSubevents = $subevent->getIncompatibleSubevents();
-                if (count($incompatibleSubevents) > 0) {
-                    $messageThis = $subevent->getName();
-
-                    $incompatibleSubeventsNames = [];
-                    foreach ($incompatibleSubevents as $incompatibleSubevent) {
-                        $incompatibleSubeventsNames[] = $incompatibleSubevent->getName();
-                    }
-                    $messageOthers = implode(', ', $incompatibleSubeventsNames);
-
+                if (!$subevent->getIncompatibleSubevents()-isEmpty()) {
                     $subeventsSelect->addRule([$this, 'validateSubeventsIncompatible'],
                         $form->getTranslator()->translate('web.application_content.incompatible_subevents_selected', NULL,
-                            ['subevent' => $messageThis, 'incompatibleSubevents' => $messageOthers]
+                            ['subevent' => $subevent->getName(), 'incompatibleSubevents' => $subevent->getIncompatibleSubeventsText()]
                         ),
                         [$subevent]
                     );
                 }
 
-                $requiredSubevents = $subevent->getRequiredSubeventsTransitive();
-                if (count($requiredSubevents) > 0) {
-                    $messageThis = $subevent->getName();
-
-                    $requiredSubeventsNames = [];
-                    foreach ($requiredSubevents as $requiredSubevent) {
-                        $requiredSubeventsNames[] = $requiredSubevent->getName();
-                    }
-                    $messageOthers = implode(', ', $requiredSubeventsNames);
-
+                if (!$subevent->getRequiredSubeventsTransitive()->isEmpty()) {
                     $subeventsSelect->addRule([$this, 'validateSubeventsRequired'],
                         $form->getTranslator()->translate('web.application_content.required_subevents_not_selected', NULL,
-                            ['subevent' => $messageThis, 'requiredSubevents' => $messageOthers]
+                            ['subevent' => $subevent->getName(), 'requiredSubevents' => $subevent->getRequiredSubeventsTransitiveText()]
                         ),
                         [$subevent]
                     );
@@ -460,37 +409,19 @@ class ApplicationForm extends Nette\Object
 
         //generovani chybovych hlasek pro vsechny kombinace roli
         foreach ($this->roleRepository->findAllRegisterableNowOrUsersOrderedByName($this->user) as $role) {
-            $incompatibleRoles = $role->getIncompatibleRoles();
-            if (count($incompatibleRoles) > 0) {
-                $messageThis = $role->getName();
-
-                $incompatibleRolesNames = [];
-                foreach ($incompatibleRoles as $incompatibleRole) {
-                    $incompatibleRolesNames[] = $incompatibleRole->getName();
-                }
-                $messageOthers = implode(', ', $incompatibleRolesNames);
-
+            if (!$role->getIncompatibleRoles()->isEmpty()) {
                 $rolesSelect->addRule([$this, 'validateRolesIncompatible'],
                     $form->getTranslator()->translate('web.application_content.incompatible_roles_selected', NULL,
-                        ['role' => $messageThis, 'incompatibleRoles' => $messageOthers]
+                        ['role' => $role->getName(), 'incompatibleRoles' => $role->getIncompatibleRolesText()]
                     ),
                     [$role]
                 );
             }
 
-            $requiredRoles = $role->getRequiredRolesTransitive();
-            if (count($requiredRoles) > 0) {
-                $messageThis = $role->getName();
-
-                $requiredRolesNames = [];
-                foreach ($requiredRoles as $requiredRole) {
-                    $requiredRolesNames[] = $requiredRole->getName();
-                }
-                $messageOthers = implode(', ', $requiredRolesNames);
-
+            if (!$role->getRequiredRolesTransitive()->isEmpty()) {
                 $rolesSelect->addRule([$this, 'validateRolesRequired'],
                     $form->getTranslator()->translate('web.application_content.required_roles_not_selected', NULL,
-                        ['role' => $messageThis, 'requiredRoles' => $messageOthers]
+                        ['role' => $role->getName(), 'requiredRoles' => $role->getRequiredRolesTransitiveText()]
                     ),
                     [$role]
                 );
@@ -532,15 +463,10 @@ class ApplicationForm extends Nette\Object
      * @return bool
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function validateSubeventsCapacities($field, $args)
+    public function validateSubeventsCapacities($field, $args): bool
     {
-        foreach ($this->subeventRepository->findSubeventsByIds($field->getValue()) as $subevent) {
-            if ($subevent->hasLimitedCapacity()) {
-                if ($this->subeventRepository->countUnoccupiedInSubevent($subevent) < 1)
-                    return FALSE;
-            }
-        }
-        return TRUE;
+        $selectedSubevents = $this->subeventRepository->findSubeventsByIds($field->getVaLue());
+        return $this->validators->validateSubeventsCapacities($selectedSubevents, $this->user);
     }
 
     /**
@@ -550,15 +476,10 @@ class ApplicationForm extends Nette\Object
      * @return bool
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function validateRolesCapacities($field, $args)
+    public function validateRolesCapacities($field, $args): bool
     {
-        foreach ($this->roleRepository->findRolesByIds($field->getValue()) as $role) {
-            if ($role->hasLimitedCapacity()) {
-                if ($this->roleRepository->countUnoccupiedInRole($role) < 1)
-                    return FALSE;
-            }
-        }
-        return TRUE;
+        $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
+        return $this->validators->validateRolesCapacities($selectedRoles, $this->user);
     }
 
     /**
@@ -567,20 +488,11 @@ class ApplicationForm extends Nette\Object
      * @param $args
      * @return bool
      */
-    public function validateSubeventsIncompatible($field, $args)
+    public function validateSubeventsIncompatible($field, $args): bool
     {
-        $selectedSubeventsIds = $field->getValue();
+        $selectedSubevents = $this->subeventRepository->findSubeventsByIds($field->getValue());
         $testSubevent = $args[0];
-
-        if (!in_array($testSubevent->getId(), $selectedSubeventsIds))
-            return TRUE;
-
-        foreach ($testSubevent->getIncompatibleSubevents() as $incompatibleSubevent) {
-            if (in_array($incompatibleSubevent->getId(), $selectedSubeventsIds))
-                return FALSE;
-        }
-
-        return TRUE;
+        return $this->validators->validateSubeventsIncompatible($selectedSubevents, $testSubevent);
     }
 
     /**
@@ -589,20 +501,11 @@ class ApplicationForm extends Nette\Object
      * @param $args
      * @return bool
      */
-    public function validateSubeventsRequired($field, $args)
+    public function validateSubeventsRequired($field, $args): bool
     {
-        $selectedSubeventsIds = $field->getValue();
+        $selectedSubevents = $this->subeventRepository->findSubeventsByIds($field->getValue());
         $testSubevent = $args[0];
-
-        if (!in_array($testSubevent->getId(), $selectedSubeventsIds))
-            return TRUE;
-
-        foreach ($testSubevent->getRequiredSubeventsTransitive() as $requiredSubevent) {
-            if (!in_array($requiredSubevent->getId(), $selectedSubeventsIds))
-                return FALSE;
-        }
-
-        return TRUE;
+        return $this->validators->validateSubeventsRequired($selectedSubevents, $testSubevent);
     }
 
     /**
@@ -611,20 +514,11 @@ class ApplicationForm extends Nette\Object
      * @param $args
      * @return bool
      */
-    public function validateRolesIncompatible($field, $args)
+    public function validateRolesIncompatible($field, $args): bool
     {
-        $selectedRolesIds = $field->getValue();
+        $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
         $testRole = $args[0];
-
-        if (!in_array($testRole->getId(), $selectedRolesIds))
-            return TRUE;
-
-        foreach ($testRole->getIncompatibleRoles() as $incompatibleRole) {
-            if (in_array($incompatibleRole->getId(), $selectedRolesIds))
-                return FALSE;
-        }
-
-        return TRUE;
+        return $this->validators->validateRolesIncompatible($selectedRoles, $testRole);
     }
 
     /**
@@ -633,20 +527,11 @@ class ApplicationForm extends Nette\Object
      * @param $args
      * @return bool
      */
-    public function validateRolesRequired($field, $args)
+    public function validateRolesRequired($field, $args): bool
     {
-        $selectedRolesIds = $field->getValue();
+        $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
         $testRole = $args[0];
-
-        if (!in_array($testRole->getId(), $selectedRolesIds))
-            return TRUE;
-
-        foreach ($testRole->getRequiredRolesTransitive() as $requiredRole) {
-            if (!in_array($requiredRole->getId(), $selectedRolesIds))
-                return FALSE;
-        }
-
-        return TRUE;
+        return $this->validators->validateRolesRequired($selectedRoles, $testRole);
     }
 
     /**
@@ -655,13 +540,10 @@ class ApplicationForm extends Nette\Object
      * @param $args
      * @return bool
      */
-    public function validateRolesRegisterable($field, $args)
+    public function validateRolesRegisterable($field, $args): bool
     {
-        foreach ($this->roleRepository->findRolesByIds($field->getValue()) as $role) {
-            if (!$role->isRegisterableNow())
-                return FALSE;
-        }
-        return TRUE;
+        $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
+        return $this->validators->validateRolesRegisterable($selectedRoles, $this->user);
     }
 
     /**
@@ -670,7 +552,7 @@ class ApplicationForm extends Nette\Object
      * @param $args
      * @return bool
      */
-    public function toggleSubeventsRequired($field, $args)
+    public function toggleSubeventsRequired($field, $args): bool
     {
         $rolesWithSubevents = $this->roleRepository->findRolesIds($this->roleRepository->findAllWithSubevents());
         foreach ($field->getValue() as $roleId)
@@ -684,7 +566,7 @@ class ApplicationForm extends Nette\Object
      * @param IControl $control
      * @return bool
      */
-    public static function toggleArrivalDeparture(IControl $control)
+    public static function toggleArrivalDeparture(IControl $control): bool
     {
         return FALSE;
     }

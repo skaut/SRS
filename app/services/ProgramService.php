@@ -5,13 +5,17 @@ namespace App\Services;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\Enums\RegisterProgramsType;
+use App\Model\Program\Block;
 use App\Model\Program\BlockRepository;
+use App\Model\Program\CategoryRepository;
+use App\Model\Program\Program;
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Nette;
 
 
@@ -34,6 +38,9 @@ class ProgramService extends Nette\Object
     /** @var UserRepository */
     private $userRepository;
 
+    /** @var CategoryRepository */
+    private $categoryRepository;
+
 
     /**
      * ProgramService constructor.
@@ -41,14 +48,17 @@ class ProgramService extends Nette\Object
      * @param ProgramRepository $programRepository
      * @param BlockRepository $blockRepository
      * @param UserRepository $userRepository
+     * @param CategoryRepository $categoryRepository
      */
     public function __construct(SettingsRepository $settingsRepository, ProgramRepository $programRepository,
-                                BlockRepository $blockRepository, UserRepository $userRepository)
+                                BlockRepository $blockRepository, UserRepository $userRepository,
+                                CategoryRepository $categoryRepository)
     {
         $this->settingsRepository = $settingsRepository;
         $this->programRepository = $programRepository;
         $this->blockRepository = $blockRepository;
         $this->userRepository = $userRepository;
+        $this->categoryRepository = $categoryRepository;
     }
 
     /**
@@ -95,7 +105,6 @@ class ProgramService extends Nette\Object
                     $newUsersPrograms->add($userAllowedProgram);
             }
 
-            $oldUsersPrograms->clear();
             $user->setPrograms($newUsersPrograms);
             $this->userRepository->save($user);
         }
@@ -104,42 +113,38 @@ class ProgramService extends Nette\Object
     /**
      * Vrací programy, na které se uživatel může přihlásit.
      * @param User $user
-     * @return array
+     * @return Collection|Program[]
      */
-    public function getUserAllowedPrograms($user)
+    public function getUserAllowedPrograms($user): Collection
     {
         if (!$user->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS))
-            return [];
+            return new ArrayCollection();
 
-        $registerableCategoriesIds = $this->userRepository->findRegisterableCategoriesIdsByUser($user);
+        $registerableCategories = $this->categoryRepository->findUserAllowed($user);
+        $registeredSubevents = $user->getSubevents();
 
-        $registeredSubeventsIds = [];
-
-        foreach ($user->getNotCanceledApplications() as $application) {
-            foreach ($application->getSubevents() as $subevent)
-                $registeredSubeventsIds[] = $subevent->getId();
-        }
-
-        return $this->programRepository->findAllowedForCategoriesAndSubevents($registerableCategoriesIds, $registeredSubeventsIds);
+        return $this->programRepository->findAllowedForCategoriesAndSubevents($registerableCategories, $registeredSubevents);
     }
 
     /**
      * Vrací názvy bloků, které jsou pro uživatele povinné, ale není na ně přihlášený.
      * @param User $user
-     * @return array
+     * @return Collection|Block[]
      */
-    public function getUnregisteredUserMandatoryBlocksNames($user)
+    public function getUnregisteredUserMandatoryBlocks(User $user): Collection
     {
-        $registerableCategoriesIds = $this->userRepository->findRegisterableCategoriesIdsByUser($user);
-        $usersSubevents = $user->getSubevents();
+        $registerableCategories = $this->categoryRepository->findUserAllowed($user);
+        $registeredSubevents = $user->getSubevents();
 
-        $unregisteredBlocks = $this->blockRepository->findMandatoryForCategoriesAndSubevents($user, $registerableCategoriesIds, $usersSubevents);
-
-        $names = [];
-        foreach ($unregisteredBlocks as $block)
-            $names[] = $block->getName();
-
-        return $names;
+        return $this->blockRepository->findMandatoryForCategoriesAndSubevents($user, $registerableCategories, $registeredSubevents);
     }
 
+    /**
+     * @param User $user
+     * @return Collection|string[]
+     */
+    public function getUnregisteredUserMandatoryBlocksNames(User $user): Collection
+    {
+        return $this->getUnregisteredUserMandatoryBlocks($user)->map(function (Block $block) {return $block->getName();});
+    }
 }

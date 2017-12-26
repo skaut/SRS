@@ -3,19 +3,41 @@
 namespace App\Model\User;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 
 /**
- * Entita přihláška.
+ * Abstraktní entita přihláška.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="ApplicationRepository")
  * @ORM\Table(name="application")
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="type", type="string")
+ * @ORM\DiscriminatorMap({
+ *     "roles_application" = "RolesApplication",
+ *     "subevents_application" = "SubeventsApplication"
+ * })
  */
-class Application
+abstract class Application
 {
+    /**
+     * Přihláška rolí.
+     */
+    const ROLES = "roles";
+
+    /**
+     * Přihláška na podakce.
+     */
+    const SUBEVENTS = "subevents";
+
+    /**
+     * Typ přihlášky.
+     */
+    protected $type;
+
     use Identifier;
 
     /**
@@ -28,14 +50,14 @@ class Application
     /**
      * Role.
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role")
-     * @var ArrayCollection
+     * @var Collection
      */
     protected $roles;
 
     /**
      * Podakce.
      * @ORM\ManyToMany(targetEntity="\App\Model\Structure\Subevent", inversedBy="applications", cascade={"persist"})
-     * @var ArrayCollection
+     * @var Collection
      */
     protected $subevents;
 
@@ -96,13 +118,6 @@ class Application
     protected $state;
 
     /**
-     * První přihláška uživatele.
-     * @ORM\Column(type="boolean")
-     * @var bool
-     */
-    protected $first = TRUE;
-
-    /**
      * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
      * @var User
      */
@@ -117,19 +132,11 @@ class Application
 
     /**
      * Platnost záznamu do.
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      * @var \DateTime
      */
     protected $validTo;
 
-
-    /**
-     * Application constructor.
-     */
-    public function __construct()
-    {
-        $this->subevents = new ArrayCollection();
-    }
 
     /**
      * @return int
@@ -137,6 +144,14 @@ class Application
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
     }
 
     /**
@@ -153,34 +168,6 @@ class Application
     public function setUser($user)
     {
         $this->user = $user;
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getSubevents()
-    {
-        return $this->subevents;
-    }
-
-    /**
-     * @param ArrayCollection $subevents
-     */
-    public function setSubevents($subevents)
-    {
-        $this->subevents = $subevents;
-    }
-
-    /**
-     * Vrací podakce oddělené čárkou.
-     * @return string
-     */
-    public function getSubeventsText()
-    {
-        $subeventsNames = [];
-        foreach ($this->subevents as $subevent)
-            $subeventsNames[] = $subevent->getName();
-        return implode(', ', $subeventsNames);
     }
 
     /**
@@ -213,11 +200,20 @@ class Application
     }
 
     /**
-     * @return VariableSymbol|null
+     * @return VariableSymbol
      */
-    public function getVariableSymbol(): ?VariableSymbol
+    public function getVariableSymbol(): VariableSymbol
     {
         return $this->variableSymbol;
+    }
+
+    /**
+     * Vrací text variabilního symbolu.
+     * @return string
+     */
+    public function getVariableSymbolText(): string
+    {
+        return $this->variableSymbol->getVariableSymbol();
     }
 
     /**
@@ -250,6 +246,15 @@ class Application
     public function getMaturityDate()
     {
         return $this->maturityDate;
+    }
+
+    /**
+     * Vrací datum splastnosti jako text.
+     * @return string|null
+     */
+    public function getMaturityDateText(): ?string
+    {
+        return $this->maturityDate !== NULL ? $this->maturityDate->format('j. n. Y') : NULL;
     }
 
     /**
@@ -325,22 +330,6 @@ class Application
     }
 
     /**
-     * @return mixed
-     */
-    public function isFirst()
-    {
-        return $this->first;
-    }
-
-    /**
-     * @param mixed $first
-     */
-    public function setFirst($first)
-    {
-        $this->first = $first;
-    }
-
-    /**
      * @return User
      */
     public function getCreatedBy(): User
@@ -375,7 +364,7 @@ class Application
     /**
      * @return \DateTime
      */
-    public function getValidTo(): \DateTime
+    public function getValidTo(): ?\DateTime
     {
         return $this->validTo;
     }
@@ -383,7 +372,7 @@ class Application
     /**
      * @param \DateTime $validTo
      */
-    public function setValidTo(\DateTime $validTo)
+    public function setValidTo(?\DateTime $validTo)
     {
         $this->validTo = $validTo;
     }

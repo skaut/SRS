@@ -3,6 +3,8 @@
 namespace App\Model\Program;
 
 use App\Model\User\User;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Kdyby\Doctrine\EntityRepository;
 
 
@@ -189,20 +191,22 @@ class ProgramRepository extends EntityRepository
 
     /**
      * Vrací programy povolené pro kategorie a podakce.
-     * @param $categoriesIds
-     * @param $subeventsIds
-     * @return array
+     * @param Collection $categories
+     * @param Collection $subevents
+     * @return Collection|Program[]
      */
-    public function findAllowedForCategoriesAndSubevents($categoriesIds, $subeventsIds)
+    public function findAllowedForCategoriesAndSubevents(Collection $categories, Collection $subevents): Collection
     {
-        return $this->createQueryBuilder('p')
+        $result = $this->createQueryBuilder('p')
             ->select('p')
             ->join('p.block', 'b')
             ->leftJoin('b.category', 'c')
             ->leftJoin('b.subevent', 's')
-            ->where('(b.category IS NULL OR c.id IN (:cids))')->setParameter('cids', $categoriesIds)
-            ->andWhere('s.id IN (:sids)')->setParameter('sids', $subeventsIds)
+            ->where('(b.category IS NULL OR c IN (:categories))')->setParameter('categories', $categories)
+            ->andWhere('s IN (:subevents)')->setParameter('subevents', $subevents)
             ->getQuery()
             ->getResult();
+
+        return new ArrayCollection($result);
     }
 }

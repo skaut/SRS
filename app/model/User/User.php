@@ -11,6 +11,7 @@ use App\Model\Program\Program;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Structure\Subevent;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\PersistentCollection;
@@ -51,14 +52,14 @@ class User
     /**
      * Přihlášky.
      * @ORM\OneToMany(targetEntity="Application", mappedBy="user", cascade={"persist"})
-     * @var ArrayCollection
+     * @var Collection
      */
     protected $applications;
 
     /**
      * Role.
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="users", cascade={"persist"})
-     * @var ArrayCollection
+     * @var Collection
      */
     protected $roles;
 
@@ -66,14 +67,14 @@ class User
      * Přihlášené programy.
      * @ORM\ManyToMany(targetEntity="\App\Model\Program\Program", inversedBy="attendees", cascade={"persist"})
      * @ORM\OrderBy({"start" = "ASC"})
-     * @var ArrayCollection
+     * @var Collection
      */
     protected $programs;
 
     /**
      * Lektorované bloky.
      * @ORM\OneToMany(targetEntity="\App\Model\Program\Block", mappedBy="lector", cascade={"persist"})
-     * @var ArrayCollection
+     * @var Collection
      */
     protected $lecturersBlocks;
 
@@ -270,7 +271,7 @@ class User
     /**
      * Hodnoty vlastních polí přihlášky.
      * @ORM\OneToMany(targetEntity="\App\Model\User\CustomInputValue\CustomInputValue", mappedBy="user", cascade={"persist"})
-     * @var ArrayCollection
+     * @var Collection
      */
     protected $customInputValues;
 
@@ -348,7 +349,7 @@ class User
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
     public function getRoles()
     {
@@ -356,7 +357,7 @@ class User
     }
 
     /**
-     * @param ArrayCollection $roles
+     * @param Collection $roles
      */
     public function setRoles($roles)
     {
@@ -407,6 +408,15 @@ class User
     }
 
     /**
+     * Vrací, zda má uživatel nějakou roli, která nemá cenu podle podakcí.
+     * @return bool
+     */
+    public function hasFixedFeeRole(): bool
+    {
+        return !$this->roles->forAll(function (int $key, Role $role) {return $role->getFee() === NULL;});
+    }
+
+    /**
      * Má uživatel oprávnění k prostředku?
      * @param $resource
      * @param $permission
@@ -440,7 +450,7 @@ class User
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
     public function getApplications()
     {
@@ -454,14 +464,57 @@ class User
     }
 
     /**
-     * Vrátí nezrušené přihlášky.
-     * @return ArrayCollection
+     * Vrátí platné přihlášky.
+     * @return Collection|Application[]
      */
-    public function getNotCanceledApplications()
+    public function getValidApplications(): Collection
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->orX(
-                Criteria::expr()->eq('state', ApplicationState::WAITING_FOR_PAYMENT),
+            ->where(Criteria::expr()->isNull('validTo'));
+
+        return $this->applications->matching($criteria);
+    }
+
+    /**
+     * Vrátí nezrušené přihlášky.
+     * @return Collection|Application[]
+     */
+    public function getNotCanceledApplications(): Collection
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->andX(
+                Criteria::expr()->isNull('validTo'),
+                Criteria::expr()->orX(
+                    Criteria::expr()->eq('state', ApplicationState::WAITING_FOR_PAYMENT),
+                    Criteria::expr()->eq('state', ApplicationState::PAID),
+                    Criteria::expr()->eq('state', ApplicationState::PAID_FREE)
+                )
+            ));
+
+        return $this->applications->matching($criteria);
+    }
+
+    /**
+     * Vrátí nezrušené přihlášky na podakce.
+     * @return Collection|SubeventsApplication[]
+     */
+    public function getNotCanceledSubeventsApplications(): Collection
+    {
+        $applications = $this->getNotCanceledApplications();
+        return $applications->filter(function (Application $application) {
+            return $application->getType() == Application::SUBEVENTS;
+        });
+    }
+
+    /**
+     * Vrácí zaplacené přihlášky.
+     * @return Collection
+     */
+    public function getPaidApplications()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->andX(
+                Criteria::expr()->isNull('validTo'),
                 Criteria::expr()->eq('state', ApplicationState::PAID)
             ));
 
@@ -469,39 +522,18 @@ class User
     }
 
     /**
-     * Vrátí zaplacené přihlášky.
-     * @return ArrayCollection
-     */
-    public function getPaidApplications()
-    {
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('state', ApplicationState::PAID));
-
-        return $this->applications->matching($criteria);
-    }
-
-    /**
      * Vrátí přihlášky čekající na platbu.
-     * @return ArrayCollection
+     * @return Collection
      */
     public function getWaitingForPaymentApplications()
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('state', ApplicationState::WAITING_FOR_PAYMENT));
+            ->where(Criteria::expr()->andX(
+                Criteria::expr()->isNull('validTo'),
+                Criteria::expr()->eq('state', ApplicationState::WAITING_FOR_PAYMENT)
+            ));
 
         return $this->applications->matching($criteria);
-    }
-
-    /**
-     * Vrátí první přihlášku.
-     * @return Application
-     */
-    public function getFirstApplication()
-    {
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('first', TRUE));
-
-        return $this->applications->matching($criteria)->first();
     }
 
     /**
@@ -511,17 +543,15 @@ class User
      */
     public function hasPaidSubevent(Subevent $subevent)
     {
-        $criteria = Criteria::create()->where(Criteria::expr()->eq('state', ApplicationState::PAID));
+        $subeventsApplications = $this->getNotCanceledSubeventsApplications();
 
-        foreach ($this->applications->matching($criteria) as $application) {
-            if ($application->getSubevents()->contains($subevent))
-                return TRUE;
-        }
-        return FALSE;
+        return $subeventsApplications->map(function (SubeventsApplication $application) {
+            return $application->getSubevents();
+        })->contains($subevent); //TODO kontrola
     }
 
     /**
-     * @param ArrayCollection $applications
+     * @param Collection $applications
      */
     public function setApplications($applications)
     {
@@ -529,7 +559,7 @@ class User
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
     public function getPrograms()
     {
@@ -537,7 +567,7 @@ class User
     }
 
     /**
-     * @param ArrayCollection $programs
+     * @param Collection $programs
      */
     public function setPrograms($programs)
     {
@@ -545,7 +575,7 @@ class User
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
     public function getLecturersBlocks()
     {
@@ -553,7 +583,7 @@ class User
     }
 
     /**
-     * @param ArrayCollection $lecturersBlocks
+     * @param Collection $lecturersBlocks
      */
     public function setLecturersBlocks($lecturersBlocks)
     {
@@ -600,20 +630,6 @@ class User
     public function isApproved()
     {
         return $this->approved;
-    }
-
-    /**
-     * Má pouze automaticky schválené role?
-     * @return bool
-     */
-    public function isApprovedAfterRegistration()
-    {
-        foreach ($this->roles as $role) {
-            if (!$role->isApprovedAfterRegistration()) {
-                return FALSE;
-            }
-        }
-        return TRUE;
     }
 
     /**
@@ -1071,7 +1087,7 @@ class User
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
     public function getCustomInputValues()
     {
@@ -1079,7 +1095,7 @@ class User
     }
 
     /**
-     * @param ArrayCollection $customInputValues
+     * @param Collection $customInputValues
      */
     public function setCustomInputValues($customInputValues)
     {
@@ -1164,24 +1180,6 @@ class User
     }
 
     /**
-     * Vrací kategorie, ze kterých si uživatel může přihlašovat programy.
-     * @param null $roles
-     * @return array
-     */
-    public function getRegisterableCategories($roles = NULL)
-    {
-        $categories = [];
-        if ($roles === NULL)
-            $roles = $this->roles;
-        foreach ($roles as $role) {
-            foreach ($role->getRegisterableCategories() as $category) {
-                $categories[] = $category;
-            }
-        }
-        return $categories;
-    }
-
-    /**
      * Je uživatel platící?
      * @return bool
      */
@@ -1223,7 +1221,7 @@ class User
     public function getFirstApplicationDate()
     {
         $minDate = NULL;
-        foreach ($this->applications as $application) {
+        foreach ($this->getValidApplications() as $application) {
             if ($minDate === NULL || $minDate > $application->getApplicationDate())
                 $minDate = $application->getApplicationDate();
         }
@@ -1237,7 +1235,7 @@ class User
     public function getLastPaymentDate()
     {
         $maxDate = NULL;
-        foreach ($this->applications as $application) {
+        foreach ($this->getValidApplications() as $application) {
             if ($maxDate === NULL || $maxDate < $application->getPaymentDate())
                 $maxDate = $application->getPaymentDate();
         }
@@ -1246,19 +1244,14 @@ class User
 
     /**
      * Vrací podakce uživatele.
-     * @return ArrayCollection
+     * @return Collection|Subevent[]
      */
-    public function getSubevents()
+    public function getSubevents(): Collection
     {
-        $subevents = new ArrayCollection();
-        foreach ($this->applications as $application) {
-            if ($application->getState() == ApplicationState::PAID
-                || $application->getState() == ApplicationState::WAITING_FOR_PAYMENT) {
-                foreach ($application->getSubevents() as $subevent) {
-                    $subevents->add($subevent);
-                }
-            }
-        }
+        $subevents = $this->getNotCanceledSubeventsApplications()->map(function (SubeventsApplication $application) {
+            return $application->getSubevents(); //TODO kontrola
+        });
+
         return $subevents;
     }
 
@@ -1266,13 +1259,10 @@ class User
      * Vrátí podakce uživatele oddělené čárkou.
      * @return string
      */
-    public function getSubeventsText()
+    public function getSubeventsText(): string
     {
-        $subeventsNames = [];
-        foreach ($this->getSubevents() as $subevent) {
-            $subeventsNames[] = $subevent->getName();
-        }
-        return implode(', ', $subeventsNames);
+        $subeventsNames = $this->getSubevents()->map(function (Subevent $subevent) {return $subevent->getName();});
+        return implode(', ', $subeventsNames->toArray());
     }
 
     /**
@@ -1289,19 +1279,9 @@ class User
      * Vrací zda uživatel zaplatil první registraci.
      * @return bool
      */
-    public function hasPaidFirstApplication()
+    public function hasPaidAnyApplication()
     {
-        $criteria = Criteria::create()->where(
-            Criteria::expr()->andX(
-                Criteria::expr()->eq('state', ApplicationState::PAID),
-                Criteria::expr()->eq('first', TRUE)
-            )
-        );
-
-        if ($this->applications->matching($criteria)->isEmpty())
-            return FALSE;
-
-        return TRUE;
+        return !$this->getPaidApplications()->isEmpty();
     }
 
     /**
@@ -1310,12 +1290,9 @@ class User
      */
     public function hasPaidEveryApplication()
     {
-        $criteria = Criteria::create()->where(Criteria::expr()->eq('state', ApplicationState::WAITING_FOR_PAYMENT));
-
-        if ($this->applications->matching($criteria)->isEmpty())
-            return TRUE;
-
-        return FALSE;
+        return $this->getValidApplications()->forAll(function (int $key, Application $application) {
+            return $application->getState() != ApplicationState::WAITING_FOR_PAYMENT;
+        });
     }
 
     /**
@@ -1324,10 +1301,9 @@ class User
      */
     public function getVariableSymbolsText()
     {
-        $variableSymbols = [];
-        foreach ($this->applications as $application)
-            if ($application->getVariableSymbol())
-                $variableSymbols[] = $application->getVariableSymbol()->getVariableSymbol();
-        return implode(', ', $variableSymbols);
+        $variableSymbols = $this->getValidApplications()->map(function (Application $application) {
+            return $application->getVariableSymbolText();
+        });
+        return implode(', ', $variableSymbols->toArray());
     }
 }

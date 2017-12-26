@@ -31,6 +31,7 @@ class ApplicationRepository extends EntityRepository
     {
         return $this->createQueryBuilder('a')
             ->where('a.state = :state')->setParameter('state', ApplicationState::WAITING_FOR_PAYMENT)
+            ->andWhere('a.validTo IS NULL')
             ->getQuery()
             ->getResult();
     }

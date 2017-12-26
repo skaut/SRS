@@ -161,7 +161,7 @@ class RoleRepository extends EntityRepository
      * @return array
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function countUnoccupiedInRoles($roles)
+    public function countUnoccupiedInRoles($roles) : array
     {
         $counts = [];
         foreach ($roles as $role) {
@@ -176,7 +176,7 @@ class RoleRepository extends EntityRepository
      * @return int|null
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function countUnoccupiedInRole(Role $role)
+    public function countUnoccupiedInRole(Role $role) : ?int
     {
         if ($role->getCapacity() === NULL)
             return NULL;
@@ -189,7 +189,7 @@ class RoleRepository extends EntityRepository
      * @return int
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function countApprovedUsersInRole(Role $role)
+    public function countApprovedUsersInRole(Role $role) : int
     {
         return $this->createQueryBuilder('r')
             ->select('COUNT(u.id)')
@@ -204,7 +204,7 @@ class RoleRepository extends EntityRepository
      * @param $roles
      * @return array
      */
-    public function countApprovedUsersInRoles($roles)
+    public function countApprovedUsersInRoles($roles) : array
     {
         return $this->createQueryBuilder('r')
             ->select('r.name, r.capacity, COUNT(u.id) AS usersCount')
@@ -221,7 +221,7 @@ class RoleRepository extends EntityRepository
      * @param $roles
      * @return array
      */
-    public function findRolesIds($roles)
+    public function findRolesIds($roles) : array
     {
         return array_map(function ($o) {
             return $o->getId();
@@ -233,7 +233,7 @@ class RoleRepository extends EntityRepository
      * @param $roleId
      * @return array
      */
-    public function getRolesWithoutRoleOptions($roleId)
+    public function getRolesWithoutRoleOptions($roleId) : array
     {
         $roles = $this->createQueryBuilder('r')
             ->select('r.id, r.name')
@@ -254,7 +254,7 @@ class RoleRepository extends EntityRepository
      * @return array
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getRegisterableNowOptionsWithCapacity()
+    public function getRegisterableNowOptionsWithCapacity() : array
     {
         $roles = $this->findAllRegisterableNowOrderedByName();
 
@@ -276,7 +276,7 @@ class RoleRepository extends EntityRepository
      * Vraci role, ktere jsou tuto chvíli registrovatelné, seřazené podle názvu.
      * @return array
      */
-    public function findAllRegisterableNowOrderedByName()
+    public function findAllRegisterableNowOrderedByName() : array
     {
         return $this->createQueryBuilder('r')
             ->select('r')
@@ -300,10 +300,10 @@ class RoleRepository extends EntityRepository
      * Vrací seznam rolí, které jsou v tuto chvíli registrovatelné nebo je uživatel má, s informací o jejich
      * obsazenosti, jako možnosti pro select.
      * @param User $user
-     * @return array
+     * @return Role[]
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getRegisterableNowOrUsersOptionsWithCapacity(User $user)
+    public function getRegisterableNowOrUsersOptionsWithCapacity(User $user) : array
     {
         $roles = $this->findAllRegisterableNowOrUsersOrderedByName($user);
 
@@ -324,9 +324,9 @@ class RoleRepository extends EntityRepository
     /**
      * Vrací role, které jsou v tuto chvíli registrovatelné nebo je uživatel má, seřazené podle názvu.
      * @param User $user
-     * @return array
+     * @return Role[]
      */
-    public function findAllRegisterableNowOrUsersOrderedByName(User $user)
+    public function findAllRegisterableNowOrUsersOrderedByName(User $user) : array
     {
         return $this->createQueryBuilder('r')
             ->select('r')
@@ -355,7 +355,7 @@ class RoleRepository extends EntityRepository
      * @param array $withoutRoles
      * @return array
      */
-    public function getRolesWithoutRolesOptions(array $withoutRoles)
+    public function getRolesWithoutRolesOptions(array $withoutRoles) : array
     {
         if (empty($withoutRoles))
             $roles = $this->createQueryBuilder('r')
@@ -385,7 +385,7 @@ class RoleRepository extends EntityRepository
      * @return array
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getRolesWithoutRolesOptionsWithCapacity(array $withoutRoles)
+    public function getRolesWithoutRolesOptionsWithCapacity(array $withoutRoles) : array
     {
         if (empty($withoutRoles))
             $roles = $this->createQueryBuilder('r')
@@ -420,7 +420,7 @@ class RoleRepository extends EntityRepository
      * @return array
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getRolesWithoutRolesOptionsWithUsersCount(array $withoutRoles)
+    public function getRolesWithoutRolesOptionsWithUsersCount(array $withoutRoles) : array
     {
         if (empty($withoutRoles))
             $roles = $this->createQueryBuilder('r')
@@ -450,7 +450,7 @@ class RoleRepository extends EntityRepository
      * Uloží roli.
      * @param Role $role
      */
-    public function save(Role $role)
+    public function save(Role $role) : void
     {
         $this->_em->persist($role);
         $this->_em->flush();
@@ -460,7 +460,7 @@ class RoleRepository extends EntityRepository
      * Odstraní roli.
      * @param Role $role
      */
-    public function remove(Role $role)
+    public function remove(Role $role) : void
     {
         $this->_em->remove($role);
         $this->_em->flush();

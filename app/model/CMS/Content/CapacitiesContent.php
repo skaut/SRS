@@ -6,6 +6,7 @@ use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\CMS\Page;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
 
@@ -24,7 +25,7 @@ class CapacitiesContent extends Content implements IContent
     /**
      * Role, jejichž obsazenosti se vypíší.
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role")
-     * @var ArrayCollection
+     * @var Collection
      */
     protected $roles;
 
@@ -52,7 +53,7 @@ class CapacitiesContent extends Content implements IContent
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
     public function getRoles()
     {
@@ -60,7 +61,7 @@ class CapacitiesContent extends Content implements IContent
     }
 
     /**
-     * @param ArrayCollection $roles
+     * @param Collection $roles
      */
     public function setRoles($roles)
     {

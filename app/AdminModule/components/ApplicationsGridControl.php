@@ -17,7 +17,6 @@ use App\Model\User\ApplicationRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
-use App\Services\Authenticator;
 use App\Services\MailService;
 use App\Services\PdfExportService;
 use App\Services\ProgramService;
@@ -62,9 +61,6 @@ class ApplicationsGridControl extends Control
     /** @var SettingsRepository */
     private $settingsRepository;
 
-    /** @var Authenticator */
-    private $authenticator;
-
     /** @var User */
     private $user;
 
@@ -86,7 +82,6 @@ class ApplicationsGridControl extends Control
      * @param ProgramRepository $programRepository
      * @param MailService $mailService
      * @param SettingsRepository $settingsRepository
-     * @param Authenticator $authenticator
      * @param PdfExportService $pdfExportService
      * @param ProgramService $programService
      */
@@ -94,8 +89,8 @@ class ApplicationsGridControl extends Control
                                 UserRepository $userRepository, RoleRepository $roleRepository,
                                 SubeventRepository $subeventRepository, ApplicationService $applicationService,
                                 ProgramRepository $programRepository, MailService $mailService,
-                                SettingsRepository $settingsRepository, Authenticator $authenticator,
-                                PdfExportService $pdfExportService, ProgramService $programService)
+                                SettingsRepository $settingsRepository, PdfExportService $pdfExportService,
+                                ProgramService $programService)
     {
         parent::__construct();
 
@@ -108,7 +103,6 @@ class ApplicationsGridControl extends Control
         $this->programRepository = $programRepository;
         $this->mailService = $mailService;
         $this->settingsRepository = $settingsRepository;
-        $this->authenticator = $authenticator;
         $this->pdfExportService = $pdfExportService;
         $this->programService = $programService;
     }

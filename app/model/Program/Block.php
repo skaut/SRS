@@ -5,6 +5,7 @@ namespace App\Model\Program;
 use App\Model\Structure\Subevent;
 use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
@@ -32,7 +33,7 @@ class Block
      * Programy v bloku.
      * @ORM\OneToMany(targetEntity="Program", mappedBy="block", cascade={"persist"})
      * @ORM\OrderBy({"start" = "ASC"})
-     * @var ArrayCollection
+     * @var Collection
      */
     protected $programs;
 
@@ -133,7 +134,7 @@ class Block
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
     public function getPrograms()
     {
@@ -141,7 +142,7 @@ class Block
     }
 
     /**
-     * @param ArrayCollection $programs
+     * @param Collection $programs
      */
     public function setPrograms($programs)
     {
@@ -150,7 +151,7 @@ class Block
 
     /**
      * Vrací seznam účastníků bloku.
-     * @return ArrayCollection
+     * @return Collection
      */
     public function getAttendees()
     {
@@ -338,7 +339,7 @@ class Block
         }
 
         $tmp = FALSE;
-        foreach ($user->getNotCanceledApplications() as $application) {
+        foreach ($user->getNotCanceledSubeventsApplications() as $application) {
             if ($application->getSubevents()->contains($this->subevent)) {
                 $tmp = TRUE;
                 break;

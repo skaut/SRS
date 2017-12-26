@@ -5,7 +5,10 @@ namespace App\Model\User;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Role;
 use App\Model\Enums\ApplicationState;
+use App\Model\Program\Category;
 use App\Model\Program\Program;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Kdyby\Doctrine\EntityRepository;
 
@@ -155,7 +158,8 @@ class UserRepository extends EntityRepository
             ->innerJoin('a.subevents', 's')
             ->where('per.name = :permission')
             ->andWhere('s.id = :sid')
-            ->andWhere('(a.state = \'' . ApplicationState::PAID . '\' OR a.state = \'' . ApplicationState::WAITING_FOR_PAYMENT . '\')')
+            ->andWhere('(a.state = \'' . ApplicationState::PAID . '\' OR a.state = \'' . ApplicationState::PAID_FREE
+                . '\' OR a.state = \'' . ApplicationState::WAITING_FOR_PAYMENT . '\')')
             ->setParameter('pid', $program->getId())
             ->setParameter('permission', Permission::CHOOSE_PROGRAMS)
             ->setParameter('sid', $program->getBlock()->getSubevent()->getId());
@@ -212,22 +216,6 @@ class UserRepository extends EntityRepository
     }
 
     /**
-     * Vrací kategorie, ze kterých si uživatel může vybírat programy.
-     * @param User $user
-     * @return int[]
-     */
-    public function findRegisterableCategoriesIdsByUser(User $user)
-    {
-        return $this->createQueryBuilder('u')
-            ->select('c.id')
-            ->join('u.roles', 'r')
-            ->join('r.registerableCategories', 'c')
-            ->where('u.id = :id')->setParameter('id', $user->getId())
-            ->getQuery()
-            ->getScalarResult();
-    }
-
-    /**
      * Uloží uživatele.
      * @param User $user
      */
@@ -238,7 +226,7 @@ class UserRepository extends EntityRepository
     }
 
     /**
-     * Odstraní uživatele.
+     * Odstraní externího uživatele.
      * @param User $user
      */
     public function remove(User $user)

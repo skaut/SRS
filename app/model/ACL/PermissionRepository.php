@@ -2,6 +2,8 @@
 
 namespace App\Model\ACL;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Kdyby\Doctrine\EntityRepository;
 
@@ -15,24 +17,25 @@ class PermissionRepository extends EntityRepository
 {
     /**
      * Vrací názvy všech oprávnění.
-     * @return array
+     * @return Collection|string[]
      */
-    public function findAllNames()
+    public function findAllNames(): Collection
     {
-        return $this->createQueryBuilder('p')
+        $result = $this->createQueryBuilder('p')
             ->select('p.name')
             ->addSelect('role.name AS roleName')->join('p.roles', 'role')
             ->addSelect('resource.name AS resourceName')->join('p.resource', 'resource')
             ->getQuery()
             ->getResult();
+        return new ArrayCollection($result);
     }
 
     /**
      * Vrací oprávnění podle id.
-     * @param $ids
-     * @return \Doctrine\Common\Collections\Collection
+     * @param int[] $ids
+     * @return Collection|Permission[]
      */
-    public function findPermissionsByIds($ids)
+    public function findPermissionsByIds(array $ids): Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids))
@@ -42,25 +45,23 @@ class PermissionRepository extends EntityRepository
 
     /**
      * Vrací id oprávnění.
-     * @param $permissions
+     * @param Collection $permissions
      * @return array
      */
-    public function findPermissionsIds($permissions)
+    public function findPermissionsIds(Collection $permissions): array
     {
-        return array_map(function ($o) {
-            return $o->getId();
-        }, $permissions->toArray());
+        return $permissions->map(function (Permission $permission) {return $permission->getId();})->toArray();
     }
 
     /**
      * Vrací oprávnění podle názvu oprávnění a prostředku.
-     * @param $permissionName
-     * @param $resourceName
-     * @return Permission
+     * @param string $permissionName
+     * @param string $resourceName
+     * @return Permission|null
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function findByPermissionAndResourceName($permissionName, $resourceName)
+    public function findByPermissionAndResourceName(string $permissionName, string $resourceName): ?Permission
     {
         return $this->createQueryBuilder('p')
             ->select('p')
