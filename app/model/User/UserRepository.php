@@ -243,19 +243,4 @@ class UserRepository extends EntityRepository
         $this->_em->remove($user);
         $this->_em->flush();
     }
-
-    /**
-     * Nastaví uživatelům účast.
-     * @param $ids
-     * @param bool $value
-     */
-    public function setAttended($ids, $value = TRUE)
-    {
-        $this->createQueryBuilder('u')
-            ->update()
-            ->set('u.attended', $value)
-            ->where('u.id IN (:ids)')->setParameter('ids', $ids)
-            ->getQuery()
-            ->execute();
-    }
 }

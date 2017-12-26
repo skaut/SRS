@@ -174,16 +174,16 @@ class UsersGridControl extends Control
 
         $grid->addGroupMultiSelectAction('admin.users.users_group_action_change_roles',
             $this->roleRepository->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]))
-            ->onSelect[] = [$this, 'groupChangeRoles']; //TODO
+            ->onSelect[] = [$this, 'groupChangeRoles'];
 
         $grid->addGroupAction('admin.users.users_group_action_mark_attended')
             ->onSelect[] = [$this, 'groupMarkAttended'];
 
         $grid->addGroupAction('admin.users.users_group_action_mark_paid_today', $this->preparePaymentMethodOptionsWithoutEmpty())
-            ->onSelect[] = [$this, 'groupMarkPaidToday']; //TODO
+            ->onSelect[] = [$this, 'groupMarkPaidToday']; //TODO kontrola
 
         $grid->addGroupAction('admin.users.users_group_action_generate_payment_proofs')
-            ->onSelect[] = [$this, 'groupGeneratePaymentProofs'];
+            ->onSelect[] = [$this, 'groupGeneratePaymentProofs']; //TODO kontrola
 
         $grid->addGroupAction('admin.users.users_group_action_export_users')
             ->onSelect[] = [$this, 'groupExportUsers']; //TODO kontrola
@@ -192,10 +192,10 @@ class UsersGridControl extends Control
             ->onSelect[] = [$this, 'groupExportSubeventsAndCategories']; //TODO kontrola
 
         $grid->addGroupAction('admin.users.users_group_action_export_roles')
-            ->onSelect[] = [$this, 'groupExportRoles'];
+            ->onSelect[] = [$this, 'groupExportRoles']; //TODO kontrola
 
         $grid->addGroupAction('admin.users.users_group_action_export_schedules')
-            ->onSelect[] = [$this, 'groupExportSchedules'];
+            ->onSelect[] = [$this, 'groupExportSchedules']; //TODO kontrola
 
 
         $grid->addColumnText('displayName', 'admin.users.users_name')
@@ -269,7 +269,7 @@ class UsersGridControl extends Control
 
         $grid->addColumnText('variableSymbol', 'admin.users.users_variable_symbol', 'variableSymbolsText')
             ->setFilterText()
-            ->setCondition(function (QueryBuilder $qb, $value) { //TODO kontrola
+            ->setCondition(function (QueryBuilder $qb, $value) {
                 $qb->join('u.applications', 'aVariableSymbol')
                     ->join('aVariableSymbol.variableSymbol', 'avsVariableSymbol')
                     ->andWhere('avsVariableSymbol.variableSymbol LIKE :variableSymbol')
@@ -439,12 +439,17 @@ class UsersGridControl extends Control
     {
         $users = $this->userRepository->findUsersByIds($ids);
 
-        foreach ($users as $user) {
-            $user->setApproved(TRUE);
-            $this->userRepository->save($user);
-        }
+        try {
+            $this->userRepository->getEntityManager()->transactional(function ($em) use ($users) {
+                foreach ($users as $user) {
+                    $user->setApproved(TRUE);
+                    $this->userRepository->save($user);
+                }
+            });
 
-        $this->getPresenter()->flashMessage('admin.users.users_group_action_approved', 'success');
+            $this->getPresenter()->flashMessage('admin.users.users_group_action_approved', 'success');
+        } catch (\Throwable $exception) { }
+
         $this->redirect('this');
     }
 
@@ -452,7 +457,7 @@ class UsersGridControl extends Control
      * Hromadně nastaví role.
      * @param array $ids
      * @param $value
-     * @throws \Throwable
+     * @throws \Nette\Application\AbortException
      */
     public function groupChangeRoles(array $ids, $value)
     {
@@ -464,7 +469,7 @@ class UsersGridControl extends Control
         //neni vybrana zadna role
         if ($selectedRoles->isEmpty()) {
             $p->flashMessage('admin.users.users_group_action_change_roles_error_empty', 'danger');
-            return;
+            $this->redirect('this');
         }
 
         //v rolich musi byt dostatek volnych mist
@@ -490,17 +495,20 @@ class UsersGridControl extends Control
 
         if (!$capacitiesOk) {
             $p->flashMessage('admin.users.users_group_action_change_roles_error_capacity', 'danger');
-            return;
+            $this->redirect('this');
         }
 
-        $this->userRepository->getEntityManager()->transactional(function ($em) use ($selectedRoles, $users, $p) {
-            foreach ($users as $user) {
-                $this->applicationService->updateRoles($user, $selectedRoles, $this->userRepository->findById($p->getUser()->id),TRUE);
-            }
+        try {
+            $this->userRepository->getEntityManager()->transactional(function ($em) use ($selectedRoles, $users, $p) {
+                foreach ($users as $user) {
+                    $this->applicationService->updateRoles($user, $selectedRoles, $this->userRepository->findById($p->getUser()->id), TRUE);
+                }
+            });
 
             $p->flashMessage('admin.users.users_group_action_changed_roles', 'success');
-            $this->redirect('this');
-        });
+        } catch (\Throwable $exception) { }
+
+        $this->redirect('this');
     }
 
     /**
@@ -510,17 +518,20 @@ class UsersGridControl extends Control
      */
     public function groupMarkAttended(array $ids)
     {
-        $this->userRepository->setAttended($ids);
+        $users = $this->userRepository->findUsersByIds($ids);
 
-        $p = $this->getPresenter();
-        $p->flashMessage('admin.users.users_group_action_marked_attended', 'success');
+        try {
+            $this->userRepository->getEntityManager()->transactional(function ($em) use ($users) {
+                foreach ($users as $user) {
+                    $user->setAttended(TRUE);
+                    $this->userRepository->save($user);
+                }
+            });
 
-        if ($p->isAjax()) {
-            $p->redrawControl('flashes');
-            $this['usersGrid']->reload();
-        } else {
-            $this->redirect('this');
-        }
+            $this->getPresenter()->flashMessage('admin.users.users_group_action_marked_attended', 'success');
+        } catch (\Throwable $exception) { }
+
+        $this->redirect('this');
     }
 
     /**

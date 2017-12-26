@@ -159,7 +159,7 @@ class ApplicationService extends Nette\Object
     public function updateRoles(User $user, Collection $roles, User $createdBy, bool $approve = FALSE): void
     {
         $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($user, $roles, $createdBy, $approve) {
-            $oldRoles = $user->getRoles();
+            $oldRoles = clone $user->getRoles();
 
             $user->setRoles($roles);
             $this->userRepository->save($user);

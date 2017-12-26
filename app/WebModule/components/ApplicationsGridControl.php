@@ -169,11 +169,11 @@ class ApplicationsGridControl extends Control
             ->join('a.user', 'u')
             ->where('u = :user')
             ->andWhere('a.validTo IS NULL')
-            ->setParameter('user', $this->user);
+            ->setParameter('user', $this->user)
+            ->orderBy('a.applicationId');
 
         $grid->setDataSource($qb);
         $grid->setPagination(FALSE);
-        $grid->setDefaultSort(['applicationDate', 'ASC']);
 
         $grid->addColumnDateTime('applicationDate', 'web.profile.applications_application_date')
             ->setFormat('j. n. Y H:i');

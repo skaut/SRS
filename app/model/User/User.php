@@ -469,7 +469,8 @@ class User
     public function getValidApplications(): Collection
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->isNull('validTo'));
+            ->where(Criteria::expr()->isNull('validTo'))
+            ->orderBy(['applicationId' => 'ASC']);
 
         return $this->applications->matching($criteria);
     }
