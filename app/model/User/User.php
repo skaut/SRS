@@ -487,6 +487,17 @@ class User
     }
 
     /**
+     * Vrátí nezrušené přihlášky na rolí.
+     * @return Collection|RolesApplication[]
+     */
+    public function getNotCanceledRolesApplications(): Collection
+    {
+        return $this->getNotCanceledApplications()->filter(function (Application $application) {
+            return $application->getType() == Application::ROLES;
+        });
+    }
+
+    /**
      * Vrátí nezrušené přihlášky na podakce.
      * @return Collection|SubeventsApplication[]
      */
@@ -614,7 +625,6 @@ class User
     {
         if (!$this->programs->contains($program)) {
             $this->programs->add($program);
-            $program->addAttendee($this);
         }
     }
 
@@ -634,11 +644,9 @@ class User
      */
     public function hasProgramBlock(Block $block)
     {
-        $criteria = Criteria::create()->where(
-            Criteria::expr()->eq('block_id', $block->getId())
-        );
-
-        return !$this->programs->matching($criteria)->isEmpty();
+        return !$this->programs->filter(function (Program $program) use ($block) {
+            return $program->getBlock() === $block;
+        });
     }
 
     /**
@@ -1244,24 +1252,22 @@ class User
     public function hasPaidSubevent(Subevent $subevent)
     {
         foreach ($this->getPaidAndFreeApplications() as $application)
-            if ($application->getType() == Application::SUBEVENTS && $application->getSubevents->contains($subevent))
+            if ($application->getType() == Application::SUBEVENTS && $application->getSubevents()->contains($subevent))
                 return TRUE;
 
         return FALSE;
     }
 
     /**
-     * Vrací datum první přihlášky.
+     * Vrací datum přihlášení.
      * @return \DateTime|null
      */
-    public function getFirstApplicationDate()
+    public function getRolesApplicationDate()
     {
-        $minDate = NULL;
-        foreach ($this->getValidApplications() as $application) {
-            if ($minDate === NULL || $minDate > $application->getApplicationDate())
-                $minDate = $application->getApplicationDate();
+        foreach ($this->getNotCanceledRolesApplications() as $application) {
+            return $application->getApplicationDate();
         }
-        return $minDate;
+        return NULL;
     }
 
     /**

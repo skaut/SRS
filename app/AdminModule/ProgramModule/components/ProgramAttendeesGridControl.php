@@ -127,6 +127,7 @@ class ProgramAttendeesGridControl extends Control
                 ->innerJoin('a.subevents', 's')
                 ->where('per.name = :permission')
                 ->andWhere('s.id = :sid')
+                ->andWhere('a.validTo IS NULL')
                 ->andWhere('(a.state = \'' . ApplicationState::PAID . '\' OR a.state = \'' . ApplicationState::PAID_FREE
                     . '\' OR a.state = \'' . ApplicationState::WAITING_FOR_PAYMENT . '\')')
                 ->setParameter('pid', $program->getId())

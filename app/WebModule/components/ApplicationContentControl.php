@@ -82,15 +82,27 @@ class ApplicationContentControl extends Control
         $template->guestRole = $user->isInRole($this->roleRepository->findBySystemName(Role::GUEST)->getName());
         $template->testRole = Role::TEST;
 
+        $explicitSubeventsExists = $this->subeventRepository->explicitSubeventsExists();
+
         if ($user->isLoggedIn()) {
+            $dbuser = $this->userRepository->findById($user->id);
+            $userHasFixedFeeRole = $dbuser->hasFixedFeeRole();
+
             $template->unapprovedRole = $user->isInRole($this->roleRepository->findBySystemName(Role::UNAPPROVED)->getName());
             $template->nonregisteredRole = $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED)->getName());
             $template->bankAccount = $this->settingsRepository->getValue(Settings::ACCOUNT_NUMBER);
-            $template->subeventsExists = $this->subeventRepository->explicitSubeventsExists();
-            $template->dbuser = $this->userRepository->findById($user->id);
+            $template->dbuser = $dbuser;
+            $template->userHasFixedFeeRole = $userHasFixedFeeRole;
+
+            $template->usersApplications = $explicitSubeventsExists && $userHasFixedFeeRole
+                ? $dbuser->getNotCanceledApplications()
+                : ($explicitSubeventsExists
+                    ? $dbuser->getNotCanceledSubeventsApplications()
+                    : $dbuser->getNotCanceledRolesApplications()
+                );
         }
 
-        $template->explicitSubeventsExists = $this->subeventRepository->explicitSubeventsExists();
+        $template->explicitSubeventsExists = $explicitSubeventsExists;
         $template->rolesWithSubevents = json_encode($this->roleRepository->findRolesIds($this->roleRepository->findAllWithSubevents()));
 
         $template->render();

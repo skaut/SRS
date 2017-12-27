@@ -147,9 +147,9 @@ class UserRepository extends EntityRepository
     /**
      * Vrací uživatele, kteří se mohou na program přihlásit.
      * @param $program
-     * @return array
+     * @return Collection|User[]
      */
-    public function findProgramAllowed(Program $program)
+    public function findProgramAllowed(Program $program): Collection
     {
         $qb = $this->createQueryBuilder('u')
             ->leftJoin('u.programs', 'p', 'WITH', 'p.id = :pid')
@@ -172,8 +172,7 @@ class UserRepository extends EntityRepository
                 ->setParameter('cid', $program->getBlock()->getCategory()->getId());
         }
 
-        return $qb->getQuery()
-            ->getResult();
+        return new ArrayCollection($qb->getQuery()->getResult());
     }
 
     /**

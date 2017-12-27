@@ -164,7 +164,7 @@ class ApplicationService extends Nette\Object
      * @return bool
      * @throws \Throwable
      */
-    public function updateRoles(User $user, Collection $roles, User $createdBy, bool $approve = FALSE): void
+    public function updateRoles(User $user, Collection $roles, ?User $createdBy, bool $approve = FALSE): void
     {
         $oldRoles = clone $user->getRoles();
 
@@ -245,7 +245,7 @@ class ApplicationService extends Nette\Object
      * @param User $createdBy
      * @throws \Throwable
      */
-    public function cancelRegistration(User $user, string $state, User $createdBy): void
+    public function cancelRegistration(User $user, string $state, ?User $createdBy): void
     {
         $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($user, $state, $createdBy) {
             $user->setApproved(TRUE);
@@ -306,8 +306,8 @@ class ApplicationService extends Nette\Object
 
         //pokud se podakce nezmenily, nic se neprovede
         if ($subevents->count() == $oldSubevents->count()) {
-            $subeventsArray = $subevents->map(function (Role $role) {return $role->getId();})->toArray();
-            $oldSubeventsArray = $oldSubevents->map(function (Role $role) {return $role->getId();})->toArray();
+            $subeventsArray = $subevents->map(function (Subevent $subevent) {return $subevent->getId();})->toArray();
+            $oldSubeventsArray = $oldSubevents->map(function (Subevent $subevent) {return $subevent->getId();})->toArray();
 
             if (array_diff($subeventsArray, $oldSubeventsArray) === array_diff($oldSubeventsArray, $subeventsArray))
                 return;
@@ -344,7 +344,7 @@ class ApplicationService extends Nette\Object
      * @param User $createdBy
      * @throws \Throwable
      */
-    public function cancelSubeventsApplication(SubeventsApplication $application, string $state, User $createdBy): void
+    public function cancelSubeventsApplication(SubeventsApplication $application, string $state, ?User $createdBy): void
     {
         $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($application, $state, $createdBy) {
             $user = $application->getUser();
@@ -380,8 +380,8 @@ class ApplicationService extends Nette\Object
      * @param User $createdBy
      * @throws \Throwable
      */
-    public function updatePayment(Application $application, string $variableSymbol, string $paymentMethod,
-                                  \DateTime $paymentDate, \DateTime $incomeProofPrintedDate, \DateTime $maturityDate,
+    public function updatePayment(Application $application, string $variableSymbol, ?string $paymentMethod,
+                                  ?\DateTime $paymentDate, ?\DateTime $incomeProofPrintedDate, ?\DateTime $maturityDate,
                                   User $createdBy): void
     {
         $oldVariableSymbol = $application->getVariableSymbolText();
@@ -430,7 +430,7 @@ class ApplicationService extends Nette\Object
         });
 
         if ($paymentDate !== NULL && $oldPaymentDate === NULL) {
-            $this->mailService->sendMailFromTemplate($this->user, '', Template::PAYMENT_CONFIRMED, [
+            $this->mailService->sendMailFromTemplate($application->getUser(), '', Template::PAYMENT_CONFIRMED, [
                 TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
                 TemplateVariable::APPLICATION_SUBEVENTS => $application->getSubeventsText()
             ]);
@@ -585,13 +585,13 @@ class ApplicationService extends Nette\Object
                 foreach ($subevents as $subevent) {
                     $fee += $subevent->getFee();
                 }
-                return $fee;
+                break;
             }
         }
 
-        //TODO sleva
+        $discount = $this->discountService->countDiscount($this->subeventRepository->findSubeventsIds($subevents));
 
-        return $fee;
+        return $fee - $discount;
     }
 
     /**

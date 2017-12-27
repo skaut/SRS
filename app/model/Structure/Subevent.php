@@ -3,6 +3,7 @@
 namespace App\Model\Structure;
 
 use App\Model\ACL\Role;
+use App\Model\Enums\ApplicationState;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -37,7 +38,7 @@ class Subevent
 
     /**
      * Přihlášky.
-     * @ORM\ManyToMany(targetEntity="\App\Model\User\Application", mappedBy="subevents", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="\App\Model\User\SubeventsApplication", mappedBy="subevents", cascade={"persist"})
      * @var Collection
      */
     protected $applications;

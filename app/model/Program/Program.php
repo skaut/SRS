@@ -104,7 +104,7 @@ class Program
     /**
      * @param $user
      */
-    public function addAttendee($user)
+    public function addAttendee(User $user)
     {
         if (!$this->attendees->contains($user)) {
             $this->attendees->add($user);

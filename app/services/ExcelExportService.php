@@ -421,17 +421,15 @@ class ExcelExportService extends Nette\Object
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->getLastPaymentDate() !== NULL ? $user->getLastPaymentDate()->format("j. n. Y") : '');
 
-            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getFirstApplicationDate() !== NULL ? $user->getFirstApplicationDate()->format("j. n. Y") : '');
+            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getRolesApplicationDate() !== NULL ? $user->getRolesApplicationDate()->format("j. n. Y") : '');
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->isAttended()
                 ? $this->translator->translate('common.export.common.yes')
                 : $this->translator->translate('common.export.common.no')
             );
 
-            $sheet->setCellValueByColumnAndRow($column++, $row,
-                ($user->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS) && $user->isApproved())
-                    ? implode(', ', $this->programService->getUnregisteredUserMandatoryBlocksNames($user))
-                    : ''
+            $sheet->setCellValueByColumnAndRow($column++, $row, $user->isAllowedRegisterPrograms()
+                    ? $this->programService->getUnregisteredUserMandatoryBlocksNamesText($user) : ''
             );
 
             foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
@@ -522,8 +520,7 @@ class ExcelExportService extends Nette\Object
             $column = 0;
 
             $sheet->getCellByColumnAndRow($column++, $row)
-                ->setValueExplicit($user->getFirstApplication() ? $user->getFirstApplication()->getVariableSymbol() : '',
-                    PHPExcel_Cell_DataType::TYPE_STRING);
+                ->setValueExplicit($user->getVariableSymbolsText(), PHPExcel_Cell_DataType::TYPE_STRING);
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->getFirstName());
 

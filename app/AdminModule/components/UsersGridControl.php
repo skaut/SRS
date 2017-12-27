@@ -17,6 +17,7 @@ use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\SubeventRepository;
+use App\Model\User\Application;
 use App\Model\User\ApplicationRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
@@ -180,22 +181,22 @@ class UsersGridControl extends Control
             ->onSelect[] = [$this, 'groupMarkAttended'];
 
         $grid->addGroupAction('admin.users.users_group_action_mark_paid_today', $this->preparePaymentMethodOptionsWithoutEmpty())
-            ->onSelect[] = [$this, 'groupMarkPaidToday']; //TODO kontrola
+            ->onSelect[] = [$this, 'groupMarkPaidToday'];
 
         $grid->addGroupAction('admin.users.users_group_action_generate_payment_proofs')
-            ->onSelect[] = [$this, 'groupGeneratePaymentProofs']; //TODO kontrola
+            ->onSelect[] = [$this, 'groupGeneratePaymentProofs'];
 
         $grid->addGroupAction('admin.users.users_group_action_export_users')
-            ->onSelect[] = [$this, 'groupExportUsers']; //TODO kontrola
+            ->onSelect[] = [$this, 'groupExportUsers'];
 
         $grid->addGroupAction('admin.users.users_group_action_export_subevents_and_categories')
-            ->onSelect[] = [$this, 'groupExportSubeventsAndCategories']; //TODO kontrola
+            ->onSelect[] = [$this, 'groupExportSubeventsAndCategories'];
 
         $grid->addGroupAction('admin.users.users_group_action_export_roles')
-            ->onSelect[] = [$this, 'groupExportRoles']; //TODO kontrola
+            ->onSelect[] = [$this, 'groupExportRoles'];
 
         $grid->addGroupAction('admin.users.users_group_action_export_schedules')
-            ->onSelect[] = [$this, 'groupExportSchedules']; //TODO kontrola
+            ->onSelect[] = [$this, 'groupExportSchedules'];
 
 
         $grid->addColumnText('displayName', 'admin.users.users_name')
@@ -281,14 +282,9 @@ class UsersGridControl extends Control
                 return $this->userService->getPaymentMethodText($row);
             });
 
-        $grid->addColumnDateTime('lastPaymentDate', 'admin.users.users_last_payment_date'); //TODO kontrola
+        $grid->addColumnDateTime('lastPaymentDate', 'admin.users.users_last_payment_date');
 
-        $grid->addColumnDateTime('firstApplicationDate', 'admin.users.users_first_application_date')
-            ->setSortable()
-            ->setSortableCallback(function ($qb, $sort) { //TODO kontrola
-                $qb->leftJoin('u.applications', 'aFirstApplicationDate', Expr\Join::WITH, 'aFirstApplicationDate.first = true')
-                    ->orderBy('aFirstApplicationDate.applicationDate', $sort['firstApplicationDate']);
-            })
+        $grid->addColumnDateTime('rolesApplicationDate', 'admin.users.users_roles_application_date')
             ->setFormat('j. n. Y H:i');
 
         $columnAttended = $grid->addColumnStatus('attended', 'admin.users.users_attended');

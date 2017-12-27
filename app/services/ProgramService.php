@@ -95,17 +95,16 @@ class ProgramService extends Nette\Object
     public function updateUsersPrograms($users)
     {
         foreach ($users as $user) {
-            $oldUsersPrograms = $user->getPrograms();
+            $oldUsersPrograms = clone $user->getPrograms();
             $userAllowedPrograms = $this->getUserAllowedPrograms($user);
 
-            $newUsersPrograms = new ArrayCollection();
+            $user->getPrograms()->clear();
 
             foreach ($userAllowedPrograms as $userAllowedProgram) {
                 if ($userAllowedProgram->getBlock()->getMandatory() == 2 || $oldUsersPrograms->contains($userAllowedProgram))
-                    $newUsersPrograms->add($userAllowedProgram);
+                    $user->addProgram($userAllowedProgram);
             }
 
-            $user->setPrograms($newUsersPrograms);
             $this->userRepository->save($user);
         }
     }

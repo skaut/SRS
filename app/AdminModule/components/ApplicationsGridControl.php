@@ -185,8 +185,7 @@ class ApplicationsGridControl extends Control
             $container->addMultiSelect('subevents', '',
                 $this->subeventRepository->getSubeventsOptionsWithCapacity()
             )
-                ->setAttribute('class', 'datagrid-multiselect')
-                ->addRule(Form::FILLED, 'admin.users.users_applications_subevents_empty');
+                ->setAttribute('class', 'datagrid-multiselect');
 
             $container->addText('variableSymbol', 'admin.users.users_variable_symbol')
                 ->addRule(Form::FILLED, 'admin.users.users_applications_variable_symbol_empty')
@@ -205,10 +204,10 @@ class ApplicationsGridControl extends Control
 
             $container->addDatePicker('maturityDate', 'admin.users.users_maturity_date');
         };
-        $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) {
+        $grid->getInlineEdit()->onSetDefaults[] = function ($container, Application $item) {
             $container->setDefaults([
                 'subevents' => $this->subeventRepository->findSubeventsIds($item->getSubevents()),
-                'variableSymbol' => $item->getVariableSymbol(),
+                'variableSymbol' => $item->getVariableSymbolText(),
                 'paymentMethod' => $item->getPaymentMethod(),
                 'paymentDate' => $item->getPaymentDate(),
                 'incomeProofPrintedDate' => $item->getIncomeProofPrintedDate(),
@@ -261,13 +260,15 @@ class ApplicationsGridControl extends Control
     {
         $selectedSubevents = $this->subeventRepository->findSubeventsByIds($values['subevents']);
 
+        $p = $this->getPresenter();
+
         if (!$this->validators->validateSubeventsCapacities($selectedSubevents, $this->user)) {
-            $this->getPresenter()->flashMessage('admin.users.users_applications_subevents_occupied', 'danger');
+            $p->flashMessage('admin.users.users_applications_subevents_occupied', 'danger');
             $this->redirect('this');
         }
 
         if (!$this->validators->validateSubeventsRegistered($selectedSubevents, $this->user)) {
-            $this->getPresenter()->flashMessage('admin.users.users_applications_subevents_registered', 'danger');
+            $p->flashMessage('admin.users.users_applications_subevents_registered', 'danger');
             $this->redirect('this');
         }
 
@@ -275,7 +276,7 @@ class ApplicationsGridControl extends Control
 
         $this->applicationService->addSubeventsApplication($this->user, $selectedSubevents, $loggedUser);
 
-        $this->getPresenter()->flashMessage('admin.users.users_applications_saved', 'success');
+        $p->flashMessage('admin.users.users_applications_saved', 'success');
         $this->redirect('this');
     }
 
@@ -293,25 +294,41 @@ class ApplicationsGridControl extends Control
 
         $selectedSubevents = $this->subeventRepository->findSubeventsByIds($values['subevents']);
 
+        $p = $this->getPresenter();
+
+        if ($application->getType() == Application::ROLES) {
+            if (!$selectedSubevents->isEmpty()) {
+                $p->flashMessage('admin.users.users_applications_subevents_not_empty', 'danger');
+                $this->redirect('this');
+            }
+        } else {
+            if ($selectedSubevents->isEmpty()) {
+                $p->flashMessage('admin.users.users_applications_subevents_empty', 'danger');
+                $this->redirect('this');
+            }
+        }
+
         if (!$this->validators->validateSubeventsCapacities($selectedSubevents, $this->user)) {
-            $this->getPresenter()->flashMessage('admin.users.users_applications_subevents_occupied', 'danger');
+            $p->flashMessage('admin.users.users_applications_subevents_occupied', 'danger');
             $this->redirect('this');
         }
 
         if (!$this->validators->validateSubeventsRegistered($selectedSubevents, $this->user, $application)) {
-            $this->getPresenter()->flashMessage('admin.users.users_applications_subevents_registered', 'danger');
+            $p->flashMessage('admin.users.users_applications_subevents_registered', 'danger');
             $this->redirect('this');
         }
 
         $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
 
         $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($application, $selectedSubevents, $values, $loggedUser) {
-            $this->applicationService->updateSubeventsApplication($application, $selectedSubevents, $loggedUser);
-            $this->applicationService->updatePayment($application, $values['variableSymbol'], $values['paymentMethod'],
-                $values['paymentDate'], $values['incomeProofPrintedDate'], $values['maturityDate'], $loggedUser);
+            if ($application->getType() == Application::SUBEVENTS)
+                $this->applicationService->updateSubeventsApplication($application, $selectedSubevents, $loggedUser);
+            $this->applicationService->updatePayment($application, $values['variableSymbol'],
+                $values['paymentMethod'] ?: NULL, $values['paymentDate'],
+                $values['incomeProofPrintedDate'], $values['maturityDate'], $loggedUser);
         });
 
-        $this->getPresenter()->flashMessage('admin.users.users_applications_saved', 'success');
+        $p->flashMessage('admin.users.users_applications_saved', 'success');
         $this->redirect('this');
     }
 

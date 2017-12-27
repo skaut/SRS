@@ -2,7 +2,9 @@
 
 namespace App\Model\User;
 
+use App\Model\ACL\Role;
 use App\Model\Enums\ApplicationState;
+use App\Model\Structure\Subevent;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -54,6 +56,20 @@ abstract class Application
      * @var User
      */
     protected $user;
+
+    /**
+     * Role.
+     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role")
+     * @var Collection
+     */
+    protected $roles;
+
+    /**
+     * Podakce.
+     * @ORM\ManyToMany(targetEntity="\App\Model\Structure\Subevent", inversedBy="applications", cascade={"persist"})
+     * @var Collection
+     */
+    protected $subevents;
 
     /**
      * Poplatek.
@@ -131,6 +147,15 @@ abstract class Application
      */
     protected $validTo;
 
+    /**
+     * Application constructor.
+     */
+    public function __construct()
+    {
+        $this->roles = new ArrayCollection();
+        $this->subevents = new ArrayCollection();
+    }
+
 
     /**
      * @return int
@@ -180,24 +205,38 @@ abstract class Application
         $this->user = $user;
     }
 
+    /**
+     * @return Collection
+     */
     public function getRoles(): Collection
     {
-        return new ArrayCollection();
+        return $this->roles;
     }
 
-    public function getRolesText(): ?string
+    /**
+     * Vrací názvy rolí oddělené čárkou.
+     * @return string
+     */
+    public function getRolesText() : string
     {
-        return NULL;
+        return implode(', ', $this->roles->map(function (Role $role) {return $role->getName();})->toArray());
     }
 
+    /**
+     * @return Collection
+     */
     public function getSubevents(): Collection
     {
-        return new ArrayCollection();
+        return $this->subevents;
     }
 
-    public function getSubeventsText(): ?string
+    /**
+     * Vrací názvy podakcí oddělené čárkou.
+     * @return string
+     */
+    public function getSubeventsText() : string
     {
-        return NULL;
+        return implode(', ', $this->subevents->map(function (Subevent $subevent) {return $subevent->getName();})->toArray());
     }
 
     /**
@@ -362,7 +401,7 @@ abstract class Application
     /**
      * @return User
      */
-    public function getCreatedBy(): User
+    public function getCreatedBy(): ?User
     {
         return $this->createdBy;
     }
@@ -370,7 +409,7 @@ abstract class Application
     /**
      * @param User $createdBy
      */
-    public function setCreatedBy(User $createdBy)
+    public function setCreatedBy(?User $createdBy)
     {
         $this->createdBy = $createdBy;
     }

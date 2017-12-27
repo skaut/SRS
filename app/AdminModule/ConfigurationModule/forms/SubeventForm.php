@@ -61,7 +61,7 @@ class SubeventForm extends Nette\Object
             ->setAttribute('title', $form->getTranslator()->translate('admin.configuration.subevents_capacity_note'));
 
         $form->addText('fee', 'admin.configuration.subevents_fee')
-            ->addCondition(Form::FILLED)
+            ->addRule(Form::FILLED, 'admin.configuration.subevents_fee_empty')
             ->addRule(Form::INTEGER, 'admin.configuration.subevents_fee_format');
 
         if ($this->subevent) {

@@ -119,7 +119,7 @@ class PdfExportService extends Nette\Object
      */
     private function prepareUsersPaymentProof(User $user, User $createdBy)
     {
-        foreach ($user->getApplications() as $application) {
+        foreach ($user->getNotCanceledApplications() as $application) {
             $this->prepareApplicationsPaymentProof($application, $createdBy);
         }
     }

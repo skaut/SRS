@@ -17,6 +17,7 @@ use App\Model\User\Application;
 use App\Model\User\ApplicationRepository;
 use App\Model\User\RolesApplicationRepository;
 use App\Model\User\SubeventsApplication;
+use App\Model\User\SubeventsApplicationRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
@@ -88,6 +89,9 @@ class ApplicationsGridControl extends Control
     /** @var RolesApplicationRepository */
     private $rolesApplicationRepository;
 
+    /** @var SubeventsApplicationRepository */
+    private $subeventsApplicationRepository;
+
 
     /**
      * ApplicationsGridControl constructor.
@@ -112,7 +116,8 @@ class ApplicationsGridControl extends Control
                                 SettingsRepository $settingsRepository, Authenticator $authenticator,
                                 PdfExportService $pdfExportService, ProgramService $programService,
                                 UserService $userService, Validators $validators,
-                                RolesApplicationRepository $rolesApplicationRepository)
+                                RolesApplicationRepository $rolesApplicationRepository,
+                                SubeventsApplicationRepository $subeventsApplicationRepository)
     {
         parent::__construct();
 
@@ -131,6 +136,7 @@ class ApplicationsGridControl extends Control
         $this->userService = $userService;
         $this->validators = $validators;
         $this->rolesApplicationRepository = $rolesApplicationRepository;
+        $this->subeventsApplicationRepository = $subeventsApplicationRepository;
     }
 
     /**
@@ -264,8 +270,10 @@ class ApplicationsGridControl extends Control
         foreach ($selectedSubevents as $subevent)
             $selectedAndUsersSubevents->add($subevent);
 
+        $p = $this->getPresenter();
+
         if (!$this->validators->validateSubeventsCapacities($selectedSubevents, $this->user)) {
-            $this->getPresenter()->flashMessage('web.profile.applications_subevents_capacity_occupied', 'danger');
+            $p->flashMessage('web.profile.applications_subevents_capacity_occupied', 'danger');
             $this->redirect('this');
         }
 
@@ -274,21 +282,21 @@ class ApplicationsGridControl extends Control
                 $message = $this->translator->translate('web.profile.applications_incompatible_subevents_selected', NULL,
                     ['subevent' => $subevent->getName(), 'incompatibleSubevents' => $subevent->getIncompatibleSubeventsText()]
                 );
-                $this->getPresenter()->flashMessage($message, 'danger');
+                $p->flashMessage($message, 'danger');
                 $this->redirect('this');
             }
             if (!$this->validators->validateSubeventsRequired($selectedAndUsersSubevents, $subevent)) {
                 $message = $this->translator->translate('web.profile.applications_required_subevents_not_selected', NULL,
                     ['subevent' => $subevent->getName(), 'requiredSubevents' => $subevent->getRequiredSubeventsTransitiveText()]
                 );
-                $this->getPresenter()->flashMessage($message, 'danger');
+                $p->flashMessage($message, 'danger');
                 $this->redirect('this');
             }
         }
 
         $this->applicationService->addSubeventsApplication($this->user, $selectedSubevents, $this->user);
 
-        $this->getPresenter()->flashMessage('web.profile.applications_add_subevents_successful', 'success');
+        $p->flashMessage('web.profile.applications_add_subevents_successful', 'success');
         $this->redirect('this');
     }
 
@@ -308,9 +316,13 @@ class ApplicationsGridControl extends Control
         $selectedAndUsersSubevents = clone $this->user->getSubevents();
         foreach ($selectedSubevents as $subevent)
             $selectedAndUsersSubevents->add($subevent);
+        foreach ($application->getSubevents() as $subevent)
+            $selectedAndUsersSubevents->removeElement($subevent);
+
+        $p = $this->getPresenter();
 
         if (!$this->validators->validateSubeventsCapacities($selectedSubevents, $this->user)) {
-            $this->getPresenter()->flashMessage('web.profile.applications_subevents_capacity_occupied', 'danger');
+            $p->flashMessage('web.profile.applications_subevents_capacity_occupied', 'danger');
             $this->redirect('this');
         }
 
@@ -319,21 +331,21 @@ class ApplicationsGridControl extends Control
                 $message = $this->translator->translate('web.profile.applications_incompatible_subevents_selected', NULL,
                     ['subevent' => $subevent->getName(), 'incompatibleSubevents' => $subevent->getIncompatibleSubeventsText()]
                 );
-                $this->getPresenter()->flashMessage($message, 'danger');
+                $p->flashMessage($message, 'danger');
                 $this->redirect('this');
             }
             if (!$this->validators->validateSubeventsRequired($selectedAndUsersSubevents, $subevent)) {
                 $message = $this->translator->translate('web.profile.applications_required_subevents_not_selected', NULL,
                     ['subevent' => $subevent->getName(), 'requiredSubevents' => $subevent->getRequiredSubeventsTransitiveText()]
                 );
-                $this->getPresenter()->flashMessage($message, 'danger');
+                $p->flashMessage($message, 'danger');
                 $this->redirect('this');
             }
         }
 
         $this->applicationService->updateSubeventsApplication($application, $selectedSubevents, $this->user);
 
-        $this->getPresenter()->flashMessage('web.profile.applications_edit_successful', 'success');
+        $p->flashMessage('web.profile.applications_edit_successful', 'success');
         $this->redirect('this');
     }
 

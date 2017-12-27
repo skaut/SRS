@@ -370,7 +370,7 @@ class ApplicationForm extends Nette\Object
 
             //generovani chybovych hlasek pro vsechny kombinace podakci
             foreach ($this->subeventRepository->findAllExplicitOrderedByName() as $subevent) {
-                if (!$subevent->getIncompatibleSubevents()-isEmpty()) {
+                if (!$subevent->getIncompatibleSubevents()->isEmpty()) {
                     $subeventsSelect->addRule([$this, 'validateSubeventsIncompatible'],
                         $form->getTranslator()->translate('web.application_content.incompatible_subevents_selected', NULL,
                             ['subevent' => $subevent->getName(), 'incompatibleSubevents' => $subevent->getIncompatibleSubeventsText()]

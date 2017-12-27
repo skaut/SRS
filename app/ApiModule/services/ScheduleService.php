@@ -110,7 +110,7 @@ class ScheduleService extends Nette\Object
      */
     public function getProgramsWeb()
     {
-        $programs = $this->programRepository->findUserAllowed($this->user);
+        $programs = $this->programService->getUserAllowedPrograms($this->user);
         $programDetailDTOs = [];
         foreach ($programs as $program) {
             $programDetailDTO = $this->convertProgramToProgramDetailDTO($program);
@@ -295,7 +295,7 @@ class ScheduleService extends Nette\Object
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_program_already_registered'));
         elseif ($program->getCapacity() !== NULL && $program->getCapacity() <= $program->getAttendeesCount())
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_program_no_vacancies'));
-        elseif (!(new ArrayCollection($this->programRepository->findUserAllowed($this->user)))->contains($program))
+        elseif (!($this->programService->getUserAllowedPrograms($this->user))->contains($program))
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_program_category_not_allowed'));
         elseif (count(
             array_intersect($this->programRepository->findBlockedProgramsIdsByProgram($program),
@@ -396,7 +396,7 @@ class ScheduleService extends Nette\Object
         $blockDetailDTO->setDescription($block->getDescription());
         $blockDetailDTO->setProgramsCount($block->getProgramsCount());
         $blockDetailDTO->setUserAttends($block->isAttendee($this->user));
-        $blockDetailDTO->setUserAllowed($block->isAllowed($this->user)); //TODO kontrola povolení zapisování před zaplacením
+        $blockDetailDTO->setUserAllowed($block->isAllowed($this->user));
 
         return $blockDetailDTO;
     }
