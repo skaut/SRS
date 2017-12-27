@@ -8,7 +8,6 @@ use App\Model\Program\RoomRepository;
 use App\Services\ExcelExportService;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
-use Nette\Application\UI\Form;
 use Ublaboo\DataGrid\DataGrid;
 
 
@@ -67,6 +66,7 @@ class RoomScheduleGridControl extends Control
     /**
      * Vytvoří komponentu.
      * @param $name
+     * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
     public function createComponentRoomScheduleGrid($name)
     {
@@ -103,7 +103,8 @@ class RoomScheduleGridControl extends Control
         $grid->addToolbarButton('exportRoomsSchedule!', 'admin.program.rooms_schedule_download_schedule');
     }
 
-    public function handleExportRoomsSchedule() {
+    public function handleExportRoomsSchedule()
+    {
         $this->room = $this->roomRepository->findById($this->getPresenter()->getParameter('id'));
 
         $response = $this->excelExportService->exportRoomSchedule($this->room, 'harmonogram-mistnosti.xlsx');

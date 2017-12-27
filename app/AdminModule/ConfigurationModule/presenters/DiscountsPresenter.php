@@ -5,7 +5,6 @@ namespace App\AdminModule\ConfigurationModule\Presenters;
 use App\AdminModule\ConfigurationModule\Components\IDiscountsGridControlFactory;
 use App\AdminModule\ConfigurationModule\Forms\DiscountForm;
 use App\AdminModule\ConfigurationModule\Forms\IDiscountFormFactory;
-use Nette\Forms\Form;
 
 
 /**

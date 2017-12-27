@@ -3,7 +3,8 @@
 namespace App\Model\User;
 
 use App\Model\Enums\ApplicationState;
-use App\Model\Settings\SettingsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Kdyby\Doctrine\EntityRepository;
 
 
@@ -22,32 +23,6 @@ class ApplicationRepository extends EntityRepository
     public function findById($id)
     {
         return $this->findOneBy(['id' => $id]);
-    }
-
-    /**
-     * Vrací přihlášky čekající na platbu.
-     * @return Application[]
-     */
-    public function findWaitingForPaymentApplications()
-    {
-        return $this->createQueryBuilder('a')
-            ->where('a.state = :state')->setParameter('state', ApplicationState::WAITING_FOR_PAYMENT)
-            ->getQuery()
-            ->getResult();
-    }
-
-    /**
-     * Vrací true, pokud existuje přihláška s tímto variabilním symbolem.
-     * @param $variableSymbol
-     * @return bool
-     */
-    public function variableSymbolExists($variableSymbol)
-    {
-        $res = $this->createQueryBuilder('a')
-            ->where('a.variableSymbol = :vs')->setParameter('vs', $variableSymbol)
-            ->getQuery()
-            ->getResult();
-        return !empty($res);
     }
 
     /**

@@ -67,6 +67,7 @@ class RoomsGridControl extends Control
     /**
      * Vytvoří komponentu.
      * @param $name
+     * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
     public function createComponentRoomsGrid($name)
     {
@@ -136,6 +137,7 @@ class RoomsGridControl extends Control
     /**
      * Zpracuje přidání místnosti.
      * @param $values
+     * @throws \Nette\Application\AbortException
      */
     public function add($values)
     {
@@ -156,6 +158,7 @@ class RoomsGridControl extends Control
      * Zpracuje úpravu místnosti.
      * @param $id
      * @param $values
+     * @throws \Nette\Application\AbortException
      */
     public function edit($id, $values)
     {
@@ -175,6 +178,7 @@ class RoomsGridControl extends Control
     /**
      * Odstraní místnost.
      * @param $id
+     * @throws \Nette\Application\AbortException
      */
     public function handleDelete($id)
     {
@@ -189,6 +193,7 @@ class RoomsGridControl extends Control
     /**
      * Hromadně vyexportuje harmonogramy místností.
      * @param array $ids
+     * @throws \Nette\Application\AbortException
      */
     public function groupExportRoomsSchedules(array $ids)
     {

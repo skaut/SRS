@@ -139,6 +139,7 @@ abstract class AdminBasePresenter extends BasePresenter
     /**
      * Kontroluje oprávnění uživatele a případně jej přesměruje.
      * @param $permission
+     * @throws \Nette\Application\AbortException
      */
     public function checkPermission($permission)
     {

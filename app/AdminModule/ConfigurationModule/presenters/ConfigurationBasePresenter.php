@@ -15,14 +15,12 @@ use App\Model\Structure\SubeventRepository;
  */
 abstract class ConfigurationBasePresenter extends AdminBasePresenter
 {
-    protected $resource = Resource::CONFIGURATION;
-
     /**
      * @var SubeventRepository
      * @inject
      */
     public $subeventRepository;
-
+    protected $resource = Resource::CONFIGURATION;
 
     public function startup()
     {

@@ -60,16 +60,17 @@ class FilesService extends Nette\Object
         if (!is_dir($dirname))
             mkdir($dirname, 0755, TRUE);
 
-        $file = fopen($absPath, 'wb' );
+        $file = fopen($absPath, 'wb');
         fwrite($file, $content);
         fclose($file);
     }
 
-     /**
+    /**
      * Změní velikost obrázku.
      * @param $path
      * @param $width
      * @param $height
+     * @throws Nette\Utils\UnknownImageFileException
      */
     public function resizeImage($path, $width, $height)
     {
@@ -84,6 +85,7 @@ class FilesService extends Nette\Object
      * @param $path
      * @param $width
      * @param $height
+     * @throws Nette\Utils\UnknownImageFileException
      */
     public function resizeAndCropImage($path, $width, $height)
     {

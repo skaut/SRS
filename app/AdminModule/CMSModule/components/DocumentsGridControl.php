@@ -64,6 +64,7 @@ class DocumentsGridControl extends Control
     /**
      * Vytvoří komponentu.
      * @param $name
+     * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
     public function createComponentDocumentsGrid($name)
     {
@@ -153,6 +154,7 @@ class DocumentsGridControl extends Control
     /**
      * Zpracuje přidání dokumentu.
      * @param $values
+     * @throws \Nette\Application\AbortException
      */
     public function add($values)
     {
@@ -179,6 +181,7 @@ class DocumentsGridControl extends Control
      * Zpracuje úpravu dokumentu.
      * @param $id
      * @param $values
+     * @throws \Nette\Application\AbortException
      */
     public function edit($id, $values)
     {
@@ -208,6 +211,7 @@ class DocumentsGridControl extends Control
     /**
      * Zpracuje odstranění dokumentu.
      * @param $id
+     * @throws \Nette\Application\AbortException
      */
     public function handleDelete($id)
     {

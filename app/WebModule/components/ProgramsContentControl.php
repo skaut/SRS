@@ -55,6 +55,7 @@ class ProgramsContentControl extends Control
 
     /**
      * @param $content
+     * @throws \App\Model\Settings\SettingsException
      */
     public function render($content)
     {

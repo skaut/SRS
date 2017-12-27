@@ -3,15 +3,10 @@
 namespace App\AdminModule\MailingModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
-use App\Model\ACL\Role;
-use App\Model\ACL\RoleRepository;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateRepository;
-use App\Model\User\UserRepository;
-use App\Services\MailService;
 use Nette;
 use Nette\Application\UI\Form;
-use Nette\Mail\SendException;
 
 
 /**
@@ -58,7 +53,13 @@ class EditTemplateForm extends Nette\Object
 
         $form->addHidden('id');
 
-        $form->addCheckbox('active', 'admin.mailing.templates_active');
+        $form->addCheckbox('active', 'admin.mailing.templates_active_form');
+
+        $form->addCheckbox('sendToUser', 'admin.mailing.templates_send_to_user_form')
+            ->setDisabled($this->template->isSystem());
+
+        $form->addCheckbox('sendToOrganizer', 'admin.mailing.templates_send_to_organizer_form')
+            ->setDisabled($this->template->isSystem());
 
         $form->addText('subject', 'admin.mailing.templates_subject')
             ->addRule(Form::FILLED, 'admin.mailing.templates_subject_empty');
@@ -77,6 +78,8 @@ class EditTemplateForm extends Nette\Object
         $form->setDefaults([
             'id' => $id,
             'active' => $this->template->isActive(),
+            'sendToUser' => $this->template->isSendToUser(),
+            'sendToOrganizer' => $this->template->isSendToOrganizer(),
             'subject' => $this->template->getSubject(),
             'text' => $this->template->getText()
         ]);
@@ -97,6 +100,13 @@ class EditTemplateForm extends Nette\Object
     {
         if (!$form['cancel']->isSubmittedBy()) {
             $this->template->setActive($values['active']);
+
+            if (array_key_exists('sendToUser', $values))
+                $this->template->setSendToUser($values['sendToUser']);
+
+            if (array_key_exists('sendToOrganizer', $values))
+                $this->template->setSendToOrganizer($values['sendToOrganizer']);
+
             $this->template->setSubject($values['subject']);
             $this->template->setText($values['text']);
 

@@ -2,11 +2,7 @@
 
 namespace App\WebModule\Presenters;
 
-use App\Model\ACL\Role;
 use App\Model\Enums\PaymentType;
-use App\Model\Mailing\Template;
-use App\Model\Mailing\TemplateVariable;
-use App\Model\Settings\Settings;
 use App\Model\Structure\SubeventRepository;
 use App\Services\ApplicationService;
 use App\Services\Authenticator;
@@ -17,8 +13,6 @@ use App\WebModule\Components\IApplicationsGridControlFactory;
 use App\WebModule\Forms\AdditionalInformationForm;
 use App\WebModule\Forms\PersonalDetailsForm;
 use App\WebModule\Forms\RolesForm;
-use App\WebModule\Forms\SubeventsForm;
-use Doctrine\Common\Collections\ArrayCollection;
 use Nette\Application\UI\Form;
 
 
@@ -37,16 +31,22 @@ class ProfilePresenter extends WebBasePresenter
     public $personalDetailsFormFactory;
 
     /**
-     * @var IApplicationsGridControlFactory
-     * @inject
-     */
-    public $applicationsGridControlFactory;
-
-    /**
      * @var AdditionalInformationForm
      * @inject
      */
     public $additionalInformationFormFactory;
+
+    /**
+     * @var RolesForm
+     * @inject
+     */
+    public $rolesFormFactory;
+
+    /**
+     * @var IApplicationsGridControlFactory
+     * @inject
+     */
+    public $applicationsGridControlFactory;
 
     /**
      * @var PdfExportService
@@ -59,12 +59,6 @@ class ProfilePresenter extends WebBasePresenter
      * @inject
      */
     public $excelExportService;
-
-    /**
-     * @var Authenticator
-     * @inject
-     */
-    public $authenticator;
 
     /**
      * @var SubeventRepository
@@ -84,7 +78,16 @@ class ProfilePresenter extends WebBasePresenter
      */
     public $applicationService;
 
+    /**
+     * @var Authenticator
+     * @inject
+     */
+    public $authenticator;
 
+
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     public function startup()
     {
         parent::startup();
@@ -103,6 +106,8 @@ class ProfilePresenter extends WebBasePresenter
 
     /**
      * Vyexportuje rozvrh uživatele.
+     * @throws \Nette\Application\AbortException
+     * @throws \PHPExcel_Exception
      */
     public function actionExportSchedule()
     {
@@ -138,6 +143,22 @@ class ProfilePresenter extends WebBasePresenter
             $this->redirect('this#collapseAdditionalInformation');
         };
 
+        return $form;
+    }
+
+    protected function createComponentRolesForm()
+    {
+        $form = $this->rolesFormFactory->create($this->user->id);
+
+        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+            if ($form['submit']->isSubmittedBy())
+                $this->flashMessage('web.profile.roles_changed', 'success');
+            elseif ($form['cancelRegistration']->isSubmittedBy())
+                $this->flashMessage('web.profile.registration_canceled', 'success');
+
+            $this->authenticator->updateRoles($this->user);
+            $this->redirect('this#collapseSeminar');
+        };
         return $form;
     }
 

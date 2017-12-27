@@ -57,13 +57,14 @@ class SendForm extends Nette\Object
     /**
      * Vytvoří formulář.
      * @return Form
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function create()
     {
         $form = $this->baseFormFactory->create();
 
         $recipientRolesMultiSelect = $form->addMultiSelect('recipientRoles', 'admin.mailing.send_recipient_roles',
-            $this->roleRepository->getRolesWithoutRolesOptionsWithUsersCount([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]));
+            $this->roleRepository->getRolesWithoutRolesOptionsWithApprovedUsersCount([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]));
 
         $recipientUsersMultiSelect = $form->addMultiSelect('recipientUsers', 'admin.mailing.send_recipient_users',
             $this->userRepository->getUsersOptions())
@@ -100,6 +101,9 @@ class SendForm extends Nette\Object
      * Zpracuje formulář.
      * @param Form $form
      * @param \stdClass $values
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Ublaboo\Mailing\Exception\MailingException
+     * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
      */
     public function processForm(Form $form, \stdClass $values)
     {

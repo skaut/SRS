@@ -2,26 +2,21 @@
 
 namespace App\AdminModule\Components;
 
-use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
-use App\Model\Mailing\Template;
-use App\Model\Mailing\TemplateVariable;
 use App\Model\Program\ProgramRepository;
-use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
-use App\Model\Structure\Subevent;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\Application;
 use App\Model\User\ApplicationRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
-use App\Services\Authenticator;
 use App\Services\MailService;
 use App\Services\PdfExportService;
-use Doctrine\Common\Collections\ArrayCollection;
+use App\Services\ProgramService;
+use App\Utils\Validators;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
@@ -62,14 +57,17 @@ class ApplicationsGridControl extends Control
     /** @var SettingsRepository */
     private $settingsRepository;
 
-    /** @var Authenticator */
-    private $authenticator;
-
     /** @var User */
     private $user;
 
     /** @var PdfExportService */
     private $pdfExportService;
+
+    /** @var ProgramService */
+    private $programService;
+
+    /** @var Validators */
+    private $validators;
 
 
     /**
@@ -83,15 +81,15 @@ class ApplicationsGridControl extends Control
      * @param ProgramRepository $programRepository
      * @param MailService $mailService
      * @param SettingsRepository $settingsRepository
-     * @param Authenticator $authenticator
      * @param PdfExportService $pdfExportService
+     * @param ProgramService $programService
      */
     public function __construct(Translator $translator, ApplicationRepository $applicationRepository,
                                 UserRepository $userRepository, RoleRepository $roleRepository,
                                 SubeventRepository $subeventRepository, ApplicationService $applicationService,
                                 ProgramRepository $programRepository, MailService $mailService,
-                                SettingsRepository $settingsRepository, Authenticator $authenticator,
-                                PdfExportService $pdfExportService)
+                                SettingsRepository $settingsRepository, PdfExportService $pdfExportService,
+                                ProgramService $programService, Validators $validators)
     {
         parent::__construct();
 
@@ -104,8 +102,9 @@ class ApplicationsGridControl extends Control
         $this->programRepository = $programRepository;
         $this->mailService = $mailService;
         $this->settingsRepository = $settingsRepository;
-        $this->authenticator = $authenticator;
         $this->pdfExportService = $pdfExportService;
+        $this->programService = $programService;
+        $this->validators = $validators;
     }
 
     /**
@@ -119,41 +118,36 @@ class ApplicationsGridControl extends Control
     /**
      * Vytvoří komponentu.
      * @param $name
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
     public function createComponentApplicationsGrid($name)
     {
         $this->user = $this->userRepository->findById($this->getPresenter()->getParameter('id'));
 
+        $explicitSubeventsExists = $this->subeventRepository->explicitSubeventsExists();
+
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
         $grid->setDataSource($this->applicationRepository->createQueryBuilder('a')
             ->join('a.user', 'u')
-            ->where('u.id = ' . $this->user->getId())
+            ->where('u = :user')
+            ->andWhere('a.validTo IS NULL')
+            ->setParameter('user', $this->user)
+            ->orderBy('a.applicationId')
         );
         $grid->setPagination(FALSE);
 
         $grid->addColumnDateTime('applicationDate', 'admin.users.users_applications_application_date')
             ->setFormat('j. n. Y H:i');
 
-        $grid->addColumnText('roles', 'admin.users.users_applications_roles')
-            ->setRenderer(function ($row) {
-                if (!$row->isFirst())
-                    return "";
+        $grid->addColumnText('roles', 'admin.users.users_applications_roles', 'rolesText');
 
-                $roles = [];
-                foreach ($row->getUser()->getRoles() as $role) {
-                    $roles[] = $role->getName();
-                }
-                return implode(", ", $roles);
-            });
-
-        if ($this->subeventRepository->explicitSubeventsExists()) {
-            $grid->addColumnText('subevents', 'admin.users.users_applications_subevents', 'subeventsText');
-        }
+        $grid->addColumnText('subevents', 'admin.users.users_applications_subevents', 'subeventsText');
 
         $grid->addColumnNumber('fee', 'admin.users.users_applications_fee');
 
-        $grid->addColumnText('variableSymbol', 'admin.users.users_applications_variable_symbol');
+        $grid->addColumnText('variableSymbol', 'admin.users.users_applications_variable_symbol', 'variableSymbolText');
 
         $grid->addColumnDateTime('maturityDate', 'admin.users.users_applications_maturity_date')
             ->setFormat('j. n. Y');
@@ -176,47 +170,44 @@ class ApplicationsGridControl extends Control
             });
 
 
-        $grid->addInlineAdd()->onControlAdd[] = function ($container) {
-            $rolesSelect = $container->addMultiSelect('roles', '', $this->roleRepository->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]))
+        if ($explicitSubeventsExists) {
+            $grid->addInlineAdd()->onControlAdd[] = function ($container) {
+                $container->addMultiSelect('subevents', '',
+                    $this->subeventRepository->getNonRegisteredSubeventsOptionsWithCapacity($this->user)
+                )
+                    ->setAttribute('class', 'datagrid-multiselect')
+                    ->addRule(Form::FILLED, 'admin.users.users_applications_subevents_empty');
+            };
+            $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
+        }
+
+        $grid->addInlineEdit()->onControlAdd[] = function ($container) use ($explicitSubeventsExists) {
+            $container->addMultiSelect('subevents', '',
+                $this->subeventRepository->getSubeventsOptionsWithCapacity()
+            )
                 ->setAttribute('class', 'datagrid-multiselect');
-
-            if ($this->subeventRepository->explicitSubeventsExists()) {
-                $subeventsSelect = $container->addMultiSelect('subevents', '', $this->subeventRepository->getNonRegisteredSubeventsOptionsWithCapacity($this->user))
-                    ->setAttribute('class', 'datagrid-multiselect');
-            }
-        };
-        $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
-
-        $grid->addInlineEdit()->onControlAdd[] = function ($container) {
-            $rolesSelect = $container->addMultiSelect('roles', '', $this->roleRepository->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]))
-                ->setAttribute('class', 'datagrid-multiselect');
-
-            if ($this->subeventRepository->explicitSubeventsExists()) {
-                $subeventsSelect = $container->addMultiSelect('subevents', '', $this->subeventRepository->getSubeventsOptionsWithCapacity())
-                    ->setAttribute('class', 'datagrid-multiselect');
-            }
 
             $container->addText('variableSymbol', 'admin.users.users_variable_symbol')
                 ->addRule(Form::FILLED, 'admin.users.users_applications_variable_symbol_empty')
                 ->addRule(Form::PATTERN, 'admin.users.users_edit_variable_symbol_format', '^\d{1,10}$');
 
-            $paymentMethodSelect = $container->addSelect('paymentMethod', 'admin.users.users_payment_method', $this->preparePaymentMethodOptions());
+            $paymentMethodSelect = $container->addSelect('paymentMethod', 'admin.users.users_payment_method',
+                $this->preparePaymentMethodOptions());
 
-            $container->addDatePicker('paymentDate', 'admin.users.users_payment_date');
+            $paymentDateText = $container->addDatePicker('paymentDate', 'admin.users.users_payment_date');
 
             $paymentMethodSelect
-                ->addConditionOn($container['paymentDate'], Form::FILLED)
+                ->addConditionOn($paymentDateText, Form::FILLED)
                 ->addRule(Form::FILLED, 'admin.users.users_applications_payment_method_empty');
 
             $container->addDatePicker('incomeProofPrintedDate', 'admin.users.users_income_proof_printed_date');
 
             $container->addDatePicker('maturityDate', 'admin.users.users_maturity_date');
         };
-        $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) {
+        $grid->getInlineEdit()->onSetDefaults[] = function ($container, Application $item) {
             $container->setDefaults([
-                'roles' => $item->isFirst() ? $this->roleRepository->findRolesIds($item->getUser()->getRoles()) : NULL,
                 'subevents' => $this->subeventRepository->findSubeventsIds($item->getSubevents()),
-                'variableSymbol' => $item->getVariableSymbol(),
+                'variableSymbol' => $item->getVariableSymbolText(),
                 'paymentMethod' => $item->getPaymentMethod(),
                 'paymentDate' => $item->getPaymentDate(),
                 'incomeProofPrintedDate' => $item->getIncomeProofPrintedDate(),
@@ -224,12 +215,15 @@ class ApplicationsGridControl extends Control
             ]);
         };
         $grid->getInlineEdit()->onSubmit[] = [$this, 'edit'];
+        $grid->allowRowsInlineEdit(function(Application $item) {
+            return !$item->isCanceled();
+        });
 
 
         $grid->addAction('generatePaymentProofCash', 'admin.users.users_applications_download_payment_proof_cash');
         $grid->allowRowsAction('generatePaymentProofCash', function ($item) {
             return $item->getState() == ApplicationState::PAID
-                &&$item->getPaymentMethod() == PaymentType::CASH
+                && $item->getPaymentMethod() == PaymentType::CASH
                 && $item->getPaymentDate();
         });
 
@@ -240,105 +234,49 @@ class ApplicationsGridControl extends Control
                 && $item->getPaymentDate();
         });
 
-        $grid->addAction('cancelRegistration', 'admin.users.users_applications_cancel_registration')
-            ->addAttributes([
-                'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('admin.users.users_applications_cancel_registration_confirm')
-            ])->setClass('btn btn-xs btn-danger');
-        $grid->allowRowsAction('cancelRegistration', function ($item) {
-            return $item->isFirst();
-        });
-
         $grid->addAction('cancelApplication', 'admin.users.users_applications_cancel_application')
             ->addAttributes([
                 'data-toggle' => 'confirmation',
                 'data-content' => $this->translator->translate('admin.users.users_applications_cancel_application_confirm')
             ])->setClass('btn btn-xs btn-danger');
-        $grid->allowRowsAction('cancelApplication', function ($item) {
-            return !$item->isFirst()
-                && ($item->getState() == ApplicationState::PAID || $item->getState() == ApplicationState::WAITING_FOR_PAYMENT);
+        $grid->allowRowsAction('cancelApplication', function (Application $item) {
+            return $item->getType() == Application::SUBEVENTS && !$item->isCanceled();
         });
 
-        $grid->setColumnsSummary(['fee']);
+
+        $grid->setColumnsSummary(['fee'], function (Application $item, $column) {
+            return $item->isCanceled() ? 0 : $item->getFee();
+        });
     }
 
     /**
      * Zpracuje přidání podakcí.
      * @param $values
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     public function add($values)
     {
-        $selectedRoles = $this->roleRepository->findRolesByIds($values['roles']);
-        $selectedSubevents = NULL;
+        $selectedSubevents = $this->subeventRepository->findSubeventsByIds($values['subevents']);
 
-        //kontrola roli
-        if ($this->user->getApplications()->isEmpty()) {
-            if (!$this->validateRolesEmpty($selectedRoles)) {
-                $this->getPresenter()->flashMessage('admin.users.users_applications_roles_empty', 'danger');
-                $this->redirect('this');
-            }
+        $p = $this->getPresenter();
 
-            if (!$this->validateRolesCapacities($selectedRoles)) {
-                $this->getPresenter()->flashMessage('admin.users.users_applications_roles_occupied', 'danger');
-                $this->redirect('this');
-            }
-        }
-        else {
-            if ($this->validateRolesEmpty($selectedRoles)) {
-                $this->getPresenter()->flashMessage('admin.users.users_applications_roles_not_empty', 'danger');
-                $this->redirect('this');
-            }
+        if (!$this->validators->validateSubeventsCapacities($selectedSubevents, $this->user)) {
+            $p->flashMessage('admin.users.users_applications_subevents_occupied', 'danger');
+            $this->redirect('this');
         }
 
-        if ($this->subeventRepository->explicitSubeventsExists()) {
-            $selectedSubevents = $this->subeventRepository->findSubeventsByIds($values['subevents']);
-
-            //kontrola podakci
-            if (!$this->validateSubeventsEmpty($selectedSubevents)) {
-                $this->getPresenter()->flashMessage('admin.users.users_applications_subevents_empty', 'danger');
-                $this->redirect('this');
-            }
-
-            if (!$this->validateSubeventsCapacities($selectedSubevents)) {
-                $this->getPresenter()->flashMessage('admin.users.users_applications_subevents_occupied', 'danger');
-                $this->redirect('this');
-            }
+        if (!$this->validators->validateSubeventsRegistered($selectedSubevents, $this->user)) {
+            $p->flashMessage('admin.users.users_applications_subevents_registered', 'danger');
+            $this->redirect('this');
         }
 
+        $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
 
-        //zpracovani zmen
-        $this->applicationRepository->getEntityManager()->transactional(function($em) use($selectedRoles, $selectedSubevents) {
-            $application = new Application();
+        $this->applicationService->addSubeventsApplication($this->user, $selectedSubevents, $loggedUser);
 
-            if ($this->user->getApplications()->isEmpty()) {
-                $this->user->setRoles($selectedRoles);
-                $this->userRepository->save($this->user);
-                $application->setFirst(TRUE);
-                $fee = $this->applicationService->countFee($selectedRoles, $selectedSubevents);
-            } else {
-                $application->setFirst(FALSE);
-                $fee = $this->applicationService->countFee($this->user->getRoles(), $selectedSubevents, FALSE);
-            }
-
-            $application->setUser($this->user);
-            if ($this->subeventRepository->explicitSubeventsExists())
-                $application->setSubevents($selectedSubevents);
-            else
-                $application->setSubevents(new ArrayCollection([$this->subeventRepository->findImplicit()]));
-            $application->setApplicationDate(new \DateTime());
-            $application->setMaturityDate($this->applicationService->countMaturityDate());
-            $application->setFee($fee);
-            $application->setState($fee == 0 ? ApplicationState::PAID : ApplicationState::WAITING_FOR_PAYMENT);
-            $this->applicationRepository->save($application);
-
-            $application->setVariableSymbol($this->applicationService->generateVariableSymbol($application));
-            $this->applicationRepository->save($application);
-
-            $this->programRepository->updateUserPrograms($this->user);
-            $this->userRepository->save($this->user);
-        });
-
-        $this->getPresenter()->flashMessage('admin.users.users_applications_saved', 'success');
+        $p->flashMessage('admin.users.users_applications_saved', 'success');
         $this->redirect('this');
     }
 
@@ -346,256 +284,99 @@ class ApplicationsGridControl extends Control
      * Zpracuje úpravu přihlášky.
      * @param $id
      * @param $values
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     public function edit($id, $values)
     {
-        $selectedRoles = $this->roleRepository->findRolesByIds($values['roles']);
-
         $application = $this->applicationRepository->findById($id);
 
-        //kontrola roli
-        if ($application->isFirst()) {
-            if (!$this->validateRolesEmpty($selectedRoles)) {
-                $this->getPresenter()->flashMessage('admin.users.users_applications_roles_empty', 'danger');
-                $this->redirect('this');
-            }
+        $selectedSubevents = $this->subeventRepository->findSubeventsByIds($values['subevents']);
 
-            if (!$this->validateRolesCapacities($selectedRoles)) {
-                $this->getPresenter()->flashMessage('admin.users.users_applications_roles_occupied', 'danger');
+        $p = $this->getPresenter();
+
+        if ($application->getType() == Application::ROLES) {
+            if (!$selectedSubevents->isEmpty()) {
+                $p->flashMessage('admin.users.users_applications_subevents_not_empty', 'danger');
                 $this->redirect('this');
             }
-        }
-        else {
-            if ($this->validateRolesEmpty($selectedRoles)) {
-                $this->getPresenter()->flashMessage('admin.users.users_applications_roles_not_empty', 'danger');
+        } else {
+            if ($selectedSubevents->isEmpty()) {
+                $p->flashMessage('admin.users.users_applications_subevents_empty', 'danger');
                 $this->redirect('this');
             }
         }
 
-        if ($this->subeventRepository->explicitSubeventsExists()) {
-            $selectedSubevents = $this->subeventRepository->findSubeventsByIds($values['subevents']);
-
-            //kontrola podakci
-            if (!$this->validateSubeventsEmpty($selectedSubevents)) {
-                $this->getPresenter()->flashMessage('admin.users.users_applications_subevents_empty', 'danger');
-                $this->redirect('this');
-            }
-
-            if (!$this->validateSubeventsCapacities($selectedSubevents)) {
-                $this->getPresenter()->flashMessage('admin.users.users_applications_subevents_occupied', 'danger');
-                $this->redirect('this');
-            }
-
-            if(!$this->validateSubeventsRegistered($selectedSubevents, $this->user, $application->getId())) {
-                $this->getPresenter()->flashMessage('admin.users.users_applications_subevents_registered', 'danger');
-                $this->redirect('this');
-            }
+        if (!$this->validators->validateSubeventsCapacities($selectedSubevents, $this->user)) {
+            $p->flashMessage('admin.users.users_applications_subevents_occupied', 'danger');
+            $this->redirect('this');
         }
 
-        //zpracovani zmen
-        $this->applicationRepository->getEntityManager()->transactional(function($em) use($selectedRoles, $selectedSubevents, $application, $values) {
-            $oldPaymentDate = $application->getPaymentDate();
+        if (!$this->validators->validateSubeventsRegistered($selectedSubevents, $this->user, $application)) {
+            $p->flashMessage('admin.users.users_applications_subevents_registered', 'danger');
+            $this->redirect('this');
+        }
 
-            if ($application->isFirst()) {
-                $this->user->setRoles($selectedRoles);
-                $this->userRepository->save($this->user);
-            }
+        $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
 
-            if ($this->subeventRepository->explicitSubeventsExists())
-                $application->setSubevents($selectedSubevents);
-            $application->setVariableSymbol($values['variableSymbol']);
-            $application->setPaymentMethod($values['paymentMethod']);
-            $application->setPaymentDate($values['paymentDate']);
-            $application->setIncomeProofPrintedDate($values['incomeProofPrintedDate']);
-            $application->setMaturityDate($values['maturityDate']);
-
-            if ($application->isFirst()) {
-                foreach ($this->user->getApplications() as $application) {
-                    if ($application->isFirst())
-                        $fee = $this->applicationService->countFee($selectedRoles, $selectedSubevents);
-                    else
-                        $fee = $this->applicationService->countFee($selectedRoles, $application->getSubevents(), FALSE);
-                    $application->setFee($fee);
-                    if ($application->getState() == ApplicationState::WAITING_FOR_PAYMENT || $application->getState() == ApplicationState::PAID)
-                        $application->setState($fee == 0 || $application->getPaymentDate() ? ApplicationState::PAID : ApplicationState::WAITING_FOR_PAYMENT);
-                    $this->applicationRepository->save($application);
-                }
-            } else {
-                $fee = $this->applicationService->countFee($this->user->getRoles(), $selectedSubevents, FALSE);
-                $application->setFee($fee);
-                $application->setState($fee == 0 || $application->getPaymentDate()
-                    ? ApplicationState::PAID
-                    : ApplicationState::WAITING_FOR_PAYMENT);
-                $this->applicationRepository->save($application);
-            }
-
-            $this->programRepository->updateUserPrograms($this->user);
-            $this->userRepository->save($this->user);
-
-            if ($values['paymentDate'] !== NULL && $oldPaymentDate === NULL) {
-                $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$this->user]), '', Template::PAYMENT_CONFIRMED, [
-                    TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-                    TemplateVariable::APPLICATION_SUBEVENTS => $application->getSubeventsText()
-                ]);
-            }
+        $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($application, $selectedSubevents, $values, $loggedUser) {
+            if ($application->getType() == Application::SUBEVENTS)
+                $this->applicationService->updateSubeventsApplication($application, $selectedSubevents, $loggedUser);
+            $this->applicationService->updatePayment($application, $values['variableSymbol'],
+                $values['paymentMethod'] ?: NULL, $values['paymentDate'],
+                $values['incomeProofPrintedDate'], $values['maturityDate'], $loggedUser);
         });
 
-        $this->getPresenter()->flashMessage('admin.users.users_applications_saved', 'success');
+        $p->flashMessage('admin.users.users_applications_saved', 'success');
         $this->redirect('this');
     }
 
     /**
      * Vygeneruje příjmový pokladní doklad.
      * @param $id
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
     public function handleGeneratePaymentProofCash($id)
     {
         $this->pdfExportService->generateApplicationsPaymentProof(
-            $application = $this->applicationRepository->findById($id),
-            "prijmovy-pokladni-doklad.pdf"
+            $application = $this->applicationRepository->findById($id), "prijmovy-pokladni-doklad.pdf",
+            $this->userRepository->findById($this->getPresenter()->getUser()->id)
         );
     }
 
     /**
      * Vygeneruje potvrzení o přijetí platby.
      * @param $id
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
     public function handleGeneratePaymentProofBank($id)
     {
         $this->pdfExportService->generateApplicationsPaymentProof(
-            $application = $this->applicationRepository->findById($id),
-            "potvrzeni-o-prijeti-platby.pdf"
+            $application = $this->applicationRepository->findById($id), "potvrzeni-o-prijeti-platby.pdf",
+            $this->userRepository->findById($this->getPresenter()->getUser()->id)
         );
-    }
-
-    /**
-     * Odhlásí uživatele ze semináře.
-     * @param $id
-     */
-    public function handleCancelRegistration($id)
-    {
-        $user = $this->applicationRepository->findById($id)->getUser();
-
-        $this->applicationRepository->getEntityManager()->transactional(function($em) use($user) {
-            $user->setRoles(new ArrayCollection([$this->roleRepository->findBySystemName(Role::NONREGISTERED)]));
-            $user->setApproved(TRUE);
-            foreach ($user->getApplications() as $application) {
-                $this->applicationRepository->remove($application);
-            }
-            $this->userRepository->save($user);
-
-            $this->programRepository->updateUserPrograms($user);
-            $this->userRepository->save($user);
-
-            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$user]), '', Template::REGISTRATION_CANCELED, [
-                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)
-            ]);
-        });
-
-        $this->getPresenter()->flashMessage('admin.users.users_applications_registration_canceled', 'success');
-        $this->redirect('this');
     }
 
     /**
      * Zruší přihlášku.
      * @param $id
+     * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     public function handleCancelApplication($id)
     {
         $application = $this->applicationRepository->findById($id);
-        $user = $application->getUser();
 
-        $this->applicationRepository->getEntityManager()->transactional(function($em) use($application, $user) {
-            $application->setState(ApplicationState::CANCELED);
-            $this->applicationRepository->save($application);
+        if ($application->getType() == Application::SUBEVENTS && !$application->isCanceled()) {
+            $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
+            $this->applicationService->cancelSubeventsApplication($application, ApplicationState::CANCELED, $loggedUser);
+            $this->getPresenter()->flashMessage('admin.users.users_applications_application_canceled', 'success');
+        }
 
-            $this->programRepository->updateUserPrograms($user);
-            $this->userRepository->save($user);
-        });
-
-        $this->getPresenter()->flashMessage('admin.users.users_applications_application_canceled', 'success');
         $this->redirect('this');
-    }
-
-    /**
-     * Ověří, že je vybrána alespoň jedna podakce.
-     * @param $selectedSubevents
-     * @return bool
-     */
-    private function validateSubeventsEmpty($selectedSubevents)
-    {
-        if ($selectedSubevents->isEmpty())
-            return FALSE;
-        return TRUE;
-    }
-
-    /**
-     * Ověří obsazenost podakcí.
-     * @param $selectedSubevents
-     * @return bool
-     */
-    private function validateSubeventsCapacities($selectedSubevents)
-    {
-        if ($this->user->isApproved()) {
-            foreach ($selectedSubevents as $subevent) {
-                if ($subevent->hasLimitedCapacity()) {
-                    if ($this->subeventRepository->countUnoccupiedInSubevent($subevent) < 1 && !$this->user->hasSubevent($subevent))
-                        return FALSE;
-                }
-            }
-        }
-        return TRUE;
-    }
-
-    /**
-     * Ověří, zda uživatel podakci již nemá.
-     * @param $selectedSubevents
-     * @param User $user
-     * @param $applicationId
-     * @return bool
-     */
-    private function validateSubeventsRegistered($selectedSubevents, User $user, $applicationId)
-    {
-        foreach ($selectedSubevents as $subevent) {
-            foreach ($user->getApplications() as $application) {
-                if ($application->getId() != $applicationId
-                    && ($application->getState() == ApplicationState::PAID
-                        || $application->getState() == ApplicationState::WAITING_FOR_PAYMENT)
-                    && $application->getSubevents()->contains($subevent))
-                    return FALSE;
-            }
-        }
-        return TRUE;
-    }
-
-    /**
-     * Ověří obsazenost rolí.
-     * @param $selectedRoles
-     * @return bool
-     */
-    private function validateRolesCapacities($selectedRoles)
-    {
-        if ($this->user->isApproved()) {
-            foreach ($selectedRoles as $role) {
-                if ($role->hasLimitedCapacity()) {
-                    if ($this->roleRepository->countUnoccupiedInRole($role) < 1 && !$this->user->isInRole($role))
-                        return FALSE;
-                }
-            }
-        }
-        return TRUE;
-    }
-
-    /**
-     * Ověří, že je vybrána alespoň jedna role.
-     * @param $selectedRoles
-     * @return bool
-     */
-    private function validateRolesEmpty($selectedRoles)
-    {
-        if ($selectedRoles->isEmpty())
-            return FALSE;
-        return TRUE;
     }
 
     /**

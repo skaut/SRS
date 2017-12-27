@@ -51,6 +51,9 @@ class ExcelExportService extends Nette\Object
     /** @var ProgramRepository */
     private $programRepository;
 
+    /** @var ProgramService */
+    private $programService;
+
 
     /**
      * ExcelExportService constructor.
@@ -61,11 +64,12 @@ class ExcelExportService extends Nette\Object
      * @param SubeventRepository $subeventRepository
      * @param CategoryRepository $categoryRepository
      * @param ProgramRepository $programRepository
+     * @param ProgramService $programService
      */
     public function __construct(Translator $translator, CustomInputRepository $customInputRepository,
                                 BlockRepository $blockRepository, UserService $userService,
                                 SubeventRepository $subeventRepository, CategoryRepository $categoryRepository,
-                                ProgramRepository $programRepository)
+                                ProgramRepository $programRepository, ProgramService $programService)
     {
         $this->phpExcel = new \PHPExcel();
 
@@ -76,6 +80,7 @@ class ExcelExportService extends Nette\Object
         $this->subeventRepository = $subeventRepository;
         $this->categoryRepository = $categoryRepository;
         $this->programRepository = $programRepository;
+        $this->programService = $programService;
     }
 
     /**
@@ -84,6 +89,7 @@ class ExcelExportService extends Nette\Object
      * @param $roles
      * @param $filename
      * @return ExcelResponse
+     * @throws \PHPExcel_Exception
      */
     public function exportUsersRoles($users, $roles, $filename)
     {
@@ -119,10 +125,23 @@ class ExcelExportService extends Nette\Object
     }
 
     /**
+     * Vyexportuje harmonogram uživatele.
+     * @param $user
+     * @param $filename
+     * @return ExcelResponse
+     * @throws \PHPExcel_Exception
+     */
+    public function exportUserSchedule($user, $filename)
+    {
+        return $this->exportUsersSchedules([$user], $filename);
+    }
+
+    /**
      * Vyexportuje harmonogramy uživatelů, každý uživatel na zvlástním listu.
      * @param $users
      * @param $filename
      * @return ExcelResponse
+     * @throws \PHPExcel_Exception
      */
     public function exportUsersSchedules($users, $filename)
     {
@@ -177,14 +196,15 @@ class ExcelExportService extends Nette\Object
     }
 
     /**
-     * Vyexportuje harmonogram uživatele.
-     * @param $user
+     * Vyexportuje harmonogram místnosti.
+     * @param Room $room
      * @param $filename
      * @return ExcelResponse
+     * @throws \PHPExcel_Exception
      */
-    public function exportUserSchedule($user, $filename)
+    public function exportRoomSchedule(Room $room, $filename)
     {
-        return $this->exportUsersSchedules([$user], $filename);
+        return $this->exportRoomsSchedules([$room], $filename);
     }
 
     /**
@@ -192,8 +212,10 @@ class ExcelExportService extends Nette\Object
      * @param $rooms
      * @param $filename
      * @return ExcelResponse
+     * @throws \PHPExcel_Exception
      */
-    public function exportRoomsSchedules($rooms, $filename) {
+    public function exportRoomsSchedules($rooms, $filename)
+    {
         $this->phpExcel->removeSheetByIndex(0);
         $sheetNumber = 0;
 
@@ -242,20 +264,10 @@ class ExcelExportService extends Nette\Object
     }
 
     /**
-     * Vyexportuje harmonogram místnosti.
-     * @param Room $room
-     * @param $filename
-     * @return ExcelResponse
-     */
-    public function exportRoomSchedule(Room $room, $filename)
-    {
-        return $this->exportRoomsSchedules([$room], $filename);
-    }
-
-    /**
      * @param Collection|User[] $users
      * @param $filename
      * @return ExcelResponse
+     * @throws \PHPExcel_Exception
      */
     public function exportUsersList($users, $filename)
     {
@@ -409,17 +421,15 @@ class ExcelExportService extends Nette\Object
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->getLastPaymentDate() !== NULL ? $user->getLastPaymentDate()->format("j. n. Y") : '');
 
-            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getFirstApplicationDate() !== NULL ? $user->getFirstApplicationDate()->format("j. n. Y") : '');
+            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getRolesApplicationDate() !== NULL ? $user->getRolesApplicationDate()->format("j. n. Y") : '');
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->isAttended()
                 ? $this->translator->translate('common.export.common.yes')
                 : $this->translator->translate('common.export.common.no')
             );
 
-            $sheet->setCellValueByColumnAndRow($column++, $row,
-                ($user->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS) && $user->isApproved())
-                    ? implode(', ', $this->blockRepository->findUserMandatoryNotRegisteredNames($user))
-                    : ''
+            $sheet->setCellValueByColumnAndRow($column++, $row, $user->isAllowedRegisterPrograms()
+                    ? $this->programService->getUnregisteredUserMandatoryBlocksNamesText($user) : ''
             );
 
             foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
@@ -441,8 +451,7 @@ class ExcelExportService extends Nette\Object
                             $value = $customInputValue->getValueOption();
                             break;
                     }
-                }
-                else
+                } else
                     $value = '';
 
                 $sheet->setCellValueByColumnAndRow($column++, $row, $value);
@@ -458,8 +467,10 @@ class ExcelExportService extends Nette\Object
      * @param Collection|User[] $users
      * @param $filename
      * @return ExcelResponse
+     * @throws \PHPExcel_Exception
      */
-    public function exportUsersSubeventsAndCategories($users, $filename) {
+    public function exportUsersSubeventsAndCategories($users, $filename)
+    {
         $sheet = $this->phpExcel->getSheet(0);
 
         $row = 1;
@@ -509,8 +520,7 @@ class ExcelExportService extends Nette\Object
             $column = 0;
 
             $sheet->getCellByColumnAndRow($column++, $row)
-                ->setValueExplicit($user->getFirstApplication() ? $user->getFirstApplication()->getVariableSymbol() : '',
-                    PHPExcel_Cell_DataType::TYPE_STRING);
+                ->setValueExplicit($user->getVariableSymbolsText(), PHPExcel_Cell_DataType::TYPE_STRING);
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->getFirstName());
 
@@ -543,6 +553,7 @@ class ExcelExportService extends Nette\Object
      * @param Collection|Block[] $blocks
      * @param $filename
      * @return ExcelResponse
+     * @throws \PHPExcel_Exception
      */
     public function exportBlocksAttendees($blocks, $filename)
     {

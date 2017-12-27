@@ -52,7 +52,7 @@ class CustomSelect extends CustomInput
             $options[NULL] = '';
 
         $optionaArray = explode(', ', $this->options);
-        for($i = 0; $i < count($optionaArray); $i++)
+        for ($i = 0; $i < count($optionaArray); $i++)
             $options[$i] = $optionaArray[$i];
 
         return $options;

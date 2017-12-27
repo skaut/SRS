@@ -8,7 +8,6 @@ use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
-use App\Model\Mailing\Mail;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Program\BlockRepository;
@@ -18,15 +17,18 @@ use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\SubeventRepository;
+use App\Model\User\Application;
 use App\Model\User\ApplicationRepository;
+use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\ExcelExportService;
 use App\Services\MailService;
 use App\Services\PdfExportService;
+use App\Services\ProgramService;
 use App\Services\UserService;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query\Expr;
+use Doctrine\ORM\QueryBuilder;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
@@ -90,6 +92,9 @@ class UsersGridControl extends Control
     /** @var UserService */
     private $userService;
 
+    /** @var ProgramService */
+    private $programService;
+
 
     /**
      * UsersGridControl constructor.
@@ -108,6 +113,7 @@ class UsersGridControl extends Control
      * @param ApplicationRepository $applicationRepository
      * @param ApplicationService $applicationService
      * @param UserService $userService
+     * @param ProgramService $programService
      */
     public function __construct(Translator $translator, UserRepository $userRepository,
                                 SettingsRepository $settingsRepository, CustomInputRepository $customInputRepository,
@@ -115,7 +121,8 @@ class UsersGridControl extends Control
                                 BlockRepository $blockRepository, PdfExportService $pdfExportService,
                                 ExcelExportService $excelExportService, MailService $mailService, Session $session,
                                 SubeventRepository $subeventRepository, ApplicationRepository $applicationRepository,
-                                ApplicationService $applicationService, UserService $userService)
+                                ApplicationService $applicationService, UserService $userService,
+                                ProgramService $programService)
     {
         parent::__construct();
 
@@ -133,6 +140,7 @@ class UsersGridControl extends Control
         $this->applicationRepository = $applicationRepository;
         $this->applicationService = $applicationService;
         $this->userService = $userService;
+        $this->programService = $programService;
 
         $this->session = $session;
         $this->sessionSection = $session->getSection('srs');
@@ -149,6 +157,9 @@ class UsersGridControl extends Control
     /**
      * Vytvoří komponentu.
      * @param $name
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Ublaboo\DataGrid\Exception\DataGridColumnStatusException
+     * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
     public function createComponentUsersGrid($name)
     {
@@ -238,14 +249,13 @@ class UsersGridControl extends Control
                     ->setText($this->userService->getMembershipText($row));
             }, function ($row) {
                 return $row->getUnit() === NULL;
-            }
-            )
+            })
             ->setSortable()
             ->setFilterText();
 
         $grid->addColumnNumber('age', 'admin.users.users_age')
             ->setSortable()
-            ->setSortableCallback(function ($qb, $sort) {
+            ->setSortableCallback(function (QueryBuilder $qb, $sort) {
                 $sort = $sort['age'] == 'DESC' ? 'ASC' : 'DESC';
                 $qb->orderBy('u.birthdate', $sort);
             });
@@ -260,9 +270,10 @@ class UsersGridControl extends Control
 
         $grid->addColumnText('variableSymbol', 'admin.users.users_variable_symbol', 'variableSymbolsText')
             ->setFilterText()
-            ->setCondition(function ($qb, $value) {
+            ->setCondition(function (QueryBuilder $qb, $value) {
                 $qb->join('u.applications', 'aVariableSymbol')
-                    ->andWhere('aVariableSymbol.variableSymbol LIKE :variableSymbol')
+                    ->join('aVariableSymbol.variableSymbol', 'avsVariableSymbol')
+                    ->andWhere('avsVariableSymbol.variableSymbol LIKE :variableSymbol')
                     ->setParameter(':variableSymbol', $value . '%');
             });
 
@@ -273,15 +284,7 @@ class UsersGridControl extends Control
 
         $grid->addColumnDateTime('lastPaymentDate', 'admin.users.users_last_payment_date');
 
-        //        $grid->addColumnDateTime('incomeProofPrintedDate', 'admin.users.users_income_proof_printed_date')
-        //            ->setSortable();
-
-        $grid->addColumnDateTime('firstApplicationDate', 'admin.users.users_first_application_date')
-            ->setSortable()
-            ->setSortableCallback(function ($qb, $sort) {
-                $qb->leftJoin('u.applications', 'aFirstApplicationDate', Expr\Join::WITH, 'aFirstApplicationDate.first = true')
-                    ->orderBy('aFirstApplicationDate.applicationDate', $sort['firstApplicationDate']);
-            })
+        $grid->addColumnDateTime('rolesApplicationDate', 'admin.users.users_roles_application_date')
             ->setFormat('j. n. Y H:i');
 
         $columnAttended = $grid->addColumnStatus('attended', 'admin.users.users_attended');
@@ -303,21 +306,20 @@ class UsersGridControl extends Control
             ->setTranslateOptions();
 
         $grid->addColumnText('unregisteredMandatoryBlocks', 'admin.users.users_not_registered_mandatory_blocks')
-            ->setRenderer(function ($row) {
-                if (!$row->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS) || !$row->isApproved())
+            ->setRenderer(function (User $row) {
+                if (!$row->isAllowedRegisterPrograms())
                     return NULL;
 
-                $unregisteredMandatoryBlocksNames = $this->blockRepository->findUserMandatoryNotRegisteredNames($row);
-                $unregisteredMandatoryBlocksNamesText = implode(', ', $unregisteredMandatoryBlocksNames);
+                $unregisteredUserMandatoryBlocks = $this->programService->getUnregisteredUserMandatoryBlocksNames($row);
                 return Html::el('span')
                     ->setAttribute('data-toggle', 'tooltip')
-                    ->setAttribute('title', $unregisteredMandatoryBlocksNamesText)
-                    ->setText(count($unregisteredMandatoryBlocksNames));
+                    ->setAttribute('title', implode(', ', $unregisteredUserMandatoryBlocks->toArray()))
+                    ->setText($unregisteredUserMandatoryBlocks->count());
             });
 
         foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
             $grid->addColumnText('customInput' . $customInput->getId(), $this->truncate($customInput->getName(), 20))
-                ->setRenderer(function ($row) use ($customInput) {
+                ->setRenderer(function (User $row) use ($customInput) {
                     $customInputValue = $row->getCustomInputValue($customInput);
                     if ($customInputValue) {
                         switch ($customInputValue->getInput()->getType()) {
@@ -355,7 +357,7 @@ class UsersGridControl extends Control
                 'data-toggle' => 'confirmation',
                 'data-content' => $this->translator->translate('admin.users.users_delete_confirm')
             ]);
-        $grid->allowRowsAction('delete', function ($item) {
+        $grid->allowRowsAction('delete', function (User $item) {
             return $item->isExternal();
         });
 
@@ -363,8 +365,9 @@ class UsersGridControl extends Control
     }
 
     /**
-     * Zpracuje odstranění uživatele.
+     * Zpracuje odstranění externího uživatele.
      * @param $id
+     * @throws \Nette\Application\AbortException
      */
     public function handleDelete($id)
     {
@@ -381,49 +384,30 @@ class UsersGridControl extends Control
      * Změní stav uživatele.
      * @param $id
      * @param $approved
+     * @throws \Nette\Application\AbortException
      */
     public function changeApproved($id, $approved)
     {
         $user = $this->userRepository->findById($id);
-
-        $over = FALSE;
-        if ($approved && !$user->isApproved()) {
-            foreach ($user->getRoles() as $role) {
-                $count = $this->roleRepository->countUnoccupiedInRole($role);
-                if ($count !== NULL && $count < 1) {
-                    $over = TRUE;
-                    break;
-                }
-            }
-            if (!$over) {
-                foreach ($user->getSubevents() as $subevent) {
-                    $count = $this->subeventRepository->countUnoccupiedInSubevent($subevent);
-                    if ($count !== NULL && $count < 1) {
-                        $over = TRUE;
-                        break;
-                    }
-                }
-            }
-        }
+        $user->setApproved($approved);
+        $this->userRepository->save($user);
 
         $p = $this->getPresenter();
+        $p->flashMessage('admin.users.users_changed_approved', 'success');
 
-        if ($over) {
-            $p->flashMessage('admin.users.users_change_approved_error', 'danger');
+        if ($p->isAjax()) {
+            $p->redrawControl('flashes');
+            $this['usersGrid']->redrawItem($id);
         } else {
-            $user->setApproved($approved);
-            $this->userRepository->save($user);
-
-            $p->flashMessage('admin.users.users_changed_approved', 'success');
+            $this->redirect('this');
         }
-
-        $this->redirect('this');
     }
 
     /**
      * Změní účast uživatele na semináři.
      * @param $id
      * @param $attended
+     * @throws \Nette\Application\AbortException
      */
     public function changeAttended($id, $attended)
     {
@@ -445,59 +429,21 @@ class UsersGridControl extends Control
     /**
      * Hromadně schválí uživatele.
      * @param array $ids
+     * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     public function groupApprove(array $ids)
     {
         $users = $this->userRepository->findUsersByIds($ids);
 
-        $rolesWithLimitedCapacity = $this->roleRepository->findAllWithLimitedCapacity();
-        $rolesUnoccupiedCounts = $this->roleRepository->countUnoccupiedInRoles($rolesWithLimitedCapacity);
-
-        $subeventsWithLimitedCapacity = $this->subeventRepository->findAllWithLimitedCapacity();
-        $subeventsUnoccupiedCounts = $this->subeventRepository->countUnoccupiedInSubevents($subeventsWithLimitedCapacity);
-
-        foreach ($users as $user) {
-            if (!$user->isApproved()) {
-                foreach ($user->getRoles() as $role) {
-                    if ($role->hasLimitedCapacity())
-                        $rolesUnoccupiedCounts[$role->getId()]--;
-                }
-                foreach ($user->getSubevents() as $subevent) {
-                    if ($subevent->hasLimitedCapacity())
-                        $subeventsUnoccupiedCounts[$subevent->getId()]--;
-                }
-            }
-        }
-
-        $over = FALSE;
-        foreach ($rolesUnoccupiedCounts as $count) {
-            if ($count < 0) {
-                $over = TRUE;
-                break;
-            }
-        }
-        if (!$over) {
-            foreach ($subeventsUnoccupiedCounts as $count) {
-                if ($count < 0) {
-                    $over = TRUE;
-                    break;
-                }
-            }
-        }
-
-        $p = $this->getPresenter();
-
-        if ($over) {
-            $p->flashMessage('admin.users.users_group_action_approve_error', 'danger');
-        } else {
+        $this->userRepository->getEntityManager()->transactional(function ($em) use ($users) {
             foreach ($users as $user) {
                 $user->setApproved(TRUE);
                 $this->userRepository->save($user);
             }
+        });
 
-            $p->flashMessage('admin.users.users_group_action_approved', 'success');
-        }
-
+        $this->getPresenter()->flashMessage('admin.users.users_group_action_approved', 'success');
         $this->redirect('this');
     }
 
@@ -505,6 +451,8 @@ class UsersGridControl extends Control
      * Hromadně nastaví role.
      * @param array $ids
      * @param $value
+     * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     public function groupChangeRoles(array $ids, $value)
     {
@@ -513,119 +461,104 @@ class UsersGridControl extends Control
 
         $p = $this->getPresenter();
 
-        $error = FALSE;
-
         //neni vybrana zadna role
         if ($selectedRoles->isEmpty()) {
             $p->flashMessage('admin.users.users_group_action_change_roles_error_empty', 'danger');
-            $error = TRUE;
+            $this->redirect('this');
         }
 
         //v rolich musi byt dostatek volnych mist
-        $unoccupiedCounts = $this->roleRepository->countUnoccupiedInRoles($selectedRoles);
-        foreach ($selectedRoles as $role) {
-            if ($role->hasLimitedCapacity()) {
-                foreach ($users as $user) {
-                    if ($user->isApproved() && !$user->isInRole($role))
-                        $unoccupiedCounts[$role->getId()]--;
-                }
+        $capacitiesOk = $selectedRoles->forAll(function (int $key, Role $role) use ($users) {
+            if (!$role->hasLimitedCapacity())
+                return TRUE;
+
+            $capacityNeeded = $users->count();
+
+            if ($capacityNeeded <= $role->getCapacity())
+                return TRUE;
+
+            foreach ($users as $user) {
+                if ($user->isInRole($role))
+                    $capacityNeeded--;
             }
-        }
-        foreach ($unoccupiedCounts as $count) {
-            if ($count < 0) {
-                $p->flashMessage('admin.users.users_group_action_change_roles_error_capacity', 'danger');
-                $error = TRUE;
-                break;
-            }
-        }
 
-        if (!$error) {
-            $this->userRepository->getEntityManager()->transactional(function($em) use($selectedRoles, $users, $p) {
-                foreach ($users as $user) {
-                    $user->setRoles($selectedRoles);
-                    $this->userRepository->save($user);
+            if ($capacityNeeded <= $role->getCapacity())
+                return TRUE;
 
-                    foreach ($user->getApplications() as $application) {
-                        $fee = $this->applicationService->countFee($selectedRoles, $application->getSubevents(),
-                            $application->isFirst()
-                        );
+            return FALSE;
+        });
 
-                        $application->setFee($fee);
-                        $application->setState($fee == 0 || $application->getPaymentDate()
-                            ? ApplicationState::PAID
-                            : ApplicationState::WAITING_FOR_PAYMENT);
-
-                        $this->applicationRepository->save($application);
-                    }
-                }
-
-                $this->programRepository->updateUsersPrograms($users->toArray());
-                $this->userRepository->getEntityManager()->flush();
-            });
-
-            $p->flashMessage('admin.users.users_group_action_changed_roles', 'success');
+        if (!$capacitiesOk) {
+            $p->flashMessage('admin.users.users_group_action_change_roles_error_capacity', 'danger');
             $this->redirect('this');
         }
+
+        $loggedUser = $this->userRepository->findById($p->getUser()->id);
+
+        $this->userRepository->getEntityManager()->transactional(function ($em) use ($selectedRoles, $users, $loggedUser) {
+            foreach ($users as $user) {
+                $this->applicationService->updateRoles($user, $selectedRoles, $loggedUser, TRUE);
+            }
+        });
+
+        $p->flashMessage('admin.users.users_group_action_changed_roles', 'success');
+        $this->redirect('this');
     }
 
     /**
      * Hromadně označí uživatele jako zúčastněné.
      * @param array $ids
+     * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     public function groupMarkAttended(array $ids)
     {
-        $this->userRepository->setAttended($ids);
+        $users = $this->userRepository->findUsersByIds($ids);
 
-        $p = $this->getPresenter();
-        $p->flashMessage('admin.users.users_group_action_marked_attended', 'success');
+        $this->userRepository->getEntityManager()->transactional(function ($em) use ($users) {
+            foreach ($users as $user) {
+                $user->setAttended(TRUE);
+                $this->userRepository->save($user);
+            }
+        });
 
-        if ($p->isAjax()) {
-            $p->redrawControl('flashes');
-            $this['usersGrid']->reload();
-        } else {
-            $this->redirect('this');
-        }
+        $this->getPresenter()->flashMessage('admin.users.users_group_action_marked_attended', 'success');
+        $this->redirect('this');
     }
 
     /**
      * Hromadně označí uživatele jako zaplacené dnes.
      * @param array $ids
      * @param $value
+     * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     public function groupMarkPaidToday(array $ids, $value)
     {
-        foreach ($ids as $id) {
-            $user = $this->userRepository->findById($id);
-
-            foreach ($user->getApplications() as $application) {
-                if ($application->getState() == ApplicationState::WAITING_FOR_PAYMENT) {
-                    $application->setPaymentMethod($value);
-                    $application->setPaymentDate(new \DateTime());
-                    $application->setState(ApplicationState::PAID);
-                    $this->applicationRepository->save($application);
-
-                    $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$user]), '', Template::PAYMENT_CONFIRMED, [
-                        TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-                        TemplateVariable::APPLICATION_SUBEVENTS => $application->getSubeventsText()
-                    ]);
-                }
-            }
-        }
+        $users = $this->userRepository->findUsersByIds($ids);
 
         $p = $this->getPresenter();
-        $p->flashMessage('admin.users.users_group_action_marked_paid_today', 'success');
 
-        if ($p->isAjax()) {
-            $p->redrawControl('flashes');
-            $this['usersGrid']->reload();
-        } else {
-            $this->redirect('this');
-        }
+        $loggedUser = $this->userRepository->findById($p->getUser()->id);
+
+        $this->userRepository->getEntityManager()->transactional(function ($em) use ($users, $value, $loggedUser) {
+            foreach ($users as $user) {
+                foreach ($user->getWaitingForPaymentApplications() as $application) {
+                    $this->applicationService->updatePayment($application, $application->getVariableSymbolText(),
+                        $value, new \DateTime(), $application->getIncomeProofPrintedDate(),
+                        $application->getMaturityDate(), $loggedUser);
+                }
+            }
+        });
+
+        $p->flashMessage('admin.users.users_group_action_marked_paid_today', 'success');
+        $this->redirect('this');
     }
 
     /**
      * Hromadně vygeneruje potvrzení o zaplacení.
      * @param array $ids
+     * @throws \Nette\Application\AbortException
      */
     public function groupGeneratePaymentProofs(array $ids)
     {
@@ -636,6 +569,7 @@ class UsersGridControl extends Control
     /**
      * Hromadně vyexportuje seznam uživatelů.
      * @param array $ids
+     * @throws \Nette\Application\AbortException
      */
     public function groupExportUsers(array $ids)
     {
@@ -645,6 +579,8 @@ class UsersGridControl extends Control
 
     /**
      * Zpracuje export seznamu uživatelů.
+     * @throws \PHPExcel_Exception
+     * @throws \Nette\Application\AbortException
      */
     public function handleExportUsers()
     {
@@ -660,6 +596,7 @@ class UsersGridControl extends Control
     /**
      * Hromadně vyexportuje seznam uživatelů s rolemi.
      * @param array $ids
+     * @throws \Nette\Application\AbortException
      */
     public function groupExportRoles(array $ids)
     {
@@ -669,6 +606,8 @@ class UsersGridControl extends Control
 
     /**
      * Zpracuje export seznamu uživatelů s rolemi.
+     * @throws \PHPExcel_Exception
+     * @throws \Nette\Application\AbortException
      */
     public function handleExportRoles()
     {
@@ -685,6 +624,7 @@ class UsersGridControl extends Control
     /**
      * Hromadně vyexportuje seznam uživatelů s podakcemi a programy podle kategorií.
      * @param array $ids
+     * @throws \Nette\Application\AbortException
      */
     public function groupExportSubeventsAndCategories(array $ids)
     {
@@ -694,6 +634,8 @@ class UsersGridControl extends Control
 
     /**
      * Zpracuje export seznamu uživatelů s podakcemi a programy podle kategorií.
+     * @throws \PHPExcel_Exception
+     * @throws \Nette\Application\AbortException
      */
     public function handleExportSubeventsAndCategories()
     {
@@ -709,6 +651,7 @@ class UsersGridControl extends Control
     /**
      * Hromadně vyexportuje harmonogramy uživatelů.
      * @param array $ids
+     * @throws \Nette\Application\AbortException
      */
     public function groupExportSchedules(array $ids)
     {
@@ -718,6 +661,8 @@ class UsersGridControl extends Control
 
     /**
      * Zpracuje export harmonogramů uživatelů.
+     * @throws \PHPExcel_Exception
+     * @throws \Nette\Application\AbortException
      */
     public function handleExportSchedules()
     {
@@ -732,12 +677,16 @@ class UsersGridControl extends Control
 
     /**
      * Vygeneruje doklady o zaplacení.
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
     public function handleGeneratePaymentProofs()
     {
         $ids = $this->session->getSection('srs')->userIds;
         $users = $this->userRepository->findUsersByIds($ids);
-        $this->pdfExportService->generateUsersPaymentProofs($users, "doklady.pdf");
+        $this->pdfExportService->generateUsersPaymentProofs($users, "doklady.pdf",
+            $this->userRepository->findById($this->getPresenter()->getUser()->id)
+        );
     }
 
     /**

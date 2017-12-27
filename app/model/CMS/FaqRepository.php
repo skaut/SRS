@@ -26,6 +26,7 @@ class FaqRepository extends EntityRepository
     /**
      * Vrací id poslední otázky.
      * @return int
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findLastId()
     {
@@ -38,6 +39,7 @@ class FaqRepository extends EntityRepository
     /**
      * Vrací poslední pozici.
      * @return int
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findLastPosition()
     {
@@ -59,6 +61,7 @@ class FaqRepository extends EntityRepository
     /**
      * Uloží otázku.
      * @param Faq $faq
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function save(Faq $faq)
     {

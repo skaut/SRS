@@ -4,6 +4,7 @@ namespace App\Model\Program;
 
 use App\Model\ACL\Role;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
@@ -29,7 +30,7 @@ class Category
     /**
      * Role, které si mohou přihlašovat programy z kategorie.
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="registerableCategories", cascade={"persist"})
-     * @var ArrayCollection
+     * @var Collection
      */
     protected $registerableRoles;
 
@@ -37,7 +38,7 @@ class Category
      * Bloky v kategorii.
      * @ORM\OneToMany(targetEntity="Block", mappedBy="category", cascade={"persist"})
      * @ORM\OrderBy({"name" = "ASC"})
-     * @var ArrayCollection
+     * @var Collection
      */
     protected $blocks;
 
@@ -76,7 +77,7 @@ class Category
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
     public function getRegisterableRoles()
     {
@@ -84,7 +85,7 @@ class Category
     }
 
     /**
-     * @param ArrayCollection $registerableRoles
+     * @param Collection $registerableRoles
      */
     public function setRegisterableRoles($registerableRoles)
     {
@@ -101,7 +102,7 @@ class Category
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
     public function getBlocks()
     {
@@ -109,7 +110,7 @@ class Category
     }
 
     /**
-     * @param ArrayCollection $blocks
+     * @param Collection $blocks
      */
     public function setBlocks($blocks)
     {

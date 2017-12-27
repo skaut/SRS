@@ -26,6 +26,7 @@ class NewsRepository extends EntityRepository
     /**
      * Vrací id poslední aktuality.
      * @return int
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findLastId()
     {

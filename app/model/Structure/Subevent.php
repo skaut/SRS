@@ -2,7 +2,11 @@
 
 namespace App\Model\Structure;
 
+use App\Model\ACL\Role;
+use App\Model\Enums\ApplicationState;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
@@ -34,8 +38,8 @@ class Subevent
 
     /**
      * Přihlášky.
-     * @ORM\ManyToMany(targetEntity="\App\Model\User\Application", mappedBy="subevents", cascade={"persist"})
-     * @var ArrayCollection
+     * @ORM\ManyToMany(targetEntity="\App\Model\User\SubeventsApplication", mappedBy="subevents", cascade={"persist"})
+     * @var Collection
      */
     protected $applications;
 
@@ -43,7 +47,7 @@ class Subevent
      * Bloky v podakci.
      * @ORM\OneToMany(targetEntity="\App\Model\Program\Block", mappedBy="subevent", cascade={"persist"})
      * @ORM\OrderBy({"name" = "ASC"})
-     * @var ArrayCollection
+     * @var Collection
      */
     protected $blocks;
 
@@ -68,14 +72,14 @@ class Subevent
      *      joinColumns={@ORM\JoinColumn(name="subevent_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="incompatible_subevent_id", referencedColumnName="id")}
      *      )
-     * @var ArrayCollection
+     * @var Collection
      */
     protected $incompatibleSubevents;
 
     /**
      * Podakce vyžadující tuto podakci.
      * @ORM\ManyToMany(targetEntity="Subevent", mappedBy="requiredSubevents", cascade={"persist"})
-     * @var ArrayCollection
+     * @var Collection
      */
     protected $requiredBySubevent;
 
@@ -86,7 +90,7 @@ class Subevent
      *      joinColumns={@ORM\JoinColumn(name="subevent_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="required_subevent_id", referencedColumnName="id")}
      *      )
-     * @var ArrayCollection
+     * @var Collection
      */
     protected $requiredSubevents;
 
@@ -106,7 +110,7 @@ class Subevent
     /**
      * @return int
      */
-    public function getId()
+    public function getId() : int
     {
         return $this->id;
     }
@@ -114,7 +118,7 @@ class Subevent
     /**
      * @return string
      */
-    public function getName()
+    public function getName() : string
     {
         return $this->name;
     }
@@ -122,7 +126,7 @@ class Subevent
     /**
      * @param string $name
      */
-    public function setName($name)
+    public function setName(string $name) : void
     {
         $this->name = $name;
     }
@@ -130,7 +134,7 @@ class Subevent
     /**
      * @return bool
      */
-    public function isImplicit()
+    public function isImplicit() : bool
     {
         return $this->implicit;
     }
@@ -138,23 +142,23 @@ class Subevent
     /**
      * @param bool $implicit
      */
-    public function setImplicit($implicit)
+    public function setImplicit(bool $implicit) : void
     {
         $this->implicit = $implicit;
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
-    public function getBlocks()
+    public function getBlocks() : Collection
     {
         return $this->blocks;
     }
 
     /**
-     * @param ArrayCollection $blocks
+     * @param Collection $blocks
      */
-    public function setBlocks($blocks)
+    public function setBlocks(Collection $blocks) : void
     {
         $this->blocks = $blocks;
     }
@@ -162,7 +166,7 @@ class Subevent
     /**
      * @return int
      */
-    public function getFee()
+    public function getFee() : int
     {
         return $this->fee;
     }
@@ -170,7 +174,7 @@ class Subevent
     /**
      * @param int $fee
      */
-    public function setFee($fee)
+    public function setFee(int $fee) : void
     {
         $this->fee = $fee;
     }
@@ -178,7 +182,7 @@ class Subevent
     /**
      * @return int
      */
-    public function getCapacity()
+    public function getCapacity() : ?int
     {
         return $this->capacity;
     }
@@ -186,7 +190,7 @@ class Subevent
     /**
      * @param int $capacity
      */
-    public function setCapacity($capacity)
+    public function setCapacity(?int $capacity) : void
     {
         $this->capacity = $capacity;
     }
@@ -194,15 +198,15 @@ class Subevent
     /**
      * @return bool
      */
-    public function hasLimitedCapacity()
+    public function hasLimitedCapacity() : bool
     {
         return $this->capacity !== NULL;
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection|Subevent[]
      */
-    public function getIncompatibleSubevents()
+    public function getIncompatibleSubevents() : Collection
     {
         return $this->incompatibleSubevents;
     }
@@ -210,7 +214,7 @@ class Subevent
     /**
      * @param $incompatibleSubevents
      */
-    public function setIncompatibleSubevents($incompatibleSubevents)
+    public function setIncompatibleSubevents(Collection $incompatibleSubevents) : void
     {
         foreach ($this->getIncompatibleSubevents() as $subevent) {
             if (!$incompatibleSubevents->contains($subevent))
@@ -227,39 +231,56 @@ class Subevent
     /**
      * @param $subevent
      */
-    public function addIncompatibleSubevent($subevent)
+    public function addIncompatibleSubevent(Subevent $subevent) : void
     {
         if (!$this->incompatibleSubevents->contains($subevent))
             $this->incompatibleSubevents->add($subevent);
     }
 
     /**
-     * @return ArrayCollection
+     * Vrací názvy všech nekompatibilních podakcí.
+     * @return string
      */
-    public function getRequiredBySubevent()
+    public function getIncompatibleSubeventsText() : string
+    {
+        $incompatibleSubeventsNames = [];
+        foreach ($this->getIncompatibleSubevents() as $incompatibleSubevent) {
+            $incompatibleSubeventsNames[] = $incompatibleSubevent->getName();
+        }
+        return implode(', ', $incompatibleSubeventsNames);
+    }
+
+    /**
+     * @return Collection|Subevent[]
+     */
+    public function getRequiredBySubevent() : Collection
     {
         return $this->requiredBySubevent;
     }
 
     /**
      * Vrací všechny (tranzitivně) podakce, kterými je tato podakce vyžadována.
-     * @return array
+     * @return Collection|Subevent[]
      */
-    public function getRequiredBySubeventTransitive()
+    public function getRequiredBySubeventTransitive() : Collection
     {
-        $allRequiredBySubevent = [];
+        $allRequiredBySubevent = new ArrayCollection();
         foreach ($this->requiredBySubevent as $requiredBySubevent) {
             $this->getRequiredBySubeventTransitiveRec($allRequiredBySubevent, $requiredBySubevent);
         }
         return $allRequiredBySubevent;
     }
 
-    private function getRequiredBySubeventTransitiveRec(&$allRequiredBySubevent, $subevent)
+    /**
+     * @param $allRequiredBySubevent
+     * @param $subevent
+     */
+    private function getRequiredBySubeventTransitiveRec(Collection &$allRequiredBySubevent, Subevent $subevent) : void
     {
-        if ($this == $subevent || in_array($subevent, $allRequiredBySubevent))
+        if ($this === $subevent || $allRequiredBySubevent->contains($subevent))
             return;
 
-        $allRequiredBySubevent[] = $subevent;
+        $allRequiredBySubevent->add($subevent);
 
         foreach ($subevent->requiredBySubevent as $requiredBySubevent) {
             $this->getRequiredBySubeventTransitiveRec($allRequiredBySubevent, $requiredBySubevent);
@@ -267,9 +288,9 @@ class Subevent
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection|Subevent[]
      */
-    public function getRequiredSubevents()
+    public function getRequiredSubevents() : Collection
     {
         return $this->requiredSubevents;
     }
@@ -277,7 +298,7 @@ class Subevent
     /**
      * @param $requiredSubevents
      */
-    public function setRequiredSubevents($requiredSubevents)
+    public function setRequiredSubevents(Collection $requiredSubevents) : void
     {
         $this->requiredSubevents = $requiredSubevents;
     }
@@ -285,7 +306,7 @@ class Subevent
     /**
      * @param $subevent
      */
-    public function addRequiredSubevent($subevent)
+    public function addRequiredSubevent(Subevent $subevent) : void
     {
         if (!$this->requiredSubevents->contains($subevent))
             $this->requiredSubevents->add($subevent);
@@ -293,26 +314,77 @@ class Subevent
 
     /**
      * Vrací všechny (tranzitivně) vyžadované podakce.
-     * @return array
+     * @return Collection|Subevent[]
      */
-    public function getRequiredSubeventsTransitive()
+    public function getRequiredSubeventsTransitive() : Collection
     {
-        $allRequiredSubevents = [];
+        $allRequiredSubevents = new ArrayCollection();
         foreach ($this->requiredSubevents as $requiredSubevent) {
             $this->getRequiredSubeventsTransitiveRec($allRequiredSubevents, $requiredSubevent);
         }
         return $allRequiredSubevents;
     }
 
-    private function getRequiredSubeventsTransitiveRec(&$allRequiredSubevents, $subevent)
+    /**
+     * @param $allRequiredSubevents
+     * @param $subevent
+     */
+    private function getRequiredSubeventsTransitiveRec(Collection &$allRequiredSubevents, Subevent $subevent) : void
     {
-        if ($this == $subevent || in_array($subevent, $allRequiredSubevents))
+        if ($this === $subevent || $allRequiredSubevents->contains($subevent))
             return;
 
-        $allRequiredSubevents[] = $subevent;
+        $allRequiredSubevents->add($subevent);
 
         foreach ($subevent->requiredSubevents as $requiredSubevent) {
             $this->getRequiredSubeventsTransitiveRec($allRequiredSubevents, $requiredSubevent);
         }
+    }
+
+    /**
+     * Vrací názvy všech vyžadovaných podakcí.
+     * @return string
+     */
+    public function getRequiredSubeventsTransitiveText() : string
+    {
+        $requiredSubeventsNames = [];
+        foreach ($this->getRequiredSubeventsTransitive() as $requiredSubevent) {
+            $requiredSubeventsNames[] = $requiredSubevent->getName();
+        }
+        return implode(', ', $requiredSubeventsNames);
+    }
+
+    /**
+     * @return int
+     */
+    public function countUsers(): int
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->andX(
+                Criteria::expr()->isNull('validTo'),
+                Criteria::expr()->orX(
+                    Criteria::expr()->eq('state', ApplicationState::WAITING_FOR_PAYMENT),
+                    Criteria::expr()->eq('state', ApplicationState::PAID),
+                    Criteria::expr()->eq('state', ApplicationState::PAID_FREE)
+                )
+            ));
+
+        return $this->applications->matching($criteria)->count();
+    }
+
+    /**
+     * @return int|null
+     */
+    public function countUnoccupied(): ?int
+    {
+        return $this->capacity ? $this->capacity - $this->countUsers() : NULL;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOccupancyText(): string
+    {
+        return $this->capacity ? $this->countUsers() . '/' . $this->capacity : $this->countUsers();
     }
 }

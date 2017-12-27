@@ -4,7 +4,6 @@ namespace App\Services;
 
 use Nette;
 use Skautis\Skautis;
-use Skautis\Wsdl\WsdlException;
 
 
 /**
@@ -90,7 +89,7 @@ class SkautIsService extends Nette\Object
             'ID' => $personId
         ]);
     }
-
+    
     public function getPersonPhoto($personId, $size)
     {
         return $this->skautIs->org->PersonPhoto([

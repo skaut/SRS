@@ -26,8 +26,8 @@
 
                 {if $explicitSubeventsExists}
                     <script>
-                        $(function(){
-                            $("select[name='roles[]']").on("change", function() {
+                        $(function () {
+                            $("select[name='roles[]']").on("change", function () {
                                 changeSubeventsRequired();
                             });
                             changeSubeventsRequired();
@@ -75,8 +75,10 @@
                             <thead>
                                 <tr>
                                     <th>{_web.application_content.application_date}</th>
-                                    <th>{_web.application_content.application_roles}</th>
-                                    {if $subeventsExists}
+                                    {if $userHasFixedFeeRole}
+                                        <th>{_web.application_content.application_roles}</th>
+                                    {/if}
+                                    {if $explicitSubeventsExists}
                                         <th>{_web.application_content.application_subevents}</th>
                                     {/if}
                                     <th>{_web.application_content.application_fee}</th>
@@ -86,20 +88,18 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {foreach $dbuser->getNotCanceledApplications() as $application}
+                                {foreach $usersApplications as $application}
                                     <tr>
                                         <td>{$application->getApplicationDate()->format('j. n. Y')}</td>
-                                        <td>
-                                            {if $application->isFirst()}
-                                                {$dbuser->getRolesText()}
-                                            {/if}
-                                        </td>
-                                        {if $subeventsExists}
+                                        {if $userHasFixedFeeRole}
+                                            <td>{$application->getRolesText()}</td>
+                                        {/if}
+                                        {if $explicitSubeventsExists}
                                             <td>{$application->getSubeventsText()}</td>
                                         {/if}
                                         <td>{$application->getFee()}</td>
-                                        <td>{$application->getVariableSymbol()}</td>
-                                        <td>{$application->getMaturityDate()->format('j. n. Y')}</td>
+                                        <td>{$application->getVariableSymbolText()}</td>
+                                        <td>{$application->getMaturityDate() ? $application->getMaturityDate()->format('j. n. Y') : ""}</td>
                                         <td>{_'common.application_state.'.$application->getState()}</td>
                                     </tr>
                                 {/foreach}

@@ -33,10 +33,11 @@ class CustomInputRepository extends EntityRepository
             ->getQuery()
             ->getResult();
     }
-
+    
     /**
      * Vrátí pozici posledního pole.
      * @return int
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findLastPosition()
     {
@@ -45,10 +46,11 @@ class CustomInputRepository extends EntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
-
+    
     /**
      * Uloží pole.
      * @param CustomInput $input
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function save(CustomInput $input)
     {

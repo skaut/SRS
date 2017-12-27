@@ -10,9 +10,11 @@ use App\AdminModule\Forms\EditUserSeminarForm;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\ACL\Role;
+use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
+use App\Services\ApplicationService;
 use App\Services\ExcelExportService;
 use App\Services\PdfExportService;
 use Nette\Application\UI\Form;
@@ -27,7 +29,7 @@ use Nette\Application\UI\Form;
 class UsersPresenter extends AdminBasePresenter
 {
     protected $resource = Resource::USERS;
-
+    
     /**
      * @var IUsersGridControlFactory
      * @inject
@@ -76,7 +78,16 @@ class UsersPresenter extends AdminBasePresenter
      */
     public $customInputRepository;
 
+    /**
+     * @var ApplicationService
+     * @inject
+     */
+    public $applicationService;
 
+
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     public function startup()
     {
         parent::startup();
@@ -94,8 +105,10 @@ class UsersPresenter extends AdminBasePresenter
      */
     public function renderDetail($id)
     {
+        $user = $this->userRepository->findById($id);
+
         $this->template->sidebarVisible = TRUE;
-        $this->template->detailUser = $this->userRepository->findById($id);
+        $this->template->detailUser = $user;
 
         $this->template->customInputs = $this->customInputRepository->findAllOrderedByPosition();
         $this->template->customInputTypeText = CustomInput::TEXT;
@@ -107,6 +120,8 @@ class UsersPresenter extends AdminBasePresenter
 
         $this->template->paymentMethodCash = PaymentType::CASH;
         $this->template->paymentMethodBank = PaymentType::BANK;
+
+        $this->template->registered = !$user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED));
     }
 
     /**
@@ -121,6 +136,7 @@ class UsersPresenter extends AdminBasePresenter
 
     /**
      * Zobrazí formulář pro editaci osobních údajů uživatele.
+     * @throws \Nette\Application\AbortException
      */
     public function handleEditPersonalDetails()
     {
@@ -135,6 +151,7 @@ class UsersPresenter extends AdminBasePresenter
 
     /**
      * Zobrazí formulář pro editaci údajů o účasti uživatele na semináři.
+     * @throws \Nette\Application\AbortException
      */
     public function handleEditSeminar()
     {
@@ -149,6 +166,7 @@ class UsersPresenter extends AdminBasePresenter
 
     /**
      * Zobrazí formulář pro editaci údajů o platbě uživatele.
+     * @throws \Nette\Application\AbortException
      */
     public function handleEditPayment()
     {
@@ -159,6 +177,20 @@ class UsersPresenter extends AdminBasePresenter
         } else {
             $this->redirect('this');
         }
+    }
+
+    /**
+     * @throws \Throwable
+     */
+    public function handleCancelRegistration()
+    {
+        $user = $this->userRepository->findById($this->getParameter('id'));
+        $loggedUser = $this->userRepository->findById($this->user->id);
+
+        $this->applicationService->cancelRegistration($user, ApplicationState::CANCELED, $loggedUser);
+
+        $this->flashMessage('admin.users.users_registration_canceled', 'success');
+        $this->redirect('this');
     }
 
     protected function createComponentUsersGrid()
@@ -203,12 +235,10 @@ class UsersPresenter extends AdminBasePresenter
         $form = $this->editUserSeminarFormFactory->create($this->getParameter('id'));
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) {
-            if ($form['cancel']->isSubmittedBy()) {
-                $this->redirect('this');
-            } else {
+            if (!$form['cancel']->isSubmittedBy())
                 $this->flashMessage('admin.users.users_saved', 'success');
-                $this->redirect('this');
-            }
+
+            $this->redirect('this');
         };
 
         return $form;

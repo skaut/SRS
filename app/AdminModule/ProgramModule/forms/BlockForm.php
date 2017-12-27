@@ -14,6 +14,7 @@ use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
+use App\Services\ProgramService;
 use Nette;
 use Nette\Application\UI\Form;
 
@@ -65,6 +66,9 @@ class BlockForm extends Nette\Object
     /** @var SubeventRepository */
     private $subeventRepository;
 
+    /** @var ProgramService */
+    private $programService;
+
 
     /**
      * BlockForm constructor.
@@ -75,11 +79,12 @@ class BlockForm extends Nette\Object
      * @param SettingsRepository $settingsRepository
      * @param ProgramRepository $programRepository
      * @param SubeventRepository $subeventRepository
+     * @param ProgramService $programService
      */
     public function __construct(BaseForm $baseFormFactory, BlockRepository $blockRepository,
                                 UserRepository $userRepository, CategoryRepository $categoryRepository,
                                 SettingsRepository $settingsRepository, ProgramRepository $programRepository,
-                                SubeventRepository $subeventRepository)
+                                SubeventRepository $subeventRepository, ProgramService $programService)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->blockRepository = $blockRepository;
@@ -88,6 +93,7 @@ class BlockForm extends Nette\Object
         $this->settingsRepository = $settingsRepository;
         $this->programRepository = $programRepository;
         $this->subeventRepository = $subeventRepository;
+        $this->programService = $programService;
     }
 
     /**
@@ -95,6 +101,7 @@ class BlockForm extends Nette\Object
      * @param $id
      * @param $userId
      * @return Form
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function create($id, $userId)
     {
@@ -205,11 +212,12 @@ class BlockForm extends Nette\Object
      * Zpracuje formulář.
      * @param Form $form
      * @param \stdClass $values
+     * @throws \Throwable
      */
     public function processForm(Form $form, \stdClass $values)
     {
         if (!$form['cancel']->isSubmittedBy()) {
-            $this->blockRepository->getEntityManager()->transactional(function($em) use($values) {
+            $this->blockRepository->getEntityManager()->transactional(function ($em) use ($values) {
                 if (!$this->block) {
                     if (!$this->settingsRepository->getValue(Settings::IS_ALLOWED_ADD_BLOCK))
                         return;
@@ -262,7 +270,7 @@ class BlockForm extends Nette\Object
                 if ($oldMandatory == $this->block->getMandatory() && (
                         $this->block->getCategory() !== $oldCategory) || ($this->block->getSubevent() !== $oldSubevent)
                 ) {
-                    $this->programRepository->updateUsersPrograms($this->userRepository->findAll());
+                    $this->programService->updateUsersPrograms($this->userRepository->findAll());
                 }
 
                 $this->blockRepository->save($this->block);

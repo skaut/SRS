@@ -8,7 +8,6 @@ use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Services\SkautIsEventEducationService;
 use App\Services\SkautIsEventGeneralService;
-use App\Services\SkautIsService;
 use Nette;
 use Nette\Application\UI\Form;
 
@@ -27,9 +26,6 @@ class SkautIsEventForm extends Nette\Object
     /** @var SettingsRepository */
     private $settingsRepository;
 
-    /** @var SkautIsService */
-    private $skautIsService;
-
     /** @var SkautIsEventGeneralService */
     private $skautIsEventGeneralService;
 
@@ -41,7 +37,8 @@ class SkautIsEventForm extends Nette\Object
      * SkautIsEventForm constructor.
      * @param BaseForm $baseForm
      * @param SettingsRepository $settingsRepository
-     * @param SkautIsService $skautIsService
+     * @param SkautIsEventGeneralService $skautIsEventGeneralService
+     * @param SkautIsEventEducationService $skautIsEventEducationService
      */
     public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository,
                                 SkautIsEventGeneralService $skautIsEventGeneralService,
@@ -56,6 +53,7 @@ class SkautIsEventForm extends Nette\Object
     /**
      * Vytvoří formulář.
      * @return Form
+     * @throws \App\Model\Settings\SettingsException
      */
     public function create()
     {
@@ -95,6 +93,7 @@ class SkautIsEventForm extends Nette\Object
      * Zpracuje formulář.
      * @param Form $form
      * @param \stdClass $values
+     * @throws \App\Model\Settings\SettingsException
      */
     public function processForm(Form $form, \stdClass $values)
     {
@@ -102,7 +101,7 @@ class SkautIsEventForm extends Nette\Object
         $eventName = NULL;
         $eventType = $values['skautisEventType'];
 
-        switch($eventType) {
+        switch ($eventType) {
             case SkautIsEventType::GENERAL:
                 $eventId = $values['skautisEventGeneral'];
                 $eventName = $this->skautIsEventGeneralService->getEventDisplayName($eventId);

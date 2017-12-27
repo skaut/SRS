@@ -21,7 +21,9 @@
                 <ul class="list-group">
                     {foreach $editedTemplate->getVariables() as $variable}
                         <li class="list-group-item">
-                            <strong>%{$translator->translate('common.mailing.variable_name.' . $variable->getName())}%</strong>
+                            <strong>
+                                %{$translator->translate('common.mailing.variable_name.' . $variable->getName())}%
+                            </strong>
                             -
                             {$translator->translate('common.mailing.variable_description.' . $variable->getName())}
                         </li>

@@ -9,7 +9,6 @@ use App\Model\Settings\SettingsRepository;
 use App\Model\User\UserRepository;
 use App\Services\MailService;
 use App\Services\SkautIsService;
-use Doctrine\Common\Collections\ArrayCollection;
 
 
 /**
@@ -48,6 +47,11 @@ class AuthPresenter extends BasePresenter
     /**
      * Přesměruje na přihlašovací stránku skautIS, nastaví přihlášení.
      * @param null $backlink
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Security\AuthenticationException
+     * @throws \Ublaboo\Mailing\Exception\MailingException
+     * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
      */
     public function actionLogin($backlink = NULL)
     {
@@ -63,7 +67,7 @@ class AuthPresenter extends BasePresenter
         if ($this->user->identity->data['firstLogin']) {
             $user = $this->userRepository->findById($this->user->id);
 
-            $this->mailService->sendMailFromTemplate(new ArrayCollection(), new ArrayCollection([$user]), '', Template::SIGN_IN, [
+            $this->mailService->sendMailFromTemplate($user, '', Template::SIGN_IN, [
                 TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)
             ]);
         }
@@ -88,6 +92,8 @@ class AuthPresenter extends BasePresenter
     /**
      * Provede přesměrování po úspěšném přihlášení, v závislosti na nastavení, nastavení role nebo returnUrl.
      * @param $returnUrl
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Nette\Application\AbortException
      */
     private function redirectAfterLogin($returnUrl)
     {

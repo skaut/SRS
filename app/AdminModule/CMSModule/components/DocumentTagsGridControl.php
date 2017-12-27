@@ -48,6 +48,7 @@ class DocumentTagsGridControl extends Control
     /**
      * Vytvoří komponentu.
      * @param $name
+     * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
     public function createComponentDocumentTagsGrid($name)
     {
@@ -96,6 +97,7 @@ class DocumentTagsGridControl extends Control
     /**
      * Zpracuje přidání štítku dokumentu.
      * @param $values
+     * @throws \Nette\Application\AbortException
      */
     public function add($values)
     {
@@ -114,6 +116,7 @@ class DocumentTagsGridControl extends Control
      * Zpracuje úpravu štítku dokumentu.
      * @param $id
      * @param $values
+     * @throws \Nette\Application\AbortException
      */
     public function edit($id, $values)
     {
@@ -131,6 +134,7 @@ class DocumentTagsGridControl extends Control
     /**
      * Zpracuje odstranění štítku dokumentu.
      * @param $id
+     * @throws \Nette\Application\AbortException
      */
     public function handleDelete($id)
     {

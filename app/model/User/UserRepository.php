@@ -5,7 +5,10 @@ namespace App\Model\User;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Role;
 use App\Model\Enums\ApplicationState;
+use App\Model\Program\Category;
 use App\Model\Program\Program;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Kdyby\Doctrine\EntityRepository;
 
@@ -41,9 +44,9 @@ class UserRepository extends EntityRepository
     /**
      * Vrací uživatele podle id.
      * @param $ids
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection|User[]
      */
-    public function findUsersByIds($ids)
+    public function findUsersByIds($ids): Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids));
@@ -74,6 +77,7 @@ class UserRepository extends EntityRepository
         return $this->createQueryBuilder('u')
             ->join('u.roles', 'r')
             ->where('r.syncedWithSkautIS = true')
+            ->andWhere('u.external = false')
             ->getQuery()
             ->getResult();
     }
@@ -103,24 +107,8 @@ class UserRepository extends EntityRepository
             ->join('u.roles', 'r')
             ->where('r.id IN (:ids)')->setParameter('ids', $rolesIds)
             ->orderBy('u.displayName')
-            ->distinct()
             ->getQuery()
             ->getResult();
-    }
-
-    /**
-     * Vrací schválené uživatele v roli.
-     * @param $systemName
-     * @return mixed
-     */
-    public function findAllApprovedInRole($systemName)
-    {
-        return $this->createQueryBuilder('u')
-            ->join('u.roles', 'r')
-            ->where('r.systemName = :name')->setParameter('name', $systemName)
-            ->andWhere('u.approved = true')
-            ->orderBy('u.displayName')
-            ->getQuery()->execute();
     }
 
     /**
@@ -135,17 +123,33 @@ class UserRepository extends EntityRepository
             ->where('r.id IN (:ids)')->setParameter('ids', $rolesIds)
             ->andWhere('u.approved = true')
             ->orderBy('u.displayName')
-            ->distinct()
             ->getQuery()
             ->getResult();
     }
 
     /**
+     * Vrací uživatele s přihláškou čekající na zaplacení.
+     * @return Collection|User[]
+     */
+    public function findAllWithWaitingForPaymentApplication(): Collection
+    {
+        $result = $this->createQueryBuilder('u')
+            ->join('u.applications', 'a')
+            ->where('a.validTo IS NULL')
+            ->andWhere('a.state = :state')
+            ->setParameter('state', ApplicationState::WAITING_FOR_PAYMENT)
+            ->getQuery()
+            ->getResult();
+
+        return new ArrayCollection($result);
+    }
+
+    /**
      * Vrací uživatele, kteří se mohou na program přihlásit.
      * @param $program
-     * @return array
+     * @return Collection|User[]
      */
-    public function findProgramAllowed(Program $program)
+    public function findProgramAllowed(Program $program): Collection
     {
         $qb = $this->createQueryBuilder('u')
             ->leftJoin('u.programs', 'p', 'WITH', 'p.id = :pid')
@@ -155,7 +159,9 @@ class UserRepository extends EntityRepository
             ->innerJoin('a.subevents', 's')
             ->where('per.name = :permission')
             ->andWhere('s.id = :sid')
-            ->andWhere('(a.state = \'' . ApplicationState::PAID . '\' OR a.state = \'' . ApplicationState::WAITING_FOR_PAYMENT . '\')')
+            ->andWhere('a.validTo IS NULL')
+            ->andWhere('(a.state = \'' . ApplicationState::PAID . '\' OR a.state = \'' . ApplicationState::PAID_FREE
+                . '\' OR a.state = \'' . ApplicationState::WAITING_FOR_PAYMENT . '\')')
             ->setParameter('pid', $program->getId())
             ->setParameter('permission', Permission::CHOOSE_PROGRAMS)
             ->setParameter('sid', $program->getBlock()->getSubevent()->getId());
@@ -166,8 +172,7 @@ class UserRepository extends EntityRepository
                 ->setParameter('cid', $program->getBlock()->getCategory()->getId());
         }
 
-        return $qb->getQuery()
-            ->getResult();
+        return new ArrayCollection($qb->getQuery()->getResult());
     }
 
     /**
@@ -212,22 +217,6 @@ class UserRepository extends EntityRepository
     }
 
     /**
-     * Vrací kategorie, ze kterých si uživatel může vybírat programy.
-     * @param User $user
-     * @return int[]
-     */
-    public function findRegisterableCategoriesIdsByUser(User $user)
-    {
-        return $this->createQueryBuilder('u')
-            ->select('c.id')
-            ->join('u.roles', 'r')
-            ->join('r.registerableCategories', 'c')
-            ->where('u.id = :id')->setParameter('id', $user->getId())
-            ->getQuery()
-            ->getScalarResult();
-    }
-
-    /**
      * Uloží uživatele.
      * @param User $user
      */
@@ -238,7 +227,7 @@ class UserRepository extends EntityRepository
     }
 
     /**
-     * Odstraní uživatele.
+     * Odstraní externího uživatele.
      * @param User $user
      */
     public function remove(User $user)
@@ -254,20 +243,5 @@ class UserRepository extends EntityRepository
 
         $this->_em->remove($user);
         $this->_em->flush();
-    }
-
-    /**
-     * Nastaví uživatelům účast.
-     * @param $ids
-     * @param bool $value
-     */
-    public function setAttended($ids, $value = TRUE)
-    {
-        $this->createQueryBuilder('u')
-            ->update()
-            ->set('u.attended', $value)
-            ->where('u.id IN (:ids)')->setParameter('ids', $ids)
-            ->getQuery()
-            ->execute();
     }
 }

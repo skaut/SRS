@@ -24,4 +24,9 @@ class ApplicationState
      * Zaplaceno.
      */
     const PAID = "paid";
+
+    /**
+     * Zaplaceno (zdarma).
+     */
+    const PAID_FREE = "paid_free";
 }

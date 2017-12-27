@@ -72,6 +72,8 @@ services:
     - App\Commands\ClearCacheCommand(%appDir%/..)
     - App\ApiModule\Services\ScheduleService
 
+    - App\Utils\Validators
+
     permissionRepository:
         class: App\Model\ACL\PermissionRepository
         tags:
@@ -119,7 +121,6 @@ services:
             doctrine.repositoryEntity: App\Model\Mailing\Template
     blockRepository:
         class: App\Model\Program\BlockRepository
-        inject: yes
         tags:
             doctrine.repositoryEntity: App\Model\Program\Block
     categoryRepository:
@@ -128,7 +129,6 @@ services:
             doctrine.repositoryEntity: App\Model\Program\Category
     programRepository:
         class: App\Model\Program\ProgramRepository
-        inject: yes
         tags:
             doctrine.repositoryEntity: App\Model\Program\Program
     roomRepository:
@@ -160,6 +160,18 @@ services:
         class: App\Model\User\ApplicationRepository
         tags:
             doctrine.repositoryEntity: App\Model\User\Application
+    rolesApplicationRepository:
+        class: App\Model\User\RolesApplicationRepository
+        tags:
+            doctrine.repositoryEntity: App\Model\User\RolesApplication
+    subeventsApplicationRepository:
+        class: App\Model\User\SubeventsApplicationRepository
+        tags:
+            doctrine.repositoryEntity: App\Model\User\SubeventsApplication
+    variableSymbolRepository:
+        class: App\Model\User\VariableSymbolRepository
+        tags:
+            doctrine.repositoryEntity: App\Model\User\VariableSymbol
     userRepository:
         class: App\Model\User\UserRepository
         tags:
@@ -190,6 +202,7 @@ services:
     - App\WebModule\Forms\ApplicationForm
     - App\WebModule\Forms\FaqForm
     - App\WebModule\Forms\PersonalDetailsForm
+    - App\WebModule\Forms\RolesForm
 
     - App\AdminModule\Components\IApplicationsGridControlFactory
     - App\AdminModule\Components\IRolesGridControlFactory

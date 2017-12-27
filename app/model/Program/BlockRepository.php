@@ -2,8 +2,10 @@
 
 namespace App\Model\Program;
 
+
 use App\Model\User\User;
-use App\Model\User\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Kdyby\Doctrine\EntityRepository;
 
@@ -16,18 +18,6 @@ use Kdyby\Doctrine\EntityRepository;
  */
 class BlockRepository extends EntityRepository
 {
-    /** @var UserRepository */
-    private $userRepository;
-
-
-    /**
-     * @param UserRepository $userRepository
-     */
-    public function injectUserRepository(UserRepository $userRepository)
-    {
-        $this->userRepository = $userRepository;
-    }
-
     /**
      * Vrací blok podle id.
      * @param $id
@@ -41,6 +31,7 @@ class BlockRepository extends EntityRepository
     /**
      * Vrací poslední id.
      * @return int
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findLastId()
     {
@@ -127,36 +118,34 @@ class BlockRepository extends EntityRepository
     }
 
     /**
-     * Vrací názvy bloků, které jsou pro uživatele povinné, ale není na ně přihlášený.
+     * Vrací bloky, které jsou pro uživatele povinné a není na ně přihlášený.
      * @param User $user
-     * @return array
+     * @param Collection $categories
+     * @param Collection $subevents
+     * @return Collection|Block[]
      */
-    public function findUserMandatoryNotRegisteredNames($user)
+    public function findMandatoryForCategoriesAndSubevents(User $user, Collection $categories, Collection $subevents): Collection
     {
-        $registerableCategoriesIds = $this->userRepository->findRegisterableCategoriesIdsByUser($user);
-
         $usersBlocks = $this->createQueryBuilder('b')
             ->select('b')
             ->leftJoin('b.programs', 'p')
             ->leftJoin('p.attendees', 'u')
-            ->where('u.id = :uid')
-            ->setParameter('uid', $user->getId())
+            ->where('u = :user')
+            ->setParameter('user', $user)
             ->getQuery()
             ->getResult();
 
-        $usersSubevents = $user->getSubevents();
-
         $qb = $this->createQueryBuilder('b')
-            ->select('b.name')
+            ->select('b')
             ->leftJoin('b.category', 'c')
             ->where($this->createQueryBuilder()->expr()->orX(
-                'c.id IN (:ids)',
+                'c IN (:categories)',
                 'b.category IS NULL'
             ))
             ->andWhere('b.subevent IN (:usersSubevents)')
             ->andWhere('b.mandatory > 0')
-            ->setParameter('ids', $registerableCategoriesIds)
-            ->setParameter('usersSubevents', $usersSubevents);
+            ->setParameter('categories', $categories)
+            ->setParameter('usersSubevents', $subevents);
 
         if (!empty($usersBlocks)) {
             $qb = $qb
@@ -164,11 +153,7 @@ class BlockRepository extends EntityRepository
                 ->setParameter('usersBlocks', $usersBlocks);
         }
 
-        $names = $qb
-            ->getQuery()
-            ->getScalarResult();
-
-        return array_map('current', $names);
+        return new ArrayCollection($qb->getQuery()->getResult());
     }
 
     /**

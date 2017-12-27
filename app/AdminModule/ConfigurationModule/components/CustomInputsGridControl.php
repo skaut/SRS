@@ -2,13 +2,10 @@
 
 namespace App\AdminModule\ConfigurationModule\Components;
 
-use App\Model\Settings\CustomInput\CustomCheckbox;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
-use App\Model\Settings\CustomInput\CustomText;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
-use Nette\Application\UI\Form;
 use Ublaboo\DataGrid\DataGrid;
 
 
@@ -50,6 +47,8 @@ class CustomInputsGridControl extends Control
     /**
      * Vytvoří komponentu.
      * @param $name
+     * @throws \Ublaboo\DataGrid\Exception\DataGridColumnStatusException
+     * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
     public function createComponentCustomInputsGrid($name)
     {
@@ -103,6 +102,7 @@ class CustomInputsGridControl extends Control
     /**
      * Zpracuje odstranění vlastního pole.
      * @param $id
+     * @throws \Nette\Application\AbortException
      */
     public function handleDelete($id)
     {
@@ -119,6 +119,7 @@ class CustomInputsGridControl extends Control
      * @param $item_id
      * @param $prev_id
      * @param $next_id
+     * @throws \Nette\Application\AbortException
      */
     public function handleSort($item_id, $prev_id, $next_id)
     {
@@ -139,6 +140,8 @@ class CustomInputsGridControl extends Control
      * Změní povinnost pole.
      * @param $id
      * @param $mandatory
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Nette\Application\AbortException
      */
     public function changeMandatory($id, $mandatory)
     {

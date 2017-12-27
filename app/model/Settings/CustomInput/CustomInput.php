@@ -3,6 +3,7 @@
 namespace App\Model\Settings\CustomInput;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
@@ -75,7 +76,7 @@ abstract class CustomInput
     /**
      * Hodnoty pole pro jednotlivé uživatele.
      * @ORM\OneToMany(targetEntity="\App\Model\User\CustomInputValue\CustomInputValue", mappedBy="input", cascade={"persist"})
-     * @var ArrayCollection
+     * @var Collection
      */
     protected $customInputValues;
 
@@ -153,7 +154,7 @@ abstract class CustomInput
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
     public function getCustomInputValues()
     {
@@ -161,7 +162,7 @@ abstract class CustomInput
     }
 
     /**
-     * @param ArrayCollection $customInputValues
+     * @param Collection $customInputValues
      */
     public function setCustomInputValues($customInputValues)
     {

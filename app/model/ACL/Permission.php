@@ -3,6 +3,7 @@
 namespace App\Model\ACL;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
@@ -78,7 +79,7 @@ class Permission
     /**
      * Role s tímto oprávněním.
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", mappedBy="permissions", cascade={"persist"})
-     * @var ArrayCollection
+     * @var Collection
      */
     protected $roles;
 
@@ -127,7 +128,7 @@ class Permission
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
     public function getRoles()
     {
@@ -143,7 +144,7 @@ class Permission
     }
 
     /**
-     * @param ArrayCollection $resource
+     * @param Collection $resource
      */
     public function setResource($resource)
     {

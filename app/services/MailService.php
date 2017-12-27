@@ -77,6 +77,9 @@ class MailService extends Nette\Object
      * @param $subject
      * @param $text
      * @param bool $automatic
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Ublaboo\Mailing\Exception\MailingException
+     * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
      */
     public function sendMail($recipientsRoles, $recipientsUsers, $copy, $subject, $text, $automatic = FALSE)
     {
@@ -116,18 +119,29 @@ class MailService extends Nette\Object
 
     /**
      * Rozešle e-mail podle šablony.
-     * @param $recipientsRoles
-     * @param $recipientsUsers
+     * @param $recipientUser
      * @param $copy
      * @param $type
      * @param $parameters
      * @param bool $automatic
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Ublaboo\Mailing\Exception\MailingException
+     * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
      */
-    public function sendMailFromTemplate($recipientsRoles, $recipientsUsers, $copy, $type, $parameters, $automatic = TRUE)
+    public function sendMailFromTemplate($recipientUser, $copy, $type, $parameters, $automatic = TRUE)
     {
         $template = $this->templateRepository->findByType($type);
 
         if ($template->isActive()) {
+            $recipientsRoles = new ArrayCollection();
+            $recipientsUsers = new ArrayCollection();
+
+            if ($template->isSendToUser())
+                $recipientsUsers->add($recipientUser);
+
+            if ($template->isSendToOrganizer())
+                $copy = $this->settingsRepository->getValue(Settings::SEMINAR_EMAIL);
+
             $subject = $template->getSubject();
             $text = $template->getText();
 

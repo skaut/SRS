@@ -53,6 +53,7 @@ class SubeventsGridControl extends Control
     /**
      * Vytvoří komponentu.
      * @param $name
+     * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
     public function createComponentSubeventsGrid($name)
     {
@@ -73,15 +74,7 @@ class SubeventsGridControl extends Control
 
         $grid->addColumnNumber('fee', 'admin.configuration.subevents_fee');
 
-        $grid->addColumnText('capacity', 'admin.configuration.subevents_occupancy')
-            ->setRenderer(
-                function ($row) {
-                    $capacity = $row->getCapacity();
-                    if ($capacity === NULL)
-                        return $this->subeventRepository->countApprovedUsersInSubevent($row);
-                    return $this->subeventRepository->countApprovedUsersInSubevent($row) . "/" . $capacity;
-                }
-            );
+        $grid->addColumnText('capacity', 'admin.configuration.subevents_occupancy', 'occupancy_text');
 
         $grid->addToolbarButton('Subevents:add')
             ->setIcon('plus')
@@ -108,6 +101,7 @@ class SubeventsGridControl extends Control
     /**
      * Zpracuje odstranění podakce.
      * @param $id
+     * @throws \Nette\Application\AbortException
      */
     public function handleDelete($id)
     {
@@ -116,8 +110,7 @@ class SubeventsGridControl extends Control
         if ($subevent->getBlocks()->isEmpty()) {
             $this->subeventRepository->remove($subevent);
             $this->getPresenter()->flashMessage('admin.configuration.subevents_deleted', 'success');
-        }
-        else {
+        } else {
             $this->getPresenter()->flashMessage('admin.configuration.subevents_deleted_error', 'danger');
         }
 

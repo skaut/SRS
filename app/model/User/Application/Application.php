@@ -2,21 +2,53 @@
 
 namespace App\Model\User;
 
+use App\Model\ACL\Role;
+use App\Model\Enums\ApplicationState;
+use App\Model\Structure\Subevent;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 
 /**
- * Entita přihláška.
+ * Abstraktní entita přihláška.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="ApplicationRepository")
  * @ORM\Table(name="application")
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="type", type="string")
+ * @ORM\DiscriminatorMap({
+ *     "roles_application" = "RolesApplication",
+ *     "subevents_application" = "SubeventsApplication"
+ * })
  */
-class Application
+abstract class Application
 {
+    /**
+     * Přihláška rolí.
+     */
+    const ROLES = "roles";
+
+    /**
+     * Přihláška na podakce.
+     */
+    const SUBEVENTS = "subevents";
+
+    /**
+     * Typ přihlášky.
+     */
+    protected $type;
+
     use Identifier;
+
+    /**
+     * Id přihlášky.
+     * @ORM\Column(type="integer", nullable=true)
+     * @var int
+     */
+    protected $applicationId;
 
     /**
      * Uživatel.
@@ -26,9 +58,16 @@ class Application
     protected $user;
 
     /**
+     * Role.
+     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role")
+     * @var Collection
+     */
+    protected $roles;
+
+    /**
      * Podakce.
      * @ORM\ManyToMany(targetEntity="\App\Model\Structure\Subevent", inversedBy="applications", cascade={"persist"})
-     * @var ArrayCollection
+     * @var Collection
      */
     protected $subevents;
 
@@ -41,8 +80,8 @@ class Application
 
     /**
      * Variabilní symbol.
-     * @ORM\Column(type="string", nullable=true)
-     * @var string
+     * @ORM\ManyToOne(targetEntity="VariableSymbol", cascade={"persist"})
+     * @var VariableSymbol
      */
     protected $variableSymbol;
 
@@ -89,20 +128,34 @@ class Application
     protected $state;
 
     /**
-     * První přihláška uživatele.
-     * @ORM\Column(type="boolean")
-     * @var bool
+     * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
+     * @var User
      */
-    protected $first = TRUE;
+    protected $createdBy;
 
+    /**
+     * Platnost záznamu od.
+     * @ORM\Column(type="datetime")
+     * @var \DateTime
+     */
+    protected $validFrom;
+
+    /**
+     * Platnost záznamu do.
+     * @ORM\Column(type="datetime", nullable=true)
+     * @var \DateTime
+     */
+    protected $validTo;
 
     /**
      * Application constructor.
      */
     public function __construct()
     {
+        $this->roles = new ArrayCollection();
         $this->subevents = new ArrayCollection();
     }
+
 
     /**
      * @return int
@@ -110,6 +163,30 @@ class Application
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getApplicationId(): int
+    {
+        return $this->applicationId;
+    }
+
+    /**
+     * @param int $applicationId
+     */
+    public function setApplicationId(int $applicationId): void
+    {
+        $this->applicationId = $applicationId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
     }
 
     /**
@@ -129,31 +206,37 @@ class Application
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
-    public function getSubevents()
+    public function getRoles(): Collection
+    {
+        return $this->roles;
+    }
+
+    /**
+     * Vrací názvy rolí oddělené čárkou.
+     * @return string
+     */
+    public function getRolesText() : string
+    {
+        return implode(', ', $this->roles->map(function (Role $role) {return $role->getName();})->toArray());
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getSubevents(): Collection
     {
         return $this->subevents;
     }
 
     /**
-     * @param ArrayCollection $subevents
-     */
-    public function setSubevents($subevents)
-    {
-        $this->subevents = $subevents;
-    }
-
-    /**
-     * Vrací podakce oddělené čárkou.
+     * Vrací názvy podakcí oddělené čárkou.
      * @return string
      */
-    public function getSubeventsText()
+    public function getSubeventsText() : string
     {
-        $subeventsNames = [];
-        foreach ($this->subevents as $subevent)
-            $subeventsNames[] = $subevent->getName();
-        return implode(', ', $subeventsNames);
+        return implode(', ', $this->subevents->map(function (Subevent $subevent) {return $subevent->getName();})->toArray());
     }
 
     /**
@@ -186,17 +269,26 @@ class Application
     }
 
     /**
-     * @return string
+     * @return VariableSymbol
      */
-    public function getVariableSymbol()
+    public function getVariableSymbol(): VariableSymbol
     {
         return $this->variableSymbol;
     }
 
     /**
-     * @param string $variableSymbol
+     * Vrací text variabilního symbolu.
+     * @return string
      */
-    public function setVariableSymbol($variableSymbol)
+    public function getVariableSymbolText(): string
+    {
+        return $this->variableSymbol->getVariableSymbol();
+    }
+
+    /**
+     * @param VariableSymbol $variableSymbol
+     */
+    public function setVariableSymbol(VariableSymbol $variableSymbol)
     {
         $this->variableSymbol = $variableSymbol;
     }
@@ -223,6 +315,15 @@ class Application
     public function getMaturityDate()
     {
         return $this->maturityDate;
+    }
+
+    /**
+     * Vrací datum splastnosti jako text.
+     * @return string|null
+     */
+    public function getMaturityDateText(): ?string
+    {
+        return $this->maturityDate !== NULL ? $this->maturityDate->format('j. n. Y') : NULL;
     }
 
     /**
@@ -298,18 +399,58 @@ class Application
     }
 
     /**
-     * @return mixed
+     * @return User
      */
-    public function isFirst()
+    public function getCreatedBy(): ?User
     {
-        return $this->first;
+        return $this->createdBy;
     }
 
     /**
-     * @param mixed $first
+     * @param User $createdBy
      */
-    public function setFirst($first)
+    public function setCreatedBy(?User $createdBy)
     {
-        $this->first = $first;
+        $this->createdBy = $createdBy;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getValidFrom(): \DateTime
+    {
+        return $this->validFrom;
+    }
+
+    /**
+     * @param \DateTime $validFrom
+     */
+    public function setValidFrom(\DateTime $validFrom)
+    {
+        $this->validFrom = $validFrom;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getValidTo(): ?\DateTime
+    {
+        return $this->validTo;
+    }
+
+    /**
+     * @param \DateTime $validTo
+     */
+    public function setValidTo(?\DateTime $validTo)
+    {
+        $this->validTo = $validTo;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCanceled(): bool
+    {
+        return $this->state == ApplicationState::CANCELED || $this->state == ApplicationState::CANCELED_NOT_PAID;
     }
 }

@@ -2,11 +2,9 @@
 
 namespace App\Model\Program;
 
-use App\Model\ACL\Permission;
-use App\Model\ACL\Resource;
 use App\Model\User\User;
-use App\Model\User\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Kdyby\Doctrine\EntityRepository;
 
 
@@ -18,18 +16,6 @@ use Kdyby\Doctrine\EntityRepository;
  */
 class ProgramRepository extends EntityRepository
 {
-    /** @var UserRepository */
-    private $userRepository;
-
-
-    /**
-     * @param UserRepository $userRepository
-     */
-    public function injectUserRepository(UserRepository $userRepository)
-    {
-        $this->userRepository = $userRepository;
-    }
-
     /**
      * Vrací program podle id.
      * @param $id
@@ -70,36 +56,6 @@ class ProgramRepository extends EntityRepository
         return array_map(function ($o) {
             return $o->getId();
         }, $programs->toArray());
-    }
-
-    /**
-     * Vrací programy, na které se uživatel může přihlásit.
-     * @param User $user
-     * @return array
-     */
-    public function findUserAllowed($user)
-    {
-        if (!$user->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS))
-            return [];
-
-        $registerableCategoriesIds = $this->userRepository->findRegisterableCategoriesIdsByUser($user);
-
-        $registerableSubeventsIds = [];
-
-        foreach ($user->getNotCanceledApplications() as $application) {
-            foreach ($application->getSubevents() as $subevent)
-                $registerableSubeventsIds[] = $subevent->getId();
-        }
-
-        return $this->createQueryBuilder('p')
-            ->select('p')
-            ->join('p.block', 'b')
-            ->leftJoin('b.category', 'c')
-            ->leftJoin('b.subevent', 's')
-            ->where('(b.category IS NULL OR c.id IN (:cids))')->setParameter('cids', $registerableCategoriesIds)
-            ->andWhere('s.id IN (:sids)')->setParameter('sids', $registerableSubeventsIds)
-            ->getQuery()
-            ->getResult();
     }
 
     /**
@@ -234,33 +190,23 @@ class ProgramRepository extends EntityRepository
     }
 
     /**
-     * Aktualizuje programy uživatele (odhlásí nepovolené a přihlásí automaticky přihlašované).
-     * @param User $user
+     * Vrací programy povolené pro kategorie a podakce.
+     * @param Collection $categories
+     * @param Collection $subevents
+     * @return Collection|Program[]
      */
-    public function updateUserPrograms(User $user)
+    public function findAllowedForCategoriesAndSubevents(Collection $categories, Collection $subevents): Collection
     {
-        $this->updateUsersPrograms([$user]);
-    }
+        $result = $this->createQueryBuilder('p')
+            ->select('p')
+            ->join('p.block', 'b')
+            ->leftJoin('b.category', 'c')
+            ->leftJoin('b.subevent', 's')
+            ->where('(b.category IS NULL OR c IN (:categories))')->setParameter('categories', $categories)
+            ->andWhere('s IN (:subevents)')->setParameter('subevents', $subevents)
+            ->getQuery()
+            ->getResult();
 
-    /**
-     * Aktualizuje programy uživatelů (odhlásí nepovolené a přihlásí automaticky přihlašované).
-     * @param $users
-     */
-    public function updateUsersPrograms($users)
-    {
-        foreach ($users as $user) {
-            $oldUsersPrograms = $user->getPrograms();
-            $userAllowedPrograms = $this->findUserAllowed($user);
-
-            $newUsersPrograms = new ArrayCollection();
-
-            foreach ($userAllowedPrograms as $userAllowedProgram) {
-                if ($userAllowedProgram->getBlock()->getMandatory() == 2 || $oldUsersPrograms->contains($userAllowedProgram))
-                    $newUsersPrograms->add($userAllowedProgram);
-            }
-
-            $oldUsersPrograms->clear();
-            $user->setPrograms($newUsersPrograms);
-        }
+        return new ArrayCollection($result);
     }
 }

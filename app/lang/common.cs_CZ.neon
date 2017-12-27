@@ -105,6 +105,7 @@ application_state:
     canceled_not_paid: "Zrušeno (nezaplaceno)"
     canceled: "Zrušeno"
     paid: "Zaplaceno"
+    paid_free: "Zaplaceno (zdarma)"
 
 condition_operator:
     and: "a"
@@ -184,13 +185,14 @@ mailing:
         sign_in: "Potvrzení přihlášení se přes skautIS"
         registration: "Potvrzení registrace"
         registration_canceled: "Potvrzení zrušení registrace"
-        registration_changed: "Potvrzení změny registrace"
-        subevent_added: "Potvrzení přidání podakcí"
+        roles_changed: "Potvrzení změny rolí"
+        subevents_changed: "Potvrzení změny podakcí"
         payment_confirmed: "Potvrzení přijetí platby"
         maturity_reminder: "Připomínka splatnosti"
         program_registered: "Přihlášení na program"
         program_unregistered: "Odhlášení z programu"
         email_verification: "Ověření změny e-mailu semináře"
+        custom_input_value_changed: "Potvrzení změny vlastních polí"
 
     variable_name:
         seminar_name: "nazev-seminare"
@@ -204,6 +206,7 @@ mailing:
         edit_registration_to: "zmena-registrace-do"
         bank_account: "cislo-uctu"
         email_verification_link: "overovaci-odkaz"
+        user: "uzivatel"
 
     variable_description:
         seminar_name: "název semináře"
@@ -217,3 +220,4 @@ mailing:
         edit_registration_to: "odhlášení, změna rolí a změna podakcí povolena do"
         bank_account: "číslo účtu"
         email_verification_link: "ověřovací odkaz"
+        user: "jméno uživatele"

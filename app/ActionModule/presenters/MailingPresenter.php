@@ -6,8 +6,6 @@ use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
-use App\Model\Structure\SubeventRepository;
-use Nette\Application\Responses\TextResponse;
 
 
 /**
@@ -27,6 +25,8 @@ class MailingPresenter extends ActionBasePresenter
     /**
      * Ověří e-mail semináře.
      * @param $code
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Nette\Application\AbortException
      */
     public function actionVerify($code)
     {
@@ -38,15 +38,13 @@ class MailingPresenter extends ActionBasePresenter
             $this->settingsRepository->setValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE, NULL);
 
             $this->flashMessage('admin.configuration.mailing_email_verification_success', 'success');
-        }
-        else {
+        } else {
             $this->flashMessage('admin.configuration.mailing_email_verification_error', 'danger');
         }
 
         if ($this->user->isAllowed(Resource::CONFIGURATION, Permission::MANAGE)) {
             $this->redirect(':Admin:Configuration:Mailing:default');
-        }
-        else {
+        } else {
             $this->redirect(':Web:Page:default');
         }
     }

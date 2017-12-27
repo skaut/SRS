@@ -51,6 +51,7 @@ class InstallPresenter extends InstallBasePresenter
 
     /**
      * Zobrazení první stránky průvodce.
+     * @throws \Nette\Application\AbortException
      */
     public function renderDefault()
     {
@@ -71,6 +72,7 @@ class InstallPresenter extends InstallBasePresenter
 
     /**
      * Vytvoření schéma databáze a počátečních dat.
+     * @throws \Exception
      */
     public function handleImportSchema()
     {
@@ -91,6 +93,8 @@ class InstallPresenter extends InstallBasePresenter
 
     /**
      * Zobrazení stránky pro vytvoření administrátora.
+     * @throws SettingsException
+     * @throws \Nette\Application\AbortException
      */
     public function renderAdmin()
     {
@@ -126,6 +130,7 @@ class InstallPresenter extends InstallBasePresenter
 
     /**
      * Otestování připojení ke skautIS, přesměrování na přihlašovací stránku.
+     * @throws \Nette\Application\AbortException
      */
     public function handleCreateAdmin()
     {
@@ -138,6 +143,7 @@ class InstallPresenter extends InstallBasePresenter
 
     /**
      * Zobrazení stránky po úspěšné instalaci.
+     * @throws \Nette\Application\AbortException
      */
     public function renderFinish()
     {
@@ -153,6 +159,7 @@ class InstallPresenter extends InstallBasePresenter
 
     /**
      * Zobrazení stránky pokud byla instalace dokončena dříve.
+     * @throws \Nette\Application\AbortException
      */
     public function renderInstalled()
     {

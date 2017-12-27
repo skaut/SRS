@@ -2,7 +2,13 @@
 
 namespace App\Services;
 
+use App\Model\Enums\ApplicationState;
+use App\Model\Mailing\Template;
+use App\Model\Mailing\TemplateVariable;
+use App\Model\Settings\Settings;
+use App\Model\User\ApplicationRepository;
 use App\Model\User\User;
+use App\Model\User\UserRepository;
 use Kdyby\Translation\Translator;
 use Nette;
 
@@ -17,14 +23,26 @@ class UserService extends Nette\Object
     /** @var Translator */
     private $translator;
 
+    /** @var UserRepository */
+    private $userRepository;
+
+    /** @var ApplicationRepository */
+    private $applicationRepository;
+
 
     /**
      * UserService constructor.
      * @param Translator $translator
+     * @param ProgramService $programService
+     * @param UserRepository $userRepository
+     * @param ApplicationRepository $applicationRepository
      */
-    public function __construct(Translator $translator)
+    public function __construct(Translator $translator, UserRepository $userRepository,
+                                ApplicationRepository $applicationRepository)
     {
         $this->translator = $translator;
+        $this->userRepository = $userRepository;
+        $this->applicationRepository = $applicationRepository;
     }
 
     /**

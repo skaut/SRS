@@ -2,14 +2,12 @@
 
 namespace App\AdminModule\ConfigurationModule\Components;
 
-use App\Model\Enums\ConditionOperator;
-use App\Model\Structure\Discount;
+
 use App\Model\Structure\DiscountRepository;
 use App\Model\Structure\SubeventRepository;
 use App\Services\DiscountService;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
-use Nette\Forms\Form;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 
@@ -63,6 +61,7 @@ class DiscountsGridControl extends Control
     /**
      * Vytvoří komponentu.
      * @param $name
+     * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
     public function createComponentDiscountsGrid($name)
     {
@@ -103,6 +102,7 @@ class DiscountsGridControl extends Control
     /**
      * Zpracuje odstranění slevy.
      * @param $id
+     * @throws \Nette\Application\AbortException
      */
     public function handleDelete($id)
     {

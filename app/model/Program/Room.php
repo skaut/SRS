@@ -3,6 +3,7 @@
 namespace App\Model\Program;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
@@ -36,7 +37,7 @@ class Room
      * Programy v místnosti.
      * @ORM\OneToMany(targetEntity="Program", mappedBy="room", cascade={"persist"})
      * @ORM\OrderBy({"start" = "ASC"})
-     * @var ArrayCollection
+     * @var Collection
      */
     protected $programs;
 

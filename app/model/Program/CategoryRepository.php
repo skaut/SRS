@@ -2,6 +2,9 @@
 
 namespace App\Model\Program;
 
+use App\Model\User\User;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Kdyby\Doctrine\EntityRepository;
 
 
@@ -61,6 +64,22 @@ class CategoryRepository extends EntityRepository
             ->getQuery()
             ->getScalarResult();
         return array_map('current', $names);
+    }
+
+    /**
+     * Vrací kategorie, ze kterých si uživatel může vybírat programy.
+     * @param User $user
+     * @return Collection|Category[]
+     */
+    public function findUserAllowed(User $user): Collection
+    {
+        $result = $this->createQueryBuilder('c')
+            ->join('c.registerableRoles', 'r')
+            ->join('r.users', 'u')
+            ->where('u = :user')->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+        return new ArrayCollection($result);
     }
 
     /**
