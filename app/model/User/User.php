@@ -390,8 +390,8 @@ class User
     public function isInRole(Role $role)
     {
         return $this->roles->filter(function ($item) use ($role) {
-                return $item == $role;
-            })->count() != 0;
+            return $item == $role;
+        })->count() != 0;
     }
 
     /**

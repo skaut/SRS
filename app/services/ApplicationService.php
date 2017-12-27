@@ -9,7 +9,6 @@ use App\Model\Enums\MaturityType;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\DiscountRepository;
 use App\Model\Structure\Subevent;
@@ -26,8 +25,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Kdyby\Translation\Translator;
 use Nette;
-use Ublaboo\Mailing\Exception\MailingException;
-use Ublaboo\Mailing\Exception\MailingMailCreationException;
 
 
 /**
@@ -170,8 +167,12 @@ class ApplicationService extends Nette\Object
 
         //pokud se role nezmenily, nic se neprovede
         if ($roles->count() == $oldRoles->count()) {
-            $rolesArray = $roles->map(function (Role $role) {return $role->getId();})->toArray();
-            $oldRolesArray = $oldRoles->map(function (Role $role) {return $role->getId();})->toArray();
+            $rolesArray = $roles->map(function (Role $role) {
+                return $role->getId();
+            })->toArray();
+            $oldRolesArray = $oldRoles->map(function (Role $role) {
+                return $role->getId();
+            })->toArray();
 
             if (array_diff($rolesArray, $oldRolesArray) === array_diff($oldRolesArray, $rolesArray))
                 return;
@@ -190,8 +191,8 @@ class ApplicationService extends Nette\Object
                 })) {
                     $user->setApproved(TRUE);
                 } elseif (!$approve && $roles->exists(function (int $key, Role $role) use ($oldRoles) {
-                        return !$role->isApprovedAfterRegistration() && !$oldRoles->contains($role);
-                    })) {
+                    return !$role->isApprovedAfterRegistration() && !$oldRoles->contains($role);
+                })) {
                     $user->setApproved(FALSE);
                 }
 
@@ -236,7 +237,9 @@ class ApplicationService extends Nette\Object
 
         $this->mailService->sendMailFromTemplate($user, '', Template::ROLES_CHANGED, [
             TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-            TemplateVariable::USERS_ROLES => implode(', ', $roles->map(function (Role $role) {return $role->getName();})->toArray())
+            TemplateVariable::USERS_ROLES => implode(', ', $roles->map(function (Role $role) {
+                return $role->getName();
+            })->toArray())
         ]);
     }
 
@@ -306,8 +309,12 @@ class ApplicationService extends Nette\Object
 
         //pokud se podakce nezmenily, nic se neprovede
         if ($subevents->count() == $oldSubevents->count()) {
-            $subeventsArray = $subevents->map(function (Subevent $subevent) {return $subevent->getId();})->toArray();
-            $oldSubeventsArray = $oldSubevents->map(function (Subevent $subevent) {return $subevent->getId();})->toArray();
+            $subeventsArray = $subevents->map(function (Subevent $subevent) {
+                return $subevent->getId();
+            })->toArray();
+            $oldSubeventsArray = $oldSubevents->map(function (Subevent $subevent) {
+                return $subevent->getId();
+            })->toArray();
 
             if (array_diff($subeventsArray, $oldSubeventsArray) === array_diff($oldSubeventsArray, $subeventsArray))
                 return;
@@ -396,8 +403,10 @@ class ApplicationService extends Nette\Object
             && $maturityDate == $oldMaturityDate)
             return;
 
-        $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($application,
-            $variableSymbol, $paymentMethod, $paymentDate, $incomeProofPrintedDate, $maturityDate, $createdBy) {
+        $this->applicationRepository->getEntityManager()->transactional(function ($em) use (
+            $application,
+            $variableSymbol, $paymentMethod, $paymentDate, $incomeProofPrintedDate, $maturityDate, $createdBy
+        ) {
             $user = $application->getUser();
 
             $newApplication = clone $application;
@@ -449,8 +458,8 @@ class ApplicationService extends Nette\Object
     {
         $user->setApproved(TRUE);
         if (!$approve && $roles->exists(function (int $key, Role $role) {
-                return !$role->isApprovedAfterRegistration();
-            }))
+            return !$role->isApprovedAfterRegistration();
+        }))
             $user->setApproved(FALSE);
 
         $user->setRoles($roles);
