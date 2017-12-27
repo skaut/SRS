@@ -173,19 +173,7 @@ class EditUserSeminarForm extends Nette\Object
 
             $this->userRepository->getEntityManager()->transactional(function ($em) use ($values, $loggedUser) {
                 $selectedRoles = $this->roleRepository->findRolesByIds($values['roles']);
-
-                $rolesChanged = TRUE;
-
-                if ($selectedRoles->count() == $this->user->getRoles()->count()) {
-                    $selectedRolesArray = $selectedRoles->map(function (Role $role) {return $role->getId();})->toArray();
-                    $usersRolesArray = $this->user->getRoles()->map(function (Role $role) {return $role->getId();})->toArray();
-
-                    if (array_diff($selectedRolesArray, $usersRolesArray) === array_diff($usersRolesArray, $selectedRolesArray))
-                        $rolesChanged = FALSE;
-                }
-
-                if ($rolesChanged)
-                    $this->applicationService->updateRoles($this->user, $selectedRoles,  $loggedUser);
+                $this->applicationService->updateRoles($this->user, $selectedRoles,  $loggedUser);
 
                 $this->user->setApproved($values['approved']);
                 $this->user->setAttended($values['attended']);

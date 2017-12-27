@@ -55,13 +55,8 @@ class SubeventsApplication extends Application
      * Vrací názvy podakcí oddělené čárkou.
      * @return string
      */
-    public function getSubeventsText() : string
+    public function getSubeventsText(): ?string
     {
         return implode(', ', $this->subevents->map(function (Subevent $subevent) {return $subevent->getName();})->toArray());
-    }
-
-    public function getRolesText(): ?string
-    {
-        return NULL;
     }
 }

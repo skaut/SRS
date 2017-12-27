@@ -44,9 +44,9 @@ class UserRepository extends EntityRepository
     /**
      * Vrací uživatele podle id.
      * @param $ids
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection|User[]
      */
-    public function findUsersByIds($ids)
+    public function findUsersByIds($ids): Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids));
@@ -77,6 +77,7 @@ class UserRepository extends EntityRepository
         return $this->createQueryBuilder('u')
             ->join('u.roles', 'r')
             ->where('r.syncedWithSkautIS = true')
+            ->andWhere('u.external = false')
             ->getQuery()
             ->getResult();
     }
@@ -106,24 +107,8 @@ class UserRepository extends EntityRepository
             ->join('u.roles', 'r')
             ->where('r.id IN (:ids)')->setParameter('ids', $rolesIds)
             ->orderBy('u.displayName')
-            ->distinct()
             ->getQuery()
             ->getResult();
-    }
-
-    /**
-     * Vrací schválené uživatele v roli.
-     * @param $systemName
-     * @return mixed
-     */
-    public function findAllApprovedInRole($systemName)
-    {
-        return $this->createQueryBuilder('u')
-            ->join('u.roles', 'r')
-            ->where('r.systemName = :name')->setParameter('name', $systemName)
-            ->andWhere('u.approved = true')
-            ->orderBy('u.displayName')
-            ->getQuery()->execute();
     }
 
     /**
@@ -138,9 +123,25 @@ class UserRepository extends EntityRepository
             ->where('r.id IN (:ids)')->setParameter('ids', $rolesIds)
             ->andWhere('u.approved = true')
             ->orderBy('u.displayName')
-            ->distinct()
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * Vrací uživatele s přihláškou čekající na zaplacení.
+     * @return Collection|User[]
+     */
+    public function findAllWithWaitingForPaymentApplication(): Collection
+    {
+        $result = $this->createQueryBuilder('u')
+            ->join('u.applications', 'a')
+            ->where('a.validTo IS NULL')
+            ->andWhere('a.state = :state')
+            ->setParameter('state', ApplicationState::WAITING_FOR_PAYMENT)
+            ->getQuery()
+            ->getResult();
+
+        return new ArrayCollection($result);
     }
 
     /**
@@ -158,6 +159,7 @@ class UserRepository extends EntityRepository
             ->innerJoin('a.subevents', 's')
             ->where('per.name = :permission')
             ->andWhere('s.id = :sid')
+            ->andWhere('a.validTo IS NULL')
             ->andWhere('(a.state = \'' . ApplicationState::PAID . '\' OR a.state = \'' . ApplicationState::PAID_FREE
                 . '\' OR a.state = \'' . ApplicationState::WAITING_FOR_PAYMENT . '\')')
             ->setParameter('pid', $program->getId())

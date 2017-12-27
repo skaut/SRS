@@ -532,9 +532,9 @@ class User
 
     /**
      * Vrátí přihlášky čekající na platbu.
-     * @return Collection
+     * @return Collection|Application[]
      */
-    public function getWaitingForPaymentApplications()
+    public function getWaitingForPaymentApplications(): Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->andX(
@@ -543,6 +543,28 @@ class User
             ));
 
         return $this->applications->matching($criteria);
+    }
+
+    /**
+     * Vrátí přihlášky rolí čekající na platbu.
+     * @return Collection|RolesApplication[]
+     */
+    public function getWaitingForPaymentRolesApplications(): Collection
+    {
+        return $this->getWaitingForPaymentApplications()->filter(function (Application $application) {
+            return $application->getType() == Application::ROLES;
+        });
+    }
+
+    /**
+     * Vrátí přihlášky podakcí čekající na platbu.
+     * @return Collection|SubeventsApplication[]
+     */
+    public function getWaitingForPaymentSubeventsApplications(): Collection
+    {
+        return $this->getWaitingForPaymentApplications()->filter(function (Application $application) {
+            return $application->getType() == Application::SUBEVENTS;
+        });
     }
 
     /**

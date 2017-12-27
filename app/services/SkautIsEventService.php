@@ -41,8 +41,7 @@ abstract class SkautIsEventService
         }
 
         foreach ($participants as $p) {
-            if (!$p->isExternal())
-                $this->insertParticipant($p->getSkautISPersonId(), $eventId);
+            $this->insertParticipant($p->getSkautISPersonId(), $eventId);
         }
     }
 

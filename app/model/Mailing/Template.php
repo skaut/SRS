@@ -33,9 +33,14 @@ class Template
     const REGISTRATION_CANCELED = 'registration_canceled';
 
     /**
-     * Potvrzení přidání podakcí.
+     * Potvrzení změny rolí.
      */
-    const SUBEVENT_ADDED = 'subevent_added';
+    const ROLES_CHANGED = 'roles_changed';
+
+    /**
+     * Potvrzení změny podakcí.
+     */
+    const SUBEVENTS_CHANGED = 'subevents_changed';
 
     /**
      * Potvrzení přijetí platby.
@@ -66,16 +71,6 @@ class Template
      * Potvrzení změny vlastního pole.
      */
     const CUSTOM_INPUT_VALUE_CHANGED = 'custom_input_value_changed';
-
-    /**
-     * Potvrzení změny rolí.
-     */
-    const ROLES_CHANGED = 'roles_changed';
-
-    /**
-     * Potvrzení změny podakcí.
-     */
-    const SUBEVENTS_CHANGED = 'subevents_changed';
 
 
     use Identifier;

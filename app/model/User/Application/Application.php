@@ -180,6 +180,26 @@ abstract class Application
         $this->user = $user;
     }
 
+    public function getRoles(): Collection
+    {
+        return new ArrayCollection();
+    }
+
+    public function getRolesText(): ?string
+    {
+        return NULL;
+    }
+
+    public function getSubevents(): Collection
+    {
+        return new ArrayCollection();
+    }
+
+    public function getSubeventsText(): ?string
+    {
+        return NULL;
+    }
+
     /**
      * @return int
      */

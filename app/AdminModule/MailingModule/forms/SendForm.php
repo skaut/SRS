@@ -64,7 +64,7 @@ class SendForm extends Nette\Object
         $form = $this->baseFormFactory->create();
 
         $recipientRolesMultiSelect = $form->addMultiSelect('recipientRoles', 'admin.mailing.send_recipient_roles',
-            $this->roleRepository->getRolesWithoutRolesOptionsWithUsersCount([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]));
+            $this->roleRepository->getRolesWithoutRolesOptionsWithApprovedUsersCount([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]));
 
         $recipientUsersMultiSelect = $form->addMultiSelect('recipientUsers', 'admin.mailing.send_recipient_users',
             $this->userRepository->getUsersOptions())

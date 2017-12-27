@@ -35,6 +35,9 @@ class PdfExportService extends Nette\Object
     /** @var ApplicationRepository */
     private $applicationRepository;
 
+    /** @var ApplicationService */
+    private $applicationService;
+
 
     /**
      * PdfExportService constructor.
@@ -42,12 +45,14 @@ class PdfExportService extends Nette\Object
      * @param SettingsRepository $settingsRepository
      * @param ApplicationRepository $applicationRepository
      */
-    public function __construct($dir, SettingsRepository $settingsRepository, ApplicationRepository $applicationRepository)
+    public function __construct($dir, SettingsRepository $settingsRepository,
+                                ApplicationRepository $applicationRepository, ApplicationService $applicationService)
     {
         $this->dir = $dir;
 
         $this->settingsRepository = $settingsRepository;
         $this->applicationRepository = $applicationRepository;
+        $this->applicationService = $applicationService;
 
         $this->fpdi = new FPDI();
         $this->fpdi->fontpath = $dir . '/fonts/';
@@ -59,15 +64,24 @@ class PdfExportService extends Nette\Object
      * Vygeneruje doklad o zaplacení pro přihlášku.
      * @param Application $application
      * @param $filename
+     * @param User $createdBy
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
-    public function generateApplicationsPaymentProof(Application $application, $filename)
+    public function generateApplicationsPaymentProof(Application $application, $filename, User $createdBy)
     {
-        $this->prepareApplicationsPaymentProof($application);
+        $this->prepareApplicationsPaymentProof($application, $createdBy);
         $this->fpdi->Output($filename, 'D');
         exit;
     }
 
-    private function prepareApplicationsPaymentProof(Application $application)
+    /**
+     * @param Application $application
+     * @param User $createdBy
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
+     */
+    private function prepareApplicationsPaymentProof(Application $application, User $createdBy)
     {
         if ($application->getState() == ApplicationState::PAID) {
             if ($application->getPaymentMethod() == PaymentType::BANK)
@@ -75,9 +89,10 @@ class PdfExportService extends Nette\Object
             else if ($application->getPaymentMethod() == PaymentType::CASH)
                 $this->addIncomeProofPage($application);
 
-            if (!$application->getIncomeProofPrintedDate() && $application->getPaymentDate()) {
-                $application->setIncomeProofPrintedDate(new \DateTime());
-                $this->applicationRepository->save($application);
+            if (!$application->getIncomeProofPrintedDate()) {
+                $this->applicationService->updatePayment($application, $application->getVariableSymbolText(),
+                    $application->getPaymentMethod(), $application->getPaymentDate(), new \DateTime(),
+                    $application->getMaturityDate(), $createdBy);
             }
         }
     }
@@ -86,37 +101,54 @@ class PdfExportService extends Nette\Object
      * Vygeneruje doklady o zaplacení pro uživatele.
      * @param User $user
      * @param $filename
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
-    public function generateUsersPaymentProof(User $user, $filename)
+    public function generateUsersPaymentProof(User $user, $filename, User $createdBy)
     {
-        $this->prepareUsersPaymentProof($user);
-        $this->fpdi->Output($filename, 'D');
-        exit;
-    }
-    
-    private function prepareUsersPaymentProof(User $user)
-    {
-        foreach ($user->getApplications() as $application) {
-            $this->prepareApplicationsPaymentProof($application);
-        }
-    }
-    
-    /**
-     * Vygeneruje doklady o zaplacení pro více uživatelů.
-     * @param $users
-     * @param $filename
-     */
-    public function generateUsersPaymentProofs($users, $filename)
-    {
-        $this->prepareUsersPaymentProofs($users);
+        $this->prepareUsersPaymentProof($user, $createdBy);
         $this->fpdi->Output($filename, 'D');
         exit;
     }
 
-    private function prepareUsersPaymentProofs($users)
+    /**
+     * @param User $user
+     * @param User $createdBy
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
+     */
+    private function prepareUsersPaymentProof(User $user, User $createdBy)
+    {
+        foreach ($user->getApplications() as $application) {
+            $this->prepareApplicationsPaymentProof($application, $createdBy);
+        }
+    }
+
+    /**
+     * Vygeneruje doklady o zaplacení pro více uživatelů.
+     * @param $users
+     * @param $filename
+     * @param User $createdBy
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
+     */
+    public function generateUsersPaymentProofs($users, $filename, User $createdBy)
+    {
+        $this->prepareUsersPaymentProofs($users, $createdBy);
+        $this->fpdi->Output($filename, 'D');
+        exit;
+    }
+
+    /**
+     * @param $users
+     * @param User $createdBy
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
+     */
+    private function prepareUsersPaymentProofs($users, User $createdBy)
     {
         foreach ($users as $user) {
-            $this->prepareUsersPaymentProof($user);
+            $this->prepareUsersPaymentProof($user, $createdBy);
         }
     }
 

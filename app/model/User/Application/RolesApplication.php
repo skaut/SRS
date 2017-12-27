@@ -55,13 +55,8 @@ class RolesApplication extends Application
      * Vrací názvy rolí oddělené čárkou.
      * @return string
      */
-    public function getRolesText() : string
+    public function getRolesText(): ?string
     {
         return implode(', ', $this->roles->map(function (Role $role) {return $role->getName();})->toArray());
-    }
-
-    public function getSubeventsText(): ?string
-    {
-        return NULL;
     }
 }

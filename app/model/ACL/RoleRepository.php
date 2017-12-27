@@ -376,7 +376,7 @@ class RoleRepository extends EntityRepository
      * @return array
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getRolesWithoutRolesOptionsWithUsersCount(array $withoutRoles) : array
+    public function getRolesWithoutRolesOptionsWithApprovedUsersCount(array $withoutRoles) : array
     {
         if (empty($withoutRoles))
             $roles = $this->createQueryBuilder('r')

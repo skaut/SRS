@@ -4,6 +4,7 @@ namespace App\WebModule\Forms;
 
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
+use App\Model\Enums\ApplicationState;
 use App\Model\Program\ProgramRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
@@ -142,19 +143,10 @@ class RolesForm extends Nette\Object
     {
         if ($form['submit']->isSubmittedBy()) {
             $selectedRoles = $this->roleRepository->findRolesByIds($values['roles']);
-
-            if ($selectedRoles->count() == $this->user->getRoles()->count()) {
-                $selectedRolesArray = $selectedRoles->map(function (Role $role) {return $role->getId();})->toArray();
-                $usersRolesArray = $this->user->getRoles()->map(function (Role $role) {return $role->getId();})->toArray();
-
-                if (array_diff($selectedRolesArray, $usersRolesArray) === array_diff($usersRolesArray, $selectedRolesArray))
-                    return;
-            }
-
             $this->applicationService->updateRoles($this->user, $selectedRoles, $this->user);
         }
         elseif ($form['cancelRegistration']->isSubmittedBy()) {
-            $this->applicationService->cancelRegistration($this->user, $this->user);
+            $this->applicationService->cancelRegistration($this->user, ApplicationState::CANCELED, $this->user);
         }
     }
 
@@ -163,7 +155,6 @@ class RolesForm extends Nette\Object
      * @param $field
      * @param $args
      * @return bool
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function validateRolesCapacities($field, $args)
     {

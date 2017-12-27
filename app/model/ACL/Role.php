@@ -6,6 +6,7 @@ use App\Model\CMS\Page;
 use App\Model\Program\Category;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
@@ -274,6 +275,15 @@ class Role
     public function getUsers(): Collection
     {
         return $this->users;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getApprovedUsers(): Collection
+    {
+        $criteria = Criteria::create()->where(Criteria::expr()->eq('approved', TRUE));
+        return $this->users->matching($criteria);
     }
 
     /**
@@ -682,6 +692,11 @@ class Role
     public function countUsers(): int
     {
         return $this->users->count();
+    }
+
+    public function countApprovedUsers(): int
+    {
+        return $this->getApprovedUsers()->count();
     }
 
     /**

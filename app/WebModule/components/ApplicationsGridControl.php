@@ -196,6 +196,7 @@ class ApplicationsGridControl extends Control
                 return $this->applicationService->getStateText($row);
             });
 
+
         if ($explicitSubeventsExists) {
             if ($this->applicationService->isAllowedAddApplication($this->user)) {
                 $grid->addInlineAdd()->onControlAdd[] = function ($container) {
@@ -222,9 +223,10 @@ class ApplicationsGridControl extends Control
             };
             $grid->getInlineEdit()->onSubmit[] = [$this, 'edit'];
             $grid->allowRowsInlineEdit(function(Application $item) {
-                return $item->getType() == Application::SUBEVENTS;
+                return $this->applicationService->isAllowedEditApplication($item);
             });
         }
+
 
         $grid->addAction('generatePaymentProofBank', 'web.profile.applications_download_payment_proof');
         $grid->allowRowsAction('generatePaymentProofBank', function (Application $item) {
@@ -239,8 +241,9 @@ class ApplicationsGridControl extends Control
                 'data-content' => $this->translator->translate('web.profile.applications_cancel_application_confirm')
             ])->setClass('btn btn-xs btn-danger');
         $grid->allowRowsAction('cancelApplication', function (Application $item) {
-            return $item->getType() == Application::SUBEVENTS;
+            return $this->applicationService->isAllowedEditApplication($item);
         });
+
 
         $grid->setColumnsSummary(['fee'], function(Application $item, $column) {
             return $item->isCanceled() ? 0 : $item->getFee();
@@ -256,69 +259,37 @@ class ApplicationsGridControl extends Control
      */
     public function add($values)
     {
-//        $selectedSubevents = $this->subeventRepository->findSubeventsByIds($values['subevents']);
-//        $selectedAndUsersSubevents = $this->user->getSubevents();
-//        foreach ($selectedSubevents as $subevent)
-//            $selectedAndUsersSubevents->add($subevent);
-//
-//        //kontrola podakci
-//        if (!$this->validators->validateSubeventsEmpty($selectedSubevents)) {
-//            $this->getPresenter()->flashMessage('web.profile.applications_subevents_empty', 'danger');
-//            $this->redirect('this');
-//        }
-//
-//        if (!$this->validators->validateSubeventsCapacities($selectedSubevents, $this->user)) {
-//            $this->getPresenter()->flashMessage('web.profile.applications_subevents_capacity_occupied', 'danger');
-//            $this->redirect('this');
-//        }
-//
-//        foreach ($this->subeventRepository->findAllExplicitOrderedByName() as $subevent) {
-//            if (!$this->validators->validateSubeventsIncompatible($selectedAndUsersSubevents, $subevent)) {
-//                $message = $this->translator->translate('web.profile.applications_incompatible_subevents_selected', NULL,
-//                    ['subevent' => $subevent->getName(), 'incompatibleSubevents' => $subevent->getIncompatibleSubeventsText()]
-//                );
-//                $this->getPresenter()->flashMessage($message, 'danger');
-//                $this->redirect('this');
-//            }
-//            if (!$this->validators->validateSubeventsRequired($selectedAndUsersSubevents, $subevent)) {
-//                $message = $this->translator->translate('web.profile.applications_required_subevents_not_selected', NULL,
-//                    ['subevent' => $subevent->getName(), 'requiredSubevents' => $subevent->getRequiredSubeventsTransitiveText()]
-//                );
-//                $this->getPresenter()->flashMessage($message, 'danger');
-//                $this->redirect('this');
-//            }
-//        }
-//
-//        //zpracovani zmen
-//        $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($selectedSubevents) {
-//            $application = new Application();
-//            $fee = $this->applicationService->countFee($this->user->getRoles(), $selectedSubevents, FALSE);
-//            $application->setUser($this->user);
-//            $application->setSubevents($selectedSubevents);
-//            $application->setApplicationDate(new \DateTime());
-//            $application->setMaturityDate($this->applicationService->countMaturityDate());
-//            $application->setFee($fee);
-//            $application->setState($fee == 0 ? ApplicationState::PAID : ApplicationState::WAITING_FOR_PAYMENT);
-//            $application->setFirst(FALSE);
-//            $this->applicationRepository->save($application);
-//
-//            $application->setVariableSymbol($this->applicationService->generateVariableSymbol($application));
-//            $this->applicationRepository->save($application);
-//
-//            $this->user->addApplication($application);
-//            $this->userRepository->save($this->user);
-//
-//            $this->programService->updateUserPrograms($this->user);
-//
-//            //zaslani potvrzovaciho e-mailu
-//            $this->mailService->sendMailFromTemplate($this->user, '', Template::SUBEVENT_ADDED, [
-//                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-//                TemplateVariable::USERS_SUBEVENTS => $this->user->getSubeventsText()
-//            ]);
-//        });
-//
-//        $this->getPresenter()->flashMessage('web.profile.applications_add_subevents_successful', 'success');
-//        $this->redirect('this');
+        $selectedSubevents = $this->subeventRepository->findSubeventsByIds($values['subevents']);
+        $selectedAndUsersSubevents = clone $this->user->getSubevents();
+        foreach ($selectedSubevents as $subevent)
+            $selectedAndUsersSubevents->add($subevent);
+
+        if (!$this->validators->validateSubeventsCapacities($selectedSubevents, $this->user)) {
+            $this->getPresenter()->flashMessage('web.profile.applications_subevents_capacity_occupied', 'danger');
+            $this->redirect('this');
+        }
+
+        foreach ($this->subeventRepository->findAllExplicitOrderedByName() as $subevent) {
+            if (!$this->validators->validateSubeventsIncompatible($selectedAndUsersSubevents, $subevent)) {
+                $message = $this->translator->translate('web.profile.applications_incompatible_subevents_selected', NULL,
+                    ['subevent' => $subevent->getName(), 'incompatibleSubevents' => $subevent->getIncompatibleSubeventsText()]
+                );
+                $this->getPresenter()->flashMessage($message, 'danger');
+                $this->redirect('this');
+            }
+            if (!$this->validators->validateSubeventsRequired($selectedAndUsersSubevents, $subevent)) {
+                $message = $this->translator->translate('web.profile.applications_required_subevents_not_selected', NULL,
+                    ['subevent' => $subevent->getName(), 'requiredSubevents' => $subevent->getRequiredSubeventsTransitiveText()]
+                );
+                $this->getPresenter()->flashMessage($message, 'danger');
+                $this->redirect('this');
+            }
+        }
+
+        $this->applicationService->addSubeventsApplication($this->user, $selectedSubevents, $this->user);
+
+        $this->getPresenter()->flashMessage('web.profile.applications_add_subevents_successful', 'success');
+        $this->redirect('this');
     }
 
     /**
@@ -331,147 +302,52 @@ class ApplicationsGridControl extends Control
      */
     public function edit($id, $values)
     {
-//        $selectedRoles = $this->roleRepository->findRolesByIds($values['roles']);
-//
-//        //kontrola roli
-//        if (!$this->validateRolesCapacities($selectedRoles)) {
-//            $this->getPresenter()->flashMessage('web.profile.applications_roles_capacity_occupied', 'danger');
-//            $this->redirect('this');
-//        }
-//
-//        if (!$this->validateRolesRegisterable($selectedRoles)) {
-//            $this->getPresenter()->flashMessage('web.profile.applications_role_is_not_registerable', 'danger');
-//            $this->redirect('this');
-//        }
-//
-//        foreach ($this->roleRepository->findAllRegisterableNowOrUsersOrderedByName($this->user) as $role) {
-//            $incompatibleRoles = $role->getIncompatibleRoles();
-//            if (count($incompatibleRoles) > 0 && !$this->validateRolesIncompatible($selectedRoles, $role)) {
-//                $messageThis = $role->getName();
-//
-//                $incompatibleRolesNames = [];
-//                foreach ($incompatibleRoles as $incompatibleRole) {
-//                    $incompatibleRolesNames[] = $incompatibleRole->getName();
-//                }
-//                $messageOthers = implode(', ', $incompatibleRolesNames);
-//
-//                $message = $this->translator->translate('web.profile.applications_incompatible_roles_selected', NULL,
-//                    ['role' => $messageThis, 'incompatibleRoles' => $messageOthers]
-//                );
-//                $this->getPresenter()->flashMessage($message, 'danger');
-//                $this->redirect('this');
-//            }
-//
-//            $requiredRoles = $role->getRequiredRolesTransitive();
-//            if (count($requiredRoles) > 0 && !$this->validateRolesRequired($selectedRoles, $role)) {
-//                $messageThis = $role->getName();
-//
-//                $requiredRolesNames = [];
-//                foreach ($requiredRoles as $requiredRole) {
-//                    $requiredRolesNames[] = $requiredRole->getName();
-//                }
-//                $messageOthers = implode(', ', $requiredRolesNames);
-//
-//                $message = $this->translator->translate('web.profile.applications_required_roles_not_selected', NULL,
-//                    ['role' => $messageThis, 'requiredRoles' => $messageOthers]
-//                );
-//                $this->getPresenter()->flashMessage($message, 'danger');
-//                $this->redirect('this');
-//            }
-//        }
-//
-//
-//        if ($this->subeventRepository->explicitSubeventsExists()) {
-//            $selectedSubevents = $this->subeventRepository->findSubeventsByIds($values['subevents']);
-//
-//            //kontrola podakci
-//            if (!$this->validateSubeventsEmpty($selectedSubevents)) {
-//                $this->getPresenter()->flashMessage('web.profile.applications_subevents_empty', 'danger');
-//                $this->redirect('this');
-//            }
-//
-//            if (!$this->validateSubeventsCapacities($selectedSubevents)) {
-//                $this->getPresenter()->flashMessage('web.profile.applications_subevents_capacity_occupied', 'danger');
-//                $this->redirect('this');
-//            }
-//
-//            foreach ($this->subeventRepository->findAllExplicitOrderedByName() as $subevent) {
-//                $incompatibleSubevents = $subevent->getIncompatibleSubevents();
-//                if (count($incompatibleSubevents) > 0 && !$this->validateSubeventsIncompatible($selectedSubevents, $subevent)) {
-//                    $messageThis = $subevent->getName();
-//
-//                    $incompatibleSubeventsNames = [];
-//                    foreach ($incompatibleSubevents as $incompatibleSubevent) {
-//                        $incompatibleSubeventsNames[] = $incompatibleSubevent->getName();
-//                    }
-//                    $messageOthers = implode(', ', $incompatibleSubeventsNames);
-//
-//                    $message = $this->translator->translate('web.profile.applications_incompatible_subevents_selected', NULL,
-//                        ['subevent' => $messageThis, 'incompatibleSubevents' => $messageOthers]
-//                    );
-//                    $this->getPresenter()->flashMessage($message, 'danger');
-//                    $this->redirect('this');
-//                }
-//
-//                $requiredSubevents = $subevent->getRequiredSubeventsTransitive();
-//                if (count($requiredSubevents) > 0 && !$this->validateSubeventsRequired($selectedSubevents, $subevent)) {
-//                    $messageThis = $subevent->getName();
-//
-//                    $requiredSubeventsNames = [];
-//                    foreach ($requiredSubevents as $requiredSubevent) {
-//                        $requiredSubeventsNames[] = $requiredSubevent->getName();
-//                    }
-//                    $messageOthers = implode(', ', $requiredSubeventsNames);
-//
-//                    $message = $this->translator->translate('web.profile.applications_required_subevents_not_selected', NULL,
-//                        ['subevent' => $messageThis, 'requiredSubevents' => $messageOthers]
-//                    );
-//                    $this->getPresenter()->flashMessage($message, 'danger');
-//                    $this->redirect('this');
-//                }
-//            }
-//        }
-//
-//        //zpracovani zmen
-//        $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($id, $selectedRoles, $selectedSubevents, $values) {
-//            $application = $this->applicationRepository->findById($id);
-//
-//            if ($this->subeventRepository->explicitSubeventsExists() && !empty($values['subevents']))
-//                $application->setSubevents($selectedSubevents);
-//            else
-//                $application->setSubevents(new ArrayCollection([$this->subeventRepository->findImplicit()]));
-//
-//            $this->userService->changeRoles($this->user, $selectedRoles);
-//
-//            $this->programService->updateUserPrograms($this->user);
-//
-//            //zaslani potvrzovaciho e-mailu
-//            $subeventsNames = [];
-//            foreach ($this->user->getSubevents() as $subevent) {
-//                $subeventsNames[] = $subevent->getName();
-//            }
-//
-//            $this->mailService->sendMailFromTemplate($this->user, '', Template::SUBEVENTS_CHANGED, [
-//                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-//                TemplateVariable::USERS_SUBEVENTS => implode(', ', $subeventsNames)
-//            ]);
-//
-//            $this->authenticator->updateRoles($this->getPresenter()->getUser());
-//        });
-//
-//        $this->getPresenter()->flashMessage('web.profile.applications_edit_successful', 'success');
-//        $this->redirect('this');
+        $application = $this->applicationRepository->findById($id);
+
+        $selectedSubevents = $this->subeventRepository->findSubeventsByIds($values['subevents']);
+        $selectedAndUsersSubevents = clone $this->user->getSubevents();
+        foreach ($selectedSubevents as $subevent)
+            $selectedAndUsersSubevents->add($subevent);
+
+        if (!$this->validators->validateSubeventsCapacities($selectedSubevents, $this->user)) {
+            $this->getPresenter()->flashMessage('web.profile.applications_subevents_capacity_occupied', 'danger');
+            $this->redirect('this');
+        }
+
+        foreach ($this->subeventRepository->findAllExplicitOrderedByName() as $subevent) {
+            if (!$this->validators->validateSubeventsIncompatible($selectedAndUsersSubevents, $subevent)) {
+                $message = $this->translator->translate('web.profile.applications_incompatible_subevents_selected', NULL,
+                    ['subevent' => $subevent->getName(), 'incompatibleSubevents' => $subevent->getIncompatibleSubeventsText()]
+                );
+                $this->getPresenter()->flashMessage($message, 'danger');
+                $this->redirect('this');
+            }
+            if (!$this->validators->validateSubeventsRequired($selectedAndUsersSubevents, $subevent)) {
+                $message = $this->translator->translate('web.profile.applications_required_subevents_not_selected', NULL,
+                    ['subevent' => $subevent->getName(), 'requiredSubevents' => $subevent->getRequiredSubeventsTransitiveText()]
+                );
+                $this->getPresenter()->flashMessage($message, 'danger');
+                $this->redirect('this');
+            }
+        }
+
+        $this->applicationService->updateSubeventsApplication($application, $selectedSubevents, $this->user);
+
+        $this->getPresenter()->flashMessage('web.profile.applications_edit_successful', 'success');
+        $this->redirect('this');
     }
 
     /**
      * Vygeneruje potvrzení o přijetí platby.
      * @param $id
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
     public function handleGeneratePaymentProofBank($id)
     {
         $this->pdfExportService->generateApplicationsPaymentProof(
-            $this->applicationRepository->findById($id),
-            "potvrzeni-o-prijeti-platby.pdf"
+            $this->applicationRepository->findById($id), "potvrzeni-o-prijeti-platby.pdf",
+            $this->userRepository->findById($this->getPresenter()->getUser()->id)
         );
     }
 
@@ -484,22 +360,14 @@ class ApplicationsGridControl extends Control
      */
     public function handleCancelApplication($id)
     {
-//        $application = $this->applicationRepository->findById($id);
-//
-//        if ($this->applicationService->isAllowedCancelApplication($application)) {
-//            $user = $application->getUser();
-//
-//            $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($application, $user) {
-//                $application->setState(ApplicationState::CANCELED);
-//                $this->applicationRepository->save($application);
-//
-//                $this->programService->updateUserPrograms($user);
-//            });
-//
-//            $this->getPresenter()->flashMessage('web.profile.applications_application_canceled', 'success');
-//        }
-//
-//        $this->redirect('this');
+        $application = $this->applicationRepository->findById($id);
+
+        if ($this->applicationService->isAllowedEditApplication($application)) {
+            $this->applicationService->cancelSubeventsApplication($application, ApplicationState::CANCELED, $application->getUser());
+            $this->getPresenter()->flashMessage('web.profile.applications_application_canceled', 'success');
+        }
+
+        $this->redirect('this');
     }
 }
 

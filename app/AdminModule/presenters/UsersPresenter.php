@@ -10,6 +10,7 @@ use App\AdminModule\Forms\EditUserSeminarForm;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\ACL\Role;
+use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
@@ -186,7 +187,7 @@ class UsersPresenter extends AdminBasePresenter
         $user = $this->userRepository->findById($this->getParameter('id'));
         $loggedUser = $this->userRepository->findById($this->user->id);
 
-        $this->applicationService->cancelRegistration($user, $loggedUser);
+        $this->applicationService->cancelRegistration($user, ApplicationState::CANCELED, $loggedUser);
 
         $this->flashMessage('admin.users.users_registration_canceled', 'success');
         $this->redirect('this');

@@ -434,22 +434,20 @@ class UsersGridControl extends Control
      * Hromadně schválí uživatele.
      * @param array $ids
      * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     public function groupApprove(array $ids)
     {
         $users = $this->userRepository->findUsersByIds($ids);
 
-        try {
-            $this->userRepository->getEntityManager()->transactional(function ($em) use ($users) {
-                foreach ($users as $user) {
-                    $user->setApproved(TRUE);
-                    $this->userRepository->save($user);
-                }
-            });
+        $this->userRepository->getEntityManager()->transactional(function ($em) use ($users) {
+            foreach ($users as $user) {
+                $user->setApproved(TRUE);
+                $this->userRepository->save($user);
+            }
+        });
 
-            $this->getPresenter()->flashMessage('admin.users.users_group_action_approved', 'success');
-        } catch (\Throwable $exception) { }
-
+        $this->getPresenter()->flashMessage('admin.users.users_group_action_approved', 'success');
         $this->redirect('this');
     }
 
@@ -458,6 +456,7 @@ class UsersGridControl extends Control
      * @param array $ids
      * @param $value
      * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     public function groupChangeRoles(array $ids, $value)
     {
@@ -498,16 +497,15 @@ class UsersGridControl extends Control
             $this->redirect('this');
         }
 
-        try {
-            $this->userRepository->getEntityManager()->transactional(function ($em) use ($selectedRoles, $users, $p) {
-                foreach ($users as $user) {
-                    $this->applicationService->updateRoles($user, $selectedRoles, $this->userRepository->findById($p->getUser()->id), TRUE);
-                }
-            });
+        $loggedUser = $this->userRepository->findById($p->getUser()->id);
 
-            $p->flashMessage('admin.users.users_group_action_changed_roles', 'success');
-        } catch (\Throwable $exception) { }
+        $this->userRepository->getEntityManager()->transactional(function ($em) use ($selectedRoles, $users, $loggedUser) {
+            foreach ($users as $user) {
+                $this->applicationService->updateRoles($user, $selectedRoles, $loggedUser, TRUE);
+            }
+        });
 
+        $p->flashMessage('admin.users.users_group_action_changed_roles', 'success');
         $this->redirect('this');
     }
 
@@ -515,22 +513,20 @@ class UsersGridControl extends Control
      * Hromadně označí uživatele jako zúčastněné.
      * @param array $ids
      * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     public function groupMarkAttended(array $ids)
     {
         $users = $this->userRepository->findUsersByIds($ids);
 
-        try {
-            $this->userRepository->getEntityManager()->transactional(function ($em) use ($users) {
-                foreach ($users as $user) {
-                    $user->setAttended(TRUE);
-                    $this->userRepository->save($user);
-                }
-            });
+        $this->userRepository->getEntityManager()->transactional(function ($em) use ($users) {
+            foreach ($users as $user) {
+                $user->setAttended(TRUE);
+                $this->userRepository->save($user);
+            }
+        });
 
-            $this->getPresenter()->flashMessage('admin.users.users_group_action_marked_attended', 'success');
-        } catch (\Throwable $exception) { }
-
+        $this->getPresenter()->flashMessage('admin.users.users_group_action_marked_attended', 'success');
         $this->redirect('this');
     }
 
@@ -538,40 +534,29 @@ class UsersGridControl extends Control
      * Hromadně označí uživatele jako zaplacené dnes.
      * @param array $ids
      * @param $value
-     * @throws \App\Model\Settings\SettingsException
      * @throws \Nette\Application\AbortException
-     * @throws \Ublaboo\Mailing\Exception\MailingException
-     * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
+     * @throws \Throwable
      */
     public function groupMarkPaidToday(array $ids, $value)
     {
-        foreach ($ids as $id) {
-            $user = $this->userRepository->findById($id);
-
-            foreach ($user->getApplications() as $application) {
-                if ($application->getState() == ApplicationState::WAITING_FOR_PAYMENT) {
-                    $application->setPaymentMethod($value);
-                    $application->setPaymentDate(new \DateTime());
-                    $application->setState(ApplicationState::PAID);
-                    $this->applicationRepository->save($application);
-
-                    $this->mailService->sendMailFromTemplate($user, '', Template::PAYMENT_CONFIRMED, [
-                        TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-                        TemplateVariable::APPLICATION_SUBEVENTS => $application->getSubeventsText()
-                    ]);
-                }
-            }
-        }
+        $users = $this->userRepository->findUsersByIds($ids);
 
         $p = $this->getPresenter();
-        $p->flashMessage('admin.users.users_group_action_marked_paid_today', 'success');
 
-        if ($p->isAjax()) {
-            $p->redrawControl('flashes');
-            $this['usersGrid']->reload();
-        } else {
-            $this->redirect('this');
-        }
+        $loggedUser = $this->userRepository->findById($p->getUser()->id);
+
+        $this->userRepository->getEntityManager()->transactional(function ($em) use ($users, $value, $loggedUser) {
+            foreach ($users as $user) {
+                foreach ($user->getWaitingForPaymentApplications() as $application) {
+                    $this->applicationService->updatePayment($application, $application->getVariableSymbolText(),
+                        $value, new \DateTime(), $application->getIncomeProofPrintedDate(),
+                        $application->getMaturityDate(), $loggedUser);
+                }
+            }
+        });
+
+        $p->flashMessage('admin.users.users_group_action_marked_paid_today', 'success');
+        $this->redirect('this');
     }
 
     /**
@@ -598,6 +583,8 @@ class UsersGridControl extends Control
 
     /**
      * Zpracuje export seznamu uživatelů.
+     * @throws \PHPExcel_Exception
+     * @throws \Nette\Application\AbortException
      */
     public function handleExportUsers()
     {
@@ -623,6 +610,8 @@ class UsersGridControl extends Control
 
     /**
      * Zpracuje export seznamu uživatelů s rolemi.
+     * @throws \PHPExcel_Exception
+     * @throws \Nette\Application\AbortException
      */
     public function handleExportRoles()
     {
@@ -649,6 +638,8 @@ class UsersGridControl extends Control
 
     /**
      * Zpracuje export seznamu uživatelů s podakcemi a programy podle kategorií.
+     * @throws \PHPExcel_Exception
+     * @throws \Nette\Application\AbortException
      */
     public function handleExportSubeventsAndCategories()
     {
@@ -674,6 +665,8 @@ class UsersGridControl extends Control
 
     /**
      * Zpracuje export harmonogramů uživatelů.
+     * @throws \PHPExcel_Exception
+     * @throws \Nette\Application\AbortException
      */
     public function handleExportSchedules()
     {
@@ -688,12 +681,16 @@ class UsersGridControl extends Control
 
     /**
      * Vygeneruje doklady o zaplacení.
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
     public function handleGeneratePaymentProofs()
     {
         $ids = $this->session->getSection('srs')->userIds;
         $users = $this->userRepository->findUsersByIds($ids);
-        $this->pdfExportService->generateUsersPaymentProofs($users, "doklady.pdf");
+        $this->pdfExportService->generateUsersPaymentProofs($users, "doklady.pdf",
+            $this->userRepository->findById($this->getPresenter()->getUser()->id)
+        );
     }
 
     /**

@@ -6,6 +6,7 @@ use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Structure\Subevent;
 use App\Model\Structure\SubeventRepository;
+use App\Model\User\Application;
 use App\Model\User\User;
 use Doctrine\Common\Collections\Collection;
 
@@ -125,18 +126,6 @@ class Validators
     }
 
     /**
-     * Ověří, že je vybrána alespoň jedna podakce.
-     * @param $selectedSubevents
-     * @return bool
-     */
-    public function validateSubeventsEmpty(Collection $selectedSubevents): bool
-    {
-        if ($selectedSubevents->isEmpty())
-            return FALSE;
-        return TRUE;
-    }
-
-    /**
      * Ověří kapacitu podakcí.
      * @param Collection|Subevent[] $selectedSubevents
      * @param User $user
@@ -189,6 +178,25 @@ class Validators
                 return FALSE;
         }
 
+        return TRUE;
+    }
+
+    /**
+     * Ověří, zda uživatel podakci již nemá.
+     * @param Collection $selectedSubevents
+     * @param User $user
+     * @param Application|null $editedApplication
+     * @return bool
+     */
+    public function validateSubeventsRegistered(Collection $selectedSubevents, User $user,
+                                                Application $editedApplication = NULL): bool
+    {
+        foreach ($selectedSubevents as $subevent) {
+            foreach ($user->getNotCanceledSubeventsApplications() as $application) {
+                if ($application !== $editedApplication && $application->getSubevents()->contains($subevent))
+                    return FALSE;
+            }
+        }
         return TRUE;
     }
 }
