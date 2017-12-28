@@ -357,10 +357,6 @@ class ExcelExportService extends Nette\Object
         $sheet->getColumnDimensionByColumn($column++)->setWidth('30');
 
         foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
-            $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate($customInput->getName()));
-            $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(TRUE);
-            $sheet->getColumnDimensionByColumn($column)->setAutoSize(FALSE);
-
             switch ($customInput->getType()) {
                 case CustomInput::TEXT:
                     $width = '30';
@@ -374,10 +370,13 @@ class ExcelExportService extends Nette\Object
                     $width = '30';
                     break;
 
-                default:
-                    $width = '30';
+                case CustomInput::FILE:
+                    continue 2;
             }
 
+            $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate($customInput->getName()));
+            $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(TRUE);
+            $sheet->getColumnDimensionByColumn($column)->setAutoSize(FALSE);
             $sheet->getColumnDimensionByColumn($column++)->setWidth($width);
         }
 
@@ -450,6 +449,9 @@ class ExcelExportService extends Nette\Object
                         case CustomInput::SELECT:
                             $value = $customInputValue->getValueOption();
                             break;
+
+                        case CustomInput::FILE:
+                            continue 2;
                     }
                 } else
                     $value = '';

@@ -19,7 +19,8 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  * @ORM\DiscriminatorMap({
  *     "custom_checkbox" = "CustomCheckbox",
  *     "custom_text" = "CustomText",
- *     "custom_select" = "CustomSelect"
+ *     "custom_select" = "CustomSelect",
+ *     "custom_file" = "CustomFile"
  * })
  */
 abstract class CustomInput
@@ -39,10 +40,16 @@ abstract class CustomInput
      */
     const SELECT = 'select';
 
+    /**
+     * Soubor.
+     */
+    const FILE = 'file';
+
     public static $types = [
         self::TEXT,
         self::CHECKBOX,
-        self::SELECT
+        self::SELECT,
+        self::FILE
     ];
 
     /**

@@ -154,8 +154,12 @@
                                                 {_admin.common.no}
                                             {/if}
                                         {case $customInputTypeSelect}
+                                            {$customInputValue->getValueOption()}
+                                        {case $customInputTypeFile}
                                             {if $customInputValue->getValue() !== NULL}
-                                                {$customInputValue->getValueOption()}
+                                                <a href="{$basePath}/files{$customInputValue->getValue()}" target="_blank">
+                                                    {_admin.users.users_custom_input_file_download}
+                                                </a>
                                             {/if}
                                     {/switch}
                                 {/if}

@@ -4,6 +4,7 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
 use App\Model\Settings\CustomInput\CustomCheckbox;
+use App\Model\Settings\CustomInput\CustomFile;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\CustomInput\CustomSelect;
@@ -124,6 +125,10 @@ class CustomInputForm extends Nette\Object
                             $optionsCleaned[] = trim($option);
                         $this->customInput->setOptions(implode(', ', $optionsCleaned));
 
+                        break;
+
+                    case CustomInput::FILE:
+                        $this->customInput = new CustomFile();
                         break;
                 }
             }

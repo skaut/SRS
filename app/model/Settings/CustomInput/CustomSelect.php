@@ -49,11 +49,11 @@ class CustomSelect extends CustomInput
         $options = [];
 
         if (!$this->isMandatory())
-            $options[NULL] = '';
+            $options[0] = '';
 
         $optionaArray = explode(', ', $this->options);
         for ($i = 0; $i < count($optionaArray); $i++)
-            $options[$i] = $optionaArray[$i];
+            $options[$i+1] = $optionaArray[$i];
 
         return $options;
     }
