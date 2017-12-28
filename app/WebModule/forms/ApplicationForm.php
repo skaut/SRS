@@ -9,6 +9,7 @@ use App\Model\Enums\Sex;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Program\ProgramRepository;
+use App\Model\Settings\CustomInput\CustomFile;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\Settings;
@@ -19,10 +20,12 @@ use App\Model\User\ApplicationRepository;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
 use App\Model\User\CustomInputValue\CustomInputValueRepository;
 use App\Model\User\CustomInputValue\CustomSelectValue;
+use App\Model\User\CustomInputValue\CustomFileValue;
 use App\Model\User\CustomInputValue\CustomTextValue;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
+use App\Services\FilesService;
 use App\Services\MailService;
 use App\Services\ProgramService;
 use App\Services\SkautIsService;
@@ -98,6 +101,9 @@ class ApplicationForm extends Nette\Object
     /** @var Validators */
     private $validators;
 
+    /** @var FilesService */
+    private $filesService;
+
 
     /**
      * ApplicationForm constructor.
@@ -114,6 +120,8 @@ class ApplicationForm extends Nette\Object
      * @param ApplicationRepository $applicationRepository
      * @param ApplicationService $applicationService
      * @param ProgramService $programService
+     * @param Validators $validators
+     * @param FilesService $filesService
      */
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
                                 RoleRepository $roleRepository, CustomInputRepository $customInputRepository,
@@ -122,7 +130,7 @@ class ApplicationForm extends Nette\Object
                                 SettingsRepository $settingsRepository, MailService $mailService,
                                 SubeventRepository $subeventRepository, ApplicationRepository $applicationRepository,
                                 ApplicationService $applicationService, ProgramService $programService,
-                                Validators $validators)
+                                Validators $validators, FilesService $filesService)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->userRepository = $userRepository;
@@ -138,6 +146,7 @@ class ApplicationForm extends Nette\Object
         $this->applicationService = $applicationService;
         $this->programService = $programService;
         $this->validators = $validators;
+        $this->filesService = $filesService;
     }
 
     /**
@@ -253,25 +262,33 @@ class ApplicationForm extends Nette\Object
             foreach ($this->customInputRepository->findAll() as $customInput) {
                 $customInputValue = $this->user->getCustomInputValue($customInput);
 
-                if ($customInputValue) {
-                    $customInputValue->setValue($values['custom' . $customInput->getId()]);
-                    continue;
-                }
-
                 switch ($customInput->getType()) {
                     case CustomInput::TEXT:
-                        $customInputValue = new CustomTextValue();
+                        $customInputValue = $customInputValue ?: new CustomTextValue();
+                        $customInputValue->setValue($values['custom' . $customInput->getId()]);
                         break;
 
                     case CustomInput::CHECKBOX:
-                        $customInputValue = new CustomCheckboxValue();
+                        $customInputValue = $customInputValue ?: new CustomCheckboxValue();
+                        $customInputValue->setValue($values['custom' . $customInput->getId()]);
                         break;
 
                     case CustomInput::SELECT:
-                        $customInputValue = new CustomSelectValue();
+                        $customInputValue = $customInputValue ?: new CustomSelectValue();
+                        $customInputValue->setValue($values['custom' . $customInput->getId()]);
+                        break;
+
+                    case CustomInput::FILE:
+                        $customInputValue = $customInputValue ?: new CustomFileValue();
+                        $file = $values['custom' . $customInput->getId()];
+                        if ($file->size > 0) {
+                            $path = $this->generatePath($file, $this->user, $customInput);
+                            $this->filesService->save($file, $path);
+                            $customInputValue->setValue($path);
+                        }
                         break;
                 }
-                $customInputValue->setValue($values['custom' . $customInput->getId()]);
+
                 $customInputValue->setUser($this->user);
                 $customInputValue->setInput($customInput);
                 $this->customInputValueRepository->save($customInputValue);
@@ -340,6 +357,10 @@ class ApplicationForm extends Nette\Object
 
                 case CustomInput::SELECT:
                     $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->prepareSelectOptions());
+                    break;
+
+                case CustomInput::FILE:
+                    $custom = $form->addUpload('custom' . $customInput->getId(), $customInput->getName());
                     break;
             }
 
@@ -474,7 +495,6 @@ class ApplicationForm extends Nette\Object
      * @param $field
      * @param $args
      * @return bool
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function validateRolesCapacities($field, $args): bool
     {
@@ -569,5 +589,17 @@ class ApplicationForm extends Nette\Object
     public static function toggleArrivalDeparture(IControl $control): bool
     {
         return FALSE;
+    }
+
+    /**
+     * Vygeneruje cestu souboru.
+     * @param $file
+     * @param User $user
+     * @param CustomFile $customInput
+     * @return string
+     */
+    private function generatePath($file, User $user, CustomFile $customInput): string
+    {
+        return CustomFile::PATH . '/' . $user->getId() . '-' . $customInput->getId() . '.' . pathinfo($file->name, PATHINFO_EXTENSION);
     }
 }

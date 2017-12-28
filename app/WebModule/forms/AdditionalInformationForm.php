@@ -2,15 +2,18 @@
 
 namespace App\WebModule\Forms;
 
+use App\Model\Settings\CustomInput\CustomFile;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
 use App\Model\User\CustomInputValue\CustomInputValueRepository;
 use App\Model\User\CustomInputValue\CustomSelectValue;
+use App\Model\User\CustomInputValue\CustomFileValue;
 use App\Model\User\CustomInputValue\CustomTextValue;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
+use App\Services\FilesService;
 use Nette;
 use Nette\Application\UI\Form;
 
@@ -44,6 +47,9 @@ class AdditionalInformationForm extends Nette\Object
     /** @var CustomInputValueRepository */
     private $customInputValueRepository;
 
+    /** @var FilesService */
+    private $filesService;
+
 
     /**
      * AdditionalInformationForm constructor.
@@ -55,13 +61,14 @@ class AdditionalInformationForm extends Nette\Object
      */
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
                                 CustomInputRepository $customInputRepository, ApplicationService $applicationService,
-                                CustomInputValueRepository $customInputValueRepository)
+                                CustomInputValueRepository $customInputValueRepository, FilesService $filesService)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->userRepository = $userRepository;
         $this->customInputRepository = $customInputRepository;
         $this->applicationService = $applicationService;
         $this->customInputValueRepository = $customInputValueRepository;
+        $this->filesService = $filesService;
     }
 
     /**
@@ -84,25 +91,32 @@ class AdditionalInformationForm extends Nette\Object
             switch ($customInput->getType()) {
                 case CustomInput::TEXT:
                     $custom = $form->addText('custom' . $customInput->getId(), $customInput->getName());
+                    if ($customInputValue)
+                        $custom->setDefaultValue($customInputValue->getValue());
                     break;
 
                 case CustomInput::CHECKBOX:
                     $custom = $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName());
+                    if ($customInputValue)
+                        $custom->setDefaultValue($customInputValue->getValue());
                     break;
 
                 case CustomInput::SELECT:
                     $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->prepareSelectOptions());
+                    if ($customInputValue)
+                        $custom->setDefaultValue($customInputValue->getValue());
+                    break;
+
+                case CustomInput::FILE:
+                    $custom = $form->addUpload('custom' . $customInput->getId(), $customInput->getName());
                     break;
             }
 
-            if ($customInput->isMandatory())
+            if ($customInput->isMandatory() && $customInput->getType() != CustomInput::FILE)
                 $custom->addRule(Form::FILLED, 'web.profile.custom_input_empty');
 
             if (!$this->applicationService->isAllowedEditCustomInputs())
                 $custom->setDisabled();
-
-            if ($customInputValue)
-                $custom->setDefaultValue($customInputValue->getValue());
         }
 
         $form->addTextArea('about', 'web.profile.about_me');
@@ -139,23 +153,33 @@ class AdditionalInformationForm extends Nette\Object
                 foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
                     $customInputValue = $this->user->getCustomInputValue($customInput);
 
-                    if ($customInputValue) {
-                        $customInputValue->setValue($values['custom' . $customInput->getId()]);
-                        continue;
-                    }
-
                     switch ($customInput->getType()) {
                         case CustomInput::TEXT:
-                            $customInputValue = new CustomTextValue();
+                            $customInputValue = $customInputValue ?: new CustomTextValue();
+                            $customInputValue->setValue($values['custom' . $customInput->getId()]);
                             break;
+
                         case CustomInput::CHECKBOX:
-                            $customInputValue = new CustomCheckboxValue();
+                            $customInputValue = $customInputValue ?: new CustomCheckboxValue();
+                            $customInputValue->setValue($values['custom' . $customInput->getId()]);
                             break;
+
                         case CustomInput::SELECT:
-                            $customInputValue = new CustomSelectValue();
+                            $customInputValue = $customInputValue ?: new CustomSelectValue();
+                            $customInputValue->setValue($values['custom' . $customInput->getId()]);
+                            break;
+
+                        case CustomInput::FILE:
+                            $customInputValue = $customInputValue ?: new CustomFileValue();
+                            $file = $values['custom' . $customInput->getId()];
+                            if ($file->size > 0) {
+                                $path = $this->generatePath($file, $this->user, $customInput);
+                                $this->filesService->save($file, $path);
+                                $customInputValue->setValue($path);
+                            }
                             break;
                     }
-                    $customInputValue->setValue($values['custom' . $customInput->getId()]);
+
                     $customInputValue->setUser($this->user);
                     $customInputValue->setInput($customInput);
                     $this->customInputValueRepository->save($customInputValue);
@@ -171,5 +195,17 @@ class AdditionalInformationForm extends Nette\Object
 
             $this->userRepository->save($this->user);
         });
+    }
+
+    /**
+     * Vygeneruje cestu souboru.
+     * @param $file
+     * @param User $user
+     * @param CustomFile $customInput
+     * @return string
+     */
+    private function generatePath($file, User $user, CustomFile $customInput): string
+    {
+        return CustomFile::PATH . '/' . $user->getId() . '-' . $customInput->getId() . '.' . pathinfo($file->name, PATHINFO_EXTENSION);
     }
 }

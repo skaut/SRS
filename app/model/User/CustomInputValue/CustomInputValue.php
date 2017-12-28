@@ -19,7 +19,8 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  * @ORM\DiscriminatorMap({
  *     "custom_checkbox_value" = "CustomCheckboxValue",
  *     "custom_text_value" = "CustomTextValue",
- *     "custom_select_value" = "CustomSelectValue"
+ *     "custom_select_value" = "CustomSelectValue",
+ *     "custom_file_value" = "CustomFileValue"
  * })
  */
 abstract class CustomInputValue

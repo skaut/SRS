@@ -35,7 +35,7 @@ class CustomSelectValue extends CustomInputValue implements ICustomInputValue
      */
     public function setValue($value)
     {
-        $this->value = $value != '' ? $value : NULL;
+        $this->value = $value;
     }
 
     /**
@@ -44,6 +44,6 @@ class CustomSelectValue extends CustomInputValue implements ICustomInputValue
      */
     public function getValueOption()
     {
-        return $this->value !== NULL ? explode(', ', $this->getInput()->getOptions())[$this->value] : NULL;
+        return $this->value != 0 ? explode(', ', $this->getInput()->getOptions())[$this->value - 1] : NULL;
     }
 }

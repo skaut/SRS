@@ -333,6 +333,13 @@ class UsersGridControl extends Control
 
                             case CustomInput::SELECT:
                                 return $customInputValue->getValueOption();
+
+                            case CustomInput::FILE:
+                                return Html::el('a')
+                                    ->setAttribute('href', $this->getPresenter()->getTemplate()->basePath
+                                        . '/files' . $customInputValue->getValue())
+                                    ->setAttribute('target', '_blank')
+                                    ->setText($this->translator->translate('admin.users.users_custom_input_file_download'));
                         }
                     }
                     return NULL;

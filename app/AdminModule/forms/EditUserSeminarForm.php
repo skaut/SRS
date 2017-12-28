@@ -5,21 +5,26 @@ namespace App\AdminModule\Forms;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Program\ProgramRepository;
+use App\Model\Settings\CustomInput\CustomFile;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
+use App\Model\Settings\CustomInput\CustomText;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
 use App\Model\User\CustomInputValue\CustomInputValueRepository;
 use App\Model\User\CustomInputValue\CustomSelectValue;
+use App\Model\User\CustomInputValue\CustomFileValue;
 use App\Model\User\CustomInputValue\CustomTextValue;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
+use App\Services\FilesService;
 use App\Services\ProgramService;
 use App\Utils\Validators;
 use Nette;
 use Nette\Application\UI\Form;
 use PhpCollection\Set;
+use phpDocumentor\Reflection\File;
 
 
 /**
@@ -57,6 +62,9 @@ class EditUserSeminarForm extends Nette\Object
     /** @var Validators */
     private $validators;
 
+    /** @var FilesService*/
+    private $filesService;
+
 
     /**
      * EditUserSeminarForm constructor.
@@ -66,12 +74,14 @@ class EditUserSeminarForm extends Nette\Object
      * @param CustomInputValueRepository $customInputValueRepository
      * @param RoleRepository $roleRepository
      * @param ApplicationService $applicationService
+     * @param Validators $validators
+     * @param FilesService $filesService
      */
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
                                 CustomInputRepository $customInputRepository,
                                 CustomInputValueRepository $customInputValueRepository,
                                 RoleRepository $roleRepository, ApplicationService $applicationService,
-                                Validators $validators)
+                                Validators $validators, FilesService $filesService)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->userRepository = $userRepository;
@@ -80,6 +90,7 @@ class EditUserSeminarForm extends Nette\Object
         $this->roleRepository = $roleRepository;
         $this->applicationService = $applicationService;
         $this->validators = $validators;
+        $this->filesService = $filesService;
     }
 
     /**
@@ -117,19 +128,26 @@ class EditUserSeminarForm extends Nette\Object
             switch ($customInput->getType()) {
                 case CustomInput::TEXT:
                     $custom = $form->addText('custom' . $customInput->getId(), $customInput->getName());
+                    if ($customInputValue)
+                        $custom->setDefaultValue($customInputValue->getValue());
                     break;
 
                 case CustomInput::CHECKBOX:
                     $custom = $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName());
+                    if ($customInputValue)
+                        $custom->setDefaultValue($customInputValue->getValue());
                     break;
 
                 case CustomInput::SELECT:
                     $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->prepareSelectOptions());
+                    if ($customInputValue)
+                        $custom->setDefaultValue($customInputValue->getValue());
+                    break;
+
+                case CustomInput::FILE:
+                    $custom = $form->addUpload('custom' . $customInput->getId(), $customInput->getName());
                     break;
             }
-
-            if ($customInputValue)
-                $custom->setDefaultValue($customInputValue->getValue());
         }
 
         $form->addTextArea('about', 'admin.users.users_about_me');
@@ -181,23 +199,33 @@ class EditUserSeminarForm extends Nette\Object
                 foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
                     $customInputValue = $this->user->getCustomInputValue($customInput);
 
-                    if ($customInputValue) {
-                        $customInputValue->setValue($values['custom' . $customInput->getId()]);
-                        continue;
-                    }
-
                     switch ($customInput->getType()) {
                         case CustomInput::TEXT:
-                            $customInputValue = new CustomTextValue();
+                            $customInputValue = $customInputValue ?: new CustomTextValue();
+                            $customInputValue->setValue($values['custom' . $customInput->getId()]);
                             break;
+
                         case CustomInput::CHECKBOX:
-                            $customInputValue = new CustomCheckboxValue();
+                            $customInputValue = $customInputValue ?: new CustomCheckboxValue();
+                            $customInputValue->setValue($values['custom' . $customInput->getId()]);
                             break;
+
                         case CustomInput::SELECT:
-                            $customInputValue = new CustomSelectValue();
+                            $customInputValue = $customInputValue ?: new CustomSelectValue();
+                            $customInputValue->setValue($values['custom' . $customInput->getId()]);
+                            break;
+
+                        case CustomInput::FILE:
+                            $customInputValue = $customInputValue ?: new CustomFileValue();
+                            $file = $values['custom' . $customInput->getId()];
+                            if ($file->size > 0) {
+                                $path = $this->generatePath($file, $this->user, $customInput);
+                                $this->filesService->save($file, $path);
+                                $customInputValue->setValue($path);
+                            }
                             break;
                     }
-                    $customInputValue->setValue($values['custom' . $customInput->getId()]);
+
                     $customInputValue->setUser($this->user);
                     $customInputValue->setInput($customInput);
                     $this->customInputValueRepository->save($customInputValue);
@@ -223,7 +251,6 @@ class EditUserSeminarForm extends Nette\Object
      * @param $field
      * @param $args
      * @return bool
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function validateRolesNonregistered($field, $args)
     {
@@ -236,11 +263,22 @@ class EditUserSeminarForm extends Nette\Object
      * @param $field
      * @param $args
      * @return bool
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function validateRolesCapacities($field, $args)
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
         return $this->validators->validateRolesCapacities($selectedRoles, $this->user);
+    }
+
+    /**
+     * Vygeneruje cestu souboru.
+     * @param $file
+     * @param User $user
+     * @param CustomFile $customInput
+     * @return string
+     */
+    private function generatePath($file, User $user, CustomFile $customInput): string
+    {
+        return CustomFile::PATH . '/' . $user->getId() . '-' . $customInput->getId() . '.' . pathinfo($file->name, PATHINFO_EXTENSION);
     }
 }
