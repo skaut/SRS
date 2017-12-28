@@ -600,6 +600,6 @@ class ApplicationForm extends Nette\Object
      */
     private function generatePath($file, User $user, CustomFile $customInput): string
     {
-        return CustomFile::PATH . '/' . $user->getId() . '-' . $customInput->getId() . '.' . pathinfo($file->name, PATHINFO_EXTENSION);
+        return CustomFile::PATH . '/' . $user->getId() . '-' . $customInput->getId() . '-' . time() . '.' . pathinfo($file->name, PATHINFO_EXTENSION);
     }
 }

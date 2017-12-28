@@ -70,6 +70,11 @@ class TemplateVariable
      */
     const EMAIL_VERIFICATION_LINK = 'email_verification_link';
 
+    /**
+     * Jméno uživatele.
+     */
+    const USER = 'user';
+
 
     use Identifier;
 

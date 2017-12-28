@@ -4,11 +4,14 @@ namespace App\AdminModule\Forms;
 
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
+use App\Model\Mailing\Template;
+use App\Model\Mailing\TemplateVariable;
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\CustomInput\CustomFile;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\CustomInput\CustomText;
+use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
 use App\Model\User\CustomInputValue\CustomInputValueRepository;
@@ -19,6 +22,7 @@ use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\FilesService;
+use App\Services\MailService;
 use App\Services\ProgramService;
 use App\Utils\Validators;
 use Nette;
@@ -65,6 +69,12 @@ class EditUserSeminarForm extends Nette\Object
     /** @var FilesService*/
     private $filesService;
 
+    /** @var MailService */
+    private $mailService;
+
+    /** @var SettingsRepository */
+    private $settingsRepository;
+
 
     /**
      * EditUserSeminarForm constructor.
@@ -81,7 +91,8 @@ class EditUserSeminarForm extends Nette\Object
                                 CustomInputRepository $customInputRepository,
                                 CustomInputValueRepository $customInputValueRepository,
                                 RoleRepository $roleRepository, ApplicationService $applicationService,
-                                Validators $validators, FilesService $filesService)
+                                Validators $validators, FilesService $filesService, MailService $mailService,
+                                SettingsRepository $settingsRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->userRepository = $userRepository;
@@ -91,6 +102,8 @@ class EditUserSeminarForm extends Nette\Object
         $this->applicationService = $applicationService;
         $this->validators = $validators;
         $this->filesService = $filesService;
+        $this->mailService = $mailService;
+        $this->settingsRepository = $settingsRepository;
     }
 
     /**
@@ -196,8 +209,12 @@ class EditUserSeminarForm extends Nette\Object
                 $this->user->setApproved($values['approved']);
                 $this->user->setAttended($values['attended']);
 
+                $customInputValueChanged = FALSE;
+
                 foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
                     $customInputValue = $this->user->getCustomInputValue($customInput);
+
+                    $oldValue = $customInputValue ? $customInputValue->getValue() : NULL;
 
                     switch ($customInput->getType()) {
                         case CustomInput::TEXT:
@@ -229,6 +246,9 @@ class EditUserSeminarForm extends Nette\Object
                     $customInputValue->setUser($this->user);
                     $customInputValue->setInput($customInput);
                     $this->customInputValueRepository->save($customInputValue);
+
+                    if ($oldValue !== $customInputValue->getValue())
+                        $customInputValueChanged = TRUE;
                 }
 
                 if (array_key_exists('arrival', $values))
@@ -242,6 +262,13 @@ class EditUserSeminarForm extends Nette\Object
                 $this->user->setNote($values['privateNote']);
 
                 $this->userRepository->save($this->user);
+
+                if ($customInputValueChanged) {
+                    $this->mailService->sendMailFromTemplate($this->user, '', Template::CUSTOM_INPUT_VALUE_CHANGED, [
+                        TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
+                        TemplateVariable::USER => $this->user->getDisplayName()
+                    ]);
+                }
             });
         }
     }
@@ -279,6 +306,6 @@ class EditUserSeminarForm extends Nette\Object
      */
     private function generatePath($file, User $user, CustomFile $customInput): string
     {
-        return CustomFile::PATH . '/' . $user->getId() . '-' . $customInput->getId() . '.' . pathinfo($file->name, PATHINFO_EXTENSION);
+        return CustomFile::PATH . '/' . $user->getId() . '-' . $customInput->getId() . '-' . time() . '.' . pathinfo($file->name, PATHINFO_EXTENSION);
     }
 }

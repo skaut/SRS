@@ -2,9 +2,13 @@
 
 namespace App\WebModule\Forms;
 
+use App\Model\Mailing\Template;
+use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\CustomInput\CustomFile;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
+use App\Model\Settings\Settings;
+use App\Model\Settings\SettingsRepository;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
 use App\Model\User\CustomInputValue\CustomInputValueRepository;
 use App\Model\User\CustomInputValue\CustomSelectValue;
@@ -14,6 +18,7 @@ use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\FilesService;
+use App\Services\MailService;
 use Nette;
 use Nette\Application\UI\Form;
 
@@ -50,6 +55,12 @@ class AdditionalInformationForm extends Nette\Object
     /** @var FilesService */
     private $filesService;
 
+    /** @var MailService */
+    private $mailService;
+
+    /** @var SettingsRepository */
+    private $settingsRepository;
+
 
     /**
      * AdditionalInformationForm constructor.
@@ -61,7 +72,8 @@ class AdditionalInformationForm extends Nette\Object
      */
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
                                 CustomInputRepository $customInputRepository, ApplicationService $applicationService,
-                                CustomInputValueRepository $customInputValueRepository, FilesService $filesService)
+                                CustomInputValueRepository $customInputValueRepository, FilesService $filesService,
+                                MailService $mailService, SettingsRepository $settingsRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->userRepository = $userRepository;
@@ -69,6 +81,8 @@ class AdditionalInformationForm extends Nette\Object
         $this->applicationService = $applicationService;
         $this->customInputValueRepository = $customInputValueRepository;
         $this->filesService = $filesService;
+        $this->mailService = $mailService;
+        $this->settingsRepository = $settingsRepository;
     }
 
     /**
@@ -149,9 +163,13 @@ class AdditionalInformationForm extends Nette\Object
     public function processForm(Form $form, \stdClass $values)
     {
         $this->userRepository->getEntityManager()->transactional(function ($em) use ($values) {
+            $customInputValueChanged = FALSE;
+
             if ($this->applicationService->isAllowedEditCustomInputs()) {
                 foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
                     $customInputValue = $this->user->getCustomInputValue($customInput);
+
+                    $oldValue = $customInputValue ? $customInputValue->getValue() : NULL;
 
                     switch ($customInput->getType()) {
                         case CustomInput::TEXT:
@@ -183,6 +201,9 @@ class AdditionalInformationForm extends Nette\Object
                     $customInputValue->setUser($this->user);
                     $customInputValue->setInput($customInput);
                     $this->customInputValueRepository->save($customInputValue);
+
+                    if ($oldValue !== $customInputValue->getValue())
+                        $customInputValueChanged = TRUE;
                 }
             }
 
@@ -194,6 +215,13 @@ class AdditionalInformationForm extends Nette\Object
                 $this->user->setDeparture($values['departure']);
 
             $this->userRepository->save($this->user);
+
+            if ($customInputValueChanged) {
+                $this->mailService->sendMailFromTemplate($this->user, '', Template::CUSTOM_INPUT_VALUE_CHANGED, [
+                    TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
+                    TemplateVariable::USER => $this->user->getDisplayName()
+                ]);
+            }
         });
     }
 
@@ -206,6 +234,6 @@ class AdditionalInformationForm extends Nette\Object
      */
     private function generatePath($file, User $user, CustomFile $customInput): string
     {
-        return CustomFile::PATH . '/' . $user->getId() . '-' . $customInput->getId() . '.' . pathinfo($file->name, PATHINFO_EXTENSION);
+        return CustomFile::PATH . '/' . $user->getId() . '-' . $customInput->getId() . '-' . time() . '.' . pathinfo($file->name, PATHINFO_EXTENSION);
     }
 }
