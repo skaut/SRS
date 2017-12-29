@@ -1,3 +1,14 @@
+{block head}
+    <script>
+        $(function () {
+            $('form#frm-applicationContent-applicationForm').submit(function () {
+                if(!LiveForm.forms[this.id].hasError)
+                    $(this).find(':input[type=submit]').prop('disabled', true);
+            });
+        });
+    </script>
+{/block}
+
 <div class="application-content">
     <div class="row">
         <div class="col-sm-12">

@@ -20,10 +20,6 @@ function init() {
     initDateTimePicker();
 
     $('[data-toggle="tooltip"]').tooltip();
-
-    $('form#frm-applicationContent-applicationForm').submit(function () {
-        $(this).find(':input[type=submit]').prop('disabled', true);
-    });
 }
 
 function animateAlerts() {
