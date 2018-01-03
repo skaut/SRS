@@ -7,6 +7,7 @@ use App\AdminModule\Forms\AddRoleForm;
 use App\AdminModule\Forms\EditRoleForm;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
+use App\Services\Authenticator;
 use Nette\Forms\Form;
 
 
@@ -35,6 +36,12 @@ class AclPresenter extends AdminBasePresenter
      * @inject
      */
     public $rolesGridControlFactory;
+
+    /**
+     * @var Authenticator
+     * @inject
+     */
+    public $authenticator;
 
 
     /**
