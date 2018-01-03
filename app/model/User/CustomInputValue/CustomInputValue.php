@@ -29,14 +29,14 @@ abstract class CustomInputValue
 
     /**
      * Vlastní pole přihlášky.
-     * @ORM\ManyToOne(targetEntity="\App\Model\Settings\CustomInput\CustomInput", inversedBy="customInputValues", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="\App\Model\Settings\CustomInput\CustomInput", inversedBy="customInputValues")
      * @var CustomInput
      */
     protected $input;
 
     /**
      * Uživatel.
-     * @ORM\ManyToOne(targetEntity="\App\Model\User\User", inversedBy="customInputValues", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="\App\Model\User\User", inversedBy="customInputValues")
      * @var User
      */
     protected $user;

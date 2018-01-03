@@ -39,21 +39,21 @@ class Block
 
     /**
      * Lektor.
-     * @ORM\ManyToOne(targetEntity="\App\Model\User\User", inversedBy="lecturersBlocks", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="\App\Model\User\User", inversedBy="lecturersBlocks")
      * @var User
      */
     protected $lector;
 
     /**
      * Kategorie bloku.
-     * @ORM\ManyToOne(targetEntity="Category", inversedBy="blocks", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Category", inversedBy="blocks")
      * @var Category
      */
     protected $category;
 
     /**
      * Podakce bloku.
-     * @ORM\ManyToOne(targetEntity="\App\Model\Structure\Subevent", inversedBy="blocks", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="\App\Model\Structure\Subevent", inversedBy="blocks")
      * @var Subevent
      */
     protected $subevent;
@@ -139,14 +139,6 @@ class Block
     public function getPrograms()
     {
         return $this->programs;
-    }
-
-    /**
-     * @param Collection $programs
-     */
-    public function setPrograms($programs)
-    {
-        $this->programs = $programs;
     }
 
     /**

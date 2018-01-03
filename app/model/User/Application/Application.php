@@ -59,7 +59,7 @@ abstract class Application
 
     /**
      * Role.
-     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role")
+     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", cascade={"persist"})
      * @var Collection
      */
     protected $roles;

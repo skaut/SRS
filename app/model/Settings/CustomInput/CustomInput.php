@@ -167,12 +167,4 @@ abstract class CustomInput
     {
         return $this->customInputValues;
     }
-
-    /**
-     * @param Collection $customInputValues
-     */
-    public function setCustomInputValues($customInputValues)
-    {
-        $this->customInputValues = $customInputValues;
-    }
 }

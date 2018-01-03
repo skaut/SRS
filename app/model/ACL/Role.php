@@ -102,7 +102,7 @@ class Role
 
     /**
      * Oprávnění role.
-     * @ORM\ManyToMany(targetEntity="Permission", inversedBy="roles", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Permission", inversedBy="roles")
      * @var Collection
      */
     protected $permissions;
@@ -197,7 +197,7 @@ class Role
 
     /**
      * Role vyžadované touto rolí.
-     * @ORM\ManyToMany(targetEntity="Role", inversedBy="requiredByRole", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Role", inversedBy="requiredByRole")
      * @ORM\JoinTable(name="role_role_required",
      *      joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="required_role_id", referencedColumnName="id")}
@@ -299,7 +299,9 @@ class Role
      */
     public function setPermissions(Collection $permissions): void
     {
-        $this->permissions = $permissions;
+        $this->permissions->clear();
+        foreach ($permissions as $permission)
+            $this->permissions->add($permission);
     }
 
     public function addPermission(Permission $permission): void
@@ -318,7 +320,7 @@ class Role
     /**
      * @param Collection $pages
      */
-    public function setPages(Collection $pages): void
+    public function setPages(Collection $pages): void //TODO kontrola
     {
         foreach ($this->getPages() as $page) {
             if (!$pages->contains($page))
@@ -518,7 +520,7 @@ class Role
     /**
      * @param Collection $incompatibleRoles
      */
-    public function setIncompatibleRoles(Collection $incompatibleRoles): void
+    public function setIncompatibleRoles(Collection $incompatibleRoles): void //TODO kontrola
     {
         foreach ($this->getIncompatibleRoles() as $role) {
             if (!$incompatibleRoles->contains($role))
@@ -601,7 +603,7 @@ class Role
     /**
      * @param Collection $requiredRoles
      */
-    public function setRequiredRoles(Collection $requiredRoles): void
+    public function setRequiredRoles(Collection $requiredRoles): void //TODO kontrola
     {
         $this->requiredRoles = $requiredRoles;
     }

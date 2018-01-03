@@ -85,7 +85,7 @@ class Subevent
 
     /**
      * Podakce vyžadované touto podakcí.
-     * @ORM\ManyToMany(targetEntity="Subevent", inversedBy="requiredBySubevent", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Subevent", inversedBy="requiredBySubevent")
      * @ORM\JoinTable(name="subevent_subevent_required",
      *      joinColumns={@ORM\JoinColumn(name="subevent_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="required_subevent_id", referencedColumnName="id")}
@@ -153,14 +153,6 @@ class Subevent
     public function getBlocks() : Collection
     {
         return $this->blocks;
-    }
-
-    /**
-     * @param Collection $blocks
-     */
-    public function setBlocks(Collection $blocks) : void
-    {
-        $this->blocks = $blocks;
     }
 
     /**
@@ -298,7 +290,7 @@ class Subevent
     /**
      * @param $requiredSubevents
      */
-    public function setRequiredSubevents(Collection $requiredSubevents) : void
+    public function setRequiredSubevents(Collection $requiredSubevents) : void //TODO kontrola
     {
         $this->requiredSubevents = $requiredSubevents;
     }

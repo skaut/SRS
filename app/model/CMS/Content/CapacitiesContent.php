@@ -63,7 +63,7 @@ class CapacitiesContent extends Content implements IContent
     /**
      * @param Collection $roles
      */
-    public function setRoles($roles)
+    public function setRoles($roles) //TODO kontrola
     {
         $this->roles = $roles;
     }

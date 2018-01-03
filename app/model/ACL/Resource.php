@@ -121,12 +121,4 @@ class Resource
     {
         return $this->permissions;
     }
-
-    /**
-     * @param Collection $permissions
-     */
-    public function setPermissions($permissions)
-    {
-        $this->permissions = $permissions;
-    }
 }

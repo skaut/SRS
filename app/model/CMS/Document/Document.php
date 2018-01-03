@@ -27,7 +27,7 @@ class Document
 
     /**
      * Tagy dokumentu.
-     * @ORM\ManyToMany(targetEntity="Tag", inversedBy="documents", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Tag", inversedBy="documents")
      * @var Collection
      */
     protected $tags;
@@ -88,7 +88,7 @@ class Document
     /**
      * @param Collection $tags
      */
-    public function setTags($tags)
+    public function setTags($tags) //TODO kontrola
     {
         $this->tags = $tags;
     }
