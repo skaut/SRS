@@ -54,7 +54,7 @@ class Page
 
     /**
      * Role, které mají na stránku přístup.
-     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="pages", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="pages")
      * @var Collection
      */
     protected $roles;
@@ -164,7 +164,7 @@ class Page
     /**
      * @param Collection $roles
      */
-    public function setRoles($roles)
+    public function setRoles($roles) //TODO kontrola
     {
         $this->roles = $roles;
     }
@@ -213,7 +213,7 @@ class Page
     /**
      * @param $content
      */
-    public function addContent($content)
+    public function addContent($content) //TODO kontrola
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('area', $content->getArea()));

@@ -97,12 +97,4 @@ class Room
     {
         return $this->programs;
     }
-
-    /**
-     * @param mixed $programs
-     */
-    public function setPrograms($programs)
-    {
-        $this->programs = $programs;
-    }
 }

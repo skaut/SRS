@@ -85,7 +85,7 @@ class Permission
 
     /**
      * Prostředek oprávnění.
-     * @ORM\ManyToOne(targetEntity="\App\Model\ACL\Resource", inversedBy="permissions", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="\App\Model\ACL\Resource", inversedBy="permissions")
      * @var Resource
      */
     protected $resource;

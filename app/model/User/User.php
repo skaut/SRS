@@ -58,14 +58,14 @@ class User
 
     /**
      * Role.
-     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="users", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="users")
      * @var Collection
      */
     protected $roles;
 
     /**
      * Přihlášené programy.
-     * @ORM\ManyToMany(targetEntity="\App\Model\Program\Program", inversedBy="attendees", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="\App\Model\Program\Program", inversedBy="attendees")
      * @ORM\OrderBy({"start" = "ASC"})
      * @var Collection
      */
@@ -359,9 +359,11 @@ class User
     /**
      * @param Collection $roles
      */
-    public function setRoles($roles)
+    public function setRoles(Collection $roles)
     {
-        $this->roles = $roles;
+        $this->roles->clear();
+        foreach ($roles as $role)
+            $this->roles->add($role);
     }
 
     /**
@@ -454,12 +456,6 @@ class User
     public function getApplications()
     {
         return $this->applications;
-    }
-
-    public function addApplication($application)
-    {
-        if (!$this->applications->contains($application))
-            $this->applications->add($application);
     }
 
     /**
@@ -579,14 +575,6 @@ class User
     }
 
     /**
-     * @param Collection $applications
-     */
-    public function setApplications($applications)
-    {
-        $this->applications = $applications;
-    }
-
-    /**
      * @return Collection
      */
     public function getPrograms()
@@ -599,7 +587,9 @@ class User
      */
     public function setPrograms($programs)
     {
-        $this->programs = $programs;
+        $this->programs->clear();
+        foreach ($programs as $program)
+            $this->programs->add($program);
     }
 
     /**
@@ -608,14 +598,6 @@ class User
     public function getLecturersBlocks()
     {
         return $this->lecturersBlocks;
-    }
-
-    /**
-     * @param Collection $lecturersBlocks
-     */
-    public function setLecturersBlocks($lecturersBlocks)
-    {
-        $this->lecturersBlocks = $lecturersBlocks;
     }
 
     /**
@@ -1117,14 +1099,6 @@ class User
     public function getCustomInputValues()
     {
         return $this->customInputValues;
-    }
-
-    /**
-     * @param Collection $customInputValues
-     */
-    public function setCustomInputValues($customInputValues)
-    {
-        $this->customInputValues = $customInputValues;
     }
 
     /**

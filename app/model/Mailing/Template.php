@@ -221,14 +221,6 @@ class Template
     }
 
     /**
-     * @param Collection $variables
-     */
-    public function setVariables($variables)
-    {
-        $this->variables = $variables;
-    }
-
-    /**
      * @return bool
      */
     public function isSendToUser()

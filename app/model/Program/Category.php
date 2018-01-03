@@ -29,7 +29,7 @@ class Category
 
     /**
      * Role, které si mohou přihlašovat programy z kategorie.
-     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="registerableCategories", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="registerableCategories")
      * @var Collection
      */
     protected $registerableRoles;
@@ -87,7 +87,7 @@ class Category
     /**
      * @param Collection $registerableRoles
      */
-    public function setRegisterableRoles($registerableRoles)
+    public function setRegisterableRoles($registerableRoles) //TODO kontrola
     {
         $this->registerableRoles = $registerableRoles;
     }
@@ -107,13 +107,5 @@ class Category
     public function getBlocks()
     {
         return $this->blocks;
-    }
-
-    /**
-     * @param Collection $blocks
-     */
-    public function setBlocks($blocks)
-    {
-        $this->blocks = $blocks;
     }
 }

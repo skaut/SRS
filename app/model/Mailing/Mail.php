@@ -92,7 +92,9 @@ class Mail
      */
     public function setRecipientRoles($recipientRoles)
     {
-        $this->recipientRoles = $recipientRoles;
+        $this->recipientRoles->clear();
+        foreach ($recipientRoles as $recipientRole)
+            $this->recipientRoles->add($recipientRole);
     }
 
     /**
@@ -121,7 +123,9 @@ class Mail
      */
     public function setRecipientUsers($recipientUsers)
     {
-        $this->recipientUsers = $recipientUsers;
+        $this->recipientUsers->clear();
+        foreach ($recipientUsers as $recipientUser)
+            $this->recipientUsers->add($recipientUser);
     }
 
     /**

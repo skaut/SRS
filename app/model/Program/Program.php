@@ -23,7 +23,7 @@ class Program
 
     /**
      * Programový blok.
-     * @ORM\ManyToOne(targetEntity="Block", inversedBy="programs", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Block", inversedBy="programs")
      * @var Block
      */
     protected $block;
@@ -37,7 +37,7 @@ class Program
 
     /**
      * Místnost.
-     * @ORM\ManyToOne(targetEntity="Room", inversedBy="programs", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Room", inversedBy="programs")
      * @var Room
      */
     protected $room;
@@ -96,9 +96,8 @@ class Program
     public function setAttendees(Collection $attendees)
     {
         $this->removeAllAttendees();
-        foreach ($attendees as $attendee) {
+        foreach ($attendees as $attendee)
             $this->addAttendee($attendee);
-        }
     }
 
     /**
@@ -106,10 +105,8 @@ class Program
      */
     public function addAttendee(User $user)
     {
-        if (!$this->attendees->contains($user)) {
-            $this->attendees->add($user);
+        if (!$this->attendees->contains($user))
             $user->addProgram($this);
-        }
     }
 
     /**

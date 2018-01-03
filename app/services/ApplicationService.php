@@ -208,8 +208,6 @@ class ApplicationService extends Nette\Object
 
                         $application->setValidTo(new \DateTime());
                         $this->applicationRepository->save($application);
-
-                        $user->addApplication($newApplication);
                     } else {
                         $fee = $this->countSubeventsFee($roles, $application->getSubevents());
 
@@ -223,8 +221,6 @@ class ApplicationService extends Nette\Object
 
                             $application->setValidTo(new \DateTime());
                             $this->applicationRepository->save($application);
-
-                            $user->addApplication($newApplication);
                         }
                     }
                 }
@@ -334,9 +330,6 @@ class ApplicationService extends Nette\Object
             $application->setValidTo(new \DateTime());
             $this->applicationRepository->save($application);
 
-            $user->addApplication($newApplication);
-            $this->userRepository->save($user);
-
             $this->programService->updateUserPrograms($user);
         });
 
@@ -364,9 +357,6 @@ class ApplicationService extends Nette\Object
 
             $application->setValidTo(new \DateTime());
             $this->applicationRepository->save($application);
-
-            $user->addApplication($newApplication);
-            $this->userRepository->save($user);
 
             $this->programService->updateUserPrograms($user);
         });
@@ -432,9 +422,6 @@ class ApplicationService extends Nette\Object
             $application->setValidTo(new \DateTime());
             $this->applicationRepository->save($application);
 
-            $user->addApplication($newApplication);
-            $this->userRepository->save($user);
-
             $this->programService->updateUserPrograms($user);
         });
 
@@ -480,9 +467,6 @@ class ApplicationService extends Nette\Object
         $application->setApplicationId($application->getId());
         $this->applicationRepository->save($application);
 
-        $user->addApplication($application);
-        $this->userRepository->save($user);
-
         return $application;
     }
 
@@ -510,9 +494,6 @@ class ApplicationService extends Nette\Object
 
         $application->setApplicationId($application->getId());
         $this->applicationRepository->save($application);
-
-        $user->addApplication($application);
-        $this->userRepository->save($user);
 
         return $application;
     }
