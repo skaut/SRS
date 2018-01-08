@@ -320,7 +320,7 @@ class Role
     /**
      * @param Collection $pages
      */
-    public function setPages(Collection $pages): void //TODO kontrola
+    public function setPages(Collection $pages): void
     {
         foreach ($this->getPages() as $page) {
             if (!$pages->contains($page))
@@ -520,7 +520,7 @@ class Role
     /**
      * @param Collection $incompatibleRoles
      */
-    public function setIncompatibleRoles(Collection $incompatibleRoles): void //TODO kontrola
+    public function setIncompatibleRoles(Collection $incompatibleRoles): void
     {
         foreach ($this->getIncompatibleRoles() as $role) {
             if (!$incompatibleRoles->contains($role))
@@ -603,9 +603,11 @@ class Role
     /**
      * @param Collection $requiredRoles
      */
-    public function setRequiredRoles(Collection $requiredRoles): void //TODO kontrola
+    public function setRequiredRoles(Collection $requiredRoles): void
     {
-        $this->requiredRoles = $requiredRoles;
+        $this->requiredRoles->clear();
+        foreach ($requiredRoles as $requiredRole)
+            $this->requiredRoles->add($requiredRole);
     }
 
     /**

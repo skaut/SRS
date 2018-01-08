@@ -87,9 +87,11 @@ class Category
     /**
      * @param Collection $registerableRoles
      */
-    public function setRegisterableRoles($registerableRoles) //TODO kontrola
+    public function setRegisterableRoles($registerableRoles)
     {
-        $this->registerableRoles = $registerableRoles;
+        $this->registerableRoles->clear();
+        foreach ($registerableRoles as $registerableRole)
+            $this->registerableRoles->add($registerableRole);
     }
 
     /**

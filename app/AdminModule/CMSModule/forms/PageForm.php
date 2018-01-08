@@ -181,20 +181,21 @@ class PageForm extends UI\Control
 
         foreach ($page->getContents($area) as $content) {
             $formContainer = $values[$content->getContentFormName()];
-            if ($formContainer['delete'])
+            if ($formContainer['delete']) {
                 $this->contentRepository->remove($content);
-            else
+            }
+            else {
                 $content->contentFormSucceeded($form, $values);
+                $this->contentRepository->save($content);
+            }
         }
 
         if ($form['submitAdd']->isSubmittedBy()) {
             $contentClass = '\\App\\Model\\CMS\\Content\\' . ucfirst($type) . 'Content';
             $content = new $contentClass($page, $area);
             $content->setHeading($form->getTranslator()->translate('common.content.default_heading.' . $type));
-            $page->addContent($content);
+            $this->contentRepository->save($content);
         }
-
-        $this->pageRepository->save($page);
 
         if ($form['submitAdd']->isSubmittedBy())
             $submitName = 'submitAdd';

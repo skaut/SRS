@@ -290,18 +290,11 @@ class Subevent
     /**
      * @param $requiredSubevents
      */
-    public function setRequiredSubevents(Collection $requiredSubevents) : void //TODO kontrola
+    public function setRequiredSubevents(Collection $requiredSubevents) : void
     {
-        $this->requiredSubevents = $requiredSubevents;
-    }
-
-    /**
-     * @param $subevent
-     */
-    public function addRequiredSubevent(Subevent $subevent) : void
-    {
-        if (!$this->requiredSubevents->contains($subevent))
-            $this->requiredSubevents->add($subevent);
+        $this->requiredSubevents->clear();
+        foreach ($requiredSubevents as $requiredSubevent)
+            $this->requiredSubevents->add($requiredSubevent);
     }
 
     /**

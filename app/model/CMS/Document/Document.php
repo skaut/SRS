@@ -88,9 +88,11 @@ class Document
     /**
      * @param Collection $tags
      */
-    public function setTags($tags) //TODO kontrola
+    public function setTags($tags)
     {
-        $this->tags = $tags;
+        $this->tags->clear();
+        foreach ($tags as $tag)
+            $this->tags->add($tag);
     }
 
     /**
