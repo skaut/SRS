@@ -13,6 +13,16 @@ use Kdyby\Doctrine\EntityRepository;
 class ContentRepository extends EntityRepository
 {
     /**
+     * Uloží obsah.
+     * @param Content $content
+     */
+    public function save(Content $content)
+    {
+        $this->_em->persist($content);
+        $this->_em->flush();
+    }
+
+    /**
      * Odstraní obsah.
      * @param Content $content
      */

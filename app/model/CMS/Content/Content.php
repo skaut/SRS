@@ -3,6 +3,7 @@
 namespace App\Model\CMS\Content;
 
 use App\Model\CMS\Page;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 use Nette\Application\UI\Form;
@@ -180,11 +181,16 @@ abstract class Content implements IContent
      * Content constructor.
      * @param Page $page
      * @param $area
+     * @throws \App\Model\Page\PageException
      */
-    public function __construct(Page $page, $area)
+    public function __construct(Page $page, string $area)
     {
         $this->page = $page;
         $this->area = $area;
+
+        $contentsCount = $page->getContents($area)->count();
+
+        $this->position = $contentsCount + 1;
     }
 
     /**
