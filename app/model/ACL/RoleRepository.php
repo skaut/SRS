@@ -3,6 +3,7 @@
 namespace App\Model\ACL;
 
 use App\Model\User\User;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Kdyby\Doctrine\EntityRepository;
@@ -230,11 +231,11 @@ class RoleRepository extends EntityRepository
 
     /**
      * Vraci role, ktere jsou tuto chvíli registrovatelné, seřazené podle názvu.
-     * @return array
+     * @return Collection|Role[]
      */
-    public function findAllRegisterableNowOrderedByName() : array
+    public function findAllRegisterableNowOrderedByName() : Collection
     {
-        return $this->createQueryBuilder('r')
+        $result = $this->createQueryBuilder('r')
             ->select('r')
             ->where($this->createQueryBuilder()->expr()->andX(
                 $this->createQueryBuilder()->expr()->eq('r.registerable', TRUE),
@@ -250,6 +251,8 @@ class RoleRepository extends EntityRepository
             ->orderBy('r.name')
             ->getQuery()
             ->getResult();
+
+        return new ArrayCollection($result);
     }
 
     /**
