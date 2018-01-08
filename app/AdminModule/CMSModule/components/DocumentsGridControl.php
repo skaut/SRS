@@ -90,13 +90,13 @@ class DocumentsGridControl extends Control
 
         $grid->addColumnText('file', 'admin.cms.documents_file')
             ->setRenderer(function ($row) {
-                return Html::el()
-                    ->addHtml(Html::el('span')->setAttribute('class', 'fa fa-download'))
-                    ->addText(' ')
-                    ->addHtml(Html::el('a')
-                        ->setAttribute('href', '../../../files' . $row->getFile())
-                        ->setAttribute('target', '_blank')
-                        ->addText($this->translator->translate('admin.cms.documents_download'))
+                return Html::el('a')
+                    ->setAttribute('href', $this->getPresenter()->getTemplate()->basePath
+                        . '/files' . $row->getFile())
+                    ->setAttribute('target', '_blank')
+                    ->setAttribute('class', 'btn btn-xs btn-default')
+                    ->addHtml(
+                        Html::el('span')->setAttribute('class', 'fa fa-download')
                     );
             });
 
