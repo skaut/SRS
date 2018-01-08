@@ -185,7 +185,6 @@ class EditUserSeminarForm extends Nette\Object
             'privateNote' => $this->user->getNote()
         ]);
 
-
         $form->onSuccess[] = [$this, 'processForm'];
 
         return $form;

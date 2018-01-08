@@ -235,6 +235,13 @@ class UsersPresenter extends AdminBasePresenter
     {
         $form = $this->editUserSeminarFormFactory->create($this->getParameter('id'));
 
+        $form->onError[] = function (Form $form) {
+            foreach ($form->errors as $error)
+                $this->flashMessage($error, 'danger');
+
+            $this->redirect('this');
+        };
+
         $form->onSuccess[] = function (Form $form, \stdClass $values) {
             if (!$form['cancel']->isSubmittedBy())
                 $this->flashMessage('admin.users.users_saved', 'success');
