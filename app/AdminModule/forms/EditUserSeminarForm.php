@@ -27,6 +27,8 @@ use App\Services\ProgramService;
 use App\Utils\Validators;
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\Utils\Random;
+use Nette\Utils\Strings;
 use PhpCollection\Set;
 use phpDocumentor\Reflection\File;
 
@@ -185,7 +187,6 @@ class EditUserSeminarForm extends Nette\Object
             'privateNote' => $this->user->getNote()
         ]);
 
-
         $form->onSuccess[] = [$this, 'processForm'];
 
         return $form;
@@ -236,7 +237,7 @@ class EditUserSeminarForm extends Nette\Object
                             $customInputValue = $customInputValue ?: new CustomFileValue();
                             $file = $values['custom' . $customInput->getId()];
                             if ($file->size > 0) {
-                                $path = $this->generatePath($file, $this->user, $customInput);
+                                $path = $this->generatePath($file);
                                 $this->filesService->save($file, $path);
                                 $customInputValue->setValue($path);
                             }
@@ -300,12 +301,10 @@ class EditUserSeminarForm extends Nette\Object
     /**
      * Vygeneruje cestu souboru.
      * @param $file
-     * @param User $user
-     * @param CustomFile $customInput
      * @return string
      */
-    private function generatePath($file, User $user, CustomFile $customInput): string
+    private function generatePath($file): string
     {
-        return CustomFile::PATH . '/' . $user->getId() . '-' . $customInput->getId() . '-' . time() . '.' . pathinfo($file->name, PATHINFO_EXTENSION);
+        return CustomFile::PATH . '/' . Random::generate(5) . '/' . Strings::webalize($file->name, '.');
     }
 }
