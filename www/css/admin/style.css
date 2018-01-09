@@ -102,6 +102,10 @@ body {
     height: 28px !important;
 }
 
+.datagrid .row-item-detail {
+    background-color: #337ab7 !important;
+}
+
 /* tabulka bez ramecku */
 .table-borderless tbody tr td,
 .table-borderless tbody tr th,

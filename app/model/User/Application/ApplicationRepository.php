@@ -5,6 +5,7 @@ namespace App\Model\User;
 use App\Model\Enums\ApplicationState;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Kdyby\Doctrine\EntityRepository;
 
 
@@ -23,6 +24,17 @@ class ApplicationRepository extends EntityRepository
     public function findById($id)
     {
         return $this->findOneBy(['id' => $id]);
+    }
+
+    /**
+     * Vrací přihlášky podle id, které mají společné všechny verze přihlášky.
+     * @param $id
+     * @return Collection|Application[]
+     */
+    public function findByApplicationId(int $id): Collection
+    {
+        $result = $this->findBy(['applicationId' => $id]);
+        return new ArrayCollection($result);
     }
 
     /**

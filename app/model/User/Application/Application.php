@@ -359,6 +359,15 @@ abstract class Application
     }
 
     /**
+     * Vrací datum platby jako text.
+     * @return string|null
+     */
+    public function getPaymentDateText(): ?string
+    {
+        return $this->paymentDate !== NULL ? $this->paymentDate->format('j. n. Y') : NULL;
+    }
+
+    /**
      * @param \DateTime $paymentDate
      */
     public function setPaymentDate($paymentDate)
@@ -372,6 +381,15 @@ abstract class Application
     public function getIncomeProofPrintedDate()
     {
         return $this->incomeProofPrintedDate;
+    }
+
+    /**
+     * Vrací datum vytištění dokladu jako text.
+     * @return string|null
+     */
+    public function getIncomeProofPrintedDateText(): ?string
+    {
+        return $this->incomeProofPrintedDate !== NULL ? $this->incomeProofPrintedDate->format('j. n. Y') : NULL;
     }
 
     /**
