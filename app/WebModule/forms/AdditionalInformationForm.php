@@ -21,6 +21,8 @@ use App\Services\FilesService;
 use App\Services\MailService;
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\Utils\Random;
+use Nette\Utils\Strings;
 
 
 /**
@@ -191,7 +193,7 @@ class AdditionalInformationForm extends Nette\Object
                             $customInputValue = $customInputValue ?: new CustomFileValue();
                             $file = $values['custom' . $customInput->getId()];
                             if ($file->size > 0) {
-                                $path = $this->generatePath($file, $this->user, $customInput);
+                                $path = $this->generatePath($file);
                                 $this->filesService->save($file, $path);
                                 $customInputValue->setValue($path);
                             }
@@ -232,8 +234,8 @@ class AdditionalInformationForm extends Nette\Object
      * @param CustomFile $customInput
      * @return string
      */
-    private function generatePath($file, User $user, CustomFile $customInput): string
+    private function generatePath($file): string
     {
-        return CustomFile::PATH . '/' . $user->getId() . '-' . $customInput->getId() . '-' . time() . '.' . pathinfo($file->name, PATHINFO_EXTENSION);
+        return CustomFile::PATH . '/' . Random::generate(5) . '/' . Strings::webalize($file->name, '.');
     }
 }
