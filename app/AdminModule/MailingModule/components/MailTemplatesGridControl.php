@@ -54,7 +54,9 @@ class MailTemplatesGridControl extends Control
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
-        $grid->setDataSource($this->templateRepository->createQueryBuilder('t'));
+        $grid->setDataSource($this->templateRepository->createQueryBuilder('t')
+            ->where('t.system = FALSE')
+        );
         $grid->setDefaultSort(['type' => 'ASC']);
         $grid->setPagination(FALSE);
 
@@ -62,12 +64,6 @@ class MailTemplatesGridControl extends Control
             ->setRenderer(function ($row) {
                 return $this->translator->translate('common.mailing.template_type.' . $row->getType());
             });
-
-        $grid->addColumnText('system', 'admin.mailing.templates_system')
-            ->setReplacement([
-                '0' => $this->translator->translate('admin.common.no'),
-                '1' => $this->translator->translate('admin.common.yes')
-            ]);
 
         $grid->addColumnStatus('active', 'admin.mailing.templates_active')
             ->addOption(FALSE, 'admin.mailing.templates_active_inactive')

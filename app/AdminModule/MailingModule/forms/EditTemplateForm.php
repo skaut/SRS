@@ -5,6 +5,7 @@ namespace App\AdminModule\MailingModule\Forms;
 use App\AdminModule\Forms\BaseForm;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Nette;
 use Nette\Application\UI\Form;
 
@@ -55,11 +56,10 @@ class EditTemplateForm extends Nette\Object
 
         $form->addCheckbox('active', 'admin.mailing.templates_active_form');
 
-        $form->addCheckbox('sendToUser', 'admin.mailing.templates_send_to_user_form')
-            ->setDisabled($this->template->isSystem());
-
-        $form->addCheckbox('sendToOrganizer', 'admin.mailing.templates_send_to_organizer_form')
-            ->setDisabled($this->template->isSystem());
+        $form->addMultiSelect('recipients', 'admin.mailing.templates_recipients', [
+            'user' => 'admin.mailing.templates_send_to_user_form',
+            'organizer' => 'admin.mailing.templates_send_to_organizer_form'
+        ])->addRule(Form::FILLED, 'admin.mailing.templates_recipients_empty');
 
         $form->addText('subject', 'admin.mailing.templates_subject')
             ->addRule(Form::FILLED, 'admin.mailing.templates_subject_empty');
@@ -75,14 +75,21 @@ class EditTemplateForm extends Nette\Object
             ->setAttribute('class', 'btn btn-warning');
 
 
+        $selectedRecipients = [];
+        if ($this->template->isSendToOrganizer())
+            $selectedRecipients[] = 'organizer';
+        if ($this->template->isSendToUser())
+            $selectedRecipients[] = 'user';
+
         $form->setDefaults([
             'id' => $id,
             'active' => $this->template->isActive(),
-            'sendToUser' => $this->template->isSendToUser(),
-            'sendToOrganizer' => $this->template->isSendToOrganizer(),
+            'recipients' => $selectedRecipients,
             'subject' => $this->template->getSubject(),
             'text' => $this->template->getText()
         ]);
+
+        if ($this->template->isSendToUser())
 
 
         $form->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
@@ -100,13 +107,8 @@ class EditTemplateForm extends Nette\Object
     {
         if (!$form['cancel']->isSubmittedBy()) {
             $this->template->setActive($values['active']);
-
-            if (array_key_exists('sendToUser', $values))
-                $this->template->setSendToUser($values['sendToUser']);
-
-            if (array_key_exists('sendToOrganizer', $values))
-                $this->template->setSendToOrganizer($values['sendToOrganizer']);
-
+            $this->template->setSendToUser(in_array('user', $values['recipients']));
+            $this->template->setSendToOrganizer(in_array('organizer', $values['recipients']));
             $this->template->setSubject($values['subject']);
             $this->template->setText($values['text']);
 
