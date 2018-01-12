@@ -1319,7 +1319,7 @@ class User
      */
     public function getVariableSymbolsText()
     {
-        $variableSymbols = $this->getValidApplications()->map(function (Application $application) {
+        $variableSymbols = $this->getNotCanceledApplications()->map(function (Application $application) {
             return $application->getVariableSymbolText();
         });
         return implode(', ', $variableSymbols->toArray());
