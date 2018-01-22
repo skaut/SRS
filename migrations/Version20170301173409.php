@@ -17,7 +17,7 @@ class Version20170301173409 extends AbstractMigration
         $dump = file_get_contents(__DIR__ . '/initial_schema.sql');
 
         $statement = '';
-        foreach (explode(PHP_EOL, $dump) as $row) {
+        foreach (preg_split('/\r\n|\r|\n/', $dump) as $row) {
             if ($row === '') {
                 $this->addSql(trim($statement));
                 $statement = '';
