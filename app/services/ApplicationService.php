@@ -524,6 +524,8 @@ class ApplicationService extends Nette\Object
      */
     private function countMaturityDate()
     {
+		$holidays = \Yasumi\Yasumi::create('CzechRepublic', date("Y"));
+
         switch ($this->settingsRepository->getValue(Settings::MATURITY_TYPE)) {
             case MaturityType::DATE:
                 return $this->settingsRepository->getDateValue(Settings::MATURITY_DATE);
@@ -531,10 +533,22 @@ class ApplicationService extends Nette\Object
             case MaturityType::DAYS:
                 return (new \DateTime())->modify('+' . $this->settingsRepository->getValue(Settings::MATURITY_DAYS) . ' days');
 
-            case MaturityType::WORK_DAYS:
-                $currentDate = (new \DateTime())->format('Y-m-d');
+            case \App\Model\Enums\MaturityType::WORK_DAYS:
                 $workDays = $this->settingsRepository->getValue(Settings::MATURITY_WORK_DAYS);
-                return new \DateTime(date('Y-m-d', strtotime($currentDate . ' +' . $workDays . ' Weekday')));
+				$currentDate = new \DateTime();
+				$i = 0;
+				while (TRUE) {
+					$currentDate = $currentDate->modify('+1 days');
+					
+					if($holidays->isWorkingDay($currentDate) {
+						$i++;
+						if ($i == $workDays) {
+							break;
+						}
+					}
+				}
+				
+				return $currentDate;
         }
         return NULL;
     }

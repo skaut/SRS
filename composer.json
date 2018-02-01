@@ -33,7 +33,9 @@
         "kartik-v/bootstrap-fileinput": "^4.4",
         "lukyrys/nette-forms-gpspicker": "^1.4",
 
-        "pear/numbers_words": "^0.18.1"
+        "pear/numbers_words": "^0.18.1",
+        "nextras/mail-panel": "^2.3",
+        "azuyalabs/yasumi": "^1.7"
 	},
 
 	"require-dev": {
