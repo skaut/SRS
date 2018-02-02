@@ -150,7 +150,8 @@ class ProgramAttendeesGridControl extends Control
             $grid->addGroupAction('admin.program.blocks_attendees_unregister')->onSelect[] = [$this, 'groupUnregister'];
 
             $grid->addColumnText('displayName', 'admin.program.blocks_attendees_name');
-
+			$grid->addFilterText('displayName', 'Name');
+			
             $grid->addColumnText('attends', 'admin.program.blocks_attendees_attends', 'pid')
                 ->setRenderer(function ($item) {
                     return $item->getPrograms()->contains($this->program) ? 'Ano' : 'Ne';
