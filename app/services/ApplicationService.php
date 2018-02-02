@@ -540,7 +540,7 @@ class ApplicationService extends Nette\Object
 				while (TRUE) {
 					$currentDate = $currentDate->modify('+1 days');
 					
-					if($holidays->isWorkingDay($currentDate) {
+					if($holidays->isWorkingDay($currentDate)) {
 						$i++;
 						if ($i == $workDays) {
 							break;
