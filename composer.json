@@ -33,12 +33,14 @@
         "kartik-v/bootstrap-fileinput": "^4.4",
         "lukyrys/nette-forms-gpspicker": "^1.4",
 
-        "pear/numbers_words": "^0.18.1"
-	},
+        "pear/numbers_words": "^0.18.1",
+        "azuyalabs/yasumi": "^1.7"
+    },
 
-	"require-dev": {
-		"nette/tester": "^1.6",
+    "require-dev": {
+        "nette/tester": "^1.6",
         "squizlabs/php_codesniffer": "^2.8",
-        "codeception/codeception": "^2.2"
-	}
+        "codeception/codeception": "^2.2",
+        "nextras/mail-panel": "^2.3"
+    }
 }

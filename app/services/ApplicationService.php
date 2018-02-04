@@ -25,6 +25,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Kdyby\Translation\Translator;
 use Nette;
+use \Yasumi\Yasumi;
 
 
 /**
@@ -532,9 +533,18 @@ class ApplicationService extends Nette\Object
                 return (new \DateTime())->modify('+' . $this->settingsRepository->getValue(Settings::MATURITY_DAYS) . ' days');
 
             case MaturityType::WORK_DAYS:
-                $currentDate = (new \DateTime())->format('Y-m-d');
                 $workDays = $this->settingsRepository->getValue(Settings::MATURITY_WORK_DAYS);
-                return new \DateTime(date('Y-m-d', strtotime($currentDate . ' +' . $workDays . ' Weekday')));
+                $date = new \DateTime();
+
+                for ($i = 0; $i < $workDays;) {
+                    $date->modify('+1 days');
+                    $holidays = Yasumi::create('CzechRepublic', $date->format('Y'));
+
+                    if ($holidays->isWorkingDay($date))
+                        $i++;
+                }
+
+                return $date;
         }
         return NULL;
     }
