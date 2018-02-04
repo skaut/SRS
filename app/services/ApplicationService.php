@@ -25,6 +25,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Kdyby\Translation\Translator;
 use Nette;
+use \Yasumi\Yasumi;
 
 
 /**
@@ -524,8 +525,6 @@ class ApplicationService extends Nette\Object
      */
     private function countMaturityDate()
     {
-		$holidays = \Yasumi\Yasumi::create('CzechRepublic', date("Y"));
-
         switch ($this->settingsRepository->getValue(Settings::MATURITY_TYPE)) {
             case MaturityType::DATE:
                 return $this->settingsRepository->getDateValue(Settings::MATURITY_DATE);
@@ -533,22 +532,19 @@ class ApplicationService extends Nette\Object
             case MaturityType::DAYS:
                 return (new \DateTime())->modify('+' . $this->settingsRepository->getValue(Settings::MATURITY_DAYS) . ' days');
 
-            case \App\Model\Enums\MaturityType::WORK_DAYS:
+            case MaturityType::WORK_DAYS:
                 $workDays = $this->settingsRepository->getValue(Settings::MATURITY_WORK_DAYS);
-				$currentDate = new \DateTime();
-				$i = 0;
-				while (TRUE) {
-					$currentDate = $currentDate->modify('+1 days');
-					
-					if($holidays->isWorkingDay($currentDate)) {
-						$i++;
-						if ($i == $workDays) {
-							break;
-						}
-					}
-				}
-				
-				return $currentDate;
+                $date = new \DateTime();
+
+                for ($i = 0; $i < $workDays;) {
+                    $date->modify('+1 days');
+                    $holidays = Yasumi::create('CzechRepublic', $date->format('Y'));
+
+                    if ($holidays->isWorkingDay($date))
+                        $i++;
+                }
+
+                return $date;
         }
         return NULL;
     }
