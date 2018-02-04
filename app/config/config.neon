@@ -198,7 +198,7 @@ services:
     - App\WebModule\Components\IOrganizerContentControlFactory
 
     - App\WebModule\Forms\BaseForm
-    - App\WebModule\Forms\AdditionalInformationForm
+    - App\WebModule\Forms\IAdditionalInformationFormFactory
     - App\WebModule\Forms\ApplicationForm
     - App\WebModule\Forms\FaqForm
     - App\WebModule\Forms\PersonalDetailsForm

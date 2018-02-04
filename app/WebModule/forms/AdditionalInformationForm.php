@@ -19,7 +19,7 @@ use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\FilesService;
 use App\Services\MailService;
-use Nette;
+use Nette\Application\UI;
 use Nette\Application\UI\Form;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
@@ -31,13 +31,18 @@ use Nette\Utils\Strings;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class AdditionalInformationForm extends Nette\Object
+class AdditionalInformationForm extends UI\Control
 {
     /**
      * Přihlášený uživatel.
      * @var User
      */
     private $user;
+
+    /**
+     * Událost při uložení formuláře.
+     */
+    public $onSave;
 
     /** @var BaseForm */
     private $baseFormFactory;
@@ -77,6 +82,8 @@ class AdditionalInformationForm extends Nette\Object
                                 CustomInputValueRepository $customInputValueRepository, FilesService $filesService,
                                 MailService $mailService, SettingsRepository $settingsRepository)
     {
+        parent::__construct();
+
         $this->baseFormFactory = $baseFormFactory;
         $this->userRepository = $userRepository;
         $this->customInputRepository = $customInputRepository;
@@ -88,18 +95,24 @@ class AdditionalInformationForm extends Nette\Object
     }
 
     /**
+     * Vykreslí komponentu.
+     */
+    public function render()
+    {
+        $this->template->setFile(__DIR__ . '/templates/additional_information_form.latte');
+        $this->template->render();
+    }
+
+    /**
      * Vytvoří formulář.
-     * @param $id
      * @return Form
      * @throws \App\Model\Settings\SettingsException
      */
-    public function create($id)
+    public function createComponentForm()
     {
-        $this->user = $this->userRepository->findById($id);
+        $this->user = $this->userRepository->findById($this->presenter->user->getId());
 
         $form = $this->baseFormFactory->create();
-
-        $form->addHidden('id');
 
         foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
             $customInputValue = $this->user->getCustomInputValue($customInput);
@@ -125,6 +138,8 @@ class AdditionalInformationForm extends Nette\Object
 
                 case CustomInput::FILE:
                     $custom = $form->addUpload('custom' . $customInput->getId(), $customInput->getName());
+                    if ($customInputValue && $customInputValue->getValue())
+                        $custom->setAttribute('data-current-file', $customInputValue->getValue());
                     break;
             }
 
@@ -145,7 +160,6 @@ class AdditionalInformationForm extends Nette\Object
         $form->addSubmit('submit', 'web.profile.update_additional_information');
 
         $form->setDefaults([
-            'id' => $id,
             'about' => $this->user->getAbout(),
             'arrival' => $this->user->getArrival(),
             'departure' => $this->user->getDeparture()
@@ -225,13 +239,13 @@ class AdditionalInformationForm extends Nette\Object
                 ]);
             }
         });
+
+        $this->onSave($this);
     }
 
     /**
      * Vygeneruje cestu souboru.
      * @param $file
-     * @param User $user
-     * @param CustomFile $customInput
      * @return string
      */
     private function generatePath($file): string
