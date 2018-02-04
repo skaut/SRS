@@ -1,0 +1,44 @@
+{form form class => form-horizontal}
+    {foreach $form->getControls() as $c}
+        {if $c instanceof Nette\Forms\Controls\SubmitButton}
+            <div class="form-group">
+                <div class="col-sm-3 col-xs-3"></div>
+                <div class="col-sm-9 col-xs-9">
+                    {input $c class => 'btn btn-primary button'}
+                </div>
+            </div>
+        {elseif $c instanceof Nette\Forms\Controls\HiddenField}
+            {input $c}
+        {else}
+            <div class="form-group">
+                <div class="col-sm-3 col-xs-3 control-label">
+                    <label for="{$c->htmlId}">
+                        {_$c->caption}
+                    </label>
+                </div>
+
+                {if $c instanceof Nette\Forms\Controls\UploadControl}
+                    <div class="col-sm-6 col-xs-6 col-lg-7">
+                        {input $c}
+                    </div>
+                    <div class="col-sm-3 col-xs-3 col-lg-2">
+                        {if array_key_exists('data-current-file', $c->control->attrs)}
+                            <a href="{$basePath}/files{$c->control->attrs['data-current-file']}" target="_blank"
+                               class="btn btn-default btn-block">
+                                {_web.profile.download_current_file}
+                            </a>
+                        {else}
+                            <a href="#" class="btn btn-default btn-block" disabled="true">
+                                {_web.profile.download_current_file}
+                            </a>
+                        {/if}
+                    </div>
+                {else}
+                    <div class="col-sm-9 col-xs-9">
+                        {input $c}
+                    </div>
+                {/if}
+            </div>
+        {/if}
+    {/foreach}
+{/form}

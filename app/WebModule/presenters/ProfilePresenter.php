@@ -10,7 +10,7 @@ use App\Services\ExcelExportService;
 use App\Services\MailService;
 use App\Services\PdfExportService;
 use App\WebModule\Components\IApplicationsGridControlFactory;
-use App\WebModule\Forms\AdditionalInformationForm;
+use App\WebModule\Forms\IAdditionalInformationFormFactory;
 use App\WebModule\Forms\PersonalDetailsForm;
 use App\WebModule\Forms\RolesForm;
 use Nette\Application\UI\Form;
@@ -31,7 +31,7 @@ class ProfilePresenter extends WebBasePresenter
     public $personalDetailsFormFactory;
 
     /**
-     * @var AdditionalInformationForm
+     * @var IAdditionalInformationFormFactory
      * @inject
      */
     public $additionalInformationFormFactory;
@@ -135,15 +135,14 @@ class ProfilePresenter extends WebBasePresenter
 
     protected function createComponentAdditionalInformationForm()
     {
-        $form = $this->additionalInformationFormFactory->create($this->user->id);
+        $control = $this->additionalInformationFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+        $control->onSave[] = function () {
             $this->flashMessage('web.profile.additional_information_update_successfull', 'success');
-
             $this->redirect('this#collapseAdditionalInformation');
         };
 
-        return $form;
+        return $control;
     }
 
     protected function createComponentRolesForm()
