@@ -149,16 +149,16 @@ class ProgramAttendeesGridControl extends Control
             $grid->addGroupAction('admin.program.blocks_attendees_register')->onSelect[] = [$this, 'groupRegister'];
             $grid->addGroupAction('admin.program.blocks_attendees_unregister')->onSelect[] = [$this, 'groupUnregister'];
 
-            $grid->addColumnText('displayName', 'admin.program.blocks_attendees_name');
-			$grid->addFilterText('displayName', 'Name');
+            $grid->addColumnText('displayName', 'admin.program.blocks_attendees_name')
+                ->setFilterText();
 			
             $grid->addColumnText('attends', 'admin.program.blocks_attendees_attends', 'pid')
                 ->setRenderer(function ($item) {
-                    return $item->getPrograms()->contains($this->program) ? 'Ano' : 'Ne';
-                });
-
-
-            $grid->addFilterSelect('attends', '', ['' => 'admin.common.all', 1 => 'admin.common.yes', 0 => 'admin.common.no'])
+                    return $item->getPrograms()->contains($this->program)
+                        ? $this->translator->translate('admin.common.yes')
+                        : $this->translator->translate('admin.common.no');
+                })
+                ->setFilterSelect(['' => 'admin.common.all', 1 => 'admin.common.yes', 0 => 'admin.common.no'])
                 ->setCondition(function ($qb, $value) {
                     if ($value === '')
                         return;
