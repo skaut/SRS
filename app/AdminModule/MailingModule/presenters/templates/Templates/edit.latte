@@ -20,12 +20,14 @@
                 </div>
                 <ul class="list-group">
                     {foreach $editedTemplate->getVariables() as $variable}
+						{var $variable = $translator->translate('common.mailing.variable_name.' . $variable->getName())}
                         <li class="list-group-item">
-                            <strong>
-                                %{$translator->translate('common.mailing.variable_name.' . $variable->getName())}%
+                            <a href="#" onClick="tinymce.activeEditor.execCommand('mceInsertContent', false, '%{$variable|noescape}%');"><strong>
+                                %{$variable}%
                             </strong>
                             -
-                            {$translator->translate('common.mailing.variable_description.' . $variable->getName())}
+                            {$variable}
+							</a>
                         </li>
                     {/foreach}
                 </ul>
