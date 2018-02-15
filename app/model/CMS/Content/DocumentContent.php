@@ -2,7 +2,7 @@
 
 namespace App\Model\CMS\Content;
 
-use App\Model\CMS\Document\TagRepository;
+use App\Model\CMS\Document\CategoryDocumentRepository;
 use App\Model\CMS\Page;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -15,6 +15,7 @@ use Nette\Application\UI\Form;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity
  * @ORM\Table(name="document_content")
  */
@@ -23,14 +24,14 @@ class DocumentContent extends Content implements IContent
     protected $type = Content::DOCUMENT;
 
     /**
-     * Tagy dokumentů, které se zobrazí.
-     * @ORM\ManyToMany(targetEntity="\App\Model\CMS\Document\Tag")
+     * Kategorie dokumentů, které se zobrazí.
+     * @ORM\ManyToMany(targetEntity="\App\Model\CMS\Document\CategoryDocument")
      * @var Collection
      */
-    protected $tags;
+    protected $categoriesDocument;
 
-    /** @var TagRepository */
-    private $tagRepository;
+    /** @var CategoryDocumentRepository */
+    private $categoryDocumentRepository;
 
 
     /**
@@ -41,31 +42,31 @@ class DocumentContent extends Content implements IContent
     public function __construct(Page $page, $area)
     {
         parent::__construct($page, $area);
-        $this->tags = new ArrayCollection();
+        $this->documentCategories = new ArrayCollection();
     }
 
     /**
-     * @param TagRepository $tagRepository
+     * @param CategoryDocumentRepository $categoryDocumentRepository
      */
-    public function injectTagRepository(TagRepository $tagRepository)
+    public function injectCategoryDocumentRepository(CategoryDocumentRepository $categoryDocumentRepository)
     {
-        $this->tagRepository = $tagRepository;
+        $this->categoryDocumentRepository = $categoryDocumentRepository;
     }
 
     /**
      * @return Collection
      */
-    public function getTags()
+    public function getDocumentCategories()
     {
-        return $this->tags;
+        return $this->documentCategories;
     }
 
     /**
-     * @param Collection $tags
+     * @param Collection $documentCategories
      */
-    public function setTags($tags)
+    public function setDocumentCategories($documentCategories)
     {
-        $this->tags = $tags;
+        $this->documentCategories = $documentCategories;
     }
 
     /**
@@ -79,8 +80,8 @@ class DocumentContent extends Content implements IContent
 
         $formContainer = $form[$this->getContentFormName()];
 
-        $formContainer->addMultiSelect('tags', 'admin.cms.pages_content_tags', $this->tagRepository->getTagsOptions())
-            ->setDefaultValue($this->tagRepository->findTagsIds($this->tags));
+        $formContainer->addMultiSelect('documentCategories', 'admin.cms.pages_content_categories', $this->documentCategories->getDocumentCategoriesOptions())
+            ->setDefaultValue($this->documentCategories->findDocumentCategories($this->documentCategories));
 
         return $form;
     }
@@ -94,6 +95,6 @@ class DocumentContent extends Content implements IContent
     {
         parent::contentFormSucceeded($form, $values);
         $values = $values[$this->getContentFormName()];
-        $this->tags = $this->tagRepository->findTagsByIds($values['tags']);
+        $this->documentCategories = $this->categoryDocumentRepository->findTagsByIds($values['documentCategories']);
     }
 }

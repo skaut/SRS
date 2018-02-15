@@ -95,10 +95,10 @@ services:
         class: App\Model\CMS\Document\DocumentRepository
         tags:
             doctrine.repositoryEntity: App\Model\CMS\Document\Document
-    tagRepository:
-        class: App\Model\CMS\Document\TagRepository
+    categoryDocumentRepository:
+        class: App\Model\CMS\Document\CategoryDocumentRepository
         tags:
-            doctrine.repositoryEntity: App\Model\CMS\Document\Tag
+            doctrine.repositoryEntity: App\Model\CMS\Document\CategoryDocument
     faqRepository:
         class: App\Model\CMS\FaqRepository
         tags:
@@ -208,7 +208,7 @@ services:
     - App\AdminModule\Components\IRolesGridControlFactory
     - App\AdminModule\Components\IUsersGridControlFactory
     - App\AdminModule\CMSModule\Components\IDocumentsGridControlFactory
-    - App\AdminModule\CMSModule\Components\IDocumentTagsGridControlFactory
+    - App\AdminModule\CMSModule\Components\IDocumentCategoriesGridControlFactory
     - App\AdminModule\CMSModule\Components\IFaqGridControlFactory
     - App\AdminModule\CMSModule\Components\INewsGridControlFactory
     - App\AdminModule\CMSModule\Components\IPagesGridControlFactory

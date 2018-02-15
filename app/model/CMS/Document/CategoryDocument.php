@@ -9,26 +9,27 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 
 /**
- * Entita tagu pro dokumenty.
+ * Entita kategorie pro dokumenty.
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @ORM\Entity(repositoryClass="TagRepository")
- * @ORM\Table(name="tag")
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
+ * @ORM\Entity(repositoryClass="CategoryDocumentRepository")
+ * @ORM\Table(name="category_document")
  */
-class Tag
+class CategoryDocument
 {
     use Identifier;
 
     /**
-     * Dokumenty s tagem.
-     * @ORM\ManyToMany(targetEntity="Document", mappedBy="tags", cascade={"persist"})
+     * Dokumenty s kategorií.
+     * @ORM\ManyToMany(targetEntity="Document", mappedBy="documentCategories", cascade={"persist"})
      * @var Collection
      */
     protected $documents;
 
     /**
-     * Název tagu.
+     * Název kategorie.
      * @ORM\Column(type="string", unique=true)
      * @var string
      */
@@ -36,7 +37,7 @@ class Tag
 
 
     /**
-     * Tag constructor.
+     * Kategorie constructor.
      */
     public function __construct()
     {

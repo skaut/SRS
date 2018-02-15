@@ -13,6 +13,7 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="DocumentRepository")
  * @ORM\Table(name="document")
  */
@@ -26,11 +27,11 @@ class Document
     use Identifier;
 
     /**
-     * Tagy dokumentu.
-     * @ORM\ManyToMany(targetEntity="Tag", inversedBy="documents")
+     * Kategorie dokumentu.
+     * @ORM\ManyToMany(targetEntity="CategoryDocument", inversedBy="documents")
      * @var Collection
      */
-    protected $tags;
+    protected $documentCategories;
 
     /**
      * Název dokumentu.
@@ -66,7 +67,7 @@ class Document
      */
     public function __construct()
     {
-        $this->tags = new ArrayCollection();
+        $this->documentCategories = new ArrayCollection();
     }
 
     /**
@@ -80,19 +81,19 @@ class Document
     /**
      * @return Collection
      */
-    public function getTags()
+    public function getDocumentCategories()
     {
-        return $this->tags;
+        return $this->documentCategories;
     }
 
     /**
-     * @param Collection $tags
+     * @param Collection $documentCategories
      */
-    public function setTags($tags)
+    public function setDocumentCategories($documentCategories)
     {
-        $this->tags->clear();
-        foreach ($tags as $tag)
-            $this->tags->add($tag);
+        $this->documentCategories->clear();
+        foreach ($documentCategories as $category)
+            $this->documentCategories->add($category);
     }
 
     /**

@@ -10,7 +10,7 @@ use App\Model\CMS\Content\ContentRepository;
 use App\Model\CMS\Content\DocumentContent;
 use App\Model\CMS\Content\ImageContent;
 use App\Model\CMS\Content\UsersContent;
-use App\Model\CMS\Document\TagRepository;
+use App\Model\CMS\Document\CategoryDocumentRepository;
 use App\Model\CMS\Page;
 use App\Model\CMS\PageRepository;
 use App\Services\FilesService;
@@ -23,6 +23,7 @@ use Nette\Application\UI\Form;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class PageForm extends UI\Control
 {
@@ -66,8 +67,8 @@ class PageForm extends UI\Control
     /** @var RoleRepository */
     private $roleRepository;
 
-    /** @var TagRepository */
-    private $tagRepository;
+    /** @var CategoryDocumentRepository */
+    private $categoryDocumentRepository;
 
     /** @var FilesService */
     private $filesService;
@@ -81,12 +82,12 @@ class PageForm extends UI\Control
      * @param PageRepository $pageRepository
      * @param ContentRepository $contentRepository
      * @param RoleRepository $roleRepository
-     * @param TagRepository $tagRepository
+     * @param CategoryDocumentRepository $categoryDocumentRepository
      * @param FilesService $filesService
      */
     public function __construct($id, $area, BaseForm $baseFormFactory, PageRepository $pageRepository,
                                 ContentRepository $contentRepository, RoleRepository $roleRepository,
-                                TagRepository $tagRepository, FilesService $filesService)
+                                CategoryDocumentRepository $categoryDocumentRepository, FilesService $filesService)
     {
         parent::__construct();
 
@@ -97,7 +98,7 @@ class PageForm extends UI\Control
         $this->pageRepository = $pageRepository;
         $this->contentRepository = $contentRepository;
         $this->roleRepository = $roleRepository;
-        $this->tagRepository = $tagRepository;
+        $this->categoryDocumentRepository = $categoryDocumentRepository;
         $this->filesService = $filesService;
 
         $this->page = $this->pageRepository->findById($id);
@@ -135,7 +136,7 @@ class PageForm extends UI\Control
                     $content->injectRoleRepository($this->roleRepository);
                     break;
                 case DocumentContent::class:
-                    $content->injectTagRepository($this->tagRepository);
+                    $content->injectCategoryDocumentRepository($this->categoryDocumentRepository);
                     break;
                 case ImageContent::class:
                     $content->injectFilesService($this->filesService);

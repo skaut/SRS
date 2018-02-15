@@ -2,8 +2,8 @@
 
 namespace App\AdminModule\CMSModule\Components;
 
-use App\Model\CMS\Document\Tag;
-use App\Model\CMS\Document\TagRepository;
+use App\Model\CMS\Document\CategoryDocument;
+use App\Model\CMS\Document\CategoryDocumentRepository;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
@@ -11,30 +11,31 @@ use Ublaboo\DataGrid\DataGrid;
 
 
 /**
- * Komponenta pro správu štítků dokumentů.
+ * Komponenta pro správu kategorií dokumentů.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
-class DocumentTagsGridControl extends Control
+class DocumentCategoriesGridControl extends Control
 {
     /** @var Translator */
     private $translator;
 
-    /** @var TagRepository */
-    private $tagRepository;
+    /** @var CategoryDocumentRepository */
+    private $categoryDocumentRepository;
 
 
     /**
-     * DocumentTagsGridControl constructor.
+     * DocumentCategoriesGridControl constructor.
      * @param Translator $translator
-     * @param TagRepository $tagRepository
+     * @param CategoryDocumentRepository $categoryDocumentRepository
      */
-    public function __construct(Translator $translator, TagRepository $tagRepository)
+    public function __construct(Translator $translator, CategoryDocumentRepository $categoryDocumentRepository)
     {
         parent::__construct();
 
         $this->translator = $translator;
-        $this->tagRepository = $tagRepository;
+        $this->categoryDocumentRepository = $categoryDocumentRepository;
     }
 
     /**
@@ -42,7 +43,7 @@ class DocumentTagsGridControl extends Control
      */
     public function render()
     {
-        $this->template->render(__DIR__ . '/templates/document_tags_grid.latte');
+        $this->template->render(__DIR__ . '/templates/document_categories_grid.latte');
     }
 
     /**
@@ -50,32 +51,32 @@ class DocumentTagsGridControl extends Control
      * @param $name
      * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
-    public function createComponentDocumentTagsGrid($name)
+    public function createComponentDocumentCategoriesGrid($name)
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
-        $grid->setDataSource($this->tagRepository->createQueryBuilder('t'));
+        $grid->setDataSource($this->categoryDocumentRepository->createQueryBuilder('t'));
         $grid->setDefaultSort(['name' => 'ASC']);
         $grid->setPagination(FALSE);
 
 
-        $grid->addColumnText('name', 'admin.cms.tags_name');
+        $grid->addColumnText('name', 'admin.cms.categories_name');
 
 
         $grid->addInlineAdd()->onControlAdd[] = function ($container) {
             $container->addText('name', '')
-                ->addRule(Form::FILLED, 'admin.cms.tags_name_empty')
-                ->addRule(Form::IS_NOT_IN, 'admin.cms.tags_name_exists', $this->tagRepository->findAllNames());
+                ->addRule(Form::FILLED, 'admin.cms.categories_name_empty')
+                ->addRule(Form::IS_NOT_IN, 'admin.cms.categories_name_exists', $this->categoryDocumentRepository->findAllNames());
         };
         $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
 
         $grid->addInlineEdit()->onControlAdd[] = function ($container) {
             $container->addText('name', '')
-                ->addRule(Form::FILLED, 'admin.cms.tags_name_empty');
+                ->addRule(Form::FILLED, 'admin.cms.categories_name_empty');
         };
         $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) {
             $container['name']
-                ->addRule(Form::IS_NOT_IN, 'admin.cms.tags_name_exists', $this->tagRepository->findOthersNames($item->getId()));
+                ->addRule(Form::IS_NOT_IN, 'admin.cms.categories_name_exists', $this->categoryDocumentRepository->findOthersNames($item->getId()));
 
             $container->setDefaults([
                 'name' => $item->getName()
@@ -90,7 +91,7 @@ class DocumentTagsGridControl extends Control
             ->setClass('btn btn-xs btn-danger')
             ->addAttributes([
                 'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('admin.cms.tags_delete_confirm')
+                'data-content' => $this->translator->translate('admin.cms.categories_delete_confirm')
             ]);
     }
 
@@ -101,13 +102,13 @@ class DocumentTagsGridControl extends Control
      */
     public function add($values)
     {
-        $tag = new Tag();
+        $category = new CategoryDocument();
 
-        $tag->setName($values['name']);
+        $category->setName($values['name']);
 
-        $this->tagRepository->save($tag);
+        $this->categoryDocumentRepository->save($category);
 
-        $this->getPresenter()->flashMessage('admin.cms.tags_saved', 'success');
+        $this->getPresenter()->flashMessage('admin.cms.categories_saved', 'success');
 
         $this->redirect('this');
     }
@@ -120,13 +121,13 @@ class DocumentTagsGridControl extends Control
      */
     public function edit($id, $values)
     {
-        $tag = $this->tagRepository->findById($id);
+        $category = $this->categoryDocumentRepository->findById($id);
 
-        $tag->setName($values['name']);
+        $category->setName($values['name']);
 
-        $this->tagRepository->save($tag);
+        $this->categoryDocumentRepository->save($category);
 
-        $this->getPresenter()->flashMessage('admin.cms.tags_saved', 'success');
+        $this->getPresenter()->flashMessage('admin.cms.categories_saved', 'success');
 
         $this->redirect('this');
     }
@@ -138,10 +139,10 @@ class DocumentTagsGridControl extends Control
      */
     public function handleDelete($id)
     {
-        $tag = $this->tagRepository->findById($id);
-        $this->tagRepository->remove($tag);
+        $categoryDocument = $this->categoryDocumentRepository->findById($id);
+        $this->categoryDocumentRepository->remove($categoryDocument);
 
-        $this->getPresenter()->flashMessage('admin.cms.tags_deleted', 'success');
+        $this->getPresenter()->flashMessage('admin.cms.categories_deleted', 'success');
 
         $this->redirect('this');
     }

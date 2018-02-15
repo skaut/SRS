@@ -7,16 +7,17 @@ use Kdyby\Doctrine\EntityRepository;
 
 
 /**
- * Třída spravující tagy dokumentů.
+ * Třída spravující kategorie dokumentů.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
-class TagRepository extends EntityRepository
+class CategoryDocumentRepository extends EntityRepository
 {
     /**
-     * Vrátí tag podle id.
+     * Vrátí kategorii podle id.
      * @param $id
-     * @return Tag|null
+     * @return CategoryDocument|null
      */
     public function findById($id)
     {
@@ -24,11 +25,11 @@ class TagRepository extends EntityRepository
     }
 
     /**
-     * Vrátí tagy podle id.
+     * Vrátí kategorie podle id.
      * @param $ids
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function findTagsByIds($ids)
+    public function findCategoryDocumentByIds($ids)
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids))
@@ -37,19 +38,19 @@ class TagRepository extends EntityRepository
     }
 
     /**
-     * Vrátí id tagů.
-     * @param $tags
+     * Vrátí id kategorií.
+     * @param $documentCategories
      * @return array
      */
-    public function findTagsIds($tags)
+    public function findDocumentCategoriesIds($documentCategories)
     {
         return array_map(function ($o) {
             return $o->getId();
-        }, $tags->toArray());
+        }, $documentCategories->toArray());
     }
 
     /**
-     * Vrátí všechny názvy tagů.
+     * Vrátí všechny názvy kategorií.
      * @return array
      */
     public function findAllNames()
@@ -62,7 +63,7 @@ class TagRepository extends EntityRepository
     }
 
     /**
-     * Vrátí názvy tagů, kromě tagu s id.
+     * Vrátí názvy kategorií, kromě kategorie s id.
      * @param $id
      * @return array
      */
@@ -78,40 +79,40 @@ class TagRepository extends EntityRepository
     }
 
     /**
-     * Uloží tag.
-     * @param Tag $tag
+     * Uloží kategorii.
+     * @param CategoryDocument $categoryDocument
      */
-    public function save(Tag $tag)
+    public function save(CategoryDocument $categoryDocument)
     {
-        $this->_em->persist($tag);
+        $this->_em->persist($categoryDocument);
         $this->_em->flush();
     }
 
     /**
-     * Odstraní tag.
-     * @param Tag $tag
+     * Odstraní kategorii.
+     * @param CategoryDocument $categoryDocument
      */
-    public function remove(Tag $tag)
+    public function remove(CategoryDocument $categoryDocument)
     {
-        $this->_em->remove($tag);
+        $this->_em->remove($categoryDocument);
         $this->_em->flush();
     }
 
     /**
-     * Vrátí seznam tagů jako možnosti pro select.
+     * Vrátí seznam kategorií jako možnosti pro select.
      * @return array
      */
-    public function getTagsOptions()
+    public function getDocumentCategoriesOptions()
     {
-        $tags = $this->createQueryBuilder('t')
+        $documentCategories = $this->createQueryBuilder('t')
             ->select('t.id, t.name')
             ->orderBy('t.name')
             ->getQuery()
             ->getResult();
 
         $options = [];
-        foreach ($tags as $tag)
-            $options[$tag['id']] = $tag['name'];
+        foreach ($documentCategories as $category)
+            $options[$category['id']] = $category['name'];
         return $options;
     }
 }

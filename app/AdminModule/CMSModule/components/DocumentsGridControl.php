@@ -4,7 +4,7 @@ namespace App\AdminModule\CMSModule\Components;
 
 use App\Model\CMS\Document\Document;
 use App\Model\CMS\Document\DocumentRepository;
-use App\Model\CMS\Document\TagRepository;
+use App\Model\CMS\Document\CategoryDocumentRepository;
 use App\Services\FilesService;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
@@ -19,6 +19,7 @@ use Ublaboo\DataGrid\DataGrid;
  * Komponenta pro správu dokumentů.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class DocumentsGridControl extends Control
 {
@@ -31,25 +32,25 @@ class DocumentsGridControl extends Control
     /** @var FilesService */
     private $filesService;
 
-    /** @var TagRepository */
-    private $tagRepository;
+    /** @var CategoryDocumentRepository */
+    private $categoryDocumentRepository;
 
 
     /**
      * DocumentsGridControl constructor.
      * @param Translator $translator
      * @param DocumentRepository $documentRepository
-     * @param TagRepository $tagRepository
+     * @param CategoryDocumentRepository $categoryDocumentRepository
      * @param FilesService $filesService
      */
     public function __construct(Translator $translator, DocumentRepository $documentRepository,
-                                TagRepository $tagRepository, FilesService $filesService)
+                                CategoryDocumentRepository $categoryDocumentRepository, FilesService $filesService)
     {
         parent::__construct();
 
         $this->translator = $translator;
         $this->documentRepository = $documentRepository;
-        $this->tagRepository = $tagRepository;
+        $this->categoryDocumentRepository = $categoryDocumentRepository;
         $this->filesService = $filesService;
     }
 
@@ -76,16 +77,16 @@ class DocumentsGridControl extends Control
 
         $grid->addColumnText('name', 'admin.cms.documents_name');
 
-        $grid->addColumnText('tags', 'admin.cms.documents_tags')
+        $grid->addColumnText('documentCategories', 'admin.cms.documents_categories')
             ->setRenderer(function ($row) {
-                $tags = Html::el();
-                foreach ($row->getTags() as $tag) {
-                    $tags->addHtml(Html::el('span')
+                $categories = Html::el();
+                foreach ($row->getDocumentCategories() as $category) {
+                    $categories->addHtml(Html::el('span')
                         ->setAttribute('class', 'label label-primary')
-                        ->setText($tag->getName()));
-                    $tags->addHtml(Html::el()->setText(' '));
+                        ->setText($category->getName()));
+                    $categories->addHtml(Html::el()->setText(' '));
                 }
-                return $tags;
+                return $categories;
             });
 
         $grid->addColumnText('file', 'admin.cms.documents_file')
@@ -105,14 +106,14 @@ class DocumentsGridControl extends Control
         $grid->addColumnDateTime('timestamp', 'admin.cms.documents_timestamp')
             ->setFormat('j. n. Y H:i');
 
-        $tagsOptions = $this->tagRepository->getTagsOptions();
+        $documentCategoriesOptions = $this->categoryDocumentRepository->getDocumentCategoriesOptions();
 
-        $grid->addInlineAdd()->onControlAdd[] = function ($container) use ($tagsOptions) {
+        $grid->addInlineAdd()->onControlAdd[] = function ($container) use ($documentCategoriesOptions) {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.documents_name_empty');
 
-            $container->addMultiSelect('tags', '', $tagsOptions)->setAttribute('class', 'datagrid-multiselect')
-                ->addRule(Form::FILLED, 'admin.cms.documents_tags_empty');
+            $container->addMultiSelect('documentCategories', '', $documentCategoriesOptions)->setAttribute('class', 'datagrid-multiselect')
+                ->addRule(Form::FILLED, 'admin.cms.documents_categories_empty');
 
             $container->addUpload('file', '')->setAttribute('class', 'datagrid-upload')
                 ->addRule(Form::FILLED, 'admin.cms.documents_file_empty');
@@ -121,12 +122,12 @@ class DocumentsGridControl extends Control
         };
         $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
 
-        $grid->addInlineEdit()->onControlAdd[] = function ($container) use ($tagsOptions) {
+        $grid->addInlineEdit()->onControlAdd[] = function ($container) use ($documentCategoriesOptions) {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.documents_name_empty');
 
-            $container->addMultiSelect('tags', '', $tagsOptions)->setAttribute('class', 'datagrid-multiselect')
-                ->addRule(Form::FILLED, 'admin.cms.documents_tags_empty');
+            $container->addMultiSelect('documentCategories', '', $documentCategoriesOptions)->setAttribute('class', 'datagrid-multiselect')
+                ->addRule(Form::FILLED, 'admin.cms.documents_categories_empty');
 
             $container->addUpload('file', '')->setAttribute('class', 'datagrid-upload');
 
@@ -135,7 +136,7 @@ class DocumentsGridControl extends Control
         $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) {
             $container->setDefaults([
                 'name' => $item->getName(),
-                'tags' => $this->tagRepository->findTagsIds($item->getTags()),
+                'documentCategories' => $this->categoryDocumentRepository->findCategoryDocumentByIds($item->getDocumentCategories()),
                 'description' => $item->getDescription()
             ]);
         };
@@ -165,7 +166,7 @@ class DocumentsGridControl extends Control
         $document = new Document();
 
         $document->setName($values['name']);
-        $document->setTags($this->tagRepository->findTagsByIds($values['tags']));
+        $document->setDocumentCategories($this->categoryDocumentRepository->findDocumentCategoriesIds($values['documentCategories']));
         $document->setFile($path);
         $document->setDescription($values['description']);
         $document->setTimestamp(new \DateTime());
@@ -198,7 +199,7 @@ class DocumentsGridControl extends Control
         }
 
         $document->setName($values['name']);
-        $document->setTags($this->tagRepository->findTagsByIds($values['tags']));
+        $document->setDocumentCategories($this->categoryDocumentRepository->findCategoryDocumentByIds($values['documentCategories']));
         $document->setDescription($values['description']);
 
         $this->documentRepository->save($document);

@@ -3,7 +3,7 @@
 namespace App\AdminModule\CMSModule\Presenters;
 
 use App\AdminModule\CMSModule\Components\IDocumentsGridControlFactory;
-use App\AdminModule\CMSModule\Components\IDocumentTagsGridControlFactory;
+use App\AdminModule\CMSModule\Components\IDocumentCategoriesGridControlFactory;
 
 
 /**
@@ -11,6 +11,7 @@ use App\AdminModule\CMSModule\Components\IDocumentTagsGridControlFactory;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class DocumentsPresenter extends CMSBasePresenter
 {
@@ -21,10 +22,10 @@ class DocumentsPresenter extends CMSBasePresenter
     public $documentsGridControlFactory;
 
     /**
-     * @var IDocumentTagsGridControlFactory
+     * @var IDocumentCategoriesGridControlFactory
      * @inject
      */
-    public $documentTagsGridControlFactory;
+    public $documentCategoriesGridControlFactory;
 
 
     protected function createComponentDocumentsGrid()
@@ -32,8 +33,8 @@ class DocumentsPresenter extends CMSBasePresenter
         return $this->documentsGridControlFactory->create();
     }
 
-    protected function createComponentDocumentTagsGrid()
+    protected function createComponentDocumentCategoriesGrid()
     {
-        return $this->documentTagsGridControlFactory->create();
+        return $this->documentCategoriesGridControlFactory->create();
     }
 }
