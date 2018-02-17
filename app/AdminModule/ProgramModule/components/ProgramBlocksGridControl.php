@@ -292,6 +292,8 @@ class ProgramBlocksGridControl extends Control
 
     /**
      * Zpracuje export seznamu uživatelů, kteří mají blok zapsaný.
+     * @throws \Nette\Application\AbortException
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function handleExportBlocksAttendees()
     {

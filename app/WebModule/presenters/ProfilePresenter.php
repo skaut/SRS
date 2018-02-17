@@ -107,7 +107,7 @@ class ProfilePresenter extends WebBasePresenter
     /**
      * Vyexportuje rozvrh uživatele.
      * @throws \Nette\Application\AbortException
-     * @throws \PHPExcel_Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function actionExportSchedule()
     {
@@ -145,6 +145,10 @@ class ProfilePresenter extends WebBasePresenter
         return $control;
     }
 
+    /**
+     * @return Form
+     * @throws \App\Model\Settings\SettingsException
+     */
     protected function createComponentRolesForm()
     {
         $form = $this->rolesFormFactory->create($this->user->id);

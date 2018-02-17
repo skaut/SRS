@@ -2,7 +2,6 @@
 
 namespace App\Model\Structure;
 
-use App\Model\Enums\ApplicationState;
 use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

@@ -16,8 +16,10 @@ use Nette\Application\UI\Form;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class SeminarForm extends Nette\Object
+class SeminarForm
 {
+    use Nette\SmartObject;
+
     /** @var BaseForm */
     private $baseFormFactory;
 

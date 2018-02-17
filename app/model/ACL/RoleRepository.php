@@ -209,7 +209,6 @@ class RoleRepository extends EntityRepository
     /**
      * Vrací seznam rolí s obsazenostmi jako možnosti pro select.
      * @return array
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getRegisterableNowOptionsWithCapacity() : array
     {
@@ -260,7 +259,6 @@ class RoleRepository extends EntityRepository
      * obsazenosti, jako možnosti pro select.
      * @param User $user
      * @return Role[]
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getRegisterableNowOrUsersOptionsWithCapacity(User $user) : array
     {
@@ -342,7 +340,6 @@ class RoleRepository extends EntityRepository
      * Vrací seznam rolí bez vybraných rolí, s informací o obsazenosti, jako možnosti pro select.
      * @param array $withoutRoles
      * @return array
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getRolesWithoutRolesOptionsWithCapacity(array $withoutRoles) : array
     {
@@ -377,7 +374,6 @@ class RoleRepository extends EntityRepository
      * Vrací seznam rolí bez vybraných rolí, s informací o počtu uživatelů, jako možnosti pro select.
      * @param array $withoutRoles
      * @return array
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getRolesWithoutRolesOptionsWithApprovedUsersCount(array $withoutRoles) : array
     {

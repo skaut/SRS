@@ -103,6 +103,10 @@ class RoomScheduleGridControl extends Control
         $grid->addToolbarButton('exportRoomsSchedule!', 'admin.program.rooms_schedule_download_schedule');
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     */
     public function handleExportRoomsSchedule()
     {
         $this->room = $this->roomRepository->findById($this->getPresenter()->getParameter('id'));

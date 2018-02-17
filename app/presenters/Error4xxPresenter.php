@@ -7,6 +7,9 @@ use Nette;
 
 class Error4xxPresenter extends BasePresenter
 {
+    /**
+     * @throws Nette\Application\BadRequestException
+     */
     public function startup()
     {
         parent::startup();

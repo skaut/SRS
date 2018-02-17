@@ -102,7 +102,10 @@ abstract class WebBasePresenter extends BasePresenter
     {
         return $this->webLoader->createJavaScriptLoader('web');
     }
-    
+
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     public function startup()
     {
         parent::startup();
@@ -117,6 +120,9 @@ abstract class WebBasePresenter extends BasePresenter
         $this->dbuser = $this->user->isLoggedIn() ? $this->userRepository->findById($this->user->id) : NULL;
     }
 
+    /**
+     * @throws SettingsException
+     */
     public function beforeRender()
     {
         parent::beforeRender();
@@ -143,6 +149,7 @@ abstract class WebBasePresenter extends BasePresenter
 
     /**
      * Ukončí testování role.
+     * @throws \Nette\Application\AbortException
      */
     public function actionExitRoleTest()
     {
@@ -152,6 +159,7 @@ abstract class WebBasePresenter extends BasePresenter
 
     /**
      * Zkontroluje stav instalace.
+     * @throws \Nette\Application\AbortException
      */
     private function checkInstallation()
     {

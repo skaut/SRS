@@ -33,8 +33,10 @@ use \Yasumi\Yasumi;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class ApplicationService extends Nette\Object
+class ApplicationService
 {
+    use Nette\SmartObject;
+
     /** @var SettingsRepository */
     private $settingsRepository;
 
@@ -80,6 +82,8 @@ class ApplicationService extends Nette\Object
      * @param DiscountService $discountService
      * @param VariableSymbolRepository $variableSymbolRepository
      * @param ProgramService $programService
+     * @param MailService $mailService
+     * @param Translator $translator
      */
     public function __construct(SettingsRepository $settingsRepository, ApplicationRepository $applicationRepository,
                                 UserRepository $userRepository, DiscountRepository $discountRepository,
@@ -159,8 +163,12 @@ class ApplicationService extends Nette\Object
      * @param User $user
      * @param Collection $roles
      * @param User $createdBy
-     * @return bool
+     * @param bool $approve
+     * @return void
+     * @throws \App\Model\Settings\SettingsException
      * @throws \Throwable
+     * @throws \Ublaboo\Mailing\Exception\MailingException
+     * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
      */
     public function updateRoles(User $user, Collection $roles, ?User $createdBy, bool $approve = FALSE): void
     {
@@ -242,8 +250,12 @@ class ApplicationService extends Nette\Object
 
     /**
      * @param User $user
+     * @param string $state
      * @param User $createdBy
+     * @throws \App\Model\Settings\SettingsException
      * @throws \Throwable
+     * @throws \Ublaboo\Mailing\Exception\MailingException
+     * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
      */
     public function cancelRegistration(User $user, string $state, ?User $createdBy): void
     {
@@ -295,10 +307,13 @@ class ApplicationService extends Nette\Object
     }
 
     /**
-     * @param Application $application
+     * @param SubeventsApplication $application
      * @param Collection $subevents
      * @param User $createdBy
+     * @throws \App\Model\Settings\SettingsException
      * @throws \Throwable
+     * @throws \Ublaboo\Mailing\Exception\MailingException
+     * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
      */
     public function updateSubeventsApplication(SubeventsApplication $application, Collection $subevents, User $createdBy): void
     {
@@ -341,9 +356,13 @@ class ApplicationService extends Nette\Object
     }
 
     /**
-     * @param Application $application
+     * @param SubeventsApplication $application
+     * @param string $state
      * @param User $createdBy
+     * @throws \App\Model\Settings\SettingsException
      * @throws \Throwable
+     * @throws \Ublaboo\Mailing\Exception\MailingException
+     * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
      */
     public function cancelSubeventsApplication(SubeventsApplication $application, string $state, ?User $createdBy): void
     {
@@ -660,7 +679,6 @@ class ApplicationService extends Nette\Object
      * @param User $user
      * @return bool
      * @throws \App\Model\Settings\SettingsException
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function isAllowedAddApplication(User $user)
     {

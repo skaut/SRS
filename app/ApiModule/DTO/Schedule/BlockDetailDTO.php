@@ -11,8 +11,10 @@ use Nette;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class BlockDetailDTO extends Nette\Object
+class BlockDetailDTO
 {
+    use Nette\SmartObject;
+
     /**
      * @JMS\Type("int")
      * @var int

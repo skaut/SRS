@@ -221,6 +221,8 @@ class ImageContent extends Content implements IContent
         $width = $values['width'] !== '' ? $values['width'] : NULL;
         $height = $values['height'] !== '' ? $values['height'] : NULL;
 
+        $image = NULL;
+
         $exists = FALSE;
 
         if ($file->size > 0) {

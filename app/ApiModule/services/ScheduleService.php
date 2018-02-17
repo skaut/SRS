@@ -21,7 +21,6 @@ use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ProgramService;
-use Doctrine\Common\Collections\ArrayCollection;
 use Kdyby\Translation\Translator;
 use Nette;
 
@@ -31,8 +30,10 @@ use Nette;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class ScheduleService extends Nette\Object
+class ScheduleService
 {
+    use Nette\SmartObject;
+
     /** @var User */
     private $user;
 

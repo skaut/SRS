@@ -17,8 +17,10 @@ use Nette\Application\UI\Form;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class FaqForm extends Nette\Object
+class FaqForm
 {
+    use Nette\SmartObject;
+    
     /**
      * Upravovaná otázka.
      * @var Faq

@@ -14,8 +14,10 @@ use Nette\Application\UI\Form;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class SubeventsForm extends Nette\Object
+class SubeventsForm
 {
+    use Nette\SmartObject;
+
     /** @var BaseForm */
     private $baseFormFactory;
 

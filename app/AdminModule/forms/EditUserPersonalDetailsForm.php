@@ -14,8 +14,10 @@ use Nette\Application\UI\Form;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class EditUserPersonalDetailsForm extends Nette\Object
+class EditUserPersonalDetailsForm
 {
+    use Nette\SmartObject;
+    
     /**
      * Upravovaný uživatel.
      * @var User

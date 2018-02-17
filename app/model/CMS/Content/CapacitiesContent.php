@@ -37,6 +37,7 @@ class CapacitiesContent extends Content implements IContent
      * CapacitiesContent constructor.
      * @param Page $page
      * @param $area
+     * @throws \App\Model\Page\PageException
      */
     public function __construct(Page $page, $area)
     {

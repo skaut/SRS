@@ -2,22 +2,15 @@
 
 namespace App\AdminModule\Components;
 
-use App\Model\ACL\Permission;
-use App\Model\ACL\Resource;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
-use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
-use App\Model\Mailing\Template;
-use App\Model\Mailing\TemplateVariable;
 use App\Model\Program\BlockRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
-use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\SubeventRepository;
-use App\Model\User\Application;
 use App\Model\User\ApplicationRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
@@ -27,7 +20,6 @@ use App\Services\MailService;
 use App\Services\PdfExportService;
 use App\Services\ProgramService;
 use App\Services\UserService;
-use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
@@ -157,7 +149,6 @@ class UsersGridControl extends Control
     /**
      * Vytvoří komponentu.
      * @param $name
-     * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Ublaboo\DataGrid\Exception\DataGridColumnStatusException
      * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
@@ -591,8 +582,8 @@ class UsersGridControl extends Control
 
     /**
      * Zpracuje export seznamu uživatelů.
-     * @throws \PHPExcel_Exception
      * @throws \Nette\Application\AbortException
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function handleExportUsers()
     {
@@ -618,8 +609,8 @@ class UsersGridControl extends Control
 
     /**
      * Zpracuje export seznamu uživatelů s rolemi.
-     * @throws \PHPExcel_Exception
      * @throws \Nette\Application\AbortException
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function handleExportRoles()
     {
@@ -646,8 +637,8 @@ class UsersGridControl extends Control
 
     /**
      * Zpracuje export seznamu uživatelů s podakcemi a programy podle kategorií.
-     * @throws \PHPExcel_Exception
      * @throws \Nette\Application\AbortException
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function handleExportSubeventsAndCategories()
     {
@@ -673,8 +664,8 @@ class UsersGridControl extends Control
 
     /**
      * Zpracuje export harmonogramů uživatelů.
-     * @throws \PHPExcel_Exception
      * @throws \Nette\Application\AbortException
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function handleExportSchedules()
     {

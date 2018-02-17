@@ -11,8 +11,10 @@ use Nette;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class RoomDetailDTO extends Nette\Object
+class RoomDetailDTO
 {
+    use Nette\SmartObject;
+    
     /**
      * @JMS\Type("int")
      * @var int

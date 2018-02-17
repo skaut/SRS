@@ -34,6 +34,9 @@ class RoomsPresenter extends ProgramBasePresenter
     public $roomScheduleGridControlFactory;
 
 
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     public function startup()
     {
         parent::startup();

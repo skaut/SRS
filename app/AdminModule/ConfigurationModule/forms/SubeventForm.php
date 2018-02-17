@@ -14,8 +14,10 @@ use Nette\Application\UI\Form;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class SubeventForm extends Nette\Object
+class SubeventForm
 {
+    use Nette\SmartObject;
+
     /**
      * Upravovaná podakce.
      * @var Subevent
@@ -43,7 +45,6 @@ class SubeventForm extends Nette\Object
      * Vytvoří formulář.
      * @param $id
      * @return Form
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function create($id)
     {

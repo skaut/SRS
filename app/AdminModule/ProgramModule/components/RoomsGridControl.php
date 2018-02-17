@@ -203,6 +203,8 @@ class RoomsGridControl extends Control
 
     /**
      * Zpracuje export harmonogramů místností.
+     * @throws \Nette\Application\AbortException
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function handleExportRoomsSchedules()
     {

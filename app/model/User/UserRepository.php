@@ -5,7 +5,6 @@ namespace App\Model\User;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Role;
 use App\Model\Enums\ApplicationState;
-use App\Model\Program\Category;
 use App\Model\Program\Program;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

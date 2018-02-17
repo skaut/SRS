@@ -21,6 +21,10 @@ class ProgramPresenter extends ConfigurationBasePresenter
     public $programFormFactory;
 
 
+    /**
+     * @return Form
+     * @throws \App\Model\Settings\SettingsException
+     */
     protected function createComponentProgramForm()
     {
         $form = $this->programFormFactory->create();

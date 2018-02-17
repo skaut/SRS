@@ -11,8 +11,10 @@ use Nette\Utils\Image;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class FilesService extends Nette\Object
+class FilesService
 {
+    use Nette\SmartObject;
+    
     /** @var string */
     private $dir;
 

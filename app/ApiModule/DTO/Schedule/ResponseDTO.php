@@ -11,8 +11,10 @@ use Nette;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class ResponseDTO extends Nette\Object
+class ResponseDTO
 {
+    use Nette\SmartObject;
+    
     /**
      * @JMS\Type("string")
      * @var string

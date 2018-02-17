@@ -3,7 +3,6 @@
 namespace App\Model\CMS\Content;
 
 use App\Model\CMS\Page;
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 use Nette\Application\UI\Form;

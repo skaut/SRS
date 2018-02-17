@@ -16,8 +16,10 @@ use Nette\Application\UI\Form;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class AddLectorForm extends Nette\Object
+class AddLectorForm
 {
+    use Nette\SmartObject;
+    
     /** @var BaseForm */
     private $baseFormFactory;
 

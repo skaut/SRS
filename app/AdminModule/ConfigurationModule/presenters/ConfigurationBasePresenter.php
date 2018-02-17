@@ -22,6 +22,9 @@ abstract class ConfigurationBasePresenter extends AdminBasePresenter
     public $subeventRepository;
     protected $resource = Resource::CONFIGURATION;
 
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     public function startup()
     {
         parent::startup();
@@ -29,6 +32,10 @@ abstract class ConfigurationBasePresenter extends AdminBasePresenter
         $this->checkPermission(Permission::MANAGE);
     }
 
+    /**
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function beforeRender()
     {
         parent::beforeRender();

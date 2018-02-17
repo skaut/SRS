@@ -17,6 +17,9 @@ abstract class CMSBasePresenter extends AdminBasePresenter
     protected $resource = Resource::CMS;
 
 
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     public function startup()
     {
         parent::startup();
@@ -24,6 +27,9 @@ abstract class CMSBasePresenter extends AdminBasePresenter
         $this->checkPermission(Permission::MANAGE);
     }
 
+    /**
+     * @throws \App\Model\Settings\SettingsException
+     */
     public function beforeRender()
     {
         parent::beforeRender();

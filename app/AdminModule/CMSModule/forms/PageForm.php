@@ -105,6 +105,7 @@ class PageForm extends UI\Control
 
     /**
      * Vykreslí komponentu.
+     * @throws \App\Model\Page\PageException
      */
     public function render()
     {
@@ -170,7 +171,6 @@ class PageForm extends UI\Control
      * @param Form $form
      * @param \stdClass $values
      * @throws \App\Model\Page\PageException
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function processForm(Form $form, \stdClass $values)
     {

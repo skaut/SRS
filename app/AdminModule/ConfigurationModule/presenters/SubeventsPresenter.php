@@ -70,9 +70,13 @@ class SubeventsPresenter extends ConfigurationBasePresenter
         return $form;
     }
 
+    /**
+     * @return \Nette\Application\UI\Form
+     * @throws \App\Model\Settings\SettingsException
+     */
     protected function createComponentSubeventsForm()
     {
-        $form = $this->subeventsFormFactory->create($this->getParameter('id'));
+        $form = $this->subeventsFormFactory->create();
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');

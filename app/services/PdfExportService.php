@@ -19,8 +19,10 @@ use Nette;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class PdfExportService extends Nette\Object
+class PdfExportService
 {
+    use Nette\SmartObject;
+    
     /** @var string */
     private $dir;
 
@@ -44,6 +46,7 @@ class PdfExportService extends Nette\Object
      * @param string $dir
      * @param SettingsRepository $settingsRepository
      * @param ApplicationRepository $applicationRepository
+     * @param ApplicationService $applicationService
      */
     public function __construct($dir, SettingsRepository $settingsRepository,
                                 ApplicationRepository $applicationRepository, ApplicationService $applicationService)
@@ -101,6 +104,7 @@ class PdfExportService extends Nette\Object
      * Vygeneruje doklady o zaplacení pro uživatele.
      * @param User $user
      * @param $filename
+     * @param User $createdBy
      * @throws \App\Model\Settings\SettingsException
      * @throws \Throwable
      */
@@ -219,7 +223,7 @@ class PdfExportService extends Nette\Object
      */
     private function configureForIncomeProof()
     {
-        $pagecount = $this->fpdi->setSourceFile($this->dir . '/prijmovy-pokladni-doklad.pdf');
+        $this->fpdi->setSourceFile($this->dir . '/prijmovy-pokladni-doklad.pdf');
         $template = $this->fpdi->importPage(1, '/MediaBox');
         $this->template = $template;
     }
@@ -229,7 +233,7 @@ class PdfExportService extends Nette\Object
      */
     private function configureForAccountProof()
     {
-        $pagecount = $this->fpdi->setSourceFile($this->dir . '/potvrzeni-o-prijeti-platby.pdf');
+        $this->fpdi->setSourceFile($this->dir . '/potvrzeni-o-prijeti-platby.pdf');
         $template = $this->fpdi->importPage(1, '/MediaBox');
         $this->template = $template;
     }

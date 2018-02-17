@@ -37,6 +37,7 @@ class DocumentContent extends Content implements IContent
      * DocumentContent constructor.
      * @param Page $page
      * @param $area
+     * @throws \App\Model\Page\PageException
      */
     public function __construct(Page $page, $area)
     {

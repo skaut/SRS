@@ -15,8 +15,10 @@ use Nette\Application\UI\Form;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class PaymentProofForm extends Nette\Object
+class PaymentProofForm
 {
+    use Nette\SmartObject;
+    
     /** @var BaseForm */
     private $baseFormFactory;
 

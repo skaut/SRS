@@ -31,6 +31,7 @@ class SystemPresenter extends ConfigurationBasePresenter
 
     /**
      * Promaže cache.
+     * @throws \Exception
      */
     public function handleClearCache()
     {

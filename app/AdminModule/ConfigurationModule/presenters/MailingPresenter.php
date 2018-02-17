@@ -29,11 +29,18 @@ class MailingPresenter extends ConfigurationBasePresenter
     public $settingsRepository;
 
 
+    /**
+     * @throws \App\Model\Settings\SettingsException
+     */
     public function renderDefault()
     {
         $this->template->waiting = $this->settingsRepository->getValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE) !== NULL;
     }
 
+    /**
+     * @return Form
+     * @throws \App\Model\Settings\SettingsException
+     */
     protected function createComponentMailingForm()
     {
         $form = $this->mailingFormFactory->create($this->user->getId());

@@ -24,8 +24,10 @@ use Nette;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class ProgramService extends Nette\Object
+class ProgramService
 {
+    use Nette\SmartObject;
+
     /** @var SettingsRepository */
     private $settingsRepository;
 
@@ -90,7 +92,7 @@ class ProgramService extends Nette\Object
 
     /**
      * Aktualizuje programy uživatelů (odhlásí nepovolené a přihlásí automaticky přihlašované).
-     * @param User[] $users
+     * @param Collection|User[] $users
      */
     public function updateUsersPrograms($users)
     {

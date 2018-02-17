@@ -4,6 +4,8 @@ namespace App\Services;
 
 use Nette;
 use Nette\Application\IResponse;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 
 /**
@@ -11,10 +13,12 @@ use Nette\Application\IResponse;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class ExcelResponse extends Nette\Object implements IResponse
+class ExcelResponse implements IResponse
 {
-    /** @var \PHPExcel */
-    private $phpExcel;
+    use Nette\SmartObject;
+    
+    /** @var Spreadsheet */
+    private $spreadsheet;
 
     /** @var string */
     private $filename;
@@ -22,19 +26,19 @@ class ExcelResponse extends Nette\Object implements IResponse
 
     /**
      * ExcelResponse constructor.
-     * @param \PHPExcel $phpExcel
+     * @param Spreadsheet $spreadsheet
      * @param $filename
      */
-    public function __construct(\PHPExcel $phpExcel, $filename)
+    public function __construct(Spreadsheet $spreadsheet, $filename)
     {
-        $this->phpExcel = $phpExcel;
+        $this->spreadsheet = $spreadsheet;
         $this->filename = $filename;
     }
 
     /**
      * @param Nette\Http\IRequest $httpRequest
      * @param Nette\Http\IResponse $httpResponse
-     * @throws \PHPExcel_Writer_Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
     public function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse)
     {
@@ -42,7 +46,7 @@ class ExcelResponse extends Nette\Object implements IResponse
         $httpResponse->setHeader('Content-Disposition', 'attachment;filename=' . $this->filename);
         $httpResponse->setHeader('Content-Transfer-Encoding', 'binary');
 
-        $writer = new \PHPExcel_Writer_Excel2007($this->phpExcel);
+        $writer = new Xlsx($this->spreadsheet);
         $writer->save('php://output');
     }
 }

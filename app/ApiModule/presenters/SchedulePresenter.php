@@ -30,6 +30,9 @@ class SchedulePresenter extends ApiBasePresenter
     private $serializer;
 
 
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     public function startup()
     {
         parent::startup();
@@ -51,6 +54,7 @@ class SchedulePresenter extends ApiBasePresenter
 
     /**
      * Vrací podrobnosti o všech programech pro použití v administraci harmonogramu.
+     * @throws \Nette\Application\AbortException
      */
     public function actionGetProgramsAdmin()
     {
@@ -63,6 +67,8 @@ class SchedulePresenter extends ApiBasePresenter
 
     /**
      * Vrací podrobnosti o programech, ke kterým má uživatel přístup, pro použití v kalendáři pro výběr programů.
+     * @throws \Nette\Application\AbortException
+     * @throws \App\Model\Settings\SettingsException
      */
     public function actionGetProgramsWeb()
     {
@@ -75,6 +81,7 @@ class SchedulePresenter extends ApiBasePresenter
 
     /**
      * Vrací podrobnosti o programových blocích.
+     * @throws \Nette\Application\AbortException
      */
     public function actionGetBlocks()
     {
@@ -87,6 +94,7 @@ class SchedulePresenter extends ApiBasePresenter
 
     /**
      * Vrací podrobnosti o místnostech.
+     * @throws \Nette\Application\AbortException
      */
     public function actionGetRooms()
     {
@@ -99,6 +107,8 @@ class SchedulePresenter extends ApiBasePresenter
 
     /**
      * Vrací nastavení pro FullCalendar.
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Nette\Application\AbortException
      */
     public function actionGetCalendarConfig()
     {

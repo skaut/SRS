@@ -13,8 +13,10 @@ use Nextras\Forms\Rendering\Bs3FormRenderer;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class BaseForm extends Nette\Object
+class BaseForm
 {
+    use Nette\SmartObject;
+    
     /** @var Translator */
     private $translator;
 

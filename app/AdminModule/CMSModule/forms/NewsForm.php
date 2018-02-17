@@ -15,8 +15,10 @@ use Nette\Application\UI\Form;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class NewsForm extends Nette\Object
+class NewsForm
 {
+    use Nette\SmartObject;
+    
     /**
      * Upravovaná aktualita.
      * @var News
