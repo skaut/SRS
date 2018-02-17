@@ -66,7 +66,7 @@ class UserService
     {
         $paymentMethod = NULL;
 
-        foreach ($user->getApplications() as $application) {
+        foreach ($user->getNotCanceledApplications() as $application) {
             $currentPaymentMethod = $application->getPaymentMethod();
             if ($currentPaymentMethod) {
                 if ($paymentMethod === NULL) {
