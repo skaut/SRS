@@ -14,7 +14,7 @@ use Nette\Application\UI\Form;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class EditUserPersonalDetailsForm 
+class EditUserPersonalDetailsForm
 {
     use Nette\SmartObject;
     

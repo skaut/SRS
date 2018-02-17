@@ -13,7 +13,7 @@ use Nextras\Forms\Rendering\Bs3FormRenderer;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class BaseForm 
+class BaseForm
 {
     use Nette\SmartObject;
     
