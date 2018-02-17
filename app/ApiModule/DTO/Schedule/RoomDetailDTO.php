@@ -11,7 +11,7 @@ use Nette;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class RoomDetailDTO 
+class RoomDetailDTO
 {
     use Nette\SmartObject;
     

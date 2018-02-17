@@ -11,7 +11,7 @@ use Nette\Utils\Image;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class FilesService 
+class FilesService
 {
     use Nette\SmartObject;
     

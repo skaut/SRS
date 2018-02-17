@@ -11,7 +11,7 @@ use Nette;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class ProgramDetailDTO 
+class ProgramDetailDTO
 {
     use Nette\SmartObject;
     

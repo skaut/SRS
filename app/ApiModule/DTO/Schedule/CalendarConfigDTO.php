@@ -11,7 +11,7 @@ use Nette;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class CalendarConfigDTO 
+class CalendarConfigDTO
 {
     use Nette\SmartObject;
     
