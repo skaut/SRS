@@ -582,8 +582,8 @@ class UsersGridControl extends Control
 
     /**
      * Zpracuje export seznamu uživatelů.
-     * @throws \PHPExcel_Exception
      * @throws \Nette\Application\AbortException
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function handleExportUsers()
     {
@@ -609,8 +609,8 @@ class UsersGridControl extends Control
 
     /**
      * Zpracuje export seznamu uživatelů s rolemi.
-     * @throws \PHPExcel_Exception
      * @throws \Nette\Application\AbortException
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function handleExportRoles()
     {
@@ -637,8 +637,8 @@ class UsersGridControl extends Control
 
     /**
      * Zpracuje export seznamu uživatelů s podakcemi a programy podle kategorií.
-     * @throws \PHPExcel_Exception
      * @throws \Nette\Application\AbortException
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function handleExportSubeventsAndCategories()
     {
@@ -664,8 +664,8 @@ class UsersGridControl extends Control
 
     /**
      * Zpracuje export harmonogramů uživatelů.
-     * @throws \PHPExcel_Exception
      * @throws \Nette\Application\AbortException
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function handleExportSchedules()
     {

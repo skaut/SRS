@@ -105,7 +105,7 @@ class RoomScheduleGridControl extends Control
 
     /**
      * @throws \Nette\Application\AbortException
-     * @throws \PHPExcel_Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function handleExportRoomsSchedule()
     {

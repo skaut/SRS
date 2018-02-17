@@ -15,7 +15,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Kdyby\Translation\Translator;
 use Nette;
-use PHPExcel_Cell_DataType;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 
 /**
@@ -27,8 +29,8 @@ class ExcelExportService
 {
     use Nette\SmartObject;
 
-    /** @var \PHPExcel */
-    private $phpExcel;
+    /** @var Spreadsheet */
+    private $spreadsheet;
 
     /** @var Translator */
     private $translator;
@@ -71,7 +73,7 @@ class ExcelExportService
                                 SubeventRepository $subeventRepository, CategoryRepository $categoryRepository,
                                 ProgramRepository $programRepository, ProgramService $programService)
     {
-        $this->phpExcel = new \PHPExcel();
+        $this->spreadsheet = new Spreadsheet();
 
         $this->translator = $translator;
         $this->customInputRepository = $customInputRepository;
@@ -89,11 +91,11 @@ class ExcelExportService
      * @param $roles
      * @param $filename
      * @return ExcelResponse
-     * @throws \PHPExcel_Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function exportUsersRoles($users, $roles, $filename)
     {
-        $sheet = $this->phpExcel->getSheet(0);
+        $sheet = $this->spreadsheet->getSheet(0);
 
         $row = 1;
         $column = 0;
@@ -121,7 +123,7 @@ class ExcelExportService
             }
         }
 
-        return new ExcelResponse($this->phpExcel, $filename);
+        return new ExcelResponse($this->spreadsheet, $filename);
     }
 
     /**
@@ -129,7 +131,7 @@ class ExcelExportService
      * @param $user
      * @param $filename
      * @return ExcelResponse
-     * @throws \PHPExcel_Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function exportUserSchedule($user, $filename)
     {
@@ -141,16 +143,16 @@ class ExcelExportService
      * @param $users
      * @param $filename
      * @return ExcelResponse
-     * @throws \PHPExcel_Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function exportUsersSchedules($users, $filename)
     {
-        $this->phpExcel->removeSheetByIndex(0);
+        $this->spreadsheet->removeSheetByIndex(0);
         $sheetNumber = 0;
 
         foreach ($users as $user) {
-            $sheet = new \PHPExcel_Worksheet($this->phpExcel, $this->truncate($user->getDisplayName(), 28));
-            $this->phpExcel->addSheet($sheet, $sheetNumber++);
+            $sheet = new Worksheet($this->spreadsheet, $this->truncate($user->getDisplayName(), 28));
+            $this->spreadsheet->addSheet($sheet, $sheetNumber++);
 
             $row = 1;
             $column = 0;
@@ -192,7 +194,7 @@ class ExcelExportService
             }
         }
 
-        return new ExcelResponse($this->phpExcel, $filename);
+        return new ExcelResponse($this->spreadsheet, $filename);
     }
 
     /**
@@ -200,7 +202,7 @@ class ExcelExportService
      * @param Room $room
      * @param $filename
      * @return ExcelResponse
-     * @throws \PHPExcel_Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function exportRoomSchedule(Room $room, $filename)
     {
@@ -212,16 +214,16 @@ class ExcelExportService
      * @param $rooms
      * @param $filename
      * @return ExcelResponse
-     * @throws \PHPExcel_Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function exportRoomsSchedules($rooms, $filename)
     {
-        $this->phpExcel->removeSheetByIndex(0);
+        $this->spreadsheet->removeSheetByIndex(0);
         $sheetNumber = 0;
 
         foreach ($rooms as $room) {
-            $sheet = new \PHPExcel_Worksheet($this->phpExcel, $this->truncate($room->getName(), 28));
-            $this->phpExcel->addSheet($sheet, $sheetNumber++);
+            $sheet = new Worksheet($this->spreadsheet, $this->truncate($room->getName(), 28));
+            $this->spreadsheet->addSheet($sheet, $sheetNumber++);
 
             $row = 1;
             $column = 0;
@@ -260,18 +262,18 @@ class ExcelExportService
             }
         }
 
-        return new ExcelResponse($this->phpExcel, $filename);
+        return new ExcelResponse($this->spreadsheet, $filename);
     }
 
     /**
      * @param Collection|User[] $users
      * @param $filename
      * @return ExcelResponse
-     * @throws \PHPExcel_Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function exportUsersList($users, $filename)
     {
-        $sheet = $this->phpExcel->getSheet(0);
+        $sheet = $this->spreadsheet->getSheet(0);
 
         $row = 1;
         $column = 0;
@@ -406,7 +408,7 @@ class ExcelExportService
             );
 
             $sheet->getCellByColumnAndRow($column++, $row)
-                ->setValueExplicit($this->userService->getMembershipText($user), PHPExcel_Cell_DataType::TYPE_STRING);
+                ->setValueExplicit($this->userService->getMembershipText($user), DataType::TYPE_STRING);
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->getAge());
 
@@ -417,7 +419,7 @@ class ExcelExportService
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->getFeeRemaining());
 
             $sheet->getCellByColumnAndRow($column++, $row)
-                ->setValueExplicit($user->getVariableSymbolsText(), PHPExcel_Cell_DataType::TYPE_STRING);
+                ->setValueExplicit($user->getVariableSymbolsText(), DataType::TYPE_STRING);
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $this->userService->getPaymentMethodText($user));
 
@@ -468,18 +470,18 @@ class ExcelExportService
             $sheet->setCellValueByColumnAndRow($column, $row, $user->getNote());
             $sheet->getStyleByColumnAndRow($column++, $row)->getAlignment()->setWrapText(TRUE);
         }
-        return new ExcelResponse($this->phpExcel, $filename);
+        return new ExcelResponse($this->spreadsheet, $filename);
     }
 
     /**
      * @param Collection|User[] $users
      * @param $filename
      * @return ExcelResponse
-     * @throws \PHPExcel_Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function exportUsersSubeventsAndCategories($users, $filename)
     {
-        $sheet = $this->phpExcel->getSheet(0);
+        $sheet = $this->spreadsheet->getSheet(0);
 
         $row = 1;
         $column = 0;
@@ -528,7 +530,7 @@ class ExcelExportService
             $column = 0;
 
             $sheet->getCellByColumnAndRow($column++, $row)
-                ->setValueExplicit($user->getVariableSymbolsText(), PHPExcel_Cell_DataType::TYPE_STRING);
+                ->setValueExplicit($user->getVariableSymbolsText(), DataType::TYPE_STRING);
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->getFirstName());
 
@@ -554,23 +556,23 @@ class ExcelExportService
                 $sheet->setCellValueByColumnAndRow($column++, $row, implode(', ', $rooms));
             }
         }
-        return new ExcelResponse($this->phpExcel, $filename);
+        return new ExcelResponse($this->spreadsheet, $filename);
     }
 
     /**
      * @param Collection|Block[] $blocks
      * @param $filename
      * @return ExcelResponse
-     * @throws \PHPExcel_Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function exportBlocksAttendees($blocks, $filename)
     {
-        $this->phpExcel->removeSheetByIndex(0);
+        $this->spreadsheet->removeSheetByIndex(0);
         $sheetNumber = 0;
 
         foreach ($blocks as $block) {
-            $sheet = new \PHPExcel_Worksheet($this->phpExcel, $this->truncate($block->getName(), 28));
-            $this->phpExcel->addSheet($sheet, $sheetNumber++);
+            $sheet = new Worksheet($this->spreadsheet, $this->truncate($block->getName(), 28));
+            $this->spreadsheet->addSheet($sheet, $sheetNumber++);
 
             $row = 1;
             $column = 0;
@@ -602,7 +604,7 @@ class ExcelExportService
             }
         }
 
-        return new ExcelResponse($this->phpExcel, $filename);
+        return new ExcelResponse($this->spreadsheet, $filename);
     }
 
     /**

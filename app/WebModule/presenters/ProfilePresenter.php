@@ -107,7 +107,7 @@ class ProfilePresenter extends WebBasePresenter
     /**
      * Vyexportuje rozvrh uživatele.
      * @throws \Nette\Application\AbortException
-     * @throws \PHPExcel_Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function actionExportSchedule()
     {
