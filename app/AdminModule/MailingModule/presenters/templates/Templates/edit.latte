@@ -4,9 +4,8 @@
 
 {block main}
     <h2>
-        {_'admin.mailing.templates_edit_heading', [
-            'type' => $translator->translate('common.mailing.template_type.' . $editedTemplate->getType())
-        ]}
+        {$translator->translate('admin.mailing.templates_edit_heading',
+            ['type' => $translator->translate('common.mailing.template_type.' . $editedTemplate->getType())])}
     </h2>
 
     <div class="row">
@@ -21,14 +20,14 @@
                 </div>
                 <ul class="list-group">
                     {foreach $editedTemplate->getVariables() as $variable}
-                        {var $variableName = $variable->getName()}
+						{var $variable = $translator->translate('common.mailing.variable_name.' . $variable->getName())}
                         <li class="list-group-item">
-                            <strong>
-                                <a href="#" onClick="tinymce.activeEditor.execCommand('mceInsertContent', false, '%{_'common.mailing.variable_name.' . $variableName|noescape}%');">
-                                    %{_'common.mailing.variable_name.' . $variableName}%
-                                </a>
+                            <a href="#" onClick="tinymce.activeEditor.execCommand('mceInsertContent', false, '%{$variable|noescape}%');"><strong>
+                                %{$variable}%
                             </strong>
-                            - {_'common.mailing.variable_description.' . $variableName}
+                            -
+                            {$variable}
+							</a>
                         </li>
                     {/foreach}
                 </ul>
@@ -36,3 +35,4 @@
         </div>
     </div>
 {/block}
+
