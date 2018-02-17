@@ -25,8 +25,10 @@ use Nette\Application\UI\Form;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class BlockForm extends Nette\Object
+class BlockForm 
 {
+    use Nette\SmartObject;
+    
     /**
      * Přihlášený uživatel.
      * @var User

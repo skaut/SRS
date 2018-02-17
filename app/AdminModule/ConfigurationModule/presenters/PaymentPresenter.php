@@ -40,6 +40,10 @@ class PaymentPresenter extends ConfigurationBasePresenter
         return $control;
     }
 
+    /**
+     * @return Form
+     * @throws \App\Model\Settings\SettingsException
+     */
     protected function createComponentPaymentProofForm()
     {
         $form = $this->paymentProofFormFactory->create();

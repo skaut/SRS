@@ -44,6 +44,10 @@ class SkautIsPresenter extends ConfigurationBasePresenter
     private $skautIsEventService;
 
 
+    /**
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Nette\Application\AbortException
+     */
     public function startup()
     {
         parent::startup();
@@ -62,6 +66,9 @@ class SkautIsPresenter extends ConfigurationBasePresenter
         }
     }
 
+    /**
+     * @throws \App\Model\Settings\SettingsException
+     */
     public function renderDefault()
     {
         $eventId = $this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_ID);
@@ -84,6 +91,8 @@ class SkautIsPresenter extends ConfigurationBasePresenter
 
     /**
      * Zruší propojení s akcí ve skautIS.
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Nette\Application\AbortException
      */
     public function handleDisconnect()
     {
@@ -97,6 +106,8 @@ class SkautIsPresenter extends ConfigurationBasePresenter
 
     /**
      * Synchronizuje účastníky s účastníky ve skautIS.
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Nette\Application\AbortException
      */
     public function handleSyncParticipants()
     {
@@ -114,6 +125,10 @@ class SkautIsPresenter extends ConfigurationBasePresenter
         $this->redirect('this');
     }
 
+    /**
+     * @return Form
+     * @throws \App\Model\Settings\SettingsException
+     */
     protected function createComponentSkautIsEventForm()
     {
         $form = $this->skautIsEventFormFactory->create();

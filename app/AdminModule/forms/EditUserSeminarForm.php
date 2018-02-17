@@ -6,11 +6,9 @@ use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
-use App\Model\Program\ProgramRepository;
 use App\Model\Settings\CustomInput\CustomFile;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
-use App\Model\Settings\CustomInput\CustomText;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
@@ -23,14 +21,11 @@ use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\FilesService;
 use App\Services\MailService;
-use App\Services\ProgramService;
 use App\Utils\Validators;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
-use PhpCollection\Set;
-use phpDocumentor\Reflection\File;
 
 
 /**
@@ -39,8 +34,10 @@ use phpDocumentor\Reflection\File;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class EditUserSeminarForm extends Nette\Object
+class EditUserSeminarForm
 {
+    use Nette\SmartObject;
+
     /**
      * Upravovaný uživatel.
      * @var User
@@ -88,6 +85,8 @@ class EditUserSeminarForm extends Nette\Object
      * @param ApplicationService $applicationService
      * @param Validators $validators
      * @param FilesService $filesService
+     * @param MailService $mailService
+     * @param SettingsRepository $settingsRepository
      */
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
                                 CustomInputRepository $customInputRepository,
@@ -112,7 +111,6 @@ class EditUserSeminarForm extends Nette\Object
      * Vytvoří formulář.
      * @param $id
      * @return Form
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function create($id)
     {
@@ -160,7 +158,7 @@ class EditUserSeminarForm extends Nette\Object
                     break;
 
                 case CustomInput::FILE:
-                    $custom = $form->addUpload('custom' . $customInput->getId(), $customInput->getName());
+                    $form->addUpload('custom' . $customInput->getId(), $customInput->getName());
                     break;
             }
         }

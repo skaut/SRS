@@ -21,8 +21,10 @@ use Ublaboo\Mailing\MailFactory;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class MailService extends Nette\Object
+class MailService
 {
+    use Nette\SmartObject;
+
     /** @var MailFactory */
     private $mailFactory;
 

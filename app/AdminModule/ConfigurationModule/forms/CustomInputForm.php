@@ -18,8 +18,10 @@ use Nette\Application\UI\Form;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class CustomInputForm extends Nette\Object
+class CustomInputForm
 {
+    use Nette\SmartObject;
+
     /**
      * Upravované pole.
      * @var CustomInput

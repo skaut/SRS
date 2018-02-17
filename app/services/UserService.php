@@ -2,10 +2,6 @@
 
 namespace App\Services;
 
-use App\Model\Enums\ApplicationState;
-use App\Model\Mailing\Template;
-use App\Model\Mailing\TemplateVariable;
-use App\Model\Settings\Settings;
 use App\Model\User\ApplicationRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
@@ -18,8 +14,10 @@ use Nette;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class UserService extends Nette\Object
+class UserService
 {
+    use Nette\SmartObject;
+
     /** @var Translator */
     private $translator;
 
@@ -33,7 +31,6 @@ class UserService extends Nette\Object
     /**
      * UserService constructor.
      * @param Translator $translator
-     * @param ProgramService $programService
      * @param UserRepository $userRepository
      * @param ApplicationRepository $applicationRepository
      */

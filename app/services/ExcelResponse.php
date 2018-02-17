@@ -11,8 +11,10 @@ use Nette\Application\IResponse;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class ExcelResponse extends Nette\Object implements IResponse
+class ExcelResponse implements IResponse
 {
+    use Nette\SmartObject;
+    
     /** @var \PHPExcel */
     private $phpExcel;
 

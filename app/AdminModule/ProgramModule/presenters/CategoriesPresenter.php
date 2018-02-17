@@ -20,6 +20,9 @@ class CategoriesPresenter extends ProgramBasePresenter
     public $programCategoriesGridControlFactory;
 
 
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     public function startup()
     {
         parent::startup();

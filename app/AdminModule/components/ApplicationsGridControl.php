@@ -83,6 +83,7 @@ class ApplicationsGridControl extends Control
      * @param SettingsRepository $settingsRepository
      * @param PdfExportService $pdfExportService
      * @param ProgramService $programService
+     * @param Validators $validators
      */
     public function __construct(Translator $translator, ApplicationRepository $applicationRepository,
                                 UserRepository $userRepository, RoleRepository $roleRepository,
@@ -256,7 +257,6 @@ class ApplicationsGridControl extends Control
     /**
      * Zpracuje přidání podakcí.
      * @param $values
-     * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Nette\Application\AbortException
      * @throws \Throwable
      */
@@ -288,7 +288,6 @@ class ApplicationsGridControl extends Control
      * Zpracuje úpravu přihlášky.
      * @param $id
      * @param $values
-     * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Nette\Application\AbortException
      * @throws \Throwable
      */

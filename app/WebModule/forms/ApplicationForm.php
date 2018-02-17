@@ -2,12 +2,8 @@
 
 namespace App\WebModule\Forms;
 
-use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
-use App\Model\Enums\ApplicationState;
 use App\Model\Enums\Sex;
-use App\Model\Mailing\Template;
-use App\Model\Mailing\TemplateVariable;
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\CustomInput\CustomFile;
 use App\Model\Settings\CustomInput\CustomInput;
@@ -15,7 +11,6 @@ use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\SubeventRepository;
-use App\Model\User\Application;
 use App\Model\User\ApplicationRepository;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
 use App\Model\User\CustomInputValue\CustomInputValueRepository;
@@ -45,8 +40,10 @@ use Skautis\Wsdl\WsdlException;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class ApplicationForm extends Nette\Object
+class ApplicationForm
 {
+    use Nette\SmartObject;
+
     /**
      * Přihlášený uživatel.
      * @var User
@@ -364,6 +361,9 @@ class ApplicationForm extends Nette\Object
                 case CustomInput::FILE:
                     $custom = $form->addUpload('custom' . $customInput->getId(), $customInput->getName());
                     break;
+
+                default:
+                    throw new Nette\InvalidArgumentException();
             }
 
             if ($customInput->isMandatory())
@@ -417,7 +417,6 @@ class ApplicationForm extends Nette\Object
     /**
      * Přidá select pro výběr rolí.
      * @param Form $form
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     private function addRolesSelect(Form $form)
     {
@@ -484,7 +483,6 @@ class ApplicationForm extends Nette\Object
      * @param $field
      * @param $args
      * @return bool
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function validateSubeventsCapacities($field, $args): bool
     {

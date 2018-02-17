@@ -20,6 +20,10 @@ class DashboardPresenter extends AdminBasePresenter
     public $subeventRepository;
 
 
+    /**
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function beforeRender()
     {
         parent::beforeRender();

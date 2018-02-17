@@ -85,6 +85,9 @@ abstract class AdminBasePresenter extends BasePresenter
         return $this->webLoader->createJavaScriptLoader('admin');
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     public function startup()
     {
         parent::startup();
@@ -105,6 +108,9 @@ abstract class AdminBasePresenter extends BasePresenter
         $this->dbuser = $this->userRepository->findById($this->user->id);
     }
 
+    /**
+     * @throws \App\Model\Settings\SettingsException
+     */
     public function beforeRender()
     {
         parent::beforeRender();

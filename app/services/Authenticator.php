@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
-use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use Nette;
@@ -17,8 +16,10 @@ use Nette\Security as NS;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class Authenticator extends Nette\Object implements NS\IAuthenticator
+class Authenticator implements NS\IAuthenticator
 {
+    use Nette\SmartObject;
+
     /** @var SkautIsService */
     protected $skautIsService;
 
@@ -36,7 +37,6 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
      * Authenticator constructor.
      * @param UserRepository $userRepository
      * @param RoleRepository $roleRepository
-     * @param SettingsRepository $settingsRepository
      * @param SkautIsService $skautIsService
      * @param FilesService $filesService
      */

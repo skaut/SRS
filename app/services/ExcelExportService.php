@@ -2,8 +2,6 @@
 
 namespace App\Services;
 
-use App\Model\ACL\Permission;
-use App\Model\ACL\Resource;
 use App\Model\Program\Block;
 use App\Model\Program\BlockRepository;
 use App\Model\Program\CategoryRepository;
@@ -25,8 +23,10 @@ use PHPExcel_Cell_DataType;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class ExcelExportService extends Nette\Object
+class ExcelExportService
 {
+    use Nette\SmartObject;
+
     /** @var \PHPExcel */
     private $phpExcel;
 
@@ -372,6 +372,9 @@ class ExcelExportService extends Nette\Object
 
                 case CustomInput::FILE:
                     continue 2;
+
+                default:
+                    throw new Nette\InvalidArgumentException();
             }
 
             $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate($customInput->getName()));
@@ -452,6 +455,9 @@ class ExcelExportService extends Nette\Object
 
                         case CustomInput::FILE:
                             continue 2;
+
+                        default:
+                            throw new Nette\InvalidArgumentException();
                     }
                 } else
                     $value = '';

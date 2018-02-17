@@ -27,6 +27,8 @@ class Validators
 
     /**
      * Validators constructor.
+     * @param RoleRepository $roleRepository
+     * @param SubeventRepository $subeventRepository
      */
     public function __construct(RoleRepository $roleRepository, SubeventRepository $subeventRepository)
     {
@@ -130,7 +132,6 @@ class Validators
      * @param Collection|Subevent[] $selectedSubevents
      * @param User $user
      * @return bool
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function validateSubeventsCapacities(Collection $selectedSubevents, User $user): bool
     {

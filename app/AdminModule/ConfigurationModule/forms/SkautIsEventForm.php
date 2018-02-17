@@ -18,8 +18,10 @@ use Nette\Application\UI\Form;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class SkautIsEventForm extends Nette\Object
+class SkautIsEventForm
 {
+    use Nette\SmartObject;
+
     /** @var BaseForm */
     private $baseFormFactory;
 

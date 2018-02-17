@@ -10,6 +10,9 @@ namespace App\WebModule\Presenters;
  */
 class MemberPresenter extends WebBasePresenter
 {
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     public function startup()
     {
         parent::startup();

@@ -2,10 +2,8 @@
 
 namespace App\WebModule\Forms;
 
-use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Enums\ApplicationState;
-use App\Model\Program\ProgramRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
@@ -19,8 +17,10 @@ use Nette\Application\UI\Form;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class RolesForm extends Nette\Object
+class RolesForm
 {
+    use Nette\SmartObject;
+    
     /**
      * Přihlášený uživatel.
      * @var User
@@ -49,6 +49,7 @@ class RolesForm extends Nette\Object
      * @param UserRepository $userRepository
      * @param RoleRepository $roleRepository
      * @param ApplicationService $applicationService
+     * @param Validators $validators
      */
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
                                 RoleRepository $roleRepository, ApplicationService $applicationService,
@@ -66,7 +67,6 @@ class RolesForm extends Nette\Object
      * @param $id
      * @return Form
      * @throws \App\Model\Settings\SettingsException
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function create($id)
     {

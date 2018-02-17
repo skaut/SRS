@@ -2,16 +2,11 @@
 
 namespace App\WebModule\Components;
 
-use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
-use App\Model\Mailing\Template;
-use App\Model\Mailing\TemplateVariable;
 use App\Model\Program\ProgramRepository;
-use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
-use App\Model\Structure\Subevent;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\Application;
 use App\Model\User\ApplicationRepository;
@@ -27,7 +22,6 @@ use App\Services\PdfExportService;
 use App\Services\ProgramService;
 use App\Services\UserService;
 use App\Utils\Validators;
-use Doctrine\Common\Collections\ArrayCollection;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
@@ -108,6 +102,9 @@ class ApplicationsGridControl extends Control
      * @param PdfExportService $pdfExportService
      * @param ProgramService $programService
      * @param UserService $userService
+     * @param Validators $validators
+     * @param RolesApplicationRepository $rolesApplicationRepository
+     * @param SubeventsApplicationRepository $subeventsApplicationRepository
      */
     public function __construct(Translator $translator, ApplicationRepository $applicationRepository,
                                 UserRepository $userRepository, RoleRepository $roleRepository,
@@ -259,7 +256,6 @@ class ApplicationsGridControl extends Control
     /**
      * Zpracuje přidání podakcí.
      * @param $values
-     * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Nette\Application\AbortException
      * @throws \Throwable
      */
@@ -304,9 +300,11 @@ class ApplicationsGridControl extends Control
      * Zpracuje úpravu přihlášky.
      * @param $id
      * @param $values
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \App\Model\Settings\SettingsException
      * @throws \Nette\Application\AbortException
      * @throws \Throwable
+     * @throws \Ublaboo\Mailing\Exception\MailingException
+     * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
      */
     public function edit($id, $values)
     {

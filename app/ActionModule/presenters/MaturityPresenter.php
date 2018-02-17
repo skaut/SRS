@@ -12,14 +12,12 @@ use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\Application;
 use App\Model\User\ApplicationRepository;
-use App\Model\User\RolesApplication;
 use App\Model\User\RolesApplicationRepository;
 use App\Model\User\SubeventsApplicationRepository;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\MailService;
 use App\Services\ProgramService;
-use Doctrine\Common\Collections\ArrayCollection;
 
 
 /**
@@ -94,18 +92,20 @@ class MaturityPresenter extends ActionBasePresenter
      * Zkontroluje splatnost přihlášek.
      * @throws \App\Model\Settings\SettingsException
      * @throws \Throwable
-     * @throws \Ublaboo\Mailing\Exception\MailingException
-     * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
      */
     public function actionCheck()
     {
         $cancelRegistration = $this->settingsRepository->getValue(Settings::CANCEL_REGISTRATION_AFTER_MATURITY);
         if ($cancelRegistration !== NULL)
             $cancelRegistrationDate = (new \DateTime())->setTime(0, 0)->modify('-' . $cancelRegistration . ' days');
+        else
+            $cancelRegistrationDate = NULL;
 
         $maturityReminder = $this->settingsRepository->getValue(Settings::MATURITY_REMINDER);
         if ($maturityReminder !== NULL)
             $maturityReminderDate = (new \DateTime())->setTime(0, 0)->modify('+' . $maturityReminder . ' days');
+        else
+            $maturityReminderDate = NULL;
 
         foreach ($this->userRepository->findAllWithWaitingForPaymentApplication() as $user) {
             $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($user, $cancelRegistration, $cancelRegistrationDate, $maturityReminder, $maturityReminderDate) {

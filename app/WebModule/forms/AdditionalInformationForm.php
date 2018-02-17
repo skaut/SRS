@@ -21,6 +21,7 @@ use App\Services\FilesService;
 use App\Services\MailService;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
+use Nette\InvalidArgumentException;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
 
@@ -76,6 +77,9 @@ class AdditionalInformationForm extends UI\Control
      * @param CustomInputRepository $customInputRepository
      * @param ApplicationService $applicationService
      * @param CustomInputValueRepository $customInputValueRepository
+     * @param FilesService $filesService
+     * @param MailService $mailService
+     * @param SettingsRepository $settingsRepository
      */
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
                                 CustomInputRepository $customInputRepository, ApplicationService $applicationService,
@@ -141,6 +145,9 @@ class AdditionalInformationForm extends UI\Control
                     if ($customInputValue && $customInputValue->getValue())
                         $custom->setAttribute('data-current-file', $customInputValue->getValue());
                     break;
+
+                default:
+                    throw new InvalidArgumentException();
             }
 
             if ($customInput->isMandatory() && $customInput->getType() != CustomInput::FILE)

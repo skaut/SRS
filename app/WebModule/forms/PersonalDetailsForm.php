@@ -17,8 +17,10 @@ use Skautis\Wsdl\WsdlException;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class PersonalDetailsForm extends Nette\Object
+class PersonalDetailsForm
 {
+    use Nette\SmartObject;
+    
     /**
      * Přihlášený uživatel.
      * @var User

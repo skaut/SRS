@@ -11,8 +11,10 @@ use Nette;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class CalendarConfigDTO extends Nette\Object
+class CalendarConfigDTO 
 {
+    use Nette\SmartObject;
+    
     /**
      * @JMS\Type("string")
      * @var string

@@ -39,6 +39,7 @@ class UsersContent extends Content implements IContent
      * UsersContent constructor.
      * @param Page $page
      * @param $area
+     * @throws \App\Model\Page\PageException
      */
     public function __construct(Page $page, $area)
     {

@@ -22,11 +22,18 @@ class WebPresenter extends ConfigurationBasePresenter
     public $webFormFactory;
 
 
+    /**
+     * @throws \App\Model\Settings\SettingsException
+     */
     public function renderDefault()
     {
         $this->template->logo = $this->settingsRepository->getValue(Settings::LOGO);
     }
 
+    /**
+     * @return Form
+     * @throws \App\Model\Settings\SettingsException
+     */
     protected function createComponentSettingsForm()
     {
         $form = $this->webFormFactory->create();

@@ -18,8 +18,10 @@ use Nette\Mail\SendException;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class SendForm extends Nette\Object
+class SendForm
 {
+    use Nette\SmartObject;
+
     /**
      * Událost po úspěšně odeslaném e-mailu.
      */
@@ -57,7 +59,6 @@ class SendForm extends Nette\Object
     /**
      * Vytvoří formulář.
      * @return Form
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function create()
     {

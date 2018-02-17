@@ -21,6 +21,10 @@ class SeminarPresenter extends ConfigurationBasePresenter
     public $seminarFormFactory;
 
 
+    /**
+     * @return Form
+     * @throws \App\Model\Settings\SettingsException
+     */
     protected function createComponentSeminarForm()
     {
         $form = $this->seminarFormFactory->create();

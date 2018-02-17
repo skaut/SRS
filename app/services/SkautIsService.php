@@ -12,8 +12,10 @@ use Skautis\Skautis;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class SkautIsService extends Nette\Object
+class SkautIsService
 {
+    use Nette\SmartObject;
+
     /** @var Skautis */
     private $skautIs;
 

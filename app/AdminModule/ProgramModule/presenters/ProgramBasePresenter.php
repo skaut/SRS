@@ -17,6 +17,9 @@ abstract class ProgramBasePresenter extends AdminBasePresenter
     protected $resource = Resource::PROGRAM;
 
 
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     public function startup()
     {
         parent::startup();
@@ -24,6 +27,9 @@ abstract class ProgramBasePresenter extends AdminBasePresenter
         $this->checkPermission(Permission::ACCESS);
     }
 
+    /**
+     * @throws \App\Model\Settings\SettingsException
+     */
     public function beforeRender()
     {
         parent::beforeRender();

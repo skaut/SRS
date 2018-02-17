@@ -17,6 +17,9 @@ abstract class MailingBasePresenter extends AdminBasePresenter
     protected $resource = Resource::MAILING;
 
 
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     public function startup()
     {
         parent::startup();
@@ -24,6 +27,9 @@ abstract class MailingBasePresenter extends AdminBasePresenter
         $this->checkPermission(Permission::MANAGE);
     }
 
+    /**
+     * @throws \App\Model\Settings\SettingsException
+     */
     public function beforeRender()
     {
         parent::beforeRender();

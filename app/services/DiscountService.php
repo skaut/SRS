@@ -15,8 +15,10 @@ use Nette;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class DiscountService extends Nette\Object
+class DiscountService
 {
+    use Nette\SmartObject;
+
     /**
      * Tokeny podmínky.
      * @var array

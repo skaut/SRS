@@ -21,8 +21,10 @@ use Nette\Application\UI\Form;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class MailingForm extends Nette\Object
+class MailingForm
 {
+    use Nette\SmartObject;
+
     /**
      * Přihlášený uživatel.
      * @var User

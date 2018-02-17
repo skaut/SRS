@@ -77,6 +77,7 @@ class AuthPresenter extends BasePresenter
 
     /**
      * Přesměruje na odhlašovací stránku skautIS.
+     * @throws \Nette\Application\AbortException
      */
     public function actionLogout()
     {

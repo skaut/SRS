@@ -15,8 +15,10 @@ use VojtechDobes\NetteForms\GpsPicker;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class PlacePointForm extends Nette\Object
+class PlacePointForm
 {
+    use Nette\SmartObject;
+
     /** @var PlacePoint */
     private $placePoint;
 

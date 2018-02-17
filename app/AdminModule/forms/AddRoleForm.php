@@ -14,8 +14,10 @@ use Nette\Application\UI\Form;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class AddRoleForm extends Nette\Object
+class AddRoleForm
 {
+    use Nette\SmartObject;
+
     /** @var BaseForm */
     private $baseFormFactory;
 

@@ -145,6 +145,10 @@ class BlocksPresenter extends ProgramBasePresenter
         return $this->programAttendeesGridControlFactory->create();
     }
 
+    /**
+     * @return Form
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     protected function createComponentBlockForm()
     {
         $form = $this->blockFormFactory->create($this->getParameter('id'), $this->getUser()->getId());

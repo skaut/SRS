@@ -80,6 +80,7 @@ class DatabaseService
 
     /**
      * Vytvoří zálohu databáze.
+     * @throws \Exception
      */
     public function backup()
     {

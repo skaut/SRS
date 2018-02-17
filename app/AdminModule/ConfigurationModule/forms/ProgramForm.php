@@ -17,8 +17,10 @@ use Nette\Application\UI\Form;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class ProgramForm extends Nette\Object
+class ProgramForm
 {
+    use Nette\SmartObject;
+
     /** @var BaseForm */
     private $baseFormFactory;
 

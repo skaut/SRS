@@ -112,6 +112,11 @@ class PagePresenter extends WebBasePresenter
     public $organizerContentControlFactory;
 
 
+    /**
+     * @param $slug
+     * @throws BadRequestException
+     * @throws \App\Model\Page\PageException
+     */
     public function renderDefault($slug)
     {
         if ($slug === NULL) {

@@ -5,7 +5,6 @@ namespace App\AdminModule\MailingModule\Forms;
 use App\AdminModule\Forms\BaseForm;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 use Nette;
 use Nette\Application\UI\Form;
 
@@ -15,8 +14,10 @@ use Nette\Application\UI\Form;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class EditTemplateForm extends Nette\Object
+class EditTemplateForm
 {
+    use Nette\SmartObject;
+
     /**
      * Upravovaná šablona.
      * @var Template

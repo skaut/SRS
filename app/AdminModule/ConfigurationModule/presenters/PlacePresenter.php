@@ -50,6 +50,10 @@ class PlacePresenter extends ConfigurationBasePresenter
         $this->template->placePoint = $placePoint;
     }
 
+    /**
+     * @return Form
+     * @throws \App\Model\Settings\SettingsException
+     */
     protected function createComponentPlaceDescriptionForm()
     {
         $form = $this->placeDescriptionFormFactory->create();

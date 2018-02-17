@@ -20,8 +20,10 @@ use Nette\Application\UI\Form;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class EditRoleForm extends Nette\Object
+class EditRoleForm
 {
+    use Nette\SmartObject;
+
     /**
      * Upravovaná role.
      * @var Role

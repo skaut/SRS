@@ -2,7 +2,6 @@
 
 namespace App\Model\Structure;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
@@ -40,14 +39,6 @@ class Discount
      */
     protected $discount;
 
-
-    /**
-     * Discount constructor.
-     */
-    public function __construct()
-    {
-        $this->conditionSubevents = new ArrayCollection();
-    }
 
     /**
      * @return int

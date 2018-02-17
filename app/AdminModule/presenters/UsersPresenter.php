@@ -201,7 +201,7 @@ class UsersPresenter extends AdminBasePresenter
 
     protected function createComponentAddLectorForm()
     {
-        $form = $this->addLectorFormFactory->create($this->getParameter('id'));
+        $form = $this->addLectorFormFactory->create();
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) {
             if ($form['cancel']->isSubmittedBy()) {
@@ -231,6 +231,9 @@ class UsersPresenter extends AdminBasePresenter
         return $form;
     }
 
+    /**
+     * @return Form
+     */
     protected function createComponentEditUserSeminarForm()
     {
         $form = $this->editUserSeminarFormFactory->create($this->getParameter('id'));

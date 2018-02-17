@@ -18,8 +18,10 @@ use Nette\Utils\Strings;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class WebForm extends Nette\Object
+class WebForm
 {
+    use Nette\SmartObject;
+
     /** @var BaseForm */
     private $baseFormFactory;
 

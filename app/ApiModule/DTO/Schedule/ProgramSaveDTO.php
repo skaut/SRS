@@ -11,8 +11,10 @@ use Nette;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class ProgramSaveDTO extends Nette\Object
+class ProgramSaveDTO
 {
+    use Nette\SmartObject;
+
     /**
      * @JMS\Type("int")
      * @var int
