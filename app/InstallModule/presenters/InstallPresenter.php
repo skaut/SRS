@@ -6,6 +6,7 @@ use App\Model\ACL\Role;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use Doctrine\DBAL\Exception\TableNotFoundException;
+use Doctrine\DBAL\Migrations\Tools\Console\Command\MigrateCommand;
 use Kdyby\Console\StringOutput;
 use Skautis\Config;
 use Skautis\Skautis;
@@ -76,6 +77,7 @@ class InstallPresenter extends InstallBasePresenter
      */
     public function handleImportSchema()
     {
+        $this->application->add(new MigrateCommand());
         $output = new StringOutput();
         $input = new ArrayInput([
             'command' => 'migrations:migrate',

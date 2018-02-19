@@ -4,14 +4,14 @@
     "require": {
         "php": ">=7.1",
         "nette/nette": "^2.4",
-        "nette/utils": "2.4.9",
+        "nette/utils": "2.4.*",
 
-        "kdyby/doctrine": "^3.2",
+        "kdyby/doctrine": "^3.3",
         "kdyby/events": "^3.1",
-        "kdyby/translation": "^2.4",
+        "kdyby/translation": "^2.5",
         "kdyby/console": "^2.7",
 
-        "zenify/doctrine-migrations": "^3.0",
+        "nettrine/migrations": "^0.2",
 
         "dg/MySQL-dump": "^1.4",
 
@@ -21,7 +21,7 @@
         "ublaboo/mailing": "^1.1",
 
         "janmarek/webloader": "dev-master",
-        "jms/serializer": "^1.8",
+        "jms/serializer": "^1.11",
 
         "skautis/skautis": "^2.1",
         "skautis/nette": "^2.0",
