@@ -10,9 +10,7 @@ extensions:
     console: Kdyby\Console\DI\ConsoleExtension
     events: Kdyby\Events\DI\EventsExtension
     annotations: Kdyby\Annotations\DI\AnnotationsExtension
-    - Arachne\ContainerAdapter\DI\ContainerAdapterExtension
-    - Arachne\EventDispatcher\DI\EventDispatcherExtension
-    migrations: Zenify\DoctrineMigrations\DI\MigrationsExtension
+    migrations: Nettrine\Migrations\DI\MigrationsExtension
     doctrine: Kdyby\Doctrine\DI\OrmExtension
     webloader: WebLoader\Nette\Extension
     skautis: Skautis\Nette\SkautisExtension
@@ -34,11 +32,11 @@ doctrine:
         App: %appDir%
 
 migrations:
-    table: doctrine_migrations # database table for applied migrations
-    column: version # database column for applied migrations
-    directory: %appDir%/../migrations # directory, where all migrations are stored
-    namespace: Migrations # namespace of migration classes
-    versionsOrganization: null # null, "year" or "year_and_month", organizes migrations to subdirectories
+    table: doctrine_migrations
+    column: version
+    directory: %appDir%/../migrations
+    namespace: Migrations
+    versionsOrganization: null
 
 skautis:
     applicationId: %skautIS.appId%
@@ -51,6 +49,12 @@ mailing:
 translation:
     default: cs
     fallback: [cs_CZ, cs]
+
+decorator:
+    Symfony\Component\Console\Command\Command:
+        tags: [kdyby.console.command]
+    Symfony\Component\Console\Helper\Helper:
+        tags: [kdyby.console.helper]
 
 services:
     - App\RouterFactory

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Doctrine\DBAL\Migrations\Tools\Console\Command\MigrateCommand;
 use Kdyby\Console\Application;
 use Kdyby\Console\StringOutput;
 use Nette\Caching\Cache;
@@ -37,7 +38,7 @@ class DatabaseService
      */
     protected $cache;
 
-    
+
     /**
      * DatabaseService constructor.
      * @param string $dir
@@ -66,6 +67,7 @@ class DatabaseService
 
                     $this->backup();
 
+                    $this->application->add(new MigrateCommand());
                     $output = new StringOutput();
                     $input = new ArrayInput([
                         'command' => 'migrations:migrate',
