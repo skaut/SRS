@@ -182,6 +182,7 @@ class Program
     /**
      * Vrací konec programu vypočtený podle délky bloku.
      * @return \DateTime
+     * @throws \Exception
      */
     public function getEnd()
     {

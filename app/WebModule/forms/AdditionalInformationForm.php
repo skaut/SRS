@@ -21,7 +21,6 @@ use App\Services\FilesService;
 use App\Services\MailService;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
-use Nette\InvalidArgumentException;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
 
@@ -147,7 +146,7 @@ class AdditionalInformationForm extends UI\Control
                     break;
 
                 default:
-                    throw new InvalidArgumentException();
+                    throw new \InvalidArgumentException();
             }
 
             if ($customInput->isMandatory() && $customInput->getType() != CustomInput::FILE)

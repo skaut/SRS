@@ -463,6 +463,9 @@ class ApplicationService
      */
     private function createRolesApplication(User $user, Collection $roles, User $createdBy, bool $approve = FALSE): RolesApplication
     {
+        if (!$user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED)))
+            throw new \InvalidArgumentException("User is already registered.");
+
         $user->setApproved(TRUE);
         if (!$approve && $roles->exists(function (int $key, Role $role) {
             return !$role->isApprovedAfterRegistration();

@@ -363,7 +363,7 @@ class ApplicationForm
                     break;
 
                 default:
-                    throw new Nette\InvalidArgumentException();
+                    throw new \InvalidArgumentException();
             }
 
             if ($customInput->isMandatory())
