@@ -4,7 +4,7 @@
     "require": {
         "php": ">=7.1",
         "nette/nette": "^2.4",
-        "nette/utils": "~2.4",
+        "nette/utils": "2.4.*",
 
         "kdyby/doctrine": "^3.3",
         "kdyby/events": "^3.1",
