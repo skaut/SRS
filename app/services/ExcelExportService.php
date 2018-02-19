@@ -376,7 +376,7 @@ class ExcelExportService
                     continue 2;
 
                 default:
-                    throw new Nette\InvalidArgumentException();
+                    throw new \InvalidArgumentException();
             }
 
             $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate($customInput->getName()));
@@ -459,7 +459,7 @@ class ExcelExportService
                             continue 2;
 
                         default:
-                            throw new Nette\InvalidArgumentException();
+                            throw new \InvalidArgumentException();
                     }
                 } else
                     $value = '';

@@ -187,6 +187,7 @@ class ScheduleService
      * @param ProgramSaveDTO $programSaveDTO
      * @return ResponseDTO
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Exception
      */
     public function saveProgram(ProgramSaveDTO $programSaveDTO)
     {
