@@ -68,7 +68,7 @@ class DocumentTagsGridControl extends Control
 
         $grid->addColumnText('name', 'admin.cms.tags_name');
 		
-		$rolesOptions = $this->roleRepository->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]);
+		$rolesOptions = $this->roleRepository->getRolesWithoutRolesOptions([]);
 		//bdump($rolesOptions);
 		$grid->addColumnText('userRoles', 'admin.tags.roles')
             ->setRenderer(function ($row) {

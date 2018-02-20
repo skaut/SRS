@@ -221,7 +221,7 @@ class Role
 
 	
     /**
-     * @ManyToMany(targetEntity="\App\Model\CMS\Document\Tag", mappedBy="roles")
+     * @ORM\ManyToMany(targetEntity="\App\Model\CMS\Document\Tag", mappedBy="roles")
      */
     private $tags;
 	
