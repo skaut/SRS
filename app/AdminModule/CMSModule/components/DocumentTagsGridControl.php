@@ -149,15 +149,13 @@ class DocumentTagsGridControl extends Control
      */
     public function edit($id, $values)
     {
-		bdump($id);
-		bdump($values);
-        $tag = $this->tagRepository->findById($id);
+		$tag = $this->tagRepository->findById($id);
 
 		$userRoles = [];
 		
 		foreach ($values['userRoles'] as $userRole) {
 			bdump($this->roleRepository->find($userRole));
-			$userRoles = $this->roleRepository->find($userRole);
+			$userRoles[] = $this->roleRepository->find($userRole);
 		}
 		
         $tag->setName($values['name']);
@@ -167,7 +165,7 @@ class DocumentTagsGridControl extends Control
 
         $this->getPresenter()->flashMessage('admin.cms.tags_saved', 'success');
 
-        //$this->redirect('this');
+        $this->redirect('this');
     }
 
     /**
