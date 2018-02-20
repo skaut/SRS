@@ -83,6 +83,7 @@ class TagRepository extends EntityRepository
      */
     public function save(Tag $tag)
     {
+		bdump($tag);
         $this->_em->persist($tag);
         $this->_em->flush();
     }

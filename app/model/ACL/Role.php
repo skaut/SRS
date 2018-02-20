@@ -10,7 +10,6 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
-
 /**
  * Entita role.
  *
@@ -220,7 +219,12 @@ class Role
      */
     protected $redirectAfterLogin;
 
-
+	
+    /**
+     * @ORM\ManyToMany(targetEntity="\App\Model\CMS\Document\Tag", mappedBy="roles")
+     */
+    private $tags;
+	
     /**
      * Role constructor.
      * @param $name
