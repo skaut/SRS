@@ -129,6 +129,8 @@ cms:
     tags_saved: "Kategorie byla úspěšně uložena."
     tags_delete_confirm: "Odstraněním kategorie odeberete kategorii všem dokumentům. Opravdu chcete kategorii odstranit?"
     tags_deleted: "Kategorie byla úspěšně odstraněna."
+    tags_roles: "Oprávněné role"
+    tags_roles_empty: "Vyberte oprávněné role"
 
     faq_heading: "FAQ"
     faq_question: "Otázka"

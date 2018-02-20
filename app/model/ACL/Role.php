@@ -16,6 +16,7 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="RoleRepository")
  * @ORM\Table(name="role")
  */
@@ -220,6 +221,10 @@ class Role
      */
     protected $redirectAfterLogin;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="\App\Model\CMS\Document\Tag", mappedBy="roles")
+     */
+    protected $tags;
 
     /**
      * Role constructor.
