@@ -13,6 +13,7 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="TagRepository")
  * @ORM\Table(name="tag")
  */
@@ -34,13 +35,19 @@ class Tag
      */
     protected $name;
 
+	/**
+     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="tags")
+     * @var Collection
+     */
+	protected $roles;
 
-    /**
+	/**
      * Tag constructor.
      */
     public function __construct()
     {
         $this->documents = new ArrayCollection();
+		$this->roles = new ArrayCollection();
     }
 
     /**
@@ -73,5 +80,32 @@ class Tag
     public function setName($name)
     {
         $this->name = $name;
+    }
+	
+	/**
+     * @return Collection
+     */
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+
+    /**
+     * @param Collection $roles
+     */
+    public function setRegisterableRoles($roles)
+    {
+        $this->roles->clear();
+        foreach ($roles as $role)
+            $this->roles->add($role);
+    }
+
+    /**
+     * @param Role $role
+     */
+    public function addRole(Role $role)
+    {
+        if (!$this->roles->contains($role))
+            $this->roles->add($role);
     }
 }

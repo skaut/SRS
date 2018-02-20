@@ -30,6 +30,7 @@ doctrine:
     dbname: %database.dbname%
     user: %database.user%
     password: %database.password%
+    metadataCache: apc
     metadata:
         App: %appDir%
 

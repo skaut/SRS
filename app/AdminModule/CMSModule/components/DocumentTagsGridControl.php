@@ -2,6 +2,8 @@
 
 namespace App\AdminModule\CMSModule\Components;
 
+use App\Model\ACL\Role;
+use App\Model\ACL\RoleRepository;
 use App\Model\CMS\Document\Tag;
 use App\Model\CMS\Document\TagRepository;
 use Kdyby\Translation\Translator;
@@ -14,12 +16,16 @@ use Ublaboo\DataGrid\DataGrid;
  * Komponenta pro správu štítků dokumentů.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class DocumentTagsGridControl extends Control
 {
     /** @var Translator */
     private $translator;
-
+	
+	/** @var RoleRepository */
+    private $roleRepository;
+	
     /** @var TagRepository */
     private $tagRepository;
 
@@ -29,11 +35,12 @@ class DocumentTagsGridControl extends Control
      * @param Translator $translator
      * @param TagRepository $tagRepository
      */
-    public function __construct(Translator $translator, TagRepository $tagRepository)
+    public function __construct(Translator $translator, RoleRepository $roleRepository, TagRepository $tagRepository)
     {
         parent::__construct();
 
         $this->translator = $translator;
+		$this->roleRepository = $roleRepository;
         $this->tagRepository = $tagRepository;
     }
 
@@ -60,26 +67,48 @@ class DocumentTagsGridControl extends Control
 
 
         $grid->addColumnText('name', 'admin.cms.tags_name');
-
-
-        $grid->addInlineAdd()->onControlAdd[] = function ($container) {
+		
+		$rolesOptions = $this->roleRepository->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]);
+		//bdump($rolesOptions);
+		$grid->addColumnText('userRoles', 'admin.tags.roles')
+            ->setRenderer(function ($row) {
+                $roles = [];
+				//bdump($row->getRoles());
+				if($row->getRoles()) {
+					foreach ($row->getRoles() as $role) {
+						$roles[] = $role->getName();
+					}
+				}
+                return implode(", ", $roles);
+            });
+		
+        $grid->addInlineAdd()->onControlAdd[] = function ($container) use ($rolesOptions) {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.tags_name_empty')
                 ->addRule(Form::IS_NOT_IN, 'admin.cms.tags_name_exists', $this->tagRepository->findAllNames());
+			
+			$container->addMultiSelect('roles', '', $rolesOptions)->setAttribute('class', 'datagrid-multiselect')
+                ->addRule(Form::FILLED, 'admin.cms.tags_roles_empty');
         };
         $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
 
-        $grid->addInlineEdit()->onControlAdd[] = function ($container) {
+        $grid->addInlineEdit()->onControlAdd[] = function ($container) use ($rolesOptions) {
             $container->addText('name', '')
-                ->addRule(Form::FILLED, 'admin.cms.tags_name_empty');
+                ->addRule(Form::FILLED, 'admin.cms.tags_roles_empty');
+			
+			$container->addMultiSelect('userRoles', '', $rolesOptions)->setAttribute('class', 'datagrid-multiselect')
+                ->addRule(Form::FILLED, 'admin.cms.tags_roles_empty');
         };
         $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) {
             $container['name']
                 ->addRule(Form::IS_NOT_IN, 'admin.cms.tags_name_exists', $this->tagRepository->findOthersNames($item->getId()));
 
-            $container->setDefaults([
-                'name' => $item->getName()
-            ]);
+			if($item->getRoles()) {
+				$container->setDefaults([
+					'name' => $item->getName(),
+					'userRoles' => $this->roleRepository->findRolesIds($item->getRoles())
+				]);
+			}
         };
         $grid->getInlineEdit()->onSubmit[] = [$this, 'edit'];
 
@@ -120,15 +149,25 @@ class DocumentTagsGridControl extends Control
      */
     public function edit($id, $values)
     {
+		bdump($id);
+		bdump($values);
         $tag = $this->tagRepository->findById($id);
 
+		$userRoles = [];
+		
+		foreach ($values['userRoles'] as $userRole) {
+			bdump($this->roleRepository->find($userRole));
+			$userRoles = $this->roleRepository->find($userRole);
+		}
+		
         $tag->setName($values['name']);
-
+		$tag->setRegisterableRoles($userRoles);
+		
         $this->tagRepository->save($tag);
 
         $this->getPresenter()->flashMessage('admin.cms.tags_saved', 'success');
 
-        $this->redirect('this');
+        //$this->redirect('this');
     }
 
     /**
