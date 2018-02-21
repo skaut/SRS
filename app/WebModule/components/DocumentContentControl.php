@@ -11,6 +11,7 @@ use Nette\Application\UI\Control;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class DocumentContentControl extends Control
 {
@@ -37,8 +38,10 @@ class DocumentContentControl extends Control
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/document_content.latte');
 
+        $roles = $this->presenter->user->roles;
+        
         $template->heading = $content->getHeading();
-        $template->documents = $this->documentRepository->findAllByTagsOrderedByName($content->getTags());
+        $template->documents = $this->documentRepository->findAllByTagsOrderedByName($roles, $content->getTags());
 
         $template->render();
     }

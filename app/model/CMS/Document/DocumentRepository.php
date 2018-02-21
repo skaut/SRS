@@ -9,6 +9,7 @@ use Kdyby\Doctrine\EntityRepository;
  * Třída spravující dokumenty.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class DocumentRepository extends EntityRepository
 {
@@ -27,12 +28,16 @@ class DocumentRepository extends EntityRepository
      * @param $tags
      * @return Document[]
      */
-    public function findAllByTagsOrderedByName($tags)
+    public function findAllByTagsOrderedByName($roles, $tags)
     {
         return $this->createQueryBuilder('d')
             ->select('d')
             ->join('d.tags', 't')
-            ->where('t IN (:ids)')->setParameter('ids', $tags)
+            ->join('t.roles', 'r')
+            ->where('t.id IN (:ids)')
+            ->andWhere('r IN (:roles)')
+            ->setParameter('ids', $tags)
+            ->setParameter('roles', array_keys($roles))
             ->orderBy('d.name')
             ->getQuery()
             ->getResult();

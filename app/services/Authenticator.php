@@ -15,6 +15,7 @@ use Nette\Security as NS;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class Authenticator implements NS\IAuthenticator
 {
@@ -75,10 +76,10 @@ class Authenticator implements NS\IAuthenticator
         $netteRoles = [];
         if ($user->isApproved()) {
             foreach ($user->getRoles() as $role)
-                $netteRoles[] = $role->getName();
+                $netteRoles[$role->getId()] = $role->getName();
         } else {
             $roleUnapproved = $this->roleRepository->findBySystemName(Role::UNAPPROVED);
-            $netteRoles[] = $roleUnapproved->getName();
+            $netteRoles[$role->getId()] = $roleUnapproved->getName();
         }
 
         return new NS\Identity($user->getId(), $netteRoles, ['firstLogin' => $firstLogin]);
@@ -145,16 +146,16 @@ class Authenticator implements NS\IAuthenticator
         if (!$testRole) {
             if ($dbuser->isApproved()) {
                 foreach ($dbuser->getRoles() as $role)
-                    $netteRoles[] = $role->getName();
+                    $netteRoles[$role->getId()] = $role->getName();
             } else {
                 $roleUnapproved = $this->roleRepository->findBySystemName(Role::UNAPPROVED);
-                $netteRoles[] = $roleUnapproved->getName();
+                $netteRoles[$role->getId()] = $roleUnapproved->getName();
             }
         } else {
-            $netteRoles[] = Role::TEST;
-            $netteRoles[] = $testRole->getName();
+            $netteRoles[0] = Role::TEST;
+            $netteRoles[$testRole->getId()] = $testRole->getName();
         }
-
+        
         $user->identity->setRoles($netteRoles);
     }
 }
