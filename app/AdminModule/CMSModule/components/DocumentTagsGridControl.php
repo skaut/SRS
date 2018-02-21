@@ -67,15 +67,14 @@ class DocumentTagsGridControl extends Control
 
         $rolesOptions = $this->roleRepository->getRolesWithoutRolesOptions([]);
 
-        $grid->addColumnText('userRoles', 'admin.cms.tags_roles')
+        $grid->addColumnText('roles', 'admin.cms.tags_roles')
                 ->setRenderer(function ($row) {
                     $roles = [];
 
-                    if ($row->getRoles()) {
-                        foreach ($row->getRoles() as $role) {
-                            $roles[] = $role->getName();
-                        }
+                    foreach ($row->getRoles() as $role) {
+                        $roles[] = $role->getName();
                     }
+                    
                     return implode(", ", $roles);
                 });
 
@@ -83,7 +82,6 @@ class DocumentTagsGridControl extends Control
             $container->addText('name', '')
                     ->addRule(Form::FILLED, 'admin.cms.tags_name_empty')
                     ->addRule(Form::IS_NOT_IN, 'admin.cms.tags_name_exists', $this->tagRepository->findAllNames());
-
             $container->addMultiSelect('roles', '', $rolesOptions)->setAttribute('class', 'datagrid-multiselect')
                     ->addRule(Form::FILLED, 'admin.cms.tags_roles_empty');
         };
@@ -92,8 +90,7 @@ class DocumentTagsGridControl extends Control
         $grid->addInlineEdit()->onControlAdd[] = function ($container) use ($rolesOptions) {
             $container->addText('name', '')
                     ->addRule(Form::FILLED, 'admin.cms.tags_roles_empty');
-
-            $container->addMultiSelect('userRoles', '', $rolesOptions)->setAttribute('class', 'datagrid-multiselect')
+            $container->addMultiSelect('roles', '', $rolesOptions)->setAttribute('class', 'datagrid-multiselect')
                     ->addRule(Form::FILLED, 'admin.cms.tags_roles_empty');
         };
         $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) {
@@ -103,7 +100,7 @@ class DocumentTagsGridControl extends Control
             if ($item->getRoles()) {
                 $container->setDefaults([
                     'name' => $item->getName(),
-                    'userRoles' => $this->roleRepository->findRolesIds($item->getRoles())
+                    'roles' => $this->roleRepository->findRolesIds($item->getRoles())
                 ]);
             }
         };
@@ -130,7 +127,8 @@ class DocumentTagsGridControl extends Control
         $tag = new Tag();
 
         $tag->setName($values['name']);
-
+        $tag->setRoles($this->roleRepository->findRolesByIds($values['roles']));
+        
         $this->tagRepository->save($tag);
 
         $this->getPresenter()->flashMessage('admin.cms.tags_saved', 'success');
@@ -149,7 +147,7 @@ class DocumentTagsGridControl extends Control
         $tag = $this->tagRepository->findById($id);
 
         $tag->setName($values['name']);
-        $tag->setRoles($this->roleRepository->findRolesByIds($values['userRoles']));
+        $tag->setRoles($this->roleRepository->findRolesByIds($values['roles']));
 
         $this->tagRepository->save($tag);
 
