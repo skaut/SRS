@@ -82,9 +82,9 @@ class Tag
     }
 
     /**
-     * @return Collection
+     * @return Collection|Role[]
      */
-    public function getRoles()
+    public function getRoles(): Collection
     {
         return $this->roles;
     }
