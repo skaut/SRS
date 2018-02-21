@@ -11,7 +11,6 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Ublaboo\DataGrid\DataGrid;
 
-
 /**
  * Komponenta pro správu štítků dokumentů.
  *
@@ -28,7 +27,6 @@ class DocumentTagsGridControl extends Control
 
     /** @var TagRepository */
     private $tagRepository;
-
 
     /**
      * DocumentTagsGridControl constructor.

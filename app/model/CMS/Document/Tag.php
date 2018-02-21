@@ -7,7 +7,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
-
 /**
  * Entita tagu pro dokumenty.
  *
@@ -34,12 +33,12 @@ class Tag
      * @var string
      */
     protected $name;
-    
+
     /**
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="tags")
      * @var Collection
      */
-	protected $roles;
+    protected $roles;
 
     /**
      * Tag constructor.
@@ -81,7 +80,7 @@ class Tag
     {
         $this->name = $name;
     }
-    
+
     /**
      * @return Collection
      */
@@ -89,23 +88,26 @@ class Tag
     {
         return $this->roles;
     }
-    
+
     /**
      * @param Collection $roles
      */
     public function setRoles($roles)
     {
         $this->roles->clear();
-        foreach ($roles as $role)
+        foreach ($roles as $role) {
             $this->roles->add($role);
+        }
     }
-    
+
     /**
      * @param Role $role
      */
     public function addRole(Role $role)
     {
-        if (!$this->roles->contains($role))
+        if (!$this->roles->contains($role)) {
             $this->roles->add($role);
+        }
     }
+
 }
