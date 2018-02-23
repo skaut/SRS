@@ -80,6 +80,7 @@ class ProgramRepository extends EntityRepository
      * Vrací programy zablokované (programy stejného bloku a překrývající se programy) přihlášením se na program.
      * @param Program $program
      * @return int[]
+     * @throws \Exception
      */
     public function findBlockedProgramsIdsByProgram(Program $program)
     {
@@ -110,6 +111,7 @@ class ProgramRepository extends EntityRepository
      * Vrací programy s překrývajícím se časem.
      * @param Program $program
      * @return int[]
+     * @throws \Exception
      */
     public function findOverlappingProgramsIds(Program $program)
     {

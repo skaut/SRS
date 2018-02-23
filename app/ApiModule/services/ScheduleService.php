@@ -94,6 +94,7 @@ class ScheduleService
     /**
      * Vrací podrobnosti o všech programech pro použití v administraci harmonogramu.
      * @return ProgramDetailDTO[]
+     * @throws \Exception
      */
     public function getProgramsAdmin()
     {
@@ -108,6 +109,7 @@ class ScheduleService
      * Vrací podrobnosti o programech, ke kterým má uživatel přístup, pro použití v kalendáři pro výběr programů.
      * @return ProgramDetailDTO[]
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Exception
      */
     public function getProgramsWeb()
     {
@@ -275,6 +277,7 @@ class ScheduleService
      * @param $programId
      * @return ResponseDTO
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Exception
      */
     public function attendProgram($programId)
     {
@@ -325,6 +328,7 @@ class ScheduleService
      * @param $programId
      * @return ResponseDTO
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Exception
      */
     public function unattendProgram($programId)
     {
@@ -359,6 +363,7 @@ class ScheduleService
      * Převede Program na ProgramDetailDTO.
      * @param Program $program
      * @return ProgramDetailDTO
+     * @throws \Exception
      */
     private function convertProgramToProgramDetailDTO(Program $program)
     {

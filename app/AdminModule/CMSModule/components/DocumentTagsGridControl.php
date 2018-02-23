@@ -2,7 +2,6 @@
 
 namespace App\AdminModule\CMSModule\Components;
 
-use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\CMS\Document\Tag;
 use App\Model\CMS\Document\TagRepository;
@@ -28,9 +27,11 @@ class DocumentTagsGridControl extends Control
     /** @var TagRepository */
     private $tagRepository;
 
+
     /**
      * DocumentTagsGridControl constructor.
      * @param Translator $translator
+     * @param RoleRepository $roleRepository
      * @param TagRepository $tagRepository
      */
     public function __construct(Translator $translator, RoleRepository $roleRepository, TagRepository $tagRepository)
@@ -65,56 +66,52 @@ class DocumentTagsGridControl extends Control
 
         $grid->addColumnText('name', 'admin.cms.tags_name');
 
+        $grid->addColumnText('roles', 'admin.cms.tags_roles', 'rolesText')
+            ->setRendererOnCondition(function () {
+                return $this->translator->translate('admin.cms.tags_roles_all');
+            }, function (Tag $tag) {
+                return count($this->roleRepository->findAll()) == $tag->getRoles()->count();
+            });
+
+
         $rolesOptions = $this->roleRepository->getRolesWithoutRolesOptions([]);
-
-        $grid->addColumnText('roles', 'admin.cms.tags_roles')
-                ->setRenderer(function ($row) {
-                    $roles = [];
-
-                    foreach ($row->getRoles() as $role) {
-                        $roles[] = $role->getName();
-                    }
-                    
-                    return implode(", ", $roles);
-                });
 
         $grid->addInlineAdd()->onControlAdd[] = function ($container) use ($rolesOptions) {
             $container->addText('name', '')
-                    ->addRule(Form::FILLED, 'admin.cms.tags_name_empty')
-                    ->addRule(Form::IS_NOT_IN, 'admin.cms.tags_name_exists', $this->tagRepository->findAllNames());
+                ->addRule(Form::FILLED, 'admin.cms.tags_name_empty')
+                ->addRule(Form::IS_NOT_IN, 'admin.cms.tags_name_exists', $this->tagRepository->findAllNames());
             $container->addMultiSelect('roles', '', $rolesOptions)->setAttribute('class', 'datagrid-multiselect')
-                    ->addRule(Form::FILLED, 'admin.cms.tags_roles_empty');
+                ->setDefaultValue(array_keys($rolesOptions))
+                ->addRule(Form::FILLED, 'admin.cms.tags_roles_empty');
         };
         $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
 
         $grid->addInlineEdit()->onControlAdd[] = function ($container) use ($rolesOptions) {
             $container->addText('name', '')
-                    ->addRule(Form::FILLED, 'admin.cms.tags_roles_empty');
+                ->addRule(Form::FILLED, 'admin.cms.tags_name_empty');
             $container->addMultiSelect('roles', '', $rolesOptions)->setAttribute('class', 'datagrid-multiselect')
-                    ->addRule(Form::FILLED, 'admin.cms.tags_roles_empty');
+                ->addRule(Form::FILLED, 'admin.cms.tags_roles_empty');
         };
-        $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) {
+        $grid->getInlineEdit()->onSetDefaults[] = function ($container, Tag $item) {
             $container['name']
-                    ->addRule(Form::IS_NOT_IN, 'admin.cms.tags_name_exists', $this->tagRepository->findOthersNames($item->getId()));
+                ->addRule(Form::IS_NOT_IN, 'admin.cms.tags_name_exists', $this->tagRepository->findOthersNames($item->getId()));
 
-            if ($item->getRoles()) {
-                $container->setDefaults([
-                    'name' => $item->getName(),
-                    'roles' => $this->roleRepository->findRolesIds($item->getRoles())
-                ]);
-            }
+            $container->setDefaults([
+                'name' => $item->getName(),
+                'roles' => $this->roleRepository->findRolesIds($item->getRoles())
+            ]);
         };
         $grid->getInlineEdit()->onSubmit[] = [$this, 'edit'];
 
 
         $grid->addAction('delete', '', 'delete!')
-                ->setIcon('trash')
-                ->setTitle('admin.common.delete')
-                ->setClass('btn btn-xs btn-danger')
-                ->addAttributes([
-                    'data-toggle' => 'confirmation',
-                    'data-content' => $this->translator->translate('admin.cms.tags_delete_confirm')
-        ]);
+            ->setIcon('trash')
+            ->setTitle('admin.common.delete')
+            ->setClass('btn btn-xs btn-danger')
+            ->addAttributes([
+                'data-toggle' => 'confirmation',
+                'data-content' => $this->translator->translate('admin.cms.tags_delete_confirm')
+            ]);
     }
 
     /**
