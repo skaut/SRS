@@ -15,6 +15,7 @@ use Nette\Security as NS;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class Authenticator implements NS\IAuthenticator
 {
@@ -75,10 +76,10 @@ class Authenticator implements NS\IAuthenticator
         $netteRoles = [];
         if ($user->isApproved()) {
             foreach ($user->getRoles() as $role)
-                $netteRoles[] = $role->getName();
+                $netteRoles[$role->getId()] = $role->getName();
         } else {
             $roleUnapproved = $this->roleRepository->findBySystemName(Role::UNAPPROVED);
-            $netteRoles[] = $roleUnapproved->getName();
+            $netteRoles[$roleUnapproved->getId()] = $roleUnapproved->getName();
         }
 
         return new NS\Identity($user->getId(), $netteRoles, ['firstLogin' => $firstLogin]);
@@ -134,27 +135,28 @@ class Authenticator implements NS\IAuthenticator
     /**
      * Aktualizuje role přihlášeného uživatele.
      * @param $user
-     * @param Role $testRole
+     * @param Role $testedRole
      */
-    public function updateRoles($user, $testRole = NULL)
+    public function updateRoles($user, $testedRole = NULL)
     {
         $dbuser = $this->userRepository->findById($user->id);
 
         $netteRoles = [];
 
-        if (!$testRole) {
+        if (!$testedRole) {
             if ($dbuser->isApproved()) {
                 foreach ($dbuser->getRoles() as $role)
-                    $netteRoles[] = $role->getName();
+                    $netteRoles[$role->getId()] = $role->getName();
             } else {
                 $roleUnapproved = $this->roleRepository->findBySystemName(Role::UNAPPROVED);
-                $netteRoles[] = $roleUnapproved->getName();
+                $netteRoles[$roleUnapproved->getId()] = $roleUnapproved->getName();
             }
         } else {
-            $netteRoles[] = Role::TEST;
-            $netteRoles[] = $testRole->getName();
+            $roleTest = $this->roleRepository->findBySystemName(Role::TEST);
+            $netteRoles[$roleTest->getId()] = $roleTest->getName();
+            $netteRoles[$testedRole->getId()] = $testedRole->getName();
         }
-
+        
         $user->identity->setRoles($netteRoles);
     }
 }

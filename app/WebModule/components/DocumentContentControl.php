@@ -2,6 +2,7 @@
 
 namespace App\WebModule\Components;
 
+use App\Model\CMS\Content\DocumentContent;
 use App\Model\CMS\Document\DocumentRepository;
 use Nette\Application\UI\Control;
 
@@ -11,6 +12,7 @@ use Nette\Application\UI\Control;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class DocumentContentControl extends Control
 {
@@ -32,13 +34,15 @@ class DocumentContentControl extends Control
     /**
      * @param $content
      */
-    public function render($content)
+    public function render(DocumentContent $content)
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/document_content.latte');
 
+        $roles = $this->presenter->user->roles;
+        
         $template->heading = $content->getHeading();
-        $template->documents = $this->documentRepository->findAllByTagsOrderedByName($content->getTags());
+        $template->documents = $this->documentRepository->findRolesAllowedByTagsOrderedByName(array_keys($roles), $content->getTags());
 
         $template->render();
     }

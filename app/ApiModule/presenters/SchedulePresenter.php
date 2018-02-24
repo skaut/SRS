@@ -54,6 +54,7 @@ class SchedulePresenter extends ApiBasePresenter
 
     /**
      * Vrací podrobnosti o všech programech pro použití v administraci harmonogramu.
+     * @throws \Exception
      * @throws \Nette\Application\AbortException
      */
     public function actionGetProgramsAdmin()
@@ -67,8 +68,9 @@ class SchedulePresenter extends ApiBasePresenter
 
     /**
      * Vrací podrobnosti o programech, ke kterým má uživatel přístup, pro použití v kalendáři pro výběr programů.
-     * @throws \Nette\Application\AbortException
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Exception
+     * @throws \Nette\Application\AbortException
      */
     public function actionGetProgramsWeb()
     {
@@ -123,6 +125,7 @@ class SchedulePresenter extends ApiBasePresenter
      * Uloží nebo vytvoří program.
      * @param $data
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Exception
      * @throws \Nette\Application\AbortException
      */
     public function actionSaveProgram($data)
@@ -155,6 +158,7 @@ class SchedulePresenter extends ApiBasePresenter
      * Přihlásí program uživateli.
      * @param $id
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Exception
      * @throws \Nette\Application\AbortException
      */
     public function actionAttendProgram($id)
@@ -170,6 +174,7 @@ class SchedulePresenter extends ApiBasePresenter
      * Odhlásí program uživateli.
      * @param $id
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Exception
      * @throws \Nette\Application\AbortException
      */
     public function actionUnattendProgram($id)

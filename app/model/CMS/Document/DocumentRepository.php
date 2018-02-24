@@ -2,6 +2,8 @@
 
 namespace App\Model\CMS\Document;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Kdyby\Doctrine\EntityRepository;
 
 
@@ -9,33 +11,41 @@ use Kdyby\Doctrine\EntityRepository;
  * Třída spravující dokumenty.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class DocumentRepository extends EntityRepository
 {
     /**
      * Vrátí dokument podle id.
-     * @param $id
+     * @param $id int
      * @return Document|null
      */
-    public function findById($id)
+    public function findById(int $id): ?Document
     {
         return $this->findOneBy(['id' => $id]);
     }
 
     /**
-     * Vrátí dokumenty s tagem, seřazené podle názvu.
-     * @param $tags
-     * @return Document[]
+     * Vrací dokumenty podle rolí a vybraných tagů, seřazené podle názvu.
+     * @param $rolesIds int[] pole id rolí
+     * @param $tags Collection|Tag[]
+     * @return Collection|Document[]
      */
-    public function findAllByTagsOrderedByName($tags)
+    public function findRolesAllowedByTagsOrderedByName(array $rolesIds, Collection $tags): Collection
     {
-        return $this->createQueryBuilder('d')
+        $result = $this->createQueryBuilder('d')
             ->select('d')
             ->join('d.tags', 't')
-            ->where('t IN (:ids)')->setParameter('ids', $tags)
+            ->join('t.roles', 'r')
+            ->where('t IN (:tags)')
+            ->andWhere('r IN (:rolesIds)')
+            ->setParameter('tags', $tags)
+            ->setParameter('rolesIds', $rolesIds)
             ->orderBy('d.name')
             ->getQuery()
             ->getResult();
+
+        return new ArrayCollection($result);
     }
 
     /**

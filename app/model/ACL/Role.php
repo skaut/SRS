@@ -2,8 +2,10 @@
 
 namespace App\Model\ACL;
 
+use App\Model\CMS\Document\Tag;
 use App\Model\CMS\Page;
 use App\Model\Program\Category;
+use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -16,6 +18,7 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="RoleRepository")
  * @ORM\Table(name="role")
  */
@@ -96,21 +99,21 @@ class Role
     /**
      * Uživatelé v roli.
      * @ORM\ManyToMany(targetEntity="\App\Model\User\User", mappedBy="roles", cascade={"persist"})
-     * @var Collection
+     * @var Collection|User[]
      */
     protected $users;
 
     /**
      * Oprávnění role.
      * @ORM\ManyToMany(targetEntity="Permission", inversedBy="roles")
-     * @var Collection
+     * @var Collection|Permission[]
      */
     protected $permissions;
 
     /**
      * Stránky, ke kterým má role přístup.
      * @ORM\ManyToMany(targetEntity="\App\Model\CMS\Page", mappedBy="roles", cascade={"persist"})
-     * @var Collection
+     * @var Collection|Page[]
      */
     protected $pages;
 
@@ -184,14 +187,14 @@ class Role
      *      joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="incompatible_role_id", referencedColumnName="id")}
      *      )
-     * @var Collection
+     * @var Collection|Role[]
      */
     protected $incompatibleRoles;
 
     /**
      * Role vyžadující tuto roli.
      * @ORM\ManyToMany(targetEntity="Role", mappedBy="requiredRoles", cascade={"persist"})
-     * @var Collection
+     * @var Collection|Role[]
      */
     protected $requiredByRole;
 
@@ -202,14 +205,14 @@ class Role
      *      joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="required_role_id", referencedColumnName="id")}
      *      )
-     * @var Collection
+     * @var Collection|Role[]
      */
     protected $requiredRoles;
 
     /**
      * Kategorie programů, na které se mohou účastníci v roli přihlásit.
      * @ORM\ManyToMany(targetEntity="\App\Model\Program\Category", mappedBy="registerableRoles", cascade={"persist"})
-     * @var Collection
+     * @var Collection|Category[]
      */
     protected $registerableCategories;
 
@@ -219,6 +222,13 @@ class Role
      * @var string
      */
     protected $redirectAfterLogin;
+
+    /**
+     * Kategorie dokumentů, ke kterým má role přístup.
+     * @ORM\ManyToMany(targetEntity="\App\Model\CMS\Document\Tag", mappedBy="roles", cascade={"persist"})
+     * @var Collection|Tag[]
+     */
+    protected $tags;
 
 
     /**
@@ -235,6 +245,7 @@ class Role
         $this->requiredByRole = new ArrayCollection();
         $this->requiredRoles = new ArrayCollection();
         $this->registerableCategories = new ArrayCollection();
+        $this->tags = new ArrayCollection();
     }
 
     /**
@@ -688,6 +699,14 @@ class Role
     public function setRedirectAfterLogin(?string $redirectAfterLogin): void
     {
         $this->redirectAfterLogin = $redirectAfterLogin;
+    }
+
+    /**
+     * @return Collection|Tag[]
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
     }
 
     /**
