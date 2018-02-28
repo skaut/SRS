@@ -39,7 +39,7 @@ class SettingsRepository extends EntityRepository
      * @return mixed
      * @throws SettingsException
      */
-    public function getValue($item)
+    public function getValue($item): ?string
     {
         $value = $this->cache->load($item);
         if ($value !== NULL)
@@ -61,7 +61,7 @@ class SettingsRepository extends EntityRepository
      * @param $value
      * @throws SettingsException
      */
-    public function setValue($item, $value)
+    public function setValue($item, $value): void
     {
         $settings = $this->findOneBy(['item' => $item]);
         if ($settings === NULL)
@@ -74,12 +74,26 @@ class SettingsRepository extends EntityRepository
     }
 
     /**
+     * Vrátí hodnotu položky typu bool.
+     * @param $item
+     * @return bool|null
+     * @throws SettingsException
+     */
+    public function getBoolValue($item): ?bool
+    {
+        $value = $this->getValue($item);
+        if ($value === NULL)
+            return NULL;
+        return filter_var($value, FILTER_VALIDATE_BOOLEAN);
+    }
+
+    /**
      * Vrátí hodnotu položky typu datum a čas.
      * @param $item
      * @return \DateTime|null
      * @throws SettingsException
      */
-    public function getDateTimeValue($item)
+    public function getDateTimeValue($item): ?\DateTime
     {
         $value = $this->getValue($item);
         if ($value === NULL)
@@ -107,7 +121,7 @@ class SettingsRepository extends EntityRepository
      * @param \DateTime|null $value
      * @throws SettingsException
      */
-    public function setDateTimeValue($item, $value)
+    public function setDateTimeValue($item, $value): void
     {
         if ($value === NULL)
             $this->setValue($item, NULL);
@@ -118,10 +132,10 @@ class SettingsRepository extends EntityRepository
     /**
      * Vrátí hodnotu položky typu datum.
      * @param $item
-     * @return \DateTime
+     * @return null|\DateTime
      * @throws SettingsException
      */
-    public function getDateValue($item)
+    public function getDateValue($item): ?\DateTime
     {
         $value = $this->getValue($item);
         if ($value === NULL)
@@ -149,7 +163,7 @@ class SettingsRepository extends EntityRepository
      * @param \DateTime|null $value
      * @throws SettingsException
      */
-    public function setDateValue($item, $value)
+    public function setDateValue($item, $value): void
     {
         if ($value === NULL)
             $this->setValue($item, NULL);

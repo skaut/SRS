@@ -164,7 +164,7 @@ abstract class WebBasePresenter extends BasePresenter
     private function checkInstallation()
     {
         try {
-            if (!filter_var($this->settingsRepository->getValue(Settings::ADMIN_CREATED), FILTER_VALIDATE_BOOLEAN))
+            if (!$this->settingsRepository->getBoolValue(Settings::ADMIN_CREATED))
                 $this->redirect(':Install:Install:default');
             else
                 $this->databaseService->update();

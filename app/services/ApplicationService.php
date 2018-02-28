@@ -188,13 +188,13 @@ class ApplicationService
         }
 
         $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($user, $roles, $createdBy, $approve, $oldRoles) {
-            $user->setRoles($roles);
-            $this->userRepository->save($user);
-
             if ($oldRoles->contains($this->roleRepository->findBySystemName(Role::NONREGISTERED))) {
                 $this->createRolesApplication($user, $roles, $createdBy, $approve);
                 $this->createSubeventsApplication($user, new ArrayCollection([$this->subeventRepository->findImplicit()]), $createdBy);
             } else {
+                $user->setRoles($roles);
+                $this->userRepository->save($user);
+
                 if ($roles->forAll(function (int $key, Role $role) {
                     return $role->isApprovedAfterRegistration();
                 })) {

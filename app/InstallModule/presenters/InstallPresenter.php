@@ -3,10 +3,17 @@
 namespace App\InstallModule\Presenters;
 
 use App\Model\ACL\Role;
+use App\Model\ACL\RoleRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
+use App\Model\Settings\SettingsRepository;
+use App\Model\Structure\SubeventRepository;
+use App\Model\User\UserRepository;
+use App\Services\ApplicationService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\DBAL\Migrations\Tools\Console\Command\MigrateCommand;
+use Kdyby\Console\Application;
 use Kdyby\Console\StringOutput;
 use Skautis\Config;
 use Skautis\Skautis;
@@ -26,28 +33,40 @@ use Symfony\Component\Console\Input\ArrayInput;
 class InstallPresenter extends InstallBasePresenter
 {
     /**
-     * @var \Kdyby\Console\Application
+     * @var Application
      * @inject
      */
     public $application;
 
     /**
-     * @var \App\Model\Settings\SettingsRepository
+     * @var SettingsRepository
      * @inject
      */
     public $settingsRepository;
 
     /**
-     * @var \App\Model\ACL\RoleRepository
+     * @var RoleRepository
      * @inject
      */
     public $roleRepository;
 
     /**
-     * @var \App\Model\User\UserRepository
+     * @var UserRepository
      * @inject
      */
     public $userRepository;
+
+    /**
+     * @var SubeventRepository
+     * @inject
+     */
+    public $subeventRepository;
+
+    /**
+     * @var ApplicationService
+     * @inject
+     */
+    public $applicationService;
 
 
     /**
@@ -61,7 +80,7 @@ class InstallPresenter extends InstallBasePresenter
         }
 
         try {
-            if (filter_var($this->settingsRepository->getValue(Settings::ADMIN_CREATED), FILTER_VALIDATE_BOOLEAN)) {
+            if ($this->settingsRepository->getBoolValue(Settings::ADMIN_CREATED)) {
                 $this->redirect('installed');
             }
             $this->flashMessage('install.schema.schema_already_created', 'info');
@@ -95,13 +114,13 @@ class InstallPresenter extends InstallBasePresenter
 
     /**
      * Zobrazení stránky pro vytvoření administrátora.
-     * @throws SettingsException
      * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     public function renderAdmin()
     {
         try {
-            if (filter_var($this->settingsRepository->getValue(Settings::ADMIN_CREATED), FILTER_VALIDATE_BOOLEAN)) {
+            if ($this->settingsRepository->getBoolValue(Settings::ADMIN_CREATED)) {
                 $this->flashMessage('install.admin.admin_already_created', 'info');
                 $this->redirect('finish');
             }
@@ -112,17 +131,18 @@ class InstallPresenter extends InstallBasePresenter
         }
 
         if ($this->user->isLoggedIn()) {
-            $user = $this->userRepository->findById($this->user->id);
+            $this->userRepository->getEntityManager()->transactional(function ($em) {
+                $user = $this->userRepository->findById($this->user->id);
+                $this->userRepository->save($user);
 
-            $nonregisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
-            $user->removeRole($nonregisteredRole);
+                $adminRole = $this->roleRepository->findBySystemName(Role::ADMIN);
+                $implicitSubevent = $this->subeventRepository->findImplicit();
 
-            $adminRole = $this->roleRepository->findBySystemName(Role::ADMIN);
-            $user->addRole($adminRole);
+                $this->applicationService->register($user, new ArrayCollection([$adminRole]),
+                    new ArrayCollection([$implicitSubevent]), $user, TRUE);
 
-            $this->settingsRepository->setValue(Settings::ADMIN_CREATED, TRUE);
-
-            $this->userRepository->save($user);
+                $this->settingsRepository->setValue(Settings::ADMIN_CREATED, TRUE);
+            });
 
             $this->user->logout(TRUE);
 
@@ -150,7 +170,7 @@ class InstallPresenter extends InstallBasePresenter
     public function renderFinish()
     {
         try {
-            if (!filter_var($this->settingsRepository->getValue(Settings::ADMIN_CREATED), FILTER_VALIDATE_BOOLEAN))
+            if (!$this->settingsRepository->getBoolValue(Settings::ADMIN_CREATED))
                 $this->redirect('default');
         } catch (TableNotFoundException $ex) {
             $this->redirect('default');
@@ -166,7 +186,7 @@ class InstallPresenter extends InstallBasePresenter
     public function renderInstalled()
     {
         try {
-            if (!filter_var($this->settingsRepository->getValue(Settings::ADMIN_CREATED), FILTER_VALIDATE_BOOLEAN))
+            if (!$this->settingsRepository->getBoolValue(Settings::ADMIN_CREATED))
                 $this->redirect('default');
         } catch (TableNotFoundException $ex) {
             $this->redirect('default');
