@@ -6,6 +6,7 @@ use App\Model\CMS\Document\Document;
 use App\Model\CMS\Document\DocumentRepository;
 use App\Model\CMS\Document\TagRepository;
 use App\Services\FilesService;
+use App\Utils\Helpers;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
@@ -103,7 +104,7 @@ class DocumentsGridControl extends Control
         $grid->addColumnText('description', 'admin.cms.documents_description');
 
         $grid->addColumnDateTime('timestamp', 'admin.cms.documents_timestamp')
-            ->setFormat('j. n. Y H:i');
+            ->setFormat(Helpers::DATETIME_FORMAT);
 
         $tagsOptions = $this->tagRepository->getTagsOptions();
 

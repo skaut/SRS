@@ -16,6 +16,7 @@ use App\Services\ApplicationService;
 use App\Services\MailService;
 use App\Services\PdfExportService;
 use App\Services\ProgramService;
+use App\Utils\Helpers;
 use App\Utils\Validators;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
@@ -144,7 +145,7 @@ class ApplicationsGridControl extends Control
 
 
         $grid->addColumnDateTime('applicationDate', 'admin.users.users_applications_application_date')
-            ->setFormat('j. n. Y H:i');
+            ->setFormat(Helpers::DATETIME_FORMAT);
 
         $grid->addColumnText('roles', 'admin.users.users_applications_roles', 'rolesText');
 
@@ -155,7 +156,7 @@ class ApplicationsGridControl extends Control
         $grid->addColumnText('variableSymbol', 'admin.users.users_applications_variable_symbol', 'variableSymbolText');
 
         $grid->addColumnDateTime('maturityDate', 'admin.users.users_applications_maturity_date')
-            ->setFormat('j. n. Y');
+            ->setFormat(Helpers::DATE_FORMAT);
 
         $grid->addColumnText('paymentMethod', 'admin.users.users_applications_payment_method')
             ->setRenderer(function ($row) {

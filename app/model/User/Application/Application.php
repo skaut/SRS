@@ -5,6 +5,7 @@ namespace App\Model\User;
 use App\Model\ACL\Role;
 use App\Model\Enums\ApplicationState;
 use App\Model\Structure\Subevent;
+use App\Utils\Helpers;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -323,7 +324,7 @@ abstract class Application
      */
     public function getMaturityDateText(): ?string
     {
-        return $this->maturityDate !== NULL ? $this->maturityDate->format('j. n. Y') : NULL;
+        return $this->maturityDate !== NULL ? $this->maturityDate->format(Helpers::DATE_FORMAT) : NULL;
     }
 
     /**
@@ -364,7 +365,7 @@ abstract class Application
      */
     public function getPaymentDateText(): ?string
     {
-        return $this->paymentDate !== NULL ? $this->paymentDate->format('j. n. Y') : NULL;
+        return $this->paymentDate !== NULL ? $this->paymentDate->format(Helpers::DATE_FORMAT) : NULL;
     }
 
     /**
@@ -389,7 +390,7 @@ abstract class Application
      */
     public function getIncomeProofPrintedDateText(): ?string
     {
-        return $this->incomeProofPrintedDate !== NULL ? $this->incomeProofPrintedDate->format('j. n. Y') : NULL;
+        return $this->incomeProofPrintedDate !== NULL ? $this->incomeProofPrintedDate->format(Helpers::DATE_FORMAT) : NULL;
     }
 
     /**

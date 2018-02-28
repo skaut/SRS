@@ -21,6 +21,7 @@ use App\Services\MailService;
 use App\Services\PdfExportService;
 use App\Services\ProgramService;
 use App\Services\UserService;
+use App\Utils\Helpers;
 use App\Utils\Validators;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
@@ -179,7 +180,7 @@ class ApplicationsGridControl extends Control
         $grid->setPagination(FALSE);
 
         $grid->addColumnDateTime('applicationDate', 'web.profile.applications_application_date')
-            ->setFormat('j. n. Y H:i');
+            ->setFormat(Helpers::DATETIME_FORMAT);
 
         if ($userHasFixedFeeRole)
         $grid->addColumnText('roles', 'web.profile.applications_roles', 'rolesText');
@@ -192,7 +193,7 @@ class ApplicationsGridControl extends Control
         $grid->addColumnText('variable_symbol', 'web.profile.applications_variable_symbol', 'variableSymbolText');
 
         $grid->addColumnDateTime('maturityDate', 'web.profile.applications_maturity_date')
-            ->setFormat('j. n. Y');
+            ->setFormat(Helpers::DATE_FORMAT);
 
         $grid->addColumnText('state', 'web.profile.applications_state')
             ->setRenderer(function (Application $row) {

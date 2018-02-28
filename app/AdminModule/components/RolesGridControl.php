@@ -7,6 +7,7 @@ use App\Model\ACL\RoleRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\User\UserRepository;
 use App\Services\ProgramService;
+use App\Utils\Helpers;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Ublaboo\DataGrid\DataGrid;
@@ -96,10 +97,10 @@ class RolesGridControl extends Control
             ->onChange[] = [$this, 'changeRegisterable'];
 
         $grid->addColumnDateTime('registerableFrom', 'admin.acl.roles_registerable_from')
-            ->setFormat('j. n. Y H:i');
+            ->setFormat(Helpers::DATETIME_FORMAT);
 
         $grid->addColumnDateTime('registerableTo', 'admin.acl.roles_registerable_to')
-            ->setFormat('j. n. Y H:i');
+            ->setFormat(Helpers::DATETIME_FORMAT);
 
         $grid->addColumnText('occupancy', 'admin.acl.roles_occupancy', 'occupancy_text');
 

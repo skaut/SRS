@@ -6,6 +6,7 @@ use App\Model\Program\ProgramRepository;
 use App\Model\Program\Room;
 use App\Model\Program\RoomRepository;
 use App\Services\ExcelExportService;
+use App\Utils\Helpers;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Ublaboo\DataGrid\DataGrid;
@@ -82,10 +83,10 @@ class RoomScheduleGridControl extends Control
         $grid->setPagination(FALSE);
 
         $grid->addColumnDateTime('start', 'admin.program.rooms_schedule_program_start')
-            ->setFormat('j. n. Y H:i');;
+            ->setFormat(Helpers::DATETIME_FORMAT);;
 
         $grid->addColumnDateTime('end', 'admin.program.rooms_schedule_program_end')
-            ->setFormat('j. n. Y H:i');;
+            ->setFormat(Helpers::DATETIME_FORMAT);;
 
         $grid->addColumnText('name', 'admin.program.rooms_schedule_program_name', 'block.name');
 

@@ -162,6 +162,14 @@ class Page
     }
 
     /**
+     * @return string
+     */
+    public function getRolesText(): string
+    {
+        return implode(', ', $this->roles->map(function (Role $role) {return $role->getName();})->toArray());
+    }
+
+    /**
      * @param Collection $roles
      */
     public function setRoles($roles)

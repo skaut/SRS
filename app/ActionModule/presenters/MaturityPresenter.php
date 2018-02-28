@@ -18,6 +18,7 @@ use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\MailService;
 use App\Services\ProgramService;
+use App\Utils\Helpers;
 
 
 /**
@@ -150,7 +151,7 @@ class MaturityPresenter extends ActionBasePresenter
                     if ($maturityReminder !== NULL && $maturityReminderDate == $maturityDate) {
                         $this->mailService->sendMailFromTemplate($application->getUser(), '', Template::MATURITY_REMINDER, [
                             TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-                            TemplateVariable::APPLICATION_MATURITY => $maturityDate->format('j. n. Y')
+                            TemplateVariable::APPLICATION_MATURITY => $maturityDate->format(Helpers::DATE_FORMAT)
                         ]);
                     }
                 }

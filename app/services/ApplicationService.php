@@ -21,6 +21,7 @@ use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Model\User\VariableSymbol;
 use App\Model\User\VariableSymbolRepository;
+use App\Utils\Helpers;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Kdyby\Translation\Translator;
@@ -646,7 +647,7 @@ class ApplicationService
         $state = $this->translator->translate('common.application_state.' . $application->getState());
 
         if ($application->getState() == ApplicationState::PAID)
-            $state .= ' (' . $application->getPaymentDate()->format('j. n. Y') . ')';
+            $state .= ' (' . $application->getPaymentDate()->format(Helpers::DATE_FORMAT) . ')';
 
         return $state;
     }

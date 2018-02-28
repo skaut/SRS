@@ -5,6 +5,7 @@ namespace App\AdminModule\MailingModule\Components;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Mailing\MailRepository;
+use App\Utils\Helpers;
 use Doctrine\ORM\QueryBuilder;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
@@ -83,7 +84,7 @@ class MailHistoryGridControl extends Control
             ->setFilterText();
 
         $grid->addColumnDateTime('datetime', 'admin.mailing.history_datetime')
-            ->setFormat('j. n. Y H:i');
+            ->setFormat(Helpers::DATETIME_FORMAT);
 
         $grid->addColumnText('automatic', 'admin.mailing.history_automatic')
             ->setReplacement([
