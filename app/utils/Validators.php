@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Utils;
 
@@ -184,7 +184,7 @@ class Validators
 
     /**
      * Ověří, zda uživatel podakci již nemá.
-     * @param Collection $selectedSubevents
+     * @param Collection|Subevent[] $selectedSubevents
      * @param User $user
      * @param Application|null $editedApplication
      * @return bool

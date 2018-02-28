@@ -20,6 +20,7 @@ use App\Services\MailService;
 use App\Services\PdfExportService;
 use App\Services\ProgramService;
 use App\Services\UserService;
+use App\Utils\Helpers;
 use Doctrine\ORM\QueryBuilder;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
@@ -276,7 +277,7 @@ class UsersGridControl extends Control
         $grid->addColumnDateTime('lastPaymentDate', 'admin.users.users_last_payment_date');
 
         $grid->addColumnDateTime('rolesApplicationDate', 'admin.users.users_roles_application_date')
-            ->setFormat('j. n. Y H:i');
+            ->setFormat(Helpers::DATETIME_FORMAT);
 
         $columnAttended = $grid->addColumnStatus('attended', 'admin.users.users_attended');
         $columnAttended
@@ -309,13 +310,13 @@ class UsersGridControl extends Control
             });
 
         foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
-            $grid->addColumnText('customInput' . $customInput->getId(), $this->truncate($customInput->getName(), 20))
+            $grid->addColumnText('customInput' . $customInput->getId(), Helpers::truncate($customInput->getName(), 20))
                 ->setRenderer(function (User $row) use ($customInput) {
                     $customInputValue = $row->getCustomInputValue($customInput);
                     if ($customInputValue) {
                         switch ($customInputValue->getInput()->getType()) {
                             case CustomInput::TEXT:
-                                return $this->truncate($customInputValue->getValue(), 20);
+                                return Helpers::truncate($customInputValue->getValue(), 20);
 
                             case CustomInput::CHECKBOX:
                                 return $customInputValue->getValue()
@@ -702,22 +703,5 @@ class UsersGridControl extends Control
         foreach (PaymentType::$types as $type)
             $options[$type] = 'common.payment.' . $type;
         return $options;
-    }
-
-    /**
-     * Zkrátí $text na $length znaků a doplní '...'.
-     * @param $text
-     * @param $length
-     * @return bool|string
-     */
-    private function truncate($text, $length)
-    {
-        if (strlen($text) > $length) {
-            $text = $text . " ";
-            $text = mb_substr($text, 0, $length, 'UTF-8');
-            $text = mb_substr($text, 0, strrpos($text, ' '), 'UTF-8');
-            $text = $text . "...";
-        }
-        return $text;
     }
 }

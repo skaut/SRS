@@ -9,6 +9,7 @@ use App\Model\Settings\SettingsRepository;
 use App\Model\User\Application;
 use App\Model\User\ApplicationRepository;
 use App\Model\User\User;
+use App\Utils\Helpers;
 use fpdi\FPDI;
 use Nette;
 
@@ -175,7 +176,7 @@ class PdfExportService
         $this->fpdi->Line(135, 54, 175, 54);
         $this->fpdi->Line(135, 64, 175, 64);
 
-        $this->fpdi->Text(133, 41, iconv('UTF-8', 'WINDOWS-1250', $application->getPaymentDate()->format("j. n. Y")));
+        $this->fpdi->Text(133, 41, iconv('UTF-8', 'WINDOWS-1250', $application->getPaymentDate()->format(Helpers::DATE_FORMAT)));
 
         $this->fpdi->MultiCell(68, 4.5, iconv('UTF-8', 'WINDOWS-1250', $this->settingsRepository->getValue(Settings::COMPANY)));
         $this->fpdi->Text(35, 71, iconv('UTF-8', 'WINDOWS-1250', $this->settingsRepository->getValue(Settings::ICO)));
@@ -245,6 +246,6 @@ class PdfExportService
     private function writeToday()
     {
         $today = new \DateTime('now');
-        return $today->format("j. n. Y");
+        return $today->format(Helpers::DATE_FORMAT);
     }
 }

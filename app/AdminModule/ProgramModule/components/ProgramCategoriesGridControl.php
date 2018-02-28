@@ -87,14 +87,7 @@ class ProgramCategoriesGridControl extends Control
 
         $grid->addColumnText('name', 'admin.program.categories_name');
 
-        $grid->addColumnText('registerableRoles', 'admin.program.categories_registerable_roles')
-            ->setRenderer(function ($row) {
-                $roles = [];
-                foreach ($row->getRegisterableRoles() as $role) {
-                    $roles[] = $role->getName();
-                }
-                return implode(", ", $roles);
-            });
+        $grid->addColumnText('registerableRoles', 'admin.program.categories_registerable_roles', 'registerableRolesText');
 
         $rolesOptions = $this->roleRepository->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]);
 

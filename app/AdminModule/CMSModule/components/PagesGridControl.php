@@ -80,19 +80,12 @@ class PagesGridControl extends Control
             ->endOption()
             ->onChange[] = [$this, 'changeStatus'];
 
-        $grid->addColumnText('roles', 'admin.cms.pages_roles')
-            ->setRenderer(function ($row) {
-                if (count($this->roleRepository->findAll()) == count($row->getRoles()))
-                    return $this->translator->translate('admin.cms.pages_roles_all');
-                else {
-                    $roles = [];
-                    foreach ($row->getRoles() as $role) {
-                        $roles[] = $role->getName();
-                    }
-                    return implode(", ", $roles);
-                }
+        $grid->addColumnText('roles', 'admin.cms.pages_roles', 'rolesText')
+            ->setRendererOnCondition(function () {
+                return $this->translator->translate('admin.cms.pages_roles_all');
+            }, function (Page $page) {
+                return count($this->roleRepository->findAll()) == $page->getRoles()->count();
             });
-
 
         $rolesOptions = $this->roleRepository->getRolesWithoutRolesOptions([]);
         $publicOptions = [

@@ -122,10 +122,10 @@ class CustomInputForm
                         $this->customInput = new CustomSelect();
 
                         $options = explode(',', $values['options']);
-                        $optionsCleaned = [];
+                        $optionsTrimmed = [];
                         foreach ($options as $option)
-                            $optionsCleaned[] = trim($option);
-                        $this->customInput->setOptions(implode(', ', $optionsCleaned));
+                            $optionsTrimmed[] = trim($option);
+                        $this->customInput->setOptions(implode(', ', $optionsTrimmed));
 
                         break;
 

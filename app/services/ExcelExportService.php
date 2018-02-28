@@ -11,6 +11,7 @@ use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\User;
+use App\Utils\Helpers;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Kdyby\Translation\Translator;
@@ -140,7 +141,7 @@ class ExcelExportService
 
     /**
      * Vyexportuje harmonogramy uživatelů, každý uživatel na zvlástním listu.
-     * @param $users
+     * @param Collection|User[] $users
      * @param $filename
      * @return ExcelResponse
      * @throws \PhpOffice\PhpSpreadsheet\Exception
@@ -151,7 +152,7 @@ class ExcelExportService
         $sheetNumber = 0;
 
         foreach ($users as $user) {
-            $sheet = new Worksheet($this->spreadsheet, $this->truncate($user->getDisplayName(), 28));
+            $sheet = new Worksheet($this->spreadsheet, Helpers::truncate($user->getDisplayName(), 28));
             $this->spreadsheet->addSheet($sheet, $sheetNumber++);
 
             $row = 1;
@@ -211,7 +212,7 @@ class ExcelExportService
 
     /**
      * Vyexportuje harmonogramy místností.
-     * @param $rooms
+     * @param Collection|Room[] $rooms
      * @param $filename
      * @return ExcelResponse
      * @throws \PhpOffice\PhpSpreadsheet\Exception
@@ -222,7 +223,7 @@ class ExcelExportService
         $sheetNumber = 0;
 
         foreach ($rooms as $room) {
-            $sheet = new Worksheet($this->spreadsheet, $this->truncate($room->getName(), 28));
+            $sheet = new Worksheet($this->spreadsheet, Helpers::truncate($room->getName(), 28));
             $this->spreadsheet->addSheet($sheet, $sheetNumber++);
 
             $row = 1;
@@ -423,9 +424,9 @@ class ExcelExportService
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $this->userService->getPaymentMethodText($user));
 
-            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getLastPaymentDate() !== NULL ? $user->getLastPaymentDate()->format("j. n. Y") : '');
+            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getLastPaymentDate() !== NULL ? $user->getLastPaymentDate()->format(Helpers::DATE_FORMAT) : '');
 
-            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getRolesApplicationDate() !== NULL ? $user->getRolesApplicationDate()->format("j. n. Y") : '');
+            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getRolesApplicationDate() !== NULL ? $user->getRolesApplicationDate()->format(Helpers::DATE_FORMAT) : '');
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->isAttended()
                 ? $this->translator->translate('common.export.common.yes')
@@ -571,7 +572,7 @@ class ExcelExportService
         $sheetNumber = 0;
 
         foreach ($blocks as $block) {
-            $sheet = new Worksheet($this->spreadsheet, $this->truncate($block->getName(), 28));
+            $sheet = new Worksheet($this->spreadsheet, Helpers::truncate($block->getName(), 28));
             $this->spreadsheet->addSheet($sheet, $sheetNumber++);
 
             $row = 1;
@@ -605,23 +606,6 @@ class ExcelExportService
         }
 
         return new ExcelResponse($this->spreadsheet, $filename);
-    }
-
-    /**
-     * Zkrátí $text na $length znaků a doplní '...'.
-     * @param $text
-     * @param $length
-     * @return bool|string
-     */
-    private function truncate($text, $length)
-    {
-        if (strlen($text) > $length) {
-            $text = $text . " ";
-            $text = mb_substr($text, 0, $length, 'UTF-8');
-            $text = mb_substr($text, 0, strrpos($text, ' '), 'UTF-8');
-            $text = $text . "...";
-        }
-        return $text;
     }
 }
 

@@ -3,6 +3,7 @@
 namespace App\AdminModule\CMSModule\Components;
 
 use App\Model\CMS\NewsRepository;
+use App\Utils\Helpers;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Ublaboo\DataGrid\DataGrid;
@@ -59,7 +60,7 @@ class NewsGridControl extends Control
         $grid->setPagination(FALSE);
 
         $grid->addColumnDateTime('published', 'admin.cms.news_published')
-            ->setFormat('j. n. Y H:i');
+            ->setFormat(Helpers::DATETIME_FORMAT);
 
         $columnMandatory = $grid->addColumnStatus('pinned', 'admin.cms.news_pinned');
         $columnMandatory

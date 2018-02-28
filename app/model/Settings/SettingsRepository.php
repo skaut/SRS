@@ -2,6 +2,7 @@
 
 namespace App\Model\Settings;
 
+use App\Utils\Helpers;
 use Doctrine\ORM\Mapping;
 use Kdyby\Doctrine\EntityManager;
 use Kdyby\Doctrine\EntityRepository;
@@ -112,7 +113,7 @@ class SettingsRepository extends EntityRepository
         $value = $this->getValue($item);
         if ($value === NULL)
             return NULL;
-        return (new \DateTime($value))->format('j. n. Y H:i');
+        return (new \DateTime($value))->format(Helpers::DATETIME_FORMAT);
     }
 
     /**
@@ -154,7 +155,7 @@ class SettingsRepository extends EntityRepository
         $value = $this->getValue($item);
         if ($value === NULL)
             return NULL;
-        return (new \DateTime($value))->format('j. n. Y');
+        return (new \DateTime($value))->format(Helpers::DATE_FORMAT);
     }
 
     /**

@@ -55,7 +55,7 @@ class Category
     /**
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -63,7 +63,7 @@ class Category
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -71,23 +71,31 @@ class Category
     /**
      * @param string $name
      */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
     /**
-     * @return Collection
+     * @return Role[]|Collection
      */
-    public function getRegisterableRoles()
+    public function getRegisterableRoles(): Collection
     {
         return $this->registerableRoles;
     }
 
     /**
-     * @param Collection $registerableRoles
+     * @return string
      */
-    public function setRegisterableRoles($registerableRoles)
+    public function getRegisterableRolesText(): string
+    {
+        return implode(', ', $this->registerableRoles->map(function (Role $role) {return $role->getName();})->toArray());
+    }
+
+    /**
+     * @param Role[]|Collection $registerableRoles
+     */
+    public function setRegisterableRoles(Collection $registerableRoles)
     {
         $this->registerableRoles->clear();
         foreach ($registerableRoles as $registerableRole)
@@ -97,16 +105,16 @@ class Category
     /**
      * @param Role $role
      */
-    public function addRole(Role $role)
+    public function addRole(Role $role): void
     {
         if (!$this->registerableRoles->contains($role))
             $this->registerableRoles->add($role);
     }
 
     /**
-     * @return Collection
+     * @return Block[]|Collection
      */
-    public function getBlocks()
+    public function getBlocks(): Collection
     {
         return $this->blocks;
     }
