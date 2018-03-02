@@ -140,6 +140,15 @@ abstract class AdminBasePresenter extends BasePresenter
         $this->template->settings = $this->settingsRepository;
 
         $this->template->containerAttributes = '';
+
+        $userId = $this->dbuser->getSkautISUserId();
+        $skautIsRoles = $this->skautIsService->getUserRoles($userId);
+        $skautIsRoleSelectedId = $this->skautIsService->getUserRoleId();
+        $skautIsRoleSelected = array_filter($skautIsRoles, function ($r) use ($skautIsRoleSelectedId) {
+            return $r->ID == $skautIsRoleSelectedId;
+        });
+        $this->template->skautIsRoles = $skautIsRoles;
+        $this->template->skautIsRoleSelected = $skautIsRoleSelected[array_keys($skautIsRoleSelected)[0]];
     }
 
     /**
@@ -153,5 +162,11 @@ abstract class AdminBasePresenter extends BasePresenter
             $this->flashMessage('admin.common.access_denied', 'danger', 'lock');
             $this->redirect(':Admin:Dashboard:default');
         }
+    }
+
+    public function handleChangeRole(int $roleId): void
+    {
+        $this->skautIsService->updateUserRole($roleId);
+        $this->redirect("this");
     }
 }

@@ -66,15 +66,30 @@
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown">
+                    <li class="dropdown" id="role-menu">
                         <div class="navbar-btn">
-                            <a id="user-button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            <a class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                <span id="role-menu-text">{$skautIsRoleSelected->DisplayName}</span>
+                                <span class="caret"></span>
+                            </a>
+
+                            <ul class="dropdown-menu">
+                                <li n:foreach="$skautIsRoles as $r" n:class="$r->ID == $skautIsRoleSelected->ID ? active">
+                                    <a class="dropdown-item" href="{plink changeRole!, $r->ID}">{$r->DisplayName}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li class="dropdown" id="user-menu">
+                        <div class="navbar-btn">
+                            <a class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                                 <span class="fa fa-user"></span>
                                 {$dbuser->getUsername()}
                                 <span class="caret"></span>
                             </a>
 
-                            <ul id="user-menu" class="dropdown-menu">
+                            <ul class="dropdown-menu">
                                 <li>
                                     <a class="dropdown-item" href="{plink :Web:Profile:default}">
                                         <span class="fa fa-fw fa-user-circle-o"></span>

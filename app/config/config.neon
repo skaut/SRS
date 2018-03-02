@@ -151,6 +151,10 @@ services:
         class: App\Model\Settings\SettingsRepository
         tags:
             doctrine.repositoryEntity: App\Model\Settings\Settings
+    skautIsCourseRepository:
+        class: App\Model\SkautIs\SkautIsCourseRepository
+        tags:
+            doctrine.repositoryEntity: App\Model\SkautIs\SkautIsCourse
     discountRepository:
         class: App\Model\Structure\DiscountRepository
         tags:
@@ -219,6 +223,7 @@ services:
     - App\AdminModule\ConfigurationModule\Components\ICustomInputsGridControlFactory
     - App\AdminModule\ConfigurationModule\Components\IDiscountsGridControlFactory
     - App\AdminModule\ConfigurationModule\Components\IPlacePointsGridControlFactory
+    - App\AdminModule\ConfigurationModule\Components\ISkautIsEventEducationGridControlFactory
     - App\AdminModule\ConfigurationModule\Components\ISubeventsGridControlFactory
     - App\AdminModule\MailingModule\Components\IMailHistoryGridControlFactory
     - App\AdminModule\MailingModule\Components\IMailTemplatesGridControlFactory

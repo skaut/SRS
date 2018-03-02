@@ -3,6 +3,7 @@
 namespace App\Model\Structure;
 
 use App\Model\Enums\ApplicationState;
+use App\Model\SkautIs\SkautIsCourse;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -93,6 +94,13 @@ class Subevent
      */
     protected $requiredSubevents;
 
+    /**
+     * Propojené skautIS kurzy.
+     * @ORM\ManyToMany(targetEntity="\App\Model\SkautIs\SkautIsCourse")
+     * @var Collection
+     */
+    protected $skautIsCourses;
+
 
     /**
      * Subevent constructor.
@@ -104,6 +112,7 @@ class Subevent
         $this->incompatibleSubevents = new ArrayCollection();
         $this->requiredBySubevent = new ArrayCollection();
         $this->requiredSubevents = new ArrayCollection();
+        $this->skautIsCourses = new ArrayCollection();
     }
 
     /**
@@ -336,6 +345,32 @@ class Subevent
             $requiredSubeventsNames[] = $requiredSubevent->getName();
         }
         return implode(', ', $requiredSubeventsNames);
+    }
+
+    /**
+     * @return Collection|SkautIsCourse[]
+     */
+    public function getSkautIsCourses(): Collection
+    {
+        return $this->skautIsCourses;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSkautIsCoursesText(): string
+    {
+        return implode(', ', $this->skautIsCourses->map(function (SkautIsCourse $skautIsCourse) {return $skautIsCourse->getName();})->toArray());
+    }
+
+    /**
+     * @param Collection|SkautIsCourse[] $skautIsCourses
+     */
+    public function setSkautIsCourses(Collection $skautIsCourses): void
+    {
+        $this->skautIsCourses->clear();
+        foreach ($skautIsCourses as $skautIsCourse)
+            $this->skautIsCourses->add($skautIsCourse);
     }
 
     /**

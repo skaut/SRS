@@ -2,14 +2,13 @@
 
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
+use App\AdminModule\ConfigurationModule\Components\ISkautIsEventEducationGridControlFactory;
+use App\AdminModule\ConfigurationModule\Components\SkautIsEventEducationGridControl;
 use App\AdminModule\ConfigurationModule\Forms\SkautIsEventForm;
 use App\Model\Enums\SkautIsEventType;
 use App\Model\Settings\Settings;
-use App\Services\SkautIsEventEducationService;
-use App\Services\SkautIsEventGeneralService;
-use App\Services\SkautIsEventService;
+use App\Model\SkautIs\SkautIsCourseRepository;
 use Nette\Application\UI\Form;
-use Skautis\Wsdl\WsdlException;
 
 
 /**
@@ -27,44 +26,17 @@ class SkautIsPresenter extends ConfigurationBasePresenter
     public $skautIsEventFormFactory;
 
     /**
-     * @var SkautIsEventGeneralService
+     * @var ISkautIsEventEducationGridControlFactory
      * @inject
      */
-    public $skautIsEventGeneralService;
+    public $skautISEventEducationGridControlFactory;
 
     /**
-     * @var SkautIsEventEducationService
+     * @var SkautIsCourseRepository
      * @inject
      */
-    public $skautIsEventEducationService;
+    public $skautIsCourseRepository;
 
-    /**
-     * @var SkautIsEventService
-     */
-    private $skautIsEventService;
-
-
-    /**
-     * @throws \App\Model\Settings\SettingsException
-     * @throws \Nette\Application\AbortException
-     */
-    public function startup()
-    {
-        parent::startup();
-
-        $eventId = $this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_ID);
-        if ($eventId !== NULL) {
-            switch ($this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_TYPE)) {
-                case SkautIsEventType::GENERAL:
-                    $this->skautIsEventService = $this->skautIsEventGeneralService;
-                    break;
-
-                case SkautIsEventType::EDUCATION:
-                    $this->skautIsEventService = $this->skautIsEventEducationService;
-                    break;
-            }
-        }
-    }
 
     /**
      * @throws \App\Model\Settings\SettingsException
@@ -75,15 +47,7 @@ class SkautIsPresenter extends ConfigurationBasePresenter
         if ($eventId !== NULL) {
             $this->template->event = $this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_NAME);
             $this->template->connected = TRUE;
-            $this->template->access = TRUE;
-            $this->template->closed = FALSE;
-
-            try {
-                if (!$this->skautIsEventService->isEventDraft($eventId))
-                    $this->template->closed = TRUE;
-            } catch (WsdlException $ex) {
-                $this->template->access = FALSE;
-            }
+            $this->template->eventEducation = $this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_TYPE) == SkautIsEventType::EDUCATION;
         } else {
             $this->template->connected = FALSE;
         }
@@ -99,28 +63,10 @@ class SkautIsPresenter extends ConfigurationBasePresenter
         $this->settingsRepository->setValue(Settings::SKAUTIS_EVENT_ID, NULL);
         $this->settingsRepository->setValue(Settings::SKAUTIS_EVENT_NAME, NULL);
 
+        if ($this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_TYPE) == SkautIsEventType::EDUCATION)
+            $this->skautIsCourseRepository->removeAll();
+
         $this->flashMessage('admin.configuration.skautis_event_disconnect_successful', 'success');
-
-        $this->redirect('this');
-    }
-
-    /**
-     * Synchronizuje účastníky s účastníky ve skautIS.
-     * @throws \App\Model\Settings\SettingsException
-     * @throws \Nette\Application\AbortException
-     */
-    public function handleSyncParticipants()
-    {
-        $participants = $this->userRepository->findAllSyncedWithSkautIS();
-
-        $eventId = $this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_ID);
-
-        try {
-            $this->skautIsEventService->syncEventParticipants($eventId, $participants);
-            $this->flashMessage('admin.configuration.skautis_event_sync_successful', 'success');
-        } catch (WsdlException $ex) {
-            $this->flashMessage('admin.configuration.skautis_event_sync_unsuccessful', 'danger');
-        }
 
         $this->redirect('this');
     }
@@ -140,5 +86,13 @@ class SkautIsPresenter extends ConfigurationBasePresenter
         };
 
         return $form;
+    }
+
+    /**
+     * @return SkautIsEventEducationGridControl
+     */
+    protected function createComponentSkautIsEventEducationGrid(): SkautIsEventEducationGridControl
+    {
+        return $this->skautISEventEducationGridControlFactory->create();
     }
 }
