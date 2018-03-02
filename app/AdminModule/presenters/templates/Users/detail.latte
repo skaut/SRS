@@ -158,7 +158,7 @@
                                         {case $customInputTypeFile}
                                             {if $customInputValue->getValue() !== NULL}
                                                 <a href="{$basePath}/files{$customInputValue->getValue()}" target="_blank">
-                                                    {_admin.users.users_custom_input_file_download}
+                                                    {array_values(array_slice(explode('/', $customInputValue->getValue()), -1))[0]}
                                                 </a>
                                             {/if}
                                     {/switch}

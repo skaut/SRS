@@ -321,7 +321,6 @@ users:
     users_arrival: "Příjezd"
     users_departure: "Odjezd"
     users_private_note: "Neveřejná poznámka"
-    users_custom_input_file_download: "stáhnout"
     users_not_registered_mandatory_blocks: "Nepřihlášené povinné bloky"
     users_changed_attended: "Účast uživatele byla úspěšně upravena."
     users_saved: "Uživatel byl úspěšně uložen."
