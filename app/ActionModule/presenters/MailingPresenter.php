@@ -37,7 +37,7 @@ class MailingPresenter extends ActionBasePresenter
             $this->settingsRepository->setValue(Settings::SEMINAR_EMAIL_UNVERIFIED, NULL);
             $this->settingsRepository->setValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE, NULL);
 
-            $this->flashMessage('admin.configuration.mailing_email_verification_success', 'success');
+            $this->flashMessage('admin.configuration.mailing_email_verification_successful', 'success');
         } else {
             $this->flashMessage('admin.configuration.mailing_email_verification_error', 'danger');
         }

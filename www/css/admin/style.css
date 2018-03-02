@@ -1,5 +1,5 @@
 body {
-    min-width: 950px;
+    min-width: 1200px;
 }
 
 #flashes {
@@ -192,6 +192,20 @@ div.mce-fullscreen {
 .navbar .navbar-nav .open .dropdown-menu > .active > a:focus {
      color: #262626 !important;
      background-color: #F5F5F5 !important;
+}
+
+/* vyber role */
+#role-menu {
+    margin-right: 5px;
+}
+
+#role-menu-text {
+    max-width: 220px;
+    display: inline-block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    vertical-align: bottom;
 }
 
 /* zarovnani dlazdic */

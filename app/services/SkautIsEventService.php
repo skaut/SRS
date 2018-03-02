@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Model\User\User;
+use Doctrine\Common\Collections\Collection;
 use Skautis\Skautis;
 use Skautis\Wsdl\WsdlException;
 
@@ -17,6 +18,7 @@ abstract class SkautIsEventService
     /** @var Skautis */
     protected $skautIs;
 
+
     /**
      * SkautIsEventService constructor.
      * @param Skautis $skautIs
@@ -27,23 +29,32 @@ abstract class SkautIsEventService
     }
 
     /**
-     * Synchronizuje účastníky.
+     * Vrací true, pokud je akce neuzavřená.
      * @param $eventId
-     * @param User[] $participants
+     * @return bool
      */
-    public function syncEventParticipants($eventId, array $participants)
-    {
-        $skautIsParticipants = $this->getAllParticipants($eventId);
+    abstract public function isEventDraft($eventId);
 
-        foreach ($skautIsParticipants as $p) {
-            if ($p->CanDelete)
-                $this->deleteParticipant($p->ID);
-        }
+    /**
+     * Vloží účastníky do skautIS.
+     * @param int $eventId
+     * @param Collection|User[] $users
+     * @return bool
+     */
+    abstract public function insertParticipants(int $eventId, Collection $users): bool;
 
-        foreach ($participants as $p) {
-            $this->insertParticipant($p->getSkautISPersonId(), $eventId);
-        }
-    }
+    /**
+     * Vrací údaje o akci.
+     * @param $eventId
+     * @return mixed
+     */
+    abstract protected function getEventDetail($eventId);
+
+    /**
+     * Vrací seznam neuzavřených akcí.
+     * @return mixed
+     */
+    abstract protected function getDraftEvents();
 
     /**
      * Vrací název akce.
@@ -56,13 +67,6 @@ abstract class SkautIsEventService
     }
 
     /**
-     * Vrací true, pokud je akce neuzavřená.
-     * @param $eventId
-     * @return bool
-     */
-    abstract public function isEventDraft($eventId);
-
-    /**
      * Vrací seznam neuzavřených akcí pro select.
      * @return array
      */
@@ -70,43 +74,10 @@ abstract class SkautIsEventService
     {
         $options = [];
         try {
-            foreach ($this->getDraftEvents() as $e)
-                $options[$e->ID] = $e->DisplayName;
-        } catch (WsdlException $ex) {
+            foreach ($this->getDraftEvents() as $event)
+                $options[$event->ID] = $event->DisplayName;
+        } catch (WsdlException $e) {
         }
         return $options;
     }
-
-    /**
-     * Vrací údaje o akci.
-     * @param $eventId
-     * @return mixed
-     */
-    abstract protected function getEventDetail($eventId);
-    
-    /**
-     * Vrátí všehny účastníky skautIS akce.
-     * @param $eventId
-     * @return array
-     */
-    abstract protected function getAllParticipants($eventId);
-
-    /**
-     * Přidává účastníka do skautIS.
-     * @param $participantId
-     * @param $eventId
-     */
-    abstract protected function insertParticipant($participantId, $eventId);
-
-    /**
-     * Odstraňuje účastníka ze skautIS.
-     * @param $participantId
-     */
-    abstract protected function deleteParticipant($participantId);
-    
-    /**
-     * Vrací seznam neuzavřených akcí.
-     * @return mixed
-     */
-    abstract protected function getDraftEvents();
 }

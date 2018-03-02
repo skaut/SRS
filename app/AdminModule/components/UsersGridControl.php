@@ -5,10 +5,12 @@ namespace App\AdminModule\Components;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Enums\PaymentType;
+use App\Model\Enums\SkautIsEventType;
 use App\Model\Program\BlockRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
+use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\ApplicationRepository;
@@ -19,6 +21,8 @@ use App\Services\ExcelExportService;
 use App\Services\MailService;
 use App\Services\PdfExportService;
 use App\Services\ProgramService;
+use App\Services\SkautIsEventEducationService;
+use App\Services\SkautIsEventGeneralService;
 use App\Services\UserService;
 use App\Utils\Helpers;
 use Doctrine\ORM\QueryBuilder;
@@ -88,6 +92,12 @@ class UsersGridControl extends Control
     /** @var ProgramService */
     private $programService;
 
+    /** @var SkautIsEventEducationService */
+    private $skautIsEventEducationService;
+
+    /** @var SkautIsEventGeneralService */
+    private $skautIsEventGeneralService;
+
 
     /**
      * UsersGridControl constructor.
@@ -107,6 +117,8 @@ class UsersGridControl extends Control
      * @param ApplicationService $applicationService
      * @param UserService $userService
      * @param ProgramService $programService
+     * @param SkautIsEventEducationService $skautIsEventEducationService
+     * @param SkautIsEventGeneralService $skautIsEventGeneralService
      */
     public function __construct(Translator $translator, UserRepository $userRepository,
                                 SettingsRepository $settingsRepository, CustomInputRepository $customInputRepository,
@@ -115,7 +127,9 @@ class UsersGridControl extends Control
                                 ExcelExportService $excelExportService, MailService $mailService, Session $session,
                                 SubeventRepository $subeventRepository, ApplicationRepository $applicationRepository,
                                 ApplicationService $applicationService, UserService $userService,
-                                ProgramService $programService)
+                                ProgramService $programService,
+                                SkautIsEventEducationService $skautIsEventEducationService,
+                                SkautIsEventGeneralService $skautIsEventGeneralService)
     {
         parent::__construct();
 
@@ -134,6 +148,8 @@ class UsersGridControl extends Control
         $this->applicationService = $applicationService;
         $this->userService = $userService;
         $this->programService = $programService;
+        $this->skautIsEventEducationService = $skautIsEventEducationService;
+        $this->skautIsEventGeneralService = $skautIsEventGeneralService;
 
         $this->session = $session;
         $this->sessionSection = $session->getSection('srs');
@@ -174,6 +190,9 @@ class UsersGridControl extends Control
 
         $grid->addGroupAction('admin.users.users_group_action_mark_paid_today', $this->preparePaymentMethodOptionsWithoutEmpty())
             ->onSelect[] = [$this, 'groupMarkPaidToday'];
+
+        $grid->addGroupAction('admin.users.users_group_action_insert_into_skaut_is')
+            ->onSelect[] = [$this, 'groupInsertIntoSkautIs'];
 
         $grid->addGroupAction('admin.users.users_group_action_generate_payment_proofs')
             ->onSelect[] = [$this, 'groupGeneratePaymentProofs'];
@@ -556,6 +575,54 @@ class UsersGridControl extends Control
         });
 
         $p->flashMessage('admin.users.users_group_action_marked_paid_today', 'success');
+        $this->redirect('this');
+    }
+
+    /**
+     * Hromadně vloží uživatele jako účastníky do skautIS.
+     * @param array $ids
+     * @param $value
+     * @throws \Nette\Application\AbortException
+     * @throws \Throwable
+     */
+    public function groupInsertIntoSkautIs(array $ids, $value)
+    {
+        $users = $this->userRepository->findUsersByIds($ids);
+
+        $p = $this->getPresenter();
+
+        $eventId = $this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_ID);
+
+        if ($eventId === NULL) {
+            $p->flashMessage('admin.users.users_group_action_insert_into_skaut_is_error_not_connected', 'danger');
+            $this->redirect('this');
+        }
+
+        $eventType = $this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_TYPE);
+
+        switch ($eventType) {
+            case SkautIsEventType::GENERAL:
+                $skautIsEventService = $this->skautIsEventGeneralService;
+                break;
+
+            case SkautIsEventType::EDUCATION:
+                $skautIsEventService = $this->skautIsEventEducationService;
+                break;
+
+            default:
+                throw new \InvalidArgumentException();
+        }
+
+        if (!$skautIsEventService->isEventDraft($eventId)) {
+            $p->flashMessage('admin.users.users_group_action_insert_into_skaut_is_error_not_draft', 'danger');
+            $this->redirect('this');
+        }
+
+        if ($skautIsEventService->insertParticipants($eventId, $users))
+            $p->flashMessage('admin.users.users_group_action_insert_into_skaut_is_error_not_draft_successful', 'success');
+        else
+            $p->flashMessage('admin.users.users_group_action_insert_into_skaut_is_error_skaut_is', 'danger');
+
         $this->redirect('this');
     }
 

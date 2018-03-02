@@ -68,6 +68,29 @@ class SkautIsService
         $this->skautIs->setLoginData($data);
     }
 
+    public function getUserRoles($userId)
+    {
+        return $this->skautIs->usr->UserRoleAll([
+            'ID_User' => $userId,
+            'IsActive' => TRUE
+        ]);
+    }
+
+    public function getUserRoleId()
+    {
+        return $this->skautIs->getUser()->getRoleId();
+    }
+
+    public function updateUserRole(int $roleId)
+    {
+        $response = $this->skautIs->usr->LoginUpdate([
+            'ID' => $this->skautIs->getUser()->getLoginId(),
+            'ID_UserRole' => $roleId
+        ]);
+        if($response)
+            $this->skautIs->getUser()->updateLoginData(NULL, $roleId, $response->ID_Unit);
+    }
+
     /**
      * Vrátí údaje o uživateli.
      * @return mixed

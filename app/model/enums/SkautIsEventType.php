@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Model\Enums;
 
@@ -16,8 +17,8 @@ class SkautIsEventType
     const GENERAL = 'general';
 
     public static $types = [
-        self::GENERAL
-        // self::EDUCATION
+        self::GENERAL,
+        self::EDUCATION
     ];
 
 
@@ -25,7 +26,7 @@ class SkautIsEventType
      * Vrací možnosti typů akcí pro select.
      * @return array
      */
-    public static function getSkautIsEventTypesOptions()
+    public static function getSkautIsEventTypesOptions(): array
     {
         $options = [];
         foreach (self::$types as $type) {

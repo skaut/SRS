@@ -109,7 +109,7 @@ class EditRoleForm
 
         $form->addCheckbox('approvedAfterRegistration', 'admin.acl.roles_approved_after_registration');
 
-        $form->addCheckbox('syncedWithSkautIs', 'admin.acl.roles_synced_with_skaut_is');
+        // $form->addCheckbox('syncedWithSkautIs', 'admin.acl.roles_synced_with_skaut_is');
 
         $form->addCheckbox('displayArrivalDeparture', 'admin.acl.roles_display_arrival_departure');
 
@@ -169,7 +169,7 @@ class EditRoleForm
             'registerableTo' => $this->role->getRegisterableTo(),
             'capacity' => $this->role->getCapacity(),
             'approvedAfterRegistration' => $this->role->isApprovedAfterRegistration(),
-            'syncedWithSkautIs' => $this->role->isSyncedWithSkautIS(),
+            // 'syncedWithSkautIs' => $this->role->isSyncedWithSkautIS(),
             'displayArrivalDeparture' => $this->role->isDisplayArrivalDeparture(),
             'feeFromSubevents' => $this->role->getFee() === NULL,
             'fee' => $this->role->getFee(),
@@ -204,7 +204,7 @@ class EditRoleForm
                 $this->role->setRegisterableTo($values['registerableTo']);
                 $this->role->setCapacity($capacity);
                 $this->role->setApprovedAfterRegistration($values['approvedAfterRegistration']);
-                $this->role->setSyncedWithSkautIS($values['syncedWithSkautIs']);
+                // $this->role->setSyncedWithSkautIS($values['syncedWithSkautIs']);
                 $this->role->setDisplayArrivalDeparture($values['displayArrivalDeparture']);
                 $this->role->setPermissions($this->permissionRepository->findPermissionsByIds($values['permissions']));
                 $this->role->setPages($this->pageRepository->findPagesBySlugs($values['pages']));

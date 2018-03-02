@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
 
@@ -6,6 +7,8 @@ use App\AdminModule\Forms\BaseForm;
 use App\Model\Enums\SkautIsEventType;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
+use App\Model\SkautIs\SkautIsCourse;
+use App\Model\SkautIs\SkautIsCourseRepository;
 use App\Services\SkautIsEventEducationService;
 use App\Services\SkautIsEventGeneralService;
 use Nette;
@@ -28,6 +31,9 @@ class SkautIsEventForm
     /** @var SettingsRepository */
     private $settingsRepository;
 
+    /** @var SkautIsCourseRepository */
+    private $skautIsCourseRepository;
+
     /** @var SkautIsEventGeneralService */
     private $skautIsEventGeneralService;
 
@@ -39,15 +45,18 @@ class SkautIsEventForm
      * SkautIsEventForm constructor.
      * @param BaseForm $baseForm
      * @param SettingsRepository $settingsRepository
+     * @param SkautIsCourseRepository $skautIsCourseRepository
      * @param SkautIsEventGeneralService $skautIsEventGeneralService
      * @param SkautIsEventEducationService $skautIsEventEducationService
      */
     public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository,
+                                SkautIsCourseRepository $skautIsCourseRepository,
                                 SkautIsEventGeneralService $skautIsEventGeneralService,
                                 SkautIsEventEducationService $skautIsEventEducationService)
     {
         $this->baseFormFactory = $baseForm;
         $this->settingsRepository = $settingsRepository;
+        $this->skautIsCourseRepository = $skautIsCourseRepository;
         $this->skautIsEventGeneralService = $skautIsEventGeneralService;
         $this->skautIsEventEducationService = $skautIsEventEducationService;
     }
@@ -57,7 +66,7 @@ class SkautIsEventForm
      * @return Form
      * @throws \App\Model\Settings\SettingsException
      */
-    public function create()
+    public function create(): Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -97,7 +106,7 @@ class SkautIsEventForm
      * @param \stdClass $values
      * @throws \App\Model\Settings\SettingsException
      */
-    public function processForm(Form $form, \stdClass $values)
+    public function processForm(Form $form, \stdClass $values): void
     {
         $eventId = NULL;
         $eventName = NULL;
@@ -112,6 +121,14 @@ class SkautIsEventForm
             case SkautIsEventType::EDUCATION:
                 $eventId = $values['skautisEventEducation'];
                 $eventName = $this->skautIsEventEducationService->getEventDisplayName($eventId);
+
+                foreach ($this->skautIsEventEducationService->getEventCourses($eventId) as $course) {
+                    $skautIsCourse = new SkautIsCourse();
+                    $skautIsCourse->setSkautIsCourseId($course->ID);
+                    $skautIsCourse->setName($course->DisplayName);
+                    $this->skautIsCourseRepository->save($skautIsCourse);
+                }
+
                 break;
         }
 

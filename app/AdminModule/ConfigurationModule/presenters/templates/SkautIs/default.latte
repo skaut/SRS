@@ -21,16 +21,8 @@
         {/if}
     </div>
 
-    <h2>{_admin.configuration.skautis_event_sync_heading}</h2>
-    <div class="well">
-        {if !$connected}
-            <div class="alert alert-warning alert-forever">{_admin.configuration.skautis_event_not_connected}</div>
-        {elseif !$access}
-            <div class="alert alert-warning alert-forever">{_admin.configuration.skautis_event_access_denied}</div>
-        {elseif $closed}
-            <div class="alert alert-warning alert-forever">{_admin.configuration.skautis_event_closed}</div>
-        {else}
-            <a class="btn btn-primary" href="{link syncParticipants!}">{_admin.configuration.skautis_event_sync}</a>
-        {/if}
-    </div>
+    {if $connected && $eventEducation}
+        <h2>{_admin.configuration.skautis_event_education_heading}</h2>
+        {control skautIsEventEducationGrid}
+    {/if}
 {/block}
