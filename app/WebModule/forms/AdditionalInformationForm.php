@@ -142,7 +142,8 @@ class AdditionalInformationForm extends UI\Control
                 case CustomInput::FILE:
                     $custom = $form->addUpload('custom' . $customInput->getId(), $customInput->getName());
                     if ($customInputValue && $customInputValue->getValue())
-                        $custom->setAttribute('data-current-file', $customInputValue->getValue());
+                        $custom->setAttribute('data-current-file-link', $customInputValue->getValue())
+                            ->setAttribute('data-current-file-name', array_values(array_slice(explode('/', $customInputValue->getValue()), -1))[0]);
                     break;
 
                 default:

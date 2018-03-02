@@ -94,7 +94,6 @@ profile:
     about_me: "O mně"
     arrival: "Příjezd"
     departure: "Odjezd"
-    download_current_file: "Stáhnout aktuální"
     update_additional_information: "Upravit doplňující informace"
     additional_information_update_successfull: "Doplňující informace úspěšně upraveny."
 
