@@ -251,7 +251,7 @@ webloader:
                 - libs/bootstrap-confirmation/bootstrap-confirmation.min.js
                 - %appDir%/../vendor/kartik-v/bootstrap-fileinput/js/fileinput.min.js
                 - %appDir%/../vendor/kartik-v/bootstrap-fileinput/themes/fa/theme.js
-                - %appDir%/../vendor/kartik-v/bootstrap-fileinput/js/locales/cz.js
+                - %appDir%/../vendor/kartik-v/bootstrap-fileinput/js/locales/cs.js
                 - main.js
 
         admin:
@@ -270,7 +270,7 @@ webloader:
                 - libs/bootstrap-confirmation/bootstrap-confirmation.min.js
                 - %appDir%/../vendor/kartik-v/bootstrap-fileinput/js/fileinput.min.js
                 - %appDir%/../vendor/kartik-v/bootstrap-fileinput/themes/fa/theme.js
-                - %appDir%/../vendor/kartik-v/bootstrap-fileinput/js/locales/cz.js
+                - %appDir%/../vendor/kartik-v/bootstrap-fileinput/js/locales/cs.js
                 - libs/ublaboo-datagrid/happy.min.js
                 - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid.min.js
                 - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid-instant-url-refresh.min.js
