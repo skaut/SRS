@@ -204,7 +204,7 @@ class InstallPresenter extends InstallBasePresenter
         try {
             $wsdlManager = new WsdlManager(new WebServiceFactory(), new Config($this->context->parameters['skautIS']['appId'], $this->context->parameters['skautIS']['test']));
             $skautIS = new Skautis($wsdlManager, new User($wsdlManager));
-            $skautIS->org->UnitAllRegistry();
+            $skautIS->org->UnitAllRegistryBasic();
         } catch (WsdlException $ex) {
             return FALSE;
         }
