@@ -24,11 +24,13 @@ class SkautIsEventGeneralService extends SkautIsEventService
     }
 
     /**
+     * Vloží účastníky do skautIS.
      * @param int $eventId
      * @param Collection|User[] $users
+     * @param bool $accept
      * @return bool
      */
-    public function insertParticipants(int $eventId, Collection $users): bool
+    public function insertParticipants(int $eventId, Collection $users, bool $accept = FALSE): bool
     {
         try {
             $participants = [];
@@ -91,7 +93,7 @@ class SkautIsEventGeneralService extends SkautIsEventService
      * @param $eventId
      * @param $personId
      */
-    private function insertParticipant($eventId, $personId)
+    private function insertParticipant(int $eventId, int $personId)
     {
         $this->skautIs->event->ParticipantGeneralInsert([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),

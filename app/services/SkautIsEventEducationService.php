@@ -43,9 +43,10 @@ class SkautIsEventEducationService extends SkautIsEventService
     /**
      * @param int $eventId
      * @param Collection|User[] $users
+     * @param bool $accept
      * @return bool
      */
-    public function insertParticipants(int $eventId, Collection $users): bool
+    public function insertParticipants(int $eventId, Collection $users, bool $accept = FALSE): bool
     {
         try {
             $participants = [];
@@ -67,7 +68,7 @@ class SkautIsEventEducationService extends SkautIsEventService
                         $courseId = $course->getSkautIsCourseId();
 
                         if (!array_key_exists($personId, $participants[$courseId])) {
-                            $this->insertParticipant($eventId, $course->getSkautIsCourseId(), $personId);
+                            $this->insertParticipant($eventId, $course->getSkautIsCourseId(), $personId, $accept);
                             $participants[$courseId][$personId] = TRUE;
                         }
                     }
@@ -133,12 +134,13 @@ class SkautIsEventEducationService extends SkautIsEventService
     }
 
     /**
-     * Přidá schváleného účastníka kurzu.
+     * Přidá účastníka kurzu.
      * @param $eventId
      * @param $courseId
      * @param $personId
+     * @param bool $accept
      */
-    private function insertParticipant($eventId, $courseId, $personId)
+    private function insertParticipant($eventId, $courseId, $personId, bool $accept)
     {
         $response = $this->skautIs->event->ParticipantEducationInsert([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -146,10 +148,13 @@ class SkautIsEventEducationService extends SkautIsEventService
             'ID_EventEducationCourse' => $courseId,
             'ID_Person' => $personId
         ]);
-        $this->skautIs->event->ParticipantEducationUpdate([
-            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
-            'ID' => $response->ID,
-            'IsAccepted' => TRUE
-        ], 'participantEducation');
+
+        if ($accept) {
+            $this->skautIs->event->ParticipantEducationUpdate([
+                'ID_Login' => $this->skautIs->getUser()->getLoginId(),
+                'ID' => $response->ID,
+                'IsAccepted' => $accept
+            ], 'participantEducation');
+        }
     }
 }
