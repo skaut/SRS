@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use Nette;
+use Nette\Caching\Cache;
+use Nette\Caching\IStorage;
 use Skautis\Skautis;
 
 
@@ -19,14 +21,19 @@ class SkautIsService
     /** @var Skautis */
     private $skautIs;
 
+    /** @var Cache */
+    private $userRolesCache;
+
 
     /**
      * SkautIsService constructor.
      * @param Skautis $skautIS
+     * @param IStorage $storage
      */
-    public function __construct(Skautis $skautIS)
+    public function __construct(Skautis $skautIS, IStorage $storage)
     {
         $this->skautIs = $skautIS;
+        $this->userRolesCache = new Cache($storage, 'UserRoles');
     }
 
     /**
@@ -68,19 +75,39 @@ class SkautIsService
         $this->skautIs->setLoginData($data);
     }
 
+    /**
+     * Vrací role uživatele.
+     * @param $userId
+     * @return mixed
+     */
     public function getUserRoles($userId)
     {
-        return $this->skautIs->usr->UserRoleAll([
-            'ID_User' => $userId,
-            'IsActive' => TRUE
-        ]);
+        $roles = $this->userRolesCache->load($userId);
+
+        if ($roles === NULL) {
+            $roles = $this->skautIs->usr->UserRoleAll([
+                'ID_User' => $userId,
+                'IsActive' => TRUE
+            ]);
+            $this->userRolesCache->save($userId, $roles);
+        }
+
+        return $roles;
     }
 
+    /**
+     * Vrací id aktuální role uživatele.
+     * @return int|null
+     */
     public function getUserRoleId()
     {
         return $this->skautIs->getUser()->getRoleId();
     }
 
+    /**
+     * Aktualizuje roli uživatele.
+     * @param int $roleId
+     */
     public function updateUserRole(int $roleId)
     {
         $response = $this->skautIs->usr->LoginUpdate([
