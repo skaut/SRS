@@ -186,6 +186,9 @@ capacities_content:
     occupied_limited: "Obsazeno %occupied% z %total%"
     occupied_unlimited: "Obsazeno %occupied%"
 
+document_content:
+    list_empty: "Pro vaši roli nejsou k dispozici žádné dokumenty."
+
 faq_content:
     login_required_begin: "Pro položení otázky se musíte"
     login_required_link: "přihlásit přes skautIS"

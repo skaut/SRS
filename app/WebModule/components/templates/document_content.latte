@@ -7,16 +7,20 @@
 
     <div class="row">
         <div class="col-sm-12">
-            <ul class="fa-ul">
-                {foreach $documents as $document}
-                    <li>
-                        <i class="fa-li fa fa-file"></i>
-                        <a href="{$basePath}/files{$document->getFile()}" target="_blank">{$document->getName()}</a>
-                        <span n:if="$document->getDescription()">- {$document->getDescription()}</span>
-                        (upraveno: {$document->getTimestamp()|date:'j. n. Y'})
-                    </li>
-                {/foreach}
-            </ul>
+            {if $documents->isEmpty()}
+                {_web.document_content.list_empty}
+            {else}
+                <ul class="fa-ul">
+                    {foreach $documents as $document}
+                        <li>
+                            <i class="fa-li fa fa-file"></i>
+                            <a href="{$basePath}/files{$document->getFile()}" target="_blank">{$document->getName()}</a>
+                            <span n:if="$document->getDescription()">- {$document->getDescription()}</span>
+                            (upraveno: {$document->getTimestamp()|date:'j. n. Y'})
+                        </li>
+                    {/foreach}
+                </ul>
+            {/if}
         </div>
     </div>
 </div>
