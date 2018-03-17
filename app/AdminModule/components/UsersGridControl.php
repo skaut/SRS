@@ -168,6 +168,7 @@ class UsersGridControl extends Control
      * @param $name
      * @throws \Ublaboo\DataGrid\Exception\DataGridColumnStatusException
      * @throws \Ublaboo\DataGrid\Exception\DataGridException
+     * @throws \App\Model\Settings\SettingsException
      */
     public function createComponentUsersGrid($name)
     {
@@ -191,8 +192,20 @@ class UsersGridControl extends Control
         $grid->addGroupAction('admin.users.users_group_action_mark_paid_today', $this->preparePaymentMethodOptionsWithoutEmpty())
             ->onSelect[] = [$this, 'groupMarkPaidToday'];
 
-        $grid->addGroupAction('admin.users.users_group_action_insert_into_skaut_is')
-            ->onSelect[] = [$this, 'groupInsertIntoSkautIs'];
+        switch ($this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_TYPE)) {
+            case SkautIsEventType::GENERAL:
+                $grid->addGroupAction('admin.users.users_group_action_insert_into_skaut_is')
+                    ->onSelect[] = [$this, 'groupInsertIntoSkautIs'];
+                break;
+
+            case SkautIsEventType::EDUCATION:
+                $grid->addGroupAction('admin.users.users_group_action_insert_into_skaut_is', $this->prepareInsertIntoSkautIsOptions())
+                    ->onSelect[] = [$this, 'groupInsertIntoSkautIs'];
+                break;
+
+            default:
+                throw new \InvalidArgumentException();
+        }
 
         $grid->addGroupAction('admin.users.users_group_action_generate_payment_proofs')
             ->onSelect[] = [$this, 'groupGeneratePaymentProofs'];
@@ -599,9 +612,7 @@ class UsersGridControl extends Control
             $this->redirect('this');
         }
 
-        $eventType = $this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_TYPE);
-
-        switch ($eventType) {
+        switch ($this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_TYPE)) {
             case SkautIsEventType::GENERAL:
                 $skautIsEventService = $this->skautIsEventGeneralService;
                 break;
@@ -619,7 +630,7 @@ class UsersGridControl extends Control
             $this->redirect('this');
         }
 
-        if ($skautIsEventService->insertParticipants($eventId, $users))
+        if ($skautIsEventService->insertParticipants($eventId, $users, $value ?: FALSE))
             $p->flashMessage('admin.users.users_group_action_insert_into_skaut_is_error_not_draft_successful', 'success');
         else
             $p->flashMessage('admin.users.users_group_action_insert_into_skaut_is_error_skaut_is', 'danger');
@@ -765,11 +776,23 @@ class UsersGridControl extends Control
      * Vrátí platební metody jako možnosti pro select. Bez prázdné možnosti.
      * @return array
      */
-    private function preparePaymentMethodOptionsWithoutEmpty()
+    private function preparePaymentMethodOptionsWithoutEmpty(): array
     {
         $options = [];
         foreach (PaymentType::$types as $type)
             $options[$type] = 'common.payment.' . $type;
+        return $options;
+    }
+
+    /**
+     * Vrátí možnosti vložení účastníků do vzdělávací akce skautIS.
+     * @return array
+     */
+    private function prepareInsertIntoSkautIsOptions(): array
+    {
+        $options = [];
+        $options[FALSE] = 'common.skautis_event_insert_type.registered';
+        $options[TRUE] = 'common.skautis_event_insert_type.accepted';
         return $options;
     }
 }

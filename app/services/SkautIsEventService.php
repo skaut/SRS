@@ -39,9 +39,10 @@ abstract class SkautIsEventService
      * Vloží účastníky do skautIS.
      * @param int $eventId
      * @param Collection|User[] $users
+     * @param bool $accept Přijetí účastníků (pouze u vzdělávacích akcí).
      * @return bool
      */
-    abstract public function insertParticipants(int $eventId, Collection $users): bool;
+    abstract public function insertParticipants(int $eventId, Collection $users, bool $accept = FALSE): bool;
 
     /**
      * Vrací údaje o akci.

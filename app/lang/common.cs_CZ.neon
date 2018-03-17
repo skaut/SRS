@@ -100,6 +100,10 @@ skautis_event_type:
     general: "Obecná akce"
     education: "Vzdělávací akce"
 
+skautis_event_insert_type:
+    registered: "Přihlášení"
+    accepted: "Přijatí"
+
 application_state:
     waiting_for_payment: "Čeká na platbu"
     canceled_not_paid: "Zrušeno (nezaplaceno)"
