@@ -7,6 +7,8 @@ use App\Model\ACL\RoleRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use Nette;
+use Nette\Caching\Cache;
+use Nette\Caching\IStorage;
 use Nette\Security as NS;
 
 
@@ -20,6 +22,9 @@ use Nette\Security as NS;
 class Authenticator implements NS\IAuthenticator
 {
     use Nette\SmartObject;
+
+    /** @var Cache */
+    private $userRolesCache;
 
     /** @var SkautIsService */
     protected $skautIsService;
@@ -40,14 +45,17 @@ class Authenticator implements NS\IAuthenticator
      * @param RoleRepository $roleRepository
      * @param SkautIsService $skautIsService
      * @param FilesService $filesService
+     * @param IStorage $storage
      */
     public function __construct(UserRepository $userRepository, RoleRepository $roleRepository,
-                                SkautIsService $skautIsService, FilesService $filesService)
+                                SkautIsService $skautIsService, FilesService $filesService, IStorage $storage)
     {
         $this->userRepository = $userRepository;
         $this->roleRepository = $roleRepository;
         $this->skautIsService = $skautIsService;
         $this->filesService = $filesService;
+
+        $this->userRolesCache = new Cache($storage, 'UserRoles');
     }
 
     /**
@@ -73,6 +81,7 @@ class Authenticator implements NS\IAuthenticator
 
         $this->userRepository->save($user);
 
+        //nacteni schvalenych roli v SRS
         $netteRoles = [];
         if ($user->isApproved()) {
             foreach ($user->getRoles() as $role)
@@ -81,6 +90,9 @@ class Authenticator implements NS\IAuthenticator
             $roleUnapproved = $this->roleRepository->findBySystemName(Role::UNAPPROVED);
             $netteRoles[$roleUnapproved->getId()] = $roleUnapproved->getName();
         }
+
+        //invalidace cache roli ze skautIS
+        $this->userRolesCache->remove($user->getSkautISUserId());
 
         return new NS\Identity($user->getId(), $netteRoles, ['firstLogin' => $firstLogin]);
     }
