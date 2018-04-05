@@ -68,6 +68,11 @@ class SkautIsService
         $this->skautIs->setLoginData($data);
     }
 
+    /**
+     * Vrátí skautIS role uživatele.
+     * @param $userId
+     * @return mixed
+     */
     public function getUserRoles($userId)
     {
         return $this->skautIs->usr->UserRoleAll([
@@ -76,11 +81,19 @@ class SkautIsService
         ]);
     }
 
+    /**
+     * Vrátí id aktuální skautIS role uživatele.
+     * @return int|null
+     */
     public function getUserRoleId()
     {
         return $this->skautIs->getUser()->getRoleId();
     }
 
+    /**
+     * Změní skautIS roli uživatele.
+     * @param int $roleId
+     */
     public function updateUserRole(int $roleId)
     {
         $response = $this->skautIs->usr->LoginUpdate([
