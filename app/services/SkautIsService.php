@@ -76,7 +76,7 @@ class SkautIsService
     }
 
     /**
-     * Vrací role uživatele.
+     * Vrátí skautIS role uživatele.
      * @param $userId
      * @return mixed
      */
@@ -96,7 +96,7 @@ class SkautIsService
     }
 
     /**
-     * Vrací id aktuální role uživatele.
+     * Vrátí id aktuální skautIS role uživatele.
      * @return int|null
      */
     public function getUserRoleId()
@@ -105,7 +105,7 @@ class SkautIsService
     }
 
     /**
-     * Aktualizuje roli uživatele.
+     * Změní skautIS roli uživatele.
      * @param int $roleId
      */
     public function updateUserRole(int $roleId)
