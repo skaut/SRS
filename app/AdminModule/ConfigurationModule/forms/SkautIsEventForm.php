@@ -125,7 +125,8 @@ class SkautIsEventForm
                 foreach ($this->skautIsEventEducationService->getEventCourses($eventId) as $course) {
                     $skautIsCourse = new SkautIsCourse();
                     $skautIsCourse->setSkautIsCourseId($course->ID);
-                    $skautIsCourse->setName($course->DisplayName);
+                    $skautIsCourseName = $course->EventEducationType . (!empty($course->DisplayName) ? ' (' . $course->DisplayName . ')' : '');
+                    $skautIsCourse->setName($skautIsCourseName);
                     $this->skautIsCourseRepository->save($skautIsCourse);
                 }
 
