@@ -2,6 +2,7 @@
 
 namespace App\Services;
 use App\Model\SkautIs\SkautIsCourseRepository;
+use App\Model\Structure\SubeventRepository;
 use App\Model\User\User;
 use Doctrine\Common\Collections\Collection;
 use Skautis\Skautis;
@@ -18,17 +19,23 @@ class SkautIsEventEducationService extends SkautIsEventService
     /** @var SkautIsCourseRepository */
     private $skautIsCourseRepository;
 
+    /** @var SubeventRepository */
+    private $subeventRepository;
+
 
     /**
      * SkautIsEventEducationService constructor.
      * @param Skautis $skautIs
      * @param SkautIsCourseRepository $skautIsCourseRepository
+     * @param SubeventRepository $subeventRepository
      */
-    public function __construct(Skautis $skautIs, SkautIsCourseRepository $skautIsCourseRepository)
+    public function __construct(Skautis $skautIs, SkautIsCourseRepository $skautIsCourseRepository,
+                                SubeventRepository $subeventRepository)
     {
         parent::__construct($skautIs);
 
         $this->skautIsCourseRepository = $skautIsCourseRepository;
+        $this->subeventRepository = $subeventRepository;
     }
 
     /**
@@ -115,6 +122,19 @@ class SkautIsEventEducationService extends SkautIsEventService
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID_EventEducation' => $eventId
         ]);
+    }
+
+    /**
+     * Je nastaveno propojení alespoň jedné podakce se skautIS kurzem?
+     * @return bool
+     */
+    public function isSubeventConnected()
+    {
+        foreach ($this->subeventRepository->findAll() as $subevent) {
+            if (!$subevent->getSkautIsCourses()->isEmpty())
+                return TRUE;
+        }
+        return FALSE;
     }
 
     /**

@@ -9,8 +9,10 @@ use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsRepository;
 use App\Model\SkautIs\SkautIsCourse;
 use App\Model\SkautIs\SkautIsCourseRepository;
+use App\Model\Structure\SubeventRepository;
 use App\Services\SkautIsEventEducationService;
 use App\Services\SkautIsEventGeneralService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Nette;
 use Nette\Application\UI\Form;
 
@@ -40,6 +42,9 @@ class SkautIsEventForm
     /** @var SkautIsEventEducationService */
     private $skautIsEventEducationService;
 
+    /** @var SubeventRepository */
+    private $subeventRepository;
+
 
     /**
      * SkautIsEventForm constructor.
@@ -48,17 +53,20 @@ class SkautIsEventForm
      * @param SkautIsCourseRepository $skautIsCourseRepository
      * @param SkautIsEventGeneralService $skautIsEventGeneralService
      * @param SkautIsEventEducationService $skautIsEventEducationService
+     * @param SubeventRepository $subeventRepository
      */
     public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository,
                                 SkautIsCourseRepository $skautIsCourseRepository,
                                 SkautIsEventGeneralService $skautIsEventGeneralService,
-                                SkautIsEventEducationService $skautIsEventEducationService)
+                                SkautIsEventEducationService $skautIsEventEducationService,
+                                SubeventRepository $subeventRepository)
     {
         $this->baseFormFactory = $baseForm;
         $this->settingsRepository = $settingsRepository;
         $this->skautIsCourseRepository = $skautIsCourseRepository;
         $this->skautIsEventGeneralService = $skautIsEventGeneralService;
         $this->skautIsEventEducationService = $skautIsEventEducationService;
+        $this->subeventRepository = $subeventRepository;
     }
 
     /**
@@ -105,6 +113,7 @@ class SkautIsEventForm
      * @param Form $form
      * @param \stdClass $values
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function processForm(Form $form, \stdClass $values): void
     {
@@ -122,11 +131,20 @@ class SkautIsEventForm
                 $eventId = $values['skautisEventEducation'];
                 $eventName = $this->skautIsEventEducationService->getEventDisplayName($eventId);
 
-                foreach ($this->skautIsEventEducationService->getEventCourses($eventId) as $course) {
+                $courses = $this->skautIsEventEducationService->getEventCourses($eventId);
+
+                foreach ($courses as $course) {
                     $skautIsCourse = new SkautIsCourse();
                     $skautIsCourse->setSkautIsCourseId($course->ID);
-                    $skautIsCourse->setName($course->DisplayName);
+                    $skautIsCourseName = $course->EventEducationType . (!empty($course->DisplayName) ? ' (' . $course->DisplayName . ')' : '');
+                    $skautIsCourse->setName($skautIsCourseName);
                     $this->skautIsCourseRepository->save($skautIsCourse);
+                }
+
+                if (count($courses) == 1 && !$this->subeventRepository->explicitSubeventsExists()) {
+                    $subevent = $this->subeventRepository->findImplicit();
+                    $subevent->setSkautIsCourses(new ArrayCollection($this->skautIsCourseRepository->findAll()));
+                    $this->subeventRepository->save($subevent);
                 }
 
                 break;
