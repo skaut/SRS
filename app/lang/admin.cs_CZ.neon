@@ -341,6 +341,7 @@ users:
     users_group_action_change_roles_error_capacity: "Role nebyly nastaveny, byla by překročena kapacita některé role."
     users_group_action_insert_into_skaut_is: "Vložit účastníky do skautIS"
     users_group_action_insert_into_skaut_is_error_not_connected: "Účastníci nebyli vloženi do skautIS, systém není propojen se žádnou akcí."
+    users_group_action_insert_into_skaut_is_error_subevent_not_connected: "Účastníci nebyli vloženi do skautIS, žádná podakce není propojena s žádným kurzem."
     users_group_action_insert_into_skaut_is_error_not_draft: "Účastníci nebyli vloženi do skautIS, akce byla uzavřena."
     users_group_action_insert_into_skaut_is_error_skaut_is: "Účastníci nebyli vloženi do skautIS, zkontrolujte, že pracujete v roli s právem přidávat účastníky akce."
     users_group_action_insert_into_skaut_is_error_not_draft_successful: "Účastníci byli úspěšně vloženi do skautIS."
