@@ -105,10 +105,14 @@ class SkautIsEventEducationService extends SkautIsEventService
      */
     protected function getDraftEvents()
     {
+        //TODO vracet jen akce, kam je možné přidávat účastníky
         return $this->skautIs->event->EventEducationAllMyActions([
-            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
-            'ID_EventEducationState' => 'draft'
+            'ID_Login' => $this->skautIs->getUser()->getLoginId()
         ]);
+//        return $this->skautIs->event->EventEducationAllMyActions([
+//            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
+//            'ID_EventEducationState' => 'draft'
+//        ]);
     }
 
     /**
