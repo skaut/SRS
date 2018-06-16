@@ -109,10 +109,10 @@ class SkautIsEventEducationService extends SkautIsEventService
         return $this->skautIs->event->EventEducationAllMyActions([
             'ID_Login' => $this->skautIs->getUser()->getLoginId()
         ]);
-//        return $this->skautIs->event->EventEducationAllMyActions([
-//            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
-//            'ID_EventEducationState' => 'draft'
-//        ]);
+        //        return $this->skautIs->event->EventEducationAllMyActions([
+        //            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
+        //            'ID_EventEducationState' => 'draft'
+        //        ]);
     }
 
     /**
