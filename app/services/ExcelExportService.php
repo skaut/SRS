@@ -314,6 +314,11 @@ class ExcelExportService
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(FALSE);
         $sheet->getColumnDimensionByColumn($column++)->setWidth('10');
 
+        $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.email'));
+        $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(TRUE);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(FALSE);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth('30');
+
         $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.city'));
         $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(TRUE);
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(FALSE);
@@ -412,6 +417,8 @@ class ExcelExportService
                 ->setValueExplicit($this->userService->getMembershipText($user), DataType::TYPE_STRING);
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->getAge());
+
+            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getEmail());
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->getCity());
 
