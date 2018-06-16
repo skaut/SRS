@@ -187,6 +187,10 @@ class ApplicationForm
             $inputBirthdate->setDisabled();
         }
 
+        $form->addText('email', 'web.application_content.email')
+            ->addRule(Form::FILLED)
+            ->setDisabled();
+
         $form->addText('street', 'web.application_content.street')
             ->addRule(Form::FILLED, 'web.application_content.street_empty')
             ->addRule(Form::PATTERN, 'web.application_content.street_format', '^(.*[^0-9]+) (([1-9][0-9]*)/)?([1-9][0-9]*[a-cA-C]?)$');
@@ -221,6 +225,7 @@ class ApplicationForm
             'lastName' => $this->user->getLastName(),
             'nickName' => $this->user->getNickName(),
             'birthdate' => $this->user->getBirthdate(),
+            'email' => $this->user->getEmail(),
             'street' => $this->user->getStreet(),
             'city' => $this->user->getCity(),
             'postcode' => $this->user->getPostcode(),

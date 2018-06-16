@@ -267,7 +267,7 @@ class UsersGridControl extends Control
             ->setTranslateOptions();
 
         $grid->addColumnText('unit', 'admin.users.users_membership')
-            ->setRendererOnCondition(function ($row) {
+            ->setRendererOnCondition(function (User $row) {
                 return Html::el('span')
                     ->style('color: red')
                     ->setText($this->userService->getMembershipText($row));
@@ -279,10 +279,19 @@ class UsersGridControl extends Control
 
         $grid->addColumnNumber('age', 'admin.users.users_age')
             ->setSortable()
-            ->setSortableCallback(function (QueryBuilder $qb, $sort) {
+            ->setSortableCallback(function (QueryBuilder $qb, array $sort) {
                 $sort = $sort['age'] == 'DESC' ? 'ASC' : 'DESC';
                 $qb->orderBy('u.birthdate', $sort);
             });
+
+        $grid->addColumnText('email', 'admin.users.users_email')
+            ->setRenderer(function (User $row) {
+                return Html::el('a')
+                    ->href('mailto:' . $row->getEmail())
+                    ->setText($row->getEmail());
+            })
+            ->setSortable()
+            ->setFilterText();
 
         $grid->addColumnText('city', 'admin.users.users_city')
             ->setSortable()

@@ -87,6 +87,10 @@ class PersonalDetailsForm
             $inputBirthdate->setDisabled();
         }
 
+        $form->addText('email', 'web.application_content.email')
+            ->addRule(Form::FILLED)
+            ->setDisabled();
+
         $form->addText('street', 'web.profile.street')
             ->addRule(Form::FILLED, 'web.profile.street_empty')
             ->addRule(Form::PATTERN, 'web.profile.street_format', '^(.*[^0-9]+) (([1-9][0-9]*)/)?([1-9][0-9]*[a-cA-C]?)$');
@@ -109,6 +113,7 @@ class PersonalDetailsForm
             'firstName' => $this->user->getFirstName(),
             'lastName' => $this->user->getLastName(),
             'nickName' => $this->user->getNickName(),
+            'email' => $this->user->getEmail(),
             'birthdate' => $this->user->getBirthdate(),
             'street' => $this->user->getStreet(),
             'city' => $this->user->getCity(),
