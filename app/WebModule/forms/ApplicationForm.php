@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\WebModule\Forms;
 
@@ -154,6 +155,7 @@ class ApplicationForm
      * @return Form
      * @throws \App\Model\Settings\SettingsException
      * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Throwable
      */
     public function create($id)
     {
@@ -235,10 +237,10 @@ class ApplicationForm
     /**
      * Zpracuje formulář.
      * @param Form $form
-     * @param \stdClass $values
+     * @param array $values
      * @throws \Throwable
      */
-    public function processForm(Form $form, \stdClass $values)
+    public function processForm(Form $form, array $values)
     {
         $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($values) {
             if (array_key_exists('sex', $values))

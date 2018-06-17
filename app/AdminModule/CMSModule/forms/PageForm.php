@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\AdminModule\CMSModule\Forms;
 
@@ -169,10 +170,10 @@ class PageForm extends UI\Control
     /**
      * Zpracuje formulář.
      * @param Form $form
-     * @param \stdClass $values
+     * @param array $values
      * @throws \App\Model\Page\PageException
      */
-    public function processForm(Form $form, \stdClass $values)
+    public function processForm(Form $form, array $values)
     {
         $page = $this->pageRepository->findById($values['id']);
 

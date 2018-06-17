@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
 
@@ -40,6 +41,7 @@ class ApplicationForm
      * Vytvoří formulář.
      * @return Form
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
     public function create()
     {
@@ -66,10 +68,10 @@ class ApplicationForm
     /**
      * Zpracuje formulář.
      * @param Form $form
-     * @param \stdClass $values
+     * @param array $values
      * @throws \App\Model\Settings\SettingsException
      */
-    public function processForm(Form $form, \stdClass $values)
+    public function processForm(Form $form, array $values)
     {
         $this->settingsRepository->setValue(Settings::APPLICATION_AGREEMENT, $values['applicationAgreement']);
         $this->settingsRepository->setValue(Settings::EDIT_CUSTOM_INPUTS_TO, $values['editCustomInputsTo']);

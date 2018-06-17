@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\WebModule\Forms;
 
@@ -124,9 +125,9 @@ class PersonalDetailsForm
     /**
      * Zpracuje formulář.
      * @param Form $form
-     * @param \stdClass $values
+     * @param array $values
      */
-    public function processForm(Form $form, \stdClass $values)
+    public function processForm(Form $form, array $values)
     {
         if (array_key_exists('sex', $values))
             $this->user->setSex($values['sex']);

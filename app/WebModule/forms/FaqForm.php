@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\WebModule\Forms;
 
@@ -73,10 +74,10 @@ class FaqForm
     /**
      * Zpracuje formulář.
      * @param Form $form
-     * @param \stdClass $values
+     * @param array $values
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function processForm(Form $form, \stdClass $values)
+    public function processForm(Form $form, array $values)
     {
         $faq = new Faq();
 

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
@@ -38,6 +39,7 @@ class PlaceContentControl extends Control
     /**
      * @param $content
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
     public function render($content)
     {

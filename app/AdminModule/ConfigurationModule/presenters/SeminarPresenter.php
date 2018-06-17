@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
@@ -29,7 +30,7 @@ class SeminarPresenter extends ConfigurationBasePresenter
     {
         $form = $this->seminarFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+        $form->onSuccess[] = function (Form $form, array $values) {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');

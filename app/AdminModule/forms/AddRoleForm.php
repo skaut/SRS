@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\AdminModule\Forms;
 
@@ -67,9 +68,9 @@ class AddRoleForm
     /**
      * Zpracuje formulář.
      * @param Form $form
-     * @param \stdClass $values
+     * @param array $values
      */
-    public function processForm(Form $form, \stdClass $values)
+    public function processForm(Form $form, array $values)
     {
         if (!$form['cancel']->isSubmittedBy()) {
             $role = new Role($values['name']);

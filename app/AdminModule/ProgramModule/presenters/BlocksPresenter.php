@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\AdminModule\ProgramModule\Presenters;
 
@@ -69,6 +70,7 @@ class BlocksPresenter extends ProgramBasePresenter
     /**
      * @param $id
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
     public function renderDetail($id)
     {
@@ -118,6 +120,7 @@ class BlocksPresenter extends ProgramBasePresenter
      * @param $programId
      * @throws \App\Model\Settings\SettingsException
      * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     public function handleDeleteProgram($programId)
     {
@@ -153,7 +156,7 @@ class BlocksPresenter extends ProgramBasePresenter
     {
         $form = $this->blockFormFactory->create($this->getParameter('id'), $this->getUser()->getId());
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+        $form->onSuccess[] = function (Form $form, array $values) {
             if ($form['cancel']->isSubmittedBy())
                 $this->redirect('Blocks:default');
 

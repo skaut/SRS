@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
 
@@ -55,6 +56,7 @@ class WebForm
      * Vytvoří formulář.
      * @return Form
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
     public function create()
     {
@@ -89,11 +91,12 @@ class WebForm
     /**
      * Zpracuje formulář.
      * @param Form $form
-     * @param \stdClass $values
+     * @param array $values
      * @throws Nette\Utils\UnknownImageFileException
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
-    public function processForm(Form $form, \stdClass $values)
+    public function processForm(Form $form, array $values)
     {
         $logo = $values['logo'];
         if ($logo->size > 0) {

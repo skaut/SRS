@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Services;
 
@@ -79,6 +80,7 @@ class SkautIsService
      * Vrátí skautIS role uživatele.
      * @param $userId
      * @return mixed
+     * @throws \Throwable
      */
     public function getUserRoles($userId)
     {

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
@@ -31,6 +32,7 @@ class MailingPresenter extends ConfigurationBasePresenter
 
     /**
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
     public function renderDefault()
     {
@@ -45,7 +47,7 @@ class MailingPresenter extends ConfigurationBasePresenter
     {
         $form = $this->mailingFormFactory->create($this->user->getId());
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+        $form->onSuccess[] = function (Form $form, array $values) {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\WebModule\Presenters;
 
@@ -122,6 +123,7 @@ abstract class WebBasePresenter extends BasePresenter
 
     /**
      * @throws SettingsException
+     * @throws \Throwable
      */
     public function beforeRender()
     {
