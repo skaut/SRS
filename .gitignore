@@ -5,7 +5,6 @@
 /deployment.ini
 /deployment.log
 /app/config/config.local.neon
-/app/config/config/test-srs.local.neon
 /www/adminer.php
 /vendor
 !.gitignore

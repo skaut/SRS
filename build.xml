@@ -28,12 +28,6 @@
             </fileset>
         </copy>
 
-        <copy file="./app/config/config.test-is.local.neon" tofile="${build.dir}/app/config/config.local.neon">
-            <filterchain>
-                <expandproperties/>
-            </filterchain>
-        </copy>
-
         <exec command="composer --working-dir=${build.dir} install
                         --no-interaction
                         --optimize-autoloader
