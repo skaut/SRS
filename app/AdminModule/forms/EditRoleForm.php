@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\AdminModule\Forms;
 
@@ -189,10 +190,10 @@ class EditRoleForm
     /**
      * Zpracuje formulář.
      * @param Form $form
-     * @param \stdClass $values
+     * @param array $values
      * @throws \Throwable
      */
-    public function processForm(Form $form, \stdClass $values)
+    public function processForm(Form $form, array $values)
     {
         if (!$form['cancel']->isSubmittedBy()) {
             $this->roleRepository->getEntityManager()->transactional(function ($em) use ($values) {

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Model\CMS\Content;
 
@@ -92,9 +93,9 @@ class UsersContent extends Content implements IContent
     /**
      * Zpracuje při uložení stránky část formuláře týkající se obsahu.
      * @param Form $form
-     * @param \stdClass $values
+     * @param array $values
      */
-    public function contentFormSucceeded(Form $form, \stdClass $values)
+    public function contentFormSucceeded(Form $form, array $values)
     {
         parent::contentFormSucceeded($form, $values);
         $values = $values[$this->getContentFormName()];

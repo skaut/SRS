@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
 
@@ -129,9 +130,9 @@ class DiscountForm extends UI\Control
     /**
      * Zpracuje formulář.
      * @param Form $form
-     * @param \stdClass $values
+     * @param array $values
      */
-    public function processForm(Form $form, \stdClass $values)
+    public function processForm(Form $form, array $values)
     {
         $this->id = $values['id'];
 

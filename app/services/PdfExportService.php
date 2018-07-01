@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Services;
 
@@ -161,6 +162,7 @@ class PdfExportService
      * Vytvoří stránku s příjmovýchm dokladem.
      * @param Application $application
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
     private function addIncomeProofPage(Application $application)
     {
@@ -189,11 +191,12 @@ class PdfExportService
 
         $this->fpdi->Text(40, 111, iconv('UTF-8', 'WINDOWS-1250', "účastnický poplatek {$this->settingsRepository->getValue(Settings::SEMINAR_NAME)}"));
     }
-    
+
     /**
      * Vytvoří stránku s potvrzením o přijetí platby.
      * @param Application $application
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
     private function addAccountProofPage(Application $application)
     {

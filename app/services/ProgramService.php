@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Services;
 
@@ -67,6 +68,7 @@ class ProgramService
      * Je povoleno zapisování programů?
      * @return bool
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
     public function isAllowedRegisterPrograms()
     {

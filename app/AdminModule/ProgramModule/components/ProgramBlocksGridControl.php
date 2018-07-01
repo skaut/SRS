@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\AdminModule\ProgramModule\Components;
 
@@ -102,6 +103,7 @@ class ProgramBlocksGridControl extends Control
      * Vytvoří komponentu.
      * @param $name
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      * @throws \Ublaboo\DataGrid\Exception\DataGridColumnStatusException
      * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */

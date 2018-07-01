@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\AdminModule\Components;
 
@@ -166,9 +167,10 @@ class UsersGridControl extends Control
     /**
      * Vytvoří komponentu.
      * @param $name
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      * @throws \Ublaboo\DataGrid\Exception\DataGridColumnStatusException
      * @throws \Ublaboo\DataGrid\Exception\DataGridException
-     * @throws \App\Model\Settings\SettingsException
      */
     public function createComponentUsersGrid($name)
     {
@@ -614,7 +616,7 @@ class UsersGridControl extends Control
 
         $p = $this->getPresenter();
 
-        $eventId = $this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_ID);
+        $eventId = $this->settingsRepository->getIntValue(Settings::SKAUTIS_EVENT_ID);
 
         if ($eventId === NULL) {
             $p->flashMessage('admin.users.users_group_action_insert_into_skaut_is_error_not_connected', 'danger');

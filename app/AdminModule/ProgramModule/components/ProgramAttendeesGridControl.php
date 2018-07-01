@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\AdminModule\ProgramModule\Components;
 
@@ -202,6 +203,7 @@ class ProgramAttendeesGridControl extends Control
      * @param $id
      * @throws \App\Model\Settings\SettingsException
      * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      * @throws \Ublaboo\Mailing\Exception\MailingException
      * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
      */
@@ -243,6 +245,7 @@ class ProgramAttendeesGridControl extends Control
      * @param $id
      * @throws \App\Model\Settings\SettingsException
      * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      * @throws \Ublaboo\Mailing\Exception\MailingException
      * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
      */

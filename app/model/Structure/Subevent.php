@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Model\Structure;
 
@@ -404,6 +405,6 @@ class Subevent
      */
     public function getOccupancyText(): string
     {
-        return $this->capacity ? $this->countUsers() . '/' . $this->capacity : $this->countUsers();
+        return $this->capacity ? $this->countUsers() . '/' . $this->capacity : '' . $this->countUsers();
     }
 }

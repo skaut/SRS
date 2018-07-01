@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\WebModule\Presenters;
 
@@ -120,7 +121,7 @@ class ProfilePresenter extends WebBasePresenter
     {
         $form = $this->personalDetailsFormFactory->create($this->user->id);
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+        $form->onSuccess[] = function (Form $form, array $values) {
             $this->flashMessage('web.profile.personal_details_update_successful', 'success');
 
             $this->redirect('this#collapsePersonalDetails');
@@ -153,7 +154,7 @@ class ProfilePresenter extends WebBasePresenter
     {
         $form = $this->rolesFormFactory->create($this->user->id);
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+        $form->onSuccess[] = function (Form $form, array $values) {
             if ($form['submit']->isSubmittedBy())
                 $this->flashMessage('web.profile.roles_changed', 'success');
             elseif ($form['cancelRegistration']->isSubmittedBy())

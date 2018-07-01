@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
 
@@ -70,6 +71,7 @@ class MailingForm
      * @param $id
      * @return Form
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
     public function create($id)
     {
@@ -99,13 +101,14 @@ class MailingForm
     /**
      * Zpracuje formulář.
      * @param Form $form
-     * @param \stdClass $values
+     * @param array $values
      * @throws Nette\Application\UI\InvalidLinkException
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      * @throws \Ublaboo\Mailing\Exception\MailingException
      * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
      */
-    public function processForm(Form $form, \stdClass $values)
+    public function processForm(Form $form, array $values)
     {
         if ($this->settingsRepository->getValue(Settings::SEMINAR_EMAIL) != $values['seminarEmail']) {
             $this->settingsRepository->setValue(Settings::SEMINAR_EMAIL_UNVERIFIED, $values['seminarEmail']);

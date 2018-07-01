@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\ApiModule\Services;
 
@@ -109,7 +110,7 @@ class ScheduleService
      * Vrací podrobnosti o programech, ke kterým má uživatel přístup, pro použití v kalendáři pro výběr programů.
      * @return ProgramDetailDTO[]
      * @throws \App\Model\Settings\SettingsException
-     * @throws \Exception
+     * @throws \Throwable
      */
     public function getProgramsWeb()
     {
@@ -166,6 +167,7 @@ class ScheduleService
      * Vrací nastavení pro FullCalendar.
      * @return CalendarConfigDTO
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
     public function getCalendarConfig()
     {
@@ -189,7 +191,7 @@ class ScheduleService
      * @param ProgramSaveDTO $programSaveDTO
      * @return ResponseDTO
      * @throws \App\Model\Settings\SettingsException
-     * @throws \Exception
+     * @throws \Throwable
      */
     public function saveProgram(ProgramSaveDTO $programSaveDTO)
     {
@@ -244,6 +246,7 @@ class ScheduleService
      * @param $programId
      * @return ResponseDTO
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
     public function removeProgram($programId)
     {
@@ -277,7 +280,7 @@ class ScheduleService
      * @param $programId
      * @return ResponseDTO
      * @throws \App\Model\Settings\SettingsException
-     * @throws \Exception
+     * @throws \Throwable
      */
     public function attendProgram($programId)
     {

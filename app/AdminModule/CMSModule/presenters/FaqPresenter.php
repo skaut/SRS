@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\AdminModule\CMSModule\Presenters;
 
@@ -48,7 +49,7 @@ class FaqPresenter extends CMSBasePresenter
     {
         $form = $this->faqFormFactory->create($this->getParameter('id'), $this->user->id);
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+        $form->onSuccess[] = function (Form $form, array $values) {
             if ($form['cancel']->isSubmittedBy())
                 $this->redirect('Faq:default');
 

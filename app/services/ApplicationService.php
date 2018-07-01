@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Services;
 
@@ -525,6 +526,7 @@ class ApplicationService
     /**
      * @return VariableSymbol
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
     private function generateVariableSymbol(): VariableSymbol
     {
@@ -545,6 +547,8 @@ class ApplicationService
      * Vypočítá datum splatnosti podle zvolené metody.
      * @return \DateTime|null
      * @throws \App\Model\Settings\SettingsException
+     * @throws \ReflectionException
+     * @throws \Throwable
      */
     private function countMaturityDate()
     {
@@ -683,6 +687,7 @@ class ApplicationService
      * @param User $user
      * @return bool
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
     public function isAllowedAddApplication(User $user)
     {

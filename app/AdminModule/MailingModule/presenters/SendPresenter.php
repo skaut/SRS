@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\AdminModule\MailingModule\Presenters;
 
@@ -25,7 +26,7 @@ class SendPresenter extends MailingBasePresenter
     {
         $form = $this->sendFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+        $form->onSuccess[] = function (Form $form, array $values) {
             if ($this->sendFormFactory->mailSuccess)
                 $this->flashMessage('admin.mailing.send_sent', 'success');
             else

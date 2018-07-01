@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\AdminModule\MailingModule\Presenters;
 
@@ -60,7 +61,7 @@ class TemplatesPresenter extends MailingBasePresenter
     {
         $form = $this->editTemplateFormFactory->create($this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+        $form->onSuccess[] = function (Form $form, array $values) {
             if ($form['cancel']->isSubmittedBy())
                 $this->redirect('Templates:default');
 

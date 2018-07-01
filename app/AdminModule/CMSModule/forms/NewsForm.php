@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\AdminModule\CMSModule\Forms;
 
@@ -95,9 +96,9 @@ class NewsForm
     /**
      * Zpracuje formulář.
      * @param Form $form
-     * @param \stdClass $values
+     * @param array $values
      */
-    public function processForm(Form $form, \stdClass $values)
+    public function processForm(Form $form, array $values)
     {
         if (!$form['cancel']->isSubmittedBy()) {
             if (!$this->news)
