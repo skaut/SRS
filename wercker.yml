@@ -37,7 +37,7 @@ build:
 deploy:
     steps:
         - add-to-known_hosts:
-            hostname: skauting.cz
+            hostname: test-srs.skauting.cz
             port: 28
 
         - add-to-known_hosts:
