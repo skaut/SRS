@@ -1,14 +1,14 @@
 box: fmasa/lebeda:7.1-ci
 
-services:
-    - name: mysql
-      id: mysql
-      tag: 5.6
-      env:
-        MYSQL_ALLOW_EMPTY_PASSWORD: yes
-        MYSQL_DATABASE: srs
-
 build:
+    services:
+        - name: mysql
+          id: mysql
+          tag: 5.6
+          env:
+            MYSQL_ALLOW_EMPTY_PASSWORD: yes
+            MYSQL_DATABASE: srs
+
     steps:
         - script:
             name: add Github token
@@ -34,11 +34,10 @@ build:
             name: test coding standard
             code: vendor/bin/phpcs app --standard=ruleset.xml
 
-
 deploy:
     steps:
         - add-to-known_hosts:
-            hostname: www.skauting.cz
+            hostname: skauting.cz
             port: 28
 
         - add-to-known_hosts:
