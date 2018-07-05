@@ -1,29 +1,52 @@
 box: fmasa/lebeda:7.1-ci
 
-services:
-    - name: mysql
-      id: mysql
-      tag: 5.6
-      env:
-        MYSQL_ALLOW_EMPTY_PASSWORD: yes
-        MYSQL_DATABASE: srs
 build:
+    services:
+        - name: mysql
+          id: mysql
+          tag: 5.6
+          env:
+            MYSQL_ALLOW_EMPTY_PASSWORD: yes
+            MYSQL_DATABASE: srs
+
     steps:
         - script:
             name: add Github token
             code: composer config -g github-oauth.github.com $GITHUB_OAUTH_TOKEN
+
         - script:
             name: install composer dependencies
             code: composer install --no-interaction
+
         - appnific/expandenv:
             input_file: app/config/config.ci.local.neon
             output_file: app/config/config.local.neon
+
         - script:
             name: give mysql some time
             code: sleep 5
+
         - script:
             name: run database migrations
             code: php www/index.php migrations:migrate --no-interaction
+
         - script:
             name: test coding standard
             code: vendor/bin/phpcs app --standard=ruleset.xml
+
+deploy:
+    steps:
+        - add-to-known_hosts:
+            hostname: test-srs.skauting.cz
+            port: 28
+
+        - add-to-known_hosts:
+            hostname: 81.31.46.138
+            port: 28
+
+        - add-ssh-key:
+            keyname: DEPLOY_SSH_KEY
+
+        - script:
+            name: build and deploy tarball
+            code: phing deploy
