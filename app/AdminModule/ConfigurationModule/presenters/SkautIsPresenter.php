@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
@@ -40,6 +41,7 @@ class SkautIsPresenter extends ConfigurationBasePresenter
 
     /**
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
     public function renderDefault()
     {
@@ -57,6 +59,7 @@ class SkautIsPresenter extends ConfigurationBasePresenter
      * Zruší propojení s akcí ve skautIS.
      * @throws \App\Model\Settings\SettingsException
      * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     public function handleDisconnect()
     {
@@ -79,7 +82,7 @@ class SkautIsPresenter extends ConfigurationBasePresenter
     {
         $form = $this->skautIsEventFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+        $form->onSuccess[] = function (Form $form, array $values) {
             $this->flashMessage('admin.configuration.skautis_event_connect_successful', 'success');
 
             $this->redirect('this');

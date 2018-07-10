@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\WebModule\Forms;
 
@@ -136,10 +137,10 @@ class RolesForm
     /**
      * Zpracuje formulář.
      * @param Form $form
-     * @param \stdClass $values
+     * @param array $values
      * @throws \Throwable
      */
-    public function processForm(Form $form, \stdClass $values)
+    public function processForm(Form $form, array $values)
     {
         if ($form['submit']->isSubmittedBy()) {
             $selectedRoles = $this->roleRepository->findRolesByIds($values['roles']);

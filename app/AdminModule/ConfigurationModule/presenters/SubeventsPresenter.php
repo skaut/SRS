@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
@@ -60,7 +61,7 @@ class SubeventsPresenter extends ConfigurationBasePresenter
     {
         $form = $this->subeventFormFactory->create($this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+        $form->onSuccess[] = function (Form $form, array $values) {
             if (!$form['cancel']->isSubmittedBy())
                 $this->flashMessage('admin.configuration.subevents_saved', 'success');
 
@@ -78,7 +79,7 @@ class SubeventsPresenter extends ConfigurationBasePresenter
     {
         $form = $this->subeventsFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+        $form->onSuccess[] = function (Form $form, array $values) {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
             $this->redirect('this');
         };

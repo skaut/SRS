@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\ActionModule\Presenters;
 
@@ -27,6 +28,7 @@ class MailingPresenter extends ActionBasePresenter
      * @param $code
      * @throws \App\Model\Settings\SettingsException
      * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     public function actionVerify($code)
     {

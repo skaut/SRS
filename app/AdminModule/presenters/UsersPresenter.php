@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\AdminModule\Presenters;
 
@@ -203,7 +204,7 @@ class UsersPresenter extends AdminBasePresenter
     {
         $form = $this->addLectorFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+        $form->onSuccess[] = function (Form $form, array $values) {
             if ($form['cancel']->isSubmittedBy()) {
                 $this->redirect('Users:default');
             } else {
@@ -219,7 +220,7 @@ class UsersPresenter extends AdminBasePresenter
     {
         $form = $this->editUserPersonalDetailsFormFactory->create($this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+        $form->onSuccess[] = function (Form $form, array $values) {
             if ($form['cancel']->isSubmittedBy()) {
                 $this->redirect('this');
             } else {
@@ -245,7 +246,7 @@ class UsersPresenter extends AdminBasePresenter
             $this->redirect('this');
         };
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+        $form->onSuccess[] = function (Form $form, array $values) {
             if (!$form['cancel']->isSubmittedBy())
                 $this->flashMessage('admin.users.users_saved', 'success');
 

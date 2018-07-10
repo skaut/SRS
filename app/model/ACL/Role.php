@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Model\ACL;
 
@@ -10,6 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
+use function GuzzleHttp\Psr7\str;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 
@@ -735,6 +737,6 @@ class Role
      */
     public function getOccupancyText(): string
     {
-        return $this->capacity ? $this->countUsers() . '/' . $this->capacity : $this->countUsers();
+        return $this->capacity ? $this->countUsers() . '/' . $this->capacity : '' . $this->countUsers();
     }
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
@@ -48,7 +49,7 @@ class PaymentPresenter extends ConfigurationBasePresenter
     {
         $form = $this->paymentProofFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+        $form->onSuccess[] = function (Form $form, array $values) {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');

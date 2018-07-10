@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
@@ -68,6 +69,7 @@ class ApplicationContentControl extends Control
      * @param $content
      * @throws \App\Model\Settings\SettingsException
      * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Throwable
      */
     public function render($content)
     {
@@ -117,7 +119,7 @@ class ApplicationContentControl extends Control
     {
         $form = $this->applicationFormFactory->create($this->getPresenter()->user->id);
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+        $form->onSuccess[] = function (Form $form, array $values) {
             $this->getPresenter()->flashMessage('web.application_content.register_successful', 'success');
 
             $this->authenticator->updateRoles($this->getPresenter()->user);

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
@@ -24,6 +25,7 @@ class WebPresenter extends ConfigurationBasePresenter
 
     /**
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
     public function renderDefault()
     {
@@ -38,7 +40,7 @@ class WebPresenter extends ConfigurationBasePresenter
     {
         $form = $this->webFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+        $form->onSuccess[] = function (Form $form, array $values) {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');

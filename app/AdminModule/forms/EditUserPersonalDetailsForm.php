@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\AdminModule\Forms;
 
@@ -131,10 +132,10 @@ class EditUserPersonalDetailsForm
     /**
      * Zpracuje formulář.
      * @param Form $form
-     * @param \stdClass $values
+     * @param array $values
      * @throws Nette\Utils\UnknownImageFileException
      */
-    public function processForm(Form $form, \stdClass $values)
+    public function processForm(Form $form, array $values)
     {
         if (!$form['cancel']->isSubmittedBy()) {
             $this->user->setFirstName($values['firstName']);

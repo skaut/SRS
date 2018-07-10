@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\AdminModule\MailingModule\Forms;
 
@@ -101,12 +102,12 @@ class SendForm
     /**
      * Zpracuje formulář.
      * @param Form $form
-     * @param \stdClass $values
+     * @param array $values
      * @throws \App\Model\Settings\SettingsException
      * @throws \Ublaboo\Mailing\Exception\MailingException
      * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
      */
-    public function processForm(Form $form, \stdClass $values)
+    public function processForm(Form $form, array $values)
     {
         try {
             $recipientsRoles = $this->roleRepository->findRolesByIds($values['recipientRoles']);

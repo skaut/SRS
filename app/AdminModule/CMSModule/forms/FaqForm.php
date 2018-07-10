@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\AdminModule\CMSModule\Forms;
 
@@ -109,10 +110,10 @@ class FaqForm
     /**
      * Zpracuje formulář.
      * @param Form $form
-     * @param \stdClass $values
+     * @param array $values
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function processForm(Form $form, \stdClass $values)
+    public function processForm(Form $form, array $values)
     {
         if (!$form['cancel']->isSubmittedBy()) {
             if (!$this->faq) {

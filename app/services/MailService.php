@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Services;
 
@@ -80,6 +81,7 @@ class MailService
      * @param $text
      * @param bool $automatic
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      * @throws \Ublaboo\Mailing\Exception\MailingException
      * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
      */
@@ -127,6 +129,7 @@ class MailService
      * @param $parameters
      * @param bool $automatic
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      * @throws \Ublaboo\Mailing\Exception\MailingException
      * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
      */

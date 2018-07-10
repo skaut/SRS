@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Presenters;
 
@@ -50,6 +51,7 @@ class AuthPresenter extends BasePresenter
      * @throws \App\Model\Settings\SettingsException
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Security\AuthenticationException
+     * @throws \Throwable
      * @throws \Ublaboo\Mailing\Exception\MailingException
      * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
      */
@@ -95,6 +97,7 @@ class AuthPresenter extends BasePresenter
      * @param $returnUrl
      * @throws \App\Model\Settings\SettingsException
      * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     private function redirectAfterLogin($returnUrl)
     {

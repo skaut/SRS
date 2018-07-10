@@ -92,7 +92,7 @@ class SkautIsEventEducationGridControl extends Control
      * @throws \Nette\Application\AbortException
      * @throws \Throwable
      */
-    public function edit(int $id, \stdClass $values)
+    public function edit(int $id, array $values)
     {
         $subevent = $this->subeventRepository->findById($id);
 

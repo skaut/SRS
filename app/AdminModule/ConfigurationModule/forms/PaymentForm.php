@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
 
@@ -62,6 +63,7 @@ class PaymentForm extends UI\Control
      * Vytvoří formulář.
      * @return Form
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
     public function createComponentForm()
     {
@@ -137,10 +139,10 @@ class PaymentForm extends UI\Control
     /**
      * Zpracuje formulář.
      * @param Form $form
-     * @param \stdClass $values
+     * @param array $values
      * @throws \App\Model\Settings\SettingsException
      */
-    public function processForm(Form $form, \stdClass $values)
+    public function processForm(Form $form, array $values)
     {
         $this->settingsRepository->setValue(Settings::ACCOUNT_NUMBER, $values['accountNumber']);
         $this->settingsRepository->setValue(Settings::VARIABLE_SYMBOL_CODE, $values['variableSymbolCode']);

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Model\Settings;
 
@@ -39,8 +40,9 @@ class SettingsRepository extends EntityRepository
      * @param $item
      * @return mixed
      * @throws SettingsException
+     * @throws \Throwable
      */
-    public function getValue($item): ?string
+    public function getValue($item)
     {
         $value = $this->cache->load($item);
 
@@ -61,6 +63,7 @@ class SettingsRepository extends EntityRepository
      * @param $item
      * @param $value
      * @throws SettingsException
+     * @throws \Throwable
      */
     public function setValue($item, $value): void
     {
@@ -75,10 +78,26 @@ class SettingsRepository extends EntityRepository
     }
 
     /**
+     * Vrátí hodnotu položky typu int.
+     * @param $item
+     * @return int|null
+     * @throws SettingsException
+     * @throws \Throwable
+     */
+    public function getIntValue($item): ?int
+    {
+        $value = $this->getValue($item);
+        if ($value === NULL)
+            return NULL;
+        return filter_var($value, FILTER_VALIDATE_INT);
+    }
+
+    /**
      * Vrátí hodnotu položky typu bool.
      * @param $item
      * @return bool|null
      * @throws SettingsException
+     * @throws \Throwable
      */
     public function getBoolValue($item): ?bool
     {
@@ -93,6 +112,7 @@ class SettingsRepository extends EntityRepository
      * @param $item
      * @return \DateTime|null
      * @throws SettingsException
+     * @throws \Throwable
      */
     public function getDateTimeValue($item): ?\DateTime
     {
@@ -107,6 +127,7 @@ class SettingsRepository extends EntityRepository
      * @param $item
      * @return null|string
      * @throws SettingsException
+     * @throws \Throwable
      */
     public function getDateTimeValueText($item): ?string
     {
@@ -135,6 +156,7 @@ class SettingsRepository extends EntityRepository
      * @param $item
      * @return null|\DateTime
      * @throws SettingsException
+     * @throws \Throwable
      */
     public function getDateValue($item): ?\DateTime
     {
@@ -149,6 +171,7 @@ class SettingsRepository extends EntityRepository
      * @param $item
      * @return null|string
      * @throws SettingsException
+     * @throws \Throwable
      */
     public function getDateValueText($item): ?string
     {

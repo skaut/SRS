@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\AdminModule\Presenters;
 
@@ -110,6 +111,7 @@ abstract class AdminBasePresenter extends BasePresenter
 
     /**
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
     public function beforeRender()
     {

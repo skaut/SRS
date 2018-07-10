@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
@@ -58,7 +59,7 @@ class PlacePresenter extends ConfigurationBasePresenter
     {
         $form = $this->placeDescriptionFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+        $form->onSuccess[] = function (Form $form, array $values) {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');
@@ -71,7 +72,7 @@ class PlacePresenter extends ConfigurationBasePresenter
     {
         $form = $this->placePointFormFactory->create($this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) {
+        $form->onSuccess[] = function (Form $form, array $values) {
             if ($form['cancel']->isSubmittedBy())
                 $this->redirect('Place:default');
 

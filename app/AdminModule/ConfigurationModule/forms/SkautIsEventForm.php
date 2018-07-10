@@ -73,6 +73,7 @@ class SkautIsEventForm
      * Vytvoří formulář.
      * @return Form
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
     public function create(): Form
     {
@@ -111,11 +112,11 @@ class SkautIsEventForm
     /**
      * Zpracuje formulář.
      * @param Form $form
-     * @param \stdClass $values
+     * @param array $values
      * @throws \App\Model\Settings\SettingsException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function processForm(Form $form, \stdClass $values): void
+    public function processForm(Form $form, array $values): void
     {
         $eventId = NULL;
         $eventName = NULL;
