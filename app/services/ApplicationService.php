@@ -535,7 +535,7 @@ class ApplicationService
         $variableSymbol = new VariableSymbol();
         $this->variableSymbolRepository->save($variableSymbol);
 
-        $variableSymbolText = $variableSymbolCode . str_pad($variableSymbol->getId(), 6, '0', STR_PAD_LEFT);
+        $variableSymbolText = $variableSymbolCode . str_pad(strval($variableSymbol->getId()), 6, '0', STR_PAD_LEFT);
 
         $variableSymbol->setVariableSymbol($variableSymbolText);
         $this->variableSymbolRepository->save($variableSymbol);
