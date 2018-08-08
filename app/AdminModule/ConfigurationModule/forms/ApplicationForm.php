@@ -73,7 +73,7 @@ class ApplicationForm
      */
     public function processForm(Form $form, array $values)
     {
-        $this->settingsRepository->setValue(Settings::APPLICATION_AGREEMENT, $values['applicationAgreement']);
-        $this->settingsRepository->setValue(Settings::EDIT_CUSTOM_INPUTS_TO, $values['editCustomInputsTo']);
+        $this->settingsRepository->setValue(Settings::APPLICATION_AGREEMENT, (string) $values['applicationAgreement']);
+        $this->settingsRepository->setValue(Settings::EDIT_CUSTOM_INPUTS_TO, (string) $values['editCustomInputsTo']);
     }
 }
