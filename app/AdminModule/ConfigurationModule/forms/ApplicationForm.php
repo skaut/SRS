@@ -70,10 +70,12 @@ class ApplicationForm
      * @param Form $form
      * @param array $values
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function processForm(Form $form, array $values)
     {
-        $this->settingsRepository->setValue(Settings::APPLICATION_AGREEMENT, (string) $values['applicationAgreement']);
+        $this->settingsRepository->setValue(Settings::APPLICATION_AGREEMENT, $values['applicationAgreement']);
         $this->settingsRepository->setValue(Settings::EDIT_CUSTOM_INPUTS_TO, (string) $values['editCustomInputsTo']);
     }
 }
