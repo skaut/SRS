@@ -218,7 +218,7 @@ class Settings
      * @param string $item
      * @param string $value
      */
-    public function __construct($item, $value)
+    public function __construct(string $item, ?string $value)
     {
         $this->item = $item;
         $this->value = $value;
@@ -227,7 +227,7 @@ class Settings
     /**
      * @return string
      */
-    public function getItem()
+    public function getItem(): string
     {
         return $this->item;
     }
@@ -235,7 +235,7 @@ class Settings
     /**
      * @param string $item
      */
-    public function setItem($item)
+    public function setItem(string $item)
     {
         $this->item = $item;
     }
@@ -243,7 +243,7 @@ class Settings
     /**
      * @return string
      */
-    public function getValue()
+    public function getValue(): ?string
     {
         return $this->value;
     }
@@ -251,7 +251,7 @@ class Settings
     /**
      * @param string $value
      */
-    public function setValue($value)
+    public function setValue(?string $value)
     {
         $this->value = $value;
     }

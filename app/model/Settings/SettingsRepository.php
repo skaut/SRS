@@ -37,14 +37,13 @@ class SettingsRepository extends EntityRepository
 
     /**
      * Vrátí hodnotu položky.
-     * @param $item
+     * @param string $item
      * @return mixed
      * @throws SettingsException
-     * @throws \Throwable
      */
-    public function getValue($item)
+    public function getValue(string $item): ?string
     {
-        $value = $this->cache->load($item);
+        $value = (string) $this->cache->load($item);
 
         if ($value === NULL) {
             $settings = $this->findOneBy(['item' => $item]);
@@ -60,12 +59,13 @@ class SettingsRepository extends EntityRepository
 
     /**
      * Nastavení hodnoty položky.
-     * @param $item
-     * @param $value
+     * @param string $item
+     * @param null|string $value
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function setValue($item, $value): void
+    public function setValue(string $item, ?string $value): void
     {
         $settings = $this->findOneBy(['item' => $item]);
         if ($settings === NULL)
@@ -79,12 +79,11 @@ class SettingsRepository extends EntityRepository
 
     /**
      * Vrátí hodnotu položky typu int.
-     * @param $item
+     * @param string $item
      * @return int|null
      * @throws SettingsException
-     * @throws \Throwable
      */
-    public function getIntValue($item): ?int
+    public function getIntValue(string $item): ?int
     {
         $value = $this->getValue($item);
         if ($value === NULL)
@@ -94,12 +93,11 @@ class SettingsRepository extends EntityRepository
 
     /**
      * Vrátí hodnotu položky typu bool.
-     * @param $item
+     * @param string $item
      * @return bool|null
      * @throws SettingsException
-     * @throws \Throwable
      */
-    public function getBoolValue($item): ?bool
+    public function getBoolValue(string $item): ?bool
     {
         $value = $this->getValue($item);
         if ($value === NULL)
@@ -109,12 +107,11 @@ class SettingsRepository extends EntityRepository
 
     /**
      * Vrátí hodnotu položky typu datum a čas.
-     * @param $item
+     * @param string $item
      * @return \DateTime|null
      * @throws SettingsException
-     * @throws \Throwable
      */
-    public function getDateTimeValue($item): ?\DateTime
+    public function getDateTimeValue(string $item): ?\DateTime
     {
         $value = $this->getValue($item);
         if ($value === NULL)
@@ -124,12 +121,11 @@ class SettingsRepository extends EntityRepository
 
     /**
      * Vrátí hodnotu položky typu datum a čas jako text.
-     * @param $item
+     * @param string $item
      * @return null|string
      * @throws SettingsException
-     * @throws \Throwable
      */
-    public function getDateTimeValueText($item): ?string
+    public function getDateTimeValueText(string $item): ?string
     {
         $value = $this->getValue($item);
         if ($value === NULL)
@@ -139,11 +135,13 @@ class SettingsRepository extends EntityRepository
 
     /**
      * Nastavení hodnoty položky typu datum a čas.
-     * @param $item
+     * @param string $item
      * @param \DateTime|null $value
      * @throws SettingsException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function setDateTimeValue($item, $value): void
+    public function setDateTimeValue(string $item, ?\DateTime $value): void
     {
         if ($value === NULL)
             $this->setValue($item, NULL);
@@ -153,12 +151,11 @@ class SettingsRepository extends EntityRepository
 
     /**
      * Vrátí hodnotu položky typu datum.
-     * @param $item
+     * @param string $item
      * @return null|\DateTime
      * @throws SettingsException
-     * @throws \Throwable
      */
-    public function getDateValue($item): ?\DateTime
+    public function getDateValue(string $item): ?\DateTime
     {
         $value = $this->getValue($item);
         if ($value === NULL)
@@ -168,12 +165,11 @@ class SettingsRepository extends EntityRepository
 
     /**
      * Vrátí hodnotu položky typu datum jako text.
-     * @param $item
+     * @param string $item
      * @return null|string
      * @throws SettingsException
-     * @throws \Throwable
      */
-    public function getDateValueText($item): ?string
+    public function getDateValueText(string $item): ?string
     {
         $value = $this->getValue($item);
         if ($value === NULL)
@@ -183,11 +179,13 @@ class SettingsRepository extends EntityRepository
 
     /**
      * Nastavení hodnoty položky typu datum.
-     * @param $item
+     * @param string $item
      * @param \DateTime|null $value
      * @throws SettingsException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function setDateValue($item, $value): void
+    public function setDateValue(string $item, ?\DateTime $value): void
     {
         if ($value === NULL)
             $this->setValue($item, NULL);
