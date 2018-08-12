@@ -40,10 +40,11 @@ class SettingsRepository extends EntityRepository
      * @param string $item
      * @return mixed
      * @throws SettingsException
+     * @throws \Throwable
      */
     public function getValue(string $item): ?string
     {
-        $value = (string) $this->cache->load($item);
+        $value = $this->cache->load($item);
 
         if ($value === NULL) {
             $settings = $this->findOneBy(['item' => $item]);
@@ -58,12 +59,13 @@ class SettingsRepository extends EntityRepository
     }
 
     /**
-     * Nastavení hodnoty položky.
+     * Nastaví hodnotu položky.
      * @param string $item
      * @param null|string $value
      * @throws SettingsException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Throwable
      */
     public function setValue(string $item, ?string $value): void
     {
@@ -82,6 +84,7 @@ class SettingsRepository extends EntityRepository
      * @param string $item
      * @return int|null
      * @throws SettingsException
+     * @throws \Throwable
      */
     public function getIntValue(string $item): ?int
     {
@@ -92,10 +95,25 @@ class SettingsRepository extends EntityRepository
     }
 
     /**
+     * Nastaví hodnotu položky typu int.
+     * @param string $item
+     * @param int|null $value
+     * @throws SettingsException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Throwable
+     */
+    public function setIntValue(string $item, ?int $value): void
+    {
+        $this->setValue($item, (string) $value);
+    }
+
+    /**
      * Vrátí hodnotu položky typu bool.
      * @param string $item
      * @return bool|null
      * @throws SettingsException
+     * @throws \Throwable
      */
     public function getBoolValue(string $item): ?bool
     {
@@ -106,10 +124,25 @@ class SettingsRepository extends EntityRepository
     }
 
     /**
+     * Nastaví hodnotu položky typu bool.
+     * @param string $item
+     * @param bool|null $value
+     * @throws SettingsException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Throwable
+     */
+    public function setBoolValue(string $item, ?bool $value): void
+    {
+        $this->setValue($item, (string) $value);
+    }
+
+    /**
      * Vrátí hodnotu položky typu datum a čas.
      * @param string $item
      * @return \DateTime|null
      * @throws SettingsException
+     * @throws \Throwable
      */
     public function getDateTimeValue(string $item): ?\DateTime
     {
@@ -124,6 +157,7 @@ class SettingsRepository extends EntityRepository
      * @param string $item
      * @return null|string
      * @throws SettingsException
+     * @throws \Throwable
      */
     public function getDateTimeValueText(string $item): ?string
     {
@@ -140,6 +174,7 @@ class SettingsRepository extends EntityRepository
      * @throws SettingsException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Throwable
      */
     public function setDateTimeValue(string $item, ?\DateTime $value): void
     {
@@ -154,6 +189,7 @@ class SettingsRepository extends EntityRepository
      * @param string $item
      * @return null|\DateTime
      * @throws SettingsException
+     * @throws \Throwable
      */
     public function getDateValue(string $item): ?\DateTime
     {
@@ -168,6 +204,7 @@ class SettingsRepository extends EntityRepository
      * @param string $item
      * @return null|string
      * @throws SettingsException
+     * @throws \Throwable
      */
     public function getDateValueText(string $item): ?string
     {
@@ -184,6 +221,7 @@ class SettingsRepository extends EntityRepository
      * @throws SettingsException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Throwable
      */
     public function setDateValue(string $item, ?\DateTime $value): void
     {

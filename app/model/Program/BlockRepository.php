@@ -184,6 +184,8 @@ class BlockRepository extends EntityRepository
     /**
      * Uloží blok.
      * @param Block $block
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function save(Block $block)
     {
@@ -194,6 +196,8 @@ class BlockRepository extends EntityRepository
     /**
      * Odstraní blok.
      * @param Block $block
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function remove(Block $block)
     {

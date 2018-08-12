@@ -58,7 +58,7 @@ class AclPresenter extends AdminBasePresenter
     /**
      * @param $id
      */
-    public function renderEdit($id)
+    public function renderEdit(int $id)
     {
         $role = $this->roleRepository->findById($id);
 
@@ -70,7 +70,7 @@ class AclPresenter extends AdminBasePresenter
      * @param $id
      * @throws \Nette\Application\AbortException
      */
-    public function actionTest($id)
+    public function actionTest(int $id)
     {
         $role = $this->roleRepository->findById($id);
 
@@ -114,7 +114,7 @@ class AclPresenter extends AdminBasePresenter
      */
     protected function createComponentEditRoleForm()
     {
-        $form = $this->editRoleFormFactory->create($this->getParameter('id'));
+        $form = $this->editRoleFormFactory->create((int) $this->getParameter('id'));
 
         $form->onSuccess[] = function (Form $form, array $values) {
             if ($form['cancel']->isSubmittedBy())

@@ -16,6 +16,8 @@ class VariableSymbolRepository extends EntityRepository
     /**
      * Uloží variabilní symbol.
      * @param VariableSymbol $variableSymbol
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function save(VariableSymbol $variableSymbol)
     {

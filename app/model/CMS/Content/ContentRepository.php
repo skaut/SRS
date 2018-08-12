@@ -16,8 +16,10 @@ class ContentRepository extends EntityRepository
     /**
      * Uloží obsah.
      * @param Content $content
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function save(Content $content)
+    public function save(Content $content): void
     {
         $this->_em->persist($content);
         $this->_em->flush();
@@ -26,8 +28,10 @@ class ContentRepository extends EntityRepository
     /**
      * Odstraní obsah.
      * @param Content $content
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function remove(Content $content)
+    public function remove(Content $content): void
     {
         $this->_em->remove($content);
         $this->_em->flush();

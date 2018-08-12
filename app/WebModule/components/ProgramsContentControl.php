@@ -79,7 +79,7 @@ class ProgramsContentControl extends Control
 
         if ($user->isLoggedIn()) {
             $template->userHasPermission = $user->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS);
-            $template->userWaitingForPayment = !$this->settingsRepository->getValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT)
+            $template->userWaitingForPayment = !$this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT)
                 && $this->userRepository->findById($user->getId())->getWaitingForPaymentApplications()->count() > 0;
         }
 

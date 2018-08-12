@@ -125,10 +125,10 @@ class PaymentForm extends UI\Control
             'variableSymbolCode' => $this->settingsRepository->getValue(Settings::VARIABLE_SYMBOL_CODE),
             'maturityType' => $this->settingsRepository->getValue(Settings::MATURITY_TYPE),
             'maturityDate' => $this->settingsRepository->getDateValue(Settings::MATURITY_DATE),
-            'maturityDays' => $this->settingsRepository->getValue(Settings::MATURITY_DAYS),
-            'maturityWorkDays' => $this->settingsRepository->getValue(Settings::MATURITY_WORK_DAYS),
-            'maturityReminder' => $this->settingsRepository->getValue(Settings::MATURITY_REMINDER),
-            'cancelRegistrationAfterMaturity' => $this->settingsRepository->getValue(Settings::CANCEL_REGISTRATION_AFTER_MATURITY)
+            'maturityDays' => $this->settingsRepository->getIntValue(Settings::MATURITY_DAYS),
+            'maturityWorkDays' => $this->settingsRepository->getIntValue(Settings::MATURITY_WORK_DAYS),
+            'maturityReminder' => $this->settingsRepository->getIntValue(Settings::MATURITY_REMINDER),
+            'cancelRegistrationAfterMaturity' => $this->settingsRepository->getIntValue(Settings::CANCEL_REGISTRATION_AFTER_MATURITY)
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -152,19 +152,19 @@ class PaymentForm extends UI\Control
             $this->settingsRepository->setDateValue(Settings::MATURITY_DATE, $values['maturityDate'] ?: (new \DateTime())->setTime(0, 0));
 
         if (array_key_exists('maturityDays', $values))
-            $this->settingsRepository->setValue(Settings::MATURITY_DAYS,
+            $this->settingsRepository->setIntValue(Settings::MATURITY_DAYS,
                 $values['maturityDays'] !== '' ? $values['maturityDays'] : 0);
 
         if (array_key_exists('maturityWorkDays', $values))
-            $this->settingsRepository->setValue(Settings::MATURITY_WORK_DAYS,
+            $this->settingsRepository->setIntValue(Settings::MATURITY_WORK_DAYS,
                 $values['maturityWorkDays'] !== '' ? $values['maturityWorkDays'] : 0);
 
         if (array_key_exists('maturityReminder', $values))
-            $this->settingsRepository->setValue(Settings::MATURITY_REMINDER,
+            $this->settingsRepository->setIntValue(Settings::MATURITY_REMINDER,
                 $values['maturityReminder'] !== '' ? $values['maturityReminder'] : NULL);
 
         if (array_key_exists('cancelRegistrationAfterMaturity', $values))
-            $this->settingsRepository->setValue(Settings::CANCEL_REGISTRATION_AFTER_MATURITY,
+            $this->settingsRepository->setIntValue(Settings::CANCEL_REGISTRATION_AFTER_MATURITY,
                 $values['cancelRegistrationAfterMaturity'] !== '' ? $values['cancelRegistrationAfterMaturity'] : NULL);
 
         $this->onSave($this);

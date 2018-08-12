@@ -40,7 +40,7 @@ class CapacitiesContent extends Content implements IContent
      * @param $area
      * @throws \App\Model\Page\PageException
      */
-    public function __construct(Page $page, $area)
+    public function __construct(Page $page, string $area)
     {
         parent::__construct($page, $area);
         $this->roles = new ArrayCollection();
@@ -49,7 +49,7 @@ class CapacitiesContent extends Content implements IContent
     /**
      * @param RoleRepository $roleRepository
      */
-    public function injectRoleRepository(RoleRepository $roleRepository)
+    public function injectRoleRepository(RoleRepository $roleRepository): void
     {
         $this->roleRepository = $roleRepository;
     }
@@ -57,7 +57,7 @@ class CapacitiesContent extends Content implements IContent
     /**
      * @return Collection
      */
-    public function getRoles()
+    public function getRoles(): Collection
     {
         return $this->roles;
     }
@@ -65,7 +65,7 @@ class CapacitiesContent extends Content implements IContent
     /**
      * @param Collection $roles
      */
-    public function setRoles($roles)
+    public function setRoles(Collection $roles): void
     {
         $this->roles->clear();
         foreach ($roles as $role)
@@ -77,7 +77,7 @@ class CapacitiesContent extends Content implements IContent
      * @param Form $form
      * @return Form
      */
-    public function addContentForm(Form $form)
+    public function addContentForm(Form $form): Form
     {
         parent::addContentForm($form);
 
@@ -95,7 +95,7 @@ class CapacitiesContent extends Content implements IContent
      * @param Form $form
      * @param array $values
      */
-    public function contentFormSucceeded(Form $form, array $values)
+    public function contentFormSucceeded(Form $form, array $values): void
     {
         parent::contentFormSucceeded($form, $values);
         $values = $values[$this->getContentFormName()];

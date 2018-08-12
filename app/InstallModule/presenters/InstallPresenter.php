@@ -142,7 +142,7 @@ class InstallPresenter extends InstallBasePresenter
                 $this->applicationService->register($user, new ArrayCollection([$adminRole]),
                     new ArrayCollection([$implicitSubevent]), $user, TRUE);
 
-                $this->settingsRepository->setValue(Settings::ADMIN_CREATED, TRUE);
+                $this->settingsRepository->setBoolValue(Settings::ADMIN_CREATED, TRUE);
             });
 
             $this->user->logout(TRUE);

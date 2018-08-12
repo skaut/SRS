@@ -85,7 +85,7 @@ class Resource
      * Resource constructor.
      * @param $name
      */
-    public function __construct($name)
+    public function __construct(string $name)
     {
         $this->name = $name;
         $this->permissions = new ArrayCollection();
@@ -94,7 +94,7 @@ class Resource
     /**
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -102,7 +102,7 @@ class Resource
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -110,7 +110,7 @@ class Resource
     /**
      * @param string $name
      */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
@@ -118,7 +118,7 @@ class Resource
     /**
      * @return Collection
      */
-    public function getPermissions()
+    public function getPermissions(): Collection
     {
         return $this->permissions;
     }

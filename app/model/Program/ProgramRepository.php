@@ -30,6 +30,8 @@ class ProgramRepository extends EntityRepository
     /**
      * Uloží program.
      * @param Program $program
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function save(Program $program)
     {
@@ -40,6 +42,8 @@ class ProgramRepository extends EntityRepository
     /**
      * Odstraní program.
      * @param Program $program
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function remove(Program $program)
     {
