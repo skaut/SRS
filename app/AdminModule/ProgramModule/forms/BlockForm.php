@@ -222,7 +222,7 @@ class BlockForm
         if (!$form['cancel']->isSubmittedBy()) {
             $this->blockRepository->getEntityManager()->transactional(function ($em) use ($values) {
                 if (!$this->block) {
-                    if (!$this->settingsRepository->getValue(Settings::IS_ALLOWED_ADD_BLOCK))
+                    if (!$this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK))
                         return;
                     $this->block = new Block();
                 } else if (!$this->user->isAllowedModifyBlock($this->block))

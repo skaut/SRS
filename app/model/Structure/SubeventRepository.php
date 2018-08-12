@@ -328,6 +328,8 @@ class SubeventRepository extends EntityRepository
     /**
      * Uloží podakci.
      * @param Subevent $subevent
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function save(Subevent $subevent)
     {
@@ -338,6 +340,8 @@ class SubeventRepository extends EntityRepository
     /**
      * Odstraní podakci.
      * @param Subevent $subevent
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function remove(Subevent $subevent)
     {

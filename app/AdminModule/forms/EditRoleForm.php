@@ -78,7 +78,7 @@ class EditRoleForm
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function create($id)
+    public function create(int $id)
     {
         $this->role = $this->roleRepository->findById($id);
 

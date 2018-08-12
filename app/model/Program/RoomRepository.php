@@ -68,6 +68,8 @@ class RoomRepository extends EntityRepository
     /**
      * Uloží místnost.
      * @param Room $room
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function save(Room $room)
     {
@@ -78,6 +80,8 @@ class RoomRepository extends EntityRepository
     /**
      * Odstraní místnost.
      * @param Room $room
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function remove(Room $room)
     {

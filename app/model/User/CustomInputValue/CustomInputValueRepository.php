@@ -26,6 +26,8 @@ class CustomInputValueRepository extends EntityRepository
     /**
      * Uloží hodnotu vlastního pole přihlášky.
      * @param CustomInputValue $value
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function save(CustomInputValue $value)
     {
@@ -36,6 +38,8 @@ class CustomInputValueRepository extends EntityRepository
     /**
      * Odstraní hodnotu vlastního pole přihlášky.
      * @param CustomInputValue $value
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function remove(CustomInputValue $value)
     {

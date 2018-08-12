@@ -94,10 +94,10 @@ class Permission
 
     /**
      * Permission constructor.
-     * @param $name
-     * @param $resource
+     * @param string $name
+     * @param Resource $resource
      */
-    public function __construct($name, $resource)
+    public function __construct(string $name, Resource $resource)
     {
         $this->name = $name;
         $this->resource = $resource;
@@ -107,7 +107,7 @@ class Permission
     /**
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -115,7 +115,7 @@ class Permission
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -123,7 +123,7 @@ class Permission
     /**
      * @param string $name
      */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
@@ -131,7 +131,7 @@ class Permission
     /**
      * @return Collection
      */
-    public function getRoles()
+    public function getRoles(): Collection
     {
         return $this->roles;
     }
@@ -139,15 +139,15 @@ class Permission
     /**
      * @return Resource
      */
-    public function getResource()
+    public function getResource(): Resource
     {
         return $this->resource;
     }
 
     /**
-     * @param Collection $resource
+     * @param Resource $resource
      */
-    public function setResource($resource)
+    public function setResource(Resource $resource): void
     {
         $this->resource = $resource;
     }

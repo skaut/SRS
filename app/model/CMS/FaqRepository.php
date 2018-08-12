@@ -63,6 +63,8 @@ class FaqRepository extends EntityRepository
      * Uloží otázku.
      * @param Faq $faq
      * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function save(Faq $faq)
     {
@@ -76,6 +78,8 @@ class FaqRepository extends EntityRepository
     /**
      * Odstraní otázku.
      * @param Faq $faq
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function remove(Faq $faq)
     {
@@ -88,6 +92,8 @@ class FaqRepository extends EntityRepository
      * @param $itemId
      * @param $prevId
      * @param $nextId
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function sort($itemId, $prevId, $nextId)
     {

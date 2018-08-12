@@ -557,10 +557,10 @@ class ApplicationService
                 return $this->settingsRepository->getDateValue(Settings::MATURITY_DATE);
 
             case MaturityType::DAYS:
-                return (new \DateTime())->modify('+' . $this->settingsRepository->getValue(Settings::MATURITY_DAYS) . ' days');
+                return (new \DateTime())->modify('+' . $this->settingsRepository->getIntValue(Settings::MATURITY_DAYS) . ' days');
 
             case MaturityType::WORK_DAYS:
-                $workDays = $this->settingsRepository->getValue(Settings::MATURITY_WORK_DAYS);
+                $workDays = $this->settingsRepository->getIntValue(Settings::MATURITY_WORK_DAYS);
                 $date = new \DateTime();
 
                 for ($i = 0; $i < $workDays;) {
@@ -692,7 +692,7 @@ class ApplicationService
     public function isAllowedAddApplication(User $user)
     {
         return $user->hasPaidEveryApplication()
-            && $this->settingsRepository->getValue(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT)
+            && $this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT)
             && $this->settingsRepository->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new \DateTime())->setTime(0, 0);
     }
 

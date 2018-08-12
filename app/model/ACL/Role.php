@@ -11,7 +11,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
-use function GuzzleHttp\Psr7\str;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 
@@ -237,7 +236,7 @@ class Role
      * Role constructor.
      * @param $name
      */
-    public function __construct($name)
+    public function __construct(string $name)
     {
         $this->name = $name;
         $this->users = new ArrayCollection();

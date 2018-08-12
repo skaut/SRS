@@ -52,6 +52,8 @@ class DocumentRepository extends EntityRepository
     /**
      * Uloží dokument.
      * @param Document $document
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function save(Document $document)
     {
@@ -62,6 +64,8 @@ class DocumentRepository extends EntityRepository
     /**
      * Odstraní dokument.
      * @param Document $document
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function remove(Document $document)
     {

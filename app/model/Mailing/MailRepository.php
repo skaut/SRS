@@ -16,6 +16,8 @@ class MailRepository extends EntityRepository
     /**
      * Uloží e-mail.
      * @param Mail $mail
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function save(Mail $mail)
     {

@@ -79,7 +79,7 @@ class BlocksPresenter extends ProgramBasePresenter
         $this->template->block = $block;
         $this->template->programId = $this->session->getSection('srs')->programId;
         $this->template->userAllowedModifySchedule = $this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE) &&
-            $this->settingsRepository->getValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE);
+            $this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE);
     }
 
     /**
@@ -127,7 +127,7 @@ class BlocksPresenter extends ProgramBasePresenter
         $program = $this->programRepository->findById($programId);
 
         if (!$this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE) ||
-            !$this->settingsRepository->getValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)
+            !$this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)
         )
             $this->getPresenter()->flashMessage('admin.program.blocks_program_modify_schedule_not_allowed', 'danger');
         else {
@@ -161,7 +161,7 @@ class BlocksPresenter extends ProgramBasePresenter
                 $this->redirect('Blocks:default');
 
             if (!$values['id']) {
-                if (!$this->settingsRepository->getValue(Settings::IS_ALLOWED_ADD_BLOCK)) {
+                if (!$this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK)) {
                     $this->flashMessage('admin.program.blocks_add_not_allowed', 'danger');
                     $this->redirect('Blocks:default');
                 }

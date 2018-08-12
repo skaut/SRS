@@ -219,6 +219,8 @@ class UserRepository extends EntityRepository
     /**
      * Uloží uživatele.
      * @param User $user
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function save(User $user)
     {
@@ -229,6 +231,8 @@ class UserRepository extends EntityRepository
     /**
      * Odstraní externího uživatele.
      * @param User $user
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function remove(User $user)
     {

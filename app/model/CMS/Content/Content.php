@@ -196,7 +196,7 @@ abstract class Content implements IContent
     /**
      * @return mixed
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
@@ -204,7 +204,7 @@ abstract class Content implements IContent
     /**
      * @return string
      */
-    public function getComponentName()
+    public function getComponentName(): string
     {
         return $this->type . 'Content';
     }
@@ -212,7 +212,7 @@ abstract class Content implements IContent
     /**
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -220,7 +220,7 @@ abstract class Content implements IContent
     /**
      * @return string
      */
-    public function getHeading()
+    public function getHeading(): string
     {
         return $this->heading;
     }
@@ -228,7 +228,7 @@ abstract class Content implements IContent
     /**
      * @param string $heading
      */
-    public function setHeading($heading)
+    public function setHeading(string $heading): void
     {
         $this->heading = $heading;
     }
@@ -236,7 +236,7 @@ abstract class Content implements IContent
     /**
      * @return Page
      */
-    public function getPage()
+    public function getPage(): Page
     {
         return $this->page;
     }
@@ -244,7 +244,7 @@ abstract class Content implements IContent
     /**
      * @param Page $page
      */
-    public function setPage($page)
+    public function setPage(Page $page): void
     {
         $this->page = $page;
     }
@@ -252,7 +252,7 @@ abstract class Content implements IContent
     /**
      * @return string
      */
-    public function getArea()
+    public function getArea(): string
     {
         return $this->area;
     }
@@ -260,7 +260,7 @@ abstract class Content implements IContent
     /**
      * @param string $area
      */
-    public function setArea($area)
+    public function setArea(string $area): void
     {
         $this->area = $area;
     }
@@ -268,7 +268,7 @@ abstract class Content implements IContent
     /**
      * @return int
      */
-    public function getPosition()
+    public function getPosition(): int
     {
         return $this->position;
     }
@@ -276,7 +276,7 @@ abstract class Content implements IContent
     /**
      * @param int $position
      */
-    public function setPosition($position)
+    public function setPosition(int $position): void
     {
         $this->position = $position;
     }
@@ -286,7 +286,7 @@ abstract class Content implements IContent
      * @param Form $form
      * @return Form
      */
-    public function addContentForm(Form $form)
+    public function addContentForm(Form $form): Form
     {
         $formContainer = $form->addContainer($this->getContentFormName());
 
@@ -314,7 +314,7 @@ abstract class Content implements IContent
     /**
      * @return string
      */
-    public function getContentFormName()
+    public function getContentFormName(): string
     {
         return $this->type . "_" . $this->id;
     }
@@ -324,7 +324,7 @@ abstract class Content implements IContent
      * @param Form $form
      * @param array $values
      */
-    public function contentFormSucceeded(Form $form, array $values)
+    public function contentFormSucceeded(Form $form, array $values): void
     {
         $values = $values[$this->getContentFormName()];
         $this->position = $values['position'];

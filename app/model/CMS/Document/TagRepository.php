@@ -81,6 +81,8 @@ class TagRepository extends EntityRepository
     /**
      * Uloží tag.
      * @param Tag $tag
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function save(Tag $tag)
     {
@@ -91,6 +93,8 @@ class TagRepository extends EntityRepository
     /**
      * Odstraní tag.
      * @param Tag $tag
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function remove(Tag $tag)
     {

@@ -56,6 +56,8 @@ class NewsRepository extends EntityRepository
     /**
      * Uloží aktualitu.
      * @param News $news
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function save(News $news)
     {
@@ -66,6 +68,8 @@ class NewsRepository extends EntityRepository
     /**
      * Odstraní aktualitu.
      * @param News $document
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function remove(News $document)
     {

@@ -88,12 +88,12 @@ class ProgramForm
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'isAllowedAddBlock' => $this->settingsRepository->getValue(Settings::IS_ALLOWED_ADD_BLOCK),
-            'isAllowedModifySchedule' => $this->settingsRepository->getValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE),
+            'isAllowedAddBlock' => $this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK),
+            'isAllowedModifySchedule' => $this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE),
             'registerProgramsType' => $this->settingsRepository->getValue(Settings::REGISTER_PROGRAMS_TYPE),
             'registerProgramsFrom' => $this->settingsRepository->getDateTimeValue(Settings::REGISTER_PROGRAMS_FROM),
             'registerProgramsTo' => $this->settingsRepository->getDateTimeValue(Settings::REGISTER_PROGRAMS_TO),
-            'isAllowedRegisterProgramsBeforePayment' => $this->settingsRepository->getValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT)
+            'isAllowedRegisterProgramsBeforePayment' => $this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT)
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];

@@ -105,6 +105,8 @@ class CategoryRepository extends EntityRepository
     /**
      * Uloží kategorii.
      * @param Category $category
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function save(Category $category)
     {
@@ -115,6 +117,8 @@ class CategoryRepository extends EntityRepository
     /**
      * Odstraní kategorii.
      * @param Category $category
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function remove(Category $category)
     {

@@ -39,6 +39,8 @@ class ApplicationRepository extends EntityRepository
     /**
      * Uloží přihlášku.
      * @param Application $application
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function save(Application $application)
     {
@@ -49,6 +51,8 @@ class ApplicationRepository extends EntityRepository
     /**
      * Odstraní přihlášku.
      * @param Application $application
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function remove(Application $application)
     {

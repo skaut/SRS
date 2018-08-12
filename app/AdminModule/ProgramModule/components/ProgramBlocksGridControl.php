@@ -184,7 +184,7 @@ class ProgramBlocksGridControl extends Control
 
         if (($this->getPresenter()->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS) ||
                 $this->getPresenter()->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS)) &&
-            $this->settingsRepository->getValue(Settings::IS_ALLOWED_ADD_BLOCK)
+            $this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK)
         ) {
             $grid->addToolbarButton('Blocks:add')
                 ->setIcon('plus')

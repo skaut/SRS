@@ -24,6 +24,8 @@ class PlacePointRepository extends EntityRepository
 
     /**
      * @param PlacePoint $placePoint
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function save(PlacePoint $placePoint)
     {
@@ -33,6 +35,8 @@ class PlacePointRepository extends EntityRepository
 
     /**
      * @param PlacePoint $placePoint
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function remove(PlacePoint $placePoint)
     {

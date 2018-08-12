@@ -28,6 +28,8 @@ class SkautIsCourseRepository extends EntityRepository
     /**
      * Uloží skautIS kurz.
      * @param SkautIsCourse $skautIsCourse
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function save(SkautIsCourse $skautIsCourse): void
     {
@@ -38,6 +40,8 @@ class SkautIsCourseRepository extends EntityRepository
     /**
      * Odstraní skautIS kurz.
      * @param SkautIsCourse $skautIsCourse
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function remove(SkautIsCourse $skautIsCourse): void
     {
@@ -45,6 +49,10 @@ class SkautIsCourseRepository extends EntityRepository
         $this->_em->flush();
     }
 
+    /**
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function removeAll(): void
     {
         foreach ($this->findAll() as $skautIsCourse)

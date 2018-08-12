@@ -156,6 +156,8 @@ class PageRepository extends EntityRepository
      * Uloží stránku.
      * @param Page $page
      * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function save(Page $page)
     {
@@ -170,6 +172,8 @@ class PageRepository extends EntityRepository
      * Odstraní stránku.
      * @param Page $page
      * @throws \App\Model\Page\PageException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function remove(Page $page)
     {
@@ -185,6 +189,8 @@ class PageRepository extends EntityRepository
      * @param $itemId
      * @param $prevId
      * @param $nextId
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function sort($itemId, $prevId, $nextId)
     {

@@ -26,6 +26,8 @@ class DiscountRepository extends EntityRepository
     /**
      * Uloží slevu.
      * @param Discount $discount
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function save(Discount $discount)
     {
@@ -36,6 +38,8 @@ class DiscountRepository extends EntityRepository
     /**
      * Odstraní slevu.
      * @param Discount $discount
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function remove(Discount $discount)
     {

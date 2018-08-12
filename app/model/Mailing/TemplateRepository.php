@@ -36,6 +36,8 @@ class TemplateRepository extends EntityRepository
     /**
      * Uloží šablonu e-mailu.
      * @param Template $template
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function save(Template $template)
     {

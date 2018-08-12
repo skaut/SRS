@@ -71,7 +71,7 @@ class RolesGridControl extends Control
      * @throws \Ublaboo\DataGrid\Exception\DataGridColumnStatusException
      * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
-    public function createComponentRolesGrid($name)
+    public function createComponentRolesGrid(string $name): void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -141,7 +141,7 @@ class RolesGridControl extends Control
      * @throws \Nette\Application\AbortException
      * @throws \Throwable
      */
-    public function handleDelete($id)
+    public function handleDelete(int $id): void
     {
         $role = $this->roleRepository->findById($id);
 
@@ -167,11 +167,13 @@ class RolesGridControl extends Control
 
     /**
      * Změní registrovatelnost role.
-     * @param $id
-     * @param $registerable
+     * @param int $id
+     * @param bool $registerable
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
-    public function changeRegisterable($id, $registerable)
+    public function changeRegisterable(int $id, bool $registerable): void
     {
         $role = $this->roleRepository->findById($id);
 

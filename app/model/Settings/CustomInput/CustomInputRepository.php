@@ -47,11 +47,13 @@ class CustomInputRepository extends EntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
-    
+
     /**
      * Uloží pole.
      * @param CustomInput $input
      * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function save(CustomInput $input)
     {
@@ -65,6 +67,8 @@ class CustomInputRepository extends EntityRepository
     /**
      * Odstraní pole.
      * @param CustomInput $input
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function remove(CustomInput $input)
     {
@@ -80,6 +84,8 @@ class CustomInputRepository extends EntityRepository
      * @param $itemId
      * @param $prevId
      * @param $nextId
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function sort($itemId, $prevId, $nextId)
     {
