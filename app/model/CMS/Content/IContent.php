@@ -17,13 +17,14 @@ interface IContent
     /**
      * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
      * @param Form $form
+     * @return Form
      */
-    public function addContentForm(Form $form);
+    public function addContentForm(Form $form): Form;
 
     /**
      * Zpracuje při uložení stránky část formuláře týkající se obsahu.
      * @param Form $form
      * @param array $values
      */
-    public function contentFormSucceeded(Form $form, array $values);
+    public function contentFormSucceeded(Form $form, array $values): void;
 }

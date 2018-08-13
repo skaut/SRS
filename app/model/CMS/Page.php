@@ -74,7 +74,7 @@ class Page
      * @param string $name
      * @param string $slug
      */
-    public function __construct($name, $slug)
+    public function __construct(string $name, string $slug)
     {
         $this->name = $name;
         $this->slug = $slug;
@@ -85,7 +85,7 @@ class Page
     /**
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -93,7 +93,7 @@ class Page
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -101,7 +101,7 @@ class Page
     /**
      * @param string $name
      */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
@@ -109,7 +109,7 @@ class Page
     /**
      * @return string
      */
-    public function getSlug()
+    public function getSlug(): string
     {
         return $this->slug;
     }
@@ -117,7 +117,7 @@ class Page
     /**
      * @param string $slug
      */
-    public function setSlug($slug)
+    public function setSlug(string $slug): void
     {
         $this->slug = $slug;
     }
@@ -125,7 +125,7 @@ class Page
     /**
      * @return int
      */
-    public function getPosition()
+    public function getPosition(): int
     {
         return $this->position;
     }
@@ -133,7 +133,7 @@ class Page
     /**
      * @param int $position
      */
-    public function setPosition($position)
+    public function setPosition(int $position): void
     {
         $this->position = $position;
     }
@@ -141,7 +141,7 @@ class Page
     /**
      * @return bool
      */
-    public function isPublic()
+    public function isPublic(): bool
     {
         return $this->public;
     }
@@ -149,7 +149,7 @@ class Page
     /**
      * @param bool $public
      */
-    public function setPublic($public)
+    public function setPublic(bool $public): void
     {
         $this->public = $public;
     }
@@ -157,7 +157,7 @@ class Page
     /**
      * @return Collection
      */
-    public function getRoles()
+    public function getRoles(): Collection
     {
         return $this->roles;
     }
@@ -173,7 +173,7 @@ class Page
     /**
      * @param Collection $roles
      */
-    public function setRoles($roles)
+    public function setRoles(Collection $roles): void
     {
         $this->roles->clear();
         foreach ($roles as $role)
@@ -183,18 +183,18 @@ class Page
     /**
      * @param Role $role
      */
-    public function addRole($role)
+    public function addRole(Role $role): void
     {
         $this->roles->add($role);
     }
 
     /**
      * Vrací obsahy v oblasti.
-     * @param null $area
+     * @param null|string $area
      * @return Collection
      * @throws PageException
      */
-    public function getContents($area = NULL)
+    public function getContents(?string $area = NULL): Collection
     {
         if ($area === NULL)
             return $this->contents;
@@ -212,7 +212,7 @@ class Page
      * @return bool
      * @throws PageException
      */
-    public function hasContents($area)
+    public function hasContents(string $area): bool
     {
         if (!in_array($area, Content::$areas))
             throw new PageException("Area {$area} not defined.");
@@ -226,7 +226,7 @@ class Page
      * @param $roleNames
      * @return bool
      */
-    public function isAllowedForRoles($roleNames)
+    public function isAllowedForRoles(Collection $roleNames): bool
     {
         foreach ($roleNames as $roleName) {
             foreach ($this->roles as $role) {

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Model\CMS;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Kdyby\Doctrine\EntityRepository;
 
@@ -20,7 +21,7 @@ class PageRepository extends EntityRepository
      * @param $id
      * @return Page|null
      */
-    public function findById($id)
+    public function findById(int $id): ?Page
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -30,7 +31,7 @@ class PageRepository extends EntityRepository
      * @param $slug
      * @return Page|null
      */
-    public function findBySlug($slug)
+    public function findBySlug(string $slug): ?Page
     {
         return $this->findOneBy(['slug' => $slug]);
     }
@@ -40,7 +41,7 @@ class PageRepository extends EntityRepository
      * @param $slug
      * @return Page|null
      */
-    public function findPublishedBySlug($slug)
+    public function findPublishedBySlug(string $slug): ?Page
     {
         return $this->findOneBy(['public' => TRUE, 'slug' => $slug]);
     }
@@ -49,7 +50,7 @@ class PageRepository extends EntityRepository
      * Vrací viditelné stránky, seřazené podle pozice.
      * @return array
      */
-    public function findPublishedOrderedByPosition()
+    public function findPublishedOrderedByPosition(): array
     {
         return $this->findBy(['public' => TRUE], ['position' => 'ASC']);
     }
@@ -59,7 +60,7 @@ class PageRepository extends EntityRepository
      * @return int
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function findLastPosition()
+    public function findLastPosition(): int
     {
         return $this->createQueryBuilder('p')
             ->select('MAX(p.position)')
@@ -71,7 +72,7 @@ class PageRepository extends EntityRepository
      * Vrací všechny cesty.
      * @return array
      */
-    public function findAllSlugs()
+    public function findAllSlugs(): array
     {
         $slugs = $this->createQueryBuilder('p')
             ->select('p.slug')
@@ -85,7 +86,7 @@ class PageRepository extends EntityRepository
      * @param $id
      * @return array
      */
-    public function findOthersSlugs($id)
+    public function findOthersSlugs(int $id): array
     {
         $slugs = $this->createQueryBuilder('p')
             ->select('p.slug')
@@ -101,7 +102,7 @@ class PageRepository extends EntityRepository
      * @param $pages
      * @return array
      */
-    public function findPagesIds($pages)
+    public function findPagesIds(Collection $pages): array
     {
         return array_map(function ($o) {
             return $o->getId();
@@ -113,7 +114,7 @@ class PageRepository extends EntityRepository
      * @param $slugs
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function findPagesBySlugs($slugs)
+    public function findPagesBySlugs(array $slugs): Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('slug', $slugs))
@@ -126,7 +127,7 @@ class PageRepository extends EntityRepository
      * @param $pages
      * @return array
      */
-    public function findPagesSlugs($pages)
+    public function findPagesSlugs(Collection $pages): array
     {
         return array_map(function ($o) {
             return $o->getSlug();
@@ -137,7 +138,7 @@ class PageRepository extends EntityRepository
      * Vrací stránky jako možnosti pro select.
      * @return array
      */
-    public function getPagesOptions()
+    public function getPagesOptions(): array
     {
         $pages = $this->createQueryBuilder('p')
             ->select('p.slug, p.name')
@@ -159,7 +160,7 @@ class PageRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function save(Page $page)
+    public function save(Page $page): void
     {
         if (!$page->getPosition())
             $page->setPosition($this->findLastPosition() + 1);
@@ -175,7 +176,7 @@ class PageRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function remove(Page $page)
+    public function remove(Page $page): void
     {
         foreach ($page->getContents() as $content)
             $this->_em->remove($content);
@@ -192,7 +193,7 @@ class PageRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function sort($itemId, $prevId, $nextId)
+    public function sort(int $itemId, int $prevId, int $nextId): void
     {
         $item = $this->find($itemId);
         $prev = $prevId ? $this->find($prevId) : NULL;

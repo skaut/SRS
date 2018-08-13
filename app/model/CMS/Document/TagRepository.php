@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Model\CMS\Document;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Kdyby\Doctrine\EntityRepository;
 
@@ -19,7 +20,7 @@ class TagRepository extends EntityRepository
      * @param $id
      * @return Tag|null
      */
-    public function findById($id)
+    public function findById(int $id): ?Tag
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -29,7 +30,7 @@ class TagRepository extends EntityRepository
      * @param $ids
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function findTagsByIds($ids)
+    public function findTagsByIds(array $ids): Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids))
@@ -42,7 +43,7 @@ class TagRepository extends EntityRepository
      * @param $tags
      * @return array
      */
-    public function findTagsIds($tags)
+    public function findTagsIds(Collection $tags): array
     {
         return array_map(function ($o) {
             return $o->getId();
@@ -53,7 +54,7 @@ class TagRepository extends EntityRepository
      * Vrátí všechny názvy tagů.
      * @return array
      */
-    public function findAllNames()
+    public function findAllNames(): array
     {
         $names = $this->createQueryBuilder('t')
             ->select('t.name')
@@ -67,7 +68,7 @@ class TagRepository extends EntityRepository
      * @param $id
      * @return array
      */
-    public function findOthersNames($id)
+    public function findOthersNames(int $id): array
     {
         $names = $this->createQueryBuilder('t')
             ->select('t.name')
@@ -84,7 +85,7 @@ class TagRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function save(Tag $tag)
+    public function save(Tag $tag): void
     {
         $this->_em->persist($tag);
         $this->_em->flush();
@@ -96,7 +97,7 @@ class TagRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function remove(Tag $tag)
+    public function remove(Tag $tag): void
     {
         $this->_em->remove($tag);
         $this->_em->flush();
@@ -106,7 +107,7 @@ class TagRepository extends EntityRepository
      * Vrátí seznam tagů jako možnosti pro select.
      * @return array
      */
-    public function getTagsOptions()
+    public function getTagsOptions(): array
     {
         $tags = $this->createQueryBuilder('t')
             ->select('t.id, t.name')

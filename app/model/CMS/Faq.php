@@ -59,7 +59,7 @@ class Faq
     /**
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -67,7 +67,7 @@ class Faq
     /**
      * @return string
      */
-    public function getQuestion()
+    public function getQuestion(): string
     {
         return $this->question;
     }
@@ -75,7 +75,7 @@ class Faq
     /**
      * @param string $question
      */
-    public function setQuestion($question)
+    public function setQuestion(string $question): void
     {
         $this->question = $question;
     }
@@ -83,7 +83,7 @@ class Faq
     /**
      * @return User
      */
-    public function getAuthor()
+    public function getAuthor(): User
     {
         return $this->author;
     }
@@ -91,7 +91,7 @@ class Faq
     /**
      * @param User $author
      */
-    public function setAuthor($author)
+    public function setAuthor(User $author): void
     {
         $this->author = $author;
     }
@@ -99,7 +99,7 @@ class Faq
     /**
      * @return string
      */
-    public function getAnswer()
+    public function getAnswer(): ?string
     {
         return $this->answer;
     }
@@ -107,7 +107,7 @@ class Faq
     /**
      * @param string $answer
      */
-    public function setAnswer($answer)
+    public function setAnswer(?string $answer): void
     {
         $this->answer = $answer;
     }
@@ -115,7 +115,7 @@ class Faq
     /**
      * @return bool
      */
-    public function isPublic()
+    public function isPublic(): bool
     {
         return $this->public;
     }
@@ -123,7 +123,7 @@ class Faq
     /**
      * @param bool $public
      */
-    public function setPublic($public)
+    public function setPublic(bool $public): void
     {
         $this->public = $public;
     }
@@ -131,7 +131,7 @@ class Faq
     /**
      * @return int
      */
-    public function getPosition()
+    public function getPosition(): int
     {
         return $this->position;
     }
@@ -139,7 +139,7 @@ class Faq
     /**
      * @param int $position
      */
-    public function setPosition($position)
+    public function setPosition(int $position): void
     {
         $this->position = $position;
     }
@@ -148,7 +148,7 @@ class Faq
      * Je zodpovězena?
      * @return bool
      */
-    public function isAnswered()
+    public function isAnswered(): bool
     {
         return $this->answer != '';
     }

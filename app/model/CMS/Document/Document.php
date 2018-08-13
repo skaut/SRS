@@ -73,7 +73,7 @@ class Document
     /**
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -81,7 +81,7 @@ class Document
     /**
      * @return Collection
      */
-    public function getTags()
+    public function getTags(): Collection
     {
         return $this->tags;
     }
@@ -89,7 +89,7 @@ class Document
     /**
      * @param Collection $tags
      */
-    public function setTags($tags)
+    public function setTags(Collection $tags): void
     {
         $this->tags->clear();
         foreach ($tags as $tag)
@@ -99,7 +99,7 @@ class Document
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -107,7 +107,7 @@ class Document
     /**
      * @param string $name
      */
-    public function setName($name)
+    public function setName(string $name)
     {
         $this->name = $name;
     }
@@ -131,7 +131,7 @@ class Document
     /**
      * @return string
      */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
@@ -139,7 +139,7 @@ class Document
     /**
      * @param string $description
      */
-    public function setDescription($description)
+    public function setDescription(?string $description): void
     {
         $this->description = $description;
     }
@@ -147,7 +147,7 @@ class Document
     /**
      * @return \DateTime
      */
-    public function getTimestamp()
+    public function getTimestamp(): \DateTime
     {
         return $this->timestamp;
     }
@@ -155,7 +155,7 @@ class Document
     /**
      * @param \DateTime $timestamp
      */
-    public function setTimestamp($timestamp)
+    public function setTimestamp(\DateTime $timestamp)
     {
         $this->timestamp = $timestamp;
     }

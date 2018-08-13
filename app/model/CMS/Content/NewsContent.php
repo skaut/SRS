@@ -30,7 +30,7 @@ class NewsContent extends Content implements IContent
     /**
      * @return int
      */
-    public function getCount()
+    public function getCount(): ?int
     {
         return $this->count;
     }
@@ -38,7 +38,7 @@ class NewsContent extends Content implements IContent
     /**
      * @param int $count
      */
-    public function setCount($count)
+    public function setCount(?int $count): void
     {
         $this->count = $count;
     }
@@ -48,7 +48,7 @@ class NewsContent extends Content implements IContent
      * @param Form $form
      * @return Form
      */
-    public function addContentForm(Form $form)
+    public function addContentForm(Form $form): Form
     {
         parent::addContentForm($form);
 
@@ -68,7 +68,7 @@ class NewsContent extends Content implements IContent
      * @param Form $form
      * @param array $values
      */
-    public function contentFormSucceeded(Form $form, array $values)
+    public function contentFormSucceeded(Form $form, array $values): void
     {
         parent::contentFormSucceeded($form, $values);
         $values = $values[$this->getContentFormName()];

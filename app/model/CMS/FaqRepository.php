@@ -19,7 +19,7 @@ class FaqRepository extends EntityRepository
      * @param $id
      * @return Faq|null
      */
-    public function findById($id)
+    public function findById(int $id): ?Faq
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -29,7 +29,7 @@ class FaqRepository extends EntityRepository
      * @return int
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function findLastId()
+    public function findLastId(): int
     {
         return $this->createQueryBuilder('f')
             ->select('MAX(f.id)')
@@ -42,7 +42,7 @@ class FaqRepository extends EntityRepository
      * @return int
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function findLastPosition()
+    public function findLastPosition(): int
     {
         return $this->createQueryBuilder('f')
             ->select('MAX(f.position)')
@@ -54,7 +54,7 @@ class FaqRepository extends EntityRepository
      * Vrací publikované otázky seřazené podle pozice.
      * @return array
      */
-    public function findPublishedOrderedByPosition()
+    public function findPublishedOrderedByPosition(): array
     {
         return $this->findBy(['public' => TRUE], ['position' => 'ASC']);
     }
@@ -66,7 +66,7 @@ class FaqRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function save(Faq $faq)
+    public function save(Faq $faq): void
     {
         if (!$faq->getPosition())
             $faq->setPosition($this->findLastPosition() + 1);
@@ -81,7 +81,7 @@ class FaqRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function remove(Faq $faq)
+    public function remove(Faq $faq): void
     {
         $this->_em->remove($faq);
         $this->_em->flush();
@@ -95,7 +95,7 @@ class FaqRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function sort($itemId, $prevId, $nextId)
+    public function sort(int $itemId, int $prevId, int $nextId): void
     {
         $item = $this->find($itemId);
         $prev = $prevId ? $this->find($prevId) : NULL;

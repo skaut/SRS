@@ -80,7 +80,7 @@ class ImageContent extends Content implements IContent
     /**
      * @param FilesService $filesService
      */
-    public function injectFilesService(FilesService $filesService)
+    public function injectFilesService(FilesService $filesService): void
     {
         $this->filesService = $filesService;
     }
@@ -88,7 +88,7 @@ class ImageContent extends Content implements IContent
     /**
      * @return array
      */
-    public static function getAligns()
+    public static function getAligns(): array
     {
         return self::$aligns;
     }
@@ -96,7 +96,7 @@ class ImageContent extends Content implements IContent
     /**
      * @param array $aligns
      */
-    public static function setAligns($aligns)
+    public static function setAligns(array $aligns): void
     {
         self::$aligns = $aligns;
     }
@@ -104,7 +104,7 @@ class ImageContent extends Content implements IContent
     /**
      * @return string
      */
-    public function getImage()
+    public function getImage(): ?string
     {
         return $this->image;
     }
@@ -112,7 +112,7 @@ class ImageContent extends Content implements IContent
     /**
      * @param string $image
      */
-    public function setImage($image)
+    public function setImage(?string $image): void
     {
         $this->image = $image;
     }
@@ -120,7 +120,7 @@ class ImageContent extends Content implements IContent
     /**
      * @return string
      */
-    public function getAlign()
+    public function getAlign(): ?string
     {
         return $this->align;
     }
@@ -128,7 +128,7 @@ class ImageContent extends Content implements IContent
     /**
      * @param string $align
      */
-    public function setAlign($align)
+    public function setAlign(?string $align): void
     {
         $this->align = $align;
     }
@@ -136,7 +136,7 @@ class ImageContent extends Content implements IContent
     /**
      * @return int
      */
-    public function getWidth()
+    public function getWidth(): ?int
     {
         return $this->width;
     }
@@ -144,7 +144,7 @@ class ImageContent extends Content implements IContent
     /**
      * @param int $width
      */
-    public function setWidth($width)
+    public function setWidth(?int $width): void
     {
         $this->width = $width;
     }
@@ -152,7 +152,7 @@ class ImageContent extends Content implements IContent
     /**
      * @return int
      */
-    public function getHeight()
+    public function getHeight(): ?int
     {
         return $this->height;
     }
@@ -160,7 +160,7 @@ class ImageContent extends Content implements IContent
     /**
      * @param int $height
      */
-    public function setHeight($height)
+    public function setHeight(?int $height): void
     {
         $this->height = $height;
     }
@@ -170,7 +170,7 @@ class ImageContent extends Content implements IContent
      * @param Form $form
      * @return Form
      */
-    public function addContentForm(Form $form)
+    public function addContentForm(Form $form): Form
     {
         parent::addContentForm($form);
         $formContainer = $form[$this->getContentFormName()];
@@ -213,7 +213,7 @@ class ImageContent extends Content implements IContent
      * @param array $values
      * @throws \Nette\Utils\UnknownImageFileException
      */
-    public function contentFormSucceeded(Form $form, array $values)
+    public function contentFormSucceeded(Form $form, array $values): void
     {
         parent::contentFormSucceeded($form, $values);
         $values = $values[$this->getContentFormName()];
@@ -265,7 +265,7 @@ class ImageContent extends Content implements IContent
      * Vrátí možnosti zarovnání obrázku pro select.
      * @return array
      */
-    private function prepareAlignOptions()
+    private function prepareAlignOptions(): array
     {
         $options = [];
         foreach (ImageContent::$aligns as $align)
@@ -278,7 +278,7 @@ class ImageContent extends Content implements IContent
      * @param $file
      * @return string
      */
-    private function generatePath($file)
+    private function generatePath($file): string //TODO: typehint
     {
         return '/images/' . Random::generate(5) . '/' . Strings::webalize($file->name, '.');
     }

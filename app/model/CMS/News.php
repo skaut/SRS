@@ -44,7 +44,7 @@ class News
     /**
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -52,7 +52,7 @@ class News
     /**
      * @return string
      */
-    public function getText()
+    public function getText(): string
     {
         return $this->text;
     }
@@ -60,7 +60,7 @@ class News
     /**
      * @param string $text
      */
-    public function setText($text)
+    public function setText(string $text): void
     {
         $this->text = $text;
     }
@@ -68,7 +68,7 @@ class News
     /**
      * @return \DateTime
      */
-    public function getPublished()
+    public function getPublished(): \DateTime
     {
         return $this->published;
     }
@@ -76,7 +76,7 @@ class News
     /**
      * @param \DateTime $published
      */
-    public function setPublished($published)
+    public function setPublished(\DateTime $published): void
     {
         $this->published = $published;
     }
@@ -84,7 +84,7 @@ class News
     /**
      * @return bool
      */
-    public function isPinned()
+    public function isPinned(): bool
     {
         return $this->pinned;
     }
@@ -92,7 +92,7 @@ class News
     /**
      * @param bool $pinned
      */
-    public function setPinned($pinned)
+    public function setPinned(bool $pinned): void
     {
         $this->pinned = $pinned;
     }

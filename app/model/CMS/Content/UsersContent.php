@@ -51,7 +51,7 @@ class UsersContent extends Content implements IContent
     /**
      * @param RoleRepository $roleRepository
      */
-    public function injectRoleRepository(RoleRepository $roleRepository)
+    public function injectRoleRepository(RoleRepository $roleRepository): void
     {
         $this->roleRepository = $roleRepository;
     }
@@ -59,7 +59,7 @@ class UsersContent extends Content implements IContent
     /**
      * @return Collection
      */
-    public function getRoles()
+    public function getRoles(): Collection
     {
         return $this->roles;
     }
@@ -67,7 +67,7 @@ class UsersContent extends Content implements IContent
     /**
      * @param Collection $roles
      */
-    public function setRoles($roles)
+    public function setRoles(Collection $roles): void
     {
         $this->roles = $roles;
     }
@@ -77,7 +77,7 @@ class UsersContent extends Content implements IContent
      * @param Form $form
      * @return Form
      */
-    public function addContentForm(Form $form)
+    public function addContentForm(Form $form): Form
     {
         parent::addContentForm($form);
 
@@ -95,7 +95,7 @@ class UsersContent extends Content implements IContent
      * @param Form $form
      * @param array $values
      */
-    public function contentFormSucceeded(Form $form, array $values)
+    public function contentFormSucceeded(Form $form, array $values): void
     {
         parent::contentFormSucceeded($form, $values);
         $values = $values[$this->getContentFormName()];

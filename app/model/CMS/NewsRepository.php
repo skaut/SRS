@@ -19,7 +19,7 @@ class NewsRepository extends EntityRepository
      * @param $id
      * @return News|null
      */
-    public function findById($id)
+    public function findById(int $id): ?News
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -29,7 +29,7 @@ class NewsRepository extends EntityRepository
      * @return int
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function findLastId()
+    public function findLastId(): int
     {
         return $this->createQueryBuilder('n')
             ->select('MAX(n.id)')
@@ -42,7 +42,7 @@ class NewsRepository extends EntityRepository
      * @param $maxCount
      * @return News[]
      */
-    public function findPublishedOrderedByPinnedAndDate($maxCount)
+    public function findPublishedOrderedByPinnedAndDate(int $maxCount): array
     {
         return $this->createQueryBuilder('n')
             ->where($this->createQueryBuilder()->expr()->lte('n.published', 'CURRENT_TIMESTAMP()'))
@@ -59,7 +59,7 @@ class NewsRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function save(News $news)
+    public function save(News $news): void
     {
         $this->_em->persist($news);
         $this->_em->flush();
@@ -71,7 +71,7 @@ class NewsRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function remove(News $document)
+    public function remove(News $document): void
     {
         $this->_em->remove($document);
         $this->_em->flush();

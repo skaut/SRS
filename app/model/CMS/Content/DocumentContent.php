@@ -49,7 +49,7 @@ class DocumentContent extends Content implements IContent
     /**
      * @param TagRepository $tagRepository
      */
-    public function injectTagRepository(TagRepository $tagRepository)
+    public function injectTagRepository(TagRepository $tagRepository): void
     {
         $this->tagRepository = $tagRepository;
     }
@@ -57,7 +57,7 @@ class DocumentContent extends Content implements IContent
     /**
      * @return Collection
      */
-    public function getTags()
+    public function getTags(): Collection
     {
         return $this->tags;
     }
@@ -65,7 +65,7 @@ class DocumentContent extends Content implements IContent
     /**
      * @param Collection $tags
      */
-    public function setTags($tags)
+    public function setTags(Collection $tags): void
     {
         $this->tags = $tags;
     }
@@ -75,7 +75,7 @@ class DocumentContent extends Content implements IContent
      * @param Form $form
      * @return Form
      */
-    public function addContentForm(Form $form)
+    public function addContentForm(Form $form): Form
     {
         parent::addContentForm($form);
 
@@ -92,7 +92,7 @@ class DocumentContent extends Content implements IContent
      * @param Form $form
      * @param array $values
      */
-    public function contentFormSucceeded(Form $form, array $values)
+    public function contentFormSucceeded(Form $form, array $values): void
     {
         parent::contentFormSucceeded($form, $values);
         $values = $values[$this->getContentFormName()];

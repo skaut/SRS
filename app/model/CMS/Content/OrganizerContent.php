@@ -29,7 +29,7 @@ class OrganizerContent extends Content implements IContent
     /**
      * @return string
      */
-    public function getOrganizer()
+    public function getOrganizer(): ?string
     {
         return $this->organizer;
     }
@@ -37,7 +37,7 @@ class OrganizerContent extends Content implements IContent
     /**
      * @param string $organizer
      */
-    public function setOrganizer($organizer)
+    public function setOrganizer(?string $organizer): void
     {
         $this->organizer = $organizer;
     }
@@ -47,7 +47,7 @@ class OrganizerContent extends Content implements IContent
      * @param Form $form
      * @return Form
      */
-    public function addContentForm(Form $form)
+    public function addContentForm(Form $form): Form
     {
         parent::addContentForm($form);
 
@@ -64,7 +64,7 @@ class OrganizerContent extends Content implements IContent
      * @param Form $form
      * @param array $values
      */
-    public function contentFormSucceeded(Form $form, array $values)
+    public function contentFormSucceeded(Form $form, array $values): void
     {
         parent::contentFormSucceeded($form, $values);
         $values = $values[$this->getContentFormName()];

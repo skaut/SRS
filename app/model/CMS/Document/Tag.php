@@ -105,7 +105,7 @@ class Tag
     /**
      * @param Collection|Role[] $roles
      */
-    public function setRoles($roles): void
+    public function setRoles(Collection $roles): void
     {
         $this->roles->clear();
         foreach ($roles as $role) {

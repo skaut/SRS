@@ -55,7 +55,7 @@ class DocumentRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function save(Document $document)
+    public function save(Document $document): void
     {
         $this->_em->persist($document);
         $this->_em->flush();
@@ -67,7 +67,7 @@ class DocumentRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function remove(Document $document)
+    public function remove(Document $document): void
     {
         $this->_em->remove($document);
         $this->_em->flush();
