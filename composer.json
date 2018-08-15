@@ -48,9 +48,6 @@
         "codeception/mockery-module": "^0.2",
         "captbaritone/mailcatcher-codeception-module": "^1.2",
         "arachne/codeception": "^0.8",
-        "phpstan/phpstan": "^0.9.0",
-        "phpstan/phpstan-nette": "^0.9",
-        "phpstan/phpstan-doctrine": "^0.9",
         "roave/security-advisories": "dev-master",
         "doctrine/coding-standard": "^4.0",
         "nette/tester": "^2.0",
@@ -59,14 +56,6 @@
 
     "scripts": {
         "run-migrations": "php71 www/index.php migrations:migrate --no-interaction",
-        "generate-orm-proxies": "php71 www/index.php orm:generate-proxies",
-        "generate-nette-proxies": "php71 www/index.php lookyman:nette-proxy:generate"
-    },
-
-    "autoload-dev": {
-        "classmap": ["code-quality/"]
-    },
-
-    "prefer-stable": true,
-    "minimum-stability": "dev"
+        "generate-proxies": "php71 www/index.php orm:generate-proxies"
+    }
 }

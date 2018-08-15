@@ -23,10 +23,6 @@ build:
             code: composer install
 
         - script:
-            name: static analysis (phpstan)
-            code: phing static-analysis
-
-        - script:
             name: check coding standard
             code: phing coding-standard
 
