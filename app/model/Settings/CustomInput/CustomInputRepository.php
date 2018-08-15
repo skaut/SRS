@@ -18,7 +18,7 @@ class CustomInputRepository extends EntityRepository
      * @param $id
      * @return CustomInput|null
      */
-    public function findById($id)
+    public function findById(int $id): ?CustomInput
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -27,7 +27,7 @@ class CustomInputRepository extends EntityRepository
      * Vrací všechna pole seřazená podle pozice.
      * @return CustomInput[]
      */
-    public function findAllOrderedByPosition()
+    public function findAllOrderedByPosition(): array
     {
         return $this->createQueryBuilder('i')
             ->orderBy('i.position')
@@ -40,9 +40,9 @@ class CustomInputRepository extends EntityRepository
      * @return int
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function findLastPosition()
+    public function findLastPosition(): int
     {
-        return $this->createQueryBuilder('i')
+        return (int) $this->createQueryBuilder('i')
             ->select('MAX(i.position)')
             ->getQuery()
             ->getSingleScalarResult();
@@ -55,7 +55,7 @@ class CustomInputRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function save(CustomInput $input)
+    public function save(CustomInput $input): void
     {
         if (!$input->getPosition())
             $input->setPosition($this->findLastPosition() + 1);
@@ -70,7 +70,7 @@ class CustomInputRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function remove(CustomInput $input)
+    public function remove(CustomInput $input): void
     {
         foreach ($input->getCustomInputValues() as $customInputValue)
             $this->_em->remove($customInputValue);
@@ -87,7 +87,7 @@ class CustomInputRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function sort($itemId, $prevId, $nextId)
+    public function sort(int $itemId, int $prevId, int $nextId): void
     {
         $item = $this->find($itemId);
         $prev = $prevId ? $this->find($prevId) : NULL;

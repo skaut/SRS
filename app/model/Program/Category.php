@@ -96,7 +96,7 @@ class Category
     /**
      * @param Role[]|Collection $registerableRoles
      */
-    public function setRegisterableRoles(Collection $registerableRoles)
+    public function setRegisterableRoles(Collection $registerableRoles): void
     {
         $this->registerableRoles->clear();
         foreach ($registerableRoles as $registerableRole)

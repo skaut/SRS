@@ -31,7 +31,7 @@ class FaqRepository extends EntityRepository
      */
     public function findLastId(): int
     {
-        return $this->createQueryBuilder('f')
+        return (int) $this->createQueryBuilder('f')
             ->select('MAX(f.id)')
             ->getQuery()
             ->getSingleScalarResult();
@@ -44,7 +44,7 @@ class FaqRepository extends EntityRepository
      */
     public function findLastPosition(): int
     {
-        return $this->createQueryBuilder('f')
+        return (int) $this->createQueryBuilder('f')
             ->select('MAX(f.position)')
             ->getQuery()
             ->getSingleScalarResult();

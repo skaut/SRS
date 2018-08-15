@@ -17,7 +17,7 @@ class PlacePointRepository extends EntityRepository
      * @param $id
      * @return PlacePoint|null
      */
-    public function findById($id)
+    public function findById(int $id): ?PlacePoint
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -27,7 +27,7 @@ class PlacePointRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function save(PlacePoint $placePoint)
+    public function save(PlacePoint $placePoint): void
     {
         $this->_em->persist($placePoint);
         $this->_em->flush();
@@ -38,7 +38,7 @@ class PlacePointRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function remove(PlacePoint $placePoint)
+    public function remove(PlacePoint $placePoint): void
     {
         $this->_em->remove($placePoint);
         $this->_em->flush();

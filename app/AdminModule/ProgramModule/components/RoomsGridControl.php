@@ -138,6 +138,8 @@ class RoomsGridControl extends Control
     /**
      * Zpracuje přidání místnosti.
      * @param $values
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
     public function add($values)
@@ -159,6 +161,8 @@ class RoomsGridControl extends Control
      * Zpracuje úpravu místnosti.
      * @param $id
      * @param $values
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
     public function edit($id, $values)
@@ -179,6 +183,8 @@ class RoomsGridControl extends Control
     /**
      * Odstraní místnost.
      * @param $id
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
     public function handleDelete($id)

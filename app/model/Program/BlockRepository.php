@@ -24,7 +24,7 @@ class BlockRepository extends EntityRepository
      * @param $id
      * @return Block|null
      */
-    public function findById($id)
+    public function findById($id): ?Block
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -34,9 +34,9 @@ class BlockRepository extends EntityRepository
      * @return int
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function findLastId()
+    public function findLastId(): int
     {
-        return $this->createQueryBuilder('b')
+        return (int) $this->createQueryBuilder('b')
             ->select('MAX(b.id)')
             ->getQuery()
             ->getSingleScalarResult();
@@ -46,7 +46,7 @@ class BlockRepository extends EntityRepository
      * Vrací názvy všech bloků.
      * @return array
      */
-    public function findAllNames()
+    public function findAllNames(): array
     {
         $names = $this->createQueryBuilder('b')
             ->select('b.name')
@@ -59,7 +59,7 @@ class BlockRepository extends EntityRepository
      * Vrací všechny bloky seřazené podle názvu.
      * @return array
      */
-    public function findAllOrderedByName()
+    public function findAllOrderedByName(): array
     {
         return $this->createQueryBuilder('b')
             ->orderBy('b.name')
@@ -71,7 +71,7 @@ class BlockRepository extends EntityRepository
      * Vrací všechny bloky nezařezené v kategorii, seřazené podle názvu.
      * @return array
      */
-    public function findAllUncategorizedOrderedByName()
+    public function findAllUncategorizedOrderedByName(): array
     {
         return $this->createQueryBuilder('b')
             ->where('b.category IS NULL')
@@ -85,7 +85,7 @@ class BlockRepository extends EntityRepository
      * @param $id
      * @return array
      */
-    public function findOthersNames($id)
+    public function findOthersNames(int $id): array
     {
         $names = $this->createQueryBuilder('b')
             ->select('b.name')
@@ -102,7 +102,7 @@ class BlockRepository extends EntityRepository
      * @param bool $unassignedOnly
      * @return array
      */
-    public function findByLikeNameOrderedByName($text, $unassignedOnly = FALSE)
+    public function findByLikeNameOrderedByName(string $text, bool $unassignedOnly = FALSE): array
     {
         $qb = $this->createQueryBuilder('b')
             ->select('b')
@@ -162,7 +162,7 @@ class BlockRepository extends EntityRepository
      * @param $blocks
      * @return array
      */
-    public function findBlocksIds($blocks)
+    public function findBlocksIds(Collection $blocks): array
     {
         return array_map(function ($o) {
             return $o->getId();
@@ -172,9 +172,9 @@ class BlockRepository extends EntityRepository
     /**
      * Vrací bloky podle id.
      * @param $ids
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
-    public function findBlocksByIds($ids)
+    public function findBlocksByIds(array $ids): Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids));
@@ -187,7 +187,7 @@ class BlockRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function save(Block $block)
+    public function save(Block $block): void
     {
         $this->_em->persist($block);
         $this->_em->flush();
@@ -199,7 +199,7 @@ class BlockRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function remove(Block $block)
+    public function remove(Block $block): void
     {
         foreach ($block->getPrograms() as $program)
             $this->_em->remove($program);

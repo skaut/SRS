@@ -13,6 +13,7 @@ class MemberPresenter extends WebBasePresenter
 {
     /**
      * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     public function startup()
     {

@@ -37,7 +37,7 @@ class VariableSymbol
     /**
      * @return string
      */
-    public function getVariableSymbol(): string
+    public function getVariableSymbol(): ?string
     {
         return $this->variableSymbol;
     }
@@ -45,7 +45,7 @@ class VariableSymbol
     /**
      * @param string $variableSymbol
      */
-    public function setVariableSymbol(string $variableSymbol)
+    public function setVariableSymbol(?string $variableSymbol): void
     {
         $this->variableSymbol = $variableSymbol;
     }

@@ -162,7 +162,7 @@ abstract class Application
     /**
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -194,7 +194,7 @@ abstract class Application
     /**
      * @return User
      */
-    public function getUser()
+    public function getUser(): User
     {
         return $this->user;
     }
@@ -202,7 +202,7 @@ abstract class Application
     /**
      * @param User $user
      */
-    public function setUser($user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }
@@ -219,7 +219,7 @@ abstract class Application
      * Vrací názvy rolí oddělené čárkou.
      * @return string
      */
-    public function getRolesText() : string
+    public function getRolesText(): string
     {
         return implode(', ', $this->roles->map(function (Role $role) {return $role->getName();})->toArray());
     }
@@ -236,7 +236,7 @@ abstract class Application
      * Vrací názvy podakcí oddělené čárkou.
      * @return string
      */
-    public function getSubeventsText() : string
+    public function getSubeventsText(): string
     {
         return implode(', ', $this->subevents->map(function (Subevent $subevent) {return $subevent->getName();})->toArray());
     }
@@ -244,7 +244,7 @@ abstract class Application
     /**
      * @return int
      */
-    public function getFee()
+    public function getFee(): int
     {
         return $this->fee;
     }
@@ -253,7 +253,7 @@ abstract class Application
      * Vrací poplatek slovy.
      * @return mixed|string
      */
-    public function getFeeWords()
+    public function getFeeWords(): string
     {
         $numbersWords = new \Numbers_Words();
         $feeWord = $numbersWords->toWords($this->getFee(), 'cs');
@@ -265,7 +265,7 @@ abstract class Application
     /**
      * @param int $fee
      */
-    public function setFee($fee)
+    public function setFee(int $fee): void
     {
         $this->fee = $fee;
     }
@@ -290,7 +290,7 @@ abstract class Application
     /**
      * @param VariableSymbol $variableSymbol
      */
-    public function setVariableSymbol(VariableSymbol $variableSymbol)
+    public function setVariableSymbol(VariableSymbol $variableSymbol): void
     {
         $this->variableSymbol = $variableSymbol;
     }
@@ -298,7 +298,7 @@ abstract class Application
     /**
      * @return \DateTime
      */
-    public function getApplicationDate()
+    public function getApplicationDate(): \DateTime
     {
         return $this->applicationDate;
     }
@@ -306,7 +306,7 @@ abstract class Application
     /**
      * @param \DateTime $applicationDate
      */
-    public function setApplicationDate($applicationDate)
+    public function setApplicationDate(\DateTime $applicationDate): void
     {
         $this->applicationDate = $applicationDate;
     }
@@ -314,7 +314,7 @@ abstract class Application
     /**
      * @return \DateTime
      */
-    public function getMaturityDate()
+    public function getMaturityDate(): ?\DateTime
     {
         return $this->maturityDate;
     }
@@ -331,7 +331,7 @@ abstract class Application
     /**
      * @param \DateTime $maturityDate
      */
-    public function setMaturityDate($maturityDate)
+    public function setMaturityDate(?\DateTime $maturityDate): void
     {
         $this->maturityDate = $maturityDate;
     }
@@ -339,7 +339,7 @@ abstract class Application
     /**
      * @return string
      */
-    public function getPaymentMethod()
+    public function getPaymentMethod(): ?string
     {
         return $this->paymentMethod;
     }
@@ -347,7 +347,7 @@ abstract class Application
     /**
      * @param string $paymentMethod
      */
-    public function setPaymentMethod($paymentMethod)
+    public function setPaymentMethod(?string $paymentMethod): void
     {
         $this->paymentMethod = $paymentMethod;
     }
@@ -355,7 +355,7 @@ abstract class Application
     /**
      * @return \DateTime
      */
-    public function getPaymentDate()
+    public function getPaymentDate(): ?\DateTime
     {
         return $this->paymentDate;
     }
@@ -372,7 +372,7 @@ abstract class Application
     /**
      * @param \DateTime $paymentDate
      */
-    public function setPaymentDate($paymentDate)
+    public function setPaymentDate(?\DateTime $paymentDate): void
     {
         $this->paymentDate = $paymentDate;
     }
@@ -380,7 +380,7 @@ abstract class Application
     /**
      * @return \DateTime
      */
-    public function getIncomeProofPrintedDate()
+    public function getIncomeProofPrintedDate(): ?\DateTime
     {
         return $this->incomeProofPrintedDate;
     }
@@ -397,7 +397,7 @@ abstract class Application
     /**
      * @param \DateTime $incomeProofPrintedDate
      */
-    public function setIncomeProofPrintedDate($incomeProofPrintedDate)
+    public function setIncomeProofPrintedDate(?\DateTime $incomeProofPrintedDate): void
     {
         $this->incomeProofPrintedDate = $incomeProofPrintedDate;
     }
@@ -405,7 +405,7 @@ abstract class Application
     /**
      * @return string
      */
-    public function getState()
+    public function getState(): string
     {
         return $this->state;
     }
@@ -413,7 +413,7 @@ abstract class Application
     /**
      * @param string $state
      */
-    public function setState($state)
+    public function setState(string $state): void
     {
         $this->state = $state;
     }
@@ -421,7 +421,7 @@ abstract class Application
     /**
      * @return User
      */
-    public function getCreatedBy(): ?User
+    public function getCreatedBy(): User
     {
         return $this->createdBy;
     }
@@ -429,7 +429,7 @@ abstract class Application
     /**
      * @param User $createdBy
      */
-    public function setCreatedBy(?User $createdBy)
+    public function setCreatedBy(User $createdBy): void
     {
         $this->createdBy = $createdBy;
     }
@@ -445,7 +445,7 @@ abstract class Application
     /**
      * @param \DateTime $validFrom
      */
-    public function setValidFrom(\DateTime $validFrom)
+    public function setValidFrom(\DateTime $validFrom): void
     {
         $this->validFrom = $validFrom;
     }
@@ -461,7 +461,7 @@ abstract class Application
     /**
      * @param \DateTime $validTo
      */
-    public function setValidTo(?\DateTime $validTo)
+    public function setValidTo(?\DateTime $validTo): void
     {
         $this->validTo = $validTo;
     }

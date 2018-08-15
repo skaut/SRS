@@ -18,7 +18,7 @@ class TemplateRepository extends EntityRepository
      * @param $id
      * @return Template|null
      */
-    public function findById($id)
+    public function findById(int $id): ?Template
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -28,7 +28,7 @@ class TemplateRepository extends EntityRepository
      * @param $type
      * @return Template|null
      */
-    public function findByType($type)
+    public function findByType(string $type): ?Template
     {
         return $this->findOneBy(['type' => $type]);
     }
@@ -39,7 +39,7 @@ class TemplateRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function save(Template $template)
+    public function save(Template $template): void
     {
         $this->_em->persist($template);
         $this->_em->flush();

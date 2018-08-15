@@ -89,6 +89,8 @@ class PlacePointsGridControl extends Control
     /**
      * Zpracuje odstranění mapového bodu.
      * @param $id
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
     public function handleDelete($id)

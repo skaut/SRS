@@ -226,7 +226,7 @@ class Page
      * @param $roleNames
      * @return bool
      */
-    public function isAllowedForRoles(Collection $roleNames): bool
+    public function isAllowedForRoles(array $roleNames): bool
     {
         foreach ($roleNames as $roleName) {
             foreach ($this->roles as $role) {

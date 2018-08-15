@@ -54,7 +54,7 @@ class Room
     /**
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -62,7 +62,7 @@ class Room
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -70,7 +70,7 @@ class Room
     /**
      * @param string $name
      */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
@@ -78,7 +78,7 @@ class Room
     /**
      * @return int
      */
-    public function getCapacity()
+    public function getCapacity(): ?int
     {
         return $this->capacity;
     }
@@ -86,7 +86,7 @@ class Room
     /**
      * @param int $capacity
      */
-    public function setCapacity($capacity)
+    public function setCapacity(?int $capacity): void
     {
         $this->capacity = $capacity;
     }
@@ -94,7 +94,7 @@ class Room
     /**
      * @return mixed
      */
-    public function getPrograms()
+    public function getPrograms(): Collection
     {
         return $this->programs;
     }

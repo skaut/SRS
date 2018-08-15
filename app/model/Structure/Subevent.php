@@ -119,7 +119,7 @@ class Subevent
     /**
      * @return int
      */
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -127,7 +127,7 @@ class Subevent
     /**
      * @return string
      */
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -135,7 +135,7 @@ class Subevent
     /**
      * @param string $name
      */
-    public function setName(string $name) : void
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
@@ -143,7 +143,7 @@ class Subevent
     /**
      * @return bool
      */
-    public function isImplicit() : bool
+    public function isImplicit(): bool
     {
         return $this->implicit;
     }
@@ -151,7 +151,7 @@ class Subevent
     /**
      * @param bool $implicit
      */
-    public function setImplicit(bool $implicit) : void
+    public function setImplicit(bool $implicit): void
     {
         $this->implicit = $implicit;
     }
@@ -159,7 +159,7 @@ class Subevent
     /**
      * @return Collection
      */
-    public function getBlocks() : Collection
+    public function getBlocks(): Collection
     {
         return $this->blocks;
     }
@@ -167,7 +167,7 @@ class Subevent
     /**
      * @return int
      */
-    public function getFee() : int
+    public function getFee(): int
     {
         return $this->fee;
     }
@@ -175,7 +175,7 @@ class Subevent
     /**
      * @param int $fee
      */
-    public function setFee(int $fee) : void
+    public function setFee(int $fee): void
     {
         $this->fee = $fee;
     }
@@ -183,7 +183,7 @@ class Subevent
     /**
      * @return int
      */
-    public function getCapacity() : ?int
+    public function getCapacity(): ?int
     {
         return $this->capacity;
     }
@@ -191,7 +191,7 @@ class Subevent
     /**
      * @param int $capacity
      */
-    public function setCapacity(?int $capacity) : void
+    public function setCapacity(?int $capacity): void
     {
         $this->capacity = $capacity;
     }
@@ -199,7 +199,7 @@ class Subevent
     /**
      * @return bool
      */
-    public function hasLimitedCapacity() : bool
+    public function hasLimitedCapacity(): bool
     {
         return $this->capacity !== NULL;
     }
@@ -207,7 +207,7 @@ class Subevent
     /**
      * @return Collection|Subevent[]
      */
-    public function getIncompatibleSubevents() : Collection
+    public function getIncompatibleSubevents(): Collection
     {
         return $this->incompatibleSubevents;
     }
@@ -215,7 +215,7 @@ class Subevent
     /**
      * @param $incompatibleSubevents
      */
-    public function setIncompatibleSubevents(Collection $incompatibleSubevents) : void
+    public function setIncompatibleSubevents(Collection $incompatibleSubevents): void
     {
         foreach ($this->getIncompatibleSubevents() as $subevent) {
             if (!$incompatibleSubevents->contains($subevent))
@@ -232,7 +232,7 @@ class Subevent
     /**
      * @param $subevent
      */
-    public function addIncompatibleSubevent(Subevent $subevent) : void
+    public function addIncompatibleSubevent(Subevent $subevent): void
     {
         if (!$this->incompatibleSubevents->contains($subevent))
             $this->incompatibleSubevents->add($subevent);
@@ -242,7 +242,7 @@ class Subevent
      * Vrací názvy všech nekompatibilních podakcí.
      * @return string
      */
-    public function getIncompatibleSubeventsText() : string
+    public function getIncompatibleSubeventsText(): string
     {
         $incompatibleSubeventsNames = [];
         foreach ($this->getIncompatibleSubevents() as $incompatibleSubevent) {
@@ -254,7 +254,7 @@ class Subevent
     /**
      * @return Collection|Subevent[]
      */
-    public function getRequiredBySubevent() : Collection
+    public function getRequiredBySubevent(): Collection
     {
         return $this->requiredBySubevent;
     }
@@ -263,7 +263,7 @@ class Subevent
      * Vrací všechny (tranzitivně) podakce, kterými je tato podakce vyžadována.
      * @return Collection|Subevent[]
      */
-    public function getRequiredBySubeventTransitive() : Collection
+    public function getRequiredBySubeventTransitive(): Collection
     {
         $allRequiredBySubevent = new ArrayCollection();
         foreach ($this->requiredBySubevent as $requiredBySubevent) {
@@ -276,7 +276,7 @@ class Subevent
      * @param $allRequiredBySubevent
      * @param $subevent
      */
-    private function getRequiredBySubeventTransitiveRec(Collection &$allRequiredBySubevent, Subevent $subevent) : void
+    private function getRequiredBySubeventTransitiveRec(Collection &$allRequiredBySubevent, Subevent $subevent): void
     {
         if ($this === $subevent || $allRequiredBySubevent->contains($subevent))
             return;
@@ -291,7 +291,7 @@ class Subevent
     /**
      * @return Collection|Subevent[]
      */
-    public function getRequiredSubevents() : Collection
+    public function getRequiredSubevents(): Collection
     {
         return $this->requiredSubevents;
     }
@@ -299,7 +299,7 @@ class Subevent
     /**
      * @param $requiredSubevents
      */
-    public function setRequiredSubevents(Collection $requiredSubevents) : void
+    public function setRequiredSubevents(Collection $requiredSubevents): void
     {
         $this->requiredSubevents->clear();
         foreach ($requiredSubevents as $requiredSubevent)
@@ -310,7 +310,7 @@ class Subevent
      * Vrací všechny (tranzitivně) vyžadované podakce.
      * @return Collection|Subevent[]
      */
-    public function getRequiredSubeventsTransitive() : Collection
+    public function getRequiredSubeventsTransitive(): Collection
     {
         $allRequiredSubevents = new ArrayCollection();
         foreach ($this->requiredSubevents as $requiredSubevent) {
@@ -323,7 +323,7 @@ class Subevent
      * @param $allRequiredSubevents
      * @param $subevent
      */
-    private function getRequiredSubeventsTransitiveRec(Collection &$allRequiredSubevents, Subevent $subevent) : void
+    private function getRequiredSubeventsTransitiveRec(Collection &$allRequiredSubevents, Subevent $subevent): void
     {
         if ($this === $subevent || $allRequiredSubevents->contains($subevent))
             return;
@@ -339,7 +339,7 @@ class Subevent
      * Vrací názvy všech vyžadovaných podakcí.
      * @return string
      */
-    public function getRequiredSubeventsTransitiveText() : string
+    public function getRequiredSubeventsTransitiveText(): string
     {
         $requiredSubeventsNames = [];
         foreach ($this->getRequiredSubeventsTransitive() as $requiredSubevent) {

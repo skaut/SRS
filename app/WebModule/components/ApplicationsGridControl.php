@@ -151,6 +151,7 @@ class ApplicationsGridControl extends Control
      * @param $name
      * @throws \App\Model\Settings\SettingsException
      * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Throwable
      * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
     public function createComponentApplicationsGrid($name)

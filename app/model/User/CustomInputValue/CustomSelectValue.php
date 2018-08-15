@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="custom_select_value")
  */
-class CustomSelectValue extends CustomInputValue implements ICustomInputValue
+class CustomSelectValue extends CustomInputValue
 {
     /**
      * Vybraná položka výběrového pole přihlášky.
@@ -26,7 +26,7 @@ class CustomSelectValue extends CustomInputValue implements ICustomInputValue
     /**
      * @return int
      */
-    public function getValue()
+    public function getValue(): ?int
     {
         return $this->value;
     }
@@ -34,7 +34,7 @@ class CustomSelectValue extends CustomInputValue implements ICustomInputValue
     /**
      * @param $value
      */
-    public function setValue($value)
+    public function setValue(?int $value): void
     {
         $this->value = $value;
     }
@@ -43,7 +43,7 @@ class CustomSelectValue extends CustomInputValue implements ICustomInputValue
      * Vrátí název vybrané možnosti.
      * @return mixed
      */
-    public function getValueOption()
+    public function getValueOption(): ?string
     {
         return $this->value != 0 ? explode(', ', $this->getInput()->getOptions())[$this->value - 1] : NULL;
     }

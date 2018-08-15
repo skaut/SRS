@@ -95,7 +95,7 @@ class Permission
     /**
      * Permission constructor.
      * @param string $name
-     * @param Resource $resource
+     * @param $resource
      */
     public function __construct(string $name, Resource $resource)
     {
@@ -145,7 +145,7 @@ class Permission
     }
 
     /**
-     * @param Resource $resource
+     * @param $resource
      */
     public function setResource(Resource $resource): void
     {

@@ -18,7 +18,7 @@ class CustomInputValueRepository extends EntityRepository
      * @param $id
      * @return CustomInputValue|null
      */
-    public function findById($id)
+    public function findById(int $id): ?CustomInputValue
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -29,7 +29,7 @@ class CustomInputValueRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function save(CustomInputValue $value)
+    public function save(CustomInputValue $value): void
     {
         $this->_em->persist($value);
         $this->_em->flush();
@@ -41,7 +41,7 @@ class CustomInputValueRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function remove(CustomInputValue $value)
+    public function remove(CustomInputValue $value): void
     {
         $this->_em->remove($value);
         $this->_em->flush();

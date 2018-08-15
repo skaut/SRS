@@ -26,7 +26,7 @@ class UserRepository extends EntityRepository
      * @param $id
      * @return User|null
      */
-    public function findById($id)
+    public function findById(int $id): ?User
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -36,7 +36,7 @@ class UserRepository extends EntityRepository
      * @param $skautISUserId
      * @return User|null
      */
-    public function findBySkautISUserId($skautISUserId)
+    public function findBySkautISUserId(int $skautISUserId): ?User
     {
         return $this->findOneBy(['skautISUserId' => $skautISUserId]);
     }
@@ -46,7 +46,7 @@ class UserRepository extends EntityRepository
      * @param $ids
      * @return Collection|User[]
      */
-    public function findUsersByIds($ids): Collection
+    public function findUsersByIds(array $ids): Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids));
@@ -58,7 +58,7 @@ class UserRepository extends EntityRepository
      * @param $text
      * @return array
      */
-    public function findNamesByLikeDisplayNameOrderedByDisplayName($text)
+    public function findNamesByLikeDisplayNameOrderedByDisplayName(string $text): array
     {
         return $this->createQueryBuilder('u')
             ->select('u.id, u.displayName')
@@ -72,7 +72,7 @@ class UserRepository extends EntityRepository
      * Vrací uživatele, kteří se synchronizují s účastníky skautIS akce.
      * @return mixed
      */
-    public function findAllSyncedWithSkautIS()
+    public function findAllSyncedWithSkautIS(): array
     {
         return $this->createQueryBuilder('u')
             ->join('u.roles', 'r')
@@ -87,7 +87,7 @@ class UserRepository extends EntityRepository
      * @param Role $role
      * @return mixed
      */
-    public function findAllInRole(Role $role)
+    public function findAllInRole(Role $role): array
     {
         return $this->createQueryBuilder('u')
             ->join('u.roles', 'r')
@@ -101,7 +101,7 @@ class UserRepository extends EntityRepository
      * @param $rolesIds
      * @return mixed
      */
-    public function findAllInRoles($rolesIds)
+    public function findAllInRoles(array $rolesIds): array
     {
         return $this->createQueryBuilder('u')
             ->join('u.roles', 'r')
@@ -116,7 +116,7 @@ class UserRepository extends EntityRepository
      * @param $rolesIds
      * @return mixed
      */
-    public function findAllApprovedInRoles($rolesIds)
+    public function findAllApprovedInRoles(array $rolesIds): array
     {
         return $this->createQueryBuilder('u')
             ->join('u.roles', 'r')
@@ -179,7 +179,7 @@ class UserRepository extends EntityRepository
      * Vrací uživatele jako možnosti pro select.
      * @return array
      */
-    public function getUsersOptions()
+    public function getUsersOptions(): array
     {
         $users = $this->createQueryBuilder('u')
             ->select('u.id, u.displayName')
@@ -198,7 +198,7 @@ class UserRepository extends EntityRepository
      * Vrací lektory jako možnosti pro select.
      * @return array
      */
-    public function getLectorsOptions()
+    public function getLectorsOptions(): array
     {
         $lectors = $this->createQueryBuilder('u')
             ->select('u.id, u.displayName')
@@ -222,7 +222,7 @@ class UserRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function save(User $user)
+    public function save(User $user): void
     {
         $this->_em->persist($user);
         $this->_em->flush();
@@ -234,7 +234,7 @@ class UserRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function remove(User $user)
+    public function remove(User $user): void
     {
         foreach ($user->getCustomInputValues() as $customInputValue)
             $this->_em->remove($customInputValue);

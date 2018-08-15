@@ -27,7 +27,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Kdyby\Translation\Translator;
 use Nette;
-use \Yasumi\Yasumi;
+use Yasumi\Yasumi;
 
 
 /**
@@ -462,6 +462,10 @@ class ApplicationService
      * @param bool $approve
      * @return RolesApplication
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \ReflectionException
+     * @throws \Throwable
      */
     private function createRolesApplication(User $user, Collection $roles, User $createdBy, bool $approve = FALSE): RolesApplication
     {
@@ -501,6 +505,10 @@ class ApplicationService
      * @param User $createdBy
      * @return SubeventsApplication
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \ReflectionException
+     * @throws \Throwable
      */
     private function createSubeventsApplication(User $user, Collection $subevents,
                                                 User $createdBy): SubeventsApplication
@@ -661,6 +669,7 @@ class ApplicationService
      * @param User $user
      * @return bool
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
     public function isAllowedEditRegistration(User $user)
     {
@@ -674,6 +683,7 @@ class ApplicationService
      * @param Application $application
      * @return bool
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
     public function isAllowedEditApplication(Application $application)
     {
@@ -700,6 +710,7 @@ class ApplicationService
      * Může uživatel upravovat vlastní pole přihlášky?
      * @return bool
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
     public function isAllowedEditCustomInputs()
     {

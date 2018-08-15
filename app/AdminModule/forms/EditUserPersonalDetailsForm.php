@@ -134,6 +134,8 @@ class EditUserPersonalDetailsForm
      * @param Form $form
      * @param array $values
      * @throws Nette\Utils\UnknownImageFileException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function processForm(Form $form, array $values)
     {

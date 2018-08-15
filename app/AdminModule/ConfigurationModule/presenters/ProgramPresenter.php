@@ -25,6 +25,7 @@ class ProgramPresenter extends ConfigurationBasePresenter
     /**
      * @return Form
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
     protected function createComponentProgramForm()
     {

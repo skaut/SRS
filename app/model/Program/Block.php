@@ -113,7 +113,7 @@ class Block
     /**
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -121,7 +121,7 @@ class Block
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -129,7 +129,7 @@ class Block
     /**
      * @param string $name
      */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
@@ -137,7 +137,7 @@ class Block
     /**
      * @return Collection
      */
-    public function getPrograms()
+    public function getPrograms(): Collection
     {
         return $this->programs;
     }
@@ -146,7 +146,7 @@ class Block
      * Vrací seznam účastníků bloku.
      * @return Collection
      */
-    public function getAttendees()
+    public function getAttendees(): Collection
     {
         $attendees = new ArrayCollection();
         foreach ($this->programs as $program) {
@@ -161,7 +161,7 @@ class Block
      * Vrací počet programů bloku.
      * @return int
      */
-    public function getProgramsCount()
+    public function getProgramsCount(): int
     {
         return $this->programs->count();
     }
@@ -169,7 +169,7 @@ class Block
     /**
      * @return User
      */
-    public function getLector()
+    public function getLector(): ?User
     {
         return $this->lector;
     }
@@ -177,7 +177,7 @@ class Block
     /**
      * @param User $lector
      */
-    public function setLector($lector)
+    public function setLector(?User $lector): void
     {
         $this->lector = $lector;
     }
@@ -185,7 +185,7 @@ class Block
     /**
      * @return Category
      */
-    public function getCategory()
+    public function getCategory(): ?Category
     {
         return $this->category;
     }
@@ -193,7 +193,7 @@ class Block
     /**
      * @param Category $category
      */
-    public function setCategory($category)
+    public function setCategory(?Category $category): void
     {
         $this->category = $category;
     }
@@ -201,7 +201,7 @@ class Block
     /**
      * @return Subevent
      */
-    public function getSubevent()
+    public function getSubevent(): Subevent
     {
         return $this->subevent;
     }
@@ -209,7 +209,7 @@ class Block
     /**
      * @param Subevent $subevent
      */
-    public function setSubevent($subevent)
+    public function setSubevent(Subevent $subevent): void
     {
         $this->subevent = $subevent;
     }
@@ -217,7 +217,7 @@ class Block
     /**
      * @return int
      */
-    public function getMandatory()
+    public function getMandatory(): int
     {
         return $this->mandatory;
     }
@@ -225,7 +225,7 @@ class Block
     /**
      * @param int $mandatory
      */
-    public function setMandatory($mandatory)
+    public function setMandatory(int $mandatory): void
     {
         $this->mandatory = $mandatory;
     }
@@ -233,7 +233,7 @@ class Block
     /**
      * @return int
      */
-    public function getDuration()
+    public function getDuration(): int
     {
         return $this->duration;
     }
@@ -241,7 +241,7 @@ class Block
     /**
      * @param int $duration
      */
-    public function setDuration($duration)
+    public function setDuration(int $duration): void
     {
         $this->duration = $duration;
     }
@@ -249,7 +249,7 @@ class Block
     /**
      * @return int
      */
-    public function getCapacity()
+    public function getCapacity(): ?int
     {
         return $this->capacity;
     }
@@ -257,7 +257,7 @@ class Block
     /**
      * @param int $capacity
      */
-    public function setCapacity($capacity)
+    public function setCapacity(?int $capacity): void
     {
         $this->capacity = $capacity;
     }
@@ -265,7 +265,7 @@ class Block
     /**
      * @return string
      */
-    public function getTools()
+    public function getTools(): ?string
     {
         return $this->tools;
     }
@@ -273,7 +273,7 @@ class Block
     /**
      * @param string $tools
      */
-    public function setTools($tools)
+    public function setTools(?string $tools): void
     {
         $this->tools = $tools;
     }
@@ -281,7 +281,7 @@ class Block
     /**
      * @return string
      */
-    public function getPerex()
+    public function getPerex(): ?string
     {
         return $this->perex;
     }
@@ -289,7 +289,7 @@ class Block
     /**
      * @param string $perex
      */
-    public function setPerex($perex)
+    public function setPerex(?string $perex): void
     {
         $this->perex = $perex;
     }
@@ -297,7 +297,7 @@ class Block
     /**
      * @return string
      */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
@@ -305,7 +305,7 @@ class Block
     /**
      * @param string $description
      */
-    public function setDescription($description)
+    public function setDescription(?string $description): void
     {
         $this->description = $description;
     }
@@ -315,7 +315,7 @@ class Block
      * @param User $user
      * @return bool
      */
-    public function isAllowed(User $user)
+    public function isAllowed(User $user): bool
     {
         $result = TRUE;
 
@@ -349,7 +349,7 @@ class Block
      * @param User $user
      * @return bool
      */
-    public function isAttendee(User $user)
+    public function isAttendee(User $user): bool
     {
         foreach ($this->programs as $program) {
             if ($program->isAttendee($user))

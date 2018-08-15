@@ -19,7 +19,7 @@ class VariableSymbolRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function save(VariableSymbol $variableSymbol)
+    public function save(VariableSymbol $variableSymbol): void
     {
         $this->_em->persist($variableSymbol);
         $this->_em->flush();

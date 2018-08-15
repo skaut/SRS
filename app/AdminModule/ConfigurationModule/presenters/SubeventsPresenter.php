@@ -74,6 +74,7 @@ class SubeventsPresenter extends ConfigurationBasePresenter
     /**
      * @return \Nette\Application\UI\Form
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
     protected function createComponentSubeventsForm()
     {

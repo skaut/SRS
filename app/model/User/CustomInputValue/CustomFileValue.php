@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="custom_file_value")
  */
-class CustomFileValue extends CustomInputValue implements ICustomInputValue
+class CustomFileValue extends CustomInputValue
 {
     /**
      * Název souboru.
@@ -26,7 +26,7 @@ class CustomFileValue extends CustomInputValue implements ICustomInputValue
     /**
      * @return string
      */
-    public function getValue()
+    public function getValue(): ?string
     {
         return $this->value;
     }
@@ -34,7 +34,7 @@ class CustomFileValue extends CustomInputValue implements ICustomInputValue
     /**
      * @param $value
      */
-    public function setValue($value)
+    public function setValue(?string $value): void
     {
         $this->value = $value;
     }

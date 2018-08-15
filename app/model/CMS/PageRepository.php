@@ -62,7 +62,7 @@ class PageRepository extends EntityRepository
      */
     public function findLastPosition(): int
     {
-        return $this->createQueryBuilder('p')
+        return (int) $this->createQueryBuilder('p')
             ->select('MAX(p.position)')
             ->getQuery()
             ->getSingleScalarResult();

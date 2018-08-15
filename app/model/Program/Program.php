@@ -62,7 +62,7 @@ class Program
     /**
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -70,7 +70,7 @@ class Program
     /**
      * @return Block
      */
-    public function getBlock()
+    public function getBlock(): Block
     {
         return $this->block;
     }
@@ -78,7 +78,7 @@ class Program
     /**
      * @param Block $block
      */
-    public function setBlock($block)
+    public function setBlock(Block $block): void
     {
         $this->block = $block;
     }
@@ -86,7 +86,7 @@ class Program
     /**
      * @return Collection
      */
-    public function getAttendees()
+    public function getAttendees(): Collection
     {
         return $this->attendees;
     }
@@ -94,7 +94,7 @@ class Program
     /**
      * @param Collection $attendees
      */
-    public function setAttendees(Collection $attendees)
+    public function setAttendees(Collection $attendees): void
     {
         $this->removeAllAttendees();
         foreach ($attendees as $attendee)
@@ -104,7 +104,7 @@ class Program
     /**
      * @param $user
      */
-    public function addAttendee(User $user)
+    public function addAttendee(User $user): void
     {
         if (!$this->attendees->contains($user))
             $user->addProgram($this);
@@ -114,7 +114,7 @@ class Program
      * Vrací počet účastníků.
      * @return int
      */
-    public function getAttendeesCount()
+    public function getAttendeesCount(): int
     {
         return $this->attendees->count();
     }
@@ -122,7 +122,7 @@ class Program
     /**
      * Odstraní všechny účastníky programu.
      */
-    public function removeAllAttendees()
+    public function removeAllAttendees(): void
     {
         foreach ($this->attendees as $attendee) {
             $attendee->removeProgram($this);
@@ -134,7 +134,7 @@ class Program
      * @param User $user
      * @return bool
      */
-    public function isAttendee(User $user)
+    public function isAttendee(User $user): bool
     {
         return $this->attendees->contains($user);
     }
@@ -143,7 +143,7 @@ class Program
      * Vrací kapacitu programového bloku.
      * @return mixed
      */
-    public function getCapacity()
+    public function getCapacity(): int
     {
         return $this->block->getCapacity();
     }
@@ -151,7 +151,7 @@ class Program
     /**
      * @return Room
      */
-    public function getRoom()
+    public function getRoom(): Room
     {
         return $this->room;
     }
@@ -159,7 +159,7 @@ class Program
     /**
      * @param Room $room
      */
-    public function setRoom($room)
+    public function setRoom(Room $room): void
     {
         $this->room = $room;
     }
@@ -167,7 +167,7 @@ class Program
     /**
      * @return \DateTime
      */
-    public function getStart()
+    public function getStart(): \DateTime
     {
         return $this->start;
     }
@@ -175,7 +175,7 @@ class Program
     /**
      * @param \DateTime $start
      */
-    public function setStart($start)
+    public function setStart(\DateTime $start): void
     {
         $this->start = $start;
     }
@@ -185,7 +185,7 @@ class Program
      * @return \DateTime
      * @throws \Exception
      */
-    public function getEnd()
+    public function getEnd(): \DateTime
     {
         $end = clone($this->start);
         $end->add(new \DateInterval('PT' . $this->block->getDuration() . 'M'));

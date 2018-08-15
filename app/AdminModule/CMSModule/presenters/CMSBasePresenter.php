@@ -30,6 +30,7 @@ abstract class CMSBasePresenter extends AdminBasePresenter
 
     /**
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
     public function beforeRender()
     {

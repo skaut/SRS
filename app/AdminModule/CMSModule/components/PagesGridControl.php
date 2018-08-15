@@ -159,6 +159,8 @@ class PagesGridControl extends Control
      * Zpracuje přidání stránky.
      * @param $values
      * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
     public function add($values)
@@ -181,6 +183,8 @@ class PagesGridControl extends Control
      * @param $id
      * @param $values
      * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
     public function edit($id, $values)
@@ -204,6 +208,8 @@ class PagesGridControl extends Control
      * Zpracuje odstranění stránky.
      * @param $id
      * @throws \App\Model\Page\PageException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
     public function handleDelete($id)
@@ -221,6 +227,8 @@ class PagesGridControl extends Control
      * @param $item_id
      * @param $prev_id
      * @param $next_id
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
     public function handleSort($item_id, $prev_id, $next_id)
@@ -243,6 +251,8 @@ class PagesGridControl extends Control
      * @param $id
      * @param $public
      * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
     public function changeStatus($id, $public)

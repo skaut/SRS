@@ -43,7 +43,7 @@ class PlacePoint
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -51,7 +51,7 @@ class PlacePoint
     /**
      * @param string $name
      */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
@@ -59,7 +59,7 @@ class PlacePoint
     /**
      * @return float
      */
-    public function getGpsLat()
+    public function getGpsLat(): float
     {
         return $this->gpsLat;
     }
@@ -67,7 +67,7 @@ class PlacePoint
     /**
      * @param float $gpsLat
      */
-    public function setGpsLat($gpsLat)
+    public function setGpsLat(float $gpsLat): void
     {
         $this->gpsLat = $gpsLat;
     }
@@ -75,7 +75,7 @@ class PlacePoint
     /**
      * @return float
      */
-    public function getGpsLon()
+    public function getGpsLon(): float
     {
         return $this->gpsLon;
     }
@@ -83,7 +83,7 @@ class PlacePoint
     /**
      * @param float $gpsLon
      */
-    public function setGpsLon($gpsLon)
+    public function setGpsLon(float $gpsLon): void
     {
         $this->gpsLon = $gpsLon;
     }

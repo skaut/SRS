@@ -26,7 +26,7 @@ class Sex
      * Vrací možnosti pohlaví pro select.
      * @return array
      */
-    public static function getSexOptions()
+    public static function getSexOptions(): array
     {
         $options = [];
         foreach (self::$sex as $s) {

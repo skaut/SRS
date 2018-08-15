@@ -95,6 +95,8 @@ class NewsGridControl extends Control
     /**
      * Zpracuje odstranění aktuality.
      * @param $id
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
     public function handleDelete($id)
@@ -111,6 +113,8 @@ class NewsGridControl extends Control
      * Změní připíchnutí aktuality.
      * @param $id
      * @param $pinned
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
     public function changePinned($id, $pinned)

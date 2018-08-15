@@ -63,6 +63,8 @@ class Authenticator implements NS\IAuthenticator
      * Autentizuje uživatele a případně vytvoří nového.
      * @param array $credentials
      * @return NS\Identity
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function authenticate(array $credentials)
     {

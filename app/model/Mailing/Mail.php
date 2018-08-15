@@ -75,7 +75,7 @@ class Mail
     /**
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -83,7 +83,7 @@ class Mail
     /**
      * @return Collection
      */
-    public function getRecipientRoles()
+    public function getRecipientRoles(): Collection
     {
         return $this->recipientRoles;
     }
@@ -91,7 +91,7 @@ class Mail
     /**
      * @param Collection $recipientRoles
      */
-    public function setRecipientRoles($recipientRoles)
+    public function setRecipientRoles(Collection $recipientRoles): void
     {
         $this->recipientRoles->clear();
         foreach ($recipientRoles as $recipientRole)
@@ -102,7 +102,7 @@ class Mail
      * Vrací příjemce (role) oddělené čárkou.
      * @return string
      */
-    public function getRecipientRolesText()
+    public function getRecipientRolesText(): string
     {
         $rolesNames = [];
         foreach ($this->recipientRoles as $role) {
@@ -114,7 +114,7 @@ class Mail
     /**
      * @return Collection
      */
-    public function getRecipientUsers()
+    public function getRecipientUsers(): Collection
     {
         return $this->recipientUsers;
     }
@@ -122,7 +122,7 @@ class Mail
     /**
      * @param Collection $recipientUsers
      */
-    public function setRecipientUsers($recipientUsers)
+    public function setRecipientUsers(Collection $recipientUsers): void
     {
         $this->recipientUsers->clear();
         foreach ($recipientUsers as $recipientUser)
@@ -133,7 +133,7 @@ class Mail
      * Vrací příjemce (uživatele) oddělené čárkou.
      * @return string
      */
-    public function getRecipientUsersText()
+    public function getRecipientUsersText(): string
     {
         $usersNames = [];
         foreach ($this->recipientUsers as $user) {
@@ -145,7 +145,7 @@ class Mail
     /**
      * @return string
      */
-    public function getSubject()
+    public function getSubject(): string
     {
         return $this->subject;
     }
@@ -153,7 +153,7 @@ class Mail
     /**
      * @param string $subject
      */
-    public function setSubject($subject)
+    public function setSubject(string $subject): void
     {
         $this->subject = $subject;
     }
@@ -161,7 +161,7 @@ class Mail
     /**
      * @return string
      */
-    public function getText()
+    public function getText(): string
     {
         return $this->text;
     }
@@ -169,7 +169,7 @@ class Mail
     /**
      * @param string $text
      */
-    public function setText($text)
+    public function setText(string $text): void
     {
         $this->text = $text;
     }
@@ -177,7 +177,7 @@ class Mail
     /**
      * @return \DateTime
      */
-    public function getDatetime()
+    public function getDatetime(): \DateTime
     {
         return $this->datetime;
     }
@@ -185,7 +185,7 @@ class Mail
     /**
      * @param \DateTime $datetime
      */
-    public function setDatetime($datetime)
+    public function setDatetime(\DateTime $datetime): void
     {
         $this->datetime = $datetime;
     }
@@ -193,7 +193,7 @@ class Mail
     /**
      * @return bool
      */
-    public function isAutomatic()
+    public function isAutomatic(): bool
     {
         return $this->automatic;
     }
@@ -201,7 +201,7 @@ class Mail
     /**
      * @param bool $automatic
      */
-    public function setAutomatic($automatic)
+    public function setAutomatic(bool $automatic): void
     {
         $this->automatic = $automatic;
     }

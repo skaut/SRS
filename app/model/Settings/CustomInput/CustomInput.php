@@ -100,7 +100,7 @@ abstract class CustomInput
     /**
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -108,7 +108,7 @@ abstract class CustomInput
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -116,7 +116,7 @@ abstract class CustomInput
     /**
      * @param string $name
      */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
@@ -124,7 +124,7 @@ abstract class CustomInput
     /**
      * @return bool
      */
-    public function isMandatory()
+    public function isMandatory(): bool
     {
         return $this->mandatory;
     }
@@ -132,7 +132,7 @@ abstract class CustomInput
     /**
      * @param bool $mandatory
      */
-    public function setMandatory($mandatory)
+    public function setMandatory(bool $mandatory): void
     {
         $this->mandatory = $mandatory;
     }
@@ -140,7 +140,7 @@ abstract class CustomInput
     /**
      * @return int
      */
-    public function getPosition()
+    public function getPosition(): int
     {
         return $this->position;
     }
@@ -148,7 +148,7 @@ abstract class CustomInput
     /**
      * @param int $position
      */
-    public function setPosition($position)
+    public function setPosition(int $position): void
     {
         $this->position = $position;
     }
@@ -156,7 +156,7 @@ abstract class CustomInput
     /**
      * @return mixed
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
@@ -164,7 +164,7 @@ abstract class CustomInput
     /**
      * @return Collection
      */
-    public function getCustomInputValues()
+    public function getCustomInputValues(): Collection
     {
         return $this->customInputValues;
     }

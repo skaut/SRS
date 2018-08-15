@@ -103,6 +103,8 @@ class CustomInputsGridControl extends Control
     /**
      * Zpracuje odstranění vlastního pole.
      * @param $id
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
     public function handleDelete($id)
@@ -120,6 +122,8 @@ class CustomInputsGridControl extends Control
      * @param $item_id
      * @param $prev_id
      * @param $next_id
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
     public function handleSort($item_id, $prev_id, $next_id)
@@ -142,6 +146,8 @@ class CustomInputsGridControl extends Control
      * @param $id
      * @param $mandatory
      * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
     public function changeMandatory($id, $mandatory)

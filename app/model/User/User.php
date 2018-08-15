@@ -11,6 +11,7 @@ use App\Model\Program\Block;
 use App\Model\Program\Program;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Structure\Subevent;
+use App\Model\User\CustomInputValue\CustomInputValue;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -311,7 +312,7 @@ class User
     /**
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -319,7 +320,7 @@ class User
     /**
      * @return string
      */
-    public function getUsername()
+    public function getUsername(): ?string
     {
         return $this->username;
     }
@@ -327,7 +328,7 @@ class User
     /**
      * @param string $username
      */
-    public function setUsername($username)
+    public function setUsername(?string $username): void
     {
         $this->username = $username;
     }
@@ -335,7 +336,7 @@ class User
     /**
      * @return string
      */
-    public function getEmail()
+    public function getEmail(): ?string
     {
         return $this->email;
     }
@@ -343,7 +344,7 @@ class User
     /**
      * @param string $email
      */
-    public function setEmail($email)
+    public function setEmail(?string $email): void
     {
         $this->email = $email;
     }
@@ -351,7 +352,7 @@ class User
     /**
      * @return Collection
      */
-    public function getRoles()
+    public function getRoles(): Collection
     {
         return $this->roles;
     }
@@ -359,7 +360,7 @@ class User
     /**
      * @param Collection $roles
      */
-    public function setRoles(Collection $roles)
+    public function setRoles(Collection $roles): void
     {
         $this->roles->clear();
         foreach ($roles as $role)
@@ -369,19 +370,10 @@ class User
     /**
      * @param Role $role
      */
-    public function addRole(Role $role)
+    public function addRole(Role $role): void
     {
         if (!$this->isInRole($role))
             $this->roles->add($role);
-    }
-
-    /**
-     * @param Role $role
-     * @return bool
-     */
-    public function removeRole(Role $role)
-    {
-        return $this->roles->removeElement($role);
     }
 
     /**
@@ -389,7 +381,7 @@ class User
      * @param Role $role
      * @return bool
      */
-    public function isInRole(Role $role)
+    public function isInRole(Role $role): bool
     {
         return $this->roles->filter(function ($item) use ($role) {
             return $item == $role;
@@ -400,7 +392,7 @@ class User
      * Vrátí role uživatele oddělené čárkou.
      * @return string
      */
-    public function getRolesText()
+    public function getRolesText(): string
     {
         $rolesNames = [];
         foreach ($this->roles as $role) {
@@ -415,7 +407,7 @@ class User
      * @param $permission
      * @return bool
      */
-    public function isAllowed($resource, $permission)
+    public function isAllowed(string $resource, string $permission): bool
     {
         foreach ($this->roles as $r) {
             foreach ($r->getPermissions() as $p) {
@@ -431,7 +423,7 @@ class User
      * @param Block $block
      * @return bool
      */
-    public function isAllowedModifyBlock(Block $block)
+    public function isAllowedModifyBlock(Block $block): bool
     {
         if ($this->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS))
             return TRUE;
@@ -445,7 +437,7 @@ class User
     /**
      * @return bool
      */
-    public function isAllowedRegisterPrograms()
+    public function isAllowedRegisterPrograms(): bool
     {
         return $this->isApproved() && $this->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS);
     }
@@ -453,7 +445,7 @@ class User
     /**
      * @return Collection
      */
-    public function getApplications()
+    public function getApplications(): Collection
     {
         return $this->applications;
     }
@@ -508,7 +500,7 @@ class User
      * Vrácí zaplacené přihlášky.
      * @return Collection
      */
-    public function getPaidApplications()
+    public function getPaidApplications(): Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->andX(
@@ -577,7 +569,7 @@ class User
     /**
      * @return Collection
      */
-    public function getPrograms()
+    public function getPrograms(): Collection
     {
         return $this->programs;
     }
@@ -585,7 +577,7 @@ class User
     /**
      * @param Collection $programs
      */
-    public function setPrograms($programs)
+    public function setPrograms(Collection $programs): void
     {
         $this->programs->clear();
         foreach ($programs as $program)
@@ -595,7 +587,7 @@ class User
     /**
      * @return Collection
      */
-    public function getLecturersBlocks()
+    public function getLecturersBlocks(): Collection
     {
         return $this->lecturersBlocks;
     }
@@ -603,7 +595,7 @@ class User
     /**
      * @param Program $program
      */
-    public function addProgram(Program $program)
+    public function addProgram(Program $program): void
     {
         if (!$this->programs->contains($program)) {
             $this->programs->add($program);
@@ -612,11 +604,11 @@ class User
 
     /**
      * @param Program $program
-     * @return bool
+     * @return void
      */
-    public function removeProgram(Program $program)
+    public function removeProgram(Program $program): void
     {
-        return $this->programs->removeElement($program);
+        $this->programs->removeElement($program);
     }
 
     /**
@@ -624,7 +616,7 @@ class User
      * @param Block $block
      * @return bool
      */
-    public function hasProgramBlock(Block $block)
+    public function hasProgramBlock(Block $block): bool
     {
         return !$this->programs->filter(function (Program $program) use ($block) {
             return $program->getBlock() === $block;
@@ -634,7 +626,7 @@ class User
     /**
      * @return bool
      */
-    public function isApproved()
+    public function isApproved(): bool
     {
         return $this->approved;
     }
@@ -642,7 +634,7 @@ class User
     /**
      * @param bool $approved
      */
-    public function setApproved($approved)
+    public function setApproved(bool $approved): void
     {
         $this->approved = $approved;
     }
@@ -650,7 +642,7 @@ class User
     /**
      * @return string
      */
-    public function getFirstName()
+    public function getFirstName(): string
     {
         return $this->firstName;
     }
@@ -658,7 +650,7 @@ class User
     /**
      * @param string $firstName
      */
-    public function setFirstName($firstName)
+    public function setFirstName(string $firstName): void
     {
         $this->firstName = $firstName;
         $this->updateDisplayName();
@@ -668,7 +660,7 @@ class User
     /**
      * @return string
      */
-    public function getLastName()
+    public function getLastName(): string
     {
         return $this->lastName;
     }
@@ -676,7 +668,7 @@ class User
     /**
      * @param string $lastName
      */
-    public function setLastName($lastName)
+    public function setLastName(string $lastName): void
     {
         $this->lastName = $lastName;
         $this->updateDisplayName();
@@ -686,7 +678,7 @@ class User
     /**
      * @return string
      */
-    public function getNickName()
+    public function getNickName(): ?string
     {
         return $this->nickName;
     }
@@ -694,7 +686,7 @@ class User
     /**
      * @param string $nickName
      */
-    public function setNickName($nickName)
+    public function setNickName(?string $nickName): void
     {
         $this->nickName = $nickName;
         $this->updateDisplayName();
@@ -704,7 +696,7 @@ class User
     /**
      * @return string
      */
-    public function getDegreePre()
+    public function getDegreePre(): ?string
     {
         return $this->degreePre;
     }
@@ -712,7 +704,7 @@ class User
     /**
      * @param string $degreePre
      */
-    public function setDegreePre($degreePre)
+    public function setDegreePre(?string $degreePre): void
     {
         $this->degreePre = $degreePre;
         $this->updateLectorName();
@@ -721,7 +713,7 @@ class User
     /**
      * @return string
      */
-    public function getDegreePost()
+    public function getDegreePost(): ?string
     {
         return $this->degreePost;
     }
@@ -729,7 +721,7 @@ class User
     /**
      * @param string $degreePost
      */
-    public function setDegreePost($degreePost)
+    public function setDegreePost(?string $degreePost): void
     {
         $this->degreePost = $degreePost;
         $this->updateLectorName();
@@ -738,7 +730,7 @@ class User
     /**
      * @return string $displayName
      */
-    public function getDisplayName()
+    public function getDisplayName(): string
     {
         return $this->displayName;
     }
@@ -746,7 +738,7 @@ class User
     /**
      * Aktualizuje zobrazované jméno.
      */
-    private function updateDisplayName()
+    private function updateDisplayName(): void
     {
         $this->displayName = $this->lastName . ' ' . $this->firstName;
         if ($this->nickName != NULL)
@@ -756,7 +748,7 @@ class User
     /**
      * @return string
      */
-    public function getLectorName()
+    public function getLectorName(): ?string
     {
         return $this->lectorName;
     }
@@ -764,7 +756,7 @@ class User
     /**
      * Aktualizuje jméno lektora.
      */
-    public function updateLectorName()
+    public function updateLectorName(): void
     {
         $this->lectorName = '';
         if ($this->degreePre != NULL)
@@ -779,7 +771,7 @@ class User
     /**
      * @return string
      */
-    public function getSecurityCode()
+    public function getSecurityCode(): ?string
     {
         return $this->securityCode;
     }
@@ -787,7 +779,7 @@ class User
     /**
      * @param string $securityCode
      */
-    public function setSecurityCode($securityCode)
+    public function setSecurityCode(?string $securityCode): void
     {
         $this->securityCode = $securityCode;
     }
@@ -796,7 +788,7 @@ class User
      * Má propojený účet?
      * @return bool
      */
-    public function isMember()
+    public function isMember(): bool
     {
         return $this->member;
     }
@@ -804,7 +796,7 @@ class User
     /**
      * @param bool $member
      */
-    public function setMember($member)
+    public function setMember(bool $member): void
     {
         $this->member = $member;
     }
@@ -813,7 +805,7 @@ class User
      * Je bez skautIS účtu?
      * @return bool
      */
-    public function isExternal()
+    public function isExternal(): bool
     {
         return $this->username === NULL;
     }
@@ -821,7 +813,7 @@ class User
     /**
      * @return string
      */
-    public function getUnit()
+    public function getUnit(): ?string
     {
         return $this->unit;
     }
@@ -829,7 +821,7 @@ class User
     /**
      * @param string $unit
      */
-    public function setUnit($unit)
+    public function setUnit(?string $unit): void
     {
         $this->unit = $unit;
     }
@@ -837,7 +829,7 @@ class User
     /**
      * @return string
      */
-    public function getSex()
+    public function getSex(): ?string
     {
         return $this->sex;
     }
@@ -845,7 +837,7 @@ class User
     /**
      * @param string $sex
      */
-    public function setSex($sex)
+    public function setSex(?string $sex): void
     {
         $this->sex = $sex;
     }
@@ -853,7 +845,7 @@ class User
     /**
      * @return \DateTime
      */
-    public function getBirthdate()
+    public function getBirthdate(): ?\DateTime
     {
         return $this->birthdate;
     }
@@ -861,7 +853,7 @@ class User
     /**
      * @param \DateTime $birthdate
      */
-    public function setBirthdate($birthdate)
+    public function setBirthdate(?\DateTime $birthdate): void
     {
         $this->birthdate = $birthdate;
     }
@@ -869,7 +861,7 @@ class User
     /**
      * @return int
      */
-    public function getAge()
+    public function getAge(): ?int
     {
         return $this->birthdate !== NULL ? (new \DateTime())->diff($this->birthdate)->y : NULL;
     }
@@ -877,7 +869,7 @@ class User
     /**
      * @return int
      */
-    public function getSkautISUserId()
+    public function getSkautISUserId(): ?int
     {
         return $this->skautISUserId;
     }
@@ -885,7 +877,7 @@ class User
     /**
      * @param int $skautISUserId
      */
-    public function setSkautISUserId($skautISUserId)
+    public function setSkautISUserId(?int $skautISUserId): void
     {
         $this->skautISUserId = $skautISUserId;
     }
@@ -893,7 +885,7 @@ class User
     /**
      * @return int
      */
-    public function getSkautISPersonId()
+    public function getSkautISPersonId(): ?int
     {
         return $this->skautISPersonId;
     }
@@ -901,7 +893,7 @@ class User
     /**
      * @param int $skautISPersonId
      */
-    public function setSkautISPersonId($skautISPersonId)
+    public function setSkautISPersonId(?int $skautISPersonId): void
     {
         $this->skautISPersonId = $skautISPersonId;
     }
@@ -909,7 +901,7 @@ class User
     /**
      * @return \DateTime
      */
-    public function getLastLogin()
+    public function getLastLogin(): ?\DateTime
     {
         return $this->lastLogin;
     }
@@ -917,7 +909,7 @@ class User
     /**
      * @param \DateTime $lastLogin
      */
-    public function setLastLogin($lastLogin)
+    public function setLastLogin(?\DateTime $lastLogin): void
     {
         $this->lastLogin = $lastLogin;
     }
@@ -925,7 +917,7 @@ class User
     /**
      * @return string
      */
-    public function getAbout()
+    public function getAbout(): ?string
     {
         return $this->about;
     }
@@ -933,7 +925,7 @@ class User
     /**
      * @param string $about
      */
-    public function setAbout($about)
+    public function setAbout(?string $about): void
     {
         $this->about = $about;
     }
@@ -941,7 +933,7 @@ class User
     /**
      * @return string
      */
-    public function getStreet()
+    public function getStreet(): ?string
     {
         return $this->street;
     }
@@ -949,7 +941,7 @@ class User
     /**
      * @param string $street
      */
-    public function setStreet($street)
+    public function setStreet(?string $street): void
     {
         $this->street = $street;
     }
@@ -957,7 +949,7 @@ class User
     /**
      * @return string
      */
-    public function getCity()
+    public function getCity(): ?string
     {
         return $this->city;
     }
@@ -965,7 +957,7 @@ class User
     /**
      * @param string $city
      */
-    public function setCity($city)
+    public function setCity(?string $city): void
     {
         $this->city = $city;
     }
@@ -973,7 +965,7 @@ class User
     /**
      * @return string
      */
-    public function getPostcode()
+    public function getPostcode(): ?string
     {
         return $this->postcode;
     }
@@ -981,7 +973,7 @@ class User
     /**
      * @param string $postcode
      */
-    public function setPostcode($postcode)
+    public function setPostcode(?string $postcode): void
     {
         $this->postcode = $postcode;
     }
@@ -989,7 +981,7 @@ class User
     /**
      * @return string
      */
-    public function getState()
+    public function getState(): ?string
     {
         return $this->state;
     }
@@ -997,7 +989,7 @@ class User
     /**
      * @param string $state
      */
-    public function setState($state)
+    public function setState(?string $state): void
     {
         $this->state = $state;
     }
@@ -1006,7 +998,7 @@ class User
      * Vrátí adresu uživatele.
      * @return null|string
      */
-    public function getAddress()
+    public function getAddress(): ?string
     {
         if (empty($this->street) || empty($this->city) || empty($this->postcode))
             return NULL;
@@ -1016,7 +1008,7 @@ class User
     /**
      * @return bool
      */
-    public function isAttended()
+    public function isAttended(): bool
     {
         return $this->attended;
     }
@@ -1024,7 +1016,7 @@ class User
     /**
      * @param bool $attended
      */
-    public function setAttended($attended)
+    public function setAttended(bool $attended): void
     {
         $this->attended = $attended;
     }
@@ -1032,7 +1024,7 @@ class User
     /**
      * @return \DateTime
      */
-    public function getArrival()
+    public function getArrival(): ?\DateTime
     {
         return $this->arrival;
     }
@@ -1040,7 +1032,7 @@ class User
     /**
      * @param \DateTime $arrival
      */
-    public function setArrival($arrival)
+    public function setArrival(?\DateTime $arrival): void
     {
         $this->arrival = $arrival;
     }
@@ -1048,7 +1040,7 @@ class User
     /**
      * @return \DateTime
      */
-    public function getDeparture()
+    public function getDeparture(): ?\DateTime
     {
         return $this->departure;
     }
@@ -1056,7 +1048,7 @@ class User
     /**
      * @param \DateTime $departure
      */
-    public function setDeparture($departure)
+    public function setDeparture(?\DateTime $departure): void
     {
         $this->departure = $departure;
     }
@@ -1064,7 +1056,7 @@ class User
     /**
      * @return string
      */
-    public function getMembershipType()
+    public function getMembershipType(): ?string
     {
         return $this->membershipType;
     }
@@ -1072,7 +1064,7 @@ class User
     /**
      * @param string $membershipType
      */
-    public function setMembershipType($membershipType)
+    public function setMembershipType(?string $membershipType): void
     {
         $this->membershipType = $membershipType;
     }
@@ -1080,7 +1072,7 @@ class User
     /**
      * @return string
      */
-    public function getMembershipCategory()
+    public function getMembershipCategory(): ?string
     {
         return $this->membershipCategory;
     }
@@ -1088,7 +1080,7 @@ class User
     /**
      * @param string $membershipCategory
      */
-    public function setMembershipCategory($membershipCategory)
+    public function setMembershipCategory(?string $membershipCategory): void
     {
         $this->membershipCategory = $membershipCategory;
     }
@@ -1096,7 +1088,7 @@ class User
     /**
      * @return Collection
      */
-    public function getCustomInputValues()
+    public function getCustomInputValues(): Collection
     {
         return $this->customInputValues;
     }
@@ -1105,7 +1097,7 @@ class User
      * @param CustomInput $customInput
      * @return mixed
      */
-    public function getCustomInputValue(CustomInput $customInput)
+    public function getCustomInputValue(CustomInput $customInput): CustomInputValue
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()
@@ -1117,7 +1109,7 @@ class User
     /**
      * @return string
      */
-    public function getNote()
+    public function getNote(): ?string
     {
         return $this->note;
     }
@@ -1125,7 +1117,7 @@ class User
     /**
      * @param string $note
      */
-    public function setNote($note)
+    public function setNote(?string $note): void
     {
         $this->note = $note;
     }
@@ -1133,7 +1125,7 @@ class User
     /**
      * @return string
      */
-    public function getPhoto()
+    public function getPhoto(): ?string
     {
         return $this->photo;
     }
@@ -1141,7 +1133,7 @@ class User
     /**
      * @param string $photo
      */
-    public function setPhoto($photo)
+    public function setPhoto(?string $photo): void
     {
         $this->photo = $photo;
     }
@@ -1149,7 +1141,7 @@ class User
     /**
      * @return \DateTime
      */
-    public function getPhotoUpdate()
+    public function getPhotoUpdate(): ?\DateTime
     {
         return $this->photoUpdate;
     }
@@ -1157,7 +1149,7 @@ class User
     /**
      * @param \DateTime $photoUpdate
      */
-    public function setPhotoUpdate($photoUpdate)
+    public function setPhotoUpdate(?\DateTime $photoUpdate): void
     {
         $this->photoUpdate = $photoUpdate;
     }
@@ -1166,7 +1158,7 @@ class User
      * Je uživatel v roli, u které se eviduje příjezd a odjezd?
      * @return bool
      */
-    public function hasDisplayArrivalDepartureRole()
+    public function hasDisplayArrivalDepartureRole(): bool
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('displayArrivalDeparture', TRUE));
@@ -1178,7 +1170,7 @@ class User
      * Je uživatel platící?
      * @return bool
      */
-    public function isPaying()
+    public function isPaying(): bool
     {
         return $this->getFee() != 0;
     }
@@ -1187,7 +1179,7 @@ class User
      * Vrací poplatek uživatele.
      * @return int
      */
-    public function getFee()
+    public function getFee(): int
     {
         $fee = 0;
         foreach ($this->getNotCanceledApplications() as $application) {
@@ -1200,7 +1192,7 @@ class User
      * Vrací částku, která zbývá uhradit.
      * @return int
      */
-    public function getFeeRemaining()
+    public function getFeeRemaining(): int
     {
         $fee = 0;
         foreach ($this->getWaitingForPaymentApplications() as $application) {
@@ -1223,7 +1215,7 @@ class User
      * @param Subevent $subevent
      * @return bool
      */
-    public function hasPaidSubevent(Subevent $subevent)
+    public function hasPaidSubevent(Subevent $subevent): bool
     {
         foreach ($this->getPaidAndFreeApplications() as $application)
             if ($application->getType() == Application::SUBEVENTS && $application->getSubevents()->contains($subevent))
@@ -1236,7 +1228,7 @@ class User
      * Vrací datum přihlášení.
      * @return \DateTime|null
      */
-    public function getRolesApplicationDate()
+    public function getRolesApplicationDate(): ?\DateTime
     {
         foreach ($this->getNotCanceledRolesApplications() as $application) {
             return $application->getApplicationDate();
@@ -1248,7 +1240,7 @@ class User
      * Vrací datum poslední platby.
      * @return \DateTime|null
      */
-    public function getLastPaymentDate()
+    public function getLastPaymentDate(): ?\DateTime
     {
         $maxDate = NULL;
         foreach ($this->getValidApplications() as $application) {
@@ -1288,7 +1280,7 @@ class User
      * @param Subevent $subevent
      * @return bool
      */
-    public function hasSubevent(Subevent $subevent)
+    public function hasSubevent(Subevent $subevent): bool
     {
         return $this->getSubevents()->contains($subevent);
     }
@@ -1297,7 +1289,7 @@ class User
      * Vrací zda uživatel zaplatil první registraci.
      * @return bool
      */
-    public function hasPaidAnyApplication()
+    public function hasPaidAnyApplication(): bool
     {
         return !$this->getPaidApplications()->isEmpty();
     }
@@ -1306,7 +1298,7 @@ class User
      * Vrací zda uživatel zaplatil všechny registrace.
      * @return bool
      */
-    public function hasPaidEveryApplication()
+    public function hasPaidEveryApplication(): bool
     {
         return $this->getValidApplications()->forAll(function (int $key, Application $application) {
             return $application->getState() != ApplicationState::WAITING_FOR_PAYMENT;
@@ -1317,7 +1309,7 @@ class User
      * Vrátí variabilní symboly oddělené čárkou.
      * @return string
      */
-    public function getVariableSymbolsText()
+    public function getVariableSymbolsText(): string
     {
         $variableSymbols = $this->getNotCanceledApplications()->map(function (Application $application) {
             return $application->getVariableSymbolText();

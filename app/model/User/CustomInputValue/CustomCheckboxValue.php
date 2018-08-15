@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="custom_checkbox_value")
  */
-class CustomCheckboxValue extends CustomInputValue implements ICustomInputValue
+class CustomCheckboxValue extends CustomInputValue
 {
     /**
      * Hodnota zaškrtávacího pole přihlášky.
@@ -26,7 +26,7 @@ class CustomCheckboxValue extends CustomInputValue implements ICustomInputValue
     /**
      * @return bool
      */
-    public function getValue()
+    public function getValue(): bool
     {
         return $this->value;
     }
@@ -34,7 +34,7 @@ class CustomCheckboxValue extends CustomInputValue implements ICustomInputValue
     /**
      * @param $value
      */
-    public function setValue($value)
+    public function setValue(bool $value): void
     {
         $this->value = $value;
     }

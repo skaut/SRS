@@ -156,6 +156,8 @@ class DocumentsGridControl extends Control
     /**
      * Zpracuje přidání dokumentu.
      * @param $values
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
     public function add($values)
@@ -183,6 +185,8 @@ class DocumentsGridControl extends Control
      * Zpracuje úpravu dokumentu.
      * @param $id
      * @param $values
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
     public function edit($id, $values)
@@ -213,6 +217,8 @@ class DocumentsGridControl extends Control
     /**
      * Zpracuje odstranění dokumentu.
      * @param $id
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
     public function handleDelete($id)

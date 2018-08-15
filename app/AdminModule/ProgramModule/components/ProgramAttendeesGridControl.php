@@ -283,6 +283,8 @@ class ProgramAttendeesGridControl extends Control
     /**
      * Hromadně přihlásí program uživatelům.
      * @param array $ids
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
     public function groupRegister(array $ids)
@@ -309,6 +311,8 @@ class ProgramAttendeesGridControl extends Control
     /**
      * Hromadně odhlásí program uživatelům.
      * @param array $ids
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
     public function groupUnregister(array $ids)

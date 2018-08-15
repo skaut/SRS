@@ -88,6 +88,7 @@ class ProfilePresenter extends WebBasePresenter
 
     /**
      * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     public function startup()
     {
@@ -149,6 +150,7 @@ class ProfilePresenter extends WebBasePresenter
     /**
      * @return Form
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
     protected function createComponentRolesForm()
     {

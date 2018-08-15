@@ -106,6 +106,7 @@ abstract class WebBasePresenter extends BasePresenter
 
     /**
      * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     public function startup()
     {
@@ -162,6 +163,7 @@ abstract class WebBasePresenter extends BasePresenter
     /**
      * Zkontroluje stav instalace.
      * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     private function checkInstallation()
     {

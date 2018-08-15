@@ -118,6 +118,8 @@ class DocumentTagsGridControl extends Control
     /**
      * Zpracuje přidání štítku dokumentu.
      * @param $values
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
     public function add($values)
@@ -138,6 +140,8 @@ class DocumentTagsGridControl extends Control
      * Zpracuje úpravu štítku dokumentu.
      * @param $id
      * @param $values
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
     public function edit($id, $values)
@@ -157,6 +161,8 @@ class DocumentTagsGridControl extends Control
     /**
      * Zpracuje odstranění štítku dokumentu.
      * @param $id
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
     public function handleDelete($id)

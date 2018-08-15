@@ -144,7 +144,7 @@ class Template
     /**
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -152,7 +152,7 @@ class Template
     /**
      * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
@@ -160,7 +160,7 @@ class Template
     /**
      * @param string $type
      */
-    public function setType($type)
+    public function setType(string $type): void
     {
         $this->type = $type;
     }
@@ -168,7 +168,7 @@ class Template
     /**
      * @return string
      */
-    public function getSubject()
+    public function getSubject(): string
     {
         return $this->subject;
     }
@@ -176,7 +176,7 @@ class Template
     /**
      * @param string $subject
      */
-    public function setSubject($subject)
+    public function setSubject(string $subject): void
     {
         $this->subject = $subject;
     }
@@ -184,7 +184,7 @@ class Template
     /**
      * @return string
      */
-    public function getText()
+    public function getText(): string
     {
         return $this->text;
     }
@@ -192,7 +192,7 @@ class Template
     /**
      * @param string $text
      */
-    public function setText($text)
+    public function setText(string $text): void
     {
         $this->text = $text;
     }
@@ -200,7 +200,7 @@ class Template
     /**
      * @return bool
      */
-    public function isActive()
+    public function isActive(): bool
     {
         return $this->active;
     }
@@ -208,7 +208,7 @@ class Template
     /**
      * @param bool $active
      */
-    public function setActive($active)
+    public function setActive(bool $active): void
     {
         $this->active = $active;
     }
@@ -216,7 +216,7 @@ class Template
     /**
      * @return Collection
      */
-    public function getVariables()
+    public function getVariables(): Collection
     {
         return $this->variables;
     }
@@ -224,7 +224,7 @@ class Template
     /**
      * @return bool
      */
-    public function isSendToUser()
+    public function isSendToUser(): bool
     {
         return $this->sendToUser;
     }
@@ -232,7 +232,7 @@ class Template
     /**
      * @param bool $sendToUser
      */
-    public function setSendToUser($sendToUser)
+    public function setSendToUser(bool $sendToUser): void
     {
         $this->sendToUser = $sendToUser;
     }
@@ -240,7 +240,7 @@ class Template
     /**
      * @return bool
      */
-    public function isSendToOrganizer()
+    public function isSendToOrganizer(): bool
     {
         return $this->sendToOrganizer;
     }
@@ -248,7 +248,7 @@ class Template
     /**
      * @param bool $sendToOrganizer
      */
-    public function setSendToOrganizer($sendToOrganizer)
+    public function setSendToOrganizer(bool $sendToOrganizer): void
     {
         $this->sendToOrganizer = $sendToOrganizer;
     }
@@ -256,7 +256,7 @@ class Template
     /**
      * @return bool
      */
-    public function isSystem()
+    public function isSystem(): bool
     {
         return $this->system;
     }
@@ -264,7 +264,7 @@ class Template
     /**
      * @param bool $system
      */
-    public function setSystem($system)
+    public function setSystem(bool $system): void
     {
         $this->system = $system;
     }

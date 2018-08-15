@@ -415,6 +415,8 @@ class UsersGridControl extends Control
     /**
      * Zpracuje odstranění externího uživatele.
      * @param $id
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
     public function handleDelete($id)
@@ -432,6 +434,8 @@ class UsersGridControl extends Control
      * Změní stav uživatele.
      * @param $id
      * @param $approved
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
     public function changeApproved($id, $approved)
@@ -455,6 +459,8 @@ class UsersGridControl extends Control
      * Změní účast uživatele na semináři.
      * @param $id
      * @param $attended
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
     public function changeAttended($id, $attended)

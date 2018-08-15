@@ -126,6 +126,8 @@ class SubeventForm
      * Zpracuje formulář.
      * @param Form $form
      * @param array $values
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function processForm(Form $form, array $values)
     {
@@ -151,6 +153,8 @@ class SubeventForm
      * @param $args
      * @return bool
      * @throws \Doctrine\DBAL\ConnectionException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function validateIncompatibleAndRequiredCollision($field, $args)
     {

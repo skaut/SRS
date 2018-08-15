@@ -94,6 +94,9 @@ class SeminarForm
      * @param Form $form
      * @param array $values
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Throwable
      */
     public function processForm(Form $form, array $values)
     {

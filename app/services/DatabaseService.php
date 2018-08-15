@@ -58,6 +58,7 @@ class DatabaseService
 
     /**
      * Vytvoří zálohu databáze a spustí migrace. Spouští se pouze pokud není v cache záznam o provedeném update.
+     * @throws \Throwable
      */
     public function update()
     {

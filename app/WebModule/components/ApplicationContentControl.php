@@ -114,6 +114,7 @@ class ApplicationContentControl extends Control
      * @return \Nette\Application\UI\Form
      * @throws \App\Model\Settings\SettingsException
      * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Throwable
      */
     protected function createComponentApplicationForm()
     {

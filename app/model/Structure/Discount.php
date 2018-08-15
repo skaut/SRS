@@ -44,7 +44,7 @@ class Discount
     /**
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -52,7 +52,7 @@ class Discount
     /**
      * @return string
      */
-    public function getDiscountCondition()
+    public function getDiscountCondition(): string
     {
         return $this->discountCondition;
     }
@@ -60,7 +60,7 @@ class Discount
     /**
      * @param string $discountCondition
      */
-    public function setDiscountCondition($discountCondition)
+    public function setDiscountCondition(string $discountCondition): void
     {
         $this->discountCondition = $discountCondition;
     }
@@ -68,7 +68,7 @@ class Discount
     /**
      * @return int
      */
-    public function getDiscount()
+    public function getDiscount(): int
     {
         return $this->discount;
     }
@@ -76,7 +76,7 @@ class Discount
     /**
      * @param int $discount
      */
-    public function setDiscount($discount)
+    public function setDiscount(int $discount): void
     {
         $this->discount = $discount;
     }

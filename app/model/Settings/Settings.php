@@ -235,7 +235,7 @@ class Settings
     /**
      * @param string $item
      */
-    public function setItem(string $item)
+    public function setItem(string $item): void
     {
         $this->item = $item;
     }
@@ -251,7 +251,7 @@ class Settings
     /**
      * @param string $value
      */
-    public function setValue(?string $value)
+    public function setValue(?string $value): void
     {
         $this->value = $value;
     }

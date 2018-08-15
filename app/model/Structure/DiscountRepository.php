@@ -18,7 +18,7 @@ class DiscountRepository extends EntityRepository
      * @param $id
      * @return Discount|null
      */
-    public function findById($id)
+    public function findById(int $id): ?Discount
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -29,7 +29,7 @@ class DiscountRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function save(Discount $discount)
+    public function save(Discount $discount): void
     {
         $this->_em->persist($discount);
         $this->_em->flush();
@@ -41,7 +41,7 @@ class DiscountRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function remove(Discount $discount)
+    public function remove(Discount $discount): void
     {
         $this->_em->remove($discount);
         $this->_em->flush();

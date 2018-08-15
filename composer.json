@@ -3,6 +3,10 @@
 
     "require": {
         "php": ">=7.1",
+        "ext-iconv": "*",
+        "ext-json": "*",
+        "ext-mysqli": "*",
+
         "nette/nette": "^2.4",
         "nette/utils": "2.4.*",
 

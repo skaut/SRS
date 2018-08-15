@@ -70,8 +70,8 @@ class SchedulePresenter extends ApiBasePresenter
     /**
      * Vrací podrobnosti o programech, ke kterým má uživatel přístup, pro použití v kalendáři pro výběr programů.
      * @throws \App\Model\Settings\SettingsException
-     * @throws \Exception
      * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     public function actionGetProgramsWeb()
     {
@@ -112,6 +112,7 @@ class SchedulePresenter extends ApiBasePresenter
      * Vrací nastavení pro FullCalendar.
      * @throws \App\Model\Settings\SettingsException
      * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     public function actionGetCalendarConfig()
     {
@@ -126,8 +127,8 @@ class SchedulePresenter extends ApiBasePresenter
      * Uloží nebo vytvoří program.
      * @param $data
      * @throws \App\Model\Settings\SettingsException
-     * @throws \Exception
      * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     public function actionSaveProgram($data)
     {
@@ -145,6 +146,7 @@ class SchedulePresenter extends ApiBasePresenter
      * @param $id
      * @throws \App\Model\Settings\SettingsException
      * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     public function actionRemoveProgram($id)
     {
@@ -159,8 +161,8 @@ class SchedulePresenter extends ApiBasePresenter
      * Přihlásí program uživateli.
      * @param $id
      * @throws \App\Model\Settings\SettingsException
-     * @throws \Exception
      * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     public function actionAttendProgram($id)
     {
@@ -175,8 +177,10 @@ class SchedulePresenter extends ApiBasePresenter
      * Odhlásí program uživateli.
      * @param $id
      * @throws \App\Model\Settings\SettingsException
-     * @throws \Exception
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     public function actionUnattendProgram($id)
     {

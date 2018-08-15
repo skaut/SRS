@@ -46,7 +46,7 @@ abstract class CustomInputValue
     /**
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -54,7 +54,7 @@ abstract class CustomInputValue
     /**
      * @return CustomInput
      */
-    public function getInput()
+    public function getInput(): CustomInput
     {
         return $this->input;
     }
@@ -62,7 +62,7 @@ abstract class CustomInputValue
     /**
      * @param CustomInput $input
      */
-    public function setInput($input)
+    public function setInput(CustomInput $input): void
     {
         $this->input = $input;
     }
@@ -70,7 +70,7 @@ abstract class CustomInputValue
     /**
      * @return User
      */
-    public function getUser()
+    public function getUser(): User
     {
         return $this->user;
     }
@@ -78,7 +78,7 @@ abstract class CustomInputValue
     /**
      * @param User $user
      */
-    public function setUser($user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }

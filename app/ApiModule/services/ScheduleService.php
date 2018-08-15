@@ -284,7 +284,7 @@ class ScheduleService
      */
     public function attendProgram($programId)
     {
-        $program = $this->programRepository->find($programId);
+        $program = $this->programRepository->findById($programId);
 
         $responseDTO = new ResponseDTO();
         $responseDTO->setStatus('danger');
@@ -331,11 +331,13 @@ class ScheduleService
      * @param $programId
      * @return ResponseDTO
      * @throws \App\Model\Settings\SettingsException
-     * @throws \Exception
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Throwable
      */
     public function unattendProgram($programId)
     {
-        $program = $this->programRepository->find($programId);
+        $program = $this->programRepository->findById($programId);
 
         $responseDTO = new ResponseDTO();
         $responseDTO->setStatus('danger');

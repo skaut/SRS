@@ -68,6 +68,7 @@ class RolesForm
      * @param $id
      * @return Form
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
     public function create($id)
     {

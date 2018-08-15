@@ -36,6 +36,7 @@ abstract class ConfigurationBasePresenter extends AdminBasePresenter
     /**
      * @throws \App\Model\Settings\SettingsException
      * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Throwable
      */
     public function beforeRender()
     {

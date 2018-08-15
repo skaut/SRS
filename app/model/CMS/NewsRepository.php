@@ -31,7 +31,7 @@ class NewsRepository extends EntityRepository
      */
     public function findLastId(): int
     {
-        return $this->createQueryBuilder('n')
+        return (int) $this->createQueryBuilder('n')
             ->select('MAX(n.id)')
             ->getQuery()
             ->getSingleScalarResult();

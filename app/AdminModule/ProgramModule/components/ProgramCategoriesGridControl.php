@@ -133,6 +133,8 @@ class ProgramCategoriesGridControl extends Control
     /**
      * Zpracuje přidání kategorie.
      * @param $values
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
     public function add($values)

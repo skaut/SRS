@@ -86,6 +86,8 @@ class ProgramService
     /**
      * Aktualizuje programy uživatele (odhlásí nepovolené a přihlásí automaticky přihlašované).
      * @param User $user
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function updateUserPrograms(User $user)
     {
@@ -95,6 +97,8 @@ class ProgramService
     /**
      * Aktualizuje programy uživatelů (odhlásí nepovolené a přihlásí automaticky přihlašované).
      * @param Collection|User[] $users
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function updateUsersPrograms($users)
     {

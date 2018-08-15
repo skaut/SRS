@@ -73,6 +73,7 @@ class InstallPresenter extends InstallBasePresenter
     /**
      * Zobrazení první stránky průvodce.
      * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     public function renderDefault()
     {
@@ -167,6 +168,7 @@ class InstallPresenter extends InstallBasePresenter
     /**
      * Zobrazení stránky po úspěšné instalaci.
      * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     public function renderFinish()
     {
@@ -183,6 +185,7 @@ class InstallPresenter extends InstallBasePresenter
     /**
      * Zobrazení stránky pokud byla instalace dokončena dříve.
      * @throws \Nette\Application\AbortException
+     * @throws \Throwable
      */
     public function renderInstalled()
     {

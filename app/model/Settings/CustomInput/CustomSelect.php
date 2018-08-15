@@ -28,7 +28,7 @@ class CustomSelect extends CustomInput
     /**
      * @return string
      */
-    public function getOptions()
+    public function getOptions(): string
     {
         return $this->options;
     }
@@ -36,7 +36,7 @@ class CustomSelect extends CustomInput
     /**
      * @param string $options
      */
-    public function setOptions($options)
+    public function setOptions(string $options): void
     {
         $this->options = $options;
     }
@@ -45,7 +45,7 @@ class CustomSelect extends CustomInput
      * Vrátí možnosti jako možnosti pro select.
      * @return array
      */
-    public function prepareSelectOptions()
+    public function prepareSelectOptions(): array
     {
         $options = [];
 

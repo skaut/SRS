@@ -19,7 +19,7 @@ class MailRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function save(Mail $mail)
+    public function save(Mail $mail): void
     {
         $this->_em->persist($mail);
         $this->_em->flush();

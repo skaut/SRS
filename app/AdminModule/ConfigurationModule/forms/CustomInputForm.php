@@ -105,6 +105,8 @@ class CustomInputForm
      * @param Form $form
      * @param array $values
      * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function processForm(Form $form, array $values)
     {

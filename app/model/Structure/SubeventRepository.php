@@ -25,7 +25,7 @@ class SubeventRepository extends EntityRepository
     /**
      * @param Translator $translator
      */
-    public function injectTranslator(Translator $translator)
+    public function injectTranslator(Translator $translator): void
     {
         $this->translator = $translator;
     }
@@ -35,7 +35,7 @@ class SubeventRepository extends EntityRepository
      * @param $id
      * @return Subevent|null
      */
-    public function findById($id)
+    public function findById(int $id): ?Subevent
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -44,7 +44,7 @@ class SubeventRepository extends EntityRepository
      * Vrací implicitní podakci.
      * @return Subevent
      */
-    public function findImplicit()
+    public function findImplicit(): Subevent
     {
         return $this->findOneBy(['implicit' => TRUE]);
     }
@@ -53,7 +53,7 @@ class SubeventRepository extends EntityRepository
      * Vrací názvy všech podakcí.
      * @return string[]
      */
-    public function findAllNames()
+    public function findAllNames(): array
     {
         $names = $this->createQueryBuilder('s')
             ->select('s.name')
@@ -66,7 +66,7 @@ class SubeventRepository extends EntityRepository
      * Vrací vytvořené podakce, seřazené podle názvu.
      * @return Collection|Subevent[]
      */
-    public function findAllExplicitOrderedByName()
+    public function findAllExplicitOrderedByName(): Collection
     {
         $result = $this->createQueryBuilder('s')
             ->where('s.implicit = FALSE')
@@ -81,7 +81,7 @@ class SubeventRepository extends EntityRepository
      * @param $id
      * @return array
      */
-    public function findOthersNames($id)
+    public function findOthersNames(int $id): array
     {
         $names = $this->createQueryBuilder('s')
             ->select('s.name')
@@ -97,7 +97,7 @@ class SubeventRepository extends EntityRepository
      * @param $ids
      * @return Collection
      */
-    public function findSubeventsByIds($ids)
+    public function findSubeventsByIds(array $ids): Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids))
@@ -110,7 +110,7 @@ class SubeventRepository extends EntityRepository
      * @param $subevents
      * @return array
      */
-    public function findSubeventsIds($subevents)
+    public function findSubeventsIds(Collection $subevents): array
     {
         return array_map(function ($o) {
             return $o->getId();
@@ -122,9 +122,9 @@ class SubeventRepository extends EntityRepository
      * @return int
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function countExplicitSubevents()
+    public function countExplicitSubevents(): int
     {
-        return $this->createQueryBuilder('s')
+        return (int) $this->createQueryBuilder('s')
             ->select('COUNT(s.id)')
             ->where('s.implicit = FALSE')
             ->getQuery()
@@ -136,7 +136,7 @@ class SubeventRepository extends EntityRepository
      * @return bool
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function explicitSubeventsExists()
+    public function explicitSubeventsExists(): bool
     {
         return $this->countExplicitSubevents() > 0;
     }
@@ -145,7 +145,7 @@ class SubeventRepository extends EntityRepository
      * Vrací seznam podakcí jako možnosti pro select.
      * @return array
      */
-    public function getSubeventsOptions()
+    public function getSubeventsOptions(): array
     {
         $subevents = $this->createQueryBuilder('s')
             ->select('s.id, s.name')
@@ -165,7 +165,7 @@ class SubeventRepository extends EntityRepository
      * @param $subeventId
      * @return array
      */
-    public function getSubeventsWithoutSubeventOptions($subeventId)
+    public function getSubeventsWithoutSubeventOptions(int $subeventId): array
     {
         $subevents = $this->createQueryBuilder('s')
             ->select('s.id, s.name')
@@ -185,7 +185,7 @@ class SubeventRepository extends EntityRepository
      * Vrací seznam podakcí, jako možnosti pro select
      * @return array
      */
-    public function getExplicitOptions()
+    public function getExplicitOptions(): array
     {
         $subevents = $this->createQueryBuilder('s')
             ->where('s.implicit = FALSE')
@@ -204,7 +204,7 @@ class SubeventRepository extends EntityRepository
      * Vrací seznam podakcí, s informací o obsazenosti, jako možnosti pro select
      * @return array
      */
-    public function getSubeventsOptionsWithCapacity()
+    public function getSubeventsOptionsWithCapacity(): array
     {
         $subevents = $this->createQueryBuilder('s')
             ->orderBy('s.name')
@@ -229,7 +229,7 @@ class SubeventRepository extends EntityRepository
      * Vrací seznam podakcí, s informací o obsazenosti, jako možnosti pro select
      * @return array
      */
-    public function getExplicitOptionsWithCapacity()
+    public function getExplicitOptionsWithCapacity(): array
     {
         $subevents = $this->createQueryBuilder('s')
             ->where('s.implicit = FALSE')
@@ -256,7 +256,7 @@ class SubeventRepository extends EntityRepository
      * @param User $user
      * @return array
      */
-    public function getNonRegisteredSubeventsOptionsWithCapacity(User $user)
+    public function getNonRegisteredSubeventsOptionsWithCapacity(User $user): array
     {
         $usersSubevents = $user->getSubevents();
         $usersSubeventsIds = $this->findSubeventsIds($usersSubevents);
@@ -292,7 +292,7 @@ class SubeventRepository extends EntityRepository
      * @param User $user
      * @return array
      */
-    public function getNonRegisteredExplicitOptionsWithCapacity(User $user)
+    public function getNonRegisteredExplicitOptionsWithCapacity(User $user): array
     {
         $usersSubevents = $user->getSubevents();
         $usersSubeventsIds = $this->findSubeventsIds($usersSubevents);
@@ -331,7 +331,7 @@ class SubeventRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function save(Subevent $subevent)
+    public function save(Subevent $subevent): void
     {
         $this->_em->persist($subevent);
         $this->_em->flush();
@@ -343,7 +343,7 @@ class SubeventRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function remove(Subevent $subevent)
+    public function remove(Subevent $subevent): void
     {
         $this->_em->remove($subevent);
         $this->_em->flush();

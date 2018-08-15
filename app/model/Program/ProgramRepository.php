@@ -22,7 +22,7 @@ class ProgramRepository extends EntityRepository
      * @param $id
      * @return Program|null
      */
-    public function findById($id)
+    public function findById(int $id): ?Program
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -33,7 +33,7 @@ class ProgramRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function save(Program $program)
+    public function save(Program $program): void
     {
         $this->_em->persist($program);
         $this->_em->flush();
@@ -45,7 +45,7 @@ class ProgramRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function remove(Program $program)
+    public function remove(Program $program): void
     {
         $this->_em->remove($program);
         $this->_em->flush();
@@ -56,9 +56,9 @@ class ProgramRepository extends EntityRepository
      * @param $programs
      * @return array
      */
-    public function findProgramsIds($programs)
+    public function findProgramsIds(Collection $programs): array
     {
-        return array_map(function ($o) {
+        return array_map(function (Program $o) {
             return $o->getId();
         }, $programs->toArray());
     }
@@ -69,7 +69,7 @@ class ProgramRepository extends EntityRepository
      * @param Category $category
      * @return array
      */
-    public function findUserRegisteredAndInCategory(User $user, Category $category)
+    public function findUserRegisteredAndInCategory(User $user, Category $category): array
     {
         return $this->createQueryBuilder('p')
             ->select('p')
@@ -87,7 +87,7 @@ class ProgramRepository extends EntityRepository
      * @return int[]
      * @throws \Exception
      */
-    public function findBlockedProgramsIdsByProgram(Program $program)
+    public function findBlockedProgramsIdsByProgram(Program $program): array
     {
         return array_merge(
             $this->findOtherProgramsWithSameBlockIds($program),
@@ -100,7 +100,7 @@ class ProgramRepository extends EntityRepository
      * @param Program $program
      * @return int[]
      */
-    public function findOtherProgramsWithSameBlockIds(Program $program)
+    public function findOtherProgramsWithSameBlockIds(Program $program): array
     {
         $programs = $this->createQueryBuilder('p')
             ->select('p.id')
@@ -118,7 +118,7 @@ class ProgramRepository extends EntityRepository
      * @return int[]
      * @throws \Exception
      */
-    public function findOverlappingProgramsIds(Program $program)
+    public function findOverlappingProgramsIds(Program $program): array
     {
         $start = $program->getStart();
         $end = $program->getEnd();
@@ -146,7 +146,7 @@ class ProgramRepository extends EntityRepository
      * @param \DateTime $end
      * @return bool
      */
-    public function hasOverlappingProgram(Program $program, \DateTime $start, \DateTime $end)
+    public function hasOverlappingProgram(Program $program, \DateTime $start, \DateTime $end): bool
     {
         $qb = $this->createQueryBuilder('p')
             ->select('p.id')
@@ -174,7 +174,7 @@ class ProgramRepository extends EntityRepository
      * @param \DateTime $end
      * @return bool
      */
-    public function hasOverlappingAutoRegisterProgram(Program $program, \DateTime $start, \DateTime $end)
+    public function hasOverlappingAutoRegisterProgram(Program $program, \DateTime $start, \DateTime $end): bool
     {
         $qb = $this->createQueryBuilder('p')
             ->select('p.id')

@@ -166,6 +166,10 @@ abstract class AdminBasePresenter extends BasePresenter
         }
     }
 
+    /**
+     * @param int $roleId
+     * @throws \Nette\Application\AbortException
+     */
     public function handleChangeRole(int $roleId): void
     {
         $this->skautIsService->updateUserRole($roleId);

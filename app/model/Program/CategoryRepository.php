@@ -21,7 +21,7 @@ class CategoryRepository extends EntityRepository
      * @param $id
      * @return Category|null
      */
-    public function findById($id)
+    public function findById(int $id): ?Category
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -30,7 +30,7 @@ class CategoryRepository extends EntityRepository
      * Vrací kategorie seřazené podle názvu.
      * @return array
      */
-    public function findAllOrderedByName()
+    public function findAllOrderedByName(): array
     {
         return $this->createQueryBuilder('c')
             ->orderBy('c.name')
@@ -42,7 +42,7 @@ class CategoryRepository extends EntityRepository
      * Vrací názvy všech kategorií.
      * @return array
      */
-    public function findAllNames()
+    public function findAllNames(): array
     {
         $names = $this->createQueryBuilder('c')
             ->select('c.name')
@@ -56,7 +56,7 @@ class CategoryRepository extends EntityRepository
      * @param $id
      * @return array
      */
-    public function findOthersNames($id)
+    public function findOthersNames(int $id): array
     {
         $names = $this->createQueryBuilder('c')
             ->select('c.name')
@@ -87,7 +87,7 @@ class CategoryRepository extends EntityRepository
      * Vrací kategorie jako možnosti pro select.
      * @return array
      */
-    public function getCategoriesOptions()
+    public function getCategoriesOptions(): array
     {
         $categories = $this->createQueryBuilder('c')
             ->select('c.id, c.name')
@@ -108,7 +108,7 @@ class CategoryRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function save(Category $category)
+    public function save(Category $category): void
     {
         $this->_em->persist($category);
         $this->_em->flush();
@@ -120,7 +120,7 @@ class CategoryRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function remove(Category $category)
+    public function remove(Category $category): void
     {
         foreach ($category->getBlocks() as $block) {
             $block->setCategory(NULL);

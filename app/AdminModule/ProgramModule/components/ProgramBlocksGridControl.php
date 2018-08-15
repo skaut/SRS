@@ -211,6 +211,8 @@ class ProgramBlocksGridControl extends Control
     /**
      * Odstraní programový blok.
      * @param $id
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
     public function handleDelete($id)
@@ -233,6 +235,8 @@ class ProgramBlocksGridControl extends Control
      * Změní povinnost bloku.
      * @param $id
      * @param $mandatory
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
     public function changeMandatory($id, $mandatory)

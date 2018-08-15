@@ -20,7 +20,7 @@ class ApplicationRepository extends EntityRepository
      * @param $id
      * @return Application|null
      */
-    public function findById($id)
+    public function findById(int $id): ?Application
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -42,7 +42,7 @@ class ApplicationRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function save(Application $application)
+    public function save(Application $application): void
     {
         $this->_em->persist($application);
         $this->_em->flush();
@@ -54,7 +54,7 @@ class ApplicationRepository extends EntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function remove(Application $application)
+    public function remove(Application $application): void
     {
         $this->_em->remove($application);
         $this->_em->flush();

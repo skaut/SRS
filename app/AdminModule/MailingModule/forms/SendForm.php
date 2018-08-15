@@ -104,6 +104,7 @@ class SendForm
      * @param Form $form
      * @param array $values
      * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      * @throws \Ublaboo\Mailing\Exception\MailingException
      * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
      */
