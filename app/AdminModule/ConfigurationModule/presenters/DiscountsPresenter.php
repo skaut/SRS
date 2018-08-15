@@ -45,10 +45,12 @@ class DiscountsPresenter extends ConfigurationBasePresenter
         $control->onConditionError[] = function (DiscountForm $control) {
             $this->flashMessage('admin.configuration.discounts_condition_format', 'danger');
 
-            if ($control->id)
+            if ($control->id) {
                 $this->redirect('Discounts:edit', ['id' => $control->id]);
-            else
+            }
+            else {
                 $this->redirect('Discounts:add');
+            }
         };
 
         return $control;

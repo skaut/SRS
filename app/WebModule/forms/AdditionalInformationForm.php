@@ -125,38 +125,44 @@ class AdditionalInformationForm extends UI\Control
             switch ($customInput->getType()) {
                 case CustomInput::TEXT:
                     $custom = $form->addText('custom' . $customInput->getId(), $customInput->getName());
-                    if ($customInputValue)
+                    if ($customInputValue) {
                         $custom->setDefaultValue($customInputValue->getValue());
+                    }
                     break;
 
                 case CustomInput::CHECKBOX:
                     $custom = $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName());
-                    if ($customInputValue)
+                    if ($customInputValue) {
                         $custom->setDefaultValue($customInputValue->getValue());
+                    }
                     break;
 
                 case CustomInput::SELECT:
                     $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->prepareSelectOptions());
-                    if ($customInputValue)
+                    if ($customInputValue) {
                         $custom->setDefaultValue($customInputValue->getValue());
+                    }
                     break;
 
                 case CustomInput::FILE:
                     $custom = $form->addUpload('custom' . $customInput->getId(), $customInput->getName());
-                    if ($customInputValue && $customInputValue->getValue())
+                    if ($customInputValue && $customInputValue->getValue()) {
                         $custom->setAttribute('data-current-file-link', $customInputValue->getValue())
                             ->setAttribute('data-current-file-name', array_values(array_slice(explode('/', $customInputValue->getValue()), -1))[0]);
+                    }
                     break;
 
                 default:
                     throw new \InvalidArgumentException();
             }
 
-            if ($customInput->isMandatory() && $customInput->getType() != CustomInput::FILE)
+            if ($customInput->isMandatory() && $customInput->getType() != CustomInput::FILE) {
                 $custom->addRule(Form::FILLED, 'web.profile.custom_input_empty');
+            }
 
-            if (!$this->applicationService->isAllowedEditCustomInputs())
+            if (!$this->applicationService->isAllowedEditCustomInputs()) {
                 $custom->setDisabled();
+            }
         }
 
         $form->addTextArea('about', 'web.profile.about_me');
@@ -227,17 +233,20 @@ class AdditionalInformationForm extends UI\Control
                     $customInputValue->setInput($customInput);
                     $this->customInputValueRepository->save($customInputValue);
 
-                    if ($oldValue !== $customInputValue->getValue())
+                    if ($oldValue !== $customInputValue->getValue()) {
                         $customInputValueChanged = TRUE;
+                    }
                 }
             }
 
             $this->user->setAbout($values['about']);
 
-            if (array_key_exists('arrival', $values))
+            if (array_key_exists('arrival', $values)) {
                 $this->user->setArrival($values['arrival']);
-            if (array_key_exists('departure', $values))
+            }
+            if (array_key_exists('departure', $values)) {
                 $this->user->setDeparture($values['departure']);
+            }
 
             $this->userRepository->save($this->user);
 

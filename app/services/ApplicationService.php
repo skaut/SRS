@@ -132,19 +132,22 @@ class ApplicationService
         $applicationVariableSymbol = "-";
 
         if ($rolesApplication->getFee() > 0 && $subeventsApplication->getFee() > 0) {
-            if ($rolesApplication->getMaturityDate())
+            if ($rolesApplication->getMaturityDate()) {
                 $applicatonMaturity = $rolesApplication->getMaturityDateText();
+            }
             $applicationFee = $rolesApplication->getFee() . ", " . $subeventsApplication->getFee();
             $applicationVariableSymbol = $rolesApplication->getVariableSymbolText() . ", "
                 . $subeventsApplication->getVariableSymbolText();
         } elseif ($rolesApplication->getFee() > 0) {
-            if ($rolesApplication->getMaturityDate())
+            if ($rolesApplication->getMaturityDate()) {
                 $applicatonMaturity = $rolesApplication->getMaturityDateText();
+            }
             $applicationFee = $rolesApplication->getFee();
             $applicationVariableSymbol = $rolesApplication->getVariableSymbolText();
         } elseif ($subeventsApplication->getFee() > 0) {
-            if ($subeventsApplication->getMaturityDate())
+            if ($subeventsApplication->getMaturityDate()) {
                 $applicatonMaturity = $subeventsApplication->getMaturityDateText();
+            }
             $applicationFee = $subeventsApplication->getFee();
             $applicationVariableSymbol = $subeventsApplication->getVariableSymbolText();
         }
@@ -185,8 +188,9 @@ class ApplicationService
                 return $role->getId();
             })->toArray();
 
-            if (array_diff($rolesArray, $oldRolesArray) === array_diff($oldRolesArray, $rolesArray))
+            if (array_diff($rolesArray, $oldRolesArray) === array_diff($oldRolesArray, $rolesArray)) {
                 return;
+            }
         }
 
         $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($user, $roles, $createdBy, $approve, $oldRoles) {
@@ -330,8 +334,9 @@ class ApplicationService
                 return $subevent->getId();
             })->toArray();
 
-            if (array_diff($subeventsArray, $oldSubeventsArray) === array_diff($oldSubeventsArray, $subeventsArray))
+            if (array_diff($subeventsArray, $oldSubeventsArray) === array_diff($oldSubeventsArray, $subeventsArray)) {
                 return;
+            }
         }
 
         $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($application, $subevents, $createdBy) {
@@ -412,8 +417,9 @@ class ApplicationService
         //pokud neni zmena, nic se neprovede
         if ($variableSymbol == $oldVariableSymbol && $paymentMethod == $oldPaymentMethod
             && $paymentDate == $oldPaymentDate && $incomeProofPrintedDate == $oldIncomeProofPrintedDate
-            && $maturityDate == $oldMaturityDate)
+            && $maturityDate == $oldMaturityDate) {
             return;
+        }
 
         $this->applicationRepository->getEntityManager()->transactional(function ($em) use (
             $application,
@@ -469,14 +475,16 @@ class ApplicationService
      */
     private function createRolesApplication(User $user, Collection $roles, User $createdBy, bool $approve = FALSE): RolesApplication
     {
-        if (!$user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED)))
+        if (!$user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))) {
             throw new \InvalidArgumentException("User is already registered.");
+        }
 
         $user->setApproved(TRUE);
         if (!$approve && $roles->exists(function (int $key, Role $role) {
             return !$role->isApprovedAfterRegistration();
-        }))
+        })) {
             $user->setApproved(FALSE);
+        }
 
         $user->setRoles($roles);
         $this->userRepository->save($user);
@@ -575,8 +583,9 @@ class ApplicationService
                     $date->modify('+1 days');
                     $holidays = Yasumi::create('CzechRepublic', $date->format('Y'));
 
-                    if ($holidays->isWorkingDay($date))
+                    if ($holidays->isWorkingDay($date)) {
                         $i++;
+                    }
                 }
 
                 return $date;
@@ -594,10 +603,12 @@ class ApplicationService
         $fee = 0;
 
         foreach ($roles as $role) {
-            if ($role->getFee() === 0)
+            if ($role->getFee() === 0) {
                 return 0;
-            elseif ($role->getFee() > 0)
+            }
+            elseif ($role->getFee() > 0) {
                 $fee += $role->getFee();
+            }
         }
 
         return $fee;
@@ -614,8 +625,9 @@ class ApplicationService
         $fee = 0;
 
         foreach ($roles as $role) {
-            if ($role->getFee() === 0)
+            if ($role->getFee() === 0) {
                 return 0;
+            }
             elseif ($role->getFee() === NULL) {
                 foreach ($subevents as $subevent) {
                     $fee += $subevent->getFee();
@@ -635,18 +647,23 @@ class ApplicationService
      */
     private function getApplicationState(Application $application)
     {
-        if ($application->getState() == ApplicationState::CANCELED)
+        if ($application->getState() == ApplicationState::CANCELED) {
             return ApplicationState::CANCELED;
+        }
 
-        if ($application->getState() == ApplicationState::CANCELED_NOT_PAID)
+        if ($application->getState() == ApplicationState::CANCELED_NOT_PAID) {
             return ApplicationState::CANCELED_NOT_PAID;
+        }
 
-        if ($application->getFee() == 0)
+        if ($application->getFee() == 0) {
             return ApplicationState::PAID_FREE;
-        elseif ($application->getPaymentDate())
+        }
+        elseif ($application->getPaymentDate()) {
             return ApplicationState::PAID;
-        else
+        }
+        else {
             return ApplicationState::WAITING_FOR_PAYMENT;
+        }
     }
 
     /**
@@ -658,8 +675,9 @@ class ApplicationService
     {
         $state = $this->translator->translate('common.application_state.' . $application->getState());
 
-        if ($application->getState() == ApplicationState::PAID)
+        if ($application->getState() == ApplicationState::PAID) {
             $state .= ' (' . $application->getPaymentDate()->format(Helpers::DATE_FORMAT) . ')';
+        }
 
         return $state;
     }

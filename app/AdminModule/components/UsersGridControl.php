@@ -651,10 +651,12 @@ class UsersGridControl extends Control
             $this->redirect('this');
         }
 
-        if ($skautIsEventService->insertParticipants($eventId, $users, $value ?: FALSE))
+        if ($skautIsEventService->insertParticipants($eventId, $users, $value ?: FALSE)) {
             $p->flashMessage('admin.users.users_group_action_insert_into_skaut_is_error_not_draft_successful', 'success');
-        else
+        }
+        else {
             $p->flashMessage('admin.users.users_group_action_insert_into_skaut_is_error_skaut_is', 'danger');
+        }
 
         $this->redirect('this');
     }

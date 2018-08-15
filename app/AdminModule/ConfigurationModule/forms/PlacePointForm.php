@@ -90,8 +90,9 @@ class PlacePointForm
     public function processForm(Form $form, array $values)
     {
         if (!$form['cancel']->isSubmittedBy()) {
-            if (!$this->placePoint)
+            if (!$this->placePoint) {
                 $this->placePoint = new PlacePoint();
+            }
 
             $this->placePoint->setName($values['name']);
             $this->placePoint->setGpsLat($values['gps']->lat);

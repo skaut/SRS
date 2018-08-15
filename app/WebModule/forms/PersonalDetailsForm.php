@@ -136,16 +136,21 @@ class PersonalDetailsForm
      */
     public function processForm(Form $form, array $values)
     {
-        if (array_key_exists('sex', $values))
+        if (array_key_exists('sex', $values)) {
             $this->user->setSex($values['sex']);
-        if (array_key_exists('firstName', $values))
+        }
+        if (array_key_exists('firstName', $values)) {
             $this->user->setFirstName($values['firstName']);
-        if (array_key_exists('lastName', $values))
+        }
+        if (array_key_exists('lastName', $values)) {
             $this->user->setLastName($values['lastName']);
-        if (array_key_exists('nickName', $values))
+        }
+        if (array_key_exists('nickName', $values)) {
             $this->user->setNickName($values['nickName']);
-        if (array_key_exists('birthdate', $values))
+        }
+        if (array_key_exists('birthdate', $values)) {
             $this->user->setBirthdate($values['birthdate']);
+        }
 
         $this->user->setStreet($values['street']);
         $this->user->setCity($values['city']);

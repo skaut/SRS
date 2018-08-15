@@ -38,10 +38,12 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
      */
     public function flashMessage($message, $type = 'info', $icon = NULL, $count = NULL, $parameters = [])
     {
-        if ($icon)
+        if ($icon) {
             return parent::flashMessage('<span class="fa fa-' . $icon . '"></span> ' .
                 $this->translator->translate($message, $count, $parameters), $type);
-        else
+        }
+        else {
             return parent::flashMessage($this->translator->translate($message, $count, $parameters), $type);
+        }
     }
 }

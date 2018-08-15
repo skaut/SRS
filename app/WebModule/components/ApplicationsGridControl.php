@@ -164,12 +164,15 @@ class ApplicationsGridControl extends Control
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
 
-        if (!$explicitSubeventsExists)
+        if (!$explicitSubeventsExists) {
             $qb = $this->rolesApplicationRepository;
-        elseif (!$userHasFixedFeeRole)
+        }
+        elseif (!$userHasFixedFeeRole) {
             $qb = $this->subeventsApplicationRepository;
-        else
+        }
+        else {
             $qb = $this->applicationRepository;
+        }
 
         $qb = $qb->createQueryBuilder('a')
             ->join('a.user', 'u')
@@ -184,11 +187,13 @@ class ApplicationsGridControl extends Control
         $grid->addColumnDateTime('applicationDate', 'web.profile.applications_application_date')
             ->setFormat(Helpers::DATETIME_FORMAT);
 
-        if ($userHasFixedFeeRole)
-        $grid->addColumnText('roles', 'web.profile.applications_roles', 'rolesText');
+        if ($userHasFixedFeeRole) {
+            $grid->addColumnText('roles', 'web.profile.applications_roles', 'rolesText');
+        }
 
-        if ($explicitSubeventsExists)
+        if ($explicitSubeventsExists) {
             $grid->addColumnText('subevents', 'web.profile.applications_subevents', 'subeventsText');
+        }
 
         $grid->addColumnNumber('fee', 'web.profile.applications_fee');
 

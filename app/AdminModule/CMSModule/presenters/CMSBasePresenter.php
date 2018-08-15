@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\CMSModule\Presenters;
@@ -6,7 +7,8 @@ namespace App\AdminModule\CMSModule\Presenters;
 use App\AdminModule\Presenters\AdminBasePresenter;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
-
+use App\Model\Settings\SettingsException;
+use Nette\Application\AbortException;
 
 /**
  * BasePresenter pro CMSModule.
@@ -19,9 +21,9 @@ abstract class CMSBasePresenter extends AdminBasePresenter
 
 
     /**
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
-    public function startup(): void
+    public function startup() : void
     {
         parent::startup();
 
@@ -29,13 +31,13 @@ abstract class CMSBasePresenter extends AdminBasePresenter
     }
 
     /**
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
-    public function beforeRender(): void
+    public function beforeRender() : void
     {
         parent::beforeRender();
 
-        $this->template->sidebarVisible = TRUE;
+        $this->template->sidebarVisible = true;
     }
 }

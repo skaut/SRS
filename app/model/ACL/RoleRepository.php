@@ -217,14 +217,16 @@ class RoleRepository extends EntityRepository
 
         $options = [];
         foreach ($roles as $role) {
-            if ($role->hasLimitedCapacity())
-                $options[$role->getId()] = $this->translator->translate('web.common.role_option', NULL, [
+            if ($role->hasLimitedCapacity()) {
+                $options[$role->getId()] = $this->translator->translate('web.common.role_option', null, [
                     'role' => $role->getName(),
                     'occupied' => $role->countUsers(),
                     'total' => $role->getCapacity()
                 ]);
-            else
+            }
+            else {
                 $options[$role->getId()] = $role->getName();
+            }
         }
         return $options;
     }
@@ -273,8 +275,9 @@ class RoleRepository extends EntityRepository
                     'occupied' => $role->countUsers(),
                     'total' => $role->getCapacity()
                 ]);
-            else
+            else {
                 $options[$role->getId()] = $role->getName();
+            }
         }
         return $options;
     }
@@ -315,13 +318,14 @@ class RoleRepository extends EntityRepository
      */
     public function getRolesWithoutRolesOptions(array $withoutRoles): array
     {
-        if (empty($withoutRoles))
+        if (empty($withoutRoles)) {
             $roles = $this->createQueryBuilder('r')
                 ->select('r.id, r.name')
                 ->orderBy('r.name')
                 ->getQuery()
                 ->getResult();
-        else
+        }
+        else {
             $roles = $this->createQueryBuilder('r')
                 ->select('r.id, r.name')
                 ->where('r.systemName NOT IN (:roles)')->setParameter('roles', $withoutRoles)
@@ -329,6 +333,7 @@ class RoleRepository extends EntityRepository
                 ->orderBy('r.name')
                 ->getQuery()
                 ->getResult();
+        }
 
         $options = [];
         foreach ($roles as $role) {
@@ -344,18 +349,20 @@ class RoleRepository extends EntityRepository
      */
     public function getRolesWithoutRolesOptionsWithCapacity(array $withoutRoles): array
     {
-        if (empty($withoutRoles))
+        if (empty($withoutRoles)) {
             $roles = $this->createQueryBuilder('r')
                 ->orderBy('r.name')
                 ->getQuery()
                 ->getResult();
-        else
+        }
+        else {
             $roles = $this->createQueryBuilder('r')
                 ->where('r.systemName NOT IN (:roles)')->setParameter('roles', $withoutRoles)
                 ->orWhere('r.systemName IS NULL')
                 ->orderBy('r.name')
                 ->getQuery()
                 ->getResult();
+        }
 
         $options = [];
         foreach ($roles as $role) {
@@ -365,8 +372,9 @@ class RoleRepository extends EntityRepository
                     'occupied' => $role->countUsers(),
                     'total' => $role->getCapacity()
                 ]);
-            else
+            else {
                 $options[$role->getId()] = $role->getName();
+            }
         }
         return $options;
     }
@@ -378,18 +386,20 @@ class RoleRepository extends EntityRepository
      */
     public function getRolesWithoutRolesOptionsWithApprovedUsersCount(array $withoutRoles): array
     {
-        if (empty($withoutRoles))
+        if (empty($withoutRoles)) {
             $roles = $this->createQueryBuilder('r')
                 ->orderBy('r.name')
                 ->getQuery()
                 ->getResult();
-        else
+        }
+        else {
             $roles = $this->createQueryBuilder('r')
                 ->where('r.systemName NOT IN (:roles)')->setParameter('roles', $withoutRoles)
                 ->orWhere('r.systemName IS NULL')
                 ->orderBy('r.name')
                 ->getQuery()
                 ->getResult();
+        }
 
         $options = [];
         foreach ($roles as $role) {

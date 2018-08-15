@@ -162,8 +162,9 @@ class ApplicationsGridControl extends Control
         $grid->addColumnText('paymentMethod', 'admin.users.users_applications_payment_method')
             ->setRenderer(function ($row) {
                 $paymentMethod = $row->getPaymentMethod();
-                if ($paymentMethod)
+                if ($paymentMethod) {
                     return $this->translator->translate('common.payment.' . $paymentMethod);
+                }
                 return NULL;
             });
 

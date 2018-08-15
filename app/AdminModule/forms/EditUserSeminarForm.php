@@ -142,20 +142,23 @@ class EditUserSeminarForm
             switch ($customInput->getType()) {
                 case CustomInput::TEXT:
                     $custom = $form->addText('custom' . $customInput->getId(), $customInput->getName());
-                    if ($customInputValue)
+                    if ($customInputValue) {
                         $custom->setDefaultValue($customInputValue->getValue());
+                    }
                     break;
 
                 case CustomInput::CHECKBOX:
                     $custom = $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName());
-                    if ($customInputValue)
+                    if ($customInputValue) {
                         $custom->setDefaultValue($customInputValue->getValue());
+                    }
                     break;
 
                 case CustomInput::SELECT:
                     $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->prepareSelectOptions());
-                    if ($customInputValue)
+                    if ($customInputValue) {
                         $custom->setDefaultValue($customInputValue->getValue());
+                    }
                     break;
 
                 case CustomInput::FILE:
@@ -247,15 +250,18 @@ class EditUserSeminarForm
                     $customInputValue->setInput($customInput);
                     $this->customInputValueRepository->save($customInputValue);
 
-                    if ($oldValue !== $customInputValue->getValue())
+                    if ($oldValue !== $customInputValue->getValue()) {
                         $customInputValueChanged = TRUE;
+                    }
                 }
 
-                if (array_key_exists('arrival', $values))
+                if (array_key_exists('arrival', $values)) {
                     $this->user->setArrival($values['arrival']);
+                }
 
-                if (array_key_exists('departure', $values))
+                if (array_key_exists('departure', $values)) {
                     $this->user->setDeparture($values['departure']);
+                }
 
                 $this->user->setAbout($values['about']);
 

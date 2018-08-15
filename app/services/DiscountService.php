@@ -82,8 +82,9 @@ class DiscountService
                 continue;
             }
 
-            if ($result)
+            if ($result) {
                 $totalDiscount += $discount->getDiscount();
+            }
         }
 
         return $totalDiscount;
@@ -134,10 +135,12 @@ class DiscountService
 
                 case Discount::SUBEVENT_ID:
                     $subevent = $this->subeventRepository->findById($symbol['value']);
-                    if ($subevent === NULL)
+                    if ($subevent === NULL) {
                         $text .= '"' . $this->translator->translate('admin.configuration.subevents_invalid_subevent') . '"';
-                    else
+                    }
+                    else {
                         $text .= '"' . $subevent->getName() . '"';
+                    }
                     break;
             }
         }
@@ -151,10 +154,12 @@ class DiscountService
 
         $this->symbols = [];
         foreach ($tokens as $token) {
-            if (is_numeric($token))
+            if (is_numeric($token)) {
                 $this->symbols[] = ['symbol' => Discount::SUBEVENT_ID, 'value' => $token];
-            else
+            }
+            else {
                 $this->symbols[] = ['symbol' => $token];
+            }
         }
 
         $this->currentSymbol = 0;
@@ -177,8 +182,9 @@ class DiscountService
 
     private function accept($symbol)
     {
-        if ($this->symbol() == $symbol)
+        if ($this->symbol() == $symbol) {
             $this->nextSymbol();
+        }
         else
             throw new InvalidArgumentException;
     }

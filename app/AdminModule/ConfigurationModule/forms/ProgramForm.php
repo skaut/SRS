@@ -128,8 +128,9 @@ class ProgramForm
      */
     public function validateRegisterProgramsFrom($field, $args)
     {
-        if ($args[0] === NULL || $args[1] == NULL)
-            return TRUE;
+        if ($args[0] === NULL || $args[1] == NULL) {
+            return true;
+        }
         return $args[0] < $args[1];
     }
 
@@ -141,8 +142,9 @@ class ProgramForm
      */
     public function validateRegisterProgramsTo($field, $args)
     {
-        if ($args[0] === NULL || $args[1] == NULL)
-            return TRUE;
+        if ($args[0] === NULL || $args[1] == NULL) {
+            return true;
+        }
         return $args[0] > $args[1];
     }
 
@@ -153,8 +155,9 @@ class ProgramForm
     private function prepareRegisterProgramsTypeOptions()
     {
         $options = [];
-        foreach (RegisterProgramsType::$types as $type)
+        foreach (RegisterProgramsType::$types as $type) {
             $options[$type] = 'common.register_programs_type.' . $type;
+        }
         return $options;
     }
 }

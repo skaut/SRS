@@ -213,10 +213,12 @@ class EditRoleForm
                 $this->role->setIncompatibleRoles($this->roleRepository->findRolesByIds($values['incompatibleRoles']));
                 $this->role->setRequiredRoles($this->roleRepository->findRolesByIds($values['requiredRoles']));
 
-                if ($values['feeFromSubevents'])
+                if ($values['feeFromSubevents']) {
                     $this->role->setFee(NULL);
-                else
+                }
+                else {
                     $this->role->setFee($values['fee']);
+                }
 
                 $this->roleRepository->save($this->role);
 
@@ -297,8 +299,9 @@ class EditRoleForm
                     break;
                 }
             }
-            if (!$valid)
+            if (!$valid) {
                 break;
+            }
         }
 
         $this->roleRepository->getEntityManager()->getConnection()->rollBack();

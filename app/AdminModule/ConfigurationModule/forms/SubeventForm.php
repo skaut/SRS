@@ -132,8 +132,9 @@ class SubeventForm
     public function processForm(Form $form, array $values)
     {
         if (!$form['cancel']->isSubmittedBy()) {
-            if (!$this->subevent)
+            if (!$this->subevent) {
                 $this->subevent = new Subevent();
+            }
 
             $capacity = $values['capacity'] !== '' ? $values['capacity'] : NULL;
 
@@ -183,8 +184,9 @@ class SubeventForm
                     break;
                 }
             }
-            if (!$valid)
+            if (!$valid) {
                 break;
+            }
         }
 
         $this->subeventRepository->save($editedSubevent);

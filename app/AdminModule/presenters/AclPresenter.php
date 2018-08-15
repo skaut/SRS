@@ -125,8 +125,9 @@ class AclPresenter extends AdminBasePresenter
             if ($form['submitAndContinue']->isSubmittedBy()) {
                 $id = $values['id'];
                 $this->redirect('Acl:edit', ['id' => $id]);
-            } else
+            } else {
                 $this->redirect('Acl:default');
+            }
         };
 
         return $form;

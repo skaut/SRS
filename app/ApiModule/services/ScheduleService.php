@@ -129,8 +129,9 @@ class ScheduleService
 
         foreach ($programDetailDTOs as $p1) {
             foreach ($programDetailDTOs as $p2) {
-                if ($p1 != $p2 && $p1->isUserAttends() && in_array($p2->getId(), $p1->getBlocks()))
+                if ($p1 != $p2 && $p1->isUserAttends() && in_array($p2->getId(), $p1->getBlocks())) {
                     $p2->setBlocked(TRUE);
+                }
             }
         }
 
@@ -195,10 +196,12 @@ class ScheduleService
      */
     public function saveProgram(ProgramSaveDTO $programSaveDTO)
     {
-        if ($programSaveDTO->getId())
+        if ($programSaveDTO->getId()) {
             $program = $this->programRepository->findById($programSaveDTO->getId());
-        else
+        }
+        else {
             $program = new Program();
+        }
 
         $responseDTO = new ResponseDTO();
         $responseDTO->setStatus('danger');
@@ -209,16 +212,21 @@ class ScheduleService
         $end = clone $start;
         $end->add(new \DateInterval('PT' . $block->getDuration() . 'M'));
 
-        if (!$this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE))
+        if (!$this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_user_not_allowed_manage'));
-        elseif (!$this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE))
+        }
+        elseif (!$this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_not_allowed_modfify'));
-        elseif ($room && $this->roomRepository->hasOverlappingProgram($room, $program, $start, $end))
+        }
+        elseif ($room && $this->roomRepository->hasOverlappingProgram($room, $program, $start, $end)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_room_occupied', NULL, ['name' => $room->getName()]));
-        elseif ($block->getMandatory() == 2 && $this->programRepository->hasOverlappingProgram($program, $start, $end))
+        }
+        elseif ($block->getMandatory() == 2 && $this->programRepository->hasOverlappingProgram($program, $start, $end)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_auto_register_not_allowed'));
-        elseif ($this->programRepository->hasOverlappingAutoRegisterProgram($program, $start, $end))
+        }
+        elseif ($this->programRepository->hasOverlappingAutoRegisterProgram($program, $start, $end)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_auto_register_not_allowed'));
+        }
         else {
             $program->setBlock($block);
             $program->setRoom($room);
@@ -255,12 +263,15 @@ class ScheduleService
         $responseDTO = new ResponseDTO();
         $responseDTO->setStatus('danger');
 
-        if (!$this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE))
+        if (!$this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_user_not_allowed_manage'));
-        elseif (!$this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE))
+        }
+        elseif (!$this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_not_allowed_modfify'));
-        elseif (!$program)
+        }
+        elseif (!$program) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_program_not_found'));
+        }
         else {
             $programDetailDTO = new ProgramDetailDTO();
             $programDetailDTO->setId($program->getId());
@@ -289,27 +300,35 @@ class ScheduleService
         $responseDTO = new ResponseDTO();
         $responseDTO->setStatus('danger');
 
-        if (!$this->user->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS))
+        if (!$this->user->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_user_not_allowed_register_programs'));
-        elseif (!$this->programService->isAllowedRegisterPrograms())
+        }
+        elseif (!$this->programService->isAllowedRegisterPrograms()) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_register_programs_not_allowed'));
+        }
         elseif (!$this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT) &&
             !$this->user->hasPaidSubevent($program->getBlock()->getSubevent())
-        )
+        ) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_register_programs_before_payment_not_allowed'));
-        elseif (!$program)
+        }
+        elseif (!$program) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_program_not_found'));
-        elseif ($this->user->getPrograms()->contains($program))
+        }
+        elseif ($this->user->getPrograms()->contains($program)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_program_already_registered'));
-        elseif ($program->getCapacity() !== NULL && $program->getCapacity() <= $program->getAttendeesCount())
+        }
+        elseif ($program->getCapacity() !== NULL && $program->getCapacity() <= $program->getAttendeesCount()) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_program_no_vacancies'));
-        elseif (!($this->programService->getUserAllowedPrograms($this->user))->contains($program))
+        }
+        elseif (!($this->programService->getUserAllowedPrograms($this->user))->contains($program)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_program_category_not_allowed'));
+        }
         elseif (count(
             array_intersect($this->programRepository->findBlockedProgramsIdsByProgram($program),
                 $this->programRepository->findProgramsIds($this->user->getPrograms()))
-        ))
+        )) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_program_blocked'));
+        }
         else {
             $this->user->addProgram($program);
             $this->userRepository->save($this->user);
@@ -342,12 +361,15 @@ class ScheduleService
         $responseDTO = new ResponseDTO();
         $responseDTO->setStatus('danger');
 
-        if (!$this->programService->isAllowedRegisterPrograms())
+        if (!$this->programService->isAllowedRegisterPrograms()) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_register_programs_not_allowed'));
-        elseif (!$program)
+        }
+        elseif (!$program) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_program_not_found'));
-        elseif (!$this->user->getPrograms()->contains($program))
+        }
+        elseif (!$this->user->getPrograms()->contains($program)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_program_not_registered'));
+        }
         else {
             $this->user->removeProgram($program);
             $this->userRepository->save($this->user);

@@ -80,8 +80,9 @@ class UserService
             }
         }
 
-        if ($paymentMethod)
+        if ($paymentMethod) {
             return $this->translator->translate('common.payment.' . $paymentMethod);
+        }
 
         return NULL;
     }

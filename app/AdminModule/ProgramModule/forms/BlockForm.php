@@ -130,15 +130,18 @@ class BlockForm
             ->setPrompt('');
 
 
-        if ($this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS))
+        if ($this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS)) {
             $lectorsOptions = $this->userRepository->getLectorsOptions();
-        else
+        }
+        else {
             $lectorsOptions = [$this->user->getId() => $this->user->getDisplayName()];
+        }
 
         $lectorColumn = $form->addSelect('lector', 'admin.program.blocks_lector', $lectorsOptions);
 
-        if ($this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS))
+        if ($this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS)) {
             $lectorColumn->setPrompt('');
+        }
 
 
         $form->addText('duration', 'admin.program.blocks_duration_form')
@@ -222,11 +225,13 @@ class BlockForm
         if (!$form['cancel']->isSubmittedBy()) {
             $this->blockRepository->getEntityManager()->transactional(function ($em) use ($values) {
                 if (!$this->block) {
-                    if (!$this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK))
+                    if (!$this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK)) {
                         return;
+                    }
                     $this->block = new Block();
-                } else if (!$this->user->isAllowedModifyBlock($this->block))
+                } else if (!$this->user->isAllowedModifyBlock($this->block)) {
                     return;
+                }
 
                 $oldMandatory = $this->block->getMandatory();
                 $oldCategory = $this->block->getCategory();
@@ -297,8 +302,9 @@ class BlockForm
                             $this->block->getPrograms()->first()->getEnd())
                     )
                 )
-            )
-                return FALSE;
+            ) {
+                return false;
+            }
         }
         return TRUE;
     }

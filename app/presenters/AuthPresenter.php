@@ -102,10 +102,12 @@ class AuthPresenter extends BasePresenter
     private function redirectAfterLogin($returnUrl)
     {
         if ($returnUrl) {
-            if (strpos($returnUrl, ':') !== FALSE)
+            if (strpos($returnUrl, ':') !== FALSE) {
                 $this->redirect($returnUrl);
-            else
+            }
+            else {
                 $this->redirectUrl($returnUrl);
+            }
         }
 
         //pokud neni navratova adresa, presmerovani podle role
@@ -128,10 +130,12 @@ class AuthPresenter extends BasePresenter
         }
 
         //pokud nema role nastaveno presmerovani, nebo je uzivatel v rolich s ruznymi presmerovani, je presmerovan na vychozi stranku
-        if ($redirectByRole && !$multipleRedirects)
+        if ($redirectByRole && !$multipleRedirects) {
             $slug = $redirectByRole;
-        else
+        }
+        else {
             $slug = $this->settingsRepository->getValue(Settings::REDIRECT_AFTER_LOGIN);
+        }
 
         $this->redirect(':Web:Page:default', ['slug' => $slug]);
     }

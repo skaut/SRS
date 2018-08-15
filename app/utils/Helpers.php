@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Utils;
-
 
 /**
  * Třída s pomocnými metodami.
@@ -17,17 +17,17 @@ class Helpers
 
     /**
      * Zkrátí $text na $length znaků a doplní '...'.
-     * @param string $text
-     * @param int $length
+     * @param string    $text text ke zkrácení
+     * @param int   $length požadovaná délka
      * @return string
      */
-    public static function truncate(string $text, int $length): string
+    public static function truncate(string $text, int $length) : string
     {
         if (strlen($text) > $length) {
-            $text = $text . " ";
+            $text = $text . ' ';
             $text = mb_substr($text, 0, $length, 'UTF-8');
             $text = mb_substr($text, 0, strrpos($text, ' '), 'UTF-8');
-            $text = $text . "...";
+            $text = $text . '...';
         }
         return $text;
     }

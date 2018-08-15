@@ -43,8 +43,9 @@ class SkautIsEventGeneralService extends SkautIsEventService
             foreach ($users as $user) {
                 $personId = $user->getSkautISPersonId();
 
-                if (!array_key_exists($personId, $participants))
+                if (!array_key_exists($personId, $participants)) {
                     $this->insertParticipant($eventId, $personId);
+                }
             }
         } catch (WsdlException $e) {
             return FALSE;

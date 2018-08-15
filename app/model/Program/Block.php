@@ -327,8 +327,9 @@ class Block
                     break;
                 }
             }
-            if (!$tmp)
-                $result = FALSE;
+            if (!$tmp) {
+                $result = false;
+            }
         }
 
         $tmp = FALSE;
@@ -338,8 +339,9 @@ class Block
                 break;
             }
         }
-        if (!$tmp)
-            $result = FALSE;
+        if (!$tmp) {
+            $result = false;
+        }
 
         return $result;
     }
@@ -352,8 +354,9 @@ class Block
     public function isAttendee(User $user): bool
     {
         foreach ($this->programs as $program) {
-            if ($program->isAttendee($user))
-                return TRUE;
+            if ($program->isAttendee($user)) {
+                return true;
+            }
         }
         return FALSE;
     }

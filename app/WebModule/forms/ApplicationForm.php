@@ -248,16 +248,21 @@ class ApplicationForm
     public function processForm(Form $form, array $values)
     {
         $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($values) {
-            if (array_key_exists('sex', $values))
+            if (array_key_exists('sex', $values)) {
                 $this->user->setSex($values['sex']);
-            if (array_key_exists('firstName', $values))
+            }
+            if (array_key_exists('firstName', $values)) {
                 $this->user->setFirstName($values['firstName']);
-            if (array_key_exists('lastName', $values))
+            }
+            if (array_key_exists('lastName', $values)) {
                 $this->user->setLastName($values['lastName']);
-            if (array_key_exists('nickName', $values))
+            }
+            if (array_key_exists('nickName', $values)) {
                 $this->user->setNickName($values['nickName']);
-            if (array_key_exists('birthdate', $values))
+            }
+            if (array_key_exists('birthdate', $values)) {
                 $this->user->setBirthdate($values['birthdate']);
+            }
 
             $this->user->setStreet($values['street']);
             $this->user->setCity($values['city']);
@@ -301,17 +306,21 @@ class ApplicationForm
             }
 
             //prijezd, odjezd
-            if (array_key_exists('arrival', $values))
+            if (array_key_exists('arrival', $values)) {
                 $this->user->setArrival($values['arrival']);
+            }
 
-            if (array_key_exists('departure', $values))
+            if (array_key_exists('departure', $values)) {
                 $this->user->setDeparture($values['departure']);
+            }
 
             //role
-            if (array_key_exists('roles', $values))
+            if (array_key_exists('roles', $values)) {
                 $roles = $this->roleRepository->findRolesByIds($values['roles']);
-            else
+            }
+            else {
                 $roles = $this->roleRepository->findAllRegisterableNowOrderedByName();
+            }
 
             //podakce
             $subevents = $this->subeventRepository->explicitSubeventsExists() && !empty($values['subevents'])

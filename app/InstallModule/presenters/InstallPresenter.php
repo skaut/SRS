@@ -173,8 +173,9 @@ class InstallPresenter extends InstallBasePresenter
     public function renderFinish()
     {
         try {
-            if (!$this->settingsRepository->getBoolValue(Settings::ADMIN_CREATED))
+            if (!$this->settingsRepository->getBoolValue(Settings::ADMIN_CREATED)) {
                 $this->redirect('default');
+            }
         } catch (TableNotFoundException $ex) {
             $this->redirect('default');
         } catch (SettingsException $ex) {
@@ -190,8 +191,9 @@ class InstallPresenter extends InstallBasePresenter
     public function renderInstalled()
     {
         try {
-            if (!$this->settingsRepository->getBoolValue(Settings::ADMIN_CREATED))
+            if (!$this->settingsRepository->getBoolValue(Settings::ADMIN_CREATED)) {
                 $this->redirect('default');
+            }
         } catch (TableNotFoundException $ex) {
             $this->redirect('default');
         } catch (SettingsException $ex) {

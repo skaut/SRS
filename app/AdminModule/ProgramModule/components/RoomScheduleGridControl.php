@@ -95,8 +95,9 @@ class RoomScheduleGridControl extends Control
             ->setRenderer(
                 function ($row) {
                     $capacity = $this->room->getCapacity();
-                    if ($capacity === NULL)
+                    if ($capacity === NULL) {
                         return $row->getAttendeesCount();
+                    }
                     return $row->getAttendeesCount() . "/" . $capacity;
                 }
             );

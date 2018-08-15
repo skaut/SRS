@@ -1,13 +1,19 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\CMSModule\Components;
 
 use App\Model\CMS\FaqRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
+use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Ublaboo\DataGrid\DataGrid;
-
+use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
+use Ublaboo\DataGrid\Exception\DataGridException;
 
 /**
  * Komponenta pro správu častých otázek.
@@ -23,23 +29,18 @@ class FaqGridControl extends Control
     private $faqRepository;
 
 
-    /**
-     * FaqGridControl constructor.
-     * @param Translator $translator
-     * @param FaqRepository $faqRepository
-     */
     public function __construct(Translator $translator, FaqRepository $faqRepository)
     {
         parent::__construct();
 
-        $this->translator = $translator;
+        $this->translator    = $translator;
         $this->faqRepository = $faqRepository;
     }
 
     /**
      * Vykreslí komponentu.
      */
-    public function render(): void
+    public function render() : void
     {
         $this->template->render(__DIR__ . '/templates/faq_grid.latte');
     }
@@ -47,38 +48,36 @@ class FaqGridControl extends Control
     /**
      * Vytvoří komponentu.
      * @param $name
-     * @throws \Ublaboo\DataGrid\Exception\DataGridColumnStatusException
-     * @throws \Ublaboo\DataGrid\Exception\DataGridException
+     * @throws DataGridColumnStatusException
+     * @throws DataGridException
      */
-    public function createComponentFaqGrid(string $name): void
+    public function createComponentFaqGrid(string $name) : void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
         $grid->setSortable();
         $grid->setSortableHandler('faqGrid:sort!');
         $grid->setDataSource($this->faqRepository->createQueryBuilder('f')->orderBy('f.position'));
-        $grid->setPagination(FALSE);
-
+        $grid->setPagination(false);
 
         $grid->addColumnText('question', 'admin.cms.faq_question');
 
         $grid->addColumnText('author', 'admin.cms.faq_author', 'author.displayName');
 
         $grid->addColumnStatus('public', 'admin.cms.faq_public')
-            ->addOption(FALSE, 'admin.cms.faq_public_private')
+            ->addOption(false, 'admin.cms.faq_public_private')
             ->setClass('btn-danger')
             ->endOption()
-            ->addOption(TRUE, 'admin.cms.faq_public_public')
+            ->addOption(true, 'admin.cms.faq_public_public')
             ->setClass('btn-success')
             ->endOption()
             ->onChange[] = [$this, 'changeStatus'];
 
         $grid->addColumnText('answered', 'admin.cms.faq_answered')
             ->setReplacement([
-                FALSE => $this->translator->translate('admin.common.no'),
-                TRUE => $this->translator->translate('admin.common.yes')
+                false => $this->translator->translate('admin.common.no'),
+                true => $this->translator->translate('admin.common.yes'),
             ]);
-
 
         $grid->addToolbarButton('Faq:add')
             ->setIcon('plus')
@@ -92,18 +91,18 @@ class FaqGridControl extends Control
             ->setClass('btn btn-xs btn-danger')
             ->addAttributes([
                 'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('admin.cms.faq_delete_confirm')
+                'data-content' => $this->translator->translate('admin.cms.faq_delete_confirm'),
             ]);
     }
 
     /**
      * Zpracuje odstranění otázky.
      * @param $id
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Nette\Application\AbortException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws AbortException
      */
-    public function handleDelete(int $id): void
+    public function handleDelete(int $id) : void
     {
         $faq = $this->faqRepository->findById($id);
         $this->faqRepository->remove($faq);
@@ -118,11 +117,11 @@ class FaqGridControl extends Control
      * @param $item_id
      * @param $prev_id
      * @param $next_id
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Nette\Application\AbortException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws AbortException
      */
-    public function handleSort(?int $item_id, ?int $prev_id, ?int $next_id): void
+    public function handleSort(?int $item_id, ?int $prev_id, ?int $next_id) : void
     {
         $this->faqRepository->sort($item_id, $prev_id, $next_id);
 
@@ -141,12 +140,12 @@ class FaqGridControl extends Control
      * Změní viditelnost otázky.
      * @param $id
      * @param $public
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Nette\Application\AbortException
+     * @throws NonUniqueResultException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws AbortException
      */
-    public function changeStatus(int $id, bool $public): void
+    public function changeStatus(int $id, bool $public) : void
     {
         $faq = $this->faqRepository->findById($id);
         $faq->setPublic($public);

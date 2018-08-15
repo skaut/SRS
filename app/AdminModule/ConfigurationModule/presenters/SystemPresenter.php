@@ -43,10 +43,12 @@ class SystemPresenter extends ConfigurationBasePresenter
         ]);
         $result = $this->application->run($input, $output);
 
-        if ($result == 0)
+        if ($result == 0) {
             $this->flashMessage('admin.configuration.system_cache_cleared', 'success');
-        else
+        }
+        else {
             $this->flashMessage('admin.configuration.system_cache_not_cleared', 'error');
+        }
 
         $this->redirect('this');
     }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\CMSModule\Forms;
@@ -8,9 +9,11 @@ use App\Model\CMS\Faq;
 use App\Model\CMS\FaqRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
-
 
 /**
  * Formulář pro úpravu otázky.
@@ -21,7 +24,7 @@ use Nette\Application\UI\Form;
 class FaqForm
 {
     use Nette\SmartObject;
-    
+
     /**
      * Upravovaná otázka.
      * @var Faq
@@ -44,28 +47,19 @@ class FaqForm
     private $userRepository;
 
 
-    /**
-     * FaqForm constructor.
-     * @param BaseForm $baseFormFactory
-     * @param FaqRepository $faqRepository
-     * @param UserRepository $userRepository
-     */
     public function __construct(BaseForm $baseFormFactory, FaqRepository $faqRepository, UserRepository $userRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
-        $this->faqRepository = $faqRepository;
-        $this->userRepository = $userRepository;
+        $this->faqRepository   = $faqRepository;
+        $this->userRepository  = $userRepository;
     }
 
     /**
      * Vytvoří formulář.
-     * @param int $id
-     * @param int $userId
-     * @return Form
      */
-    public function create(int $id, int $userId): Form
+    public function create(int $id, int $userId) : Form
     {
-        $this->faq = $this->faqRepository->findById($id);
+        $this->faq  = $this->faqRepository->findById($id);
         $this->user = $this->userRepository->findById($userId);
 
         $form = $this->baseFormFactory->create();
@@ -93,12 +87,10 @@ class FaqForm
                 'id' => $id,
                 'question' => $this->faq->getQuestion(),
                 'answer' => $this->faq->getAnswer(),
-                'public' => $this->faq->isPublic()
+                'public' => $this->faq->isPublic(),
             ]);
         } else {
-            $form->setDefaults([
-                'public' => TRUE
-            ]);
+            $form->setDefaults(['public' => true]);
         }
 
         $form->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
@@ -109,25 +101,26 @@ class FaqForm
 
     /**
      * Zpracuje formulář.
-     * @param Form $form
      * @param array $values
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws NonUniqueResultException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function processForm(Form $form, \stdClass $values): void
+    public function processForm(Form $form, \stdClass $values) : void
     {
-        if (!$form['cancel']->isSubmittedBy()) {
-            if (!$this->faq) {
-                $this->faq = new Faq();
-                $this->faq->setAuthor($this->user);
-            }
-
-            $this->faq->setQuestion($values['question']);
-            $this->faq->setAnswer($values['answer']);
-            $this->faq->setPublic($values['public']);
-
-            $this->faqRepository->save($this->faq);
+        if ($form['cancel']->isSubmittedBy()) {
+            return;
         }
+
+        if (! $this->faq) {
+            $this->faq = new Faq();
+            $this->faq->setAuthor($this->user);
+        }
+
+        $this->faq->setQuestion($values['question']);
+        $this->faq->setAnswer($values['answer']);
+        $this->faq->setPublic($values['public']);
+
+        $this->faqRepository->save($this->faq);
     }
 }

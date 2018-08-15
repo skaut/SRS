@@ -46,8 +46,9 @@ class FilesService
     public function delete($path)
     {
         $file = $this->dir . $path;
-        if (file_exists($file))
+        if (file_exists($file)) {
             unlink($file);
+        }
     }
 
     /**
@@ -60,8 +61,9 @@ class FilesService
         $absPath = $this->dir . $path;
         $dirname = dirname($absPath);
 
-        if (!is_dir($dirname))
+        if (!is_dir($dirname)) {
             mkdir($dirname, 0755, TRUE);
+        }
 
         $file = fopen($absPath, 'wb');
         fwrite($file, $content);
@@ -94,10 +96,12 @@ class FilesService
     {
         $image = Image::fromFile($this->dir . $path);
 
-        if ($image->getWidth() / $width > $image->getHeight() / $height)
+        if ($image->getWidth() / $width > $image->getHeight() / $height) {
             $image->resize(NULL, $height);
-        else
+        }
+        else {
             $image->resize($width, NULL);
+        }
 
         $image->sharpen();
 

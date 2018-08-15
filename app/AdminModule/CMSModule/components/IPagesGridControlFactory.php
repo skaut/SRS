@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\CMSModule\Components;
-
 
 /**
  * Factory komponenty pro správu stránek.
@@ -13,7 +13,6 @@ interface IPagesGridControlFactory
 {
     /**
      * Vytvoří komponentu.
-     * @return PagesGridControl
      */
-    public function create(): PagesGridControl;
+    public function create() : PagesGridControl;
 }

@@ -470,8 +470,9 @@ class ExcelExportService
                         default:
                             throw new \InvalidArgumentException();
                     }
-                } else
+                } else {
                     $value = '';
+                }
 
                 $sheet->setCellValueByColumnAndRow($column++, $row, $value);
             }

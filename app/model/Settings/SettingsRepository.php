@@ -48,8 +48,9 @@ class SettingsRepository extends EntityRepository
 
         if ($value === NULL) {
             $settings = $this->findOneBy(['item' => $item]);
-            if ($settings === NULL)
+            if ($settings === NULL) {
                 throw new SettingsException("Item {$item} was not found in table Settings.");
+            }
 
             $value = $settings->getValue();
             $this->cache->save($item, $value);
@@ -70,8 +71,9 @@ class SettingsRepository extends EntityRepository
     public function setValue(string $item, ?string $value): void
     {
         $settings = $this->findOneBy(['item' => $item]);
-        if ($settings === NULL)
+        if ($settings === NULL) {
             throw new SettingsException("Item {$item} was not found in table Settings.");
+        }
 
         $settings->setValue($value);
         $this->_em->flush();
@@ -89,8 +91,9 @@ class SettingsRepository extends EntityRepository
     public function getIntValue(string $item): ?int
     {
         $value = $this->getValue($item);
-        if ($value === NULL)
+        if ($value === NULL) {
             return NULL;
+        }
         return filter_var($value, FILTER_VALIDATE_INT);
     }
 
@@ -118,8 +121,9 @@ class SettingsRepository extends EntityRepository
     public function getBoolValue(string $item): ?bool
     {
         $value = $this->getValue($item);
-        if ($value === NULL)
+        if ($value === NULL) {
             return NULL;
+        }
         return filter_var($value, FILTER_VALIDATE_BOOLEAN);
     }
 
@@ -147,8 +151,9 @@ class SettingsRepository extends EntityRepository
     public function getDateTimeValue(string $item): ?\DateTime
     {
         $value = $this->getValue($item);
-        if ($value === NULL)
+        if ($value === NULL) {
             return NULL;
+        }
         return new \DateTime($value);
     }
 
@@ -162,8 +167,9 @@ class SettingsRepository extends EntityRepository
     public function getDateTimeValueText(string $item): ?string
     {
         $value = $this->getValue($item);
-        if ($value === NULL)
+        if ($value === NULL) {
             return NULL;
+        }
         return (new \DateTime($value))->format(Helpers::DATETIME_FORMAT);
     }
 
@@ -178,10 +184,12 @@ class SettingsRepository extends EntityRepository
      */
     public function setDateTimeValue(string $item, ?\DateTime $value): void
     {
-        if ($value === NULL)
-            $this->setValue($item, NULL);
-        else
+        if ($value === NULL) {
+            $this->setValue($item, null);
+        }
+        else {
             $this->setValue($item, $value->format(\DateTime::ISO8601));
+        }
     }
 
     /**
@@ -194,8 +202,9 @@ class SettingsRepository extends EntityRepository
     public function getDateValue(string $item): ?\DateTime
     {
         $value = $this->getValue($item);
-        if ($value === NULL)
-            return NULL;
+        if ($value === NULL) {
+            return null;
+        }
         return new \DateTime($value);
     }
 
@@ -209,8 +218,9 @@ class SettingsRepository extends EntityRepository
     public function getDateValueText(string $item): ?string
     {
         $value = $this->getValue($item);
-        if ($value === NULL)
-            return NULL;
+        if ($value === NULL) {
+            return null;
+        }
         return (new \DateTime($value))->format(Helpers::DATE_FORMAT);
     }
 
@@ -225,10 +235,11 @@ class SettingsRepository extends EntityRepository
      */
     public function setDateValue(string $item, ?\DateTime $value): void
     {
-        if ($value === NULL)
-            $this->setValue($item, NULL);
-        else
+        if ($value === NULL) {
+            $this->setValue($item, null);
+        } else {
             $this->setValue($item, $value->format('Y-m-d'));
+        }
     }
 }
 

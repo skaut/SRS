@@ -78,10 +78,12 @@ class EditTemplateForm
 
 
         $selectedRecipients = [];
-        if ($this->template->isSendToOrganizer())
+        if ($this->template->isSendToOrganizer()) {
             $selectedRecipients[] = 'organizer';
-        if ($this->template->isSendToUser())
+        }
+        if ($this->template->isSendToUser()) {
             $selectedRecipients[] = 'user';
+        }
 
         $form->setDefaults([
             'id' => $id,
@@ -90,9 +92,6 @@ class EditTemplateForm
             'subject' => $this->template->getSubject(),
             'text' => $this->template->getText()
         ]);
-
-        if ($this->template->isSendToUser())
-
 
         $form->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
         $form->onSuccess[] = [$this, 'processForm'];

@@ -236,8 +236,9 @@ class ImageContent extends Content implements IContent
         } else if ($this->image) {
             $path = $this->filesService->getDir() . $this->image;
             $exists = file_exists($path);
-            if ($exists)
+            if ($exists) {
                 $image = Image::fromFile($path);
+            }
         }
 
         if ($exists) {

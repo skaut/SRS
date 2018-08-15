@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\CMSModule\Components;
-
 
 /**
  * Factory komponenty pro správu aktualit.
@@ -13,7 +13,6 @@ interface INewsGridControlFactory
 {
     /**
      * Vytvoří komponentu.
-     * @return NewsGridControl
      */
-    public function create(): NewsGridControl;
+    public function create() : NewsGridControl;
 }

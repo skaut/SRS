@@ -218,12 +218,14 @@ class Subevent
     public function setIncompatibleSubevents(Collection $incompatibleSubevents): void
     {
         foreach ($this->getIncompatibleSubevents() as $subevent) {
-            if (!$incompatibleSubevents->contains($subevent))
+            if (!$incompatibleSubevents->contains($subevent)) {
                 $subevent->getIncompatibleSubevents()->removeElement($this);
+            }
         }
         foreach ($incompatibleSubevents as $subevent) {
-            if (!$subevent->getIncompatibleSubevents()->contains($this))
+            if (!$subevent->getIncompatibleSubevents()->contains($this)) {
                 $subevent->getIncompatibleSubevents()->add($this);
+            }
         }
 
         $this->incompatibleSubevents = $incompatibleSubevents;
@@ -234,8 +236,9 @@ class Subevent
      */
     public function addIncompatibleSubevent(Subevent $subevent): void
     {
-        if (!$this->incompatibleSubevents->contains($subevent))
+        if (!$this->incompatibleSubevents->contains($subevent)) {
             $this->incompatibleSubevents->add($subevent);
+        }
     }
 
     /**
@@ -278,8 +281,9 @@ class Subevent
      */
     private function getRequiredBySubeventTransitiveRec(Collection &$allRequiredBySubevent, Subevent $subevent): void
     {
-        if ($this === $subevent || $allRequiredBySubevent->contains($subevent))
+        if ($this === $subevent || $allRequiredBySubevent->contains($subevent)) {
             return;
+        }
 
         $allRequiredBySubevent->add($subevent);
 
@@ -325,8 +329,9 @@ class Subevent
      */
     private function getRequiredSubeventsTransitiveRec(Collection &$allRequiredSubevents, Subevent $subevent): void
     {
-        if ($this === $subevent || $allRequiredSubevents->contains($subevent))
+        if ($this === $subevent || $allRequiredSubevents->contains($subevent)) {
             return;
+        }
 
         $allRequiredSubevents->add($subevent);
 

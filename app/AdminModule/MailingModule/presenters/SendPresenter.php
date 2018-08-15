@@ -27,10 +27,12 @@ class SendPresenter extends MailingBasePresenter
         $form = $this->sendFormFactory->create();
 
         $form->onSuccess[] = function (Form $form, array $values) {
-            if ($this->sendFormFactory->mailSuccess)
+            if ($this->sendFormFactory->mailSuccess) {
                 $this->flashMessage('admin.mailing.send_sent', 'success');
-            else
+            }
+            else {
                 $this->flashMessage('admin.mailing.send_error', 'danger');
+            }
 
             $this->redirect('this');
         };

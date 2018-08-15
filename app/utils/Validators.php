@@ -48,10 +48,12 @@ class Validators
         $nonregisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
 
         if ($selectedRoles->contains($nonregisteredRole)) {
-            if ($user->isInRole($nonregisteredRole) && $selectedRoles->count() == 1)
-                return TRUE;
-            else
-                return FALSE;
+            if ($user->isInRole($nonregisteredRole) && $selectedRoles->count() == 1) {
+                return true;
+            }
+            else {
+                return false;
+            }
         }
 
         return TRUE;

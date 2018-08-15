@@ -196,10 +196,12 @@ class Page
      */
     public function getContents(?string $area = NULL): Collection
     {
-        if ($area === NULL)
+        if ($area === NULL) {
             return $this->contents;
-        if (!in_array($area, Content::$areas))
+        }
+        if (!in_array($area, Content::$areas)) {
             throw new PageException("Area {$area} not defined.");
+        }
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('area', $area))
             ->orderBy(['position' => 'ASC']);

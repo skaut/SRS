@@ -335,12 +335,14 @@ class Role
     public function setPages(Collection $pages): void
     {
         foreach ($this->getPages() as $page) {
-            if (!$pages->contains($page))
+            if (!$pages->contains($page)) {
                 $page->getRoles()->removeElement($this);
+            }
         }
         foreach ($pages as $page) {
-            if (!$page->getRoles()->contains($this))
+            if (!$page->getRoles()->contains($this)) {
                 $page->getRoles()->add($this);
+            }
         }
         $this->pages = $pages;
     }
@@ -350,8 +352,9 @@ class Role
      */
     public function addPage(Page $page): void
     {
-        if (!$this->pages->contains($page))
+        if (!$this->pages->contains($page)) {
             $page->addRole($this);
+        }
     }
 
     /**
@@ -396,8 +399,9 @@ class Role
         if ($this->registerable &&
             ($this->registerableFrom == NULL || $this->registerableFrom <= $now) &&
             ($this->registerableTo == NULL || $this->registerableTo >= $now)
-        )
+        ) {
             return TRUE;
+        }
         return FALSE;
     }
 
@@ -535,12 +539,14 @@ class Role
     public function setIncompatibleRoles(Collection $incompatibleRoles): void
     {
         foreach ($this->getIncompatibleRoles() as $role) {
-            if (!$incompatibleRoles->contains($role))
+            if (!$incompatibleRoles->contains($role)) {
                 $role->getIncompatibleRoles()->removeElement($this);
+            }
         }
         foreach ($incompatibleRoles as $role) {
-            if (!$role->getIncompatibleRoles()->contains($this))
+            if (!$role->getIncompatibleRoles()->contains($this)) {
                 $role->getIncompatibleRoles()->add($this);
+            }
         }
 
         $this->incompatibleRoles = $incompatibleRoles;
@@ -563,8 +569,9 @@ class Role
      */
     public function addIncompatibleRole(Role $role): void
     {
-        if (!$this->incompatibleRoles->contains($role))
+        if (!$this->incompatibleRoles->contains($role)) {
             $this->incompatibleRoles->add($role);
+        }
     }
 
     /**
@@ -594,8 +601,9 @@ class Role
      */
     private function getRequiredByRoleTransitiveRec(Collection &$allRequiredByRole, Role $role): void
     {
-        if ($this === $role || $allRequiredByRole->contains($role))
+        if ($this === $role || $allRequiredByRole->contains($role)) {
             return;
+        }
 
         $allRequiredByRole->add($role);
 
@@ -627,8 +635,9 @@ class Role
      */
     public function addRequiredRole(Role $role): void
     {
-        if (!$this->requiredRoles->contains($role))
+        if (!$this->requiredRoles->contains($role)) {
             $this->requiredRoles->add($role);
+        }
     }
 
     /**
@@ -650,8 +659,9 @@ class Role
      */
     private function getRequiredRolesTransitiveRec(Collection &$allRequiredRoles, Role $role): void
     {
-        if ($this === $role || $allRequiredRoles->contains($role))
+        if ($this === $role || $allRequiredRoles->contains($role)) {
             return;
+        }
 
         $allRequiredRoles->add($role);
 
@@ -682,8 +692,9 @@ class Role
 
     public function addRegisterableCategory(Category $category): void
     {
-        if (!$this->registerableCategories->contains($category))
+        if (!$this->registerableCategories->contains($category)) {
             $category->addRole($this);
+        }
     }
 
     /**

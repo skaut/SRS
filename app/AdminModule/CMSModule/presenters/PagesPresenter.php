@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\CMSModule\Presenters;
@@ -11,7 +12,6 @@ use App\Model\CMS\Content\Content;
 use App\Model\CMS\Content\ContentRepository;
 use App\Model\CMS\PageRepository;
 use Nette\Application\UI\Form;
-
 
 /**
  * Presenter starající se o správu stránek.
@@ -46,28 +46,28 @@ class PagesPresenter extends CMSBasePresenter
     public $contentRepository;
 
 
-    public function renderContent(int $id, string $area): void
+    public function renderContent(int $id, string $area) : void
     {
         $page = $this->pagesRepository->findById($id);
 
         $this->template->page = $page;
-        $this->template->id = $id;
+        $this->template->id   = $id;
         $this->template->area = $area;
     }
 
-    protected function createComponentPagesGrid(): PagesGridControl
+    protected function createComponentPagesGrid() : PagesGridControl
     {
         return $this->pagesGridControlFactory->create();
     }
 
-    protected function createComponentPageForm(): Form
+    protected function createComponentPageForm() : Form
     {
-        $id = $this->getParameter('id');
+        $id   = $this->getParameter('id');
         $area = $this->getParameter('area');
 
         $control = $this->pageFormFactory->create($id, $area);
 
-        $control->onPageSave[] = function (PageForm $control, $submitName) {
+        $control->onPageSave[] = function (PageForm $control, $submitName) : void {
             $this->flashMessage('admin.cms.pages_content_saved', 'success');
 
             switch ($submitName) {
@@ -86,7 +86,7 @@ class PagesPresenter extends CMSBasePresenter
             }
         };
 
-        $control->onPageSaveError[] = function (PageForm $control) {
+        $control->onPageSaveError[] = function (PageForm $control) : void {
             $this->flashMessage('admin.cms.pages_content_save_error', 'danger');
             $this->redirect('Pages:content', ['id' => $control->id, 'area' => $control->area]);
         };

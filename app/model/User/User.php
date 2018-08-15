@@ -741,8 +741,9 @@ class User
     private function updateDisplayName(): void
     {
         $this->displayName = $this->lastName . ' ' . $this->firstName;
-        if ($this->nickName != NULL)
+        if ($this->nickName != NULL) {
             $this->displayName .= ' (' . $this->nickName . ')';
+        }
     }
 
     /**
@@ -759,13 +760,16 @@ class User
     public function updateLectorName(): void
     {
         $this->lectorName = '';
-        if ($this->degreePre != NULL)
+        if ($this->degreePre != NULL) {
             $this->lectorName .= $this->degreePre . ' ';
+        }
         $this->lectorName .= $this->firstName . ' ' . $this->lastName;
-        if ($this->degreePost != NULL)
+        if ($this->degreePost != NULL) {
             $this->lectorName .= ', ' . $this->degreePost;
-        if ($this->nickName != NULL)
+        }
+        if ($this->nickName != NULL) {
             $this->lectorName .= ' (' . $this->nickName . ')';
+        }
     }
 
     /**

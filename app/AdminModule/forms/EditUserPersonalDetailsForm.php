@@ -151,8 +151,9 @@ class EditUserPersonalDetailsForm
             $this->user->setCity($values['city']);
             $this->user->setPostcode($values['postcode']);
 
-            if (array_key_exists('removePhoto', $values) && $values['removePhoto'])
+            if (array_key_exists('removePhoto', $values) && $values['removePhoto']) {
                 $this->user->setPhoto(NULL);
+            }
             elseif (array_key_exists('newPhoto', $values)) {
                 $photo = $values['newPhoto'];
                 if ($photo->size > 0) {

@@ -127,10 +127,12 @@ class Authenticator implements NS\IAuthenticator
         $user->setMember($skautISUser->HasMembership);
 
         $validMembership = $this->skautIsService->getValidMembership($user->getSkautISPersonId());
-        if ($validMembership == NULL)
+        if ($validMembership == NULL) {
             $user->setUnit(NULL);
-        else
+        }
+        else {
             $user->setUnit($validMembership->RegistrationNumber);
+        }
 
         $photoUpdate = new \DateTime($skautISPerson->PhotoUpdate);
         if ($user->getPhotoUpdate() === NULL || $photoUpdate->diff($user->getPhotoUpdate())->s >= 1) {

@@ -109,10 +109,12 @@ class BlocksPresenter extends ProgramBasePresenter
 
         $this->template->programId = $programId;
 
-        if ($this->isAjax())
+        if ($this->isAjax()) {
             $this->redrawControl('programs');
-        else
+        }
+        else {
             $this->redirect('this');
+        }
     }
 
     /**

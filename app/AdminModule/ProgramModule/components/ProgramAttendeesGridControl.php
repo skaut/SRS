@@ -104,8 +104,9 @@ class ProgramAttendeesGridControl extends Control
     public function createComponentProgramAttendeesGrid($name)
     {
         $programId = $this->getPresenter()->getParameter('programId');
-        if (!$programId)
+        if (!$programId) {
             $programId = $this->sessionSection->programId;
+        }
 
         $program = $this->programRepository->findById($programId);
 
@@ -161,16 +162,19 @@ class ProgramAttendeesGridControl extends Control
                 })
                 ->setFilterSelect(['' => 'admin.common.all', 1 => 'admin.common.yes', 0 => 'admin.common.no'])
                 ->setCondition(function ($qb, $value) {
-                    if ($value === '')
+                    if ($value === '') {
                         return;
-                    elseif ($value == 1)
+                    }
+                    elseif ($value == 1) {
                         $qb->innerJoin('u.programs', 'pro')
                             ->andWhere('pro.id = :proid')
                             ->setParameter('proid', $this->program->getId());
-                    elseif ($value == 0)
+                    }
+                    elseif ($value == 0) {
                         $qb->leftJoin('u.programs', 'pro')
                             ->andWhere('(pro.id != :proid OR pro.id IS NULL)')
                             ->setParameter('proid', $this->program->getId());
+                    }
                 })
                 ->setTranslateOptions();
 
@@ -216,10 +220,12 @@ class ProgramAttendeesGridControl extends Control
         $user = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
         $program = $this->programRepository->findById($this->sessionSection->programId);
 
-        if (!$user->isAllowedModifyBlock($program->getBlock()))
+        if (!$user->isAllowedModifyBlock($program->getBlock())) {
             $p->flashMessage('admin.program.blocks_edit_not_allowed', 'danger');
-        elseif ($editedUser->hasProgramBlock($program->getBlock()))
+        }
+        elseif ($editedUser->hasProgramBlock($program->getBlock())) {
             $p->flashMessage('admin.program.blocks_attendees_already_has_block', 'danger');
+        }
         else {
             $editedUser->addProgram($program);
             $this->userRepository->save($editedUser);

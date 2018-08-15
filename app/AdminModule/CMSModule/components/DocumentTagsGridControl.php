@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\CMSModule\Components;
@@ -6,10 +7,16 @@ namespace App\AdminModule\CMSModule\Components;
 use App\Model\ACL\RoleRepository;
 use App\Model\CMS\Document\Tag;
 use App\Model\CMS\Document\TagRepository;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
+use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Ublaboo\DataGrid\DataGrid;
+use Ublaboo\DataGrid\Exception\DataGridException;
+use function array_keys;
+use function count;
 
 /**
  * Komponenta pro správu štítků dokumentů.
@@ -29,25 +36,19 @@ class DocumentTagsGridControl extends Control
     private $tagRepository;
 
 
-    /**
-     * DocumentTagsGridControl constructor.
-     * @param Translator $translator
-     * @param RoleRepository $roleRepository
-     * @param TagRepository $tagRepository
-     */
     public function __construct(Translator $translator, RoleRepository $roleRepository, TagRepository $tagRepository)
     {
         parent::__construct();
 
-        $this->translator = $translator;
+        $this->translator     = $translator;
         $this->roleRepository = $roleRepository;
-        $this->tagRepository = $tagRepository;
+        $this->tagRepository  = $tagRepository;
     }
 
     /**
      * Vykreslí komponentu.
      */
-    public function render(): void
+    public function render() : void
     {
         $this->template->render(__DIR__ . '/templates/document_tags_grid.latte');
     }
@@ -55,15 +56,15 @@ class DocumentTagsGridControl extends Control
     /**
      * Vytvoří komponentu.
      * @param $name
-     * @throws \Ublaboo\DataGrid\Exception\DataGridException
+     * @throws DataGridException
      */
-    public function createComponentDocumentTagsGrid(string $name): void
+    public function createComponentDocumentTagsGrid(string $name) : void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
         $grid->setDataSource($this->tagRepository->createQueryBuilder('t'));
         $grid->setDefaultSort(['name' => 'ASC']);
-        $grid->setPagination(FALSE);
+        $grid->setPagination(false);
 
         $grid->addColumnText('name', 'admin.cms.tags_name');
 
@@ -71,13 +72,12 @@ class DocumentTagsGridControl extends Control
             ->setRendererOnCondition(function () {
                 return $this->translator->translate('admin.cms.tags_roles_all');
             }, function (Tag $tag) {
-                return count($this->roleRepository->findAll()) == $tag->getRoles()->count();
+                return count($this->roleRepository->findAll()) === $tag->getRoles()->count();
             });
-
 
         $rolesOptions = $this->roleRepository->getRolesWithoutRolesOptions([]);
 
-        $grid->addInlineAdd()->onControlAdd[] = function ($container) use ($rolesOptions) {
+        $grid->addInlineAdd()->onControlAdd[] = function ($container) use ($rolesOptions) : void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.tags_name_empty')
                 ->addRule(Form::IS_NOT_IN, 'admin.cms.tags_name_exists', $this->tagRepository->findAllNames());
@@ -85,25 +85,24 @@ class DocumentTagsGridControl extends Control
                 ->setDefaultValue(array_keys($rolesOptions))
                 ->addRule(Form::FILLED, 'admin.cms.tags_roles_empty');
         };
-        $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
+        $grid->getInlineAdd()->onSubmit[]     = [$this, 'add'];
 
-        $grid->addInlineEdit()->onControlAdd[] = function ($container) use ($rolesOptions) {
+        $grid->addInlineEdit()->onControlAdd[]  = function ($container) use ($rolesOptions) : void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.tags_name_empty');
             $container->addMultiSelect('roles', '', $rolesOptions)->setAttribute('class', 'datagrid-multiselect')
                 ->addRule(Form::FILLED, 'admin.cms.tags_roles_empty');
         };
-        $grid->getInlineEdit()->onSetDefaults[] = function ($container, Tag $item) {
+        $grid->getInlineEdit()->onSetDefaults[] = function ($container, Tag $item) : void {
             $container['name']
                 ->addRule(Form::IS_NOT_IN, 'admin.cms.tags_name_exists', $this->tagRepository->findOthersNames($item->getId()));
 
             $container->setDefaults([
                 'name' => $item->getName(),
-                'roles' => $this->roleRepository->findRolesIds($item->getRoles())
+                'roles' => $this->roleRepository->findRolesIds($item->getRoles()),
             ]);
         };
-        $grid->getInlineEdit()->onSubmit[] = [$this, 'edit'];
-
+        $grid->getInlineEdit()->onSubmit[]      = [$this, 'edit'];
 
         $grid->addAction('delete', '', 'delete!')
             ->setIcon('trash')
@@ -111,24 +110,24 @@ class DocumentTagsGridControl extends Control
             ->setClass('btn btn-xs btn-danger')
             ->addAttributes([
                 'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('admin.cms.tags_delete_confirm')
+                'data-content' => $this->translator->translate('admin.cms.tags_delete_confirm'),
             ]);
     }
 
     /**
      * Zpracuje přidání štítku dokumentu.
      * @param $values
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Nette\Application\AbortException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws AbortException
      */
-    public function add(\stdClass $values): void
+    public function add(\stdClass $values) : void
     {
         $tag = new Tag();
 
         $tag->setName($values['name']);
         $tag->setRoles($this->roleRepository->findRolesByIds($values['roles']));
-        
+
         $this->tagRepository->save($tag);
 
         $this->getPresenter()->flashMessage('admin.cms.tags_saved', 'success');
@@ -140,11 +139,11 @@ class DocumentTagsGridControl extends Control
      * Zpracuje úpravu štítku dokumentu.
      * @param $id
      * @param $values
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Nette\Application\AbortException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws AbortException
      */
-    public function edit(int $id, \stdClass $values): void
+    public function edit(int $id, \stdClass $values) : void
     {
         $tag = $this->tagRepository->findById($id);
 
@@ -161,11 +160,11 @@ class DocumentTagsGridControl extends Control
     /**
      * Zpracuje odstranění štítku dokumentu.
      * @param $id
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Nette\Application\AbortException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws AbortException
      */
-    public function handleDelete(int $id): void
+    public function handleDelete(int $id) : void
     {
         $tag = $this->tagRepository->findById($id);
         $this->tagRepository->remove($tag);

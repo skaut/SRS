@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\ActionModule\Presenters;
@@ -6,8 +7,9 @@ namespace App\ActionModule\Presenters;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\Settings\Settings;
+use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
-
+use Nette\Application\AbortException;
 
 /**
  * Presenter obsluhující potvrzení změny e-mailu.
@@ -26,18 +28,18 @@ class MailingPresenter extends ActionBasePresenter
     /**
      * Ověří e-mail semináře.
      * @param $code
-     * @throws \App\Model\Settings\SettingsException
-     * @throws \Nette\Application\AbortException
+     * @throws SettingsException
+     * @throws AbortException
      * @throws \Throwable
      */
-    public function actionVerify(string $code): void
+    public function actionVerify(string $code) : void
     {
-        if ($code == $this->settingsRepository->getValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE)) {
+        if ($code === $this->settingsRepository->getValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE)) {
             $newEmail = $this->settingsRepository->getValue(Settings::SEMINAR_EMAIL_UNVERIFIED);
             $this->settingsRepository->setValue(Settings::SEMINAR_EMAIL, $newEmail);
 
-            $this->settingsRepository->setValue(Settings::SEMINAR_EMAIL_UNVERIFIED, NULL);
-            $this->settingsRepository->setValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE, NULL);
+            $this->settingsRepository->setValue(Settings::SEMINAR_EMAIL_UNVERIFIED, null);
+            $this->settingsRepository->setValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE, null);
 
             $this->flashMessage('admin.configuration.mailing_email_verification_successful', 'success');
         } else {

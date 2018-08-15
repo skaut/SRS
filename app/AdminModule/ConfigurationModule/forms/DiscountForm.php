@@ -139,10 +139,12 @@ class DiscountForm extends UI\Control
         $this->id = $values['id'];
 
         if ($this->discountService->validateCondition(($values['condition']))) {
-            if (!$this->id)
+            if (!$this->id) {
                 $this->discount = new Discount();
-            else
+            }
+            else {
                 $this->discount = $this->discountRepository->findById($this->id);
+            }
 
             $this->discount->setDiscountCondition($values['condition']);
             $this->discount->setDiscount($values['discount']);
@@ -150,7 +152,8 @@ class DiscountForm extends UI\Control
             $this->discountRepository->save($this->discount);
 
             $this->onSave($this);
-        } else
+        } else {
             $this->onConditionError($this);
+        }
     }
 }

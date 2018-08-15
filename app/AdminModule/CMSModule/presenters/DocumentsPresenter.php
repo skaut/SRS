@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\CMSModule\Presenters;
@@ -7,7 +8,6 @@ use App\AdminModule\CMSModule\Components\DocumentsGridControl;
 use App\AdminModule\CMSModule\Components\DocumentTagsGridControl;
 use App\AdminModule\CMSModule\Components\IDocumentsGridControlFactory;
 use App\AdminModule\CMSModule\Components\IDocumentTagsGridControlFactory;
-
 
 /**
  * Presenter starající se o správu dokumentů.
@@ -30,12 +30,12 @@ class DocumentsPresenter extends CMSBasePresenter
     public $documentTagsGridControlFactory;
 
 
-    protected function createComponentDocumentsGrid(): DocumentsGridControl
+    protected function createComponentDocumentsGrid() : DocumentsGridControl
     {
         return $this->documentsGridControlFactory->create();
     }
 
-    protected function createComponentDocumentTagsGrid(): DocumentTagsGridControl
+    protected function createComponentDocumentTagsGrid() : DocumentTagsGridControl
     {
         return $this->documentTagsGridControlFactory->create();
     }
