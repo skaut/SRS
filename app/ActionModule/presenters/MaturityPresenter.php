@@ -95,7 +95,7 @@ class MaturityPresenter extends ActionBasePresenter
      * @throws \App\Model\Settings\SettingsException
      * @throws \Throwable
      */
-    public function actionCheck()
+    public function actionCheck(): void
     {
         $cancelRegistration = $this->settingsRepository->getValue(Settings::CANCEL_REGISTRATION_AFTER_MATURITY);
         if ($cancelRegistration !== NULL)

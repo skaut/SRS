@@ -108,7 +108,7 @@ class PageForm extends UI\Control
      * Vykreslí komponentu.
      * @throws \App\Model\Page\PageException
      */
-    public function render()
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/templates/page_form.latte');
 
@@ -123,7 +123,7 @@ class PageForm extends UI\Control
      * @return Form
      * @throws \App\Model\Page\PageException
      */
-    public function createComponentForm()
+    public function createComponentForm(): Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -175,7 +175,7 @@ class PageForm extends UI\Control
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function processForm(Form $form, array $values)
+    public function processForm(Form $form, \stdClass $values): void
     {
         $page = $this->pageRepository->findById($values['id']);
 
@@ -218,7 +218,7 @@ class PageForm extends UI\Control
      * Připraví možnosti obsahů stránky pro select.
      * @return array
      */
-    private function prepareContentTypesOptions()
+    private function prepareContentTypesOptions(): array
     {
         $options = [];
         foreach (Content::$types as $type)

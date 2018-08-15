@@ -6,6 +6,7 @@ namespace App\Model\CMS\Content;
 use App\Services\FilesService;
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
+use Nette\Http\FileUpload;
 use Nette\Utils\Image;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
@@ -278,7 +279,7 @@ class ImageContent extends Content implements IContent
      * @param $file
      * @return string
      */
-    private function generatePath($file): string //TODO: typehint
+    private function generatePath(FileUpload $file): string
     {
         return '/images/' . Random::generate(5) . '/' . Strings::webalize($file->name, '.');
     }

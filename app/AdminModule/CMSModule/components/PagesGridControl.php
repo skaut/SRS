@@ -47,7 +47,7 @@ class PagesGridControl extends Control
     /**
      * Vykreslí komponentu.
      */
-    public function render()
+    public function render(): void
     {
         $this->template->render(__DIR__ . '/templates/pages_grid.latte');
     }
@@ -58,7 +58,7 @@ class PagesGridControl extends Control
      * @throws \Ublaboo\DataGrid\Exception\DataGridColumnStatusException
      * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
-    public function createComponentPagesGrid($name)
+    public function createComponentPagesGrid(string $name): void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -163,7 +163,7 @@ class PagesGridControl extends Control
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
-    public function add($values)
+    public function add(\stdClass $values): void
     {
         $page = new Page($values['name'], $values['slug']);
 
@@ -187,7 +187,7 @@ class PagesGridControl extends Control
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
-    public function edit($id, $values)
+    public function edit(int $id, \stdClass $values): void
     {
         $page = $this->pageRepository->findById($id);
 
@@ -212,7 +212,7 @@ class PagesGridControl extends Control
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
-    public function handleDelete($id)
+    public function handleDelete(int $id): void
     {
         $page = $this->pageRepository->findById($id);
         $this->pageRepository->remove($page);
@@ -231,7 +231,7 @@ class PagesGridControl extends Control
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
-    public function handleSort($item_id, $prev_id, $next_id)
+    public function handleSort(?int $item_id, ?int $prev_id, ?int $next_id): void
     {
         $this->pageRepository->sort($item_id, $prev_id, $next_id);
 
@@ -255,7 +255,7 @@ class PagesGridControl extends Control
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
-    public function changeStatus($id, $public)
+    public function changeStatus(int $id, bool $public): void
     {
         $p = $this->getPresenter();
 

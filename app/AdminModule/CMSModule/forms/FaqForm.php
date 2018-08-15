@@ -59,11 +59,11 @@ class FaqForm
 
     /**
      * Vytvoří formulář.
-     * @param $id
-     * @param $userId
+     * @param int $id
+     * @param int $userId
      * @return Form
      */
-    public function create($id, $userId)
+    public function create(int $id, int $userId): Form
     {
         $this->faq = $this->faqRepository->findById($id);
         $this->user = $this->userRepository->findById($userId);
@@ -115,7 +115,7 @@ class FaqForm
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function processForm(Form $form, array $values)
+    public function processForm(Form $form, \stdClass $values): void
     {
         if (!$form['cancel']->isSubmittedBy()) {
             if (!$this->faq) {

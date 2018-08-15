@@ -47,7 +47,7 @@ class DocumentTagsGridControl extends Control
     /**
      * Vykreslí komponentu.
      */
-    public function render()
+    public function render(): void
     {
         $this->template->render(__DIR__ . '/templates/document_tags_grid.latte');
     }
@@ -57,7 +57,7 @@ class DocumentTagsGridControl extends Control
      * @param $name
      * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
-    public function createComponentDocumentTagsGrid($name)
+    public function createComponentDocumentTagsGrid(string $name): void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -122,7 +122,7 @@ class DocumentTagsGridControl extends Control
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
-    public function add($values)
+    public function add(\stdClass $values): void
     {
         $tag = new Tag();
 
@@ -144,7 +144,7 @@ class DocumentTagsGridControl extends Control
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
-    public function edit($id, $values)
+    public function edit(int $id, \stdClass $values): void
     {
         $tag = $this->tagRepository->findById($id);
 
@@ -165,7 +165,7 @@ class DocumentTagsGridControl extends Control
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
-    public function handleDelete($id)
+    public function handleDelete(int $id): void
     {
         $tag = $this->tagRepository->findById($id);
         $this->tagRepository->remove($tag);

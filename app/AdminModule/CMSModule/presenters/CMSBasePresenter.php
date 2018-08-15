@@ -21,7 +21,7 @@ abstract class CMSBasePresenter extends AdminBasePresenter
     /**
      * @throws \Nette\Application\AbortException
      */
-    public function startup()
+    public function startup(): void
     {
         parent::startup();
 
@@ -32,7 +32,7 @@ abstract class CMSBasePresenter extends AdminBasePresenter
      * @throws \App\Model\Settings\SettingsException
      * @throws \Throwable
      */
-    public function beforeRender()
+    public function beforeRender(): void
     {
         parent::beforeRender();
 

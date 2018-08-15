@@ -30,7 +30,7 @@ class MailingPresenter extends ActionBasePresenter
      * @throws \Nette\Application\AbortException
      * @throws \Throwable
      */
-    public function actionVerify($code)
+    public function actionVerify(string $code): void
     {
         if ($code == $this->settingsRepository->getValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE)) {
             $newEmail = $this->settingsRepository->getValue(Settings::SEMINAR_EMAIL_UNVERIFIED);

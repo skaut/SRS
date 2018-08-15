@@ -15,5 +15,5 @@ interface IDocumentTagsGridControlFactory
      * Vytvoří komponentu.
      * @return DocumentTagsGridControl
      */
-    public function create();
+    public function create(): DocumentTagsGridControl;
 }

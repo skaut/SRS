@@ -11,9 +11,11 @@ use App\Utils\Helpers;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\Http\FileUpload;
 use Nette\Utils\Html;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
+use phpDocumentor\Reflection\File;
 use Ublaboo\DataGrid\DataGrid;
 
 
@@ -58,7 +60,7 @@ class DocumentsGridControl extends Control
     /**
      * Vykreslí komponentu.
      */
-    public function render()
+    public function render(): void
     {
         $this->template->render(__DIR__ . '/templates/documents_grid.latte');
     }
@@ -68,7 +70,7 @@ class DocumentsGridControl extends Control
      * @param $name
      * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
-    public function createComponentDocumentsGrid($name)
+    public function createComponentDocumentsGrid(string $name): void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -160,7 +162,7 @@ class DocumentsGridControl extends Control
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
-    public function add($values)
+    public function add(\stdClass $values): void
     {
         $file = $values['file'];
         $path = $this->generatePath($file);
@@ -189,7 +191,7 @@ class DocumentsGridControl extends Control
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
-    public function edit($id, $values)
+    public function edit(int $id, \stdClass $values): void
     {
         $document = $this->documentRepository->findById($id);
 
@@ -221,7 +223,7 @@ class DocumentsGridControl extends Control
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
-    public function handleDelete($id)
+    public function handleDelete(int $id): void
     {
         $document = $this->documentRepository->findById($id);
         $this->filesService->delete($document->getFile());
@@ -237,7 +239,7 @@ class DocumentsGridControl extends Control
      * @param $file
      * @return string
      */
-    private function generatePath($file)
+    private function generatePath(FileUpload $file): string
     {
         return Document::PATH . '/' . Random::generate(5) . '/' . Strings::webalize($file->name, '.');
     }

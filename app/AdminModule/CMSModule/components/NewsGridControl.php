@@ -40,7 +40,7 @@ class NewsGridControl extends Control
     /**
      * Vykreslí komponentu.
      */
-    public function render()
+    public function render(): void
     {
         $this->template->render(__DIR__ . '/templates/news_grid.latte');
     }
@@ -51,7 +51,7 @@ class NewsGridControl extends Control
      * @throws \Ublaboo\DataGrid\Exception\DataGridColumnStatusException
      * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
-    public function createComponentNewsGrid($name)
+    public function createComponentNewsGrid(string $name): void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTemplateFile(__DIR__ . '/templates/news_grid_template.latte');
@@ -99,7 +99,7 @@ class NewsGridControl extends Control
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
-    public function handleDelete($id)
+    public function handleDelete(int $id): void
     {
         $news = $this->newsRepository->findById($id);
         $this->newsRepository->remove($news);
@@ -117,7 +117,7 @@ class NewsGridControl extends Control
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
-    public function changePinned($id, $pinned)
+    public function changePinned(int $id, bool $pinned): void
     {
         $news = $this->newsRepository->findById($id);
         $news->setPinned($pinned);

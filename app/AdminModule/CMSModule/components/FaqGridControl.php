@@ -39,7 +39,7 @@ class FaqGridControl extends Control
     /**
      * Vykreslí komponentu.
      */
-    public function render()
+    public function render(): void
     {
         $this->template->render(__DIR__ . '/templates/faq_grid.latte');
     }
@@ -50,7 +50,7 @@ class FaqGridControl extends Control
      * @throws \Ublaboo\DataGrid\Exception\DataGridColumnStatusException
      * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
-    public function createComponentFaqGrid($name)
+    public function createComponentFaqGrid(string $name): void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -103,7 +103,7 @@ class FaqGridControl extends Control
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
-    public function handleDelete($id)
+    public function handleDelete(int $id): void
     {
         $faq = $this->faqRepository->findById($id);
         $this->faqRepository->remove($faq);
@@ -122,7 +122,7 @@ class FaqGridControl extends Control
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
-    public function handleSort($item_id, $prev_id, $next_id)
+    public function handleSort(?int $item_id, ?int $prev_id, ?int $next_id): void
     {
         $this->faqRepository->sort($item_id, $prev_id, $next_id);
 
@@ -146,7 +146,7 @@ class FaqGridControl extends Control
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Nette\Application\AbortException
      */
-    public function changeStatus($id, $public)
+    public function changeStatus(int $id, bool $public): void
     {
         $faq = $this->faqRepository->findById($id);
         $faq->setPublic($public);

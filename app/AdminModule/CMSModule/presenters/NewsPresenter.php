@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\AdminModule\CMSModule\Presenters;
 
 use App\AdminModule\CMSModule\Components\INewsGridControlFactory;
+use App\AdminModule\CMSModule\Components\NewsGridControl;
 use App\AdminModule\CMSModule\Forms\NewsForm;
 use App\Model\CMS\NewsRepository;
 use Nette\Application\UI\Form;
@@ -36,16 +37,16 @@ class NewsPresenter extends CMSBasePresenter
     public $newsRepository;
 
 
-    public function renderEdit($id)
+    public function renderEdit(int $id)
     {
     }
 
-    protected function createComponentNewsGrid()
+    protected function createComponentNewsGrid(): NewsGridControl
     {
         return $this->newsGridControlFactory->create();
     }
 
-    protected function createComponentNewsForm()
+    protected function createComponentNewsForm(): Form
     {
         $form = $this->newsFormFactory->create($this->getParameter('id'));
 

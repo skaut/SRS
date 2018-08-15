@@ -15,5 +15,5 @@ interface INewsGridControlFactory
      * Vytvoří komponentu.
      * @return NewsGridControl
      */
-    public function create();
+    public function create(): NewsGridControl;
 }

@@ -4,11 +4,13 @@ declare(strict_types=1);
 namespace App\AdminModule\CMSModule\Presenters;
 
 use App\AdminModule\CMSModule\Components\IPagesGridControlFactory;
+use App\AdminModule\CMSModule\Components\PagesGridControl;
 use App\AdminModule\CMSModule\Forms\IPageFormFactory;
 use App\AdminModule\CMSModule\Forms\PageForm;
 use App\Model\CMS\Content\Content;
 use App\Model\CMS\Content\ContentRepository;
 use App\Model\CMS\PageRepository;
+use Nette\Application\UI\Form;
 
 
 /**
@@ -44,7 +46,7 @@ class PagesPresenter extends CMSBasePresenter
     public $contentRepository;
 
 
-    public function renderContent($id, $area)
+    public function renderContent(int $id, string $area): void
     {
         $page = $this->pagesRepository->findById($id);
 
@@ -53,12 +55,12 @@ class PagesPresenter extends CMSBasePresenter
         $this->template->area = $area;
     }
 
-    protected function createComponentPagesGrid()
+    protected function createComponentPagesGrid(): PagesGridControl
     {
         return $this->pagesGridControlFactory->create();
     }
 
-    protected function createComponentPageForm()
+    protected function createComponentPageForm(): Form
     {
         $id = $this->getParameter('id');
         $area = $this->getParameter('area');
