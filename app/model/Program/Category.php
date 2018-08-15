@@ -99,8 +99,9 @@ class Category
     public function setRegisterableRoles(Collection $registerableRoles): void
     {
         $this->registerableRoles->clear();
-        foreach ($registerableRoles as $registerableRole)
+        foreach ($registerableRoles as $registerableRole) {
             $this->registerableRoles->add($registerableRole);
+        }
     }
 
     /**
@@ -108,8 +109,9 @@ class Category
      */
     public function addRole(Role $role): void
     {
-        if (!$this->registerableRoles->contains($role))
+        if (!$this->registerableRoles->contains($role)) {
             $this->registerableRoles->add($role);
+        }
     }
 
     /**

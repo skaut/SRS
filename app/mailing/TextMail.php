@@ -25,8 +25,9 @@ class TextMail extends Mail implements IComposableMail
         $message->setFrom($params['fromEmail'], $params['fromName']);
 
         foreach ($params['recipients'] as $recipient) {
-            if ($recipient->getEmail() !== NULL)
+            if ($recipient->getEmail() !== NULL) {
                 $message->addBcc($recipient->getEmail(), $recipient->getDisplayName());
+            }
         }
 
         if ($params['copy']) {

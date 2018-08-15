@@ -97,8 +97,9 @@ class Program
     public function setAttendees(Collection $attendees): void
     {
         $this->removeAllAttendees();
-        foreach ($attendees as $attendee)
+        foreach ($attendees as $attendee) {
             $this->addAttendee($attendee);
+        }
     }
 
     /**
@@ -106,8 +107,9 @@ class Program
      */
     public function addAttendee(User $user): void
     {
-        if (!$this->attendees->contains($user))
+        if (!$this->attendees->contains($user)) {
             $user->addProgram($this);
+        }
     }
 
     /**

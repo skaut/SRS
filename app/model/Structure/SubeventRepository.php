@@ -213,14 +213,16 @@ class SubeventRepository extends EntityRepository
 
         $options = [];
         foreach ($subevents as $subevent) {
-            if ($subevent->hasLimitedCapacity())
-                $options[$subevent->getId()] = $this->translator->translate('web.common.subevent_option', NULL, [
+            if ($subevent->hasLimitedCapacity()) {
+                $options[$subevent->getId()] = $this->translator->translate('web.common.subevent_option', null, [
                     'subevent' => $subevent->getName(),
                     'occupied' => $subevent->countUsers(),
                     'total' => $subevent->getCapacity()
                 ]);
-            else
+            }
+            else {
                 $options[$subevent->getId()] = $subevent->getName();
+            }
         }
         return $options;
     }
@@ -239,14 +241,16 @@ class SubeventRepository extends EntityRepository
 
         $options = [];
         foreach ($subevents as $subevent) {
-            if ($subevent->hasLimitedCapacity())
-                $options[$subevent->getId()] = $this->translator->translate('web.common.subevent_option', NULL, [
+            if ($subevent->hasLimitedCapacity()) {
+                $options[$subevent->getId()] = $this->translator->translate('web.common.subevent_option', null, [
                     'subevent' => $subevent->getName(),
                     'occupied' => $subevent->countUsers(),
                     'total' => $subevent->getCapacity()
                 ]);
-            else
+            }
+            else {
                 $options[$subevent->getId()] = $subevent->getName();
+            }
         }
         return $options;
     }
@@ -261,28 +265,32 @@ class SubeventRepository extends EntityRepository
         $usersSubevents = $user->getSubevents();
         $usersSubeventsIds = $this->findSubeventsIds($usersSubevents);
 
-        if (empty($usersSubeventsIds))
+        if (empty($usersSubeventsIds)) {
             $subevents = $this->createQueryBuilder('s')
                 ->orderBy('s.name')
                 ->getQuery()
                 ->getResult();
-        else
+        }
+        else {
             $subevents = $this->createQueryBuilder('s')
                 ->where('s.id NOT IN (:subevents)')->setParameter('subevents', $usersSubeventsIds)
                 ->orderBy('s.name')
                 ->getQuery()
                 ->getResult();
+        }
 
         $options = [];
         foreach ($subevents as $subevent) {
-            if ($subevent->hasLimitedCapacity())
-                $options[$subevent->getId()] = $this->translator->translate('web.common.subevent_option', NULL, [
+            if ($subevent->hasLimitedCapacity()) {
+                $options[$subevent->getId()] = $this->translator->translate('web.common.subevent_option', null, [
                     'subevent' => $subevent->getName(),
                     'occupied' => $subevent->countUsers(),
                     'total' => $subevent->getCapacity()
                 ]);
-            else
+            }
+            else {
                 $options[$subevent->getId()] = $subevent->getName();
+            }
         }
         return $options;
     }
@@ -297,30 +305,34 @@ class SubeventRepository extends EntityRepository
         $usersSubevents = $user->getSubevents();
         $usersSubeventsIds = $this->findSubeventsIds($usersSubevents);
 
-        if (empty($usersSubeventsIds))
+        if (empty($usersSubeventsIds)) {
             $subevents = $this->createQueryBuilder('s')
                 ->where('s.implicit = FALSE')
                 ->orderBy('s.name')
                 ->getQuery()
                 ->getResult();
-        else
+        }
+        else {
             $subevents = $this->createQueryBuilder('s')
                 ->where('s.implicit = FALSE')
                 ->andWhere('s.id NOT IN (:subevents)')->setParameter('subevents', $usersSubeventsIds)
                 ->orderBy('s.name')
                 ->getQuery()
                 ->getResult();
+        }
 
         $options = [];
         foreach ($subevents as $subevent) {
-            if ($subevent->hasLimitedCapacity())
-                $options[$subevent->getId()] = $this->translator->translate('web.common.subevent_option', NULL, [
+            if ($subevent->hasLimitedCapacity()) {
+                $options[$subevent->getId()] = $this->translator->translate('web.common.subevent_option', null, [
                     'subevent' => $subevent->getName(),
                     'occupied' => $subevent->countUsers(),
                     'total' => $subevent->getCapacity()
                 ]);
-            else
+            }
+            else {
                 $options[$subevent->getId()] = $subevent->getName();
+            }
         }
         return $options;
     }
