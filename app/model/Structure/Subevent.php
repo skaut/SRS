@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Structure;
@@ -10,7 +11,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
-
+use function implode;
 
 /**
  * Entita podakce.
@@ -35,7 +36,7 @@ class Subevent
      * @ORM\Column(type="boolean")
      * @var bool
      */
-    protected $implicit = FALSE;
+    protected $implicit = false;
 
     /**
      * Přihlášky.
@@ -103,55 +104,37 @@ class Subevent
     protected $skautIsCourses;
 
 
-    /**
-     * Subevent constructor.
-     */
     public function __construct()
     {
-        $this->applications = new ArrayCollection();
-        $this->blocks = new ArrayCollection();
+        $this->applications          = new ArrayCollection();
+        $this->blocks                = new ArrayCollection();
         $this->incompatibleSubevents = new ArrayCollection();
-        $this->requiredBySubevent = new ArrayCollection();
-        $this->requiredSubevents = new ArrayCollection();
-        $this->skautIsCourses = new ArrayCollection();
+        $this->requiredBySubevent    = new ArrayCollection();
+        $this->requiredSubevents     = new ArrayCollection();
+        $this->skautIsCourses        = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getId(): int
+    public function getId() : int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getName(): string
+    public function getName() : string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName(string $name): void
+    public function setName(string $name) : void
     {
         $this->name = $name;
     }
 
-    /**
-     * @return bool
-     */
-    public function isImplicit(): bool
+    public function isImplicit() : bool
     {
         return $this->implicit;
     }
 
-    /**
-     * @param bool $implicit
-     */
-    public function setImplicit(bool $implicit): void
+    public function setImplicit(bool $implicit) : void
     {
         $this->implicit = $implicit;
     }
@@ -159,93 +142,77 @@ class Subevent
     /**
      * @return Collection
      */
-    public function getBlocks(): Collection
+    public function getBlocks() : Collection
     {
         return $this->blocks;
     }
 
-    /**
-     * @return int
-     */
-    public function getFee(): int
+    public function getFee() : int
     {
         return $this->fee;
     }
 
-    /**
-     * @param int $fee
-     */
-    public function setFee(int $fee): void
+    public function setFee(int $fee) : void
     {
         $this->fee = $fee;
     }
 
-    /**
-     * @return int
-     */
-    public function getCapacity(): ?int
+    public function getCapacity() : ?int
     {
         return $this->capacity;
     }
 
-    /**
-     * @param int $capacity
-     */
-    public function setCapacity(?int $capacity): void
+    public function setCapacity(?int $capacity) : void
     {
         $this->capacity = $capacity;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasLimitedCapacity(): bool
+    public function hasLimitedCapacity() : bool
     {
-        return $this->capacity !== NULL;
+        return $this->capacity !== null;
     }
 
     /**
      * @return Collection|Subevent[]
      */
-    public function getIncompatibleSubevents(): Collection
+    public function getIncompatibleSubevents() : Collection
     {
         return $this->incompatibleSubevents;
     }
 
-    /**
-     * @param $incompatibleSubevents
-     */
-    public function setIncompatibleSubevents(Collection $incompatibleSubevents): void
+    public function setIncompatibleSubevents(Collection $incompatibleSubevents) : void
     {
         foreach ($this->getIncompatibleSubevents() as $subevent) {
-            if (!$incompatibleSubevents->contains($subevent)) {
-                $subevent->getIncompatibleSubevents()->removeElement($this);
+            if ($incompatibleSubevents->contains($subevent)) {
+                continue;
             }
+
+            $subevent->getIncompatibleSubevents()->removeElement($this);
         }
         foreach ($incompatibleSubevents as $subevent) {
-            if (!$subevent->getIncompatibleSubevents()->contains($this)) {
-                $subevent->getIncompatibleSubevents()->add($this);
+            if ($subevent->getIncompatibleSubevents()->contains($this)) {
+                continue;
             }
+
+            $subevent->getIncompatibleSubevents()->add($this);
         }
 
         $this->incompatibleSubevents = $incompatibleSubevents;
     }
 
-    /**
-     * @param $subevent
-     */
-    public function addIncompatibleSubevent(Subevent $subevent): void
+    public function addIncompatibleSubevent(Subevent $subevent) : void
     {
-        if (!$this->incompatibleSubevents->contains($subevent)) {
-            $this->incompatibleSubevents->add($subevent);
+        if ($this->incompatibleSubevents->contains($subevent)) {
+            return;
         }
+
+        $this->incompatibleSubevents->add($subevent);
     }
 
     /**
      * Vrací názvy všech nekompatibilních podakcí.
-     * @return string
      */
-    public function getIncompatibleSubeventsText(): string
+    public function getIncompatibleSubeventsText() : string
     {
         $incompatibleSubeventsNames = [];
         foreach ($this->getIncompatibleSubevents() as $incompatibleSubevent) {
@@ -257,7 +224,7 @@ class Subevent
     /**
      * @return Collection|Subevent[]
      */
-    public function getRequiredBySubevent(): Collection
+    public function getRequiredBySubevent() : Collection
     {
         return $this->requiredBySubevent;
     }
@@ -266,7 +233,7 @@ class Subevent
      * Vrací všechny (tranzitivně) podakce, kterými je tato podakce vyžadována.
      * @return Collection|Subevent[]
      */
-    public function getRequiredBySubeventTransitive(): Collection
+    public function getRequiredBySubeventTransitive() : Collection
     {
         $allRequiredBySubevent = new ArrayCollection();
         foreach ($this->requiredBySubevent as $requiredBySubevent) {
@@ -275,11 +242,7 @@ class Subevent
         return $allRequiredBySubevent;
     }
 
-    /**
-     * @param $allRequiredBySubevent
-     * @param $subevent
-     */
-    private function getRequiredBySubeventTransitiveRec(Collection &$allRequiredBySubevent, Subevent $subevent): void
+    private function getRequiredBySubeventTransitiveRec(Collection &$allRequiredBySubevent, Subevent $subevent) : void
     {
         if ($this === $subevent || $allRequiredBySubevent->contains($subevent)) {
             return;
@@ -295,26 +258,24 @@ class Subevent
     /**
      * @return Collection|Subevent[]
      */
-    public function getRequiredSubevents(): Collection
+    public function getRequiredSubevents() : Collection
     {
         return $this->requiredSubevents;
     }
 
-    /**
-     * @param $requiredSubevents
-     */
-    public function setRequiredSubevents(Collection $requiredSubevents): void
+    public function setRequiredSubevents(Collection $requiredSubevents) : void
     {
         $this->requiredSubevents->clear();
-        foreach ($requiredSubevents as $requiredSubevent)
+        foreach ($requiredSubevents as $requiredSubevent) {
             $this->requiredSubevents->add($requiredSubevent);
+        }
     }
 
     /**
      * Vrací všechny (tranzitivně) vyžadované podakce.
      * @return Collection|Subevent[]
      */
-    public function getRequiredSubeventsTransitive(): Collection
+    public function getRequiredSubeventsTransitive() : Collection
     {
         $allRequiredSubevents = new ArrayCollection();
         foreach ($this->requiredSubevents as $requiredSubevent) {
@@ -323,11 +284,7 @@ class Subevent
         return $allRequiredSubevents;
     }
 
-    /**
-     * @param $allRequiredSubevents
-     * @param $subevent
-     */
-    private function getRequiredSubeventsTransitiveRec(Collection &$allRequiredSubevents, Subevent $subevent): void
+    private function getRequiredSubeventsTransitiveRec(Collection &$allRequiredSubevents, Subevent $subevent) : void
     {
         if ($this === $subevent || $allRequiredSubevents->contains($subevent)) {
             return;
@@ -342,9 +299,8 @@ class Subevent
 
     /**
      * Vrací názvy všech vyžadovaných podakcí.
-     * @return string
      */
-    public function getRequiredSubeventsTransitiveText(): string
+    public function getRequiredSubeventsTransitiveText() : string
     {
         $requiredSubeventsNames = [];
         foreach ($this->getRequiredSubeventsTransitive() as $requiredSubevent) {
@@ -356,33 +312,30 @@ class Subevent
     /**
      * @return Collection|SkautIsCourse[]
      */
-    public function getSkautIsCourses(): Collection
+    public function getSkautIsCourses() : Collection
     {
         return $this->skautIsCourses;
     }
 
-    /**
-     * @return string
-     */
-    public function getSkautIsCoursesText(): string
+    public function getSkautIsCoursesText() : string
     {
-        return implode(', ', $this->skautIsCourses->map(function (SkautIsCourse $skautIsCourse) {return $skautIsCourse->getName();})->toArray());
+        return implode(', ', $this->skautIsCourses->map(function (SkautIsCourse $skautIsCourse) {
+            return $skautIsCourse->getName();
+        })->toArray());
     }
 
     /**
      * @param Collection|SkautIsCourse[] $skautIsCourses
      */
-    public function setSkautIsCourses(Collection $skautIsCourses): void
+    public function setSkautIsCourses(Collection $skautIsCourses) : void
     {
         $this->skautIsCourses->clear();
-        foreach ($skautIsCourses as $skautIsCourse)
+        foreach ($skautIsCourses as $skautIsCourse) {
             $this->skautIsCourses->add($skautIsCourse);
+        }
     }
 
-    /**
-     * @return int
-     */
-    public function countUsers(): int
+    public function countUsers() : int
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->andX(
@@ -397,18 +350,12 @@ class Subevent
         return $this->applications->matching($criteria)->count();
     }
 
-    /**
-     * @return int|null
-     */
-    public function countUnoccupied(): ?int
+    public function countUnoccupied() : ?int
     {
-        return $this->capacity ? $this->capacity - $this->countUsers() : NULL;
+        return $this->capacity ? $this->capacity - $this->countUsers() : null;
     }
 
-    /**
-     * @return string
-     */
-    public function getOccupancyText(): string
+    public function getOccupancyText() : string
     {
         return $this->capacity ? $this->countUsers() . '/' . $this->capacity : '' . $this->countUsers();
     }

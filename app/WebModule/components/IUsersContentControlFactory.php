@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\WebModule\Components;
-
 
 /**
  * Factory komponenty s přehledem uživatelů.
@@ -11,8 +11,5 @@ namespace App\WebModule\Components;
  */
 interface IUsersContentControlFactory
 {
-    /**
-     * @return UsersContentControl
-     */
-    public function create();
+    public function create() : UsersContentControl;
 }

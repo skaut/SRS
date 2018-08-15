@@ -1,10 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\ACL;
 
 use Kdyby\Doctrine\EntityRepository;
-
+use function array_map;
 
 /**
  * Třída spravující prostředky.
@@ -17,7 +18,7 @@ class ResourceRepository extends EntityRepository
      * Vrací názvy všech prostředků.
      * @return string[]
      */
-    public function findAllNames(): array
+    public function findAllNames() : array
     {
         $names = $this->createQueryBuilder('r')
             ->select('r.name')

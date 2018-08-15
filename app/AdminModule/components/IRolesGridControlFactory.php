@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\Components;
-
 
 /**
  * Factory komponenty pro správu rolí.
@@ -13,7 +13,6 @@ interface IRolesGridControlFactory
 {
     /**
      * Vytvoří komponentu.
-     * @return RolesGridControl
      */
-    public function create();
+    public function create() : RolesGridControl;
 }

@@ -101,7 +101,6 @@ class FaqForm
 
     /**
      * Zpracuje formulář.
-     * @param array $values
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException

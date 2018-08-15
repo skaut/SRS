@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\User\CustomInputValue;
@@ -7,7 +8,6 @@ use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\User\User;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
-
 
 /**
  * Abstraktní entita hodnota vlastního pole přihlášky.
@@ -43,42 +43,27 @@ abstract class CustomInputValue
     protected $user;
 
 
-    /**
-     * @return int
-     */
-    public function getId(): int
+    public function getId() : int
     {
         return $this->id;
     }
 
-    /**
-     * @return CustomInput
-     */
-    public function getInput(): CustomInput
+    public function getInput() : CustomInput
     {
         return $this->input;
     }
 
-    /**
-     * @param CustomInput $input
-     */
-    public function setInput(CustomInput $input): void
+    public function setInput(CustomInput $input) : void
     {
         $this->input = $input;
     }
 
-    /**
-     * @return User
-     */
-    public function getUser(): User
+    public function getUser() : User
     {
         return $this->user;
     }
 
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user): void
+    public function setUser(User $user) : void
     {
         $this->user = $user;
     }

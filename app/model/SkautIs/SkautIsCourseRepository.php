@@ -1,12 +1,15 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\SkautIs;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Kdyby\Doctrine\EntityRepository;
-
+use function array_map;
 
 /**
  * Třída spravující skautIS kurzy.
@@ -17,21 +20,18 @@ class SkautIsCourseRepository extends EntityRepository
 {
     /**
      * Vrací skautIS kurz podle id.
-     * @param int $id
-     * @return SkautIsCourse|null
      */
-    public function findById(int $id): ?SkautIsCourse
+    public function findById(int $id) : ?SkautIsCourse
     {
         return $this->findOneBy(['id' => $id]);
     }
 
     /**
      * Uloží skautIS kurz.
-     * @param SkautIsCourse $skautIsCourse
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function save(SkautIsCourse $skautIsCourse): void
+    public function save(SkautIsCourse $skautIsCourse) : void
     {
         $this->_em->persist($skautIsCourse);
         $this->_em->flush();
@@ -39,24 +39,24 @@ class SkautIsCourseRepository extends EntityRepository
 
     /**
      * Odstraní skautIS kurz.
-     * @param SkautIsCourse $skautIsCourse
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function remove(SkautIsCourse $skautIsCourse): void
+    public function remove(SkautIsCourse $skautIsCourse) : void
     {
         $this->_em->remove($skautIsCourse);
         $this->_em->flush();
     }
 
     /**
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function removeAll(): void
+    public function removeAll() : void
     {
-        foreach ($this->findAll() as $skautIsCourse)
+        foreach ($this->findAll() as $skautIsCourse) {
             $this->_em->remove($skautIsCourse);
+        }
         $this->_em->flush();
     }
 
@@ -65,7 +65,7 @@ class SkautIsCourseRepository extends EntityRepository
      * @param Collection|SkautIsCourse[] $skautIsCourses
      * @return array
      */
-    public function findSkautIsCoursesIds(Collection $skautIsCourses): array
+    public function findSkautIsCoursesIds(Collection $skautIsCourses) : array
     {
         return array_map(function (SkautIsCourse $skautIsCourse) {
             return $skautIsCourse->getId();
@@ -77,7 +77,7 @@ class SkautIsCourseRepository extends EntityRepository
      * @param array $ids
      * @return Collection|SkautIsCourse[]
      */
-    public function findSkautIsCoursesByIds(array $ids): Collection
+    public function findSkautIsCoursesByIds(array $ids) : Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids))
@@ -89,7 +89,7 @@ class SkautIsCourseRepository extends EntityRepository
      * Vrací seznam skautIS kurzů jako možnosti pro select.
      * @return array
      */
-    public function getSkautIsCoursesOptions(): array
+    public function getSkautIsCoursesOptions() : array
     {
         $skautIsCourses = $this->createQueryBuilder('c')
             ->select('c.id, c.name')

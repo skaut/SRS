@@ -1,15 +1,18 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
 use App\Model\Settings\Settings;
+use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\SubeventRepository;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
-
 
 /**
  * Formulář pro nastavení semináře.
@@ -31,33 +34,28 @@ class SeminarForm
     private $subeventRepository;
 
 
-    /**
-     * SeminarForm constructor.
-     * @param BaseForm $baseForm
-     * @param SettingsRepository $settingsRepository
-     * @param SubeventRepository $subeventRepository
-     */
-    public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository,
-                                SubeventRepository $subeventRepository)
-    {
-        $this->baseFormFactory = $baseForm;
+    public function __construct(
+        BaseForm $baseForm,
+        SettingsRepository $settingsRepository,
+        SubeventRepository $subeventRepository
+    ) {
+        $this->baseFormFactory    = $baseForm;
         $this->settingsRepository = $settingsRepository;
         $this->subeventRepository = $subeventRepository;
     }
 
     /**
      * Vytvoří formulář.
-     * @return Form
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
-    public function create()
+    public function create() : Form
     {
         $form = $this->baseFormFactory->create();
 
-        $renderer = $form->getRenderer();
+        $renderer                                   = $form->getRenderer();
         $renderer->wrappers['control']['container'] = 'div class="col-sm-7 col-xs-7"';
-        $renderer->wrappers['label']['container'] = 'div class="col-sm-5 col-xs-5 control-label"';
+        $renderer->wrappers['label']['container']   = 'div class="col-sm-5 col-xs-5 control-label"';
 
         $form->addText('seminarName', 'admin.configuration.seminar_name')
             ->addRule(Form::FILLED, 'admin.configuration.seminar_name_empty');
@@ -81,7 +79,7 @@ class SeminarForm
             'seminarName' => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
             'seminarFromDate' => $this->settingsRepository->getDateValue(Settings::SEMINAR_FROM_DATE),
             'seminarToDate' => $this->settingsRepository->getDateValue(Settings::SEMINAR_TO_DATE),
-            'editRegistrationTo' => $this->settingsRepository->getDateValue(Settings::EDIT_REGISTRATION_TO)
+            'editRegistrationTo' => $this->settingsRepository->getDateValue(Settings::EDIT_REGISTRATION_TO),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -91,14 +89,13 @@ class SeminarForm
 
     /**
      * Zpracuje formulář.
-     * @param Form $form
      * @param array $values
-     * @throws \App\Model\Settings\SettingsException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws SettingsException
+     * @throws ORMException
+     * @throws OptimisticLockException
      * @throws \Throwable
      */
-    public function processForm(Form $form, array $values)
+    public function processForm(Form $form, array $values) : void
     {
         $this->settingsRepository->setValue(Settings::SEMINAR_NAME, $values['seminarName']);
         $implicitSubevent = $this->subeventRepository->findImplicit();
@@ -114,9 +111,8 @@ class SeminarForm
      * Ověří, že datum začátku semináře je dříve než konce.
      * @param $field
      * @param $args
-     * @return bool
      */
-    public function validateSeminarFromDate($field, $args)
+    public function validateSeminarFromDate($field, $args) : bool
     {
         return $args[0] <= $args[1];
     }
@@ -125,9 +121,8 @@ class SeminarForm
      * Ověří, že datum konce semináře je později než začátku.
      * @param $field
      * @param $args
-     * @return bool
      */
-    public function validateSeminarToDate($field, $args)
+    public function validateSeminarToDate($field, $args) : bool
     {
         return $args[0] >= $args[1];
     }
@@ -136,9 +131,8 @@ class SeminarForm
      * Ověří, že datum uzavření registrace je dříve než začátek semináře.
      * @param $field
      * @param $args
-     * @return bool
      */
-    public function validateEditRegistrationTo($field, $args)
+    public function validateEditRegistrationTo($field, $args) : bool
     {
         return $args[0] < $args[1];
     }

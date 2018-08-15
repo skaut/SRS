@@ -1,11 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\MailingModule\Presenters;
 
 use App\AdminModule\MailingModule\Forms\SendForm;
 use Nette\Forms\Form;
-
 
 /**
  * Presenter obsluhující rozesílání e-mailu vytvořeného ve formuláři.
@@ -26,11 +26,10 @@ class SendPresenter extends MailingBasePresenter
     {
         $form = $this->sendFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, array $values) {
+        $form->onSuccess[] = function (Form $form, array $values) : void {
             if ($this->sendFormFactory->mailSuccess) {
                 $this->flashMessage('admin.mailing.send_sent', 'success');
-            }
-            else {
+            } else {
                 $this->flashMessage('admin.mailing.send_error', 'danger');
             }
 

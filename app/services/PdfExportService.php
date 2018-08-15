@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services;
@@ -6,6 +7,7 @@ namespace App\Services;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
 use App\Model\Settings\Settings;
+use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\Application;
 use App\Model\User\ApplicationRepository;
@@ -13,7 +15,7 @@ use App\Model\User\User;
 use App\Utils\Helpers;
 use fpdi\FPDI;
 use Nette;
-
+use function iconv;
 
 /**
  * Služba pro export do formátu PDF.
@@ -24,11 +26,11 @@ use Nette;
 class PdfExportService
 {
     use Nette\SmartObject;
-    
+
     /** @var string */
     private $dir;
 
-    /** @var \fpdi\FPDI */
+    /** @var FPDI */
     private $fpdi;
 
     private $template;
@@ -43,23 +45,19 @@ class PdfExportService
     private $applicationService;
 
 
-    /**
-     * PdfExportService constructor.
-     * @param string $dir
-     * @param SettingsRepository $settingsRepository
-     * @param ApplicationRepository $applicationRepository
-     * @param ApplicationService $applicationService
-     */
-    public function __construct($dir, SettingsRepository $settingsRepository,
-                                ApplicationRepository $applicationRepository, ApplicationService $applicationService)
-    {
+    public function __construct(
+        string $dir,
+        SettingsRepository $settingsRepository,
+        ApplicationRepository $applicationRepository,
+        ApplicationService $applicationService
+    ) {
         $this->dir = $dir;
 
-        $this->settingsRepository = $settingsRepository;
+        $this->settingsRepository    = $settingsRepository;
         $this->applicationRepository = $applicationRepository;
-        $this->applicationService = $applicationService;
+        $this->applicationService    = $applicationService;
 
-        $this->fpdi = new FPDI();
+        $this->fpdi           = new FPDI();
         $this->fpdi->fontpath = $dir . '/fonts/';
         $this->fpdi->AddFont('verdana', '', 'verdana.php');
         $this->fpdi->SetFont('verdana', '', 10);
@@ -67,13 +65,11 @@ class PdfExportService
 
     /**
      * Vygeneruje doklad o zaplacení pro přihlášku.
-     * @param Application $application
      * @param $filename
-     * @param User $createdBy
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
-    public function generateApplicationsPaymentProof(Application $application, $filename, User $createdBy)
+    public function generateApplicationsPaymentProof(Application $application, $filename, User $createdBy) : void
     {
         $this->prepareApplicationsPaymentProof($application, $createdBy);
         $this->fpdi->Output($filename, 'D');
@@ -81,36 +77,43 @@ class PdfExportService
     }
 
     /**
-     * @param Application $application
-     * @param User $createdBy
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
-    private function prepareApplicationsPaymentProof(Application $application, User $createdBy)
+    private function prepareApplicationsPaymentProof(Application $application, User $createdBy) : void
     {
-        if ($application->getState() == ApplicationState::PAID) {
-            if ($application->getPaymentMethod() == PaymentType::BANK)
-                $this->addAccountProofPage($application);
-            else if ($application->getPaymentMethod() == PaymentType::CASH)
-                $this->addIncomeProofPage($application);
-
-            if (!$application->getIncomeProofPrintedDate()) {
-                $this->applicationService->updatePayment($application, $application->getVariableSymbolText(),
-                    $application->getPaymentMethod(), $application->getPaymentDate(), new \DateTime(),
-                    $application->getMaturityDate(), $createdBy);
-            }
+        if ($application->getState() !== ApplicationState::PAID) {
+            return;
         }
+
+        if ($application->getPaymentMethod() === PaymentType::BANK) {
+            $this->addAccountProofPage($application);
+        } elseif ($application->getPaymentMethod() === PaymentType::CASH) {
+            $this->addIncomeProofPage($application);
+        }
+
+        if ($application->getIncomeProofPrintedDate()) {
+            return;
+        }
+
+        $this->applicationService->updatePayment(
+            $application,
+            $application->getVariableSymbolText(),
+            $application->getPaymentMethod(),
+            $application->getPaymentDate(),
+            new \DateTime(),
+            $application->getMaturityDate(),
+            $createdBy
+        );
     }
 
     /**
      * Vygeneruje doklady o zaplacení pro uživatele.
-     * @param User $user
      * @param $filename
-     * @param User $createdBy
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
-    public function generateUsersPaymentProof(User $user, $filename, User $createdBy)
+    public function generateUsersPaymentProof(User $user, $filename, User $createdBy) : void
     {
         $this->prepareUsersPaymentProof($user, $createdBy);
         $this->fpdi->Output($filename, 'D');
@@ -118,12 +121,10 @@ class PdfExportService
     }
 
     /**
-     * @param User $user
-     * @param User $createdBy
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
-    private function prepareUsersPaymentProof(User $user, User $createdBy)
+    private function prepareUsersPaymentProof(User $user, User $createdBy) : void
     {
         foreach ($user->getNotCanceledApplications() as $application) {
             $this->prepareApplicationsPaymentProof($application, $createdBy);
@@ -134,11 +135,10 @@ class PdfExportService
      * Vygeneruje doklady o zaplacení pro více uživatelů.
      * @param $users
      * @param $filename
-     * @param User $createdBy
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
-    public function generateUsersPaymentProofs($users, $filename, User $createdBy)
+    public function generateUsersPaymentProofs($users, $filename, User $createdBy) : void
     {
         $this->prepareUsersPaymentProofs($users, $createdBy);
         $this->fpdi->Output($filename, 'D');
@@ -147,11 +147,10 @@ class PdfExportService
 
     /**
      * @param $users
-     * @param User $createdBy
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
-    private function prepareUsersPaymentProofs($users, User $createdBy)
+    private function prepareUsersPaymentProofs($users, User $createdBy) : void
     {
         foreach ($users as $user) {
             $this->prepareUsersPaymentProof($user, $createdBy);
@@ -160,11 +159,10 @@ class PdfExportService
 
     /**
      * Vytvoří stránku s příjmovýchm dokladem.
-     * @param Application $application
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
-    private function addIncomeProofPage(Application $application)
+    private function addIncomeProofPage(Application $application) : void
     {
         $this->configureForIncomeProof();
 
@@ -186,19 +184,21 @@ class PdfExportService
         $this->fpdi->Text(140, 76, iconv('UTF-8', 'WINDOWS-1250', '== ' . $application->getFee() . ' =='));
         $this->fpdi->Text(38, 86, iconv('UTF-8', 'WINDOWS-1250', '== ' . $application->getFeeWords() . ' =='));
 
-        $this->fpdi->Text(40, 98, iconv('UTF-8', 'WINDOWS-1250',
-            "{$application->getUser()->getFirstName()} {$application->getUser()->getLastName()}, {$application->getUser()->getStreet()}, {$application->getUser()->getCity()}, {$application->getUser()->getPostcode()}"));
+        $this->fpdi->Text(40, 98, iconv(
+            'UTF-8',
+            'WINDOWS-1250',
+            "{$application->getUser()->getFirstName()} {$application->getUser()->getLastName()}, {$application->getUser()->getStreet()}, {$application->getUser()->getCity()}, {$application->getUser()->getPostcode()}"
+        ));
 
         $this->fpdi->Text(40, 111, iconv('UTF-8', 'WINDOWS-1250', "účastnický poplatek {$this->settingsRepository->getValue(Settings::SEMINAR_NAME)}"));
     }
 
     /**
      * Vytvoří stránku s potvrzením o přijetí platby.
-     * @param Application $application
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
-    private function addAccountProofPage(Application $application)
+    private function addAccountProofPage(Application $application) : void
     {
         $this->configureForAccountProof();
 
@@ -225,28 +225,27 @@ class PdfExportService
     /**
      * Nastaví šablonu pro příjmový doklad.
      */
-    private function configureForIncomeProof()
+    private function configureForIncomeProof() : void
     {
         $this->fpdi->setSourceFile($this->dir . '/prijmovy-pokladni-doklad.pdf');
-        $template = $this->fpdi->importPage(1, '/MediaBox');
+        $template       = $this->fpdi->importPage(1, '/MediaBox');
         $this->template = $template;
     }
-    
+
     /**
      * Nastaví šablonu pro potvrzení o přijetí platby.
      */
-    private function configureForAccountProof()
+    private function configureForAccountProof() : void
     {
         $this->fpdi->setSourceFile($this->dir . '/potvrzeni-o-prijeti-platby.pdf');
-        $template = $this->fpdi->importPage(1, '/MediaBox');
+        $template       = $this->fpdi->importPage(1, '/MediaBox');
         $this->template = $template;
     }
 
     /**
      * Vygeneruje dnešní datum.
-     * @return string
      */
-    private function writeToday()
+    private function writeToday() : string
     {
         $today = new \DateTime('now');
         return $today->format(Helpers::DATE_FORMAT);

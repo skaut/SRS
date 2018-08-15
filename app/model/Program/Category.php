@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Program;
@@ -8,7 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
-
+use function implode;
 
 /**
  * Entita kategorie programového bloku.
@@ -44,35 +45,23 @@ class Category
     protected $blocks;
 
 
-    /**
-     * Category constructor.
-     */
     public function __construct()
     {
         $this->registerableRoles = new ArrayCollection();
-        $this->blocks = new ArrayCollection();
+        $this->blocks            = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getId(): int
+    public function getId() : int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getName(): string
+    public function getName() : string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName(string $name): void
+    public function setName(string $name) : void
     {
         $this->name = $name;
     }
@@ -80,23 +69,22 @@ class Category
     /**
      * @return Role[]|Collection
      */
-    public function getRegisterableRoles(): Collection
+    public function getRegisterableRoles() : Collection
     {
         return $this->registerableRoles;
     }
 
-    /**
-     * @return string
-     */
-    public function getRegisterableRolesText(): string
+    public function getRegisterableRolesText() : string
     {
-        return implode(', ', $this->registerableRoles->map(function (Role $role) {return $role->getName();})->toArray());
+        return implode(', ', $this->registerableRoles->map(function (Role $role) {
+            return $role->getName();
+        })->toArray());
     }
 
     /**
      * @param Role[]|Collection $registerableRoles
      */
-    public function setRegisterableRoles(Collection $registerableRoles): void
+    public function setRegisterableRoles(Collection $registerableRoles) : void
     {
         $this->registerableRoles->clear();
         foreach ($registerableRoles as $registerableRole) {
@@ -104,20 +92,19 @@ class Category
         }
     }
 
-    /**
-     * @param Role $role
-     */
-    public function addRole(Role $role): void
+    public function addRole(Role $role) : void
     {
-        if (!$this->registerableRoles->contains($role)) {
-            $this->registerableRoles->add($role);
+        if ($this->registerableRoles->contains($role)) {
+            return;
         }
+
+        $this->registerableRoles->add($role);
     }
 
     /**
      * @return Block[]|Collection
      */
-    public function getBlocks(): Collection
+    public function getBlocks() : Collection
     {
         return $this->blocks;
     }

@@ -47,7 +47,6 @@ class FaqGridControl extends Control
 
     /**
      * Vytvoří komponentu.
-     * @param $name
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
@@ -97,7 +96,6 @@ class FaqGridControl extends Control
 
     /**
      * Zpracuje odstranění otázky.
-     * @param $id
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -114,9 +112,6 @@ class FaqGridControl extends Control
 
     /**
      * Přesuee otázku $item_id mezi $prev_id a $next_id.
-     * @param $item_id
-     * @param $prev_id
-     * @param $next_id
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -138,8 +133,6 @@ class FaqGridControl extends Control
 
     /**
      * Změní viditelnost otázky.
-     * @param $id
-     * @param $public
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException

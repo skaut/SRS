@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\WebModule\Components;
@@ -9,7 +10,6 @@ use App\Model\CMS\FaqRepository;
 use App\WebModule\Forms\FaqForm;
 use Nette\Application\UI\Control;
 use Nette\Forms\Form;
-
 
 /**
  * Komponenta s FAQ.
@@ -29,48 +29,36 @@ class FaqContentControl extends Control
     private $roleRepository;
 
 
-    /**
-     * FaqContentControl constructor.
-     * @param FaqForm $faqFormFactory
-     * @param FaqRepository $faqRepository
-     * @param RoleRepository $roleRepository
-     */
     public function __construct(FaqForm $faqFormFactory, FaqRepository $faqRepository, RoleRepository $roleRepository)
     {
         parent::__construct();
 
         $this->faqFormFactory = $faqFormFactory;
-        $this->faqRepository = $faqRepository;
+        $this->faqRepository  = $faqRepository;
         $this->roleRepository = $roleRepository;
     }
 
-    /**
-     * @param $content
-     */
-    public function render($content)
+    public function render($content) : void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/faq_content.latte');
 
-        $template->heading = $content->getHeading();
+        $template->heading   = $content->getHeading();
         $template->questions = $this->faqRepository->findPublishedOrderedByPosition();
 
         $template->backlink = $this->getPresenter()->getHttpRequest()->getUrl()->getPath();
 
-        $user = $this->getPresenter()->user;
+        $user                = $this->getPresenter()->user;
         $template->guestRole = $user->isInRole($this->roleRepository->findBySystemName(Role::GUEST)->getName());
 
         $template->render();
     }
 
-    /**
-     * @return \Nette\Application\UI\Form
-     */
-    public function createComponentFaqForm()
+    public function createComponentFaqForm() : \Nette\Application\UI\Form
     {
         $form = $this->faqFormFactory->create($this->getPresenter()->getUser()->id);
 
-        $form->onSuccess[] = function (Form $form, array $values) {
+        $form->onSuccess[] = function (Form $form, array $values) : void {
             $this->getPresenter()->flashMessage('web.faq_content.add_question_successful', 'success');
 
             $this->getPresenter()->redirect('this');

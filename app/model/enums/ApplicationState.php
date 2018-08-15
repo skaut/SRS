@@ -1,33 +1,33 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Enums;
-
 
 class ApplicationState
 {
     /**
      * Čeká na platbu.
      */
-    const WAITING_FOR_PAYMENT = "waiting_for_payment";
+    public const WAITING_FOR_PAYMENT = 'waiting_for_payment';
 
     /**
      * Automaticky zrušeno kvůli nezaplacení.
      */
-    const CANCELED_NOT_PAID = "canceled_not_paid";
+    public const CANCELED_NOT_PAID = 'canceled_not_paid';
 
     /**
      * Zrušeno.
      */
-    const CANCELED = "canceled";
+    public const CANCELED = 'canceled';
 
     /**
      * Zaplaceno.
      */
-    const PAID = "paid";
+    public const PAID = 'paid';
 
     /**
      * Zaplaceno (zdarma).
      */
-    const PAID_FREE = "paid_free";
+    public const PAID_FREE = 'paid_free';
 }

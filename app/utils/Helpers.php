@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
+use function mb_substr;
+use function strlen;
+use function strrpos;
+
 /**
  * Třída s pomocnými metodami.
  *
@@ -17,9 +21,6 @@ class Helpers
 
     /**
      * Zkrátí $text na $length znaků a doplní '...'.
-     * @param string    $text text ke zkrácení
-     * @param int   $length požadovaná délka
-     * @return string
      */
     public static function truncate(string $text, int $length) : string
     {

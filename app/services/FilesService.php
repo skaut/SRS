@@ -1,11 +1,19 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services;
 
 use Nette;
 use Nette\Utils\Image;
-
+use function dirname;
+use function fclose;
+use function file_exists;
+use function fopen;
+use function fwrite;
+use function is_dir;
+use function mkdir;
+use function unlink;
 
 /**
  * Služba pro správu nahraných souborů.
@@ -15,16 +23,12 @@ use Nette\Utils\Image;
 class FilesService
 {
     use Nette\SmartObject;
-    
+
     /** @var string */
     private $dir;
 
 
-    /**
-     * FilesService constructor.
-     * @param string $dir
-     */
-    public function __construct($dir)
+    public function __construct(string $dir)
     {
         $this->dir = $dir;
     }
@@ -34,7 +38,7 @@ class FilesService
      * @param $file
      * @param $path
      */
-    public function save($file, $path)
+    public function save($file, $path) : void
     {
         $file->move($this->dir . $path);
     }
@@ -43,12 +47,14 @@ class FilesService
      * Odstraní soubor.
      * @param $path
      */
-    public function delete($path)
+    public function delete($path) : void
     {
         $file = $this->dir . $path;
-        if (file_exists($file)) {
-            unlink($file);
+        if (! file_exists($file)) {
+            return;
         }
+
+        unlink($file);
     }
 
     /**
@@ -56,13 +62,13 @@ class FilesService
      * @param $path
      * @param $content
      */
-    public function create($path, $content)
+    public function create($path, $content) : void
     {
         $absPath = $this->dir . $path;
         $dirname = dirname($absPath);
 
-        if (!is_dir($dirname)) {
-            mkdir($dirname, 0755, TRUE);
+        if (! is_dir($dirname)) {
+            mkdir($dirname, 0755, true);
         }
 
         $file = fopen($absPath, 'wb');
@@ -77,7 +83,7 @@ class FilesService
      * @param $height
      * @throws Nette\Utils\UnknownImageFileException
      */
-    public function resizeImage($path, $width, $height)
+    public function resizeImage($path, $width, $height) : void
     {
         $image = Image::fromFile($this->dir . $path);
         $image->resize($width, $height);
@@ -92,15 +98,14 @@ class FilesService
      * @param $height
      * @throws Nette\Utils\UnknownImageFileException
      */
-    public function resizeAndCropImage($path, $width, $height)
+    public function resizeAndCropImage($path, $width, $height) : void
     {
         $image = Image::fromFile($this->dir . $path);
 
         if ($image->getWidth() / $width > $image->getHeight() / $height) {
-            $image->resize(NULL, $height);
-        }
-        else {
-            $image->resize($width, NULL);
+            $image->resize(null, $height);
+        } else {
+            $image->resize($width, null);
         }
 
         $image->sharpen();
@@ -112,9 +117,8 @@ class FilesService
 
     /**
      * Vrací cestu ke složce pro nahrávání souborů.
-     * @return string
      */
-    public function getDir()
+    public function getDir() : string
     {
         return $this->dir;
     }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ProgramModule\Forms;
@@ -16,9 +17,10 @@ use App\Model\Structure\SubeventRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ProgramService;
+use Doctrine\ORM\NonUniqueResultException;
 use Nette;
 use Nette\Application\UI\Form;
-
+use function array_key_exists;
 
 /**
  * Formulář pro úpravu programového bloku.
@@ -29,7 +31,7 @@ use Nette\Application\UI\Form;
 class BlockForm
 {
     use Nette\SmartObject;
-    
+
     /**
      * Přihlášený uživatel.
      * @var User
@@ -73,43 +75,36 @@ class BlockForm
     private $programService;
 
 
-    /**
-     * BlockForm constructor.
-     * @param BaseForm $baseFormFactory
-     * @param BlockRepository $blockRepository
-     * @param UserRepository $userRepository
-     * @param CategoryRepository $categoryRepository
-     * @param SettingsRepository $settingsRepository
-     * @param ProgramRepository $programRepository
-     * @param SubeventRepository $subeventRepository
-     * @param ProgramService $programService
-     */
-    public function __construct(BaseForm $baseFormFactory, BlockRepository $blockRepository,
-                                UserRepository $userRepository, CategoryRepository $categoryRepository,
-                                SettingsRepository $settingsRepository, ProgramRepository $programRepository,
-                                SubeventRepository $subeventRepository, ProgramService $programService)
-    {
-        $this->baseFormFactory = $baseFormFactory;
-        $this->blockRepository = $blockRepository;
-        $this->userRepository = $userRepository;
+    public function __construct(
+        BaseForm $baseFormFactory,
+        BlockRepository $blockRepository,
+        UserRepository $userRepository,
+        CategoryRepository $categoryRepository,
+        SettingsRepository $settingsRepository,
+        ProgramRepository $programRepository,
+        SubeventRepository $subeventRepository,
+        ProgramService $programService
+    ) {
+        $this->baseFormFactory    = $baseFormFactory;
+        $this->blockRepository    = $blockRepository;
+        $this->userRepository     = $userRepository;
         $this->categoryRepository = $categoryRepository;
         $this->settingsRepository = $settingsRepository;
-        $this->programRepository = $programRepository;
+        $this->programRepository  = $programRepository;
         $this->subeventRepository = $subeventRepository;
-        $this->programService = $programService;
+        $this->programService     = $programService;
     }
 
     /**
      * Vytvoří formulář.
      * @param $id
      * @param $userId
-     * @return Form
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
-    public function create($id, $userId)
+    public function create($id, $userId) : Form
     {
         $this->block = $this->blockRepository->findById($id);
-        $this->user = $this->userRepository->findById($userId);
+        $this->user  = $this->userRepository->findById($userId);
 
         $this->subeventsExists = $this->subeventRepository->explicitSubeventsExists();
 
@@ -129,11 +124,9 @@ class BlockForm
         $form->addSelect('category', 'admin.program.blocks_category', $this->categoryRepository->getCategoriesOptions())
             ->setPrompt('');
 
-
         if ($this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS)) {
             $lectorsOptions = $this->userRepository->getLectorsOptions();
-        }
-        else {
+        } else {
             $lectorsOptions = [$this->user->getId() => $this->user->getDisplayName()];
         }
 
@@ -142,7 +135,6 @@ class BlockForm
         if ($this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS)) {
             $lectorColumn->setPrompt('');
         }
-
 
         $form->addText('duration', 'admin.program.blocks_duration_form')
             ->addRule(Form::FILLED, 'admin.program.blocks_duration_empty')
@@ -155,7 +147,7 @@ class BlockForm
             ->addRule(Form::INTEGER, 'admin.program.blocks_capacity_format');
 
         $form->addCheckbox('mandatory', 'admin.program.blocks_mandatory_form')
-            ->addCondition(Form::EQUAL, TRUE)
+            ->addCondition(Form::EQUAL, true)
             ->toggle('autoRegisterCheckbox');
 
         $form->addCheckbox('autoRegister', 'admin.program.blocks_auto_register')
@@ -188,20 +180,20 @@ class BlockForm
             $form->setDefaults([
                 'id' => $id,
                 'name' => $this->block->getName(),
-                'category' => $this->block->getCategory() ? $this->block->getCategory()->getId() : NULL,
-                'lector' => $this->block->getLector() ? $this->block->getLector()->getId() : NULL,
+                'category' => $this->block->getCategory() ? $this->block->getCategory()->getId() : null,
+                'lector' => $this->block->getLector() ? $this->block->getLector()->getId() : null,
                 'duration' => $this->block->getDuration(),
                 'capacity' => $this->block->getCapacity(),
                 'mandatory' => $this->block->getMandatory() > 0,
-                'autoRegister' => $this->block->getMandatory() == 2,
+                'autoRegister' => $this->block->getMandatory() === 2,
                 'perex' => $this->block->getPerex(),
                 'description' => $this->block->getDescription(),
-                'tools' => $this->block->getTools()
+                'tools' => $this->block->getTools(),
             ]);
 
             if ($this->subeventsExists) {
                 $form->setDefaults([
-                    'subevent' => $this->block->getSubevent() ? $this->block->getSubevent()->getId() : NULL
+                    'subevent' => $this->block->getSubevent() ? $this->block->getSubevent()->getId() : null,
                 ]);
             }
         } else {
@@ -216,96 +208,97 @@ class BlockForm
 
     /**
      * Zpracuje formulář.
-     * @param Form $form
      * @param array $values
      * @throws \Throwable
      */
-    public function processForm(Form $form, array $values)
+    public function processForm(Form $form, array $values) : void
     {
-        if (!$form['cancel']->isSubmittedBy()) {
-            $this->blockRepository->getEntityManager()->transactional(function ($em) use ($values) {
-                if (!$this->block) {
-                    if (!$this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK)) {
-                        return;
-                    }
-                    $this->block = new Block();
-                } else if (!$this->user->isAllowedModifyBlock($this->block)) {
+        if ($form['cancel']->isSubmittedBy()) {
+            return;
+        }
+
+        $this->blockRepository->getEntityManager()->transactional(function ($em) use ($values) : void {
+            if (! $this->block) {
+                if (! $this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK)) {
                     return;
                 }
+                $this->block = new Block();
+            } elseif (! $this->user->isAllowedModifyBlock($this->block)) {
+                return;
+            }
 
-                $oldMandatory = $this->block->getMandatory();
-                $oldCategory = $this->block->getCategory();
-                $oldSubevent = $this->block->getSubevent();
+            $oldMandatory = $this->block->getMandatory();
+            $oldCategory  = $this->block->getCategory();
+            $oldSubevent  = $this->block->getSubevent();
 
-                $category = $values['category'] != '' ? $this->categoryRepository->findById($values['category']) : NULL;
-                $lector = $values['lector'] != '' ? $this->userRepository->findById($values['lector']) : NULL;
-                $capacity = $values['capacity'] !== '' ? $values['capacity'] : NULL;
+            $category = $values['category'] !== '' ? $this->categoryRepository->findById($values['category']) : null;
+            $lector   = $values['lector'] !== '' ? $this->userRepository->findById($values['lector']) : null;
+            $capacity = $values['capacity'] !== '' ? $values['capacity'] : null;
 
-                $this->block->setName($values['name']);
-                $this->block->setCategory($category);
-                $this->block->setLector($lector);
-                $this->block->setDuration($values['duration']);
-                $this->block->setCapacity($capacity);
-                $this->block->setMandatory($values['mandatory'] ? ((array_key_exists('autoRegister', $values) && $values['autoRegister']) ? 2 : 1) : 0);
-                $this->block->setPerex($values['perex']);
-                $this->block->setDescription($values['description']);
-                $this->block->setTools($values['tools']);
+            $this->block->setName($values['name']);
+            $this->block->setCategory($category);
+            $this->block->setLector($lector);
+            $this->block->setDuration($values['duration']);
+            $this->block->setCapacity($capacity);
+            $this->block->setMandatory($values['mandatory'] ? ((array_key_exists('autoRegister', $values) && $values['autoRegister']) ? 2 : 1) : 0);
+            $this->block->setPerex($values['perex']);
+            $this->block->setDescription($values['description']);
+            $this->block->setTools($values['tools']);
 
-                if ($this->subeventsExists) {
-                    $subevent = $values['subevent'] != '' ? $this->subeventRepository->findById($values['subevent']) : NULL;
-                    $this->block->setSubevent($subevent);
-                } else {
-                    $this->block->setSubevent($this->subeventRepository->findImplicit());
+            if ($this->subeventsExists) {
+                $subevent = $values['subevent'] !== '' ? $this->subeventRepository->findById($values['subevent']) : null;
+                $this->block->setSubevent($subevent);
+            } else {
+                $this->block->setSubevent($this->subeventRepository->findImplicit());
+            }
+
+            $this->blockRepository->save($this->block);
+
+            //odstraneni ucastniku, pokud se odstrani automaticke prihlasovani
+            if ($oldMandatory === 2 && $this->block->getMandatory() !== 2) {
+                foreach ($this->block->getPrograms() as $program) {
+                    $program->removeAllAttendees();
                 }
+            }
 
-                $this->blockRepository->save($this->block);
-
-                //odstraneni ucastniku, pokud se odstrani automaticke prihlasovani
-                if ($oldMandatory == 2 && $this->block->getMandatory() != 2) {
-                    foreach ($this->block->getPrograms() as $program) {
-                        $program->removeAllAttendees();
-                    }
+            //pridani ucastniku, pokud je pridano automaticke prihlaseni
+            if ($oldMandatory !== 2 && $this->block->getMandatory() === 2) {
+                foreach ($this->block->getPrograms() as $program) {
+                    $program->setAttendees($this->userRepository->findProgramAllowed($program));
                 }
+            }
 
-                //pridani ucastniku, pokud je pridano automaticke prihlaseni
-                if ($oldMandatory != 2 && $this->block->getMandatory() == 2) {
-                    foreach ($this->block->getPrograms() as $program) {
-                        $program->setAttendees($this->userRepository->findProgramAllowed($program));
-                    }
-                }
+            //aktualizace ucastniku pri zmene kategorie nebo podakce
+            if ($oldMandatory === $this->block->getMandatory() && (
+                    $this->block->getCategory() !== $oldCategory) || ($this->block->getSubevent() !== $oldSubevent)
+            ) {
+                $this->programService->updateUsersPrograms($this->userRepository->findAll());
+            }
 
-                //aktualizace ucastniku pri zmene kategorie nebo podakce
-                if ($oldMandatory == $this->block->getMandatory() && (
-                        $this->block->getCategory() !== $oldCategory) || ($this->block->getSubevent() !== $oldSubevent)
-                ) {
-                    $this->programService->updateUsersPrograms($this->userRepository->findAll());
-                }
-
-                $this->blockRepository->save($this->block);
-            });
-        }
+            $this->blockRepository->save($this->block);
+        });
     }
 
     /**
      * Ověří, zda může být program automaticky přihlašovaný.
      * @param $field
      * @param $args
-     * @return bool
      */
-    public function validateAutoRegister($field, $args)
+    public function validateAutoRegister($field, $args) : bool
     {
         if ($this->block) {
-            if ($this->block->getMandatory() != 2 && ($this->block->getProgramsCount() > 1 ||
-                    ($this->block->getProgramsCount() == 1 && $this->programRepository->hasOverlappingProgram(
-                            $this->block->getPrograms()->first(),
-                            $this->block->getPrograms()->first()->getStart(),
-                            $this->block->getPrograms()->first()->getEnd())
+            if ($this->block->getMandatory() !== 2 && ($this->block->getProgramsCount() > 1 ||
+                    ($this->block->getProgramsCount() === 1 && $this->programRepository->hasOverlappingProgram(
+                        $this->block->getPrograms()->first(),
+                        $this->block->getPrograms()->first()->getStart(),
+                        $this->block->getPrograms()->first()->getEnd()
+                    )
                     )
                 )
             ) {
                 return false;
             }
         }
-        return TRUE;
+        return true;
     }
 }

@@ -1,14 +1,18 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Components;
 
 use App\Model\Program\BlockRepository;
 use App\Model\Structure\SubeventRepository;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
+use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Ublaboo\DataGrid\DataGrid;
-
+use Ublaboo\DataGrid\Exception\DataGridException;
 
 /**
  * Komponenta pro správu podakcí.
@@ -27,26 +31,22 @@ class SubeventsGridControl extends Control
     private $blockRepository;
 
 
-    /**
-     * SubeventsGridControl constructor.
-     * @param Translator $translator
-     * @param SubeventRepository $subeventRepository
-     * @param BlockRepository $blockRepository
-     */
-    public function __construct(Translator $translator, SubeventRepository $subeventRepository,
-                                BlockRepository $blockRepository)
-    {
+    public function __construct(
+        Translator $translator,
+        SubeventRepository $subeventRepository,
+        BlockRepository $blockRepository
+    ) {
         parent::__construct();
 
-        $this->translator = $translator;
+        $this->translator         = $translator;
         $this->subeventRepository = $subeventRepository;
-        $this->blockRepository = $blockRepository;
+        $this->blockRepository    = $blockRepository;
     }
 
     /**
      * Vykreslí komponentu.
      */
-    public function render()
+    public function render() : void
     {
         $this->template->render(__DIR__ . '/templates/subevents_grid.latte');
     }
@@ -54,23 +54,22 @@ class SubeventsGridControl extends Control
     /**
      * Vytvoří komponentu.
      * @param $name
-     * @throws \Ublaboo\DataGrid\Exception\DataGridException
+     * @throws DataGridException
      */
-    public function createComponentSubeventsGrid($name)
+    public function createComponentSubeventsGrid($name) : void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
         $grid->setDataSource($this->subeventRepository->createQueryBuilder('s'));
         $grid->setDefaultSort(['name' => 'ASC']);
-        $grid->setPagination(FALSE);
-
+        $grid->setPagination(false);
 
         $grid->addColumnText('name', 'admin.configuration.subevents_name');
 
         $grid->addColumnText('implicit', 'admin.configuration.subevents_implicit')
             ->setReplacement([
                 '0' => $this->translator->translate('admin.common.no'),
-                '1' => $this->translator->translate('admin.common.yes')
+                '1' => $this->translator->translate('admin.common.yes'),
             ]);
 
         $grid->addColumnNumber('fee', 'admin.configuration.subevents_fee');
@@ -83,7 +82,7 @@ class SubeventsGridControl extends Control
 
         $grid->addAction('edit', 'admin.common.edit', 'Subevents:edit');
         $grid->allowRowsAction('edit', function ($item) {
-            return !$item->isImplicit();
+            return ! $item->isImplicit();
         });
 
         $grid->addAction('delete', '', 'delete!')
@@ -92,21 +91,21 @@ class SubeventsGridControl extends Control
             ->setClass('btn btn-xs btn-danger')
             ->addAttributes([
                 'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('admin.configuration.subevents_delete_confirm')
+                'data-content' => $this->translator->translate('admin.configuration.subevents_delete_confirm'),
             ]);
         $grid->allowRowsAction('delete', function ($item) {
-            return !$item->isImplicit();
+            return ! $item->isImplicit();
         });
     }
 
     /**
      * Zpracuje odstranění podakce.
      * @param $id
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Nette\Application\AbortException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws AbortException
      */
-    public function handleDelete($id)
+    public function handleDelete($id) : void
     {
         $subevent = $this->subeventRepository->findById($id);
 

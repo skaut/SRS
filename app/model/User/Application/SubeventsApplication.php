@@ -1,11 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\User;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-
 
 /**
  * Entita přihláška podakcí.
@@ -21,7 +21,7 @@ class SubeventsApplication extends Application
     /**
      * @param Collection $subevents
      */
-    public function setSubevents(Collection $subevents): void
+    public function setSubevents(Collection $subevents) : void
     {
         $this->subevents = $subevents;
     }

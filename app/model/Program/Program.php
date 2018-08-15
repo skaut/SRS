@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Program;
@@ -8,7 +9,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
-
 
 /**
  * Entita program.
@@ -51,34 +51,22 @@ class Program
     protected $start;
 
 
-    /**
-     * Program constructor.
-     */
     public function __construct()
     {
         $this->attendees = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getId(): int
+    public function getId() : int
     {
         return $this->id;
     }
 
-    /**
-     * @return Block
-     */
-    public function getBlock(): Block
+    public function getBlock() : Block
     {
         return $this->block;
     }
 
-    /**
-     * @param Block $block
-     */
-    public function setBlock(Block $block): void
+    public function setBlock(Block $block) : void
     {
         $this->block = $block;
     }
@@ -86,7 +74,7 @@ class Program
     /**
      * @return Collection
      */
-    public function getAttendees(): Collection
+    public function getAttendees() : Collection
     {
         return $this->attendees;
     }
@@ -94,7 +82,7 @@ class Program
     /**
      * @param Collection $attendees
      */
-    public function setAttendees(Collection $attendees): void
+    public function setAttendees(Collection $attendees) : void
     {
         $this->removeAllAttendees();
         foreach ($attendees as $attendee) {
@@ -102,21 +90,19 @@ class Program
         }
     }
 
-    /**
-     * @param $user
-     */
-    public function addAttendee(User $user): void
+    public function addAttendee(User $user) : void
     {
-        if (!$this->attendees->contains($user)) {
-            $user->addProgram($this);
+        if ($this->attendees->contains($user)) {
+            return;
         }
+
+        $user->addProgram($this);
     }
 
     /**
      * Vrací počet účastníků.
-     * @return int
      */
-    public function getAttendeesCount(): int
+    public function getAttendeesCount() : int
     {
         return $this->attendees->count();
     }
@@ -124,7 +110,7 @@ class Program
     /**
      * Odstraní všechny účastníky programu.
      */
-    public function removeAllAttendees(): void
+    public function removeAllAttendees() : void
     {
         foreach ($this->attendees as $attendee) {
             $attendee->removeProgram($this);
@@ -133,10 +119,8 @@ class Program
 
     /**
      * Je uživatel účastník programu?
-     * @param User $user
-     * @return bool
      */
-    public function isAttendee(User $user): bool
+    public function isAttendee(User $user) : bool
     {
         return $this->attendees->contains($user);
     }
@@ -145,49 +129,36 @@ class Program
      * Vrací kapacitu programového bloku.
      * @return mixed
      */
-    public function getCapacity(): int
+    public function getCapacity() : int
     {
         return $this->block->getCapacity();
     }
 
-    /**
-     * @return Room
-     */
-    public function getRoom(): Room
+    public function getRoom() : Room
     {
         return $this->room;
     }
 
-    /**
-     * @param Room $room
-     */
-    public function setRoom(Room $room): void
+    public function setRoom(Room $room) : void
     {
         $this->room = $room;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getStart(): \DateTime
+    public function getStart() : \DateTime
     {
         return $this->start;
     }
 
-    /**
-     * @param \DateTime $start
-     */
-    public function setStart(\DateTime $start): void
+    public function setStart(\DateTime $start) : void
     {
         $this->start = $start;
     }
 
     /**
      * Vrací konec programu vypočtený podle délky bloku.
-     * @return \DateTime
      * @throws \Exception
      */
-    public function getEnd(): \DateTime
+    public function getEnd() : \DateTime
     {
         $end = clone($this->start);
         $end->add(new \DateInterval('PT' . $this->block->getDuration() . 'M'));

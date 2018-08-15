@@ -1,10 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\User\CustomInputValue;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Kdyby\Doctrine\EntityRepository;
-
 
 /**
  * Třída spravující hodnoty vlastních polí přihlášky.
@@ -16,20 +18,18 @@ class CustomInputValueRepository extends EntityRepository
     /**
      * Vrací hodnotu vlastního pole přihlášky podle id.
      * @param $id
-     * @return CustomInputValue|null
      */
-    public function findById(int $id): ?CustomInputValue
+    public function findById(int $id) : ?CustomInputValue
     {
         return $this->findOneBy(['id' => $id]);
     }
 
     /**
      * Uloží hodnotu vlastního pole přihlášky.
-     * @param CustomInputValue $value
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function save(CustomInputValue $value): void
+    public function save(CustomInputValue $value) : void
     {
         $this->_em->persist($value);
         $this->_em->flush();
@@ -37,11 +37,10 @@ class CustomInputValueRepository extends EntityRepository
 
     /**
      * Odstraní hodnotu vlastního pole přihlášky.
-     * @param CustomInputValue $value
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function remove(CustomInputValue $value): void
+    public function remove(CustomInputValue $value) : void
     {
         $this->_em->remove($value);
         $this->_em->flush();

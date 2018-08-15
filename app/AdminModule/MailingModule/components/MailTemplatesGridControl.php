@@ -1,14 +1,18 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\MailingModule\Components;
 
-
 use App\Model\Mailing\TemplateRepository;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
+use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Ublaboo\DataGrid\DataGrid;
-
+use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
+use Ublaboo\DataGrid\Exception\DataGridException;
 
 /**
  * Komponenta pro správu automatických e-mailů.
@@ -24,23 +28,18 @@ class MailTemplatesGridControl extends Control
     private $templateRepository;
 
 
-    /**
-     * MailTemplatesGridControl constructor.
-     * @param Translator $translator
-     * @param TemplateRepository $templateRepository
-     */
     public function __construct(Translator $translator, TemplateRepository $templateRepository)
     {
         parent::__construct();
 
-        $this->translator = $translator;
+        $this->translator         = $translator;
         $this->templateRepository = $templateRepository;
     }
 
     /**
      * Vykreslí komponentu.
      */
-    public function render()
+    public function render() : void
     {
         $this->template->render(__DIR__ . '/templates/mail_templates_grid.latte');
     }
@@ -48,18 +47,17 @@ class MailTemplatesGridControl extends Control
     /**
      * Vytvoří komponentu.
      * @param $name
-     * @throws \Ublaboo\DataGrid\Exception\DataGridColumnStatusException
-     * @throws \Ublaboo\DataGrid\Exception\DataGridException
+     * @throws DataGridColumnStatusException
+     * @throws DataGridException
      */
-    public function createComponentMailTemplatesGrid($name)
+    public function createComponentMailTemplatesGrid($name) : void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
         $grid->setDataSource($this->templateRepository->createQueryBuilder('t')
-            ->where('t.system = FALSE')
-        );
+            ->where('t.system = FALSE'));
         $grid->setDefaultSort(['type' => 'ASC']);
-        $grid->setPagination(FALSE);
+        $grid->setPagination(false);
 
         $grid->addColumnText('type', 'admin.mailing.templates_type')
             ->setRenderer(function ($row) {
@@ -67,10 +65,10 @@ class MailTemplatesGridControl extends Control
             });
 
         $grid->addColumnStatus('active', 'admin.mailing.templates_active')
-            ->addOption(FALSE, 'admin.mailing.templates_active_inactive')
+            ->addOption(false, 'admin.mailing.templates_active_inactive')
             ->setClass('btn-danger')
             ->endOption()
-            ->addOption(TRUE, 'admin.mailing.templates_active_active')
+            ->addOption(true, 'admin.mailing.templates_active_active')
             ->setClass('btn-success')
             ->endOption()
             ->onChange[] = [$this, 'changeActive'];
@@ -78,13 +76,13 @@ class MailTemplatesGridControl extends Control
         $grid->addColumnText('sendToUser', 'admin.mailing.templates_send_to_user')
             ->setReplacement([
                 '0' => $this->translator->translate('admin.common.no'),
-                '1' => $this->translator->translate('admin.common.yes')
+                '1' => $this->translator->translate('admin.common.yes'),
             ]);
 
         $grid->addColumnText('sendToOrganizer', 'admin.mailing.templates_send_to_organizer')
             ->setReplacement([
                 '0' => $this->translator->translate('admin.common.no'),
-                '1' => $this->translator->translate('admin.common.yes')
+                '1' => $this->translator->translate('admin.common.yes'),
             ]);
 
         $grid->addAction('edit', 'admin.common.edit', 'Templates:edit');
@@ -94,17 +92,17 @@ class MailTemplatesGridControl extends Control
      * Aktivuje/deaktivuje automatický e-mail.
      * @param $id
      * @param $active
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Nette\Application\AbortException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws AbortException
      */
-    public function changeActive($id, $active)
+    public function changeActive($id, $active) : void
     {
         $p = $this->getPresenter();
 
         $template = $this->templateRepository->findById($id);
 
-        if ($template->isSystem() && !$active) {
+        if ($template->isSystem() && ! $active) {
             $p->flashMessage('admin.mailing.templates_change_active_denied', 'danger');
         } else {
             $template->setActive($active);

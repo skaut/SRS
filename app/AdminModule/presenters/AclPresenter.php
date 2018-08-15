@@ -1,16 +1,20 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\Presenters;
 
 use App\AdminModule\Components\IRolesGridControlFactory;
+use App\AdminModule\Components\RolesGridControl;
 use App\AdminModule\Forms\AddRoleForm;
 use App\AdminModule\Forms\EditRoleForm;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Services\Authenticator;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
+use Nette\Application\AbortException;
 use Nette\Forms\Form;
-
 
 /**
  * Presenter obsluhující správu rolí.
@@ -21,7 +25,7 @@ use Nette\Forms\Form;
 class AclPresenter extends AdminBasePresenter
 {
     protected $resource = Resource::ACL;
-    
+
     /**
      * @var AddRoleForm
      * @inject
@@ -46,19 +50,16 @@ class AclPresenter extends AdminBasePresenter
 
 
     /**
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
-    public function startup()
+    public function startup() : void
     {
         parent::startup();
 
         $this->checkPermission(Permission::MANAGE);
     }
 
-    /**
-     * @param $id
-     */
-    public function renderEdit(int $id)
+    public function renderEdit(int $id) : void
     {
         $role = $this->roleRepository->findById($id);
 
@@ -68,9 +69,9 @@ class AclPresenter extends AdminBasePresenter
     /**
      * Zapne testování role.
      * @param $id
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
-    public function actionTest(int $id)
+    public function actionTest(int $id) : void
     {
         $role = $this->roleRepository->findById($id);
 
@@ -79,24 +80,19 @@ class AclPresenter extends AdminBasePresenter
         $this->redirect(':Web:Page:default');
     }
 
-    /**
-     * @return \App\AdminModule\Components\RolesGridControl
-     */
-    protected function createComponentRolesGrid()
+    protected function createComponentRolesGrid() : RolesGridControl
     {
         return $this->rolesGridControlFactory->create();
     }
 
-    /**
-     * @return \Nette\Application\UI\Form
-     */
-    protected function createComponentAddRoleForm()
+    protected function createComponentAddRoleForm() : \Nette\Application\UI\Form
     {
         $form = $this->addRoleFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, array $values) {
-            if ($form['cancel']->isSubmittedBy())
+        $form->onSuccess[] = function (Form $form, array $values) : void {
+            if ($form['cancel']->isSubmittedBy()) {
                 $this->redirect('Acl:default');
+            }
 
             $this->flashMessage('admin.acl.roles_saved', 'success');
 
@@ -108,17 +104,17 @@ class AclPresenter extends AdminBasePresenter
     }
 
     /**
-     * @return \Nette\Application\UI\Form
-     * @throws \Doctrine\ORM\NoResultException
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NoResultException
+     * @throws NonUniqueResultException
      */
-    protected function createComponentEditRoleForm()
+    protected function createComponentEditRoleForm() : \Nette\Application\UI\Form
     {
         $form = $this->editRoleFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, array $values) {
-            if ($form['cancel']->isSubmittedBy())
+        $form->onSuccess[] = function (Form $form, array $values) : void {
+            if ($form['cancel']->isSubmittedBy()) {
                 $this->redirect('Acl:default');
+            }
 
             $this->flashMessage('admin.acl.roles_saved', 'success');
 

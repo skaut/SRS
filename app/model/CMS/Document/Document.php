@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\CMS\Document;
@@ -7,7 +8,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
-
 
 /**
  * Entita dokumentu.
@@ -22,7 +22,7 @@ class Document
     /**
      * Adresář pro ukládání dokumentů.
      */
-    const PATH = "/documents";
+    public const PATH = '/documents';
 
     use Identifier;
 
@@ -62,18 +62,12 @@ class Document
     protected $timestamp;
 
 
-    /**
-     * Document constructor.
-     */
     public function __construct()
     {
         $this->tags = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getId(): int
+    public function getId() : int
     {
         return $this->id;
     }
@@ -81,7 +75,7 @@ class Document
     /**
      * @return Collection
      */
-    public function getTags(): Collection
+    public function getTags() : Collection
     {
         return $this->tags;
     }
@@ -89,73 +83,50 @@ class Document
     /**
      * @param Collection $tags
      */
-    public function setTags(Collection $tags): void
+    public function setTags(Collection $tags) : void
     {
         $this->tags->clear();
-        foreach ($tags as $tag)
+        foreach ($tags as $tag) {
             $this->tags->add($tag);
+        }
     }
 
-    /**
-     * @return string
-     */
-    public function getName(): string
+    public function getName() : string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName(string $name)
+    public function setName(string $name) : void
     {
         $this->name = $name;
     }
 
-    /**
-     * @return string
-     */
-    public function getFile()
+    public function getFile() : string
     {
         return $this->file;
     }
 
-    /**
-     * @param string $file
-     */
-    public function setFile($file)
+    public function setFile(string $file) : void
     {
         $this->file = $file;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescription(): ?string
+    public function getDescription() : ?string
     {
         return $this->description;
     }
 
-    /**
-     * @param string $description
-     */
-    public function setDescription(?string $description): void
+    public function setDescription(?string $description) : void
     {
         $this->description = $description;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getTimestamp(): \DateTime
+    public function getTimestamp() : \DateTime
     {
         return $this->timestamp;
     }
 
-    /**
-     * @param \DateTime $timestamp
-     */
-    public function setTimestamp(\DateTime $timestamp)
+    public function setTimestamp(\DateTime $timestamp) : void
     {
         $this->timestamp = $timestamp;
     }

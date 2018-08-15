@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\Components;
@@ -9,10 +10,14 @@ use App\Model\Program\ProgramRepository;
 use App\Model\User\UserRepository;
 use App\Services\ProgramService;
 use App\Utils\Helpers;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
+use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Ublaboo\DataGrid\DataGrid;
-
+use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
+use Ublaboo\DataGrid\Exception\DataGridException;
 
 /**
  * Komponenta pro správu rolí.
@@ -37,30 +42,26 @@ class RolesGridControl extends Control
     private $programService;
 
 
-    /**
-     * RolesGridControl constructor.
-     * @param Translator $translator
-     * @param RoleRepository $roleRepository
-     * @param UserRepository $userRepository
-     * @param ProgramRepository $programRepository
-     * @param ProgramService $programService
-     */
-    public function __construct(Translator $translator, RoleRepository $roleRepository, UserRepository $userRepository,
-                                ProgramRepository $programRepository, ProgramService $programService)
-    {
+    public function __construct(
+        Translator $translator,
+        RoleRepository $roleRepository,
+        UserRepository $userRepository,
+        ProgramRepository $programRepository,
+        ProgramService $programService
+    ) {
         parent::__construct();
 
-        $this->translator = $translator;
-        $this->roleRepository = $roleRepository;
-        $this->userRepository = $userRepository;
+        $this->translator        = $translator;
+        $this->roleRepository    = $roleRepository;
+        $this->userRepository    = $userRepository;
         $this->programRepository = $programRepository;
-        $this->programService = $programService;
+        $this->programService    = $programService;
     }
 
     /**
      * Vykreslí komponentu.
      */
-    public function render()
+    public function render() : void
     {
         $this->template->render(__DIR__ . '/templates/roles_grid.latte');
     }
@@ -68,31 +69,30 @@ class RolesGridControl extends Control
     /**
      * Vytvoří komponentu.
      * @param $name
-     * @throws \Ublaboo\DataGrid\Exception\DataGridColumnStatusException
-     * @throws \Ublaboo\DataGrid\Exception\DataGridException
+     * @throws DataGridColumnStatusException
+     * @throws DataGridException
      */
-    public function createComponentRolesGrid(string $name): void
+    public function createComponentRolesGrid(string $name) : void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
         $grid->setDataSource($this->roleRepository->createQueryBuilder('r'));
         $grid->setDefaultSort(['name' => 'ASC']);
-        $grid->setPagination(FALSE);
-
+        $grid->setPagination(false);
 
         $grid->addColumnText('name', 'admin.acl.roles_name');
 
         $grid->addColumnText('system', 'admin.acl.roles_system')
             ->setReplacement([
                 '0' => $this->translator->translate('admin.common.no'),
-                '1' => $this->translator->translate('admin.common.yes')
+                '1' => $this->translator->translate('admin.common.yes'),
             ]);
 
         $grid->addColumnStatus('registerable', 'admin.acl.roles_registerable')
-            ->addOption(FALSE, 'admin.acl.roles_registerable_nonregisterable')
+            ->addOption(false, 'admin.acl.roles_registerable_nonregisterable')
             ->setClass('btn-danger')
             ->endOption()
-            ->addOption(TRUE, 'admin.acl.roles_registerable_registerable')
+            ->addOption(true, 'admin.acl.roles_registerable_registerable')
             ->setClass('btn-success')
             ->endOption()
             ->onChange[] = [$this, 'changeRegisterable'];
@@ -109,9 +109,8 @@ class RolesGridControl extends Control
             ->setRendererOnCondition(function ($row) {
                 return $this->translator->translate('admin.acl.roles_fee_from_subevents');
             }, function ($row) {
-                return $row->getFee() === NULL;
+                return $row->getFee() === null;
             });
-
 
         $grid->addToolbarButton('Acl:add')
             ->setIcon('plus')
@@ -128,34 +127,36 @@ class RolesGridControl extends Control
             ->setClass('btn btn-xs btn-danger')
             ->addAttributes([
                 'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('admin.acl.roles_delete_confirm')
+                'data-content' => $this->translator->translate('admin.acl.roles_delete_confirm'),
             ]);
         $grid->allowRowsAction('delete', function ($item) {
-            return !$item->isSystem();
+            return ! $item->isSystem();
         });
     }
 
     /**
      * Zpracuje odstranění role.
      * @param $id
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      * @throws \Throwable
      */
-    public function handleDelete(int $id): void
+    public function handleDelete(int $id) : void
     {
         $role = $this->roleRepository->findById($id);
 
         $usersInRole = $this->userRepository->findAllInRole($role);
 
-        $this->roleRepository->getEntityManager()->transactional(function ($em) use ($role, $usersInRole) {
+        $this->roleRepository->getEntityManager()->transactional(function ($em) use ($role, $usersInRole) : void {
             $this->roleRepository->remove($role);
 
             foreach ($usersInRole as $user) {
-                if ($user->getRoles()->isEmpty()) {
-                    $user->addRole($this->roleRepository->findBySystemName(Role::NONREGISTERED));
-                    $user->setApproved(TRUE);
-                    $this->userRepository->save($user);
+                if (! $user->getRoles()->isEmpty()) {
+                    continue;
                 }
+
+                $user->addRole($this->roleRepository->findBySystemName(Role::NONREGISTERED));
+                $user->setApproved(true);
+                $this->userRepository->save($user);
             }
 
             $this->programService->updateUsersPrograms($this->userRepository->findAll());
@@ -167,13 +168,11 @@ class RolesGridControl extends Control
 
     /**
      * Změní registrovatelnost role.
-     * @param int $id
-     * @param bool $registerable
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Nette\Application\AbortException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws AbortException
      */
-    public function changeRegisterable(int $id, bool $registerable): void
+    public function changeRegisterable(int $id, bool $registerable) : void
     {
         $role = $this->roleRepository->findById($id);
 

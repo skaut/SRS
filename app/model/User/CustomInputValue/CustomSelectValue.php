@@ -1,10 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\User\CustomInputValue;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use function explode;
 
 /**
  * Entita hodnota vlastního výběrového pole přihlášky.
@@ -23,18 +24,12 @@ class CustomSelectValue extends CustomInputValue
     protected $value;
 
 
-    /**
-     * @return int
-     */
-    public function getValue(): ?int
+    public function getValue() : ?int
     {
         return $this->value;
     }
 
-    /**
-     * @param $value
-     */
-    public function setValue(?int $value): void
+    public function setValue(?int $value) : void
     {
         $this->value = $value;
     }
@@ -43,8 +38,8 @@ class CustomSelectValue extends CustomInputValue
      * Vrátí název vybrané možnosti.
      * @return mixed
      */
-    public function getValueOption(): ?string
+    public function getValueOption() : ?string
     {
-        return $this->value != 0 ? explode(', ', $this->getInput()->getOptions())[$this->value - 1] : NULL;
+        return $this->value !== 0 ? explode(', ', $this->getInput()->getOptions())[$this->value - 1] : null;
     }
 }

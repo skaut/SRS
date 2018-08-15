@@ -1,12 +1,15 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Program;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Kdyby\Doctrine\EntityRepository;
-
+use function array_map;
 
 /**
  * Třída spravující místnosti.
@@ -18,9 +21,8 @@ class RoomRepository extends EntityRepository
     /**
      * Vrací místnost podle id.
      * @param $id
-     * @return Room|null
      */
-    public function findById(int $id): ?Room
+    public function findById(int $id) : ?Room
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -29,7 +31,7 @@ class RoomRepository extends EntityRepository
      * Vrací názvy všech místností.
      * @return array
      */
-    public function findAllNames(): array
+    public function findAllNames() : array
     {
         $names = $this->createQueryBuilder('r')
             ->select('r.name')
@@ -43,7 +45,7 @@ class RoomRepository extends EntityRepository
      * @param $id
      * @return array
      */
-    public function findOthersNames(int $id): array
+    public function findOthersNames(int $id) : array
     {
         $names = $this->createQueryBuilder('r')
             ->select('r.name')
@@ -59,7 +61,7 @@ class RoomRepository extends EntityRepository
      * @param $ids
      * @return Collection
      */
-    public function findRoomsByIds(array $ids): Collection
+    public function findRoomsByIds(array $ids) : Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids));
@@ -68,11 +70,10 @@ class RoomRepository extends EntityRepository
 
     /**
      * Uloží místnost.
-     * @param Room $room
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function save(Room $room): void
+    public function save(Room $room) : void
     {
         $this->_em->persist($room);
         $this->_em->flush();
@@ -80,14 +81,13 @@ class RoomRepository extends EntityRepository
 
     /**
      * Odstraní místnost.
-     * @param Room $room
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function remove(Room $room): void
+    public function remove(Room $room) : void
     {
         foreach ($room->getPrograms() as $program) {
-            $program->setRoom(NULL);
+            $program->setRoom(null);
             $this->_em->persist($program);
         }
 
@@ -97,13 +97,8 @@ class RoomRepository extends EntityRepository
 
     /**
      * Je v místnosti jiný program ve stejnou dobu?
-     * @param Room $room
-     * @param Program $program
-     * @param \DateTime $start
-     * @param \DateTime $end
-     * @return bool
      */
-    public function hasOverlappingProgram(Room $room, Program $program, \DateTime $start, \DateTime $end): bool
+    public function hasOverlappingProgram(Room $room, Program $program, \DateTime $start, \DateTime $end) : bool
     {
         $qb = $this->createQueryBuilder('r')
             ->select('r.id')
@@ -124,6 +119,6 @@ class RoomRepository extends EntityRepository
                 ->setParameter('pid', $program->getId());
         }
 
-        return !empty($qb->getQuery()->getResult());
+        return ! empty($qb->getQuery()->getResult());
     }
 }

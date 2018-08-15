@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\Presenters;
@@ -18,8 +19,8 @@ use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Services\ApplicationService;
 use App\Services\ExcelExportService;
 use App\Services\PdfExportService;
+use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
-
 
 /**
  * Presenter obsluhující správu uživatelů.
@@ -30,7 +31,7 @@ use Nette\Application\UI\Form;
 class UsersPresenter extends AdminBasePresenter
 {
     protected $resource = Resource::USERS;
-    
+
     /**
      * @var IUsersGridControlFactory
      * @inject
@@ -87,50 +88,47 @@ class UsersPresenter extends AdminBasePresenter
 
 
     /**
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
-    public function startup()
+    public function startup() : void
     {
         parent::startup();
 
         $this->checkPermission(Permission::MANAGE);
 
-        $this->template->results = [];
-        $this->template->editPersonalDetails = FALSE;
-        $this->template->editSeminar = FALSE;
-        $this->template->editPayment = FALSE;
+        $this->template->results             = [];
+        $this->template->editPersonalDetails = false;
+        $this->template->editSeminar         = false;
+        $this->template->editPayment         = false;
     }
 
-    /**
-     * @param $id
-     */
-    public function renderDetail($id)
+    public function renderDetail($id) : void
     {
         $user = $this->userRepository->findById($id);
 
-        $this->template->sidebarVisible = TRUE;
-        $this->template->detailUser = $user;
+        $this->template->sidebarVisible = true;
+        $this->template->detailUser     = $user;
 
-        $this->template->customInputs = $this->customInputRepository->findAllOrderedByPosition();
-        $this->template->customInputTypeText = CustomInput::TEXT;
+        $this->template->customInputs            = $this->customInputRepository->findAllOrderedByPosition();
+        $this->template->customInputTypeText     = CustomInput::TEXT;
         $this->template->customInputTypeCheckbox = CustomInput::CHECKBOX;
-        $this->template->customInputTypeSelect = CustomInput::SELECT;
-        $this->template->customInputTypeFile = CustomInput::FILE;
+        $this->template->customInputTypeSelect   = CustomInput::SELECT;
+        $this->template->customInputTypeFile     = CustomInput::FILE;
 
-        $this->template->roleAdminName = $this->roleRepository->findBySystemName(Role::ADMIN)->getName();
+        $this->template->roleAdminName     = $this->roleRepository->findBySystemName(Role::ADMIN)->getName();
         $this->template->roleOrganizerName = $this->roleRepository->findBySystemName(Role::ORGANIZER)->getName();
 
         $this->template->paymentMethodCash = PaymentType::CASH;
         $this->template->paymentMethodBank = PaymentType::BANK;
 
-        $this->template->registered = !$user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED));
+        $this->template->registered = ! $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED));
     }
 
     /**
      * Zpracuje fulltext vyhledávání v displayName uživatelů.
      * @param $text
      */
-    public function handleSearch($text)
+    public function handleSearch($text) : void
     {
         $this->template->results = $this->userRepository->findNamesByLikeDisplayNameOrderedByDisplayName($text);
         $this->redrawControl('results');
@@ -138,11 +136,11 @@ class UsersPresenter extends AdminBasePresenter
 
     /**
      * Zobrazí formulář pro editaci osobních údajů uživatele.
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
-    public function handleEditPersonalDetails()
+    public function handleEditPersonalDetails() : void
     {
-        $this->template->editPersonalDetails = TRUE;
+        $this->template->editPersonalDetails = true;
 
         if ($this->isAjax()) {
             $this->redrawControl('userDetail');
@@ -153,11 +151,11 @@ class UsersPresenter extends AdminBasePresenter
 
     /**
      * Zobrazí formulář pro editaci údajů o účasti uživatele na semináři.
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
-    public function handleEditSeminar()
+    public function handleEditSeminar() : void
     {
-        $this->template->editSeminar = TRUE;
+        $this->template->editSeminar = true;
 
         if ($this->isAjax()) {
             $this->redrawControl('userDetail');
@@ -168,11 +166,11 @@ class UsersPresenter extends AdminBasePresenter
 
     /**
      * Zobrazí formulář pro editaci údajů o platbě uživatele.
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
-    public function handleEditPayment()
+    public function handleEditPayment() : void
     {
-        $this->template->editPayment = TRUE;
+        $this->template->editPayment = true;
 
         if ($this->isAjax()) {
             $this->redrawControl('userDetail');
@@ -184,9 +182,9 @@ class UsersPresenter extends AdminBasePresenter
     /**
      * @throws \Throwable
      */
-    public function handleCancelRegistration()
+    public function handleCancelRegistration() : void
     {
-        $user = $this->userRepository->findById($this->getParameter('id'));
+        $user       = $this->userRepository->findById($this->getParameter('id'));
         $loggedUser = $this->userRepository->findById($this->user->id);
 
         $this->applicationService->cancelRegistration($user, ApplicationState::CANCELED, $loggedUser);
@@ -204,7 +202,7 @@ class UsersPresenter extends AdminBasePresenter
     {
         $form = $this->addLectorFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, array $values) {
+        $form->onSuccess[] = function (Form $form, array $values) : void {
             if ($form['cancel']->isSubmittedBy()) {
                 $this->redirect('Users:default');
             } else {
@@ -220,7 +218,7 @@ class UsersPresenter extends AdminBasePresenter
     {
         $form = $this->editUserPersonalDetailsFormFactory->create($this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, array $values) {
+        $form->onSuccess[] = function (Form $form, array $values) : void {
             if ($form['cancel']->isSubmittedBy()) {
                 $this->redirect('this');
             } else {
@@ -232,23 +230,22 @@ class UsersPresenter extends AdminBasePresenter
         return $form;
     }
 
-    /**
-     * @return Form
-     */
-    protected function createComponentEditUserSeminarForm()
+    protected function createComponentEditUserSeminarForm() : Form
     {
         $form = $this->editUserSeminarFormFactory->create($this->getParameter('id'));
 
-        $form->onError[] = function (Form $form) {
-            foreach ($form->errors as $error)
+        $form->onError[] = function (Form $form) : void {
+            foreach ($form->errors as $error) {
                 $this->flashMessage($error, 'danger');
+            }
 
             $this->redirect('this');
         };
 
-        $form->onSuccess[] = function (Form $form, array $values) {
-            if (!$form['cancel']->isSubmittedBy())
+        $form->onSuccess[] = function (Form $form, array $values) : void {
+            if (! $form['cancel']->isSubmittedBy()) {
                 $this->flashMessage('admin.users.users_saved', 'success');
+            }
 
             $this->redirect('this');
         };

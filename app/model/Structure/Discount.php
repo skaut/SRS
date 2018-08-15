@@ -1,11 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Structure;
 
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
-
 
 /**
  * Entita sleva.
@@ -16,12 +16,12 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  */
 class Discount
 {
-    const SUBEVENT_ID = 'subevent_id';
-    const OPERATOR_OR = 'or';
-    const OPERATOR_AND = 'and';
-    const LEFT_PARENTHESIS = '(';
-    const RIGHT_PARENTHESIS = ')';
-    const END = '';
+    public const SUBEVENT_ID       = 'subevent_id';
+    public const OPERATOR_OR       = 'or';
+    public const OPERATOR_AND      = 'and';
+    public const LEFT_PARENTHESIS  = '(';
+    public const RIGHT_PARENTHESIS = ')';
+    public const END               = '';
 
 
     use Identifier;
@@ -41,42 +41,27 @@ class Discount
     protected $discount;
 
 
-    /**
-     * @return int
-     */
-    public function getId(): int
+    public function getId() : int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getDiscountCondition(): string
+    public function getDiscountCondition() : string
     {
         return $this->discountCondition;
     }
 
-    /**
-     * @param string $discountCondition
-     */
-    public function setDiscountCondition(string $discountCondition): void
+    public function setDiscountCondition(string $discountCondition) : void
     {
         $this->discountCondition = $discountCondition;
     }
 
-    /**
-     * @return int
-     */
-    public function getDiscount(): int
+    public function getDiscount() : int
     {
         return $this->discount;
     }
 
-    /**
-     * @param int $discount
-     */
-    public function setDiscount(int $discount): void
+    public function setDiscount(int $discount) : void
     {
         $this->discount = $discount;
     }

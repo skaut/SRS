@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\CMS;
@@ -11,7 +12,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
-
+use function implode;
+use function in_array;
 
 /**
  * Entita stránky.
@@ -51,7 +53,7 @@ class Page
      * @ORM\Column(type="boolean")
      * @var bool
      */
-    protected $public = FALSE;
+    protected $public = false;
 
     /**
      * Role, které mají na stránku přístup.
@@ -69,87 +71,55 @@ class Page
     protected $contents;
 
 
-    /**
-     * Page constructor.
-     * @param string $name
-     * @param string $slug
-     */
     public function __construct(string $name, string $slug)
     {
-        $this->name = $name;
-        $this->slug = $slug;
-        $this->roles = new ArrayCollection();
+        $this->name     = $name;
+        $this->slug     = $slug;
+        $this->roles    = new ArrayCollection();
         $this->contents = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getId(): int
+    public function getId() : int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getName(): string
+    public function getName() : string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName(string $name): void
+    public function setName(string $name) : void
     {
         $this->name = $name;
     }
 
-    /**
-     * @return string
-     */
-    public function getSlug(): string
+    public function getSlug() : string
     {
         return $this->slug;
     }
 
-    /**
-     * @param string $slug
-     */
-    public function setSlug(string $slug): void
+    public function setSlug(string $slug) : void
     {
         $this->slug = $slug;
     }
 
-    /**
-     * @return int
-     */
-    public function getPosition(): int
+    public function getPosition() : int
     {
         return $this->position;
     }
 
-    /**
-     * @param int $position
-     */
-    public function setPosition(int $position): void
+    public function setPosition(int $position) : void
     {
         $this->position = $position;
     }
 
-    /**
-     * @return bool
-     */
-    public function isPublic(): bool
+    public function isPublic() : bool
     {
         return $this->public;
     }
 
-    /**
-     * @param bool $public
-     */
-    public function setPublic(bool $public): void
+    public function setPublic(bool $public) : void
     {
         $this->public = $public;
     }
@@ -157,49 +127,45 @@ class Page
     /**
      * @return Collection
      */
-    public function getRoles(): Collection
+    public function getRoles() : Collection
     {
         return $this->roles;
     }
 
-    /**
-     * @return string
-     */
-    public function getRolesText(): string
+    public function getRolesText() : string
     {
-        return implode(', ', $this->roles->map(function (Role $role) {return $role->getName();})->toArray());
+        return implode(', ', $this->roles->map(function (Role $role) {
+            return $role->getName();
+        })->toArray());
     }
 
     /**
      * @param Collection $roles
      */
-    public function setRoles(Collection $roles): void
+    public function setRoles(Collection $roles) : void
     {
         $this->roles->clear();
-        foreach ($roles as $role)
+        foreach ($roles as $role) {
             $this->roles->add($role);
+        }
     }
 
-    /**
-     * @param Role $role
-     */
-    public function addRole(Role $role): void
+    public function addRole(Role $role) : void
     {
         $this->roles->add($role);
     }
 
     /**
      * Vrací obsahy v oblasti.
-     * @param null|string $area
      * @return Collection
      * @throws PageException
      */
-    public function getContents(?string $area = NULL): Collection
+    public function getContents(?string $area = null) : Collection
     {
-        if ($area === NULL) {
+        if ($area === null) {
             return $this->contents;
         }
-        if (!in_array($area, Content::$areas)) {
+        if (! in_array($area, Content::$areas)) {
             throw new PageException("Area {$area} not defined.");
         }
         $criteria = Criteria::create()
@@ -211,31 +177,31 @@ class Page
     /**
      * Má stránka nějaký obsah v oblasti?
      * @param $area
-     * @return bool
      * @throws PageException
      */
-    public function hasContents(string $area): bool
+    public function hasContents(string $area) : bool
     {
-        if (!in_array($area, Content::$areas))
+        if (! in_array($area, Content::$areas)) {
             throw new PageException("Area {$area} not defined.");
+        }
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('area', $area));
-        return !$this->contents->matching($criteria)->isEmpty();
+        return ! $this->contents->matching($criteria)->isEmpty();
     }
 
     /**
      * Je stránka viditelná pro uživatele v rolích?
      * @param $roleNames
-     * @return bool
      */
-    public function isAllowedForRoles(array $roleNames): bool
+    public function isAllowedForRoles(array $roleNames) : bool
     {
         foreach ($roleNames as $roleName) {
             foreach ($this->roles as $role) {
-                if ($roleName == $role->getName())
-                    return TRUE;
+                if ($roleName === $role->getName()) {
+                    return true;
+                }
             }
         }
-        return FALSE;
+        return false;
     }
 }

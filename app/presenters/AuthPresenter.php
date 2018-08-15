@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Presenters;
@@ -6,11 +7,16 @@ namespace App\Presenters;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Settings;
+use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\UserRepository;
 use App\Services\MailService;
 use App\Services\SkautIsService;
-
+use Nette\Application\AbortException;
+use Nette\Security\AuthenticationException;
+use Ublaboo\Mailing\Exception\MailingException;
+use Ublaboo\Mailing\Exception\MailingMailCreationException;
+use function strpos;
 
 /**
  * Presenter obsluhující přihlašování a odhlašování pomocí skautIS.
@@ -47,30 +53,29 @@ class AuthPresenter extends BasePresenter
 
     /**
      * Přesměruje na přihlašovací stránku skautIS, nastaví přihlášení.
-     * @param null $backlink
-     * @throws \App\Model\Settings\SettingsException
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Security\AuthenticationException
+     * @throws SettingsException
+     * @throws AbortException
+     * @throws AuthenticationException
      * @throws \Throwable
-     * @throws \Ublaboo\Mailing\Exception\MailingException
-     * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
+     * @throws MailingException
+     * @throws MailingMailCreationException
      */
-    public function actionLogin($backlink = NULL)
+    public function actionLogin(?string $backlink = null) : void
     {
-        if ($this->getHttpRequest()->getPost() == NULL) {
+        if ($this->getHttpRequest()->getPost() == null) {
             $loginUrl = $this->skautIsService->getLoginUrl($backlink);
             $this->redirectUrl($loginUrl);
         }
 
         $this->skautIsService->setLoginData($_POST);
-        $this->user->login(NULL);
+        $this->user->login(null);
         $this->user->setExpiration('+30 minutes');
 
         if ($this->user->identity->data['firstLogin']) {
             $user = $this->userRepository->findById($this->user->id);
 
             $this->mailService->sendMailFromTemplate($user, '', Template::SIGN_IN, [
-                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)
+                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
             ]);
         }
 
@@ -79,12 +84,12 @@ class AuthPresenter extends BasePresenter
 
     /**
      * Přesměruje na odhlašovací stránku skautIS.
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
-    public function actionLogout()
+    public function actionLogout() : void
     {
         if ($this->user->isLoggedIn()) {
-            $this->user->logout(TRUE);
+            $this->user->logout(true);
             $logoutUrl = $this->skautIsService->getLogoutUrl();
             $this->redirectUrl($logoutUrl);
         }
@@ -95,17 +100,16 @@ class AuthPresenter extends BasePresenter
     /**
      * Provede přesměrování po úspěšném přihlášení, v závislosti na nastavení, nastavení role nebo returnUrl.
      * @param $returnUrl
-     * @throws \App\Model\Settings\SettingsException
-     * @throws \Nette\Application\AbortException
+     * @throws SettingsException
+     * @throws AbortException
      * @throws \Throwable
      */
-    private function redirectAfterLogin($returnUrl)
+    private function redirectAfterLogin(?string $returnUrl) : void
     {
         if ($returnUrl) {
-            if (strpos($returnUrl, ':') !== FALSE) {
+            if (strpos($returnUrl, ':') !== false) {
                 $this->redirect($returnUrl);
-            }
-            else {
+            } else {
                 $this->redirectUrl($returnUrl);
             }
         }
@@ -113,27 +117,28 @@ class AuthPresenter extends BasePresenter
         //pokud neni navratova adresa, presmerovani podle role
         $user = $this->userRepository->findById($this->user->id);
 
-        $redirectByRole = NULL;
-        $multipleRedirects = FALSE;
+        $redirectByRole    = null;
+        $multipleRedirects = false;
 
         foreach ($user->getRoles() as $role) {
-            if ($role->getRedirectAfterLogin()) {
-                $roleRedirect = $role->getRedirectAfterLogin();
+            if (! $role->getRedirectAfterLogin()) {
+                continue;
+            }
 
-                if ($redirectByRole && $redirectByRole == $roleRedirect) {
-                    $multipleRedirects = TRUE;
-                    break;
-                } else {
-                    $redirectByRole = $roleRedirect;
-                }
+            $roleRedirect = $role->getRedirectAfterLogin();
+
+            if ($redirectByRole && $redirectByRole === $roleRedirect) {
+                $multipleRedirects = true;
+                break;
+            } else {
+                $redirectByRole = $roleRedirect;
             }
         }
 
         //pokud nema role nastaveno presmerovani, nebo je uzivatel v rolich s ruznymi presmerovani, je presmerovan na vychozi stranku
-        if ($redirectByRole && !$multipleRedirects) {
+        if ($redirectByRole && ! $multipleRedirects) {
             $slug = $redirectByRole;
-        }
-        else {
+        } else {
             $slug = $this->settingsRepository->getValue(Settings::REDIRECT_AFTER_LOGIN);
         }
 

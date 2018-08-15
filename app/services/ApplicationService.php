@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services;
@@ -10,6 +11,7 @@ use App\Model\Enums\MaturityType;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Settings;
+use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\DiscountRepository;
 use App\Model\Structure\Subevent;
@@ -25,10 +27,18 @@ use App\Model\User\VariableSymbolRepository;
 use App\Utils\Helpers;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
 use Nette;
+use Ublaboo\Mailing\Exception\MailingException;
+use Ublaboo\Mailing\Exception\MailingMailCreationException;
 use Yasumi\Yasumi;
-
+use const STR_PAD_LEFT;
+use function array_diff;
+use function implode;
+use function str_pad;
+use function strval;
 
 /**
  * Služba pro správu přihlašování na akci.
@@ -73,82 +83,76 @@ class ApplicationService
     private $translator;
 
 
-    /**
-     * ApplicationService constructor.
-     * @param SettingsRepository $settingsRepository
-     * @param ApplicationRepository $applicationRepository
-     * @param UserRepository $userRepository
-     * @param DiscountRepository $discountRepository
-     * @param RoleRepository $roleRepository
-     * @param SubeventRepository $subeventRepository
-     * @param DiscountService $discountService
-     * @param VariableSymbolRepository $variableSymbolRepository
-     * @param ProgramService $programService
-     * @param MailService $mailService
-     * @param Translator $translator
-     */
-    public function __construct(SettingsRepository $settingsRepository, ApplicationRepository $applicationRepository,
-                                UserRepository $userRepository, DiscountRepository $discountRepository,
-                                RoleRepository $roleRepository, SubeventRepository $subeventRepository,
-                                DiscountService $discountService, VariableSymbolRepository $variableSymbolRepository,
-                                ProgramService $programService, MailService $mailService, Translator $translator)
-    {
-        $this->settingsRepository = $settingsRepository;
-        $this->applicationRepository = $applicationRepository;
-        $this->userRepository = $userRepository;
-        $this->discountRepository = $discountRepository;
-        $this->roleRepository = $roleRepository;
-        $this->subeventRepository = $subeventRepository;
-        $this->discountService = $discountService;
+    public function __construct(
+        SettingsRepository $settingsRepository,
+        ApplicationRepository $applicationRepository,
+        UserRepository $userRepository,
+        DiscountRepository $discountRepository,
+        RoleRepository $roleRepository,
+        SubeventRepository $subeventRepository,
+        DiscountService $discountService,
+        VariableSymbolRepository $variableSymbolRepository,
+        ProgramService $programService,
+        MailService $mailService,
+        Translator $translator
+    ) {
+        $this->settingsRepository       = $settingsRepository;
+        $this->applicationRepository    = $applicationRepository;
+        $this->userRepository           = $userRepository;
+        $this->discountRepository       = $discountRepository;
+        $this->roleRepository           = $roleRepository;
+        $this->subeventRepository       = $subeventRepository;
+        $this->discountService          = $discountService;
         $this->variableSymbolRepository = $variableSymbolRepository;
-        $this->programService = $programService;
-        $this->mailService = $mailService;
-        $this->translator = $translator;
+        $this->programService           = $programService;
+        $this->mailService              = $mailService;
+        $this->translator               = $translator;
     }
 
     /**
-     * @param User $user
      * @param Collection $roles
      * @param Collection $subevents
-     * @param User $createdBy
-     * @param bool $approve
      * @throws \Throwable
      */
-    public function register(User $user, Collection $roles, Collection $subevents, User $createdBy,
-                             bool $approve = FALSE): void
-    {
-        $rolesApplication = new RolesApplication();
+    public function register(
+        User $user,
+        Collection $roles,
+        Collection $subevents,
+        User $createdBy,
+        bool $approve = false
+    ) : void {
+        $rolesApplication     = new RolesApplication();
         $subeventsApplication = new SubeventsApplication();
 
-        $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($user, $roles, $subevents, $createdBy, $approve, &$rolesApplication, &$subeventsApplication) {
-            $rolesApplication = $this->createRolesApplication($user, $roles, $createdBy, $approve);
+        $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($user, $roles, $subevents, $createdBy, $approve, &$rolesApplication, &$subeventsApplication) : void {
+            $rolesApplication     = $this->createRolesApplication($user, $roles, $createdBy, $approve);
             $subeventsApplication = $this->createSubeventsApplication($user, $subevents, $createdBy);
 
             $this->programService->updateUserPrograms($user);
         });
 
-        $applicatonMaturity = "-";
-        $applicationFee = "0";
-        $applicationVariableSymbol = "-";
+        $applicatonMaturity        = '-';
+        $applicationFee            = '0';
+        $applicationVariableSymbol = '-';
 
         if ($rolesApplication->getFee() > 0 && $subeventsApplication->getFee() > 0) {
             if ($rolesApplication->getMaturityDate()) {
                 $applicatonMaturity = $rolesApplication->getMaturityDateText();
             }
-            $applicationFee = $rolesApplication->getFee() . ", " . $subeventsApplication->getFee();
-            $applicationVariableSymbol = $rolesApplication->getVariableSymbolText() . ", "
+            $applicationFee            = $rolesApplication->getFee() . ', ' . $subeventsApplication->getFee();
+            $applicationVariableSymbol = $rolesApplication->getVariableSymbolText() . ', '
                 . $subeventsApplication->getVariableSymbolText();
         } elseif ($rolesApplication->getFee() > 0) {
             if ($rolesApplication->getMaturityDate()) {
                 $applicatonMaturity = $rolesApplication->getMaturityDateText();
             }
-            $applicationFee = $rolesApplication->getFee();
+            $applicationFee            = $rolesApplication->getFee();
             $applicationVariableSymbol = $rolesApplication->getVariableSymbolText();
         } elseif ($subeventsApplication->getFee() > 0) {
             if ($subeventsApplication->getMaturityDate()) {
                 $applicatonMaturity = $subeventsApplication->getMaturityDateText();
             }
-            $applicationFee = $subeventsApplication->getFee();
+            $applicationFee            = $subeventsApplication->getFee();
             $applicationVariableSymbol = $subeventsApplication->getVariableSymbolText();
         }
 
@@ -156,32 +160,28 @@ class ApplicationService
 
         $this->mailService->sendMailFromTemplate($user, '', Template::REGISTRATION, [
             TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-            TemplateVariable::EDIT_REGISTRATION_TO => $editRegistrationToText !== NULL ? $editRegistrationToText : '-',
+            TemplateVariable::EDIT_REGISTRATION_TO => $editRegistrationToText !== null ? $editRegistrationToText : '-',
             TemplateVariable::APPLICATION_MATURITY => $applicatonMaturity,
             TemplateVariable::APPLICATION_FEE => $applicationFee,
             TemplateVariable::APPLICATION_VARIABLE_SYMBOL => $applicationVariableSymbol,
-            TemplateVariable::BANK_ACCOUNT => $this->settingsRepository->getValue(Settings::ACCOUNT_NUMBER)
+            TemplateVariable::BANK_ACCOUNT => $this->settingsRepository->getValue(Settings::ACCOUNT_NUMBER),
         ]);
     }
 
     /**
-     * @param User $user
      * @param Collection $roles
-     * @param User $createdBy
-     * @param bool $approve
-     * @return void
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
-     * @throws \Ublaboo\Mailing\Exception\MailingException
-     * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
+     * @throws MailingException
+     * @throws MailingMailCreationException
      */
-    public function updateRoles(User $user, Collection $roles, ?User $createdBy, bool $approve = FALSE): void
+    public function updateRoles(User $user, Collection $roles, ?User $createdBy, bool $approve = false) : void
     {
         $oldRoles = clone $user->getRoles();
 
         //pokud se role nezmenily, nic se neprovede
-        if ($roles->count() == $oldRoles->count()) {
-            $rolesArray = $roles->map(function (Role $role) {
+        if ($roles->count() === $oldRoles->count()) {
+            $rolesArray    = $roles->map(function (Role $role) {
                 return $role->getId();
             })->toArray();
             $oldRolesArray = $oldRoles->map(function (Role $role) {
@@ -193,7 +193,7 @@ class ApplicationService
             }
         }
 
-        $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($user, $roles, $createdBy, $approve, $oldRoles) {
+        $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($user, $roles, $createdBy, $approve, $oldRoles) : void {
             if ($oldRoles->contains($this->roleRepository->findBySystemName(Role::NONREGISTERED))) {
                 $this->createRolesApplication($user, $roles, $createdBy, $approve);
                 $this->createSubeventsApplication($user, new ArrayCollection([$this->subeventRepository->findImplicit()]), $createdBy);
@@ -204,15 +204,15 @@ class ApplicationService
                 if ($roles->forAll(function (int $key, Role $role) {
                     return $role->isApprovedAfterRegistration();
                 })) {
-                    $user->setApproved(TRUE);
-                } elseif (!$approve && $roles->exists(function (int $key, Role $role) use ($oldRoles) {
-                    return !$role->isApprovedAfterRegistration() && !$oldRoles->contains($role);
+                    $user->setApproved(true);
+                } elseif (! $approve && $roles->exists(function (int $key, Role $role) use ($oldRoles) {
+                    return ! $role->isApprovedAfterRegistration() && ! $oldRoles->contains($role);
                 })) {
-                    $user->setApproved(FALSE);
+                    $user->setApproved(false);
                 }
 
                 foreach ($user->getNotCanceledApplications() as $application) {
-                    if ($application->getType() == Application::ROLES) {
+                    if ($application->getType() === Application::ROLES) {
                         $newApplication = clone $application;
                         $newApplication->setRoles($roles);
                         $newApplication->setFee($this->countRolesFee($roles));
@@ -226,7 +226,7 @@ class ApplicationService
                     } else {
                         $fee = $this->countSubeventsFee($roles, $application->getSubevents());
 
-                        if ($application->getFee() != $fee) {
+                        if ($application->getFee() !== $fee) {
                             $newApplication = clone $application;
                             $newApplication->setFee($fee);
                             $newApplication->setState($this->getApplicationState($newApplication));
@@ -250,23 +250,20 @@ class ApplicationService
             TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
             TemplateVariable::USERS_ROLES => implode(', ', $roles->map(function (Role $role) {
                 return $role->getName();
-            })->toArray())
+            })->toArray()),
         ]);
     }
 
     /**
-     * @param User $user
-     * @param string $state
-     * @param User $createdBy
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
-     * @throws \Ublaboo\Mailing\Exception\MailingException
-     * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
+     * @throws MailingException
+     * @throws MailingMailCreationException
      */
-    public function cancelRegistration(User $user, string $state, ?User $createdBy): void
+    public function cancelRegistration(User $user, string $state, ?User $createdBy) : void
     {
-        $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($user, $state, $createdBy) {
-            $user->setApproved(TRUE);
+        $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($user, $state, $createdBy) : void {
+            $user->setApproved(true);
             $user->getRoles()->clear();
             $user->addRole($this->roleRepository->findBySystemName(Role::NONREGISTERED));
             $this->userRepository->save($user);
@@ -288,19 +285,17 @@ class ApplicationService
         });
 
         $this->mailService->sendMailFromTemplate($user, '', Template::REGISTRATION_CANCELED, [
-            TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME)
+            TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
         ]);
     }
 
     /**
-     * @param User $user
      * @param Collection $subevents
-     * @param User $createdBy
      * @throws \Throwable
      */
-    public function addSubeventsApplication(User $user, Collection $subevents, User $createdBy): void
+    public function addSubeventsApplication(User $user, Collection $subevents, User $createdBy) : void
     {
-        $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($user, $subevents, $createdBy) {
+        $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($user, $subevents, $createdBy) : void {
             $this->createSubeventsApplication($user, $subevents, $createdBy);
 
             $this->programService->updateUserPrograms($user);
@@ -308,26 +303,24 @@ class ApplicationService
 
         $this->mailService->sendMailFromTemplate($user, '', Template::SUBEVENTS_CHANGED, [
             TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-            TemplateVariable::USERS_SUBEVENTS => $user->getSubeventsText()
+            TemplateVariable::USERS_SUBEVENTS => $user->getSubeventsText(),
         ]);
     }
 
     /**
-     * @param SubeventsApplication $application
      * @param Collection $subevents
-     * @param User $createdBy
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
-     * @throws \Ublaboo\Mailing\Exception\MailingException
-     * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
+     * @throws MailingException
+     * @throws MailingMailCreationException
      */
-    public function updateSubeventsApplication(SubeventsApplication $application, Collection $subevents, User $createdBy): void
+    public function updateSubeventsApplication(SubeventsApplication $application, Collection $subevents, User $createdBy) : void
     {
         $oldSubevents = clone $application->getSubevents();
 
         //pokud se podakce nezmenily, nic se neprovede
-        if ($subevents->count() == $oldSubevents->count()) {
-            $subeventsArray = $subevents->map(function (Subevent $subevent) {
+        if ($subevents->count() === $oldSubevents->count()) {
+            $subeventsArray    = $subevents->map(function (Subevent $subevent) {
                 return $subevent->getId();
             })->toArray();
             $oldSubeventsArray = $oldSubevents->map(function (Subevent $subevent) {
@@ -339,7 +332,7 @@ class ApplicationService
             }
         }
 
-        $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($application, $subevents, $createdBy) {
+        $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($application, $subevents, $createdBy) : void {
             $user = $application->getUser();
 
             $newApplication = clone $application;
@@ -358,22 +351,19 @@ class ApplicationService
 
         $this->mailService->sendMailFromTemplate($application->getUser(), '', Template::SUBEVENTS_CHANGED, [
             TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-            TemplateVariable::USERS_SUBEVENTS => $application->getUser()->getSubeventsText()
+            TemplateVariable::USERS_SUBEVENTS => $application->getUser()->getSubeventsText(),
         ]);
     }
 
     /**
-     * @param SubeventsApplication $application
-     * @param string $state
-     * @param User $createdBy
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
-     * @throws \Ublaboo\Mailing\Exception\MailingException
-     * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
+     * @throws MailingException
+     * @throws MailingMailCreationException
      */
-    public function cancelSubeventsApplication(SubeventsApplication $application, string $state, ?User $createdBy): void
+    public function cancelSubeventsApplication(SubeventsApplication $application, string $state, ?User $createdBy) : void
     {
-        $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($application, $state, $createdBy) {
+        $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($application, $state, $createdBy) : void {
             $user = $application->getUser();
 
             $newApplication = clone $application;
@@ -390,46 +380,49 @@ class ApplicationService
 
         $this->mailService->sendMailFromTemplate($application->getUser(), '', Template::SUBEVENTS_CHANGED, [
             TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-            TemplateVariable::USERS_SUBEVENTS => $application->getUser()->getSubeventsText()
+            TemplateVariable::USERS_SUBEVENTS => $application->getUser()->getSubeventsText(),
         ]);
     }
 
     /**
-     * @param Application $application
-     * @param string $variableSymbol
-     * @param string $paymentMethod
-     * @param \DateTime $paymentDate
-     * @param \DateTime $incomeProofPrintedDate
-     * @param \DateTime $maturityDate
-     * @param User $createdBy
      * @throws \Throwable
      */
-    public function updatePayment(Application $application, string $variableSymbol, ?string $paymentMethod,
-                                  ?\DateTime $paymentDate, ?\DateTime $incomeProofPrintedDate, ?\DateTime $maturityDate,
-                                  User $createdBy): void
-    {
-        $oldVariableSymbol = $application->getVariableSymbolText();
-        $oldPaymentMethod = $application->getPaymentMethod();
-        $oldPaymentDate = $application->getPaymentDate();
+    public function updatePayment(
+        Application $application,
+        string $variableSymbol,
+        ?string $paymentMethod,
+        ?\DateTime $paymentDate,
+        ?\DateTime $incomeProofPrintedDate,
+        ?\DateTime $maturityDate,
+        User $createdBy
+    ) : void {
+        $oldVariableSymbol         = $application->getVariableSymbolText();
+        $oldPaymentMethod          = $application->getPaymentMethod();
+        $oldPaymentDate            = $application->getPaymentDate();
         $oldIncomeProofPrintedDate = $application->getIncomeProofPrintedDate();
-        $oldMaturityDate = $application->getMaturityDate();
+        $oldMaturityDate           = $application->getMaturityDate();
 
         //pokud neni zmena, nic se neprovede
-        if ($variableSymbol == $oldVariableSymbol && $paymentMethod == $oldPaymentMethod
-            && $paymentDate == $oldPaymentDate && $incomeProofPrintedDate == $oldIncomeProofPrintedDate
-            && $maturityDate == $oldMaturityDate) {
+        if ($variableSymbol === $oldVariableSymbol && $paymentMethod === $oldPaymentMethod
+            && $paymentDate === $oldPaymentDate && $incomeProofPrintedDate === $oldIncomeProofPrintedDate
+            && $maturityDate === $oldMaturityDate) {
             return;
         }
 
         $this->applicationRepository->getEntityManager()->transactional(function ($em) use (
             $application,
-            $variableSymbol, $paymentMethod, $paymentDate, $incomeProofPrintedDate, $maturityDate, $createdBy
-        ) {
+            $variableSymbol,
+            $paymentMethod,
+            $paymentDate,
+            $incomeProofPrintedDate,
+            $maturityDate,
+            $createdBy
+        ) : void {
             $user = $application->getUser();
 
             $newApplication = clone $application;
 
-            if ($application->getVariableSymbolText() != $variableSymbol) {
+            if ($application->getVariableSymbolText() !== $variableSymbol) {
                 $newVariableSymbol = new VariableSymbol();
                 $newVariableSymbol->setVariableSymbol($variableSymbol);
                 $this->variableSymbolRepository->save($newVariableSymbol);
@@ -453,37 +446,35 @@ class ApplicationService
             $this->programService->updateUserPrograms($user);
         });
 
-        if ($paymentDate !== NULL && $oldPaymentDate === NULL) {
-            $this->mailService->sendMailFromTemplate($application->getUser(), '', Template::PAYMENT_CONFIRMED, [
-                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-                TemplateVariable::APPLICATION_SUBEVENTS => $application->getSubeventsText()
-            ]);
+        if ($paymentDate === null || $oldPaymentDate !== null) {
+            return;
         }
+
+        $this->mailService->sendMailFromTemplate($application->getUser(), '', Template::PAYMENT_CONFIRMED, [
+            TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
+            TemplateVariable::APPLICATION_SUBEVENTS => $application->getSubeventsText(),
+        ]);
     }
 
     /**
-     * @param User $user
      * @param Collection $roles
-     * @param User $createdBy
-     * @param bool $approve
-     * @return RolesApplication
-     * @throws \App\Model\Settings\SettingsException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws SettingsException
+     * @throws ORMException
+     * @throws OptimisticLockException
      * @throws \ReflectionException
      * @throws \Throwable
      */
-    private function createRolesApplication(User $user, Collection $roles, User $createdBy, bool $approve = FALSE): RolesApplication
+    private function createRolesApplication(User $user, Collection $roles, User $createdBy, bool $approve = false) : RolesApplication
     {
-        if (!$user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))) {
-            throw new \InvalidArgumentException("User is already registered.");
+        if (! $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))) {
+            throw new \InvalidArgumentException('User is already registered.');
         }
 
-        $user->setApproved(TRUE);
-        if (!$approve && $roles->exists(function (int $key, Role $role) {
-            return !$role->isApprovedAfterRegistration();
+        $user->setApproved(true);
+        if (! $approve && $roles->exists(function (int $key, Role $role) {
+            return ! $role->isApprovedAfterRegistration();
         })) {
-            $user->setApproved(FALSE);
+            $user->setApproved(false);
         }
 
         $user->setRoles($roles);
@@ -508,19 +499,18 @@ class ApplicationService
     }
 
     /**
-     * @param User $user
      * @param Collection $subevents
-     * @param User $createdBy
-     * @return SubeventsApplication
-     * @throws \App\Model\Settings\SettingsException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws SettingsException
+     * @throws ORMException
+     * @throws OptimisticLockException
      * @throws \ReflectionException
      * @throws \Throwable
      */
-    private function createSubeventsApplication(User $user, Collection $subevents,
-                                                User $createdBy): SubeventsApplication
-    {
+    private function createSubeventsApplication(
+        User $user,
+        Collection $subevents,
+        User $createdBy
+    ) : SubeventsApplication {
         $application = new SubeventsApplication();
         $application->setUser($user);
         $application->setSubevents($subevents);
@@ -540,11 +530,10 @@ class ApplicationService
     }
 
     /**
-     * @return VariableSymbol
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
-    private function generateVariableSymbol(): VariableSymbol
+    private function generateVariableSymbol() : VariableSymbol
     {
         $variableSymbolCode = $this->settingsRepository->getValue(Settings::VARIABLE_SYMBOL_CODE);
 
@@ -561,12 +550,11 @@ class ApplicationService
 
     /**
      * Vypočítá datum splatnosti podle zvolené metody.
-     * @return \DateTime|null
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \ReflectionException
      * @throws \Throwable
      */
-    private function countMaturityDate()
+    private function countMaturityDate() : ?\DateTime
     {
         switch ($this->settingsRepository->getValue(Settings::MATURITY_TYPE)) {
             case MaturityType::DATE:
@@ -577,36 +565,36 @@ class ApplicationService
 
             case MaturityType::WORK_DAYS:
                 $workDays = $this->settingsRepository->getIntValue(Settings::MATURITY_WORK_DAYS);
-                $date = new \DateTime();
+                $date     = new \DateTime();
 
                 for ($i = 0; $i < $workDays;) {
                     $date->modify('+1 days');
                     $holidays = Yasumi::create('CzechRepublic', $date->format('Y'));
 
-                    if ($holidays->isWorkingDay($date)) {
-                        $i++;
+                    if (! $holidays->isWorkingDay($date)) {
+                        continue;
                     }
+
+                    $i++;
                 }
 
                 return $date;
         }
-        return NULL;
+        return null;
     }
 
     /**
      * Vypočítá poplatek za role.
      * @param Collection $roles
-     * @return int
      */
-    private function countRolesFee(Collection $roles)
+    private function countRolesFee(Collection $roles) : int
     {
         $fee = 0;
 
         foreach ($roles as $role) {
             if ($role->getFee() === 0) {
                 return 0;
-            }
-            elseif ($role->getFee() > 0) {
+            } elseif ($role->getFee() > 0) {
                 $fee += $role->getFee();
             }
         }
@@ -616,11 +604,10 @@ class ApplicationService
 
     /**
      * Vypočítá poplatek za podakce přihlášky.
-     * @param Collection|Role[] $roles
+     * @param Collection|Role[]     $roles
      * @param Collection|Subevent[] $subevents
-     * @return int
      */
-    private function countSubeventsFee(Collection $roles, Collection $subevents)
+    private function countSubeventsFee(Collection $roles, Collection $subevents) : int
     {
         $fee = 0;
 
@@ -628,7 +615,8 @@ class ApplicationService
             if ($role->getFee() === 0) {
                 return 0;
             }
-            elseif ($role->getFee() === NULL) {
+
+            if ($role->getFee() === null) {
                 foreach ($subevents as $subevent) {
                     $fee += $subevent->getFee();
                 }
@@ -641,41 +629,35 @@ class ApplicationService
         return $fee - $discount;
     }
 
-    /**
-     * @param Application $application
-     * @return string
-     */
-    private function getApplicationState(Application $application)
+    private function getApplicationState(Application $application) : string
     {
-        if ($application->getState() == ApplicationState::CANCELED) {
+        if ($application->getState() === ApplicationState::CANCELED) {
             return ApplicationState::CANCELED;
         }
 
-        if ($application->getState() == ApplicationState::CANCELED_NOT_PAID) {
+        if ($application->getState() === ApplicationState::CANCELED_NOT_PAID) {
             return ApplicationState::CANCELED_NOT_PAID;
         }
 
-        if ($application->getFee() == 0) {
+        if ($application->getFee() === 0) {
             return ApplicationState::PAID_FREE;
         }
-        elseif ($application->getPaymentDate()) {
+
+        if ($application->getPaymentDate()) {
             return ApplicationState::PAID;
         }
-        else {
-            return ApplicationState::WAITING_FOR_PAYMENT;
-        }
+
+        return ApplicationState::WAITING_FOR_PAYMENT;
     }
 
     /**
      * Vrací stav přihlášky jako text.
-     * @param Application $application
-     * @return string
      */
-    public function getStateText(Application $application): string
+    public function getStateText(Application $application) : string
     {
         $state = $this->translator->translate('common.application_state.' . $application->getState());
 
-        if ($application->getState() == ApplicationState::PAID) {
+        if ($application->getState() === ApplicationState::PAID) {
             $state .= ' (' . $application->getPaymentDate()->format(Helpers::DATE_FORMAT) . ')';
         }
 
@@ -684,40 +666,34 @@ class ApplicationService
 
     /**
      * Může uživatel upravovat role?
-     * @param User $user
-     * @return bool
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
-    public function isAllowedEditRegistration(User $user)
+    public function isAllowedEditRegistration(User $user) : bool
     {
-        return !$user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))
-            && !$user->hasPaidAnyApplication()
+        return ! $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))
+            && ! $user->hasPaidAnyApplication()
             && $this->settingsRepository->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new \DateTime())->setTime(0, 0);
     }
 
     /**
      * Je uživateli povoleno upravit nebo zrušit přihlášku?
-     * @param Application $application
-     * @return bool
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
-    public function isAllowedEditApplication(Application $application)
+    public function isAllowedEditApplication(Application $application) : bool
     {
-        return $application->getType() == Application::SUBEVENTS && !$application->isCanceled()
-            && $application->getState() != ApplicationState::PAID
+        return $application->getType() === Application::SUBEVENTS && ! $application->isCanceled()
+            && $application->getState() !== ApplicationState::PAID
             && $this->settingsRepository->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new \DateTime())->setTime(0, 0);
     }
 
     /**
      * Může uživatel dodatečně přidávat podakce?
-     * @param User $user
-     * @return bool
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
-    public function isAllowedAddApplication(User $user)
+    public function isAllowedAddApplication(User $user) : bool
     {
         return $user->hasPaidEveryApplication()
             && $this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT)
@@ -726,11 +702,10 @@ class ApplicationService
 
     /**
      * Může uživatel upravovat vlastní pole přihlášky?
-     * @return bool
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
-    public function isAllowedEditCustomInputs()
+    public function isAllowedEditCustomInputs() : bool
     {
         return $this->settingsRepository->getDateValue(Settings::EDIT_CUSTOM_INPUTS_TO) >= (new \DateTime())->setTime(0, 0);
     }

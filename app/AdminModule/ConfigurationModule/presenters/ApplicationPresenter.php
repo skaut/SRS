@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Presenters;
@@ -8,8 +9,8 @@ use App\AdminModule\ConfigurationModule\Components\ICustomInputsGridControlFacto
 use App\AdminModule\ConfigurationModule\Forms\ApplicationForm;
 use App\AdminModule\ConfigurationModule\Forms\CustomInputForm;
 use App\Model\Settings\CustomInput\CustomInputRepository;
+use App\Model\Settings\SettingsException;
 use Nette\Application\UI\Form;
-
 
 /**
  * Presenter obsluhující nastavení přihlášky.
@@ -43,32 +44,25 @@ class ApplicationPresenter extends ConfigurationBasePresenter
     public $customInputFormFactory;
 
 
-    /**
-     * @param $id
-     */
-    public function renderEdit($id)
+    public function renderEdit($id) : void
     {
         $this->template->customInput = $this->customInputRepository->findById($id);
     }
 
-    /**
-     * @return CustomInputsGridControl
-     */
-    protected function createComponentCustomInputsGrid()
+    protected function createComponentCustomInputsGrid() : CustomInputsGridControl
     {
         return $this->customInputsGridControlFactory->create();
     }
 
     /**
-     * @return Form
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
-    protected function createComponentApplicationForm()
+    protected function createComponentApplicationForm() : Form
     {
         $form = $this->applicationFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, array $values) {
+        $form->onSuccess[] = function (Form $form, array $values) : void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');
@@ -77,15 +71,12 @@ class ApplicationPresenter extends ConfigurationBasePresenter
         return $form;
     }
 
-    /**
-     * @return Form
-     */
-    protected function createComponentCustomInputForm()
+    protected function createComponentCustomInputForm() : Form
     {
         $form = $this->customInputFormFactory->create($this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, array $values) {
-            if (!$form['cancel']->isSubmittedBy()) {
+        $form->onSuccess[] = function (Form $form, array $values) : void {
+            if (! $form['cancel']->isSubmittedBy()) {
                 $this->flashMessage('admin.configuration.custom_inputs_saved', 'success');
             }
 

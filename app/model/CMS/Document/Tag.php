@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\CMS\Document;
@@ -8,7 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
-
+use function implode;
 
 /**
  * Entita tagu pro dokumenty.
@@ -45,19 +46,13 @@ class Tag
     protected $roles;
 
 
-    /**
-     * Tag constructor.
-     */
     public function __construct()
     {
         $this->documents = new ArrayCollection();
-        $this->roles = new ArrayCollection();
+        $this->roles     = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getId(): int
+    public function getId() : int
     {
         return $this->id;
     }
@@ -65,23 +60,17 @@ class Tag
     /**
      * @return Collection|Document[]
      */
-    public function getDocuments(): Collection
+    public function getDocuments() : Collection
     {
         return $this->documents;
     }
 
-    /**
-     * @return string
-     */
-    public function getName(): string
+    public function getName() : string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName(string $name): void
+    public function setName(string $name) : void
     {
         $this->name = $name;
     }
@@ -89,23 +78,22 @@ class Tag
     /**
      * @return Collection|Role[]
      */
-    public function getRoles(): Collection
+    public function getRoles() : Collection
     {
         return $this->roles;
     }
 
-    /**
-     * @return string
-     */
-    public function getRolesText(): string
+    public function getRolesText() : string
     {
-        return implode(', ', $this->roles->map(function (Role $role) {return $role->getName();})->toArray());
+        return implode(', ', $this->roles->map(function (Role $role) {
+            return $role->getName();
+        })->toArray());
     }
 
     /**
      * @param Collection|Role[] $roles
      */
-    public function setRoles(Collection $roles): void
+    public function setRoles(Collection $roles) : void
     {
         $this->roles->clear();
         foreach ($roles as $role) {
@@ -113,14 +101,12 @@ class Tag
         }
     }
 
-    /**
-     * @param Role $role
-     */
-    public function addRole(Role $role): void
+    public function addRole(Role $role) : void
     {
-        if (!$this->roles->contains($role)) {
-            $this->roles->add($role);
+        if ($this->roles->contains($role)) {
+            return;
         }
-    }
 
+        $this->roles->add($role);
+    }
 }

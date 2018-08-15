@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Presenters;
@@ -6,9 +7,9 @@ namespace App\AdminModule\ConfigurationModule\Presenters;
 use App\AdminModule\ConfigurationModule\Components\ISubeventsGridControlFactory;
 use App\AdminModule\ConfigurationModule\Forms\SubeventForm;
 use App\AdminModule\ConfigurationModule\Forms\SubeventsForm;
+use App\Model\Settings\SettingsException;
 use App\Model\Structure\SubeventRepository;
 use Nette\Forms\Form;
-
 
 /**
  * Presenter obsluhující správu podakcí.
@@ -42,10 +43,7 @@ class SubeventsPresenter extends ConfigurationBasePresenter
     public $subeventRepository;
 
 
-    /**
-     * @param $id
-     */
-    public function renderEdit($id)
+    public function renderEdit($id) : void
     {
         $subevent = $this->subeventRepository->findById($id);
 
@@ -61,9 +59,10 @@ class SubeventsPresenter extends ConfigurationBasePresenter
     {
         $form = $this->subeventFormFactory->create($this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, array $values) {
-            if (!$form['cancel']->isSubmittedBy())
+        $form->onSuccess[] = function (Form $form, array $values) : void {
+            if (! $form['cancel']->isSubmittedBy()) {
                 $this->flashMessage('admin.configuration.subevents_saved', 'success');
+            }
 
             $this->redirect('Subevents:default');
         };
@@ -72,15 +71,14 @@ class SubeventsPresenter extends ConfigurationBasePresenter
     }
 
     /**
-     * @return \Nette\Application\UI\Form
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
-    protected function createComponentSubeventsForm()
+    protected function createComponentSubeventsForm() : \Nette\Application\UI\Form
     {
         $form = $this->subeventsFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, array $values) {
+        $form->onSuccess[] = function (Form $form, array $values) : void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
             $this->redirect('this');
         };

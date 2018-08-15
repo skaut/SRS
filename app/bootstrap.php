@@ -1,9 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$configurator = new Nette\Configurator;
+$configurator = new Nette\Configurator();
 
 $configurator->setDebugMode(getenv('DEVELOPMENT_MACHINE') === 'true');
 $configurator->enableDebugger(__DIR__ . '/../log');

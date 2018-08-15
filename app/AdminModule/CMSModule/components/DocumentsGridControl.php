@@ -66,7 +66,6 @@ class DocumentsGridControl extends Control
 
     /**
      * Vytvoří komponentu.
-     * @param $name
      * @throws DataGridException
      */
     public function createComponentDocumentsGrid(string $name) : void
@@ -156,7 +155,6 @@ class DocumentsGridControl extends Control
 
     /**
      * Zpracuje přidání dokumentu.
-     * @param $values
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -184,8 +182,6 @@ class DocumentsGridControl extends Control
 
     /**
      * Zpracuje úpravu dokumentu.
-     * @param $id
-     * @param $values
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -217,7 +213,6 @@ class DocumentsGridControl extends Control
 
     /**
      * Zpracuje odstranění dokumentu.
-     * @param $id
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -235,7 +230,6 @@ class DocumentsGridControl extends Control
 
     /**
      * Vygeneruje cestu dokumentu.
-     * @param $file
      */
     private function generatePath(FileUpload $file) : string
     {

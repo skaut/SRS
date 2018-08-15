@@ -80,8 +80,8 @@ class PageForm extends UI\Control
 
 
     public function __construct(
-        $id,
-        $area,
+        int $id,
+        string $area,
         BaseForm $baseFormFactory,
         PageRepository $pageRepository,
         ContentRepository $contentRepository,
@@ -168,7 +168,6 @@ class PageForm extends UI\Control
 
     /**
      * Zpracuje formulář.
-     * @param array $values
      * @throws PageException
      * @throws ORMException
      * @throws OptimisticLockException
@@ -214,7 +213,6 @@ class PageForm extends UI\Control
 
     /**
      * Připraví možnosti obsahů stránky pro select.
-     * @return array
      */
     private function prepareContentTypesOptions() : array
     {

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\WebModule\Forms;
@@ -7,10 +8,12 @@ use App\Model\Enums\Sex;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\SkautIsService;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
 use Skautis\Wsdl\WsdlException;
-
+use function array_key_exists;
 
 /**
  * Formulář pro úpravu osobních údajů.
@@ -21,7 +24,7 @@ use Skautis\Wsdl\WsdlException;
 class PersonalDetailsForm
 {
     use Nette\SmartObject;
-    
+
     /**
      * Přihlášený uživatel.
      * @var User
@@ -40,25 +43,18 @@ class PersonalDetailsForm
     private $skautIsService;
 
 
-    /**
-     * PersonalDetailsForm constructor.
-     * @param BaseForm $baseFormFactory
-     * @param UserRepository $userRepository
-     * @param SkautIsService $skautIsService
-     */
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository, SkautIsService $skautIsService)
     {
         $this->baseFormFactory = $baseFormFactory;
-        $this->userRepository = $userRepository;
-        $this->skautIsService = $skautIsService;
+        $this->userRepository  = $userRepository;
+        $this->skautIsService  = $skautIsService;
     }
 
     /**
      * Vytvoří formulář.
      * @param $id
-     * @return Form
      */
-    public function create($id)
+    public function create($id) : Form
     {
         $this->user = $this->userRepository->findById($id);
 
@@ -67,7 +63,7 @@ class PersonalDetailsForm
         $form->addHidden('id');
 
         $inputSex = $form->addRadioList('sex', 'web.profile.sex', Sex::getSexOptions());
-        $inputSex->getSeparatorPrototype()->setName(NULL);
+        $inputSex->getSeparatorPrototype()->setName(null);
 
         $inputFirstName = $form->addText('firstName', 'web.profile.firstname')
             ->addRule(Form::FILLED, 'web.profile.firstname_empty');
@@ -119,7 +115,7 @@ class PersonalDetailsForm
             'street' => $this->user->getStreet(),
             'city' => $this->user->getCity(),
             'postcode' => $this->user->getPostcode(),
-            'state' => $this->user->getState()
+            'state' => $this->user->getState(),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -129,12 +125,11 @@ class PersonalDetailsForm
 
     /**
      * Zpracuje formulář.
-     * @param Form $form
      * @param array $values
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function processForm(Form $form, array $values)
+    public function processForm(Form $form, array $values) : void
     {
         if (array_key_exists('sex', $values)) {
             $this->user->setSex($values['sex']);

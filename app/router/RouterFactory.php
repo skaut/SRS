@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App;
@@ -9,12 +10,9 @@ use Nette;
 use Nette\Application\Routers\Route;
 use Nette\Application\Routers\RouteList;
 
-
 class RouterFactory
 {
-    /**
-     * @var PageRepository
-     */
+    /** @var PageRepository */
     private $pageRepository;
 
 
@@ -23,70 +21,67 @@ class RouterFactory
         $this->pageRepository = $pageRepository;
     }
 
-    /**
-     * @return Nette\Application\IRouter
-     */
-    public function createRouter()
+    public function createRouter() : Nette\Application\IRouter
     {
-        $router = new RouteList;
+        $router = new RouteList();
 
         $router[] = new Route('index.php', 'Web:Page:default', Route::ONE_WAY);
 
         $router[] = new Route('api/<presenter>/<action>[/<id>]', [
             'module' => 'Api',
-            'presenter' => NULL,
-            'action' => NULL,
-            'id' => NULL
+            'presenter' => null,
+            'action' => null,
+            'id' => null,
         ]);
 
         $router[] = new Route('action/<presenter>/<action>[/<id>]', [
             'module' => 'Action',
-            'presenter' => NULL,
-            'action' => NULL,
-            'id' => NULL
+            'presenter' => null,
+            'action' => null,
+            'id' => null,
         ]);
 
         $router[] = new Route('admin/cms/<presenter>/<action>[/<id>][/<area>]', [
             'module' => 'Admin:CMS',
             'presenter' => 'Page',
             'action' => 'default',
-            'id' => NULL,
-            'area' => NULL
+            'id' => null,
+            'area' => null,
         ]);
 
         $router[] = new Route('admin/program/<presenter>/<action>[/<id>]', [
             'module' => 'Admin:Program',
             'presenter' => 'Block',
             'action' => 'default',
-            'id' => NULL
+            'id' => null,
         ]);
 
         $router[] = new Route('admin/mailing/<presenter>/<action>[/<id>]', [
             'module' => 'Admin:Mailing',
             'presenter' => 'Auto',
             'action' => 'default',
-            'id' => NULL
+            'id' => null,
         ]);
 
         $router[] = new Route('admin/configuration/<presenter>/<action>[/<id>]', [
             'module' => 'Admin:Configuration',
             'presenter' => 'Seminar',
             'action' => 'default',
-            'id' => NULL
+            'id' => null,
         ]);
 
         $router[] = new Route('admin/<presenter>/<action>[/<id>]', [
             'module' => 'Admin',
             'presenter' => 'Dashboard',
             'action' => 'default',
-            'id' => NULL
+            'id' => null,
         ]);
 
         $router[] = new Route('install/<action>/<id>/', [
             'module' => 'Install',
             'presenter' => 'Install',
             'action' => 'default',
-            'id' => NULL
+            'id' => null,
         ]);
 
         $router[] = new Route('login/', 'Auth:login');
@@ -102,9 +97,9 @@ class RouterFactory
                     },
                     Route::FILTER_OUT => function ($page) {
                         return $page->getSlug();
-                    }
+                    },
                 ],
-                'action' => 'default'
+                'action' => 'default',
             ]);
         } catch (TableNotFoundException $ex) {
         }
@@ -113,7 +108,7 @@ class RouterFactory
             'module' => 'Web',
             'presenter' => 'Page',
             'action' => 'default',
-            'id' => NULL
+            'id' => null,
         ]);
 
         return $router;

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services;
@@ -10,7 +11,6 @@ use App\Model\ACL\RoleRepository;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Nette;
 
-
 /**
  * Služba nastavující role a oprávnění.
  *
@@ -19,15 +19,11 @@ use Nette;
  */
 class Authorizator extends Nette\Security\Permission
 {
-    /**
-     * Authorizator constructor.
-     * @param RoleRepository $roleRepository
-     * @param PermissionRepository $permissionRepository
-     * @param ResourceRepository $resourceRepository
-     */
-    public function __construct(RoleRepository $roleRepository, PermissionRepository $permissionRepository,
-                                ResourceRepository $resourceRepository)
-    {
+    public function __construct(
+        RoleRepository $roleRepository,
+        PermissionRepository $permissionRepository,
+        ResourceRepository $resourceRepository
+    ) {
         $this->addRole(Role::TEST); //role pouzivana pri testovani jine role
 
         try {

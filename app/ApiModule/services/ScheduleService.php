@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\ApiModule\Services;
@@ -18,13 +19,20 @@ use App\Model\Program\ProgramRepository;
 use App\Model\Program\Room;
 use App\Model\Program\RoomRepository;
 use App\Model\Settings\Settings;
+use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ProgramService;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
 use Nette;
-
+use const DATE_ISO8601;
+use function array_intersect;
+use function count;
+use function floor;
+use function in_array;
 
 /**
  * Služba pro zpracování požadavků z API pro správu harmonogramu a zapisování programů.
@@ -60,34 +68,25 @@ class ScheduleService
     private $programService;
 
 
-    /**
-     * ScheduleService constructor.
-     * @param Translator $translator
-     * @param UserRepository $userRepository
-     * @param ProgramRepository $programRepository
-     * @param BlockRepository $blockRepository
-     * @param RoomRepository $roomRepository
-     * @param SettingsRepository $settingsRepository
-     * @param ProgramService $programService
-     */
-    public function __construct(Translator $translator, UserRepository $userRepository,
-                                ProgramRepository $programRepository, BlockRepository $blockRepository,
-                                RoomRepository $roomRepository, SettingsRepository $settingsRepository,
-                                ProgramService $programService)
-    {
-        $this->translator = $translator;
-        $this->userRepository = $userRepository;
-        $this->programRepository = $programRepository;
-        $this->blockRepository = $blockRepository;
-        $this->roomRepository = $roomRepository;
+    public function __construct(
+        Translator $translator,
+        UserRepository $userRepository,
+        ProgramRepository $programRepository,
+        BlockRepository $blockRepository,
+        RoomRepository $roomRepository,
+        SettingsRepository $settingsRepository,
+        ProgramService $programService
+    ) {
+        $this->translator         = $translator;
+        $this->userRepository     = $userRepository;
+        $this->programRepository  = $programRepository;
+        $this->blockRepository    = $blockRepository;
+        $this->roomRepository     = $roomRepository;
         $this->settingsRepository = $settingsRepository;
-        $this->programService = $programService;
+        $this->programService     = $programService;
     }
 
-    /**
-     * @param $userId
-     */
-    public function setUser($userId)
+    public function setUser($userId) : void
     {
         $this->user = $this->userRepository->findById($userId);
     }
@@ -99,39 +98,42 @@ class ScheduleService
      */
     public function getProgramsAdmin()
     {
-        $programs = $this->programRepository->findAll();
+        $programs               = $this->programRepository->findAll();
         $programAdminDetailDTOs = [];
-        foreach ($programs as $program)
+        foreach ($programs as $program) {
             $programAdminDetailDTOs[] = $this->convertProgramToProgramDetailDTO($program);
+        }
         return $programAdminDetailDTOs;
     }
 
     /**
      * Vrací podrobnosti o programech, ke kterým má uživatel přístup, pro použití v kalendáři pro výběr programů.
      * @return ProgramDetailDTO[]
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
     public function getProgramsWeb()
     {
-        $programs = $this->programService->getUserAllowedPrograms($this->user);
+        $programs          = $this->programService->getUserAllowedPrograms($this->user);
         $programDetailDTOs = [];
         foreach ($programs as $program) {
             $programDetailDTO = $this->convertProgramToProgramDetailDTO($program);
             $programDetailDTO->setAttendeesCount($program->getAttendeesCount());
             $programDetailDTO->setUserAttends($program->isAttendee($this->user));
             $programDetailDTO->setBlocks($this->programRepository->findBlockedProgramsIdsByProgram($program));
-            $programDetailDTO->setBlocked(FALSE);
+            $programDetailDTO->setBlocked(false);
             $programDetailDTO->setPaid($programPaid = $this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT)
                 || $this->user->hasPaidSubevent($program->getBlock()->getSubevent()));
-            $programDetailDTOs[] = $programDetailDTO;
+            $programDetailDTOs[]                    = $programDetailDTO;
         }
 
         foreach ($programDetailDTOs as $p1) {
             foreach ($programDetailDTOs as $p2) {
-                if ($p1 != $p2 && $p1->isUserAttends() && in_array($p2->getId(), $p1->getBlocks())) {
-                    $p2->setBlocked(TRUE);
+                if ($p1 === $p2 || ! $p1->isUserAttends() || ! in_array($p2->getId(), $p1->getBlocks())) {
+                    continue;
                 }
+
+                $p2->setBlocked(true);
             }
         }
 
@@ -144,10 +146,11 @@ class ScheduleService
      */
     public function getBlocks()
     {
-        $blocks = $this->blockRepository->findAll();
+        $blocks          = $this->blockRepository->findAll();
         $blockDetailDTOs = [];
-        foreach ($blocks as $block)
+        foreach ($blocks as $block) {
             $blockDetailDTOs[] = $this->convertBlockToBlockDetailDTO($block);
+        }
         return $blockDetailDTOs;
     }
 
@@ -157,25 +160,25 @@ class ScheduleService
      */
     public function getRooms()
     {
-        $rooms = $this->roomRepository->findAll();
+        $rooms          = $this->roomRepository->findAll();
         $roomDetailDTOs = [];
-        foreach ($rooms as $room)
+        foreach ($rooms as $room) {
             $roomDetailDTOs[] = $this->convertRoomToRoomDetailDTO($room);
+        }
         return $roomDetailDTOs;
     }
 
     /**
      * Vrací nastavení pro FullCalendar.
-     * @return CalendarConfigDTO
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
-    public function getCalendarConfig()
+    public function getCalendarConfig() : CalendarConfigDTO
     {
         $calendarConfigDTO = new CalendarConfigDTO();
 
         $fromDate = $this->settingsRepository->getDateValue(Settings::SEMINAR_FROM_DATE);
-        $toDate = $this->settingsRepository->getDateValue(Settings::SEMINAR_TO_DATE);
+        $toDate   = $this->settingsRepository->getDateValue(Settings::SEMINAR_TO_DATE);
 
         $calendarConfigDTO->setSeminarFromDate($fromDate->format('Y-m-d'));
         $calendarConfigDTO->setSeminarDuration($toDate->diff($fromDate)->d + 1);
@@ -189,17 +192,14 @@ class ScheduleService
 
     /**
      * Uloží nebo vytvoří program.
-     * @param ProgramSaveDTO $programSaveDTO
-     * @return ResponseDTO
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
-    public function saveProgram(ProgramSaveDTO $programSaveDTO)
+    public function saveProgram(ProgramSaveDTO $programSaveDTO) : ResponseDTO
     {
         if ($programSaveDTO->getId()) {
             $program = $this->programRepository->findById($programSaveDTO->getId());
-        }
-        else {
+        } else {
             $program = new Program();
         }
 
@@ -207,33 +207,28 @@ class ScheduleService
         $responseDTO->setStatus('danger');
 
         $block = $this->blockRepository->findById($programSaveDTO->getBlockId());
-        $room = $programSaveDTO->getRoomId() ? $this->roomRepository->findById($programSaveDTO->getRoomId()) : NULL;
+        $room  = $programSaveDTO->getRoomId() ? $this->roomRepository->findById($programSaveDTO->getRoomId()) : null;
         $start = $programSaveDTO->getStart();
-        $end = clone $start;
+        $end   = clone $start;
         $end->add(new \DateInterval('PT' . $block->getDuration() . 'M'));
 
-        if (!$this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE)) {
+        if (! $this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_user_not_allowed_manage'));
-        }
-        elseif (!$this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)) {
+        } elseif (! $this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_not_allowed_modfify'));
-        }
-        elseif ($room && $this->roomRepository->hasOverlappingProgram($room, $program, $start, $end)) {
-            $responseDTO->setMessage($this->translator->translate('common.api.schedule_room_occupied', NULL, ['name' => $room->getName()]));
-        }
-        elseif ($block->getMandatory() == 2 && $this->programRepository->hasOverlappingProgram($program, $start, $end)) {
+        } elseif ($room && $this->roomRepository->hasOverlappingProgram($room, $program, $start, $end)) {
+            $responseDTO->setMessage($this->translator->translate('common.api.schedule_room_occupied', null, ['name' => $room->getName()]));
+        } elseif ($block->getMandatory() === 2 && $this->programRepository->hasOverlappingProgram($program, $start, $end)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_auto_register_not_allowed'));
-        }
-        elseif ($this->programRepository->hasOverlappingAutoRegisterProgram($program, $start, $end)) {
+        } elseif ($this->programRepository->hasOverlappingAutoRegisterProgram($program, $start, $end)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_auto_register_not_allowed'));
-        }
-        else {
+        } else {
             $program->setBlock($block);
             $program->setRoom($room);
             $program->setStart($start);
             $this->programRepository->save($program);
 
-            if ($block->getMandatory() == 2) {
+            if ($block->getMandatory() === 2) {
                 foreach ($this->userRepository->findProgramAllowed($program) as $attendee) {
                     $program->addAttendee($attendee);
                 }
@@ -252,27 +247,23 @@ class ScheduleService
     /**
      * Smaže program.
      * @param $programId
-     * @return ResponseDTO
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
-    public function removeProgram($programId)
+    public function removeProgram($programId) : ResponseDTO
     {
         $program = $this->programRepository->findById($programId);
 
         $responseDTO = new ResponseDTO();
         $responseDTO->setStatus('danger');
 
-        if (!$this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE)) {
+        if (! $this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_user_not_allowed_manage'));
-        }
-        elseif (!$this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)) {
+        } elseif (! $this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_not_allowed_modfify'));
-        }
-        elseif (!$program) {
+        } elseif (! $program) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_program_not_found'));
-        }
-        else {
+        } else {
             $programDetailDTO = new ProgramDetailDTO();
             $programDetailDTO->setId($program->getId());
 
@@ -289,47 +280,40 @@ class ScheduleService
     /**
      * Přihlásí program uživateli.
      * @param $programId
-     * @return ResponseDTO
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
-    public function attendProgram($programId)
+    public function attendProgram($programId) : ResponseDTO
     {
         $program = $this->programRepository->findById($programId);
 
         $responseDTO = new ResponseDTO();
         $responseDTO->setStatus('danger');
 
-        if (!$this->user->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS)) {
+        if (! $this->user->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_user_not_allowed_register_programs'));
-        }
-        elseif (!$this->programService->isAllowedRegisterPrograms()) {
+        } elseif (! $this->programService->isAllowedRegisterPrograms()) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_register_programs_not_allowed'));
-        }
-        elseif (!$this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT) &&
-            !$this->user->hasPaidSubevent($program->getBlock()->getSubevent())
+        } elseif (! $this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT) &&
+            ! $this->user->hasPaidSubevent($program->getBlock()->getSubevent())
         ) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_register_programs_before_payment_not_allowed'));
-        }
-        elseif (!$program) {
+        } elseif (! $program) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_program_not_found'));
-        }
-        elseif ($this->user->getPrograms()->contains($program)) {
+        } elseif ($this->user->getPrograms()->contains($program)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_program_already_registered'));
-        }
-        elseif ($program->getCapacity() !== NULL && $program->getCapacity() <= $program->getAttendeesCount()) {
+        } elseif ($program->getCapacity() !== null && $program->getCapacity() <= $program->getAttendeesCount()) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_program_no_vacancies'));
-        }
-        elseif (!($this->programService->getUserAllowedPrograms($this->user))->contains($program)) {
+        } elseif (! ($this->programService->getUserAllowedPrograms($this->user))->contains($program)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_program_category_not_allowed'));
-        }
-        elseif (count(
-            array_intersect($this->programRepository->findBlockedProgramsIdsByProgram($program),
-                $this->programRepository->findProgramsIds($this->user->getPrograms()))
+        } elseif (count(
+            array_intersect(
+                $this->programRepository->findBlockedProgramsIdsByProgram($program),
+                $this->programRepository->findProgramsIds($this->user->getPrograms())
+            )
         )) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_program_blocked'));
-        }
-        else {
+        } else {
             $this->user->addProgram($program);
             $this->userRepository->save($this->user);
 
@@ -348,29 +332,25 @@ class ScheduleService
     /**
      * Odhlásí program uživateli.
      * @param $programId
-     * @return ResponseDTO
-     * @throws \App\Model\Settings\SettingsException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws SettingsException
+     * @throws ORMException
+     * @throws OptimisticLockException
      * @throws \Throwable
      */
-    public function unattendProgram($programId)
+    public function unattendProgram($programId) : ResponseDTO
     {
         $program = $this->programRepository->findById($programId);
 
         $responseDTO = new ResponseDTO();
         $responseDTO->setStatus('danger');
 
-        if (!$this->programService->isAllowedRegisterPrograms()) {
+        if (! $this->programService->isAllowedRegisterPrograms()) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_register_programs_not_allowed'));
-        }
-        elseif (!$program) {
+        } elseif (! $program) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_program_not_found'));
-        }
-        elseif (!$this->user->getPrograms()->contains($program)) {
+        } elseif (! $this->user->getPrograms()->contains($program)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_program_not_registered'));
-        }
-        else {
+        } else {
             $this->user->removeProgram($program);
             $this->userRepository->save($this->user);
 
@@ -388,11 +368,9 @@ class ScheduleService
 
     /**
      * Převede Program na ProgramDetailDTO.
-     * @param Program $program
-     * @return ProgramDetailDTO
      * @throws \Exception
      */
-    private function convertProgramToProgramDetailDTO(Program $program)
+    private function convertProgramToProgramDetailDTO(Program $program) : ProgramDetailDTO
     {
         $programDetailDTO = new ProgramDetailDTO();
 
@@ -401,17 +379,15 @@ class ScheduleService
         $programDetailDTO->setStart($program->getStart()->format(DATE_ISO8601));
         $programDetailDTO->setEnd($program->getEnd()->format(DATE_ISO8601));
         $programDetailDTO->setBlockId($program->getBlock()->getId());
-        $programDetailDTO->setRoomId($program->getRoom() ? $program->getRoom()->getId() : NULL);
+        $programDetailDTO->setRoomId($program->getRoom() ? $program->getRoom()->getId() : null);
 
         return $programDetailDTO;
     }
 
     /**
      * Převede Block na BlockDetailDTO.
-     * @param Block $block
-     * @return BlockDetailDTO
      */
-    private function convertBlockToBlockDetailDTO(Block $block)
+    private function convertBlockToBlockDetailDTO(Block $block) : BlockDetailDTO
     {
         $blockDetailDTO = new BlockDetailDTO();
 
@@ -420,12 +396,12 @@ class ScheduleService
         $blockDetailDTO->setCategory($block->getCategory() ? $block->getCategory()->getName() : '');
         $blockDetailDTO->setLector($block->getLector() ? $block->getLector()->getLectorName() : '');
         $blockDetailDTO->setAboutLector($block->getLector() ? $block->getLector()->getAbout() : '');
-        $blockDetailDTO->setLectorPhoto($block->getLector() ? $block->getLector()->getPhoto() : NULL);
-        $blockDetailDTO->setDurationHours(floor($block->getDuration() / 60));
+        $blockDetailDTO->setLectorPhoto($block->getLector() ? $block->getLector()->getPhoto() : null);
+        $blockDetailDTO->setDurationHours((int) floor($block->getDuration() / 60));
         $blockDetailDTO->setDurationMinutes($block->getDuration() % 60);
         $blockDetailDTO->setCapacity($block->getCapacity());
         $blockDetailDTO->setMandatory($block->getMandatory() > 0);
-        $blockDetailDTO->setAutoRegister($block->getMandatory() == 2);
+        $blockDetailDTO->setAutoRegister($block->getMandatory() === 2);
         $blockDetailDTO->setPerex($block->getPerex());
         $blockDetailDTO->setDescription($block->getDescription());
         $blockDetailDTO->setProgramsCount($block->getProgramsCount());
@@ -437,10 +413,8 @@ class ScheduleService
 
     /**
      * Převede Room na RoomDetailDTO.
-     * @param Room $room
-     * @return RoomDetailDTO
      */
-    private function convertRoomToRoomDetailDTO(Room $room)
+    private function convertRoomToRoomDetailDTO(Room $room) : RoomDetailDTO
     {
         $roomDetailDTO = new RoomDetailDTO();
 

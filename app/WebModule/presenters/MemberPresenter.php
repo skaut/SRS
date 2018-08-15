@@ -1,8 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\WebModule\Presenters;
 
+use Nette\Application\AbortException;
 
 /**
  * Presenter obshluhující stránku s informacemi o propojení skautIS účtu.
@@ -12,20 +14,22 @@ namespace App\WebModule\Presenters;
 class MemberPresenter extends WebBasePresenter
 {
     /**
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      * @throws \Throwable
      */
-    public function startup()
+    public function startup() : void
     {
         parent::startup();
 
-        if (!$this->user->isLoggedIn()) {
-            $this->flashMessage('web.common.login_required', 'danger', 'lock');
-            $this->redirect(':Web:Page:default');
+        if ($this->user->isLoggedIn()) {
+            return;
         }
+
+        $this->flashMessage('web.common.login_required', 'danger', 'lock');
+        $this->redirect(':Web:Page:default');
     }
 
-    public function renderDefault()
+    public function renderDefault() : void
     {
         $this->template->pageName = $this->translator->translate('web.member.title');
     }

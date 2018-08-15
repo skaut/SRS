@@ -1,10 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Settings\Place;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Kdyby\Doctrine\EntityRepository;
-
 
 /**
  * Třída spravující mapové body.
@@ -13,32 +15,26 @@ use Kdyby\Doctrine\EntityRepository;
  */
 class PlacePointRepository extends EntityRepository
 {
-    /**
-     * @param $id
-     * @return PlacePoint|null
-     */
-    public function findById(int $id): ?PlacePoint
+    public function findById(int $id) : ?PlacePoint
     {
         return $this->findOneBy(['id' => $id]);
     }
 
     /**
-     * @param PlacePoint $placePoint
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function save(PlacePoint $placePoint): void
+    public function save(PlacePoint $placePoint) : void
     {
         $this->_em->persist($placePoint);
         $this->_em->flush();
     }
 
     /**
-     * @param PlacePoint $placePoint
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function remove(PlacePoint $placePoint): void
+    public function remove(PlacePoint $placePoint) : void
     {
         $this->_em->remove($placePoint);
         $this->_em->flush();

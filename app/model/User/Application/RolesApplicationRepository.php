@@ -1,10 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\User;
 
 use Kdyby\Doctrine\EntityRepository;
-
 
 /**
  * Třída spravující přihlášky rolí.

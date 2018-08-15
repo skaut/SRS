@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Page;
-
 
 /**
  * Výjimka chyba stránky.
@@ -11,5 +11,4 @@ namespace App\Model\Page;
  */
 class PageException extends \Exception
 {
-
 }

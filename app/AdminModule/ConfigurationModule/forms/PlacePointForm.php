@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
@@ -6,10 +7,11 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseForm;
 use App\Model\Settings\Place\PlacePoint;
 use App\Model\Settings\Place\PlacePointRepository;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
 use VojtechDobes\NetteForms\GpsPicker;
-
 
 /**
  * Formulář pro úpravu mapového bodu.
@@ -30,23 +32,17 @@ class PlacePointForm
     private $placePointRepository;
 
 
-    /**
-     * PlacePointForm constructor.
-     * @param BaseForm $baseForm
-     * @param PlacePointRepository $placePointRepository
-     */
     public function __construct(BaseForm $baseForm, PlacePointRepository $placePointRepository)
     {
-        $this->baseFormFactory = $baseForm;
+        $this->baseFormFactory      = $baseForm;
         $this->placePointRepository = $placePointRepository;
     }
 
     /**
      * Vytvoří formulář.
      * @param $id
-     * @return Form
      */
-    public function create($id)
+    public function create($id) : Form
     {
         $this->placePoint = $this->placePointRepository->findById($id);
 
@@ -57,7 +53,7 @@ class PlacePointForm
 
         $form->addGpsPicker('gps', 'admin.configuration.place_points_place')
             ->setDriver(GpsPicker::DRIVER_SEZNAM)
-            ->setSize("100%", 400);
+            ->setSize('100%', 400);
 
         $form->addSubmit('submit', 'admin.common.save');
 
@@ -70,8 +66,8 @@ class PlacePointForm
                 'name' => $this->placePoint->getName(),
                 'gps' => [
                     'lat' => $this->placePoint->getGpsLat(),
-                    'lng' => $this->placePoint->getGpsLon()
-                ]
+                    'lng' => $this->placePoint->getGpsLon(),
+                ],
             ]);
         }
 
@@ -82,23 +78,24 @@ class PlacePointForm
 
     /**
      * Zpracuje formulář.
-     * @param Form $form
      * @param array $values
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function processForm(Form $form, array $values)
+    public function processForm(Form $form, array $values) : void
     {
-        if (!$form['cancel']->isSubmittedBy()) {
-            if (!$this->placePoint) {
-                $this->placePoint = new PlacePoint();
-            }
-
-            $this->placePoint->setName($values['name']);
-            $this->placePoint->setGpsLat($values['gps']->lat);
-            $this->placePoint->setGpsLon($values['gps']->lng);
-
-            $this->placePointRepository->save($this->placePoint);
+        if ($form['cancel']->isSubmittedBy()) {
+            return;
         }
+
+        if (! $this->placePoint) {
+            $this->placePoint = new PlacePoint();
+        }
+
+        $this->placePoint->setName($values['name']);
+        $this->placePoint->setGpsLat($values['gps']->lat);
+        $this->placePoint->setGpsLon($values['gps']->lng);
+
+        $this->placePointRepository->save($this->placePoint);
     }
 }

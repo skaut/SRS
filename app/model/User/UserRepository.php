@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\User;
@@ -10,8 +11,9 @@ use App\Model\Program\Program;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Kdyby\Doctrine\EntityRepository;
-
 
 /**
  * Třída spravující uživatele.
@@ -24,9 +26,8 @@ class UserRepository extends EntityRepository
     /**
      * Vrací uživatele podle id.
      * @param $id
-     * @return User|null
      */
-    public function findById(int $id): ?User
+    public function findById(int $id) : ?User
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -34,9 +35,8 @@ class UserRepository extends EntityRepository
     /**
      * Vrací uživatele podle skautISUserId.
      * @param $skautISUserId
-     * @return User|null
      */
-    public function findBySkautISUserId(int $skautISUserId): ?User
+    public function findBySkautISUserId(int $skautISUserId) : ?User
     {
         return $this->findOneBy(['skautISUserId' => $skautISUserId]);
     }
@@ -46,7 +46,7 @@ class UserRepository extends EntityRepository
      * @param $ids
      * @return Collection|User[]
      */
-    public function findUsersByIds(array $ids): Collection
+    public function findUsersByIds(array $ids) : Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids));
@@ -58,7 +58,7 @@ class UserRepository extends EntityRepository
      * @param $text
      * @return array
      */
-    public function findNamesByLikeDisplayNameOrderedByDisplayName(string $text): array
+    public function findNamesByLikeDisplayNameOrderedByDisplayName(string $text) : array
     {
         return $this->createQueryBuilder('u')
             ->select('u.id, u.displayName')
@@ -72,7 +72,7 @@ class UserRepository extends EntityRepository
      * Vrací uživatele, kteří se synchronizují s účastníky skautIS akce.
      * @return mixed
      */
-    public function findAllSyncedWithSkautIS(): array
+    public function findAllSyncedWithSkautIS() : array
     {
         return $this->createQueryBuilder('u')
             ->join('u.roles', 'r')
@@ -84,10 +84,9 @@ class UserRepository extends EntityRepository
 
     /**
      * Vrací uživatele v roli.
-     * @param Role $role
      * @return mixed
      */
-    public function findAllInRole(Role $role): array
+    public function findAllInRole(Role $role) : array
     {
         return $this->createQueryBuilder('u')
             ->join('u.roles', 'r')
@@ -101,7 +100,7 @@ class UserRepository extends EntityRepository
      * @param $rolesIds
      * @return mixed
      */
-    public function findAllInRoles(array $rolesIds): array
+    public function findAllInRoles(array $rolesIds) : array
     {
         return $this->createQueryBuilder('u')
             ->join('u.roles', 'r')
@@ -116,7 +115,7 @@ class UserRepository extends EntityRepository
      * @param $rolesIds
      * @return mixed
      */
-    public function findAllApprovedInRoles(array $rolesIds): array
+    public function findAllApprovedInRoles(array $rolesIds) : array
     {
         return $this->createQueryBuilder('u')
             ->join('u.roles', 'r')
@@ -131,7 +130,7 @@ class UserRepository extends EntityRepository
      * Vrací uživatele s přihláškou čekající na zaplacení.
      * @return Collection|User[]
      */
-    public function findAllWithWaitingForPaymentApplication(): Collection
+    public function findAllWithWaitingForPaymentApplication() : Collection
     {
         $result = $this->createQueryBuilder('u')
             ->join('u.applications', 'a')
@@ -149,7 +148,7 @@ class UserRepository extends EntityRepository
      * @param $program
      * @return Collection|User[]
      */
-    public function findProgramAllowed(Program $program): Collection
+    public function findProgramAllowed(Program $program) : Collection
     {
         $qb = $this->createQueryBuilder('u')
             ->leftJoin('u.programs', 'p', 'WITH', 'p.id = :pid')
@@ -179,7 +178,7 @@ class UserRepository extends EntityRepository
      * Vrací uživatele jako možnosti pro select.
      * @return array
      */
-    public function getUsersOptions(): array
+    public function getUsersOptions() : array
     {
         $users = $this->createQueryBuilder('u')
             ->select('u.id, u.displayName')
@@ -198,7 +197,7 @@ class UserRepository extends EntityRepository
      * Vrací lektory jako možnosti pro select.
      * @return array
      */
-    public function getLectorsOptions(): array
+    public function getLectorsOptions() : array
     {
         $lectors = $this->createQueryBuilder('u')
             ->select('u.id, u.displayName')
@@ -218,11 +217,10 @@ class UserRepository extends EntityRepository
 
     /**
      * Uloží uživatele.
-     * @param User $user
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function save(User $user): void
+    public function save(User $user) : void
     {
         $this->_em->persist($user);
         $this->_em->flush();
@@ -230,20 +228,22 @@ class UserRepository extends EntityRepository
 
     /**
      * Odstraní externího uživatele.
-     * @param User $user
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function remove(User $user): void
+    public function remove(User $user) : void
     {
-        foreach ($user->getCustomInputValues() as $customInputValue)
+        foreach ($user->getCustomInputValues() as $customInputValue) {
             $this->_em->remove($customInputValue);
+        }
 
-        foreach ($user->getApplications() as $application)
+        foreach ($user->getApplications() as $application) {
             $this->_em->remove($application);
+        }
 
-        foreach ($user->getLecturersBlocks() as $block)
-            $block->setLector(NULL);
+        foreach ($user->getLecturersBlocks() as $block) {
+            $block->setLector(null);
+        }
 
         $this->_em->remove($user);
         $this->_em->flush();

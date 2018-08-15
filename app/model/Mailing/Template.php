@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Mailing;
@@ -7,7 +8,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
-
 
 /**
  * Entita šablona automatického e-mailu.
@@ -21,57 +21,57 @@ class Template
     /**
      * Přihlášení přes skautIS.
      */
-    const SIGN_IN = 'sign_in';
+    public const SIGN_IN = 'sign_in';
 
     /**
      * Potvrzení registrace.
      */
-    const REGISTRATION = 'registration';
+    public const REGISTRATION = 'registration';
 
     /**
      * Odhlášení ze semináře.
      */
-    const REGISTRATION_CANCELED = 'registration_canceled';
+    public const REGISTRATION_CANCELED = 'registration_canceled';
 
     /**
      * Potvrzení změny rolí.
      */
-    const ROLES_CHANGED = 'roles_changed';
+    public const ROLES_CHANGED = 'roles_changed';
 
     /**
      * Potvrzení změny podakcí.
      */
-    const SUBEVENTS_CHANGED = 'subevents_changed';
+    public const SUBEVENTS_CHANGED = 'subevents_changed';
 
     /**
      * Potvrzení přijetí platby.
      */
-    const PAYMENT_CONFIRMED = 'payment_confirmed';
+    public const PAYMENT_CONFIRMED = 'payment_confirmed';
 
     /**
      * Upozornění na splatnost.
      */
-    const MATURITY_REMINDER = 'maturity_reminder';
+    public const MATURITY_REMINDER = 'maturity_reminder';
 
     /**
      * Účastníkovi byl zapsán program.
      */
-    const PROGRAM_REGISTERED = 'program_registered';
+    public const PROGRAM_REGISTERED = 'program_registered';
 
     /**
      * Účastníkovi byl odhlášen program.
      */
-    const PROGRAM_UNREGISTERED = 'program_unregistered';
+    public const PROGRAM_UNREGISTERED = 'program_unregistered';
 
     /**
      * Ověření e-mailu pro mailing.
      */
-    const EMAIL_VERIFICATION = 'email_verification';
+    public const EMAIL_VERIFICATION = 'email_verification';
 
     /**
      * Potvrzení změny vlastního pole.
      */
-    const CUSTOM_INPUT_VALUE_CHANGED = 'custom_input_value_changed';
+    public const CUSTOM_INPUT_VALUE_CHANGED = 'custom_input_value_changed';
 
 
     use Identifier;
@@ -133,82 +133,52 @@ class Template
     protected $system;
 
 
-    /**
-     * Template constructor.
-     */
     public function __construct()
     {
         $this->variables = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getId(): int
+    public function getId() : int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getType(): string
+    public function getType() : string
     {
         return $this->type;
     }
 
-    /**
-     * @param string $type
-     */
-    public function setType(string $type): void
+    public function setType(string $type) : void
     {
         $this->type = $type;
     }
 
-    /**
-     * @return string
-     */
-    public function getSubject(): string
+    public function getSubject() : string
     {
         return $this->subject;
     }
 
-    /**
-     * @param string $subject
-     */
-    public function setSubject(string $subject): void
+    public function setSubject(string $subject) : void
     {
         $this->subject = $subject;
     }
 
-    /**
-     * @return string
-     */
-    public function getText(): string
+    public function getText() : string
     {
         return $this->text;
     }
 
-    /**
-     * @param string $text
-     */
-    public function setText(string $text): void
+    public function setText(string $text) : void
     {
         $this->text = $text;
     }
 
-    /**
-     * @return bool
-     */
-    public function isActive(): bool
+    public function isActive() : bool
     {
         return $this->active;
     }
 
-    /**
-     * @param bool $active
-     */
-    public function setActive(bool $active): void
+    public function setActive(bool $active) : void
     {
         $this->active = $active;
     }
@@ -216,55 +186,37 @@ class Template
     /**
      * @return Collection
      */
-    public function getVariables(): Collection
+    public function getVariables() : Collection
     {
         return $this->variables;
     }
 
-    /**
-     * @return bool
-     */
-    public function isSendToUser(): bool
+    public function isSendToUser() : bool
     {
         return $this->sendToUser;
     }
 
-    /**
-     * @param bool $sendToUser
-     */
-    public function setSendToUser(bool $sendToUser): void
+    public function setSendToUser(bool $sendToUser) : void
     {
         $this->sendToUser = $sendToUser;
     }
 
-    /**
-     * @return bool
-     */
-    public function isSendToOrganizer(): bool
+    public function isSendToOrganizer() : bool
     {
         return $this->sendToOrganizer;
     }
 
-    /**
-     * @param bool $sendToOrganizer
-     */
-    public function setSendToOrganizer(bool $sendToOrganizer): void
+    public function setSendToOrganizer(bool $sendToOrganizer) : void
     {
         $this->sendToOrganizer = $sendToOrganizer;
     }
 
-    /**
-     * @return bool
-     */
-    public function isSystem(): bool
+    public function isSystem() : bool
     {
         return $this->system;
     }
 
-    /**
-     * @param bool $system
-     */
-    public function setSystem(bool $system): void
+    public function setSystem(bool $system) : void
     {
         $this->system = $system;
     }

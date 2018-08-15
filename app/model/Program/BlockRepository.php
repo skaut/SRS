@@ -1,15 +1,18 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Program;
-
 
 use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Kdyby\Doctrine\EntityRepository;
-
+use function array_map;
 
 /**
  * Třída spravující programové bloky.
@@ -22,19 +25,17 @@ class BlockRepository extends EntityRepository
     /**
      * Vrací blok podle id.
      * @param $id
-     * @return Block|null
      */
-    public function findById($id): ?Block
+    public function findById($id) : ?Block
     {
         return $this->findOneBy(['id' => $id]);
     }
 
     /**
      * Vrací poslední id.
-     * @return int
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
-    public function findLastId(): int
+    public function findLastId() : int
     {
         return (int) $this->createQueryBuilder('b')
             ->select('MAX(b.id)')
@@ -46,7 +47,7 @@ class BlockRepository extends EntityRepository
      * Vrací názvy všech bloků.
      * @return array
      */
-    public function findAllNames(): array
+    public function findAllNames() : array
     {
         $names = $this->createQueryBuilder('b')
             ->select('b.name')
@@ -59,7 +60,7 @@ class BlockRepository extends EntityRepository
      * Vrací všechny bloky seřazené podle názvu.
      * @return array
      */
-    public function findAllOrderedByName(): array
+    public function findAllOrderedByName() : array
     {
         return $this->createQueryBuilder('b')
             ->orderBy('b.name')
@@ -71,7 +72,7 @@ class BlockRepository extends EntityRepository
      * Vrací všechny bloky nezařezené v kategorii, seřazené podle názvu.
      * @return array
      */
-    public function findAllUncategorizedOrderedByName(): array
+    public function findAllUncategorizedOrderedByName() : array
     {
         return $this->createQueryBuilder('b')
             ->where('b.category IS NULL')
@@ -85,7 +86,7 @@ class BlockRepository extends EntityRepository
      * @param $id
      * @return array
      */
-    public function findOthersNames(int $id): array
+    public function findOthersNames(int $id) : array
     {
         $names = $this->createQueryBuilder('b')
             ->select('b.name')
@@ -99,10 +100,9 @@ class BlockRepository extends EntityRepository
     /**
      * Vrací bloky podle textu obsaženého v názvu, seřazené podle názvu.
      * @param $text
-     * @param bool $unassignedOnly
      * @return array
      */
-    public function findByLikeNameOrderedByName(string $text, bool $unassignedOnly = FALSE): array
+    public function findByLikeNameOrderedByName(string $text, bool $unassignedOnly = false) : array
     {
         $qb = $this->createQueryBuilder('b')
             ->select('b')
@@ -120,12 +120,11 @@ class BlockRepository extends EntityRepository
 
     /**
      * Vrací bloky, které jsou pro uživatele povinné a není na ně přihlášený.
-     * @param User $user
      * @param Collection $categories
      * @param Collection $subevents
      * @return Collection|Block[]
      */
-    public function findMandatoryForCategoriesAndSubevents(User $user, Collection $categories, Collection $subevents): Collection
+    public function findMandatoryForCategoriesAndSubevents(User $user, Collection $categories, Collection $subevents) : Collection
     {
         $usersBlocks = $this->createQueryBuilder('b')
             ->select('b')
@@ -148,7 +147,7 @@ class BlockRepository extends EntityRepository
             ->setParameter('categories', $categories)
             ->setParameter('usersSubevents', $subevents);
 
-        if (!empty($usersBlocks)) {
+        if (! empty($usersBlocks)) {
             $qb = $qb
                 ->andWhere('b NOT IN (:usersBlocks)')
                 ->setParameter('usersBlocks', $usersBlocks);
@@ -162,7 +161,7 @@ class BlockRepository extends EntityRepository
      * @param $blocks
      * @return array
      */
-    public function findBlocksIds(Collection $blocks): array
+    public function findBlocksIds(Collection $blocks) : array
     {
         return array_map(function ($o) {
             return $o->getId();
@@ -174,7 +173,7 @@ class BlockRepository extends EntityRepository
      * @param $ids
      * @return Collection
      */
-    public function findBlocksByIds(array $ids): Collection
+    public function findBlocksByIds(array $ids) : Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids));
@@ -183,11 +182,10 @@ class BlockRepository extends EntityRepository
 
     /**
      * Uloží blok.
-     * @param Block $block
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function save(Block $block): void
+    public function save(Block $block) : void
     {
         $this->_em->persist($block);
         $this->_em->flush();
@@ -195,14 +193,14 @@ class BlockRepository extends EntityRepository
 
     /**
      * Odstraní blok.
-     * @param Block $block
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function remove(Block $block): void
+    public function remove(Block $block) : void
     {
-        foreach ($block->getPrograms() as $program)
+        foreach ($block->getPrograms() as $program) {
             $this->_em->remove($program);
+        }
 
         $this->_em->remove($block);
         $this->_em->flush();

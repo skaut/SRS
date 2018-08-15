@@ -1,10 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\ApiModule\Presenters;
 
 use App\Presenters\BasePresenter;
-
 
 /**
  * BasePresenter pro ApiModule.
@@ -13,5 +13,4 @@ use App\Presenters\BasePresenter;
  */
 abstract class ApiBasePresenter extends BasePresenter
 {
-
 }

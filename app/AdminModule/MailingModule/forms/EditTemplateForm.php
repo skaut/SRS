@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\MailingModule\Forms;
@@ -6,9 +7,11 @@ namespace App\AdminModule\MailingModule\Forms;
 use App\AdminModule\Forms\BaseForm;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateRepository;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
-
+use function in_array;
 
 /**
  * Formulář pro nastavení šablony automatického e-mailu.
@@ -32,23 +35,17 @@ class EditTemplateForm
     private $templateRepository;
 
 
-    /**
-     * SendForm constructor.
-     * @param BaseForm $baseFormFactory
-     * @param TemplateRepository $templateRepository
-     */
     public function __construct(BaseForm $baseFormFactory, TemplateRepository $templateRepository)
     {
-        $this->baseFormFactory = $baseFormFactory;
+        $this->baseFormFactory    = $baseFormFactory;
         $this->templateRepository = $templateRepository;
     }
 
     /**
      * Vytvoří formulář.
      * @param $id
-     * @return Form
      */
-    public function create($id)
+    public function create($id) : Form
     {
         $this->template = $this->templateRepository->findById($id);
 
@@ -60,7 +57,7 @@ class EditTemplateForm
 
         $form->addMultiSelect('recipients', 'admin.mailing.templates_recipients', [
             'user' => 'admin.mailing.templates_send_to_user_form',
-            'organizer' => 'admin.mailing.templates_send_to_organizer_form'
+            'organizer' => 'admin.mailing.templates_send_to_organizer_form',
         ])->addRule(Form::FILLED, 'admin.mailing.templates_recipients_empty');
 
         $form->addText('subject', 'admin.mailing.templates_subject')
@@ -76,7 +73,6 @@ class EditTemplateForm
             ->setValidationScope([])
             ->setAttribute('class', 'btn btn-warning');
 
-
         $selectedRecipients = [];
         if ($this->template->isSendToOrganizer()) {
             $selectedRecipients[] = 'organizer';
@@ -90,7 +86,7 @@ class EditTemplateForm
             'active' => $this->template->isActive(),
             'recipients' => $selectedRecipients,
             'subject' => $this->template->getSubject(),
-            'text' => $this->template->getText()
+            'text' => $this->template->getText(),
         ]);
 
         $form->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
@@ -101,21 +97,22 @@ class EditTemplateForm
 
     /**
      * Zpracuje formulář.
-     * @param Form $form
      * @param array $values
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function processForm(Form $form, array $values)
+    public function processForm(Form $form, array $values) : void
     {
-        if (!$form['cancel']->isSubmittedBy()) {
-            $this->template->setActive($values['active']);
-            $this->template->setSendToUser(in_array('user', $values['recipients']));
-            $this->template->setSendToOrganizer(in_array('organizer', $values['recipients']));
-            $this->template->setSubject($values['subject']);
-            $this->template->setText($values['text']);
-
-            $this->templateRepository->save($this->template);
+        if ($form['cancel']->isSubmittedBy()) {
+            return;
         }
+
+        $this->template->setActive($values['active']);
+        $this->template->setSendToUser(in_array('user', $values['recipients']));
+        $this->template->setSendToOrganizer(in_array('organizer', $values['recipients']));
+        $this->template->setSubject($values['subject']);
+        $this->template->setText($values['text']);
+
+        $this->templateRepository->save($this->template);
     }
 }

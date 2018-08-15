@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\WebModule\Components;
-
 
 /**
  * Factory komponenty pro správu vlastních přihlášek.
@@ -13,7 +13,6 @@ interface IApplicationsGridControlFactory
 {
     /**
      * Vytvoří komponentu.
-     * @return ApplicationsGridControl
      */
-    public function create();
+    public function create() : ApplicationsGridControl;
 }

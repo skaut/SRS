@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\MailingModule\Forms;
@@ -6,12 +7,14 @@ namespace App\AdminModule\MailingModule\Forms;
 use App\AdminModule\Forms\BaseForm;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
+use App\Model\Settings\SettingsException;
 use App\Model\User\UserRepository;
 use App\Services\MailService;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Mail\SendException;
-
+use Ublaboo\Mailing\Exception\MailingException;
+use Ublaboo\Mailing\Exception\MailingMailCreationException;
 
 /**
  * Formulář pro vytvoření e-mailu.
@@ -41,35 +44,36 @@ class SendForm
     private $userRepository;
 
 
-    /**
-     * SendForm constructor.
-     * @param BaseForm $baseFormFactory
-     * @param MailService $mailService
-     * @param RoleRepository $roleRepository
-     * @param UserRepository $userRepository
-     */
-    public function __construct(BaseForm $baseFormFactory, MailService $mailService, RoleRepository $roleRepository,
-                                UserRepository $userRepository)
-    {
+    public function __construct(
+        BaseForm $baseFormFactory,
+        MailService $mailService,
+        RoleRepository $roleRepository,
+        UserRepository $userRepository
+    ) {
         $this->baseFormFactory = $baseFormFactory;
-        $this->mailService = $mailService;
-        $this->roleRepository = $roleRepository;
-        $this->userRepository = $userRepository;
+        $this->mailService     = $mailService;
+        $this->roleRepository  = $roleRepository;
+        $this->userRepository  = $userRepository;
     }
 
     /**
      * Vytvoří formulář.
-     * @return Form
      */
-    public function create()
+    public function create() : Form
     {
         $form = $this->baseFormFactory->create();
 
-        $recipientRolesMultiSelect = $form->addMultiSelect('recipientRoles', 'admin.mailing.send_recipient_roles',
-            $this->roleRepository->getRolesWithoutRolesOptionsWithApprovedUsersCount([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]));
+        $recipientRolesMultiSelect = $form->addMultiSelect(
+            'recipientRoles',
+            'admin.mailing.send_recipient_roles',
+            $this->roleRepository->getRolesWithoutRolesOptionsWithApprovedUsersCount([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED])
+        );
 
-        $recipientUsersMultiSelect = $form->addMultiSelect('recipientUsers', 'admin.mailing.send_recipient_users',
-            $this->userRepository->getUsersOptions())
+        $recipientUsersMultiSelect = $form->addMultiSelect(
+            'recipientUsers',
+            'admin.mailing.send_recipient_users',
+            $this->userRepository->getUsersOptions()
+        )
             ->setAttribute('data-live-search', 'true');
 
         $recipientRolesMultiSelect
@@ -101,23 +105,22 @@ class SendForm
 
     /**
      * Zpracuje formulář.
-     * @param Form $form
      * @param array $values
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
-     * @throws \Ublaboo\Mailing\Exception\MailingException
-     * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
+     * @throws MailingException
+     * @throws MailingMailCreationException
      */
-    public function processForm(Form $form, array $values)
+    public function processForm(Form $form, array $values) : void
     {
         try {
             $recipientsRoles = $this->roleRepository->findRolesByIds($values['recipientRoles']);
             $recipientsUsers = $this->userRepository->findUsersByIds($values['recipientUsers']);
 
             $this->mailService->sendMail($recipientsRoles, $recipientsUsers, $values['copy'], $values['subject'], $values['text']);
-            $this->mailSuccess = TRUE;
+            $this->mailSuccess = true;
         } catch (SendException $ex) {
-            $this->mailSuccess = FALSE;
+            $this->mailSuccess = false;
         }
     }
 }

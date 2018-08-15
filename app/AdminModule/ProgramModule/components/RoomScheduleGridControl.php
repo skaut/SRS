@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ProgramModule\Components;
@@ -9,9 +10,11 @@ use App\Model\Program\RoomRepository;
 use App\Services\ExcelExportService;
 use App\Utils\Helpers;
 use Kdyby\Translation\Translator;
+use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
+use PhpOffice\PhpSpreadsheet\Exception;
 use Ublaboo\DataGrid\DataGrid;
-
+use Ublaboo\DataGrid\Exception\DataGridException;
 
 /**
  * Komponenta pro zobrazení harmonogramu místnosti.
@@ -39,28 +42,24 @@ class RoomScheduleGridControl extends Control
     private $excelExportService;
 
 
-    /**
-     * RoomScheduleGridControl constructor.
-     * @param Translator $translator
-     * @param RoomRepository $roomRepository
-     * @param ProgramRepository $programRepository
-     * @param ExcelExportService $excelExportService
-     */
-    public function __construct(Translator $translator, RoomRepository $roomRepository,
-                                ProgramRepository $programRepository, ExcelExportService $excelExportService)
-    {
+    public function __construct(
+        Translator $translator,
+        RoomRepository $roomRepository,
+        ProgramRepository $programRepository,
+        ExcelExportService $excelExportService
+    ) {
         parent::__construct();
 
-        $this->translator = $translator;
-        $this->roomRepository = $roomRepository;
-        $this->programRepository = $programRepository;
+        $this->translator         = $translator;
+        $this->roomRepository     = $roomRepository;
+        $this->programRepository  = $programRepository;
         $this->excelExportService = $excelExportService;
     }
 
     /**
      * Vykreslí komponentu.
      */
-    public function render()
+    public function render() : void
     {
         $this->template->render(__DIR__ . '/templates/room_schedule_grid.latte');
     }
@@ -68,9 +67,9 @@ class RoomScheduleGridControl extends Control
     /**
      * Vytvoří komponentu.
      * @param $name
-     * @throws \Ublaboo\DataGrid\Exception\DataGridException
+     * @throws DataGridException
      */
-    public function createComponentRoomScheduleGrid($name)
+    public function createComponentRoomScheduleGrid($name) : void
     {
         $this->room = $this->roomRepository->findById($this->getPresenter()->getParameter('id'));
 
@@ -78,16 +77,15 @@ class RoomScheduleGridControl extends Control
         $grid->setTranslator($this->translator);
         $grid->setDataSource($this->programRepository->createQueryBuilder('p')
             ->addSelect('b')->join('p.block', 'b')
-            ->where('p.room = :room')->setParameter('room', $this->room)
-        );
+            ->where('p.room = :room')->setParameter('room', $this->room));
         $grid->setDefaultSort(['start' => 'ASC']);
-        $grid->setPagination(FALSE);
+        $grid->setPagination(false);
 
         $grid->addColumnDateTime('start', 'admin.program.rooms_schedule_program_start')
-            ->setFormat(Helpers::DATETIME_FORMAT);;
+            ->setFormat(Helpers::DATETIME_FORMAT);
 
         $grid->addColumnDateTime('end', 'admin.program.rooms_schedule_program_end')
-            ->setFormat(Helpers::DATETIME_FORMAT);;
+            ->setFormat(Helpers::DATETIME_FORMAT);
 
         $grid->addColumnText('name', 'admin.program.rooms_schedule_program_name', 'block.name');
 
@@ -95,22 +93,21 @@ class RoomScheduleGridControl extends Control
             ->setRenderer(
                 function ($row) {
                     $capacity = $this->room->getCapacity();
-                    if ($capacity === NULL) {
+                    if ($capacity === null) {
                         return $row->getAttendeesCount();
                     }
-                    return $row->getAttendeesCount() . "/" . $capacity;
+                    return $row->getAttendeesCount() . '/' . $capacity;
                 }
             );
-
 
         $grid->addToolbarButton('exportRoomsSchedule!', 'admin.program.rooms_schedule_download_schedule');
     }
 
     /**
-     * @throws \Nette\Application\AbortException
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws AbortException
+     * @throws Exception
      */
-    public function handleExportRoomsSchedule()
+    public function handleExportRoomsSchedule() : void
     {
         $this->room = $this->roomRepository->findById($this->getPresenter()->getParameter('id'));
 

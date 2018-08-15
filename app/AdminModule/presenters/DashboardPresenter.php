@@ -1,10 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\Presenters;
 
+use App\Model\Settings\SettingsException;
 use App\Model\Structure\SubeventRepository;
-
+use Doctrine\ORM\NonUniqueResultException;
 
 /**
  * Presenter obsluhující úvodní stránku.
@@ -22,11 +24,11 @@ class DashboardPresenter extends AdminBasePresenter
 
 
     /**
-     * @throws \App\Model\Settings\SettingsException
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws SettingsException
+     * @throws NonUniqueResultException
      * @throws \Throwable
      */
-    public function beforeRender()
+    public function beforeRender() : void
     {
         parent::beforeRender();
 

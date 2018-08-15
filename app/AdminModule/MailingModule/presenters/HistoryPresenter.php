@@ -1,10 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\MailingModule\Presenters;
 
 use App\AdminModule\MailingModule\Components\IMailHistoryGridControlFactory;
-
 
 /**
  * Presenter obsluhující historii e-mailů.

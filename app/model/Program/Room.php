@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Program;
@@ -7,7 +8,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
-
 
 /**
  * Entita místnost.
@@ -43,50 +43,32 @@ class Room
     protected $programs;
 
 
-    /**
-     * Room constructor.
-     */
     public function __construct()
     {
         $this->programs = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getId(): int
+    public function getId() : int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getName(): string
+    public function getName() : string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName(string $name): void
+    public function setName(string $name) : void
     {
         $this->name = $name;
     }
 
-    /**
-     * @return int
-     */
-    public function getCapacity(): ?int
+    public function getCapacity() : ?int
     {
         return $this->capacity;
     }
 
-    /**
-     * @param int $capacity
-     */
-    public function setCapacity(?int $capacity): void
+    public function setCapacity(?int $capacity) : void
     {
         $this->capacity = $capacity;
     }
@@ -94,7 +76,7 @@ class Room
     /**
      * @return mixed
      */
-    public function getPrograms(): Collection
+    public function getPrograms() : Collection
     {
         return $this->programs;
     }

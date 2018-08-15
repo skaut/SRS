@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Presenters;
@@ -6,7 +7,6 @@ namespace App\AdminModule\ConfigurationModule\Presenters;
 use App\AdminModule\ConfigurationModule\Components\IDiscountsGridControlFactory;
 use App\AdminModule\ConfigurationModule\Forms\DiscountForm;
 use App\AdminModule\ConfigurationModule\Forms\IDiscountFormFactory;
-
 
 /**
  * Presenter obsluhující správu slev.
@@ -37,18 +37,17 @@ class DiscountsPresenter extends ConfigurationBasePresenter
     {
         $control = $this->discountFormFactory->create($this->getParameter('id'));
 
-        $control->onSave[] = function () {
+        $control->onSave[] = function () : void {
             $this->flashMessage('admin.configuration.discounts_saved', 'success');
             $this->redirect('Discounts:default');
         };
 
-        $control->onConditionError[] = function (DiscountForm $control) {
+        $control->onConditionError[] = function (DiscountForm $control) : void {
             $this->flashMessage('admin.configuration.discounts_condition_format', 'danger');
 
             if ($control->id) {
                 $this->redirect('Discounts:edit', ['id' => $control->id]);
-            }
-            else {
+            } else {
                 $this->redirect('Discounts:add');
             }
         };

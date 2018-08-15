@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
@@ -6,12 +7,12 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseForm;
 use App\Model\CMS\PageRepository;
 use App\Model\Settings\Settings;
+use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
 use App\Services\FilesService;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Utils\Strings;
-
 
 /**
  * Formulář pro nastavení webové prezentace.
@@ -36,35 +37,30 @@ class WebForm
     private $filesService;
 
 
-    /**
-     * WebForm constructor.
-     * @param BaseForm $baseFormFactory
-     * @param PageRepository $pageRepository
-     * @param SettingsRepository $settingsRepository
-     * @param FilesService $filesService
-     */
-    public function __construct(BaseForm $baseFormFactory, PageRepository $pageRepository,
-                                SettingsRepository $settingsRepository, FilesService $filesService)
-    {
-        $this->baseFormFactory = $baseFormFactory;
-        $this->pageRepository = $pageRepository;
+    public function __construct(
+        BaseForm $baseFormFactory,
+        PageRepository $pageRepository,
+        SettingsRepository $settingsRepository,
+        FilesService $filesService
+    ) {
+        $this->baseFormFactory    = $baseFormFactory;
+        $this->pageRepository     = $pageRepository;
         $this->settingsRepository = $settingsRepository;
-        $this->filesService = $filesService;
+        $this->filesService       = $filesService;
     }
 
     /**
      * Vytvoří formulář.
-     * @return Form
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
-    public function create()
+    public function create() : Form
     {
         $form = $this->baseFormFactory->create();
 
-        $renderer = $form->getRenderer();
+        $renderer                                   = $form->getRenderer();
         $renderer->wrappers['control']['container'] = 'div class="col-sm-7 col-xs-7"';
-        $renderer->wrappers['label']['container'] = 'div class="col-sm-5 col-xs-5 control-label"';
+        $renderer->wrappers['label']['container']   = 'div class="col-sm-5 col-xs-5 control-label"';
 
         $form->addUpload('logo', 'admin.configuration.web_new_logo')
             ->setAttribute('accept', 'image/*')
@@ -80,7 +76,7 @@ class WebForm
 
         $form->setDefaults([
             'footer' => $this->settingsRepository->getValue(Settings::FOOTER),
-            'redirectAfterLogin' => $this->settingsRepository->getValue(Settings::REDIRECT_AFTER_LOGIN)
+            'redirectAfterLogin' => $this->settingsRepository->getValue(Settings::REDIRECT_AFTER_LOGIN),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -90,13 +86,12 @@ class WebForm
 
     /**
      * Zpracuje formulář.
-     * @param Form $form
      * @param array $values
      * @throws Nette\Utils\UnknownImageFileException
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
-    public function processForm(Form $form, array $values)
+    public function processForm(Form $form, array $values) : void
     {
         $logo = $values['logo'];
         if ($logo->size > 0) {
@@ -104,7 +99,7 @@ class WebForm
 
             $logoName = Strings::webalize($logo->name, '.');
             $this->filesService->save($logo, '/logo/' . $logoName);
-            $this->filesService->resizeImage('/logo/' . $logoName, NULL, 100);
+            $this->filesService->resizeImage('/logo/' . $logoName, null, 100);
 
             $this->settingsRepository->setValue(Settings::LOGO, $logoName);
         }

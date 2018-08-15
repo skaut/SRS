@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
@@ -6,11 +7,14 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseForm;
 use App\Model\Enums\MaturityType;
 use App\Model\Settings\Settings;
+use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\UserRepository;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
-
+use function array_key_exists;
 
 /**
  * Formulář pro nastavení platby.
@@ -27,7 +31,7 @@ class PaymentForm extends UI\Control
 
     /** @var BaseForm */
     private $baseFormFactory;
- 
+
     /** @var SettingsRepository */
     private $settingsRepository;
 
@@ -35,25 +39,19 @@ class PaymentForm extends UI\Control
     private $userRepository;
 
 
-    /**
-     * PaymentForm constructor.
-     * @param BaseForm $baseForm
-     * @param SettingsRepository $settingsRepository
-     * @param UserRepository $userRepository
-     */
     public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository, UserRepository $userRepository)
     {
         parent::__construct();
 
-        $this->baseFormFactory = $baseForm;
+        $this->baseFormFactory    = $baseForm;
         $this->settingsRepository = $settingsRepository;
-        $this->userRepository = $userRepository;
+        $this->userRepository     = $userRepository;
     }
 
     /**
      * Vykreslí komponentu.
      */
-    public function render()
+    public function render() : void
     {
         $this->template->setFile(__DIR__ . '/templates/payment_form.latte');
         $this->template->render();
@@ -61,17 +59,16 @@ class PaymentForm extends UI\Control
 
     /**
      * Vytvoří formulář.
-     * @return Form
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
-    public function createComponentForm()
+    public function createComponentForm() : Form
     {
         $form = $this->baseFormFactory->create();
 
-        $renderer = $form->getRenderer();
+        $renderer                                   = $form->getRenderer();
         $renderer->wrappers['control']['container'] = 'div class="col-sm-7 col-xs-7"';
-        $renderer->wrappers['label']['container'] = 'div class="col-sm-5 col-xs-5 control-label"';
+        $renderer->wrappers['label']['container']   = 'div class="col-sm-5 col-xs-5 control-label"';
 
         $form->addText('accountNumber', 'admin.configuration.account_number')
             ->addRule(Form::FILLED, 'admin.configuration.account_number_empty')
@@ -128,7 +125,7 @@ class PaymentForm extends UI\Control
             'maturityDays' => $this->settingsRepository->getIntValue(Settings::MATURITY_DAYS),
             'maturityWorkDays' => $this->settingsRepository->getIntValue(Settings::MATURITY_WORK_DAYS),
             'maturityReminder' => $this->settingsRepository->getIntValue(Settings::MATURITY_REMINDER),
-            'cancelRegistrationAfterMaturity' => $this->settingsRepository->getIntValue(Settings::CANCEL_REGISTRATION_AFTER_MATURITY)
+            'cancelRegistrationAfterMaturity' => $this->settingsRepository->getIntValue(Settings::CANCEL_REGISTRATION_AFTER_MATURITY),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -138,14 +135,13 @@ class PaymentForm extends UI\Control
 
     /**
      * Zpracuje formulář.
-     * @param Form $form
      * @param array $values
-     * @throws \App\Model\Settings\SettingsException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws SettingsException
+     * @throws ORMException
+     * @throws OptimisticLockException
      * @throws \Throwable
      */
-    public function processForm(Form $form, array $values)
+    public function processForm(Form $form, array $values) : void
     {
         $this->settingsRepository->setValue(Settings::ACCOUNT_NUMBER, $values['accountNumber']);
         $this->settingsRepository->setValue(Settings::VARIABLE_SYMBOL_CODE, $values['variableSymbolCode']);
@@ -156,23 +152,31 @@ class PaymentForm extends UI\Control
         }
 
         if (array_key_exists('maturityDays', $values)) {
-            $this->settingsRepository->setIntValue(Settings::MATURITY_DAYS,
-                $values['maturityDays'] !== '' ? $values['maturityDays'] : 0);
+            $this->settingsRepository->setIntValue(
+                Settings::MATURITY_DAYS,
+                $values['maturityDays'] !== '' ? $values['maturityDays'] : 0
+            );
         }
 
         if (array_key_exists('maturityWorkDays', $values)) {
-            $this->settingsRepository->setIntValue(Settings::MATURITY_WORK_DAYS,
-                $values['maturityWorkDays'] !== '' ? $values['maturityWorkDays'] : 0);
+            $this->settingsRepository->setIntValue(
+                Settings::MATURITY_WORK_DAYS,
+                $values['maturityWorkDays'] !== '' ? $values['maturityWorkDays'] : 0
+            );
         }
 
         if (array_key_exists('maturityReminder', $values)) {
-            $this->settingsRepository->setIntValue(Settings::MATURITY_REMINDER,
-                $values['maturityReminder'] !== '' ? $values['maturityReminder'] : NULL);
+            $this->settingsRepository->setIntValue(
+                Settings::MATURITY_REMINDER,
+                $values['maturityReminder'] !== '' ? $values['maturityReminder'] : null
+            );
         }
 
         if (array_key_exists('cancelRegistrationAfterMaturity', $values)) {
-            $this->settingsRepository->setIntValue(Settings::CANCEL_REGISTRATION_AFTER_MATURITY,
-                $values['cancelRegistrationAfterMaturity'] !== '' ? $values['cancelRegistrationAfterMaturity'] : NULL);
+            $this->settingsRepository->setIntValue(
+                Settings::CANCEL_REGISTRATION_AFTER_MATURITY,
+                $values['cancelRegistrationAfterMaturity'] !== '' ? $values['cancelRegistrationAfterMaturity'] : null
+            );
         }
 
         $this->onSave($this);
@@ -182,11 +186,12 @@ class PaymentForm extends UI\Control
      * Vrátí způsoby výpočtu splatnosti jako možnosti pro select.
      * @return array
      */
-    private function prepareMaturityTypeOptions()
+    private function prepareMaturityTypeOptions() : array
     {
         $options = [];
-        foreach (MaturityType::$types as $type)
+        foreach (MaturityType::$types as $type) {
             $options[$type] = 'common.maturity_type.' . $type;
+        }
         return $options;
     }
 }

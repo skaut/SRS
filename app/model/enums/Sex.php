@@ -1,24 +1,24 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Enums;
-
 
 class Sex
 {
     /**
      * Muž.
      */
-    const MALE = 'male';
+    public const MALE = 'male';
 
     /**
      * Žena.
      */
-    const FEMALE = 'female';
+    public const FEMALE = 'female';
 
     public static $sex = [
         self::MALE,
-        self::FEMALE
+        self::FEMALE,
     ];
 
 
@@ -26,7 +26,7 @@ class Sex
      * Vrací možnosti pohlaví pro select.
      * @return array
      */
-    public static function getSexOptions(): array
+    public static function getSexOptions() : array
     {
         $options = [];
         foreach (self::$sex as $s) {

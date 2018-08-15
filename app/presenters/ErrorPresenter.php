@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Presenters;
@@ -6,7 +7,6 @@ namespace App\Presenters;
 use Nette;
 use Nette\Application\Responses;
 use Tracy\ILogger;
-
 
 class ErrorPresenter implements Nette\Application\IPresenter
 {
@@ -16,17 +16,12 @@ class ErrorPresenter implements Nette\Application\IPresenter
     private $logger;
 
 
-    /**
-     * ErrorPresenter constructor.
-     * @param ILogger $logger
-     */
     public function __construct(ILogger $logger)
     {
         $this->logger = $logger;
     }
 
     /**
-     * @param Nette\Application\Request $request
      * @return Responses\CallbackResponse|Responses\ForwardResponse
      */
     public function run(Nette\Application\Request $request)
@@ -40,7 +35,7 @@ class ErrorPresenter implements Nette\Application\IPresenter
         }
 
         $this->logger->log($e, ILogger::EXCEPTION);
-        return new Responses\CallbackResponse(function () {
+        return new Responses\CallbackResponse(function () : void {
             require __DIR__ . '/templates/Error/500.phtml';
         });
     }

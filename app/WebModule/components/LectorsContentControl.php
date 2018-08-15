@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\WebModule\Components;
@@ -7,7 +8,6 @@ use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\User\UserRepository;
 use Nette\Application\UI\Control;
-
 
 /**
  * Komponenta s přehledem lektorů.
@@ -23,11 +23,6 @@ class LectorsContentControl extends Control
     private $roleRepository;
 
 
-    /**
-     * UsersContentControl constructor.
-     * @param UserRepository $userRepository
-     * @param RoleRepository $roleRepository
-     */
     public function __construct(UserRepository $userRepository, RoleRepository $roleRepository)
     {
         parent::__construct();
@@ -36,10 +31,7 @@ class LectorsContentControl extends Control
         $this->roleRepository = $roleRepository;
     }
 
-    /**
-     * @param $content
-     */
-    public function render($content)
+    public function render($content) : void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/lectors_content.latte');

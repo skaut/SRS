@@ -1,11 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services;
+
 use App\Model\User\User;
 use Doctrine\Common\Collections\Collection;
 use Skautis\Wsdl\WsdlException;
-
+use function array_key_exists;
 
 /**
  * Služba pro správu obecné skautIS akce.
@@ -15,43 +17,38 @@ use Skautis\Wsdl\WsdlException;
  */
 class SkautIsEventGeneralService extends SkautIsEventService
 {
-    /**
-     * @param $eventId
-     * @return bool
-     */
-    public function isEventDraft($eventId)
+    public function isEventDraft($eventId) : bool
     {
-        return $this->getEventDetail($eventId)->ID_EventGeneralState == 'draft';
+        return $this->getEventDetail($eventId)->ID_EventGeneralState === 'draft';
     }
 
     /**
      * Vloží účastníky do skautIS.
-     * @param int $eventId
      * @param Collection|User[] $users
-     * @param bool $accept
-     * @return bool
      */
-    public function insertParticipants(int $eventId, Collection $users, bool $accept = FALSE): bool
+    public function insertParticipants(int $eventId, Collection $users, bool $accept = false) : bool
     {
         try {
             $participants = [];
 
             foreach ($this->getAllParticipants($eventId) as $participant) {
-                $participants[$participant->ID_Person] = TRUE;
+                $participants[$participant->ID_Person] = true;
             }
 
             foreach ($users as $user) {
                 $personId = $user->getSkautISPersonId();
 
-                if (!array_key_exists($personId, $participants)) {
-                    $this->insertParticipant($eventId, $personId);
+                if (array_key_exists($personId, $participants)) {
+                    continue;
                 }
+
+                $this->insertParticipant($eventId, $personId);
             }
         } catch (WsdlException $e) {
-            return FALSE;
+            return false;
         }
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -62,7 +59,7 @@ class SkautIsEventGeneralService extends SkautIsEventService
     {
         return $this->skautIs->event->EventGeneralDetail([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
-            'ID' => $eventId
+            'ID' => $eventId,
         ]);
     }
 
@@ -73,7 +70,7 @@ class SkautIsEventGeneralService extends SkautIsEventService
     {
         return $this->skautIs->event->EventGeneralAll([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
-            'ID_EventGeneralState' => 'draft'
+            'ID_EventGeneralState' => 'draft',
         ]);
     }
 
@@ -86,7 +83,7 @@ class SkautIsEventGeneralService extends SkautIsEventService
     {
         return $this->skautIs->event->ParticipantGeneralAll([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
-            'ID_EventGeneral' => $eventId
+            'ID_EventGeneral' => $eventId,
         ]);
     }
 
@@ -95,12 +92,12 @@ class SkautIsEventGeneralService extends SkautIsEventService
      * @param $eventId
      * @param $personId
      */
-    private function insertParticipant(int $eventId, int $personId)
+    private function insertParticipant(int $eventId, int $personId) : void
     {
         $this->skautIs->event->ParticipantGeneralInsert([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID_EventGeneral' => $eventId,
-            'ID_Person' => $personId
+            'ID_Person' => $personId,
         ]);
     }
 }

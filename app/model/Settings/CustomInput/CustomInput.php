@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Settings\CustomInput;
@@ -7,7 +8,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
-
 
 /**
  * Abstraktní entita vlastní pole přihlášky.
@@ -29,28 +29,28 @@ abstract class CustomInput
     /**
      * Textové pole.
      */
-    const TEXT = 'text';
+    public const TEXT = 'text';
 
     /**
      * Zaškrtávací pole.
      */
-    const CHECKBOX = 'checkbox';
+    public const CHECKBOX = 'checkbox';
 
     /**
      * Výběrové pole.
      */
-    const SELECT = 'select';
+    public const SELECT = 'select';
 
     /**
      * Soubor.
      */
-    const FILE = 'file';
+    public const FILE = 'file';
 
     public static $types = [
         self::TEXT,
         self::CHECKBOX,
         self::SELECT,
-        self::FILE
+        self::FILE,
     ];
 
     /**
@@ -72,12 +72,12 @@ abstract class CustomInput
      * @ORM\Column(type="boolean")
      * @var bool
      */
-    protected $mandatory = FALSE;
+    protected $mandatory = false;
 
     /**
      * Pořadí pole na přihlášce.
      * @ORM\Column(type="integer")
-     * @var integer
+     * @var int
      */
     protected $position;
 
@@ -89,66 +89,42 @@ abstract class CustomInput
     protected $customInputValues;
 
 
-    /**
-     * CustomInput constructor.
-     */
     public function __construct()
     {
         $this->customInputValues = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getId(): int
+    public function getId() : int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getName(): string
+    public function getName() : string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName(string $name): void
+    public function setName(string $name) : void
     {
         $this->name = $name;
     }
 
-    /**
-     * @return bool
-     */
-    public function isMandatory(): bool
+    public function isMandatory() : bool
     {
         return $this->mandatory;
     }
 
-    /**
-     * @param bool $mandatory
-     */
-    public function setMandatory(bool $mandatory): void
+    public function setMandatory(bool $mandatory) : void
     {
         $this->mandatory = $mandatory;
     }
 
-    /**
-     * @return int
-     */
-    public function getPosition(): int
+    public function getPosition() : int
     {
         return $this->position;
     }
 
-    /**
-     * @param int $position
-     */
-    public function setPosition(int $position): void
+    public function setPosition(int $position) : void
     {
         $this->position = $position;
     }
@@ -156,7 +132,7 @@ abstract class CustomInput
     /**
      * @return mixed
      */
-    public function getType(): string
+    public function getType() : string
     {
         return $this->type;
     }
@@ -164,7 +140,7 @@ abstract class CustomInput
     /**
      * @return Collection
      */
-    public function getCustomInputValues(): Collection
+    public function getCustomInputValues() : Collection
     {
         return $this->customInputValues;
     }

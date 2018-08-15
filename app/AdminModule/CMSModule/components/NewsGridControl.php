@@ -47,7 +47,6 @@ class NewsGridControl extends Control
 
     /**
      * Vytvoří komponentu.
-     * @param $name
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
@@ -93,7 +92,6 @@ class NewsGridControl extends Control
 
     /**
      * Zpracuje odstranění aktuality.
-     * @param $id
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -110,8 +108,6 @@ class NewsGridControl extends Control
 
     /**
      * Změní připíchnutí aktuality.
-     * @param $id
-     * @param $pinned
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException

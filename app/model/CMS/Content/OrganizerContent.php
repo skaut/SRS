@@ -1,11 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\CMS\Content;
 
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
-
 
 /**
  * Entita obsahu s informací o pořadateli.
@@ -26,28 +26,20 @@ class OrganizerContent extends Content implements IContent
     protected $organizer;
 
 
-    /**
-     * @return string
-     */
-    public function getOrganizer(): ?string
+    public function getOrganizer() : ?string
     {
         return $this->organizer;
     }
 
-    /**
-     * @param string $organizer
-     */
-    public function setOrganizer(?string $organizer): void
+    public function setOrganizer(?string $organizer) : void
     {
         $this->organizer = $organizer;
     }
 
     /**
      * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
-     * @param Form $form
-     * @return Form
      */
-    public function addContentForm(Form $form): Form
+    public function addContentForm(Form $form) : Form
     {
         parent::addContentForm($form);
 
@@ -61,13 +53,12 @@ class OrganizerContent extends Content implements IContent
 
     /**
      * Zpracuje při uložení stránky část formuláře týkající se obsahu.
-     * @param Form $form
      * @param array $values
      */
-    public function contentFormSucceeded(Form $form, array $values): void
+    public function contentFormSucceeded(Form $form, array $values) : void
     {
         parent::contentFormSucceeded($form, $values);
-        $values = $values[$this->getContentFormName()];
+        $values          = $values[$this->getContentFormName()];
         $this->organizer = $values['organizer'];
     }
 }

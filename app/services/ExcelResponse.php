@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services;
@@ -6,8 +7,8 @@ namespace App\Services;
 use Nette;
 use Nette\Application\IResponse;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Exception;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-
 
 /**
  * ExcelResponse.
@@ -17,7 +18,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 class ExcelResponse implements IResponse
 {
     use Nette\SmartObject;
-    
+
     /** @var Spreadsheet */
     private $spreadsheet;
 
@@ -25,23 +26,16 @@ class ExcelResponse implements IResponse
     private $filename;
 
 
-    /**
-     * ExcelResponse constructor.
-     * @param Spreadsheet $spreadsheet
-     * @param $filename
-     */
     public function __construct(Spreadsheet $spreadsheet, $filename)
     {
         $this->spreadsheet = $spreadsheet;
-        $this->filename = $filename;
+        $this->filename    = $filename;
     }
 
     /**
-     * @param Nette\Http\IRequest $httpRequest
-     * @param Nette\Http\IResponse $httpResponse
-     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @throws Exception
      */
-    public function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse)
+    public function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse) : void
     {
         $httpResponse->setContentType('application/force-download');
         $httpResponse->setHeader('Content-Disposition', 'attachment;filename=' . $this->filename);

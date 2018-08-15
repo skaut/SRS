@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ProgramModule\Components;
@@ -6,13 +7,17 @@ namespace App\AdminModule\ProgramModule\Components;
 use App\Model\Program\Room;
 use App\Model\Program\RoomRepository;
 use App\Services\ExcelExportService;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
+use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
+use PhpOffice\PhpSpreadsheet\Exception;
 use Ublaboo\DataGrid\DataGrid;
-
+use Ublaboo\DataGrid\Exception\DataGridException;
 
 /**
  * Komponenta pro správu místností.
@@ -37,30 +42,26 @@ class RoomsGridControl extends Control
     private $sessionSection;
 
 
-    /**
-     * RoomsGridControl constructor.
-     * @param Translator $translator
-     * @param RoomRepository $roomRepository
-     * @param ExcelExportService $excelExportService
-     * @param Session $session
-     */
-    public function __construct(Translator $translator, RoomRepository $roomRepository,
-                                ExcelExportService $excelExportService, Session $session)
-    {
+    public function __construct(
+        Translator $translator,
+        RoomRepository $roomRepository,
+        ExcelExportService $excelExportService,
+        Session $session
+    ) {
         parent::__construct();
 
-        $this->translator = $translator;
-        $this->roomRepository = $roomRepository;
+        $this->translator         = $translator;
+        $this->roomRepository     = $roomRepository;
         $this->excelExportService = $excelExportService;
 
-        $this->session = $session;
+        $this->session        = $session;
         $this->sessionSection = $session->getSection('srs');
     }
 
     /**
      * Vykreslí komponentu.
      */
-    public function render()
+    public function render() : void
     {
         $this->template->render(__DIR__ . '/templates/rooms_grid.latte');
     }
@@ -68,20 +69,18 @@ class RoomsGridControl extends Control
     /**
      * Vytvoří komponentu.
      * @param $name
-     * @throws \Ublaboo\DataGrid\Exception\DataGridException
+     * @throws DataGridException
      */
-    public function createComponentRoomsGrid($name)
+    public function createComponentRoomsGrid($name) : void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
         $grid->setDataSource($this->roomRepository->createQueryBuilder('r'));
         $grid->setDefaultSort(['name' => 'ASC']);
-        $grid->setPagination(FALSE);
-
+        $grid->setPagination(false);
 
         $grid->addGroupAction('admin.program.rooms_group_action_export_rooms_schedules')
             ->onSelect[] = [$this, 'groupExportRoomsSchedules'];
-
 
         $grid->addColumnText('name', 'admin.program.rooms_name');
 
@@ -89,10 +88,10 @@ class RoomsGridControl extends Control
             ->setRendererOnCondition(function ($row) {
                 return $this->translator->translate('admin.program.blocks_capacity_unlimited');
             }, function ($row) {
-                return $row->getCapacity() === NULL;
+                return $row->getCapacity() === null;
             });
 
-        $grid->addInlineAdd()->onControlAdd[] = function ($container) {
+        $grid->addInlineAdd()->onControlAdd[] = function ($container) : void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.program.rooms_name_empty')
                 ->addRule(Form::IS_NOT_IN, 'admin.program.rooms_name_exists', $this->roomRepository->findAllNames());
@@ -101,9 +100,9 @@ class RoomsGridControl extends Control
                 ->addCondition(Form::FILLED)
                 ->addRule(Form::INTEGER, 'admin.program.rooms_capacity_format');
         };
-        $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
+        $grid->getInlineAdd()->onSubmit[]     = [$this, 'add'];
 
-        $grid->addInlineEdit()->onControlAdd[] = function ($container) {
+        $grid->addInlineEdit()->onControlAdd[]  = function ($container) : void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.program.rooms_name_empty');
 
@@ -111,16 +110,16 @@ class RoomsGridControl extends Control
                 ->addCondition(Form::FILLED)
                 ->addRule(Form::INTEGER, 'admin.program.rooms_capacity_format');
         };
-        $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) {
+        $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) : void {
             $container['name']
                 ->addRule(Form::IS_NOT_IN, 'admin.program.rooms_name_exists', $this->roomRepository->findOthersNames($item->getId()));
 
             $container->setDefaults([
                 'name' => $item->getName(),
-                'capacity' => $item->getCapacity()
+                'capacity' => $item->getCapacity(),
             ]);
         };
-        $grid->getInlineEdit()->onSubmit[] = [$this, 'edit'];
+        $grid->getInlineEdit()->onSubmit[]      = [$this, 'edit'];
 
         $grid->addAction('detail', 'admin.common.detail', 'Rooms:detail')
             ->setClass('btn btn-xs btn-primary');
@@ -131,23 +130,23 @@ class RoomsGridControl extends Control
             ->setClass('btn btn-xs btn-danger')
             ->addAttributes([
                 'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('admin.program.rooms_delete_confirm')
+                'data-content' => $this->translator->translate('admin.program.rooms_delete_confirm'),
             ]);
     }
 
     /**
      * Zpracuje přidání místnosti.
      * @param $values
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Nette\Application\AbortException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws AbortException
      */
-    public function add($values)
+    public function add($values) : void
     {
         $room = new Room();
 
         $room->setName($values['name']);
-        $room->setCapacity($values['capacity'] !== '' ? $values['capacity'] : NULL);
+        $room->setCapacity($values['capacity'] !== '' ? $values['capacity'] : null);
 
         $this->roomRepository->save($room);
 
@@ -161,16 +160,16 @@ class RoomsGridControl extends Control
      * Zpracuje úpravu místnosti.
      * @param $id
      * @param $values
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Nette\Application\AbortException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws AbortException
      */
-    public function edit($id, $values)
+    public function edit($id, $values) : void
     {
         $room = $this->roomRepository->findById($id);
 
         $room->setName($values['name']);
-        $room->setCapacity($values['capacity'] !== '' ? $values['capacity'] : NULL);
+        $room->setCapacity($values['capacity'] !== '' ? $values['capacity'] : null);
 
         $this->roomRepository->save($room);
 
@@ -183,11 +182,11 @@ class RoomsGridControl extends Control
     /**
      * Odstraní místnost.
      * @param $id
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Nette\Application\AbortException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws AbortException
      */
-    public function handleDelete($id)
+    public function handleDelete($id) : void
     {
         $room = $this->roomRepository->findById($id);
         $this->roomRepository->remove($room);
@@ -200,9 +199,9 @@ class RoomsGridControl extends Control
     /**
      * Hromadně vyexportuje harmonogramy místností.
      * @param array $ids
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
-    public function groupExportRoomsSchedules(array $ids)
+    public function groupExportRoomsSchedules(array $ids) : void
     {
         $this->sessionSection->roomIds = $ids;
         $this->redirect('exportroomsschedules'); //presmerovani kvuli zruseni ajax
@@ -210,16 +209,16 @@ class RoomsGridControl extends Control
 
     /**
      * Zpracuje export harmonogramů místností.
-     * @throws \Nette\Application\AbortException
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws AbortException
+     * @throws Exception
      */
-    public function handleExportRoomsSchedules()
+    public function handleExportRoomsSchedules() : void
     {
         $ids = $this->session->getSection('srs')->roomIds;
 
         $blocks = $this->roomRepository->findRoomsByIds($ids);
 
-        $response = $this->excelExportService->exportRoomsSchedules($blocks, "harmonogramy-mistnosti.xlsx");
+        $response = $this->excelExportService->exportRoomsSchedules($blocks, 'harmonogramy-mistnosti.xlsx');
 
         $this->getPresenter()->sendResponse($response);
     }

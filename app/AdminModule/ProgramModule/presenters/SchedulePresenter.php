@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ProgramModule\Presenters;
-
 
 /**
  * Presenter obsluhjící správu harmonogramu.
@@ -12,7 +12,7 @@ namespace App\AdminModule\ProgramModule\Presenters;
  */
 class SchedulePresenter extends ProgramBasePresenter
 {
-    public function renderDefault()
+    public function renderDefault() : void
     {
         $this->template->containerAttributes = 'ng-app="scheduleApp" ng-controller="AdminScheduleCtrl"';
     }

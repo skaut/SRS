@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\WebModule\Components;
@@ -6,7 +7,7 @@ namespace App\WebModule\Components;
 use App\Model\CMS\Content\DocumentContent;
 use App\Model\CMS\Document\DocumentRepository;
 use Nette\Application\UI\Control;
-
+use function array_keys;
 
 /**
  * Komponenta s dokumenty.
@@ -21,10 +22,6 @@ class DocumentContentControl extends Control
     private $documentRepository;
 
 
-    /**
-     * DocumentContentControl constructor.
-     * @param DocumentRepository $documentRepository
-     */
     public function __construct(DocumentRepository $documentRepository)
     {
         parent::__construct();
@@ -32,17 +29,14 @@ class DocumentContentControl extends Control
         $this->documentRepository = $documentRepository;
     }
 
-    /**
-     * @param $content
-     */
-    public function render(DocumentContent $content)
+    public function render(DocumentContent $content) : void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/document_content.latte');
 
         $roles = $this->presenter->user->roles;
-        
-        $template->heading = $content->getHeading();
+
+        $template->heading   = $content->getHeading();
         $template->documents = $this->documentRepository->findRolesAllowedByTagsOrderedByName(array_keys($roles), $content->getTags());
 
         $template->render();

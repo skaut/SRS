@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
@@ -10,9 +11,14 @@ use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\CustomInput\CustomSelect;
 use App\Model\Settings\CustomInput\CustomText;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
-
+use function explode;
+use function implode;
+use function trim;
 
 /**
  * Formulář pro úpravu vlastních polí přihlášky.
@@ -36,29 +42,21 @@ class CustomInputForm
     private $customInputRepository;
 
 
-    /**
-     * CustomInputForm constructor.
-     * @param BaseForm $baseFormFactory
-     * @param CustomInputRepository $customInputRepository
-     */
     public function __construct(BaseForm $baseFormFactory, CustomInputRepository $customInputRepository)
     {
-        $this->baseFormFactory = $baseFormFactory;
+        $this->baseFormFactory       = $baseFormFactory;
         $this->customInputRepository = $customInputRepository;
     }
 
     /**
      * Vytvoří formulář.
      * @param $id
-     * @return Form
      */
-    public function create($id)
+    public function create($id) : Form
     {
         $this->customInput = $this->customInputRepository->findById($id);
 
-
         $form = $this->baseFormFactory->create();
-
 
         $form->addHidden('id');
 
@@ -79,7 +77,6 @@ class CustomInputForm
             ->setValidationScope([])
             ->setAttribute('class', 'btn btn-warning');
 
-
         if ($this->customInput) {
             $typeSelect->setDisabled();
             $optionsText->setDisabled();
@@ -91,8 +88,9 @@ class CustomInputForm
                 'mandatory' => $this->customInput->isMandatory(),
             ]);
 
-            if ($this->customInput->getType() == CustomInput::SELECT)
+            if ($this->customInput->getType() === CustomInput::SELECT) {
                 $optionsText->setDefaultValue($this->customInput->getOptions());
+            }
         }
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -102,58 +100,61 @@ class CustomInputForm
 
     /**
      * Zpracuje formulář.
-     * @param Form $form
      * @param array $values
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws NonUniqueResultException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function processForm(Form $form, array $values)
+    public function processForm(Form $form, array $values) : void
     {
-        if (!$form['cancel']->isSubmittedBy()) {
-            if (!$this->customInput) {
-                switch ($values['type']) {
-                    case CustomInput::TEXT:
-                        $this->customInput = new CustomText();
-                        break;
-
-                    case CustomInput::CHECKBOX:
-                        $this->customInput = new CustomCheckbox();
-                        break;
-
-                    case CustomInput::SELECT:
-                        $this->customInput = new CustomSelect();
-
-                        $options = explode(',', $values['options']);
-                        $optionsTrimmed = [];
-                        foreach ($options as $option)
-                            $optionsTrimmed[] = trim($option);
-                        $this->customInput->setOptions(implode(', ', $optionsTrimmed));
-
-                        break;
-
-                    case CustomInput::FILE:
-                        $this->customInput = new CustomFile();
-                        break;
-                }
-            }
-
-            $this->customInput->setName($values['name']);
-            $this->customInput->setMandatory($values['mandatory']);
-
-            $this->customInputRepository->save($this->customInput);
+        if ($form['cancel']->isSubmittedBy()) {
+            return;
         }
+
+        if (! $this->customInput) {
+            switch ($values['type']) {
+                case CustomInput::TEXT:
+                    $this->customInput = new CustomText();
+                    break;
+
+                case CustomInput::CHECKBOX:
+                    $this->customInput = new CustomCheckbox();
+                    break;
+
+                case CustomInput::SELECT:
+                    $this->customInput = new CustomSelect();
+
+                    $options        = explode(',', $values['options']);
+                    $optionsTrimmed = [];
+                    foreach ($options as $option) {
+                        $optionsTrimmed[] = trim($option);
+                    }
+                    $this->customInput->setOptions(implode(', ', $optionsTrimmed));
+
+                    break;
+
+                case CustomInput::FILE:
+                    $this->customInput = new CustomFile();
+                    break;
+            }
+        }
+
+        $this->customInput->setName($values['name']);
+        $this->customInput->setMandatory($values['mandatory']);
+
+        $this->customInputRepository->save($this->customInput);
     }
 
     /**
      * Vrátí typy vlastních polí jako možnosti pro select.
      * @return array
      */
-    private function prepareCustomInputTypesOptions()
+    private function prepareCustomInputTypesOptions() : array
     {
         $options = [];
-        foreach (CustomInput::$types as $type)
+        foreach (CustomInput::$types as $type) {
             $options[$type] = 'admin.common.custom_' . $type;
+        }
         return $options;
     }
 }

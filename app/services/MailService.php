@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services;
@@ -9,13 +10,17 @@ use App\Model\Mailing\Mail;
 use App\Model\Mailing\MailRepository;
 use App\Model\Mailing\TemplateRepository;
 use App\Model\Settings\Settings;
+use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Kdyby\Translation\Translator;
 use Nette;
+use Ublaboo\Mailing\Exception\MailingException;
+use Ublaboo\Mailing\Exception\MailingMailCreationException;
 use Ublaboo\Mailing\MailFactory;
-
+use function in_array;
+use function str_replace;
 
 /**
  * Služba pro rozesílání e-mailů.
@@ -48,28 +53,22 @@ class MailService
     private $translator;
 
 
-    /**
-     * MailService constructor.
-     * @param MailFactory $mailFactory
-     * @param SettingsRepository $settingsRepository
-     * @param MailRepository $mailRepository
-     * @param UserRepository $userRepository
-     * @param RoleRepository $roleRepository
-     * @param TemplateRepository $templateRepository
-     * @param Translator $translator
-     */
-    public function __construct(MailFactory $mailFactory, SettingsRepository $settingsRepository,
-                                MailRepository $mailRepository, UserRepository $userRepository,
-                                RoleRepository $roleRepository, TemplateRepository $templateRepository,
-                                Translator $translator)
-    {
-        $this->mailFactory = $mailFactory;
+    public function __construct(
+        MailFactory $mailFactory,
+        SettingsRepository $settingsRepository,
+        MailRepository $mailRepository,
+        UserRepository $userRepository,
+        RoleRepository $roleRepository,
+        TemplateRepository $templateRepository,
+        Translator $translator
+    ) {
+        $this->mailFactory        = $mailFactory;
         $this->settingsRepository = $settingsRepository;
-        $this->mailRepository = $mailRepository;
-        $this->userRepository = $userRepository;
-        $this->roleRepository = $roleRepository;
+        $this->mailRepository     = $mailRepository;
+        $this->userRepository     = $userRepository;
+        $this->roleRepository     = $roleRepository;
         $this->templateRepository = $templateRepository;
-        $this->translator = $translator;
+        $this->translator         = $translator;
     }
 
     /**
@@ -79,24 +78,29 @@ class MailService
      * @param $copy
      * @param $subject
      * @param $text
-     * @param bool $automatic
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
-     * @throws \Ublaboo\Mailing\Exception\MailingException
-     * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
+     * @throws MailingException
+     * @throws MailingMailCreationException
      */
-    public function sendMail($recipientsRoles, $recipientsUsers, $copy, $subject, $text, $automatic = FALSE)
+    public function sendMail($recipientsRoles, $recipientsUsers, $copy, $subject, $text, bool $automatic = false) : void
     {
         $recipients = [];
 
         foreach ($this->userRepository->findAllApprovedInRoles($this->roleRepository->findRolesIds($recipientsRoles)) as $user) {
-            if (!in_array($user, $recipients))
-                $recipients[] = $user;
+            if (in_array($user, $recipients)) {
+                continue;
+            }
+
+            $recipients[] = $user;
         }
 
         foreach ($recipientsUsers as $user) {
-            if (!in_array($user, $recipients))
-                $recipients[] = $user;
+            if (in_array($user, $recipients)) {
+                continue;
+            }
+
+            $recipients[] = $user;
         }
 
         $params = [
@@ -105,7 +109,7 @@ class MailService
             'recipients' => $recipients,
             'copy' => $copy,
             'subject' => $subject,
-            'text' => $text
+            'text' => $text,
         ];
 
         $mail = $this->mailFactory->createByType(TextMail::class, $params);
@@ -127,38 +131,41 @@ class MailService
      * @param $copy
      * @param $type
      * @param $parameters
-     * @param bool $automatic
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
-     * @throws \Ublaboo\Mailing\Exception\MailingException
-     * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
+     * @throws MailingException
+     * @throws MailingMailCreationException
      */
-    public function sendMailFromTemplate($recipientUser, $copy, $type, $parameters, $automatic = TRUE)
+    public function sendMailFromTemplate($recipientUser, $copy, $type, $parameters, bool $automatic = true) : void
     {
         $template = $this->templateRepository->findByType($type);
 
-        if ($template->isActive()) {
-            $recipientsRoles = new ArrayCollection();
-            $recipientsUsers = new ArrayCollection();
-
-            if ($template->isSendToUser())
-                $recipientsUsers->add($recipientUser);
-
-            if ($template->isSendToOrganizer())
-                $copy = $this->settingsRepository->getValue(Settings::SEMINAR_EMAIL);
-
-            $subject = $template->getSubject();
-            $text = $template->getText();
-
-            foreach ($template->getVariables() as $variable) {
-                $variableName = '%' . $this->translator->translate('common.mailing.variable_name.' . $variable->getName()) . '%';
-                $value = $parameters[$variable->getName()];
-
-                $subject = str_replace($variableName, $value, $subject);
-                $text = str_replace($variableName, $value, $text);
-            }
-
-            $this->sendMail($recipientsRoles, $recipientsUsers, $copy, $subject, $text, $automatic);
+        if (! $template->isActive()) {
+            return;
         }
+
+        $recipientsRoles = new ArrayCollection();
+        $recipientsUsers = new ArrayCollection();
+
+        if ($template->isSendToUser()) {
+            $recipientsUsers->add($recipientUser);
+        }
+
+        if ($template->isSendToOrganizer()) {
+            $copy = $this->settingsRepository->getValue(Settings::SEMINAR_EMAIL);
+        }
+
+        $subject = $template->getSubject();
+        $text    = $template->getText();
+
+        foreach ($template->getVariables() as $variable) {
+            $variableName = '%' . $this->translator->translate('common.mailing.variable_name.' . $variable->getName()) . '%';
+            $value        = $parameters[$variable->getName()];
+
+            $subject = str_replace($variableName, $value, $subject);
+            $text    = str_replace($variableName, $value, $text);
+        }
+
+        $this->sendMail($recipientsRoles, $recipientsUsers, $copy, $subject, $text, $automatic);
     }
 }

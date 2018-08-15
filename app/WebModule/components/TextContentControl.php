@@ -1,10 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
 use Nette\Application\UI\Control;
-
 
 /**
  * Komponenta s textem.
@@ -14,16 +14,13 @@ use Nette\Application\UI\Control;
  */
 class TextContentControl extends Control
 {
-    /**
-     * @param $content
-     */
-    public function render($content)
+    public function render($content) : void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/text_content.latte');
 
         $template->heading = $content->getHeading();
-        $template->text = $content->getText();
+        $template->text    = $content->getText();
 
         $template->render();
     }

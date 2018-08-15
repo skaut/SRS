@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
-
 
 /**
  * Factory komponenty s formulářem pro úpravu slevy.

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services;
@@ -8,7 +9,6 @@ use App\Model\User\User;
 use App\Model\User\UserRepository;
 use Kdyby\Translation\Translator;
 use Nette;
-
 
 /**
  * Služba pro správu uživatelů.
@@ -29,54 +29,49 @@ class UserService
     private $applicationRepository;
 
 
-    /**
-     * UserService constructor.
-     * @param Translator $translator
-     * @param UserRepository $userRepository
-     * @param ApplicationRepository $applicationRepository
-     */
-    public function __construct(Translator $translator, UserRepository $userRepository,
-                                ApplicationRepository $applicationRepository)
-    {
-        $this->translator = $translator;
-        $this->userRepository = $userRepository;
+    public function __construct(
+        Translator $translator,
+        UserRepository $userRepository,
+        ApplicationRepository $applicationRepository
+    ) {
+        $this->translator            = $translator;
+        $this->userRepository        = $userRepository;
         $this->applicationRepository = $applicationRepository;
     }
 
-    /**
-     * @param User $user
-     * @return string
-     */
-    public function getMembershipText(User $user)
+    public function getMembershipText(User $user) : string
     {
-        if ($user->getUnit() !== NULL)
+        if ($user->getUnit() !== null) {
             return $user->getUnit();
-        else if ($user->isMember())
+        }
+
+        if ($user->isMember()) {
             return $this->translator->translate('admin.users.users_membership_no');
-        else if ($user->isExternal())
+        }
+
+        if ($user->isExternal()) {
             return $this->translator->translate('admin.users.users_membership_external');
-        else
-            return $this->translator->translate('admin.users.users_membership_not_connected');
+        }
+
+        return $this->translator->translate('admin.users.users_membership_not_connected');
     }
 
-    /**
-     * @param User $user
-     * @return string
-     */
-    public function getPaymentMethodText(User $user)
+    public function getPaymentMethodText(User $user) : string
     {
-        $paymentMethod = NULL;
+        $paymentMethod = null;
 
         foreach ($user->getNotCanceledApplications() as $application) {
             $currentPaymentMethod = $application->getPaymentMethod();
-            if ($currentPaymentMethod) {
-                if ($paymentMethod === NULL) {
-                    $paymentMethod = $currentPaymentMethod;
-                    continue;
-                }
-                if ($paymentMethod != $currentPaymentMethod) {
-                    return $this->translator->translate('common.payment.mixed');
-                }
+            if (! $currentPaymentMethod) {
+                continue;
+            }
+
+            if ($paymentMethod === null) {
+                $paymentMethod = $currentPaymentMethod;
+                continue;
+            }
+            if ($paymentMethod !== $currentPaymentMethod) {
+                return $this->translator->translate('common.payment.mixed');
             }
         }
 
@@ -84,6 +79,6 @@ class UserService
             return $this->translator->translate('common.payment.' . $paymentMethod);
         }
 
-        return NULL;
+        return null;
     }
 }

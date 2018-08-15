@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
@@ -8,9 +9,10 @@ use App\Model\Structure\Discount;
 use App\Model\Structure\DiscountRepository;
 use App\Model\Structure\SubeventRepository;
 use App\Services\DiscountService;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
-
 
 /**
  * Komponenta s formulářem pro úpravu slevy.
@@ -53,32 +55,28 @@ class DiscountForm extends UI\Control
     private $discountService;
 
 
-    /**
-     * DiscountForm constructor.
-     * @param $id
-     * @param BaseForm $baseFormFactory
-     * @param DiscountRepository $discountRepository
-     * @param SubeventRepository $subeventRepository
-     * @param DiscountService $discountService
-     */
-    public function __construct($id, BaseForm $baseFormFactory, DiscountRepository $discountRepository,
-                                SubeventRepository $subeventRepository, DiscountService $discountService)
-    {
+    public function __construct(
+        $id,
+        BaseForm $baseFormFactory,
+        DiscountRepository $discountRepository,
+        SubeventRepository $subeventRepository,
+        DiscountService $discountService
+    ) {
         parent::__construct();
 
-        $this->baseFormFactory = $baseFormFactory;
+        $this->baseFormFactory    = $baseFormFactory;
         $this->discountRepository = $discountRepository;
         $this->subeventRepository = $subeventRepository;
-        $this->discountService = $discountService;
+        $this->discountService    = $discountService;
 
-        $this->id = $id;
+        $this->id       = $id;
         $this->discount = $this->discountRepository->findById($id);
     }
 
     /**
      * Vykreslí komponentu.
      */
-    public function render()
+    public function render() : void
     {
         $this->template->setFile(__DIR__ . '/templates/discount_form.latte');
 
@@ -89,9 +87,8 @@ class DiscountForm extends UI\Control
 
     /**
      * Vytvoří formulář.
-     * @return Form
      */
-    public function createComponentForm()
+    public function createComponentForm() : Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -100,7 +97,7 @@ class DiscountForm extends UI\Control
         $form->addHidden('condition');
 
         $form->addTextArea('conditionText', 'admin.configuration.discounts_condition')
-            ->setAttribute('readonly', TRUE);
+            ->setAttribute('readonly', true);
 
         $form->addText('discount', 'admin.configuration.discounts_discount')
             ->addRule(Form::FILLED, 'admin.configuration.discounts_discount_empty')
@@ -112,13 +109,12 @@ class DiscountForm extends UI\Control
             ->setValidationScope([])
             ->setAttribute('class', 'btn btn-warning');
 
-
         if ($this->discount) {
             $form->setDefaults([
                 'id' => $this->id,
                 'conditionText' => $this->discountService->convertConditionToText($this->discount->getDiscountCondition()),
                 'condition' => $this->discount->getDiscountCondition(),
-                'discount' => $this->discount->getDiscount()
+                'discount' => $this->discount->getDiscount(),
             ]);
         }
 
@@ -129,20 +125,18 @@ class DiscountForm extends UI\Control
 
     /**
      * Zpracuje formulář.
-     * @param Form $form
      * @param array $values
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function processForm(Form $form, array $values)
+    public function processForm(Form $form, array $values) : void
     {
         $this->id = $values['id'];
 
         if ($this->discountService->validateCondition(($values['condition']))) {
-            if (!$this->id) {
+            if (! $this->id) {
                 $this->discount = new Discount();
-            }
-            else {
+            } else {
                 $this->discount = $this->discountRepository->findById($this->id);
             }
 

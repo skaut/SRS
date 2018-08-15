@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Settings;
-
 
 /**
  * Výjimka nenalezena položka nastavení.
@@ -11,5 +11,4 @@ namespace App\Model\Settings;
  */
 class SettingsException extends \Exception
 {
-
 }

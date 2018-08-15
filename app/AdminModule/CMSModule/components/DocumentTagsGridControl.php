@@ -55,7 +55,6 @@ class DocumentTagsGridControl extends Control
 
     /**
      * Vytvoří komponentu.
-     * @param $name
      * @throws DataGridException
      */
     public function createComponentDocumentTagsGrid(string $name) : void
@@ -116,7 +115,6 @@ class DocumentTagsGridControl extends Control
 
     /**
      * Zpracuje přidání štítku dokumentu.
-     * @param $values
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -137,8 +135,6 @@ class DocumentTagsGridControl extends Control
 
     /**
      * Zpracuje úpravu štítku dokumentu.
-     * @param $id
-     * @param $values
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -159,7 +155,6 @@ class DocumentTagsGridControl extends Control
 
     /**
      * Zpracuje odstranění štítku dokumentu.
-     * @param $id
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException

@@ -1,11 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
 use App\Model\CMS\NewsRepository;
 use Nette\Application\UI\Control;
-
 
 /**
  * Komponenta s aktualitami.
@@ -19,10 +19,6 @@ class NewsContentControl extends Control
     private $newsRepository;
 
 
-    /**
-     * NewsContentControl constructor.
-     * @param NewsRepository $newsRepository
-     */
     public function __construct(NewsRepository $newsRepository)
     {
         parent::__construct();
@@ -30,16 +26,13 @@ class NewsContentControl extends Control
         $this->newsRepository = $newsRepository;
     }
 
-    /**
-     * @param $content
-     */
-    public function render($content)
+    public function render($content) : void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/news_content.latte');
 
         $template->heading = $content->getHeading();
-        $template->news = $this->newsRepository->findPublishedOrderedByPinnedAndDate($content->getCount());
+        $template->news    = $this->newsRepository->findPublishedOrderedByPinnedAndDate($content->getCount());
 
         $template->render();
     }

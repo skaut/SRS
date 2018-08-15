@@ -57,7 +57,6 @@ class PagesGridControl extends Control
 
     /**
      * Vytvoří komponentu.
-     * @param $name
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
@@ -158,7 +157,6 @@ class PagesGridControl extends Control
 
     /**
      * Zpracuje přidání stránky.
-     * @param $values
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException
@@ -181,8 +179,6 @@ class PagesGridControl extends Control
 
     /**
      * Zpracuje upravení stránky.
-     * @param $id
-     * @param $values
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException
@@ -207,7 +203,6 @@ class PagesGridControl extends Control
 
     /**
      * Zpracuje odstranění stránky.
-     * @param $id
      * @throws PageException
      * @throws ORMException
      * @throws OptimisticLockException
@@ -225,9 +220,6 @@ class PagesGridControl extends Control
 
     /**
      * Přesune stránku s $item_id mezi $prev_id a $next_id.
-     * @param $item_id
-     * @param $prev_id
-     * @param $next_id
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -249,8 +241,6 @@ class PagesGridControl extends Control
 
     /**
      * Změní viditelnost stránky.
-     * @param $id
-     * @param $public
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException

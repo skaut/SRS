@@ -1,17 +1,20 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Components;
 
-
 use App\Model\Structure\DiscountRepository;
 use App\Model\Structure\SubeventRepository;
 use App\Services\DiscountService;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
+use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
-
+use Ublaboo\DataGrid\Exception\DataGridException;
 
 /**
  * Komponenta pro správu slev.
@@ -33,28 +36,24 @@ class DiscountsGridControl extends Control
     private $discountService;
 
 
-    /**
-     * DiscountsGridControl constructor.
-     * @param Translator $translator
-     * @param DiscountRepository $discountRepository
-     * @param SubeventRepository $subeventRepository
-     * @param DiscountService $discountService
-     */
-    public function __construct(Translator $translator, DiscountRepository $discountRepository,
-                                SubeventRepository $subeventRepository, DiscountService $discountService)
-    {
+    public function __construct(
+        Translator $translator,
+        DiscountRepository $discountRepository,
+        SubeventRepository $subeventRepository,
+        DiscountService $discountService
+    ) {
         parent::__construct();
 
-        $this->translator = $translator;
+        $this->translator         = $translator;
         $this->discountRepository = $discountRepository;
         $this->subeventRepository = $subeventRepository;
-        $this->discountService = $discountService;
+        $this->discountService    = $discountService;
     }
 
     /**
      * Vykreslí komponentu.
      */
-    public function render()
+    public function render() : void
     {
         $this->template->render(__DIR__ . '/templates/discounts_grid.latte');
     }
@@ -62,28 +61,27 @@ class DiscountsGridControl extends Control
     /**
      * Vytvoří komponentu.
      * @param $name
-     * @throws \Ublaboo\DataGrid\Exception\DataGridException
+     * @throws DataGridException
      */
-    public function createComponentDiscountsGrid($name)
+    public function createComponentDiscountsGrid($name) : void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
         $grid->setDataSource($this->discountRepository->createQueryBuilder('d'));
-        $grid->setPagination(FALSE);
-
+        $grid->setPagination(false);
 
         $grid->addColumnText('discountCondition', 'admin.configuration.discounts_condition')
             ->setRenderer(function ($row) {
-                if ($this->discountService->validateCondition($row->getDiscountCondition()))
+                if ($this->discountService->validateCondition($row->getDiscountCondition())) {
                     return $this->discountService->convertConditionToText($row->getDiscountCondition());
-                else
-                    return Html::el('span')
-                        ->style('color: red')
-                        ->setText($this->translator->translate('admin.configuration.discounts_invalid_condition'));
+                }
+
+                return Html::el('span')
+                    ->style('color: red')
+                    ->setText($this->translator->translate('admin.configuration.discounts_invalid_condition'));
             });
 
         $grid->addColumnText('discount', 'admin.configuration.discounts_discount');
-
 
         $grid->addToolbarButton('Discounts:add')
             ->setIcon('plus');
@@ -96,18 +94,18 @@ class DiscountsGridControl extends Control
             ->setClass('btn btn-xs btn-danger')
             ->addAttributes([
                 'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('admin.configuration.discounts_delete_confirm')
+                'data-content' => $this->translator->translate('admin.configuration.discounts_delete_confirm'),
             ]);
     }
 
     /**
      * Zpracuje odstranění slevy.
      * @param $id
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Nette\Application\AbortException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws AbortException
      */
-    public function handleDelete($id)
+    public function handleDelete($id) : void
     {
         $discount = $this->discountRepository->findById($id);
         $this->discountRepository->remove($discount);

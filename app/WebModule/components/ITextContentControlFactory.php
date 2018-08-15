@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\WebModule\Components;
-
 
 /**
  * Factory komponenty s textem.
@@ -12,8 +12,5 @@ namespace App\WebModule\Components;
  */
 interface ITextContentControlFactory
 {
-    /**
-     * @return TextContentControl
-     */
-    public function create();
+    public function create() : TextContentControl;
 }

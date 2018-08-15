@@ -1,8 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\WebModule\Presenters;
 
+use App\Model\Page\PageException;
 use App\WebModule\Components\IApplicationContentControlFactory;
 use App\WebModule\Components\IBlocksContentControlFactory;
 use App\WebModule\Components\ICapacitiesContentControlFactory;
@@ -18,7 +20,6 @@ use App\WebModule\Components\IProgramsContentControlFactory;
 use App\WebModule\Components\ITextContentControlFactory;
 use App\WebModule\Components\IUsersContentControlFactory;
 use Nette\Application\BadRequestException;
-
 
 /**
  * Presenter obshlující dynamicky vytvářené stránky pomocí administrace.
@@ -116,27 +117,27 @@ class PagePresenter extends WebBasePresenter
     /**
      * @param $slug
      * @throws BadRequestException
-     * @throws \App\Model\Page\PageException
+     * @throws PageException
      */
-    public function renderDefault($slug)
+    public function renderDefault($slug) : void
     {
-        if ($slug === NULL) {
+        if ($slug === null) {
             $page = $this->pageRepository->findPublishedBySlug('/');
-            if ($page === NULL) {
+            if ($page === null) {
                 throw new BadRequestException($this->translator->translate('web.common.homepage_not_found'), 404);
             }
-            $this->template->bodyClass = "body-homepage";
+            $this->template->bodyClass = 'body-homepage';
         } else {
-            $page = $this->pageRepository->findBySlug($slug);
+            $page                      = $this->pageRepository->findBySlug($slug);
             $this->template->bodyClass = "body-{$page->getSlug()}";
         }
 
-        if (!$page->isAllowedForRoles($this->user->roles)) {
+        if (! $page->isAllowedForRoles($this->user->roles)) {
             throw new BadRequestException($this->translator->translate('web.common.page_access_denied'), 403);
         }
 
-        $this->template->page = $page;
-        $this->template->pageName = $page->getName();
+        $this->template->page           = $page;
+        $this->template->pageName       = $page->getName();
         $this->template->sidebarVisible = $page->hasContents('sidebar');
     }
 

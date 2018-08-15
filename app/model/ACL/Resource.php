@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\ACL;
@@ -7,7 +8,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
-
 
 /**
  * Entita prostředek.
@@ -22,37 +22,37 @@ class Resource
     /**
      * Administrace.
      */
-    const ADMIN = 'admin';
+    public const ADMIN = 'admin';
 
     /**
      * Web.
      */
-    const CMS = 'cms';
+    public const CMS = 'cms';
 
     /**
      * Role.
      */
-    const ACL = 'acl';
+    public const ACL = 'acl';
 
     /**
      * Program.
      */
-    const PROGRAM = 'program';
+    public const PROGRAM = 'program';
 
     /**
      * Nastavení.
      */
-    const CONFIGURATION = 'configuration';
+    public const CONFIGURATION = 'configuration';
 
     /**
      * Uživatelé.
      */
-    const USERS = 'users';
+    public const USERS = 'users';
 
     /**
      * Mailing.
      */
-    const MAILING = 'mailing';
+    public const MAILING = 'mailing';
 
     public static $resources = [
         self::ADMIN,
@@ -61,7 +61,7 @@ class Resource
         self::PROGRAM,
         self::CONFIGURATION,
         self::USERS,
-        self::MAILING
+        self::MAILING,
     ];
 
     use Identifier;
@@ -81,36 +81,23 @@ class Resource
     protected $permissions;
 
 
-    /**
-     * Resource constructor.
-     * @param $name
-     */
     public function __construct(string $name)
     {
-        $this->name = $name;
+        $this->name        = $name;
         $this->permissions = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getId(): int
+    public function getId() : int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getName(): string
+    public function getName() : string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName(string $name): void
+    public function setName(string $name) : void
     {
         $this->name = $name;
     }
@@ -118,7 +105,7 @@ class Resource
     /**
      * @return Collection
      */
-    public function getPermissions(): Collection
+    public function getPermissions() : Collection
     {
         return $this->permissions;
     }

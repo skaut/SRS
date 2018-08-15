@@ -1,14 +1,17 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
 use App\Model\Settings\Settings;
+use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
-
 
 /**
  * Formulář pro nastavení podakcí.
@@ -26,24 +29,18 @@ class SubeventsForm
     private $settingsRepository;
 
 
-    /**
-     * ApplicationForm constructor.
-     * @param BaseForm $baseForm
-     * @param SettingsRepository $settingsRepository
-     */
     public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository)
     {
-        $this->baseFormFactory = $baseForm;
+        $this->baseFormFactory    = $baseForm;
         $this->settingsRepository = $settingsRepository;
     }
 
     /**
      * Vytvoří formulář.
-     * @return Form
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
-    public function create()
+    public function create() : Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -52,7 +49,7 @@ class SubeventsForm
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'isAllowedAddSubeventsAfterPayment' => $this->settingsRepository->getValue(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT)
+            'isAllowedAddSubeventsAfterPayment' => $this->settingsRepository->getValue(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -62,14 +59,13 @@ class SubeventsForm
 
     /**
      * Zpracuje formulář.
-     * @param Form $form
      * @param array $values
-     * @throws \App\Model\Settings\SettingsException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws SettingsException
+     * @throws ORMException
+     * @throws OptimisticLockException
      * @throws \Throwable
      */
-    public function processForm(Form $form, array $values)
+    public function processForm(Form $form, array $values) : void
     {
         $this->settingsRepository->setValue(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT, $values['isAllowedAddSubeventsAfterPayment']);
     }

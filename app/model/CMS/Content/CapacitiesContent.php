@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\CMS\Content;
@@ -6,11 +7,11 @@ namespace App\Model\CMS\Content;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\CMS\Page;
+use App\Model\Page\PageException;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
-
 
 /**
  * Entita obsahu s přehledem kapacit rolí.
@@ -35,10 +36,9 @@ class CapacitiesContent extends Content implements IContent
 
 
     /**
-     * CapacitiesContent constructor.
-     * @param Page $page
+     *
      * @param $area
-     * @throws \App\Model\Page\PageException
+     * @throws PageException
      */
     public function __construct(Page $page, string $area)
     {
@@ -46,10 +46,7 @@ class CapacitiesContent extends Content implements IContent
         $this->roles = new ArrayCollection();
     }
 
-    /**
-     * @param RoleRepository $roleRepository
-     */
-    public function injectRoleRepository(RoleRepository $roleRepository): void
+    public function injectRoleRepository(RoleRepository $roleRepository) : void
     {
         $this->roleRepository = $roleRepository;
     }
@@ -57,7 +54,7 @@ class CapacitiesContent extends Content implements IContent
     /**
      * @return Collection
      */
-    public function getRoles(): Collection
+    public function getRoles() : Collection
     {
         return $this->roles;
     }
@@ -65,26 +62,28 @@ class CapacitiesContent extends Content implements IContent
     /**
      * @param Collection $roles
      */
-    public function setRoles(Collection $roles): void
+    public function setRoles(Collection $roles) : void
     {
         $this->roles->clear();
-        foreach ($roles as $role)
+        foreach ($roles as $role) {
             $this->roles->add($role);
+        }
     }
 
     /**
      * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
-     * @param Form $form
-     * @return Form
      */
-    public function addContentForm(Form $form): Form
+    public function addContentForm(Form $form) : Form
     {
         parent::addContentForm($form);
 
         $formContainer = $form[$this->getContentFormName()];
 
-        $formContainer->addMultiSelect('roles', 'admin.cms.pages_content_capacities_roles',
-            $this->roleRepository->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]))
+        $formContainer->addMultiSelect(
+            'roles',
+            'admin.cms.pages_content_capacities_roles',
+            $this->roleRepository->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED])
+        )
             ->setDefaultValue($this->roleRepository->findRolesIds($this->roles));
 
         return $form;
@@ -92,13 +91,12 @@ class CapacitiesContent extends Content implements IContent
 
     /**
      * Zpracuje při uložení stránky část formuláře týkající se obsahu.
-     * @param Form $form
      * @param array $values
      */
-    public function contentFormSucceeded(Form $form, array $values): void
+    public function contentFormSucceeded(Form $form, array $values) : void
     {
         parent::contentFormSucceeded($form, $values);
-        $values = $values[$this->getContentFormName()];
+        $values      = $values[$this->getContentFormName()];
         $this->roles = $this->roleRepository->findRolesByIds($values['roles']);
     }
 }

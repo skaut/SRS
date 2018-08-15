@@ -1,10 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\CMS\Content;
 
 use Nette\Application\UI\Form;
-
 
 /**
  * Rozhraní obsahů.
@@ -16,15 +16,12 @@ interface IContent
 {
     /**
      * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
-     * @param Form $form
-     * @return Form
      */
-    public function addContentForm(Form $form): Form;
+    public function addContentForm(Form $form) : Form;
 
     /**
      * Zpracuje při uložení stránky část formuláře týkající se obsahu.
-     * @param Form $form
      * @param array $values
      */
-    public function contentFormSucceeded(Form $form, array $values): void;
+    public function contentFormSucceeded(Form $form, array $values) : void;
 }

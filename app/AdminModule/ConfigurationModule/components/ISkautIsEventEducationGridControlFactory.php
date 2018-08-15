@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Components;
-
 
 /**
  * Factory komponenty pro nastavení propojení se vzdělávací akcí.
@@ -13,7 +13,6 @@ interface ISkautIsEventEducationGridControlFactory
 {
     /**
      * Vytvoří komponentu.
-     * @return SkautIsEventEducationGridControl
      */
-    public function create(): SkautIsEventEducationGridControl;
+    public function create() : SkautIsEventEducationGridControl;
 }

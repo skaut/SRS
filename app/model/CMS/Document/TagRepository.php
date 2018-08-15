@@ -1,12 +1,15 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\CMS\Document;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Kdyby\Doctrine\EntityRepository;
-
+use function array_map;
 
 /**
  * Třída spravující tagy dokumentů.
@@ -18,9 +21,8 @@ class TagRepository extends EntityRepository
     /**
      * Vrátí tag podle id.
      * @param $id
-     * @return Tag|null
      */
-    public function findById(int $id): ?Tag
+    public function findById(int $id) : ?Tag
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -28,9 +30,9 @@ class TagRepository extends EntityRepository
     /**
      * Vrátí tagy podle id.
      * @param $ids
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
-    public function findTagsByIds(array $ids): Collection
+    public function findTagsByIds(array $ids) : Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids))
@@ -43,7 +45,7 @@ class TagRepository extends EntityRepository
      * @param $tags
      * @return array
      */
-    public function findTagsIds(Collection $tags): array
+    public function findTagsIds(Collection $tags) : array
     {
         return array_map(function ($o) {
             return $o->getId();
@@ -54,7 +56,7 @@ class TagRepository extends EntityRepository
      * Vrátí všechny názvy tagů.
      * @return array
      */
-    public function findAllNames(): array
+    public function findAllNames() : array
     {
         $names = $this->createQueryBuilder('t')
             ->select('t.name')
@@ -68,7 +70,7 @@ class TagRepository extends EntityRepository
      * @param $id
      * @return array
      */
-    public function findOthersNames(int $id): array
+    public function findOthersNames(int $id) : array
     {
         $names = $this->createQueryBuilder('t')
             ->select('t.name')
@@ -81,11 +83,10 @@ class TagRepository extends EntityRepository
 
     /**
      * Uloží tag.
-     * @param Tag $tag
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function save(Tag $tag): void
+    public function save(Tag $tag) : void
     {
         $this->_em->persist($tag);
         $this->_em->flush();
@@ -93,11 +94,10 @@ class TagRepository extends EntityRepository
 
     /**
      * Odstraní tag.
-     * @param Tag $tag
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function remove(Tag $tag): void
+    public function remove(Tag $tag) : void
     {
         $this->_em->remove($tag);
         $this->_em->flush();
@@ -107,7 +107,7 @@ class TagRepository extends EntityRepository
      * Vrátí seznam tagů jako možnosti pro select.
      * @return array
      */
-    public function getTagsOptions(): array
+    public function getTagsOptions() : array
     {
         $tags = $this->createQueryBuilder('t')
             ->select('t.id, t.name')
@@ -116,8 +116,9 @@ class TagRepository extends EntityRepository
             ->getResult();
 
         $options = [];
-        foreach ($tags as $tag)
+        foreach ($tags as $tag) {
             $options[$tag['id']] = $tag['name'];
+        }
         return $options;
     }
 }

@@ -1,10 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Settings\CustomInput;
 
 use Doctrine\ORM\Mapping as ORM;
-
 
 /**
  * Entita vlastní zaškrtávací pole přihlášky.

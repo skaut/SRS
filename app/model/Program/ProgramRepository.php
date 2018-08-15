@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Program;
@@ -6,8 +7,11 @@ namespace App\Model\Program;
 use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Kdyby\Doctrine\EntityRepository;
-
+use function array_map;
+use function array_merge;
 
 /**
  * Třída spravující programy.
@@ -20,20 +24,18 @@ class ProgramRepository extends EntityRepository
     /**
      * Vrací program podle id.
      * @param $id
-     * @return Program|null
      */
-    public function findById(int $id): ?Program
+    public function findById(int $id) : ?Program
     {
         return $this->findOneBy(['id' => $id]);
     }
 
     /**
      * Uloží program.
-     * @param Program $program
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function save(Program $program): void
+    public function save(Program $program) : void
     {
         $this->_em->persist($program);
         $this->_em->flush();
@@ -41,11 +43,10 @@ class ProgramRepository extends EntityRepository
 
     /**
      * Odstraní program.
-     * @param Program $program
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function remove(Program $program): void
+    public function remove(Program $program) : void
     {
         $this->_em->remove($program);
         $this->_em->flush();
@@ -56,7 +57,7 @@ class ProgramRepository extends EntityRepository
      * @param $programs
      * @return array
      */
-    public function findProgramsIds(Collection $programs): array
+    public function findProgramsIds(Collection $programs) : array
     {
         return array_map(function (Program $o) {
             return $o->getId();
@@ -65,11 +66,9 @@ class ProgramRepository extends EntityRepository
 
     /**
      * Vrací programy, na které je uživatel zapsaný a jsou v danné kategorii.
-     * @param User $user
-     * @param Category $category
      * @return array
      */
-    public function findUserRegisteredAndInCategory(User $user, Category $category): array
+    public function findUserRegisteredAndInCategory(User $user, Category $category) : array
     {
         return $this->createQueryBuilder('p')
             ->select('p')
@@ -83,11 +82,10 @@ class ProgramRepository extends EntityRepository
 
     /**
      * Vrací programy zablokované (programy stejného bloku a překrývající se programy) přihlášením se na program.
-     * @param Program $program
      * @return int[]
      * @throws \Exception
      */
-    public function findBlockedProgramsIdsByProgram(Program $program): array
+    public function findBlockedProgramsIdsByProgram(Program $program) : array
     {
         return array_merge(
             $this->findOtherProgramsWithSameBlockIds($program),
@@ -97,10 +95,9 @@ class ProgramRepository extends EntityRepository
 
     /**
      * Vrací programy stejného bloku.
-     * @param Program $program
      * @return int[]
      */
-    public function findOtherProgramsWithSameBlockIds(Program $program): array
+    public function findOtherProgramsWithSameBlockIds(Program $program) : array
     {
         $programs = $this->createQueryBuilder('p')
             ->select('p.id')
@@ -114,14 +111,13 @@ class ProgramRepository extends EntityRepository
 
     /**
      * Vrací programy s překrývajícím se časem.
-     * @param Program $program
      * @return int[]
      * @throws \Exception
      */
-    public function findOverlappingProgramsIds(Program $program): array
+    public function findOverlappingProgramsIds(Program $program) : array
     {
         $start = $program->getStart();
-        $end = $program->getEnd();
+        $end   = $program->getEnd();
 
         $programs = $this->createQueryBuilder('p')
             ->select('p.id')
@@ -141,12 +137,8 @@ class ProgramRepository extends EntityRepository
 
     /**
      * Překrývá se program s jiným programem?
-     * @param Program $program
-     * @param \DateTime $start
-     * @param \DateTime $end
-     * @return bool
      */
-    public function hasOverlappingProgram(Program $program, \DateTime $start, \DateTime $end): bool
+    public function hasOverlappingProgram(Program $program, \DateTime $start, \DateTime $end) : bool
     {
         $qb = $this->createQueryBuilder('p')
             ->select('p.id')
@@ -164,17 +156,13 @@ class ProgramRepository extends EntityRepository
                 ->setParameter('pid', $program->getId());
         }
 
-        return !empty($qb->getQuery()->getResult());
+        return ! empty($qb->getQuery()->getResult());
     }
 
     /**
      * Překrývá se s jiným programem, který je automaticky zapisovaný.
-     * @param Program $program
-     * @param \DateTime $start
-     * @param \DateTime $end
-     * @return bool
      */
-    public function hasOverlappingAutoRegisterProgram(Program $program, \DateTime $start, \DateTime $end): bool
+    public function hasOverlappingAutoRegisterProgram(Program $program, \DateTime $start, \DateTime $end) : bool
     {
         $qb = $this->createQueryBuilder('p')
             ->select('p.id')
@@ -193,7 +181,7 @@ class ProgramRepository extends EntityRepository
                 ->setParameter('pid', $program->getId());
         }
 
-        return !empty($qb->getQuery()->getResult());
+        return ! empty($qb->getQuery()->getResult());
     }
 
     /**
@@ -202,7 +190,7 @@ class ProgramRepository extends EntityRepository
      * @param Collection $subevents
      * @return Collection|Program[]
      */
-    public function findAllowedForCategoriesAndSubevents(Collection $categories, Collection $subevents): Collection
+    public function findAllowedForCategoriesAndSubevents(Collection $categories, Collection $subevents) : Collection
     {
         $result = $this->createQueryBuilder('p')
             ->select('p')
