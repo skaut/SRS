@@ -1,7 +1,9 @@
 <?php
 
+declare(strict_types=1);
 
-class FirstCest
+
+class LoginCest
 {
     public function _before(AcceptanceTester $I)
     {
@@ -11,8 +13,13 @@ class FirstCest
     {
     }
 
-    // tests
+    /**
+     * @throws Exception
+     */
     public function tryToTest(AcceptanceTester $I)
     {
+        $I->wantTo('login');
+
+        $I->login();
     }
 }

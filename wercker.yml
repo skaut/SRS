@@ -6,7 +6,7 @@ build:
           id: mysql
           tag: 5.7
           env:
-            MYSQL_ALLOW_EMPTY_PASSWORD: yes
+            MYSQL_ROOT_PASSWORD: 'root'
             MYSQL_DATABASE: srs
         - name: smtp-srs.loc
           id: tophfr/mailcatcher

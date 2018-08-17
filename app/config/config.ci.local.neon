@@ -1,9 +1,9 @@
 parameters:
     database:
-        host: mysql
+        host: mysql-test
         dbname: srs
         user: root
-        password:
+        password: root
 
     skautIS:
         appId: 31153c75-6c74-49ab-8660-123786a11a3b

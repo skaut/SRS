@@ -7,6 +7,19 @@
 actor: AcceptanceTester
 modules:
     enabled:
-        - PhpBrowser:
-            url: http://localhost/myapp
+        - WebDriver:
+            url: http://srs.loc
+            browser: phantomjs
+            host: phantom
+            window_size: 1920x1080
+
         - \Helper\Acceptance
+
+        - MailCatcher:
+            url: 'http://smtp-srs.loc'
+            port: 80
+
+        - Db:
+            dsn: 'mysql:host=mysql-test;dbname=srs'
+            user: 'root'
+            password: 'root'
