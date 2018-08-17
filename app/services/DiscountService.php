@@ -25,7 +25,7 @@ class DiscountService
 
     /**
      * Tokeny podmínky.
-     * @var string[]
+     * @var string[][]
      */
     private $symbols;
 
