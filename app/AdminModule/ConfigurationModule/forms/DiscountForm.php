@@ -11,6 +11,7 @@ use App\Model\Structure\SubeventRepository;
 use App\Services\DiscountService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Kdyby\Events\Event;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
 
@@ -35,10 +36,13 @@ class DiscountForm extends UI\Control
 
     /**
      * Událost při uložení formuláře.
+     * @var Event
      */
     public $onSave;
+
     /**
      * Událost při chybě podmínky.
+     * @var Event
      */
     public $onConditionError;
 
@@ -56,7 +60,7 @@ class DiscountForm extends UI\Control
 
 
     public function __construct(
-        $id,
+        int $id,
         BaseForm $baseFormFactory,
         DiscountRepository $discountRepository,
         SubeventRepository $subeventRepository,
@@ -125,13 +129,12 @@ class DiscountForm extends UI\Control
 
     /**
      * Zpracuje formulář.
-     * @param array $values
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(Form $form, array $values) : void
+    public function processForm(Form $form, \stdClass $values) : void
     {
-        $this->id = $values['id'];
+        $this->id = (int) $values['id'];
 
         if ($this->discountService->validateCondition(($values['condition']))) {
             if (! $this->id) {

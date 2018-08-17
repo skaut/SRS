@@ -24,6 +24,7 @@ use function file_exists;
  */
 class ImageContent extends Content implements IContent
 {
+    /** @var string */
     protected $type = Content::IMAGE;
 
     /**
@@ -41,6 +42,7 @@ class ImageContent extends Content implements IContent
      */
     public const CENTER = 'center';
 
+    /** @var string[] */
     public static $aligns = [
         self::LEFT,
         self::RIGHT,
@@ -78,13 +80,14 @@ class ImageContent extends Content implements IContent
     /** @var FilesService */
     private $filesService;
 
+
     public function injectFilesService(FilesService $filesService) : void
     {
         $this->filesService = $filesService;
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public static function getAligns() : array
     {
@@ -92,7 +95,7 @@ class ImageContent extends Content implements IContent
     }
 
     /**
-     * @param array $aligns
+     * @param string[] $aligns
      */
     public static function setAligns(array $aligns) : void
     {
@@ -181,10 +184,9 @@ class ImageContent extends Content implements IContent
 
     /**
      * Zpracuje při uložení stránky část formuláře týkající se obsahu.
-     * @param array $values
      * @throws UnknownImageFileException
      */
-    public function contentFormSucceeded(Form $form, array $values) : void
+    public function contentFormSucceeded(Form $form, \stdClass $values) : void
     {
         parent::contentFormSucceeded($form, $values);
         $values = $values[$this->getContentFormName()];
@@ -235,7 +237,7 @@ class ImageContent extends Content implements IContent
 
     /**
      * Vrátí možnosti zarovnání obrázku pro select.
-     * @return array
+     * @return string[]
      */
     private function prepareAlignOptions() : array
     {
@@ -248,7 +250,6 @@ class ImageContent extends Content implements IContent
 
     /**
      * Vygeneruje cestu pro uložení obrázku.
-     * @param $file
      */
     private function generatePath(FileUpload $file) : string
     {

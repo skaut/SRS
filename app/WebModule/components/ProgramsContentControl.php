@@ -8,6 +8,7 @@ use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
+use App\Model\CMS\Content\ProgramsContent;
 use App\Model\Enums\RegisterProgramsType;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
@@ -52,11 +53,10 @@ class ProgramsContentControl extends Control
     }
 
     /**
-     * @param $content
      * @throws SettingsException
      * @throws \Throwable
      */
-    public function render($content) : void
+    public function render(ProgramsContent $content) : void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/programs_content.latte');

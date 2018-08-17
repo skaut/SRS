@@ -15,5 +15,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class PlaceContent extends Content implements IContent
 {
+    /** @var string */
     protected $type = Content::PLACE;
 }

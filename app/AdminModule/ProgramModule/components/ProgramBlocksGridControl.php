@@ -6,6 +6,7 @@ namespace App\AdminModule\ProgramModule\Components;
 
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
+use App\Model\Program\Block;
 use App\Model\Program\BlockRepository;
 use App\Model\Program\CategoryRepository;
 use App\Model\Program\ProgramRepository;
@@ -101,13 +102,12 @@ class ProgramBlocksGridControl extends Control
 
     /**
      * Vytvoří komponentu.
-     * @param $name
      * @throws SettingsException
      * @throws \Throwable
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
-    public function createComponentProgramBlocksGrid($name) : void
+    public function createComponentProgramBlocksGrid(string $name) : void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -206,12 +206,11 @@ class ProgramBlocksGridControl extends Control
 
     /**
      * Odstraní programový blok.
-     * @param $id
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
      */
-    public function handleDelete($id) : void
+    public function handleDelete(int $id) : void
     {
         $block = $this->blockRepository->findById($id);
 
@@ -229,13 +228,11 @@ class ProgramBlocksGridControl extends Control
 
     /**
      * Změní povinnost bloku.
-     * @param $id
-     * @param $mandatory
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
      */
-    public function changeMandatory($id, $mandatory) : void
+    public function changeMandatory(int $id, int $mandatory) : void
     {
         $block = $this->blockRepository->findById($id);
 
@@ -284,7 +281,7 @@ class ProgramBlocksGridControl extends Control
 
     /**
      * Hromadně vyexportuje seznam uživatelů, kteří mají blok zapsaný.
-     * @param array $ids
+     * @param int[] $ids
      * @throws AbortException
      */
     public function groupExportBlocksAttendees(array $ids) : void
@@ -311,10 +308,8 @@ class ProgramBlocksGridControl extends Control
 
     /**
      * Vrací true, pokud je uživatel oprávněn upravovat programový blok.
-     * @param $block
-     * @return mixed
      */
-    public function isAllowedModifyBlock($block)
+    public function isAllowedModifyBlock(Block $block) : bool
     {
         return $this->getPresenter()->dbuser->isAllowedModifyBlock($block);
     }

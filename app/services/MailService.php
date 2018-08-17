@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Mailing\TextMail;
+use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Mailing\Mail;
 use App\Model\Mailing\MailRepository;
@@ -12,8 +13,10 @@ use App\Model\Mailing\TemplateRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
+use App\Model\User\User;
 use App\Model\User\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Kdyby\Translation\Translator;
 use Nette;
 use Ublaboo\Mailing\Exception\MailingException;
@@ -73,17 +76,14 @@ class MailService
 
     /**
      * Rozešle e-mail.
-     * @param $recipientsRoles
-     * @param $recipientsUsers
-     * @param $copy
-     * @param $subject
-     * @param $text
+     * @param Collection|Role[] $recipientsRoles
+     * @param Collection|User[] $recipientsUsers
      * @throws SettingsException
      * @throws \Throwable
      * @throws MailingException
      * @throws MailingMailCreationException
      */
-    public function sendMail($recipientsRoles, $recipientsUsers, $copy, $subject, $text, bool $automatic = false) : void
+    public function sendMail(Collection $recipientsRoles, Collection $recipientsUsers, string $copy, string $subject, string $text, bool $automatic = false) : void
     {
         $recipients = [];
 
@@ -127,16 +127,13 @@ class MailService
 
     /**
      * Rozešle e-mail podle šablony.
-     * @param $recipientUser
-     * @param $copy
-     * @param $type
-     * @param $parameters
+     * @param string[] $parameters
      * @throws SettingsException
      * @throws \Throwable
      * @throws MailingException
      * @throws MailingMailCreationException
      */
-    public function sendMailFromTemplate($recipientUser, $copy, $type, $parameters, bool $automatic = true) : void
+    public function sendMailFromTemplate(User $recipientUser, string $copy, string $type, array $parameters, bool $automatic = true) : void
     {
         $template = $this->templateRepository->findByType($type);
 

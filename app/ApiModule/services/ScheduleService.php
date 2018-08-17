@@ -86,7 +86,7 @@ class ScheduleService
         $this->programService     = $programService;
     }
 
-    public function setUser($userId) : void
+    public function setUser(int $userId) : void
     {
         $this->user = $this->userRepository->findById($userId);
     }
@@ -96,7 +96,7 @@ class ScheduleService
      * @return ProgramDetailDTO[]
      * @throws \Exception
      */
-    public function getProgramsAdmin()
+    public function getProgramsAdmin() : array
     {
         $programs               = $this->programRepository->findAll();
         $programAdminDetailDTOs = [];
@@ -112,7 +112,7 @@ class ScheduleService
      * @throws SettingsException
      * @throws \Throwable
      */
-    public function getProgramsWeb()
+    public function getProgramsWeb() : array
     {
         $programs          = $this->programService->getUserAllowedPrograms($this->user);
         $programDetailDTOs = [];
@@ -144,7 +144,7 @@ class ScheduleService
      * Vrací podrobnosti o programových blocích.
      * @return BlockDetailDTO[]
      */
-    public function getBlocks()
+    public function getBlocks() : array
     {
         $blocks          = $this->blockRepository->findAll();
         $blockDetailDTOs = [];
@@ -158,7 +158,7 @@ class ScheduleService
      * Vrací podrobnosti o místnostech.
      * @return RoomDetailDTO[]
      */
-    public function getRooms()
+    public function getRooms() : array
     {
         $rooms          = $this->roomRepository->findAll();
         $roomDetailDTOs = [];
@@ -246,11 +246,10 @@ class ScheduleService
 
     /**
      * Smaže program.
-     * @param $programId
      * @throws SettingsException
      * @throws \Throwable
      */
-    public function removeProgram($programId) : ResponseDTO
+    public function removeProgram(int $programId) : ResponseDTO
     {
         $program = $this->programRepository->findById($programId);
 
@@ -279,11 +278,10 @@ class ScheduleService
 
     /**
      * Přihlásí program uživateli.
-     * @param $programId
      * @throws SettingsException
      * @throws \Throwable
      */
-    public function attendProgram($programId) : ResponseDTO
+    public function attendProgram(int $programId) : ResponseDTO
     {
         $program = $this->programRepository->findById($programId);
 
@@ -331,13 +329,12 @@ class ScheduleService
 
     /**
      * Odhlásí program uživateli.
-     * @param $programId
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws \Throwable
      */
-    public function unattendProgram($programId) : ResponseDTO
+    public function unattendProgram(int $programId) : ResponseDTO
     {
         $program = $this->programRepository->findById($programId);
 

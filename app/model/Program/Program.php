@@ -32,7 +32,7 @@ class Program
     /**
      * Účastníci programu.
      * @ORM\ManyToMany(targetEntity="\App\Model\User\User", mappedBy="programs", cascade={"persist"})
-     * @var Collection
+     * @var Collection|User[]
      */
     protected $attendees;
 
@@ -56,7 +56,7 @@ class Program
         $this->attendees = new ArrayCollection();
     }
 
-    public function getId() : int
+    public function getId() : ?int
     {
         return $this->id;
     }
@@ -72,7 +72,7 @@ class Program
     }
 
     /**
-     * @return Collection
+     * @return Collection|User[]
      */
     public function getAttendees() : Collection
     {
@@ -80,7 +80,7 @@ class Program
     }
 
     /**
-     * @param Collection $attendees
+     * @param Collection|User[] $attendees
      */
     public function setAttendees(Collection $attendees) : void
     {
@@ -134,12 +134,12 @@ class Program
         return $this->block->getCapacity();
     }
 
-    public function getRoom() : Room
+    public function getRoom() : ?Room
     {
         return $this->room;
     }
 
-    public function setRoom(Room $room) : void
+    public function setRoom(?Room $room) : void
     {
         $this->room = $room;
     }

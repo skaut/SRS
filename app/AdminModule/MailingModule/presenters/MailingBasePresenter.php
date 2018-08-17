@@ -17,6 +17,7 @@ use Nette\Application\AbortException;
  */
 abstract class MailingBasePresenter extends AdminBasePresenter
 {
+    /** @var string */
     protected $resource = Resource::MAILING;
 
 

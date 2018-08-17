@@ -167,7 +167,7 @@ class PagesGridControl extends Control
         $page = new Page($values['name'], $values['slug']);
 
         $page->setRoles($this->roleRepository->findRolesByIds($values['roles']));
-        $page->setPublic($values['public']);
+        $page->setPublic((bool) $values['public']);
 
         $this->pageRepository->save($page);
 
@@ -191,7 +191,7 @@ class PagesGridControl extends Control
         $page->setName($values['name']);
         $page->setSlug($values['slug']);
         $page->setRoles($this->roleRepository->findRolesByIds($values['roles']));
-        $page->setPublic($values['public']);
+        $page->setPublic((bool) $values['public']);
 
         $this->pageRepository->save($page);
 
@@ -224,7 +224,7 @@ class PagesGridControl extends Control
      * @throws OptimisticLockException
      * @throws AbortException
      */
-    public function handleSort(?int $item_id, ?int $prev_id, ?int $next_id) : void
+    public function handleSort($item_id, $prev_id, $next_id) : void
     {
         $this->pageRepository->sort($item_id, $prev_id, $next_id);
 

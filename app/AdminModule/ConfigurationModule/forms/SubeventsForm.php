@@ -59,14 +59,13 @@ class SubeventsForm
 
     /**
      * Zpracuje formulář.
-     * @param array $values
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws \Throwable
      */
-    public function processForm(Form $form, array $values) : void
+    public function processForm(Form $form, \stdClass $values) : void
     {
-        $this->settingsRepository->setValue(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT, $values['isAllowedAddSubeventsAfterPayment']);
+        $this->settingsRepository->setBoolValue(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT, $values['isAllowedAddSubeventsAfterPayment']);
     }
 }

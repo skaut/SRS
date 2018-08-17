@@ -19,9 +19,8 @@ class NewsRepository extends EntityRepository
 {
     /**
      * Vrací aktualitu podle id.
-     * @param $id
      */
-    public function findById(int $id) : ?News
+    public function findById(?int $id) : ?News
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -40,7 +39,6 @@ class NewsRepository extends EntityRepository
 
     /**
      * Vrací posledních $maxCount publikovaných aktualit.
-     * @param $maxCount
      * @return News[]
      */
     public function findPublishedOrderedByPinnedAndDate(int $maxCount) : array

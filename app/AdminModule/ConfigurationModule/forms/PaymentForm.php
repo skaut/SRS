@@ -12,6 +12,7 @@ use App\Model\Settings\SettingsRepository;
 use App\Model\User\UserRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Kdyby\Events\Event;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
 use function array_key_exists;
@@ -26,6 +27,7 @@ class PaymentForm extends UI\Control
 {
     /**
      * Událost při uložení formuláře.
+     * @var Event
      */
     public $onSave;
 
@@ -135,13 +137,12 @@ class PaymentForm extends UI\Control
 
     /**
      * Zpracuje formulář.
-     * @param array $values
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws \Throwable
      */
-    public function processForm(Form $form, array $values) : void
+    public function processForm(Form $form, \stdClass $values) : void
     {
         $this->settingsRepository->setValue(Settings::ACCOUNT_NUMBER, $values['accountNumber']);
         $this->settingsRepository->setValue(Settings::VARIABLE_SYMBOL_CODE, $values['variableSymbolCode']);
@@ -184,7 +185,7 @@ class PaymentForm extends UI\Control
 
     /**
      * Vrátí způsoby výpočtu splatnosti jako možnosti pro select.
-     * @return array
+     * @return string[]
      */
     private function prepareMaturityTypeOptions() : array
     {

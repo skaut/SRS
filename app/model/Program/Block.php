@@ -34,7 +34,7 @@ class Block
      * Programy v bloku.
      * @ORM\OneToMany(targetEntity="Program", mappedBy="block", cascade={"persist"})
      * @ORM\OrderBy({"start" = "ASC"})
-     * @var Collection
+     * @var Collection|Program[]
      */
     protected $programs;
 
@@ -123,7 +123,7 @@ class Block
     }
 
     /**
-     * @return Collection
+     * @return Collection|Program[]
      */
     public function getPrograms() : Collection
     {
@@ -132,7 +132,7 @@ class Block
 
     /**
      * Vrací seznam účastníků bloku.
-     * @return Collection
+     * @return Collection|User[]
      */
     public function getAttendees() : Collection
     {
@@ -173,7 +173,7 @@ class Block
         $this->category = $category;
     }
 
-    public function getSubevent() : Subevent
+    public function getSubevent() : ?Subevent
     {
         return $this->subevent;
     }

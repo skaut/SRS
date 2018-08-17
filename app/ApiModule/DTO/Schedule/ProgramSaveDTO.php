@@ -36,12 +36,12 @@ class ProgramSaveDTO
 
     /**
      * @JMS\Type("DateTime<'Y-m-d\TH:i:s'>")
-     * \DateTime
+     * @var \DateTime
      */
     private $start;
 
 
-    public function getId() : int
+    public function getId() : ?int
     {
         return $this->id;
     }
@@ -61,12 +61,12 @@ class ProgramSaveDTO
         $this->blockId = $blockId;
     }
 
-    public function getRoomId() : int
+    public function getRoomId() : ?int
     {
         return $this->roomId;
     }
 
-    public function setRoomId(int $roomId) : void
+    public function setRoomId(?int $roomId) : void
     {
         $this->roomId = $roomId;
     }

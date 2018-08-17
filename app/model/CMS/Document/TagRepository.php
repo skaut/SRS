@@ -20,17 +20,16 @@ class TagRepository extends EntityRepository
 {
     /**
      * Vrátí tag podle id.
-     * @param $id
      */
-    public function findById(int $id) : ?Tag
+    public function findById(?int $id) : ?Tag
     {
         return $this->findOneBy(['id' => $id]);
     }
 
     /**
      * Vrátí tagy podle id.
-     * @param $ids
-     * @return Collection
+     * @param int[] $ids
+     * @return Collection|Tag[]
      */
     public function findTagsByIds(array $ids) : Collection
     {
@@ -42,8 +41,8 @@ class TagRepository extends EntityRepository
 
     /**
      * Vrátí id tagů.
-     * @param $tags
-     * @return array
+     * @param Collection|Tag[] $tags
+     * @return int[]
      */
     public function findTagsIds(Collection $tags) : array
     {
@@ -54,7 +53,7 @@ class TagRepository extends EntityRepository
 
     /**
      * Vrátí všechny názvy tagů.
-     * @return array
+     * @return string[]
      */
     public function findAllNames() : array
     {
@@ -67,8 +66,7 @@ class TagRepository extends EntityRepository
 
     /**
      * Vrátí názvy tagů, kromě tagu s id.
-     * @param $id
-     * @return array
+     * @return string[]
      */
     public function findOthersNames(int $id) : array
     {
@@ -105,7 +103,7 @@ class TagRepository extends EntityRepository
 
     /**
      * Vrátí seznam tagů jako možnosti pro select.
-     * @return array
+     * @return string[]
      */
     public function getTagsOptions() : array
     {

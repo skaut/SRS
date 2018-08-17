@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use Nette;
+use Nette\Http\FileUpload;
 use Nette\Utils\Image;
 use function dirname;
 use function fclose;
@@ -35,19 +36,16 @@ class FilesService
 
     /**
      * Uloží soubor.
-     * @param $file
-     * @param $path
      */
-    public function save($file, $path) : void
+    public function save(FileUpload $file, string $path) : void
     {
         $file->move($this->dir . $path);
     }
 
     /**
      * Odstraní soubor.
-     * @param $path
      */
-    public function delete($path) : void
+    public function delete(string $path) : void
     {
         $file = $this->dir . $path;
         if (! file_exists($file)) {
@@ -59,10 +57,8 @@ class FilesService
 
     /**
      * Vytvoří soubor s daným obsahem.
-     * @param $path
-     * @param $content
      */
-    public function create($path, $content) : void
+    public function create(string $path, string $content) : void
     {
         $absPath = $this->dir . $path;
         $dirname = dirname($absPath);
@@ -78,12 +74,9 @@ class FilesService
 
     /**
      * Změní velikost obrázku.
-     * @param $path
-     * @param $width
-     * @param $height
      * @throws Nette\Utils\UnknownImageFileException
      */
-    public function resizeImage($path, $width, $height) : void
+    public function resizeImage(string $path, ?int $width, ?int $height) : void
     {
         $image = Image::fromFile($this->dir . $path);
         $image->resize($width, $height);
@@ -93,12 +86,9 @@ class FilesService
 
     /**
      * Změní velikost a ořízne obrázek.
-     * @param $path
-     * @param $width
-     * @param $height
      * @throws Nette\Utils\UnknownImageFileException
      */
-    public function resizeAndCropImage($path, $width, $height) : void
+    public function resizeAndCropImage(string $path, ?int $width, ?int $height) : void
     {
         $image = Image::fromFile($this->dir . $path);
 

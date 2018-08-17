@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\ProgramModule\Presenters;
 
 use App\AdminModule\ProgramModule\Components\IProgramCategoriesGridControlFactory;
+use App\AdminModule\ProgramModule\Components\ProgramCategoriesGridControl;
 use App\Model\ACL\Permission;
 use Nette\Application\AbortException;
 
@@ -32,7 +33,7 @@ class CategoriesPresenter extends ProgramBasePresenter
         $this->checkPermission(Permission::MANAGE_CATEGORIES);
     }
 
-    protected function createComponentProgramCategoriesGrid()
+    protected function createComponentProgramCategoriesGrid() : ProgramCategoriesGridControl
     {
         return $this->programCategoriesGridControlFactory->create();
     }

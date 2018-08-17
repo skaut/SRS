@@ -13,6 +13,7 @@ use App\Model\User\Application;
 use App\Model\User\ApplicationRepository;
 use App\Model\User\User;
 use App\Utils\Helpers;
+use Doctrine\Common\Collections\Collection;
 use fpdi\FPDI;
 use Nette;
 use function iconv;
@@ -33,6 +34,7 @@ class PdfExportService
     /** @var FPDI */
     private $fpdi;
 
+    /** @var int */
     private $template;
 
     /** @var SettingsRepository */
@@ -65,11 +67,10 @@ class PdfExportService
 
     /**
      * Vygeneruje doklad o zaplacení pro přihlášku.
-     * @param $filename
      * @throws SettingsException
      * @throws \Throwable
      */
-    public function generateApplicationsPaymentProof(Application $application, $filename, User $createdBy) : void
+    public function generateApplicationsPaymentProof(Application $application, string $filename, User $createdBy) : void
     {
         $this->prepareApplicationsPaymentProof($application, $createdBy);
         $this->fpdi->Output($filename, 'D');
@@ -109,11 +110,10 @@ class PdfExportService
 
     /**
      * Vygeneruje doklady o zaplacení pro uživatele.
-     * @param $filename
      * @throws SettingsException
      * @throws \Throwable
      */
-    public function generateUsersPaymentProof(User $user, $filename, User $createdBy) : void
+    public function generateUsersPaymentProof(User $user, string $filename, User $createdBy) : void
     {
         $this->prepareUsersPaymentProof($user, $createdBy);
         $this->fpdi->Output($filename, 'D');
@@ -133,12 +133,11 @@ class PdfExportService
 
     /**
      * Vygeneruje doklady o zaplacení pro více uživatelů.
-     * @param $users
-     * @param $filename
+     * @param Collection|User[] $users
      * @throws SettingsException
      * @throws \Throwable
      */
-    public function generateUsersPaymentProofs($users, $filename, User $createdBy) : void
+    public function generateUsersPaymentProofs(Collection $users, string $filename, User $createdBy) : void
     {
         $this->prepareUsersPaymentProofs($users, $createdBy);
         $this->fpdi->Output($filename, 'D');
@@ -146,11 +145,11 @@ class PdfExportService
     }
 
     /**
-     * @param $users
+     * @param Collection|User[] $users
      * @throws SettingsException
      * @throws \Throwable
      */
-    private function prepareUsersPaymentProofs($users, User $createdBy) : void
+    private function prepareUsersPaymentProofs(Collection $users, User $createdBy) : void
     {
         foreach ($users as $user) {
             $this->prepareUsersPaymentProof($user, $createdBy);
@@ -187,10 +186,10 @@ class PdfExportService
         $this->fpdi->Text(40, 98, iconv(
             'UTF-8',
             'WINDOWS-1250',
-            "{$application->getUser()->getFirstName()} {$application->getUser()->getLastName()}, {$application->getUser()->getStreet()}, {$application->getUser()->getCity()}, {$application->getUser()->getPostcode()}"
+            $application->getUser()->getFirstName() . ' ' . $application->getUser()->getLastName() . ', ' . $application->getUser()->getStreet() . ', ' . $application->getUser()->getCity() . ', ' . $application->getUser()->getPostcode()
         ));
 
-        $this->fpdi->Text(40, 111, iconv('UTF-8', 'WINDOWS-1250', "účastnický poplatek {$this->settingsRepository->getValue(Settings::SEMINAR_NAME)}"));
+        $this->fpdi->Text(40, 111, iconv('UTF-8', 'WINDOWS-1250', 'účastnický poplatek ' . $this->settingsRepository->getValue(Settings::SEMINAR_NAME)));
     }
 
     /**
@@ -213,13 +212,13 @@ class PdfExportService
 
         $this->fpdi->Text(70, 78, iconv('UTF-8', 'WINDOWS-1250', $application->getFee() . ' Kč, slovy =' . $application->getFeeWords() . '='));
         $this->fpdi->Text(70, 85, iconv('UTF-8', 'WINDOWS-1250', 'účastnický poplatek ' . $this->settingsRepository->getValue(Settings::SEMINAR_NAME)));
-        $this->fpdi->Text(70, 92, iconv('UTF-8', 'WINDOWS-1250', "{$application->getUser()->getFirstName()} {$application->getUser()->getLastName()}"));
-        $this->fpdi->Text(70, 99, iconv('UTF-8', 'WINDOWS-1250', "{$application->getUser()->getStreet()}, {$application->getUser()->getCity()}, {$application->getUser()->getPostcode()}"));
+        $this->fpdi->Text(70, 92, iconv('UTF-8', 'WINDOWS-1250', $application->getUser()->getFirstName() . ' ' . $application->getUser()->getLastName()));
+        $this->fpdi->Text(70, 99, iconv('UTF-8', 'WINDOWS-1250', $application->getUser()->getStreet() . ', ' . $application->getUser()->getCity() . ', ' . $application->getUser()->getPostcode()));
 
-        $this->fpdi->Text(31, 111, iconv('UTF-8', 'WINDOWS-1250', "{$this->settingsRepository->getValue(Settings::PRINT_LOCATION)}"));
-        $this->fpdi->Text(75, 111, iconv('UTF-8', 'WINDOWS-1250', "{$this->writeToday()}"));
+        $this->fpdi->Text(31, 111, iconv('UTF-8', 'WINDOWS-1250', $this->settingsRepository->getValue(Settings::PRINT_LOCATION)));
+        $this->fpdi->Text(75, 111, iconv('UTF-8', 'WINDOWS-1250', $this->writeToday()));
 
-        $this->fpdi->Text(130, 119, iconv('UTF-8', 'WINDOWS-1250', "{$this->settingsRepository->getValue(Settings::ACCOUNTANT)}"));
+        $this->fpdi->Text(130, 119, iconv('UTF-8', 'WINDOWS-1250', $this->settingsRepository->getValue(Settings::ACCOUNTANT)));
     }
 
     /**

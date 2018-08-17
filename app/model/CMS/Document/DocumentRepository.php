@@ -20,17 +20,16 @@ class DocumentRepository extends EntityRepository
 {
     /**
      * Vrátí dokument podle id.
-     * @param $id int
      */
-    public function findById(int $id) : ?Document
+    public function findById(?int $id) : ?Document
     {
         return $this->findOneBy(['id' => $id]);
     }
 
     /**
      * Vrací dokumenty podle rolí a vybraných tagů, seřazené podle názvu.
-     * @param $rolesIds int[] pole id rolí
-     * @param $tags Collection|Tag[]
+     * @param int[]            $rolesIds pole id rolí
+     * @param Collection|Tag[] $tags
      * @return Collection|Document[]
      */
     public function findRolesAllowedByTagsOrderedByName(array $rolesIds, Collection $tags) : Collection

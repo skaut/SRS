@@ -12,7 +12,9 @@ use App\Services\Authenticator;
 use App\Services\ExcelExportService;
 use App\Services\MailService;
 use App\Services\PdfExportService;
+use App\WebModule\Components\ApplicationsGridControl;
 use App\WebModule\Components\IApplicationsGridControlFactory;
+use App\WebModule\Forms\AdditionalInformationForm;
 use App\WebModule\Forms\IAdditionalInformationFormFactory;
 use App\WebModule\Forms\PersonalDetailsForm;
 use App\WebModule\Forms\RolesForm;
@@ -123,11 +125,11 @@ class ProfilePresenter extends WebBasePresenter
         $this->sendResponse($response);
     }
 
-    protected function createComponentPersonalDetailsForm()
+    protected function createComponentPersonalDetailsForm() : Form
     {
         $form = $this->personalDetailsFormFactory->create($this->user->id);
 
-        $form->onSuccess[] = function (Form $form, array $values) : void {
+        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
             $this->flashMessage('web.profile.personal_details_update_successful', 'success');
 
             $this->redirect('this#collapsePersonalDetails');
@@ -140,7 +142,7 @@ class ProfilePresenter extends WebBasePresenter
         return $form;
     }
 
-    protected function createComponentAdditionalInformationForm()
+    protected function createComponentAdditionalInformationForm() : AdditionalInformationForm
     {
         $control = $this->additionalInformationFormFactory->create();
 
@@ -160,7 +162,7 @@ class ProfilePresenter extends WebBasePresenter
     {
         $form = $this->rolesFormFactory->create($this->user->id);
 
-        $form->onSuccess[] = function (Form $form, array $values) : void {
+        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
             if ($form['submit']->isSubmittedBy()) {
                 $this->flashMessage('web.profile.roles_changed', 'success');
             } elseif ($form['cancelRegistration']->isSubmittedBy()) {
@@ -173,7 +175,7 @@ class ProfilePresenter extends WebBasePresenter
         return $form;
     }
 
-    protected function createComponentApplicationsGrid()
+    protected function createComponentApplicationsGrid() : ApplicationsGridControl
     {
         return $this->applicationsGridControlFactory->create();
     }

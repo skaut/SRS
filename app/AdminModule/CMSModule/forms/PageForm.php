@@ -19,6 +19,7 @@ use App\Model\Page\PageException;
 use App\Services\FilesService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Kdyby\Events\Event;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
 use function get_class;
@@ -52,11 +53,13 @@ class PageForm extends UI\Control
 
     /**
      * Událost při uložení formuláře.
+     * @var Event
      */
     public $onPageSave;
 
     /**
      * Událost při chybě ukládání stránky.
+     * @var Event
      */
     public $onPageSaveError;
 
@@ -174,7 +177,7 @@ class PageForm extends UI\Control
      */
     public function processForm(Form $form, \stdClass $values) : void
     {
-        $page = $this->pageRepository->findById($values['id']);
+        $page = $this->pageRepository->findById((int) $values['id']);
 
         $area = $values['area'];
         $type = $values['type'];
@@ -213,6 +216,7 @@ class PageForm extends UI\Control
 
     /**
      * Připraví možnosti obsahů stránky pro select.
+     * @return string[]
      */
     private function prepareContentTypesOptions() : array
     {

@@ -68,7 +68,6 @@ class RolesGridControl extends Control
 
     /**
      * Vytvoří komponentu.
-     * @param $name
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
@@ -136,7 +135,6 @@ class RolesGridControl extends Control
 
     /**
      * Zpracuje odstranění role.
-     * @param $id
      * @throws AbortException
      * @throws \Throwable
      */

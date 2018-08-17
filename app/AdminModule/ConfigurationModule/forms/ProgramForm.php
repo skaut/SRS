@@ -14,6 +14,8 @@ use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\Utils\DateTime;
+use Nextras\Forms\Controls\DateTimePicker;
 
 /**
  * Formulář pro nastavení programu.
@@ -102,28 +104,26 @@ class ProgramForm
 
     /**
      * Zpracuje formulář.
-     * @param array $values
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws \Throwable
      */
-    public function processForm(Form $form, array $values) : void
+    public function processForm(Form $form, \stdClass $values) : void
     {
-        $this->settingsRepository->setValue(Settings::IS_ALLOWED_ADD_BLOCK, $values['isAllowedAddBlock']);
-        $this->settingsRepository->setValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE, $values['isAllowedModifySchedule']);
+        $this->settingsRepository->setBoolValue(Settings::IS_ALLOWED_ADD_BLOCK, $values['isAllowedAddBlock']);
+        $this->settingsRepository->setBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE, $values['isAllowedModifySchedule']);
         $this->settingsRepository->setValue(Settings::REGISTER_PROGRAMS_TYPE, $values['registerProgramsType']);
-        $this->settingsRepository->setValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, $values['isAllowedRegisterProgramsBeforePayment']);
+        $this->settingsRepository->setBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, $values['isAllowedRegisterProgramsBeforePayment']);
         $this->settingsRepository->setDateTimeValue(Settings::REGISTER_PROGRAMS_FROM, $values['registerProgramsFrom']);
         $this->settingsRepository->setDateTimeValue(Settings::REGISTER_PROGRAMS_TO, $values['registerProgramsTo']);
     }
 
     /**
      * Ověří, že otevření zapisování programů je dříve než uzavření.
-     * @param $field
-     * @param $args
+     * @param DateTime[] $args
      */
-    public function validateRegisterProgramsFrom($field, $args) : bool
+    public function validateRegisterProgramsFrom(DateTimePicker $field, array $args) : bool
     {
         if ($args[0] === null || $args[1] === null) {
             return true;
@@ -133,10 +133,9 @@ class ProgramForm
 
     /**
      * Ověří, že uzavření zapisování programů je později než otevření.
-     * @param $field
-     * @param $args
+     * @param DateTime[] $args
      */
-    public function validateRegisterProgramsTo($field, $args) : bool
+    public function validateRegisterProgramsTo(DateTimePicker $field, array $args) : bool
     {
         if ($args[0] === null || $args[1] === null) {
             return true;
@@ -146,7 +145,7 @@ class ProgramForm
 
     /**
      * Vrátí stavy registrace programů.
-     * @return array
+     * @return string[]
      */
     private function prepareRegisterProgramsTypeOptions() : array
     {

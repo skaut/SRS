@@ -57,9 +57,9 @@ class FaqForm
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id, int $userId) : Form
+    public function create(?int $id, int $userId) : Form
     {
-        $this->faq  = $this->faqRepository->findById($id);
+        $this->faq  = $id === null ? null : $this->faqRepository->findById($id);
         $this->user = $this->userRepository->findById($userId);
 
         $form = $this->baseFormFactory->create();

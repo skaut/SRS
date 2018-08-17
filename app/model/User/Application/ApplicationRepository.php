@@ -19,16 +19,14 @@ class ApplicationRepository extends EntityRepository
 {
     /**
      * Vrací přihlášku podle id.
-     * @param $id
      */
-    public function findById(int $id) : ?Application
+    public function findById(?int $id) : ?Application
     {
         return $this->findOneBy(['id' => $id]);
     }
 
     /**
      * Vrací přihlášky podle id, které mají společné všechny verze přihlášky.
-     * @param $id
      * @return Collection|Application[]
      */
     public function findByApplicationId(int $id) : Collection

@@ -36,7 +36,6 @@ class SettingsRepository extends EntityRepository
 
     /**
      * Vrátí hodnotu položky.
-     * @return mixed
      * @throws SettingsException
      * @throws \Throwable
      */
@@ -47,7 +46,7 @@ class SettingsRepository extends EntityRepository
         if ($value === null) {
             $settings = $this->findOneBy(['item' => $item]);
             if ($settings === null) {
-                throw new SettingsException("Item {$item} was not found in table Settings.");
+                throw new SettingsException('Item ' . $item . ' was not found in table Settings.');
             }
 
             $value = $settings->getValue();
@@ -68,7 +67,7 @@ class SettingsRepository extends EntityRepository
     {
         $settings = $this->findOneBy(['item' => $item]);
         if ($settings === null) {
-            throw new SettingsException("Item {$item} was not found in table Settings.");
+            throw new SettingsException('Item ' . $item . ' was not found in table Settings.');
         }
 
         $settings->setValue($value);

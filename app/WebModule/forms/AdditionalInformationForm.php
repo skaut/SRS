@@ -22,8 +22,10 @@ use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\FilesService;
 use App\Services\MailService;
+use Kdyby\Events\Event;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
+use Nette\Http\FileUpload;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
 use function array_key_exists;
@@ -47,6 +49,7 @@ class AdditionalInformationForm extends UI\Control
 
     /**
      * Událost při uložení formuláře.
+     * @var Event
      */
     public $onSave;
 
@@ -187,10 +190,9 @@ class AdditionalInformationForm extends UI\Control
 
     /**
      * Zpracuje formulář.
-     * @param array $values
      * @throws \Throwable
      */
-    public function processForm(Form $form, array $values) : void
+    public function processForm(Form $form, \stdClass $values) : void
     {
         $this->userRepository->getEntityManager()->transactional(function ($em) use ($values) : void {
             $customInputValueChanged = false;
@@ -266,9 +268,8 @@ class AdditionalInformationForm extends UI\Control
 
     /**
      * Vygeneruje cestu souboru.
-     * @param $file
      */
-    private function generatePath($file) : string
+    private function generatePath(FileUpload $file) : string
     {
         return CustomFile::PATH . '/' . Random::generate(5) . '/' . Strings::webalize($file->name, '.');
     }

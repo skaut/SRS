@@ -76,9 +76,8 @@ class ClearCacheCommand extends Command
 
     /**
      * Maže složku.
-     * @param $path
      */
-    private function deleteDir($path) : bool
+    private function deleteDir(string $path) : bool
     {
         if (is_dir($path) === true) {
             $files = array_diff(scandir($path), ['.', '..']);

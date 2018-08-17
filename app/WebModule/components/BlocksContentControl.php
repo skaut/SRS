@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
+use App\Model\CMS\Content\BlocksContent;
 use App\Model\Program\BlockRepository;
 use App\Model\Program\CategoryRepository;
 use Nette\Application\UI\Control;
@@ -30,7 +31,7 @@ class BlocksContentControl extends Control
         $this->categoryRepository = $categoryRepository;
     }
 
-    public function render($content) : void
+    public function render(BlocksContent $content) : void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/blocks_content.latte');

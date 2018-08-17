@@ -21,44 +21,53 @@ class Permission
 {
     /**
      * Oprávnění spravovat.
+     * @var string
      */
     public const MANAGE = 'manage';
 
     /**
      * Oprávnění přistupovat.
+     * @var string
      */
     public const ACCESS = 'access';
 
     /**
      * Oprávnění spravovat programy, u kterých je uživatel lektor.
+     * @var string
      */
     public const MANAGE_OWN_PROGRAMS = 'manage_own_programs';
 
     /**
      * Oprávnění spravovat všechny programy.
+     * @var string
      */
     public const MANAGE_ALL_PROGRAMS = 'manage_all_programs';
 
     /**
      * Oprávnění spravovat harmonogram.
+     * @var string
      */
     public const MANAGE_SCHEDULE = 'manage_schedule';
 
     /**
      * Oprávnění spravovat místnosti.
+     * @var string
      */
     public const MANAGE_ROOMS = 'manage_rooms';
 
     /**
      * Oprávnění spravovat kategorie bloků.
+     * @var string
      */
     public const MANAGE_CATEGORIES = 'manage_categories';
 
     /**
      * Oprávnění přihlašovat se na programy.
+     * @var string
      */
     public const CHOOSE_PROGRAMS = 'choose_programs';
 
+    /** @var string[] */
     public static $permissions = [
         self::MANAGE,
         self::ACCESS,
@@ -80,7 +89,7 @@ class Permission
     /**
      * Role s tímto oprávněním.
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", mappedBy="permissions", cascade={"persist"})
-     * @var Collection
+     * @var Collection|Role[]
      */
     protected $roles;
 
@@ -115,7 +124,7 @@ class Permission
     }
 
     /**
-     * @return Collection
+     * @return Collection|Role[]
      */
     public function getRoles() : Collection
     {

@@ -22,12 +22,13 @@ use Nette\Application\UI\Form;
  */
 class CapacitiesContent extends Content implements IContent
 {
+    /** @var string */
     protected $type = Content::CAPACITIES;
 
     /**
      * Role, jejichž obsazenosti se vypíší.
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role")
-     * @var Collection
+     * @var Collection|Role[]
      */
     protected $roles;
 
@@ -36,8 +37,6 @@ class CapacitiesContent extends Content implements IContent
 
 
     /**
-     *
-     * @param $area
      * @throws PageException
      */
     public function __construct(Page $page, string $area)
@@ -52,7 +51,7 @@ class CapacitiesContent extends Content implements IContent
     }
 
     /**
-     * @return Collection
+     * @return Collection|Role[]
      */
     public function getRoles() : Collection
     {
@@ -60,7 +59,7 @@ class CapacitiesContent extends Content implements IContent
     }
 
     /**
-     * @param Collection $roles
+     * @param Collection|Role[] $roles
      */
     public function setRoles(Collection $roles) : void
     {
@@ -91,9 +90,8 @@ class CapacitiesContent extends Content implements IContent
 
     /**
      * Zpracuje při uložení stránky část formuláře týkající se obsahu.
-     * @param array $values
      */
-    public function contentFormSucceeded(Form $form, array $values) : void
+    public function contentFormSucceeded(Form $form, \stdClass $values) : void
     {
         parent::contentFormSucceeded($form, $values);
         $values      = $values[$this->getContentFormName()];

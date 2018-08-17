@@ -8,6 +8,7 @@ use Nette;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 use Skautis\Skautis;
+use function array_key_exists;
 
 /**
  * Služba pro komunikaci se skautIS.
@@ -34,9 +35,8 @@ class SkautIsService
 
     /**
      * Vratí url přihlašovací stránky skautIS.
-     * @param $backlink
      */
-    public function getLoginUrl($backlink) : string
+    public function getLoginUrl(?string $backlink) : string
     {
         return $this->skautIs->getLoginUrl($backlink);
     }
@@ -61,27 +61,26 @@ class SkautIsService
 
     /**
      * Nastaví údaje vrácené skautIS po úspěšném přihlášení.
-     * @param $data
+     * @param string[] $data
      */
-    public function setLoginData($data) : void
+    public function setLoginData(array $data) : void
     {
         $this->skautIs->setLoginData($data);
     }
 
     /**
      * Vrátí skautIS role uživatele.
-     * @param $userId
-     * @return mixed
+     * @return \stdClass[]
      * @throws \Throwable
      */
-    public function getUserRoles($userId)
+    public function getUserRoles(int $userId) : array
     {
         $roles = $this->userRolesCache->load($userId);
 
         if ($roles === null) {
             $roles = $this->skautIs->usr->UserRoleAll([
                 'ID_User' => $userId,
-                'IsActive' => true
+                'IsActive' => true,
             ]);
             $this->userRolesCache->save($userId, $roles);
         }
@@ -104,7 +103,7 @@ class SkautIsService
     {
         $response = $this->skautIs->usr->LoginUpdate([
             'ID' => $this->skautIs->getUser()->getLoginId(),
-            'ID_UserRole' => $roleId
+            'ID_UserRole' => $roleId,
         ]);
         if (! $response) {
             return;
@@ -115,47 +114,38 @@ class SkautIsService
 
     /**
      * Vrátí údaje o uživateli.
-     * @return mixed
      */
-    public function getUserDetail()
+    public function getUserDetail() : \stdClass
     {
         return $this->skautIs->usr->UserDetail([
-            'ID_Login' => $this->skautIs->getUser()->getLoginId()
+            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
         ]);
     }
 
     /**
      * Vrátí údaje o osobě.
-     * @param $personId
-     * @return mixed
      */
-    public function getPersonDetail($personId)
+    public function getPersonDetail(int $personId) : \stdClass
     {
         return $this->skautIs->org->PersonDetail([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
-            'ID' => $personId
+            'ID' => $personId,
         ]);
     }
 
-    public function getPersonPhoto($personId, $size)
+    public function getPersonPhoto(int $personId, string $size) : \stdClass
     {
         return $this->skautIs->org->PersonPhoto([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID' => $personId,
-            'Size' => $size
+            'Size' => $size,
         ]);
     }
 
     /**
      * Aktualizuje údaje o osobě.
-     * @param $personId
-     * @param $sex
-     * @param $birthday
-     * @param $firstName
-     * @param $lastName
-     * @param $nickName
      */
-    public function updatePersonBasic($personId, $sex, $birthday, $firstName, $lastName, $nickName) : void
+    public function updatePersonBasic(int $personId, string $sex, \DateTime $birthday, string $firstName, string $lastName, string $nickName) : void
     {
         $this->skautIs->org->PersonUpdateBasic([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -164,19 +154,14 @@ class SkautIsService
             'Birthday' => $birthday->format('Y-m-d\TH:i:s'),
             'FirstName' => $firstName,
             'LastName' => $lastName,
-            'NickName' => $nickName
+            'NickName' => $nickName,
         ], 'personUpdateBasicInput');
     }
 
     /**
      * Aktualizuje adresu osoby.
-     * @param $personId
-     * @param $street
-     * @param $city
-     * @param $postcode
-     * @param $state
      */
-    public function updatePersonAddress($personId, $street, $city, $postcode, $state) : void
+    public function updatePersonAddress(int $personId, string $street, string $city, string $postcode, string $state) : void
     {
         $skautISPerson = $this->getPersonDetail($personId);
 
@@ -191,7 +176,7 @@ class SkautIsService
             'PostalStreet' => $skautISPerson->PostalStreet,
             'PostalCity' => $skautISPerson->PostalCity,
             'PostalPostcode' => $skautISPerson->PostalPostcode,
-            'PostalState' => $skautISPerson->PostalState
+            'PostalState' => $skautISPerson->PostalState,
         ], 'personUpdateAddressInput');
     }
 
@@ -205,26 +190,25 @@ class SkautIsService
 
     /**
      * Vrací platné členství typu "řádné" nebo "čestné", pokud osoba žádné nemá vrací null.
-     * @param $personId
      */
-    public function getValidMembership($personId) : ?\stdClass
+    public function getValidMembership(int $personId) : ?\stdClass
     {
         $membership = $this->skautIs->org->MembershipAllPerson([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID_Person' => $personId,
             'ID_MembershipType' => 'radne',
-            'IsValid' => true
+            'IsValid' => true,
         ]);
 
-        if ($membership === new \stdClass()) {
+        if (! array_key_exists('MembershipAllOutput', $membership)) {
             $membership = $this->skautIs->org->MembershipAllPerson([
                 'ID_Login' => $this->skautIs->getUser()->getLoginId(),
                 'ID_Person' => $personId,
                 'ID_MembershipType' => 'cestne',
-                'IsValid' => true
+                'IsValid' => true,
             ]);
 
-            if ($membership === new \stdClass()) {
+            if (! array_key_exists('MembershipAllOutput', $membership)) {
                 return null;
             }
         }
@@ -234,14 +218,12 @@ class SkautIsService
 
     /**
      * Vrací údaje o jednotce.
-     * @param $unitId
-     * @return mixed
      */
-    public function getUnitDetail($unitId)
+    public function getUnitDetail(int $unitId) : \stdClass
     {
         return $this->skautIs->org->UnitDetail([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
-            'ID' => $unitId
+            'ID' => $unitId,
         ]);
     }
 }

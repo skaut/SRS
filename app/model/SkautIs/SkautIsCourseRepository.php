@@ -21,7 +21,7 @@ class SkautIsCourseRepository extends EntityRepository
     /**
      * Vrací skautIS kurz podle id.
      */
-    public function findById(int $id) : ?SkautIsCourse
+    public function findById(?int $id) : ?SkautIsCourse
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -63,7 +63,7 @@ class SkautIsCourseRepository extends EntityRepository
     /**
      * Vrací id skautIS kurzů.
      * @param Collection|SkautIsCourse[] $skautIsCourses
-     * @return array
+     * @return int[]
      */
     public function findSkautIsCoursesIds(Collection $skautIsCourses) : array
     {
@@ -74,7 +74,7 @@ class SkautIsCourseRepository extends EntityRepository
 
     /**
      * Vrací skautIS kurzy podle id.
-     * @param array $ids
+     * @param int[] $ids
      * @return Collection|SkautIsCourse[]
      */
     public function findSkautIsCoursesByIds(array $ids) : Collection
@@ -87,7 +87,7 @@ class SkautIsCourseRepository extends EntityRepository
 
     /**
      * Vrací seznam skautIS kurzů jako možnosti pro select.
-     * @return array
+     * @return string[]
      */
     public function getSkautIsCoursesOptions() : array
     {

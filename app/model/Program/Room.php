@@ -38,7 +38,7 @@ class Room
      * Programy v místnosti.
      * @ORM\OneToMany(targetEntity="Program", mappedBy="room", cascade={"persist"})
      * @ORM\OrderBy({"start" = "ASC"})
-     * @var Collection
+     * @var Collection|Program[]
      */
     protected $programs;
 
@@ -74,7 +74,7 @@ class Room
     }
 
     /**
-     * @return mixed
+     * @return Collection|Program[]
      */
     public function getPrograms() : Collection
     {

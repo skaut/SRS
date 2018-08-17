@@ -16,5 +16,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ProgramsContent extends Content implements IContent
 {
+    /** @var string */
     protected $type = Content::PROGRAMS;
 }

@@ -74,10 +74,9 @@ class ProgramCategoriesGridControl extends Control
 
     /**
      * Vytvoří komponentu.
-     * @param $name
      * @throws DataGridException
      */
-    public function createComponentProgramCategoriesGrid($name) : void
+    public function createComponentProgramCategoriesGrid(string $name) : void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -131,12 +130,11 @@ class ProgramCategoriesGridControl extends Control
 
     /**
      * Zpracuje přidání kategorie.
-     * @param $values
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
      */
-    public function add($values) : void
+    public function add(\stdClass $values) : void
     {
         $category = new Category();
 
@@ -153,12 +151,10 @@ class ProgramCategoriesGridControl extends Control
 
     /**
      * Zpracuje úpravu kategorie.
-     * @param $id
-     * @param $values
      * @throws AbortException
      * @throws \Throwable
      */
-    public function edit($id, $values) : void
+    public function edit(int $id, \stdClass $values) : void
     {
         $category = $this->categoryRepository->findById($id);
 
@@ -179,11 +175,10 @@ class ProgramCategoriesGridControl extends Control
 
     /**
      * Odstraní kategorii.
-     * @param $id
      * @throws AbortException
      * @throws \Throwable
      */
-    public function handleDelete($id) : void
+    public function handleDelete(int $id) : void
     {
         $category = $this->categoryRepository->findById($id);
 

@@ -68,10 +68,9 @@ class RoomsGridControl extends Control
 
     /**
      * Vytvoří komponentu.
-     * @param $name
      * @throws DataGridException
      */
-    public function createComponentRoomsGrid($name) : void
+    public function createComponentRoomsGrid(string $name) : void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -136,12 +135,11 @@ class RoomsGridControl extends Control
 
     /**
      * Zpracuje přidání místnosti.
-     * @param $values
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
      */
-    public function add($values) : void
+    public function add(\stdClass $values) : void
     {
         $room = new Room();
 
@@ -158,13 +156,11 @@ class RoomsGridControl extends Control
 
     /**
      * Zpracuje úpravu místnosti.
-     * @param $id
-     * @param $values
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
      */
-    public function edit($id, $values) : void
+    public function edit(int $id, \stdClass $values) : void
     {
         $room = $this->roomRepository->findById($id);
 
@@ -181,12 +177,11 @@ class RoomsGridControl extends Control
 
     /**
      * Odstraní místnost.
-     * @param $id
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
      */
-    public function handleDelete($id) : void
+    public function handleDelete(int $id) : void
     {
         $room = $this->roomRepository->findById($id);
         $this->roomRepository->remove($room);
@@ -198,7 +193,7 @@ class RoomsGridControl extends Control
 
     /**
      * Hromadně vyexportuje harmonogramy místností.
-     * @param array $ids
+     * @param int[] $ids
      * @throws AbortException
      */
     public function groupExportRoomsSchedules(array $ids) : void

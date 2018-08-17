@@ -41,7 +41,7 @@ class WebPresenter extends ConfigurationBasePresenter
     {
         $form = $this->webFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, array $values) : void {
+        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');

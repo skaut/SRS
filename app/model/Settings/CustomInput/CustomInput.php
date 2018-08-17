@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Settings\CustomInput;
 
+use App\Model\User\CustomInputValue\CustomInputValue;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -28,24 +29,29 @@ abstract class CustomInput
 {
     /**
      * Textové pole.
+     * @var string
      */
     public const TEXT = 'text';
 
     /**
      * Zaškrtávací pole.
+     * @var string
      */
     public const CHECKBOX = 'checkbox';
 
     /**
      * Výběrové pole.
+     * @var string
      */
     public const SELECT = 'select';
 
     /**
      * Soubor.
+     * @var string
      */
     public const FILE = 'file';
 
+    /** @var string[] */
     public static $types = [
         self::TEXT,
         self::CHECKBOX,
@@ -55,6 +61,7 @@ abstract class CustomInput
 
     /**
      * Typ vlastního pole.
+     * @var string
      */
     protected $type;
 
@@ -84,7 +91,7 @@ abstract class CustomInput
     /**
      * Hodnoty pole pro jednotlivé uživatele.
      * @ORM\OneToMany(targetEntity="\App\Model\User\CustomInputValue\CustomInputValue", mappedBy="input", cascade={"persist"})
-     * @var Collection
+     * @var Collection|CustomInputValue[]
      */
     protected $customInputValues;
 
@@ -138,7 +145,7 @@ abstract class CustomInput
     }
 
     /**
-     * @return Collection
+     * @return Collection|CustomInputValue[]
      */
     public function getCustomInputValues() : Collection
     {

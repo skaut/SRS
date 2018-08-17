@@ -58,7 +58,7 @@ class Page
     /**
      * Role, které mají na stránku přístup.
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="pages")
-     * @var Collection
+     * @var Collection|Role[]
      */
     protected $roles;
 
@@ -66,7 +66,7 @@ class Page
      * Obsahy na stránce.
      * @ORM\OneToMany(targetEntity="\App\Model\CMS\Content\Content", mappedBy="page", cascade={"persist"})
      * @ORM\OrderBy({"position" = "ASC"})
-     * @var Collection
+     * @var Collection|Content[]
      */
     protected $contents;
 
@@ -125,7 +125,7 @@ class Page
     }
 
     /**
-     * @return Collection
+     * @return Collection|Role[]
      */
     public function getRoles() : Collection
     {
@@ -140,7 +140,7 @@ class Page
     }
 
     /**
-     * @param Collection $roles
+     * @param Collection|Role[] $roles
      */
     public function setRoles(Collection $roles) : void
     {
@@ -157,7 +157,7 @@ class Page
 
     /**
      * Vrací obsahy v oblasti.
-     * @return Collection
+     * @return Collection|Content[]
      * @throws PageException
      */
     public function getContents(?string $area = null) : Collection
@@ -166,7 +166,7 @@ class Page
             return $this->contents;
         }
         if (! in_array($area, Content::$areas)) {
-            throw new PageException("Area {$area} not defined.");
+            throw new PageException('Area ' . $area . ' not defined.');
         }
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('area', $area))
@@ -176,13 +176,12 @@ class Page
 
     /**
      * Má stránka nějaký obsah v oblasti?
-     * @param $area
      * @throws PageException
      */
     public function hasContents(string $area) : bool
     {
         if (! in_array($area, Content::$areas)) {
-            throw new PageException("Area {$area} not defined.");
+            throw new PageException('Area ' . $area . ' not defined.');
         }
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('area', $area));
@@ -191,7 +190,7 @@ class Page
 
     /**
      * Je stránka viditelná pro uživatele v rolích?
-     * @param $roleNames
+     * @param string[] $roleNames
      */
     public function isAllowedForRoles(array $roleNames) : bool
     {

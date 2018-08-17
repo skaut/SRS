@@ -8,14 +8,17 @@ class Sex
 {
     /**
      * Muž.
+     * @var string
      */
     public const MALE = 'male';
 
     /**
      * Žena.
+     * @var string
      */
     public const FEMALE = 'female';
 
+    /** @var string[] */
     public static $sex = [
         self::MALE,
         self::FEMALE,
@@ -24,7 +27,7 @@ class Sex
 
     /**
      * Vrací možnosti pohlaví pro select.
-     * @return array
+     * @return string[]
      */
     public static function getSexOptions() : array
     {

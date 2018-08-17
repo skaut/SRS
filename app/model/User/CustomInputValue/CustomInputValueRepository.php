@@ -17,9 +17,8 @@ class CustomInputValueRepository extends EntityRepository
 {
     /**
      * Vrací hodnotu vlastního pole přihlášky podle id.
-     * @param $id
      */
-    public function findById(int $id) : ?CustomInputValue
+    public function findById(?int $id) : ?CustomInputValue
     {
         return $this->findOneBy(['id' => $id]);
     }

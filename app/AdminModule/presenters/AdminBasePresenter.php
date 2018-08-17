@@ -158,10 +158,9 @@ abstract class AdminBasePresenter extends BasePresenter
 
     /**
      * Kontroluje oprávnění uživatele a případně jej přesměruje.
-     * @param $permission
      * @throws AbortException
      */
-    public function checkPermission($permission) : void
+    public function checkPermission(string $permission) : void
     {
         if ($this->user->isAllowed($this->resource, $permission)) {
             return;

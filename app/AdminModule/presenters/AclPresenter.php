@@ -24,6 +24,7 @@ use Nette\Forms\Form;
  */
 class AclPresenter extends AdminBasePresenter
 {
+    /** @var string */
     protected $resource = Resource::ACL;
 
     /**
@@ -31,11 +32,13 @@ class AclPresenter extends AdminBasePresenter
      * @inject
      */
     public $addRoleFormFactory;
+
     /**
      * @var EditRoleForm
      * @inject
      */
     public $editRoleFormFactory;
+
     /**
      * @var IRolesGridControlFactory
      * @inject
@@ -68,7 +71,6 @@ class AclPresenter extends AdminBasePresenter
 
     /**
      * Zapne testování role.
-     * @param $id
      * @throws AbortException
      */
     public function actionTest(int $id) : void
@@ -85,11 +87,11 @@ class AclPresenter extends AdminBasePresenter
         return $this->rolesGridControlFactory->create();
     }
 
-    protected function createComponentAddRoleForm() : \Nette\Application\UI\Form
+    protected function createComponentAddRoleForm() : Form
     {
         $form = $this->addRoleFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, array $values) : void {
+        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
             if ($form['cancel']->isSubmittedBy()) {
                 $this->redirect('Acl:default');
             }
@@ -107,11 +109,11 @@ class AclPresenter extends AdminBasePresenter
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    protected function createComponentEditRoleForm() : \Nette\Application\UI\Form
+    protected function createComponentEditRoleForm() : Form
     {
         $form = $this->editRoleFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, array $values) : void {
+        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
             if ($form['cancel']->isSubmittedBy()) {
                 $this->redirect('Acl:default');
             }

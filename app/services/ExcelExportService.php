@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Model\ACL\Role;
 use App\Model\Program\Block;
 use App\Model\Program\BlockRepository;
 use App\Model\Program\CategoryRepository;
@@ -85,12 +86,11 @@ class ExcelExportService
 
     /**
      * Vyexportuje matici uživatelů a rolí.
-     * @param $users
-     * @param $roles
-     * @param $filename
+     * @param Collection|User[] $users
+     * @param Collection|Role[] $roles
      * @throws Exception
      */
-    public function exportUsersRoles($users, $roles, $filename) : ExcelResponse
+    public function exportUsersRoles(Collection $users, Collection $roles, string $filename) : ExcelResponse
     {
         $sheet = $this->spreadsheet->getSheet(0);
 
@@ -128,11 +128,9 @@ class ExcelExportService
 
     /**
      * Vyexportuje harmonogram uživatele.
-     * @param $user
-     * @param $filename
      * @throws Exception
      */
-    public function exportUserSchedule($user, $filename) : ExcelResponse
+    public function exportUserSchedule(User $user, string $filename) : ExcelResponse
     {
         return $this->exportUsersSchedules([$user], $filename);
     }
@@ -140,10 +138,9 @@ class ExcelExportService
     /**
      * Vyexportuje harmonogramy uživatelů, každý uživatel na zvlástním listu.
      * @param Collection|User[] $users
-     * @param $filename
      * @throws Exception
      */
-    public function exportUsersSchedules(Collection $users, $filename) : ExcelResponse
+    public function exportUsersSchedules(Collection $users, string $filename) : ExcelResponse
     {
         $this->spreadsheet->removeSheetByIndex(0);
         $sheetNumber = 0;
@@ -197,10 +194,9 @@ class ExcelExportService
 
     /**
      * Vyexportuje harmonogram místnosti.
-     * @param $filename
      * @throws Exception
      */
-    public function exportRoomSchedule(Room $room, $filename) : ExcelResponse
+    public function exportRoomSchedule(Room $room, string $filename) : ExcelResponse
     {
         return $this->exportRoomsSchedules([$room], $filename);
     }
@@ -208,10 +204,9 @@ class ExcelExportService
     /**
      * Vyexportuje harmonogramy místností.
      * @param Collection|Room[] $rooms
-     * @param $filename
      * @throws Exception
      */
-    public function exportRoomsSchedules(Collection $rooms, $filename) : ExcelResponse
+    public function exportRoomsSchedules(Collection $rooms, string $filename) : ExcelResponse
     {
         $this->spreadsheet->removeSheetByIndex(0);
         $sheetNumber = 0;
@@ -261,10 +256,9 @@ class ExcelExportService
 
     /**
      * @param Collection|User[] $users
-     * @param $filename
      * @throws Exception
      */
-    public function exportUsersList(Collection $users, $filename) : ExcelResponse
+    public function exportUsersList(Collection $users, string $filename) : ExcelResponse
     {
         $sheet = $this->spreadsheet->getSheet(0);
 
@@ -473,10 +467,9 @@ class ExcelExportService
 
     /**
      * @param Collection|User[] $users
-     * @param $filename
      * @throws Exception
      */
-    public function exportUsersSubeventsAndCategories(Collection $users, $filename) : ExcelResponse
+    public function exportUsersSubeventsAndCategories(Collection $users, string $filename) : ExcelResponse
     {
         $sheet = $this->spreadsheet->getSheet(0);
 
@@ -558,10 +551,9 @@ class ExcelExportService
 
     /**
      * @param Collection|Block[] $blocks
-     * @param $filename
      * @throws Exception
      */
-    public function exportBlocksAttendees(Collection $blocks, $filename) : ExcelResponse
+    public function exportBlocksAttendees(Collection $blocks, string $filename) : ExcelResponse
     {
         $this->spreadsheet->removeSheetByIndex(0);
         $sheetNumber = 0;

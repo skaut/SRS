@@ -133,12 +133,12 @@ class ProgramDetailDTO
         $this->blockId = $blockId;
     }
 
-    public function getRoomId() : int
+    public function getRoomId() : ?int
     {
         return $this->roomId;
     }
 
-    public function setRoomId(int $roomId) : void
+    public function setRoomId(?int $roomId) : void
     {
         $this->roomId = $roomId;
     }
@@ -164,17 +164,17 @@ class ProgramDetailDTO
     }
 
     /**
-     * @return \int[]
+     * @return int[]
      */
-    public function getBlocks()
+    public function getBlocks() : array
     {
         return $this->blocks;
     }
 
     /**
-     * @param \int[] $blocks
+     * @param int[] $blocks
      */
-    public function setBlocks($blocks) : void
+    public function setBlocks(array $blocks) : void
     {
         $this->blocks = $blocks;
     }

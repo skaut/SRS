@@ -6,6 +6,7 @@ namespace App\WebModule\Components;
 
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
+use App\Model\CMS\Content\FaqContent;
 use App\Model\CMS\FaqRepository;
 use App\WebModule\Forms\FaqForm;
 use Nette\Application\UI\Control;
@@ -38,7 +39,7 @@ class FaqContentControl extends Control
         $this->roleRepository = $roleRepository;
     }
 
-    public function render($content) : void
+    public function render(FaqContent $content) : void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/faq_content.latte');
@@ -58,7 +59,7 @@ class FaqContentControl extends Control
     {
         $form = $this->faqFormFactory->create($this->getPresenter()->getUser()->id);
 
-        $form->onSuccess[] = function (Form $form, array $values) : void {
+        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
             $this->getPresenter()->flashMessage('web.faq_content.add_question_successful', 'success');
 
             $this->getPresenter()->redirect('this');

@@ -40,86 +40,103 @@ abstract class Content implements IContent
 {
     /**
      * TextContent.
+     * @var string
      */
     public const TEXT = 'text';
 
     /**
      * ImageContent.
+     * @var string
      */
     public const IMAGE = 'image';
 
     /**
      * DocumentContent.
+     * @var string
      */
     public const DOCUMENT = 'document';
 
     /**
      * ApplicationContent.
+     * @var string
      */
     public const APPLICATION = 'application';
 
     /**
      * HtmlContent.
+     * @var string
      */
     public const HTML = 'html';
 
     /**
      * FaqContent.
+     * @var string
      */
     public const FAQ = 'faq';
 
     /**
      * NewsContent.
+     * @var string
      */
     public const NEWS = 'news';
 
     /**
      * PlaceContent.
+     * @var string
      */
     public const PLACE = 'place';
 
     /**
      * ProgramsContent.
+     * @var string
      */
     public const PROGRAMS = 'programs';
 
     /**
      * UsersContent.
+     * @var string
      */
     public const USERS = 'users';
 
     /**
      * LectorsContent.
+     * @var string
      */
     public const LECTORS = 'lectors';
 
     /**
      * BlocksContent.
+     * @var string
      */
     public const BLOCKS = 'blocks';
 
     /**
      * CapacitiesContent.
+     * @var string
      */
     public const CAPACITIES = 'capacities';
 
     /**
      * OrganizerContent
+     * @var string
      */
     public const ORGANIZER = 'organizer';
 
 
     /**
      * Hlavní oblast stránky.
+     * @var string
      */
     public const MAIN = 'main';
 
     /**
      * Postranní panel stránky.
+     * @var string
      */
     public const SIDEBAR = 'sidebar';
 
 
+    /** @var string[] */
     public static $types = [
         self::TEXT,
         self::IMAGE,
@@ -137,6 +154,7 @@ abstract class Content implements IContent
         self::ORGANIZER,
     ];
 
+    /** @var string[] */
     public static $areas = [
         self::MAIN,
         self::SIDEBAR,
@@ -144,6 +162,7 @@ abstract class Content implements IContent
 
     /**
      * Typ obsahu.
+     * @var string
      */
     protected $type;
 
@@ -179,8 +198,6 @@ abstract class Content implements IContent
 
 
     /**
-     *
-     * @param $area
      * @throws PageException
      */
     public function __construct(Page $page, string $area)
@@ -286,9 +303,8 @@ abstract class Content implements IContent
 
     /**
      * Zpracuje při uložení stránky část formuláře týkající se obsahu.
-     * @param array $values
      */
-    public function contentFormSucceeded(Form $form, array $values) : void
+    public function contentFormSucceeded(Form $form, \stdClass $values) : void
     {
         $values         = $values[$this->getContentFormName()];
         $this->position = $values['position'];

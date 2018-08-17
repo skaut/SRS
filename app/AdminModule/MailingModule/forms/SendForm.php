@@ -10,6 +10,7 @@ use App\Model\ACL\RoleRepository;
 use App\Model\Settings\SettingsException;
 use App\Model\User\UserRepository;
 use App\Services\MailService;
+use Kdyby\Events\Event;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Mail\SendException;
@@ -28,6 +29,7 @@ class SendForm
 
     /**
      * Událost po úspěšně odeslaném e-mailu.
+     * @var Event
      */
     public $mailSuccess;
 
@@ -105,13 +107,12 @@ class SendForm
 
     /**
      * Zpracuje formulář.
-     * @param array $values
      * @throws SettingsException
      * @throws \Throwable
      * @throws MailingException
      * @throws MailingMailCreationException
      */
-    public function processForm(Form $form, array $values) : void
+    public function processForm(Form $form, \stdClass $values) : void
     {
         try {
             $recipientsRoles = $this->roleRepository->findRolesByIds($values['recipientRoles']);

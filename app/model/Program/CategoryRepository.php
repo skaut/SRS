@@ -21,16 +21,15 @@ class CategoryRepository extends EntityRepository
 {
     /**
      * Vrací kategorii podle id.
-     * @param $id
      */
-    public function findById(int $id) : ?Category
+    public function findById(?int $id) : ?Category
     {
         return $this->findOneBy(['id' => $id]);
     }
 
     /**
      * Vrací kategorie seřazené podle názvu.
-     * @return array
+     * @return Category[]
      */
     public function findAllOrderedByName() : array
     {
@@ -42,7 +41,7 @@ class CategoryRepository extends EntityRepository
 
     /**
      * Vrací názvy všech kategorií.
-     * @return array
+     * @return string[]
      */
     public function findAllNames() : array
     {
@@ -55,8 +54,7 @@ class CategoryRepository extends EntityRepository
 
     /**
      * Vrací názvy kategorií, kromě kategorie s id.
-     * @param $id
-     * @return array
+     * @return string[]
      */
     public function findOthersNames(int $id) : array
     {
@@ -86,7 +84,7 @@ class CategoryRepository extends EntityRepository
 
     /**
      * Vrací kategorie jako možnosti pro select.
-     * @return array
+     * @return string[]
      */
     public function getCategoriesOptions() : array
     {

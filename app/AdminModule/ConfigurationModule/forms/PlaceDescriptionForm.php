@@ -61,13 +61,12 @@ class PlaceDescriptionForm
 
     /**
      * Zpracuje formulář.
-     * @param array $values
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws \Throwable
      */
-    public function processForm(Form $form, array $values) : void
+    public function processForm(Form $form, \stdClass $values) : void
     {
         $this->settingsRepository->setValue(Settings::PLACE_DESCRIPTION, $values['placeDescription']);
     }

@@ -71,11 +71,10 @@ class MailingForm
 
     /**
      * Vytvoří formulář.
-     * @param $id
      * @throws SettingsException
      * @throws \Throwable
      */
-    public function create($id) : Form
+    public function create(int $id) : Form
     {
         $this->user = $this->userRepository->findById($id);
 
@@ -102,14 +101,13 @@ class MailingForm
 
     /**
      * Zpracuje formulář.
-     * @param array $values
      * @throws Nette\Application\UI\InvalidLinkException
      * @throws SettingsException
      * @throws \Throwable
      * @throws MailingException
      * @throws MailingMailCreationException
      */
-    public function processForm(Form $form, array $values) : void
+    public function processForm(Form $form, \stdClass $values) : void
     {
         if ($this->settingsRepository->getValue(Settings::SEMINAR_EMAIL) === $values['seminarEmail']) {
             return;
@@ -128,7 +126,7 @@ class MailingForm
             Template::EMAIL_VERIFICATION,
             [
                 TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-                TemplateVariable::EMAIL_VERIFICATION_LINK => $link
+                TemplateVariable::EMAIL_VERIFICATION_LINK => $link,
             ],
             true
         );

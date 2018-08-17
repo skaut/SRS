@@ -54,14 +54,14 @@ class User
     /**
      * Přihlášky.
      * @ORM\OneToMany(targetEntity="Application", mappedBy="user", cascade={"persist"})
-     * @var Collection
+     * @var Collection|Application[]
      */
     protected $applications;
 
     /**
      * Role.
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="users")
-     * @var Collection
+     * @var Collection|Role[]
      */
     protected $roles;
 
@@ -69,14 +69,14 @@ class User
      * Přihlášené programy.
      * @ORM\ManyToMany(targetEntity="\App\Model\Program\Program", inversedBy="attendees")
      * @ORM\OrderBy({"start" = "ASC"})
-     * @var Collection
+     * @var Collection|Program[]
      */
     protected $programs;
 
     /**
      * Lektorované bloky.
      * @ORM\OneToMany(targetEntity="\App\Model\Program\Block", mappedBy="lector", cascade={"persist"})
-     * @var Collection
+     * @var Collection|Block[]
      */
     protected $lecturersBlocks;
 
@@ -273,7 +273,7 @@ class User
     /**
      * Hodnoty vlastních polí přihlášky.
      * @ORM\OneToMany(targetEntity="\App\Model\User\CustomInputValue\CustomInputValue", mappedBy="user", cascade={"persist"})
-     * @var Collection
+     * @var Collection|CustomInputValue[]
      */
     protected $customInputValues;
 
@@ -333,7 +333,7 @@ class User
     }
 
     /**
-     * @return Collection
+     * @return Collection|Role[]
      */
     public function getRoles() : Collection
     {
@@ -341,7 +341,7 @@ class User
     }
 
     /**
-     * @param Collection $roles
+     * @param Collection|Role[] $roles
      */
     public function setRoles(Collection $roles) : void
     {
@@ -384,8 +384,6 @@ class User
 
     /**
      * Má uživatel oprávnění k prostředku?
-     * @param $resource
-     * @param $permission
      */
     public function isAllowed(string $resource, string $permission) : bool
     {
@@ -421,7 +419,7 @@ class User
     }
 
     /**
-     * @return Collection
+     * @return Collection|Application[]
      */
     public function getApplications() : Collection
     {
@@ -476,7 +474,7 @@ class User
 
     /**
      * Vrácí zaplacené přihlášky.
-     * @return Collection
+     * @return Collection|Application[]
      */
     public function getPaidApplications() : Collection
     {
@@ -545,7 +543,7 @@ class User
     }
 
     /**
-     * @return Collection
+     * @return Collection|Program[]
      */
     public function getPrograms() : Collection
     {
@@ -553,7 +551,7 @@ class User
     }
 
     /**
-     * @param Collection $programs
+     * @param Collection|Program[] $programs
      */
     public function setPrograms(Collection $programs) : void
     {
@@ -564,7 +562,7 @@ class User
     }
 
     /**
-     * @return Collection
+     * @return Collection|Block[]
      */
     public function getLecturersBlocks() : Collection
     {
@@ -663,9 +661,6 @@ class User
         $this->updateLectorName();
     }
 
-    /**
-     * @return string $displayName
-     */
     public function getDisplayName() : string
     {
         return $this->displayName;
@@ -677,7 +672,8 @@ class User
     private function updateDisplayName() : void
     {
         $this->displayName = $this->lastName . ' ' . $this->firstName;
-        if ($this->nickName === null) {
+
+        if (empty($this->nickName)) {
             return;
         }
 
@@ -695,14 +691,18 @@ class User
     public function updateLectorName() : void
     {
         $this->lectorName = '';
-        if ($this->degreePre !== null) {
+
+        if (! empty($this->degreePre)) {
             $this->lectorName .= $this->degreePre . ' ';
         }
+
         $this->lectorName .= $this->firstName . ' ' . $this->lastName;
-        if ($this->degreePost !== null) {
+
+        if (! empty($this->degreePost)) {
             $this->lectorName .= ', ' . $this->degreePost;
         }
-        if ($this->nickName === null) {
+
+        if (empty($this->nickName)) {
             return;
         }
 
@@ -917,22 +917,26 @@ class User
     }
 
     /**
-     * @return Collection
+     * @return Collection|CustomInputValue[]
      */
     public function getCustomInputValues() : Collection
     {
         return $this->customInputValues;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCustomInputValue(CustomInput $customInput) : CustomInputValue
+    public function getCustomInputValue(CustomInput $customInput) : ?CustomInputValue
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()
                 ->eq('input', $customInput));
-        return $this->customInputValues->matching($criteria)->first();
+
+        $matchingCustomInputValues = $this->customInputValues->matching($criteria);
+
+        if ($matchingCustomInputValues->count() === 0) {
+            return null;
+        }
+
+        return $matchingCustomInputValues->first();
     }
 
     public function getNote() : ?string

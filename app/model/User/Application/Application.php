@@ -33,16 +33,19 @@ abstract class Application
 {
     /**
      * Přihláška rolí.
+     * @var string
      */
     public const ROLES = 'roles';
 
     /**
      * Přihláška na podakce.
+     * @var string
      */
     public const SUBEVENTS = 'subevents';
 
     /**
      * Typ přihlášky.
+     * @var string
      */
     protected $type;
 
@@ -65,14 +68,14 @@ abstract class Application
     /**
      * Role.
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", cascade={"persist"})
-     * @var Collection
+     * @var Collection|Role[]
      */
     protected $roles;
 
     /**
      * Podakce.
      * @ORM\ManyToMany(targetEntity="\App\Model\Structure\Subevent", inversedBy="applications", cascade={"persist"})
-     * @var Collection
+     * @var Collection|Subevent[]
      */
     protected $subevents;
 
@@ -152,12 +155,12 @@ abstract class Application
      */
     protected $validTo;
 
+
     public function __construct()
     {
         $this->roles     = new ArrayCollection();
         $this->subevents = new ArrayCollection();
     }
-
 
     public function getId() : int
     {
@@ -190,7 +193,7 @@ abstract class Application
     }
 
     /**
-     * @return Collection
+     * @return Collection|Role[]
      */
     public function getRoles() : Collection
     {
@@ -208,7 +211,7 @@ abstract class Application
     }
 
     /**
-     * @return Collection
+     * @return Collection|Subevent[]
      */
     public function getSubevents() : Collection
     {
@@ -232,7 +235,6 @@ abstract class Application
 
     /**
      * Vrací poplatek slovy.
-     * @return mixed|string
      */
     public function getFeeWords() : string
     {
@@ -340,12 +342,12 @@ abstract class Application
         $this->incomeProofPrintedDate = $incomeProofPrintedDate;
     }
 
-    public function getState() : string
+    public function getState() : ?string
     {
         return $this->state;
     }
 
-    public function setState(string $state) : void
+    public function setState(?string $state) : void
     {
         $this->state = $state;
     }

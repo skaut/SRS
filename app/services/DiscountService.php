@@ -25,7 +25,7 @@ class DiscountService
 
     /**
      * Tokeny podmínky.
-     * @var array
+     * @var string[]
      */
     private $symbols;
 
@@ -63,9 +63,9 @@ class DiscountService
 
     /**
      * Vypočítá slevu pro kombinaci podakcí.
-     * @param $selectedSubeventsIds
+     * @param int[] $selectedSubeventsIds
      */
-    public function countDiscount($selectedSubeventsIds) : int
+    public function countDiscount(array $selectedSubeventsIds) : int
     {
         $totalDiscount = 0;
 
@@ -92,9 +92,8 @@ class DiscountService
 
     /**
      * Ověří formát podmínky pro slevu.
-     * @param $condition
      */
-    public function validateCondition($condition) : bool
+    public function validateCondition(string $condition) : bool
     {
         $this->tokenize($condition);
 
@@ -111,9 +110,8 @@ class DiscountService
 
     /**
      * Převede podmínku na text.
-     * @param $condition
      */
-    public function convertConditionToText($condition) : string
+    public function convertConditionToText(string $condition) : string
     {
         $this->tokenize($condition);
 
@@ -132,7 +130,7 @@ class DiscountService
                     break;
 
                 case Discount::SUBEVENT_ID:
-                    $subevent = $this->subeventRepository->findById($symbol['value']);
+                    $subevent = $this->subeventRepository->findById((int) $symbol['value']);
                     if ($subevent === null) {
                         $text .= '"' . $this->translator->translate('admin.configuration.subevents_invalid_subevent') . '"';
                     } else {
@@ -145,7 +143,7 @@ class DiscountService
         return $text;
     }
 
-    private function tokenize($condition) : void
+    private function tokenize(string $condition) : void
     {
         $tokens = explode('|', $condition);
 
@@ -166,17 +164,17 @@ class DiscountService
         $this->currentSymbol++;
     }
 
-    private function symbol()
+    private function symbol() : string
     {
         return $this->symbols[$this->currentSymbol]['symbol'];
     }
 
-    private function symbolValue()
+    private function symbolValue() : string
     {
         return $this->symbols[$this->currentSymbol]['value'];
     }
 
-    private function accept($symbol) : void
+    private function accept(string $symbol) : void
     {
         if ($this->symbol() !== $symbol) {
             throw new InvalidArgumentException();
@@ -185,9 +183,9 @@ class DiscountService
         $this->nextSymbol();
     }
 
-    private function acceptSubevent(&$sValue) : void
+    private function acceptSubevent(?int &$sValue) : void
     {
-        if ($this->symbol() !== Discount::SUBEVENT_ID || $this->subeventRepository->findById($this->symbolValue()) === null) {
+        if ($this->symbol() !== Discount::SUBEVENT_ID || $this->subeventRepository->findById((int) $this->symbolValue()) === null) {
             throw new InvalidArgumentException();
         }
 
@@ -195,13 +193,13 @@ class DiscountService
         $this->nextSymbol();
     }
 
-    private function parseExpression(&$sValue) : void
+    private function parseExpression(?int &$sValue) : void
     {
         switch ($this->symbol()) {
             case Discount::SUBEVENT_ID:
             case Discount::LEFT_PARENTHESIS:
                 $this->parseTerm($termSValue);
-                $this->parseExpression_($termSValue, $expressionSValue);
+                $this->parseExpressionRest($termSValue, $expressionSValue);
                 $sValue = $expressionSValue;
                 break;
 
@@ -210,13 +208,13 @@ class DiscountService
         }
     }
 
-    private function parseExpression_($dValue, &$sValue) : void
+    private function parseExpressionRest(int $dValue, ?int &$sValue) : void
     {
         switch ($this->symbol()) {
             case Discount::OPERATOR_OR:
                 $this->accept(Discount::OPERATOR_OR);
                 $this->parseTerm($termSValue);
-                $this->parseExpression_($dValue | $termSValue, $expressionSValue);
+                $this->parseExpressionRest($dValue | $termSValue, $expressionSValue);
                 $sValue = $expressionSValue;
                 break;
 
@@ -230,13 +228,13 @@ class DiscountService
         }
     }
 
-    private function parseTerm(&$sValue) : void
+    private function parseTerm(?int &$sValue) : void
     {
         switch ($this->symbol()) {
             case Discount::SUBEVENT_ID:
             case Discount::LEFT_PARENTHESIS:
                 $this->parseFactor($factorSValue);
-                $this->parseTerm_($factorSValue, $termSValue);
+                $this->parseTermRest($factorSValue, $termSValue);
                 $sValue = $termSValue;
                 break;
 
@@ -245,13 +243,13 @@ class DiscountService
         }
     }
 
-    private function parseTerm_($dValue, &$sValue) : void
+    private function parseTermRest(int $dValue, ?int &$sValue) : void
     {
         switch ($this->symbol()) {
             case Discount::OPERATOR_AND:
                 $this->accept(Discount::OPERATOR_AND);
                 $this->parseFactor($factorSValue);
-                $this->parseTerm_($dValue & $factorSValue, $termSValue);
+                $this->parseTermRest($dValue & $factorSValue, $termSValue);
                 $sValue = $termSValue;
                 break;
 
@@ -266,7 +264,7 @@ class DiscountService
         }
     }
 
-    private function parseFactor(&$sValue) : void
+    private function parseFactor(?int &$sValue) : void
     {
         switch ($this->symbol()) {
             case Discount::SUBEVENT_ID:

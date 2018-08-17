@@ -17,6 +17,7 @@ use Nette\Application\UI\Form;
  */
 class HtmlContent extends Content implements IContent
 {
+    /** @var string */
     protected $type = Content::HTML;
 
     /**
@@ -55,9 +56,8 @@ class HtmlContent extends Content implements IContent
 
     /**
      * Zpracuje při uložení stránky část formuláře týkající se obsahu.
-     * @param array $values
      */
-    public function contentFormSucceeded(Form $form, array $values) : void
+    public function contentFormSucceeded(Form $form, \stdClass $values) : void
     {
         parent::contentFormSucceeded($form, $values);
         $values     = $values[$this->getContentFormName()];

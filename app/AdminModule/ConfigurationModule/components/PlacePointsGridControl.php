@@ -47,10 +47,9 @@ class PlacePointsGridControl extends Control
 
     /**
      * Vytvoří komponentu.
-     * @param $name
      * @throws DataGridException
      */
-    public function createComponentPlacePointsGrid($name) : void
+    public function createComponentPlacePointsGrid(string $name) : void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -87,12 +86,11 @@ class PlacePointsGridControl extends Control
 
     /**
      * Zpracuje odstranění mapového bodu.
-     * @param $id
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
      */
-    public function handleDelete($id) : void
+    public function handleDelete(int $id) : void
     {
         $input = $this->placePointRepository->findById($id);
         $this->placePointRepository->remove($input);

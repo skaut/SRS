@@ -165,13 +165,12 @@ class UsersGridControl extends Control
 
     /**
      * Vytvoří komponentu.
-     * @param $name
      * @throws SettingsException
      * @throws \Throwable
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
-    public function createComponentUsersGrid($name) : void
+    public function createComponentUsersGrid(string $name) : void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -415,12 +414,11 @@ class UsersGridControl extends Control
 
     /**
      * Zpracuje odstranění externího uživatele.
-     * @param $id
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
      */
-    public function handleDelete($id) : void
+    public function handleDelete(int $id) : void
     {
         $user = $this->userRepository->findById($id);
 
@@ -433,13 +431,11 @@ class UsersGridControl extends Control
 
     /**
      * Změní stav uživatele.
-     * @param $id
-     * @param $approved
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
      */
-    public function changeApproved($id, $approved) : void
+    public function changeApproved(int $id, bool $approved) : void
     {
         $user = $this->userRepository->findById($id);
         $user->setApproved($approved);
@@ -458,13 +454,11 @@ class UsersGridControl extends Control
 
     /**
      * Změní účast uživatele na semináři.
-     * @param $id
-     * @param $attended
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
      */
-    public function changeAttended($id, $attended) : void
+    public function changeAttended(int $id, bool $attended) : void
     {
         $user = $this->userRepository->findById($id);
         $user->setAttended($attended);
@@ -483,7 +477,7 @@ class UsersGridControl extends Control
 
     /**
      * Hromadně schválí uživatele.
-     * @param array $ids
+     * @param int[] $ids
      * @throws AbortException
      * @throws \Throwable
      */
@@ -504,12 +498,11 @@ class UsersGridControl extends Control
 
     /**
      * Hromadně nastaví role.
-     * @param array $ids
-     * @param $value
+     * @param int[] $ids
      * @throws AbortException
      * @throws \Throwable
      */
-    public function groupChangeRoles(array $ids, $value) : void
+    public function groupChangeRoles(array $ids, \stdClass $value) : void
     {
         $users         = $this->userRepository->findUsersByIds($ids);
         $selectedRoles = $this->roleRepository->findRolesByIds($value);
@@ -568,7 +561,7 @@ class UsersGridControl extends Control
 
     /**
      * Hromadně označí uživatele jako zúčastněné.
-     * @param array $ids
+     * @param int[] $ids
      * @throws AbortException
      * @throws \Throwable
      */
@@ -589,12 +582,11 @@ class UsersGridControl extends Control
 
     /**
      * Hromadně označí uživatele jako zaplacené dnes.
-     * @param array $ids
-     * @param $value
+     * @param int[] $ids
      * @throws AbortException
      * @throws \Throwable
      */
-    public function groupMarkPaidToday(array $ids, $value) : void
+    public function groupMarkPaidToday(array $ids, string $paymentMethod) : void
     {
         $users = $this->userRepository->findUsersByIds($ids);
 
@@ -602,13 +594,13 @@ class UsersGridControl extends Control
 
         $loggedUser = $this->userRepository->findById($p->getUser()->id);
 
-        $this->userRepository->getEntityManager()->transactional(function ($em) use ($users, $value, $loggedUser) : void {
+        $this->userRepository->getEntityManager()->transactional(function ($em) use ($users, $paymentMethod, $loggedUser) : void {
             foreach ($users as $user) {
                 foreach ($user->getWaitingForPaymentApplications() as $application) {
                     $this->applicationService->updatePayment(
                         $application,
                         $application->getVariableSymbolText(),
-                        $value,
+                        $paymentMethod,
                         new \DateTime(),
                         $application->getIncomeProofPrintedDate(),
                         $application->getMaturityDate(),
@@ -624,12 +616,11 @@ class UsersGridControl extends Control
 
     /**
      * Hromadně vloží uživatele jako účastníky do skautIS.
-     * @param array $ids
-     * @param $value
+     * @param int[] $ids
      * @throws AbortException
      * @throws \Throwable
      */
-    public function groupInsertIntoSkautIs(array $ids, $value) : void
+    public function groupInsertIntoSkautIs(array $ids, bool $accept) : void
     {
         $users = $this->userRepository->findUsersByIds($ids);
 
@@ -664,7 +655,7 @@ class UsersGridControl extends Control
             $this->redirect('this');
         }
 
-        if ($skautIsEventService->insertParticipants($eventId, $users, $value ?: false)) {
+        if ($skautIsEventService->insertParticipants($eventId, $users, $accept ?: false)) {
             $p->flashMessage('admin.users.users_group_action_insert_into_skaut_is_error_not_draft_successful', 'success');
         } else {
             $p->flashMessage('admin.users.users_group_action_insert_into_skaut_is_error_skaut_is', 'danger');
@@ -675,7 +666,7 @@ class UsersGridControl extends Control
 
     /**
      * Hromadně vygeneruje potvrzení o zaplacení.
-     * @param array $ids
+     * @param int[] $ids
      * @throws AbortException
      */
     public function groupGeneratePaymentProofs(array $ids) : void
@@ -686,7 +677,7 @@ class UsersGridControl extends Control
 
     /**
      * Hromadně vyexportuje seznam uživatelů.
-     * @param array $ids
+     * @param int[] $ids
      * @throws AbortException
      */
     public function groupExportUsers(array $ids) : void
@@ -713,7 +704,7 @@ class UsersGridControl extends Control
 
     /**
      * Hromadně vyexportuje seznam uživatelů s rolemi.
-     * @param array $ids
+     * @param int[] $ids
      * @throws AbortException
      */
     public function groupExportRoles(array $ids) : void
@@ -741,7 +732,7 @@ class UsersGridControl extends Control
 
     /**
      * Hromadně vyexportuje seznam uživatelů s podakcemi a programy podle kategorií.
-     * @param array $ids
+     * @param int[] $ids
      * @throws AbortException
      */
     public function groupExportSubeventsAndCategories(array $ids) : void
@@ -768,7 +759,7 @@ class UsersGridControl extends Control
 
     /**
      * Hromadně vyexportuje harmonogramy uživatelů.
-     * @param array $ids
+     * @param int[] $ids
      * @throws AbortException
      */
     public function groupExportSchedules(array $ids) : void
@@ -811,7 +802,7 @@ class UsersGridControl extends Control
 
     /**
      * Vrátí platební metody jako možnosti pro select. Bez prázdné možnosti.
-     * @return array
+     * @return string[]
      */
     private function preparePaymentMethodOptionsWithoutEmpty() : array
     {
@@ -824,7 +815,7 @@ class UsersGridControl extends Control
 
     /**
      * Vrátí možnosti vložení účastníků do vzdělávací akce skautIS.
-     * @return array
+     * @return string[]
      */
     private function prepareInsertIntoSkautIsOptions() : array
     {

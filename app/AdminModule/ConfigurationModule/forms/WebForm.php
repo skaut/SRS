@@ -86,12 +86,11 @@ class WebForm
 
     /**
      * Zpracuje formulář.
-     * @param array $values
      * @throws Nette\Utils\UnknownImageFileException
      * @throws SettingsException
      * @throws \Throwable
      */
-    public function processForm(Form $form, array $values) : void
+    public function processForm(Form $form, \stdClass $values) : void
     {
         $logo = $values['logo'];
         if ($logo->size > 0) {

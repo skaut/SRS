@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
 use App\AdminModule\ConfigurationModule\Components\IPlacePointsGridControlFactory;
+use App\AdminModule\ConfigurationModule\Components\PlacePointsGridControl;
 use App\AdminModule\ConfigurationModule\Forms\PlaceDescriptionForm;
 use App\AdminModule\ConfigurationModule\Forms\PlacePointForm;
 use App\Model\Settings\Place\PlacePointRepository;
@@ -43,7 +44,7 @@ class PlacePresenter extends ConfigurationBasePresenter
     public $placePointsGridControlFactory;
 
 
-    public function renderEdit($id) : void
+    public function renderEdit(int $id) : void
     {
         $placePoint                 = $this->placePointRepository->findById($id);
         $this->template->placePoint = $placePoint;
@@ -57,7 +58,7 @@ class PlacePresenter extends ConfigurationBasePresenter
     {
         $form = $this->placeDescriptionFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, array $values) : void {
+        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');
@@ -66,11 +67,11 @@ class PlacePresenter extends ConfigurationBasePresenter
         return $form;
     }
 
-    protected function createComponentPlacePointForm()
+    protected function createComponentPlacePointForm() : Form
     {
-        $form = $this->placePointFormFactory->create($this->getParameter('id'));
+        $form = $this->placePointFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, array $values) : void {
+        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
             if ($form['cancel']->isSubmittedBy()) {
                 $this->redirect('Place:default');
             }
@@ -83,7 +84,7 @@ class PlacePresenter extends ConfigurationBasePresenter
         return $form;
     }
 
-    protected function createComponentPlacePointsGrid()
+    protected function createComponentPlacePointsGrid() : PlacePointsGridControl
     {
         return $this->placePointsGridControlFactory->create();
     }

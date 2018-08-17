@@ -29,7 +29,7 @@ class Document
     /**
      * Tagy dokumentu.
      * @ORM\ManyToMany(targetEntity="Tag", inversedBy="documents")
-     * @var Collection
+     * @var Collection|Tag[]
      */
     protected $tags;
 
@@ -73,7 +73,7 @@ class Document
     }
 
     /**
-     * @return Collection
+     * @return Collection|Tag[]
      */
     public function getTags() : Collection
     {
@@ -81,7 +81,7 @@ class Document
     }
 
     /**
-     * @param Collection $tags
+     * @param Collection|Tag[] $tags
      */
     public function setTags(Collection $tags) : void
     {

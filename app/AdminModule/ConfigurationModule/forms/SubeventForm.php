@@ -12,6 +12,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\Forms\Controls\MultiSelectBox;
 use function md5;
 use function mt_rand;
 
@@ -44,9 +45,8 @@ class SubeventForm
 
     /**
      * Vytvoří formulář.
-     * @param $id
      */
-    public function create($id) : Form
+    public function create(int $id) : Form
     {
         $this->subevent = $this->subeventRepository->findById($id);
 
@@ -127,11 +127,10 @@ class SubeventForm
 
     /**
      * Zpracuje formulář.
-     * @param array $values
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(Form $form, array $values) : void
+    public function processForm(Form $form, \stdClass $values) : void
     {
         if ($form['cancel']->isSubmittedBy()) {
             return;
@@ -154,13 +153,12 @@ class SubeventForm
 
     /**
      * Ověří kolize mezi vyžadovanými a nekompatibilními podakcemi.
-     * @param $field
-     * @param $args
+     * @param int[][] $args
      * @throws ConnectionException
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function validateIncompatibleAndRequiredCollision($field, $args) : bool
+    public function validateIncompatibleAndRequiredCollision(MultiSelectBox $field, array $args) : bool
     {
         $incompatibleSubevents = $this->subeventRepository->findSubeventsByIds($args[0]);
         $requiredSubevents     = $this->subeventRepository->findSubeventsByIds($args[1]);

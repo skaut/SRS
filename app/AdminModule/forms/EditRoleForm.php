@@ -17,6 +17,8 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\Forms\Controls\MultiSelectBox;
+use Nette\Forms\Controls\SelectBox;
 use function in_array;
 
 /**
@@ -72,7 +74,6 @@ class EditRoleForm
 
     /**
      * Vytvoří formulář.
-     * @param $id
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
@@ -189,10 +190,9 @@ class EditRoleForm
 
     /**
      * Zpracuje formulář.
-     * @param array $values
      * @throws \Throwable
      */
-    public function processForm(Form $form, array $values) : void
+    public function processForm(Form $form, \stdClass $values) : void
     {
         if ($form['cancel']->isSubmittedBy()) {
             return;
@@ -229,7 +229,7 @@ class EditRoleForm
 
     /**
      * Vrátí možná oprávnění jako možnosti pro select.
-     * @return array
+     * @return string[]
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
@@ -261,13 +261,11 @@ class EditRoleForm
 
     /**
      * Připraví oprávnění jako možnost pro select.
-     * @param $optionsGroup
-     * @param $permissionName
-     * @param $resourceName
+     * @param string[] $optionsGroup
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    private function preparePermissionOption(&$optionsGroup, $permissionName, $resourceName) : void
+    private function preparePermissionOption(?array &$optionsGroup, string $permissionName, string $resourceName) : void
     {
         $permission                         = $this->permissionRepository->findByPermissionAndResourceName($permissionName, $resourceName);
         $optionsGroup[$permission->getId()] = 'common.permission_name.' . $permissionName . '.' . $resourceName;
@@ -275,11 +273,10 @@ class EditRoleForm
 
     /**
      * Ověří kolize mezi vyžadovanými a nekompatibilními rolemi.
-     * @param $field
-     * @param $args
+     * @param int[][] $args
      * @throws ConnectionException
      */
-    public function validateIncompatibleAndRequiredCollision($field, $args) : bool
+    public function validateIncompatibleAndRequiredCollision(MultiSelectBox $field, array $args) : bool
     {
         $incompatibleRoles = $this->roleRepository->findRolesByIds($args[0]);
         $requiredRoles     = $this->roleRepository->findRolesByIds($args[1]);
@@ -310,10 +307,9 @@ class EditRoleForm
 
     /**
      * Ověří, zda stránka, kam mají být uživatelé přesměrování po přihlášení, je pro ně viditelná.
-     * @param $field
-     * @param $args
+     * @param string[][] $args
      */
-    public function validateRedirectAllowed($field, $args) : bool
+    public function validateRedirectAllowed(SelectBox $field, array $args) : bool
     {
         return in_array($field->getValue(), $args[0]);
     }

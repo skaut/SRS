@@ -33,9 +33,8 @@ class SubeventRepository extends EntityRepository
 
     /**
      * Vrací podakci podle id.
-     * @param $id
      */
-    public function findById(int $id) : ?Subevent
+    public function findById(?int $id) : ?Subevent
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -77,8 +76,7 @@ class SubeventRepository extends EntityRepository
 
     /**
      * Vrací názvy podakcí, kromě podakce se zadaným id.
-     * @param $id
-     * @return array
+     * @return string[]
      */
     public function findOthersNames(int $id) : array
     {
@@ -93,8 +91,8 @@ class SubeventRepository extends EntityRepository
 
     /**
      * Vrací podakce podle id.
-     * @param $ids
-     * @return Collection
+     * @param int[] $ids
+     * @return Collection|Subevent[]
      */
     public function findSubeventsByIds(array $ids) : Collection
     {
@@ -106,8 +104,8 @@ class SubeventRepository extends EntityRepository
 
     /**
      * Vrací id podakcí.
-     * @param $subevents
-     * @return array
+     * @param Subevent[] $subevents
+     * @return int[]
      */
     public function findSubeventsIds(Collection $subevents) : array
     {
@@ -140,7 +138,7 @@ class SubeventRepository extends EntityRepository
 
     /**
      * Vrací seznam podakcí jako možnosti pro select.
-     * @return array
+     * @return string[]
      */
     public function getSubeventsOptions() : array
     {
@@ -159,8 +157,7 @@ class SubeventRepository extends EntityRepository
 
     /**
      * Vrací seznam podakcí jako možnosti pro select, podakce specifikovaná parametrem je vynechána.
-     * @param $subeventId
-     * @return array
+     * @return string[]
      */
     public function getSubeventsWithoutSubeventOptions(int $subeventId) : array
     {
@@ -180,7 +177,7 @@ class SubeventRepository extends EntityRepository
 
     /**
      * Vrací seznam podakcí, jako možnosti pro select
-     * @return array
+     * @return string[]
      */
     public function getExplicitOptions() : array
     {
@@ -199,7 +196,7 @@ class SubeventRepository extends EntityRepository
 
     /**
      * Vrací seznam podakcí, s informací o obsazenosti, jako možnosti pro select
-     * @return array
+     * @return string[]
      */
     public function getSubeventsOptionsWithCapacity() : array
     {
@@ -225,7 +222,7 @@ class SubeventRepository extends EntityRepository
 
     /**
      * Vrací seznam podakcí, s informací o obsazenosti, jako možnosti pro select
-     * @return array
+     * @return string[]
      */
     public function getExplicitOptionsWithCapacity() : array
     {
@@ -252,7 +249,7 @@ class SubeventRepository extends EntityRepository
 
     /**
      * Vrací seznam podakcí, kromě podakcí uživatele, s informací o obsazenosti, jako možnosti pro select.
-     * @return array
+     * @return string[]
      */
     public function getNonRegisteredSubeventsOptionsWithCapacity(User $user) : array
     {
@@ -289,7 +286,7 @@ class SubeventRepository extends EntityRepository
 
     /**
      * Vrací seznam podakcí, kromě podakcí uživatele, s informací o obsazenosti, jako možnosti pro select.
-     * @return array
+     * @return string[]
      */
     public function getNonRegisteredExplicitOptionsWithCapacity(User $user) : array
     {

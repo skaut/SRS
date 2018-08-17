@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
+use App\Model\CMS\Content\OrganizerContent;
 use Nette\Application\UI\Control;
 
 /**
@@ -13,7 +14,7 @@ use Nette\Application\UI\Control;
  */
 class OrganizerContentControl extends Control
 {
-    public function render($content) : void
+    public function render(OrganizerContent $content) : void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/organizer_content.latte');

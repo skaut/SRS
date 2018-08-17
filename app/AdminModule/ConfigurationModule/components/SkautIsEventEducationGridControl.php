@@ -83,12 +83,10 @@ class SkautIsEventEducationGridControl extends Control
 
     /**
      * Zpracuje úpravu propojení podakce s kurzy.
-     * @param $id
-     * @param $values
      * @throws AbortException
      * @throws \Throwable
      */
-    public function edit(int $id, array $values) : void
+    public function edit(int $id, \stdClass $values) : void
     {
         $subevent = $this->subeventRepository->findById($id);
 

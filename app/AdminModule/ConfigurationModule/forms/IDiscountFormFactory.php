@@ -13,8 +13,6 @@ interface IDiscountFormFactory
 {
     /**
      * Vytvoří komponentu.
-     * @param $id
-     * @return mixed
      */
-    public function create($id);
+    public function create($id) : DiscountForm;
 }

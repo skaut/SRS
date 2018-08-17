@@ -10,6 +10,7 @@ use App\Model\User\UserRepository;
 use App\Services\SkautIsService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Kdyby\Events\Event;
 use Nette;
 use Nette\Application\UI\Form;
 use Skautis\Wsdl\WsdlException;
@@ -31,6 +32,7 @@ class PersonalDetailsForm
      */
     private $user;
 
+    /** @var Event */
     public $onSkautIsError;
 
     /** @var BaseForm */
@@ -52,9 +54,8 @@ class PersonalDetailsForm
 
     /**
      * Vytvoří formulář.
-     * @param $id
      */
-    public function create($id) : Form
+    public function create(int $id) : Form
     {
         $this->user = $this->userRepository->findById($id);
 
@@ -125,11 +126,10 @@ class PersonalDetailsForm
 
     /**
      * Zpracuje formulář.
-     * @param array $values
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(Form $form, array $values) : void
+    public function processForm(Form $form, \stdClass $values) : void
     {
         if (array_key_exists('sex', $values)) {
             $this->user->setSex($values['sex']);

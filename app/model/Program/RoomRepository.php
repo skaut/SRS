@@ -20,16 +20,15 @@ class RoomRepository extends EntityRepository
 {
     /**
      * Vrací místnost podle id.
-     * @param $id
      */
-    public function findById(int $id) : ?Room
+    public function findById(?int $id) : ?Room
     {
         return $this->findOneBy(['id' => $id]);
     }
 
     /**
      * Vrací názvy všech místností.
-     * @return array
+     * @return string[]
      */
     public function findAllNames() : array
     {
@@ -42,8 +41,7 @@ class RoomRepository extends EntityRepository
 
     /**
      * Vrací názvy místností, kromě místnosti s id.
-     * @param $id
-     * @return array
+     * @return string[]
      */
     public function findOthersNames(int $id) : array
     {
@@ -58,8 +56,8 @@ class RoomRepository extends EntityRepository
 
     /**
      * Vrací místnosti podle id.
-     * @param $ids
-     * @return Collection
+     * @param int[] $ids
+     * @return Collection|Room[]
      */
     public function findRoomsByIds(array $ids) : Collection
     {

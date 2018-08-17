@@ -53,10 +53,9 @@ class SubeventsGridControl extends Control
 
     /**
      * Vytvoří komponentu.
-     * @param $name
      * @throws DataGridException
      */
-    public function createComponentSubeventsGrid($name) : void
+    public function createComponentSubeventsGrid(string $name) : void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -100,12 +99,11 @@ class SubeventsGridControl extends Control
 
     /**
      * Zpracuje odstranění podakce.
-     * @param $id
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
      */
-    public function handleDelete($id) : void
+    public function handleDelete(int $id) : void
     {
         $subevent = $this->subeventRepository->findById($id);
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
+use App\Model\CMS\Content\NewsContent;
 use App\Model\CMS\NewsRepository;
 use Nette\Application\UI\Control;
 
@@ -26,7 +27,7 @@ class NewsContentControl extends Control
         $this->newsRepository = $newsRepository;
     }
 
-    public function render($content) : void
+    public function render(NewsContent $content) : void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/news_content.latte');

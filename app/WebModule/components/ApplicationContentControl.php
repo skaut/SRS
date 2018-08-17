@@ -6,6 +6,7 @@ namespace App\WebModule\Components;
 
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
+use App\Model\CMS\Content\ApplicationContent;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
@@ -64,12 +65,11 @@ class ApplicationContentControl extends Control
     }
 
     /**
-     * @param $content
      * @throws SettingsException
      * @throws NonUniqueResultException
      * @throws \Throwable
      */
-    public function render($content) : void
+    public function render(ApplicationContent $content) : void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/application_content.latte');
@@ -113,11 +113,11 @@ class ApplicationContentControl extends Control
      * @throws NonUniqueResultException
      * @throws \Throwable
      */
-    protected function createComponentApplicationForm() : \Nette\Application\UI\Form
+    protected function createComponentApplicationForm() : Form
     {
         $form = $this->applicationFormFactory->create($this->getPresenter()->user->id);
 
-        $form->onSuccess[] = function (Form $form, array $values) : void {
+        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
             $this->getPresenter()->flashMessage('web.application_content.register_successful', 'success');
 
             $this->authenticator->updateRoles($this->getPresenter()->user);

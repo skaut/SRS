@@ -93,11 +93,11 @@ class ProgramService
 
     /**
      * Aktualizuje programy uživatelů (odhlásí nepovolené a přihlásí automaticky přihlašované).
-     * @param Collection|User[] $users
+     * @param User[] $users
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function updateUsersPrograms(Collection $users) : void
+    public function updateUsersPrograms(array $users) : void
     {
         foreach ($users as $user) {
             $oldUsersPrograms    = clone $user->getPrograms();

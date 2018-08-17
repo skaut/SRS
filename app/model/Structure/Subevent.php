@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Model\Structure;
 
 use App\Model\Enums\ApplicationState;
+use App\Model\Program\Block;
 use App\Model\SkautIs\SkautIsCourse;
+use App\Model\User\SubeventsApplication;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -41,7 +43,7 @@ class Subevent
     /**
      * Přihlášky.
      * @ORM\ManyToMany(targetEntity="\App\Model\User\SubeventsApplication", mappedBy="subevents", cascade={"persist"})
-     * @var Collection
+     * @var Collection|SubeventsApplication[]
      */
     protected $applications;
 
@@ -49,7 +51,7 @@ class Subevent
      * Bloky v podakci.
      * @ORM\OneToMany(targetEntity="\App\Model\Program\Block", mappedBy="subevent", cascade={"persist"})
      * @ORM\OrderBy({"name" = "ASC"})
-     * @var Collection
+     * @var Collection|Block[]
      */
     protected $blocks;
 
@@ -74,14 +76,14 @@ class Subevent
      *      joinColumns={@ORM\JoinColumn(name="subevent_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="incompatible_subevent_id", referencedColumnName="id")}
      *      )
-     * @var Collection
+     * @var Collection|Subevent[]
      */
     protected $incompatibleSubevents;
 
     /**
      * Podakce vyžadující tuto podakci.
      * @ORM\ManyToMany(targetEntity="Subevent", mappedBy="requiredSubevents", cascade={"persist"})
-     * @var Collection
+     * @var Collection|Subevent[]
      */
     protected $requiredBySubevent;
 
@@ -92,14 +94,14 @@ class Subevent
      *      joinColumns={@ORM\JoinColumn(name="subevent_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="required_subevent_id", referencedColumnName="id")}
      *      )
-     * @var Collection
+     * @var Collection|Subevent[]
      */
     protected $requiredSubevents;
 
     /**
      * Propojené skautIS kurzy.
      * @ORM\ManyToMany(targetEntity="\App\Model\SkautIs\SkautIsCourse")
-     * @var Collection
+     * @var Collection|SkautIsCourse[]
      */
     protected $skautIsCourses;
 
@@ -140,7 +142,7 @@ class Subevent
     }
 
     /**
-     * @return Collection
+     * @return Collection|Block[]
      */
     public function getBlocks() : Collection
     {
@@ -180,6 +182,9 @@ class Subevent
         return $this->incompatibleSubevents;
     }
 
+    /**
+     * @param Collection|Subevent[] $incompatibleSubevents
+     */
     public function setIncompatibleSubevents(Collection $incompatibleSubevents) : void
     {
         foreach ($this->getIncompatibleSubevents() as $subevent) {
@@ -242,6 +247,9 @@ class Subevent
         return $allRequiredBySubevent;
     }
 
+    /**
+     * @param Collection|Subevent[] $allRequiredBySubevent
+     */
     private function getRequiredBySubeventTransitiveRec(Collection &$allRequiredBySubevent, Subevent $subevent) : void
     {
         if ($this === $subevent || $allRequiredBySubevent->contains($subevent)) {
@@ -263,6 +271,9 @@ class Subevent
         return $this->requiredSubevents;
     }
 
+    /**
+     * @param Collection|Subevent[] $requiredSubevents
+     */
     public function setRequiredSubevents(Collection $requiredSubevents) : void
     {
         $this->requiredSubevents->clear();
@@ -284,6 +295,9 @@ class Subevent
         return $allRequiredSubevents;
     }
 
+    /**
+     * @param Collection|Subevent[] $allRequiredSubevents
+     */
     private function getRequiredSubeventsTransitiveRec(Collection &$allRequiredSubevents, Subevent $subevent) : void
     {
         if ($this === $subevent || $allRequiredSubevents->contains($subevent)) {

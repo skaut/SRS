@@ -116,13 +116,12 @@ class ApplicationsGridControl extends Control
 
     /**
      * Vytvoří komponentu.
-     * @param $name
      * @throws NonUniqueResultException
      * @throws DataGridException
      */
-    public function createComponentApplicationsGrid($name) : void
+    public function createComponentApplicationsGrid(string $name) : void
     {
-        $this->user = $this->userRepository->findById($this->getPresenter()->getParameter('id'));
+        $this->user = $this->userRepository->findById((int) $this->getPresenter()->getParameter('id'));
 
         $explicitSubeventsExists = $this->subeventRepository->explicitSubeventsExists();
 
@@ -257,11 +256,10 @@ class ApplicationsGridControl extends Control
 
     /**
      * Zpracuje přidání podakcí.
-     * @param $values
      * @throws AbortException
      * @throws \Throwable
      */
-    public function add($values) : void
+    public function add(\stdClass $values) : void
     {
         $selectedSubevents = $this->subeventRepository->findSubeventsByIds($values['subevents']);
 
@@ -287,12 +285,10 @@ class ApplicationsGridControl extends Control
 
     /**
      * Zpracuje úpravu přihlášky.
-     * @param $id
-     * @param $values
      * @throws AbortException
      * @throws \Throwable
      */
-    public function edit($id, $values) : void
+    public function edit(int $id, \stdClass $values) : void
     {
         $application = $this->applicationRepository->findById($id);
 
@@ -345,11 +341,10 @@ class ApplicationsGridControl extends Control
 
     /**
      * Vygeneruje příjmový pokladní doklad.
-     * @param $id
      * @throws SettingsException
      * @throws \Throwable
      */
-    public function handleGeneratePaymentProofCash($id) : void
+    public function handleGeneratePaymentProofCash(int $id) : void
     {
         $this->pdfExportService->generateApplicationsPaymentProof(
             $application = $this->applicationRepository->findById($id),
@@ -360,11 +355,10 @@ class ApplicationsGridControl extends Control
 
     /**
      * Vygeneruje potvrzení o přijetí platby.
-     * @param $id
      * @throws SettingsException
      * @throws \Throwable
      */
-    public function handleGeneratePaymentProofBank($id) : void
+    public function handleGeneratePaymentProofBank(int $id) : void
     {
         $this->pdfExportService->generateApplicationsPaymentProof(
             $application = $this->applicationRepository->findById($id),
@@ -375,11 +369,10 @@ class ApplicationsGridControl extends Control
 
     /**
      * Zruší přihlášku.
-     * @param $id
      * @throws AbortException
      * @throws \Throwable
      */
-    public function handleCancelApplication($id) : void
+    public function handleCancelApplication(int $id) : void
     {
         $application = $this->applicationRepository->findById($id);
 
@@ -394,7 +387,7 @@ class ApplicationsGridControl extends Control
 
     /**
      * Vrátí platební metody jako možnosti pro select.
-     * @return array
+     * @return string[]
      */
     private function preparePaymentMethodOptions() : array
     {

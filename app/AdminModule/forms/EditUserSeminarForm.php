@@ -26,6 +26,8 @@ use App\Services\MailService;
 use App\Utils\Validators;
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\Forms\Controls\MultiSelectBox;
+use Nette\Http\FileUpload;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
 use function array_key_exists;
@@ -103,9 +105,8 @@ class EditUserSeminarForm
 
     /**
      * Vytvoří formulář.
-     * @param $id
      */
-    public function create($id) : Form
+    public function create(int $id) : Form
     {
         $this->user = $this->userRepository->findById($id);
 
@@ -190,10 +191,9 @@ class EditUserSeminarForm
 
     /**
      * Zpracuje formulář.
-     * @param array $values
      * @throws \Throwable
      */
-    public function processForm(Form $form, array $values) : void
+    public function processForm(Form $form, \stdClass $values) : void
     {
         if ($form['cancel']->isSubmittedBy()) {
             return;
@@ -280,10 +280,8 @@ class EditUserSeminarForm
 
     /**
      * Ověří, že není vybrána role "Neregistrovaný".
-     * @param $field
-     * @param $args
      */
-    public function validateRolesNonregistered($field, $args) : bool
+    public function validateRolesNonregistered(MultiSelectBox $field) : bool
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
         return $this->validators->validateRolesNonregistered($selectedRoles, $this->user);
@@ -291,10 +289,8 @@ class EditUserSeminarForm
 
     /**
      * Ověří kapacitu rolí.
-     * @param $field
-     * @param $args
      */
-    public function validateRolesCapacities($field, $args) : bool
+    public function validateRolesCapacities(MultiSelectBox $field) : bool
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
         return $this->validators->validateRolesCapacities($selectedRoles, $this->user);
@@ -302,9 +298,8 @@ class EditUserSeminarForm
 
     /**
      * Vygeneruje cestu souboru.
-     * @param $file
      */
-    private function generatePath($file) : string
+    private function generatePath(FileUpload $file) : string
     {
         return CustomFile::PATH . '/' . Random::generate(5) . '/' . Strings::webalize($file->name, '.');
     }

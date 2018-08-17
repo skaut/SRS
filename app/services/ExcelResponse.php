@@ -26,7 +26,7 @@ class ExcelResponse implements IResponse
     private $filename;
 
 
-    public function __construct(Spreadsheet $spreadsheet, $filename)
+    public function __construct(Spreadsheet $spreadsheet, string $filename)
     {
         $this->spreadsheet = $spreadsheet;
         $this->filename    = $filename;

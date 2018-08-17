@@ -48,7 +48,7 @@ class MailingPresenter extends ConfigurationBasePresenter
     {
         $form = $this->mailingFormFactory->create($this->user->getId());
 
-        $form->onSuccess[] = function (Form $form, array $values) : void {
+        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');

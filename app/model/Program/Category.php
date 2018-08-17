@@ -32,7 +32,7 @@ class Category
     /**
      * Role, které si mohou přihlašovat programy z kategorie.
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="registerableCategories")
-     * @var Collection
+     * @var Collection|Role[]
      */
     protected $registerableRoles;
 
@@ -40,7 +40,7 @@ class Category
      * Bloky v kategorii.
      * @ORM\OneToMany(targetEntity="Block", mappedBy="category", cascade={"persist"})
      * @ORM\OrderBy({"name" = "ASC"})
-     * @var Collection
+     * @var Collection|Block[]
      */
     protected $blocks;
 
@@ -67,7 +67,7 @@ class Category
     }
 
     /**
-     * @return Role[]|Collection
+     * @return Collection|Role[]
      */
     public function getRegisterableRoles() : Collection
     {
@@ -82,7 +82,7 @@ class Category
     }
 
     /**
-     * @param Role[]|Collection $registerableRoles
+     * @param Collection|Role[] $registerableRoles
      */
     public function setRegisterableRoles(Collection $registerableRoles) : void
     {
@@ -102,7 +102,7 @@ class Category
     }
 
     /**
-     * @return Block[]|Collection
+     * @return Collection|Block[]
      */
     public function getBlocks() : Collection
     {

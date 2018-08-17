@@ -100,10 +100,9 @@ class ProgramAttendeesGridControl extends Control
 
     /**
      * Vytvoří komponentu.
-     * @param $name
      * @throws DataGridException
      */
-    public function createComponentProgramAttendeesGrid($name) : void
+    public function createComponentProgramAttendeesGrid(string $name) : void
     {
         $programId = $this->getPresenter()->getParameter('programId');
         if (! $programId) {
@@ -202,14 +201,13 @@ class ProgramAttendeesGridControl extends Control
 
     /**
      * Přihlásí uživatele na program.
-     * @param $id
      * @throws SettingsException
      * @throws AbortException
      * @throws \Throwable
      * @throws MailingException
      * @throws MailingMailCreationException
      */
-    public function handleRegister($id) : void
+    public function handleRegister(int $id) : void
     {
         $editedUser = $this->userRepository->findById($id);
 
@@ -244,14 +242,13 @@ class ProgramAttendeesGridControl extends Control
 
     /**
      * Odhlásí uživatele z programu.
-     * @param $id
      * @throws SettingsException
      * @throws AbortException
      * @throws \Throwable
      * @throws MailingException
      * @throws MailingMailCreationException
      */
-    public function handleUnregister($id) : void
+    public function handleUnregister(int $id) : void
     {
         $editedUser = $this->userRepository->findById($id);
 
@@ -284,7 +281,7 @@ class ProgramAttendeesGridControl extends Control
 
     /**
      * Hromadně přihlásí program uživatelům.
-     * @param array $ids
+     * @param int[] $ids
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -314,7 +311,7 @@ class ProgramAttendeesGridControl extends Control
 
     /**
      * Hromadně odhlásí program uživatelům.
-     * @param array $ids
+     * @param int[] $ids
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException

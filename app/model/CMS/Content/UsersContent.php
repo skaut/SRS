@@ -22,12 +22,13 @@ use Nette\Application\UI\Form;
  */
 class UsersContent extends Content implements IContent
 {
+    /** @var string */
     protected $type = Content::USERS;
 
     /**
      * Role, jejichž uživatelé budou vypsáni.
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role")
-     * @var Collection
+     * @var Collection|Role[]
      */
     protected $roles;
 
@@ -36,11 +37,9 @@ class UsersContent extends Content implements IContent
 
 
     /**
-     *
-     * @param $area
      * @throws PageException
      */
-    public function __construct(Page $page, $area)
+    public function __construct(Page $page, string $area)
     {
         parent::__construct($page, $area);
         $this->roles = new ArrayCollection();
@@ -52,7 +51,7 @@ class UsersContent extends Content implements IContent
     }
 
     /**
-     * @return Collection
+     * @return Collection|Role[]
      */
     public function getRoles() : Collection
     {
@@ -60,7 +59,7 @@ class UsersContent extends Content implements IContent
     }
 
     /**
-     * @param Collection $roles
+     * @param Collection|Role[] $roles
      */
     public function setRoles(Collection $roles) : void
     {
@@ -88,9 +87,8 @@ class UsersContent extends Content implements IContent
 
     /**
      * Zpracuje při uložení stránky část formuláře týkající se obsahu.
-     * @param array $values
      */
-    public function contentFormSucceeded(Form $form, array $values) : void
+    public function contentFormSucceeded(Form $form, \stdClass $values) : void
     {
         parent::contentFormSucceeded($form, $values);
         $values      = $values[$this->getContentFormName()];

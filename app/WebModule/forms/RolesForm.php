@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\WebModule\Forms;
 
+use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Settings\SettingsException;
@@ -13,6 +14,7 @@ use App\Services\ApplicationService;
 use App\Utils\Validators;
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\Forms\Controls\MultiSelectBox;
 
 /**
  * Formulář pro změnu rolí.
@@ -61,11 +63,10 @@ class RolesForm
 
     /**
      * Vytvoří formulář.
-     * @param $id
      * @throws SettingsException
      * @throws \Throwable
      */
-    public function create($id) : Form
+    public function create(int $id) : Form
     {
         $this->user = $this->userRepository->findById($id);
 
@@ -140,10 +141,9 @@ class RolesForm
 
     /**
      * Zpracuje formulář.
-     * @param array $values
      * @throws \Throwable
      */
-    public function processForm(Form $form, array $values) : void
+    public function processForm(Form $form, \stdClass $values) : void
     {
         if ($form['submit']->isSubmittedBy()) {
             $selectedRoles = $this->roleRepository->findRolesByIds($values['roles']);
@@ -155,10 +155,8 @@ class RolesForm
 
     /**
      * Ověří kapacitu rolí.
-     * @param $field
-     * @param $args
      */
-    public function validateRolesCapacities($field, $args) : bool
+    public function validateRolesCapacities(MultiSelectBox $field) : bool
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
         return $this->validators->validateRolesCapacities($selectedRoles, $this->user);
@@ -166,10 +164,9 @@ class RolesForm
 
     /**
      * Ověří kompatibilitu rolí.
-     * @param $field
-     * @param $args
+     * @param Role[] $args
      */
-    public function validateRolesIncompatible($field, $args) : bool
+    public function validateRolesIncompatible(MultiSelectBox $field, array $args) : bool
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
         $testRole      = $args[0];
@@ -179,10 +176,9 @@ class RolesForm
 
     /**
      * Ověří výběr vyžadovaných rolí.
-     * @param $field
-     * @param $args
+     * @param Role[] $args
      */
-    public function validateRolesRequired($field, $args) : bool
+    public function validateRolesRequired(MultiSelectBox $field, array $args) : bool
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
         $testRole      = $args[0];
@@ -192,10 +188,8 @@ class RolesForm
 
     /**
      * Ověří registrovatelnost rolí.
-     * @param $field
-     * @param $args
      */
-    public function validateRolesRegisterable($field, $args) : bool
+    public function validateRolesRegisterable(MultiSelectBox $field) : bool
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
         return $this->validators->validateRolesRegisterable($selectedRoles, $this->user);

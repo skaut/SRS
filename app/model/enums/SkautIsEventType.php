@@ -8,14 +8,17 @@ class SkautIsEventType
 {
     /**
      * Vzdělávací akce.
+     * @var string
      */
     public const EDUCATION = 'education';
 
     /**
      * Další akce.
+     * @var string
      */
     public const GENERAL = 'general';
 
+    /** @var string[] */
     public static $types = [
         self::GENERAL,
         self::EDUCATION,
@@ -24,7 +27,7 @@ class SkautIsEventType
 
     /**
      * Vrací možnosti typů akcí pro select.
-     * @return array
+     * @return string[]
      */
     public static function getSkautIsEventTypesOptions() : array
     {

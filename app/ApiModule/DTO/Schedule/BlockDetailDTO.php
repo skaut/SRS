@@ -163,12 +163,12 @@ class BlockDetailDTO
         $this->aboutLector = $aboutLector;
     }
 
-    public function getLectorPhoto() : string
+    public function getLectorPhoto() : ?string
     {
         return $this->lectorPhoto;
     }
 
-    public function setLectorPhoto(string $lectorPhoto) : void
+    public function setLectorPhoto(?string $lectorPhoto) : void
     {
         $this->lectorPhoto = $lectorPhoto;
     }
@@ -193,12 +193,12 @@ class BlockDetailDTO
         $this->durationMinutes = $durationMinutes;
     }
 
-    public function getCapacity() : int
+    public function getCapacity() : ?int
     {
         return $this->capacity;
     }
 
-    public function setCapacity(int $capacity) : void
+    public function setCapacity(?int $capacity) : void
     {
         $this->capacity = $capacity;
     }

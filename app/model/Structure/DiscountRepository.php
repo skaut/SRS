@@ -17,9 +17,8 @@ class DiscountRepository extends EntityRepository
 {
     /**
      * Vrací slevu podle id.
-     * @param $id
      */
-    public function findById(int $id) : ?Discount
+    public function findById(?int $id) : ?Discount
     {
         return $this->findOneBy(['id' => $id]);
     }

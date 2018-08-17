@@ -59,7 +59,7 @@ class Authenticator implements NS\IAuthenticator
 
     /**
      * Autentizuje uživatele a případně vytvoří nového.
-     * @param array $credentials
+     * @param string[] $credentials
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -100,9 +100,8 @@ class Authenticator implements NS\IAuthenticator
 
     /**
      * Aktualizuje údaje uživatele ze skautIS.
-     * @param $skautISUser
      */
-    private function updateUserFromSkautIS(User $user, $skautISUser) : void
+    private function updateUserFromSkautIS(User $user, \stdClass $skautISUser) : void
     {
         $skautISPerson = $this->skautIsService->getPersonDetail($skautISUser->ID_Person);
 
@@ -149,9 +148,8 @@ class Authenticator implements NS\IAuthenticator
 
     /**
      * Aktualizuje role přihlášeného uživatele.
-     * @param $user
      */
-    public function updateRoles($user, ?Role $testedRole = null) : void
+    public function updateRoles(NS\User $user, ?Role $testedRole = null) : void
     {
         $dbuser = $this->userRepository->findById($user->id);
 

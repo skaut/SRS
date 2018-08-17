@@ -50,9 +50,8 @@ class CustomInputForm
 
     /**
      * Vytvoří formulář.
-     * @param $id
      */
-    public function create($id) : Form
+    public function create(int $id) : Form
     {
         $this->customInput = $this->customInputRepository->findById($id);
 
@@ -100,12 +99,11 @@ class CustomInputForm
 
     /**
      * Zpracuje formulář.
-     * @param array $values
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(Form $form, array $values) : void
+    public function processForm(Form $form, \stdClass $values) : void
     {
         if ($form['cancel']->isSubmittedBy()) {
             return;
@@ -147,7 +145,7 @@ class CustomInputForm
 
     /**
      * Vrátí typy vlastních polí jako možnosti pro select.
-     * @return array
+     * @return string[]
      */
     private function prepareCustomInputTypesOptions() : array
     {

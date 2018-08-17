@@ -63,11 +63,10 @@ class AddRoleForm
 
     /**
      * Zpracuje formulář.
-     * @param array $values
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(Form $form, array $values) : void
+    public function processForm(Form $form, \stdClass $values) : void
     {
         if ($form['cancel']->isSubmittedBy()) {
             return;

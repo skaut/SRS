@@ -11,9 +11,16 @@
 
     <file>app</file>
     <rule ref="Doctrine">
-        <!-- Right now causes problem with several properties used for Doctrine mapping -->
+        <!-- Zpusobuje problem s property pouzivanymi v Doctrine mappings -->
         <exclude name="SlevomatCodingStandard.Classes.UnusedPrivateElements"/>
 
+        <!-- Zakazuje pouziti @author anotace -->
         <exclude name="SlevomatCodingStandard.Commenting.ForbiddenAnnotations.AnnotationForbidden"/>
+
+        <!-- Chybejici typehints zatim nelze doplnit u funkcí volaných z AJAX nebo pretizenych funkci -->
+        <exclude name="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint"/>
+
+        <!-- Docasne ignorovano, dokud nebudou vytvoreny lepsi vyjimky -->
+        <exclude name="SlevomatCodingStandard.Classes.SuperfluousExceptionNaming.SuperfluousSuffix"/>
     </rule>
 </ruleset>

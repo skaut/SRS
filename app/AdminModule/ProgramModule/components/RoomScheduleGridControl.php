@@ -66,12 +66,11 @@ class RoomScheduleGridControl extends Control
 
     /**
      * Vytvoří komponentu.
-     * @param $name
      * @throws DataGridException
      */
-    public function createComponentRoomScheduleGrid($name) : void
+    public function createComponentRoomScheduleGrid(string $name) : void
     {
-        $this->room = $this->roomRepository->findById($this->getPresenter()->getParameter('id'));
+        $this->room = $this->roomRepository->findById((int) $this->getPresenter()->getParameter('id'));
 
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -109,7 +108,7 @@ class RoomScheduleGridControl extends Control
      */
     public function handleExportRoomsSchedule() : void
     {
-        $this->room = $this->roomRepository->findById($this->getPresenter()->getParameter('id'));
+        $this->room = $this->roomRepository->findById((int) $this->getPresenter()->getParameter('id'));
 
         $response = $this->excelExportService->exportRoomSchedule($this->room, 'harmonogram-mistnosti.xlsx');
 

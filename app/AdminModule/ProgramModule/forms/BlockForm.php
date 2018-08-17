@@ -97,11 +97,9 @@ class BlockForm
 
     /**
      * Vytvoří formulář.
-     * @param $id
-     * @param $userId
      * @throws NonUniqueResultException
      */
-    public function create($id, $userId) : Form
+    public function create(int $id, int $userId) : Form
     {
         $this->block = $this->blockRepository->findById($id);
         $this->user  = $this->userRepository->findById($userId);
@@ -208,10 +206,9 @@ class BlockForm
 
     /**
      * Zpracuje formulář.
-     * @param array $values
      * @throws \Throwable
      */
-    public function processForm(Form $form, array $values) : void
+    public function processForm(Form $form, \stdClass $values) : void
     {
         if ($form['cancel']->isSubmittedBy()) {
             return;
@@ -281,10 +278,8 @@ class BlockForm
 
     /**
      * Ověří, zda může být program automaticky přihlašovaný.
-     * @param $field
-     * @param $args
      */
-    public function validateAutoRegister($field, $args) : bool
+    public function validateAutoRegister() : bool
     {
         if ($this->block) {
             if ($this->block->getMandatory() !== 2 && ($this->block->getProgramsCount() > 1 ||

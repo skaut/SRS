@@ -19,12 +19,14 @@ use Nette\Application\AbortException;
  */
 abstract class ConfigurationBasePresenter extends AdminBasePresenter
 {
+    /** @var string */
+    protected $resource = Resource::CONFIGURATION;
+
     /**
      * @var SubeventRepository
      * @inject
      */
     public $subeventRepository;
-    protected $resource = Resource::CONFIGURATION;
 
     /**
      * @throws AbortException
@@ -35,6 +37,7 @@ abstract class ConfigurationBasePresenter extends AdminBasePresenter
 
         $this->checkPermission(Permission::MANAGE);
     }
+
 
     /**
      * @throws SettingsException

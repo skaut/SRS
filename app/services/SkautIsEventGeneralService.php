@@ -17,7 +17,7 @@ use function array_key_exists;
  */
 class SkautIsEventGeneralService extends SkautIsEventService
 {
-    public function isEventDraft($eventId) : bool
+    public function isEventDraft(int $eventId) : bool
     {
         return $this->getEventDetail($eventId)->ID_EventGeneralState === 'draft';
     }
@@ -51,11 +51,7 @@ class SkautIsEventGeneralService extends SkautIsEventService
         return true;
     }
 
-    /**
-     * @param $eventId
-     * @return mixed
-     */
-    protected function getEventDetail($eventId)
+    protected function getEventDetail(int $eventId) : \stdClass
     {
         return $this->skautIs->event->EventGeneralDetail([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -64,9 +60,9 @@ class SkautIsEventGeneralService extends SkautIsEventService
     }
 
     /**
-     * @return mixed
+     * @return \stdClass[]
      */
-    protected function getDraftEvents()
+    protected function getDraftEvents() : array
     {
         return $this->skautIs->event->EventGeneralAll([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -76,10 +72,9 @@ class SkautIsEventGeneralService extends SkautIsEventService
 
     /**
      * Vrací účastníky akce.
-     * @param $eventId
-     * @return mixed
+     * @return \stdClass[]
      */
-    private function getAllParticipants($eventId)
+    private function getAllParticipants(int $eventId) : array
     {
         return $this->skautIs->event->ParticipantGeneralAll([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -89,8 +84,6 @@ class SkautIsEventGeneralService extends SkautIsEventService
 
     /**
      * Přidá účastníka akce.
-     * @param $eventId
-     * @param $personId
      */
     private function insertParticipant(int $eventId, int $personId) : void
     {

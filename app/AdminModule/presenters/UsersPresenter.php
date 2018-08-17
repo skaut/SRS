@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Presenters;
 
+use App\AdminModule\Components\ApplicationsGridControl;
 use App\AdminModule\Components\IApplicationsGridControlFactory;
 use App\AdminModule\Components\IUsersGridControlFactory;
+use App\AdminModule\Components\UsersGridControl;
 use App\AdminModule\Forms\AddLectorForm;
 use App\AdminModule\Forms\EditUserPersonalDetailsForm;
 use App\AdminModule\Forms\EditUserSeminarForm;
@@ -30,6 +32,7 @@ use Nette\Application\UI\Form;
  */
 class UsersPresenter extends AdminBasePresenter
 {
+    /** @var string */
     protected $resource = Resource::USERS;
 
     /**
@@ -102,7 +105,7 @@ class UsersPresenter extends AdminBasePresenter
         $this->template->editPayment         = false;
     }
 
-    public function renderDetail($id) : void
+    public function renderDetail(int $id) : void
     {
         $user = $this->userRepository->findById($id);
 
@@ -126,7 +129,6 @@ class UsersPresenter extends AdminBasePresenter
 
     /**
      * Zpracuje fulltext vyhledávání v displayName uživatelů.
-     * @param $text
      */
     public function handleSearch($text) : void
     {
@@ -184,7 +186,7 @@ class UsersPresenter extends AdminBasePresenter
      */
     public function handleCancelRegistration() : void
     {
-        $user       = $this->userRepository->findById($this->getParameter('id'));
+        $user       = $this->userRepository->findById((int) $this->getParameter('id'));
         $loggedUser = $this->userRepository->findById($this->user->id);
 
         $this->applicationService->cancelRegistration($user, ApplicationState::CANCELED, $loggedUser);
@@ -193,16 +195,16 @@ class UsersPresenter extends AdminBasePresenter
         $this->redirect('this');
     }
 
-    protected function createComponentUsersGrid()
+    protected function createComponentUsersGrid() : UsersGridControl
     {
         return $this->usersGridControlFactory->create();
     }
 
-    protected function createComponentAddLectorForm()
+    protected function createComponentAddLectorForm() : Form
     {
         $form = $this->addLectorFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, array $values) : void {
+        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
             if ($form['cancel']->isSubmittedBy()) {
                 $this->redirect('Users:default');
             } else {
@@ -214,11 +216,11 @@ class UsersPresenter extends AdminBasePresenter
         return $form;
     }
 
-    protected function createComponentEditUserPersonalDetailsForm()
+    protected function createComponentEditUserPersonalDetailsForm() : Form
     {
-        $form = $this->editUserPersonalDetailsFormFactory->create($this->getParameter('id'));
+        $form = $this->editUserPersonalDetailsFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, array $values) : void {
+        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
             if ($form['cancel']->isSubmittedBy()) {
                 $this->redirect('this');
             } else {
@@ -232,7 +234,7 @@ class UsersPresenter extends AdminBasePresenter
 
     protected function createComponentEditUserSeminarForm() : Form
     {
-        $form = $this->editUserSeminarFormFactory->create($this->getParameter('id'));
+        $form = $this->editUserSeminarFormFactory->create((int) $this->getParameter('id'));
 
         $form->onError[] = function (Form $form) : void {
             foreach ($form->errors as $error) {
@@ -242,7 +244,7 @@ class UsersPresenter extends AdminBasePresenter
             $this->redirect('this');
         };
 
-        $form->onSuccess[] = function (Form $form, array $values) : void {
+        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
             if (! $form['cancel']->isSubmittedBy()) {
                 $this->flashMessage('admin.users.users_saved', 'success');
             }
@@ -253,7 +255,7 @@ class UsersPresenter extends AdminBasePresenter
         return $form;
     }
 
-    protected function createComponentApplicationsGrid()
+    protected function createComponentApplicationsGrid() : ApplicationsGridControl
     {
         return $this->applicationsGridControlFactory->create();
     }

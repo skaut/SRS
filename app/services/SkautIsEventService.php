@@ -27,9 +27,8 @@ abstract class SkautIsEventService
 
     /**
      * Vrací true, pokud je akce neuzavřená.
-     * @param $eventId
      */
-    abstract public function isEventDraft($eventId) : bool;
+    abstract public function isEventDraft(int $eventId) : bool;
 
     /**
      * Vloží účastníky do skautIS.
@@ -40,29 +39,26 @@ abstract class SkautIsEventService
 
     /**
      * Vrací údaje o akci.
-     * @param $eventId
-     * @return mixed
      */
-    abstract protected function getEventDetail($eventId);
+    abstract protected function getEventDetail(int $eventId) : \stdClass;
 
     /**
      * Vrací seznam neuzavřených akcí.
-     * @return mixed
+     * @return \stdClass[]
      */
-    abstract protected function getDraftEvents();
+    abstract protected function getDraftEvents() : array;
 
     /**
      * Vrací název akce.
-     * @param $eventId
      */
-    public function getEventDisplayName($eventId) : string
+    public function getEventDisplayName(int $eventId) : string
     {
         return $this->getEventDetail($eventId)->DisplayName;
     }
 
     /**
      * Vrací seznam neuzavřených akcí pro select.
-     * @return array
+     * @return string[]
      */
     public function getEventsOptions() : array
     {

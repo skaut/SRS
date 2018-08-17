@@ -13,6 +13,8 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\Utils\DateTime;
+use Nextras\Forms\Controls\DatePicker;
 
 /**
  * Formulář pro nastavení semináře.
@@ -89,13 +91,12 @@ class SeminarForm
 
     /**
      * Zpracuje formulář.
-     * @param array $values
-     * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException
+     * @throws SettingsException
      * @throws \Throwable
      */
-    public function processForm(Form $form, array $values) : void
+    public function processForm(Form $form, \stdClass $values) : void
     {
         $this->settingsRepository->setValue(Settings::SEMINAR_NAME, $values['seminarName']);
         $implicitSubevent = $this->subeventRepository->findImplicit();
@@ -109,30 +110,27 @@ class SeminarForm
 
     /**
      * Ověří, že datum začátku semináře je dříve než konce.
-     * @param $field
-     * @param $args
+     * @param DateTime[] $args
      */
-    public function validateSeminarFromDate($field, $args) : bool
+    public function validateSeminarFromDate(DatePicker $field, array $args) : bool
     {
         return $args[0] <= $args[1];
     }
 
     /**
      * Ověří, že datum konce semináře je později než začátku.
-     * @param $field
-     * @param $args
+     * @param DateTime[] $args
      */
-    public function validateSeminarToDate($field, $args) : bool
+    public function validateSeminarToDate(DatePicker $field, array $args) : bool
     {
         return $args[0] >= $args[1];
     }
 
     /**
      * Ověří, že datum uzavření registrace je dříve než začátek semináře.
-     * @param $field
-     * @param $args
+     * @param DateTime[] $args
      */
-    public function validateEditRegistrationTo($field, $args) : bool
+    public function validateEditRegistrationTo(DatePicker $field, array $args) : bool
     {
         return $args[0] < $args[1];
     }

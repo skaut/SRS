@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Program;
 
+use App\Model\Structure\Subevent;
 use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -24,9 +25,8 @@ class BlockRepository extends EntityRepository
 {
     /**
      * Vrací blok podle id.
-     * @param $id
      */
-    public function findById($id) : ?Block
+    public function findById(?int $id) : ?Block
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -45,7 +45,7 @@ class BlockRepository extends EntityRepository
 
     /**
      * Vrací názvy všech bloků.
-     * @return array
+     * @return string[]
      */
     public function findAllNames() : array
     {
@@ -58,7 +58,7 @@ class BlockRepository extends EntityRepository
 
     /**
      * Vrací všechny bloky seřazené podle názvu.
-     * @return array
+     * @return Block[]
      */
     public function findAllOrderedByName() : array
     {
@@ -70,7 +70,7 @@ class BlockRepository extends EntityRepository
 
     /**
      * Vrací všechny bloky nezařezené v kategorii, seřazené podle názvu.
-     * @return array
+     * @return Block[]
      */
     public function findAllUncategorizedOrderedByName() : array
     {
@@ -83,8 +83,7 @@ class BlockRepository extends EntityRepository
 
     /**
      * Vrací názvy ostatních bloků, kromě bloku se zadaným id.
-     * @param $id
-     * @return array
+     * @return string[]
      */
     public function findOthersNames(int $id) : array
     {
@@ -99,8 +98,7 @@ class BlockRepository extends EntityRepository
 
     /**
      * Vrací bloky podle textu obsaženého v názvu, seřazené podle názvu.
-     * @param $text
-     * @return array
+     * @return Block[]
      */
     public function findByLikeNameOrderedByName(string $text, bool $unassignedOnly = false) : array
     {
@@ -120,8 +118,8 @@ class BlockRepository extends EntityRepository
 
     /**
      * Vrací bloky, které jsou pro uživatele povinné a není na ně přihlášený.
-     * @param Collection $categories
-     * @param Collection $subevents
+     * @param Collection|Category[] $categories
+     * @param Collection|Subevent[] $subevents
      * @return Collection|Block[]
      */
     public function findMandatoryForCategoriesAndSubevents(User $user, Collection $categories, Collection $subevents) : Collection
@@ -158,8 +156,8 @@ class BlockRepository extends EntityRepository
 
     /**
      * Vrací id bloků.
-     * @param $blocks
-     * @return array
+     * @param Collection|Block[] $blocks
+     * @return int[]
      */
     public function findBlocksIds(Collection $blocks) : array
     {
@@ -170,8 +168,8 @@ class BlockRepository extends EntityRepository
 
     /**
      * Vrací bloky podle id.
-     * @param $ids
-     * @return Collection
+     * @param int[] $ids
+     * @return Collection|Block[]
      */
     public function findBlocksByIds(array $ids) : Collection
     {

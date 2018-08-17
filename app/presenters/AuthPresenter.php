@@ -62,7 +62,7 @@ class AuthPresenter extends BasePresenter
      */
     public function actionLogin(?string $backlink = null) : void
     {
-        if ($this->getHttpRequest()->getPost() == null) {
+        if (empty($this->getHttpRequest()->getPost())) {
             $loginUrl = $this->skautIsService->getLoginUrl($backlink);
             $this->redirectUrl($loginUrl);
         }
@@ -99,7 +99,6 @@ class AuthPresenter extends BasePresenter
 
     /**
      * Provede přesměrování po úspěšném přihlášení, v závislosti na nastavení, nastavení role nebo returnUrl.
-     * @param $returnUrl
      * @throws SettingsException
      * @throws AbortException
      * @throws \Throwable

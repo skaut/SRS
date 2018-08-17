@@ -17,6 +17,7 @@ use function explode;
  */
 class CustomSelect extends CustomInput
 {
+    /** @var string */
     protected $type = CustomInput::SELECT;
 
     /**
@@ -39,7 +40,7 @@ class CustomSelect extends CustomInput
 
     /**
      * Vrátí možnosti jako možnosti pro select.
-     * @return array
+     * @return string[]
      */
     public function prepareSelectOptions() : array
     {

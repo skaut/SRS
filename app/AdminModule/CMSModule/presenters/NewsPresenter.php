@@ -48,9 +48,9 @@ class NewsPresenter extends CMSBasePresenter
 
     protected function createComponentNewsForm() : Form
     {
-        $form = $this->newsFormFactory->create($this->getParameter('id'));
+        $form = $this->newsFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, array $values) : void {
+        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
             if ($form['cancel']->isSubmittedBy()) {
                 $this->redirect('News:default');
             }

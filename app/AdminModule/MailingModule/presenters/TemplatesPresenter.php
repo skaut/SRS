@@ -36,7 +36,7 @@ class TemplatesPresenter extends MailingBasePresenter
     public $editTemplateFormFactory;
 
 
-    public function renderEdit($id) : void
+    public function renderEdit(int $id) : void
     {
         $template = $this->templateRepository->findById($id);
 
@@ -49,11 +49,11 @@ class TemplatesPresenter extends MailingBasePresenter
         return $this->mailTemplatesGridControlFactory->create();
     }
 
-    protected function createComponentEditTemplateForm() : \Nette\Application\UI\Form
+    protected function createComponentEditTemplateForm() : Form
     {
-        $form = $this->editTemplateFormFactory->create($this->getParameter('id'));
+        $form = $this->editTemplateFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, array $values) : void {
+        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
             if ($form['cancel']->isSubmittedBy()) {
                 $this->redirect('Templates:default');
             }

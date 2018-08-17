@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\WebModule\Forms;
 
+use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Enums\Sex;
 use App\Model\Program\ProgramRepository;
@@ -13,6 +14,7 @@ use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
+use App\Model\Structure\Subevent;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\ApplicationRepository;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
@@ -30,9 +32,12 @@ use App\Services\SkautIsService;
 use App\Utils\Validators;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\NonUniqueResultException;
+use Kdyby\Events\Event;
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\Forms\Controls\MultiSelectBox;
 use Nette\Forms\IControl;
+use Nette\Http\FileUpload;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
 use Skautis\Wsdl\WsdlException;
@@ -57,6 +62,7 @@ class ApplicationForm
      */
     private $user;
 
+    /** @var Event */
     public $onSkautIsError;
 
     /**
@@ -147,12 +153,11 @@ class ApplicationForm
 
     /**
      * Vytvoří formulář.
-     * @param $id
      * @throws SettingsException
      * @throws NonUniqueResultException
      * @throws \Throwable
      */
-    public function create($id) : Form
+    public function create(int $id) : Form
     {
         $this->user = $this->userRepository->findById($id);
 
@@ -236,10 +241,9 @@ class ApplicationForm
 
     /**
      * Zpracuje formulář.
-     * @param array $values
      * @throws \Throwable
      */
-    public function processForm(Form $form, array $values) : void
+    public function processForm(Form $form, \stdClass $values) : void
     {
         $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($values) : void {
             if (array_key_exists('sex', $values)) {
@@ -508,10 +512,8 @@ class ApplicationForm
 
     /**
      * Ověří kapacity podakcí.
-     * @param $field
-     * @param $args
      */
-    public function validateSubeventsCapacities($field, $args) : bool
+    public function validateSubeventsCapacities(MultiSelectBox $field) : bool
     {
         $selectedSubevents = $this->subeventRepository->findSubeventsByIds($field->getVaLue());
         return $this->validators->validateSubeventsCapacities($selectedSubevents, $this->user);
@@ -519,10 +521,8 @@ class ApplicationForm
 
     /**
      * Ověří kapacity rolí.
-     * @param $field
-     * @param $args
      */
-    public function validateRolesCapacities($field, $args) : bool
+    public function validateRolesCapacities(MultiSelectBox $field) : bool
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
         return $this->validators->validateRolesCapacities($selectedRoles, $this->user);
@@ -530,10 +530,9 @@ class ApplicationForm
 
     /**
      * Ověří kompatibilitu podakcí.
-     * @param $field
-     * @param $args
+     * @param Subevent[] $args
      */
-    public function validateSubeventsIncompatible($field, $args) : bool
+    public function validateSubeventsIncompatible(MultiSelectBox $field, array $args) : bool
     {
         $selectedSubevents = $this->subeventRepository->findSubeventsByIds($field->getValue());
         $testSubevent      = $args[0];
@@ -542,10 +541,9 @@ class ApplicationForm
 
     /**
      * Ověří výběr požadovaných podakcí.
-     * @param $field
-     * @param $args
+     * @param Subevent[] $args
      */
-    public function validateSubeventsRequired($field, $args) : bool
+    public function validateSubeventsRequired(MultiSelectBox $field, array $args) : bool
     {
         $selectedSubevents = $this->subeventRepository->findSubeventsByIds($field->getValue());
         $testSubevent      = $args[0];
@@ -554,10 +552,9 @@ class ApplicationForm
 
     /**
      * Ověří kompatibilitu rolí.
-     * @param $field
-     * @param $args
+     * @param Role[] $args
      */
-    public function validateRolesIncompatible($field, $args) : bool
+    public function validateRolesIncompatible(MultiSelectBox $field, array $args) : bool
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
         $testRole      = $args[0];
@@ -566,10 +563,9 @@ class ApplicationForm
 
     /**
      * Ověří výběr požadovaných rolí.
-     * @param $field
-     * @param $args
+     * @param Role[] $args
      */
-    public function validateRolesRequired($field, $args) : bool
+    public function validateRolesRequired(MultiSelectBox $field, array $args) : bool
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
         $testRole      = $args[0];
@@ -578,10 +574,8 @@ class ApplicationForm
 
     /**
      * Ověří registrovatelnost rolí.
-     * @param $field
-     * @param $args
      */
-    public function validateRolesRegisterable($field, $args) : bool
+    public function validateRolesRegisterable(MultiSelectBox $field) : bool
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
         return $this->validators->validateRolesRegisterable($selectedRoles, $this->user);
@@ -589,10 +583,8 @@ class ApplicationForm
 
     /**
      * Vrací, zda je výběr podakcí povinný pro kombinaci rolí.
-     * @param $field
-     * @param $args
      */
-    public function toggleSubeventsRequired($field, $args) : bool
+    public function toggleSubeventsRequired(MultiSelectBox $field) : bool
     {
         $rolesWithSubevents = $this->roleRepository->findRolesIds($this->roleRepository->findAllWithSubevents());
         foreach ($field->getValue() as $roleId) {
@@ -604,7 +596,7 @@ class ApplicationForm
     }
 
     /**
-     * Přepne zobrazení polí pro příjzed a odjezd.
+     * Přepne zobrazení polí pro příjezd a odjezd.
      */
     public static function toggleArrivalDeparture(IControl $control) : bool
     {
@@ -613,9 +605,8 @@ class ApplicationForm
 
     /**
      * Vygeneruje cestu souboru.
-     * @param $file
      */
-    private function generatePath($file) : string
+    private function generatePath(FileUpload $file) : string
     {
         return CustomFile::PATH . '/' . Random::generate(5) . '/' . Strings::webalize($file->name, '.');
     }

@@ -117,14 +117,13 @@ class SkautIsEventForm
 
     /**
      * Zpracuje formulář.
-     * @param array $values
      * @throws SettingsException
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws \Throwable
      */
-    public function processForm(Form $form, array $values) : void
+    public function processForm(Form $form, \stdClass $values) : void
     {
         $eventId   = null;
         $eventName = null;
@@ -165,7 +164,7 @@ class SkautIsEventForm
             return;
         }
 
-        $this->settingsRepository->setValue(Settings::SKAUTIS_EVENT_ID, $eventId);
+        $this->settingsRepository->setIntValue(Settings::SKAUTIS_EVENT_ID, $eventId);
         $this->settingsRepository->setValue(Settings::SKAUTIS_EVENT_NAME, $eventName);
     }
 }

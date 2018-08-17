@@ -5,6 +5,12 @@ declare(strict_types=1);
 namespace App\WebModule\Presenters;
 
 use App\Model\Page\PageException;
+use App\WebModule\Components\ApplicationContentControl;
+use App\WebModule\Components\BlocksContentControl;
+use App\WebModule\Components\CapacitiesContentControl;
+use App\WebModule\Components\DocumentContentControl;
+use App\WebModule\Components\FaqContentControl;
+use App\WebModule\Components\HtmlContentControl;
 use App\WebModule\Components\IApplicationContentControlFactory;
 use App\WebModule\Components\IBlocksContentControlFactory;
 use App\WebModule\Components\ICapacitiesContentControlFactory;
@@ -13,12 +19,20 @@ use App\WebModule\Components\IFaqContentControlFactory;
 use App\WebModule\Components\IHtmlContentControlFactory;
 use App\WebModule\Components\IImageContentControlFactory;
 use App\WebModule\Components\ILectorsContentControlFactory;
+use App\WebModule\Components\ImageContentControl;
 use App\WebModule\Components\INewsContentControlFactory;
 use App\WebModule\Components\IOrganizerContentControlFactory;
 use App\WebModule\Components\IPlaceContentControlFactory;
 use App\WebModule\Components\IProgramsContentControlFactory;
 use App\WebModule\Components\ITextContentControlFactory;
 use App\WebModule\Components\IUsersContentControlFactory;
+use App\WebModule\Components\LectorsContentControl;
+use App\WebModule\Components\NewsContentControl;
+use App\WebModule\Components\OrganizerContentControl;
+use App\WebModule\Components\PlaceContentControl;
+use App\WebModule\Components\ProgramsContentControl;
+use App\WebModule\Components\TextContentControl;
+use App\WebModule\Components\UsersContentControl;
 use Nette\Application\BadRequestException;
 
 /**
@@ -115,11 +129,10 @@ class PagePresenter extends WebBasePresenter
 
 
     /**
-     * @param $slug
      * @throws BadRequestException
      * @throws PageException
      */
-    public function renderDefault($slug) : void
+    public function renderDefault(?string $slug) : void
     {
         if ($slug === null) {
             $page = $this->pageRepository->findPublishedBySlug('/');
@@ -129,7 +142,7 @@ class PagePresenter extends WebBasePresenter
             $this->template->bodyClass = 'body-homepage';
         } else {
             $page                      = $this->pageRepository->findBySlug($slug);
-            $this->template->bodyClass = "body-{$page->getSlug()}";
+            $this->template->bodyClass = 'body-' . $page->getSlug();
         }
 
         if (! $page->isAllowedForRoles($this->user->roles)) {
@@ -141,72 +154,72 @@ class PagePresenter extends WebBasePresenter
         $this->template->sidebarVisible = $page->hasContents('sidebar');
     }
 
-    protected function createComponentApplicationContent()
+    protected function createComponentApplicationContent() : ApplicationContentControl
     {
         return $this->applicationContentControlFactory->create();
     }
 
-    protected function createComponentBlocksContent()
+    protected function createComponentBlocksContent() : BlocksContentControl
     {
         return $this->blocksContentControlFactory->create();
     }
 
-    protected function createComponentCapacitiesContent()
+    protected function createComponentCapacitiesContent() : CapacitiesContentControl
     {
         return $this->capacitiesContentControlFactory->create();
     }
 
-    protected function createComponentDocumentContent()
+    protected function createComponentDocumentContent() : DocumentContentControl
     {
         return $this->documentContentControlFactory->create();
     }
 
-    protected function createComponentFaqContent()
+    protected function createComponentFaqContent() : FaqContentControl
     {
         return $this->faqContentControlFactory->create();
     }
 
-    protected function createComponentHtmlContent()
+    protected function createComponentHtmlContent() : HtmlContentControl
     {
         return $this->htmlContentControlFactory->create();
     }
 
-    protected function createComponentImageContent()
+    protected function createComponentImageContent() : ImageContentControl
     {
         return $this->imageContentControlFactory->create();
     }
 
-    protected function createComponentNewsContent()
+    protected function createComponentNewsContent() : NewsContentControl
     {
         return $this->newsContentControlFactory->create();
     }
 
-    protected function createComponentPlaceContent()
+    protected function createComponentPlaceContent() : PlaceContentControl
     {
         return $this->placeContentControlFactory->create();
     }
 
-    protected function createComponentProgramsContent()
+    protected function createComponentProgramsContent() : ProgramsContentControl
     {
         return $this->programsContentControlFactory->create();
     }
 
-    protected function createComponentTextContent()
+    protected function createComponentTextContent() : TextContentControl
     {
         return $this->textContentControlFactory->create();
     }
 
-    protected function createComponentUsersContent()
+    protected function createComponentUsersContent() : UsersContentControl
     {
         return $this->usersContentControlFactory->create();
     }
 
-    protected function createComponentLectorsContent()
+    protected function createComponentLectorsContent() : LectorsContentControl
     {
         return $this->lectorsContentControlFactory->create();
     }
 
-    protected function createComponentOrganizerContent()
+    protected function createComponentOrganizerContent() : OrganizerContentControl
     {
         return $this->organizerContentControlFactory->create();
     }

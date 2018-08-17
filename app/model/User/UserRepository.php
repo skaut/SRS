@@ -25,16 +25,14 @@ class UserRepository extends EntityRepository
 {
     /**
      * Vrací uživatele podle id.
-     * @param $id
      */
-    public function findById(int $id) : ?User
+    public function findById(?int $id) : ?User
     {
         return $this->findOneBy(['id' => $id]);
     }
 
     /**
      * Vrací uživatele podle skautISUserId.
-     * @param $skautISUserId
      */
     public function findBySkautISUserId(int $skautISUserId) : ?User
     {
@@ -43,7 +41,7 @@ class UserRepository extends EntityRepository
 
     /**
      * Vrací uživatele podle id.
-     * @param $ids
+     * @param int[] $ids
      * @return Collection|User[]
      */
     public function findUsersByIds(array $ids) : Collection
@@ -55,8 +53,7 @@ class UserRepository extends EntityRepository
 
     /**
      * Vrací jména uživatelů obsahující zadaný text, seřazená podle zobrazovaného jména.
-     * @param $text
-     * @return array
+     * @return string[]
      */
     public function findNamesByLikeDisplayNameOrderedByDisplayName(string $text) : array
     {
@@ -70,7 +67,7 @@ class UserRepository extends EntityRepository
 
     /**
      * Vrací uživatele, kteří se synchronizují s účastníky skautIS akce.
-     * @return mixed
+     * @return User[]
      */
     public function findAllSyncedWithSkautIS() : array
     {
@@ -84,7 +81,7 @@ class UserRepository extends EntityRepository
 
     /**
      * Vrací uživatele v roli.
-     * @return mixed
+     * @return User[]
      */
     public function findAllInRole(Role $role) : array
     {
@@ -97,8 +94,8 @@ class UserRepository extends EntityRepository
 
     /**
      * Vrací uživatele v rolích.
-     * @param $rolesIds
-     * @return mixed
+     * @param int[] $rolesIds
+     * @return User[]
      */
     public function findAllInRoles(array $rolesIds) : array
     {
@@ -112,8 +109,8 @@ class UserRepository extends EntityRepository
 
     /**
      * Vrací schválené uživatele v rolích.
-     * @param $rolesIds
-     * @return mixed
+     * @param int[] $rolesIds
+     * @return User[]
      */
     public function findAllApprovedInRoles(array $rolesIds) : array
     {
@@ -145,7 +142,6 @@ class UserRepository extends EntityRepository
 
     /**
      * Vrací uživatele, kteří se mohou na program přihlásit.
-     * @param $program
      * @return Collection|User[]
      */
     public function findProgramAllowed(Program $program) : Collection
@@ -176,7 +172,7 @@ class UserRepository extends EntityRepository
 
     /**
      * Vrací uživatele jako možnosti pro select.
-     * @return array
+     * @return string[]
      */
     public function getUsersOptions() : array
     {
@@ -195,7 +191,7 @@ class UserRepository extends EntityRepository
 
     /**
      * Vrací lektory jako možnosti pro select.
-     * @return array
+     * @return string[]
      */
     public function getLectorsOptions() : array
     {

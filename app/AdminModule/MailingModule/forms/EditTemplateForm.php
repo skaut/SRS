@@ -43,9 +43,8 @@ class EditTemplateForm
 
     /**
      * Vytvoří formulář.
-     * @param $id
      */
-    public function create($id) : Form
+    public function create(int $id) : Form
     {
         $this->template = $this->templateRepository->findById($id);
 
@@ -97,11 +96,10 @@ class EditTemplateForm
 
     /**
      * Zpracuje formulář.
-     * @param array $values
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(Form $form, array $values) : void
+    public function processForm(Form $form, \stdClass $values) : void
     {
         if ($form['cancel']->isSubmittedBy()) {
             return;

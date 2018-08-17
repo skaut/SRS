@@ -110,8 +110,8 @@ class ApplicationService
     }
 
     /**
-     * @param Collection $roles
-     * @param Collection $subevents
+     * @param Collection|Role[]     $roles
+     * @param Collection|Subevent[] $subevents
      * @throws \Throwable
      */
     public function register(
@@ -169,7 +169,7 @@ class ApplicationService
     }
 
     /**
-     * @param Collection $roles
+     * @param Collection|Role[] $roles
      * @throws SettingsException
      * @throws \Throwable
      * @throws MailingException
@@ -290,7 +290,7 @@ class ApplicationService
     }
 
     /**
-     * @param Collection $subevents
+     * @param Collection|Subevent[] $subevents
      * @throws \Throwable
      */
     public function addSubeventsApplication(User $user, Collection $subevents, User $createdBy) : void
@@ -308,7 +308,7 @@ class ApplicationService
     }
 
     /**
-     * @param Collection $subevents
+     * @param Collection|Subevent[] $subevents
      * @throws SettingsException
      * @throws \Throwable
      * @throws MailingException
@@ -457,7 +457,7 @@ class ApplicationService
     }
 
     /**
-     * @param Collection $roles
+     * @param Collection|Role[] $roles
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException
@@ -499,7 +499,7 @@ class ApplicationService
     }
 
     /**
-     * @param Collection $subevents
+     * @param Collection|Subevent[] $subevents
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException
@@ -585,7 +585,7 @@ class ApplicationService
 
     /**
      * Vypočítá poplatek za role.
-     * @param Collection $roles
+     * @param Collection|Role[] $roles
      */
     private function countRolesFee(Collection $roles) : int
     {

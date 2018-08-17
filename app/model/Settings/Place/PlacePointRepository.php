@@ -15,7 +15,7 @@ use Kdyby\Doctrine\EntityRepository;
  */
 class PlacePointRepository extends EntityRepository
 {
-    public function findById(int $id) : ?PlacePoint
+    public function findById(?int $id) : ?PlacePoint
     {
         return $this->findOneBy(['id' => $id]);
     }

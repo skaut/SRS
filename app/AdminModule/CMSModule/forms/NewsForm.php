@@ -44,7 +44,7 @@ class NewsForm
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id) : Form
+    public function create(?int $id) : Form
     {
         $this->news = $this->newsRepository->findById($id);
 
@@ -90,7 +90,6 @@ class NewsForm
 
     /**
      * Zpracuje formulář.
-     * @param array $values
      * @throws ORMException
      * @throws OptimisticLockException
      */

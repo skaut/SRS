@@ -20,56 +20,67 @@ class Template
 {
     /**
      * Přihlášení přes skautIS.
+     * @var string
      */
     public const SIGN_IN = 'sign_in';
 
     /**
      * Potvrzení registrace.
+     * @var string
      */
     public const REGISTRATION = 'registration';
 
     /**
      * Odhlášení ze semináře.
+     * @var string
      */
     public const REGISTRATION_CANCELED = 'registration_canceled';
 
     /**
      * Potvrzení změny rolí.
+     * @var string
      */
     public const ROLES_CHANGED = 'roles_changed';
 
     /**
      * Potvrzení změny podakcí.
+     * @var string
      */
     public const SUBEVENTS_CHANGED = 'subevents_changed';
 
     /**
      * Potvrzení přijetí platby.
+     * @var string
      */
     public const PAYMENT_CONFIRMED = 'payment_confirmed';
 
     /**
      * Upozornění na splatnost.
+     * @var string
      */
     public const MATURITY_REMINDER = 'maturity_reminder';
 
     /**
      * Účastníkovi byl zapsán program.
+     * @var string
      */
     public const PROGRAM_REGISTERED = 'program_registered';
 
     /**
      * Účastníkovi byl odhlášen program.
+     * @var string
      */
     public const PROGRAM_UNREGISTERED = 'program_unregistered';
 
     /**
      * Ověření e-mailu pro mailing.
+     * @var string
      */
     public const EMAIL_VERIFICATION = 'email_verification';
 
     /**
      * Potvrzení změny vlastního pole.
+     * @var string
      */
     public const CUSTOM_INPUT_VALUE_CHANGED = 'custom_input_value_changed';
 
@@ -107,7 +118,7 @@ class Template
     /**
      * Proměnné použitelné v šabloně.
      * @ORM\ManyToMany(targetEntity="\App\Model\Mailing\TemplateVariable")
-     * @var Collection
+     * @var Collection|TemplateVariable[]
      */
     protected $variables;
 
@@ -184,7 +195,7 @@ class Template
     }
 
     /**
-     * @return Collection
+     * @return Collection|TemplateVariable[]
      */
     public function getVariables() : Collection
     {

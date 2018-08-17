@@ -48,11 +48,10 @@ class CustomInputsGridControl extends Control
 
     /**
      * Vytvoří komponentu.
-     * @param $name
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
-    public function createComponentCustomInputsGrid($name) : void
+    public function createComponentCustomInputsGrid(string $name) : void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -101,12 +100,11 @@ class CustomInputsGridControl extends Control
 
     /**
      * Zpracuje odstranění vlastního pole.
-     * @param $id
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
      */
-    public function handleDelete($id) : void
+    public function handleDelete(int $id) : void
     {
         $input = $this->customInputRepository->findById($id);
         $this->customInputRepository->remove($input);
@@ -118,16 +116,13 @@ class CustomInputsGridControl extends Control
 
     /**
      * Přesune vlastní pole s id $item_id mezi $prev_id a $next_id.
-     * @param $item_id
-     * @param $prev_id
-     * @param $next_id
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
      */
     public function handleSort($item_id, $prev_id, $next_id) : void
     {
-        $this->customInputRepository->sort($item_id, $prev_id, $next_id);
+        $this->customInputRepository->sort((int) $item_id, (int) $prev_id, (int) $next_id);
 
         $p = $this->getPresenter();
         $p->flashMessage('admin.configuration.custom_inputs_order_saved', 'success');
@@ -142,14 +137,12 @@ class CustomInputsGridControl extends Control
 
     /**
      * Změní povinnost pole.
-     * @param $id
-     * @param $mandatory
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
      */
-    public function changeMandatory($id, $mandatory) : void
+    public function changeMandatory(int $id, bool $mandatory) : void
     {
         $customInput = $this->customInputRepository->findById($id);
         $customInput->setMandatory($mandatory);

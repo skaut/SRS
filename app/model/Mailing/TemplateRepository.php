@@ -17,16 +17,14 @@ class TemplateRepository extends EntityRepository
 {
     /**
      * Vrací šablonu podle id.
-     * @param $id
      */
-    public function findById(int $id) : ?Template
+    public function findById(?int $id) : ?Template
     {
         return $this->findOneBy(['id' => $id]);
     }
 
     /**
      * Vrací šablonu podle typu.
-     * @param $type
      */
     public function findByType(string $type) : ?Template
     {

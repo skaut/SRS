@@ -116,7 +116,7 @@ class FaqGridControl extends Control
      * @throws OptimisticLockException
      * @throws AbortException
      */
-    public function handleSort(?int $item_id, ?int $prev_id, ?int $next_id) : void
+    public function handleSort($item_id, $prev_id, $next_id) : void
     {
         $this->faqRepository->sort($item_id, $prev_id, $next_id);
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Program;
 
+use App\Model\Structure\Subevent;
 use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -23,9 +24,8 @@ class ProgramRepository extends EntityRepository
 {
     /**
      * Vrací program podle id.
-     * @param $id
      */
-    public function findById(int $id) : ?Program
+    public function findById(?int $id) : ?Program
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -54,8 +54,8 @@ class ProgramRepository extends EntityRepository
 
     /**
      * Vrací id podle programů.
-     * @param $programs
-     * @return array
+     * @param Collection|Program[] $programs
+     * @return int[]
      */
     public function findProgramsIds(Collection $programs) : array
     {
@@ -66,7 +66,7 @@ class ProgramRepository extends EntityRepository
 
     /**
      * Vrací programy, na které je uživatel zapsaný a jsou v danné kategorii.
-     * @return array
+     * @return User[]
      */
     public function findUserRegisteredAndInCategory(User $user, Category $category) : array
     {
@@ -186,8 +186,8 @@ class ProgramRepository extends EntityRepository
 
     /**
      * Vrací programy povolené pro kategorie a podakce.
-     * @param Collection $categories
-     * @param Collection $subevents
+     * @param Collection|Category[] $categories
+     * @param Collection|Subevent[] $subevents
      * @return Collection|Program[]
      */
     public function findAllowedForCategoriesAndSubevents(Collection $categories, Collection $subevents) : Collection

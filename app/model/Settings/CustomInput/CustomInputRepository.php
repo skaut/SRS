@@ -19,9 +19,8 @@ class CustomInputRepository extends EntityRepository
 {
     /**
      * Vrací pole podle id.
-     * @param $id
      */
-    public function findById(int $id) : ?CustomInput
+    public function findById(?int $id) : ?CustomInput
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -83,9 +82,6 @@ class CustomInputRepository extends EntityRepository
 
     /**
      * Přesune pole mezi pole s id prevId a nextId.
-     * @param $itemId
-     * @param $prevId
-     * @param $nextId
      * @throws ORMException
      * @throws OptimisticLockException
      */

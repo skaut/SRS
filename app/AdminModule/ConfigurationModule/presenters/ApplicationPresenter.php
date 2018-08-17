@@ -44,7 +44,7 @@ class ApplicationPresenter extends ConfigurationBasePresenter
     public $customInputFormFactory;
 
 
-    public function renderEdit($id) : void
+    public function renderEdit(int $id) : void
     {
         $this->template->customInput = $this->customInputRepository->findById($id);
     }
@@ -62,7 +62,7 @@ class ApplicationPresenter extends ConfigurationBasePresenter
     {
         $form = $this->applicationFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, array $values) : void {
+        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');
@@ -73,9 +73,9 @@ class ApplicationPresenter extends ConfigurationBasePresenter
 
     protected function createComponentCustomInputForm() : Form
     {
-        $form = $this->customInputFormFactory->create($this->getParameter('id'));
+        $form = $this->customInputFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, array $values) : void {
+        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
             if (! $form['cancel']->isSubmittedBy()) {
                 $this->flashMessage('admin.configuration.custom_inputs_saved', 'success');
             }

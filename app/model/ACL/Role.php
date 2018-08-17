@@ -28,49 +28,59 @@ class Role
 {
     /**
      * Role nepřihlášeného uživatele.
+     * @var string
      */
     public const GUEST = 'guest';
 
     /**
      * Role uživatele nepřihlášeného na seminář.
+     * @var string
      */
     public const NONREGISTERED = 'nonregistered';
 
     /**
      * Role neschváleného uživatele.
+     * @var string
      */
     public const UNAPPROVED = 'unapproved';
 
     /**
      * Role účastníka.
+     * @var string
      */
     public const ATTENDEE = 'attendee';
 
     /**
      * Role servis týmu.
+     * @var string
      */
     public const SERVICE_TEAM = 'service_team';
 
     /**
      * Role lektora.
+     * @var string
      */
     public const LECTOR = 'lector';
 
     /**
      * Role organizátora.
+     * @var string
      */
     public const ORGANIZER = 'organizer';
 
     /**
      * Role administrátora.
+     * @var string
      */
     public const ADMIN = 'admin';
 
     /**
      * Role, která je uživateli nastavena při testování jiné role.
+     * @var string
      */
     public const TEST = 'test';
 
+    /** @var string[] */
     public static $roles = [
         self::GUEST,
         self::NONREGISTERED,
@@ -267,7 +277,7 @@ class Role
     }
 
     /**
-     * @return Collection
+     * @return Collection|User[]
      */
     public function getUsers() : Collection
     {
@@ -275,7 +285,7 @@ class Role
     }
 
     /**
-     * @return Collection
+     * @return Collection|User[]
      */
     public function getApprovedUsers() : Collection
     {
@@ -284,7 +294,7 @@ class Role
     }
 
     /**
-     * @return Collection
+     * @return Collection|Permission[]
      */
     public function getPermissions() : Collection
     {
@@ -292,7 +302,7 @@ class Role
     }
 
     /**
-     * @param Collection $permissions
+     * @param Collection|Permission[] $permissions
      */
     public function setPermissions(Collection $permissions) : void
     {
@@ -308,7 +318,7 @@ class Role
     }
 
     /**
-     * @return Collection
+     * @return Collection|Page[]
      */
     public function getPages() : Collection
     {
@@ -316,7 +326,7 @@ class Role
     }
 
     /**
-     * @param Collection $pages
+     * @param Collection|Page[] $pages
      */
     public function setPages(Collection $pages) : void
     {
@@ -465,7 +475,7 @@ class Role
     }
 
     /**
-     * @param Collection $incompatibleRoles
+     * @param Collection|Role[] $incompatibleRoles
      */
     public function setIncompatibleRoles(Collection $incompatibleRoles) : void
     {
@@ -530,7 +540,7 @@ class Role
     }
 
     /**
-     * @param Collection $allRequiredByRole
+     * @param Collection|Role[] $allRequiredByRole
      */
     private function getRequiredByRoleTransitiveRec(Collection &$allRequiredByRole, Role $role) : void
     {
@@ -546,7 +556,7 @@ class Role
     }
 
     /**
-     * @return Collection
+     * @return Collection|Role[]
      */
     public function getRequiredRoles() : Collection
     {
@@ -554,7 +564,7 @@ class Role
     }
 
     /**
-     * @param Collection $requiredRoles
+     * @param Collection|Role[] $requiredRoles
      */
     public function setRequiredRoles(Collection $requiredRoles) : void
     {
@@ -587,7 +597,7 @@ class Role
     }
 
     /**
-     * @param Collection $allRequiredRoles
+     * @param Collection|Role[] $allRequiredRoles
      */
     private function getRequiredRolesTransitiveRec(Collection &$allRequiredRoles, Role $role) : void
     {

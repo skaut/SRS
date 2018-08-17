@@ -46,11 +46,10 @@ class MailTemplatesGridControl extends Control
 
     /**
      * Vytvoří komponentu.
-     * @param $name
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
-    public function createComponentMailTemplatesGrid($name) : void
+    public function createComponentMailTemplatesGrid(string $name) : void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -90,13 +89,11 @@ class MailTemplatesGridControl extends Control
 
     /**
      * Aktivuje/deaktivuje automatický e-mail.
-     * @param $id
-     * @param $active
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
      */
-    public function changeActive($id, $active) : void
+    public function changeActive(int $id, bool $active) : void
     {
         $p = $this->getPresenter();
 

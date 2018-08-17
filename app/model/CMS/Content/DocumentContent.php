@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\CMS\Content;
 
+use App\Model\CMS\Document\Tag;
 use App\Model\CMS\Document\TagRepository;
 use App\Model\CMS\Page;
 use App\Model\Page\PageException;
@@ -22,12 +23,13 @@ use Nette\Application\UI\Form;
  */
 class DocumentContent extends Content implements IContent
 {
+    /** @var string */
     protected $type = Content::DOCUMENT;
 
     /**
      * Tagy dokumentů, které se zobrazí.
      * @ORM\ManyToMany(targetEntity="\App\Model\CMS\Document\Tag")
-     * @var Collection
+     * @var Collection|Tag[]
      */
     protected $tags;
 
@@ -36,11 +38,9 @@ class DocumentContent extends Content implements IContent
 
 
     /**
-     *
-     * @param $area
      * @throws PageException
      */
-    public function __construct(Page $page, $area)
+    public function __construct(Page $page, string $area)
     {
         parent::__construct($page, $area);
         $this->tags = new ArrayCollection();
@@ -52,7 +52,7 @@ class DocumentContent extends Content implements IContent
     }
 
     /**
-     * @return Collection
+     * @return Collection|Tag[]
      */
     public function getTags() : Collection
     {
@@ -60,7 +60,7 @@ class DocumentContent extends Content implements IContent
     }
 
     /**
-     * @param Collection $tags
+     * @param Collection|Tag[] $tags
      */
     public function setTags(Collection $tags) : void
     {
@@ -84,9 +84,8 @@ class DocumentContent extends Content implements IContent
 
     /**
      * Zpracuje při uložení stránky část formuláře týkající se obsahu.
-     * @param array $values
      */
-    public function contentFormSucceeded(Form $form, array $values) : void
+    public function contentFormSucceeded(Form $form, \stdClass $values) : void
     {
         parent::contentFormSucceeded($form, $values);
         $values     = $values[$this->getContentFormName()];

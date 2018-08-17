@@ -15,5 +15,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CustomText extends CustomInput
 {
+    /** @var string */
     protected $type = CustomInput::TEXT;
 }

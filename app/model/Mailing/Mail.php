@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Model\Mailing;
 
+use App\Model\ACL\Role;
+use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -24,14 +26,14 @@ class Mail
     /**
      * Role, kterým byl e-mail odeslán.
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role")
-     * @var Collection
+     * @var Collection|Role[]
      */
     protected $recipientRoles;
 
     /**
      * Uživatelé, kterém byl e-mail odeslán.
      * @ORM\ManyToMany(targetEntity="\App\Model\User\User")
-     * @var Collection
+     * @var Collection|User[]
      */
     protected $recipientUsers;
 
@@ -76,7 +78,7 @@ class Mail
     }
 
     /**
-     * @return Collection
+     * @return Collection|Role[]
      */
     public function getRecipientRoles() : Collection
     {
@@ -84,7 +86,7 @@ class Mail
     }
 
     /**
-     * @param Collection $recipientRoles
+     * @param Collection|Role[] $recipientRoles
      */
     public function setRecipientRoles(Collection $recipientRoles) : void
     {
@@ -107,7 +109,7 @@ class Mail
     }
 
     /**
-     * @return Collection
+     * @return Collection|User[]
      */
     public function getRecipientUsers() : Collection
     {
@@ -115,7 +117,7 @@ class Mail
     }
 
     /**
-     * @param Collection $recipientUsers
+     * @param Collection|User[] $recipientUsers
      */
     public function setRecipientUsers(Collection $recipientUsers) : void
     {

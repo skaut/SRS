@@ -15,5 +15,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class LectorsContent extends Content implements IContent
 {
+    /** @var string */
     protected $type = Content::LECTORS;
 }

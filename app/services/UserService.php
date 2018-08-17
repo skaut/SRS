@@ -56,7 +56,7 @@ class UserService
         return $this->translator->translate('admin.users.users_membership_not_connected');
     }
 
-    public function getPaymentMethodText(User $user) : string
+    public function getPaymentMethodText(User $user) : ?string
     {
         $paymentMethod = null;
 

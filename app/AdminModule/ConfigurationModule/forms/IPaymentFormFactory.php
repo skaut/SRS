@@ -13,7 +13,6 @@ interface IPaymentFormFactory
 {
     /**
      * Vytvoří komponentu.
-     * @return mixed
      */
-    public function create();
+    public function create() : PaymentForm;
 }

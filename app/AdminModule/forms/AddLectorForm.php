@@ -107,12 +107,11 @@ class AddLectorForm
 
     /**
      * Zpracuje formulář.
-     * @param array $values
      * @throws Nette\Utils\UnknownImageFileException
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(Form $form, array $values) : void
+    public function processForm(Form $form, \stdClass $values) : void
     {
         if ($form['cancel']->isSubmittedBy()) {
             return;

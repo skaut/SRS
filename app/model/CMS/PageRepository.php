@@ -24,16 +24,14 @@ class PageRepository extends EntityRepository
 {
     /**
      * Vrací stránku podle id.
-     * @param $id
      */
-    public function findById(int $id) : ?Page
+    public function findById(?int $id) : ?Page
     {
         return $this->findOneBy(['id' => $id]);
     }
 
     /**
      * Vrací stránku podle cesty.
-     * @param $slug
      */
     public function findBySlug(string $slug) : ?Page
     {
@@ -42,7 +40,6 @@ class PageRepository extends EntityRepository
 
     /**
      * Vrací viditelné stránky se zadaným slugem.
-     * @param $slug
      */
     public function findPublishedBySlug(string $slug) : ?Page
     {
@@ -51,7 +48,7 @@ class PageRepository extends EntityRepository
 
     /**
      * Vrací viditelné stránky, seřazené podle pozice.
-     * @return array
+     * @return Page[]
      */
     public function findPublishedOrderedByPosition() : array
     {
@@ -72,7 +69,7 @@ class PageRepository extends EntityRepository
 
     /**
      * Vrací všechny cesty.
-     * @return array
+     * @return string[]
      */
     public function findAllSlugs() : array
     {
@@ -85,8 +82,7 @@ class PageRepository extends EntityRepository
 
     /**
      * Vrací všechny cesty, kromě cesty stránky s id.
-     * @param $id
-     * @return array
+     * @return string[]
      */
     public function findOthersSlugs(int $id) : array
     {
@@ -101,8 +97,8 @@ class PageRepository extends EntityRepository
 
     /**
      * Vrací id podle stránek.
-     * @param $pages
-     * @return array
+     * @param Collection|Page[] $pages
+     * @return int[]
      */
     public function findPagesIds(Collection $pages) : array
     {
@@ -113,8 +109,8 @@ class PageRepository extends EntityRepository
 
     /**
      * Vrací stránky podle cest.
-     * @param $slugs
-     * @return Collection
+     * @param string[] $slugs
+     * @return Collection|Page[]
      */
     public function findPagesBySlugs(array $slugs) : Collection
     {
@@ -126,8 +122,8 @@ class PageRepository extends EntityRepository
 
     /**
      * Vrací cesty podle stránek.
-     * @param $pages
-     * @return array
+     * @param Collection|Page[] $pages
+     * @return string[]
      */
     public function findPagesSlugs(Collection $pages) : array
     {
@@ -138,7 +134,7 @@ class PageRepository extends EntityRepository
 
     /**
      * Vrací stránky jako možnosti pro select.
-     * @return array
+     * @return string[]
      */
     public function getPagesOptions() : array
     {
@@ -189,9 +185,6 @@ class PageRepository extends EntityRepository
 
     /**
      * Přesune stránku mezi stránky s id prevId a nextId.
-     * @param $itemId
-     * @param $prevId
-     * @param $nextId
      * @throws ORMException
      * @throws OptimisticLockException
      */

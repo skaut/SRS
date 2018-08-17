@@ -85,7 +85,7 @@ class SkautIsPresenter extends ConfigurationBasePresenter
     {
         $form = $this->skautIsEventFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, array $values) : void {
+        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
             $this->flashMessage('admin.configuration.skautis_event_connect_successful', 'success');
 
             $this->redirect('this');

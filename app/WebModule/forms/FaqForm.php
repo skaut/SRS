@@ -49,9 +49,8 @@ class FaqForm
 
     /**
      * Vytvoří formulář.
-     * @param $id
      */
-    public function create($id) : Form
+    public function create(int $id) : Form
     {
         $this->user = $this->userRepository->findById($id);
 
@@ -69,12 +68,11 @@ class FaqForm
 
     /**
      * Zpracuje formulář.
-     * @param array $values
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(Form $form, array $values) : void
+    public function processForm(Form $form, \stdClass $values) : void
     {
         $faq = new Faq();
 

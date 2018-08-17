@@ -21,39 +21,47 @@ class Resource
 {
     /**
      * Administrace.
+     * @var string
      */
     public const ADMIN = 'admin';
 
     /**
      * Web.
+     * @var string
      */
     public const CMS = 'cms';
 
     /**
      * Role.
+     * @var string
      */
     public const ACL = 'acl';
 
     /**
      * Program.
+     * @var string
      */
     public const PROGRAM = 'program';
 
     /**
      * Nastavení.
+     * @var string
      */
     public const CONFIGURATION = 'configuration';
 
     /**
      * Uživatelé.
+     * @var string
      */
     public const USERS = 'users';
 
     /**
      * Mailing.
+     * @var string
      */
     public const MAILING = 'mailing';
 
+    /** @var string[] */
     public static $resources = [
         self::ADMIN,
         self::CMS,
@@ -76,7 +84,7 @@ class Resource
     /**
      * Oprávnění s tímto prostředkem.
      * @ORM\OneToMany(targetEntity="\App\Model\ACL\Permission", mappedBy="resource", cascade={"persist"})
-     * @var Collection
+     * @var Collection|Permission[]
      */
     protected $permissions;
 
@@ -103,7 +111,7 @@ class Resource
     }
 
     /**
-     * @return Collection
+     * @return Collection|Permission[]
      */
     public function getPermissions() : Collection
     {

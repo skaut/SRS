@@ -11,7 +11,6 @@ use App\AdminModule\CMSModule\Forms\PageForm;
 use App\Model\CMS\Content\Content;
 use App\Model\CMS\Content\ContentRepository;
 use App\Model\CMS\PageRepository;
-use Nette\Application\UI\Form;
 
 /**
  * Presenter starající se o správu stránek.
@@ -60,9 +59,9 @@ class PagesPresenter extends CMSBasePresenter
         return $this->pagesGridControlFactory->create();
     }
 
-    protected function createComponentPageForm() : Form
+    protected function createComponentPageForm() : PageForm
     {
-        $id   = $this->getParameter('id');
+        $id   = (int) $this->getParameter('id');
         $area = $this->getParameter('area');
 
         $control = $this->pageFormFactory->create($id, $area);

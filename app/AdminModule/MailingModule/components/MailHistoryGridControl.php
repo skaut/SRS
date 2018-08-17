@@ -49,9 +49,8 @@ class MailHistoryGridControl extends Control
 
     /**
      * Vytvoří komponentu.
-     * @param $name
      */
-    public function createComponentMailHistoryGrid($name) : void
+    public function createComponentMailHistoryGrid(string $name) : void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);

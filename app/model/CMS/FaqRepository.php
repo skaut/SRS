@@ -20,9 +20,8 @@ class FaqRepository extends EntityRepository
 {
     /**
      * Vrací otázku podle id.
-     * @param $id
      */
-    public function findById(int $id) : ?Faq
+    public function findById(?int $id) : ?Faq
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -53,7 +52,7 @@ class FaqRepository extends EntityRepository
 
     /**
      * Vrací publikované otázky seřazené podle pozice.
-     * @return array
+     * @return Faq[]
      */
     public function findPublishedOrderedByPosition() : array
     {
@@ -89,9 +88,6 @@ class FaqRepository extends EntityRepository
 
     /**
      * Přesune otázku mezi otázky s id prevId a nextId.
-     * @param $itemId
-     * @param $prevId
-     * @param $nextId
      * @throws ORMException
      * @throws OptimisticLockException
      */
