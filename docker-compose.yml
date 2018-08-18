@@ -3,16 +3,14 @@ version: '2'
 services:
     app:
         container_name: srs.app
-        image: fmasa/lebeda:7.1
+        image: jstanek/lebeda:7.1
         volumes:
             - www:/var/www
             - .:/var/www/html
-            - /var/www/html/temp
         ports:
             - 80:80
         environment:
             DEVELOPMENT_MACHINE: 'true'
-            WRITABLE_DIRS: '/var/www/html/temp'
         networks:
             main:
                 aliases:
@@ -20,16 +18,49 @@ services:
 
     mysql:
         container_name: srs.mysql
-        image: mysql:5.6
+        image: mysql:5.7
         volumes:
             - mysql:/var/lib/mysql
         environment:
-            MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
+            MYSQL_ROOT_PASSWORD: 'root'
             MYSQL_DATABASE: srs
         networks:
             main:
                 aliases:
                     - mysql
+
+    mysql-test:
+        container_name: srs.mysql-test
+        image: mysql:5.7
+        environment:
+            MYSQL_ROOT_PASSWORD: 'root'
+            MYSQL_DATABASE: srs
+        networks:
+            main:
+                aliases:
+                    - mysql-test
+
+    phantom:
+        container_name: srs.phantom
+        image: davert/phantomjs-env
+        networks:
+            main:
+                aliases:
+                    - phantom
+        command: phantomjs --webdriver=4444 --ssl-protocol=any --ignore-ssl-errors=true
+
+    smtp:
+        container_name: srs.smtp
+        image: tophfr/mailcatcher
+        environment:
+            SMTP_HOST: smtp-srs.loc
+        networks:
+            main:
+                aliases:
+                - smtp-srs.loc
+        ports:
+            - 1080:1080
+
 volumes:
     mysql:
     www:

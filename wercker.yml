@@ -1,4 +1,4 @@
-box: fmasa/lebeda:7.1-ci
+box: jstanek/lebeda:7.1-ci
 
 build:
     services:
