@@ -22,9 +22,9 @@ build:
             name: install dependencies
             code: composer install
 
-        - script:
-            name: check coding standard
-            code: phing coding-standard
+#        - script:
+#            name: check coding standard
+#            code: phing coding-standard
 
         - script:
             name: wait for MySQL connection

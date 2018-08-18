@@ -3,7 +3,9 @@
     <property name="tempDir" value="temp"/>
     <target name="main" description="Runs tests and prepares deployable tarball">
         <exec command="composer install" passthru="true"/>
-        <exec command="php www/index.php orm:validate-schema --skip-sync"/>
+        <!--<phingcall target="static-analysis"/>-->
+        <phingcall target="coding-standard"/>
+        <phingcall target="tests"/>
     </target>
 
     <target name="prepare-tarball" description="Prepares deployable tarball with everything built">
@@ -155,17 +157,12 @@
         <exec command="vendor/bin/codecept run unit" passthru="true" checkreturn="true"/>
     </target>
 
-    <target name="tests-integration">
-        <exec command="vendor/bin/codecept run integration" passthru="true" checkreturn="true"/>
-    </target>
-
     <target name="tests-acceptance">
         <exec command="vendor/bin/codecept run acceptance -vvv" passthru="true" checkreturn="true"/>
     </target>
 
     <target name="tests">
         <phingcall target="tests-unit"/>
-        <phingcall target="tests-integration"/>
     </target>
 
     <target name="tests-with-coverage">
@@ -173,6 +170,6 @@
     </target>
 
     <target name="coding-standard">
-        <exec command="vendor/bin/phpcs" passthru="true" checkreturn="true"/>
+        <exec command="vendor/bin/phpcs" passthru="true"/>
     </target>
 </project>

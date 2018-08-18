@@ -49,7 +49,6 @@
         "captbaritone/mailcatcher-codeception-module": "^1.2",
         "arachne/codeception": "^0.8",
         "doctrine/coding-standard": "^4.0",
-        "phing/phing": "2.16",
         "nette/tester": "^2.0",
         "nextras/mail-panel": "^2.4"
     },
