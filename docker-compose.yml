@@ -3,14 +3,16 @@ version: '2'
 services:
     app:
         container_name: srs.app
-        image: jstanek/lebeda:7.1
+        image: fmasa/lebeda:7.1
         volumes:
             - www:/var/www
             - .:/var/www/html
+            - /var/www/html/temp
         ports:
             - 80:80
         environment:
             DEVELOPMENT_MACHINE: 'true'
+            WRITABLE_DIRS: '/var/www/html/temp'
         networks:
             main:
                 aliases:
