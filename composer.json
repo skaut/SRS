@@ -57,5 +57,8 @@
     "scripts": {
         "run-migrations": "php71 www/index.php migrations:migrate --no-interaction",
         "generate-proxies": "php71 www/index.php orm:generate-proxies"
-    }
+    },
+
+    "prefer-stable": true,
+    "minimum-stability": "dev"
 }
