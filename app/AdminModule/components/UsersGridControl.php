@@ -499,10 +499,10 @@ class UsersGridControl extends Control
     /**
      * Hromadně nastaví role.
      * @param int[] $ids
-     * @throws AbortException
+     * @throws int[] $value
      * @throws \Throwable
      */
-    public function groupChangeRoles(array $ids, \stdClass $value) : void
+    public function groupChangeRoles(array $ids, array $value) : void
     {
         $users         = $this->userRepository->findUsersByIds($ids);
         $selectedRoles = $this->roleRepository->findRolesByIds($value);
