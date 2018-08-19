@@ -28,6 +28,7 @@ use App\Services\SkautIsEventEducationService;
 use App\Services\SkautIsEventGeneralService;
 use App\Services\UserService;
 use App\Utils\Helpers;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
@@ -725,7 +726,7 @@ class UsersGridControl extends Control
         $users = $this->userRepository->findUsersByIds($ids);
         $roles = $this->roleRepository->findAll();
 
-        $response = $this->excelExportService->exportUsersRoles($users, $roles, 'role-uzivatelu.xlsx');
+        $response = $this->excelExportService->exportUsersRoles($users, new ArrayCollection($roles), 'role-uzivatelu.xlsx');
 
         $this->getPresenter()->sendResponse($response);
     }

@@ -41,7 +41,7 @@ class NewsRepository extends EntityRepository
      * Vrací posledních $maxCount publikovaných aktualit.
      * @return News[]
      */
-    public function findPublishedOrderedByPinnedAndDate(int $maxCount) : array
+    public function findPublishedOrderedByPinnedAndDate(?int $maxCount) : array
     {
         return $this->createQueryBuilder('n')
             ->where($this->createQueryBuilder()->expr()->lte('n.published', 'CURRENT_TIMESTAMP()'))

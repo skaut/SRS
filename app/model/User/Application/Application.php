@@ -240,7 +240,6 @@ abstract class Application
     {
         $numbersWords = new \Numbers_Words();
         $feeWord      = $numbersWords->toWords($this->getFee(), 'cs');
-        $feeWord      = iconv('windows-1250', 'UTF-8', $feeWord);
         $feeWord      = str_replace(' ', '', $feeWord);
         return $feeWord;
     }

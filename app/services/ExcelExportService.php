@@ -15,6 +15,7 @@ use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\User;
 use App\Utils\Helpers;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Kdyby\Translation\Translator;
@@ -132,7 +133,7 @@ class ExcelExportService
      */
     public function exportUserSchedule(User $user, string $filename) : ExcelResponse
     {
-        return $this->exportUsersSchedules([$user], $filename);
+        return $this->exportUsersSchedules(new ArrayCollection([$user]), $filename);
     }
 
     /**
@@ -198,7 +199,7 @@ class ExcelExportService
      */
     public function exportRoomSchedule(Room $room, string $filename) : ExcelResponse
     {
-        return $this->exportRoomsSchedules([$room], $filename);
+        return $this->exportRoomsSchedules(new ArrayCollection([$room]), $filename);
     }
 
     /**

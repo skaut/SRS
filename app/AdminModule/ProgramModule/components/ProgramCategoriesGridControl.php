@@ -11,6 +11,7 @@ use App\Model\Program\CategoryRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\User\UserRepository;
 use App\Services\ProgramService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
@@ -164,7 +165,7 @@ class ProgramCategoriesGridControl extends Control
 
             $this->categoryRepository->save($category);
 
-            $this->programService->updateUsersPrograms($this->userRepository->findAll());
+            $this->programService->updateUsersPrograms(new ArrayCollection($this->userRepository->findAll()));
 
             $this->categoryRepository->save($category);
         });
@@ -185,7 +186,7 @@ class ProgramCategoriesGridControl extends Control
         $this->categoryRepository->getEntityManager()->transactional(function ($em) use ($category) : void {
             $this->categoryRepository->remove($category);
 
-            $this->programService->updateUsersPrograms($this->userRepository->findAll());
+            $this->programService->updateUsersPrograms(new ArrayCollection($this->userRepository->findAll()));
         });
 
         $this->getPresenter()->flashMessage('admin.program.categories_deleted', 'success');

@@ -10,6 +10,7 @@ use App\Model\Program\ProgramRepository;
 use App\Model\User\UserRepository;
 use App\Services\ProgramService;
 use App\Utils\Helpers;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
@@ -157,7 +158,7 @@ class RolesGridControl extends Control
                 $this->userRepository->save($user);
             }
 
-            $this->programService->updateUsersPrograms($this->userRepository->findAll());
+            $this->programService->updateUsersPrograms(new ArrayCollection($this->userRepository->findAll()));
         });
 
         $this->getPresenter()->flashMessage('admin.acl.roles_deleted', 'success');

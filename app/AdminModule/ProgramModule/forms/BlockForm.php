@@ -17,6 +17,7 @@ use App\Model\Structure\SubeventRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ProgramService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\NonUniqueResultException;
 use Nette;
 use Nette\Application\UI\Form;
@@ -269,7 +270,7 @@ class BlockForm
             if ($oldMandatory === $this->block->getMandatory() && (
                     $this->block->getCategory() !== $oldCategory) || ($this->block->getSubevent() !== $oldSubevent)
             ) {
-                $this->programService->updateUsersPrograms($this->userRepository->findAll());
+                $this->programService->updateUsersPrograms(new ArrayCollection($this->userRepository->findAll()));
             }
 
             $this->blockRepository->save($this->block);

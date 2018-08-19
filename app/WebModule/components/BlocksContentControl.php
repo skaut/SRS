@@ -44,7 +44,7 @@ class BlocksContentControl extends Control
         $selectedBlockId = $this->getPresenter()->getParameter('blockId');
 
         if ($selectedBlockId !== null) {
-            $selectedBlock                   = $this->blockRepository->findById($selectedBlockId);
+            $selectedBlock                   = $this->blockRepository->findById((int) $selectedBlockId);
             $this->template->selectedBlockId = $selectedBlockId;
             $this->template->selectedBlock   = $selectedBlock;
             if ($selectedBlock->getCategory()) {

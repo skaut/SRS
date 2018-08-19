@@ -104,7 +104,7 @@ class ProgramAttendeesGridControl extends Control
      */
     public function createComponentProgramAttendeesGrid(string $name) : void
     {
-        $programId = $this->getPresenter()->getParameter('programId');
+        $programId = (int) $this->getPresenter()->getParameter('programId');
         if (! $programId) {
             $programId = $this->sessionSection->programId;
         }

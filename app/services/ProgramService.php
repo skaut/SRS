@@ -88,7 +88,7 @@ class ProgramService
      */
     public function updateUserPrograms(User $user) : void
     {
-        $this->updateUsersPrograms([$user]);
+        $this->updateUsersPrograms(new ArrayCollection([$user]));
     }
 
     /**
