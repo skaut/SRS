@@ -493,16 +493,26 @@ class User
      */
     public function getPaidAndFreeApplications() : Collection
     {
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->andX(
-                Criteria::expr()->isNull('validTo'),
-                Criteria::expr()->orX(
-                    Criteria::expr()->eq('state', ApplicationState::PAID),
-                    Criteria::expr()->eq('state', ApplicationState::PAID_FREE)
-                )
-            ));
+        //TODO: opravit
+//        $criteria = Criteria::create()
+//            ->where(Criteria::expr()->andX(
+//                Criteria::expr()->isNull('validTo'),
+//                Criteria::expr()->orX(
+//                    Criteria::expr()->eq('state', ApplicationState::PAID),
+//                    Criteria::expr()->eq('state', ApplicationState::PAID_FREE)
+//                )
+//            ));
+//
+//        return $this->applications->matching($criteria);
 
-        return $this->applications->matching($criteria);
+        return $this->applications->filter(function (Application $application) {
+            if ($application->getValidTo() === null && (
+                    $application->getState() === ApplicationState::PAID_FREE ||
+                    $application->getState() === ApplicationState::PAID)) {
+                return true;
+            }
+            return false;
+        });
     }
 
     /**

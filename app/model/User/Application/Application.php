@@ -351,12 +351,12 @@ abstract class Application
         $this->state = $state;
     }
 
-    public function getCreatedBy() : User
+    public function getCreatedBy() : ?User
     {
         return $this->createdBy;
     }
 
-    public function setCreatedBy(User $createdBy) : void
+    public function setCreatedBy(?User $createdBy) : void
     {
         $this->createdBy = $createdBy;
     }

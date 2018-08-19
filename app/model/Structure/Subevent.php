@@ -7,6 +7,7 @@ namespace App\Model\Structure;
 use App\Model\Enums\ApplicationState;
 use App\Model\Program\Block;
 use App\Model\SkautIs\SkautIsCourse;
+use App\Model\User\Application;
 use App\Model\User\SubeventsApplication;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -351,17 +352,28 @@ class Subevent
 
     public function countUsers() : int
     {
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->andX(
-                Criteria::expr()->isNull('validTo'),
-                Criteria::expr()->orX(
-                    Criteria::expr()->eq('state', ApplicationState::WAITING_FOR_PAYMENT),
-                    Criteria::expr()->eq('state', ApplicationState::PAID),
-                    Criteria::expr()->eq('state', ApplicationState::PAID_FREE)
-                )
-            ));
+        //TODO: opravit
+//        $criteria = Criteria::create()
+//            ->where(Criteria::expr()->andX(
+//                Criteria::expr()->isNull('validTo'),
+//                Criteria::expr()->orX(
+//                    Criteria::expr()->eq('state', ApplicationState::WAITING_FOR_PAYMENT),
+//                    Criteria::expr()->eq('state', ApplicationState::PAID),
+//                    Criteria::expr()->eq('state', ApplicationState::PAID_FREE)
+//                )
+//            ));
+//
+//        return $this->applications->matching($criteria)->count();
 
-        return $this->applications->matching($criteria)->count();
+        return $this->applications->filter(function (Application $application) {
+            if ($application->getValidTo() === null && (
+                $application->getState() === ApplicationState::WAITING_FOR_PAYMENT ||
+                $application->getState() === ApplicationState::PAID_FREE ||
+                $application->getState() === ApplicationState::PAID)) {
+                return true;
+            }
+            return false;
+        })->count();
     }
 
     public function countUnoccupied() : ?int
