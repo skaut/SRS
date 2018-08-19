@@ -115,7 +115,7 @@ class MailingForm
 
         $this->settingsRepository->setValue(Settings::SEMINAR_EMAIL_UNVERIFIED, $values['seminarEmail']);
 
-        $verificationCode = substr(md5(uniqid(mt_rand(), true)), 0, 8);
+        $verificationCode = substr(md5(uniqid((string) mt_rand(), true)), 0, 8);
         $this->settingsRepository->setValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE, $verificationCode);
 
         $link = $this->linkGenerator->link('Action:Mailing:verify', ['code' => $verificationCode]);

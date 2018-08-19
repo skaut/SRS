@@ -133,7 +133,7 @@ class MailService
      * @throws MailingException
      * @throws MailingMailCreationException
      */
-    public function sendMailFromTemplate(User $recipientUser, string $copy, string $type, array $parameters, bool $automatic = true) : void
+    public function sendMailFromTemplate(?User $recipientUser, string $copy, string $type, array $parameters, bool $automatic = true) : void
     {
         $template = $this->templateRepository->findByType($type);
 
