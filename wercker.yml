@@ -33,11 +33,11 @@ build:
 #        - script:
 #            name: run unit & integration tests
 #            code: phing tests-with-coverage
-#
-#        - appnific/expandenv:
-#            input_file: app/config/config.ci.local.neon
-#            output_file: app/config/config.local.neon
-#
+
+        - appnific/expandenv:
+            input_file: app/config/config.ci.local.neon
+            output_file: app/config/config.local.neon
+
 #        - script:
 #            name: start phantomjs
 #            code: phantomjs --webdriver=4444 --ignore-ssl-errors=true --ssl-protocol=any &
