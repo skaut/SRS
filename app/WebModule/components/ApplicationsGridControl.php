@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\WebModule\Components;
@@ -7,6 +8,7 @@ use App\Model\ACL\RoleRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
 use App\Model\Program\ProgramRepository;
+use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\Application;
@@ -24,11 +26,15 @@ use App\Services\ProgramService;
 use App\Services\UserService;
 use App\Utils\Helpers;
 use App\Utils\Validators;
+use Doctrine\ORM\NonUniqueResultException;
 use Kdyby\Translation\Translator;
+use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Ublaboo\DataGrid\DataGrid;
-
+use Ublaboo\DataGrid\Exception\DataGridException;
+use Ublaboo\Mailing\Exception\MailingException;
+use Ublaboo\Mailing\Exception\MailingMailCreationException;
 
 /**
  * Komponenta pro správu vlastních přihlášek.
@@ -89,86 +95,76 @@ class ApplicationsGridControl extends Control
     private $subeventsApplicationRepository;
 
 
-    /**
-     * ApplicationsGridControl constructor.
-     * @param Translator $translator
-     * @param ApplicationRepository $applicationRepository
-     * @param UserRepository $userRepository
-     * @param RoleRepository $roleRepository
-     * @param SubeventRepository $subeventRepository
-     * @param ApplicationService $applicationService
-     * @param ProgramRepository $programRepository
-     * @param MailService $mailService
-     * @param SettingsRepository $settingsRepository
-     * @param Authenticator $authenticator
-     * @param PdfExportService $pdfExportService
-     * @param ProgramService $programService
-     * @param UserService $userService
-     * @param Validators $validators
-     * @param RolesApplicationRepository $rolesApplicationRepository
-     * @param SubeventsApplicationRepository $subeventsApplicationRepository
-     */
-    public function __construct(Translator $translator, ApplicationRepository $applicationRepository,
-                                UserRepository $userRepository, RoleRepository $roleRepository,
-                                SubeventRepository $subeventRepository, ApplicationService $applicationService,
-                                ProgramRepository $programRepository, MailService $mailService,
-                                SettingsRepository $settingsRepository, Authenticator $authenticator,
-                                PdfExportService $pdfExportService, ProgramService $programService,
-                                UserService $userService, Validators $validators,
-                                RolesApplicationRepository $rolesApplicationRepository,
-                                SubeventsApplicationRepository $subeventsApplicationRepository)
-    {
+    public function __construct(
+        Translator $translator,
+        ApplicationRepository $applicationRepository,
+        UserRepository $userRepository,
+        RoleRepository $roleRepository,
+        SubeventRepository $subeventRepository,
+        ApplicationService $applicationService,
+        ProgramRepository $programRepository,
+        MailService $mailService,
+        SettingsRepository $settingsRepository,
+        Authenticator $authenticator,
+        PdfExportService $pdfExportService,
+        ProgramService $programService,
+        UserService $userService,
+        Validators $validators,
+        RolesApplicationRepository $rolesApplicationRepository,
+        SubeventsApplicationRepository $subeventsApplicationRepository
+    ) {
         parent::__construct();
 
-        $this->translator = $translator;
-        $this->applicationRepository = $applicationRepository;
-        $this->userRepository = $userRepository;
-        $this->roleRepository = $roleRepository;
-        $this->subeventRepository = $subeventRepository;
-        $this->applicationService = $applicationService;
-        $this->programRepository = $programRepository;
-        $this->mailService = $mailService;
-        $this->settingsRepository = $settingsRepository;
-        $this->authenticator = $authenticator;
-        $this->pdfExportService = $pdfExportService;
-        $this->programService = $programService;
-        $this->userService = $userService;
-        $this->validators = $validators;
-        $this->rolesApplicationRepository = $rolesApplicationRepository;
+        $this->translator                     = $translator;
+        $this->applicationRepository          = $applicationRepository;
+        $this->userRepository                 = $userRepository;
+        $this->roleRepository                 = $roleRepository;
+        $this->subeventRepository             = $subeventRepository;
+        $this->applicationService             = $applicationService;
+        $this->programRepository              = $programRepository;
+        $this->mailService                    = $mailService;
+        $this->settingsRepository             = $settingsRepository;
+        $this->authenticator                  = $authenticator;
+        $this->pdfExportService               = $pdfExportService;
+        $this->programService                 = $programService;
+        $this->userService                    = $userService;
+        $this->validators                     = $validators;
+        $this->rolesApplicationRepository     = $rolesApplicationRepository;
         $this->subeventsApplicationRepository = $subeventsApplicationRepository;
     }
 
     /**
      * Vykreslí komponentu.
      */
-    public function render()
+    public function render() : void
     {
         $this->template->render(__DIR__ . '/templates/applications_grid.latte');
     }
 
     /**
      * Vytvoří komponentu.
-     * @param $name
-     * @throws \App\Model\Settings\SettingsException
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Ublaboo\DataGrid\Exception\DataGridException
+     * @throws SettingsException
+     * @throws NonUniqueResultException
+     * @throws \Throwable
+     * @throws DataGridException
      */
-    public function createComponentApplicationsGrid($name)
+    public function createComponentApplicationsGrid(string $name) : void
     {
         $this->user = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
 
         $explicitSubeventsExists = $this->subeventRepository->explicitSubeventsExists();
-        $userHasFixedFeeRole = $this->user->hasFixedFeeRole();
+        $userHasFixedFeeRole     = $this->user->hasFixedFeeRole();
 
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
 
-        if (!$explicitSubeventsExists)
+        if (! $explicitSubeventsExists) {
             $qb = $this->rolesApplicationRepository;
-        elseif (!$userHasFixedFeeRole)
+        } elseif (! $userHasFixedFeeRole) {
             $qb = $this->subeventsApplicationRepository;
-        else
+        } else {
             $qb = $this->applicationRepository;
+        }
 
         $qb = $qb->createQueryBuilder('a')
             ->join('a.user', 'u')
@@ -178,16 +174,18 @@ class ApplicationsGridControl extends Control
             ->orderBy('a.applicationId');
 
         $grid->setDataSource($qb);
-        $grid->setPagination(FALSE);
+        $grid->setPagination(false);
 
         $grid->addColumnDateTime('applicationDate', 'web.profile.applications_application_date')
             ->setFormat(Helpers::DATETIME_FORMAT);
 
-        if ($userHasFixedFeeRole)
-        $grid->addColumnText('roles', 'web.profile.applications_roles', 'rolesText');
+        if ($userHasFixedFeeRole) {
+            $grid->addColumnText('roles', 'web.profile.applications_roles', 'rolesText');
+        }
 
-        if ($explicitSubeventsExists)
+        if ($explicitSubeventsExists) {
             $grid->addColumnText('subevents', 'web.profile.applications_subevents', 'subeventsText');
+        }
 
         $grid->addColumnNumber('fee', 'web.profile.applications_fee');
 
@@ -201,10 +199,9 @@ class ApplicationsGridControl extends Control
                 return $this->applicationService->getStateText($row);
             });
 
-
         if ($explicitSubeventsExists) {
             if ($this->applicationService->isAllowedAddApplication($this->user)) {
-                $grid->addInlineAdd()->onControlAdd[] = function ($container) {
+                $grid->addInlineAdd()->onControlAdd[] = function ($container) : void {
                     $options = $this->subeventRepository->getNonRegisteredExplicitOptionsWithCapacity($this->user);
                     $container->addMultiSelect('subevents', '', $options)
                         ->setAttribute('class', 'datagrid-multiselect')
@@ -214,82 +211,86 @@ class ApplicationsGridControl extends Control
                 $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
             }
 
-            $grid->addInlineEdit()->onControlAdd[] = function ($container) {
+            $grid->addInlineEdit()->onControlAdd[] = function ($container) : void {
                 $options = $this->subeventRepository->getExplicitOptionsWithCapacity();
                 $container->addMultiSelect('subevents', '', $options)
                     ->setAttribute('class', 'datagrid-multiselect')
                     ->addRule(Form::FILLED, 'web.profile.applications_subevents_empty');
             };
             $grid->getInlineEdit()->setText($this->translator->translate('web.profile.applications_edit'));
-            $grid->getInlineEdit()->onSetDefaults[] = function ($container, SubeventsApplication $item) {
+            $grid->getInlineEdit()->onSetDefaults[] = function ($container, SubeventsApplication $item) : void {
                 $container->setDefaults([
-                    'subevents' => $this->subeventRepository->findSubeventsIds($item->getSubevents())
+                    'subevents' => $this->subeventRepository->findSubeventsIds($item->getSubevents()),
                 ]);
             };
-            $grid->getInlineEdit()->onSubmit[] = [$this, 'edit'];
-            $grid->allowRowsInlineEdit(function(Application $item) {
+            $grid->getInlineEdit()->onSubmit[]      = [$this, 'edit'];
+            $grid->allowRowsInlineEdit(function (Application $item) {
                 return $this->applicationService->isAllowedEditApplication($item);
             });
         }
 
-
         $grid->addAction('generatePaymentProofBank', 'web.profile.applications_download_payment_proof');
         $grid->allowRowsAction('generatePaymentProofBank', function (Application $item) {
-            return $item->getState() == ApplicationState::PAID
-                && $item->getPaymentMethod() == PaymentType::BANK
+            return $item->getState() === ApplicationState::PAID
+                && $item->getPaymentMethod() === PaymentType::BANK
                 && $item->getPaymentDate();
         });
 
         $grid->addAction('cancelApplication', 'web.profile.applications_cancel_application')
             ->addAttributes([
                 'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('web.profile.applications_cancel_application_confirm')
+                'data-content' => $this->translator->translate('web.profile.applications_cancel_application_confirm'),
             ])->setClass('btn btn-xs btn-danger');
         $grid->allowRowsAction('cancelApplication', function (Application $item) {
             return $this->applicationService->isAllowedEditApplication($item);
         });
 
-
-        $grid->setColumnsSummary(['fee'], function(Application $item, $column) {
+        $grid->setColumnsSummary(['fee'], function (Application $item, $column) {
             return $item->isCanceled() ? 0 : $item->getFee();
         });
     }
 
     /**
      * Zpracuje přidání podakcí.
-     * @param $values
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      * @throws \Throwable
      */
-    public function add($values)
+    public function add(\stdClass $values) : void
     {
-        $selectedSubevents = $this->subeventRepository->findSubeventsByIds($values['subevents']);
+        $selectedSubevents         = $this->subeventRepository->findSubeventsByIds($values['subevents']);
         $selectedAndUsersSubevents = clone $this->user->getSubevents();
-        foreach ($selectedSubevents as $subevent)
+        foreach ($selectedSubevents as $subevent) {
             $selectedAndUsersSubevents->add($subevent);
+        }
 
         $p = $this->getPresenter();
 
-        if (!$this->validators->validateSubeventsCapacities($selectedSubevents, $this->user)) {
+        if (! $this->validators->validateSubeventsCapacities($selectedSubevents, $this->user)) {
             $p->flashMessage('web.profile.applications_subevents_capacity_occupied', 'danger');
             $this->redirect('this');
         }
 
         foreach ($this->subeventRepository->findAllExplicitOrderedByName() as $subevent) {
-            if (!$this->validators->validateSubeventsIncompatible($selectedAndUsersSubevents, $subevent)) {
-                $message = $this->translator->translate('web.profile.applications_incompatible_subevents_selected', NULL,
+            if (! $this->validators->validateSubeventsIncompatible($selectedAndUsersSubevents, $subevent)) {
+                $message = $this->translator->translate(
+                    'web.profile.applications_incompatible_subevents_selected',
+                    null,
                     ['subevent' => $subevent->getName(), 'incompatibleSubevents' => $subevent->getIncompatibleSubeventsText()]
                 );
                 $p->flashMessage($message, 'danger');
                 $this->redirect('this');
             }
-            if (!$this->validators->validateSubeventsRequired($selectedAndUsersSubevents, $subevent)) {
-                $message = $this->translator->translate('web.profile.applications_required_subevents_not_selected', NULL,
-                    ['subevent' => $subevent->getName(), 'requiredSubevents' => $subevent->getRequiredSubeventsTransitiveText()]
-                );
-                $p->flashMessage($message, 'danger');
-                $this->redirect('this');
+            if ($this->validators->validateSubeventsRequired($selectedAndUsersSubevents, $subevent)) {
+                continue;
             }
+
+            $message = $this->translator->translate(
+                'web.profile.applications_required_subevents_not_selected',
+                null,
+                ['subevent' => $subevent->getName(), 'requiredSubevents' => $subevent->getRequiredSubeventsTransitiveText()]
+            );
+            $p->flashMessage($message, 'danger');
+            $this->redirect('this');
         }
 
         $this->applicationService->addSubeventsApplication($this->user, $selectedSubevents, $this->user);
@@ -300,47 +301,53 @@ class ApplicationsGridControl extends Control
 
     /**
      * Zpracuje úpravu přihlášky.
-     * @param $id
-     * @param $values
-     * @throws \App\Model\Settings\SettingsException
-     * @throws \Nette\Application\AbortException
+     * @throws SettingsException
+     * @throws AbortException
      * @throws \Throwable
-     * @throws \Ublaboo\Mailing\Exception\MailingException
-     * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
+     * @throws MailingException
+     * @throws MailingMailCreationException
      */
-    public function edit($id, $values)
+    public function edit(int $id, \stdClass $values) : void
     {
         $application = $this->applicationRepository->findById($id);
 
-        $selectedSubevents = $this->subeventRepository->findSubeventsByIds($values['subevents']);
+        $selectedSubevents         = $this->subeventRepository->findSubeventsByIds($values['subevents']);
         $selectedAndUsersSubevents = clone $this->user->getSubevents();
-        foreach ($selectedSubevents as $subevent)
+        foreach ($selectedSubevents as $subevent) {
             $selectedAndUsersSubevents->add($subevent);
-        foreach ($application->getSubevents() as $subevent)
+        }
+        foreach ($application->getSubevents() as $subevent) {
             $selectedAndUsersSubevents->removeElement($subevent);
+        }
 
         $p = $this->getPresenter();
 
-        if (!$this->validators->validateSubeventsCapacities($selectedSubevents, $this->user)) {
+        if (! $this->validators->validateSubeventsCapacities($selectedSubevents, $this->user)) {
             $p->flashMessage('web.profile.applications_subevents_capacity_occupied', 'danger');
             $this->redirect('this');
         }
 
         foreach ($this->subeventRepository->findAllExplicitOrderedByName() as $subevent) {
-            if (!$this->validators->validateSubeventsIncompatible($selectedAndUsersSubevents, $subevent)) {
-                $message = $this->translator->translate('web.profile.applications_incompatible_subevents_selected', NULL,
+            if (! $this->validators->validateSubeventsIncompatible($selectedAndUsersSubevents, $subevent)) {
+                $message = $this->translator->translate(
+                    'web.profile.applications_incompatible_subevents_selected',
+                    null,
                     ['subevent' => $subevent->getName(), 'incompatibleSubevents' => $subevent->getIncompatibleSubeventsText()]
                 );
                 $p->flashMessage($message, 'danger');
                 $this->redirect('this');
             }
-            if (!$this->validators->validateSubeventsRequired($selectedAndUsersSubevents, $subevent)) {
-                $message = $this->translator->translate('web.profile.applications_required_subevents_not_selected', NULL,
-                    ['subevent' => $subevent->getName(), 'requiredSubevents' => $subevent->getRequiredSubeventsTransitiveText()]
-                );
-                $p->flashMessage($message, 'danger');
-                $this->redirect('this');
+            if ($this->validators->validateSubeventsRequired($selectedAndUsersSubevents, $subevent)) {
+                continue;
             }
+
+            $message = $this->translator->translate(
+                'web.profile.applications_required_subevents_not_selected',
+                null,
+                ['subevent' => $subevent->getName(), 'requiredSubevents' => $subevent->getRequiredSubeventsTransitiveText()]
+            );
+            $p->flashMessage($message, 'danger');
+            $this->redirect('this');
         }
 
         $this->applicationService->updateSubeventsApplication($application, $selectedSubevents, $this->user);
@@ -351,26 +358,25 @@ class ApplicationsGridControl extends Control
 
     /**
      * Vygeneruje potvrzení o přijetí platby.
-     * @param $id
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
-    public function handleGeneratePaymentProofBank($id)
+    public function handleGeneratePaymentProofBank(int $id) : void
     {
         $this->pdfExportService->generateApplicationsPaymentProof(
-            $this->applicationRepository->findById($id), "potvrzeni-o-prijeti-platby.pdf",
+            $this->applicationRepository->findById($id),
+            'potvrzeni-o-prijeti-platby.pdf',
             $this->userRepository->findById($this->getPresenter()->getUser()->id)
         );
     }
 
     /**
      * Zruší přihlášku.
-     * @param $id
-     * @throws \App\Model\Settings\SettingsException
-     * @throws \Nette\Application\AbortException
+     * @throws SettingsException
+     * @throws AbortException
      * @throws \Throwable
      */
-    public function handleCancelApplication($id)
+    public function handleCancelApplication(int $id) : void
     {
         $application = $this->applicationRepository->findById($id);
 
@@ -382,4 +388,3 @@ class ApplicationsGridControl extends Control
         $this->redirect('this');
     }
 }
-

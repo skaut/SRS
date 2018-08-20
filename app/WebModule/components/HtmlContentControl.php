@@ -1,10 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
+use App\Model\CMS\Content\HtmlContent;
 use Nette\Application\UI\Control;
-
 
 /**
  * Komponenta s HTML.
@@ -14,16 +15,13 @@ use Nette\Application\UI\Control;
  */
 class HtmlContentControl extends Control
 {
-    /**
-     * @param $content
-     */
-    public function render($content)
+    public function render(HtmlContent $content) : void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/html_content.latte');
 
         $template->heading = $content->getHeading();
-        $template->html = $content->getText();
+        $template->html    = $content->getText();
 
         $template->render();
     }

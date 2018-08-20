@@ -1,13 +1,14 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\CMSModule\Presenters;
 
 use App\AdminModule\CMSModule\Components\INewsGridControlFactory;
+use App\AdminModule\CMSModule\Components\NewsGridControl;
 use App\AdminModule\CMSModule\Forms\NewsForm;
 use App\Model\CMS\NewsRepository;
 use Nette\Application\UI\Form;
-
 
 /**
  * Presenter starající se o správu aktualit.
@@ -36,30 +37,32 @@ class NewsPresenter extends CMSBasePresenter
     public $newsRepository;
 
 
-    public function renderEdit($id)
+    public function renderEdit(int $id) : void
     {
     }
 
-    protected function createComponentNewsGrid()
+    protected function createComponentNewsGrid() : NewsGridControl
     {
         return $this->newsGridControlFactory->create();
     }
 
-    protected function createComponentNewsForm()
+    protected function createComponentNewsForm() : Form
     {
-        $form = $this->newsFormFactory->create($this->getParameter('id'));
+        $form = $this->newsFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, array $values) {
-            if ($form['cancel']->isSubmittedBy())
+        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
+            if ($form['cancel']->isSubmittedBy()) {
                 $this->redirect('News:default');
+            }
 
             $this->flashMessage('admin.cms.news_saved', 'success');
 
             if ($form['submitAndContinue']->isSubmittedBy()) {
                 $id = $values['id'] ?: $this->newsRepository->findLastId();
                 $this->redirect('News:edit', ['id' => $id]);
-            } else
+            } else {
                 $this->redirect('News:default');
+            }
         };
 
         return $form;

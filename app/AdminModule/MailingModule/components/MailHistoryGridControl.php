@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\MailingModule\Components;
@@ -11,7 +12,6 @@ use Doctrine\ORM\QueryBuilder;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Ublaboo\DataGrid\DataGrid;
-
 
 /**
  * Komponenta pro výpis historie e-mailů.
@@ -30,17 +30,11 @@ class MailHistoryGridControl extends Control
     private $roleRepository;
 
 
-    /**
-     * MailHistoryGridControl constructor.
-     * @param Translator $translator
-     * @param MailRepository $mailRepository
-     * @param RoleRepository $roleRepository
-     */
     public function __construct(Translator $translator, MailRepository $mailRepository, RoleRepository $roleRepository)
     {
         parent::__construct();
 
-        $this->translator = $translator;
+        $this->translator     = $translator;
         $this->mailRepository = $mailRepository;
         $this->roleRepository = $roleRepository;
     }
@@ -48,16 +42,15 @@ class MailHistoryGridControl extends Control
     /**
      * Vykreslí komponentu.
      */
-    public function render()
+    public function render() : void
     {
         $this->template->render(__DIR__ . '/templates/mail_history_grid.latte');
     }
 
     /**
      * Vytvoří komponentu.
-     * @param $name
      */
-    public function createComponentMailHistoryGrid($name)
+    public function createComponentMailHistoryGrid(string $name) : void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -67,7 +60,7 @@ class MailHistoryGridControl extends Control
 
         $grid->addColumnText('recipientRoles', 'admin.mailing.history_recipient_roles', 'recipientRolesText')
             ->setFilterMultiSelect($this->roleRepository->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]))
-            ->setCondition(function (QueryBuilder $qb, $values) {
+            ->setCondition(function (QueryBuilder $qb, $values) : void {
                 $qb->join('m.recipientRoles', 'r')
                     ->andWhere('r.id IN (:rids)')
                     ->setParameter('rids', $values);
@@ -75,7 +68,7 @@ class MailHistoryGridControl extends Control
 
         $grid->addColumnText('recipientUsers', 'admin.mailing.history_recipient_users', 'recipientUsersText')
             ->setFilterText()
-            ->setCondition(function (QueryBuilder $qb, $value) {
+            ->setCondition(function (QueryBuilder $qb, $value) : void {
                 $qb->join('m.recipientUsers', 'u')
                     ->andWhere('u.displayName LIKE :displayName')
                     ->setParameter('displayName', '%' . $value . '%');
@@ -90,12 +83,12 @@ class MailHistoryGridControl extends Control
         $grid->addColumnText('automatic', 'admin.mailing.history_automatic')
             ->setReplacement([
                 '0' => $this->translator->translate('admin.common.no'),
-                '1' => $this->translator->translate('admin.common.yes')
+                '1' => $this->translator->translate('admin.common.yes'),
             ])
             ->setFilterSelect([
                 '' => 'admin.common.all',
                 '0' => 'admin.common.no',
-                '1' => 'admin.common.yes'
+                '1' => 'admin.common.yes',
             ])
             ->setTranslateOptions();
     }

@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\WebModule\Components;
-
 
 /**
  * Factory komponenty s podrobnostmi o programových blocích.
@@ -11,8 +11,5 @@ namespace App\WebModule\Components;
  */
 interface IBlocksContentControlFactory
 {
-    /**
-     * @return BlocksContentControl
-     */
-    public function create();
+    public function create() : BlocksContentControl;
 }

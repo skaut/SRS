@@ -1,14 +1,17 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
 use App\Model\Settings\Settings;
+use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
-
 
 /**
  * Formulář pro nastavení popisu cesty.
@@ -26,24 +29,18 @@ class PlaceDescriptionForm
     private $settingsRepository;
 
 
-    /**
-     * PlaceDescriptionForm constructor.
-     * @param BaseForm $baseForm
-     * @param SettingsRepository $settingsRepository
-     */
     public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository)
     {
-        $this->baseFormFactory = $baseForm;
+        $this->baseFormFactory    = $baseForm;
         $this->settingsRepository = $settingsRepository;
     }
 
     /**
      * Vytvoří formulář.
-     * @return Form
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
-    public function create()
+    public function create() : Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -53,7 +50,7 @@ class PlaceDescriptionForm
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'placeDescription' => $this->settingsRepository->getValue(Settings::PLACE_DESCRIPTION)
+            'placeDescription' => $this->settingsRepository->getValue(Settings::PLACE_DESCRIPTION),
         ]);
 
         $form->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
@@ -64,11 +61,12 @@ class PlaceDescriptionForm
 
     /**
      * Zpracuje formulář.
-     * @param Form $form
-     * @param array $values
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws \Throwable
      */
-    public function processForm(Form $form, array $values)
+    public function processForm(Form $form, \stdClass $values) : void
     {
         $this->settingsRepository->setValue(Settings::PLACE_DESCRIPTION, $values['placeDescription']);
     }

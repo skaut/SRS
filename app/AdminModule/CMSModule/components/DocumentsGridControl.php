@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\CMSModule\Components;
@@ -8,14 +9,18 @@ use App\Model\CMS\Document\DocumentRepository;
 use App\Model\CMS\Document\TagRepository;
 use App\Services\FilesService;
 use App\Utils\Helpers;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
+use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\Http\FileUpload;
 use Nette\Utils\Html;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
 use Ublaboo\DataGrid\DataGrid;
-
+use Ublaboo\DataGrid\Exception\DataGridException;
 
 /**
  * Komponenta pro správu dokumentů.
@@ -37,44 +42,39 @@ class DocumentsGridControl extends Control
     private $tagRepository;
 
 
-    /**
-     * DocumentsGridControl constructor.
-     * @param Translator $translator
-     * @param DocumentRepository $documentRepository
-     * @param TagRepository $tagRepository
-     * @param FilesService $filesService
-     */
-    public function __construct(Translator $translator, DocumentRepository $documentRepository,
-                                TagRepository $tagRepository, FilesService $filesService)
-    {
+    public function __construct(
+        Translator $translator,
+        DocumentRepository $documentRepository,
+        TagRepository $tagRepository,
+        FilesService $filesService
+    ) {
         parent::__construct();
 
-        $this->translator = $translator;
+        $this->translator         = $translator;
         $this->documentRepository = $documentRepository;
-        $this->tagRepository = $tagRepository;
-        $this->filesService = $filesService;
+        $this->tagRepository      = $tagRepository;
+        $this->filesService       = $filesService;
     }
 
     /**
      * Vykreslí komponentu.
      */
-    public function render()
+    public function render() : void
     {
         $this->template->render(__DIR__ . '/templates/documents_grid.latte');
     }
 
     /**
      * Vytvoří komponentu.
-     * @param $name
-     * @throws \Ublaboo\DataGrid\Exception\DataGridException
+     * @throws DataGridException
      */
-    public function createComponentDocumentsGrid($name)
+    public function createComponentDocumentsGrid(string $name) : void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
         $grid->setDataSource($this->documentRepository->createQueryBuilder('d'));
         $grid->setDefaultSort(['name' => 'ASC']);
-        $grid->setPagination(FALSE);
+        $grid->setPagination(false);
 
         $grid->addColumnText('name', 'admin.cms.documents_name');
 
@@ -109,7 +109,7 @@ class DocumentsGridControl extends Control
 
         $tagsOptions = $this->tagRepository->getTagsOptions();
 
-        $grid->addInlineAdd()->onControlAdd[] = function ($container) use ($tagsOptions) {
+        $grid->addInlineAdd()->onControlAdd[] = function ($container) use ($tagsOptions) : void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.documents_name_empty');
 
@@ -121,9 +121,9 @@ class DocumentsGridControl extends Control
 
             $container->addText('description', '');
         };
-        $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
+        $grid->getInlineAdd()->onSubmit[]     = [$this, 'add'];
 
-        $grid->addInlineEdit()->onControlAdd[] = function ($container) use ($tagsOptions) {
+        $grid->addInlineEdit()->onControlAdd[]  = function ($container) use ($tagsOptions) : void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.documents_name_empty');
 
@@ -134,14 +134,14 @@ class DocumentsGridControl extends Control
 
             $container->addText('description', '');
         };
-        $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) {
+        $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) : void {
             $container->setDefaults([
                 'name' => $item->getName(),
                 'tags' => $this->tagRepository->findTagsIds($item->getTags()),
-                'description' => $item->getDescription()
+                'description' => $item->getDescription(),
             ]);
         };
-        $grid->getInlineEdit()->onSubmit[] = [$this, 'edit'];
+        $grid->getInlineEdit()->onSubmit[]      = [$this, 'edit'];
 
         $grid->addAction('delete', '', 'delete!')
             ->setIcon('trash')
@@ -149,16 +149,17 @@ class DocumentsGridControl extends Control
             ->setClass('btn btn-xs btn-danger')
             ->addAttributes([
                 'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('admin.cms.documents_delete_confirm')
+                'data-content' => $this->translator->translate('admin.cms.documents_delete_confirm'),
             ]);
     }
 
     /**
      * Zpracuje přidání dokumentu.
-     * @param $values
-     * @throws \Nette\Application\AbortException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws AbortException
      */
-    public function add($values)
+    public function add(\stdClass $values) : void
     {
         $file = $values['file'];
         $path = $this->generatePath($file);
@@ -181,11 +182,11 @@ class DocumentsGridControl extends Control
 
     /**
      * Zpracuje úpravu dokumentu.
-     * @param $id
-     * @param $values
-     * @throws \Nette\Application\AbortException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws AbortException
      */
-    public function edit($id, $values)
+    public function edit(int $id, \stdClass $values) : void
     {
         $document = $this->documentRepository->findById($id);
 
@@ -212,10 +213,11 @@ class DocumentsGridControl extends Control
 
     /**
      * Zpracuje odstranění dokumentu.
-     * @param $id
-     * @throws \Nette\Application\AbortException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws AbortException
      */
-    public function handleDelete($id)
+    public function handleDelete(int $id) : void
     {
         $document = $this->documentRepository->findById($id);
         $this->filesService->delete($document->getFile());
@@ -228,10 +230,8 @@ class DocumentsGridControl extends Control
 
     /**
      * Vygeneruje cestu dokumentu.
-     * @param $file
-     * @return string
      */
-    private function generatePath($file)
+    private function generatePath(FileUpload $file) : string
     {
         return Document::PATH . '/' . Random::generate(5) . '/' . Strings::webalize($file->name, '.');
     }

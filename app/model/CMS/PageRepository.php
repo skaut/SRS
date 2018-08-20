@@ -1,11 +1,18 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\CMS;
 
+use App\Model\Page\PageException;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Kdyby\Doctrine\EntityRepository;
-
+use const PHP_INT_MAX;
+use function array_map;
 
 /**
  * Třída spravující stránky.
@@ -17,51 +24,44 @@ class PageRepository extends EntityRepository
 {
     /**
      * Vrací stránku podle id.
-     * @param $id
-     * @return Page|null
      */
-    public function findById($id)
+    public function findById(?int $id) : ?Page
     {
         return $this->findOneBy(['id' => $id]);
     }
 
     /**
      * Vrací stránku podle cesty.
-     * @param $slug
-     * @return Page|null
      */
-    public function findBySlug($slug)
+    public function findBySlug(string $slug) : ?Page
     {
         return $this->findOneBy(['slug' => $slug]);
     }
 
     /**
      * Vrací viditelné stránky se zadaným slugem.
-     * @param $slug
-     * @return Page|null
      */
-    public function findPublishedBySlug($slug)
+    public function findPublishedBySlug(string $slug) : ?Page
     {
-        return $this->findOneBy(['public' => TRUE, 'slug' => $slug]);
+        return $this->findOneBy(['public' => true, 'slug' => $slug]);
     }
 
     /**
      * Vrací viditelné stránky, seřazené podle pozice.
-     * @return array
+     * @return Page[]
      */
-    public function findPublishedOrderedByPosition()
+    public function findPublishedOrderedByPosition() : array
     {
-        return $this->findBy(['public' => TRUE], ['position' => 'ASC']);
+        return $this->findBy(['public' => true], ['position' => 'ASC']);
     }
 
     /**
      * Vrací poslední pozici stránky.
-     * @return int
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
-    public function findLastPosition()
+    public function findLastPosition() : int
     {
-        return $this->createQueryBuilder('p')
+        return (int) $this->createQueryBuilder('p')
             ->select('MAX(p.position)')
             ->getQuery()
             ->getSingleScalarResult();
@@ -69,9 +69,9 @@ class PageRepository extends EntityRepository
 
     /**
      * Vrací všechny cesty.
-     * @return array
+     * @return string[]
      */
-    public function findAllSlugs()
+    public function findAllSlugs() : array
     {
         $slugs = $this->createQueryBuilder('p')
             ->select('p.slug')
@@ -82,10 +82,9 @@ class PageRepository extends EntityRepository
 
     /**
      * Vrací všechny cesty, kromě cesty stránky s id.
-     * @param $id
-     * @return array
+     * @return string[]
      */
-    public function findOthersSlugs($id)
+    public function findOthersSlugs(int $id) : array
     {
         $slugs = $this->createQueryBuilder('p')
             ->select('p.slug')
@@ -98,10 +97,10 @@ class PageRepository extends EntityRepository
 
     /**
      * Vrací id podle stránek.
-     * @param $pages
-     * @return array
+     * @param Collection|Page[] $pages
+     * @return int[]
      */
-    public function findPagesIds($pages)
+    public function findPagesIds(Collection $pages) : array
     {
         return array_map(function ($o) {
             return $o->getId();
@@ -110,10 +109,10 @@ class PageRepository extends EntityRepository
 
     /**
      * Vrací stránky podle cest.
-     * @param $slugs
-     * @return \Doctrine\Common\Collections\Collection
+     * @param string[] $slugs
+     * @return Collection|Page[]
      */
-    public function findPagesBySlugs($slugs)
+    public function findPagesBySlugs(array $slugs) : Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('slug', $slugs))
@@ -123,10 +122,10 @@ class PageRepository extends EntityRepository
 
     /**
      * Vrací cesty podle stránek.
-     * @param $pages
-     * @return array
+     * @param Collection|Page[] $pages
+     * @return string[]
      */
-    public function findPagesSlugs($pages)
+    public function findPagesSlugs(Collection $pages) : array
     {
         return array_map(function ($o) {
             return $o->getSlug();
@@ -135,9 +134,9 @@ class PageRepository extends EntityRepository
 
     /**
      * Vrací stránky jako možnosti pro select.
-     * @return array
+     * @return string[]
      */
-    public function getPagesOptions()
+    public function getPagesOptions() : array
     {
         $pages = $this->createQueryBuilder('p')
             ->select('p.slug, p.name')
@@ -154,15 +153,15 @@ class PageRepository extends EntityRepository
 
     /**
      * Uloží stránku.
-     * @param Page $page
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws NonUniqueResultException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function save(Page $page)
+    public function save(Page $page) : void
     {
-        if (!$page->getPosition())
+        if (! $page->getPosition()) {
             $page->setPosition($this->findLastPosition() + 1);
+        }
 
         $this->_em->persist($page);
         $this->_em->flush();
@@ -170,15 +169,15 @@ class PageRepository extends EntityRepository
 
     /**
      * Odstraní stránku.
-     * @param Page $page
-     * @throws \App\Model\Page\PageException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws PageException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function remove(Page $page)
+    public function remove(Page $page) : void
     {
-        foreach ($page->getContents() as $content)
+        foreach ($page->getContents() as $content) {
             $this->_em->remove($content);
+        }
 
         $this->_em->remove($page);
         $this->_em->flush();
@@ -186,17 +185,14 @@ class PageRepository extends EntityRepository
 
     /**
      * Přesune stránku mezi stránky s id prevId a nextId.
-     * @param $itemId
-     * @param $prevId
-     * @param $nextId
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function sort($itemId, $prevId, $nextId)
+    public function sort(int $itemId, int $prevId, int $nextId) : void
     {
         $item = $this->find($itemId);
-        $prev = $prevId ? $this->find($prevId) : NULL;
-        $next = $nextId ? $this->find($nextId) : NULL;
+        $prev = $prevId ? $this->find($prevId) : null;
+        $next = $nextId ? $this->find($nextId) : null;
 
         $itemsToMoveUp = $this->createQueryBuilder('i')
             ->where('i.position <= :position')
@@ -226,7 +222,7 @@ class PageRepository extends EntityRepository
 
         if ($prev) {
             $item->setPosition($prev->getPosition() + 1);
-        } else if ($next) {
+        } elseif ($next) {
             $item->setPosition($next->getPosition() - 1);
         } else {
             $item->setPosition(1);

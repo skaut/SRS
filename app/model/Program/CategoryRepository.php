@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Program;
@@ -6,8 +7,10 @@ namespace App\Model\Program;
 use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Kdyby\Doctrine\EntityRepository;
-
+use function array_map;
 
 /**
  * Třída spravující kategorie programových bloků.
@@ -18,19 +21,17 @@ class CategoryRepository extends EntityRepository
 {
     /**
      * Vrací kategorii podle id.
-     * @param $id
-     * @return Category|null
      */
-    public function findById($id)
+    public function findById(?int $id) : ?Category
     {
         return $this->findOneBy(['id' => $id]);
     }
 
     /**
      * Vrací kategorie seřazené podle názvu.
-     * @return array
+     * @return Category[]
      */
-    public function findAllOrderedByName()
+    public function findAllOrderedByName() : array
     {
         return $this->createQueryBuilder('c')
             ->orderBy('c.name')
@@ -40,9 +41,9 @@ class CategoryRepository extends EntityRepository
 
     /**
      * Vrací názvy všech kategorií.
-     * @return array
+     * @return string[]
      */
-    public function findAllNames()
+    public function findAllNames() : array
     {
         $names = $this->createQueryBuilder('c')
             ->select('c.name')
@@ -53,10 +54,9 @@ class CategoryRepository extends EntityRepository
 
     /**
      * Vrací názvy kategorií, kromě kategorie s id.
-     * @param $id
-     * @return array
+     * @return string[]
      */
-    public function findOthersNames($id)
+    public function findOthersNames(int $id) : array
     {
         $names = $this->createQueryBuilder('c')
             ->select('c.name')
@@ -69,10 +69,9 @@ class CategoryRepository extends EntityRepository
 
     /**
      * Vrací kategorie, ze kterých si uživatel může vybírat programy.
-     * @param User $user
      * @return Collection|Category[]
      */
-    public function findUserAllowed(User $user): Collection
+    public function findUserAllowed(User $user) : Collection
     {
         $result = $this->createQueryBuilder('c')
             ->join('c.registerableRoles', 'r')
@@ -85,9 +84,9 @@ class CategoryRepository extends EntityRepository
 
     /**
      * Vrací kategorie jako možnosti pro select.
-     * @return array
+     * @return string[]
      */
-    public function getCategoriesOptions()
+    public function getCategoriesOptions() : array
     {
         $categories = $this->createQueryBuilder('c')
             ->select('c.id, c.name')
@@ -104,11 +103,10 @@ class CategoryRepository extends EntityRepository
 
     /**
      * Uloží kategorii.
-     * @param Category $category
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function save(Category $category)
+    public function save(Category $category) : void
     {
         $this->_em->persist($category);
         $this->_em->flush();
@@ -116,14 +114,13 @@ class CategoryRepository extends EntityRepository
 
     /**
      * Odstraní kategorii.
-     * @param Category $category
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function remove(Category $category)
+    public function remove(Category $category) : void
     {
         foreach ($category->getBlocks() as $block) {
-            $block->setCategory(NULL);
+            $block->setCategory(null);
             $this->_em->persist($block);
         }
 

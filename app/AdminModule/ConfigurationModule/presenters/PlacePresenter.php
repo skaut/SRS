@@ -1,14 +1,16 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
 use App\AdminModule\ConfigurationModule\Components\IPlacePointsGridControlFactory;
+use App\AdminModule\ConfigurationModule\Components\PlacePointsGridControl;
 use App\AdminModule\ConfigurationModule\Forms\PlaceDescriptionForm;
 use App\AdminModule\ConfigurationModule\Forms\PlacePointForm;
 use App\Model\Settings\Place\PlacePointRepository;
+use App\Model\Settings\SettingsException;
 use Nette\Application\UI\Form;
-
 
 /**
  * Presenter obsluhující nastavení místa semináře.
@@ -42,24 +44,21 @@ class PlacePresenter extends ConfigurationBasePresenter
     public $placePointsGridControlFactory;
 
 
-    /**
-     * @param $id
-     */
-    public function renderEdit($id)
+    public function renderEdit(int $id) : void
     {
-        $placePoint = $this->placePointRepository->findById($id);
+        $placePoint                 = $this->placePointRepository->findById($id);
         $this->template->placePoint = $placePoint;
     }
 
     /**
-     * @return Form
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
+     * @throws \Throwable
      */
-    protected function createComponentPlaceDescriptionForm()
+    protected function createComponentPlaceDescriptionForm() : Form
     {
         $form = $this->placeDescriptionFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, array $values) {
+        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');
@@ -68,13 +67,14 @@ class PlacePresenter extends ConfigurationBasePresenter
         return $form;
     }
 
-    protected function createComponentPlacePointForm()
+    protected function createComponentPlacePointForm() : Form
     {
-        $form = $this->placePointFormFactory->create($this->getParameter('id'));
+        $form = $this->placePointFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, array $values) {
-            if ($form['cancel']->isSubmittedBy())
+        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
+            if ($form['cancel']->isSubmittedBy()) {
                 $this->redirect('Place:default');
+            }
 
             $this->flashMessage('admin.configuration.place_points_saved', 'success');
 
@@ -84,7 +84,7 @@ class PlacePresenter extends ConfigurationBasePresenter
         return $form;
     }
 
-    protected function createComponentPlacePointsGrid()
+    protected function createComponentPlacePointsGrid() : PlacePointsGridControl
     {
         return $this->placePointsGridControlFactory->create();
     }

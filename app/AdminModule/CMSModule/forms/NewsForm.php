@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\CMSModule\Forms;
@@ -6,9 +7,10 @@ namespace App\AdminModule\CMSModule\Forms;
 use App\AdminModule\Forms\BaseForm;
 use App\Model\CMS\News;
 use App\Model\CMS\NewsRepository;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
-
 
 /**
  * Formulář pro úpravu aktuality.
@@ -19,7 +21,7 @@ use Nette\Application\UI\Form;
 class NewsForm
 {
     use Nette\SmartObject;
-    
+
     /**
      * Upravovaná aktualita.
      * @var News
@@ -33,23 +35,16 @@ class NewsForm
     private $newsRepository;
 
 
-    /**
-     * NewsForm constructor.
-     * @param BaseForm $baseFormFactory
-     * @param NewsRepository $newsRepository
-     */
     public function __construct(BaseForm $baseFormFactory, NewsRepository $newsRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
-        $this->newsRepository = $newsRepository;
+        $this->newsRepository  = $newsRepository;
     }
 
     /**
      * Vytvoří formulář.
-     * @param $id
-     * @return Form
      */
-    public function create($id)
+    public function create(?int $id) : Form
     {
         $this->news = $this->newsRepository->findById($id);
 
@@ -79,11 +74,11 @@ class NewsForm
                 'id' => $id,
                 'published' => $this->news->getPublished(),
                 'pinned' => $this->news->isPinned(),
-                'text' => $this->news->getText()
+                'text' => $this->news->getText(),
             ]);
         } else {
             $form->setDefaults([
-                'published' => new \DateTime()
+                'published' => new \DateTime(),
             ]);
         }
 
@@ -95,20 +90,23 @@ class NewsForm
 
     /**
      * Zpracuje formulář.
-     * @param Form $form
-     * @param array $values
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function processForm(Form $form, array $values)
+    public function processForm(Form $form, \stdClass $values) : void
     {
-        if (!$form['cancel']->isSubmittedBy()) {
-            if (!$this->news)
-                $this->news = new News();
-
-            $this->news->setText($values['text']);
-            $this->news->setPublished($values['published']);
-            $this->news->setPinned($values['pinned']);
-
-            $this->newsRepository->save($this->news);
+        if ($form['cancel']->isSubmittedBy()) {
+            return;
         }
+
+        if (! $this->news) {
+            $this->news = new News();
+        }
+
+        $this->news->setText($values['text']);
+        $this->news->setPublished($values['published']);
+        $this->news->setPinned($values['pinned']);
+
+        $this->newsRepository->save($this->news);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
@@ -6,9 +7,14 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseForm;
 use App\Model\Structure\Subevent;
 use App\Model\Structure\SubeventRepository;
+use Doctrine\DBAL\ConnectionException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
-
+use Nette\Forms\Controls\MultiSelectBox;
+use function md5;
+use function mt_rand;
 
 /**
  * Formulář pro úpravu podakce.
@@ -31,23 +37,16 @@ class SubeventForm
     /** @var SubeventRepository */
     private $subeventRepository;
 
-    /**
-     * SubeventForm constructor.
-     * @param BaseForm $baseFormFactory
-     * @param SubeventRepository $subeventRepository
-     */
     public function __construct(BaseForm $baseFormFactory, SubeventRepository $subeventRepository)
     {
-        $this->baseFormFactory = $baseFormFactory;
+        $this->baseFormFactory    = $baseFormFactory;
         $this->subeventRepository = $subeventRepository;
     }
 
     /**
      * Vytvoří formulář.
-     * @param $id
-     * @return Form
      */
-    public function create($id)
+    public function create(int $id) : Form
     {
         $this->subevent = $this->subeventRepository->findById($id);
 
@@ -84,27 +83,31 @@ class SubeventForm
             $subeventsOptions = $this->subeventRepository->getSubeventsOptions();
         }
 
-
         $incompatibleSubeventsSelect = $form->addMultiSelect('incompatibleSubevents', 'admin.configuration.subevents_incompatible_subevents', $subeventsOptions);
 
         $requiredSubeventsSelect = $form->addMultiSelect('requiredSubevents', 'admin.configuration.subevents_required_subevents', $subeventsOptions);
 
         $incompatibleSubeventsSelect
             ->addCondition(Form::FILLED)
-            ->addRule([$this, 'validateIncompatibleAndRequiredCollision'],
-                'admin.configuration.subevents_incompatible_collision', [$incompatibleSubeventsSelect, $requiredSubeventsSelect]);
+            ->addRule(
+                [$this, 'validateIncompatibleAndRequiredCollision'],
+                'admin.configuration.subevents_incompatible_collision',
+                [$incompatibleSubeventsSelect, $requiredSubeventsSelect]
+            );
 
         $requiredSubeventsSelect
             ->addCondition(Form::FILLED)
-            ->addRule([$this, 'validateIncompatibleAndRequiredCollision'],
-                'admin.configuration.subevents_required_collision', [$incompatibleSubeventsSelect, $requiredSubeventsSelect]);
+            ->addRule(
+                [$this, 'validateIncompatibleAndRequiredCollision'],
+                'admin.configuration.subevents_required_collision',
+                [$incompatibleSubeventsSelect, $requiredSubeventsSelect]
+            );
 
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->addSubmit('cancel', 'admin.common.cancel')
             ->setValidationScope([])
             ->setAttribute('class', 'btn btn-warning');
-
 
         if ($this->subevent) {
             $form->setDefaults([
@@ -113,7 +116,7 @@ class SubeventForm
                 'capacity' => $this->subevent->getCapacity(),
                 'fee' => $this->subevent->getFee(),
                 'incompatibleSubevents' => $this->subeventRepository->findSubeventsIds($this->subevent->getIncompatibleSubevents()),
-                'requiredSubevents' => $this->subeventRepository->findSubeventsIds($this->subevent->getRequiredSubevents())
+                'requiredSubevents' => $this->subeventRepository->findSubeventsIds($this->subevent->getRequiredSubevents()),
             ]);
         }
 
@@ -124,38 +127,41 @@ class SubeventForm
 
     /**
      * Zpracuje formulář.
-     * @param Form $form
-     * @param array $values
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function processForm(Form $form, array $values)
+    public function processForm(Form $form, \stdClass $values) : void
     {
-        if (!$form['cancel']->isSubmittedBy()) {
-            if (!$this->subevent)
-                $this->subevent = new Subevent();
-
-            $capacity = $values['capacity'] !== '' ? $values['capacity'] : NULL;
-
-            $this->subevent->setName($values['name']);
-            $this->subevent->setCapacity($capacity);
-            $this->subevent->setFee($values['fee']);
-            $this->subevent->setIncompatibleSubevents($this->subeventRepository->findSubeventsByIds($values['incompatibleSubevents']));
-            $this->subevent->setRequiredSubevents($this->subeventRepository->findSubeventsByIds($values['requiredSubevents']));
-
-            $this->subeventRepository->save($this->subevent);
+        if ($form['cancel']->isSubmittedBy()) {
+            return;
         }
+
+        if (! $this->subevent) {
+            $this->subevent = new Subevent();
+        }
+
+        $capacity = $values['capacity'] !== '' ? $values['capacity'] : null;
+
+        $this->subevent->setName($values['name']);
+        $this->subevent->setCapacity($capacity);
+        $this->subevent->setFee($values['fee']);
+        $this->subevent->setIncompatibleSubevents($this->subeventRepository->findSubeventsByIds($values['incompatibleSubevents']));
+        $this->subevent->setRequiredSubevents($this->subeventRepository->findSubeventsByIds($values['requiredSubevents']));
+
+        $this->subeventRepository->save($this->subevent);
     }
 
     /**
      * Ověří kolize mezi vyžadovanými a nekompatibilními podakcemi.
-     * @param $field
-     * @param $args
-     * @return bool
-     * @throws \Doctrine\DBAL\ConnectionException
+     * @param int[][] $args
+     * @throws ConnectionException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function validateIncompatibleAndRequiredCollision($field, $args)
+    public function validateIncompatibleAndRequiredCollision(MultiSelectBox $field, array $args) : bool
     {
         $incompatibleSubevents = $this->subeventRepository->findSubeventsByIds($args[0]);
-        $requiredSubevents = $this->subeventRepository->findSubeventsByIds($args[1]);
+        $requiredSubevents     = $this->subeventRepository->findSubeventsByIds($args[1]);
 
         $this->subeventRepository->getEntityManager()->getConnection()->beginTransaction();
 
@@ -170,17 +176,18 @@ class SubeventForm
         $editedSubevent->setIncompatibleSubevents($incompatibleSubevents);
         $editedSubevent->setRequiredSubevents($requiredSubevents);
 
-        $valid = TRUE;
+        $valid = true;
 
         foreach ($this->subeventRepository->findAll() as $subevent) {
             foreach ($subevent->getRequiredSubeventsTransitive() as $requiredSubevent) {
                 if ($subevent->getIncompatibleSubevents()->contains($requiredSubevent)) {
-                    $valid = FALSE;
+                    $valid = false;
                     break;
                 }
             }
-            if (!$valid)
+            if (! $valid) {
                 break;
+            }
         }
 
         $this->subeventRepository->save($editedSubevent);

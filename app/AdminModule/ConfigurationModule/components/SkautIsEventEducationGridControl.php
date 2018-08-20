@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Components;
@@ -7,10 +8,10 @@ use App\Model\SkautIs\SkautIsCourseRepository;
 use App\Model\Structure\Subevent;
 use App\Model\Structure\SubeventRepository;
 use Kdyby\Translation\Translator;
+use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Forms\Container;
 use Ublaboo\DataGrid\DataGrid;
-
 
 /**
  * Komponenta pro nastavení propojení se vzdělávací akcí.
@@ -29,70 +30,63 @@ class SkautIsEventEducationGridControl extends Control
     private $skautIsCourseRepository;
 
 
-    /**
-     * SubeventsGridControl constructor.
-     * @param Translator $translator
-     * @param SubeventRepository $subeventRepository
-     * @param SkautIsCourseRepository $skautIsCourseRepository
-     */
-    public function __construct(Translator $translator, SubeventRepository $subeventRepository,
-                                SkautIsCourseRepository $skautIsCourseRepository)
-    {
+    public function __construct(
+        Translator $translator,
+        SubeventRepository $subeventRepository,
+        SkautIsCourseRepository $skautIsCourseRepository
+    ) {
         parent::__construct();
 
-        $this->translator = $translator;
-        $this->subeventRepository = $subeventRepository;
+        $this->translator              = $translator;
+        $this->subeventRepository      = $subeventRepository;
         $this->skautIsCourseRepository = $skautIsCourseRepository;
     }
 
     /**
      * Vykreslí komponentu.
      */
-    public function render(): void
+    public function render() : void
     {
         $this->template->render(__DIR__ . '/templates/skaut_is_event_education_grid.latte');
     }
 
     /**
      * Vytvoří komponentu.
-     * @param string $name
      */
-    public function createComponentSkautIsEventEducationGrid(string $name): void
+    public function createComponentSkautIsEventEducationGrid(string $name) : void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
         $grid->setDataSource($this->subeventRepository->createQueryBuilder('s'));
         $grid->setDefaultSort(['name' => 'ASC']);
-        $grid->setPagination(FALSE);
-
+        $grid->setPagination(false);
 
         $grid->addColumnText('name', 'admin.configuration.skautis_event_education_subevent');
 
         $grid->addColumnText('skautIsCourses', 'admin.configuration.skautis_event_education_skaut_is_courses', 'skautIsCoursesText');
 
-
-        $grid->addInlineEdit()->onControlAdd[] = function (Container $container) {
-            $container->addMultiSelect('skautIsCourses', '',
+        $grid->addInlineEdit()->onControlAdd[]  = function (Container $container) : void {
+            $container->addMultiSelect(
+                'skautIsCourses',
+                '',
                 $this->skautIsCourseRepository->getSkautIsCoursesOptions()
             )
                 ->setAttribute('class', 'datagrid-multiselect');
         };
-        $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Subevent $subevent) {
+        $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Subevent $subevent) : void {
             $container->setDefaults([
-                'skautIsCourses' => $this->skautIsCourseRepository->findSkautIsCoursesIds($subevent->getSkautIsCourses())
+                'skautIsCourses' => $this->skautIsCourseRepository->findSkautIsCoursesIds($subevent->getSkautIsCourses()),
             ]);
         };
-        $grid->getInlineEdit()->onSubmit[] = [$this, 'edit'];
+        $grid->getInlineEdit()->onSubmit[]      = [$this, 'edit'];
     }
 
     /**
      * Zpracuje úpravu propojení podakce s kurzy.
-     * @param $id
-     * @param $values
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      * @throws \Throwable
      */
-    public function edit(int $id, array $values)
+    public function edit(int $id, \stdClass $values) : void
     {
         $subevent = $this->subeventRepository->findById($id);
 

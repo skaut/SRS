@@ -1,11 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\User;
 
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
-
 
 /**
  * Entita variabilní symbol.
@@ -26,26 +26,17 @@ class VariableSymbol
     protected $variableSymbol;
 
 
-    /**
-     * @return int
-     */
-    public function getId(): int
+    public function getId() : int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getVariableSymbol(): string
+    public function getVariableSymbol() : ?string
     {
         return $this->variableSymbol;
     }
 
-    /**
-     * @param string $variableSymbol
-     */
-    public function setVariableSymbol(string $variableSymbol)
+    public function setVariableSymbol(?string $variableSymbol) : void
     {
         $this->variableSymbol = $variableSymbol;
     }

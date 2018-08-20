@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Program;
@@ -8,7 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
-
+use function implode;
 
 /**
  * Entita kategorie programového bloku.
@@ -31,7 +32,7 @@ class Category
     /**
      * Role, které si mohou přihlašovat programy z kategorie.
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="registerableCategories")
-     * @var Collection
+     * @var Collection|Role[]
      */
     protected $registerableRoles;
 
@@ -39,83 +40,71 @@ class Category
      * Bloky v kategorii.
      * @ORM\OneToMany(targetEntity="Block", mappedBy="category", cascade={"persist"})
      * @ORM\OrderBy({"name" = "ASC"})
-     * @var Collection
+     * @var Collection|Block[]
      */
     protected $blocks;
 
 
-    /**
-     * Category constructor.
-     */
     public function __construct()
     {
         $this->registerableRoles = new ArrayCollection();
-        $this->blocks = new ArrayCollection();
+        $this->blocks            = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getId(): int
+    public function getId() : int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getName(): string
+    public function getName() : string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName(string $name): void
+    public function setName(string $name) : void
     {
         $this->name = $name;
     }
 
     /**
-     * @return Role[]|Collection
+     * @return Collection|Role[]
      */
-    public function getRegisterableRoles(): Collection
+    public function getRegisterableRoles() : Collection
     {
         return $this->registerableRoles;
     }
 
-    /**
-     * @return string
-     */
-    public function getRegisterableRolesText(): string
+    public function getRegisterableRolesText() : string
     {
-        return implode(', ', $this->registerableRoles->map(function (Role $role) {return $role->getName();})->toArray());
+        return implode(', ', $this->registerableRoles->map(function (Role $role) {
+            return $role->getName();
+        })->toArray());
     }
 
     /**
-     * @param Role[]|Collection $registerableRoles
+     * @param Collection|Role[] $registerableRoles
      */
-    public function setRegisterableRoles(Collection $registerableRoles)
+    public function setRegisterableRoles(Collection $registerableRoles) : void
     {
         $this->registerableRoles->clear();
-        foreach ($registerableRoles as $registerableRole)
+        foreach ($registerableRoles as $registerableRole) {
             $this->registerableRoles->add($registerableRole);
+        }
     }
 
-    /**
-     * @param Role $role
-     */
-    public function addRole(Role $role): void
+    public function addRole(Role $role) : void
     {
-        if (!$this->registerableRoles->contains($role))
-            $this->registerableRoles->add($role);
+        if ($this->registerableRoles->contains($role)) {
+            return;
+        }
+
+        $this->registerableRoles->add($role);
     }
 
     /**
-     * @return Block[]|Collection
+     * @return Collection|Block[]
      */
-    public function getBlocks(): Collection
+    public function getBlocks() : Collection
     {
         return $this->blocks;
     }

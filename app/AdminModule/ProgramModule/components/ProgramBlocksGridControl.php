@@ -1,24 +1,32 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ProgramModule\Components;
 
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
+use App\Model\Program\Block;
 use App\Model\Program\BlockRepository;
 use App\Model\Program\CategoryRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\Settings;
+use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\UserRepository;
 use App\Services\ExcelExportService;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
+use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
+use PhpOffice\PhpSpreadsheet\Exception;
 use Ublaboo\DataGrid\DataGrid;
-
+use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
+use Ublaboo\DataGrid\Exception\DataGridException;
 
 /**
  * Komponenta pro správu programových bloků.
@@ -58,72 +66,61 @@ class ProgramBlocksGridControl extends Control
     private $sessionSection;
 
 
-    /**
-     * ProgramBlocksGridControl constructor.
-     * @param Translator $translator
-     * @param BlockRepository $blockRepository
-     * @param SettingsRepository $settingsRepository
-     * @param UserRepository $userRepository
-     * @param CategoryRepository $categoryRepository
-     * @param ProgramRepository $programRepository
-     * @param SubeventRepository $subeventRepository
-     * @param ExcelExportService $excelExportService
-     * @param Session $session
-     */
-    public function __construct(Translator $translator, BlockRepository $blockRepository,
-                                SettingsRepository $settingsRepository, UserRepository $userRepository,
-                                CategoryRepository $categoryRepository, ProgramRepository $programRepository,
-                                SubeventRepository $subeventRepository, ExcelExportService $excelExportService,
-                                Session $session)
-    {
+    public function __construct(
+        Translator $translator,
+        BlockRepository $blockRepository,
+        SettingsRepository $settingsRepository,
+        UserRepository $userRepository,
+        CategoryRepository $categoryRepository,
+        ProgramRepository $programRepository,
+        SubeventRepository $subeventRepository,
+        ExcelExportService $excelExportService,
+        Session $session
+    ) {
         parent::__construct();
 
-        $this->translator = $translator;
-        $this->blockRepository = $blockRepository;
+        $this->translator         = $translator;
+        $this->blockRepository    = $blockRepository;
         $this->settingsRepository = $settingsRepository;
-        $this->userRepository = $userRepository;
+        $this->userRepository     = $userRepository;
         $this->categoryRepository = $categoryRepository;
-        $this->programRepository = $programRepository;
+        $this->programRepository  = $programRepository;
         $this->subeventRepository = $subeventRepository;
         $this->excelExportService = $excelExportService;
 
-        $this->session = $session;
+        $this->session        = $session;
         $this->sessionSection = $session->getSection('srs');
     }
 
     /**
      * Vykreslí komponentu.
      */
-    public function render()
+    public function render() : void
     {
         $this->template->render(__DIR__ . '/templates/program_blocks_grid.latte');
     }
 
     /**
      * Vytvoří komponentu.
-     * @param $name
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
-     * @throws \Ublaboo\DataGrid\Exception\DataGridColumnStatusException
-     * @throws \Ublaboo\DataGrid\Exception\DataGridException
+     * @throws DataGridColumnStatusException
+     * @throws DataGridException
      */
-    public function createComponentProgramBlocksGrid($name)
+    public function createComponentProgramBlocksGrid(string $name) : void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
         $grid->setDataSource($this->blockRepository->createQueryBuilder('b')
             ->addSelect('l')->leftJoin('b.lector', 'l')
             ->addSelect('c')->leftJoin('b.category', 'c')
-            ->addSelect('s')->leftJoin('b.subevent', 's')
-        );
+            ->addSelect('s')->leftJoin('b.subevent', 's'));
         $grid->setDefaultSort(['name' => 'ASC']);
-        $grid->setPagination(FALSE);
+        $grid->setPagination(false);
         $grid->setColumnsHideable();
-
 
         $grid->addGroupAction('admin.program.blocks_group_action_export_blocks_attendees')
             ->onSelect[] = [$this, 'groupExportBlocksAttendees'];
-
 
         $grid->addColumnText('name', 'admin.program.blocks_name')
             ->setSortable()
@@ -149,9 +146,8 @@ class ProgramBlocksGridControl extends Control
             ->setRendererOnCondition(function ($row) {
                 return $this->translator->translate('admin.program.blocks_capacity_unlimited');
             }, function ($row) {
-                return $row->getCapacity() === NULL;
-            }
-            )
+                return $row->getCapacity() === null;
+            })
             ->setSortable();
 
         $columnMandatory = $grid->addColumnStatus('mandatory', 'admin.program.blocks_mandatory');
@@ -173,7 +169,7 @@ class ProgramBlocksGridControl extends Control
                 '' => 'admin.common.all',
                 0 => 'admin.program.blocks_mandatory_voluntary',
                 1 => 'admin.program.blocks_mandatory_mandatory',
-                2 => 'admin.program.blocks_mandatory_auto_register'
+                2 => 'admin.program.blocks_mandatory_auto_register',
             ])
             ->setTranslateOptions();
 
@@ -203,21 +199,22 @@ class ProgramBlocksGridControl extends Control
             ->setClass('btn btn-xs btn-danger')
             ->addAttributes([
                 'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('admin.program.blocks_delete_confirm')
+                'data-content' => $this->translator->translate('admin.program.blocks_delete_confirm'),
             ]);
         $grid->allowRowsAction('delete', [$this, 'isAllowedModifyBlock']);
     }
 
     /**
      * Odstraní programový blok.
-     * @param $id
-     * @throws \Nette\Application\AbortException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws AbortException
      */
-    public function handleDelete($id)
+    public function handleDelete(int $id) : void
     {
         $block = $this->blockRepository->findById($id);
 
-        if (!$this->userRepository->findById($this->getPresenter()->getUser()->getId())->isAllowedModifyBlock($block)) {
+        if (! $this->userRepository->findById($this->getPresenter()->getUser()->getId())->isAllowedModifyBlock($block)) {
             $this->getPresenter()->flashMessage('admin.program.blocks_delete_not_allowed', 'danger');
             $this->redirect('this');
         }
@@ -231,37 +228,38 @@ class ProgramBlocksGridControl extends Control
 
     /**
      * Změní povinnost bloku.
-     * @param $id
-     * @param $mandatory
-     * @throws \Nette\Application\AbortException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws AbortException
      */
-    public function changeMandatory($id, $mandatory)
+    public function changeMandatory(int $id, int $mandatory) : void
     {
         $block = $this->blockRepository->findById($id);
 
         $p = $this->getPresenter();
 
-        if (!$p->dbuser->isAllowedModifyBlock($block)) {
+        if (! $p->dbuser->isAllowedModifyBlock($block)) {
             $p->flashMessage('admin.program.blocks_change_mandatory_denied', 'danger');
-        } elseif ($mandatory == 2 && $block->getMandatory() != 2 &&
+        } elseif ($mandatory === 2 && $block->getMandatory() !== 2 &&
             ($block->getProgramsCount() > 1 ||
-                ($block->getProgramsCount() == 1 && $this->programRepository->hasOverlappingProgram(
-                        $block->getPrograms()->first(),
-                        $block->getPrograms()->first()->getStart(),
-                        $block->getPrograms()->first()->getEnd())
+                ($block->getProgramsCount() === 1 && $this->programRepository->hasOverlappingProgram(
+                    $block->getPrograms()->first(),
+                    $block->getPrograms()->first()->getStart(),
+                    $block->getPrograms()->first()->getEnd()
+                )
                 )
             )
         ) {
             $p->flashMessage('admin.program.blocks_change_mandatory_auto_register_not_allowed', 'danger');
         } else {
             //odstraneni ucastniku, pokud se odstrani automaticke prihlasovani
-            if ($block->getMandatory() == 2 && $mandatory != 2) {
+            if ($block->getMandatory() === 2 && $mandatory !== 2) {
                 foreach ($block->getPrograms() as $program) {
                     $program->removeAllAttendees();
                 }
             }
             //pridani ucastniku, pokud je pridana automaticke prihlaseni
-            if ($mandatory == 2 && $block->getMandatory() != 2) {
+            if ($mandatory === 2 && $block->getMandatory() !== 2) {
                 foreach ($block->getPrograms() as $program) {
                     $program->setAttendees($this->userRepository->findProgramAllowed($program));
                 }
@@ -283,10 +281,10 @@ class ProgramBlocksGridControl extends Control
 
     /**
      * Hromadně vyexportuje seznam uživatelů, kteří mají blok zapsaný.
-     * @param array $ids
-     * @throws \Nette\Application\AbortException
+     * @param int[] $ids
+     * @throws AbortException
      */
-    public function groupExportBlocksAttendees(array $ids)
+    public function groupExportBlocksAttendees(array $ids) : void
     {
         $this->sessionSection->blockIds = $ids;
         $this->redirect('exportblocksattendees'); //presmerovani kvuli zruseni ajax
@@ -294,26 +292,24 @@ class ProgramBlocksGridControl extends Control
 
     /**
      * Zpracuje export seznamu uživatelů, kteří mají blok zapsaný.
-     * @throws \Nette\Application\AbortException
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws AbortException
+     * @throws Exception
      */
-    public function handleExportBlocksAttendees()
+    public function handleExportBlocksAttendees() : void
     {
         $ids = $this->session->getSection('srs')->blockIds;
 
         $blocks = $this->blockRepository->findBlocksByIds($ids);
 
-        $response = $this->excelExportService->exportBlocksAttendees($blocks, "ucastnici-bloku.xlsx");
+        $response = $this->excelExportService->exportBlocksAttendees($blocks, 'ucastnici-bloku.xlsx');
 
         $this->getPresenter()->sendResponse($response);
     }
 
     /**
      * Vrací true, pokud je uživatel oprávněn upravovat programový blok.
-     * @param $block
-     * @return mixed
      */
-    public function isAllowedModifyBlock($block)
+    public function isAllowedModifyBlock(Block $block) : bool
     {
         return $this->getPresenter()->dbuser->isAllowedModifyBlock($block);
     }

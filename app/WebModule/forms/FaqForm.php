@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\WebModule\Forms;
@@ -7,9 +8,11 @@ use App\Model\CMS\Faq;
 use App\Model\CMS\FaqRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
-
 
 /**
  * Formulář pro položení otázky.
@@ -37,25 +40,17 @@ class FaqForm
     private $userRepository;
 
 
-    /**
-     * FaqForm constructor.
-     * @param BaseForm $baseFormFactory
-     * @param FaqRepository $faqRepository
-     * @param UserRepository $userRepository
-     */
     public function __construct(BaseForm $baseFormFactory, FaqRepository $faqRepository, UserRepository $userRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
-        $this->faqRepository = $faqRepository;
-        $this->userRepository = $userRepository;
+        $this->faqRepository   = $faqRepository;
+        $this->userRepository  = $userRepository;
     }
 
     /**
      * Vytvoří formulář.
-     * @param $id
-     * @return Form
      */
-    public function create($id)
+    public function create(int $id) : Form
     {
         $this->user = $this->userRepository->findById($id);
 
@@ -73,11 +68,11 @@ class FaqForm
 
     /**
      * Zpracuje formulář.
-     * @param Form $form
-     * @param array $values
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function processForm(Form $form, array $values)
+    public function processForm(Form $form, \stdClass $values) : void
     {
         $faq = new Faq();
 

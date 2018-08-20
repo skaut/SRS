@@ -1,0 +1,25 @@
+# Codeception Test Suite Configuration
+#
+# Suite for acceptance tests.
+# Perform tests in browser using the WebDriver or PhpBrowser.
+# If you need both WebDriver and PHPBrowser tests - create a separate suite.
+
+actor: AcceptanceTester
+modules:
+    enabled:
+        - WebDriver:
+            url: http://srs.loc
+            browser: phantomjs
+            host: phantom
+            window_size: 1920x1080
+
+        - \Helper\Acceptance
+
+        - MailCatcher:
+            url: 'http://smtp-srs.loc'
+            port: 80
+
+        - Db:
+            dsn: 'mysql:host=mysql-test;dbname=srs'
+            user: 'root'
+            password: 'root'

@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\CMSModule\Components;
-
 
 /**
  * Factory komponenty pro správu dokumentů.
@@ -13,7 +13,6 @@ interface IDocumentsGridControlFactory
 {
     /**
      * Vytvoří komponentu.
-     * @return DocumentsGridControl
      */
-    public function create();
+    public function create() : DocumentsGridControl;
 }

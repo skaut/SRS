@@ -8,3 +8,11 @@ parameters:
     skautIS:
         appId: ${config.skautis.applicationId}
         test: ${config.skautis.testMode}
+
+mail:
+    smtp: false
+    host:
+    port:
+    username:
+    password:
+    secure:

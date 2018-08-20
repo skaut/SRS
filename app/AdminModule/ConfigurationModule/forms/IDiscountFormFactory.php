@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
-
 
 /**
  * Factory komponenty s formulářem pro úpravu slevy.
@@ -13,8 +13,6 @@ interface IDiscountFormFactory
 {
     /**
      * Vytvoří komponentu.
-     * @param $id
-     * @return mixed
      */
-    public function create($id);
+    public function create($id) : DiscountForm;
 }

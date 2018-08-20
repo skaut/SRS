@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\WebModule\Components;
-
 
 /**
  * Factory komponenty s obrázkem.
@@ -12,8 +12,5 @@ namespace App\WebModule\Components;
  */
 interface IImageContentControlFactory
 {
-    /**
-     * @return ImageContentControl
-     */
-    public function create();
+    public function create() : ImageContentControl;
 }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ProgramModule\Presenters;
@@ -6,7 +7,8 @@ namespace App\AdminModule\ProgramModule\Presenters;
 use App\AdminModule\Presenters\AdminBasePresenter;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
-
+use App\Model\Settings\SettingsException;
+use Nette\Application\AbortException;
 
 /**
  * Basepresenter pro ProgramModule.
@@ -15,13 +17,14 @@ use App\Model\ACL\Resource;
  */
 abstract class ProgramBasePresenter extends AdminBasePresenter
 {
+    /** @var string */
     protected $resource = Resource::PROGRAM;
 
 
     /**
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
-    public function startup()
+    public function startup() : void
     {
         parent::startup();
 
@@ -29,12 +32,13 @@ abstract class ProgramBasePresenter extends AdminBasePresenter
     }
 
     /**
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
+     * @throws \Throwable
      */
-    public function beforeRender()
+    public function beforeRender() : void
     {
         parent::beforeRender();
 
-        $this->template->sidebarVisible = TRUE;
+        $this->template->sidebarVisible = true;
     }
 }

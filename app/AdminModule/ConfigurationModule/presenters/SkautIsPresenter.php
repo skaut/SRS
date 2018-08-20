@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Presenters;
@@ -8,9 +9,10 @@ use App\AdminModule\ConfigurationModule\Components\SkautIsEventEducationGridCont
 use App\AdminModule\ConfigurationModule\Forms\SkautIsEventForm;
 use App\Model\Enums\SkautIsEventType;
 use App\Model\Settings\Settings;
+use App\Model\Settings\SettingsException;
 use App\Model\SkautIs\SkautIsCourseRepository;
+use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
-
 
 /**
  * Presenter obsluhující nastavení propojení se skautIS akcí.
@@ -40,34 +42,35 @@ class SkautIsPresenter extends ConfigurationBasePresenter
 
 
     /**
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
-    public function renderDefault()
+    public function renderDefault() : void
     {
         $eventId = $this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_ID);
-        if ($eventId !== NULL) {
-            $this->template->event = $this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_NAME);
-            $this->template->connected = TRUE;
-            $this->template->eventEducation = $this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_TYPE) == SkautIsEventType::EDUCATION;
+        if ($eventId !== null) {
+            $this->template->event          = $this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_NAME);
+            $this->template->connected      = true;
+            $this->template->eventEducation = $this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_TYPE) === SkautIsEventType::EDUCATION;
         } else {
-            $this->template->connected = FALSE;
+            $this->template->connected = false;
         }
     }
 
     /**
      * Zruší propojení s akcí ve skautIS.
-     * @throws \App\Model\Settings\SettingsException
-     * @throws \Nette\Application\AbortException
+     * @throws SettingsException
+     * @throws AbortException
      * @throws \Throwable
      */
-    public function handleDisconnect()
+    public function handleDisconnect() : void
     {
-        $this->settingsRepository->setValue(Settings::SKAUTIS_EVENT_ID, NULL);
-        $this->settingsRepository->setValue(Settings::SKAUTIS_EVENT_NAME, NULL);
+        $this->settingsRepository->setValue(Settings::SKAUTIS_EVENT_ID, null);
+        $this->settingsRepository->setValue(Settings::SKAUTIS_EVENT_NAME, null);
 
-        if ($this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_TYPE) == SkautIsEventType::EDUCATION)
+        if ($this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_TYPE) === SkautIsEventType::EDUCATION) {
             $this->skautIsCourseRepository->removeAll();
+        }
 
         $this->flashMessage('admin.configuration.skautis_event_disconnect_successful', 'success');
 
@@ -75,14 +78,14 @@ class SkautIsPresenter extends ConfigurationBasePresenter
     }
 
     /**
-     * @return Form
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
+     * @throws \Throwable
      */
-    protected function createComponentSkautIsEventForm()
+    protected function createComponentSkautIsEventForm() : Form
     {
         $form = $this->skautIsEventFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, array $values) {
+        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
             $this->flashMessage('admin.configuration.skautis_event_connect_successful', 'success');
 
             $this->redirect('this');
@@ -91,10 +94,7 @@ class SkautIsPresenter extends ConfigurationBasePresenter
         return $form;
     }
 
-    /**
-     * @return SkautIsEventEducationGridControl
-     */
-    protected function createComponentSkautIsEventEducationGrid(): SkautIsEventEducationGridControl
+    protected function createComponentSkautIsEventEducationGrid() : SkautIsEventEducationGridControl
     {
         return $this->skautISEventEducationGridControlFactory->create();
     }

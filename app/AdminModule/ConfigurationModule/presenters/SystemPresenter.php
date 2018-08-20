@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Presenters;
@@ -7,7 +8,6 @@ use App\Commands\ClearCacheCommand;
 use Kdyby\Console\Application;
 use Kdyby\Console\StringOutput;
 use Symfony\Component\Console\Input\ArrayInput;
-
 
 /**
  * Presenter obsluhující nastavení systému.
@@ -34,19 +34,18 @@ class SystemPresenter extends ConfigurationBasePresenter
      * Promaže cache.
      * @throws \Exception
      */
-    public function handleClearCache()
+    public function handleClearCache() : void
     {
         $this->application->add($this->clearCacheCommand);
         $output = new StringOutput();
-        $input = new ArrayInput([
-            'command' => 'app:cache:clear'
-        ]);
+        $input  = new ArrayInput(['command' => 'app:cache:clear']);
         $result = $this->application->run($input, $output);
 
-        if ($result == 0)
+        if ($result === 0) {
             $this->flashMessage('admin.configuration.system_cache_cleared', 'success');
-        else
+        } else {
             $this->flashMessage('admin.configuration.system_cache_not_cleared', 'error');
+        }
 
         $this->redirect('this');
     }

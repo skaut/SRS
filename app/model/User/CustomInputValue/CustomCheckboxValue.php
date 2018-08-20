@@ -1,10 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\User\CustomInputValue;
 
 use Doctrine\ORM\Mapping as ORM;
-
 
 /**
  * Entita hodnota vlastního zaškrtávacího pole přihlášky.
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="custom_checkbox_value")
  */
-class CustomCheckboxValue extends CustomInputValue implements ICustomInputValue
+class CustomCheckboxValue extends CustomInputValue
 {
     /**
      * Hodnota zaškrtávacího pole přihlášky.
@@ -23,18 +23,12 @@ class CustomCheckboxValue extends CustomInputValue implements ICustomInputValue
     protected $value;
 
 
-    /**
-     * @return bool
-     */
-    public function getValue()
+    public function getValue() : bool
     {
         return $this->value;
     }
 
-    /**
-     * @param $value
-     */
-    public function setValue($value)
+    public function setValue(bool $value) : void
     {
         $this->value = $value;
     }

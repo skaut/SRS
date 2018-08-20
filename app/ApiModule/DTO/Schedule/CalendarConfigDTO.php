@@ -1,11 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\ApiModule\DTO\Schedule;
 
 use JMS\Serializer\Annotation as JMS;
 use Nette;
-
 
 /**
  * Objekt pro přenos konfigurace do FullCalendar.
@@ -15,7 +15,7 @@ use Nette;
 class CalendarConfigDTO
 {
     use Nette\SmartObject;
-    
+
     /**
      * @JMS\Type("string")
      * @var string
@@ -30,55 +30,37 @@ class CalendarConfigDTO
 
     /**
      * @JMS\Type("boolean")
-     * @var boolean
+     * @var bool
      */
     private $allowedModifySchedule;
 
 
-    /**
-     * @return string
-     */
-    public function getSeminarFromDate()
+    public function getSeminarFromDate() : string
     {
         return $this->seminarFromDate;
     }
 
-    /**
-     * @param string $seminarFromDate
-     */
-    public function setSeminarFromDate($seminarFromDate)
+    public function setSeminarFromDate(string $seminarFromDate) : void
     {
         $this->seminarFromDate = $seminarFromDate;
     }
 
-    /**
-     * @return int
-     */
-    public function getSeminarDuration()
+    public function getSeminarDuration() : int
     {
         return $this->seminarDuration;
     }
 
-    /**
-     * @param int $seminarDuration
-     */
-    public function setSeminarDuration($seminarDuration)
+    public function setSeminarDuration(int $seminarDuration) : void
     {
         $this->seminarDuration = $seminarDuration;
     }
 
-    /**
-     * @return bool
-     */
-    public function isAllowedModifySchedule()
+    public function isAllowedModifySchedule() : bool
     {
         return $this->allowedModifySchedule;
     }
 
-    /**
-     * @param bool $allowedModifySchedule
-     */
-    public function setAllowedModifySchedule($allowedModifySchedule)
+    public function setAllowedModifySchedule(bool $allowedModifySchedule) : void
     {
         $this->allowedModifySchedule = $allowedModifySchedule;
     }

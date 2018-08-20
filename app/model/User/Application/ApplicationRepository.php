@@ -1,12 +1,14 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\User;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Kdyby\Doctrine\EntityRepository;
-
 
 /**
  * Třída spravující přihlášky.
@@ -17,20 +19,17 @@ class ApplicationRepository extends EntityRepository
 {
     /**
      * Vrací přihlášku podle id.
-     * @param $id
-     * @return Application|null
      */
-    public function findById($id)
+    public function findById(?int $id) : ?Application
     {
         return $this->findOneBy(['id' => $id]);
     }
 
     /**
      * Vrací přihlášky podle id, které mají společné všechny verze přihlášky.
-     * @param $id
      * @return Collection|Application[]
      */
-    public function findByApplicationId(int $id): Collection
+    public function findByApplicationId(int $id) : Collection
     {
         $result = $this->findBy(['applicationId' => $id]);
         return new ArrayCollection($result);
@@ -38,11 +37,10 @@ class ApplicationRepository extends EntityRepository
 
     /**
      * Uloží přihlášku.
-     * @param Application $application
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function save(Application $application)
+    public function save(Application $application) : void
     {
         $this->_em->persist($application);
         $this->_em->flush();
@@ -50,11 +48,10 @@ class ApplicationRepository extends EntityRepository
 
     /**
      * Odstraní přihlášku.
-     * @param Application $application
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function remove(Application $application)
+    public function remove(Application $application) : void
     {
         $this->_em->remove($application);
         $this->_em->flush();

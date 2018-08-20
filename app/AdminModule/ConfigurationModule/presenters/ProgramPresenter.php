@@ -1,11 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
 use App\AdminModule\ConfigurationModule\Forms\ProgramForm;
+use App\Model\Settings\SettingsException;
 use Nette\Application\UI\Form;
-
 
 /**
  * Presenter obsluhující nastavení programu.
@@ -23,14 +24,14 @@ class ProgramPresenter extends ConfigurationBasePresenter
 
 
     /**
-     * @return Form
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
+     * @throws \Throwable
      */
-    protected function createComponentProgramForm()
+    protected function createComponentProgramForm() : Form
     {
         $form = $this->programFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, array $values) {
+        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');

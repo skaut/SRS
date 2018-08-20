@@ -1,19 +1,24 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ProgramModule\Presenters;
 
 use App\AdminModule\ProgramModule\Components\IProgramAttendeesGridControlFactory;
 use App\AdminModule\ProgramModule\Components\IProgramBlocksGridControlFactory;
+use App\AdminModule\ProgramModule\Components\ProgramAttendeesGridControl;
+use App\AdminModule\ProgramModule\Components\ProgramBlocksGridControl;
 use App\AdminModule\ProgramModule\Forms\BlockForm;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\Program\BlockRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\Settings;
+use App\Model\Settings\SettingsException;
+use Doctrine\ORM\NonUniqueResultException;
+use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Http\Session;
-
 
 /**
  * Presenter obsluhující správu programových bloků.
@@ -60,7 +65,7 @@ class BlocksPresenter extends ProgramBasePresenter
     public $session;
 
 
-    public function renderDefault()
+    public function renderDefault() : void
     {
         $this->template->emptyUserInfo = empty($this->dbuser->getAbout());
 
@@ -68,29 +73,27 @@ class BlocksPresenter extends ProgramBasePresenter
     }
 
     /**
-     * @param $id
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
-    public function renderDetail($id)
+    public function renderDetail(int $id) : void
     {
         $block = $this->blockRepository->findById($id);
 
-        $this->template->block = $block;
-        $this->template->programId = $this->session->getSection('srs')->programId;
+        $this->template->block                     = $block;
+        $this->template->programId                 = $this->session->getSection('srs')->programId;
         $this->template->userAllowedModifySchedule = $this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE) &&
             $this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE);
     }
 
     /**
-     * @param $id
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
-    public function renderEdit($id)
+    public function renderEdit(int $id) : void
     {
         $block = $this->blockRepository->findById($id);
 
-        if (!$this->userRepository->findById($this->getUser()->getId())->isAllowedModifyBlock($block)) {
+        if (! $this->userRepository->findById($this->getUser()->getId())->isAllowedModifyBlock($block)) {
             $this->flashMessage('admin.program.blocks_edit_not_allowed', 'danger');
             $this->redirect('Blocks:default');
         }
@@ -100,37 +103,36 @@ class BlocksPresenter extends ProgramBasePresenter
 
     /**
      * Zobrazí přehled účastníků u vybraného programu.
-     * @param $programId
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
-    public function handleShowAttendees($programId)
+    public function handleShowAttendees(int $programId) : void
     {
         $this->session->getSection('srs')->programId = $programId;
 
         $this->template->programId = $programId;
 
-        if ($this->isAjax())
+        if ($this->isAjax()) {
             $this->redrawControl('programs');
-        else
+        } else {
             $this->redirect('this');
+        }
     }
 
     /**
      * Odstraní vybraný program.
-     * @param $programId
-     * @throws \App\Model\Settings\SettingsException
-     * @throws \Nette\Application\AbortException
+     * @throws SettingsException
+     * @throws AbortException
      * @throws \Throwable
      */
-    public function handleDeleteProgram($programId)
+    public function handleDeleteProgram(int $programId) : void
     {
         $program = $this->programRepository->findById($programId);
 
-        if (!$this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE) ||
-            !$this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)
-        )
+        if (! $this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE) ||
+            ! $this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)
+        ) {
             $this->getPresenter()->flashMessage('admin.program.blocks_program_modify_schedule_not_allowed', 'danger');
-        else {
+        } else {
             $this->programRepository->remove($program);
             $this->getPresenter()->flashMessage('admin.program.blocks_program_deleted', 'success');
         }
@@ -138,38 +140,38 @@ class BlocksPresenter extends ProgramBasePresenter
         $this->redirect('this');
     }
 
-    protected function createComponentProgramBlocksGrid()
+    protected function createComponentProgramBlocksGrid() : ProgramBlocksGridControl
     {
         return $this->programBlocksGridControlFactory->create();
     }
 
-    protected function createComponentProgramAttendeesGrid()
+    protected function createComponentProgramAttendeesGrid() : ProgramAttendeesGridControl
     {
         return $this->programAttendeesGridControlFactory->create();
     }
 
     /**
-     * @return Form
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
-    protected function createComponentBlockForm()
+    protected function createComponentBlockForm() : Form
     {
-        $form = $this->blockFormFactory->create($this->getParameter('id'), $this->getUser()->getId());
+        $form = $this->blockFormFactory->create((int) $this->getParameter('id'), $this->getUser()->getId());
 
-        $form->onSuccess[] = function (Form $form, array $values) {
-            if ($form['cancel']->isSubmittedBy())
+        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
+            if ($form['cancel']->isSubmittedBy()) {
                 $this->redirect('Blocks:default');
+            }
 
-            if (!$values['id']) {
-                if (!$this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK)) {
+            if (! $values['id']) {
+                if (! $this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK)) {
                     $this->flashMessage('admin.program.blocks_add_not_allowed', 'danger');
                     $this->redirect('Blocks:default');
                 }
             } else {
-                $user = $this->userRepository->findById($this->user->getId());
-                $block = $this->blockRepository->findById($values['id']);
+                $user  = $this->userRepository->findById($this->user->getId());
+                $block = $this->blockRepository->findById((int) $values['id']);
 
-                if ($values['id'] && !$user->isAllowedModifyBlock($block)) {
+                if ($values['id'] && ! $user->isAllowedModifyBlock($block)) {
                     $this->flashMessage('admin.program.blocks_edit_not_allowed', 'danger');
                     $this->redirect('Blocks:default');
                 }
@@ -180,8 +182,9 @@ class BlocksPresenter extends ProgramBasePresenter
             if ($form['submitAndContinue']->isSubmittedBy()) {
                 $id = $values['id'] ?: $this->blockRepository->findLastId();
                 $this->redirect('Blocks:edit', ['id' => $id]);
-            } else
+            } else {
                 $this->redirect('Blocks:default');
+            }
         };
 
         return $form;

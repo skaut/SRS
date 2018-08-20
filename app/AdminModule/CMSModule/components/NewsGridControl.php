@@ -1,14 +1,19 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\CMSModule\Components;
 
 use App\Model\CMS\NewsRepository;
 use App\Utils\Helpers;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
+use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Ublaboo\DataGrid\DataGrid;
-
+use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
+use Ublaboo\DataGrid\Exception\DataGridException;
 
 /**
  * Komponenta pro správu aktualit.
@@ -24,57 +29,50 @@ class NewsGridControl extends Control
     private $newsRepository;
 
 
-    /**
-     * NewsGridControl constructor.
-     * @param Translator $translator
-     * @param NewsRepository $newsRepository
-     */
     public function __construct(Translator $translator, NewsRepository $newsRepository)
     {
         parent::__construct();
 
-        $this->translator = $translator;
+        $this->translator     = $translator;
         $this->newsRepository = $newsRepository;
     }
 
     /**
      * Vykreslí komponentu.
      */
-    public function render()
+    public function render() : void
     {
         $this->template->render(__DIR__ . '/templates/news_grid.latte');
     }
 
     /**
      * Vytvoří komponentu.
-     * @param $name
-     * @throws \Ublaboo\DataGrid\Exception\DataGridColumnStatusException
-     * @throws \Ublaboo\DataGrid\Exception\DataGridException
+     * @throws DataGridColumnStatusException
+     * @throws DataGridException
      */
-    public function createComponentNewsGrid($name)
+    public function createComponentNewsGrid(string $name) : void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTemplateFile(__DIR__ . '/templates/news_grid_template.latte');
         $grid->setTranslator($this->translator);
         $grid->setDataSource($this->newsRepository->createQueryBuilder('n'));
         $grid->setDefaultSort(['published' => 'DESC']);
-        $grid->setPagination(FALSE);
+        $grid->setPagination(false);
 
         $grid->addColumnDateTime('published', 'admin.cms.news_published')
             ->setFormat(Helpers::DATETIME_FORMAT);
 
         $columnMandatory = $grid->addColumnStatus('pinned', 'admin.cms.news_pinned');
         $columnMandatory
-            ->addOption(FALSE, 'admin.cms.news_pinned_unpinned')
+            ->addOption(false, 'admin.cms.news_pinned_unpinned')
             ->setClass('btn-primary')
             ->endOption()
-            ->addOption(TRUE, 'admin.cms.news_pinned_pinned')
+            ->addOption(true, 'admin.cms.news_pinned_pinned')
             ->setClass('btn-warning')
             ->endOption()
             ->onChange[] = [$this, 'changePinned'];
 
         $grid->addColumnText('text', 'admin.cms.news_text');
-
 
         $grid->addToolbarButton('News:add')
             ->setIcon('plus')
@@ -88,16 +86,17 @@ class NewsGridControl extends Control
             ->setClass('btn btn-xs btn-danger')
             ->addAttributes([
                 'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('admin.cms.news_delete_confirm')
+                'data-content' => $this->translator->translate('admin.cms.news_delete_confirm'),
             ]);
     }
 
     /**
      * Zpracuje odstranění aktuality.
-     * @param $id
-     * @throws \Nette\Application\AbortException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws AbortException
      */
-    public function handleDelete($id)
+    public function handleDelete(int $id) : void
     {
         $news = $this->newsRepository->findById($id);
         $this->newsRepository->remove($news);
@@ -109,11 +108,11 @@ class NewsGridControl extends Control
 
     /**
      * Změní připíchnutí aktuality.
-     * @param $id
-     * @param $pinned
-     * @throws \Nette\Application\AbortException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws AbortException
      */
-    public function changePinned($id, $pinned)
+    public function changePinned(int $id, bool $pinned) : void
     {
         $news = $this->newsRepository->findById($id);
         $news->setPinned($pinned);

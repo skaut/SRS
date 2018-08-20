@@ -1,15 +1,16 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\CMSModule\Presenters;
 
 use App\AdminModule\CMSModule\Components\IPagesGridControlFactory;
+use App\AdminModule\CMSModule\Components\PagesGridControl;
 use App\AdminModule\CMSModule\Forms\IPageFormFactory;
 use App\AdminModule\CMSModule\Forms\PageForm;
 use App\Model\CMS\Content\Content;
 use App\Model\CMS\Content\ContentRepository;
 use App\Model\CMS\PageRepository;
-
 
 /**
  * Presenter starající se o správu stránek.
@@ -44,28 +45,28 @@ class PagesPresenter extends CMSBasePresenter
     public $contentRepository;
 
 
-    public function renderContent($id, $area)
+    public function renderContent(int $id, string $area) : void
     {
         $page = $this->pagesRepository->findById($id);
 
         $this->template->page = $page;
-        $this->template->id = $id;
+        $this->template->id   = $id;
         $this->template->area = $area;
     }
 
-    protected function createComponentPagesGrid()
+    protected function createComponentPagesGrid() : PagesGridControl
     {
         return $this->pagesGridControlFactory->create();
     }
 
-    protected function createComponentPageForm()
+    protected function createComponentPageForm() : PageForm
     {
-        $id = $this->getParameter('id');
+        $id   = (int) $this->getParameter('id');
         $area = $this->getParameter('area');
 
         $control = $this->pageFormFactory->create($id, $area);
 
-        $control->onPageSave[] = function (PageForm $control, $submitName) {
+        $control->onPageSave[] = function (PageForm $control, $submitName) : void {
             $this->flashMessage('admin.cms.pages_content_saved', 'success');
 
             switch ($submitName) {
@@ -84,7 +85,7 @@ class PagesPresenter extends CMSBasePresenter
             }
         };
 
-        $control->onPageSaveError[] = function (PageForm $control) {
+        $control->onPageSaveError[] = function (PageForm $control) : void {
             $this->flashMessage('admin.cms.pages_content_save_error', 'danger');
             $this->redirect('Pages:content', ['id' => $control->id, 'area' => $control->area]);
         };

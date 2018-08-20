@@ -1,12 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\InstallModule\Presenters;
 
 use App\Presenters\BasePresenter;
+use Kdyby\Translation\Translator;
 use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\JavaScriptLoader;
-
 
 /**
  * BasePresenter pro InstallModule.
@@ -16,7 +17,7 @@ use WebLoader\Nette\JavaScriptLoader;
 abstract class InstallBasePresenter extends BasePresenter
 {
     /**
-     * @var \Kdyby\Translation\Translator
+     * @var Translator
      * @inject
      */
     public $translator;
@@ -24,18 +25,16 @@ abstract class InstallBasePresenter extends BasePresenter
 
     /**
      * Načte css podle konfigurace v config.neon.
-     * @return CssLoader
      */
-    protected function createComponentCss()
+    protected function createComponentCss() : CssLoader
     {
         return $this->webLoader->createCssLoader('install');
     }
 
     /**
      * Načte javascript podle konfigurace v config.neon.
-     * @return JavaScriptLoader
      */
-    protected function createComponentJs()
+    protected function createComponentJs() : JavaScriptLoader
     {
         return $this->webLoader->createJavaScriptLoader('install');
     }

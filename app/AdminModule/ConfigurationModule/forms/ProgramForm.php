@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
@@ -6,11 +7,15 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseForm;
 use App\Model\Enums\RegisterProgramsType;
 use App\Model\Settings\Settings;
+use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
 use Nette;
 use Nette\Application\UI\Form;
-
+use Nette\Utils\DateTime;
+use Nextras\Forms\Controls\DateTimePicker;
 
 /**
  * Formulář pro nastavení programu.
@@ -32,35 +37,31 @@ class ProgramForm
     private $translator;
 
 
-    /**
-     * ProgramForm constructor.
-     * @param BaseForm $baseForm
-     * @param SettingsRepository $settingsRepository
-     * @param Translator $translator
-     */
     public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository, Translator $translator)
     {
-        $this->baseFormFactory = $baseForm;
+        $this->baseFormFactory    = $baseForm;
         $this->settingsRepository = $settingsRepository;
-        $this->translator = $translator;
+        $this->translator         = $translator;
     }
 
     /**
      * Vytvoří formulář.
-     * @return Form
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
-    public function create()
+    public function create() : Form
     {
         $form = $this->baseFormFactory->create();
 
-        $renderer = $form->getRenderer();
+        $renderer                                   = $form->getRenderer();
         $renderer->wrappers['control']['container'] = 'div class="col-sm-7 col-xs-7"';
-        $renderer->wrappers['label']['container'] = 'div class="col-sm-5 col-xs-5 control-label"';
+        $renderer->wrappers['label']['container']   = 'div class="col-sm-5 col-xs-5 control-label"';
 
-        $registerProgramsTypeSelect = $form->addSelect('registerProgramsType', 'admin.configuration.register_programs_type',
-            $this->prepareRegisterProgramsTypeOptions());
+        $registerProgramsTypeSelect = $form->addSelect(
+            'registerProgramsType',
+            'admin.configuration.register_programs_type',
+            $this->prepareRegisterProgramsTypeOptions()
+        );
         $registerProgramsTypeSelect
             ->addCondition($form::EQUAL, RegisterProgramsType::ALLOWED_FROM_TO)
             ->toggle('register-programs-from')
@@ -93,7 +94,7 @@ class ProgramForm
             'registerProgramsType' => $this->settingsRepository->getValue(Settings::REGISTER_PROGRAMS_TYPE),
             'registerProgramsFrom' => $this->settingsRepository->getDateTimeValue(Settings::REGISTER_PROGRAMS_FROM),
             'registerProgramsTo' => $this->settingsRepository->getDateTimeValue(Settings::REGISTER_PROGRAMS_TO),
-            'isAllowedRegisterProgramsBeforePayment' => $this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT)
+            'isAllowedRegisterProgramsBeforePayment' => $this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -103,55 +104,55 @@ class ProgramForm
 
     /**
      * Zpracuje formulář.
-     * @param Form $form
-     * @param array $values
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws \Throwable
      */
-    public function processForm(Form $form, array $values)
+    public function processForm(Form $form, \stdClass $values) : void
     {
-        $this->settingsRepository->setValue(Settings::IS_ALLOWED_ADD_BLOCK, $values['isAllowedAddBlock']);
-        $this->settingsRepository->setValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE, $values['isAllowedModifySchedule']);
+        $this->settingsRepository->setBoolValue(Settings::IS_ALLOWED_ADD_BLOCK, $values['isAllowedAddBlock']);
+        $this->settingsRepository->setBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE, $values['isAllowedModifySchedule']);
         $this->settingsRepository->setValue(Settings::REGISTER_PROGRAMS_TYPE, $values['registerProgramsType']);
-        $this->settingsRepository->setValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, $values['isAllowedRegisterProgramsBeforePayment']);
+        $this->settingsRepository->setBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, $values['isAllowedRegisterProgramsBeforePayment']);
         $this->settingsRepository->setDateTimeValue(Settings::REGISTER_PROGRAMS_FROM, $values['registerProgramsFrom']);
         $this->settingsRepository->setDateTimeValue(Settings::REGISTER_PROGRAMS_TO, $values['registerProgramsTo']);
     }
 
     /**
      * Ověří, že otevření zapisování programů je dříve než uzavření.
-     * @param $field
-     * @param $args
-     * @return bool
+     * @param DateTime[] $args
      */
-    public function validateRegisterProgramsFrom($field, $args)
+    public function validateRegisterProgramsFrom(DateTimePicker $field, array $args) : bool
     {
-        if ($args[0] === NULL || $args[1] == NULL)
-            return TRUE;
+        if ($args[0] === null || $args[1] === null) {
+            return true;
+        }
         return $args[0] < $args[1];
     }
 
     /**
      * Ověří, že uzavření zapisování programů je později než otevření.
-     * @param $field
-     * @param $args
-     * @return bool
+     * @param DateTime[] $args
      */
-    public function validateRegisterProgramsTo($field, $args)
+    public function validateRegisterProgramsTo(DateTimePicker $field, array $args) : bool
     {
-        if ($args[0] === NULL || $args[1] == NULL)
-            return TRUE;
+        if ($args[0] === null || $args[1] === null) {
+            return true;
+        }
         return $args[0] > $args[1];
     }
 
     /**
      * Vrátí stavy registrace programů.
-     * @return array
+     * @return string[]
      */
-    private function prepareRegisterProgramsTypeOptions()
+    private function prepareRegisterProgramsTypeOptions() : array
     {
         $options = [];
-        foreach (RegisterProgramsType::$types as $type)
+        foreach (RegisterProgramsType::$types as $type) {
             $options[$type] = 'common.register_programs_type.' . $type;
+        }
         return $options;
     }
 }

@@ -1,35 +1,40 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Enums;
-
 
 class MaturityType
 {
     /**
      * Neomezená splatnost.
+     * @var string
      */
-    const UNLIMITED = "unlimited";
+    public const UNLIMITED = 'unlimited';
 
     /**
      * Pevné datum splatnosti.
+     * @var string
      */
-    const DATE = "date";
+    public const DATE = 'date';
 
     /**
      * Splatnost vypočtená podle počtu dní od odeslání přihlášky.
+     * @var string
      */
-    const DAYS = "days";
+    public const DAYS = 'days';
 
     /**
      * Splatnost vypočtená podle počtu pracovních dní od odeslání přihlášky.
+     * @var string
      */
-    const WORK_DAYS = "work_days";
+    public const WORK_DAYS = 'work_days';
 
+    /** @var string[] */
     public static $types = [
         self::UNLIMITED,
         self::DATE,
         self::DAYS,
-        self::WORK_DAYS
+        self::WORK_DAYS,
     ];
 }

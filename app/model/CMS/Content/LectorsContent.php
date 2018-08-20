@@ -1,10 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\CMS\Content;
 
 use Doctrine\ORM\Mapping as ORM;
-
 
 /**
  * Entita obsahu se seznamem lektorů.
@@ -15,5 +15,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class LectorsContent extends Content implements IContent
 {
+    /** @var string */
     protected $type = Content::LECTORS;
 }

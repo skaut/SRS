@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\ApiModule\Presenters;
@@ -6,10 +7,13 @@ namespace App\ApiModule\Presenters;
 use App\ApiModule\DTO\Schedule\ProgramSaveDTO;
 use App\ApiModule\DTO\Schedule\ResponseDTO;
 use App\ApiModule\Services\ScheduleService;
+use App\Model\Settings\SettingsException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializerBuilder;
+use Nette\Application\AbortException;
 use Nette\Application\Responses\TextResponse;
-
 
 /**
  * API pro správu harmonogramu a zapisování programů.
@@ -25,16 +29,14 @@ class SchedulePresenter extends ApiBasePresenter
      */
     public $scheduleService;
 
-    /**
-     * @var Serializer
-     */
+    /** @var Serializer */
     private $serializer;
 
 
     /**
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
-    public function startup()
+    public function startup() : void
     {
         parent::startup();
 
@@ -47,7 +49,7 @@ class SchedulePresenter extends ApiBasePresenter
             $data->setMessage($this->translator->translate('common.api.authentification_error'));
             $data->setStatus('danger');
 
-            $json = $this->serializer->serialize($data, 'json');
+            $json     = $this->serializer->serialize($data, 'json');
             $response = new TextResponse($json);
             $this->sendResponse($response);
         }
@@ -56,133 +58,133 @@ class SchedulePresenter extends ApiBasePresenter
     /**
      * Vrací podrobnosti o všech programech pro použití v administraci harmonogramu.
      * @throws \Exception
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
-    public function actionGetProgramsAdmin()
+    public function actionGetProgramsAdmin() : void
     {
         $data = $this->scheduleService->getProgramsAdmin();
 
-        $json = $this->serializer->serialize($data, 'json');
+        $json     = $this->serializer->serialize($data, 'json');
         $response = new TextResponse($json);
         $this->sendResponse($response);
     }
 
     /**
      * Vrací podrobnosti o programech, ke kterým má uživatel přístup, pro použití v kalendáři pro výběr programů.
-     * @throws \App\Model\Settings\SettingsException
-     * @throws \Exception
-     * @throws \Nette\Application\AbortException
+     * @throws SettingsException
+     * @throws AbortException
+     * @throws \Throwable
      */
-    public function actionGetProgramsWeb()
+    public function actionGetProgramsWeb() : void
     {
         $data = $this->scheduleService->getProgramsWeb();
 
-        $json = $this->serializer->serialize($data, 'json');
+        $json     = $this->serializer->serialize($data, 'json');
         $response = new TextResponse($json);
         $this->sendResponse($response);
     }
 
     /**
      * Vrací podrobnosti o programových blocích.
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
-    public function actionGetBlocks()
+    public function actionGetBlocks() : void
     {
         $data = $this->scheduleService->getBlocks();
 
-        $json = $this->serializer->serialize($data, 'json');
+        $json     = $this->serializer->serialize($data, 'json');
         $response = new TextResponse($json);
         $this->sendResponse($response);
     }
 
     /**
      * Vrací podrobnosti o místnostech.
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
-    public function actionGetRooms()
+    public function actionGetRooms() : void
     {
         $data = $this->scheduleService->getRooms();
 
-        $json = $this->serializer->serialize($data, 'json');
+        $json     = $this->serializer->serialize($data, 'json');
         $response = new TextResponse($json);
         $this->sendResponse($response);
     }
 
     /**
      * Vrací nastavení pro FullCalendar.
-     * @throws \App\Model\Settings\SettingsException
-     * @throws \Nette\Application\AbortException
+     * @throws SettingsException
+     * @throws AbortException
+     * @throws \Throwable
      */
-    public function actionGetCalendarConfig()
+    public function actionGetCalendarConfig() : void
     {
         $data = $this->scheduleService->getCalendarConfig();
 
-        $json = $this->serializer->serialize($data, 'json');
+        $json     = $this->serializer->serialize($data, 'json');
         $response = new TextResponse($json);
         $this->sendResponse($response);
     }
 
     /**
      * Uloží nebo vytvoří program.
-     * @param $data
-     * @throws \App\Model\Settings\SettingsException
-     * @throws \Exception
-     * @throws \Nette\Application\AbortException
+     * @throws SettingsException
+     * @throws AbortException
+     * @throws \Throwable
      */
-    public function actionSaveProgram($data)
+    public function actionSaveProgram(string $data) : void
     {
         $programSaveDTO = $this->serializer->deserialize($data, ProgramSaveDTO::class, 'json');
 
         $data = $this->scheduleService->saveProgram($programSaveDTO);
 
-        $json = $this->serializer->serialize($data, 'json');
+        $json     = $this->serializer->serialize($data, 'json');
         $response = new TextResponse($json);
         $this->sendResponse($response);
     }
 
     /**
      * Smaže program.
-     * @param $id
-     * @throws \App\Model\Settings\SettingsException
-     * @throws \Nette\Application\AbortException
+     * @throws SettingsException
+     * @throws AbortException
+     * @throws \Throwable
      */
-    public function actionRemoveProgram($id)
+    public function actionRemoveProgram(int $id) : void
     {
         $data = $this->scheduleService->removeProgram($id);
 
-        $json = $this->serializer->serialize($data, 'json');
+        $json     = $this->serializer->serialize($data, 'json');
         $response = new TextResponse($json);
         $this->sendResponse($response);
     }
 
     /**
      * Přihlásí program uživateli.
-     * @param $id
-     * @throws \App\Model\Settings\SettingsException
-     * @throws \Exception
-     * @throws \Nette\Application\AbortException
+     * @throws SettingsException
+     * @throws AbortException
+     * @throws \Throwable
      */
-    public function actionAttendProgram($id)
+    public function actionAttendProgram(int $id) : void
     {
         $data = $this->scheduleService->attendProgram($id);
 
-        $json = $this->serializer->serialize($data, 'json');
+        $json     = $this->serializer->serialize($data, 'json');
         $response = new TextResponse($json);
         $this->sendResponse($response);
     }
 
     /**
      * Odhlásí program uživateli.
-     * @param $id
-     * @throws \App\Model\Settings\SettingsException
-     * @throws \Exception
-     * @throws \Nette\Application\AbortException
+     * @throws SettingsException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws AbortException
+     * @throws \Throwable
      */
-    public function actionUnattendProgram($id)
+    public function actionUnattendProgram(int $id) : void
     {
         $data = $this->scheduleService->unattendProgram($id);
 
-        $json = $this->serializer->serialize($data, 'json');
+        $json     = $this->serializer->serialize($data, 'json');
         $response = new TextResponse($json);
         $this->sendResponse($response);
     }

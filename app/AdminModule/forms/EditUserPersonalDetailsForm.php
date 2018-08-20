@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\Forms;
@@ -6,9 +7,13 @@ namespace App\AdminModule\Forms;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\FilesService;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
-
+use function array_key_exists;
+use function getimagesizefromstring;
+use function image_type_to_extension;
 
 /**
  * Formulář pro úpravu osobních údajů externích lektorů.
@@ -18,7 +23,7 @@ use Nette\Application\UI\Form;
 class EditUserPersonalDetailsForm
 {
     use Nette\SmartObject;
-    
+
     /**
      * Upravovaný uživatel.
      * @var User
@@ -35,25 +40,17 @@ class EditUserPersonalDetailsForm
     private $filesService;
 
 
-    /**
-     * EditUserSeminarForm constructor.
-     * @param BaseForm $baseFormFactory
-     * @param UserRepository $userRepository
-     * @param FilesService $filesService
-     */
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository, FilesService $filesService)
     {
         $this->baseFormFactory = $baseFormFactory;
-        $this->userRepository = $userRepository;
-        $this->filesService = $filesService;
+        $this->userRepository  = $userRepository;
+        $this->filesService    = $filesService;
     }
 
     /**
      * Vytvoří formulář.
-     * @param $id
-     * @return Form
      */
-    public function create($id)
+    public function create(int $id) : Form
     {
         $this->user = $this->userRepository->findById($id);
 
@@ -66,13 +63,13 @@ class EditUserPersonalDetailsForm
             ->setOption('id', 'new-photo')
             ->addCondition(Form::FILLED)
             ->addRule(Form::IMAGE, 'admin.users.users_photo_format')
-            ->toggle('remove-photo', FALSE);
+            ->toggle('remove-photo', false);
 
         $form->addCheckbox('removePhoto', 'admin.users.users_remove_photo')
             ->setOption('id', 'remove-photo')
-            ->setDisabled($this->user->getPhoto() === NULL)
+            ->setDisabled($this->user->getPhoto() === null)
             ->addCondition(Form::FILLED)
-            ->toggle('new-photo', FALSE);
+            ->toggle('new-photo', false);
 
         $form->addText('firstName', 'admin.users.users_firstname')
             ->addRule(Form::FILLED, 'admin.users.users_firstname_empty');
@@ -108,7 +105,6 @@ class EditUserPersonalDetailsForm
             ->setValidationScope([])
             ->setAttribute('class', 'btn btn-warning');
 
-
         $form->setDefaults([
             'id' => $id,
             'firstName' => $this->user->getFirstName(),
@@ -120,9 +116,8 @@ class EditUserPersonalDetailsForm
             'birthdate' => $this->user->getBirthdate(),
             'street' => $this->user->getStreet(),
             'city' => $this->user->getCity(),
-            'postcode' => $this->user->getPostcode()
+            'postcode' => $this->user->getPostcode(),
         ]);
-
 
         $form->onSuccess[] = [$this, 'processForm'];
 
@@ -131,40 +126,42 @@ class EditUserPersonalDetailsForm
 
     /**
      * Zpracuje formulář.
-     * @param Form $form
-     * @param array $values
      * @throws Nette\Utils\UnknownImageFileException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function processForm(Form $form, array $values)
+    public function processForm(Form $form, \stdClass $values) : void
     {
-        if (!$form['cancel']->isSubmittedBy()) {
-            $this->user->setFirstName($values['firstName']);
-            $this->user->setLastName($values['lastName']);
-            $this->user->setNickName($values['nickName']);
-            $this->user->setDegreePre($values['degreePre']);
-            $this->user->setDegreePost($values['degreePost']);
-            $this->user->setEmail($values['email']);
-            $this->user->setBirthdate($values['birthdate']);
-            $this->user->setStreet($values['street']);
-            $this->user->setCity($values['city']);
-            $this->user->setPostcode($values['postcode']);
-
-            if (array_key_exists('removePhoto', $values) && $values['removePhoto'])
-                $this->user->setPhoto(NULL);
-            elseif (array_key_exists('newPhoto', $values)) {
-                $photo = $values['newPhoto'];
-                if ($photo->size > 0) {
-                    $photoExtension = image_type_to_extension(getimagesizefromstring($photo->getContents())[2]);
-                    $photoName = 'ext_' . $this->user->getId() . $photoExtension;
-
-                    $this->filesService->save($photo, User::PHOTO_PATH . '/' . $photoName);
-                    $this->filesService->resizeAndCropImage(User::PHOTO_PATH . '/' . $photoName, 135, 180);
-
-                    $this->user->setPhoto($photoName);
-                }
-            }
-
-            $this->userRepository->save($this->user);
+        if ($form['cancel']->isSubmittedBy()) {
+            return;
         }
+
+        $this->user->setFirstName($values['firstName']);
+        $this->user->setLastName($values['lastName']);
+        $this->user->setNickName($values['nickName']);
+        $this->user->setDegreePre($values['degreePre']);
+        $this->user->setDegreePost($values['degreePost']);
+        $this->user->setEmail($values['email']);
+        $this->user->setBirthdate($values['birthdate']);
+        $this->user->setStreet($values['street']);
+        $this->user->setCity($values['city']);
+        $this->user->setPostcode($values['postcode']);
+
+        if (array_key_exists('removePhoto', $values) && $values['removePhoto']) {
+            $this->user->setPhoto(null);
+        } elseif (array_key_exists('newPhoto', $values)) {
+            $photo = $values['newPhoto'];
+            if ($photo->size > 0) {
+                $photoExtension = image_type_to_extension(getimagesizefromstring($photo->getContents())[2]);
+                $photoName      = 'ext_' . $this->user->getId() . $photoExtension;
+
+                $this->filesService->save($photo, User::PHOTO_PATH . '/' . $photoName);
+                $this->filesService->resizeAndCropImage(User::PHOTO_PATH . '/' . $photoName, 135, 180);
+
+                $this->user->setPhoto($photoName);
+            }
+        }
+
+        $this->userRepository->save($this->user);
     }
 }

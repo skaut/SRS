@@ -1,11 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\ApiModule\DTO\Schedule;
 
 use JMS\Serializer\Annotation as JMS;
 use Nette;
-
 
 /**
  * Objekt pro přenos údajů o nově vytvořeném bloku z FullCalendar.
@@ -36,71 +36,47 @@ class ProgramSaveDTO
 
     /**
      * @JMS\Type("DateTime<'Y-m-d\TH:i:s'>")
-     * \DateTime
+     * @var \DateTime
      */
     private $start;
 
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId() : ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id)
+    public function setId(int $id) : void
     {
         $this->id = $id;
     }
 
-    /**
-     * @return int
-     */
-    public function getBlockId()
+    public function getBlockId() : int
     {
         return $this->blockId;
     }
 
-    /**
-     * @param int $blockId
-     */
-    public function setBlockId($blockId)
+    public function setBlockId(int $blockId) : void
     {
         $this->blockId = $blockId;
     }
 
-    /**
-     * @return int
-     */
-    public function getRoomId()
+    public function getRoomId() : ?int
     {
         return $this->roomId;
     }
 
-    /**
-     * @param int $roomId
-     */
-    public function setRoomId($roomId)
+    public function setRoomId(?int $roomId) : void
     {
         $this->roomId = $roomId;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getStart()
+    public function getStart() : \DateTime
     {
         return $this->start;
     }
 
-    /**
-     * @param \DateTime $start
-     */
-    public function setStart($start)
+    public function setStart(\DateTime $start) : void
     {
         $this->start = $start;
     }

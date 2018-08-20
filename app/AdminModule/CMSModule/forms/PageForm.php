@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\CMSModule\Forms;
@@ -14,10 +15,15 @@ use App\Model\CMS\Content\UsersContent;
 use App\Model\CMS\Document\TagRepository;
 use App\Model\CMS\Page;
 use App\Model\CMS\PageRepository;
+use App\Model\Page\PageException;
 use App\Services\FilesService;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Kdyby\Events\Event;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
-
+use function get_class;
+use function ucfirst;
 
 /**
  * Komponenta s formulářem pro úpravu obsahu stránky.
@@ -32,26 +38,28 @@ class PageForm extends UI\Control
      * @var int
      */
     public $id;
-    
+
     /**
      * Upravovaná stránka.
      * @var Page
      */
     private $page;
-    
+
     /**
      * Upravovaná oblast.
      * @var string
      */
     public $area;
-    
+
     /**
      * Událost při uložení formuláře.
+     * @var Event
      */
     public $onPageSave;
-    
+
     /**
      * Událost při chybě ukládání stránky.
+     * @var Event
      */
     public $onPageSaveError;
 
@@ -74,45 +82,40 @@ class PageForm extends UI\Control
     private $filesService;
 
 
-    /**
-     * PageForm constructor.
-     * @param $id
-     * @param $area
-     * @param BaseForm $baseFormFactory
-     * @param PageRepository $pageRepository
-     * @param ContentRepository $contentRepository
-     * @param RoleRepository $roleRepository
-     * @param TagRepository $tagRepository
-     * @param FilesService $filesService
-     */
-    public function __construct($id, $area, BaseForm $baseFormFactory, PageRepository $pageRepository,
-                                ContentRepository $contentRepository, RoleRepository $roleRepository,
-                                TagRepository $tagRepository, FilesService $filesService)
-    {
+    public function __construct(
+        int $id,
+        string $area,
+        BaseForm $baseFormFactory,
+        PageRepository $pageRepository,
+        ContentRepository $contentRepository,
+        RoleRepository $roleRepository,
+        TagRepository $tagRepository,
+        FilesService $filesService
+    ) {
         parent::__construct();
 
-        $this->id = $id;
+        $this->id   = $id;
         $this->area = $area;
 
-        $this->baseFormFactory = $baseFormFactory;
-        $this->pageRepository = $pageRepository;
+        $this->baseFormFactory   = $baseFormFactory;
+        $this->pageRepository    = $pageRepository;
         $this->contentRepository = $contentRepository;
-        $this->roleRepository = $roleRepository;
-        $this->tagRepository = $tagRepository;
-        $this->filesService = $filesService;
+        $this->roleRepository    = $roleRepository;
+        $this->tagRepository     = $tagRepository;
+        $this->filesService      = $filesService;
 
         $this->page = $this->pageRepository->findById($id);
     }
 
     /**
      * Vykreslí komponentu.
-     * @throws \App\Model\Page\PageException
+     * @throws PageException
      */
-    public function render()
+    public function render() : void
     {
         $this->template->setFile(__DIR__ . '/templates/page_form.latte');
 
-        $this->template->area = $this->area;
+        $this->template->area     = $this->area;
         $this->template->contents = $this->page->getContents($this->area);
 
         $this->template->render();
@@ -120,10 +123,9 @@ class PageForm extends UI\Control
 
     /**
      * Vytvoří komponentu.
-     * @return Form
-     * @throws \App\Model\Page\PageException
+     * @throws PageException
      */
-    public function createComponentForm()
+    public function createComponentForm() : Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -160,7 +162,7 @@ class PageForm extends UI\Control
         $form->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
         $form->onSuccess[] = [$this, 'processForm'];
 
-        $form->onError[] = function (Form $form) {
+        $form->onError[] = function (Form $form) : void {
             $this->onPageSaveError($this);
         };
 
@@ -169,13 +171,13 @@ class PageForm extends UI\Control
 
     /**
      * Zpracuje formulář.
-     * @param Form $form
-     * @param array $values
-     * @throws \App\Model\Page\PageException
+     * @throws PageException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function processForm(Form $form, array $values)
+    public function processForm(Form $form, \stdClass $values) : void
     {
-        $page = $this->pageRepository->findById($values['id']);
+        $page = $this->pageRepository->findById((int) $values['id']);
 
         $area = $values['area'];
         $type = $values['type'];
@@ -184,8 +186,7 @@ class PageForm extends UI\Control
             $formContainer = $values[$content->getContentFormName()];
             if ($formContainer['delete']) {
                 $this->contentRepository->remove($content);
-            }
-            else {
+            } else {
                 $content->contentFormSucceeded($form, $values);
                 $this->contentRepository->save($content);
             }
@@ -193,34 +194,36 @@ class PageForm extends UI\Control
 
         if ($form['submitAdd']->isSubmittedBy()) {
             $contentClass = '\\App\\Model\\CMS\\Content\\' . ucfirst($type) . 'Content';
-            $content = new $contentClass($page, $area);
+            $content      = new $contentClass($page, $area);
             $content->setHeading($form->getTranslator()->translate('common.content.default_heading.' . $type));
             $this->contentRepository->save($content);
         }
 
-        if ($form['submitAdd']->isSubmittedBy())
+        if ($form['submitAdd']->isSubmittedBy()) {
             $submitName = 'submitAdd';
-        elseif ($form['submitMain']->isSubmittedBy())
+        } elseif ($form['submitMain']->isSubmittedBy()) {
             $submitName = 'submitMain';
-        elseif ($form['submitSidebar']->isSubmittedBy())
+        } elseif ($form['submitSidebar']->isSubmittedBy()) {
             $submitName = 'submitSidebar';
-        elseif ($form['submitAndContinue']->isSubmittedBy())
+        } elseif ($form['submitAndContinue']->isSubmittedBy()) {
             $submitName = 'submitAndContinue';
-        else
+        } else {
             $submitName = 'submit';
+        }
 
         $this->onPageSave($this, $submitName);
     }
 
     /**
      * Připraví možnosti obsahů stránky pro select.
-     * @return array
+     * @return string[]
      */
-    private function prepareContentTypesOptions()
+    private function prepareContentTypesOptions() : array
     {
         $options = [];
-        foreach (Content::$types as $type)
+        foreach (Content::$types as $type) {
             $options[$type] = 'common.content.name.' . $type;
+        }
         return $options;
     }
 }

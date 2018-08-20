@@ -1,10 +1,14 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Settings\CustomInput;
 
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Kdyby\Doctrine\EntityRepository;
-
+use const PHP_INT_MAX;
 
 /**
  * Třída spravující vlastní pole přihlášky.
@@ -15,10 +19,8 @@ class CustomInputRepository extends EntityRepository
 {
     /**
      * Vrací pole podle id.
-     * @param $id
-     * @return CustomInput|null
      */
-    public function findById($id)
+    public function findById(?int $id) : ?CustomInput
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -27,22 +29,21 @@ class CustomInputRepository extends EntityRepository
      * Vrací všechna pole seřazená podle pozice.
      * @return CustomInput[]
      */
-    public function findAllOrderedByPosition()
+    public function findAllOrderedByPosition() : array
     {
         return $this->createQueryBuilder('i')
             ->orderBy('i.position')
             ->getQuery()
             ->getResult();
     }
-    
+
     /**
      * Vrátí pozici posledního pole.
-     * @return int
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
-    public function findLastPosition()
+    public function findLastPosition() : int
     {
-        return $this->createQueryBuilder('i')
+        return (int) $this->createQueryBuilder('i')
             ->select('MAX(i.position)')
             ->getQuery()
             ->getSingleScalarResult();
@@ -50,15 +51,15 @@ class CustomInputRepository extends EntityRepository
 
     /**
      * Uloží pole.
-     * @param CustomInput $input
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws NonUniqueResultException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function save(CustomInput $input)
+    public function save(CustomInput $input) : void
     {
-        if (!$input->getPosition())
+        if (! $input->getPosition()) {
             $input->setPosition($this->findLastPosition() + 1);
+        }
 
         $this->_em->persist($input);
         $this->_em->flush();
@@ -66,14 +67,14 @@ class CustomInputRepository extends EntityRepository
 
     /**
      * Odstraní pole.
-     * @param CustomInput $input
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function remove(CustomInput $input)
+    public function remove(CustomInput $input) : void
     {
-        foreach ($input->getCustomInputValues() as $customInputValue)
+        foreach ($input->getCustomInputValues() as $customInputValue) {
             $this->_em->remove($customInputValue);
+        }
 
         $this->_em->remove($input);
         $this->_em->flush();
@@ -81,17 +82,14 @@ class CustomInputRepository extends EntityRepository
 
     /**
      * Přesune pole mezi pole s id prevId a nextId.
-     * @param $itemId
-     * @param $prevId
-     * @param $nextId
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function sort($itemId, $prevId, $nextId)
+    public function sort(int $itemId, int $prevId, int $nextId) : void
     {
         $item = $this->find($itemId);
-        $prev = $prevId ? $this->find($prevId) : NULL;
-        $next = $nextId ? $this->find($nextId) : NULL;
+        $prev = $prevId ? $this->find($prevId) : null;
+        $next = $nextId ? $this->find($nextId) : null;
 
         $itemsToMoveUp = $this->createQueryBuilder('i')
             ->where('i.position <= :position')
@@ -121,7 +119,7 @@ class CustomInputRepository extends EntityRepository
 
         if ($prev) {
             $item->setPosition($prev->getPosition() + 1);
-        } else if ($next) {
+        } elseif ($next) {
             $item->setPosition($next->getPosition() - 1);
         } else {
             $item->setPosition(1);

@@ -1,10 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\CMS\Content;
 
 use Doctrine\ORM\Mapping as ORM;
-
 
 /**
  * Entita obsahu s popisem cesty.
@@ -15,5 +15,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class PlaceContent extends Content implements IContent
 {
+    /** @var string */
     protected $type = Content::PLACE;
 }

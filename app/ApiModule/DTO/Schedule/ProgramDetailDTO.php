@@ -1,11 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\ApiModule\DTO\Schedule;
 
 use JMS\Serializer\Annotation as JMS;
 use Nette;
-
 
 /**
  * Objekt pro přenos údajů o programu do FullCalendar.
@@ -15,7 +15,7 @@ use Nette;
 class ProgramDetailDTO
 {
     use Nette\SmartObject;
-    
+
     /**
      * @JMS\Type("int")
      * @var int
@@ -83,178 +83,118 @@ class ProgramDetailDTO
     private $paid;
 
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId() : int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id)
+    public function setId(int $id) : void
     {
         $this->id = $id;
     }
 
-    /**
-     * @return string
-     */
-    public function getTitle()
+    public function getTitle() : string
     {
         return $this->title;
     }
 
-    /**
-     * @param string $title
-     */
-    public function setTitle($title)
+    public function setTitle(string $title) : void
     {
         $this->title = $title;
     }
 
-    /**
-     * @return string
-     */
-    public function getStart()
+    public function getStart() : string
     {
         return $this->start;
     }
 
-    /**
-     * @param string $start
-     */
-    public function setStart($start)
+    public function setStart(string $start) : void
     {
         $this->start = $start;
     }
 
-    /**
-     * @return string
-     */
-    public function getEnd()
+    public function getEnd() : string
     {
         return $this->end;
     }
 
-    /**
-     * @param string $end
-     */
-    public function setEnd($end)
+    public function setEnd(string $end) : void
     {
         $this->end = $end;
     }
 
-    /**
-     * @return int
-     */
-    public function getBlockId()
+    public function getBlockId() : int
     {
         return $this->blockId;
     }
 
-    /**
-     * @param int $blockId
-     */
-    public function setBlockId($blockId)
+    public function setBlockId(int $blockId) : void
     {
         $this->blockId = $blockId;
     }
 
-    /**
-     * @return int
-     */
-    public function getRoomId()
+    public function getRoomId() : ?int
     {
         return $this->roomId;
     }
 
-    /**
-     * @param int $roomId
-     */
-    public function setRoomId($roomId)
+    public function setRoomId(?int $roomId) : void
     {
         $this->roomId = $roomId;
     }
 
-    /**
-     * @return int
-     */
-    public function getAttendeesCount()
+    public function getAttendeesCount() : int
     {
         return $this->attendeesCount;
     }
 
-    /**
-     * @param int $attendeesCount
-     */
-    public function setAttendeesCount($attendeesCount)
+    public function setAttendeesCount(int $attendeesCount) : void
     {
         $this->attendeesCount = $attendeesCount;
     }
 
-    /**
-     * @return bool
-     */
-    public function isUserAttends()
+    public function isUserAttends() : bool
     {
         return $this->userAttends;
     }
 
-    /**
-     * @param bool $userAttends
-     */
-    public function setUserAttends($userAttends)
+    public function setUserAttends(bool $userAttends) : void
     {
         $this->userAttends = $userAttends;
     }
 
     /**
-     * @return \int[]
+     * @return int[]
      */
-    public function getBlocks()
+    public function getBlocks() : array
     {
         return $this->blocks;
     }
 
     /**
-     * @param \int[] $blocks
+     * @param int[] $blocks
      */
-    public function setBlocks($blocks)
+    public function setBlocks(array $blocks) : void
     {
         $this->blocks = $blocks;
     }
 
-    /**
-     * @return bool
-     */
-    public function isBlocked()
+    public function isBlocked() : bool
     {
         return $this->blocked;
     }
 
-    /**
-     * @param bool $blocked
-     */
-    public function setBlocked($blocked)
+    public function setBlocked(bool $blocked) : void
     {
         $this->blocked = $blocked;
     }
 
-    /**
-     * @return bool
-     */
-    public function isPaid()
+    public function isPaid() : bool
     {
         return $this->paid;
     }
 
-    /**
-     * @param bool $paid
-     */
-    public function setPaid($paid)
+    public function setPaid(bool $paid) : void
     {
         $this->paid = $paid;
     }

@@ -1,15 +1,17 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\CMS\Content;
 
+use App\Model\CMS\Document\Tag;
 use App\Model\CMS\Document\TagRepository;
 use App\Model\CMS\Page;
+use App\Model\Page\PageException;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
-
 
 /**
  * Entita obsahu s dokumenty.
@@ -21,12 +23,13 @@ use Nette\Application\UI\Form;
  */
 class DocumentContent extends Content implements IContent
 {
+    /** @var string */
     protected $type = Content::DOCUMENT;
 
     /**
      * Tagy dokumentů, které se zobrazí.
      * @ORM\ManyToMany(targetEntity="\App\Model\CMS\Document\Tag")
-     * @var Collection
+     * @var Collection|Tag[]
      */
     protected $tags;
 
@@ -35,47 +38,39 @@ class DocumentContent extends Content implements IContent
 
 
     /**
-     * DocumentContent constructor.
-     * @param Page $page
-     * @param $area
-     * @throws \App\Model\Page\PageException
+     * @throws PageException
      */
-    public function __construct(Page $page, $area)
+    public function __construct(Page $page, string $area)
     {
         parent::__construct($page, $area);
         $this->tags = new ArrayCollection();
     }
 
-    /**
-     * @param TagRepository $tagRepository
-     */
-    public function injectTagRepository(TagRepository $tagRepository)
+    public function injectTagRepository(TagRepository $tagRepository) : void
     {
         $this->tagRepository = $tagRepository;
     }
 
     /**
-     * @return Collection
+     * @return Collection|Tag[]
      */
-    public function getTags()
+    public function getTags() : Collection
     {
         return $this->tags;
     }
 
     /**
-     * @param Collection $tags
+     * @param Collection|Tag[] $tags
      */
-    public function setTags($tags)
+    public function setTags(Collection $tags) : void
     {
         $this->tags = $tags;
     }
 
     /**
      * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
-     * @param Form $form
-     * @return Form
      */
-    public function addContentForm(Form $form)
+    public function addContentForm(Form $form) : Form
     {
         parent::addContentForm($form);
 
@@ -89,13 +84,11 @@ class DocumentContent extends Content implements IContent
 
     /**
      * Zpracuje při uložení stránky část formuláře týkající se obsahu.
-     * @param Form $form
-     * @param array $values
      */
-    public function contentFormSucceeded(Form $form, array $values)
+    public function contentFormSucceeded(Form $form, \stdClass $values) : void
     {
         parent::contentFormSucceeded($form, $values);
-        $values = $values[$this->getContentFormName()];
+        $values     = $values[$this->getContentFormName()];
         $this->tags = $this->tagRepository->findTagsByIds($values['tags']);
     }
 }

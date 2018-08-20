@@ -1,10 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\CMS;
 
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Kdyby\Doctrine\EntityRepository;
-
 
 /**
  * Třída spravující aktuality.
@@ -16,22 +19,19 @@ class NewsRepository extends EntityRepository
 {
     /**
      * Vrací aktualitu podle id.
-     * @param $id
-     * @return News|null
      */
-    public function findById($id)
+    public function findById(?int $id) : ?News
     {
         return $this->findOneBy(['id' => $id]);
     }
 
     /**
      * Vrací id poslední aktuality.
-     * @return int
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
-    public function findLastId()
+    public function findLastId() : int
     {
-        return $this->createQueryBuilder('n')
+        return (int) $this->createQueryBuilder('n')
             ->select('MAX(n.id)')
             ->getQuery()
             ->getSingleScalarResult();
@@ -39,10 +39,9 @@ class NewsRepository extends EntityRepository
 
     /**
      * Vrací posledních $maxCount publikovaných aktualit.
-     * @param $maxCount
      * @return News[]
      */
-    public function findPublishedOrderedByPinnedAndDate($maxCount)
+    public function findPublishedOrderedByPinnedAndDate(?int $maxCount) : array
     {
         return $this->createQueryBuilder('n')
             ->where($this->createQueryBuilder()->expr()->lte('n.published', 'CURRENT_TIMESTAMP()'))
@@ -55,11 +54,10 @@ class NewsRepository extends EntityRepository
 
     /**
      * Uloží aktualitu.
-     * @param News $news
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function save(News $news)
+    public function save(News $news) : void
     {
         $this->_em->persist($news);
         $this->_em->flush();
@@ -67,11 +65,10 @@ class NewsRepository extends EntityRepository
 
     /**
      * Odstraní aktualitu.
-     * @param News $document
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function remove(News $document)
+    public function remove(News $document) : void
     {
         $this->_em->remove($document);
         $this->_em->flush();

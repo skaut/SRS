@@ -1,11 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
 use App\Model\ACL\RoleRepository;
+use App\Model\CMS\Content\CapacitiesContent;
 use Nette\Application\UI\Control;
-
 
 /**
  * Komponenta s kapacitami rolí.
@@ -18,10 +19,6 @@ class CapacitiesContentControl extends Control
     private $roleRepository;
 
 
-    /**
-     * CapacitiesContentControl constructor.
-     * @param RoleRepository $roleRepository
-     */
     public function __construct(RoleRepository $roleRepository)
     {
         parent::__construct();
@@ -29,16 +26,13 @@ class CapacitiesContentControl extends Control
         $this->roleRepository = $roleRepository;
     }
 
-    /**
-     * @param $content
-     */
-    public function render($content)
+    public function render(CapacitiesContent $content) : void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/capacities_content.latte');
 
         $template->heading = $content->getHeading();
-        $template->roles = $this->roleRepository->countUsersInRoles($content->getRoles());
+        $template->roles   = $this->roleRepository->countUsersInRoles($content->getRoles());
 
         $template->render();
     }

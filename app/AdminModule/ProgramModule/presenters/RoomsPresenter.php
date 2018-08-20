@@ -1,13 +1,16 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ProgramModule\Presenters;
 
 use App\AdminModule\ProgramModule\Components\IRoomScheduleGridControlFactory;
 use App\AdminModule\ProgramModule\Components\IRoomsGridControlFactory;
+use App\AdminModule\ProgramModule\Components\RoomScheduleGridControl;
+use App\AdminModule\ProgramModule\Components\RoomsGridControl;
 use App\Model\ACL\Permission;
 use App\Model\Program\RoomRepository;
-
+use Nette\Application\AbortException;
 
 /**
  * Presenter obsluhující správu místností.
@@ -36,31 +39,28 @@ class RoomsPresenter extends ProgramBasePresenter
 
 
     /**
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
-    public function startup()
+    public function startup() : void
     {
         parent::startup();
 
         $this->checkPermission(Permission::MANAGE_ROOMS);
     }
 
-    /**
-     * @param $id
-     */
-    public function renderDetail($id)
+    public function renderDetail(int $id) : void
     {
         $room = $this->roomRepository->findById($id);
 
         $this->template->room = $room;
     }
 
-    protected function createComponentRoomsGrid()
+    protected function createComponentRoomsGrid() : RoomsGridControl
     {
         return $this->roomsGridControlFactory->create();
     }
 
-    protected function createComponentRoomScheduleGrid()
+    protected function createComponentRoomScheduleGrid() : RoomScheduleGridControl
     {
         return $this->roomScheduleGridControlFactory->create();
     }

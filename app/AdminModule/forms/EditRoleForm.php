@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\Forms;
@@ -11,9 +12,14 @@ use App\Model\ACL\RoleRepository;
 use App\Model\CMS\PageRepository;
 use App\Model\Program\ProgramRepository;
 use App\Services\ProgramService;
+use Doctrine\DBAL\ConnectionException;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Nette;
 use Nette\Application\UI\Form;
-
+use Nette\Forms\Controls\MultiSelectBox;
+use Nette\Forms\Controls\SelectBox;
+use function in_array;
 
 /**
  * Formulář pro úpravu role.
@@ -50,35 +56,28 @@ class EditRoleForm
     private $programService;
 
 
-    /**
-     * EditRoleForm constructor.
-     * @param BaseForm $baseFormFactory
-     * @param RoleRepository $roleRepository
-     * @param PageRepository $pageRepository
-     * @param PermissionRepository $permissionRepository
-     * @param ProgramRepository $programRepository
-     * @param ProgramService $programService
-     */
-    public function __construct(BaseForm $baseFormFactory, RoleRepository $roleRepository,
-                                PageRepository $pageRepository, PermissionRepository $permissionRepository,
-                                ProgramRepository $programRepository, ProgramService $programService)
-    {
-        $this->baseFormFactory = $baseFormFactory;
-        $this->roleRepository = $roleRepository;
-        $this->pageRepository = $pageRepository;
+    public function __construct(
+        BaseForm $baseFormFactory,
+        RoleRepository $roleRepository,
+        PageRepository $pageRepository,
+        PermissionRepository $permissionRepository,
+        ProgramRepository $programRepository,
+        ProgramService $programService
+    ) {
+        $this->baseFormFactory      = $baseFormFactory;
+        $this->roleRepository       = $roleRepository;
+        $this->pageRepository       = $pageRepository;
         $this->permissionRepository = $permissionRepository;
-        $this->programRepository = $programRepository;
-        $this->programService = $programService;
+        $this->programRepository    = $programRepository;
+        $this->programService       = $programService;
     }
 
     /**
      * Vytvoří formulář.
-     * @param $id
-     * @return Form
-     * @throws \Doctrine\ORM\NoResultException
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NoResultException
+     * @throws NonUniqueResultException
      */
-    public function create(int $id)
+    public function create(int $id) : Form
     {
         $this->role = $this->roleRepository->findById($id);
 
@@ -115,7 +114,7 @@ class EditRoleForm
         $form->addCheckbox('displayArrivalDeparture', 'admin.acl.roles_display_arrival_departure');
 
         $form->addCheckbox('feeFromSubevents', 'admin.acl.roles_fee_from_subevents_checkbox')
-            ->addCondition(Form::EQUAL, FALSE)
+            ->addCondition(Form::EQUAL, false)
             ->toggle('fee');
 
         $form->addText('fee', 'admin.acl.roles_fee')
@@ -124,7 +123,6 @@ class EditRoleForm
             ->addRule(Form::INTEGER, 'admin.acl.roles_fee_format');
 
         $form->addMultiSelect('permissions', 'admin.acl.roles_permissions', $this->preparePermissionsOptions());
-
 
         $pagesOptions = $this->pageRepository->getPagesOptions();
 
@@ -136,7 +134,6 @@ class EditRoleForm
             ->addCondition(Form::FILLED)
             ->addRule([$this, 'validateRedirectAllowed'], 'admin.acl.roles_redirect_after_login_restricted', [$allowedPages]);
 
-
         $rolesOptions = $this->roleRepository->getRolesWithoutRoleOptions($this->role->getId());
 
         $incompatibleRolesSelect = $form->addMultiSelect('incompatibleRoles', 'admin.acl.roles_incompatible_roles', $rolesOptions);
@@ -145,13 +142,19 @@ class EditRoleForm
 
         $incompatibleRolesSelect
             ->addCondition(Form::FILLED)
-            ->addRule([$this, 'validateIncompatibleAndRequiredCollision'],
-                'admin.acl.roles_incompatible_collision', [$incompatibleRolesSelect, $requiredRolesSelect]);
+            ->addRule(
+                [$this, 'validateIncompatibleAndRequiredCollision'],
+                'admin.acl.roles_incompatible_collision',
+                [$incompatibleRolesSelect, $requiredRolesSelect]
+            );
 
         $requiredRolesSelect
             ->addCondition(Form::FILLED)
-            ->addRule([$this, 'validateIncompatibleAndRequiredCollision'],
-                'admin.acl.roles_required_collision', [$incompatibleRolesSelect, $requiredRolesSelect]);
+            ->addRule(
+                [$this, 'validateIncompatibleAndRequiredCollision'],
+                'admin.acl.roles_required_collision',
+                [$incompatibleRolesSelect, $requiredRolesSelect]
+            );
 
         $form->addSubmit('submit', 'admin.common.save');
 
@@ -160,7 +163,6 @@ class EditRoleForm
         $form->addSubmit('cancel', 'admin.common.cancel')
             ->setValidationScope([])
             ->setAttribute('class', 'btn btn-warning');
-
 
         $form->setDefaults([
             'id' => $id,
@@ -172,15 +174,14 @@ class EditRoleForm
             'approvedAfterRegistration' => $this->role->isApprovedAfterRegistration(),
             // 'syncedWithSkautIs' => $this->role->isSyncedWithSkautIS(),
             'displayArrivalDeparture' => $this->role->isDisplayArrivalDeparture(),
-            'feeFromSubevents' => $this->role->getFee() === NULL,
+            'feeFromSubevents' => $this->role->getFee() === null,
             'fee' => $this->role->getFee(),
             'permissions' => $this->permissionRepository->findPermissionsIds($this->role->getPermissions()),
             'pages' => $this->pageRepository->findPagesSlugs($this->role->getPages()),
             'redirectAfterLogin' => $this->role->getRedirectAfterLogin(),
             'incompatibleRoles' => $this->roleRepository->findRolesIds($this->role->getIncompatibleRoles()),
-            'requiredRoles' => $this->roleRepository->findRolesIds($this->role->getRequiredRoles())
+            'requiredRoles' => $this->roleRepository->findRolesIds($this->role->getRequiredRoles()),
         ]);
-
 
         $form->onSuccess[] = [$this, 'processForm'];
 
@@ -189,57 +190,58 @@ class EditRoleForm
 
     /**
      * Zpracuje formulář.
-     * @param Form $form
-     * @param array $values
      * @throws \Throwable
      */
-    public function processForm(Form $form, array $values)
+    public function processForm(Form $form, \stdClass $values) : void
     {
-        if (!$form['cancel']->isSubmittedBy()) {
-            $this->roleRepository->getEntityManager()->transactional(function ($em) use ($values) {
-                $capacity = $values['capacity'] !== '' ? $values['capacity'] : NULL;
-
-                $this->role->setName($values['name']);
-                $this->role->setRegisterable($values['registerable']);
-                $this->role->setRegisterableFrom($values['registerableFrom']);
-                $this->role->setRegisterableTo($values['registerableTo']);
-                $this->role->setCapacity($capacity);
-                $this->role->setApprovedAfterRegistration($values['approvedAfterRegistration']);
-                // $this->role->setSyncedWithSkautIS($values['syncedWithSkautIs']);
-                $this->role->setDisplayArrivalDeparture($values['displayArrivalDeparture']);
-                $this->role->setPermissions($this->permissionRepository->findPermissionsByIds($values['permissions']));
-                $this->role->setPages($this->pageRepository->findPagesBySlugs($values['pages']));
-                $this->role->setRedirectAfterLogin($values['redirectAfterLogin']);
-                $this->role->setIncompatibleRoles($this->roleRepository->findRolesByIds($values['incompatibleRoles']));
-                $this->role->setRequiredRoles($this->roleRepository->findRolesByIds($values['requiredRoles']));
-
-                if ($values['feeFromSubevents'])
-                    $this->role->setFee(NULL);
-                else
-                    $this->role->setFee($values['fee']);
-
-                $this->roleRepository->save($this->role);
-
-                $this->programService->updateUsersPrograms($this->role->getUsers());
-            });
+        if ($form['cancel']->isSubmittedBy()) {
+            return;
         }
+
+        $this->roleRepository->getEntityManager()->transactional(function ($em) use ($values) : void {
+            $capacity = $values['capacity'] !== '' ? $values['capacity'] : null;
+
+            $this->role->setName($values['name']);
+            $this->role->setRegisterable($values['registerable']);
+            $this->role->setRegisterableFrom($values['registerableFrom']);
+            $this->role->setRegisterableTo($values['registerableTo']);
+            $this->role->setCapacity($capacity);
+            $this->role->setApprovedAfterRegistration($values['approvedAfterRegistration']);
+            // $this->role->setSyncedWithSkautIS($values['syncedWithSkautIs']);
+            $this->role->setDisplayArrivalDeparture($values['displayArrivalDeparture']);
+            $this->role->setPermissions($this->permissionRepository->findPermissionsByIds($values['permissions']));
+            $this->role->setPages($this->pageRepository->findPagesBySlugs($values['pages']));
+            $this->role->setRedirectAfterLogin($values['redirectAfterLogin']);
+            $this->role->setIncompatibleRoles($this->roleRepository->findRolesByIds($values['incompatibleRoles']));
+            $this->role->setRequiredRoles($this->roleRepository->findRolesByIds($values['requiredRoles']));
+
+            if ($values['feeFromSubevents']) {
+                $this->role->setFee(null);
+            } else {
+                $this->role->setFee($values['fee']);
+            }
+
+            $this->roleRepository->save($this->role);
+
+            $this->programService->updateUsersPrograms($this->role->getUsers());
+        });
     }
 
     /**
      * Vrátí možná oprávnění jako možnosti pro select.
-     * @return array
-     * @throws \Doctrine\ORM\NoResultException
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @return string[]
+     * @throws NoResultException
+     * @throws NonUniqueResultException
      */
-    private function preparePermissionsOptions()
+    private function preparePermissionsOptions() : array
     {
         $options = [];
 
-        $groupWebName = 'common.permission_group.web';
+        $groupWebName    = 'common.permission_group.web';
         $optionsGroupWeb = &$options[$groupWebName];
         $this->preparePermissionOption($optionsGroupWeb, Permission::CHOOSE_PROGRAMS, Resource::PROGRAM);
 
-        $groupAdminName = 'common.permission_group.admin';
+        $groupAdminName    = 'common.permission_group.admin';
         $optionsGroupAdmin = &$options[$groupAdminName];
         $this->preparePermissionOption($optionsGroupAdmin, Permission::ACCESS, Resource::ADMIN);
         $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, Resource::CMS);
@@ -259,46 +261,43 @@ class EditRoleForm
 
     /**
      * Připraví oprávnění jako možnost pro select.
-     * @param $optionsGroup
-     * @param $permissionName
-     * @param $resourceName
-     * @throws \Doctrine\ORM\NoResultException
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @param string[] $optionsGroup
+     * @throws NoResultException
+     * @throws NonUniqueResultException
      */
-    private function preparePermissionOption(&$optionsGroup, $permissionName, $resourceName)
+    private function preparePermissionOption(?array &$optionsGroup, string $permissionName, string $resourceName) : void
     {
-        $permission = $this->permissionRepository->findByPermissionAndResourceName($permissionName, $resourceName);
+        $permission                         = $this->permissionRepository->findByPermissionAndResourceName($permissionName, $resourceName);
         $optionsGroup[$permission->getId()] = 'common.permission_name.' . $permissionName . '.' . $resourceName;
     }
 
     /**
      * Ověří kolize mezi vyžadovanými a nekompatibilními rolemi.
-     * @param $field
-     * @param $args
-     * @return bool
-     * @throws \Doctrine\DBAL\ConnectionException
+     * @param int[][] $args
+     * @throws ConnectionException
      */
-    public function validateIncompatibleAndRequiredCollision($field, $args)
+    public function validateIncompatibleAndRequiredCollision(MultiSelectBox $field, array $args) : bool
     {
         $incompatibleRoles = $this->roleRepository->findRolesByIds($args[0]);
-        $requiredRoles = $this->roleRepository->findRolesByIds($args[1]);
+        $requiredRoles     = $this->roleRepository->findRolesByIds($args[1]);
 
         $this->roleRepository->getEntityManager()->getConnection()->beginTransaction();
 
         $this->role->setIncompatibleRoles($incompatibleRoles);
         $this->role->setRequiredRoles($requiredRoles);
 
-        $valid = TRUE;
+        $valid = true;
 
         foreach ($this->roleRepository->findAll() as $role) {
             foreach ($role->getRequiredRolesTransitive() as $requiredRole) {
                 if ($role->getIncompatibleRoles()->contains($requiredRole)) {
-                    $valid = FALSE;
+                    $valid = false;
                     break;
                 }
             }
-            if (!$valid)
+            if (! $valid) {
                 break;
+            }
         }
 
         $this->roleRepository->getEntityManager()->getConnection()->rollBack();
@@ -308,11 +307,9 @@ class EditRoleForm
 
     /**
      * Ověří, zda stránka, kam mají být uživatelé přesměrování po přihlášení, je pro ně viditelná.
-     * @param $field
-     * @param $args
-     * @return bool
+     * @param string[][] $args
      */
-    public function validateRedirectAllowed($field, $args)
+    public function validateRedirectAllowed(SelectBox $field, array $args) : bool
     {
         return in_array($field->getValue(), $args[0]);
     }

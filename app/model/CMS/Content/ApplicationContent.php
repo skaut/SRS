@@ -1,10 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\CMS\Content;
 
 use Doctrine\ORM\Mapping as ORM;
-
 
 /**
  * Entita obsahu s přihláškou.
@@ -16,5 +16,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ApplicationContent extends Content implements IContent
 {
+    /** @var string */
     protected $type = Content::APPLICATION;
 }

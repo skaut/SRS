@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\Forms;
@@ -8,9 +9,12 @@ use App\Model\ACL\RoleRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\FilesService;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
-
+use function getimagesizefromstring;
+use function image_type_to_extension;
 
 /**
  * Formulář pro vytvoření externího lektora.
@@ -20,7 +24,7 @@ use Nette\Application\UI\Form;
 class AddLectorForm
 {
     use Nette\SmartObject;
-    
+
     /** @var BaseForm */
     private $baseFormFactory;
 
@@ -34,27 +38,22 @@ class AddLectorForm
     private $filesService;
 
 
-    /**
-     * AddLectorForm constructor.
-     * @param BaseForm $baseFormFactory
-     * @param UserRepository $userRepository
-     * @param RoleRepository $roleRepository
-     * @param FilesService $filesService
-     */
-    public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository,
-                                RoleRepository $roleRepository, FilesService $filesService)
-    {
+    public function __construct(
+        BaseForm $baseFormFactory,
+        UserRepository $userRepository,
+        RoleRepository $roleRepository,
+        FilesService $filesService
+    ) {
         $this->baseFormFactory = $baseFormFactory;
-        $this->userRepository = $userRepository;
-        $this->roleRepository = $roleRepository;
-        $this->filesService = $filesService;
+        $this->userRepository  = $userRepository;
+        $this->roleRepository  = $roleRepository;
+        $this->filesService    = $filesService;
     }
 
     /**
      * Vytvoří formulář.
-     * @return Form
      */
-    public function create()
+    public function create() : Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -108,44 +107,46 @@ class AddLectorForm
 
     /**
      * Zpracuje formulář.
-     * @param Form $form
-     * @param array $values
      * @throws Nette\Utils\UnknownImageFileException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function processForm(Form $form, array $values)
+    public function processForm(Form $form, \stdClass $values) : void
     {
-        if (!$form['cancel']->isSubmittedBy()) {
-            $user = new User();
-
-            $user->setFirstName($values['firstName']);
-            $user->setLastName($values['lastName']);
-            $user->setNickName($values['nickName']);
-            $user->setDegreePre($values['degreePre']);
-            $user->setDegreePost($values['degreePost']);
-            $user->setEmail($values['email']);
-            $user->setBirthdate($values['birthdate'] !== NULL ? new \DateTime($values['birthdate']) : NULL);
-            $user->setStreet($values['street']);
-            $user->setCity($values['city']);
-            $user->setPostcode($values['postcode']);
-            $user->setAbout($values['about']);
-            $user->setNote($values['privateNote']);
-
-            $user->addRole($this->roleRepository->findBySystemName(Role::LECTOR));
-
-            $this->userRepository->save($user);
-
-            $photo = $values['photo'];
-            if ($photo->size > 0) {
-                $photoExtension = image_type_to_extension(getimagesizefromstring($photo->getContents())[2]);
-                $photoName = 'ext_' . $user->getId() . $photoExtension;
-
-                $this->filesService->save($photo, User::PHOTO_PATH . '/' . $photoName);
-                $this->filesService->resizeAndCropImage(User::PHOTO_PATH . '/' . $photoName, 135, 180);
-
-                $user->setPhoto($photoName);
-            }
-
-            $this->userRepository->save($user);
+        if ($form['cancel']->isSubmittedBy()) {
+            return;
         }
+
+        $user = new User();
+
+        $user->setFirstName($values['firstName']);
+        $user->setLastName($values['lastName']);
+        $user->setNickName($values['nickName']);
+        $user->setDegreePre($values['degreePre']);
+        $user->setDegreePost($values['degreePost']);
+        $user->setEmail($values['email']);
+        $user->setBirthdate($values['birthdate'] !== null ? new \DateTime($values['birthdate']) : null);
+        $user->setStreet($values['street']);
+        $user->setCity($values['city']);
+        $user->setPostcode($values['postcode']);
+        $user->setAbout($values['about']);
+        $user->setNote($values['privateNote']);
+
+        $user->addRole($this->roleRepository->findBySystemName(Role::LECTOR));
+
+        $this->userRepository->save($user);
+
+        $photo = $values['photo'];
+        if ($photo->size > 0) {
+            $photoExtension = image_type_to_extension(getimagesizefromstring($photo->getContents())[2]);
+            $photoName      = 'ext_' . $user->getId() . $photoExtension;
+
+            $this->filesService->save($photo, User::PHOTO_PATH . '/' . $photoName);
+            $this->filesService->resizeAndCropImage(User::PHOTO_PATH . '/' . $photoName, 135, 180);
+
+            $user->setPhoto($photoName);
+        }
+
+        $this->userRepository->save($user);
     }
 }

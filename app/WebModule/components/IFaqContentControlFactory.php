@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\WebModule\Components;
-
 
 /**
  * Factory komponenty s FAQ.
@@ -12,8 +12,5 @@ namespace App\WebModule\Components;
  */
 interface IFaqContentControlFactory
 {
-    /**
-     * @return FaqContentControl
-     */
-    public function create();
+    public function create() : FaqContentControl;
 }

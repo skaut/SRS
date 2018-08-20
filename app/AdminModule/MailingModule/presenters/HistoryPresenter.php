@@ -1,10 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\MailingModule\Presenters;
 
 use App\AdminModule\MailingModule\Components\IMailHistoryGridControlFactory;
-
+use App\AdminModule\MailingModule\Components\MailHistoryGridControl;
 
 /**
  * Presenter obsluhující historii e-mailů.
@@ -20,7 +21,7 @@ class HistoryPresenter extends MailingBasePresenter
     public $mailHistoryGridControlFactory;
 
 
-    protected function createComponentMailHistoryGrid()
+    protected function createComponentMailHistoryGrid() : MailHistoryGridControl
     {
         return $this->mailHistoryGridControlFactory->create();
     }

@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\WebModule\Components;
-
 
 /**
  * Factory komponenty s přehledem lektorů.
@@ -11,8 +11,5 @@ namespace App\WebModule\Components;
  */
 interface ILectorsContentControlFactory
 {
-    /**
-     * @return LectorsContentControl
-     */
-    public function create();
+    public function create() : LectorsContentControl;
 }

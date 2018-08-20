@@ -1,16 +1,20 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Structure;
 
 use App\Model\Enums\ApplicationState;
+use App\Model\Program\Block;
 use App\Model\SkautIs\SkautIsCourse;
+use App\Model\User\Application;
+use App\Model\User\SubeventsApplication;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
-
+use function implode;
 
 /**
  * Entita podakce.
@@ -35,12 +39,12 @@ class Subevent
      * @ORM\Column(type="boolean")
      * @var bool
      */
-    protected $implicit = FALSE;
+    protected $implicit = false;
 
     /**
      * Přihlášky.
      * @ORM\ManyToMany(targetEntity="\App\Model\User\SubeventsApplication", mappedBy="subevents", cascade={"persist"})
-     * @var Collection
+     * @var Collection|SubeventsApplication[]
      */
     protected $applications;
 
@@ -48,7 +52,7 @@ class Subevent
      * Bloky v podakci.
      * @ORM\OneToMany(targetEntity="\App\Model\Program\Block", mappedBy="subevent", cascade={"persist"})
      * @ORM\OrderBy({"name" = "ASC"})
-     * @var Collection
+     * @var Collection|Block[]
      */
     protected $blocks;
 
@@ -73,14 +77,14 @@ class Subevent
      *      joinColumns={@ORM\JoinColumn(name="subevent_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="incompatible_subevent_id", referencedColumnName="id")}
      *      )
-     * @var Collection
+     * @var Collection|Subevent[]
      */
     protected $incompatibleSubevents;
 
     /**
      * Podakce vyžadující tuto podakci.
      * @ORM\ManyToMany(targetEntity="Subevent", mappedBy="requiredSubevents", cascade={"persist"})
-     * @var Collection
+     * @var Collection|Subevent[]
      */
     protected $requiredBySubevent;
 
@@ -91,117 +95,84 @@ class Subevent
      *      joinColumns={@ORM\JoinColumn(name="subevent_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="required_subevent_id", referencedColumnName="id")}
      *      )
-     * @var Collection
+     * @var Collection|Subevent[]
      */
     protected $requiredSubevents;
 
     /**
      * Propojené skautIS kurzy.
      * @ORM\ManyToMany(targetEntity="\App\Model\SkautIs\SkautIsCourse")
-     * @var Collection
+     * @var Collection|SkautIsCourse[]
      */
     protected $skautIsCourses;
 
 
-    /**
-     * Subevent constructor.
-     */
     public function __construct()
     {
-        $this->applications = new ArrayCollection();
-        $this->blocks = new ArrayCollection();
+        $this->applications          = new ArrayCollection();
+        $this->blocks                = new ArrayCollection();
         $this->incompatibleSubevents = new ArrayCollection();
-        $this->requiredBySubevent = new ArrayCollection();
-        $this->requiredSubevents = new ArrayCollection();
-        $this->skautIsCourses = new ArrayCollection();
+        $this->requiredBySubevent    = new ArrayCollection();
+        $this->requiredSubevents     = new ArrayCollection();
+        $this->skautIsCourses        = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
     public function getId() : int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getName() : string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     */
     public function setName(string $name) : void
     {
         $this->name = $name;
     }
 
-    /**
-     * @return bool
-     */
     public function isImplicit() : bool
     {
         return $this->implicit;
     }
 
-    /**
-     * @param bool $implicit
-     */
     public function setImplicit(bool $implicit) : void
     {
         $this->implicit = $implicit;
     }
 
     /**
-     * @return Collection
+     * @return Collection|Block[]
      */
     public function getBlocks() : Collection
     {
         return $this->blocks;
     }
 
-    /**
-     * @return int
-     */
     public function getFee() : int
     {
         return $this->fee;
     }
 
-    /**
-     * @param int $fee
-     */
     public function setFee(int $fee) : void
     {
         $this->fee = $fee;
     }
 
-    /**
-     * @return int
-     */
     public function getCapacity() : ?int
     {
         return $this->capacity;
     }
 
-    /**
-     * @param int $capacity
-     */
     public function setCapacity(?int $capacity) : void
     {
         $this->capacity = $capacity;
     }
 
-    /**
-     * @return bool
-     */
     public function hasLimitedCapacity() : bool
     {
-        return $this->capacity !== NULL;
+        return $this->capacity !== null;
     }
 
     /**
@@ -213,34 +184,39 @@ class Subevent
     }
 
     /**
-     * @param $incompatibleSubevents
+     * @param Collection|Subevent[] $incompatibleSubevents
      */
     public function setIncompatibleSubevents(Collection $incompatibleSubevents) : void
     {
         foreach ($this->getIncompatibleSubevents() as $subevent) {
-            if (!$incompatibleSubevents->contains($subevent))
-                $subevent->getIncompatibleSubevents()->removeElement($this);
+            if ($incompatibleSubevents->contains($subevent)) {
+                continue;
+            }
+
+            $subevent->getIncompatibleSubevents()->removeElement($this);
         }
         foreach ($incompatibleSubevents as $subevent) {
-            if (!$subevent->getIncompatibleSubevents()->contains($this))
-                $subevent->getIncompatibleSubevents()->add($this);
+            if ($subevent->getIncompatibleSubevents()->contains($this)) {
+                continue;
+            }
+
+            $subevent->getIncompatibleSubevents()->add($this);
         }
 
         $this->incompatibleSubevents = $incompatibleSubevents;
     }
 
-    /**
-     * @param $subevent
-     */
     public function addIncompatibleSubevent(Subevent $subevent) : void
     {
-        if (!$this->incompatibleSubevents->contains($subevent))
-            $this->incompatibleSubevents->add($subevent);
+        if ($this->incompatibleSubevents->contains($subevent)) {
+            return;
+        }
+
+        $this->incompatibleSubevents->add($subevent);
     }
 
     /**
      * Vrací názvy všech nekompatibilních podakcí.
-     * @return string
      */
     public function getIncompatibleSubeventsText() : string
     {
@@ -273,13 +249,13 @@ class Subevent
     }
 
     /**
-     * @param $allRequiredBySubevent
-     * @param $subevent
+     * @param Collection|Subevent[] $allRequiredBySubevent
      */
     private function getRequiredBySubeventTransitiveRec(Collection &$allRequiredBySubevent, Subevent $subevent) : void
     {
-        if ($this === $subevent || $allRequiredBySubevent->contains($subevent))
+        if ($this === $subevent || $allRequiredBySubevent->contains($subevent)) {
             return;
+        }
 
         $allRequiredBySubevent->add($subevent);
 
@@ -297,13 +273,14 @@ class Subevent
     }
 
     /**
-     * @param $requiredSubevents
+     * @param Collection|Subevent[] $requiredSubevents
      */
     public function setRequiredSubevents(Collection $requiredSubevents) : void
     {
         $this->requiredSubevents->clear();
-        foreach ($requiredSubevents as $requiredSubevent)
+        foreach ($requiredSubevents as $requiredSubevent) {
             $this->requiredSubevents->add($requiredSubevent);
+        }
     }
 
     /**
@@ -320,13 +297,13 @@ class Subevent
     }
 
     /**
-     * @param $allRequiredSubevents
-     * @param $subevent
+     * @param Collection|Subevent[] $allRequiredSubevents
      */
     private function getRequiredSubeventsTransitiveRec(Collection &$allRequiredSubevents, Subevent $subevent) : void
     {
-        if ($this === $subevent || $allRequiredSubevents->contains($subevent))
+        if ($this === $subevent || $allRequiredSubevents->contains($subevent)) {
             return;
+        }
 
         $allRequiredSubevents->add($subevent);
 
@@ -337,7 +314,6 @@ class Subevent
 
     /**
      * Vrací názvy všech vyžadovaných podakcí.
-     * @return string
      */
     public function getRequiredSubeventsTransitiveText() : string
     {
@@ -351,59 +327,61 @@ class Subevent
     /**
      * @return Collection|SkautIsCourse[]
      */
-    public function getSkautIsCourses(): Collection
+    public function getSkautIsCourses() : Collection
     {
         return $this->skautIsCourses;
     }
 
-    /**
-     * @return string
-     */
-    public function getSkautIsCoursesText(): string
+    public function getSkautIsCoursesText() : string
     {
-        return implode(', ', $this->skautIsCourses->map(function (SkautIsCourse $skautIsCourse) {return $skautIsCourse->getName();})->toArray());
+        return implode(', ', $this->skautIsCourses->map(function (SkautIsCourse $skautIsCourse) {
+            return $skautIsCourse->getName();
+        })->toArray());
     }
 
     /**
      * @param Collection|SkautIsCourse[] $skautIsCourses
      */
-    public function setSkautIsCourses(Collection $skautIsCourses): void
+    public function setSkautIsCourses(Collection $skautIsCourses) : void
     {
         $this->skautIsCourses->clear();
-        foreach ($skautIsCourses as $skautIsCourse)
+        foreach ($skautIsCourses as $skautIsCourse) {
             $this->skautIsCourses->add($skautIsCourse);
+        }
     }
 
-    /**
-     * @return int
-     */
-    public function countUsers(): int
+    public function countUsers() : int
     {
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->andX(
-                Criteria::expr()->isNull('validTo'),
-                Criteria::expr()->orX(
-                    Criteria::expr()->eq('state', ApplicationState::WAITING_FOR_PAYMENT),
-                    Criteria::expr()->eq('state', ApplicationState::PAID),
-                    Criteria::expr()->eq('state', ApplicationState::PAID_FREE)
-                )
-            ));
+        //TODO: opravit
+//        $criteria = Criteria::create()
+//            ->where(Criteria::expr()->andX(
+//                Criteria::expr()->isNull('validTo'),
+//                Criteria::expr()->orX(
+//                    Criteria::expr()->eq('state', ApplicationState::WAITING_FOR_PAYMENT),
+//                    Criteria::expr()->eq('state', ApplicationState::PAID),
+//                    Criteria::expr()->eq('state', ApplicationState::PAID_FREE)
+//                )
+//            ));
+//
+//        return $this->applications->matching($criteria)->count();
 
-        return $this->applications->matching($criteria)->count();
+        return $this->applications->filter(function (Application $application) {
+            if ($application->getValidTo() === null && (
+                $application->getState() === ApplicationState::WAITING_FOR_PAYMENT ||
+                $application->getState() === ApplicationState::PAID_FREE ||
+                $application->getState() === ApplicationState::PAID)) {
+                return true;
+            }
+            return false;
+        })->count();
     }
 
-    /**
-     * @return int|null
-     */
-    public function countUnoccupied(): ?int
+    public function countUnoccupied() : ?int
     {
-        return $this->capacity ? $this->capacity - $this->countUsers() : NULL;
+        return $this->capacity ? $this->capacity - $this->countUsers() : null;
     }
 
-    /**
-     * @return string
-     */
-    public function getOccupancyText(): string
+    public function getOccupancyText() : string
     {
         return $this->capacity ? $this->countUsers() . '/' . $this->capacity : '' . $this->countUsers();
     }

@@ -1,11 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Settings\Place;
 
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
-
 
 /**
  * Entita mapového bodu.
@@ -40,50 +40,32 @@ class PlacePoint
     protected $gpsLon;
 
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName() : string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName($name)
+    public function setName(string $name) : void
     {
         $this->name = $name;
     }
 
-    /**
-     * @return float
-     */
-    public function getGpsLat()
+    public function getGpsLat() : float
     {
         return $this->gpsLat;
     }
 
-    /**
-     * @param float $gpsLat
-     */
-    public function setGpsLat($gpsLat)
+    public function setGpsLat(float $gpsLat) : void
     {
         $this->gpsLat = $gpsLat;
     }
 
-    /**
-     * @return float
-     */
-    public function getGpsLon()
+    public function getGpsLon() : float
     {
         return $this->gpsLon;
     }
 
-    /**
-     * @param float $gpsLon
-     */
-    public function setGpsLon($gpsLon)
+    public function setGpsLon(float $gpsLon) : void
     {
         $this->gpsLon = $gpsLon;
     }

@@ -1,13 +1,16 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Mailing;
 
+use App\Model\ACL\Role;
+use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
-
+use function implode;
 
 /**
  * Entita e-mail.
@@ -23,14 +26,14 @@ class Mail
     /**
      * Role, kterým byl e-mail odeslán.
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role")
-     * @var Collection
+     * @var Collection|Role[]
      */
     protected $recipientRoles;
 
     /**
      * Uživatelé, kterém byl e-mail odeslán.
      * @ORM\ManyToMany(targetEntity="\App\Model\User\User")
-     * @var Collection
+     * @var Collection|User[]
      */
     protected $recipientUsers;
 
@@ -60,49 +63,43 @@ class Mail
      * @ORM\Column(type="boolean")
      * @var bool
      */
-    protected $automatic = FALSE;
+    protected $automatic = false;
 
 
-    /**
-     * Mail constructor.
-     */
     public function __construct()
     {
         $this->recipientRoles = new ArrayCollection();
         $this->recipientUsers = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId() : int
     {
         return $this->id;
     }
 
     /**
-     * @return Collection
+     * @return Collection|Role[]
      */
-    public function getRecipientRoles()
+    public function getRecipientRoles() : Collection
     {
         return $this->recipientRoles;
     }
 
     /**
-     * @param Collection $recipientRoles
+     * @param Collection|Role[] $recipientRoles
      */
-    public function setRecipientRoles($recipientRoles)
+    public function setRecipientRoles(Collection $recipientRoles) : void
     {
         $this->recipientRoles->clear();
-        foreach ($recipientRoles as $recipientRole)
+        foreach ($recipientRoles as $recipientRole) {
             $this->recipientRoles->add($recipientRole);
+        }
     }
 
     /**
      * Vrací příjemce (role) oddělené čárkou.
-     * @return string
      */
-    public function getRecipientRolesText()
+    public function getRecipientRolesText() : string
     {
         $rolesNames = [];
         foreach ($this->recipientRoles as $role) {
@@ -112,28 +109,28 @@ class Mail
     }
 
     /**
-     * @return Collection
+     * @return Collection|User[]
      */
-    public function getRecipientUsers()
+    public function getRecipientUsers() : Collection
     {
         return $this->recipientUsers;
     }
 
     /**
-     * @param Collection $recipientUsers
+     * @param Collection|User[] $recipientUsers
      */
-    public function setRecipientUsers($recipientUsers)
+    public function setRecipientUsers(Collection $recipientUsers) : void
     {
         $this->recipientUsers->clear();
-        foreach ($recipientUsers as $recipientUser)
+        foreach ($recipientUsers as $recipientUser) {
             $this->recipientUsers->add($recipientUser);
+        }
     }
 
     /**
      * Vrací příjemce (uživatele) oddělené čárkou.
-     * @return string
      */
-    public function getRecipientUsersText()
+    public function getRecipientUsersText() : string
     {
         $usersNames = [];
         foreach ($this->recipientUsers as $user) {
@@ -142,66 +139,42 @@ class Mail
         return implode(', ', $usersNames);
     }
 
-    /**
-     * @return string
-     */
-    public function getSubject()
+    public function getSubject() : string
     {
         return $this->subject;
     }
 
-    /**
-     * @param string $subject
-     */
-    public function setSubject($subject)
+    public function setSubject(string $subject) : void
     {
         $this->subject = $subject;
     }
 
-    /**
-     * @return string
-     */
-    public function getText()
+    public function getText() : string
     {
         return $this->text;
     }
 
-    /**
-     * @param string $text
-     */
-    public function setText($text)
+    public function setText(string $text) : void
     {
         $this->text = $text;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDatetime()
+    public function getDatetime() : \DateTime
     {
         return $this->datetime;
     }
 
-    /**
-     * @param \DateTime $datetime
-     */
-    public function setDatetime($datetime)
+    public function setDatetime(\DateTime $datetime) : void
     {
         $this->datetime = $datetime;
     }
 
-    /**
-     * @return bool
-     */
-    public function isAutomatic()
+    public function isAutomatic() : bool
     {
         return $this->automatic;
     }
 
-    /**
-     * @param bool $automatic
-     */
-    public function setAutomatic($automatic)
+    public function setAutomatic(bool $automatic) : void
     {
         $this->automatic = $automatic;
     }

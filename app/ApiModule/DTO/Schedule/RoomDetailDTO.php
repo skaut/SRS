@@ -1,11 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ApiModule\DTO\Schedule;
 
 use JMS\Serializer\Annotation as JMS;
 use Nette;
-
 
 /**
  * Objekt pro přenos údajů o místnosti do FullCalendar.
@@ -15,7 +15,7 @@ use Nette;
 class RoomDetailDTO
 {
     use Nette\SmartObject;
-    
+
     /**
      * @JMS\Type("int")
      * @var int
@@ -30,55 +30,37 @@ class RoomDetailDTO
 
     /**
      * @JMS\Type("integer")
-     * @var integer
+     * @var int
      */
     private $capacity;
 
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId() : int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id)
+    public function setId(int $id) : void
     {
         $this->id = $id;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName() : string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName($name)
+    public function setName(string $name) : void
     {
         $this->name = $name;
     }
 
-    /**
-     * @return int
-     */
-    public function getCapacity()
+    public function getCapacity() : int
     {
         return $this->capacity;
     }
 
-    /**
-     * @param int $capacity
-     */
-    public function setCapacity($capacity)
+    public function setCapacity(int $capacity) : void
     {
         $this->capacity = $capacity;
     }

@@ -1,10 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
+use App\Model\CMS\Content\ImageContent;
 use Nette\Application\UI\Control;
-
 
 /**
  * Komponenta s obrázkem.
@@ -14,19 +15,16 @@ use Nette\Application\UI\Control;
  */
 class ImageContentControl extends Control
 {
-    /**
-     * @param $content
-     */
-    public function render($content)
+    public function render(ImageContent $content) : void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/image_content.latte');
 
         $template->heading = $content->getHeading();
-        $template->image = $content->getImage();
-        $template->align = $content->getAlign();
-        $template->width = $content->getWidth();
-        $template->height = $content->getHeight();
+        $template->image   = $content->getImage();
+        $template->align   = $content->getAlign();
+        $template->width   = $content->getWidth();
+        $template->height  = $content->getHeight();
 
         $template->render();
     }

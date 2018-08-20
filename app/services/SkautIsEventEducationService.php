@@ -1,14 +1,16 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services;
+
 use App\Model\SkautIs\SkautIsCourseRepository;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\User;
 use Doctrine\Common\Collections\Collection;
 use Skautis\Skautis;
 use Skautis\Wsdl\WsdlException;
-
+use function array_key_exists;
 
 /**
  * Služba pro správu vzdělávací skautIS akce.
@@ -24,47 +26,36 @@ class SkautIsEventEducationService extends SkautIsEventService
     private $subeventRepository;
 
 
-    /**
-     * SkautIsEventEducationService constructor.
-     * @param Skautis $skautIs
-     * @param SkautIsCourseRepository $skautIsCourseRepository
-     * @param SubeventRepository $subeventRepository
-     */
-    public function __construct(Skautis $skautIs, SkautIsCourseRepository $skautIsCourseRepository,
-                                SubeventRepository $subeventRepository)
-    {
+    public function __construct(
+        Skautis $skautIs,
+        SkautIsCourseRepository $skautIsCourseRepository,
+        SubeventRepository $subeventRepository
+    ) {
         parent::__construct($skautIs);
 
         $this->skautIsCourseRepository = $skautIsCourseRepository;
-        $this->subeventRepository = $subeventRepository;
+        $this->subeventRepository      = $subeventRepository;
     }
 
-    /**
-     * @param $eventId
-     * @return bool
-     */
-    public function isEventDraft($eventId)
+    public function isEventDraft(int $eventId) : bool
     {
-        return $this->getEventDetail($eventId)->ID_EventEducationState == 'draft';
+        return $this->getEventDetail($eventId)->ID_EventEducationState === 'draft';
     }
 
     /**
-     * @param int $eventId
      * @param Collection|User[] $users
-     * @param bool $accept
-     * @return bool
      */
-    public function insertParticipants(int $eventId, Collection $users, bool $accept = FALSE): bool
+    public function insertParticipants(int $eventId, Collection $users, bool $accept = false) : bool
     {
         try {
             $participants = [];
 
             foreach ($this->skautIsCourseRepository->findAll() as $course) {
-                $courseId = $course->getSkautIsCourseId();
+                $courseId                = $course->getSkautIsCourseId();
                 $participants[$courseId] = [];
 
                 foreach ($this->getAllParticipants($eventId, $courseId) as $participant) {
-                    $participants[$courseId][$participant->ID_Person] = TRUE;
+                    $participants[$courseId][$participant->ID_Person] = true;
                 }
             }
 
@@ -75,40 +66,38 @@ class SkautIsEventEducationService extends SkautIsEventService
                     foreach ($subevent->getSkautIsCourses() as $course) {
                         $courseId = $course->getSkautIsCourseId();
 
-                        if (!array_key_exists($personId, $participants[$courseId])) {
-                            $this->insertParticipant($eventId, $course->getSkautIsCourseId(), $personId, $accept);
-                            $participants[$courseId][$personId] = TRUE;
+                        if (array_key_exists($personId, $participants[$courseId])) {
+                            continue;
                         }
+
+                        $this->insertParticipant($eventId, $course->getSkautIsCourseId(), $personId, $accept);
+                        $participants[$courseId][$personId] = true;
                     }
                 }
             }
         } catch (WsdlException $e) {
-            return FALSE;
+            return false;
         }
 
-        return TRUE;
+        return true;
     }
 
-    /**
-     * @param $eventId
-     * @return mixed
-     */
-    protected function getEventDetail($eventId)
+    protected function getEventDetail(int $eventId) : \stdClass
     {
         return $this->skautIs->event->EventEducationDetail([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
-            'ID' => $eventId
+            'ID' => $eventId,
         ]);
     }
 
     /**
-     * @return mixed
+     * @return \stdClass[]
      */
-    protected function getDraftEvents()
+    protected function getDraftEvents() : array
     {
         //TODO vracet jen akce, kam je možné přidávat účastníky
         return $this->skautIs->event->EventEducationAllMyActions([
-            'ID_Login' => $this->skautIs->getUser()->getLoginId()
+            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
         ]);
         //        return $this->skautIs->event->EventEducationAllMyActions([
         //            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -117,69 +106,64 @@ class SkautIsEventEducationService extends SkautIsEventService
     }
 
     /**
-     * Vrací kurzy vzdělavací akce.
-     * @param int $eventId
-     * @return mixed
+     * Vrací kurzy vzdělávací akce.
+     * @return \stdClass[]
      */
-    public function getEventCourses(int $eventId)
+    public function getEventCourses(int $eventId) : array
     {
         return $this->skautIs->event->EventEducationCourseAll([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
-            'ID_EventEducation' => $eventId
+            'ID_EventEducation' => $eventId,
         ]);
     }
 
     /**
      * Je nastaveno propojení alespoň jedné podakce se skautIS kurzem?
-     * @return bool
      */
-    public function isSubeventConnected()
+    public function isSubeventConnected() : bool
     {
         foreach ($this->subeventRepository->findAll() as $subevent) {
-            if (!$subevent->getSkautIsCourses()->isEmpty())
-                return TRUE;
+            if (! $subevent->getSkautIsCourses()->isEmpty()) {
+                return true;
+            }
         }
-        return FALSE;
+        return false;
     }
 
     /**
      * Vrací přihlášené účastníky kurzu.
-     * @param $eventId
-     * @param $courseId
-     * @return mixed
+     * @return \stdClass[]
      */
-    private function getAllParticipants($eventId, $courseId)
+    private function getAllParticipants(int $eventId, int $courseId) : array
     {
         return $this->skautIs->event->ParticipantEducationAll([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID_EventEducation' => $eventId,
             'ID_EventEducationCourse' => [$courseId, $courseId],
-            'IsActive' => TRUE
+            'IsActive' => true,
         ]);
     }
 
     /**
      * Přidá účastníka kurzu.
-     * @param $eventId
-     * @param $courseId
-     * @param $personId
-     * @param bool $accept
      */
-    private function insertParticipant($eventId, $courseId, $personId, bool $accept)
+    private function insertParticipant(int $eventId, int $courseId, int $personId, bool $accept) : void
     {
         $response = $this->skautIs->event->ParticipantEducationInsert([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID_EventEducation' => $eventId,
             'ID_EventEducationCourse' => $courseId,
-            'ID_Person' => $personId
+            'ID_Person' => $personId,
         ]);
 
-        if ($accept) {
-            $this->skautIs->event->ParticipantEducationUpdate([
-                'ID_Login' => $this->skautIs->getUser()->getLoginId(),
-                'ID' => $response->ID,
-                'IsAccepted' => $accept
-            ], 'participantEducation');
+        if (! $accept) {
+            return;
         }
+
+        $this->skautIs->event->ParticipantEducationUpdate([
+            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
+            'ID' => $response->ID,
+            'IsAccepted' => $accept,
+        ], 'participantEducation');
     }
 }

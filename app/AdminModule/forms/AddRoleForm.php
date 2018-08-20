@@ -1,13 +1,15 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\Forms;
 
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
-
 
 /**
  * Formulář pro vytvoření role.
@@ -26,22 +28,16 @@ class AddRoleForm
     private $roleRepository;
 
 
-    /**
-     * AddRoleForm constructor.
-     * @param BaseForm $baseFormFactory
-     * @param RoleRepository $roleRepository
-     */
     public function __construct(BaseForm $baseFormFactory, RoleRepository $roleRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
-        $this->roleRepository = $roleRepository;
+        $this->roleRepository  = $roleRepository;
     }
 
     /**
      * Vytvoří formulář.
-     * @return Form
      */
-    public function create()
+    public function create() : Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -67,49 +63,57 @@ class AddRoleForm
 
     /**
      * Zpracuje formulář.
-     * @param Form $form
-     * @param array $values
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function processForm(Form $form, array $values)
+    public function processForm(Form $form, \stdClass $values) : void
     {
-        if (!$form['cancel']->isSubmittedBy()) {
-            $role = new Role($values['name']);
+        if ($form['cancel']->isSubmittedBy()) {
+            return;
+        }
 
-            $parent = $this->roleRepository->findById($values['parent']);
+        $role = new Role($values['name']);
 
-            $role->setSystem(FALSE);
+        $parent = $this->roleRepository->findById($values['parent']);
 
-            if ($parent) {
-                foreach ($parent->getPermissions() as $permission)
-                    $role->addPermission($permission);
+        $role->setSystem(false);
 
-                foreach ($parent->getIncompatibleRoles() as $incompatibleRole)
-                    $role->addIncompatibleRole($incompatibleRole);
-
-                foreach ($parent->getRequiredRoles() as $requiredRole)
-                    $role->addRequiredRole($requiredRole);
-
-                foreach ($parent->getRegisterableCategories() as $registerableCategory)
-                    $role->addRegisterableCategory($registerableCategory);
-
-                foreach ($parent->getPages() as $page)
-                    $role->addPage($page);
-
-                $role->setFee($parent->getFee());
-                $role->setCapacity($parent->getCapacity());
-                $role->setApprovedAfterRegistration($parent->isApprovedAfterRegistration());
-                $role->setSyncedWithSkautIS($parent->isSyncedWithSkautIS());
-                $role->setRegisterable($parent->isRegisterable());
-                $role->setRegisterableFrom($parent->getRegisterableFrom());
-                $role->setRegisterableTo($parent->getRegisterableTo());
-                $role->setDisplayArrivalDeparture($parent->isDisplayArrivalDeparture());
-            } else {
-                $nonregistered = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
-                foreach ($nonregistered->getPages() as $page)
-                    $role->addPage($page);
+        if ($parent) {
+            foreach ($parent->getPermissions() as $permission) {
+                $role->addPermission($permission);
             }
 
-            $this->roleRepository->save($role);
+            foreach ($parent->getIncompatibleRoles() as $incompatibleRole) {
+                $role->addIncompatibleRole($incompatibleRole);
+            }
+
+            foreach ($parent->getRequiredRoles() as $requiredRole) {
+                $role->addRequiredRole($requiredRole);
+            }
+
+            foreach ($parent->getRegisterableCategories() as $registerableCategory) {
+                $role->addRegisterableCategory($registerableCategory);
+            }
+
+            foreach ($parent->getPages() as $page) {
+                $role->addPage($page);
+            }
+
+            $role->setFee($parent->getFee());
+            $role->setCapacity($parent->getCapacity());
+            $role->setApprovedAfterRegistration($parent->isApprovedAfterRegistration());
+            $role->setSyncedWithSkautIS($parent->isSyncedWithSkautIS());
+            $role->setRegisterable($parent->isRegisterable());
+            $role->setRegisterableFrom($parent->getRegisterableFrom());
+            $role->setRegisterableTo($parent->getRegisterableTo());
+            $role->setDisplayArrivalDeparture($parent->isDisplayArrivalDeparture());
+        } else {
+            $nonregistered = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
+            foreach ($nonregistered->getPages() as $page) {
+                $role->addPage($page);
+            }
         }
+
+        $this->roleRepository->save($role);
     }
 }

@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\WebModule\Components;
-
 
 /**
  * Factory komponenty s kapacitami rolí.
@@ -11,8 +11,5 @@ namespace App\WebModule\Components;
  */
 interface ICapacitiesContentControlFactory
 {
-    /**
-     * @return CapacitiesContentControl
-     */
-    public function create();
+    public function create() : CapacitiesContentControl;
 }

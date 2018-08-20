@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Program;
@@ -8,7 +9,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
-
 
 /**
  * Entita program.
@@ -32,7 +32,7 @@ class Program
     /**
      * Účastníci programu.
      * @ORM\ManyToMany(targetEntity="\App\Model\User\User", mappedBy="programs", cascade={"persist"})
-     * @var Collection
+     * @var Collection|User[]
      */
     protected $attendees;
 
@@ -51,70 +51,58 @@ class Program
     protected $start;
 
 
-    /**
-     * Program constructor.
-     */
     public function __construct()
     {
         $this->attendees = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId() : ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return Block
-     */
-    public function getBlock()
+    public function getBlock() : Block
     {
         return $this->block;
     }
 
-    /**
-     * @param Block $block
-     */
-    public function setBlock($block)
+    public function setBlock(Block $block) : void
     {
         $this->block = $block;
     }
 
     /**
-     * @return Collection
+     * @return Collection|User[]
      */
-    public function getAttendees()
+    public function getAttendees() : Collection
     {
         return $this->attendees;
     }
 
     /**
-     * @param Collection $attendees
+     * @param Collection|User[] $attendees
      */
-    public function setAttendees(Collection $attendees)
+    public function setAttendees(Collection $attendees) : void
     {
         $this->removeAllAttendees();
-        foreach ($attendees as $attendee)
+        foreach ($attendees as $attendee) {
             $this->addAttendee($attendee);
+        }
     }
 
-    /**
-     * @param $user
-     */
-    public function addAttendee(User $user)
+    public function addAttendee(User $user) : void
     {
-        if (!$this->attendees->contains($user))
-            $user->addProgram($this);
+        if ($this->attendees->contains($user)) {
+            return;
+        }
+
+        $user->addProgram($this);
     }
 
     /**
      * Vrací počet účastníků.
-     * @return int
      */
-    public function getAttendeesCount()
+    public function getAttendeesCount() : int
     {
         return $this->attendees->count();
     }
@@ -122,7 +110,7 @@ class Program
     /**
      * Odstraní všechny účastníky programu.
      */
-    public function removeAllAttendees()
+    public function removeAllAttendees() : void
     {
         foreach ($this->attendees as $attendee) {
             $attendee->removeProgram($this);
@@ -131,10 +119,8 @@ class Program
 
     /**
      * Je uživatel účastník programu?
-     * @param User $user
-     * @return bool
      */
-    public function isAttendee(User $user)
+    public function isAttendee(User $user) : bool
     {
         return $this->attendees->contains($user);
     }
@@ -143,49 +129,36 @@ class Program
      * Vrací kapacitu programového bloku.
      * @return mixed
      */
-    public function getCapacity()
+    public function getCapacity() : int
     {
         return $this->block->getCapacity();
     }
 
-    /**
-     * @return Room
-     */
-    public function getRoom()
+    public function getRoom() : ?Room
     {
         return $this->room;
     }
 
-    /**
-     * @param Room $room
-     */
-    public function setRoom($room)
+    public function setRoom(?Room $room) : void
     {
         $this->room = $room;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getStart()
+    public function getStart() : \DateTime
     {
         return $this->start;
     }
 
-    /**
-     * @param \DateTime $start
-     */
-    public function setStart($start)
+    public function setStart(\DateTime $start) : void
     {
         $this->start = $start;
     }
 
     /**
      * Vrací konec programu vypočtený podle délky bloku.
-     * @return \DateTime
      * @throws \Exception
      */
-    public function getEnd()
+    public function getEnd() : \DateTime
     {
         $end = clone($this->start);
         $end->add(new \DateInterval('PT' . $this->block->getDuration() . 'M'));

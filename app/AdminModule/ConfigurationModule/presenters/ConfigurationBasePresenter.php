@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Presenters;
@@ -6,8 +7,10 @@ namespace App\AdminModule\ConfigurationModule\Presenters;
 use App\AdminModule\Presenters\AdminBasePresenter;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
+use App\Model\Settings\SettingsException;
 use App\Model\Structure\SubeventRepository;
-
+use Doctrine\ORM\NonUniqueResultException;
+use Nette\Application\AbortException;
 
 /**
  * Basepresenter pro ConfigurationModule.
@@ -16,32 +19,36 @@ use App\Model\Structure\SubeventRepository;
  */
 abstract class ConfigurationBasePresenter extends AdminBasePresenter
 {
+    /** @var string */
+    protected $resource = Resource::CONFIGURATION;
+
     /**
      * @var SubeventRepository
      * @inject
      */
     public $subeventRepository;
-    protected $resource = Resource::CONFIGURATION;
 
     /**
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
-    public function startup()
+    public function startup() : void
     {
         parent::startup();
 
         $this->checkPermission(Permission::MANAGE);
     }
 
+
     /**
-     * @throws \App\Model\Settings\SettingsException
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws SettingsException
+     * @throws NonUniqueResultException
+     * @throws \Throwable
      */
-    public function beforeRender()
+    public function beforeRender() : void
     {
         parent::beforeRender();
 
-        $this->template->sidebarVisible = TRUE;
+        $this->template->sidebarVisible          = true;
         $this->template->explicitSubeventsExists = $this->subeventRepository->explicitSubeventsExists();
     }
 }

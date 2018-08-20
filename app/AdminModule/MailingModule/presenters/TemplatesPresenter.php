@@ -1,13 +1,14 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\MailingModule\Presenters;
 
 use App\AdminModule\MailingModule\Components\IMailTemplatesGridControlFactory;
+use App\AdminModule\MailingModule\Components\MailTemplatesGridControl;
 use App\AdminModule\MailingModule\Forms\EditTemplateForm;
 use App\Model\Mailing\TemplateRepository;
 use Nette\Forms\Form;
-
 
 /**
  * Presenter obsluhující nastavení šablon automatických e-mailů.
@@ -35,35 +36,27 @@ class TemplatesPresenter extends MailingBasePresenter
     public $editTemplateFormFactory;
 
 
-    /**
-     * @param $id
-     */
-    public function renderEdit($id)
+    public function renderEdit(int $id) : void
     {
         $template = $this->templateRepository->findById($id);
 
         $this->template->editedTemplate = $template;
-        $this->template->translator = $this->translator;
+        $this->template->translator     = $this->translator;
     }
 
-    /**
-     * @return \App\AdminModule\MailingModule\Components\MailTemplatesGridControl
-     */
-    protected function createComponentMailTemplatesGrid()
+    protected function createComponentMailTemplatesGrid() : MailTemplatesGridControl
     {
         return $this->mailTemplatesGridControlFactory->create();
     }
 
-    /**
-     * @return \Nette\Application\UI\Form
-     */
-    protected function createComponentEditTemplateForm()
+    protected function createComponentEditTemplateForm() : Form
     {
-        $form = $this->editTemplateFormFactory->create($this->getParameter('id'));
+        $form = $this->editTemplateFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, array $values) {
-            if ($form['cancel']->isSubmittedBy())
+        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
+            if ($form['cancel']->isSubmittedBy()) {
                 $this->redirect('Templates:default');
+            }
 
             $this->flashMessage('admin.mailing.templates_saved', 'success');
 

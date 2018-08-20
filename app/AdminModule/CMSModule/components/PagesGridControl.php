@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\CMSModule\Components;
@@ -6,11 +7,19 @@ namespace App\AdminModule\CMSModule\Components;
 use App\Model\ACL\RoleRepository;
 use App\Model\CMS\Page;
 use App\Model\CMS\PageRepository;
+use App\Model\Page\PageException;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
+use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Ublaboo\DataGrid\DataGrid;
-
+use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
+use Ublaboo\DataGrid\Exception\DataGridException;
+use function array_keys;
+use function count;
 
 /**
  * Komponenta pro správu stránek.
@@ -29,17 +38,11 @@ class PagesGridControl extends Control
     private $roleRepository;
 
 
-    /**
-     * PagesGridControl constructor.
-     * @param Translator $translator
-     * @param PageRepository $pageRepository
-     * @param RoleRepository $roleRepository
-     */
     public function __construct(Translator $translator, PageRepository $pageRepository, RoleRepository $roleRepository)
     {
         parent::__construct();
 
-        $this->translator = $translator;
+        $this->translator     = $translator;
         $this->pageRepository = $pageRepository;
         $this->roleRepository = $roleRepository;
     }
@@ -47,36 +50,34 @@ class PagesGridControl extends Control
     /**
      * Vykreslí komponentu.
      */
-    public function render()
+    public function render() : void
     {
         $this->template->render(__DIR__ . '/templates/pages_grid.latte');
     }
 
     /**
      * Vytvoří komponentu.
-     * @param $name
-     * @throws \Ublaboo\DataGrid\Exception\DataGridColumnStatusException
-     * @throws \Ublaboo\DataGrid\Exception\DataGridException
+     * @throws DataGridColumnStatusException
+     * @throws DataGridException
      */
-    public function createComponentPagesGrid($name)
+    public function createComponentPagesGrid(string $name) : void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
         $grid->setSortable();
         $grid->setSortableHandler('pagesGrid:sort!');
         $grid->setDataSource($this->pageRepository->createQueryBuilder('p')->orderBy('p.position'));
-        $grid->setPagination(FALSE);
-
+        $grid->setPagination(false);
 
         $grid->addColumnText('name', 'admin.cms.pages_name');
 
         $grid->addColumnText('slug', 'admin.cms.pages_slug');
 
         $grid->addColumnStatus('public', 'admin.cms.pages_public')
-            ->addOption(FALSE, 'admin.cms.pages_public_private')
+            ->addOption(false, 'admin.cms.pages_public_private')
             ->setClass('btn-danger')
             ->endOption()
-            ->addOption(TRUE, 'admin.cms.pages_public_public')
+            ->addOption(true, 'admin.cms.pages_public_public')
             ->setClass('btn-success')
             ->endOption()
             ->onChange[] = [$this, 'changeStatus'];
@@ -85,16 +86,16 @@ class PagesGridControl extends Control
             ->setRendererOnCondition(function () {
                 return $this->translator->translate('admin.cms.pages_roles_all');
             }, function (Page $page) {
-                return count($this->roleRepository->findAll()) == $page->getRoles()->count();
+                return count($this->roleRepository->findAll()) === $page->getRoles()->count();
             });
 
-        $rolesOptions = $this->roleRepository->getRolesWithoutRolesOptions([]);
+        $rolesOptions  = $this->roleRepository->getRolesWithoutRolesOptions([]);
         $publicOptions = [
-            FALSE => 'admin.cms.pages_public_private',
-            TRUE => 'admin.cms.pages_public_public'
+            false => 'admin.cms.pages_public_private',
+            true => 'admin.cms.pages_public_public',
         ];
 
-        $grid->addInlineAdd()->onControlAdd[] = function ($container) use ($rolesOptions, $publicOptions) {
+        $grid->addInlineAdd()->onControlAdd[] = function ($container) use ($rolesOptions, $publicOptions) : void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.pages_name_empty');
 
@@ -109,9 +110,9 @@ class PagesGridControl extends Control
 
             $container->addSelect('public', '', $publicOptions);
         };
-        $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
+        $grid->getInlineAdd()->onSubmit[]     = [$this, 'add'];
 
-        $grid->addInlineEdit()->onControlAdd[] = function ($container) use ($rolesOptions, $publicOptions) {
+        $grid->addInlineEdit()->onControlAdd[]  = function ($container) use ($rolesOptions, $publicOptions) : void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.pages_name_empty');
 
@@ -124,7 +125,7 @@ class PagesGridControl extends Control
 
             $container->addSelect('public', '', $publicOptions);
         };
-        $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) {
+        $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) : void {
             $container['slug']
                 ->addRule(Form::IS_NOT_IN, 'admin.cms.pages_slug_exists', $this->pageRepository->findOthersSlugs($item->getId()));
 
@@ -132,11 +133,10 @@ class PagesGridControl extends Control
                 'name' => $item->getName(),
                 'slug' => $item->getSlug(),
                 'roles' => $this->roleRepository->findRolesIds($item->getRoles()),
-                'public' => $item->isPublic() ? 1 : 0
+                'public' => $item->isPublic() ? 1 : 0,
             ]);
         };
-        $grid->getInlineEdit()->onSubmit[] = [$this, 'edit'];
-
+        $grid->getInlineEdit()->onSubmit[]      = [$this, 'edit'];
 
         $grid->addAction('content', 'admin.cms.pages_edit_content', 'Pages:content')
             ->addParameters(['area' => 'main'])
@@ -148,25 +148,26 @@ class PagesGridControl extends Control
             ->setClass('btn btn-xs btn-danger')
             ->addAttributes([
                 'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('admin.cms.pages_delete_confirm')
+                'data-content' => $this->translator->translate('admin.cms.pages_delete_confirm'),
             ]);
         $grid->allowRowsAction('delete', function ($item) {
-            return $item->getSlug() != '/';
+            return $item->getSlug() !== '/';
         });
     }
 
     /**
      * Zpracuje přidání stránky.
-     * @param $values
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Nette\Application\AbortException
+     * @throws NonUniqueResultException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws AbortException
      */
-    public function add($values)
+    public function add(\stdClass $values) : void
     {
         $page = new Page($values['name'], $values['slug']);
 
         $page->setRoles($this->roleRepository->findRolesByIds($values['roles']));
-        $page->setPublic($values['public']);
+        $page->setPublic((bool) $values['public']);
 
         $this->pageRepository->save($page);
 
@@ -178,19 +179,19 @@ class PagesGridControl extends Control
 
     /**
      * Zpracuje upravení stránky.
-     * @param $id
-     * @param $values
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Nette\Application\AbortException
+     * @throws NonUniqueResultException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws AbortException
      */
-    public function edit($id, $values)
+    public function edit(int $id, \stdClass $values) : void
     {
         $page = $this->pageRepository->findById($id);
 
         $page->setName($values['name']);
         $page->setSlug($values['slug']);
         $page->setRoles($this->roleRepository->findRolesByIds($values['roles']));
-        $page->setPublic($values['public']);
+        $page->setPublic((bool) $values['public']);
 
         $this->pageRepository->save($page);
 
@@ -202,11 +203,12 @@ class PagesGridControl extends Control
 
     /**
      * Zpracuje odstranění stránky.
-     * @param $id
-     * @throws \App\Model\Page\PageException
-     * @throws \Nette\Application\AbortException
+     * @throws PageException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws AbortException
      */
-    public function handleDelete($id)
+    public function handleDelete(int $id) : void
     {
         $page = $this->pageRepository->findById($id);
         $this->pageRepository->remove($page);
@@ -218,12 +220,11 @@ class PagesGridControl extends Control
 
     /**
      * Přesune stránku s $item_id mezi $prev_id a $next_id.
-     * @param $item_id
-     * @param $prev_id
-     * @param $next_id
-     * @throws \Nette\Application\AbortException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws AbortException
      */
-    public function handleSort($item_id, $prev_id, $next_id)
+    public function handleSort($item_id, $prev_id, $next_id) : void
     {
         $this->pageRepository->sort($item_id, $prev_id, $next_id);
 
@@ -240,18 +241,18 @@ class PagesGridControl extends Control
 
     /**
      * Změní viditelnost stránky.
-     * @param $id
-     * @param $public
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Nette\Application\AbortException
+     * @throws NonUniqueResultException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws AbortException
      */
-    public function changeStatus($id, $public)
+    public function changeStatus(int $id, bool $public) : void
     {
         $p = $this->getPresenter();
 
         $page = $this->pageRepository->findById($id);
 
-        if ($page->getSlug() == '/' && !$public) {
+        if ($page->getSlug() === '/' && ! $public) {
             $p->flashMessage('admin.cms.pages_change_public_denied', 'danger');
         } else {
             $page->setPublic($public);

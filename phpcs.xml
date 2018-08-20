@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<ruleset>
+    <arg name="basepath" value="."/>
+    <arg name="extensions" value="php"/>
+    <arg name="parallel" value="80"/>
+    <arg name="cache" value="temp/.phpcs-cache"/>
+    <arg name="colors"/>
+
+    <!-- Ignore warnings, show progress of the run and show sniff names -->
+    <arg value="nps"/>
+
+    <file>app</file>
+    <rule ref="Doctrine">
+        <!-- Zpusobuje problem s property pouzivanymi v Doctrine mappings -->
+        <exclude name="SlevomatCodingStandard.Classes.UnusedPrivateElements"/>
+
+        <!-- Zakazuje pouziti @author anotace -->
+        <exclude name="SlevomatCodingStandard.Commenting.ForbiddenAnnotations.AnnotationForbidden"/>
+
+        <!-- Chybejici typehints zatim nelze doplnit u funkcí volaných z AJAX nebo pretizenych funkci -->
+        <exclude name="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint"/>
+
+        <!-- Docasne ignorovano, dokud nebudou vytvoreny lepsi vyjimky -->
+        <exclude name="SlevomatCodingStandard.Classes.SuperfluousExceptionNaming.SuperfluousSuffix"/>
+    </rule>
+</ruleset>

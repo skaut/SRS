@@ -1,12 +1,14 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
 use App\AdminModule\ConfigurationModule\Forms\IPaymentFormFactory;
+use App\AdminModule\ConfigurationModule\Forms\PaymentForm;
 use App\AdminModule\ConfigurationModule\Forms\PaymentProofForm;
+use App\Model\Settings\SettingsException;
 use Nette\Application\UI\Form;
-
 
 /**
  * Presenter obsluhující nastavení platby a dokladů.
@@ -29,11 +31,11 @@ class PaymentPresenter extends ConfigurationBasePresenter
     public $paymentProofFormFactory;
 
 
-    protected function createComponentPaymentForm()
+    protected function createComponentPaymentForm() : PaymentForm
     {
         $control = $this->paymentFormFactory->create();
 
-        $control->onSave[] = function () {
+        $control->onSave[] = function () : void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
             $this->redirect('this');
         };
@@ -42,14 +44,14 @@ class PaymentPresenter extends ConfigurationBasePresenter
     }
 
     /**
-     * @return Form
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
+     * @throws \Throwable
      */
-    protected function createComponentPaymentProofForm()
+    protected function createComponentPaymentProofForm() : Form
     {
         $form = $this->paymentProofFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, array $values) {
+        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');

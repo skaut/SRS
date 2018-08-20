@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\CMSModule\Components;
-
 
 /**
  * Factory komponenty pro správu častých otázek.
@@ -13,7 +13,6 @@ interface IFaqGridControlFactory
 {
     /**
      * Vytvoří komponentu.
-     * @return FaqGridControl
      */
-    public function create();
+    public function create() : FaqGridControl;
 }

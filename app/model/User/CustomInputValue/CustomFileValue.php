@@ -1,10 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\User\CustomInputValue;
 
 use Doctrine\ORM\Mapping as ORM;
-
 
 /**
  * Entita vlastní příloha přihlášky.
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="custom_file_value")
  */
-class CustomFileValue extends CustomInputValue implements ICustomInputValue
+class CustomFileValue extends CustomInputValue
 {
     /**
      * Název souboru.
@@ -23,18 +23,12 @@ class CustomFileValue extends CustomInputValue implements ICustomInputValue
     protected $value;
 
 
-    /**
-     * @return string
-     */
-    public function getValue()
+    public function getValue() : ?string
     {
         return $this->value;
     }
 
-    /**
-     * @param $value
-     */
-    public function setValue($value)
+    public function setValue(?string $value) : void
     {
         $this->value = $value;
     }

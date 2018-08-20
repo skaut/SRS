@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Program;
@@ -9,7 +10,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
-
 
 /**
  * Entita programový blok.
@@ -34,7 +34,7 @@ class Block
      * Programy v bloku.
      * @ORM\OneToMany(targetEntity="Program", mappedBy="block", cascade={"persist"})
      * @ORM\OrderBy({"start" = "ASC"})
-     * @var Collection
+     * @var Collection|Program[]
      */
     protected $programs;
 
@@ -102,51 +102,39 @@ class Block
     protected $description;
 
 
-    /**
-     * Block constructor.
-     */
     public function __construct()
     {
         $this->programs = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId() : int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName() : string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName($name)
+    public function setName(string $name) : void
     {
         $this->name = $name;
     }
 
     /**
-     * @return Collection
+     * @return Collection|Program[]
      */
-    public function getPrograms()
+    public function getPrograms() : Collection
     {
         return $this->programs;
     }
 
     /**
      * Vrací seznam účastníků bloku.
-     * @return Collection
+     * @return Collection|User[]
      */
-    public function getAttendees()
+    public function getAttendees() : Collection
     {
         $attendees = new ArrayCollection();
         foreach ($this->programs as $program) {
@@ -159,202 +147,146 @@ class Block
 
     /**
      * Vrací počet programů bloku.
-     * @return int
      */
-    public function getProgramsCount()
+    public function getProgramsCount() : int
     {
         return $this->programs->count();
     }
 
-    /**
-     * @return User
-     */
-    public function getLector()
+    public function getLector() : ?User
     {
         return $this->lector;
     }
 
-    /**
-     * @param User $lector
-     */
-    public function setLector($lector)
+    public function setLector(?User $lector) : void
     {
         $this->lector = $lector;
     }
 
-    /**
-     * @return Category
-     */
-    public function getCategory()
+    public function getCategory() : ?Category
     {
         return $this->category;
     }
 
-    /**
-     * @param Category $category
-     */
-    public function setCategory($category)
+    public function setCategory(?Category $category) : void
     {
         $this->category = $category;
     }
 
-    /**
-     * @return Subevent
-     */
-    public function getSubevent()
+    public function getSubevent() : ?Subevent
     {
         return $this->subevent;
     }
 
-    /**
-     * @param Subevent $subevent
-     */
-    public function setSubevent($subevent)
+    public function setSubevent(Subevent $subevent) : void
     {
         $this->subevent = $subevent;
     }
 
-    /**
-     * @return int
-     */
-    public function getMandatory()
+    public function getMandatory() : int
     {
         return $this->mandatory;
     }
 
-    /**
-     * @param int $mandatory
-     */
-    public function setMandatory($mandatory)
+    public function setMandatory(int $mandatory) : void
     {
         $this->mandatory = $mandatory;
     }
 
-    /**
-     * @return int
-     */
-    public function getDuration()
+    public function getDuration() : int
     {
         return $this->duration;
     }
 
-    /**
-     * @param int $duration
-     */
-    public function setDuration($duration)
+    public function setDuration(int $duration) : void
     {
         $this->duration = $duration;
     }
 
-    /**
-     * @return int
-     */
-    public function getCapacity()
+    public function getCapacity() : ?int
     {
         return $this->capacity;
     }
 
-    /**
-     * @param int $capacity
-     */
-    public function setCapacity($capacity)
+    public function setCapacity(?int $capacity) : void
     {
         $this->capacity = $capacity;
     }
 
-    /**
-     * @return string
-     */
-    public function getTools()
+    public function getTools() : ?string
     {
         return $this->tools;
     }
 
-    /**
-     * @param string $tools
-     */
-    public function setTools($tools)
+    public function setTools(?string $tools) : void
     {
         $this->tools = $tools;
     }
 
-    /**
-     * @return string
-     */
-    public function getPerex()
+    public function getPerex() : ?string
     {
         return $this->perex;
     }
 
-    /**
-     * @param string $perex
-     */
-    public function setPerex($perex)
+    public function setPerex(?string $perex) : void
     {
         $this->perex = $perex;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription() : ?string
     {
         return $this->description;
     }
 
-    /**
-     * @param string $description
-     */
-    public function setDescription($description)
+    public function setDescription(?string $description) : void
     {
         $this->description = $description;
     }
 
     /**
      * Je uživatel oprávněn přihlašovat se na programy bloku?
-     * @param User $user
-     * @return bool
      */
-    public function isAllowed(User $user)
+    public function isAllowed(User $user) : bool
     {
-        $result = TRUE;
+        $result = true;
 
         if ($this->category) {
-            $tmp = FALSE;
+            $tmp = false;
             foreach ($user->getRoles() as $role) {
                 if ($role->getRegisterableCategories()->contains($this->category)) {
-                    $tmp = TRUE;
+                    $tmp = true;
                     break;
                 }
             }
-            if (!$tmp)
-                $result = FALSE;
+            if (! $tmp) {
+                $result = false;
+            }
         }
 
-        $tmp = FALSE;
+        $tmp = false;
         foreach ($user->getNotCanceledSubeventsApplications() as $application) {
             if ($application->getSubevents()->contains($this->subevent)) {
-                $tmp = TRUE;
+                $tmp = true;
                 break;
             }
         }
-        if (!$tmp)
-            $result = FALSE;
+        if (! $tmp) {
+            $result = false;
+        }
 
         return $result;
     }
 
     /**
      * Účastní se uživatel programu bloku?
-     * @param User $user
-     * @return bool
      */
-    public function isAttendee(User $user)
+    public function isAttendee(User $user) : bool
     {
         foreach ($this->programs as $program) {
-            if ($program->isAttendee($user))
-                return TRUE;
+            if ($program->isAttendee($user)) {
+                return true;
+            }
         }
-        return FALSE;
+        return false;
     }
 }

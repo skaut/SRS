@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Program;
@@ -7,7 +8,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
-
 
 /**
  * Entita místnost.
@@ -38,63 +38,45 @@ class Room
      * Programy v místnosti.
      * @ORM\OneToMany(targetEntity="Program", mappedBy="room", cascade={"persist"})
      * @ORM\OrderBy({"start" = "ASC"})
-     * @var Collection
+     * @var Collection|Program[]
      */
     protected $programs;
 
 
-    /**
-     * Room constructor.
-     */
     public function __construct()
     {
         $this->programs = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId() : int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName() : string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName($name)
+    public function setName(string $name) : void
     {
         $this->name = $name;
     }
 
-    /**
-     * @return int
-     */
-    public function getCapacity()
+    public function getCapacity() : ?int
     {
         return $this->capacity;
     }
 
-    /**
-     * @param int $capacity
-     */
-    public function setCapacity($capacity)
+    public function setCapacity(?int $capacity) : void
     {
         $this->capacity = $capacity;
     }
 
     /**
-     * @return mixed
+     * @return Collection|Program[]
      */
-    public function getPrograms()
+    public function getPrograms() : Collection
     {
         return $this->programs;
     }

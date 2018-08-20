@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\ACL;
@@ -7,7 +8,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
-
 
 /**
  * Entita prostředek.
@@ -21,39 +21,47 @@ class Resource
 {
     /**
      * Administrace.
+     * @var string
      */
-    const ADMIN = 'admin';
+    public const ADMIN = 'admin';
 
     /**
      * Web.
+     * @var string
      */
-    const CMS = 'cms';
+    public const CMS = 'cms';
 
     /**
      * Role.
+     * @var string
      */
-    const ACL = 'acl';
+    public const ACL = 'acl';
 
     /**
      * Program.
+     * @var string
      */
-    const PROGRAM = 'program';
+    public const PROGRAM = 'program';
 
     /**
      * Nastavení.
+     * @var string
      */
-    const CONFIGURATION = 'configuration';
+    public const CONFIGURATION = 'configuration';
 
     /**
      * Uživatelé.
+     * @var string
      */
-    const USERS = 'users';
+    public const USERS = 'users';
 
     /**
      * Mailing.
+     * @var string
      */
-    const MAILING = 'mailing';
+    public const MAILING = 'mailing';
 
+    /** @var string[] */
     public static $resources = [
         self::ADMIN,
         self::CMS,
@@ -61,7 +69,7 @@ class Resource
         self::PROGRAM,
         self::CONFIGURATION,
         self::USERS,
-        self::MAILING
+        self::MAILING,
     ];
 
     use Identifier;
@@ -76,49 +84,36 @@ class Resource
     /**
      * Oprávnění s tímto prostředkem.
      * @ORM\OneToMany(targetEntity="\App\Model\ACL\Permission", mappedBy="resource", cascade={"persist"})
-     * @var Collection
+     * @var Collection|Permission[]
      */
     protected $permissions;
 
 
-    /**
-     * Resource constructor.
-     * @param $name
-     */
     public function __construct(string $name)
     {
-        $this->name = $name;
+        $this->name        = $name;
         $this->permissions = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getId(): int
+    public function getId() : int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getName(): string
+    public function getName() : string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName(string $name): void
+    public function setName(string $name) : void
     {
         $this->name = $name;
     }
 
     /**
-     * @return Collection
+     * @return Collection|Permission[]
      */
-    public function getPermissions(): Collection
+    public function getPermissions() : Collection
     {
         return $this->permissions;
     }

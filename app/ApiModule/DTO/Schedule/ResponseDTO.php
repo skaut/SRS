@@ -1,11 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\ApiModule\DTO\Schedule;
 
 use JMS\Serializer\Annotation as JMS;
 use Nette;
-
 
 /**
  * Objekt pro přenos stavu do FullCalendar.
@@ -15,7 +15,7 @@ use Nette;
 class ResponseDTO
 {
     use Nette\SmartObject;
-    
+
     /**
      * @JMS\Type("string")
      * @var string
@@ -35,34 +35,22 @@ class ResponseDTO
     private $program;
 
 
-    /**
-     * @return string
-     */
-    public function getMessage()
+    public function getMessage() : string
     {
         return $this->message;
     }
 
-    /**
-     * @param string $message
-     */
-    public function setMessage($message)
+    public function setMessage(string $message) : void
     {
         $this->message = $message;
     }
 
-    /**
-     * @return string
-     */
-    public function getStatus()
+    public function getStatus() : string
     {
         return $this->status;
     }
 
-    /**
-     * @param string $status
-     */
-    public function setStatus($status)
+    public function setStatus(string $status) : void
     {
         $this->status = $status;
     }
@@ -78,7 +66,7 @@ class ResponseDTO
     /**
      * @param mixed $program
      */
-    public function setProgram($program)
+    public function setProgram($program) : void
     {
         $this->program = $program;
     }

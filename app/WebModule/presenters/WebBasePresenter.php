@@ -1,23 +1,29 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\WebModule\Presenters;
 
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
+use App\Model\ACL\ResourceRepository;
 use App\Model\ACL\Role;
+use App\Model\ACL\RoleRepository;
+use App\Model\CMS\PageRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
+use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
+use App\Model\User\UserRepository;
 use App\Presenters\BasePresenter;
 use App\Services\Authenticator;
 use App\Services\Authorizator;
 use App\Services\DatabaseService;
 use App\Services\SkautIsService;
 use Doctrine\DBAL\Exception\TableNotFoundException;
+use Nette\Application\AbortException;
 use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\JavaScriptLoader;
-
 
 /**
  * BasePresenter pro WebModule.
@@ -39,31 +45,31 @@ abstract class WebBasePresenter extends BasePresenter
     public $authenticator;
 
     /**
-     * @var \App\Model\ACL\ResourceRepository
+     * @var ResourceRepository
      * @inject
      */
     public $resourceRepository;
 
     /**
-     * @var \App\Model\ACL\RoleRepository
+     * @var RoleRepository
      * @inject
      */
     public $roleRepository;
 
     /**
-     * @var \App\Model\CMS\PageRepository
+     * @var PageRepository
      * @inject
      */
     public $pageRepository;
 
     /**
-     * @var \App\Model\Settings\SettingsRepository
+     * @var SettingsRepository
      * @inject
      */
     public $settingsRepository;
 
     /**
-     * @var \App\Model\User\UserRepository
+     * @var UserRepository
      * @inject
      */
     public $userRepository;
@@ -80,52 +86,50 @@ abstract class WebBasePresenter extends BasePresenter
      */
     public $databaseService;
 
-    /**
-     * @var User
-     */
+    /** @var User */
     protected $dbuser;
 
 
     /**
      * Načte css podle konfigurace v config.neon.
-     * @return CssLoader
      */
-    protected function createComponentCss()
+    protected function createComponentCss() : CssLoader
     {
         return $this->webLoader->createCssLoader('web');
     }
 
     /**
      * Načte javascript podle konfigurace v config.neon.
-     * @return JavaScriptLoader
      */
-    protected function createComponentJs()
+    protected function createComponentJs() : JavaScriptLoader
     {
         return $this->webLoader->createJavaScriptLoader('web');
     }
 
     /**
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
+     * @throws \Throwable
      */
-    public function startup()
+    public function startup() : void
     {
         parent::startup();
 
         $this->checkInstallation();
 
-        if ($this->user->isLoggedIn() && !$this->skautIsService->isLoggedIn())
-            $this->user->logout(TRUE);
+        if ($this->user->isLoggedIn() && ! $this->skautIsService->isLoggedIn()) {
+            $this->user->logout(true);
+        }
 
         $this->user->setAuthorizator($this->authorizator);
 
-        $this->dbuser = $this->user->isLoggedIn() ? $this->userRepository->findById($this->user->id) : NULL;
+        $this->dbuser = $this->user->isLoggedIn() ? $this->userRepository->findById($this->user->id) : null;
     }
 
     /**
      * @throws SettingsException
      * @throws \Throwable
      */
-    public function beforeRender()
+    public function beforeRender() : void
     {
         parent::beforeRender();
 
@@ -133,27 +137,27 @@ abstract class WebBasePresenter extends BasePresenter
 
         $this->template->backlink = $this->getHttpRequest()->getUrl()->getPath();
 
-        $this->template->logo = $this->settingsRepository->getValue(Settings::LOGO);
-        $this->template->footer = $this->settingsRepository->getValue(Settings::FOOTER);
+        $this->template->logo        = $this->settingsRepository->getValue(Settings::LOGO);
+        $this->template->footer      = $this->settingsRepository->getValue(Settings::FOOTER);
         $this->template->seminarName = $this->settingsRepository->getValue(Settings::SEMINAR_NAME);
 
         $this->template->nonregisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
-        $this->template->unapprovedRole = $this->roleRepository->findBySystemName(Role::UNAPPROVED);
-        $this->template->testRole = Role::TEST;
+        $this->template->unapprovedRole    = $this->roleRepository->findBySystemName(Role::UNAPPROVED);
+        $this->template->testRole          = Role::TEST;
 
         $this->template->adminAccess = $this->user->isAllowed(Resource::ADMIN, Permission::ACCESS);
 
-        $this->template->pages = $this->pageRepository->findPublishedOrderedByPosition();
-        $this->template->sidebarVisible = FALSE;
+        $this->template->pages          = $this->pageRepository->findPublishedOrderedByPosition();
+        $this->template->sidebarVisible = false;
 
         $this->template->settings = $this->settingsRepository;
     }
 
     /**
      * Ukončí testování role.
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
-    public function actionExitRoleTest()
+    public function actionExitRoleTest() : void
     {
         $this->authenticator->updateRoles($this->user);
         $this->redirect(':Admin:Acl:default');
@@ -161,15 +165,17 @@ abstract class WebBasePresenter extends BasePresenter
 
     /**
      * Zkontroluje stav instalace.
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
+     * @throws \Throwable
      */
-    private function checkInstallation()
+    private function checkInstallation() : void
     {
         try {
-            if (!$this->settingsRepository->getBoolValue(Settings::ADMIN_CREATED))
+            if (! $this->settingsRepository->getBoolValue(Settings::ADMIN_CREATED)) {
                 $this->redirect(':Install:Install:default');
-            else
+            } else {
                 $this->databaseService->update();
+            }
         } catch (TableNotFoundException $ex) {
             $this->redirect(':Install:Install:default');
         } catch (SettingsException $ex) {

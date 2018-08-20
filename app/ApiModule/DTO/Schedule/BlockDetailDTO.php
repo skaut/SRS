@@ -1,11 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\ApiModule\DTO\Schedule;
 
 use JMS\Serializer\Annotation as JMS;
 use Nette;
-
 
 /**
  * Objekt pro přenos údajů o bloku do FullCalendar.
@@ -113,258 +113,162 @@ class BlockDetailDTO
     private $userAttends;
 
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId() : int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id)
+    public function setId(int $id) : void
     {
         $this->id = $id;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName() : string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName($name)
+    public function setName(string $name) : void
     {
         $this->name = $name;
     }
 
-    /**
-     * @return string
-     */
-    public function getCategory()
+    public function getCategory() : string
     {
         return $this->category;
     }
 
-    /**
-     * @param string $category
-     */
-    public function setCategory($category)
+    public function setCategory(string $category) : void
     {
         $this->category = $category;
     }
 
-    /**
-     * @return string
-     */
-    public function getLector()
+    public function getLector() : string
     {
         return $this->lector;
     }
 
-    /**
-     * @param string $lector
-     */
-    public function setLector($lector)
+    public function setLector(string $lector) : void
     {
         $this->lector = $lector;
     }
 
-    /**
-     * @return string
-     */
-    public function getAboutLector()
+    public function getAboutLector() : string
     {
         return $this->aboutLector;
     }
 
-    /**
-     * @param string $aboutLector
-     */
-    public function setAboutLector($aboutLector)
+    public function setAboutLector(string $aboutLector) : void
     {
         $this->aboutLector = $aboutLector;
     }
 
-    /**
-     * @return string
-     */
-    public function getLectorPhoto()
+    public function getLectorPhoto() : ?string
     {
         return $this->lectorPhoto;
     }
 
-    /**
-     * @param string $lectorPhoto
-     */
-    public function setLectorPhoto($lectorPhoto)
+    public function setLectorPhoto(?string $lectorPhoto) : void
     {
         $this->lectorPhoto = $lectorPhoto;
     }
 
-    /**
-     * @return int
-     */
-    public function getDurationHours()
+    public function getDurationHours() : int
     {
         return $this->durationHours;
     }
 
-    /**
-     * @param int $durationHours
-     */
-    public function setDurationHours($durationHours)
+    public function setDurationHours(int $durationHours) : void
     {
         $this->durationHours = $durationHours;
     }
 
-    /**
-     * @return int
-     */
-    public function getDurationMinutes()
+    public function getDurationMinutes() : int
     {
         return $this->durationMinutes;
     }
 
-    /**
-     * @param int $durationMinutes
-     */
-    public function setDurationMinutes($durationMinutes)
+    public function setDurationMinutes(int $durationMinutes) : void
     {
         $this->durationMinutes = $durationMinutes;
     }
 
-    /**
-     * @return int
-     */
-    public function getCapacity()
+    public function getCapacity() : ?int
     {
         return $this->capacity;
     }
 
-    /**
-     * @param int $capacity
-     */
-    public function setCapacity($capacity)
+    public function setCapacity(?int $capacity) : void
     {
         $this->capacity = $capacity;
     }
 
-    /**
-     * @return bool
-     */
-    public function isMandatory()
+    public function isMandatory() : bool
     {
         return $this->mandatory;
     }
 
-    /**
-     * @param bool $mandatory
-     */
-    public function setMandatory($mandatory)
+    public function setMandatory(bool $mandatory) : void
     {
         $this->mandatory = $mandatory;
     }
 
-    /**
-     * @return bool
-     */
-    public function isAutoRegister()
+    public function isAutoRegister() : bool
     {
         return $this->autoRegister;
     }
 
-    /**
-     * @param bool $autoRegister
-     */
-    public function setAutoRegister($autoRegister)
+    public function setAutoRegister(bool $autoRegister) : void
     {
         $this->autoRegister = $autoRegister;
     }
 
-    /**
-     * @return string
-     */
-    public function getPerex()
+    public function getPerex() : string
     {
         return $this->perex;
     }
 
-    /**
-     * @param string $perex
-     */
-    public function setPerex($perex)
+    public function setPerex(string $perex) : void
     {
         $this->perex = $perex;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription() : string
     {
         return $this->description;
     }
 
-    /**
-     * @param string $description
-     */
-    public function setDescription($description)
+    public function setDescription(string $description) : void
     {
         $this->description = $description;
     }
 
-    /**
-     * @return int
-     */
-    public function getProgramsCount()
+    public function getProgramsCount() : int
     {
         return $this->programsCount;
     }
 
-    /**
-     * @param int $programsCount
-     */
-    public function setProgramsCount($programsCount)
+    public function setProgramsCount(int $programsCount) : void
     {
         $this->programsCount = $programsCount;
     }
 
-    /**
-     * @return bool
-     */
-    public function isUserAllowed()
+    public function isUserAllowed() : bool
     {
         return $this->userAllowed;
     }
 
-    /**
-     * @param bool $userAllowed
-     */
-    public function setUserAllowed($userAllowed)
+    public function setUserAllowed(bool $userAllowed) : void
     {
         $this->userAllowed = $userAllowed;
     }
 
-    /**
-     * @return bool
-     */
-    public function isUserAttends()
+    public function isUserAttends() : bool
     {
         return $this->userAttends;
     }
 
-    /**
-     * @param bool $userAttends
-     */
-    public function setUserAttends($userAttends)
+    public function setUserAttends(bool $userAttends) : void
     {
         $this->userAttends = $userAttends;
     }

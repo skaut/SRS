@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
@@ -6,6 +7,7 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseForm;
 use App\Model\Enums\SkautIsEventType;
 use App\Model\Settings\Settings;
+use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
 use App\Model\SkautIs\SkautIsCourse;
 use App\Model\SkautIs\SkautIsCourseRepository;
@@ -13,9 +15,12 @@ use App\Model\Structure\SubeventRepository;
 use App\Services\SkautIsEventEducationService;
 use App\Services\SkautIsEventGeneralService;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
-
+use function count;
 
 /**
  * Formulár pro nastavení propojení se skautIS akcí.
@@ -46,62 +51,63 @@ class SkautIsEventForm
     private $subeventRepository;
 
 
-    /**
-     * SkautIsEventForm constructor.
-     * @param BaseForm $baseForm
-     * @param SettingsRepository $settingsRepository
-     * @param SkautIsCourseRepository $skautIsCourseRepository
-     * @param SkautIsEventGeneralService $skautIsEventGeneralService
-     * @param SkautIsEventEducationService $skautIsEventEducationService
-     * @param SubeventRepository $subeventRepository
-     */
-    public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository,
-                                SkautIsCourseRepository $skautIsCourseRepository,
-                                SkautIsEventGeneralService $skautIsEventGeneralService,
-                                SkautIsEventEducationService $skautIsEventEducationService,
-                                SubeventRepository $subeventRepository)
-    {
-        $this->baseFormFactory = $baseForm;
-        $this->settingsRepository = $settingsRepository;
-        $this->skautIsCourseRepository = $skautIsCourseRepository;
-        $this->skautIsEventGeneralService = $skautIsEventGeneralService;
+    public function __construct(
+        BaseForm $baseForm,
+        SettingsRepository $settingsRepository,
+        SkautIsCourseRepository $skautIsCourseRepository,
+        SkautIsEventGeneralService $skautIsEventGeneralService,
+        SkautIsEventEducationService $skautIsEventEducationService,
+        SubeventRepository $subeventRepository
+    ) {
+        $this->baseFormFactory              = $baseForm;
+        $this->settingsRepository           = $settingsRepository;
+        $this->skautIsCourseRepository      = $skautIsCourseRepository;
+        $this->skautIsEventGeneralService   = $skautIsEventGeneralService;
         $this->skautIsEventEducationService = $skautIsEventEducationService;
-        $this->subeventRepository = $subeventRepository;
+        $this->subeventRepository           = $subeventRepository;
     }
 
     /**
      * Vytvoří formulář.
-     * @return Form
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
-    public function create(): Form
+    public function create() : Form
     {
         $form = $this->baseFormFactory->create();
 
-        $renderer = $form->getRenderer();
+        $renderer                                   = $form->getRenderer();
         $renderer->wrappers['control']['container'] = 'div class="col-sm-7 col-xs-7"';
-        $renderer->wrappers['label']['container'] = 'div class="col-sm-5 col-xs-5 control-label"';
+        $renderer->wrappers['label']['container']   = 'div class="col-sm-5 col-xs-5 control-label"';
 
-        $eventTypeSelect = $form->addSelect('skautisEventType', 'admin.configuration.skautis_event_type',
-            SkautIsEventType::getSkautIsEventTypesOptions());
+        $eventTypeSelect = $form->addSelect(
+            'skautisEventType',
+            'admin.configuration.skautis_event_type',
+            SkautIsEventType::getSkautIsEventTypesOptions()
+        );
         $eventTypeSelect->addCondition($form::EQUAL, SkautIsEventType::GENERAL)
             ->toggle('event-general');
         $eventTypeSelect->addCondition($form::EQUAL, SkautIsEventType::EDUCATION)
             ->toggle('event-education');
 
-        $form->addSelect('skautisEventGeneral', 'admin.configuration.skautis_event',
-            $this->skautIsEventGeneralService->getEventsOptions())
+        $form->addSelect(
+            'skautisEventGeneral',
+            'admin.configuration.skautis_event',
+            $this->skautIsEventGeneralService->getEventsOptions()
+        )
             ->setOption('id', 'event-general');
 
-        $form->addSelect('skautisEventEducation', 'admin.configuration.skautis_event',
-            $this->skautIsEventEducationService->getEventsOptions())
+        $form->addSelect(
+            'skautisEventEducation',
+            'admin.configuration.skautis_event',
+            $this->skautIsEventEducationService->getEventsOptions()
+        )
             ->setOption('id', 'event-education');
 
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'skautisEventType' => $this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_TYPE)
+            'skautisEventType' => $this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_TYPE),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -111,25 +117,26 @@ class SkautIsEventForm
 
     /**
      * Zpracuje formulář.
-     * @param Form $form
-     * @param array $values
-     * @throws \App\Model\Settings\SettingsException
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws SettingsException
+     * @throws NonUniqueResultException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws \Throwable
      */
-    public function processForm(Form $form, array $values): void
+    public function processForm(Form $form, \stdClass $values) : void
     {
-        $eventId = NULL;
-        $eventName = NULL;
+        $eventId   = null;
+        $eventName = null;
         $eventType = $values['skautisEventType'];
 
         switch ($eventType) {
             case SkautIsEventType::GENERAL:
-                $eventId = $values['skautisEventGeneral'];
+                $eventId   = $values['skautisEventGeneral'];
                 $eventName = $this->skautIsEventGeneralService->getEventDisplayName($eventId);
                 break;
 
             case SkautIsEventType::EDUCATION:
-                $eventId = $values['skautisEventEducation'];
+                $eventId   = $values['skautisEventEducation'];
                 $eventName = $this->skautIsEventEducationService->getEventDisplayName($eventId);
 
                 $courses = $this->skautIsEventEducationService->getEventCourses($eventId);
@@ -137,12 +144,12 @@ class SkautIsEventForm
                 foreach ($courses as $course) {
                     $skautIsCourse = new SkautIsCourse();
                     $skautIsCourse->setSkautIsCourseId($course->ID);
-                    $skautIsCourseName = $course->EventEducationType . (!empty($course->DisplayName) ? ' (' . $course->DisplayName . ')' : '');
+                    $skautIsCourseName = $course->EventEducationType . (! empty($course->DisplayName) ? ' (' . $course->DisplayName . ')' : '');
                     $skautIsCourse->setName($skautIsCourseName);
                     $this->skautIsCourseRepository->save($skautIsCourse);
                 }
 
-                if (count($courses) == 1 && !$this->subeventRepository->explicitSubeventsExists()) {
+                if (count($courses) === 1 && ! $this->subeventRepository->explicitSubeventsExists()) {
                     $subevent = $this->subeventRepository->findImplicit();
                     $subevent->setSkautIsCourses(new ArrayCollection($this->skautIsCourseRepository->findAll()));
                     $this->subeventRepository->save($subevent);
@@ -153,9 +160,11 @@ class SkautIsEventForm
 
         $this->settingsRepository->setValue(Settings::SKAUTIS_EVENT_TYPE, $eventType);
 
-        if ($eventId !== NULL) {
-            $this->settingsRepository->setValue(Settings::SKAUTIS_EVENT_ID, $eventId);
-            $this->settingsRepository->setValue(Settings::SKAUTIS_EVENT_NAME, $eventName);
+        if ($eventId === null) {
+            return;
         }
+
+        $this->settingsRepository->setIntValue(Settings::SKAUTIS_EVENT_ID, $eventId);
+        $this->settingsRepository->setValue(Settings::SKAUTIS_EVENT_NAME, $eventName);
     }
 }

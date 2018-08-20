@@ -1,12 +1,14 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\CMS\Document;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Kdyby\Doctrine\EntityRepository;
-
 
 /**
  * Třída spravující dokumenty.
@@ -18,21 +20,19 @@ class DocumentRepository extends EntityRepository
 {
     /**
      * Vrátí dokument podle id.
-     * @param $id int
-     * @return Document|null
      */
-    public function findById(int $id): ?Document
+    public function findById(?int $id) : ?Document
     {
         return $this->findOneBy(['id' => $id]);
     }
 
     /**
      * Vrací dokumenty podle rolí a vybraných tagů, seřazené podle názvu.
-     * @param $rolesIds int[] pole id rolí
-     * @param $tags Collection|Tag[]
+     * @param int[]            $rolesIds pole id rolí
+     * @param Collection|Tag[] $tags
      * @return Collection|Document[]
      */
-    public function findRolesAllowedByTagsOrderedByName(array $rolesIds, Collection $tags): Collection
+    public function findRolesAllowedByTagsOrderedByName(array $rolesIds, Collection $tags) : Collection
     {
         $result = $this->createQueryBuilder('d')
             ->select('d')
@@ -51,11 +51,10 @@ class DocumentRepository extends EntityRepository
 
     /**
      * Uloží dokument.
-     * @param Document $document
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function save(Document $document)
+    public function save(Document $document) : void
     {
         $this->_em->persist($document);
         $this->_em->flush();
@@ -63,11 +62,10 @@ class DocumentRepository extends EntityRepository
 
     /**
      * Odstraní dokument.
-     * @param Document $document
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function remove(Document $document)
+    public function remove(Document $document) : void
     {
         $this->_em->remove($document);
         $this->_em->flush();

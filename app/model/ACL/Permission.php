@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\ACL;
@@ -7,7 +8,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
-
 
 /**
  * Entita oprávnění.
@@ -21,51 +21,60 @@ class Permission
 {
     /**
      * Oprávnění spravovat.
+     * @var string
      */
-    const MANAGE = 'manage';
+    public const MANAGE = 'manage';
 
     /**
      * Oprávnění přistupovat.
+     * @var string
      */
-    const ACCESS = 'access';
+    public const ACCESS = 'access';
 
     /**
      * Oprávnění spravovat programy, u kterých je uživatel lektor.
+     * @var string
      */
-    const MANAGE_OWN_PROGRAMS = 'manage_own_programs';
+    public const MANAGE_OWN_PROGRAMS = 'manage_own_programs';
 
     /**
      * Oprávnění spravovat všechny programy.
+     * @var string
      */
-    const MANAGE_ALL_PROGRAMS = 'manage_all_programs';
+    public const MANAGE_ALL_PROGRAMS = 'manage_all_programs';
 
     /**
      * Oprávnění spravovat harmonogram.
+     * @var string
      */
-    const MANAGE_SCHEDULE = 'manage_schedule';
+    public const MANAGE_SCHEDULE = 'manage_schedule';
 
     /**
      * Oprávnění spravovat místnosti.
+     * @var string
      */
-    const MANAGE_ROOMS = 'manage_rooms';
+    public const MANAGE_ROOMS = 'manage_rooms';
 
     /**
      * Oprávnění spravovat kategorie bloků.
+     * @var string
      */
-    const MANAGE_CATEGORIES = 'manage_categories';
+    public const MANAGE_CATEGORIES = 'manage_categories';
 
     /**
      * Oprávnění přihlašovat se na programy.
+     * @var string
      */
-    const CHOOSE_PROGRAMS = 'choose_programs';
+    public const CHOOSE_PROGRAMS = 'choose_programs';
 
+    /** @var string[] */
     public static $permissions = [
         self::MANAGE,
         self::ACCESS,
         self::MANAGE_OWN_PROGRAMS,
         self::MANAGE_ALL_PROGRAMS,
         self::MANAGE_SCHEDULE,
-        self::CHOOSE_PROGRAMS
+        self::CHOOSE_PROGRAMS,
     ];
 
     use Identifier;
@@ -80,7 +89,7 @@ class Permission
     /**
      * Role s tímto oprávněním.
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", mappedBy="permissions", cascade={"persist"})
-     * @var Collection
+     * @var Collection|Role[]
      */
     protected $roles;
 
@@ -92,62 +101,42 @@ class Permission
     protected $resource;
 
 
-    /**
-     * Permission constructor.
-     * @param string $name
-     * @param Resource $resource
-     */
     public function __construct(string $name, Resource $resource)
     {
-        $this->name = $name;
+        $this->name     = $name;
         $this->resource = $resource;
-        $this->roles = new ArrayCollection();
+        $this->roles    = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getId(): int
+    public function getId() : int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getName(): string
+    public function getName() : string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName(string $name): void
+    public function setName(string $name) : void
     {
         $this->name = $name;
     }
 
     /**
-     * @return Collection
+     * @return Collection|Role[]
      */
-    public function getRoles(): Collection
+    public function getRoles() : Collection
     {
         return $this->roles;
     }
 
-    /**
-     * @return Resource
-     */
-    public function getResource(): Resource
+    public function getResource() : Resource
     {
         return $this->resource;
     }
 
-    /**
-     * @param Resource $resource
-     */
-    public function setResource(Resource $resource): void
+    public function setResource(Resource $resource) : void
     {
         $this->resource = $resource;
     }

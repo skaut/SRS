@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\CMS;
@@ -6,7 +7,6 @@ namespace App\Model\CMS;
 use App\Model\User\User;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
-
 
 /**
  * Entita FAQ.
@@ -46,7 +46,7 @@ class Faq
      * @ORM\Column(type="boolean")
      * @var bool
      */
-    protected $public = FALSE;
+    protected $public = false;
 
     /**
      * Pozice otázky.
@@ -56,100 +56,66 @@ class Faq
     protected $position = 0;
 
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId() : int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getQuestion()
+    public function getQuestion() : string
     {
         return $this->question;
     }
 
-    /**
-     * @param string $question
-     */
-    public function setQuestion($question)
+    public function setQuestion(string $question) : void
     {
         $this->question = $question;
     }
 
-    /**
-     * @return User
-     */
-    public function getAuthor()
+    public function getAuthor() : User
     {
         return $this->author;
     }
 
-    /**
-     * @param User $author
-     */
-    public function setAuthor($author)
+    public function setAuthor(User $author) : void
     {
         $this->author = $author;
     }
 
-    /**
-     * @return string
-     */
-    public function getAnswer()
+    public function getAnswer() : ?string
     {
         return $this->answer;
     }
 
-    /**
-     * @param string $answer
-     */
-    public function setAnswer($answer)
+    public function setAnswer(?string $answer) : void
     {
         $this->answer = $answer;
     }
 
-    /**
-     * @return bool
-     */
-    public function isPublic()
+    public function isPublic() : bool
     {
         return $this->public;
     }
 
-    /**
-     * @param bool $public
-     */
-    public function setPublic($public)
+    public function setPublic(bool $public) : void
     {
         $this->public = $public;
     }
 
-    /**
-     * @return int
-     */
-    public function getPosition()
+    public function getPosition() : int
     {
         return $this->position;
     }
 
-    /**
-     * @param int $position
-     */
-    public function setPosition($position)
+    public function setPosition(int $position) : void
     {
         $this->position = $position;
     }
 
     /**
      * Je zodpovězena?
-     * @return bool
      */
-    public function isAnswered()
+    public function isAnswered() : bool
     {
-        return $this->answer != '';
+        return $this->answer !== '';
     }
 }

@@ -1,11 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\CMS\Content;
 
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
-
 
 /**
  * Entita obsahu s aktualitami.
@@ -17,6 +17,7 @@ use Nette\Application\UI\Form;
  */
 class NewsContent extends Content implements IContent
 {
+    /** @var string */
     protected $type = Content::NEWS;
 
     /**
@@ -27,28 +28,20 @@ class NewsContent extends Content implements IContent
     protected $count;
 
 
-    /**
-     * @return int
-     */
-    public function getCount()
+    public function getCount() : ?int
     {
         return $this->count;
     }
 
-    /**
-     * @param int $count
-     */
-    public function setCount($count)
+    public function setCount(?int $count) : void
     {
         $this->count = $count;
     }
 
     /**
      * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
-     * @param Form $form
-     * @return Form
      */
-    public function addContentForm(Form $form)
+    public function addContentForm(Form $form) : Form
     {
         parent::addContentForm($form);
 
@@ -65,13 +58,11 @@ class NewsContent extends Content implements IContent
 
     /**
      * Zpracuje při uložení stránky část formuláře týkající se obsahu.
-     * @param Form $form
-     * @param array $values
      */
-    public function contentFormSucceeded(Form $form, array $values)
+    public function contentFormSucceeded(Form $form, \stdClass $values) : void
     {
         parent::contentFormSucceeded($form, $values);
-        $values = $values[$this->getContentFormName()];
-        $this->count = $values['count'] !== '' ? $values['count'] : NULL;
+        $values      = $values[$this->getContentFormName()];
+        $this->count = $values['count'] !== '' ? $values['count'] : null;
     }
 }

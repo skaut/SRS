@@ -1,10 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Structure;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Kdyby\Doctrine\EntityRepository;
-
 
 /**
  * Třída spravující slevy.
@@ -15,21 +17,18 @@ class DiscountRepository extends EntityRepository
 {
     /**
      * Vrací slevu podle id.
-     * @param $id
-     * @return Discount|null
      */
-    public function findById($id)
+    public function findById(?int $id) : ?Discount
     {
         return $this->findOneBy(['id' => $id]);
     }
 
     /**
      * Uloží slevu.
-     * @param Discount $discount
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function save(Discount $discount)
+    public function save(Discount $discount) : void
     {
         $this->_em->persist($discount);
         $this->_em->flush();
@@ -37,11 +36,10 @@ class DiscountRepository extends EntityRepository
 
     /**
      * Odstraní slevu.
-     * @param Discount $discount
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function remove(Discount $discount)
+    public function remove(Discount $discount) : void
     {
         $this->_em->remove($discount);
         $this->_em->flush();

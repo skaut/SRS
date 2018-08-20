@@ -1,12 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
+use App\Model\CMS\Content\BlocksContent;
 use App\Model\Program\BlockRepository;
 use App\Model\Program\CategoryRepository;
 use Nette\Application\UI\Control;
-
 
 /**
  * Komponenta s podrobnostmi o programových blocích.
@@ -22,45 +23,38 @@ class BlocksContentControl extends Control
     private $categoryRepository;
 
 
-    /**
-     * BlocksContentControl constructor.
-     * @param BlockRepository $blockRepository
-     * @param CategoryRepository $categoryRepository
-     */
     public function __construct(BlockRepository $blockRepository, CategoryRepository $categoryRepository)
     {
         parent::__construct();
 
-        $this->blockRepository = $blockRepository;
+        $this->blockRepository    = $blockRepository;
         $this->categoryRepository = $categoryRepository;
     }
 
-    /**
-     * @param $content
-     */
-    public function render($content)
+    public function render(BlocksContent $content) : void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/blocks_content.latte');
 
-        $template->heading = $content->getHeading();
-        $template->categories = $this->categoryRepository->findAllOrderedByName();
-        $template->allBlocks = $this->blockRepository->findAllOrderedByName();
+        $template->heading             = $content->getHeading();
+        $template->categories          = $this->categoryRepository->findAllOrderedByName();
+        $template->allBlocks           = $this->blockRepository->findAllOrderedByName();
         $template->uncategorizedBlocks = $this->blockRepository->findAllUncategorizedOrderedByName();
 
         $selectedBlockId = $this->getPresenter()->getParameter('blockId');
 
-        if ($selectedBlockId != NULL) {
-            $selectedBlock = $this->blockRepository->findById($selectedBlockId);
+        if ($selectedBlockId !== null) {
+            $selectedBlock                   = $this->blockRepository->findById((int) $selectedBlockId);
             $this->template->selectedBlockId = $selectedBlockId;
-            $this->template->selectedBlock = $selectedBlock;
-            if ($selectedBlock->getCategory())
+            $this->template->selectedBlock   = $selectedBlock;
+            if ($selectedBlock->getCategory()) {
                 $this->template->selectedCategoryId = $selectedBlock->getCategory()->getId();
-            else
+            } else {
                 $this->template->selectedCategoryId = 'uncategorized';
+            }
         } else {
-            $this->template->selectedBlockId = NULL;
-            $this->template->selectedCategoryId = NULL;
+            $this->template->selectedBlockId    = null;
+            $this->template->selectedCategoryId = null;
         }
 
         $template->render();

@@ -1,14 +1,17 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
 use App\Model\Settings\Settings;
+use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
-
 
 /**
  * Formulář pro nastavení dokladů.
@@ -19,7 +22,7 @@ use Nette\Application\UI\Form;
 class PaymentProofForm
 {
     use Nette\SmartObject;
-    
+
     /** @var BaseForm */
     private $baseFormFactory;
 
@@ -27,30 +30,24 @@ class PaymentProofForm
     private $settingsRepository;
 
 
-    /**
-     * PaymentProofForm constructor.
-     * @param BaseForm $baseForm
-     * @param SettingsRepository $settingsRepository
-     */
     public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository)
     {
-        $this->baseFormFactory = $baseForm;
+        $this->baseFormFactory    = $baseForm;
         $this->settingsRepository = $settingsRepository;
     }
 
     /**
      * Vytvoří formulář.
-     * @return Form
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
-    public function create()
+    public function create() : Form
     {
         $form = $this->baseFormFactory->create();
 
-        $renderer = $form->getRenderer();
+        $renderer                                   = $form->getRenderer();
         $renderer->wrappers['control']['container'] = 'div class="col-sm-7 col-xs-7"';
-        $renderer->wrappers['label']['container'] = 'div class="col-sm-5 col-xs-5 control-label"';
+        $renderer->wrappers['label']['container']   = 'div class="col-sm-5 col-xs-5 control-label"';
 
         $form->addTextArea('company', 'admin.configuration.company')
             ->addRule(Form::FILLED, 'admin.configuration.company_empty');
@@ -71,7 +68,7 @@ class PaymentProofForm
             'company' => $this->settingsRepository->getValue(Settings::COMPANY),
             'ico' => $this->settingsRepository->getValue(Settings::ICO),
             'accountant' => $this->settingsRepository->getValue(Settings::ACCOUNTANT),
-            'printLocation' => $this->settingsRepository->getValue(Settings::PRINT_LOCATION)
+            'printLocation' => $this->settingsRepository->getValue(Settings::PRINT_LOCATION),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -81,11 +78,12 @@ class PaymentProofForm
 
     /**
      * Zpracuje formulář.
-     * @param Form $form
-     * @param array $values
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws \Throwable
      */
-    public function processForm(Form $form, array $values)
+    public function processForm(Form $form, \stdClass $values) : void
     {
         $this->settingsRepository->setValue(Settings::COMPANY, $values['company']);
         $this->settingsRepository->setValue(Settings::ICO, $values['ico']);

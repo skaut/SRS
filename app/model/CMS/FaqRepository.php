@@ -1,10 +1,14 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\CMS;
 
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Kdyby\Doctrine\EntityRepository;
-
+use const PHP_INT_MAX;
 
 /**
  * Třída spravující FAQ.
@@ -16,22 +20,19 @@ class FaqRepository extends EntityRepository
 {
     /**
      * Vrací otázku podle id.
-     * @param $id
-     * @return Faq|null
      */
-    public function findById($id)
+    public function findById(?int $id) : ?Faq
     {
         return $this->findOneBy(['id' => $id]);
     }
 
     /**
      * Vrací id poslední otázky.
-     * @return int
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
-    public function findLastId()
+    public function findLastId() : int
     {
-        return $this->createQueryBuilder('f')
+        return (int) $this->createQueryBuilder('f')
             ->select('MAX(f.id)')
             ->getQuery()
             ->getSingleScalarResult();
@@ -39,12 +40,11 @@ class FaqRepository extends EntityRepository
 
     /**
      * Vrací poslední pozici.
-     * @return int
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
-    public function findLastPosition()
+    public function findLastPosition() : int
     {
-        return $this->createQueryBuilder('f')
+        return (int) $this->createQueryBuilder('f')
             ->select('MAX(f.position)')
             ->getQuery()
             ->getSingleScalarResult();
@@ -52,24 +52,24 @@ class FaqRepository extends EntityRepository
 
     /**
      * Vrací publikované otázky seřazené podle pozice.
-     * @return array
+     * @return Faq[]
      */
-    public function findPublishedOrderedByPosition()
+    public function findPublishedOrderedByPosition() : array
     {
-        return $this->findBy(['public' => TRUE], ['position' => 'ASC']);
+        return $this->findBy(['public' => true], ['position' => 'ASC']);
     }
 
     /**
      * Uloží otázku.
-     * @param Faq $faq
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws NonUniqueResultException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function save(Faq $faq)
+    public function save(Faq $faq) : void
     {
-        if (!$faq->getPosition())
+        if (! $faq->getPosition()) {
             $faq->setPosition($this->findLastPosition() + 1);
+        }
 
         $this->_em->persist($faq);
         $this->_em->flush();
@@ -77,11 +77,10 @@ class FaqRepository extends EntityRepository
 
     /**
      * Odstraní otázku.
-     * @param Faq $faq
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function remove(Faq $faq)
+    public function remove(Faq $faq) : void
     {
         $this->_em->remove($faq);
         $this->_em->flush();
@@ -89,17 +88,14 @@ class FaqRepository extends EntityRepository
 
     /**
      * Přesune otázku mezi otázky s id prevId a nextId.
-     * @param $itemId
-     * @param $prevId
-     * @param $nextId
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function sort($itemId, $prevId, $nextId)
+    public function sort(int $itemId, int $prevId, int $nextId) : void
     {
         $item = $this->find($itemId);
-        $prev = $prevId ? $this->find($prevId) : NULL;
-        $next = $nextId ? $this->find($nextId) : NULL;
+        $prev = $prevId ? $this->find($prevId) : null;
+        $next = $nextId ? $this->find($nextId) : null;
 
         $itemsToMoveUp = $this->createQueryBuilder('i')
             ->where('i.position <= :position')
@@ -129,7 +125,7 @@ class FaqRepository extends EntityRepository
 
         if ($prev) {
             $item->setPosition($prev->getPosition() + 1);
-        } else if ($next) {
+        } elseif ($next) {
             $item->setPosition($next->getPosition() - 1);
         } else {
             $item->setPosition(1);

@@ -1,11 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ProgramModule\Presenters;
 
 use App\AdminModule\ProgramModule\Components\IProgramCategoriesGridControlFactory;
+use App\AdminModule\ProgramModule\Components\ProgramCategoriesGridControl;
 use App\Model\ACL\Permission;
-
+use Nette\Application\AbortException;
 
 /**
  * Presenter obsluhující správu kategorií.
@@ -22,16 +24,16 @@ class CategoriesPresenter extends ProgramBasePresenter
 
 
     /**
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
-    public function startup()
+    public function startup() : void
     {
         parent::startup();
 
         $this->checkPermission(Permission::MANAGE_CATEGORIES);
     }
 
-    protected function createComponentProgramCategoriesGrid()
+    protected function createComponentProgramCategoriesGrid() : ProgramCategoriesGridControl
     {
         return $this->programCategoriesGridControlFactory->create();
     }

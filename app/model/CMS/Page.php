@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\CMS;
@@ -11,7 +12,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
-
+use function implode;
+use function in_array;
 
 /**
  * Entita stránky.
@@ -51,12 +53,12 @@ class Page
      * @ORM\Column(type="boolean")
      * @var bool
      */
-    protected $public = FALSE;
+    protected $public = false;
 
     /**
      * Role, které mají na stránku přístup.
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="pages")
-     * @var Collection
+     * @var Collection|Role[]
      */
     protected $roles;
 
@@ -64,142 +66,108 @@ class Page
      * Obsahy na stránce.
      * @ORM\OneToMany(targetEntity="\App\Model\CMS\Content\Content", mappedBy="page", cascade={"persist"})
      * @ORM\OrderBy({"position" = "ASC"})
-     * @var Collection
+     * @var Collection|Content[]
      */
     protected $contents;
 
 
-    /**
-     * Page constructor.
-     * @param string $name
-     * @param string $slug
-     */
-    public function __construct($name, $slug)
+    public function __construct(string $name, string $slug)
     {
-        $this->name = $name;
-        $this->slug = $slug;
-        $this->roles = new ArrayCollection();
+        $this->name     = $name;
+        $this->slug     = $slug;
+        $this->roles    = new ArrayCollection();
         $this->contents = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId() : int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName() : string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName($name)
+    public function setName(string $name) : void
     {
         $this->name = $name;
     }
 
-    /**
-     * @return string
-     */
-    public function getSlug()
+    public function getSlug() : string
     {
         return $this->slug;
     }
 
-    /**
-     * @param string $slug
-     */
-    public function setSlug($slug)
+    public function setSlug(string $slug) : void
     {
         $this->slug = $slug;
     }
 
-    /**
-     * @return int
-     */
-    public function getPosition()
+    public function getPosition() : int
     {
         return $this->position;
     }
 
-    /**
-     * @param int $position
-     */
-    public function setPosition($position)
+    public function setPosition(int $position) : void
     {
         $this->position = $position;
     }
 
-    /**
-     * @return bool
-     */
-    public function isPublic()
+    public function isPublic() : bool
     {
         return $this->public;
     }
 
-    /**
-     * @param bool $public
-     */
-    public function setPublic($public)
+    public function setPublic(bool $public) : void
     {
         $this->public = $public;
     }
 
     /**
-     * @return Collection
+     * @return Collection|Role[]
      */
-    public function getRoles()
+    public function getRoles() : Collection
     {
         return $this->roles;
     }
 
-    /**
-     * @return string
-     */
-    public function getRolesText(): string
+    public function getRolesText() : string
     {
-        return implode(', ', $this->roles->map(function (Role $role) {return $role->getName();})->toArray());
+        return implode(', ', $this->roles->map(function (Role $role) {
+            return $role->getName();
+        })->toArray());
     }
 
     /**
-     * @param Collection $roles
+     * @param Collection|Role[] $roles
      */
-    public function setRoles($roles)
+    public function setRoles(Collection $roles) : void
     {
         $this->roles->clear();
-        foreach ($roles as $role)
+        foreach ($roles as $role) {
             $this->roles->add($role);
+        }
     }
 
-    /**
-     * @param Role $role
-     */
-    public function addRole($role)
+    public function addRole(Role $role) : void
     {
         $this->roles->add($role);
     }
 
     /**
      * Vrací obsahy v oblasti.
-     * @param null $area
-     * @return Collection
+     * @return Collection|Content[]
      * @throws PageException
      */
-    public function getContents($area = NULL)
+    public function getContents(?string $area = null) : Collection
     {
-        if ($area === NULL)
+        if ($area === null) {
             return $this->contents;
-        if (!in_array($area, Content::$areas))
-            throw new PageException("Area {$area} not defined.");
+        }
+        if (! in_array($area, Content::$areas)) {
+            throw new PageException('Area ' . $area . ' not defined.');
+        }
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('area', $area))
             ->orderBy(['position' => 'ASC']);
@@ -208,32 +176,31 @@ class Page
 
     /**
      * Má stránka nějaký obsah v oblasti?
-     * @param $area
-     * @return bool
      * @throws PageException
      */
-    public function hasContents($area)
+    public function hasContents(string $area) : bool
     {
-        if (!in_array($area, Content::$areas))
-            throw new PageException("Area {$area} not defined.");
+        if (! in_array($area, Content::$areas)) {
+            throw new PageException('Area ' . $area . ' not defined.');
+        }
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('area', $area));
-        return !$this->contents->matching($criteria)->isEmpty();
+        return ! $this->contents->matching($criteria)->isEmpty();
     }
 
     /**
      * Je stránka viditelná pro uživatele v rolích?
-     * @param $roleNames
-     * @return bool
+     * @param string[] $roleNames
      */
-    public function isAllowedForRoles($roleNames)
+    public function isAllowedForRoles(array $roleNames) : bool
     {
         foreach ($roleNames as $roleName) {
             foreach ($this->roles as $role) {
-                if ($roleName == $role->getName())
-                    return TRUE;
+                if ($roleName === $role->getName()) {
+                    return true;
+                }
             }
         }
-        return FALSE;
+        return false;
     }
 }

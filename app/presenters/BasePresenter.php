@@ -1,10 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Presenters;
 
+use Kdyby\Translation\Translator;
 use Nette;
-
+use WebLoader\Nette\LoaderFactory;
 
 /**
  * BasePresenter.
@@ -15,13 +17,13 @@ use Nette;
 abstract class BasePresenter extends Nette\Application\UI\Presenter
 {
     /**
-     * @var \WebLoader\Nette\LoaderFactory
+     * @var LoaderFactory
      * @inject
      */
     public $webLoader;
 
     /**
-     * @var \Kdyby\Translation\Translator
+     * @var Translator
      * @inject
      */
     public $translator;
@@ -29,19 +31,15 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
     /**
      * Zobrazí přeloženou zprávu.
-     * @param $message
-     * @param string $type
-     * @param null $icon
-     * @param null $count
-     * @param array $parameters
-     * @return \stdClass
+     * @param string[] $parameters
      */
-    public function flashMessage($message, $type = 'info', $icon = NULL, $count = NULL, $parameters = [])
+    public function flashMessage($message, $type = 'info', ?string $icon = null, ?int $count = null, array $parameters = []) : \stdClass
     {
-        if ($icon)
+        if ($icon) {
             return parent::flashMessage('<span class="fa fa-' . $icon . '"></span> ' .
                 $this->translator->translate($message, $count, $parameters), $type);
-        else
-            return parent::flashMessage($this->translator->translate($message, $count, $parameters), $type);
+        }
+
+        return parent::flashMessage($this->translator->translate($message, $count, $parameters), $type);
     }
 }

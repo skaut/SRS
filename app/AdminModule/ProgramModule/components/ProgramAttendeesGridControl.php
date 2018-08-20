@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\AdminModule\ProgramModule\Components;
@@ -11,16 +12,22 @@ use App\Model\Mailing\TemplateVariable;
 use App\Model\Program\Program;
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\Settings;
+use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\MailService;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
+use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Ublaboo\DataGrid\DataGrid;
-
+use Ublaboo\DataGrid\Exception\DataGridException;
+use Ublaboo\Mailing\Exception\MailingException;
+use Ublaboo\Mailing\Exception\MailingMailCreationException;
 
 /**
  * Komponenta pro správu účastníků programu.
@@ -63,60 +70,54 @@ class ProgramAttendeesGridControl extends Control
     private $sessionSection;
 
 
-    /**
-     * ProgramAttendeesGridControl constructor.
-     * @param Translator $translator
-     * @param ProgramRepository $programRepository
-     * @param UserRepository $userRepository
-     * @param SettingsRepository $settingsRepository
-     * @param MailService $mailService
-     * @param Session $session
-     */
-    public function __construct(Translator $translator, ProgramRepository $programRepository,
-                                UserRepository $userRepository, SettingsRepository $settingsRepository,
-                                MailService $mailService, Session $session)
-    {
+    public function __construct(
+        Translator $translator,
+        ProgramRepository $programRepository,
+        UserRepository $userRepository,
+        SettingsRepository $settingsRepository,
+        MailService $mailService,
+        Session $session
+    ) {
         parent::__construct();
 
-        $this->translator = $translator;
-        $this->programRepository = $programRepository;
-        $this->userRepository = $userRepository;
+        $this->translator         = $translator;
+        $this->programRepository  = $programRepository;
+        $this->userRepository     = $userRepository;
         $this->settingsRepository = $settingsRepository;
-        $this->mailService = $mailService;
+        $this->mailService        = $mailService;
 
-        $this->session = $session;
+        $this->session        = $session;
         $this->sessionSection = $session->getSection('srs');
     }
 
     /**
      * Vykreslí komponentu.
      */
-    public function render()
+    public function render() : void
     {
         $this->template->render(__DIR__ . '/templates/program_attendees_grid.latte');
     }
 
     /**
      * Vytvoří komponentu.
-     * @param $name
-     * @throws \Ublaboo\DataGrid\Exception\DataGridException
+     * @throws DataGridException
      */
-    public function createComponentProgramAttendeesGrid($name)
+    public function createComponentProgramAttendeesGrid(string $name) : void
     {
-        $programId = $this->getPresenter()->getParameter('programId');
-        if (!$programId)
+        $programId = (int) $this->getPresenter()->getParameter('programId');
+        if (! $programId) {
             $programId = $this->sessionSection->programId;
+        }
 
         $program = $this->programRepository->findById($programId);
 
-
         $grid = new DataGrid($this, $name);
 
-        if (!$program) {
+        if (! $program) {
             $grid->setDataSource([]);
         } else {
             $this->program = $program;
-            $this->user = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
+            $this->user    = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
 
             $grid->setTranslator($this->translator);
 
@@ -146,13 +147,12 @@ class ProgramAttendeesGridControl extends Control
 
             $grid->setDataSource($qb);
 
-
-            $grid->addGroupAction('admin.program.blocks_attendees_register')->onSelect[] = [$this, 'groupRegister'];
+            $grid->addGroupAction('admin.program.blocks_attendees_register')->onSelect[]   = [$this, 'groupRegister'];
             $grid->addGroupAction('admin.program.blocks_attendees_unregister')->onSelect[] = [$this, 'groupUnregister'];
 
             $grid->addColumnText('displayName', 'admin.program.blocks_attendees_name')
                 ->setFilterText();
-			
+
             $grid->addColumnText('attends', 'admin.program.blocks_attendees_attends', 'pid')
                 ->setRenderer(function ($item) {
                     return $item->getPrograms()->contains($this->program)
@@ -160,17 +160,18 @@ class ProgramAttendeesGridControl extends Control
                         : $this->translator->translate('admin.common.no');
                 })
                 ->setFilterSelect(['' => 'admin.common.all', 1 => 'admin.common.yes', 0 => 'admin.common.no'])
-                ->setCondition(function ($qb, $value) {
-                    if ($value === '')
+                ->setCondition(function ($qb, $value) : void {
+                    if ($value === '') {
                         return;
-                    elseif ($value == 1)
+                    } elseif ($value === 1) {
                         $qb->innerJoin('u.programs', 'pro')
                             ->andWhere('pro.id = :proid')
                             ->setParameter('proid', $this->program->getId());
-                    elseif ($value == 0)
+                    } elseif ($value === 0) {
                         $qb->leftJoin('u.programs', 'pro')
                             ->andWhere('(pro.id != :proid OR pro.id IS NULL)')
                             ->setParameter('proid', $this->program->getId());
+                    }
                 })
                 ->setTranslateOptions();
 
@@ -186,7 +187,7 @@ class ProgramAttendeesGridControl extends Control
                 $grid->addAction('register', 'admin.program.blocks_attendees_register', 'register!')
                     ->setClass('btn btn-xs btn-success ajax');
                 $grid->allowRowsAction('register', function ($item) {
-                    return !$this->program->isAttendee($item);
+                    return ! $this->program->isAttendee($item);
                 });
 
                 $grid->addAction('unregister', 'admin.program.blocks_attendees_unregister', 'unregister!')
@@ -200,33 +201,32 @@ class ProgramAttendeesGridControl extends Control
 
     /**
      * Přihlásí uživatele na program.
-     * @param $id
-     * @throws \App\Model\Settings\SettingsException
-     * @throws \Nette\Application\AbortException
+     * @throws SettingsException
+     * @throws AbortException
      * @throws \Throwable
-     * @throws \Ublaboo\Mailing\Exception\MailingException
-     * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
+     * @throws MailingException
+     * @throws MailingMailCreationException
      */
-    public function handleRegister($id)
+    public function handleRegister(int $id) : void
     {
         $editedUser = $this->userRepository->findById($id);
 
         $p = $this->getPresenter();
 
-        $user = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
+        $user    = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
         $program = $this->programRepository->findById($this->sessionSection->programId);
 
-        if (!$user->isAllowedModifyBlock($program->getBlock()))
+        if (! $user->isAllowedModifyBlock($program->getBlock())) {
             $p->flashMessage('admin.program.blocks_edit_not_allowed', 'danger');
-        elseif ($editedUser->hasProgramBlock($program->getBlock()))
+        } elseif ($editedUser->hasProgramBlock($program->getBlock())) {
             $p->flashMessage('admin.program.blocks_attendees_already_has_block', 'danger');
-        else {
+        } else {
             $editedUser->addProgram($program);
             $this->userRepository->save($editedUser);
 
             $this->mailService->sendMailFromTemplate($editedUser, '', Template::PROGRAM_REGISTERED, [
                 TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-                TemplateVariable::PROGRAM_NAME => $program->getBlock()->getName()
+                TemplateVariable::PROGRAM_NAME => $program->getBlock()->getName(),
             ]);
 
             $p->flashMessage('admin.program.blocks_attendees_registered', 'success');
@@ -242,31 +242,30 @@ class ProgramAttendeesGridControl extends Control
 
     /**
      * Odhlásí uživatele z programu.
-     * @param $id
-     * @throws \App\Model\Settings\SettingsException
-     * @throws \Nette\Application\AbortException
+     * @throws SettingsException
+     * @throws AbortException
      * @throws \Throwable
-     * @throws \Ublaboo\Mailing\Exception\MailingException
-     * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
+     * @throws MailingException
+     * @throws MailingMailCreationException
      */
-    public function handleUnregister($id)
+    public function handleUnregister(int $id) : void
     {
         $editedUser = $this->userRepository->findById($id);
 
         $p = $this->getPresenter();
 
-        $user = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
+        $user    = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
         $program = $this->programRepository->findById($this->sessionSection->programId);
 
-        if (!$user->isAllowedModifyBlock($program->getBlock()))
+        if (! $user->isAllowedModifyBlock($program->getBlock())) {
             $p->flashMessage('admin.program.blocks_edit_not_allowed', 'danger');
-        else {
+        } else {
             $editedUser->removeProgram($program);
             $this->userRepository->save($editedUser);
 
             $this->mailService->sendMailFromTemplate($editedUser, '', Template::PROGRAM_UNREGISTERED, [
                 TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-                TemplateVariable::PROGRAM_NAME => $program->getBlock()->getName()
+                TemplateVariable::PROGRAM_NAME => $program->getBlock()->getName(),
             ]);
 
             $p->flashMessage('admin.program.blocks_attendees_unregistered', 'success');
@@ -282,17 +281,21 @@ class ProgramAttendeesGridControl extends Control
 
     /**
      * Hromadně přihlásí program uživatelům.
-     * @param array $ids
-     * @throws \Nette\Application\AbortException
+     * @param int[] $ids
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws AbortException
      */
-    public function groupRegister(array $ids)
+    public function groupRegister(array $ids) : void
     {
         foreach ($ids as $id) {
             $user = $this->userRepository->findById($id);
-            if (!$user->hasProgramBlock($this->program->getBlock())) {
-                $user->addProgram($this->program);
-                $this->userRepository->save($user);
+            if ($user->hasProgramBlock($this->program->getBlock())) {
+                continue;
             }
+
+            $user->addProgram($this->program);
+            $this->userRepository->save($user);
         }
 
         $p = $this->getPresenter();
@@ -308,10 +311,12 @@ class ProgramAttendeesGridControl extends Control
 
     /**
      * Hromadně odhlásí program uživatelům.
-     * @param array $ids
-     * @throws \Nette\Application\AbortException
+     * @param int[] $ids
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws AbortException
      */
-    public function groupUnregister(array $ids)
+    public function groupUnregister(array $ids) : void
     {
         foreach ($ids as $id) {
             $user = $this->userRepository->findById($id);
