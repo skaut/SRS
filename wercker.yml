@@ -74,9 +74,9 @@ build:
             name: upload code coverage to codecov.io
             code: mv tests/_output/coverage.xml clover.xml && bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN
 
-        - script:
-            name: acceptance testing
-            code: php phing.phar tests-acceptance
+#        - script:
+#            name: acceptance testing
+#            code: php phing.phar tests-acceptance
 
 deploy:
     steps:
