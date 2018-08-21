@@ -22,17 +22,17 @@ build:
             name: install dependencies
             code: composer install
 
-#        - script:
-#            name: check coding standard
-#            code: phing coding-standard
+        - script:
+            name: check coding standard
+            code: php phing.phar coding-standard
 
         - script:
             name: wait for MySQL connection
             code: sleep 10
 
-#        - script:
-#            name: run unit & integration tests
-#            code: phing tests-with-coverage
+        - script:
+            name: run unit & integration tests
+            code: php phing.phar tests-with-coverage
 
         - appnific/expandenv:
             input_file: app/config/config.ci.local.neon
@@ -69,14 +69,14 @@ build:
 #        - script:
 #            name: give mysql and phantomjs some time
 #            code: sleep 5
-#
-#        - script:
-#            name: upload code coverage to codecov.io
-#            code: mv tests/_output/coverage.xml clover.xml && bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN
-#
+
+        - script:
+            name: upload code coverage to codecov.io
+            code: mv tests/_output/coverage.xml clover.xml && bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN
+
 #        - script:
 #            name: acceptance testing
-#            code: phing tests-acceptance
+#            code: php phing.phar tests-acceptance
 
 deploy:
     steps:
@@ -93,4 +93,4 @@ deploy:
 
         - script:
             name: build and deploy tarball
-            code: phing deploy
+            code: php phing.phar deploy

@@ -7,6 +7,7 @@ class LoginCest
 {
     public function _before(AcceptanceTester $I)
     {
+        $I->install();
     }
 
     public function _after(AcceptanceTester $I)

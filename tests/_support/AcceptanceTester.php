@@ -27,6 +27,18 @@ class AcceptanceTester extends Actor
     private const LOGIN = 'srs-test';
     private const PASSWORD = 'test-srs1';
 
+    public function install() : void
+    {
+        $I = $this;
+        $I->amOnPage('/install/');
+        $I->click('Přihlásit se');
+        $I->see('skautIS přihlášení do aplikace');
+        $I->fillField('(//input)[9]', self::LOGIN);
+        $I->fillField('(//input)[10]', self::PASSWORD);
+        $I->click('//button');
+        $I->waitForText('Instalace dokončena');
+    }
+
     /**
      * @throws Exception
      */

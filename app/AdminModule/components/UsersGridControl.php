@@ -500,7 +500,7 @@ class UsersGridControl extends Control
     /**
      * Hromadně nastaví role.
      * @param int[] $ids
-     * @throws int[] $value
+     * @param int[] $value
      * @throws \Throwable
      */
     public function groupChangeRoles(array $ids, array $value) : void
