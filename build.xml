@@ -5,6 +5,7 @@
         <exec command="composer install" passthru="true"/>
         <!--<phingcall target="static-analysis"/>-->
         <phingcall target="coding-standard"/>
+        <exec command="php www/index.php orm:validate-schema --skip-sync"/>
         <phingcall target="tests"/>
     </target>
 
@@ -170,6 +171,6 @@
     </target>
 
     <target name="coding-standard">
-        <exec command="vendor/bin/phpcs" passthru="true"/>
+        <exec command="vendor/bin/phpcs" passthru="true" checkreturn="true"/>
     </target>
 </project>

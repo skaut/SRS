@@ -24,7 +24,7 @@ build:
 
         - script:
             name: check coding standard
-            code: phing coding-standard
+            code: php phing.phar coding-standard
 
         - script:
             name: wait for MySQL connection
