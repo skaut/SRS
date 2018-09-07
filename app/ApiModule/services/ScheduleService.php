@@ -220,7 +220,7 @@ class ScheduleService
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_room_occupied', null, ['name' => $room->getName()]));
         } elseif ($block->getMandatory() === 2 && $this->programRepository->hasOverlappingProgram($program, $start, $end)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_auto_register_not_allowed'));
-        } elseif ($this->programRepository->hasOverlappingAutoRegisterProgram($program, $start, $end)) {
+        } elseif ($this->programRepository->hasOverlappingAutoRegisteredProgram($program, $start, $end)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_auto_register_not_allowed'));
         } else {
             $program->setBlock($block);
@@ -398,7 +398,7 @@ class ScheduleService
         $blockDetailDTO->setDurationMinutes($block->getDuration() % 60);
         $blockDetailDTO->setCapacity($block->getCapacity());
         $blockDetailDTO->setMandatory($block->getMandatory() > 0);
-        $blockDetailDTO->setAutoRegister($block->getMandatory() === 2);
+        $blockDetailDTO->setAutoRegistered($block->getMandatory() === 2);
         $blockDetailDTO->setPerex($block->getPerex());
         $blockDetailDTO->setDescription($block->getDescription());
         $blockDetailDTO->setProgramsCount($block->getProgramsCount());

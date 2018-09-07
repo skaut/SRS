@@ -51,8 +51,9 @@ class Program
     protected $start;
 
 
-    public function __construct()
+    public function __construct(Block $block)
     {
+        $this->block = $block;
         $this->attendees = new ArrayCollection();
     }
 
@@ -64,11 +65,6 @@ class Program
     public function getBlock() : Block
     {
         return $this->block;
-    }
-
-    public function setBlock(Block $block) : void
-    {
-        $this->block = $block;
     }
 
     /**

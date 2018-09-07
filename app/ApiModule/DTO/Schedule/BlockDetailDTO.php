@@ -80,7 +80,7 @@ class BlockDetailDTO
      * @JMS\Type("boolean")
      * @var bool
      */
-    private $autoRegister;
+    private $autoRegistered;
 
     /**
      * @JMS\Type("string")
@@ -213,14 +213,14 @@ class BlockDetailDTO
         $this->mandatory = $mandatory;
     }
 
-    public function isAutoRegister() : bool
+    public function isAutoRegistered() : bool
     {
-        return $this->autoRegister;
+        return $this->autoRegistered;
     }
 
-    public function setAutoRegister(bool $autoRegister) : void
+    public function setAutoRegistered(bool $autoRegistered) : void
     {
-        $this->autoRegister = $autoRegister;
+        $this->autoRegistered = $autoRegistered;
     }
 
     public function getPerex() : string

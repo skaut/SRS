@@ -162,7 +162,7 @@ class ProgramRepository extends EntityRepository
     /**
      * Překrývá se s jiným programem, který je automaticky zapisovaný.
      */
-    public function hasOverlappingAutoRegisterProgram(Program $program, \DateTime $start, \DateTime $end) : bool
+    public function hasOverlappingAutoRegisteredProgram(Program $program, \DateTime $start, \DateTime $end) : bool
     {
         $qb = $this->createQueryBuilder('p')
             ->select('p.id')

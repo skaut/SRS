@@ -7,6 +7,7 @@ namespace App\AdminModule\ProgramModule\Forms;
 use App\AdminModule\Forms\BaseForm;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
+use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Block;
 use App\Model\Program\BlockRepository;
 use App\Model\Program\CategoryRepository;
@@ -147,14 +148,14 @@ class BlockForm
 
         $form->addCheckbox('mandatory', 'admin.program.blocks_mandatory_form')
             ->addCondition(Form::EQUAL, true)
-            ->toggle('autoRegisterCheckbox');
+            ->toggle('autoRegisteredCheckbox');
 
-        $form->addCheckbox('autoRegister', 'admin.program.blocks_auto_register')
-            ->setOption('id', 'autoRegisterCheckbox')
+        $form->addCheckbox('autoRegistered', 'admin.program.blocks_auto_register')
+            ->setOption('id', 'autoRegisteredCheckbox')
             ->setAttribute('data-toggle', 'tooltip')
             ->setAttribute('title', $form->getTranslator()->translate('admin.program.blocks_auto_register_note'))
             ->addCondition(Form::FILLED)
-            ->addRule([$this, 'validateAutoRegister'], 'admin.program.blocks_auto_register_not_allowed');
+            ->addRule([$this, 'validateAutoRegistered'], 'admin.program.blocks_auto_register_not_allowed');
 
         $form->addTextArea('perex', 'admin.program.blocks_perex_form')
             ->addCondition(Form::FILLED)
@@ -184,7 +185,7 @@ class BlockForm
                 'duration' => $this->block->getDuration(),
                 'capacity' => $this->block->getCapacity(),
                 'mandatory' => $this->block->getMandatory() > 0,
-                'autoRegister' => $this->block->getMandatory() === 2,
+                'autoRegistered' => $this->block->getMandatory() === 2,
                 'perex' => $this->block->getPerex(),
                 'description' => $this->block->getDescription(),
                 'tools' => $this->block->getTools(),
@@ -215,72 +216,38 @@ class BlockForm
             return;
         }
 
-        $this->blockRepository->getEntityManager()->transactional(function ($em) use ($values) : void {
-            if (! $this->block) {
-                if (! $this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK)) {
-                    return;
-                }
-                $this->block = new Block();
-            } elseif (! $this->user->isAllowedModifyBlock($this->block)) {
+        if (! $this->block) {
+            if (! $this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK)) {
                 return;
             }
+            $this->block = new Block();
+        } elseif (! $this->user->isAllowedModifyBlock($this->block)) {
+            return;
+        }
 
-            $oldMandatory = $this->block->getMandatory();
-            $oldCategory  = $this->block->getCategory();
-            $oldSubevent  = $this->block->getSubevent();
+        if ($this->subeventsExists) {
+            $subevent = $values['subevent'] !== '' ? $this->subeventRepository->findById($values['subevent']) : null;
+            $this->block->setSubevent($subevent);
+        } else {
+            $this->block->setSubevent($this->subeventRepository->findImplicit());
+        }
+        $category = $values['category'] !== '' ? $this->categoryRepository->findById($values['category']) : null;
+        $lector   = $values['lector'] !== '' ? $this->userRepository->findById($values['lector']) : null;
+        $capacity = $values['capacity'] !== '' ? $values['capacity'] : null;
+        $mandatory = $values['mandatory'] ? ($values['autoRegistered'] ? ProgramMandatoryType::AUTO_REGISTERED : ProgramMandatoryType::MANDATORY) : ProgramMandatoryType::VOLUNTARY;
 
-            $category = $values['category'] !== '' ? $this->categoryRepository->findById($values['category']) : null;
-            $lector   = $values['lector'] !== '' ? $this->userRepository->findById($values['lector']) : null;
-            $capacity = $values['capacity'] !== '' ? $values['capacity'] : null;
 
-            $this->block->setName($values['name']);
-            $this->block->setCategory($category);
-            $this->block->setLector($lector);
-            $this->block->setDuration($values['duration']);
-            $this->block->setCapacity($capacity);
-            $this->block->setMandatory($values['mandatory'] ? ((array_key_exists('autoRegister', $values) && $values['autoRegister']) ? 2 : 1) : 0);
-            $this->block->setPerex($values['perex']);
-            $this->block->setDescription($values['description']);
-            $this->block->setTools($values['tools']);
-
-            if ($this->subeventsExists) {
-                $subevent = $values['subevent'] !== '' ? $this->subeventRepository->findById($values['subevent']) : null;
-                $this->block->setSubevent($subevent);
-            } else {
-                $this->block->setSubevent($this->subeventRepository->findImplicit());
-            }
-
-            $this->blockRepository->save($this->block);
-
-            //odstraneni ucastniku, pokud se odstrani automaticke prihlasovani
-            if ($oldMandatory === 2 && $this->block->getMandatory() !== 2) {
-                foreach ($this->block->getPrograms() as $program) {
-                    $program->removeAllAttendees();
-                }
-            }
-
-            //pridani ucastniku, pokud je pridano automaticke prihlaseni
-            if ($oldMandatory !== 2 && $this->block->getMandatory() === 2) {
-                foreach ($this->block->getPrograms() as $program) {
-                    $program->setAttendees($this->userRepository->findProgramAllowed($program));
-                }
-            }
-
-            //aktualizace ucastniku pri zmene kategorie nebo podakce
-            if ($oldMandatory === $this->block->getMandatory() && (
-                    $this->block->getCategory() !== $oldCategory) || ($this->block->getSubevent() !== $oldSubevent)
-            ) {
-                $this->programService->updateUsersPrograms(new ArrayCollection($this->userRepository->findAll()));
-            }
-
-            $this->blockRepository->save($this->block);
-        });
+        if (! $this->block) {
+            $this->programService->createBlock($values['name'], $subevent, $category, $lector, $values['duration'], $capacity, $mandatory, $values['perex'], $values['description'], $values['tools']);
+        } else {
+            $this->programService->updateBlock($this->block, $values['name'], $subevent, $category, $lector, $values['duration'], $capacity, $mandatory, $values['perex'], $values['description'], $values['tools']);
+        }
     }
 
     /**
      * Ověří, zda může být program automaticky přihlašovaný.
      */
-    public function validateAutoRegister() : bool
+    public function validateAutoRegistered() : bool
     {
         if ($this->block) {
             if ($this->block->getMandatory() !== 2 && ($this->block->getProgramsCount() > 1 ||
