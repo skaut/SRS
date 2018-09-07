@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Enums;
 
-class RegisterProgramsType
+class ProgramRegistrationType
 {
     /**
      * Zapisování programů povoleno.

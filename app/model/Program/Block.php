@@ -60,11 +60,11 @@ class Block
     protected $subevent;
 
     /**
-     * Povinnost. 0 - nepovinný, 1 - povinný, 2 - automaticky zapisovaný.
-     * @ORM\Column(type="integer")
-     * @var int
+     * Povinnost.
+     * @ORM\Column(type="string")
+     * @var string
      */
-    protected $mandatory = 0;
+    protected $mandatory;
 
     /**
      * Délka programového bloku.
@@ -183,12 +183,12 @@ class Block
         $this->subevent = $subevent;
     }
 
-    public function getMandatory() : int
+    public function getMandatory() : string
     {
         return $this->mandatory;
     }
 
-    public function setMandatory(int $mandatory) : void
+    public function setMandatory(string $mandatory) : void
     {
         $this->mandatory = $mandatory;
     }

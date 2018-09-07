@@ -9,7 +9,7 @@ use App\Model\ACL\Resource;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\CMS\Content\ProgramsContent;
-use App\Model\Enums\RegisterProgramsType;
+use App\Model\Enums\ProgramRegistrationType;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
@@ -66,8 +66,8 @@ class ProgramsContentControl extends Control
         $template->backlink = $this->getPresenter()->getHttpRequest()->getUrl()->getPath();
 
         $template->registerProgramsAllowed       = $this->programService->isAllowedRegisterPrograms();
-        $template->registerProgramsNotAllowed    = $this->settingsRepository->getValue(Settings::REGISTER_PROGRAMS_TYPE) === RegisterProgramsType::NOT_ALLOWED;
-        $template->registerProgramsAllowedFromTo = $this->settingsRepository->getValue(Settings::REGISTER_PROGRAMS_TYPE) === RegisterProgramsType::ALLOWED_FROM_TO;
+        $template->registerProgramsNotAllowed    = $this->settingsRepository->getValue(Settings::REGISTER_PROGRAMS_TYPE) === ProgramRegistrationType::NOT_ALLOWED;
+        $template->registerProgramsAllowedFromTo = $this->settingsRepository->getValue(Settings::REGISTER_PROGRAMS_TYPE) === ProgramRegistrationType::ALLOWED_FROM_TO;
         $template->registerProgramsFrom          = $this->settingsRepository->getDateTimeValue(Settings::REGISTER_PROGRAMS_FROM);
         $template->registerProgramsTo            = $this->settingsRepository->getDateTimeValue(Settings::REGISTER_PROGRAMS_TO);
 

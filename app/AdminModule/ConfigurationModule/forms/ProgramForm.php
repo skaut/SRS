@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
-use App\Model\Enums\RegisterProgramsType;
+use App\Model\Enums\ProgramRegistrationType;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
@@ -63,7 +63,7 @@ class ProgramForm
             $this->prepareRegisterProgramsTypeOptions()
         );
         $registerProgramsTypeSelect
-            ->addCondition($form::EQUAL, RegisterProgramsType::ALLOWED_FROM_TO)
+            ->addCondition($form::EQUAL, ProgramRegistrationType::ALLOWED_FROM_TO)
             ->toggle('register-programs-from')
             ->toggle('register-programs-to');
 
@@ -150,7 +150,7 @@ class ProgramForm
     private function prepareRegisterProgramsTypeOptions() : array
     {
         $options = [];
-        foreach (RegisterProgramsType::$types as $type) {
+        foreach (ProgramRegistrationType::$types as $type) {
             $options[$type] = 'common.register_programs_type.' . $type;
         }
         return $options;
