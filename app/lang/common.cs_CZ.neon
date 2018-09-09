@@ -181,7 +181,7 @@ export:
         to: "Do"
         program_name: "Název programu"
         room: "Místnost"
-        lector: "Lektor"
+        lectors: "Lektoři"
         occupancy: "Obsazenost"
 
 mailing:

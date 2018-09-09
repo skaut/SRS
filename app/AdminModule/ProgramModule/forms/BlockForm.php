@@ -18,11 +18,10 @@ use App\Model\Structure\SubeventRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ProgramService;
-use Doctrine\Common\Collections\ArrayCollection;
+use App\Utils\Validators;
 use Doctrine\ORM\NonUniqueResultException;
 use Nette;
 use Nette\Application\UI\Form;
-use function array_key_exists;
 
 /**
  * Formulář pro úpravu programového bloku.
@@ -76,6 +75,9 @@ class BlockForm
     /** @var ProgramService */
     private $programService;
 
+    /** @var Validators */
+    private $validators;
+
 
     public function __construct(
         BaseForm $baseFormFactory,
@@ -85,7 +87,8 @@ class BlockForm
         SettingsRepository $settingsRepository,
         ProgramRepository $programRepository,
         SubeventRepository $subeventRepository,
-        ProgramService $programService
+        ProgramService $programService,
+        Validators $validators
     ) {
         $this->baseFormFactory    = $baseFormFactory;
         $this->blockRepository    = $blockRepository;
@@ -95,6 +98,7 @@ class BlockForm
         $this->programRepository  = $programRepository;
         $this->subeventRepository = $subeventRepository;
         $this->programService     = $programService;
+        $this->validators         = $validators;
     }
 
     /**
@@ -124,17 +128,8 @@ class BlockForm
         $form->addSelect('category', 'admin.program.blocks_category', $this->categoryRepository->getCategoriesOptions())
             ->setPrompt('');
 
-        if ($this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS)) {
-            $lectorsOptions = $this->userRepository->getLectorsOptions();
-        } else {
-            $lectorsOptions = [$this->user->getId() => $this->user->getDisplayName()];
-        }
-
-        $lectorColumn = $form->addSelect('lector', 'admin.program.blocks_lector', $lectorsOptions);
-
-        if ($this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS)) {
-            $lectorColumn->setPrompt('');
-        }
+        $form->addMultiSelect('lectors', 'admin.program.blocks_lectors', $this->userRepository->getLectorsOptions())
+            ->setDisabled(! $this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS));
 
         $form->addText('duration', 'admin.program.blocks_duration_form')
             ->addRule(Form::FILLED, 'admin.program.blocks_duration_empty')
@@ -181,7 +176,7 @@ class BlockForm
                 'id' => $id,
                 'name' => $this->block->getName(),
                 'category' => $this->block->getCategory() ? $this->block->getCategory()->getId() : null,
-                'lector' => $this->block->getLector() ? $this->block->getLector()->getId() : null,
+                'lectors' => $this->userRepository->findUsersIds($this->block->getLectors()),
                 'duration' => $this->block->getDuration(),
                 'capacity' => $this->block->getCapacity(),
                 'mandatory' => $this->block->getMandatory() > 0,
@@ -220,27 +215,24 @@ class BlockForm
             if (! $this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK)) {
                 return;
             }
-            $this->block = new Block();
         } elseif (! $this->user->isAllowedModifyBlock($this->block)) {
             return;
         }
 
         if ($this->subeventsExists) {
             $subevent = $values['subevent'] !== '' ? $this->subeventRepository->findById($values['subevent']) : null;
-            $this->block->setSubevent($subevent);
         } else {
-            $this->block->setSubevent($this->subeventRepository->findImplicit());
+            $subevent = $this->subeventRepository->findImplicit();
         }
         $category = $values['category'] !== '' ? $this->categoryRepository->findById($values['category']) : null;
-        $lector   = $values['lector'] !== '' ? $this->userRepository->findById($values['lector']) : null;
+        $lectors   = $this->userRepository->findUsersByIds($values['lectors']);
         $capacity = $values['capacity'] !== '' ? $values['capacity'] : null;
         $mandatory = $values['mandatory'] ? ($values['autoRegistered'] ? ProgramMandatoryType::AUTO_REGISTERED : ProgramMandatoryType::MANDATORY) : ProgramMandatoryType::VOLUNTARY;
 
-
         if (! $this->block) {
-            $this->programService->createBlock($values['name'], $subevent, $category, $lector, $values['duration'], $capacity, $mandatory, $values['perex'], $values['description'], $values['tools']);
+            $this->programService->createBlock($values['name'], $subevent, $category, $lectors, $values['duration'], $capacity, $mandatory, $values['perex'], $values['description'], $values['tools']);
         } else {
-            $this->programService->updateBlock($this->block, $values['name'], $subevent, $category, $lector, $values['duration'], $capacity, $mandatory, $values['perex'], $values['description'], $values['tools']);
+            $this->programService->updateBlock($this->block, $values['name'], $subevent, $category, $lectors, $values['duration'], $capacity, $mandatory, $values['perex'], $values['description'], $values['tools']);
         }
     }
 
@@ -249,19 +241,6 @@ class BlockForm
      */
     public function validateAutoRegistered() : bool
     {
-        if ($this->block) {
-            if ($this->block->getMandatory() !== 2 && ($this->block->getProgramsCount() > 1 ||
-                    ($this->block->getProgramsCount() === 1 && $this->programRepository->hasOverlappingProgram(
-                        $this->block->getPrograms()->first(),
-                        $this->block->getPrograms()->first()->getStart(),
-                        $this->block->getPrograms()->first()->getEnd()
-                    )
-                    )
-                )
-            ) {
-                return false;
-            }
-        }
-        return true;
+        return $this->validators->validateBlockAutoRegistered($this->block);
     }
 }

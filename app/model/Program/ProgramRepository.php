@@ -138,7 +138,7 @@ class ProgramRepository extends EntityRepository
     /**
      * Překrývá se program s jiným programem?
      */
-    public function hasOverlappingProgram(Program $program, \DateTime $start, \DateTime $end) : bool
+    public function hasOverlappingProgram(?int $programId, \DateTime $start, \DateTime $end) : bool
     {
         $qb = $this->createQueryBuilder('p')
             ->select('p.id')
@@ -147,14 +147,10 @@ class ProgramRepository extends EntityRepository
                 "(p.start < :end) AND (DATE_ADD(p.start, (b.duration * 60), 'second') > :start)",
                 "(p.start < :end) AND (:start < (DATE_ADD(p.start, (b.duration * 60), 'second')))"
             ))
+            ->andWhere('p.id != :pid')
             ->setParameter('start', $start)
-            ->setParameter('end', $end);
-
-        if ($program->getId()) {
-            $qb = $qb
-                ->andWhere('p.id != :pid')
-                ->setParameter('pid', $program->getId());
-        }
+            ->setParameter('end', $end)
+            ->setParameter('pid', $programId);
 
         return ! empty($qb->getQuery()->getResult());
     }
@@ -162,7 +158,7 @@ class ProgramRepository extends EntityRepository
     /**
      * Překrývá se s jiným programem, který je automaticky zapisovaný.
      */
-    public function hasOverlappingAutoRegisteredProgram(Program $program, \DateTime $start, \DateTime $end) : bool
+    public function hasOverlappingAutoRegisteredProgram(?int $programId, \DateTime $start, \DateTime $end) : bool
     {
         $qb = $this->createQueryBuilder('p')
             ->select('p.id')
@@ -172,14 +168,10 @@ class ProgramRepository extends EntityRepository
                 "(p.start < :end) AND (:start < (DATE_ADD(p.start, (b.duration * 60), 'second')))"
             ))
             ->andWhere('b.mandatory = 2')
+            ->andWhere('p.id != :pid')
             ->setParameter('start', $start)
-            ->setParameter('end', $end);
-
-        if ($program->getId()) {
-            $qb = $qb
-                ->andWhere('p.id != :pid')
-                ->setParameter('pid', $program->getId());
-        }
+            ->setParameter('end', $end)
+            ->setParameter('pid', $programId);
 
         return ! empty($qb->getQuery()->getResult());
     }

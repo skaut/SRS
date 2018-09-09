@@ -75,10 +75,17 @@ class User
 
     /**
      * Lektorované bloky.
-     * @ORM\OneToMany(targetEntity="\App\Model\Program\Block", mappedBy="lector", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="\App\Model\Program\Block", mappedBy="lectors", cascade={"persist"})
      * @var Collection|Block[]
      */
     protected $lecturersBlocks;
+
+    /**
+     * Programové bloky, které jsou pro uživatele povinné, ale nemá je zapsané.
+     * @ORM\ManyToMany(targetEntity="\App\Model\Program\Block")
+     * @var Collection|Block[]
+     */
+    protected $notRegisteredMandatoryBlocks;
 
     /**
      * Schválený.
@@ -305,6 +312,7 @@ class User
         $this->roles           = new ArrayCollection();
         $this->programs        = new ArrayCollection();
         $this->lecturersBlocks = new ArrayCollection();
+        $this->notRegisteredMandatoryBlocks = new ArrayCollection();
     }
 
     public function getId() : int
@@ -577,6 +585,32 @@ class User
     public function getLecturersBlocks() : Collection
     {
         return $this->lecturersBlocks;
+    }
+
+    /**
+     * @return Collection|Block[]
+     */
+    public function getNotRegisteredMandatoryBlocks() : Collection
+    {
+        return $this->notRegisteredMandatoryBlocks;
+    }
+
+    public function getNotRegisteredMandatoryBlocksText() : string {
+        return implode(', ', $this->notRegisteredMandatoryBlocks->map(function (Block $block) {
+            return $block->getName();
+        })->toArray());
+    }
+
+    public function getNotRegisteredMandatoryBlocksCount() : int {
+        return $this->notRegisteredMandatoryBlocks->count();
+    }
+
+    /**
+     * @param Collection|Block[] $notRegisteredMandatoryBlocks
+     */
+    public function setNotRegisteredMandatoryBlocks(Collection $notRegisteredMandatoryBlocks) : void
+    {
+        $this->notRegisteredMandatoryBlocks = $notRegisteredMandatoryBlocks;
     }
 
     public function addProgram(Program $program) : void

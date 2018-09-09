@@ -6,6 +6,10 @@ namespace App\Utils;
 
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
+use App\Model\Enums\ProgramMandatoryType;
+use App\Model\Enums\ProgramRegistrationType;
+use App\Model\Program\Block;
+use App\Model\Program\ProgramRepository;
 use App\Model\Structure\Subevent;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\Application;
@@ -25,11 +29,14 @@ class Validators
     /** @var SubeventRepository */
     private $subeventRepository;
 
+    /** @var ProgramRepository */
+    private $programRepository;
 
-    public function __construct(RoleRepository $roleRepository, SubeventRepository $subeventRepository)
+    public function __construct(RoleRepository $roleRepository, SubeventRepository $subeventRepository, ProgramRepository $programRepository)
     {
         $this->roleRepository     = $roleRepository;
         $this->subeventRepository = $subeventRepository;
+        $this->programRepository = $programRepository;
     }
 
     /**
@@ -187,6 +194,25 @@ class Validators
                     return false;
                 }
             }
+        }
+        return true;
+    }
+
+    /**
+     * Ověří, zda může být program automaticky přihlašovaný.
+     */
+    public function validateBlockAutoRegistered(Block $block) : bool
+    {
+        if ($block->getMandatory() !== ProgramMandatoryType::AUTO_REGISTERED
+            && ($block->getProgramsCount() > 1
+                || ($block->getProgramsCount() === 1 && $this->programRepository->hasOverlappingProgram(
+                    $block->getPrograms()->first(),
+                    $block->getPrograms()->first()->getStart(),
+                    $block->getPrograms()->first()->getEnd())
+                )
+            )
+        ) {
+            return false;
         }
         return true;
     }

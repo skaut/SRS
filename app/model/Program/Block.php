@@ -40,10 +40,10 @@ class Block
 
     /**
      * Lektor.
-     * @ORM\ManyToOne(targetEntity="\App\Model\User\User", inversedBy="lecturersBlocks")
-     * @var User
+     * @ORM\ManyToMany(targetEntity="\App\Model\User\User", inversedBy="lecturersBlocks")
+     * @var Collection|User[]
      */
-    protected $lector;
+    protected $lectors;
 
     /**
      * Kategorie bloku.
@@ -105,6 +105,7 @@ class Block
     public function __construct()
     {
         $this->programs = new ArrayCollection();
+        $this->lectors = new ArrayCollection();
     }
 
     public function getId() : int
@@ -153,14 +154,21 @@ class Block
         return $this->programs->count();
     }
 
-    public function getLector() : ?User
+    public function getLectors() : Collection
     {
-        return $this->lector;
+        return $this->lectors;
     }
 
-    public function setLector(?User $lector) : void
+    public function getLectorsText() : string
     {
-        $this->lector = $lector;
+        return implode(', ', $this->lectors->map(function (User $lector) {
+            return $lector->getDisplayName();
+        })->toArray());
+    }
+
+    public function setLectors(Collection $lectors) : void
+    {
+        $this->lectors = $lectors;
     }
 
     public function getCategory() : ?Category

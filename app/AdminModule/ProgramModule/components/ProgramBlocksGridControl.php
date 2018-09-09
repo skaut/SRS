@@ -6,6 +6,7 @@ namespace App\AdminModule\ProgramModule\Components;
 
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
+use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Block;
 use App\Model\Program\BlockRepository;
 use App\Model\Program\CategoryRepository;
@@ -16,6 +17,8 @@ use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\UserRepository;
 use App\Services\ExcelExportService;
+use App\Services\ProgramService;
+use App\Utils\Validators;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
@@ -59,6 +62,12 @@ class ProgramBlocksGridControl extends Control
     /** @var ExcelExportService */
     private $excelExportService;
 
+    /** @var ProgramService */
+    private $programService;
+
+    /** @var Validators */
+    private $validators;
+
     /** @var Session */
     private $session;
 
@@ -75,6 +84,8 @@ class ProgramBlocksGridControl extends Control
         ProgramRepository $programRepository,
         SubeventRepository $subeventRepository,
         ExcelExportService $excelExportService,
+        ProgramService $programService,
+        Validators $validators,
         Session $session
     ) {
         parent::__construct();
@@ -87,6 +98,8 @@ class ProgramBlocksGridControl extends Control
         $this->programRepository  = $programRepository;
         $this->subeventRepository = $subeventRepository;
         $this->excelExportService = $excelExportService;
+        $this->programService     = $programService;
+        $this->validators         = $validators;
 
         $this->session        = $session;
         $this->sessionSection = $session->getSection('srs');
@@ -112,7 +125,6 @@ class ProgramBlocksGridControl extends Control
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
         $grid->setDataSource($this->blockRepository->createQueryBuilder('b')
-            ->addSelect('l')->leftJoin('b.lector', 'l')
             ->addSelect('c')->leftJoin('b.category', 'c')
             ->addSelect('s')->leftJoin('b.subevent', 's'));
         $grid->setDefaultSort(['name' => 'ASC']);
@@ -134,9 +146,13 @@ class ProgramBlocksGridControl extends Control
             ->setSortable('c.name')
             ->setFilterMultiSelect($this->categoryRepository->getCategoriesOptions(), 'c.id');
 
-        $grid->addColumnText('lector', 'admin.program.blocks_lector', 'lector.displayName')
-            ->setSortable('l.displayName')
-            ->setFilterMultiSelect($this->userRepository->getLectorsOptions(), 'l.id');
+        $grid->addColumnText('lectors', 'admin.program.blocks_lectors', 'lectorsText')
+            ->setFilterMultiSelect($this->userRepository->getLectorsOptions())
+            ->setCondition(function ($qb, $values) : void {
+                $qb->join('b.lectors', 'l')
+                    ->andWhere('l.id IN (:lids)')
+                    ->setParameter('lids', $values);
+            });
 
         $grid->addColumnNumber('duration', 'admin.program.blocks_duration')
             ->setSortable()
@@ -152,13 +168,13 @@ class ProgramBlocksGridControl extends Control
 
         $columnMandatory = $grid->addColumnStatus('mandatory', 'admin.program.blocks_mandatory');
         $columnMandatory
-            ->addOption(0, 'admin.program.blocks_mandatory_voluntary')
+            ->addOption(ProgramMandatoryType::VOLUNTARY, 'admin.program.blocks_mandatory_voluntary')
             ->setClass('btn-primary')
             ->endOption()
-            ->addOption(1, 'admin.program.blocks_mandatory_mandatory')
+            ->addOption(ProgramMandatoryType::MANDATORY, 'admin.program.blocks_mandatory_mandatory')
             ->setClass('btn-danger')
             ->endOption()
-            ->addOption(2, 'admin.program.blocks_mandatory_auto_register')
+            ->addOption(ProgramMandatoryType::AUTO_REGISTERED, 'admin.program.blocks_mandatory_auto_register')
             ->setClass('btn-warning')
             ->endOption()
             ->onChange[] = [$this, 'changeMandatory'];
@@ -167,14 +183,14 @@ class ProgramBlocksGridControl extends Control
             ->setSortable()
             ->setFilterSelect([
                 '' => 'admin.common.all',
-                0 => 'admin.program.blocks_mandatory_voluntary',
-                1 => 'admin.program.blocks_mandatory_mandatory',
-                2 => 'admin.program.blocks_mandatory_auto_register',
+                ProgramMandatoryType::VOLUNTARY => 'admin.program.blocks_mandatory_voluntary',
+                ProgramMandatoryType::MANDATORY => 'admin.program.blocks_mandatory_mandatory',
+                ProgramMandatoryType::AUTO_REGISTERED => 'admin.program.blocks_mandatory_auto_register',
             ])
             ->setTranslateOptions();
 
         $grid->addColumnNumber('programsCount', 'admin.program.blocks_programs_count')
-            ->setRenderer(function ($row) {
+            ->setRenderer(function (Block $row) {
                 return $row->getProgramsCount();
             });
 
@@ -219,7 +235,7 @@ class ProgramBlocksGridControl extends Control
             $this->redirect('this');
         }
 
-        $this->blockRepository->remove($block);
+        $this->programService->removeBlock($block);
 
         $this->getPresenter()->flashMessage('admin.program.blocks_deleted', 'success');
 
@@ -232,42 +248,18 @@ class ProgramBlocksGridControl extends Control
      * @throws OptimisticLockException
      * @throws AbortException
      */
-    public function changeMandatory(int $id, int $mandatory) : void
+    public function changeMandatory(int $id, string $mandatory) : void
     {
         $block = $this->blockRepository->findById($id);
 
         $p = $this->getPresenter();
 
-        if (! $p->dbuser->isAllowedModifyBlock($block)) {
+        if (! $this->isAllowedModifyBlock($block)) {
             $p->flashMessage('admin.program.blocks_change_mandatory_denied', 'danger');
-        } elseif ($mandatory === 2 && $block->getMandatory() !== 2 &&
-            ($block->getProgramsCount() > 1 ||
-                ($block->getProgramsCount() === 1 && $this->programRepository->hasOverlappingProgram(
-                    $block->getPrograms()->first(),
-                    $block->getPrograms()->first()->getStart(),
-                    $block->getPrograms()->first()->getEnd()
-                )
-                )
-            )
-        ) {
+        } elseif(! $this->validators->validateBlockAutoRegistered($block)) {
             $p->flashMessage('admin.program.blocks_change_mandatory_auto_register_not_allowed', 'danger');
         } else {
-            //odstraneni ucastniku, pokud se odstrani automaticke prihlasovani
-            if ($block->getMandatory() === 2 && $mandatory !== 2) {
-                foreach ($block->getPrograms() as $program) {
-                    $program->removeAllAttendees();
-                }
-            }
-            //pridani ucastniku, pokud je pridana automaticke prihlaseni
-            if ($mandatory === 2 && $block->getMandatory() !== 2) {
-                foreach ($block->getPrograms() as $program) {
-                    $program->setAttendees($this->userRepository->findProgramAllowed($program));
-                }
-            }
-
-            $block->setMandatory($mandatory);
-            $this->blockRepository->save($block);
-
+            $this->programService->updateBlockMandatory($block, $mandatory);
             $p->flashMessage('admin.program.blocks_changed_mandatory', 'success');
         }
 

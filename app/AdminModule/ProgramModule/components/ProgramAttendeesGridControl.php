@@ -9,6 +9,7 @@ use App\Model\ACL\Resource;
 use App\Model\Enums\ApplicationState;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
+use App\Model\Program\Block;
 use App\Model\Program\Program;
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\Settings;
@@ -17,6 +18,7 @@ use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\MailService;
+use App\Services\ProgramService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
@@ -63,6 +65,9 @@ class ProgramAttendeesGridControl extends Control
     /** @var MailService */
     private $mailService;
 
+    /** @var ProgramService */
+    private $programService;
+
     /** @var Session */
     private $session;
 
@@ -76,6 +81,7 @@ class ProgramAttendeesGridControl extends Control
         UserRepository $userRepository,
         SettingsRepository $settingsRepository,
         MailService $mailService,
+        ProgramService $programService,
         Session $session
     ) {
         parent::__construct();
@@ -84,7 +90,7 @@ class ProgramAttendeesGridControl extends Control
         $this->programRepository  = $programRepository;
         $this->userRepository     = $userRepository;
         $this->settingsRepository = $settingsRepository;
-        $this->mailService        = $mailService;
+        $this->programService     = $programService;
 
         $this->session        = $session;
         $this->sessionSection = $session->getSection('srs');
@@ -209,26 +215,18 @@ class ProgramAttendeesGridControl extends Control
      */
     public function handleRegister(int $id) : void
     {
-        $editedUser = $this->userRepository->findById($id);
+        $user = $this->userRepository->findById($id);
 
         $p = $this->getPresenter();
 
-        $user    = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
         $program = $this->programRepository->findById($this->sessionSection->programId);
 
-        if (! $user->isAllowedModifyBlock($program->getBlock())) {
+        if (! $this->isAllowedModifyProgram($program)) {
             $p->flashMessage('admin.program.blocks_edit_not_allowed', 'danger');
-        } elseif ($editedUser->hasProgramBlock($program->getBlock())) {
+        } elseif ($user->hasProgramBlock($program->getBlock())) {
             $p->flashMessage('admin.program.blocks_attendees_already_has_block', 'danger');
         } else {
-            $editedUser->addProgram($program);
-            $this->userRepository->save($editedUser);
-
-            $this->mailService->sendMailFromTemplate($editedUser, '', Template::PROGRAM_REGISTERED, [
-                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-                TemplateVariable::PROGRAM_NAME => $program->getBlock()->getName(),
-            ]);
-
+            $this->programService->registerProgram($user, $program, true);
             $p->flashMessage('admin.program.blocks_attendees_registered', 'success');
         }
 
@@ -250,24 +248,16 @@ class ProgramAttendeesGridControl extends Control
      */
     public function handleUnregister(int $id) : void
     {
-        $editedUser = $this->userRepository->findById($id);
+        $user = $this->userRepository->findById($id);
 
         $p = $this->getPresenter();
 
-        $user    = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
         $program = $this->programRepository->findById($this->sessionSection->programId);
 
-        if (! $user->isAllowedModifyBlock($program->getBlock())) {
+        if (! $this->isAllowedModifyProgram($program)) {
             $p->flashMessage('admin.program.blocks_edit_not_allowed', 'danger');
         } else {
-            $editedUser->removeProgram($program);
-            $this->userRepository->save($editedUser);
-
-            $this->mailService->sendMailFromTemplate($editedUser, '', Template::PROGRAM_UNREGISTERED, [
-                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-                TemplateVariable::PROGRAM_NAME => $program->getBlock()->getName(),
-            ]);
-
+            $this->programService->unregisterProgram($user, $program, true);
             $p->flashMessage('admin.program.blocks_attendees_unregistered', 'success');
         }
 
@@ -288,18 +278,20 @@ class ProgramAttendeesGridControl extends Control
      */
     public function groupRegister(array $ids) : void
     {
-        foreach ($ids as $id) {
-            $user = $this->userRepository->findById($id);
-            if ($user->hasProgramBlock($this->program->getBlock())) {
-                continue;
+        $p = $this->getPresenter();
+
+        if (! $this->isAllowedModifyProgram($this->program)) {
+            $p->flashMessage('admin.program.blocks_edit_not_allowed', 'danger');
+        } else {
+            foreach ($ids as $id) {
+                $user = $this->userRepository->findById($id);
+                if (! $user->hasProgramBlock($this->program->getBlock())) {
+                    $this->programService->registerProgram($user, $this->program, true);
+                }
             }
 
-            $user->addProgram($this->program);
-            $this->userRepository->save($user);
+            $p->flashMessage('admin.program.blocks_attendees_group_action_registered', 'success');
         }
-
-        $p = $this->getPresenter();
-        $p->flashMessage('admin.program.blocks_attendees_group_action_registered', 'success');
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
@@ -318,14 +310,20 @@ class ProgramAttendeesGridControl extends Control
      */
     public function groupUnregister(array $ids) : void
     {
-        foreach ($ids as $id) {
-            $user = $this->userRepository->findById($id);
-            $user->removeProgram($this->program);
-            $this->userRepository->save($user);
-        }
-
         $p = $this->getPresenter();
-        $p->flashMessage('admin.program.blocks_attendees_group_action_unregistered', 'success');
+
+        if (! $this->isAllowedModifyProgram($this->program)) {
+            $p->flashMessage('admin.program.blocks_edit_not_allowed', 'danger');
+        } else {
+            foreach ($ids as $id) {
+                $user = $this->userRepository->findById($id);
+                if ($user->hasProgramBlock($this->program->getBlock())) {
+                    $this->programService->unregisterProgram($user, $this->program, true);
+                }
+            }
+
+            $p->flashMessage('admin.program.blocks_attendees_group_action_unregistered', 'success');
+        }
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
@@ -333,5 +331,10 @@ class ProgramAttendeesGridControl extends Control
         } else {
             $this->redirect('this');
         }
+    }
+
+    private function isAllowedModifyProgram(Program $program) : bool {
+        $user = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
+        return $user->isAllowedModifyBlock($program->getBlock());
     }
 }

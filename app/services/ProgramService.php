@@ -8,6 +8,8 @@ use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Enums\ProgramRegistrationType;
+use App\Model\Mailing\Template;
+use App\Model\Mailing\TemplateVariable;
 use App\Model\Program\Block;
 use App\Model\Program\BlockRepository;
 use App\Model\Program\Category;
@@ -67,52 +69,83 @@ class ProgramService
         $this->categoryRepository = $categoryRepository;
     }
 
+    /**
+     * @param Collection|User[] $lectors
+     * @throws \Throwable
+     */
     public function createBlock(string $name,
                                 Subevent $subevent,
                                 ?Category $category,
-                                ?User $lector,
+                                Collection $lectors,
                                 int $duration,
                                 ?int $capacity,
                                 string $mandatory,
                                 string $perex,
                                 string $description,
                                 string $tools) : void {
+        $this->blockRepository->getEntityManager()->transactional(function () use ($name, $subevent, $category, $lectors, $duration, $capacity, $mandatory, $perex, $description, $tools) : void {
+            $block = new Block();
 
+            $block->setName($name);
+            $block->setSubevent($subevent);
+            $block->setCategory($category);
+            $block->setLectors($lectors);
+            $block->setDuration($duration);
+            $block->setCapacity($capacity);
+            $block->setMandatory($mandatory);
+            $block->setPerex($perex);
+            $block->setDescription($description);
+            $block->setTools($tools);
+
+            $this->blockRepository->save($block);
+
+            $this->programService->updateUsersPrograms(new ArrayCollection($this->userRepository->findAll()));
+        });
     }
 
+    /**
+     * @param Collection|User[] $lectors
+     * @throws \Throwable
+     */
     public function updateBlock(Block $block,
                                 string $name,
                                 Subevent $subevent,
                                 ?Category $category,
-                                ?User $lector,
+                                Collection $lectors,
                                 int $duration,
                                 ?int $capacity,
                                 string $mandatory,
                                 string $perex,
                                 string $description,
                                 string $tools) : void {
-        $this->blockRepository->getEntityManager()->transactional(function ($em) use ($block, $name, $subevent, $category, $lector, $duration, $capacity, $mandatory, $perex, $description, $tools) : void {
+        $this->blockRepository->getEntityManager()->transactional(function () use ($block, $name, $subevent, $category, $lectors, $duration, $capacity, $mandatory, $perex, $description, $tools) : void {
             $oldMandatory = $block->getMandatory();
             $oldSubevent = $block->getSubevent();
             $oldCategory = $block->getCategory();
 
-            $block->setMandatory($mandatory);
+            $block->setName($name);
             $block->setSubevent($subevent);
             $block->setCategory($category);
+            $block->setLectors($lectors);
+            $block->setDuration($duration);
+            $block->setCapacity($capacity);
+            $block->setPerex($perex);
+            $block->setDescription($description);
+            $block->setTools($tools);
 
             $this->blockRepository->save($block);
 
+            $this->updateBlockMandatory($block, $mandatory);
+
             //aktualizace ucastniku pri zmene kategorie nebo podakce
-            if ($oldMandatory === $this->block->getMandatory() && (
-                    $this->block->getCategory() !== $oldCategory) || ($this->block->getSubevent() !== $oldSubevent)
-            ) {
+            if ($mandatory === $oldMandatory && (($category !== $oldCategory) || ($subevent !== $oldSubevent))) {
                 $this->programService->updateUsersPrograms(new ArrayCollection($this->userRepository->findAll()));
             }
         });
     }
 
     public function updateBlockMandatory(Block $block, string $mandatory) : void {
-        $this->blockRepository->getEntityManager()->transactional(function ($em) use ($block, $mandatory) : void {
+        $this->blockRepository->getEntityManager()->transactional(function () use ($block, $mandatory) : void {
             $oldMandatory = $block->getMandatory();
 
             $block->setMandatory($mandatory);
@@ -137,28 +170,92 @@ class ProgramService
         });
     }
 
-    public function removeBlock(Block $block) {
-
+    public function removeBlock(Block $block) : void {
+        $this->blockRepository->remove($block);
     }
 
-    public function createProgram(Block $block, Room $room, \DateTime $start) : void {
+    public function createCategory(string $name, Collection $registerableRoles) : void {
+        $category = new Category();
 
+        $category->setName($name);
+        $category->setRegisterableRoles($registerableRoles);
+
+        $this->categoryRepository->save($category);
+    }
+
+    public function updateCategory(Category $category, string $name, Collection $registerableRoles) : void {
+        $this->blockRepository->getEntityManager()->transactional(function ($em) use ($category, $name, $registerableRoles) : void {
+            $category->setName($name);
+            $category->setRegisterableRoles($registerableRoles);
+
+            $this->categoryRepository->save($category);
+
+            $this->programService->updateUsersPrograms(new ArrayCollection($this->userRepository->findAll()));
+
+            $this->categoryRepository->save($category);
+        });
+    }
+
+    public function removeCategory(Category $category) : void {
+        $this->categoryRepository->getEntityManager()->transactional(function ($em) use ($category) : void {
+            $this->categoryRepository->remove($category);
+
+            $this->programService->updateUsersPrograms(new ArrayCollection($this->userRepository->findAll()));
+        });
+    }
+
+    public function createProgram(Block $block, Room $room, \DateTime $start) : Program {
+        $program = new Program($block);
+
+        $program->setRoom($room);
+        $program->setStart($start);
+
+        $this->blockRepository->getEntityManager()->transactional(function ($em) use ($program, $block) : void {
+            $this->programRepository->save($program);
+
+            if ($block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED) {
+                foreach ($this->userRepository->findProgramAllowed($program) as $attendee) {
+                    $program->addAttendee($attendee);
+                }
+                $this->programRepository->save($program);
+            }
+        });
+
+        return $program;
     }
 
     public function updateProgram(Program $program, Room $room, \DateTime $start) : void {
-
+        $program->setRoom($room);
+        $program->setStart($start);
+        $this->programRepository->save($program);
     }
 
     public function removeProgram(Program $program) : void {
-
+        $this->programRepository->remove($program);
     }
 
-    public function registerProgram(User $user, Program $program) : void {
+    public function registerProgram(User $user, Program $program, bool $sendEmail = false) : void {
+        $user->addProgram($program);
+        $this->userRepository->save($this->user);
 
+        if ($sendEmail) {
+            $this->mailService->sendMailFromTemplate($user, '', Template::PROGRAM_REGISTERED, [
+                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
+                TemplateVariable::PROGRAM_NAME => $program->getBlock()->getName(),
+            ]);
+        }
     }
 
-    public function unregisterProgram(User $user, Program $program) : void {
+    public function unregisterProgram(User $user, Program $program, bool $sendEmail = false) : void {
+        $user->removeProgram($program);
+        $this->userRepository->save($this->user);
 
+        if ($sendEmail) {
+            $this->mailService->sendMailFromTemplate($user, '', Template::PROGRAM_UNREGISTERED, [
+                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
+                TemplateVariable::PROGRAM_NAME => $program->getBlock()->getName(),
+            ]);
+        }
     }
 
     /**

@@ -52,6 +52,18 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Vrací id uživatelů.
+     * @param Collection|User[] $users
+     * @return int[]
+     */
+    public function findUsersIds(Collection $users) : array
+    {
+        return array_map(function (User $user) {
+            return $user->getId();
+        }, $users->toArray());
+    }
+
+    /**
      * Vrací jména uživatelů obsahující zadaný text, seřazená podle zobrazovaného jména.
      * @return string[]
      */

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\ApiModule\Services;
 
+use ApiModule\DTO\Schedule\LectorDetailDTO;
 use ApiModule\DTO\Schedule\RoomDetailDTO;
 use App\ApiModule\DTO\Schedule\BlockDetailDTO;
 use App\ApiModule\DTO\Schedule\CalendarConfigDTO;
@@ -12,6 +13,7 @@ use App\ApiModule\DTO\Schedule\ProgramSaveDTO;
 use App\ApiModule\DTO\Schedule\ResponseDTO;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
+use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Block;
 use App\Model\Program\BlockRepository;
 use App\Model\Program\Program;
@@ -197,15 +199,10 @@ class ScheduleService
      */
     public function saveProgram(ProgramSaveDTO $programSaveDTO) : ResponseDTO
     {
-        if ($programSaveDTO->getId()) {
-            $program = $this->programRepository->findById($programSaveDTO->getId());
-        } else {
-            $program = new Program();
-        }
-
         $responseDTO = new ResponseDTO();
         $responseDTO->setStatus('danger');
 
+        $programId = $programSaveDTO->getId();
         $block = $this->blockRepository->findById($programSaveDTO->getBlockId());
         $room  = $programSaveDTO->getRoomId() ? $this->roomRepository->findById($programSaveDTO->getRoomId()) : null;
         $start = $programSaveDTO->getStart();
@@ -216,23 +213,18 @@ class ScheduleService
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_user_not_allowed_manage'));
         } elseif (! $this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_not_allowed_modfify'));
-        } elseif ($room && $this->roomRepository->hasOverlappingProgram($room, $program, $start, $end)) {
+        } elseif ($room && $this->roomRepository->hasOverlappingProgram($room, $programId, $start, $end)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_room_occupied', null, ['name' => $room->getName()]));
-        } elseif ($block->getMandatory() === 2 && $this->programRepository->hasOverlappingProgram($program, $start, $end)) {
+        } elseif ($block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED && $this->programRepository->hasOverlappingProgram($programId, $start, $end)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_auto_register_not_allowed'));
-        } elseif ($this->programRepository->hasOverlappingAutoRegisteredProgram($program, $start, $end)) {
+        } elseif ($this->programRepository->hasOverlappingAutoRegisteredProgram($programId, $start, $end)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_auto_register_not_allowed'));
         } else {
-            $program->setBlock($block);
-            $program->setRoom($room);
-            $program->setStart($start);
-            $this->programRepository->save($program);
-
-            if ($block->getMandatory() === 2) {
-                foreach ($this->userRepository->findProgramAllowed($program) as $attendee) {
-                    $program->addAttendee($attendee);
-                }
-                $this->programRepository->save($program);
+            if ($programId) {
+                $program = $this->programRepository->findById($programId);
+                $this->programService->updateProgram($program, $room, $start);
+            } else {
+                $program = $this->programService->createProgram($block, $room, $start);
             }
 
             $responseDTO = new ResponseDTO();
@@ -312,8 +304,7 @@ class ScheduleService
         )) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_program_blocked'));
         } else {
-            $this->user->addProgram($program);
-            $this->userRepository->save($this->user);
+            $this->programService->registerProgram($this->user, $program);
 
             $responseDTO->setMessage($this->translator->translate('common.api.program_registered'));
             $responseDTO->setStatus('success');
@@ -348,8 +339,7 @@ class ScheduleService
         } elseif (! $this->user->getPrograms()->contains($program)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_program_not_registered'));
         } else {
-            $this->user->removeProgram($program);
-            $this->userRepository->save($this->user);
+            $this->programService->unregisterProgram($this->user, $program);
 
             $responseDTO->setMessage($this->translator->translate('common.api.program_unregistered'));
             $responseDTO->setStatus('success');
@@ -391,9 +381,10 @@ class ScheduleService
         $blockDetailDTO->setId($block->getId());
         $blockDetailDTO->setName($block->getName());
         $blockDetailDTO->setCategory($block->getCategory() ? $block->getCategory()->getName() : '');
-        $blockDetailDTO->setLector($block->getLector() ? $block->getLector()->getLectorName() : '');
-        $blockDetailDTO->setAboutLector($block->getLector() ? $block->getLector()->getAbout() : '');
-        $blockDetailDTO->setLectorPhoto($block->getLector() ? $block->getLector()->getPhoto() : null);
+        $blockDetailDTO->setLectors($block->getLectors()->map(function (User $lector) {
+            return $this->convertUserToLectorDetailDTO($lector);
+        })->toArray());
+        $blockDetailDTO->setLectorsNames($block->getLectorsText());
         $blockDetailDTO->setDurationHours((int) floor($block->getDuration() / 60));
         $blockDetailDTO->setDurationMinutes($block->getDuration() % 60);
         $blockDetailDTO->setCapacity($block->getCapacity());
@@ -406,6 +397,21 @@ class ScheduleService
         $blockDetailDTO->setUserAllowed($block->isAllowed($this->user));
 
         return $blockDetailDTO;
+    }
+
+    /**
+     * Převede User na LectorDetailDTO.
+     */
+    private function convertUserToLectorDetailDTO(User $lector) : LectorDetailDTO
+    {
+        $lectorDetailDTO = new LectorDetailDTO();
+
+        $lectorDetailDTO->setId($lector->getId());
+        $lectorDetailDTO->setName($lector->getLectorName());
+        $lectorDetailDTO->setAbout($lector->getAbout());
+        $lectorDetailDTO->setPhoto($lector->getPhoto());
+
+        return $lectorDetailDTO;
     }
 
     /**

@@ -137,15 +137,9 @@ class ProgramCategoriesGridControl extends Control
      */
     public function add(\stdClass $values) : void
     {
-        $category = new Category();
+        $this->programService->createCategory($values['name'], $this->roleRepository->findRolesByIds($values['registerableRoles']));
 
-        $category->setName($values['name']);
-        $category->setRegisterableRoles($this->roleRepository->findRolesByIds($values['registerableRoles']));
-
-        $this->categoryRepository->save($category);
-
-        $p = $this->getPresenter();
-        $p->flashMessage('admin.program.categories_saved', 'success');
+        $this->getPresenter()->flashMessage('admin.program.categories_saved', 'success');
 
         $this->redirect('this');
     }
@@ -159,16 +153,7 @@ class ProgramCategoriesGridControl extends Control
     {
         $category = $this->categoryRepository->findById($id);
 
-        $this->categoryRepository->getEntityManager()->transactional(function ($em) use ($category, $values) : void {
-            $category->setName($values['name']);
-            $category->setRegisterableRoles($this->roleRepository->findRolesByIds($values['registerableRoles']));
-
-            $this->categoryRepository->save($category);
-
-            $this->programService->updateUsersPrograms(new ArrayCollection($this->userRepository->findAll()));
-
-            $this->categoryRepository->save($category);
-        });
+        $this->programService->updateCategory($category, $values['name'], $this->roleRepository->findRolesByIds($values['registerableRoles']));
 
         $this->getPresenter()->flashMessage('admin.program.categories_saved', 'success');
         $this->redirect('this');
@@ -183,11 +168,7 @@ class ProgramCategoriesGridControl extends Control
     {
         $category = $this->categoryRepository->findById($id);
 
-        $this->categoryRepository->getEntityManager()->transactional(function ($em) use ($category) : void {
-            $this->categoryRepository->remove($category);
-
-            $this->programService->updateUsersPrograms(new ArrayCollection($this->userRepository->findAll()));
-        });
+        $this->programService->removeCategory($category);
 
         $this->getPresenter()->flashMessage('admin.program.categories_deleted', 'success');
         $this->redirect('this');
