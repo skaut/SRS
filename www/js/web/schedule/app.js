@@ -239,11 +239,17 @@ app.controller('WebScheduleCtrl', function WebScheduleCtrl($scope, $http, $q, ui
                     content: ''
                 };
 
-                options.content += "<strong>Kategorie:</strong> " + event.block.category + "<br>";
-                options.content += "<strong>Lektor:</strong> " + event.block.lector + "<br>";
-                options.content += "<strong>Místnost:</strong> " + (event.room ? event.room.name : '') + "<br>";
+                if (event.block.category) {
+                    options.content += "<strong>Kategorie:</strong> " + event.block.category + "<br>";
+                }
+                if (event.block.lectors_names) {
+                    options.content += "<strong>Lektoři:</strong> " + event.block.lectors_names + "<br>";
+                }
+                if (event.blocked.room) {
+                    options.content += "<strong>Místnost:</strong> " + (event.room ? event.room.name : '') + "<br>";
+                }
                 options.content += "<strong>Obsazenost:</strong> " + (event.block.capacity !== undefined ? event.attendees_count + "/" + event.block.capacity : event.attendees_count) + "</br>";
-                options.content += event.block.perex;
+                options.content += event.block.perex + "</br>";
 
                 element.popover(options);
             }

@@ -70,6 +70,14 @@ class Subevent
     protected $capacity;
 
     /**
+     * Obsazenost.
+     * Bude se používat pro kontrolu kapacity.
+     * @ORM\Column(type="integer")
+     * @var int
+     */
+    protected $occupancy = 0;
+
+    /**
      * Podakce neregistrovatelné současně s touto podakcí.
      * @ORM\ManyToMany(targetEntity="Subevent")
      * @ORM\JoinTable(name="subevent_subevent_incompatible",
@@ -172,6 +180,16 @@ class Subevent
     public function hasLimitedCapacity() : bool
     {
         return $this->capacity !== null;
+    }
+
+    public function getOccupancy() : int
+    {
+        return $this->occupancy;
+    }
+
+    public function setOccupancy(int $occupancy) : void
+    {
+        $this->occupancy = $occupancy;
     }
 
     /**

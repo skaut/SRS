@@ -17,9 +17,7 @@
             <tr>
                 <th>{_admin.program.blocks_lectors}</th>
                 <td>
-                    {if $block->getLector()}
-                        {$block->getLector()->getDisplayName()}
-                    {/if}
+                    {$block->getLectorsText()}
                 </td>
             </tr>
 

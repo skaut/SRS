@@ -96,50 +96,42 @@
                                     <h4 class="modal-title">{{ event.block.name }}</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <table class="table table-form">
-                                        <colgroup>
-                                            <col class="col-sm-3 col-xs-3">
-                                            <col class="col-sm-9 col-xs-9">
-                                        </colgroup>
+                                    <ul class="no-bullets no-margin">
+                                        <li ng-if="event.block.category">
+                                            <strong>{_web.programs_content.category}</strong>
+                                            {{ event.block.category }}
+                                        </li>
 
-                                        <tr ng-if="event.block.category">
-                                            <th>{_web.programs_content.category}</th>
-                                            <td>{{ event.block.category }}</td>
-                                        </tr>
-                                        <tr ng-if="event.block.lector">
-                                            <th>{_web.programs_content.lector}</th>
-                                            <td>{{ event.block.lector }}</td>
-                                        </tr>
-                                        <tr ng-if="event.room">
-                                            <th>{_web.programs_content.room}</th>
-                                            <td>{{ event.room ? event.room.name : '' }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>{_web.programs_content.occupancy}</th>
-                                            <td>{{ event.block.capacity !== undefined ? event.attendees_count + '/' +
-                                                event.block.capacity : event.attendees_count }}
-                                            </td>
-                                        </tr>
-                                    </table>
+                                        <li ng-if="event.room">
+                                            <strong>{_web.programs_content.room}</strong>
+                                            {{ event.room ? event.room.name : '' }}
+                                        </li>
 
-                                    <div ng-if="event.block.perex">
-                                        <h5><strong>{_web.programs_content.about_program}</strong></h5>
-                                        <p>{{ event.block.perex }}</p>
+                                        <li>
+                                            <strong>{_web.programs_content.occupancy}</strong>
+                                            {{ event.block.capacity !== undefined
+                                                ? event.attendees_count + '/' + event.block.capacity
+                                                : event.attendees_count
+                                            }}
+                                        </li>
+                                    </ul>
 
-                                    </div>
-
-                                    <div ng-if="event.block.description" ng-bind-html="event.block.description"></div>
-
-                                    <div ng-if="event.block.about_lector || event.block.lector_photo">
-                                        <h5><strong>{_web.programs_content.about_lector}</strong></h5>
-                                        <p>
-                                            <img ng-src="{$basePath}/files/user_photos/{{ event.block.lector_photo }}"
-                                                 ng-if="event.block.lector_photo"
-                                                 style="float: left; margin: 0 10px 10px 0;"/>
-                                            {{ event.block.about_lector }}
+                                    <div ng-if="event.block.lectors">
+                                        <h5><strong>{_web.programs_content.lectors}</strong></h5>
+                                        <div ng-repeat="lector in event.block.lectors">
+                                            <h5>{{ lector.name }}</h5>
+                                            <p>
+                                                <img ng-src="{$basePath}/files/user_photos/{{ lector.photo }}"
+                                                     ng-if="lector.photo" style="float: left; margin: 0 10px 10px 0;"/>
+                                                {{ lector.about }}
+                                            </p>
                                             <div class="clearfix"></div>
-                                        </p>
+                                        </div>
                                     </div>
+
+                                    <h5><strong>{_web.programs_content.about_program}</strong></h5>
+                                    <p>{{ event.block.perex }}</p>
+                                    <p ng-bind-html="event.block.description"></p>
                                 </div>
 
                                 <div class="modal-footer">

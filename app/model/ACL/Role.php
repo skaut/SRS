@@ -172,6 +172,14 @@ class Role
     protected $capacity;
 
     /**
+     * Obsazenost.
+     * Bude se používat pro kontrolu kapacity.
+     * @ORM\Column(type="integer")
+     * @var int
+     */
+    protected $occupancy = 0;
+
+    /**
      * Poplatek.
      * @ORM\Column(type="integer", nullable=true)
      * @var int
@@ -434,6 +442,16 @@ class Role
     public function hasLimitedCapacity() : bool
     {
         return $this->capacity !== null;
+    }
+
+    public function getOccupancy() : int
+    {
+        return $this->occupancy;
+    }
+
+    public function setOccupancy(int $occupancy) : void
+    {
+        $this->occupancy = $occupancy;
     }
 
     public function getFee() : ?int

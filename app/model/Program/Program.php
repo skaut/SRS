@@ -37,6 +37,13 @@ class Program
     protected $attendees;
 
     /**
+     * Obsazenost.
+     * @ORM\Column(type="integer")
+     * @var int
+     */
+    protected $occupancy = 0;
+
+    /**
      * Místnost.
      * @ORM\ManyToOne(targetEntity="Room", inversedBy="programs")
      * @var Room
@@ -128,6 +135,16 @@ class Program
     public function getCapacity() : int
     {
         return $this->block->getCapacity();
+    }
+
+    public function getOccupancy() : int
+    {
+        return $this->occupancy;
+    }
+
+    public function setOccupancy(int $occupancy) : void
+    {
+        $this->occupancy = $occupancy;
     }
 
     public function getRoom() : ?Room

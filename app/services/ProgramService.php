@@ -204,7 +204,7 @@ class ProgramService
         });
     }
 
-    public function createProgram(Block $block, Room $room, \DateTime $start) : Program {
+    public function createProgram(Block $block, ?Room $room, \DateTime $start) : Program {
         $program = new Program($block);
 
         $program->setRoom($room);
@@ -224,7 +224,7 @@ class ProgramService
         return $program;
     }
 
-    public function updateProgram(Program $program, Room $room, \DateTime $start) : void {
+    public function updateProgram(Program $program, ?Room $room, \DateTime $start) : void {
         $program->setRoom($room);
         $program->setStart($start);
         $this->programRepository->save($program);

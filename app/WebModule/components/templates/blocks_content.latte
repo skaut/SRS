@@ -71,13 +71,6 @@
                             </li>
                         {/if}
 
-                        {if $selectedBlock->getLector()}
-                            <li>
-                                <strong>{_web.blocks_content.lector}</strong>
-                                {$selectedBlock->getLector()->getLectorName()}
-                            </li>
-                        {/if}
-
                         <li>
                             <strong>{_web.blocks_content.duration}</strong>
                             {_web.common.minutes, $selectedBlock->getDuration()}
@@ -93,21 +86,24 @@
                         </li>
                     </ul>
 
-                    <h5>{_web.blocks_content.about_block}</h5>
+                    {if !$selectedBlock->getLectors()->isEmpty()}
+                        <h5><strong>{_web.blocks_content.lectors}</strong></h5>
+                        {foreach $selectedBlock->getLectors() as $lector}
+                            <h5>{$lector->getLectorName()}</h5>
+                            <p>
+                                {if $lector->getPhoto()}
+                                    <img src="{$basePath}/files/user_photos/{$lector->getPhoto()}"
+                                         style="float: left; margin: 0 10px 10px 0;"/>
+                                {/if}
+                                {$lector->getAbout()}
+                            </p>
+                            <div class="clearfix"></div>
+                        {/foreach}
+                    {/if}
+
+                    <h5><strong>{_web.blocks_content.about_block}</strong></h5>
                     <p>{$selectedBlock->getPerex()}</p>
                     <p>{$selectedBlock->getDescription()|noescape}</p>
-
-                    {if $selectedBlock->getLector() && $selectedBlock->getLector()->getAbout()}
-                        <h5>{_web.blocks_content.about_lector}</h5>
-                        <p>
-                            {if $selectedBlock->getLector()->getPhoto()}
-                                <img src="{$basePath}/files/user_photos/{$selectedBlock->getLector()->getPhoto()}"
-                                     style="float: left; margin: 0 10px 10px 0;"/>
-                            {/if}
-                            {$selectedBlock->getLector()->getAbout()}
-                            <div class="clearfix"></div>
-                        </p>
-                    {/if}
                 </div>
             {else}
                 <h4>{_web.blocks_content.all_blocks}</h4>

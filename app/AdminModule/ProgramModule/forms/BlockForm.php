@@ -22,6 +22,7 @@ use App\Utils\Validators;
 use Doctrine\ORM\NonUniqueResultException;
 use Nette;
 use Nette\Application\UI\Form;
+use phpDocumentor\Reflection\Types\Resource_;
 
 /**
  * Formulář pro úpravu programového bloku.
@@ -47,7 +48,7 @@ class BlockForm
 
     /**
      * Jsou vytvořené podakce.
-     * @var int
+     * @var bool
      */
     private $subeventsExists;
 
@@ -128,8 +129,20 @@ class BlockForm
         $form->addSelect('category', 'admin.program.blocks_category', $this->categoryRepository->getCategoriesOptions())
             ->setPrompt('');
 
-        $form->addMultiSelect('lectors', 'admin.program.blocks_lectors', $this->userRepository->getLectorsOptions())
-            ->setDisabled(! $this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS));
+        $userIsAllowedManageAllPrograms = $this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS);
+        if ($userIsAllowedManageAllPrograms) {
+            $lectorsOptions = $this->userRepository->getLectorsOptions();
+        } else {
+            if ($this->block) {
+                foreach ($this->block->getLectors() as $lector) {
+                    $lectorsOptions[$lector->getId()] = $lector->getDisplayName();
+                }
+            } else {
+                $lectorsOptions[$this->user->getId()] = $this->user->getDisplayName();
+            }
+        }
+
+        $form->addMultiSelect('lectors', 'admin.program.blocks_lectors', $lectorsOptions);
 
         $form->addText('duration', 'admin.program.blocks_duration_form')
             ->addRule(Form::FILLED, 'admin.program.blocks_duration_empty')
@@ -193,6 +206,10 @@ class BlockForm
             }
         } else {
             $form['name']->addRule(Form::IS_NOT_IN, 'admin.program.blocks_name_exists', $this->blockRepository->findAllNames());
+
+            if (! $userIsAllowedManageAllPrograms) {
+                $form['lectors']->setDefaultValue([$this->user->getId()]);
+            }
         }
 
         $form->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
@@ -224,9 +241,9 @@ class BlockForm
         } else {
             $subevent = $this->subeventRepository->findImplicit();
         }
-        $category = $values['category'] !== '' ? $this->categoryRepository->findById($values['category']) : null;
+        $category  = $values['category'] !== '' ? $this->categoryRepository->findById($values['category']) : null;
         $lectors   = $this->userRepository->findUsersByIds($values['lectors']);
-        $capacity = $values['capacity'] !== '' ? $values['capacity'] : null;
+        $capacity  = $values['capacity'] !== '' ? $values['capacity'] : null;
         $mandatory = $values['mandatory'] ? ($values['autoRegistered'] ? ProgramMandatoryType::AUTO_REGISTERED : ProgramMandatoryType::MANDATORY) : ProgramMandatoryType::VOLUNTARY;
 
         if (! $this->block) {
