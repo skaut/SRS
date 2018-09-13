@@ -568,15 +568,14 @@ class User
         return $this->programs;
     }
 
-    /**
-     * @param Collection|Program[] $programs
-     */
-    public function setPrograms(Collection $programs) : void
+    public function addProgram(Program $program) : void
     {
-        $this->programs->clear();
-        foreach ($programs as $program) {
-            $this->programs->add($program);
-        }
+        $this->programs->add($program);
+    }
+
+    public function removeProgram(Program $program) : void
+    {
+        $this->programs->removeElement($program);
     }
 
     /**
@@ -611,20 +610,6 @@ class User
     public function setNotRegisteredMandatoryBlocks(Collection $notRegisteredMandatoryBlocks) : void
     {
         $this->notRegisteredMandatoryBlocks = $notRegisteredMandatoryBlocks;
-    }
-
-    public function addProgram(Program $program) : void
-    {
-        if ($this->programs->contains($program)) {
-            return;
-        }
-
-        $this->programs->add($program);
-    }
-
-    public function removeProgram(Program $program) : void
-    {
-        $this->programs->removeElement($program);
     }
 
     /**

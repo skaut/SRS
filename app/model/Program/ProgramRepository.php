@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Program;
 
+use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Structure\Subevent;
 use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -167,10 +168,11 @@ class ProgramRepository extends EntityRepository
                 "(p.start < :end) AND (DATE_ADD(p.start, (b.duration * 60), 'second') > :start)",
                 "(p.start < :end) AND (:start < (DATE_ADD(p.start, (b.duration * 60), 'second')))"
             ))
-            ->andWhere('b.mandatory = 2')
+            ->andWhere('b.mandatory = :auto_registered')
             ->andWhere('p.id != :pid')
             ->setParameter('start', $start)
             ->setParameter('end', $end)
+            ->setParameter('auto_registered', ProgramMandatoryType::AUTO_REGISTERED)
             ->setParameter('pid', $programId);
 
         return ! empty($qb->getQuery()->getResult());
@@ -195,5 +197,19 @@ class ProgramRepository extends EntityRepository
             ->getResult();
 
         return new ArrayCollection($result);
+    }
+
+    public function incrementOccupancy(Program $program) : void
+    {
+        $this->createQuery('UPDATE App\Model\Program\Program p SET p.occupancy = p.occupancy + 1 WHERE p.id = :pid')
+            ->setParameter('pid', $program->getId())
+            ->getResult();
+    }
+
+    public function decrementOccupancy(Program $program) : void
+    {
+        $this->createQuery('UPDATE App\Model\Program\Program p SET p.occupancy = p.occupancy - 1 WHERE p.id = :pid')
+            ->setParameter('pid', $program->getId())
+            ->getResult();
     }
 }

@@ -171,7 +171,7 @@ class BlocksPresenter extends ProgramBasePresenter
                 $user  = $this->userRepository->findById($this->user->getId());
                 $block = $this->blockRepository->findById((int) $values['id']);
 
-                if ($values['id'] && ! $user->isAllowedModifyBlock($block)) {
+                if (! $user->isAllowedModifyBlock($block)) {
                     $this->flashMessage('admin.program.blocks_edit_not_allowed', 'danger');
                     $this->redirect('Blocks:default');
                 }

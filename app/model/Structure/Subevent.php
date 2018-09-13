@@ -187,11 +187,6 @@ class Subevent
         return $this->occupancy;
     }
 
-    public function setOccupancy(int $occupancy) : void
-    {
-        $this->occupancy = $occupancy;
-    }
-
     /**
      * @return Collection|Subevent[]
      */

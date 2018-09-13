@@ -449,11 +449,6 @@ class Role
         return $this->occupancy;
     }
 
-    public function setOccupancy(int $occupancy) : void
-    {
-        $this->occupancy = $occupancy;
-    }
-
     public function getFee() : ?int
     {
         return $this->fee;
