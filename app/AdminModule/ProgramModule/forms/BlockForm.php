@@ -158,12 +158,12 @@ class BlockForm
             ->addCondition(Form::EQUAL, true)
             ->toggle('autoRegisteredCheckbox');
 
-        $form->addCheckbox('autoRegistered', 'admin.program.blocks_auto_register')
+        $form->addCheckbox('autoRegistered', 'admin.program.blocks_auto_registered')
             ->setOption('id', 'autoRegisteredCheckbox')
             ->setAttribute('data-toggle', 'tooltip')
-            ->setAttribute('title', $form->getTranslator()->translate('admin.program.blocks_auto_register_note'))
+            ->setAttribute('title', $form->getTranslator()->translate('admin.program.blocks_auto_registered_note'))
             ->addCondition(Form::FILLED)
-            ->addRule([$this, 'validateAutoRegistered'], 'admin.program.blocks_auto_register_not_allowed');
+            ->addRule([$this, 'validateAutoRegistered'], 'admin.program.blocks_auto_registered_not_allowed');
 
         $form->addTextArea('perex', 'admin.program.blocks_perex_form')
             ->addCondition(Form::FILLED)
@@ -192,8 +192,8 @@ class BlockForm
                 'lectors' => $this->userRepository->findUsersIds($this->block->getLectors()),
                 'duration' => $this->block->getDuration(),
                 'capacity' => $this->block->getCapacity(),
-                'mandatory' => $this->block->getMandatory() > 0,
-                'autoRegistered' => $this->block->getMandatory() === 2,
+                'mandatory' => $this->block->getMandatory() === ProgramMandatoryType::MANDATORY || $this->block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED,
+                'autoRegistered' => $this->block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED,
                 'perex' => $this->block->getPerex(),
                 'description' => $this->block->getDescription(),
                 'tools' => $this->block->getTools(),
@@ -258,6 +258,10 @@ class BlockForm
      */
     public function validateAutoRegistered() : bool
     {
-        return $this->validators->validateBlockAutoRegistered($this->block);
+        if ($this->block) {
+            return $this->validators->validateBlockAutoRegistered($this->block);
+        } else {
+            return true;
+        }
     }
 }

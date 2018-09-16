@@ -168,7 +168,10 @@ class Block
 
     public function setLectors(Collection $lectors) : void
     {
-        $this->lectors = $lectors;
+        $this->lectors->clear();
+        foreach ($lectors as $lector) {
+            $lectors->add($lector);
+        }
     }
 
     public function getCategory() : ?Category

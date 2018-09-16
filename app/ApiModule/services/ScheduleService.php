@@ -216,9 +216,9 @@ class ScheduleService
         } elseif ($room && $this->roomRepository->hasOverlappingProgram($room, $programId, $start, $end)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_room_occupied', null, ['name' => $room->getName()]));
         } elseif ($block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED && $this->programRepository->hasOverlappingProgram($programId, $start, $end)) {
-            $responseDTO->setMessage($this->translator->translate('common.api.schedule_auto_register_not_allowed'));
+            $responseDTO->setMessage($this->translator->translate('common.api.schedule_auto_registered_not_allowed'));
         } elseif ($this->programRepository->hasOverlappingAutoRegisteredProgram($programId, $start, $end)) {
-            $responseDTO->setMessage($this->translator->translate('common.api.schedule_auto_register_not_allowed'));
+            $responseDTO->setMessage($this->translator->translate('common.api.schedule_auto_registered_not_allowed'));
         } else {
             if ($programId) {
                 $program = $this->programRepository->findById($programId);
@@ -258,7 +258,7 @@ class ScheduleService
             $programDetailDTO = new ProgramDetailDTO();
             $programDetailDTO->setId($program->getId());
 
-            $this->programRepository->remove($program);
+            $this->programService->removeProgram($program);
 
             $responseDTO->setProgram($programDetailDTO);
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_deleted'));
@@ -388,8 +388,8 @@ class ScheduleService
         $blockDetailDTO->setDurationHours((int) floor($block->getDuration() / 60));
         $blockDetailDTO->setDurationMinutes($block->getDuration() % 60);
         $blockDetailDTO->setCapacity($block->getCapacity());
-        $blockDetailDTO->setMandatory($block->getMandatory() > 0);
-        $blockDetailDTO->setAutoRegistered($block->getMandatory() === 2);
+        $blockDetailDTO->setMandatory($block->getMandatory() === ProgramMandatoryType::MANDATORY || $block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED);
+        $blockDetailDTO->setAutoRegistered($block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED);
         $blockDetailDTO->setPerex($block->getPerex());
         $blockDetailDTO->setDescription($block->getDescription());
         $blockDetailDTO->setProgramsCount($block->getProgramsCount());

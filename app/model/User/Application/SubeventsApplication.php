@@ -25,6 +25,9 @@ class SubeventsApplication extends Application
      */
     public function setSubevents(Collection $subevents) : void
     {
-        $this->subevents = $subevents;
+        $this->subevents->clear();
+        foreach ($subevents as $subevent) {
+            $this->subevents->add($subevent);
+        }
     }
 }

@@ -308,10 +308,10 @@ class User
 
     public function __construct()
     {
-        $this->applications    = new ArrayCollection();
-        $this->roles           = new ArrayCollection();
-        $this->programs        = new ArrayCollection();
-        $this->lecturersBlocks = new ArrayCollection();
+        $this->applications                 = new ArrayCollection();
+        $this->roles                        = new ArrayCollection();
+        $this->programs                     = new ArrayCollection();
+        $this->lecturersBlocks              = new ArrayCollection();
         $this->notRegisteredMandatoryBlocks = new ArrayCollection();
     }
 
@@ -609,7 +609,10 @@ class User
      */
     public function setNotRegisteredMandatoryBlocks(Collection $notRegisteredMandatoryBlocks) : void
     {
-        $this->notRegisteredMandatoryBlocks = $notRegisteredMandatoryBlocks;
+        $this->notRegisteredMandatoryBlocks->clear();
+        foreach ($notRegisteredMandatoryBlocks as $notRegisteredMandatoryBlock) {
+            $this->notRegisteredMandatoryBlocks->add($notRegisteredMandatoryBlock);
+        }
     }
 
     /**
@@ -619,7 +622,7 @@ class User
     {
         return ! $this->programs->filter(function (Program $program) use ($block) {
             return $program->getBlock() === $block;
-        });
+        })->isEmpty();
     }
 
     public function isApproved() : bool

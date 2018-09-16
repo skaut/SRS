@@ -130,7 +130,7 @@
             <ul id="blocks-container" class="list-group" style="margin-top: 15px; margin-bottom: 0">
                 <li class="list-group-item block"
                     ng-repeat="block in blocks | filterBlocks: search:unassignedOnly"
-                    ng-class="block.mandatory ? (block.auto_register ? 'list-group-item-warning' : 'list-group-item-danger') : 'list-group-item-info'"
+                    ng-class="block.mandatory ? (block.auto_registered ? 'list-group-item-warning' : 'list-group-item-danger') : 'list-group-item-info'"
                     block="{{ block.id }}">
                     <table>
                         <tr>

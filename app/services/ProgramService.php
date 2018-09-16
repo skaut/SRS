@@ -54,19 +54,24 @@ class ProgramService
     /** @var CategoryRepository */
     private $categoryRepository;
 
+    /** @var MailService */
+    private $mailService;
+
 
     public function __construct(
         SettingsRepository $settingsRepository,
         ProgramRepository $programRepository,
         BlockRepository $blockRepository,
         UserRepository $userRepository,
-        CategoryRepository $categoryRepository
+        CategoryRepository $categoryRepository,
+        MailService $mailService
     ) {
         $this->settingsRepository = $settingsRepository;
         $this->programRepository  = $programRepository;
         $this->blockRepository    = $blockRepository;
         $this->userRepository     = $userRepository;
         $this->categoryRepository = $categoryRepository;
+        $this->mailService        = $mailService;
     }
 
     /**
@@ -237,7 +242,13 @@ class ProgramService
     }
 
     public function removeProgram(Program $program) : void {
-        $this->programRepository->remove($program);
+        $this->blockRepository->getEntityManager()->transactional(function () use ($program) : void {
+            $attendees = clone $program->getAttendees();
+
+            $this->programRepository->remove($program);
+
+            $this->updateUsersNotRegisteredMandatoryBlocks($attendees);
+        });
     }
 
     public function registerProgram(User $user, Program $program, bool $sendEmail = false) : void {
@@ -245,11 +256,13 @@ class ProgramService
             return;
         }
 
-        $this->blockRepository->getEntityManager()->transactional(function ($em) use ($user, $program, $sendEmail) : void {
-            $user->addProgram($program);
-            $this->userRepository->save($this->user);
-
+        $this->blockRepository->getEntityManager()->transactional(function () use ($user, $program, $sendEmail) : void {
             $this->programRepository->incrementOccupancy($program);
+
+            $user->addProgram($program);
+            $this->userRepository->save($user);
+
+            $this->updateUserNotRegisteredMandatoryBlocks($user);
 
             if ($sendEmail) {
                 $this->mailService->sendMailFromTemplate($user, '', Template::PROGRAM_REGISTERED, [
@@ -265,11 +278,13 @@ class ProgramService
             return;
         }
 
-        $this->blockRepository->getEntityManager()->transactional(function ($em) use ($user, $program, $sendEmail) : void {
-            $user->removeProgram($program);
-            $this->userRepository->save($this->user);
-
+        $this->blockRepository->getEntityManager()->transactional(function () use ($user, $program, $sendEmail) : void {
             $this->programRepository->decrementOccupancy($program);
+
+            $user->removeProgram($program);
+            $this->userRepository->save($user);
+
+            $this->updateUserNotRegisteredMandatoryBlocks($user);
 
             if ($sendEmail) {
                 $this->mailService->sendMailFromTemplate($user, '', Template::PROGRAM_UNREGISTERED, [
@@ -336,7 +351,7 @@ class ProgramService
         }
     }
 
-    public function updateUserNotRegisteredMandatoryBlocks(User $user) : void
+    private function updateUserNotRegisteredMandatoryBlocks(User $user) : void
     {
         if ($user->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS)) {
             $registerableCategories = $this->categoryRepository->findUserAllowed($user);
@@ -352,7 +367,7 @@ class ProgramService
         $this->userRepository->save($user);
     }
 
-    public function updateUsersNotRegisteredMandatoryBlocks(Collection $users) : void {
+    private function updateUsersNotRegisteredMandatoryBlocks(Collection $users) : void {
         foreach ($users as $user) {
             $this->updateUserNotRegisteredMandatoryBlocks($user);
         }

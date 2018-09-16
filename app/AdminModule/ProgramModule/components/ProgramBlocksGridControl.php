@@ -174,7 +174,7 @@ class ProgramBlocksGridControl extends Control
             ->addOption(ProgramMandatoryType::MANDATORY, 'admin.program.blocks_mandatory_mandatory')
             ->setClass('btn-danger')
             ->endOption()
-            ->addOption(ProgramMandatoryType::AUTO_REGISTERED, 'admin.program.blocks_mandatory_auto_register')
+            ->addOption(ProgramMandatoryType::AUTO_REGISTERED, 'admin.program.blocks_mandatory_auto_registered')
             ->setClass('btn-warning')
             ->endOption()
             ->onChange[] = [$this, 'changeMandatory'];
@@ -185,7 +185,7 @@ class ProgramBlocksGridControl extends Control
                 '' => 'admin.common.all',
                 ProgramMandatoryType::VOLUNTARY => 'admin.program.blocks_mandatory_voluntary',
                 ProgramMandatoryType::MANDATORY => 'admin.program.blocks_mandatory_mandatory',
-                ProgramMandatoryType::AUTO_REGISTERED => 'admin.program.blocks_mandatory_auto_register',
+                ProgramMandatoryType::AUTO_REGISTERED => 'admin.program.blocks_mandatory_auto_registered',
             ])
             ->setTranslateOptions();
 
@@ -257,7 +257,7 @@ class ProgramBlocksGridControl extends Control
         if (! $this->isAllowedModifyBlock($block)) {
             $p->flashMessage('admin.program.blocks_change_mandatory_denied', 'danger');
         } elseif(! $this->validators->validateBlockAutoRegistered($block)) {
-            $p->flashMessage('admin.program.blocks_change_mandatory_auto_register_not_allowed', 'danger');
+            $p->flashMessage('admin.program.blocks_change_mandatory_auto_registered_not_allowed', 'danger');
         } else {
             $this->programService->updateBlockMandatory($block, $mandatory);
             $p->flashMessage('admin.program.blocks_changed_mandatory', 'success');

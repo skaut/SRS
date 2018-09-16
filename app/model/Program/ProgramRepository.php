@@ -148,10 +148,14 @@ class ProgramRepository extends EntityRepository
                 "(p.start < :end) AND (DATE_ADD(p.start, (b.duration * 60), 'second') > :start)",
                 "(p.start < :end) AND (:start < (DATE_ADD(p.start, (b.duration * 60), 'second')))"
             ))
-            ->andWhere('p.id != :pid')
             ->setParameter('start', $start)
-            ->setParameter('end', $end)
-            ->setParameter('pid', $programId);
+            ->setParameter('end', $end);
+
+        if ($programId) {
+            $qb = $qb
+                ->andWhere('p.id != :pid')
+                ->setParameter('pid', $programId);
+        }
 
         return ! empty($qb->getQuery()->getResult());
     }
@@ -169,11 +173,15 @@ class ProgramRepository extends EntityRepository
                 "(p.start < :end) AND (:start < (DATE_ADD(p.start, (b.duration * 60), 'second')))"
             ))
             ->andWhere('b.mandatory = :auto_registered')
-            ->andWhere('p.id != :pid')
             ->setParameter('start', $start)
             ->setParameter('end', $end)
-            ->setParameter('auto_registered', ProgramMandatoryType::AUTO_REGISTERED)
-            ->setParameter('pid', $programId);
+            ->setParameter('auto_registered', ProgramMandatoryType::AUTO_REGISTERED);
+
+        if ($programId) {
+            $qb = $qb
+                ->andWhere('p.id != :pid')
+                ->setParameter('pid', $programId);
+        }
 
         return ! empty($qb->getQuery()->getResult());
     }

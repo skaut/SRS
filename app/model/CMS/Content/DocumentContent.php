@@ -64,7 +64,10 @@ class DocumentContent extends Content implements IContent
      */
     public function setTags(Collection $tags) : void
     {
-        $this->tags = $tags;
+        $this->tags->clear();
+        foreach ($tags as $tag) {
+            $this->tags->add($tag);
+        }
     }
 
     /**
