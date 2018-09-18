@@ -293,15 +293,6 @@ class Role
     }
 
     /**
-     * @return Collection|User[]
-     */
-    public function getApprovedUsers() : Collection
-    {
-        $criteria = Criteria::create()->where(Criteria::expr()->eq('approved', true));
-        return $this->users->matching($criteria);
-    }
-
-    /**
      * @return Collection|Permission[]
      */
     public function getPermissions() : Collection
@@ -675,11 +666,6 @@ class Role
     public function countUsers() : int
     {
         return $this->users->count();
-    }
-
-    public function countApprovedUsers() : int
-    {
-        return $this->getApprovedUsers()->count();
     }
 
     public function countUnoccupied() : ?int

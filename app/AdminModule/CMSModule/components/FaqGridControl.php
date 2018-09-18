@@ -118,7 +118,7 @@ class FaqGridControl extends Control
      */
     public function handleSort($item_id, $prev_id, $next_id) : void
     {
-        $this->faqRepository->sort($item_id, $prev_id, $next_id);
+        $this->faqRepository->sort((int) $item_id, (int) $prev_id, (int) $next_id);
 
         $p = $this->getPresenter();
         $p->flashMessage('admin.cms.faq_order_saved', 'success');

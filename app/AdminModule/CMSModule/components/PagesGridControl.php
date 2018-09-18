@@ -226,7 +226,7 @@ class PagesGridControl extends Control
      */
     public function handleSort($item_id, $prev_id, $next_id) : void
     {
-        $this->pageRepository->sort($item_id, $prev_id, $next_id);
+        $this->pageRepository->sort((int) $item_id, (int) $prev_id, (int) $next_id);
 
         $p = $this->getPresenter();
         $p->flashMessage('admin.cms.pages_order_saved', 'success');

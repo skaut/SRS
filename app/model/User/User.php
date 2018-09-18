@@ -1069,6 +1069,17 @@ class User
     }
 
     /**
+     * Vrací přihlášku rolí.
+     */
+    public function getRolesApplication() : ?RolesApplication
+    {
+        foreach ($this->getNotCanceledRolesApplications() as $application) {
+            return $application;
+        }
+        return null;
+    }
+
+    /**
      * Vrací datum přihlášení.
      */
     public function getRolesApplicationDate() : ?\DateTime

@@ -198,6 +198,8 @@ class ApplicationService
                 $this->createRolesApplication($user, $roles, $createdBy, $approve);
                 $this->createSubeventsApplication($user, new ArrayCollection([$this->subeventRepository->findImplicit()]), $createdBy);
             } else {
+                $this->incrementRolesOccupancy($roles);
+
                 $user->setRoles($roles);
                 $this->userRepository->save($user);
 
@@ -241,6 +243,8 @@ class ApplicationService
                 }
 
                 $this->userRepository->save($user);
+
+                $this->decrementRolesOccupancy($user->getRolesApplication()->getRoles());
             }
 
             $this->programService->updateUserPrograms($user);
@@ -277,6 +281,12 @@ class ApplicationService
 
                 $application->setValidTo(new \DateTime());
                 $this->applicationRepository->save($application);
+
+                if ($application instanceof RolesApplication) {
+                    $this->decrementRolesOccupancy($application->getRoles());
+                } else if ($application instanceof SubeventsApplication) {
+                    $this->decrementSubeventsOccupancy($application->getSubevents());
+                }
             }
 
             $this->userRepository->save($user);
@@ -296,6 +306,8 @@ class ApplicationService
     public function addSubeventsApplication(User $user, Collection $subevents, User $createdBy) : void
     {
         $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($user, $subevents, $createdBy) : void {
+            $this->incrementSubeventsOccupancy($subevents);
+
             $this->createSubeventsApplication($user, $subevents, $createdBy);
 
             $this->programService->updateUserPrograms($user);
@@ -333,6 +345,8 @@ class ApplicationService
         }
 
         $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($application, $subevents, $createdBy) : void {
+            $this->incrementSubeventsOccupancy($subevents);
+
             $user = $application->getUser();
 
             $newApplication = clone $application;
@@ -347,6 +361,8 @@ class ApplicationService
             $this->applicationRepository->save($application);
 
             $this->programService->updateUserPrograms($user);
+
+            $this->decrementSubeventsOccupancy($application->getSubevents());
         });
 
         $this->mailService->sendMailFromTemplate($application->getUser(), '', Template::SUBEVENTS_CHANGED, [
@@ -376,6 +392,8 @@ class ApplicationService
             $this->applicationRepository->save($application);
 
             $this->programService->updateUserPrograms($user);
+
+            $this->decrementSubeventsOccupancy($application->getSubevents());
         });
 
         $this->mailService->sendMailFromTemplate($application->getUser(), '', Template::SUBEVENTS_CHANGED, [
@@ -470,6 +488,8 @@ class ApplicationService
             throw new \InvalidArgumentException('User is already registered.');
         }
 
+        $this->incrementRolesOccupancy($roles);
+
         $user->setApproved(true);
         if (! $approve && $roles->exists(function (int $key, Role $role) {
             return ! $role->isApprovedAfterRegistration();
@@ -511,6 +531,8 @@ class ApplicationService
         Collection $subevents,
         User $createdBy
     ) : SubeventsApplication {
+        $this->incrementSubeventsOccupancy($subevents);
+
         $application = new SubeventsApplication();
         $application->setUser($user);
         $application->setSubevents($subevents);
@@ -708,5 +730,33 @@ class ApplicationService
     public function isAllowedEditCustomInputs() : bool
     {
         return $this->settingsRepository->getDateValue(Settings::EDIT_CUSTOM_INPUTS_TO) >= (new \DateTime())->setTime(0, 0);
+    }
+
+    private function incrementRolesOccupancy(Collection $roles) : void {
+        foreach ($roles as $role) {
+            $this->roleRepository->incrementOccupancy($role);
+            $this->roleRepository->save($role);
+        }
+    }
+
+    private function decrementRolesOccupancy(Collection $roles) : void {
+        foreach ($roles as $role) {
+            $this->roleRepository->decrementOccupancy($role);
+            $this->roleRepository->save($role);
+        }
+    }
+
+    private function incrementSubeventsOccupancy(Collection $subevents) : void {
+        foreach ($subevents as $subevent) {
+            $this->subeventRepository->incrementOccupancy($subevent);
+            $this->subeventRepository->save($subevent);
+        }
+    }
+
+    private function decrementSubeventsOccupancy(Collection $subevents) : void {
+        foreach ($subevents as $subevent) {
+            $this->subeventRepository->decrementOccupancy($subevent);
+            $this->subeventRepository->save($subevent);
+        }
     }
 }
