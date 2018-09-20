@@ -160,7 +160,7 @@ class ApplicationService
 
         $this->mailService->sendMailFromTemplate($user, '', Template::REGISTRATION, [
             TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-            TemplateVariable::EDIT_REGISTRATION_TO => $editRegistrationToText !== null ? $editRegistrationToText : '-',
+            TemplateVariable::EDIT_REGISTRATION_TO => $editRegistrationToText ?? '-',
             TemplateVariable::APPLICATION_MATURITY => $applicatonMaturity,
             TemplateVariable::APPLICATION_FEE => $applicationFee,
             TemplateVariable::APPLICATION_VARIABLE_SYMBOL => $applicationVariableSymbol,
@@ -284,7 +284,7 @@ class ApplicationService
 
                 if ($application instanceof RolesApplication) {
                     $this->decrementRolesOccupancy($application->getRoles());
-                } else if ($application instanceof SubeventsApplication) {
+                } elseif ($application instanceof SubeventsApplication) {
                     $this->decrementSubeventsOccupancy($application->getSubevents());
                 }
             }
@@ -732,28 +732,32 @@ class ApplicationService
         return $this->settingsRepository->getDateValue(Settings::EDIT_CUSTOM_INPUTS_TO) >= (new \DateTime())->setTime(0, 0);
     }
 
-    private function incrementRolesOccupancy(Collection $roles) : void {
+    private function incrementRolesOccupancy(Collection $roles) : void
+    {
         foreach ($roles as $role) {
             $this->roleRepository->incrementOccupancy($role);
             $this->roleRepository->save($role);
         }
     }
 
-    private function decrementRolesOccupancy(Collection $roles) : void {
+    private function decrementRolesOccupancy(Collection $roles) : void
+    {
         foreach ($roles as $role) {
             $this->roleRepository->decrementOccupancy($role);
             $this->roleRepository->save($role);
         }
     }
 
-    private function incrementSubeventsOccupancy(Collection $subevents) : void {
+    private function incrementSubeventsOccupancy(Collection $subevents) : void
+    {
         foreach ($subevents as $subevent) {
             $this->subeventRepository->incrementOccupancy($subevent);
             $this->subeventRepository->save($subevent);
         }
     }
 
-    private function decrementSubeventsOccupancy(Collection $subevents) : void {
+    private function decrementSubeventsOccupancy(Collection $subevents) : void
+    {
         foreach ($subevents as $subevent) {
             $this->subeventRepository->decrementOccupancy($subevent);
             $this->subeventRepository->save($subevent);

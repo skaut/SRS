@@ -281,9 +281,11 @@ class ProgramAttendeesGridControl extends Control
         } else {
             foreach ($ids as $id) {
                 $user = $this->userRepository->findById($id);
-                if (! $user->hasProgramBlock($this->program->getBlock())) {
-                    $this->programService->registerProgram($user, $this->program, true);
+                if ($user->hasProgramBlock($this->program->getBlock())) {
+                    continue;
                 }
+
+                $this->programService->registerProgram($user, $this->program, true);
             }
 
             $p->flashMessage('admin.program.blocks_attendees_group_action_registered', 'success');
@@ -313,9 +315,11 @@ class ProgramAttendeesGridControl extends Control
         } else {
             foreach ($ids as $id) {
                 $user = $this->userRepository->findById($id);
-                if ($user->hasProgramBlock($this->program->getBlock())) {
-                    $this->programService->unregisterProgram($user, $this->program, true);
+                if (! $user->hasProgramBlock($this->program->getBlock())) {
+                    continue;
                 }
+
+                $this->programService->unregisterProgram($user, $this->program, true);
             }
 
             $p->flashMessage('admin.program.blocks_attendees_group_action_unregistered', 'success');

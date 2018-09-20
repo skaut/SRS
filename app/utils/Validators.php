@@ -208,7 +208,8 @@ class Validators
                 && $this->programRepository->hasOverlappingProgram(
                     $block->getPrograms()->first()->getId(),
                     $block->getPrograms()->first()->getStart(),
-                    $block->getPrograms()->first()->getEnd())
+                    $block->getPrograms()->first()->getEnd()
+                )
                 )
             )
         ) {

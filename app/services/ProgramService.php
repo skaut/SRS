@@ -27,9 +27,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use function GuzzleHttp\Promise\all;
 use Nette;
-use function implode;
 
 /**
  * Služba pro správu programů.
@@ -79,16 +77,18 @@ class ProgramService
      * @param Collection|User[] $lectors
      * @throws \Throwable
      */
-    public function createBlock(string $name,
-                                Subevent $subevent,
-                                ?Category $category,
-                                Collection $lectors,
-                                int $duration,
-                                ?int $capacity,
-                                string $mandatory,
-                                string $perex,
-                                string $description,
-                                string $tools) : void {
+    public function createBlock(
+        string $name,
+        Subevent $subevent,
+        ?Category $category,
+        Collection $lectors,
+        int $duration,
+        ?int $capacity,
+        string $mandatory,
+        string $perex,
+        string $description,
+        string $tools
+    ) : void {
         $this->blockRepository->getEntityManager()->transactional(function () use ($name, $subevent, $category, $lectors, $duration, $capacity, $mandatory, $perex, $description, $tools) : void {
             $block = new Block();
 
@@ -113,17 +113,19 @@ class ProgramService
      * @param Collection|User[] $lectors
      * @throws \Throwable
      */
-    public function updateBlock(Block $block,
-                                string $name,
-                                Subevent $subevent,
-                                ?Category $category,
-                                Collection $lectors,
-                                int $duration,
-                                ?int $capacity,
-                                string $mandatory,
-                                string $perex,
-                                string $description,
-                                string $tools) : void {
+    public function updateBlock(
+        Block $block,
+        string $name,
+        Subevent $subevent,
+        ?Category $category,
+        Collection $lectors,
+        int $duration,
+        ?int $capacity,
+        string $mandatory,
+        string $perex,
+        string $description,
+        string $tools
+    ) : void {
         $this->blockRepository->getEntityManager()->transactional(function () use ($block, $name, $subevent, $category, $lectors, $duration, $capacity, $mandatory, $perex, $description, $tools) : void {
             $oldSubevent = $block->getSubevent();
             $oldCategory = $block->getCategory();
@@ -148,15 +150,19 @@ class ProgramService
 
                 foreach ($block->getPrograms() as $program) {
                     foreach ($program->getAttendees() as $user) {
-                        if (! $allowedUsers->contains($user)) {
-                            $this->unregisterProgram($user, $program);
+                        if ($allowedUsers->contains($user)) {
+                            continue;
                         }
+
+                        $this->unregisterProgram($user, $program);
                     }
 
-                    if ($mandatory === ProgramMandatoryType::AUTO_REGISTERED) {
-                        foreach ($allowedUsers as $user) {
-                            $this->registerProgram($user, $program);
-                        }
+                    if ($mandatory !== ProgramMandatoryType::AUTO_REGISTERED) {
+                        continue;
+                    }
+
+                    foreach ($allowedUsers as $user) {
+                        $this->registerProgram($user, $program);
                     }
                 }
 
@@ -169,59 +175,66 @@ class ProgramService
         });
     }
 
-    public function updateBlockMandatory(Block $block, string $mandatory) : void {
+    public function updateBlockMandatory(Block $block, string $mandatory) : void
+    {
         $this->blockRepository->getEntityManager()->transactional(function () use ($block, $mandatory) : void {
             $oldMandatory = $block->getMandatory();
 
-            if ($mandatory !== $oldMandatory) {
-                $block->setMandatory($mandatory);
-
-                $this->blockRepository->save($block);
-
-                //odstraneni ucastniku, pokud se odstrani automaticke prihlasovani
-                if ($oldMandatory === ProgramMandatoryType::AUTO_REGISTERED && $mandatory !== ProgramMandatoryType::AUTO_REGISTERED) {
-                    foreach ($block->getPrograms() as $program) {
-                        foreach ($program->getAttendees() as $user) {
-                            $this->unregisterProgram($user, $program);
-                        }
-                    }
-                }
-
-                //pridani ucastniku, pokud je pridano automaticke prihlaseni
-                if ($oldMandatory !== ProgramMandatoryType::AUTO_REGISTERED && $mandatory === ProgramMandatoryType::AUTO_REGISTERED) {
-                    $allowedUsers = $this->userRepository->findBlockAllowed($block);
-
-                    foreach ($block->getPrograms() as $program) {
-                        foreach ($allowedUsers as $user) {
-                            $this->registerProgram($user, $program);
-                        }
-                    }
-                }
-
-                //prepocet neprihlasenych povinnych bloku, pri zmene z povinneho na nepovinny a naopak
-                if (($oldMandatory === ProgramMandatoryType::VOLUNTARY &&
-                        ($mandatory === ProgramMandatoryType::MANDATORY || $mandatory === ProgramMandatoryType::AUTO_REGISTERED))
-                    || (($oldMandatory === ProgramMandatoryType::MANDATORY || $oldMandatory === ProgramMandatoryType::AUTO_REGISTERED)
-                        && $mandatory === ProgramMandatoryType::VOLUNTARY)) {
-                    $this->updateUsersNotRegisteredMandatoryBlocks($this->userRepository->findBlockAllowed($block));
-                }
-
-                $this->blockRepository->save($block);
+            if ($mandatory === $oldMandatory) {
+                return;
             }
+
+            $block->setMandatory($mandatory);
+
+            $this->blockRepository->save($block);
+
+            //odstraneni ucastniku, pokud se odstrani automaticke prihlasovani
+            if ($oldMandatory === ProgramMandatoryType::AUTO_REGISTERED && $mandatory !== ProgramMandatoryType::AUTO_REGISTERED) {
+                foreach ($block->getPrograms() as $program) {
+                    foreach ($program->getAttendees() as $user) {
+                        $this->unregisterProgram($user, $program);
+                    }
+                }
+            }
+
+            //pridani ucastniku, pokud je pridano automaticke prihlaseni
+            if ($oldMandatory !== ProgramMandatoryType::AUTO_REGISTERED && $mandatory === ProgramMandatoryType::AUTO_REGISTERED) {
+                $allowedUsers = $this->userRepository->findBlockAllowed($block);
+
+                foreach ($block->getPrograms() as $program) {
+                    foreach ($allowedUsers as $user) {
+                        $this->registerProgram($user, $program);
+                    }
+                }
+            }
+
+            //prepocet neprihlasenych povinnych bloku, pri zmene z povinneho na nepovinny a naopak
+            if (($oldMandatory === ProgramMandatoryType::VOLUNTARY &&
+                    ($mandatory === ProgramMandatoryType::MANDATORY || $mandatory === ProgramMandatoryType::AUTO_REGISTERED))
+                || (($oldMandatory === ProgramMandatoryType::MANDATORY || $oldMandatory === ProgramMandatoryType::AUTO_REGISTERED)
+                    && $mandatory === ProgramMandatoryType::VOLUNTARY)) {
+                $this->updateUsersNotRegisteredMandatoryBlocks($this->userRepository->findBlockAllowed($block));
+            }
+
+            $this->blockRepository->save($block);
         });
     }
 
-    public function removeBlock(Block $block) : void {
+    public function removeBlock(Block $block) : void
+    {
         $isVoluntary = $block->getMandatory() === ProgramMandatoryType::VOLUNTARY;
 
         $this->blockRepository->remove($block);
 
-        if (! $isVoluntary) {
-            $this->updateUsersNotRegisteredMandatoryBlocks(new ArrayCollection($this->userRepository->findAll()));
+        if ($isVoluntary) {
+            return;
         }
+
+        $this->updateUsersNotRegisteredMandatoryBlocks(new ArrayCollection($this->userRepository->findAll()));
     }
 
-    public function createCategory(string $name, Collection $registerableRoles) : void {
+    public function createCategory(string $name, Collection $registerableRoles) : void
+    {
         $category = new Category();
 
         $category->setName($name);
@@ -230,7 +243,8 @@ class ProgramService
         $this->categoryRepository->save($category);
     }
 
-    public function updateCategory(Category $category, string $name, Collection $registerableRoles) : void {
+    public function updateCategory(Category $category, string $name, Collection $registerableRoles) : void
+    {
         $this->blockRepository->getEntityManager()->transactional(function ($em) use ($category, $name, $registerableRoles) : void {
             $category->setName($name);
             $category->setRegisterableRoles($registerableRoles);
@@ -241,7 +255,8 @@ class ProgramService
         });
     }
 
-    public function createProgram(Block $block, ?Room $room, \DateTime $start) : Program {
+    public function createProgram(Block $block, ?Room $room, \DateTime $start) : Program
+    {
         $program = new Program($block);
 
         $program->setRoom($room);
@@ -250,24 +265,28 @@ class ProgramService
         $this->blockRepository->getEntityManager()->transactional(function ($em) use ($program, $block) : void {
             $this->programRepository->save($program);
 
-            if ($block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED) {
-                foreach ($this->userRepository->findBlockAllowed($block) as $user) {
-                    $this->registerProgram($user, $program);
-                }
-                $this->programRepository->save($program);
+            if ($block->getMandatory() !== ProgramMandatoryType::AUTO_REGISTERED) {
+                return;
             }
+
+            foreach ($this->userRepository->findBlockAllowed($block) as $user) {
+                $this->registerProgram($user, $program);
+            }
+            $this->programRepository->save($program);
         });
 
         return $program;
     }
 
-    public function updateProgram(Program $program, ?Room $room, \DateTime $start) : void {
+    public function updateProgram(Program $program, ?Room $room, \DateTime $start) : void
+    {
         $program->setRoom($room);
         $program->setStart($start);
         $this->programRepository->save($program);
     }
 
-    public function removeProgram(Program $program) : void {
+    public function removeProgram(Program $program) : void
+    {
         $this->blockRepository->getEntityManager()->transactional(function () use ($program) : void {
             $attendees = clone $program->getAttendees();
 
@@ -277,7 +296,8 @@ class ProgramService
         });
     }
 
-    public function registerProgram(User $user, Program $program, bool $sendEmail = false) : void {
+    public function registerProgram(User $user, Program $program, bool $sendEmail = false) : void
+    {
         if ($user->getPrograms()->contains($program)) {
             return;
         }
@@ -290,16 +310,19 @@ class ProgramService
 
             $this->updateUserNotRegisteredMandatoryBlocks($user);
 
-            if ($sendEmail) {
-                $this->mailService->sendMailFromTemplate($user, '', Template::PROGRAM_REGISTERED, [
-                    TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-                    TemplateVariable::PROGRAM_NAME => $program->getBlock()->getName(),
-                ]);
+            if (! $sendEmail) {
+                return;
             }
+
+            $this->mailService->sendMailFromTemplate($user, '', Template::PROGRAM_REGISTERED, [
+                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
+                TemplateVariable::PROGRAM_NAME => $program->getBlock()->getName(),
+            ]);
         });
     }
 
-    public function unregisterProgram(User $user, Program $program, bool $sendEmail = false) : void {
+    public function unregisterProgram(User $user, Program $program, bool $sendEmail = false) : void
+    {
         if (! $user->getPrograms()->contains($program)) {
             return;
         }
@@ -312,12 +335,14 @@ class ProgramService
 
             $this->updateUserNotRegisteredMandatoryBlocks($user);
 
-            if ($sendEmail) {
-                $this->mailService->sendMailFromTemplate($user, '', Template::PROGRAM_UNREGISTERED, [
-                    TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-                    TemplateVariable::PROGRAM_NAME => $program->getBlock()->getName(),
-                ]);
+            if (! $sendEmail) {
+                return;
             }
+
+            $this->mailService->sendMailFromTemplate($user, '', Template::PROGRAM_UNREGISTERED, [
+                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
+                TemplateVariable::PROGRAM_NAME => $program->getBlock()->getName(),
+            ]);
         });
     }
 
@@ -350,15 +375,19 @@ class ProgramService
         $userAllowedPrograms = $this->getUserAllowedPrograms($user);
 
         foreach ($oldUsersPrograms as $program) {
-            if (! $userAllowedPrograms->contains($program)) {
-                $this->unregisterProgram($user, $program);
+            if ($userAllowedPrograms->contains($program)) {
+                continue;
             }
+
+            $this->unregisterProgram($user, $program);
         }
 
         foreach ($userAllowedPrograms as $program) {
-            if ($program->getBlock()->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED) {
-                $this->registerProgram($user, $program);
+            if ($program->getBlock()->getMandatory() !== ProgramMandatoryType::AUTO_REGISTERED) {
+                continue;
             }
+
+            $this->registerProgram($user, $program);
         }
 
         $this->updateUserNotRegisteredMandatoryBlocks($user);
@@ -393,7 +422,8 @@ class ProgramService
         $this->userRepository->save($user);
     }
 
-    private function updateUsersNotRegisteredMandatoryBlocks(Collection $users) : void {
+    private function updateUsersNotRegisteredMandatoryBlocks(Collection $users) : void
+    {
         foreach ($users as $user) {
             $this->updateUserNotRegisteredMandatoryBlocks($user);
         }
