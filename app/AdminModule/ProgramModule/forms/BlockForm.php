@@ -22,7 +22,6 @@ use App\Utils\Validators;
 use Doctrine\ORM\NonUniqueResultException;
 use Nette;
 use Nette\Application\UI\Form;
-use phpDocumentor\Reflection\Types\Resource_;
 
 /**
  * Formulář pro úpravu programového bloku.
@@ -260,8 +259,7 @@ class BlockForm
     {
         if ($this->block) {
             return $this->validators->validateBlockAutoRegistered($this->block);
-        } else {
-            return true;
         }
+        return true;
     }
 }

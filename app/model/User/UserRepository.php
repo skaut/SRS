@@ -8,13 +8,13 @@ use App\Model\ACL\Permission;
 use App\Model\ACL\Role;
 use App\Model\Enums\ApplicationState;
 use App\Model\Program\Block;
-use App\Model\Program\Program;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Kdyby\Doctrine\EntityRepository;
+use function array_map;
 
 /**
  * Třída spravující uživatele.

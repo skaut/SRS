@@ -7,7 +7,6 @@ namespace App\Utils;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Enums\ProgramMandatoryType;
-use App\Model\Enums\ProgramRegistrationType;
 use App\Model\Program\Block;
 use App\Model\Program\ProgramRepository;
 use App\Model\Structure\Subevent;
@@ -36,7 +35,7 @@ class Validators
     {
         $this->roleRepository     = $roleRepository;
         $this->subeventRepository = $subeventRepository;
-        $this->programRepository = $programRepository;
+        $this->programRepository  = $programRepository;
     }
 
     /**
@@ -204,8 +203,9 @@ class Validators
     public function validateBlockAutoRegistered(Block $block) : bool
     {
         if ($block->getMandatory() !== ProgramMandatoryType::AUTO_REGISTERED
-            && ($block->getProgramsCount() > 1
-                || ($block->getProgramsCount() === 1 && $this->programRepository->hasOverlappingProgram(
+            && ($block->getProgramsCount() > 1 || (
+                $block->getProgramsCount() === 1
+                && $this->programRepository->hasOverlappingProgram(
                     $block->getPrograms()->first()->getId(),
                     $block->getPrograms()->first()->getStart(),
                     $block->getPrograms()->first()->getEnd())

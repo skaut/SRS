@@ -203,10 +203,10 @@ class ScheduleService
         $responseDTO->setStatus('danger');
 
         $programId = $programSaveDTO->getId();
-        $block = $this->blockRepository->findById($programSaveDTO->getBlockId());
-        $room  = $programSaveDTO->getRoomId() ? $this->roomRepository->findById($programSaveDTO->getRoomId()) : null;
-        $start = $programSaveDTO->getStart();
-        $end   = clone $start;
+        $block     = $this->blockRepository->findById($programSaveDTO->getBlockId());
+        $room      = $programSaveDTO->getRoomId() ? $this->roomRepository->findById($programSaveDTO->getRoomId()) : null;
+        $start     = $programSaveDTO->getStart();
+        $end       = clone $start;
         $end->add(new \DateInterval('PT' . $block->getDuration() . 'M'));
 
         if (! $this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE)) {

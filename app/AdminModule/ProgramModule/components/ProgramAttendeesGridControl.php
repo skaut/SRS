@@ -7,12 +7,8 @@ namespace App\AdminModule\ProgramModule\Components;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\Enums\ApplicationState;
-use App\Model\Mailing\Template;
-use App\Model\Mailing\TemplateVariable;
-use App\Model\Program\Block;
 use App\Model\Program\Program;
 use App\Model\Program\ProgramRepository;
-use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
@@ -333,7 +329,8 @@ class ProgramAttendeesGridControl extends Control
         }
     }
 
-    private function isAllowedModifyProgram(Program $program) : bool {
+    private function isAllowedModifyProgram(Program $program) : bool
+    {
         $user = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
         return $user->isAllowedModifyBlock($program->getBlock());
     }

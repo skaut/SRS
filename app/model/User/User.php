@@ -594,13 +594,15 @@ class User
         return $this->notRegisteredMandatoryBlocks;
     }
 
-    public function getNotRegisteredMandatoryBlocksText() : string {
+    public function getNotRegisteredMandatoryBlocksText() : string
+    {
         return implode(', ', $this->notRegisteredMandatoryBlocks->map(function (Block $block) {
             return $block->getName();
         })->toArray());
     }
 
-    public function getNotRegisteredMandatoryBlocksCount() : int {
+    public function getNotRegisteredMandatoryBlocksCount() : int
+    {
         return $this->notRegisteredMandatoryBlocks->count();
     }
 

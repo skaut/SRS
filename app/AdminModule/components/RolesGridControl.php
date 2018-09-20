@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Components;
 
-use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\User\UserRepository;
 use App\Services\ProgramService;
 use App\Utils\Helpers;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;

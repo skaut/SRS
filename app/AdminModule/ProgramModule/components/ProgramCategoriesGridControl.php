@@ -6,12 +6,10 @@ namespace App\AdminModule\ProgramModule\Components;
 
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
-use App\Model\Program\Category;
 use App\Model\Program\CategoryRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\User\UserRepository;
 use App\Services\ProgramService;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;

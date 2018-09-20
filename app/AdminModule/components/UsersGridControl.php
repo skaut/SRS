@@ -45,7 +45,6 @@ use Ublaboo\DataGrid\Exception\DataGridException;
 use function array_slice;
 use function array_values;
 use function explode;
-use function implode;
 
 /**
  * Komponenta pro správu rolí.

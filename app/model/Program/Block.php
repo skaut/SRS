@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
+use function implode;
 
 /**
  * Entita programový blok.
@@ -105,7 +106,7 @@ class Block
     public function __construct()
     {
         $this->programs = new ArrayCollection();
-        $this->lectors = new ArrayCollection();
+        $this->lectors  = new ArrayCollection();
     }
 
     public function getId() : int
@@ -154,6 +155,9 @@ class Block
         return $this->programs->count();
     }
 
+    /**
+     * @return Collection|User[]
+     */
     public function getLectors() : Collection
     {
         return $this->lectors;
@@ -166,6 +170,9 @@ class Block
         })->toArray());
     }
 
+    /**
+     * @param Collection|User[] $lectors
+     */
     public function setLectors(Collection $lectors) : void
     {
         $this->lectors->clear();

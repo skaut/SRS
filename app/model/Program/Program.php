@@ -60,7 +60,7 @@ class Program
 
     public function __construct(Block $block)
     {
-        $this->block = $block;
+        $this->block     = $block;
         $this->attendees = new ArrayCollection();
     }
 
