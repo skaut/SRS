@@ -7,6 +7,7 @@ namespace App\Model\User;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Role;
 use App\Model\Enums\ApplicationState;
+use App\Model\Program\Block;
 use App\Model\Program\Program;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -156,27 +157,25 @@ class UserRepository extends EntityRepository
      * Vrací uživatele, kteří se mohou na program přihlásit.
      * @return Collection|User[]
      */
-    public function findProgramAllowed(Program $program) : Collection
+    public function findBlockAllowed(Block $block) : Collection
     {
         $qb = $this->createQueryBuilder('u')
-            ->leftJoin('u.programs', 'p', 'WITH', 'p.id = :pid')
             ->innerJoin('u.roles', 'r')
-            ->innerJoin('r.permissions', 'per')
+            ->innerJoin('r.permissions', 'p')
             ->innerJoin('u.applications', 'a')
             ->innerJoin('a.subevents', 's')
-            ->where('per.name = :permission')
+            ->where('p.name = :permission')
             ->andWhere('s.id = :sid')
             ->andWhere('a.validTo IS NULL')
             ->andWhere('(a.state = \'' . ApplicationState::PAID . '\' OR a.state = \'' . ApplicationState::PAID_FREE
                 . '\' OR a.state = \'' . ApplicationState::WAITING_FOR_PAYMENT . '\')')
-            ->setParameter('pid', $program->getId())
             ->setParameter('permission', Permission::CHOOSE_PROGRAMS)
-            ->setParameter('sid', $program->getBlock()->getSubevent()->getId());
+            ->setParameter('sid', $block->getSubevent()->getId());
 
-        if ($program->getBlock()->getCategory()) {
+        if ($block->getCategory()) {
             $qb = $qb->innerJoin('r.registerableCategories', 'c')
                 ->andWhere('c.id = :cid')
-                ->setParameter('cid', $program->getBlock()->getCategory()->getId());
+                ->setParameter('cid', $block->getCategory()->getId());
         }
 
         return new ArrayCollection($qb->getQuery()->getResult());

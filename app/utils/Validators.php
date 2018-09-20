@@ -206,7 +206,7 @@ class Validators
         if ($block->getMandatory() !== ProgramMandatoryType::AUTO_REGISTERED
             && ($block->getProgramsCount() > 1
                 || ($block->getProgramsCount() === 1 && $this->programRepository->hasOverlappingProgram(
-                    $block->getPrograms()->first(),
+                    $block->getPrograms()->first()->getId(),
                     $block->getPrograms()->first()->getStart(),
                     $block->getPrograms()->first()->getEnd())
                 )

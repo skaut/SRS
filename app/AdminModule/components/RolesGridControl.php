@@ -143,25 +143,13 @@ class RolesGridControl extends Control
     {
         $role = $this->roleRepository->findById($id);
 
-        $usersInRole = $this->userRepository->findAllInRole($role);
-
-        $this->roleRepository->getEntityManager()->transactional(function ($em) use ($role, $usersInRole) : void {
+        if ($role->getUsers()->isEmpty()) {
             $this->roleRepository->remove($role);
+            $this->getPresenter()->flashMessage('admin.acl.roles_deleted', 'success');
+        } else {
+            $this->getPresenter()->flashMessage('admin.acl.roles_deleted_error', 'danger');
+        }
 
-            foreach ($usersInRole as $user) {
-                if (! $user->getRoles()->isEmpty()) {
-                    continue;
-                }
-
-                $user->addRole($this->roleRepository->findBySystemName(Role::NONREGISTERED));
-                $user->setApproved(true);
-                $this->userRepository->save($user);
-            }
-
-            $this->programService->updateUsersPrograms(new ArrayCollection($this->userRepository->findAll()));
-        });
-
-        $this->getPresenter()->flashMessage('admin.acl.roles_deleted', 'success');
         $this->redirect('this');
     }
 

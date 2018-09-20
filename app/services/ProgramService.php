@@ -27,6 +27,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use function GuzzleHttp\Promise\all;
 use Nette;
 use function implode;
 
@@ -124,9 +125,10 @@ class ProgramService
                                 string $description,
                                 string $tools) : void {
         $this->blockRepository->getEntityManager()->transactional(function () use ($block, $name, $subevent, $category, $lectors, $duration, $capacity, $mandatory, $perex, $description, $tools) : void {
-            $oldMandatory = $block->getMandatory();
             $oldSubevent = $block->getSubevent();
             $oldCategory = $block->getCategory();
+
+            $oldAllowedUsers = clone $this->userRepository->findBlockAllowed($block);
 
             $block->setName($name);
             $block->setSubevent($subevent);
@@ -140,12 +142,30 @@ class ProgramService
 
             $this->blockRepository->save($block);
 
-            $this->updateBlockMandatory($block, $mandatory);
-
             //aktualizace ucastniku pri zmene kategorie nebo podakce
-            if ($mandatory === $oldMandatory && (($category !== $oldCategory) || ($subevent !== $oldSubevent))) {
-                $this->programService->updateUsersPrograms(new ArrayCollection($this->userRepository->findAll()));
+            if (($category !== $oldCategory) || ($subevent !== $oldSubevent)) {
+                $allowedUsers = $this->userRepository->findBlockAllowed($block);
+
+                foreach ($block->getPrograms() as $program) {
+                    foreach ($program->getAttendees() as $user) {
+                        if (! $allowedUsers->contains($user)) {
+                            $this->unregisterProgram($user, $program);
+                        }
+                    }
+
+                    if ($mandatory === ProgramMandatoryType::AUTO_REGISTERED) {
+                        foreach ($allowedUsers as $user) {
+                            $this->registerProgram($user, $program);
+                        }
+                    }
+                }
+
+                $this->updateUsersNotRegisteredMandatoryBlocks($oldAllowedUsers);
+                $this->updateUsersNotRegisteredMandatoryBlocks($allowedUsers);
             }
+
+            //aktualizace ucastniku pri zmene povinnosti
+            $this->updateBlockMandatory($block, $mandatory);
         });
     }
 
@@ -153,25 +173,41 @@ class ProgramService
         $this->blockRepository->getEntityManager()->transactional(function () use ($block, $mandatory) : void {
             $oldMandatory = $block->getMandatory();
 
-            $block->setMandatory($mandatory);
+            if ($mandatory !== $oldMandatory) {
+                $block->setMandatory($mandatory);
 
-            $this->blockRepository->save($block);
+                $this->blockRepository->save($block);
 
-            //odstraneni ucastniku, pokud se odstrani automaticke prihlasovani
-            if ($oldMandatory === ProgramMandatoryType::AUTO_REGISTERED && $mandatory !== ProgramMandatoryType::AUTO_REGISTERED) {
-                foreach ($this->block->getPrograms() as $program) {
-                    $program->removeAllAttendees();
+                //odstraneni ucastniku, pokud se odstrani automaticke prihlasovani
+                if ($oldMandatory === ProgramMandatoryType::AUTO_REGISTERED && $mandatory !== ProgramMandatoryType::AUTO_REGISTERED) {
+                    foreach ($block->getPrograms() as $program) {
+                        foreach ($program->getAttendees() as $user) {
+                            $this->unregisterProgram($user, $program);
+                        }
+                    }
                 }
-            }
 
-            //pridani ucastniku, pokud je pridano automaticke prihlaseni
-            if ($oldMandatory !== ProgramMandatoryType::AUTO_REGISTERED && $mandatory === ProgramMandatoryType::AUTO_REGISTERED) {
-                foreach ($this->block->getPrograms() as $program) {
-                    $program->setAttendees($this->userRepository->findProgramAllowed($program));
+                //pridani ucastniku, pokud je pridano automaticke prihlaseni
+                if ($oldMandatory !== ProgramMandatoryType::AUTO_REGISTERED && $mandatory === ProgramMandatoryType::AUTO_REGISTERED) {
+                    $allowedUsers = $this->userRepository->findBlockAllowed($block);
+
+                    foreach ($block->getPrograms() as $program) {
+                        foreach ($allowedUsers as $user) {
+                            $this->registerProgram($user, $program);
+                        }
+                    }
                 }
-            }
 
-            $this->blockRepository->save($block);
+                //prepocet neprihlasenych povinnych bloku, pri zmene z povinneho na nepovinny a naopak
+                if (($oldMandatory === ProgramMandatoryType::VOLUNTARY &&
+                        ($mandatory === ProgramMandatoryType::MANDATORY || $mandatory === ProgramMandatoryType::AUTO_REGISTERED))
+                    || (($oldMandatory === ProgramMandatoryType::MANDATORY || $oldMandatory === ProgramMandatoryType::AUTO_REGISTERED)
+                        && $mandatory === ProgramMandatoryType::VOLUNTARY)) {
+                    $this->updateUsersNotRegisteredMandatoryBlocks($this->userRepository->findBlockAllowed($block));
+                }
+
+                $this->blockRepository->save($block);
+            }
         });
     }
 
@@ -201,17 +237,7 @@ class ProgramService
 
             $this->categoryRepository->save($category);
 
-            $this->programService->updateUsersPrograms(new ArrayCollection($this->userRepository->findAll()));
-
-            $this->categoryRepository->save($category);
-        });
-    }
-
-    public function removeCategory(Category $category) : void {
-        $this->categoryRepository->getEntityManager()->transactional(function ($em) use ($category) : void {
-            $this->categoryRepository->remove($category);
-
-            $this->programService->updateUsersPrograms(new ArrayCollection($this->userRepository->findAll()));
+            $this->updateUsersPrograms(new ArrayCollection($this->userRepository->findAll()));
         });
     }
 
@@ -225,7 +251,7 @@ class ProgramService
             $this->programRepository->save($program);
 
             if ($block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED) {
-                foreach ($this->userRepository->findProgramAllowed($program) as $user) {
+                foreach ($this->userRepository->findBlockAllowed($block) as $user) {
                     $this->registerProgram($user, $program);
                 }
                 $this->programRepository->save($program);

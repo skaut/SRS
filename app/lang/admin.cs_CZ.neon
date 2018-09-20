@@ -245,6 +245,7 @@ program:
     categories_saved: "Kategorie byla úspěšně uložena."
     categories_delete_confirm: "Odstraněním kategorie odeberete kategorii všem programovým blokům. Opravdu chcete kategorii odstranit?"
     categories_deleted: "Kategorie byla úspěšně odstraněna."
+    categories_deleted_error: "Kategorie nebyla odstraněna, zkontrolujte, zda není přiřazena programovému bloku."
 
     rooms_heading: "Místnosti"
     rooms_name: "Název"
@@ -431,6 +432,7 @@ acl:
     roles_changed_registerable: "Registrovatelnost role byla úspěšně upravena."
     roles_delete_confirm: "Odstraněním role bude všem uživatelům, kteří nemají jinou roli, nastavena role Nepřihlášený. Opravdu chcete roli odstranit?"
     roles_deleted: "Role byla úspěšně odstraněna."
+    roles_deleted_error: "Role nebyla odstraněna, zkontrolujte, zda není přiřazena uživatelům."
     roles_add_heading: "Nová role"
     roles_edit_heading: "Úprava role: %name%"
 
