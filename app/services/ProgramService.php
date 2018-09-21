@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
+use App\Model\ACL\Role;
 use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Enums\ProgramRegistrationType;
 use App\Model\Mailing\Template;
@@ -74,6 +75,7 @@ class ProgramService
     }
 
     /**
+     * Vytvoří programový blok.
      * @param Collection|User[] $lectors
      * @throws \Throwable
      */
@@ -110,6 +112,7 @@ class ProgramService
     }
 
     /**
+     * Aktualizuje programový blok.
      * @param Collection|User[] $lectors
      * @throws \Throwable
      */
@@ -175,6 +178,10 @@ class ProgramService
         });
     }
 
+    /**
+     * Aktualizuje povinnost bloku.
+     * @throws \Throwable
+     */
     public function updateBlockMandatory(Block $block, string $mandatory) : void
     {
         $this->blockRepository->getEntityManager()->transactional(function () use ($block, $mandatory) : void {
@@ -220,6 +227,11 @@ class ProgramService
         });
     }
 
+    /**
+     * Odstraní programový blok.
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     public function removeBlock(Block $block) : void
     {
         $isVoluntary = $block->getMandatory() === ProgramMandatoryType::VOLUNTARY;
@@ -233,6 +245,12 @@ class ProgramService
         $this->updateUsersNotRegisteredMandatoryBlocks(new ArrayCollection($this->userRepository->findAll()));
     }
 
+    /**
+     * Vytvoří kategorii programů.
+     * @param Collection|Role[] $registerableRoles
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     public function createCategory(string $name, Collection $registerableRoles) : void
     {
         $category = new Category();
@@ -243,6 +261,11 @@ class ProgramService
         $this->categoryRepository->save($category);
     }
 
+    /**
+     * Aktualizuje kategorii programů.
+     * @param Collection|Role[] $registerableRoles
+     * @throws \Throwable
+     */
     public function updateCategory(Category $category, string $name, Collection $registerableRoles) : void
     {
         $this->blockRepository->getEntityManager()->transactional(function ($em) use ($category, $name, $registerableRoles) : void {
@@ -255,6 +278,10 @@ class ProgramService
         });
     }
 
+    /**
+     * Vytvoří program v harmonogramu.
+     * @throws \Throwable
+     */
     public function createProgram(Block $block, ?Room $room, \DateTime $start) : Program
     {
         $program = new Program($block);
@@ -278,6 +305,11 @@ class ProgramService
         return $program;
     }
 
+    /**
+     * Aktualizuje program v harmonogramu.
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     public function updateProgram(Program $program, ?Room $room, \DateTime $start) : void
     {
         $program->setRoom($room);
@@ -285,6 +317,10 @@ class ProgramService
         $this->programRepository->save($program);
     }
 
+    /**
+     * Odstraní program z harmonogramu.
+     * @throws \Throwable
+     */
     public function removeProgram(Program $program) : void
     {
         $this->blockRepository->getEntityManager()->transactional(function () use ($program) : void {
@@ -296,6 +332,11 @@ class ProgramService
         });
     }
 
+    /**
+     * Přihlásí uživatele na program.
+     * @param bool $sendEmail Poslat uživateli e-mail o přihlášení?
+     * @throws \Throwable
+     */
     public function registerProgram(User $user, Program $program, bool $sendEmail = false) : void
     {
         if ($user->getPrograms()->contains($program)) {
@@ -321,6 +362,11 @@ class ProgramService
         });
     }
 
+    /**
+     * Odhlásí uživatele z programu.
+     * @param bool $sendEmail Poslat uživateli e-mail o odhlášení?
+     * @throws \Throwable
+     */
     public function unregisterProgram(User $user, Program $program, bool $sendEmail = false) : void
     {
         if (! $user->getPrograms()->contains($program)) {
@@ -406,6 +452,11 @@ class ProgramService
         }
     }
 
+    /**
+     * Aktualizuje uživateli seznam nepřihlášených povinných bloků.
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     private function updateUserNotRegisteredMandatoryBlocks(User $user) : void
     {
         if ($user->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS)) {
@@ -422,6 +473,12 @@ class ProgramService
         $this->userRepository->save($user);
     }
 
+    /**
+     * Aktualizuje uživatelům seznam nepřihlášených povinných bloků.
+     * @param Collection|User[] $users
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     private function updateUsersNotRegisteredMandatoryBlocks(Collection $users) : void
     {
         foreach ($users as $user) {

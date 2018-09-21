@@ -110,6 +110,7 @@ class ApplicationService
     }
 
     /**
+     * Zaregistruje uživatele (vyplnění přihlášky / přidání role v administraci).
      * @param Collection|Role[]     $roles
      * @param Collection|Subevent[] $subevents
      * @throws \Throwable
@@ -169,6 +170,7 @@ class ApplicationService
     }
 
     /**
+     * Změní role uživatele.
      * @param Collection|Role[] $roles
      * @throws SettingsException
      * @throws \Throwable
@@ -259,6 +261,7 @@ class ApplicationService
     }
 
     /**
+     * Zruší registraci uživatele na seminář.
      * @throws SettingsException
      * @throws \Throwable
      * @throws MailingException
@@ -300,6 +303,7 @@ class ApplicationService
     }
 
     /**
+     * Vytvoří novou přihlášku na podakce.
      * @param Collection|Subevent[] $subevents
      * @throws \Throwable
      */
@@ -320,6 +324,7 @@ class ApplicationService
     }
 
     /**
+     * Aktualizuje podakce přihlášky.
      * @param Collection|Subevent[] $subevents
      * @throws SettingsException
      * @throws \Throwable
@@ -372,6 +377,7 @@ class ApplicationService
     }
 
     /**
+     * Zruší přihlášku na podakce.
      * @throws SettingsException
      * @throws \Throwable
      * @throws MailingException
@@ -403,6 +409,7 @@ class ApplicationService
     }
 
     /**
+     * Aktualizuje stav platby.
      * @throws \Throwable
      */
     public function updatePayment(
@@ -651,6 +658,9 @@ class ApplicationService
         return $fee - $discount;
     }
 
+    /**
+     * Určí stav přihlášky.
+     */
     private function getApplicationState(Application $application) : string
     {
         if ($application->getState() === ApplicationState::CANCELED) {
@@ -732,6 +742,12 @@ class ApplicationService
         return $this->settingsRepository->getDateValue(Settings::EDIT_CUSTOM_INPUTS_TO) >= (new \DateTime())->setTime(0, 0);
     }
 
+    /**
+     * Zvýší obsazenost rolí.
+     * @param Collection|Role[] $roles
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     private function incrementRolesOccupancy(Collection $roles) : void
     {
         foreach ($roles as $role) {
@@ -740,6 +756,12 @@ class ApplicationService
         }
     }
 
+    /**
+     * Sníží obsazenost rolí.
+     * @param Collection|Role[] $roles
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     private function decrementRolesOccupancy(Collection $roles) : void
     {
         foreach ($roles as $role) {
@@ -748,6 +770,12 @@ class ApplicationService
         }
     }
 
+    /**
+     * Zvýší obsazenost podakcí.
+     * @param Collection|Subevent[] $subevents
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     private function incrementSubeventsOccupancy(Collection $subevents) : void
     {
         foreach ($subevents as $subevent) {
@@ -756,6 +784,12 @@ class ApplicationService
         }
     }
 
+    /**
+     * Sníží obsazenost podakcí.
+     * @param Collection|Subevent[] $subevents
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     private function decrementSubeventsOccupancy(Collection $subevents) : void
     {
         foreach ($subevents as $subevent) {
