@@ -55,8 +55,8 @@
                             </tr>
 
                             <tr>
-                                <th>{_admin.program.schedule_lector}</th>
-                                <td>{{ event.block.lector }}</td>
+                                <th>{_admin.program.schedule_lectors}</th>
+                                <td>{{ event.block.lectors_names }}</td>
                             </tr>
                         </table>
 
@@ -130,7 +130,7 @@
             <ul id="blocks-container" class="list-group" style="margin-top: 15px; margin-bottom: 0">
                 <li class="list-group-item block"
                     ng-repeat="block in blocks | filterBlocks: search:unassignedOnly"
-                    ng-class="block.mandatory ? (block.auto_register ? 'list-group-item-warning' : 'list-group-item-danger') : 'list-group-item-info'"
+                    ng-class="block.mandatory ? (block.auto_registered ? 'list-group-item-warning' : 'list-group-item-danger') : 'list-group-item-info'"
                     block="{{ block.id }}">
                     <table>
                         <tr>
@@ -141,8 +141,8 @@
                             <td>{{ block.category }}</td>
                         </tr>
                         <tr>
-                            <td style="padding-right: 15px">{_admin.program.schedule_lector}</td>
-                            <td>{{ block.lector }}</td>
+                            <td style="padding-right: 15px; vertical-align: top">{_admin.program.schedule_lectors}</td>
+                            <td>{{ block.lectors_names }}</td>
                         </tr>
                         <tr>
                             <td style="padding-right: 15px">{_admin.program.schedule_capacity}</td>

@@ -173,7 +173,7 @@ class ExcelExportService
             $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
             $sheet->getColumnDimensionByColumn($column++)->setWidth('25');
 
-            $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.schedule.lector'));
+            $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.schedule.lectors'));
             $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
             $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
             $sheet->getColumnDimensionByColumn($column++)->setWidth('25');
@@ -186,7 +186,7 @@ class ExcelExportService
                 $sheet->setCellValueByColumnAndRow($column++, $row, $program->getEnd()->format('j. n. H:i'));
                 $sheet->setCellValueByColumnAndRow($column++, $row, $program->getBlock()->getName());
                 $sheet->setCellValueByColumnAndRow($column++, $row, $program->getRoom() ? $program->getRoom()->getName() : null);
-                $sheet->setCellValueByColumnAndRow($column++, $row, $program->getBlock()->getLector() ? $program->getBlock()->getLector()->getLectorName() : null);
+                $sheet->setCellValueByColumnAndRow($column++, $row, $program->getBlock()->getLector() ? $program->getBlock()->getLector()->getLectorName() : null); //todo
             }
         }
 
@@ -425,8 +425,7 @@ class ExcelExportService
                 ? $this->translator->translate('common.export.common.yes')
                 : $this->translator->translate('common.export.common.no'));
 
-            $sheet->setCellValueByColumnAndRow($column++, $row, $user->isAllowedRegisterPrograms()
-                    ? $this->programService->getUnregisteredUserMandatoryBlocksNamesText($user) : '');
+            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getNotRegisteredMandatoryBlocksText());
 
             foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
                 $customInputValue = $user->getCustomInputValue($customInput);

@@ -45,7 +45,6 @@ use Ublaboo\DataGrid\Exception\DataGridException;
 use function array_slice;
 use function array_values;
 use function explode;
-use function implode;
 
 /**
  * Komponenta pro správu rolí.
@@ -340,17 +339,12 @@ class UsersGridControl extends Control
             ])
             ->setTranslateOptions();
 
-        $grid->addColumnText('unregisteredMandatoryBlocks', 'admin.users.users_not_registered_mandatory_blocks')
+        $grid->addColumnText('notRegisteredMandatoryBlocks', 'admin.users.users_not_registered_mandatory_blocks')
             ->setRenderer(function (User $row) {
-                if (! $row->isAllowedRegisterPrograms()) {
-                    return null;
-                }
-
-                $unregisteredUserMandatoryBlocks = $this->programService->getUnregisteredUserMandatoryBlocksNames($row);
                 return Html::el('span')
                     ->setAttribute('data-toggle', 'tooltip')
-                    ->setAttribute('title', implode(', ', $unregisteredUserMandatoryBlocks->toArray()))
-                    ->setText($unregisteredUserMandatoryBlocks->count());
+                    ->setAttribute('title', $row->getNotRegisteredMandatoryBlocksText())
+                    ->setText($row->getNotRegisteredMandatoryBlocksCount());
             });
 
         foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {

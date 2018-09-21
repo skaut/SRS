@@ -15,11 +15,9 @@
             </tr>
 
             <tr>
-                <th>{_admin.program.blocks_lector}</th>
+                <th>{_admin.program.blocks_lectors}</th>
                 <td>
-                    {if $block->getLector()}
-                        {$block->getLector()->getDisplayName()}
-                    {/if}
+                    {$block->getLectorsText()}
                 </td>
             </tr>
 
@@ -47,7 +45,7 @@
                     {elseif $block->getMandatory() == 1}
                         {_admin.program.blocks_mandatory_mandatory}
                     {else}
-                        {_admin.program.blocks_mandatory_auto_register}
+                        {_admin.program.blocks_mandatory_auto_registered}
                     {/if}
                 </td>
             </tr>

@@ -110,6 +110,7 @@ class ApplicationService
     }
 
     /**
+     * Zaregistruje uživatele (vyplnění přihlášky / přidání role v administraci).
      * @param Collection|Role[]     $roles
      * @param Collection|Subevent[] $subevents
      * @throws \Throwable
@@ -160,7 +161,7 @@ class ApplicationService
 
         $this->mailService->sendMailFromTemplate($user, '', Template::REGISTRATION, [
             TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-            TemplateVariable::EDIT_REGISTRATION_TO => $editRegistrationToText !== null ? $editRegistrationToText : '-',
+            TemplateVariable::EDIT_REGISTRATION_TO => $editRegistrationToText ?? '-',
             TemplateVariable::APPLICATION_MATURITY => $applicatonMaturity,
             TemplateVariable::APPLICATION_FEE => $applicationFee,
             TemplateVariable::APPLICATION_VARIABLE_SYMBOL => $applicationVariableSymbol,
@@ -169,6 +170,7 @@ class ApplicationService
     }
 
     /**
+     * Změní role uživatele.
      * @param Collection|Role[] $roles
      * @throws SettingsException
      * @throws \Throwable
@@ -198,6 +200,8 @@ class ApplicationService
                 $this->createRolesApplication($user, $roles, $createdBy, $approve);
                 $this->createSubeventsApplication($user, new ArrayCollection([$this->subeventRepository->findImplicit()]), $createdBy);
             } else {
+                $this->incrementRolesOccupancy($roles);
+
                 $user->setRoles($roles);
                 $this->userRepository->save($user);
 
@@ -241,6 +245,8 @@ class ApplicationService
                 }
 
                 $this->userRepository->save($user);
+
+                $this->decrementRolesOccupancy($user->getRolesApplication()->getRoles());
             }
 
             $this->programService->updateUserPrograms($user);
@@ -255,6 +261,7 @@ class ApplicationService
     }
 
     /**
+     * Zruší registraci uživatele na seminář.
      * @throws SettingsException
      * @throws \Throwable
      * @throws MailingException
@@ -277,6 +284,12 @@ class ApplicationService
 
                 $application->setValidTo(new \DateTime());
                 $this->applicationRepository->save($application);
+
+                if ($application instanceof RolesApplication) {
+                    $this->decrementRolesOccupancy($application->getRoles());
+                } elseif ($application instanceof SubeventsApplication) {
+                    $this->decrementSubeventsOccupancy($application->getSubevents());
+                }
             }
 
             $this->userRepository->save($user);
@@ -290,12 +303,15 @@ class ApplicationService
     }
 
     /**
+     * Vytvoří novou přihlášku na podakce.
      * @param Collection|Subevent[] $subevents
      * @throws \Throwable
      */
     public function addSubeventsApplication(User $user, Collection $subevents, User $createdBy) : void
     {
         $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($user, $subevents, $createdBy) : void {
+            $this->incrementSubeventsOccupancy($subevents);
+
             $this->createSubeventsApplication($user, $subevents, $createdBy);
 
             $this->programService->updateUserPrograms($user);
@@ -308,6 +324,7 @@ class ApplicationService
     }
 
     /**
+     * Aktualizuje podakce přihlášky.
      * @param Collection|Subevent[] $subevents
      * @throws SettingsException
      * @throws \Throwable
@@ -333,6 +350,8 @@ class ApplicationService
         }
 
         $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($application, $subevents, $createdBy) : void {
+            $this->incrementSubeventsOccupancy($subevents);
+
             $user = $application->getUser();
 
             $newApplication = clone $application;
@@ -347,6 +366,8 @@ class ApplicationService
             $this->applicationRepository->save($application);
 
             $this->programService->updateUserPrograms($user);
+
+            $this->decrementSubeventsOccupancy($application->getSubevents());
         });
 
         $this->mailService->sendMailFromTemplate($application->getUser(), '', Template::SUBEVENTS_CHANGED, [
@@ -356,6 +377,7 @@ class ApplicationService
     }
 
     /**
+     * Zruší přihlášku na podakce.
      * @throws SettingsException
      * @throws \Throwable
      * @throws MailingException
@@ -376,6 +398,8 @@ class ApplicationService
             $this->applicationRepository->save($application);
 
             $this->programService->updateUserPrograms($user);
+
+            $this->decrementSubeventsOccupancy($application->getSubevents());
         });
 
         $this->mailService->sendMailFromTemplate($application->getUser(), '', Template::SUBEVENTS_CHANGED, [
@@ -385,6 +409,7 @@ class ApplicationService
     }
 
     /**
+     * Aktualizuje stav platby.
      * @throws \Throwable
      */
     public function updatePayment(
@@ -470,6 +495,8 @@ class ApplicationService
             throw new \InvalidArgumentException('User is already registered.');
         }
 
+        $this->incrementRolesOccupancy($roles);
+
         $user->setApproved(true);
         if (! $approve && $roles->exists(function (int $key, Role $role) {
             return ! $role->isApprovedAfterRegistration();
@@ -511,6 +538,8 @@ class ApplicationService
         Collection $subevents,
         User $createdBy
     ) : SubeventsApplication {
+        $this->incrementSubeventsOccupancy($subevents);
+
         $application = new SubeventsApplication();
         $application->setUser($user);
         $application->setSubevents($subevents);
@@ -629,6 +658,9 @@ class ApplicationService
         return $fee - $discount;
     }
 
+    /**
+     * Určí stav přihlášky.
+     */
     private function getApplicationState(Application $application) : string
     {
         if ($application->getState() === ApplicationState::CANCELED) {
@@ -708,5 +740,61 @@ class ApplicationService
     public function isAllowedEditCustomInputs() : bool
     {
         return $this->settingsRepository->getDateValue(Settings::EDIT_CUSTOM_INPUTS_TO) >= (new \DateTime())->setTime(0, 0);
+    }
+
+    /**
+     * Zvýší obsazenost rolí.
+     * @param Collection|Role[] $roles
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    private function incrementRolesOccupancy(Collection $roles) : void
+    {
+        foreach ($roles as $role) {
+            $this->roleRepository->incrementOccupancy($role);
+            $this->roleRepository->save($role);
+        }
+    }
+
+    /**
+     * Sníží obsazenost rolí.
+     * @param Collection|Role[] $roles
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    private function decrementRolesOccupancy(Collection $roles) : void
+    {
+        foreach ($roles as $role) {
+            $this->roleRepository->decrementOccupancy($role);
+            $this->roleRepository->save($role);
+        }
+    }
+
+    /**
+     * Zvýší obsazenost podakcí.
+     * @param Collection|Subevent[] $subevents
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    private function incrementSubeventsOccupancy(Collection $subevents) : void
+    {
+        foreach ($subevents as $subevent) {
+            $this->subeventRepository->incrementOccupancy($subevent);
+            $this->subeventRepository->save($subevent);
+        }
+    }
+
+    /**
+     * Sníží obsazenost podakcí.
+     * @param Collection|Subevent[] $subevents
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    private function decrementSubeventsOccupancy(Collection $subevents) : void
+    {
+        foreach ($subevents as $subevent) {
+            $this->subeventRepository->decrementOccupancy($subevent);
+            $this->subeventRepository->save($subevent);
+        }
     }
 }

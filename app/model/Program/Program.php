@@ -37,6 +37,13 @@ class Program
     protected $attendees;
 
     /**
+     * Obsazenost.
+     * @ORM\Column(type="integer")
+     * @var int
+     */
+    protected $occupancy = 0;
+
+    /**
      * Místnost.
      * @ORM\ManyToOne(targetEntity="Room", inversedBy="programs")
      * @var Room
@@ -51,8 +58,9 @@ class Program
     protected $start;
 
 
-    public function __construct()
+    public function __construct(Block $block)
     {
+        $this->block     = $block;
         $this->attendees = new ArrayCollection();
     }
 
@@ -66,11 +74,6 @@ class Program
         return $this->block;
     }
 
-    public function setBlock(Block $block) : void
-    {
-        $this->block = $block;
-    }
-
     /**
      * @return Collection|User[]
      */
@@ -80,41 +83,11 @@ class Program
     }
 
     /**
-     * @param Collection|User[] $attendees
-     */
-    public function setAttendees(Collection $attendees) : void
-    {
-        $this->removeAllAttendees();
-        foreach ($attendees as $attendee) {
-            $this->addAttendee($attendee);
-        }
-    }
-
-    public function addAttendee(User $user) : void
-    {
-        if ($this->attendees->contains($user)) {
-            return;
-        }
-
-        $user->addProgram($this);
-    }
-
-    /**
      * Vrací počet účastníků.
      */
     public function getAttendeesCount() : int
     {
         return $this->attendees->count();
-    }
-
-    /**
-     * Odstraní všechny účastníky programu.
-     */
-    public function removeAllAttendees() : void
-    {
-        foreach ($this->attendees as $attendee) {
-            $attendee->removeProgram($this);
-        }
     }
 
     /**
@@ -127,11 +100,15 @@ class Program
 
     /**
      * Vrací kapacitu programového bloku.
-     * @return mixed
      */
-    public function getCapacity() : int
+    public function getCapacity() : ?int
     {
         return $this->block->getCapacity();
+    }
+
+    public function getOccupancy() : int
+    {
+        return $this->occupancy;
     }
 
     public function getRoom() : ?Room

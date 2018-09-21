@@ -10,7 +10,6 @@ use App\Model\Program\Category;
 use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 use function implode;
@@ -172,6 +171,14 @@ class Role
     protected $capacity;
 
     /**
+     * Obsazenost.
+     * Bude se používat pro kontrolu kapacity.
+     * @ORM\Column(type="integer")
+     * @var int
+     */
+    protected $occupancy = 0;
+
+    /**
      * Poplatek.
      * @ORM\Column(type="integer", nullable=true)
      * @var int
@@ -282,15 +289,6 @@ class Role
     public function getUsers() : Collection
     {
         return $this->users;
-    }
-
-    /**
-     * @return Collection|User[]
-     */
-    public function getApprovedUsers() : Collection
-    {
-        $criteria = Criteria::create()->where(Criteria::expr()->eq('approved', true));
-        return $this->users->matching($criteria);
     }
 
     /**
@@ -434,6 +432,11 @@ class Role
     public function hasLimitedCapacity() : bool
     {
         return $this->capacity !== null;
+    }
+
+    public function getOccupancy() : int
+    {
+        return $this->occupancy;
     }
 
     public function getFee() : ?int
@@ -662,11 +665,6 @@ class Role
     public function countUsers() : int
     {
         return $this->users->count();
-    }
-
-    public function countApprovedUsers() : int
-    {
-        return $this->getApprovedUsers()->count();
     }
 
     public function countUnoccupied() : ?int

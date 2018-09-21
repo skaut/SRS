@@ -15,6 +15,7 @@ use App\Model\Program\BlockRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
+use App\Services\ProgramService;
 use Doctrine\ORM\NonUniqueResultException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
@@ -63,6 +64,12 @@ class BlocksPresenter extends ProgramBasePresenter
      * @inject
      */
     public $session;
+
+    /**
+     * @var ProgramService
+     * @inject
+     */
+    public $programService;
 
 
     public function renderDefault() : void
@@ -133,7 +140,7 @@ class BlocksPresenter extends ProgramBasePresenter
         ) {
             $this->getPresenter()->flashMessage('admin.program.blocks_program_modify_schedule_not_allowed', 'danger');
         } else {
-            $this->programRepository->remove($program);
+            $this->programService->removeProgram($program);
             $this->getPresenter()->flashMessage('admin.program.blocks_program_deleted', 'success');
         }
 
@@ -171,7 +178,7 @@ class BlocksPresenter extends ProgramBasePresenter
                 $user  = $this->userRepository->findById($this->user->getId());
                 $block = $this->blockRepository->findById((int) $values['id']);
 
-                if ($values['id'] && ! $user->isAllowedModifyBlock($block)) {
+                if (! $user->isAllowedModifyBlock($block)) {
                     $this->flashMessage('admin.program.blocks_edit_not_allowed', 'danger');
                     $this->redirect('Blocks:default');
                 }

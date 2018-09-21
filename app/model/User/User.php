@@ -75,10 +75,17 @@ class User
 
     /**
      * Lektorované bloky.
-     * @ORM\OneToMany(targetEntity="\App\Model\Program\Block", mappedBy="lector", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="\App\Model\Program\Block", mappedBy="lectors", cascade={"persist"})
      * @var Collection|Block[]
      */
     protected $lecturersBlocks;
+
+    /**
+     * Programové bloky, které jsou pro uživatele povinné, ale nemá je zapsané.
+     * @ORM\ManyToMany(targetEntity="\App\Model\Program\Block")
+     * @var Collection|Block[]
+     */
+    protected $notRegisteredMandatoryBlocks;
 
     /**
      * Schválený.
@@ -301,10 +308,11 @@ class User
 
     public function __construct()
     {
-        $this->applications    = new ArrayCollection();
-        $this->roles           = new ArrayCollection();
-        $this->programs        = new ArrayCollection();
-        $this->lecturersBlocks = new ArrayCollection();
+        $this->applications                 = new ArrayCollection();
+        $this->roles                        = new ArrayCollection();
+        $this->programs                     = new ArrayCollection();
+        $this->lecturersBlocks              = new ArrayCollection();
+        $this->notRegisteredMandatoryBlocks = new ArrayCollection();
     }
 
     public function getId() : int
@@ -406,7 +414,7 @@ class User
             return true;
         }
 
-        if ($this->isAllowed(Resource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS) && $block->getLector() === $this) {
+        if ($this->isAllowed(Resource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS) && $block->getLectors()->contains($this)) {
             return true;
         }
 
@@ -560,15 +568,14 @@ class User
         return $this->programs;
     }
 
-    /**
-     * @param Collection|Program[] $programs
-     */
-    public function setPrograms(Collection $programs) : void
+    public function addProgram(Program $program) : void
     {
-        $this->programs->clear();
-        foreach ($programs as $program) {
-            $this->programs->add($program);
-        }
+        $this->programs->add($program);
+    }
+
+    public function removeProgram(Program $program) : void
+    {
+        $this->programs->removeElement($program);
     }
 
     /**
@@ -579,18 +586,35 @@ class User
         return $this->lecturersBlocks;
     }
 
-    public function addProgram(Program $program) : void
+    /**
+     * @return Collection|Block[]
+     */
+    public function getNotRegisteredMandatoryBlocks() : Collection
     {
-        if ($this->programs->contains($program)) {
-            return;
-        }
-
-        $this->programs->add($program);
+        return $this->notRegisteredMandatoryBlocks;
     }
 
-    public function removeProgram(Program $program) : void
+    public function getNotRegisteredMandatoryBlocksText() : string
     {
-        $this->programs->removeElement($program);
+        return implode(', ', $this->notRegisteredMandatoryBlocks->map(function (Block $block) {
+            return $block->getName();
+        })->toArray());
+    }
+
+    public function getNotRegisteredMandatoryBlocksCount() : int
+    {
+        return $this->notRegisteredMandatoryBlocks->count();
+    }
+
+    /**
+     * @param Collection|Block[] $notRegisteredMandatoryBlocks
+     */
+    public function setNotRegisteredMandatoryBlocks(Collection $notRegisteredMandatoryBlocks) : void
+    {
+        $this->notRegisteredMandatoryBlocks->clear();
+        foreach ($notRegisteredMandatoryBlocks as $notRegisteredMandatoryBlock) {
+            $this->notRegisteredMandatoryBlocks->add($notRegisteredMandatoryBlock);
+        }
     }
 
     /**
@@ -600,7 +624,7 @@ class User
     {
         return ! $this->programs->filter(function (Program $program) use ($block) {
             return $program->getBlock() === $block;
-        });
+        })->isEmpty();
     }
 
     public function isApproved() : bool
@@ -1044,6 +1068,17 @@ class User
         }
 
         return false;
+    }
+
+    /**
+     * Vrací přihlášku rolí.
+     */
+    public function getRolesApplication() : ?RolesApplication
+    {
+        foreach ($this->getNotCanceledRolesApplications() as $application) {
+            return $application;
+        }
+        return null;
     }
 
     /**

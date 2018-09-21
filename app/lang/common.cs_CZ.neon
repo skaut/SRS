@@ -142,7 +142,7 @@ api:
     schedule_program_not_registered: "Na tento program jste nebyli přihlášeni."
     program_unregistered: "Program byl úspěšně odhlášen."
     schedule_room_occupied: "Místnost \"%name%\" je v tuto dobu již obsazena."
-    schedule_auto_register_not_allowed: "Automaticky přihlašovaný program nesmí být ve stejnou dobu jako jiný program."
+    schedule_auto_registered_not_allowed: "Automaticky přihlašovaný program nesmí být ve stejnou dobu jako jiný program."
 
 export:
     common:
@@ -181,7 +181,7 @@ export:
         to: "Do"
         program_name: "Název programu"
         room: "Místnost"
-        lector: "Lektor"
+        lectors: "Lektoři"
         occupancy: "Obsazenost"
 
 mailing:

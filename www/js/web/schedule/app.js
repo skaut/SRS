@@ -1,6 +1,6 @@
 var apiPath = basePath + '/api/schedule/';
 
-var COLOR_OPTIONAL = '#0275D8';
+var COLOR_VOLUNTARY = '#0275D8';
 var COLOR_MANDATORY = '#D9534F';
 var COLOR_ATTENDS = '#5CB85C';
 var COLOR_BLOCKED = '#A6A6A6';
@@ -29,7 +29,7 @@ app.controller('WebScheduleCtrl', function WebScheduleCtrl($scope, $http, $q, ui
         type: ''
     };
 
-    $scope.mandatory_nonregistered_programs_count = 0;
+    $scope.mandatory_not_registered_programs_count = 0;
 
 
     $scope.startup = function () {
@@ -59,7 +59,7 @@ app.controller('WebScheduleCtrl', function WebScheduleCtrl($scope, $http, $q, ui
                     $scope.blocksMap[block.id] = block;
 
                     if (block.mandatory && block.user_allowed && !block.user_attends)
-                        $scope.mandatory_nonregistered_programs_count++;
+                        $scope.mandatory_not_registered_programs_count++;
                 })
             }, function (response) {
                 $scope.flashMessage('Nepodařilo se načíst programové bloky.', 'danger');
@@ -121,7 +121,7 @@ app.controller('WebScheduleCtrl', function WebScheduleCtrl($scope, $http, $q, ui
                     $scope.event.user_attends = true;
 
                     if ($scope.event.block.mandatory == true) {
-                        $scope.mandatory_nonregistered_programs_count--;
+                        $scope.mandatory_not_registered_programs_count--;
                     }
 
                     $scope.event.attendees_count = response.data.program.attendees_count;
@@ -156,7 +156,7 @@ app.controller('WebScheduleCtrl', function WebScheduleCtrl($scope, $http, $q, ui
                     $scope.event.user_attends = false;
 
                     if ($scope.event.block.mandatory) {
-                        $scope.mandatory_nonregistered_programs_count++;
+                        $scope.mandatory_not_registered_programs_count++;
                     }
 
                     $scope.event.attendees_count = response.data.program.attendees_count;
@@ -239,11 +239,17 @@ app.controller('WebScheduleCtrl', function WebScheduleCtrl($scope, $http, $q, ui
                     content: ''
                 };
 
-                options.content += "<strong>Kategorie:</strong> " + event.block.category + "<br>";
-                options.content += "<strong>Lektor:</strong> " + event.block.lector + "<br>";
-                options.content += "<strong>Místnost:</strong> " + (event.room ? event.room.name : '') + "<br>";
+                if (event.block.category) {
+                    options.content += "<strong>Kategorie:</strong> " + event.block.category + "<br>";
+                }
+                if (event.block.lectors_names) {
+                    options.content += "<strong>Lektoři:</strong> " + event.block.lectors_names + "<br>";
+                }
+                if (event.blocked.room) {
+                    options.content += "<strong>Místnost:</strong> " + (event.room ? event.room.name : '') + "<br>";
+                }
                 options.content += "<strong>Obsazenost:</strong> " + (event.block.capacity !== undefined ? event.attendees_count + "/" + event.block.capacity : event.attendees_count) + "</br>";
-                options.content += event.block.perex;
+                options.content += event.block.perex + "</br>";
 
                 element.popover(options);
             }
@@ -264,7 +270,7 @@ function setColor(event) {
         event.color = COLOR_MANDATORY;
     }
     else {
-        event.color = COLOR_OPTIONAL;
+        event.color = COLOR_VOLUNTARY;
     }
 }
 

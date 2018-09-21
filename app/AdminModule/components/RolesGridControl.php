@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Components;
 
-use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\User\UserRepository;
 use App\Services\ProgramService;
 use App\Utils\Helpers;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
@@ -143,25 +141,13 @@ class RolesGridControl extends Control
     {
         $role = $this->roleRepository->findById($id);
 
-        $usersInRole = $this->userRepository->findAllInRole($role);
-
-        $this->roleRepository->getEntityManager()->transactional(function ($em) use ($role, $usersInRole) : void {
+        if ($role->getUsers()->isEmpty()) {
             $this->roleRepository->remove($role);
+            $this->getPresenter()->flashMessage('admin.acl.roles_deleted', 'success');
+        } else {
+            $this->getPresenter()->flashMessage('admin.acl.roles_deleted_error', 'danger');
+        }
 
-            foreach ($usersInRole as $user) {
-                if (! $user->getRoles()->isEmpty()) {
-                    continue;
-                }
-
-                $user->addRole($this->roleRepository->findBySystemName(Role::NONREGISTERED));
-                $user->setApproved(true);
-                $this->userRepository->save($user);
-            }
-
-            $this->programService->updateUsersPrograms(new ArrayCollection($this->userRepository->findAll()));
-        });
-
-        $this->getPresenter()->flashMessage('admin.acl.roles_deleted', 'success');
         $this->redirect('this');
     }
 

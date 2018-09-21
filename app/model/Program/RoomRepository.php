@@ -96,7 +96,7 @@ class RoomRepository extends EntityRepository
     /**
      * Je v místnosti jiný program ve stejnou dobu?
      */
-    public function hasOverlappingProgram(Room $room, Program $program, \DateTime $start, \DateTime $end) : bool
+    public function hasOverlappingProgram(Room $room, ?int $programId, \DateTime $start, \DateTime $end) : bool
     {
         $qb = $this->createQueryBuilder('r')
             ->select('r.id')
@@ -107,15 +107,11 @@ class RoomRepository extends EntityRepository
                 "(p.start < :end) AND (:start < (DATE_ADD(p.start, (b.duration * 60), 'second')))"
             ))
             ->andWhere('r.id = :rid')
+            ->andWhere('p.id != :pid')
             ->setParameter('start', $start)
             ->setParameter('end', $end)
-            ->setParameter('rid', $room->getId());
-
-        if ($program->getId()) {
-            $qb = $qb
-                ->andWhere('p.id != :pid')
-                ->setParameter('pid', $program->getId());
-        }
+            ->setParameter('rid', $room->getId())
+            ->setParameter('pid', $programId);
 
         return ! empty($qb->getQuery()->getResult());
     }

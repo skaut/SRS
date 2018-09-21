@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
+use function implode;
 
 /**
  * Entita programový blok.
@@ -40,10 +41,10 @@ class Block
 
     /**
      * Lektor.
-     * @ORM\ManyToOne(targetEntity="\App\Model\User\User", inversedBy="lecturersBlocks")
-     * @var User
+     * @ORM\ManyToMany(targetEntity="\App\Model\User\User", inversedBy="lecturersBlocks")
+     * @var Collection|User[]
      */
-    protected $lector;
+    protected $lectors;
 
     /**
      * Kategorie bloku.
@@ -60,11 +61,11 @@ class Block
     protected $subevent;
 
     /**
-     * Povinnost. 0 - nepovinný, 1 - povinný, 2 - automaticky zapisovaný.
-     * @ORM\Column(type="integer")
-     * @var int
+     * Povinnost.
+     * @ORM\Column(type="string")
+     * @var string
      */
-    protected $mandatory = 0;
+    protected $mandatory;
 
     /**
      * Délka programového bloku.
@@ -105,6 +106,7 @@ class Block
     public function __construct()
     {
         $this->programs = new ArrayCollection();
+        $this->lectors  = new ArrayCollection();
     }
 
     public function getId() : int
@@ -153,14 +155,30 @@ class Block
         return $this->programs->count();
     }
 
-    public function getLector() : ?User
+    /**
+     * @return Collection|User[]
+     */
+    public function getLectors() : Collection
     {
-        return $this->lector;
+        return $this->lectors;
     }
 
-    public function setLector(?User $lector) : void
+    public function getLectorsText() : string
     {
-        $this->lector = $lector;
+        return implode(', ', $this->lectors->map(function (User $lector) {
+            return $lector->getDisplayName();
+        })->toArray());
+    }
+
+    /**
+     * @param Collection|User[] $lectors
+     */
+    public function setLectors(Collection $lectors) : void
+    {
+        $this->lectors->clear();
+        foreach ($lectors as $lector) {
+            $lectors->add($lector);
+        }
     }
 
     public function getCategory() : ?Category
@@ -183,12 +201,12 @@ class Block
         $this->subevent = $subevent;
     }
 
-    public function getMandatory() : int
+    public function getMandatory() : string
     {
         return $this->mandatory;
     }
 
-    public function setMandatory(int $mandatory) : void
+    public function setMandatory(string $mandatory) : void
     {
         $this->mandatory = $mandatory;
     }

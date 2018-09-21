@@ -344,4 +344,18 @@ class SubeventRepository extends EntityRepository
         $this->_em->remove($subevent);
         $this->_em->flush();
     }
+
+    public function incrementOccupancy(Subevent $subevent) : void
+    {
+        $this->createQuery('UPDATE App\Model\Structure\Subevent s SET s.occupancy = s.occupancy + 1 WHERE s.id = :sid')
+            ->setParameter('sid', $subevent->getId())
+            ->getResult();
+    }
+
+    public function decrementOccupancy(Subevent $subevent) : void
+    {
+        $this->createQuery('UPDATE App\Model\Structure\Subevent s SET s.occupancy = s.occupancy - 1 WHERE s.id = :sid')
+            ->setParameter('sid', $subevent->getId())
+            ->getResult();
+    }
 }

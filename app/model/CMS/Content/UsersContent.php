@@ -63,7 +63,10 @@ class UsersContent extends Content implements IContent
      */
     public function setRoles(Collection $roles) : void
     {
-        $this->roles = $roles;
+        $this->roles->clear();
+        foreach ($roles as $role) {
+            $this->roles->add($role);
+        }
     }
 
     /**

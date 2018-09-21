@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Program;
 
+use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Structure\Subevent;
 use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -141,9 +142,10 @@ class BlockRepository extends EntityRepository
                 'b.category IS NULL'
             ))
             ->andWhere('b.subevent IN (:usersSubevents)')
-            ->andWhere('b.mandatory > 0')
+            ->andWhere('b.mandatory != :voluntary')
             ->setParameter('categories', $categories)
-            ->setParameter('usersSubevents', $subevents);
+            ->setParameter('usersSubevents', $subevents)
+            ->setParameter('voluntary', ProgramMandatoryType::VOLUNTARY);
 
         if (! empty($usersBlocks)) {
             $qb = $qb

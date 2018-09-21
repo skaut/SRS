@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\ApiModule\DTO\Schedule;
 
+use ApiModule\DTO\Schedule\LectorDetailDTO;
 use JMS\Serializer\Annotation as JMS;
 use Nette;
 
@@ -35,22 +36,16 @@ class BlockDetailDTO
     private $category;
 
     /**
-     * @JMS\Type("string")
-     * @var string
+     * @JMS\Type("array<ApiModule\DTO\Schedule\LectorDetailDTO>")
+     * @var LectorDetailDTO[]
      */
-    private $lector;
+    private $lectors;
 
     /**
      * @JMS\Type("string")
      * @var string
      */
-    private $aboutLector;
-
-    /**
-     * @JMS\Type("string")
-     * @var string
-     */
-    private $lectorPhoto;
+    private $lectorsNames;
 
     /**
      * @JMS\Type("int")
@@ -66,7 +61,7 @@ class BlockDetailDTO
 
     /**
      * @JMS\Type("int")
-     * @var int
+     * @var ?int
      */
     private $capacity;
 
@@ -80,7 +75,7 @@ class BlockDetailDTO
      * @JMS\Type("boolean")
      * @var bool
      */
-    private $autoRegister;
+    private $autoRegistered;
 
     /**
      * @JMS\Type("string")
@@ -143,34 +138,30 @@ class BlockDetailDTO
         $this->category = $category;
     }
 
-    public function getLector() : string
+    /**
+     * @return LectorDetailDTO[]
+     */
+    public function getLectors() : array
     {
-        return $this->lector;
+        return $this->lectors;
     }
 
-    public function setLector(string $lector) : void
+    /**
+     * @param LectorDetailDTO[] $lectors
+     */
+    public function setLectors(array $lectors) : void
     {
-        $this->lector = $lector;
+        $this->lectors = $lectors;
     }
 
-    public function getAboutLector() : string
+    public function getLectorsNames() : string
     {
-        return $this->aboutLector;
+        return $this->lectorsNames;
     }
 
-    public function setAboutLector(string $aboutLector) : void
+    public function setLectorsNames(string $lectorsNames) : void
     {
-        $this->aboutLector = $aboutLector;
-    }
-
-    public function getLectorPhoto() : ?string
-    {
-        return $this->lectorPhoto;
-    }
-
-    public function setLectorPhoto(?string $lectorPhoto) : void
-    {
-        $this->lectorPhoto = $lectorPhoto;
+        $this->lectorsNames = $lectorsNames;
     }
 
     public function getDurationHours() : int
@@ -213,14 +204,14 @@ class BlockDetailDTO
         $this->mandatory = $mandatory;
     }
 
-    public function isAutoRegister() : bool
+    public function isAutoRegistered() : bool
     {
-        return $this->autoRegister;
+        return $this->autoRegistered;
     }
 
-    public function setAutoRegister(bool $autoRegister) : void
+    public function setAutoRegistered(bool $autoRegistered) : void
     {
-        $this->autoRegister = $autoRegister;
+        $this->autoRegistered = $autoRegistered;
     }
 
     public function getPerex() : string
