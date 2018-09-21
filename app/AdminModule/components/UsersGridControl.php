@@ -298,7 +298,15 @@ class UsersGridControl extends Control
             ->setSortable()
             ->setFilterText();
 
-        $grid->addColumnNumber('fee', 'admin.users.users_fee');
+        $grid->addColumnNumber('fee', 'admin.users.users_fee')
+            ->setSortable()
+            ->setSortableCallback(function (QueryBuilder $qb, array $sort) : void {
+                $sort = $sort['fee'] === 'DESC' ? 'ASC' : 'DESC';
+                $qb->addSelect('sum(aFee.fee) as totalFee')
+                    ->join('u.applications', 'aFee')
+                    ->groupBy('u.id')
+                    ->orderBy('totalFee', $sort);
+            });
 
         $grid->addColumnNumber('feeRemaining', 'admin.users.users_fee_remaining');
 
