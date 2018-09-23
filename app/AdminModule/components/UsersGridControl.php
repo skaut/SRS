@@ -278,7 +278,7 @@ class UsersGridControl extends Control
             ->setSortable()
             ->setSortableCallback(function (QueryBuilder $qb, array $sort) : void {
                 $sortOrig = $sort['unit'];
-                $sortRev = $sort['unit'] === 'DESC' ? 'ASC' : 'DESC';
+                $sortRev  = $sort['unit'] === 'DESC' ? 'ASC' : 'DESC';
                 $qb->orderBy('u.unit', $sortOrig)
                     ->addOrderBy('u.externalLector', $sortRev)
                     ->addOrderBy('u.member', $sortRev);
@@ -322,7 +322,7 @@ class UsersGridControl extends Control
 
         $grid->addColumnText('paymentMethod', 'admin.users.users_payment_method')
             ->setRenderer(function (User $user) {
-                return $user->getPaymentMethod() ? $this->translator->translate('common.payment.' . $user->getPaymentMethod()) : "";
+                return $user->getPaymentMethod() ? $this->translator->translate('common.payment.' . $user->getPaymentMethod()) : '';
             })
             ->setFilterMultiSelect($this->preparePaymentMethodOptionsWithMixed())
             ->setTranslateOptions();

@@ -506,18 +506,12 @@ class User
         $this->member = $member;
     }
 
-    /**
-     * @return bool
-     */
-    public function isExternalLector(): bool
+    public function isExternalLector() : bool
     {
         return $this->externalLector;
     }
 
-    /**
-     * @param bool $externalLector
-     */
-    public function setExternalLector(bool $externalLector): void
+    public function setExternalLector(bool $externalLector) : void
     {
         $this->externalLector = $externalLector;
     }
@@ -712,8 +706,8 @@ class User
     public function isInRole(Role $role) : bool
     {
         return $this->roles->filter(function ($item) use ($role) {
-                return $item === $role;
-            })->count() !== 0;
+            return $item === $role;
+        })->count() !== 0;
     }
 
     /**
@@ -975,12 +969,12 @@ class User
         return $this->lecturersBlocks;
     }
 
-    public function getFee(): int
+    public function getFee() : int
     {
         return $this->fee;
     }
 
-    public function setFee(int $fee): void
+    public function setFee(int $fee) : void
     {
         $this->fee = $fee;
     }

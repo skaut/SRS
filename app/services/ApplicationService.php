@@ -834,9 +834,10 @@ class ApplicationService
 
         $maxDate = null;
         foreach ($user->getValidApplications() as $application) {
-            if ($maxDate < $application->getPaymentDate()) {
-                $maxDate = $application->getPaymentDate();
+            if ($maxDate >= $application->getPaymentDate()) {
+                continue;
             }
+            $maxDate = $application->getPaymentDate();
         }
         $user->setLastPaymentDate($maxDate);
 
