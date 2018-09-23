@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Model\Enums\PaymentType;
 use App\Model\User\ApplicationRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
@@ -49,14 +50,14 @@ class UserService
             return $this->translator->translate('admin.users.users_membership_no');
         }
 
-        if ($user->isExternal()) {
+        if ($user->isExternalLector()) {
             return $this->translator->translate('admin.users.users_membership_external');
         }
 
         return $this->translator->translate('admin.users.users_membership_not_connected');
     }
 
-    public function getPaymentMethodText(User $user) : ?string
+    public function getPaymentMethod(User $user) : ?string
     {
         $paymentMethod = null;
 
@@ -65,18 +66,17 @@ class UserService
             if (! $currentPaymentMethod) {
                 continue;
             }
-
-            if ($paymentMethod === null) {
+            if (! $paymentMethod) {
                 $paymentMethod = $currentPaymentMethod;
                 continue;
             }
             if ($paymentMethod !== $currentPaymentMethod) {
-                return $this->translator->translate('common.payment.mixed');
+                return PaymentType::MIXED;
             }
         }
 
         if ($paymentMethod) {
-            return $this->translator->translate('common.payment.' . $paymentMethod);
+            return $paymentMethod;
         }
 
         return null;

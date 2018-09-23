@@ -119,6 +119,7 @@ class AddLectorForm
 
         $user = new User();
 
+        $user->setExternalLector(true);
         $user->setFirstName($values['firstName']);
         $user->setLastName($values['lastName']);
         $user->setNickName($values['nickName']);

@@ -52,42 +52,6 @@ class User
     protected $email;
 
     /**
-     * Přihlášky.
-     * @ORM\OneToMany(targetEntity="Application", mappedBy="user", cascade={"persist"})
-     * @var Collection|Application[]
-     */
-    protected $applications;
-
-    /**
-     * Role.
-     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="users")
-     * @var Collection|Role[]
-     */
-    protected $roles;
-
-    /**
-     * Přihlášené programy.
-     * @ORM\ManyToMany(targetEntity="\App\Model\Program\Program", inversedBy="attendees")
-     * @ORM\OrderBy({"start" = "ASC"})
-     * @var Collection|Program[]
-     */
-    protected $programs;
-
-    /**
-     * Lektorované bloky.
-     * @ORM\ManyToMany(targetEntity="\App\Model\Program\Block", mappedBy="lectors", cascade={"persist"})
-     * @var Collection|Block[]
-     */
-    protected $lecturersBlocks;
-
-    /**
-     * Programové bloky, které jsou pro uživatele povinné, ale nemá je zapsané.
-     * @ORM\ManyToMany(targetEntity="\App\Model\Program\Block")
-     * @var Collection|Block[]
-     */
-    protected $notRegisteredMandatoryBlocks;
-
-    /**
      * Schválený.
      * @ORM\Column(type="boolean")
      * @var bool
@@ -120,7 +84,6 @@ class User
      * @ORM\Column(type="string", nullable=true)
      * @var string
      */
-
     protected $degreePre;
 
     /**
@@ -159,6 +122,13 @@ class User
     protected $member = false;
 
     /**
+     * Externí lektor.
+     * @ORM\Column(type="boolean")
+     * @var bool
+     */
+    protected $externalLector = false;
+
+    /**
      * Jednotka.
      * @ORM\Column(type="string", nullable=true)
      * @var string
@@ -192,13 +162,6 @@ class User
      * @var int
      */
     protected $skautISPersonId;
-
-    /**
-     * Datum prvního přihlášení.
-     * @ORM\Column(type="datetime", nullable=true)
-     * @var \DateTime
-     */
-    protected $firstLogin;
 
     /**
      * Datum posledního přihlášení.
@@ -264,18 +227,82 @@ class User
     protected $departure;
 
     /**
-     * Typ členství. NEPOUŽÍVÁ SE.
-     * @ORM\Column(type="string", nullable=true)
-     * @var string
+     * Role.
+     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="users")
+     * @var Collection|Role[]
      */
-    protected $membershipType;
+    protected $roles;
 
     /**
-     * Kategorie členství. NEPOUŽÍVÁ SE.
+     * Přihlášky.
+     * @ORM\OneToMany(targetEntity="Application", mappedBy="user", cascade={"persist"})
+     * @var Collection|Application[]
+     */
+    protected $applications;
+
+    /**
+     * Přihlášené programy.
+     * @ORM\ManyToMany(targetEntity="\App\Model\Program\Program", inversedBy="attendees")
+     * @ORM\OrderBy({"start" = "ASC"})
+     * @var Collection|Program[]
+     */
+    protected $programs;
+
+    /**
+     * Lektorované bloky.
+     * @ORM\ManyToMany(targetEntity="\App\Model\Program\Block", mappedBy="lectors", cascade={"persist"})
+     * @var Collection|Block[]
+     */
+    protected $lecturersBlocks;
+
+    /**
+     * Poplatek uživatele.
+     * @ORM\Column(type="integer")
+     * @var int
+     */
+    protected $fee = 0;
+
+    /**
+     * Zbývající poplatek uživatele.
+     * @ORM\Column(type="integer")
+     * @var int
+     */
+    protected $feeRemaining = 0;
+
+    /**
+     * Platební metoda.
      * @ORM\Column(type="string", nullable=true)
      * @var string
      */
-    protected $membershipCategory;
+    protected $paymentMethod;
+
+    /**
+     * Datum poslední platby.
+     * @ORM\Column(type="date", nullable=true)
+     * @var \DateTime
+     */
+    protected $lastPaymentDate;
+
+    /**
+     * Datum a čas vytvoření přihlášky rolí.
+     * @ORM\Column(type="datetime", nullable=true)
+     * @var \DateTime
+     */
+    protected $rolesApplicationDate;
+
+    /**
+     * Programové bloky, které jsou pro uživatele povinné, ale nemá je zapsané.
+     * @ORM\ManyToMany(targetEntity="\App\Model\Program\Block")
+     * @var Collection|Block[]
+     */
+    protected $notRegisteredMandatoryBlocks;
+
+    /**
+     * Počet programových bloků, které jsou pro uživatele povinné, ale nemá je zapsané.
+     * @ORM\Column(type="integer")
+     * @var int
+     */
+    protected $notRegisteredMandatoryBlocksCount = 0;
 
     /**
      * Hodnoty vlastních polí přihlášky.
@@ -338,293 +365,6 @@ class User
     public function setEmail(?string $email) : void
     {
         $this->email = $email;
-    }
-
-    /**
-     * @return Collection|Role[]
-     */
-    public function getRoles() : Collection
-    {
-        return $this->roles;
-    }
-
-    /**
-     * @param Collection|Role[] $roles
-     */
-    public function setRoles(Collection $roles) : void
-    {
-        $this->roles->clear();
-        foreach ($roles as $role) {
-            $this->roles->add($role);
-        }
-    }
-
-    public function addRole(Role $role) : void
-    {
-        if ($this->isInRole($role)) {
-            return;
-        }
-
-        $this->roles->add($role);
-    }
-
-    /**
-     * Je uživatel v roli?
-     */
-    public function isInRole(Role $role) : bool
-    {
-        return $this->roles->filter(function ($item) use ($role) {
-            return $item === $role;
-        })->count() !== 0;
-    }
-
-    /**
-     * Vrátí role uživatele oddělené čárkou.
-     */
-    public function getRolesText() : string
-    {
-        $rolesNames = [];
-        foreach ($this->roles as $role) {
-            $rolesNames[] = $role->getName();
-        }
-        return implode(', ', $rolesNames);
-    }
-
-    /**
-     * Má uživatel oprávnění k prostředku?
-     */
-    public function isAllowed(string $resource, string $permission) : bool
-    {
-        foreach ($this->roles as $r) {
-            foreach ($r->getPermissions() as $p) {
-                if ($p->getResource()->getName() === $resource && $p->getName() === $permission) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Je uživatel oprávněn upravovat blok?
-     */
-    public function isAllowedModifyBlock(Block $block) : bool
-    {
-        if ($this->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS)) {
-            return true;
-        }
-
-        if ($this->isAllowed(Resource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS) && $block->getLectors()->contains($this)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public function isAllowedRegisterPrograms() : bool
-    {
-        return $this->isApproved() && $this->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS);
-    }
-
-    /**
-     * @return Collection|Application[]
-     */
-    public function getApplications() : Collection
-    {
-        return $this->applications;
-    }
-
-    /**
-     * Vrátí platné přihlášky.
-     * @return Collection|Application[]
-     */
-    public function getValidApplications() : Collection
-    {
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->isNull('validTo'))
-            ->orderBy(['applicationId' => 'ASC']);
-
-        return $this->applications->matching($criteria);
-    }
-
-    /**
-     * Vrátí nezrušené přihlášky.
-     * @return Collection|Application[]
-     */
-    public function getNotCanceledApplications() : Collection
-    {
-        return $this->getValidApplications()->filter(function (Application $application) {
-            return ! $application->isCanceled();
-        });
-    }
-
-    /**
-     * Vrátí nezrušené přihlášky na rolí.
-     * @return Collection|RolesApplication[]
-     */
-    public function getNotCanceledRolesApplications() : Collection
-    {
-        return $this->getNotCanceledApplications()->filter(function (Application $application) {
-            return $application->getType() === Application::ROLES;
-        });
-    }
-
-    /**
-     * Vrátí nezrušené přihlášky na podakce.
-     * @return Collection|SubeventsApplication[]
-     */
-    public function getNotCanceledSubeventsApplications() : Collection
-    {
-        return $this->getNotCanceledApplications()->filter(function (Application $application) {
-            return $application->getType() === Application::SUBEVENTS;
-        });
-    }
-
-    /**
-     * Vrácí zaplacené přihlášky.
-     * @return Collection|Application[]
-     */
-    public function getPaidApplications() : Collection
-    {
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->andX(
-                Criteria::expr()->isNull('validTo'),
-                Criteria::expr()->eq('state', ApplicationState::PAID)
-            ));
-
-        return $this->applications->matching($criteria);
-    }
-
-    /**
-     * Vrátí přihlášky, které jsou zaplacené nebo zdarma.
-     * @return Collection|Application[]
-     */
-    public function getPaidAndFreeApplications() : Collection
-    {
-        //TODO: opravit
-//        $criteria = Criteria::create()
-//            ->where(Criteria::expr()->andX(
-//                Criteria::expr()->isNull('validTo'),
-//                Criteria::expr()->orX(
-//                    Criteria::expr()->eq('state', ApplicationState::PAID),
-//                    Criteria::expr()->eq('state', ApplicationState::PAID_FREE)
-//                )
-//            ));
-//
-//        return $this->applications->matching($criteria);
-
-        return $this->applications->filter(function (Application $application) {
-            if ($application->getValidTo() === null && (
-                    $application->getState() === ApplicationState::PAID_FREE ||
-                    $application->getState() === ApplicationState::PAID)) {
-                return true;
-            }
-            return false;
-        });
-    }
-
-    /**
-     * Vrátí přihlášky čekající na platbu.
-     * @return Collection|Application[]
-     */
-    public function getWaitingForPaymentApplications() : Collection
-    {
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->andX(
-                Criteria::expr()->isNull('validTo'),
-                Criteria::expr()->eq('state', ApplicationState::WAITING_FOR_PAYMENT)
-            ));
-
-        return $this->applications->matching($criteria);
-    }
-
-    /**
-     * Vrátí přihlášky rolí čekající na platbu.
-     * @return Collection|RolesApplication[]
-     */
-    public function getWaitingForPaymentRolesApplications() : Collection
-    {
-        return $this->getWaitingForPaymentApplications()->filter(function (Application $application) {
-            return $application->getType() === Application::ROLES;
-        });
-    }
-
-    /**
-     * Vrátí přihlášky podakcí čekající na platbu.
-     * @return Collection|SubeventsApplication[]
-     */
-    public function getWaitingForPaymentSubeventsApplications() : Collection
-    {
-        return $this->getWaitingForPaymentApplications()->filter(function (Application $application) {
-            return $application->getType() === Application::SUBEVENTS;
-        });
-    }
-
-    /**
-     * @return Collection|Program[]
-     */
-    public function getPrograms() : Collection
-    {
-        return $this->programs;
-    }
-
-    public function addProgram(Program $program) : void
-    {
-        $this->programs->add($program);
-    }
-
-    public function removeProgram(Program $program) : void
-    {
-        $this->programs->removeElement($program);
-    }
-
-    /**
-     * @return Collection|Block[]
-     */
-    public function getLecturersBlocks() : Collection
-    {
-        return $this->lecturersBlocks;
-    }
-
-    /**
-     * @return Collection|Block[]
-     */
-    public function getNotRegisteredMandatoryBlocks() : Collection
-    {
-        return $this->notRegisteredMandatoryBlocks;
-    }
-
-    public function getNotRegisteredMandatoryBlocksText() : string
-    {
-        return implode(', ', $this->notRegisteredMandatoryBlocks->map(function (Block $block) {
-            return $block->getName();
-        })->toArray());
-    }
-
-    public function getNotRegisteredMandatoryBlocksCount() : int
-    {
-        return $this->notRegisteredMandatoryBlocks->count();
-    }
-
-    /**
-     * @param Collection|Block[] $notRegisteredMandatoryBlocks
-     */
-    public function setNotRegisteredMandatoryBlocks(Collection $notRegisteredMandatoryBlocks) : void
-    {
-        $this->notRegisteredMandatoryBlocks->clear();
-        foreach ($notRegisteredMandatoryBlocks as $notRegisteredMandatoryBlock) {
-            $this->notRegisteredMandatoryBlocks->add($notRegisteredMandatoryBlock);
-        }
-    }
-
-    /**
-     * Má uživatel přihlášený program z bloku?
-     */
-    public function hasProgramBlock(Block $block) : bool
-    {
-        return ! $this->programs->filter(function (Program $program) use ($block) {
-            return $program->getBlock() === $block;
-        })->isEmpty();
     }
 
     public function isApproved() : bool
@@ -722,7 +462,7 @@ class User
     /**
      * Aktualizuje jméno lektora.
      */
-    public function updateLectorName() : void
+    private function updateLectorName() : void
     {
         $this->lectorName = '';
 
@@ -766,12 +506,14 @@ class User
         $this->member = $member;
     }
 
-    /**
-     * Je bez skautIS účtu?
-     */
-    public function isExternal() : bool
+    public function isExternalLector() : bool
     {
-        return $this->username === null;
+        return $this->externalLector;
+    }
+
+    public function setExternalLector(bool $externalLector) : void
+    {
+        $this->externalLector = $externalLector;
     }
 
     public function getUnit() : ?string
@@ -930,24 +672,392 @@ class User
         $this->departure = $departure;
     }
 
-    public function getMembershipType() : ?string
+    /**
+     * @return Collection|Role[]
+     */
+    public function getRoles() : Collection
     {
-        return $this->membershipType;
+        return $this->roles;
     }
 
-    public function setMembershipType(?string $membershipType) : void
+    /**
+     * @param Collection|Role[] $roles
+     */
+    public function setRoles(Collection $roles) : void
     {
-        $this->membershipType = $membershipType;
+        $this->roles->clear();
+        foreach ($roles as $role) {
+            $this->roles->add($role);
+        }
     }
 
-    public function getMembershipCategory() : ?string
+    public function addRole(Role $role) : void
     {
-        return $this->membershipCategory;
+        if ($this->isInRole($role)) {
+            return;
+        }
+
+        $this->roles->add($role);
     }
 
-    public function setMembershipCategory(?string $membershipCategory) : void
+    /**
+     * Je uživatel v roli?
+     */
+    public function isInRole(Role $role) : bool
     {
-        $this->membershipCategory = $membershipCategory;
+        return $this->roles->filter(function ($item) use ($role) {
+            return $item === $role;
+        })->count() !== 0;
+    }
+
+    /**
+     * Je uživatel v roli, u které se eviduje příjezd a odjezd?
+     */
+    public function hasDisplayArrivalDepartureRole() : bool
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('displayArrivalDeparture', true));
+
+        return ! $this->roles->matching($criteria)->isEmpty();
+    }
+
+    /**
+     * Vrací, zda má uživatel nějakou roli, která nemá cenu podle podakcí.
+     */
+    public function hasFixedFeeRole() : bool
+    {
+        return $this->roles->exists(function (int $key, Role $role) {
+            return $role->getFee() !== null;
+        });
+    }
+
+    /**
+     * Vrátí role uživatele oddělené čárkou.
+     */
+    public function getRolesText() : string
+    {
+        $rolesNames = [];
+        foreach ($this->roles as $role) {
+            $rolesNames[] = $role->getName();
+        }
+        return implode(', ', $rolesNames);
+    }
+
+    /**
+     * Má uživatel oprávnění k prostředku?
+     */
+    public function isAllowed(string $resource, string $permission) : bool
+    {
+        foreach ($this->roles as $r) {
+            foreach ($r->getPermissions() as $p) {
+                if ($p->getResource()->getName() === $resource && $p->getName() === $permission) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Je uživatel oprávněn upravovat blok?
+     */
+    public function isAllowedModifyBlock(Block $block) : bool
+    {
+        if ($this->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS)) {
+            return true;
+        }
+
+        if ($this->isAllowed(Resource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS) && $block->getLectors()->contains($this)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Je uživatel oprávněn zapisovat se na programy?
+     */
+    public function isAllowedRegisterPrograms() : bool
+    {
+        return $this->isApproved() && $this->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS);
+    }
+
+    /**
+     * @return Collection|Application[]
+     */
+    public function getApplications() : Collection
+    {
+        return $this->applications;
+    }
+
+    /**
+     * Vrátí platné přihlášky.
+     * @return Collection|Application[]
+     */
+    public function getValidApplications() : Collection
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->isNull('validTo'))
+            ->orderBy(['applicationId' => 'ASC']);
+
+        return $this->applications->matching($criteria);
+    }
+
+    /**
+     * Vrátí nezrušené přihlášky.
+     * @return Collection|Application[]
+     */
+    public function getNotCanceledApplications() : Collection
+    {
+        return $this->getValidApplications()->filter(function (Application $application) {
+            return ! $application->isCanceled();
+        });
+    }
+
+    /**
+     * Vrátí nezrušené přihlášky na rolí.
+     * @return Collection|RolesApplication[]
+     */
+    public function getNotCanceledRolesApplications() : Collection
+    {
+        return $this->getNotCanceledApplications()->filter(function (Application $application) {
+            return $application->getType() === Application::ROLES;
+        });
+    }
+
+    /**
+     * Vrátí nezrušené přihlášky na podakce.
+     * @return Collection|SubeventsApplication[]
+     */
+    public function getNotCanceledSubeventsApplications() : Collection
+    {
+        return $this->getNotCanceledApplications()->filter(function (Application $application) {
+            return $application->getType() === Application::SUBEVENTS;
+        });
+    }
+
+    /**
+     * Vrácí zaplacené přihlášky.
+     * @return Collection|Application[]
+     */
+    public function getPaidApplications() : Collection
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->andX(
+                Criteria::expr()->isNull('validTo'),
+                Criteria::expr()->eq('state', ApplicationState::PAID)
+            ));
+
+        return $this->applications->matching($criteria);
+    }
+
+    /**
+     * Vrátí přihlášky, které jsou zaplacené nebo zdarma.
+     * @return Collection|Application[]
+     */
+    public function getPaidAndFreeApplications() : Collection
+    {
+        return $this->applications->filter(function (Application $application) {
+            if ($application->getValidTo() === null && (
+                    $application->getState() === ApplicationState::PAID_FREE ||
+                    $application->getState() === ApplicationState::PAID)) {
+                return true;
+            }
+            return false;
+        });
+    }
+
+    /**
+     * Vrátí přihlášky čekající na platbu.
+     * @return Collection|Application[]
+     */
+    public function getWaitingForPaymentApplications() : Collection
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->andX(
+                Criteria::expr()->isNull('validTo'),
+                Criteria::expr()->eq('state', ApplicationState::WAITING_FOR_PAYMENT)
+            ));
+
+        return $this->applications->matching($criteria);
+    }
+
+    /**
+     * Vrátí přihlášky rolí čekající na platbu.
+     * @return Collection|RolesApplication[]
+     */
+    public function getWaitingForPaymentRolesApplications() : Collection
+    {
+        return $this->getWaitingForPaymentApplications()->filter(function (Application $application) {
+            return $application->getType() === Application::ROLES;
+        });
+    }
+
+    /**
+     * Vrací přihlášku rolí.
+     */
+    public function getRolesApplication() : ?RolesApplication
+    {
+        foreach ($this->getNotCanceledRolesApplications() as $application) {
+            return $application;
+        }
+        return null;
+    }
+
+    /**
+     * Vrátí přihlášky podakcí čekající na platbu.
+     * @return Collection|SubeventsApplication[]
+     */
+    public function getWaitingForPaymentSubeventsApplications() : Collection
+    {
+        return $this->getWaitingForPaymentApplications()->filter(function (Application $application) {
+            return $application->getType() === Application::SUBEVENTS;
+        });
+    }
+
+    /**
+     * Vrací zda uživatel zaplatil první registraci.
+     */
+    public function hasPaidAnyApplication() : bool
+    {
+        return ! $this->getPaidApplications()->isEmpty();
+    }
+
+    /**
+     * Vrací zda uživatel zaplatil všechny registrace.
+     */
+    public function hasPaidEveryApplication() : bool
+    {
+        return $this->getValidApplications()->forAll(function (int $key, Application $application) {
+            return $application->getState() !== ApplicationState::WAITING_FOR_PAYMENT;
+        });
+    }
+
+    /**
+     * @return Collection|Program[]
+     */
+    public function getPrograms() : Collection
+    {
+        return $this->programs;
+    }
+
+    public function addProgram(Program $program) : void
+    {
+        $this->programs->add($program);
+    }
+
+    public function removeProgram(Program $program) : void
+    {
+        $this->programs->removeElement($program);
+    }
+
+    /**
+     * Má uživatel přihlášený program z bloku?
+     */
+    public function hasProgramBlock(Block $block) : bool
+    {
+        return ! $this->programs->filter(function (Program $program) use ($block) {
+            return $program->getBlock() === $block;
+        })->isEmpty();
+    }
+
+    /**
+     * @return Collection|Block[]
+     */
+    public function getLecturersBlocks() : Collection
+    {
+        return $this->lecturersBlocks;
+    }
+
+    public function getFee() : int
+    {
+        return $this->fee;
+    }
+
+    public function setFee(int $fee) : void
+    {
+        $this->fee = $fee;
+    }
+
+    /**
+     * Je uživatel platící?
+     */
+    public function isPaying() : bool
+    {
+        return $this->getFee() !== 0;
+    }
+
+    public function getFeeRemaining() : int
+    {
+        return $this->feeRemaining;
+    }
+
+    public function setFeeRemaining(int $feeRemaining) : void
+    {
+        $this->feeRemaining = $feeRemaining;
+    }
+
+    public function getPaymentMethod() : ?string
+    {
+        return $this->paymentMethod;
+    }
+
+    public function setPaymentMethod(?string $paymentMethod) : void
+    {
+        $this->paymentMethod = $paymentMethod;
+    }
+
+    public function getLastPaymentDate() : ?\DateTime
+    {
+        return $this->lastPaymentDate;
+    }
+
+    public function setLastPaymentDate(?\DateTime $lastPaymentDate) : void
+    {
+        $this->lastPaymentDate = $lastPaymentDate;
+    }
+
+    public function getRolesApplicationDate() : ?\DateTime
+    {
+        return $this->rolesApplicationDate;
+    }
+
+    public function setRolesApplicationDate(?\DateTime $rolesApplicationDate) : void
+    {
+        $this->rolesApplicationDate = $rolesApplicationDate;
+    }
+
+    /**
+     * @return Collection|Block[]
+     */
+    public function getNotRegisteredMandatoryBlocks() : Collection
+    {
+        return $this->notRegisteredMandatoryBlocks;
+    }
+
+    public function getNotRegisteredMandatoryBlocksText() : string
+    {
+        return implode(', ', $this->notRegisteredMandatoryBlocks->map(function (Block $block) {
+            return $block->getName();
+        })->toArray());
+    }
+
+    /**
+     * @param Collection|Block[] $notRegisteredMandatoryBlocks
+     */
+    public function setNotRegisteredMandatoryBlocks(Collection $notRegisteredMandatoryBlocks) : void
+    {
+        $this->notRegisteredMandatoryBlocks->clear();
+        foreach ($notRegisteredMandatoryBlocks as $notRegisteredMandatoryBlock) {
+            $this->notRegisteredMandatoryBlocks->add($notRegisteredMandatoryBlock);
+        }
+
+        $this->notRegisteredMandatoryBlocksCount = $this->notRegisteredMandatoryBlocks->count();
+    }
+
+    public function getNotRegisteredMandatoryBlocksCount() : int
+    {
+        return $this->notRegisteredMandatoryBlocksCount;
     }
 
     /**
@@ -1004,111 +1114,6 @@ class User
     }
 
     /**
-     * Je uživatel v roli, u které se eviduje příjezd a odjezd?
-     */
-    public function hasDisplayArrivalDepartureRole() : bool
-    {
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('displayArrivalDeparture', true));
-
-        return ! $this->roles->matching($criteria)->isEmpty();
-    }
-
-    /**
-     * Je uživatel platící?
-     */
-    public function isPaying() : bool
-    {
-        return $this->getFee() !== 0;
-    }
-
-    /**
-     * Vrací poplatek uživatele.
-     */
-    public function getFee() : int
-    {
-        $fee = 0;
-        foreach ($this->getNotCanceledApplications() as $application) {
-            $fee += $application->getFee();
-        }
-        return $fee;
-    }
-
-    /**
-     * Vrací částku, která zbývá uhradit.
-     */
-    public function getFeeRemaining() : int
-    {
-        $fee = 0;
-        foreach ($this->getWaitingForPaymentApplications() as $application) {
-            $fee += $application->getFee();
-        }
-        return $fee;
-    }
-
-    /**
-     * Vrací, zda má uživatel nějakou roli, která nemá cenu podle podakcí.
-     */
-    public function hasFixedFeeRole() : bool
-    {
-        return $this->roles->exists(function (int $key, Role $role) {
-            return $role->getFee() !== null;
-        });
-    }
-
-    /**
-     * Vrácí, zda má uživatel zaplacenou přihlášku s podakcí.
-     */
-    public function hasPaidSubevent(Subevent $subevent) : bool
-    {
-        foreach ($this->getPaidAndFreeApplications() as $application) {
-            if ($application->getType() === Application::SUBEVENTS && $application->getSubevents()->contains($subevent)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Vrací přihlášku rolí.
-     */
-    public function getRolesApplication() : ?RolesApplication
-    {
-        foreach ($this->getNotCanceledRolesApplications() as $application) {
-            return $application;
-        }
-        return null;
-    }
-
-    /**
-     * Vrací datum přihlášení.
-     */
-    public function getRolesApplicationDate() : ?\DateTime
-    {
-        foreach ($this->getNotCanceledRolesApplications() as $application) {
-            return $application->getApplicationDate();
-        }
-        return null;
-    }
-
-    /**
-     * Vrací datum poslední platby.
-     */
-    public function getLastPaymentDate() : ?\DateTime
-    {
-        $maxDate = null;
-        foreach ($this->getValidApplications() as $application) {
-            if ($maxDate !== null && $maxDate >= $application->getPaymentDate()) {
-                continue;
-            }
-
-            $maxDate = $application->getPaymentDate();
-        }
-        return $maxDate;
-    }
-
-    /**
      * Vrací podakce uživatele.
      * @return Collection|Subevent[]
      */
@@ -1145,21 +1150,17 @@ class User
     }
 
     /**
-     * Vrací zda uživatel zaplatil první registraci.
+     * Vrácí, zda má uživatel zaplacenou přihlášku s podakcí.
      */
-    public function hasPaidAnyApplication() : bool
+    public function hasPaidSubevent(Subevent $subevent) : bool
     {
-        return ! $this->getPaidApplications()->isEmpty();
-    }
+        foreach ($this->getPaidAndFreeApplications() as $application) {
+            if ($application->getType() === Application::SUBEVENTS && $application->getSubevents()->contains($subevent)) {
+                return true;
+            }
+        }
 
-    /**
-     * Vrací zda uživatel zaplatil všechny registrace.
-     */
-    public function hasPaidEveryApplication() : bool
-    {
-        return $this->getValidApplications()->forAll(function (int $key, Application $application) {
-            return $application->getState() !== ApplicationState::WAITING_FOR_PAYMENT;
-        });
+        return false;
     }
 
     /**
