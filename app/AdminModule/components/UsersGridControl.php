@@ -276,6 +276,12 @@ class UsersGridControl extends Control
                 return $row->getUnit() === null;
             })
             ->setSortable()
+            ->setSortableCallback(function (QueryBuilder $qb, array $sort) : void {
+                $sort = $sort['unit'] === 'DESC' ? 'ASC' : 'DESC';
+                $qb->orderBy('u.unit', $sort)
+                    ->addOrderBy('u.member', $sort)
+                    ->addOrderBy('u.externalLector', $sort);
+            })
             ->setFilterText();
 
         $grid->addColumnNumber('age', 'admin.users.users_age')
@@ -409,7 +415,7 @@ class UsersGridControl extends Control
                 'data-content' => $this->translator->translate('admin.users.users_delete_confirm'),
             ]);
         $grid->allowRowsAction('delete', function (User $item) {
-            return $item->isExternal();
+            return $item->isExternalLector();
         });
 
         $grid->setColumnsSummary(['fee']);
