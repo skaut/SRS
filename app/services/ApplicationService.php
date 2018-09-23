@@ -79,6 +79,9 @@ class ApplicationService
     /** @var MailService */
     private $mailService;
 
+    /** @var UserService */
+    private $userService;
+
     /** @var Translator */
     private $translator;
 
@@ -94,6 +97,7 @@ class ApplicationService
         VariableSymbolRepository $variableSymbolRepository,
         ProgramService $programService,
         MailService $mailService,
+        UserService $userService,
         Translator $translator
     ) {
         $this->settingsRepository       = $settingsRepository;
@@ -106,6 +110,7 @@ class ApplicationService
         $this->variableSymbolRepository = $variableSymbolRepository;
         $this->programService           = $programService;
         $this->mailService              = $mailService;
+        $this->userService              = $userService;
         $this->translator               = $translator;
     }
 
@@ -130,6 +135,7 @@ class ApplicationService
             $subeventsApplication = $this->createSubeventsApplication($user, $subevents, $createdBy);
 
             $this->programService->updateUserPrograms($user);
+            $this->updateUserPaymentInfo($user);
         });
 
         $applicatonMaturity        = '-';
@@ -250,6 +256,7 @@ class ApplicationService
             }
 
             $this->programService->updateUserPrograms($user);
+            $this->updateUserPaymentInfo($user);
         });
 
         $this->mailService->sendMailFromTemplate($user, '', Template::ROLES_CHANGED, [
@@ -272,6 +279,7 @@ class ApplicationService
         $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($user, $state, $createdBy) : void {
             $user->setApproved(true);
             $user->getRoles()->clear();
+            $user->setRolesApplicationDate(null);
             $user->addRole($this->roleRepository->findBySystemName(Role::NONREGISTERED));
             $this->userRepository->save($user);
 
@@ -295,6 +303,7 @@ class ApplicationService
             $this->userRepository->save($user);
 
             $this->programService->updateUserPrograms($user);
+            $this->updateUserPaymentInfo($user);
         });
 
         $this->mailService->sendMailFromTemplate($user, '', Template::REGISTRATION_CANCELED, [
@@ -315,6 +324,7 @@ class ApplicationService
             $this->createSubeventsApplication($user, $subevents, $createdBy);
 
             $this->programService->updateUserPrograms($user);
+            $this->updateUserPaymentInfo($user);
         });
 
         $this->mailService->sendMailFromTemplate($user, '', Template::SUBEVENTS_CHANGED, [
@@ -366,6 +376,7 @@ class ApplicationService
             $this->applicationRepository->save($application);
 
             $this->programService->updateUserPrograms($user);
+            $this->updateUserPaymentInfo($user);
 
             $this->decrementSubeventsOccupancy($application->getSubevents());
         });
@@ -398,6 +409,7 @@ class ApplicationService
             $this->applicationRepository->save($application);
 
             $this->programService->updateUserPrograms($user);
+            $this->updateUserPaymentInfo($user);
 
             $this->decrementSubeventsOccupancy($application->getSubevents());
         });
@@ -469,6 +481,7 @@ class ApplicationService
             $this->applicationRepository->save($application);
 
             $this->programService->updateUserPrograms($user);
+            $this->updateUserPaymentInfo($user);
         });
 
         if ($paymentDate === null || $oldPaymentDate !== null) {
@@ -505,6 +518,7 @@ class ApplicationService
         }
 
         $user->setRoles($roles);
+        $user->setRolesApplicationDate(new \DateTime());
         $this->userRepository->save($user);
 
         $application = new RolesApplication();
@@ -796,5 +810,36 @@ class ApplicationService
             $this->subeventRepository->decrementOccupancy($subevent);
             $this->subeventRepository->save($subevent);
         }
+    }
+
+    /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    private function updateUserPaymentInfo(User $user) : void
+    {
+        $fee = 0;
+        foreach ($user->getNotCanceledApplications() as $application) {
+            $fee += $application->getFee();
+        }
+        $user->setFee($fee);
+
+        $feeRemaining = 0;
+        foreach ($user->getWaitingForPaymentApplications() as $application) {
+            $feeRemaining += $application->getFee();
+        }
+        $user->setFeeRemaining($feeRemaining);
+
+        $user->setPaymentMethod($this->userService->getPaymentMethod($user));
+
+        $maxDate = null;
+        foreach ($user->getValidApplications() as $application) {
+            if ($maxDate < $application->getPaymentDate()) {
+                $maxDate = $application->getPaymentDate();
+            }
+        }
+        $user->setLastPaymentDate($maxDate);
+
+        $this->userRepository->save($user);
     }
 }

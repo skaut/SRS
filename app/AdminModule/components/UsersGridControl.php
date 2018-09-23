@@ -277,18 +277,19 @@ class UsersGridControl extends Control
             })
             ->setSortable()
             ->setSortableCallback(function (QueryBuilder $qb, array $sort) : void {
-                $sort = $sort['unit'] === 'DESC' ? 'ASC' : 'DESC';
-                $qb->orderBy('u.unit', $sort)
-                    ->addOrderBy('u.member', $sort)
-                    ->addOrderBy('u.externalLector', $sort);
+                $sortOrig = $sort['unit'];
+                $sortRev = $sort['unit'] === 'DESC' ? 'ASC' : 'DESC';
+                $qb->orderBy('u.unit', $sortOrig)
+                    ->addOrderBy('u.externalLector', $sortRev)
+                    ->addOrderBy('u.member', $sortRev);
             })
             ->setFilterText();
 
         $grid->addColumnNumber('age', 'admin.users.users_age')
             ->setSortable()
             ->setSortableCallback(function (QueryBuilder $qb, array $sort) : void {
-                $sort = $sort['age'] === 'DESC' ? 'ASC' : 'DESC';
-                $qb->orderBy('u.birthdate', $sort);
+                $sortRev = $sort['age'] === 'DESC' ? 'ASC' : 'DESC';
+                $qb->orderBy('u.birthdate', $sortRev);
             });
 
         $grid->addColumnText('email', 'admin.users.users_email')
@@ -305,16 +306,10 @@ class UsersGridControl extends Control
             ->setFilterText();
 
         $grid->addColumnNumber('fee', 'admin.users.users_fee')
-            ->setSortable()
-            ->setSortableCallback(function (QueryBuilder $qb, array $sort) : void {
-                $sort = $sort['fee'] === 'DESC' ? 'ASC' : 'DESC';
-                $qb->addSelect('sum(aFee.fee) as totalFee')
-                    ->join('u.applications', 'aFee')
-                    ->groupBy('u.id')
-                    ->orderBy('totalFee', $sort);
-            });
+            ->setSortable();
 
-        $grid->addColumnNumber('feeRemaining', 'admin.users.users_fee_remaining');
+        $grid->addColumnNumber('feeRemaining', 'admin.users.users_fee_remaining')
+            ->setSortable();
 
         $grid->addColumnText('variableSymbol', 'admin.users.users_variable_symbol', 'variableSymbolsText')
             ->setFilterText()
@@ -326,14 +321,18 @@ class UsersGridControl extends Control
             });
 
         $grid->addColumnText('paymentMethod', 'admin.users.users_payment_method')
-            ->setRenderer(function ($row) {
-                return $this->userService->getPaymentMethodText($row);
-            });
+            ->setRenderer(function (User $user) {
+                return $user->getPaymentMethod() ? $this->translator->translate('common.payment.' . $user->getPaymentMethod()) : "";
+            })
+            ->setFilterMultiSelect($this->preparePaymentMethodOptionsWithMixed())
+            ->setTranslateOptions();
 
-        $grid->addColumnDateTime('lastPaymentDate', 'admin.users.users_last_payment_date');
+        $grid->addColumnDateTime('lastPaymentDate', 'admin.users.users_last_payment_date')
+            ->setSortable();
 
         $grid->addColumnDateTime('rolesApplicationDate', 'admin.users.users_roles_application_date')
-            ->setFormat(Helpers::DATETIME_FORMAT);
+            ->setFormat(Helpers::DATETIME_FORMAT)
+            ->setSortable();
 
         $columnAttended  = $grid->addColumnStatus('attended', 'admin.users.users_attended');
         $columnAttended
@@ -353,18 +352,19 @@ class UsersGridControl extends Control
             ])
             ->setTranslateOptions();
 
-        $grid->addColumnText('notRegisteredMandatoryBlocks', 'admin.users.users_not_registered_mandatory_blocks')
-            ->setRenderer(function (User $row) {
+        $grid->addColumnText('notRegisteredMandatoryBlocksCount', 'admin.users.users_not_registered_mandatory_blocks')
+            ->setRenderer(function (User $user) {
                 return Html::el('span')
                     ->setAttribute('data-toggle', 'tooltip')
-                    ->setAttribute('title', $row->getNotRegisteredMandatoryBlocksText())
-                    ->setText($row->getNotRegisteredMandatoryBlocksCount());
-            });
+                    ->setAttribute('title', $user->getNotRegisteredMandatoryBlocksText())
+                    ->setText($user->getNotRegisteredMandatoryBlocksCount());
+            })
+            ->setSortable();
 
         foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
             $grid->addColumnText('customInput' . $customInput->getId(), Helpers::truncate($customInput->getName(), 20))
-                ->setRenderer(function (User $row) use ($customInput) {
-                    $customInputValue = $row->getCustomInputValue($customInput);
+                ->setRenderer(function (User $user) use ($customInput) {
+                    $customInputValue = $user->getCustomInputValue($customInput);
                     if ($customInputValue) {
                         switch ($customInputValue->getInput()->getType()) {
                             case CustomInput::TEXT:
@@ -418,7 +418,7 @@ class UsersGridControl extends Control
             return $item->isExternalLector();
         });
 
-        $grid->setColumnsSummary(['fee']);
+        $grid->setColumnsSummary(['fee', 'feeRemaining']);
     }
 
     /**
@@ -819,6 +819,20 @@ class UsersGridControl extends Control
         foreach (PaymentType::$types as $type) {
             $options[$type] = 'common.payment.' . $type;
         }
+        return $options;
+    }
+
+    /**
+     * Vrátí platební metody jako možnosti pro select. Včetně smíšené.
+     * @return string[]
+     */
+    private function preparePaymentMethodOptionsWithMixed() : array
+    {
+        $options = [];
+        foreach (PaymentType::$types as $type) {
+            $options[$type] = 'common.payment.' . $type;
+        }
+        $options[PaymentType::MIXED] = 'common.payment.' . PaymentType::MIXED;
         return $options;
     }
 

@@ -18,6 +18,12 @@ class PaymentType
      */
     public const BANK = 'bank';
 
+    /**
+     * Uživatel zaplatil část přihlášek hotově a část na bankovní účet.
+     * @var string
+     */
+    public const MIXED = 'mixed';
+
     /** @var string[] */
     public static $types = [
         self::CASH,

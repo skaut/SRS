@@ -78,7 +78,7 @@ align:
 
 payment:
     cash: "Hotovost"
-    bank: "Na účet"
+    bank: "Účet"
     mixed: "Smíšená"
 
 sex:

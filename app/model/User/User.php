@@ -257,17 +257,17 @@ class User
 
     /**
      * Poplatek uživatele.
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer")
      * @var int
      */
-    protected $fee;
+    protected $fee = 0;
 
     /**
      * Zbývající poplatek uživatele.
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer")
      * @var int
      */
-    protected $feeRemaining;
+    protected $feeRemaining = 0;
 
     /**
      * Platební metoda.
@@ -299,10 +299,10 @@ class User
 
     /**
      * Počet programových bloků, které jsou pro uživatele povinné, ale nemá je zapsané.
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer")
      * @var int
      */
-    protected $notRegisteredMandatoryBlocksCount;
+    protected $notRegisteredMandatoryBlocksCount = 0;
 
     /**
      * Hodnoty vlastních polí přihlášky.
@@ -863,18 +863,6 @@ class User
      */
     public function getPaidAndFreeApplications() : Collection
     {
-        //TODO: opravit
-//        $criteria = Criteria::create()
-//            ->where(Criteria::expr()->andX(
-//                Criteria::expr()->isNull('validTo'),
-//                Criteria::expr()->orX(
-//                    Criteria::expr()->eq('state', ApplicationState::PAID),
-//                    Criteria::expr()->eq('state', ApplicationState::PAID_FREE)
-//                )
-//            ));
-//
-//        return $this->applications->matching($criteria);
-
         return $this->applications->filter(function (Application $application) {
             if ($application->getValidTo() === null && (
                     $application->getState() === ApplicationState::PAID_FREE ||
@@ -987,17 +975,11 @@ class User
         return $this->lecturersBlocks;
     }
 
-    /**
-     * @return int
-     */
     public function getFee(): int
     {
         return $this->fee;
     }
 
-    /**
-     * @param int $fee
-     */
     public function setFee(int $fee): void
     {
         $this->fee = $fee;
@@ -1011,66 +993,42 @@ class User
         return $this->getFee() !== 0;
     }
 
-    /**
-     * @return int
-     */
-    public function getFeeRemaining(): int
+    public function getFeeRemaining() : int
     {
         return $this->feeRemaining;
     }
 
-    /**
-     * @param int $feeRemaining
-     */
-    public function setFeeRemaining(int $feeRemaining): void
+    public function setFeeRemaining(int $feeRemaining) : void
     {
         $this->feeRemaining = $feeRemaining;
     }
 
-    /**
-     * @return string
-     */
-    public function getPaymentMethod(): string
+    public function getPaymentMethod() : ?string
     {
         return $this->paymentMethod;
     }
 
-    /**
-     * @param string $paymentMethod
-     */
-    public function setPaymentMethod(string $paymentMethod): void
+    public function setPaymentMethod(?string $paymentMethod) : void
     {
         $this->paymentMethod = $paymentMethod;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getLastPaymentDate(): \DateTime
+    public function getLastPaymentDate() : ?\DateTime
     {
         return $this->lastPaymentDate;
     }
 
-    /**
-     * @param \DateTime $lastPaymentDate
-     */
-    public function setLastPaymentDate(\DateTime $lastPaymentDate): void
+    public function setLastPaymentDate(?\DateTime $lastPaymentDate) : void
     {
         $this->lastPaymentDate = $lastPaymentDate;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getRolesApplicationDate(): \DateTime
+    public function getRolesApplicationDate() : ?\DateTime
     {
         return $this->rolesApplicationDate;
     }
 
-    /**
-     * @param \DateTime $rolesApplicationDate
-     */
-    public function setRolesApplicationDate(\DateTime $rolesApplicationDate): void
+    public function setRolesApplicationDate(?\DateTime $rolesApplicationDate) : void
     {
         $this->rolesApplicationDate = $rolesApplicationDate;
     }
@@ -1161,33 +1119,6 @@ class User
         $this->photoUpdate = $photoUpdate;
     }
 
-//    /**
-//     * Vrací datum přihlášení.
-//     */
-//    public function getRolesApplicationDate() : ?\DateTime
-//    {
-//        foreach ($this->getNotCanceledRolesApplications() as $application) {
-//            return $application->getApplicationDate();
-//        }
-//        return null;
-//    }
-
-//    /**
-//     * Vrací datum poslední platby.
-//     */
-//    public function getLastPaymentDate() : ?\DateTime
-//    {
-//        $maxDate = null;
-//        foreach ($this->getValidApplications() as $application) {
-//            if ($maxDate !== null && $maxDate >= $application->getPaymentDate()) {
-//                continue;
-//            }
-//
-//            $maxDate = $application->getPaymentDate();
-//        }
-//        return $maxDate;
-//    }
-
     /**
      * Vrací podakce uživatele.
      * @return Collection|Subevent[]
@@ -1237,44 +1168,6 @@ class User
 
         return false;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//
-//    /**
-//     * Vrací poplatek uživatele.
-//     */
-//    public function getFee() : int
-//    {
-//        $fee = 0;
-//        foreach ($this->getNotCanceledApplications() as $application) {
-//            $fee += $application->getFee();
-//        }
-//        return $fee;
-//    }
-//
-//    /**
-//     * Vrací částku, která zbývá uhradit.
-//     */
-//    public function getFeeRemaining() : int
-//    {
-//        $fee = 0;
-//        foreach ($this->getWaitingForPaymentApplications() as $application) {
-//            $fee += $application->getFee();
-//        }
-//        return $fee;
-//    }
 
     /**
      * Vrátí variabilní symboly oddělené čárkou.
