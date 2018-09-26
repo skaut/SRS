@@ -177,7 +177,7 @@ class Block
     {
         $this->lectors->clear();
         foreach ($lectors as $lector) {
-            $lectors->add($lector);
+            $this->lectors->add($lector);
         }
     }
 

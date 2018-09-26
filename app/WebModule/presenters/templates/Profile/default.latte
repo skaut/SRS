@@ -130,7 +130,7 @@
                                     <th class="text-right">{_web.profile.to}</th>
                                     <th>{_web.profile.program_name}</th>
                                     <th>{_web.profile.room}</th>
-                                    <th>{_web.profile.lector}</th>
+                                    <th>{_web.profile.lectors}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -148,7 +148,7 @@
                                         </td>
                                         <td>{$program->getBlock()->getName()}</td>
                                         <td>{if $program->getRoom() !== null}{$program->getRoom()->getName()}{/if}</td>
-                                        <td>{if $program->getBlock()->getLector() !== null}{$program->getBlock()->getLector()->getLectorName()}{/if}</td>
+                                        <td>{$program->getBlock()->getLectorsText()}</td>
                                     </tr>
                                 {/foreach}
                             </tbody>
