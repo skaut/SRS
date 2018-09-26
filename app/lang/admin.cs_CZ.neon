@@ -323,6 +323,11 @@ users:
     users_departure: "Odjezd"
     users_private_note: "Neveřejná poznámka"
     users_not_registered_mandatory_blocks: "Nepřihlášené povinné bloky"
+    users_from: "Od"
+    users_to: "Do"
+    users_program_name: "Název programu"
+    users_room: "Místnost"
+    users_lectors: "Lektoři"
     users_changed_attended: "Účast uživatele byla úspěšně upravena."
     users_saved: "Uživatel byl úspěšně uložen."
     users_group_action_approve: "Schválit"
@@ -388,6 +393,7 @@ users:
     users_detail_personal_details: "Osobní údaje"
     users_detail_seminar: "Účast na semináři"
     users_detail_applications: "Role a platby"
+    users_detail_schedule: "Harmonogram"
 
 acl:
     roles_heading: "Role"
