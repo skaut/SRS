@@ -247,7 +247,7 @@ class ApplicationsGridControl extends Control
                     'data-content' => $this->translator->translate('admin.users.users_applications_cancel_application_confirm'),
                 ])->setClass('btn btn-xs btn-danger');
             $grid->allowRowsAction('cancelApplication', function (Application $item) {
-                return $item->getType() === Application::SUBEVENTS && !$item->isCanceled();
+                return $item->getType() === Application::SUBEVENTS && ! $item->isCanceled();
             });
         }
 
