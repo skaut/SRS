@@ -96,7 +96,7 @@ class ExcelExportService
         $sheet = $this->spreadsheet->getSheet(0);
 
         $row    = 1;
-        $column = 0;
+        $column = 1;
 
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
         $sheet->getColumnDimensionByColumn($column++)->setWidth('25');
@@ -110,7 +110,7 @@ class ExcelExportService
 
         foreach ($users as $user) {
             $row++;
-            $column = 0;
+            $column = 1;
 
             $sheet->setCellValueByColumnAndRow($column, $row, $user->getDisplayName());
 
@@ -140,6 +140,7 @@ class ExcelExportService
      * Vyexportuje harmonogramy uživatelů, každý uživatel na zvlástním listu.
      * @param Collection|User[] $users
      * @throws Exception
+     * @throws \Exception
      */
     public function exportUsersSchedules(Collection $users, string $filename) : ExcelResponse
     {
@@ -151,7 +152,7 @@ class ExcelExportService
             $this->spreadsheet->addSheet($sheet, $sheetNumber++);
 
             $row    = 1;
-            $column = 0;
+            $column = 1;
 
             $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.schedule.from'));
             $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
@@ -186,7 +187,7 @@ class ExcelExportService
                 $sheet->setCellValueByColumnAndRow($column++, $row, $program->getEnd()->format('j. n. H:i'));
                 $sheet->setCellValueByColumnAndRow($column++, $row, $program->getBlock()->getName());
                 $sheet->setCellValueByColumnAndRow($column++, $row, $program->getRoom() ? $program->getRoom()->getName() : null);
-                $sheet->setCellValueByColumnAndRow($column++, $row, $program->getBlock()->getLector() ? $program->getBlock()->getLector()->getLectorName() : null); //todo
+                $sheet->setCellValueByColumnAndRow($column++, $row, $program->getBlock()->getLectorsText());
             }
         }
 
@@ -206,6 +207,7 @@ class ExcelExportService
      * Vyexportuje harmonogramy místností.
      * @param Collection|Room[] $rooms
      * @throws Exception
+     * @throws \Exception
      */
     public function exportRoomsSchedules(Collection $rooms, string $filename) : ExcelResponse
     {
@@ -217,7 +219,7 @@ class ExcelExportService
             $this->spreadsheet->addSheet($sheet, $sheetNumber++);
 
             $row    = 1;
-            $column = 0;
+            $column = 1;
 
             $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.schedule.from'));
             $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
@@ -241,7 +243,7 @@ class ExcelExportService
 
             foreach ($room->getPrograms() as $program) {
                 $row++;
-                $column = 0;
+                $column = 1;
 
                 $sheet->setCellValueByColumnAndRow($column++, $row, $program->getStart()->format('j. n. H:i'));
                 $sheet->setCellValueByColumnAndRow($column++, $row, $program->getEnd()->format('j. n. H:i'));
@@ -264,7 +266,7 @@ class ExcelExportService
         $sheet = $this->spreadsheet->getSheet(0);
 
         $row    = 1;
-        $column = 0;
+        $column = 1;
 
         $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.display_name'));
         $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
@@ -385,7 +387,7 @@ class ExcelExportService
 
         foreach ($users as $user) {
             $row++;
-            $column = 0;
+            $column = 1;
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->getDisplayName());
 
@@ -415,7 +417,7 @@ class ExcelExportService
             $sheet->getCellByColumnAndRow($column++, $row)
                 ->setValueExplicit($user->getVariableSymbolsText(), DataType::TYPE_STRING);
 
-            $sheet->setCellValueByColumnAndRow($column++, $row, $this->userService->getPaymentMethodText($user));
+            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getPaymentMethod() ? $this->translator->translate('common.payment.' . $user->getPaymentMethod()) : '');
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->getLastPaymentDate() !== null ? $user->getLastPaymentDate()->format(Helpers::DATE_FORMAT) : '');
 
@@ -474,7 +476,7 @@ class ExcelExportService
         $sheet = $this->spreadsheet->getSheet(0);
 
         $row    = 1;
-        $column = 0;
+        $column = 1;
 
         $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.variable_symbol'));
         $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
@@ -517,7 +519,7 @@ class ExcelExportService
 
         foreach ($users as $user) {
             $row++;
-            $column = 0;
+            $column = 1;
 
             $sheet->getCellByColumnAndRow($column++, $row)
                 ->setValueExplicit($user->getVariableSymbolsText(), DataType::TYPE_STRING);
@@ -563,7 +565,7 @@ class ExcelExportService
             $this->spreadsheet->addSheet($sheet, $sheetNumber++);
 
             $row    = 1;
-            $column = 0;
+            $column = 1;
 
             $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.display_name'));
             $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
@@ -584,7 +586,7 @@ class ExcelExportService
 
             foreach ($block->getAttendees()->matching($criteria) as $attendee) {
                 $row++;
-                $column = 0;
+                $column = 1;
 
                 $sheet->setCellValueByColumnAndRow($column++, $row, $attendee->getDisplayName());
                 $sheet->setCellValueByColumnAndRow($column++, $row, $attendee->getEmail());

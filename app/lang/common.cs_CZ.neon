@@ -171,7 +171,7 @@ export:
         variable_symbol: "Variabilní symbol"
         payment_method: "Platební metoda"
         payment_date: "Datum poslední platby"
-        first_application_date: "Datum první přihlášky"
+        first_application_date: "Datum přihlášení"
         attended: "Přítomen"
         not_registared_mandatory_blocks: "Nepřihlášené povinné bloky"
         private_note: "Neveřejná poznámka"
