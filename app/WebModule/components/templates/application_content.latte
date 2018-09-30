@@ -24,45 +24,59 @@
                     <a href="{plink :Auth:login, 'backlink' => $backlink}">{_web.application_content.login_required_link}</a>{_web.application_content.login_required_end}
                 </div>
             {elseif $nonregisteredRole}
-                <script>
-                    Nette.validators.AppWebModuleFormsApplicationForm_toggleArrivalDeparture = function (elem, arg, value) {
-                        var i;
-                        for (i = 0; i < value.length; i++) {
-                            if (jQuery.inArray(value[i], arg) != -1)
-                                return true;
-                        }
-                        return false;
-                    };
-                </script>
-
-                {if $explicitSubeventsExists}
+                {if $noRegisterableRole}
+                    <div class="alert alert-info alert-forever">
+                        {if $registrationStart && $registrationEnd}
+                            {_web.application_content.no_registerable_role_start_end, ['start' => $registrationStart->format('j. n. Y H:i'), 'end' => $registrationEnd->format('j. n. Y H:i')]}
+                        {elseif $registrationStart}
+                            {_web.application_content.no_registerable_role_start, ['start' => $registrationStart->format('j. n. Y H:i')]}
+                        {elseif $registrationEnd}
+                            {_web.application_content.no_registerable_role_end, ['end' => $registrationEnd->format('j. n. Y H:i')]}
+                        {else}
+                            {_web.application_content.no_registerable_role}
+                        {/if}
+                    </div>
+                {else}
                     <script>
-                        $(function () {
-                            $("select[name='roles[]']").on("change", function () {
-                                changeSubeventsRequired();
-                            });
-                            changeSubeventsRequired();
-                        });
-
-                        function changeSubeventsRequired() {
-                            var value = $("select[name='roles[]']").val();
-                            var label = $("label[for='frm-applicationContent-applicationForm-subevents']");
-                            var rolesWithSubevents = JSON.parse({$rolesWithSubevents});
+                        Nette.validators.AppWebModuleFormsApplicationForm_toggleArrivalDeparture = function (elem, arg, value) {
                             var i;
                             for (i = 0; i < value.length; i++) {
-                                if (jQuery.inArray(parseInt(value[i]), rolesWithSubevents) != -1) {
-                                    label.addClass('required');
-                                    return;
-                                }
+                                if (jQuery.inArray(value[i], arg) != -1)
+                                    return true;
                             }
-                            label.removeClass('required');
-                        }
+                            return false;
+                        };
                     </script>
-                {/if}
 
-                <div class="well">
-                    {control applicationForm}
-                </div>
+                    {if $explicitSubeventsExists}
+                        <script>
+                            $(function () {
+                                $("select[name='roles[]']").on("change", function () {
+                                    changeSubeventsRequired();
+                                });
+                                changeSubeventsRequired();
+                            });
+
+                            function changeSubeventsRequired() {
+                                var value = $("select[name='roles[]']").val();
+                                var label = $("label[for='frm-applicationContent-applicationForm-subevents']");
+                                var rolesWithSubevents = JSON.parse({$rolesWithSubevents});
+                                var i;
+                                for (i = 0; i < value.length; i++) {
+                                    if (jQuery.inArray(parseInt(value[i]), rolesWithSubevents) != -1) {
+                                        label.addClass('required');
+                                        return;
+                                    }
+                                }
+                                label.removeClass('required');
+                            }
+                        </script>
+                    {/if}
+
+                    <div class="well">
+                        {control applicationForm}
+                    </div>
+                {/if}
             {else}
                 {if $unapprovedRole}
                     <div class="alert alert-warning alert-forever">

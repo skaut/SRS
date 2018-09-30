@@ -90,6 +90,9 @@ class ApplicationContentControl extends Control
 
             $template->unapprovedRole      = $user->isInRole($this->roleRepository->findBySystemName(Role::UNAPPROVED)->getName());
             $template->nonregisteredRole   = $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED)->getName());
+            $template->noRegisterableRole  = $this->roleRepository->findAllRegisterableNowOrderedByName()->isEmpty();
+            $template->registrationStart   = $this->roleRepository->getRegistrationStart();
+            $template->registrationEnd     = $this->roleRepository->getRegistrationEnd();
             $template->bankAccount         = $this->settingsRepository->getValue(Settings::ACCOUNT_NUMBER);
             $template->dbuser              = $dbuser;
             $template->userHasFixedFeeRole = $userHasFixedFeeRole;

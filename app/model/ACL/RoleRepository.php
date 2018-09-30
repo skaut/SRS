@@ -435,4 +435,30 @@ class RoleRepository extends EntityRepository
             ->setParameter('rid', $role->getId())
             ->getResult();
     }
+
+    public function getRegistrationStart() : ?\DateTime
+    {
+        $result = $this->createQueryBuilder('r')
+            ->select('r.registerableFrom')
+            ->where('r.registerable = TRUE')
+            ->andWhere('r.registerableFrom IS NOT NULL')
+            ->orderBy('r.registerableFrom')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+        return $result ? $result['registerableFrom'] : null;
+    }
+
+    public function getRegistrationEnd() : ?\DateTime
+    {
+        $result = $this->createQueryBuilder('r')
+            ->select('r.registerableTo')
+            ->where('r.registerable = TRUE')
+            ->andWhere('r.registerableTo IS NOT NULL')
+            ->orderBy('r.registerableTo', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+        return $result ? $result['registerableTo'] : null;
+    }
 }
