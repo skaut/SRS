@@ -455,7 +455,7 @@ class RoleRepository extends EntityRepository
             ->select('r.registerableTo')
             ->where('r.registerable = TRUE')
             ->andWhere('r.registerableTo IS NOT NULL')
-            ->orderBy('r.registerableTo')
+            ->orderBy('r.registerableTo', 'DESC')
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
