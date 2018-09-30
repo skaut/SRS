@@ -10,21 +10,32 @@ test = no
 ; files and directories to ignore
 ignore = "
     .git*
-    project.pp[jx]
-    /deployment.*
+    /.idea
+    /app/config/config.ci.local.neon
+    /app/config/config.local.neon
+    /app/config/config.local.neon.sample
+    /app/config/config.production.local.neon
+    /backup
+    /docker
     /log
     !/log/.*
+    /temp/*
+    !/temp/.*
+    /tests
     /www/css/web/style.css
     /www/webtemp/
     !/www/webtemp/.*
     /www/files/
     !/www/files/.*
-    /temp/*
-    !/temp/.*
-    /.idea
-    /deploy.bat
-    /config.local.neon
-    /config.local.neon.sample
+    .travis.yml
+    /build.xml
+    /codeception.xml
+    /deploy.*
+    /deployment.*
+    /docker-compose.yml
+    /phing.phar
+    /phpcs.xml
+    /wercker.yml
 "
 
 ; is allowed to delete remote files? (defaults to yes)
