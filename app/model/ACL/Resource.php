@@ -61,6 +61,12 @@ class Resource
      */
     public const MAILING = 'mailing';
 
+    /**
+     * Platby.
+     * @var string
+     */
+    public const PAYMENTS = 'payments';
+
     /** @var string[] */
     public static $resources = [
         self::ADMIN,
@@ -70,6 +76,7 @@ class Resource
         self::CONFIGURATION,
         self::USERS,
         self::MAILING,
+        self::PAYMENTS,
     ];
 
     use Identifier;
