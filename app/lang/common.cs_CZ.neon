@@ -13,6 +13,7 @@ permission_name:
         cms: "Spravovat web"
         users: "Spravovat uživatele"
         acl: "Spravovat role"
+        payments: "Spravovat platby"
         mailing: "Spravovat mailing"
         configuration: "Spravovat konfiguraci"
 
@@ -80,6 +81,14 @@ payment:
     cash: "Hotovost"
     bank: "Účet"
     mixed: "Smíšená"
+
+payment_state:
+    paired_auto: "Spárována (automaticky)"
+    paired_manual: "Spárována (ručně)"
+    not_paired_fee: "Nespárována (nesouhlasí částka)"
+    not_paired_vs: "Nespárována (neexistující variabilní symbol)"
+    not_paired_canceled: "Nespárována (přihláška zrušena)"
+    not_paired: "Nespárována"
 
 sex:
     male: "Muž"

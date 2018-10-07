@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Payment;
 
+use App\Model\User\Application;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -69,10 +70,24 @@ class Payment
      */
     protected $message;
 
+    /**
+     * Spárované přihlášky.
+     * @ORM\OneToMany(targetEntity="\App\Model\User\Application", mappedBy="payment", cascade={"persist"})
+     * @var Collection|Application[]
+     */
+    protected $pairedApplications;
+
+    /**
+     * Stav platby.
+     * @ORM\Column(type="string")
+     * @var string
+     */
+    protected $state;
+
 
     public function __construct()
     {
-        $this->programs = new ArrayCollection();
+        $this->pairedApplications = new ArrayCollection();
     }
 
     public function getId() : int
@@ -80,31 +95,99 @@ class Payment
         return $this->id;
     }
 
-    public function getName() : string
+    public function getTransactionId(): ?string
     {
-        return $this->name;
+        return $this->transactionId;
     }
 
-    public function setName(string $name) : void
+    public function setTransactionId(?string $transactionId): void
     {
-        $this->name = $name;
+        $this->transactionId = $transactionId;
     }
 
-    public function getCapacity() : ?int
+    public function getDate(): \DateTime
     {
-        return $this->capacity;
+        return $this->date;
     }
 
-    public function setCapacity(?int $capacity) : void
+    public function setDate(\DateTime $date): void
     {
-        $this->capacity = $capacity;
+        $this->date = $date;
+    }
+
+    public function getAmmount(): float
+    {
+        return $this->ammount;
+    }
+
+    public function setAmmount(float $ammount): void
+    {
+        $this->ammount = $ammount;
+    }
+
+    public function getAccountNumber(): ?string
+    {
+        return $this->accountNumber;
+    }
+
+    public function setAccountNumber(?string $accountNumber): void
+    {
+        $this->accountNumber = $accountNumber;
+    }
+
+    public function getAccountName(): ?string
+    {
+        return $this->accountName;
+    }
+
+    public function setAccountName(?string $accountName): void
+    {
+        $this->accountName = $accountName;
+    }
+
+    public function getVariableSymbol(): ?string
+    {
+        return $this->variableSymbol;
+    }
+
+    public function setVariableSymbol(?string $variableSymbol): void
+    {
+        $this->variableSymbol = $variableSymbol;
+    }
+
+    public function getMessage(): ?string
+    {
+        return $this->message;
+    }
+
+    public function setMessage(?string $message): void
+    {
+        $this->message = $message;
     }
 
     /**
-     * @return Collection|Program[]
+     * @return Application[]|Collection
      */
-    public function getPrograms() : Collection
+    public function getPairedApplications()
     {
-        return $this->programs;
+        return $this->pairedApplications;
+    }
+
+    /**
+     * @param Application[]|Collection $pairedApplications
+     */
+    public function setPairedApplications(Collection $pairedApplications): void //todo kontrola
+    {
+        $this->pairedApplications = $pairedApplications;
+    }
+
+    public function getState(): string
+    {
+        return $this->state;
+    }
+
+    public function setState(string $state): void
+    {
+        $this->state = $state;
     }
 }

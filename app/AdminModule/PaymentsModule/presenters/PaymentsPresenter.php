@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\AdminModule\ProgramModule\Presenters;
+namespace App\AdminModule\PaymentsModule\Presenters;
 
 use App\AdminModule\PaymentsModule\Components\IPaymentsGridControlFactory;
 use App\AdminModule\PaymentsModule\Components\PaymentsGridControl;

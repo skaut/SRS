@@ -326,7 +326,7 @@ class ApplicationsGridControl extends Control
             if ($application->getType() === Application::SUBEVENTS) {
                 $this->applicationService->updateSubeventsApplication($application, $selectedSubevents, $loggedUser);
             }
-            $this->applicationService->updatePayment(
+            $this->applicationService->updateApplicationPayment(
                 $application,
                 $values['variableSymbol'],
                 $values['paymentMethod'] ?: null,

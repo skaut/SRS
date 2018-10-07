@@ -97,7 +97,7 @@ class PdfExportService
             return;
         }
 
-        $this->applicationService->updatePayment(
+        $this->applicationService->updateApplicationPayment(
             $application,
             $application->getVariableSymbolText(),
             $application->getPaymentMethod(),

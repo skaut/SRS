@@ -34,6 +34,11 @@
                             <a href="{plink :Admin:Users:default}">{_admin.menu.users}</a>
                         </li>
                     {/if}
+                    {if $user->isAllowed($resourcePayments, $permissionManage)}
+                        <li n:class="$presenter->isLinkCurrent(':Admin:Payments:Payments:*') ? active">
+                            <a href="{plink :Admin:Payments:Payments:default}">{_admin.menu.payments}</a>
+                        </li>
+                    {/if}
                     {if $user->isAllowed($resourceACL, $permissionManage)}
                         <li n:class="$presenter->isLinkCurrent(':Admin:Acl:*') ? active">
                             <a href="{plink :Admin:Acl:default}">{_admin.menu.acl}</a>

@@ -606,7 +606,7 @@ class UsersGridControl extends Control
         $this->userRepository->getEntityManager()->transactional(function ($em) use ($users, $paymentMethod, $loggedUser) : void {
             foreach ($users as $user) {
                 foreach ($user->getWaitingForPaymentApplications() as $application) {
-                    $this->applicationService->updatePayment(
+                    $this->applicationService->updateApplicationPayment(
                         $application,
                         $application->getVariableSymbolText(),
                         $paymentMethod,

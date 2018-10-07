@@ -6,9 +6,13 @@ namespace App\AdminModule\PaymentsModule\Components;
 
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
+use App\Model\Payment\Payment;
+use App\Model\Payment\PaymentRepository;
 use App\Model\Program\CategoryRepository;
 use App\Model\Program\ProgramRepository;
+use App\Model\User\ApplicationRepository;
 use App\Model\User\UserRepository;
+use App\Services\ApplicationService;
 use App\Services\ProgramService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -16,6 +20,7 @@ use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\Forms\Container;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
@@ -29,38 +34,33 @@ class PaymentsGridControl extends Control
     /** @var Translator */
     private $translator;
 
-    /** @var CategoryRepository */
-    private $categoryRepository;
+    /** @var PaymentRepository */
+    private $paymentRepository;
 
-    /** @var RoleRepository */
-    private $roleRepository;
+    /** @var ApplicationRepository */
+    private $applicationRepository;
 
     /** @var UserRepository */
     private $userRepository;
 
-    /** @var ProgramRepository */
-    private $programRepository;
-
-    /** @var ProgramService */
-    private $programService;
+    /** @var ApplicationService */
+    private $applicationService;
 
 
     public function __construct(
         Translator $translator,
-        CategoryRepository $categoryRepository,
-        RoleRepository $roleRepository,
+        PaymentRepository $paymentRepository,
+        ApplicationRepository $applicationRepository,
         UserRepository $userRepository,
-        ProgramRepository $programRepository,
-        ProgramService $programService
+        ApplicationService $applicationService
     ) {
         parent::__construct();
 
-        $this->translator         = $translator;
-        $this->categoryRepository = $categoryRepository;
-        $this->roleRepository     = $roleRepository;
-        $this->userRepository     = $userRepository;
-        $this->programRepository  = $programRepository;
-        $this->programService     = $programService;
+        $this->translator            = $translator;
+        $this->paymentRepository     = $paymentRepository;
+        $this->applicationRepository = $applicationRepository;
+        $this->userRepository        = $userRepository;
+        $this->applicationService    = $applicationService;
     }
 
     /**
@@ -79,100 +79,119 @@ class PaymentsGridControl extends Control
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
-        $grid->setDataSource($this->categoryRepository->createQueryBuilder('c'));
-        $grid->setDefaultSort(['name' => 'ASC']);
-        $grid->setPagination(false);
+        $grid->setDataSource($this->paymentRepository->createQueryBuilder('p'));
+        $grid->setDefaultSort(['date' => 'DESC']);
+        $grid->setItemsPerPageList([25, 50, 100, 250, 500]);
 
-        $grid->addColumnText('name', 'admin.program.categories_name');
+        $grid->addColumnDateTime('date', 'admin.payments.payments.date');
 
-        $grid->addColumnText('registerableRoles', 'admin.program.categories_registerable_roles', 'registerableRolesText');
+        $grid->addColumnNumber('ammount', 'admin.payments.payments.ammount');
 
-        $rolesOptions = $this->roleRepository->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]);
+        $grid->addColumnText('variableSymbol', 'admin.payments.payments.variable_symbol');
 
-        $grid->addInlineAdd()->onControlAdd[] = function ($container) use ($rolesOptions) : void {
-            $container->addText('name', '')
-                ->addRule(Form::FILLED, 'admin.program.categories_name_empty')
-                ->addRule(Form::IS_NOT_IN, 'admin.program.categories_name_exists', $this->categoryRepository->findAllNames());
+        $grid->addColumnText('accountName', 'admin.payments.payments.account_name');
 
-            $container->addMultiSelect('registerableRoles', '', $rolesOptions)->setAttribute('class', 'datagrid-multiselect')
-                ->addRule(Form::FILLED, 'admin.program.categories_registerable_roles_empty');
+        $grid->addColumnText('message', 'admin.payments.payments.message');
+
+        $grid->addColumnText('pairedApplications', 'admin.payments.payments.paired_applications', 'pairedApplicationsText');
+
+        $grid->addColumnText('state', 'admin.payments.payments.state');
+
+        $grid->addInlineAdd()->onControlAdd[] = function (Container $container) : void {
+            $container->addDatePicker('date', '')
+                ->addRule(Form::FILLED, 'admin.payments.payments.date_empty');
+
+            $container->addInteger('ammount', '')
+                ->addRule(Form::FILLED, 'admin.payments.payments.ammount_empty')
+                ->addRule(Form::MIN, 'admin.payments.payments.ammount_low', 1);
+
+            $container->addText('variableSymbol', '')
+                ->addRule(Form::FILLED, 'admin.payments.payments.variable_symbol_empty');
         };
         $grid->getInlineAdd()->onSubmit[]     = [$this, 'add'];
 
-        $grid->addInlineEdit()->onControlAdd[]  = function ($container) use ($rolesOptions) : void {
-            $container->addText('name', '')
-                ->addRule(Form::FILLED, 'admin.program.categories_name_empty');
+        $applicationsOptions = null; //todo
 
-            $container->addMultiSelect('registerableRoles', '', $rolesOptions)->setAttribute('class', 'datagrid-multiselect')
-                ->addRule(Form::FILLED, 'admin.program.categories_registerable_roles_empty');
+        $grid->addInlineEdit()->onControlAdd[]  = function (Container $container) use ($applicationsOptions) : void {
+            $container->addDatePicker('date', '')
+                ->addRule(Form::FILLED, 'admin.payments.payments.date_empty');
+
+            $container->addInteger('ammount', '')
+                ->addRule(Form::FILLED, 'admin.payments.payments.ammount_empty')
+                ->addRule(Form::MIN, 'admin.payments.payments.ammount_low', 1);
+
+            $container->addText('variableSymbol', '')
+                ->addRule(Form::FILLED, 'admin.payments.payments.variable_symbol_empty');
+
+            $container->addMultiSelect('pairedApplications', '', $applicationsOptions)->setAttribute('class', 'datagrid-multiselect');
         };
-        $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) : void {
-            $container['name']
-                ->addRule(Form::IS_NOT_IN, 'admin.program.categories_name_exists', $this->categoryRepository->findOthersNames($item->getId()));
-
+        $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Payment $item) : void {
             $container->setDefaults([
-                'name' => $item->getName(),
-                'registerableRoles' => $this->roleRepository->findRolesIds($item->getRegisterableRoles()),
+                'date' => $item->getDate(),
+                'ammount' => $item->getAmmount(),
+                'variableSymbol' => $item->getVariableSymbol(),
+                'pairedApplications' => $this->applicationRepository->findApplicationsIds($item->getPairedApplications()),
             ]);
         };
         $grid->getInlineEdit()->onSubmit[]      = [$this, 'edit'];
-
+//
         $grid->addAction('delete', '', 'delete!')
             ->setIcon('trash')
             ->setTitle('admin.common.delete')
             ->setClass('btn btn-xs btn-danger')
             ->addAttributes([
                 'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('admin.program.categories_delete_confirm'),
+                'data-content' => $this->translator->translate('admin.payments.payments.delete_confirm'),
             ]);
     }
 
     /**
-     * Zpracuje přidání kategorie.
+     * Zpracuje přidání platby.
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
      */
     public function add(\stdClass $values) : void
     {
-        $this->programService->createCategory($values['name'], $this->roleRepository->findRolesByIds($values['registerableRoles']));
+        $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
 
-        $this->getPresenter()->flashMessage('admin.program.categories_saved', 'success');
+        $this->applicationService->createPayment($values['date'], $values['ammount'], $values['variableSymbol'], null, null, null, null, $loggedUser);
 
+        $this->getPresenter()->flashMessage('admin.payments.payments.saved', 'success');
         $this->redirect('this');
     }
 
     /**
-     * Zpracuje úpravu kategorie.
-     * @throws AbortException
+     * Zpracuje úpravu platby.
      * @throws \Throwable
      */
     public function edit(int $id, \stdClass $values) : void
     {
-        $category = $this->categoryRepository->findById($id);
+        $payment = $this->paymentRepository->findById($id);
 
-        $this->programService->updateCategory($category, $values['name'], $this->roleRepository->findRolesByIds($values['registerableRoles']));
+        $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
 
-        $this->getPresenter()->flashMessage('admin.program.categories_saved', 'success');
+        $pairedApplications = $this->applicationRepository->findApplicationsByIds($values['pairedApplications']);
+
+        $this->applicationService->updatePayment($payment, $values['date'], $values['ammount'], $values['variableSymbol'], $pairedApplications, $loggedUser);
+
+        $this->getPresenter()->flashMessage('admin.payments.payments.saved', 'success');
         $this->redirect('this');
     }
 
     /**
-     * Odstraní kategorii.
-     * @throws AbortException
+     * Odstraní platbu.
      * @throws \Throwable
      */
     public function handleDelete(int $id) : void
     {
-        $category = $this->categoryRepository->findById($id);
+        $payment = $this->paymentRepository->findById($id);
 
-        if ($category->getBlocks()->isEmpty()) {
-            $this->categoryRepository->remove($category);
-            $this->getPresenter()->flashMessage('admin.program.categories_deleted', 'success');
-        } else {
-            $this->getPresenter()->flashMessage('admin.program.categories_deleted_error', 'danger');
-        }
+        $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
 
+        $this->applicationService->removePayment($payment, $loggedUser);
+
+        $this->getPresenter()->flashMessage('admin.payments.payments.saved.deleted', 'success');
         $this->redirect('this');
     }
 }
