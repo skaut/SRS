@@ -7,6 +7,7 @@ namespace App\Model\Payment;
 use App\Model\User\Application;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
@@ -174,11 +175,35 @@ class Payment
     }
 
     /**
-     * @param Application[]|Collection $pairedApplications
+     * @return Application[]|Collection
      */
-    public function setPairedApplications(Collection $pairedApplications): void //todo kontrola
+    public function getPairedValidApplications()
     {
-        $this->pairedApplications = $pairedApplications;
+        $criteria = Criteria::create()->where(
+            Criteria::expr()->isNull('validTo')
+        );
+        return $this->pairedApplications->matching($criteria);
+    }
+
+    public function getPairedValidApplicationsText()
+    {
+        $usersVS = [];
+        $usersNames = [];
+        foreach ($this->getPairedValidApplications() as $pairedApplication) {
+            $userId = $pairedApplication->getUser()->getId();
+            if (!array_key_exists($userId, $usersNames)) {
+                $usersVS[$userId] = [];
+                $usersNames[$userId] = $pairedApplication->getUser()->getLastName() . ' ' . $pairedApplication->getUser()->getFirstName();
+            }
+            $usersVS[$userId][] = $pairedApplication->getVariableSymbolText();
+        }
+
+        $usersTexts = [];
+        foreach (array_keys($usersNames) as $userId) {
+            $usersTexts[] = $usersNames[$userId] . ' (' . implode(', ', $usersVS[$userId]) . ')';
+        }
+
+        return implode(', ', $usersTexts);
     }
 
     public function getState(): string

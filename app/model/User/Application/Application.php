@@ -330,12 +330,12 @@ abstract class Application
         $this->paymentDate = $paymentDate;
     }
 
-    public function getPayment(): Payment
+    public function getPayment(): ?Payment
     {
         return $this->payment;
     }
 
-    public function setPayment(Payment $payment): void
+    public function setPayment(?Payment $payment): void
     {
         $this->payment = $payment;
     }

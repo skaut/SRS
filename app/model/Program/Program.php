@@ -24,7 +24,7 @@ class Program
 
     /**
      * Programový blok.
-     * @ORM\ManyToOne(targetEntity="Block", inversedBy="programs")
+     * @ORM\ManyToOne(targetEntity="Block", inversedBy="programs", cascade={"persist"})
      * @var Block
      */
     protected $block;
@@ -45,7 +45,7 @@ class Program
 
     /**
      * Místnost.
-     * @ORM\ManyToOne(targetEntity="Room", inversedBy="programs")
+     * @ORM\ManyToOne(targetEntity="Room", inversedBy="programs", cascade={"persist"})
      * @var Room
      */
     protected $room;

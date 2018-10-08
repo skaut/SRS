@@ -505,9 +505,9 @@ class ApplicationService
 
     public function createPayment(\DateTime $date, float $ammount, string $variableSymbol, ?string $transactionId, ?string $accountNumber, ?string $accountName, ?string $message, ?User $createdBy = null) : void
     {
-        $pairedApplication = $this->applicationRepository->findValidByVariableSymbol($variableSymbol);
+        $this->applicationRepository->getEntityManager()->transactional(function () use ($date, $ammount, $variableSymbol, $transactionId, $accountNumber, $accountName, $message, $createdBy) : void {
+            $pairedApplication = $this->applicationRepository->findValidByVariableSymbol($variableSymbol);
 
-        $this->applicationRepository->getEntityManager()->transactional(function () use ($pairedApplication, $date, $ammount, $variableSymbol, $transactionId, $accountNumber, $accountName, $message, $createdBy) : void {
             $payment = new Payment();
 
             $payment->setDate($date);
@@ -520,8 +520,8 @@ class ApplicationService
 
             if ($pairedApplication) {
                 if ($pairedApplication->getFee() == $ammount) {
-                    $payment->setPairedApplications(null); //todo
                     $payment->setState(PaymentState::PAIRED_AUTO);
+                    $pairedApplication->setPayment($payment);
                     $this->updateApplicationPayment($pairedApplication, $variableSymbol, PaymentType::BANK, $date, null, null, $createdBy);
                 } else {
                     $payment->setState(PaymentState::NOT_PAIRED_FEE);
@@ -545,39 +545,48 @@ class ApplicationService
      */
     public function updatePayment(Payment $payment, \DateTime $date, float $ammount, string $variableSymbol, Collection $pairedApplications, User $createdBy) : void
     {
-        $modified = false;
+        $this->applicationRepository->getEntityManager()->transactional(function () use ($payment, $date, $ammount, $variableSymbol, $pairedApplications, $createdBy) : void {
+            $oldPairedApplications = clone $payment->getPairedValidApplications();
+            $newPairedApplications = clone $pairedApplications;
 
-        foreach ($payment->getPairedApplications() as $pairedApplication) {
-            if (! $pairedApplications->contains($pairedApplication)) {
-                $this->updateApplicationPayment($pairedApplication, $pairedApplication->getVariableSymbolText(), null, null, null, $pairedApplication->getMaturityDate(), $createdBy);
-                $modified = true;
-            }
-        }
-        foreach ($pairedApplications as $pairedApplication) {
-            if (! $payment->getPairedApplications()->contains($pairedApplication)) {
-                $this->updateApplicationPayment($pairedApplication, $pairedApplication->getVariableSymbolText(), PaymentType::BANK, $date, null, $pairedApplication->getMaturityDate(), $createdBy);
-                $modified = true;
-            }
-        }
+            $modified = false;
 
-        if ($modified) {
-            if ($pairedApplications->isEmpty()) {
-                $payment->setState(PaymentState::NOT_PAIRED);
-            } else {
-                $payment->setState(PaymentState::PAIRED_MANUAL);
+            foreach ($oldPairedApplications as $pairedApplication) {
+                if (! $newPairedApplications->contains($pairedApplication)) {
+                    $pairedApplication->setPayment(null);
+                    $this->updateApplicationPayment($pairedApplication, $pairedApplication->getVariableSymbolText(), null, null, null, $pairedApplication->getMaturityDate(), $createdBy);
+                    $modified = true;
+                }
             }
-        }
+            foreach ($newPairedApplications as $pairedApplication) {
+                if (! $oldPairedApplications->contains($pairedApplication)) {
+                    $pairedApplication->setPayment($payment);
+                    $this->updateApplicationPayment($pairedApplication, $pairedApplication->getVariableSymbolText(), PaymentType::BANK, $date, null, $pairedApplication->getMaturityDate(), $createdBy);
+                    $modified = true;
+                }
+            }
 
-        $this->paymentRepository->save($payment); //todo transakce
+            if ($modified) {
+                if ($pairedApplications->isEmpty()) {
+                    $payment->setState(PaymentState::NOT_PAIRED);
+                } else {
+                    $payment->setState(PaymentState::PAIRED_MANUAL);
+                }
+            }
+
+            $this->paymentRepository->save($payment);
+        });
     }
 
     public function removePayment(Payment $payment, User $createdBy) : void
     {
-        foreach ($payment->getPairedApplications() as $pairedApplication) {
-            $this->updateApplicationPayment($pairedApplication, $pairedApplication->getVariableSymbolText(), null, null, null, $pairedApplication->getMaturityDate(), $createdBy);
-        }
+        $this->applicationRepository->getEntityManager()->transactional(function () use ($payment, $createdBy) : void {
+            foreach ($payment->getPairedValidApplications() as $pairedApplication) {
+                $this->updateApplicationPayment($pairedApplication, $pairedApplication->getVariableSymbolText(), null, null, null, $pairedApplication->getMaturityDate(), $createdBy);
+            }
 
-        $this->paymentRepository->remove($payment); //todo transakce
+            $this->paymentRepository->remove($payment);
+        });
     }
 
     /**

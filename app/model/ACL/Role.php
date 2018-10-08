@@ -116,7 +116,7 @@ class Role
 
     /**
      * Oprávnění role.
-     * @ORM\ManyToMany(targetEntity="Permission", inversedBy="roles")
+     * @ORM\ManyToMany(targetEntity="Permission", inversedBy="roles", cascade={"persist"})
      * @var Collection|Permission[]
      */
     protected $permissions;

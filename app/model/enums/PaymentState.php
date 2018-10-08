@@ -49,6 +49,7 @@ class PaymentState
         self::NOT_PAIRED_FEE,
         self::NOT_PAIRED_VS,
         self::NOT_PAIRED_CANCELED,
+        self::NOT_PAIRED_PAID, //todo parovat jenom ty s waiting for payment
         self::NOT_PAIRED,
     ];
 }

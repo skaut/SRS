@@ -44,6 +44,11 @@ class PaymentRepository extends EntityRepository
      */
     public function remove(Payment $payment) : void
     {
+        foreach ($payment->getPairedApplications() as $pairedApplication) {
+            $pairedApplication->setPayment(null);
+            $this->_em->persist($pairedApplication);
+        }
+
         $this->_em->remove($payment);
         $this->_em->flush();
     }

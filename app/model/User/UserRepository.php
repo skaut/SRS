@@ -250,6 +250,7 @@ class UserRepository extends EntityRepository
 
         foreach ($user->getLecturersBlocks() as $block) {
             $block->setLector(null);
+            $this->_em->persist($block);
         }
 
         $this->_em->remove($user);

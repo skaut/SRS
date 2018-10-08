@@ -85,7 +85,7 @@ class PaymentsGridControl extends Control
 
         $grid->addColumnDateTime('date', 'admin.payments.payments.date');
 
-        $grid->addColumnNumber('ammount', 'admin.payments.payments.ammount');
+        $grid->addColumnNumber('ammount', 'admin.payments.payments.ammount'); //todo desetinna mista
 
         $grid->addColumnText('variableSymbol', 'admin.payments.payments.variable_symbol');
 
@@ -93,7 +93,7 @@ class PaymentsGridControl extends Control
 
         $grid->addColumnText('message', 'admin.payments.payments.message');
 
-        $grid->addColumnText('pairedApplications', 'admin.payments.payments.paired_applications', 'pairedApplicationsText');
+        $grid->addColumnText('pairedApplications', 'admin.payments.payments.paired_applications', 'pairedValidApplicationsText');
 
         $grid->addColumnText('state', 'admin.payments.payments.state');
 
@@ -110,9 +110,7 @@ class PaymentsGridControl extends Control
         };
         $grid->getInlineAdd()->onSubmit[]     = [$this, 'add'];
 
-        $applicationsOptions = null; //todo
-
-        $grid->addInlineEdit()->onControlAdd[]  = function (Container $container) use ($applicationsOptions) : void {
+        $grid->addInlineEdit()->onControlAdd[]  = function (Container $container) : void {
             $container->addDatePicker('date', '')
                 ->addRule(Form::FILLED, 'admin.payments.payments.date_empty');
 
@@ -123,15 +121,21 @@ class PaymentsGridControl extends Control
             $container->addText('variableSymbol', '')
                 ->addRule(Form::FILLED, 'admin.payments.payments.variable_symbol_empty');
 
-            $container->addMultiSelect('pairedApplications', '', $applicationsOptions)->setAttribute('class', 'datagrid-multiselect');
+            $container->addMultiSelect('pairedApplications', '', $this->applicationRepository->getApplicationsVariableSymbolsOptions())->setAttribute('class', 'datagrid-multiselect');
         };
         $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Payment $item) : void {
             $container->setDefaults([
                 'date' => $item->getDate(),
                 'ammount' => $item->getAmmount(),
                 'variableSymbol' => $item->getVariableSymbol(),
-                'pairedApplications' => $this->applicationRepository->findApplicationsIds($item->getPairedApplications()),
+                'pairedApplications' => $this->applicationRepository->findApplicationsIds($item->getPairedValidApplications()),
             ]);
+
+            if ($item->getTransactionId() !== null) {
+                $container['date']->setDisabled();
+                $container['ammount']->setDisabled();
+                $container['variableSymbol']->setDisabled();
+            }
         };
         $grid->getInlineEdit()->onSubmit[]      = [$this, 'edit'];
 //

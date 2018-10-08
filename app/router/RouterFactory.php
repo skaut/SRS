@@ -56,6 +56,13 @@ class RouterFactory
             'id' => null,
         ]);
 
+        $router[] = new Route('admin/payments/<presenter>/<action>[/<id>]', [
+            'module' => 'Admin:Payments',
+            'presenter' => 'Payments',
+            'action' => 'default',
+            'id' => null,
+        ]);
+
         $router[] = new Route('admin/mailing/<presenter>/<action>[/<id>]', [
             'module' => 'Admin:Mailing',
             'presenter' => 'Auto',

@@ -29,7 +29,7 @@ class Faq
 
     /**
      * Autor otázky.
-     * @ORM\ManyToOne(targetEntity="\App\Model\User\User")
+     * @ORM\ManyToOne(targetEntity="\App\Model\User\User", cascade={"persist"})
      * @var User
      */
     protected $author;

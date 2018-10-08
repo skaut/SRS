@@ -39,13 +39,13 @@ class ApplicationRepository extends EntityRepository
 
     public function findValidByVariableSymbol(string $variableSymbol) : ?Application
     {
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->andX(
-                Criteria::expr()->eq('variableSymbol.variableSymbol', $variableSymbol),
-                Criteria::expr()->isNull('validTo')
-            ));
-
-        return $this->matching($criteria)->first();
+        return $this->createQueryBuilder('a')
+            ->select('a')
+            ->join('a.variableSymbol', 'variableSymbol')
+            ->where('variableSymbol = :variableSymbol')->setParameter('variableSymbol', $variableSymbol)
+            ->andWhere('a.validTo IS NULL')
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     /**
@@ -92,5 +92,26 @@ class ApplicationRepository extends EntityRepository
         return array_map(function (Application $o) {
             return $o->getId();
         }, $applications->toArray());
+    }
+
+    /**
+     * @return Collection|Application[]
+     */
+    public function findValidApplicationsWithFee() : Collection
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->isNull('validTo'))
+            ->andWhere(Criteria::expr()->gt('fee', 0));
+
+        return $this->matching($criteria);
+    }
+
+    public function getApplicationsVariableSymbolsOptions() : array
+    {
+        $options = [];
+        foreach ($this->findValidApplicationsWithFee() as $application) {
+            $options[$application->getId()] = $application->getUser()->getLastName() . ' ' . $application->getUser()->getFirstName() . ' (' . $application->getVariableSymbolText() . ')';
+        }
+        return $options;
     }
 }
