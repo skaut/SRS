@@ -40,7 +40,7 @@ class Tag
 
     /**
      * Role oprávněné zobrazit dokumenty v této kategorií.
-     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="tags")
+     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="tags", cascade={"persist"})
      * @var Collection|Role[]
      */
     protected $roles;

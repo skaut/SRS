@@ -117,6 +117,27 @@
             </div>
         {/if}
 
+        {if $user->isAllowed($resourcePayments, $permissionManage)}
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">{_admin.menu.payments}</div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-2 col-xs-2">
+                                    <a href="{plink Payments:Payments:default}" class="btn btn-default btn-sm btn-block">
+                                        <span class="fa fa-2x fa-money"></span>
+                                        <br>
+                                        {_admin.menu.payments}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {/if}
+
         {if $user->isAllowed($resourceACL, $permissionManage)}
             <div class="row">
                 <div class="col-sm-12">

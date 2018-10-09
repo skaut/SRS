@@ -31,7 +31,7 @@ class Category
 
     /**
      * Role, které si mohou přihlašovat programy z kategorie.
-     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="registerableCategories")
+     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="registerableCategories", cascade={"persist"})
      * @var Collection|Role[]
      */
     protected $registerableRoles;

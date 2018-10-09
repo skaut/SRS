@@ -228,7 +228,7 @@ class User
 
     /**
      * Role.
-     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="users")
+     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="users", cascade={"persist"})
      * @var Collection|Role[]
      */
     protected $roles;
@@ -242,7 +242,7 @@ class User
 
     /**
      * Přihlášené programy.
-     * @ORM\ManyToMany(targetEntity="\App\Model\Program\Program", inversedBy="attendees")
+     * @ORM\ManyToMany(targetEntity="\App\Model\Program\Program", inversedBy="attendees", cascade={"persist"})
      * @ORM\OrderBy({"start" = "ASC"})
      * @var Collection|Program[]
      */

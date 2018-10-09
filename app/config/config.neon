@@ -115,6 +115,10 @@ services:
         class: App\Model\CMS\PageRepository
         tags:
             doctrine.repositoryEntity: App\Model\CMS\Page
+    paymentRepository:
+        class: App\Model\Payment\PaymentRepository
+        tags:
+            doctrine.repositoryEntity: App\Model\Payment\Payment
     mailRepository:
         class: App\Model\Mailing\MailRepository
         tags:
@@ -227,6 +231,7 @@ services:
     - App\AdminModule\ConfigurationModule\Components\ISubeventsGridControlFactory
     - App\AdminModule\MailingModule\Components\IMailHistoryGridControlFactory
     - App\AdminModule\MailingModule\Components\IMailTemplatesGridControlFactory
+    - App\AdminModule\PaymentsModule\Components\IPaymentsGridControlFactory
     - App\AdminModule\ProgramModule\Components\IProgramBlocksGridControlFactory
     - App\AdminModule\ProgramModule\Components\IProgramCategoriesGridControlFactory
     - App\AdminModule\ProgramModule\Components\IProgramAttendeesGridControlFactory

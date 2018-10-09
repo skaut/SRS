@@ -6,6 +6,7 @@ namespace App\Model\User;
 
 use App\Model\ACL\Role;
 use App\Model\Enums\ApplicationState;
+use App\Model\Payment\Payment;
 use App\Model\Structure\Subevent;
 use App\Utils\Helpers;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -119,6 +120,13 @@ abstract class Application
      * @var \DateTime
      */
     protected $paymentDate;
+
+    /**
+     * Spárovaná platba.
+     * @ORM\ManyToOne(targetEntity="\App\Model\Payment\Payment", inversedBy="pairedApplications", cascade={"persist"})
+     * @var Payment
+     */
+    protected $payment;
 
     /**
      * Datum vytištění dokladu o zaplacení.
@@ -320,6 +328,16 @@ abstract class Application
     public function setPaymentDate(?\DateTime $paymentDate) : void
     {
         $this->paymentDate = $paymentDate;
+    }
+
+    public function getPayment(): ?Payment
+    {
+        return $this->payment;
+    }
+
+    public function setPayment(?Payment $payment): void
+    {
+        $this->payment = $payment;
     }
 
     public function getIncomeProofPrintedDate() : ?\DateTime

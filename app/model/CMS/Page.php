@@ -57,7 +57,7 @@ class Page
 
     /**
      * Role, které mají na stránku přístup.
-     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="pages")
+     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="pages", cascade={"persist"})
      * @var Collection|Role[]
      */
     protected $roles;

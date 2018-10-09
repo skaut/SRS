@@ -41,21 +41,21 @@ class Block
 
     /**
      * Lektor.
-     * @ORM\ManyToMany(targetEntity="\App\Model\User\User", inversedBy="lecturersBlocks")
+     * @ORM\ManyToMany(targetEntity="\App\Model\User\User", inversedBy="lecturersBlocks", cascade={"persist"})
      * @var Collection|User[]
      */
     protected $lectors;
 
     /**
      * Kategorie bloku.
-     * @ORM\ManyToOne(targetEntity="Category", inversedBy="blocks")
+     * @ORM\ManyToOne(targetEntity="Category", inversedBy="blocks", cascade={"persist"})
      * @var Category
      */
     protected $category;
 
     /**
      * Podakce bloku.
-     * @ORM\ManyToOne(targetEntity="\App\Model\Structure\Subevent", inversedBy="blocks")
+     * @ORM\ManyToOne(targetEntity="\App\Model\Structure\Subevent", inversedBy="blocks", cascade={"persist"})
      * @var Subevent
      */
     protected $subevent;

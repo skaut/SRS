@@ -126,6 +126,7 @@ abstract class AdminBasePresenter extends BasePresenter
         $this->template->resourceCMS           = Resource::CMS;
         $this->template->resourceConfiguration = Resource::CONFIGURATION;
         $this->template->resourceUsers         = Resource::USERS;
+        $this->template->resourcePayments      = Resource::PAYMENTS;
         $this->template->resourceMailing       = Resource::MAILING;
         $this->template->resourceProgram       = Resource::PROGRAM;
 

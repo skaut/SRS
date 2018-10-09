@@ -28,7 +28,7 @@ class Document
 
     /**
      * Tagy dokumentu.
-     * @ORM\ManyToMany(targetEntity="Tag", inversedBy="documents")
+     * @ORM\ManyToMany(targetEntity="Tag", inversedBy="documents", cascade={"persist"})
      * @var Collection|Tag[]
      */
     protected $tags;

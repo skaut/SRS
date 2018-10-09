@@ -33,6 +33,7 @@ menu:
     cms: "Web"
     program: "Program"
     users: "Uživatelé"
+    payments: "Platby"
     acl: "Role"
     mailing: "Mailing"
     configuration: "Nastavení"
@@ -394,6 +395,24 @@ users:
     users_detail_seminar: "Účast na semináři"
     users_detail_applications: "Role a platby"
     users_detail_schedule: "Harmonogram"
+
+payments:
+    payments:
+        heading: "Platby"
+        date: "Datum"
+        date_empty: "Zadejte datum."
+        ammount: "Částka"
+        ammount_empty: "Zadejte částku."
+        ammount_low: "Částka musí být větší než 0."
+        variable_symbol: "Variabilní symbol"
+        variable_symbol_empty: "Zadejte variabilní symbol."
+        account_name: "Název protiúčtu"
+        message: "Zpráva pro příjemce"
+        paired_applications: "Spárované přihlášky"
+        state: "Stav"
+        saved: "Platba byla úspěšně uložena."
+        delete_confirm: "Opravdu chcete platbu odstranit?"
+        deleted: "Platba byla úspěšně odstraněna."
 
 acl:
     roles_heading: "Role"

@@ -8,8 +8,12 @@ use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\MaturityType;
+use App\Model\Enums\PaymentState;
+use App\Model\Enums\PaymentType;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
+use App\Model\Payment\Payment;
+use App\Model\Payment\PaymentRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
@@ -85,6 +89,9 @@ class ApplicationService
     /** @var Translator */
     private $translator;
 
+    /** @var PaymentRepository */
+    private $paymentRepository;
+
 
     public function __construct(
         SettingsRepository $settingsRepository,
@@ -98,7 +105,8 @@ class ApplicationService
         ProgramService $programService,
         MailService $mailService,
         UserService $userService,
-        Translator $translator
+        Translator $translator,
+        PaymentRepository $paymentRepository
     ) {
         $this->settingsRepository       = $settingsRepository;
         $this->applicationRepository    = $applicationRepository;
@@ -112,6 +120,7 @@ class ApplicationService
         $this->mailService              = $mailService;
         $this->userService              = $userService;
         $this->translator               = $translator;
+        $this->paymentRepository        = $paymentRepository;
     }
 
     /**
@@ -424,14 +433,14 @@ class ApplicationService
      * Aktualizuje stav platby.
      * @throws \Throwable
      */
-    public function updatePayment(
+    public function updateApplicationPayment(
         Application $application,
         string $variableSymbol,
         ?string $paymentMethod,
         ?\DateTime $paymentDate,
         ?\DateTime $incomeProofPrintedDate,
         ?\DateTime $maturityDate,
-        User $createdBy
+        ?User $createdBy
     ) : void {
         $oldVariableSymbol         = $application->getVariableSymbolText();
         $oldPaymentMethod          = $application->getPaymentMethod();
@@ -440,7 +449,7 @@ class ApplicationService
         $oldMaturityDate           = $application->getMaturityDate();
 
         //pokud neni zmena, nic se neprovede
-        if ($variableSymbol === $oldVariableSymbol && $paymentMethod === $oldPaymentMethod
+        if ($variableSymbol === $oldVariableSymbol && $paymentMethod === $oldPaymentMethod //todo zakazat zmenu VS
             && $paymentDate === $oldPaymentDate && $incomeProofPrintedDate === $oldIncomeProofPrintedDate
             && $maturityDate === $oldMaturityDate) {
             return;
@@ -494,6 +503,152 @@ class ApplicationService
         ]);
     }
 
+    public function createPayment(\DateTime $date, float $ammount, string $variableSymbol, ?string $transactionId, ?string $accountNumber, ?string $accountName, ?string $message, ?User $createdBy = null) : void
+    {
+        $this->applicationRepository->getEntityManager()->transactional(function () use ($date, $ammount, $variableSymbol, $transactionId, $accountNumber, $accountName, $message, $createdBy) : void {
+            $pairedApplication = $this->applicationRepository->findValidByVariableSymbol($variableSymbol);
+
+            $payment = new Payment();
+
+            $payment->setDate($date);
+            $payment->setAmmount($ammount);
+            $payment->setVariableSymbol($variableSymbol);
+            $payment->setTransactionId($transactionId);
+            $payment->setAccountNumber($accountNumber);
+            $payment->setAccountName($accountName);
+            $payment->setMessage($message);
+
+            if ($pairedApplication) {
+                if ($pairedApplication->getFee() == $ammount) {
+                    $payment->setState(PaymentState::PAIRED_AUTO);
+                    $pairedApplication->setPayment($payment);
+                    $this->updateApplicationPayment($pairedApplication, $variableSymbol, PaymentType::BANK, $date, null, null, $createdBy);
+                } else {
+                    $payment->setState(PaymentState::NOT_PAIRED_FEE);
+                }
+            } else {
+                $payment->setState(PaymentState::NOT_PAIRED_VS);
+            }
+
+            $this->paymentRepository->save($payment);
+        });
+    }
+
+    public function createPaymentManual(\DateTime $date, float $ammount, string $variableSymbol, User $createdBy) : void
+    {
+        $this->createPayment($date, $ammount, $variableSymbol, null, null, null, null, $createdBy);
+    }
+
+    /**
+     * @param Collection|Application[] $pairedApplications
+     * @throws \Throwable
+     */
+    public function updatePayment(Payment $payment, \DateTime $date, float $ammount, string $variableSymbol, Collection $pairedApplications, User $createdBy) : void
+    {
+        $this->applicationRepository->getEntityManager()->transactional(function () use ($payment, $date, $ammount, $variableSymbol, $pairedApplications, $createdBy) : void {
+            $oldPairedApplications = clone $payment->getPairedValidApplications();
+            $newPairedApplications = clone $pairedApplications;
+
+            $modified = false;
+
+            foreach ($oldPairedApplications as $pairedApplication) {
+                if (! $newPairedApplications->contains($pairedApplication)) {
+                    $pairedApplication->setPayment(null);
+                    $this->updateApplicationPayment($pairedApplication, $pairedApplication->getVariableSymbolText(), null, null, null, $pairedApplication->getMaturityDate(), $createdBy);
+                    $modified = true;
+                }
+            }
+            foreach ($newPairedApplications as $pairedApplication) {
+                if (! $oldPairedApplications->contains($pairedApplication)) {
+                    $pairedApplication->setPayment($payment);
+                    $this->updateApplicationPayment($pairedApplication, $pairedApplication->getVariableSymbolText(), PaymentType::BANK, $date, null, $pairedApplication->getMaturityDate(), $createdBy);
+                    $modified = true;
+                }
+            }
+
+            if ($modified) {
+                if ($pairedApplications->isEmpty()) {
+                    $payment->setState(PaymentState::NOT_PAIRED);
+                } else {
+                    $payment->setState(PaymentState::PAIRED_MANUAL);
+                }
+            }
+
+            $this->paymentRepository->save($payment);
+        });
+    }
+
+    public function removePayment(Payment $payment, User $createdBy) : void
+    {
+        $this->applicationRepository->getEntityManager()->transactional(function () use ($payment, $createdBy) : void {
+            foreach ($payment->getPairedValidApplications() as $pairedApplication) {
+                $this->updateApplicationPayment($pairedApplication, $pairedApplication->getVariableSymbolText(), null, null, null, $pairedApplication->getMaturityDate(), $createdBy);
+            }
+
+            $this->paymentRepository->remove($payment);
+        });
+    }
+
+    /**
+     * Vrací stav přihlášky jako text.
+     */
+    public function getStateText(Application $application) : string
+    {
+        $state = $this->translator->translate('common.application_state.' . $application->getState());
+
+        if ($application->getState() === ApplicationState::PAID) {
+            $state .= ' (' . $application->getPaymentDate()->format(Helpers::DATE_FORMAT) . ')';
+        }
+
+        return $state;
+    }
+
+    /**
+     * Může uživatel upravovat role?
+     * @throws SettingsException
+     * @throws \Throwable
+     */
+    public function isAllowedEditRegistration(User $user) : bool
+    {
+        return ! $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))
+            && ! $user->hasPaidAnyApplication()
+            && $this->settingsRepository->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new \DateTime())->setTime(0, 0);
+    }
+
+    /**
+     * Je uživateli povoleno upravit nebo zrušit přihlášku?
+     * @throws SettingsException
+     * @throws \Throwable
+     */
+    public function isAllowedEditApplication(Application $application) : bool
+    {
+        return $application->getType() === Application::SUBEVENTS && ! $application->isCanceled()
+            && $application->getState() !== ApplicationState::PAID
+            && $this->settingsRepository->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new \DateTime())->setTime(0, 0);
+    }
+
+    /**
+     * Může uživatel dodatečně přidávat podakce?
+     * @throws SettingsException
+     * @throws \Throwable
+     */
+    public function isAllowedAddApplication(User $user) : bool
+    {
+        return $user->hasPaidEveryApplication()
+            && $this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT)
+            && $this->settingsRepository->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new \DateTime())->setTime(0, 0);
+    }
+
+    /**
+     * Může uživatel upravovat vlastní pole přihlášky?
+     * @throws SettingsException
+     * @throws \Throwable
+     */
+    public function isAllowedEditCustomInputs() : bool
+    {
+        return $this->settingsRepository->getDateValue(Settings::EDIT_CUSTOM_INPUTS_TO) >= (new \DateTime())->setTime(0, 0);
+    }
+
     /**
      * @param Collection|Role[] $roles
      * @throws SettingsException
@@ -512,8 +667,8 @@ class ApplicationService
 
         $user->setApproved(true);
         if (! $approve && $roles->exists(function (int $key, Role $role) {
-            return ! $role->isApprovedAfterRegistration();
-        })) {
+                return ! $role->isApprovedAfterRegistration();
+            })) {
             $user->setApproved(false);
         }
 
@@ -694,66 +849,6 @@ class ApplicationService
         }
 
         return ApplicationState::WAITING_FOR_PAYMENT;
-    }
-
-    /**
-     * Vrací stav přihlášky jako text.
-     */
-    public function getStateText(Application $application) : string
-    {
-        $state = $this->translator->translate('common.application_state.' . $application->getState());
-
-        if ($application->getState() === ApplicationState::PAID) {
-            $state .= ' (' . $application->getPaymentDate()->format(Helpers::DATE_FORMAT) . ')';
-        }
-
-        return $state;
-    }
-
-    /**
-     * Může uživatel upravovat role?
-     * @throws SettingsException
-     * @throws \Throwable
-     */
-    public function isAllowedEditRegistration(User $user) : bool
-    {
-        return ! $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))
-            && ! $user->hasPaidAnyApplication()
-            && $this->settingsRepository->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new \DateTime())->setTime(0, 0);
-    }
-
-    /**
-     * Je uživateli povoleno upravit nebo zrušit přihlášku?
-     * @throws SettingsException
-     * @throws \Throwable
-     */
-    public function isAllowedEditApplication(Application $application) : bool
-    {
-        return $application->getType() === Application::SUBEVENTS && ! $application->isCanceled()
-            && $application->getState() !== ApplicationState::PAID
-            && $this->settingsRepository->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new \DateTime())->setTime(0, 0);
-    }
-
-    /**
-     * Může uživatel dodatečně přidávat podakce?
-     * @throws SettingsException
-     * @throws \Throwable
-     */
-    public function isAllowedAddApplication(User $user) : bool
-    {
-        return $user->hasPaidEveryApplication()
-            && $this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT)
-            && $this->settingsRepository->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new \DateTime())->setTime(0, 0);
-    }
-
-    /**
-     * Může uživatel upravovat vlastní pole přihlášky?
-     * @throws SettingsException
-     * @throws \Throwable
-     */
-    public function isAllowedEditCustomInputs() : bool
-    {
-        return $this->settingsRepository->getDateValue(Settings::EDIT_CUSTOM_INPUTS_TO) >= (new \DateTime())->setTime(0, 0);
     }
 
     /**
