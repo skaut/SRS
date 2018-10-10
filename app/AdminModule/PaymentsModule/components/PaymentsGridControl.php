@@ -6,14 +6,18 @@ namespace App\AdminModule\PaymentsModule\Components;
 
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
+use App\Model\Enums\PaymentState;
 use App\Model\Payment\Payment;
 use App\Model\Payment\PaymentRepository;
 use App\Model\Program\CategoryRepository;
 use App\Model\Program\ProgramRepository;
+use App\Model\Settings\SettingsException;
 use App\Model\User\ApplicationRepository;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
+use App\Services\PdfExportService;
 use App\Services\ProgramService;
+use App\Utils\Helpers;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -47,13 +51,17 @@ class PaymentsGridControl extends Control
     /** @var ApplicationService */
     private $applicationService;
 
+    /** @var PdfExportService */
+    private $pdfExportService;
+
 
     public function __construct(
         Translator $translator,
         PaymentRepository $paymentRepository,
         ApplicationRepository $applicationRepository,
         UserRepository $userRepository,
-        ApplicationService $applicationService
+        ApplicationService $applicationService,
+        PdfExportService $pdfExportService
     ) {
         parent::__construct();
 
@@ -62,6 +70,7 @@ class PaymentsGridControl extends Control
         $this->applicationRepository = $applicationRepository;
         $this->userRepository        = $userRepository;
         $this->applicationService    = $applicationService;
+        $this->pdfExportService      = $pdfExportService;
     }
 
     /**
@@ -84,23 +93,31 @@ class PaymentsGridControl extends Control
         $grid->setDefaultSort(['date' => 'DESC']);
         $grid->setItemsPerPageList([25, 50, 100, 250, 500]);
 
-        $grid->addColumnDateTime('date', 'admin.payments.payments.date');
+        $grid->addColumnDateTime('date', 'admin.payments.payments.date')
+            ->setFormat(Helpers::DATETIME_FORMAT)
+            ->setSortable();
 
         $grid->addColumnNumber('ammount', 'admin.payments.payments.ammount')
-            ->setFormat(2, ',', ' ');
+            ->setFormat(2, ',', ' ')
+            ->setSortable();
 
-        $grid->addColumnText('variableSymbol', 'admin.payments.payments.variable_symbol');
+        $grid->addColumnText('variableSymbol', 'admin.payments.payments.variable_symbol')
+            ->setFilterText();
 
-        $grid->addColumnText('accountName', 'admin.payments.payments.account_name');
+        $grid->addColumnText('accountName', 'admin.payments.payments.account_name')
+            ->setFilterText();
 
-        $grid->addColumnText('message', 'admin.payments.payments.message');
+        $grid->addColumnText('message', 'admin.payments.payments.message')
+            ->setFilterText();
 
         $grid->addColumnText('pairedApplications', 'admin.payments.payments.paired_applications', 'pairedValidApplicationsText');
 
         $grid->addColumnText('state', 'admin.payments.payments.state')
             ->setRenderer(function(Payment $payment) {
                 return $this->translator->translate('common.payment_state.' . $payment->getState());
-            });
+            })
+            ->setFilterMultiSelect($this->preparePaymentStatesOptions())
+            ->setTranslateOptions();
 
         $grid->addInlineAdd()->onControlAdd[] = function (Container $container) : void {
             $container->addDatePicker('date', '')
@@ -147,6 +164,11 @@ class PaymentsGridControl extends Control
             }
         };
         $grid->getInlineEdit()->onSubmit[]      = [$this, 'edit'];
+
+        $grid->addAction('generatePaymentProofBank', 'admin.payments.payments.download_payment_proof_bank');
+        $grid->allowRowsAction('generatePaymentProofBank', function (Payment $payment) {
+            return $payment->getState() === PaymentState::PAIRED_AUTO || $payment->getState() === PaymentState::PAIRED_MANUAL;
+        });
 
         $grid->addAction('delete', '', 'delete!')
             ->setIcon('trash')
@@ -206,5 +228,33 @@ class PaymentsGridControl extends Control
 
         $this->getPresenter()->flashMessage('admin.payments.payments.saved.deleted', 'success');
         $this->redirect('this');
+    }
+
+    /**
+     * Vygeneruje potvrzení o přijetí platby.
+     * @throws SettingsException
+     * @throws \Throwable
+     */
+    public function handleGeneratePaymentProofBank(int $id) : void
+    {
+        $this->pdfExportService->generateApplicationsPaymentProofs(
+            $this->paymentRepository->findById($id)->getPairedValidApplications(),
+            'potvrzeni-o-prijeti-platby.pdf',
+            $this->userRepository->findById($this->getPresenter()->getUser()->id)
+        );
+    }
+
+    /**
+     * Vrátí stavy plateb jako možnosti pro select.
+     * @return string[]
+     */
+    private function preparePaymentStatesOptions() : array
+    {
+        $options     = [];
+        $options[''] = '';
+        foreach (PaymentState::$states as $state) {
+            $options[$state] = 'common.payment_state.' . $state;
+        }
+        return $options;
     }
 }

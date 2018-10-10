@@ -299,7 +299,9 @@ class ApplicationService
                 $newApplication->setValidFrom(new \DateTime());
 
                 if ($newApplication->getPayment() !== null) {
-                    $newApplication->getPayment()->setState(PaymentState::NOT_PAIRED_CANCELED);
+                    if ($newApplication->getPayment()->getPairedValidApplications()->count() === 1) {
+                        $newApplication->getPayment()->setState(PaymentState::NOT_PAIRED_CANCELED);
+                    }
                     $newApplication->setPayment(null);
                 }
 
@@ -358,6 +360,10 @@ class ApplicationService
      */
     public function updateSubeventsApplication(SubeventsApplication $application, Collection $subevents, User $createdBy) : void
     {
+        if (! $application->isValid()) {
+            return;
+        }
+
         $oldSubevents = clone $application->getSubevents();
 
         //pokud se podakce nezmenily, nic se neprovede
@@ -411,6 +417,10 @@ class ApplicationService
      */
     public function cancelSubeventsApplication(SubeventsApplication $application, string $state, ?User $createdBy) : void
     {
+        if (! $application->isValid()) {
+            return;
+        }
+
         $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($application, $state, $createdBy) : void {
             $user = $application->getUser();
 
@@ -420,7 +430,9 @@ class ApplicationService
             $newApplication->setValidFrom(new \DateTime());
 
             if ($newApplication->getPayment() !== null) {
-                $newApplication->getPayment()->setState(PaymentState::NOT_PAIRED_CANCELED);
+                if ($newApplication->getPayment()->getPairedValidApplications()->count() === 1) {
+                    $newApplication->getPayment()->setState(PaymentState::NOT_PAIRED_CANCELED);
+                }
                 $newApplication->setPayment(null);
             }
 

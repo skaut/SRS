@@ -49,7 +49,7 @@ class PaymentState
     public const NOT_PAIRED = 'not_paired';
 
     /** @var string[] */
-    public static $types = [
+    public static $states = [
         self::PAIRED_AUTO,
         self::PAIRED_MANUAL,
         self::NOT_PAIRED_FEE,
