@@ -96,72 +96,72 @@ class Payment
         return $this->id;
     }
 
-    public function getTransactionId(): ?string
+    public function getTransactionId() : ?string
     {
         return $this->transactionId;
     }
 
-    public function setTransactionId(?string $transactionId): void
+    public function setTransactionId(?string $transactionId) : void
     {
         $this->transactionId = $transactionId;
     }
 
-    public function getDate(): \DateTime
+    public function getDate() : \DateTime
     {
         return $this->date;
     }
 
-    public function setDate(\DateTime $date): void
+    public function setDate(\DateTime $date) : void
     {
         $this->date = $date;
     }
 
-    public function getAmmount(): float
+    public function getAmmount() : float
     {
         return $this->ammount;
     }
 
-    public function setAmmount(float $ammount): void
+    public function setAmmount(float $ammount) : void
     {
         $this->ammount = $ammount;
     }
 
-    public function getAccountNumber(): ?string
+    public function getAccountNumber() : ?string
     {
         return $this->accountNumber;
     }
 
-    public function setAccountNumber(?string $accountNumber): void
+    public function setAccountNumber(?string $accountNumber) : void
     {
         $this->accountNumber = $accountNumber;
     }
 
-    public function getAccountName(): ?string
+    public function getAccountName() : ?string
     {
         return $this->accountName;
     }
 
-    public function setAccountName(?string $accountName): void
+    public function setAccountName(?string $accountName) : void
     {
         $this->accountName = $accountName;
     }
 
-    public function getVariableSymbol(): ?string
+    public function getVariableSymbol() : ?string
     {
         return $this->variableSymbol;
     }
 
-    public function setVariableSymbol(?string $variableSymbol): void
+    public function setVariableSymbol(?string $variableSymbol) : void
     {
         $this->variableSymbol = $variableSymbol;
     }
 
-    public function getMessage(): ?string
+    public function getMessage() : ?string
     {
         return $this->message;
     }
 
-    public function setMessage(?string $message): void
+    public function setMessage(?string $message) : void
     {
         $this->message = $message;
     }
@@ -169,7 +169,7 @@ class Payment
     /**
      * @return Application[]|Collection
      */
-    public function getPairedApplications()
+    public function getPairedApplications() : Collection
     {
         return $this->pairedApplications;
     }
@@ -177,7 +177,7 @@ class Payment
     /**
      * @return Application[]|Collection
      */
-    public function getPairedValidApplications()
+    public function getPairedValidApplications() : Collection
     {
         $criteria = Criteria::create()->where(
             Criteria::expr()->isNull('validTo')
@@ -185,7 +185,7 @@ class Payment
         return $this->pairedApplications->matching($criteria);
     }
 
-    public function getPairedValidApplicationsText()
+    public function getPairedValidApplicationsText() : string
     {
         $usersVS = [];
         $usersNames = [];
@@ -206,12 +206,12 @@ class Payment
         return implode(', ', $usersTexts);
     }
 
-    public function getState(): string
+    public function getState() : string
     {
         return $this->state;
     }
 
-    public function setState(string $state): void
+    public function setState(string $state) : void
     {
         $this->state = $state;
     }

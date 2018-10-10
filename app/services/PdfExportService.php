@@ -108,6 +108,11 @@ class PdfExportService
         );
     }
 
+    /**
+     * @param Collection|Application[] $applications
+     * @throws SettingsException
+     * @throws \Throwable
+     */
     public function generateApplicationsPaymentProofs(Collection $applications, string $filename, User $createdBy) : void
     {
         $this->prepareApplicationsPaymentProofs($applications, $createdBy);
@@ -115,6 +120,11 @@ class PdfExportService
         exit;
     }
 
+    /**
+     * @param Collection|Application[] $applications
+     * @throws SettingsException
+     * @throws \Throwable
+     */
     private function prepareApplicationsPaymentProofs(Collection $applications, User $createdBy) : void
     {
         foreach ($applications as $application) {

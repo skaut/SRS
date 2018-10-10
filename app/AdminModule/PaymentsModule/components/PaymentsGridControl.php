@@ -4,21 +4,15 @@ declare(strict_types=1);
 
 namespace App\AdminModule\PaymentsModule\Components;
 
-use App\Model\ACL\Role;
-use App\Model\ACL\RoleRepository;
 use App\Model\Enums\PaymentState;
 use App\Model\Payment\Payment;
 use App\Model\Payment\PaymentRepository;
-use App\Model\Program\CategoryRepository;
-use App\Model\Program\ProgramRepository;
 use App\Model\Settings\SettingsException;
 use App\Model\User\ApplicationRepository;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\PdfExportService;
-use App\Services\ProgramService;
 use App\Utils\Helpers;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
@@ -113,7 +107,7 @@ class PaymentsGridControl extends Control
         $grid->addColumnText('pairedApplications', 'admin.payments.payments.paired_applications', 'pairedValidApplicationsText');
 
         $grid->addColumnText('state', 'admin.payments.payments.state')
-            ->setRenderer(function(Payment $payment) {
+            ->setRenderer(function (Payment $payment) {
                 return $this->translator->translate('common.payment_state.' . $payment->getState());
             })
             ->setFilterMultiSelect($this->preparePaymentStatesOptions())
@@ -157,11 +151,13 @@ class PaymentsGridControl extends Control
                 'pairedApplications' => $this->applicationRepository->findApplicationsIds($payment->getPairedValidApplications()),
             ]);
 
-            if ($payment->getTransactionId() !== null) {
-                $container['date']->setDisabled();
-                $container['ammount']->setDisabled();
-                $container['variableSymbol']->setDisabled();
+            if ($payment->getTransactionId() === null) {
+                return;
             }
+
+            $container['date']->setDisabled();
+            $container['ammount']->setDisabled();
+            $container['variableSymbol']->setDisabled();
         };
         $grid->getInlineEdit()->onSubmit[]      = [$this, 'edit'];
 
