@@ -297,6 +297,14 @@ class ApplicationService
                 $newApplication->setState($state);
                 $newApplication->setCreatedBy($createdBy);
                 $newApplication->setValidFrom(new \DateTime());
+
+                if ($newApplication->getPayment() !== null) {
+                    if ($newApplication->getPayment()->getPairedValidApplications()->count() === 1) {
+                        $newApplication->getPayment()->setState(PaymentState::NOT_PAIRED_CANCELED);
+                    }
+                    $newApplication->setPayment(null);
+                }
+
                 $this->applicationRepository->save($newApplication);
 
                 $application->setValidTo(new \DateTime());
@@ -352,6 +360,10 @@ class ApplicationService
      */
     public function updateSubeventsApplication(SubeventsApplication $application, Collection $subevents, User $createdBy) : void
     {
+        if (! $application->isValid()) {
+            return;
+        }
+
         $oldSubevents = clone $application->getSubevents();
 
         //pokud se podakce nezmenily, nic se neprovede
@@ -405,6 +417,10 @@ class ApplicationService
      */
     public function cancelSubeventsApplication(SubeventsApplication $application, string $state, ?User $createdBy) : void
     {
+        if (! $application->isValid()) {
+            return;
+        }
+
         $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($application, $state, $createdBy) : void {
             $user = $application->getUser();
 
@@ -412,6 +428,14 @@ class ApplicationService
             $newApplication->setState($state);
             $newApplication->setCreatedBy($createdBy);
             $newApplication->setValidFrom(new \DateTime());
+
+            if ($newApplication->getPayment() !== null) {
+                if ($newApplication->getPayment()->getPairedValidApplications()->count() === 1) {
+                    $newApplication->getPayment()->setState(PaymentState::NOT_PAIRED_CANCELED);
+                }
+                $newApplication->setPayment(null);
+            }
+
             $this->applicationRepository->save($newApplication);
 
             $application->setValidTo(new \DateTime());
@@ -519,12 +543,14 @@ class ApplicationService
             $payment->setMessage($message);
 
             if ($pairedApplication) {
-                if ($pairedApplication->getFee() == $ammount) {
+                if ($pairedApplication->getState() === ApplicationState::PAID || $pairedApplication->getState() === ApplicationState::PAID_FREE) {
+                    $payment->setState(PaymentState::NOT_PAIRED_PAID);
+                } elseif (abs($pairedApplication->getFee() - $ammount) >= 0.01) {
+                    $payment->setState(PaymentState::NOT_PAIRED_FEE);
+                } else {
                     $payment->setState(PaymentState::PAIRED_AUTO);
                     $pairedApplication->setPayment($payment);
                     $this->updateApplicationPayment($pairedApplication, $variableSymbol, PaymentType::BANK, $date, null, null, $createdBy);
-                } else {
-                    $payment->setState(PaymentState::NOT_PAIRED_FEE);
                 }
             } else {
                 $payment->setState(PaymentState::NOT_PAIRED_VS);

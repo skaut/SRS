@@ -349,7 +349,7 @@ class ApplicationsGridControl extends Control
     public function handleGeneratePaymentProofCash(int $id) : void
     {
         $this->pdfExportService->generateApplicationsPaymentProof(
-            $application = $this->applicationRepository->findById($id),
+            $this->applicationRepository->findById($id),
             'prijmovy-pokladni-doklad.pdf',
             $this->userRepository->findById($this->getPresenter()->getUser()->id)
         );
@@ -363,7 +363,7 @@ class ApplicationsGridControl extends Control
     public function handleGeneratePaymentProofBank(int $id) : void
     {
         $this->pdfExportService->generateApplicationsPaymentProof(
-            $application = $this->applicationRepository->findById($id),
+            $this->applicationRepository->findById($id),
             'potvrzeni-o-prijeti-platby.pdf',
             $this->userRepository->findById($this->getPresenter()->getUser()->id)
         );

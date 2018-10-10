@@ -413,6 +413,7 @@ payments:
         saved: "Platba byla úspěšně uložena."
         delete_confirm: "Opravdu chcete platbu odstranit?"
         deleted: "Platba byla úspěšně odstraněna."
+        download_payment_proof_bank: "Stáhnout potvrzení o přijetí platby"
 
 acl:
     roles_heading: "Role"

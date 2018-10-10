@@ -108,6 +108,20 @@ class PdfExportService
         );
     }
 
+    public function generateApplicationsPaymentProofs(Collection $applications, string $filename, User $createdBy) : void
+    {
+        $this->prepareApplicationsPaymentProofs($applications, $createdBy);
+        $this->fpdi->Output($filename, 'D');
+        exit;
+    }
+
+    private function prepareApplicationsPaymentProofs(Collection $applications, User $createdBy) : void
+    {
+        foreach ($applications as $application) {
+            $this->prepareApplicationsPaymentProof($application, $createdBy);
+        }
+    }
+
     /**
      * Vygeneruje doklady o zaplacení pro uživatele.
      * @throws SettingsException

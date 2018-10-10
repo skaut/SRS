@@ -398,6 +398,11 @@ abstract class Application
         $this->validTo = $validTo;
     }
 
+    public function isValid() : bool
+    {
+        return $this->validTo === null;
+    }
+
     public function isCanceled() : bool
     {
         return $this->state === ApplicationState::CANCELED || $this->state === ApplicationState::CANCELED_NOT_PAID;
