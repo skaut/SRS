@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace App\Model\Payment;
 
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Kdyby\Doctrine\EntityRepository;
-use function array_map;
 
 /**
  * Třída spravující platby.

@@ -39,6 +39,7 @@ use Ublaboo\Mailing\Exception\MailingException;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 use Yasumi\Yasumi;
 use const STR_PAD_LEFT;
+use function abs;
 use function array_diff;
 use function implode;
 use function str_pad;
@@ -693,8 +694,8 @@ class ApplicationService
 
         $user->setApproved(true);
         if (! $approve && $roles->exists(function (int $key, Role $role) {
-                return ! $role->isApprovedAfterRegistration();
-            })) {
+            return ! $role->isApprovedAfterRegistration();
+        })) {
             $user->setApproved(false);
         }
 

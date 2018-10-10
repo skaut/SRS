@@ -196,6 +196,11 @@ class Settings
      */
     public const EDIT_CUSTOM_INPUTS_TO = 'edit_custom_inputs_to';
 
+    /**
+     * Token pro přístup k účtu.
+     */
+    public const ACCOUNT_TOKEN = 'account_token';
+
 
     /**
      * Název položky nastavení.

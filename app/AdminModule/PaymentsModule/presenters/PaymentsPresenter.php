@@ -6,7 +6,6 @@ namespace App\AdminModule\PaymentsModule\Presenters;
 
 use App\AdminModule\PaymentsModule\Components\IPaymentsGridControlFactory;
 use App\AdminModule\PaymentsModule\Components\PaymentsGridControl;
-use App\AdminModule\PaymentsModule\Presenters\PaymentsBasePresenter;
 
 /**
  * Presenter obsluhující správu plateb.

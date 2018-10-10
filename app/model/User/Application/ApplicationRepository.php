@@ -5,13 +5,11 @@ declare(strict_types=1);
 namespace App\Model\User;
 
 use App\Model\Enums\ApplicationState;
-use App\Model\Payment\Payment;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Doctrine\ORM\Query\Expr;
 use Kdyby\Doctrine\EntityRepository;
 
 /**
@@ -39,6 +37,9 @@ class ApplicationRepository extends EntityRepository
         return new ArrayCollection($result);
     }
 
+    /**
+     * @return Collection|Application[]
+     */
     public function findValid() : Collection
     {
         $criteria = Criteria::create()
@@ -104,6 +105,7 @@ class ApplicationRepository extends EntityRepository
     }
 
     /**
+     * @param Collection|Application[] $pairedApplications
      * @return Collection|Application[]
      */
     public function findWaitingForPaymentOrPairedApplications(Collection $pairedApplications) : Collection
@@ -121,6 +123,9 @@ class ApplicationRepository extends EntityRepository
         return $this->matching($criteria);
     }
 
+    /**
+     * @return string[]
+     */
     public function getApplicationsVariableSymbolsOptions() : array
     {
         $options = [];
@@ -130,6 +135,10 @@ class ApplicationRepository extends EntityRepository
         return $options;
     }
 
+    /**
+     * @param Collection|Application[] $pairedApplications
+     * @return string[]
+     */
     public function getWaitingForPaymentOrPairedApplicationsVariableSymbolsOptions(Collection $pairedApplications) : array
     {
         $options = [];
