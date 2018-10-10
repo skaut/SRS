@@ -39,7 +39,9 @@
         "lukyrys/nette-forms-gpspicker": "^1.4",
 
         "pear/numbers_words": "^0.18",
-        "azuyalabs/yasumi": "^1.8"
+        "azuyalabs/yasumi": "^1.8",
+
+        "mhujer/fio-api-php": "^4.1"
     },
 
     "require-dev": {
