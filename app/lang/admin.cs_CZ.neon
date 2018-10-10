@@ -598,6 +598,7 @@ configuration:
     maturity_work_days_format: "Zadejte číslo."
     maturity_reminder: "Počet dní před splatností pro zaslání upomínky"
     maturity_reminder_format: "Zadejte číslo."
+    account_token: "FIO token"
     cancel_registration_after_maturity: "Počet dní po splatnosti pro odhlášení"
     cancel_registration_after_maturity_format: "Zadejte číslo."
 
