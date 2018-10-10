@@ -86,8 +86,9 @@ payment_state:
     paired_auto: "Spárována (automaticky)"
     paired_manual: "Spárována (ručně)"
     not_paired_fee: "Nespárována (nesouhlasí částka)"
-    not_paired_vs: "Nespárována (neexistující variabilní symbol)"
+    not_paired_vs: "Nespárována (neexistuje variabilní symbol)"
     not_paired_canceled: "Nespárována (přihláška zrušena)"
+    not_paired_paid: "Nespárována (přihláška již zaplacena)"
     not_paired: "Nespárována"
 
 sex:

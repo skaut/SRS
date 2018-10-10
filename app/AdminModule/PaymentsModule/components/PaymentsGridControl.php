@@ -14,6 +14,7 @@ use App\Model\User\ApplicationRepository;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\ProgramService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
@@ -85,7 +86,8 @@ class PaymentsGridControl extends Control
 
         $grid->addColumnDateTime('date', 'admin.payments.payments.date');
 
-        $grid->addColumnNumber('ammount', 'admin.payments.payments.ammount'); //todo desetinna mista
+        $grid->addColumnNumber('ammount', 'admin.payments.payments.ammount')
+            ->setFormat(2, ',', ' ');
 
         $grid->addColumnText('variableSymbol', 'admin.payments.payments.variable_symbol');
 
@@ -95,7 +97,10 @@ class PaymentsGridControl extends Control
 
         $grid->addColumnText('pairedApplications', 'admin.payments.payments.paired_applications', 'pairedValidApplicationsText');
 
-        $grid->addColumnText('state', 'admin.payments.payments.state');
+        $grid->addColumnText('state', 'admin.payments.payments.state')
+            ->setRenderer(function(Payment $payment) {
+                return $this->translator->translate('common.payment_state.' . $payment->getState());
+            });
 
         $grid->addInlineAdd()->onControlAdd[] = function (Container $container) : void {
             $container->addDatePicker('date', '')
@@ -121,24 +126,28 @@ class PaymentsGridControl extends Control
             $container->addText('variableSymbol', '')
                 ->addRule(Form::FILLED, 'admin.payments.payments.variable_symbol_empty');
 
-            $container->addMultiSelect('pairedApplications', '', $this->applicationRepository->getApplicationsVariableSymbolsOptions())->setAttribute('class', 'datagrid-multiselect');
+            $container->addMultiSelect('pairedApplications', '', $this->applicationRepository->getApplicationsVariableSymbolsOptions())
+                ->setAttribute('class', 'datagrid-multiselect')
+                ->setAttribute('data-live-search', 'true');
         };
-        $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Payment $item) : void {
+        $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Payment $payment) : void {
+            $container['pairedApplications']->setItems($this->applicationRepository->getWaitingForPaymentOrPairedApplicationsVariableSymbolsOptions($payment->getPairedValidApplications()));
+
             $container->setDefaults([
-                'date' => $item->getDate(),
-                'ammount' => $item->getAmmount(),
-                'variableSymbol' => $item->getVariableSymbol(),
-                'pairedApplications' => $this->applicationRepository->findApplicationsIds($item->getPairedValidApplications()),
+                'date' => $payment->getDate(),
+                'ammount' => $payment->getAmmount(),
+                'variableSymbol' => $payment->getVariableSymbol(),
+                'pairedApplications' => $this->applicationRepository->findApplicationsIds($payment->getPairedValidApplications()),
             ]);
 
-            if ($item->getTransactionId() !== null) {
+            if ($payment->getTransactionId() !== null) {
                 $container['date']->setDisabled();
                 $container['ammount']->setDisabled();
                 $container['variableSymbol']->setDisabled();
             }
         };
         $grid->getInlineEdit()->onSubmit[]      = [$this, 'edit'];
-//
+
         $grid->addAction('delete', '', 'delete!')
             ->setIcon('trash')
             ->setTitle('admin.common.delete')

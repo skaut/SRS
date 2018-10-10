@@ -297,6 +297,12 @@ class ApplicationService
                 $newApplication->setState($state);
                 $newApplication->setCreatedBy($createdBy);
                 $newApplication->setValidFrom(new \DateTime());
+
+                if ($newApplication->getPayment() !== null) {
+                    $newApplication->getPayment()->setState(PaymentState::NOT_PAIRED_CANCELED);
+                    $newApplication->setPayment(null);
+                }
+
                 $this->applicationRepository->save($newApplication);
 
                 $application->setValidTo(new \DateTime());
@@ -412,6 +418,12 @@ class ApplicationService
             $newApplication->setState($state);
             $newApplication->setCreatedBy($createdBy);
             $newApplication->setValidFrom(new \DateTime());
+
+            if ($newApplication->getPayment() !== null) {
+                $newApplication->getPayment()->setState(PaymentState::NOT_PAIRED_CANCELED);
+                $newApplication->setPayment(null);
+            }
+
             $this->applicationRepository->save($newApplication);
 
             $application->setValidTo(new \DateTime());
@@ -519,12 +531,14 @@ class ApplicationService
             $payment->setMessage($message);
 
             if ($pairedApplication) {
-                if ($pairedApplication->getFee() == $ammount) {
+                if ($pairedApplication->getState() === ApplicationState::PAID || $pairedApplication->getState() === ApplicationState::PAID_FREE) {
+                    $payment->setState(PaymentState::NOT_PAIRED_PAID);
+                } elseif (abs($pairedApplication->getFee() - $ammount) >= 0.01) {
+                    $payment->setState(PaymentState::NOT_PAIRED_FEE);
+                } else {
                     $payment->setState(PaymentState::PAIRED_AUTO);
                     $pairedApplication->setPayment($payment);
                     $this->updateApplicationPayment($pairedApplication, $variableSymbol, PaymentType::BANK, $date, null, null, $createdBy);
-                } else {
-                    $payment->setState(PaymentState::NOT_PAIRED_FEE);
                 }
             } else {
                 $payment->setState(PaymentState::NOT_PAIRED_VS);

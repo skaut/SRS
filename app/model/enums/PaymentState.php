@@ -37,6 +37,12 @@ class PaymentState
     public const NOT_PAIRED_CANCELED = 'not_paired_canceled';
 
     /**
+     * Nespárováni - přihláška již byla zaplacena.
+     * @var string
+     */
+    public const NOT_PAIRED_PAID = 'not_paired_paid';
+
+    /**
      * Nespárováno - nevybrána spárovaná přihláška.
      * @var string
      */
@@ -49,7 +55,7 @@ class PaymentState
         self::NOT_PAIRED_FEE,
         self::NOT_PAIRED_VS,
         self::NOT_PAIRED_CANCELED,
-        self::NOT_PAIRED_PAID, //todo parovat jenom ty s waiting for payment
+        self::NOT_PAIRED_PAID,
         self::NOT_PAIRED,
     ];
 }
