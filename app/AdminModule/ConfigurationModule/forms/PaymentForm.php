@@ -80,7 +80,7 @@ class PaymentForm extends UI\Control
             ->addCondition(Form::FILLED)
             ->addRule(Form::PATTERN, 'admin.configuration.variable_symbol_code_format', '^\d{0,4}$');
 
-        $form->addText('accountToken', 'admin.configuration.account_token');
+        $form->addPassword('accountToken', 'admin.configuration.account_token');
 
         $maturityTypeSelect = $form->addSelect('maturityType', 'admin.configuration.maturity_type', $this->prepareMaturityTypeOptions());
         $maturityTypeSelect->addCondition($form::EQUAL, MaturityType::DATE)
