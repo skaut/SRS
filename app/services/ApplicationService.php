@@ -579,18 +579,22 @@ class ApplicationService
             $modified = false;
 
             foreach ($oldPairedApplications as $pairedApplication) {
-                if (! $newPairedApplications->contains($pairedApplication)) {
-                    $pairedApplication->setPayment(null);
-                    $this->updateApplicationPayment($pairedApplication, $pairedApplication->getVariableSymbolText(), null, null, null, $pairedApplication->getMaturityDate(), $createdBy);
-                    $modified = true;
+                if ($newPairedApplications->contains($pairedApplication)) {
+                    continue;
                 }
+
+                $pairedApplication->setPayment(null);
+                $this->updateApplicationPayment($pairedApplication, $pairedApplication->getVariableSymbolText(), null, null, null, $pairedApplication->getMaturityDate(), $createdBy);
+                $modified = true;
             }
             foreach ($newPairedApplications as $pairedApplication) {
-                if (! $oldPairedApplications->contains($pairedApplication)) {
-                    $pairedApplication->setPayment($payment);
-                    $this->updateApplicationPayment($pairedApplication, $pairedApplication->getVariableSymbolText(), PaymentType::BANK, $date, null, $pairedApplication->getMaturityDate(), $createdBy);
-                    $modified = true;
+                if ($oldPairedApplications->contains($pairedApplication)) {
+                    continue;
                 }
+
+                $pairedApplication->setPayment($payment);
+                $this->updateApplicationPayment($pairedApplication, $pairedApplication->getVariableSymbolText(), PaymentType::BANK, $date, null, $pairedApplication->getMaturityDate(), $createdBy);
+                $modified = true;
             }
 
             if ($modified) {

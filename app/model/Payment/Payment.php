@@ -10,6 +10,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
+use function array_key_exists;
+use function array_keys;
+use function implode;
 
 /**
  * Entita platba.
@@ -187,12 +190,12 @@ class Payment
 
     public function getPairedValidApplicationsText() : string
     {
-        $usersVS = [];
+        $usersVS    = [];
         $usersNames = [];
         foreach ($this->getPairedValidApplications() as $pairedApplication) {
             $userId = $pairedApplication->getUser()->getId();
-            if (!array_key_exists($userId, $usersNames)) {
-                $usersVS[$userId] = [];
+            if (! array_key_exists($userId, $usersNames)) {
+                $usersVS[$userId]    = [];
                 $usersNames[$userId] = $pairedApplication->getUser()->getLastName() . ' ' . $pairedApplication->getUser()->getFirstName();
             }
             $usersVS[$userId][] = $pairedApplication->getVariableSymbolText();

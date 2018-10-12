@@ -80,8 +80,6 @@ class PaymentForm extends UI\Control
             ->addCondition(Form::FILLED)
             ->addRule(Form::PATTERN, 'admin.configuration.variable_symbol_code_format', '^\d{0,4}$');
 
-        $form->addPassword('accountToken', 'admin.configuration.account_token');
-
         $maturityTypeSelect = $form->addSelect('maturityType', 'admin.configuration.maturity_type', $this->prepareMaturityTypeOptions());
         $maturityTypeSelect->addCondition($form::EQUAL, MaturityType::DATE)
             ->toggle('maturity-date')
@@ -180,10 +178,6 @@ class PaymentForm extends UI\Control
                 Settings::CANCEL_REGISTRATION_AFTER_MATURITY,
                 $values['cancelRegistrationAfterMaturity'] !== '' ? $values['cancelRegistrationAfterMaturity'] : null
             );
-        }
-
-        if ($values['accountToken'] !== "") {
-            $this->settingsRepository->setValue(Settings::ACCOUNT_TOKEN, $values['accountToken']);
         }
 
         $this->onSave($this);

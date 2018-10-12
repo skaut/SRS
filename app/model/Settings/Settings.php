@@ -197,9 +197,9 @@ class Settings
     public const EDIT_CUSTOM_INPUTS_TO = 'edit_custom_inputs_to';
 
     /**
-     * Token pro přístup k účtu.
+     * Token pro přístup k API banky.
      */
-    public const ACCOUNT_TOKEN = 'account_token';
+    public const BANK_TOKEN = 'bank_token';
 
 
     /**
