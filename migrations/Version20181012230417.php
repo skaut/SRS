@@ -8,13 +8,13 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20181010230205 extends AbstractMigration
+final class Version20181012230417 extends AbstractMigration
 {
     public function up(Schema $schema) : void
     {
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('INSERT INTO `settings` (`item`, `value`) VALUES (\'account_token\', NULL)');
+        $this->addSql('UPDATE `settings` SET `item` = \'bank_token\' WHERE `settings`.`item` = \'account_token\'');
     }
 
     public function down(Schema $schema) : void

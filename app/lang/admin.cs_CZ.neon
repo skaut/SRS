@@ -598,9 +598,17 @@ configuration:
     maturity_work_days_format: "Zadejte číslo."
     maturity_reminder: "Počet dní před splatností pro zaslání upomínky"
     maturity_reminder_format: "Zadejte číslo."
-    account_token: "FIO token"
     cancel_registration_after_maturity: "Počet dní po splatnosti pro odhlášení"
     cancel_registration_after_maturity_format: "Zadejte číslo."
+
+    payment:
+        bank_heading: "Automatická kontrola plateb"
+        bank: "Banka"
+        bank_token: "API token"
+        bank_token_empty: "Zadejte token."
+        bank_token_length: "Zadejte platný token."
+        bank_disconnect: "Zrušit kontrolu bankovního účtu"
+        bank_disconnect_successful: "Propojení s bankovním účtem bylo úspěšně zrušeno."
 
     payment_proof_heading: "Doklady"
     company: "Firma"

@@ -8,4 +8,14 @@
     <div class="well">
         {control paymentProofForm}
     </div>
+
+    <h2>{_admin.configuration.payment.bank_heading}</h2>
+    <div class="well">
+        {if !$connected}
+            {control bankForm}
+        {else}
+            <a class="btn btn-danger" id="disconnect-button"
+               href="{link disconnect!}">{_admin.configuration.payment.bank_disconnect}</a>
+        {/if}
+    </div>
 {/block}

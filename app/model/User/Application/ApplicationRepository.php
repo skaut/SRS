@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Kdyby\Doctrine\EntityRepository;
+use function array_map;
 
 /**
  * Třída spravující přihlášky.
@@ -117,8 +118,8 @@ class ApplicationRepository extends EntityRepository
                 Criteria::expr()->in('id', $pairedApplications->map(function (Application $application) {
                     return $application->getId();
                 })
-                    ->toArray()
-                )));
+                    ->toArray())
+            ));
 
         return $this->matching($criteria);
     }
