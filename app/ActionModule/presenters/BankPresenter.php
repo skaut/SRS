@@ -12,7 +12,7 @@ use App\Services\BankService;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class PaymentPresenter extends ActionBasePresenter
+class BankPresenter extends ActionBasePresenter
 {
     /**
      * @var BankService
