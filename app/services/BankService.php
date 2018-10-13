@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Model\Settings\Settings;
+use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
 use FioApi;
 use Nette;
@@ -32,7 +33,7 @@ class BankService
     }
 
     /**
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
     public function downloadTransactions() : void
@@ -40,7 +41,7 @@ class BankService
         $downloader      = new FioApi\Downloader($this->settingsRepository->getValue(Settings::BANK_TOKEN));
         $transactionList = $downloader->downloadLast();
 
-        $bankDownloadFrom    = $this->settingsRepository->getDateValue(Settings::BANK_DOWNLOAD_FROM);
+        $bankDownloadFrom = $this->settingsRepository->getDateValue(Settings::BANK_DOWNLOAD_FROM);
 
         $this->settingsRepository->getEntityManager()->transactional(function () use ($transactionList, $bankDownloadFrom) : void {
             foreach ($transactionList->getTransactions() as $transaction) {
