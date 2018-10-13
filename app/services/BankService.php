@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Model\Settings\Settings;
+use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
 use FioApi;
 use Nette;
@@ -31,28 +32,49 @@ class BankService
         $this->settingsRepository = $settingsRepository;
     }
 
-    public function readFromFio() : void
+    /**
+     * @throws SettingsException
+     * @throws \Throwable
+     */
+    public function downloadTransactions() : void
     {
         $downloader      = new FioApi\Downloader($this->settingsRepository->getValue(Settings::BANK_TOKEN));
         $transactionList = $downloader->downloadLast();
 
-        foreach ($transactionList->getTransactions() as $transaction) {
-            if ($transaction->getAmount() <= 0) {
-                continue;
+        $bankDownloadFrom = $this->settingsRepository->getDateValue(Settings::BANK_DOWNLOAD_FROM);
+
+        $this->settingsRepository->getEntityManager()->transactional(function () use ($transactionList, $bankDownloadFrom) : void {
+            foreach ($transactionList->getTransactions() as $transaction) {
+                if ($transaction->getAmount() <= 0) {
+                    continue;
+                }
+
+                $date = new \DateTime();
+                $date->setTimestamp($transaction->getDate()->getTimestamp());
+
+                if ($date < $bankDownloadFrom) {
+                    continue;
+                }
+
+                $accountNumber = null;
+                if ($transaction->getSenderAccountNumber() !== null && $transaction->getSenderBankCode() !== null) {
+                    $accountNumber = $transaction->getSenderAccountNumber() . '/' . $transaction->getSenderBankCode();
+                } elseif ($transaction->getSenderAccountNumber() !== null) {
+                    $accountNumber = $transaction->getSenderAccountNumber();
+                } elseif ($transaction->getSenderBankCode() !== null) {
+                    $accountNumber = $transaction->getSenderBankCode();
+                }
+
+                $this->applicationService->createPayment(
+                    $date,
+                    $transaction->getAmount(),
+                    $transaction->getVariableSymbol(),
+                    $transaction->getId(),
+                    $accountNumber,
+                    $transaction->getSenderBankName(),
+                    $transaction->getComment()
+                );
             }
-
-            $dateTime = new \DateTime();
-            $dateTime->setTimestamp($transaction->getDate()->getTimestamp());
-
-            $this->applicationService->createPayment(
-                $dateTime,
-                $transaction->getAmount(),
-                $transaction->getVariableSymbol(),
-                $transaction->getId(),
-                $transaction->getSenderAccountNumber() . '/' . $transaction->getSenderBankCode(),
-                $transaction->getSenderBankName(),
-                $transaction->getComment()
-            );
-        }
+        });
     }
 }

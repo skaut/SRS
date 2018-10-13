@@ -44,7 +44,7 @@ class Payment
      * @ORM\Column(type="float")
      * @var double
      */
-    protected $ammount;
+    protected $amount;
 
     /**
      * Číslo protiúčtu.
@@ -119,14 +119,14 @@ class Payment
         $this->date = $date;
     }
 
-    public function getAmmount() : float
+    public function getAmount() : float
     {
-        return $this->ammount;
+        return $this->amount;
     }
 
-    public function setAmmount(float $ammount) : void
+    public function setAmount(float $amount) : void
     {
-        $this->ammount = $ammount;
+        $this->amount = $amount;
     }
 
     public function getAccountNumber() : ?string
