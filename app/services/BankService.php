@@ -36,14 +36,32 @@ class BankService
      * @throws SettingsException
      * @throws \Throwable
      */
-    public function downloadTransactions() : void
+    public function downloadLastTransactions() : void
     {
         $downloader      = new FioApi\Downloader($this->settingsRepository->getValue(Settings::BANK_TOKEN));
         $transactionList = $downloader->downloadLast();
 
-        $bankDownloadFrom = $this->settingsRepository->getDateValue(Settings::BANK_DOWNLOAD_FROM);
+        $this->addPayments($transactionList);
+    }
 
-        $this->settingsRepository->getEntityManager()->transactional(function () use ($transactionList, $bankDownloadFrom) : void {
+    /**
+     * @throws SettingsException
+     * @throws \Throwable
+     */
+    public function downloadTransactionsFrom(\DateTime $from) : void
+    {
+        $downloader      = new FioApi\Downloader($this->settingsRepository->getValue(Settings::BANK_TOKEN));
+        $transactionList = $downloader->downloadSince($from);
+
+        $this->addPayments($transactionList);
+    }
+
+    /**
+     * @throws \Throwable
+     */
+    private function addPayments(FioApi\TransactionList $transactionList) : void
+    {
+        $this->settingsRepository->getEntityManager()->transactional(function () use ($transactionList) : void {
             foreach ($transactionList->getTransactions() as $transaction) {
                 if ($transaction->getAmount() <= 0) {
                     continue;
@@ -51,10 +69,6 @@ class BankService
 
                 $date = new \DateTime();
                 $date->setTimestamp($transaction->getDate()->getTimestamp());
-
-                if ($date < $bankDownloadFrom) {
-                    continue;
-                }
 
                 $accountNumber = null;
                 if ($transaction->getSenderAccountNumber() !== null && $transaction->getSenderBankCode() !== null) {

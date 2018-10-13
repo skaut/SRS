@@ -12,6 +12,7 @@ use App\Services\BankService;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use FioApi\Exceptions\InternalErrorException;
 use Nette;
 use Nette\Application\UI\Form;
 
@@ -82,6 +83,15 @@ class BankForm
     public function processForm(Form $form, \stdClass $values) : void
     {
         $this->settingsRepository->setValue(Settings::BANK_TOKEN, $values['bankToken']);
-        $this->settingsRepository->setDateValue(Settings::BANK_DOWNLOAD_FROM, $values['bankDownloadFrom']);
+
+        $downloadTransactionsFrom = $values['bankDownloadFrom'];
+        $this->settingsRepository->setDateValue(Settings::BANK_DOWNLOAD_FROM, $downloadTransactionsFrom);
+
+        try {
+            $this->bankService->downloadTransactionsFrom($downloadTransactionsFrom);
+        } catch (InternalErrorException $e) {
+            $this->settingsRepository->setValue(Settings::BANK_TOKEN, $values['bankToken']);
+            $form->addError('admin.configuration.payment.bank_invalid_token');
+        }
     }
 }

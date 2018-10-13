@@ -608,7 +608,8 @@ configuration:
         bank_token_empty: "Zadejte token."
         bank_token_length: "Zadejte platný token."
         bank_download_from: "Stáhnout platby od"
-        bank_download_from_empty: "Zadum datum počátku stahování plateb."
+        bank_download_from_empty: "Zadejte datum počátku stahování plateb."
+        bank_invalid_token: "Token není správný."
         bank_disconnect: "Zrušit kontrolu bankovního účtu"
         bank_disconnect_successful: "Propojení s bankovním účtem bylo úspěšně zrušeno."
 
