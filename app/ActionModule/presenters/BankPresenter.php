@@ -28,6 +28,6 @@ class BankPresenter extends ActionBasePresenter
      */
     public function actionCheck() : void
     {
-        $this->bankService->readFromFio();
+        $this->bankService->downloadTransactions();
     }
 }

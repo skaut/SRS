@@ -61,6 +61,8 @@ class BankForm
         $form->addText('bankToken', 'admin.configuration.payment.bank_token')
             ->addRule(Form::FILLED, 'admin.configuration.payment.bank_token_empty')
             ->addRule(Form::LENGTH, 'admin.configuration.payment.bank_token_length', 64);
+        $form->addDatePicker('bankDownloadFrom', 'admin.configuration.payment.bank_download_from')
+            ->addRule(Form::FILLED, 'admin.configuration.payment.bank_download_from_empty');
 
         $form->addSubmit('submit', 'admin.common.save');
 
@@ -80,5 +82,6 @@ class BankForm
     public function processForm(Form $form, \stdClass $values) : void
     {
         $this->settingsRepository->setValue(Settings::BANK_TOKEN, $values['bankToken']);
+        $this->settingsRepository->setDateValue(Settings::BANK_DOWNLOAD_FROM, $values['bankDownloadFrom']);
     }
 }

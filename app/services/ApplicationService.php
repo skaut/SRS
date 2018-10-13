@@ -528,15 +528,15 @@ class ApplicationService
         ]);
     }
 
-    public function createPayment(\DateTime $date, float $ammount, ?string $variableSymbol, ?string $transactionId, ?string $accountNumber, ?string $accountName, ?string $message, ?User $createdBy = null) : void
+    public function createPayment(\DateTime $date, float $amount, ?string $variableSymbol, ?string $transactionId, ?string $accountNumber, ?string $accountName, ?string $message, ?User $createdBy = null) : void
     {
-        $this->applicationRepository->getEntityManager()->transactional(function () use ($date, $ammount, $variableSymbol, $transactionId, $accountNumber, $accountName, $message, $createdBy) : void {
+        $this->applicationRepository->getEntityManager()->transactional(function () use ($date, $amount, $variableSymbol, $transactionId, $accountNumber, $accountName, $message, $createdBy) : void {
             $pairedApplication = $this->applicationRepository->findValidByVariableSymbol($variableSymbol);
 
             $payment = new Payment();
 
             $payment->setDate($date);
-            $payment->setAmmount($ammount);
+            $payment->setAmount($amount);
             $payment->setVariableSymbol($variableSymbol);
             $payment->setTransactionId($transactionId);
             $payment->setAccountNumber($accountNumber);
@@ -546,7 +546,7 @@ class ApplicationService
             if ($pairedApplication) {
                 if ($pairedApplication->getState() === ApplicationState::PAID || $pairedApplication->getState() === ApplicationState::PAID_FREE) {
                     $payment->setState(PaymentState::NOT_PAIRED_PAID);
-                } elseif (abs($pairedApplication->getFee() - $ammount) >= 0.01) {
+                } elseif (abs($pairedApplication->getFee() - $amount) >= 0.01) {
                     $payment->setState(PaymentState::NOT_PAIRED_FEE);
                 } else {
                     $payment->setState(PaymentState::PAIRED_AUTO);
@@ -561,43 +561,51 @@ class ApplicationService
         });
     }
 
-    public function createPaymentManual(\DateTime $date, float $ammount, string $variableSymbol, User $createdBy) : void
+    public function createPaymentManual(\DateTime $date, float $amount, string $variableSymbol, User $createdBy) : void
     {
-        $this->createPayment($date, $ammount, $variableSymbol, null, null, null, null, $createdBy);
+        $this->createPayment($date, $amount, $variableSymbol, null, null, null, null, $createdBy);
     }
 
     /**
      * @param Collection|Application[] $pairedApplications
      * @throws \Throwable
      */
-    public function updatePayment(Payment $payment, \DateTime $date, float $ammount, string $variableSymbol, Collection $pairedApplications, User $createdBy) : void
+    public function updatePayment(Payment $payment, ?\DateTime $date, ?float $amount, ?string $variableSymbol, Collection $pairedApplications, User $createdBy) : void
     {
-        $this->applicationRepository->getEntityManager()->transactional(function () use ($payment, $date, $ammount, $variableSymbol, $pairedApplications, $createdBy) : void {
+        $this->applicationRepository->getEntityManager()->transactional(function () use ($payment, $date, $amount, $variableSymbol, $pairedApplications, $createdBy) : void {
+            if ($date !== null) {
+                $payment->setDate($date);
+            }
+            if ($amount !== null) {
+                $payment->setAmount($amount);
+            }
+            if ($variableSymbol !== null) {
+                $payment->setVariableSymbol($variableSymbol);
+            }
+
             $oldPairedApplications = clone $payment->getPairedValidApplications();
             $newPairedApplications = clone $pairedApplications;
 
-            $modified = false;
+            $pairedApplicationsModified = false;
 
             foreach ($oldPairedApplications as $pairedApplication) {
                 if ($newPairedApplications->contains($pairedApplication)) {
                     continue;
                 }
-
                 $pairedApplication->setPayment(null);
                 $this->updateApplicationPayment($pairedApplication, $pairedApplication->getVariableSymbolText(), null, null, null, $pairedApplication->getMaturityDate(), $createdBy);
-                $modified = true;
+                $pairedApplicationsModified = true;
             }
             foreach ($newPairedApplications as $pairedApplication) {
                 if ($oldPairedApplications->contains($pairedApplication)) {
                     continue;
                 }
-
                 $pairedApplication->setPayment($payment);
                 $this->updateApplicationPayment($pairedApplication, $pairedApplication->getVariableSymbolText(), PaymentType::BANK, $date, null, $pairedApplication->getMaturityDate(), $createdBy);
-                $modified = true;
+                $pairedApplicationsModified = true;
             }
 
-            if ($modified) {
+            if ($pairedApplicationsModified) {
                 if ($pairedApplications->isEmpty()) {
                     $payment->setState(PaymentState::NOT_PAIRED);
                 } else {

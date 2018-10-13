@@ -91,7 +91,7 @@ class PaymentsGridControl extends Control
             ->setFormat(Helpers::DATETIME_FORMAT)
             ->setSortable();
 
-        $grid->addColumnNumber('ammount', 'admin.payments.payments.ammount')
+        $grid->addColumnNumber('amount', 'admin.payments.payments.amount')
             ->setFormat(2, ',', ' ')
             ->setSortable();
 
@@ -117,9 +117,9 @@ class PaymentsGridControl extends Control
             $container->addDatePicker('date', '')
                 ->addRule(Form::FILLED, 'admin.payments.payments.date_empty');
 
-            $container->addInteger('ammount', '')
-                ->addRule(Form::FILLED, 'admin.payments.payments.ammount_empty')
-                ->addRule(Form::MIN, 'admin.payments.payments.ammount_low', 1);
+            $container->addInteger('amount', '')
+                ->addRule(Form::FILLED, 'admin.payments.payments.amount_empty')
+                ->addRule(Form::MIN, 'admin.payments.payments.amount_low', 1);
 
             $container->addText('variableSymbol', '')
                 ->addRule(Form::FILLED, 'admin.payments.payments.variable_symbol_empty');
@@ -130,9 +130,9 @@ class PaymentsGridControl extends Control
             $container->addDatePicker('date', '')
                 ->addRule(Form::FILLED, 'admin.payments.payments.date_empty');
 
-            $container->addInteger('ammount', '')
-                ->addRule(Form::FILLED, 'admin.payments.payments.ammount_empty')
-                ->addRule(Form::MIN, 'admin.payments.payments.ammount_low', 1);
+            $container->addInteger('amount', '')
+                ->addRule(Form::FILLED, 'admin.payments.payments.amount_empty')
+                ->addRule(Form::MIN, 'admin.payments.payments.amount_low', 1);
 
             $container->addText('variableSymbol', '')
                 ->addRule(Form::FILLED, 'admin.payments.payments.variable_symbol_empty');
@@ -146,7 +146,7 @@ class PaymentsGridControl extends Control
 
             $container->setDefaults([
                 'date' => $payment->getDate(),
-                'ammount' => $payment->getAmmount(),
+                'amount' => $payment->getAmount(),
                 'variableSymbol' => $payment->getVariableSymbol(),
                 'pairedApplications' => $this->applicationRepository->findApplicationsIds($payment->getPairedValidApplications()),
             ]);
@@ -156,7 +156,7 @@ class PaymentsGridControl extends Control
             }
 
             $container['date']->setDisabled();
-            $container['ammount']->setDisabled();
+            $container['amount']->setDisabled();
             $container['variableSymbol']->setDisabled();
         };
         $grid->getInlineEdit()->onSubmit[]      = [$this, 'edit'];
@@ -186,7 +186,7 @@ class PaymentsGridControl extends Control
     {
         $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
 
-        $this->applicationService->createPayment($values['date'], $values['ammount'], $values['variableSymbol'], null, null, null, null, $loggedUser);
+        $this->applicationService->createPayment($values['date'], $values['amount'], $values['variableSymbol'], null, null, null, null, $loggedUser);
 
         $this->getPresenter()->flashMessage('admin.payments.payments.saved', 'success');
         $this->redirect('this');
@@ -204,7 +204,7 @@ class PaymentsGridControl extends Control
 
         $pairedApplications = $this->applicationRepository->findApplicationsByIds($values['pairedApplications']);
 
-        $this->applicationService->updatePayment($payment, $values['date'], $values['ammount'], $values['variableSymbol'], $pairedApplications, $loggedUser);
+        $this->applicationService->updatePayment($payment, $values['date'], $values['amount'], $values['variableSymbol'], $pairedApplications, $loggedUser);
 
         $this->getPresenter()->flashMessage('admin.payments.payments.saved', 'success');
         $this->redirect('this');

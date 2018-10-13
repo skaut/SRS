@@ -201,6 +201,11 @@ class Settings
      */
     public const BANK_TOKEN = 'bank_token';
 
+    /**
+     * Počáteční datum pro stahování plateb.
+     */
+    public const BANK_DOWNLOAD_FROM = 'bank_download_from';
+
 
     /**
      * Název položky nastavení.
