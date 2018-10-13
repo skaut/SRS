@@ -528,7 +528,7 @@ class ApplicationService
         ]);
     }
 
-    public function createPayment(\DateTime $date, float $ammount, string $variableSymbol, ?string $transactionId, ?string $accountNumber, ?string $accountName, ?string $message, ?User $createdBy = null) : void
+    public function createPayment(\DateTime $date, float $ammount, ?string $variableSymbol, ?string $transactionId, ?string $accountNumber, ?string $accountName, ?string $message, ?User $createdBy = null) : void
     {
         $this->applicationRepository->getEntityManager()->transactional(function () use ($date, $ammount, $variableSymbol, $transactionId, $accountNumber, $accountName, $message, $createdBy) : void {
             $pairedApplication = $this->applicationRepository->findValidByVariableSymbol($variableSymbol);
