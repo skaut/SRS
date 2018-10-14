@@ -15,6 +15,7 @@ use Doctrine\ORM\ORMException;
 use FioApi\Exceptions\InternalErrorException;
 use Nette;
 use Nette\Application\UI\Form;
+use Nextras\Forms\Controls\DatePicker;
 
 /**
  * Formulár pro nastavení párování plateb.
@@ -63,7 +64,8 @@ class BankForm
             ->addRule(Form::FILLED, 'admin.configuration.payment.bank_token_empty')
             ->addRule(Form::LENGTH, 'admin.configuration.payment.bank_token_length', 64);
         $form->addDatePicker('bankDownloadFrom', 'admin.configuration.payment.bank_download_from')
-            ->addRule(Form::FILLED, 'admin.configuration.payment.bank_download_from_empty');
+            ->addRule(Form::FILLED, 'admin.configuration.payment.bank_download_from_empty')
+            ->addRule([$this, 'validateBankDownloadFromDate'], 'admin.configuration.payment.bank_download_from_future');
 
         $form->addSubmit('submit', 'admin.common.save');
 
@@ -82,16 +84,24 @@ class BankForm
      */
     public function processForm(Form $form, \stdClass $values) : void
     {
-        $this->settingsRepository->setValue(Settings::BANK_TOKEN, $values['bankToken']);
-
-        $downloadTransactionsFrom = $values['bankDownloadFrom'];
-        $this->settingsRepository->setDateValue(Settings::BANK_DOWNLOAD_FROM, $downloadTransactionsFrom);
+        $token = $values['bankToken'];
+        $from  = $values['bankDownloadFrom'];
 
         try {
-            $this->bankService->downloadTransactionsFrom($downloadTransactionsFrom);
+            $this->bankService->downloadTransactionsFrom($from, $token);
+
+            $this->settingsRepository->setValue(Settings::BANK_TOKEN, $token);
+            $this->settingsRepository->setDateValue(Settings::BANK_DOWNLOAD_FROM, $from);
         } catch (InternalErrorException $e) {
-            $this->settingsRepository->setValue(Settings::BANK_TOKEN, $values['bankToken']);
             $form->addError('admin.configuration.payment.bank_invalid_token');
         }
+    }
+
+    /**
+     * Ověří, že datum počátku stahování transakcí je v minulosti.
+     */
+    public function validateBankDownloadFromDate(DatePicker $field) : bool
+    {
+        return $field->getValue() <= new \DateTime();
     }
 }

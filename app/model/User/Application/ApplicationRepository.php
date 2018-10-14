@@ -48,7 +48,7 @@ class ApplicationRepository extends EntityRepository
         return $this->matching($criteria);
     }
 
-    public function findValidByVariableSymbol(string $variableSymbol) : ?Application
+    public function findValidByVariableSymbol(?string $variableSymbol) : ?Application
     {
         return $this->createQueryBuilder('a')
             ->select('a')

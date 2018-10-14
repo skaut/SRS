@@ -36,9 +36,14 @@ class BankService
      * @throws SettingsException
      * @throws \Throwable
      */
-    public function downloadLastTransactions() : void
+    public function downloadLastTransactions(?string $token = null) : void
     {
-        $downloader      = new FioApi\Downloader($this->settingsRepository->getValue(Settings::BANK_TOKEN));
+        $token ?: $this->settingsRepository->getValue(Settings::BANK_TOKEN);
+        if ($token === null) {
+            return;
+        }
+
+        $downloader      = new FioApi\Downloader($token);
         $transactionList = $downloader->downloadLast();
 
         $this->addPayments($transactionList);
@@ -48,9 +53,14 @@ class BankService
      * @throws SettingsException
      * @throws \Throwable
      */
-    public function downloadTransactionsFrom(\DateTime $from) : void
+    public function downloadTransactionsFrom(\DateTime $from, ?string $token = null) : void
     {
-        $downloader      = new FioApi\Downloader($this->settingsRepository->getValue(Settings::BANK_TOKEN));
+        $token ?: $this->settingsRepository->getValue(Settings::BANK_TOKEN);
+        if ($token === null) {
+            return;
+        }
+
+        $downloader      = new FioApi\Downloader($token);
         $transactionList = $downloader->downloadSince($from);
 
         $this->addPayments($transactionList);
@@ -85,8 +95,8 @@ class BankService
                     $transaction->getVariableSymbol(),
                     $transaction->getId(),
                     $accountNumber,
-                    $transaction->getSenderBankName(),
-                    $transaction->getComment()
+                    $transaction->getUserIdentity(),
+                    $transaction->getUserMessage()
                 );
             }
         });

@@ -531,8 +531,6 @@ class ApplicationService
     public function createPayment(\DateTime $date, float $amount, ?string $variableSymbol, ?string $transactionId, ?string $accountNumber, ?string $accountName, ?string $message, ?User $createdBy = null) : void
     {
         $this->applicationRepository->getEntityManager()->transactional(function () use ($date, $amount, $variableSymbol, $transactionId, $accountNumber, $accountName, $message, $createdBy) : void {
-            $pairedApplication = $this->applicationRepository->findValidByVariableSymbol($variableSymbol);
-
             $payment = new Payment();
 
             $payment->setDate($date);
@@ -542,6 +540,8 @@ class ApplicationService
             $payment->setAccountNumber($accountNumber);
             $payment->setAccountName($accountName);
             $payment->setMessage($message);
+
+            $pairedApplication = $this->applicationRepository->findValidByVariableSymbol($variableSymbol);
 
             if ($pairedApplication) {
                 if ($pairedApplication->getState() === ApplicationState::PAID || $pairedApplication->getState() === ApplicationState::PAID_FREE) {
