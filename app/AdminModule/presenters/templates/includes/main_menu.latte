@@ -74,7 +74,11 @@
                     <li class="dropdown" id="role-menu">
                         <div class="navbar-btn">
                             <a class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                <span id="role-menu-text">{$skautIsRoleSelected->DisplayName}</span>
+                                <span id="role-menu-text">
+                                    {if $skautIsRoleSelected}
+                                        {$skautIsRoleSelected->DisplayName}
+                                    {/if}
+                                </span>
                                 <span class="caret"></span>
                             </a>
 

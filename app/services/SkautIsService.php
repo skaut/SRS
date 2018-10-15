@@ -85,6 +85,10 @@ class SkautIsService
             $this->userRolesCache->save($userId, $roles);
         }
 
+        if ($roles instanceof \stdClass) {
+            return [];
+        }
+
         return $roles;
     }
 

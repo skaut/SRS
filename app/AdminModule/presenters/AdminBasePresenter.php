@@ -155,7 +155,11 @@ abstract class AdminBasePresenter extends BasePresenter
             return $r->ID === $skautIsRoleSelectedId;
         });
         $this->template->skautIsRoles        = $skautIsRoles;
-        $this->template->skautIsRoleSelected = $skautIsRoleSelected[array_keys($skautIsRoleSelected)[0]];
+        if (empty($skautIsRoleSelected)) {
+            $this->template->skautIsRoleSelected = null;
+        } else {
+            $this->template->skautIsRoleSelected = $skautIsRoleSelected[array_keys($skautIsRoleSelected)[0]];
+        }
     }
 
     /**
