@@ -99,7 +99,6 @@ class PdfExportService
 
         $this->applicationService->updateApplicationPayment(
             $application,
-            $application->getVariableSymbolText(),
             $application->getPaymentMethod(),
             $application->getPaymentDate(),
             new \DateTime(),

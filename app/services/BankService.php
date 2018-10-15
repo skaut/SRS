@@ -90,7 +90,6 @@ class BankService
                 $date->setTimestamp($transaction->getDate()->getTimestamp());
 
                 $accountNumber = $transaction->getSenderAccountNumber() . '/' . $transaction->getSenderBankCode();
-                $accountName   = $transaction->getUserIdentity() ?? $transaction->getPerformedBy(); //todo zmenit na getSenderName
 
                 $this->applicationService->createPayment(
                     $date,
@@ -98,7 +97,7 @@ class BankService
                     $transaction->getVariableSymbol(),
                     $id,
                     $accountNumber,
-                    $accountName,
+                    $transaction->getUserIdentity(), //todo: zmenit na getSenderName
                     $transaction->getUserMessage()
                 );
             }
