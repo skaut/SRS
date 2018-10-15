@@ -24,6 +24,14 @@ class PaymentRepository extends EntityRepository
     }
 
     /**
+     * Vrací platbu podle id transakce.
+     */
+    public function findByTransactionId(string $transactionId) : ?Payment
+    {
+        return $this->findOneBy(['transactionId' => $transactionId]);
+    }
+
+    /**
      * Uloží platbu.
      * @throws ORMException
      * @throws OptimisticLockException

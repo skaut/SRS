@@ -608,7 +608,6 @@ class UsersGridControl extends Control
                 foreach ($user->getWaitingForPaymentApplications() as $application) {
                     $this->applicationService->updateApplicationPayment(
                         $application,
-                        $application->getVariableSymbolText(),
                         $paymentMethod,
                         new \DateTime(),
                         $application->getIncomeProofPrintedDate(),

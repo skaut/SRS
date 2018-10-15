@@ -460,29 +460,25 @@ class ApplicationService
      */
     public function updateApplicationPayment(
         Application $application,
-        string $variableSymbol,
         ?string $paymentMethod,
         ?\DateTime $paymentDate,
         ?\DateTime $incomeProofPrintedDate,
         ?\DateTime $maturityDate,
         ?User $createdBy
     ) : void {
-        $oldVariableSymbol         = $application->getVariableSymbolText();
         $oldPaymentMethod          = $application->getPaymentMethod();
         $oldPaymentDate            = $application->getPaymentDate();
         $oldIncomeProofPrintedDate = $application->getIncomeProofPrintedDate();
         $oldMaturityDate           = $application->getMaturityDate();
 
         //pokud neni zmena, nic se neprovede
-        if ($variableSymbol === $oldVariableSymbol && $paymentMethod === $oldPaymentMethod //todo zakazat zmenu VS
-            && $paymentDate === $oldPaymentDate && $incomeProofPrintedDate === $oldIncomeProofPrintedDate
-            && $maturityDate === $oldMaturityDate) {
+        if ($paymentMethod === $oldPaymentMethod && $paymentDate === $oldPaymentDate
+            && $incomeProofPrintedDate === $oldIncomeProofPrintedDate && $maturityDate === $oldMaturityDate) {
             return;
         }
 
         $this->applicationRepository->getEntityManager()->transactional(function ($em) use (
             $application,
-            $variableSymbol,
             $paymentMethod,
             $paymentDate,
             $incomeProofPrintedDate,
@@ -492,14 +488,6 @@ class ApplicationService
             $user = $application->getUser();
 
             $newApplication = clone $application;
-
-            if ($application->getVariableSymbolText() !== $variableSymbol) {
-                $newVariableSymbol = new VariableSymbol();
-                $newVariableSymbol->setVariableSymbol($variableSymbol);
-                $this->variableSymbolRepository->save($newVariableSymbol);
-
-                $newApplication->setVariableSymbol($newVariableSymbol);
-            }
 
             $newApplication->setPaymentMethod($paymentMethod);
             $newApplication->setPaymentDate($paymentDate);
@@ -551,7 +539,7 @@ class ApplicationService
                 } else {
                     $payment->setState(PaymentState::PAIRED_AUTO);
                     $pairedApplication->setPayment($payment);
-                    $this->updateApplicationPayment($pairedApplication, $variableSymbol, PaymentType::BANK, $date, null, null, $createdBy);
+                    $this->updateApplicationPayment($pairedApplication, PaymentType::BANK, $date, null, null, $createdBy);
                 }
             } else {
                 $payment->setState(PaymentState::NOT_PAIRED_VS);
@@ -593,7 +581,7 @@ class ApplicationService
                     continue;
                 }
                 $pairedApplication->setPayment(null);
-                $this->updateApplicationPayment($pairedApplication, $pairedApplication->getVariableSymbolText(), null, null, null, $pairedApplication->getMaturityDate(), $createdBy);
+                $this->updateApplicationPayment($pairedApplication, null, null, null, $pairedApplication->getMaturityDate(), $createdBy);
                 $pairedApplicationsModified = true;
             }
             foreach ($newPairedApplications as $pairedApplication) {
@@ -601,7 +589,7 @@ class ApplicationService
                     continue;
                 }
                 $pairedApplication->setPayment($payment);
-                $this->updateApplicationPayment($pairedApplication, $pairedApplication->getVariableSymbolText(), PaymentType::BANK, $date, null, $pairedApplication->getMaturityDate(), $createdBy);
+                $this->updateApplicationPayment($pairedApplication, PaymentType::BANK, $date, null, $pairedApplication->getMaturityDate(), $createdBy);
                 $pairedApplicationsModified = true;
             }
 
@@ -621,7 +609,7 @@ class ApplicationService
     {
         $this->applicationRepository->getEntityManager()->transactional(function () use ($payment, $createdBy) : void {
             foreach ($payment->getPairedValidApplications() as $pairedApplication) {
-                $this->updateApplicationPayment($pairedApplication, $pairedApplication->getVariableSymbolText(), null, null, null, $pairedApplication->getMaturityDate(), $createdBy);
+                $this->updateApplicationPayment($pairedApplication, null, null, null, $pairedApplication->getMaturityDate(), $createdBy);
             }
 
             $this->paymentRepository->remove($payment);

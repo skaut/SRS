@@ -191,10 +191,6 @@ class ApplicationsGridControl extends Control
             )
                 ->setAttribute('class', 'datagrid-multiselect');
 
-            $container->addText('variableSymbol', 'admin.users.users_variable_symbol')
-                ->addRule(Form::FILLED, 'admin.users.users_applications_variable_symbol_empty')
-                ->addRule(Form::PATTERN, 'admin.users.users_edit_variable_symbol_format', '^\d{1,10}$');
-
             $paymentMethodSelect = $container->addSelect(
                 'paymentMethod',
                 'admin.users.users_payment_method',
@@ -214,7 +210,6 @@ class ApplicationsGridControl extends Control
         $grid->getInlineEdit()->onSetDefaults[] = function ($container, Application $item) : void {
             $container->setDefaults([
                 'subevents' => $this->subeventRepository->findSubeventsIds($item->getSubevents()),
-                'variableSymbol' => $item->getVariableSymbolText(),
                 'paymentMethod' => $item->getPaymentMethod(),
                 'paymentDate' => $item->getPaymentDate(),
                 'incomeProofPrintedDate' => $item->getIncomeProofPrintedDate(),
@@ -328,7 +323,6 @@ class ApplicationsGridControl extends Control
             }
             $this->applicationService->updateApplicationPayment(
                 $application,
-                $values['variableSymbol'],
                 $values['paymentMethod'] ?: null,
                 $values['paymentDate'],
                 $values['incomeProofPrintedDate'],
