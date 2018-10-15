@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Model\Payment\PaymentRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
@@ -25,11 +26,17 @@ class BankService
     /** @var SettingsRepository */
     private $settingsRepository;
 
+    /** @var PaymentRepository */
+    private $paymentRepository;
 
-    public function __construct(ApplicationService $applicationService, SettingsRepository $settingsRepository)
+
+    public function __construct(ApplicationService $applicationService,
+                                SettingsRepository $settingsRepository,
+                                PaymentRepository $paymentRepository)
     {
         $this->applicationService = $applicationService;
         $this->settingsRepository = $settingsRepository;
+        $this->paymentRepository  = $paymentRepository;
     }
 
     /**
@@ -73,29 +80,25 @@ class BankService
     {
         $this->settingsRepository->getEntityManager()->transactional(function () use ($transactionList) : void {
             foreach ($transactionList->getTransactions() as $transaction) {
-                if ($transaction->getAmount() <= 0) {
+                $id = $transaction->getId();
+
+                if ($transaction->getAmount() <= 0 || $this->paymentRepository->findByTransactionId($id) !== null) {
                     continue;
                 }
 
                 $date = new \DateTime();
                 $date->setTimestamp($transaction->getDate()->getTimestamp());
 
-                $accountNumber = null;
-                if ($transaction->getSenderAccountNumber() !== null && $transaction->getSenderBankCode() !== null) {
-                    $accountNumber = $transaction->getSenderAccountNumber() . '/' . $transaction->getSenderBankCode();
-                } elseif ($transaction->getSenderAccountNumber() !== null) {
-                    $accountNumber = $transaction->getSenderAccountNumber();
-                } elseif ($transaction->getSenderBankCode() !== null) {
-                    $accountNumber = $transaction->getSenderBankCode();
-                }
+                $accountNumber = $transaction->getSenderAccountNumber() . '/' . $transaction->getSenderBankCode();
+                $accountName   = $transaction->getUserIdentity() ?? $transaction->getPerformedBy(); //todo zmenit na getSenderName
 
                 $this->applicationService->createPayment(
                     $date,
                     $transaction->getAmount(),
                     $transaction->getVariableSymbol(),
-                    $transaction->getId(),
+                    $id,
                     $accountNumber,
-                    $transaction->getUserIdentity(),
+                    $accountName,
                     $transaction->getUserMessage()
                 );
             }

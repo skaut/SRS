@@ -127,21 +127,33 @@ class PaymentsGridControl extends Control
         $grid->getInlineAdd()->onSubmit[]     = [$this, 'add'];
 
         $grid->addInlineEdit()->onControlAdd[]  = function (Container $container) : void {
-            $container->addDatePicker('date', '')
-                ->addRule(Form::FILLED, 'admin.payments.payments.date_empty');
+            $container->addDatePicker('date', '');
 
-            $container->addInteger('amount', '')
-                ->addRule(Form::FILLED, 'admin.payments.payments.amount_empty')
-                ->addRule(Form::MIN, 'admin.payments.payments.amount_low', 1);
+            $container->addInteger('amount', '');
 
-            $container->addText('variableSymbol', '')
-                ->addRule(Form::FILLED, 'admin.payments.payments.variable_symbol_empty');
+            $container->addText('variableSymbol', '');
 
             $container->addMultiSelect('pairedApplications', '', $this->applicationRepository->getApplicationsVariableSymbolsOptions())
                 ->setAttribute('class', 'datagrid-multiselect')
                 ->setAttribute('data-live-search', 'true');
         };
         $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Payment $payment) : void {
+            if ($payment->getTransactionId() === null) {
+                $container['date']
+                    ->addRule(Form::FILLED, 'admin.payments.payments.date_empty');
+
+                $container['amount']
+                    ->addRule(Form::FILLED, 'admin.payments.payments.amount_empty')
+                    ->addRule(Form::MIN, 'admin.payments.payments.amount_low', 1);
+
+                $container['variableSymbol']
+                    ->addRule(Form::FILLED, 'admin.payments.payments.variable_symbol_empty');
+            } else {
+                $container['date']->setDisabled();
+                $container['amount']->setDisabled();
+                $container['variableSymbol']->setDisabled();
+            }
+
             $container['pairedApplications']->setItems($this->applicationRepository->getWaitingForPaymentOrPairedApplicationsVariableSymbolsOptions($payment->getPairedValidApplications()));
 
             $container->setDefaults([
@@ -150,14 +162,6 @@ class PaymentsGridControl extends Control
                 'variableSymbol' => $payment->getVariableSymbol(),
                 'pairedApplications' => $this->applicationRepository->findApplicationsIds($payment->getPairedValidApplications()),
             ]);
-
-            if ($payment->getTransactionId() === null) {
-                return;
-            }
-
-            $container['date']->setDisabled();
-            $container['amount']->setDisabled();
-            $container['variableSymbol']->setDisabled();
         };
         $grid->getInlineEdit()->onSubmit[]      = [$this, 'edit'];
 
@@ -174,6 +178,9 @@ class PaymentsGridControl extends Control
                 'data-toggle' => 'confirmation',
                 'data-content' => $this->translator->translate('admin.payments.payments.delete_confirm'),
             ]);
+        $grid->allowRowsAction('delete', function (Payment $payment) {
+            return $payment->getTransactionId() === null;
+        });
     }
 
     /**
@@ -222,7 +229,7 @@ class PaymentsGridControl extends Control
 
         $this->applicationService->removePayment($payment, $loggedUser);
 
-        $this->getPresenter()->flashMessage('admin.payments.payments.saved.deleted', 'success');
+        $this->getPresenter()->flashMessage('admin.payments.payments.deleted', 'success');
         $this->redirect('this');
     }
 

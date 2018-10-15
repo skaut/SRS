@@ -93,7 +93,7 @@ class BankForm
             $this->settingsRepository->setValue(Settings::BANK_TOKEN, $token);
             $this->settingsRepository->setDateValue(Settings::BANK_DOWNLOAD_FROM, $from);
         } catch (InternalErrorException $e) {
-            $form->addError('admin.configuration.payment.bank_invalid_token');
+            $form['bankToken']->addError('admin.configuration.payment.bank_invalid_token');
         }
     }
 
