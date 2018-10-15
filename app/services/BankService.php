@@ -30,10 +30,10 @@ class BankService
     private $paymentRepository;
 
 
-    public function __construct(ApplicationService $applicationService,
-                                SettingsRepository $settingsRepository,
-                                PaymentRepository $paymentRepository)
-    {
+    public function __construct(
+        ApplicationService $applicationService,
+        SettingsRepository $settingsRepository,
+        PaymentRepository $paymentRepository) {
         $this->applicationService = $applicationService;
         $this->settingsRepository = $settingsRepository;
         $this->paymentRepository  = $paymentRepository;
