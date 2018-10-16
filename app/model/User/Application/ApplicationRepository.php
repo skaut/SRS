@@ -52,8 +52,8 @@ class ApplicationRepository extends EntityRepository
     {
         return $this->createQueryBuilder('a')
             ->select('a')
-            ->join('a.variableSymbol', 'variableSymbol')
-            ->where('variableSymbol = :variableSymbol')->setParameter('variableSymbol', $variableSymbol)
+            ->join('a.variableSymbol', 'v')
+            ->where('v.variableSymbol = :variableSymbol')->setParameter('variableSymbol', $variableSymbol)
             ->andWhere('a.validTo IS NULL')
             ->getQuery()
             ->getOneOrNullResult();

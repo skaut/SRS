@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\ActionModule\Presenters;
 
+use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
+use App\Model\Settings\SettingsRepository;
 use App\Services\BankService;
 
 /**
@@ -20,6 +22,12 @@ class BankPresenter extends ActionBasePresenter
      */
     public $bankService;
 
+    /**
+     * @var SettingsRepository
+     * @inject
+     */
+    public $settingsRepository;
+
 
     /**
      * Zkontroluje splatnost přihlášek.
@@ -28,6 +36,7 @@ class BankPresenter extends ActionBasePresenter
      */
     public function actionCheck() : void
     {
-        $this->bankService->downloadLastTransactions();
+        $from = $this->settingsRepository->getDateValue(Settings::BANK_DOWNLOAD_FROM);
+        $this->bankService->downloadTransactions($from);
     }
 }

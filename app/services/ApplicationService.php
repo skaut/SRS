@@ -534,6 +534,8 @@ class ApplicationService
             if ($pairedApplication) {
                 if ($pairedApplication->getState() === ApplicationState::PAID || $pairedApplication->getState() === ApplicationState::PAID_FREE) {
                     $payment->setState(PaymentState::NOT_PAIRED_PAID);
+                } elseif ($pairedApplication->getState() === ApplicationState::CANCELED || $pairedApplication->getState() === ApplicationState::CANCELED_NOT_PAID) {
+                    $payment->setState(PaymentState::NOT_PAIRED_CANCELED);
                 } elseif (abs($pairedApplication->getFee() - $amount) >= 0.01) {
                     $payment->setState(PaymentState::NOT_PAIRED_FEE);
                 } else {

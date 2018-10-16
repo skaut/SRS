@@ -88,7 +88,7 @@ class PaymentsGridControl extends Control
         $grid->setItemsPerPageList([25, 50, 100, 250, 500]);
 
         $grid->addColumnDateTime('date', 'admin.payments.payments.date')
-            ->setFormat(Helpers::DATETIME_FORMAT)
+            ->setFormat(Helpers::DATE_FORMAT)
             ->setSortable();
 
         $grid->addColumnNumber('amount', 'admin.payments.payments.amount')
