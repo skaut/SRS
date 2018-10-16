@@ -86,7 +86,7 @@ abstract class CustomInput
      * @ORM\Column(type="integer")
      * @var int
      */
-    protected $position;
+    protected $position = 0;
 
     /**
      * Hodnoty pole pro jednotlivé uživatele.
