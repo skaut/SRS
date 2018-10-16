@@ -88,10 +88,8 @@ class BankForm
         $from  = $values['bankDownloadFrom'];
 
         try {
-            $this->bankService->downloadTransactionsFrom($from, $token);
-
+            $this->bankService->downloadTransactions($from, $token);
             $this->settingsRepository->setValue(Settings::BANK_TOKEN, $token);
-            $this->settingsRepository->setDateValue(Settings::BANK_DOWNLOAD_FROM, $from);
         } catch (InternalErrorException $e) {
             $form['bankToken']->addError('admin.configuration.payment.bank_invalid_token');
         }

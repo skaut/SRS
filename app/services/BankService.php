@@ -44,40 +44,23 @@ class BankService
      * @throws SettingsException
      * @throws \Throwable
      */
-    public function downloadLastTransactions(?string $token = null) : void
+    public function downloadTransactions(\DateTime $from, ?string $token = null) : void
     {
-        $token ?: $this->settingsRepository->getValue(Settings::BANK_TOKEN);
+        $token = $token ?: $this->settingsRepository->getValue(Settings::BANK_TOKEN);
         if ($token === null) {
-            return;
-        }
-
-        $downloader      = new FioApi\Downloader($token);
-        $transactionList = $downloader->downloadLast();
-
-        $this->addPayments($transactionList);
-    }
-
-    /**
-     * @throws SettingsException
-     * @throws \Throwable
-     */
-    public function downloadTransactionsFrom(\DateTime $from, ?string $token = null) : void
-    {
-        $token ?: $this->settingsRepository->getValue(Settings::BANK_TOKEN);
-        if ($token === null) {
-            return;
+            throw new \InvalidArgumentException('Token is not set.');
         }
 
         $downloader      = new FioApi\Downloader($token);
         $transactionList = $downloader->downloadSince($from);
 
-        $this->addPayments($transactionList);
+        $this->createPayments($transactionList);
     }
 
     /**
      * @throws \Throwable
      */
-    private function addPayments(FioApi\TransactionList $transactionList) : void
+    private function createPayments(FioApi\TransactionList $transactionList) : void
     {
         $this->settingsRepository->getEntityManager()->transactional(function () use ($transactionList) : void {
             foreach ($transactionList->getTransactions() as $transaction) {
@@ -102,6 +85,8 @@ class BankService
                     $transaction->getUserMessage()
                 );
             }
+
+            $this->settingsRepository->setDateValue(Settings::BANK_DOWNLOAD_FROM, new \DateTime());
         });
     }
 }
