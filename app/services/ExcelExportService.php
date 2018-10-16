@@ -181,7 +181,7 @@ class ExcelExportService
 
             foreach ($user->getPrograms() as $program) {
                 $row++;
-                $column = 0;
+                $column = 1;
 
                 $sheet->setCellValueByColumnAndRow($column++, $row, $program->getStart()->format('j. n. H:i'));
                 $sheet->setCellValueByColumnAndRow($column++, $row, $program->getEnd()->format('j. n. H:i'));
