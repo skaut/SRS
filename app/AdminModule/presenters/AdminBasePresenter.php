@@ -148,13 +148,13 @@ abstract class AdminBasePresenter extends BasePresenter
 
         $this->template->containerAttributes = '';
 
-        $skautIsUserId                       = $this->dbuser->getSkautISUserId();
-        $skautIsRoles                        = $this->skautIsService->getUserRoles($skautIsUserId);
-        $skautIsRoleSelectedId               = $this->skautIsService->getUserRoleId();
-        $skautIsRoleSelected                 = array_filter($skautIsRoles, function ($r) use ($skautIsRoleSelectedId) {
+        $skautIsUserId                = $this->dbuser->getSkautISUserId();
+        $skautIsRoles                 = $this->skautIsService->getUserRoles($skautIsUserId);
+        $skautIsRoleSelectedId        = $this->skautIsService->getUserRoleId();
+        $skautIsRoleSelected          = array_filter($skautIsRoles, function ($r) use ($skautIsRoleSelectedId) {
             return $r->ID === $skautIsRoleSelectedId;
         });
-        $this->template->skautIsRoles        = $skautIsRoles;
+        $this->template->skautIsRoles = $skautIsRoles;
         if (empty($skautIsRoleSelected)) {
             $this->template->skautIsRoleSelected = null;
         } else {
