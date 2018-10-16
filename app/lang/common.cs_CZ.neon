@@ -15,7 +15,7 @@ permission_name:
         acl: "Spravovat role"
         payments: "Spravovat platby"
         mailing: "Spravovat mailing"
-        configuration: "Spravovat konfiguraci"
+        configuration: "Spravovat nastavení"
 
     choose_programs:
         program: "Přihlašovat se na programy"

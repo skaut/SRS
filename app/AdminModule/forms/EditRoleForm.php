@@ -252,6 +252,7 @@ class EditRoleForm
         $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE_CATEGORIES, Resource::PROGRAM);
         $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE_ROOMS, Resource::PROGRAM);
         $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, Resource::USERS);
+        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, Resource::PAYMENTS);
         $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, Resource::ACL);
         $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, Resource::MAILING);
         $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, Resource::CONFIGURATION);
