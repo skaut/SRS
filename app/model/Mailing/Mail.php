@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Model\Mailing;
 
 use App\Model\ACL\Role;
+use App\Model\Structure\Subevent;
 use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -29,6 +30,13 @@ class Mail
      * @var Collection|Role[]
      */
     protected $recipientRoles;
+
+    /**
+     * Podakce, jejichž účastníkům byl e-mail odeslán.
+     * @ORM\ManyToMany(targetEntity="\App\Model\Structure\Subevent")
+     * @var Collection|Subevent[]
+     */
+    protected $recipientSubevents;
 
     /**
      * Uživatelé, kterém byl e-mail odeslán.
@@ -101,11 +109,38 @@ class Mail
      */
     public function getRecipientRolesText() : string
     {
-        $rolesNames = [];
-        foreach ($this->recipientRoles as $role) {
-            $rolesNames[] = $role->getName();
+        return implode(', ', $this->recipientRoles->map(function (Role $role) {
+            return $role->getName();
+        })->toArray());
+    }
+
+    /**
+     * @return Collection|Subevent[]
+     */
+    public function getRecipientSubevents() : Collection
+    {
+        return $this->recipientSubevents;
+    }
+
+    /**
+     * @param Collection|Subevent[] $recipientSubevents
+     */
+    public function setRecipientSubevents(Collection $recipientSubevents) : void
+    {
+        $this->recipientSubevents->clear();
+        foreach ($recipientSubevents as $recipientSubevent) {
+            $this->recipientSubevents->add($recipientSubevent);
         }
-        return implode(', ', $rolesNames);
+    }
+
+    /**
+     * Vrací příjemce (podakce) oddělené čárkou.
+     */
+    public function getRecipientSubeventsText() : string
+    {
+        return implode(', ', $this->recipientSubevents->map(function (Subevent $subevent) {
+            return $subevent->getName();
+        })->toArray());
     }
 
     /**
@@ -132,11 +167,9 @@ class Mail
      */
     public function getRecipientUsersText() : string
     {
-        $usersNames = [];
-        foreach ($this->recipientUsers as $user) {
-            $usersNames[] = $user->getDisplayName();
-        }
-        return implode(', ', $usersNames);
+        return implode(', ', $this->recipientUsers->map(function (User $user) {
+            return $user->getDisplayName();
+        })->toArray());
     }
 
     public function getSubject() : string
