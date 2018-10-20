@@ -83,9 +83,9 @@ class MailService
 
     /**
      * Rozešle e-mail.
-     * @param Collection|Role[] $recipientsRoles
-     * @param Collection|Subevent $recipientsSubevents
-     * @param Collection|User[] $recipientsUsers
+     * @param Collection|Role[]     $recipientsRoles
+     * @param Collection|Subevent[] $recipientsSubevents
+     * @param Collection|User[]     $recipientsUsers
      * @throws SettingsException
      * @throws \Throwable
      * @throws MailingException
