@@ -7,6 +7,7 @@ namespace App\AdminModule\MailingModule\Components;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Mailing\MailRepository;
+use App\Model\Structure\SubeventRepository;
 use App\Utils\Helpers;
 use Doctrine\ORM\QueryBuilder;
 use Kdyby\Translation\Translator;
@@ -29,14 +30,22 @@ class MailHistoryGridControl extends Control
     /** @var RoleRepository */
     private $roleRepository;
 
+    /** @var SubeventRepository */
+    private $subeventRepository;
 
-    public function __construct(Translator $translator, MailRepository $mailRepository, RoleRepository $roleRepository)
-    {
+
+    public function __construct(
+        Translator $translator,
+        MailRepository $mailRepository,
+        RoleRepository $roleRepository,
+        SubeventRepository $subeventRepository
+    ) {
         parent::__construct();
 
-        $this->translator     = $translator;
-        $this->mailRepository = $mailRepository;
-        $this->roleRepository = $roleRepository;
+        $this->translator         = $translator;
+        $this->mailRepository     = $mailRepository;
+        $this->roleRepository     = $roleRepository;
+        $this->subeventRepository = $subeventRepository;
     }
 
     /**
@@ -58,7 +67,7 @@ class MailHistoryGridControl extends Control
         $grid->setDefaultSort(['datetime' => 'DESC']);
         $grid->setItemsPerPageList([25, 50, 100, 250, 500]);
 
-        $grid->addColumnText('recipientRoles', 'admin.mailing.history_recipient_roles', 'recipientRolesText')
+        $grid->addColumnText('recipientRoles', 'admin.mailing.history.recipient_roles', 'recipientRolesText')
             ->setFilterMultiSelect($this->roleRepository->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]))
             ->setCondition(function (QueryBuilder $qb, $values) : void {
                 $qb->join('m.recipientRoles', 'r')
@@ -66,7 +75,15 @@ class MailHistoryGridControl extends Control
                     ->setParameter('rids', $values);
             });
 
-        $grid->addColumnText('recipientUsers', 'admin.mailing.history_recipient_users', 'recipientUsersText')
+        $grid->addColumnText('recipientSubevents', 'admin.mailing.history.recipient_subevents', 'recipientSubeventsText')
+            ->setFilterMultiSelect($this->subeventRepository->getSubeventsOptions())
+            ->setCondition(function (QueryBuilder $qb, $values) : void {
+                $qb->join('m.recipientSubevents', 's')
+                    ->andWhere('s.id IN (:sids)')
+                    ->setParameter('sids', $values);
+            });
+
+        $grid->addColumnText('recipientUsers', 'admin.mailing.history.recipient_users', 'recipientUsersText')
             ->setFilterText()
             ->setCondition(function (QueryBuilder $qb, $value) : void {
                 $qb->join('m.recipientUsers', 'u')
@@ -74,13 +91,13 @@ class MailHistoryGridControl extends Control
                     ->setParameter('displayName', '%' . $value . '%');
             });
 
-        $grid->addColumnText('subject', 'admin.mailing.history_subject')
+        $grid->addColumnText('subject', 'admin.mailing.history.subject')
             ->setFilterText();
 
-        $grid->addColumnDateTime('datetime', 'admin.mailing.history_datetime')
+        $grid->addColumnDateTime('datetime', 'admin.mailing.history.datetime')
             ->setFormat(Helpers::DATETIME_FORMAT);
 
-        $grid->addColumnText('automatic', 'admin.mailing.history_automatic')
+        $grid->addColumnText('automatic', 'admin.mailing.history.automatic')
             ->setReplacement([
                 '0' => $this->translator->translate('admin.common.no'),
                 '1' => $this->translator->translate('admin.common.yes'),

@@ -4,7 +4,7 @@
 
 {block main}
     <h2>
-        {_'admin.mailing.templates_edit_heading', [
+        {_'admin.mailing.templates.edit_heading', [
             'type' => $translator->translate('common.mailing.template_type.' . $editedTemplate->getType())
         ]}
     </h2>
@@ -17,7 +17,7 @@
         <div class="col-sm-4 col-xs-4">
             <div class="panel panel-info">
                 <div class="panel-heading">
-                    <h3 class="panel-title">{_admin.mailing.templates_variables}</h3>
+                    <h3 class="panel-title">{_admin.mailing.templates.variables}</h3>
                 </div>
                 <ul class="list-group">
                     {foreach $editedTemplate->getVariables() as $variable}

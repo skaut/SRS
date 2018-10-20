@@ -52,18 +52,18 @@ class EditTemplateForm
 
         $form->addHidden('id');
 
-        $form->addCheckbox('active', 'admin.mailing.templates_active_form');
+        $form->addCheckbox('active', 'admin.mailing.templates.active_form');
 
-        $form->addMultiSelect('recipients', 'admin.mailing.templates_recipients', [
-            'user' => 'admin.mailing.templates_send_to_user_form',
-            'organizer' => 'admin.mailing.templates_send_to_organizer_form',
-        ])->addRule(Form::FILLED, 'admin.mailing.templates_recipients_empty');
+        $form->addMultiSelect('recipients', 'admin.mailing.templates.recipients', [
+            'user' => 'admin.mailing.templates.send_to_user_form',
+            'organizer' => 'admin.mailing.templates.send_to_organizer_form',
+        ])->addRule(Form::FILLED, 'admin.mailing.templates.recipients_empty');
 
-        $form->addText('subject', 'admin.mailing.templates_subject')
-            ->addRule(Form::FILLED, 'admin.mailing.templates_subject_empty');
+        $form->addText('subject', 'admin.mailing.templates.subject')
+            ->addRule(Form::FILLED, 'admin.mailing.templates.subject_empty');
 
-        $form->addTextArea('text', 'admin.mailing.templates_text')
-            ->addRule(Form::FILLED, 'admin.mailing.templates_text_empty')
+        $form->addTextArea('text', 'admin.mailing.templates.text')
+            ->addRule(Form::FILLED, 'admin.mailing.templates.text_empty')
             ->setAttribute('class', 'tinymce-paragraph');
 
         $form->addSubmit('submit', 'admin.common.save');

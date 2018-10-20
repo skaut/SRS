@@ -58,7 +58,7 @@ class TemplatesPresenter extends MailingBasePresenter
                 $this->redirect('Templates:default');
             }
 
-            $this->flashMessage('admin.mailing.templates_saved', 'success');
+            $this->flashMessage('admin.mailing.templates.saved', 'success');
 
             $this->redirect('Templates:default');
         };

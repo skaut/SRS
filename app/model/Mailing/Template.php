@@ -226,9 +226,4 @@ class Template
     {
         return $this->system;
     }
-
-    public function setSystem(bool $system) : void
-    {
-        $this->system = $system;
-    }
 }
