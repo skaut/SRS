@@ -324,6 +324,30 @@ class SubeventRepository extends EntityRepository
     }
 
     /**
+     * Vrací seznam podakcí, s informací o počtu uživatelů, jako možnosti pro select.
+     * @return string[]
+     */
+    public function getSubeventsOptionsWithUsersCount() : array
+    {
+        $subevents = $this->createQueryBuilder('s')
+            ->orderBy('s.name')
+            ->getQuery()
+            ->getResult();
+
+        $options = [];
+        foreach ($subevents as $subevent) {
+            $options[$subevent->getId()] = $this->translator->translate(
+                'admin.common.subevent_option',
+                $subevent->countUsers(),
+                [
+                    'subevent' => $subevent->getName(),
+                ]
+            );
+        }
+        return $options;
+    }
+
+    /**
      * Uloží podakci.
      * @throws ORMException
      * @throws OptimisticLockException

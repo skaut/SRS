@@ -76,8 +76,9 @@ class Mail
 
     public function __construct()
     {
-        $this->recipientRoles = new ArrayCollection();
-        $this->recipientUsers = new ArrayCollection();
+        $this->recipientRoles     = new ArrayCollection();
+        $this->recipientSubevents = new ArrayCollection();
+        $this->recipientUsers     = new ArrayCollection();
     }
 
     public function getId() : int

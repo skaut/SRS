@@ -8,6 +8,7 @@ use App\AdminModule\Forms\BaseForm;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Settings\SettingsException;
+use App\Model\Structure\SubeventRepository;
 use App\Model\User\UserRepository;
 use App\Services\MailService;
 use Kdyby\Events\Event;
@@ -45,17 +46,22 @@ class SendForm
     /** @var UserRepository */
     private $userRepository;
 
+    /** @var SubeventRepository */
+    private $subeventRepository;
+
 
     public function __construct(
         BaseForm $baseFormFactory,
         MailService $mailService,
         RoleRepository $roleRepository,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        SubeventRepository $subeventRepository
     ) {
-        $this->baseFormFactory = $baseFormFactory;
-        $this->mailService     = $mailService;
-        $this->roleRepository  = $roleRepository;
-        $this->userRepository  = $userRepository;
+        $this->baseFormFactory    = $baseFormFactory;
+        $this->mailService        = $mailService;
+        $this->roleRepository     = $roleRepository;
+        $this->userRepository     = $userRepository;
+        $this->subeventRepository = $subeventRepository;
     }
 
     /**
@@ -67,37 +73,50 @@ class SendForm
 
         $recipientRolesMultiSelect = $form->addMultiSelect(
             'recipientRoles',
-            'admin.mailing.send_recipient_roles',
+            'admin.mailing.send.recipient_roles',
             $this->roleRepository->getRolesWithoutRolesOptionsWithApprovedUsersCount([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED])
+        );
+
+        $recipientSubeventsMultiSelect = $form->addMultiSelect(
+            'recipientSubevents',
+            'admin.mailing.send.recipient_subevents',
+            $this->subeventRepository->getSubeventsOptionsWithUsersCount()
         );
 
         $recipientUsersMultiSelect = $form->addMultiSelect(
             'recipientUsers',
-            'admin.mailing.send_recipient_users',
+            'admin.mailing.send.recipient_users',
             $this->userRepository->getUsersOptions()
         )
             ->setAttribute('data-live-search', 'true');
 
         $recipientRolesMultiSelect
+            ->addConditionOn($recipientSubeventsMultiSelect, Form::BLANK)
             ->addConditionOn($recipientUsersMultiSelect, Form::BLANK)
-            ->addRule(Form::FILLED, 'admin.mailing.send_recipients_empty');
+            ->addRule(Form::FILLED, 'admin.mailing.send.recipients_empty');
+
+        $recipientSubeventsMultiSelect
+            ->addConditionOn($recipientRolesMultiSelect, Form::BLANK)
+            ->addConditionOn($recipientUsersMultiSelect, Form::BLANK)
+            ->addRule(Form::FILLED, 'admin.mailing.send.recipients_empty');
 
         $recipientUsersMultiSelect
             ->addConditionOn($recipientRolesMultiSelect, Form::BLANK)
-            ->addRule(Form::FILLED, 'admin.mailing.send_recipients_empty');
+            ->addConditionOn($recipientSubeventsMultiSelect, Form::BLANK)
+            ->addRule(Form::FILLED, 'admin.mailing.send.recipients_empty');
 
-        $form->addText('copy', 'admin.mailing.send_copy')
+        $form->addText('copy', 'admin.mailing.send.copy')
             ->addCondition(Form::FILLED)
-            ->addRule(Form::EMAIL, 'admin.mailing.send_copy_format');
+            ->addRule(Form::EMAIL, 'admin.mailing.send.copy_format');
 
-        $form->addText('subject', 'admin.mailing.send_subject')
-            ->addRule(Form::FILLED, 'admin.mailing.send_subject_empty');
+        $form->addText('subject', 'admin.mailing.send.subject')
+            ->addRule(Form::FILLED, 'admin.mailing.send.subject_empty');
 
-        $form->addTextArea('text', 'admin.mailing.send_text')
-            ->addRule(Form::FILLED, 'admin.mailing.send_text_empty')
+        $form->addTextArea('text', 'admin.mailing.send.text')
+            ->addRule(Form::FILLED, 'admin.mailing.send.text_empty')
             ->setAttribute('class', 'tinymce-paragraph');
 
-        $form->addSubmit('submit', 'admin.mailing.send_send');
+        $form->addSubmit('submit', 'admin.mailing.send.send');
 
         $form->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
         $form->onSuccess[] = [$this, 'processForm'];
@@ -115,10 +134,11 @@ class SendForm
     public function processForm(Form $form, \stdClass $values) : void
     {
         try {
-            $recipientsRoles = $this->roleRepository->findRolesByIds($values['recipientRoles']);
-            $recipientsUsers = $this->userRepository->findUsersByIds($values['recipientUsers']);
+            $recipientsRoles     = $this->roleRepository->findRolesByIds($values['recipientRoles']);
+            $recipientsSubevents = $this->subeventRepository->findSubeventsByIds($values['recipientSubevents']);
+            $recipientsUsers     = $this->userRepository->findUsersByIds($values['recipientUsers']);
 
-            $this->mailService->sendMail($recipientsRoles, $recipientsUsers, $values['copy'], $values['subject'], $values['text']);
+            $this->mailService->sendMail($recipientsRoles, $recipientsSubevents, $recipientsUsers, $values['copy'], $values['subject'], $values['text']);
             $this->mailSuccess = true;
         } catch (SendException $ex) {
             $this->mailSuccess = false;

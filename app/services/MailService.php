@@ -13,6 +13,8 @@ use App\Model\Mailing\TemplateRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
+use App\Model\Structure\Subevent;
+use App\Model\Structure\SubeventRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -49,6 +51,9 @@ class MailService
     /** @var RoleRepository */
     private $roleRepository;
 
+    /** @var SubeventRepository */
+    private $subeventRepository;
+
     /** @var TemplateRepository */
     private $templateRepository;
 
@@ -62,6 +67,7 @@ class MailService
         MailRepository $mailRepository,
         UserRepository $userRepository,
         RoleRepository $roleRepository,
+        SubeventRepository $subeventRepository,
         TemplateRepository $templateRepository,
         Translator $translator
     ) {
@@ -70,6 +76,7 @@ class MailService
         $this->mailRepository     = $mailRepository;
         $this->userRepository     = $userRepository;
         $this->roleRepository     = $roleRepository;
+        $this->subeventRepository = $subeventRepository;
         $this->templateRepository = $templateRepository;
         $this->translator         = $translator;
     }
@@ -77,13 +84,14 @@ class MailService
     /**
      * Rozešle e-mail.
      * @param Collection|Role[] $recipientsRoles
+     * @param Collection|Subevent $recipientsSubevents
      * @param Collection|User[] $recipientsUsers
      * @throws SettingsException
      * @throws \Throwable
      * @throws MailingException
      * @throws MailingMailCreationException
      */
-    public function sendMail(Collection $recipientsRoles, Collection $recipientsUsers, string $copy, string $subject, string $text, bool $automatic = false) : void
+    public function sendMail(Collection $recipientsRoles, Collection $recipientsSubevents, Collection $recipientsUsers, string $copy, string $subject, string $text, bool $automatic = false) : void
     {
         $recipients = [];
 
@@ -91,7 +99,13 @@ class MailService
             if (in_array($user, $recipients)) {
                 continue;
             }
+            $recipients[] = $user;
+        }
 
+        foreach ($this->userRepository->findAllWithSubevents($this->subeventRepository->findSubeventsIds($recipientsSubevents)) as $user) {
+            if (in_array($user, $recipients)) {
+                continue;
+            }
             $recipients[] = $user;
         }
 
@@ -99,7 +113,6 @@ class MailService
             if (in_array($user, $recipients)) {
                 continue;
             }
-
             $recipients[] = $user;
         }
 
@@ -117,6 +130,7 @@ class MailService
 
         $mailLog = new Mail();
         $mailLog->setRecipientRoles($recipientsRoles);
+        $mailLog->setRecipientSubevents($recipientsSubevents);
         $mailLog->setRecipientUsers($recipientsUsers);
         $mailLog->setSubject($subject);
         $mailLog->setText($text);
@@ -141,8 +155,9 @@ class MailService
             return;
         }
 
-        $recipientsRoles = new ArrayCollection();
-        $recipientsUsers = new ArrayCollection();
+        $recipientsRoles     = new ArrayCollection();
+        $recipientsSubevents = new ArrayCollection();
+        $recipientsUsers     = new ArrayCollection();
 
         if ($template->isSendToUser()) {
             $recipientsUsers->add($recipientUser);
@@ -163,6 +178,6 @@ class MailService
             $text    = str_replace($variableName, $value, $text);
         }
 
-        $this->sendMail($recipientsRoles, $recipientsUsers, $copy, $subject, $text, $automatic);
+        $this->sendMail($recipientsRoles, $recipientsSubevents, $recipientsUsers, $copy, $subject, $text, $automatic);
     }
 }

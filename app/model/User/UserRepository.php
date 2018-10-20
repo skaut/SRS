@@ -137,6 +137,27 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Vrací uživatele přihlášené na podakce.
+     * @param int[] $subeventsIds
+     * @return Collection|User[]
+     */
+    public function findAllWithSubevents(array $subeventsIds) : Collection
+    {
+        $result = $this->createQueryBuilder('u')
+            ->join('u.applications', 'a')
+            ->join('a.subevents', 's')
+            ->where('a.validTo IS NULL')
+            ->andWhere('a.state IN (:states)')
+            ->andWhere('s.id IN (:ids)')
+            ->setParameter('states', [ApplicationState::PAID, ApplicationState::PAID_FREE, ApplicationState::WAITING_FOR_PAYMENT])
+            ->setParameter('ids', $subeventsIds)
+            ->getQuery()
+            ->getResult();
+
+        return new ArrayCollection($result);
+    }
+
+    /**
      * Vrací uživatele s přihláškou čekající na zaplacení.
      * @return Collection|User[]
      */
