@@ -42,6 +42,7 @@ use PhpOffice\PhpSpreadsheet\Exception;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
+use function array_merge;
 use function array_slice;
 use function array_values;
 use function explode;
@@ -235,17 +236,17 @@ class UsersGridControl extends Control
         $grid->addColumnText('roles', 'admin.users.users_roles', 'rolesText')
             ->setFilterMultiSelect($this->roleRepository->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED]))
             ->setCondition(function ($qb, $values) : void {
-                $qb->join('u.roles', 'r')
-                    ->andWhere('r.id IN (:rids)')
+                $qb->join('u.roles', 'uR')
+                    ->andWhere('uR.id IN (:rids)')
                     ->setParameter('rids', $values);
             });
 
         $grid->addColumnText('subevents', 'admin.users.users_subevents', 'subeventsText')
             ->setFilterMultiSelect($this->subeventRepository->getSubeventsOptions())
             ->setCondition(function ($qb, $values) : void {
-                $qb->join('u.applications', 'aSubevents')
-                    ->join('aSubevents.subevents', 's')
-                    ->andWhere('s.id IN (:sids)')
+                $qb->join('u.applications', 'uA')
+                    ->join('uA.subevents', 'uAS')
+                    ->andWhere('uAS.id IN (:sids)')
                     ->setParameter('sids', $values);
             });
 
@@ -314,9 +315,9 @@ class UsersGridControl extends Control
         $grid->addColumnText('variableSymbol', 'admin.users.users_variable_symbol', 'variableSymbolsText')
             ->setFilterText()
             ->setCondition(function (QueryBuilder $qb, $value) : void {
-                $qb->join('u.applications', 'aVariableSymbol')
-                    ->join('aVariableSymbol.variableSymbol', 'avsVariableSymbol')
-                    ->andWhere('avsVariableSymbol.variableSymbol LIKE :variableSymbol')
+                $qb->join('u.applications', 'uAVS')
+                    ->join('uAVS.variableSymbol', 'uAVSVS')
+                    ->andWhere('uAVSVS.variableSymbol LIKE :variableSymbol')
                     ->setParameter(':variableSymbol', $value . '%');
             });
 
@@ -362,11 +363,13 @@ class UsersGridControl extends Control
             ->setSortable();
 
         foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
-            $grid->addColumnText('customInput' . $customInput->getId(), Helpers::truncate($customInput->getName(), 20))
+            $columnCustomInputName = 'customInput' . $customInput->getId();
+
+            $columnCustomInput = $grid->addColumnText($columnCustomInputName, Helpers::truncate($customInput->getName(), 20))
                 ->setRenderer(function (User $user) use ($customInput) {
                     $customInputValue = $user->getCustomInputValue($customInput);
                     if ($customInputValue) {
-                        switch ($customInputValue->getInput()->getType()) {
+                        switch ($customInput->getType()) {
                             case CustomInput::TEXT:
                                 return Helpers::truncate($customInputValue->getValue(), 20);
 
@@ -394,6 +397,56 @@ class UsersGridControl extends Control
                     }
                     return null;
                 });
+
+            switch ($customInput->getType()) {
+                case CustomInput::TEXT:
+                    $columnCustomInput->setSortable()
+                        ->setSortableCallback(function (QueryBuilder $qb, array $sort) use ($customInput, $columnCustomInputName) : void {
+                            $qb->leftJoin('u.customInputValues', 'uCIV1')
+                                ->leftJoin('uCIV1.input', 'uCIVI1')
+                                ->leftJoin('App\Model\User\CustomInputValue\CustomTextValue', 'uCTV', 'WITH', 'uCIV1.id = uCTV.id')
+                                ->andWhere('uCIVI1.id = :iid1 OR uCIVI1.id IS NULL')
+                                ->setParameter('iid1', $customInput->getId())
+                                ->orderBy('uCTV.value', $sort[$columnCustomInputName]);
+                        });
+                    break;
+
+                case CustomInput::CHECKBOX:
+                    $columnCustomInput->setFilterSelect(['' => 'admin.common.all', 1 => 'admin.common.yes', 0 => 'admin.common.no'])
+                        ->setCondition(function (QueryBuilder $qb, string $value) use ($customInput) : void {
+                            if ($value === '') {
+                                return;
+                            } else {
+                                $qb->leftJoin('u.customInputValues', 'uCIV2')
+                                    ->leftJoin('uCIV2.input', 'uCIVI2')
+                                    ->leftJoin('App\Model\User\CustomInputValue\CustomCheckboxValue', 'uCCV', 'WITH', 'uCIV2.id = uCCV.id')
+                                    ->andWhere('uCIVI2.id = :iid2 OR uCIVI2.id IS NULL')
+                                    ->andWhere('uCCV.value = :ivalue2')
+                                    ->setParameter('iid2', $customInput->getId())
+                                    ->setParameter('ivalue2', $value);
+                            }
+                        })
+                        ->setTranslateOptions();
+                    break;
+
+                case CustomInput::SELECT:
+                    $columnCustomInput->setFilterSelect(array_merge(['' => 'admin.common.all'], $customInput->getSelectOptions()))
+                        ->setCondition(function (QueryBuilder $qb, string $value) use ($customInput) : void {
+                            if ($value === '') {
+                                return;
+                            } else {
+                                $qb->leftJoin('u.customInputValues', 'uCIV3')
+                                    ->leftJoin('uCIV3.input', 'uCIVI3')
+                                    ->leftJoin('App\Model\User\CustomInputValue\CustomSelectValue', 'uCSV', 'WITH', 'uCIV3.id = uCSV.id')
+                                    ->andWhere('uCIVI3.id = :iid3 OR uCIVI3.id IS NULL')
+                                    ->andWhere('uCSV.value = :ivalue3')
+                                    ->setParameter('iid3', $customInput->getId())
+                                    ->setParameter('ivalue3', $value);
+                            }
+                        })
+                        ->setTranslateOptions();
+                    break;
+            }
         }
 
         $grid->addColumnText('note', 'admin.users.users_private_note')

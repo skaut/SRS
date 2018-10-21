@@ -367,7 +367,7 @@ class ApplicationForm
                     break;
 
                 case CustomInput::SELECT:
-                    $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->prepareSelectOptions());
+                    $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions());
                     break;
 
                 case CustomInput::FILE:
