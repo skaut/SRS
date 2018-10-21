@@ -398,56 +398,55 @@ class UsersGridControl extends Control
                     return null;
                 });
 
-                switch ($customInput->getType()) {
-                    case CustomInput::TEXT:
-                        $columnCustomInput->setSortable()
-                            ->setSortableCallback(function (QueryBuilder $qb, array $sort) use ($customInput, $columnCustomInputName) : void {
-                                $qb->leftJoin('u.customInputValues', 'uCIV1')
-                                    ->leftJoin('uCIV1.input', 'uCIVI1')
-                                    ->leftJoin('App\Model\User\CustomInputValue\CustomTextValue', 'uCTV', 'WITH', 'uCIV1.id = uCTV.id')
-                                    ->andWhere('uCIVI1.id = :iid1 OR uCIVI1.id IS NULL')
-                                    ->setParameter('iid1', $customInput->getId())
-                                    ->orderBy('uCTV.value', $sort[$columnCustomInputName]);
-                            });
-                        break;
+            switch ($customInput->getType()) {
+                case CustomInput::TEXT:
+                    $columnCustomInput->setSortable()
+                        ->setSortableCallback(function (QueryBuilder $qb, array $sort) use ($customInput, $columnCustomInputName) : void {
+                            $qb->leftJoin('u.customInputValues', 'uCIV1')
+                                ->leftJoin('uCIV1.input', 'uCIVI1')
+                                ->leftJoin('App\Model\User\CustomInputValue\CustomTextValue', 'uCTV', 'WITH', 'uCIV1.id = uCTV.id')
+                                ->andWhere('uCIVI1.id = :iid1 OR uCIVI1.id IS NULL')
+                                ->setParameter('iid1', $customInput->getId())
+                                ->orderBy('uCTV.value', $sort[$columnCustomInputName]);
+                        });
+                    break;
 
-                    case CustomInput::CHECKBOX:
-                        $columnCustomInput->setFilterSelect(['' => 'admin.common.all', 1 => 'admin.common.yes', 0 => 'admin.common.no'])
-                            ->setCondition(function (QueryBuilder $qb, string $value) use ($customInput) : void {
-                                if ($value === '') {
-                                    return;
-                                } else {
-                                    $qb->leftJoin('u.customInputValues', 'uCIV2')
-                                        ->leftJoin('uCIV2.input', 'uCIVI2')
-                                        ->leftJoin('App\Model\User\CustomInputValue\CustomCheckboxValue', 'uCCV', 'WITH', 'uCIV2.id = uCCV.id')
-                                        ->andWhere('uCIVI2.id = :iid2 OR uCIVI2.id IS NULL')
-                                        ->andWhere('uCCV.value = :ivalue2')
-                                        ->setParameter('iid2', $customInput->getId())
-                                        ->setParameter('ivalue2', $value);
-                                }
-                            })
-                            ->setTranslateOptions();
-                        break;
+                case CustomInput::CHECKBOX:
+                    $columnCustomInput->setFilterSelect(['' => 'admin.common.all', 1 => 'admin.common.yes', 0 => 'admin.common.no'])
+                        ->setCondition(function (QueryBuilder $qb, string $value) use ($customInput) : void {
+                            if ($value === '') {
+                                return;
+                            } else {
+                                $qb->leftJoin('u.customInputValues', 'uCIV2')
+                                    ->leftJoin('uCIV2.input', 'uCIVI2')
+                                    ->leftJoin('App\Model\User\CustomInputValue\CustomCheckboxValue', 'uCCV', 'WITH', 'uCIV2.id = uCCV.id')
+                                    ->andWhere('uCIVI2.id = :iid2 OR uCIVI2.id IS NULL')
+                                    ->andWhere('uCCV.value = :ivalue2')
+                                    ->setParameter('iid2', $customInput->getId())
+                                    ->setParameter('ivalue2', $value);
+                            }
+                        })
+                        ->setTranslateOptions();
+                    break;
 
-                    case CustomInput::SELECT:
-                        $columnCustomInput->setFilterSelect(array_merge(['' => 'admin.common.all'], $customInput->getSelectOptions()))
-                            ->setCondition(function (QueryBuilder $qb, string $value) use ($customInput) : void {
-                                if ($value === '') {
-                                    return;
-                                } else {
-                                    $qb->leftJoin('u.customInputValues', 'uCIV3')
-                                        ->leftJoin('uCIV3.input', 'uCIVI3')
-                                        ->leftJoin('App\Model\User\CustomInputValue\CustomSelectValue', 'uCSV', 'WITH', 'uCIV3.id = uCSV.id')
-                                        ->andWhere('uCIVI3.id = :iid3 OR uCIVI3.id IS NULL')
-                                        ->andWhere('uCSV.value = :ivalue3')
-                                        ->setParameter('iid3', $customInput->getId())
-                                        ->setParameter('ivalue3', $value);
-                                }
-                            })
-                            ->setTranslateOptions();
-                        break;
-                }
-
+                case CustomInput::SELECT:
+                    $columnCustomInput->setFilterSelect(array_merge(['' => 'admin.common.all'], $customInput->getSelectOptions()))
+                        ->setCondition(function (QueryBuilder $qb, string $value) use ($customInput) : void {
+                            if ($value === '') {
+                                return;
+                            } else {
+                                $qb->leftJoin('u.customInputValues', 'uCIV3')
+                                    ->leftJoin('uCIV3.input', 'uCIVI3')
+                                    ->leftJoin('App\Model\User\CustomInputValue\CustomSelectValue', 'uCSV', 'WITH', 'uCIV3.id = uCSV.id')
+                                    ->andWhere('uCIVI3.id = :iid3 OR uCIVI3.id IS NULL')
+                                    ->andWhere('uCSV.value = :ivalue3')
+                                    ->setParameter('iid3', $customInput->getId())
+                                    ->setParameter('ivalue3', $value);
+                            }
+                        })
+                        ->setTranslateOptions();
+                    break;
+            }
         }
 
         $grid->addColumnText('note', 'admin.users.users_private_note')
