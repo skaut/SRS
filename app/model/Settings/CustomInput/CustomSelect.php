@@ -42,7 +42,7 @@ class CustomSelect extends CustomInput
      * Vrátí možnosti jako možnosti pro select.
      * @return string[]
      */
-    public function prepareSelectOptions() : array
+    public function getSelectOptions() : array
     {
         $options = [];
 

@@ -139,7 +139,7 @@ class AdditionalInformationForm extends UI\Control
                     break;
 
                 case CustomInput::SELECT:
-                    $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->prepareSelectOptions());
+                    $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions());
                     if ($customInputValue) {
                         $custom->setDefaultValue($customInputValue->getValue());
                     }
