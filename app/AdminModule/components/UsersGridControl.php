@@ -6,6 +6,7 @@ namespace App\AdminModule\Components;
 
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
+use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
 use App\Model\Enums\SkautIsEventType;
 use App\Model\Program\BlockRepository;
@@ -247,7 +248,10 @@ class UsersGridControl extends Control
                 $qb->join('u.applications', 'uA')
                     ->join('uA.subevents', 'uAS')
                     ->andWhere('uAS.id IN (:sids)')
-                    ->setParameter('sids', $values);
+                    ->andWhere('uA.validTo IS NULL')
+                    ->andWhere('uA.state IN (:states)')
+                    ->setParameter('sids', $values)
+                    ->setParameter('states', [ApplicationState::PAID, ApplicationState::PAID_FREE, ApplicationState::WAITING_FOR_PAYMENT]);
             });
 
         $columnApproved  = $grid->addColumnStatus('approved', 'admin.users.users_approved');
