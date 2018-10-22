@@ -663,7 +663,8 @@ class ApplicationService
      */
     public function isAllowedAddApplication(User $user) : bool
     {
-        return $user->hasPaidEveryApplication()
+        return ! $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))
+            && $user->hasPaidEveryApplication()
             && $this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT)
             && $this->settingsRepository->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new \DateTime())->setTime(0, 0);
     }
