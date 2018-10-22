@@ -98,6 +98,9 @@ class PaymentsGridControl extends Control
         $grid->addColumnText('variableSymbol', 'admin.payments.payments.variable_symbol')
             ->setFilterText();
 
+        $grid->addColumnText('accountNumber', 'admin.payments.payments.account_number')
+            ->setFilterText();
+
         $grid->addColumnText('accountName', 'admin.payments.payments.account_name')
             ->setFilterText();
 
