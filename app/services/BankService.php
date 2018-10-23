@@ -62,12 +62,12 @@ class BankService
      */
     private function createPayments(FioApi\TransactionList $transactionList) : void
     {
-        $this->settingsRepository->getEntityManager()->transactional(function () use ($transactionList) : void {
-            foreach ($transactionList->getTransactions() as $transaction) {
+        foreach ($transactionList->getTransactions() as $transaction) {
+            $this->settingsRepository->getEntityManager()->transactional(function () use ($transaction) : void {
                 $id = $transaction->getId();
 
                 if ($transaction->getAmount() <= 0 || $this->paymentRepository->findByTransactionId($id) !== null) {
-                    continue;
+                    return;
                 }
 
                 $date = new \DateTime();
@@ -84,9 +84,9 @@ class BankService
                     $transaction->getUserIdentity(), //todo: zmenit na getSenderName
                     $transaction->getUserMessage()
                 );
-            }
+            });
+        }
 
-            $this->settingsRepository->setDateValue(Settings::BANK_DOWNLOAD_FROM, new \DateTime());
-        });
+        $this->settingsRepository->setDateValue(Settings::BANK_DOWNLOAD_FROM, new \DateTime());
     }
 }
