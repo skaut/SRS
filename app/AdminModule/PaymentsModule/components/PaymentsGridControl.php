@@ -256,7 +256,7 @@ class PaymentsGridControl extends Control
      */
     private function preparePaymentStatesOptions() : array
     {
-        $options     = [];
+        $options = [];
         foreach (PaymentState::$states as $state) {
             $options[$state] = 'common.payment_state.' . $state;
         }
