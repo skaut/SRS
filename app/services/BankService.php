@@ -66,22 +66,24 @@ class BankService
             $this->settingsRepository->getEntityManager()->transactional(function () use ($transaction) : void {
                 $id = $transaction->getId();
 
-                if ($transaction->getAmount() > 0 && $this->paymentRepository->findByTransactionId($id) === null) {
-                    $date = new \DateTime();
-                    $date->setTimestamp($transaction->getDate()->getTimestamp());
-
-                    $accountNumber = $transaction->getSenderAccountNumber() . '/' . $transaction->getSenderBankCode();
-
-                    $this->applicationService->createPayment(
-                        $date,
-                        $transaction->getAmount(),
-                        $transaction->getVariableSymbol(),
-                        $id,
-                        $accountNumber,
-                        $transaction->getUserIdentity(), //todo: zmenit na getSenderName
-                        $transaction->getUserMessage()
-                    );
+                if ($transaction->getAmount() <= 0 || $this->paymentRepository->findByTransactionId($id) !== null) {
+                    return;
                 }
+
+                $date = new \DateTime();
+                $date->setTimestamp($transaction->getDate()->getTimestamp());
+
+                $accountNumber = $transaction->getSenderAccountNumber() . '/' . $transaction->getSenderBankCode();
+
+                $this->applicationService->createPayment(
+                    $date,
+                    $transaction->getAmount(),
+                    $transaction->getVariableSymbol(),
+                    $id,
+                    $accountNumber,
+                    $transaction->getUserIdentity(), //todo: zmenit na getSenderName
+                    $transaction->getUserMessage()
+                );
             });
         }
 
