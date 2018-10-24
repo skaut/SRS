@@ -131,7 +131,7 @@ class ApplicationRepository extends EntityRepository
     {
         $options = [];
         foreach ($this->findValid() as $application) {
-            $options[$application->getId()] = $application->getUser()->getLastName() . ' ' . $application->getUser()->getFirstName() . ' (' . $application->getVariableSymbolText() . ')';
+            $options[$application->getId()] = $application->getUser()->getLastName() . ' ' . $application->getUser()->getFirstName() . ' (' . $application->getVariableSymbolText() . ' - ' . $application->getFee() . ')';
         }
         return $options;
     }
@@ -144,7 +144,7 @@ class ApplicationRepository extends EntityRepository
     {
         $options = [];
         foreach ($this->findWaitingForPaymentOrPairedApplications($pairedApplications) as $application) {
-            $options[$application->getId()] = $application->getUser()->getLastName() . ' ' . $application->getUser()->getFirstName() . ' (' . $application->getVariableSymbolText() . ')';
+            $options[$application->getId()] = $application->getUser()->getLastName() . ' ' . $application->getUser()->getFirstName() . ' (' . $application->getVariableSymbolText() . ' - ' . $application->getFee() . ')';
         }
         return $options;
     }
