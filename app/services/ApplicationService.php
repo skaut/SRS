@@ -591,7 +591,7 @@ class ApplicationService
                     continue;
                 }
                 $pairedApplication->setPayment($payment);
-                $this->updateApplicationPayment($pairedApplication, PaymentType::BANK, $date, null, $pairedApplication->getMaturityDate(), $createdBy);
+                $this->updateApplicationPayment($pairedApplication, PaymentType::BANK, $payment->getDate(), null, $pairedApplication->getMaturityDate(), $createdBy);
                 $pairedApplicationsModified = true;
             }
 
