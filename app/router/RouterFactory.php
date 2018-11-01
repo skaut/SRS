@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\Model\CMS\Page;
 use App\Model\CMS\PageRepository;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Nette;
@@ -99,10 +100,10 @@ class RouterFactory
                 'module' => 'Web',
                 'presenter' => 'Page',
                 'page' => [
-                    Route::FILTER_IN => function ($slug) {
+                    Route::FILTER_IN => function (string $slug) {
                         return $this->pageRepository->findBySlug($slug);
                     },
-                    Route::FILTER_OUT => function ($page) {
+                    Route::FILTER_OUT => function (Page $page) {
                         return $page->getSlug();
                     },
                 ],
