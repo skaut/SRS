@@ -6,7 +6,8 @@ common:
     logout: "Odhlásit"
     admin: "Administrace"
 
-    homepage_not_exists: "Stránka s cestou \"/\" neexistuje nebo není zveřejněná. Nastavte ji v administriaci."
+    homepage_not_found: "Stránka s cestou \"/\" neexistuje nebo není zveřejněná. Nastavte ji v administriaci."
+    page_not_found: "Stránka neexistuje nebo není zveřejněna."
     page_access_denied: "Na zobrazení této stránky nemáte práva."
     login_required: "Pro přístup musíte být přihlášeni."
 

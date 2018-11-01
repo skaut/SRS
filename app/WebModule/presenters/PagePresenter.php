@@ -141,8 +141,11 @@ class PagePresenter extends WebBasePresenter
             }
             $this->template->bodyClass = 'body-homepage';
         } else {
-            $page                      = $this->pageRepository->findBySlug($slug);
-            $this->template->bodyClass = 'body-' . $page->getSlug();
+            $page = $this->pageRepository->findBySlug($slug);
+            if ($page === null) {
+                throw new BadRequestException($this->translator->translate('web.common.page_not_found'), 404);
+            }
+            $this->template->bodyClass = 'body-' . $slug;
         }
 
         if (! $page->isAllowedForRoles($this->user->roles)) {
