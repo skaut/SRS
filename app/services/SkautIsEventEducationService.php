@@ -95,10 +95,17 @@ class SkautIsEventEducationService extends SkautIsEventService
      */
     protected function getDraftEvents() : array
     {
-        //TODO vracet jen akce, kam je možné přidávat účastníky
-        return $this->skautIs->event->EventEducationAllMyActions([
+        $events = $this->skautIs->event->EventEducationAllMyActions([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
         ]);
+
+        if ($events instanceof \stdClass) {
+            return [];
+        }
+
+        return $events;
+
+        //TODO: vracet jen akce, kam je možné přidávat účastníky
         //        return $this->skautIs->event->EventEducationAllMyActions([
         //            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
         //            'ID_EventEducationState' => 'draft'
@@ -111,10 +118,16 @@ class SkautIsEventEducationService extends SkautIsEventService
      */
     public function getEventCourses(int $eventId) : array
     {
-        return $this->skautIs->event->EventEducationCourseAll([
+        $courses = $this->skautIs->event->EventEducationCourseAll([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID_EventEducation' => $eventId,
         ]);
+
+        if ($courses instanceof \stdClass) {
+            return [];
+        }
+
+        return $courses;
     }
 
     /**
@@ -136,12 +149,18 @@ class SkautIsEventEducationService extends SkautIsEventService
      */
     private function getAllParticipants(int $eventId, int $courseId) : array
     {
-        return $this->skautIs->event->ParticipantEducationAll([
+        $participants = $this->skautIs->event->ParticipantEducationAll([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID_EventEducation' => $eventId,
             'ID_EventEducationCourse' => [$courseId, $courseId],
             'IsActive' => true,
         ]);
+
+        if ($participants instanceof \stdClass) {
+            return [];
+        }
+
+        return $participants;
     }
 
     /**
