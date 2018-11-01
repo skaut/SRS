@@ -61,12 +61,12 @@ class LectorDetailDTO
         $this->name = $name;
     }
 
-    public function getAbout() : string
+    public function getAbout() : ?string
     {
         return $this->about;
     }
 
-    public function setAbout(string $about) : void
+    public function setAbout(?string $about) : void
     {
         $this->about = $about;
     }
