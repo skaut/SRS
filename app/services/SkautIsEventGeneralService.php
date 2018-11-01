@@ -64,10 +64,16 @@ class SkautIsEventGeneralService extends SkautIsEventService
      */
     protected function getDraftEvents() : array
     {
-        return $this->skautIs->event->EventGeneralAll([
+        $events = $this->skautIs->event->EventGeneralAll([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID_EventGeneralState' => 'draft',
         ]);
+
+        if ($events instanceof \stdClass) {
+            return [];
+        }
+
+        return $events;
     }
 
     /**
@@ -76,10 +82,16 @@ class SkautIsEventGeneralService extends SkautIsEventService
      */
     private function getAllParticipants(int $eventId) : array
     {
-        return $this->skautIs->event->ParticipantGeneralAll([
+        $participants = $this->skautIs->event->ParticipantGeneralAll([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID_EventGeneral' => $eventId,
         ]);
+
+        if ($participants instanceof \stdClass) {
+            return [];
+        }
+
+        return $participants;
     }
 
     /**
