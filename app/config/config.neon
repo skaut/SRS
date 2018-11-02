@@ -18,6 +18,7 @@ extensions:
     nextras.form: Nextras\Forms\Bridges\NetteDI\FormsExtension
     mailing: Ublaboo\Mailing\DI\MailingExtension
     gpspicker: VojtechDobes\NetteForms\GpsPickerExtension
+    profiler: Netpromotion\Profiler\Extension\ProfilerNetteExtension
 
 latte:
     macros:
@@ -55,6 +56,16 @@ decorator:
         tags: [kdyby.console.command]
     Symfony\Component\Console\Helper\Helper:
         tags: [kdyby.console.helper]
+
+profiler:
+    profile:
+        createService: false
+    bar:
+        primaryValue: effective
+        show:
+            memoryUsageChart: true
+            shortProfiles: true
+            timeLines: true
 
 services:
     - App\RouterFactory

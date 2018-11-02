@@ -42,7 +42,9 @@
         "azuyalabs/yasumi": "^1.8",
 
         "mhujer/fio-api-php": "^4.1",
-        "composer/ca-bundle": "^1.1"
+        "composer/ca-bundle": "^1.1",
+
+        "netpromotion/profiler": "^1.3"
     },
 
     "require-dev": {
