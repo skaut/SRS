@@ -456,8 +456,9 @@ class ProgramService
      * Aktualizuje uživateli seznam nepřihlášených povinných bloků.
      * @throws ORMException
      * @throws OptimisticLockException
+     * @throws \Exception
      */
-    private function updateUserNotRegisteredMandatoryBlocks(User $user) : void
+    private function updateUserNotRegisteredMandatoryBlocks(User $user, bool $flush = true) : void
     {
         if ($user->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS)) {
             $registerableCategories = $this->categoryRepository->findUserAllowed($user);
@@ -470,7 +471,9 @@ class ProgramService
             $user->setNotRegisteredMandatoryBlocks(new ArrayCollection());
         }
 
-        $this->userRepository->save($user);
+        if ($flush) {
+            $this->userRepository->getEntityManager()->flush();
+        }
     }
 
     /**
@@ -478,12 +481,15 @@ class ProgramService
      * @param Collection|User[] $users
      * @throws ORMException
      * @throws OptimisticLockException
+     * @throws \Exception
      */
     private function updateUsersNotRegisteredMandatoryBlocks(Collection $users) : void
     {
         foreach ($users as $user) {
-            $this->updateUserNotRegisteredMandatoryBlocks($user);
+            $this->updateUserNotRegisteredMandatoryBlocks($user, false);
         }
+
+        $this->userRepository->getEntityManager()->flush();
     }
 
     /**
