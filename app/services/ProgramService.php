@@ -471,9 +471,11 @@ class ProgramService
             $user->setNotRegisteredMandatoryBlocks(new ArrayCollection());
         }
 
-        if ($flush) {
-            $this->userRepository->getEntityManager()->flush();
+        if (! $flush) {
+            return;
         }
+
+        $this->userRepository->getEntityManager()->flush();
     }
 
     /**
