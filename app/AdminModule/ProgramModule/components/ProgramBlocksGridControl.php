@@ -130,6 +130,7 @@ class ProgramBlocksGridControl extends Control
         $grid->setDefaultSort(['name' => 'ASC']);
         $grid->setPagination(false);
         $grid->setColumnsHideable();
+        $grid->setStrictSessionFilterValues(false);
 
         $grid->addGroupAction('admin.program.blocks_group_action_export_blocks_attendees')
             ->onSelect[] = [$this, 'groupExportBlocksAttendees'];
