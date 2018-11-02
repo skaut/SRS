@@ -148,6 +148,7 @@ class ProgramAttendeesGridControl extends Control
             }
 
             $grid->setDataSource($qb);
+            $grid->setStrictSessionFilterValues(false);
 
             $grid->addGroupAction('admin.program.blocks_attendees_register')->onSelect[]   = [$this, 'groupRegister'];
             $grid->addGroupAction('admin.program.blocks_attendees_unregister')->onSelect[] = [$this, 'groupUnregister'];

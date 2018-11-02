@@ -180,6 +180,7 @@ class UsersGridControl extends Control
         $grid->setDefaultSort(['displayName' => 'ASC']);
         $grid->setColumnsHideable();
         $grid->setItemsPerPageList([25, 50, 100, 250, 500]);
+        $grid->setStrictSessionFilterValues(false);
 
         $grid->addGroupAction('admin.users.users_group_action_approve')
             ->onSelect[] = [$this, 'groupApprove'];

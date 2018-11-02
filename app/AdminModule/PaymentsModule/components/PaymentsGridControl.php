@@ -86,6 +86,7 @@ class PaymentsGridControl extends Control
         $grid->setDataSource($this->paymentRepository->createQueryBuilder('p'));
         $grid->setDefaultSort(['date' => 'DESC']);
         $grid->setItemsPerPageList([25, 50, 100, 250, 500]);
+        $grid->setStrictSessionFilterValues(false);
 
         $grid->addColumnDateTime('date', 'admin.payments.payments.date')
             ->setFormat(Helpers::DATE_FORMAT)

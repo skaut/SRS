@@ -66,6 +66,7 @@ class MailHistoryGridControl extends Control
         $grid->setDataSource($this->mailRepository->createQueryBuilder('m'));
         $grid->setDefaultSort(['datetime' => 'DESC']);
         $grid->setItemsPerPageList([25, 50, 100, 250, 500]);
+        $grid->setStrictSessionFilterValues(false);
 
         $grid->addColumnText('recipientRoles', 'admin.mailing.history.recipient_roles', 'recipientRolesText')
             ->setFilterMultiSelect($this->roleRepository->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]))
