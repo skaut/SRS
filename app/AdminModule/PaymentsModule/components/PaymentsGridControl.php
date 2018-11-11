@@ -7,10 +7,13 @@ namespace App\AdminModule\PaymentsModule\Components;
 use App\Model\Enums\PaymentState;
 use App\Model\Payment\Payment;
 use App\Model\Payment\PaymentRepository;
+use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
+use App\Model\Settings\SettingsRepository;
 use App\Model\User\ApplicationRepository;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
+use App\Services\BankService;
 use App\Services\PdfExportService;
 use App\Utils\Helpers;
 use Doctrine\ORM\OptimisticLockException;
@@ -42,11 +45,17 @@ class PaymentsGridControl extends Control
     /** @var UserRepository */
     private $userRepository;
 
+    /** @var SettingsRepository */
+    private $settingsRepository;
+
     /** @var ApplicationService */
     private $applicationService;
 
     /** @var PdfExportService */
     private $pdfExportService;
+
+    /** @var BankService */
+    private $bankService;
 
 
     public function __construct(
@@ -54,8 +63,10 @@ class PaymentsGridControl extends Control
         PaymentRepository $paymentRepository,
         ApplicationRepository $applicationRepository,
         UserRepository $userRepository,
+        SettingsRepository $settingsRepository,
         ApplicationService $applicationService,
-        PdfExportService $pdfExportService
+        PdfExportService $pdfExportService,
+        BankService $bankService
     ) {
         parent::__construct();
 
@@ -63,8 +74,10 @@ class PaymentsGridControl extends Control
         $this->paymentRepository     = $paymentRepository;
         $this->applicationRepository = $applicationRepository;
         $this->userRepository        = $userRepository;
+        $this->settingsRepository    = $settingsRepository;
         $this->applicationService    = $applicationService;
         $this->pdfExportService      = $pdfExportService;
+        $this->bankService           = $bankService;
     }
 
     /**
@@ -78,6 +91,8 @@ class PaymentsGridControl extends Control
     /**
      * Vytvoří komponentu.
      * @throws DataGridException
+     * @throws SettingsException
+     * @throws \Throwable
      */
     public function createComponentPaymentsGrid(string $name) : void
     {
@@ -169,6 +184,11 @@ class PaymentsGridControl extends Control
         };
         $grid->getInlineEdit()->onSubmit[]      = [$this, 'edit'];
 
+        if ($this->settingsRepository->getValue(Settings::BANK_TOKEN) !== null) {
+            $grid->addToolbarButton('checkPayments!')
+                ->setText('admin.payments.payments.check_payments');
+        }
+
         $grid->addAction('generatePaymentProofBank', 'admin.payments.payments.download_payment_proof_bank');
         $grid->allowRowsAction('generatePaymentProofBank', function (Payment $payment) {
             return $payment->getState() === PaymentState::PAIRED_AUTO || $payment->getState() === PaymentState::PAIRED_MANUAL;
@@ -249,6 +269,17 @@ class PaymentsGridControl extends Control
             'potvrzeni-o-prijeti-platby.pdf',
             $this->userRepository->findById($this->getPresenter()->getUser()->id)
         );
+    }
+
+    /**
+     * Zkontroluje platby na bankovním účtu.
+     * @throws SettingsException
+     * @throws \Throwable
+     */
+    public function handleCheckPayments() : void
+    {
+        $from = $this->settingsRepository->getDateValue(Settings::BANK_DOWNLOAD_FROM);
+        $this->bankService->downloadTransactions($from);
     }
 
     /**
