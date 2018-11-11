@@ -349,7 +349,7 @@ class ProgramService
             $user->addProgram($program);
             $this->userRepository->save($user);
 
-            if ($program->getBlock()->getMandatory() != ProgramMandatoryType::VOLUNTARY) {
+            if ($program->getBlock()->getMandatory() !== ProgramMandatoryType::VOLUNTARY) {
                 $this->updateUserNotRegisteredMandatoryBlocks($user);
             }
 
@@ -381,7 +381,7 @@ class ProgramService
             $user->removeProgram($program);
             $this->userRepository->save($user);
 
-            if ($program->getBlock()->getMandatory() != ProgramMandatoryType::VOLUNTARY) {
+            if ($program->getBlock()->getMandatory() !== ProgramMandatoryType::VOLUNTARY) {
                 $this->updateUserNotRegisteredMandatoryBlocks($user);
             }
 

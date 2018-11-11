@@ -938,7 +938,7 @@ class User
      */
     public function hasPaidRolesApplication() : bool
     {
-        return $this->getRolesApplication()->getState() != ApplicationState::WAITING_FOR_PAYMENT;
+        return $this->getRolesApplication()->getState() !== ApplicationState::WAITING_FOR_PAYMENT;
     }
 
     /**
