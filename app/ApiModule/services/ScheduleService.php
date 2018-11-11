@@ -124,9 +124,9 @@ class ScheduleService
             $programDetailDTO->setUserAttends($program->isAttendee($this->user));
             $programDetailDTO->setBlocks($this->programRepository->findBlockedProgramsIdsByProgram($program));
             $programDetailDTO->setBlocked(false);
-            $programDetailDTO->setPaid($programPaid = $this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT)
-                || $this->user->hasPaidSubevent($program->getBlock()->getSubevent()));
-            $programDetailDTOs[]                    = $programDetailDTO;
+            $programDetailDTO->setPaid($this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT)
+                || ($this->user->hasPaidSubevent($program->getBlock()->getSubevent()) && $this->user->hasPaidRolesApplication()));
+            $programDetailDTOs[] = $programDetailDTO;
         }
 
         foreach ($programDetailDTOs as $p1) {
