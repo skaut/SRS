@@ -74,7 +74,7 @@ class SendForm
         $recipientRolesMultiSelect = $form->addMultiSelect(
             'recipientRoles',
             'admin.mailing.send.recipient_roles',
-            $this->roleRepository->getRolesWithoutRolesOptionsWithApprovedUsersCount([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED])
+            $this->roleRepository->getRolesWithoutRolesOptionsWithApprovedUsersCount([Role::GUEST, Role::UNAPPROVED])
         );
 
         $recipientSubeventsMultiSelect = $form->addMultiSelect(
