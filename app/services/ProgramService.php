@@ -349,7 +349,9 @@ class ProgramService
             $user->addProgram($program);
             $this->userRepository->save($user);
 
-            $this->updateUserNotRegisteredMandatoryBlocks($user);
+            if ($program->getBlock()->getMandatory() != ProgramMandatoryType::VOLUNTARY) {
+                $this->updateUserNotRegisteredMandatoryBlocks($user);
+            }
 
             if (! $sendEmail) {
                 return;
@@ -379,7 +381,9 @@ class ProgramService
             $user->removeProgram($program);
             $this->userRepository->save($user);
 
-            $this->updateUserNotRegisteredMandatoryBlocks($user);
+            if ($program->getBlock()->getMandatory() != ProgramMandatoryType::VOLUNTARY) {
+                $this->updateUserNotRegisteredMandatoryBlocks($user);
+            }
 
             if (! $sendEmail) {
                 return;
