@@ -416,6 +416,7 @@ payments:
         delete_confirm: "Opravdu chcete platbu odstranit?"
         deleted: "Platba byla úspěšně odstraněna."
         download_payment_proof_bank: "Stáhnout potvrzení o přijetí platby"
+        check_payments: "Načíst platby z bankovního účtu"
 
 acl:
     roles_heading: "Role"
