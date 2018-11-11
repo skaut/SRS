@@ -916,7 +916,7 @@ class User
     }
 
     /**
-     * Vrací zda uživatel zaplatil první registraci.
+     * Vrací zda uživatel zaplatil nějakou přihlášku.
      */
     public function hasPaidAnyApplication() : bool
     {
@@ -924,13 +924,21 @@ class User
     }
 
     /**
-     * Vrací zda uživatel zaplatil všechny registrace.
+     * Vrací zda uživatel zaplatil všechny přihlášky.
      */
     public function hasPaidEveryApplication() : bool
     {
         return $this->getValidApplications()->forAll(function (int $key, Application $application) {
             return $application->getState() !== ApplicationState::WAITING_FOR_PAYMENT;
         });
+    }
+
+    /**
+     * Vrací zda uživatel zaplatil přihlášku rolí.
+     */
+    public function hasPaidRolesApplication() : bool
+    {
+        return $this->getRolesApplication()->getState() !== ApplicationState::WAITING_FOR_PAYMENT;
     }
 
     /**
