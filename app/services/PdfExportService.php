@@ -14,9 +14,10 @@ use App\Model\User\ApplicationRepository;
 use App\Model\User\User;
 use App\Utils\Helpers;
 use Doctrine\Common\Collections\Collection;
-use fpdi\FPDI;
+use FPDI;
 use Nette;
 use function iconv;
+use ReflectionObject;
 
 /**
  * Služba pro export do formátu PDF.
@@ -59,8 +60,13 @@ class PdfExportService
         $this->applicationRepository = $applicationRepository;
         $this->applicationService    = $applicationService;
 
-        $this->fpdi           = new FPDI();
-        $this->fpdi->fontpath = $dir . '/fonts/';
+        $this->fpdi = new FPDI();
+
+        $refFpdi         = new ReflectionObject($this->fpdi);
+        $refFpdiFontpath = $refFpdi->getProperty('fontpath');
+        $refFpdiFontpath->setAccessible(true);
+        $refFpdiFontpath->setValue($this->fpdi, $dir . '/fonts/');
+
         $this->fpdi->AddFont('verdana', '', 'verdana.php');
         $this->fpdi->SetFont('verdana', '', 10);
     }
