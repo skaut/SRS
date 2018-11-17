@@ -320,6 +320,11 @@ webloader:
                 - %appDir%/../vendor/twbs/bootstrap/dist/css/bootstrap.min.css
                 - install/style.css
 
+        export:
+            files:
+                - %appDir%/../vendor/twbs/bootstrap/dist/css/bootstrap.min.css
+                - export/style.css
+
     js:
         web:
             files:

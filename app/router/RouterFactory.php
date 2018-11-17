@@ -35,6 +35,13 @@ class RouterFactory
             'id' => null,
         ]);
 
+        $router[] = new Route('export/<presenter>/<action>[/<id>]', [
+            'module' => 'Export',
+            'presenter' => null,
+            'action' => null,
+            'id' => null,
+        ]);
+
         $router[] = new Route('action/<presenter>/<action>[/<id>]', [
             'module' => 'Action',
             'presenter' => null,
