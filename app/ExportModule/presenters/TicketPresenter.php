@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\ExportModule\Presenters;
 
 use App\Model\Settings\Settings;
+use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\UserRepository;
@@ -41,7 +42,7 @@ class TicketPresenter extends ExportBasePresenter
     /**
      * Vygeneruje vstupenku v PDF.
      * @throws AbortException
-     * @throws \App\Model\Settings\SettingsException
+     * @throws SettingsException
      * @throws \Throwable
      */
     public function actionPdf() : void
@@ -53,9 +54,9 @@ class TicketPresenter extends ExportBasePresenter
         $template = $this->createTemplate();
         $template->setFile(__DIR__ . '/templates/Ticket/pdf.latte');
 
-        $template->logo = $this->settingsRepository->getValue(Settings::LOGO);
-        $template->seminarName = $this->settingsRepository->getValue(Settings::SEMINAR_NAME);
-        $template->ticketUser = $this->userRepository->findById($this->user->id);
+        $template->logo                    = $this->settingsRepository->getValue(Settings::LOGO);
+        $template->seminarName             = $this->settingsRepository->getValue(Settings::SEMINAR_NAME);
+        $template->ticketUser              = $this->userRepository->findById($this->user->id);
         $template->explicitSubeventsExists = $this->subeventRepository->explicitSubeventsExists();
 
         $pdf = new PdfResponse($template);

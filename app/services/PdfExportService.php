@@ -16,8 +16,8 @@ use App\Utils\Helpers;
 use Doctrine\Common\Collections\Collection;
 use FPDI;
 use Nette;
-use function iconv;
 use ReflectionObject;
+use function iconv;
 
 /**
  * Služba pro export do formátu PDF.
