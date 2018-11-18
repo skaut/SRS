@@ -12,6 +12,7 @@ use App\Model\User\UserRepository;
 use Joseki\Application\Responses\PdfResponse;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
+use function random_bytes;
 
 /**
  * Presenter pro generování vstupenek.
@@ -64,7 +65,7 @@ class TicketPresenter extends ExportBasePresenter
         $pdf->documentTitle =  'ticket';
         $pdf->pageFormat    = 'A4';
 
-        $pdf->getMPDF()->SetProtection(['copy','print', 'print-highres'], '', random_bytes(30));
+        $pdf->getMPDF()->SetProtection(['copy', 'print', 'print-highres'], '', random_bytes(30));
 
         $this->sendResponse($pdf);
     }
