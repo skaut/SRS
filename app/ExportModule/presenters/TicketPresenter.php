@@ -64,6 +64,8 @@ class TicketPresenter extends ExportBasePresenter
         $pdf->documentTitle =  'ticket';
         $pdf->pageFormat    = 'A4';
 
+        $pdf->getMPDF()->SetProtection(['copy','print', 'print-highres'], '', random_bytes(30));
+
         $this->sendResponse($pdf);
     }
 }
