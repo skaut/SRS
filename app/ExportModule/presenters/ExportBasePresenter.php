@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\ExportModule\Presenters;
 
+use App\Model\Settings\Settings;
+use App\Model\Settings\SettingsRepository;
 use App\Presenters\BasePresenter;
 use WebLoader\Nette\CssLoader;
 

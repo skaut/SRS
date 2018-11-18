@@ -1,0 +1,13 @@
+ticket:
+    first_name: "Jméno"
+    last_name: "Příjmení"
+    nickname: "Přezdívka"
+    username: "SkautIS účet"
+    roles: "Role"
+    subevents: "Podakce"
+    schedule: "Harmonogram"
+    from: "Od"
+    to: "Do"
+    program_name: "Program"
+    room: "Místnost"
+    lectors: "Lektoři"

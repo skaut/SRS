@@ -1,44 +1,88 @@
 {block content}
     <div class="row">
-        <div class="col-xs-12 center">
-            <h1>Vstupenka</h1>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-6">
-            aaaaaaaaaaaaaa
-        </div>
-        <div class="col-xs-6">
-            bbbbbbbbbbbbbb
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-12">
-            <h2>Podakce</h2>
-        </div>
         <div class="col-xs-12">
             <table class="table">
-                <thead>
                 <tr>
-                    <th>#</th>
-                    <th>Firstname</th>
-                    <th>Lastname</th>
-                    <th>Age</th>
-                    <th>City</th>
-                    <th>Country</th>
+                    <td class="col-xs-3"><img src="{$basePath}/files/logo/{$logo}"/></td>
+                    <td class="col-xs-9 text-right" valign="middle"><h1>{$seminarName}</h1></td>
                 </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Anna</td>
-                    <td>Pitt</td>
-                    <td>35</td>
-                    <td>New York</td>
-                    <td>USA</td>
-                </tr>
-                </tbody>
             </table>
         </div>
     </div>
+    <div class="row" style="margin-top: 30px">
+        <div class="col-xs-9">
+            <table class="table table-condensed table-borderless">
+                <tbody>
+                    <tr>
+                        <th class="col-xs-3">{_export.ticket.first_name}</th>
+                        <td class="col-xs-9">{$ticketUser->getFirstName()}</td>
+                    </tr>
+                    <tr>
+                        <th>{_export.ticket.last_name}</th>
+                        <td>{$ticketUser->getLastName()}</td>
+                    </tr>
+                    {if $ticketUser->getNickname()}
+                        <tr>
+                            <th>{_export.ticket.nickname}</th>
+                            <td>{$ticketUser->getNickname()}</td>
+                        </tr>
+                    {/if}
+                    <tr>
+                        <th>{_export.ticket.username}</th>
+                        <td>{$ticketUser->getUsername()}</td>
+                    </tr>
+                    <tr>
+                        <th valign="top">{_export.ticket.roles}</th>
+                        <td>{$ticketUser->getRolesText()}</td>
+                    </tr>
+                    {if $explicitSubeventsExists}
+                        <tr>
+                            <th valign="top">{_export.ticket.subevents}</th>
+                            <td>{$ticketUser->getSubeventsText()}</td>
+                        </tr>
+                    {/if}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-xs-3 text-right">
+            <barcode class="barcode" code="{$ticketUser->getId()}" type="QR" error="M" disableborder="1"/>
+        </div>
+    </div>
+    {if !$ticketUser->getPrograms()->isEmpty()}
+        <div class="row">
+            <div class="col-xs-12">
+                <h3>Harmonogram</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="text-right">{_export.ticket.from}</th>
+                            <th class="text-right">{_export.ticket.to}</th>
+                            <th>{_export.ticket.program_name}</th>
+                            <th>{_export.ticket.room}</th>
+                            <th>{_export.ticket.lectors}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {foreach $ticketUser->getPrograms() as $program}
+                            <tr>
+                                <td class="text-right">
+                                    {var $startDay = $program->getStart()->format('N')}
+                                    {_common.day.$startDay}
+                                    {$program->getStart()|date:"j. n. G:i"}
+                                </td>
+                                <td class="text-right">
+                                    {var $endDay = $program->getEnd()->format('N')}
+                                    {_common.day.$endDay}
+                                    {$program->getEnd()|date:"j. n. G:i"}
+                                </td>
+                                <td>{$program->getBlock()->getName()}</td>
+                                <td>{if $program->getRoom() !== null}{$program->getRoom()->getName()}{/if}</td>
+                                <td>{$program->getBlock()->getLectorsText()}</td>
+                            </tr>
+                        {/foreach}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {/if}
 {/block}

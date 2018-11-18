@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\ExportModule\Presenters;
 
+use App\Model\Settings\Settings;
+use App\Model\Settings\SettingsRepository;
+use App\Model\Structure\SubeventRepository;
 use App\Model\User\UserRepository;
 use Joseki\Application\Responses\PdfResponse;
 use Nette\Application\AbortException;
@@ -22,11 +25,24 @@ class TicketPresenter extends ExportBasePresenter
      */
     public $userRepository;
 
+    /**
+     * @var SettingsRepository
+     * @inject
+     */
+    public $settingsRepository;
+
+    /**
+     * @var SubeventRepository
+     * @inject
+     */
+    public $subeventRepository;
+
 
     /**
      * Vygeneruje vstupenku v PDF.
-     * @throws \Exception
      * @throws AbortException
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
      */
     public function actionPdf() : void
     {
@@ -34,14 +50,17 @@ class TicketPresenter extends ExportBasePresenter
             throw new ForbiddenRequestException();
         }
 
-        $user = $this->userRepository->findById($this->user->id);
-
         $template = $this->createTemplate();
         $template->setFile(__DIR__ . '/templates/Ticket/pdf.latte');
 
+        $template->logo = $this->settingsRepository->getValue(Settings::LOGO);
+        $template->seminarName = $this->settingsRepository->getValue(Settings::SEMINAR_NAME);
+        $template->ticketUser = $this->userRepository->findById($this->user->id);
+        $template->explicitSubeventsExists = $this->subeventRepository->explicitSubeventsExists();
+
         $pdf = new PdfResponse($template);
 
-        $pdf->documentTitle =  'ticket-' . $user->getId();
+        $pdf->documentTitle =  'ticket';
         $pdf->pageFormat = 'A4';
 
         $this->sendResponse($pdf);
