@@ -7,7 +7,9 @@ namespace App\WebModule\Forms;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Enums\ApplicationState;
+use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
+use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
@@ -40,6 +42,9 @@ class RolesForm
     /** @var RoleRepository */
     private $roleRepository;
 
+    /** @var SettingsRepository */
+    private $settingsRepository;
+
     /** @var ApplicationService */
     private $applicationService;
 
@@ -51,12 +56,14 @@ class RolesForm
         BaseForm $baseFormFactory,
         UserRepository $userRepository,
         RoleRepository $roleRepository,
+        SettingsRepository $settingsRepository,
         ApplicationService $applicationService,
         Validators $validators
     ) {
         $this->baseFormFactory    = $baseFormFactory;
         $this->userRepository     = $userRepository;
         $this->roleRepository     = $roleRepository;
+        $this->settingsRepository = $settingsRepository;
         $this->applicationService = $applicationService;
         $this->validators         = $validators;
     }
@@ -131,6 +138,23 @@ class RolesForm
                 ->setAttribute('data-toggle', 'tooltip')
                 ->setAttribute('title', $form->getTranslator()->translate('web.profile.cancel_registration_disabled'));
         }
+
+        $ticketDownloadFrom = $this->settingsRepository->getDateTimeValue(Settings::TICKET_DOWNLOAD_FROM);
+        if (! $this->user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))
+            && $this->user->hasPaidEveryApplication()
+            && $ticketDownloadFrom !== null
+        ) {
+            $downloadTicketButton = $form->addSubmit('downloadTicket', 'web.profile.download_ticket')
+                ->setAttribute('class', 'btn-success');
+
+            if ($ticketDownloadFrom > new \DateTime()) {
+                $downloadTicketButton
+                    ->setDisabled()
+                    ->setAttribute('data-toggle', 'tooltip')
+                    ->setAttribute('title', $form->getTranslator()->translate('web.profile.download_ticket_disabled'));
+            }
+        }
+
         $form->setDefaults([
             'id' => $id,
             'roles' => $this->roleRepository->findRolesIds($this->user->getRoles()),

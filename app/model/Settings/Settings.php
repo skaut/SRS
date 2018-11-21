@@ -206,6 +206,11 @@ class Settings
      */
     public const BANK_DOWNLOAD_FROM = 'bank_download_from';
 
+    /**
+     * Datum, odkdy je možné stáhnout vstupenku.
+     */
+    public const TICKET_DOWNLOAD_FROM = 'ticket_download_from';
+
 
     /**
      * Název položky nastavení.

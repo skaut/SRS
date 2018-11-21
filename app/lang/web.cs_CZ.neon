@@ -45,6 +45,8 @@ profile:
     cancel_registration_confirm: "Opravdu se chcete odhlásit z celého semináře?"
     cancel_registration_disabled: "Odhlášení již není možné nebo nejste na seminář registrováni."
     registration_canceled: "Odhlášení ze semináře proběhlo úspěšně."
+    download_ticket: "Stáhnout vstupenku"
+    download_ticket_disabled: "Stažení vstupenky ještě není možné."
 
     applications_application_date: "Datum přihlášky"
     applications_roles: "Role"
