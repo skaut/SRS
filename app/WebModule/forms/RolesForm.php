@@ -139,15 +139,14 @@ class RolesForm
                 ->setAttribute('title', $form->getTranslator()->translate('web.profile.cancel_registration_disabled'));
         }
 
-        $ticketDownloadFrom = $this->settingsRepository->getDateTimeValue(Settings::TICKET_DOWNLOAD_FROM);
-        if (! $this->user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))
-            && $this->user->hasPaidEveryApplication()
-            && $ticketDownloadFrom !== null
-        ) {
+        $ticketDownloadFrom = $this->settingsRepository->getDateTimeValue(Settings::TICKETS_FROM);
+        if ($ticketDownloadFrom !== null) {
             $downloadTicketButton = $form->addSubmit('downloadTicket', 'web.profile.download_ticket')
                 ->setAttribute('class', 'btn-success');
 
-            if ($ticketDownloadFrom > new \DateTime()) {
+            if ($this->user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))
+                || ! $this->user->hasPaidEveryApplication()
+                || $ticketDownloadFrom > new \DateTime()) {
                 $downloadTicketButton
                     ->setDisabled()
                     ->setAttribute('data-toggle', 'tooltip')

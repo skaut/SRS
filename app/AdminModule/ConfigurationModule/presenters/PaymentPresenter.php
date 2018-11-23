@@ -8,6 +8,7 @@ use App\AdminModule\ConfigurationModule\Forms\BankForm;
 use App\AdminModule\ConfigurationModule\Forms\IPaymentFormFactory;
 use App\AdminModule\ConfigurationModule\Forms\PaymentForm;
 use App\AdminModule\ConfigurationModule\Forms\PaymentProofForm;
+use App\AdminModule\ConfigurationModule\Forms\TicketsForm;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use Nette\Application\UI\Form;
@@ -38,6 +39,12 @@ class PaymentPresenter extends ConfigurationBasePresenter
      */
     public $bankFormFactory;
 
+    /**
+     * @var TicketsForm
+     * @inject
+     */
+    public $ticketsFormFactory;
+
 
     /**
      * @throws SettingsException
@@ -62,7 +69,7 @@ class PaymentPresenter extends ConfigurationBasePresenter
     {
         $this->settingsRepository->setValue(Settings::BANK_TOKEN, null);
 
-        $this->flashMessage('admin.configuration.payment.bank_disconnect_successful', 'success');
+        $this->flashMessage('admin.configuration.payment.bank.disconnect_successful', 'success');
         $this->redirect('this');
     }
 
@@ -101,6 +108,18 @@ class PaymentPresenter extends ConfigurationBasePresenter
     protected function createComponentBankForm() : Form
     {
         $form = $this->bankFormFactory->create();
+
+        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
+            $this->flashMessage('admin.configuration.configuration_saved', 'success');
+            $this->redirect('this');
+        };
+
+        return $form;
+    }
+
+    protected function createComponentTicketsForm() : Form
+    {
+        $form = $this->ticketsFormFactory->create();
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');

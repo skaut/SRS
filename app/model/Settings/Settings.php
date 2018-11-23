@@ -209,7 +209,7 @@ class Settings
     /**
      * Datum, odkdy je možné stáhnout vstupenku.
      */
-    public const TICKET_DOWNLOAD_FROM = 'ticket_download_from';
+    public const TICKETS_FROM = 'tickets_from';
 
 
     /**

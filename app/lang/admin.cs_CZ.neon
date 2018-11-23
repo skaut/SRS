@@ -521,7 +521,7 @@ mailing:
 configuration:
     menu_seminar: "Seminář"
     menu_program: "Program"
-    menu_payment: "Platba a doklady"
+    menu_payment: "Platby a doklady"
     menu_application: "Přihláška"
     menu_place: "Místo"
     menu_mailing: "Mailing"
@@ -611,17 +611,23 @@ configuration:
     cancel_registration_after_maturity_format: "Zadejte číslo."
 
     payment:
-        bank_heading: "Automatická kontrola plateb"
-        bank: "Banka"
-        bank_token: "API token"
-        bank_token_empty: "Zadejte token."
-        bank_token_length: "Zadejte platný token."
-        bank_download_from: "Stáhnout platby od"
-        bank_download_from_empty: "Zadejte datum počátku stahování plateb."
-        bank_download_from_future: "Zadejte datum v minulosti."
-        bank_invalid_token: "Token není platný."
-        bank_disconnect: "Zrušit kontrolu bankovního účtu"
-        bank_disconnect_successful: "Propojení s bankovním účtem bylo úspěšně zrušeno."
+        bank:
+            heading: "Automatická kontrola plateb"
+            bank: "Banka"
+            token: "API token"
+            token_empty: "Zadejte token."
+            token_length: "Zadejte platný token."
+            download_from: "Stáhnout platby od"
+            download_from_empty: "Zadejte datum počátku stahování plateb."
+            download_from_future: "Zadejte datum v minulosti."
+            invalid_token: "Token není platný."
+            disconnect: "Zrušit kontrolu bankovního účtu"
+            disconnect_successful: "Propojení s bankovním účtem bylo úspěšně zrušeno."
+
+        tickets:
+            heading: "Vstupenky"
+            allowed: "povolit vstupenky"
+            from: "Povolit stažení od"
 
     payment_proof_heading: "Doklady"
     company: "Firma"

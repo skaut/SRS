@@ -14,7 +14,7 @@ final class Version20181121205737 extends AbstractMigration
     {
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('INSERT INTO `settings` (`item`, `value`) VALUES (\'ticket_download_from\', NULL)');
+        $this->addSql('INSERT INTO `settings` (`item`, `value`) VALUES (\'tickets_from\', NULL)');
     }
 
     public function down(Schema $schema) : void
