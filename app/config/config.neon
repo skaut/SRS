@@ -281,6 +281,7 @@ services:
     - App\AdminModule\ConfigurationModule\Forms\SkautIsEventForm
     - App\AdminModule\ConfigurationModule\Forms\SubeventForm
     - App\AdminModule\ConfigurationModule\Forms\SubeventsForm
+    - App\AdminModule\ConfigurationModule\Forms\TicketsForm
     - App\AdminModule\ConfigurationModule\Forms\WebForm
     - App\AdminModule\ProgramModule\Forms\BlockForm
     - App\AdminModule\MailingModule\Forms\EditTemplateForm
@@ -297,8 +298,8 @@ webloader:
                 - libs/bootstrap-select/bootstrap-select.min.css
                 - %appDir%/../vendor/kartik-v/bootstrap-fileinput/css/fileinput.min.css
                 - libs/ublaboo-datagrid/happy.min.css
-                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid.min.css
-                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid-spinners.min.css
+                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid.css
+                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid-spinners.css
                 - web/layout.css
                 - web/style.css
 
@@ -311,14 +312,19 @@ webloader:
                 - libs/bootstrap-select/bootstrap-select.min.css
                 - %appDir%/../vendor/kartik-v/bootstrap-fileinput/css/fileinput.min.css
                 - libs/ublaboo-datagrid/happy.min.css
-                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid.min.css
-                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid-spinners.min.css
+                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid.css
+                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid-spinners.css
                 - admin/style.css
 
         install:
             files:
                 - %appDir%/../vendor/twbs/bootstrap/dist/css/bootstrap.min.css
                 - install/style.css
+
+        export:
+            files:
+                - %appDir%/../vendor/twbs/bootstrap/dist/css/bootstrap.min.css
+                - export/style.css
 
     js:
         web:
@@ -339,10 +345,10 @@ webloader:
                 - %appDir%/../vendor/kartik-v/bootstrap-fileinput/themes/fa/theme.js
                 - %appDir%/../vendor/kartik-v/bootstrap-fileinput/js/locales/cs.js
                 - libs/ublaboo-datagrid/happy.min.js
-                - libs/ublaboo-datagrid/datagrid.js
-#                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid.min.js
-                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid-instant-url-refresh.min.js
-                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid-spinners.min.js
+#                - libs/ublaboo-datagrid/datagrid.js
+                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid.js
+                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid-instant-url-refresh.js
+                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid-spinners.js
                 - main.js
 
         admin:
@@ -363,10 +369,10 @@ webloader:
                 - %appDir%/../vendor/kartik-v/bootstrap-fileinput/themes/fa/theme.js
                 - %appDir%/../vendor/kartik-v/bootstrap-fileinput/js/locales/cs.js
                 - libs/ublaboo-datagrid/happy.min.js
-                - libs/ublaboo-datagrid/datagrid.js
-#                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid.min.js
-                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid-instant-url-refresh.min.js
-                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid-spinners.min.js
+#                - libs/ublaboo-datagrid/datagrid.js
+                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid.js
+                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid-instant-url-refresh.js
+                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid-spinners.js
                 - main.js
 
         install:

@@ -1,0 +1,52 @@
+.col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12 {
+    border: 0;
+    padding: 0;
+}
+
+.table tbody tr th,
+.table tfoot tr th,
+.table thead tr td,
+.table tbody tr td,
+.table tfoot tr td {
+    padding: 8px;
+    line-height: 1.42857143;
+    vertical-align: top;
+    border-top: 1px solid #000;
+}
+.table thead tr th {
+    padding: 8px;
+    line-height: 1.42857143;
+    vertical-align: bottom;
+    border-bottom: 2px solid #000;
+}
+
+.table-condensed thead tr th,
+.table-condensed tbody tr th,
+.table-condensed tfoot tr th,
+.table-condensed thead tr td,
+.table-condensed tbody tr td,
+.table-condensed tfoot tr td {
+    padding: 5px;
+}
+
+.table-bordered thead tr th,
+.table-bordered tbody tr th,
+.table-bordered tfoot tr th,
+.table-bordered thead tr td,
+.table-bordered tbody tr td,
+.table-bordered tfoot tr td {
+    border: 1px solid #000;
+}
+.table-bordered thead tr th,
+.table-bordered thead tr td {
+    border-bottom-width: 2px;
+}
+
+.table-borderless tbody tr td,
+.table-borderless tbody tr th,
+.table-borderless thead tr th,
+.table-borderless thead tr td,
+.table-borderless tfoot tr th,
+.table-borderless tfoot tr td {
+    border: none;
+}

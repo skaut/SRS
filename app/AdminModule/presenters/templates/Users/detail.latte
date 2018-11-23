@@ -38,14 +38,14 @@
                         <td>{$detailUser->getNickName()}</td>
                     </tr>
 
-                    {if $detailUser->getDegreePre() != NULL}
+                    {if $detailUser->getDegreePre() != null}
                         <tr>
                             <th>{_admin.users.users_degree_pre}</th>
                             <td>{$detailUser->getDegreePre()}</td>
                         </tr>
                     {/if}
 
-                    {if $detailUser->getDegreePost() != NULL}
+                    {if $detailUser->getDegreePost() != null}
                         <tr>
                             <th>{_admin.users.users_degree_post}</th>
                             <td>{$detailUser->getDegreePost()}</td>
@@ -156,7 +156,7 @@
                                         {case $customInputTypeSelect}
                                             {$customInputValue->getValueOption()}
                                         {case $customInputTypeFile}
-                                            {if $customInputValue->getValue() !== NULL}
+                                            {if $customInputValue->getValue() !== null}
                                                 <a href="{$basePath}/files{$customInputValue->getValue()}" target="_blank">
                                                     {array_values(array_slice(explode('/', $customInputValue->getValue()), -1))[0]}
                                                 </a>

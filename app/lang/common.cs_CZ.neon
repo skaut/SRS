@@ -189,7 +189,7 @@ export:
     schedule:
         from: "Od"
         to: "Do"
-        program_name: "Název programu"
+        program_name: "Program"
         room: "Místnost"
         lectors: "Lektoři"
         occupancy: "Obsazenost"

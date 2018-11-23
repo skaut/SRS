@@ -45,6 +45,8 @@ profile:
     cancel_registration_confirm: "Opravdu se chcete odhlásit z celého semináře?"
     cancel_registration_disabled: "Odhlášení již není možné nebo nejste na seminář registrováni."
     registration_canceled: "Odhlášení ze semináře proběhlo úspěšně."
+    download_ticket: "Stáhnout vstupenku"
+    download_ticket_disabled: "Stahování vstupenek ještě není povoleno, nejste na seminář registrováni nebo chybí zaplatit některou přihlášku."
 
     applications_application_date: "Datum přihlášky"
     applications_roles: "Role"
@@ -102,7 +104,7 @@ profile:
     my_schedule_group: "Můj harmonogram semináře"
     from: "Od"
     to: "Do"
-    program_name: "Název programu"
+    program_name: "Program"
     room: "Místnost"
     lectors: "Lektoři"
     no_programs: "Nemáte zvolené žádné programy."

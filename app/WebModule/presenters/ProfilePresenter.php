@@ -167,6 +167,8 @@ class ProfilePresenter extends WebBasePresenter
                 $this->flashMessage('web.profile.roles_changed', 'success');
             } elseif ($form['cancelRegistration']->isSubmittedBy()) {
                 $this->flashMessage('web.profile.registration_canceled', 'success');
+            } elseif ($form['downloadTicket']->isSubmittedBy()) {
+                $this->redirect(':Export:Ticket:pdf');
             }
 
             $this->authenticator->updateRoles($this->user);

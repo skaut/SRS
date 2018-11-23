@@ -60,12 +60,12 @@ class BankForm
         $renderer->wrappers['label']['container']   = 'div class="col-sm-5 col-xs-5 control-label"';
 
         $form->addSelect('bank', 'admin.configuration.payment.bank', ['fio' => 'FIO']);
-        $form->addText('bankToken', 'admin.configuration.payment.bank_token')
-            ->addRule(Form::FILLED, 'admin.configuration.payment.bank_token_empty')
-            ->addRule(Form::LENGTH, 'admin.configuration.payment.bank_token_length', 64);
-        $form->addDatePicker('bankDownloadFrom', 'admin.configuration.payment.bank_download_from')
-            ->addRule(Form::FILLED, 'admin.configuration.payment.bank_download_from_empty')
-            ->addRule([$this, 'validateBankDownloadFromDate'], 'admin.configuration.payment.bank_download_from_future');
+        $form->addText('bankToken', 'admin.configuration.payment.bank.token')
+            ->addRule(Form::FILLED, 'admin.configuration.payment.bank.token_empty')
+            ->addRule(Form::LENGTH, 'admin.configuration.payment.bank.token_length', 64);
+        $form->addDatePicker('bankDownloadFrom', 'admin.configuration.payment.bank.download_from')
+            ->addRule(Form::FILLED, 'admin.configuration.payment.bank.download_from_empty')
+            ->addRule([$this, 'validateBankDownloadFromDate'], 'admin.configuration.payment.bank.download_from_future');
 
         $form->addSubmit('submit', 'admin.common.save');
 
@@ -91,7 +91,7 @@ class BankForm
             $this->bankService->downloadTransactions($from, $token);
             $this->settingsRepository->setValue(Settings::BANK_TOKEN, $token);
         } catch (InternalErrorException $e) {
-            $form['bankToken']->addError('admin.configuration.payment.bank_invalid_token');
+            $form['bankToken']->addError('admin.configuration.payment.bank.invalid_token');
         }
     }
 
