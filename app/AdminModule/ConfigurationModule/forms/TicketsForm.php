@@ -11,7 +11,6 @@ use App\Model\Settings\SettingsRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette\Application\UI\Form;
-use function array_key_exists;
 
 /**
  * Formulář pro nastavení vstupenek.
