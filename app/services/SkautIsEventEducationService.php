@@ -39,7 +39,8 @@ class SkautIsEventEducationService extends SkautIsEventService
 
     public function isEventDraft(int $eventId) : bool
     {
-        return $this->getEventDetail($eventId)->ID_EventEducationState === 'draft';
+        return true;
+//        return $this->getEventDetail($eventId)->ID_EventEducationState === 'draft';
     }
 
     /**
