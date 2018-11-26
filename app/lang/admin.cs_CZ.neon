@@ -352,7 +352,7 @@ users:
     users_group_action_insert_into_skaut_is_error_subevent_not_connected: "Účastníci nebyli vloženi do skautIS, žádná podakce není propojena s žádným kurzem."
     users_group_action_insert_into_skaut_is_error_not_draft: "Účastníci nebyli vloženi do skautIS, akce byla uzavřena."
     users_group_action_insert_into_skaut_is_error_skaut_is: "Účastníci nebyli vloženi do skautIS, zkontrolujte, že pracujete v roli s právem přidávat účastníky akce."
-    users_group_action_insert_into_skaut_is_error_not_draft_successful: "Účastníci byli úspěšně vloženi do skautIS."
+    users_group_action_insert_into_skaut_is_successful: "Účastníci byli úspěšně vloženi do skautIS."
     users_delete_confirm: "Opravdu chcete uživatele odstranit?"
     users_deleted: "Uživatel byl úspěšně odstraněn."
     users_add_lector: "Přidat lektora"
