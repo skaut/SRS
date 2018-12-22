@@ -93,7 +93,7 @@ INSERT INTO `settings` (`item`, `value`) VALUES
   ('account_number', ''),
   ('accountant', ''),
   ('admin_created', '0'),
-  ('application_agreement', 'Souhlasím se zpracováním mých osobních údajů pro potřeby účasti na této akci v rozsahu a dle pravidel daných přihláškou člena do organizace. Souhlasím s pořizování foto, audio a video záznamů z akce a souhlasím s jejich využítím pro potřeby Junáka - českého skauta. Tím není dotčeno mé právo pro konkrétní situaci souhlas omezit nebo vyloučit, a to sdělením vedoucímu programu předem. Osobní údaje jsou zpracovávány v souladu se zákonem č. 101/2000 Sb. na ochranu osobních údajů.'),
+  ('application_agreement', 'Má účast na této akci je součástí činnosti Junáka - českého skauta a jeho jednotek, a tak beru na vědomí, že zpracování mých osobních údajů pro potřeby této akce se řídí pravidly, poučením a souhlasy danými v rámci přihlášky člena do organizace Junák - český skaut (případně pokud nejsem členem, tak přihláškou nečlena na akci). Podrobné znění je vždy dostupné na www.skaut.cz/osobniudaje. Zpracování osobních údajů a nakládání s nimi na této akci probíhá v souladu s Nařízením Evropského parlamentu a Rady 2016/679 (tzv. GDPR) a zákonem 101/2000 Sb., o ochraně osobních údajů, ve znění pozdějších předpisů. Společným správcem osobních údajů je Junák - český skaut, z. s. (hlavní spolek) a případné další pořádající organizační jednotky (pobočný spolek uvedený v kontaktech na webu této akce).'),
   ('company', ''),
   ('display_users_roles', '1'),
   ('edit_registration_to', CURDATE()),
