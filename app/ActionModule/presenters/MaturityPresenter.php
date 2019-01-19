@@ -98,14 +98,14 @@ class MaturityPresenter extends ActionBasePresenter
      */
     public function actionCheck() : void
     {
-        $cancelRegistration = $this->settingsRepository->getValue(Settings::CANCEL_REGISTRATION_AFTER_MATURITY);
+        $cancelRegistration = $this->settingsRepository->getIntValue(Settings::CANCEL_REGISTRATION_AFTER_MATURITY);
         if ($cancelRegistration !== null) {
             $cancelRegistrationDate = (new \DateTime())->setTime(0, 0)->modify('-' . $cancelRegistration . ' days');
         } else {
             $cancelRegistrationDate = null;
         }
 
-        $maturityReminder = $this->settingsRepository->getValue(Settings::MATURITY_REMINDER);
+        $maturityReminder = $this->settingsRepository->getIntValue(Settings::MATURITY_REMINDER);
         if ($maturityReminder !== null) {
             $maturityReminderDate = (new \DateTime())->setTime(0, 0)->modify('+' . $maturityReminder . ' days');
         } else {

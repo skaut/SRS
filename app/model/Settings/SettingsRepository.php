@@ -99,7 +99,11 @@ class SettingsRepository extends EntityRepository
      */
     public function setIntValue(string $item, ?int $value) : void
     {
-        $this->setValue($item, (string) $value);
+        if ($value === null) {
+            $this->setValue($item, null);
+        } else {
+            $this->setValue($item, (string) $value);
+        }
     }
 
     /**
@@ -125,7 +129,11 @@ class SettingsRepository extends EntityRepository
      */
     public function setBoolValue(string $item, ?bool $value) : void
     {
-        $this->setValue($item, (string) $value);
+        if ($value === null) {
+            $this->setValue($item, null);
+        } else {
+            $this->setValue($item, (string) $value);
+        }
     }
 
     /**
