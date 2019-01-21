@@ -251,10 +251,11 @@ class ApplicationsGridControl extends Control
             return $item->isCanceled() ? 0 : $item->getFee();
         });
 
-        $grid->setRowCallback(function (Application $application, Html $tr) {
-            if ($application->isCanceled()) {
-                $tr->addClass("disabled");
+        $grid->setRowCallback(function (Application $application, Html $tr) : void {
+            if (! $application->isCanceled()) {
+                return;
             }
+            $tr->addClass('disabled');
         });
     }
 
