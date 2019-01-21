@@ -26,6 +26,7 @@ use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
@@ -248,6 +249,12 @@ class ApplicationsGridControl extends Control
 
         $grid->setColumnsSummary(['fee'], function (Application $item, $column) {
             return $item->isCanceled() ? 0 : $item->getFee();
+        });
+
+        $grid->setRowCallback(function (Application $application, Html $tr) {
+            if ($application->isCanceled()) {
+                $tr->addClass("disabled");
+            }
         });
     }
 
