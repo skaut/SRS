@@ -13,6 +13,7 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="VariableSymbolRepository")
  * @ORM\Table(name="variable_symbol")
+ * @ORM\Cache(usage="READ_WRITE", region="variable_symbol_region")
  */
 class VariableSymbol
 {

@@ -21,6 +21,7 @@ use function implode;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="SubeventRepository")
  * @ORM\Table(name="subevent")
+ * @ORM\Cache(usage="READ_WRITE", region="subevent_region")
  */
 class Subevent
 {
