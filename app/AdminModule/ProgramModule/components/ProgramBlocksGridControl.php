@@ -260,8 +260,12 @@ class ProgramBlocksGridControl extends Control
         } elseif ($mandatory  === ProgramMandatoryType::AUTO_REGISTERED && ! $this->validators->validateBlockAutoRegistered($block)) {
             $p->flashMessage('admin.program.blocks_change_mandatory_auto_registered_not_allowed', 'danger');
         } else {
-            $this->programService->updateBlockMandatory($block, $mandatory);
-            $p->flashMessage('admin.program.blocks_changed_mandatory', 'success');
+            try {
+                $this->programService->updateBlockMandatory($block, $mandatory);
+                $p->flashMessage('admin.program.blocks_changed_mandatory', 'success');
+            } catch (\Throwable $e) {
+                $p->flashMessage('admin.program.blocks_change_mandatory_error', 'danger');
+            }
         }
 
         if ($p->isAjax()) {

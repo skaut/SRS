@@ -16,6 +16,7 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="PermissionRepository")
  * @ORM\Table(name="permission")
+ * @ORM\Cache(usage="READ_ONLY", region="permission_region")
  */
 class Permission
 {
@@ -118,11 +119,6 @@ class Permission
         return $this->name;
     }
 
-    public function setName(string $name) : void
-    {
-        $this->name = $name;
-    }
-
     /**
      * @return Collection|Role[]
      */
@@ -134,10 +130,5 @@ class Permission
     public function getResource() : Resource
     {
         return $this->resource;
-    }
-
-    public function setResource(Resource $resource) : void
-    {
-        $this->resource = $resource;
     }
 }

@@ -17,6 +17,7 @@ use function implode;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="CategoryRepository")
  * @ORM\Table(name="category")
+ * @ORM\Cache(usage="READ_WRITE", region="category_region")
  */
 class Category
 {

@@ -16,6 +16,7 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="ResourceRepository")
  * @ORM\Table(name="resource")
+ * @ORM\Cache(usage="READ_ONLY", region="resource_region")
  */
 class Resource
 {
@@ -110,11 +111,6 @@ class Resource
     public function getName() : string
     {
         return $this->name;
-    }
-
-    public function setName(string $name) : void
-    {
-        $this->name = $name;
     }
 
     /**
