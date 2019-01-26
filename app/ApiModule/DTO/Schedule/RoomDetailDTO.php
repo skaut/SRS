@@ -30,7 +30,7 @@ class RoomDetailDTO
 
     /**
      * @JMS\Type("integer")
-     * @var int
+     * @var ?int
      */
     private $capacity;
 
@@ -55,12 +55,12 @@ class RoomDetailDTO
         $this->name = $name;
     }
 
-    public function getCapacity() : int
+    public function getCapacity() : ?int
     {
         return $this->capacity;
     }
 
-    public function setCapacity(int $capacity) : void
+    public function setCapacity(?int $capacity) : void
     {
         $this->capacity = $capacity;
     }
