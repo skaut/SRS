@@ -33,6 +33,8 @@ doctrine:
         App: %appDir%
     secondLevelCache:
         enabled: true
+        factoryClass: Doctrine\ORM\Cache\DefaultCacheFactory
+        driver: apc
 
 migrations:
     table: doctrine_migrations
