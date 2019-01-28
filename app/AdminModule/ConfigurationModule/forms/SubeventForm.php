@@ -15,6 +15,7 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
 use function md5;
 use function mt_rand;
+use function uniqid;
 
 /**
  * Formulář pro úpravu podakce.
@@ -169,7 +170,7 @@ class SubeventForm
             $editedSubevent = $this->subevent;
         } else {
             $editedSubevent = new Subevent();
-            $editedSubevent->setName(md5(mt_rand()));
+            $editedSubevent->setName(md5(uniqid((string) mt_rand(), true)));
             $this->subeventRepository->save($editedSubevent);
         }
 
