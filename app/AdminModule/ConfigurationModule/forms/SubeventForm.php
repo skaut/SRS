@@ -15,6 +15,7 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
 use function md5;
 use function mt_rand;
+use function uniqid;
 
 /**
  * Formulář pro úpravu podakce.
