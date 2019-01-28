@@ -22,7 +22,6 @@ use function implode;
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="RoleRepository")
  * @ORM\Table(name="role")
- * @ORM\Cache(usage="READ_WRITE", region="role_region")
  */
 class Role
 {

@@ -31,10 +31,6 @@ doctrine:
     password: %database.password%
     metadata:
         App: %appDir%
-    secondLevelCache:
-        enabled: true
-        factoryClass: Doctrine\ORM\Cache\DefaultCacheFactory
-        driver: apc
 
 migrations:
     table: doctrine_migrations

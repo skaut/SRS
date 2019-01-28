@@ -17,7 +17,6 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="ProgramRepository")
  * @ORM\Table(name="program")
- * @ORM\Cache(usage="READ_WRITE", region="program_region")
  */
 class Program
 {

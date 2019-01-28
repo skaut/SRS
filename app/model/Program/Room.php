@@ -15,7 +15,6 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="RoomRepository")
  * @ORM\Table(name="room")
- * @ORM\Cache(usage="READ_WRITE", region="room_region")
  */
 class Room
 {
