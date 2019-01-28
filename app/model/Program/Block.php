@@ -19,7 +19,6 @@ use function implode;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="BlockRepository")
  * @ORM\Table(name="block")
- * @ORM\Cache(usage="READ_WRITE", region="block_region")
  */
 class Block
 {

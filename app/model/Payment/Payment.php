@@ -20,7 +20,6 @@ use function implode;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="PaymentRepository")
  * @ORM\Table(name="payment")
- * @ORM\Cache(usage="READ_WRITE", region="payment_region")
  */
 class Payment
 {

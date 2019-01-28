@@ -16,7 +16,6 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="ResourceRepository")
  * @ORM\Table(name="resource")
- * @ORM\Cache(usage="READ_ONLY", region="resource_region")
  */
 class Resource
 {
