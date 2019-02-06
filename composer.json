@@ -1,5 +1,5 @@
 {
-    "name": "skaut/SRS",
+    "name": "skaut/srs",
 
     "require": {
         "php": ">=7.1",
@@ -14,9 +14,9 @@
         "kdyby/translation": "^2.5",
         "kdyby/console": "^2.7",
 
-        "nettrine/migrations": "^0.3",
+        "nettrine/migrations": "^0.4",
 
-        "dg/MySQL-dump": "^1.4",
+        "dg/MySQL-dump": "^1.5",
 
         "nextras/forms": "^2.0",
 
@@ -35,6 +35,7 @@
         "joseki/pdf-response": "^4.0",
 
         "twbs/bootstrap": "^3.3",
+        "snapappointments/bootstrap-select": "1.12.4",
         "kartik-v/bootstrap-fileinput": "^4.5",
         "lukyrys/nette-forms-gpspicker": "^1.4",
 
@@ -52,7 +53,7 @@
         "codeception/codeception": "^2.2",
         "codeception/mockery-module": "^0.2",
         "captbaritone/mailcatcher-codeception-module": "^1.2",
-        "arachne/codeception": "^0.8",
+        "contributte/codeception": "^0.8",
         "doctrine/coding-standard": "^4.0",
         "nette/tester": "^2.0",
         "nextras/mail-panel": "^2.4"

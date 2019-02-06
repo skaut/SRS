@@ -295,7 +295,7 @@ webloader:
                 - %appDir%/../vendor/twbs/bootstrap/dist/css/bootstrap.min.css
                 - libs/font-awesome.min.css
                 - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.css
-                - libs/bootstrap-select/bootstrap-select.min.css
+                - %appDir%/../vendor/snapappointments/bootstrap-select/dist/css/bootstrap-select.css
                 - %appDir%/../vendor/kartik-v/bootstrap-fileinput/css/fileinput.min.css
                 - libs/ublaboo-datagrid/happy.min.css
                 - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid.css
@@ -309,7 +309,7 @@ webloader:
                 - %appDir%/../vendor/twbs/bootstrap/dist/css/bootstrap.min.css
                 - libs/font-awesome.min.css
                 - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.css
-                - libs/bootstrap-select/bootstrap-select.min.css
+                - %appDir%/../vendor/snapappointments/bootstrap-select/dist/css/bootstrap-select.css
                 - %appDir%/../vendor/kartik-v/bootstrap-fileinput/css/fileinput.min.css
                 - libs/ublaboo-datagrid/happy.min.css
                 - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid.css
@@ -329,7 +329,7 @@ webloader:
     js:
         web:
             files:
-                - libs/jquery/jquery-3.1.1.min.js
+                - libs/jquery/jquery-3.3.1.min.js
                 - libs/live-form-validation.js
                 - libs/nette.ajax.js
                 - libs/jquery/jquery-ui.min.js
@@ -338,14 +338,14 @@ webloader:
                 - libs/moment/moment.js
                 - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js
                 - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.cs.js
-                - libs/bootstrap-select/bootstrap-select.min.js
-                - libs/bootstrap-select/defaults-cs_CZ.js
-                - libs/bootstrap-confirmation/bootstrap-confirmation.min.js
+                - %appDir%/../vendor/snapappointments/bootstrap-select/dist/js/bootstrap-select.js
+                - %appDir%/../vendor/snapappointments/bootstrap-select/dist/js/i18n/defaults-cs_CZ.js
+                - libs/bootstrap-confirmation/bootstrap-confirmation.js
                 - %appDir%/../vendor/kartik-v/bootstrap-fileinput/js/fileinput.min.js
                 - %appDir%/../vendor/kartik-v/bootstrap-fileinput/themes/fa/theme.js
                 - %appDir%/../vendor/kartik-v/bootstrap-fileinput/js/locales/cs.js
                 - libs/ublaboo-datagrid/happy.min.js
-                - libs/ublaboo-datagrid/datagrid.js
+#                - libs/ublaboo-datagrid/datagrid.js
                 - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid.js
                 - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid-instant-url-refresh.js
                 - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid-spinners.js
@@ -353,7 +353,7 @@ webloader:
 
         admin:
             files:
-                - libs/jquery/jquery-3.1.1.min.js
+                - libs/jquery/jquery-3.3.1.min.js
                 - libs/live-form-validation.js
                 - libs/nette.ajax.js
                 - libs/jquery/jquery-ui.min.js
@@ -362,14 +362,14 @@ webloader:
                 - libs/moment/moment.js
                 - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js
                 - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.cs.js
-                - libs/bootstrap-select/bootstrap-select.min.js
-                - libs/bootstrap-select/defaults-cs_CZ.js
-                - libs/bootstrap-confirmation/bootstrap-confirmation.min.js
+                - %appDir%/../vendor/snapappointments/bootstrap-select/dist/js/bootstrap-select.js
+                - %appDir%/../vendor/snapappointments/bootstrap-select/dist/js/i18n/defaults-cs_CZ.js
+                - libs/bootstrap-confirmation/bootstrap-confirmation.js
                 - %appDir%/../vendor/kartik-v/bootstrap-fileinput/js/fileinput.min.js
                 - %appDir%/../vendor/kartik-v/bootstrap-fileinput/themes/fa/theme.js
                 - %appDir%/../vendor/kartik-v/bootstrap-fileinput/js/locales/cs.js
                 - libs/ublaboo-datagrid/happy.min.js
-                - libs/ublaboo-datagrid/datagrid.js
+#                - libs/ublaboo-datagrid/datagrid.js
                 - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid.js
                 - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid-instant-url-refresh.js
                 - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid-spinners.js
@@ -377,5 +377,5 @@ webloader:
 
         install:
             files:
-                - libs/jquery/jquery-3.1.1.min.js
+                - libs/jquery/jquery-3.3.1.min.js
                 - %appDir%/../vendor/twbs/bootstrap/dist/js/bootstrap.min.js

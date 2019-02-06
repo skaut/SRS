@@ -81,7 +81,7 @@ class BankService
                     $transaction->getVariableSymbol(),
                     $id,
                     $accountNumber,
-                    $transaction->getUserIdentity(), //todo: zmenit na getSenderName
+                    $transaction->getSenderName(),
                     $transaction->getUserMessage()
                 );
             });
