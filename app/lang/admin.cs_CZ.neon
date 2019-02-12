@@ -688,7 +688,7 @@ configuration:
     skautis_event: "Akce"
     skautis_event_empty: "Vyberte akci ze seznamu."
     skautis_event_name: "Systém je propojen s akcí: %name%."
-    skautis_event_note: "V seznanu akcí jsou neuzavřené akce, na které máte ve SkautIS oprávnění, pokud se Vám akce v seznamu nezobrazuje, nechte synchronizaci nastavit někoho s patřičnými právy."
+    skautis_event_note: "V seznamu akcí jsou neuzavřené akce, na které máte ve SkautIS oprávnění, pokud se Vám akce v seznamu nezobrazuje, nechte synchronizaci nastavit někoho s patřičnými právy."
     skautis_event_disconnect: "Odpojit od akce"
     skautis_event_disconnect_confirm: "Opravdu se chcete odpojit od akce?"
     skautis_event_connect_successful: "Propojení s akcí proběhlo úspěšně."
