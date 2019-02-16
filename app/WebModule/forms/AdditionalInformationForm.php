@@ -116,7 +116,7 @@ class AdditionalInformationForm extends UI\Control
      */
     public function createComponentForm() : Form
     {
-        $this->user = $this->userRepository->findById($this->presenter->user->getId());
+        $this->user                = $this->userRepository->findById($this->presenter->user->getId());
         $isAllowedEditCustomInputs = $this->applicationService->isAllowedEditCustomInputs();
 
         $form = $this->baseFormFactory->create();
