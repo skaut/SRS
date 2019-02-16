@@ -100,6 +100,7 @@ profile:
     departure: "Odjezd"
     update_additional_information: "Upravit doplňující informace"
     additional_information_update_successfull: "Doplňující informace úspěšně upraveny."
+    additional_information_edit_not_allowed: "Úprava údajů z přihlášky již není povolena."
 
     my_schedule_group: "Můj harmonogram semináře"
     from: "Od"

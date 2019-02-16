@@ -99,6 +99,11 @@
             </div>
             <div id="collapseAdditionalInformation" class="panel-collapse collapse">
                 <div class="panel-body">
+                    {if !$isAllowedEditCustomInputs}
+                        <div class="alert alert-info alert-forever">
+                            {_web.profile.additional_information_edit_not_allowed}
+                        </div>
+                    {/if}
                     {control additionalInformationForm}
                 </div>
             </div>

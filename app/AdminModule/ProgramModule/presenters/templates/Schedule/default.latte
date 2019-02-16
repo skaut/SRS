@@ -11,7 +11,13 @@
 
 
 {block main}
-    <h2>{_admin.program.schedule_heading}</h2>
+    <h2>{_admin.program.schedule.heading}</h2>
+    {if !$isAllowedModifySchedule}
+        <div class="alert alert-warning alert-forever">
+            <a href="#" class="close" data-dismiss="alert">&times;</a>
+            {_admin.program.schedule.modify_schedule_is_not_allowed}
+        </div>
+    {/if}
     <div id="app">
         <div class="notifications">
             <div class="spinner" ng-show="loading" style="float: left">
@@ -31,7 +37,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">{_admin.program.schedule_program_settings}</h4>
+                        <h4 class="modal-title">{_admin.program.schedule.program_settings}</h4>
                     </div>
                     <div class="modal-body">
                         <table class="table table-form">
@@ -41,7 +47,7 @@
                             </colgroup>
 
                             <tr>
-                                <th>{_admin.program.schedule_name}</th>
+                                <th>{_admin.program.schedule.name}</th>
                                 <td>
                                     <a ng-href="../blocks/detail/{{ event.block.id }}" target="_blank">
                                         {{ event.block.name }}
@@ -50,12 +56,12 @@
                             </tr>
 
                             <tr>
-                                <th>{_admin.program.schedule_category}</th>
+                                <th>{_admin.program.schedule.category}</th>
                                 <td>{{ event.block.category }}</td>
                             </tr>
 
                             <tr>
-                                <th>{_admin.program.schedule_lectors}</th>
+                                <th>{_admin.program.schedule.lectors}</th>
                                 <td>{{ event.block.lectors_names }}</td>
                             </tr>
                         </table>
@@ -63,7 +69,7 @@
                         <form class="form-horizontal">
                             <div class="form-group" style="margin-bottom: 0">
                                 <div class="col-sm-3 col-xs-3 control-label">
-                                    <label for="select-room">{_admin.program.schedule_room}</label>
+                                    <label for="select-room">{_admin.program.schedule.room}</label>
                                 </div>
                                 <div class="col-sm-9 col-xs-9">
                                     <select id="select-room" class="form-control" ng-model="event['room']"
@@ -85,13 +91,13 @@
                                 <td>
                                     <span ng-show="event.room.capacity < event.block.capacity" class="text-warning">
                                         <i class="fa fa-exclamation-triangle"></i>
-                                        {_admin.program.schedule_room_capacity_warning}
+                                        {_admin.program.schedule.room_capacity_warning}
                                     </span>
                                 </td>
                             </tr>
 
                             <tr>
-                                <th>{_admin.program.schedule_capacity}</th>
+                                <th>{_admin.program.schedule.capacity}</th>
                                 <td>{{ event.block.capacity }}</td>
                             </tr>
                         </table>
@@ -112,7 +118,7 @@
 {block sidebar}
     {include #parent}
 
-    <h3>{_admin.program.schedule_blocks_heading}</h3>
+    <h3>{_admin.program.schedule.blocks_heading}</h3>
     <div class="well">
         <div class="input-group">
             <span class="input-group-addon"><i class="fa fa-search fa-fw"></i></span>
@@ -122,7 +128,7 @@
         <div class="checkbox" style="text-align: center">
             <label for="checkbox-unassigned">
                 <input type="checkbox" id="checkbox-unassigned" ng-model="unassignedOnly">
-                {_admin.program.schedule_blocks_unassigned_only}
+                {_admin.program.schedule.blocks_unassigned_only}
             </label>
         </div>
 
@@ -137,19 +143,19 @@
                             <th colspan="2">{{ block.name }}</th>
                         </tr>
                         <tr>
-                            <td style="padding-right: 15px">{_admin.program.schedule_category}</td>
+                            <td style="padding-right: 15px">{_admin.program.schedule.category}</td>
                             <td>{{ block.category }}</td>
                         </tr>
                         <tr>
-                            <td style="padding-right: 15px; vertical-align: top">{_admin.program.schedule_lectors}</td>
+                            <td style="padding-right: 15px; vertical-align: top">{_admin.program.schedule.lectors}</td>
                             <td>{{ block.lectors_names }}</td>
                         </tr>
                         <tr>
-                            <td style="padding-right: 15px">{_admin.program.schedule_capacity}</td>
+                            <td style="padding-right: 15px">{_admin.program.schedule.capacity}</td>
                             <td>{{ block.capacity }}</td>
                         </tr>
                         <tr>
-                            <td style="padding-right: 15px">{_admin.program.schedule_programs_count}</td>
+                            <td style="padding-right: 15px">{_admin.program.schedule.programs_count}</td>
                             <td>{{ block.programs_count }}×</td>
                         </tr>
                     </table>
