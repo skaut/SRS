@@ -116,7 +116,8 @@ class AdditionalInformationForm extends UI\Control
      */
     public function createComponentForm() : Form
     {
-        $this->user = $this->userRepository->findById($this->presenter->user->getId());
+        $this->user                = $this->userRepository->findById($this->presenter->user->getId());
+        $isAllowedEditCustomInputs = $this->applicationService->isAllowedEditCustomInputs();
 
         $form = $this->baseFormFactory->create();
 
@@ -161,11 +162,9 @@ class AdditionalInformationForm extends UI\Control
                 $custom->addRule(Form::FILLED, 'web.profile.custom_input_empty');
             }
 
-            if ($this->applicationService->isAllowedEditCustomInputs()) {
-                continue;
+            if (! $isAllowedEditCustomInputs) {
+                $custom->setDisabled();
             }
-
-            $custom->setDisabled();
         }
 
         $form->addTextArea('about', 'web.profile.about_me');

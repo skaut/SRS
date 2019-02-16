@@ -20,6 +20,9 @@
         <!-- Chybejici typehints zatim nelze doplnit u funkcí volaných z AJAX nebo pretizenych funkci -->
         <exclude name="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint"/>
 
+        <!-- Zneprehlednuje kod -->
+        <exclude name="SlevomatCodingStandard.ControlStructures.EarlyExit"/>
+
         <!-- Docasne ignorovano, dokud nebudou vytvoreny lepsi vyjimky -->
         <exclude name="SlevomatCodingStandard.Classes.SuperfluousExceptionNaming.SuperfluousSuffix"/>
     </rule>

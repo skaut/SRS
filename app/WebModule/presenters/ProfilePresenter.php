@@ -107,10 +107,15 @@ class ProfilePresenter extends WebBasePresenter
         $this->redirect(':Web:Page:default');
     }
 
+    /**
+     * @throws SettingsException
+     * @throws \Throwable
+     */
     public function renderDefault() : void
     {
-        $this->template->pageName          = $this->translator->translate('web.profile.title');
-        $this->template->paymentMethodBank = PaymentType::BANK;
+        $this->template->pageName                  = $this->translator->translate('web.profile.title');
+        $this->template->paymentMethodBank         = PaymentType::BANK;
+        $this->template->isAllowedEditCustomInputs = $this->applicationService->isAllowedEditCustomInputs();
     }
 
     /**

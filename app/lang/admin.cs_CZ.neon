@@ -39,10 +39,6 @@ menu:
     mailing: "Mailing"
     configuration: "Nastavení"
 
-dashboard:
-    heading: "Vítejte v systému SRS!"
-    text: "<p>Pokud jste v systému poprvé nebo s ním nejste zcela srozuměni, přečtěte si <a href=\"https://github.com/skaut/SRS/wiki/U%C5%BEivatelsk%C3%A1-p%C5%99%C3%ADru%C4%8Dka\" target=\"_blank\">uživatelskou příručku</a>.</p>"
-
 cms:
     menu_pages: "Stránky"
     menu_news: "Aktuality"
@@ -226,17 +222,19 @@ program:
     blocks_attendees_group_action_registered: "Účastníci, kteří tento program neměli zapsaný jindy, byli úspěšně přihlášeni."
     blocks_attendees_group_action_unregistered: "Účastníci byli úspěšně odhlášeni z programu."
 
-    schedule_heading: "Harmonogram"
-    schedule_name: "Název"
-    schedule_category: "Kategorie"
-    schedule_lectors: "Lektoři"
-    schedule_room: "Místnost"
-    schedule_room_capacity_warning: "Kapacita místnosti je menší než kapacita bloku."
-    schedule_capacity: "Kapacita"
-    schedule_programs_count: "Zařazeno"
-    schedule_program_settings: "Nastavení programu"
-    schedule_blocks_heading: "Programové bloky"
-    schedule_blocks_unassigned_only: "jen nezařazené"
+    schedule:
+        heading: "Harmonogram"
+        name: "Název"
+        category: "Kategorie"
+        lectors: "Lektoři"
+        room: "Místnost"
+        room_capacity_warning: "Kapacita místnosti je menší než kapacita bloku."
+        capacity: "Kapacita"
+        programs_count: "Zařazeno"
+        program_settings: "Nastavení programu"
+        blocks_heading: "Programové bloky"
+        blocks_unassigned_only: "jen nezařazené"
+        modify_schedule_is_not_allowed: "Úprava harmonogramu není povolena."
 
     categories_heading: "Kategorie"
     categories_name: "Název"
