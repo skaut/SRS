@@ -145,45 +145,6 @@ class PaymentsGridControl extends Control
         };
         $grid->getInlineAdd()->onSubmit[]     = [$this, 'add'];
 
-        $grid->addInlineEdit()->onControlAdd[]  = function (Container $container) : void {
-            $container->addDatePicker('date', '');
-
-            $container->addInteger('amount', '');
-
-            $container->addText('variableSymbol', '');
-
-            $container->addMultiSelect('pairedApplications', '', $this->applicationRepository->getApplicationsVariableSymbolsOptions())
-                ->setAttribute('class', 'datagrid-multiselect')
-                ->setAttribute('data-live-search', 'true');
-        };
-        $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Payment $payment) : void {
-            if ($payment->getTransactionId() === null) {
-                $container['date']
-                    ->addRule(Form::FILLED, 'admin.payments.payments.date_empty');
-
-                $container['amount']
-                    ->addRule(Form::FILLED, 'admin.payments.payments.amount_empty')
-                    ->addRule(Form::MIN, 'admin.payments.payments.amount_low', 1);
-
-                $container['variableSymbol']
-                    ->addRule(Form::FILLED, 'admin.payments.payments.variable_symbol_empty');
-            } else {
-                $container['date']->setDisabled();
-                $container['amount']->setDisabled();
-                $container['variableSymbol']->setDisabled();
-            }
-
-            $container['pairedApplications']->setItems($this->applicationRepository->getWaitingForPaymentOrPairedApplicationsVariableSymbolsOptions($payment->getPairedValidApplications()));
-
-            $container->setDefaults([
-                'date' => $payment->getDate(),
-                'amount' => $payment->getAmount(),
-                'variableSymbol' => $payment->getVariableSymbol(),
-                'pairedApplications' => $this->applicationRepository->findApplicationsIds($payment->getPairedValidApplications()),
-            ]);
-        };
-        $grid->getInlineEdit()->onSubmit[]      = [$this, 'edit'];
-
         if ($this->settingsRepository->getValue(Settings::BANK_TOKEN) !== null) {
             $grid->addToolbarButton('checkPayments!')
                 ->setText('admin.payments.payments.check_payments');
@@ -193,6 +154,8 @@ class PaymentsGridControl extends Control
         $grid->allowRowsAction('generatePaymentProofBank', function (Payment $payment) {
             return $payment->getState() === PaymentState::PAIRED_AUTO || $payment->getState() === PaymentState::PAIRED_MANUAL;
         });
+
+        $grid->addAction('edit', 'admin.common.edit', 'Payments:edit');
 
         $grid->addAction('delete', '', 'delete!')
             ->setIcon('trash')
@@ -218,24 +181,6 @@ class PaymentsGridControl extends Control
         $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
 
         $this->applicationService->createPayment($values['date'], $values['amount'], $values['variableSymbol'], null, null, null, null, $loggedUser);
-
-        $this->getPresenter()->flashMessage('admin.payments.payments.saved', 'success');
-        $this->redirect('this');
-    }
-
-    /**
-     * Zpracuje úpravu platby.
-     * @throws \Throwable
-     */
-    public function edit(int $id, \stdClass $values) : void
-    {
-        $payment = $this->paymentRepository->findById($id);
-
-        $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
-
-        $pairedApplications = $this->applicationRepository->findApplicationsByIds($values['pairedApplications']);
-
-        $this->applicationService->updatePayment($payment, $values['date'], $values['amount'], $values['variableSymbol'], $pairedApplications, $loggedUser);
 
         $this->getPresenter()->flashMessage('admin.payments.payments.saved', 'success');
         $this->redirect('this');
