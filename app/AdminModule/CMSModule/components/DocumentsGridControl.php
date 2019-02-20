@@ -109,7 +109,7 @@ class DocumentsGridControl extends Control
 
         $tagsOptions = $this->tagRepository->getTagsOptions();
 
-        $grid->addInlineAdd()->onControlAdd[] = function ($container) use ($tagsOptions) : void {
+        $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function ($container) use ($tagsOptions) : void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.documents_name_empty');
 
@@ -121,7 +121,7 @@ class DocumentsGridControl extends Control
 
             $container->addText('description', '');
         };
-        $grid->getInlineAdd()->onSubmit[]     = [$this, 'add'];
+        $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
 
         $grid->addInlineEdit()->onControlAdd[]  = function ($container) use ($tagsOptions) : void {
             $container->addText('name', '')

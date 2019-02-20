@@ -283,6 +283,7 @@ services:
     - App\AdminModule\ConfigurationModule\Forms\SubeventsForm
     - App\AdminModule\ConfigurationModule\Forms\TicketsForm
     - App\AdminModule\ConfigurationModule\Forms\WebForm
+    - App\AdminModule\PaymentsModule\Forms\EditPaymentForm
     - App\AdminModule\ProgramModule\Forms\BlockForm
     - App\AdminModule\MailingModule\Forms\EditTemplateForm
     - App\AdminModule\MailingModule\Forms\SendForm

@@ -90,7 +90,7 @@ class RoomsGridControl extends Control
                 return $row->getCapacity() === null;
             });
 
-        $grid->addInlineAdd()->onControlAdd[] = function ($container) : void {
+        $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function ($container) : void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.program.rooms_name_empty')
                 ->addRule(Form::IS_NOT_IN, 'admin.program.rooms_name_exists', $this->roomRepository->findAllNames());
@@ -99,7 +99,7 @@ class RoomsGridControl extends Control
                 ->addCondition(Form::FILLED)
                 ->addRule(Form::INTEGER, 'admin.program.rooms_capacity_format');
         };
-        $grid->getInlineAdd()->onSubmit[]     = [$this, 'add'];
+        $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
 
         $grid->addInlineEdit()->onControlAdd[]  = function ($container) : void {
             $container->addText('name', '')

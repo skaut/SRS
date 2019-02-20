@@ -172,7 +172,7 @@ class ApplicationsGridControl extends Control
             });
 
         if ($explicitSubeventsExists) {
-            $grid->addInlineAdd()->onControlAdd[] = function ($container) : void {
+            $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function ($container) : void {
                 $container->addMultiSelect(
                     'subevents',
                     '',
@@ -181,7 +181,7 @@ class ApplicationsGridControl extends Control
                     ->setAttribute('class', 'datagrid-multiselect')
                     ->addRule(Form::FILLED, 'admin.users.users_applications_subevents_empty');
             };
-            $grid->getInlineAdd()->onSubmit[]     = [$this, 'add'];
+            $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
         }
 
         $grid->addInlineEdit()->onControlAdd[]  = function ($container) use ($explicitSubeventsExists) : void {

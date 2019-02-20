@@ -95,7 +95,7 @@ class PagesGridControl extends Control
             true => 'admin.cms.pages_public_public',
         ];
 
-        $grid->addInlineAdd()->onControlAdd[] = function ($container) use ($rolesOptions, $publicOptions) : void {
+        $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function ($container) use ($rolesOptions, $publicOptions) : void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.pages_name_empty');
 
@@ -110,7 +110,7 @@ class PagesGridControl extends Control
 
             $container->addSelect('public', '', $publicOptions);
         };
-        $grid->getInlineAdd()->onSubmit[]     = [$this, 'add'];
+        $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
 
         $grid->addInlineEdit()->onControlAdd[]  = function ($container) use ($rolesOptions, $publicOptions) : void {
             $container->addText('name', '')

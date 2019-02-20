@@ -76,7 +76,7 @@ class DocumentTagsGridControl extends Control
 
         $rolesOptions = $this->roleRepository->getRolesWithoutRolesOptions([]);
 
-        $grid->addInlineAdd()->onControlAdd[] = function ($container) use ($rolesOptions) : void {
+        $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function ($container) use ($rolesOptions) : void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.tags_name_empty')
                 ->addRule(Form::IS_NOT_IN, 'admin.cms.tags_name_exists', $this->tagRepository->findAllNames());
@@ -84,7 +84,7 @@ class DocumentTagsGridControl extends Control
                 ->setDefaultValue(array_keys($rolesOptions))
                 ->addRule(Form::FILLED, 'admin.cms.tags_roles_empty');
         };
-        $grid->getInlineAdd()->onSubmit[]     = [$this, 'add'];
+        $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
 
         $grid->addInlineEdit()->onControlAdd[]  = function ($container) use ($rolesOptions) : void {
             $container->addText('name', '')
