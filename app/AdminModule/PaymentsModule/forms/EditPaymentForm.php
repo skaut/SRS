@@ -9,6 +9,7 @@ use App\Model\Payment\Payment;
 use App\Model\Payment\PaymentRepository;
 use App\Model\User\ApplicationRepository;
 use App\Model\User\UserRepository;
+use App\Services\ApplicationService;
 use Nette;
 use Nette\Application\UI\Form;
 
@@ -39,17 +40,22 @@ class EditPaymentForm
     /** @var UserRepository */
     private $userRepository;
 
+    /** @var ApplicationService */
+    private $applicationService;
+
 
     public function __construct(
         BaseForm $baseFormFactory,
         PaymentRepository $paymentRepository,
         ApplicationRepository $applicationRepository,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        ApplicationService $applicationService
     ) {
         $this->baseFormFactory       = $baseFormFactory;
         $this->paymentRepository     = $paymentRepository;
         $this->applicationRepository = $applicationRepository;
         $this->userRepository        = $userRepository;
+        $this->applicationService    = $applicationService;
     }
 
     /**
@@ -102,6 +108,7 @@ class EditPaymentForm
         );
 
         $form->setDefaults([
+            'id' => $id,
             'date' => $this->payment->getDate(),
             'amount' => $this->payment->getAmount(),
             'variableSymbol' => $this->payment->getVariableSymbol(),
@@ -120,7 +127,7 @@ class EditPaymentForm
     public function processForm(Form $form, \stdClass $values) : void
     {
         if (! $form['cancel']->isSubmittedBy()) {
-            $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
+            $loggedUser = $this->userRepository->findById($form->getPresenter()->user->id);
 
             $pairedApplications = $this->applicationRepository->findApplicationsByIds($values['pairedApplications']);
 
