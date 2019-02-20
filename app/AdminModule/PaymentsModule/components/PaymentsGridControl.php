@@ -132,7 +132,7 @@ class PaymentsGridControl extends Control
             ->setFilterMultiSelect($this->preparePaymentStatesOptions())
             ->setTranslateOptions();
 
-        $grid->addInlineAdd()->onControlAdd[] = function (Container $container) : void {
+        $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function (Container $container) : void {
             $container->addDatePicker('date', '')
                 ->addRule(Form::FILLED, 'admin.payments.payments.date_empty');
 

@@ -89,7 +89,7 @@ class ProgramCategoriesGridControl extends Control
 
         $rolesOptions = $this->roleRepository->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]);
 
-        $grid->addInlineAdd()->onControlAdd[] = function ($container) use ($rolesOptions) : void {
+        $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function ($container) use ($rolesOptions) : void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.program.categories_name_empty')
                 ->addRule(Form::IS_NOT_IN, 'admin.program.categories_name_exists', $this->categoryRepository->findAllNames());

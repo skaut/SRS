@@ -201,7 +201,7 @@ class ApplicationsGridControl extends Control
 
         if ($explicitSubeventsExists) {
             if ($this->applicationService->isAllowedAddApplication($this->user)) {
-                $grid->addInlineAdd()->onControlAdd[] = function ($container) : void {
+                $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function ($container) : void {
                     $options = $this->subeventRepository->getNonRegisteredExplicitOptionsWithCapacity($this->user);
                     $container->addMultiSelect('subevents', '', $options)
                         ->setAttribute('class', 'datagrid-multiselect')

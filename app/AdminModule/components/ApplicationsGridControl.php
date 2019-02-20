@@ -172,7 +172,7 @@ class ApplicationsGridControl extends Control
             });
 
         if ($explicitSubeventsExists) {
-            $grid->addInlineAdd()->onControlAdd[] = function ($container) : void {
+            $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function ($container) : void {
                 $container->addMultiSelect(
                     'subevents',
                     '',
