@@ -8,6 +8,7 @@
         "ext-mysqli": "*",
 
         "nette/nette": "^2.4",
+        "latte/latte": "~2.4.0",
 
         "kdyby/doctrine": "^3.3",
         "kdyby/events": "^3.1",
@@ -35,7 +36,7 @@
         "joseki/pdf-response": "^4.0",
 
         "twbs/bootstrap": "^3.3",
-        "snapappointments/bootstrap-select": "1.12.4",
+        "snapappointments/bootstrap-select": "~1.12.0",
         "kartik-v/bootstrap-fileinput": "^4.5",
         "lukyrys/nette-forms-gpspicker": "^1.4",
 

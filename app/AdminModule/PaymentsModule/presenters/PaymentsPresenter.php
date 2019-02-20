@@ -29,6 +29,10 @@ class PaymentsPresenter extends PaymentsBasePresenter
     public $editPaymentFormFactory;
 
 
+    public function renderEdit(int $id) : void
+    {
+    }
+
     protected function createComponentPaymentsGrid() : PaymentsGridControl
     {
         return $this->paymentsGridControlFactory->create();
@@ -46,7 +50,7 @@ class PaymentsPresenter extends PaymentsBasePresenter
                 $this->flashMessage('admin.payments.payments.saved', 'success');
             }
 
-            $this->redirect('this');
+            $this->redirect('Payments:default');
         };
 
         return $form;
