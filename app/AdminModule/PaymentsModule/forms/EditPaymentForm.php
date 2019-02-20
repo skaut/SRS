@@ -9,7 +9,6 @@ use App\Model\Payment\Payment;
 use App\Model\Payment\PaymentRepository;
 use App\Model\User\ApplicationRepository;
 use App\Model\User\UserRepository;
-use Doctrine\ORM\NonUniqueResultException;
 use Nette;
 use Nette\Application\UI\Form;
 
@@ -120,14 +119,12 @@ class EditPaymentForm
      */
     public function processForm(Form $form, \stdClass $values) : void
     {
-        if ($form['cancel']->isSubmittedBy()) {
-            return;
+        if (! $form['cancel']->isSubmittedBy()) {
+            $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
+
+            $pairedApplications = $this->applicationRepository->findApplicationsByIds($values['pairedApplications']);
+
+            $this->applicationService->updatePayment($this->payment, $values['date'], $values['amount'], $values['variableSymbol'], $pairedApplications, $loggedUser);
         }
-
-        $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
-
-        $pairedApplications = $this->applicationRepository->findApplicationsByIds($values['pairedApplications']);
-
-        $this->applicationService->updatePayment($this->payment, $values['date'], $values['amount'], $values['variableSymbol'], $pairedApplications, $loggedUser);
     }
 }

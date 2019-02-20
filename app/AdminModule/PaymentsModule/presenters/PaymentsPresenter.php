@@ -26,7 +26,7 @@ class PaymentsPresenter extends PaymentsBasePresenter
      * @var EditPaymentForm
      * @inject
      */
-    public $editPaymentForm;
+    public $editPaymentFormFactory;
 
 
     protected function createComponentPaymentsGrid() : PaymentsGridControl
@@ -39,7 +39,7 @@ class PaymentsPresenter extends PaymentsBasePresenter
      */
     protected function createComponentEditPaymentForm() : Form
     {
-        $form = $this->editPaymentForm->create((int) $this->getParameter('id'));
+        $form = $this->editPaymentFormFactory->create((int) $this->getParameter('id'));
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
             if (! $form['cancel']->isSubmittedBy()) {
