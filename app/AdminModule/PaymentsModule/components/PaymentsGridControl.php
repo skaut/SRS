@@ -143,7 +143,7 @@ class PaymentsGridControl extends Control
             $container->addText('variableSymbol', '')
                 ->addRule(Form::FILLED, 'admin.payments.payments.variable_symbol_empty');
         };
-        $grid->getInlineAdd()->onSubmit[]     = [$this, 'add'];
+        $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
 
         if ($this->settingsRepository->getValue(Settings::BANK_TOKEN) !== null) {
             $grid->addToolbarButton('checkPayments!')

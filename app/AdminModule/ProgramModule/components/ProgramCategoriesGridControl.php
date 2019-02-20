@@ -97,7 +97,7 @@ class ProgramCategoriesGridControl extends Control
             $container->addMultiSelect('registerableRoles', '', $rolesOptions)->setAttribute('class', 'datagrid-multiselect')
                 ->addRule(Form::FILLED, 'admin.program.categories_registerable_roles_empty');
         };
-        $grid->getInlineAdd()->onSubmit[]     = [$this, 'add'];
+        $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
 
         $grid->addInlineEdit()->onControlAdd[]  = function ($container) use ($rolesOptions) : void {
             $container->addText('name', '')

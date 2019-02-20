@@ -121,7 +121,7 @@ class DocumentsGridControl extends Control
 
             $container->addText('description', '');
         };
-        $grid->getInlineAdd()->onSubmit[]     = [$this, 'add'];
+        $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
 
         $grid->addInlineEdit()->onControlAdd[]  = function ($container) use ($tagsOptions) : void {
             $container->addText('name', '')

@@ -99,7 +99,7 @@ class RoomsGridControl extends Control
                 ->addCondition(Form::FILLED)
                 ->addRule(Form::INTEGER, 'admin.program.rooms_capacity_format');
         };
-        $grid->getInlineAdd()->onSubmit[]     = [$this, 'add'];
+        $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
 
         $grid->addInlineEdit()->onControlAdd[]  = function ($container) : void {
             $container->addText('name', '')

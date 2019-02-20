@@ -110,7 +110,7 @@ class PagesGridControl extends Control
 
             $container->addSelect('public', '', $publicOptions);
         };
-        $grid->getInlineAdd()->onSubmit[]     = [$this, 'add'];
+        $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
 
         $grid->addInlineEdit()->onControlAdd[]  = function ($container) use ($rolesOptions, $publicOptions) : void {
             $container->addText('name', '')
