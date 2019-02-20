@@ -107,7 +107,7 @@ class ProgramService
 
             $this->blockRepository->save($block);
 
-            $this->updateUsersNotRegisteredMandatoryBlocks(new ArrayCollection($this->userRepository->findAll()));
+//            $this->updateUsersNotRegisteredMandatoryBlocks(new ArrayCollection($this->userRepository->findAll())); TODO: optimalizovat
         });
     }
 
@@ -169,8 +169,8 @@ class ProgramService
                     }
                 }
 
-                $this->updateUsersNotRegisteredMandatoryBlocks($oldAllowedUsers);
-                $this->updateUsersNotRegisteredMandatoryBlocks($allowedUsers);
+//                $this->updateUsersNotRegisteredMandatoryBlocks($oldAllowedUsers); TODO: optimalizovat
+//                $this->updateUsersNotRegisteredMandatoryBlocks($allowedUsers); TODO: optimalizovat
             }
 
             //aktualizace ucastniku pri zmene povinnosti
@@ -222,12 +222,12 @@ class ProgramService
         }
 
         //prepocet neprihlasenych povinnych bloku, pri zmene z povinneho na nepovinny a naopak
-        if (($oldMandatory === ProgramMandatoryType::VOLUNTARY &&
-                ($mandatory === ProgramMandatoryType::MANDATORY || $mandatory === ProgramMandatoryType::AUTO_REGISTERED))
-            || (($oldMandatory === ProgramMandatoryType::MANDATORY || $oldMandatory === ProgramMandatoryType::AUTO_REGISTERED)
-                && $mandatory === ProgramMandatoryType::VOLUNTARY)) {
-            $this->updateUsersNotRegisteredMandatoryBlocks($this->userRepository->findBlockAllowed($block));
-        }
+//        if (($oldMandatory === ProgramMandatoryType::VOLUNTARY &&
+//                ($mandatory === ProgramMandatoryType::MANDATORY || $mandatory === ProgramMandatoryType::AUTO_REGISTERED))
+//            || (($oldMandatory === ProgramMandatoryType::MANDATORY || $oldMandatory === ProgramMandatoryType::AUTO_REGISTERED)
+//                && $mandatory === ProgramMandatoryType::VOLUNTARY)) {
+//            $this->updateUsersNotRegisteredMandatoryBlocks($this->userRepository->findBlockAllowed($block));
+//        } TODO: optimalizovat
 
         $this->blockRepository->save($block);
     }
@@ -248,7 +248,7 @@ class ProgramService
                 return;
             }
 
-            $this->updateUsersNotRegisteredMandatoryBlocks(new ArrayCollection($this->userRepository->findAll()));
+//            $this->updateUsersNotRegisteredMandatoryBlocks(new ArrayCollection($this->userRepository->findAll())); TODO: optimalizovat
         });
     }
 
@@ -335,7 +335,7 @@ class ProgramService
 
             $this->programRepository->remove($program);
 
-            $this->updateUsersNotRegisteredMandatoryBlocks($attendees);
+//            $this->updateUsersNotRegisteredMandatoryBlocks($attendees); TODO: optimalizovat
         });
     }
 
@@ -362,9 +362,9 @@ class ProgramService
         $user->addProgram($program);
         $this->userRepository->save($user);
 
-        if ($program->getBlock()->getMandatory() !== ProgramMandatoryType::VOLUNTARY) {
-            $this->updateUserNotRegisteredMandatoryBlocks($user);
-        }
+//        if ($program->getBlock()->getMandatory() !== ProgramMandatoryType::VOLUNTARY) {
+//            $this->updateUserNotRegisteredMandatoryBlocks($user); TODO: optimalizovat
+//        }
 
         if (! $sendEmail) {
             return;
@@ -399,9 +399,9 @@ class ProgramService
         $user->removeProgram($program);
         $this->userRepository->save($user);
 
-        if ($program->getBlock()->getMandatory() !== ProgramMandatoryType::VOLUNTARY) {
-            $this->updateUserNotRegisteredMandatoryBlocks($user);
-        }
+//        if ($program->getBlock()->getMandatory() !== ProgramMandatoryType::VOLUNTARY) {
+//            $this->updateUserNotRegisteredMandatoryBlocks($user); TODO: optimalizovat
+//        }
 
         if (! $sendEmail) {
             return;
@@ -457,7 +457,7 @@ class ProgramService
             $this->registerProgramImpl($user, $program);
         }
 
-        $this->updateUserNotRegisteredMandatoryBlocks($user);
+//        $this->updateUserNotRegisteredMandatoryBlocks($user); TODO: optimalizovat
     }
 
     /**
