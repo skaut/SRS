@@ -35,7 +35,7 @@
         "phpoffice/phpspreadsheet": "^1.3",
         "joseki/pdf-response": "^4.0",
 
-        "twbs/bootstrap": "^3.3",
+        "twbs/bootstrap": "~3.3.0",
         "snapappointments/bootstrap-select": "~1.12.0",
         "kartik-v/bootstrap-fileinput": "^4.5",
         "lukyrys/nette-forms-gpspicker": "^1.4",
