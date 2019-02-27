@@ -7,7 +7,7 @@
         "ext-json": "*",
         "ext-mysqli": "*",
 
-        "nette/nette": "^2.4",
+        "nette/nette": "~2.4.0",
         "latte/latte": "~2.4.0",
 
         "kdyby/doctrine": "^3.3",
