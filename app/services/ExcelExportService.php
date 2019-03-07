@@ -25,6 +25,7 @@ use PhpOffice\PhpSpreadsheet\Exception;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use function implode;
+use function preg_replace;
 
 /**
  * Služba pro export do formátu XLSX.
@@ -148,7 +149,7 @@ class ExcelExportService
         $sheetNumber = 0;
 
         foreach ($users as $user) {
-            $sheet = new Worksheet($this->spreadsheet, Helpers::truncate($user->getDisplayName(), 28));
+            $sheet = new Worksheet($this->spreadsheet, self::cleanSheetName($user->getDisplayName()));
             $this->spreadsheet->addSheet($sheet, $sheetNumber++);
 
             $row    = 1;
@@ -215,7 +216,7 @@ class ExcelExportService
         $sheetNumber = 0;
 
         foreach ($rooms as $room) {
-            $sheet = new Worksheet($this->spreadsheet, Helpers::truncate($room->getName(), 28));
+            $sheet = new Worksheet($this->spreadsheet, self::cleanSheetName($room->getName()));
             $this->spreadsheet->addSheet($sheet, $sheetNumber++);
 
             $row    = 1;
@@ -561,7 +562,7 @@ class ExcelExportService
         $sheetNumber = 0;
 
         foreach ($blocks as $block) {
-            $sheet = new Worksheet($this->spreadsheet, Helpers::truncate($block->getName(), 28));
+            $sheet = new Worksheet($this->spreadsheet, self::cleanSheetName($block->getName()));
             $this->spreadsheet->addSheet($sheet, $sheetNumber++);
 
             $row    = 1;
@@ -595,5 +596,14 @@ class ExcelExportService
         }
 
         return new ExcelResponse($this->spreadsheet, $filename);
+    }
+
+    /**
+     * Odstraní z názvu listu zakázané znaky a zkrátí jej na 31 znaků.
+     */
+    private static function cleanSheetName(string $name) : string
+    {
+        $name = preg_replace('[\\/\*\[\]:?]', '', $name);
+        return Helpers::truncate($name, 28);
     }
 }
