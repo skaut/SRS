@@ -234,7 +234,9 @@ program:
         program_settings: "Nastavení programu"
         blocks_heading: "Programové bloky"
         blocks_unassigned_only: "jen nezařazené"
-        modify_schedule_is_not_allowed: "Úprava harmonogramu není povolena."
+        modify_schedule_is_not_allowed_begin: "Úprava harmonogramu není povolena, povolit ji můžete v "
+        modify_schedule_is_not_allowed_link: "nastavení"
+        modify_schedule_is_not_allowed_end: "."
 
     categories_heading: "Kategorie"
     categories_name: "Název"

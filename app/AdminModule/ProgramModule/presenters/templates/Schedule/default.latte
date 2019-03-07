@@ -15,7 +15,8 @@
     {if !$isAllowedModifySchedule}
         <div class="alert alert-warning alert-forever">
             <a href="#" class="close" data-dismiss="alert">&times;</a>
-            {_admin.program.schedule.modify_schedule_is_not_allowed}
+            {_admin.program.schedule.modify_schedule_is_not_allowed_begin}<a href="{plink :Admin:Configuration:Program:default}"
+                                                                             class="alert-link">{_admin.program.schedule.modify_schedule_is_not_allowed_link}</a>{_admin.program.schedule.modify_schedule_is_not_allowed_end}
         </div>
     {/if}
     <div id="app">
