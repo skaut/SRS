@@ -137,19 +137,19 @@ class PagePresenter extends WebBasePresenter
         if ($slug === null) {
             $page = $this->pageRepository->findPublishedBySlug('/');
             if ($page === null) {
-                throw new BadRequestException($this->translator->translate('web.common.homepage_not_found'), 404);
+                $this->error($this->translator->translate('web.common.homepage_not_found'), 404);
             }
             $this->template->bodyClass = 'body-homepage';
         } else {
             $page = $this->pageRepository->findBySlug($slug);
             if ($page === null) {
-                throw new BadRequestException($this->translator->translate('web.common.page_not_found'), 404);
+                $this->error($this->translator->translate('web.common.page_not_found'), 404);
             }
             $this->template->bodyClass = 'body-' . $slug;
         }
 
         if (! $page->isAllowedForRoles($this->user->roles)) {
-            throw new BadRequestException($this->translator->translate('web.common.page_access_denied'), 403);
+            $this->error($this->translator->translate('web.common.page_access_denied'), 403);
         }
 
         $this->template->page           = $page;
