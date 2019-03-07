@@ -1,7 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Presenters;
+
 use Nette;
 use Nette\Application\Responses;
 use Nette\Http;
@@ -20,20 +22,17 @@ final class ErrorPresenter implements Nette\Application\IPresenter
         $this->logger = $logger;
     }
 
-    /**
-     * @return Nette\Application\IResponse
-     */
-    public function run(Nette\Application\Request $request)
+    public function run(Nette\Application\Request $request) : Nette\Application\IResponse
     {
         $e = $request->getParameter('exception');
         if ($e instanceof Nette\Application\BadRequestException) {
             // $this->logger->log("HTTP code {$e->getCode()}: {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}", 'access');
             list($module, , $sep) = Nette\Application\Helpers::splitName($request->getPresenterName());
-            $errorPresenter = $module . $sep . 'Error4xx';
+            $errorPresenter       = $module . $sep . 'Error4xx';
             return new Responses\ForwardResponse($request->setPresenterName($errorPresenter));
         }
         $this->logger->log($e, ILogger::EXCEPTION);
-        return new Responses\CallbackResponse(function (Http\IRequest $httpRequest, Http\IResponse $httpResponse) {
+        return new Responses\CallbackResponse(function (Http\IRequest $httpRequest, Http\IResponse $httpResponse) : void {
             if (preg_match('#^text/html(?:;|$)#', $httpResponse->getHeader('Content-Type'))) {
                 require __DIR__ . '/templates/Error/500.phtml';
             }
