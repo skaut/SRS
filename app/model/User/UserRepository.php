@@ -106,6 +106,20 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * Vrací schválené uživatele v roli.
+     * @return User[]
+     */
+    public function findAllApprovedInRole(Role $role) : array
+    {
+        return $this->createQueryBuilder('u')
+            ->join('u.roles', 'r')
+            ->where('r.id = :id')->setParameter('id', $role->getId())
+            ->andWhere('u.approved = true')
+            ->orderBy('u.displayName')
+            ->getQuery()->execute();
+    }
+
+    /**
      * Vrací uživatele v rolích.
      * @param int[] $rolesIds
      * @return User[]

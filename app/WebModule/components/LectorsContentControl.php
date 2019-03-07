@@ -38,7 +38,7 @@ class LectorsContentControl extends Control
         $template->setFile(__DIR__ . '/templates/lectors_content.latte');
 
         $template->heading = $content->getHeading();
-        $template->lectors = $this->userRepository->findAllInRole($this->roleRepository->findBySystemName(Role::LECTOR));
+        $template->lectors = $this->userRepository->findAllApprovedInRole($this->roleRepository->findBySystemName(Role::LECTOR));
 
         $template->render();
     }
