@@ -126,28 +126,32 @@ class AdditionalInformationForm extends UI\Control
 
             switch ($customInput->getType()) {
                 case CustomInput::TEXT:
-                    $custom = $form->addText('custom' . $customInput->getId(), $customInput->getName());
+                    $custom = $form->addText('custom' . $customInput->getId(), $customInput->getName())
+                        ->setDisabled(! $isAllowedEditCustomInputs);
                     if ($customInputValue) {
                         $custom->setDefaultValue($customInputValue->getValue());
                     }
                     break;
 
                 case CustomInput::CHECKBOX:
-                    $custom = $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName());
+                    $custom = $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName())
+                        ->setDisabled(! $isAllowedEditCustomInputs);
                     if ($customInputValue) {
                         $custom->setDefaultValue($customInputValue->getValue());
                     }
                     break;
 
                 case CustomInput::SELECT:
-                    $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions());
+                    $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions())
+                        ->setDisabled(! $isAllowedEditCustomInputs);
                     if ($customInputValue) {
                         $custom->setDefaultValue($customInputValue->getValue());
                     }
                     break;
 
                 case CustomInput::FILE:
-                    $custom = $form->addUpload('custom' . $customInput->getId(), $customInput->getName());
+                    $custom = $form->addUpload('custom' . $customInput->getId(), $customInput->getName())
+                        ->setDisabled(! $isAllowedEditCustomInputs);
                     if ($customInputValue && $customInputValue->getValue()) {
                         $custom->setAttribute('data-current-file-link', $customInputValue->getValue())
                             ->setAttribute('data-current-file-name', array_values(array_slice(explode('/', $customInputValue->getValue()), -1))[0]);
@@ -160,10 +164,6 @@ class AdditionalInformationForm extends UI\Control
 
             if ($customInput->isMandatory() && $customInput->getType() !== CustomInput::FILE) {
                 $custom->addRule(Form::FILLED, 'web.profile.custom_input_empty');
-            }
-
-            if (! $isAllowedEditCustomInputs) {
-                $custom->setDisabled();
             }
         }
 
