@@ -17,6 +17,7 @@ use App\Services\MailService;
 use App\Services\ProgramService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\QueryBuilder;
 use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
@@ -148,6 +149,7 @@ class ProgramAttendeesGridControl extends Control
             }
 
             $grid->setDataSource($qb);
+            $grid->setItemsPerPageList([25, 50, 100, 250, 500]);
             $grid->setStrictSessionFilterValues(false);
 
             $grid->addGroupAction('admin.program.blocks_attendees_register')->onSelect[]   = [$this, 'groupRegister'];
@@ -157,28 +159,28 @@ class ProgramAttendeesGridControl extends Control
                 ->setFilterText();
 
             $grid->addColumnText('attends', 'admin.program.blocks_attendees_attends', 'pid')
-                ->setRenderer(function ($item) {
+                ->setRenderer(function (User $item) {
                     return $item->getPrograms()->contains($this->program)
                         ? $this->translator->translate('admin.common.yes')
                         : $this->translator->translate('admin.common.no');
                 })
-                ->setFilterSelect(['' => 'admin.common.all', 1 => 'admin.common.yes', 0 => 'admin.common.no'])
-                ->setCondition(function ($qb, $value) : void {
+                ->setFilterSelect(['' => 'admin.common.all', 'yes' => 'admin.common.yes', 'no' => 'admin.common.no'])
+                ->setCondition(function (QueryBuilder $qb, $value) : void {
                     if ($value === '') {
                         return;
-                    } elseif ($value === 1) {
+                    } elseif ($value === 'yes') {
                         $qb->innerJoin('u.programs', 'pro')
                             ->andWhere('pro.id = :proid')
                             ->setParameter('proid', $this->program->getId());
-                    } elseif ($value === 0) {
+                    } elseif ($value === 'no') {
                         $qb->leftJoin('u.programs', 'pro')
-                            ->andWhere('(pro.id != :proid OR pro.id IS NULL)')
-                            ->setParameter('proid', $this->program->getId());
+                            ->andWhere('u not in (:attendees)')
+                            ->setParameter('attendees', $this->program->getAttendees());
                     }
                 })
                 ->setTranslateOptions();
 
-            //$grid->setDefaultFilter(['attends' => 1], false); - zpusobuje problem, pokud neni zadny prihlaseny
+            $grid->setDefaultFilter(['attends' => 'yes'], false);
 
             if ($this->user->isAllowed(Resource::USERS, Permission::MANAGE)) {
                 $grid->addAction('detail', 'admin.common.detail', ':Admin:Users:detail')
