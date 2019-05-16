@@ -45,7 +45,7 @@ skautis:
 
 mailing:
     do: both
-    log_directory: '%appDir%/../log/mails'
+    logDirectory: '%appDir%/../log/mails'
 
 translation:
     default: cs
