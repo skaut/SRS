@@ -2,7 +2,7 @@
 
 namespace Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
@@ -10,7 +10,7 @@ use Doctrine\DBAL\Schema\Schema;
  */
 class Version20171224194026 extends AbstractMigration
 {
-    public function up(Schema $schema)
+    public function up(Schema $schema) : void
     {
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
@@ -19,7 +19,7 @@ class Version20171224194026 extends AbstractMigration
         $this->addSql('CREATE INDEX IDX_A45BDDC125813A9D ON application (variable_symbol_id)');
     }
 
-    public function down(Schema $schema)
+    public function down(Schema $schema) : void
     {
     }
 }

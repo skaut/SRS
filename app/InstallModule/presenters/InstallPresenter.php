@@ -14,7 +14,7 @@ use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception\TableNotFoundException;
-use Doctrine\DBAL\Migrations\Tools\Console\Command\MigrateCommand;
+use Doctrine\Migrations\Tools\Console\Command\MigrateCommand;
 use Kdyby\Console\Application;
 use Kdyby\Console\StringOutput;
 use Nette\Application\AbortException;
