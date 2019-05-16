@@ -10,7 +10,7 @@ use Doctrine\DBAL\Schema\Schema;
  */
 class Version20171228185809 extends AbstractMigration
 {
-    public function up(Schema $schema)
+    public function up(Schema $schema) : void
     {
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
@@ -20,7 +20,7 @@ class Version20171228185809 extends AbstractMigration
         $this->addSql('ALTER TABLE custom_file_value ADD CONSTRAINT FK_880BD4A9BF396750 FOREIGN KEY (id) REFERENCES custom_input_value (id) ON DELETE CASCADE');
     }
 
-    public function down(Schema $schema)
+    public function down(Schema $schema) : void
     {
     }
 }

@@ -10,7 +10,7 @@ use Doctrine\DBAL\Schema\Schema;
  */
 class Version20171227152222 extends AbstractMigration
 {
-    public function up(Schema $schema)
+    public function up(Schema $schema) : void
     {
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
@@ -27,7 +27,7 @@ class Version20171227152222 extends AbstractMigration
         $this->addSql('DELETE FROM `template_template_variable` WHERE `template_template_variable`.`template_id` = 4 AND `template_template_variable`.`template_variable_id` = 4');
     }
 
-    public function down(Schema $schema)
+    public function down(Schema $schema) : void
     {
     }
 }
