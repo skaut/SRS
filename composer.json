@@ -22,7 +22,7 @@
         "nextras/forms": "^2.0",
 
         "ublaboo/datagrid": "^5.7",
-        "ublaboo/mailing": "^1.2",
+        "ublaboo/mailing": "~1.1.0",
 
         "janmarek/webloader": "dev-master",
         "jms/serializer": "^1.13",
