@@ -76,7 +76,7 @@ class DiscountService
 
             try {
                 $this->parseExpression($result);
-            } catch (InvalidArgumentException $exception) {
+            } catch (InvalidArgumentException $ex) {
                 continue;
             }
 
@@ -101,7 +101,7 @@ class DiscountService
 
         try {
             $this->parseExpression($result);
-        } catch (InvalidArgumentException $exception) {
+        } catch (InvalidArgumentException $ex) {
             return false;
         }
 

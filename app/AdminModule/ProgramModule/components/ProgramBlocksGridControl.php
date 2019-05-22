@@ -27,6 +27,8 @@ use Nette\Application\UI\Control;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use PhpOffice\PhpSpreadsheet\Exception;
+use Tracy\Debugger;
+use Tracy\ILogger;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
@@ -263,7 +265,8 @@ class ProgramBlocksGridControl extends Control
             try {
                 $this->programService->updateBlockMandatory($block, $mandatory);
                 $p->flashMessage('admin.program.blocks_changed_mandatory', 'success');
-            } catch (\Throwable $e) {
+            } catch (\Throwable $ex) {
+                Debugger::log($ex, ILogger::WARNING);
                 $p->flashMessage('admin.program.blocks_change_mandatory_error', 'danger');
             }
         }

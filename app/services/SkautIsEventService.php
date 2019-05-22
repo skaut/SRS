@@ -8,6 +8,8 @@ use App\Model\User\User;
 use Doctrine\Common\Collections\Collection;
 use Skautis\Skautis;
 use Skautis\Wsdl\WsdlException;
+use Tracy\Debugger;
+use Tracy\ILogger;
 
 /**
  * Služba pro správu skautIS akce.
@@ -67,7 +69,8 @@ abstract class SkautIsEventService
             foreach ($this->getDraftEvents() as $event) {
                 $options[$event->ID] = $event->DisplayName;
             }
-        } catch (WsdlException $e) {
+        } catch (WsdlException $ex) {
+            Debugger::log($ex, ILogger::WARNING);
         }
         return $options;
     }
