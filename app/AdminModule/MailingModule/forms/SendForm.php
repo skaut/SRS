@@ -15,6 +15,8 @@ use Kdyby\Events\Event;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Mail\SendException;
+use Tracy\Debugger;
+use Tracy\ILogger;
 use Ublaboo\Mailing\Exception\MailingException;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 
@@ -141,6 +143,7 @@ class SendForm
             $this->mailService->sendMail($recipientsRoles, $recipientsSubevents, $recipientsUsers, $values['copy'], $values['subject'], $values['text']);
             $this->mailSuccess = true;
         } catch (SendException $ex) {
+            Debugger::log($ex, ILogger::WARNING);
             $this->mailSuccess = false;
         }
     }

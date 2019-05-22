@@ -15,6 +15,8 @@ use Nette;
 use Nette\Application\UI\Form;
 use Skautis\Wsdl\WsdlException;
 use function array_key_exists;
+use Tracy\Debugger;
+use Tracy\ILogger;
 
 /**
  * Formulář pro úpravu osobních údajů.
@@ -172,6 +174,7 @@ class PersonalDetailsForm
                 $this->user->getState()
             );
         } catch (WsdlException $ex) {
+            Debugger::log($ex, ILogger::WARNING);
             $this->onSkautIsError();
         }
     }

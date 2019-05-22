@@ -8,6 +8,8 @@ use App\Model\User\User;
 use Doctrine\Common\Collections\Collection;
 use Skautis\Wsdl\WsdlException;
 use function array_key_exists;
+use Tracy\Debugger;
+use Tracy\ILogger;
 
 /**
  * Služba pro správu obecné skautIS akce.
@@ -44,7 +46,8 @@ class SkautIsEventGeneralService extends SkautIsEventService
 
                 $this->insertParticipant($eventId, $personId);
             }
-        } catch (WsdlException $e) {
+        } catch (WsdlException $ex) {
+            Debugger::log($ex, ILogger::WARNING);
             return false;
         }
 

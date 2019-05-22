@@ -16,6 +16,8 @@ use FioApi\Exceptions\InternalErrorException;
 use Nette;
 use Nette\Application\UI\Form;
 use Nextras\Forms\Controls\DatePicker;
+use Tracy\Debugger;
+use Tracy\ILogger;
 
 /**
  * Formulár pro nastavení párování plateb.
@@ -90,7 +92,8 @@ class BankForm
         try {
             $this->bankService->downloadTransactions($from, $token);
             $this->settingsRepository->setValue(Settings::BANK_TOKEN, $token);
-        } catch (InternalErrorException $e) {
+        } catch (InternalErrorException $ex) {
+            Debugger::log($ex, ILogger::WARNING);
             $form['bankToken']->addError('admin.configuration.payment.bank.invalid_token');
         }
     }

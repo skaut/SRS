@@ -11,6 +11,8 @@ use Doctrine\Common\Collections\Collection;
 use Skautis\Skautis;
 use Skautis\Wsdl\WsdlException;
 use function array_key_exists;
+use Tracy\Debugger;
+use Tracy\ILogger;
 
 /**
  * Služba pro správu vzdělávací skautIS akce.
@@ -76,7 +78,8 @@ class SkautIsEventEducationService extends SkautIsEventService
                     }
                 }
             }
-        } catch (WsdlException $e) {
+        } catch (WsdlException $ex) {
+            Debugger::log($ex, ILogger::WARNING);
             return false;
         }
 
