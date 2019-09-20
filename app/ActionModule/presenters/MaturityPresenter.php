@@ -163,7 +163,7 @@ class MaturityPresenter extends ActionBasePresenter
                         continue;
                     }
 
-                    if ($maturityReminder === null || $maturityReminderDate !== $maturityDate) {
+                    if ($maturityReminder === null || $maturityReminderDate != $maturityDate) {
                         continue;
                     }
 
