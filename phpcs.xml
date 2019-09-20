@@ -25,5 +25,8 @@
 
         <!-- Docasne ignorovano, dokud nebudou vytvoreny lepsi vyjimky -->
         <exclude name="SlevomatCodingStandard.Classes.SuperfluousExceptionNaming.SuperfluousSuffix"/>
+
+        <!-- Docasne ignorovano, pro porovnavani objektu (DateTime) neni strict zadouci -->
+        <exclude name="SlevomatCodingStandard.ControlStructures.DisallowEqualOperators.DisallowedNotEqualOperator"/>
     </rule>
 </ruleset>
