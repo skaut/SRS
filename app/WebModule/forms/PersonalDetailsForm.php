@@ -14,9 +14,9 @@ use Kdyby\Events\Event;
 use Nette;
 use Nette\Application\UI\Form;
 use Skautis\Wsdl\WsdlException;
-use function array_key_exists;
 use Tracy\Debugger;
 use Tracy\ILogger;
+use function array_key_exists;
 
 /**
  * Formulář pro úpravu osobních údajů.

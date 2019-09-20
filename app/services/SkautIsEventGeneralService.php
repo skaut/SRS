@@ -7,9 +7,9 @@ namespace App\Services;
 use App\Model\User\User;
 use Doctrine\Common\Collections\Collection;
 use Skautis\Wsdl\WsdlException;
-use function array_key_exists;
 use Tracy\Debugger;
 use Tracy\ILogger;
+use function array_key_exists;
 
 /**
  * Služba pro správu obecné skautIS akce.
