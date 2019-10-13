@@ -29,6 +29,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
+use Nette\Caching\Cache;
+use Nette\Caching\IStorage;
 
 /**
  * Služba pro správu programů.
@@ -57,6 +59,9 @@ class ProgramService
     /** @var MailService */
     private $mailService;
 
+    /** @var Cache */
+    private $userAllowedProgramsCache;
+
 
     public function __construct(
         SettingsRepository $settingsRepository,
@@ -64,7 +69,8 @@ class ProgramService
         BlockRepository $blockRepository,
         UserRepository $userRepository,
         CategoryRepository $categoryRepository,
-        MailService $mailService
+        MailService $mailService,
+        IStorage $storage
     ) {
         $this->settingsRepository = $settingsRepository;
         $this->programRepository  = $programRepository;
@@ -72,6 +78,8 @@ class ProgramService
         $this->userRepository     = $userRepository;
         $this->categoryRepository = $categoryRepository;
         $this->mailService        = $mailService;
+
+        $this->userAllowedProgramsCache = new Cache($storage, 'UserAllowedPrograms');
     }
 
     /**
@@ -518,6 +526,7 @@ class ProgramService
     /**
      * Vrací programy, na které se uživatel může přihlásit.
      * @return Collection|Program[]
+     * @throws \Throwable
      */
     public function getUserAllowedPrograms(User $user) : Collection
     {
@@ -528,6 +537,12 @@ class ProgramService
         $registerableCategories = $this->categoryRepository->findUserAllowed($user);
         $registeredSubevents    = $user->getSubevents();
 
-        return $this->programRepository->findAllowedForCategoriesAndSubevents($registerableCategories, $registeredSubevents);
+        $key = serialize($registerableCategories->toArray()) . ":" . serialize($registeredSubevents->toArray());
+        $userAllowedPrograms = $this->userAllowedProgramsCache->load($key);
+        if ($userAllowedPrograms === null) {
+            $userAllowedPrograms = $this->programRepository->findAllowedForCategoriesAndSubevents($registerableCategories, $registeredSubevents);
+            $this->userAllowedProgramsCache->save($key, $userAllowedPrograms); //TODO invalidate
+        }
+        return $userAllowedPrograms;
     }
 }
