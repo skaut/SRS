@@ -7,10 +7,15 @@ namespace App\Model\CMS;
 use App\Model\Page\PageException;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\Mapping;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Kdyby\Doctrine\EntityManager;
 use Kdyby\Doctrine\EntityRepository;
+use Nette\Caching\Cache;
+use Nette\Caching\IStorage;
+use SRS\model\CMS\PageDTO;
 use const PHP_INT_MAX;
 use function array_map;
 
@@ -22,6 +27,16 @@ use function array_map;
  */
 class PageRepository extends EntityRepository
 {
+    /** @var Cache */
+    private $cache;
+
+
+    public function __construct(EntityManager $em, Mapping\ClassMetadata $class, IStorage $storage)
+    {
+        parent::__construct($em, $class);
+        $this->cache = new Cache($storage, 'Page');
+    }
+
     /**
      * Vrací stránku podle id.
      */
@@ -31,24 +46,22 @@ class PageRepository extends EntityRepository
     }
 
     /**
-     * Vrací stránku podle cesty.
-     */
-    public function findBySlug(string $slug) : ?Page
-    {
-        return $this->findOneBy(['slug' => $slug]);
-    }
-
-    /**
      * Vrací viditelné stránky se zadaným slugem.
+     * @throws \Throwable
      */
-    public function findPublishedBySlug(string $slug) : ?Page
+    public function findPublishedBySlug(string $slug) : ?PageDTO
     {
-        return $this->findOneBy(['public' => true, 'slug' => $slug]);
+        $page = $this->cache->load($slug);
+        if ($page === null) {
+            $page = $this->findOneBy(['public' => true, 'slug' => $slug]);
+            $this->cache->save($slug, $page);
+        }
+        return $page;
     }
 
     /**
      * Vrací viditelné stránky, seřazené podle pozice.
-     * @return Page[]
+     * @return PageDTO[]
      */
     public function findPublishedOrderedByPosition() : array
     {

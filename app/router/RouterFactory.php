@@ -108,7 +108,7 @@ class RouterFactory
                 'presenter' => 'Page',
                 'page' => [
                     Route::FILTER_IN => function (string $slug) {
-                        return $this->pageRepository->findBySlug($slug);
+                        return $this->pageRepository->findPublishedBySlug($slug);
                     },
                     Route::FILTER_OUT => function (Page $page) {
                         return $page->getSlug();

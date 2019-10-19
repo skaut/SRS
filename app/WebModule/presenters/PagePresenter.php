@@ -141,7 +141,7 @@ class PagePresenter extends WebBasePresenter
             }
             $this->template->bodyClass = 'body-homepage';
         } else {
-            $page = $this->pageRepository->findBySlug($slug);
+            $page = $this->pageRepository->findPublishedBySlug($slug);
             if ($page === null) {
                 $this->error($this->translator->translate('web.common.page_not_found'), 404);
             }
