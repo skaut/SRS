@@ -211,6 +211,11 @@ class Settings
      */
     public const TICKETS_FROM = 'tickets_from';
 
+    /**
+     * Google Analytics kód měření.
+     */
+    public const GA_ID = 'ga_id';
+
 
     /**
      * Název položky nastavení.

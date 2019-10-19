@@ -72,11 +72,14 @@ class WebForm
         $form->addSelect('redirectAfterLogin', 'admin.configuration.web_redirect_after_login', $this->pageRepository->getPagesOptions())
             ->addRule(Form::FILLED, 'admin.configuration.web_redirect_after_login_empty');
 
+        $form->addText('ga_id', 'admin.configuration.web_ga_id');
+
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
             'footer' => $this->settingsRepository->getValue(Settings::FOOTER),
             'redirectAfterLogin' => $this->settingsRepository->getValue(Settings::REDIRECT_AFTER_LOGIN),
+            'ga_id' => $this->settingsRepository->getValue(Settings::GA_ID),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -105,5 +108,6 @@ class WebForm
 
         $this->settingsRepository->setValue(Settings::FOOTER, $values['footer']);
         $this->settingsRepository->setValue(Settings::REDIRECT_AFTER_LOGIN, $values['redirectAfterLogin']);
+        $this->settingsRepository->setValue(Settings::GA_ID, $values['ga_id']);
     }
 }
