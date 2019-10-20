@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Mailing\TextMail;
+use App\Mailing\SrsMail;
+use App\Mailing\SrsMailData;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Mailing\Mail;
@@ -114,16 +115,10 @@ class MailService
             $recipients[] = $user;
         }
 
-        $params = [
-            'fromEmail' => $this->settingsRepository->getValue(Settings::SEMINAR_EMAIL),
-            'fromName' => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-            'recipients' => $recipients,
-            'copy' => $copy,
-            'subject' => $subject,
-            'text' => $text,
-        ];
-
-        $mail = $this->mailFactory->createByType(TextMail::class, $params);
+        $messageData = new SrsMailData($this->settingsRepository->getValue(Settings::SEMINAR_EMAIL),
+            $this->settingsRepository->getValue(Settings::SEMINAR_NAME), $recipients, $copy, $subject, $text
+        );
+        $mail = $this->mailFactory->createByType(SrsMail::class, $messageData);
         $mail->send();
 
         $mailLog = new Mail();
