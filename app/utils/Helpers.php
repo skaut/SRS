@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Utils;
 
 use Doctrine\Common\Collections\Collection;
+use Nette\SmartObject;
 use function array_map;
 use function mb_substr;
 use function strlen;
@@ -37,7 +38,7 @@ class Helpers
 
     /**
      * Vrátí id prvků v kolekci.
-     * @param Collection $collection
+     * @param Collection|SmartObject[] $collection
      * @return int[]
      */
     public static function getIds(Collection $collection) : array

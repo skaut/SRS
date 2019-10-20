@@ -27,7 +27,7 @@ class ContentDTO
     public function __construct(string $componentName, string $heading)
     {
         $this->componentName = $componentName;
-        $this->heading = $heading;
+        $this->heading       = $heading;
     }
 
     public function getComponentName() : string

@@ -46,7 +46,7 @@ class PageDTO
 
 
     /**
-     * @param string[] $allowedRoles
+     * @param string[]     $allowedRoles
      * @param ContentDTO[] $mainContents
      * @param ContentDTO[] $sidebarContents
      */
