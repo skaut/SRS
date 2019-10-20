@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Model\CMS\Content;
 
+use Doctrine\ORM\Mapping;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Doctrine\ORM\Mapping;
 use Kdyby\Doctrine\EntityManager;
 use Kdyby\Doctrine\EntityRepository;
 use Nette\Caching\Cache;

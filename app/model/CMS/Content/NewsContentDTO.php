@@ -18,12 +18,6 @@ class NewsContentDTO extends ContentDTO
     protected $count;
 
 
-    /**
-     * NewsContent constructor.
-     * @param string $type
-     * @param string $heading
-     * @param int $count
-     */
     public function __construct(string $type, string $heading, ?int $count)
     {
         parent::__construct($type, $heading);

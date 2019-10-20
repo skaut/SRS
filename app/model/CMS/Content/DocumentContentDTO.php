@@ -19,10 +19,7 @@ class DocumentContentDTO extends ContentDTO
 
 
     /**
-     * DocumentContent constructor.
-     * @param string $type
-     * @param string $heading
-     * @param array $tags
+     * @param int[] $tags
      */
     public function __construct(string $type, string $heading, array $tags)
     {

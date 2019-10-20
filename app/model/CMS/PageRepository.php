@@ -59,8 +59,6 @@ class PageRepository extends EntityRepository
 
     /**
      * Vrací DTO viditelné stránky se zadaným slugem.
-     * @param string $slug
-     * @return PageDTO|null
      * @throws \Throwable
      */
     public function findPublishedBySlugDTO(string $slug) : ?PageDTO

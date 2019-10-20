@@ -71,7 +71,6 @@ class AclPresenter extends AdminBasePresenter
 
     /**
      * Zapne testování role.
-     * @param int $id
      * @throws AbortException
      */
     public function actionTest(int $id) : void

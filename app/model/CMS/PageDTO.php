@@ -46,36 +46,26 @@ class PageDTO
 
 
     /**
-     * PageDTO constructor.
-     * @param string $name
-     * @param string $slug
      * @param string[] $allowedRoles
      * @param ContentDTO[] $mainContents
      * @param ContentDTO[] $sidebarContents
-     * @param bool $hasSidebar
      */
     public function __construct(string $name, string $slug, array $allowedRoles, array $mainContents, array $sidebarContents, bool $hasSidebar)
     {
-        $this->name = $name;
-        $this->slug = $slug;
-        $this->allowedRoles = $allowedRoles;
-        $this->mainContents = $mainContents;
+        $this->name            = $name;
+        $this->slug            = $slug;
+        $this->allowedRoles    = $allowedRoles;
+        $this->mainContents    = $mainContents;
         $this->sidebarContents = $sidebarContents;
-        $this->hasSidebar = $hasSidebar;
+        $this->hasSidebar      = $hasSidebar;
     }
 
-    /**
-     * @return string
-     */
-    public function getName(): string
+    public function getName() : string
     {
         return $this->name;
     }
 
-    /**
-     * @return string
-     */
-    public function getSlug(): string
+    public function getSlug() : string
     {
         return $this->slug;
     }
@@ -83,7 +73,7 @@ class PageDTO
     /**
      * @return string[]
      */
-    public function getAllowedRoles(): array
+    public function getAllowedRoles() : array
     {
         return $this->allowedRoles;
     }
@@ -91,7 +81,7 @@ class PageDTO
     /**
      * @return ContentDTO[]
      */
-    public function getMainContents(): array
+    public function getMainContents() : array
     {
         return $this->mainContents;
     }
@@ -99,14 +89,11 @@ class PageDTO
     /**
      * @return ContentDTO[]
      */
-    public function getSidebarContents(): array
+    public function getSidebarContents() : array
     {
         return $this->sidebarContents;
     }
 
-    /**
-     * @return bool
-     */
     public function hasSidebar() : bool
     {
         return $this->hasSidebar;
@@ -114,8 +101,7 @@ class PageDTO
 
     /**
      * Je stránka viditelná pro uživatele v rolích?
-     * @param array $userRoles
-     * @return bool
+     * @param string[] $userRoles
      */
     public function isAllowedForRoles(array $userRoles) : bool
     {

@@ -24,11 +24,6 @@ class ContentDTO
     protected $heading;
 
 
-    /**
-     * ContentDTO constructor.
-     * @param string $type
-     * @param string $heading
-     */
     public function __construct(string $componentName, string $heading)
     {
         $this->componentName = $componentName;

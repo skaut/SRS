@@ -36,21 +36,12 @@ class ImageContentDTO extends ContentDTO
     protected $height;
 
 
-    /**
-     * ImageContent constructor.
-     * @param string $type
-     * @param string $heading
-     * @param string $image
-     * @param string $align
-     * @param int $width
-     * @param int $height
-     */
     public function __construct(string $type, string $heading, ?string $image, ?string $align, ?int $width, ?int $height)
     {
         parent::__construct($type, $heading);
-        $this->image = $image;
-        $this->align = $align;
-        $this->width = $width;
+        $this->image  = $image;
+        $this->align  = $align;
+        $this->width  = $width;
         $this->height = $height;
     }
 

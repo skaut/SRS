@@ -19,7 +19,6 @@ class CapacitiesContentDTO extends ContentDTO
 
 
     /**
-     * CapacitiesContentDTO constructor.
      * @param int[] $roles
      */
     public function __construct(string $type, string $heading, array $roles)

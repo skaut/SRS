@@ -12,6 +12,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
+use function array_map;
 use function implode;
 use function in_array;
 
@@ -175,7 +176,6 @@ class Page
     }
 
     /**
-     * @return PageDTO
      * @throws PageException
      */
     public function convertToDTO() : PageDTO

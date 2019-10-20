@@ -29,6 +29,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
+use Ublaboo\Mailing\Exception\MailingException;
+use Ublaboo\Mailing\Exception\MailingMailCreationException;
 
 /**
  * Služba pro správu programů.
@@ -190,14 +192,12 @@ class ProgramService
     }
 
     /**
-     * @param Block $block
-     * @param string $mandatory
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws SettingsException
      * @throws \Throwable
-     * @throws \Ublaboo\Mailing\Exception\MailingException
-     * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
+     * @throws MailingException
+     * @throws MailingMailCreationException
      */
     private function updateBlockMandatoryImpl(Block $block, string $mandatory) : void
     {
@@ -361,15 +361,12 @@ class ProgramService
     }
 
     /**
-     * @param User $user
-     * @param Program $program
-     * @param bool $sendEmail
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws SettingsException
      * @throws \Throwable
-     * @throws \Ublaboo\Mailing\Exception\MailingException
-     * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
+     * @throws MailingException
+     * @throws MailingMailCreationException
      */
     private function registerProgramImpl(User $user, Program $program, bool $sendEmail = false) : void
     {
@@ -409,15 +406,12 @@ class ProgramService
     }
 
     /**
-     * @param User $user
-     * @param Program $program
-     * @param bool $sendEmail
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws SettingsException
      * @throws \Throwable
-     * @throws \Ublaboo\Mailing\Exception\MailingException
-     * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
+     * @throws MailingException
+     * @throws MailingMailCreationException
      */
     private function unregisterProgramImpl(User $user, Program $program, bool $sendEmail = false) : void
     {

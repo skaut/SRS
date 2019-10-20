@@ -19,10 +19,7 @@ class UsersContentDTO extends ContentDTO
 
 
     /**
-     * UsersContent constructor.
-     * @param string $type
-     * @param string $heading
-     * @param array $roles
+     * @param int[] $roles
      */
     public function __construct(string $type, string $heading, array $roles)
     {

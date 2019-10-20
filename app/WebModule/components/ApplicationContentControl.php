@@ -65,7 +65,6 @@ class ApplicationContentControl extends Control
     }
 
     /**
-     * @param ContentDTO $content
      * @throws NonUniqueResultException
      * @throws SettingsException
      * @throws \Throwable

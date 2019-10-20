@@ -8,8 +8,6 @@ use App\ApiModule\DTO\Schedule\ProgramSaveDTO;
 use App\ApiModule\DTO\Schedule\ResponseDTO;
 use App\ApiModule\Services\ScheduleService;
 use App\Model\Settings\SettingsException;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializerBuilder;
 use Nette\Application\AbortException;

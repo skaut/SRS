@@ -437,7 +437,6 @@ class RoleRepository extends EntityRepository
     }
 
     /**
-     * @return \DateTime|null
      * @throws NonUniqueResultException
      */
     public function getRegistrationStart() : ?\DateTime
@@ -454,7 +453,6 @@ class RoleRepository extends EntityRepository
     }
 
     /**
-     * @return \DateTime|null
      * @throws NonUniqueResultException
      */
     public function getRegistrationEnd() : ?\DateTime

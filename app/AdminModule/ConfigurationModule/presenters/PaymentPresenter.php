@@ -117,7 +117,6 @@ class PaymentPresenter extends ConfigurationBasePresenter
     }
 
     /**
-     * @return Form
      * @throws SettingsException
      * @throws \Throwable
      */

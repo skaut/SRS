@@ -18,12 +18,6 @@ class HtmlContentDTO extends ContentDTO
     protected $text;
 
 
-    /**
-     * HtmlContent constructor.
-     * @param string $type
-     * @param string $heading
-     * @param string $text
-     */
     public function __construct(string $type, string $heading, ?string $text)
     {
         parent::__construct($type, $heading);

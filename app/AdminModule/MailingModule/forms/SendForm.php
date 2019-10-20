@@ -17,7 +17,6 @@ use Nette\Application\UI\Form;
 use Nette\Mail\SendException;
 use Tracy\Debugger;
 use Tracy\ILogger;
-use Ublaboo\Mailing\Exception\MailingException;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 
 /**

@@ -19,8 +19,6 @@ use App\Model\User\UserRepository;
 use App\Services\ExcelExportService;
 use App\Services\ProgramService;
 use App\Utils\Validators;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;

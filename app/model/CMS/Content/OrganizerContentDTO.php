@@ -18,12 +18,6 @@ class OrganizerContentDTO extends ContentDTO
     protected $organizer;
 
 
-    /**
-     * OrganizerContent constructor.
-     * @param string $type
-     * @param string $heading
-     * @param string $organizer
-     */
     public function __construct(string $type, string $heading, ?string $organizer)
     {
         parent::__construct($type, $heading);

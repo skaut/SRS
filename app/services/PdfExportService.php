@@ -49,11 +49,6 @@ class PdfExportService
 
 
     /**
-     * PdfExportService constructor.
-     * @param string $dir
-     * @param SettingsRepository $settingsRepository
-     * @param ApplicationRepository $applicationRepository
-     * @param ApplicationService $applicationService
      * @throws \ReflectionException
      */
     public function __construct(

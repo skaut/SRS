@@ -517,14 +517,6 @@ class ApplicationService
     }
 
     /**
-     * @param \DateTime $date
-     * @param float $amount
-     * @param string|null $variableSymbol
-     * @param string|null $transactionId
-     * @param string|null $accountNumber
-     * @param string|null $accountName
-     * @param string|null $message
-     * @param User|null $createdBy
      * @throws \Throwable
      */
     public function createPayment(\DateTime $date, float $amount, ?string $variableSymbol, ?string $transactionId, ?string $accountNumber, ?string $accountName, ?string $message, ?User $createdBy = null) : void
@@ -619,8 +611,6 @@ class ApplicationService
     }
 
     /**
-     * @param Payment $payment
-     * @param User $createdBy
      * @throws \Throwable
      */
     public function removePayment(Payment $payment, User $createdBy) : void

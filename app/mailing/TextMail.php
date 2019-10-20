@@ -16,7 +16,7 @@ use Ublaboo\Mailing\IMessageData;
  */
 class TextMail extends AbstractMail implements IComposableMail
 {
-    public function compose(Nette\Mail\Message $message, IMessageData $params = null) : void
+    public function compose(Nette\Mail\Message $message, ?IMessageData $params = null) : void
     {
         $message->setFrom($params['fromEmail'], $params['fromName']);
 
