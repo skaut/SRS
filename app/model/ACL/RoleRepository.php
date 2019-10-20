@@ -8,11 +8,15 @@ use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Kdyby\Doctrine\EntityRepository;
 use Kdyby\Translation\Translator;
+use Nette\Caching\Cache;
+use Nette\Caching\IStorage;
 use function array_map;
 
 /**
@@ -25,6 +29,15 @@ class RoleRepository extends EntityRepository
     /** @var Translator */
     private $translator;
 
+    /** @var Cache */
+    private $roleNamesCache;
+
+
+    public function __construct(EntityManager $em, Mapping\ClassMetadata $class, IStorage $storage)
+    {
+        parent::__construct($em, $class);
+        $this->roleNamesCache = new Cache($storage, 'RoleNames');
+    }
 
     public function injectTranslator(Translator $translator) : void
     {
@@ -70,14 +83,20 @@ class RoleRepository extends EntityRepository
     /**
      * Vrací názvy všech rolí.
      * @return string[]
+     * @throws \Throwable
      */
     public function findAllNames() : array
     {
-        $names = $this->createQueryBuilder('r')
-            ->select('r.name')
-            ->getQuery()
-            ->getScalarResult();
-        return array_map('current', $names);
+        $names = $this->roleNamesCache->load(null);
+        if ($names === null) {
+            $names = $this->createQueryBuilder('r')
+                ->select('r.name')
+                ->getQuery()
+                ->getScalarResult();
+            $names = array_map('current', $names);
+            $this->roleNamesCache->save(null, $names);
+        }
+        return $names;
     }
 
     /**
@@ -409,6 +428,8 @@ class RoleRepository extends EntityRepository
     {
         $this->_em->persist($role);
         $this->_em->flush();
+
+        $this->roleNamesCache->clean([Cache::NAMESPACES => ['RoleNames']]);
     }
 
     /**
@@ -420,6 +441,8 @@ class RoleRepository extends EntityRepository
     {
         $this->_em->remove($role);
         $this->_em->flush();
+
+        $this->roleNamesCache->clean([Cache::NAMESPACES => ['RoleNames']]);
     }
 
     public function incrementOccupancy(Role $role) : void
