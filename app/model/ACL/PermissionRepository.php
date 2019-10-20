@@ -7,9 +7,13 @@ namespace App\Model\ACL;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Kdyby\Doctrine\EntityRepository;
+use Nette\Caching\Cache;
+use Nette\Caching\IStorage;
 
 /**
  * Třída spravující oprávnění.
@@ -18,19 +22,33 @@ use Kdyby\Doctrine\EntityRepository;
  */
 class PermissionRepository extends EntityRepository
 {
+    /** @var Cache */
+    private $permissionNamesCache;
+
+
+    public function __construct(EntityManager $em, Mapping\ClassMetadata $class, IStorage $storage)
+    {
+        parent::__construct($em, $class);
+        $this->permissionNamesCache = new Cache($storage, 'PermissionNames');
+    }
+
     /**
      * Vrací názvy všech oprávnění.
      * @return Collection|string[]
      */
     public function findAllNames() : Collection
     {
-        $result = $this->createQueryBuilder('p')
-            ->select('p.name')
-            ->addSelect('role.name AS roleName')->join('p.roles', 'role')
-            ->addSelect('resource.name AS resourceName')->join('p.resource', 'resource')
-            ->getQuery()
-            ->getResult();
-        return new ArrayCollection($result);
+        $names = $this->permissionNamesCache->load(null);
+        if ($names === null) {
+            $names = $result = $this->createQueryBuilder('p')
+                ->select('p.name')
+                ->addSelect('role.name AS roleName')->join('p.roles', 'role')
+                ->addSelect('resource.name AS resourceName')->join('p.resource', 'resource')
+                ->getQuery()
+                ->getResult();
+            $this->permissionNamesCache->save(null, $names);
+        }
+        return new ArrayCollection($names);
     }
 
     /**

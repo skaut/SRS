@@ -25,13 +25,13 @@ use function filter_var;
 class SettingsRepository extends EntityRepository
 {
     /** @var Cache */
-    private $cache;
+    private $settingsCache;
 
 
     public function __construct(EntityManager $em, Mapping\ClassMetadata $class, IStorage $storage)
     {
         parent::__construct($em, $class);
-        $this->cache = new Cache($storage, 'Settings');
+        $this->settingsCache = new Cache($storage, 'Settings');
     }
 
     /**
@@ -41,7 +41,7 @@ class SettingsRepository extends EntityRepository
      */
     public function getValue(string $item) : ?string
     {
-        $value = $this->cache->load($item);
+        $value = $this->settingsCache->load($item);
 
         if ($value === null) {
             $settings = $this->findOneBy(['item' => $item]);
@@ -50,7 +50,7 @@ class SettingsRepository extends EntityRepository
             }
 
             $value = $settings->getValue();
-            $this->cache->save($item, $value);
+            $this->settingsCache->save($item, $value);
         }
 
         return $value;
@@ -73,7 +73,7 @@ class SettingsRepository extends EntityRepository
         $settings->setValue($value);
         $this->_em->flush();
 
-        $this->cache->save($item, $value);
+        $this->settingsCache->save($item, $value);
     }
 
     /**
