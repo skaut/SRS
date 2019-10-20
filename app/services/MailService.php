@@ -115,8 +115,13 @@ class MailService
             $recipients[] = $user;
         }
 
-        $messageData = new SrsMailData($this->settingsRepository->getValue(Settings::SEMINAR_EMAIL),
-            $this->settingsRepository->getValue(Settings::SEMINAR_NAME), $recipients, $copy, $subject, $text
+        $messageData = new SrsMailData(
+            $this->settingsRepository->getValue(Settings::SEMINAR_EMAIL),
+            $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
+            $recipients,
+            $copy,
+            $subject,
+            $text
         );
         $mail = $this->mailFactory->createByType(SrsMail::class, $messageData);
         $mail->send();
