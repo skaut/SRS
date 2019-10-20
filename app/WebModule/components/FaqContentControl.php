@@ -7,7 +7,6 @@ namespace App\WebModule\Components;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\CMS\Content\ContentDTO;
-use App\Model\CMS\Content\FaqContent;
 use App\Model\CMS\FaqRepository;
 use App\WebModule\Forms\FaqForm;
 use Nette\Application\UI\Control;

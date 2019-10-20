@@ -9,7 +9,6 @@ use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
 use App\Services\BankService;
-use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use FioApi\Exceptions\InternalErrorException;
@@ -50,7 +49,6 @@ class BankForm
 
     /**
      * Vytvoří formulář.
-     * @throws SettingsException
      * @throws \Throwable
      */
     public function create() : Form
@@ -79,7 +77,6 @@ class BankForm
     /**
      * Zpracuje formulář.
      * @throws SettingsException
-     * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws \Throwable

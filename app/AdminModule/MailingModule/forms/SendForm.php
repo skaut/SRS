@@ -130,7 +130,6 @@ class SendForm
      * Zpracuje formulář.
      * @throws SettingsException
      * @throws \Throwable
-     * @throws MailingException
      * @throws MailingMailCreationException
      */
     public function processForm(Form $form, \stdClass $values) : void

@@ -9,7 +9,6 @@ use App\Model\ACL\Resource;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\CMS\Content\ContentDTO;
-use App\Model\CMS\Content\ProgramsContent;
 use App\Model\Enums\ProgramRegistrationType;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;

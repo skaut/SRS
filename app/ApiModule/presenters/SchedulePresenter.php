@@ -175,8 +175,6 @@ class SchedulePresenter extends ApiBasePresenter
     /**
      * Odhlásí program uživateli.
      * @throws SettingsException
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @throws AbortException
      * @throws \Throwable
      */

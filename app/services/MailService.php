@@ -88,7 +88,6 @@ class MailService
      * @param Collection|User[]     $recipientsUsers
      * @throws SettingsException
      * @throws \Throwable
-     * @throws MailingException
      * @throws MailingMailCreationException
      */
     public function sendMail(Collection $recipientsRoles, Collection $recipientsSubevents, Collection $recipientsUsers, string $copy, string $subject, string $text, bool $automatic = false) : void
@@ -144,7 +143,6 @@ class MailService
      * @param string[] $parameters
      * @throws SettingsException
      * @throws \Throwable
-     * @throws MailingException
      * @throws MailingMailCreationException
      */
     public function sendMailFromTemplate(?User $recipientUser, string $copy, string $type, array $parameters, bool $automatic = true) : void

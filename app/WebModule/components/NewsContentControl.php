@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
-use App\Model\CMS\Content\NewsContent;
 use App\Model\CMS\Content\NewsContentDTO;
 use App\Model\CMS\NewsRepository;
 use Nette\Application\UI\Control;

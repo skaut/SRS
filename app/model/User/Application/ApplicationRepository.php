@@ -48,6 +48,11 @@ class ApplicationRepository extends EntityRepository
         return $this->matching($criteria);
     }
 
+    /**
+     * @param string|null $variableSymbol
+     * @return Application|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function findValidByVariableSymbol(?string $variableSymbol) : ?Application
     {
         return $this->createQueryBuilder('a')

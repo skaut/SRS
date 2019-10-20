@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\WebModule\Components;
 
 use App\Model\ACL\RoleRepository;
-use App\Model\CMS\Content\CapacitiesContent;
 use App\Model\CMS\Content\CapacitiesContentDTO;
 use Nette\Application\UI\Control;
 

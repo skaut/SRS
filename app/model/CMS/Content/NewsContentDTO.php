@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\Model\CMS\Content;
 
-use Doctrine\ORM\Mapping as ORM;
-use Nette\Application\UI\Form;
-
 /**
  * DTO obsahu s aktualitami.
  *

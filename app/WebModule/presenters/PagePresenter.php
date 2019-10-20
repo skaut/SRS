@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\WebModule\Presenters;
 
-use App\Model\Page\PageException;
 use App\WebModule\Components\ApplicationContentControl;
 use App\WebModule\Components\BlocksContentControl;
 use App\WebModule\Components\CapacitiesContentControl;
@@ -130,7 +129,6 @@ class PagePresenter extends WebBasePresenter
 
     /**
      * @throws BadRequestException
-     * @throws PageException
      * @throws \Throwable
      */
     public function renderDefault(?string $slug) : void

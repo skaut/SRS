@@ -5,20 +5,18 @@ declare(strict_types=1);
 namespace App\Mailing;
 
 use Nette;
+use Ublaboo\Mailing\AbstractMail;
 use Ublaboo\Mailing\IComposableMail;
-use Ublaboo\Mailing\Mail;
+use Ublaboo\Mailing\IMessageData;
 
 /**
  * Třída pro vytváření hromadných e-mailů s libovolným textem.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class TextMail extends Mail implements IComposableMail
+class TextMail extends AbstractMail implements IComposableMail
 {
-    /**
-     * @param  mixed $params
-     */
-    public function compose(Nette\Mail\Message $message, $params = null) : void
+    public function compose(Nette\Mail\Message $message, IMessageData $params = null) : void
     {
         $message->setFrom($params['fromEmail'], $params['fromName']);
 

@@ -7,13 +7,11 @@ namespace App\Model\CMS;
 use App\Model\ACL\Role;
 use App\Model\CMS\Content\Content;
 use App\Model\Page\PageException;
-use App\Utils\Helpers;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
-use App\Model\CMS\PageDTO;
 use function implode;
 use function in_array;
 
@@ -176,6 +174,10 @@ class Page
         return $this->contents->matching($criteria);
     }
 
+    /**
+     * @return PageDTO
+     * @throws PageException
+     */
     public function convertToDTO() : PageDTO
     {
         $allowedRoles = array_map(function (Role $role) {

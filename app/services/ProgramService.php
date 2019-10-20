@@ -29,8 +29,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
-use Nette\Caching\Cache;
-use Nette\Caching\IStorage;
 
 /**
  * Služba pro správu programů.
@@ -191,6 +189,16 @@ class ProgramService
         });
     }
 
+    /**
+     * @param Block $block
+     * @param string $mandatory
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws SettingsException
+     * @throws \Throwable
+     * @throws \Ublaboo\Mailing\Exception\MailingException
+     * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
+     */
     private function updateBlockMandatoryImpl(Block $block, string $mandatory) : void
     {
         $oldMandatory = $block->getMandatory();
@@ -236,8 +244,7 @@ class ProgramService
 
     /**
      * Odstraní programový blok.
-     * @throws ORMException
-     * @throws OptimisticLockException
+     * @throws \Throwable
      */
     public function removeBlock(Block $block) : void
     {
@@ -353,6 +360,17 @@ class ProgramService
         });
     }
 
+    /**
+     * @param User $user
+     * @param Program $program
+     * @param bool $sendEmail
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws SettingsException
+     * @throws \Throwable
+     * @throws \Ublaboo\Mailing\Exception\MailingException
+     * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
+     */
     private function registerProgramImpl(User $user, Program $program, bool $sendEmail = false) : void
     {
         if ($user->getPrograms()->contains($program)) {
@@ -390,6 +408,17 @@ class ProgramService
         });
     }
 
+    /**
+     * @param User $user
+     * @param Program $program
+     * @param bool $sendEmail
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws SettingsException
+     * @throws \Throwable
+     * @throws \Ublaboo\Mailing\Exception\MailingException
+     * @throws \Ublaboo\Mailing\Exception\MailingMailCreationException
+     */
     private function unregisterProgramImpl(User $user, Program $program, bool $sendEmail = false) : void
     {
         if (! $user->getPrograms()->contains($program)) {
@@ -435,8 +464,6 @@ class ProgramService
 
     /**
      * Aktualizuje programy uživatele (odhlásí nepovolené a přihlásí automaticky přihlašované).
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function updateUserPrograms(User $user) : void
     {
@@ -465,8 +492,6 @@ class ProgramService
     /**
      * Aktualizuje programy uživatelů (odhlásí nepovolené a přihlásí automaticky přihlašované).
      * @param Collection|User[] $users
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function updateUsersPrograms(Collection $users) : void
     {
@@ -477,8 +502,6 @@ class ProgramService
 
     /**
      * Aktualizuje uživateli seznam nepřihlášených povinných bloků.
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @throws \Exception
      */
     private function updateUserNotRegisteredMandatoryBlocks(User $user, bool $flush = true) : void
@@ -504,8 +527,6 @@ class ProgramService
     /**
      * Aktualizuje uživatelům seznam nepřihlášených povinných bloků.
      * @param Collection|User[] $users
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @throws \Exception
      */
     private function updateUsersNotRegisteredMandatoryBlocks(Collection $users) : void

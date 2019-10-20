@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App;
 
-use App\Model\CMS\Page;
 use App\Model\CMS\PageDTO;
 use App\Model\CMS\PageRepository;
 use Doctrine\DBAL\Exception\TableNotFoundException;

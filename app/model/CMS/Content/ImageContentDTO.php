@@ -4,16 +4,6 @@ declare(strict_types=1);
 
 namespace App\Model\CMS\Content;
 
-use App\Services\FilesService;
-use Doctrine\ORM\Mapping as ORM;
-use Nette\Application\UI\Form;
-use Nette\Http\FileUpload;
-use Nette\Utils\Image;
-use Nette\Utils\Random;
-use Nette\Utils\Strings;
-use Nette\Utils\UnknownImageFileException;
-use function file_exists;
-
 /**
  * DTO obsahu s obrázkem.
  *

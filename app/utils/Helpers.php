@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Utils;
 
 use Doctrine\Common\Collections\Collection;
+use function array_map;
 use function mb_substr;
 use function strlen;
 use function strrpos;

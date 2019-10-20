@@ -436,6 +436,10 @@ class RoleRepository extends EntityRepository
             ->getResult();
     }
 
+    /**
+     * @return \DateTime|null
+     * @throws NonUniqueResultException
+     */
     public function getRegistrationStart() : ?\DateTime
     {
         $result = $this->createQueryBuilder('r')
@@ -449,6 +453,10 @@ class RoleRepository extends EntityRepository
         return $result ? $result['registerableFrom'] : null;
     }
 
+    /**
+     * @return \DateTime|null
+     * @throws NonUniqueResultException
+     */
     public function getRegistrationEnd() : ?\DateTime
     {
         $result = $this->createQueryBuilder('r')

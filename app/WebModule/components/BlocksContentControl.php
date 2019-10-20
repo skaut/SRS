@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
-use App\Model\CMS\Content\BlocksContent;
 use App\Model\CMS\Content\ContentDTO;
 use App\Model\Program\BlockRepository;
 use App\Model\Program\CategoryRepository;

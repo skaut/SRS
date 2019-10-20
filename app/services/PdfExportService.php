@@ -48,6 +48,14 @@ class PdfExportService
     private $applicationService;
 
 
+    /**
+     * PdfExportService constructor.
+     * @param string $dir
+     * @param SettingsRepository $settingsRepository
+     * @param ApplicationRepository $applicationRepository
+     * @param ApplicationService $applicationService
+     * @throws \ReflectionException
+     */
     public function __construct(
         string $dir,
         SettingsRepository $settingsRepository,
@@ -252,6 +260,7 @@ class PdfExportService
 
     /**
      * Nastaví šablonu pro příjmový doklad.
+     * @throws \Exception
      */
     private function configureForIncomeProof() : void
     {
@@ -262,6 +271,7 @@ class PdfExportService
 
     /**
      * Nastaví šablonu pro potvrzení o přijetí platby.
+     * @throws \Exception
      */
     private function configureForAccountProof() : void
     {
