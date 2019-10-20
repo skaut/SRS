@@ -15,31 +15,37 @@ use Ublaboo\Mailing\IMessageData;
 class SrsMailData implements IMessageData
 {
     /**
+     * E-mail odesílatele.
      * @var string
      */
     private $fromEmail;
 
     /**
+     * Jméno odesílatele.
      * @var string
      */
     private $fromName;
 
     /**
+     * Příjemci mailu.
      * @var User[]
      */
     private $recipients;
 
     /**
+     * Kopie mailu.
      * @var string
      */
     private $copy;
 
     /**
+     * Předmět mailu.
      * @var string
      */
     private $subject;
 
     /**
+     * Text mailu.
      * @var string
      */
     private $text;

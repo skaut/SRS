@@ -123,7 +123,7 @@ class MailService
             $subject,
             $text
         );
-        $mail = $this->mailFactory->createByType(SrsMail::class, $messageData);
+        $mail        = $this->mailFactory->createByType(SrsMail::class, $messageData);
         $mail->send();
 
         $mailLog = new Mail();
