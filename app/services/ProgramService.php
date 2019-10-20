@@ -59,9 +59,6 @@ class ProgramService
     /** @var MailService */
     private $mailService;
 
-    /** @var Cache */
-    private $userAllowedProgramsCache;
-
 
     public function __construct(
         SettingsRepository $settingsRepository,
@@ -69,8 +66,7 @@ class ProgramService
         BlockRepository $blockRepository,
         UserRepository $userRepository,
         CategoryRepository $categoryRepository,
-        MailService $mailService,
-        IStorage $storage
+        MailService $mailService
     ) {
         $this->settingsRepository = $settingsRepository;
         $this->programRepository  = $programRepository;
@@ -78,8 +74,6 @@ class ProgramService
         $this->userRepository     = $userRepository;
         $this->categoryRepository = $categoryRepository;
         $this->mailService        = $mailService;
-
-        $this->userAllowedProgramsCache = new Cache($storage, 'UserAllowedPrograms');
     }
 
     /**
@@ -141,7 +135,7 @@ class ProgramService
             $oldSubevent = $block->getSubevent();
             $oldCategory = $block->getCategory();
 
-            $oldAllowedUsers = clone $this->userRepository->findBlockAllowed($block);
+//            $oldAllowedUsers = clone $this->userRepository->findBlockAllowed($block);
 
             $block->setName($name);
             $block->setSubevent($subevent);
@@ -339,7 +333,7 @@ class ProgramService
     public function removeProgram(Program $program) : void
     {
         $this->blockRepository->getEntityManager()->transactional(function () use ($program) : void {
-            $attendees = clone $program->getAttendees();
+//            $attendees = clone $program->getAttendees();
 
             $this->programRepository->remove($program);
 
@@ -526,7 +520,6 @@ class ProgramService
     /**
      * Vrací programy, na které se uživatel může přihlásit.
      * @return Collection|Program[]
-     * @throws \Throwable
      */
     public function getUserAllowedPrograms(User $user) : Collection
     {
@@ -537,12 +530,6 @@ class ProgramService
         $registerableCategories = $this->categoryRepository->findUserAllowed($user);
         $registeredSubevents    = $user->getSubevents();
 
-        $key = serialize($registerableCategories->toArray()) . ":" . serialize($registeredSubevents->toArray());
-        $userAllowedPrograms = $this->userAllowedProgramsCache->load($key);
-        if ($userAllowedPrograms === null) {
-            $userAllowedPrograms = $this->programRepository->findAllowedForCategoriesAndSubevents($registerableCategories, $registeredSubevents);
-            $this->userAllowedProgramsCache->save($key, $userAllowedPrograms); //TODO invalidate
-        }
-        return $userAllowedPrograms;
+        return $this->programRepository->findAllowedForCategoriesAndSubevents($registerableCategories, $registeredSubevents);
     }
 }
