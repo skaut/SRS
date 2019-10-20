@@ -11,15 +11,22 @@ namespace App\Model\CMS\Content;
  */
 class CapacitiesContentDTO extends ContentDTO
 {
-    /** @var string */
-    protected $type = Content::CAPACITIES;
-
     /**
      * Role, jejichž obsazenosti se vypíší.
      * @var int[]
      */
     protected $roles;
 
+
+    /**
+     * CapacitiesContentDTO constructor.
+     * @param int[] $roles
+     */
+    public function __construct(string $type, string $heading, array $roles)
+    {
+        parent::__construct($type, $heading);
+        $this->roles = $roles;
+    }
 
     /**
      * @return int[]

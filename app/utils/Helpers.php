@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
+use Doctrine\Common\Collections\Collection;
 use function mb_substr;
 use function strlen;
 use function strrpos;
@@ -31,5 +32,17 @@ class Helpers
             $text = $text . '...';
         }
         return $text;
+    }
+
+    /**
+     * Vrátí id prvků v kolekci.
+     * @param Collection $collection
+     * @return int[]
+     */
+    public static function getIds(Collection $collection) : array
+    {
+        return array_map(function ($o) {
+            return $o->getId();
+        }, $collection->toArray());
     }
 }

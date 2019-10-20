@@ -7,6 +7,7 @@ namespace App\Model\CMS;
 use App\Model\ACL\Role;
 use App\Model\CMS\Content\Content;
 use App\Model\Page\PageException;
+use App\Utils\Helpers;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -175,33 +176,22 @@ class Page
         return $this->contents->matching($criteria);
     }
 
-    /**
-     * Má stránka nějaký obsah v oblasti?
-     * @throws PageException
-     */
-    public function hasContents(string $area) : bool
+    public function convertToDTO() : PageDTO
     {
-        if (! in_array($area, Content::$areas)) {
-            throw new PageException('Area ' . $area . ' not defined.');
-        }
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('area', $area));
-        return ! $this->contents->matching($criteria)->isEmpty();
-    }
+        $allowedRoles = array_map(function (Role $role) {
+            return $role->getName();
+        }, $this->roles->toArray());
 
-    /**
-     * Je stránka viditelná pro uživatele v rolích?
-     * @param string[] $roleNames
-     */
-    public function isAllowedForRoles(array $roleNames) : bool
-    {
-        foreach ($roleNames as $roleName) {
-            foreach ($this->roles as $role) {
-                if ($roleName === $role->getName()) {
-                    return true;
-                }
-            }
+        $mainContents = [];
+        foreach ($this->getContents(Content::MAIN)->toArray() as $content) {
+            $mainContents[] = $content->convertToDTO();
         }
-        return false;
+
+        $sidebarContents = [];
+        foreach ($this->getContents(Content::SIDEBAR)->toArray() as $content) {
+            $sidebarContents[] = $content->convertToDTO();
+        }
+
+        return new PageDTO($this->name, $this->slug, $allowedRoles, $mainContents, $sidebarContents, ! empty($sidebarContents));
     }
 }

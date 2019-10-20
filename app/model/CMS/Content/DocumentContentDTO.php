@@ -14,84 +14,36 @@ use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
 
 /**
- * Entita obsahu s dokumenty.
+ * DTO obsahu s dokumenty.
  *
- * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @ORM\Entity
- * @ORM\Table(name="document_content")
  */
-class DocumentContent extends Content implements IContent
+class DocumentContentDTO extends ContentDTO
 {
-    /** @var string */
-    protected $type = Content::DOCUMENT;
-
     /**
      * Tagy dokumentů, které se zobrazí.
-     * @ORM\ManyToMany(targetEntity="\App\Model\CMS\Document\Tag")
-     * @var Collection|Tag[]
+     * @var int[]
      */
     protected $tags;
 
-    /** @var TagRepository */
-    private $tagRepository;
-
 
     /**
-     * @throws PageException
+     * DocumentContent constructor.
+     * @param string $type
+     * @param string $heading
+     * @param array $tags
      */
-    public function __construct(Page $page, string $area)
+    public function __construct(string $type, string $heading, array $tags)
     {
-        parent::__construct($page, $area);
-        $this->tags = new ArrayCollection();
-    }
-
-    public function injectTagRepository(TagRepository $tagRepository) : void
-    {
-        $this->tagRepository = $tagRepository;
+        parent::__construct($type, $heading);
+        $this->tags = $tags;
     }
 
     /**
-     * @return Collection|Tag[]
+     * @return int[]
      */
-    public function getTags() : Collection
+    public function getTags() : array
     {
         return $this->tags;
-    }
-
-    /**
-     * @param Collection|Tag[] $tags
-     */
-    public function setTags(Collection $tags) : void
-    {
-        $this->tags->clear();
-        foreach ($tags as $tag) {
-            $this->tags->add($tag);
-        }
-    }
-
-    /**
-     * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
-     */
-    public function addContentForm(Form $form) : Form
-    {
-        parent::addContentForm($form);
-
-        $formContainer = $form[$this->getContentFormName()];
-
-        $formContainer->addMultiSelect('tags', 'admin.cms.pages_content_tags', $this->tagRepository->getTagsOptions())
-            ->setDefaultValue($this->tagRepository->findTagsIds($this->tags));
-
-        return $form;
-    }
-
-    /**
-     * Zpracuje při uložení stránky část formuláře týkající se obsahu.
-     */
-    public function contentFormSucceeded(Form $form, \stdClass $values) : void
-    {
-        parent::contentFormSucceeded($form, $values);
-        $values     = $values[$this->getContentFormName()];
-        $this->tags = $this->tagRepository->findTagsByIds($values['tags']);
     }
 }

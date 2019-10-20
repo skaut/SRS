@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
+use App\Model\CMS\Content\ContentDTO;
 use App\Model\CMS\Content\PlaceContent;
 use App\Model\Settings\Place\PlacePointRepository;
 use App\Model\Settings\Settings;
@@ -37,7 +38,7 @@ class PlaceContentControl extends Control
      * @throws SettingsException
      * @throws \Throwable
      */
-    public function render(PlaceContent $content) : void
+    public function render(ContentDTO $content) : void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/place_content.latte');

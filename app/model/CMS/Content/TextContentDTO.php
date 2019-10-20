@@ -8,33 +8,33 @@ use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
 
 /**
- * Entita obsahu s textem.
+ * DTO obsahu s textem.
  *
- * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @ORM\Entity
- * @ORM\Table(name="text_content")
  */
-class TextContent extends Content implements IContent
+class TextContentDTO extends ContentDTO
 {
-    /** @var string */
-    protected $type = Content::TEXT;
-
     /**
      * Text.
-     * @ORM\Column(type="text", nullable=true)
      * @var string
      */
     protected $text;
 
 
+    /**
+     * TextContent constructor.
+     * @param string $type
+     * @param string $heading
+     * @param string $text
+     */
+    public function __construct(string $type, string $heading, ?string $text)
+    {
+        parent::__construct($type, $heading);
+        $this->text = $text;
+    }
+
     public function getText() : ?string
     {
         return $this->text;
-    }
-
-    public function setText(?string $text) : void
-    {
-        $this->text = $text;
     }
 }

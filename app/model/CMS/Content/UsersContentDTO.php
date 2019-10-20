@@ -14,37 +14,35 @@ use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
 
 /**
- * Entita obsahu se seznamem uživatelů.
+ * DTO obsahu se seznamem uživatelů.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @ORM\Entity
- * @ORM\Table(name="users_content")
  */
-class UsersContent extends Content implements IContent
+class UsersContentDTO extends ContentDTO
 {
-    /** @var string */
-    protected $type = Content::USERS;
-
     /**
      * Role, jejichž uživatelé budou vypsáni.
-     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role")
-     * @var Collection|Role[]
+     * @var int[]
      */
     protected $roles;
 
+
     /**
-     * @throws PageException
+     * UsersContent constructor.
+     * @param string $type
+     * @param string $heading
+     * @param array $roles
      */
-    public function __construct(Page $page, string $area)
+    public function __construct(string $type, string $heading, array $roles)
     {
-        parent::__construct($page, $area);
-        $this->roles = new ArrayCollection();
+        parent::__construct($type, $heading);
+        $this->roles = $roles;
     }
 
     /**
-     * @return Collection|Role[]
+     * @return int[]
      */
-    public function getRoles() : Collection
+    public function getRoles() : array
     {
         return $this->roles;
     }

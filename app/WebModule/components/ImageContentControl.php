@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\WebModule\Components;
 
 use App\Model\CMS\Content\ImageContent;
+use App\Model\CMS\Content\ImageContentDTO;
 use Nette\Application\UI\Control;
 
 /**
@@ -15,7 +16,7 @@ use Nette\Application\UI\Control;
  */
 class ImageContentControl extends Control
 {
-    public function render(ImageContent $content) : void
+    public function render(ImageContentDTO $content) : void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/image_content.latte');

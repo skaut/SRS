@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App;
 
 use App\Model\CMS\Page;
+use App\Model\CMS\PageDTO;
 use App\Model\CMS\PageRepository;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Nette;
@@ -108,9 +109,9 @@ class RouterFactory
                 'presenter' => 'Page',
                 'page' => [
                     Route::FILTER_IN => function (string $slug) {
-                        return $this->pageRepository->findPublishedBySlug($slug);
+                        return $this->pageRepository->findPublishedBySlugDTO($slug);
                     },
-                    Route::FILTER_OUT => function (Page $page) {
+                    Route::FILTER_OUT => function (PageDTO $page) {
                         return $page->getSlug();
                     },
                 ],

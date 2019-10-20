@@ -310,4 +310,9 @@ abstract class Content implements IContent
         $this->position = $values['position'];
         $this->heading  = $values['heading'];
     }
+
+    public function convertToDTO() : ContentDTO
+    {
+        return new ContentDTO($this->getComponentName(), $this->heading);
+    }
 }

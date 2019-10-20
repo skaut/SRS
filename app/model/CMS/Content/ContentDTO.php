@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace App\Model\CMS\Content;
 
 /**
- * Abstraktní DTO obsahu.
+ * DTO obsahu.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-abstract class ContentDTO
+class ContentDTO
 {
     /**
-     * Typ obsahu.
+     * Název komponenty.
      * @var string
      */
-    protected $type;
+    protected $componentName;
 
     /**
      * Nadpis obsahu.
@@ -25,11 +25,19 @@ abstract class ContentDTO
 
 
     /**
-     * @return mixed
+     * ContentDTO constructor.
+     * @param string $type
+     * @param string $heading
      */
-    public function getType() : string
+    public function __construct(string $componentName, string $heading)
     {
-        return $this->type;
+        $this->componentName = $componentName;
+        $this->heading = $heading;
+    }
+
+    public function getComponentName() : string
+    {
+        return $this->componentName;
     }
 
     public function getHeading() : string
