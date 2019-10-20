@@ -63,4 +63,9 @@ class HtmlContent extends Content implements IContent
         $values     = $values[$this->getContentFormName()];
         $this->text = $values['text'];
     }
+
+    public function convertToDTO() : ContentDTO
+    {
+        return new HtmlContentDTO($this->getComponentName(), $this->heading, $this->text);
+    }
 }

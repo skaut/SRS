@@ -19,8 +19,6 @@ use App\Model\User\UserRepository;
 use App\Services\ExcelExportService;
 use App\Services\ProgramService;
 use App\Utils\Validators;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
@@ -225,9 +223,8 @@ class ProgramBlocksGridControl extends Control
 
     /**
      * Odstraní programový blok.
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @throws AbortException
+     * @throws \Throwable
      */
     public function handleDelete(int $id) : void
     {
@@ -247,8 +244,6 @@ class ProgramBlocksGridControl extends Control
 
     /**
      * Změní povinnost bloku.
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @throws AbortException
      */
     public function changeMandatory(int $id, string $mandatory) : void

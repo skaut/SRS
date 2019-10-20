@@ -516,6 +516,9 @@ class ApplicationService
         ]);
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function createPayment(\DateTime $date, float $amount, ?string $variableSymbol, ?string $transactionId, ?string $accountNumber, ?string $accountName, ?string $message, ?User $createdBy = null) : void
     {
         $this->applicationRepository->getEntityManager()->transactional(function () use ($date, $amount, $variableSymbol, $transactionId, $accountNumber, $accountName, $message, $createdBy) : void {
@@ -607,6 +610,9 @@ class ApplicationService
         });
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function removePayment(Payment $payment, User $createdBy) : void
     {
         $this->applicationRepository->getEntityManager()->transactional(function () use ($payment, $createdBy) : void {

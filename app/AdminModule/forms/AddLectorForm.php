@@ -110,6 +110,7 @@ class AddLectorForm
      * @throws Nette\Utils\UnknownImageFileException
      * @throws ORMException
      * @throws OptimisticLockException
+     * @throws \Exception
      */
     public function processForm(Form $form, \stdClass $values) : void
     {

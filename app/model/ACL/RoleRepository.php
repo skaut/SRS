@@ -152,15 +152,15 @@ class RoleRepository extends EntityRepository
 
     /**
      * Vrací role s počty uživatelů.
-     * @param Collection|Role[] $roles
+     * @param int[] $rolesIds
      * @return string[][]
      */
-    public function countUsersInRoles(Collection $roles) : array
+    public function countUsersInRoles(array $rolesIds) : array
     {
         return $this->createQueryBuilder('r')
             ->select('r.name, r.capacity, COUNT(u.id) AS usersCount')
             ->leftJoin('r.users', 'u')
-            ->where('r.id IN (:ids)')->setParameter('ids', $this->findRolesIds($roles))
+            ->where('r.id IN (:ids)')->setParameter('ids', $rolesIds)
             ->groupBy('r.id')
             ->orderBy('r.name')
             ->getQuery()
@@ -436,6 +436,9 @@ class RoleRepository extends EntityRepository
             ->getResult();
     }
 
+    /**
+     * @throws NonUniqueResultException
+     */
     public function getRegistrationStart() : ?\DateTime
     {
         $result = $this->createQueryBuilder('r')
@@ -449,6 +452,9 @@ class RoleRepository extends EntityRepository
         return $result ? $result['registerableFrom'] : null;
     }
 
+    /**
+     * @throws NonUniqueResultException
+     */
     public function getRegistrationEnd() : ?\DateTime
     {
         $result = $this->createQueryBuilder('r')

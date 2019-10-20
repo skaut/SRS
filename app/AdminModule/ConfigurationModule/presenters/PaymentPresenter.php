@@ -102,7 +102,6 @@ class PaymentPresenter extends ConfigurationBasePresenter
     }
 
     /**
-     * @throws SettingsException
      * @throws \Throwable
      */
     protected function createComponentBankForm() : Form
@@ -117,6 +116,10 @@ class PaymentPresenter extends ConfigurationBasePresenter
         return $form;
     }
 
+    /**
+     * @throws SettingsException
+     * @throws \Throwable
+     */
     protected function createComponentTicketsForm() : Form
     {
         $form = $this->ticketsFormFactory->create();

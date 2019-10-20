@@ -61,4 +61,9 @@ class OrganizerContent extends Content implements IContent
         $values          = $values[$this->getContentFormName()];
         $this->organizer = $values['organizer'];
     }
+
+    public function convertToDTO() : ContentDTO
+    {
+        return new OrganizerContentDTO($this->getComponentName(), $this->heading, $this->organizer);
+    }
 }

@@ -17,7 +17,6 @@ use Nette\Application\UI\Form;
 use Nette\Mail\SendException;
 use Tracy\Debugger;
 use Tracy\ILogger;
-use Ublaboo\Mailing\Exception\MailingException;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 
 /**
@@ -130,7 +129,6 @@ class SendForm
      * Zpracuje formulář.
      * @throws SettingsException
      * @throws \Throwable
-     * @throws MailingException
      * @throws MailingMailCreationException
      */
     public function processForm(Form $form, \stdClass $values) : void

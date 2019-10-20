@@ -9,14 +9,11 @@ use App\Model\ACL\Resource;
 use App\Model\Enums\ApplicationState;
 use App\Model\Program\Program;
 use App\Model\Program\ProgramRepository;
-use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\MailService;
 use App\Services\ProgramService;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
@@ -25,8 +22,6 @@ use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
-use Ublaboo\Mailing\Exception\MailingException;
-use Ublaboo\Mailing\Exception\MailingMailCreationException;
 
 /**
  * Komponenta pro správu účastníků programu.
@@ -58,9 +53,6 @@ class ProgramAttendeesGridControl extends Control
 
     /** @var SettingsRepository */
     private $settingsRepository;
-
-    /** @var MailService */
-    private $mailService;
 
     /** @var ProgramService */
     private $programService;
@@ -206,11 +198,8 @@ class ProgramAttendeesGridControl extends Control
 
     /**
      * Přihlásí uživatele na program.
-     * @throws SettingsException
      * @throws AbortException
      * @throws \Throwable
-     * @throws MailingException
-     * @throws MailingMailCreationException
      */
     public function handleRegister(int $id) : void
     {
@@ -239,11 +228,8 @@ class ProgramAttendeesGridControl extends Control
 
     /**
      * Odhlásí uživatele z programu.
-     * @throws SettingsException
      * @throws AbortException
      * @throws \Throwable
-     * @throws MailingException
-     * @throws MailingMailCreationException
      */
     public function handleUnregister(int $id) : void
     {
@@ -271,9 +257,8 @@ class ProgramAttendeesGridControl extends Control
     /**
      * Hromadně přihlásí program uživatelům.
      * @param int[] $ids
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @throws AbortException
+     * @throws \Throwable
      */
     public function groupRegister(array $ids) : void
     {
@@ -305,9 +290,8 @@ class ProgramAttendeesGridControl extends Control
     /**
      * Hromadně odhlásí program uživatelům.
      * @param int[] $ids
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @throws AbortException
+     * @throws \Throwable
      */
     public function groupUnregister(array $ids) : void
     {
