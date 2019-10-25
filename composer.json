@@ -6,6 +6,7 @@
         "ext-iconv": "*",
         "ext-json": "*",
         "ext-mysqli": "*",
+        "ext-soap": "*",
 
         "nette/nette": "~2.4.0",
         "latte/latte": "~2.4.0",
