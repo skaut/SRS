@@ -22,6 +22,9 @@ use App\Services\ApplicationService;
 use App\Services\MailService;
 use App\Services\ProgramService;
 use App\Utils\Helpers;
+use Throwable;
+use Ublaboo\Mailing\Exception\MailingException;
+use Ublaboo\Mailing\Exception\MailingMailCreationException;
 
 /**
  * Presenter obsluhující kontrolu splatnosti přihlášek.
@@ -92,87 +95,84 @@ class MaturityPresenter extends ActionBasePresenter
 
 
     /**
-     * Zkontroluje splatnost přihlášek.
+     * Zruší přihlášky po splatnosti.
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function actionCheck() : void
+    public function actionCancelApplications() : void
     {
         $cancelRegistration = $this->settingsRepository->getIntValue(Settings::CANCEL_REGISTRATION_AFTER_MATURITY);
         if ($cancelRegistration !== null) {
             $cancelRegistrationDate = (new \DateTime())->setTime(0, 0)->modify('-' . $cancelRegistration . ' days');
         } else {
-            $cancelRegistrationDate = null;
+            return;
         }
 
+        foreach ($this->userRepository->findAllWithWaitingForPaymentApplication() as $user) {
+            $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($user, $cancelRegistration, $cancelRegistrationDate) : void {
+                // odhlášení účastníků s nezaplacnou přihláškou rolí
+                foreach ($user->getWaitingForPaymentRolesApplications() as $application) {
+                    $maturityDate = $application->getMaturityDate();
+
+                    if ($maturityDate !== null && $cancelRegistrationDate > $maturityDate) {
+                        $this->applicationService->cancelRegistration($user, ApplicationState::CANCELED_NOT_PAID, null);
+                        return;
+                    }
+                }
+
+                // zrušení nezaplacených přihlášek podakcí
+                $subeventsApplicationCanceled = false;
+                foreach ($user->getWaitingForPaymentSubeventsApplications() as $application) {
+                    $maturityDate = $application->getMaturityDate();
+
+                    if ($maturityDate !== null && $cancelRegistrationDate > $maturityDate) {
+                        $this->applicationService->cancelSubeventsApplication($application, ApplicationState::CANCELED_NOT_PAID, null);
+                        $subeventsApplicationCanceled = true;
+                    }
+                }
+
+                // pokud účastníkovi nezbyde žádná podakce, je třeba odebrat i roli s cenou podle podakcí, případně jej odhlásit
+                if ($subeventsApplicationCanceled && $user->getSubevents()->isEmpty()) {
+                    $newRoles = $user->getRoles()->filter(function (Role $role) {
+                        return $role !== null;
+                    });
+                    if ($newRoles->isEmpty()) {
+                        $this->applicationService->cancelRegistration($user, ApplicationState::CANCELED_NOT_PAID, null);
+                        return;
+                    } else {
+                        $this->applicationService->updateRoles($user, $newRoles, null);
+                    }
+                }
+            });
+        }
+    }
+
+    /**
+     * Rozešle přípomínky splatnosti.
+     * @throws SettingsException
+     * @throws Throwable
+     * @throws MailingException
+     * @throws MailingMailCreationException
+     */
+    public function actionSendReminders() : void {
         $maturityReminder = $this->settingsRepository->getIntValue(Settings::MATURITY_REMINDER);
         if ($maturityReminder !== null) {
             $maturityReminderDate = (new \DateTime())->setTime(0, 0)->modify('+' . $maturityReminder . ' days');
         } else {
-            $maturityReminderDate = null;
+            return;
         }
 
         foreach ($this->userRepository->findAllWithWaitingForPaymentApplication() as $user) {
-            $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($user, $cancelRegistration, $cancelRegistrationDate, $maturityReminder, $maturityReminderDate) : void {
-                foreach ($user->getWaitingForPaymentRolesApplications() as $application) {
-                    if ($application->getType() !== Application::ROLES) {
-                        continue;
-                    }
+            foreach ($user->getWaitingForPaymentApplications() as $application) {
+                $maturityDate = $application->getMaturityDate();
 
-                    $maturityDate = $application->getMaturityDate();
-                    if ($maturityDate === null) {
-                        continue;
-                    }
-
-                    if ($cancelRegistration === null || $cancelRegistrationDate <= $maturityDate) {
-                        continue;
-                    }
-
-                    $rolesWithoutFee = $user->getRoles()->filter(function (Role $role) {
-                        return $role->getFee() === 0;
-                    });
-
-                    if ($rolesWithoutFee->isEmpty()) {
-                        $this->applicationService->cancelRegistration($user, ApplicationState::CANCELED_NOT_PAID, null);
-                        return;
-                    } else {
-                        $this->applicationService->updateRoles($user, $rolesWithoutFee, null);
-                    }
-                }
-
-                foreach ($user->getWaitingForPaymentSubeventsApplications() as $application) {
-                    if ($application->getType() !== Application::SUBEVENTS) {
-                        continue;
-                    }
-
-                    $maturityDate = $application->getMaturityDate();
-                    if ($maturityDate === null) {
-                        continue;
-                    }
-
-                    if ($cancelRegistration === null || $cancelRegistrationDate <= $maturityDate) {
-                        continue;
-                    }
-
-                    $this->applicationService->cancelSubeventsApplication($application, ApplicationState::CANCELED_NOT_PAID, null);
-                }
-
-                foreach ($user->getWaitingForPaymentApplications() as $application) {
-                    $maturityDate = $application->getMaturityDate();
-                    if ($maturityDate === null) {
-                        continue;
-                    }
-
-                    if ($maturityReminder === null || $maturityReminderDate !== $maturityDate) {
-                        continue;
-                    }
-
+                if ($maturityReminderDate == $maturityDate) {
                     $this->mailService->sendMailFromTemplate($application->getUser(), '', Template::MATURITY_REMINDER, [
                         TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
                         TemplateVariable::APPLICATION_MATURITY => $maturityDate->format(Helpers::DATE_FORMAT),
                     ]);
                 }
-            });
+            }
         }
     }
 }
