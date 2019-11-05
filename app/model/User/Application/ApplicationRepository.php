@@ -8,6 +8,7 @@ use App\Model\Enums\ApplicationState;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Kdyby\Doctrine\EntityRepository;
@@ -48,6 +49,9 @@ class ApplicationRepository extends EntityRepository
         return $this->matching($criteria);
     }
 
+    /**
+     * @throws NonUniqueResultException
+     */
     public function findValidByVariableSymbol(?string $variableSymbol) : ?Application
     {
         return $this->createQueryBuilder('a')

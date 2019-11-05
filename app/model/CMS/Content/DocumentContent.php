@@ -8,6 +8,7 @@ use App\Model\CMS\Document\Tag;
 use App\Model\CMS\Document\TagRepository;
 use App\Model\CMS\Page;
 use App\Model\Page\PageException;
+use App\Utils\Helpers;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -93,5 +94,10 @@ class DocumentContent extends Content implements IContent
         parent::contentFormSucceeded($form, $values);
         $values     = $values[$this->getContentFormName()];
         $this->tags = $this->tagRepository->findTagsByIds($values['tags']);
+    }
+
+    public function convertToDTO() : ContentDTO
+    {
+        return new DocumentContentDTO($this->getComponentName(), $this->heading, Helpers::getIds($this->tags));
     }
 }

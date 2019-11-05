@@ -41,12 +41,12 @@ use Nette\Http\FileUpload;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
 use Skautis\Wsdl\WsdlException;
+use Tracy\Debugger;
+use Tracy\ILogger;
 use function array_key_exists;
 use function array_keys;
 use function count;
 use function in_array;
-use Tracy\Debugger;
-use Tracy\ILogger;
 
 /**
  * Formulář přihlášky.

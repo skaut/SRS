@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Mailing\TextMail;
+use App\Mailing\SrsMail;
+use App\Mailing\SrsMailData;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Mailing\Mail;
@@ -21,7 +22,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Kdyby\Translation\Translator;
 use Nette;
-use Ublaboo\Mailing\Exception\MailingException;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 use Ublaboo\Mailing\MailFactory;
 use function in_array;
@@ -88,7 +88,6 @@ class MailService
      * @param Collection|User[]     $recipientsUsers
      * @throws SettingsException
      * @throws \Throwable
-     * @throws MailingException
      * @throws MailingMailCreationException
      */
     public function sendMail(Collection $recipientsRoles, Collection $recipientsSubevents, Collection $recipientsUsers, string $copy, string $subject, string $text, bool $automatic = false) : void
@@ -116,16 +115,15 @@ class MailService
             $recipients[] = $user;
         }
 
-        $params = [
-            'fromEmail' => $this->settingsRepository->getValue(Settings::SEMINAR_EMAIL),
-            'fromName' => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-            'recipients' => $recipients,
-            'copy' => $copy,
-            'subject' => $subject,
-            'text' => $text,
-        ];
-
-        $mail = $this->mailFactory->createByType(TextMail::class, $params);
+        $messageData = new SrsMailData(
+            $this->settingsRepository->getValue(Settings::SEMINAR_EMAIL),
+            $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
+            $recipients,
+            $copy,
+            $subject,
+            $text
+        );
+        $mail        = $this->mailFactory->createByType(SrsMail::class, $messageData);
         $mail->send();
 
         $mailLog = new Mail();
@@ -144,7 +142,6 @@ class MailService
      * @param string[] $parameters
      * @throws SettingsException
      * @throws \Throwable
-     * @throws MailingException
      * @throws MailingMailCreationException
      */
     public function sendMailFromTemplate(?User $recipientUser, string $copy, string $type, array $parameters, bool $automatic = true) : void

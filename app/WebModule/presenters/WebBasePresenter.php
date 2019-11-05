@@ -140,6 +140,7 @@ abstract class WebBasePresenter extends BasePresenter
         $this->template->logo        = $this->settingsRepository->getValue(Settings::LOGO);
         $this->template->footer      = $this->settingsRepository->getValue(Settings::FOOTER);
         $this->template->seminarName = $this->settingsRepository->getValue(Settings::SEMINAR_NAME);
+        $this->template->gaId        = $this->settingsRepository->getValue(Settings::GA_ID);
 
         $this->template->nonregisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
         $this->template->unapprovedRole    = $this->roleRepository->findBySystemName(Role::UNAPPROVED);
@@ -147,7 +148,7 @@ abstract class WebBasePresenter extends BasePresenter
 
         $this->template->adminAccess = $this->user->isAllowed(Resource::ADMIN, Permission::ACCESS);
 
-        $this->template->pages          = $this->pageRepository->findPublishedOrderedByPosition();
+        $this->template->pages          = $this->pageRepository->findPublishedOrderedByPositionDTO();
         $this->template->sidebarVisible = false;
 
         $this->template->settings = $this->settingsRepository;

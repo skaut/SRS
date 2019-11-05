@@ -100,6 +100,7 @@ class Authenticator implements NS\IAuthenticator
 
     /**
      * Aktualizuje údaje uživatele ze skautIS.
+     * @throws \Exception
      */
     private function updateUserFromSkautIS(User $user, \stdClass $skautISUser) : void
     {

@@ -7,10 +7,14 @@ namespace App\Model\CMS;
 use App\Model\Page\PageException;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\Mapping;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Kdyby\Doctrine\EntityManager;
 use Kdyby\Doctrine\EntityRepository;
+use Nette\Caching\Cache;
+use Nette\Caching\IStorage;
 use const PHP_INT_MAX;
 use function array_map;
 
@@ -22,6 +26,20 @@ use function array_map;
  */
 class PageRepository extends EntityRepository
 {
+    /** @var Cache */
+    private $pageCache;
+
+    /** @var Cache */
+    private $menuCache;
+
+
+    public function __construct(EntityManager $em, Mapping\ClassMetadata $class, IStorage $storage)
+    {
+        parent::__construct($em, $class);
+        $this->pageCache = new Cache($storage, 'Page');
+        $this->menuCache = new Cache($storage, 'Menu');
+    }
+
     /**
      * Vrací stránku podle id.
      */
@@ -31,19 +49,29 @@ class PageRepository extends EntityRepository
     }
 
     /**
-     * Vrací stránku podle cesty.
-     */
-    public function findBySlug(string $slug) : ?Page
-    {
-        return $this->findOneBy(['slug' => $slug]);
-    }
-
-    /**
      * Vrací viditelné stránky se zadaným slugem.
+     * @throws \Throwable
      */
     public function findPublishedBySlug(string $slug) : ?Page
     {
         return $this->findOneBy(['public' => true, 'slug' => $slug]);
+    }
+
+    /**
+     * Vrací DTO viditelné stránky se zadaným slugem.
+     * @throws \Throwable
+     */
+    public function findPublishedBySlugDTO(string $slug) : ?PageDTO
+    {
+        $pageDTO = $this->pageCache->load($slug);
+        if ($pageDTO === null) {
+            $page = $this->findPublishedBySlug($slug);
+            if ($page !== null) {
+                $pageDTO = $page->convertToDTO();
+                $this->pageCache->save($slug, $pageDTO);
+            }
+        }
+        return $pageDTO;
     }
 
     /**
@@ -53,6 +81,23 @@ class PageRepository extends EntityRepository
     public function findPublishedOrderedByPosition() : array
     {
         return $this->findBy(['public' => true], ['position' => 'ASC']);
+    }
+
+    /**
+     * Vrací DTO viditelných stránek, seřazená podle pozice.
+     * @return PageDTO[]
+     * @throws \Throwable
+     */
+    public function findPublishedOrderedByPositionDTO() : array
+    {
+        $pagesDTO = $this->menuCache->load(null);
+        if ($pagesDTO === null) {
+            $pagesDTO = array_map(function (Page $page) {
+                return $page->convertToDTO();
+            }, $this->findPublishedOrderedByPosition());
+            $this->menuCache->save(null, $pagesDTO);
+        }
+        return $pagesDTO;
     }
 
     /**
@@ -165,6 +210,9 @@ class PageRepository extends EntityRepository
 
         $this->_em->persist($page);
         $this->_em->flush();
+
+        $this->pageCache->clean([Cache::NAMESPACES => ['Page']]);
+        $this->menuCache->clean([Cache::NAMESPACES => ['Menu']]);
     }
 
     /**
@@ -181,6 +229,9 @@ class PageRepository extends EntityRepository
 
         $this->_em->remove($page);
         $this->_em->flush();
+
+        $this->pageCache->clean([Cache::NAMESPACES => ['Page']]);
+        $this->menuCache->clean([Cache::NAMESPACES => ['Menu']]);
     }
 
     /**
@@ -230,5 +281,8 @@ class PageRepository extends EntityRepository
 
         $this->_em->persist($item);
         $this->_em->flush();
+
+        $this->pageCache->clean([Cache::NAMESPACES => ['Page']]);
+        $this->menuCache->clean([Cache::NAMESPACES => ['Menu']]);
     }
 }

@@ -63,4 +63,9 @@ class TextContent extends Content implements IContent
         $values     = $values[$this->getContentFormName()];
         $this->text = $values['text'];
     }
+
+    public function convertToDTO() : ContentDTO
+    {
+        return new TextContentDTO($this->getComponentName(), $this->heading, $this->text);
+    }
 }

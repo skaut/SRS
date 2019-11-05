@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\WebModule\Presenters;
 
-use App\Model\Page\PageException;
 use App\WebModule\Components\ApplicationContentControl;
 use App\WebModule\Components\BlocksContentControl;
 use App\WebModule\Components\CapacitiesContentControl;
@@ -130,18 +129,18 @@ class PagePresenter extends WebBasePresenter
 
     /**
      * @throws BadRequestException
-     * @throws PageException
+     * @throws \Throwable
      */
     public function renderDefault(?string $slug) : void
     {
         if ($slug === null) {
-            $page = $this->pageRepository->findPublishedBySlug('/');
+            $page = $this->pageRepository->findPublishedBySlugDTO('/');
             if ($page === null) {
                 $this->error($this->translator->translate('web.common.homepage_not_found'), 404);
             }
             $this->template->bodyClass = 'body-homepage';
         } else {
-            $page = $this->pageRepository->findBySlug($slug);
+            $page = $this->pageRepository->findPublishedBySlugDTO($slug);
             if ($page === null) {
                 $this->error($this->translator->translate('web.common.page_not_found'), 404);
             }
@@ -154,7 +153,7 @@ class PagePresenter extends WebBasePresenter
 
         $this->template->page           = $page;
         $this->template->pageName       = $page->getName();
-        $this->template->sidebarVisible = $page->hasContents('sidebar');
+        $this->template->sidebarVisible = $page->hasSidebar();
     }
 
     protected function createComponentApplicationContent() : ApplicationContentControl

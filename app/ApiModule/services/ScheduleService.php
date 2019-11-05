@@ -26,8 +26,6 @@ use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ProgramService;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
 use Nette;
 use const DATE_ISO8601;
@@ -321,8 +319,6 @@ class ScheduleService
     /**
      * Odhlásí program uživateli.
      * @throws SettingsException
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @throws \Throwable
      */
     public function unattendProgram(int $programId) : ResponseDTO

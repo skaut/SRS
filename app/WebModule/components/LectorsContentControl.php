@@ -6,7 +6,7 @@ namespace App\WebModule\Components;
 
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
-use App\Model\CMS\Content\LectorsContent;
+use App\Model\CMS\Content\ContentDTO;
 use App\Model\User\UserRepository;
 use Nette\Application\UI\Control;
 
@@ -32,7 +32,7 @@ class LectorsContentControl extends Control
         $this->roleRepository = $roleRepository;
     }
 
-    public function render(LectorsContent $content) : void
+    public function render(ContentDTO $content) : void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/lectors_content.latte');

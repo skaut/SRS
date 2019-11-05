@@ -255,4 +255,9 @@ class ImageContent extends Content implements IContent
     {
         return '/images/' . Random::generate(5) . '/' . Strings::webalize($file->name, '.');
     }
+
+    public function convertToDTO() : ContentDTO
+    {
+        return new ImageContentDTO($this->getComponentName(), $this->heading, $this->image, $this->align, $this->width, $this->height);
+    }
 }

@@ -29,7 +29,7 @@ class DatabaseService
     public $dir;
 
     /** @var Cache */
-    protected $cache;
+    protected $databaseCache;
 
 
     public function __construct(string $dir, Application $application, Container $container, IStorage $storage)
@@ -38,7 +38,7 @@ class DatabaseService
         $this->application = $application;
         $this->container   = $container;
 
-        $this->cache = new Cache($storage, 'Database');
+        $this->databaseCache = new Cache($storage, 'Database');
     }
 
     /**
@@ -47,13 +47,13 @@ class DatabaseService
      */
     public function update() : void
     {
-        if ($this->cache->load('updated') !== null) {
+        if ($this->databaseCache->load('updated') !== null) {
             return;
         }
 
-        $this->cache->save('lock', function () {
-            if ($this->cache->load('updated') === null) {
-                $this->cache->save('updated', new \DateTime());
+        $this->databaseCache->save('lock', function () {
+            if ($this->databaseCache->load('updated') === null) {
+                $this->databaseCache->save('updated', new \DateTime());
 
                 $this->backup();
 

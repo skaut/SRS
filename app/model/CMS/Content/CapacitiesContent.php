@@ -8,6 +8,7 @@ use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\CMS\Page;
 use App\Model\Page\PageException;
+use App\Utils\Helpers;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -96,5 +97,10 @@ class CapacitiesContent extends Content implements IContent
         parent::contentFormSucceeded($form, $values);
         $values      = $values[$this->getContentFormName()];
         $this->roles = $this->roleRepository->findRolesByIds($values['roles']);
+    }
+
+    public function convertToDTO() : ContentDTO
+    {
+        return new CapacitiesContentDTO($this->getComponentName(), $this->heading, Helpers::getIds($this->roles));
     }
 }

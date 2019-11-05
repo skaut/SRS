@@ -7,14 +7,14 @@
         </div>
     </div>
 
-    {foreach $page->getContents('main') as $content}
+    {foreach $page->getMainContents() as $content}
         {control $content->getComponentName(), $content}
     {/foreach}
 {/block}
 
 {if $sidebar}
     {block sidebar}
-        {foreach $page->getContents('sidebar') as $content}
+        {foreach $page->getSidebarContents() as $content}
             {control $content->getComponentName(), $content}
         {/foreach}
     {/block}

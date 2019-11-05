@@ -28,19 +28,19 @@ class DocumentRepository extends EntityRepository
 
     /**
      * Vrací dokumenty podle rolí a vybraných tagů, seřazené podle názvu.
-     * @param int[]            $rolesIds pole id rolí
-     * @param Collection|Tag[] $tags
+     * @param int[] $rolesIds pole id rolí
+     * @param int[] $tagsIds
      * @return Collection|Document[]
      */
-    public function findRolesAllowedByTagsOrderedByName(array $rolesIds, Collection $tags) : Collection
+    public function findRolesAllowedByTagsOrderedByName(array $rolesIds, array $tagsIds) : Collection
     {
         $result = $this->createQueryBuilder('d')
             ->select('d')
             ->join('d.tags', 't')
             ->join('t.roles', 'r')
-            ->where('t IN (:tags)')
+            ->where('t IN (:tagsIds)')
             ->andWhere('r IN (:rolesIds)')
-            ->setParameter('tags', $tags)
+            ->setParameter('tagsIds', $tagsIds)
             ->setParameter('rolesIds', $rolesIds)
             ->orderBy('d.name')
             ->getQuery()

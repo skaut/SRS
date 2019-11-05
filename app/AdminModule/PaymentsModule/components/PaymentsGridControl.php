@@ -16,8 +16,6 @@ use App\Services\ApplicationService;
 use App\Services\BankService;
 use App\Services\PdfExportService;
 use App\Utils\Helpers;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
@@ -172,9 +170,8 @@ class PaymentsGridControl extends Control
 
     /**
      * Zpracuje přidání platby.
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @throws AbortException
+     * @throws \Throwable
      */
     public function add(\stdClass $values) : void
     {

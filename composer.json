@@ -6,6 +6,7 @@
         "ext-iconv": "*",
         "ext-json": "*",
         "ext-mysqli": "*",
+        "ext-soap": "*",
 
         "nette/nette": "~2.4.0",
         "latte/latte": "~2.4.0",
@@ -22,7 +23,7 @@
         "nextras/forms": "^2.0",
 
         "ublaboo/datagrid": "^5.7",
-        "ublaboo/mailing": "~1.1.0",
+        "ublaboo/mailing": "^1.2",
 
         "janmarek/webloader": "dev-master",
         "jms/serializer": "^1.13",

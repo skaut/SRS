@@ -65,4 +65,9 @@ class NewsContent extends Content implements IContent
         $values      = $values[$this->getContentFormName()];
         $this->count = $values['count'] !== '' ? $values['count'] : null;
     }
+
+    public function convertToDTO() : ContentDTO
+    {
+        return new NewsContentDTO($this->getComponentName(), $this->heading, $this->count);
+    }
 }
