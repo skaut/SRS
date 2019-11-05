@@ -13,7 +13,6 @@ use App\Model\Program\ProgramRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
-use App\Model\User\Application;
 use App\Model\User\ApplicationRepository;
 use App\Model\User\RolesApplicationRepository;
 use App\Model\User\SubeventsApplicationRepository;
@@ -154,7 +153,8 @@ class MaturityPresenter extends ActionBasePresenter
      * @throws MailingException
      * @throws MailingMailCreationException
      */
-    public function actionSendReminders() : void {
+    public function actionSendReminders() : void
+    {
         $maturityReminder = $this->settingsRepository->getIntValue(Settings::MATURITY_REMINDER);
         if ($maturityReminder !== null) {
             $maturityReminderDate = (new \DateTime())->setTime(0, 0)->modify('+' . $maturityReminder . ' days');
