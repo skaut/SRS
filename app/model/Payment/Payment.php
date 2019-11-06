@@ -27,7 +27,7 @@ class Payment
 
     /**
      * Id platby v systému banky.
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", unique=true, nullable=true)
      * @var string
      */
     protected $transactionId;

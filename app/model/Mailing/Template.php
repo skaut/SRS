@@ -89,7 +89,7 @@ class Template
 
     /**
      * Typ e-mailu.
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", unique=true)
      * @var string
      */
     protected $type;
