@@ -8,6 +8,7 @@ use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
 use App\Services\BankService;
+use Nette\Application\Responses\TextResponse;
 
 /**
  * Presenter obsluhující načítání plateb z API banky.
@@ -38,5 +39,8 @@ class BankPresenter extends ActionBasePresenter
     {
         $from = $this->settingsRepository->getDateValue(Settings::BANK_DOWNLOAD_FROM);
         $this->bankService->downloadTransactions($from);
+
+        $response = new TextResponse(null);
+        $this->sendResponse($response);
     }
 }

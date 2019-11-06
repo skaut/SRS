@@ -21,6 +21,7 @@ use App\Services\ApplicationService;
 use App\Services\MailService;
 use App\Services\ProgramService;
 use App\Utils\Helpers;
+use Nette\Application\Responses\TextResponse;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingException;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
@@ -143,6 +144,9 @@ class MaturityPresenter extends ActionBasePresenter
                 }
             });
         }
+
+        $response = new TextResponse(null);
+        $this->sendResponse($response);
     }
 
     /**
@@ -173,5 +177,8 @@ class MaturityPresenter extends ActionBasePresenter
                 }
             }
         }
+
+        $response = new TextResponse(null);
+        $this->sendResponse($response);
     }
 }
