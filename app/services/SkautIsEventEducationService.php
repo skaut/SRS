@@ -58,7 +58,7 @@ class SkautIsEventEducationService extends SkautIsEventService
                 $participants[$courseId] = [];
 
                 foreach ($this->getAllParticipants($eventId, $courseId) as $participant) {
-                    $participants[$courseId][$participant->ID_Person] = true;
+                    $participants[$courseId][$participant->ID_Person] = ['id' => $participant->ID, 'accepted' => $participant->IsAccepted];
                 }
             }
 
@@ -69,12 +69,15 @@ class SkautIsEventEducationService extends SkautIsEventService
                     foreach ($subevent->getSkautIsCourses() as $course) {
                         $courseId = $course->getSkautIsCourseId();
 
-                        if (array_key_exists($personId, $participants[$courseId])) {
-                            continue;
+                        if (! array_key_exists($personId, $participants[$courseId])) {
+                            $participantId                      = $this->insertParticipant($eventId, $course->getSkautIsCourseId(), $personId);
+                            $participants[$courseId][$personId] = ['id' => $participantId, 'accepted' => false];
                         }
 
-                        $this->insertParticipant($eventId, $course->getSkautIsCourseId(), $personId, $accept);
-                        $participants[$courseId][$personId] = true;
+                        if ($participants[$courseId][$personId]['accepted'] !== $accept) {
+                            $this->updateParticipant($participants[$courseId][$personId]['id'], $accept);
+                            $participants[$courseId][$personId]['accepted'] = $accept;
+                        }
                     }
                 }
             }
@@ -170,7 +173,7 @@ class SkautIsEventEducationService extends SkautIsEventService
     /**
      * Přidá účastníka kurzu.
      */
-    private function insertParticipant(int $eventId, int $courseId, int $personId, bool $accept) : void
+    private function insertParticipant(int $eventId, int $courseId, int $personId) : int
     {
         $response = $this->skautIs->event->ParticipantEducationInsert([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -178,14 +181,17 @@ class SkautIsEventEducationService extends SkautIsEventService
             'ID_EventEducationCourse' => $courseId,
             'ID_Person' => $personId,
         ]);
+        return $response->ID;
+    }
 
-        if (! $accept) {
-            return;
-        }
-
+    /**
+     * Aktualizuje přijetí účastníka.
+     */
+    private function updateParticipant(int $participantId, bool $accept) : void
+    {
         $this->skautIs->event->ParticipantEducationUpdate([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
-            'ID' => $response->ID,
+            'ID' => $participantId,
             'IsAccepted' => $accept,
         ], 'participantEducation');
     }
