@@ -59,7 +59,7 @@ class BankForm
         $renderer->wrappers['control']['container'] = 'div class="col-sm-7 col-xs-7"';
         $renderer->wrappers['label']['container']   = 'div class="col-sm-5 col-xs-5 control-label"';
 
-        $form->addSelect('bank', 'admin.configuration.payment.bank', ['fio' => 'FIO']);
+        $form->addSelect('bank', 'admin.configuration.payment.bank.bank', ['fio' => 'FIO']);
         $form->addText('bankToken', 'admin.configuration.payment.bank.token')
             ->addRule(Form::FILLED, 'admin.configuration.payment.bank.token_empty')
             ->addRule(Form::LENGTH, 'admin.configuration.payment.bank.token_length', 64);
