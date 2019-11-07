@@ -137,16 +137,11 @@ class ApplicationService
         User $createdBy,
         bool $approve = false
     ) : void {
-        $rolesApplication     = new RolesApplication();
-        $subeventsApplication = new SubeventsApplication();
+        $rolesApplication     = $this->createRolesApplication($user, $roles, $createdBy, $approve);
+        $subeventsApplication = $this->createSubeventsApplication($user, $subevents, $createdBy);
 
-        $this->applicationRepository->getEntityManager()->transactional(function ($em) use ($user, $roles, $subevents, $createdBy, $approve, &$rolesApplication, &$subeventsApplication) : void {
-            $rolesApplication     = $this->createRolesApplication($user, $roles, $createdBy, $approve);
-            $subeventsApplication = $this->createSubeventsApplication($user, $subevents, $createdBy);
-
-            $this->programService->updateUserPrograms($user);
-            $this->updateUserPaymentInfo($user);
-        });
+        $this->programService->updateUserPrograms($user);
+        $this->updateUserPaymentInfo($user);
 
         $applicatonMaturity        = '-';
         $applicationFee            = '0';
@@ -157,8 +152,7 @@ class ApplicationService
                 $applicatonMaturity = $rolesApplication->getMaturityDateText();
             }
             $applicationFee            = $rolesApplication->getFee() . ', ' . $subeventsApplication->getFee();
-            $applicationVariableSymbol = $rolesApplication->getVariableSymbolText() . ', '
-                . $subeventsApplication->getVariableSymbolText();
+            $applicationVariableSymbol = $rolesApplication->getVariableSymbolText() . ', ' . $subeventsApplication->getVariableSymbolText();
         } elseif ($rolesApplication->getFee() > 0) {
             if ($rolesApplication->getMaturityDate()) {
                 $applicatonMaturity = $rolesApplication->getMaturityDateText();
