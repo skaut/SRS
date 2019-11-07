@@ -58,7 +58,7 @@ class SkautIsEventEducationService extends SkautIsEventService
                 $participants[$courseId] = [];
 
                 foreach ($this->getAllParticipants($eventId, $courseId) as $participant) {
-                    $participants[$courseId][$participant->ID_Person] = $participant->IsAccepted;
+                    $participants[$courseId][$participant->ID_Person] = ['id' => $participant->ID, 'accepted' => $participant->IsAccepted];
                 }
             }
 
@@ -70,13 +70,13 @@ class SkautIsEventEducationService extends SkautIsEventService
                         $courseId = $course->getSkautIsCourseId();
 
                         if (! array_key_exists($personId, $participants[$courseId])) {
-                            $this->insertParticipant($eventId, $course->getSkautIsCourseId(), $personId);
-                            $participants[$courseId][$personId] = false;
+                            $participantId = $this->insertParticipant($eventId, $course->getSkautIsCourseId(), $personId);
+                            $participants[$courseId][$personId] = ['id' => $participantId, 'accepted' => false];
                         }
 
-                        if ($participants[$courseId][$personId] !== $accept) {
-                            $this->updateParticipant($eventId, $course->getSkautIsCourseId(), $personId, $accept);
-                            $participants[$courseId][$personId] = $accept;
+                        if ($participants[$courseId][$personId]['accepted'] !== $accept) {
+                            $this->updateParticipant($participants[$courseId][$personId]['id'], $accept);
+                            $participants[$courseId][$personId]['accepted'] = $accept;
                         }
                     }
                 }
@@ -173,7 +173,7 @@ class SkautIsEventEducationService extends SkautIsEventService
     /**
      * Přidá účastníka kurzu.
      */
-    private function insertParticipant(int $eventId, int $courseId, int $personId) : void
+    private function insertParticipant(int $eventId, int $courseId, int $personId) : int
     {
         $response = $this->skautIs->event->ParticipantEducationInsert([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -181,18 +181,17 @@ class SkautIsEventEducationService extends SkautIsEventService
             'ID_EventEducationCourse' => $courseId,
             'ID_Person' => $personId,
         ]);
+        return $response->ID;
     }
 
     /**
      * Aktualizuje přijetí účastníka.
      */
-    private function updateParticipant(int $eventId, int $courseId, int $personId, bool $accept) : void
+    private function updateParticipant(int $participantId, bool $accept) : void
     {
         $this->skautIs->event->ParticipantEducationUpdate([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
-            'ID_EventEducation' => $eventId,
-            'ID_EventEducationCourse' => $courseId,
-            'ID_Person' => $personId,
+            'ID' => $participantId,
             'IsAccepted' => $accept,
         ], 'participantEducation');
     }
