@@ -133,7 +133,7 @@ class MaturityPresenter extends ActionBasePresenter
                 // pokud účastníkovi nezbyde žádná podakce, je třeba odebrat i roli s cenou podle podakcí, případně jej odhlásit
                 if ($subeventsApplicationCanceled && $user->getSubevents()->isEmpty()) {
                     $newRoles = $user->getRoles()->filter(function (Role $role) {
-                        return $role !== null;
+                        return $role->getFee() !== null;
                     });
                     if ($newRoles->isEmpty()) {
                         $this->applicationService->cancelRegistration($user, ApplicationState::CANCELED_NOT_PAID, null);
