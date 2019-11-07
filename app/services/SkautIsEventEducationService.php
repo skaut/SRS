@@ -70,7 +70,7 @@ class SkautIsEventEducationService extends SkautIsEventService
                         $courseId = $course->getSkautIsCourseId();
 
                         if (! array_key_exists($personId, $participants[$courseId])) {
-                            $participantId = $this->insertParticipant($eventId, $course->getSkautIsCourseId(), $personId);
+                            $participantId                      = $this->insertParticipant($eventId, $course->getSkautIsCourseId(), $personId);
                             $participants[$courseId][$personId] = ['id' => $participantId, 'accepted' => false];
                         }
 
