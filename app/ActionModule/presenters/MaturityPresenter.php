@@ -137,7 +137,6 @@ class MaturityPresenter extends ActionBasePresenter
                     });
                     if ($newRoles->isEmpty()) {
                         $this->applicationService->cancelRegistration($user, ApplicationState::CANCELED_NOT_PAID, null);
-                        return;
                     } else {
                         $this->applicationService->updateRoles($user, $newRoles, null);
                     }
