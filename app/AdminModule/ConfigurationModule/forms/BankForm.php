@@ -7,7 +7,7 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseForm;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
+use App\Model\Settings\SettingsFacade;
 use App\Services\BankService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -30,8 +30,8 @@ class BankForm
     /** @var BaseForm */
     private $baseFormFactory;
 
-    /** @var SettingsRepository */
-    private $settingsRepository;
+    /** @var SettingsFacade */
+    private $settingsFacade;
 
     /** @var BankService */
     private $bankService;
@@ -39,11 +39,11 @@ class BankForm
 
     public function __construct(
         BaseForm $baseForm,
-        SettingsRepository $settingsRepository,
+        SettingsFacade $settingsFacade,
         BankService $bankService
     ) {
         $this->baseFormFactory    = $baseForm;
-        $this->settingsRepository = $settingsRepository;
+        $this->settingsFacade = $settingsFacade;
         $this->bankService        = $bankService;
     }
 
@@ -88,7 +88,7 @@ class BankForm
 
         try {
             $this->bankService->downloadTransactions($from, $token);
-            $this->settingsRepository->setValue(Settings::BANK_TOKEN, $token);
+            $this->settingsFacade->setValue(Settings::BANK_TOKEN, $token);
         } catch (InternalErrorException $ex) {
             Debugger::log($ex, ILogger::WARNING);
             $form['bankToken']->addError('admin.configuration.payment.bank.invalid_token');

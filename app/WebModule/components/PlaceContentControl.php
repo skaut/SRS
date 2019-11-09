@@ -8,7 +8,7 @@ use App\Model\CMS\Content\ContentDTO;
 use App\Model\Settings\Place\PlacePointRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
+use App\Model\Settings\SettingsFacade;
 use Nette\Application\UI\Control;
 
 /**
@@ -18,18 +18,18 @@ use Nette\Application\UI\Control;
  */
 class PlaceContentControl extends Control
 {
-    /** @var SettingsRepository */
-    private $settingsRepository;
+    /** @var SettingsFacade */
+    private $settingsFacade;
 
     /** @var PlacePointRepository */
     private $placePointRepository;
 
 
-    public function __construct(SettingsRepository $settingsRepository, PlacePointRepository $placePointRepository)
+    public function __construct(SettingsFacade $settingsFacade, PlacePointRepository $placePointRepository)
     {
         parent::__construct();
 
-        $this->settingsRepository   = $settingsRepository;
+        $this->settingsFacade   = $settingsFacade;
         $this->placePointRepository = $placePointRepository;
     }
 
@@ -43,7 +43,7 @@ class PlaceContentControl extends Control
         $template->setFile(__DIR__ . '/templates/place_content.latte');
 
         $template->heading     = $content->getHeading();
-        $template->description = $this->settingsRepository->getValue(Settings::PLACE_DESCRIPTION);
+        $template->description = $this->settingsFacade->getValue(Settings::PLACE_DESCRIPTION);
         $template->points      = $this->placePointRepository->findAll();
 
         $template->render();

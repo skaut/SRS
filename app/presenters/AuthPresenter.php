@@ -8,7 +8,7 @@ use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
+use App\Model\Settings\SettingsFacade;
 use App\Model\User\UserRepository;
 use App\Services\MailService;
 use App\Services\SkautIsService;
@@ -33,10 +33,10 @@ class AuthPresenter extends BasePresenter
     public $skautIsService;
 
     /**
-     * @var SettingsRepository
+     * @var SettingsFacade
      * @inject
      */
-    public $settingsRepository;
+    public $settingsFacade;
 
     /**
      * @var UserRepository
@@ -75,7 +75,7 @@ class AuthPresenter extends BasePresenter
             $user = $this->userRepository->findById($this->user->id);
 
             $this->mailService->sendMailFromTemplate($user, '', Template::SIGN_IN, [
-                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
+                TemplateVariable::SEMINAR_NAME => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
             ]);
         }
 
@@ -138,7 +138,7 @@ class AuthPresenter extends BasePresenter
         if ($redirectByRole && ! $multipleRedirects) {
             $slug = $redirectByRole;
         } else {
-            $slug = $this->settingsRepository->getValue(Settings::REDIRECT_AFTER_LOGIN);
+            $slug = $this->settingsFacade->getValue(Settings::REDIRECT_AFTER_LOGIN);
         }
 
         $this->redirect(':Web:Page:default', ['slug' => $slug]);

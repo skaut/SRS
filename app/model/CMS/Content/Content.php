@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Model\CMS\Content;
@@ -7,15 +6,14 @@ namespace App\Model\CMS\Content;
 use App\Model\CMS\Page;
 use App\Model\Page\PageException;
 use Doctrine\ORM\Mapping as ORM;
-use Kdyby\Doctrine\Entities\Attributes\Identifier;
 use Nette\Application\UI\Form;
+use Nettrine\ORM\Entity\Attributes\Id as Identifier;
 
 /**
  * Abstraktní entita obsahu.
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @ORM\Entity(repositoryClass="ContentRepository")
  * @ORM\Table(name="content")
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="type", type="string")
@@ -38,281 +36,279 @@ use Nette\Application\UI\Form;
  */
 abstract class Content implements IContent
 {
-    /**
-     * TextContent.
-     * @var string
-     */
-    public const TEXT = 'text';
 
-    /**
-     * ImageContent.
-     * @var string
-     */
-    public const IMAGE = 'image';
+	/**
+	 * TextContent.
+	 * @var string
+	 */
+	public const TEXT = 'text';
 
-    /**
-     * DocumentContent.
-     * @var string
-     */
-    public const DOCUMENT = 'document';
+	/**
+	 * ImageContent.
+	 * @var string
+	 */
+	public const IMAGE = 'image';
 
-    /**
-     * ApplicationContent.
-     * @var string
-     */
-    public const APPLICATION = 'application';
+	/**
+	 * DocumentContent.
+	 * @var string
+	 */
+	public const DOCUMENT = 'document';
 
-    /**
-     * HtmlContent.
-     * @var string
-     */
-    public const HTML = 'html';
+	/**
+	 * ApplicationContent.
+	 * @var string
+	 */
+	public const APPLICATION = 'application';
 
-    /**
-     * FaqContent.
-     * @var string
-     */
-    public const FAQ = 'faq';
+	/**
+	 * HtmlContent.
+	 * @var string
+	 */
+	public const HTML = 'html';
 
-    /**
-     * NewsContent.
-     * @var string
-     */
-    public const NEWS = 'news';
+	/**
+	 * FaqContent.
+	 * @var string
+	 */
+	public const FAQ = 'faq';
 
-    /**
-     * PlaceContent.
-     * @var string
-     */
-    public const PLACE = 'place';
+	/**
+	 * NewsContent.
+	 * @var string
+	 */
+	public const NEWS = 'news';
 
-    /**
-     * ProgramsContent.
-     * @var string
-     */
-    public const PROGRAMS = 'programs';
+	/**
+	 * PlaceContent.
+	 * @var string
+	 */
+	public const PLACE = 'place';
 
-    /**
-     * UsersContent.
-     * @var string
-     */
-    public const USERS = 'users';
+	/**
+	 * ProgramsContent.
+	 * @var string
+	 */
+	public const PROGRAMS = 'programs';
 
-    /**
-     * LectorsContent.
-     * @var string
-     */
-    public const LECTORS = 'lectors';
+	/**
+	 * UsersContent.
+	 * @var string
+	 */
+	public const USERS = 'users';
 
-    /**
-     * BlocksContent.
-     * @var string
-     */
-    public const BLOCKS = 'blocks';
+	/**
+	 * LectorsContent.
+	 * @var string
+	 */
+	public const LECTORS = 'lectors';
 
-    /**
-     * CapacitiesContent.
-     * @var string
-     */
-    public const CAPACITIES = 'capacities';
+	/**
+	 * BlocksContent.
+	 * @var string
+	 */
+	public const BLOCKS = 'blocks';
 
-    /**
-     * OrganizerContent
-     * @var string
-     */
-    public const ORGANIZER = 'organizer';
+	/**
+	 * CapacitiesContent.
+	 * @var string
+	 */
+	public const CAPACITIES = 'capacities';
 
+	/**
+	 * OrganizerContent
+	 * @var string
+	 */
+	public const ORGANIZER = 'organizer';
 
-    /**
-     * Hlavní oblast stránky.
-     * @var string
-     */
-    public const MAIN = 'main';
+	/**
+	 * Hlavní oblast stránky.
+	 * @var string
+	 */
+	public const MAIN = 'main';
 
-    /**
-     * Postranní panel stránky.
-     * @var string
-     */
-    public const SIDEBAR = 'sidebar';
+	/**
+	 * Postranní panel stránky.
+	 * @var string
+	 */
+	public const SIDEBAR = 'sidebar';
 
+	/** @var string[] */
+	public static $types = [
+		self::TEXT,
+		self::IMAGE,
+		self::DOCUMENT,
+		self::APPLICATION,
+		self::HTML,
+		self::FAQ,
+		self::NEWS,
+		self::PLACE,
+		self::PROGRAMS,
+		self::USERS,
+		self::LECTORS,
+		self::BLOCKS,
+		self::CAPACITIES,
+		self::ORGANIZER,
+	];
 
-    /** @var string[] */
-    public static $types = [
-        self::TEXT,
-        self::IMAGE,
-        self::DOCUMENT,
-        self::APPLICATION,
-        self::HTML,
-        self::FAQ,
-        self::NEWS,
-        self::PLACE,
-        self::PROGRAMS,
-        self::USERS,
-        self::LECTORS,
-        self::BLOCKS,
-        self::CAPACITIES,
-        self::ORGANIZER,
-    ];
+	/** @var string[] */
+	public static $areas = [
+		self::MAIN,
+		self::SIDEBAR,
+	];
 
-    /** @var string[] */
-    public static $areas = [
-        self::MAIN,
-        self::SIDEBAR,
-    ];
+	use Identifier;
 
-    /**
-     * Typ obsahu.
-     * @var string
-     */
-    protected $type;
+	/**
+	 * Typ obsahu.
+	 * @var string
+	 */
+	protected $type;
 
-    use Identifier;
+	/**
+	 * Nadpis obsahu.
+	 * @ORM\Column(type="string", nullable=true)
+	 * @var string
+	 */
+	protected $heading;
 
-    /**
-     * Nadpis obsahu.
-     * @ORM\Column(type="string", nullable=true)
-     * @var string
-     */
-    protected $heading;
+	/**
+	 * Stránka, na které je obsah umístěn.
+	 * @ORM\ManyToOne(targetEntity="\App\Model\CMS\Page", inversedBy="contents", cascade={"persist"})
+	 * @var Page
+	 */
+	protected $page;
 
-    /**
-     * Stránka, na které je obsah umístěn.
-     * @ORM\ManyToOne(targetEntity="\App\Model\CMS\Page", inversedBy="contents", cascade={"persist"})
-     * @var Page
-     */
-    protected $page;
+	/**
+	 * Oblast stránky, ve které se obsah nachází.
+	 * @ORM\Column(type="string")
+	 * @var string
+	 */
+	protected $area;
 
-    /**
-     * Oblast stránky, ve které se obsah nachází.
-     * @ORM\Column(type="string")
-     * @var string
-     */
-    protected $area;
+	/**
+	 * Pořadí obsahu na stránce.
+	 * @ORM\Column(type="integer")
+	 * @var int
+	 */
+	protected $position = 0;
 
-    /**
-     * Pořadí obsahu na stránce.
-     * @ORM\Column(type="integer")
-     * @var int
-     */
-    protected $position = 0;
+	/**
+	 * @throws PageException
+	 */
+	public function __construct(Page $page, string $area)
+	{
+		$this->page = $page;
+		$this->area = $area;
 
+		$contentsCount = $page->getContents($area)->count();
 
-    /**
-     * @throws PageException
-     */
-    public function __construct(Page $page, string $area)
-    {
-        $this->page = $page;
-        $this->area = $area;
+		$this->position = $contentsCount + 1;
+	}
 
-        $contentsCount = $page->getContents($area)->count();
+	/**
+	 * @return mixed
+	 */
+	public function getType(): string
+	{
+		return $this->type;
+	}
 
-        $this->position = $contentsCount + 1;
-    }
+	public function getComponentName(): string
+	{
+		return $this->type . 'Content';
+	}
 
-    /**
-     * @return mixed
-     */
-    public function getType() : string
-    {
-        return $this->type;
-    }
+	public function getId(): int
+	{
+		return $this->id;
+	}
 
-    public function getComponentName() : string
-    {
-        return $this->type . 'Content';
-    }
+	public function getHeading(): string
+	{
+		return $this->heading;
+	}
 
-    public function getId() : int
-    {
-        return $this->id;
-    }
+	public function setHeading(string $heading): void
+	{
+		$this->heading = $heading;
+	}
 
-    public function getHeading() : string
-    {
-        return $this->heading;
-    }
+	public function getPage(): Page
+	{
+		return $this->page;
+	}
 
-    public function setHeading(string $heading) : void
-    {
-        $this->heading = $heading;
-    }
+	public function setPage(Page $page): void
+	{
+		$this->page = $page;
+	}
 
-    public function getPage() : Page
-    {
-        return $this->page;
-    }
+	public function getArea(): string
+	{
+		return $this->area;
+	}
 
-    public function setPage(Page $page) : void
-    {
-        $this->page = $page;
-    }
+	public function setArea(string $area): void
+	{
+		$this->area = $area;
+	}
 
-    public function getArea() : string
-    {
-        return $this->area;
-    }
+	public function getPosition(): int
+	{
+		return $this->position;
+	}
 
-    public function setArea(string $area) : void
-    {
-        $this->area = $area;
-    }
+	public function setPosition(int $position): void
+	{
+		$this->position = $position;
+	}
 
-    public function getPosition() : int
-    {
-        return $this->position;
-    }
+	/**
+	 * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
+	 */
+	public function addContentForm(Form $form): Form
+	{
+		$formContainer = $form->addContainer($this->getContentFormName());
 
-    public function setPosition(int $position) : void
-    {
-        $this->position = $position;
-    }
+		$formContainer->addHidden('id')
+			->setAttribute('class', 'id');
 
-    /**
-     * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
-     */
-    public function addContentForm(Form $form) : Form
-    {
-        $formContainer = $form->addContainer($this->getContentFormName());
+		$formContainer->addHidden('position')
+			->setAttribute('class', 'position');
 
-        $formContainer->addHidden('id')
-            ->setAttribute('class', 'id');
+		$formContainer->addHidden('delete')
+			->setAttribute('class', 'delete');
 
-        $formContainer->addHidden('position')
-            ->setAttribute('class', 'position');
+		$formContainer->addText('heading', 'admin.cms.pages_content_heading');
 
-        $formContainer->addHidden('delete')
-            ->setAttribute('class', 'delete');
+		$formContainer->setDefaults([
+			'id' => $this->id,
+			'position' => $this->position,
+			'delete' => 0,
+			'heading' => $this->heading,
+		]);
 
-        $formContainer->addText('heading', 'admin.cms.pages_content_heading');
+		return $form;
+	}
 
-        $formContainer->setDefaults([
-            'id' => $this->id,
-            'position' => $this->position,
-            'delete' => 0,
-            'heading' => $this->heading,
-        ]);
+	public function getContentFormName(): string
+	{
+		return $this->type . '_' . $this->id;
+	}
 
-        return $form;
-    }
+	/**
+	 * Zpracuje při uložení stránky část formuláře týkající se obsahu.
+	 */
+	public function contentFormSucceeded(Form $form, \stdClass $values): void
+	{
+		$values = $values[$this->getContentFormName()];
+		$this->position = $values['position'];
+		$this->heading = $values['heading'];
+	}
 
-    public function getContentFormName() : string
-    {
-        return $this->type . '_' . $this->id;
-    }
-
-    /**
-     * Zpracuje při uložení stránky část formuláře týkající se obsahu.
-     */
-    public function contentFormSucceeded(Form $form, \stdClass $values) : void
-    {
-        $values         = $values[$this->getContentFormName()];
-        $this->position = $values['position'];
-        $this->heading  = $values['heading'];
-    }
-
-    public function convertToDTO() : ContentDTO
-    {
-        return new ContentDTO($this->getComponentName(), $this->heading);
-    }
+	public function convertToDTO(): ContentDTO
+	{
+		return new ContentDTO($this->getComponentName(), $this->heading);
+	}
 }

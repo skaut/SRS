@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\WebModule\Presenters;
@@ -42,187 +41,187 @@ use Nette\Application\BadRequestException;
  */
 class PagePresenter extends WebBasePresenter
 {
-    /**
-     * @var IApplicationContentControlFactory
-     * @inject
-     */
-    public $applicationContentControlFactory;
 
-    /**
-     * @var IBlocksContentControlFactory
-     * @inject
-     */
-    public $blocksContentControlFactory;
+	/**
+	 * @var IApplicationContentControlFactory
+	 * @inject
+	 */
+	public $applicationContentControlFactory;
 
-    /**
-     * @var ICapacitiesContentControlFactory
-     * @inject
-     */
-    public $capacitiesContentControlFactory;
+	/**
+	 * @var IBlocksContentControlFactory
+	 * @inject
+	 */
+	public $blocksContentControlFactory;
 
-    /**
-     * @var IDocumentContentControlFactory
-     * @inject
-     */
-    public $documentContentControlFactory;
+	/**
+	 * @var ICapacitiesContentControlFactory
+	 * @inject
+	 */
+	public $capacitiesContentControlFactory;
 
-    /**
-     * @var IFaqContentControlFactory
-     * @inject
-     */
-    public $faqContentControlFactory;
+	/**
+	 * @var IDocumentContentControlFactory
+	 * @inject
+	 */
+	public $documentContentControlFactory;
 
-    /**
-     * @var IHtmlContentControlFactory
-     * @inject
-     */
-    public $htmlContentControlFactory;
+	/**
+	 * @var IFaqContentControlFactory
+	 * @inject
+	 */
+	public $faqContentControlFactory;
 
-    /**
-     * @var IImageContentControlFactory
-     * @inject
-     */
-    public $imageContentControlFactory;
+	/**
+	 * @var IHtmlContentControlFactory
+	 * @inject
+	 */
+	public $htmlContentControlFactory;
 
-    /**
-     * @var INewsContentControlFactory
-     * @inject
-     */
-    public $newsContentControlFactory;
+	/**
+	 * @var IImageContentControlFactory
+	 * @inject
+	 */
+	public $imageContentControlFactory;
 
-    /**
-     * @var IPlaceContentControlFactory
-     * @inject
-     */
-    public $placeContentControlFactory;
+	/**
+	 * @var INewsContentControlFactory
+	 * @inject
+	 */
+	public $newsContentControlFactory;
 
-    /**
-     * @var IProgramsContentControlFactory
-     * @inject
-     */
-    public $programsContentControlFactory;
+	/**
+	 * @var IPlaceContentControlFactory
+	 * @inject
+	 */
+	public $placeContentControlFactory;
 
-    /**
-     * @var ITextContentControlFactory
-     * @inject
-     */
-    public $textContentControlFactory;
+	/**
+	 * @var IProgramsContentControlFactory
+	 * @inject
+	 */
+	public $programsContentControlFactory;
 
-    /**
-     * @var IUsersContentControlFactory
-     * @inject
-     */
-    public $usersContentControlFactory;
+	/**
+	 * @var ITextContentControlFactory
+	 * @inject
+	 */
+	public $textContentControlFactory;
 
-    /**
-     * @var ILectorsContentControlFactory
-     * @inject
-     */
-    public $lectorsContentControlFactory;
+	/**
+	 * @var IUsersContentControlFactory
+	 * @inject
+	 */
+	public $usersContentControlFactory;
 
-    /**
-     * @var IOrganizerContentControlFactory
-     * @inject
-     */
-    public $organizerContentControlFactory;
+	/**
+	 * @var ILectorsContentControlFactory
+	 * @inject
+	 */
+	public $lectorsContentControlFactory;
 
+	/**
+	 * @var IOrganizerContentControlFactory
+	 * @inject
+	 */
+	public $organizerContentControlFactory;
 
-    /**
-     * @throws BadRequestException
-     * @throws \Throwable
-     */
-    public function renderDefault(?string $slug) : void
-    {
-        if ($slug === null) {
-            $page = $this->pageRepository->findPublishedBySlugDTO('/');
-            if ($page === null) {
-                $this->error($this->translator->translate('web.common.homepage_not_found'), 404);
-            }
-            $this->template->bodyClass = 'body-homepage';
-        } else {
-            $page = $this->pageRepository->findPublishedBySlugDTO($slug);
-            if ($page === null) {
-                $this->error($this->translator->translate('web.common.page_not_found'), 404);
-            }
-            $this->template->bodyClass = 'body-' . $slug;
-        }
+	/**
+	 * @throws BadRequestException
+	 * @throws \Throwable
+	 */
+	public function renderDefault(?string $slug): void
+	{
+		if ($slug === null) {
+			$page = $this->pageFacade->findPublishedBySlugDTO('/');
+			if ($page === null) {
+				$this->error($this->translator->translate('web.common.homepage_not_found'), 404);
+			}
+			$this->template->bodyClass = 'body-homepage';
+		} else {
+			$page = $this->pageFacade->findPublishedBySlugDTO($slug);
+			if ($page === null) {
+				$this->error($this->translator->translate('web.common.page_not_found'), 404);
+			}
+			$this->template->bodyClass = 'body-' . $slug;
+		}
 
-        if (! $page->isAllowedForRoles($this->user->roles)) {
-            $this->error($this->translator->translate('web.common.page_access_denied'), 403);
-        }
+		if (!$page->isAllowedForRoles($this->user->roles)) {
+			$this->error($this->translator->translate('web.common.page_access_denied'), 403);
+		}
 
-        $this->template->page           = $page;
-        $this->template->pageName       = $page->getName();
-        $this->template->sidebarVisible = $page->hasSidebar();
-    }
+		$this->template->page = $page;
+		$this->template->pageName = $page->getName();
+		$this->template->sidebarVisible = $page->hasSidebar();
+	}
 
-    protected function createComponentApplicationContent() : ApplicationContentControl
-    {
-        return $this->applicationContentControlFactory->create();
-    }
+	protected function createComponentApplicationContent(): ApplicationContentControl
+	{
+		return $this->applicationContentControlFactory->create();
+	}
 
-    protected function createComponentBlocksContent() : BlocksContentControl
-    {
-        return $this->blocksContentControlFactory->create();
-    }
+	protected function createComponentBlocksContent(): BlocksContentControl
+	{
+		return $this->blocksContentControlFactory->create();
+	}
 
-    protected function createComponentCapacitiesContent() : CapacitiesContentControl
-    {
-        return $this->capacitiesContentControlFactory->create();
-    }
+	protected function createComponentCapacitiesContent(): CapacitiesContentControl
+	{
+		return $this->capacitiesContentControlFactory->create();
+	}
 
-    protected function createComponentDocumentContent() : DocumentContentControl
-    {
-        return $this->documentContentControlFactory->create();
-    }
+	protected function createComponentDocumentContent(): DocumentContentControl
+	{
+		return $this->documentContentControlFactory->create();
+	}
 
-    protected function createComponentFaqContent() : FaqContentControl
-    {
-        return $this->faqContentControlFactory->create();
-    }
+	protected function createComponentFaqContent(): FaqContentControl
+	{
+		return $this->faqContentControlFactory->create();
+	}
 
-    protected function createComponentHtmlContent() : HtmlContentControl
-    {
-        return $this->htmlContentControlFactory->create();
-    }
+	protected function createComponentHtmlContent(): HtmlContentControl
+	{
+		return $this->htmlContentControlFactory->create();
+	}
 
-    protected function createComponentImageContent() : ImageContentControl
-    {
-        return $this->imageContentControlFactory->create();
-    }
+	protected function createComponentImageContent(): ImageContentControl
+	{
+		return $this->imageContentControlFactory->create();
+	}
 
-    protected function createComponentNewsContent() : NewsContentControl
-    {
-        return $this->newsContentControlFactory->create();
-    }
+	protected function createComponentNewsContent(): NewsContentControl
+	{
+		return $this->newsContentControlFactory->create();
+	}
 
-    protected function createComponentPlaceContent() : PlaceContentControl
-    {
-        return $this->placeContentControlFactory->create();
-    }
+	protected function createComponentPlaceContent(): PlaceContentControl
+	{
+		return $this->placeContentControlFactory->create();
+	}
 
-    protected function createComponentProgramsContent() : ProgramsContentControl
-    {
-        return $this->programsContentControlFactory->create();
-    }
+	protected function createComponentProgramsContent(): ProgramsContentControl
+	{
+		return $this->programsContentControlFactory->create();
+	}
 
-    protected function createComponentTextContent() : TextContentControl
-    {
-        return $this->textContentControlFactory->create();
-    }
+	protected function createComponentTextContent(): TextContentControl
+	{
+		return $this->textContentControlFactory->create();
+	}
 
-    protected function createComponentUsersContent() : UsersContentControl
-    {
-        return $this->usersContentControlFactory->create();
-    }
+	protected function createComponentUsersContent(): UsersContentControl
+	{
+		return $this->usersContentControlFactory->create();
+	}
 
-    protected function createComponentLectorsContent() : LectorsContentControl
-    {
-        return $this->lectorsContentControlFactory->create();
-    }
+	protected function createComponentLectorsContent(): LectorsContentControl
+	{
+		return $this->lectorsContentControlFactory->create();
+	}
 
-    protected function createComponentOrganizerContent() : OrganizerContentControl
-    {
-        return $this->organizerContentControlFactory->create();
-    }
+	protected function createComponentOrganizerContent(): OrganizerContentControl
+	{
+		return $this->organizerContentControlFactory->create();
+	}
 }

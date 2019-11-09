@@ -7,7 +7,7 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseForm;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
+use App\Model\Settings\SettingsFacade;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
@@ -25,14 +25,14 @@ class SubeventsForm
     /** @var BaseForm */
     private $baseFormFactory;
 
-    /** @var  SettingsRepository */
-    private $settingsRepository;
+    /** @var  SettingsFacade */
+    private $settingsFacade;
 
 
-    public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository)
+    public function __construct(BaseForm $baseForm, SettingsFacade $settingsFacade)
     {
         $this->baseFormFactory    = $baseForm;
-        $this->settingsRepository = $settingsRepository;
+        $this->settingsFacade = $settingsFacade;
     }
 
     /**
@@ -49,7 +49,7 @@ class SubeventsForm
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'isAllowedAddSubeventsAfterPayment' => $this->settingsRepository->getValue(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT),
+            'isAllowedAddSubeventsAfterPayment' => $this->settingsFacade->getValue(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -66,6 +66,6 @@ class SubeventsForm
      */
     public function processForm(Form $form, \stdClass $values) : void
     {
-        $this->settingsRepository->setBoolValue(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT, $values['isAllowedAddSubeventsAfterPayment']);
+        $this->settingsFacade->setBoolValue(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT, $values['isAllowedAddSubeventsAfterPayment']);
     }
 }

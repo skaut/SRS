@@ -13,7 +13,7 @@ use App\Model\Program\CategoryRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
+use App\Model\Settings\SettingsFacade;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\UserRepository;
 use App\Services\ExcelExportService;
@@ -44,8 +44,8 @@ class ProgramBlocksGridControl extends Control
     /** @var BlockRepository */
     private $blockRepository;
 
-    /** @var SettingsRepository */
-    private $settingsRepository;
+    /** @var SettingsFacade */
+    private $settingsFacade;
 
     /** @var UserRepository */
     private $userRepository;
@@ -78,7 +78,7 @@ class ProgramBlocksGridControl extends Control
     public function __construct(
         Translator $translator,
         BlockRepository $blockRepository,
-        SettingsRepository $settingsRepository,
+        SettingsFacade $settingsFacade,
         UserRepository $userRepository,
         CategoryRepository $categoryRepository,
         ProgramRepository $programRepository,
@@ -92,7 +92,7 @@ class ProgramBlocksGridControl extends Control
 
         $this->translator         = $translator;
         $this->blockRepository    = $blockRepository;
-        $this->settingsRepository = $settingsRepository;
+        $this->settingsFacade = $settingsFacade;
         $this->userRepository     = $userRepository;
         $this->categoryRepository = $categoryRepository;
         $this->programRepository  = $programRepository;
@@ -197,7 +197,7 @@ class ProgramBlocksGridControl extends Control
 
         if (($this->getPresenter()->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS) ||
                 $this->getPresenter()->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS)) &&
-            $this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK)
+            $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK)
         ) {
             $grid->addToolbarButton('Blocks:add')
                 ->setIcon('plus')

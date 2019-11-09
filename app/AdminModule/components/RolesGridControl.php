@@ -1,9 +1,9 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\AdminModule\Components;
 
+use App\Model\ACL\RoleFacade;
 use App\Model\ACL\RoleRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\User\UserRepository;
@@ -25,153 +25,159 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class RolesGridControl extends Control
 {
-    /** @var Translator */
-    private $translator;
 
-    /** @var RoleRepository */
-    private $roleRepository;
+	/** @var Translator */
+	private $translator;
 
-    /** @var UserRepository */
-    private $userRepository;
+	/** @var RoleFacade */
+	private $roleFacade;
 
-    /** @var ProgramRepository */
-    private $programRepository;
+	/** @var RoleRepository */
+	private $roleRepository;
 
-    /** @var ProgramService */
-    private $programService;
+	/** @var UserRepository */
+	private $userRepository;
 
+	/** @var ProgramRepository */
+	private $programRepository;
 
-    public function __construct(
-        Translator $translator,
-        RoleRepository $roleRepository,
-        UserRepository $userRepository,
-        ProgramRepository $programRepository,
-        ProgramService $programService
-    ) {
-        parent::__construct();
+	/** @var ProgramService */
+	private $programService;
 
-        $this->translator        = $translator;
-        $this->roleRepository    = $roleRepository;
-        $this->userRepository    = $userRepository;
-        $this->programRepository = $programRepository;
-        $this->programService    = $programService;
-    }
+	public function __construct(
+		Translator $translator,
+		RoleFacade $roleFacade,
+		RoleRepository $roleRepository,
+		UserRepository $userRepository,
+		ProgramRepository $programRepository,
+		ProgramService $programService
+	)
+	{
+		parent::__construct();
 
-    /**
-     * Vykreslí komponentu.
-     */
-    public function render() : void
-    {
-        $this->template->render(__DIR__ . '/templates/roles_grid.latte');
-    }
+		$this->translator = $translator;
+		$this->roleFacade = $roleFacade;
+		$this->roleRepository = $roleRepository;
+		$this->userRepository = $userRepository;
+		$this->programRepository = $programRepository;
+		$this->programService = $programService;
+	}
 
-    /**
-     * Vytvoří komponentu.
-     * @throws DataGridColumnStatusException
-     * @throws DataGridException
-     */
-    public function createComponentRolesGrid(string $name) : void
-    {
-        $grid = new DataGrid($this, $name);
-        $grid->setTranslator($this->translator);
-        $grid->setDataSource($this->roleRepository->createQueryBuilder('r'));
-        $grid->setDefaultSort(['name' => 'ASC']);
-        $grid->setPagination(false);
+	/**
+	 * Vykreslí komponentu.
+	 */
+	public function render(): void
+	{
+		$this->template->render(__DIR__ . '/templates/roles_grid.latte');
+	}
 
-        $grid->addColumnText('name', 'admin.acl.roles_name');
+	/**
+	 * Vytvoří komponentu.
+	 * @throws DataGridColumnStatusException
+	 * @throws DataGridException
+	 */
+	public function createComponentRolesGrid(string $name): void
+	{
+		$grid = new DataGrid($this, $name);
+		$grid->setTranslator($this->translator);
+		$grid->setDataSource($this->roleRepository->createQueryBuilder('r'));
+		$grid->setDefaultSort(['name' => 'ASC']);
+		$grid->setPagination(false);
 
-        $grid->addColumnText('system', 'admin.acl.roles_system')
-            ->setReplacement([
-                '0' => $this->translator->translate('admin.common.no'),
-                '1' => $this->translator->translate('admin.common.yes'),
-            ]);
+		$grid->addColumnText('name', 'admin.acl.roles_name');
 
-        $grid->addColumnStatus('registerable', 'admin.acl.roles_registerable')
-            ->addOption(false, 'admin.acl.roles_registerable_nonregisterable')
-            ->setClass('btn-danger')
-            ->endOption()
-            ->addOption(true, 'admin.acl.roles_registerable_registerable')
-            ->setClass('btn-success')
-            ->endOption()
-            ->onChange[] = [$this, 'changeRegisterable'];
+		$grid->addColumnText('system', 'admin.acl.roles_system')
+			->setReplacement([
+				'0' => $this->translator->translate('admin.common.no'),
+				'1' => $this->translator->translate('admin.common.yes'),
+		]);
 
-        $grid->addColumnDateTime('registerableFrom', 'admin.acl.roles_registerable_from')
-            ->setFormat(Helpers::DATETIME_FORMAT);
+		$grid->addColumnStatus('registerable', 'admin.acl.roles_registerable')
+				->addOption(false, 'admin.acl.roles_registerable_nonregisterable')
+				->setClass('btn-danger')
+				->endOption()
+				->addOption(true, 'admin.acl.roles_registerable_registerable')
+				->setClass('btn-success')
+				->endOption()
+			->onChange[] = [$this, 'changeRegisterable'];
 
-        $grid->addColumnDateTime('registerableTo', 'admin.acl.roles_registerable_to')
-            ->setFormat(Helpers::DATETIME_FORMAT);
+		$grid->addColumnDateTime('registerableFrom', 'admin.acl.roles_registerable_from')
+			->setFormat(Helpers::DATETIME_FORMAT);
 
-        $grid->addColumnText('occupancy', 'admin.acl.roles_occupancy', 'occupancy_text');
+		$grid->addColumnDateTime('registerableTo', 'admin.acl.roles_registerable_to')
+			->setFormat(Helpers::DATETIME_FORMAT);
 
-        $grid->addColumnText('fee', 'admin.acl.roles_fee')
-            ->setRendererOnCondition(function ($row) {
-                return $this->translator->translate('admin.acl.roles_fee_from_subevents');
-            }, function ($row) {
-                return $row->getFee() === null;
-            });
+		$grid->addColumnText('occupancy', 'admin.acl.roles_occupancy', 'occupancy_text');
 
-        $grid->addToolbarButton('Acl:add')
-            ->setIcon('plus')
-            ->setTitle('admin.common.add');
+		$grid->addColumnText('fee', 'admin.acl.roles_fee')
+			->setRendererOnCondition(function ($row) {
+				return $this->translator->translate('admin.acl.roles_fee_from_subevents');
+			}, function ($row) {
+				return $row->getFee() === null;
+			});
 
-        $grid->addAction('test', 'admin.acl.roles_test', 'Acl:test')
-            ->setClass('btn btn-xs btn-primary');
+		$grid->addToolbarButton('Acl:add')
+			->setIcon('plus')
+			->setTitle('admin.common.add');
 
-        $grid->addAction('edit', 'admin.common.edit', 'Acl:edit');
+		$grid->addAction('test', 'admin.acl.roles_test', 'Acl:test')
+			->setClass('btn btn-xs btn-primary');
 
-        $grid->addAction('delete', '', 'delete!')
-            ->setIcon('trash')
-            ->setTitle('admin.common.delete')
-            ->setClass('btn btn-xs btn-danger')
-            ->addAttributes([
-                'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('admin.acl.roles_delete_confirm'),
-            ]);
-        $grid->allowRowsAction('delete', function ($item) {
-            return ! $item->isSystem();
-        });
-    }
+		$grid->addAction('edit', 'admin.common.edit', 'Acl:edit');
 
-    /**
-     * Zpracuje odstranění role.
-     * @throws AbortException
-     * @throws \Throwable
-     */
-    public function handleDelete(int $id) : void
-    {
-        $role = $this->roleRepository->findById($id);
+		$grid->addAction('delete', '', 'delete!')
+			->setIcon('trash')
+			->setTitle('admin.common.delete')
+			->setClass('btn btn-xs btn-danger')
+			->addAttributes([
+				'data-toggle' => 'confirmation',
+				'data-content' => $this->translator->translate('admin.acl.roles_delete_confirm'),
+		]);
+		$grid->allowRowsAction('delete', function ($item) {
+			return !$item->isSystem();
+		});
+	}
 
-        if ($role->getUsers()->isEmpty()) {
-            $this->roleRepository->remove($role);
-            $this->getPresenter()->flashMessage('admin.acl.roles_deleted', 'success');
-        } else {
-            $this->getPresenter()->flashMessage('admin.acl.roles_deleted_error', 'danger');
-        }
+	/**
+	 * Zpracuje odstranění role.
+	 * @throws AbortException
+	 * @throws \Throwable
+	 */
+	public function handleDelete(int $id): void
+	{
+		$role = $this->roleRepository->findById($id);
 
-        $this->redirect('this');
-    }
+		if ($role->getUsers()->isEmpty()) {
+			$this->roleFacade->remove($role);
+			$this->getPresenter()->flashMessage('admin.acl.roles_deleted', 'success');
+		} else {
+			$this->getPresenter()->flashMessage('admin.acl.roles_deleted_error', 'danger');
+		}
 
-    /**
-     * Změní registrovatelnost role.
-     * @throws ORMException
-     * @throws OptimisticLockException
-     * @throws AbortException
-     */
-    public function changeRegisterable(int $id, bool $registerable) : void
-    {
-        $role = $this->roleRepository->findById($id);
+		$this->redirect('this');
+	}
 
-        $role->setRegisterable($registerable);
-        $this->roleRepository->save($role);
+	/**
+	 * Změní registrovatelnost role.
+	 * @throws ORMException
+	 * @throws OptimisticLockException
+	 * @throws AbortException
+	 */
+	public function changeRegisterable(int $id, bool $registerable): void
+	{
+		$role = $this->roleRepository->findById($id);
 
-        $p = $this->getPresenter();
-        $p->flashMessage('admin.acl.roles_changed_registerable', 'success');
+		$role->setRegisterable($registerable);
+		$this->roleFacade->save($role);
 
-        if ($p->isAjax()) {
-            $p->redrawControl('flashes');
-            $this['rolesGrid']->redrawItem($id);
-        } else {
-            $this->redirect('this');
-        }
-    }
+		$p = $this->getPresenter();
+		$p->flashMessage('admin.acl.roles_changed_registerable', 'success');
+
+		if ($p->isAjax()) {
+			$p->redrawControl('flashes');
+			$this['rolesGrid']->redrawItem($id);
+		} else {
+			$this->redirect('this');
+		}
+	}
 }

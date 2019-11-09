@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Model\Settings;
@@ -11,251 +10,250 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @ORM\Entity(repositoryClass="SettingsRepository")
+ * @ORM\Entity
  * @ORM\Table(name="settings")
  */
 class Settings
 {
-    /**
-     * Administrátor byl vytvořen.
-     */
-    public const ADMIN_CREATED = 'admin_created';
 
-    /**
-     * Název semináře.
-     */
-    public const SEMINAR_NAME = 'seminar_name';
+	/**
+	 * Administrátor byl vytvořen.
+	 */
+	public const ADMIN_CREATED = 'admin_created';
 
-    /**
-     * E-mail semináře.
-     */
-    public const SEMINAR_EMAIL = 'seminar_email';
+	/**
+	 * Název semináře.
+	 */
+	public const SEMINAR_NAME = 'seminar_name';
 
-    /**
-     * Neověřený změněný e-mail semináře.
-     */
-    public const SEMINAR_EMAIL_UNVERIFIED = 'seminar_email_unverified';
+	/**
+	 * E-mail semináře.
+	 */
+	public const SEMINAR_EMAIL = 'seminar_email';
 
-    /**
-     * Ověřovací kód pro změnu e-mailu.
-     */
-    public const SEMINAR_EMAIL_VERIFICATION_CODE = 'seminar_email_verification_code';
+	/**
+	 * Neověřený změněný e-mail semináře.
+	 */
+	public const SEMINAR_EMAIL_UNVERIFIED = 'seminar_email_unverified';
 
-    /**
-     * Začátek semináře.
-     */
-    public const SEMINAR_FROM_DATE = 'seminar_from_date';
+	/**
+	 * Ověřovací kód pro změnu e-mailu.
+	 */
+	public const SEMINAR_EMAIL_VERIFICATION_CODE = 'seminar_email_verification_code';
 
-    /**
-     * Konec semináře.
-     */
-    public const SEMINAR_TO_DATE = 'seminar_to_date';
+	/**
+	 * Začátek semináře.
+	 */
+	public const SEMINAR_FROM_DATE = 'seminar_from_date';
 
-    /**
-     * Povoleno přidávat programové bloky.
-     */
-    public const IS_ALLOWED_ADD_BLOCK = 'is_allowed_add_block';
+	/**
+	 * Konec semináře.
+	 */
+	public const SEMINAR_TO_DATE = 'seminar_to_date';
 
-    /**
-     * Povoleno upravovat harmonogram.
-     */
-    public const IS_ALLOWED_MODIFY_SCHEDULE = 'is_allowed_modify_schedule';
+	/**
+	 * Povoleno přidávat programové bloky.
+	 */
+	public const IS_ALLOWED_ADD_BLOCK = 'is_allowed_add_block';
 
-    /**
-     * Povoleno přihlašovat se na programy před zaplacením.
-     */
-    public const IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT = 'is_allowed_register_programs_before_payment';
+	/**
+	 * Povoleno upravovat harmonogram.
+	 */
+	public const IS_ALLOWED_MODIFY_SCHEDULE = 'is_allowed_modify_schedule';
 
-    /**
-     * Povoleno přidávání podakcí po zaplacení.
-     */
-    public const IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT = 'is_allowed_add_subevents_after_payment';
+	/**
+	 * Povoleno přihlašovat se na programy před zaplacením.
+	 */
+	public const IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT = 'is_allowed_register_programs_before_payment';
 
-    /**
-     * Id propojené skautIS akce.
-     */
-    public const SKAUTIS_EVENT_ID = 'skautis_event_id';
+	/**
+	 * Povoleno přidávání podakcí po zaplacení.
+	 */
+	public const IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT = 'is_allowed_add_subevents_after_payment';
 
-    /**
-     * Typ propojené skautIS akce.
-     */
-    public const SKAUTIS_EVENT_TYPE = 'skautis_event_type';
+	/**
+	 * Id propojené skautIS akce.
+	 */
+	public const SKAUTIS_EVENT_ID = 'skautis_event_id';
 
-    /**
-     * Název propojené skautIS akce.
-     */
-    public const SKAUTIS_EVENT_NAME = 'skautis_event_name';
+	/**
+	 * Typ propojené skautIS akce.
+	 */
+	public const SKAUTIS_EVENT_TYPE = 'skautis_event_type';
 
-    /**
-     * Adresa obrázku s logem.
-     */
-    public const LOGO = 'logo';
+	/**
+	 * Název propojené skautIS akce.
+	 */
+	public const SKAUTIS_EVENT_NAME = 'skautis_event_name';
 
-    /**
-     * Text patičky.
-     */
-    public const FOOTER = 'footer';
+	/**
+	 * Adresa obrázku s logem.
+	 */
+	public const LOGO = 'logo';
 
-    /**
-     * Dodavatel.
-     */
-    public const COMPANY = 'company';
+	/**
+	 * Text patičky.
+	 */
+	public const FOOTER = 'footer';
 
-    /**
-     * IČO.
-     */
-    public const ICO = 'ico';
+	/**
+	 * Dodavatel.
+	 */
+	public const COMPANY = 'company';
 
-    /**
-     * Jméno pokladníka.
-     */
-    public const ACCOUNTANT = 'accountant';
+	/**
+	 * IČO.
+	 */
+	public const ICO = 'ico';
 
-    /**
-     * Místo vystavení dokladu.
-     */
-    public const PRINT_LOCATION = 'print_location';
+	/**
+	 * Jméno pokladníka.
+	 */
+	public const ACCOUNTANT = 'accountant';
 
-    /**
-     * Číslo účtu.
-     */
-    public const ACCOUNT_NUMBER = 'account_number';
+	/**
+	 * Místo vystavení dokladu.
+	 */
+	public const PRINT_LOCATION = 'print_location';
 
-    /**
-     * Předvolba variabilního symbolu. 0-4 číslice před generovaným variabilním symbolem.
-     */
-    public const VARIABLE_SYMBOL_CODE = 'variable_symbol_code';
+	/**
+	 * Číslo účtu.
+	 */
+	public const ACCOUNT_NUMBER = 'account_number';
 
-    /**
-     * Způsob povolení zápisu na programy.
-     */
-    public const REGISTER_PROGRAMS_TYPE = 'register_programs_type';
+	/**
+	 * Předvolba variabilního symbolu. 0-4 číslice před generovaným variabilním symbolem.
+	 */
+	public const VARIABLE_SYMBOL_CODE = 'variable_symbol_code';
 
-    /**
-     * Přihlašování na programy od.
-     */
-    public const REGISTER_PROGRAMS_FROM = 'register_programs_from';
+	/**
+	 * Způsob povolení zápisu na programy.
+	 */
+	public const REGISTER_PROGRAMS_TYPE = 'register_programs_type';
 
-    /**
-     * Přihlašování na programy do.
-     */
-    public const REGISTER_PROGRAMS_TO = 'register_programs_to';
+	/**
+	 * Přihlašování na programy od.
+	 */
+	public const REGISTER_PROGRAMS_FROM = 'register_programs_from';
 
-    /**
-     * Odhlášení ze semináře a změna rolí povolena do.
-     */
-    public const EDIT_REGISTRATION_TO = 'edit_registration_to';
+	/**
+	 * Přihlašování na programy do.
+	 */
+	public const REGISTER_PROGRAMS_TO = 'register_programs_to';
 
-    /**
-     * Text souhlasu u přihlášky.
-     */
-    public const APPLICATION_AGREEMENT = 'application_agreement';
+	/**
+	 * Odhlášení ze semináře a změna rolí povolena do.
+	 */
+	public const EDIT_REGISTRATION_TO = 'edit_registration_to';
 
-    /**
-     * Stránka, na kterou budou přesměrováni uživatelé po přihlášení, pokud není jinak specifikováno u jejich role.
-     */
-    public const REDIRECT_AFTER_LOGIN = 'redirect_after_login';
+	/**
+	 * Text souhlasu u přihlášky.
+	 */
+	public const APPLICATION_AGREEMENT = 'application_agreement';
 
-    /**
-     * Popis místa a cesty.
-     */
-    public const PLACE_DESCRIPTION = 'place_description';
+	/**
+	 * Stránka, na kterou budou přesměrováni uživatelé po přihlášení, pokud není jinak specifikováno u jejich role.
+	 */
+	public const REDIRECT_AFTER_LOGIN = 'redirect_after_login';
 
-    /**
-     * Způsob výpočtu splatnosti.
-     */
-    public const MATURITY_TYPE = 'maturity_type';
+	/**
+	 * Popis místa a cesty.
+	 */
+	public const PLACE_DESCRIPTION = 'place_description';
 
-    /**
-     * Datum splatnosti.
-     */
-    public const MATURITY_DATE = 'maturity_date';
+	/**
+	 * Způsob výpočtu splatnosti.
+	 */
+	public const MATURITY_TYPE = 'maturity_type';
 
-    /**
-     * Počet dní pro výpočet splatnosti.
-     */
-    public const MATURITY_DAYS = 'maturity_days';
+	/**
+	 * Datum splatnosti.
+	 */
+	public const MATURITY_DATE = 'maturity_date';
 
-    /**
-     * Počet pracovních dní pro výpočet splatnosti.
-     */
-    public const MATURITY_WORK_DAYS = 'maturity_work_days';
+	/**
+	 * Počet dní pro výpočet splatnosti.
+	 */
+	public const MATURITY_DAYS = 'maturity_days';
 
-    /**
-     * Počet dní, kdy zaslat připomenutí splatnosti.
-     */
-    public const MATURITY_REMINDER = 'maturity_reminder';
+	/**
+	 * Počet pracovních dní pro výpočet splatnosti.
+	 */
+	public const MATURITY_WORK_DAYS = 'maturity_work_days';
 
-    /**
-     * Počet dní od splatnosti, kdy zrušit nezaplacené registrace.
-     */
-    public const CANCEL_REGISTRATION_AFTER_MATURITY = 'cancel_registration_after_maturity';
+	/**
+	 * Počet dní, kdy zaslat připomenutí splatnosti.
+	 */
+	public const MATURITY_REMINDER = 'maturity_reminder';
 
-    /**
-     * Úprava vlastních polí povolena do.
-     */
-    public const EDIT_CUSTOM_INPUTS_TO = 'edit_custom_inputs_to';
+	/**
+	 * Počet dní od splatnosti, kdy zrušit nezaplacené registrace.
+	 */
+	public const CANCEL_REGISTRATION_AFTER_MATURITY = 'cancel_registration_after_maturity';
 
-    /**
-     * Token pro přístup k API banky.
-     */
-    public const BANK_TOKEN = 'bank_token';
+	/**
+	 * Úprava vlastních polí povolena do.
+	 */
+	public const EDIT_CUSTOM_INPUTS_TO = 'edit_custom_inputs_to';
 
-    /**
-     * Počáteční datum pro stahování plateb.
-     */
-    public const BANK_DOWNLOAD_FROM = 'bank_download_from';
+	/**
+	 * Token pro přístup k API banky.
+	 */
+	public const BANK_TOKEN = 'bank_token';
 
-    /**
-     * Datum, odkdy je možné stáhnout vstupenku.
-     */
-    public const TICKETS_FROM = 'tickets_from';
+	/**
+	 * Počáteční datum pro stahování plateb.
+	 */
+	public const BANK_DOWNLOAD_FROM = 'bank_download_from';
 
-    /**
-     * Google Analytics kód měření.
-     */
-    public const GA_ID = 'ga_id';
+	/**
+	 * Datum, odkdy je možné stáhnout vstupenku.
+	 */
+	public const TICKETS_FROM = 'tickets_from';
 
+	/**
+	 * Google Analytics kód měření.
+	 */
+	public const GA_ID = 'ga_id';
 
-    /**
-     * Název položky nastavení.
-     * @ORM\Column(type="string", unique=true)
-     * @ORM\Id
-     * @var string
-     */
-    protected $item;
+	/**
+	 * Název položky nastavení.
+	 * @ORM\Column(type="string", unique=true)
+	 * @ORM\Id
+	 * @var string
+	 */
+	protected $item;
 
-    /**
-     * Hodnota položky nastavení.
-     * @ORM\Column(type="text", nullable=true)
-     * @var string
-     */
-    protected $value;
+	/**
+	 * Hodnota položky nastavení.
+	 * @ORM\Column(type="text", nullable=true)
+	 * @var string
+	 */
+	protected $value;
 
+	public function __construct(string $item, ?string $value)
+	{
+		$this->item = $item;
+		$this->value = $value;
+	}
 
-    public function __construct(string $item, ?string $value)
-    {
-        $this->item  = $item;
-        $this->value = $value;
-    }
+	public function getItem(): string
+	{
+		return $this->item;
+	}
 
-    public function getItem() : string
-    {
-        return $this->item;
-    }
+	public function setItem(string $item): void
+	{
+		$this->item = $item;
+	}
 
-    public function setItem(string $item) : void
-    {
-        $this->item = $item;
-    }
+	public function getValue(): ?string
+	{
+		return $this->value;
+	}
 
-    public function getValue() : ?string
-    {
-        return $this->value;
-    }
-
-    public function setValue(?string $value) : void
-    {
-        $this->value = $value;
-    }
+	public function setValue(?string $value): void
+	{
+		$this->value = $value;
+	}
 }

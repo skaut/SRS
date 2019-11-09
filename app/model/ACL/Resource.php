@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Model\ACL;
@@ -7,116 +6,116 @@ namespace App\Model\ACL;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Kdyby\Doctrine\Entities\Attributes\Identifier;
+use Nettrine\ORM\Entity\Attributes\Id as Identifier;
 
 /**
  * Entita prostředek.
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @ORM\Entity(repositoryClass="ResourceRepository")
+ * @ORM\Entity
  * @ORM\Table(name="resource")
  */
 class Resource
 {
-    /**
-     * Administrace.
-     * @var string
-     */
-    public const ADMIN = 'admin';
 
-    /**
-     * Web.
-     * @var string
-     */
-    public const CMS = 'cms';
+	/**
+	 * Administrace.
+	 * @var string
+	 */
+	public const ADMIN = 'admin';
 
-    /**
-     * Role.
-     * @var string
-     */
-    public const ACL = 'acl';
+	/**
+	 * Web.
+	 * @var string
+	 */
+	public const CMS = 'cms';
 
-    /**
-     * Program.
-     * @var string
-     */
-    public const PROGRAM = 'program';
+	/**
+	 * Role.
+	 * @var string
+	 */
+	public const ACL = 'acl';
 
-    /**
-     * Nastavení.
-     * @var string
-     */
-    public const CONFIGURATION = 'configuration';
+	/**
+	 * Program.
+	 * @var string
+	 */
+	public const PROGRAM = 'program';
 
-    /**
-     * Uživatelé.
-     * @var string
-     */
-    public const USERS = 'users';
+	/**
+	 * Nastavení.
+	 * @var string
+	 */
+	public const CONFIGURATION = 'configuration';
 
-    /**
-     * Mailing.
-     * @var string
-     */
-    public const MAILING = 'mailing';
+	/**
+	 * Uživatelé.
+	 * @var string
+	 */
+	public const USERS = 'users';
 
-    /**
-     * Platby.
-     * @var string
-     */
-    public const PAYMENTS = 'payments';
+	/**
+	 * Mailing.
+	 * @var string
+	 */
+	public const MAILING = 'mailing';
 
-    /** @var string[] */
-    public static $resources = [
-        self::ADMIN,
-        self::CMS,
-        self::ACL,
-        self::PROGRAM,
-        self::CONFIGURATION,
-        self::USERS,
-        self::MAILING,
-        self::PAYMENTS,
-    ];
+	/**
+	 * Platby.
+	 * @var string
+	 */
+	public const PAYMENTS = 'payments';
 
-    use Identifier;
+	/** @var string[] */
+	public static $resources = [
+		self::ADMIN,
+		self::CMS,
+		self::ACL,
+		self::PROGRAM,
+		self::CONFIGURATION,
+		self::USERS,
+		self::MAILING,
+		self::PAYMENTS,
+	];
 
-    /**
-     * Název prostředku.
-     * @ORM\Column(type="string", unique=true)
-     * @var string
-     */
-    protected $name;
+	use Identifier;
 
-    /**
-     * Oprávnění s tímto prostředkem.
-     * @ORM\OneToMany(targetEntity="\App\Model\ACL\Permission", mappedBy="resource", cascade={"persist"})
-     * @var Collection|Permission[]
-     */
-    protected $permissions;
+	/**
+	 * Název prostředku.
+	 * @ORM\Column(type="string", unique=true)
+	 * @var string
+	 */
+	protected $name;
 
+	/**
+	 * Oprávnění s tímto prostředkem.
+	 * @ORM\OneToMany(targetEntity="\App\Model\ACL\Permission", mappedBy="resource", cascade={"persist"})
+	 * @var Collection|Permission[]
+	 */
+	protected $permissions;
 
-    public function __construct(string $name)
-    {
-        $this->name        = $name;
-        $this->permissions = new ArrayCollection();
-    }
+	public function __construct(string $name)
+	{
+		$this->name = $name;
+		$this->permissions = new ArrayCollection();
+	}
 
-    public function getId() : int
-    {
-        return $this->id;
-    }
+	public function getId(): int
+	{
+		return $this->id;
+	}
 
-    public function getName() : string
-    {
-        return $this->name;
-    }
+	public function getName(): string
+	{
+		return $this->name;
+	}
 
-    /**
-     * @return Collection|Permission[]
-     */
-    public function getPermissions() : Collection
-    {
-        return $this->permissions;
-    }
+	/**
+	 * @return Collection|Permission[]
+	 */
+	public function getPermissions(): Collection
+	{
+		return $this->permissions;
+	}
 }

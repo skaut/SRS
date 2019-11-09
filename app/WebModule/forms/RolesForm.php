@@ -9,7 +9,7 @@ use App\Model\ACL\RoleRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
+use App\Model\Settings\SettingsFacade;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
@@ -42,8 +42,8 @@ class RolesForm
     /** @var RoleRepository */
     private $roleRepository;
 
-    /** @var SettingsRepository */
-    private $settingsRepository;
+    /** @var SettingsFacade */
+    private $settingsFacade;
 
     /** @var ApplicationService */
     private $applicationService;
@@ -56,14 +56,14 @@ class RolesForm
         BaseForm $baseFormFactory,
         UserRepository $userRepository,
         RoleRepository $roleRepository,
-        SettingsRepository $settingsRepository,
+        SettingsFacade $settingsFacade,
         ApplicationService $applicationService,
         Validators $validators
     ) {
         $this->baseFormFactory    = $baseFormFactory;
         $this->userRepository     = $userRepository;
         $this->roleRepository     = $roleRepository;
-        $this->settingsRepository = $settingsRepository;
+        $this->settingsFacade = $settingsFacade;
         $this->applicationService = $applicationService;
         $this->validators         = $validators;
     }
@@ -139,7 +139,7 @@ class RolesForm
                 ->setAttribute('title', $form->getTranslator()->translate('web.profile.cancel_registration_disabled'));
         }
 
-        $ticketDownloadFrom = $this->settingsRepository->getDateTimeValue(Settings::TICKETS_FROM);
+        $ticketDownloadFrom = $this->settingsFacade->getDateTimeValue(Settings::TICKETS_FROM);
         if ($ticketDownloadFrom !== null) {
             $downloadTicketButton = $form->addSubmit('downloadTicket', 'web.profile.download_ticket')
                 ->setAttribute('class', 'btn-success');

@@ -9,7 +9,7 @@ use App\Model\ACL\RoleRepository;
 use App\Model\CMS\Content\ContentDTO;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
+use App\Model\Settings\SettingsFacade;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\UserRepository;
 use App\Services\Authenticator;
@@ -39,8 +39,8 @@ class ApplicationContentControl extends Control
     /** @var Authenticator */
     private $authenticator;
 
-    /** @var SettingsRepository */
-    private $settingsRepository;
+    /** @var SettingsFacade */
+    private $settingsFacade;
 
     /** @var SubeventRepository */
     private $subeventRepository;
@@ -51,7 +51,7 @@ class ApplicationContentControl extends Control
         Authenticator $authenticator,
         UserRepository $userRepository,
         RoleRepository $roleRepository,
-        SettingsRepository $settingsRepository,
+        SettingsFacade $settingsFacade,
         SubeventRepository $subeventRepository
     ) {
         parent::__construct();
@@ -60,7 +60,7 @@ class ApplicationContentControl extends Control
         $this->authenticator          = $authenticator;
         $this->userRepository         = $userRepository;
         $this->roleRepository         = $roleRepository;
-        $this->settingsRepository     = $settingsRepository;
+        $this->settingsFacade     = $settingsFacade;
         $this->subeventRepository     = $subeventRepository;
     }
 
@@ -93,7 +93,7 @@ class ApplicationContentControl extends Control
             $template->noRegisterableRole  = $this->roleRepository->findAllRegisterableNowOrderedByName()->isEmpty();
             $template->registrationStart   = $this->roleRepository->getRegistrationStart();
             $template->registrationEnd     = $this->roleRepository->getRegistrationEnd();
-            $template->bankAccount         = $this->settingsRepository->getValue(Settings::ACCOUNT_NUMBER);
+            $template->bankAccount         = $this->settingsFacade->getValue(Settings::ACCOUNT_NUMBER);
             $template->dbuser              = $dbuser;
             $template->userHasFixedFeeRole = $userHasFixedFeeRole;
 

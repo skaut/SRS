@@ -6,7 +6,7 @@ namespace App\ActionModule\Presenters;
 
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
+use App\Model\Settings\SettingsFacade;
 use App\Services\BankService;
 use Nette\Application\Responses\TextResponse;
 
@@ -24,10 +24,10 @@ class BankPresenter extends ActionBasePresenter
     public $bankService;
 
     /**
-     * @var SettingsRepository
+     * @var SettingsFacade
      * @inject
      */
-    public $settingsRepository;
+    public $settingsFacade;
 
 
     /**
@@ -37,7 +37,7 @@ class BankPresenter extends ActionBasePresenter
      */
     public function actionCheck() : void
     {
-        $from = $this->settingsRepository->getDateValue(Settings::BANK_DOWNLOAD_FROM);
+        $from = $this->settingsFacade->getDateValue(Settings::BANK_DOWNLOAD_FROM);
         $this->bankService->downloadTransactions($from);
 
         $response = new TextResponse(null);

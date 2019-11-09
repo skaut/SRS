@@ -1,11 +1,10 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Model\SkautIs;
 
 use Doctrine\ORM\Mapping as ORM;
-use Kdyby\Doctrine\Entities\Attributes\Identifier;
+use Nettrine\ORM\Entity\Attributes\Id as Identifier;
 
 /**
  * Entita skautIS kurz.
@@ -16,45 +15,45 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  */
 class SkautIsCourse
 {
-    use Identifier;
 
-    /**
-     * SkautIS id kurzu.
-     * @ORM\Column(type="integer")
-     * @var int
-     */
-    protected $skautIsCourseId;
+	use Identifier;
 
-    /**
-     * Název kurzu.
-     * @ORM\Column(type="string")
-     * @var string
-     */
-    protected $name;
+	/**
+	 * SkautIS id kurzu.
+	 * @ORM\Column(type="integer")
+	 * @var int
+	 */
+	protected $skautIsCourseId;
 
+	/**
+	 * Název kurzu.
+	 * @ORM\Column(type="string")
+	 * @var string
+	 */
+	protected $name;
 
-    public function getId() : int
-    {
-        return $this->id;
-    }
+	public function getId(): int
+	{
+		return $this->id;
+	}
 
-    public function getSkautIsCourseId() : int
-    {
-        return $this->skautIsCourseId;
-    }
+	public function getSkautIsCourseId(): int
+	{
+		return $this->skautIsCourseId;
+	}
 
-    public function setSkautIsCourseId(int $skautIsCourseId) : void
-    {
-        $this->skautIsCourseId = $skautIsCourseId;
-    }
+	public function setSkautIsCourseId(int $skautIsCourseId): void
+	{
+		$this->skautIsCourseId = $skautIsCourseId;
+	}
 
-    public function getName() : string
-    {
-        return $this->name;
-    }
+	public function getName(): string
+	{
+		return $this->name;
+	}
 
-    public function setName(string $name) : void
-    {
-        $this->name = $name;
-    }
+	public function setName(string $name): void
+	{
+		$this->name = $name;
+	}
 }

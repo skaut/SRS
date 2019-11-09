@@ -13,7 +13,7 @@ use App\Model\Mailing\MailRepository;
 use App\Model\Mailing\TemplateRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
+use App\Model\Settings\SettingsFacade;
 use App\Model\Structure\Subevent;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\User;
@@ -39,8 +39,8 @@ class MailService
     /** @var MailFactory */
     private $mailFactory;
 
-    /** @var SettingsRepository */
-    private $settingsRepository;
+    /** @var SettingsFacade */
+    private $settingsFacade;
 
     /** @var MailRepository */
     private $mailRepository;
@@ -63,7 +63,7 @@ class MailService
 
     public function __construct(
         MailFactory $mailFactory,
-        SettingsRepository $settingsRepository,
+        SettingsFacade $settingsFacade,
         MailRepository $mailRepository,
         UserRepository $userRepository,
         RoleRepository $roleRepository,
@@ -72,7 +72,7 @@ class MailService
         Translator $translator
     ) {
         $this->mailFactory        = $mailFactory;
-        $this->settingsRepository = $settingsRepository;
+        $this->settingsFacade = $settingsFacade;
         $this->mailRepository     = $mailRepository;
         $this->userRepository     = $userRepository;
         $this->roleRepository     = $roleRepository;
@@ -116,8 +116,8 @@ class MailService
         }
 
         $messageData = new SrsMailData(
-            $this->settingsRepository->getValue(Settings::SEMINAR_EMAIL),
-            $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
+            $this->settingsFacade->getValue(Settings::SEMINAR_EMAIL),
+            $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
             $recipients,
             $copy,
             $subject,
@@ -161,7 +161,7 @@ class MailService
         }
 
         if ($template->isSendToOrganizer()) {
-            $copy = $this->settingsRepository->getValue(Settings::SEMINAR_EMAIL);
+            $copy = $this->settingsFacade->getValue(Settings::SEMINAR_EMAIL);
         }
 
         $subject = $template->getSubject();

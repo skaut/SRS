@@ -15,7 +15,7 @@ use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
+use App\Model\Settings\SettingsFacade;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\ApplicationRepository;
 use App\Model\User\User;
@@ -61,8 +61,8 @@ class UsersGridControl extends Control
     /** @var UserRepository */
     private $userRepository;
 
-    /** @var SettingsRepository */
-    private $settingsRepository;
+    /** @var SettingsFacade */
+    private $settingsFacade;
 
     /** @var CustomInputRepository */
     private $customInputRepository;
@@ -116,7 +116,7 @@ class UsersGridControl extends Control
     public function __construct(
         Translator $translator,
         UserRepository $userRepository,
-        SettingsRepository $settingsRepository,
+        SettingsFacade $settingsFacade,
         CustomInputRepository $customInputRepository,
         RoleRepository $roleRepository,
         ProgramRepository $programRepository,
@@ -137,7 +137,7 @@ class UsersGridControl extends Control
 
         $this->translator                   = $translator;
         $this->userRepository               = $userRepository;
-        $this->settingsRepository           = $settingsRepository;
+        $this->settingsFacade           = $settingsFacade;
         $this->customInputRepository        = $customInputRepository;
         $this->roleRepository               = $roleRepository;
         $this->programRepository            = $programRepository;
@@ -197,7 +197,7 @@ class UsersGridControl extends Control
         $grid->addGroupAction('admin.users.users_group_action_mark_paid_today', $this->preparePaymentMethodOptionsWithoutEmpty())
             ->onSelect[] = [$this, 'groupMarkPaidToday'];
 
-        switch ($this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_TYPE)) {
+        switch ($this->settingsFacade->getValue(Settings::SKAUTIS_EVENT_TYPE)) {
             case SkautIsEventType::GENERAL:
                 $grid->addGroupAction('admin.users.users_group_action_insert_into_skaut_is')
                     ->onSelect[] = [$this, 'groupInsertIntoSkautIs'];
@@ -692,14 +692,14 @@ class UsersGridControl extends Control
 
         $p = $this->getPresenter();
 
-        $eventId = $this->settingsRepository->getIntValue(Settings::SKAUTIS_EVENT_ID);
+        $eventId = $this->settingsFacade->getIntValue(Settings::SKAUTIS_EVENT_ID);
 
         if ($eventId === null) {
             $p->flashMessage('admin.users.users_group_action_insert_into_skaut_is_error_not_connected', 'danger');
             $this->redirect('this');
         }
 
-        switch ($this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_TYPE)) {
+        switch ($this->settingsFacade->getValue(Settings::SKAUTIS_EVENT_TYPE)) {
             case SkautIsEventType::GENERAL:
                 $skautIsEventService = $this->skautIsEventGeneralService;
                 break;

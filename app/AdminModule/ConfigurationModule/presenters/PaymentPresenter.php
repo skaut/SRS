@@ -52,7 +52,7 @@ class PaymentPresenter extends ConfigurationBasePresenter
      */
     public function renderDefault() : void
     {
-        $bankToken = $this->settingsRepository->getValue(Settings::BANK_TOKEN);
+        $bankToken = $this->settingsFacade->getValue(Settings::BANK_TOKEN);
         if ($bankToken !== null) {
             $this->template->connected = true;
         } else {
@@ -67,7 +67,7 @@ class PaymentPresenter extends ConfigurationBasePresenter
      */
     public function handleDisconnect() : void
     {
-        $this->settingsRepository->setValue(Settings::BANK_TOKEN, null);
+        $this->settingsFacade->setValue(Settings::BANK_TOKEN, null);
 
         $this->flashMessage('admin.configuration.payment.bank.disconnect_successful', 'success');
         $this->redirect('this');

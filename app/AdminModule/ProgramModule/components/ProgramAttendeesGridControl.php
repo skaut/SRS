@@ -9,7 +9,7 @@ use App\Model\ACL\Resource;
 use App\Model\Enums\ApplicationState;
 use App\Model\Program\Program;
 use App\Model\Program\ProgramRepository;
-use App\Model\Settings\SettingsRepository;
+use App\Model\Settings\SettingsFacade;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\MailService;
@@ -51,8 +51,8 @@ class ProgramAttendeesGridControl extends Control
     /** @var UserRepository */
     private $userRepository;
 
-    /** @var SettingsRepository */
-    private $settingsRepository;
+    /** @var SettingsFacade */
+    private $settingsFacade;
 
     /** @var ProgramService */
     private $programService;
@@ -68,7 +68,7 @@ class ProgramAttendeesGridControl extends Control
         Translator $translator,
         ProgramRepository $programRepository,
         UserRepository $userRepository,
-        SettingsRepository $settingsRepository,
+        SettingsFacade $settingsFacade,
         MailService $mailService,
         ProgramService $programService,
         Session $session
@@ -78,7 +78,7 @@ class ProgramAttendeesGridControl extends Control
         $this->translator         = $translator;
         $this->programRepository  = $programRepository;
         $this->userRepository     = $userRepository;
-        $this->settingsRepository = $settingsRepository;
+        $this->settingsFacade = $settingsFacade;
         $this->programService     = $programService;
 
         $this->session        = $session;

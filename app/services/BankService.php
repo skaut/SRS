@@ -7,7 +7,7 @@ namespace App\Services;
 use App\Model\Payment\PaymentRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
+use App\Model\Settings\SettingsFacade;
 use FioApi;
 use Nette;
 
@@ -23,8 +23,8 @@ class BankService
     /** @var ApplicationService */
     private $applicationService;
 
-    /** @var SettingsRepository */
-    private $settingsRepository;
+    /** @var SettingsFacade */
+    private $settingsFacade;
 
     /** @var PaymentRepository */
     private $paymentRepository;
@@ -32,11 +32,11 @@ class BankService
 
     public function __construct(
         ApplicationService $applicationService,
-        SettingsRepository $settingsRepository,
+        SettingsFacade $settingsFacade,
         PaymentRepository $paymentRepository
     ) {
         $this->applicationService = $applicationService;
-        $this->settingsRepository = $settingsRepository;
+        $this->settingsFacade = $settingsFacade;
         $this->paymentRepository  = $paymentRepository;
     }
 
@@ -46,7 +46,7 @@ class BankService
      */
     public function downloadTransactions(\DateTime $from, ?string $token = null) : void
     {
-        $token = $token ?: $this->settingsRepository->getValue(Settings::BANK_TOKEN);
+        $token = $token ?: $this->settingsFacade->getValue(Settings::BANK_TOKEN);
         if ($token === null) {
             throw new \InvalidArgumentException('Token is not set.');
         }
@@ -63,7 +63,7 @@ class BankService
     private function createPayments(FioApi\TransactionList $transactionList) : void
     {
         foreach ($transactionList->getTransactions() as $transaction) {
-            $this->settingsRepository->getEntityManager()->transactional(function () use ($transaction) : void {
+            $this->settingsFacade->getEntityManager()->transactional(function () use ($transaction) : void {
                 $id = $transaction->getId();
 
                 if ($transaction->getAmount() <= 0 || $this->paymentRepository->findByTransactionId($id) !== null) {
@@ -87,6 +87,6 @@ class BankService
             });
         }
 
-        $this->settingsRepository->setDateValue(Settings::BANK_DOWNLOAD_FROM, new \DateTime());
+        $this->settingsFacade->setDateValue(Settings::BANK_DOWNLOAD_FROM, new \DateTime());
     }
 }

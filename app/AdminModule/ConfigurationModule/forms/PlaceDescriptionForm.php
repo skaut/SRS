@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
@@ -7,7 +6,7 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseForm;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
+use App\Model\Settings\SettingsFacade;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
@@ -20,54 +19,54 @@ use Nette\Application\UI\Form;
  */
 class PlaceDescriptionForm
 {
-    use Nette\SmartObject;
 
-    /** @var BaseForm */
-    private $baseFormFactory;
+	use Nette\SmartObject;
 
-    /** @var  SettingsRepository */
-    private $settingsRepository;
+	/** @var BaseForm */
+	private $baseFormFactory;
 
+	/** @var  SettingsFacade */
+	private $settingsFacade;
 
-    public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository)
-    {
-        $this->baseFormFactory    = $baseForm;
-        $this->settingsRepository = $settingsRepository;
-    }
+	public function __construct(BaseForm $baseForm, SettingsFacade $settingsFacade)
+	{
+		$this->baseFormFactory = $baseForm;
+		$this->settingsFacade = $settingsFacade;
+	}
 
-    /**
-     * Vytvoří formulář.
-     * @throws SettingsException
-     * @throws \Throwable
-     */
-    public function create() : Form
-    {
-        $form = $this->baseFormFactory->create();
+	/**
+	 * Vytvoří formulář.
+	 * @throws SettingsException
+	 * @throws \Throwable
+	 */
+	public function create(): Form
+	{
+		$form = $this->baseFormFactory->create();
 
-        $form->addTextArea('placeDescription', 'admin.configuration.place_description')
-            ->setAttribute('class', 'tinymce-paragraph');
+		$form->addTextArea('placeDescription', 'admin.configuration.place_description')
+			->setAttribute('class', 'tinymce-paragraph');
 
-        $form->addSubmit('submit', 'admin.common.save');
+		$form->addSubmit('submit', 'admin.common.save');
 
-        $form->setDefaults([
-            'placeDescription' => $this->settingsRepository->getValue(Settings::PLACE_DESCRIPTION),
-        ]);
+		$form->setDefaults([
+			'placeDescription' => $this->settingsFacade->getValue(Settings::PLACE_DESCRIPTION),
+		]);
 
-        $form->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
-        $form->onSuccess[] = [$this, 'processForm'];
+		$form->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
+		$form->onSuccess[] = [$this, 'processForm'];
 
-        return $form;
-    }
+		return $form;
+	}
 
-    /**
-     * Zpracuje formulář.
-     * @throws SettingsException
-     * @throws ORMException
-     * @throws OptimisticLockException
-     * @throws \Throwable
-     */
-    public function processForm(Form $form, \stdClass $values) : void
-    {
-        $this->settingsRepository->setValue(Settings::PLACE_DESCRIPTION, $values['placeDescription']);
-    }
+	/**
+	 * Zpracuje formulář.
+	 * @throws SettingsException
+	 * @throws ORMException
+	 * @throws OptimisticLockException
+	 * @throws \Throwable
+	 */
+	public function processForm(Form $form, \stdClass $values): void
+	{
+		$this->settingsFacade->setValue(Settings::PLACE_DESCRIPTION, $values['placeDescription']);
+	}
 }

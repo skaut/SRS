@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Model\Program;
@@ -8,7 +7,7 @@ use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Kdyby\Doctrine\Entities\Attributes\Identifier;
+use Nettrine\ORM\Entity\Attributes\Id as Identifier;
 
 /**
  * Entita program.
@@ -20,125 +19,125 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  */
 class Program
 {
-    use Identifier;
 
-    /**
-     * Programový blok.
-     * @ORM\ManyToOne(targetEntity="Block", inversedBy="programs", cascade={"persist"})
-     * @var Block
-     */
-    protected $block;
+	use Identifier;
 
-    /**
-     * Účastníci programu.
-     * @ORM\ManyToMany(targetEntity="\App\Model\User\User", mappedBy="programs", cascade={"persist"})
-     * @var Collection|User[]
-     */
-    protected $attendees;
+	/**
+	 * Programový blok.
+	 * @ORM\ManyToOne(targetEntity="Block", inversedBy="programs", cascade={"persist"})
+	 * @var Block
+	 */
+	protected $block;
 
-    /**
-     * Obsazenost.
-     * @ORM\Column(type="integer")
-     * @var int
-     */
-    protected $occupancy = 0;
+	/**
+	 * Účastníci programu.
+	 * @ORM\ManyToMany(targetEntity="\App\Model\User\User", mappedBy="programs", cascade={"persist"})
+	 * @var Collection|User[]
+	 */
+	protected $attendees;
 
-    /**
-     * Místnost.
-     * @ORM\ManyToOne(targetEntity="Room", inversedBy="programs", cascade={"persist"})
-     * @var Room
-     */
-    protected $room;
+	/**
+	 * Obsazenost.
+	 * @ORM\Column(type="integer")
+	 * @var int
+	 */
+	protected $occupancy = 0;
 
-    /**
-     * Začátek programu.
-     * @ORM\Column(type="datetime")
-     * @var \DateTime
-     */
-    protected $start;
+	/**
+	 * Místnost.
+	 * @ORM\ManyToOne(targetEntity="Room", inversedBy="programs", cascade={"persist"})
+	 * @var Room
+	 */
+	protected $room;
 
+	/**
+	 * Začátek programu.
+	 * @ORM\Column(type="datetime")
+	 * @var \DateTime
+	 */
+	protected $start;
 
-    public function __construct(Block $block)
-    {
-        $this->block     = $block;
-        $this->attendees = new ArrayCollection();
-    }
+	public function __construct(Block $block)
+	{
+		$this->block = $block;
+		$this->attendees = new ArrayCollection();
+	}
 
-    public function getId() : ?int
-    {
-        return $this->id;
-    }
+	public function getId(): ?int
+	{
+		return $this->id;
+	}
 
-    public function getBlock() : Block
-    {
-        return $this->block;
-    }
+	public function getBlock(): Block
+	{
+		return $this->block;
+	}
 
-    /**
-     * @return Collection|User[]
-     */
-    public function getAttendees() : Collection
-    {
-        return $this->attendees;
-    }
+	/**
+	 * @return Collection|User[]
+	 */
+	public function getAttendees(): Collection
+	{
+		return $this->attendees;
+	}
 
-    /**
-     * Vrací počet účastníků.
-     */
-    public function getAttendeesCount() : int
-    {
-        return $this->attendees->count();
-    }
+	/**
+	 * Vrací počet účastníků.
+	 */
+	public function getAttendeesCount(): int
+	{
+		return $this->attendees->count();
+	}
 
-    /**
-     * Je uživatel účastník programu?
-     */
-    public function isAttendee(User $user) : bool
-    {
-        return $this->attendees->contains($user);
-    }
+	/**
+	 * Je uživatel účastník programu?
+	 */
+	public function isAttendee(User $user): bool
+	{
+		return $this->attendees->contains($user);
+	}
 
-    /**
-     * Vrací kapacitu programového bloku.
-     */
-    public function getCapacity() : ?int
-    {
-        return $this->block->getCapacity();
-    }
+	/**
+	 * Vrací kapacitu programového bloku.
+	 */
+	public function getCapacity(): ?int
+	{
+		return $this->block->getCapacity();
+	}
 
-    public function getOccupancy() : int
-    {
-        return $this->occupancy;
-    }
+	public function getOccupancy(): int
+	{
+		return $this->occupancy;
+	}
 
-    public function getRoom() : ?Room
-    {
-        return $this->room;
-    }
+	public function getRoom(): ?Room
+	{
+		return $this->room;
+	}
 
-    public function setRoom(?Room $room) : void
-    {
-        $this->room = $room;
-    }
+	public function setRoom(?Room $room): void
+	{
+		$this->room = $room;
+	}
 
-    public function getStart() : \DateTime
-    {
-        return $this->start;
-    }
+	public function getStart(): \DateTime
+	{
+		return $this->start;
+	}
 
-    public function setStart(\DateTime $start) : void
-    {
-        $this->start = $start;
-    }
+	public function setStart(\DateTime $start): void
+	{
+		$this->start = $start;
+	}
 
-    /**
-     * Vrací konec programu vypočtený podle délky bloku.
-     * @throws \Exception
-     */
-    public function getEnd() : \DateTime
-    {
-        $end = clone($this->start);
-        $end->add(new \DateInterval('PT' . $this->block->getDuration() . 'M'));
-        return $end;
-    }
+	/**
+	 * Vrací konec programu vypočtený podle délky bloku.
+	 * @throws \Exception
+	 */
+	public function getEnd(): \DateTime
+	{
+		$end = clone($this->start);
+		$end->add(new \DateInterval('PT' . $this->block->getDuration() . 'M'));
+		return $end;
+	}
 }

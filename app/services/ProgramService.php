@@ -20,7 +20,7 @@ use App\Model\Program\ProgramRepository;
 use App\Model\Program\Room;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
+use App\Model\Settings\SettingsFacade;
 use App\Model\Structure\Subevent;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
@@ -41,8 +41,8 @@ class ProgramService
 {
     use Nette\SmartObject;
 
-    /** @var SettingsRepository */
-    private $settingsRepository;
+    /** @var SettingsFacade */
+    private $settingsFacade;
 
     /** @var ProgramRepository */
     private $programRepository;
@@ -61,14 +61,14 @@ class ProgramService
 
 
     public function __construct(
-        SettingsRepository $settingsRepository,
+        SettingsFacade $settingsFacade,
         ProgramRepository $programRepository,
         BlockRepository $blockRepository,
         UserRepository $userRepository,
         CategoryRepository $categoryRepository,
         MailService $mailService
     ) {
-        $this->settingsRepository = $settingsRepository;
+        $this->settingsFacade = $settingsFacade;
         $this->programRepository  = $programRepository;
         $this->blockRepository    = $blockRepository;
         $this->userRepository     = $userRepository;
@@ -388,7 +388,7 @@ class ProgramService
         }
 
         $this->mailService->sendMailFromTemplate($user, '', Template::PROGRAM_REGISTERED, [
-            TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
+            TemplateVariable::SEMINAR_NAME => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
             TemplateVariable::PROGRAM_NAME => $program->getBlock()->getName(),
         ]);
     }
@@ -433,7 +433,7 @@ class ProgramService
         }
 
         $this->mailService->sendMailFromTemplate($user, '', Template::PROGRAM_UNREGISTERED, [
-            TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
+            TemplateVariable::SEMINAR_NAME => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
             TemplateVariable::PROGRAM_NAME => $program->getBlock()->getName(),
         ]);
     }
@@ -445,13 +445,13 @@ class ProgramService
      */
     public function isAllowedRegisterPrograms() : bool
     {
-        return $this->settingsRepository->getValue(Settings::REGISTER_PROGRAMS_TYPE) === ProgramRegistrationType::ALLOWED
+        return $this->settingsFacade->getValue(Settings::REGISTER_PROGRAMS_TYPE) === ProgramRegistrationType::ALLOWED
             || (
-                $this->settingsRepository->getValue(Settings::REGISTER_PROGRAMS_TYPE) === ProgramRegistrationType::ALLOWED_FROM_TO
-                && ($this->settingsRepository->getDateTimeValue(Settings::REGISTER_PROGRAMS_FROM) === null
-                    || $this->settingsRepository->getDateTimeValue(Settings::REGISTER_PROGRAMS_FROM) <= new \DateTime())
-                && ($this->settingsRepository->getDateTimeValue(Settings::REGISTER_PROGRAMS_TO) === null
-                    || $this->settingsRepository->getDateTimeValue(Settings::REGISTER_PROGRAMS_TO) >= new \DateTime()
+                $this->settingsFacade->getValue(Settings::REGISTER_PROGRAMS_TYPE) === ProgramRegistrationType::ALLOWED_FROM_TO
+                && ($this->settingsFacade->getDateTimeValue(Settings::REGISTER_PROGRAMS_FROM) === null
+                    || $this->settingsFacade->getDateTimeValue(Settings::REGISTER_PROGRAMS_FROM) <= new \DateTime())
+                && ($this->settingsFacade->getDateTimeValue(Settings::REGISTER_PROGRAMS_TO) === null
+                    || $this->settingsFacade->getDateTimeValue(Settings::REGISTER_PROGRAMS_TO) >= new \DateTime()
                 )
             );
     }

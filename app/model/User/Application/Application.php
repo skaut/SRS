@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Model\User;
@@ -12,7 +11,7 @@ use App\Utils\Helpers;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Kdyby\Doctrine\Entities\Attributes\Identifier;
+use Nettrine\ORM\Entity\Attributes\Id as Identifier;
 use function implode;
 use function str_replace;
 
@@ -31,380 +30,380 @@ use function str_replace;
  */
 abstract class Application
 {
-    /**
-     * Přihláška rolí.
-     * @var string
-     */
-    public const ROLES = 'roles';
 
-    /**
-     * Přihláška na podakce.
-     * @var string
-     */
-    public const SUBEVENTS = 'subevents';
+	/**
+	 * Přihláška rolí.
+	 * @var string
+	 */
+	public const ROLES = 'roles';
 
-    /**
-     * Typ přihlášky.
-     * @var string
-     */
-    protected $type;
+	/**
+	 * Přihláška na podakce.
+	 * @var string
+	 */
+	public const SUBEVENTS = 'subevents';
 
-    use Identifier;
+	/**
+	 * Typ přihlášky.
+	 * @var string
+	 */
+	protected $type;
 
-    /**
-     * Id přihlášky.
-     * @ORM\Column(type="integer", nullable=true)
-     * @var int
-     */
-    protected $applicationId;
+	use Identifier;
 
-    /**
-     * Uživatel.
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="applications", cascade={"persist"})
-     * @var User
-     */
-    protected $user;
+	/**
+	 * Id přihlášky.
+	 * @ORM\Column(type="integer", nullable=true)
+	 * @var int
+	 */
+	protected $applicationId;
 
-    /**
-     * Role.
-     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", cascade={"persist"})
-     * @var Collection|Role[]
-     */
-    protected $roles;
+	/**
+	 * Uživatel.
+	 * @ORM\ManyToOne(targetEntity="User", inversedBy="applications", cascade={"persist"})
+	 * @var User
+	 */
+	protected $user;
 
-    /**
-     * Podakce.
-     * @ORM\ManyToMany(targetEntity="\App\Model\Structure\Subevent", inversedBy="applications", cascade={"persist"})
-     * @var Collection|Subevent[]
-     */
-    protected $subevents;
+	/**
+	 * Role.
+	 * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", cascade={"persist"})
+	 * @var Collection|Role[]
+	 */
+	protected $roles;
 
-    /**
-     * Poplatek.
-     * @ORM\Column(type="integer")
-     * @var int
-     */
-    protected $fee;
+	/**
+	 * Podakce.
+	 * @ORM\ManyToMany(targetEntity="\App\Model\Structure\Subevent", inversedBy="applications", cascade={"persist"})
+	 * @var Collection|Subevent[]
+	 */
+	protected $subevents;
 
-    /**
-     * Variabilní symbol.
-     * @ORM\ManyToOne(targetEntity="VariableSymbol", cascade={"persist"})
-     * @var VariableSymbol
-     */
-    protected $variableSymbol;
+	/**
+	 * Poplatek.
+	 * @ORM\Column(type="integer")
+	 * @var int
+	 */
+	protected $fee;
 
-    /**
-     * Datum podání přihlášky.
-     * @ORM\Column(type="datetime")
-     * @var \DateTime
-     */
-    protected $applicationDate;
+	/**
+	 * Variabilní symbol.
+	 * @ORM\ManyToOne(targetEntity="VariableSymbol", cascade={"persist"})
+	 * @var VariableSymbol
+	 */
+	protected $variableSymbol;
 
-    /**
-     * Datum splatnosti.
-     * @ORM\Column(type="date", nullable=true)
-     * @var \DateTime
-     */
-    protected $maturityDate;
+	/**
+	 * Datum podání přihlášky.
+	 * @ORM\Column(type="datetime")
+	 * @var \DateTime
+	 */
+	protected $applicationDate;
 
-    /**
-     * Platební metoda.
-     * @ORM\Column(type="string", nullable=true)
-     * @var string
-     */
-    protected $paymentMethod;
+	/**
+	 * Datum splatnosti.
+	 * @ORM\Column(type="date", nullable=true)
+	 * @var \DateTime
+	 */
+	protected $maturityDate;
 
-    /**
-     * Datum zaplacení.
-     * @ORM\Column(type="date", nullable=true)
-     * @var \DateTime
-     */
-    protected $paymentDate;
+	/**
+	 * Platební metoda.
+	 * @ORM\Column(type="string", nullable=true)
+	 * @var string
+	 */
+	protected $paymentMethod;
 
-    /**
-     * Spárovaná platba.
-     * @ORM\ManyToOne(targetEntity="\App\Model\Payment\Payment", inversedBy="pairedApplications", cascade={"persist"})
-     * @var Payment
-     */
-    protected $payment;
+	/**
+	 * Datum zaplacení.
+	 * @ORM\Column(type="date", nullable=true)
+	 * @var \DateTime
+	 */
+	protected $paymentDate;
 
-    /**
-     * Datum vytištění dokladu o zaplacení.
-     * @ORM\Column(type="date", nullable=true)
-     * @var \DateTime
-     */
-    protected $incomeProofPrintedDate;
+	/**
+	 * Spárovaná platba.
+	 * @ORM\ManyToOne(targetEntity="\App\Model\Payment\Payment", inversedBy="pairedApplications", cascade={"persist"})
+	 * @var Payment
+	 */
+	protected $payment;
 
-    /**
-     * Stav přihlášky.
-     * @ORM\Column(type="string")
-     * @var string
-     */
-    protected $state;
+	/**
+	 * Datum vytištění dokladu o zaplacení.
+	 * @ORM\Column(type="date", nullable=true)
+	 * @var \DateTime
+	 */
+	protected $incomeProofPrintedDate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
-     * @var User
-     */
-    protected $createdBy;
+	/**
+	 * Stav přihlášky.
+	 * @ORM\Column(type="string")
+	 * @var string
+	 */
+	protected $state;
 
-    /**
-     * Platnost záznamu od.
-     * @ORM\Column(type="datetime")
-     * @var \DateTime
-     */
-    protected $validFrom;
+	/**
+	 * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
+	 * @var User
+	 */
+	protected $createdBy;
 
-    /**
-     * Platnost záznamu do.
-     * @ORM\Column(type="datetime", nullable=true)
-     * @var \DateTime
-     */
-    protected $validTo;
+	/**
+	 * Platnost záznamu od.
+	 * @ORM\Column(type="datetime")
+	 * @var \DateTime
+	 */
+	protected $validFrom;
 
+	/**
+	 * Platnost záznamu do.
+	 * @ORM\Column(type="datetime", nullable=true)
+	 * @var \DateTime
+	 */
+	protected $validTo;
 
-    public function __construct()
-    {
-        $this->roles     = new ArrayCollection();
-        $this->subevents = new ArrayCollection();
-    }
+	public function __construct()
+	{
+		$this->roles = new ArrayCollection();
+		$this->subevents = new ArrayCollection();
+	}
 
-    public function getId() : int
-    {
-        return $this->id;
-    }
+	public function getId(): int
+	{
+		return $this->id;
+	}
 
-    public function getApplicationId() : int
-    {
-        return $this->applicationId;
-    }
+	public function getApplicationId(): int
+	{
+		return $this->applicationId;
+	}
 
-    public function setApplicationId(int $applicationId) : void
-    {
-        $this->applicationId = $applicationId;
-    }
+	public function setApplicationId(int $applicationId): void
+	{
+		$this->applicationId = $applicationId;
+	}
 
-    public function getType() : string
-    {
-        return $this->type;
-    }
+	public function getType(): string
+	{
+		return $this->type;
+	}
 
-    public function getUser() : User
-    {
-        return $this->user;
-    }
+	public function getUser(): User
+	{
+		return $this->user;
+	}
 
-    public function setUser(User $user) : void
-    {
-        $this->user = $user;
-    }
+	public function setUser(User $user): void
+	{
+		$this->user = $user;
+	}
 
-    /**
-     * @return Collection|Role[]
-     */
-    public function getRoles() : Collection
-    {
-        return $this->roles;
-    }
+	/**
+	 * @return Collection|Role[]
+	 */
+	public function getRoles(): Collection
+	{
+		return $this->roles;
+	}
 
-    /**
-     * Vrací názvy rolí oddělené čárkou.
-     */
-    public function getRolesText() : string
-    {
-        return implode(', ', $this->roles->map(function (Role $role) {
-            return $role->getName();
-        })->toArray());
-    }
+	/**
+	 * Vrací názvy rolí oddělené čárkou.
+	 */
+	public function getRolesText(): string
+	{
+		return implode(', ', $this->roles->map(function (Role $role) {
+				return $role->getName();
+			})->toArray());
+	}
 
-    /**
-     * @return Collection|Subevent[]
-     */
-    public function getSubevents() : Collection
-    {
-        return $this->subevents;
-    }
+	/**
+	 * @return Collection|Subevent[]
+	 */
+	public function getSubevents(): Collection
+	{
+		return $this->subevents;
+	}
 
-    /**
-     * Vrací názvy podakcí oddělené čárkou.
-     */
-    public function getSubeventsText() : string
-    {
-        return implode(', ', $this->subevents->map(function (Subevent $subevent) {
-            return $subevent->getName();
-        })->toArray());
-    }
+	/**
+	 * Vrací názvy podakcí oddělené čárkou.
+	 */
+	public function getSubeventsText(): string
+	{
+		return implode(', ', $this->subevents->map(function (Subevent $subevent) {
+				return $subevent->getName();
+			})->toArray());
+	}
 
-    public function getFee() : int
-    {
-        return $this->fee;
-    }
+	public function getFee(): int
+	{
+		return $this->fee;
+	}
 
-    /**
-     * Vrací poplatek slovy.
-     */
-    public function getFeeWords() : string
-    {
-        $numbersWords = new \Numbers_Words();
-        $feeWord      = $numbersWords->toWords($this->getFee(), 'cs');
-        $feeWord      = str_replace(' ', '', $feeWord);
-        return $feeWord;
-    }
+	/**
+	 * Vrací poplatek slovy.
+	 */
+	public function getFeeWords(): string
+	{
+		$numbersWords = new \Numbers_Words();
+		$feeWord = $numbersWords->toWords($this->getFee(), 'cs');
+		$feeWord = str_replace(' ', '', $feeWord);
+		return $feeWord;
+	}
 
-    public function setFee(int $fee) : void
-    {
-        $this->fee = $fee;
-    }
+	public function setFee(int $fee): void
+	{
+		$this->fee = $fee;
+	}
 
-    public function getVariableSymbol() : VariableSymbol
-    {
-        return $this->variableSymbol;
-    }
+	public function getVariableSymbol(): VariableSymbol
+	{
+		return $this->variableSymbol;
+	}
 
-    /**
-     * Vrací text variabilního symbolu.
-     */
-    public function getVariableSymbolText() : string
-    {
-        return $this->variableSymbol->getVariableSymbol();
-    }
+	/**
+	 * Vrací text variabilního symbolu.
+	 */
+	public function getVariableSymbolText(): string
+	{
+		return $this->variableSymbol->getVariableSymbol();
+	}
 
-    public function setVariableSymbol(VariableSymbol $variableSymbol) : void
-    {
-        $this->variableSymbol = $variableSymbol;
-    }
+	public function setVariableSymbol(VariableSymbol $variableSymbol): void
+	{
+		$this->variableSymbol = $variableSymbol;
+	}
 
-    public function getApplicationDate() : \DateTime
-    {
-        return $this->applicationDate;
-    }
+	public function getApplicationDate(): \DateTime
+	{
+		return $this->applicationDate;
+	}
 
-    public function setApplicationDate(\DateTime $applicationDate) : void
-    {
-        $this->applicationDate = $applicationDate;
-    }
+	public function setApplicationDate(\DateTime $applicationDate): void
+	{
+		$this->applicationDate = $applicationDate;
+	}
 
-    public function getMaturityDate() : ?\DateTime
-    {
-        return $this->maturityDate;
-    }
+	public function getMaturityDate(): ?\DateTime
+	{
+		return $this->maturityDate;
+	}
 
-    /**
-     * Vrací datum splastnosti jako text.
-     */
-    public function getMaturityDateText() : ?string
-    {
-        return $this->maturityDate !== null ? $this->maturityDate->format(Helpers::DATE_FORMAT) : null;
-    }
+	/**
+	 * Vrací datum splastnosti jako text.
+	 */
+	public function getMaturityDateText(): ?string
+	{
+		return $this->maturityDate !== null ? $this->maturityDate->format(Helpers::DATE_FORMAT) : null;
+	}
 
-    public function setMaturityDate(?\DateTime $maturityDate) : void
-    {
-        $this->maturityDate = $maturityDate;
-    }
+	public function setMaturityDate(?\DateTime $maturityDate): void
+	{
+		$this->maturityDate = $maturityDate;
+	}
 
-    public function getPaymentMethod() : ?string
-    {
-        return $this->paymentMethod;
-    }
+	public function getPaymentMethod(): ?string
+	{
+		return $this->paymentMethod;
+	}
 
-    public function setPaymentMethod(?string $paymentMethod) : void
-    {
-        $this->paymentMethod = $paymentMethod;
-    }
+	public function setPaymentMethod(?string $paymentMethod): void
+	{
+		$this->paymentMethod = $paymentMethod;
+	}
 
-    public function getPaymentDate() : ?\DateTime
-    {
-        return $this->paymentDate;
-    }
+	public function getPaymentDate(): ?\DateTime
+	{
+		return $this->paymentDate;
+	}
 
-    /**
-     * Vrací datum platby jako text.
-     */
-    public function getPaymentDateText() : ?string
-    {
-        return $this->paymentDate !== null ? $this->paymentDate->format(Helpers::DATE_FORMAT) : null;
-    }
+	/**
+	 * Vrací datum platby jako text.
+	 */
+	public function getPaymentDateText(): ?string
+	{
+		return $this->paymentDate !== null ? $this->paymentDate->format(Helpers::DATE_FORMAT) : null;
+	}
 
-    public function setPaymentDate(?\DateTime $paymentDate) : void
-    {
-        $this->paymentDate = $paymentDate;
-    }
+	public function setPaymentDate(?\DateTime $paymentDate): void
+	{
+		$this->paymentDate = $paymentDate;
+	}
 
-    public function getPayment() : ?Payment
-    {
-        return $this->payment;
-    }
+	public function getPayment(): ?Payment
+	{
+		return $this->payment;
+	}
 
-    public function setPayment(?Payment $payment) : void
-    {
-        $this->payment = $payment;
-    }
+	public function setPayment(?Payment $payment): void
+	{
+		$this->payment = $payment;
+	}
 
-    public function getIncomeProofPrintedDate() : ?\DateTime
-    {
-        return $this->incomeProofPrintedDate;
-    }
+	public function getIncomeProofPrintedDate(): ?\DateTime
+	{
+		return $this->incomeProofPrintedDate;
+	}
 
-    /**
-     * Vrací datum vytištění dokladu jako text.
-     */
-    public function getIncomeProofPrintedDateText() : ?string
-    {
-        return $this->incomeProofPrintedDate !== null ? $this->incomeProofPrintedDate->format(Helpers::DATE_FORMAT) : null;
-    }
+	/**
+	 * Vrací datum vytištění dokladu jako text.
+	 */
+	public function getIncomeProofPrintedDateText(): ?string
+	{
+		return $this->incomeProofPrintedDate !== null ? $this->incomeProofPrintedDate->format(Helpers::DATE_FORMAT) : null;
+	}
 
-    public function setIncomeProofPrintedDate(?\DateTime $incomeProofPrintedDate) : void
-    {
-        $this->incomeProofPrintedDate = $incomeProofPrintedDate;
-    }
+	public function setIncomeProofPrintedDate(?\DateTime $incomeProofPrintedDate): void
+	{
+		$this->incomeProofPrintedDate = $incomeProofPrintedDate;
+	}
 
-    public function getState() : ?string
-    {
-        return $this->state;
-    }
+	public function getState(): ?string
+	{
+		return $this->state;
+	}
 
-    public function setState(?string $state) : void
-    {
-        $this->state = $state;
-    }
+	public function setState(?string $state): void
+	{
+		$this->state = $state;
+	}
 
-    public function getCreatedBy() : ?User
-    {
-        return $this->createdBy;
-    }
+	public function getCreatedBy(): ?User
+	{
+		return $this->createdBy;
+	}
 
-    public function setCreatedBy(?User $createdBy) : void
-    {
-        $this->createdBy = $createdBy;
-    }
+	public function setCreatedBy(?User $createdBy): void
+	{
+		$this->createdBy = $createdBy;
+	}
 
-    public function getValidFrom() : \DateTime
-    {
-        return $this->validFrom;
-    }
+	public function getValidFrom(): \DateTime
+	{
+		return $this->validFrom;
+	}
 
-    public function setValidFrom(\DateTime $validFrom) : void
-    {
-        $this->validFrom = $validFrom;
-    }
+	public function setValidFrom(\DateTime $validFrom): void
+	{
+		$this->validFrom = $validFrom;
+	}
 
-    public function getValidTo() : ?\DateTime
-    {
-        return $this->validTo;
-    }
+	public function getValidTo(): ?\DateTime
+	{
+		return $this->validTo;
+	}
 
-    public function setValidTo(?\DateTime $validTo) : void
-    {
-        $this->validTo = $validTo;
-    }
+	public function setValidTo(?\DateTime $validTo): void
+	{
+		$this->validTo = $validTo;
+	}
 
-    public function isValid() : bool
-    {
-        return $this->validTo === null;
-    }
+	public function isValid(): bool
+	{
+		return $this->validTo === null;
+	}
 
-    public function isCanceled() : bool
-    {
-        return $this->state === ApplicationState::CANCELED || $this->state === ApplicationState::CANCELED_NOT_PAID;
-    }
+	public function isCanceled(): bool
+	{
+		return $this->state === ApplicationState::CANCELED || $this->state === ApplicationState::CANCELED_NOT_PAID;
+	}
 }

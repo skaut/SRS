@@ -1,6 +1,7 @@
 *~
 /composer.lock
 /.idea
+/nbproject
 /composer.phar
 /deployment.ini
 /deployment.log

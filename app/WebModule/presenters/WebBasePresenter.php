@@ -1,18 +1,18 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\WebModule\Presenters;
 
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
-use App\Model\ACL\ResourceRepository;
+use App\Model\ACL\ResourceFacade;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
+use App\Model\CMS\PageFacade;
 use App\Model\CMS\PageRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
+use App\Model\Settings\SettingsFacade;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Presenters\BasePresenter;
@@ -32,155 +32,161 @@ use WebLoader\Nette\JavaScriptLoader;
  */
 abstract class WebBasePresenter extends BasePresenter
 {
-    /**
-     * @var Authorizator
-     * @inject
-     */
-    public $authorizator;
 
-    /**
-     * @var Authenticator
-     * @inject
-     */
-    public $authenticator;
+	/**
+	 * @var Authorizator
+	 * @inject
+	 */
+	public $authorizator;
 
-    /**
-     * @var ResourceRepository
-     * @inject
-     */
-    public $resourceRepository;
+	/**
+	 * @var Authenticator
+	 * @inject
+	 */
+	public $authenticator;
 
-    /**
-     * @var RoleRepository
-     * @inject
-     */
-    public $roleRepository;
+	/**
+	 * @var ResourceFacade
+	 * @inject
+	 */
+	public $resourceFacade;
 
-    /**
-     * @var PageRepository
-     * @inject
-     */
-    public $pageRepository;
+	/**
+	 * @var RoleRepository
+	 * @inject
+	 */
+	public $roleRepository;
 
-    /**
-     * @var SettingsRepository
-     * @inject
-     */
-    public $settingsRepository;
+	/**
+	 * @var PageFacade
+	 * @inject
+	 */
+	public $pageFacade;
 
-    /**
-     * @var UserRepository
-     * @inject
-     */
-    public $userRepository;
+	/**
+	 * @var PageRepository
+	 * @inject
+	 */
+	public $pageRepository;
 
-    /**
-     * @var SkautIsService
-     * @inject
-     */
-    public $skautIsService;
+	/**
+	 * @var SettingsFacade
+	 * @inject
+	 */
+	public $settingsFacade;
 
-    /**
-     * @var DatabaseService
-     * @inject
-     */
-    public $databaseService;
+	/**
+	 * @var UserRepository
+	 * @inject
+	 */
+	public $userRepository;
 
-    /** @var User */
-    protected $dbuser;
+	/**
+	 * @var SkautIsService
+	 * @inject
+	 */
+	public $skautIsService;
 
+	/**
+	 * @var DatabaseService
+	 * @inject
+	 */
+	public $databaseService;
 
-    /**
-     * Načte css podle konfigurace v config.neon.
-     */
-    protected function createComponentCss() : CssLoader
-    {
-        return $this->webLoader->createCssLoader('web');
-    }
+	/** @var User */
+	protected $dbuser;
 
-    /**
-     * Načte javascript podle konfigurace v config.neon.
-     */
-    protected function createComponentJs() : JavaScriptLoader
-    {
-        return $this->webLoader->createJavaScriptLoader('web');
-    }
+	/**
+	 * Načte css podle konfigurace v config.neon.
+	 */
+	protected function createComponentCss(): CssLoader
+	{
+		return $this->webLoader->createCssLoader('web');
+	}
 
-    /**
-     * @throws AbortException
-     * @throws \Throwable
-     */
-    public function startup() : void
-    {
-        parent::startup();
+	/**
+	 * Načte javascript podle konfigurace v config.neon.
+	 */
+	protected function createComponentJs(): JavaScriptLoader
+	{
+		return $this->webLoader->createJavaScriptLoader('web');
+	}
 
-        $this->checkInstallation();
+	/**
+	 * @throws AbortException
+	 * @throws \Throwable
+	 */
+	public function startup(): void
+	{
+		parent::startup();
 
-        if ($this->user->isLoggedIn() && ! $this->skautIsService->isLoggedIn()) {
-            $this->user->logout(true);
-        }
+		$this->checkInstallation();
 
-        $this->user->setAuthorizator($this->authorizator);
+		if ($this->user->isLoggedIn() && !$this->skautIsService->isLoggedIn()) {
+			$this->user->logout(true);
+		}
 
-        $this->dbuser = $this->user->isLoggedIn() ? $this->userRepository->findById($this->user->id) : null;
-    }
+		$this->user->setAuthorizator($this->authorizator);
 
-    /**
-     * @throws SettingsException
-     * @throws \Throwable
-     */
-    public function beforeRender() : void
-    {
-        parent::beforeRender();
+		$this->dbuser = $this->user->isLoggedIn() ? $this->userRepository->findById($this->user->id) : null;
+	}
 
-        $this->template->dbuser = $this->dbuser;
+	/**
+	 * @throws SettingsException
+	 * @throws \Throwable
+	 */
+	public function beforeRender(): void
+	{
+		parent::beforeRender();
 
-        $this->template->backlink = $this->getHttpRequest()->getUrl()->getPath();
+		$this->template->dbuser = $this->dbuser;
 
-        $this->template->logo        = $this->settingsRepository->getValue(Settings::LOGO);
-        $this->template->footer      = $this->settingsRepository->getValue(Settings::FOOTER);
-        $this->template->seminarName = $this->settingsRepository->getValue(Settings::SEMINAR_NAME);
-        $this->template->gaId        = $this->settingsRepository->getValue(Settings::GA_ID);
+		$this->template->backlink = $this->getHttpRequest()->getUrl()->getPath();
 
-        $this->template->nonregisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
-        $this->template->unapprovedRole    = $this->roleRepository->findBySystemName(Role::UNAPPROVED);
-        $this->template->testRole          = Role::TEST;
+		$this->template->logo = $this->settingsFacade->getValue(Settings::LOGO);
+		$this->template->footer = $this->settingsFacade->getValue(Settings::FOOTER);
+		$this->template->seminarName = $this->settingsFacade->getValue(Settings::SEMINAR_NAME);
+		$this->template->gaId = $this->settingsFacade->getValue(Settings::GA_ID);
 
-        $this->template->adminAccess = $this->user->isAllowed(Resource::ADMIN, Permission::ACCESS);
+		$this->template->nonregisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
+		$this->template->unapprovedRole = $this->roleRepository->findBySystemName(Role::UNAPPROVED);
+		$this->template->testRole = Role::TEST;
 
-        $this->template->pages          = $this->pageRepository->findPublishedOrderedByPositionDTO();
-        $this->template->sidebarVisible = false;
+		$this->template->adminAccess = $this->user->isAllowed(Resource::ADMIN, Permission::ACCESS);
 
-        $this->template->settings = $this->settingsRepository;
-    }
+		$this->template->pages = $this->pageFacade->findPublishedOrderedByPositionDTO();
+		$this->template->sidebarVisible = false;
 
-    /**
-     * Ukončí testování role.
-     * @throws AbortException
-     */
-    public function actionExitRoleTest() : void
-    {
-        $this->authenticator->updateRoles($this->user);
-        $this->redirect(':Admin:Acl:default');
-    }
+		$this->template->settings = $this->settingsFacade;
+	}
 
-    /**
-     * Zkontroluje stav instalace.
-     * @throws AbortException
-     * @throws \Throwable
-     */
-    private function checkInstallation() : void
-    {
-        try {
-            if (! $this->settingsRepository->getBoolValue(Settings::ADMIN_CREATED)) {
-                $this->redirect(':Install:Install:default');
-            } else {
-                $this->databaseService->update();
-            }
-        } catch (TableNotFoundException $ex) {
-            $this->redirect(':Install:Install:default');
-        } catch (SettingsException $ex) {
-            $this->redirect(':Install:Install:default');
-        }
-    }
+	/**
+	 * Ukončí testování role.
+	 * @throws AbortException
+	 */
+	public function actionExitRoleTest(): void
+	{
+		$this->authenticator->updateRoles($this->user);
+		$this->redirect(':Admin:Acl:default');
+	}
+
+	/**
+	 * Zkontroluje stav instalace.
+	 * @throws AbortException
+	 * @throws \Throwable
+	 */
+	private function checkInstallation(): void
+	{
+		try {
+			if (!$this->settingsFacade->getBoolValue(Settings::ADMIN_CREATED)) {
+				$this->redirect(':Install:Install:default');
+			} else {
+				$this->databaseService->update();
+			}
+		} catch (TableNotFoundException $ex) {
+			$this->redirect(':Install:Install:default');
+		} catch (SettingsException $ex) {
+			$this->redirect(':Install:Install:default');
+		}
+	}
 }

@@ -8,7 +8,7 @@ use App\AdminModule\Forms\BaseForm;
 use App\Model\Enums\SkautIsEventType;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
+use App\Model\Settings\SettingsFacade;
 use App\Model\SkautIs\SkautIsCourse;
 use App\Model\SkautIs\SkautIsCourseRepository;
 use App\Model\Structure\SubeventRepository;
@@ -35,8 +35,8 @@ class SkautIsEventForm
     /** @var BaseForm */
     private $baseFormFactory;
 
-    /** @var SettingsRepository */
-    private $settingsRepository;
+    /** @var SettingsFacade */
+    private $settingsFacade;
 
     /** @var SkautIsCourseRepository */
     private $skautIsCourseRepository;
@@ -53,14 +53,14 @@ class SkautIsEventForm
 
     public function __construct(
         BaseForm $baseForm,
-        SettingsRepository $settingsRepository,
+        SettingsFacade $settingsFacade,
         SkautIsCourseRepository $skautIsCourseRepository,
         SkautIsEventGeneralService $skautIsEventGeneralService,
         SkautIsEventEducationService $skautIsEventEducationService,
         SubeventRepository $subeventRepository
     ) {
         $this->baseFormFactory              = $baseForm;
-        $this->settingsRepository           = $settingsRepository;
+        $this->settingsFacade           = $settingsFacade;
         $this->skautIsCourseRepository      = $skautIsCourseRepository;
         $this->skautIsEventGeneralService   = $skautIsEventGeneralService;
         $this->skautIsEventEducationService = $skautIsEventEducationService;
@@ -107,7 +107,7 @@ class SkautIsEventForm
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'skautisEventType' => $this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_TYPE),
+            'skautisEventType' => $this->settingsFacade->getValue(Settings::SKAUTIS_EVENT_TYPE),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -158,13 +158,13 @@ class SkautIsEventForm
                 break;
         }
 
-        $this->settingsRepository->setValue(Settings::SKAUTIS_EVENT_TYPE, $eventType);
+        $this->settingsFacade->setValue(Settings::SKAUTIS_EVENT_TYPE, $eventType);
 
         if ($eventId === null) {
             return;
         }
 
-        $this->settingsRepository->setIntValue(Settings::SKAUTIS_EVENT_ID, $eventId);
-        $this->settingsRepository->setValue(Settings::SKAUTIS_EVENT_NAME, $eventName);
+        $this->settingsFacade->setIntValue(Settings::SKAUTIS_EVENT_ID, $eventId);
+        $this->settingsFacade->setValue(Settings::SKAUTIS_EVENT_NAME, $eventName);
     }
 }

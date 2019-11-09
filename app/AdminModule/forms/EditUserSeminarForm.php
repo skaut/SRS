@@ -12,7 +12,7 @@ use App\Model\Settings\CustomInput\CustomFile;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsRepository;
+use App\Model\Settings\SettingsFacade;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
 use App\Model\User\CustomInputValue\CustomFileValue;
 use App\Model\User\CustomInputValue\CustomInputValueRepository;
@@ -75,8 +75,8 @@ class EditUserSeminarForm
     /** @var MailService */
     private $mailService;
 
-    /** @var SettingsRepository */
-    private $settingsRepository;
+    /** @var SettingsFacade */
+    private $settingsFacade;
 
 
     public function __construct(
@@ -89,7 +89,7 @@ class EditUserSeminarForm
         Validators $validators,
         FilesService $filesService,
         MailService $mailService,
-        SettingsRepository $settingsRepository
+        SettingsFacade $settingsFacade
     ) {
         $this->baseFormFactory            = $baseFormFactory;
         $this->userRepository             = $userRepository;
@@ -100,7 +100,7 @@ class EditUserSeminarForm
         $this->validators                 = $validators;
         $this->filesService               = $filesService;
         $this->mailService                = $mailService;
-        $this->settingsRepository         = $settingsRepository;
+        $this->settingsFacade         = $settingsFacade;
     }
 
     /**
@@ -272,7 +272,7 @@ class EditUserSeminarForm
             }
 
             $this->mailService->sendMailFromTemplate($this->user, '', Template::CUSTOM_INPUT_VALUE_CHANGED, [
-                TemplateVariable::SEMINAR_NAME => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
+                TemplateVariable::SEMINAR_NAME => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
                 TemplateVariable::USER => $this->user->getDisplayName(),
             ]);
         });

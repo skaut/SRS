@@ -8,7 +8,7 @@ use App\AdminModule\Forms\BaseForm;
 use App\Model\CMS\PageRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
+use App\Model\Settings\SettingsFacade;
 use App\Services\FilesService;
 use Nette;
 use Nette\Application\UI\Form;
@@ -30,8 +30,8 @@ class WebForm
     /** @var PageRepository */
     private $pageRepository;
 
-    /** @var SettingsRepository */
-    private $settingsRepository;
+    /** @var SettingsFacade */
+    private $settingsFacade;
 
     /** @var FilesService */
     private $filesService;
@@ -40,12 +40,12 @@ class WebForm
     public function __construct(
         BaseForm $baseFormFactory,
         PageRepository $pageRepository,
-        SettingsRepository $settingsRepository,
+        SettingsFacade $settingsFacade,
         FilesService $filesService
     ) {
         $this->baseFormFactory    = $baseFormFactory;
         $this->pageRepository     = $pageRepository;
-        $this->settingsRepository = $settingsRepository;
+        $this->settingsFacade = $settingsFacade;
         $this->filesService       = $filesService;
     }
 
@@ -77,9 +77,9 @@ class WebForm
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'footer' => $this->settingsRepository->getValue(Settings::FOOTER),
-            'redirectAfterLogin' => $this->settingsRepository->getValue(Settings::REDIRECT_AFTER_LOGIN),
-            'ga_id' => $this->settingsRepository->getValue(Settings::GA_ID),
+            'footer' => $this->settingsFacade->getValue(Settings::FOOTER),
+            'redirectAfterLogin' => $this->settingsFacade->getValue(Settings::REDIRECT_AFTER_LOGIN),
+            'ga_id' => $this->settingsFacade->getValue(Settings::GA_ID),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -97,17 +97,17 @@ class WebForm
     {
         $logo = $values['logo'];
         if ($logo->size > 0) {
-            $this->filesService->delete('/logo/' . $this->settingsRepository->getValue(Settings::LOGO));
+            $this->filesService->delete('/logo/' . $this->settingsFacade->getValue(Settings::LOGO));
 
             $logoName = Strings::webalize($logo->name, '.');
             $this->filesService->save($logo, '/logo/' . $logoName);
             $this->filesService->resizeImage('/logo/' . $logoName, null, 100);
 
-            $this->settingsRepository->setValue(Settings::LOGO, $logoName);
+            $this->settingsFacade->setValue(Settings::LOGO, $logoName);
         }
 
-        $this->settingsRepository->setValue(Settings::FOOTER, $values['footer']);
-        $this->settingsRepository->setValue(Settings::REDIRECT_AFTER_LOGIN, $values['redirectAfterLogin']);
-        $this->settingsRepository->setValue(Settings::GA_ID, $values['ga_id']);
+        $this->settingsFacade->setValue(Settings::FOOTER, $values['footer']);
+        $this->settingsFacade->setValue(Settings::REDIRECT_AFTER_LOGIN, $values['redirectAfterLogin']);
+        $this->settingsFacade->setValue(Settings::GA_ID, $values['ga_id']);
     }
 }

@@ -47,11 +47,11 @@ class SkautIsPresenter extends ConfigurationBasePresenter
      */
     public function renderDefault() : void
     {
-        $eventId = $this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_ID);
+        $eventId = $this->settingsFacade->getValue(Settings::SKAUTIS_EVENT_ID);
         if ($eventId !== null) {
-            $this->template->event          = $this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_NAME);
+            $this->template->event          = $this->settingsFacade->getValue(Settings::SKAUTIS_EVENT_NAME);
             $this->template->connected      = true;
-            $this->template->eventEducation = $this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_TYPE) === SkautIsEventType::EDUCATION;
+            $this->template->eventEducation = $this->settingsFacade->getValue(Settings::SKAUTIS_EVENT_TYPE) === SkautIsEventType::EDUCATION;
         } else {
             $this->template->connected = false;
         }
@@ -65,10 +65,10 @@ class SkautIsPresenter extends ConfigurationBasePresenter
      */
     public function handleDisconnect() : void
     {
-        $this->settingsRepository->setValue(Settings::SKAUTIS_EVENT_ID, null);
-        $this->settingsRepository->setValue(Settings::SKAUTIS_EVENT_NAME, null);
+        $this->settingsFacade->setValue(Settings::SKAUTIS_EVENT_ID, null);
+        $this->settingsFacade->setValue(Settings::SKAUTIS_EVENT_NAME, null);
 
-        if ($this->settingsRepository->getValue(Settings::SKAUTIS_EVENT_TYPE) === SkautIsEventType::EDUCATION) {
+        if ($this->settingsFacade->getValue(Settings::SKAUTIS_EVENT_TYPE) === SkautIsEventType::EDUCATION) {
             $this->skautIsCourseRepository->removeAll();
         }
 

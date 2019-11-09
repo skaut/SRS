@@ -1,13 +1,12 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Model\ACL\PermissionRepository;
-use App\Model\ACL\ResourceRepository;
+use App\Model\ACL\PermissionFacade;
+use App\Model\ACL\ResourceFacade;
 use App\Model\ACL\Role;
-use App\Model\ACL\RoleRepository;
+use App\Model\ACL\RoleFacade;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Nette;
 
@@ -19,25 +18,27 @@ use Nette;
  */
 class Authorizator extends Nette\Security\Permission
 {
-    public function __construct(
-        RoleRepository $roleRepository,
-        PermissionRepository $permissionRepository,
-        ResourceRepository $resourceRepository
-    ) {
-        $this->addRole(Role::TEST); //role pouzivana pri testovani jine role
 
-        try {
-            foreach ($resourceRepository->findAllNames() as $resourceName) {
-                $this->addResource($resourceName);
-            }
-            foreach ($roleRepository->findAllNames() as $roleName) {
-                $this->addRole($roleName);
-            }
-            foreach ($permissionRepository->findAllNames() as $permission) {
-                $this->allow($permission['roleName'], $permission['resourceName'], $permission['name']);
-            }
-        } catch (TableNotFoundException $ex) {
-            //prvni spusteni pred vytvorenim databaze
-        }
-    }
+	public function __construct(
+		RoleFacade $roleFacade,
+		PermissionFacade $permissionRepository,
+		ResourceFacade $resourceFacade
+	)
+	{
+		$this->addRole(Role::TEST); //role pouzivana pri testovani jine role
+
+		try {
+			foreach ($resourceFacade->findAllNames() as $resourceName) {
+				$this->addResource($resourceName);
+			}
+			foreach ($roleFacade->findAllNames() as $roleName) {
+				$this->addRole($roleName);
+			}
+			foreach ($permissionRepository->findAllNames() as $permission) {
+				$this->allow($permission['roleName'], $permission['resourceName'], $permission['name']);
+			}
+		} catch (TableNotFoundException $ex) {
+			//prvni spusteni pred vytvorenim databaze
+		}
+	}
 }

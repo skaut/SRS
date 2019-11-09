@@ -6,7 +6,7 @@ namespace App\ExportModule\Presenters;
 
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
+use App\Model\Settings\SettingsFacade;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\UserRepository;
 use Joseki\Application\Responses\PdfResponse;
@@ -28,10 +28,10 @@ class TicketPresenter extends ExportBasePresenter
     public $userRepository;
 
     /**
-     * @var SettingsRepository
+     * @var SettingsFacade
      * @inject
      */
-    public $settingsRepository;
+    public $settingsFacade;
 
     /**
      * @var SubeventRepository
@@ -55,8 +55,8 @@ class TicketPresenter extends ExportBasePresenter
         $template = $this->createTemplate();
         $template->setFile(__DIR__ . '/templates/Ticket/pdf.latte');
 
-        $template->logo                    = $this->settingsRepository->getValue(Settings::LOGO);
-        $template->seminarName             = $this->settingsRepository->getValue(Settings::SEMINAR_NAME);
+        $template->logo                    = $this->settingsFacade->getValue(Settings::LOGO);
+        $template->seminarName             = $this->settingsFacade->getValue(Settings::SEMINAR_NAME);
         $template->ticketUser              = $this->userRepository->findById($this->user->id);
         $template->explicitSubeventsExists = $this->subeventRepository->explicitSubeventsExists();
 

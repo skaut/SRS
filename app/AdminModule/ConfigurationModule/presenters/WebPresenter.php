@@ -30,7 +30,7 @@ class WebPresenter extends ConfigurationBasePresenter
      */
     public function renderDefault() : void
     {
-        $this->template->logo = $this->settingsRepository->getValue(Settings::LOGO);
+        $this->template->logo = $this->settingsFacade->getValue(Settings::LOGO);
     }
 
     /**

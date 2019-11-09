@@ -9,7 +9,7 @@ use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
+use App\Model\Settings\SettingsFacade;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\Application;
 use App\Model\User\ApplicationRepository;
@@ -61,8 +61,8 @@ class ApplicationsGridControl extends Control
     /** @var MailService */
     private $mailService;
 
-    /** @var SettingsRepository */
-    private $settingsRepository;
+    /** @var SettingsFacade */
+    private $settingsFacade;
 
     /** @var User */
     private $user;
@@ -86,7 +86,7 @@ class ApplicationsGridControl extends Control
         ApplicationService $applicationService,
         ProgramRepository $programRepository,
         MailService $mailService,
-        SettingsRepository $settingsRepository,
+        SettingsFacade $settingsFacade,
         PdfExportService $pdfExportService,
         ProgramService $programService,
         Validators $validators
@@ -101,7 +101,7 @@ class ApplicationsGridControl extends Control
         $this->applicationService    = $applicationService;
         $this->programRepository     = $programRepository;
         $this->mailService           = $mailService;
-        $this->settingsRepository    = $settingsRepository;
+        $this->settingsFacade    = $settingsFacade;
         $this->pdfExportService      = $pdfExportService;
         $this->programService        = $programService;
         $this->validators            = $validators;

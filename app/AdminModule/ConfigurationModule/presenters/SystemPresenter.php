@@ -1,13 +1,12 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
 use App\Commands\ClearCacheCommand;
-use Kdyby\Console\Application;
-use Kdyby\Console\StringOutput;
+use Contributte\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
 
 /**
  * Presenter obsluhující nastavení systému.
@@ -17,36 +16,31 @@ use Symfony\Component\Console\Input\ArrayInput;
  */
 class SystemPresenter extends ConfigurationBasePresenter
 {
-    /**
-     * @var Application
-     * @inject
-     */
-    public $application;
 
-    /**
-     * @var ClearCacheCommand
-     * @inject
-     */
-    public $clearCacheCommand;
+	/**
+	 * @var ClearCacheCommand
+	 * @inject
+	 */
+	public $clearCacheCommand;
 
+	/**
+	 * Promaže cache.
+	 * @throws \Exception
+	 */
+	public function handleClearCache(): void
+	{
+		$consoleApp = new Application();
+		$output = new BufferedOutput();
+		$input = new ArrayInput(['command' => 'app:cache:clear']);
+		$consoleApp->add($this->clearCacheCommand);
+		$result = $consoleApp->run($input, $output);
 
-    /**
-     * Promaže cache.
-     * @throws \Exception
-     */
-    public function handleClearCache() : void
-    {
-        $this->application->add($this->clearCacheCommand);
-        $output = new StringOutput();
-        $input  = new ArrayInput(['command' => 'app:cache:clear']);
-        $result = $this->application->run($input, $output);
+		if ($result === 0) {
+			$this->flashMessage('admin.configuration.system_cache_cleared', 'success');
+		} else {
+			$this->flashMessage('admin.configuration.system_cache_not_cleared', 'error');
+		}
 
-        if ($result === 0) {
-            $this->flashMessage('admin.configuration.system_cache_cleared', 'success');
-        } else {
-            $this->flashMessage('admin.configuration.system_cache_not_cleared', 'error');
-        }
-
-        $this->redirect('this');
-    }
+		$this->redirect('this');
+	}
 }

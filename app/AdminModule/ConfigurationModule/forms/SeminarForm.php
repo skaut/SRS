@@ -7,7 +7,7 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseForm;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
+use App\Model\Settings\SettingsFacade;
 use App\Model\Structure\SubeventRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -29,8 +29,8 @@ class SeminarForm
     /** @var BaseForm */
     private $baseFormFactory;
 
-    /** @var SettingsRepository */
-    private $settingsRepository;
+    /** @var SettingsFacade */
+    private $settingsFacade;
 
     /** @var SubeventRepository */
     private $subeventRepository;
@@ -38,11 +38,11 @@ class SeminarForm
 
     public function __construct(
         BaseForm $baseForm,
-        SettingsRepository $settingsRepository,
+        SettingsFacade $settingsFacade,
         SubeventRepository $subeventRepository
     ) {
         $this->baseFormFactory    = $baseForm;
-        $this->settingsRepository = $settingsRepository;
+        $this->settingsFacade = $settingsFacade;
         $this->subeventRepository = $subeventRepository;
     }
 
@@ -78,10 +78,10 @@ class SeminarForm
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'seminarName' => $this->settingsRepository->getValue(Settings::SEMINAR_NAME),
-            'seminarFromDate' => $this->settingsRepository->getDateValue(Settings::SEMINAR_FROM_DATE),
-            'seminarToDate' => $this->settingsRepository->getDateValue(Settings::SEMINAR_TO_DATE),
-            'editRegistrationTo' => $this->settingsRepository->getDateValue(Settings::EDIT_REGISTRATION_TO),
+            'seminarName' => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
+            'seminarFromDate' => $this->settingsFacade->getDateValue(Settings::SEMINAR_FROM_DATE),
+            'seminarToDate' => $this->settingsFacade->getDateValue(Settings::SEMINAR_TO_DATE),
+            'editRegistrationTo' => $this->settingsFacade->getDateValue(Settings::EDIT_REGISTRATION_TO),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -98,14 +98,14 @@ class SeminarForm
      */
     public function processForm(Form $form, \stdClass $values) : void
     {
-        $this->settingsRepository->setValue(Settings::SEMINAR_NAME, $values['seminarName']);
+        $this->settingsFacade->setValue(Settings::SEMINAR_NAME, $values['seminarName']);
         $implicitSubevent = $this->subeventRepository->findImplicit();
         $implicitSubevent->setName($values['seminarName']);
         $this->subeventRepository->save($implicitSubevent);
 
-        $this->settingsRepository->setDateValue(Settings::SEMINAR_FROM_DATE, $values['seminarFromDate']);
-        $this->settingsRepository->setDateValue(Settings::SEMINAR_TO_DATE, $values['seminarToDate']);
-        $this->settingsRepository->setDateValue(Settings::EDIT_REGISTRATION_TO, $values['editRegistrationTo']);
+        $this->settingsFacade->setDateValue(Settings::SEMINAR_FROM_DATE, $values['seminarFromDate']);
+        $this->settingsFacade->setDateValue(Settings::SEMINAR_TO_DATE, $values['seminarToDate']);
+        $this->settingsFacade->setDateValue(Settings::EDIT_REGISTRATION_TO, $values['editRegistrationTo']);
     }
 
     /**

@@ -22,7 +22,7 @@ use App\Model\Program\Room;
 use App\Model\Program\RoomRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
+use App\Model\Settings\SettingsFacade;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ProgramService;
@@ -61,8 +61,8 @@ class ScheduleService
     /** @var RoomRepository */
     private $roomRepository;
 
-    /** @var SettingsRepository */
-    private $settingsRepository;
+    /** @var SettingsFacade */
+    private $settingsFacade;
 
     /** @var ProgramService */
     private $programService;
@@ -74,7 +74,7 @@ class ScheduleService
         ProgramRepository $programRepository,
         BlockRepository $blockRepository,
         RoomRepository $roomRepository,
-        SettingsRepository $settingsRepository,
+        SettingsFacade $settingsFacade,
         ProgramService $programService
     ) {
         $this->translator         = $translator;
@@ -82,7 +82,7 @@ class ScheduleService
         $this->programRepository  = $programRepository;
         $this->blockRepository    = $blockRepository;
         $this->roomRepository     = $roomRepository;
-        $this->settingsRepository = $settingsRepository;
+        $this->settingsFacade = $settingsFacade;
         $this->programService     = $programService;
     }
 
@@ -122,7 +122,7 @@ class ScheduleService
             $programDetailDTO->setUserAttends($program->isAttendee($this->user));
             $programDetailDTO->setBlocks($this->programRepository->findBlockedProgramsIdsByProgram($program));
             $programDetailDTO->setBlocked(false);
-            $programDetailDTO->setPaid($this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT)
+            $programDetailDTO->setPaid($this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT)
                 || ($this->user->hasPaidSubevent($program->getBlock()->getSubevent()) && $this->user->hasPaidRolesApplication()));
             $programDetailDTOs[] = $programDetailDTO;
         }
@@ -177,13 +177,13 @@ class ScheduleService
     {
         $calendarConfigDTO = new CalendarConfigDTO();
 
-        $fromDate = $this->settingsRepository->getDateValue(Settings::SEMINAR_FROM_DATE);
-        $toDate   = $this->settingsRepository->getDateValue(Settings::SEMINAR_TO_DATE);
+        $fromDate = $this->settingsFacade->getDateValue(Settings::SEMINAR_FROM_DATE);
+        $toDate   = $this->settingsFacade->getDateValue(Settings::SEMINAR_TO_DATE);
 
         $calendarConfigDTO->setSeminarFromDate($fromDate->format('Y-m-d'));
         $calendarConfigDTO->setSeminarDuration($toDate->diff($fromDate)->d + 1);
         $calendarConfigDTO->setAllowedModifySchedule(
-            $this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE) &&
+            $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE) &&
             $this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE)
         );
 
@@ -209,7 +209,7 @@ class ScheduleService
 
         if (! $this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_user_not_allowed_manage'));
-        } elseif (! $this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)) {
+        } elseif (! $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_not_allowed_modfify'));
         } elseif ($room && $this->roomRepository->hasOverlappingProgram($room, $programId, $start, $end)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_room_occupied', null, ['name' => $room->getName()]));
@@ -248,7 +248,7 @@ class ScheduleService
 
         if (! $this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_user_not_allowed_manage'));
-        } elseif (! $this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)) {
+        } elseif (! $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_not_allowed_modfify'));
         } elseif (! $program) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_program_not_found'));
@@ -282,7 +282,7 @@ class ScheduleService
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_user_not_allowed_register_programs'));
         } elseif (! $this->programService->isAllowedRegisterPrograms()) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_register_programs_not_allowed'));
-        } elseif (! $this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT) &&
+        } elseif (! $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT) &&
             ! $this->user->hasPaidSubevent($program->getBlock()->getSubevent())
         ) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_register_programs_before_payment_not_allowed'));

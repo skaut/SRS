@@ -1,10 +1,9 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Model\User;
 
-use Kdyby\Doctrine\EntityRepository;
+use App\Model\EntityRepository;
 
 /**
  * Třída spravující přihlášky podakcí.
@@ -13,4 +12,5 @@ use Kdyby\Doctrine\EntityRepository;
  */
 class SubeventsApplicationRepository extends EntityRepository
 {
+
 }

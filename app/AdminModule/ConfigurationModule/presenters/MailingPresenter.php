@@ -7,7 +7,7 @@ namespace App\AdminModule\ConfigurationModule\Presenters;
 use App\AdminModule\ConfigurationModule\Forms\MailingForm;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
+use App\Model\Settings\SettingsFacade;
 use Nette\Application\UI\Form;
 
 /**
@@ -25,10 +25,10 @@ class MailingPresenter extends ConfigurationBasePresenter
     public $mailingFormFactory;
 
     /**
-     * @var SettingsRepository
+     * @var SettingsFacade
      * @inject
      */
-    public $settingsRepository;
+    public $settingsFacade;
 
 
     /**
@@ -37,7 +37,7 @@ class MailingPresenter extends ConfigurationBasePresenter
      */
     public function renderDefault() : void
     {
-        $this->template->waiting = $this->settingsRepository->getValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE) !== null;
+        $this->template->waiting = $this->settingsFacade->getValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE) !== null;
     }
 
     /**

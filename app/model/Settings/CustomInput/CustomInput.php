@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Model\Settings\CustomInput;
@@ -8,7 +7,7 @@ use App\Model\User\CustomInputValue\CustomInputValue;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Kdyby\Doctrine\Entities\Attributes\Identifier;
+use Nettrine\ORM\Entity\Attributes\Id as Identifier;
 
 /**
  * Abstraktní entita vlastní pole přihlášky.
@@ -27,128 +26,128 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  */
 abstract class CustomInput
 {
-    /**
-     * Textové pole.
-     * @var string
-     */
-    public const TEXT = 'text';
 
-    /**
-     * Zaškrtávací pole.
-     * @var string
-     */
-    public const CHECKBOX = 'checkbox';
+	/**
+	 * Textové pole.
+	 * @var string
+	 */
+	public const TEXT = 'text';
 
-    /**
-     * Výběrové pole.
-     * @var string
-     */
-    public const SELECT = 'select';
+	/**
+	 * Zaškrtávací pole.
+	 * @var string
+	 */
+	public const CHECKBOX = 'checkbox';
 
-    /**
-     * Soubor.
-     * @var string
-     */
-    public const FILE = 'file';
+	/**
+	 * Výběrové pole.
+	 * @var string
+	 */
+	public const SELECT = 'select';
 
-    /** @var string[] */
-    public static $types = [
-        self::TEXT,
-        self::CHECKBOX,
-        self::SELECT,
-        self::FILE,
-    ];
+	/**
+	 * Soubor.
+	 * @var string
+	 */
+	public const FILE = 'file';
 
-    /**
-     * Typ vlastního pole.
-     * @var string
-     */
-    protected $type;
+	/** @var string[] */
+	public static $types = [
+		self::TEXT,
+		self::CHECKBOX,
+		self::SELECT,
+		self::FILE,
+	];
 
-    use Identifier;
+	/**
+	 * Typ vlastního pole.
+	 * @var string
+	 */
+	protected $type;
 
-    /**
-     * Název vlastního pole.
-     * @ORM\Column(type="string")
-     * @var string
-     */
-    protected $name;
+	use Identifier;
 
-    /**
-     * Povinné pole.
-     * @ORM\Column(type="boolean")
-     * @var bool
-     */
-    protected $mandatory = false;
+	/**
+	 * Název vlastního pole.
+	 * @ORM\Column(type="string")
+	 * @var string
+	 */
+	protected $name;
 
-    /**
-     * Pořadí pole na přihlášce.
-     * @ORM\Column(type="integer")
-     * @var int
-     */
-    protected $position = 0;
+	/**
+	 * Povinné pole.
+	 * @ORM\Column(type="boolean")
+	 * @var bool
+	 */
+	protected $mandatory = false;
 
-    /**
-     * Hodnoty pole pro jednotlivé uživatele.
-     * @ORM\OneToMany(targetEntity="\App\Model\User\CustomInputValue\CustomInputValue", mappedBy="input", cascade={"persist"})
-     * @var Collection|CustomInputValue[]
-     */
-    protected $customInputValues;
+	/**
+	 * Pořadí pole na přihlášce.
+	 * @ORM\Column(type="integer")
+	 * @var int
+	 */
+	protected $position = 0;
 
+	/**
+	 * Hodnoty pole pro jednotlivé uživatele.
+	 * @ORM\OneToMany(targetEntity="\App\Model\User\CustomInputValue\CustomInputValue", mappedBy="input", cascade={"persist"})
+	 * @var Collection|CustomInputValue[]
+	 */
+	protected $customInputValues;
 
-    public function __construct()
-    {
-        $this->customInputValues = new ArrayCollection();
-    }
+	public function __construct()
+	{
+		$this->customInputValues = new ArrayCollection();
+	}
 
-    public function getId() : int
-    {
-        return $this->id;
-    }
+	public function getId(): int
+	{
+		return $this->id;
+	}
 
-    public function getName() : string
-    {
-        return $this->name;
-    }
+	public function getName(): string
+	{
+		return $this->name;
+	}
 
-    public function setName(string $name) : void
-    {
-        $this->name = $name;
-    }
+	public function setName(string $name): void
+	{
+		$this->name = $name;
+	}
 
-    public function isMandatory() : bool
-    {
-        return $this->mandatory;
-    }
+	public function isMandatory(): bool
+	{
+		return $this->mandatory;
+	}
 
-    public function setMandatory(bool $mandatory) : void
-    {
-        $this->mandatory = $mandatory;
-    }
+	public function setMandatory(bool $mandatory): void
+	{
+		$this->mandatory = $mandatory;
+	}
 
-    public function getPosition() : int
-    {
-        return $this->position;
-    }
+	public function getPosition(): int
+	{
+		return $this->position;
+	}
 
-    public function setPosition(int $position) : void
-    {
-        $this->position = $position;
-    }
+	public function setPosition(int $position): void
+	{
+		$this->position = $position;
+	}
 
-    /**
-     * @return mixed
-     */
-    public function getType() : string
-    {
-        return $this->type;
-    }
+	/**
+	 * @return mixed
+	 */
+	public function getType(): string
+	{
+		return $this->type;
+	}
 
-    /**
-     * @return Collection|CustomInputValue[]
-     */
-    public function getCustomInputValues() : Collection
-    {
-        return $this->customInputValues;
-    }
+	/**
+	 * @return Collection|CustomInputValue[]
+	 */
+	public function getCustomInputValues(): Collection
+	{
+		return $this->customInputValues;
+	}
 }

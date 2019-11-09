@@ -7,7 +7,7 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseForm;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
+use App\Model\Settings\SettingsFacade;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette\Application\UI\Form;
@@ -22,14 +22,14 @@ class TicketsForm
     /** @var BaseForm */
     private $baseFormFactory;
 
-    /** @var SettingsRepository */
-    private $settingsRepository;
+    /** @var SettingsFacade */
+    private $settingsFacade;
 
 
-    public function __construct(BaseForm $baseForm, SettingsRepository $settingsRepository)
+    public function __construct(BaseForm $baseForm, SettingsFacade $settingsFacade)
     {
         $this->baseFormFactory    = $baseForm;
-        $this->settingsRepository = $settingsRepository;
+        $this->settingsFacade = $settingsFacade;
     }
 
     /**
@@ -54,7 +54,7 @@ class TicketsForm
 
         $form->addSubmit('submit', 'admin.common.save');
 
-        $ticketsFrom = $this->settingsRepository->getDateTimeValue(Settings::TICKETS_FROM);
+        $ticketsFrom = $this->settingsFacade->getDateTimeValue(Settings::TICKETS_FROM);
 
         $form->setDefaults([
             'ticketsAllowed' => $ticketsFrom !== null,
@@ -76,9 +76,9 @@ class TicketsForm
     public function processForm(Form $form, \stdClass $values) : void
     {
         if ($values['ticketsAllowed']) {
-            $this->settingsRepository->setDateTimeValue(Settings::TICKETS_FROM, $values['ticketsFrom']);
+            $this->settingsFacade->setDateTimeValue(Settings::TICKETS_FROM, $values['ticketsFrom']);
         } else {
-            $this->settingsRepository->setDateTimeValue(Settings::TICKETS_FROM, null);
+            $this->settingsFacade->setDateTimeValue(Settings::TICKETS_FROM, null);
         }
     }
 }

@@ -1,11 +1,10 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Model\CMS;
 
 use Doctrine\ORM\Mapping as ORM;
-use Kdyby\Doctrine\Entities\Attributes\Identifier;
+use Nettrine\ORM\Entity\Attributes\Id as Identifier;
 
 /**
  * Entita aktuality.
@@ -17,62 +16,62 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  */
 class News
 {
-    use Identifier;
 
-    /**
-     * Text aktuality.
-     * @ORM\Column(type="text")
-     * @var string
-     */
-    protected $text;
+	use Identifier;
 
-    /**
-     * Datum publikování aktuality.
-     * @ORM\Column(type="datetime")
-     * @var \DateTime
-     */
-    protected $published;
+	/**
+	 * Text aktuality.
+	 * @ORM\Column(type="text")
+	 * @var string
+	 */
+	protected $text;
 
-    /**
-     * Připíchnutá nahoru.
-     * @ORM\Column(type="boolean")
-     * @var bool
-     */
-    protected $pinned = false;
+	/**
+	 * Datum publikování aktuality.
+	 * @ORM\Column(type="datetime")
+	 * @var \DateTime
+	 */
+	protected $published;
 
+	/**
+	 * Připíchnutá nahoru.
+	 * @ORM\Column(type="boolean")
+	 * @var bool
+	 */
+	protected $pinned = false;
 
-    public function getId() : int
-    {
-        return $this->id;
-    }
+	public function getId(): int
+	{
+		return $this->id;
+	}
 
-    public function getText() : string
-    {
-        return $this->text;
-    }
+	public function getText(): string
+	{
+		return $this->text;
+	}
 
-    public function setText(string $text) : void
-    {
-        $this->text = $text;
-    }
+	public function setText(string $text): void
+	{
+		$this->text = $text;
+	}
 
-    public function getPublished() : \DateTime
-    {
-        return $this->published;
-    }
+	public function getPublished(): \DateTime
+	{
+		return $this->published;
+	}
 
-    public function setPublished(\DateTime $published) : void
-    {
-        $this->published = $published;
-    }
+	public function setPublished(\DateTime $published): void
+	{
+		$this->published = $published;
+	}
 
-    public function isPinned() : bool
-    {
-        return $this->pinned;
-    }
+	public function isPinned(): bool
+	{
+		return $this->pinned;
+	}
 
-    public function setPinned(bool $pinned) : void
-    {
-        $this->pinned = $pinned;
-    }
+	public function setPinned(bool $pinned): void
+	{
+		$this->pinned = $pinned;
+	}
 }

@@ -9,7 +9,7 @@ use App\Model\Payment\Payment;
 use App\Model\Payment\PaymentRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
+use App\Model\Settings\SettingsFacade;
 use App\Model\User\ApplicationRepository;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
@@ -43,8 +43,8 @@ class PaymentsGridControl extends Control
     /** @var UserRepository */
     private $userRepository;
 
-    /** @var SettingsRepository */
-    private $settingsRepository;
+    /** @var SettingsFacade */
+    private $settingsFacade;
 
     /** @var ApplicationService */
     private $applicationService;
@@ -61,7 +61,7 @@ class PaymentsGridControl extends Control
         PaymentRepository $paymentRepository,
         ApplicationRepository $applicationRepository,
         UserRepository $userRepository,
-        SettingsRepository $settingsRepository,
+        SettingsFacade $settingsFacade,
         ApplicationService $applicationService,
         PdfExportService $pdfExportService,
         BankService $bankService
@@ -72,7 +72,7 @@ class PaymentsGridControl extends Control
         $this->paymentRepository     = $paymentRepository;
         $this->applicationRepository = $applicationRepository;
         $this->userRepository        = $userRepository;
-        $this->settingsRepository    = $settingsRepository;
+        $this->settingsFacade    = $settingsFacade;
         $this->applicationService    = $applicationService;
         $this->pdfExportService      = $pdfExportService;
         $this->bankService           = $bankService;
@@ -143,7 +143,7 @@ class PaymentsGridControl extends Control
         };
         $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
 
-        if ($this->settingsRepository->getValue(Settings::BANK_TOKEN) !== null) {
+        if ($this->settingsFacade->getValue(Settings::BANK_TOKEN) !== null) {
             $grid->addToolbarButton('checkPayments!')
                 ->setText('admin.payments.payments.check_payments');
         }
@@ -220,7 +220,7 @@ class PaymentsGridControl extends Control
      */
     public function handleCheckPayments() : void
     {
-        $from = $this->settingsRepository->getDateValue(Settings::BANK_DOWNLOAD_FROM);
+        $from = $this->settingsFacade->getDateValue(Settings::BANK_DOWNLOAD_FROM);
         $this->bankService->downloadTransactions($from);
     }
 
