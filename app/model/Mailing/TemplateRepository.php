@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Mailing;
@@ -14,31 +15,31 @@ use Doctrine\ORM\ORMException;
  */
 class TemplateRepository extends EntityRepository
 {
+    /**
+     * Vrací šablonu podle id.
+     */
+    public function findById(?int $id) : ?Template
+    {
+        return $this->findOneBy(['id' => $id]);
+    }
 
-	/**
-	 * Vrací šablonu podle id.
-	 */
-	public function findById(?int $id): ?Template
-	{
-		return $this->findOneBy(['id' => $id]);
-	}
+    /**
+     * Vrací šablonu podle typu.
+     */
+    public function findByType(string $type) : ?Template
+    {
+        return $this->findOneBy(['type' => $type]);
+    }
 
-	/**
-	 * Vrací šablonu podle typu.
-	 */
-	public function findByType(string $type): ?Template
-	{
-		return $this->findOneBy(['type' => $type]);
-	}
-
-	/**
-	 * Uloží šablonu e-mailu.
-	 * @throws ORMException
-	 * @throws OptimisticLockException
-	 */
-	public function save(Template $template): void
-	{
-		$this->_em->persist($template);
-		$this->_em->flush();
-	}
+    /**
+     * Uloží šablonu e-mailu.
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function save(Template $template) : void
+    {
+        $this->_em->persist($template);
+        $this->_em->flush();
+    }
 }

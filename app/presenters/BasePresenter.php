@@ -17,27 +17,30 @@ use WebLoader\Nette\LoaderFactory;
 abstract class BasePresenter extends Nette\Application\UI\Presenter
 {
     /**
-     * @var LoaderFactory
+     * @var    LoaderFactory
      * @inject
      */
     public $webLoader;
 
     /**
-     * @var Translator
+     * @var    Translator
      * @inject
      */
     public $translator;
 
-
     /**
      * Zobrazí přeloženou zprávu.
+     *
      * @param string[] $parameters
      */
     public function flashMessage($message, $type = 'info', ?string $icon = null, ?int $count = null, array $parameters = []) : \stdClass
     {
         if ($icon) {
-            return parent::flashMessage('<span class="fa fa-' . $icon . '"></span> ' .
-                $this->translator->translate($message, $count, $parameters), $type);
+            return parent::flashMessage(
+                '<span class="fa fa-' . $icon . '"></span> ' .
+                            $this->translator->translate($message, $count, $parameters),
+                $type
+            );
         }
 
         return parent::flashMessage($this->translator->translate($message, $count, $parameters), $type);

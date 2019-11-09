@@ -29,7 +29,6 @@ class FaqContentControl extends Control
     /** @var RoleRepository */
     private $roleRepository;
 
-
     public function __construct(FaqForm $faqFormFactory, FaqRepository $faqRepository, RoleRepository $roleRepository)
     {
         parent::__construct();

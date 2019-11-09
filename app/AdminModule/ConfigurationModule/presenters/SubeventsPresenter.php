@@ -20,29 +20,28 @@ use Nette\Forms\Form;
 class SubeventsPresenter extends ConfigurationBasePresenter
 {
     /**
-     * @var ISubeventsGridControlFactory
+     * @var    ISubeventsGridControlFactory
      * @inject
      */
     public $subeventsGridControlFactory;
 
     /**
-     * @var SubeventForm
+     * @var    SubeventForm
      * @inject
      */
     public $subeventFormFactory;
 
     /**
-     * @var SubeventsForm
+     * @var    SubeventsForm
      * @inject
      */
     public $subeventsFormFactory;
 
     /**
-     * @var SubeventRepository
+     * @var    SubeventRepository
      * @inject
      */
     public $subeventRepository;
-
 
     public function renderEdit(int $id) : void
     {

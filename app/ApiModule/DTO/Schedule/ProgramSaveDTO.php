@@ -18,28 +18,27 @@ class ProgramSaveDTO
 
     /**
      * @JMS\Type("int")
-     * @var int
+     * @var             int
      */
     private $id;
 
     /**
      * @JMS\Type("int")
-     * @var int
+     * @var             int
      */
     private $blockId;
 
     /**
      * @JMS\Type("int")
-     * @var int
+     * @var             int
      */
     private $roomId;
 
     /**
      * @JMS\Type("DateTime<'Y-m-d\TH:i:s'>")
-     * @var \DateTime
+     * @var                                  \DateTime
      */
     private $start;
-
 
     public function getId() : ?int
     {

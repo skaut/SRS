@@ -26,6 +26,7 @@ class FaqForm
 
     /**
      * Přihlášený uživatel.
+     *
      * @var User
      */
     private $user;
@@ -38,7 +39,6 @@ class FaqForm
 
     /** @var UserRepository */
     private $userRepository;
-
 
     public function __construct(BaseForm $baseFormFactory, FaqRepository $faqRepository, UserRepository $userRepository)
     {
@@ -57,7 +57,7 @@ class FaqForm
         $form = $this->baseFormFactory->create();
 
         $form->addTextArea('question', 'web.faq_content.question')
-            ->addRule(Form::FILLED, 'web.faq_content.question_empty');
+                ->addRule(Form::FILLED, 'web.faq_content.question_empty');
 
         $form->addSubmit('submit', 'web.faq_content.add_question');
 
@@ -68,6 +68,7 @@ class FaqForm
 
     /**
      * Zpracuje formulář.
+     *
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException

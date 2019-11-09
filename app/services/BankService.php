@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services;
@@ -18,81 +19,81 @@ use Nette;
  */
 class BankService
 {
+    use Nette\SmartObject;
 
-	use Nette\SmartObject;
+    /** @var ApplicationService */
+    private $applicationService;
 
-	/** @var ApplicationService */
-	private $applicationService;
+    /** @var EntityManagerDecorator */
+    private $em;
 
-	/** @var EntityManagerDecorator */
-	private $em;
+    /** @var SettingsFacade */
+    private $settingsFacade;
 
-	/** @var SettingsFacade */
-	private $settingsFacade;
+    /** @var PaymentRepository */
+    private $paymentRepository;
 
-	/** @var PaymentRepository */
-	private $paymentRepository;
+    public function __construct(
+        ApplicationService $applicationService,
+        EntityManagerDecorator $em,
+        SettingsFacade $settingsFacade,
+        PaymentRepository $paymentRepository
+    ) {
+        $this->applicationService = $applicationService;
+        $this->em                 = $em;
+        $this->settingsFacade     = $settingsFacade;
+        $this->paymentRepository  = $paymentRepository;
+    }
 
-	public function __construct(
-		ApplicationService $applicationService,
-		EntityManagerDecorator $em,
-		SettingsFacade $settingsFacade,
-		PaymentRepository $paymentRepository
-	)
-	{
-		$this->applicationService = $applicationService;
-		$this->em = $em;
-		$this->settingsFacade = $settingsFacade;
-		$this->paymentRepository = $paymentRepository;
-	}
+    /**
+     * @throws SettingsException
+     * @throws \Throwable
+     */
+    public function downloadTransactions(\DateTime $from, ?string $token = null) : void
+    {
+        $token = $token ?: $this->settingsFacade->getValue(Settings::BANK_TOKEN);
+        if ($token === null) {
+            throw new \InvalidArgumentException('Token is not set.');
+        }
 
-	/**
-	 * @throws SettingsException
-	 * @throws \Throwable
-	 */
-	public function downloadTransactions(\DateTime $from, ?string $token = null): void
-	{
-		$token = $token ?: $this->settingsFacade->getValue(Settings::BANK_TOKEN);
-		if ($token === null) {
-			throw new \InvalidArgumentException('Token is not set.');
-		}
+        $downloader      = new FioApi\Downloader($token);
+        $transactionList = $downloader->downloadSince($from);
 
-		$downloader = new FioApi\Downloader($token);
-		$transactionList = $downloader->downloadSince($from);
+        $this->createPayments($transactionList);
+    }
 
-		$this->createPayments($transactionList);
-	}
+    /**
+     * @throws \Throwable
+     */
+    private function createPayments(FioApi\TransactionList $transactionList) : void
+    {
+        foreach ($transactionList->getTransactions() as $transaction) {
+            $this->em->transactional(
+                function () use ($transaction) : void {
+                        $id = $transaction->getId();
 
-	/**
-	 * @throws \Throwable
-	 */
-	private function createPayments(FioApi\TransactionList $transactionList): void
-	{
-		foreach ($transactionList->getTransactions() as $transaction) {
-			$this->em->transactional(function () use ($transaction): void {
-				$id = $transaction->getId();
+                    if ($transaction->getAmount() <= 0 || $this->paymentRepository->findByTransactionId($id) !== null) {
+                        return;
+                    }
 
-				if ($transaction->getAmount() <= 0 || $this->paymentRepository->findByTransactionId($id) !== null) {
-					return;
-				}
+                        $date = new \DateTime();
+                        $date->setTimestamp($transaction->getDate()->getTimestamp());
 
-				$date = new \DateTime();
-				$date->setTimestamp($transaction->getDate()->getTimestamp());
+                        $accountNumber = $transaction->getSenderAccountNumber() . '/' . $transaction->getSenderBankCode();
 
-				$accountNumber = $transaction->getSenderAccountNumber() . '/' . $transaction->getSenderBankCode();
+                        $this->applicationService->createPayment(
+                            $date,
+                            $transaction->getAmount(),
+                            $transaction->getVariableSymbol(),
+                            $id,
+                            $accountNumber,
+                            $transaction->getSenderName(),
+                            $transaction->getUserMessage()
+                        );
+                }
+            );
+        }
 
-				$this->applicationService->createPayment(
-					$date,
-					$transaction->getAmount(),
-					$transaction->getVariableSymbol(),
-					$id,
-					$accountNumber,
-					$transaction->getSenderName(),
-					$transaction->getUserMessage()
-				);
-			});
-		}
-
-		$this->settingsFacade->setDateValue(Settings::BANK_DOWNLOAD_FROM, new \DateTime());
-	}
+        $this->settingsFacade->setDateValue(Settings::BANK_DOWNLOAD_FROM, new \DateTime());
+    }
 }

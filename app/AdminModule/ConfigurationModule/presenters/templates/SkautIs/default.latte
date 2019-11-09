@@ -1,28 +1,28 @@
 {block head}
-    <script>
-        $(function () {
-            $("#disconnect-button").confirm({
-                text: {_admin.configuration.skautis_event_disconnect_confirm}
-            });
-        });
-    </script>
+<script>
+	$(function () {
+		$("#disconnect-button").confirm({
+			text: {_admin.configuration.skautis_event_disconnect_confirm}
+		});
+	});
+</script>
 {/block}
 
 {block main}
-    <h2>{_admin.configuration.skautis_event_heading}</h2>
-    <div class="well">
-        {if !$connected}
-            <div class="alert alert-info alert-forever">{_admin.configuration.skautis_event_note}</div>
+<h2>{_admin.configuration.skautis_event_heading}</h2>
+<div class="well">
+	{if !$connected}
+		<div class="alert alert-info alert-forever">{_admin.configuration.skautis_event_note}</div>
         {control skautIsEventForm}
-        {else}
-            <div class="alert alert-info alert-forever">{_admin.configuration.skautis_event_name, ['name' => $event]}</div>
-            <a class="btn btn-danger" id="disconnect-button"
-               href="{link disconnect!}">{_admin.configuration.skautis_event_disconnect}</a>
-        {/if}
-    </div>
+	{else}
+		<div class="alert alert-info alert-forever">{_admin.configuration.skautis_event_name, ['name' => $event]}</div>
+		<a class="btn btn-danger" id="disconnect-button"
+		   href="{link disconnect!}">{_admin.configuration.skautis_event_disconnect}</a>
+	{/if}
+</div>
 
-    {if $connected && $eventEducation}
-        <h2>{_admin.configuration.skautis_event_education_heading}</h2>
-        {control skautIsEventEducationGrid}
-    {/if}
+{if $connected && $eventEducation}
+	<h2>{_admin.configuration.skautis_event_education_heading}</h2>
+	{control skautIsEventEducationGrid}
+{/if}
 {/block}

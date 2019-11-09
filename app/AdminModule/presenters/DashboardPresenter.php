@@ -17,11 +17,10 @@ use Doctrine\ORM\NonUniqueResultException;
 class DashboardPresenter extends AdminBasePresenter
 {
     /**
-     * @var SubeventRepository
+     * @var    SubeventRepository
      * @inject
      */
     public $subeventRepository;
-
 
     /**
      * @throws SettingsException

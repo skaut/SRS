@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Entita vlastní textové pole přihlášky.
  *
- * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author                        Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity
  * @ORM\Table(name="custom_text")
  */

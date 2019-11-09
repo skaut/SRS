@@ -10,40 +10,45 @@ class PageDTO
 {
     /**
      * Název stránky.
+     *
      * @var string
      */
     protected $name;
 
     /**
      * Cesta stránky.
+     *
      * @var string
      */
     protected $slug;
 
     /**
      * Role, které mají na stránku přístup.
+     *
      * @var string[]
      */
     protected $allowedRoles;
 
     /**
      * Obsahy v hlavní části stránky.
+     *
      * @var ContentDTO[]
      */
     protected $mainContents;
 
     /**
      * Obsahy v postranní části stránky.
+     *
      * @var ContentDTO[]
      */
     protected $sidebarContents;
 
     /**
      * Má stránka sidebar?
+     *
      * @var bool
      */
     protected $hasSidebar;
-
 
     /**
      * @param string[]     $allowedRoles
@@ -101,6 +106,7 @@ class PageDTO
 
     /**
      * Je stránka viditelná pro uživatele v rolích?
+     *
      * @param string[] $userRoles
      */
     public function isAllowedForRoles(array $userRoles) : bool

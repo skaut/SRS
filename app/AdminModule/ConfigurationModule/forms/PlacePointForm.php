@@ -31,7 +31,6 @@ class PlacePointForm
     /** @var PlacePointRepository */
     private $placePointRepository;
 
-
     public function __construct(BaseForm $baseForm, PlacePointRepository $placePointRepository)
     {
         $this->baseFormFactory      = $baseForm;
@@ -48,26 +47,28 @@ class PlacePointForm
         $form = $this->baseFormFactory->create();
 
         $form->addText('name', 'admin.configuration.place_points_name')
-            ->addRule(Form::FILLED, 'admin.configuration.place_points_name_empty');
+                ->addRule(Form::FILLED, 'admin.configuration.place_points_name_empty');
 
         $form->addGpsPicker('gps', 'admin.configuration.place_points_place')
-            ->setDriver(GpsPicker::DRIVER_SEZNAM)
-            ->setSize('100%', 400);
+                ->setDriver(GpsPicker::DRIVER_SEZNAM)
+                ->setSize('100%', 400);
 
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->addSubmit('cancel', 'admin.common.cancel')
-            ->setValidationScope([])
-            ->setAttribute('class', 'btn btn-warning');
+                ->setValidationScope([])
+                ->setAttribute('class', 'btn btn-warning');
 
         if ($this->placePoint) {
-            $form->setDefaults([
-                'name' => $this->placePoint->getName(),
-                'gps' => [
-                    'lat' => $this->placePoint->getGpsLat(),
-                    'lng' => $this->placePoint->getGpsLon(),
-                ],
-            ]);
+            $form->setDefaults(
+                [
+                        'name' => $this->placePoint->getName(),
+                        'gps' => [
+                            'lat' => $this->placePoint->getGpsLat(),
+                            'lng' => $this->placePoint->getGpsLon(),
+                        ],
+                    ]
+            );
         }
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -77,6 +78,7 @@ class PlacePointForm
 
     /**
      * Zpracuje formulář.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      */

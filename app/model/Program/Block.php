@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Program;
@@ -14,296 +15,312 @@ use function implode;
 /**
  * Entita programový blok.
  *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author                                        Michal Májský
+ * @author                                        Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="BlockRepository")
  * @ORM\Table(name="block")
  */
 class Block
 {
+    use Identifier;
 
-	use Identifier;
+    /**
+     * Název programového bloku.
+     *
+     * @ORM\Column(type="string", unique=true)
+     * @var                       string
+     */
+    protected $name;
 
-	/**
-	 * Název programového bloku.
-	 * @ORM\Column(type="string", unique=true)
-	 * @var string
-	 */
-	protected $name;
+    /**
+     * Programy v bloku.
+     *
+     * @ORM\OneToMany(targetEntity="Program", mappedBy="block", cascade={"persist"})
+     * @ORM\OrderBy({"start"                  = "ASC"})
+     * @var                                   Collection|Program[]
+     */
+    protected $programs;
 
-	/**
-	 * Programy v bloku.
-	 * @ORM\OneToMany(targetEntity="Program", mappedBy="block", cascade={"persist"})
-	 * @ORM\OrderBy({"start" = "ASC"})
-	 * @var Collection|Program[]
-	 */
-	protected $programs;
+    /**
+     * Lektor.
+     *
+     * @ORM\ManyToMany(targetEntity="\App\Model\User\User", inversedBy="lecturersBlocks", cascade={"persist"})
+     * @var                                                 Collection|User[]
+     */
+    protected $lectors;
 
-	/**
-	 * Lektor.
-	 * @ORM\ManyToMany(targetEntity="\App\Model\User\User", inversedBy="lecturersBlocks", cascade={"persist"})
-	 * @var Collection|User[]
-	 */
-	protected $lectors;
+    /**
+     * Kategorie bloku.
+     *
+     * @ORM\ManyToOne(targetEntity="Category", inversedBy="blocks", cascade={"persist"})
+     * @var                                    Category
+     */
+    protected $category;
 
-	/**
-	 * Kategorie bloku.
-	 * @ORM\ManyToOne(targetEntity="Category", inversedBy="blocks", cascade={"persist"})
-	 * @var Category
-	 */
-	protected $category;
+    /**
+     * Podakce bloku.
+     *
+     * @ORM\ManyToOne(targetEntity="\App\Model\Structure\Subevent", inversedBy="blocks", cascade={"persist"})
+     * @var                                                         Subevent
+     */
+    protected $subevent;
 
-	/**
-	 * Podakce bloku.
-	 * @ORM\ManyToOne(targetEntity="\App\Model\Structure\Subevent", inversedBy="blocks", cascade={"persist"})
-	 * @var Subevent
-	 */
-	protected $subevent;
+    /**
+     * Povinnost.
+     *
+     * @ORM\Column(type="string")
+     * @var                       string
+     */
+    protected $mandatory;
 
-	/**
-	 * Povinnost.
-	 * @ORM\Column(type="string")
-	 * @var string
-	 */
-	protected $mandatory;
+    /**
+     * Délka programového bloku.
+     *
+     * @ORM\Column(type="integer")
+     * @var                        int
+     */
+    protected $duration;
 
-	/**
-	 * Délka programového bloku.
-	 * @ORM\Column(type="integer")
-	 * @var int
-	 */
-	protected $duration;
+    /**
+     * Kapacita.
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     * @var                        int
+     */
+    protected $capacity;
 
-	/**
-	 * Kapacita.
-	 * @ORM\Column(type="integer", nullable=true)
-	 * @var int
-	 */
-	protected $capacity;
+    /**
+     * Pomůcky.
+     *
+     * @ORM\Column(type="string", nullable=true)
+     * @var                       string
+     */
+    protected $tools;
 
-	/**
-	 * Pomůcky.
-	 * @ORM\Column(type="string", nullable=true)
-	 * @var string
-	 */
-	protected $tools;
+    /**
+     * Stručný popis.
+     *
+     * @ORM\Column(type="text", nullable=true)
+     * @var                     string
+     */
+    protected $perex;
 
-	/**
-	 * Stručný popis.
-	 * @ORM\Column(type="text", nullable=true)
-	 * @var string
-	 */
-	protected $perex;
+    /**
+     * Podrobný popis.
+     *
+     * @ORM\Column(type="text", nullable=true)
+     * @var                     string
+     */
+    protected $description;
 
-	/**
-	 * Podrobný popis.
-	 * @ORM\Column(type="text", nullable=true)
-	 * @var string
-	 */
-	protected $description;
+    public function __construct()
+    {
+        $this->programs = new ArrayCollection();
+        $this->lectors  = new ArrayCollection();
+    }
 
-	public function __construct()
-	{
-		$this->programs = new ArrayCollection();
-		$this->lectors = new ArrayCollection();
-	}
+    public function getId() : int
+    {
+        return $this->id;
+    }
 
-	public function getId(): int
-	{
-		return $this->id;
-	}
+    public function getName() : string
+    {
+        return $this->name;
+    }
 
-	public function getName(): string
-	{
-		return $this->name;
-	}
+    public function setName(string $name) : void
+    {
+        $this->name = $name;
+    }
 
-	public function setName(string $name): void
-	{
-		$this->name = $name;
-	}
+    /**
+     * @return Collection|Program[]
+     */
+    public function getPrograms() : Collection
+    {
+        return $this->programs;
+    }
 
-	/**
-	 * @return Collection|Program[]
-	 */
-	public function getPrograms(): Collection
-	{
-		return $this->programs;
-	}
+    /**
+     * Vrací seznam účastníků bloku.
+     *
+     * @return Collection|User[]
+     */
+    public function getAttendees() : Collection
+    {
+        $attendees = new ArrayCollection();
+        foreach ($this->programs as $program) {
+            foreach ($program->getAttendees() as $attendee) {
+                $attendees->add($attendee);
+            }
+        }
+        return $attendees;
+    }
 
-	/**
-	 * Vrací seznam účastníků bloku.
-	 * @return Collection|User[]
-	 */
-	public function getAttendees(): Collection
-	{
-		$attendees = new ArrayCollection();
-		foreach ($this->programs as $program) {
-			foreach ($program->getAttendees() as $attendee) {
-				$attendees->add($attendee);
-			}
-		}
-		return $attendees;
-	}
+    /**
+     * Vrací počet programů bloku.
+     */
+    public function getProgramsCount() : int
+    {
+        return $this->programs->count();
+    }
 
-	/**
-	 * Vrací počet programů bloku.
-	 */
-	public function getProgramsCount(): int
-	{
-		return $this->programs->count();
-	}
+    /**
+     * @return Collection|User[]
+     */
+    public function getLectors() : Collection
+    {
+        return $this->lectors;
+    }
 
-	/**
-	 * @return Collection|User[]
-	 */
-	public function getLectors(): Collection
-	{
-		return $this->lectors;
-	}
+    public function getLectorsText() : string
+    {
+        return implode(
+            ', ',
+            $this->lectors->map(
+                function (User $lector) {
+                            return $lector->getDisplayName();
+                }
+            )->toArray()
+        );
+    }
 
-	public function getLectorsText(): string
-	{
-		return implode(', ', $this->lectors->map(function (User $lector) {
-				return $lector->getDisplayName();
-			})->toArray());
-	}
+    /**
+     * @param Collection|User[] $lectors
+     */
+    public function setLectors(Collection $lectors) : void
+    {
+        $this->lectors->clear();
+        foreach ($lectors as $lector) {
+            $this->lectors->add($lector);
+        }
+    }
 
-	/**
-	 * @param Collection|User[] $lectors
-	 */
-	public function setLectors(Collection $lectors): void
-	{
-		$this->lectors->clear();
-		foreach ($lectors as $lector) {
-			$this->lectors->add($lector);
-		}
-	}
+    public function getCategory() : ?Category
+    {
+        return $this->category;
+    }
 
-	public function getCategory(): ?Category
-	{
-		return $this->category;
-	}
+    public function setCategory(?Category $category) : void
+    {
+        $this->category = $category;
+    }
 
-	public function setCategory(?Category $category): void
-	{
-		$this->category = $category;
-	}
+    public function getSubevent() : ?Subevent
+    {
+        return $this->subevent;
+    }
 
-	public function getSubevent(): ?Subevent
-	{
-		return $this->subevent;
-	}
+    public function setSubevent(Subevent $subevent) : void
+    {
+        $this->subevent = $subevent;
+    }
 
-	public function setSubevent(Subevent $subevent): void
-	{
-		$this->subevent = $subevent;
-	}
+    public function getMandatory() : string
+    {
+        return $this->mandatory;
+    }
 
-	public function getMandatory(): string
-	{
-		return $this->mandatory;
-	}
+    public function setMandatory(string $mandatory) : void
+    {
+        $this->mandatory = $mandatory;
+    }
 
-	public function setMandatory(string $mandatory): void
-	{
-		$this->mandatory = $mandatory;
-	}
+    public function getDuration() : int
+    {
+        return $this->duration;
+    }
 
-	public function getDuration(): int
-	{
-		return $this->duration;
-	}
+    public function setDuration(int $duration) : void
+    {
+        $this->duration = $duration;
+    }
 
-	public function setDuration(int $duration): void
-	{
-		$this->duration = $duration;
-	}
+    public function getCapacity() : ?int
+    {
+        return $this->capacity;
+    }
 
-	public function getCapacity(): ?int
-	{
-		return $this->capacity;
-	}
+    public function setCapacity(?int $capacity) : void
+    {
+        $this->capacity = $capacity;
+    }
 
-	public function setCapacity(?int $capacity): void
-	{
-		$this->capacity = $capacity;
-	}
+    public function getTools() : ?string
+    {
+        return $this->tools;
+    }
 
-	public function getTools(): ?string
-	{
-		return $this->tools;
-	}
+    public function setTools(?string $tools) : void
+    {
+        $this->tools = $tools;
+    }
 
-	public function setTools(?string $tools): void
-	{
-		$this->tools = $tools;
-	}
+    public function getPerex() : ?string
+    {
+        return $this->perex;
+    }
 
-	public function getPerex(): ?string
-	{
-		return $this->perex;
-	}
+    public function setPerex(?string $perex) : void
+    {
+        $this->perex = $perex;
+    }
 
-	public function setPerex(?string $perex): void
-	{
-		$this->perex = $perex;
-	}
+    public function getDescription() : ?string
+    {
+        return $this->description;
+    }
 
-	public function getDescription(): ?string
-	{
-		return $this->description;
-	}
+    public function setDescription(?string $description) : void
+    {
+        $this->description = $description;
+    }
 
-	public function setDescription(?string $description): void
-	{
-		$this->description = $description;
-	}
+    /**
+     * Je uživatel oprávněn přihlašovat se na programy bloku?
+     */
+    public function isAllowed(User $user) : bool
+    {
+        $result = true;
 
-	/**
-	 * Je uživatel oprávněn přihlašovat se na programy bloku?
-	 */
-	public function isAllowed(User $user): bool
-	{
-		$result = true;
+        if ($this->category) {
+            $tmp = false;
+            foreach ($user->getRoles() as $role) {
+                if ($role->getRegisterableCategories()->contains($this->category)) {
+                    $tmp = true;
+                    break;
+                }
+            }
+            if (! $tmp) {
+                $result = false;
+            }
+        }
 
-		if ($this->category) {
-			$tmp = false;
-			foreach ($user->getRoles() as $role) {
-				if ($role->getRegisterableCategories()->contains($this->category)) {
-					$tmp = true;
-					break;
-				}
-			}
-			if (!$tmp) {
-				$result = false;
-			}
-		}
+        $tmp = false;
+        foreach ($user->getNotCanceledSubeventsApplications() as $application) {
+            if ($application->getSubevents()->contains($this->subevent)) {
+                $tmp = true;
+                break;
+            }
+        }
+        if (! $tmp) {
+            $result = false;
+        }
 
-		$tmp = false;
-		foreach ($user->getNotCanceledSubeventsApplications() as $application) {
-			if ($application->getSubevents()->contains($this->subevent)) {
-				$tmp = true;
-				break;
-			}
-		}
-		if (!$tmp) {
-			$result = false;
-		}
+        return $result;
+    }
 
-		return $result;
-	}
-
-	/**
-	 * Účastní se uživatel programu bloku?
-	 */
-	public function isAttendee(User $user): bool
-	{
-		foreach ($this->programs as $program) {
-			if ($program->isAttendee($user)) {
-				return true;
-			}
-		}
-		return false;
-	}
+    /**
+     * Účastní se uživatel programu bloku?
+     */
+    public function isAttendee(User $user) : bool
+    {
+        foreach ($this->programs as $program) {
+            if ($program->isAttendee($user)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -41,7 +41,6 @@ class RoomsGridControl extends Control
     /** @var SessionSection */
     private $sessionSection;
 
-
     public function __construct(
         Translator $translator,
         RoomRepository $roomRepository,
@@ -68,6 +67,7 @@ class RoomsGridControl extends Control
 
     /**
      * Vytvoří komponentu.
+     *
      * @throws DataGridException
      */
     public function createComponentRoomsGrid(string $name) : void
@@ -79,62 +79,70 @@ class RoomsGridControl extends Control
         $grid->setPagination(false);
 
         $grid->addGroupAction('admin.program.rooms_group_action_export_rooms_schedules')
-            ->onSelect[] = [$this, 'groupExportRoomsSchedules'];
+                ->onSelect[] = [$this, 'groupExportRoomsSchedules'];
 
         $grid->addColumnText('name', 'admin.program.rooms_name');
 
         $grid->addColumnText('capacity', 'admin.program.rooms_capacity')
-            ->setRendererOnCondition(function ($row) {
-                return $this->translator->translate('admin.program.blocks_capacity_unlimited');
-            }, function ($row) {
-                return $row->getCapacity() === null;
-            });
+                ->setRendererOnCondition(
+                    function ($row) {
+                            return $this->translator->translate('admin.program.blocks_capacity_unlimited');
+                    },
+                    function ($row) {
+                            return $row->getCapacity() === null;
+                    }
+                );
 
         $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function ($container) : void {
             $container->addText('name', '')
-                ->addRule(Form::FILLED, 'admin.program.rooms_name_empty')
-                ->addRule(Form::IS_NOT_IN, 'admin.program.rooms_name_exists', $this->roomRepository->findAllNames());
+                    ->addRule(Form::FILLED, 'admin.program.rooms_name_empty')
+                    ->addRule(Form::IS_NOT_IN, 'admin.program.rooms_name_exists', $this->roomRepository->findAllNames());
 
             $container->addText('capacity', '')
-                ->addCondition(Form::FILLED)
-                ->addRule(Form::INTEGER, 'admin.program.rooms_capacity_format');
+                    ->addCondition(Form::FILLED)
+                    ->addRule(Form::INTEGER, 'admin.program.rooms_capacity_format');
         };
         $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
 
         $grid->addInlineEdit()->onControlAdd[]  = function ($container) : void {
             $container->addText('name', '')
-                ->addRule(Form::FILLED, 'admin.program.rooms_name_empty');
+                    ->addRule(Form::FILLED, 'admin.program.rooms_name_empty');
 
             $container->addText('capacity', '')
-                ->addCondition(Form::FILLED)
-                ->addRule(Form::INTEGER, 'admin.program.rooms_capacity_format');
+                    ->addCondition(Form::FILLED)
+                    ->addRule(Form::INTEGER, 'admin.program.rooms_capacity_format');
         };
         $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) : void {
             $container['name']
-                ->addRule(Form::IS_NOT_IN, 'admin.program.rooms_name_exists', $this->roomRepository->findOthersNames($item->getId()));
+                    ->addRule(Form::IS_NOT_IN, 'admin.program.rooms_name_exists', $this->roomRepository->findOthersNames($item->getId()));
 
-            $container->setDefaults([
-                'name' => $item->getName(),
-                'capacity' => $item->getCapacity(),
-            ]);
+            $container->setDefaults(
+                [
+                        'name' => $item->getName(),
+                        'capacity' => $item->getCapacity(),
+                    ]
+            );
         };
         $grid->getInlineEdit()->onSubmit[]      = [$this, 'edit'];
 
         $grid->addAction('detail', 'admin.common.detail', 'Rooms:detail')
-            ->setClass('btn btn-xs btn-primary');
+                ->setClass('btn btn-xs btn-primary');
 
         $grid->addAction('delete', '', 'delete!')
-            ->setIcon('trash')
-            ->setTitle('admin.common.delete')
-            ->setClass('btn btn-xs btn-danger')
-            ->addAttributes([
-                'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('admin.program.rooms_delete_confirm'),
-            ]);
+                ->setIcon('trash')
+                ->setTitle('admin.common.delete')
+                ->setClass('btn btn-xs btn-danger')
+                ->addAttributes(
+                    [
+                            'data-toggle' => 'confirmation',
+                            'data-content' => $this->translator->translate('admin.program.rooms_delete_confirm'),
+                        ]
+                );
     }
 
     /**
      * Zpracuje přidání místnosti.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -156,6 +164,7 @@ class RoomsGridControl extends Control
 
     /**
      * Zpracuje úpravu místnosti.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -177,6 +186,7 @@ class RoomsGridControl extends Control
 
     /**
      * Odstraní místnost.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -193,7 +203,8 @@ class RoomsGridControl extends Control
 
     /**
      * Hromadně vyexportuje harmonogramy místností.
-     * @param int[] $ids
+     *
+     * @param  int[] $ids
      * @throws AbortException
      */
     public function groupExportRoomsSchedules(array $ids) : void
@@ -204,6 +215,7 @@ class RoomsGridControl extends Control
 
     /**
      * Zpracuje export harmonogramů místností.
+     *
      * @throws AbortException
      * @throws Exception
      */

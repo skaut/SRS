@@ -19,17 +19,16 @@ use Nette\Application\UI\Form;
 class MailingPresenter extends ConfigurationBasePresenter
 {
     /**
-     * @var MailingForm
+     * @var    MailingForm
      * @inject
      */
     public $mailingFormFactory;
 
     /**
-     * @var SettingsFacade
+     * @var    SettingsFacade
      * @inject
      */
     public $settingsFacade;
-
 
     /**
      * @throws SettingsException

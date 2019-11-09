@@ -22,29 +22,28 @@ use Nette\Application\UI\Form;
 class PaymentPresenter extends ConfigurationBasePresenter
 {
     /**
-     * @var IPaymentFormFactory
+     * @var    IPaymentFormFactory
      * @inject
      */
     public $paymentFormFactory;
 
     /**
-     * @var PaymentProofForm
+     * @var    PaymentProofForm
      * @inject
      */
     public $paymentProofFormFactory;
 
     /**
-     * @var BankForm
+     * @var    BankForm
      * @inject
      */
     public $bankFormFactory;
 
     /**
-     * @var TicketsForm
+     * @var    TicketsForm
      * @inject
      */
     public $ticketsFormFactory;
-
 
     /**
      * @throws SettingsException
@@ -62,6 +61,7 @@ class PaymentPresenter extends ConfigurationBasePresenter
 
     /**
      * Zruší propojení s API banky.
+     *
      * @throws SettingsException
      * @throws \Throwable
      */

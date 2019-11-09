@@ -41,7 +41,6 @@ class DocumentsGridControl extends Control
     /** @var TagRepository */
     private $tagRepository;
 
-
     public function __construct(
         Translator $translator,
         DocumentRepository $documentRepository,
@@ -66,6 +65,7 @@ class DocumentsGridControl extends Control
 
     /**
      * Vytvoří komponentu.
+     *
      * @throws DataGridException
      */
     public function createComponentDocumentsGrid(string $name) : void
@@ -79,45 +79,54 @@ class DocumentsGridControl extends Control
         $grid->addColumnText('name', 'admin.cms.documents_name');
 
         $grid->addColumnText('tags', 'admin.cms.documents_tags')
-            ->setRenderer(function ($row) {
-                $tags = Html::el();
-                foreach ($row->getTags() as $tag) {
-                    $tags->addHtml(Html::el('span')
-                        ->setAttribute('class', 'label label-primary')
-                        ->setText($tag->getName()));
-                    $tags->addHtml(Html::el()->setText(' '));
-                }
-                return $tags;
-            });
+                ->setRenderer(
+                    function ($row) {
+                            $tags = Html::el();
+                        foreach ($row->getTags() as $tag) {
+                            $tags->addHtml(
+                                Html::el('span')
+                                ->setAttribute('class', 'label label-primary')
+                                ->setText($tag->getName())
+                            );
+                            $tags->addHtml(Html::el()->setText(' '));
+                        }
+                            return $tags;
+                    }
+                );
 
         $grid->addColumnText('file', 'admin.cms.documents_file')
-            ->setRenderer(function ($row) {
-                return Html::el('a')
-                    ->setAttribute('href', $this->getPresenter()->getTemplate()->basePath
-                        . '/files' . $row->getFile())
-                    ->setAttribute('target', '_blank')
-                    ->setAttribute('class', 'btn btn-xs btn-default')
-                    ->addHtml(
-                        Html::el('span')->setAttribute('class', 'fa fa-download')
-                    );
-            });
+                ->setRenderer(
+                    function ($row) {
+                            return Html::el('a')
+                            ->setAttribute(
+                                'href',
+                                $this->getPresenter()->getTemplate()->basePath
+                                    . '/files' . $row->getFile()
+                            )
+                            ->setAttribute('target', '_blank')
+                            ->setAttribute('class', 'btn btn-xs btn-default')
+                            ->addHtml(
+                                Html::el('span')->setAttribute('class', 'fa fa-download')
+                            );
+                    }
+                );
 
         $grid->addColumnText('description', 'admin.cms.documents_description');
 
         $grid->addColumnDateTime('timestamp', 'admin.cms.documents_timestamp')
-            ->setFormat(Helpers::DATETIME_FORMAT);
+                ->setFormat(Helpers::DATETIME_FORMAT);
 
         $tagsOptions = $this->tagRepository->getTagsOptions();
 
         $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function ($container) use ($tagsOptions) : void {
             $container->addText('name', '')
-                ->addRule(Form::FILLED, 'admin.cms.documents_name_empty');
+                    ->addRule(Form::FILLED, 'admin.cms.documents_name_empty');
 
             $container->addMultiSelect('tags', '', $tagsOptions)->setAttribute('class', 'datagrid-multiselect')
-                ->addRule(Form::FILLED, 'admin.cms.documents_tags_empty');
+                    ->addRule(Form::FILLED, 'admin.cms.documents_tags_empty');
 
             $container->addUpload('file', '')->setAttribute('class', 'datagrid-upload')
-                ->addRule(Form::FILLED, 'admin.cms.documents_file_empty');
+                    ->addRule(Form::FILLED, 'admin.cms.documents_file_empty');
 
             $container->addText('description', '');
         };
@@ -125,36 +134,41 @@ class DocumentsGridControl extends Control
 
         $grid->addInlineEdit()->onControlAdd[]  = function ($container) use ($tagsOptions) : void {
             $container->addText('name', '')
-                ->addRule(Form::FILLED, 'admin.cms.documents_name_empty');
+                    ->addRule(Form::FILLED, 'admin.cms.documents_name_empty');
 
             $container->addMultiSelect('tags', '', $tagsOptions)->setAttribute('class', 'datagrid-multiselect')
-                ->addRule(Form::FILLED, 'admin.cms.documents_tags_empty');
+                    ->addRule(Form::FILLED, 'admin.cms.documents_tags_empty');
 
             $container->addUpload('file', '')->setAttribute('class', 'datagrid-upload');
 
             $container->addText('description', '');
         };
         $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) : void {
-            $container->setDefaults([
-                'name' => $item->getName(),
-                'tags' => $this->tagRepository->findTagsIds($item->getTags()),
-                'description' => $item->getDescription(),
-            ]);
+            $container->setDefaults(
+                [
+                        'name' => $item->getName(),
+                        'tags' => $this->tagRepository->findTagsIds($item->getTags()),
+                        'description' => $item->getDescription(),
+                    ]
+            );
         };
         $grid->getInlineEdit()->onSubmit[]      = [$this, 'edit'];
 
         $grid->addAction('delete', '', 'delete!')
-            ->setIcon('trash')
-            ->setTitle('admin.common.delete')
-            ->setClass('btn btn-xs btn-danger')
-            ->addAttributes([
-                'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('admin.cms.documents_delete_confirm'),
-            ]);
+                ->setIcon('trash')
+                ->setTitle('admin.common.delete')
+                ->setClass('btn btn-xs btn-danger')
+                ->addAttributes(
+                    [
+                            'data-toggle' => 'confirmation',
+                            'data-content' => $this->translator->translate('admin.cms.documents_delete_confirm'),
+                        ]
+                );
     }
 
     /**
      * Zpracuje přidání dokumentu.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -182,6 +196,7 @@ class DocumentsGridControl extends Control
 
     /**
      * Zpracuje úpravu dokumentu.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -213,6 +228,7 @@ class DocumentsGridControl extends Control
 
     /**
      * Zpracuje odstranění dokumentu.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException

@@ -74,7 +74,6 @@ class ProgramBlocksGridControl extends Control
     /** @var SessionSection */
     private $sessionSection;
 
-
     public function __construct(
         Translator $translator,
         BlockRepository $blockRepository,
@@ -92,7 +91,7 @@ class ProgramBlocksGridControl extends Control
 
         $this->translator         = $translator;
         $this->blockRepository    = $blockRepository;
-        $this->settingsFacade = $settingsFacade;
+        $this->settingsFacade     = $settingsFacade;
         $this->userRepository     = $userRepository;
         $this->categoryRepository = $categoryRepository;
         $this->programRepository  = $programRepository;
@@ -115,6 +114,7 @@ class ProgramBlocksGridControl extends Control
 
     /**
      * Vytvoří komponentu.
+     *
      * @throws SettingsException
      * @throws \Throwable
      * @throws DataGridColumnStatusException
@@ -124,105 +124,117 @@ class ProgramBlocksGridControl extends Control
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
-        $grid->setDataSource($this->blockRepository->createQueryBuilder('b')
-            ->addSelect('c')->leftJoin('b.category', 'c')
-            ->addSelect('s')->leftJoin('b.subevent', 's'));
+        $grid->setDataSource(
+            $this->blockRepository->createQueryBuilder('b')
+                        ->addSelect('c')->leftJoin('b.category', 'c')
+                        ->addSelect('s')->leftJoin('b.subevent', 's')
+        );
         $grid->setDefaultSort(['name' => 'ASC']);
         $grid->setPagination(false);
         $grid->setColumnsHideable();
         $grid->setStrictSessionFilterValues(false);
 
         $grid->addGroupAction('admin.program.blocks_group_action_export_blocks_attendees')
-            ->onSelect[] = [$this, 'groupExportBlocksAttendees'];
+                ->onSelect[] = [$this, 'groupExportBlocksAttendees'];
 
         $grid->addColumnText('name', 'admin.program.blocks_name')
-            ->setSortable()
-            ->setFilterText();
+                ->setSortable()
+                ->setFilterText();
 
         $grid->addColumnText('subevent', 'admin.program.blocks_subevent', 'subevent.name')
-            ->setSortable('s.name')
-            ->setFilterMultiSelect($this->subeventRepository->getSubeventsOptions(), 's.id');
+                ->setSortable('s.name')
+                ->setFilterMultiSelect($this->subeventRepository->getSubeventsOptions(), 's.id');
 
         $grid->addColumnText('category', 'admin.program.blocks_category', 'category.name')
-            ->setSortable('c.name')
-            ->setFilterMultiSelect($this->categoryRepository->getCategoriesOptions(), 'c.id');
+                ->setSortable('c.name')
+                ->setFilterMultiSelect($this->categoryRepository->getCategoriesOptions(), 'c.id');
 
         $grid->addColumnText('lectors', 'admin.program.blocks_lectors', 'lectorsText')
-            ->setFilterMultiSelect($this->userRepository->getLectorsOptions())
-            ->setCondition(function ($qb, $values) : void {
-                $qb->join('b.lectors', 'l')
-                    ->andWhere('l.id IN (:lids)')
-                    ->setParameter('lids', $values);
-            });
+                ->setFilterMultiSelect($this->userRepository->getLectorsOptions())
+                ->setCondition(
+                    function ($qb, $values) : void {
+                            $qb->join('b.lectors', 'l')
+                            ->andWhere('l.id IN (:lids)')
+                            ->setParameter('lids', $values);
+                    }
+                );
 
         $grid->addColumnNumber('duration', 'admin.program.blocks_duration')
-            ->setSortable()
-            ->setFilterText();
+                ->setSortable()
+                ->setFilterText();
 
         $grid->addColumnText('capacity', 'admin.program.blocks_capacity')
-            ->setRendererOnCondition(function ($row) {
-                return $this->translator->translate('admin.program.blocks_capacity_unlimited');
-            }, function ($row) {
-                return $row->getCapacity() === null;
-            })
-            ->setSortable();
+                ->setRendererOnCondition(
+                    function ($row) {
+                            return $this->translator->translate('admin.program.blocks_capacity_unlimited');
+                    },
+                    function ($row) {
+                            return $row->getCapacity() === null;
+                    }
+                )
+                ->setSortable();
 
-        $columnMandatory = $grid->addColumnStatus('mandatory', 'admin.program.blocks_mandatory');
+        $columnMandatory     = $grid->addColumnStatus('mandatory', 'admin.program.blocks_mandatory');
         $columnMandatory
-            ->addOption(ProgramMandatoryType::VOLUNTARY, 'admin.program.blocks_mandatory_voluntary')
-            ->setClass('btn-primary')
-            ->endOption()
-            ->addOption(ProgramMandatoryType::MANDATORY, 'admin.program.blocks_mandatory_mandatory')
-            ->setClass('btn-danger')
-            ->endOption()
-            ->addOption(ProgramMandatoryType::AUTO_REGISTERED, 'admin.program.blocks_mandatory_auto_registered')
-            ->setClass('btn-warning')
-            ->endOption()
-            ->onChange[] = [$this, 'changeMandatory'];
+                        ->addOption(ProgramMandatoryType::VOLUNTARY, 'admin.program.blocks_mandatory_voluntary')
+                        ->setClass('btn-primary')
+                        ->endOption()
+                        ->addOption(ProgramMandatoryType::MANDATORY, 'admin.program.blocks_mandatory_mandatory')
+                        ->setClass('btn-danger')
+                        ->endOption()
+                        ->addOption(ProgramMandatoryType::AUTO_REGISTERED, 'admin.program.blocks_mandatory_auto_registered')
+                        ->setClass('btn-warning')
+                        ->endOption()
+                ->onChange[] = [$this, 'changeMandatory'];
 
         $columnMandatory
-            ->setSortable()
-            ->setFilterSelect([
-                '' => 'admin.common.all',
-                ProgramMandatoryType::VOLUNTARY => 'admin.program.blocks_mandatory_voluntary',
-                ProgramMandatoryType::MANDATORY => 'admin.program.blocks_mandatory_mandatory',
-                ProgramMandatoryType::AUTO_REGISTERED => 'admin.program.blocks_mandatory_auto_registered',
-            ])
-            ->setTranslateOptions();
+                ->setSortable()
+                ->setFilterSelect(
+                    [
+                            '' => 'admin.common.all',
+                            ProgramMandatoryType::VOLUNTARY => 'admin.program.blocks_mandatory_voluntary',
+                            ProgramMandatoryType::MANDATORY => 'admin.program.blocks_mandatory_mandatory',
+                            ProgramMandatoryType::AUTO_REGISTERED => 'admin.program.blocks_mandatory_auto_registered',
+                        ]
+                )
+                ->setTranslateOptions();
 
         $grid->addColumnNumber('programsCount', 'admin.program.blocks_programs_count')
-            ->setRenderer(function (Block $row) {
-                return $row->getProgramsCount();
-            });
+                ->setRenderer(
+                    function (Block $row) {
+                            return $row->getProgramsCount();
+                    }
+                );
 
-        if (($this->getPresenter()->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS) ||
-                $this->getPresenter()->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS)) &&
-            $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK)
+        if (($this->getPresenter()->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS) || $this->getPresenter()->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS)) && $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK)
         ) {
             $grid->addToolbarButton('Blocks:add')
-                ->setIcon('plus')
-                ->setTitle('admin.common.add');
+                    ->setIcon('plus')
+                    ->setTitle('admin.common.add');
         }
 
         $grid->addAction('detail', 'admin.common.detail', 'Blocks:detail')
-            ->setClass('btn btn-xs btn-primary');
+                ->setClass('btn btn-xs btn-primary');
 
         $grid->addAction('edit', 'admin.common.edit', 'Blocks:edit');
         $grid->allowRowsAction('edit', [$this, 'isAllowedModifyBlock']);
 
         $grid->addAction('delete', '', 'delete!')
-            ->setIcon('trash')
-            ->setTitle('admin.common.delete')
-            ->setClass('btn btn-xs btn-danger')
-            ->addAttributes([
-                'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('admin.program.blocks_delete_confirm'),
-            ]);
+                ->setIcon('trash')
+                ->setTitle('admin.common.delete')
+                ->setClass('btn btn-xs btn-danger')
+                ->addAttributes(
+                    [
+                            'data-toggle' => 'confirmation',
+                            'data-content' => $this->translator->translate('admin.program.blocks_delete_confirm'),
+                        ]
+                );
         $grid->allowRowsAction('delete', [$this, 'isAllowedModifyBlock']);
     }
 
     /**
      * Odstraní programový blok.
+     *
      * @throws AbortException
      * @throws \Throwable
      */
@@ -244,6 +256,7 @@ class ProgramBlocksGridControl extends Control
 
     /**
      * Změní povinnost bloku.
+     *
      * @throws AbortException
      */
     public function changeMandatory(int $id, string $mandatory) : void
@@ -254,7 +267,7 @@ class ProgramBlocksGridControl extends Control
 
         if (! $this->isAllowedModifyBlock($block)) {
             $p->flashMessage('admin.program.blocks_change_mandatory_denied', 'danger');
-        } elseif ($mandatory  === ProgramMandatoryType::AUTO_REGISTERED && ! $this->validators->validateBlockAutoRegistered($block)) {
+        } elseif ($mandatory === ProgramMandatoryType::AUTO_REGISTERED && ! $this->validators->validateBlockAutoRegistered($block)) {
             $p->flashMessage('admin.program.blocks_change_mandatory_auto_registered_not_allowed', 'danger');
         } else {
             try {
@@ -276,7 +289,8 @@ class ProgramBlocksGridControl extends Control
 
     /**
      * Hromadně vyexportuje seznam uživatelů, kteří mají blok zapsaný.
-     * @param int[] $ids
+     *
+     * @param  int[] $ids
      * @throws AbortException
      */
     public function groupExportBlocksAttendees(array $ids) : void
@@ -287,6 +301,7 @@ class ProgramBlocksGridControl extends Control
 
     /**
      * Zpracuje export seznamu uživatelů, kteří mají blok zapsaný.
+     *
      * @throws AbortException
      * @throws Exception
      */

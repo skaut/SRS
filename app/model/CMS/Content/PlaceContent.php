@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Entita obsahu s popisem cesty.
  *
- * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author                          Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity
  * @ORM\Table(name="place_content")
  */

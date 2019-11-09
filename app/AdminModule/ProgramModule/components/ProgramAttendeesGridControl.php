@@ -32,12 +32,14 @@ class ProgramAttendeesGridControl extends Control
 {
     /**
      * Aktuální program.
+     *
      * @var Program
      */
     private $program;
 
     /**
      * Přihlášený uživatel.
+     *
      * @var User
      */
     private $user;
@@ -63,7 +65,6 @@ class ProgramAttendeesGridControl extends Control
     /** @var SessionSection */
     private $sessionSection;
 
-
     public function __construct(
         Translator $translator,
         ProgramRepository $programRepository,
@@ -75,11 +76,11 @@ class ProgramAttendeesGridControl extends Control
     ) {
         parent::__construct();
 
-        $this->translator         = $translator;
-        $this->programRepository  = $programRepository;
-        $this->userRepository     = $userRepository;
-        $this->settingsFacade = $settingsFacade;
-        $this->programService     = $programService;
+        $this->translator        = $translator;
+        $this->programRepository = $programRepository;
+        $this->userRepository    = $userRepository;
+        $this->settingsFacade    = $settingsFacade;
+        $this->programService    = $programService;
 
         $this->session        = $session;
         $this->sessionSection = $session->getSection('srs');
@@ -95,6 +96,7 @@ class ProgramAttendeesGridControl extends Control
 
     /**
      * Vytvoří komponentu.
+     *
      * @throws DataGridException
      */
     public function createComponentProgramAttendeesGrid(string $name) : void
@@ -117,27 +119,29 @@ class ProgramAttendeesGridControl extends Control
             $grid->setTranslator($this->translator);
 
             $qb = $this->userRepository->createQueryBuilder('u')
-                ->leftJoin('u.programs', 'p', 'WITH', 'p.id = :pid')
-                ->innerJoin('u.roles', 'r')
-                ->innerJoin('r.permissions', 'per')
-                ->innerJoin('u.applications', 'a')
-                ->innerJoin('a.subevents', 's')
-                ->where('per.name = :permission')
-                ->andWhere('s.id = :sid')
-                ->andWhere('a.validTo IS NULL')
-                ->andWhere('(a.state = \'' . ApplicationState::PAID . '\' OR a.state = \'' . ApplicationState::PAID_FREE
-                    . '\' OR a.state = \'' . ApplicationState::WAITING_FOR_PAYMENT . '\')')
-                ->setParameter('pid', $program->getId())
-                ->setParameter('permission', Permission::CHOOSE_PROGRAMS)
-                ->setParameter('sid', $program->getBlock()->getSubevent()->getId())
-                ->orderBy('u.displayName');
+                    ->leftJoin('u.programs', 'p', 'WITH', 'p.id = :pid')
+                    ->innerJoin('u.roles', 'r')
+                    ->innerJoin('r.permissions', 'per')
+                    ->innerJoin('u.applications', 'a')
+                    ->innerJoin('a.subevents', 's')
+                    ->where('per.name = :permission')
+                    ->andWhere('s.id = :sid')
+                    ->andWhere('a.validTo IS NULL')
+                    ->andWhere(
+                        '(a.state = \'' . ApplicationState::PAID . '\' OR a.state = \'' . ApplicationState::PAID_FREE
+                            . '\' OR a.state = \'' . ApplicationState::WAITING_FOR_PAYMENT . '\')'
+                    )
+                    ->setParameter('pid', $program->getId())
+                    ->setParameter('permission', Permission::CHOOSE_PROGRAMS)
+                    ->setParameter('sid', $program->getBlock()->getSubevent()->getId())
+                    ->orderBy('u.displayName');
 
             if ($this->program->getBlock()->getCategory()) {
                 $qb = $qb
-                    ->innerJoin('u.roles', 'rol')
-                    ->innerJoin('rol.registerableCategories', 'c')
-                    ->andWhere('c.id = :cid')
-                    ->setParameter('cid', $this->program->getBlock()->getCategory()->getId());
+                        ->innerJoin('u.roles', 'rol')
+                        ->innerJoin('rol.registerableCategories', 'c')
+                        ->andWhere('c.id = :cid')
+                        ->setParameter('cid', $this->program->getBlock()->getCategory()->getId());
             }
 
             $grid->setDataSource($qb);
@@ -148,56 +152,65 @@ class ProgramAttendeesGridControl extends Control
             $grid->addGroupAction('admin.program.blocks_attendees_unregister')->onSelect[] = [$this, 'groupUnregister'];
 
             $grid->addColumnText('displayName', 'admin.program.blocks_attendees_name')
-                ->setFilterText();
+                    ->setFilterText();
 
             $grid->addColumnText('attends', 'admin.program.blocks_attendees_attends', 'pid')
-                ->setRenderer(function (User $item) {
-                    return $item->getPrograms()->contains($this->program)
-                        ? $this->translator->translate('admin.common.yes')
-                        : $this->translator->translate('admin.common.no');
-                })
-                ->setFilterSelect(['' => 'admin.common.all', 'yes' => 'admin.common.yes', 'no' => 'admin.common.no'])
-                ->setCondition(function (QueryBuilder $qb, $value) : void {
-                    if ($value === '') {
-                        return;
-                    } elseif ($value === 'yes') {
-                        $qb->innerJoin('u.programs', 'pro')
-                            ->andWhere('pro.id = :proid')
-                            ->setParameter('proid', $this->program->getId());
-                    } elseif ($value === 'no') {
-                        $qb->leftJoin('u.programs', 'pro')
-                            ->andWhere('u not in (:attendees)')
-                            ->setParameter('attendees', $this->program->getAttendees());
-                    }
-                })
-                ->setTranslateOptions();
+                    ->setRenderer(
+                        function (User $item) {
+                                return $item->getPrograms()->contains($this->program) ? $this->translator->translate('admin.common.yes') : $this->translator->translate('admin.common.no');
+                        }
+                    )
+                    ->setFilterSelect(['' => 'admin.common.all', 'yes' => 'admin.common.yes', 'no' => 'admin.common.no'])
+                    ->setCondition(
+                        function (QueryBuilder $qb, $value) : void {
+                            if ($value === '') {
+                                return;
+                            } elseif ($value === 'yes') {
+                                $qb->innerJoin('u.programs', 'pro')
+                                ->andWhere('pro.id = :proid')
+                                ->setParameter('proid', $this->program->getId());
+                            } elseif ($value === 'no') {
+                                $qb->leftJoin('u.programs', 'pro')
+                                ->andWhere('u not in (:attendees)')
+                                ->setParameter('attendees', $this->program->getAttendees());
+                            }
+                        }
+                    )
+                    ->setTranslateOptions();
 
             $grid->setDefaultFilter(['attends' => 'yes'], false);
 
             if ($this->user->isAllowed(Resource::USERS, Permission::MANAGE)) {
                 $grid->addAction('detail', 'admin.common.detail', ':Admin:Users:detail')
-                    ->setClass('btn btn-xs btn-primary')
-                    ->addAttributes(['target' => '_blank']);
+                        ->setClass('btn btn-xs btn-primary')
+                        ->addAttributes(['target' => '_blank']);
             }
 
             if ($this->user->isAllowedModifyBlock($this->program->getBlock())) {
                 $grid->addAction('register', 'admin.program.blocks_attendees_register', 'register!')
-                    ->setClass('btn btn-xs btn-success ajax');
-                $grid->allowRowsAction('register', function ($item) {
-                    return ! $this->program->isAttendee($item);
-                });
+                        ->setClass('btn btn-xs btn-success ajax');
+                $grid->allowRowsAction(
+                    'register',
+                    function ($item) {
+                            return ! $this->program->isAttendee($item);
+                    }
+                );
 
                 $grid->addAction('unregister', 'admin.program.blocks_attendees_unregister', 'unregister!')
-                    ->setClass('btn btn-xs btn-danger ajax');
-                $grid->allowRowsAction('unregister', function ($item) {
-                    return $this->program->isAttendee($item);
-                });
+                        ->setClass('btn btn-xs btn-danger ajax');
+                $grid->allowRowsAction(
+                    'unregister',
+                    function ($item) {
+                            return $this->program->isAttendee($item);
+                    }
+                );
             }
         }
     }
 
     /**
      * Přihlásí uživatele na program.
+     *
      * @throws AbortException
      * @throws \Throwable
      */
@@ -228,6 +241,7 @@ class ProgramAttendeesGridControl extends Control
 
     /**
      * Odhlásí uživatele z programu.
+     *
      * @throws AbortException
      * @throws \Throwable
      */
@@ -256,7 +270,8 @@ class ProgramAttendeesGridControl extends Control
 
     /**
      * Hromadně přihlásí program uživatelům.
-     * @param int[] $ids
+     *
+     * @param  int[] $ids
      * @throws AbortException
      * @throws \Throwable
      */
@@ -289,7 +304,8 @@ class ProgramAttendeesGridControl extends Control
 
     /**
      * Hromadně odhlásí program uživatelům.
-     * @param int[] $ids
+     *
+     * @param  int[] $ids
      * @throws AbortException
      * @throws \Throwable
      */

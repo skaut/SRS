@@ -45,7 +45,6 @@ class ApplicationContentControl extends Control
     /** @var SubeventRepository */
     private $subeventRepository;
 
-
     public function __construct(
         ApplicationForm $applicationFormFactory,
         Authenticator $authenticator,
@@ -60,7 +59,7 @@ class ApplicationContentControl extends Control
         $this->authenticator          = $authenticator;
         $this->userRepository         = $userRepository;
         $this->roleRepository         = $roleRepository;
-        $this->settingsFacade     = $settingsFacade;
+        $this->settingsFacade         = $settingsFacade;
         $this->subeventRepository     = $subeventRepository;
     }
 
@@ -97,12 +96,8 @@ class ApplicationContentControl extends Control
             $template->dbuser              = $dbuser;
             $template->userHasFixedFeeRole = $userHasFixedFeeRole;
 
-            $template->usersApplications = $explicitSubeventsExists && $userHasFixedFeeRole
-                ? $dbuser->getNotCanceledApplications()
-                : ($explicitSubeventsExists
-                    ? $dbuser->getNotCanceledSubeventsApplications()
-                    : $dbuser->getNotCanceledRolesApplications()
-                );
+            $template->usersApplications = $explicitSubeventsExists && $userHasFixedFeeRole ? $dbuser->getNotCanceledApplications() : ($explicitSubeventsExists ? $dbuser->getNotCanceledSubeventsApplications() : $dbuser->getNotCanceledRolesApplications()
+                    );
         }
 
         $template->explicitSubeventsExists = $explicitSubeventsExists;

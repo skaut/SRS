@@ -23,23 +23,22 @@ use Nette\Application\UI\Form;
 class SkautIsPresenter extends ConfigurationBasePresenter
 {
     /**
-     * @var SkautIsEventForm
+     * @var    SkautIsEventForm
      * @inject
      */
     public $skautIsEventFormFactory;
 
     /**
-     * @var ISkautIsEventEducationGridControlFactory
+     * @var    ISkautIsEventEducationGridControlFactory
      * @inject
      */
     public $skautISEventEducationGridControlFactory;
 
     /**
-     * @var SkautIsCourseRepository
+     * @var    SkautIsCourseRepository
      * @inject
      */
     public $skautIsCourseRepository;
-
 
     /**
      * @throws SettingsException
@@ -59,6 +58,7 @@ class SkautIsPresenter extends ConfigurationBasePresenter
 
     /**
      * Zruší propojení s akcí ve skautIS.
+     *
      * @throws SettingsException
      * @throws AbortException
      * @throws \Throwable

@@ -16,11 +16,10 @@ use Nette\Forms\Form;
 class SendPresenter extends MailingBasePresenter
 {
     /**
-     * @var SendForm
+     * @var    SendForm
      * @inject
      */
     public $sendFormFactory;
-
 
     protected function createComponentSendForm() : Form
     {

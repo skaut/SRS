@@ -29,7 +29,6 @@ class UserService
     /** @var ApplicationRepository */
     private $applicationRepository;
 
-
     public function __construct(
         Translator $translator,
         UserRepository $userRepository,

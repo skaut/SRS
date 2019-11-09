@@ -18,11 +18,10 @@ use Nette\Application\UI\Form;
 class WebPresenter extends ConfigurationBasePresenter
 {
     /**
-     * @var WebForm
+     * @var    WebForm
      * @inject
      */
     public $webFormFactory;
-
 
     /**
      * @throws SettingsException

@@ -1,38 +1,38 @@
 {block head}
-    {include '../../../../presenters/templates/includes/tinymce_init.latte'}
+{include '../../../../presenters/templates/includes/tinymce_init.latte'}
 {/block}
 
 {block main}
-    <h2>
-        {_'admin.mailing.templates.edit_heading', [
+<h2>
+	{_'admin.mailing.templates.edit_heading', [
             'type' => $translator->translate('common.mailing.template_type.' . $editedTemplate->getType())
         ]}
-    </h2>
+</h2>
 
-    <div class="row">
-        <div class="col-sm-8 col-xs-8">
-            {control editTemplateForm}
-        </div>
+<div class="row">
+	<div class="col-sm-8 col-xs-8">
+		{control editTemplateForm}
+	</div>
 
-        <div class="col-sm-4 col-xs-4">
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    <h3 class="panel-title">{_admin.mailing.templates.variables}</h3>
-                </div>
-                <ul class="list-group">
-                    {foreach $editedTemplate->getVariables() as $variable}
-                        {var $variableName = $variable->getName()}
-                        <li class="list-group-item">
-                            <strong>
-                                <a href="#" onClick="tinymce.activeEditor.execCommand('mceInsertContent', false, '%{_'common.mailing.variable_name.' . $variableName|noescape}%');">
-                                    %{_'common.mailing.variable_name.' . $variableName}%
-                                </a>
-                            </strong>
-                            - {_'common.mailing.variable_description.' . $variableName}
-                        </li>
-                    {/foreach}
-                </ul>
-            </div>
-        </div>
-    </div>
+	<div class="col-sm-4 col-xs-4">
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				<h3 class="panel-title">{_admin.mailing.templates.variables}</h3>
+			</div>
+			<ul class="list-group">
+				{foreach $editedTemplate->getVariables() as $variable}
+					{var $variableName = $variable->getName()}
+					<li class="list-group-item">
+						<strong>
+							<a href="#" onClick="tinymce.activeEditor.execCommand('mceInsertContent', false, '%{_'common.mailing.variable_name.' . $variableName|noescape}%');">
+								%{_'common.mailing.variable_name.' . $variableName}%
+							</a>
+						</strong>
+						- {_'common.mailing.variable_description.' . $variableName}
+					</li>
+				{/foreach}
+			</ul>
+		</div>
+	</div>
+</div>
 {/block}

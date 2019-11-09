@@ -18,17 +18,16 @@ use App\AdminModule\CMSModule\Components\IDocumentTagsGridControlFactory;
 class DocumentsPresenter extends CMSBasePresenter
 {
     /**
-     * @var IDocumentsGridControlFactory
+     * @var    IDocumentsGridControlFactory
      * @inject
      */
     public $documentsGridControlFactory;
 
     /**
-     * @var IDocumentTagsGridControlFactory
+     * @var    IDocumentTagsGridControlFactory
      * @inject
      */
     public $documentTagsGridControlFactory;
-
 
     protected function createComponentDocumentsGrid() : DocumentsGridControl
     {

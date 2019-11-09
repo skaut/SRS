@@ -18,22 +18,21 @@ class ResponseDTO
 
     /**
      * @JMS\Type("string")
-     * @var string
+     * @var                string
      */
     private $message;
 
     /**
      * @JMS\Type("string")
-     * @var string
+     * @var                string
      */
     private $status;
 
     /**
      * @JMS\Type("App\ApiModule\DTO\Schedule\ProgramDetailDTO")
-     * @var ProgramDetailDTO
+     * @var                                                     ProgramDetailDTO
      */
     private $program;
-
 
     public function getMessage() : string
     {

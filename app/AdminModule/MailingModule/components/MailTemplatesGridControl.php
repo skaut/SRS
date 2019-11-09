@@ -27,7 +27,6 @@ class MailTemplatesGridControl extends Control
     /** @var TemplateRepository */
     private $templateRepository;
 
-
     public function __construct(Translator $translator, TemplateRepository $templateRepository)
     {
         parent::__construct();
@@ -46,6 +45,7 @@ class MailTemplatesGridControl extends Control
 
     /**
      * Vytvoří komponentu.
+     *
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
@@ -53,42 +53,51 @@ class MailTemplatesGridControl extends Control
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
-        $grid->setDataSource($this->templateRepository->createQueryBuilder('t')
-            ->where('t.system = FALSE'));
+        $grid->setDataSource(
+            $this->templateRepository->createQueryBuilder('t')
+                        ->where('t.system = FALSE')
+        );
         $grid->setDefaultSort(['type' => 'ASC']);
         $grid->setPagination(false);
 
         $grid->addColumnText('type', 'admin.mailing.templates.type')
-            ->setRenderer(function ($row) {
-                return $this->translator->translate('common.mailing.template_type.' . $row->getType());
-            });
+                ->setRenderer(
+                    function ($row) {
+                            return $this->translator->translate('common.mailing.template_type.' . $row->getType());
+                    }
+                );
 
         $grid->addColumnStatus('active', 'admin.mailing.templates.active')
-            ->addOption(false, 'admin.mailing.templates.active_inactive')
-            ->setClass('btn-danger')
-            ->endOption()
-            ->addOption(true, 'admin.mailing.templates.active_active')
-            ->setClass('btn-success')
-            ->endOption()
-            ->onChange[] = [$this, 'changeActive'];
+                        ->addOption(false, 'admin.mailing.templates.active_inactive')
+                        ->setClass('btn-danger')
+                        ->endOption()
+                        ->addOption(true, 'admin.mailing.templates.active_active')
+                        ->setClass('btn-success')
+                        ->endOption()
+                ->onChange[] = [$this, 'changeActive'];
 
         $grid->addColumnText('sendToUser', 'admin.mailing.templates.send_to_user')
-            ->setReplacement([
-                '0' => $this->translator->translate('admin.common.no'),
-                '1' => $this->translator->translate('admin.common.yes'),
-            ]);
+                ->setReplacement(
+                    [
+                            '0' => $this->translator->translate('admin.common.no'),
+                            '1' => $this->translator->translate('admin.common.yes'),
+                        ]
+                );
 
         $grid->addColumnText('sendToOrganizer', 'admin.mailing.templates.send_to_organizer')
-            ->setReplacement([
-                '0' => $this->translator->translate('admin.common.no'),
-                '1' => $this->translator->translate('admin.common.yes'),
-            ]);
+                ->setReplacement(
+                    [
+                            '0' => $this->translator->translate('admin.common.no'),
+                            '1' => $this->translator->translate('admin.common.yes'),
+                        ]
+                );
 
         $grid->addAction('edit', 'admin.common.edit', 'Templates:edit');
     }
 
     /**
      * Aktivuje/deaktivuje automatický e-mail.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException

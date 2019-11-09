@@ -17,17 +17,16 @@ use Nette\Forms\Form;
 class PaymentsPresenter extends PaymentsBasePresenter
 {
     /**
-     * @var IPaymentsGridControlFactory
+     * @var    IPaymentsGridControlFactory
      * @inject
      */
     public $paymentsGridControlFactory;
 
     /**
-     * @var EditPaymentForm
+     * @var    EditPaymentForm
      * @inject
      */
     public $editPaymentFormFactory;
-
 
     public function renderEdit(int $id) : void
     {

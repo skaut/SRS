@@ -35,7 +35,6 @@ class DiscountsGridControl extends Control
     /** @var DiscountService */
     private $discountService;
 
-
     public function __construct(
         Translator $translator,
         DiscountRepository $discountRepository,
@@ -60,6 +59,7 @@ class DiscountsGridControl extends Control
 
     /**
      * Vytvoří komponentu.
+     *
      * @throws DataGridException
      */
     public function createComponentDiscountsGrid(string $name) : void
@@ -70,35 +70,40 @@ class DiscountsGridControl extends Control
         $grid->setPagination(false);
 
         $grid->addColumnText('discountCondition', 'admin.configuration.discounts_condition')
-            ->setRenderer(function ($row) {
-                if ($this->discountService->validateCondition($row->getDiscountCondition())) {
-                    return $this->discountService->convertConditionToText($row->getDiscountCondition());
-                }
+                ->setRenderer(
+                    function ($row) {
+                        if ($this->discountService->validateCondition($row->getDiscountCondition())) {
+                            return $this->discountService->convertConditionToText($row->getDiscountCondition());
+                        }
 
-                return Html::el('span')
-                    ->style('color: red')
-                    ->setText($this->translator->translate('admin.configuration.discounts_invalid_condition'));
-            });
+                            return Html::el('span')
+                            ->style('color: red')
+                            ->setText($this->translator->translate('admin.configuration.discounts_invalid_condition'));
+                    }
+                );
 
         $grid->addColumnText('discount', 'admin.configuration.discounts_discount');
 
         $grid->addToolbarButton('Discounts:add')
-            ->setIcon('plus');
+                ->setIcon('plus');
 
         $grid->addAction('detail', 'admin.common.edit', 'Discounts:edit');
 
         $grid->addAction('delete', '', 'delete!')
-            ->setIcon('trash')
-            ->setTitle('admin.common.delete')
-            ->setClass('btn btn-xs btn-danger')
-            ->addAttributes([
-                'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('admin.configuration.discounts_delete_confirm'),
-            ]);
+                ->setIcon('trash')
+                ->setTitle('admin.common.delete')
+                ->setClass('btn btn-xs btn-danger')
+                ->addAttributes(
+                    [
+                            'data-toggle' => 'confirmation',
+                            'data-content' => $this->translator->translate('admin.configuration.discounts_delete_confirm'),
+                        ]
+                );
     }
 
     /**
      * Zpracuje odstranění slevy.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException

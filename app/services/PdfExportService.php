@@ -47,7 +47,6 @@ class PdfExportService
     /** @var ApplicationService */
     private $applicationService;
 
-
     /**
      * @throws \ReflectionException
      */
@@ -59,7 +58,7 @@ class PdfExportService
     ) {
         $this->dir = $dir;
 
-        $this->settingsFacade    = $settingsFacade;
+        $this->settingsFacade        = $settingsFacade;
         $this->applicationRepository = $applicationRepository;
         $this->applicationService    = $applicationService;
 
@@ -76,6 +75,7 @@ class PdfExportService
 
     /**
      * Vygeneruje doklad o zaplacení pro přihlášku.
+     *
      * @throws SettingsException
      * @throws \Throwable
      */
@@ -117,7 +117,7 @@ class PdfExportService
     }
 
     /**
-     * @param Collection|Application[] $applications
+     * @param  Collection|Application[] $applications
      * @throws SettingsException
      * @throws \Throwable
      */
@@ -129,7 +129,7 @@ class PdfExportService
     }
 
     /**
-     * @param Collection|Application[] $applications
+     * @param  Collection|Application[] $applications
      * @throws SettingsException
      * @throws \Throwable
      */
@@ -142,6 +142,7 @@ class PdfExportService
 
     /**
      * Vygeneruje doklady o zaplacení pro uživatele.
+     *
      * @throws SettingsException
      * @throws \Throwable
      */
@@ -165,7 +166,8 @@ class PdfExportService
 
     /**
      * Vygeneruje doklady o zaplacení pro více uživatelů.
-     * @param Collection|User[] $users
+     *
+     * @param  Collection|User[] $users
      * @throws SettingsException
      * @throws \Throwable
      */
@@ -177,7 +179,7 @@ class PdfExportService
     }
 
     /**
-     * @param Collection|User[] $users
+     * @param  Collection|User[] $users
      * @throws SettingsException
      * @throws \Throwable
      */
@@ -190,6 +192,7 @@ class PdfExportService
 
     /**
      * Vytvoří stránku s příjmovýchm dokladem.
+     *
      * @throws SettingsException
      * @throws \Throwable
      */
@@ -215,17 +218,22 @@ class PdfExportService
         $this->fpdi->Text(140, 76, iconv('UTF-8', 'WINDOWS-1250', '== ' . $application->getFee() . ' =='));
         $this->fpdi->Text(38, 86, iconv('UTF-8', 'WINDOWS-1250', '== ' . $application->getFeeWords() . ' =='));
 
-        $this->fpdi->Text(40, 98, iconv(
-            'UTF-8',
-            'WINDOWS-1250',
-            $application->getUser()->getFirstName() . ' ' . $application->getUser()->getLastName() . ', ' . $application->getUser()->getStreet() . ', ' . $application->getUser()->getCity() . ', ' . $application->getUser()->getPostcode()
-        ));
+        $this->fpdi->Text(
+            40,
+            98,
+            iconv(
+                'UTF-8',
+                'WINDOWS-1250',
+                $application->getUser()->getFirstName() . ' ' . $application->getUser()->getLastName() . ', ' . $application->getUser()->getStreet() . ', ' . $application->getUser()->getCity() . ', ' . $application->getUser()->getPostcode()
+            )
+        );
 
         $this->fpdi->Text(40, 111, iconv('UTF-8', 'WINDOWS-1250', 'účastnický poplatek ' . $this->settingsFacade->getValue(Settings::SEMINAR_NAME)));
     }
 
     /**
      * Vytvoří stránku s potvrzením o přijetí platby.
+     *
      * @throws SettingsException
      * @throws \Throwable
      */
@@ -255,6 +263,7 @@ class PdfExportService
 
     /**
      * Nastaví šablonu pro příjmový doklad.
+     *
      * @throws \Exception
      */
     private function configureForIncomeProof() : void
@@ -266,6 +275,7 @@ class PdfExportService
 
     /**
      * Nastaví šablonu pro potvrzení o přijetí platby.
+     *
      * @throws \Exception
      */
     private function configureForAccountProof() : void

@@ -1,13 +1,13 @@
 {block head}
-    {include '../../../../presenters/templates/includes/tinymce_init.latte'}
+{include '../../../../presenters/templates/includes/tinymce_init.latte'}
 {/block}
 
 {block main}
-    <h2>{_admin.configuration.place_heading}</h2>
-    <div class="well">
-        {control placeDescriptionForm}
-    </div>
+<h2>{_admin.configuration.place_heading}</h2>
+<div class="well">
+	{control placeDescriptionForm}
+</div>
 
-    <h2>{_admin.configuration.place_points}</h2>
-    {control placePointsGrid}
+<h2>{_admin.configuration.place_points}</h2>
+{control placePointsGrid}
 {/block}

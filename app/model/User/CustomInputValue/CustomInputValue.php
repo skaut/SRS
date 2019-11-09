@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\User\CustomInputValue;
@@ -11,11 +12,11 @@ use Nettrine\ORM\Entity\Attributes\Id as Identifier;
 /**
  * Abstraktní entita hodnota vlastního pole přihlášky.
  *
- * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author                                                   Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="CustomInputValueRepository")
  * @ORM\Table(name="custom_input_value")
  * @ORM\InheritanceType("JOINED")
- * @ORM\DiscriminatorColumn(name="type", type="string")
+ * @ORM\DiscriminatorColumn(name="type",                     type="string")
  * @ORM\DiscriminatorMap({
  *     "custom_checkbox_value" = "CustomCheckboxValue",
  *     "custom_text_value" = "CustomTextValue",
@@ -25,45 +26,46 @@ use Nettrine\ORM\Entity\Attributes\Id as Identifier;
  */
 abstract class CustomInputValue
 {
+    use Identifier;
 
-	use Identifier;
+    /**
+     * Vlastní pole přihlášky.
+     *
+     * @ORM\ManyToOne(targetEntity="\App\Model\Settings\CustomInput\CustomInput", inversedBy="customInputValues", cascade={"persist"})
+     * @var                                                                       CustomInput
+     */
+    protected $input;
 
-	/**
-	 * Vlastní pole přihlášky.
-	 * @ORM\ManyToOne(targetEntity="\App\Model\Settings\CustomInput\CustomInput", inversedBy="customInputValues", cascade={"persist"})
-	 * @var CustomInput
-	 */
-	protected $input;
+    /**
+     * Uživatel.
+     *
+     * @ORM\ManyToOne(targetEntity="\App\Model\User\User", inversedBy="customInputValues", cascade={"persist"})
+     * @var                                                User
+     */
+    protected $user;
 
-	/**
-	 * Uživatel.
-	 * @ORM\ManyToOne(targetEntity="\App\Model\User\User", inversedBy="customInputValues", cascade={"persist"})
-	 * @var User
-	 */
-	protected $user;
+    public function getId() : int
+    {
+        return $this->id;
+    }
 
-	public function getId(): int
-	{
-		return $this->id;
-	}
+    public function getInput() : CustomInput
+    {
+        return $this->input;
+    }
 
-	public function getInput(): CustomInput
-	{
-		return $this->input;
-	}
+    public function setInput(CustomInput $input) : void
+    {
+        $this->input = $input;
+    }
 
-	public function setInput(CustomInput $input): void
-	{
-		$this->input = $input;
-	}
+    public function getUser() : User
+    {
+        return $this->user;
+    }
 
-	public function getUser(): User
-	{
-		return $this->user;
-	}
-
-	public function setUser(User $user): void
-	{
-		$this->user = $user;
-	}
+    public function setUser(User $user) : void
+    {
+        $this->user = $user;
+    }
 }

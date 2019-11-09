@@ -17,11 +17,10 @@ use WebLoader\Nette\JavaScriptLoader;
 abstract class InstallBasePresenter extends BasePresenter
 {
     /**
-     * @var Translator
+     * @var    Translator
      * @inject
      */
     public $translator;
-
 
     /**
      * Načte css podle konfigurace v config.neon.

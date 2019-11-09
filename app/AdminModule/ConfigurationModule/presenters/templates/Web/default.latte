@@ -1,17 +1,17 @@
 {block main}
-    <h2>{_admin.configuration.web_heading}</h2>
-    <div class="well">
-        <table class="table table-form">
-            <col class="col-sm-5 col-xs-5">
-            <col class="col-sm-7 col-xs-7">
+<h2>{_admin.configuration.web_heading}</h2>
+<div class="well">
+	<table class="table table-form">
+		<col class="col-sm-5 col-xs-5">
+		<col class="col-sm-7 col-xs-7">
 
-            <tr>
-                <th>{_admin.configuration.web_current_logo}</th>
-                <td>
-                    <img src="{$basePath}/files/logo/{$logo}"/>
-                </td>
-            </tr>
-        </table>
-        {control settingsForm}
-    </div>
+		<tr>
+			<th>{_admin.configuration.web_current_logo}</th>
+			<td>
+				<img src="{$basePath}/files/logo/{$logo}"/>
+			</td>
+		</tr>
+	</table>
+	{control settingsForm}
+</div>
 {/block}

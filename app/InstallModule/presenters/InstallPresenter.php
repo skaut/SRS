@@ -1,21 +1,22 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\InstallModule\Presenters;
 
-use App\Model\EntityManagerDecorator;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
+use App\Model\EntityManagerDecorator;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsFacade;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
+use Contributte\Console\Application;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\Migrations\Tools\Console\Command\MigrateCommand;
-use Contributte\Console\Application;
 use Nette\Application\AbortException;
 use Skautis\Config;
 use Skautis\Skautis;
@@ -34,195 +35,202 @@ use Symfony\Component\Console\Output\BufferedOutput;
  */
 class InstallPresenter extends InstallBasePresenter
 {
+    /**
+     * @var    EntityManagerDecorator
+     * @inject
+     */
+    public $em;
 
-	/**
-	 * @var EntityManagerDecorator
-	 * @inject
-	 */
-	public $em;
+    /**
+     * @var    SettingsFacade
+     * @inject
+     */
+    public $settingsFacade;
 
-	/**
-	 * @var SettingsFacade
-	 * @inject
-	 */
-	public $settingsFacade;
+    /**
+     * @var    RoleRepository
+     * @inject
+     */
+    public $roleRepository;
 
-	/**
-	 * @var RoleRepository
-	 * @inject
-	 */
-	public $roleRepository;
+    /**
+     * @var    UserRepository
+     * @inject
+     */
+    public $userRepository;
 
-	/**
-	 * @var UserRepository
-	 * @inject
-	 */
-	public $userRepository;
+    /**
+     * @var    SubeventRepository
+     * @inject
+     */
+    public $subeventRepository;
 
-	/**
-	 * @var SubeventRepository
-	 * @inject
-	 */
-	public $subeventRepository;
+    /**
+     * @var    ApplicationService
+     * @inject
+     */
+    public $applicationService;
 
-	/**
-	 * @var ApplicationService
-	 * @inject
-	 */
-	public $applicationService;
+    /**
+     * Zobrazení první stránky průvodce.
+     *
+     * @throws AbortException
+     * @throws \Throwable
+     */
+    public function renderDefault() : void
+    {
+        if ($this->user->isLoggedIn()) {
+            $this->user->logout(true);
+        }
 
-	/**
-	 * Zobrazení první stránky průvodce.
-	 * @throws AbortException
-	 * @throws \Throwable
-	 */
-	public function renderDefault(): void
-	{
-		if ($this->user->isLoggedIn()) {
-			$this->user->logout(true);
-		}
+        try {
+            if ($this->settingsFacade->getBoolValue(Settings::ADMIN_CREATED)) {
+                $this->redirect('installed');
+            }
+            $this->flashMessage('install.schema.schema_already_created', 'info');
+            $this->redirect('admin');
+        } catch (TableNotFoundException $ex) {
+        } catch (SettingsException $ex) {
+        }
+    }
 
-		try {
-			if ($this->settingsFacade->getBoolValue(Settings::ADMIN_CREATED)) {
-				$this->redirect('installed');
-			}
-			$this->flashMessage('install.schema.schema_already_created', 'info');
-			$this->redirect('admin');
-		} catch (TableNotFoundException $ex) {
+    /**
+     * Vytvoření schéma databáze a počátečních dat.
+     *
+     * @throws \Exception
+     */
+    public function handleImportSchema() : void
+    {
+        $consoleApp = new Application();
+        $output     = new BufferedOutput();
+        $input      = new ArrayInput(
+            [
+            'command' => 'migrations:migrate',
+            '--no-interaction' => true,
+                ]
+        );
+        $consoleApp->add(new MigrateCommand());
+        $result = $consoleApp->run($input, $output);
+        if ($result !== 0) {
+            $this->flashMessage('install.schema.schema_create_unsuccessful', 'danger');
+            return;
+        }
 
-		} catch (SettingsException $ex) {
+        $this->redirect('admin');
+    }
 
-		}
-	}
+    /**
+     * Zobrazení stránky pro vytvoření administrátora.
+     *
+     * @throws AbortException
+     * @throws \Throwable
+     */
+    public function renderAdmin() : void
+    {
+        try {
+            if ($this->settingsFacade->getBoolValue(Settings::ADMIN_CREATED)) {
+                $this->flashMessage('install.admin.admin_already_created', 'info');
+                $this->redirect('finish');
+            }
+        } catch (TableNotFoundException $ex) {
+            $this->redirect('default');
+        } catch (SettingsException $ex) {
+            $this->redirect('default');
+        }
 
-	/**
-	 * Vytvoření schéma databáze a počátečních dat.
-	 * @throws \Exception
-	 */
-	public function handleImportSchema(): void
-	{
-		$consoleApp = new Application();
-		$output = new BufferedOutput();
-		$input = new ArrayInput([
-			'command' => 'migrations:migrate',
-			'--no-interaction' => true,
-		]);
-		$consoleApp->add(new MigrateCommand);
-		$result = $consoleApp->run($input, $output);
-		if ($result !== 0) {
-			$this->flashMessage('install.schema.schema_create_unsuccessful', 'danger');
-			return;
-		}
+        if (! $this->user->isLoggedIn()) {
+            return;
+        }
 
-		$this->redirect('admin');
-	}
+        $this->em->transactional(
+            function ($em) : void {
+                    $user = $this->userRepository->findById($this->user->id);
+                    $this->userRepository->save($user);
 
-	/**
-	 * Zobrazení stránky pro vytvoření administrátora.
-	 * @throws AbortException
-	 * @throws \Throwable
-	 */
-	public function renderAdmin(): void
-	{
-		try {
-			if ($this->settingsFacade->getBoolValue(Settings::ADMIN_CREATED)) {
-				$this->flashMessage('install.admin.admin_already_created', 'info');
-				$this->redirect('finish');
-			}
-		} catch (TableNotFoundException $ex) {
-			$this->redirect('default');
-		} catch (SettingsException $ex) {
-			$this->redirect('default');
-		}
+                    $adminRole        = $this->roleRepository->findBySystemName(Role::ADMIN);
+                    $implicitSubevent = $this->subeventRepository->findImplicit();
 
-		if (!$this->user->isLoggedIn()) {
-			return;
-		}
+                    $this->applicationService->register(
+                        $user,
+                        new ArrayCollection([$adminRole]),
+                        new ArrayCollection([$implicitSubevent]),
+                        $user,
+                        true
+                    );
 
-		$this->em->transactional(function ($em): void {
-			$user = $this->userRepository->findById($this->user->id);
-			$this->userRepository->save($user);
+                    $this->settingsFacade->setBoolValue(Settings::ADMIN_CREATED, true);
+            }
+        );
 
-			$adminRole = $this->roleRepository->findBySystemName(Role::ADMIN);
-			$implicitSubevent = $this->subeventRepository->findImplicit();
+        $this->user->logout(true);
 
-			$this->applicationService->register(
-				$user,
-				new ArrayCollection([$adminRole]),
-				new ArrayCollection([$implicitSubevent]),
-				$user,
-				true
-			);
+        $this->redirect('finish');
+    }
 
-			$this->settingsFacade->setBoolValue(Settings::ADMIN_CREATED, true);
-		});
+    /**
+     * Otestování připojení ke skautIS, přesměrování na přihlašovací stránku.
+     *
+     * @throws AbortException
+     */
+    public function handleCreateAdmin() : void
+    {
+        if (! $this->checkSkautISConnection()) {
+            $this->flashMessage('install.admin.skautis_access_denied', 'danger');
+            return;
+        }
+        $this->redirect(':Auth:login', ['backlink' => ':Install:Install:admin']);
+    }
 
-		$this->user->logout(true);
+    /**
+     * Zobrazení stránky po úspěšné instalaci.
+     *
+     * @throws AbortException
+     * @throws \Throwable
+     */
+    public function renderFinish() : void
+    {
+        try {
+            if (! $this->settingsFacade->getBoolValue(Settings::ADMIN_CREATED)) {
+                $this->redirect('default');
+            }
+        } catch (TableNotFoundException $ex) {
+            $this->redirect('default');
+        } catch (SettingsException $ex) {
+            $this->redirect('default');
+        }
+    }
 
-		$this->redirect('finish');
-	}
+    /**
+     * Zobrazení stránky pokud byla instalace dokončena dříve.
+     *
+     * @throws AbortException
+     * @throws \Throwable
+     */
+    public function renderInstalled() : void
+    {
+        try {
+            if (! $this->settingsFacade->getBoolValue(Settings::ADMIN_CREATED)) {
+                $this->redirect('default');
+            }
+        } catch (TableNotFoundException $ex) {
+            $this->redirect('default');
+        } catch (SettingsException $ex) {
+            $this->redirect('default');
+        }
+    }
 
-	/**
-	 * Otestování připojení ke skautIS, přesměrování na přihlašovací stránku.
-	 * @throws AbortException
-	 */
-	public function handleCreateAdmin(): void
-	{
-		if (!$this->checkSkautISConnection()) {
-			$this->flashMessage('install.admin.skautis_access_denied', 'danger');
-			return;
-		}
-		$this->redirect(':Auth:login', ['backlink' => ':Install:Install:admin']);
-	}
-
-	/**
-	 * Zobrazení stránky po úspěšné instalaci.
-	 * @throws AbortException
-	 * @throws \Throwable
-	 */
-	public function renderFinish(): void
-	{
-		try {
-			if (!$this->settingsFacade->getBoolValue(Settings::ADMIN_CREATED)) {
-				$this->redirect('default');
-			}
-		} catch (TableNotFoundException $ex) {
-			$this->redirect('default');
-		} catch (SettingsException $ex) {
-			$this->redirect('default');
-		}
-	}
-
-	/**
-	 * Zobrazení stránky pokud byla instalace dokončena dříve.
-	 * @throws AbortException
-	 * @throws \Throwable
-	 */
-	public function renderInstalled(): void
-	{
-		try {
-			if (!$this->settingsFacade->getBoolValue(Settings::ADMIN_CREATED)) {
-				$this->redirect('default');
-			}
-		} catch (TableNotFoundException $ex) {
-			$this->redirect('default');
-		} catch (SettingsException $ex) {
-			$this->redirect('default');
-		}
-	}
-
-	/**
-	 * Vyzkouší připojení ke skautIS pomocí anonymní funkce.
-	 */
-	private function checkSkautISConnection(): bool
-	{
-		try {
-			$wsdlManager = new WsdlManager(new WebServiceFactory(), new Config($this->context->parameters['skautIS']['appId'], $this->context->parameters['skautIS']['test']));
-			$skautIS = new Skautis($wsdlManager, new User($wsdlManager));
-			$skautIS->org->UnitAllRegistryBasic();
-		} catch (WsdlException $ex) {
-			return false;
-		}
-		return true;
-	}
+    /**
+     * Vyzkouší připojení ke skautIS pomocí anonymní funkce.
+     */
+    private function checkSkautISConnection() : bool
+    {
+        try {
+            $wsdlManager = new WsdlManager(new WebServiceFactory(), new Config($this->context->parameters['skautIS']['appId'], $this->context->parameters['skautIS']['test']));
+            $skautIS     = new Skautis($wsdlManager, new User($wsdlManager));
+            $skautIS->org->UnitAllRegistryBasic();
+        } catch (WsdlException $ex) {
+            return false;
+        }
+        return true;
+    }
 }

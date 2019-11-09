@@ -28,29 +28,28 @@ class AclPresenter extends AdminBasePresenter
     protected $resource = Resource::ACL;
 
     /**
-     * @var AddRoleForm
+     * @var    AddRoleForm
      * @inject
      */
     public $addRoleFormFactory;
 
     /**
-     * @var EditRoleForm
+     * @var    EditRoleForm
      * @inject
      */
     public $editRoleFormFactory;
 
     /**
-     * @var IRolesGridControlFactory
+     * @var    IRolesGridControlFactory
      * @inject
      */
     public $rolesGridControlFactory;
 
     /**
-     * @var Authenticator
+     * @var    Authenticator
      * @inject
      */
     public $authenticator;
-
 
     /**
      * @throws AbortException
@@ -71,6 +70,7 @@ class AclPresenter extends AdminBasePresenter
 
     /**
      * Zapne testování role.
+     *
      * @throws AbortException
      */
     public function actionTest(int $id) : void

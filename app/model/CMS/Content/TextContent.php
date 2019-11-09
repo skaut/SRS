@@ -10,8 +10,8 @@ use Nette\Application\UI\Form;
 /**
  * Entita obsahu s textem.
  *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author                         Michal Májský
+ * @author                         Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity
  * @ORM\Table(name="text_content")
  */
@@ -22,11 +22,11 @@ class TextContent extends Content implements IContent
 
     /**
      * Text.
+     *
      * @ORM\Column(type="text", nullable=true)
-     * @var string
+     * @var                     string
      */
     protected $text;
-
 
     public function getText() : ?string
     {
@@ -48,8 +48,8 @@ class TextContent extends Content implements IContent
         $formContainer = $form[$this->getContentFormName()];
 
         $formContainer->addTextArea('text', 'admin.cms.pages_content_text')
-            ->setDefaultValue($this->text)
-            ->setAttribute('class', 'tinymce');
+                ->setDefaultValue($this->text)
+                ->setAttribute('class', 'tinymce');
 
         return $form;
     }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\CMS\Document;
@@ -11,122 +12,126 @@ use Nettrine\ORM\Entity\Attributes\Id as Identifier;
 /**
  * Entita dokumentu.
  *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author                                           Michal Májský
+ * @author                                           Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="DocumentRepository")
  * @ORM\Table(name="document")
  */
 class Document
 {
+    /**
+     * Adresář pro ukládání dokumentů.
+     */
+    public const PATH = '/documents';
 
-	/**
-	 * Adresář pro ukládání dokumentů.
-	 */
-	public const PATH = '/documents';
+    use Identifier;
 
-	use Identifier;
+    /**
+     * Tagy dokumentu.
+     *
+     * @ORM\ManyToMany(targetEntity="Tag", inversedBy="documents", cascade={"persist"})
+     * @var                                Collection|Tag[]
+     */
+    protected $tags;
 
-	/**
-	 * Tagy dokumentu.
-	 * @ORM\ManyToMany(targetEntity="Tag", inversedBy="documents", cascade={"persist"})
-	 * @var Collection|Tag[]
-	 */
-	protected $tags;
+    /**
+     * Název dokumentu.
+     *
+     * @ORM\Column(type="string")
+     * @var                       string
+     */
+    protected $name;
 
-	/**
-	 * Název dokumentu.
-	 * @ORM\Column(type="string")
-	 * @var string
-	 */
-	protected $name;
+    /**
+     * Adresa souboru.
+     *
+     * @ORM\Column(type="string")
+     * @var                       string
+     */
+    protected $file;
 
-	/**
-	 * Adresa souboru.
-	 * @ORM\Column(type="string")
-	 * @var string
-	 */
-	protected $file;
+    /**
+     * Popis.
+     *
+     * @ORM\Column(type="string", nullable=true)
+     * @var                       string
+     */
+    protected $description;
 
-	/**
-	 * Popis.
-	 * @ORM\Column(type="string", nullable=true)
-	 * @var string
-	 */
-	protected $description;
+    /**
+     * Datum změny souboru.
+     *
+     * @ORM\Column(type="datetime");
+     * @var                          \DateTime
+     */
+    protected $timestamp;
 
-	/**
-	 * Datum změny souboru.
-	 * @ORM\Column(type="datetime");
-	 * @var \DateTime
-	 */
-	protected $timestamp;
+    public function __construct()
+    {
+        $this->tags = new ArrayCollection();
+    }
 
-	public function __construct()
-	{
-		$this->tags = new ArrayCollection();
-	}
+    public function getId() : int
+    {
+        return $this->id;
+    }
 
-	public function getId(): int
-	{
-		return $this->id;
-	}
+    /**
+     * @return Collection|Tag[]
+     */
+    public function getTags() : Collection
+    {
+        return $this->tags;
+    }
 
-	/**
-	 * @return Collection|Tag[]
-	 */
-	public function getTags(): Collection
-	{
-		return $this->tags;
-	}
+    /**
+     * @param Collection|Tag[] $tags
+     */
+    public function setTags(Collection $tags) : void
+    {
+        $this->tags->clear();
+        foreach ($tags as $tag) {
+            $this->tags->add($tag);
+        }
+    }
 
-	/**
-	 * @param Collection|Tag[] $tags
-	 */
-	public function setTags(Collection $tags): void
-	{
-		$this->tags->clear();
-		foreach ($tags as $tag) {
-			$this->tags->add($tag);
-		}
-	}
+    public function getName() : string
+    {
+        return $this->name;
+    }
 
-	public function getName(): string
-	{
-		return $this->name;
-	}
+    public function setName(string $name) : void
+    {
+        $this->name = $name;
+    }
 
-	public function setName(string $name): void
-	{
-		$this->name = $name;
-	}
+    public function getFile() : string
+    {
+        return $this->file;
+    }
 
-	public function getFile(): string
-	{
-		return $this->file;
-	}
+    public function setFile(string $file) : void
+    {
+        $this->file = $file;
+    }
 
-	public function setFile(string $file): void
-	{
-		$this->file = $file;
-	}
+    public function getDescription() : ?string
+    {
+        return $this->description;
+    }
 
-	public function getDescription(): ?string
-	{
-		return $this->description;
-	}
+    public function setDescription(?string $description) : void
+    {
+        $this->description = $description;
+    }
 
-	public function setDescription(?string $description): void
-	{
-		$this->description = $description;
-	}
+    public function getTimestamp() : \DateTime
+    {
+        return $this->timestamp;
+    }
 
-	public function getTimestamp(): \DateTime
-	{
-		return $this->timestamp;
-	}
-
-	public function setTimestamp(\DateTime $timestamp): void
-	{
-		$this->timestamp = $timestamp;
-	}
+    public function setTimestamp(\DateTime $timestamp) : void
+    {
+        $this->timestamp = $timestamp;
+    }
 }

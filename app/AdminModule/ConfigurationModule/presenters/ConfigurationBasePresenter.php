@@ -23,7 +23,7 @@ abstract class ConfigurationBasePresenter extends AdminBasePresenter
     protected $resource = Resource::CONFIGURATION;
 
     /**
-     * @var SubeventRepository
+     * @var    SubeventRepository
      * @inject
      */
     public $subeventRepository;
@@ -37,7 +37,6 @@ abstract class ConfigurationBasePresenter extends AdminBasePresenter
 
         $this->checkPermission(Permission::MANAGE);
     }
-
 
     /**
      * @throws SettingsException

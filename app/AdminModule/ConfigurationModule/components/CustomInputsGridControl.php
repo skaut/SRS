@@ -29,7 +29,6 @@ class CustomInputsGridControl extends Control
     /** @var CustomInputRepository */
     private $customInputRepository;
 
-
     public function __construct(Translator $translator, CustomInputRepository $customInputRepository)
     {
         parent::__construct();
@@ -48,6 +47,7 @@ class CustomInputsGridControl extends Control
 
     /**
      * Vytvoří komponentu.
+     *
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
@@ -63,43 +63,50 @@ class CustomInputsGridControl extends Control
         $grid->addColumnText('name', 'admin.configuration.custom_inputs_name');
 
         $grid->addColumnText('type', 'admin.configuration.custom_inputs_type')
-            ->setRenderer(function ($row) {
-                return $this->translator->translate('admin.common.custom_' . $row->getType());
-            });
+                ->setRenderer(
+                    function ($row) {
+                            return $this->translator->translate('admin.common.custom_' . $row->getType());
+                    }
+                );
 
-        $columnMandatory = $grid->addColumnStatus('mandatory', 'admin.configuration.custom_inputs_mandatory');
+        $columnMandatory     = $grid->addColumnStatus('mandatory', 'admin.configuration.custom_inputs_mandatory');
         $columnMandatory
-            ->addOption(false, 'admin.configuration.custom_inputs_mandatory_voluntary')
-            ->setClass('btn-primary')
-            ->endOption()
-            ->addOption(true, 'admin.configuration.custom_inputs_mandatory_mandatory')
-            ->setClass('btn-danger')
-            ->endOption()
-            ->onChange[] = [$this, 'changeMandatory'];
+                        ->addOption(false, 'admin.configuration.custom_inputs_mandatory_voluntary')
+                        ->setClass('btn-primary')
+                        ->endOption()
+                        ->addOption(true, 'admin.configuration.custom_inputs_mandatory_mandatory')
+                        ->setClass('btn-danger')
+                        ->endOption()
+                ->onChange[] = [$this, 'changeMandatory'];
 
         $grid->addColumnText('options', 'admin.configuration.custom_inputs_options')
-            ->setRenderer(function ($row) {
-                return $row->getType() === CustomInput::SELECT ? $row->getOptions() : null;
-            });
+                ->setRenderer(
+                    function ($row) {
+                            return $row->getType() === CustomInput::SELECT ? $row->getOptions() : null;
+                    }
+                );
 
         $grid->addToolbarButton('Application:add')
-            ->setIcon('plus')
-            ->setTitle('admin.common.add');
+                ->setIcon('plus')
+                ->setTitle('admin.common.add');
 
         $grid->addAction('edit', 'admin.common.edit', 'Application:edit');
 
         $grid->addAction('delete', '', 'delete!')
-            ->setIcon('trash')
-            ->setTitle('admin.common.delete')
-            ->setClass('btn btn-xs btn-danger')
-            ->addAttributes([
-                'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('admin.configuration.custom_inputs_delete_confirm'),
-            ]);
+                ->setIcon('trash')
+                ->setTitle('admin.common.delete')
+                ->setClass('btn btn-xs btn-danger')
+                ->addAttributes(
+                    [
+                            'data-toggle' => 'confirmation',
+                            'data-content' => $this->translator->translate('admin.configuration.custom_inputs_delete_confirm'),
+                        ]
+                );
     }
 
     /**
      * Zpracuje odstranění vlastního pole.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -116,6 +123,7 @@ class CustomInputsGridControl extends Control
 
     /**
      * Přesune vlastní pole s id $item_id mezi $prev_id a $next_id.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -137,6 +145,7 @@ class CustomInputsGridControl extends Control
 
     /**
      * Změní povinnost pole.
+     *
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException

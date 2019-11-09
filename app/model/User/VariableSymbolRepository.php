@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\User;
@@ -14,15 +15,15 @@ use Doctrine\ORM\ORMException;
  */
 class VariableSymbolRepository extends EntityRepository
 {
-
-	/**
-	 * Uloží variabilní symbol.
-	 * @throws ORMException
-	 * @throws OptimisticLockException
-	 */
-	public function save(VariableSymbol $variableSymbol): void
-	{
-		$this->_em->persist($variableSymbol);
-		$this->_em->flush();
-	}
+    /**
+     * Uloží variabilní symbol.
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function save(VariableSymbol $variableSymbol) : void
+    {
+        $this->_em->persist($variableSymbol);
+        $this->_em->flush();
+    }
 }

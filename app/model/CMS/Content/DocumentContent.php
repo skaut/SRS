@@ -17,8 +17,8 @@ use Nette\Application\UI\Form;
 /**
  * Entita obsahu s dokumenty.
  *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author                             Michal Májský
+ * @author                             Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity
  * @ORM\Table(name="document_content")
  */
@@ -29,14 +29,14 @@ class DocumentContent extends Content implements IContent
 
     /**
      * Tagy dokumentů, které se zobrazí.
+     *
      * @ORM\ManyToMany(targetEntity="\App\Model\CMS\Document\Tag")
-     * @var Collection|Tag[]
+     * @var                                                        Collection|Tag[]
      */
     protected $tags;
 
     /** @var TagRepository */
     private $tagRepository;
-
 
     /**
      * @throws PageException
@@ -81,7 +81,7 @@ class DocumentContent extends Content implements IContent
         $formContainer = $form[$this->getContentFormName()];
 
         $formContainer->addMultiSelect('tags', 'admin.cms.pages_content_tags', $this->tagRepository->getTagsOptions())
-            ->setDefaultValue($this->tagRepository->findTagsIds($this->tags));
+                ->setDefaultValue($this->tagRepository->findTagsIds($this->tags));
 
         return $form;
     }

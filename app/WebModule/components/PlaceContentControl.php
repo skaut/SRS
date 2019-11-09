@@ -24,12 +24,11 @@ class PlaceContentControl extends Control
     /** @var PlacePointRepository */
     private $placePointRepository;
 
-
     public function __construct(SettingsFacade $settingsFacade, PlacePointRepository $placePointRepository)
     {
         parent::__construct();
 
-        $this->settingsFacade   = $settingsFacade;
+        $this->settingsFacade       = $settingsFacade;
         $this->placePointRepository = $placePointRepository;
     }
 

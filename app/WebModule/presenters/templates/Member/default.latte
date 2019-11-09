@@ -1,11 +1,11 @@
 {block body-class}body-member{/block}
 
 {block main}
-    <h2>{_web.member.heading}</h2>
-    <div>
-        <p>{_web.member.text_info}</p>
-        <p>{_web.member.text_instructions}</p>
-        <p>{_web.member.text_details, ['username' => $dbuser->getUsername(), 'securityCode' => $dbuser->getSecurityCode()]|noescape}</p>
-        <p>{_web.member.text_note}</p>
-    </div>
+<h2>{_web.member.heading}</h2>
+<div>
+	<p>{_web.member.text_info}</p>
+	<p>{_web.member.text_instructions}</p>
+	<p>{_web.member.text_details, ['username' => $dbuser->getUsername(), 'securityCode' => $dbuser->getSecurityCode()]|noescape}</p>
+	<p>{_web.member.text_note}</p>
+</div>
 {/block}

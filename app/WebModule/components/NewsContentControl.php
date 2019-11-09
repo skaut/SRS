@@ -19,7 +19,6 @@ class NewsContentControl extends Control
     /** @var NewsRepository */
     private $newsRepository;
 
-
     public function __construct(NewsRepository $newsRepository)
     {
         parent::__construct();

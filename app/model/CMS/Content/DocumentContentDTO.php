@@ -13,10 +13,10 @@ class DocumentContentDTO extends ContentDTO
 {
     /**
      * Tagy dokumentů, které se zobrazí.
+     *
      * @var int[]
      */
     protected $tags;
-
 
     /**
      * @param int[] $tags

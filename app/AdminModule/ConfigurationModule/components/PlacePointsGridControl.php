@@ -28,7 +28,6 @@ class PlacePointsGridControl extends Control
     /** @var PlacePointRepository */
     private $placePointRepository;
 
-
     public function __construct(Translator $translator, PlacePointRepository $placePointRepository)
     {
         parent::__construct();
@@ -47,6 +46,7 @@ class PlacePointsGridControl extends Control
 
     /**
      * Vytvoří komponentu.
+     *
      * @throws DataGridException
      */
     public function createComponentPlacePointsGrid(string $name) : void
@@ -58,34 +58,39 @@ class PlacePointsGridControl extends Control
 
         $grid->addColumnText('name', 'admin.configuration.place_points_name');
         $grid->addColumnText('gps', 'admin.configuration.place_points_gps')
-            ->setRenderer(function ($row) {
-                $lat = $row->getGpsLat();
-                $lon = $row->getGpsLon();
+                ->setRenderer(
+                    function ($row) {
+                            $lat = $row->getGpsLat();
+                            $lon = $row->getGpsLon();
 
-                $latText = number_format(abs($lat), 7) . ($lat >= 0 ? 'N' : 'S');
-                $lonText = number_format(abs($lon), 7) . ($lon >= 0 ? 'E' : 'W');
+                            $latText = number_format(abs($lat), 7) . ($lat >= 0 ? 'N' : 'S');
+                            $lonText = number_format(abs($lon), 7) . ($lon >= 0 ? 'E' : 'W');
 
-                return $latText . ', ' . $lonText;
-            });
+                            return $latText . ', ' . $lonText;
+                    }
+                );
 
         $grid->addToolbarButton('Place:add')
-            ->setIcon('plus')
-            ->setTitle('admin.common.add');
+                ->setIcon('plus')
+                ->setTitle('admin.common.add');
 
         $grid->addAction('edit', 'admin.common.edit', 'Place:edit');
 
         $grid->addAction('delete', '', 'delete!')
-            ->setIcon('trash')
-            ->setTitle('admin.common.delete')
-            ->setClass('btn btn-xs btn-danger')
-            ->addAttributes([
-                'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('admin.configuration.place_points_delete_confirm'),
-            ]);
+                ->setIcon('trash')
+                ->setTitle('admin.common.delete')
+                ->setClass('btn btn-xs btn-danger')
+                ->addAttributes(
+                    [
+                            'data-toggle' => 'confirmation',
+                            'data-content' => $this->translator->translate('admin.configuration.place_points_delete_confirm'),
+                        ]
+                );
     }
 
     /**
      * Zpracuje odstranění mapového bodu.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException

@@ -35,18 +35,21 @@ class BlockForm
 
     /**
      * Přihlášený uživatel.
+     *
      * @var User
      */
     private $user;
 
     /**
      * Upravovaný programový blok.
+     *
      * @var Block
      */
     private $block;
 
     /**
      * Jsou vytvořené podakce.
+     *
      * @var bool
      */
     private $subeventsExists;
@@ -78,7 +81,6 @@ class BlockForm
     /** @var Validators */
     private $validators;
 
-
     public function __construct(
         BaseForm $baseFormFactory,
         BlockRepository $blockRepository,
@@ -94,7 +96,7 @@ class BlockForm
         $this->blockRepository    = $blockRepository;
         $this->userRepository     = $userRepository;
         $this->categoryRepository = $categoryRepository;
-        $this->settingsFacade = $settingsFacade;
+        $this->settingsFacade     = $settingsFacade;
         $this->programRepository  = $programRepository;
         $this->subeventRepository = $subeventRepository;
         $this->programService     = $programService;
@@ -103,6 +105,7 @@ class BlockForm
 
     /**
      * Vytvoří formulář.
+     *
      * @throws NonUniqueResultException
      */
     public function create(int $id, int $userId) : Form
@@ -117,16 +120,16 @@ class BlockForm
         $form->addHidden('id');
 
         $form->addText('name', 'admin.program.blocks_name')
-            ->addRule(Form::FILLED, 'admin.program.blocks_name_empty');
+                ->addRule(Form::FILLED, 'admin.program.blocks_name_empty');
 
         if ($this->subeventsExists) {
             $form->addSelect('subevent', 'admin.program.blocks_subevent', $this->subeventRepository->getSubeventsOptions())
-                ->setPrompt('')
-                ->addRule(Form::FILLED, 'admin.program.blocks_subevent_empty');
+                    ->setPrompt('')
+                    ->addRule(Form::FILLED, 'admin.program.blocks_subevent_empty');
         }
 
         $form->addSelect('category', 'admin.program.blocks_category', $this->categoryRepository->getCategoriesOptions())
-            ->setPrompt('');
+                ->setPrompt('');
 
         $userIsAllowedManageAllPrograms = $this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS);
         if ($userIsAllowedManageAllPrograms) {
@@ -144,32 +147,32 @@ class BlockForm
         $form->addMultiSelect('lectors', 'admin.program.blocks_lectors', $lectorsOptions);
 
         $form->addText('duration', 'admin.program.blocks_duration_form')
-            ->addRule(Form::FILLED, 'admin.program.blocks_duration_empty')
-            ->addRule(Form::NUMERIC, 'admin.program.blocks_duration_format');
+                ->addRule(Form::FILLED, 'admin.program.blocks_duration_empty')
+                ->addRule(Form::NUMERIC, 'admin.program.blocks_duration_format');
 
         $form->addText('capacity', 'admin.program.blocks_capacity')
-            ->setAttribute('data-toggle', 'tooltip')
-            ->setAttribute('title', $form->getTranslator()->translate('admin.program.blocks_capacity_note'))
-            ->addCondition(Form::FILLED)
-            ->addRule(Form::INTEGER, 'admin.program.blocks_capacity_format');
+                ->setAttribute('data-toggle', 'tooltip')
+                ->setAttribute('title', $form->getTranslator()->translate('admin.program.blocks_capacity_note'))
+                ->addCondition(Form::FILLED)
+                ->addRule(Form::INTEGER, 'admin.program.blocks_capacity_format');
 
         $form->addCheckbox('mandatory', 'admin.program.blocks_mandatory_form')
-            ->addCondition(Form::EQUAL, true)
-            ->toggle('autoRegisteredCheckbox');
+                ->addCondition(Form::EQUAL, true)
+                ->toggle('autoRegisteredCheckbox');
 
         $form->addCheckbox('autoRegistered', 'admin.program.blocks_auto_registered')
-            ->setOption('id', 'autoRegisteredCheckbox')
-            ->setAttribute('data-toggle', 'tooltip')
-            ->setAttribute('title', $form->getTranslator()->translate('admin.program.blocks_auto_registered_note'))
-            ->addCondition(Form::FILLED)
-            ->addRule([$this, 'validateAutoRegistered'], 'admin.program.blocks_auto_registered_not_allowed');
+                ->setOption('id', 'autoRegisteredCheckbox')
+                ->setAttribute('data-toggle', 'tooltip')
+                ->setAttribute('title', $form->getTranslator()->translate('admin.program.blocks_auto_registered_note'))
+                ->addCondition(Form::FILLED)
+                ->addRule([$this, 'validateAutoRegistered'], 'admin.program.blocks_auto_registered_not_allowed');
 
         $form->addTextArea('perex', 'admin.program.blocks_perex_form')
-            ->addCondition(Form::FILLED)
-            ->addRule(Form::MAX_LENGTH, 'admin.program.blocks_perex_length', 160);
+                ->addCondition(Form::FILLED)
+                ->addRule(Form::MAX_LENGTH, 'admin.program.blocks_perex_length', 160);
 
         $form->addTextArea('description', 'admin.program.blocks_description')
-            ->setAttribute('class', 'tinymce-paragraph');
+                ->setAttribute('class', 'tinymce-paragraph');
 
         $form->addText('tools', 'admin.program.blocks_tools');
 
@@ -178,30 +181,34 @@ class BlockForm
         $form->addSubmit('submitAndContinue', 'admin.common.save_and_continue');
 
         $form->addSubmit('cancel', 'admin.common.cancel')
-            ->setValidationScope([])
-            ->setAttribute('class', 'btn btn-warning');
+                ->setValidationScope([])
+                ->setAttribute('class', 'btn btn-warning');
 
         if ($this->block) {
             $form['name']->addRule(Form::IS_NOT_IN, 'admin.program.blocks_name_exists', $this->blockRepository->findOthersNames($id));
 
-            $form->setDefaults([
-                'id' => $id,
-                'name' => $this->block->getName(),
-                'category' => $this->block->getCategory() ? $this->block->getCategory()->getId() : null,
-                'lectors' => $this->userRepository->findUsersIds($this->block->getLectors()),
-                'duration' => $this->block->getDuration(),
-                'capacity' => $this->block->getCapacity(),
-                'mandatory' => $this->block->getMandatory() === ProgramMandatoryType::MANDATORY || $this->block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED,
-                'autoRegistered' => $this->block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED,
-                'perex' => $this->block->getPerex(),
-                'description' => $this->block->getDescription(),
-                'tools' => $this->block->getTools(),
-            ]);
+            $form->setDefaults(
+                [
+                        'id' => $id,
+                        'name' => $this->block->getName(),
+                        'category' => $this->block->getCategory() ? $this->block->getCategory()->getId() : null,
+                        'lectors' => $this->userRepository->findUsersIds($this->block->getLectors()),
+                        'duration' => $this->block->getDuration(),
+                        'capacity' => $this->block->getCapacity(),
+                        'mandatory' => $this->block->getMandatory() === ProgramMandatoryType::MANDATORY || $this->block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED,
+                        'autoRegistered' => $this->block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED,
+                        'perex' => $this->block->getPerex(),
+                        'description' => $this->block->getDescription(),
+                        'tools' => $this->block->getTools(),
+                    ]
+            );
 
             if ($this->subeventsExists) {
-                $form->setDefaults([
-                    'subevent' => $this->block->getSubevent() ? $this->block->getSubevent()->getId() : null,
-                ]);
+                $form->setDefaults(
+                    [
+                            'subevent' => $this->block->getSubevent() ? $this->block->getSubevent()->getId() : null,
+                        ]
+                );
             }
         } else {
             $form['name']->addRule(Form::IS_NOT_IN, 'admin.program.blocks_name_exists', $this->blockRepository->findAllNames());
@@ -219,6 +226,7 @@ class BlockForm
 
     /**
      * Zpracuje formulář.
+     *
      * @throws \Throwable
      */
     public function processForm(Form $form, \stdClass $values) : void

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\ActionModule\Presenters;
@@ -17,37 +18,37 @@ use Nette\Application\AbortException;
  */
 class MailingPresenter extends ActionBasePresenter
 {
+    /**
+     * @var    SettingsFacade
+     * @inject
+     */
+    public $settingsFacade;
 
-	/**
-	 * @var SettingsFacade
-	 * @inject
-	 */
-	public $settingsFacade;
+    /**
+     * Ověří e-mail semináře.
+     *
+     * @throws SettingsException
+     * @throws AbortException
+     * @throws \Throwable
+     */
+    public function actionVerify(string $code) : void
+    {
+        if ($code === $this->settingsFacade->getValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE)) {
+            $newEmail = $this->settingsFacade->getValue(Settings::SEMINAR_EMAIL_UNVERIFIED);
+            $this->settingsFacade->setValue(Settings::SEMINAR_EMAIL, $newEmail);
 
-	/**
-	 * Ověří e-mail semináře.
-	 * @throws SettingsException
-	 * @throws AbortException
-	 * @throws \Throwable
-	 */
-	public function actionVerify(string $code): void
-	{
-		if ($code === $this->settingsFacade->getValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE)) {
-			$newEmail = $this->settingsFacade->getValue(Settings::SEMINAR_EMAIL_UNVERIFIED);
-			$this->settingsFacade->setValue(Settings::SEMINAR_EMAIL, $newEmail);
+            $this->settingsFacade->setValue(Settings::SEMINAR_EMAIL_UNVERIFIED, null);
+            $this->settingsFacade->setValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE, null);
 
-			$this->settingsFacade->setValue(Settings::SEMINAR_EMAIL_UNVERIFIED, null);
-			$this->settingsFacade->setValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE, null);
+            $this->flashMessage('admin.configuration.mailing_email_verification_successful', 'success');
+        } else {
+            $this->flashMessage('admin.configuration.mailing_email_verification_error', 'danger');
+        }
 
-			$this->flashMessage('admin.configuration.mailing_email_verification_successful', 'success');
-		} else {
-			$this->flashMessage('admin.configuration.mailing_email_verification_error', 'danger');
-		}
-
-		if ($this->user->isAllowed(Resource::CONFIGURATION, Permission::MANAGE)) {
-			$this->redirect(':Admin:Configuration:Mailing:default');
-		} else {
-			$this->redirect(':Web:Page:default');
-		}
-	}
+        if ($this->user->isAllowed(Resource::CONFIGURATION, Permission::MANAGE)) {
+            $this->redirect(':Admin:Configuration:Mailing:default');
+        } else {
+            $this->redirect(':Web:Page:default');
+        }
+    }
 }

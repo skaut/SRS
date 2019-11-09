@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services;
@@ -18,27 +19,25 @@ use Nette;
  */
 class Authorizator extends Nette\Security\Permission
 {
+    public function __construct(
+        RoleFacade $roleFacade,
+        PermissionFacade $permissionRepository,
+        ResourceFacade $resourceFacade
+    ) {
+        $this->addRole(Role::TEST); //role pouzivana pri testovani jine role
 
-	public function __construct(
-		RoleFacade $roleFacade,
-		PermissionFacade $permissionRepository,
-		ResourceFacade $resourceFacade
-	)
-	{
-		$this->addRole(Role::TEST); //role pouzivana pri testovani jine role
-
-		try {
-			foreach ($resourceFacade->findAllNames() as $resourceName) {
-				$this->addResource($resourceName);
-			}
-			foreach ($roleFacade->findAllNames() as $roleName) {
-				$this->addRole($roleName);
-			}
-			foreach ($permissionRepository->findAllNames() as $permission) {
-				$this->allow($permission['roleName'], $permission['resourceName'], $permission['name']);
-			}
-		} catch (TableNotFoundException $ex) {
-			//prvni spusteni pred vytvorenim databaze
-		}
-	}
+        try {
+            foreach ($resourceFacade->findAllNames() as $resourceName) {
+                $this->addResource($resourceName);
+            }
+            foreach ($roleFacade->findAllNames() as $roleName) {
+                $this->addRole($roleName);
+            }
+            foreach ($permissionRepository->findAllNames() as $permission) {
+                $this->allow($permission['roleName'], $permission['resourceName'], $permission['name']);
+            }
+        } catch (TableNotFoundException $ex) {
+            //prvni spusteni pred vytvorenim databaze
+        }
+    }
 }

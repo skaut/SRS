@@ -22,26 +22,26 @@ use function random_bytes;
 class TicketPresenter extends ExportBasePresenter
 {
     /**
-     * @var UserRepository
+     * @var    UserRepository
      * @inject
      */
     public $userRepository;
 
     /**
-     * @var SettingsFacade
+     * @var    SettingsFacade
      * @inject
      */
     public $settingsFacade;
 
     /**
-     * @var SubeventRepository
+     * @var    SubeventRepository
      * @inject
      */
     public $subeventRepository;
 
-
     /**
      * Vygeneruje vstupenku v PDF.
+     *
      * @throws AbortException
      * @throws SettingsException
      * @throws \Throwable
@@ -62,7 +62,7 @@ class TicketPresenter extends ExportBasePresenter
 
         $pdf = new PdfResponse($template);
 
-        $pdf->documentTitle =  'ticket';
+        $pdf->documentTitle = 'ticket';
         $pdf->pageFormat    = 'A4';
 
         $pdf->getMPDF()->SetProtection(['copy', 'print', 'print-highres'], '', random_bytes(30));

@@ -50,7 +50,6 @@ class SkautIsEventForm
     /** @var SubeventRepository */
     private $subeventRepository;
 
-
     public function __construct(
         BaseForm $baseForm,
         SettingsFacade $settingsFacade,
@@ -60,7 +59,7 @@ class SkautIsEventForm
         SubeventRepository $subeventRepository
     ) {
         $this->baseFormFactory              = $baseForm;
-        $this->settingsFacade           = $settingsFacade;
+        $this->settingsFacade               = $settingsFacade;
         $this->skautIsCourseRepository      = $skautIsCourseRepository;
         $this->skautIsEventGeneralService   = $skautIsEventGeneralService;
         $this->skautIsEventEducationService = $skautIsEventEducationService;
@@ -69,6 +68,7 @@ class SkautIsEventForm
 
     /**
      * Vytvoří formulář.
+     *
      * @throws SettingsException
      * @throws \Throwable
      */
@@ -86,29 +86,31 @@ class SkautIsEventForm
             SkautIsEventType::getSkautIsEventTypesOptions()
         );
         $eventTypeSelect->addCondition($form::EQUAL, SkautIsEventType::GENERAL)
-            ->toggle('event-general');
+                ->toggle('event-general');
         $eventTypeSelect->addCondition($form::EQUAL, SkautIsEventType::EDUCATION)
-            ->toggle('event-education');
+                ->toggle('event-education');
 
         $form->addSelect(
             'skautisEventGeneral',
             'admin.configuration.skautis_event',
             $this->skautIsEventGeneralService->getEventsOptions()
         )
-            ->setOption('id', 'event-general');
+                ->setOption('id', 'event-general');
 
         $form->addSelect(
             'skautisEventEducation',
             'admin.configuration.skautis_event',
             $this->skautIsEventEducationService->getEventsOptions()
         )
-            ->setOption('id', 'event-education');
+                ->setOption('id', 'event-education');
 
         $form->addSubmit('submit', 'admin.common.save');
 
-        $form->setDefaults([
-            'skautisEventType' => $this->settingsFacade->getValue(Settings::SKAUTIS_EVENT_TYPE),
-        ]);
+        $form->setDefaults(
+            [
+                    'skautisEventType' => $this->settingsFacade->getValue(Settings::SKAUTIS_EVENT_TYPE),
+                ]
+        );
 
         $form->onSuccess[] = [$this, 'processForm'];
 
@@ -117,6 +119,7 @@ class SkautIsEventForm
 
     /**
      * Zpracuje formulář.
+     *
      * @throws SettingsException
      * @throws NonUniqueResultException
      * @throws ORMException

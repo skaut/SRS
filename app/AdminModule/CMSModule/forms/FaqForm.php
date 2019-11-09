@@ -27,13 +27,15 @@ class FaqForm
 
     /**
      * Upravovaná otázka.
+     *
      * @var Faq
      */
     private $faq;
 
     /**
      * Přihlášený uživatel.
-     * @var  User
+     *
+     * @var User
      */
     private $user;
 
@@ -45,7 +47,6 @@ class FaqForm
 
     /** @var UserRepository */
     private $userRepository;
-
 
     public function __construct(BaseForm $baseFormFactory, FaqRepository $faqRepository, UserRepository $userRepository)
     {
@@ -67,10 +68,10 @@ class FaqForm
         $form->addHidden('id');
 
         $form->addTextArea('question', 'admin.cms.faq_question')
-            ->addRule(Form::FILLED, 'admin.cms.faq_question_empty');
+                ->addRule(Form::FILLED, 'admin.cms.faq_question_empty');
 
         $form->addTextArea('answer', 'admin.cms.faq_answer')
-            ->setAttribute('class', 'tinymce-paragraph');
+                ->setAttribute('class', 'tinymce-paragraph');
 
         $form->addCheckbox('public', 'admin.cms.faq_public_form');
 
@@ -79,16 +80,18 @@ class FaqForm
         $form->addSubmit('submitAndContinue', 'admin.common.save_and_continue');
 
         $form->addSubmit('cancel', 'admin.common.cancel')
-            ->setValidationScope([])
-            ->setAttribute('class', 'btn btn-warning');
+                ->setValidationScope([])
+                ->setAttribute('class', 'btn btn-warning');
 
         if ($this->faq) {
-            $form->setDefaults([
-                'id' => $id,
-                'question' => $this->faq->getQuestion(),
-                'answer' => $this->faq->getAnswer(),
-                'public' => $this->faq->isPublic(),
-            ]);
+            $form->setDefaults(
+                [
+                        'id' => $id,
+                        'question' => $this->faq->getQuestion(),
+                        'answer' => $this->faq->getAnswer(),
+                        'public' => $this->faq->isPublic(),
+                    ]
+            );
         } else {
             $form->setDefaults(['public' => true]);
         }
@@ -101,6 +104,7 @@ class FaqForm
 
     /**
      * Zpracuje formulář.
+     *
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException

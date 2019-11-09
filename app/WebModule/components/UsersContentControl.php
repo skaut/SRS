@@ -19,7 +19,6 @@ class UsersContentControl extends Control
     /** @var UserRepository */
     private $userRepository;
 
-
     public function __construct(UserRepository $userRepository, RoleRepository $roleRepository)
     {
         parent::__construct();

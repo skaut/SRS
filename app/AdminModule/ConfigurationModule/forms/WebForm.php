@@ -36,21 +36,21 @@ class WebForm
     /** @var FilesService */
     private $filesService;
 
-
     public function __construct(
         BaseForm $baseFormFactory,
         PageRepository $pageRepository,
         SettingsFacade $settingsFacade,
         FilesService $filesService
     ) {
-        $this->baseFormFactory    = $baseFormFactory;
-        $this->pageRepository     = $pageRepository;
-        $this->settingsFacade = $settingsFacade;
-        $this->filesService       = $filesService;
+        $this->baseFormFactory = $baseFormFactory;
+        $this->pageRepository  = $pageRepository;
+        $this->settingsFacade  = $settingsFacade;
+        $this->filesService    = $filesService;
     }
 
     /**
      * Vytvoří formulář.
+     *
      * @throws SettingsException
      * @throws \Throwable
      */
@@ -63,24 +63,26 @@ class WebForm
         $renderer->wrappers['label']['container']   = 'div class="col-sm-5 col-xs-5 control-label"';
 
         $form->addUpload('logo', 'admin.configuration.web_new_logo')
-            ->setAttribute('accept', 'image/*')
-            ->addCondition(Form::FILLED)
-            ->addRule(Form::IMAGE, 'admin.configuration.web_new_logo_format');
+                ->setAttribute('accept', 'image/*')
+                ->addCondition(Form::FILLED)
+                ->addRule(Form::IMAGE, 'admin.configuration.web_new_logo_format');
 
         $form->addText('footer', 'admin.configuration.web_footer');
 
         $form->addSelect('redirectAfterLogin', 'admin.configuration.web_redirect_after_login', $this->pageRepository->getPagesOptions())
-            ->addRule(Form::FILLED, 'admin.configuration.web_redirect_after_login_empty');
+                ->addRule(Form::FILLED, 'admin.configuration.web_redirect_after_login_empty');
 
         $form->addText('ga_id', 'admin.configuration.web_ga_id');
 
         $form->addSubmit('submit', 'admin.common.save');
 
-        $form->setDefaults([
-            'footer' => $this->settingsFacade->getValue(Settings::FOOTER),
-            'redirectAfterLogin' => $this->settingsFacade->getValue(Settings::REDIRECT_AFTER_LOGIN),
-            'ga_id' => $this->settingsFacade->getValue(Settings::GA_ID),
-        ]);
+        $form->setDefaults(
+            [
+                    'footer' => $this->settingsFacade->getValue(Settings::FOOTER),
+                    'redirectAfterLogin' => $this->settingsFacade->getValue(Settings::REDIRECT_AFTER_LOGIN),
+                    'ga_id' => $this->settingsFacade->getValue(Settings::GA_ID),
+                ]
+        );
 
         $form->onSuccess[] = [$this, 'processForm'];
 
@@ -89,6 +91,7 @@ class WebForm
 
     /**
      * Zpracuje formulář.
+     *
      * @throws Nette\Utils\UnknownImageFileException
      * @throws SettingsException
      * @throws \Throwable

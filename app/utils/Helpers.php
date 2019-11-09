@@ -18,8 +18,7 @@ use function strrpos;
  */
 class Helpers
 {
-    public const DATE_FORMAT = 'j. n. Y';
-
+    public const DATE_FORMAT     = 'j. n. Y';
     public const DATETIME_FORMAT = 'j. n. Y H:i';
 
     /**
@@ -38,13 +37,17 @@ class Helpers
 
     /**
      * Vrátí id prvků v kolekci.
-     * @param Collection|SmartObject[] $collection
+     *
+     * @param  Collection|SmartObject[] $collection
      * @return int[]
      */
     public static function getIds(Collection $collection) : array
     {
-        return array_map(function ($o) {
-            return $o->getId();
-        }, $collection->toArray());
+        return array_map(
+            function ($o) {
+                    return $o->getId();
+            },
+            $collection->toArray()
+        );
     }
 }

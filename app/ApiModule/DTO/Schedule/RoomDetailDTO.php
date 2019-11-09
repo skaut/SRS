@@ -18,22 +18,21 @@ class RoomDetailDTO
 
     /**
      * @JMS\Type("int")
-     * @var int
+     * @var             int
      */
     private $id;
 
     /**
      * @JMS\Type("string")
-     * @var string
+     * @var                string
      */
     private $name;
 
     /**
      * @JMS\Type("integer")
-     * @var ?int
+     * @var                 ?int
      */
     private $capacity;
-
 
     public function getId() : int
     {

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\User;
@@ -15,28 +16,28 @@ use Nettrine\ORM\Entity\Attributes\Id as Identifier;
  */
 class VariableSymbol
 {
+    use Identifier;
 
-	use Identifier;
+    /**
+     * Variabilní symbol.
+     *
+     * @ORM\Column(type="string", nullable=true)
+     * @var                       string
+     */
+    protected $variableSymbol;
 
-	/**
-	 * Variabilní symbol.
-	 * @ORM\Column(type="string", nullable=true)
-	 * @var string
-	 */
-	protected $variableSymbol;
+    public function getId() : int
+    {
+        return $this->id;
+    }
 
-	public function getId(): int
-	{
-		return $this->id;
-	}
+    public function getVariableSymbol() : ?string
+    {
+        return $this->variableSymbol;
+    }
 
-	public function getVariableSymbol(): ?string
-	{
-		return $this->variableSymbol;
-	}
-
-	public function setVariableSymbol(?string $variableSymbol): void
-	{
-		$this->variableSymbol = $variableSymbol;
-	}
+    public function setVariableSymbol(?string $variableSymbol) : void
+    {
+        $this->variableSymbol = $variableSymbol;
+    }
 }

@@ -17,17 +17,16 @@ use App\AdminModule\ConfigurationModule\Forms\IDiscountFormFactory;
 class DiscountsPresenter extends ConfigurationBasePresenter
 {
     /**
-     * @var IDiscountsGridControlFactory
+     * @var    IDiscountsGridControlFactory
      * @inject
      */
     public $discountsGridControlFactory;
 
     /**
-     * @var IDiscountFormFactory
+     * @var    IDiscountFormFactory
      * @inject
      */
     public $discountFormFactory;
-
 
     protected function createComponentDiscountsGrid() : DiscountsGridControl
     {

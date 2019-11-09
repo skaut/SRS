@@ -25,6 +25,7 @@ class RoomScheduleGridControl extends Control
 {
     /**
      * Aktulní místnost
+     *
      * @var Room
      */
     private $room;
@@ -40,7 +41,6 @@ class RoomScheduleGridControl extends Control
 
     /** @var ExcelExportService */
     private $excelExportService;
-
 
     public function __construct(
         Translator $translator,
@@ -66,6 +66,7 @@ class RoomScheduleGridControl extends Control
 
     /**
      * Vytvoří komponentu.
+     *
      * @throws DataGridException
      */
     public function createComponentRoomScheduleGrid(string $name) : void
@@ -74,30 +75,32 @@ class RoomScheduleGridControl extends Control
 
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
-        $grid->setDataSource($this->programRepository->createQueryBuilder('p')
-            ->addSelect('b')->join('p.block', 'b')
-            ->where('p.room = :room')->setParameter('room', $this->room));
+        $grid->setDataSource(
+            $this->programRepository->createQueryBuilder('p')
+                        ->addSelect('b')->join('p.block', 'b')
+                        ->where('p.room = :room')->setParameter('room', $this->room)
+        );
         $grid->setDefaultSort(['start' => 'ASC']);
         $grid->setPagination(false);
 
         $grid->addColumnDateTime('start', 'admin.program.rooms_schedule_program_start')
-            ->setFormat(Helpers::DATETIME_FORMAT);
+                ->setFormat(Helpers::DATETIME_FORMAT);
 
         $grid->addColumnDateTime('end', 'admin.program.rooms_schedule_program_end')
-            ->setFormat(Helpers::DATETIME_FORMAT);
+                ->setFormat(Helpers::DATETIME_FORMAT);
 
         $grid->addColumnText('name', 'admin.program.rooms_schedule_program_name', 'block.name');
 
         $grid->addColumnText('occupancy', 'admin.program.rooms_schedule_occupancy')
-            ->setRenderer(
-                function ($row) {
-                    $capacity = $this->room->getCapacity();
-                    if ($capacity === null) {
-                        return $row->getAttendeesCount();
+                ->setRenderer(
+                    function ($row) {
+                            $capacity = $this->room->getCapacity();
+                        if ($capacity === null) {
+                            return $row->getAttendeesCount();
+                        }
+                            return $row->getAttendeesCount() . '/' . $capacity;
                     }
-                    return $row->getAttendeesCount() . '/' . $capacity;
-                }
-            );
+                );
 
         $grid->addToolbarButton('exportRoomsSchedule!', 'admin.program.rooms_schedule_download_schedule');
     }

@@ -24,6 +24,7 @@ class NewsForm
 
     /**
      * Upravovaná aktualita.
+     *
      * @var News
      */
     private $news;
@@ -33,7 +34,6 @@ class NewsForm
 
     /** @var NewsRepository */
     private $newsRepository;
-
 
     public function __construct(BaseForm $baseFormFactory, NewsRepository $newsRepository)
     {
@@ -53,33 +53,37 @@ class NewsForm
         $form->addHidden('id');
 
         $form->addDateTimePicker('published', 'admin.cms.news_published')
-            ->addRule(Form::FILLED, 'admin.cms.news_published_empty');
+                ->addRule(Form::FILLED, 'admin.cms.news_published_empty');
 
         $form->addCheckbox('pinned', 'admin.cms.news_edit_pinned');
 
         $form->addTextArea('text', 'admin.cms.news_text')
-            ->addRule(Form::FILLED, 'admin.cms.news_text_empty')
-            ->setAttribute('class', 'tinymce-paragraph');
+                ->addRule(Form::FILLED, 'admin.cms.news_text_empty')
+                ->setAttribute('class', 'tinymce-paragraph');
 
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->addSubmit('submitAndContinue', 'admin.common.save_and_continue');
 
         $form->addSubmit('cancel', 'admin.common.cancel')
-            ->setValidationScope([])
-            ->setAttribute('class', 'btn btn-warning');
+                ->setValidationScope([])
+                ->setAttribute('class', 'btn btn-warning');
 
         if ($this->news) {
-            $form->setDefaults([
-                'id' => $id,
-                'published' => $this->news->getPublished(),
-                'pinned' => $this->news->isPinned(),
-                'text' => $this->news->getText(),
-            ]);
+            $form->setDefaults(
+                [
+                        'id' => $id,
+                        'published' => $this->news->getPublished(),
+                        'pinned' => $this->news->isPinned(),
+                        'text' => $this->news->getText(),
+                    ]
+            );
         } else {
-            $form->setDefaults([
-                'published' => new \DateTime(),
-            ]);
+            $form->setDefaults(
+                [
+                        'published' => new \DateTime(),
+                    ]
+            );
         }
 
         $form->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
@@ -90,6 +94,7 @@ class NewsForm
 
     /**
      * Zpracuje formulář.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      */

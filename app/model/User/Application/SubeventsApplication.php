@@ -11,14 +11,13 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Entita přihláška podakcí.
  *
- * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author                                                       Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="SubeventsApplicationRepository")
  */
 class SubeventsApplication extends Application
 {
     /** @var string */
     protected $type = Application::SUBEVENTS;
-
 
     /**
      * @param Collection|Subevent[] $subevents

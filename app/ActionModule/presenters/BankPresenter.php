@@ -18,20 +18,20 @@ use Nette\Application\Responses\TextResponse;
 class BankPresenter extends ActionBasePresenter
 {
     /**
-     * @var BankService
+     * @var    BankService
      * @inject
      */
     public $bankService;
 
     /**
-     * @var SettingsFacade
+     * @var    SettingsFacade
      * @inject
      */
     public $settingsFacade;
 
-
     /**
      * Zkontroluje splatnost přihlášek.
+     *
      * @throws SettingsException
      * @throws \Throwable
      */

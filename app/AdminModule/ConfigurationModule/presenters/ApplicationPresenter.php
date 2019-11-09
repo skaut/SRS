@@ -20,29 +20,28 @@ use Nette\Application\UI\Form;
 class ApplicationPresenter extends ConfigurationBasePresenter
 {
     /**
-     * @var CustomInputRepository
+     * @var    CustomInputRepository
      * @inject
      */
     public $customInputRepository;
 
     /**
-     * @var ICustomInputsGridControlFactory
+     * @var    ICustomInputsGridControlFactory
      * @inject
      */
     public $customInputsGridControlFactory;
 
     /**
-     * @var ApplicationForm
+     * @var    ApplicationForm
      * @inject
      */
     public $applicationFormFactory;
 
     /**
-     * @var CustomInputForm
+     * @var    CustomInputForm
      * @inject
      */
     public $customInputFormFactory;
-
 
     public function renderEdit(int $id) : void
     {

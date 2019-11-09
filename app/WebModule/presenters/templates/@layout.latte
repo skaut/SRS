@@ -1,88 +1,89 @@
 <!DOCTYPE html>
 <html>
-<head>
-    {if $gaId}
-        <!-- Global site tag (gtag.js) - Google Analytics -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-9757753-1"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){ dataLayer.push(arguments);}
-            gtag('js', new Date());
+	<head>
+		{if $gaId}
+			<!-- Global site tag (gtag.js) - Google Analytics -->
+			<script async src="https://www.googletagmanager.com/gtag/js?id=UA-9757753-1"></script>
+			<script>
+				window.dataLayer = window.dataLayer || [];
+				function gtag() {
+					dataLayer.push(arguments);
+				}
+				gtag('js', ne	w Date());
+						gtag('config', {$gaId});
+			</script>
+		{/if}
 
-            gtag('config', {$gaId});
-        </script>
-    {/if}
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="description" content="">
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="">
+		<title>{_web.common.title, [page => $pageName, seminar_name => $seminarName]}</title>
 
-    <title>{_web.common.title, [page => $pageName, seminar_name => $seminarName]}</title>
+		<link rel="shortcut icon" href="{$basePath}/favicon.ico">
 
-    <link rel="shortcut icon" href="{$basePath}/favicon.ico">
+		{control css}
+		{control js}
 
-    {control css}
-    {control js}
+		{block head}{/block}
+	</head>
 
-    {block head}{/block}
-</head>
+	<body class="{block body-class}{/block}">
 
-<body class="{block body-class}{/block}">
+		<div class="container">
+			{snippet flashes}
+				<div id="flashes" class="row">
+					<div class="col-sm-12">
+						{import 'includes/role_test.latte'}
+						{include role-test}
 
-<div class="container">
-    {snippet flashes}
-        <div id="flashes" class="row">
-            <div class="col-sm-12">
-                {import 'includes/role_test.latte'}
-                {include role-test}
+						<div n:foreach="$flashes as $flash" n:class="alert, 'alert-' . $flash->type">
+							{$flash->message|noescape}
+						</div>
+					</div>
+				</div>
+			{/snippet}
 
-                <div n:foreach="$flashes as $flash" n:class="alert, 'alert-' . $flash->type">
-                    {$flash->message|noescape}
-                </div>
-            </div>
-        </div>
-    {/snippet}
+			<div id="header" class="row">
+				<div class="col-sm-12">
+					{import 'includes/user_menu.latte'}
+					{include user-menu}
 
-    <div id="header" class="row">
-        <div class="col-sm-12">
-            {import 'includes/user_menu.latte'}
-            {include user-menu}
+					<div id="logo">
+						<a href="{plink :Web:Page:default}">
+							<img src="{$basePath}/files/logo/{$logo}" title="{$seminarName}" alt="logo">
+						</a>
+					</div>
+				</div>
+			</div>
 
-            <div id="logo">
-                <a href="{plink :Web:Page:default}">
-                    <img src="{$basePath}/files/logo/{$logo}" title="{$seminarName}" alt="logo">
-                </a>
-            </div>
-        </div>
-    </div>
+			<div id="main-menu" class="row">
+				<div class="col-sm-12">
+					{import 'includes/main_menu.latte'}
+					{include main-menu}
+				</div>
+			</div>
 
-    <div id="main-menu" class="row">
-        <div class="col-sm-12">
-            {import 'includes/main_menu.latte'}
-            {include main-menu}
-        </div>
-    </div>
+			<div id="content" class="row">
+				<div id="main" class="{if $sidebarVisible}col-sm-9 col-xs-9{else}col-sm-12{/if}">
+					{include #main}
+				</div>
 
-    <div id="content" class="row">
-        <div id="main" class="{if $sidebarVisible}col-sm-9 col-xs-9{else}col-sm-12{/if}">
-            {include #main}
-        </div>
+				{if $sidebarVisible}
+					<div id="sidebar" class="col-sm-3 col-xs-3">
+						{include #sidebar}
+					</div>
+				{/if}
+			</div>
 
-        {if $sidebarVisible}
-            <div id="sidebar" class="col-sm-3 col-xs-3">
-                {include #sidebar}
-            </div>
-        {/if}
-    </div>
+			<hr>
 
-    <hr>
+			<footer>
+				<p>{$footer|noescape}</p>
+			</footer>
+		</div>
 
-    <footer>
-        <p>{$footer|noescape}</p>
-    </footer>
-</div>
-
-</body>
+	</body>
 </html>
 
 

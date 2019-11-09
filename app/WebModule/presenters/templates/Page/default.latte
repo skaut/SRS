@@ -1,21 +1,21 @@
 {block body-class}{$bodyClass}{/block}
 
 {block main}
-    <div class="row">
-        <div class="col-sm-12 page-heading">
-            <h2>{$page->getName()}</h2>
-        </div>
-    </div>
+<div class="row">
+	<div class="col-sm-12 page-heading">
+		<h2>{$page->getName()}</h2>
+	</div>
+</div>
 
-    {foreach $page->getMainContents() as $content}
-        {control $content->getComponentName(), $content}
-    {/foreach}
+{foreach $page->getMainContents() as $content}
+	{control $content->getComponentName(), $content}
+{/foreach}
 {/block}
 
 {if $sidebar}
     {block sidebar}
-        {foreach $page->getSidebarContents() as $content}
-            {control $content->getComponentName(), $content}
-        {/foreach}
+	{foreach $page->getSidebarContents() as $content}
+		{control $content->getComponentName(), $content}
+	{/foreach}
     {/block}
 {/if}

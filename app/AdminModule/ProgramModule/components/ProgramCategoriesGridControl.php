@@ -44,7 +44,6 @@ class ProgramCategoriesGridControl extends Control
     /** @var ProgramService */
     private $programService;
 
-
     public function __construct(
         Translator $translator,
         CategoryRepository $categoryRepository,
@@ -73,6 +72,7 @@ class ProgramCategoriesGridControl extends Control
 
     /**
      * Vytvoří komponentu.
+     *
      * @throws DataGridException
      */
     public function createComponentProgramCategoriesGrid(string $name) : void
@@ -91,44 +91,49 @@ class ProgramCategoriesGridControl extends Control
 
         $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function ($container) use ($rolesOptions) : void {
             $container->addText('name', '')
-                ->addRule(Form::FILLED, 'admin.program.categories_name_empty')
-                ->addRule(Form::IS_NOT_IN, 'admin.program.categories_name_exists', $this->categoryRepository->findAllNames());
+                    ->addRule(Form::FILLED, 'admin.program.categories_name_empty')
+                    ->addRule(Form::IS_NOT_IN, 'admin.program.categories_name_exists', $this->categoryRepository->findAllNames());
 
             $container->addMultiSelect('registerableRoles', '', $rolesOptions)->setAttribute('class', 'datagrid-multiselect')
-                ->addRule(Form::FILLED, 'admin.program.categories_registerable_roles_empty');
+                    ->addRule(Form::FILLED, 'admin.program.categories_registerable_roles_empty');
         };
         $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
 
         $grid->addInlineEdit()->onControlAdd[]  = function ($container) use ($rolesOptions) : void {
             $container->addText('name', '')
-                ->addRule(Form::FILLED, 'admin.program.categories_name_empty');
+                    ->addRule(Form::FILLED, 'admin.program.categories_name_empty');
 
             $container->addMultiSelect('registerableRoles', '', $rolesOptions)->setAttribute('class', 'datagrid-multiselect')
-                ->addRule(Form::FILLED, 'admin.program.categories_registerable_roles_empty');
+                    ->addRule(Form::FILLED, 'admin.program.categories_registerable_roles_empty');
         };
         $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) : void {
             $container['name']
-                ->addRule(Form::IS_NOT_IN, 'admin.program.categories_name_exists', $this->categoryRepository->findOthersNames($item->getId()));
+                    ->addRule(Form::IS_NOT_IN, 'admin.program.categories_name_exists', $this->categoryRepository->findOthersNames($item->getId()));
 
-            $container->setDefaults([
-                'name' => $item->getName(),
-                'registerableRoles' => $this->roleRepository->findRolesIds($item->getRegisterableRoles()),
-            ]);
+            $container->setDefaults(
+                [
+                        'name' => $item->getName(),
+                        'registerableRoles' => $this->roleRepository->findRolesIds($item->getRegisterableRoles()),
+                    ]
+            );
         };
         $grid->getInlineEdit()->onSubmit[]      = [$this, 'edit'];
 
         $grid->addAction('delete', '', 'delete!')
-            ->setIcon('trash')
-            ->setTitle('admin.common.delete')
-            ->setClass('btn btn-xs btn-danger')
-            ->addAttributes([
-                'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('admin.program.categories_delete_confirm'),
-            ]);
+                ->setIcon('trash')
+                ->setTitle('admin.common.delete')
+                ->setClass('btn btn-xs btn-danger')
+                ->addAttributes(
+                    [
+                            'data-toggle' => 'confirmation',
+                            'data-content' => $this->translator->translate('admin.program.categories_delete_confirm'),
+                        ]
+                );
     }
 
     /**
      * Zpracuje přidání kategorie.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -144,6 +149,7 @@ class ProgramCategoriesGridControl extends Control
 
     /**
      * Zpracuje úpravu kategorie.
+     *
      * @throws AbortException
      * @throws \Throwable
      */
@@ -159,6 +165,7 @@ class ProgramCategoriesGridControl extends Control
 
     /**
      * Odstraní kategorii.
+     *
      * @throws AbortException
      * @throws \Throwable
      */
