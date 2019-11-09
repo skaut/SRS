@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\InstallModule\Presenters;
 
+use App\Model\EntityManagerDecorator;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Settings\Settings;
@@ -33,6 +34,12 @@ use Symfony\Component\Console\Output\BufferedOutput;
  */
 class InstallPresenter extends InstallBasePresenter
 {
+
+	/**
+	 * @var EntityManagerDecorator
+	 * @inject
+	 */
+	public $em;
 
 	/**
 	 * @var SettingsFacade
@@ -132,7 +139,7 @@ class InstallPresenter extends InstallBasePresenter
 			return;
 		}
 
-		$this->userRepository->getEntityManager()->transactional(function ($em): void {
+		$this->em->transactional(function ($em): void {
 			$user = $this->userRepository->findById($this->user->id);
 			$this->userRepository->save($user);
 

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\WebModule\Forms;
 
+use App\Model\EntityManagerDecorator;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\CustomInput\CustomFile;
@@ -55,6 +56,9 @@ class AdditionalInformationForm extends UI\Control
 	/** @var BaseForm */
 	private $baseFormFactory;
 
+	/** @var EntityManagerDecorator */
+	private $em;
+
 	/** @var UserRepository */
 	private $userRepository;
 
@@ -78,6 +82,7 @@ class AdditionalInformationForm extends UI\Control
 
 	public function __construct(
 		BaseForm $baseFormFactory,
+		EntityManagerDecorator $em,
 		UserRepository $userRepository,
 		CustomInputRepository $customInputRepository,
 		ApplicationService $applicationService,
@@ -90,6 +95,7 @@ class AdditionalInformationForm extends UI\Control
 		parent::__construct();
 
 		$this->baseFormFactory = $baseFormFactory;
+		$this->em = $em;
 		$this->userRepository = $userRepository;
 		$this->customInputRepository = $customInputRepository;
 		$this->applicationService = $applicationService;
@@ -192,7 +198,7 @@ class AdditionalInformationForm extends UI\Control
 	 */
 	public function processForm(Form $form, \stdClass $values): void
 	{
-		$this->userRepository->getEntityManager()->transactional(function ($em) use ($values): void {
+		$this->em->transactional(function ($em) use ($values): void {
 			$customInputValueChanged = false;
 
 			if ($this->applicationService->isAllowedEditCustomInputs()) {

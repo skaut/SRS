@@ -1,9 +1,9 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\AdminModule\Forms;
 
+use App\Model\EntityManagerDecorator;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Mailing\Template;
@@ -40,267 +40,273 @@ use function array_key_exists;
  */
 class EditUserSeminarForm
 {
-    use Nette\SmartObject;
 
-    /**
-     * Upravovaný uživatel.
-     * @var User
-     */
-    private $user;
+	use Nette\SmartObject;
 
-    /** @var BaseForm */
-    private $baseFormFactory;
+	/** @var EntityManagerDecorator */
+	private $em;
 
-    /** @var UserRepository */
-    private $userRepository;
+	/**
+	 * Upravovaný uživatel.
+	 * @var User
+	 */
+	private $user;
 
-    /** @var CustomInputRepository */
-    private $customInputRepository;
+	/** @var BaseForm */
+	private $baseFormFactory;
 
-    /** @var CustomInputValueRepository */
-    private $customInputValueRepository;
+	/** @var UserRepository */
+	private $userRepository;
 
-    /** @var RoleRepository */
-    private $roleRepository;
+	/** @var CustomInputRepository */
+	private $customInputRepository;
 
-    /** @var ApplicationService */
-    private $applicationService;
+	/** @var CustomInputValueRepository */
+	private $customInputValueRepository;
 
-    /** @var Validators */
-    private $validators;
+	/** @var RoleRepository */
+	private $roleRepository;
 
-    /** @var FilesService*/
-    private $filesService;
+	/** @var ApplicationService */
+	private $applicationService;
 
-    /** @var MailService */
-    private $mailService;
+	/** @var Validators */
+	private $validators;
 
-    /** @var SettingsFacade */
-    private $settingsFacade;
+	/** @var FilesService */
+	private $filesService;
 
+	/** @var MailService */
+	private $mailService;
 
-    public function __construct(
-        BaseForm $baseFormFactory,
-        UserRepository $userRepository,
-        CustomInputRepository $customInputRepository,
-        CustomInputValueRepository $customInputValueRepository,
-        RoleRepository $roleRepository,
-        ApplicationService $applicationService,
-        Validators $validators,
-        FilesService $filesService,
-        MailService $mailService,
-        SettingsFacade $settingsFacade
-    ) {
-        $this->baseFormFactory            = $baseFormFactory;
-        $this->userRepository             = $userRepository;
-        $this->customInputRepository      = $customInputRepository;
-        $this->customInputValueRepository = $customInputValueRepository;
-        $this->roleRepository             = $roleRepository;
-        $this->applicationService         = $applicationService;
-        $this->validators                 = $validators;
-        $this->filesService               = $filesService;
-        $this->mailService                = $mailService;
-        $this->settingsFacade         = $settingsFacade;
-    }
+	/** @var SettingsFacade */
+	private $settingsFacade;
 
-    /**
-     * Vytvoří formulář.
-     */
-    public function create(int $id) : Form
-    {
-        $this->user = $this->userRepository->findById($id);
+	public function __construct(
+		BaseForm $baseFormFactory,
+		EntityManagerDecorator $em,
+		UserRepository $userRepository,
+		CustomInputRepository $customInputRepository,
+		CustomInputValueRepository $customInputValueRepository,
+		RoleRepository $roleRepository,
+		ApplicationService $applicationService,
+		Validators $validators,
+		FilesService $filesService,
+		MailService $mailService,
+		SettingsFacade $settingsFacade
+	)
+	{
+		$this->baseFormFactory = $baseFormFactory;
+		$this->em = $em;
+		$this->userRepository = $userRepository;
+		$this->customInputRepository = $customInputRepository;
+		$this->customInputValueRepository = $customInputValueRepository;
+		$this->roleRepository = $roleRepository;
+		$this->applicationService = $applicationService;
+		$this->validators = $validators;
+		$this->filesService = $filesService;
+		$this->mailService = $mailService;
+		$this->settingsFacade = $settingsFacade;
+	}
 
-        $form = $this->baseFormFactory->create();
+	/**
+	 * Vytvoří formulář.
+	 */
+	public function create(int $id): Form
+	{
+		$this->user = $this->userRepository->findById($id);
 
-        $form->addHidden('id');
+		$form = $this->baseFormFactory->create();
 
-        $form->addMultiSelect(
-            'roles',
-            'admin.users.users_roles',
-            $this->roleRepository->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED])
-        )
-            ->addRule(Form::FILLED, 'admin.users.users_edit_roles_empty')
-            ->addRule([$this, 'validateRolesNonregistered'], 'admin.users.users_edit_roles_nonregistered')
-            ->addRule([$this, 'validateRolesCapacities'], 'admin.users.users_edit_roles_occupied');
+		$form->addHidden('id');
 
-        $form->addCheckbox('approved', 'admin.users.users_approved_form');
+		$form->addMultiSelect(
+				'roles',
+				'admin.users.users_roles',
+				$this->roleRepository->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED])
+			)
+			->addRule(Form::FILLED, 'admin.users.users_edit_roles_empty')
+			->addRule([$this, 'validateRolesNonregistered'], 'admin.users.users_edit_roles_nonregistered')
+			->addRule([$this, 'validateRolesCapacities'], 'admin.users.users_edit_roles_occupied');
 
-        $form->addCheckbox('attended', 'admin.users.users_attended_form');
+		$form->addCheckbox('approved', 'admin.users.users_approved_form');
 
-        if ($this->user->hasDisplayArrivalDepartureRole()) {
-            $form->addDateTimePicker('arrival', 'admin.users.users_arrival');
-            $form->addDateTimePicker('departure', 'admin.users.users_departure');
-        }
+		$form->addCheckbox('attended', 'admin.users.users_attended_form');
 
-        foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
-            $customInputValue = $this->user->getCustomInputValue($customInput);
+		if ($this->user->hasDisplayArrivalDepartureRole()) {
+			$form->addDateTimePicker('arrival', 'admin.users.users_arrival');
+			$form->addDateTimePicker('departure', 'admin.users.users_departure');
+		}
 
-            switch ($customInput->getType()) {
-                case CustomInput::TEXT:
-                    $custom = $form->addText('custom' . $customInput->getId(), $customInput->getName());
-                    if ($customInputValue) {
-                        $custom->setDefaultValue($customInputValue->getValue());
-                    }
-                    break;
+		foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
+			$customInputValue = $this->user->getCustomInputValue($customInput);
 
-                case CustomInput::CHECKBOX:
-                    $custom = $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName());
-                    if ($customInputValue) {
-                        $custom->setDefaultValue($customInputValue->getValue());
-                    }
-                    break;
+			switch ($customInput->getType()) {
+				case CustomInput::TEXT:
+					$custom = $form->addText('custom' . $customInput->getId(), $customInput->getName());
+					if ($customInputValue) {
+						$custom->setDefaultValue($customInputValue->getValue());
+					}
+					break;
 
-                case CustomInput::SELECT:
-                    $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions());
-                    if ($customInputValue) {
-                        $custom->setDefaultValue($customInputValue->getValue());
-                    }
-                    break;
+				case CustomInput::CHECKBOX:
+					$custom = $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName());
+					if ($customInputValue) {
+						$custom->setDefaultValue($customInputValue->getValue());
+					}
+					break;
 
-                case CustomInput::FILE:
-                    $form->addUpload('custom' . $customInput->getId(), $customInput->getName());
-                    break;
-            }
-        }
+				case CustomInput::SELECT:
+					$custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions());
+					if ($customInputValue) {
+						$custom->setDefaultValue($customInputValue->getValue());
+					}
+					break;
 
-        $form->addTextArea('about', 'admin.users.users_about_me');
+				case CustomInput::FILE:
+					$form->addUpload('custom' . $customInput->getId(), $customInput->getName());
+					break;
+			}
+		}
 
-        $form->addTextArea('privateNote', 'admin.users.users_private_note');
+		$form->addTextArea('about', 'admin.users.users_about_me');
 
-        $form->addSubmit('submit', 'admin.common.save');
+		$form->addTextArea('privateNote', 'admin.users.users_private_note');
 
-        $form->addSubmit('cancel', 'admin.common.cancel')
-            ->setValidationScope([])
-            ->setAttribute('class', 'btn btn-warning');
+		$form->addSubmit('submit', 'admin.common.save');
 
-        $form->setDefaults([
-            'id' => $id,
-            'roles' => $this->roleRepository->findRolesIds($this->user->getRoles()),
-            'approved' => $this->user->isApproved(),
-            'attended' => $this->user->isAttended(),
-            'arrival' => $this->user->getArrival(),
-            'departure' => $this->user->getDeparture(),
-            'about' => $this->user->getAbout(),
-            'privateNote' => $this->user->getNote(),
-        ]);
+		$form->addSubmit('cancel', 'admin.common.cancel')
+			->setValidationScope([])
+			->setAttribute('class', 'btn btn-warning');
 
-        $form->onSuccess[] = [$this, 'processForm'];
+		$form->setDefaults([
+			'id' => $id,
+			'roles' => $this->roleRepository->findRolesIds($this->user->getRoles()),
+			'approved' => $this->user->isApproved(),
+			'attended' => $this->user->isAttended(),
+			'arrival' => $this->user->getArrival(),
+			'departure' => $this->user->getDeparture(),
+			'about' => $this->user->getAbout(),
+			'privateNote' => $this->user->getNote(),
+		]);
 
-        return $form;
-    }
+		$form->onSuccess[] = [$this, 'processForm'];
 
-    /**
-     * Zpracuje formulář.
-     * @throws \Throwable
-     */
-    public function processForm(Form $form, \stdClass $values) : void
-    {
-        if ($form['cancel']->isSubmittedBy()) {
-            return;
-        }
+		return $form;
+	}
 
-        $loggedUser = $this->userRepository->findById($form->getPresenter()->user->id);
+	/**
+	 * Zpracuje formulář.
+	 * @throws \Throwable
+	 */
+	public function processForm(Form $form, \stdClass $values): void
+	{
+		if ($form['cancel']->isSubmittedBy()) {
+			return;
+		}
 
-        $this->userRepository->getEntityManager()->transactional(function ($em) use ($values, $loggedUser) : void {
-            $selectedRoles = $this->roleRepository->findRolesByIds($values['roles']);
-            $this->applicationService->updateRoles($this->user, $selectedRoles, $loggedUser);
+		$loggedUser = $this->userRepository->findById($form->getPresenter()->user->id);
 
-            $this->user->setApproved($values['approved']);
-            $this->user->setAttended($values['attended']);
+		$this->em->transactional(function ($em) use ($values, $loggedUser): void {
+			$selectedRoles = $this->roleRepository->findRolesByIds($values['roles']);
+			$this->applicationService->updateRoles($this->user, $selectedRoles, $loggedUser);
 
-            $customInputValueChanged = false;
+			$this->user->setApproved($values['approved']);
+			$this->user->setAttended($values['attended']);
 
-            foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
-                $customInputValue = $this->user->getCustomInputValue($customInput);
+			$customInputValueChanged = false;
 
-                $oldValue = $customInputValue ? $customInputValue->getValue() : null;
+			foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
+				$customInputValue = $this->user->getCustomInputValue($customInput);
 
-                switch ($customInput->getType()) {
-                    case CustomInput::TEXT:
-                        $customInputValue = $customInputValue ?: new CustomTextValue();
-                        $customInputValue->setValue($values['custom' . $customInput->getId()]);
-                        break;
+				$oldValue = $customInputValue ? $customInputValue->getValue() : null;
 
-                    case CustomInput::CHECKBOX:
-                        $customInputValue = $customInputValue ?: new CustomCheckboxValue();
-                        $customInputValue->setValue($values['custom' . $customInput->getId()]);
-                        break;
+				switch ($customInput->getType()) {
+					case CustomInput::TEXT:
+						$customInputValue = $customInputValue ?: new CustomTextValue();
+						$customInputValue->setValue($values['custom' . $customInput->getId()]);
+						break;
 
-                    case CustomInput::SELECT:
-                        $customInputValue = $customInputValue ?: new CustomSelectValue();
-                        $customInputValue->setValue($values['custom' . $customInput->getId()]);
-                        break;
+					case CustomInput::CHECKBOX:
+						$customInputValue = $customInputValue ?: new CustomCheckboxValue();
+						$customInputValue->setValue($values['custom' . $customInput->getId()]);
+						break;
 
-                    case CustomInput::FILE:
-                        $customInputValue = $customInputValue ?: new CustomFileValue();
-                        $file             = $values['custom' . $customInput->getId()];
-                        if ($file->size > 0) {
-                            $path = $this->generatePath($file);
-                            $this->filesService->save($file, $path);
-                            $customInputValue->setValue($path);
-                        }
-                        break;
-                }
+					case CustomInput::SELECT:
+						$customInputValue = $customInputValue ?: new CustomSelectValue();
+						$customInputValue->setValue($values['custom' . $customInput->getId()]);
+						break;
 
-                $customInputValue->setUser($this->user);
-                $customInputValue->setInput($customInput);
-                $this->customInputValueRepository->save($customInputValue);
+					case CustomInput::FILE:
+						$customInputValue = $customInputValue ?: new CustomFileValue();
+						$file = $values['custom' . $customInput->getId()];
+						if ($file->size > 0) {
+							$path = $this->generatePath($file);
+							$this->filesService->save($file, $path);
+							$customInputValue->setValue($path);
+						}
+						break;
+				}
 
-                if ($oldValue === $customInputValue->getValue()) {
-                    continue;
-                }
+				$customInputValue->setUser($this->user);
+				$customInputValue->setInput($customInput);
+				$this->customInputValueRepository->save($customInputValue);
 
-                $customInputValueChanged = true;
-            }
+				if ($oldValue === $customInputValue->getValue()) {
+					continue;
+				}
 
-            if (array_key_exists('arrival', $values)) {
-                $this->user->setArrival($values['arrival']);
-            }
+				$customInputValueChanged = true;
+			}
 
-            if (array_key_exists('departure', $values)) {
-                $this->user->setDeparture($values['departure']);
-            }
+			if (array_key_exists('arrival', $values)) {
+				$this->user->setArrival($values['arrival']);
+			}
 
-            $this->user->setAbout($values['about']);
+			if (array_key_exists('departure', $values)) {
+				$this->user->setDeparture($values['departure']);
+			}
 
-            $this->user->setNote($values['privateNote']);
+			$this->user->setAbout($values['about']);
 
-            $this->userRepository->save($this->user);
+			$this->user->setNote($values['privateNote']);
 
-            if (! $customInputValueChanged) {
-                return;
-            }
+			$this->userRepository->save($this->user);
 
-            $this->mailService->sendMailFromTemplate($this->user, '', Template::CUSTOM_INPUT_VALUE_CHANGED, [
-                TemplateVariable::SEMINAR_NAME => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
-                TemplateVariable::USER => $this->user->getDisplayName(),
-            ]);
-        });
-    }
+			if (!$customInputValueChanged) {
+				return;
+			}
 
-    /**
-     * Ověří, že není vybrána role "Neregistrovaný".
-     */
-    public function validateRolesNonregistered(MultiSelectBox $field) : bool
-    {
-        $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
-        return $this->validators->validateRolesNonregistered($selectedRoles, $this->user);
-    }
+			$this->mailService->sendMailFromTemplate($this->user, '', Template::CUSTOM_INPUT_VALUE_CHANGED, [
+				TemplateVariable::SEMINAR_NAME => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
+				TemplateVariable::USER => $this->user->getDisplayName(),
+			]);
+		});
+	}
 
-    /**
-     * Ověří kapacitu rolí.
-     */
-    public function validateRolesCapacities(MultiSelectBox $field) : bool
-    {
-        $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
-        return $this->validators->validateRolesCapacities($selectedRoles, $this->user);
-    }
+	/**
+	 * Ověří, že není vybrána role "Neregistrovaný".
+	 */
+	public function validateRolesNonregistered(MultiSelectBox $field): bool
+	{
+		$selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
+		return $this->validators->validateRolesNonregistered($selectedRoles, $this->user);
+	}
 
-    /**
-     * Vygeneruje cestu souboru.
-     */
-    private function generatePath(FileUpload $file) : string
-    {
-        return CustomFile::PATH . '/' . Random::generate(5) . '/' . Strings::webalize($file->name, '.');
-    }
+	/**
+	 * Ověří kapacitu rolí.
+	 */
+	public function validateRolesCapacities(MultiSelectBox $field): bool
+	{
+		$selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
+		return $this->validators->validateRolesCapacities($selectedRoles, $this->user);
+	}
+
+	/**
+	 * Vygeneruje cestu souboru.
+	 */
+	private function generatePath(FileUpload $file): string
+	{
+		return CustomFile::PATH . '/' . Random::generate(5) . '/' . Strings::webalize($file->name, '.');
+	}
 }

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Forms;
 
+use App\Model\EntityManagerDecorator;
 use App\Model\ACL\Permission;
 use App\Model\ACL\PermissionRepository;
 use App\Model\ACL\Resource;
@@ -32,6 +33,9 @@ class EditRoleForm
 
 	use Nette\SmartObject;
 
+	/** @var EntityManagerDecorator */
+	private $em;
+
 	/**
 	 * Upravovaná role.
 	 * @var Role
@@ -60,6 +64,7 @@ class EditRoleForm
 	private $programService;
 
 	public function __construct(
+		EntityManagerDecorator $em,
 		BaseForm $baseFormFactory,
 		RoleFacade $roleFacade,
 		RoleRepository $roleRepository,
@@ -69,6 +74,7 @@ class EditRoleForm
 		ProgramService $programService
 	)
 	{
+		$this->em = $em;
 		$this->baseFormFactory = $baseFormFactory;
 		$this->roleFacade = $roleFacade;
 		$this->roleRepository = $roleRepository;
@@ -204,7 +210,7 @@ class EditRoleForm
 			return;
 		}
 
-		$this->roleRepository->getEntityManager()->transactional(function ($em) use ($values): void {
+		$this->em->transactional(function ($em) use ($values): void {
 			$capacity = $values['capacity'] !== '' ? $values['capacity'] : null;
 
 			$this->role->setName($values['name']);
@@ -288,7 +294,7 @@ class EditRoleForm
 		$incompatibleRoles = $this->roleRepository->findRolesByIds($args[0]);
 		$requiredRoles = $this->roleRepository->findRolesByIds($args[1]);
 
-		$this->roleRepository->getEntityManager()->getConnection()->beginTransaction();
+		$this->em->getConnection()->beginTransaction();
 
 		$this->role->setIncompatibleRoles($incompatibleRoles);
 		$this->role->setRequiredRoles($requiredRoles);
@@ -307,7 +313,7 @@ class EditRoleForm
 			}
 		}
 
-		$this->roleRepository->getEntityManager()->getConnection()->rollBack();
+		$this->em->getConnection()->rollBack();
 
 		return $valid;
 	}

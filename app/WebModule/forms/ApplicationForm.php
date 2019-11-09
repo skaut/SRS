@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\WebModule\Forms;
 
+use App\Model\EntityManagerDecorator;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Enums\Sex;
@@ -75,6 +76,9 @@ class ApplicationForm
 	/** @var BaseForm */
 	private $baseFormFactory;
 
+	/** @var EntityManagerDecorator */
+	private $em;
+
 	/** @var UserRepository */
 	private $userRepository;
 
@@ -119,6 +123,7 @@ class ApplicationForm
 
 	public function __construct(
 		BaseForm $baseFormFactory,
+		EntityManagerDecorator $em,
 		UserRepository $userRepository,
 		RoleRepository $roleRepository,
 		CustomInputRepository $customInputRepository,
@@ -136,6 +141,7 @@ class ApplicationForm
 	)
 	{
 		$this->baseFormFactory = $baseFormFactory;
+		$this->em = $em;
 		$this->userRepository = $userRepository;
 		$this->roleRepository = $roleRepository;
 		$this->customInputRepository = $customInputRepository;
@@ -246,7 +252,7 @@ class ApplicationForm
 	 */
 	public function processForm(Form $form, \stdClass $values): void
 	{
-		$this->applicationRepository->getEntityManager()->transactional(function ($em) use ($values): void {
+		$this->em->transactional(function ($em) use ($values): void {
 			if (array_key_exists('sex', $values)) {
 				$this->user->setSex($values['sex']);
 			}

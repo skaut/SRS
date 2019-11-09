@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\ActionModule\Presenters;
 
+use App\Model\EntityManagerDecorator;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Enums\ApplicationState;
@@ -32,6 +33,12 @@ use Ublaboo\Mailing\Exception\MailingMailCreationException;
  */
 class MaturityPresenter extends ActionBasePresenter
 {
+
+	/**
+	 * @var EntityManagerDecorator
+	 * @inject
+	 */
+	public $em;
 
 	/**
 	 * @var ApplicationRepository
@@ -108,7 +115,7 @@ class MaturityPresenter extends ActionBasePresenter
 		}
 
 		foreach ($this->userRepository->findAllWithWaitingForPaymentApplication() as $user) {
-			$this->applicationRepository->getEntityManager()->transactional(function ($em) use ($user, $cancelRegistration, $cancelRegistrationDate): void {
+			$this->em->transactional(function ($em) use ($user, $cancelRegistration, $cancelRegistrationDate): void {
 				// odhlášení účastníků s nezaplacnou přihláškou rolí
 				foreach ($user->getWaitingForPaymentRolesApplications() as $application) {
 					$maturityDate = $application->getMaturityDate();
