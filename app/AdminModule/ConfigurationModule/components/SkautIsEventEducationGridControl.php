@@ -29,6 +29,7 @@ class SkautIsEventEducationGridControl extends Control
     /** @var SkautIsCourseRepository */
     private $skautIsCourseRepository;
 
+
     public function __construct(
         Translator $translator,
         SubeventRepository $subeventRepository,
@@ -70,21 +71,18 @@ class SkautIsEventEducationGridControl extends Control
                 '',
                 $this->skautIsCourseRepository->getSkautIsCoursesOptions()
             )
-                    ->setAttribute('class', 'datagrid-multiselect');
+                ->setAttribute('class', 'datagrid-multiselect');
         };
         $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Subevent $subevent) : void {
-            $container->setDefaults(
-                [
-                        'skautIsCourses' => $this->skautIsCourseRepository->findSkautIsCoursesIds($subevent->getSkautIsCourses()),
-                    ]
-            );
+            $container->setDefaults([
+                'skautIsCourses' => $this->skautIsCourseRepository->findSkautIsCoursesIds($subevent->getSkautIsCourses()),
+            ]);
         };
         $grid->getInlineEdit()->onSubmit[]      = [$this, 'edit'];
     }
 
     /**
      * Zpracuje úpravu propojení podakce s kurzy.
-     *
      * @throws AbortException
      * @throws \Throwable
      */

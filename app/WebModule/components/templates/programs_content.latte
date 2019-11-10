@@ -1,16 +1,16 @@
 {block head}
-<script>
-	var basePath = {$basePath};
-</script>
+    <script>
+        var basePath = {$basePath};
+    </script>
 
-<link rel="stylesheet" type="text/css" href="{$basePath}/css/libs/fullcalendar/fullcalendar.min.css">
-<script src="{$basePath}/js/libs/angular/angular.min.js"></script>
-<script src="{$basePath}/js/libs/angular/angular-sanitize.min.js"></script>
-<script src="{$basePath}/js/libs/angular-ui-calendar/calendar.js"></script>
-<script src="{$basePath}/js/libs/angular-ui-bootstrap/ui-bootstrap-tpls-2.5.0.min.js"></script>
-<script src="{$basePath}/js/libs/fullcalendar/fullcalendar.min.js"></script>
-<script src="{$basePath}/js/libs/fullcalendar/lang-all.js"></script>
-<script src="{$basePath}/js/web/schedule/app.js"></script>
+    <link rel="stylesheet" type="text/css" href="{$basePath}/css/libs/fullcalendar/fullcalendar.min.css">
+    <script src="{$basePath}/js/libs/angular/angular.min.js"></script>
+    <script src="{$basePath}/js/libs/angular/angular-sanitize.min.js"></script>
+    <script src="{$basePath}/js/libs/angular-ui-calendar/calendar.js"></script>
+    <script src="{$basePath}/js/libs/angular-ui-bootstrap/ui-bootstrap-tpls-2.5.0.min.js"></script>
+    <script src="{$basePath}/js/libs/fullcalendar/fullcalendar.min.js"></script>
+    <script src="{$basePath}/js/libs/fullcalendar/lang-all.js"></script>
+    <script src="{$basePath}/js/web/schedule/app.js"></script>
 {/block}
 
 <div class="programs-content">
@@ -28,34 +28,34 @@
                     <a href="{plink :Auth:login, 'backlink' => $backlink}">{_web.programs_content.login_required_link}</a>{_web.programs_content.login_required_end}
                 </div>
             {else}
-				{if !$userHasPermission}
-					<div class="alert alert-warning alert-forever">
-						{_web.programs_content.unapproved_register_programs}
-					</div>
-				{elseif !$registerProgramsAllowed}
-					<div class="alert alert-warning alert-forever">
-						{if $registerProgramsNotAllowed}
-							{_web.programs_content.register_programs_not_allowed}
-						{else}
-							{if $registerProgramsFrom !== null && $registerProgramsTo !== null}
-								{_web.programs_content.register_programs_allowed_from_to, ['from' => $registerProgramsFrom->format('j. n. Y G:i'), 'to' => $registerProgramsTo->format('j. n. Y G:i')]}
-							{elseif $registerProgramsFrom === null && $registerProgramsTo !== null}
-								{_web.programs_content.register_programs_was_allowed_to, ['to' => $registerProgramsTo->format('j. n. Y G:i')]}
-							{elseif $registerProgramsFrom !== null && $registerProgramsTo === null}
-								{_web.programs_content.register_programs_is_allowed_from, ['from' => $registerProgramsFrom->format('j. n. Y G:i')]}
-							{/if}
-						{/if}
-					</div>
-				{elseif $userWaitingForPayment}
-					<div class="alert alert-warning alert-forever">
-						{_web.programs_content.register_programs_allowed_after_payment}
-					</div>
-				{/if}
+            {if !$userHasPermission}
+                <div class="alert alert-warning alert-forever">
+                    {_web.programs_content.unapproved_register_programs}
+                </div>
+            {elseif !$registerProgramsAllowed}
+                <div class="alert alert-warning alert-forever">
+                    {if $registerProgramsNotAllowed}
+                        {_web.programs_content.register_programs_not_allowed}
+                    {else}
+                        {if $registerProgramsFrom !== null && $registerProgramsTo !== null}
+                            {_web.programs_content.register_programs_allowed_from_to, ['from' => $registerProgramsFrom->format('j. n. Y G:i'), 'to' => $registerProgramsTo->format('j. n. Y G:i')]}
+                        {elseif $registerProgramsFrom === null && $registerProgramsTo !== null}
+                            {_web.programs_content.register_programs_was_allowed_to, ['to' => $registerProgramsTo->format('j. n. Y G:i')]}
+                        {elseif $registerProgramsFrom !== null && $registerProgramsTo === null}
+                            {_web.programs_content.register_programs_is_allowed_from, ['from' => $registerProgramsFrom->format('j. n. Y G:i')]}
+                        {/if}
+                    {/if}
+                </div>
+            {elseif $userWaitingForPayment}
+                <div class="alert alert-warning alert-forever">
+                    {_web.programs_content.register_programs_allowed_after_payment}
+                </div>
+            {/if}
 
-				{var $userAllowedRegisterPrograms = $registerProgramsAllowed && $userHasPermission}
+            {var $userAllowedRegisterPrograms = $registerProgramsAllowed && $userHasPermission}
 
                 <script>
-	var userAllowedRegisterPrograms = {$userAllowedRegisterPrograms};
+                    var userAllowedRegisterPrograms = {$userAllowedRegisterPrograms};
                 </script>
 
                 <div id="app" ng-app="scheduleApp" ng-controller="WebScheduleCtrl">
@@ -110,8 +110,8 @@
                                         <li>
                                             <strong>{_web.programs_content.occupancy}</strong>
                                             {{ event.block.capacity !== undefined
-											? event.attendees_count + '/' + event.block.capacity
-											: event.attendees_count
+                                                ? event.attendees_count + '/' + event.block.capacity
+                                                : event.attendees_count
                                             }}
                                         </li>
                                     </ul>

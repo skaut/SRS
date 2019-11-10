@@ -16,6 +16,8 @@ use function array_map;
 
 /**
  *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class PageFacade

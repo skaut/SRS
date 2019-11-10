@@ -28,6 +28,7 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  * Komponenta pro správu plateb.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class PaymentsGridControl extends Control
 {
@@ -54,6 +55,7 @@ class PaymentsGridControl extends Control
 
     /** @var BankService */
     private $bankService;
+
 
     public function __construct(
         Translator $translator,
@@ -87,7 +89,6 @@ class PaymentsGridControl extends Control
 
     /**
      * Vytvoří komponentu.
-     *
      * @throws DataGridException
      * @throws SettingsException
      * @throws \Throwable
@@ -102,85 +103,74 @@ class PaymentsGridControl extends Control
         $grid->setStrictSessionFilterValues(false);
 
         $grid->addColumnDateTime('date', 'admin.payments.payments.date')
-                ->setFormat(Helpers::DATE_FORMAT)
-                ->setSortable();
+            ->setFormat(Helpers::DATE_FORMAT)
+            ->setSortable();
 
         $grid->addColumnNumber('amount', 'admin.payments.payments.amount')
-                ->setFormat(2, ',', ' ')
-                ->setSortable();
+            ->setFormat(2, ',', ' ')
+            ->setSortable();
 
         $grid->addColumnText('variableSymbol', 'admin.payments.payments.variable_symbol')
-                ->setFilterText();
+            ->setFilterText();
 
         $grid->addColumnText('accountNumber', 'admin.payments.payments.account_number')
-                ->setFilterText();
+            ->setFilterText();
 
         $grid->addColumnText('accountName', 'admin.payments.payments.account_name')
-                ->setFilterText();
+            ->setFilterText();
 
         $grid->addColumnText('message', 'admin.payments.payments.message')
-                ->setFilterText();
+            ->setFilterText();
 
         $grid->addColumnText('pairedApplications', 'admin.payments.payments.paired_applications', 'pairedValidApplicationsText');
 
         $grid->addColumnText('state', 'admin.payments.payments.state')
-                ->setRenderer(
-                    function (Payment $payment) {
-                            return $this->translator->translate('common.payment_state.' . $payment->getState());
-                    }
-                )
-                ->setFilterMultiSelect($this->preparePaymentStatesOptions())
-                ->setTranslateOptions();
+            ->setRenderer(function (Payment $payment) {
+                return $this->translator->translate('common.payment_state.' . $payment->getState());
+            })
+            ->setFilterMultiSelect($this->preparePaymentStatesOptions())
+            ->setTranslateOptions();
 
         $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function (Container $container) : void {
             $container->addDatePicker('date', '')
-                    ->addRule(Form::FILLED, 'admin.payments.payments.date_empty');
+                ->addRule(Form::FILLED, 'admin.payments.payments.date_empty');
 
             $container->addInteger('amount', '')
-                    ->addRule(Form::FILLED, 'admin.payments.payments.amount_empty')
-                    ->addRule(Form::MIN, 'admin.payments.payments.amount_low', 1);
+                ->addRule(Form::FILLED, 'admin.payments.payments.amount_empty')
+                ->addRule(Form::MIN, 'admin.payments.payments.amount_low', 1);
 
             $container->addText('variableSymbol', '')
-                    ->addRule(Form::FILLED, 'admin.payments.payments.variable_symbol_empty');
+                ->addRule(Form::FILLED, 'admin.payments.payments.variable_symbol_empty');
         };
         $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
 
         if ($this->settingsFacade->getValue(Settings::BANK_TOKEN) !== null) {
             $grid->addToolbarButton('checkPayments!')
-                    ->setText('admin.payments.payments.check_payments');
+                ->setText('admin.payments.payments.check_payments');
         }
 
         $grid->addAction('generatePaymentProofBank', 'admin.payments.payments.download_payment_proof_bank');
-        $grid->allowRowsAction(
-            'generatePaymentProofBank',
-            function (Payment $payment) {
-                    return $payment->getState() === PaymentState::PAIRED_AUTO || $payment->getState() === PaymentState::PAIRED_MANUAL;
-            }
-        );
+        $grid->allowRowsAction('generatePaymentProofBank', function (Payment $payment) {
+            return $payment->getState() === PaymentState::PAIRED_AUTO || $payment->getState() === PaymentState::PAIRED_MANUAL;
+        });
 
         $grid->addAction('edit', 'admin.common.edit', 'Payments:edit');
 
         $grid->addAction('delete', '', 'delete!')
-                ->setIcon('trash')
-                ->setTitle('admin.common.delete')
-                ->setClass('btn btn-xs btn-danger')
-                ->addAttributes(
-                    [
-                            'data-toggle' => 'confirmation',
-                            'data-content' => $this->translator->translate('admin.payments.payments.delete_confirm'),
-                        ]
-                );
-        $grid->allowRowsAction(
-            'delete',
-            function (Payment $payment) {
-                    return $payment->getTransactionId() === null;
-            }
-        );
+            ->setIcon('trash')
+            ->setTitle('admin.common.delete')
+            ->setClass('btn btn-xs btn-danger')
+            ->addAttributes([
+                'data-toggle' => 'confirmation',
+                'data-content' => $this->translator->translate('admin.payments.payments.delete_confirm'),
+            ]);
+        $grid->allowRowsAction('delete', function (Payment $payment) {
+            return $payment->getTransactionId() === null;
+        });
     }
 
     /**
      * Zpracuje přidání platby.
-     *
      * @throws AbortException
      * @throws \Throwable
      */
@@ -196,7 +186,6 @@ class PaymentsGridControl extends Control
 
     /**
      * Odstraní platbu.
-     *
      * @throws \Throwable
      */
     public function handleDelete(int $id) : void
@@ -213,7 +202,6 @@ class PaymentsGridControl extends Control
 
     /**
      * Vygeneruje potvrzení o přijetí platby.
-     *
      * @throws SettingsException
      * @throws \Throwable
      */
@@ -228,7 +216,6 @@ class PaymentsGridControl extends Control
 
     /**
      * Zkontroluje platby na bankovním účtu.
-     *
      * @throws SettingsException
      * @throws \Throwable
      */
@@ -240,7 +227,6 @@ class PaymentsGridControl extends Control
 
     /**
      * Vrátí stavy plateb jako možnosti pro select.
-     *
      * @return string[]
      */
     private function preparePaymentStatesOptions() : array

@@ -28,6 +28,7 @@ class NewsGridControl extends Control
     /** @var NewsRepository */
     private $newsRepository;
 
+
     public function __construct(Translator $translator, NewsRepository $newsRepository)
     {
         parent::__construct();
@@ -46,7 +47,6 @@ class NewsGridControl extends Control
 
     /**
      * Vytvoří komponentu.
-     *
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
@@ -60,41 +60,38 @@ class NewsGridControl extends Control
         $grid->setPagination(false);
 
         $grid->addColumnDateTime('published', 'admin.cms.news_published')
-                ->setFormat(Helpers::DATETIME_FORMAT);
+            ->setFormat(Helpers::DATETIME_FORMAT);
 
-        $columnMandatory     = $grid->addColumnStatus('pinned', 'admin.cms.news_pinned');
+        $columnMandatory = $grid->addColumnStatus('pinned', 'admin.cms.news_pinned');
         $columnMandatory
-                        ->addOption(false, 'admin.cms.news_pinned_unpinned')
-                        ->setClass('btn-primary')
-                        ->endOption()
-                        ->addOption(true, 'admin.cms.news_pinned_pinned')
-                        ->setClass('btn-warning')
-                        ->endOption()
-                ->onChange[] = [$this, 'changePinned'];
+            ->addOption(false, 'admin.cms.news_pinned_unpinned')
+            ->setClass('btn-primary')
+            ->endOption()
+            ->addOption(true, 'admin.cms.news_pinned_pinned')
+            ->setClass('btn-warning')
+            ->endOption()
+            ->onChange[] = [$this, 'changePinned'];
 
         $grid->addColumnText('text', 'admin.cms.news_text');
 
         $grid->addToolbarButton('News:add')
-                ->setIcon('plus')
-                ->setTitle('admin.common.add');
+            ->setIcon('plus')
+            ->setTitle('admin.common.add');
 
         $grid->addAction('edit', 'admin.common.edit', 'News:edit');
 
         $grid->addAction('delete', '', 'delete!')
-                ->setIcon('trash')
-                ->setTitle('admin.common.delete')
-                ->setClass('btn btn-xs btn-danger')
-                ->addAttributes(
-                    [
-                            'data-toggle' => 'confirmation',
-                            'data-content' => $this->translator->translate('admin.cms.news_delete_confirm'),
-                        ]
-                );
+            ->setIcon('trash')
+            ->setTitle('admin.common.delete')
+            ->setClass('btn btn-xs btn-danger')
+            ->addAttributes([
+                'data-toggle' => 'confirmation',
+                'data-content' => $this->translator->translate('admin.cms.news_delete_confirm'),
+            ]);
     }
 
     /**
      * Zpracuje odstranění aktuality.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -111,7 +108,6 @@ class NewsGridControl extends Control
 
     /**
      * Změní připíchnutí aktuality.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException

@@ -12,8 +12,9 @@ use Nettrine\ORM\Entity\Attributes\Id as Identifier;
 /**
  * Entita dokumentu.
  *
- * @author                                           Michal Májský
- * @author                                           Jan Staněk <jan.stanek@skaut.cz>
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="DocumentRepository")
  * @ORM\Table(name="document")
  */
@@ -28,43 +29,39 @@ class Document
 
     /**
      * Tagy dokumentu.
-     *
      * @ORM\ManyToMany(targetEntity="Tag", inversedBy="documents", cascade={"persist"})
-     * @var                                Collection|Tag[]
+     * @var Collection|Tag[]
      */
     protected $tags;
 
     /**
      * Název dokumentu.
-     *
      * @ORM\Column(type="string")
-     * @var                       string
+     * @var string
      */
     protected $name;
 
     /**
      * Adresa souboru.
-     *
      * @ORM\Column(type="string")
-     * @var                       string
+     * @var string
      */
     protected $file;
 
     /**
      * Popis.
-     *
      * @ORM\Column(type="string", nullable=true)
-     * @var                       string
+     * @var string
      */
     protected $description;
 
     /**
      * Datum změny souboru.
-     *
      * @ORM\Column(type="datetime");
-     * @var                          \DateTime
+     * @var \DateTime
      */
     protected $timestamp;
+
 
     public function __construct()
     {

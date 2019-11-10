@@ -14,14 +14,16 @@ use Nette\Application\UI\Form;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class WebPresenter extends ConfigurationBasePresenter
 {
     /**
-     * @var    WebForm
+     * @var WebForm
      * @inject
      */
     public $webFormFactory;
+
 
     /**
      * @throws SettingsException

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Model\User;
 
-use App\Model\EntityRepository;
 use App\Model\Enums\ApplicationState;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -12,6 +11,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Kdyby\Doctrine\EntityRepository;
 use function array_map;
 
 /**
@@ -31,7 +31,6 @@ class ApplicationRepository extends EntityRepository
 
     /**
      * Vrací přihlášky podle id, které mají společné všechny verze přihlášky.
-     *
      * @return Collection|Application[]
      */
     public function findByApplicationId(int $id) : Collection
@@ -46,7 +45,7 @@ class ApplicationRepository extends EntityRepository
     public function findValid() : Collection
     {
         $criteria = Criteria::create()
-                ->where(Criteria::expr()->isNull('validTo'));
+            ->where(Criteria::expr()->isNull('validTo'));
         return $this->matching($criteria);
     }
 
@@ -56,17 +55,16 @@ class ApplicationRepository extends EntityRepository
     public function findValidByVariableSymbol(?string $variableSymbol) : ?Application
     {
         return $this->createQueryBuilder('a')
-                        ->select('a')
-                        ->join('a.variableSymbol', 'v')
-                        ->where('v.variableSymbol = :variableSymbol')->setParameter('variableSymbol', $variableSymbol)
-                        ->andWhere('a.validTo IS NULL')
-                        ->getQuery()
-                        ->getOneOrNullResult();
+            ->select('a')
+            ->join('a.variableSymbol', 'v')
+            ->where('v.variableSymbol = :variableSymbol')->setParameter('variableSymbol', $variableSymbol)
+            ->andWhere('a.validTo IS NULL')
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     /**
      * Uloží přihlášku.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -78,7 +76,6 @@ class ApplicationRepository extends EntityRepository
 
     /**
      * Odstraní přihlášku.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -90,55 +87,43 @@ class ApplicationRepository extends EntityRepository
 
     /**
      * Vrací přihlášky podle id.
-     *
-     * @param  int[] $ids
+     * @param int[] $ids
      * @return Collection|Application[]
      */
     public function findApplicationsByIds(array $ids) : Collection
     {
         $criteria = Criteria::create()
-                ->where(Criteria::expr()->in('id', $ids));
+            ->where(Criteria::expr()->in('id', $ids));
         return $this->matching($criteria);
     }
 
     /**
      * Vrací id přihlášek.
-     *
-     * @param  Collection|Application[] $applications
+     * @param Collection|Application[] $applications
      * @return int[]
      */
     public function findApplicationsIds(Collection $applications) : array
     {
-        return array_map(
-            function (Application $o) {
-                    return $o->getId();
-            },
-            $applications->toArray()
-        );
+        return array_map(function (Application $o) {
+            return $o->getId();
+        }, $applications->toArray());
     }
 
     /**
-     * @param  Collection|Application[] $pairedApplications
+     * @param Collection|Application[] $pairedApplications
      * @return Collection|Application[]
      */
     public function findWaitingForPaymentOrPairedApplications(Collection $pairedApplications) : Collection
     {
         $criteria = Criteria::create()
-                ->where(Criteria::expr()->isNull('validTo'))
-                ->andWhere(
-                    Criteria::expr()->orX(
-                        Criteria::expr()->eq('state', ApplicationState::WAITING_FOR_PAYMENT),
-                        Criteria::expr()->in(
-                            'id',
-                            $pairedApplications->map(
-                                function (Application $application) {
-                                            return $application->getId();
-                                }
-                            )
-                                ->toArray()
-                        )
-                    )
-                );
+            ->where(Criteria::expr()->isNull('validTo'))
+            ->andWhere(Criteria::expr()->orX(
+                Criteria::expr()->eq('state', ApplicationState::WAITING_FOR_PAYMENT),
+                Criteria::expr()->in('id', $pairedApplications->map(function (Application $application) {
+                    return $application->getId();
+                })
+                    ->toArray())
+            ));
 
         return $this->matching($criteria);
     }
@@ -156,7 +141,7 @@ class ApplicationRepository extends EntityRepository
     }
 
     /**
-     * @param  Collection|Application[] $pairedApplications
+     * @param Collection|Application[] $pairedApplications
      * @return string[]
      */
     public function getWaitingForPaymentOrPairedApplicationsVariableSymbolsOptions(Collection $pairedApplications) : array

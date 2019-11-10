@@ -32,9 +32,16 @@ use Symfony\Component\Console\Output\BufferedOutput;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class InstallPresenter extends InstallBasePresenter
 {
+    /**
+     * @var Application
+     * @inject
+     */
+    public $application;
+
     /**
      * @var    EntityManagerDecorator
      * @inject
@@ -42,38 +49,38 @@ class InstallPresenter extends InstallBasePresenter
     public $em;
 
     /**
-     * @var    SettingsFacade
+     * @var SettingsFacade
      * @inject
      */
     public $settingsFacade;
 
     /**
-     * @var    RoleRepository
+     * @var RoleRepository
      * @inject
      */
     public $roleRepository;
 
     /**
-     * @var    UserRepository
+     * @var UserRepository
      * @inject
      */
     public $userRepository;
 
     /**
-     * @var    SubeventRepository
+     * @var SubeventRepository
      * @inject
      */
     public $subeventRepository;
 
     /**
-     * @var    ApplicationService
+     * @var ApplicationService
      * @inject
      */
     public $applicationService;
 
+
     /**
      * Zobrazení první stránky průvodce.
-     *
      * @throws AbortException
      * @throws \Throwable
      */
@@ -96,21 +103,19 @@ class InstallPresenter extends InstallBasePresenter
 
     /**
      * Vytvoření schéma databáze a počátečních dat.
-     *
      * @throws \Exception
      */
     public function handleImportSchema() : void
     {
         $consoleApp = new Application();
         $output     = new BufferedOutput();
-        $input      = new ArrayInput(
-            [
+        $input      = new ArrayInput([
             'command' => 'migrations:migrate',
             '--no-interaction' => true,
-                ]
-        );
+        ]);
         $consoleApp->add(new MigrateCommand());
         $result = $consoleApp->run($input, $output);
+
         if ($result !== 0) {
             $this->flashMessage('install.schema.schema_create_unsuccessful', 'danger');
             return;
@@ -121,7 +126,6 @@ class InstallPresenter extends InstallBasePresenter
 
     /**
      * Zobrazení stránky pro vytvoření administrátora.
-     *
      * @throws AbortException
      * @throws \Throwable
      */
@@ -142,25 +146,23 @@ class InstallPresenter extends InstallBasePresenter
             return;
         }
 
-        $this->em->transactional(
-            function ($em) : void {
-                    $user = $this->userRepository->findById($this->user->id);
-                    $this->userRepository->save($user);
+        $this->userRepository->getEntityManager()->transactional(function ($em) : void {
+            $user = $this->userRepository->findById($this->user->id);
+            $this->userRepository->save($user);
 
-                    $adminRole        = $this->roleRepository->findBySystemName(Role::ADMIN);
-                    $implicitSubevent = $this->subeventRepository->findImplicit();
+            $adminRole        = $this->roleRepository->findBySystemName(Role::ADMIN);
+            $implicitSubevent = $this->subeventRepository->findImplicit();
 
-                    $this->applicationService->register(
-                        $user,
-                        new ArrayCollection([$adminRole]),
-                        new ArrayCollection([$implicitSubevent]),
-                        $user,
-                        true
-                    );
+            $this->applicationService->register(
+                $user,
+                new ArrayCollection([$adminRole]),
+                new ArrayCollection([$implicitSubevent]),
+                $user,
+                true
+            );
 
-                    $this->settingsFacade->setBoolValue(Settings::ADMIN_CREATED, true);
-            }
-        );
+            $this->settingsFacade->setBoolValue(Settings::ADMIN_CREATED, true);
+        });
 
         $this->user->logout(true);
 
@@ -169,7 +171,6 @@ class InstallPresenter extends InstallBasePresenter
 
     /**
      * Otestování připojení ke skautIS, přesměrování na přihlašovací stránku.
-     *
      * @throws AbortException
      */
     public function handleCreateAdmin() : void
@@ -183,7 +184,6 @@ class InstallPresenter extends InstallBasePresenter
 
     /**
      * Zobrazení stránky po úspěšné instalaci.
-     *
      * @throws AbortException
      * @throws \Throwable
      */
@@ -202,7 +202,6 @@ class InstallPresenter extends InstallBasePresenter
 
     /**
      * Zobrazení stránky pokud byla instalace dokončena dříve.
-     *
      * @throws AbortException
      * @throws \Throwable
      */

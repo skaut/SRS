@@ -41,6 +41,7 @@ class Authenticator implements NS\IAuthenticator
     /** @var FilesService */
     private $filesService;
 
+
     public function __construct(
         UserRepository $userRepository,
         RoleRepository $roleRepository,
@@ -58,8 +59,7 @@ class Authenticator implements NS\IAuthenticator
 
     /**
      * Autentizuje uživatele a případně vytvoří nového.
-     *
-     * @param  string[] $credentials
+     * @param string[] $credentials
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -100,7 +100,6 @@ class Authenticator implements NS\IAuthenticator
 
     /**
      * Aktualizuje údaje uživatele ze skautIS.
-     *
      * @throws \Exception
      */
     private function updateUserFromSkautIS(User $user, \stdClass $skautISUser) : void

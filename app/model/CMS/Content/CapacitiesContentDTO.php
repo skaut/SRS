@@ -13,10 +13,10 @@ class CapacitiesContentDTO extends ContentDTO
 {
     /**
      * Role, jejichž obsazenosti se vypíší.
-     *
      * @var int[]
      */
     protected $roles;
+
 
     /**
      * @param int[] $roles

@@ -22,6 +22,7 @@ class BlocksContentControl extends Control
     /** @var CategoryRepository */
     private $categoryRepository;
 
+
     public function __construct(BlockRepository $blockRepository, CategoryRepository $categoryRepository)
     {
         parent::__construct();

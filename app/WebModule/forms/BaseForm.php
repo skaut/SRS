@@ -21,6 +21,7 @@ class BaseForm
     /** @var Translator */
     private $translator;
 
+
     public function __construct(Translator $translator)
     {
         $this->translator = $translator;

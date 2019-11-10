@@ -14,6 +14,7 @@ use Symfony\Component\Console\Output\BufferedOutput;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class SystemPresenter extends ConfigurationBasePresenter
 {
@@ -23,9 +24,9 @@ class SystemPresenter extends ConfigurationBasePresenter
      */
     public $clearCacheCommand;
 
+
     /**
      * Promaže cache.
-     *
      * @throws \Exception
      */
     public function handleClearCache() : void

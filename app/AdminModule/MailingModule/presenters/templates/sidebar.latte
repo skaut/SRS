@@ -1,17 +1,17 @@
 {block sidebar}
-<div class="well">
-	<ul class="nav nav-pills nav-stacked">
-		<li {ifCurrent Templates:*}class="active"{/ifCurrent}>
-			<a href="{plink Templates:default}">{_admin.mailing.menu.templates}</a>
-		</li>
+    <div class="well">
+        <ul class="nav nav-pills nav-stacked">
+            <li {ifCurrent Templates:*}class="active"{/ifCurrent}>
+                <a href="{plink Templates:default}">{_admin.mailing.menu.templates}</a>
+            </li>
 
-		<li {ifCurrent Send:*}class="active"{/ifCurrent}>
-			<a href="{plink Send:default}">{_admin.mailing.menu.send}</a>
-		</li>
+            <li {ifCurrent Send:*}class="active"{/ifCurrent}>
+                <a href="{plink Send:default}">{_admin.mailing.menu.send}</a>
+            </li>
 
-		<li {ifCurrent History:*}class="active"{/ifCurrent}>
-			<a href="{plink History:default}">{_admin.mailing.menu.history}</a>
-		</li>
-	</ul>
-</div>
+            <li {ifCurrent History:*}class="active"{/ifCurrent}>
+                <a href="{plink History:default}">{_admin.mailing.menu.history}</a>
+            </li>
+        </ul>
+    </div>
 {/block}

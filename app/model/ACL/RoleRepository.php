@@ -17,11 +17,13 @@ use function array_map;
  * Třída spravující role.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class RoleRepository extends EntityRepository
 {
     /** @var Translator */
     private $translator;
+
 
     public function injectTranslator(Translator $translator) : void
     {
@@ -54,36 +56,33 @@ class RoleRepository extends EntityRepository
 
     /**
      * Vrací id naposledy přidané role.
-     *
      * @throws NonUniqueResultException
      */
     public function findLastId() : ?int
     {
         return (int) $this->createQueryBuilder('r')
-                        ->select('MAX(r.id)')
-                        ->getQuery()
-                        ->getSingleScalarResult();
+            ->select('MAX(r.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
     /**
      * Vrací názvy rolí, kromě role se zadaným id.
-     *
      * @return string[]
      */
     public function findOthersNames(int $id) : array
     {
         $names = $this->createQueryBuilder('r')
-                ->select('r.name')
-                ->where('r.id != :id')
-                ->setParameter('id', $id)
-                ->getQuery()
-                ->getScalarResult();
+            ->select('r.name')
+            ->where('r.id != :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getScalarResult();
         return array_map('current', $names);
     }
 
     /**
      * Vrací registrovatelné role.
-     *
      * @return Role[]
      */
     public function findAllRegisterable() : array
@@ -93,101 +92,91 @@ class RoleRepository extends EntityRepository
 
     /**
      * Vrací role s omezenou kapacitou.
-     *
      * @return Collection|Role[]
      */
     public function findAllWithLimitedCapacity() : Collection
     {
         $criteria = Criteria::create()
-                ->where(Criteria::expr()->neq('capacity', null));
+            ->where(Criteria::expr()->neq('capacity', null));
         return $this->matching($criteria);
     }
 
     /**
      * Vrací role, u kterých se eviduje příjezd a odjezd.
-     *
      * @return Collection|Role[]
      */
     public function findAllWithArrivalDeparture() : Collection
     {
         $criteria = Criteria::create()
-                ->where(Criteria::expr()->eq('displayArrivalDeparture', true));
+            ->where(Criteria::expr()->eq('displayArrivalDeparture', true));
         return $this->matching($criteria);
     }
 
     /**
      * Vrací role, u kterých je cena počítána podle podakcí.
-     *
      * @return Collection|Role[]
      */
     public function findAllWithSubevents() : Collection
     {
         $criteria = Criteria::create()
-                ->where(Criteria::expr()->eq('fee', null));
+            ->where(Criteria::expr()->eq('fee', null));
         return $this->matching($criteria);
     }
 
     /**
      * Vrací role podle id.
-     *
-     * @param  int[] $ids
+     * @param int[] $ids
      * @return Collection|Role[]
      */
     public function findRolesByIds(array $ids) : Collection
     {
         $criteria = Criteria::create()
-                ->where(Criteria::expr()->in('id', $ids))
-                ->orderBy(['name' => 'ASC']);
+            ->where(Criteria::expr()->in('id', $ids))
+            ->orderBy(['name' => 'ASC']);
         return $this->matching($criteria);
     }
 
     /**
      * Vrací role s počty uživatelů.
-     *
-     * @param  int[] $rolesIds
+     * @param int[] $rolesIds
      * @return string[][]
      */
     public function countUsersInRoles(array $rolesIds) : array
     {
         return $this->createQueryBuilder('r')
-                        ->select('r.name, r.capacity, COUNT(u.id) AS usersCount')
-                        ->leftJoin('r.users', 'u')
-                        ->where('r.id IN (:ids)')->setParameter('ids', $rolesIds)
-                        ->groupBy('r.id')
-                        ->orderBy('r.name')
-                        ->getQuery()
-                        ->getResult();
+            ->select('r.name, r.capacity, COUNT(u.id) AS usersCount')
+            ->leftJoin('r.users', 'u')
+            ->where('r.id IN (:ids)')->setParameter('ids', $rolesIds)
+            ->groupBy('r.id')
+            ->orderBy('r.name')
+            ->getQuery()
+            ->getResult();
     }
 
     /**
      * Vrací id rolí.
-     *
-     * @param  Collection|Role[] $roles
+     * @param Collection|Role[] $roles
      * @return int[]
      */
     public function findRolesIds(Collection $roles) : array
     {
-        return array_map(
-            function ($o) {
-                    return $o->getId();
-            },
-            $roles->toArray()
-        );
+        return array_map(function ($o) {
+            return $o->getId();
+        }, $roles->toArray());
     }
 
     /**
      * Vrací seznam rolí jako možnosti pro select, role specifikovaná parametrem je vynechána.
-     *
      * @return string[]
      */
     public function getRolesWithoutRoleOptions(int $roleId) : array
     {
         $roles = $this->createQueryBuilder('r')
-                ->select('r.id, r.name')
-                ->where('r.id != :id')->setParameter('id', $roleId)
-                ->orderBy('r.name')
-                ->getQuery()
-                ->getResult();
+            ->select('r.id, r.name')
+            ->where('r.id != :id')->setParameter('id', $roleId)
+            ->orderBy('r.name')
+            ->getQuery()
+            ->getResult();
 
         $options = [];
         foreach ($roles as $role) {
@@ -198,7 +187,6 @@ class RoleRepository extends EntityRepository
 
     /**
      * Vrací seznam rolí s obsazenostmi jako možnosti pro select.
-     *
      * @return string[]
      */
     public function getRegisterableNowOptionsWithCapacity() : array
@@ -208,15 +196,11 @@ class RoleRepository extends EntityRepository
         $options = [];
         foreach ($roles as $role) {
             if ($role->hasLimitedCapacity()) {
-                $options[$role->getId()] = $this->translator->translate(
-                    'web.common.role_option',
-                    null,
-                    [
+                $options[$role->getId()] = $this->translator->translate('web.common.role_option', null, [
                     'role' => $role->getName(),
                     'occupied' => $role->countUsers(),
                     'total' => $role->getCapacity(),
-                        ]
-                );
+                ]);
             } else {
                 $options[$role->getId()] = $role->getName();
             }
@@ -226,29 +210,26 @@ class RoleRepository extends EntityRepository
 
     /**
      * Vraci role, ktere jsou tuto chvíli registrovatelné, seřazené podle názvu.
-     *
      * @return Collection|Role[]
      */
     public function findAllRegisterableNowOrderedByName() : Collection
     {
         $result = $this->createQueryBuilder('r')
-                ->select('r')
-                ->where(
-                    $this->createQueryBuilder('r')->expr()->andX(
-                        $this->createQueryBuilder('r')->expr()->eq('r.registerable', true),
-                        $this->createQueryBuilder('r')->expr()->orX(
-                            $this->createQueryBuilder('r')->expr()->lte('r.registerableFrom', 'CURRENT_TIMESTAMP()'),
-                            $this->createQueryBuilder('r')->expr()->isNull('r.registerableFrom')
-                        ),
-                        $this->createQueryBuilder('r')->expr()->orX(
-                            $this->createQueryBuilder('r')->expr()->gte('r.registerableTo', 'CURRENT_TIMESTAMP()'),
-                            $this->createQueryBuilder('r')->expr()->isNull('r.registerableTo')
-                        )
-                    )
+            ->select('r')
+            ->where($this->createQueryBuilder()->expr()->andX(
+                $this->createQueryBuilder()->expr()->eq('r.registerable', true),
+                $this->createQueryBuilder()->expr()->orX(
+                    $this->createQueryBuilder()->expr()->lte('r.registerableFrom', 'CURRENT_TIMESTAMP()'),
+                    $this->createQueryBuilder()->expr()->isNull('r.registerableFrom')
+                ),
+                $this->createQueryBuilder()->expr()->orX(
+                    $this->createQueryBuilder()->expr()->gte('r.registerableTo', 'CURRENT_TIMESTAMP()'),
+                    $this->createQueryBuilder()->expr()->isNull('r.registerableTo')
                 )
-                ->orderBy('r.name')
-                ->getQuery()
-                ->getResult();
+            ))
+            ->orderBy('r.name')
+            ->getQuery()
+            ->getResult();
 
         return new ArrayCollection($result);
     }
@@ -256,7 +237,6 @@ class RoleRepository extends EntityRepository
     /**
      * Vrací seznam rolí, které jsou v tuto chvíli registrovatelné nebo je uživatel má, s informací o jejich
      * obsazenosti, jako možnosti pro select.
-     *
      * @return Role[]
      */
     public function getRegisterableNowOrUsersOptionsWithCapacity(User $user) : array
@@ -266,15 +246,11 @@ class RoleRepository extends EntityRepository
         $options = [];
         foreach ($roles as $role) {
             if ($role->hasLimitedCapacity()) {
-                $options[$role->getId()] = $this->translator->translate(
-                    'web.common.role_option',
-                    null,
-                    [
+                $options[$role->getId()] = $this->translator->translate('web.common.role_option', null, [
                     'role' => $role->getName(),
                     'occupied' => $role->countUsers(),
                     'total' => $role->getCapacity(),
-                        ]
-                );
+                ]);
             } else {
                 $options[$role->getId()] = $role->getName();
             }
@@ -284,57 +260,53 @@ class RoleRepository extends EntityRepository
 
     /**
      * Vrací role, které jsou v tuto chvíli registrovatelné nebo je uživatel má, seřazené podle názvu.
-     *
      * @return Role[]
      */
     public function findAllRegisterableNowOrUsersOrderedByName(User $user) : array
     {
         return $this->createQueryBuilder('r')
-                        ->select('r')
-                        ->leftJoin('r.users', 'u')
-                        ->where(
-                            $this->createQueryBuilder('r')->expr()->orX(
-                                $this->createQueryBuilder('r')->expr()->andX(
-                                    $this->createQueryBuilder('r')->expr()->eq('r.registerable', true),
-                                    $this->createQueryBuilder('r')->expr()->orX(
-                                        $this->createQueryBuilder('r')->expr()->lte('r.registerableFrom', 'CURRENT_TIMESTAMP()'),
-                                        $this->createQueryBuilder('r')->expr()->isNull('r.registerableFrom')
-                                    ),
-                                    $this->createQueryBuilder('r')->expr()->orX(
-                                        $this->createQueryBuilder('r')->expr()->gte('r.registerableTo', 'CURRENT_TIMESTAMP()'),
-                                        $this->createQueryBuilder('r')->expr()->isNull('r.registerableTo')
-                                    )
-                                ),
-                                $this->createQueryBuilder('r')->expr()->eq('u.id', $user->getId())
-                            )
-                        )
-                        ->orderBy('r.name')
-                        ->getQuery()
-                        ->getResult();
+            ->select('r')
+            ->leftJoin('r.users', 'u')
+            ->where($this->createQueryBuilder()->expr()->orX(
+                $this->createQueryBuilder()->expr()->andX(
+                    $this->createQueryBuilder()->expr()->eq('r.registerable', true),
+                    $this->createQueryBuilder()->expr()->orX(
+                        $this->createQueryBuilder()->expr()->lte('r.registerableFrom', 'CURRENT_TIMESTAMP()'),
+                        $this->createQueryBuilder()->expr()->isNull('r.registerableFrom')
+                    ),
+                    $this->createQueryBuilder()->expr()->orX(
+                        $this->createQueryBuilder()->expr()->gte('r.registerableTo', 'CURRENT_TIMESTAMP()'),
+                        $this->createQueryBuilder()->expr()->isNull('r.registerableTo')
+                    )
+                ),
+                $this->createQueryBuilder()->expr()->eq('u.id', $user->getId())
+            ))
+            ->orderBy('r.name')
+            ->getQuery()
+            ->getResult();
     }
 
     /**
      * Vrací role bez vybraných rolí jako možnosti pro select.
-     *
-     * @param  string[] $withoutRoles
+     * @param string[] $withoutRoles
      * @return string[]
      */
     public function getRolesWithoutRolesOptions(array $withoutRoles) : array
     {
         if (empty($withoutRoles)) {
             $roles = $this->createQueryBuilder('r')
-                    ->select('r.id, r.name')
-                    ->orderBy('r.name')
-                    ->getQuery()
-                    ->getResult();
+                ->select('r.id, r.name')
+                ->orderBy('r.name')
+                ->getQuery()
+                ->getResult();
         } else {
             $roles = $this->createQueryBuilder('r')
-                    ->select('r.id, r.name')
-                    ->where('r.systemName NOT IN (:roles)')->setParameter('roles', $withoutRoles)
-                    ->orWhere('r.systemName IS NULL')
-                    ->orderBy('r.name')
-                    ->getQuery()
-                    ->getResult();
+                ->select('r.id, r.name')
+                ->where('r.systemName NOT IN (:roles)')->setParameter('roles', $withoutRoles)
+                ->orWhere('r.systemName IS NULL')
+                ->orderBy('r.name')
+                ->getQuery()
+                ->getResult();
         }
 
         $options = [];
@@ -346,38 +318,33 @@ class RoleRepository extends EntityRepository
 
     /**
      * Vrací seznam rolí bez vybraných rolí, s informací o obsazenosti, jako možnosti pro select.
-     *
-     * @param  string[] $withoutRoles
+     * @param string[] $withoutRoles
      * @return string[]
      */
     public function getRolesWithoutRolesOptionsWithCapacity(array $withoutRoles) : array
     {
         if (empty($withoutRoles)) {
             $roles = $this->createQueryBuilder('r')
-                    ->orderBy('r.name')
-                    ->getQuery()
-                    ->getResult();
+                ->orderBy('r.name')
+                ->getQuery()
+                ->getResult();
         } else {
             $roles = $this->createQueryBuilder('r')
-                    ->where('r.systemName NOT IN (:roles)')->setParameter('roles', $withoutRoles)
-                    ->orWhere('r.systemName IS NULL')
-                    ->orderBy('r.name')
-                    ->getQuery()
-                    ->getResult();
+                ->where('r.systemName NOT IN (:roles)')->setParameter('roles', $withoutRoles)
+                ->orWhere('r.systemName IS NULL')
+                ->orderBy('r.name')
+                ->getQuery()
+                ->getResult();
         }
 
         $options = [];
         foreach ($roles as $role) {
             if ($role->hasLimitedCapacity()) {
-                $options[$role->getId()] = $this->translator->translate(
-                    'web.common.role_option',
-                    null,
-                    [
+                $options[$role->getId()] = $this->translator->translate('web.common.role_option', null, [
                     'role' => $role->getName(),
                     'occupied' => $role->countUsers(),
                     'total' => $role->getCapacity(),
-                        ]
-                );
+                ]);
             } else {
                 $options[$role->getId()] = $role->getName();
             }
@@ -387,24 +354,23 @@ class RoleRepository extends EntityRepository
 
     /**
      * Vrací seznam rolí bez vybraných rolí, s informací o počtu uživatelů, jako možnosti pro select.
-     *
-     * @param  string[] $withoutRoles
+     * @param string[] $withoutRoles
      * @return string[]
      */
     public function getRolesWithoutRolesOptionsWithApprovedUsersCount(array $withoutRoles) : array
     {
         if (empty($withoutRoles)) {
             $roles = $this->createQueryBuilder('r')
-                    ->orderBy('r.name')
-                    ->getQuery()
-                    ->getResult();
+                ->orderBy('r.name')
+                ->getQuery()
+                ->getResult();
         } else {
             $roles = $this->createQueryBuilder('r')
-                    ->where('r.systemName NOT IN (:roles)')->setParameter('roles', $withoutRoles)
-                    ->orWhere('r.systemName IS NULL')
-                    ->orderBy('r.name')
-                    ->getQuery()
-                    ->getResult();
+                ->where('r.systemName NOT IN (:roles)')->setParameter('roles', $withoutRoles)
+                ->orWhere('r.systemName IS NULL')
+                ->orderBy('r.name')
+                ->getQuery()
+                ->getResult();
         }
 
         $options = [];
@@ -413,8 +379,8 @@ class RoleRepository extends EntityRepository
                 'admin.common.role_option',
                 $role->countUsers(),
                 [
-                        'role' => $role->getName(),
-                    ]
+                    'role' => $role->getName(),
+                ]
             );
         }
         return $options;
@@ -423,15 +389,15 @@ class RoleRepository extends EntityRepository
     public function incrementOccupancy(Role $role) : void
     {
         $this->createQuery('UPDATE App\Model\ACL\Role r SET r.occupancy = r.occupancy + 1 WHERE r.id = :rid')
-                ->setParameter('rid', $role->getId())
-                ->getResult();
+            ->setParameter('rid', $role->getId())
+            ->getResult();
     }
 
     public function decrementOccupancy(Role $role) : void
     {
         $this->createQuery('UPDATE App\Model\ACL\Role r SET r.occupancy = r.occupancy - 1 WHERE r.id = :rid')
-                ->setParameter('rid', $role->getId())
-                ->getResult();
+            ->setParameter('rid', $role->getId())
+            ->getResult();
     }
 
     /**
@@ -440,13 +406,13 @@ class RoleRepository extends EntityRepository
     public function getRegistrationStart() : ?\DateTime
     {
         $result = $this->createQueryBuilder('r')
-                ->select('r.registerableFrom')
-                ->where('r.registerable = TRUE')
-                ->andWhere('r.registerableFrom IS NOT NULL')
-                ->orderBy('r.registerableFrom')
-                ->setMaxResults(1)
-                ->getQuery()
-                ->getOneOrNullResult();
+            ->select('r.registerableFrom')
+            ->where('r.registerable = TRUE')
+            ->andWhere('r.registerableFrom IS NOT NULL')
+            ->orderBy('r.registerableFrom')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
         return $result ? $result['registerableFrom'] : null;
     }
 
@@ -456,13 +422,13 @@ class RoleRepository extends EntityRepository
     public function getRegistrationEnd() : ?\DateTime
     {
         $result = $this->createQueryBuilder('r')
-                ->select('r.registerableTo')
-                ->where('r.registerable = TRUE')
-                ->andWhere('r.registerableTo IS NOT NULL')
-                ->orderBy('r.registerableTo', 'DESC')
-                ->setMaxResults(1)
-                ->getQuery()
-                ->getOneOrNullResult();
+            ->select('r.registerableTo')
+            ->where('r.registerable = TRUE')
+            ->andWhere('r.registerableTo IS NOT NULL')
+            ->orderBy('r.registerableTo', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
         return $result ? $result['registerableTo'] : null;
     }
 }

@@ -21,6 +21,7 @@ abstract class SkautIsEventService
     /** @var Skautis */
     protected $skautIs;
 
+
     public function __construct(Skautis $skautIs)
     {
         $this->skautIs = $skautIs;
@@ -33,7 +34,6 @@ abstract class SkautIsEventService
 
     /**
      * Vloží účastníky do skautIS.
-     *
      * @param Collection|User[] $users
      * @param bool              $accept Přijetí účastníků (pouze u vzdělávacích akcí).
      */
@@ -46,7 +46,6 @@ abstract class SkautIsEventService
 
     /**
      * Vrací seznam neuzavřených akcí.
-     *
      * @return \stdClass[]
      */
     abstract protected function getDraftEvents() : array;
@@ -61,7 +60,6 @@ abstract class SkautIsEventService
 
     /**
      * Vrací seznam neuzavřených akcí pro select.
-     *
      * @return string[]
      */
     public function getEventsOptions() : array

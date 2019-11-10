@@ -33,6 +33,7 @@ class MailHistoryGridControl extends Control
     /** @var SubeventRepository */
     private $subeventRepository;
 
+
     public function __construct(
         Translator $translator,
         MailRepository $mailRepository,
@@ -68,55 +69,45 @@ class MailHistoryGridControl extends Control
         $grid->setStrictSessionFilterValues(false);
 
         $grid->addColumnText('recipientRoles', 'admin.mailing.history.recipient_roles', 'recipientRolesText')
-                ->setFilterMultiSelect($this->roleRepository->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]))
-                ->setCondition(
-                    function (QueryBuilder $qb, $values) : void {
-                            $qb->join('m.recipientRoles', 'r')
-                            ->andWhere('r.id IN (:rids)')
-                            ->setParameter('rids', $values);
-                    }
-                );
+            ->setFilterMultiSelect($this->roleRepository->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]))
+            ->setCondition(function (QueryBuilder $qb, $values) : void {
+                $qb->join('m.recipientRoles', 'r')
+                    ->andWhere('r.id IN (:rids)')
+                    ->setParameter('rids', $values);
+            });
 
         $grid->addColumnText('recipientSubevents', 'admin.mailing.history.recipient_subevents', 'recipientSubeventsText')
-                ->setFilterMultiSelect($this->subeventRepository->getSubeventsOptions())
-                ->setCondition(
-                    function (QueryBuilder $qb, $values) : void {
-                            $qb->join('m.recipientSubevents', 's')
-                            ->andWhere('s.id IN (:sids)')
-                            ->setParameter('sids', $values);
-                    }
-                );
+            ->setFilterMultiSelect($this->subeventRepository->getSubeventsOptions())
+            ->setCondition(function (QueryBuilder $qb, $values) : void {
+                $qb->join('m.recipientSubevents', 's')
+                    ->andWhere('s.id IN (:sids)')
+                    ->setParameter('sids', $values);
+            });
 
         $grid->addColumnText('recipientUsers', 'admin.mailing.history.recipient_users', 'recipientUsersText')
-                ->setFilterText()
-                ->setCondition(
-                    function (QueryBuilder $qb, $value) : void {
-                            $qb->join('m.recipientUsers', 'u')
-                            ->andWhere('u.displayName LIKE :displayName')
-                            ->setParameter('displayName', '%' . $value . '%');
-                    }
-                );
+            ->setFilterText()
+            ->setCondition(function (QueryBuilder $qb, $value) : void {
+                $qb->join('m.recipientUsers', 'u')
+                    ->andWhere('u.displayName LIKE :displayName')
+                    ->setParameter('displayName', '%' . $value . '%');
+            });
 
         $grid->addColumnText('subject', 'admin.mailing.history.subject')
-                ->setFilterText();
+            ->setFilterText();
 
         $grid->addColumnDateTime('datetime', 'admin.mailing.history.datetime')
-                ->setFormat(Helpers::DATETIME_FORMAT);
+            ->setFormat(Helpers::DATETIME_FORMAT);
 
         $grid->addColumnText('automatic', 'admin.mailing.history.automatic')
-                ->setReplacement(
-                    [
-                            '0' => $this->translator->translate('admin.common.no'),
-                            '1' => $this->translator->translate('admin.common.yes'),
-                        ]
-                )
-                ->setFilterSelect(
-                    [
-                            '' => 'admin.common.all',
-                            '0' => 'admin.common.no',
-                            '1' => 'admin.common.yes',
-                        ]
-                )
-                ->setTranslateOptions();
+            ->setReplacement([
+                '0' => $this->translator->translate('admin.common.no'),
+                '1' => $this->translator->translate('admin.common.yes'),
+            ])
+            ->setFilterSelect([
+                '' => 'admin.common.all',
+                '0' => 'admin.common.no',
+                '1' => 'admin.common.yes',
+            ])
+            ->setTranslateOptions();
     }
 }

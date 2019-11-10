@@ -17,8 +17,8 @@ use function file_exists;
 /**
  * Entita obsahu s obrázkem.
  *
- * @author                          Michal Májský
- * @author                          Jan Staněk <jan.stanek@skaut.cz>
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity
  * @ORM\Table(name="image_content")
  */
@@ -51,38 +51,35 @@ class ImageContent extends Content implements IContent
 
     /**
      * Adresa obrázku.
-     *
      * @ORM\Column(type="string", nullable=true)
-     * @var                       string
+     * @var string
      */
     protected $image;
 
     /**
      * Zarovnání obrázku v textu.
-     *
      * @ORM\Column(type="string", nullable=true)
-     * @var                       string
+     * @var string
      */
     protected $align;
 
     /**
      * Šířka obrázku.
-     *
      * @ORM\Column(type="integer", nullable=true)
-     * @var                        int
+     * @var int
      */
     protected $width;
 
     /**
      * Výška obrázku.
-     *
      * @ORM\Column(type="integer", nullable=true)
-     * @var                        int
+     * @var int
      */
     protected $height;
 
     /** @var FilesService */
     private $filesService;
+
 
     public function injectFilesService(FilesService $filesService) : void
     {
@@ -154,42 +151,39 @@ class ImageContent extends Content implements IContent
         $formContainer = $form[$this->getContentFormName()];
 
         $formContainer->addText('currentImage', 'admin.cms.pages_content_image_current_file')
-                ->setAttribute('data-type', 'image')
-                ->setAttribute('data-image', $this->image)
-                ->setAttribute('data-width', $this->width)
-                ->setAttribute('data-height', $this->height);
+            ->setAttribute('data-type', 'image')
+            ->setAttribute('data-image', $this->image)
+            ->setAttribute('data-width', $this->width)
+            ->setAttribute('data-height', $this->height);
 
         $formContainer->addUpload('image', 'admin.cms.pages_content_image_new_file')
-                ->setAttribute('accept', 'image/*')
-                ->addCondition(Form::FILLED)
-                ->addRule(Form::IMAGE, 'admin.cms.pages_content_image_new_file_format');
+            ->setAttribute('accept', 'image/*')
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::IMAGE, 'admin.cms.pages_content_image_new_file_format');
 
         $formContainer->addSelect('align', 'admin.cms.pages_content_image_align', $this->prepareAlignOptions());
 
         $formContainer->addText('width', 'admin.cms.pages_content_image_width')
-                ->setAttribute('data-toggle', 'tooltip')
-                ->setAttribute('title', $form->getTranslator()->translate('admin.cms.pages_content_image_size_note'))
-                ->addCondition(Form::FILLED)->addRule(Form::NUMERIC, 'admin.cms.pages_content_image_width_format');
+            ->setAttribute('data-toggle', 'tooltip')
+            ->setAttribute('title', $form->getTranslator()->translate('admin.cms.pages_content_image_size_note'))
+            ->addCondition(Form::FILLED)->addRule(Form::NUMERIC, 'admin.cms.pages_content_image_width_format');
 
         $formContainer->addText('height', 'admin.cms.pages_content_image_height')
-                ->setAttribute('data-toggle', 'tooltip')
-                ->setAttribute('title', $form->getTranslator()->translate('admin.cms.pages_content_image_size_note'))
-                ->addCondition(Form::FILLED)->addRule(Form::NUMERIC, 'admin.cms.pages_content_image_height_format');
+            ->setAttribute('data-toggle', 'tooltip')
+            ->setAttribute('title', $form->getTranslator()->translate('admin.cms.pages_content_image_size_note'))
+            ->addCondition(Form::FILLED)->addRule(Form::NUMERIC, 'admin.cms.pages_content_image_height_format');
 
-        $formContainer->setDefaults(
-            [
-                    'align' => $this->align,
-                    'width' => $this->width,
-                    'height' => $this->height,
-                ]
-        );
+        $formContainer->setDefaults([
+            'align' => $this->align,
+            'width' => $this->width,
+            'height' => $this->height,
+        ]);
 
         return $form;
     }
 
     /**
      * Zpracuje při uložení stránky část formuláře týkající se obsahu.
-     *
      * @throws UnknownImageFileException
      */
     public function contentFormSucceeded(Form $form, \stdClass $values) : void
@@ -243,7 +237,6 @@ class ImageContent extends Content implements IContent
 
     /**
      * Vrátí možnosti zarovnání obrázku pro select.
-     *
      * @return string[]
      */
     private function prepareAlignOptions() : array

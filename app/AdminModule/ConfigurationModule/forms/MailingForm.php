@@ -28,6 +28,7 @@ use function uniqid;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class MailingForm
 {
@@ -35,7 +36,6 @@ class MailingForm
 
     /**
      * Přihlášený uživatel.
-     *
      * @var User
      */
     private $user;
@@ -55,6 +55,7 @@ class MailingForm
     /** @var LinkGenerator */
     private $linkGenerator;
 
+
     public function __construct(
         BaseForm $baseForm,
         SettingsFacade $settingsFacade,
@@ -71,7 +72,6 @@ class MailingForm
 
     /**
      * Vytvoří formulář.
-     *
      * @throws SettingsException
      * @throws \Throwable
      */
@@ -86,16 +86,14 @@ class MailingForm
         $renderer->wrappers['label']['container']   = 'div class="col-sm-5 col-xs-5 control-label"';
 
         $form->addText('seminarEmail', 'admin.configuration.mailing_email')
-                ->addRule(Form::FILLED, 'admin.configuration.mailing_email_empty')
-                ->addRule(Form::EMAIL, 'admin.configuration.mailing_email_format');
+            ->addRule(Form::FILLED, 'admin.configuration.mailing_email_empty')
+            ->addRule(Form::EMAIL, 'admin.configuration.mailing_email_format');
 
         $form->addSubmit('submit', 'admin.common.save');
 
-        $form->setDefaults(
-            [
-                    'seminarEmail' => $this->settingsFacade->getValue(Settings::SEMINAR_EMAIL),
-                ]
-        );
+        $form->setDefaults([
+            'seminarEmail' => $this->settingsFacade->getValue(Settings::SEMINAR_EMAIL),
+        ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
 
@@ -104,7 +102,6 @@ class MailingForm
 
     /**
      * Zpracuje formulář.
-     *
      * @throws Nette\Application\UI\InvalidLinkException
      * @throws SettingsException
      * @throws \Throwable
@@ -129,9 +126,9 @@ class MailingForm
             $values['seminarEmail'],
             Template::EMAIL_VERIFICATION,
             [
-                    TemplateVariable::SEMINAR_NAME => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
-                    TemplateVariable::EMAIL_VERIFICATION_LINK => $link,
-                ],
+                TemplateVariable::SEMINAR_NAME => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
+                TemplateVariable::EMAIL_VERIFICATION_LINK => $link,
+            ],
             true
         );
     }

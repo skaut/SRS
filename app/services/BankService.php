@@ -16,6 +16,7 @@ use Nette;
  * Služba pro správu plateb.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class BankService
 {
@@ -32,6 +33,7 @@ class BankService
 
     /** @var PaymentRepository */
     private $paymentRepository;
+
 
     public function __construct(
         ApplicationService $applicationService,
@@ -68,30 +70,28 @@ class BankService
     private function createPayments(FioApi\TransactionList $transactionList) : void
     {
         foreach ($transactionList->getTransactions() as $transaction) {
-            $this->em->transactional(
-                function () use ($transaction) : void {
-                        $id = $transaction->getId();
+            $this->em->transactional(function () use ($transaction) : void {
+                $id = $transaction->getId();
 
-                    if ($transaction->getAmount() <= 0 || $this->paymentRepository->findByTransactionId($id) !== null) {
-                        return;
-                    }
-
-                        $date = new \DateTime();
-                        $date->setTimestamp($transaction->getDate()->getTimestamp());
-
-                        $accountNumber = $transaction->getSenderAccountNumber() . '/' . $transaction->getSenderBankCode();
-
-                        $this->applicationService->createPayment(
-                            $date,
-                            $transaction->getAmount(),
-                            $transaction->getVariableSymbol(),
-                            $id,
-                            $accountNumber,
-                            $transaction->getSenderName(),
-                            $transaction->getUserMessage()
-                        );
+                if ($transaction->getAmount() <= 0 || $this->paymentRepository->findByTransactionId($id) !== null) {
+                    return;
                 }
-            );
+
+                $date = new \DateTime();
+                $date->setTimestamp($transaction->getDate()->getTimestamp());
+
+                $accountNumber = $transaction->getSenderAccountNumber() . '/' . $transaction->getSenderBankCode();
+
+                $this->applicationService->createPayment(
+                    $date,
+                    $transaction->getAmount(),
+                    $transaction->getVariableSymbol(),
+                    $id,
+                    $accountNumber,
+                    $transaction->getSenderName(),
+                    $transaction->getUserMessage()
+                );
+            });
         }
 
         $this->settingsFacade->setDateValue(Settings::BANK_DOWNLOAD_FROM, new \DateTime());

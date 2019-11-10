@@ -16,7 +16,8 @@ use function implode;
 /**
  * Entita e-mail.
  *
- * @author                                       Jan Staněk <jan.stanek@skaut.cz>
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="MailRepository")
  * @ORM\Table(name="mail")
  */
@@ -26,59 +27,53 @@ class Mail
 
     /**
      * Role, kterým byl e-mail odeslán.
-     *
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role")
-     * @var                                                Collection|Role[]
+     * @var Collection|Role[]
      */
     protected $recipientRoles;
 
     /**
      * Podakce, jejichž účastníkům byl e-mail odeslán.
-     *
      * @ORM\ManyToMany(targetEntity="\App\Model\Structure\Subevent")
-     * @var                                                          Collection|Subevent[]
+     * @var Collection|Subevent[]
      */
     protected $recipientSubevents;
 
     /**
      * Uživatelé, kterém byl e-mail odeslán.
-     *
      * @ORM\ManyToMany(targetEntity="\App\Model\User\User")
-     * @var                                                 Collection|User[]
+     * @var Collection|User[]
      */
     protected $recipientUsers;
 
     /**
      * Předmět e-mailu.
-     *
      * @ORM\Column(type="string")
-     * @var                       string
+     * @var string
      */
     protected $subject;
 
     /**
      * Text e-mailu.
-     *
      * @ORM\Column(type="text")
-     * @var                     string
+     * @var string
      */
     protected $text;
 
     /**
      * Datum a čas odeslání.
-     *
      * @ORM\Column(type="datetime")
-     * @var                         \DateTime
+     * @var \DateTime
      */
     protected $datetime;
 
     /**
      * Automatický e-mail.
-     *
      * @ORM\Column(type="boolean")
-     * @var                        bool
+     * @var bool
      */
     protected $automatic = false;
+
 
     public function __construct()
     {
@@ -116,14 +111,9 @@ class Mail
      */
     public function getRecipientRolesText() : string
     {
-        return implode(
-            ', ',
-            $this->recipientRoles->map(
-                function (Role $role) {
-                            return $role->getName();
-                }
-            )->toArray()
-        );
+        return implode(', ', $this->recipientRoles->map(function (Role $role) {
+            return $role->getName();
+        })->toArray());
     }
 
     /**
@@ -150,14 +140,9 @@ class Mail
      */
     public function getRecipientSubeventsText() : string
     {
-        return implode(
-            ', ',
-            $this->recipientSubevents->map(
-                function (Subevent $subevent) {
-                            return $subevent->getName();
-                }
-            )->toArray()
-        );
+        return implode(', ', $this->recipientSubevents->map(function (Subevent $subevent) {
+            return $subevent->getName();
+        })->toArray());
     }
 
     /**
@@ -184,14 +169,9 @@ class Mail
      */
     public function getRecipientUsersText() : string
     {
-        return implode(
-            ', ',
-            $this->recipientUsers->map(
-                function (User $user) {
-                            return $user->getDisplayName();
-                }
-            )->toArray()
-        );
+        return implode(', ', $this->recipientUsers->map(function (User $user) {
+            return $user->getDisplayName();
+        })->toArray());
     }
 
     public function getSubject() : string

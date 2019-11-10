@@ -26,51 +26,52 @@ use function array_keys;
  * BasePresenter pro AdminModule.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 abstract class AdminBasePresenter extends BasePresenter
 {
     /**
-     * @var    Authorizator
+     * @var Authorizator
      * @inject
      */
     public $authorizator;
 
     /**
-     * @var    ResourceFacade
+     * @var ResourceFacade
      * @inject
      */
     public $resourceFacade;
 
     /**
-     * @var    RoleRepository
+     * @var RoleRepository
      * @inject
      */
     public $roleRepository;
 
     /**
-     * @var    SettingsFacade
+     * @var SettingsFacade
      * @inject
      */
     public $settingsFacade;
 
     /**
-     * @var    UserRepository
+     * @var UserRepository
      * @inject
      */
     public $userRepository;
 
     /**
-     * @var    SkautIsService
+     * @var SkautIsService
      * @inject
      */
     public $skautIsService;
 
     /**
      * Přihlášený uživatel.
-     *
      * @var User
      */
     public $dbuser;
+
 
     /**
      * Načte css podle konfigurace v config.neon.
@@ -151,12 +152,9 @@ abstract class AdminBasePresenter extends BasePresenter
         $skautIsUserId                = $this->dbuser->getSkautISUserId();
         $skautIsRoles                 = $this->skautIsService->getUserRoles($skautIsUserId);
         $skautIsRoleSelectedId        = $this->skautIsService->getUserRoleId();
-        $skautIsRoleSelected          = array_filter(
-            $skautIsRoles,
-            function ($r) use ($skautIsRoleSelectedId) {
-                    return $r->ID === $skautIsRoleSelectedId;
-            }
-        );
+        $skautIsRoleSelected          = array_filter($skautIsRoles, function ($r) use ($skautIsRoleSelectedId) {
+            return $r->ID === $skautIsRoleSelectedId;
+        });
         $this->template->skautIsRoles = $skautIsRoles;
         if (empty($skautIsRoleSelected)) {
             $this->template->skautIsRoleSelected = null;
@@ -167,7 +165,6 @@ abstract class AdminBasePresenter extends BasePresenter
 
     /**
      * Kontroluje oprávnění uživatele a případně jej přesměruje.
-     *
      * @throws AbortException
      */
     public function checkPermission(string $permission) : void

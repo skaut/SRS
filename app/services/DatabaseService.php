@@ -16,6 +16,7 @@ use Symfony\Component\Console\Output\BufferedOutput;
  * Služba pro správu databáze.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class DatabaseService
 {
@@ -28,6 +29,7 @@ class DatabaseService
     /** @var Cache */
     protected $databaseCache;
 
+
     public function __construct(string $dir, Container $container, IStorage $storage)
     {
         $this->dir       = $dir;
@@ -38,7 +40,6 @@ class DatabaseService
 
     /**
      * Vytvoří zálohu databáze a spustí migrace. Spouští se pouze pokud není v cache záznam o provedeném update.
-     *
      * @throws \Throwable
      */
     public function update() : void
@@ -47,33 +48,27 @@ class DatabaseService
             return;
         }
 
-        $this->databaseCache->save(
-            'lock',
-            function () {
-                if ($this->databaseCache->load('updated') === null) {
-                    $this->databaseCache->save('updated', new \DateTime());
+        $this->databaseCache->save('lock', function () {
+            if ($this->databaseCache->load('updated') === null) {
+                $this->databaseCache->save('updated', new \DateTime());
 
-                    $this->backup();
+                $this->backup();
 
-                    $consoleApp = new Application();
-                    $output     = new BufferedOutput();
-                    $input      = new ArrayInput(
-                        [
-                        'command' => 'migrations:migrate',
-                        '--no-interaction' => true,
-                        ]
-                    );
-                    $consoleApp->add(new MigrateCommand());
-                    $consoleApp->run($input, $output);
-                }
-                    return true;
+                $consoleApp = new Application();
+                $output     = new BufferedOutput();
+                $input      = new ArrayInput([
+                    'command' => 'migrations:migrate',
+                    '--no-interaction' => true,
+                ]);
+                $consoleApp->add(new MigrateCommand());
+                $consoleApp->run($input, $output);
             }
-        );
+            return true;
+        });
     }
 
     /**
      * Vytvoří zálohu databáze.
-     *
      * @throws \Exception
      */
     public function backup() : void

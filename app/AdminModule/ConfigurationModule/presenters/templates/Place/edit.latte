@@ -1,12 +1,12 @@
 {block head}
-<script src="https://api.mapy.cz/loader.js"></script>
-<script>Loader.load()</script>
-<script src="{$basePath}/js/libs/nette-forms-gpspicker/nette.gpsPicker.js"></script>
+    <script src="https://api.mapy.cz/loader.js"></script>
+    <script>Loader.load()</script>
+    <script src="{$basePath}/js/libs/nette-forms-gpspicker/nette.gpsPicker.js"></script>
 {/block}
 
 {block main}
-<h2>{_admin.configuration.place_points_edit_heading, ['name' => $placePoint->getName()]}</h2>
-<div class="well">
-	{control placePointForm}
-</div>
+    <h2>{_admin.configuration.place_points_edit_heading, ['name' => $placePoint->getName()]}</h2>
+    <div class="well">
+        {control placePointForm}
+    </div>
 {/block}

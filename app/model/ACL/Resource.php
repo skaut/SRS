@@ -12,65 +12,58 @@ use Nettrine\ORM\Entity\Attributes\Id as Identifier;
 /**
  * Entita prostředek.
  *
- * @author                     Michal Májský
- * @author                     Jan Staněk <jan.stanek@skaut.cz>
- * @ORM\Entity
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
+ * @ORM\Entity(repositoryClass="ResourceRepository")
  * @ORM\Table(name="resource")
  */
 class Resource
 {
     /**
      * Administrace.
-     *
      * @var string
      */
     public const ADMIN = 'admin';
 
     /**
      * Web.
-     *
      * @var string
      */
     public const CMS = 'cms';
 
     /**
      * Role.
-     *
      * @var string
      */
     public const ACL = 'acl';
 
     /**
      * Program.
-     *
      * @var string
      */
     public const PROGRAM = 'program';
 
     /**
      * Nastavení.
-     *
      * @var string
      */
     public const CONFIGURATION = 'configuration';
 
     /**
      * Uživatelé.
-     *
      * @var string
      */
     public const USERS = 'users';
 
     /**
      * Mailing.
-     *
      * @var string
      */
     public const MAILING = 'mailing';
 
     /**
      * Platby.
-     *
      * @var string
      */
     public const PAYMENTS = 'payments';
@@ -91,19 +84,18 @@ class Resource
 
     /**
      * Název prostředku.
-     *
      * @ORM\Column(type="string", unique=true)
-     * @var                       string
+     * @var string
      */
     protected $name;
 
     /**
      * Oprávnění s tímto prostředkem.
-     *
      * @ORM\OneToMany(targetEntity="\App\Model\ACL\Permission", mappedBy="resource", cascade={"persist"})
-     * @var                                                     Collection|Permission[]
+     * @var Collection|Permission[]
      */
     protected $permissions;
+
 
     public function __construct(string $name)
     {

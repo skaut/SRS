@@ -18,7 +18,8 @@ use function implode;
 /**
  * Entita podakce.
  *
- * @author                                           Jan Staněk <jan.stanek@skaut.cz>
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="SubeventRepository")
  * @ORM\Table(name="subevent")
  */
@@ -28,101 +29,91 @@ class Subevent
 
     /**
      * Název podakce.
-     *
      * @ORM\Column(type="string", unique=true)
-     * @var                       string
+     * @var string
      */
     protected $name;
 
     /**
      * Implicitní podakce. Vytvořena automaticky.
-     *
      * @ORM\Column(type="boolean")
-     * @var                        bool
+     * @var bool
      */
     protected $implicit = false;
 
     /**
      * Přihlášky.
-     *
      * @ORM\ManyToMany(targetEntity="\App\Model\User\SubeventsApplication", mappedBy="subevents", cascade={"persist"})
-     * @var                                                                 Collection|SubeventsApplication[]
+     * @var Collection|SubeventsApplication[]
      */
     protected $applications;
 
     /**
      * Bloky v podakci.
-     *
      * @ORM\OneToMany(targetEntity="\App\Model\Program\Block", mappedBy="subevent", cascade={"persist"})
-     * @ORM\OrderBy({"name"                                    = "ASC"})
-     * @var                                                    Collection|Block[]
+     * @ORM\OrderBy({"name" = "ASC"})
+     * @var Collection|Block[]
      */
     protected $blocks;
 
     /**
      * Poplatek.
-     *
      * @ORM\Column(type="integer")
-     * @var                        int
+     * @var int
      */
     protected $fee = 0;
 
     /**
      * Kapacita.
-     *
      * @ORM\Column(type="integer", nullable=true)
-     * @var                        int
+     * @var int
      */
     protected $capacity;
 
     /**
      * Obsazenost.
      * Bude se používat pro kontrolu kapacity.
-     *
      * @ORM\Column(type="integer")
-     * @var                        int
+     * @var int
      */
     protected $occupancy = 0;
 
     /**
      * Podakce neregistrovatelné současně s touto podakcí.
-     *
      * @ORM\ManyToMany(targetEntity="Subevent")
      * @ORM\JoinTable(name="subevent_subevent_incompatible",
      *      joinColumns={@ORM\JoinColumn(name="subevent_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="incompatible_subevent_id", referencedColumnName="id")}
      *      )
-     * @var                                                  Collection|Subevent[]
+     * @var Collection|Subevent[]
      */
     protected $incompatibleSubevents;
 
     /**
      * Podakce vyžadující tuto podakci.
-     *
      * @ORM\ManyToMany(targetEntity="Subevent", mappedBy="requiredSubevents", cascade={"persist"})
-     * @var                                     Collection|Subevent[]
+     * @var Collection|Subevent[]
      */
     protected $requiredBySubevent;
 
     /**
      * Podakce vyžadované touto podakcí.
-     *
-     * @ORM\ManyToMany(targetEntity="Subevent",          inversedBy="requiredBySubevent")
+     * @ORM\ManyToMany(targetEntity="Subevent", inversedBy="requiredBySubevent")
      * @ORM\JoinTable(name="subevent_subevent_required",
      *      joinColumns={@ORM\JoinColumn(name="subevent_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="required_subevent_id", referencedColumnName="id")}
      *      )
-     * @var                                              Collection|Subevent[]
+     * @var Collection|Subevent[]
      */
     protected $requiredSubevents;
 
     /**
      * Propojené skautIS kurzy.
-     *
      * @ORM\ManyToMany(targetEntity="\App\Model\SkautIs\SkautIsCourse")
-     * @var                                                             Collection|SkautIsCourse[]
+     * @var Collection|SkautIsCourse[]
      */
     protected $skautIsCourses;
+
 
     public function __construct()
     {
@@ -259,7 +250,6 @@ class Subevent
 
     /**
      * Vrací všechny (tranzitivně) podakce, kterými je tato podakce vyžadována.
-     *
      * @return Collection|Subevent[]
      */
     public function getRequiredBySubeventTransitive() : Collection
@@ -308,7 +298,6 @@ class Subevent
 
     /**
      * Vrací všechny (tranzitivně) vyžadované podakce.
-     *
      * @return Collection|Subevent[]
      */
     public function getRequiredSubeventsTransitive() : Collection
@@ -358,14 +347,9 @@ class Subevent
 
     public function getSkautIsCoursesText() : string
     {
-        return implode(
-            ', ',
-            $this->skautIsCourses->map(
-                function (SkautIsCourse $skautIsCourse) {
-                            return $skautIsCourse->getName();
-                }
-            )->toArray()
-        );
+        return implode(', ', $this->skautIsCourses->map(function (SkautIsCourse $skautIsCourse) {
+            return $skautIsCourse->getName();
+        })->toArray());
     }
 
     /**
@@ -382,27 +366,27 @@ class Subevent
     public function countUsers() : int
     {
         //TODO: opravit
-        //        $criteria = Criteria::create()
-        //            ->where(Criteria::expr()->andX(
-        //                Criteria::expr()->isNull('validTo'),
-        //                Criteria::expr()->orX(
-        //                    Criteria::expr()->eq('state', ApplicationState::WAITING_FOR_PAYMENT),
-        //                    Criteria::expr()->eq('state', ApplicationState::PAID),
-        //                    Criteria::expr()->eq('state', ApplicationState::PAID_FREE)
-        //                )
-        //            ));
-        //
-        //        return $this->applications->matching($criteria)->count();
+//        $criteria = Criteria::create()
+//            ->where(Criteria::expr()->andX(
+//                Criteria::expr()->isNull('validTo'),
+//                Criteria::expr()->orX(
+//                    Criteria::expr()->eq('state', ApplicationState::WAITING_FOR_PAYMENT),
+//                    Criteria::expr()->eq('state', ApplicationState::PAID),
+//                    Criteria::expr()->eq('state', ApplicationState::PAID_FREE)
+//                )
+//            ));
+//
+//        return $this->applications->matching($criteria)->count();
 
-        return $this->applications->filter(
-            function (Application $application) {
-                if ($application->getValidTo() === null && ( $application->getState() === ApplicationState::WAITING_FOR_PAYMENT || $application->getState() === ApplicationState::PAID_FREE || $application->getState() === ApplicationState::PAID)
-                            ) {
-                    return true;
-                }
-                            return false;
+        return $this->applications->filter(function (Application $application) {
+            if ($application->getValidTo() === null && (
+                $application->getState() === ApplicationState::WAITING_FOR_PAYMENT ||
+                $application->getState() === ApplicationState::PAID_FREE ||
+                $application->getState() === ApplicationState::PAID)) {
+                return true;
             }
-        )->count();
+            return false;
+        })->count();
     }
 
     public function countUnoccupied() : ?int

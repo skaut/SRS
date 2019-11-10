@@ -17,6 +17,7 @@ use Nette\Application\UI\Form;
  * Formulář pro nastavení popisu cesty.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class PlaceDescriptionForm
 {
@@ -28,6 +29,7 @@ class PlaceDescriptionForm
     /** @var SettingsFacade */
     private $settingsFacade;
 
+
     public function __construct(BaseForm $baseForm, SettingsFacade $settingsFacade)
     {
         $this->baseFormFactory = $baseForm;
@@ -36,7 +38,6 @@ class PlaceDescriptionForm
 
     /**
      * Vytvoří formulář.
-     *
      * @throws SettingsException
      * @throws \Throwable
      */
@@ -45,15 +46,13 @@ class PlaceDescriptionForm
         $form = $this->baseFormFactory->create();
 
         $form->addTextArea('placeDescription', 'admin.configuration.place_description')
-                ->setAttribute('class', 'tinymce-paragraph');
+            ->setAttribute('class', 'tinymce-paragraph');
 
         $form->addSubmit('submit', 'admin.common.save');
 
-        $form->setDefaults(
-            [
-                    'placeDescription' => $this->settingsFacade->getValue(Settings::PLACE_DESCRIPTION),
-                ]
-        );
+        $form->setDefaults([
+            'placeDescription' => $this->settingsFacade->getValue(Settings::PLACE_DESCRIPTION),
+        ]);
 
         $form->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
         $form->onSuccess[] = [$this, 'processForm'];
@@ -63,7 +62,6 @@ class PlaceDescriptionForm
 
     /**
      * Zpracuje formulář.
-     *
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException

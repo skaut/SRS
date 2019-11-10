@@ -27,6 +27,7 @@ class SkautIsEventEducationService extends SkautIsEventService
     /** @var SubeventRepository */
     private $subeventRepository;
 
+
     public function __construct(
         Skautis $skautIs,
         SkautIsCourseRepository $skautIsCourseRepository,
@@ -41,7 +42,7 @@ class SkautIsEventEducationService extends SkautIsEventService
     public function isEventDraft(int $eventId) : bool
     {
         return true;
-        //        return $this->getEventDetail($eventId)->ID_EventEducationState === 'draft';
+//        return $this->getEventDetail($eventId)->ID_EventEducationState === 'draft';
     }
 
     /**
@@ -90,12 +91,10 @@ class SkautIsEventEducationService extends SkautIsEventService
 
     protected function getEventDetail(int $eventId) : \stdClass
     {
-        return $this->skautIs->event->EventEducationDetail(
-            [
-                            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
-                            'ID' => $eventId,
-                        ]
-        );
+        return $this->skautIs->event->EventEducationDetail([
+            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
+            'ID' => $eventId,
+        ]);
     }
 
     /**
@@ -103,11 +102,9 @@ class SkautIsEventEducationService extends SkautIsEventService
      */
     protected function getDraftEvents() : array
     {
-        $events = $this->skautIs->event->EventEducationAllMyActions(
-            [
-                    'ID_Login' => $this->skautIs->getUser()->getLoginId(),
-                ]
-        );
+        $events = $this->skautIs->event->EventEducationAllMyActions([
+            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
+        ]);
 
         if ($events instanceof \stdClass) {
             return [];
@@ -124,17 +121,14 @@ class SkautIsEventEducationService extends SkautIsEventService
 
     /**
      * Vrací kurzy vzdělávací akce.
-     *
      * @return \stdClass[]
      */
     public function getEventCourses(int $eventId) : array
     {
-        $courses = $this->skautIs->event->EventEducationCourseAll(
-            [
-                    'ID_Login' => $this->skautIs->getUser()->getLoginId(),
-                    'ID_EventEducation' => $eventId,
-                ]
-        );
+        $courses = $this->skautIs->event->EventEducationCourseAll([
+            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
+            'ID_EventEducation' => $eventId,
+        ]);
 
         if ($courses instanceof \stdClass) {
             return [];
@@ -158,19 +152,16 @@ class SkautIsEventEducationService extends SkautIsEventService
 
     /**
      * Vrací přihlášené účastníky kurzu.
-     *
      * @return \stdClass[]
      */
     private function getAllParticipants(int $eventId, int $courseId) : array
     {
-        $participants = $this->skautIs->event->ParticipantEducationAll(
-            [
-                    'ID_Login' => $this->skautIs->getUser()->getLoginId(),
-                    'ID_EventEducation' => $eventId,
-                    'ID_EventEducationCourse' => [$courseId, $courseId],
-                    'IsActive' => true,
-                ]
-        );
+        $participants = $this->skautIs->event->ParticipantEducationAll([
+            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
+            'ID_EventEducation' => $eventId,
+            'ID_EventEducationCourse' => [$courseId, $courseId],
+            'IsActive' => true,
+        ]);
 
         if ($participants instanceof \stdClass) {
             return [];
@@ -184,14 +175,12 @@ class SkautIsEventEducationService extends SkautIsEventService
      */
     private function insertParticipant(int $eventId, int $courseId, int $personId) : int
     {
-        $response = $this->skautIs->event->ParticipantEducationInsert(
-            [
-                    'ID_Login' => $this->skautIs->getUser()->getLoginId(),
-                    'ID_EventEducation' => $eventId,
-                    'ID_EventEducationCourse' => $courseId,
-                    'ID_Person' => $personId,
-                ]
-        );
+        $response = $this->skautIs->event->ParticipantEducationInsert([
+            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
+            'ID_EventEducation' => $eventId,
+            'ID_EventEducationCourse' => $courseId,
+            'ID_Person' => $personId,
+        ]);
         return $response->ID;
     }
 
@@ -200,13 +189,10 @@ class SkautIsEventEducationService extends SkautIsEventService
      */
     private function updateParticipant(int $participantId, bool $accept) : void
     {
-        $this->skautIs->event->ParticipantEducationUpdate(
-            [
-                    'ID_Login' => $this->skautIs->getUser()->getLoginId(),
-                    'ID' => $participantId,
-                    'IsAccepted' => $accept,
-                ],
-            'participantEducation'
-        );
+        $this->skautIs->event->ParticipantEducationUpdate([
+            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
+            'ID' => $participantId,
+            'IsAccepted' => $accept,
+        ], 'participantEducation');
     }
 }

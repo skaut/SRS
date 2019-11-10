@@ -19,11 +19,12 @@ use function str_replace;
 /**
  * Abstraktní entita přihláška.
  *
- * @author                                              Jan Staněk <jan.stanek@skaut.cz>
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="ApplicationRepository")
  * @ORM\Table(name="application")
  * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="type",                type="string")
+ * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({
  *     "roles_application" = "RolesApplication",
  *     "subevents_application" = "SubeventsApplication"
@@ -33,21 +34,18 @@ abstract class Application
 {
     /**
      * Přihláška rolí.
-     *
      * @var string
      */
     public const ROLES = 'roles';
 
     /**
      * Přihláška na podakce.
-     *
      * @var string
      */
     public const SUBEVENTS = 'subevents';
 
     /**
      * Typ přihlášky.
-     *
      * @var string
      */
     protected $type;
@@ -56,129 +54,115 @@ abstract class Application
 
     /**
      * Id přihlášky.
-     *
      * @ORM\Column(type="integer", nullable=true)
-     * @var                        int
+     * @var int
      */
     protected $applicationId;
 
     /**
      * Uživatel.
-     *
      * @ORM\ManyToOne(targetEntity="User", inversedBy="applications", cascade={"persist"})
-     * @var                                User
+     * @var User
      */
     protected $user;
 
     /**
      * Role.
-     *
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", cascade={"persist"})
-     * @var                                                Collection|Role[]
+     * @var Collection|Role[]
      */
     protected $roles;
 
     /**
      * Podakce.
-     *
      * @ORM\ManyToMany(targetEntity="\App\Model\Structure\Subevent", inversedBy="applications", cascade={"persist"})
-     * @var                                                          Collection|Subevent[]
+     * @var Collection|Subevent[]
      */
     protected $subevents;
 
     /**
      * Poplatek.
-     *
      * @ORM\Column(type="integer")
-     * @var                        int
+     * @var int
      */
     protected $fee;
 
     /**
      * Variabilní symbol.
-     *
      * @ORM\ManyToOne(targetEntity="VariableSymbol", cascade={"persist"})
-     * @var                                          VariableSymbol
+     * @var VariableSymbol
      */
     protected $variableSymbol;
 
     /**
      * Datum podání přihlášky.
-     *
      * @ORM\Column(type="datetime")
-     * @var                         \DateTime
+     * @var \DateTime
      */
     protected $applicationDate;
 
     /**
      * Datum splatnosti.
-     *
      * @ORM\Column(type="date", nullable=true)
-     * @var                     \DateTime
+     * @var \DateTime
      */
     protected $maturityDate;
 
     /**
      * Platební metoda.
-     *
      * @ORM\Column(type="string", nullable=true)
-     * @var                       string
+     * @var string
      */
     protected $paymentMethod;
 
     /**
      * Datum zaplacení.
-     *
      * @ORM\Column(type="date", nullable=true)
-     * @var                     \DateTime
+     * @var \DateTime
      */
     protected $paymentDate;
 
     /**
      * Spárovaná platba.
-     *
      * @ORM\ManyToOne(targetEntity="\App\Model\Payment\Payment", inversedBy="pairedApplications", cascade={"persist"})
-     * @var                                                      Payment
+     * @var Payment
      */
     protected $payment;
 
     /**
      * Datum vytištění dokladu o zaplacení.
-     *
      * @ORM\Column(type="date", nullable=true)
-     * @var                     \DateTime
+     * @var \DateTime
      */
     protected $incomeProofPrintedDate;
 
     /**
      * Stav přihlášky.
-     *
      * @ORM\Column(type="string")
-     * @var                       string
+     * @var string
      */
     protected $state;
 
     /**
      * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
-     * @var                                User
+     * @var User
      */
     protected $createdBy;
 
     /**
      * Platnost záznamu od.
-     *
      * @ORM\Column(type="datetime")
-     * @var                         \DateTime
+     * @var \DateTime
      */
     protected $validFrom;
 
     /**
      * Platnost záznamu do.
-     *
      * @ORM\Column(type="datetime", nullable=true)
-     * @var                         \DateTime
+     * @var \DateTime
      */
     protected $validTo;
+
 
     public function __construct()
     {
@@ -229,14 +213,9 @@ abstract class Application
      */
     public function getRolesText() : string
     {
-        return implode(
-            ', ',
-            $this->roles->map(
-                function (Role $role) {
-                            return $role->getName();
-                }
-            )->toArray()
-        );
+        return implode(', ', $this->roles->map(function (Role $role) {
+            return $role->getName();
+        })->toArray());
     }
 
     /**
@@ -252,14 +231,9 @@ abstract class Application
      */
     public function getSubeventsText() : string
     {
-        return implode(
-            ', ',
-            $this->subevents->map(
-                function (Subevent $subevent) {
-                            return $subevent->getName();
-                }
-            )->toArray()
-        );
+        return implode(', ', $this->subevents->map(function (Subevent $subevent) {
+            return $subevent->getName();
+        })->toArray());
     }
 
     public function getFee() : int

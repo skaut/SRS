@@ -1,48 +1,48 @@
 {include '../../../presenters/templates/includes/tinymce_init.latte'}
 
 <script>
-	$(function () {
-		//nastaveni trid a identifikatoru pro spravnou funkcnost mazani a razeni contentu
-		$('.contents-item').each(function () {
-			var id = $(this).find('input.id').val();
-			$(this).attr('id', 'content-' + id);
-			$(this).find('.delete-content').attr('href', '#content-' + id);
-		});
+    $(function () {
+        //nastaveni trid a identifikatoru pro spravnou funkcnost mazani a razeni contentu
+        $('.contents-item').each(function () {
+            var id = $(this).find('input.id').val();
+            $(this).attr('id', 'content-' + id);
+            $(this).find('.delete-content').attr('href', '#content-' + id);
+        });
 
-		//razeni contentu
-		$('#contents').sortable({
-			delay: 300,
-			update: function (event, ui) {
-			},
-			start: function (event, ui) {
-			},
-			stop: function (event, ui) {
-				$('.tinymce').each(function () {
-					tinymce.EditorManager.execCommand('mceRemoveEditor', false, $(this).attr('id'));
-					tinymce.EditorManager.execCommand('mceAddEditor', false, $(this).attr('id'));
-				});
+        //razeni contentu
+        $('#contents').sortable({
+            delay: 300,
+            update: function (event, ui) {
+            },
+            start: function (event, ui) {
+            },
+            stop: function (event, ui) {
+                $('.tinymce').each(function () {
+                    tinymce.EditorManager.execCommand('mceRemoveEditor', false, $(this).attr('id'));
+                    tinymce.EditorManager.execCommand('mceAddEditor', false, $(this).attr('id'));
+                });
 
-				var sorted = $("#contents").sortable("toArray");
-				for (var i = 0; i < sorted.length; i++) {
-					$('#' + sorted[i]).find('input.position').val(i + 1);
-				}
-			}
-		});
+                var sorted = $("#contents").sortable("toArray");
+                for (var i = 0; i < sorted.length; i++) {
+                    $('#' + sorted[i]).find('input.position').val(i + 1);
+                }
+            }
+        });
 
-		//mazani contentu
-		$('.delete-content').click(function (event) {
-			event.preventDefault();
+        //mazani contentu
+        $('.delete-content').click(function (event) {
+            event.preventDefault();
 
-			var contentToDelete = $(this).attr('href').replace('#', '');
-			$('#' + contentToDelete + ' .delete').val(1);
+            var contentToDelete = $(this).attr('href').replace('#', '');
+            $('#' + contentToDelete + ' .delete').val(1);
 
-			var contentToDeleteSelector = $('#' + contentToDelete);
-			contentToDeleteSelector.find('input[type=text]').prop('disabled', true).val('');
-			contentToDeleteSelector.find('input[type=file]').prop('disabled', true).val('');
-			contentToDeleteSelector.find('textarea').prop('disabled', true).val('');
-			contentToDeleteSelector.fadeOut();
-		});
-	});
+            var contentToDeleteSelector = $('#' + contentToDelete);
+            contentToDeleteSelector.find('input[type=text]').prop('disabled', true).val('');
+            contentToDeleteSelector.find('input[type=file]').prop('disabled', true).val('');
+            contentToDeleteSelector.find('textarea').prop('disabled', true).val('');
+            contentToDeleteSelector.fadeOut();
+        });
+    });
 </script>
 
 {form form class => form-horizontal}

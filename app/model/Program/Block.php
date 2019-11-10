@@ -15,8 +15,9 @@ use function implode;
 /**
  * Entita programový blok.
  *
- * @author                                        Michal Májský
- * @author                                        Jan Staněk <jan.stanek@skaut.cz>
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="BlockRepository")
  * @ORM\Table(name="block")
  */
@@ -26,92 +27,82 @@ class Block
 
     /**
      * Název programového bloku.
-     *
      * @ORM\Column(type="string", unique=true)
-     * @var                       string
+     * @var string
      */
     protected $name;
 
     /**
      * Programy v bloku.
-     *
      * @ORM\OneToMany(targetEntity="Program", mappedBy="block", cascade={"persist"})
-     * @ORM\OrderBy({"start"                  = "ASC"})
-     * @var                                   Collection|Program[]
+     * @ORM\OrderBy({"start" = "ASC"})
+     * @var Collection|Program[]
      */
     protected $programs;
 
     /**
      * Lektor.
-     *
      * @ORM\ManyToMany(targetEntity="\App\Model\User\User", inversedBy="lecturersBlocks", cascade={"persist"})
-     * @var                                                 Collection|User[]
+     * @var Collection|User[]
      */
     protected $lectors;
 
     /**
      * Kategorie bloku.
-     *
      * @ORM\ManyToOne(targetEntity="Category", inversedBy="blocks", cascade={"persist"})
-     * @var                                    Category
+     * @var Category
      */
     protected $category;
 
     /**
      * Podakce bloku.
-     *
      * @ORM\ManyToOne(targetEntity="\App\Model\Structure\Subevent", inversedBy="blocks", cascade={"persist"})
-     * @var                                                         Subevent
+     * @var Subevent
      */
     protected $subevent;
 
     /**
      * Povinnost.
-     *
      * @ORM\Column(type="string")
-     * @var                       string
+     * @var string
      */
     protected $mandatory;
 
     /**
      * Délka programového bloku.
-     *
      * @ORM\Column(type="integer")
-     * @var                        int
+     * @var int
      */
     protected $duration;
 
     /**
      * Kapacita.
-     *
      * @ORM\Column(type="integer", nullable=true)
-     * @var                        int
+     * @var int
      */
     protected $capacity;
 
     /**
      * Pomůcky.
-     *
      * @ORM\Column(type="string", nullable=true)
-     * @var                       string
+     * @var string
      */
     protected $tools;
 
     /**
      * Stručný popis.
-     *
      * @ORM\Column(type="text", nullable=true)
-     * @var                     string
+     * @var string
      */
     protected $perex;
 
     /**
      * Podrobný popis.
-     *
      * @ORM\Column(type="text", nullable=true)
-     * @var                     string
+     * @var string
      */
     protected $description;
+
 
     public function __construct()
     {
@@ -144,7 +135,6 @@ class Block
 
     /**
      * Vrací seznam účastníků bloku.
-     *
      * @return Collection|User[]
      */
     public function getAttendees() : Collection
@@ -176,14 +166,9 @@ class Block
 
     public function getLectorsText() : string
     {
-        return implode(
-            ', ',
-            $this->lectors->map(
-                function (User $lector) {
-                            return $lector->getDisplayName();
-                }
-            )->toArray()
-        );
+        return implode(', ', $this->lectors->map(function (User $lector) {
+            return $lector->getDisplayName();
+        })->toArray());
     }
 
     /**

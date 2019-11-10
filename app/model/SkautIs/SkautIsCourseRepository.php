@@ -15,6 +15,7 @@ use function array_map;
  * Třída spravující skautIS kurzy.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class SkautIsCourseRepository extends EntityRepository
 {
@@ -28,7 +29,6 @@ class SkautIsCourseRepository extends EntityRepository
 
     /**
      * Uloží skautIS kurz.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -40,7 +40,6 @@ class SkautIsCourseRepository extends EntityRepository
 
     /**
      * Odstraní skautIS kurz.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -64,46 +63,40 @@ class SkautIsCourseRepository extends EntityRepository
 
     /**
      * Vrací id skautIS kurzů.
-     *
-     * @param  Collection|SkautIsCourse[] $skautIsCourses
+     * @param Collection|SkautIsCourse[] $skautIsCourses
      * @return int[]
      */
     public function findSkautIsCoursesIds(Collection $skautIsCourses) : array
     {
-        return array_map(
-            function (SkautIsCourse $skautIsCourse) {
-                    return $skautIsCourse->getId();
-            },
-            $skautIsCourses->toArray()
-        );
+        return array_map(function (SkautIsCourse $skautIsCourse) {
+            return $skautIsCourse->getId();
+        }, $skautIsCourses->toArray());
     }
 
     /**
      * Vrací skautIS kurzy podle id.
-     *
-     * @param  int[] $ids
+     * @param int[] $ids
      * @return Collection|SkautIsCourse[]
      */
     public function findSkautIsCoursesByIds(array $ids) : Collection
     {
         $criteria = Criteria::create()
-                ->where(Criteria::expr()->in('id', $ids))
-                ->orderBy(['name' => 'ASC']);
+            ->where(Criteria::expr()->in('id', $ids))
+            ->orderBy(['name' => 'ASC']);
         return $this->matching($criteria);
     }
 
     /**
      * Vrací seznam skautIS kurzů jako možnosti pro select.
-     *
      * @return string[]
      */
     public function getSkautIsCoursesOptions() : array
     {
         $skautIsCourses = $this->createQueryBuilder('c')
-                ->select('c.id, c.name')
-                ->orderBy('c.name')
-                ->getQuery()
-                ->getResult();
+            ->select('c.id, c.name')
+            ->orderBy('c.name')
+            ->getQuery()
+            ->getResult();
 
         $options = [];
         foreach ($skautIsCourses as $skautIsCourse) {

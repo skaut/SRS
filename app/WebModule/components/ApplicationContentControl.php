@@ -24,6 +24,7 @@ use function json_encode;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class ApplicationContentControl extends Control
 {
@@ -44,6 +45,7 @@ class ApplicationContentControl extends Control
 
     /** @var SubeventRepository */
     private $subeventRepository;
+
 
     public function __construct(
         ApplicationForm $applicationFormFactory,
@@ -96,8 +98,12 @@ class ApplicationContentControl extends Control
             $template->dbuser              = $dbuser;
             $template->userHasFixedFeeRole = $userHasFixedFeeRole;
 
-            $template->usersApplications = $explicitSubeventsExists && $userHasFixedFeeRole ? $dbuser->getNotCanceledApplications() : ($explicitSubeventsExists ? $dbuser->getNotCanceledSubeventsApplications() : $dbuser->getNotCanceledRolesApplications()
-                    );
+            $template->usersApplications = $explicitSubeventsExists && $userHasFixedFeeRole
+                ? $dbuser->getNotCanceledApplications()
+                : ($explicitSubeventsExists
+                    ? $dbuser->getNotCanceledSubeventsApplications()
+                    : $dbuser->getNotCanceledRolesApplications()
+                );
         }
 
         $template->explicitSubeventsExists = $explicitSubeventsExists;

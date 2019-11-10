@@ -10,7 +10,8 @@ use Nettrine\ORM\Entity\Attributes\Id as Identifier;
 /**
  * Entita sleva.
  *
- * @author                                           Jan Staněk <jan.stanek@skaut.cz>
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="DiscountRepository")
  * @ORM\Table(name="discount")
  */
@@ -23,23 +24,23 @@ class Discount
     public const RIGHT_PARENTHESIS = ')';
     public const END               = '';
 
+
     use Identifier;
 
     /**
      * Podmínka.
-     *
      * @ORM\Column(type="string")
-     * @var                       string
+     * @var string
      */
     protected $discountCondition;
 
     /**
      * Sleva.
-     *
      * @ORM\Column(type="integer")
-     * @var                        int
+     * @var int
      */
     protected $discount;
+
 
     public function getId() : int
     {

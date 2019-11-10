@@ -31,64 +31,65 @@ use PhpOffice\PhpSpreadsheet\Exception;
 class ProfilePresenter extends WebBasePresenter
 {
     /**
-     * @var    PersonalDetailsForm
+     * @var PersonalDetailsForm
      * @inject
      */
     public $personalDetailsFormFactory;
 
     /**
-     * @var    IAdditionalInformationFormFactory
+     * @var IAdditionalInformationFormFactory
      * @inject
      */
     public $additionalInformationFormFactory;
 
     /**
-     * @var    RolesForm
+     * @var RolesForm
      * @inject
      */
     public $rolesFormFactory;
 
     /**
-     * @var    IApplicationsGridControlFactory
+     * @var IApplicationsGridControlFactory
      * @inject
      */
     public $applicationsGridControlFactory;
 
     /**
-     * @var    PdfExportService
+     * @var PdfExportService
      * @inject
      */
     public $pdfExportService;
 
     /**
-     * @var    ExcelExportService
+     * @var ExcelExportService
      * @inject
      */
     public $excelExportService;
 
     /**
-     * @var    SubeventRepository
+     * @var SubeventRepository
      * @inject
      */
     public $subeventRepository;
 
     /**
-     * @var    MailService
+     * @var MailService
      * @inject
      */
     public $mailService;
 
     /**
-     * @var    ApplicationService
+     * @var ApplicationService
      * @inject
      */
     public $applicationService;
 
     /**
-     * @var    Authenticator
+     * @var Authenticator
      * @inject
      */
     public $authenticator;
+
 
     /**
      * @throws AbortException
@@ -119,7 +120,6 @@ class ProfilePresenter extends WebBasePresenter
 
     /**
      * Vyexportuje rozvrh uživatele.
-     *
      * @throws AbortException
      * @throws Exception
      */

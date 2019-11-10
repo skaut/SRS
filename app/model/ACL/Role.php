@@ -17,9 +17,9 @@ use function implode;
 /**
  * Entita role.
  *
- * @author                                       Michal Májský
- * @author                                       Jan Staněk <jan.stanek@skaut.cz>
- * @author                                       Petr Parolek <petr.parolek@webnazakazku.cz>
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="RoleRepository")
  * @ORM\Table(name="role")
  */
@@ -27,63 +27,54 @@ class Role
 {
     /**
      * Role nepřihlášeného uživatele.
-     *
      * @var string
      */
     public const GUEST = 'guest';
 
     /**
      * Role uživatele nepřihlášeného na seminář.
-     *
      * @var string
      */
     public const NONREGISTERED = 'nonregistered';
 
     /**
      * Role neschváleného uživatele.
-     *
      * @var string
      */
     public const UNAPPROVED = 'unapproved';
 
     /**
      * Role účastníka.
-     *
      * @var string
      */
     public const ATTENDEE = 'attendee';
 
     /**
      * Role servis týmu.
-     *
      * @var string
      */
     public const SERVICE_TEAM = 'service_team';
 
     /**
      * Role lektora.
-     *
      * @var string
      */
     public const LECTOR = 'lector';
 
     /**
      * Role organizátora.
-     *
      * @var string
      */
     public const ORGANIZER = 'organizer';
 
     /**
      * Role administrátora.
-     *
      * @var string
      */
     public const ADMIN = 'admin';
 
     /**
      * Role, která je uživateli nastavena při testování jiné role.
-     *
      * @var string
      */
     public const TEST = 'test';
@@ -104,180 +95,160 @@ class Role
 
     /**
      * Název role.
-     *
      * @ORM\Column(type="string", unique=true)
-     * @var                       string
+     * @var string
      */
     protected $name;
 
     /**
      * Systémový název systémové role.
-     *
      * @ORM\Column(type="string", unique=true, nullable=true)
-     * @var                       string
+     * @var string
      */
     protected $systemName;
 
     /**
      * Uživatelé v roli.
-     *
      * @ORM\ManyToMany(targetEntity="\App\Model\User\User", mappedBy="roles", cascade={"persist"})
-     * @var                                                 Collection|User[]
+     * @var Collection|User[]
      */
     protected $users;
 
     /**
      * Oprávnění role.
-     *
      * @ORM\ManyToMany(targetEntity="Permission", inversedBy="roles", cascade={"persist"})
-     * @var                                       Collection|Permission[]
+     * @var Collection|Permission[]
      */
     protected $permissions;
 
     /**
      * Stránky, ke kterým má role přístup.
-     *
      * @ORM\ManyToMany(targetEntity="\App\Model\CMS\Page", mappedBy="roles", cascade={"persist"})
-     * @var                                                Collection|Page[]
+     * @var Collection|Page[]
      */
     protected $pages;
 
     /**
      * Systémová role. Systémovou roli nelze odstranit.
-     *
      * @ORM\Column(type="boolean")
-     * @var                        bool
+     * @var bool
      */
     protected $system = true;
 
     /**
      * Registrovatelná role. Lze vybrat v přihlášce.
-     *
      * @ORM\Column(type="boolean")
-     * @var                        bool
+     * @var bool
      */
     protected $registerable = true;
 
     /**
      * Automaticky schválit. Role nevyžaduje schválení registrace organizátory.
-     *
      * @ORM\Column(type="boolean")
-     * @var                        bool
+     * @var bool
      */
     protected $approvedAfterRegistration = false;
 
     /**
      * Registrovatelná od.
-     *
      * @ORM\Column(type="datetime", nullable=true)
-     * @var                         \DateTime
+     * @var \DateTime
      */
     protected $registerableFrom;
 
     /**
      * Registrovatelná do.
-     *
      * @ORM\Column(type="datetime", nullable=true)
-     * @var                         \DateTime
+     * @var \DateTime
      */
     protected $registerableTo;
 
     /**
      * Kapacita.
-     *
      * @ORM\Column(type="integer", nullable=true)
-     * @var                        int
+     * @var int
      */
     protected $capacity;
 
     /**
      * Obsazenost.
      * Bude se používat pro kontrolu kapacity.
-     *
      * @ORM\Column(type="integer")
-     * @var                        int
+     * @var int
      */
     protected $occupancy = 0;
 
     /**
      * Poplatek.
-     *
      * @ORM\Column(type="integer", nullable=true)
-     * @var                        int
+     * @var int
      */
     protected $fee = 0;
 
     /**
      * Evidovat příjezd a odjezd.
-     *
      * @ORM\Column(type="boolean")
-     * @var                        bool
+     * @var bool
      */
     protected $displayArrivalDeparture = false;
 
     /**
      * Synchronizovat účastníky v roli se skautIS.
-     *
      * @ORM\Column(type="boolean")
-     * @var                        bool
+     * @var bool
      */
     protected $syncedWithSkautIS = true;
 
     /**
      * Role neregistrovatelné současně s touto rolí.
-     *
      * @ORM\ManyToMany(targetEntity="Role")
      * @ORM\JoinTable(name="role_role_incompatible",
      *      joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="incompatible_role_id", referencedColumnName="id")}
      *      )
-     * @var                                          Collection|Role[]
+     * @var Collection|Role[]
      */
     protected $incompatibleRoles;
 
     /**
      * Role vyžadující tuto roli.
-     *
      * @ORM\ManyToMany(targetEntity="Role", mappedBy="requiredRoles", cascade={"persist"})
-     * @var                                 Collection|Role[]
+     * @var Collection|Role[]
      */
     protected $requiredByRole;
 
     /**
      * Role vyžadované touto rolí.
-     *
-     * @ORM\ManyToMany(targetEntity="Role",      inversedBy="requiredByRole")
+     * @ORM\ManyToMany(targetEntity="Role", inversedBy="requiredByRole")
      * @ORM\JoinTable(name="role_role_required",
      *      joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="required_role_id", referencedColumnName="id")}
      *      )
-     * @var                                      Collection|Role[]
+     * @var Collection|Role[]
      */
     protected $requiredRoles;
 
     /**
      * Kategorie programů, na které se mohou účastníci v roli přihlásit.
-     *
      * @ORM\ManyToMany(targetEntity="\App\Model\Program\Category", mappedBy="registerableRoles", cascade={"persist"})
-     * @var                                                        Collection|Category[]
+     * @var Collection|Category[]
      */
     protected $registerableCategories;
 
     /**
      * Adresa, na kterou budou uživatelé v roli přesměrováni po přihlášení.
-     *
      * @ORM\Column(type="string", nullable=true)
-     * @var                       string
+     * @var string
      */
     protected $redirectAfterLogin;
 
     /**
      * Kategorie dokumentů, ke kterým má role přístup.
-     *
      * @ORM\ManyToMany(targetEntity="\App\Model\CMS\Document\Tag", mappedBy="roles", cascade={"persist"})
-     * @var                                                        Collection|Tag[]
+     * @var Collection|Tag[]
      */
     protected $tags;
+
 
     public function __construct(string $name)
     {
@@ -409,7 +380,9 @@ class Role
     public function isRegisterableNow() : bool
     {
         $now = new \DateTime();
-        if ($this->registerable && ($this->registerableFrom === null || $this->registerableFrom <= $now) && ($this->registerableTo === null || $this->registerableTo >= $now)
+        if ($this->registerable &&
+            ($this->registerableFrom === null || $this->registerableFrom <= $now) &&
+            ($this->registerableTo === null || $this->registerableTo >= $now)
         ) {
             return true;
         }
@@ -558,7 +531,6 @@ class Role
 
     /**
      * Vrací všechny (tranzitivně) role, kterými je tato role vyžadována.
-     *
      * @return Collection|Role[]
      */
     public function getRequiredByRoleTransitive() : Collection
@@ -616,7 +588,6 @@ class Role
 
     /**
      * Vrací všechny (tranzitivně) vyžadované role.
-     *
      * @return Collection|Role[]
      */
     public function getRequiredRolesTransitive() : Collection

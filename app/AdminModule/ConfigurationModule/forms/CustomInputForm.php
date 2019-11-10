@@ -31,7 +31,6 @@ class CustomInputForm
 
     /**
      * Upravované pole.
-     *
      * @var CustomInput
      */
     private $customInput;
@@ -41,6 +40,7 @@ class CustomInputForm
 
     /** @var CustomInputRepository */
     private $customInputRepository;
+
 
     public function __construct(BaseForm $baseFormFactory, CustomInputRepository $customInputRepository)
     {
@@ -60,7 +60,7 @@ class CustomInputForm
         $form->addHidden('id');
 
         $form->addText('name', 'admin.configuration.custom_inputs_name')
-                ->addRule(Form::FILLED, 'admin.configuration.custom_inputs_name_empty');
+            ->addRule(Form::FILLED, 'admin.configuration.custom_inputs_name_empty');
 
         $typeSelect = $form->addSelect('type', 'admin.configuration.custom_inputs_type', $this->prepareCustomInputTypesOptions());
         $typeSelect->addCondition($form::EQUAL, CustomInput::SELECT)->toggle('custom-input-select');
@@ -73,21 +73,19 @@ class CustomInputForm
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->addSubmit('cancel', 'admin.common.cancel')
-                ->setValidationScope([])
-                ->setAttribute('class', 'btn btn-warning');
+            ->setValidationScope([])
+            ->setAttribute('class', 'btn btn-warning');
 
         if ($this->customInput) {
             $typeSelect->setDisabled();
             $optionsText->setDisabled();
 
-            $form->setDefaults(
-                [
-                        'id' => $id,
-                        'name' => $this->customInput->getName(),
-                        'type' => $this->customInput->getType(),
-                        'mandatory' => $this->customInput->isMandatory(),
-                    ]
-            );
+            $form->setDefaults([
+                'id' => $id,
+                'name' => $this->customInput->getName(),
+                'type' => $this->customInput->getType(),
+                'mandatory' => $this->customInput->isMandatory(),
+            ]);
 
             if ($this->customInput->getType() === CustomInput::SELECT) {
                 $optionsText->setDefaultValue($this->customInput->getOptions());
@@ -101,7 +99,6 @@ class CustomInputForm
 
     /**
      * Zpracuje formulář.
-     *
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException
@@ -148,7 +145,6 @@ class CustomInputForm
 
     /**
      * Vrátí typy vlastních polí jako možnosti pro select.
-     *
      * @return string[]
      */
     private function prepareCustomInputTypesOptions() : array

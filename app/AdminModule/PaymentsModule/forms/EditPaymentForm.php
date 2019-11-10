@@ -24,7 +24,6 @@ class EditPaymentForm
 
     /**
      * Upravovaná platba.
-     *
      * @var Payment
      */
     private $payment;
@@ -43,6 +42,7 @@ class EditPaymentForm
 
     /** @var ApplicationService */
     private $applicationService;
+
 
     public function __construct(
         BaseForm $baseFormFactory,
@@ -76,25 +76,25 @@ class EditPaymentForm
         $inputVariableSymbol = $form->addText('variableSymbol', 'admin.payments.payments.variable_symbol');
 
         $inputPairedApplication = $form->addMultiSelect('pairedApplications', 'admin.payments.payments.paired_applications', $this->applicationRepository->getApplicationsVariableSymbolsOptions())
-                ->setAttribute('class', 'datagrid-multiselect')
-                ->setAttribute('data-live-search', 'true');
+            ->setAttribute('class', 'datagrid-multiselect')
+            ->setAttribute('data-live-search', 'true');
 
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->addSubmit('cancel', 'admin.common.cancel')
-                ->setValidationScope([])
-                ->setAttribute('class', 'btn btn-warning');
+            ->setValidationScope([])
+            ->setAttribute('class', 'btn btn-warning');
 
         if ($this->payment->getTransactionId() === null) {
             $inputDate
-                    ->addRule(Form::FILLED, 'admin.payments.payments.date_empty');
+                ->addRule(Form::FILLED, 'admin.payments.payments.date_empty');
 
             $inputAmount
-                    ->addRule(Form::FILLED, 'admin.payments.payments.amount_empty')
-                    ->addRule(Form::MIN, 'admin.payments.payments.amount_low', 1);
+                ->addRule(Form::FILLED, 'admin.payments.payments.amount_empty')
+                ->addRule(Form::MIN, 'admin.payments.payments.amount_low', 1);
 
             $inputVariableSymbol
-                    ->addRule(Form::FILLED, 'admin.payments.payments.variable_symbol_empty');
+                ->addRule(Form::FILLED, 'admin.payments.payments.variable_symbol_empty');
         } else {
             $inputDate->setDisabled();
             $inputAmount->setDisabled();
@@ -107,15 +107,13 @@ class EditPaymentForm
             $this->applicationRepository->getWaitingForPaymentOrPairedApplicationsVariableSymbolsOptions($pairedValidApplications)
         );
 
-        $form->setDefaults(
-            [
-                    'id' => $id,
-                    'date' => $this->payment->getDate(),
-                    'amount' => $this->payment->getAmount(),
-                    'variableSymbol' => $this->payment->getVariableSymbol(),
-                    'pairedApplications' => $this->applicationRepository->findApplicationsIds($pairedValidApplications),
-                ]
-        );
+        $form->setDefaults([
+            'id' => $id,
+            'date' => $this->payment->getDate(),
+            'amount' => $this->payment->getAmount(),
+            'variableSymbol' => $this->payment->getVariableSymbol(),
+            'pairedApplications' => $this->applicationRepository->findApplicationsIds($pairedValidApplications),
+        ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
 
@@ -124,7 +122,6 @@ class EditPaymentForm
 
     /**
      * Zpracuje formulář.
-     *
      * @throws \Throwable
      */
     public function processForm(Form $form, \stdClass $values) : void

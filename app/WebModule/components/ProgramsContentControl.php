@@ -22,6 +22,7 @@ use Nette\Application\UI\Control;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class ProgramsContentControl extends Control
 {
@@ -36,6 +37,7 @@ class ProgramsContentControl extends Control
 
     /** @var ProgramService */
     private $programService;
+
 
     public function __construct(
         UserRepository $userRepository,
@@ -75,7 +77,8 @@ class ProgramsContentControl extends Control
 
         if ($user->isLoggedIn()) {
             $template->userHasPermission     = $user->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS);
-            $template->userWaitingForPayment = ! $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT) && $this->userRepository->findById($user->getId())->getWaitingForPaymentApplications()->count() > 0;
+            $template->userWaitingForPayment = ! $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT)
+                && $this->userRepository->findById($user->getId())->getWaitingForPaymentApplications()->count() > 0;
         }
 
         $template->render();

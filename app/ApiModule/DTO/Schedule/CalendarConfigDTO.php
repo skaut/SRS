@@ -18,21 +18,22 @@ class CalendarConfigDTO
 
     /**
      * @JMS\Type("string")
-     * @var                string
+     * @var string
      */
     private $seminarFromDate;
 
     /**
      * @JMS\Type("int")
-     * @var             int
+     * @var int
      */
     private $seminarDuration;
 
     /**
      * @JMS\Type("boolean")
-     * @var                 bool
+     * @var bool
      */
     private $allowedModifySchedule;
+
 
     public function getSeminarFromDate() : string
     {

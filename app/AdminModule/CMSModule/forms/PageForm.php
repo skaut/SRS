@@ -29,40 +29,36 @@ use function ucfirst;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class PageForm extends UI\Control
 {
     /**
      * Id upravované stránky.
-     *
      * @var int
      */
     public $id;
 
     /**
      * Upravovaná stránka.
-     *
      * @var Page
      */
     private $page;
 
     /**
      * Upravovaná oblast.
-     *
      * @var string
      */
     public $area;
 
     /**
      * Událost při uložení formuláře.
-     *
      * @var callable
      */
     public $onPageSave;
 
     /**
      * Událost při chybě ukládání stránky.
-     *
      * @var callable
      */
     public $onPageSaveError;
@@ -84,6 +80,7 @@ class PageForm extends UI\Control
 
     /** @var FilesService */
     private $filesService;
+
 
     public function __construct(
         int $id,
@@ -112,7 +109,6 @@ class PageForm extends UI\Control
 
     /**
      * Vykreslí komponentu.
-     *
      * @throws PageException
      */
     public function render() : void
@@ -127,7 +123,6 @@ class PageForm extends UI\Control
 
     /**
      * Vytvoří komponentu.
-     *
      * @throws PageException
      */
     public function createComponentForm() : Form
@@ -160,9 +155,9 @@ class PageForm extends UI\Control
         $form->addSubmit('submitAndContinue', 'admin.common.save_and_continue');
         $form->addSubmit('submitAdd', 'admin.common.add');
         $form->addSubmit('submitMain', 'common.area.main')
-                ->setAttribute('class', 'btn-link');
+            ->setAttribute('class', 'btn-link');
         $form->addSubmit('submitSidebar', 'common.area.sidebar')
-                ->setAttribute('class', 'btn-link');
+            ->setAttribute('class', 'btn-link');
 
         $form->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
         $form->onSuccess[] = [$this, 'processForm'];
@@ -176,7 +171,6 @@ class PageForm extends UI\Control
 
     /**
      * Zpracuje formulář.
-     *
      * @throws PageException
      * @throws ORMException
      * @throws OptimisticLockException
@@ -222,7 +216,6 @@ class PageForm extends UI\Control
 
     /**
      * Připraví možnosti obsahů stránky pro select.
-     *
      * @return string[]
      */
     private function prepareContentTypesOptions() : array

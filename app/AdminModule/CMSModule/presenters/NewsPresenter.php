@@ -19,22 +19,23 @@ use Nette\Application\UI\Form;
 class NewsPresenter extends CMSBasePresenter
 {
     /**
-     * @var    INewsGridControlFactory
+     * @var INewsGridControlFactory
      * @inject
      */
     public $newsGridControlFactory;
 
     /**
-     * @var    NewsForm
+     * @var NewsForm
      * @inject
      */
     public $newsFormFactory;
 
     /**
-     * @var    NewsRepository
+     * @var NewsRepository
      * @inject
      */
     public $newsRepository;
+
 
     public function renderEdit(int $id) : void
     {

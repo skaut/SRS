@@ -11,7 +11,7 @@ use function explode;
 /**
  * Entita vlastní výběrové pole přihlášky.
  *
- * @author                          Jan Staněk <jan.stanek@skaut.cz>
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity
  * @ORM\Table(name="custom_select")
  */
@@ -22,11 +22,11 @@ class CustomSelect extends CustomInput
 
     /**
      * Možnosti výběrového pole oddělené čárkou.
-     *
      * @ORM\Column(type="string")
-     * @var                       string
+     * @var string
      */
     protected $options;
+
 
     public function getOptions() : string
     {
@@ -40,7 +40,6 @@ class CustomSelect extends CustomInput
 
     /**
      * Vrátí možnosti jako možnosti pro select.
-     *
      * @return string[]
      */
     public function getSelectOptions() : array
@@ -53,7 +52,7 @@ class CustomSelect extends CustomInput
 
         $optionaArray = explode(', ', $this->options);
         for ($i = 0; $i < count($optionaArray); $i++) {
-            $options[$i + 1] = $optionaArray[$i];
+            $options[$i+1] = $optionaArray[$i];
         }
 
         return $options;

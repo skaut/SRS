@@ -23,6 +23,7 @@ use Ublaboo\Mailing\Exception\MailingMailCreationException;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class SendForm
 {
@@ -30,7 +31,6 @@ class SendForm
 
     /**
      * Událost po úspěšně odeslaném e-mailu.
-     *
      * @var callable
      */
     public $mailSuccess;
@@ -49,6 +49,7 @@ class SendForm
 
     /** @var SubeventRepository */
     private $subeventRepository;
+
 
     public function __construct(
         BaseForm $baseFormFactory,
@@ -88,33 +89,33 @@ class SendForm
             'admin.mailing.send.recipient_users',
             $this->userRepository->getUsersOptions()
         )
-                ->setAttribute('data-live-search', 'true');
+            ->setAttribute('data-live-search', 'true');
 
         $recipientRolesMultiSelect
-                ->addConditionOn($recipientSubeventsMultiSelect, Form::BLANK)
-                ->addConditionOn($recipientUsersMultiSelect, Form::BLANK)
-                ->addRule(Form::FILLED, 'admin.mailing.send.recipients_empty');
+            ->addConditionOn($recipientSubeventsMultiSelect, Form::BLANK)
+            ->addConditionOn($recipientUsersMultiSelect, Form::BLANK)
+            ->addRule(Form::FILLED, 'admin.mailing.send.recipients_empty');
 
         $recipientSubeventsMultiSelect
-                ->addConditionOn($recipientRolesMultiSelect, Form::BLANK)
-                ->addConditionOn($recipientUsersMultiSelect, Form::BLANK)
-                ->addRule(Form::FILLED, 'admin.mailing.send.recipients_empty');
+            ->addConditionOn($recipientRolesMultiSelect, Form::BLANK)
+            ->addConditionOn($recipientUsersMultiSelect, Form::BLANK)
+            ->addRule(Form::FILLED, 'admin.mailing.send.recipients_empty');
 
         $recipientUsersMultiSelect
-                ->addConditionOn($recipientRolesMultiSelect, Form::BLANK)
-                ->addConditionOn($recipientSubeventsMultiSelect, Form::BLANK)
-                ->addRule(Form::FILLED, 'admin.mailing.send.recipients_empty');
+            ->addConditionOn($recipientRolesMultiSelect, Form::BLANK)
+            ->addConditionOn($recipientSubeventsMultiSelect, Form::BLANK)
+            ->addRule(Form::FILLED, 'admin.mailing.send.recipients_empty');
 
         $form->addText('copy', 'admin.mailing.send.copy')
-                ->addCondition(Form::FILLED)
-                ->addRule(Form::EMAIL, 'admin.mailing.send.copy_format');
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::EMAIL, 'admin.mailing.send.copy_format');
 
         $form->addText('subject', 'admin.mailing.send.subject')
-                ->addRule(Form::FILLED, 'admin.mailing.send.subject_empty');
+            ->addRule(Form::FILLED, 'admin.mailing.send.subject_empty');
 
         $form->addTextArea('text', 'admin.mailing.send.text')
-                ->addRule(Form::FILLED, 'admin.mailing.send.text_empty')
-                ->setAttribute('class', 'tinymce-paragraph');
+            ->addRule(Form::FILLED, 'admin.mailing.send.text_empty')
+            ->setAttribute('class', 'tinymce-paragraph');
 
         $form->addSubmit('submit', 'admin.mailing.send.send');
 
@@ -126,7 +127,6 @@ class SendForm
 
     /**
      * Zpracuje formulář.
-     *
      * @throws SettingsException
      * @throws \Throwable
      * @throws MailingMailCreationException

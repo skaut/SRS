@@ -35,6 +35,7 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  * Komponenta pro správu přihlášek.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class ApplicationsGridControl extends Control
 {
@@ -80,6 +81,7 @@ class ApplicationsGridControl extends Control
     /** @var Validators */
     private $validators;
 
+
     public function __construct(
         Translator $translator,
         EntityManagerDecorator $em,
@@ -122,7 +124,6 @@ class ApplicationsGridControl extends Control
 
     /**
      * Vytvoří komponentu.
-     *
      * @throws NonUniqueResultException
      * @throws DataGridException
      */
@@ -134,21 +135,19 @@ class ApplicationsGridControl extends Control
 
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
-        $grid->setDataSource(
-            $this->applicationRepository->createQueryBuilder('a')
-                        ->join('a.user', 'u')
-                        ->where('u = :user')
-                        ->andWhere('a.validTo IS NULL')
-                        ->setParameter('user', $this->user)
-                        ->orderBy('a.applicationId')
-        );
+        $grid->setDataSource($this->applicationRepository->createQueryBuilder('a')
+            ->join('a.user', 'u')
+            ->where('u = :user')
+            ->andWhere('a.validTo IS NULL')
+            ->setParameter('user', $this->user)
+            ->orderBy('a.applicationId'));
         $grid->setPagination(false);
         $grid->setItemsDetail()
-                ->setTemplateParameters(['applicationRepository' => $this->applicationRepository]);
+            ->setTemplateParameters(['applicationRepository' => $this->applicationRepository]);
         $grid->setTemplateFile(__DIR__ . '/templates/applications_grid_template.latte');
 
         $grid->addColumnDateTime('applicationDate', 'admin.users.users_applications_application_date')
-                ->setFormat(Helpers::DATETIME_FORMAT);
+            ->setFormat(Helpers::DATETIME_FORMAT);
 
         $grid->addColumnText('roles', 'admin.users.users_applications_roles', 'rolesText');
 
@@ -159,29 +158,25 @@ class ApplicationsGridControl extends Control
         $grid->addColumnText('variableSymbol', 'admin.users.users_applications_variable_symbol', 'variableSymbolText');
 
         $grid->addColumnDateTime('maturityDate', 'admin.users.users_applications_maturity_date')
-                ->setFormat(Helpers::DATE_FORMAT);
+            ->setFormat(Helpers::DATE_FORMAT);
 
         $grid->addColumnText('paymentMethod', 'admin.users.users_applications_payment_method')
-                ->setRenderer(
-                    function ($row) {
-                            $paymentMethod = $row->getPaymentMethod();
-                        if ($paymentMethod) {
-                            return $this->translator->translate('common.payment.' . $paymentMethod);
-                        }
-                            return null;
-                    }
-                );
+            ->setRenderer(function ($row) {
+                $paymentMethod = $row->getPaymentMethod();
+                if ($paymentMethod) {
+                    return $this->translator->translate('common.payment.' . $paymentMethod);
+                }
+                return null;
+            });
 
         $grid->addColumnDateTime('paymentDate', 'admin.users.users_applications_payment_date');
 
         $grid->addColumnDateTime('incomeProofPrintedDate', 'admin.users.users_applications_income_proof_printed_date');
 
         $grid->addColumnText('state', 'admin.users.users_applications_state')
-                ->setRenderer(
-                    function ($row) {
-                            return $this->translator->translate('common.application_state.' . $row->getState());
-                    }
-                );
+            ->setRenderer(function ($row) {
+                return $this->translator->translate('common.application_state.' . $row->getState());
+            });
 
         if ($explicitSubeventsExists) {
             $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function ($container) : void {
@@ -190,8 +185,8 @@ class ApplicationsGridControl extends Control
                     '',
                     $this->subeventRepository->getNonRegisteredSubeventsOptionsWithCapacity($this->user)
                 )
-                        ->setAttribute('class', 'datagrid-multiselect')
-                        ->addRule(Form::FILLED, 'admin.users.users_applications_subevents_empty');
+                    ->setAttribute('class', 'datagrid-multiselect')
+                    ->addRule(Form::FILLED, 'admin.users.users_applications_subevents_empty');
             };
             $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
         }
@@ -202,7 +197,7 @@ class ApplicationsGridControl extends Control
                 '',
                 $this->subeventRepository->getSubeventsOptionsWithCapacity()
             )
-                    ->setAttribute('class', 'datagrid-multiselect');
+                ->setAttribute('class', 'datagrid-multiselect');
 
             $paymentMethodSelect = $container->addSelect(
                 'paymentMethod',
@@ -213,83 +208,66 @@ class ApplicationsGridControl extends Control
             $paymentDateText = $container->addDatePicker('paymentDate', 'admin.users.users_payment_date');
 
             $paymentMethodSelect
-                    ->addConditionOn($paymentDateText, Form::FILLED)
-                    ->addRule(Form::FILLED, 'admin.users.users_applications_payment_method_empty');
+                ->addConditionOn($paymentDateText, Form::FILLED)
+                ->addRule(Form::FILLED, 'admin.users.users_applications_payment_method_empty');
 
             $container->addDatePicker('incomeProofPrintedDate', 'admin.users.users_income_proof_printed_date');
 
             $container->addDatePicker('maturityDate', 'admin.users.users_maturity_date');
         };
         $grid->getInlineEdit()->onSetDefaults[] = function ($container, Application $item) : void {
-            $container->setDefaults(
-                [
-                        'subevents' => $this->subeventRepository->findSubeventsIds($item->getSubevents()),
-                        'paymentMethod' => $item->getPaymentMethod(),
-                        'paymentDate' => $item->getPaymentDate(),
-                        'incomeProofPrintedDate' => $item->getIncomeProofPrintedDate(),
-                        'maturityDate' => $item->getMaturityDate(),
-                    ]
-            );
+            $container->setDefaults([
+                'subevents' => $this->subeventRepository->findSubeventsIds($item->getSubevents()),
+                'paymentMethod' => $item->getPaymentMethod(),
+                'paymentDate' => $item->getPaymentDate(),
+                'incomeProofPrintedDate' => $item->getIncomeProofPrintedDate(),
+                'maturityDate' => $item->getMaturityDate(),
+            ]);
         };
         $grid->getInlineEdit()->onSubmit[]      = [$this, 'edit'];
-        $grid->allowRowsInlineEdit(
-            function (Application $item) {
-                    return ! $item->isCanceled();
-            }
-        );
+        $grid->allowRowsInlineEdit(function (Application $item) {
+            return ! $item->isCanceled();
+        });
 
         $grid->addAction('generatePaymentProofCash', 'admin.users.users_applications_download_payment_proof_cash');
-        $grid->allowRowsAction(
-            'generatePaymentProofCash',
-            function ($item) {
-                    return $item->getState() === ApplicationState::PAID && $item->getPaymentMethod() === PaymentType::CASH && $item->getPaymentDate();
-            }
-        );
+        $grid->allowRowsAction('generatePaymentProofCash', function ($item) {
+            return $item->getState() === ApplicationState::PAID
+                && $item->getPaymentMethod() === PaymentType::CASH
+                && $item->getPaymentDate();
+        });
 
         $grid->addAction('generatePaymentProofBank', 'admin.users.users_applications_download_payment_proof_bank');
-        $grid->allowRowsAction(
-            'generatePaymentProofBank',
-            function ($item) {
-                    return $item->getState() === ApplicationState::PAID && $item->getPaymentMethod() === PaymentType::BANK && $item->getPaymentDate();
-            }
-        );
+        $grid->allowRowsAction('generatePaymentProofBank', function ($item) {
+            return $item->getState() === ApplicationState::PAID
+                && $item->getPaymentMethod() === PaymentType::BANK
+                && $item->getPaymentDate();
+        });
 
         if ($this->user->getNotCanceledSubeventsApplications()->count() > 1) {
             $grid->addAction('cancelApplication', 'admin.users.users_applications_cancel_application')
-                    ->addAttributes(
-                        [
-                                'data-toggle' => 'confirmation',
-                                'data-content' => $this->translator->translate('admin.users.users_applications_cancel_application_confirm'),
-                            ]
-                    )->setClass('btn btn-xs btn-danger');
-            $grid->allowRowsAction(
-                'cancelApplication',
-                function (Application $item) {
-                        return $item->getType() === Application::SUBEVENTS && ! $item->isCanceled();
-                }
-            );
+                ->addAttributes([
+                    'data-toggle' => 'confirmation',
+                    'data-content' => $this->translator->translate('admin.users.users_applications_cancel_application_confirm'),
+                ])->setClass('btn btn-xs btn-danger');
+            $grid->allowRowsAction('cancelApplication', function (Application $item) {
+                return $item->getType() === Application::SUBEVENTS && ! $item->isCanceled();
+            });
         }
 
-        $grid->setColumnsSummary(
-            ['fee'],
-            function (Application $item, $column) {
-                    return $item->isCanceled() ? 0 : $item->getFee();
-            }
-        );
+        $grid->setColumnsSummary(['fee'], function (Application $item, $column) {
+            return $item->isCanceled() ? 0 : $item->getFee();
+        });
 
-        $grid->setRowCallback(
-            function (Application $application, Html $tr) : void {
-                if (! $application->isCanceled()) {
-                    return;
-                }
-                    $tr->addClass('disabled');
+        $grid->setRowCallback(function (Application $application, Html $tr) : void {
+            if (! $application->isCanceled()) {
+                return;
             }
-        );
+            $tr->addClass('disabled');
+        });
     }
 
     /**
      * Zpracuje přidání podakcí.
-     *
      * @throws AbortException
      * @throws \Throwable
      */
@@ -319,7 +297,6 @@ class ApplicationsGridControl extends Control
 
     /**
      * Zpracuje úpravu přihlášky.
-     *
      * @throws AbortException
      * @throws \Throwable
      */
@@ -355,21 +332,19 @@ class ApplicationsGridControl extends Control
 
         $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
 
-        $this->em->transactional(
-            function ($em) use ($application, $selectedSubevents, $values, $loggedUser) : void {
-                if ($application->getType() === Application::SUBEVENTS) {
-                    $this->applicationService->updateSubeventsApplication($application, $selectedSubevents, $loggedUser);
-                }
-                    $this->applicationService->updateApplicationPayment(
-                        $application,
-                        $values['paymentMethod'] ?: null,
-                        $values['paymentDate'],
-                        $values['incomeProofPrintedDate'],
-                        $values['maturityDate'],
-                        $loggedUser
-                    );
+        $this->em->transactional(function ($em) use ($application, $selectedSubevents, $values, $loggedUser) : void {
+            if ($application->getType() === Application::SUBEVENTS) {
+                $this->applicationService->updateSubeventsApplication($application, $selectedSubevents, $loggedUser);
             }
-        );
+            $this->applicationService->updateApplicationPayment(
+                $application,
+                $values['paymentMethod'] ?: null,
+                $values['paymentDate'],
+                $values['incomeProofPrintedDate'],
+                $values['maturityDate'],
+                $loggedUser
+            );
+        });
 
         $p->flashMessage('admin.users.users_applications_saved', 'success');
         $this->redirect('this');
@@ -377,7 +352,6 @@ class ApplicationsGridControl extends Control
 
     /**
      * Vygeneruje příjmový pokladní doklad.
-     *
      * @throws SettingsException
      * @throws \Throwable
      */
@@ -392,7 +366,6 @@ class ApplicationsGridControl extends Control
 
     /**
      * Vygeneruje potvrzení o přijetí platby.
-     *
      * @throws SettingsException
      * @throws \Throwable
      */
@@ -407,7 +380,6 @@ class ApplicationsGridControl extends Control
 
     /**
      * Zruší přihlášku.
-     *
      * @throws AbortException
      * @throws \Throwable
      */
@@ -426,7 +398,6 @@ class ApplicationsGridControl extends Control
 
     /**
      * Vrátí platební metody jako možnosti pro select.
-     *
      * @return string[]
      */
     private function preparePaymentMethodOptions() : array

@@ -25,6 +25,7 @@ class ExcelResponse implements IResponse
     /** @var string */
     private $filename;
 
+
     public function __construct(Spreadsheet $spreadsheet, string $filename)
     {
         $this->spreadsheet = $spreadsheet;

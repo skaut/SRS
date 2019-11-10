@@ -23,6 +23,7 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  * Komponenta pro správu rolí.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class RolesGridControl extends Control
 {
@@ -43,6 +44,7 @@ class RolesGridControl extends Control
 
     /** @var ProgramService */
     private $programService;
+
 
     public function __construct(
         Translator $translator,
@@ -72,7 +74,6 @@ class RolesGridControl extends Control
 
     /**
      * Vytvoří komponentu.
-     *
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
@@ -87,70 +88,59 @@ class RolesGridControl extends Control
         $grid->addColumnText('name', 'admin.acl.roles_name');
 
         $grid->addColumnText('system', 'admin.acl.roles_system')
-                ->setReplacement(
-                    [
-                            '0' => $this->translator->translate('admin.common.no'),
-                            '1' => $this->translator->translate('admin.common.yes'),
-                        ]
-                );
+            ->setReplacement([
+                '0' => $this->translator->translate('admin.common.no'),
+                '1' => $this->translator->translate('admin.common.yes'),
+            ]);
 
         $grid->addColumnStatus('registerable', 'admin.acl.roles_registerable')
-                        ->addOption(false, 'admin.acl.roles_registerable_nonregisterable')
-                        ->setClass('btn-danger')
-                        ->endOption()
-                        ->addOption(true, 'admin.acl.roles_registerable_registerable')
-                        ->setClass('btn-success')
-                        ->endOption()
-                ->onChange[] = [$this, 'changeRegisterable'];
+            ->addOption(false, 'admin.acl.roles_registerable_nonregisterable')
+            ->setClass('btn-danger')
+            ->endOption()
+            ->addOption(true, 'admin.acl.roles_registerable_registerable')
+            ->setClass('btn-success')
+            ->endOption()
+            ->onChange[] = [$this, 'changeRegisterable'];
 
         $grid->addColumnDateTime('registerableFrom', 'admin.acl.roles_registerable_from')
-                ->setFormat(Helpers::DATETIME_FORMAT);
+            ->setFormat(Helpers::DATETIME_FORMAT);
 
         $grid->addColumnDateTime('registerableTo', 'admin.acl.roles_registerable_to')
-                ->setFormat(Helpers::DATETIME_FORMAT);
+            ->setFormat(Helpers::DATETIME_FORMAT);
 
         $grid->addColumnText('occupancy', 'admin.acl.roles_occupancy', 'occupancy_text');
 
         $grid->addColumnText('fee', 'admin.acl.roles_fee')
-                ->setRendererOnCondition(
-                    function ($row) {
-                            return $this->translator->translate('admin.acl.roles_fee_from_subevents');
-                    },
-                    function ($row) {
-                            return $row->getFee() === null;
-                    }
-                );
+            ->setRendererOnCondition(function ($row) {
+                return $this->translator->translate('admin.acl.roles_fee_from_subevents');
+            }, function ($row) {
+                return $row->getFee() === null;
+            });
 
         $grid->addToolbarButton('Acl:add')
-                ->setIcon('plus')
-                ->setTitle('admin.common.add');
+            ->setIcon('plus')
+            ->setTitle('admin.common.add');
 
         $grid->addAction('test', 'admin.acl.roles_test', 'Acl:test')
-                ->setClass('btn btn-xs btn-primary');
+            ->setClass('btn btn-xs btn-primary');
 
         $grid->addAction('edit', 'admin.common.edit', 'Acl:edit');
 
         $grid->addAction('delete', '', 'delete!')
-                ->setIcon('trash')
-                ->setTitle('admin.common.delete')
-                ->setClass('btn btn-xs btn-danger')
-                ->addAttributes(
-                    [
-                            'data-toggle' => 'confirmation',
-                            'data-content' => $this->translator->translate('admin.acl.roles_delete_confirm'),
-                        ]
-                );
-        $grid->allowRowsAction(
-            'delete',
-            function ($item) {
-                    return ! $item->isSystem();
-            }
-        );
+            ->setIcon('trash')
+            ->setTitle('admin.common.delete')
+            ->setClass('btn btn-xs btn-danger')
+            ->addAttributes([
+                'data-toggle' => 'confirmation',
+                'data-content' => $this->translator->translate('admin.acl.roles_delete_confirm'),
+            ]);
+        $grid->allowRowsAction('delete', function ($item) {
+            return ! $item->isSystem();
+        });
     }
 
     /**
      * Zpracuje odstranění role.
-     *
      * @throws AbortException
      * @throws \Throwable
      */
@@ -170,7 +160,6 @@ class RolesGridControl extends Control
 
     /**
      * Změní registrovatelnost role.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException

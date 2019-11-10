@@ -28,6 +28,7 @@ class ClearCacheCommand extends Command
     /** @var string */
     private $dir;
 
+
     public function __construct(string $dir)
     {
         parent::__construct();

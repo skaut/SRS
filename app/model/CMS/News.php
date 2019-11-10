@@ -10,8 +10,9 @@ use Nettrine\ORM\Entity\Attributes\Id as Identifier;
 /**
  * Entita aktuality.
  *
- * @author                                       Michal Májský
- * @author                                       Jan Staněk <jan.stanek@skaut.cz>
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="NewsRepository")
  * @ORM\Table(name="news")
  */
@@ -21,27 +22,25 @@ class News
 
     /**
      * Text aktuality.
-     *
      * @ORM\Column(type="text")
-     * @var                     string
+     * @var string
      */
     protected $text;
 
     /**
      * Datum publikování aktuality.
-     *
      * @ORM\Column(type="datetime")
-     * @var                         \DateTime
+     * @var \DateTime
      */
     protected $published;
 
     /**
      * Připíchnutá nahoru.
-     *
      * @ORM\Column(type="boolean")
-     * @var                        bool
+     * @var bool
      */
     protected $pinned = false;
+
 
     public function getId() : int
     {

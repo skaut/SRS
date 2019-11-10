@@ -10,7 +10,8 @@ use Nettrine\ORM\Entity\Attributes\Id as Identifier;
 /**
  * Entita skautIS kurz.
  *
- * @author                                                Jan Staněk <jan.stanek@skaut.cz>
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="SkautIsCourseRepository")
  * @ORM\Table(name="skaut_is_course")
  */
@@ -20,19 +21,18 @@ class SkautIsCourse
 
     /**
      * SkautIS id kurzu.
-     *
      * @ORM\Column(type="integer")
-     * @var                        int
+     * @var int
      */
     protected $skautIsCourseId;
 
     /**
      * Název kurzu.
-     *
      * @ORM\Column(type="string")
-     * @var                       string
+     * @var string
      */
     protected $name;
+
 
     public function getId() : int
     {

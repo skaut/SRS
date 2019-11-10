@@ -19,26 +19,28 @@ use Nette\Application\UI\Form;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class SkautIsPresenter extends ConfigurationBasePresenter
 {
     /**
-     * @var    SkautIsEventForm
+     * @var SkautIsEventForm
      * @inject
      */
     public $skautIsEventFormFactory;
 
     /**
-     * @var    ISkautIsEventEducationGridControlFactory
+     * @var ISkautIsEventEducationGridControlFactory
      * @inject
      */
     public $skautISEventEducationGridControlFactory;
 
     /**
-     * @var    SkautIsCourseRepository
+     * @var SkautIsCourseRepository
      * @inject
      */
     public $skautIsCourseRepository;
+
 
     /**
      * @throws SettingsException
@@ -58,7 +60,6 @@ class SkautIsPresenter extends ConfigurationBasePresenter
 
     /**
      * Zruší propojení s akcí ve skautIS.
-     *
      * @throws SettingsException
      * @throws AbortException
      * @throws \Throwable

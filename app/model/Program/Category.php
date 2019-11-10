@@ -14,7 +14,8 @@ use function implode;
 /**
  * Entita kategorie programového bloku.
  *
- * @author                                           Jan Staněk <jan.stanek@skaut.cz>
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="CategoryRepository")
  * @ORM\Table(name="category")
  */
@@ -24,28 +25,26 @@ class Category
 
     /**
      * Název kategorie.
-     *
      * @ORM\Column(type="string", unique=true)
-     * @var                       string
+     * @var string
      */
     protected $name;
 
     /**
      * Role, které si mohou přihlašovat programy z kategorie.
-     *
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="registerableCategories", cascade={"persist"})
-     * @var                                                Collection|Role[]
+     * @var Collection|Role[]
      */
     protected $registerableRoles;
 
     /**
      * Bloky v kategorii.
-     *
      * @ORM\OneToMany(targetEntity="Block", mappedBy="category", cascade={"persist"})
-     * @ORM\OrderBy({"name"                 = "ASC"})
-     * @var                                 Collection|Block[]
+     * @ORM\OrderBy({"name" = "ASC"})
+     * @var Collection|Block[]
      */
     protected $blocks;
+
 
     public function __construct()
     {
@@ -78,14 +77,9 @@ class Category
 
     public function getRegisterableRolesText() : string
     {
-        return implode(
-            ', ',
-            $this->registerableRoles->map(
-                function (Role $role) {
-                            return $role->getName();
-                }
-            )->toArray()
-        );
+        return implode(', ', $this->registerableRoles->map(function (Role $role) {
+            return $role->getName();
+        })->toArray());
     }
 
     /**

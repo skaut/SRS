@@ -22,6 +22,7 @@ use Nextras\Forms\Controls\DateTimePicker;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class ProgramForm
 {
@@ -36,6 +37,7 @@ class ProgramForm
     /** @var Translator */
     private $translator;
 
+
     public function __construct(BaseForm $baseForm, SettingsFacade $settingsFacade, Translator $translator)
     {
         $this->baseFormFactory = $baseForm;
@@ -45,7 +47,6 @@ class ProgramForm
 
     /**
      * Vytvoří formulář.
-     *
      * @throws SettingsException
      * @throws \Throwable
      */
@@ -63,41 +64,39 @@ class ProgramForm
             $this->prepareRegisterProgramsTypeOptions()
         );
         $registerProgramsTypeSelect
-                ->addCondition($form::EQUAL, ProgramRegistrationType::ALLOWED_FROM_TO)
-                ->toggle('register-programs-from')
-                ->toggle('register-programs-to');
+            ->addCondition($form::EQUAL, ProgramRegistrationType::ALLOWED_FROM_TO)
+            ->toggle('register-programs-from')
+            ->toggle('register-programs-to');
 
         $registerProgramsFrom = $form->addDateTimePicker('registerProgramsFrom', 'admin.configuration.register_programs_from')
-                ->setOption('id', 'register-programs-from');
+            ->setOption('id', 'register-programs-from');
 
         $registerProgramsTo = $form->addDateTimePicker('registerProgramsTo', 'admin.configuration.register_programs_to')
-                ->setOption('id', 'register-programs-to');
+            ->setOption('id', 'register-programs-to');
 
         $form->addCheckbox('isAllowedRegisterProgramsBeforePayment', 'admin.configuration.is_allowed_register_programs_before_payment');
 
         $registerProgramsFrom
-                ->addCondition(Form::FILLED)
-                ->addRule([$this, 'validateRegisterProgramsFrom'], 'admin.configuration.register_programs_from_after_to', [$registerProgramsFrom, $registerProgramsTo]);
+            ->addCondition(Form::FILLED)
+            ->addRule([$this, 'validateRegisterProgramsFrom'], 'admin.configuration.register_programs_from_after_to', [$registerProgramsFrom, $registerProgramsTo]);
 
         $registerProgramsTo
-                ->addCondition(Form::FILLED)
-                ->addRule([$this, 'validateRegisterProgramsTo'], 'admin.configuration.register_programs_to_before_from', [$registerProgramsTo, $registerProgramsFrom]);
+            ->addCondition(Form::FILLED)
+            ->addRule([$this, 'validateRegisterProgramsTo'], 'admin.configuration.register_programs_to_before_from', [$registerProgramsTo, $registerProgramsFrom]);
 
         $form->addCheckbox('isAllowedAddBlock', 'admin.configuration.is_allowed_add_block');
         $form->addCheckbox('isAllowedModifySchedule', 'admin.configuration.is_allowed_modify_schedule');
 
         $form->addSubmit('submit', 'admin.common.save');
 
-        $form->setDefaults(
-            [
-                    'isAllowedAddBlock' => $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK),
-                    'isAllowedModifySchedule' => $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE),
-                    'registerProgramsType' => $this->settingsFacade->getValue(Settings::REGISTER_PROGRAMS_TYPE),
-                    'registerProgramsFrom' => $this->settingsFacade->getDateTimeValue(Settings::REGISTER_PROGRAMS_FROM),
-                    'registerProgramsTo' => $this->settingsFacade->getDateTimeValue(Settings::REGISTER_PROGRAMS_TO),
-                    'isAllowedRegisterProgramsBeforePayment' => $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT),
-                ]
-        );
+        $form->setDefaults([
+            'isAllowedAddBlock' => $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK),
+            'isAllowedModifySchedule' => $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE),
+            'registerProgramsType' => $this->settingsFacade->getValue(Settings::REGISTER_PROGRAMS_TYPE),
+            'registerProgramsFrom' => $this->settingsFacade->getDateTimeValue(Settings::REGISTER_PROGRAMS_FROM),
+            'registerProgramsTo' => $this->settingsFacade->getDateTimeValue(Settings::REGISTER_PROGRAMS_TO),
+            'isAllowedRegisterProgramsBeforePayment' => $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT),
+        ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
 
@@ -106,7 +105,6 @@ class ProgramForm
 
     /**
      * Zpracuje formulář.
-     *
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException
@@ -124,7 +122,6 @@ class ProgramForm
 
     /**
      * Ověří, že otevření zapisování programů je dříve než uzavření.
-     *
      * @param DateTime[] $args
      */
     public function validateRegisterProgramsFrom(DateTimePicker $field, array $args) : bool
@@ -137,7 +134,6 @@ class ProgramForm
 
     /**
      * Ověří, že uzavření zapisování programů je později než otevření.
-     *
      * @param DateTime[] $args
      */
     public function validateRegisterProgramsTo(DateTimePicker $field, array $args) : bool
@@ -150,7 +146,6 @@ class ProgramForm
 
     /**
      * Vrátí stavy registrace programů.
-     *
      * @return string[]
      */
     private function prepareRegisterProgramsTypeOptions() : array

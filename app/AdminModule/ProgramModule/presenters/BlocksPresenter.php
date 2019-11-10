@@ -26,50 +26,52 @@ use Nette\Http\Session;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class BlocksPresenter extends ProgramBasePresenter
 {
     /**
-     * @var    BlockRepository
+     * @var BlockRepository
      * @inject
      */
     public $blockRepository;
 
     /**
-     * @var    ProgramRepository
+     * @var ProgramRepository
      * @inject
      */
     public $programRepository;
 
     /**
-     * @var    IProgramBlocksGridControlFactory
+     * @var IProgramBlocksGridControlFactory
      * @inject
      */
     public $programBlocksGridControlFactory;
 
     /**
-     * @var    IProgramAttendeesGridControlFactory
+     * @var IProgramAttendeesGridControlFactory
      * @inject
      */
     public $programAttendeesGridControlFactory;
 
     /**
-     * @var    BlockForm
+     * @var BlockForm
      * @inject
      */
     public $blockFormFactory;
 
     /**
-     * @var    Session
+     * @var Session
      * @inject
      */
     public $session;
 
     /**
-     * @var    ProgramService
+     * @var ProgramService
      * @inject
      */
     public $programService;
+
 
     public function renderDefault() : void
     {
@@ -89,7 +91,7 @@ class BlocksPresenter extends ProgramBasePresenter
         $this->template->block                     = $block;
         $this->template->programId                 = $this->session->getSection('srs')->programId;
         $this->template->userAllowedModifySchedule = $this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE) &&
-                $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE);
+            $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE);
     }
 
     /**
@@ -109,7 +111,6 @@ class BlocksPresenter extends ProgramBasePresenter
 
     /**
      * Zobrazí přehled účastníků u vybraného programu.
-     *
      * @throws AbortException
      */
     public function handleShowAttendees(int $programId) : void
@@ -127,7 +128,6 @@ class BlocksPresenter extends ProgramBasePresenter
 
     /**
      * Odstraní vybraný program.
-     *
      * @throws SettingsException
      * @throws AbortException
      * @throws \Throwable
@@ -136,7 +136,8 @@ class BlocksPresenter extends ProgramBasePresenter
     {
         $program = $this->programRepository->findById($programId);
 
-        if (! $this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE) || ! $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)
+        if (! $this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE) ||
+            ! $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)
         ) {
             $this->getPresenter()->flashMessage('admin.program.blocks_program_modify_schedule_not_allowed', 'danger');
         } else {

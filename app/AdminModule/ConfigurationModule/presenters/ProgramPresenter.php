@@ -17,10 +17,11 @@ use Nette\Application\UI\Form;
 class ProgramPresenter extends ConfigurationBasePresenter
 {
     /**
-     * @var    ProgramForm
+     * @var ProgramForm
      * @inject
      */
     public $programFormFactory;
+
 
     /**
      * @throws SettingsException

@@ -39,92 +39,94 @@ use Nette\Application\BadRequestException;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class PagePresenter extends WebBasePresenter
 {
     /**
-     * @var    IApplicationContentControlFactory
+     * @var IApplicationContentControlFactory
      * @inject
      */
     public $applicationContentControlFactory;
 
     /**
-     * @var    IBlocksContentControlFactory
+     * @var IBlocksContentControlFactory
      * @inject
      */
     public $blocksContentControlFactory;
 
     /**
-     * @var    ICapacitiesContentControlFactory
+     * @var ICapacitiesContentControlFactory
      * @inject
      */
     public $capacitiesContentControlFactory;
 
     /**
-     * @var    IDocumentContentControlFactory
+     * @var IDocumentContentControlFactory
      * @inject
      */
     public $documentContentControlFactory;
 
     /**
-     * @var    IFaqContentControlFactory
+     * @var IFaqContentControlFactory
      * @inject
      */
     public $faqContentControlFactory;
 
     /**
-     * @var    IHtmlContentControlFactory
+     * @var IHtmlContentControlFactory
      * @inject
      */
     public $htmlContentControlFactory;
 
     /**
-     * @var    IImageContentControlFactory
+     * @var IImageContentControlFactory
      * @inject
      */
     public $imageContentControlFactory;
 
     /**
-     * @var    INewsContentControlFactory
+     * @var INewsContentControlFactory
      * @inject
      */
     public $newsContentControlFactory;
 
     /**
-     * @var    IPlaceContentControlFactory
+     * @var IPlaceContentControlFactory
      * @inject
      */
     public $placeContentControlFactory;
 
     /**
-     * @var    IProgramsContentControlFactory
+     * @var IProgramsContentControlFactory
      * @inject
      */
     public $programsContentControlFactory;
 
     /**
-     * @var    ITextContentControlFactory
+     * @var ITextContentControlFactory
      * @inject
      */
     public $textContentControlFactory;
 
     /**
-     * @var    IUsersContentControlFactory
+     * @var IUsersContentControlFactory
      * @inject
      */
     public $usersContentControlFactory;
 
     /**
-     * @var    ILectorsContentControlFactory
+     * @var ILectorsContentControlFactory
      * @inject
      */
     public $lectorsContentControlFactory;
 
     /**
-     * @var    IOrganizerContentControlFactory
+     * @var IOrganizerContentControlFactory
      * @inject
      */
     public $organizerContentControlFactory;
+
 
     /**
      * @throws BadRequestException

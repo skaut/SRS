@@ -37,6 +37,7 @@ class PagesGridControl extends Control
     /** @var RoleRepository */
     private $roleRepository;
 
+
     public function __construct(Translator $translator, PageRepository $pageRepository, RoleRepository $roleRepository)
     {
         parent::__construct();
@@ -56,7 +57,6 @@ class PagesGridControl extends Control
 
     /**
      * Vytvoří komponentu.
-     *
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
@@ -74,23 +74,20 @@ class PagesGridControl extends Control
         $grid->addColumnText('slug', 'admin.cms.pages_slug');
 
         $grid->addColumnStatus('public', 'admin.cms.pages_public')
-                        ->addOption(false, 'admin.cms.pages_public_private')
-                        ->setClass('btn-danger')
-                        ->endOption()
-                        ->addOption(true, 'admin.cms.pages_public_public')
-                        ->setClass('btn-success')
-                        ->endOption()
-                ->onChange[] = [$this, 'changeStatus'];
+            ->addOption(false, 'admin.cms.pages_public_private')
+            ->setClass('btn-danger')
+            ->endOption()
+            ->addOption(true, 'admin.cms.pages_public_public')
+            ->setClass('btn-success')
+            ->endOption()
+            ->onChange[] = [$this, 'changeStatus'];
 
         $grid->addColumnText('roles', 'admin.cms.pages_roles', 'rolesText')
-                ->setRendererOnCondition(
-                    function () {
-                            return $this->translator->translate('admin.cms.pages_roles_all');
-                    },
-                    function (Page $page) {
-                            return count($this->roleRepository->findAll()) === $page->getRoles()->count();
-                    }
-                );
+            ->setRendererOnCondition(function () {
+                return $this->translator->translate('admin.cms.pages_roles_all');
+            }, function (Page $page) {
+                return count($this->roleRepository->findAll()) === $page->getRoles()->count();
+            });
 
         $rolesOptions  = $this->roleRepository->getRolesWithoutRolesOptions([]);
         $publicOptions = [
@@ -100,16 +97,16 @@ class PagesGridControl extends Control
 
         $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function ($container) use ($rolesOptions, $publicOptions) : void {
             $container->addText('name', '')
-                    ->addRule(Form::FILLED, 'admin.cms.pages_name_empty');
+                ->addRule(Form::FILLED, 'admin.cms.pages_name_empty');
 
             $container->addText('slug', '')
-                    ->addRule(Form::FILLED, 'admin.cms.pages_slug_empty')
-                    ->addRule(Form::PATTERN, 'admin.cms.pages_slug_format', '^[a-z0-9-]*$')
-                    ->addRule(Form::IS_NOT_IN, 'admin.cms.pages_slug_exists', $this->pageRepository->findAllSlugs());
+                ->addRule(Form::FILLED, 'admin.cms.pages_slug_empty')
+                ->addRule(Form::PATTERN, 'admin.cms.pages_slug_format', '^[a-z0-9-]*$')
+                ->addRule(Form::IS_NOT_IN, 'admin.cms.pages_slug_exists', $this->pageRepository->findAllSlugs());
 
             $container->addMultiSelect('roles', '', $rolesOptions)->setAttribute('class', 'datagrid-multiselect')
-                    ->setDefaultValue(array_keys($rolesOptions))
-                    ->addRule(Form::FILLED, 'admin.cms.pages_roles_empty');
+                ->setDefaultValue(array_keys($rolesOptions))
+                ->addRule(Form::FILLED, 'admin.cms.pages_roles_empty');
 
             $container->addSelect('public', '', $publicOptions);
         };
@@ -117,57 +114,49 @@ class PagesGridControl extends Control
 
         $grid->addInlineEdit()->onControlAdd[]  = function ($container) use ($rolesOptions, $publicOptions) : void {
             $container->addText('name', '')
-                    ->addRule(Form::FILLED, 'admin.cms.pages_name_empty');
+                ->addRule(Form::FILLED, 'admin.cms.pages_name_empty');
 
             $container->addText('slug', '')
-                    ->addRule(Form::FILLED, 'admin.cms.pages_slug_empty')
-                    ->addRule(Form::PATTERN, 'admin.cms.pages_slug_format', '^([a-z0-9-]*)|/$');
+                ->addRule(Form::FILLED, 'admin.cms.pages_slug_empty')
+                ->addRule(Form::PATTERN, 'admin.cms.pages_slug_format', '^([a-z0-9-]*)|/$');
 
             $container->addMultiSelect('roles', '', $rolesOptions)->setAttribute('class', 'datagrid-multiselect')
-                    ->addRule(Form::FILLED, 'admin.cms.pages_roles_empty');
+                ->addRule(Form::FILLED, 'admin.cms.pages_roles_empty');
 
             $container->addSelect('public', '', $publicOptions);
         };
         $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) : void {
             $container['slug']
-                    ->addRule(Form::IS_NOT_IN, 'admin.cms.pages_slug_exists', $this->pageRepository->findOthersSlugs($item->getId()));
+                ->addRule(Form::IS_NOT_IN, 'admin.cms.pages_slug_exists', $this->pageRepository->findOthersSlugs($item->getId()));
 
-            $container->setDefaults(
-                [
-                        'name' => $item->getName(),
-                        'slug' => $item->getSlug(),
-                        'roles' => $this->roleRepository->findRolesIds($item->getRoles()),
-                        'public' => $item->isPublic() ? 1 : 0,
-                    ]
-            );
+            $container->setDefaults([
+                'name' => $item->getName(),
+                'slug' => $item->getSlug(),
+                'roles' => $this->roleRepository->findRolesIds($item->getRoles()),
+                'public' => $item->isPublic() ? 1 : 0,
+            ]);
         };
         $grid->getInlineEdit()->onSubmit[]      = [$this, 'edit'];
 
         $grid->addAction('content', 'admin.cms.pages_edit_content', 'Pages:content')
-                ->addParameters(['area' => 'main'])
-                ->setClass('btn btn-xs btn-primary');
+            ->addParameters(['area' => 'main'])
+            ->setClass('btn btn-xs btn-primary');
 
         $grid->addAction('delete', '', 'delete!')
-                ->setIcon('trash')
-                ->setTitle('admin.common.delete')
-                ->setClass('btn btn-xs btn-danger')
-                ->addAttributes(
-                    [
-                            'data-toggle' => 'confirmation',
-                            'data-content' => $this->translator->translate('admin.cms.pages_delete_confirm'),
-                        ]
-                );
-        $grid->allowRowsAction(
-            'delete',
-            function ($item) {
-                    return $item->getSlug() !== '/';
-            }
-        );
+            ->setIcon('trash')
+            ->setTitle('admin.common.delete')
+            ->setClass('btn btn-xs btn-danger')
+            ->addAttributes([
+                'data-toggle' => 'confirmation',
+                'data-content' => $this->translator->translate('admin.cms.pages_delete_confirm'),
+            ]);
+        $grid->allowRowsAction('delete', function ($item) {
+            return $item->getSlug() !== '/';
+        });
     }
 
     /**
      * Zpracuje přidání stránky.
-     *
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException
@@ -190,7 +179,6 @@ class PagesGridControl extends Control
 
     /**
      * Zpracuje upravení stránky.
-     *
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException
@@ -215,7 +203,6 @@ class PagesGridControl extends Control
 
     /**
      * Zpracuje odstranění stránky.
-     *
      * @throws PageException
      * @throws ORMException
      * @throws OptimisticLockException
@@ -233,7 +220,6 @@ class PagesGridControl extends Control
 
     /**
      * Přesune stránku s $item_id mezi $prev_id a $next_id.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -255,7 +241,6 @@ class PagesGridControl extends Control
 
     /**
      * Změní viditelnost stránky.
-     *
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException

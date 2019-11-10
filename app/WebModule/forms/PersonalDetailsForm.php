@@ -22,6 +22,7 @@ use function array_key_exists;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class PersonalDetailsForm
 {
@@ -29,7 +30,6 @@ class PersonalDetailsForm
 
     /**
      * Přihlášený uživatel.
-     *
      * @var User
      */
     private $user;
@@ -45,6 +45,7 @@ class PersonalDetailsForm
 
     /** @var SkautIsService */
     private $skautIsService;
+
 
     public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository, SkautIsService $skautIsService)
     {
@@ -68,15 +69,15 @@ class PersonalDetailsForm
         $inputSex->getSeparatorPrototype()->setName(null);
 
         $inputFirstName = $form->addText('firstName', 'web.profile.firstname')
-                ->addRule(Form::FILLED, 'web.profile.firstname_empty');
+            ->addRule(Form::FILLED, 'web.profile.firstname_empty');
 
         $inputLastName = $form->addText('lastName', 'web.profile.lastname')
-                ->addRule(Form::FILLED, 'web.profile.lastname_empty');
+            ->addRule(Form::FILLED, 'web.profile.lastname_empty');
 
         $inputNickName = $form->addText('nickName', 'web.profile.nickname');
 
         $inputBirthdate = $form->addDatePicker('birthdate', 'web.profile.birthdate')
-                ->addRule(Form::FILLED, 'web.profile.birthdate_empty');
+            ->addRule(Form::FILLED, 'web.profile.birthdate_empty');
 
         if ($this->user->isMember()) {
             $inputSex->setDisabled();
@@ -87,40 +88,38 @@ class PersonalDetailsForm
         }
 
         $form->addText('email', 'web.application_content.email')
-                ->addRule(Form::FILLED)
-                ->setDisabled();
+            ->addRule(Form::FILLED)
+            ->setDisabled();
 
         $form->addText('street', 'web.profile.street')
-                ->addRule(Form::FILLED, 'web.profile.street_empty')
-                ->addRule(Form::PATTERN, 'web.profile.street_format', '^(.*[^0-9]+) (([1-9][0-9]*)/)?([1-9][0-9]*[a-cA-C]?)$');
+            ->addRule(Form::FILLED, 'web.profile.street_empty')
+            ->addRule(Form::PATTERN, 'web.profile.street_format', '^(.*[^0-9]+) (([1-9][0-9]*)/)?([1-9][0-9]*[a-cA-C]?)$');
 
         $form->addText('city', 'web.profile.city')
-                ->addRule(Form::FILLED, 'web.profile.city_empty');
+            ->addRule(Form::FILLED, 'web.profile.city_empty');
 
         $form->addText('postcode', 'web.profile.postcode')
-                ->addRule(Form::FILLED, 'web.profile.postcode_empty')
-                ->addRule(Form::PATTERN, 'web.profile.postcode_format', '^\d{3} ?\d{2}$');
+            ->addRule(Form::FILLED, 'web.profile.postcode_empty')
+            ->addRule(Form::PATTERN, 'web.profile.postcode_format', '^\d{3} ?\d{2}$');
 
         $form->addText('state', 'web.profile.state')
-                ->addRule(Form::FILLED, 'web.profile.state_empty');
+            ->addRule(Form::FILLED, 'web.profile.state_empty');
 
         $form->addSubmit('submit', 'web.profile.update_personal_details');
 
-        $form->setDefaults(
-            [
-                    'id' => $id,
-                    'sex' => $this->user->getSex(),
-                    'firstName' => $this->user->getFirstName(),
-                    'lastName' => $this->user->getLastName(),
-                    'nickName' => $this->user->getNickName(),
-                    'email' => $this->user->getEmail(),
-                    'birthdate' => $this->user->getBirthdate(),
-                    'street' => $this->user->getStreet(),
-                    'city' => $this->user->getCity(),
-                    'postcode' => $this->user->getPostcode(),
-                    'state' => $this->user->getState(),
-                ]
-        );
+        $form->setDefaults([
+            'id' => $id,
+            'sex' => $this->user->getSex(),
+            'firstName' => $this->user->getFirstName(),
+            'lastName' => $this->user->getLastName(),
+            'nickName' => $this->user->getNickName(),
+            'email' => $this->user->getEmail(),
+            'birthdate' => $this->user->getBirthdate(),
+            'street' => $this->user->getStreet(),
+            'city' => $this->user->getCity(),
+            'postcode' => $this->user->getPostcode(),
+            'state' => $this->user->getState(),
+        ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
 
@@ -129,7 +128,6 @@ class PersonalDetailsForm
 
     /**
      * Zpracuje formulář.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */

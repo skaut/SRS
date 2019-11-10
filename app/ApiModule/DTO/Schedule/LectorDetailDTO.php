@@ -18,27 +18,28 @@ class LectorDetailDTO
 
     /**
      * @JMS\Type("int")
-     * @var             int
+     * @var int
      */
     private $id;
 
     /**
      * @JMS\Type("string")
-     * @var                string
+     * @var string
      */
     private $name;
 
     /**
      * @JMS\Type("string")
-     * @var                string
+     * @var string
      */
     private $about;
 
     /**
      * @JMS\Type("string")
-     * @var                ?string
+     * @var ?string
      */
     private $photo;
+
 
     public function getId() : int
     {

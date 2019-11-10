@@ -14,6 +14,7 @@ use Doctrine\ORM\ORMException;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class NewsRepository extends EntityRepository
 {
@@ -27,36 +28,33 @@ class NewsRepository extends EntityRepository
 
     /**
      * Vrací id poslední aktuality.
-     *
      * @throws NonUniqueResultException
      */
     public function findLastId() : int
     {
         return (int) $this->createQueryBuilder('n')
-                        ->select('MAX(n.id)')
-                        ->getQuery()
-                        ->getSingleScalarResult();
+            ->select('MAX(n.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
     /**
      * Vrací posledních $maxCount publikovaných aktualit.
-     *
      * @return News[]
      */
     public function findPublishedOrderedByPinnedAndDate(?int $maxCount) : array
     {
         return $this->createQueryBuilder('n')
-                        ->where($this->createQueryBuilder('n')->expr()->lte('n.published', 'CURRENT_TIMESTAMP()'))
-                        ->orderBy('n.pinned', 'DESC')
-                        ->addOrderBy('n.published', 'DESC')
-                        ->setMaxResults($maxCount)
-                        ->getQuery()
-                        ->getResult();
+            ->where($this->createQueryBuilder()->expr()->lte('n.published', 'CURRENT_TIMESTAMP()'))
+            ->orderBy('n.pinned', 'DESC')
+            ->addOrderBy('n.published', 'DESC')
+            ->setMaxResults($maxCount)
+            ->getQuery()
+            ->getResult();
     }
 
     /**
      * Uloží aktualitu.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -68,7 +66,6 @@ class NewsRepository extends EntityRepository
 
     /**
      * Odstraní aktualitu.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */

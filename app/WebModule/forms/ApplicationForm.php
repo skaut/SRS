@@ -53,6 +53,7 @@ use function in_array;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class ApplicationForm
 {
@@ -60,7 +61,6 @@ class ApplicationForm
 
     /**
      * Přihlášený uživatel.
-     *
      * @var User
      */
     private $user;
@@ -70,7 +70,6 @@ class ApplicationForm
 
     /**
      * Jsou vytvořené podakce.
-     *
      * @var bool
      */
     private $subeventsExists;
@@ -123,6 +122,7 @@ class ApplicationForm
     /** @var FilesService */
     private $filesService;
 
+
     public function __construct(
         BaseForm $baseFormFactory,
         EntityManagerDecorator $em,
@@ -161,7 +161,6 @@ class ApplicationForm
 
     /**
      * Vytvoří formulář.
-     *
      * @throws SettingsException
      * @throws NonUniqueResultException
      * @throws \Throwable
@@ -180,15 +179,15 @@ class ApplicationForm
         $inputSex->getSeparatorPrototype()->setName(null);
 
         $inputFirstName = $form->addText('firstName', 'web.application_content.firstname')
-                ->addRule(Form::FILLED, 'web.application_content.firstname_empty');
+            ->addRule(Form::FILLED, 'web.application_content.firstname_empty');
 
         $inputLastName = $form->addText('lastName', 'web.application_content.lastname')
-                ->addRule(Form::FILLED, 'web.application_content.lastname_empty');
+            ->addRule(Form::FILLED, 'web.application_content.lastname_empty');
 
         $inputNickName = $form->addText('nickName', 'web.application_content.nickname');
 
         $inputBirthdate = $form->addDatePicker('birthdate', 'web.application_content.birthdate')
-                ->addRule(Form::FILLED, 'web.application_content.birthdate_empty');
+            ->addRule(Form::FILLED, 'web.application_content.birthdate_empty');
 
         if ($this->user->isMember()) {
             $inputSex->setDisabled();
@@ -199,22 +198,22 @@ class ApplicationForm
         }
 
         $form->addText('email', 'web.application_content.email')
-                ->addRule(Form::FILLED)
-                ->setDisabled();
+            ->addRule(Form::FILLED)
+            ->setDisabled();
 
         $form->addText('street', 'web.application_content.street')
-                ->addRule(Form::FILLED, 'web.application_content.street_empty')
-                ->addRule(Form::PATTERN, 'web.application_content.street_format', '^(.*[^0-9]+) (([1-9][0-9]*)/)?([1-9][0-9]*[a-cA-C]?)$');
+            ->addRule(Form::FILLED, 'web.application_content.street_empty')
+            ->addRule(Form::PATTERN, 'web.application_content.street_format', '^(.*[^0-9]+) (([1-9][0-9]*)/)?([1-9][0-9]*[a-cA-C]?)$');
 
         $form->addText('city', 'web.application_content.city')
-                ->addRule(Form::FILLED, 'web.application_content.city_empty');
+            ->addRule(Form::FILLED, 'web.application_content.city_empty');
 
         $form->addText('postcode', 'web.application_content.postcode')
-                ->addRule(Form::FILLED, 'web.application_content.postcode_empty')
-                ->addRule(Form::PATTERN, 'web.application_content.postcode_format', '^\d{3} ?\d{2}$');
+            ->addRule(Form::FILLED, 'web.application_content.postcode_empty')
+            ->addRule(Form::PATTERN, 'web.application_content.postcode_format', '^\d{3} ?\d{2}$');
 
         $form->addText('state', 'web.application_content.state')
-                ->addRule(Form::FILLED, 'web.application_content.state_empty');
+            ->addRule(Form::FILLED, 'web.application_content.state_empty');
 
         $this->addRolesSelect($form);
 
@@ -225,25 +224,23 @@ class ApplicationForm
         $this->addCustomInputs($form);
 
         $form->addCheckbox('agreement', $this->settingsFacade->getValue(Settings::APPLICATION_AGREEMENT))
-                ->addRule(Form::FILLED, 'web.application_content.agreement_empty');
+            ->addRule(Form::FILLED, 'web.application_content.agreement_empty');
 
         $form->addSubmit('submit', 'web.application_content.register');
 
-        $form->setDefaults(
-            [
-                    'id' => $id,
-                    'sex' => $this->user->getSex(),
-                    'firstName' => $this->user->getFirstName(),
-                    'lastName' => $this->user->getLastName(),
-                    'nickName' => $this->user->getNickName(),
-                    'birthdate' => $this->user->getBirthdate(),
-                    'email' => $this->user->getEmail(),
-                    'street' => $this->user->getStreet(),
-                    'city' => $this->user->getCity(),
-                    'postcode' => $this->user->getPostcode(),
-                    'state' => $this->user->getState(),
-                ]
-        );
+        $form->setDefaults([
+            'id' => $id,
+            'sex' => $this->user->getSex(),
+            'firstName' => $this->user->getFirstName(),
+            'lastName' => $this->user->getLastName(),
+            'nickName' => $this->user->getNickName(),
+            'birthdate' => $this->user->getBirthdate(),
+            'email' => $this->user->getEmail(),
+            'street' => $this->user->getStreet(),
+            'city' => $this->user->getCity(),
+            'postcode' => $this->user->getPostcode(),
+            'state' => $this->user->getState(),
+        ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
 
@@ -252,116 +249,115 @@ class ApplicationForm
 
     /**
      * Zpracuje formulář.
-     *
      * @throws \Throwable
      */
     public function processForm(Form $form, \stdClass $values) : void
     {
-        $this->em->transactional(
-            function ($em) use ($values) : void {
-                if (array_key_exists('sex', $values)) {
-                    $this->user->setSex($values['sex']);
-                }
-                if (array_key_exists('firstName', $values)) {
-                    $this->user->setFirstName($values['firstName']);
-                }
-                if (array_key_exists('lastName', $values)) {
-                    $this->user->setLastName($values['lastName']);
-                }
-                if (array_key_exists('nickName', $values)) {
-                    $this->user->setNickName($values['nickName']);
-                }
-                if (array_key_exists('birthdate', $values)) {
-                    $this->user->setBirthdate($values['birthdate']);
-                }
+        $this->em->transactional(function ($em) use ($values) : void {
+            if (array_key_exists('sex', $values)) {
+                $this->user->setSex($values['sex']);
+            }
+            if (array_key_exists('firstName', $values)) {
+                $this->user->setFirstName($values['firstName']);
+            }
+            if (array_key_exists('lastName', $values)) {
+                $this->user->setLastName($values['lastName']);
+            }
+            if (array_key_exists('nickName', $values)) {
+                $this->user->setNickName($values['nickName']);
+            }
+            if (array_key_exists('birthdate', $values)) {
+                $this->user->setBirthdate($values['birthdate']);
+            }
 
-                    $this->user->setStreet($values['street']);
-                    $this->user->setCity($values['city']);
-                    $this->user->setPostcode($values['postcode']);
-                    $this->user->setState($values['state']);
+            $this->user->setStreet($values['street']);
+            $this->user->setCity($values['city']);
+            $this->user->setPostcode($values['postcode']);
+            $this->user->setState($values['state']);
 
             //vlastni pole
-                foreach ($this->customInputRepository->findAll() as $customInput) {
-                    $customInputValue = $this->user->getCustomInputValue($customInput);
+            foreach ($this->customInputRepository->findAll() as $customInput) {
+                $customInputValue = $this->user->getCustomInputValue($customInput);
 
-                    switch ($customInput->getType()) {
-                        case CustomInput::TEXT:
-                            $customInputValue = $customInputValue ?: new CustomTextValue();
-                            $customInputValue->setValue($values['custom' . $customInput->getId()]);
-                            break;
+                switch ($customInput->getType()) {
+                    case CustomInput::TEXT:
+                        $customInputValue = $customInputValue ?: new CustomTextValue();
+                        $customInputValue->setValue($values['custom' . $customInput->getId()]);
+                        break;
 
-                        case CustomInput::CHECKBOX:
-                            $customInputValue = $customInputValue ?: new CustomCheckboxValue();
-                            $customInputValue->setValue($values['custom' . $customInput->getId()]);
-                            break;
+                    case CustomInput::CHECKBOX:
+                        $customInputValue = $customInputValue ?: new CustomCheckboxValue();
+                        $customInputValue->setValue($values['custom' . $customInput->getId()]);
+                        break;
 
-                        case CustomInput::SELECT:
-                            $customInputValue = $customInputValue ?: new CustomSelectValue();
-                            $customInputValue->setValue($values['custom' . $customInput->getId()]);
-                            break;
+                    case CustomInput::SELECT:
+                        $customInputValue = $customInputValue ?: new CustomSelectValue();
+                        $customInputValue->setValue($values['custom' . $customInput->getId()]);
+                        break;
 
-                        case CustomInput::FILE:
-                            $customInputValue = $customInputValue ?: new CustomFileValue();
-                            $file             = $values['custom' . $customInput->getId()];
-                            if ($file->size > 0) {
-                                $path = $this->generatePath($file);
-                                $this->filesService->save($file, $path);
-                                $customInputValue->setValue($path);
-                            }
-                            break;
-                    }
-
-                    $customInputValue->setUser($this->user);
-                    $customInputValue->setInput($customInput);
-                    $this->customInputValueRepository->save($customInputValue);
+                    case CustomInput::FILE:
+                        $customInputValue = $customInputValue ?: new CustomFileValue();
+                        $file             = $values['custom' . $customInput->getId()];
+                        if ($file->size > 0) {
+                            $path = $this->generatePath($file);
+                            $this->filesService->save($file, $path);
+                            $customInputValue->setValue($path);
+                        }
+                        break;
                 }
+
+                $customInputValue->setUser($this->user);
+                $customInputValue->setInput($customInput);
+                $this->customInputValueRepository->save($customInputValue);
+            }
 
             //prijezd, odjezd
-                if (array_key_exists('arrival', $values)) {
-                    $this->user->setArrival($values['arrival']);
-                }
+            if (array_key_exists('arrival', $values)) {
+                $this->user->setArrival($values['arrival']);
+            }
 
-                if (array_key_exists('departure', $values)) {
-                    $this->user->setDeparture($values['departure']);
-                }
+            if (array_key_exists('departure', $values)) {
+                $this->user->setDeparture($values['departure']);
+            }
 
             //role
-                if (array_key_exists('roles', $values)) {
-                    $roles = $this->roleRepository->findRolesByIds($values['roles']);
-                } else {
-                    $roles = $this->roleRepository->findAllRegisterableNowOrderedByName();
-                }
+            if (array_key_exists('roles', $values)) {
+                $roles = $this->roleRepository->findRolesByIds($values['roles']);
+            } else {
+                $roles = $this->roleRepository->findAllRegisterableNowOrderedByName();
+            }
 
             //podakce
-                    $subevents = $this->subeventRepository->explicitSubeventsExists() && ! empty($values['subevents']) ? $this->subeventRepository->findSubeventsByIds($values['subevents']) : new ArrayCollection([$this->subeventRepository->findImplicit()]);
+            $subevents = $this->subeventRepository->explicitSubeventsExists() && ! empty($values['subevents'])
+                ? $this->subeventRepository->findSubeventsByIds($values['subevents'])
+                : new ArrayCollection([$this->subeventRepository->findImplicit()]);
 
             //aktualizace udaju ve skautIS
-                try {
-                    $this->skautIsService->updatePersonBasic(
-                        $this->user->getSkautISPersonId(),
-                        $this->user->getSex(),
-                        $this->user->getBirthdate(),
-                        $this->user->getFirstName(),
-                        $this->user->getLastName(),
-                        $this->user->getNickName()
-                    );
+            try {
+                $this->skautIsService->updatePersonBasic(
+                    $this->user->getSkautISPersonId(),
+                    $this->user->getSex(),
+                    $this->user->getBirthdate(),
+                    $this->user->getFirstName(),
+                    $this->user->getLastName(),
+                    $this->user->getNickName()
+                );
 
-                    $this->skautIsService->updatePersonAddress(
-                        $this->user->getSkautISPersonId(),
-                        $this->user->getStreet(),
-                        $this->user->getCity(),
-                        $this->user->getPostcode(),
-                        $this->user->getState()
-                    );
-                } catch (WsdlException $ex) {
-                    Debugger::log($ex, ILogger::WARNING);
-                    $this->onSkautIsError();
-                }
+                $this->skautIsService->updatePersonAddress(
+                    $this->user->getSkautISPersonId(),
+                    $this->user->getStreet(),
+                    $this->user->getCity(),
+                    $this->user->getPostcode(),
+                    $this->user->getState()
+                );
+            } catch (WsdlException $ex) {
+                Debugger::log($ex, ILogger::WARNING);
+                $this->onSkautIsError();
+            }
 
             //vytvoreni prihlasky
-                    $this->applicationService->register($this->user, $roles, $subevents, $this->user);
-            }
-        );
+            $this->applicationService->register($this->user, $roles, $subevents, $this->user);
+        });
     }
 
     /**
@@ -401,7 +397,6 @@ class ApplicationForm
 
     /**
      * Přidá select pro výběr podakcí.
-     *
      * @throws NonUniqueResultException
      */
     private function addSubeventsSelect(Form $form) : void
@@ -416,11 +411,11 @@ class ApplicationForm
             $subeventsOptions
         );
         $subeventsSelect
-                ->setRequired(false)
-                ->addRule([$this, 'validateSubeventsCapacities'], 'web.application_content.subevents_capacity_occupied');
+            ->setRequired(false)
+            ->addRule([$this, 'validateSubeventsCapacities'], 'web.application_content.subevents_capacity_occupied');
         $subeventsSelect
-                ->addConditionOn($form['roles'], [$this, 'toggleSubeventsRequired'])
-                ->addRule(Form::FILLED, 'web.application_content.subevents_empty');
+            ->addConditionOn($form['roles'], [$this, 'toggleSubeventsRequired'])
+            ->addRule(Form::FILLED, 'web.application_content.subevents_empty');
 
         //generovani chybovych hlasek pro vsechny kombinace podakci
         foreach ($this->subeventRepository->findAllExplicitOrderedByName() as $subevent) {
@@ -462,9 +457,9 @@ class ApplicationForm
         $rolesSelect = $form->addMultiSelect('roles', 'web.application_content.roles')->setItems(
             $registerableOptions
         )
-                ->addRule(Form::FILLED, 'web.application_content.roles_empty')
-                ->addRule([$this, 'validateRolesCapacities'], 'web.application_content.roles_capacity_occupied')
-                ->addRule([$this, 'validateRolesRegisterable'], 'web.application_content.role_is_not_registerable');
+            ->addRule(Form::FILLED, 'web.application_content.roles_empty')
+            ->addRule([$this, 'validateRolesCapacities'], 'web.application_content.roles_capacity_occupied')
+            ->addRule([$this, 'validateRolesRegisterable'], 'web.application_content.role_is_not_registerable');
 
         //generovani chybovych hlasek pro vsechny kombinace roli
         foreach ($this->roleRepository->findAllRegisterableNowOrUsersOrderedByName($this->user) as $role) {
@@ -500,8 +495,8 @@ class ApplicationForm
             $ids[] = (string) $role->getId();
         }
         $rolesSelect->addCondition(self::class . '::toggleArrivalDeparture', $ids)
-                ->toggle('arrivalInput')
-                ->toggle('departureInput');
+            ->toggle('arrivalInput')
+            ->toggle('departureInput');
 
         //pokud je na vyber jen jedna role, je oznacena
         if (count($registerableOptions) !== 1) {
@@ -518,10 +513,10 @@ class ApplicationForm
     private function addArrivalDeparture(Form $form) : void
     {
         $form->addDateTimePicker('arrival', 'web.application_content.arrival')
-                ->setOption('id', 'arrivalInput');
+            ->setOption('id', 'arrivalInput');
 
         $form->addDateTimePicker('departure', 'web.application_content.departure')
-                ->setOption('id', 'departureInput');
+            ->setOption('id', 'departureInput');
     }
 
     /**
@@ -544,7 +539,6 @@ class ApplicationForm
 
     /**
      * Ověří kompatibilitu podakcí.
-     *
      * @param Subevent[] $args
      */
     public function validateSubeventsIncompatible(MultiSelectBox $field, array $args) : bool
@@ -556,7 +550,6 @@ class ApplicationForm
 
     /**
      * Ověří výběr požadovaných podakcí.
-     *
      * @param Subevent[] $args
      */
     public function validateSubeventsRequired(MultiSelectBox $field, array $args) : bool
@@ -568,7 +561,6 @@ class ApplicationForm
 
     /**
      * Ověří kompatibilitu rolí.
-     *
      * @param Role[] $args
      */
     public function validateRolesIncompatible(MultiSelectBox $field, array $args) : bool
@@ -580,7 +572,6 @@ class ApplicationForm
 
     /**
      * Ověří výběr požadovaných rolí.
-     *
      * @param Role[] $args
      */
     public function validateRolesRequired(MultiSelectBox $field, array $args) : bool

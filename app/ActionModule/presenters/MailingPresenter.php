@@ -15,18 +15,19 @@ use Nette\Application\AbortException;
  * Presenter obsluhující potvrzení změny e-mailu.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class MailingPresenter extends ActionBasePresenter
 {
     /**
-     * @var    SettingsFacade
+     * @var SettingsFacade
      * @inject
      */
     public $settingsFacade;
 
+
     /**
      * Ověří e-mail semináře.
-     *
      * @throws SettingsException
      * @throws AbortException
      * @throws \Throwable

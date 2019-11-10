@@ -20,6 +20,7 @@ use function array_merge;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class ProgramRepository extends EntityRepository
 {
@@ -33,7 +34,6 @@ class ProgramRepository extends EntityRepository
 
     /**
      * Uloží program.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -45,7 +45,6 @@ class ProgramRepository extends EntityRepository
 
     /**
      * Odstraní program.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -57,40 +56,34 @@ class ProgramRepository extends EntityRepository
 
     /**
      * Vrací id podle programů.
-     *
-     * @param  Collection|Program[] $programs
+     * @param Collection|Program[] $programs
      * @return int[]
      */
     public function findProgramsIds(Collection $programs) : array
     {
-        return array_map(
-            function (Program $o) {
-                    return $o->getId();
-            },
-            $programs->toArray()
-        );
+        return array_map(function (Program $o) {
+            return $o->getId();
+        }, $programs->toArray());
     }
 
     /**
      * Vrací programy, na které je uživatel zapsaný a jsou v danné kategorii.
-     *
      * @return User[]
      */
     public function findUserRegisteredAndInCategory(User $user, Category $category) : array
     {
         return $this->createQueryBuilder('p')
-                        ->select('p')
-                        ->join('p.block', 'b')
-                        ->join('p.attendees', 'a')
-                        ->where('b.category = :category')->setParameter('category', $category)
-                        ->andWhere('a = :user')->setParameter('user', $user)
-                        ->getQuery()
-                        ->getResult();
+            ->select('p')
+            ->join('p.block', 'b')
+            ->join('p.attendees', 'a')
+            ->where('b.category = :category')->setParameter('category', $category)
+            ->andWhere('a = :user')->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
     }
 
     /**
      * Vrací programy zablokované (programy stejného bloku a překrývající se programy) přihlášením se na program.
-     *
      * @return int[]
      * @throws \Exception
      */
@@ -104,24 +97,22 @@ class ProgramRepository extends EntityRepository
 
     /**
      * Vrací programy stejného bloku.
-     *
      * @return int[]
      */
     public function findOtherProgramsWithSameBlockIds(Program $program) : array
     {
         $programs = $this->createQueryBuilder('p')
-                ->select('p.id')
-                ->join('p.block', 'b')
-                ->where('b.id = :bid')->setParameter('bid', $program->getBlock()->getId())
-                ->andWhere('p.id != :pid')->setParameter('pid', $program->getId())
-                ->getQuery()
-                ->getScalarResult();
+            ->select('p.id')
+            ->join('p.block', 'b')
+            ->where('b.id = :bid')->setParameter('bid', $program->getBlock()->getId())
+            ->andWhere('p.id != :pid')->setParameter('pid', $program->getId())
+            ->getQuery()
+            ->getScalarResult();
         return array_map('intval', array_map('current', $programs));
     }
 
     /**
      * Vrací programy s překrývajícím se časem.
-     *
      * @return int[]
      * @throws \Exception
      */
@@ -131,20 +122,18 @@ class ProgramRepository extends EntityRepository
         $end   = $program->getEnd();
 
         $programs = $this->createQueryBuilder('p')
-                ->select('p.id')
-                ->join('p.block', 'b')
-                ->where(
-                    $this->createQueryBuilder('p')->expr()->orX(
-                        "(p.start < :end) AND (DATE_ADD(p.start, (b.duration * 60), 'second') > :start)",
-                        "(p.start < :end) AND (:start < (DATE_ADD(p.start, (b.duration * 60), 'second')))"
-                    )
-                )
-                ->andWhere('p.id != :pid')
-                ->setParameter('start', $start)
-                ->setParameter('end', $end)
-                ->setParameter('pid', $program->getId())
-                ->getQuery()
-                ->getScalarResult();
+            ->select('p.id')
+            ->join('p.block', 'b')
+            ->where($this->createQueryBuilder()->expr()->orX(
+                "(p.start < :end) AND (DATE_ADD(p.start, (b.duration * 60), 'second') > :start)",
+                "(p.start < :end) AND (:start < (DATE_ADD(p.start, (b.duration * 60), 'second')))"
+            ))
+            ->andWhere('p.id != :pid')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->setParameter('pid', $program->getId())
+            ->getQuery()
+            ->getScalarResult();
         return array_map('intval', array_map('current', $programs));
     }
 
@@ -154,21 +143,19 @@ class ProgramRepository extends EntityRepository
     public function hasOverlappingProgram(?int $programId, \DateTime $start, \DateTime $end) : bool
     {
         $qb = $this->createQueryBuilder('p')
-                ->select('p.id')
-                ->join('p.block', 'b')
-                ->where(
-                    $this->createQueryBuilder('p')->expr()->orX(
-                        "(p.start < :end) AND (DATE_ADD(p.start, (b.duration * 60), 'second') > :start)",
-                        "(p.start < :end) AND (:start < (DATE_ADD(p.start, (b.duration * 60), 'second')))"
-                    )
-                )
-                ->setParameter('start', $start)
-                ->setParameter('end', $end);
+            ->select('p.id')
+            ->join('p.block', 'b')
+            ->where($this->createQueryBuilder()->expr()->orX(
+                "(p.start < :end) AND (DATE_ADD(p.start, (b.duration * 60), 'second') > :start)",
+                "(p.start < :end) AND (:start < (DATE_ADD(p.start, (b.duration * 60), 'second')))"
+            ))
+            ->setParameter('start', $start)
+            ->setParameter('end', $end);
 
         if ($programId) {
             $qb = $qb
-                    ->andWhere('p.id != :pid')
-                    ->setParameter('pid', $programId);
+                ->andWhere('p.id != :pid')
+                ->setParameter('pid', $programId);
         }
 
         return ! empty($qb->getQuery()->getResult());
@@ -180,23 +167,21 @@ class ProgramRepository extends EntityRepository
     public function hasOverlappingAutoRegisteredProgram(?int $programId, \DateTime $start, \DateTime $end) : bool
     {
         $qb = $this->createQueryBuilder('p')
-                ->select('p.id')
-                ->join('p.block', 'b')
-                ->where(
-                    $this->createQueryBuilder('p')->expr()->orX(
-                        "(p.start < :end) AND (DATE_ADD(p.start, (b.duration * 60), 'second') > :start)",
-                        "(p.start < :end) AND (:start < (DATE_ADD(p.start, (b.duration * 60), 'second')))"
-                    )
-                )
-                ->andWhere('b.mandatory = :auto_registered')
-                ->setParameter('start', $start)
-                ->setParameter('end', $end)
-                ->setParameter('auto_registered', ProgramMandatoryType::AUTO_REGISTERED);
+            ->select('p.id')
+            ->join('p.block', 'b')
+            ->where($this->createQueryBuilder()->expr()->orX(
+                "(p.start < :end) AND (DATE_ADD(p.start, (b.duration * 60), 'second') > :start)",
+                "(p.start < :end) AND (:start < (DATE_ADD(p.start, (b.duration * 60), 'second')))"
+            ))
+            ->andWhere('b.mandatory = :auto_registered')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->setParameter('auto_registered', ProgramMandatoryType::AUTO_REGISTERED);
 
         if ($programId) {
             $qb = $qb
-                    ->andWhere('p.id != :pid')
-                    ->setParameter('pid', $programId);
+                ->andWhere('p.id != :pid')
+                ->setParameter('pid', $programId);
         }
 
         return ! empty($qb->getQuery()->getResult());
@@ -204,22 +189,21 @@ class ProgramRepository extends EntityRepository
 
     /**
      * Vrací programy povolené pro kategorie a podakce.
-     *
-     * @param  Collection|Category[] $categories
-     * @param  Collection|Subevent[] $subevents
+     * @param Collection|Category[] $categories
+     * @param Collection|Subevent[] $subevents
      * @return Collection|Program[]
      */
     public function findAllowedForCategoriesAndSubevents(Collection $categories, Collection $subevents) : Collection
     {
         $result = $this->createQueryBuilder('p')
-                ->select('p')
-                ->join('p.block', 'b')
-                ->leftJoin('b.category', 'c')
-                ->leftJoin('b.subevent', 's')
-                ->where('(b.category IS NULL OR c IN (:categories))')->setParameter('categories', $categories)
-                ->andWhere('s IN (:subevents)')->setParameter('subevents', $subevents)
-                ->getQuery()
-                ->getResult();
+            ->select('p')
+            ->join('p.block', 'b')
+            ->leftJoin('b.category', 'c')
+            ->leftJoin('b.subevent', 's')
+            ->where('(b.category IS NULL OR c IN (:categories))')->setParameter('categories', $categories)
+            ->andWhere('s IN (:subevents)')->setParameter('subevents', $subevents)
+            ->getQuery()
+            ->getResult();
 
         return new ArrayCollection($result);
     }
@@ -227,14 +211,14 @@ class ProgramRepository extends EntityRepository
     public function incrementOccupancy(Program $program) : void
     {
         $this->createQuery('UPDATE App\Model\Program\Program p SET p.occupancy = p.occupancy + 1 WHERE p.id = :pid')
-                ->setParameter('pid', $program->getId())
-                ->getResult();
+            ->setParameter('pid', $program->getId())
+            ->getResult();
     }
 
     public function decrementOccupancy(Program $program) : void
     {
         $this->createQuery('UPDATE App\Model\Program\Program p SET p.occupancy = p.occupancy - 1 WHERE p.id = :pid')
-                ->setParameter('pid', $program->getId())
-                ->getResult();
+            ->setParameter('pid', $program->getId())
+            ->getResult();
     }
 }

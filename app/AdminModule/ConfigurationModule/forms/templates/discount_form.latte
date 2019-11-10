@@ -1,106 +1,107 @@
 <script>
-	$(function () {
-		var condition = $('input[name=condition]');
-		var conditionText = $('textarea[name=conditionText]');
+    $(function () {
+        var condition = $('input[name=condition]');
+        var conditionText = $('textarea[name=conditionText]');
 
-		var buttonSubevent = $('#button-subevent');
-		var buttonSubevents = $('.button-subevents');
-		var buttonAnd = $('#button-and');
-		var buttonOr = $('#button-or');
-		var buttonLeftParenthesis = $('#button-left-parenthesis');
-		var buttonRightParenthesis = $('#button-right-parenthesis');
-		var buttonClear = $('#button-clear');
+        var buttonSubevent = $('#button-subevent');
+        var buttonSubevents = $('.button-subevents');
+        var buttonAnd = $('#button-and');
+        var buttonOr = $('#button-or');
+        var buttonLeftParenthesis = $('#button-left-parenthesis');
+        var buttonRightParenthesis = $('#button-right-parenthesis');
+        var buttonClear = $('#button-clear');
 
-		var openedParenthesisCount = 0;
+        var openedParenthesisCount = 0;
 
-		if (condition.val()) {
-			buttonSubevent.addClass('disabled');
-			buttonLeftParenthesis.addClass('disabled');
-			buttonRightParenthesis.addClass('disabled');
-		} else {
-			buttonAnd.addClass('disabled');
-			buttonOr.addClass('disabled');
-			buttonRightParenthesis.addClass('disabled');
-		}
+        if (condition.val()) {
+            buttonSubevent.addClass('disabled');
+            buttonLeftParenthesis.addClass('disabled');
+            buttonRightParenthesis.addClass('disabled');
+        }
+        else {
+            buttonAnd.addClass('disabled');
+            buttonOr.addClass('disabled');
+            buttonRightParenthesis.addClass('disabled');
+        }
 
-		buttonSubevents.on('click', function () {
-			condition.val(condition.val() + this.dataset.id + '|');
-			conditionText.val(conditionText.val() + '"' + this.dataset.name + '"');
+        buttonSubevents.on('click', function () {
+            condition.val(condition.val() + this.dataset.id + '|');
+            conditionText.val(conditionText.val() + '"' + this.dataset.name + '"');
 
-			buttonSubevent.addClass('disabled');
-			buttonAnd.removeClass('disabled');
-			buttonOr.removeClass('disabled');
-			buttonLeftParenthesis.addClass('disabled');
-			if (openedParenthesisCount > 0)
-				buttonRightParenthesis.removeClass('disabled');
-			else
-				buttonRightParenthesis.addClass('disabled');
-		});
+            buttonSubevent.addClass('disabled');
+            buttonAnd.removeClass('disabled');
+            buttonOr.removeClass('disabled');
+            buttonLeftParenthesis.addClass('disabled');
+            if (openedParenthesisCount > 0)
+                buttonRightParenthesis.removeClass('disabled');
+            else
+                buttonRightParenthesis.addClass('disabled');
+        });
 
-		buttonAnd.on('click', function () {
-			condition.val(condition.val() + 'and|');
-			conditionText.val(conditionText.val() + ' ' + {_common.condition_operator.and} + ' ');
+        buttonAnd.on('click', function () {
+            condition.val(condition.val() + 'and|');
+            conditionText.val(conditionText.val() + ' ' + {_common.condition_operator.and} +' ');
 
-			buttonSubevent.removeClass('disabled');
-			buttonAnd.addClass('disabled');
-			buttonOr.addClass('disabled');
-			buttonLeftParenthesis.removeClass('disabled');
-			buttonRightParenthesis.addClass('disabled');
-		});
+            buttonSubevent.removeClass('disabled');
+            buttonAnd.addClass('disabled');
+            buttonOr.addClass('disabled');
+            buttonLeftParenthesis.removeClass('disabled');
+            buttonRightParenthesis.addClass('disabled');
+        });
 
-		buttonOr.on('click', function () {
-			condition.val(condition.val() + 'or|');
-			conditionText.val(conditionText.val() + ' ' + {_common.condition_operator.or} + ' ');
+        buttonOr.on('click', function () {
+            condition.val(condition.val() + 'or|');
+            conditionText.val(conditionText.val() + ' ' + {_common.condition_operator.or} +' ');
 
-			buttonSubevent.removeClass('disabled');
-			buttonAnd.addClass('disabled');
-			buttonOr.addClass('disabled');
-			buttonLeftParenthesis.removeClass('disabled');
-			buttonRightParenthesis.addClass('disabled');
-		});
+            buttonSubevent.removeClass('disabled');
+            buttonAnd.addClass('disabled');
+            buttonOr.addClass('disabled');
+            buttonLeftParenthesis.removeClass('disabled');
+            buttonRightParenthesis.addClass('disabled');
+        });
 
-		buttonLeftParenthesis.on('click', function () {
-			condition.val(condition.val() + '(|');
-			conditionText.val(conditionText.val() + '(');
+        buttonLeftParenthesis.on('click', function () {
+            condition.val(condition.val() + '(|');
+            conditionText.val(conditionText.val() + '(');
 
-			openedParenthesisCount++;
+            openedParenthesisCount++;
 
-			buttonSubevent.removeClass('disabled');
-			buttonAnd.addClass('disabled');
-			buttonOr.addClass('disabled');
-			buttonLeftParenthesis.removeClass('disabled');
-			buttonRightParenthesis.addClass('disabled');
-		});
+            buttonSubevent.removeClass('disabled');
+            buttonAnd.addClass('disabled');
+            buttonOr.addClass('disabled');
+            buttonLeftParenthesis.removeClass('disabled');
+            buttonRightParenthesis.addClass('disabled');
+        });
 
-		buttonRightParenthesis.on('click', function () {
-			condition.val(condition.val() + ')|');
-			conditionText.val(conditionText.val() + ')');
+        buttonRightParenthesis.on('click', function () {
+            condition.val(condition.val() + ')|');
+            conditionText.val(conditionText.val() + ')');
 
-			openedParenthesisCount--;
+            openedParenthesisCount--;
 
-			buttonSubevent.addClass('disabled');
-			buttonAnd.removeClass('disabled');
-			buttonOr.removeClass('disabled');
-			buttonLeftParenthesis.addClass('disabled');
-			if (openedParenthesisCount > 0)
-				buttonRightParenthesis.removeClass('disabled');
-			else
-				buttonRightParenthesis.addClass('disabled');
-		});
+            buttonSubevent.addClass('disabled');
+            buttonAnd.removeClass('disabled');
+            buttonOr.removeClass('disabled');
+            buttonLeftParenthesis.addClass('disabled');
+            if (openedParenthesisCount > 0)
+                buttonRightParenthesis.removeClass('disabled');
+            else
+                buttonRightParenthesis.addClass('disabled');
+        });
 
-		buttonClear.on('click', function () {
-			condition.val('');
-			conditionText.val('');
+        buttonClear.on('click', function () {
+            condition.val('');
+            conditionText.val('');
 
-			openedParenthesisCount = 0;
+            openedParenthesisCount = 0;
 
-			buttonSubevent.removeClass('disabled');
-			buttonAnd.addClass('disabled');
-			buttonOr.addClass('disabled');
-			buttonLeftParenthesis.removeClass('disabled');
-			buttonRightParenthesis.addClass('disabled');
-		});
-	});
+            buttonSubevent.removeClass('disabled');
+            buttonAnd.addClass('disabled');
+            buttonOr.addClass('disabled');
+            buttonLeftParenthesis.removeClass('disabled');
+            buttonRightParenthesis.addClass('disabled');
+        });
+    });
 </script>
 
 {form form class => form-horizontal}

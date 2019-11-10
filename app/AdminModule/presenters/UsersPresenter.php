@@ -36,58 +36,59 @@ class UsersPresenter extends AdminBasePresenter
     protected $resource = Resource::USERS;
 
     /**
-     * @var    IUsersGridControlFactory
+     * @var IUsersGridControlFactory
      * @inject
      */
     public $usersGridControlFactory;
 
     /**
-     * @var    AddLectorForm
+     * @var AddLectorForm
      * @inject
      */
     public $addLectorFormFactory;
 
     /**
-     * @var    EditUserPersonalDetailsForm
+     * @var EditUserPersonalDetailsForm
      * @inject
      */
     public $editUserPersonalDetailsFormFactory;
 
     /**
-     * @var    EditUserSeminarForm
+     * @var EditUserSeminarForm
      * @inject
      */
     public $editUserSeminarFormFactory;
 
     /**
-     * @var    IApplicationsGridControlFactory
+     * @var IApplicationsGridControlFactory
      * @inject
      */
     public $applicationsGridControlFactory;
 
     /**
-     * @var    PdfExportService
+     * @var PdfExportService
      * @inject
      */
     public $pdfExportService;
 
     /**
-     * @var    ExcelExportService
+     * @var ExcelExportService
      * @inject
      */
     public $excelExportService;
 
     /**
-     * @var    CustomInputRepository
+     * @var CustomInputRepository
      * @inject
      */
     public $customInputRepository;
 
     /**
-     * @var    ApplicationService
+     * @var ApplicationService
      * @inject
      */
     public $applicationService;
+
 
     /**
      * @throws AbortException
@@ -137,7 +138,6 @@ class UsersPresenter extends AdminBasePresenter
 
     /**
      * Zobrazí formulář pro editaci osobních údajů uživatele.
-     *
      * @throws AbortException
      */
     public function handleEditPersonalDetails() : void
@@ -153,7 +153,6 @@ class UsersPresenter extends AdminBasePresenter
 
     /**
      * Zobrazí formulář pro editaci údajů o účasti uživatele na semináři.
-     *
      * @throws AbortException
      */
     public function handleEditSeminar() : void
@@ -169,7 +168,6 @@ class UsersPresenter extends AdminBasePresenter
 
     /**
      * Zobrazí formulář pro editaci údajů o platbě uživatele.
-     *
      * @throws AbortException
      */
     public function handleEditPayment() : void

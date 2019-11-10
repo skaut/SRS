@@ -14,6 +14,7 @@ use function array_map;
  * Třída spravující prostředky.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class ResourceFacade
 {

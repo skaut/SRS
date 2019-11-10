@@ -12,6 +12,7 @@ use Doctrine\ORM\ORMException;
  * Třída spravující mapové body.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class PlacePointRepository extends EntityRepository
 {

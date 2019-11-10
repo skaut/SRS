@@ -20,6 +20,7 @@ abstract class ProgramBasePresenter extends AdminBasePresenter
     /** @var string */
     protected $resource = Resource::PROGRAM;
 
+
     /**
      * @throws AbortException
      */

@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Entita hodnota vlastního textového pole přihlášky.
  *
- * @author                              Jan Staněk <jan.stanek@skaut.cz>
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity
  * @ORM\Table(name="custom_text_value")
  */
@@ -17,11 +17,11 @@ class CustomTextValue extends CustomInputValue
 {
     /**
      * Hodnota textového pole přihlášky.
-     *
      * @ORM\Column(type="string")
-     * @var                       string
+     * @var string
      */
     protected $value;
+
 
     public function getValue() : ?string
     {

@@ -19,8 +19,9 @@ use function in_array;
 /**
  * Entita stránky.
  *
- * @author                                       Michal Májský
- * @author                                       Jan Staněk <jan.stanek@skaut.cz>
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="PageRepository")
  * @ORM\Table(name="page")
  */
@@ -30,52 +31,47 @@ class Page
 
     /**
      * Název stránky.
-     *
      * @ORM\Column(type="string")
-     * @var                       string
+     * @var string
      */
     protected $name;
 
     /**
      * Cesta stránky.
-     *
      * @ORM\Column(type="string", unique=true)
-     * @var                       string
+     * @var string
      */
     protected $slug;
 
     /**
      * Pořadí v menu.
-     *
      * @ORM\Column(type="integer")
-     * @var                        int
+     * @var int
      */
     protected $position = 0;
 
     /**
      * Viditelná.
-     *
      * @ORM\Column(type="boolean")
-     * @var                        bool
+     * @var bool
      */
     protected $public = false;
 
     /**
      * Role, které mají na stránku přístup.
-     *
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="pages", cascade={"persist"})
-     * @var                                                Collection|Role[]
+     * @var Collection|Role[]
      */
     protected $roles;
 
     /**
      * Obsahy na stránce.
-     *
      * @ORM\OneToMany(targetEntity="\App\Model\CMS\Content\Content", mappedBy="page", cascade={"persist"})
-     * @ORM\OrderBy({"position"                                      = "ASC"})
-     * @var                                                          Collection|Content[]
+     * @ORM\OrderBy({"position" = "ASC"})
+     * @var Collection|Content[]
      */
     protected $contents;
+
 
     public function __construct(string $name, string $slug)
     {
@@ -140,14 +136,9 @@ class Page
 
     public function getRolesText() : string
     {
-        return implode(
-            ', ',
-            $this->roles->map(
-                function (Role $role) {
-                            return $role->getName();
-                }
-            )->toArray()
-        );
+        return implode(', ', $this->roles->map(function (Role $role) {
+            return $role->getName();
+        })->toArray());
     }
 
     /**
@@ -168,7 +159,6 @@ class Page
 
     /**
      * Vrací obsahy v oblasti.
-     *
      * @return Collection|Content[]
      * @throws PageException
      */
@@ -181,8 +171,8 @@ class Page
             throw new PageException('Area ' . $area . ' not defined.');
         }
         $criteria = Criteria::create()
-                ->where(Criteria::expr()->eq('area', $area))
-                ->orderBy(['position' => 'ASC']);
+            ->where(Criteria::expr()->eq('area', $area))
+            ->orderBy(['position' => 'ASC']);
         return $this->contents->matching($criteria);
     }
 
@@ -191,12 +181,9 @@ class Page
      */
     public function convertToDTO() : PageDTO
     {
-        $allowedRoles = array_map(
-            function (Role $role) {
-                    return $role->getName();
-            },
-            $this->roles->toArray()
-        );
+        $allowedRoles = array_map(function (Role $role) {
+            return $role->getName();
+        }, $this->roles->toArray());
 
         $mainContents = [];
         foreach ($this->getContents(Content::MAIN)->toArray() as $content) {

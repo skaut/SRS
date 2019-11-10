@@ -53,6 +53,7 @@ use function explode;
  * Komponenta pro správu rolí.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class UsersGridControl extends Control
 {
@@ -116,6 +117,7 @@ class UsersGridControl extends Control
     /** @var SkautIsEventGeneralService */
     private $skautIsEventGeneralService;
 
+
     public function __construct(
         Translator $translator,
         EntityManagerDecorator $em,
@@ -172,7 +174,6 @@ class UsersGridControl extends Control
 
     /**
      * Vytvoří komponentu.
-     *
      * @throws SettingsException
      * @throws \Throwable
      * @throws DataGridColumnStatusException
@@ -189,29 +190,29 @@ class UsersGridControl extends Control
         $grid->setStrictSessionFilterValues(false);
 
         $grid->addGroupAction('admin.users.users_group_action_approve')
-                ->onSelect[] = [$this, 'groupApprove'];
+            ->onSelect[] = [$this, 'groupApprove'];
 
         $grid->addGroupMultiSelectAction(
             'admin.users.users_group_action_change_roles',
             $this->roleRepository->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED])
         )
-                ->onSelect[] = [$this, 'groupChangeRoles'];
+            ->onSelect[] = [$this, 'groupChangeRoles'];
 
         $grid->addGroupAction('admin.users.users_group_action_mark_attended')
-                ->onSelect[] = [$this, 'groupMarkAttended'];
+            ->onSelect[] = [$this, 'groupMarkAttended'];
 
         $grid->addGroupAction('admin.users.users_group_action_mark_paid_today', $this->preparePaymentMethodOptionsWithoutEmpty())
-                ->onSelect[] = [$this, 'groupMarkPaidToday'];
+            ->onSelect[] = [$this, 'groupMarkPaidToday'];
 
         switch ($this->settingsFacade->getValue(Settings::SKAUTIS_EVENT_TYPE)) {
             case SkautIsEventType::GENERAL:
                 $grid->addGroupAction('admin.users.users_group_action_insert_into_skaut_is')
-                        ->onSelect[] = [$this, 'groupInsertIntoSkautIs'];
+                    ->onSelect[] = [$this, 'groupInsertIntoSkautIs'];
                 break;
 
             case SkautIsEventType::EDUCATION:
                 $grid->addGroupAction('admin.users.users_group_action_insert_into_skaut_is', $this->prepareInsertIntoSkautIsOptions())
-                        ->onSelect[] = [$this, 'groupInsertIntoSkautIs'];
+                    ->onSelect[] = [$this, 'groupInsertIntoSkautIs'];
                 break;
 
             default:
@@ -219,310 +220,274 @@ class UsersGridControl extends Control
         }
 
         $grid->addGroupAction('admin.users.users_group_action_generate_payment_proofs')
-                ->onSelect[] = [$this, 'groupGeneratePaymentProofs'];
+            ->onSelect[] = [$this, 'groupGeneratePaymentProofs'];
 
         $grid->addGroupAction('admin.users.users_group_action_export_users')
-                ->onSelect[] = [$this, 'groupExportUsers'];
+            ->onSelect[] = [$this, 'groupExportUsers'];
 
         $grid->addGroupAction('admin.users.users_group_action_export_subevents_and_categories')
-                ->onSelect[] = [$this, 'groupExportSubeventsAndCategories'];
+            ->onSelect[] = [$this, 'groupExportSubeventsAndCategories'];
 
         $grid->addGroupAction('admin.users.users_group_action_export_roles')
-                ->onSelect[] = [$this, 'groupExportRoles'];
+            ->onSelect[] = [$this, 'groupExportRoles'];
 
         $grid->addGroupAction('admin.users.users_group_action_export_schedules')
-                ->onSelect[] = [$this, 'groupExportSchedules'];
+            ->onSelect[] = [$this, 'groupExportSchedules'];
 
         $grid->addColumnText('displayName', 'admin.users.users_name')
-                ->setSortable()
-                ->setFilterText();
+            ->setSortable()
+            ->setFilterText();
 
         $grid->addColumnText('username', 'admin.users.users_username')
-                ->setSortable()
-                ->setFilterText();
+            ->setSortable()
+            ->setFilterText();
 
         $grid->addColumnText('roles', 'admin.users.users_roles', 'rolesText')
-                ->setFilterMultiSelect($this->roleRepository->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED]))
-                ->setCondition(
-                    function ($qb, $values) : void {
-                            $qb->join('u.roles', 'uR')
-                            ->andWhere('uR.id IN (:rids)')
-                            ->setParameter('rids', $values);
-                    }
-                );
+            ->setFilterMultiSelect($this->roleRepository->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED]))
+            ->setCondition(function ($qb, $values) : void {
+                $qb->join('u.roles', 'uR')
+                    ->andWhere('uR.id IN (:rids)')
+                    ->setParameter('rids', $values);
+            });
 
         $grid->addColumnText('subevents', 'admin.users.users_subevents', 'subeventsText')
-                ->setFilterMultiSelect($this->subeventRepository->getSubeventsOptions())
-                ->setCondition(
-                    function ($qb, $values) : void {
-                            $qb->join('u.applications', 'uA')
-                            ->join('uA.subevents', 'uAS')
-                            ->andWhere('uAS.id IN (:sids)')
-                            ->andWhere('uA.validTo IS NULL')
-                            ->andWhere('uA.state IN (:states)')
-                            ->setParameter('sids', $values)
-                            ->setParameter('states', [ApplicationState::PAID, ApplicationState::PAID_FREE, ApplicationState::WAITING_FOR_PAYMENT]);
-                    }
-                );
+            ->setFilterMultiSelect($this->subeventRepository->getSubeventsOptions())
+            ->setCondition(function ($qb, $values) : void {
+                $qb->join('u.applications', 'uA')
+                    ->join('uA.subevents', 'uAS')
+                    ->andWhere('uAS.id IN (:sids)')
+                    ->andWhere('uA.validTo IS NULL')
+                    ->andWhere('uA.state IN (:states)')
+                    ->setParameter('sids', $values)
+                    ->setParameter('states', [ApplicationState::PAID, ApplicationState::PAID_FREE, ApplicationState::WAITING_FOR_PAYMENT]);
+            });
 
-        $columnApproved      = $grid->addColumnStatus('approved', 'admin.users.users_approved');
+        $columnApproved  = $grid->addColumnStatus('approved', 'admin.users.users_approved');
         $columnApproved
-                        ->addOption(false, 'admin.users.users_approved_unapproved')
-                        ->setClass('btn-danger')
-                        ->endOption()
-                        ->addOption(true, 'admin.users.users_approved_approved')
-                        ->setClass('btn-success')
-                        ->endOption()
-                ->onChange[] = [$this, 'changeApproved'];
+            ->addOption(false, 'admin.users.users_approved_unapproved')
+            ->setClass('btn-danger')
+            ->endOption()
+            ->addOption(true, 'admin.users.users_approved_approved')
+            ->setClass('btn-success')
+            ->endOption()
+            ->onChange[] = [$this, 'changeApproved'];
         $columnApproved
-                ->setSortable()
-                ->setFilterSelect(
-                    [
-                            '' => 'admin.common.all',
-                            '0' => 'admin.users.users_approved_unapproved',
-                            '1' => 'admin.users.users_approved_approved',
-                        ]
-                )
-                ->setTranslateOptions();
+            ->setSortable()
+            ->setFilterSelect([
+                '' => 'admin.common.all',
+                '0' => 'admin.users.users_approved_unapproved',
+                '1' => 'admin.users.users_approved_approved',
+            ])
+            ->setTranslateOptions();
 
         $grid->addColumnText('unit', 'admin.users.users_membership')
-                ->setRendererOnCondition(
-                    function (User $row) {
-                            return Html::el('span')
-                            ->style('color: red')
-                            ->setText($this->userService->getMembershipText($row));
-                    },
-                    function ($row) {
-                            return $row->getUnit() === null;
-                    }
-                )
-                ->setSortable()
-                ->setSortableCallback(
-                    function (QueryBuilder $qb, array $sort) : void {
-                            $sortOrig = $sort['unit'];
-                            $sortRev  = $sort['unit'] === 'DESC' ? 'ASC' : 'DESC';
-                            $qb->orderBy('u.unit', $sortOrig)
-                            ->addOrderBy('u.externalLector', $sortRev)
-                            ->addOrderBy('u.member', $sortRev);
-                    }
-                )
-                ->setFilterText();
+            ->setRendererOnCondition(function (User $row) {
+                return Html::el('span')
+                    ->style('color: red')
+                    ->setText($this->userService->getMembershipText($row));
+            }, function ($row) {
+                return $row->getUnit() === null;
+            })
+            ->setSortable()
+            ->setSortableCallback(function (QueryBuilder $qb, array $sort) : void {
+                $sortOrig = $sort['unit'];
+                $sortRev  = $sort['unit'] === 'DESC' ? 'ASC' : 'DESC';
+                $qb->orderBy('u.unit', $sortOrig)
+                    ->addOrderBy('u.externalLector', $sortRev)
+                    ->addOrderBy('u.member', $sortRev);
+            })
+            ->setFilterText();
 
         $grid->addColumnNumber('age', 'admin.users.users_age')
-                ->setSortable()
-                ->setSortableCallback(
-                    function (QueryBuilder $qb, array $sort) : void {
-                            $sortRev = $sort['age'] === 'DESC' ? 'ASC' : 'DESC';
-                            $qb->orderBy('u.birthdate', $sortRev);
-                    }
-                );
+            ->setSortable()
+            ->setSortableCallback(function (QueryBuilder $qb, array $sort) : void {
+                $sortRev = $sort['age'] === 'DESC' ? 'ASC' : 'DESC';
+                $qb->orderBy('u.birthdate', $sortRev);
+            });
 
         $grid->addColumnText('email', 'admin.users.users_email')
-                ->setRenderer(
-                    function (User $row) {
-                            return Html::el('a')
-                            ->href('mailto:' . $row->getEmail())
-                            ->setText($row->getEmail());
-                    }
-                )
-                ->setSortable()
-                ->setFilterText();
+            ->setRenderer(function (User $row) {
+                return Html::el('a')
+                    ->href('mailto:' . $row->getEmail())
+                    ->setText($row->getEmail());
+            })
+            ->setSortable()
+            ->setFilterText();
 
         $grid->addColumnText('city', 'admin.users.users_city')
-                ->setSortable()
-                ->setFilterText();
+            ->setSortable()
+            ->setFilterText();
 
         $grid->addColumnNumber('fee', 'admin.users.users_fee')
-                ->setSortable();
+            ->setSortable();
 
         $grid->addColumnNumber('feeRemaining', 'admin.users.users_fee_remaining')
-                ->setSortable();
+            ->setSortable();
 
         $grid->addColumnText('variableSymbol', 'admin.users.users_variable_symbol', 'variableSymbolsText')
-                ->setFilterText()
-                ->setCondition(
-                    function (QueryBuilder $qb, $value) : void {
-                            $qb->join('u.applications', 'uAVS')
-                            ->join('uAVS.variableSymbol', 'uAVSVS')
-                            ->andWhere('uAVSVS.variableSymbol LIKE :variableSymbol')
-                            ->setParameter(':variableSymbol', $value . '%');
-                    }
-                );
+            ->setFilterText()
+            ->setCondition(function (QueryBuilder $qb, $value) : void {
+                $qb->join('u.applications', 'uAVS')
+                    ->join('uAVS.variableSymbol', 'uAVSVS')
+                    ->andWhere('uAVSVS.variableSymbol LIKE :variableSymbol')
+                    ->setParameter(':variableSymbol', $value . '%');
+            });
 
         $grid->addColumnText('paymentMethod', 'admin.users.users_payment_method')
-                ->setRenderer(
-                    function (User $user) {
-                            return $user->getPaymentMethod() ? $this->translator->translate('common.payment.' . $user->getPaymentMethod()) : '';
-                    }
-                )
-                ->setFilterMultiSelect($this->preparePaymentMethodOptionsWithMixed())
-                ->setTranslateOptions();
+            ->setRenderer(function (User $user) {
+                return $user->getPaymentMethod() ? $this->translator->translate('common.payment.' . $user->getPaymentMethod()) : '';
+            })
+            ->setFilterMultiSelect($this->preparePaymentMethodOptionsWithMixed())
+            ->setTranslateOptions();
 
         $grid->addColumnDateTime('lastPaymentDate', 'admin.users.users_last_payment_date')
-                ->setSortable();
+            ->setSortable();
 
         $grid->addColumnDateTime('rolesApplicationDate', 'admin.users.users_roles_application_date')
-                ->setFormat(Helpers::DATETIME_FORMAT)
-                ->setSortable();
+            ->setFormat(Helpers::DATETIME_FORMAT)
+            ->setSortable();
 
-        $columnAttended      = $grid->addColumnStatus('attended', 'admin.users.users_attended');
+        $columnAttended  = $grid->addColumnStatus('attended', 'admin.users.users_attended');
         $columnAttended
-                        ->addOption(false, 'admin.users.users_attended_no')
-                        ->setClass('btn-danger')
-                        ->endOption()
-                        ->addOption(true, 'admin.users.users_attended_yes')
-                        ->setClass('btn-success')
-                        ->endOption()
-                ->onChange[] = [$this, 'changeAttended'];
+            ->addOption(false, 'admin.users.users_attended_no')
+            ->setClass('btn-danger')
+            ->endOption()
+            ->addOption(true, 'admin.users.users_attended_yes')
+            ->setClass('btn-success')
+            ->endOption()
+            ->onChange[] = [$this, 'changeAttended'];
         $columnAttended
-                ->setSortable()
-                ->setFilterSelect(
-                    [
-                            '' => 'admin.common.all',
-                            '0' => 'admin.users.users_attended_no',
-                            '1' => 'admin.users.users_attended_yes',
-                        ]
-                )
-                ->setTranslateOptions();
+            ->setSortable()
+            ->setFilterSelect([
+                '' => 'admin.common.all',
+                '0' => 'admin.users.users_attended_no',
+                '1' => 'admin.users.users_attended_yes',
+            ])
+            ->setTranslateOptions();
 
         $grid->addColumnText('notRegisteredMandatoryBlocksCount', 'admin.users.users_not_registered_mandatory_blocks')
-                ->setRenderer(
-                    function (User $user) {
-                            return Html::el('span')
-                            ->setAttribute('data-toggle', 'tooltip')
-                            ->setAttribute('title', $user->getNotRegisteredMandatoryBlocksText())
-                            ->setText($user->getNotRegisteredMandatoryBlocksCount());
-                    }
-                )
-                ->setSortable();
+            ->setRenderer(function (User $user) {
+                return Html::el('span')
+                    ->setAttribute('data-toggle', 'tooltip')
+                    ->setAttribute('title', $user->getNotRegisteredMandatoryBlocksText())
+                    ->setText($user->getNotRegisteredMandatoryBlocksCount());
+            })
+            ->setSortable();
 
         foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
             $columnCustomInputName = 'customInput' . $customInput->getId();
 
             $columnCustomInput = $grid->addColumnText($columnCustomInputName, Helpers::truncate($customInput->getName(), 20))
-                    ->setRenderer(
-                        function (User $user) use ($customInput) {
-                            $customInputValue = $user->getCustomInputValue($customInput);
-                            if ($customInputValue) {
-                                switch ($customInput->getType()) {
-                                    case CustomInput::TEXT:
-                                        return Helpers::truncate($customInputValue->getValue(), 20);
+                ->setRenderer(function (User $user) use ($customInput) {
+                    $customInputValue = $user->getCustomInputValue($customInput);
+                    if ($customInputValue) {
+                        switch ($customInput->getType()) {
+                            case CustomInput::TEXT:
+                                return Helpers::truncate($customInputValue->getValue(), 20);
 
-                                    case CustomInput::CHECKBOX:
-                                        return $customInputValue->getValue() ? $this->translator->translate('admin.common.yes') : $this->translator->translate('admin.common.no');
+                            case CustomInput::CHECKBOX:
+                                return $customInputValue->getValue()
+                                    ? $this->translator->translate('admin.common.yes')
+                                    : $this->translator->translate('admin.common.no');
 
-                                    case CustomInput::SELECT:
-                                        return $customInputValue->getValueOption();
+                            case CustomInput::SELECT:
+                                return $customInputValue->getValueOption();
 
-                                    case CustomInput::FILE:
-                                        return $customInputValue->getValue() ? Html::el('a')
-                                    ->setAttribute(
-                                        'href',
-                                        $this->getPresenter()->getTemplate()->basePath
-                                            . '/files' . $customInputValue->getValue()
-                                    )
-                                            ->setAttribute('title', array_values(array_slice(explode('/', $customInputValue->getValue()), -1))[0])
-                                            ->setAttribute('target', '_blank')
-                                            ->setAttribute('class', 'btn btn-xs btn-default')
-                                            ->addHtml(
-                                                Html::el('span')->setAttribute('class', 'fa fa-download')
-                                            ) : '';
-                                }
-                            }
-                            return null;
+                            case CustomInput::FILE:
+                                return $customInputValue->getValue()
+                                    ? Html::el('a')
+                                        ->setAttribute('href', $this->getPresenter()->getTemplate()->basePath
+                                            . '/files' . $customInputValue->getValue())
+                                        ->setAttribute('title', array_values(array_slice(explode('/', $customInputValue->getValue()), -1))[0])
+                                        ->setAttribute('target', '_blank')
+                                        ->setAttribute('class', 'btn btn-xs btn-default')
+                                        ->addHtml(
+                                            Html::el('span')->setAttribute('class', 'fa fa-download')
+                                        )
+                                    : '';
                         }
-                    );
+                    }
+                    return null;
+                });
 
             switch ($customInput->getType()) {
                 case CustomInput::TEXT:
                     $columnCustomInput->setSortable()
-                            ->setSortableCallback(
-                                function (QueryBuilder $qb, array $sort) use ($customInput, $columnCustomInputName) : void {
-                                        $qb->leftJoin('u.customInputValues', 'uCIV1')
-                                        ->leftJoin('uCIV1.input', 'uCIVI1')
-                                        ->leftJoin('App\Model\User\CustomInputValue\CustomTextValue', 'uCTV', 'WITH', 'uCIV1.id = uCTV.id')
-                                        ->andWhere('uCIVI1.id = :iid1 OR uCIVI1.id IS NULL')
-                                        ->setParameter('iid1', $customInput->getId())
-                                        ->orderBy('uCTV.value', $sort[$columnCustomInputName]);
-                                }
-                            );
+                        ->setSortableCallback(function (QueryBuilder $qb, array $sort) use ($customInput, $columnCustomInputName) : void {
+                            $qb->leftJoin('u.customInputValues', 'uCIV1')
+                                ->leftJoin('uCIV1.input', 'uCIVI1')
+                                ->leftJoin('App\Model\User\CustomInputValue\CustomTextValue', 'uCTV', 'WITH', 'uCIV1.id = uCTV.id')
+                                ->andWhere('uCIVI1.id = :iid1 OR uCIVI1.id IS NULL')
+                                ->setParameter('iid1', $customInput->getId())
+                                ->orderBy('uCTV.value', $sort[$columnCustomInputName]);
+                        });
                     break;
 
                 case CustomInput::CHECKBOX:
                     $columnCustomInput->setFilterSelect(['' => 'admin.common.all', 1 => 'admin.common.yes', 0 => 'admin.common.no'])
-                            ->setCondition(
-                                function (QueryBuilder $qb, string $value) use ($customInput) : void {
-                                    if ($value === '') {
-                                        return;
-                                    } else {
-                                        $qb->leftJoin('u.customInputValues', 'uCIV2')
-                                        ->leftJoin('uCIV2.input', 'uCIVI2')
-                                        ->leftJoin('App\Model\User\CustomInputValue\CustomCheckboxValue', 'uCCV', 'WITH', 'uCIV2.id = uCCV.id')
-                                        ->andWhere('uCIVI2.id = :iid2 OR uCIVI2.id IS NULL')
-                                        ->andWhere('uCCV.value = :ivalue2')
-                                        ->setParameter('iid2', $customInput->getId())
-                                        ->setParameter('ivalue2', $value);
-                                    }
-                                }
-                            )
-                            ->setTranslateOptions();
+                        ->setCondition(function (QueryBuilder $qb, string $value) use ($customInput) : void {
+                            if ($value === '') {
+                                return;
+                            } else {
+                                $qb->leftJoin('u.customInputValues', 'uCIV2')
+                                    ->leftJoin('uCIV2.input', 'uCIVI2')
+                                    ->leftJoin('App\Model\User\CustomInputValue\CustomCheckboxValue', 'uCCV', 'WITH', 'uCIV2.id = uCCV.id')
+                                    ->andWhere('uCIVI2.id = :iid2 OR uCIVI2.id IS NULL')
+                                    ->andWhere('uCCV.value = :ivalue2')
+                                    ->setParameter('iid2', $customInput->getId())
+                                    ->setParameter('ivalue2', $value);
+                            }
+                        })
+                        ->setTranslateOptions();
                     break;
 
                 case CustomInput::SELECT:
                     $columnCustomInput->setFilterSelect(array_merge(['' => 'admin.common.all'], $customInput->getSelectOptions()))
-                            ->setCondition(
-                                function (QueryBuilder $qb, string $value) use ($customInput) : void {
-                                    if ($value === '') {
-                                        return;
-                                    } else {
-                                        $qb->leftJoin('u.customInputValues', 'uCIV3')
-                                        ->leftJoin('uCIV3.input', 'uCIVI3')
-                                        ->leftJoin('App\Model\User\CustomInputValue\CustomSelectValue', 'uCSV', 'WITH', 'uCIV3.id = uCSV.id')
-                                        ->andWhere('uCIVI3.id = :iid3 OR uCIVI3.id IS NULL')
-                                        ->andWhere('uCSV.value = :ivalue3')
-                                        ->setParameter('iid3', $customInput->getId())
-                                        ->setParameter('ivalue3', $value);
-                                    }
-                                }
-                            )
-                            ->setTranslateOptions();
+                        ->setCondition(function (QueryBuilder $qb, string $value) use ($customInput) : void {
+                            if ($value === '') {
+                                return;
+                            } else {
+                                $qb->leftJoin('u.customInputValues', 'uCIV3')
+                                    ->leftJoin('uCIV3.input', 'uCIVI3')
+                                    ->leftJoin('App\Model\User\CustomInputValue\CustomSelectValue', 'uCSV', 'WITH', 'uCIV3.id = uCSV.id')
+                                    ->andWhere('uCIVI3.id = :iid3 OR uCIVI3.id IS NULL')
+                                    ->andWhere('uCSV.value = :ivalue3')
+                                    ->setParameter('iid3', $customInput->getId())
+                                    ->setParameter('ivalue3', $value);
+                            }
+                        })
+                        ->setTranslateOptions();
                     break;
             }
         }
 
         $grid->addColumnText('note', 'admin.users.users_private_note')
-                ->setFilterText();
+            ->setFilterText();
 
         $grid->addToolbarButton('Users:add')
-                ->setIcon('plus')
-                ->setText('admin.users.users_add_lector');
+            ->setIcon('plus')
+            ->setText('admin.users.users_add_lector');
 
         $grid->addAction('detail', 'admin.common.detail', 'Users:detail')
-                ->setClass('btn btn-xs btn-primary');
+            ->setClass('btn btn-xs btn-primary');
 
         $grid->addAction('delete', '', 'delete!')
-                ->setIcon('trash')
-                ->setTitle('admin.common.delete')
-                ->setClass('btn btn-xs btn-danger')
-                ->addAttributes(
-                    [
-                            'data-toggle' => 'confirmation',
-                            'data-content' => $this->translator->translate('admin.users.users_delete_confirm'),
-                        ]
-                );
-        $grid->allowRowsAction(
-            'delete',
-            function (User $item) {
-                    return $item->isExternalLector();
-            }
-        );
+            ->setIcon('trash')
+            ->setTitle('admin.common.delete')
+            ->setClass('btn btn-xs btn-danger')
+            ->addAttributes([
+                'data-toggle' => 'confirmation',
+                'data-content' => $this->translator->translate('admin.users.users_delete_confirm'),
+            ]);
+        $grid->allowRowsAction('delete', function (User $item) {
+            return $item->isExternalLector();
+        });
 
         $grid->setColumnsSummary(['fee', 'feeRemaining']);
     }
 
     /**
      * Zpracuje odstranění externího uživatele.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -540,7 +505,6 @@ class UsersGridControl extends Control
 
     /**
      * Změní stav uživatele.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -564,7 +528,6 @@ class UsersGridControl extends Control
 
     /**
      * Změní účast uživatele na semináři.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -588,8 +551,7 @@ class UsersGridControl extends Control
 
     /**
      * Hromadně schválí uživatele.
-     *
-     * @param  int[] $ids
+     * @param int[] $ids
      * @throws AbortException
      * @throws \Throwable
      */
@@ -597,14 +559,12 @@ class UsersGridControl extends Control
     {
         $users = $this->userRepository->findUsersByIds($ids);
 
-        $this->em->transactional(
-            function ($em) use ($users) : void {
-                foreach ($users as $user) {
-                    $user->setApproved(true);
-                    $this->userRepository->save($user);
-                }
+        $this->em->transactional(function ($em) use ($users) : void {
+            foreach ($users as $user) {
+                $user->setApproved(true);
+                $this->userRepository->save($user);
             }
-        );
+        });
 
         $this->getPresenter()->flashMessage('admin.users.users_group_action_approved', 'success');
         $this->redirect('this');
@@ -612,9 +572,8 @@ class UsersGridControl extends Control
 
     /**
      * Hromadně nastaví role.
-     *
-     * @param  int[] $ids
-     * @param  int[] $value
+     * @param int[] $ids
+     * @param int[] $value
      * @throws \Throwable
      */
     public function groupChangeRoles(array $ids, array $value) : void
@@ -631,33 +590,31 @@ class UsersGridControl extends Control
         }
 
         //v rolich musi byt dostatek volnych mist
-        $capacitiesOk = $selectedRoles->forAll(
-            function (int $key, Role $role) use ($users) {
-                if (! $role->hasLimitedCapacity()) {
-                    return true;
-                }
-
-                    $capacityNeeded = $users->count();
-
-                if ($capacityNeeded <= $role->getCapacity()) {
-                    return true;
-                }
-
-                foreach ($users as $user) {
-                    if (! $user->isInRole($role)) {
-                        continue;
-                    }
-
-                    $capacityNeeded--;
-                }
-
-                if ($capacityNeeded <= $role->getCapacity()) {
-                    return true;
-                }
-
-                    return false;
+        $capacitiesOk = $selectedRoles->forAll(function (int $key, Role $role) use ($users) {
+            if (! $role->hasLimitedCapacity()) {
+                return true;
             }
-        );
+
+            $capacityNeeded = $users->count();
+
+            if ($capacityNeeded <= $role->getCapacity()) {
+                return true;
+            }
+
+            foreach ($users as $user) {
+                if (! $user->isInRole($role)) {
+                    continue;
+                }
+
+                $capacityNeeded--;
+            }
+
+            if ($capacityNeeded <= $role->getCapacity()) {
+                return true;
+            }
+
+            return false;
+        });
 
         if (! $capacitiesOk) {
             $p->flashMessage('admin.users.users_group_action_change_roles_error_capacity', 'danger');
@@ -666,13 +623,11 @@ class UsersGridControl extends Control
 
         $loggedUser = $this->userRepository->findById($p->getUser()->id);
 
-        $this->em->transactional(
-            function ($em) use ($selectedRoles, $users, $loggedUser) : void {
-                foreach ($users as $user) {
-                    $this->applicationService->updateRoles($user, $selectedRoles, $loggedUser, true);
-                }
+        $this->em->transactional(function ($em) use ($selectedRoles, $users, $loggedUser) : void {
+            foreach ($users as $user) {
+                $this->applicationService->updateRoles($user, $selectedRoles, $loggedUser, true);
             }
-        );
+        });
 
         $p->flashMessage('admin.users.users_group_action_changed_roles', 'success');
         $this->redirect('this');
@@ -680,8 +635,7 @@ class UsersGridControl extends Control
 
     /**
      * Hromadně označí uživatele jako zúčastněné.
-     *
-     * @param  int[] $ids
+     * @param int[] $ids
      * @throws AbortException
      * @throws \Throwable
      */
@@ -689,14 +643,12 @@ class UsersGridControl extends Control
     {
         $users = $this->userRepository->findUsersByIds($ids);
 
-        $this->em->transactional(
-            function ($em) use ($users) : void {
-                foreach ($users as $user) {
-                    $user->setAttended(true);
-                    $this->userRepository->save($user);
-                }
+        $this->em->transactional(function ($em) use ($users) : void {
+            foreach ($users as $user) {
+                $user->setAttended(true);
+                $this->userRepository->save($user);
             }
-        );
+        });
 
         $this->getPresenter()->flashMessage('admin.users.users_group_action_marked_attended', 'success');
         $this->redirect('this');
@@ -704,8 +656,7 @@ class UsersGridControl extends Control
 
     /**
      * Hromadně označí uživatele jako zaplacené dnes.
-     *
-     * @param  int[] $ids
+     * @param int[] $ids
      * @throws AbortException
      * @throws \Throwable
      */
@@ -717,22 +668,20 @@ class UsersGridControl extends Control
 
         $loggedUser = $this->userRepository->findById($p->getUser()->id);
 
-        $this->em->transactional(
-            function ($em) use ($users, $paymentMethod, $loggedUser) : void {
-                foreach ($users as $user) {
-                    foreach ($user->getWaitingForPaymentApplications() as $application) {
-                        $this->applicationService->updateApplicationPayment(
-                            $application,
-                            $paymentMethod,
-                            new \DateTime(),
-                            $application->getIncomeProofPrintedDate(),
-                            $application->getMaturityDate(),
-                            $loggedUser
-                        );
-                    }
+        $this->em->transactional(function ($em) use ($users, $paymentMethod, $loggedUser) : void {
+            foreach ($users as $user) {
+                foreach ($user->getWaitingForPaymentApplications() as $application) {
+                    $this->applicationService->updateApplicationPayment(
+                        $application,
+                        $paymentMethod,
+                        new \DateTime(),
+                        $application->getIncomeProofPrintedDate(),
+                        $application->getMaturityDate(),
+                        $loggedUser
+                    );
                 }
             }
-        );
+        });
 
         $p->flashMessage('admin.users.users_group_action_marked_paid_today', 'success');
         $this->redirect('this');
@@ -740,8 +689,7 @@ class UsersGridControl extends Control
 
     /**
      * Hromadně vloží uživatele jako účastníky do skautIS.
-     *
-     * @param  int[] $ids
+     * @param int[] $ids
      * @throws AbortException
      * @throws \Throwable
      */
@@ -791,8 +739,7 @@ class UsersGridControl extends Control
 
     /**
      * Hromadně vygeneruje potvrzení o zaplacení.
-     *
-     * @param  int[] $ids
+     * @param int[] $ids
      * @throws AbortException
      */
     public function groupGeneratePaymentProofs(array $ids) : void
@@ -803,8 +750,7 @@ class UsersGridControl extends Control
 
     /**
      * Hromadně vyexportuje seznam uživatelů.
-     *
-     * @param  int[] $ids
+     * @param int[] $ids
      * @throws AbortException
      */
     public function groupExportUsers(array $ids) : void
@@ -815,7 +761,6 @@ class UsersGridControl extends Control
 
     /**
      * Zpracuje export seznamu uživatelů.
-     *
      * @throws AbortException
      * @throws Exception
      */
@@ -832,8 +777,7 @@ class UsersGridControl extends Control
 
     /**
      * Hromadně vyexportuje seznam uživatelů s rolemi.
-     *
-     * @param  int[] $ids
+     * @param int[] $ids
      * @throws AbortException
      */
     public function groupExportRoles(array $ids) : void
@@ -844,7 +788,6 @@ class UsersGridControl extends Control
 
     /**
      * Zpracuje export seznamu uživatelů s rolemi.
-     *
      * @throws AbortException
      * @throws Exception
      */
@@ -862,8 +805,7 @@ class UsersGridControl extends Control
 
     /**
      * Hromadně vyexportuje seznam uživatelů s podakcemi a programy podle kategorií.
-     *
-     * @param  int[] $ids
+     * @param int[] $ids
      * @throws AbortException
      */
     public function groupExportSubeventsAndCategories(array $ids) : void
@@ -874,7 +816,6 @@ class UsersGridControl extends Control
 
     /**
      * Zpracuje export seznamu uživatelů s podakcemi a programy podle kategorií.
-     *
      * @throws AbortException
      * @throws Exception
      */
@@ -891,8 +832,7 @@ class UsersGridControl extends Control
 
     /**
      * Hromadně vyexportuje harmonogramy uživatelů.
-     *
-     * @param  int[] $ids
+     * @param int[] $ids
      * @throws AbortException
      */
     public function groupExportSchedules(array $ids) : void
@@ -903,7 +843,6 @@ class UsersGridControl extends Control
 
     /**
      * Zpracuje export harmonogramů uživatelů.
-     *
      * @throws AbortException
      * @throws Exception
      */
@@ -920,7 +859,6 @@ class UsersGridControl extends Control
 
     /**
      * Vygeneruje doklady o zaplacení.
-     *
      * @throws SettingsException
      * @throws \Throwable
      */
@@ -937,7 +875,6 @@ class UsersGridControl extends Control
 
     /**
      * Vrátí platební metody jako možnosti pro select. Bez prázdné možnosti.
-     *
      * @return string[]
      */
     private function preparePaymentMethodOptionsWithoutEmpty() : array
@@ -951,7 +888,6 @@ class UsersGridControl extends Control
 
     /**
      * Vrátí platební metody jako možnosti pro select. Včetně smíšené.
-     *
      * @return string[]
      */
     private function preparePaymentMethodOptionsWithMixed() : array
@@ -966,7 +902,6 @@ class UsersGridControl extends Control
 
     /**
      * Vrátí možnosti vložení účastníků do vzdělávací akce skautIS.
-     *
      * @return string[]
      */
     private function prepareInsertIntoSkautIsOptions() : array

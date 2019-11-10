@@ -12,7 +12,8 @@ use Nettrine\ORM\Entity\Attributes\Id as Identifier;
 /**
  * Entita místnost.
  *
- * @author                                       Jan Staněk <jan.stanek@skaut.cz>
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="RoomRepository")
  * @ORM\Table(name="room")
  */
@@ -22,28 +23,26 @@ class Room
 
     /**
      * Název místnosti.
-     *
      * @ORM\Column(type="string", unique=true)
-     * @var                       string
+     * @var string
      */
     protected $name;
 
     /**
      * Kapacita.
-     *
      * @ORM\Column(type="integer", nullable=true)
-     * @var                        int
+     * @var int
      */
     protected $capacity;
 
     /**
      * Programy v místnosti.
-     *
      * @ORM\OneToMany(targetEntity="Program", mappedBy="room", cascade={"persist"})
-     * @ORM\OrderBy({"start"                  = "ASC"})
-     * @var                                   Collection|Program[]
+     * @ORM\OrderBy({"start" = "ASC"})
+     * @var Collection|Program[]
      */
     protected $programs;
+
 
     public function __construct()
     {

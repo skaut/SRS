@@ -10,7 +10,7 @@ use function explode;
 /**
  * Entita hodnota vlastního výběrového pole přihlášky.
  *
- * @author                                Jan Staněk <jan.stanek@skaut.cz>
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity
  * @ORM\Table(name="custom_select_value")
  */
@@ -18,11 +18,11 @@ class CustomSelectValue extends CustomInputValue
 {
     /**
      * Vybraná položka výběrového pole přihlášky.
-     *
      * @ORM\Column(type="integer", nullable=true)
-     * @var                        int
+     * @var int
      */
     protected $value;
+
 
     public function getValue() : ?int
     {
@@ -36,7 +36,6 @@ class CustomSelectValue extends CustomInputValue
 
     /**
      * Vrátí název vybrané možnosti.
-     *
      * @return mixed
      */
     public function getValueOption() : ?string

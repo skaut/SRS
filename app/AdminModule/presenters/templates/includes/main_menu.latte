@@ -1,59 +1,59 @@
 {define main-menu}
-<nav class="navbar navbar-inverse navbar-static-top">
-	<div class="container-fluid">
-		<div class="navbar-header">
-			<a class="navbar-brand"
-			   href="{plink :Web:Page:default}">{_admin.common.heading, [seminar_name => $seminarName]}</a>
-		</div>
+    <nav class="navbar navbar-inverse navbar-static-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand"
+                   href="{plink :Web:Page:default}">{_admin.common.heading, [seminar_name => $seminarName]}</a>
+            </div>
 
-		<div id="navbar">
-			<ul class="nav navbar-nav">
-				<li n:class="$presenter->isLinkCurrent(':Admin:Dashboard:*') ? active">
-					<a href="{plink :Admin:Dashboard:default}">{_admin.menu.dashboard}</a>
-				</li>
-				{if $user->isAllowed($resourceCMS, $permissionManage)}
-					<li n:class="
+            <div id="navbar">
+                <ul class="nav navbar-nav">
+                    <li n:class="$presenter->isLinkCurrent(':Admin:Dashboard:*') ? active">
+                        <a href="{plink :Admin:Dashboard:default}">{_admin.menu.dashboard}</a>
+                    </li>
+                    {if $user->isAllowed($resourceCMS, $permissionManage)}
+                        <li n:class="
                                 $presenter->isLinkCurrent(':Admin:CMS:Pages:*') ||
                                 $presenter->isLinkCurrent(':Admin:CMS:News:*') ||
                                 $presenter->isLinkCurrent(':Admin:CMS:Documents:*') ||
                                 $presenter->isLinkCurrent(':Admin:CMS:Faq:*') ? active">
-						<a href="{plink :Admin:CMS:Pages:default}">{_admin.menu.cms}</a>
-					</li>
-				{/if}
-				{if $user->isAllowed($resourceProgram, $permissionAccess)}
-					<li n:class="
+                            <a href="{plink :Admin:CMS:Pages:default}">{_admin.menu.cms}</a>
+                        </li>
+                    {/if}
+                    {if $user->isAllowed($resourceProgram, $permissionAccess)}
+                        <li n:class="
                                 $presenter->isLinkCurrent(':Admin:Program:Blocks:*') ||
                                 $presenter->isLinkCurrent(':Admin:Program:Schedule:*') ||
                                 $presenter->isLinkCurrent(':Admin:Program:Categories:*') ||
                                 $presenter->isLinkCurrent(':Admin:Program:Rooms:*') ? active">
-						<a href="{plink :Admin:Program:Blocks:default}">{_admin.menu.program}</a>
-					</li>
-				{/if}
-				{if $user->isAllowed($resourceUsers, $permissionManage)}
-					<li n:class="$presenter->isLinkCurrent(':Admin:Users:*') ? active">
-						<a href="{plink :Admin:Users:default}">{_admin.menu.users}</a>
-					</li>
-				{/if}
-				{if $user->isAllowed($resourcePayments, $permissionManage)}
-					<li n:class="$presenter->isLinkCurrent(':Admin:Payments:Payments:*') ? active">
-						<a href="{plink :Admin:Payments:Payments:default}">{_admin.menu.payments}</a>
-					</li>
-				{/if}
-				{if $user->isAllowed($resourceACL, $permissionManage)}
-					<li n:class="$presenter->isLinkCurrent(':Admin:Acl:*') ? active">
-						<a href="{plink :Admin:Acl:default}">{_admin.menu.acl}</a>
-					</li>
-				{/if}
-				{if $user->isAllowed($resourceMailing, $permissionManage)}
-					<li n:class="
+                            <a href="{plink :Admin:Program:Blocks:default}">{_admin.menu.program}</a>
+                        </li>
+                    {/if}
+                    {if $user->isAllowed($resourceUsers, $permissionManage)}
+                        <li n:class="$presenter->isLinkCurrent(':Admin:Users:*') ? active">
+                            <a href="{plink :Admin:Users:default}">{_admin.menu.users}</a>
+                        </li>
+                    {/if}
+                    {if $user->isAllowed($resourcePayments, $permissionManage)}
+                        <li n:class="$presenter->isLinkCurrent(':Admin:Payments:Payments:*') ? active">
+                            <a href="{plink :Admin:Payments:Payments:default}">{_admin.menu.payments}</a>
+                        </li>
+                    {/if}
+                    {if $user->isAllowed($resourceACL, $permissionManage)}
+                        <li n:class="$presenter->isLinkCurrent(':Admin:Acl:*') ? active">
+                            <a href="{plink :Admin:Acl:default}">{_admin.menu.acl}</a>
+                        </li>
+                    {/if}
+                    {if $user->isAllowed($resourceMailing, $permissionManage)}
+                        <li n:class="
                                 $presenter->isLinkCurrent(':Admin:Mailing:Templates:*') ||
                                 $presenter->isLinkCurrent(':Admin:Mailing:Send:*') ||
                                 $presenter->isLinkCurrent(':Admin:Mailing:History:*') ? active">
-						<a href="{plink :Admin:Mailing:Templates:default}">{_admin.menu.mailing}</a>
-					</li>
-				{/if}
-				{if $user->isAllowed($resourceConfiguration, $permissionManage)}
-					<li n:class="
+                            <a href="{plink :Admin:Mailing:Templates:default}">{_admin.menu.mailing}</a>
+                        </li>
+                    {/if}
+                    {if $user->isAllowed($resourceConfiguration, $permissionManage)}
+                        <li n:class="
                                 $presenter->isLinkCurrent(':Admin:Configuration:Application:*') ||
                                 $presenter->isLinkCurrent(':Admin:Configuration:Mailing:*') ||
                                 $presenter->isLinkCurrent(':Admin:Configuration:Payment:*') ||
@@ -65,64 +65,64 @@
                                 $presenter->isLinkCurrent(':Admin:Configuration:System:*') ||
                                 $presenter->isLinkCurrent(':Admin:Configuration:Subevents:*') ||
                                 $presenter->isLinkCurrent(':Admin:Configuration:Discounts:*') ? active">
-						<a href="{plink :Admin:Configuration:Seminar:default}">{_admin.menu.configuration}</a>
-					</li>
-				{/if}
-			</ul>
+                            <a href="{plink :Admin:Configuration:Seminar:default}">{_admin.menu.configuration}</a>
+                        </li>
+                    {/if}
+                </ul>
 
-			<ul class="nav navbar-nav navbar-right">
-				<li class="dropdown" id="role-menu">
-					<div class="navbar-btn">
-						<a class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-							<span id="role-menu-text">
-								{if $skautIsRoleSelected}
-									{$skautIsRoleSelected->DisplayName}
-								{/if}
-							</span>
-							<span class="caret"></span>
-						</a>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown" id="role-menu">
+                        <div class="navbar-btn">
+                            <a class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                <span id="role-menu-text">
+                                    {if $skautIsRoleSelected}
+                                        {$skautIsRoleSelected->DisplayName}
+                                    {/if}
+                                </span>
+                                <span class="caret"></span>
+                            </a>
 
-						<ul class="dropdown-menu">
-							<li n:foreach="$skautIsRoles as $r" n:class="$r->ID == $skautIsRoleSelected->ID ? active">
-								<a class="dropdown-item" href="{plink changeRole!, $r->ID}">{$r->DisplayName}</a>
-							</li>
-						</ul>
-					</div>
-				</li>
+                            <ul class="dropdown-menu">
+                                <li n:foreach="$skautIsRoles as $r" n:class="$r->ID == $skautIsRoleSelected->ID ? active">
+                                    <a class="dropdown-item" href="{plink changeRole!, $r->ID}">{$r->DisplayName}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
 
-				<li class="dropdown" id="user-menu">
-					<div class="navbar-btn">
-						<a class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-							<span class="fa fa-user"></span>
-							{$dbuser->getUsername()}
-							<span class="caret"></span>
-						</a>
+                    <li class="dropdown" id="user-menu">
+                        <div class="navbar-btn">
+                            <a class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                <span class="fa fa-user"></span>
+                                {$dbuser->getUsername()}
+                                <span class="caret"></span>
+                            </a>
 
-						<ul class="dropdown-menu">
-							<li>
-								<a class="dropdown-item" href="{plink :Web:Profile:default}">
-									<span class="fa fa-fw fa-user-circle-o"></span>
-								{foreach $user->roles as $role}{$role}{sep}, {/sep}{/foreach}
-							</a>
-						</li>
-						<li>
-							<a class="dropdown-item"
-							   href="{plink :Web:Profile:default}#collapsePersonalDetails">
-								<span class="fa fa-fw fa-user"></span>
-								{_admin.common.profile}
-							</a>
-						</li>
-						<li>
-							<a class="dropdown-item" href="{plink :Auth:logout}">
-								<span class="fa fa-fw fa-sign-out"></span>
-								{_admin.common.logout}
-							</a>
-						</li>
-					</ul>
-				</div>
-			</li>
-		</ul>
-	</div>
-</div>
-</nav>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href="{plink :Web:Profile:default}">
+                                        <span class="fa fa-fw fa-user-circle-o"></span>
+                                        {foreach $user->roles as $role}{$role}{sep}, {/sep}{/foreach}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item"
+                                       href="{plink :Web:Profile:default}#collapsePersonalDetails">
+                                        <span class="fa fa-fw fa-user"></span>
+                                        {_admin.common.profile}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{plink :Auth:logout}">
+                                        <span class="fa fa-fw fa-sign-out"></span>
+                                        {_admin.common.logout}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 {/define}

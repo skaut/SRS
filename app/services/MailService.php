@@ -31,6 +31,7 @@ use function str_replace;
  * Služba pro rozesílání e-mailů.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class MailService
 {
@@ -60,6 +61,7 @@ class MailService
     /** @var Translator */
     private $translator;
 
+
     public function __construct(
         MailFactory $mailFactory,
         SettingsFacade $settingsFacade,
@@ -82,10 +84,9 @@ class MailService
 
     /**
      * Rozešle e-mail.
-     *
-     * @param  Collection|Role[]     $recipientsRoles
-     * @param  Collection|Subevent[] $recipientsSubevents
-     * @param  Collection|User[]     $recipientsUsers
+     * @param Collection|Role[]     $recipientsRoles
+     * @param Collection|Subevent[] $recipientsSubevents
+     * @param Collection|User[]     $recipientsUsers
      * @throws SettingsException
      * @throws \Throwable
      * @throws MailingMailCreationException
@@ -139,8 +140,7 @@ class MailService
 
     /**
      * Rozešle e-mail podle šablony.
-     *
-     * @param  string[] $parameters
+     * @param string[] $parameters
      * @throws SettingsException
      * @throws \Throwable
      * @throws MailingMailCreationException

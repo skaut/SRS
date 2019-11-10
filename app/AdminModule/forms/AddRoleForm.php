@@ -17,6 +17,7 @@ use Nette\Application\UI\Form;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class AddRoleForm
 {
@@ -30,6 +31,7 @@ class AddRoleForm
 
     /** @var RoleRepository */
     private $roleRepository;
+
 
     public function __construct(BaseForm $baseFormFactory, RoleFacade $roleFacade, RoleRepository $roleRepository)
     {
@@ -46,19 +48,19 @@ class AddRoleForm
         $form = $this->baseFormFactory->create();
 
         $form->addText('name', 'admin.acl.roles_name')
-                ->addRule(Form::FILLED, 'admin.acl.roles_name_empty')
-                ->addRule(Form::IS_NOT_IN, 'admin.acl.roles_name_exists', $this->roleFacade->findAllNames())
-                ->addRule(Form::NOT_EQUAL, 'admin.acl.roles_name_reserved', 'test');
+            ->addRule(Form::FILLED, 'admin.acl.roles_name_empty')
+            ->addRule(Form::IS_NOT_IN, 'admin.acl.roles_name_exists', $this->roleRepository->findAllNames())
+            ->addRule(Form::NOT_EQUAL, 'admin.acl.roles_name_reserved', 'test');
 
         $form->addSelect('parent', 'admin.acl.roles_parent', $this->roleRepository->getRolesWithoutRolesOptions([]))
-                ->setPrompt('')
-                ->setAttribute('title', $form->getTranslator()->translate('admin.acl.roles_parent_note'));
+            ->setPrompt('')
+            ->setAttribute('title', $form->getTranslator()->translate('admin.acl.roles_parent_note'));
 
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->addSubmit('cancel', 'admin.common.cancel')
-                ->setValidationScope([])
-                ->setAttribute('class', 'btn btn-warning');
+            ->setValidationScope([])
+            ->setAttribute('class', 'btn btn-warning');
 
         $form->onSuccess[] = [$this, 'processForm'];
 
@@ -67,7 +69,6 @@ class AddRoleForm
 
     /**
      * Zpracuje formulář.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */

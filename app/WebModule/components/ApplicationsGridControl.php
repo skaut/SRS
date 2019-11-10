@@ -40,6 +40,7 @@ use Ublaboo\Mailing\Exception\MailingMailCreationException;
  * Komponenta pro správu vlastních přihlášek.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class ApplicationsGridControl extends Control
 {
@@ -94,6 +95,7 @@ class ApplicationsGridControl extends Control
     /** @var SubeventsApplicationRepository */
     private $subeventsApplicationRepository;
 
+
     public function __construct(
         Translator $translator,
         ApplicationRepository $applicationRepository,
@@ -142,7 +144,6 @@ class ApplicationsGridControl extends Control
 
     /**
      * Vytvoří komponentu.
-     *
      * @throws SettingsException
      * @throws NonUniqueResultException
      * @throws \Throwable
@@ -167,17 +168,17 @@ class ApplicationsGridControl extends Control
         }
 
         $qb = $qb->createQueryBuilder('a')
-                ->join('a.user', 'u')
-                ->where('u = :user')
-                ->andWhere('a.validTo IS NULL')
-                ->setParameter('user', $this->user)
-                ->orderBy('a.applicationId');
+            ->join('a.user', 'u')
+            ->where('u = :user')
+            ->andWhere('a.validTo IS NULL')
+            ->setParameter('user', $this->user)
+            ->orderBy('a.applicationId');
 
         $grid->setDataSource($qb);
         $grid->setPagination(false);
 
         $grid->addColumnDateTime('applicationDate', 'web.profile.applications_application_date')
-                ->setFormat(Helpers::DATETIME_FORMAT);
+            ->setFormat(Helpers::DATETIME_FORMAT);
 
         if ($userHasFixedFeeRole) {
             $grid->addColumnText('roles', 'web.profile.applications_roles', 'rolesText');
@@ -192,22 +193,20 @@ class ApplicationsGridControl extends Control
         $grid->addColumnText('variable_symbol', 'web.profile.applications_variable_symbol', 'variableSymbolText');
 
         $grid->addColumnDateTime('maturityDate', 'web.profile.applications_maturity_date')
-                ->setFormat(Helpers::DATE_FORMAT);
+            ->setFormat(Helpers::DATE_FORMAT);
 
         $grid->addColumnText('state', 'web.profile.applications_state')
-                ->setRenderer(
-                    function (Application $row) {
-                            return $this->applicationService->getStateText($row);
-                    }
-                );
+            ->setRenderer(function (Application $row) {
+                return $this->applicationService->getStateText($row);
+            });
 
         if ($explicitSubeventsExists) {
             if ($this->applicationService->isAllowedAddApplication($this->user)) {
                 $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function ($container) : void {
                     $options = $this->subeventRepository->getNonRegisteredExplicitOptionsWithCapacity($this->user);
                     $container->addMultiSelect('subevents', '', $options)
-                            ->setAttribute('class', 'datagrid-multiselect')
-                            ->addRule(Form::FILLED, 'web.profile.applications_subevents_empty');
+                        ->setAttribute('class', 'datagrid-multiselect')
+                        ->addRule(Form::FILLED, 'web.profile.applications_subevents_empty');
                 };
                 $grid->getInlineAdd()->setText($this->translator->translate('web.profile.applications_add_subevents'));
                 $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
@@ -216,60 +215,46 @@ class ApplicationsGridControl extends Control
             $grid->addInlineEdit()->onControlAdd[] = function ($container) : void {
                 $options = $this->subeventRepository->getExplicitOptionsWithCapacity();
                 $container->addMultiSelect('subevents', '', $options)
-                        ->setAttribute('class', 'datagrid-multiselect')
-                        ->addRule(Form::FILLED, 'web.profile.applications_subevents_empty');
+                    ->setAttribute('class', 'datagrid-multiselect')
+                    ->addRule(Form::FILLED, 'web.profile.applications_subevents_empty');
             };
             $grid->getInlineEdit()->setText($this->translator->translate('web.profile.applications_edit'));
             $grid->getInlineEdit()->onSetDefaults[] = function ($container, SubeventsApplication $item) : void {
-                $container->setDefaults(
-                    [
-                            'subevents' => $this->subeventRepository->findSubeventsIds($item->getSubevents()),
-                        ]
-                );
+                $container->setDefaults([
+                    'subevents' => $this->subeventRepository->findSubeventsIds($item->getSubevents()),
+                ]);
             };
             $grid->getInlineEdit()->onSubmit[]      = [$this, 'edit'];
-            $grid->allowRowsInlineEdit(
-                function (Application $item) {
-                        return $this->applicationService->isAllowedEditApplication($item);
-                }
-            );
+            $grid->allowRowsInlineEdit(function (Application $item) {
+                return $this->applicationService->isAllowedEditApplication($item);
+            });
         }
 
         $grid->addAction('generatePaymentProofBank', 'web.profile.applications_download_payment_proof');
-        $grid->allowRowsAction(
-            'generatePaymentProofBank',
-            function (Application $item) {
-                    return $item->getState() === ApplicationState::PAID && $item->getPaymentMethod() === PaymentType::BANK && $item->getPaymentDate();
-            }
-        );
+        $grid->allowRowsAction('generatePaymentProofBank', function (Application $item) {
+            return $item->getState() === ApplicationState::PAID
+                && $item->getPaymentMethod() === PaymentType::BANK
+                && $item->getPaymentDate();
+        });
 
         if ($this->user->getNotCanceledSubeventsApplications()->count() > 1) {
             $grid->addAction('cancelApplication', 'web.profile.applications_cancel_application')
-                    ->addAttributes(
-                        [
-                                'data-toggle' => 'confirmation',
-                                'data-content' => $this->translator->translate('web.profile.applications_cancel_application_confirm'),
-                            ]
-                    )->setClass('btn btn-xs btn-danger');
-            $grid->allowRowsAction(
-                'cancelApplication',
-                function (Application $item) {
-                        return $this->applicationService->isAllowedEditApplication($item);
-                }
-            );
+                ->addAttributes([
+                    'data-toggle' => 'confirmation',
+                    'data-content' => $this->translator->translate('web.profile.applications_cancel_application_confirm'),
+                ])->setClass('btn btn-xs btn-danger');
+            $grid->allowRowsAction('cancelApplication', function (Application $item) {
+                return $this->applicationService->isAllowedEditApplication($item);
+            });
         }
 
-        $grid->setColumnsSummary(
-            ['fee'],
-            function (Application $item, $column) {
-                    return $item->isCanceled() ? 0 : $item->getFee();
-            }
-        );
+        $grid->setColumnsSummary(['fee'], function (Application $item, $column) {
+            return $item->isCanceled() ? 0 : $item->getFee();
+        });
     }
 
     /**
      * Zpracuje přidání podakcí.
-     *
      * @throws AbortException
      * @throws \Throwable
      */
@@ -319,7 +304,6 @@ class ApplicationsGridControl extends Control
 
     /**
      * Zpracuje úpravu přihlášky.
-     *
      * @throws SettingsException
      * @throws AbortException
      * @throws \Throwable
@@ -377,7 +361,6 @@ class ApplicationsGridControl extends Control
 
     /**
      * Vygeneruje potvrzení o přijetí platby.
-     *
      * @throws SettingsException
      * @throws \Throwable
      */
@@ -392,7 +375,6 @@ class ApplicationsGridControl extends Control
 
     /**
      * Zruší přihlášku.
-     *
      * @throws SettingsException
      * @throws AbortException
      * @throws \Throwable

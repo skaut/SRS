@@ -28,6 +28,7 @@ class FilesService
     /** @var string */
     private $dir;
 
+
     public function __construct(string $dir)
     {
         $this->dir = $dir;
@@ -73,7 +74,6 @@ class FilesService
 
     /**
      * Změní velikost obrázku.
-     *
      * @throws Nette\Utils\UnknownImageFileException
      */
     public function resizeImage(string $path, ?int $width, ?int $height) : void
@@ -86,7 +86,6 @@ class FilesService
 
     /**
      * Změní velikost a ořízne obrázek.
-     *
      * @throws Nette\Utils\UnknownImageFileException
      */
     public function resizeAndCropImage(string $path, ?int $width, ?int $height) : void

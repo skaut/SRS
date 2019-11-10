@@ -15,10 +15,11 @@ use App\AdminModule\MailingModule\Components\MailHistoryGridControl;
 class HistoryPresenter extends MailingBasePresenter
 {
     /**
-     * @var    IMailHistoryGridControlFactory
+     * @var IMailHistoryGridControlFactory
      * @inject
      */
     public $mailHistoryGridControlFactory;
+
 
     protected function createComponentMailHistoryGrid() : MailHistoryGridControl
     {

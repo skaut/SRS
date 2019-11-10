@@ -15,6 +15,7 @@ use const PHP_INT_MAX;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class FaqRepository extends EntityRepository
 {
@@ -28,33 +29,30 @@ class FaqRepository extends EntityRepository
 
     /**
      * Vrací id poslední otázky.
-     *
      * @throws NonUniqueResultException
      */
     public function findLastId() : int
     {
         return (int) $this->createQueryBuilder('f')
-                        ->select('MAX(f.id)')
-                        ->getQuery()
-                        ->getSingleScalarResult();
+            ->select('MAX(f.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
     /**
      * Vrací poslední pozici.
-     *
      * @throws NonUniqueResultException
      */
     public function findLastPosition() : int
     {
         return (int) $this->createQueryBuilder('f')
-                        ->select('MAX(f.position)')
-                        ->getQuery()
-                        ->getSingleScalarResult();
+            ->select('MAX(f.position)')
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
     /**
      * Vrací publikované otázky seřazené podle pozice.
-     *
      * @return Faq[]
      */
     public function findPublishedOrderedByPosition() : array
@@ -64,7 +62,6 @@ class FaqRepository extends EntityRepository
 
     /**
      * Uloží otázku.
-     *
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException
@@ -81,7 +78,6 @@ class FaqRepository extends EntityRepository
 
     /**
      * Odstraní otázku.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -93,7 +89,6 @@ class FaqRepository extends EntityRepository
 
     /**
      * Přesune otázku mezi otázky s id prevId a nextId.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -104,12 +99,12 @@ class FaqRepository extends EntityRepository
         $next = $nextId ? $this->find($nextId) : null;
 
         $itemsToMoveUp = $this->createQueryBuilder('i')
-                ->where('i.position <= :position')
-                ->setParameter('position', $prev ? $prev->getPosition() : 0)
-                ->andWhere('i.position > :position2')
-                ->setParameter('position2', $item->getPosition())
-                ->getQuery()
-                ->getResult();
+            ->where('i.position <= :position')
+            ->setParameter('position', $prev ? $prev->getPosition() : 0)
+            ->andWhere('i.position > :position2')
+            ->setParameter('position2', $item->getPosition())
+            ->getQuery()
+            ->getResult();
 
         foreach ($itemsToMoveUp as $t) {
             $t->setPosition($t->getPosition() - 1);
@@ -117,12 +112,12 @@ class FaqRepository extends EntityRepository
         }
 
         $itemsToMoveDown = $this->createQueryBuilder('i')
-                ->where('i.position >= :position')
-                ->setParameter('position', $next ? $next->getPosition() : PHP_INT_MAX)
-                ->andWhere('i.position < :position2')
-                ->setParameter('position2', $item->getPosition())
-                ->getQuery()
-                ->getResult();
+            ->where('i.position >= :position')
+            ->setParameter('position', $next ? $next->getPosition() : PHP_INT_MAX)
+            ->andWhere('i.position < :position2')
+            ->setParameter('position2', $item->getPosition())
+            ->getQuery()
+            ->getResult();
 
         foreach ($itemsToMoveDown as $t) {
             $t->setPosition($t->getPosition() + 1);

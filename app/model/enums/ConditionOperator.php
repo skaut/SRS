@@ -8,14 +8,12 @@ class ConditionOperator
 {
     /**
      * A.
-     *
      * @var string
      */
     public const OPERATOR_AND = 'and';
 
     /**
      * Nebo.
-     *
      * @var string
      */
     public const OPERATOR_OR = 'or';

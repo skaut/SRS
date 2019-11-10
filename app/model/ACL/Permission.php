@@ -12,8 +12,9 @@ use Nettrine\ORM\Entity\Attributes\Id as Identifier;
 /**
  * Entita oprávnění.
  *
- * @author                                             Michal Májský
- * @author                                             Jan Staněk <jan.stanek@skaut.cz>
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="PermissionRepository")
  * @ORM\Table(name="permission")
  */
@@ -21,56 +22,48 @@ class Permission
 {
     /**
      * Oprávnění spravovat.
-     *
      * @var string
      */
     public const MANAGE = 'manage';
 
     /**
      * Oprávnění přistupovat.
-     *
      * @var string
      */
     public const ACCESS = 'access';
 
     /**
      * Oprávnění spravovat programy, u kterých je uživatel lektor.
-     *
      * @var string
      */
     public const MANAGE_OWN_PROGRAMS = 'manage_own_programs';
 
     /**
      * Oprávnění spravovat všechny programy.
-     *
      * @var string
      */
     public const MANAGE_ALL_PROGRAMS = 'manage_all_programs';
 
     /**
      * Oprávnění spravovat harmonogram.
-     *
      * @var string
      */
     public const MANAGE_SCHEDULE = 'manage_schedule';
 
     /**
      * Oprávnění spravovat místnosti.
-     *
      * @var string
      */
     public const MANAGE_ROOMS = 'manage_rooms';
 
     /**
      * Oprávnění spravovat kategorie bloků.
-     *
      * @var string
      */
     public const MANAGE_CATEGORIES = 'manage_categories';
 
     /**
      * Oprávnění přihlašovat se na programy.
-     *
      * @var string
      */
     public const CHOOSE_PROGRAMS = 'choose_programs';
@@ -89,27 +82,25 @@ class Permission
 
     /**
      * Název oprávnění.
-     *
      * @ORM\Column(type="string")
-     * @var                       string
+     * @var string
      */
     protected $name;
 
     /**
      * Role s tímto oprávněním.
-     *
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", mappedBy="permissions", cascade={"persist"})
-     * @var                                                Collection|Role[]
+     * @var Collection|Role[]
      */
     protected $roles;
 
     /**
      * Prostředek oprávnění.
-     *
      * @ORM\ManyToOne(targetEntity="\App\Model\ACL\Resource", inversedBy="permissions", cascade={"persist"})
-     * @var                                                   Resource
+     * @var Resource
      */
     protected $resource;
+
 
     public function __construct(string $name, Resource $resource)
     {

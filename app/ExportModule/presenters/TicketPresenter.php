@@ -18,30 +18,31 @@ use function random_bytes;
  * Presenter pro generování vstupenek.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class TicketPresenter extends ExportBasePresenter
 {
     /**
-     * @var    UserRepository
+     * @var UserRepository
      * @inject
      */
     public $userRepository;
 
     /**
-     * @var    SettingsFacade
+     * @var SettingsFacade
      * @inject
      */
     public $settingsFacade;
 
     /**
-     * @var    SubeventRepository
+     * @var SubeventRepository
      * @inject
      */
     public $subeventRepository;
 
+
     /**
      * Vygeneruje vstupenku v PDF.
-     *
      * @throws AbortException
      * @throws SettingsException
      * @throws \Throwable

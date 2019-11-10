@@ -20,28 +20,29 @@ use Nette\Application\UI\Form;
 class PlacePresenter extends ConfigurationBasePresenter
 {
     /**
-     * @var    PlacePointRepository
+     * @var PlacePointRepository
      * @inject
      */
     public $placePointRepository;
 
     /**
-     * @var    PlaceDescriptionForm
+     * @var PlaceDescriptionForm
      * @inject
      */
     public $placeDescriptionFormFactory;
 
     /**
-     * @var    PlacePointForm
+     * @var PlacePointForm
      * @inject
      */
     public $placePointFormFactory;
 
     /**
-     * @var    IPlacePointsGridControlFactory
+     * @var IPlacePointsGridControlFactory
      * @inject
      */
     public $placePointsGridControlFactory;
+
 
     public function renderEdit(int $id) : void
     {

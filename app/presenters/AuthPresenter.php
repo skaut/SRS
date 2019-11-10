@@ -23,36 +23,37 @@ use function strpos;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class AuthPresenter extends BasePresenter
 {
     /**
-     * @var    SkautIsService
+     * @var SkautIsService
      * @inject
      */
     public $skautIsService;
 
     /**
-     * @var    SettingsFacade
+     * @var SettingsFacade
      * @inject
      */
     public $settingsFacade;
 
     /**
-     * @var    UserRepository
+     * @var UserRepository
      * @inject
      */
     public $userRepository;
 
     /**
-     * @var    MailService
+     * @var MailService
      * @inject
      */
     public $mailService;
 
+
     /**
      * Přesměruje na přihlašovací stránku skautIS, nastaví přihlášení.
-     *
      * @throws SettingsException
      * @throws AbortException
      * @throws AuthenticationException
@@ -74,14 +75,9 @@ class AuthPresenter extends BasePresenter
         if ($this->user->identity->data['firstLogin']) {
             $user = $this->userRepository->findById($this->user->id);
 
-            $this->mailService->sendMailFromTemplate(
-                $user,
-                '',
-                Template::SIGN_IN,
-                [
+            $this->mailService->sendMailFromTemplate($user, '', Template::SIGN_IN, [
                 TemplateVariable::SEMINAR_NAME => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
-                    ]
-            );
+            ]);
         }
 
         $this->redirectAfterLogin($this->getParameter('ReturnUrl'));
@@ -89,7 +85,6 @@ class AuthPresenter extends BasePresenter
 
     /**
      * Přesměruje na odhlašovací stránku skautIS.
-     *
      * @throws AbortException
      */
     public function actionLogout() : void
@@ -105,7 +100,6 @@ class AuthPresenter extends BasePresenter
 
     /**
      * Provede přesměrování po úspěšném přihlášení, v závislosti na nastavení, nastavení role nebo returnUrl.
-     *
      * @throws SettingsException
      * @throws AbortException
      * @throws \Throwable

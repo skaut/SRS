@@ -21,6 +21,7 @@ use Nextras\Forms\Controls\DatePicker;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class SeminarForm
 {
@@ -35,6 +36,7 @@ class SeminarForm
     /** @var SubeventRepository */
     private $subeventRepository;
 
+
     public function __construct(
         BaseForm $baseForm,
         SettingsFacade $settingsFacade,
@@ -47,7 +49,6 @@ class SeminarForm
 
     /**
      * Vytvoří formulář.
-     *
      * @throws SettingsException
      * @throws \Throwable
      */
@@ -60,16 +61,16 @@ class SeminarForm
         $renderer->wrappers['label']['container']   = 'div class="col-sm-5 col-xs-5 control-label"';
 
         $form->addText('seminarName', 'admin.configuration.seminar_name')
-                ->addRule(Form::FILLED, 'admin.configuration.seminar_name_empty');
+            ->addRule(Form::FILLED, 'admin.configuration.seminar_name_empty');
 
         $seminarFromDate = $form->addDatePicker('seminarFromDate', 'admin.configuration.seminar_from_date')
-                ->addRule(Form::FILLED, 'admin.configuration.seminar_from_date_empty');
+            ->addRule(Form::FILLED, 'admin.configuration.seminar_from_date_empty');
 
         $seminarToDate = $form->addDatePicker('seminarToDate', 'admin.configuration.seminar_to_date')
-                ->addRule(Form::FILLED, 'admin.configuration.seminar_to_date_empty');
+            ->addRule(Form::FILLED, 'admin.configuration.seminar_to_date_empty');
 
         $editRegistrationTo = $form->addDatePicker('editRegistrationTo', 'admin.configuration.edit_registration_to')
-                ->addRule(Form::FILLED, 'admin.configuration.edit_registration_to_empty');
+            ->addRule(Form::FILLED, 'admin.configuration.edit_registration_to_empty');
 
         $seminarFromDate->addRule([$this, 'validateSeminarFromDate'], 'admin.configuration.seminar_from_date_after_to', [$seminarFromDate, $seminarToDate]);
         $seminarToDate->addRule([$this, 'validateSeminarToDate'], 'admin.configuration.seminar_to_date_before_from', [$seminarToDate, $seminarFromDate]);
@@ -77,14 +78,12 @@ class SeminarForm
 
         $form->addSubmit('submit', 'admin.common.save');
 
-        $form->setDefaults(
-            [
-                    'seminarName' => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
-                    'seminarFromDate' => $this->settingsFacade->getDateValue(Settings::SEMINAR_FROM_DATE),
-                    'seminarToDate' => $this->settingsFacade->getDateValue(Settings::SEMINAR_TO_DATE),
-                    'editRegistrationTo' => $this->settingsFacade->getDateValue(Settings::EDIT_REGISTRATION_TO),
-                ]
-        );
+        $form->setDefaults([
+            'seminarName' => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
+            'seminarFromDate' => $this->settingsFacade->getDateValue(Settings::SEMINAR_FROM_DATE),
+            'seminarToDate' => $this->settingsFacade->getDateValue(Settings::SEMINAR_TO_DATE),
+            'editRegistrationTo' => $this->settingsFacade->getDateValue(Settings::EDIT_REGISTRATION_TO),
+        ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
 
@@ -93,7 +92,6 @@ class SeminarForm
 
     /**
      * Zpracuje formulář.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws SettingsException
@@ -113,7 +111,6 @@ class SeminarForm
 
     /**
      * Ověří, že datum začátku semináře je dříve než konce.
-     *
      * @param DateTime[] $args
      */
     public function validateSeminarFromDate(DatePicker $field, array $args) : bool
@@ -123,7 +120,6 @@ class SeminarForm
 
     /**
      * Ověří, že datum konce semináře je později než začátku.
-     *
      * @param DateTime[] $args
      */
     public function validateSeminarToDate(DatePicker $field, array $args) : bool
@@ -133,7 +129,6 @@ class SeminarForm
 
     /**
      * Ověří, že datum uzavření registrace je dříve než začátek semináře.
-     *
      * @param DateTime[] $args
      */
     public function validateEditRegistrationTo(DatePicker $field, array $args) : bool

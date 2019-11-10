@@ -13,9 +13,10 @@ use Nettrine\ORM\Entity\Attributes\Id as Identifier;
 /**
  * Abstraktní entita obsahu.
  *
- * @author                               Michal Májský
- * @author                               Jan Staněk <jan.stanek@skaut.cz>
- * @ORM\Entity
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
+ * @ORM\Entity(repositoryClass="ContentRepository")
  * @ORM\Table(name="content")
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="type", type="string")
@@ -40,115 +41,101 @@ abstract class Content implements IContent
 {
     /**
      * TextContent.
-     *
      * @var string
      */
     public const TEXT = 'text';
 
     /**
      * ImageContent.
-     *
      * @var string
      */
     public const IMAGE = 'image';
 
     /**
      * DocumentContent.
-     *
      * @var string
      */
     public const DOCUMENT = 'document';
 
     /**
      * ApplicationContent.
-     *
      * @var string
      */
     public const APPLICATION = 'application';
 
     /**
      * HtmlContent.
-     *
      * @var string
      */
     public const HTML = 'html';
 
     /**
      * FaqContent.
-     *
      * @var string
      */
     public const FAQ = 'faq';
 
     /**
      * NewsContent.
-     *
      * @var string
      */
     public const NEWS = 'news';
 
     /**
      * PlaceContent.
-     *
      * @var string
      */
     public const PLACE = 'place';
 
     /**
      * ProgramsContent.
-     *
      * @var string
      */
     public const PROGRAMS = 'programs';
 
     /**
      * UsersContent.
-     *
      * @var string
      */
     public const USERS = 'users';
 
     /**
      * LectorsContent.
-     *
      * @var string
      */
     public const LECTORS = 'lectors';
 
     /**
      * BlocksContent.
-     *
      * @var string
      */
     public const BLOCKS = 'blocks';
 
     /**
      * CapacitiesContent.
-     *
      * @var string
      */
     public const CAPACITIES = 'capacities';
 
     /**
      * OrganizerContent
-     *
      * @var string
      */
     public const ORGANIZER = 'organizer';
 
+
     /**
      * Hlavní oblast stránky.
-     *
      * @var string
      */
     public const MAIN = 'main';
 
     /**
      * Postranní panel stránky.
-     *
      * @var string
      */
     public const SIDEBAR = 'sidebar';
+
 
     /** @var string[] */
     public static $types = [
@@ -174,46 +161,42 @@ abstract class Content implements IContent
         self::SIDEBAR,
     ];
 
-    use Identifier;
-
     /**
      * Typ obsahu.
-     *
      * @var string
      */
     protected $type;
 
+    use Identifier;
+
     /**
      * Nadpis obsahu.
-     *
      * @ORM\Column(type="string", nullable=true)
-     * @var                       string
+     * @var string
      */
     protected $heading;
 
     /**
      * Stránka, na které je obsah umístěn.
-     *
      * @ORM\ManyToOne(targetEntity="\App\Model\CMS\Page", inversedBy="contents", cascade={"persist"})
-     * @var                                               Page
+     * @var Page
      */
     protected $page;
 
     /**
      * Oblast stránky, ve které se obsah nachází.
-     *
      * @ORM\Column(type="string")
-     * @var                       string
+     * @var string
      */
     protected $area;
 
     /**
      * Pořadí obsahu na stránce.
-     *
      * @ORM\Column(type="integer")
-     * @var                        int
+     * @var int
      */
     protected $position = 0;
+
 
     /**
      * @throws PageException
@@ -294,24 +277,22 @@ abstract class Content implements IContent
         $formContainer = $form->addContainer($this->getContentFormName());
 
         $formContainer->addHidden('id')
-                ->setAttribute('class', 'id');
+            ->setAttribute('class', 'id');
 
         $formContainer->addHidden('position')
-                ->setAttribute('class', 'position');
+            ->setAttribute('class', 'position');
 
         $formContainer->addHidden('delete')
-                ->setAttribute('class', 'delete');
+            ->setAttribute('class', 'delete');
 
         $formContainer->addText('heading', 'admin.cms.pages_content_heading');
 
-        $formContainer->setDefaults(
-            [
-                    'id' => $this->id,
-                    'position' => $this->position,
-                    'delete' => 0,
-                    'heading' => $this->heading,
-                ]
-        );
+        $formContainer->setDefaults([
+            'id' => $this->id,
+            'position' => $this->position,
+            'delete' => 0,
+            'heading' => $this->heading,
+        ]);
 
         return $form;
     }

@@ -24,7 +24,7 @@
                             <ul class="list-group">
                                 {foreach $uncategorizedBlocks as $block}
                                     <a href="?blockId={$block->getId()}"
-									   n:class="list-group-item, $block->getId() == $selectedBlockId ? active">
+                                            n:class="list-group-item, $block->getId() == $selectedBlockId ? active">
                                         {$block->getName()}
                                     </a>
                                 {/foreach}
@@ -48,7 +48,7 @@
                             <ul class="list-group">
                                 {foreach $category->getBlocks() as $block}
                                     <a href="?blockId={$block->getId()}"
-									   n:class="list-group-item, $block->getId() == $selectedBlockId ? active">
+                                            n:class="list-group-item, $block->getId() == $selectedBlockId ? active">
                                         {$block->getName()}
                                     </a>
                                 {/foreach}

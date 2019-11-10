@@ -30,6 +30,7 @@ class SubeventsGridControl extends Control
     /** @var BlockRepository */
     private $blockRepository;
 
+
     public function __construct(
         Translator $translator,
         SubeventRepository $subeventRepository,
@@ -52,7 +53,6 @@ class SubeventsGridControl extends Control
 
     /**
      * Vytvoří komponentu.
-     *
      * @throws DataGridException
      */
     public function createComponentSubeventsGrid(string $name) : void
@@ -66,50 +66,39 @@ class SubeventsGridControl extends Control
         $grid->addColumnText('name', 'admin.configuration.subevents_name');
 
         $grid->addColumnText('implicit', 'admin.configuration.subevents_implicit')
-                ->setReplacement(
-                    [
-                            '0' => $this->translator->translate('admin.common.no'),
-                            '1' => $this->translator->translate('admin.common.yes'),
-                        ]
-                );
+            ->setReplacement([
+                '0' => $this->translator->translate('admin.common.no'),
+                '1' => $this->translator->translate('admin.common.yes'),
+            ]);
 
         $grid->addColumnNumber('fee', 'admin.configuration.subevents_fee');
 
         $grid->addColumnText('capacity', 'admin.configuration.subevents_occupancy', 'occupancy_text');
 
         $grid->addToolbarButton('Subevents:add')
-                ->setIcon('plus')
-                ->setTitle('admin.common.add');
+            ->setIcon('plus')
+            ->setTitle('admin.common.add');
 
         $grid->addAction('edit', 'admin.common.edit', 'Subevents:edit');
-        $grid->allowRowsAction(
-            'edit',
-            function ($item) {
-                    return ! $item->isImplicit();
-            }
-        );
+        $grid->allowRowsAction('edit', function ($item) {
+            return ! $item->isImplicit();
+        });
 
         $grid->addAction('delete', '', 'delete!')
-                ->setIcon('trash')
-                ->setTitle('admin.common.delete')
-                ->setClass('btn btn-xs btn-danger')
-                ->addAttributes(
-                    [
-                            'data-toggle' => 'confirmation',
-                            'data-content' => $this->translator->translate('admin.configuration.subevents_delete_confirm'),
-                        ]
-                );
-        $grid->allowRowsAction(
-            'delete',
-            function ($item) {
-                    return ! $item->isImplicit();
-            }
-        );
+            ->setIcon('trash')
+            ->setTitle('admin.common.delete')
+            ->setClass('btn btn-xs btn-danger')
+            ->addAttributes([
+                'data-toggle' => 'confirmation',
+                'data-content' => $this->translator->translate('admin.configuration.subevents_delete_confirm'),
+            ]);
+        $grid->allowRowsAction('delete', function ($item) {
+            return ! $item->isImplicit();
+        });
     }
 
     /**
      * Zpracuje odstranění podakce.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException

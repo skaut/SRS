@@ -19,93 +19,94 @@ class BlockDetailDTO
 
     /**
      * @JMS\Type("int")
-     * @var             int
+     * @var int
      */
     private $id;
 
     /**
      * @JMS\Type("string")
-     * @var                string
+     * @var string
      */
     private $name;
 
     /**
      * @JMS\Type("string")
-     * @var                string
+     * @var string
      */
     private $category;
 
     /**
      * @JMS\Type("array<ApiModule\DTO\Schedule\LectorDetailDTO>")
-     * @var                                                       LectorDetailDTO[]
+     * @var LectorDetailDTO[]
      */
     private $lectors;
 
     /**
      * @JMS\Type("string")
-     * @var                string
+     * @var string
      */
     private $lectorsNames;
 
     /**
      * @JMS\Type("int")
-     * @var             int
+     * @var int
      */
     private $durationHours;
 
     /**
      * @JMS\Type("int")
-     * @var             int
+     * @var int
      */
     private $durationMinutes;
 
     /**
      * @JMS\Type("int")
-     * @var             ?int
+     * @var ?int
      */
     private $capacity;
 
     /**
      * @JMS\Type("boolean")
-     * @var                 bool
+     * @var bool
      */
     private $mandatory;
 
     /**
      * @JMS\Type("boolean")
-     * @var                 bool
+     * @var bool
      */
     private $autoRegistered;
 
     /**
      * @JMS\Type("string")
-     * @var                string
+     * @var string
      */
     private $perex;
 
     /**
      * @JMS\Type("string")
-     * @var                string
+     * @var string
      */
     private $description;
 
     /**
      * @JMS\Type("int")
-     * @var             int
+     * @var int
      */
     private $programsCount;
 
     /**
      * @JMS\Type("boolean")
-     * @var                 bool
+     * @var bool
      */
     private $userAllowed;
 
     /**
      * @JMS\Type("boolean")
-     * @var                 bool
+     * @var bool
      */
     private $userAttends;
+
 
     public function getId() : int
     {

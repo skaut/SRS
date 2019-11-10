@@ -18,6 +18,7 @@ use Nette\Application\UI\Form;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class PaymentProofForm
 {
@@ -29,6 +30,7 @@ class PaymentProofForm
     /** @var SettingsFacade */
     private $settingsFacade;
 
+
     public function __construct(BaseForm $baseForm, SettingsFacade $settingsFacade)
     {
         $this->baseFormFactory = $baseForm;
@@ -37,7 +39,6 @@ class PaymentProofForm
 
     /**
      * Vytvoří formulář.
-     *
      * @throws SettingsException
      * @throws \Throwable
      */
@@ -50,28 +51,26 @@ class PaymentProofForm
         $renderer->wrappers['label']['container']   = 'div class="col-sm-5 col-xs-5 control-label"';
 
         $form->addTextArea('company', 'admin.configuration.company')
-                ->addRule(Form::FILLED, 'admin.configuration.company_empty');
+            ->addRule(Form::FILLED, 'admin.configuration.company_empty');
 
         $form->addText('ico', 'admin.configuration.ico')
-                ->addRule(Form::FILLED, 'admin.configuration.ico_empty')
-                ->addRule(Form::PATTERN, 'admin.configuration.ico_format', '^\d{8}$');
+            ->addRule(Form::FILLED, 'admin.configuration.ico_empty')
+            ->addRule(Form::PATTERN, 'admin.configuration.ico_format', '^\d{8}$');
 
         $form->addText('accountant', 'admin.configuration.accountant')
-                ->addRule(Form::FILLED, 'admin.configuration.accountant_empty');
+            ->addRule(Form::FILLED, 'admin.configuration.accountant_empty');
 
         $form->addText('printLocation', 'admin.configuration.print_location')
-                ->addRule(Form::FILLED, 'admin.configuration.print_location_empty');
+            ->addRule(Form::FILLED, 'admin.configuration.print_location_empty');
 
         $form->addSubmit('submit', 'admin.common.save');
 
-        $form->setDefaults(
-            [
-                    'company' => $this->settingsFacade->getValue(Settings::COMPANY),
-                    'ico' => $this->settingsFacade->getValue(Settings::ICO),
-                    'accountant' => $this->settingsFacade->getValue(Settings::ACCOUNTANT),
-                    'printLocation' => $this->settingsFacadey->getValue(Settings::PRINT_LOCATION),
-                ]
-        );
+        $form->setDefaults([
+            'company' => $this->settingsFacade->getValue(Settings::COMPANY),
+            'ico' => $this->settingsFacade->getValue(Settings::ICO),
+            'accountant' => $this->settingsFacade->getValue(Settings::ACCOUNTANT),
+            'printLocation' => $this->settingsFacade->getValue(Settings::PRINT_LOCATION),
+        ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
 
@@ -80,7 +79,6 @@ class PaymentProofForm
 
     /**
      * Zpracuje formulář.
-     *
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException

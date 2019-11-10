@@ -17,6 +17,7 @@ use Nette\Application\UI\Form;
  * Formulář pro nastavení přihlášky.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class ApplicationForm
 {
@@ -28,16 +29,15 @@ class ApplicationForm
     /** @var SettingsFacade */
     private $settingsFacade;
 
+
     public function __construct(BaseForm $baseForm, SettingsFacade $settingsFacade)
     {
         $this->baseFormFactory = $baseForm;
-        $this->settingsFacade  = $settingsFacade;
         $this->settingsFacade  = $settingsFacade;
     }
 
     /**
      * Vytvoří formulář.
-     *
      * @throws SettingsException
      * @throws \Throwable
      */
@@ -46,19 +46,17 @@ class ApplicationForm
         $form = $this->baseFormFactory->create();
 
         $form->addTextArea('applicationAgreement', 'admin.configuration.application_agreement')
-                ->setAttribute('rows', 5);
+            ->setAttribute('rows', 5);
 
         $form->addDatePicker('editCustomInputsTo', 'admin.configuration.application_edit_custom_inputs_to')
-                ->addRule(Form::FILLED, 'admin.configuration.application_edit_custom_inputs_to_empty');
+            ->addRule(Form::FILLED, 'admin.configuration.application_edit_custom_inputs_to_empty');
 
         $form->addSubmit('submit', 'admin.common.save');
 
-        $form->setDefaults(
-            [
-                    'applicationAgreement' => $this->settingsFacade->getValue(Settings::APPLICATION_AGREEMENT),
-                    'editCustomInputsTo' => $this->settingsFacade->getDateValue(Settings::EDIT_CUSTOM_INPUTS_TO),
-                ]
-        );
+        $form->setDefaults([
+            'applicationAgreement' => $this->settingsFacade->getValue(Settings::APPLICATION_AGREEMENT),
+            'editCustomInputsTo' => $this->settingsFacade->getDateValue(Settings::EDIT_CUSTOM_INPUTS_TO),
+        ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
 
@@ -67,7 +65,6 @@ class ApplicationForm
 
     /**
      * Zpracuje formulář.
-     *
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException

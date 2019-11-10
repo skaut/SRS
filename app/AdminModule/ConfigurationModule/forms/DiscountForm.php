@@ -18,33 +18,30 @@ use Nette\Application\UI\Form;
  * Komponenta s formulářem pro úpravu slevy.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class DiscountForm extends UI\Control
 {
     /**
      * Id upravované slevy.
-     *
      * @var int
      */
     public $id;
 
     /**
      * Upravovaná sleva.
-     *
      * @var Discount
      */
     private $discount;
 
     /**
      * Událost při uložení formuláře.
-     *
      * @var callable
      */
     public $onSave;
 
     /**
      * Událost při chybě podmínky.
-     *
      * @var callable
      */
     public $onConditionError;
@@ -60,6 +57,7 @@ class DiscountForm extends UI\Control
 
     /** @var DiscountService */
     private $discountService;
+
 
     public function __construct(
         int $id,
@@ -103,27 +101,25 @@ class DiscountForm extends UI\Control
         $form->addHidden('condition');
 
         $form->addTextArea('conditionText', 'admin.configuration.discounts_condition')
-                ->setAttribute('readonly', true);
+            ->setAttribute('readonly', true);
 
         $form->addText('discount', 'admin.configuration.discounts_discount')
-                ->addRule(Form::FILLED, 'admin.configuration.discounts_discount_empty')
-                ->addRule(Form::INTEGER, 'admin.configuration.discounts_discount_format');
+            ->addRule(Form::FILLED, 'admin.configuration.discounts_discount_empty')
+            ->addRule(Form::INTEGER, 'admin.configuration.discounts_discount_format');
 
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->addSubmit('cancel', 'admin.common.cancel')
-                ->setValidationScope([])
-                ->setAttribute('class', 'btn btn-warning');
+            ->setValidationScope([])
+            ->setAttribute('class', 'btn btn-warning');
 
         if ($this->discount) {
-            $form->setDefaults(
-                [
-                        'id' => $this->id,
-                        'conditionText' => $this->discountService->convertConditionToText($this->discount->getDiscountCondition()),
-                        'condition' => $this->discount->getDiscountCondition(),
-                        'discount' => $this->discount->getDiscount(),
-                    ]
-            );
+            $form->setDefaults([
+                'id' => $this->id,
+                'conditionText' => $this->discountService->convertConditionToText($this->discount->getDiscountCondition()),
+                'condition' => $this->discount->getDiscountCondition(),
+                'discount' => $this->discount->getDiscount(),
+            ]);
         }
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -133,7 +129,6 @@ class DiscountForm extends UI\Control
 
     /**
      * Zpracuje formulář.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */

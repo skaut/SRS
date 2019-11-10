@@ -17,32 +17,34 @@ use App\Model\CMS\PageRepository;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class PagesPresenter extends CMSBasePresenter
 {
     /**
-     * @var    IPagesGridControlFactory
+     * @var IPagesGridControlFactory
      * @inject
      */
     public $pagesGridControlFactory;
 
     /**
-     * @var    IPageFormFactory
+     * @var IPageFormFactory
      * @inject
      */
     public $pageFormFactory;
 
     /**
-     * @var    PageRepository
+     * @var PageRepository
      * @inject
      */
     public $pagesRepository;
 
     /**
-     * @var    ContentFacade
+     * @var ContentFacade
      * @inject
      */
     public $contentFacade;
+
 
     public function renderContent(int $id, string $area) : void
     {

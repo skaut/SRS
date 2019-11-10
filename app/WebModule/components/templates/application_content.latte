@@ -1,12 +1,12 @@
 {block head}
-<script>
-	$(function () {
-		$('form#frm-applicationContent-applicationForm').submit(function () {
-			if (!LiveForm.forms[this.id].hasError)
-				$(this).find(':input[type=submit]').prop('disabled', true);
-		});
-	});
-</script>
+    <script>
+        $(function () {
+            $('form#frm-applicationContent-applicationForm').submit(function () {
+                if(!LiveForm.forms[this.id].hasError)
+                    $(this).find(':input[type=submit]').prop('disabled', true);
+            });
+        });
+    </script>
 {/block}
 
 <div class="application-content">
@@ -38,38 +38,38 @@
                     </div>
                 {else}
                     <script>
-						Nette.validators.AppWebModuleFormsApplicationForm_toggleArrivalDeparture = function (elem, arg, value) {
-							var i;
-							for (i = 0; i < value.length; i++) {
-								if (jQuery.inArray(value[i], arg) != -1)
-									return true;
-							}
-							return false;
-						};
+                        Nette.validators.AppWebModuleFormsApplicationForm_toggleArrivalDeparture = function (elem, arg, value) {
+                            var i;
+                            for (i = 0; i < value.length; i++) {
+                                if (jQuery.inArray(value[i], arg) != -1)
+                                    return true;
+                            }
+                            return false;
+                        };
                     </script>
 
                     {if $explicitSubeventsExists}
                         <script>
-							$(function () {
-								$("select[name='roles[]']").on("change", function () {
-									changeSubeventsRequired();
-								});
-								changeSubeventsRequired();
-							});
+                            $(function () {
+                                $("select[name='roles[]']").on("change", function () {
+                                    changeSubeventsRequired();
+                                });
+                                changeSubeventsRequired();
+                            });
 
-							function changeSubeventsRequired() {
-								var value = $("select[name='roles[]']").val();
-								var label = $("label[for='frm-applicationContent-applicationForm-subevents']");
-								var rolesWithSubevents = JSON.parse({$rolesWithSubevents});
-								var i;
-								for (i = 0; i < value.length; i++) {
-									if (jQuery.inArray(parseInt(value[i]), rolesWithSubevents) != -1) {
-										label.addClass('required');
-										return;
-									}
-								}
-								label.removeClass('required');
-							}
+                            function changeSubeventsRequired() {
+                                var value = $("select[name='roles[]']").val();
+                                var label = $("label[for='frm-applicationContent-applicationForm-subevents']");
+                                var rolesWithSubevents = JSON.parse({$rolesWithSubevents});
+                                var i;
+                                for (i = 0; i < value.length; i++) {
+                                    if (jQuery.inArray(parseInt(value[i]), rolesWithSubevents) != -1) {
+                                        label.addClass('required');
+                                        return;
+                                    }
+                                }
+                                label.removeClass('required');
+                            }
                         </script>
                     {/if}
 
@@ -100,12 +100,12 @@
                             <thead>
                                 <tr>
                                     <th>{_web.application_content.application_date}</th>
-										{if $userHasFixedFeeRole}
+                                    {if $userHasFixedFeeRole}
                                         <th>{_web.application_content.application_roles}</th>
-										{/if}
-										{if $explicitSubeventsExists}
+                                    {/if}
+                                    {if $explicitSubeventsExists}
                                         <th>{_web.application_content.application_subevents}</th>
-										{/if}
+                                    {/if}
                                     <th>{_web.application_content.application_fee}</th>
                                     <th>{_web.application_content.application_variable_symbol}</th>
                                     <th>{_web.application_content.application_maturity_date}</th>

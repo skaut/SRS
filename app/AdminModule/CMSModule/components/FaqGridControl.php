@@ -28,6 +28,7 @@ class FaqGridControl extends Control
     /** @var FaqRepository */
     private $faqRepository;
 
+
     public function __construct(Translator $translator, FaqRepository $faqRepository)
     {
         parent::__construct();
@@ -46,7 +47,6 @@ class FaqGridControl extends Control
 
     /**
      * Vytvoří komponentu.
-     *
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
@@ -64,43 +64,38 @@ class FaqGridControl extends Control
         $grid->addColumnText('author', 'admin.cms.faq_author', 'author.displayName');
 
         $grid->addColumnStatus('public', 'admin.cms.faq_public')
-                        ->addOption(false, 'admin.cms.faq_public_private')
-                        ->setClass('btn-danger')
-                        ->endOption()
-                        ->addOption(true, 'admin.cms.faq_public_public')
-                        ->setClass('btn-success')
-                        ->endOption()
-                ->onChange[] = [$this, 'changeStatus'];
+            ->addOption(false, 'admin.cms.faq_public_private')
+            ->setClass('btn-danger')
+            ->endOption()
+            ->addOption(true, 'admin.cms.faq_public_public')
+            ->setClass('btn-success')
+            ->endOption()
+            ->onChange[] = [$this, 'changeStatus'];
 
         $grid->addColumnText('answered', 'admin.cms.faq_answered')
-                ->setReplacement(
-                    [
-                            false => $this->translator->translate('admin.common.no'),
-                            true => $this->translator->translate('admin.common.yes'),
-                        ]
-                );
+            ->setReplacement([
+                false => $this->translator->translate('admin.common.no'),
+                true => $this->translator->translate('admin.common.yes'),
+            ]);
 
         $grid->addToolbarButton('Faq:add')
-                ->setIcon('plus')
-                ->setTitle('admin.common.add');
+            ->setIcon('plus')
+            ->setTitle('admin.common.add');
 
         $grid->addAction('edit', 'admin.common.edit', 'Faq:edit');
 
         $grid->addAction('delete', '', 'delete!')
-                ->setIcon('trash')
-                ->setTitle('admin.common.delete')
-                ->setClass('btn btn-xs btn-danger')
-                ->addAttributes(
-                    [
-                            'data-toggle' => 'confirmation',
-                            'data-content' => $this->translator->translate('admin.cms.faq_delete_confirm'),
-                        ]
-                );
+            ->setIcon('trash')
+            ->setTitle('admin.common.delete')
+            ->setClass('btn btn-xs btn-danger')
+            ->addAttributes([
+                'data-toggle' => 'confirmation',
+                'data-content' => $this->translator->translate('admin.cms.faq_delete_confirm'),
+            ]);
     }
 
     /**
      * Zpracuje odstranění otázky.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -117,7 +112,6 @@ class FaqGridControl extends Control
 
     /**
      * Přesuee otázku $item_id mezi $prev_id a $next_id.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -139,7 +133,6 @@ class FaqGridControl extends Control
 
     /**
      * Změní viditelnost otázky.
-     *
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException

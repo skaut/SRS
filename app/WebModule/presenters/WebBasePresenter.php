@@ -30,71 +30,73 @@ use WebLoader\Nette\JavaScriptLoader;
  * BasePresenter pro WebModule.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 abstract class WebBasePresenter extends BasePresenter
 {
     /**
-     * @var    Authorizator
+     * @var Authorizator
      * @inject
      */
     public $authorizator;
 
     /**
-     * @var    Authenticator
+     * @var Authenticator
      * @inject
      */
     public $authenticator;
 
     /**
-     * @var    ResourceFacade
+     * @var ResourceFacade
      * @inject
      */
     public $resourceFacade;
 
     /**
-     * @var    RoleRepository
+     * @var RoleRepository
      * @inject
      */
     public $roleRepository;
 
     /**
-     * @var    PageFacade
+     * @var PageFacade
      * @inject
      */
     public $pageFacade;
 
     /**
-     * @var    PageRepository
+     * @var PageRepository
      * @inject
      */
     public $pageRepository;
 
     /**
-     * @var    SettingsFacade
+     * @var SettingsFacade
      * @inject
      */
     public $settingsFacade;
 
     /**
-     * @var    UserRepository
+     * @var UserRepository
      * @inject
      */
     public $userRepository;
 
     /**
-     * @var    SkautIsService
+     * @var SkautIsService
      * @inject
      */
     public $skautIsService;
 
     /**
-     * @var    DatabaseService
+     * @var DatabaseService
      * @inject
      */
     public $databaseService;
 
     /** @var User */
     protected $dbuser;
+
 
     /**
      * Načte css podle konfigurace v config.neon.
@@ -162,7 +164,6 @@ abstract class WebBasePresenter extends BasePresenter
 
     /**
      * Ukončí testování role.
-     *
      * @throws AbortException
      */
     public function actionExitRoleTest() : void
@@ -173,7 +174,6 @@ abstract class WebBasePresenter extends BasePresenter
 
     /**
      * Zkontroluje stav instalace.
-     *
      * @throws AbortException
      * @throws \Throwable
      */

@@ -17,7 +17,7 @@ use Nette\Application\UI\Form;
 /**
  * Entita obsahu s přehledem kapacit rolí.
  *
- * @author                               Jan Staněk <jan.stanek@skaut.cz>
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity
  * @ORM\Table(name="capacities_content")
  */
@@ -28,14 +28,14 @@ class CapacitiesContent extends Content implements IContent
 
     /**
      * Role, jejichž obsazenosti se vypíší.
-     *
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role")
-     * @var                                                Collection|Role[]
+     * @var Collection|Role[]
      */
     protected $roles;
 
     /** @var RoleRepository */
     private $roleRepository;
+
 
     /**
      * @throws PageException
@@ -84,7 +84,7 @@ class CapacitiesContent extends Content implements IContent
             'admin.cms.pages_content_capacities_roles',
             $this->roleRepository->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED])
         )
-                ->setDefaultValue($this->roleRepository->findRolesIds($this->roles));
+            ->setDefaultValue($this->roleRepository->findRolesIds($this->roles));
 
         return $form;
     }

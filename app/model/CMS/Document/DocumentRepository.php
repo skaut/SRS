@@ -28,31 +28,29 @@ class DocumentRepository extends EntityRepository
 
     /**
      * Vrací dokumenty podle rolí a vybraných tagů, seřazené podle názvu.
-     *
-     * @param  int[] $rolesIds pole id rolí
-     * @param  int[] $tagsIds
+     * @param int[] $rolesIds pole id rolí
+     * @param int[] $tagsIds
      * @return Collection|Document[]
      */
     public function findRolesAllowedByTagsOrderedByName(array $rolesIds, array $tagsIds) : Collection
     {
         $result = $this->createQueryBuilder('d')
-                ->select('d')
-                ->join('d.tags', 't')
-                ->join('t.roles', 'r')
-                ->where('t IN (:tagsIds)')
-                ->andWhere('r IN (:rolesIds)')
-                ->setParameter('tagsIds', $tagsIds)
-                ->setParameter('rolesIds', $rolesIds)
-                ->orderBy('d.name')
-                ->getQuery()
-                ->getResult();
+            ->select('d')
+            ->join('d.tags', 't')
+            ->join('t.roles', 'r')
+            ->where('t IN (:tagsIds)')
+            ->andWhere('r IN (:rolesIds)')
+            ->setParameter('tagsIds', $tagsIds)
+            ->setParameter('rolesIds', $rolesIds)
+            ->orderBy('d.name')
+            ->getQuery()
+            ->getResult();
 
         return new ArrayCollection($result);
     }
 
     /**
      * Uloží dokument.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -64,7 +62,6 @@ class DocumentRepository extends EntityRepository
 
     /**
      * Odstraní dokument.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */

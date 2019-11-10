@@ -22,6 +22,7 @@ use Tracy\ILogger;
  * Formulár pro nastavení párování plateb.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class BankForm
 {
@@ -36,6 +37,7 @@ class BankForm
     /** @var BankService */
     private $bankService;
 
+
     public function __construct(
         BaseForm $baseForm,
         SettingsFacade $settingsFacade,
@@ -48,7 +50,6 @@ class BankForm
 
     /**
      * Vytvoří formulář.
-     *
      * @throws \Throwable
      */
     public function create() : Form
@@ -61,11 +62,11 @@ class BankForm
 
         $form->addSelect('bank', 'admin.configuration.payment.bank.bank', ['fio' => 'FIO']);
         $form->addText('bankToken', 'admin.configuration.payment.bank.token')
-                ->addRule(Form::FILLED, 'admin.configuration.payment.bank.token_empty')
-                ->addRule(Form::LENGTH, 'admin.configuration.payment.bank.token_length', 64);
+            ->addRule(Form::FILLED, 'admin.configuration.payment.bank.token_empty')
+            ->addRule(Form::LENGTH, 'admin.configuration.payment.bank.token_length', 64);
         $form->addDatePicker('bankDownloadFrom', 'admin.configuration.payment.bank.download_from')
-                ->addRule(Form::FILLED, 'admin.configuration.payment.bank.download_from_empty')
-                ->addRule([$this, 'validateBankDownloadFromDate'], 'admin.configuration.payment.bank.download_from_future');
+            ->addRule(Form::FILLED, 'admin.configuration.payment.bank.download_from_empty')
+            ->addRule([$this, 'validateBankDownloadFromDate'], 'admin.configuration.payment.bank.download_from_future');
 
         $form->addSubmit('submit', 'admin.common.save');
 
@@ -76,7 +77,6 @@ class BankForm
 
     /**
      * Zpracuje formulář.
-     *
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException

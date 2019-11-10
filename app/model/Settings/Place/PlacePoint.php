@@ -10,7 +10,8 @@ use Nettrine\ORM\Entity\Attributes\Id as Identifier;
 /**
  * Entita mapového bodu.
  *
- * @author                                             Jan Staněk <jan.stanek@skaut.cz>
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="PlacePointRepository")
  * @ORM\Table(name="place_point")
  */
@@ -20,27 +21,25 @@ class PlacePoint
 
     /**
      * Název bodu.
-     *
      * @ORM\Column(type="string")
-     * @var                       string
+     * @var string
      */
     protected $name;
 
     /**
      * Zeměpisná šířka.
-     *
      * @ORM\Column(type="float")
-     * @var                      float
+     * @var float
      */
     protected $gpsLat;
 
     /**
      * Zeměpisná délka.
-     *
      * @ORM\Column(type="float")
-     * @var                      float
+     * @var float
      */
     protected $gpsLon;
+
 
     public function getName() : string
     {

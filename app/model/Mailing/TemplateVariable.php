@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace App\Model\Mailing;
 
 use Doctrine\ORM\Mapping as ORM;
+use Nettrine\ORM\Entity\Attributes\Id as Identifier;
 
 /**
  * Entita proměnná v automatickém e-mailu.
  *
- * @author                                   Jan Staněk <jan.stanek@skaut.cz>
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity
  * @ORM\Table(name="mail_template_variable")
  */
@@ -75,19 +77,13 @@ class TemplateVariable
      */
     public const USER = 'user';
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
-     * @var                        int|NULL
-     */
-    protected $id;
+
+    use Identifier;
 
     /**
      * Název proměnné.
-     *
      * @ORM\Column(type="string")
-     * @var                       string
+     * @var string
      */
     protected $name;
 

@@ -17,6 +17,7 @@ use Nette\Application\UI\Form;
  * Formulář pro nastavení podakcí.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class SubeventsForm
 {
@@ -28,6 +29,7 @@ class SubeventsForm
     /** @var SettingsFacade */
     private $settingsFacade;
 
+
     public function __construct(BaseForm $baseForm, SettingsFacade $settingsFacade)
     {
         $this->baseFormFactory = $baseForm;
@@ -36,7 +38,6 @@ class SubeventsForm
 
     /**
      * Vytvoří formulář.
-     *
      * @throws SettingsException
      * @throws \Throwable
      */
@@ -48,11 +49,9 @@ class SubeventsForm
 
         $form->addSubmit('submit', 'admin.common.save');
 
-        $form->setDefaults(
-            [
-                    'isAllowedAddSubeventsAfterPayment' => $this->settingsFacade->getValue(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT),
-                ]
-        );
+        $form->setDefaults([
+            'isAllowedAddSubeventsAfterPayment' => $this->settingsFacade->getValue(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT),
+        ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
 
@@ -61,7 +60,6 @@ class SubeventsForm
 
     /**
      * Zpracuje formulář.
-     *
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException

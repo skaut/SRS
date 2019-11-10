@@ -10,7 +10,7 @@ use Nette\Application\UI\Form;
 /**
  * Entita obsahu s informací o pořadateli.
  *
- * @author                              Jan Staněk <jan.stanek@skaut.cz>
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity
  * @ORM\Table(name="organizer_content")
  */
@@ -21,11 +21,11 @@ class OrganizerContent extends Content implements IContent
 
     /**
      * Pořadatel.
-     *
      * @ORM\Column(type="string", nullable=true)
-     * @var                       string
+     * @var string
      */
     protected $organizer;
+
 
     public function getOrganizer() : ?string
     {
@@ -47,7 +47,7 @@ class OrganizerContent extends Content implements IContent
         $formContainer = $form[$this->getContentFormName()];
 
         $formContainer->addText('organizer', 'admin.cms.pages_content_organizer')
-                ->setDefaultValue($this->organizer);
+            ->setDefaultValue($this->organizer);
 
         return $form;
     }

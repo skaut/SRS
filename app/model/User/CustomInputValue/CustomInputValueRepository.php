@@ -12,6 +12,7 @@ use Doctrine\ORM\ORMException;
  * Třída spravující hodnoty vlastních polí přihlášky.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class CustomInputValueRepository extends EntityRepository
 {
@@ -25,7 +26,6 @@ class CustomInputValueRepository extends EntityRepository
 
     /**
      * Uloží hodnotu vlastního pole přihlášky.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -37,7 +37,6 @@ class CustomInputValueRepository extends EntityRepository
 
     /**
      * Odstraní hodnotu vlastního pole přihlášky.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */

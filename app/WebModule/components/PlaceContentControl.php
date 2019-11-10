@@ -15,6 +15,7 @@ use Nette\Application\UI\Control;
  * Komponenta s místem.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class PlaceContentControl extends Control
 {
@@ -23,6 +24,7 @@ class PlaceContentControl extends Control
 
     /** @var PlacePointRepository */
     private $placePointRepository;
+
 
     public function __construct(SettingsFacade $settingsFacade, PlacePointRepository $placePointRepository)
     {

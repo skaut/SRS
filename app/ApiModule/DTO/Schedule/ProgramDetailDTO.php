@@ -18,69 +18,70 @@ class ProgramDetailDTO
 
     /**
      * @JMS\Type("int")
-     * @var             int
+     * @var int
      */
     private $id;
 
     /**
      * @JMS\Type("string")
-     * @var                string
+     * @var string
      */
     private $title;
 
     /**
      * @JMS\Type("string")
-     * @var                string
+     * @var string
      */
     private $start;
 
     /**
      * @JMS\Type("string")
-     * @var                string
+     * @var string
      */
     private $end;
 
     /**
      * @JMS\Type("int")
-     * @var             int
+     * @var int
      */
     private $blockId;
 
     /**
      * @JMS\Type("int")
-     * @var             int
+     * @var int
      */
     private $roomId;
 
     /**
      * @JMS\Type("int")
-     * @var             int
+     * @var int
      */
     private $attendeesCount;
 
     /**
      * @JMS\Type("boolean")
-     * @var                 bool
+     * @var bool
      */
     private $userAttends;
 
     /**
      * @JMS\Type("array")
-     * @var               int[]
+     * @var int[]
      */
     private $blocks;
 
     /**
      * @JMS\Type("boolean")
-     * @var                 bool
+     * @var bool
      */
     private $blocked;
 
     /**
      * @JMS\Type("boolean")
-     * @var                 bool
+     * @var bool
      */
     private $paid;
+
 
     public function getId() : int
     {

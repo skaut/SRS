@@ -22,6 +22,7 @@ use Nette\Forms\Controls\MultiSelectBox;
  * Formulář pro změnu rolí.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class RolesForm
 {
@@ -29,7 +30,6 @@ class RolesForm
 
     /**
      * Přihlášený uživatel.
-     *
      * @var User
      */
     private $user;
@@ -52,6 +52,7 @@ class RolesForm
     /** @var Validators */
     private $validators;
 
+
     public function __construct(
         BaseForm $baseFormFactory,
         UserRepository $userRepository,
@@ -70,7 +71,6 @@ class RolesForm
 
     /**
      * Vytvoří formulář.
-     *
      * @throws SettingsException
      * @throws \Throwable
      */
@@ -85,10 +85,10 @@ class RolesForm
         $rolesSelect = $form->addMultiSelect('roles', 'web.profile.roles')->setItems(
             $this->roleRepository->getRegisterableNowOrUsersOptionsWithCapacity($this->user)
         )
-                ->addRule(Form::FILLED, 'web.profile.roles_empty')
-                ->addRule([$this, 'validateRolesCapacities'], 'web.profile.roles_capacity_occupied')
-                ->addRule([$this, 'validateRolesRegisterable'], 'web.profile.role_is_not_registerable')
-                ->setDisabled(! $this->applicationService->isAllowedEditRegistration($this->user));
+            ->addRule(Form::FILLED, 'web.profile.roles_empty')
+            ->addRule([$this, 'validateRolesCapacities'], 'web.profile.roles_capacity_occupied')
+            ->addRule([$this, 'validateRolesRegisterable'], 'web.profile.role_is_not_registerable')
+            ->setDisabled(! $this->applicationService->isAllowedEditRegistration($this->user));
 
         foreach ($this->roleRepository->findAllRegisterableNowOrUsersOrderedByName($this->user) as $role) {
             if (! $role->getIncompatibleRoles()->isEmpty()) {
@@ -120,52 +120,51 @@ class RolesForm
         $submitButton = $form->addSubmit('submit', 'web.profile.change_roles');
 
         $cancelRegistrationButton = $form->addSubmit('cancelRegistration', 'web.profile.cancel_registration')
-                ->setAttribute('class', 'btn-danger');
+            ->setAttribute('class', 'btn-danger');
 
         if ($this->applicationService->isAllowedEditRegistration($this->user)) {
             $submitButton
-                    ->setAttribute('data-toggle', 'confirmation')
-                    ->setAttribute('data-content', $form->getTranslator()->translate('web.profile.change_roles_confirm'));
+                ->setAttribute('data-toggle', 'confirmation')
+                ->setAttribute('data-content', $form->getTranslator()->translate('web.profile.change_roles_confirm'));
             $cancelRegistrationButton
-                    ->setAttribute('data-toggle', 'confirmation')
-                    ->setAttribute('data-content', $form->getTranslator()->translate('web.profile.cancel_registration_confirm'));
+                ->setAttribute('data-toggle', 'confirmation')
+                ->setAttribute('data-content', $form->getTranslator()->translate('web.profile.cancel_registration_confirm'));
         } else {
             $submitButton
-                    ->setDisabled()
-                    ->setAttribute('data-toggle', 'tooltip')
-                    ->setAttribute('title', $form->getTranslator()->translate('web.profile.change_roles_disabled'));
+                ->setDisabled()
+                ->setAttribute('data-toggle', 'tooltip')
+                ->setAttribute('title', $form->getTranslator()->translate('web.profile.change_roles_disabled'));
             $cancelRegistrationButton
-                    ->setDisabled()
-                    ->setAttribute('data-toggle', 'tooltip')
-                    ->setAttribute('title', $form->getTranslator()->translate('web.profile.cancel_registration_disabled'));
+                ->setDisabled()
+                ->setAttribute('data-toggle', 'tooltip')
+                ->setAttribute('title', $form->getTranslator()->translate('web.profile.cancel_registration_disabled'));
         }
 
         $ticketDownloadFrom = $this->settingsFacade->getDateTimeValue(Settings::TICKETS_FROM);
         if ($ticketDownloadFrom !== null) {
             $downloadTicketButton = $form->addSubmit('downloadTicket', 'web.profile.download_ticket')
-                    ->setAttribute('class', 'btn-success');
+                ->setAttribute('class', 'btn-success');
 
-            if ($this->user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED)) || ! $this->user->hasPaidEveryApplication() || $ticketDownloadFrom > new \DateTime()) {
+            if ($this->user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))
+                || ! $this->user->hasPaidEveryApplication()
+                || $ticketDownloadFrom > new \DateTime()) {
                 $downloadTicketButton
-                        ->setDisabled()
-                        ->setAttribute('data-toggle', 'tooltip')
-                        ->setAttribute('title', $form->getTranslator()->translate('web.profile.download_ticket_disabled'));
+                    ->setDisabled()
+                    ->setAttribute('data-toggle', 'tooltip')
+                    ->setAttribute('title', $form->getTranslator()->translate('web.profile.download_ticket_disabled'));
             }
         }
 
-        $form->setDefaults(
-            [
-                    'id' => $id,
-                    'roles' => $this->roleRepository->findRolesIds($this->user->getRoles()),
-                ]
-        );
+        $form->setDefaults([
+            'id' => $id,
+            'roles' => $this->roleRepository->findRolesIds($this->user->getRoles()),
+        ]);
         $form->onSuccess[] = [$this, 'processForm'];
         return $form;
     }
 
     /**
      * Zpracuje formulář.
-     *
      * @throws \Throwable
      */
     public function processForm(Form $form, \stdClass $values) : void
@@ -189,7 +188,6 @@ class RolesForm
 
     /**
      * Ověří kompatibilitu rolí.
-     *
      * @param Role[] $args
      */
     public function validateRolesIncompatible(MultiSelectBox $field, array $args) : bool
@@ -202,7 +200,6 @@ class RolesForm
 
     /**
      * Ověří výběr vyžadovaných rolí.
-     *
      * @param Role[] $args
      */
     public function validateRolesRequired(MultiSelectBox $field, array $args) : bool

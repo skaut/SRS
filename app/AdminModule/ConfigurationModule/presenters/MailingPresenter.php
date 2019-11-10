@@ -15,20 +15,22 @@ use Nette\Application\UI\Form;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class MailingPresenter extends ConfigurationBasePresenter
 {
     /**
-     * @var    MailingForm
+     * @var MailingForm
      * @inject
      */
     public $mailingFormFactory;
 
     /**
-     * @var    SettingsFacade
+     * @var SettingsFacade
      * @inject
      */
     public $settingsFacade;
+
 
     /**
      * @throws SettingsException

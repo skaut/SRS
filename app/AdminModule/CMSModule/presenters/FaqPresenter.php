@@ -19,22 +19,23 @@ use Nette\Application\UI\Form;
 class FaqPresenter extends CMSBasePresenter
 {
     /**
-     * @var    IFaqGridControlFactory
+     * @var IFaqGridControlFactory
      * @inject
      */
     public $faqGridControlFactory;
 
     /**
-     * @var    FaqForm
+     * @var FaqForm
      * @inject
      */
     public $faqFormFactory;
 
     /**
-     * @var    FaqRepository
+     * @var FaqRepository
      * @inject
      */
     public $faqRepository;
+
 
     public function renderEdit(int $id) : void
     {

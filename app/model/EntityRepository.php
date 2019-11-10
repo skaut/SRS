@@ -13,6 +13,8 @@ use function reset;
 
 /**
  * Custom base EntityRepository
+ * 
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 abstract class EntityRepository extends DoctrineEntityRepository
 {

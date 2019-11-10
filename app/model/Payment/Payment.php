@@ -17,7 +17,8 @@ use function implode;
 /**
  * Entita platba.
  *
- * @author                                          Jan Staněk <jan.stanek@skaut.cz>
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="PaymentRepository")
  * @ORM\Table(name="payment")
  */
@@ -27,75 +28,67 @@ class Payment
 
     /**
      * Id platby v systému banky.
-     *
      * @ORM\Column(type="string", unique=true, nullable=true)
-     * @var                       string
+     * @var string
      */
     protected $transactionId;
 
     /**
      * Datum platby.
-     *
      * @ORM\Column(type="date")
-     * @var                     \DateTime
+     * @var \DateTime
      */
     protected $date;
 
     /**
      * Částka.
-     *
      * @ORM\Column(type="float")
-     * @var                      double
+     * @var double
      */
     protected $amount;
 
     /**
      * Číslo protiúčtu.
-     *
      * @ORM\Column(type="string", nullable=true)
-     * @var                       string
+     * @var string
      */
     protected $accountNumber;
 
     /**
      * Majitel protiúčtu.
-     *
      * @ORM\Column(type="string", nullable=true)
-     * @var                       string
+     * @var string
      */
     protected $accountName;
 
     /**
      * Variabilní symbol platby.
-     *
      * @ORM\Column(type="string", nullable=true)
-     * @var                       string
+     * @var string
      */
     protected $variableSymbol;
 
     /**
      * Zpráva pro příjemce.
-     *
      * @ORM\Column(type="string", nullable=true)
-     * @var                       string
+     * @var string
      */
     protected $message;
 
     /**
      * Spárované přihlášky.
-     *
      * @ORM\OneToMany(targetEntity="\App\Model\User\Application", mappedBy="payment", cascade={"persist"})
-     * @var                                                       Collection|Application[]
+     * @var Collection|Application[]
      */
     protected $pairedApplications;
 
     /**
      * Stav platby.
-     *
      * @ORM\Column(type="string")
-     * @var                       string
+     * @var string
      */
     protected $state;
+
 
     public function __construct()
     {

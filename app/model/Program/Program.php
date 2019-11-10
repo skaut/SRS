@@ -13,8 +13,9 @@ use Nettrine\ORM\Entity\Attributes\Id as Identifier;
 /**
  * Entita program.
  *
- * @author                                          Michal Májský
- * @author                                          Jan Staněk <jan.stanek@skaut.cz>
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="ProgramRepository")
  * @ORM\Table(name="program")
  */
@@ -24,43 +25,39 @@ class Program
 
     /**
      * Programový blok.
-     *
      * @ORM\ManyToOne(targetEntity="Block", inversedBy="programs", cascade={"persist"})
-     * @var                                 Block
+     * @var Block
      */
     protected $block;
 
     /**
      * Účastníci programu.
-     *
      * @ORM\ManyToMany(targetEntity="\App\Model\User\User", mappedBy="programs", cascade={"persist"})
-     * @var                                                 Collection|User[]
+     * @var Collection|User[]
      */
     protected $attendees;
 
     /**
      * Obsazenost.
-     *
      * @ORM\Column(type="integer")
-     * @var                        int
+     * @var int
      */
     protected $occupancy = 0;
 
     /**
      * Místnost.
-     *
      * @ORM\ManyToOne(targetEntity="Room", inversedBy="programs", cascade={"persist"})
-     * @var                                Room
+     * @var Room
      */
     protected $room;
 
     /**
      * Začátek programu.
-     *
      * @ORM\Column(type="datetime")
-     * @var                         \DateTime
+     * @var \DateTime
      */
     protected $start;
+
 
     public function __construct(Block $block)
     {
@@ -137,7 +134,6 @@ class Program
 
     /**
      * Vrací konec programu vypočtený podle délky bloku.
-     *
      * @throws \Exception
      */
     public function getEnd() : \DateTime

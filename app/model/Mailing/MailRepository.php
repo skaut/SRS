@@ -12,12 +12,12 @@ use Doctrine\ORM\ORMException;
  * Třída spravující historii e-mailů.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class MailRepository extends EntityRepository
 {
     /**
      * Uloží e-mail.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */

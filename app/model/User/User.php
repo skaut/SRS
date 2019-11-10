@@ -23,8 +23,9 @@ use function implode;
 /**
  * Entita uživatele.
  *
- * @author                                       Michal Májský
- * @author                                       Jan Staněk <jan.stanek@skaut.cz>
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="UserRepository")
  * @ORM\Table(name="user")
  */
@@ -39,340 +40,299 @@ class User
 
     /**
      * Uživatelské jméno skautIS.
-     *
      * @ORM\Column(type="string", unique=true, nullable=true, options={"collation":"utf8_bin"})
-     * @var                       string
+     * @var string
      */
     protected $username;
 
     /**
      * E-mail.
-     *
      * @ORM\Column(type="string", nullable=true)
-     * @var                       string
+     * @var string
      */
     protected $email;
 
     /**
      * Schválený.
-     *
      * @ORM\Column(type="boolean")
-     * @var                        bool
+     * @var bool
      */
     protected $approved = true;
 
     /**
      * Jméno.
-     *
      * @ORM\Column(type="string")
-     * @var                       string
+     * @var string
      */
     protected $firstName;
 
     /**
      * Příjmení.
-     *
      * @ORM\Column(type="string")
-     * @var                       string
+     * @var string
      */
     protected $lastName;
 
     /**
      * Přezdívka.
-     *
      * @ORM\Column(type="string", nullable=true)
-     * @var                       string
+     * @var string
      */
     protected $nickName;
 
     /**
      * Titul před jménem.
-     *
      * @ORM\Column(type="string", nullable=true)
-     * @var                       string
+     * @var string
      */
     protected $degreePre;
 
     /**
      * Titul za jménem.
-     *
      * @ORM\Column(type="string", nullable=true)
-     * @var                       string
+     * @var string
      */
     protected $degreePost;
 
     /**
      * Zobrazované jméno - Příjmení Jméno (Přezdívka).
-     *
      * @ORM\Column(type="string")
-     * @var                       string
+     * @var string
      */
     protected $displayName;
 
     /**
      * Zobrazované jméno lektora, včetně titulů.
-     *
      * @ORM\Column(type="string", nullable=true)
-     * @var                       string
+     * @var string
      */
     protected $lectorName;
 
     /**
      * Bezpečnostní kód.
-     *
      * @ORM\Column(type="string", nullable=true)
-     * @var                       string
+     * @var string
      */
     protected $securityCode;
 
     /**
      * Propojený účet.
-     *
      * @ORM\Column(type="boolean")
-     * @var                        bool
+     * @var bool
      */
     protected $member = false;
 
     /**
      * Externí lektor.
-     *
      * @ORM\Column(type="boolean")
-     * @var                        bool
+     * @var bool
      */
     protected $externalLector = false;
 
     /**
      * Jednotka.
-     *
      * @ORM\Column(type="string", nullable=true)
-     * @var                       string
+     * @var string
      */
     protected $unit;
 
     /**
      * Pohlaví.
-     *
      * @ORM\Column(type="string", nullable=true)
-     * @var                       string
+     * @var string
      */
     protected $sex;
 
     /**
      * Datum narození.
-     *
      * @ORM\Column(type="date", nullable=true)
-     * @var                     \DateTime
+     * @var \DateTime
      */
     protected $birthdate;
 
     /**
      * Id uživatele ve skautIS.
-     *
      * @ORM\Column(type="integer", unique=true, nullable=true, name="skautis_user_id")
-     * @var                        int
+     * @var int
      */
     protected $skautISUserId;
 
     /**
      * Id osoby ve skautIS.
-     *
      * @ORM\Column(type="integer", unique=true, nullable=true, name="skautis_person_id")
-     * @var                        int
+     * @var int
      */
     protected $skautISPersonId;
 
     /**
      * Datum posledního přihlášení.
-     *
      * @ORM\Column(type="datetime", nullable=true)
-     * @var                         \DateTime
+     * @var \DateTime
      */
     protected $lastLogin;
 
     /**
      * O mně.
-     *
      * @ORM\Column(type="text", nullable=true)
-     * @var                     string
+     * @var string
      */
     protected $about;
 
     /**
      * Ulice.
-     *
      * @ORM\Column(type="string", nullable=true)
-     * @var                       string
+     * @var string
      */
     protected $street;
 
     /**
      * Město.
-     *
      * @ORM\Column(type="string", nullable=true)
-     * @var                       string
+     * @var string
      */
     protected $city;
 
     /**
      * Poštovní směrovací číslo.
-     *
      * @ORM\Column(type="string", nullable=true)
-     * @var                       string
+     * @var string
      */
     protected $postcode;
 
     /**
      * Stát.
-     *
      * @ORM\Column(type="string", nullable=true)
-     * @var                       string
+     * @var string
      */
     protected $state;
 
     /**
      * Zúčastnil se.
-     *
      * @ORM\Column(type="boolean")
-     * @var                        bool
+     * @var bool
      */
     protected $attended = false;
 
     /**
      * Příjezd.
-     *
      * @ORM\Column(type="datetime", nullable=true)
-     * @var                         \DateTime
+     * @var \DateTime
      */
     protected $arrival;
 
     /**
      * Odjezd.
-     *
      * @ORM\Column(type="datetime", nullable=true)
-     * @var                         \DateTime
+     * @var \DateTime
      */
     protected $departure;
 
     /**
      * Role.
-     *
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="users", cascade={"persist"})
-     * @var                                                Collection|Role[]
+     * @var Collection|Role[]
      */
     protected $roles;
 
     /**
      * Přihlášky.
-     *
      * @ORM\OneToMany(targetEntity="Application", mappedBy="user", cascade={"persist"})
-     * @var                                       Collection|Application[]
+     * @var Collection|Application[]
      */
     protected $applications;
 
     /**
      * Přihlášené programy.
-     *
      * @ORM\ManyToMany(targetEntity="\App\Model\Program\Program", inversedBy="attendees", cascade={"persist"})
-     * @ORM\OrderBy({"start"                                      = "ASC"})
-     * @var                                                       Collection|Program[]
+     * @ORM\OrderBy({"start" = "ASC"})
+     * @var Collection|Program[]
      */
     protected $programs;
 
     /**
      * Lektorované bloky.
-     *
      * @ORM\ManyToMany(targetEntity="\App\Model\Program\Block", mappedBy="lectors", cascade={"persist"})
-     * @var                                                     Collection|Block[]
+     * @var Collection|Block[]
      */
     protected $lecturersBlocks;
 
     /**
      * Poplatek uživatele.
-     *
      * @ORM\Column(type="integer")
-     * @var                        int
+     * @var int
      */
     protected $fee = 0;
 
     /**
      * Zbývající poplatek uživatele.
-     *
      * @ORM\Column(type="integer")
-     * @var                        int
+     * @var int
      */
     protected $feeRemaining = 0;
 
     /**
      * Platební metoda.
-     *
      * @ORM\Column(type="string", nullable=true)
-     * @var                       string
+     * @var string
      */
     protected $paymentMethod;
 
     /**
      * Datum poslední platby.
-     *
      * @ORM\Column(type="date", nullable=true)
-     * @var                     \DateTime
+     * @var \DateTime
      */
     protected $lastPaymentDate;
 
     /**
      * Datum a čas vytvoření přihlášky rolí.
-     *
      * @ORM\Column(type="datetime", nullable=true)
-     * @var                         \DateTime
+     * @var \DateTime
      */
     protected $rolesApplicationDate;
 
     /**
      * Programové bloky, které jsou pro uživatele povinné, ale nemá je zapsané.
-     *
      * @ORM\ManyToMany(targetEntity="\App\Model\Program\Block")
-     * @var                                                     Collection|Block[]
+     * @var Collection|Block[]
      */
     protected $notRegisteredMandatoryBlocks;
 
     /**
      * Počet programových bloků, které jsou pro uživatele povinné, ale nemá je zapsané.
-     *
      * @ORM\Column(type="integer")
-     * @var                        int
+     * @var int
      */
     protected $notRegisteredMandatoryBlocksCount = 0;
 
     /**
      * Hodnoty vlastních polí přihlášky.
-     *
      * @ORM\OneToMany(targetEntity="\App\Model\User\CustomInputValue\CustomInputValue", mappedBy="user", cascade={"persist"})
-     * @var                                                                             Collection|CustomInputValue[]
+     * @var Collection|CustomInputValue[]
      */
     protected $customInputValues;
 
     /**
      * Neveřejná poznámka.
-     *
      * @ORM\Column(type="text", nullable=true)
-     * @var                     string
+     * @var string
      */
     protected $note;
 
     /**
      * Fotka.
-     *
      * @ORM\Column(type="string", nullable=true)
-     * @var                       string
+     * @var string
      */
     protected $photo;
 
     /**
      * Datum aktualizace fotky.
-     *
      * @ORM\Column(type="datetime", nullable=true)
-     * @var                         \DateTime
+     * @var \DateTime
      */
     protected $photoUpdate;
+
 
     public function __construct()
     {
@@ -746,11 +706,9 @@ class User
      */
     public function isInRole(Role $role) : bool
     {
-        return $this->roles->filter(
-            function ($item) use ($role) {
-                            return $item === $role;
-            }
-        )->count() !== 0;
+        return $this->roles->filter(function ($item) use ($role) {
+            return $item === $role;
+        })->count() !== 0;
     }
 
     /**
@@ -759,7 +717,7 @@ class User
     public function hasDisplayArrivalDepartureRole() : bool
     {
         $criteria = Criteria::create()
-                ->where(Criteria::expr()->eq('displayArrivalDeparture', true));
+            ->where(Criteria::expr()->eq('displayArrivalDeparture', true));
 
         return ! $this->roles->matching($criteria)->isEmpty();
     }
@@ -769,11 +727,9 @@ class User
      */
     public function hasFixedFeeRole() : bool
     {
-        return $this->roles->exists(
-            function (int $key, Role $role) {
-                            return $role->getFee() !== null;
-            }
-        );
+        return $this->roles->exists(function (int $key, Role $role) {
+            return $role->getFee() !== null;
+        });
     }
 
     /**
@@ -837,126 +793,105 @@ class User
 
     /**
      * Vrátí platné přihlášky.
-     *
      * @return Collection|Application[]
      */
     public function getValidApplications() : Collection
     {
         $criteria = Criteria::create()
-                ->where(Criteria::expr()->isNull('validTo'))
-                ->orderBy(['applicationId' => 'ASC']);
+            ->where(Criteria::expr()->isNull('validTo'))
+            ->orderBy(['applicationId' => 'ASC']);
 
         return $this->applications->matching($criteria);
     }
 
     /**
      * Vrátí nezrušené přihlášky.
-     *
      * @return Collection|Application[]
      */
     public function getNotCanceledApplications() : Collection
     {
-        return $this->getValidApplications()->filter(
-            function (Application $application) {
-                            return ! $application->isCanceled();
-            }
-        );
+        return $this->getValidApplications()->filter(function (Application $application) {
+            return ! $application->isCanceled();
+        });
     }
 
     /**
      * Vrátí nezrušené přihlášky na rolí.
-     *
      * @return Collection|RolesApplication[]
      */
     public function getNotCanceledRolesApplications() : Collection
     {
-        return $this->getNotCanceledApplications()->filter(
-            function (Application $application) {
-                            return $application->getType() === Application::ROLES;
-            }
-        );
+        return $this->getNotCanceledApplications()->filter(function (Application $application) {
+            return $application->getType() === Application::ROLES;
+        });
     }
 
     /**
      * Vrátí nezrušené přihlášky na podakce.
-     *
      * @return Collection|SubeventsApplication[]
      */
     public function getNotCanceledSubeventsApplications() : Collection
     {
-        return $this->getNotCanceledApplications()->filter(
-            function (Application $application) {
-                            return $application->getType() === Application::SUBEVENTS;
-            }
-        );
+        return $this->getNotCanceledApplications()->filter(function (Application $application) {
+            return $application->getType() === Application::SUBEVENTS;
+        });
     }
 
     /**
      * Vrácí zaplacené přihlášky.
-     *
      * @return Collection|Application[]
      */
     public function getPaidApplications() : Collection
     {
         $criteria = Criteria::create()
-                ->where(
-                    Criteria::expr()->andX(
-                        Criteria::expr()->isNull('validTo'),
-                        Criteria::expr()->eq('state', ApplicationState::PAID)
-                    )
-                );
+            ->where(Criteria::expr()->andX(
+                Criteria::expr()->isNull('validTo'),
+                Criteria::expr()->eq('state', ApplicationState::PAID)
+            ));
 
         return $this->applications->matching($criteria);
     }
 
     /**
      * Vrátí přihlášky, které jsou zaplacené nebo zdarma.
-     *
      * @return Collection|Application[]
      */
     public function getPaidAndFreeApplications() : Collection
     {
-        return $this->applications->filter(
-            function (Application $application) {
-                if ($application->getValidTo() === null && ( $application->getState() === ApplicationState::PAID_FREE || $application->getState() === ApplicationState::PAID)
-                            ) {
-                    return true;
-                }
-                            return false;
+        return $this->applications->filter(function (Application $application) {
+            if ($application->getValidTo() === null && (
+                    $application->getState() === ApplicationState::PAID_FREE ||
+                    $application->getState() === ApplicationState::PAID)) {
+                return true;
             }
-        );
+            return false;
+        });
     }
 
     /**
      * Vrátí přihlášky čekající na platbu.
-     *
      * @return Collection|Application[]
      */
     public function getWaitingForPaymentApplications() : Collection
     {
         $criteria = Criteria::create()
-                ->where(
-                    Criteria::expr()->andX(
-                        Criteria::expr()->isNull('validTo'),
-                        Criteria::expr()->eq('state', ApplicationState::WAITING_FOR_PAYMENT)
-                    )
-                );
+            ->where(Criteria::expr()->andX(
+                Criteria::expr()->isNull('validTo'),
+                Criteria::expr()->eq('state', ApplicationState::WAITING_FOR_PAYMENT)
+            ));
 
         return $this->applications->matching($criteria);
     }
 
     /**
      * Vrátí přihlášky rolí čekající na platbu.
-     *
      * @return Collection|RolesApplication[]
      */
     public function getWaitingForPaymentRolesApplications() : Collection
     {
-        return $this->getWaitingForPaymentApplications()->filter(
-            function (Application $application) {
-                            return $application->getType() === Application::ROLES;
-            }
-        );
+        return $this->getWaitingForPaymentApplications()->filter(function (Application $application) {
+            return $application->getType() === Application::ROLES;
+        });
     }
 
     /**
@@ -972,16 +907,13 @@ class User
 
     /**
      * Vrátí přihlášky podakcí čekající na platbu.
-     *
      * @return Collection|SubeventsApplication[]
      */
     public function getWaitingForPaymentSubeventsApplications() : Collection
     {
-        return $this->getWaitingForPaymentApplications()->filter(
-            function (Application $application) {
-                            return $application->getType() === Application::SUBEVENTS;
-            }
-        );
+        return $this->getWaitingForPaymentApplications()->filter(function (Application $application) {
+            return $application->getType() === Application::SUBEVENTS;
+        });
     }
 
     /**
@@ -997,11 +929,9 @@ class User
      */
     public function hasPaidEveryApplication() : bool
     {
-        return $this->getValidApplications()->forAll(
-            function (int $key, Application $application) {
-                            return $application->getState() !== ApplicationState::WAITING_FOR_PAYMENT;
-            }
-        );
+        return $this->getValidApplications()->forAll(function (int $key, Application $application) {
+            return $application->getState() !== ApplicationState::WAITING_FOR_PAYMENT;
+        });
     }
 
     /**
@@ -1035,11 +965,9 @@ class User
      */
     public function hasProgramBlock(Block $block) : bool
     {
-        return ! $this->programs->filter(
-            function (Program $program) use ($block) {
-                            return $program->getBlock() === $block;
-            }
-        )->isEmpty();
+        return ! $this->programs->filter(function (Program $program) use ($block) {
+            return $program->getBlock() === $block;
+        })->isEmpty();
     }
 
     /**
@@ -1118,14 +1046,9 @@ class User
 
     public function getNotRegisteredMandatoryBlocksText() : string
     {
-        return implode(
-            ', ',
-            $this->notRegisteredMandatoryBlocks->map(
-                function (Block $block) {
-                            return $block->getName();
-                }
-            )->toArray()
-        );
+        return implode(', ', $this->notRegisteredMandatoryBlocks->map(function (Block $block) {
+            return $block->getName();
+        })->toArray());
     }
 
     /**
@@ -1157,10 +1080,8 @@ class User
     public function getCustomInputValue(CustomInput $customInput) : ?CustomInputValue
     {
         $criteria = Criteria::create()
-                ->where(
-                    Criteria::expr()
-                    ->eq('input', $customInput)
-                );
+            ->where(Criteria::expr()
+                ->eq('input', $customInput));
 
         $matchingCustomInputValues = $this->customInputValues->matching($criteria);
 
@@ -1203,7 +1124,6 @@ class User
 
     /**
      * Vrací podakce uživatele.
-     *
      * @return Collection|Subevent[]
      */
     public function getSubevents() : Collection
@@ -1224,11 +1144,9 @@ class User
      */
     public function getSubeventsText() : string
     {
-        $subeventsNames = $this->getSubevents()->map(
-            function (Subevent $subevent) {
-                    return $subevent->getName();
-            }
-        );
+        $subeventsNames = $this->getSubevents()->map(function (Subevent $subevent) {
+            return $subevent->getName();
+        });
         return implode(', ', $subeventsNames->toArray());
     }
 
@@ -1259,11 +1177,9 @@ class User
      */
     public function getVariableSymbolsText() : string
     {
-        $variableSymbols = $this->getNotCanceledApplications()->map(
-            function (Application $application) {
-                    return $application->getVariableSymbolText();
-            }
-        );
+        $variableSymbols = $this->getNotCanceledApplications()->map(function (Application $application) {
+            return $application->getVariableSymbolText();
+        });
         return implode(', ', $variableSymbols->toArray());
     }
 }

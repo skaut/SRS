@@ -18,22 +18,23 @@ use Nette\Forms\Form;
 class TemplatesPresenter extends MailingBasePresenter
 {
     /**
-     * @var    TemplateRepository
+     * @var TemplateRepository
      * @inject
      */
     public $templateRepository;
 
     /**
-     * @var    IMailTemplatesGridControlFactory
+     * @var IMailTemplatesGridControlFactory
      * @inject
      */
     public $mailTemplatesGridControlFactory;
 
     /**
-     * @var    EditTemplateForm
+     * @var EditTemplateForm
      * @inject
      */
     public $editTemplateFormFactory;
+
 
     public function renderEdit(int $id) : void
     {

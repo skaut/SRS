@@ -12,6 +12,7 @@ use Doctrine\ORM\ORMException;
  * Třída spravující slevy.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class DiscountRepository extends EntityRepository
 {
@@ -25,7 +26,6 @@ class DiscountRepository extends EntityRepository
 
     /**
      * Uloží slevu.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -37,7 +37,6 @@ class DiscountRepository extends EntityRepository
 
     /**
      * Odstraní slevu.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */

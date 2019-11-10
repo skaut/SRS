@@ -16,6 +16,7 @@ use Nette\Application\UI\Form;
  * Formulář pro nastavení vstupenek.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class TicketsForm
 {
@@ -25,6 +26,7 @@ class TicketsForm
     /** @var SettingsFacade */
     private $settingsFacade;
 
+
     public function __construct(BaseForm $baseForm, SettingsFacade $settingsFacade)
     {
         $this->baseFormFactory = $baseForm;
@@ -33,7 +35,6 @@ class TicketsForm
 
     /**
      * Vytvoří formulář.
-     *
      * @throws SettingsException
      * @throws \Throwable
      */
@@ -47,21 +48,19 @@ class TicketsForm
 
         $ticketsAllowedCheckbox = $form->addCheckbox('ticketsAllowed', 'admin.configuration.payment.tickets.allowed');
         $ticketsAllowedCheckbox->addCondition($form::EQUAL, true)
-                ->toggle('tickets-from');
+            ->toggle('tickets-from');
 
         $form->addDateTimePicker('ticketsFrom', 'admin.configuration.payment.tickets.from')
-                ->setOption('id', 'tickets-from');
+            ->setOption('id', 'tickets-from');
 
         $form->addSubmit('submit', 'admin.common.save');
 
         $ticketsFrom = $this->settingsFacade->getDateTimeValue(Settings::TICKETS_FROM);
 
-        $form->setDefaults(
-            [
-                    'ticketsAllowed' => $ticketsFrom !== null,
-                    'ticketsFrom' => $ticketsFrom,
-                ]
-        );
+        $form->setDefaults([
+            'ticketsAllowed' => $ticketsFrom !== null,
+            'ticketsFrom' => $ticketsFrom,
+        ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
 
@@ -70,7 +69,6 @@ class TicketsForm
 
     /**
      * Zpracuje formulář.
-     *
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException

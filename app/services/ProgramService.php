@@ -37,6 +37,7 @@ use Ublaboo\Mailing\Exception\MailingMailCreationException;
  * Služba pro správu programů.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class ProgramService
 {
@@ -63,6 +64,7 @@ class ProgramService
     /** @var MailService */
     private $mailService;
 
+
     public function __construct(
         EntityManagerDecorator $em,
         SettingsFacade $settingsFacade,
@@ -83,8 +85,7 @@ class ProgramService
 
     /**
      * Vytvoří programový blok.
-     *
-     * @param  Collection|User[] $lectors
+     * @param Collection|User[] $lectors
      * @throws \Throwable
      */
     public function createBlock(
@@ -99,32 +100,29 @@ class ProgramService
         string $description,
         string $tools
     ) : void {
-        $this->em->transactional(
-            function () use ($name, $subevent, $category, $lectors, $duration, $capacity, $mandatory, $perex, $description, $tools) : void {
-                    $block = new Block();
+        $this->em->transactional(function () use ($name, $subevent, $category, $lectors, $duration, $capacity, $mandatory, $perex, $description, $tools) : void {
+            $block = new Block();
 
-                    $block->setName($name);
-                    $block->setSubevent($subevent);
-                    $block->setCategory($category);
-                    $block->setLectors($lectors);
-                    $block->setDuration($duration);
-                    $block->setCapacity($capacity);
-                    $block->setMandatory($mandatory);
-                    $block->setPerex($perex);
-                    $block->setDescription($description);
-                    $block->setTools($tools);
+            $block->setName($name);
+            $block->setSubevent($subevent);
+            $block->setCategory($category);
+            $block->setLectors($lectors);
+            $block->setDuration($duration);
+            $block->setCapacity($capacity);
+            $block->setMandatory($mandatory);
+            $block->setPerex($perex);
+            $block->setDescription($description);
+            $block->setTools($tools);
 
-                    $this->blockRepository->save($block);
+            $this->blockRepository->save($block);
 
-            //            $this->updateUsersNotRegisteredMandatoryBlocks(new ArrayCollection($this->userRepository->findAll())); TODO: optimalizovat
-            }
-        );
+//            $this->updateUsersNotRegisteredMandatoryBlocks(new ArrayCollection($this->userRepository->findAll())); TODO: optimalizovat
+        });
     }
 
     /**
      * Aktualizuje programový blok.
-     *
-     * @param  Collection|User[] $lectors
+     * @param Collection|User[] $lectors
      * @throws \Throwable
      */
     public function updateBlock(
@@ -140,69 +138,64 @@ class ProgramService
         string $description,
         string $tools
     ) : void {
-        $this->em->transactional(
-            function () use ($block, $name, $subevent, $category, $lectors, $duration, $capacity, $mandatory, $perex, $description, $tools) : void {
-                    $oldSubevent = $block->getSubevent();
-                    $oldCategory = $block->getCategory();
+        $this->em->transactional(function () use ($block, $name, $subevent, $category, $lectors, $duration, $capacity, $mandatory, $perex, $description, $tools) : void {
+            $oldSubevent = $block->getSubevent();
+            $oldCategory = $block->getCategory();
 
-            //            $oldAllowedUsers = clone $this->userRepository->findBlockAllowed($block);
+//            $oldAllowedUsers = clone $this->userRepository->findBlockAllowed($block);
 
-                    $block->setName($name);
-                    $block->setSubevent($subevent);
-                    $block->setCategory($category);
-                    $block->setLectors($lectors);
-                    $block->setDuration($duration);
-                    $block->setCapacity($capacity);
-                    $block->setPerex($perex);
-                    $block->setDescription($description);
-                    $block->setTools($tools);
+            $block->setName($name);
+            $block->setSubevent($subevent);
+            $block->setCategory($category);
+            $block->setLectors($lectors);
+            $block->setDuration($duration);
+            $block->setCapacity($capacity);
+            $block->setPerex($perex);
+            $block->setDescription($description);
+            $block->setTools($tools);
 
-                    $this->blockRepository->save($block);
+            $this->blockRepository->save($block);
 
             //aktualizace ucastniku pri zmene kategorie nebo podakce
-                if (($category !== $oldCategory) || ($subevent !== $oldSubevent)) {
-                    $allowedUsers = $this->userRepository->findBlockAllowed($block);
+            if (($category !== $oldCategory) || ($subevent !== $oldSubevent)) {
+                $allowedUsers = $this->userRepository->findBlockAllowed($block);
 
-                    foreach ($block->getPrograms() as $program) {
-                        foreach ($program->getAttendees() as $user) {
-                            if ($allowedUsers->contains($user)) {
-                                continue;
-                            }
-
-                            $this->unregisterProgramImpl($user, $program);
-                        }
-
-                        if ($mandatory !== ProgramMandatoryType::AUTO_REGISTERED) {
+                foreach ($block->getPrograms() as $program) {
+                    foreach ($program->getAttendees() as $user) {
+                        if ($allowedUsers->contains($user)) {
                             continue;
                         }
 
-                        foreach ($allowedUsers as $user) {
-                            $this->registerProgramImpl($user, $program);
-                        }
+                        $this->unregisterProgramImpl($user, $program);
                     }
 
-                        //                $this->updateUsersNotRegisteredMandatoryBlocks($oldAllowedUsers); TODO: optimalizovat
-                        //                $this->updateUsersNotRegisteredMandatoryBlocks($allowedUsers); TODO: optimalizovat
+                    if ($mandatory !== ProgramMandatoryType::AUTO_REGISTERED) {
+                        continue;
+                    }
+
+                    foreach ($allowedUsers as $user) {
+                        $this->registerProgramImpl($user, $program);
+                    }
                 }
 
-            //aktualizace ucastniku pri zmene povinnosti
-                    $this->updateBlockMandatoryImpl($block, $mandatory);
+//                $this->updateUsersNotRegisteredMandatoryBlocks($oldAllowedUsers); TODO: optimalizovat
+//                $this->updateUsersNotRegisteredMandatoryBlocks($allowedUsers); TODO: optimalizovat
             }
-        );
+
+            //aktualizace ucastniku pri zmene povinnosti
+            $this->updateBlockMandatoryImpl($block, $mandatory);
+        });
     }
 
     /**
      * Aktualizuje povinnost bloku.
-     *
      * @throws \Throwable
      */
     public function updateBlockMandatory(Block $block, string $mandatory) : void
     {
-        $this->em->transactional(
-            function () use ($block, $mandatory) : void {
-                    $this->updateBlockMandatoryImpl($block, $mandatory);
-            }
-        );
+        $this->em->transactional(function () use ($block, $mandatory) : void {
+            $this->updateBlockMandatoryImpl($block, $mandatory);
+        });
     }
 
     /**
@@ -246,42 +239,38 @@ class ProgramService
         }
 
         //prepocet neprihlasenych povinnych bloku, pri zmene z povinneho na nepovinny a naopak
-        //        if (($oldMandatory === ProgramMandatoryType::VOLUNTARY &&
-        //                ($mandatory === ProgramMandatoryType::MANDATORY || $mandatory === ProgramMandatoryType::AUTO_REGISTERED))
-        //            || (($oldMandatory === ProgramMandatoryType::MANDATORY || $oldMandatory === ProgramMandatoryType::AUTO_REGISTERED)
-        //                && $mandatory === ProgramMandatoryType::VOLUNTARY)) {
-        //            $this->updateUsersNotRegisteredMandatoryBlocks($this->userRepository->findBlockAllowed($block));
-        //        } TODO: optimalizovat
+//        if (($oldMandatory === ProgramMandatoryType::VOLUNTARY &&
+//                ($mandatory === ProgramMandatoryType::MANDATORY || $mandatory === ProgramMandatoryType::AUTO_REGISTERED))
+//            || (($oldMandatory === ProgramMandatoryType::MANDATORY || $oldMandatory === ProgramMandatoryType::AUTO_REGISTERED)
+//                && $mandatory === ProgramMandatoryType::VOLUNTARY)) {
+//            $this->updateUsersNotRegisteredMandatoryBlocks($this->userRepository->findBlockAllowed($block));
+//        } TODO: optimalizovat
 
         $this->blockRepository->save($block);
     }
 
     /**
      * Odstraní programový blok.
-     *
      * @throws \Throwable
      */
     public function removeBlock(Block $block) : void
     {
-        $this->em->transactional(
-            function () use ($block) : void {
-                    $isVoluntary = $block->getMandatory() === ProgramMandatoryType::VOLUNTARY;
+        $this->em->transactional(function () use ($block) : void {
+            $isVoluntary = $block->getMandatory() === ProgramMandatoryType::VOLUNTARY;
 
-                    $this->blockRepository->remove($block);
+            $this->blockRepository->remove($block);
 
-                if ($isVoluntary) {
-                    return;
-                }
-
-            //            $this->updateUsersNotRegisteredMandatoryBlocks(new ArrayCollection($this->userRepository->findAll())); TODO: optimalizovat
+            if ($isVoluntary) {
+                return;
             }
-        );
+
+//            $this->updateUsersNotRegisteredMandatoryBlocks(new ArrayCollection($this->userRepository->findAll())); TODO: optimalizovat
+        });
     }
 
     /**
      * Vytvoří kategorii programů.
-     *
-     * @param  Collection|Role[] $registerableRoles
+     * @param Collection|Role[] $registerableRoles
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -297,27 +286,23 @@ class ProgramService
 
     /**
      * Aktualizuje kategorii programů.
-     *
-     * @param  Collection|Role[] $registerableRoles
+     * @param Collection|Role[] $registerableRoles
      * @throws \Throwable
      */
     public function updateCategory(Category $category, string $name, Collection $registerableRoles) : void
     {
-        $this->em->transactional(
-            function ($em) use ($category, $name, $registerableRoles) : void {
-                    $category->setName($name);
-                    $category->setRegisterableRoles($registerableRoles);
+        $this->em->transactional(function ($em) use ($category, $name, $registerableRoles) : void {
+            $category->setName($name);
+            $category->setRegisterableRoles($registerableRoles);
 
-                    $this->categoryRepository->save($category);
+            $this->categoryRepository->save($category);
 
-                    $this->updateUsersPrograms(new ArrayCollection($this->userRepository->findAll()));
-            }
-        );
+            $this->updateUsersPrograms(new ArrayCollection($this->userRepository->findAll()));
+        });
     }
 
     /**
      * Vytvoří program v harmonogramu.
-     *
      * @throws \Throwable
      */
     public function createProgram(Block $block, ?Room $room, \DateTime $start) : Program
@@ -327,27 +312,24 @@ class ProgramService
         $program->setRoom($room);
         $program->setStart($start);
 
-        $this->em->transactional(
-            function ($em) use ($program, $block) : void {
-                    $this->programRepository->save($program);
+        $this->em->transactional(function ($em) use ($program, $block) : void {
+            $this->programRepository->save($program);
 
-                if ($block->getMandatory() !== ProgramMandatoryType::AUTO_REGISTERED) {
-                    return;
-                }
-
-                foreach ($this->userRepository->findBlockAllowed($block) as $user) {
-                    $this->registerProgramImpl($user, $program);
-                }
-                    $this->programRepository->save($program);
+            if ($block->getMandatory() !== ProgramMandatoryType::AUTO_REGISTERED) {
+                return;
             }
-        );
+
+            foreach ($this->userRepository->findBlockAllowed($block) as $user) {
+                $this->registerProgramImpl($user, $program);
+            }
+            $this->programRepository->save($program);
+        });
 
         return $program;
     }
 
     /**
      * Aktualizuje program v harmonogramu.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -360,35 +342,29 @@ class ProgramService
 
     /**
      * Odstraní program z harmonogramu.
-     *
      * @throws \Throwable
      */
     public function removeProgram(Program $program) : void
     {
-        $this->em->transactional(
-            function () use ($program) : void {
-            //            $attendees = clone $program->getAttendees();
+        $this->em->transactional(function () use ($program) : void {
+//            $attendees = clone $program->getAttendees();
 
-                    $this->programRepository->remove($program);
+            $this->programRepository->remove($program);
 
-            //            $this->updateUsersNotRegisteredMandatoryBlocks($attendees); TODO: optimalizovat
-            }
-        );
+//            $this->updateUsersNotRegisteredMandatoryBlocks($attendees); TODO: optimalizovat
+        });
     }
 
     /**
      * Přihlásí uživatele na program.
-     *
-     * @param  bool $sendEmail Poslat uživateli e-mail o přihlášení?
+     * @param bool $sendEmail Poslat uživateli e-mail o přihlášení?
      * @throws \Throwable
      */
     public function registerProgram(User $user, Program $program, bool $sendEmail = false) : void
     {
-        $this->em->transactional(
-            function () use ($user, $program, $sendEmail) : void {
-                    $this->registerProgramImpl($user, $program, $sendEmail);
-            }
-        );
+        $this->em->transactional(function () use ($user, $program, $sendEmail) : void {
+            $this->registerProgramImpl($user, $program, $sendEmail);
+        });
     }
 
     /**
@@ -410,38 +386,30 @@ class ProgramService
         $user->addProgram($program);
         $this->userRepository->save($user);
 
-        //        if ($program->getBlock()->getMandatory() !== ProgramMandatoryType::VOLUNTARY) {
-        //            $this->updateUserNotRegisteredMandatoryBlocks($user); TODO: optimalizovat
-        //        }
+//        if ($program->getBlock()->getMandatory() !== ProgramMandatoryType::VOLUNTARY) {
+//            $this->updateUserNotRegisteredMandatoryBlocks($user); TODO: optimalizovat
+//        }
 
         if (! $sendEmail) {
             return;
         }
 
-        $this->mailService->sendMailFromTemplate(
-            $user,
-            '',
-            Template::PROGRAM_REGISTERED,
-            [
+        $this->mailService->sendMailFromTemplate($user, '', Template::PROGRAM_REGISTERED, [
             TemplateVariable::SEMINAR_NAME => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
             TemplateVariable::PROGRAM_NAME => $program->getBlock()->getName(),
-                ]
-        );
+        ]);
     }
 
     /**
      * Odhlásí uživatele z programu.
-     *
-     * @param  bool $sendEmail Poslat uživateli e-mail o odhlášení?
+     * @param bool $sendEmail Poslat uživateli e-mail o odhlášení?
      * @throws \Throwable
      */
     public function unregisterProgram(User $user, Program $program, bool $sendEmail = false) : void
     {
-        $this->em->transactional(
-            function () use ($user, $program, $sendEmail) : void {
-                    $this->unregisterProgramImpl($user, $program, $sendEmail);
-            }
-        );
+        $this->em->transactional(function () use ($user, $program, $sendEmail) : void {
+            $this->unregisterProgramImpl($user, $program, $sendEmail);
+        });
     }
 
     /**
@@ -463,37 +431,36 @@ class ProgramService
         $user->removeProgram($program);
         $this->userRepository->save($user);
 
-        //        if ($program->getBlock()->getMandatory() !== ProgramMandatoryType::VOLUNTARY) {
-        //            $this->updateUserNotRegisteredMandatoryBlocks($user); TODO: optimalizovat
-        //        }
+//        if ($program->getBlock()->getMandatory() !== ProgramMandatoryType::VOLUNTARY) {
+//            $this->updateUserNotRegisteredMandatoryBlocks($user); TODO: optimalizovat
+//        }
 
         if (! $sendEmail) {
             return;
         }
 
-        $this->mailService->sendMailFromTemplate(
-            $user,
-            '',
-            Template::PROGRAM_UNREGISTERED,
-            [
+        $this->mailService->sendMailFromTemplate($user, '', Template::PROGRAM_UNREGISTERED, [
             TemplateVariable::SEMINAR_NAME => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
             TemplateVariable::PROGRAM_NAME => $program->getBlock()->getName(),
-                ]
-        );
+        ]);
     }
 
     /**
      * Je povoleno zapisování programů?
-     *
      * @throws SettingsException
      * @throws \Throwable
      */
     public function isAllowedRegisterPrograms() : bool
     {
-        return $this->settingsFacade->getValue(Settings::REGISTER_PROGRAMS_TYPE) === ProgramRegistrationType::ALLOWED || (
-                $this->settingsFacade->getValue(Settings::REGISTER_PROGRAMS_TYPE) === ProgramRegistrationType::ALLOWED_FROM_TO && ($this->settingsFacade->getDateTimeValue(Settings::REGISTER_PROGRAMS_FROM) === null || $this->settingsFacade->getDateTimeValue(Settings::REGISTER_PROGRAMS_FROM) <= new \DateTime()) && ($this->settingsFacade->getDateTimeValue(Settings::REGISTER_PROGRAMS_TO) === null || $this->settingsFacade->getDateTimeValue(Settings::REGISTER_PROGRAMS_TO) >= new \DateTime()
+        return $this->settingsFacade->getValue(Settings::REGISTER_PROGRAMS_TYPE) === ProgramRegistrationType::ALLOWED
+            || (
+                $this->settingsFacade->getValue(Settings::REGISTER_PROGRAMS_TYPE) === ProgramRegistrationType::ALLOWED_FROM_TO
+                && ($this->settingsFacade->getDateTimeValue(Settings::REGISTER_PROGRAMS_FROM) === null
+                    || $this->settingsFacade->getDateTimeValue(Settings::REGISTER_PROGRAMS_FROM) <= new \DateTime())
+                && ($this->settingsFacade->getDateTimeValue(Settings::REGISTER_PROGRAMS_TO) === null
+                    || $this->settingsFacade->getDateTimeValue(Settings::REGISTER_PROGRAMS_TO) >= new \DateTime()
                 )
-                );
+            );
     }
 
     /**
@@ -520,12 +487,11 @@ class ProgramService
             $this->registerProgramImpl($user, $program);
         }
 
-        //        $this->updateUserNotRegisteredMandatoryBlocks($user); TODO: optimalizovat
+//        $this->updateUserNotRegisteredMandatoryBlocks($user); TODO: optimalizovat
     }
 
     /**
      * Aktualizuje programy uživatelů (odhlásí nepovolené a přihlásí automaticky přihlašované).
-     *
      * @param Collection|User[] $users
      */
     public function updateUsersPrograms(Collection $users) : void
@@ -537,7 +503,6 @@ class ProgramService
 
     /**
      * Aktualizuje uživateli seznam nepřihlášených povinných bloků.
-     *
      * @throws \Exception
      */
     private function updateUserNotRegisteredMandatoryBlocks(User $user, bool $flush = true) : void
@@ -562,8 +527,7 @@ class ProgramService
 
     /**
      * Aktualizuje uživatelům seznam nepřihlášených povinných bloků.
-     *
-     * @param  Collection|User[] $users
+     * @param Collection|User[] $users
      * @throws \Exception
      */
     private function updateUsersNotRegisteredMandatoryBlocks(Collection $users) : void
@@ -577,7 +541,6 @@ class ProgramService
 
     /**
      * Vrací programy, na které se uživatel může přihlásit.
-     *
      * @return Collection|Program[]
      */
     public function getUserAllowedPrograms(User $user) : Collection

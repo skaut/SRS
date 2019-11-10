@@ -14,6 +14,7 @@ use const PHP_INT_MAX;
  * Třída spravující vlastní pole přihlášky.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class CustomInputRepository extends EntityRepository
 {
@@ -27,33 +28,30 @@ class CustomInputRepository extends EntityRepository
 
     /**
      * Vrací všechna pole seřazená podle pozice.
-     *
      * @return CustomInput[]
      */
     public function findAllOrderedByPosition() : array
     {
         return $this->createQueryBuilder('i')
-                        ->orderBy('i.position')
-                        ->getQuery()
-                        ->getResult();
+            ->orderBy('i.position')
+            ->getQuery()
+            ->getResult();
     }
 
     /**
      * Vrátí pozici posledního pole.
-     *
      * @throws NonUniqueResultException
      */
     public function findLastPosition() : int
     {
         return (int) $this->createQueryBuilder('i')
-                        ->select('MAX(i.position)')
-                        ->getQuery()
-                        ->getSingleScalarResult();
+            ->select('MAX(i.position)')
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
     /**
      * Uloží pole.
-     *
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException
@@ -70,7 +68,6 @@ class CustomInputRepository extends EntityRepository
 
     /**
      * Odstraní pole.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -86,7 +83,6 @@ class CustomInputRepository extends EntityRepository
 
     /**
      * Přesune pole mezi pole s id prevId a nextId.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -97,12 +93,12 @@ class CustomInputRepository extends EntityRepository
         $next = $nextId ? $this->find($nextId) : null;
 
         $itemsToMoveUp = $this->createQueryBuilder('i')
-                ->where('i.position <= :position')
-                ->setParameter('position', $prev ? $prev->getPosition() : 0)
-                ->andWhere('i.position > :position2')
-                ->setParameter('position2', $item->getPosition())
-                ->getQuery()
-                ->getResult();
+            ->where('i.position <= :position')
+            ->setParameter('position', $prev ? $prev->getPosition() : 0)
+            ->andWhere('i.position > :position2')
+            ->setParameter('position2', $item->getPosition())
+            ->getQuery()
+            ->getResult();
 
         foreach ($itemsToMoveUp as $t) {
             $t->setPosition($t->getPosition() - 1);
@@ -110,12 +106,12 @@ class CustomInputRepository extends EntityRepository
         }
 
         $itemsToMoveDown = $this->createQueryBuilder('i')
-                ->where('i.position >= :position')
-                ->setParameter('position', $next ? $next->getPosition() : PHP_INT_MAX)
-                ->andWhere('i.position < :position2')
-                ->setParameter('position2', $item->getPosition())
-                ->getQuery()
-                ->getResult();
+            ->where('i.position >= :position')
+            ->setParameter('position', $next ? $next->getPosition() : PHP_INT_MAX)
+            ->andWhere('i.position < :position2')
+            ->setParameter('position2', $item->getPosition())
+            ->getQuery()
+            ->getResult();
 
         foreach ($itemsToMoveDown as $t) {
             $t->setPosition($t->getPosition() + 1);

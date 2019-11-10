@@ -14,24 +14,25 @@ use Nette\Application\Responses\TextResponse;
  * Presenter obsluhující načítání plateb z API banky.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class BankPresenter extends ActionBasePresenter
 {
     /**
-     * @var    BankService
+     * @var BankService
      * @inject
      */
     public $bankService;
 
     /**
-     * @var    SettingsFacade
+     * @var SettingsFacade
      * @inject
      */
     public $settingsFacade;
 
+
     /**
      * Zkontroluje splatnost přihlášek.
-     *
      * @throws SettingsException
      * @throws \Throwable
      */

@@ -51,6 +51,7 @@ use function strval;
  * Služba pro správu přihlašování na akci.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class ApplicationService
 {
@@ -101,6 +102,7 @@ class ApplicationService
     /** @var PaymentRepository */
     private $paymentRepository;
 
+
     public function __construct(
         EntityManagerDecorator $em,
         SettingsFacade $settingsFacade,
@@ -137,9 +139,8 @@ class ApplicationService
 
     /**
      * Zaregistruje uživatele (vyplnění přihlášky / přidání role v administraci).
-     *
-     * @param  Collection|Role[]     $roles
-     * @param  Collection|Subevent[] $subevents
+     * @param Collection|Role[]     $roles
+     * @param Collection|Subevent[] $subevents
      * @throws \Throwable
      */
     public function register(
@@ -181,25 +182,19 @@ class ApplicationService
 
         $editRegistrationToText = $this->settingsFacade->getDateValueText(Settings::EDIT_REGISTRATION_TO);
 
-        $this->mailService->sendMailFromTemplate(
-            $user,
-            '',
-            Template::REGISTRATION,
-            [
+        $this->mailService->sendMailFromTemplate($user, '', Template::REGISTRATION, [
             TemplateVariable::SEMINAR_NAME => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
             TemplateVariable::EDIT_REGISTRATION_TO => $editRegistrationToText ?? '-',
             TemplateVariable::APPLICATION_MATURITY => $applicatonMaturity,
             TemplateVariable::APPLICATION_FEE => $applicationFee,
             TemplateVariable::APPLICATION_VARIABLE_SYMBOL => $applicationVariableSymbol,
             TemplateVariable::BANK_ACCOUNT => $this->settingsFacade->getValue(Settings::ACCOUNT_NUMBER),
-                ]
-        );
+        ]);
     }
 
     /**
      * Změní role uživatele.
-     *
-     * @param  Collection|Role[] $roles
+     * @param Collection|Role[] $roles
      * @throws SettingsException
      * @throws \Throwable
      * @throws MailingException
@@ -211,54 +206,56 @@ class ApplicationService
 
         //pokud se role nezmenily, nic se neprovede
         if ($roles->count() === $oldRoles->count()) {
-            $rolesArray    = $roles->map(
-                function (Role $role) {
-                                return $role->getId();
-                }
-            )->toArray();
-            $oldRolesArray = $oldRoles->map(
-                function (Role $role) {
-                                return $role->getId();
-                }
-            )->toArray();
+            $rolesArray    = $roles->map(function (Role $role) {
+                return $role->getId();
+            })->toArray();
+            $oldRolesArray = $oldRoles->map(function (Role $role) {
+                return $role->getId();
+            })->toArray();
 
             if (array_diff($rolesArray, $oldRolesArray) === array_diff($oldRolesArray, $rolesArray)) {
                 return;
             }
         }
 
-        $this->em->transactional(
-            function ($em) use ($user, $roles, $createdBy, $approve, $oldRoles) : void {
-                if ($oldRoles->contains($this->roleRepository->findBySystemName(Role::NONREGISTERED))) {
-                    $this->createRolesApplication($user, $roles, $createdBy, $approve);
-                    $this->createSubeventsApplication($user, new ArrayCollection([$this->subeventRepository->findImplicit()]), $createdBy);
-                } else {
-                    $this->incrementRolesOccupancy($roles);
+        $this->em->transactional(function ($em) use ($user, $roles, $createdBy, $approve, $oldRoles) : void {
+            if ($oldRoles->contains($this->roleRepository->findBySystemName(Role::NONREGISTERED))) {
+                $this->createRolesApplication($user, $roles, $createdBy, $approve);
+                $this->createSubeventsApplication($user, new ArrayCollection([$this->subeventRepository->findImplicit()]), $createdBy);
+            } else {
+                $this->incrementRolesOccupancy($roles);
 
-                    $user->setRoles($roles);
-                    $this->userRepository->save($user);
+                $user->setRoles($roles);
+                $this->userRepository->save($user);
 
-                    if ($roles->forAll(
-                        function (int $key, Role $role) {
-                                    return $role->isApprovedAfterRegistration();
-                        }
-                    )
-                    ) {
-                        $user->setApproved(true);
-                    } elseif (! $approve && $roles->exists(
-                        function (int $key, Role $role) use ($oldRoles) {
-                                    return ! $role->isApprovedAfterRegistration() && ! $oldRoles->contains($role);
-                        }
-                    )
-                    ) {
-                        $user->setApproved(false);
-                    }
+                if ($roles->forAll(function (int $key, Role $role) {
+                    return $role->isApprovedAfterRegistration();
+                })) {
+                    $user->setApproved(true);
+                } elseif (! $approve && $roles->exists(function (int $key, Role $role) use ($oldRoles) {
+                    return ! $role->isApprovedAfterRegistration() && ! $oldRoles->contains($role);
+                })) {
+                    $user->setApproved(false);
+                }
 
-                    foreach ($user->getNotCanceledApplications() as $application) {
-                        if ($application->getType() === Application::ROLES) {
+                foreach ($user->getNotCanceledApplications() as $application) {
+                    if ($application->getType() === Application::ROLES) {
+                        $newApplication = clone $application;
+                        $newApplication->setRoles($roles);
+                        $newApplication->setFee($this->countRolesFee($roles));
+                        $newApplication->setState($this->getApplicationState($newApplication));
+                        $newApplication->setCreatedBy($createdBy);
+                        $newApplication->setValidFrom(new \DateTime());
+                        $this->applicationRepository->save($newApplication);
+
+                        $application->setValidTo(new \DateTime());
+                        $this->applicationRepository->save($application);
+                    } else {
+                        $fee = $this->countSubeventsFee($roles, $application->getSubevents());
+
+                        if ($application->getFee() !== $fee) {
                             $newApplication = clone $application;
-                            $newApplication->setRoles($roles);
-                            $newApplication->setFee($this->countRolesFee($roles));
+                            $newApplication->setFee($fee);
                             $newApplication->setState($this->getApplicationState($newApplication));
                             $newApplication->setCreatedBy($createdBy);
                             $newApplication->setValidFrom(new \DateTime());
@@ -266,54 +263,29 @@ class ApplicationService
 
                             $application->setValidTo(new \DateTime());
                             $this->applicationRepository->save($application);
-                        } else {
-                            $fee = $this->countSubeventsFee($roles, $application->getSubevents());
-
-                            if ($application->getFee() !== $fee) {
-                                $newApplication = clone $application;
-                                $newApplication->setFee($fee);
-                                $newApplication->setState($this->getApplicationState($newApplication));
-                                $newApplication->setCreatedBy($createdBy);
-                                $newApplication->setValidFrom(new \DateTime());
-                                $this->applicationRepository->save($newApplication);
-
-                                $application->setValidTo(new \DateTime());
-                                $this->applicationRepository->save($application);
-                            }
                         }
                     }
-
-                    $this->userRepository->save($user);
-
-                    $this->decrementRolesOccupancy($user->getRolesApplication()->getRoles());
                 }
 
-                    $this->programService->updateUserPrograms($user);
-                    $this->updateUserPaymentInfo($user);
-            }
-        );
+                $this->userRepository->save($user);
 
-        $this->mailService->sendMailFromTemplate(
-            $user,
-            '',
-            Template::ROLES_CHANGED,
-            [
+                $this->decrementRolesOccupancy($user->getRolesApplication()->getRoles());
+            }
+
+            $this->programService->updateUserPrograms($user);
+            $this->updateUserPaymentInfo($user);
+        });
+
+        $this->mailService->sendMailFromTemplate($user, '', Template::ROLES_CHANGED, [
             TemplateVariable::SEMINAR_NAME => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
-            TemplateVariable::USERS_ROLES => implode(
-                ', ',
-                $roles->map(
-                    function (Role $role) {
-                                return $role->getName();
-                    }
-                )->toArray()
-            ),
-                ]
-        );
+            TemplateVariable::USERS_ROLES => implode(', ', $roles->map(function (Role $role) {
+                return $role->getName();
+            })->toArray()),
+        ]);
     }
 
     /**
      * Zruší registraci uživatele na seminář.
-     *
      * @throws SettingsException
      * @throws \Throwable
      * @throws MailingException
@@ -321,90 +293,74 @@ class ApplicationService
      */
     public function cancelRegistration(User $user, string $state, ?User $createdBy) : void
     {
-        $this->em->transactional(
-            function ($em) use ($user, $state, $createdBy) : void {
-                    $user->setApproved(true);
-                    $user->getRoles()->clear();
-                    $user->setRolesApplicationDate(null);
-                    $user->addRole($this->roleRepository->findBySystemName(Role::NONREGISTERED));
-                    $this->userRepository->save($user);
+        $this->em->transactional(function ($em) use ($user, $state, $createdBy) : void {
+            $user->setApproved(true);
+            $user->getRoles()->clear();
+            $user->setRolesApplicationDate(null);
+            $user->addRole($this->roleRepository->findBySystemName(Role::NONREGISTERED));
+            $this->userRepository->save($user);
 
-                foreach ($user->getNotCanceledApplications() as $application) {
-                    $newApplication = clone $application;
-                    $newApplication->setState($state);
-                    $newApplication->setCreatedBy($createdBy);
-                    $newApplication->setValidFrom(new \DateTime());
+            foreach ($user->getNotCanceledApplications() as $application) {
+                $newApplication = clone $application;
+                $newApplication->setState($state);
+                $newApplication->setCreatedBy($createdBy);
+                $newApplication->setValidFrom(new \DateTime());
 
-                    if ($newApplication->getPayment() !== null) {
-                        if ($newApplication->getPayment()->getPairedValidApplications()->count() === 1) {
-                            $newApplication->getPayment()->setState(PaymentState::NOT_PAIRED_CANCELED);
-                        }
-                        $newApplication->setPayment(null);
+                if ($newApplication->getPayment() !== null) {
+                    if ($newApplication->getPayment()->getPairedValidApplications()->count() === 1) {
+                        $newApplication->getPayment()->setState(PaymentState::NOT_PAIRED_CANCELED);
                     }
-
-                    $this->applicationRepository->save($newApplication);
-
-                    $application->setValidTo(new \DateTime());
-                    $this->applicationRepository->save($application);
-
-                    if ($application instanceof RolesApplication) {
-                        $this->decrementRolesOccupancy($application->getRoles());
-                    } elseif ($application instanceof SubeventsApplication) {
-                        $this->decrementSubeventsOccupancy($application->getSubevents());
-                    }
+                    $newApplication->setPayment(null);
                 }
 
-                    $this->userRepository->save($user);
+                $this->applicationRepository->save($newApplication);
 
-                    $this->programService->updateUserPrograms($user);
-                    $this->updateUserPaymentInfo($user);
+                $application->setValidTo(new \DateTime());
+                $this->applicationRepository->save($application);
+
+                if ($application instanceof RolesApplication) {
+                    $this->decrementRolesOccupancy($application->getRoles());
+                } elseif ($application instanceof SubeventsApplication) {
+                    $this->decrementSubeventsOccupancy($application->getSubevents());
+                }
             }
-        );
 
-        $this->mailService->sendMailFromTemplate(
-            $user,
-            '',
-            Template::REGISTRATION_CANCELED,
-            [
+            $this->userRepository->save($user);
+
+            $this->programService->updateUserPrograms($user);
+            $this->updateUserPaymentInfo($user);
+        });
+
+        $this->mailService->sendMailFromTemplate($user, '', Template::REGISTRATION_CANCELED, [
             TemplateVariable::SEMINAR_NAME => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
-                ]
-        );
+        ]);
     }
 
     /**
      * Vytvoří novou přihlášku na podakce.
-     *
-     * @param  Collection|Subevent[] $subevents
+     * @param Collection|Subevent[] $subevents
      * @throws \Throwable
      */
     public function addSubeventsApplication(User $user, Collection $subevents, User $createdBy) : void
     {
-        $this->em->transactional(
-            function ($em) use ($user, $subevents, $createdBy) : void {
-                    $this->incrementSubeventsOccupancy($subevents);
+        $this->em->transactional(function ($em) use ($user, $subevents, $createdBy) : void {
+            $this->incrementSubeventsOccupancy($subevents);
 
-                    $this->createSubeventsApplication($user, $subevents, $createdBy);
+            $this->createSubeventsApplication($user, $subevents, $createdBy);
 
-                    $this->programService->updateUserPrograms($user);
-                    $this->updateUserPaymentInfo($user);
-            }
-        );
+            $this->programService->updateUserPrograms($user);
+            $this->updateUserPaymentInfo($user);
+        });
 
-        $this->mailService->sendMailFromTemplate(
-            $user,
-            '',
-            Template::SUBEVENTS_CHANGED,
-            [
+        $this->mailService->sendMailFromTemplate($user, '', Template::SUBEVENTS_CHANGED, [
             TemplateVariable::SEMINAR_NAME => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
             TemplateVariable::USERS_SUBEVENTS => $user->getSubeventsText(),
-                ]
-        );
+        ]);
     }
 
     /**
      * Aktualizuje podakce přihlášky.
-     *
-     * @param  Collection|Subevent[] $subevents
+     * @param Collection|Subevent[] $subevents
      * @throws SettingsException
      * @throws \Throwable
      * @throws MailingException
@@ -420,60 +376,48 @@ class ApplicationService
 
         //pokud se podakce nezmenily, nic se neprovede
         if ($subevents->count() === $oldSubevents->count()) {
-            $subeventsArray    = $subevents->map(
-                function (Subevent $subevent) {
-                                return $subevent->getId();
-                }
-            )->toArray();
-            $oldSubeventsArray = $oldSubevents->map(
-                function (Subevent $subevent) {
-                                return $subevent->getId();
-                }
-            )->toArray();
+            $subeventsArray    = $subevents->map(function (Subevent $subevent) {
+                return $subevent->getId();
+            })->toArray();
+            $oldSubeventsArray = $oldSubevents->map(function (Subevent $subevent) {
+                return $subevent->getId();
+            })->toArray();
 
             if (array_diff($subeventsArray, $oldSubeventsArray) === array_diff($oldSubeventsArray, $subeventsArray)) {
                 return;
             }
         }
 
-        $this->em->transactional(
-            function ($em) use ($application, $subevents, $createdBy) : void {
-                    $this->incrementSubeventsOccupancy($subevents);
+        $this->em->transactional(function ($em) use ($application, $subevents, $createdBy) : void {
+            $this->incrementSubeventsOccupancy($subevents);
 
-                    $user = $application->getUser();
+            $user = $application->getUser();
 
-                    $newApplication = clone $application;
-                    $newApplication->setSubevents($subevents);
-                    $newApplication->setFee($this->countSubeventsFee($user->getRoles(), $subevents));
-                    $newApplication->setState($this->getApplicationState($newApplication));
-                    $newApplication->setCreatedBy($createdBy);
-                    $newApplication->setValidFrom(new \DateTime());
-                    $this->applicationRepository->save($newApplication);
+            $newApplication = clone $application;
+            $newApplication->setSubevents($subevents);
+            $newApplication->setFee($this->countSubeventsFee($user->getRoles(), $subevents));
+            $newApplication->setState($this->getApplicationState($newApplication));
+            $newApplication->setCreatedBy($createdBy);
+            $newApplication->setValidFrom(new \DateTime());
+            $this->applicationRepository->save($newApplication);
 
-                    $application->setValidTo(new \DateTime());
-                    $this->applicationRepository->save($application);
+            $application->setValidTo(new \DateTime());
+            $this->applicationRepository->save($application);
 
-                    $this->programService->updateUserPrograms($user);
-                    $this->updateUserPaymentInfo($user);
+            $this->programService->updateUserPrograms($user);
+            $this->updateUserPaymentInfo($user);
 
-                    $this->decrementSubeventsOccupancy($application->getSubevents());
-            }
-        );
+            $this->decrementSubeventsOccupancy($application->getSubevents());
+        });
 
-        $this->mailService->sendMailFromTemplate(
-            $application->getUser(),
-            '',
-            Template::SUBEVENTS_CHANGED,
-            [
+        $this->mailService->sendMailFromTemplate($application->getUser(), '', Template::SUBEVENTS_CHANGED, [
             TemplateVariable::SEMINAR_NAME => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
             TemplateVariable::USERS_SUBEVENTS => $application->getUser()->getSubeventsText(),
-                ]
-        );
+        ]);
     }
 
     /**
      * Zruší přihlášku na podakce.
-     *
      * @throws SettingsException
      * @throws \Throwable
      * @throws MailingException
@@ -485,48 +429,40 @@ class ApplicationService
             return;
         }
 
-        $this->em->transactional(
-            function ($em) use ($application, $state, $createdBy) : void {
-                    $user = $application->getUser();
+        $this->em->transactional(function ($em) use ($application, $state, $createdBy) : void {
+            $user = $application->getUser();
 
-                    $newApplication = clone $application;
-                    $newApplication->setState($state);
-                    $newApplication->setCreatedBy($createdBy);
-                    $newApplication->setValidFrom(new \DateTime());
+            $newApplication = clone $application;
+            $newApplication->setState($state);
+            $newApplication->setCreatedBy($createdBy);
+            $newApplication->setValidFrom(new \DateTime());
 
-                if ($newApplication->getPayment() !== null) {
-                    if ($newApplication->getPayment()->getPairedValidApplications()->count() === 1) {
-                        $newApplication->getPayment()->setState(PaymentState::NOT_PAIRED_CANCELED);
-                    }
-                    $newApplication->setPayment(null);
+            if ($newApplication->getPayment() !== null) {
+                if ($newApplication->getPayment()->getPairedValidApplications()->count() === 1) {
+                    $newApplication->getPayment()->setState(PaymentState::NOT_PAIRED_CANCELED);
                 }
-
-                    $this->applicationRepository->save($newApplication);
-
-                    $application->setValidTo(new \DateTime());
-                    $this->applicationRepository->save($application);
-
-                    $this->programService->updateUserPrograms($user);
-                    $this->updateUserPaymentInfo($user);
-
-                    $this->decrementSubeventsOccupancy($application->getSubevents());
+                $newApplication->setPayment(null);
             }
-        );
 
-        $this->mailService->sendMailFromTemplate(
-            $application->getUser(),
-            '',
-            Template::SUBEVENTS_CHANGED,
-            [
+            $this->applicationRepository->save($newApplication);
+
+            $application->setValidTo(new \DateTime());
+            $this->applicationRepository->save($application);
+
+            $this->programService->updateUserPrograms($user);
+            $this->updateUserPaymentInfo($user);
+
+            $this->decrementSubeventsOccupancy($application->getSubevents());
+        });
+
+        $this->mailService->sendMailFromTemplate($application->getUser(), '', Template::SUBEVENTS_CHANGED, [
             TemplateVariable::SEMINAR_NAME => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
             TemplateVariable::USERS_SUBEVENTS => $application->getUser()->getSubeventsText(),
-                ]
-        );
+        ]);
     }
 
     /**
      * Aktualizuje stav platby.
-     *
      * @throws \Throwable
      */
     public function updateApplicationPayment(
@@ -543,54 +479,48 @@ class ApplicationService
         $oldMaturityDate           = $application->getMaturityDate();
 
         //pokud neni zmena, nic se neprovede
-        if ($paymentMethod === $oldPaymentMethod && $paymentDate === $oldPaymentDate && $incomeProofPrintedDate === $oldIncomeProofPrintedDate && $maturityDate === $oldMaturityDate) {
+        if ($paymentMethod === $oldPaymentMethod && $paymentDate === $oldPaymentDate
+            && $incomeProofPrintedDate === $oldIncomeProofPrintedDate && $maturityDate === $oldMaturityDate) {
             return;
         }
 
-        $this->em->transactional(
-            function ($em) use (
-                $application,
-                $paymentMethod,
-                $paymentDate,
-                $incomeProofPrintedDate,
-                $maturityDate,
-                $createdBy
-            ) : void {
-                    $user = $application->getUser();
+        $this->em->transactional(function ($em) use (
+            $application,
+            $paymentMethod,
+            $paymentDate,
+            $incomeProofPrintedDate,
+            $maturityDate,
+            $createdBy
+        ) : void {
+            $user = $application->getUser();
 
-                    $newApplication = clone $application;
+            $newApplication = clone $application;
 
-                    $newApplication->setPaymentMethod($paymentMethod);
-                    $newApplication->setPaymentDate($paymentDate);
-                    $newApplication->setIncomeProofPrintedDate($incomeProofPrintedDate);
-                    $newApplication->setMaturityDate($maturityDate);
+            $newApplication->setPaymentMethod($paymentMethod);
+            $newApplication->setPaymentDate($paymentDate);
+            $newApplication->setIncomeProofPrintedDate($incomeProofPrintedDate);
+            $newApplication->setMaturityDate($maturityDate);
 
-                    $newApplication->setState($this->getApplicationState($newApplication));
-                    $newApplication->setCreatedBy($createdBy);
-                    $newApplication->setValidFrom(new \DateTime());
-                    $this->applicationRepository->save($newApplication);
+            $newApplication->setState($this->getApplicationState($newApplication));
+            $newApplication->setCreatedBy($createdBy);
+            $newApplication->setValidFrom(new \DateTime());
+            $this->applicationRepository->save($newApplication);
 
-                    $application->setValidTo(new \DateTime());
-                    $this->applicationRepository->save($application);
+            $application->setValidTo(new \DateTime());
+            $this->applicationRepository->save($application);
 
-                    $this->programService->updateUserPrograms($user);
-                    $this->updateUserPaymentInfo($user);
-            }
-        );
+            $this->programService->updateUserPrograms($user);
+            $this->updateUserPaymentInfo($user);
+        });
 
         if ($paymentDate === null || $oldPaymentDate !== null) {
             return;
         }
 
-        $this->mailService->sendMailFromTemplate(
-            $application->getUser(),
-            '',
-            Template::PAYMENT_CONFIRMED,
-            [
+        $this->mailService->sendMailFromTemplate($application->getUser(), '', Template::PAYMENT_CONFIRMED, [
             TemplateVariable::SEMINAR_NAME => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
             TemplateVariable::APPLICATION_SUBEVENTS => $application->getSubeventsText(),
-                ]
-        );
+        ]);
     }
 
     /**
@@ -598,39 +528,37 @@ class ApplicationService
      */
     public function createPayment(\DateTime $date, float $amount, ?string $variableSymbol, ?string $transactionId, ?string $accountNumber, ?string $accountName, ?string $message, ?User $createdBy = null) : void
     {
-        $this->em->transactional(
-            function () use ($date, $amount, $variableSymbol, $transactionId, $accountNumber, $accountName, $message, $createdBy) : void {
-                    $payment = new Payment();
+        $this->em->transactional(function () use ($date, $amount, $variableSymbol, $transactionId, $accountNumber, $accountName, $message, $createdBy) : void {
+            $payment = new Payment();
 
-                    $payment->setDate($date);
-                    $payment->setAmount($amount);
-                    $payment->setVariableSymbol($variableSymbol);
-                    $payment->setTransactionId($transactionId);
-                    $payment->setAccountNumber($accountNumber);
-                    $payment->setAccountName($accountName);
-                    $payment->setMessage($message);
+            $payment->setDate($date);
+            $payment->setAmount($amount);
+            $payment->setVariableSymbol($variableSymbol);
+            $payment->setTransactionId($transactionId);
+            $payment->setAccountNumber($accountNumber);
+            $payment->setAccountName($accountName);
+            $payment->setMessage($message);
 
-                    $pairedApplication = $this->applicationRepository->findValidByVariableSymbol($variableSymbol);
+            $pairedApplication = $this->applicationRepository->findValidByVariableSymbol($variableSymbol);
 
-                if ($pairedApplication) {
-                    if ($pairedApplication->getState() === ApplicationState::PAID || $pairedApplication->getState() === ApplicationState::PAID_FREE) {
-                        $payment->setState(PaymentState::NOT_PAIRED_PAID);
-                    } elseif ($pairedApplication->getState() === ApplicationState::CANCELED || $pairedApplication->getState() === ApplicationState::CANCELED_NOT_PAID) {
-                        $payment->setState(PaymentState::NOT_PAIRED_CANCELED);
-                    } elseif (abs($pairedApplication->getFee() - $amount) >= 0.01) {
-                        $payment->setState(PaymentState::NOT_PAIRED_FEE);
-                    } else {
-                        $payment->setState(PaymentState::PAIRED_AUTO);
-                        $pairedApplication->setPayment($payment);
-                        $this->updateApplicationPayment($pairedApplication, PaymentType::BANK, $date, null, null, $createdBy);
-                    }
+            if ($pairedApplication) {
+                if ($pairedApplication->getState() === ApplicationState::PAID || $pairedApplication->getState() === ApplicationState::PAID_FREE) {
+                    $payment->setState(PaymentState::NOT_PAIRED_PAID);
+                } elseif ($pairedApplication->getState() === ApplicationState::CANCELED || $pairedApplication->getState() === ApplicationState::CANCELED_NOT_PAID) {
+                    $payment->setState(PaymentState::NOT_PAIRED_CANCELED);
+                } elseif (abs($pairedApplication->getFee() - $amount) >= 0.01) {
+                    $payment->setState(PaymentState::NOT_PAIRED_FEE);
                 } else {
-                    $payment->setState(PaymentState::NOT_PAIRED_VS);
+                    $payment->setState(PaymentState::PAIRED_AUTO);
+                    $pairedApplication->setPayment($payment);
+                    $this->updateApplicationPayment($pairedApplication, PaymentType::BANK, $date, null, null, $createdBy);
                 }
-
-                    $this->paymentRepository->save($payment);
+            } else {
+                $payment->setState(PaymentState::NOT_PAIRED_VS);
             }
-        );
+
+            $this->paymentRepository->save($payment);
+        });
     }
 
     public function createPaymentManual(\DateTime $date, float $amount, string $variableSymbol, User $createdBy) : void
@@ -639,56 +567,54 @@ class ApplicationService
     }
 
     /**
-     * @param  Collection|Application[] $pairedApplications
+     * @param Collection|Application[] $pairedApplications
      * @throws \Throwable
      */
     public function updatePayment(Payment $payment, ?\DateTime $date, ?float $amount, ?string $variableSymbol, Collection $pairedApplications, User $createdBy) : void
     {
-        $this->em->transactional(
-            function () use ($payment, $date, $amount, $variableSymbol, $pairedApplications, $createdBy) : void {
-                if ($date !== null) {
-                    $payment->setDate($date);
-                }
-                if ($amount !== null) {
-                    $payment->setAmount($amount);
-                }
-                if ($variableSymbol !== null) {
-                    $payment->setVariableSymbol($variableSymbol);
-                }
-
-                    $oldPairedApplications = clone $payment->getPairedValidApplications();
-                    $newPairedApplications = clone $pairedApplications;
-
-                    $pairedApplicationsModified = false;
-
-                foreach ($oldPairedApplications as $pairedApplication) {
-                    if ($newPairedApplications->contains($pairedApplication)) {
-                        continue;
-                    }
-                    $pairedApplication->setPayment(null);
-                    $this->updateApplicationPayment($pairedApplication, null, null, null, $pairedApplication->getMaturityDate(), $createdBy);
-                    $pairedApplicationsModified = true;
-                }
-                foreach ($newPairedApplications as $pairedApplication) {
-                    if ($oldPairedApplications->contains($pairedApplication)) {
-                        continue;
-                    }
-                    $pairedApplication->setPayment($payment);
-                    $this->updateApplicationPayment($pairedApplication, PaymentType::BANK, $payment->getDate(), null, $pairedApplication->getMaturityDate(), $createdBy);
-                    $pairedApplicationsModified = true;
-                }
-
-                if ($pairedApplicationsModified) {
-                    if ($pairedApplications->isEmpty()) {
-                        $payment->setState(PaymentState::NOT_PAIRED);
-                    } else {
-                        $payment->setState(PaymentState::PAIRED_MANUAL);
-                    }
-                }
-
-                    $this->paymentRepository->save($payment);
+        $this->em->transactional(function () use ($payment, $date, $amount, $variableSymbol, $pairedApplications, $createdBy) : void {
+            if ($date !== null) {
+                $payment->setDate($date);
             }
-        );
+            if ($amount !== null) {
+                $payment->setAmount($amount);
+            }
+            if ($variableSymbol !== null) {
+                $payment->setVariableSymbol($variableSymbol);
+            }
+
+            $oldPairedApplications = clone $payment->getPairedValidApplications();
+            $newPairedApplications = clone $pairedApplications;
+
+            $pairedApplicationsModified = false;
+
+            foreach ($oldPairedApplications as $pairedApplication) {
+                if ($newPairedApplications->contains($pairedApplication)) {
+                    continue;
+                }
+                $pairedApplication->setPayment(null);
+                $this->updateApplicationPayment($pairedApplication, null, null, null, $pairedApplication->getMaturityDate(), $createdBy);
+                $pairedApplicationsModified = true;
+            }
+            foreach ($newPairedApplications as $pairedApplication) {
+                if ($oldPairedApplications->contains($pairedApplication)) {
+                    continue;
+                }
+                $pairedApplication->setPayment($payment);
+                $this->updateApplicationPayment($pairedApplication, PaymentType::BANK, $payment->getDate(), null, $pairedApplication->getMaturityDate(), $createdBy);
+                $pairedApplicationsModified = true;
+            }
+
+            if ($pairedApplicationsModified) {
+                if ($pairedApplications->isEmpty()) {
+                    $payment->setState(PaymentState::NOT_PAIRED);
+                } else {
+                    $payment->setState(PaymentState::PAIRED_MANUAL);
+                }
+            }
+
+            $this->paymentRepository->save($payment);
+        });
     }
 
     /**
@@ -696,15 +622,13 @@ class ApplicationService
      */
     public function removePayment(Payment $payment, User $createdBy) : void
     {
-        $this->em->transactional(
-            function () use ($payment, $createdBy) : void {
-                foreach ($payment->getPairedValidApplications() as $pairedApplication) {
-                    $this->updateApplicationPayment($pairedApplication, null, null, null, $pairedApplication->getMaturityDate(), $createdBy);
-                }
-
-                    $this->paymentRepository->remove($payment);
+        $this->em->transactional(function () use ($payment, $createdBy) : void {
+            foreach ($payment->getPairedValidApplications() as $pairedApplication) {
+                $this->updateApplicationPayment($pairedApplication, null, null, null, $pairedApplication->getMaturityDate(), $createdBy);
             }
-        );
+
+            $this->paymentRepository->remove($payment);
+        });
     }
 
     /**
@@ -723,40 +647,43 @@ class ApplicationService
 
     /**
      * Může uživatel upravovat role?
-     *
      * @throws SettingsException
      * @throws \Throwable
      */
     public function isAllowedEditRegistration(User $user) : bool
     {
-        return ! $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED)) && ! $user->hasPaidAnyApplication() && $this->settingsFacade->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new \DateTime())->setTime(0, 0);
+        return ! $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))
+            && ! $user->hasPaidAnyApplication()
+            && $this->settingsFacade->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new \DateTime())->setTime(0, 0);
     }
 
     /**
      * Je uživateli povoleno upravit nebo zrušit přihlášku?
-     *
      * @throws SettingsException
      * @throws \Throwable
      */
     public function isAllowedEditApplication(Application $application) : bool
     {
-        return $application->getType() === Application::SUBEVENTS && ! $application->isCanceled() && $application->getState() !== ApplicationState::PAID && $this->settingsFacade->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new \DateTime())->setTime(0, 0);
+        return $application->getType() === Application::SUBEVENTS && ! $application->isCanceled()
+            && $application->getState() !== ApplicationState::PAID
+            && $this->settingsFacade->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new \DateTime())->setTime(0, 0);
     }
 
     /**
      * Může uživatel dodatečně přidávat podakce?
-     *
      * @throws SettingsException
      * @throws \Throwable
      */
     public function isAllowedAddApplication(User $user) : bool
     {
-        return ! $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED)) && $user->hasPaidEveryApplication() && $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT) && $this->settingsFacade->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new \DateTime())->setTime(0, 0);
+        return ! $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))
+            && $user->hasPaidEveryApplication()
+            && $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT)
+            && $this->settingsFacade->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new \DateTime())->setTime(0, 0);
     }
 
     /**
      * Může uživatel upravovat vlastní pole přihlášky?
-     *
      * @throws SettingsException
      * @throws \Throwable
      */
@@ -766,7 +693,7 @@ class ApplicationService
     }
 
     /**
-     * @param  Collection|Role[] $roles
+     * @param Collection|Role[] $roles
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException
@@ -782,12 +709,9 @@ class ApplicationService
         $this->incrementRolesOccupancy($roles);
 
         $user->setApproved(true);
-        if (! $approve && $roles->exists(
-            function (int $key, Role $role) {
-                            return ! $role->isApprovedAfterRegistration();
-            }
-        )
-        ) {
+        if (! $approve && $roles->exists(function (int $key, Role $role) {
+            return ! $role->isApprovedAfterRegistration();
+        })) {
             $user->setApproved(false);
         }
 
@@ -814,7 +738,7 @@ class ApplicationService
     }
 
     /**
-     * @param  Collection|Subevent[] $subevents
+     * @param Collection|Subevent[] $subevents
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException
@@ -867,7 +791,6 @@ class ApplicationService
 
     /**
      * Vypočítá datum splatnosti podle zvolené metody.
-     *
      * @throws SettingsException
      * @throws \ReflectionException
      * @throws \Throwable
@@ -903,7 +826,6 @@ class ApplicationService
 
     /**
      * Vypočítá poplatek za role.
-     *
      * @param Collection|Role[] $roles
      */
     private function countRolesFee(Collection $roles) : int
@@ -923,7 +845,6 @@ class ApplicationService
 
     /**
      * Vypočítá poplatek za podakce přihlášky.
-     *
      * @param Collection|Role[]     $roles
      * @param Collection|Subevent[] $subevents
      */
@@ -975,8 +896,7 @@ class ApplicationService
 
     /**
      * Zvýší obsazenost rolí.
-     *
-     * @param  Collection|Role[] $roles
+     * @param Collection|Role[] $roles
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -990,8 +910,7 @@ class ApplicationService
 
     /**
      * Sníží obsazenost rolí.
-     *
-     * @param  Collection|Role[] $roles
+     * @param Collection|Role[] $roles
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -1005,8 +924,7 @@ class ApplicationService
 
     /**
      * Zvýší obsazenost podakcí.
-     *
-     * @param  Collection|Subevent[] $subevents
+     * @param Collection|Subevent[] $subevents
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -1020,8 +938,7 @@ class ApplicationService
 
     /**
      * Sníží obsazenost podakcí.
-     *
-     * @param  Collection|Subevent[] $subevents
+     * @param Collection|Subevent[] $subevents
      * @throws ORMException
      * @throws OptimisticLockException
      */

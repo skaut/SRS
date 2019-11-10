@@ -12,11 +12,12 @@ use Nettrine\ORM\Entity\Attributes\Id as Identifier;
 /**
  * Abstraktní entita hodnota vlastního pole přihlášky.
  *
- * @author                                                   Jan Staněk <jan.stanek@skaut.cz>
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="CustomInputValueRepository")
  * @ORM\Table(name="custom_input_value")
  * @ORM\InheritanceType("JOINED")
- * @ORM\DiscriminatorColumn(name="type",                     type="string")
+ * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({
  *     "custom_checkbox_value" = "CustomCheckboxValue",
  *     "custom_text_value" = "CustomTextValue",
@@ -30,19 +31,18 @@ abstract class CustomInputValue
 
     /**
      * Vlastní pole přihlášky.
-     *
      * @ORM\ManyToOne(targetEntity="\App\Model\Settings\CustomInput\CustomInput", inversedBy="customInputValues", cascade={"persist"})
-     * @var                                                                       CustomInput
+     * @var CustomInput
      */
     protected $input;
 
     /**
      * Uživatel.
-     *
      * @ORM\ManyToOne(targetEntity="\App\Model\User\User", inversedBy="customInputValues", cascade={"persist"})
-     * @var                                                User
+     * @var User
      */
     protected $user;
+
 
     public function getId() : int
     {

@@ -11,6 +11,7 @@ use Nettrine\ORM\Entity\Attributes\Id as Identifier;
  * Entita variabilní symbol.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="VariableSymbolRepository")
  * @ORM\Table(name="variable_symbol")
  */
@@ -20,11 +21,11 @@ class VariableSymbol
 
     /**
      * Variabilní symbol.
-     *
      * @ORM\Column(type="string", nullable=true)
-     * @var                       string
+     * @var string
      */
     protected $variableSymbol;
+
 
     public function getId() : int
     {

@@ -37,6 +37,7 @@ class AddLectorForm
     /** @var FilesService */
     private $filesService;
 
+
     public function __construct(
         BaseForm $baseFormFactory,
         UserRepository $userRepository,
@@ -57,15 +58,15 @@ class AddLectorForm
         $form = $this->baseFormFactory->create();
 
         $form->addUpload('photo', 'admin.users.users_photo')
-                ->setAttribute('accept', 'image/*')
-                ->addCondition(Form::FILLED)
-                ->addRule(Form::IMAGE, 'admin.users.users_photo_format');
+            ->setAttribute('accept', 'image/*')
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::IMAGE, 'admin.users.users_photo_format');
 
         $form->addText('firstName', 'admin.users.users_firstname')
-                ->addRule(Form::FILLED, 'admin.users.users_firstname_empty');
+            ->addRule(Form::FILLED, 'admin.users.users_firstname_empty');
 
         $form->addText('lastName', 'admin.users.users_lastname')
-                ->addRule(Form::FILLED, 'admin.users.users_lastname_empty');
+            ->addRule(Form::FILLED, 'admin.users.users_lastname_empty');
 
         $form->addText('nickName', 'admin.users.users_nickname');
 
@@ -74,20 +75,20 @@ class AddLectorForm
         $form->addText('degreePost', 'admin.users.users_degree_post');
 
         $form->addText('email', 'admin.users.users_email')
-                ->addCondition(Form::FILLED)
-                ->addRule(Form::EMAIL, 'admin.users.users_email_format');
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::EMAIL, 'admin.users.users_email_format');
 
         $form->addDatePicker('birthdate', 'admin.users.users_birthdate');
 
         $form->addText('street', 'admin.users.users_street')
-                ->addCondition(Form::FILLED)
-                ->addRule(Form::PATTERN, 'web.application_content.street_format', '^(.*[^0-9]+) (([1-9][0-9]*)/)?([1-9][0-9]*[a-cA-C]?)$');
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::PATTERN, 'web.application_content.street_format', '^(.*[^0-9]+) (([1-9][0-9]*)/)?([1-9][0-9]*[a-cA-C]?)$');
 
         $form->addText('city', 'admin.users.users_city');
 
         $form->addText('postcode', 'admin.users.users_postcode')
-                ->addCondition(Form::FILLED)
-                ->addRule(Form::PATTERN, 'web.application_content.postcode_format', '^\d{3} ?\d{2}$');
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::PATTERN, 'web.application_content.postcode_format', '^\d{3} ?\d{2}$');
 
         $form->addTextArea('about', 'admin.users.users_about_me');
 
@@ -96,8 +97,8 @@ class AddLectorForm
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->addSubmit('cancel', 'admin.common.cancel')
-                ->setValidationScope([])
-                ->setAttribute('class', 'btn btn-warning');
+            ->setValidationScope([])
+            ->setAttribute('class', 'btn btn-warning');
 
         $form->onSuccess[] = [$this, 'processForm'];
 
@@ -106,7 +107,6 @@ class AddLectorForm
 
     /**
      * Zpracuje formulář.
-     *
      * @throws Nette\Utils\UnknownImageFileException
      * @throws ORMException
      * @throws OptimisticLockException

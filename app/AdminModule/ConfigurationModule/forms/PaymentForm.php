@@ -21,12 +21,12 @@ use function array_key_exists;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class PaymentForm extends UI\Control
 {
     /**
      * Událost při uložení formuláře.
-     *
      * @var callable
      */
     public $onSave;
@@ -40,12 +40,12 @@ class PaymentForm extends UI\Control
     /** @var UserRepository */
     private $userRepository;
 
+
     public function __construct(BaseForm $baseForm, SettingsFacade $settingsFacade, UserRepository $userRepository)
     {
         parent::__construct();
 
         $this->baseFormFactory = $baseForm;
-        $this->settingsFacade  = $settingsFacade;
         $this->settingsFacade  = $settingsFacade;
         $this->userRepository  = $userRepository;
     }
@@ -61,7 +61,6 @@ class PaymentForm extends UI\Control
 
     /**
      * Vytvoří formulář.
-     *
      * @throws SettingsException
      * @throws \Throwable
      */
@@ -74,64 +73,62 @@ class PaymentForm extends UI\Control
         $renderer->wrappers['label']['container']   = 'div class="col-sm-5 col-xs-5 control-label"';
 
         $form->addText('accountNumber', 'admin.configuration.account_number')
-                ->addRule(Form::FILLED, 'admin.configuration.account_number_empty')
-                ->addRule(Form::PATTERN, 'admin.configuration.account_number_format', '^(\d{1,6}-|)\d{2,10}\/\d{4}$');
+            ->addRule(Form::FILLED, 'admin.configuration.account_number_empty')
+            ->addRule(Form::PATTERN, 'admin.configuration.account_number_format', '^(\d{1,6}-|)\d{2,10}\/\d{4}$');
 
         $form->addText('variableSymbolCode', 'admin.configuration.variable_symbol_code')
-                ->addCondition(Form::FILLED)
-                ->addRule(Form::PATTERN, 'admin.configuration.variable_symbol_code_format', '^\d{0,4}$');
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::PATTERN, 'admin.configuration.variable_symbol_code_format', '^\d{0,4}$');
 
         $maturityTypeSelect = $form->addSelect('maturityType', 'admin.configuration.maturity_type', $this->prepareMaturityTypeOptions());
         $maturityTypeSelect->addCondition($form::EQUAL, MaturityType::DATE)
-                ->toggle('maturity-date')
-                ->toggle('maturity-reminder')
-                ->toggle('cancel-registration-after-maturity');
+            ->toggle('maturity-date')
+            ->toggle('maturity-reminder')
+            ->toggle('cancel-registration-after-maturity');
         $maturityTypeSelect->addCondition($form::EQUAL, MaturityType::DAYS)
-                ->toggle('maturity-days')
-                ->toggle('maturity-reminder')
-                ->toggle('cancel-registration-after-maturity');
+            ->toggle('maturity-days')
+            ->toggle('maturity-reminder')
+            ->toggle('cancel-registration-after-maturity');
         $maturityTypeSelect->addCondition($form::EQUAL, MaturityType::WORK_DAYS)
-                ->toggle('maturity-work-days')
-                ->toggle('maturity-reminder')
-                ->toggle('cancel-registration-after-maturity');
+            ->toggle('maturity-work-days')
+            ->toggle('maturity-reminder')
+            ->toggle('cancel-registration-after-maturity');
 
         $form->addDatePicker('maturityDate', 'admin.configuration.maturity_date')
-                ->setOption('id', 'maturity-date');
+            ->setOption('id', 'maturity-date');
 
         $form->addText('maturityDays', 'admin.configuration.maturity_days')
-                ->setOption('id', 'maturity-days')
-                ->addCondition(Form::FILLED)
-                ->addRule(Form::INTEGER, 'admin.configuration.maturity_days_format');
+            ->setOption('id', 'maturity-days')
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::INTEGER, 'admin.configuration.maturity_days_format');
 
         $form->addText('maturityWorkDays', 'admin.configuration.maturity_work_days')
-                ->setOption('id', 'maturity-work-days')
-                ->addCondition(Form::FILLED)
-                ->addRule(Form::INTEGER, 'admin.configuration.maturity_work_days_format');
+            ->setOption('id', 'maturity-work-days')
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::INTEGER, 'admin.configuration.maturity_work_days_format');
 
         $form->addText('maturityReminder', 'admin.configuration.maturity_reminder')
-                ->setOption('id', 'maturity-reminder')
-                ->addCondition(Form::FILLED)
-                ->addRule(Form::INTEGER, 'admin.configuration.maturity_reminder_format');
+            ->setOption('id', 'maturity-reminder')
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::INTEGER, 'admin.configuration.maturity_reminder_format');
 
         $form->addText('cancelRegistrationAfterMaturity', 'admin.configuration.cancel_registration_after_maturity')
-                ->setOption('id', 'cancel-registration-after-maturity')
-                ->addCondition(Form::FILLED)
-                ->addRule(Form::INTEGER, 'admin.configuration.cancel_registration_after_maturity_format');
+            ->setOption('id', 'cancel-registration-after-maturity')
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::INTEGER, 'admin.configuration.cancel_registration_after_maturity_format');
 
         $form->addSubmit('submit', 'admin.common.save');
 
-        $form->setDefaults(
-            [
-                    'accountNumber' => $this->settingsFacade->getValue(Settings::ACCOUNT_NUMBER),
-                    'variableSymbolCode' => $this->settingsFacade->getValue(Settings::VARIABLE_SYMBOL_CODE),
-                    'maturityType' => $this->settingsFacade->getValue(Settings::MATURITY_TYPE),
-                    'maturityDate' => $this->settingsFacade->getDateValue(Settings::MATURITY_DATE),
-                    'maturityDays' => $this->settingsFacade->getIntValue(Settings::MATURITY_DAYS),
-                    'maturityWorkDays' => $this->settingsFacade->getIntValue(Settings::MATURITY_WORK_DAYS),
-                    'maturityReminder' => $this->settingsFacade->getIntValue(Settings::MATURITY_REMINDER),
-                    'cancelRegistrationAfterMaturity' => $this->settingsFacade->getIntValue(Settings::CANCEL_REGISTRATION_AFTER_MATURITY),
-                ]
-        );
+        $form->setDefaults([
+            'accountNumber' => $this->settingsFacade->getValue(Settings::ACCOUNT_NUMBER),
+            'variableSymbolCode' => $this->settingsFacade->getValue(Settings::VARIABLE_SYMBOL_CODE),
+            'maturityType' => $this->settingsFacade->getValue(Settings::MATURITY_TYPE),
+            'maturityDate' => $this->settingsFacade->getDateValue(Settings::MATURITY_DATE),
+            'maturityDays' => $this->settingsFacade->getIntValue(Settings::MATURITY_DAYS),
+            'maturityWorkDays' => $this->settingsFacade->getIntValue(Settings::MATURITY_WORK_DAYS),
+            'maturityReminder' => $this->settingsFacade->getIntValue(Settings::MATURITY_REMINDER),
+            'cancelRegistrationAfterMaturity' => $this->settingsFacade->getIntValue(Settings::CANCEL_REGISTRATION_AFTER_MATURITY),
+        ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
 
@@ -140,7 +137,6 @@ class PaymentForm extends UI\Control
 
     /**
      * Zpracuje formulář.
-     *
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException
@@ -189,7 +185,6 @@ class PaymentForm extends UI\Control
 
     /**
      * Vrátí způsoby výpočtu splatnosti jako možnosti pro select.
-     *
      * @return string[]
      */
     private function prepareMaturityTypeOptions() : array

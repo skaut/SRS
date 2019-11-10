@@ -24,7 +24,6 @@ class EditTemplateForm
 
     /**
      * Upravovaná šablona.
-     *
      * @var Template
      */
     private $template;
@@ -34,6 +33,7 @@ class EditTemplateForm
 
     /** @var TemplateRepository */
     private $templateRepository;
+
 
     public function __construct(BaseForm $baseFormFactory, TemplateRepository $templateRepository)
     {
@@ -54,27 +54,23 @@ class EditTemplateForm
 
         $form->addCheckbox('active', 'admin.mailing.templates.active_form');
 
-        $form->addMultiSelect(
-            'recipients',
-            'admin.mailing.templates.recipients',
-            [
+        $form->addMultiSelect('recipients', 'admin.mailing.templates.recipients', [
             'user' => 'admin.mailing.templates.send_to_user_form',
             'organizer' => 'admin.mailing.templates.send_to_organizer_form',
-                ]
-        )->addRule(Form::FILLED, 'admin.mailing.templates.recipients_empty');
+        ])->addRule(Form::FILLED, 'admin.mailing.templates.recipients_empty');
 
         $form->addText('subject', 'admin.mailing.templates.subject')
-                ->addRule(Form::FILLED, 'admin.mailing.templates.subject_empty');
+            ->addRule(Form::FILLED, 'admin.mailing.templates.subject_empty');
 
         $form->addTextArea('text', 'admin.mailing.templates.text')
-                ->addRule(Form::FILLED, 'admin.mailing.templates.text_empty')
-                ->setAttribute('class', 'tinymce-paragraph');
+            ->addRule(Form::FILLED, 'admin.mailing.templates.text_empty')
+            ->setAttribute('class', 'tinymce-paragraph');
 
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->addSubmit('cancel', 'admin.common.cancel')
-                ->setValidationScope([])
-                ->setAttribute('class', 'btn btn-warning');
+            ->setValidationScope([])
+            ->setAttribute('class', 'btn btn-warning');
 
         $selectedRecipients = [];
         if ($this->template->isSendToOrganizer()) {
@@ -84,15 +80,13 @@ class EditTemplateForm
             $selectedRecipients[] = 'user';
         }
 
-        $form->setDefaults(
-            [
-                    'id' => $id,
-                    'active' => $this->template->isActive(),
-                    'recipients' => $selectedRecipients,
-                    'subject' => $this->template->getSubject(),
-                    'text' => $this->template->getText(),
-                ]
-        );
+        $form->setDefaults([
+            'id' => $id,
+            'active' => $this->template->isActive(),
+            'recipients' => $selectedRecipients,
+            'subject' => $this->template->getSubject(),
+            'text' => $this->template->getText(),
+        ]);
 
         $form->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
         $form->onSuccess[] = [$this, 'processForm'];
@@ -102,7 +96,6 @@ class EditTemplateForm
 
     /**
      * Zpracuje formulář.
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */

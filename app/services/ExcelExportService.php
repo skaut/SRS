@@ -63,6 +63,7 @@ class ExcelExportService
     /** @var ProgramService */
     private $programService;
 
+
     public function __construct(
         Translator $translator,
         CustomInputRepository $customInputRepository,
@@ -87,9 +88,8 @@ class ExcelExportService
 
     /**
      * Vyexportuje matici uživatelů a rolí.
-     *
-     * @param  Collection|User[] $users
-     * @param  Collection|Role[] $roles
+     * @param Collection|User[] $users
+     * @param Collection|Role[] $roles
      * @throws Exception
      */
     public function exportUsersRoles(Collection $users, Collection $roles, string $filename) : ExcelResponse
@@ -130,7 +130,6 @@ class ExcelExportService
 
     /**
      * Vyexportuje harmonogram uživatele.
-     *
      * @throws Exception
      */
     public function exportUserSchedule(User $user, string $filename) : ExcelResponse
@@ -140,8 +139,7 @@ class ExcelExportService
 
     /**
      * Vyexportuje harmonogramy uživatelů, každý uživatel na zvlástním listu.
-     *
-     * @param  Collection|User[] $users
+     * @param Collection|User[] $users
      * @throws Exception
      * @throws \Exception
      */
@@ -199,7 +197,6 @@ class ExcelExportService
 
     /**
      * Vyexportuje harmonogram místnosti.
-     *
      * @throws Exception
      */
     public function exportRoomSchedule(Room $room, string $filename) : ExcelResponse
@@ -209,8 +206,7 @@ class ExcelExportService
 
     /**
      * Vyexportuje harmonogramy místností.
-     *
-     * @param  Collection|Room[] $rooms
+     * @param Collection|Room[] $rooms
      * @throws Exception
      * @throws \Exception
      */
@@ -253,7 +249,9 @@ class ExcelExportService
                 $sheet->setCellValueByColumnAndRow($column++, $row, $program->getStart()->format('j. n. H:i'));
                 $sheet->setCellValueByColumnAndRow($column++, $row, $program->getEnd()->format('j. n. H:i'));
                 $sheet->setCellValueByColumnAndRow($column++, $row, $program->getBlock()->getName());
-                $sheet->setCellValueByColumnAndRow($column++, $row, $room->getCapacity() !== null ? $program->getAttendeesCount() . '/' . $room->getCapacity() : $program->getAttendeesCount());
+                $sheet->setCellValueByColumnAndRow($column++, $row, $room->getCapacity() !== null
+                    ? $program->getAttendeesCount() . '/' . $room->getCapacity()
+                    : $program->getAttendeesCount());
             }
         }
 
@@ -261,7 +259,7 @@ class ExcelExportService
     }
 
     /**
-     * @param  Collection|User[] $users
+     * @param Collection|User[] $users
      * @throws Exception
      */
     public function exportUsersList(Collection $users, string $filename) : ExcelResponse
@@ -400,10 +398,12 @@ class ExcelExportService
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->getSubeventsText());
 
-            $sheet->setCellValueByColumnAndRow($column++, $row, $user->isApproved() ? $this->translator->translate('common.export.common.yes') : $this->translator->translate('common.export.common.no'));
+            $sheet->setCellValueByColumnAndRow($column++, $row, $user->isApproved()
+                ? $this->translator->translate('common.export.common.yes')
+                : $this->translator->translate('common.export.common.no'));
 
             $sheet->getCellByColumnAndRow($column++, $row)
-                    ->setValueExplicit($this->userService->getMembershipText($user), DataType::TYPE_STRING);
+                ->setValueExplicit($this->userService->getMembershipText($user), DataType::TYPE_STRING);
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->getAge());
 
@@ -416,7 +416,7 @@ class ExcelExportService
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->getFeeRemaining());
 
             $sheet->getCellByColumnAndRow($column++, $row)
-                    ->setValueExplicit($user->getVariableSymbolsText(), DataType::TYPE_STRING);
+                ->setValueExplicit($user->getVariableSymbolsText(), DataType::TYPE_STRING);
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->getPaymentMethod() ? $this->translator->translate('common.payment.' . $user->getPaymentMethod()) : '');
 
@@ -424,7 +424,9 @@ class ExcelExportService
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->getRolesApplicationDate() !== null ? $user->getRolesApplicationDate()->format(Helpers::DATE_FORMAT) : '');
 
-            $sheet->setCellValueByColumnAndRow($column++, $row, $user->isAttended() ? $this->translator->translate('common.export.common.yes') : $this->translator->translate('common.export.common.no'));
+            $sheet->setCellValueByColumnAndRow($column++, $row, $user->isAttended()
+                ? $this->translator->translate('common.export.common.yes')
+                : $this->translator->translate('common.export.common.no'));
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->getNotRegisteredMandatoryBlocksText());
 
@@ -438,7 +440,9 @@ class ExcelExportService
                             break;
 
                         case CustomInput::CHECKBOX:
-                            $value = $customInputValue->getValue() ? $this->translator->translate('common.export.common.yes') : $this->translator->translate('common.export.common.no');
+                            $value = $customInputValue->getValue()
+                                ? $this->translator->translate('common.export.common.yes')
+                                : $this->translator->translate('common.export.common.no');
                             break;
 
                         case CustomInput::SELECT:
@@ -465,7 +469,7 @@ class ExcelExportService
     }
 
     /**
-     * @param  Collection|User[] $users
+     * @param Collection|User[] $users
      * @throws Exception
      */
     public function exportUsersSubeventsAndCategories(Collection $users, string $filename) : ExcelResponse
@@ -519,7 +523,7 @@ class ExcelExportService
             $column = 1;
 
             $sheet->getCellByColumnAndRow($column++, $row)
-                    ->setValueExplicit($user->getVariableSymbolsText(), DataType::TYPE_STRING);
+                ->setValueExplicit($user->getVariableSymbolsText(), DataType::TYPE_STRING);
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->getFirstName());
 
@@ -528,7 +532,9 @@ class ExcelExportService
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->getNickname());
 
             foreach ($this->subeventRepository->findAllExplicitOrderedByName() as $subevent) {
-                $sheet->setCellValueByColumnAndRow($column++, $row, $user->hasSubevent($subevent) ? $this->translator->translate('common.export.common.yes') : $this->translator->translate('common.export.common.no'));
+                $sheet->setCellValueByColumnAndRow($column++, $row, $user->hasSubevent($subevent)
+                    ? $this->translator->translate('common.export.common.yes')
+                    : $this->translator->translate('common.export.common.no'));
             }
 
             foreach ($this->categoryRepository->findAll() as $category) {
@@ -547,7 +553,7 @@ class ExcelExportService
     }
 
     /**
-     * @param  Collection|Block[] $blocks
+     * @param Collection|Block[] $blocks
      * @throws Exception
      */
     public function exportBlocksAttendees(Collection $blocks, string $filename) : ExcelResponse
