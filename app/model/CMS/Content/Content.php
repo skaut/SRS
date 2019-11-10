@@ -15,6 +15,7 @@ use Nettrine\ORM\Entity\Attributes\Id as Identifier;
  *
  * @author                               Michal Májský
  * @author                               Jan Staněk <jan.stanek@skaut.cz>
+ * @ORM\Entity
  * @ORM\Table(name="content")
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="type", type="string")
