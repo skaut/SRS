@@ -1,0 +1,2 @@
+services:
+    - Contributte\Console\Application

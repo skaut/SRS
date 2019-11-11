@@ -17,6 +17,9 @@ $configurator->createRobotLoader()
     ->register();
 
 $configurator->addConfig(__DIR__ . '/config/config.neon');
+if (php_sapi_name() != "cli") {
+    $configurator->addConfig(__DIR__ . '/config/config.console.neon');
+}
 $configurator->addConfig(__DIR__ . '/config/config.local.neon');
 
 $container = $configurator->createContainer();
