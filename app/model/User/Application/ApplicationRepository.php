@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\User;
 
+use App\Model\EntityRepository;
 use App\Model\Enums\ApplicationState;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -11,7 +12,6 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Kdyby\Doctrine\EntityRepository;
 use function array_map;
 
 /**

@@ -372,14 +372,14 @@ class SubeventRepository extends EntityRepository
 
     public function incrementOccupancy(Subevent $subevent) : void
     {
-        $this->createQuery('UPDATE App\Model\Structure\Subevent s SET s.occupancy = s.occupancy + 1 WHERE s.id = :sid')
+        $this->_em->createQuery('UPDATE App\Model\Structure\Subevent s SET s.occupancy = s.occupancy + 1 WHERE s.id = :sid')
             ->setParameter('sid', $subevent->getId())
             ->getResult();
     }
 
     public function decrementOccupancy(Subevent $subevent) : void
     {
-        $this->createQuery('UPDATE App\Model\Structure\Subevent s SET s.occupancy = s.occupancy - 1 WHERE s.id = :sid')
+        $this->_em->createQuery('UPDATE App\Model\Structure\Subevent s SET s.occupancy = s.occupancy - 1 WHERE s.id = :sid')
             ->setParameter('sid', $subevent->getId())
             ->getResult();
     }

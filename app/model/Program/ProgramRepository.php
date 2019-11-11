@@ -210,14 +210,14 @@ class ProgramRepository extends EntityRepository
 
     public function incrementOccupancy(Program $program) : void
     {
-        $this->createQuery('UPDATE App\Model\Program\Program p SET p.occupancy = p.occupancy + 1 WHERE p.id = :pid')
+        $this->_em->createQuery('UPDATE App\Model\Program\Program p SET p.occupancy = p.occupancy + 1 WHERE p.id = :pid')
             ->setParameter('pid', $program->getId())
             ->getResult();
     }
 
     public function decrementOccupancy(Program $program) : void
     {
-        $this->createQuery('UPDATE App\Model\Program\Program p SET p.occupancy = p.occupancy - 1 WHERE p.id = :pid')
+        $this->_em->createQuery('UPDATE App\Model\Program\Program p SET p.occupancy = p.occupancy - 1 WHERE p.id = :pid')
             ->setParameter('pid', $program->getId())
             ->getResult();
     }

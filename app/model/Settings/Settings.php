@@ -11,7 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @ORM\Entity(repositoryClass="SettingsRepository")
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
+ * @ORM\Entity
  * @ORM\Table(name="settings")
  */
 class Settings

@@ -13,14 +13,12 @@ use function reset;
 
 /**
  * Custom base EntityRepository
- * 
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 abstract class EntityRepository extends DoctrineEntityRepository
 {
     /**
      * Fetches all records like $key => $value pairs
-     *
      * @param string[] $criteria parameter can be skipped
      * @param string   $value    mandatory
      * @param string   $key      optional

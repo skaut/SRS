@@ -388,14 +388,14 @@ class RoleRepository extends EntityRepository
 
     public function incrementOccupancy(Role $role) : void
     {
-        $this->createQuery('UPDATE App\Model\ACL\Role r SET r.occupancy = r.occupancy + 1 WHERE r.id = :rid')
+        $this->_em->createQuery('UPDATE App\Model\ACL\Role r SET r.occupancy = r.occupancy + 1 WHERE r.id = :rid')
             ->setParameter('rid', $role->getId())
             ->getResult();
     }
 
     public function decrementOccupancy(Role $role) : void
     {
-        $this->createQuery('UPDATE App\Model\ACL\Role r SET r.occupancy = r.occupancy - 1 WHERE r.id = :rid')
+        $this->_em->createQuery('UPDATE App\Model\ACL\Role r SET r.occupancy = r.occupancy - 1 WHERE r.id = :rid')
             ->setParameter('rid', $role->getId())
             ->getResult();
     }

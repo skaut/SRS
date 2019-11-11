@@ -40,10 +40,10 @@ class InstallPresenter extends InstallBasePresenter
      * @var Application
      * @inject
      */
-    public $application;
+    public $consoleApplication;
 
     /**
-     * @var    EntityManagerDecorator
+     * @var EntityManagerDecorator
      * @inject
      */
     public $em;
@@ -107,15 +107,16 @@ class InstallPresenter extends InstallBasePresenter
      */
     public function handleImportSchema() : void
     {
-        $consoleApp = new Application();
-        $output     = new BufferedOutput();
         $input      = new ArrayInput([
             'command' => 'migrations:migrate',
             '--no-interaction' => true,
         ]);
-        $consoleApp->add(new MigrateCommand());
-        $result = $consoleApp->run($input, $output);
+		$output = new \Symfony\Component\Console\Output\BufferedOutput();
 
+		$this->consoleApplication->add(new MigrateCommand());
+		$this->consoleApplication->setAutoExit(false);
+		$result = $this->consoleApplication->run($input, $output);
+        
         if ($result !== 0) {
             $this->flashMessage('install.schema.schema_create_unsuccessful', 'danger');
             return;
@@ -146,7 +147,7 @@ class InstallPresenter extends InstallBasePresenter
             return;
         }
 
-        $this->userRepository->getEntityManager()->transactional(function ($em) : void {
+        $this->em->transactional(function ($em) : void {
             $user = $this->userRepository->findById($this->user->id);
             $this->userRepository->save($user);
 
