@@ -1,4 +1,5 @@
 parameters:
+    consoleUrl: https://srs-test.local
     database:
         host: mysql-test
         dbname: srs
