@@ -1,0 +1,123 @@
+application:
+    errorPresenter: Error
+    mapping:
+        *: App\*Module\Presenters\*Presenter
+    scanDirs:
+        - ../installer
+
+session:
+    expiration: 14 days
+
+extensions:
+    translation: Kdyby\Translation\DI\TranslationExtension
+    webloader: WebLoader\Nette\Extension
+
+services:
+    - App\InstallModule\Forms\BaseForm
+    - App\InstallModule\Forms\ConfigParametersForm
+
+    - App\Installer\RouterFactory
+    router: @App\Installer\RouterFactory::createRouter
+
+tracy:
+    maxLength: 900
+    showLocation: true
+
+translation:
+    default: cs
+    fallback: [cs_CZ, cs]
+
+webloader:
+    css:
+        web:
+            files:
+                - libs/jquery/jquery-ui.min.css
+                - %appDir%/../vendor/twbs/bootstrap/dist/css/bootstrap.min.css
+                - libs/font-awesome.min.css
+                - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.css
+                - %appDir%/../vendor/snapappointments/bootstrap-select/dist/css/bootstrap-select.css
+                - %appDir%/../vendor/kartik-v/bootstrap-fileinput/css/fileinput.min.css
+                - libs/ublaboo-datagrid/happy.min.css
+                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid.css
+                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid-spinners.css
+                - web/layout.css
+                - web/style.css
+
+        admin:
+            files:
+                - libs/jquery/jquery-ui.min.css
+                - %appDir%/../vendor/twbs/bootstrap/dist/css/bootstrap.min.css
+                - libs/font-awesome.min.css
+                - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.css
+                - %appDir%/../vendor/snapappointments/bootstrap-select/dist/css/bootstrap-select.css
+                - %appDir%/../vendor/kartik-v/bootstrap-fileinput/css/fileinput.min.css
+                - libs/ublaboo-datagrid/happy.min.css
+                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid.css
+                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid-spinners.css
+                - admin/style.css
+
+        install:
+            files:
+                - %appDir%/../vendor/twbs/bootstrap/dist/css/bootstrap.min.css
+                - install/style.css
+
+        export:
+            files:
+                - %appDir%/../vendor/twbs/bootstrap/dist/css/bootstrap.min.css
+                - export/style.css
+
+    js:
+        web:
+            files:
+                - libs/jquery/jquery-3.3.1.min.js
+                - libs/live-form-validation.js
+                - libs/nette.ajax.js
+                - libs/jquery/jquery-ui.min.js
+                - libs/jquery/jquery.mousewheel.min.js
+                - %appDir%/../vendor/twbs/bootstrap/dist/js/bootstrap.min.js
+                - libs/moment/moment.js
+                - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js
+                - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.cs.js
+                - %appDir%/../vendor/snapappointments/bootstrap-select/dist/js/bootstrap-select.js
+                - %appDir%/../vendor/snapappointments/bootstrap-select/dist/js/i18n/defaults-cs_CZ.js
+                - libs/bootstrap-confirmation/bootstrap-confirmation.js
+                - %appDir%/../vendor/kartik-v/bootstrap-fileinput/js/fileinput.min.js
+                - %appDir%/../vendor/kartik-v/bootstrap-fileinput/themes/fa/theme.js
+                - %appDir%/../vendor/kartik-v/bootstrap-fileinput/js/locales/cs.js
+                - libs/ublaboo-datagrid/happy.min.js
+#                - libs/ublaboo-datagrid/datagrid.js
+                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid.js
+                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid-instant-url-refresh.js
+                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid-spinners.js
+                - main.js
+
+        admin:
+            files:
+                - libs/jquery/jquery-3.3.1.min.js
+                - libs/live-form-validation.js
+                - libs/nette.ajax.js
+                - libs/jquery/jquery-ui.min.js
+                - libs/jquery/jquery.mousewheel.min.js
+                - %appDir%/../vendor/twbs/bootstrap/dist/js/bootstrap.min.js
+                - libs/moment/moment.js
+                - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js
+                - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.cs.js
+                - %appDir%/../vendor/snapappointments/bootstrap-select/dist/js/bootstrap-select.js
+                - %appDir%/../vendor/snapappointments/bootstrap-select/dist/js/i18n/defaults-cs_CZ.js
+                - libs/bootstrap-confirmation/bootstrap-confirmation.js
+                - %appDir%/../vendor/kartik-v/bootstrap-fileinput/js/fileinput.min.js
+                - %appDir%/../vendor/kartik-v/bootstrap-fileinput/themes/fa/theme.js
+                - %appDir%/../vendor/kartik-v/bootstrap-fileinput/js/locales/cs.js
+                - libs/ublaboo-datagrid/happy.min.js
+#                - libs/ublaboo-datagrid/datagrid.js
+                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid.js
+                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid-instant-url-refresh.js
+                - %appDir%/../vendor/ublaboo/datagrid/assets/dist/datagrid-spinners.js
+                - main.js
+
+        install:
+            files:
+                - libs/jquery/jquery-3.3.1.min.js
+                - %appDir%/../vendor/twbs/bootstrap/dist/js/bootstrap.min.js
+                - libs/live-form-validation.js
+                - libs/nette.ajax.js

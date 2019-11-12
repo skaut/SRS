@@ -38,6 +38,7 @@ console:
     catchExceptions: true
     autoExit: true
     lazy: false
+    url: %consoleUrl%
 
 dbal:
     connection:

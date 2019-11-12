@@ -107,16 +107,16 @@ class InstallPresenter extends InstallBasePresenter
      */
     public function handleImportSchema() : void
     {
-        $input      = new ArrayInput([
+        $input  = new ArrayInput([
             'command' => 'migrations:migrate',
             '--no-interaction' => true,
         ]);
-		$output = new \Symfony\Component\Console\Output\BufferedOutput();
+        $output = new BufferedOutput();
 
-		$this->consoleApplication->add(new MigrateCommand());
-		$this->consoleApplication->setAutoExit(false);
-		$result = $this->consoleApplication->run($input, $output);
-        
+        $this->consoleApplication->add(new MigrateCommand());
+        $this->consoleApplication->setAutoExit(false);
+        $result = $this->consoleApplication->run($input, $output);
+
         if ($result !== 0) {
             $this->flashMessage('install.schema.schema_create_unsuccessful', 'danger');
             return;
@@ -176,10 +176,6 @@ class InstallPresenter extends InstallBasePresenter
      */
     public function handleCreateAdmin() : void
     {
-        if (! $this->checkSkautISConnection()) {
-            $this->flashMessage('install.admin.skautis_access_denied', 'danger');
-            return;
-        }
         $this->redirect(':Auth:login', ['backlink' => ':Install:Install:admin']);
     }
 

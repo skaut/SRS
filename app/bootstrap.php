@@ -10,17 +10,26 @@ $configurator->setDebugMode(getenv('DEVELOPMENT_MACHINE') === 'true');
 $configurator->enableDebugger(__DIR__ . '/../log');
 
 $configurator->setTimeZone('Europe/Prague');
-$configurator->setTempDirectory(__DIR__ . '/../temp');
 
-$configurator->createRobotLoader()
-    ->addDirectory(__DIR__)
-    ->register();
+if (file_exists(__DIR__ . '/config/config.local.neon')) {
+    $configurator->setTempDirectory(__DIR__ . '/../temp');
 
-$configurator->addConfig(__DIR__ . '/config/config.neon');
-if (php_sapi_name() != "cli") {
-    $configurator->addConfig(__DIR__ . '/config/config.console.neon');
+    $configurator->addConfig(__DIR__ . '/config/config.local.neon');
+    $configurator->addConfig(__DIR__ . '/config/config.neon');
+    if (PHP_SAPI != 'cli') {
+        $configurator->addConfig(__DIR__ . '/config/config.console.neon');
+    }
+    $configurator->createRobotLoader()
+        ->addDirectory(__DIR__)
+        ->register();
+} else {
+    $configurator->setTempDirectory(__DIR__ . '/../temp/installer');
+
+    $configurator->addConfig(__DIR__ . '/../installer/config/config.neon');
+    $configurator->createRobotLoader()
+        ->addDirectory(__DIR__ . '/../installer')
+        ->register();
 }
-$configurator->addConfig(__DIR__ . '/config/config.local.neon');
 
 $container = $configurator->createContainer();
 

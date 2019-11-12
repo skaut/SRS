@@ -2,6 +2,32 @@ common:
     title: "Instalace | SRS"
     heading: "SRS: Instalace"
 
+connection:
+    heading: "Nastavení spojení"
+    mysql_db_settings: "Nastanení spojení s MySQL serverem"
+    host: "Host"
+    username: "Uživatelské jméno"
+    password: "Heslo"
+    port: "Port"
+    dbName: "Název databáze"
+    host_empty: "Zadejte hosta"
+    port_empty: "Zadejte port"
+    username_empty: "Zadejte uživatelské jméno"
+    password_empty: "Zadejte heslo"
+    dbName_empty: "Zadejte název databáze"
+    skatIS_settings: "Nastavení spojení s Skaut IS"
+    skautISAppId: "Skaut IS App ID"
+    skautISAppId_empty: "Skaut IS App ID je povinný údaj"
+    skautISTestMode: "Testovací režim"
+    mysql_access_denied: "Připojení k MySQL serveru se nepodařilo, zkontrolujte zadané údaje"
+    mail_settings: "Nastavení odesílání e-mailů"
+    smtp: "SMTP"
+    smtp_secure_type: "Zabezpečení spojení"
+    smtp_secure:
+        null: "žádné"
+        ssl: "SSL"
+        tls: "TLS"
+
 schema:
     heading: "Vytvoření tabulek"
     text: "Pro správnou funkci systému je třeba v databázi vytvořit tabulky a počáteční data. Před pokračováním odstraňte data z předchozích instalací!"
@@ -14,7 +40,7 @@ admin:
     text: "Pro administraci systému je třeba nastavit administrátora, v dalším kroku budete přesměrováni na přihlašovací stránku skautISu, přihlášenému uživateli bude v systému přiřazena administrátorská role."
     create_admin: "Přihlásit se"
     admin_already_created: "Administrátorská role již byla vytvořena."
-    skautis_access_denied: "Připojení ke skautISu se nepodařilo, zkontrolujte App ID a verzi v config.local.neon."
+    skautis_access_denied: "Připojení ke skautISu se nepodařilo, zkontrolujte App ID."
 
 finish:
     heading: "Instalace dokončena"
@@ -25,5 +51,3 @@ installed:
     heading: "Instalace systému"
     text: "Instalace systému již byla provedena."
     redirect_home: "Přejít na úvodní stránku"
-
-
