@@ -16,7 +16,7 @@ extensions:
 
     # ORM
     orm: Nettrine\ORM\DI\OrmExtension
-    orm.cache: Nettrine\ORM\DI\OrmCacheExtension
+    #orm.cache: Nettrine\ORM\DI\OrmCacheExtension
     orm.console: Nettrine\ORM\DI\OrmConsoleExtension
     orm.annotations: Nettrine\ORM\DI\OrmAnnotationsExtension
 

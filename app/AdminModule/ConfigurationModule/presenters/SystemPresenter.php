@@ -24,6 +24,12 @@ class SystemPresenter extends ConfigurationBasePresenter
      */
     public $clearCacheCommand;
 
+    /**
+     * @var Application
+     * @inject
+     */
+    public $consoleApplication;
+
 
     /**
      * Promaže cache.
@@ -31,11 +37,11 @@ class SystemPresenter extends ConfigurationBasePresenter
      */
     public function handleClearCache() : void
     {
-        $consoleApp = new Application();
-        $output     = new BufferedOutput();
-        $input      = new ArrayInput(['command' => 'app:cache:clear']);
-        $consoleApp->add($this->clearCacheCommand);
-        $result = $consoleApp->run($input, $output);
+        $output = new BufferedOutput();
+        $input  = new ArrayInput(['command' => 'app:cache:clear']);
+        $this->consoleApplication->add($this->clearCacheCommand);
+        $this->consoleApplication->setAutoExit(false);
+        $result = $this->consoleApplication->run($input, $output);
 
         if ($result === 0) {
             $this->flashMessage('admin.configuration.system_cache_cleared', 'success');

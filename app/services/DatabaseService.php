@@ -29,13 +29,17 @@ class DatabaseService
     /** @var Cache */
     protected $databaseCache;
 
+    /** @var Application */
+    private $consoleApplication;
 
-    public function __construct(string $dir, Container $container, IStorage $storage)
+
+    public function __construct(string $dir, Container $container, IStorage $storage, Application $consoleApplication)
     {
         $this->dir       = $dir;
         $this->container = $container;
 
-        $this->databaseCache = new Cache($storage, 'Database');
+        $this->databaseCache      = new Cache($storage, 'Database');
+        $this->consoleApplication = $consoleApplication;
     }
 
     /**
@@ -54,14 +58,15 @@ class DatabaseService
 
                 $this->backup();
 
-                $consoleApp = new Application();
-                $output     = new BufferedOutput();
-                $input      = new ArrayInput([
+                $input  = new ArrayInput([
                     'command' => 'migrations:migrate',
                     '--no-interaction' => true,
                 ]);
-                $consoleApp->add(new MigrateCommand());
-                $consoleApp->run($input, $output);
+                $output = new BufferedOutput();
+
+                $this->consoleApplication->add(new MigrateCommand());
+                $this->consoleApplication->setAutoExit(false);
+                $this->consoleApplication->run($input, $output);
             }
             return true;
         });
