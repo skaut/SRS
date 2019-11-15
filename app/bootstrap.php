@@ -16,6 +16,10 @@ $configurator->createRobotLoader()
     ->addDirectory(__DIR__)
     ->register();
 
+$configurator->addParameters([
+    'wwwDir' => realpath(__DIR__ . '/../www'),
+]);
+
 $configurator->addConfig(__DIR__ . '/config/config.neon');
 if (PHP_SAPI != 'cli') {
     $configurator->addConfig(__DIR__ . '/config/config.console.neon');

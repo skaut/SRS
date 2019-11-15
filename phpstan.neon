@@ -1,0 +1,13 @@
+includes:
+    - vendor/phpstan/phpstan-doctrine/extension.neon
+    - vendor/phpstan/phpstan-doctrine/rules.neon
+    - vendor/phpstan/phpstan-nette/extension.neon
+    - vendor/phpstan/phpstan-nette/rules.neon
+
+parameters:
+    autoload_directories:
+        - %rootDir%/../../../app
+
+    doctrine:
+        repositoryClass: App\Model\EntityRepository
+        objectManagerLoader: tests/PHPStan/helpers/object-manager.php
