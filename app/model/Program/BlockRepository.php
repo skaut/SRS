@@ -138,7 +138,7 @@ class BlockRepository extends EntityRepository
         $qb = $this->createQueryBuilder('b')
             ->select('b')
             ->leftJoin('b.category', 'c')
-            ->where($this->createQueryBuilder()->expr()->orX(
+            ->where($this->createQueryBuilder('b')->expr()->orX(
                 'c IN (:categories)',
                 'b.category IS NULL'
             ))

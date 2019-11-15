@@ -12,6 +12,7 @@ use App\Model\Settings\SettingsException;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class SchedulePresenter extends ProgramBasePresenter
 {
@@ -22,6 +23,6 @@ class SchedulePresenter extends ProgramBasePresenter
     public function renderDefault() : void
     {
         $this->template->containerAttributes     = 'ng-app="scheduleApp" ng-controller="AdminScheduleCtrl"';
-        $this->template->isAllowedModifySchedule = $this->settingsRepository->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE);
+        $this->template->isAllowedModifySchedule = $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE);
     }
 }

@@ -91,7 +91,7 @@ class PageFacade
     public function save(Page $page) : void
     {
         if (! $page->getPosition()) {
-            $page->setPosition($this->findLastPosition() + 1);
+            $page->setPosition($this->pageRepository->findLastPosition() + 1);
         }
 
         $this->em->persist($page);
@@ -129,11 +129,11 @@ class PageFacade
      */
     public function sort(int $itemId, int $prevId, int $nextId) : void
     {
-        $item = $this->find($itemId);
-        $prev = $prevId ? $this->find($prevId) : null;
-        $next = $nextId ? $this->find($nextId) : null;
+        $item = $this->pageRepository->find($itemId);
+        $prev = $prevId ? $this->pageRepository->find($prevId) : null;
+        $next = $nextId ? $this->pageRepository->find($nextId) : null;
 
-        $itemsToMoveUp = $this->createQueryBuilder('i')
+        $itemsToMoveUp = $this->pageRepository->createQueryBuilder('i')
                 ->where('i.position <= :position')
                 ->setParameter('position', $prev ? $prev->getPosition() : 0)
                 ->andWhere('i.position > :position2')
@@ -146,7 +146,7 @@ class PageFacade
             $this->em->persist($t);
         }
 
-        $itemsToMoveDown = $this->createQueryBuilder('i')
+        $itemsToMoveDown = $this->pageRepository->createQueryBuilder('i')
                 ->where('i.position >= :position')
                 ->setParameter('position', $next ? $next->getPosition() : PHP_INT_MAX)
                 ->andWhere('i.position < :position2')

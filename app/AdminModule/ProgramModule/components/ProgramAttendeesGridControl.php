@@ -12,7 +12,6 @@ use App\Model\Program\ProgramRepository;
 use App\Model\Settings\SettingsFacade;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
-use App\Services\MailService;
 use App\Services\ProgramService;
 use Doctrine\ORM\QueryBuilder;
 use Kdyby\Translation\Translator;
@@ -70,7 +69,6 @@ class ProgramAttendeesGridControl extends Control
         ProgramRepository $programRepository,
         UserRepository $userRepository,
         SettingsFacade $settingsFacade,
-        MailService $mailService,
         ProgramService $programService,
         Session $session
     ) {

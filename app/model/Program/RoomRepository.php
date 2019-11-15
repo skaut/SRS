@@ -103,7 +103,7 @@ class RoomRepository extends EntityRepository
             ->select('r.id')
             ->join('r.programs', 'p')
             ->join('p.block', 'b')
-            ->where($this->createQueryBuilder()->expr()->orX(
+            ->where($this->createQueryBuilder('r')->expr()->orX(
                 "(p.start < :end) AND (DATE_ADD(p.start, (b.duration * 60), 'second') > :start)",
                 "(p.start < :end) AND (:start < (DATE_ADD(p.start, (b.duration * 60), 'second')))"
             ))

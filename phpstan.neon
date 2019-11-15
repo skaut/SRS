@@ -8,6 +8,9 @@ parameters:
     autoload_directories:
         - %rootDir%/../../../app
 
+    ignoreErrors:
+        - '#Parameter (.*) of method (.*) has invalid typehint type Nette\\SmartObject#i'
+
     doctrine:
         repositoryClass: App\Model\EntityRepository
         objectManagerLoader: tests/PHPStan/helpers/object-manager.php

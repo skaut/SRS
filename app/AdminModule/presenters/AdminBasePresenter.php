@@ -169,7 +169,7 @@ abstract class AdminBasePresenter extends BasePresenter
      */
     public function checkPermission(string $permission) : void
     {
-        if ($this->user->isAllowed($this->resource, $permission)) {
+        if ($this->user->isAllowed($permission)) {
             return;
         }
 

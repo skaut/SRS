@@ -191,7 +191,7 @@ class ApplicationsGridControl extends Control
             $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
         }
 
-        $grid->addInlineEdit()->onControlAdd[]  = function ($container) use ($explicitSubeventsExists) : void {
+        $grid->addInlineEdit()->onControlAdd[]  = function ($container) : void {
             $container->addMultiSelect(
                 'subevents',
                 '',

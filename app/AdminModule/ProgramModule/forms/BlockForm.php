@@ -134,6 +134,7 @@ class BlockForm
             $lectorsOptions = $this->userRepository->getLectorsOptions();
         } else {
             if ($this->block) {
+                $lectorsOptions = [];
                 foreach ($this->block->getLectors() as $lector) {
                     $lectorsOptions[$lector->getId()] = $lector->getDisplayName();
                 }

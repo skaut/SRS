@@ -45,7 +45,7 @@ class NewsRepository extends EntityRepository
     public function findPublishedOrderedByPinnedAndDate(?int $maxCount) : array
     {
         return $this->createQueryBuilder('n')
-            ->where($this->createQueryBuilder()->expr()->lte('n.published', 'CURRENT_TIMESTAMP()'))
+            ->where($this->createQueryBuilder('n')->expr()->lte('n.published', 'CURRENT_TIMESTAMP()'))
             ->orderBy('n.pinned', 'DESC')
             ->addOrderBy('n.published', 'DESC')
             ->setMaxResults($maxCount)

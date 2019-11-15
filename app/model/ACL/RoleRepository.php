@@ -216,15 +216,15 @@ class RoleRepository extends EntityRepository
     {
         $result = $this->createQueryBuilder('r')
             ->select('r')
-            ->where($this->createQueryBuilder()->expr()->andX(
-                $this->createQueryBuilder()->expr()->eq('r.registerable', true),
-                $this->createQueryBuilder()->expr()->orX(
-                    $this->createQueryBuilder()->expr()->lte('r.registerableFrom', 'CURRENT_TIMESTAMP()'),
-                    $this->createQueryBuilder()->expr()->isNull('r.registerableFrom')
+            ->where($this->createQueryBuilder('r')->expr()->andX(
+                $this->createQueryBuilder('r')->expr()->eq('r.registerable', true),
+                $this->createQueryBuilder('r')->expr()->orX(
+                    $this->createQueryBuilder('r')->expr()->lte('r.registerableFrom', 'CURRENT_TIMESTAMP()'),
+                    $this->createQueryBuilder('r')->expr()->isNull('r.registerableFrom')
                 ),
-                $this->createQueryBuilder()->expr()->orX(
-                    $this->createQueryBuilder()->expr()->gte('r.registerableTo', 'CURRENT_TIMESTAMP()'),
-                    $this->createQueryBuilder()->expr()->isNull('r.registerableTo')
+                $this->createQueryBuilder('r')->expr()->orX(
+                    $this->createQueryBuilder('r')->expr()->gte('r.registerableTo', 'CURRENT_TIMESTAMP()'),
+                    $this->createQueryBuilder('r')->expr()->isNull('r.registerableTo')
                 )
             ))
             ->orderBy('r.name')
@@ -267,19 +267,19 @@ class RoleRepository extends EntityRepository
         return $this->createQueryBuilder('r')
             ->select('r')
             ->leftJoin('r.users', 'u')
-            ->where($this->createQueryBuilder()->expr()->orX(
-                $this->createQueryBuilder()->expr()->andX(
-                    $this->createQueryBuilder()->expr()->eq('r.registerable', true),
-                    $this->createQueryBuilder()->expr()->orX(
-                        $this->createQueryBuilder()->expr()->lte('r.registerableFrom', 'CURRENT_TIMESTAMP()'),
-                        $this->createQueryBuilder()->expr()->isNull('r.registerableFrom')
+            ->where($this->createQueryBuilder('r')->expr()->orX(
+                $this->createQueryBuilder('r')->expr()->andX(
+                    $this->createQueryBuilder('r')->expr()->eq('r.registerable', true),
+                    $this->createQueryBuilder('r')->expr()->orX(
+                        $this->createQueryBuilder('r')->expr()->lte('r.registerableFrom', 'CURRENT_TIMESTAMP()'),
+                        $this->createQueryBuilder('r')->expr()->isNull('r.registerableFrom')
                     ),
-                    $this->createQueryBuilder()->expr()->orX(
-                        $this->createQueryBuilder()->expr()->gte('r.registerableTo', 'CURRENT_TIMESTAMP()'),
-                        $this->createQueryBuilder()->expr()->isNull('r.registerableTo')
+                    $this->createQueryBuilder('r')->expr()->orX(
+                        $this->createQueryBuilder('r')->expr()->gte('r.registerableTo', 'CURRENT_TIMESTAMP()'),
+                        $this->createQueryBuilder('r')->expr()->isNull('r.registerableTo')
                     )
                 ),
-                $this->createQueryBuilder()->expr()->eq('u.id', $user->getId())
+                $this->createQueryBuilder('r')->expr()->eq('u.id', $user->getId())
             ))
             ->orderBy('r.name')
             ->getQuery()

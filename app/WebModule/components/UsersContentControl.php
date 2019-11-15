@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
-use App\Model\ACL\RoleRepository;
 use App\Model\CMS\Content\UsersContentDTO;
 use App\Model\User\UserRepository;
 use Nette\Application\UI\Control;
@@ -13,6 +12,7 @@ use Nette\Application\UI\Control;
  * Komponenta s přehledem uživatelů.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class UsersContentControl extends Control
 {
@@ -20,7 +20,7 @@ class UsersContentControl extends Control
     private $userRepository;
 
 
-    public function __construct(UserRepository $userRepository, RoleRepository $roleRepository)
+    public function __construct(UserRepository $userRepository)
     {
         parent::__construct();
 
