@@ -50,6 +50,10 @@ build:
             name: run database migrations
             code: php www/index.php migrations:migrate --no-interaction
 
+        - script:
+            name: static analyze
+            code: php vendor/bin/phpstan analyse -l 2 -c phpstan.neon app
+
 #        - script:
 #            name: configure /etc/hosts (srs.loc)
 #            code: echo "127.0.0.1 srs.loc" >> /etc/hosts
