@@ -116,130 +116,80 @@ services:
 
     permissionRepository:
         class: App\Model\ACL\PermissionRepository
-        #tags:
-            #doctrine.repositoryEntity: App\Model\ACL\Permission
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\ACL\Permission)
     roleRepository:
         class: App\Model\ACL\RoleRepository
         inject: yes
-        #tags:
-            #doctrine.repositoryEntity: App\Model\ACL\Role
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\ACL\Role)
     documentRepository:
         class: App\Model\CMS\Document\DocumentRepository
-        #tags:
-            #doctrine.repositoryEntity: App\Model\CMS\Document\Document
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\CMS\Document\Document)
     tagRepository:
         class: App\Model\CMS\Document\TagRepository
-        #tags:
-            #doctrine.repositoryEntity: App\Model\CMS\Document\Tag
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\CMS\Document\Tag)
     faqRepository:
         class: App\Model\CMS\FaqRepository
-        #tags:
-            #doctrine.repositoryEntity: App\Model\CMS\Faq
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\CMS\Faq)
     newsRepository:
         class: App\Model\CMS\NewsRepository
-        #tags:
-            #doctrine.repositoryEntity: App\Model\CMS\News
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\CMS\News)
     pageRepository:
         class: App\Model\CMS\PageRepository
-        #tags:
-            #doctrine.repositoryEntity: App\Model\CMS\Page
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\CMS\Page)
     paymentRepository:
         class: App\Model\Payment\PaymentRepository
-        #tags:
-            #doctrine.repositoryEntity: App\Model\Payment\Payment
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Payment\Payment)
     mailRepository:
         class: App\Model\Mailing\MailRepository
-        #tags:
-            #doctrine.repositoryEntity: App\Model\Mailing\Mail
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Mailing\Mail)
     templateRepository:
         class: App\Model\Mailing\TemplateRepository
-        #tags:
-        #	doctrine.repositoryEntity: App\Model\Mailing\Template
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Mailing\Template)
     blockRepository:
         class: App\Model\Program\BlockRepository
-        #tags:
-        #	doctrine.repositoryEntity: App\Model\Program\Block
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Program\Block)
     categoryRepository:
         class: App\Model\Program\CategoryRepository
-        #tags:
-        #	doctrine.repositoryEntity: App\Model\Program\Category
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Program\Category)
     programRepository:
         class: App\Model\Program\ProgramRepository
-        #tags:
-        #	doctrine.repositoryEntity: App\Model\Program\Program
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Program\Program)
     roomRepository:
         class: App\Model\Program\RoomRepository
-        #tags:
-        #	doctrine.repositoryEntity: App\Model\Program\Room
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Program\Room)
     customInputRepository:
         class: App\Model\Settings\CustomInput\CustomInputRepository
-        #tags:
-        #	doctrine.repositoryEntity: App\Model\Settings\CustomInput\CustomInput
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Settings\CustomInput\CustomInput)
     placePointRepository:
         class: App\Model\Settings\Place\PlacePointRepository
-        #tags:
-        #	doctrine.repositoryEntity: App\Model\Settings\Place\PlacePoint
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Settings\Place\PlacePoint)
     skautIsCourseRepository:
         class: App\Model\SkautIs\SkautIsCourseRepository
-        #tags:
-        #	doctrine.repositoryEntity: App\Model\SkautIs\SkautIsCourse
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\SkautIs\SkautIsCourse)
     discountRepository:
         class: App\Model\Structure\DiscountRepository
-        #tags:
-        #	doctrine.repositoryEntity: App\Model\Structure\Discount
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Structure\Discount)
     subeventRepository:
         class: App\Model\Structure\SubeventRepository
         inject: yes
-        #tags:
-        #	doctrine.repositoryEntity: App\Model\Structure\Subevent
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Structure\Subevent)
     applicationRepository:
         class: App\Model\User\ApplicationRepository
-        #tags:
-        #	doctrine.repositoryEntity: App\Model\User\Application
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\Application)
     rolesApplicationRepository:
         class: App\Model\User\RolesApplicationRepository
-        #tags:
-        #	doctrine.repositoryEntity: App\Model\User\RolesApplication
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\RolesApplication)
     subeventsApplicationRepository:
         class: App\Model\User\SubeventsApplicationRepository
-        #tags:
-        #	doctrine.repositoryEntity: App\Model\User\SubeventsApplication
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\SubeventsApplication)
     variableSymbolRepository:
         class: App\Model\User\VariableSymbolRepository
-        #tags:
-        #	doctrine.repositoryEntity: App\Model\User\VariableSymbol
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\VariableSymbol)
     userRepository:
         class: App\Model\User\UserRepository
-        #tags:
-        #	doctrine.repositoryEntity: App\Model\User\User
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\User)
     customInputValueRepository:
         class: App\Model\User\CustomInputValue\CustomInputValueRepository
-        #tags:
-        #	doctrine.repositoryEntity: App\Model\User\CustomInputValue\CustomInputValue
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\CustomInputValue\CustomInputValue)
 
     - App\Model\ACL\PermissionFacade

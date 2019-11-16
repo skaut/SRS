@@ -9,7 +9,7 @@
         "ext-soap": "*",
 
         "nette/nette": "~2.4.0",
-		"latte/latte": "~2.4.0",
+        "latte/latte": "~2.4.0",
 
         "kdyby/translation": "^2.5",
 
