@@ -10,6 +10,7 @@ use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
+use Nette\Bridges\ApplicationLatte\Template;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
@@ -18,6 +19,9 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  * Komponenta pro správu automatických e-mailů.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
+ *
+ * @property-read Template $template
  */
 class MailTemplatesGridControl extends Control
 {

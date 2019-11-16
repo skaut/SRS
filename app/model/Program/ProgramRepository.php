@@ -68,7 +68,7 @@ class ProgramRepository extends EntityRepository
 
     /**
      * Vrací programy, na které je uživatel zapsaný a jsou v danné kategorii.
-     * @return User[]
+     * @return Program[]
      */
     public function findUserRegisteredAndInCategory(User $user, Category $category) : array
     {

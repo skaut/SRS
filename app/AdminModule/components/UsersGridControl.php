@@ -14,11 +14,15 @@ use App\Model\Program\BlockRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
+use App\Model\Settings\CustomInput\CustomSelect;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsFacade;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\ApplicationRepository;
+use App\Model\User\CustomInputValue\CustomCheckboxValue;
+use App\Model\User\CustomInputValue\CustomSelectValue;
+use App\Model\User\CustomInputValue\CustomTextValue;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
@@ -37,6 +41,7 @@ use Doctrine\ORM\QueryBuilder;
 use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
+use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\Utils\Html;
@@ -54,6 +59,8 @@ use function explode;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
+ *
+ * @property-read Template $template
  */
 class UsersGridControl extends Control
 {
@@ -379,18 +386,22 @@ class UsersGridControl extends Control
 
             $columnCustomInput = $grid->addColumnText($columnCustomInputName, Helpers::truncate($customInput->getName(), 20))
                 ->setRenderer(function (User $user) use ($customInput) {
+                    /** @var CustomCheckboxValue $customInputValue */
                     $customInputValue = $user->getCustomInputValue($customInput);
                     if ($customInputValue) {
                         switch ($customInput->getType()) {
                             case CustomInput::TEXT:
+                                $customInputValue = $customInputValue ?: new CustomTextValue();
                                 return Helpers::truncate($customInputValue->getValue(), 20);
 
                             case CustomInput::CHECKBOX:
+                                $customInputValue = $customInputValue ?: new CustomCheckboxValue();
                                 return $customInputValue->getValue()
                                     ? $this->translator->translate('admin.common.yes')
                                     : $this->translator->translate('admin.common.no');
 
                             case CustomInput::SELECT:
+                                $customInputValue = $customInputValue ?: new CustomSelectValue();
                                 return $customInputValue->getValueOption();
 
                             case CustomInput::FILE:
@@ -442,6 +453,8 @@ class UsersGridControl extends Control
                     break;
 
                 case CustomInput::SELECT:
+                    /** @var CustomSelect $customInput */
+                    $customInput = $customInput ?: new CustomSelect();
                     $columnCustomInput->setFilterSelect(array_merge(['' => 'admin.common.all'], $customInput->getSelectOptions()))
                         ->setCondition(function (QueryBuilder $qb, string $value) use ($customInput) : void {
                             if ($value === '') {

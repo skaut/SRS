@@ -14,6 +14,7 @@ use App\Services\MailService;
 use App\Services\SkautIsService;
 use Nette\Application\AbortException;
 use Nette\Security\AuthenticationException;
+use Nette\Security\Identity;
 use Ublaboo\Mailing\Exception\MailingException;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 use function strpos;
@@ -72,7 +73,9 @@ class AuthPresenter extends BasePresenter
         $this->user->login(null);
         $this->user->setExpiration('+30 minutes');
 
-        if ($this->user->identity->data['firstLogin']) {
+        /** @var Identity $userIdentity */
+        $userIdentity = $this->user->identity;
+        if ($userIdentity->data['firstLogin']) {
             $user = $this->userRepository->findById($this->user->id);
 
             $this->mailService->sendMailFromTemplate($user, '', Template::SIGN_IN, [

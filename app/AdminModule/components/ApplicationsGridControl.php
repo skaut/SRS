@@ -27,6 +27,7 @@ use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
@@ -36,6 +37,8 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
+ *
+ * @property-read Template $template
  */
 class ApplicationsGridControl extends Control
 {

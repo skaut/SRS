@@ -10,6 +10,7 @@ use App\Model\Structure\SubeventRepository;
 use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
+use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Forms\Container;
 use Ublaboo\DataGrid\DataGrid;
 
@@ -17,6 +18,9 @@ use Ublaboo\DataGrid\DataGrid;
  * Komponenta pro nastavení propojení se vzdělávací akcí.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
+ *
+ * @property-read Template $template
  */
 class SkautIsEventEducationGridControl extends Control
 {

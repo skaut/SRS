@@ -14,6 +14,7 @@ use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use App\Utils\Validators;
+use Kdyby\Translation\Translator;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
@@ -49,6 +50,9 @@ class RolesForm
     /** @var ApplicationService */
     private $applicationService;
 
+    /** @var Translator */
+    private $translator;
+
     /** @var Validators */
     private $validators;
 
@@ -59,6 +63,7 @@ class RolesForm
         RoleRepository $roleRepository,
         SettingsFacade $settingsFacade,
         ApplicationService $applicationService,
+        Translator $translator,
         Validators $validators
     ) {
         $this->baseFormFactory    = $baseFormFactory;
@@ -66,6 +71,7 @@ class RolesForm
         $this->roleRepository     = $roleRepository;
         $this->settingsFacade     = $settingsFacade;
         $this->applicationService = $applicationService;
+        $this->translator         = $translator;
         $this->validators         = $validators;
     }
 
@@ -94,7 +100,7 @@ class RolesForm
             if (! $role->getIncompatibleRoles()->isEmpty()) {
                 $rolesSelect->addRule(
                     [$this, 'validateRolesIncompatible'],
-                    $form->getTranslator()->translate(
+                    $this->translator->translate(
                         'web.profile.incompatible_roles_selected',
                         null,
                         ['role' => $role->getName(), 'incompatibleRoles' => $role->getIncompatibleRolesText()]
@@ -108,7 +114,7 @@ class RolesForm
 
             $rolesSelect->addRule(
                 [$this, 'validateRolesRequired'],
-                $form->getTranslator()->translate(
+                $this->translator->translate(
                     'web.profile.required_roles_not_selected',
                     null,
                     ['role' => $role->getName(), 'requiredRoles' => $role->getRequiredRolesTransitiveText()]

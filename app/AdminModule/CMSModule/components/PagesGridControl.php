@@ -6,6 +6,7 @@ namespace App\AdminModule\CMSModule\Components;
 
 use App\Model\ACL\RoleRepository;
 use App\Model\CMS\Page;
+use App\Model\CMS\PageFacade;
 use App\Model\CMS\PageRepository;
 use App\Model\Page\PageException;
 use Doctrine\ORM\NonUniqueResultException;
@@ -15,6 +16,7 @@ use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\Bridges\ApplicationLatte\Template;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
@@ -25,11 +27,17 @@ use function count;
  * Komponenta pro správu stránek.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
+ *
+ * @property-read Template $template
  */
 class PagesGridControl extends Control
 {
     /** @var Translator */
     private $translator;
+
+    /** @var PageFacade */
+    private $pageFacade;
 
     /** @var PageRepository */
     private $pageRepository;
@@ -38,11 +46,12 @@ class PagesGridControl extends Control
     private $roleRepository;
 
 
-    public function __construct(Translator $translator, PageRepository $pageRepository, RoleRepository $roleRepository)
+    public function __construct(Translator $translator, PageFacade $pageFacade, PageRepository $pageRepository, RoleRepository $roleRepository)
     {
         parent::__construct();
 
         $this->translator     = $translator;
+        $this->pageFacade     = $pageFacade;
         $this->pageRepository = $pageRepository;
         $this->roleRepository = $roleRepository;
     }
@@ -169,7 +178,7 @@ class PagesGridControl extends Control
         $page->setRoles($this->roleRepository->findRolesByIds($values['roles']));
         $page->setPublic((bool) $values['public']);
 
-        $this->pageRepository->save($page);
+        $this->pageFacade->save($page);
 
         $p = $this->getPresenter();
         $p->flashMessage('admin.cms.pages_saved', 'success');
@@ -193,7 +202,7 @@ class PagesGridControl extends Control
         $page->setRoles($this->roleRepository->findRolesByIds($values['roles']));
         $page->setPublic((bool) $values['public']);
 
-        $this->pageRepository->save($page);
+        $this->pageFacade->save($page);
 
         $p = $this->getPresenter();
         $p->flashMessage('admin.cms.pages_saved', 'success');
@@ -211,7 +220,7 @@ class PagesGridControl extends Control
     public function handleDelete(int $id) : void
     {
         $page = $this->pageRepository->findById($id);
-        $this->pageRepository->remove($page);
+        $this->pageFacade->remove($page);
 
         $this->getPresenter()->flashMessage('admin.cms.pages_deleted', 'success');
 
@@ -226,7 +235,7 @@ class PagesGridControl extends Control
      */
     public function handleSort($item_id, $prev_id, $next_id) : void
     {
-        $this->pageRepository->sort((int) $item_id, (int) $prev_id, (int) $next_id);
+        $this->pageFacade->sort((int) $item_id, (int) $prev_id, (int) $next_id);
 
         $p = $this->getPresenter();
         $p->flashMessage('admin.cms.pages_order_saved', 'success');
@@ -256,7 +265,7 @@ class PagesGridControl extends Control
             $p->flashMessage('admin.cms.pages_change_public_denied', 'danger');
         } else {
             $page->setPublic($public);
-            $this->pageRepository->save($page);
+            $this->pageFacade->save($page);
 
             $p->flashMessage('admin.cms.pages_changed_public', 'success');
         }

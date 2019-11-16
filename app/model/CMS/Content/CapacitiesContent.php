@@ -13,11 +13,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
+use Nette\Forms\Container;
 
 /**
  * Entita obsahu s přehledem kapacit rolí.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity
  * @ORM\Table(name="capacities_content")
  */
@@ -77,6 +79,7 @@ class CapacitiesContent extends Content implements IContent
     {
         parent::addContentForm($form);
 
+        /** @var Container $formContainer */
         $formContainer = $form[$this->getContentFormName()];
 
         $formContainer->addMultiSelect(

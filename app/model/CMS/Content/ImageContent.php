@@ -7,6 +7,7 @@ namespace App\Model\CMS\Content;
 use App\Services\FilesService;
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
+use Nette\Forms\Container;
 use Nette\Http\FileUpload;
 use Nette\Utils\Image;
 use Nette\Utils\Random;
@@ -19,6 +20,7 @@ use function file_exists;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity
  * @ORM\Table(name="image_content")
  */
@@ -148,6 +150,7 @@ class ImageContent extends Content implements IContent
     public function addContentForm(Form $form) : Form
     {
         parent::addContentForm($form);
+        /** @var Container $formContainer */
         $formContainer = $form[$this->getContentFormName()];
 
         $formContainer->addText('currentImage', 'admin.cms.pages_content_image_current_file')

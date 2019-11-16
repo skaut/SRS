@@ -12,6 +12,7 @@ use App\Model\Program\ProgramRepository;
 use App\Model\Settings\CustomInput\CustomFile;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
+use App\Model\Settings\CustomInput\CustomSelect;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsFacade;
@@ -33,6 +34,7 @@ use App\Services\SkautIsService;
 use App\Utils\Validators;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\NonUniqueResultException;
+use Kdyby\Translation\Translator;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
@@ -122,6 +124,9 @@ class ApplicationForm
     /** @var FilesService */
     private $filesService;
 
+    /** @var Translator */
+    private $translator;
+
 
     public function __construct(
         BaseForm $baseFormFactory,
@@ -139,7 +144,8 @@ class ApplicationForm
         ApplicationService $applicationService,
         ProgramService $programService,
         Validators $validators,
-        FilesService $filesService
+        FilesService $filesService,
+        Translator $translator
     ) {
         $this->baseFormFactory            = $baseFormFactory;
         $this->em                         = $em;
@@ -157,6 +163,7 @@ class ApplicationForm
         $this->programService             = $programService;
         $this->validators                 = $validators;
         $this->filesService               = $filesService;
+        $this->translator                 = $translator;
     }
 
     /**
@@ -281,21 +288,25 @@ class ApplicationForm
 
                 switch ($customInput->getType()) {
                     case CustomInput::TEXT:
+                        /** @var CustomTextValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomTextValue();
                         $customInputValue->setValue($values['custom' . $customInput->getId()]);
                         break;
 
                     case CustomInput::CHECKBOX:
+                        /** @var CustomCheckboxValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomCheckboxValue();
                         $customInputValue->setValue($values['custom' . $customInput->getId()]);
                         break;
 
                     case CustomInput::SELECT:
+                        /** @var CustomSelectValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomSelectValue();
                         $customInputValue->setValue($values['custom' . $customInput->getId()]);
                         break;
 
                     case CustomInput::FILE:
+                        /** @var CustomFileValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomFileValue();
                         $file             = $values['custom' . $customInput->getId()];
                         if ($file->size > 0) {
@@ -376,7 +387,9 @@ class ApplicationForm
                     break;
 
                 case CustomInput::SELECT:
-                    $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions());
+                    /** @var CustomSelect $customInput */
+                    $customInput = $customInput ?: new CustomSelect();
+                    $custom      = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions());
                     break;
 
                 case CustomInput::FILE:
@@ -422,7 +435,7 @@ class ApplicationForm
             if (! $subevent->getIncompatibleSubevents()->isEmpty()) {
                 $subeventsSelect->addRule(
                     [$this, 'validateSubeventsIncompatible'],
-                    $form->getTranslator()->translate(
+                    $this->translator->translate(
                         'web.application_content.incompatible_subevents_selected',
                         null,
                         ['subevent' => $subevent->getName(), 'incompatibleSubevents' => $subevent->getIncompatibleSubeventsText()]
@@ -437,7 +450,7 @@ class ApplicationForm
 
             $subeventsSelect->addRule(
                 [$this, 'validateSubeventsRequired'],
-                $form->getTranslator()->translate(
+                $this->translator->translate(
                     'web.application_content.required_subevents_not_selected',
                     null,
                     ['subevent' => $subevent->getName(), 'requiredSubevents' => $subevent->getRequiredSubeventsTransitiveText()]
@@ -466,7 +479,7 @@ class ApplicationForm
             if (! $role->getIncompatibleRoles()->isEmpty()) {
                 $rolesSelect->addRule(
                     [$this, 'validateRolesIncompatible'],
-                    $form->getTranslator()->translate(
+                    $this->translator->translate(
                         'web.application_content.incompatible_roles_selected',
                         null,
                         ['role' => $role->getName(), 'incompatibleRoles' => $role->getIncompatibleRolesText()]
@@ -481,7 +494,7 @@ class ApplicationForm
 
             $rolesSelect->addRule(
                 [$this, 'validateRolesRequired'],
-                $form->getTranslator()->translate(
+                $this->translator->translate(
                     'web.application_content.required_roles_not_selected',
                     null,
                     ['role' => $role->getName(), 'requiredRoles' => $role->getRequiredRolesTransitiveText()]

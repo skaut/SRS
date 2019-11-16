@@ -17,6 +17,7 @@ use Doctrine\ORM\QueryBuilder;
 use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
+use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Ublaboo\DataGrid\DataGrid;
@@ -27,6 +28,8 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
+ *
+ * @property-read Template $template
  */
 class ProgramAttendeesGridControl extends Control
 {

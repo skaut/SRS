@@ -36,6 +36,9 @@ abstract class AdminBasePresenter extends BasePresenter
      */
     public $authorizator;
 
+    /** @var string */
+    protected $resource = null;
+
     /**
      * @var ResourceFacade
      * @inject
@@ -169,7 +172,7 @@ abstract class AdminBasePresenter extends BasePresenter
      */
     public function checkPermission(string $permission) : void
     {
-        if ($this->user->isAllowed($permission)) {
+        if ($this->user->isAllowed($this->resource, $permission)) {
             return;
         }
 

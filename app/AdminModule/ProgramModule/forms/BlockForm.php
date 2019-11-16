@@ -22,6 +22,8 @@ use App\Utils\Validators;
 use Doctrine\ORM\NonUniqueResultException;
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\Forms\Controls\MultiSelectBox;
+use Nette\Forms\Controls\TextInput;
 
 /**
  * Formulář pro úpravu programového bloku.
@@ -184,7 +186,9 @@ class BlockForm
             ->setAttribute('class', 'btn btn-warning');
 
         if ($this->block) {
-            $form['name']->addRule(Form::IS_NOT_IN, 'admin.program.blocks_name_exists', $this->blockRepository->findOthersNames($id));
+            /** @var TextInput $nameControl */
+            $nameControl = $form['name'];
+            $nameControl->addRule(Form::IS_NOT_IN, 'admin.program.blocks_name_exists', $this->blockRepository->findOthersNames($id));
 
             $form->setDefaults([
                 'id' => $id,
@@ -206,10 +210,14 @@ class BlockForm
                 ]);
             }
         } else {
-            $form['name']->addRule(Form::IS_NOT_IN, 'admin.program.blocks_name_exists', $this->blockRepository->findAllNames());
+            /** @var TextInput $nameControl */
+            $nameControl = $form['name'];
+            $nameControl->addRule(Form::IS_NOT_IN, 'admin.program.blocks_name_exists', $this->blockRepository->findAllNames());
 
             if (! $userIsAllowedManageAllPrograms) {
-                $form['lectors']->setDefaultValue([$this->user->getId()]);
+                /** @var MultiSelectBox $lestorsControl */
+                $lestorsControl = $form['lectors'];
+                $lestorsControl->setDefaultValue([$this->user->getId()]);
             }
         }
 

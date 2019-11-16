@@ -211,9 +211,6 @@ abstract class Content implements IContent
         $this->position = $contentsCount + 1;
     }
 
-    /**
-     * @return mixed
-     */
     public function getType() : string
     {
         return $this->type;

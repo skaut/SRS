@@ -6,12 +6,14 @@ namespace App\Model\CMS\Content;
 
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
+use Nette\Forms\Container;
 
 /**
  * Entita obsahu s HTML.
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity
  * @ORM\Table(name="html_content")
  */
@@ -45,6 +47,7 @@ class HtmlContent extends Content implements IContent
     {
         parent::addContentForm($form);
 
+        /** @var Container $formContainer */
         $formContainer = $form[$this->getContentFormName()];
 
         $formContainer->addTextArea('text', 'admin.cms.pages_content_html')

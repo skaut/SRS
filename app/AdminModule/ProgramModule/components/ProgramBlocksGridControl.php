@@ -15,6 +15,7 @@ use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsFacade;
 use App\Model\Structure\SubeventRepository;
+use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ExcelExportService;
 use App\Services\ProgramService;
@@ -22,6 +23,7 @@ use App\Utils\Validators;
 use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
+use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use PhpOffice\PhpSpreadsheet\Exception;
@@ -36,6 +38,8 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
+ *
+ * @property-read Template $template
  */
 class ProgramBlocksGridControl extends Control
 {
@@ -75,6 +79,8 @@ class ProgramBlocksGridControl extends Control
     /** @var SessionSection */
     private $sessionSection;
 
+    /** @var User */
+    private $user;
 
     public function __construct(
         Translator $translator,
@@ -307,6 +313,6 @@ class ProgramBlocksGridControl extends Control
      */
     public function isAllowedModifyBlock(Block $block) : bool
     {
-        return $this->getPresenter()->dbuser->isAllowedModifyBlock($block);
+        return $this->user->isAllowedModifyBlock($block);
     }
 }

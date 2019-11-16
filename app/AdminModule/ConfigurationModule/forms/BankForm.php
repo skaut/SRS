@@ -92,7 +92,9 @@ class BankForm
             $this->settingsFacade->setValue(Settings::BANK_TOKEN, $token);
         } catch (InternalErrorException $ex) {
             Debugger::log($ex, ILogger::WARNING);
-            $form['bankToken']->addError('admin.configuration.payment.bank.invalid_token');
+            /** @var Nette\Forms\Controls\TextInput $bankTokenInput */
+            $bankTokenInput = $form['bankToken'];
+            $bankTokenInput->addError('admin.configuration.payment.bank.invalid_token');
         }
     }
 

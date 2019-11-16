@@ -12,6 +12,7 @@ use App\Utils\Helpers;
 use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
+use Nette\Bridges\ApplicationLatte\Template;
 use PhpOffice\PhpSpreadsheet\Exception;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
@@ -20,6 +21,9 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  * Komponenta pro zobrazení harmonogramu místnosti.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
+ *
+ * @property-read Template $template
  */
 class RoomScheduleGridControl extends Control
 {

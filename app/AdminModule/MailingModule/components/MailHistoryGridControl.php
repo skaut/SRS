@@ -12,12 +12,16 @@ use App\Utils\Helpers;
 use Doctrine\ORM\QueryBuilder;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
+use Nette\Bridges\ApplicationLatte\Template;
 use Ublaboo\DataGrid\DataGrid;
 
 /**
  * Komponenta pro výpis historie e-mailů.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
+ *
+ * @property-read Template $template
  */
 class MailHistoryGridControl extends Control
 {

@@ -137,9 +137,6 @@ abstract class CustomInput
         $this->position = $position;
     }
 
-    /**
-     * @return mixed
-     */
     public function getType() : string
     {
         return $this->type;

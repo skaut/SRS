@@ -15,6 +15,7 @@ use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Http\FileUpload;
 use Nette\Utils\Html;
 use Nette\Utils\Random;
@@ -26,6 +27,9 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  * Komponenta pro správu dokumentů.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
+ *
+ * @property-read Template $template
  */
 class DocumentsGridControl extends Control
 {

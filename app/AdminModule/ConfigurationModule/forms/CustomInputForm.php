@@ -24,6 +24,7 @@ use function trim;
  * Formulář pro úpravu vlastních polí přihlášky.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class CustomInputForm
 {
@@ -88,7 +89,9 @@ class CustomInputForm
             ]);
 
             if ($this->customInput->getType() === CustomInput::SELECT) {
-                $optionsText->setDefaultValue($this->customInput->getOptions());
+                /** @var CustomSelect $customInput */
+                $customInput = $this->customInput;
+                $optionsText->setDefaultValue($customInput->getOptions());
             }
         }
 

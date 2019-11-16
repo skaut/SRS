@@ -105,7 +105,7 @@ class SubeventRepository extends EntityRepository
 
     /**
      * Vrací id podakcí.
-     * @param Subevent[] $subevents
+     * @param Collection|Subevent[] $subevents
      * @return int[]
      */
     public function findSubeventsIds(Collection $subevents) : array

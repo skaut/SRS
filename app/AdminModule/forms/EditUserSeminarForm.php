@@ -12,6 +12,7 @@ use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\CustomInput\CustomFile;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
+use App\Model\Settings\CustomInput\CustomSelect;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsFacade;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
@@ -146,6 +147,8 @@ class EditUserSeminarForm
                 case CustomInput::TEXT:
                     $custom = $form->addText('custom' . $customInput->getId(), $customInput->getName());
                     if ($customInputValue) {
+                        /** @var CustomTextValue $customInputValue */
+                        $customInputValue = $customInputValue ?: new CustomTextValue();
                         $custom->setDefaultValue($customInputValue->getValue());
                     }
                     break;
@@ -153,13 +156,19 @@ class EditUserSeminarForm
                 case CustomInput::CHECKBOX:
                     $custom = $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName());
                     if ($customInputValue) {
+                        /** @var CustomCheckboxValue $customInputValue */
+                        $customInputValue = $customInputValue ?: new CustomCheckboxValue();
                         $custom->setDefaultValue($customInputValue->getValue());
                     }
                     break;
 
                 case CustomInput::SELECT:
-                    $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions());
+                    /** @var CustomSelect $customInput */
+                    $customInput = $customInput ?: new CustomSelect();
+                    $custom      = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions());
                     if ($customInputValue) {
+                        /** @var CustomSelectValue $customInputValue */
+                        $customInputValue = $customInputValue ?: new CustomSelectValue();
                         $custom->setDefaultValue($customInputValue->getValue());
                     }
                     break;
@@ -218,6 +227,7 @@ class EditUserSeminarForm
             $customInputValueChanged = false;
 
             foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
+                /** @var CustomTextValue $customInputValue */
                 $customInputValue = $this->user->getCustomInputValue($customInput);
 
                 $oldValue = $customInputValue ? $customInputValue->getValue() : null;

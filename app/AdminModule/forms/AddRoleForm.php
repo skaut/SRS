@@ -49,7 +49,7 @@ class AddRoleForm
 
         $form->addText('name', 'admin.acl.roles_name')
             ->addRule(Form::FILLED, 'admin.acl.roles_name_empty')
-            ->addRule(Form::IS_NOT_IN, 'admin.acl.roles_name_exists', $this->roleRepository->findAllNames())
+            ->addRule(Form::IS_NOT_IN, 'admin.acl.roles_name_exists', $this->roleFacade->findAllNames())
             ->addRule(Form::NOT_EQUAL, 'admin.acl.roles_name_reserved', 'test');
 
         $form->addSelect('parent', 'admin.acl.roles_parent', $this->roleRepository->getRolesWithoutRolesOptions([]))

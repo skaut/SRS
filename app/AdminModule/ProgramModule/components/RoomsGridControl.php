@@ -13,6 +13,7 @@ use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use PhpOffice\PhpSpreadsheet\Exception;
@@ -23,6 +24,9 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  * Komponenta pro správu místností.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
+ *
+ * @property-read Template $template
  */
 class RoomsGridControl extends Control
 {

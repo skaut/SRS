@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Model\Settings;
 
 use App\Model\EntityManagerDecorator;
+use App\Model\EntityRepository;
 use App\Utils\Helpers;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -29,14 +30,14 @@ class SettingsFacade
     /** @var Cache */
     private $settingsCache;
 
-    /** @var SettingsFacade */
-    private $settingsFacade;
+    /** @var EntityRepository */
+    private $settingsRepository;
 
     public function __construct(EntityManagerDecorator $em, IStorage $storage)
     {
-        $this->em             = $em;
-        $this->settingsFacade = $em->getRepository(Settings::class);
-        $this->settingsCache  = new Cache($storage, 'Settings');
+        $this->em                 = $em;
+        $this->settingsRepository = $em->getRepository(Settings::class);
+        $this->settingsCache      = new Cache($storage, 'Settings');
     }
 
     /**
@@ -50,10 +51,8 @@ class SettingsFacade
         $value = $this->settingsCache->load($item);
 
         if ($value === null) {
-            /**
-             * @var Settings $settings
-             */
-            $settings = $this->settingsFacade->findOneBy(['item' => $item]);
+            /** @var Settings $settings */
+            $settings = $this->settingsRepository->findOneBy(['item' => $item]);
             if ($settings === null) {
                 throw new SettingsException('Item ' . $item . ' was not found in table Settings.');
             }
@@ -78,7 +77,7 @@ class SettingsFacade
         /**
          * @var Settings $settings
          */
-        $settings = $this->settingsFacade->findOneBy(['item' => $item]);
+        $settings = $this->settingsRepository->findOneBy(['item' => $item]);
         if ($settings === null) {
             throw new SettingsException('Item ' . $item . ' was not found in table Settings.');
         }

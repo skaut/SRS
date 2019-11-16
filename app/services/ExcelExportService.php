@@ -13,6 +13,7 @@ use App\Model\Program\Room;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Structure\SubeventRepository;
+use App\Model\User\CustomInputValue\CustomSelectValue;
 use App\Model\User\User;
 use App\Utils\Helpers;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -91,7 +92,7 @@ class ExcelExportService
      * Vyexportuje matici uživatelů a rolí.
      * @param Collection|User[] $users
      * @param Collection|Role[] $roles
-     * @throws Exception
+     * @throws \Exception
      */
     public function exportUsersRoles(Collection $users, Collection $roles, string $filename) : ExcelResponse
     {
@@ -198,7 +199,7 @@ class ExcelExportService
 
     /**
      * Vyexportuje harmonogram místnosti.
-     * @throws Exception
+     * @throws \Exception
      */
     public function exportRoomSchedule(Room $room, string $filename) : ExcelResponse
     {
@@ -208,7 +209,6 @@ class ExcelExportService
     /**
      * Vyexportuje harmonogramy místností.
      * @param Collection|Room[] $rooms
-     * @throws Exception
      * @throws \Exception
      */
     public function exportRoomsSchedules(Collection $rooms, string $filename) : ExcelResponse
@@ -261,7 +261,7 @@ class ExcelExportService
 
     /**
      * @param Collection|User[] $users
-     * @throws Exception
+     * @throws \Exception
      */
     public function exportUsersList(Collection $users, string $filename) : ExcelResponse
     {
@@ -433,6 +433,8 @@ class ExcelExportService
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->getNotRegisteredMandatoryBlocksText());
 
             foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
+                /** @var User $user */
+                /** @var CustomSelectValue $customInputValue */
                 $customInputValue = $user->getCustomInputValue($customInput);
 
                 if ($customInputValue) {
@@ -473,7 +475,7 @@ class ExcelExportService
 
     /**
      * @param Collection|User[] $users
-     * @throws Exception
+     * @throws \Exception
      */
     public function exportUsersSubeventsAndCategories(Collection $users, string $filename) : ExcelResponse
     {
@@ -557,7 +559,7 @@ class ExcelExportService
 
     /**
      * @param Collection|Block[] $blocks
-     * @throws Exception
+     * @throws \Exception
      */
     public function exportBlocksAttendees(Collection $blocks, string $filename) : ExcelResponse
     {

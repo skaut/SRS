@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\User\CustomInputValue;
 
+use App\Model\Settings\CustomInput\CustomSelect;
 use Doctrine\ORM\Mapping as ORM;
 use function explode;
 
@@ -11,6 +12,7 @@ use function explode;
  * Entita hodnota vlastního výběrového pole přihlášky.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity
  * @ORM\Table(name="custom_select_value")
  */
@@ -36,10 +38,11 @@ class CustomSelectValue extends CustomInputValue
 
     /**
      * Vrátí název vybrané možnosti.
-     * @return mixed
      */
     public function getValueOption() : ?string
     {
-        return $this->value !== 0 ? explode(', ', $this->getInput()->getOptions())[$this->value - 1] : null;
+        /** @var CustomSelect $input */
+        $input = $this->getInput();
+        return $this->value !== 0 ? explode(', ', $input->getOptions())[$this->value - 1] : null;
     }
 }
