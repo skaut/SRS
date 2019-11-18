@@ -22,7 +22,7 @@ class Authorizator extends Nette\Security\Permission
 {
     public function __construct(
         RoleFacade $roleFacade,
-        PermissionFacade $permissionRepository,
+        PermissionFacade $permissionFacade,
         ResourceFacade $resourceFacade
     ) {
         $this->addRole(Role::TEST); //role pouzivana pri testovani jine role
@@ -34,7 +34,7 @@ class Authorizator extends Nette\Security\Permission
             foreach ($roleFacade->findAllNames() as $roleName) {
                 $this->addRole($roleName);
             }
-            foreach ($permissionRepository->findAllNames() as $permission) {
+            foreach ($permissionFacade->findAllNames() as $permission) {
                 $this->allow($permission['roleName'], $permission['resourceName'], $permission['name']);
             }
         } catch (TableNotFoundException $ex) {
