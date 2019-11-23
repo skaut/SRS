@@ -8,6 +8,7 @@ use Nette\Utils\Finder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Throwable;
 use function array_diff;
 use function is_dir;
 use function is_file;
@@ -68,7 +69,7 @@ class ClearCacheCommand extends Command
 
             $output->writeln('Cache cleared.');
             return 0;
-        } catch (\Throwable $ex) {
+        } catch (Throwable $ex) {
             $output->write('error');
             return 1;
         }

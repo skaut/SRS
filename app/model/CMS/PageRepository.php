@@ -4,10 +4,15 @@ declare(strict_types=1);
 
 namespace App\Model\CMS;
 
-use App\Model\EntityRepository;
+use App\Model\Page\PageException;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Throwable;
 use function array_map;
 
 /**
@@ -29,7 +34,7 @@ class PageRepository extends EntityRepository
 
     /**
      * Vrací viditelné stránky se zadaným slugem.
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function findPublishedBySlug(string $slug) : ?Page
     {
@@ -48,6 +53,7 @@ class PageRepository extends EntityRepository
     /**
      * Vrací poslední pozici stránky.
      * @throws NonUniqueResultException
+     * @throws NoResultException
      */
     public function findLastPosition() : int
     {
@@ -92,7 +98,7 @@ class PageRepository extends EntityRepository
      */
     public function findPagesIds(Collection $pages) : array
     {
-        return array_map(function ($o) {
+        return array_map(function (Page $o) {
             return $o->getId();
         }, $pages->toArray());
     }
@@ -117,7 +123,7 @@ class PageRepository extends EntityRepository
      */
     public function findPagesSlugs(Collection $pages) : array
     {
-        return array_map(function ($o) {
+        return array_map(function (Page $o) {
             return $o->getSlug();
         }, $pages->toArray());
     }
@@ -139,5 +145,89 @@ class PageRepository extends EntityRepository
             $options[$page['slug']] = $page['name'];
         }
         return $options;
+    }
+
+    /**
+     * Uloží stránku.
+     *
+     * @throws NonUniqueResultException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function save(Page $page) : void
+    {
+        if (! $page->getPosition()) {
+            $page->setPosition($this->findLastPosition() + 1);
+        }
+
+        $this->_em->persist($page);
+        $this->_em->flush();
+    }
+
+    /**
+     * Odstraní stránku.
+     *
+     * @throws PageException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function remove(Page $page) : void
+    {
+        foreach ($page->getContents() as $content) {
+            $this->_em->remove($content);
+        }
+
+        $this->_em->remove($page);
+        $this->_em->flush();
+    }
+
+    /**
+     * Přesune stránku mezi stránky s id prevId a nextId.
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function sort(int $itemId, int $prevId, int $nextId) : void
+    {
+        $item = $this->find($itemId);
+        $prev = $prevId ? $this->find($prevId) : null;
+        $next = $nextId ? $this->find($nextId) : null;
+
+        $itemsToMoveUp = $this->createQueryBuilder('i')
+            ->where('i.position <= :position')
+            ->setParameter('position', $prev ? $prev->getPosition() : 0)
+            ->andWhere('i.position > :position2')
+            ->setParameter('position2', $item->getPosition())
+            ->getQuery()
+            ->getResult();
+
+        foreach ($itemsToMoveUp as $t) {
+            $t->setPosition($t->getPosition() - 1);
+            $this->_em->persist($t);
+        }
+
+        $itemsToMoveDown = $this->createQueryBuilder('i')
+            ->where('i.position >= :position')
+            ->setParameter('position', $next ? $next->getPosition() : PHP_INT_MAX)
+            ->andWhere('i.position < :position2')
+            ->setParameter('position2', $item->getPosition())
+            ->getQuery()
+            ->getResult();
+
+        foreach ($itemsToMoveDown as $t) {
+            $t->setPosition($t->getPosition() + 1);
+            $this->_em->persist($t);
+        }
+
+        if ($prev) {
+            $item->setPosition($prev->getPosition() + 1);
+        } elseif ($next) {
+            $item->setPosition($next->getPosition() - 1);
+        } else {
+            $item->setPosition(1);
+        }
+
+        $this->_em->persist($item);
+        $this->_em->flush();
     }
 }

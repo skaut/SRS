@@ -8,18 +8,20 @@ use App\AdminModule\Forms\BaseForm;
 use App\Model\CMS\PageRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsFacade;
+use App\Model\Settings\SettingsRepository;
 use App\Services\FilesService;
+use App\Services\SettingsService;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Utils\Strings;
+use stdClass;
+use Throwable;
 
 /**
  * Formulář pro nastavení webové prezentace.
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class WebForm
 {
@@ -31,8 +33,8 @@ class WebForm
     /** @var PageRepository */
     private $pageRepository;
 
-    /** @var SettingsFacade */
-    private $settingsFacade;
+    /** @var SettingsService */
+    private $settingsService;
 
     /** @var FilesService */
     private $filesService;
@@ -41,19 +43,19 @@ class WebForm
     public function __construct(
         BaseForm $baseFormFactory,
         PageRepository $pageRepository,
-        SettingsFacade $settingsFacade,
+        SettingsService $settingsService,
         FilesService $filesService
     ) {
         $this->baseFormFactory = $baseFormFactory;
         $this->pageRepository  = $pageRepository;
-        $this->settingsFacade  = $settingsFacade;
+        $this->settingsService  = $settingsService;
         $this->filesService    = $filesService;
     }
 
     /**
      * Vytvoří formulář.
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function create() : Form
     {
@@ -78,9 +80,9 @@ class WebForm
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'footer' => $this->settingsFacade->getValue(Settings::FOOTER),
-            'redirectAfterLogin' => $this->settingsFacade->getValue(Settings::REDIRECT_AFTER_LOGIN),
-            'ga_id' => $this->settingsFacade->getValue(Settings::GA_ID),
+            'footer' => $this->settingsService->getValue(Settings::FOOTER),
+            'redirectAfterLogin' => $this->settingsService->getValue(Settings::REDIRECT_AFTER_LOGIN),
+            'ga_id' => $this->settingsService->getValue(Settings::GA_ID),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -92,23 +94,23 @@ class WebForm
      * Zpracuje formulář.
      * @throws Nette\Utils\UnknownImageFileException
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function processForm(Form $form, \stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         $logo = $values['logo'];
         if ($logo->size > 0) {
-            $this->filesService->delete('/logo/' . $this->settingsFacade->getValue(Settings::LOGO));
+            $this->filesService->delete('/logo/' . $this->settingsService->getValue(Settings::LOGO));
 
             $logoName = Strings::webalize($logo->name, '.');
             $this->filesService->save($logo, '/logo/' . $logoName);
             $this->filesService->resizeImage('/logo/' . $logoName, null, 100);
 
-            $this->settingsFacade->setValue(Settings::LOGO, $logoName);
+            $this->settingsService->setValue(Settings::LOGO, $logoName);
         }
 
-        $this->settingsFacade->setValue(Settings::FOOTER, $values['footer']);
-        $this->settingsFacade->setValue(Settings::REDIRECT_AFTER_LOGIN, $values['redirectAfterLogin']);
-        $this->settingsFacade->setValue(Settings::GA_ID, $values['ga_id']);
+        $this->settingsService->setValue(Settings::FOOTER, $values['footer']);
+        $this->settingsService->setValue(Settings::REDIRECT_AFTER_LOGIN, $values['redirectAfterLogin']);
+        $this->settingsService->setValue(Settings::GA_ID, $values['ga_id']);
     }
 }

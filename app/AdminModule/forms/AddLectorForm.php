@@ -9,10 +9,13 @@ use App\Model\ACL\RoleRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\FilesService;
+use DateTime;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Exception;
 use Nette;
 use Nette\Application\UI\Form;
+use stdClass;
 use function getimagesizefromstring;
 use function image_type_to_extension;
 
@@ -110,9 +113,9 @@ class AddLectorForm
      * @throws Nette\Utils\UnknownImageFileException
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws \Exception
+     * @throws Exception
      */
-    public function processForm(Form $form, \stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         if ($form['cancel']->isSubmittedBy()) {
             return;
@@ -127,7 +130,7 @@ class AddLectorForm
         $user->setDegreePre($values['degreePre']);
         $user->setDegreePost($values['degreePost']);
         $user->setEmail($values['email']);
-        $user->setBirthdate($values['birthdate'] !== null ? new \DateTime($values['birthdate']) : null);
+        $user->setBirthdate($values['birthdate'] !== null ? new DateTime($values['birthdate']) : null);
         $user->setStreet($values['street']);
         $user->setCity($values['city']);
         $user->setPostcode($values['postcode']);

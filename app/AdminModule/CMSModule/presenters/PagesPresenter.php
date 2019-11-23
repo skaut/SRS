@@ -9,7 +9,7 @@ use App\AdminModule\CMSModule\Components\PagesGridControl;
 use App\AdminModule\CMSModule\Forms\IPageFormFactory;
 use App\AdminModule\CMSModule\Forms\PageForm;
 use App\Model\CMS\Content\Content;
-use App\Model\CMS\Content\ContentFacade;
+use App\Model\CMS\Content\ContentRepository;
 use App\Model\CMS\PageRepository;
 
 /**
@@ -38,12 +38,6 @@ class PagesPresenter extends CMSBasePresenter
      * @inject
      */
     public $pagesRepository;
-
-    /**
-     * @var ContentFacade
-     * @inject
-     */
-    public $contentFacade;
 
 
     public function renderContent(int $id, string $area) : void

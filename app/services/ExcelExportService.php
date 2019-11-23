@@ -19,6 +19,7 @@ use App\Utils\Helpers;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use InvalidArgumentException;
 use Kdyby\Translation\Translator;
 use Nette;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
@@ -374,7 +375,7 @@ class ExcelExportService
                     continue 2;
 
                 default:
-                    throw new \InvalidArgumentException();
+                    throw new InvalidArgumentException();
             }
 
             $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate($customInput->getName()));
@@ -458,7 +459,7 @@ class ExcelExportService
                             continue 2;
 
                         default:
-                            throw new \InvalidArgumentException();
+                            throw new InvalidArgumentException();
                     }
                 } else {
                     $value = '';

@@ -11,6 +11,8 @@ use App\AdminModule\ConfigurationModule\Forms\SubeventsForm;
 use App\Model\Settings\SettingsException;
 use App\Model\Structure\SubeventRepository;
 use Nette\Forms\Form;
+use stdClass;
+use Throwable;
 
 /**
  * Presenter obsluhující správu podakcí.
@@ -60,7 +62,7 @@ class SubeventsPresenter extends ConfigurationBasePresenter
     {
         $form = $this->subeventFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             if (! $form['cancel']->isSubmittedBy()) {
                 $this->flashMessage('admin.configuration.subevents_saved', 'success');
             }
@@ -73,13 +75,13 @@ class SubeventsPresenter extends ConfigurationBasePresenter
 
     /**
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     protected function createComponentSubeventsForm() : Form
     {
         $form = $this->subeventsFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
             $this->redirect('this');
         };

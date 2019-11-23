@@ -9,14 +9,17 @@ use App\Model\ACL\RoleRepository;
 use App\Model\CMS\Content\ContentDTO;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsFacade;
+use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\UserRepository;
 use App\Services\Authenticator;
+use App\Services\SettingsService;
 use App\WebModule\Forms\ApplicationForm;
 use Doctrine\ORM\NonUniqueResultException;
 use Nette\Application\UI\Control;
 use Nette\Forms\Form;
+use stdClass;
+use Throwable;
 use function json_encode;
 
 /**
@@ -40,8 +43,8 @@ class ApplicationContentControl extends Control
     /** @var Authenticator */
     private $authenticator;
 
-    /** @var SettingsFacade */
-    private $settingsFacade;
+    /** @var SettingsService */
+    private $settingsService;
 
     /** @var SubeventRepository */
     private $subeventRepository;
@@ -52,7 +55,7 @@ class ApplicationContentControl extends Control
         Authenticator $authenticator,
         UserRepository $userRepository,
         RoleRepository $roleRepository,
-        SettingsFacade $settingsFacade,
+        SettingsService $settingsService,
         SubeventRepository $subeventRepository
     ) {
         parent::__construct();
@@ -61,14 +64,14 @@ class ApplicationContentControl extends Control
         $this->authenticator          = $authenticator;
         $this->userRepository         = $userRepository;
         $this->roleRepository         = $roleRepository;
-        $this->settingsFacade         = $settingsFacade;
+        $this->settingsService        = $settingsService;
         $this->subeventRepository     = $subeventRepository;
     }
 
     /**
      * @throws NonUniqueResultException
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function render(ContentDTO $content) : void
     {
@@ -94,7 +97,7 @@ class ApplicationContentControl extends Control
             $template->noRegisterableRole  = $this->roleRepository->findAllRegisterableNowOrderedByName()->isEmpty();
             $template->registrationStart   = $this->roleRepository->getRegistrationStart();
             $template->registrationEnd     = $this->roleRepository->getRegistrationEnd();
-            $template->bankAccount         = $this->settingsFacade->getValue(Settings::ACCOUNT_NUMBER);
+            $template->bankAccount         = $this->settingsService->getValue(Settings::ACCOUNT_NUMBER);
             $template->dbuser              = $dbuser;
             $template->userHasFixedFeeRole = $userHasFixedFeeRole;
 
@@ -115,13 +118,13 @@ class ApplicationContentControl extends Control
     /**
      * @throws SettingsException
      * @throws NonUniqueResultException
-     * @throws \Throwable
+     * @throws Throwable
      */
     protected function createComponentApplicationForm() : Form
     {
         $form = $this->applicationFormFactory->create($this->getPresenter()->user->id);
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             $this->getPresenter()->flashMessage('web.application_content.register_successful', 'success');
 
             $this->authenticator->updateRoles($this->getPresenter()->user);

@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Components;
 
 use App\Model\Program\BlockRepository;
+use App\Model\Structure\Subevent;
 use App\Model\Structure\SubeventRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
+use Mpdf\Tag\Sub;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Bridges\ApplicationLatte\Template;
@@ -84,7 +86,7 @@ class SubeventsGridControl extends Control
             ->setTitle('admin.common.add');
 
         $grid->addAction('edit', 'admin.common.edit', 'Subevents:edit');
-        $grid->allowRowsAction('edit', function ($item) {
+        $grid->allowRowsAction('edit', function (Subevent $item) {
             return ! $item->isImplicit();
         });
 
@@ -96,7 +98,7 @@ class SubeventsGridControl extends Control
                 'data-toggle' => 'confirmation',
                 'data-content' => $this->translator->translate('admin.configuration.subevents_delete_confirm'),
             ]);
-        $grid->allowRowsAction('delete', function ($item) {
+        $grid->allowRowsAction('delete', function (Subevent $item) {
             return ! $item->isImplicit();
         });
     }

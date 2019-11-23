@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\WebModule\Forms;
 
-use App\Model\EntityManagerDecorator;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\CustomInput\CustomFile;
@@ -13,7 +12,6 @@ use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\CustomInput\CustomSelect;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsFacade;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
 use App\Model\User\CustomInputValue\CustomFileValue;
 use App\Model\User\CustomInputValue\CustomInputValueRepository;
@@ -24,11 +22,17 @@ use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\FilesService;
 use App\Services\MailService;
+use App\Services\SettingsService;
+use Doctrine\ORM\EntityManager;
+use InvalidArgumentException;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
+use Nettrine\ORM\EntityManagerDecorator;
+use stdClass;
+use Throwable;
 use function array_key_exists;
 use function array_slice;
 use function array_values;
@@ -79,8 +83,8 @@ class AdditionalInformationForm extends UI\Control
     /** @var MailService */
     private $mailService;
 
-    /** @var SettingsFacade */
-    private $settingsFacade;
+    /** @var SettingsService */
+    private $settingsService;
 
 
     public function __construct(
@@ -92,7 +96,7 @@ class AdditionalInformationForm extends UI\Control
         CustomInputValueRepository $customInputValueRepository,
         FilesService $filesService,
         MailService $mailService,
-        SettingsFacade $settingsFacade
+        SettingsService $settingsService
     ) {
         parent::__construct();
 
@@ -104,7 +108,7 @@ class AdditionalInformationForm extends UI\Control
         $this->customInputValueRepository = $customInputValueRepository;
         $this->filesService               = $filesService;
         $this->mailService                = $mailService;
-        $this->settingsFacade             = $settingsFacade;
+        $this->settingsService            = $settingsService;
     }
 
     /**
@@ -119,7 +123,7 @@ class AdditionalInformationForm extends UI\Control
     /**
      * Vytvoří formulář.
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function createComponentForm() : Form
     {
@@ -176,7 +180,7 @@ class AdditionalInformationForm extends UI\Control
                     break;
 
                 default:
-                    throw new \InvalidArgumentException();
+                    throw new InvalidArgumentException();
             }
 
             if ($customInput->isMandatory() && $customInput->getType() !== CustomInput::FILE) {
@@ -206,11 +210,11 @@ class AdditionalInformationForm extends UI\Control
 
     /**
      * Zpracuje formulář.
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function processForm(Form $form, \stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
-        $this->em->transactional(function ($em) use ($values) : void {
+        $this->em->transactional(function () use ($values) : void {
             $customInputValueChanged = false;
 
             if ($this->applicationService->isAllowedEditCustomInputs()) {
@@ -276,7 +280,7 @@ class AdditionalInformationForm extends UI\Control
             }
 
             $this->mailService->sendMailFromTemplate($this->user, '', Template::CUSTOM_INPUT_VALUE_CHANGED, [
-                TemplateVariable::SEMINAR_NAME => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
+                TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
                 TemplateVariable::USER => $this->user->getDisplayName(),
             ]);
         });

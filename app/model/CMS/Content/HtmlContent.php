@@ -7,6 +7,7 @@ namespace App\Model\CMS\Content;
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
+use stdClass;
 
 /**
  * Entita obsahu s HTML.
@@ -60,7 +61,7 @@ class HtmlContent extends Content implements IContent
     /**
      * Zpracuje při uložení stránky část formuláře týkající se obsahu.
      */
-    public function contentFormSucceeded(Form $form, \stdClass $values) : void
+    public function contentFormSucceeded(Form $form, stdClass $values) : void
     {
         parent::contentFormSucceeded($form, $values);
         $values     = $values[$this->getContentFormName()];

@@ -6,6 +6,7 @@ namespace App\Presenters;
 
 use Kdyby\Translation\Translator;
 use Nette;
+use stdClass;
 use WebLoader\Nette\LoaderFactory;
 
 /**
@@ -33,7 +34,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
      * Zobrazí přeloženou zprávu.
      * @param string[] $parameters
      */
-    public function flashMessage($message, $type = 'info', ?string $icon = null, ?int $count = null, array $parameters = []) : \stdClass
+    public function flashMessage($message, $type = 'info', ?string $icon = null, ?int $count = null, array $parameters = []) : stdClass
     {
         if ($icon) {
             return parent::flashMessage('<span class="fa fa-' . $icon . '"></span> ' .

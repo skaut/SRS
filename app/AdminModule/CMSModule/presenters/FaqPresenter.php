@@ -9,6 +9,7 @@ use App\AdminModule\CMSModule\Components\IFaqGridControlFactory;
 use App\AdminModule\CMSModule\Forms\FaqForm;
 use App\Model\CMS\FaqRepository;
 use Nette\Application\UI\Form;
+use stdClass;
 
 /**
  * Presenter starající se o správu častých otázek.
@@ -50,7 +51,7 @@ class FaqPresenter extends CMSBasePresenter
     {
         $form = $this->faqFormFactory->create((int) $this->getParameter('id'), $this->user->id);
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             if ($form['cancel']->isSubmittedBy()) {
                 $this->redirect('Faq:default');
             }

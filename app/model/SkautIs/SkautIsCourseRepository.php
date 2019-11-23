@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Model\SkautIs;
 
-use App\Model\EntityRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use function array_map;
@@ -29,8 +29,6 @@ class SkautIsCourseRepository extends EntityRepository
 
     /**
      * Uloží skautIS kurz.
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function save(SkautIsCourse $skautIsCourse) : void
     {
@@ -40,8 +38,6 @@ class SkautIsCourseRepository extends EntityRepository
 
     /**
      * Odstraní skautIS kurz.
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function remove(SkautIsCourse $skautIsCourse) : void
     {
@@ -50,8 +46,6 @@ class SkautIsCourseRepository extends EntityRepository
     }
 
     /**
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function removeAll() : void
     {

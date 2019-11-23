@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Model\EntityManagerDecorator;
 use App\Model\Payment\PaymentRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsFacade;
+use App\Model\Settings\SettingsRepository;
+use DateTime;
+use Doctrine\ORM\EntityManager;
 use FioApi;
+use InvalidArgumentException;
 use Nette;
+use Nettrine\ORM\EntityManagerDecorator;
+use Throwable;
 
 /**
  * Služba pro správu plateb.
@@ -28,8 +32,8 @@ class BankService
     /** @var EntityManagerDecorator */
     private $em;
 
-    /** @var SettingsFacade */
-    private $settingsFacade;
+    /** @var SettingsService */
+    private $settingsService;
 
     /** @var PaymentRepository */
     private $paymentRepository;
@@ -38,24 +42,24 @@ class BankService
     public function __construct(
         ApplicationService $applicationService,
         EntityManagerDecorator $em,
-        SettingsFacade $settingsFacade,
+        SettingsService $settingsService,
         PaymentRepository $paymentRepository
     ) {
         $this->applicationService = $applicationService;
         $this->em                 = $em;
-        $this->settingsFacade     = $settingsFacade;
+        $this->settingsService    = $settingsService;
         $this->paymentRepository  = $paymentRepository;
     }
 
     /**
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function downloadTransactions(\DateTime $from, ?string $token = null) : void
+    public function downloadTransactions(DateTime $from, ?string $token = null) : void
     {
-        $token = $token ?: $this->settingsFacade->getValue(Settings::BANK_TOKEN);
+        $token = $token ?: $this->settingsService->getValue(Settings::BANK_TOKEN);
         if ($token === null) {
-            throw new \InvalidArgumentException('Token is not set.');
+            throw new InvalidArgumentException('Token is not set.');
         }
 
         $downloader      = new FioApi\Downloader($token);
@@ -65,7 +69,7 @@ class BankService
     }
 
     /**
-     * @throws \Throwable
+     * @throws Throwable
      */
     private function createPayments(FioApi\TransactionList $transactionList) : void
     {
@@ -77,7 +81,7 @@ class BankService
                     return;
                 }
 
-                $date = new \DateTime();
+                $date = new DateTime();
                 $date->setTimestamp($transaction->getDate()->getTimestamp());
 
                 $accountNumber = $transaction->getSenderAccountNumber() . '/' . $transaction->getSenderBankCode();
@@ -94,6 +98,6 @@ class BankService
             });
         }
 
-        $this->settingsFacade->setDateValue(Settings::BANK_DOWNLOAD_FROM, new \DateTime());
+        $this->settingsService->setDateValue(Settings::BANK_DOWNLOAD_FROM, new DateTime());
     }
 }

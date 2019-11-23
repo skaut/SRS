@@ -6,14 +6,13 @@ namespace App\ActionModule\Presenters;
 
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
-use App\Model\EntityManagerDecorator;
 use App\Model\Enums\ApplicationState;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsFacade;
+use App\Model\Settings\SettingsRepository;
 use App\Model\User\ApplicationRepository;
 use App\Model\User\RolesApplicationRepository;
 use App\Model\User\SubeventsApplicationRepository;
@@ -21,8 +20,12 @@ use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\MailService;
 use App\Services\ProgramService;
+use App\Services\SettingsService;
 use App\Utils\Helpers;
+use DateTime;
+use Doctrine\ORM\EntityManager;
 use Nette\Application\Responses\TextResponse;
+use Nettrine\ORM\EntityManagerDecorator;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingException;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
@@ -90,10 +93,10 @@ class MaturityPresenter extends ActionBasePresenter
     public $rolesApplicationRepository;
 
     /**
-     * @var SettingsFacade
+     * @var SettingsService
      * @inject
      */
-    public $settingsFacade;
+    public $settingsService;
 
     /**
      * @var SubeventsApplicationRepository
@@ -109,15 +112,15 @@ class MaturityPresenter extends ActionBasePresenter
      */
     public function actionCancelApplications() : void
     {
-        $cancelRegistration = $this->settingsFacade->getIntValue(Settings::CANCEL_REGISTRATION_AFTER_MATURITY);
+        $cancelRegistration = $this->settingsService->getIntValue(Settings::CANCEL_REGISTRATION_AFTER_MATURITY);
         if ($cancelRegistration !== null) {
-            $cancelRegistrationDate = (new \DateTime())->setTime(0, 0)->modify('-' . $cancelRegistration . ' days');
+            $cancelRegistrationDate = (new DateTime())->setTime(0, 0)->modify('-' . $cancelRegistration . ' days');
         } else {
             return;
         }
 
         foreach ($this->userRepository->findAllWithWaitingForPaymentApplication() as $user) {
-            $this->em->transactional(function ($em) use ($user, $cancelRegistrationDate) : void {
+            $this->em->transactional(function () use ($user, $cancelRegistrationDate) : void {
                 // odhlášení účastníků s nezaplacnou přihláškou rolí
                 foreach ($user->getWaitingForPaymentRolesApplications() as $application) {
                     $maturityDate = $application->getMaturityDate();
@@ -161,14 +164,13 @@ class MaturityPresenter extends ActionBasePresenter
      * Rozešle přípomínky splatnosti.
      * @throws SettingsException
      * @throws Throwable
-     * @throws MailingException
      * @throws MailingMailCreationException
      */
     public function actionSendReminders() : void
     {
-        $maturityReminder = $this->settingsFacade->getIntValue(Settings::MATURITY_REMINDER);
+        $maturityReminder = $this->settingsService->getIntValue(Settings::MATURITY_REMINDER);
         if ($maturityReminder !== null) {
-            $maturityReminderDate = (new \DateTime())->setTime(0, 0)->modify('+' . $maturityReminder . ' days');
+            $maturityReminderDate = (new DateTime())->setTime(0, 0)->modify('+' . $maturityReminder . ' days');
         } else {
             return;
         }
@@ -179,7 +181,7 @@ class MaturityPresenter extends ActionBasePresenter
 
                 if ($maturityReminderDate == $maturityDate) {
                     $this->mailService->sendMailFromTemplate($application->getUser(), '', Template::MATURITY_REMINDER, [
-                        TemplateVariable::SEMINAR_NAME => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
+                        TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
                         TemplateVariable::APPLICATION_MATURITY => $maturityDate->format(Helpers::DATE_FORMAT),
                     ]);
                 }

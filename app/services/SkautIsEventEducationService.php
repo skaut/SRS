@@ -10,6 +10,7 @@ use App\Model\User\User;
 use Doctrine\Common\Collections\Collection;
 use Skautis\Skautis;
 use Skautis\Wsdl\WsdlException;
+use stdClass;
 use Tracy\Debugger;
 use Tracy\ILogger;
 use function array_key_exists;
@@ -89,7 +90,7 @@ class SkautIsEventEducationService extends SkautIsEventService
         return true;
     }
 
-    protected function getEventDetail(int $eventId) : \stdClass
+    protected function getEventDetail(int $eventId) : stdClass
     {
         return $this->skautIs->event->EventEducationDetail([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -98,7 +99,7 @@ class SkautIsEventEducationService extends SkautIsEventService
     }
 
     /**
-     * @return \stdClass[]
+     * @return stdClass[]
      */
     protected function getDraftEvents() : array
     {
@@ -106,7 +107,7 @@ class SkautIsEventEducationService extends SkautIsEventService
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
         ]);
 
-        if ($events instanceof \stdClass) {
+        if ($events instanceof stdClass) {
             return [];
         }
 
@@ -121,7 +122,7 @@ class SkautIsEventEducationService extends SkautIsEventService
 
     /**
      * Vrací kurzy vzdělávací akce.
-     * @return \stdClass[]
+     * @return stdClass[]
      */
     public function getEventCourses(int $eventId) : array
     {
@@ -130,7 +131,7 @@ class SkautIsEventEducationService extends SkautIsEventService
             'ID_EventEducation' => $eventId,
         ]);
 
-        if ($courses instanceof \stdClass) {
+        if ($courses instanceof stdClass) {
             return [];
         }
 
@@ -152,7 +153,7 @@ class SkautIsEventEducationService extends SkautIsEventService
 
     /**
      * Vrací přihlášené účastníky kurzu.
-     * @return \stdClass[]
+     * @return stdClass[]
      */
     private function getAllParticipants(int $eventId, int $courseId) : array
     {
@@ -163,7 +164,7 @@ class SkautIsEventEducationService extends SkautIsEventService
             'IsActive' => true,
         ]);
 
-        if ($participants instanceof \stdClass) {
+        if ($participants instanceof stdClass) {
             return [];
         }
 

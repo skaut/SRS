@@ -7,11 +7,14 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseForm;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsFacade;
+use App\Model\Settings\SettingsRepository;
+use App\Services\SettingsService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
+use stdClass;
+use Throwable;
 
 /**
  * Formulář pro nastavení dokladů.
@@ -27,20 +30,20 @@ class PaymentProofForm
     /** @var BaseForm */
     private $baseFormFactory;
 
-    /** @var SettingsFacade */
-    private $settingsFacade;
+    /** @var SettingsService */
+    private $settingsService;
 
 
-    public function __construct(BaseForm $baseForm, SettingsFacade $settingsFacade)
+    public function __construct(BaseForm $baseForm, SettingsService $settingsService)
     {
         $this->baseFormFactory = $baseForm;
-        $this->settingsFacade  = $settingsFacade;
+        $this->settingsService = $settingsService;
     }
 
     /**
      * Vytvoří formulář.
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function create() : Form
     {
@@ -66,10 +69,10 @@ class PaymentProofForm
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'company' => $this->settingsFacade->getValue(Settings::COMPANY),
-            'ico' => $this->settingsFacade->getValue(Settings::ICO),
-            'accountant' => $this->settingsFacade->getValue(Settings::ACCOUNTANT),
-            'printLocation' => $this->settingsFacade->getValue(Settings::PRINT_LOCATION),
+            'company' => $this->settingsService->getValue(Settings::COMPANY),
+            'ico' => $this->settingsService->getValue(Settings::ICO),
+            'accountant' => $this->settingsService->getValue(Settings::ACCOUNTANT),
+            'printLocation' => $this->settingsService->getValue(Settings::PRINT_LOCATION),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -82,13 +85,13 @@ class PaymentProofForm
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function processForm(Form $form, \stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
-        $this->settingsFacade->setValue(Settings::COMPANY, $values['company']);
-        $this->settingsFacade->setValue(Settings::ICO, $values['ico']);
-        $this->settingsFacade->setValue(Settings::ACCOUNTANT, $values['accountant']);
-        $this->settingsFacade->setValue(Settings::PRINT_LOCATION, $values['printLocation']);
+        $this->settingsService->setValue(Settings::COMPANY, $values['company']);
+        $this->settingsService->setValue(Settings::ICO, $values['ico']);
+        $this->settingsService->setValue(Settings::ACCOUNTANT, $values['accountant']);
+        $this->settingsService->setValue(Settings::PRINT_LOCATION, $values['printLocation']);
     }
 }

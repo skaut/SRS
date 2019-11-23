@@ -12,6 +12,8 @@ use App\AdminModule\ConfigurationModule\Forms\TicketsForm;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use Nette\Application\UI\Form;
+use stdClass;
+use Throwable;
 
 /**
  * Presenter obsluhující nastavení platby a dokladů.
@@ -49,11 +51,11 @@ class PaymentPresenter extends ConfigurationBasePresenter
 
     /**
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function renderDefault() : void
     {
-        $bankToken = $this->settingsFacade->getValue(Settings::BANK_TOKEN);
+        $bankToken = $this->settingsService->getValue(Settings::BANK_TOKEN);
         if ($bankToken !== null) {
             $this->template->connected = true;
         } else {
@@ -64,11 +66,11 @@ class PaymentPresenter extends ConfigurationBasePresenter
     /**
      * Zruší propojení s API banky.
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function handleDisconnect() : void
     {
-        $this->settingsFacade->setValue(Settings::BANK_TOKEN, null);
+        $this->settingsService->setValue(Settings::BANK_TOKEN, null);
 
         $this->flashMessage('admin.configuration.payment.bank.disconnect_successful', 'success');
         $this->redirect('this');
@@ -88,13 +90,13 @@ class PaymentPresenter extends ConfigurationBasePresenter
 
     /**
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     protected function createComponentPaymentProofForm() : Form
     {
         $form = $this->paymentProofFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
             $this->redirect('this');
         };
@@ -103,13 +105,13 @@ class PaymentPresenter extends ConfigurationBasePresenter
     }
 
     /**
-     * @throws \Throwable
+     * @throws Throwable
      */
     protected function createComponentBankForm() : Form
     {
         $form = $this->bankFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
             $this->redirect('this');
         };
@@ -119,13 +121,13 @@ class PaymentPresenter extends ConfigurationBasePresenter
 
     /**
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     protected function createComponentTicketsForm() : Form
     {
         $form = $this->ticketsFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
             $this->redirect('this');
         };

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Components;
 
+use App\Model\Structure\Discount;
 use App\Model\Structure\DiscountRepository;
 use App\Model\Structure\SubeventRepository;
 use App\Services\DiscountService;
@@ -74,7 +75,7 @@ class DiscountsGridControl extends Control
         $grid->setPagination(false);
 
         $grid->addColumnText('discountCondition', 'admin.configuration.discounts_condition')
-            ->setRenderer(function ($row) {
+            ->setRenderer(function (Discount $row) {
                 if ($this->discountService->validateCondition($row->getDiscountCondition())) {
                     return $this->discountService->convertConditionToText($row->getDiscountCondition());
                 }

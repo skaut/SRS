@@ -13,6 +13,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
+use stdClass;
 
 /**
  * Formulář pro položení otázky.
@@ -72,7 +73,7 @@ class FaqForm
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(Form $form, \stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         $faq = new Faq();
 

@@ -6,9 +6,11 @@ namespace App\ActionModule\Presenters;
 
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsFacade;
+use App\Model\Settings\SettingsRepository;
 use App\Services\BankService;
+use App\Services\SettingsService;
 use Nette\Application\Responses\TextResponse;
+use Throwable;
 
 /**
  * Presenter obsluhující načítání plateb z API banky.
@@ -25,20 +27,20 @@ class BankPresenter extends ActionBasePresenter
     public $bankService;
 
     /**
-     * @var SettingsFacade
+     * @var SettingsService
      * @inject
      */
-    public $settingsFacade;
+    public $settingsService;
 
 
     /**
      * Zkontroluje splatnost přihlášek.
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function actionCheck() : void
     {
-        $from = $this->settingsFacade->getDateValue(Settings::BANK_DOWNLOAD_FROM);
+        $from = $this->settingsService->getDateValue(Settings::BANK_DOWNLOAD_FROM);
         $this->bankService->downloadTransactions($from);
 
         $response = new TextResponse(null);

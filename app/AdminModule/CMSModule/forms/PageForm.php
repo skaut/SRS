@@ -8,7 +8,7 @@ use App\AdminModule\Forms\BaseForm;
 use App\Model\ACL\RoleRepository;
 use App\Model\CMS\Content\CapacitiesContent;
 use App\Model\CMS\Content\Content;
-use App\Model\CMS\Content\ContentFacade;
+use App\Model\CMS\Content\ContentRepository;
 use App\Model\CMS\Content\DocumentContent;
 use App\Model\CMS\Content\ImageContent;
 use App\Model\CMS\Content\UsersContent;
@@ -16,11 +16,13 @@ use App\Model\CMS\Document\TagRepository;
 use App\Model\CMS\Page;
 use App\Model\CMS\PageRepository;
 use App\Model\Page\PageException;
+use App\Services\CMSService;
 use App\Services\FilesService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
+use stdClass;
 use function get_class;
 use function ucfirst;
 
@@ -69,8 +71,8 @@ class PageForm extends UI\Control
     /** @var PageRepository */
     private $pageRepository;
 
-    /** @var ContentFacade */
-    private $contentFacade;
+    /** @var CMSService */
+    private $CMSService;
 
     /** @var RoleRepository */
     private $roleRepository;
@@ -87,7 +89,7 @@ class PageForm extends UI\Control
         string $area,
         BaseForm $baseFormFactory,
         PageRepository $pageRepository,
-        ContentFacade $contentFacade,
+        CMSService $CMSService,
         RoleRepository $roleRepository,
         TagRepository $tagRepository,
         FilesService $filesService
@@ -99,7 +101,7 @@ class PageForm extends UI\Control
 
         $this->baseFormFactory = $baseFormFactory;
         $this->pageRepository  = $pageRepository;
-        $this->contentFacade   = $contentFacade;
+        $this->CMSService      = $CMSService;
         $this->roleRepository  = $roleRepository;
         $this->tagRepository   = $tagRepository;
         $this->filesService    = $filesService;
@@ -137,6 +139,7 @@ class PageForm extends UI\Control
             switch (get_class($content)) {
                 case CapacitiesContent::class:
                     $content->injectRoleRepository($this->roleRepository);
+                    $content->injectACLService($this->ACLService);
                     break;
                 case DocumentContent::class:
                     $content->injectTagRepository($this->tagRepository);
@@ -175,7 +178,7 @@ class PageForm extends UI\Control
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(Form $form, \stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         $page = $this->pageRepository->findById((int) $values['id']);
 
@@ -185,10 +188,10 @@ class PageForm extends UI\Control
         foreach ($page->getContents($area) as $content) {
             $formContainer = $values[$content->getContentFormName()];
             if ($formContainer['delete']) {
-                $this->contentFacade->remove($content);
+                $this->CMSService->removeContent($content);
             } else {
                 $content->contentFormSucceeded($form, $values);
-                $this->contentFacade->save($content);
+                $this->CMSService->saveContent($content);
             }
         }
 
@@ -196,7 +199,7 @@ class PageForm extends UI\Control
             $contentClass = '\\App\\Model\\CMS\\Content\\' . ucfirst($type) . 'Content';
             $content      = new $contentClass($page, $area);
             $content->setHeading($form->getTranslator()->translate('common.content.default_heading.' . $type));
-            $this->contentFacade->save($content);
+            $this->CMSService->saveContent($content);
         }
 
         if ($form['submitAdd']->isSubmittedBy()) {

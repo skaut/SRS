@@ -9,13 +9,16 @@ use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsFacade;
+use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\MailService;
+use App\Services\SettingsService;
 use Nette;
 use Nette\Application\LinkGenerator;
 use Nette\Application\UI\Form;
+use stdClass;
+use Throwable;
 use Ublaboo\Mailing\Exception\MailingException;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 use function md5;
@@ -43,8 +46,8 @@ class MailingForm
     /** @var BaseForm */
     private $baseFormFactory;
 
-    /** @var SettingsFacade */
-    private $settingsFacade;
+    /** @var SettingsService */
+    private $settingsService;
 
     /** @var UserRepository */
     private $userRepository;
@@ -58,13 +61,13 @@ class MailingForm
 
     public function __construct(
         BaseForm $baseForm,
-        SettingsFacade $settingsFacade,
+        SettingsService $settingsService,
         UserRepository $userRepository,
         MailService $mailService,
         LinkGenerator $linkGenerator
     ) {
         $this->baseFormFactory = $baseForm;
-        $this->settingsFacade  = $settingsFacade;
+        $this->settingsService = $settingsService;
         $this->userRepository  = $userRepository;
         $this->mailService     = $mailService;
         $this->linkGenerator   = $linkGenerator;
@@ -73,7 +76,7 @@ class MailingForm
     /**
      * Vytvoří formulář.
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function create(int $id) : Form
     {
@@ -92,7 +95,7 @@ class MailingForm
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'seminarEmail' => $this->settingsFacade->getValue(Settings::SEMINAR_EMAIL),
+            'seminarEmail' => $this->settingsService->getValue(Settings::SEMINAR_EMAIL),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -104,20 +107,19 @@ class MailingForm
      * Zpracuje formulář.
      * @throws Nette\Application\UI\InvalidLinkException
      * @throws SettingsException
-     * @throws \Throwable
-     * @throws MailingException
+     * @throws Throwable
      * @throws MailingMailCreationException
      */
-    public function processForm(Form $form, \stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
-        if ($this->settingsFacade->getValue(Settings::SEMINAR_EMAIL) === $values['seminarEmail']) {
+        if ($this->settingsService->getValue(Settings::SEMINAR_EMAIL) === $values['seminarEmail']) {
             return;
         }
 
-        $this->settingsFacade->setValue(Settings::SEMINAR_EMAIL_UNVERIFIED, $values['seminarEmail']);
+        $this->settingsService->setValue(Settings::SEMINAR_EMAIL_UNVERIFIED, $values['seminarEmail']);
 
         $verificationCode = substr(md5(uniqid((string) mt_rand(), true)), 0, 8);
-        $this->settingsFacade->setValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE, $verificationCode);
+        $this->settingsService->setValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE, $verificationCode);
 
         $link = $this->linkGenerator->link('Action:Mailing:verify', ['code' => $verificationCode]);
 
@@ -126,7 +128,7 @@ class MailingForm
             $values['seminarEmail'],
             Template::EMAIL_VERIFICATION,
             [
-                TemplateVariable::SEMINAR_NAME => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
+                TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
                 TemplateVariable::EMAIL_VERIFICATION_LINK => $link,
             ],
             true

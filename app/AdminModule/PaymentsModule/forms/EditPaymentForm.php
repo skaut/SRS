@@ -12,6 +12,8 @@ use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use Nette;
 use Nette\Application\UI\Form;
+use stdClass;
+use Throwable;
 
 /**
  * Formulář pro úpravu platby.
@@ -122,9 +124,9 @@ class EditPaymentForm
 
     /**
      * Zpracuje formulář.
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function processForm(Form $form, \stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         if (! $form['cancel']->isSubmittedBy()) {
             $loggedUser = $this->userRepository->findById($form->getPresenter()->user->id);

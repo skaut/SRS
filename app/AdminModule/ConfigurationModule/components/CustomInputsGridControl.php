@@ -67,7 +67,7 @@ class CustomInputsGridControl extends Control
         $grid->addColumnText('name', 'admin.configuration.custom_inputs_name');
 
         $grid->addColumnText('type', 'admin.configuration.custom_inputs_type')
-            ->setRenderer(function ($row) {
+            ->setRenderer(function (CustomInput $row) {
                 return $this->translator->translate('admin.common.custom_' . $row->getType());
             });
 
@@ -82,7 +82,7 @@ class CustomInputsGridControl extends Control
             ->onChange[] = [$this, 'changeMandatory'];
 
         $grid->addColumnText('options', 'admin.configuration.custom_inputs_options')
-            ->setRenderer(function ($row) {
+            ->setRenderer(function (CustomInput $row) {
                 return $row->getType() === CustomInput::SELECT ? $row->getOptions() : null;
             });
 

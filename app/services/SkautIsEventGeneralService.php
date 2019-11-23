@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Model\User\User;
 use Doctrine\Common\Collections\Collection;
 use Skautis\Wsdl\WsdlException;
+use stdClass;
 use Tracy\Debugger;
 use Tracy\ILogger;
 use function array_key_exists;
@@ -54,7 +55,7 @@ class SkautIsEventGeneralService extends SkautIsEventService
         return true;
     }
 
-    protected function getEventDetail(int $eventId) : \stdClass
+    protected function getEventDetail(int $eventId) : stdClass
     {
         return $this->skautIs->event->EventGeneralDetail([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -63,7 +64,7 @@ class SkautIsEventGeneralService extends SkautIsEventService
     }
 
     /**
-     * @return \stdClass[]
+     * @return stdClass[]
      */
     protected function getDraftEvents() : array
     {
@@ -72,7 +73,7 @@ class SkautIsEventGeneralService extends SkautIsEventService
             'ID_EventGeneralState' => 'draft',
         ]);
 
-        if ($events instanceof \stdClass) {
+        if ($events instanceof stdClass) {
             return [];
         }
 
@@ -81,7 +82,7 @@ class SkautIsEventGeneralService extends SkautIsEventService
 
     /**
      * Vrací účastníky akce.
-     * @return \stdClass[]
+     * @return stdClass[]
      */
     private function getAllParticipants(int $eventId) : array
     {
@@ -90,7 +91,7 @@ class SkautIsEventGeneralService extends SkautIsEventService
             'ID_EventGeneral' => $eventId,
         ]);
 
-        if ($participants instanceof \stdClass) {
+        if ($participants instanceof stdClass) {
             return [];
         }
 

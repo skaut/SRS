@@ -12,6 +12,8 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Forms\Container;
+use stdClass;
+use Throwable;
 use Ublaboo\DataGrid\DataGrid;
 
 /**
@@ -88,9 +90,9 @@ class SkautIsEventEducationGridControl extends Control
     /**
      * Zpracuje úpravu propojení podakce s kurzy.
      * @throws AbortException
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function edit(int $id, \stdClass $values) : void
+    public function edit(int $id, stdClass $values) : void
     {
         $subevent = $this->subeventRepository->findById($id);
 

@@ -6,12 +6,12 @@ namespace App\Model\User;
 
 use App\Model\ACL\Permission;
 use App\Model\ACL\Role;
-use App\Model\EntityRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Program\Block;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use function array_map;
@@ -260,8 +260,6 @@ class UserRepository extends EntityRepository
 
     /**
      * Uloží uživatele.
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function save(User $user) : void
     {
@@ -271,8 +269,6 @@ class UserRepository extends EntityRepository
 
     /**
      * Odstraní externího uživatele.
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function remove(User $user) : void
     {

@@ -12,10 +12,12 @@ use App\Model\CMS\Content\ContentDTO;
 use App\Model\Enums\ProgramRegistrationType;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsFacade;
+use App\Model\Settings\SettingsRepository;
 use App\Model\User\UserRepository;
 use App\Services\ProgramService;
+use App\Services\SettingsService;
 use Nette\Application\UI\Control;
+use Throwable;
 
 /**
  * Komponenta s výběrem programů.
@@ -32,8 +34,8 @@ class ProgramsContentControl extends Control
     /** @var RoleRepository */
     private $roleRepository;
 
-    /** @var SettingsFacade */
-    private $settingsFacade;
+    /** @var SettingsService */
+    private $settingsService;
 
     /** @var ProgramService */
     private $programService;
@@ -42,20 +44,20 @@ class ProgramsContentControl extends Control
     public function __construct(
         UserRepository $userRepository,
         RoleRepository $roleRepository,
-        SettingsFacade $settingsFacade,
+        SettingsService $settingsService,
         ProgramService $programService
     ) {
         parent::__construct();
 
-        $this->userRepository = $userRepository;
-        $this->roleRepository = $roleRepository;
-        $this->settingsFacade = $settingsFacade;
-        $this->programService = $programService;
+        $this->userRepository  = $userRepository;
+        $this->roleRepository  = $roleRepository;
+        $this->settingsService = $settingsService;
+        $this->programService  = $programService;
     }
 
     /**
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function render(ContentDTO $content) : void
     {
@@ -67,17 +69,17 @@ class ProgramsContentControl extends Control
         $template->backlink = $this->getPresenter()->getHttpRequest()->getUrl()->getPath();
 
         $template->registerProgramsAllowed       = $this->programService->isAllowedRegisterPrograms();
-        $template->registerProgramsNotAllowed    = $this->settingsFacade->getValue(Settings::REGISTER_PROGRAMS_TYPE) === ProgramRegistrationType::NOT_ALLOWED;
-        $template->registerProgramsAllowedFromTo = $this->settingsFacade->getValue(Settings::REGISTER_PROGRAMS_TYPE) === ProgramRegistrationType::ALLOWED_FROM_TO;
-        $template->registerProgramsFrom          = $this->settingsFacade->getDateTimeValue(Settings::REGISTER_PROGRAMS_FROM);
-        $template->registerProgramsTo            = $this->settingsFacade->getDateTimeValue(Settings::REGISTER_PROGRAMS_TO);
+        $template->registerProgramsNotAllowed    = $this->settingsService->getValue(Settings::REGISTER_PROGRAMS_TYPE) === ProgramRegistrationType::NOT_ALLOWED;
+        $template->registerProgramsAllowedFromTo = $this->settingsService->getValue(Settings::REGISTER_PROGRAMS_TYPE) === ProgramRegistrationType::ALLOWED_FROM_TO;
+        $template->registerProgramsFrom          = $this->settingsService->getDateTimeValue(Settings::REGISTER_PROGRAMS_FROM);
+        $template->registerProgramsTo            = $this->settingsService->getDateTimeValue(Settings::REGISTER_PROGRAMS_TO);
 
         $user                = $this->getPresenter()->user;
         $template->guestRole = $user->isInRole($this->roleRepository->findBySystemName(Role::GUEST)->getName());
 
         if ($user->isLoggedIn()) {
             $template->userHasPermission     = $user->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS);
-            $template->userWaitingForPayment = ! $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT)
+            $template->userWaitingForPayment = ! $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT)
                 && $this->userRepository->findById($user->getId())->getWaitingForPaymentApplications()->count() > 0;
         }
 

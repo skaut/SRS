@@ -8,6 +8,7 @@ use App\Model\CMS\Document\Tag;
 use App\Model\CMS\Page;
 use App\Model\Program\Category;
 use App\Model\User\User;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -152,14 +153,14 @@ class Role
     /**
      * Registrovatelná od.
      * @ORM\Column(type="datetime", nullable=true)
-     * @var \DateTime
+     * @var DateTime
      */
     protected $registerableFrom;
 
     /**
      * Registrovatelná do.
      * @ORM\Column(type="datetime", nullable=true)
-     * @var \DateTime
+     * @var DateTime
      */
     protected $registerableTo;
 
@@ -379,7 +380,7 @@ class Role
      */
     public function isRegisterableNow() : bool
     {
-        $now = new \DateTime();
+        $now = new DateTime();
         if ($this->registerable &&
             ($this->registerableFrom === null || $this->registerableFrom <= $now) &&
             ($this->registerableTo === null || $this->registerableTo >= $now)
@@ -399,22 +400,22 @@ class Role
         $this->approvedAfterRegistration = $approvedAfterRegistration;
     }
 
-    public function getRegisterableFrom() : ?\DateTime
+    public function getRegisterableFrom() : ?DateTime
     {
         return $this->registerableFrom;
     }
 
-    public function setRegisterableFrom(?\DateTime $registerableFrom) : void
+    public function setRegisterableFrom(?DateTime $registerableFrom) : void
     {
         $this->registerableFrom = $registerableFrom;
     }
 
-    public function getRegisterableTo() : ?\DateTime
+    public function getRegisterableTo() : ?DateTime
     {
         return $this->registerableTo;
     }
 
-    public function setRegisterableTo(?\DateTime $registerableTo) : void
+    public function setRegisterableTo(?DateTime $registerableTo) : void
     {
         $this->registerableTo = $registerableTo;
     }

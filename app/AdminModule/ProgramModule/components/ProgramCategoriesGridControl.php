@@ -6,6 +6,7 @@ namespace App\AdminModule\ProgramModule\Components;
 
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
+use App\Model\Program\Category;
 use App\Model\Program\CategoryRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\User\UserRepository;
@@ -17,6 +18,9 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Bridges\ApplicationLatte\Template;
+use Nette\Forms\Container;
+use stdClass;
+use Throwable;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
@@ -93,7 +97,7 @@ class ProgramCategoriesGridControl extends Control
 
         $rolesOptions = $this->roleRepository->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]);
 
-        $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function ($container) use ($rolesOptions) : void {
+        $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function (Container $container) use ($rolesOptions) : void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.program.categories_name_empty')
                 ->addRule(Form::IS_NOT_IN, 'admin.program.categories_name_exists', $this->categoryRepository->findAllNames());
@@ -103,14 +107,14 @@ class ProgramCategoriesGridControl extends Control
         };
         $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
 
-        $grid->addInlineEdit()->onControlAdd[]  = function ($container) use ($rolesOptions) : void {
+        $grid->addInlineEdit()->onControlAdd[]  = function (Container $container) use ($rolesOptions) : void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.program.categories_name_empty');
 
             $container->addMultiSelect('registerableRoles', '', $rolesOptions)->setAttribute('class', 'datagrid-multiselect')
                 ->addRule(Form::FILLED, 'admin.program.categories_registerable_roles_empty');
         };
-        $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) : void {
+        $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Category $item) : void {
             $container['name']
                 ->addRule(Form::IS_NOT_IN, 'admin.program.categories_name_exists', $this->categoryRepository->findOthersNames($item->getId()));
 
@@ -137,7 +141,7 @@ class ProgramCategoriesGridControl extends Control
      * @throws OptimisticLockException
      * @throws AbortException
      */
-    public function add(\stdClass $values) : void
+    public function add(stdClass $values) : void
     {
         $this->programService->createCategory($values['name'], $this->roleRepository->findRolesByIds($values['registerableRoles']));
 
@@ -149,9 +153,9 @@ class ProgramCategoriesGridControl extends Control
     /**
      * Zpracuje úpravu kategorie.
      * @throws AbortException
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function edit(int $id, \stdClass $values) : void
+    public function edit(int $id, stdClass $values) : void
     {
         $category = $this->categoryRepository->findById($id);
 
@@ -164,7 +168,7 @@ class ProgramCategoriesGridControl extends Control
     /**
      * Odstraní kategorii.
      * @throws AbortException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function handleDelete(int $id) : void
     {

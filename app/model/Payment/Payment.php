@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Model\Payment;
 
 use App\Model\User\Application;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -36,7 +37,7 @@ class Payment
     /**
      * Datum platby.
      * @ORM\Column(type="date")
-     * @var \DateTime
+     * @var DateTime
      */
     protected $date;
 
@@ -110,12 +111,12 @@ class Payment
         $this->transactionId = $transactionId;
     }
 
-    public function getDate() : \DateTime
+    public function getDate() : DateTime
     {
         return $this->date;
     }
 
-    public function setDate(\DateTime $date) : void
+    public function setDate(DateTime $date) : void
     {
         $this->date = $date;
     }

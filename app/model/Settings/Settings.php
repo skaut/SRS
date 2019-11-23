@@ -11,8 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="SettingsRepository")
  * @ORM\Table(name="settings")
  */
 class Settings
@@ -238,16 +237,6 @@ class Settings
     {
         $this->item  = $item;
         $this->value = $value;
-    }
-
-    public function getItem() : string
-    {
-        return $this->item;
-    }
-
-    public function setItem(string $item) : void
-    {
-        $this->item = $item;
     }
 
     public function getValue() : ?string

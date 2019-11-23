@@ -8,13 +8,14 @@ use App\AdminModule\ConfigurationModule\Forms\WebForm;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use Nette\Application\UI\Form;
+use stdClass;
+use Throwable;
 
 /**
  * Presenter obsluhující nastavení webové prezentace.
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class WebPresenter extends ConfigurationBasePresenter
 {
@@ -27,22 +28,22 @@ class WebPresenter extends ConfigurationBasePresenter
 
     /**
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function renderDefault() : void
     {
-        $this->template->logo = $this->settingsFacade->getValue(Settings::LOGO);
+        $this->template->logo = $this->settingsService->getValue(Settings::LOGO);
     }
 
     /**
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     protected function createComponentSettingsForm() : Form
     {
         $form = $this->webFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');

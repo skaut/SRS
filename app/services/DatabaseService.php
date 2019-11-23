@@ -5,12 +5,18 @@ declare(strict_types=1);
 namespace App\Services;
 
 use Contributte\Console\Application;
+use DateTime;
 use Doctrine\Migrations\Tools\Console\Command\MigrateCommand;
+use Exception;
+use MySQLDump;
+use mysqli;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 use Nette\DI\Container;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Nette;
+use Throwable;
 
 /**
  * Služba pro správu databáze.
@@ -20,6 +26,8 @@ use Symfony\Component\Console\Output\BufferedOutput;
  */
 class DatabaseService
 {
+    use Nette\SmartObject;
+
     /** @var Container */
     public $container;
 
@@ -44,7 +52,7 @@ class DatabaseService
 
     /**
      * Vytvoří zálohu databáze a spustí migrace. Spouští se pouze pokud není v cache záznam o provedeném update.
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function update() : void
     {
@@ -54,7 +62,7 @@ class DatabaseService
 
         $this->databaseCache->save('lock', function () {
             if ($this->databaseCache->load('updated') === null) {
-                $this->databaseCache->save('updated', new \DateTime());
+                $this->databaseCache->save('updated', new DateTime());
 
                 $this->backup();
 
@@ -74,7 +82,7 @@ class DatabaseService
 
     /**
      * Vytvoří zálohu databáze.
-     * @throws \Exception
+     * @throws Exception
      */
     public function backup() : void
     {
@@ -85,9 +93,9 @@ class DatabaseService
         $password = $database['password'];
         $dbname   = $database['dbname'];
 
-        $dump = new \MySQLDump(new \mysqli($host, $user, $password, $dbname));
+        $dump = new MySQLDump(new mysqli($host, $user, $password, $dbname));
 
-        $timestamp = (new \DateTime())->format('YmdHi');
+        $timestamp = (new DateTime())->format('YmdHi');
 
         $dump->save($this->dir . '/backup/' . $dbname . '-' . $timestamp . '.sql.gz');
     }

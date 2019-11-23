@@ -7,7 +7,6 @@ namespace App\Services;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\ACL\Role;
-use App\Model\EntityManagerDecorator;
 use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Enums\ProgramRegistrationType;
 use App\Model\Mailing\Template;
@@ -21,15 +20,20 @@ use App\Model\Program\ProgramRepository;
 use App\Model\Program\Room;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsFacade;
+use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\Subevent;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Exception;
 use Nette;
+use Nettrine\ORM\EntityManagerDecorator;
+use Throwable;
 use Ublaboo\Mailing\Exception\MailingException;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 
@@ -46,8 +50,8 @@ class ProgramService
     /** @var EntityManagerDecorator */
     private $em;
 
-    /** @var SettingsFacade */
-    private $settingsFacade;
+    /** @var SettingsService */
+    private $settingsService;
 
     /** @var ProgramRepository */
     private $programRepository;
@@ -67,7 +71,7 @@ class ProgramService
 
     public function __construct(
         EntityManagerDecorator $em,
-        SettingsFacade $settingsFacade,
+        SettingsService $settingsService,
         ProgramRepository $programRepository,
         BlockRepository $blockRepository,
         UserRepository $userRepository,
@@ -75,7 +79,7 @@ class ProgramService
         MailService $mailService
     ) {
         $this->em                 = $em;
-        $this->settingsFacade     = $settingsFacade;
+        $this->settingsService    = $settingsService;
         $this->programRepository  = $programRepository;
         $this->blockRepository    = $blockRepository;
         $this->userRepository     = $userRepository;
@@ -86,7 +90,7 @@ class ProgramService
     /**
      * Vytvoří programový blok.
      * @param Collection|User[] $lectors
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function createBlock(
         string $name,
@@ -123,7 +127,7 @@ class ProgramService
     /**
      * Aktualizuje programový blok.
      * @param Collection|User[] $lectors
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function updateBlock(
         Block $block,
@@ -189,7 +193,7 @@ class ProgramService
 
     /**
      * Aktualizuje povinnost bloku.
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function updateBlockMandatory(Block $block, string $mandatory) : void
     {
@@ -202,7 +206,7 @@ class ProgramService
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      * @throws MailingException
      * @throws MailingMailCreationException
      */
@@ -251,7 +255,7 @@ class ProgramService
 
     /**
      * Odstraní programový blok.
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function removeBlock(Block $block) : void
     {
@@ -287,11 +291,11 @@ class ProgramService
     /**
      * Aktualizuje kategorii programů.
      * @param Collection|Role[] $registerableRoles
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function updateCategory(Category $category, string $name, Collection $registerableRoles) : void
     {
-        $this->em->transactional(function ($em) use ($category, $name, $registerableRoles) : void {
+        $this->em->transactional(function () use ($category, $name, $registerableRoles) : void {
             $category->setName($name);
             $category->setRegisterableRoles($registerableRoles);
 
@@ -303,16 +307,16 @@ class ProgramService
 
     /**
      * Vytvoří program v harmonogramu.
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function createProgram(Block $block, ?Room $room, \DateTime $start) : Program
+    public function createProgram(Block $block, ?Room $room, DateTime $start) : Program
     {
         $program = new Program($block);
 
         $program->setRoom($room);
         $program->setStart($start);
 
-        $this->em->transactional(function ($em) use ($program, $block) : void {
+        $this->em->transactional(function () use ($program, $block) : void {
             $this->programRepository->save($program);
 
             if ($block->getMandatory() !== ProgramMandatoryType::AUTO_REGISTERED) {
@@ -333,7 +337,7 @@ class ProgramService
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function updateProgram(Program $program, ?Room $room, \DateTime $start) : void
+    public function updateProgram(Program $program, ?Room $room, DateTime $start) : void
     {
         $program->setRoom($room);
         $program->setStart($start);
@@ -342,7 +346,7 @@ class ProgramService
 
     /**
      * Odstraní program z harmonogramu.
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function removeProgram(Program $program) : void
     {
@@ -358,7 +362,7 @@ class ProgramService
     /**
      * Přihlásí uživatele na program.
      * @param bool $sendEmail Poslat uživateli e-mail o přihlášení?
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function registerProgram(User $user, Program $program, bool $sendEmail = false) : void
     {
@@ -371,8 +375,7 @@ class ProgramService
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws SettingsException
-     * @throws \Throwable
-     * @throws MailingException
+     * @throws Throwable
      * @throws MailingMailCreationException
      */
     private function registerProgramImpl(User $user, Program $program, bool $sendEmail = false) : void
@@ -395,7 +398,7 @@ class ProgramService
         }
 
         $this->mailService->sendMailFromTemplate($user, '', Template::PROGRAM_REGISTERED, [
-            TemplateVariable::SEMINAR_NAME => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
+            TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
             TemplateVariable::PROGRAM_NAME => $program->getBlock()->getName(),
         ]);
     }
@@ -403,7 +406,7 @@ class ProgramService
     /**
      * Odhlásí uživatele z programu.
      * @param bool $sendEmail Poslat uživateli e-mail o odhlášení?
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function unregisterProgram(User $user, Program $program, bool $sendEmail = false) : void
     {
@@ -416,8 +419,7 @@ class ProgramService
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws SettingsException
-     * @throws \Throwable
-     * @throws MailingException
+     * @throws Throwable
      * @throws MailingMailCreationException
      */
     private function unregisterProgramImpl(User $user, Program $program, bool $sendEmail = false) : void
@@ -440,7 +442,7 @@ class ProgramService
         }
 
         $this->mailService->sendMailFromTemplate($user, '', Template::PROGRAM_UNREGISTERED, [
-            TemplateVariable::SEMINAR_NAME => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
+            TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
             TemplateVariable::PROGRAM_NAME => $program->getBlock()->getName(),
         ]);
     }
@@ -448,23 +450,30 @@ class ProgramService
     /**
      * Je povoleno zapisování programů?
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function isAllowedRegisterPrograms() : bool
     {
-        return $this->settingsFacade->getValue(Settings::REGISTER_PROGRAMS_TYPE) === ProgramRegistrationType::ALLOWED
+        return $this->settingsService->getValue(Settings::REGISTER_PROGRAMS_TYPE) === ProgramRegistrationType::ALLOWED
             || (
-                $this->settingsFacade->getValue(Settings::REGISTER_PROGRAMS_TYPE) === ProgramRegistrationType::ALLOWED_FROM_TO
-                && ($this->settingsFacade->getDateTimeValue(Settings::REGISTER_PROGRAMS_FROM) === null
-                    || $this->settingsFacade->getDateTimeValue(Settings::REGISTER_PROGRAMS_FROM) <= new \DateTime())
-                && ($this->settingsFacade->getDateTimeValue(Settings::REGISTER_PROGRAMS_TO) === null
-                    || $this->settingsFacade->getDateTimeValue(Settings::REGISTER_PROGRAMS_TO) >= new \DateTime()
+                $this->settingsService->getValue(Settings::REGISTER_PROGRAMS_TYPE) === ProgramRegistrationType::ALLOWED_FROM_TO
+                && ($this->settingsService->getDateTimeValue(Settings::REGISTER_PROGRAMS_FROM) === null
+                    || $this->settingsService->getDateTimeValue(Settings::REGISTER_PROGRAMS_FROM) <= new DateTime())
+                && ($this->settingsService->getDateTimeValue(Settings::REGISTER_PROGRAMS_TO) === null
+                    || $this->settingsService->getDateTimeValue(Settings::REGISTER_PROGRAMS_TO) >= new DateTime()
                 )
             );
     }
 
     /**
      * Aktualizuje programy uživatele (odhlásí nepovolené a přihlásí automaticky přihlašované).
+     *
+     * @throws MailingException
+     * @throws MailingMailCreationException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws SettingsException
+     * @throws Throwable
      */
     public function updateUserPrograms(User $user) : void
     {
@@ -492,7 +501,13 @@ class ProgramService
 
     /**
      * Aktualizuje programy uživatelů (odhlásí nepovolené a přihlásí automaticky přihlašované).
-     * @param Collection|User[] $users
+     *
+     * @throws MailingException
+     * @throws MailingMailCreationException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws SettingsException
+     * @throws Throwable
      */
     public function updateUsersPrograms(Collection $users) : void
     {
@@ -503,7 +518,8 @@ class ProgramService
 
     /**
      * Aktualizuje uživateli seznam nepřihlášených povinných bloků.
-     * @throws \Exception
+     *
+     * @throws Exception
      */
     private function updateUserNotRegisteredMandatoryBlocks(User $user, bool $flush = true) : void
     {
@@ -528,7 +544,7 @@ class ProgramService
     /**
      * Aktualizuje uživatelům seznam nepřihlášených povinných bloků.
      * @param Collection|User[] $users
-     * @throws \Exception
+     * @throws Exception
      */
     private function updateUsersNotRegisteredMandatoryBlocks(Collection $users) : void
     {

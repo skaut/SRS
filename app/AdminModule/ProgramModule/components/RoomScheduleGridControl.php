@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ProgramModule\Components;
 
+use App\Model\Program\Program;
 use App\Model\Program\ProgramRepository;
 use App\Model\Program\Room;
 use App\Model\Program\RoomRepository;
@@ -94,7 +95,7 @@ class RoomScheduleGridControl extends Control
 
         $grid->addColumnText('occupancy', 'admin.program.rooms_schedule_occupancy')
             ->setRenderer(
-                function ($row) {
+                function (Program $row) {
                     $capacity = $this->room->getCapacity();
                     if ($capacity === null) {
                         return $row->getAttendeesCount();
@@ -108,7 +109,7 @@ class RoomScheduleGridControl extends Control
 
     /**
      * @throws AbortException
-     * @throws Exception
+     * @throws \Exception
      */
     public function handleExportRoomsSchedule() : void
     {

@@ -6,6 +6,7 @@ namespace App\AdminModule\MailingModule\Presenters;
 
 use App\AdminModule\MailingModule\Forms\SendForm;
 use Nette\Forms\Form;
+use stdClass;
 
 /**
  * Presenter obsluhující rozesílání e-mailu vytvořeného ve formuláři.
@@ -26,7 +27,7 @@ class SendPresenter extends MailingBasePresenter
     {
         $form = $this->sendFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             if ($this->sendFormFactory->mailSuccess) {
                 $this->flashMessage('admin.mailing.send.sent', 'success');
             } else {

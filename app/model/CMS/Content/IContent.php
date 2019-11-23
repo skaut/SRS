@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Model\CMS\Content;
 
 use Nette\Application\UI\Form;
+use stdClass;
 
 /**
  * Rozhraní obsahů.
@@ -22,5 +23,5 @@ interface IContent
     /**
      * Zpracuje při uložení stránky část formuláře týkající se obsahu.
      */
-    public function contentFormSucceeded(Form $form, \stdClass $values) : void;
+    public function contentFormSucceeded(Form $form, stdClass $values) : void;
 }

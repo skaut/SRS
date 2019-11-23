@@ -7,6 +7,7 @@ namespace App\Model\Mailing;
 use App\Model\ACL\Role;
 use App\Model\Structure\Subevent;
 use App\Model\User\User;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -63,7 +64,7 @@ class Mail
     /**
      * Datum a čas odeslání.
      * @ORM\Column(type="datetime")
-     * @var \DateTime
+     * @var DateTime
      */
     protected $datetime;
 
@@ -194,12 +195,12 @@ class Mail
         $this->text = $text;
     }
 
-    public function getDatetime() : \DateTime
+    public function getDatetime() : DateTime
     {
         return $this->datetime;
     }
 
-    public function setDatetime(\DateTime $datetime) : void
+    public function setDatetime(DateTime $datetime) : void
     {
         $this->datetime = $datetime;
     }

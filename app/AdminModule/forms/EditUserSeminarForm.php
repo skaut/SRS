@@ -6,7 +6,6 @@ namespace App\AdminModule\Forms;
 
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
-use App\Model\EntityManagerDecorator;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\CustomInput\CustomFile;
@@ -14,7 +13,7 @@ use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\CustomInput\CustomSelect;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsFacade;
+use App\Model\Settings\SettingsRepository;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
 use App\Model\User\CustomInputValue\CustomFileValue;
 use App\Model\User\CustomInputValue\CustomInputValueRepository;
@@ -25,13 +24,18 @@ use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\FilesService;
 use App\Services\MailService;
+use App\Services\SettingsService;
 use App\Utils\Validators;
+use Doctrine\ORM\EntityManager;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
 use Nette\Http\FileUpload;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
+use Nettrine\ORM\EntityManagerDecorator;
+use stdClass;
+use Throwable;
 use function array_key_exists;
 
 /**
@@ -81,8 +85,8 @@ class EditUserSeminarForm
     /** @var MailService */
     private $mailService;
 
-    /** @var SettingsFacade */
-    private $settingsFacade;
+    /** @var SettingsService */
+    private $settingsService;
 
 
     public function __construct(
@@ -96,7 +100,7 @@ class EditUserSeminarForm
         Validators $validators,
         FilesService $filesService,
         MailService $mailService,
-        SettingsFacade $settingsFacade
+        SettingsService $settingsService
     ) {
         $this->baseFormFactory            = $baseFormFactory;
         $this->em                         = $em;
@@ -108,7 +112,7 @@ class EditUserSeminarForm
         $this->validators                 = $validators;
         $this->filesService               = $filesService;
         $this->mailService                = $mailService;
-        $this->settingsFacade             = $settingsFacade;
+        $this->settingsService            = $settingsService;
     }
 
     /**
@@ -207,9 +211,9 @@ class EditUserSeminarForm
 
     /**
      * Zpracuje formulář.
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function processForm(Form $form, \stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         if ($form['cancel']->isSubmittedBy()) {
             return;
@@ -217,7 +221,7 @@ class EditUserSeminarForm
 
         $loggedUser = $this->userRepository->findById($form->getPresenter()->user->id);
 
-        $this->em->transactional(function ($em) use ($values, $loggedUser) : void {
+        $this->em->transactional(function () use ($values, $loggedUser) : void {
             $selectedRoles = $this->roleRepository->findRolesByIds($values['roles']);
             $this->applicationService->updateRoles($this->user, $selectedRoles, $loggedUser);
 
@@ -289,7 +293,7 @@ class EditUserSeminarForm
             }
 
             $this->mailService->sendMailFromTemplate($this->user, '', Template::CUSTOM_INPUT_VALUE_CHANGED, [
-                TemplateVariable::SEMINAR_NAME => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
+                TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
                 TemplateVariable::USER => $this->user->getDisplayName(),
             ]);
         });

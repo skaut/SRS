@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Components;
 
+use App\Model\Settings\Place\PlacePoint;
 use App\Model\Settings\Place\PlacePointRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -62,7 +63,7 @@ class PlacePointsGridControl extends Control
 
         $grid->addColumnText('name', 'admin.configuration.place_points_name');
         $grid->addColumnText('gps', 'admin.configuration.place_points_gps')
-            ->setRenderer(function ($row) {
+            ->setRenderer(function (PlacePoint $row) {
                 $lat = $row->getGpsLat();
                 $lon = $row->getGpsLon();
 

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Model\CMS\Document;
 
-use App\Model\EntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
@@ -51,8 +51,6 @@ class DocumentRepository extends EntityRepository
 
     /**
      * Uloží dokument.
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function save(Document $document) : void
     {
@@ -62,8 +60,6 @@ class DocumentRepository extends EntityRepository
 
     /**
      * Odstraní dokument.
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function remove(Document $document) : void
     {

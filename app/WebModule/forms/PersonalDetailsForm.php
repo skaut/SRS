@@ -13,6 +13,7 @@ use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
 use Skautis\Wsdl\WsdlException;
+use stdClass;
 use Tracy\Debugger;
 use Tracy\ILogger;
 use function array_key_exists;
@@ -131,7 +132,7 @@ class PersonalDetailsForm
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(Form $form, \stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         if (array_key_exists('sex', $values)) {
             $this->user->setSex($values['sex']);

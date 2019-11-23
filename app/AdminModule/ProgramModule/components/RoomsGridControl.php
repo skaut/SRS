@@ -14,9 +14,11 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Bridges\ApplicationLatte\Template;
+use Nette\Forms\Container;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use PhpOffice\PhpSpreadsheet\Exception;
+use stdClass;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
@@ -88,13 +90,13 @@ class RoomsGridControl extends Control
         $grid->addColumnText('name', 'admin.program.rooms_name');
 
         $grid->addColumnText('capacity', 'admin.program.rooms_capacity')
-            ->setRendererOnCondition(function ($row) {
+            ->setRendererOnCondition(function (Room $row) {
                 return $this->translator->translate('admin.program.blocks_capacity_unlimited');
-            }, function ($row) {
+            }, function (Room $row) {
                 return $row->getCapacity() === null;
             });
 
-        $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function ($container) : void {
+        $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function (Container $container) : void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.program.rooms_name_empty')
                 ->addRule(Form::IS_NOT_IN, 'admin.program.rooms_name_exists', $this->roomRepository->findAllNames());
@@ -105,7 +107,7 @@ class RoomsGridControl extends Control
         };
         $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
 
-        $grid->addInlineEdit()->onControlAdd[]  = function ($container) : void {
+        $grid->addInlineEdit()->onControlAdd[]  = function (Container $container) : void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.program.rooms_name_empty');
 
@@ -113,7 +115,7 @@ class RoomsGridControl extends Control
                 ->addCondition(Form::FILLED)
                 ->addRule(Form::INTEGER, 'admin.program.rooms_capacity_format');
         };
-        $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) : void {
+        $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Room $item) : void {
             $container['name']
                 ->addRule(Form::IS_NOT_IN, 'admin.program.rooms_name_exists', $this->roomRepository->findOthersNames($item->getId()));
 
@@ -143,7 +145,7 @@ class RoomsGridControl extends Control
      * @throws OptimisticLockException
      * @throws AbortException
      */
-    public function add(\stdClass $values) : void
+    public function add(stdClass $values) : void
     {
         $room = new Room();
 
@@ -164,7 +166,7 @@ class RoomsGridControl extends Control
      * @throws OptimisticLockException
      * @throws AbortException
      */
-    public function edit(int $id, \stdClass $values) : void
+    public function edit(int $id, stdClass $values) : void
     {
         $room = $this->roomRepository->findById($id);
 
@@ -209,7 +211,7 @@ class RoomsGridControl extends Control
     /**
      * Zpracuje export harmonogramů místností.
      * @throws AbortException
-     * @throws Exception
+     * @throws \Exception
      */
     public function handleExportRoomsSchedules() : void
     {

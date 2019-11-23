@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\CMS;
 
-use App\Model\EntityRepository;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -29,7 +29,6 @@ class FaqRepository extends EntityRepository
 
     /**
      * Vrací id poslední otázky.
-     * @throws NonUniqueResultException
      */
     public function findLastId() : int
     {
@@ -41,7 +40,6 @@ class FaqRepository extends EntityRepository
 
     /**
      * Vrací poslední pozici.
-     * @throws NonUniqueResultException
      */
     public function findLastPosition() : int
     {
@@ -64,7 +62,6 @@ class FaqRepository extends EntityRepository
      * Uloží otázku.
      * @throws NonUniqueResultException
      * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function save(Faq $faq) : void
     {
@@ -78,8 +75,6 @@ class FaqRepository extends EntityRepository
 
     /**
      * Odstraní otázku.
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function remove(Faq $faq) : void
     {
@@ -89,8 +84,6 @@ class FaqRepository extends EntityRepository
 
     /**
      * Přesune otázku mezi otázky s id prevId a nextId.
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function sort(int $itemId, int $prevId, int $nextId) : void
     {

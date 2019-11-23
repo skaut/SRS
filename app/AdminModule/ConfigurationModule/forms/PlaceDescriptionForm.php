@@ -7,11 +7,14 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseForm;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsFacade;
+use App\Model\Settings\SettingsRepository;
+use App\Services\SettingsService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
+use stdClass;
+use Throwable;
 
 /**
  * Formulář pro nastavení popisu cesty.
@@ -26,20 +29,20 @@ class PlaceDescriptionForm
     /** @var BaseForm */
     private $baseFormFactory;
 
-    /** @var SettingsFacade */
-    private $settingsFacade;
+    /** @var SettingsService */
+    private $settingsService;
 
 
-    public function __construct(BaseForm $baseForm, SettingsFacade $settingsFacade)
+    public function __construct(BaseForm $baseForm, SettingsService $settingsService)
     {
         $this->baseFormFactory = $baseForm;
-        $this->settingsFacade  = $settingsFacade;
+        $this->settingsService = $settingsService;
     }
 
     /**
      * Vytvoří formulář.
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function create() : Form
     {
@@ -51,7 +54,7 @@ class PlaceDescriptionForm
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'placeDescription' => $this->settingsFacade->getValue(Settings::PLACE_DESCRIPTION),
+            'placeDescription' => $this->settingsService->getValue(Settings::PLACE_DESCRIPTION),
         ]);
 
         $form->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
@@ -65,10 +68,10 @@ class PlaceDescriptionForm
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function processForm(Form $form, \stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
-        $this->settingsFacade->setValue(Settings::PLACE_DESCRIPTION, $values['placeDescription']);
+        $this->settingsService->setValue(Settings::PLACE_DESCRIPTION, $values['placeDescription']);
     }
 }

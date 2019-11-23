@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace App\Model\Program;
 
 use App\Model\User\User;
+use DateInterval;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use Nettrine\ORM\Entity\Attributes\Id as Identifier;
 
 /**
@@ -54,7 +57,7 @@ class Program
     /**
      * Začátek programu.
      * @ORM\Column(type="datetime")
-     * @var \DateTime
+     * @var DateTime
      */
     protected $start;
 
@@ -122,24 +125,24 @@ class Program
         $this->room = $room;
     }
 
-    public function getStart() : \DateTime
+    public function getStart() : DateTime
     {
         return $this->start;
     }
 
-    public function setStart(\DateTime $start) : void
+    public function setStart(DateTime $start) : void
     {
         $this->start = $start;
     }
 
     /**
      * Vrací konec programu vypočtený podle délky bloku.
-     * @throws \Exception
+     * @throws Exception
      */
-    public function getEnd() : \DateTime
+    public function getEnd() : DateTime
     {
         $end = clone($this->start);
-        $end->add(new \DateInterval('PT' . $this->block->getDuration() . 'M'));
+        $end->add(new DateInterval('PT' . $this->block->getDuration() . 'M'));
         return $end;
     }
 }

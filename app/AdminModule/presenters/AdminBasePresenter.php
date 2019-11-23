@@ -6,17 +6,19 @@ namespace App\AdminModule\Presenters;
 
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
-use App\Model\ACL\ResourceFacade;
 use App\Model\ACL\RoleRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsFacade;
+use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Presenters\BasePresenter;
+use App\Services\ACLService;
 use App\Services\Authorizator;
+use App\Services\SettingsService;
 use App\Services\SkautIsService;
 use Nette\Application\AbortException;
+use Throwable;
 use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\JavaScriptLoader;
 use function array_filter;
@@ -40,22 +42,16 @@ abstract class AdminBasePresenter extends BasePresenter
     protected $resource = null;
 
     /**
-     * @var ResourceFacade
-     * @inject
-     */
-    public $resourceFacade;
-
-    /**
      * @var RoleRepository
      * @inject
      */
     public $roleRepository;
 
     /**
-     * @var SettingsFacade
+     * @var SettingsService
      * @inject
      */
-    public $settingsFacade;
+    public $settingsService;
 
     /**
      * @var UserRepository
@@ -118,7 +114,7 @@ abstract class AdminBasePresenter extends BasePresenter
 
     /**
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function beforeRender() : void
     {
@@ -143,12 +139,12 @@ abstract class AdminBasePresenter extends BasePresenter
         $this->template->permissionManageCategories  = Permission::MANAGE_CATEGORIES;
         $this->template->permissionChoosePrograms    = Permission::CHOOSE_PROGRAMS;
 
-        $this->template->footer      = $this->settingsFacade->getValue(Settings::FOOTER);
-        $this->template->seminarName = $this->settingsFacade->getValue(Settings::SEMINAR_NAME);
+        $this->template->footer      = $this->settingsService->getValue(Settings::FOOTER);
+        $this->template->seminarName = $this->settingsService->getValue(Settings::SEMINAR_NAME);
 
         $this->template->sidebarVisible = false;
 
-        $this->template->settings = $this->settingsFacade;
+        $this->template->settings = $this->settingsService;
 
         $this->template->containerAttributes = '';
 

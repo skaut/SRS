@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Model\ACL\Role;
-use App\Model\ACL\RoleFacade;
 use App\Model\ACL\RoleRepository;
-use App\Model\EntityManagerDecorator;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\MaturityType;
 use App\Model\Enums\PaymentState;
@@ -18,7 +16,7 @@ use App\Model\Payment\Payment;
 use App\Model\Payment\PaymentRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsFacade;
+use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\DiscountRepository;
 use App\Model\Structure\Subevent;
 use App\Model\Structure\SubeventRepository;
@@ -31,12 +29,18 @@ use App\Model\User\UserRepository;
 use App\Model\User\VariableSymbol;
 use App\Model\User\VariableSymbolRepository;
 use App\Utils\Helpers;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use InvalidArgumentException;
 use Kdyby\Translation\Translator;
 use Nette;
+use Nettrine\ORM\EntityManagerDecorator;
+use ReflectionException;
+use Throwable;
 use Ublaboo\Mailing\Exception\MailingException;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 use Yasumi\Yasumi;
@@ -60,8 +64,8 @@ class ApplicationService
     /** @var EntityManagerDecorator */
     private $em;
 
-    /** @var SettingsFacade */
-    private $settingsFacade;
+    /** @var SettingsService */
+    private $settingsService;
 
     /** @var ApplicationRepository */
     private $applicationRepository;
@@ -72,8 +76,8 @@ class ApplicationService
     /** @var DiscountRepository */
     private $discountRepository;
 
-    /** @var RoleFacade */
-    private $roleFacade;
+    /** @var ACLService */
+    private $ACLService;
 
     /** @var RoleRepository */
     private $roleRepository;
@@ -105,11 +109,11 @@ class ApplicationService
 
     public function __construct(
         EntityManagerDecorator $em,
-        SettingsFacade $settingsFacade,
+        SettingsService $settingsService,
         ApplicationRepository $applicationRepository,
         UserRepository $userRepository,
         DiscountRepository $discountRepository,
-        RoleFacade $roleFacade,
+        ACLService $ACLService,
         RoleRepository $roleRepository,
         SubeventRepository $subeventRepository,
         DiscountService $discountService,
@@ -121,11 +125,11 @@ class ApplicationService
         PaymentRepository $paymentRepository
     ) {
         $this->em                       = $em;
-        $this->settingsFacade           = $settingsFacade;
+        $this->settingsService          = $settingsService;
         $this->applicationRepository    = $applicationRepository;
         $this->userRepository           = $userRepository;
         $this->discountRepository       = $discountRepository;
-        $this->roleFacade               = $roleFacade;
+        $this->ACLService               = $ACLService;
         $this->roleRepository           = $roleRepository;
         $this->subeventRepository       = $subeventRepository;
         $this->discountService          = $discountService;
@@ -141,7 +145,7 @@ class ApplicationService
      * Zaregistruje uživatele (vyplnění přihlášky / přidání role v administraci).
      * @param Collection|Role[]     $roles
      * @param Collection|Subevent[] $subevents
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function register(
         User $user,
@@ -180,15 +184,15 @@ class ApplicationService
             $applicationVariableSymbol = $subeventsApplication->getVariableSymbolText();
         }
 
-        $editRegistrationToText = $this->settingsFacade->getDateValueText(Settings::EDIT_REGISTRATION_TO);
+        $editRegistrationToText = $this->settingsService->getDateValueText(Settings::EDIT_REGISTRATION_TO);
 
         $this->mailService->sendMailFromTemplate($user, '', Template::REGISTRATION, [
-            TemplateVariable::SEMINAR_NAME => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
+            TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
             TemplateVariable::EDIT_REGISTRATION_TO => $editRegistrationToText ?? '-',
             TemplateVariable::APPLICATION_MATURITY => $applicatonMaturity,
             TemplateVariable::APPLICATION_FEE => $applicationFee,
             TemplateVariable::APPLICATION_VARIABLE_SYMBOL => $applicationVariableSymbol,
-            TemplateVariable::BANK_ACCOUNT => $this->settingsFacade->getValue(Settings::ACCOUNT_NUMBER),
+            TemplateVariable::BANK_ACCOUNT => $this->settingsService->getValue(Settings::ACCOUNT_NUMBER),
         ]);
     }
 
@@ -196,8 +200,7 @@ class ApplicationService
      * Změní role uživatele.
      * @param Collection|Role[] $roles
      * @throws SettingsException
-     * @throws \Throwable
-     * @throws MailingException
+     * @throws Throwable
      * @throws MailingMailCreationException
      */
     public function updateRoles(User $user, Collection $roles, ?User $createdBy, bool $approve = false) : void
@@ -218,7 +221,7 @@ class ApplicationService
             }
         }
 
-        $this->em->transactional(function ($em) use ($user, $roles, $createdBy, $approve, $oldRoles) : void {
+        $this->em->transactional(function () use ($user, $roles, $createdBy, $approve, $oldRoles) : void {
             if ($oldRoles->contains($this->roleRepository->findBySystemName(Role::NONREGISTERED))) {
                 $this->createRolesApplication($user, $roles, $createdBy, $approve);
                 $this->createSubeventsApplication($user, new ArrayCollection([$this->subeventRepository->findImplicit()]), $createdBy);
@@ -246,10 +249,10 @@ class ApplicationService
                         $newApplication->setFee($this->countRolesFee($roles));
                         $newApplication->setState($this->getApplicationState($newApplication));
                         $newApplication->setCreatedBy($createdBy);
-                        $newApplication->setValidFrom(new \DateTime());
+                        $newApplication->setValidFrom(new DateTime());
                         $this->applicationRepository->save($newApplication);
 
-                        $application->setValidTo(new \DateTime());
+                        $application->setValidTo(new DateTime());
                         $this->applicationRepository->save($application);
                     } else {
                         $fee = $this->countSubeventsFee($roles, $application->getSubevents());
@@ -259,10 +262,10 @@ class ApplicationService
                             $newApplication->setFee($fee);
                             $newApplication->setState($this->getApplicationState($newApplication));
                             $newApplication->setCreatedBy($createdBy);
-                            $newApplication->setValidFrom(new \DateTime());
+                            $newApplication->setValidFrom(new DateTime());
                             $this->applicationRepository->save($newApplication);
 
-                            $application->setValidTo(new \DateTime());
+                            $application->setValidTo(new DateTime());
                             $this->applicationRepository->save($application);
                         }
                     }
@@ -278,7 +281,7 @@ class ApplicationService
         });
 
         $this->mailService->sendMailFromTemplate($user, '', Template::ROLES_CHANGED, [
-            TemplateVariable::SEMINAR_NAME => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
+            TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
             TemplateVariable::USERS_ROLES => implode(', ', $roles->map(function (Role $role) {
                 return $role->getName();
             })->toArray()),
@@ -288,13 +291,12 @@ class ApplicationService
     /**
      * Zruší registraci uživatele na seminář.
      * @throws SettingsException
-     * @throws \Throwable
-     * @throws MailingException
+     * @throws Throwable
      * @throws MailingMailCreationException
      */
     public function cancelRegistration(User $user, string $state, ?User $createdBy) : void
     {
-        $this->em->transactional(function ($em) use ($user, $state, $createdBy) : void {
+        $this->em->transactional(function () use ($user, $state, $createdBy) : void {
             $user->setApproved(true);
             $user->getRoles()->clear();
             $user->setRolesApplicationDate(null);
@@ -305,7 +307,7 @@ class ApplicationService
                 $newApplication = clone $application;
                 $newApplication->setState($state);
                 $newApplication->setCreatedBy($createdBy);
-                $newApplication->setValidFrom(new \DateTime());
+                $newApplication->setValidFrom(new DateTime());
 
                 if ($newApplication->getPayment() !== null) {
                     if ($newApplication->getPayment()->getPairedValidApplications()->count() === 1) {
@@ -316,7 +318,7 @@ class ApplicationService
 
                 $this->applicationRepository->save($newApplication);
 
-                $application->setValidTo(new \DateTime());
+                $application->setValidTo(new DateTime());
                 $this->applicationRepository->save($application);
 
                 if ($application instanceof RolesApplication) {
@@ -333,18 +335,18 @@ class ApplicationService
         });
 
         $this->mailService->sendMailFromTemplate($user, '', Template::REGISTRATION_CANCELED, [
-            TemplateVariable::SEMINAR_NAME => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
+            TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
         ]);
     }
 
     /**
      * Vytvoří novou přihlášku na podakce.
      * @param Collection|Subevent[] $subevents
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function addSubeventsApplication(User $user, Collection $subevents, User $createdBy) : void
     {
-        $this->em->transactional(function ($em) use ($user, $subevents, $createdBy) : void {
+        $this->em->transactional(function () use ($user, $subevents, $createdBy) : void {
             $this->incrementSubeventsOccupancy($subevents);
 
             $this->createSubeventsApplication($user, $subevents, $createdBy);
@@ -354,7 +356,7 @@ class ApplicationService
         });
 
         $this->mailService->sendMailFromTemplate($user, '', Template::SUBEVENTS_CHANGED, [
-            TemplateVariable::SEMINAR_NAME => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
+            TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
             TemplateVariable::USERS_SUBEVENTS => $user->getSubeventsText(),
         ]);
     }
@@ -363,8 +365,7 @@ class ApplicationService
      * Aktualizuje podakce přihlášky.
      * @param Collection|Subevent[] $subevents
      * @throws SettingsException
-     * @throws \Throwable
-     * @throws MailingException
+     * @throws Throwable
      * @throws MailingMailCreationException
      */
     public function updateSubeventsApplication(SubeventsApplication $application, Collection $subevents, User $createdBy) : void
@@ -389,7 +390,7 @@ class ApplicationService
             }
         }
 
-        $this->em->transactional(function ($em) use ($application, $subevents, $createdBy) : void {
+        $this->em->transactional(function () use ($application, $subevents, $createdBy) : void {
             $this->incrementSubeventsOccupancy($subevents);
 
             $user = $application->getUser();
@@ -399,10 +400,10 @@ class ApplicationService
             $newApplication->setFee($this->countSubeventsFee($user->getRoles(), $subevents));
             $newApplication->setState($this->getApplicationState($newApplication));
             $newApplication->setCreatedBy($createdBy);
-            $newApplication->setValidFrom(new \DateTime());
+            $newApplication->setValidFrom(new DateTime());
             $this->applicationRepository->save($newApplication);
 
-            $application->setValidTo(new \DateTime());
+            $application->setValidTo(new DateTime());
             $this->applicationRepository->save($application);
 
             $this->programService->updateUserPrograms($user);
@@ -412,7 +413,7 @@ class ApplicationService
         });
 
         $this->mailService->sendMailFromTemplate($application->getUser(), '', Template::SUBEVENTS_CHANGED, [
-            TemplateVariable::SEMINAR_NAME => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
+            TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
             TemplateVariable::USERS_SUBEVENTS => $application->getUser()->getSubeventsText(),
         ]);
     }
@@ -420,8 +421,7 @@ class ApplicationService
     /**
      * Zruší přihlášku na podakce.
      * @throws SettingsException
-     * @throws \Throwable
-     * @throws MailingException
+     * @throws Throwable
      * @throws MailingMailCreationException
      */
     public function cancelSubeventsApplication(SubeventsApplication $application, string $state, ?User $createdBy) : void
@@ -430,13 +430,13 @@ class ApplicationService
             return;
         }
 
-        $this->em->transactional(function ($em) use ($application, $state, $createdBy) : void {
+        $this->em->transactional(function () use ($application, $state, $createdBy) : void {
             $user = $application->getUser();
 
             $newApplication = clone $application;
             $newApplication->setState($state);
             $newApplication->setCreatedBy($createdBy);
-            $newApplication->setValidFrom(new \DateTime());
+            $newApplication->setValidFrom(new DateTime());
 
             if ($newApplication->getPayment() !== null) {
                 if ($newApplication->getPayment()->getPairedValidApplications()->count() === 1) {
@@ -447,7 +447,7 @@ class ApplicationService
 
             $this->applicationRepository->save($newApplication);
 
-            $application->setValidTo(new \DateTime());
+            $application->setValidTo(new DateTime());
             $this->applicationRepository->save($application);
 
             $this->programService->updateUserPrograms($user);
@@ -457,21 +457,21 @@ class ApplicationService
         });
 
         $this->mailService->sendMailFromTemplate($application->getUser(), '', Template::SUBEVENTS_CHANGED, [
-            TemplateVariable::SEMINAR_NAME => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
+            TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
             TemplateVariable::USERS_SUBEVENTS => $application->getUser()->getSubeventsText(),
         ]);
     }
 
     /**
      * Aktualizuje stav platby.
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function updateApplicationPayment(
         Application $application,
         ?string $paymentMethod,
-        ?\DateTime $paymentDate,
-        ?\DateTime $incomeProofPrintedDate,
-        ?\DateTime $maturityDate,
+        ?DateTime $paymentDate,
+        ?DateTime $incomeProofPrintedDate,
+        ?DateTime $maturityDate,
         ?User $createdBy
     ) : void {
         $oldPaymentMethod          = $application->getPaymentMethod();
@@ -485,7 +485,7 @@ class ApplicationService
             return;
         }
 
-        $this->em->transactional(function ($em) use (
+        $this->em->transactional(function () use (
             $application,
             $paymentMethod,
             $paymentDate,
@@ -504,10 +504,10 @@ class ApplicationService
 
             $newApplication->setState($this->getApplicationState($newApplication));
             $newApplication->setCreatedBy($createdBy);
-            $newApplication->setValidFrom(new \DateTime());
+            $newApplication->setValidFrom(new DateTime());
             $this->applicationRepository->save($newApplication);
 
-            $application->setValidTo(new \DateTime());
+            $application->setValidTo(new DateTime());
             $this->applicationRepository->save($application);
 
             $this->programService->updateUserPrograms($user);
@@ -519,15 +519,15 @@ class ApplicationService
         }
 
         $this->mailService->sendMailFromTemplate($application->getUser(), '', Template::PAYMENT_CONFIRMED, [
-            TemplateVariable::SEMINAR_NAME => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
+            TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
             TemplateVariable::APPLICATION_SUBEVENTS => $application->getSubeventsText(),
         ]);
     }
 
     /**
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function createPayment(\DateTime $date, float $amount, ?string $variableSymbol, ?string $transactionId, ?string $accountNumber, ?string $accountName, ?string $message, ?User $createdBy = null) : void
+    public function createPayment(DateTime $date, float $amount, ?string $variableSymbol, ?string $transactionId, ?string $accountNumber, ?string $accountName, ?string $message, ?User $createdBy = null) : void
     {
         $this->em->transactional(function () use ($date, $amount, $variableSymbol, $transactionId, $accountNumber, $accountName, $message, $createdBy) : void {
             $payment = new Payment();
@@ -562,16 +562,19 @@ class ApplicationService
         });
     }
 
-    public function createPaymentManual(\DateTime $date, float $amount, string $variableSymbol, User $createdBy) : void
+    /**
+     * @throws Throwable
+     */
+    public function createPaymentManual(DateTime $date, float $amount, string $variableSymbol, User $createdBy) : void
     {
         $this->createPayment($date, $amount, $variableSymbol, null, null, null, null, $createdBy);
     }
 
     /**
      * @param Collection|Application[] $pairedApplications
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function updatePayment(Payment $payment, ?\DateTime $date, ?float $amount, ?string $variableSymbol, Collection $pairedApplications, User $createdBy) : void
+    public function updatePayment(Payment $payment, ?DateTime $date, ?float $amount, ?string $variableSymbol, Collection $pairedApplications, User $createdBy) : void
     {
         $this->em->transactional(function () use ($payment, $date, $amount, $variableSymbol, $pairedApplications, $createdBy) : void {
             if ($date !== null) {
@@ -619,7 +622,7 @@ class ApplicationService
     }
 
     /**
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function removePayment(Payment $payment, User $createdBy) : void
     {
@@ -649,48 +652,48 @@ class ApplicationService
     /**
      * Může uživatel upravovat role?
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function isAllowedEditRegistration(User $user) : bool
     {
         return ! $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))
             && ! $user->hasPaidAnyApplication()
-            && $this->settingsFacade->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new \DateTime())->setTime(0, 0);
+            && $this->settingsService->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new DateTime())->setTime(0, 0);
     }
 
     /**
      * Je uživateli povoleno upravit nebo zrušit přihlášku?
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function isAllowedEditApplication(Application $application) : bool
     {
         return $application->getType() === Application::SUBEVENTS && ! $application->isCanceled()
             && $application->getState() !== ApplicationState::PAID
-            && $this->settingsFacade->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new \DateTime())->setTime(0, 0);
+            && $this->settingsService->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new DateTime())->setTime(0, 0);
     }
 
     /**
      * Může uživatel dodatečně přidávat podakce?
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function isAllowedAddApplication(User $user) : bool
     {
         return ! $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))
             && $user->hasPaidEveryApplication()
-            && $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT)
-            && $this->settingsFacade->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new \DateTime())->setTime(0, 0);
+            && $this->settingsService->getBoolValue(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT)
+            && $this->settingsService->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new DateTime())->setTime(0, 0);
     }
 
     /**
      * Může uživatel upravovat vlastní pole přihlášky?
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function isAllowedEditCustomInputs() : bool
     {
-        return $this->settingsFacade->getDateValue(Settings::EDIT_CUSTOM_INPUTS_TO) >= (new \DateTime())->setTime(0, 0);
+        return $this->settingsService->getDateValue(Settings::EDIT_CUSTOM_INPUTS_TO) >= (new DateTime())->setTime(0, 0);
     }
 
     /**
@@ -698,13 +701,13 @@ class ApplicationService
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws \ReflectionException
-     * @throws \Throwable
+     * @throws ReflectionException
+     * @throws Throwable
      */
     private function createRolesApplication(User $user, Collection $roles, User $createdBy, bool $approve = false) : RolesApplication
     {
         if (! $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))) {
-            throw new \InvalidArgumentException('User is already registered.');
+            throw new InvalidArgumentException('User is already registered.');
         }
 
         $this->incrementRolesOccupancy($roles);
@@ -717,19 +720,19 @@ class ApplicationService
         }
 
         $user->setRoles($roles);
-        $user->setRolesApplicationDate(new \DateTime());
+        $user->setRolesApplicationDate(new DateTime());
         $this->userRepository->save($user);
 
         $application = new RolesApplication();
         $application->setUser($user);
         $application->setRoles($roles);
-        $application->setApplicationDate(new \DateTime());
+        $application->setApplicationDate(new DateTime());
         $application->setFee($this->countRolesFee($roles));
         $application->setMaturityDate($this->countMaturityDate());
         $application->setState($this->getApplicationState($application));
         $application->setVariableSymbol($this->generateVariableSymbol());
         $application->setCreatedBy($createdBy);
-        $application->setValidFrom(new \DateTime());
+        $application->setValidFrom(new DateTime());
         $this->applicationRepository->save($application);
 
         $application->setApplicationId($application->getId());
@@ -743,8 +746,8 @@ class ApplicationService
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws \ReflectionException
-     * @throws \Throwable
+     * @throws ReflectionException
+     * @throws Throwable
      */
     private function createSubeventsApplication(
         User $user,
@@ -756,13 +759,13 @@ class ApplicationService
         $application = new SubeventsApplication();
         $application->setUser($user);
         $application->setSubevents($subevents);
-        $application->setApplicationDate(new \DateTime());
+        $application->setApplicationDate(new DateTime());
         $application->setFee($this->countSubeventsFee($user->getRoles(), $subevents));
         $application->setMaturityDate($this->countMaturityDate());
         $application->setState($this->getApplicationState($application));
         $application->setVariableSymbol($this->generateVariableSymbol());
         $application->setCreatedBy($createdBy);
-        $application->setValidFrom(new \DateTime());
+        $application->setValidFrom(new DateTime());
         $this->applicationRepository->save($application);
 
         $application->setApplicationId($application->getId());
@@ -773,11 +776,11 @@ class ApplicationService
 
     /**
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     private function generateVariableSymbol() : VariableSymbol
     {
-        $variableSymbolCode = $this->settingsFacade->getValue(Settings::VARIABLE_SYMBOL_CODE);
+        $variableSymbolCode = $this->settingsService->getValue(Settings::VARIABLE_SYMBOL_CODE);
 
         $variableSymbol = new VariableSymbol();
         $this->variableSymbolRepository->save($variableSymbol);
@@ -793,21 +796,21 @@ class ApplicationService
     /**
      * Vypočítá datum splatnosti podle zvolené metody.
      * @throws SettingsException
-     * @throws \ReflectionException
-     * @throws \Throwable
+     * @throws ReflectionException
+     * @throws Throwable
      */
-    private function countMaturityDate() : ?\DateTime
+    private function countMaturityDate() : ?DateTime
     {
-        switch ($this->settingsFacade->getValue(Settings::MATURITY_TYPE)) {
+        switch ($this->settingsService->getValue(Settings::MATURITY_TYPE)) {
             case MaturityType::DATE:
-                return $this->settingsFacade->getDateValue(Settings::MATURITY_DATE);
+                return $this->settingsService->getDateValue(Settings::MATURITY_DATE);
 
             case MaturityType::DAYS:
-                return (new \DateTime())->modify('+' . $this->settingsFacade->getIntValue(Settings::MATURITY_DAYS) . ' days');
+                return (new DateTime())->modify('+' . $this->settingsService->getIntValue(Settings::MATURITY_DAYS) . ' days');
 
             case MaturityType::WORK_DAYS:
-                $workDays = $this->settingsFacade->getIntValue(Settings::MATURITY_WORK_DAYS);
-                $date     = new \DateTime();
+                $workDays = $this->settingsService->getIntValue(Settings::MATURITY_WORK_DAYS);
+                $date     = new DateTime();
 
                 for ($i = 0; $i < $workDays;) {
                     $date->modify('+1 days');
@@ -898,28 +901,24 @@ class ApplicationService
     /**
      * Zvýší obsazenost rolí.
      * @param Collection|Role[] $roles
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     private function incrementRolesOccupancy(Collection $roles) : void
     {
         foreach ($roles as $role) {
             $this->roleRepository->incrementOccupancy($role);
-            $this->roleFacade->save($role);
+            $this->ACLService->saveRole($role);
         }
     }
 
     /**
      * Sníží obsazenost rolí.
      * @param Collection|Role[] $roles
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     private function decrementRolesOccupancy(Collection $roles) : void
     {
         foreach ($roles as $role) {
             $this->roleRepository->decrementOccupancy($role);
-            $this->roleFacade->save($role);
+            $this->ACLService->saveRole($role);
         }
     }
 

@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Components;
 
-use App\Model\ACL\RoleFacade;
+use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\User\UserRepository;
+use App\Services\ACLService;
 use App\Services\ProgramService;
 use App\Utils\Helpers;
 use Doctrine\ORM\OptimisticLockException;
@@ -16,6 +17,7 @@ use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Bridges\ApplicationLatte\Template;
+use Throwable;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
@@ -33,8 +35,8 @@ class RolesGridControl extends Control
     /** @var Translator */
     private $translator;
 
-    /** @var RoleFacade */
-    private $roleFacade;
+    /** @var ACLService */
+    private $ACLService;
 
     /** @var RoleRepository */
     private $roleRepository;
@@ -51,7 +53,7 @@ class RolesGridControl extends Control
 
     public function __construct(
         Translator $translator,
-        RoleFacade $roleFacade,
+        ACLService $ACLService,
         RoleRepository $roleRepository,
         UserRepository $userRepository,
         ProgramRepository $programRepository,
@@ -60,7 +62,7 @@ class RolesGridControl extends Control
         parent::__construct();
 
         $this->translator        = $translator;
-        $this->roleFacade        = $roleFacade;
+        $this->ACLService        = $ACLService;
         $this->roleRepository    = $roleRepository;
         $this->userRepository    = $userRepository;
         $this->programRepository = $programRepository;
@@ -114,9 +116,9 @@ class RolesGridControl extends Control
         $grid->addColumnText('occupancy', 'admin.acl.roles_occupancy', 'occupancy_text');
 
         $grid->addColumnText('fee', 'admin.acl.roles_fee')
-            ->setRendererOnCondition(function ($row) {
+            ->setRendererOnCondition(function (Role $row) {
                 return $this->translator->translate('admin.acl.roles_fee_from_subevents');
-            }, function ($row) {
+            }, function (Role $row) {
                 return $row->getFee() === null;
             });
 
@@ -137,7 +139,7 @@ class RolesGridControl extends Control
                 'data-toggle' => 'confirmation',
                 'data-content' => $this->translator->translate('admin.acl.roles_delete_confirm'),
             ]);
-        $grid->allowRowsAction('delete', function ($item) {
+        $grid->allowRowsAction('delete', function (Role $item) {
             return ! $item->isSystem();
         });
     }
@@ -145,14 +147,14 @@ class RolesGridControl extends Control
     /**
      * Zpracuje odstranění role.
      * @throws AbortException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function handleDelete(int $id) : void
     {
         $role = $this->roleRepository->findById($id);
 
         if ($role->getUsers()->isEmpty()) {
-            $this->roleFacade->remove($role);
+            $this->ACLService->removeRole($role);
             $this->getPresenter()->flashMessage('admin.acl.roles_deleted', 'success');
         } else {
             $this->getPresenter()->flashMessage('admin.acl.roles_deleted_error', 'danger');
@@ -163,8 +165,6 @@ class RolesGridControl extends Control
 
     /**
      * Změní registrovatelnost role.
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @throws AbortException
      */
     public function changeRegisterable(int $id, bool $registerable) : void
@@ -172,7 +172,7 @@ class RolesGridControl extends Control
         $role = $this->roleRepository->findById($id);
 
         $role->setRegisterable($registerable);
-        $this->roleFacade->save($role);
+        $this->ACLService->saveRole($role);
 
         $p = $this->getPresenter();
         $p->flashMessage('admin.acl.roles_changed_registerable', 'success');

@@ -7,6 +7,7 @@ namespace App\AdminModule\CMSModule\Components;
 use App\Model\ACL\RoleRepository;
 use App\Model\CMS\Document\Tag;
 use App\Model\CMS\Document\TagRepository;
+use App\Services\ACLService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
@@ -14,6 +15,8 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Bridges\ApplicationLatte\Template;
+use Nette\Forms\Container;
+use stdClass;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 use function array_keys;
@@ -35,16 +38,20 @@ class DocumentTagsGridControl extends Control
     /** @var RoleRepository */
     private $roleRepository;
 
+    /** @var ACLService */
+    private $ACLService;
+
     /** @var TagRepository */
     private $tagRepository;
 
 
-    public function __construct(Translator $translator, RoleRepository $roleRepository, TagRepository $tagRepository)
+    public function __construct(Translator $translator, RoleRepository $roleRepository, ACLService $ACLService, TagRepository $tagRepository)
     {
         parent::__construct();
 
         $this->translator     = $translator;
         $this->roleRepository = $roleRepository;
+        $this->ACLService     = $ACLService;
         $this->tagRepository  = $tagRepository;
     }
 
@@ -77,9 +84,9 @@ class DocumentTagsGridControl extends Control
                 return count($this->roleRepository->findAll()) === $tag->getRoles()->count();
             });
 
-        $rolesOptions = $this->roleRepository->getRolesWithoutRolesOptions([]);
+        $rolesOptions = $this->ACLService->getRolesWithoutRolesOptions([]);
 
-        $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function ($container) use ($rolesOptions) : void {
+        $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function (Container $container) use ($rolesOptions) : void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.tags_name_empty')
                 ->addRule(Form::IS_NOT_IN, 'admin.cms.tags_name_exists', $this->tagRepository->findAllNames());
@@ -89,13 +96,13 @@ class DocumentTagsGridControl extends Control
         };
         $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
 
-        $grid->addInlineEdit()->onControlAdd[]  = function ($container) use ($rolesOptions) : void {
+        $grid->addInlineEdit()->onControlAdd[]  = function (Container $container) use ($rolesOptions) : void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.tags_name_empty');
             $container->addMultiSelect('roles', '', $rolesOptions)->setAttribute('class', 'datagrid-multiselect')
                 ->addRule(Form::FILLED, 'admin.cms.tags_roles_empty');
         };
-        $grid->getInlineEdit()->onSetDefaults[] = function ($container, Tag $item) : void {
+        $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Tag $item) : void {
             $container['name']
                 ->addRule(Form::IS_NOT_IN, 'admin.cms.tags_name_exists', $this->tagRepository->findOthersNames($item->getId()));
 
@@ -122,7 +129,7 @@ class DocumentTagsGridControl extends Control
      * @throws OptimisticLockException
      * @throws AbortException
      */
-    public function add(\stdClass $values) : void
+    public function add(stdClass $values) : void
     {
         $tag = new Tag();
 
@@ -142,7 +149,7 @@ class DocumentTagsGridControl extends Control
      * @throws OptimisticLockException
      * @throws AbortException
      */
-    public function edit(int $id, \stdClass $values) : void
+    public function edit(int $id, stdClass $values) : void
     {
         $tag = $this->tagRepository->findById($id);
 

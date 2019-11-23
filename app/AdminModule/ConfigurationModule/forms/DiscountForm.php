@@ -13,6 +13,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
+use stdClass;
 
 /**
  * Komponenta s formulářem pro úpravu slevy.
@@ -132,7 +133,7 @@ class DiscountForm extends UI\Control
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(Form $form, \stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         $this->id = (int) $values['id'];
 

@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use DateTime;
 use Nette;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 use Skautis\Skautis;
+use stdClass;
+use Throwable;
 use function array_key_exists;
 
 /**
@@ -55,7 +58,7 @@ class SkautIsService
     public function isLoggedIn() : bool
     {
         $logoutTime = clone($this->skautIs->getUser()->getLogoutDate());
-        $hardCheck  = $logoutTime->diff(new \DateTime())->i < 25; //pokud od posledniho obnoveni prihlaseni ubehlo 5 minut
+        $hardCheck  = $logoutTime->diff(new DateTime())->i < 25; //pokud od posledniho obnoveni prihlaseni ubehlo 5 minut
         return $this->skautIs->getUser()->isLoggedIn($hardCheck);
     }
 
@@ -70,8 +73,8 @@ class SkautIsService
 
     /**
      * Vrátí skautIS role uživatele.
-     * @return \stdClass[]
-     * @throws \Throwable
+     * @return stdClass[]
+     * @throws Throwable
      */
     public function getUserRoles(int $userId) : array
     {
@@ -85,7 +88,7 @@ class SkautIsService
             $this->userRolesCache->save($userId, $roles);
         }
 
-        if ($roles instanceof \stdClass) {
+        if ($roles instanceof stdClass) {
             return [];
         }
 
@@ -119,7 +122,7 @@ class SkautIsService
     /**
      * Vrátí údaje o uživateli.
      */
-    public function getUserDetail() : \stdClass
+    public function getUserDetail() : stdClass
     {
         return $this->skautIs->usr->UserDetail([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -129,7 +132,7 @@ class SkautIsService
     /**
      * Vrátí údaje o osobě.
      */
-    public function getPersonDetail(int $personId) : \stdClass
+    public function getPersonDetail(int $personId) : stdClass
     {
         return $this->skautIs->org->PersonDetail([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -137,7 +140,7 @@ class SkautIsService
         ]);
     }
 
-    public function getPersonPhoto(int $personId, string $size) : \stdClass
+    public function getPersonPhoto(int $personId, string $size) : stdClass
     {
         return $this->skautIs->org->PersonPhoto([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -149,7 +152,7 @@ class SkautIsService
     /**
      * Aktualizuje údaje o osobě.
      */
-    public function updatePersonBasic(int $personId, string $sex, \DateTime $birthday, string $firstName, string $lastName, string $nickName) : void
+    public function updatePersonBasic(int $personId, string $sex, DateTime $birthday, string $firstName, string $lastName, string $nickName) : void
     {
         $this->skautIs->org->PersonUpdateBasic([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -195,7 +198,7 @@ class SkautIsService
     /**
      * Vrací platné členství typu "řádné" nebo "čestné", pokud osoba žádné nemá vrací null.
      */
-    public function getValidMembership(int $personId) : ?\stdClass
+    public function getValidMembership(int $personId) : ?stdClass
     {
         $membership = $this->skautIs->org->MembershipAllPerson([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -223,7 +226,7 @@ class SkautIsService
     /**
      * Vrací údaje o jednotce.
      */
-    public function getUnitDetail(int $unitId) : \stdClass
+    public function getUnitDetail(int $unitId) : stdClass
     {
         return $this->skautIs->org->UnitDetail([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),

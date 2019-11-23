@@ -8,8 +8,10 @@ use App\Model\User\User;
 use Doctrine\Common\Collections\Collection;
 use Skautis\Skautis;
 use Skautis\Wsdl\WsdlException;
+use stdClass;
 use Tracy\Debugger;
 use Tracy\ILogger;
+use Nette;
 
 /**
  * Služba pro správu skautIS akce.
@@ -18,6 +20,8 @@ use Tracy\ILogger;
  */
 abstract class SkautIsEventService
 {
+    use Nette\SmartObject;
+
     /** @var Skautis */
     protected $skautIs;
 
@@ -42,11 +46,11 @@ abstract class SkautIsEventService
     /**
      * Vrací údaje o akci.
      */
-    abstract protected function getEventDetail(int $eventId) : \stdClass;
+    abstract protected function getEventDetail(int $eventId) : stdClass;
 
     /**
      * Vrací seznam neuzavřených akcí.
-     * @return \stdClass[]
+     * @return stdClass[]
      */
     abstract protected function getDraftEvents() : array;
 

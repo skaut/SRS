@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Settings\Place;
 
-use App\Model\EntityRepository;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
@@ -23,7 +23,6 @@ class PlacePointRepository extends EntityRepository
 
     /**
      * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function save(PlacePoint $placePoint) : void
     {
@@ -33,7 +32,6 @@ class PlacePointRepository extends EntityRepository
 
     /**
      * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function remove(PlacePoint $placePoint) : void
     {

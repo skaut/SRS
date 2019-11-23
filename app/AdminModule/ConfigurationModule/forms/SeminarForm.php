@@ -7,14 +7,17 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseForm;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsFacade;
+use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\SubeventRepository;
+use App\Services\SettingsService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Utils\DateTime;
 use Nextras\Forms\Controls\DatePicker;
+use stdClass;
+use Throwable;
 
 /**
  * Formulář pro nastavení semináře.
@@ -30,8 +33,8 @@ class SeminarForm
     /** @var BaseForm */
     private $baseFormFactory;
 
-    /** @var SettingsFacade */
-    private $settingsFacade;
+    /** @var SettingsService */
+    private $settingsService;
 
     /** @var SubeventRepository */
     private $subeventRepository;
@@ -39,18 +42,18 @@ class SeminarForm
 
     public function __construct(
         BaseForm $baseForm,
-        SettingsFacade $settingsFacade,
+        SettingsService $settingsService,
         SubeventRepository $subeventRepository
     ) {
         $this->baseFormFactory    = $baseForm;
-        $this->settingsFacade     = $settingsFacade;
+        $this->settingsService    = $settingsService;
         $this->subeventRepository = $subeventRepository;
     }
 
     /**
      * Vytvoří formulář.
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function create() : Form
     {
@@ -79,10 +82,10 @@ class SeminarForm
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'seminarName' => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
-            'seminarFromDate' => $this->settingsFacade->getDateValue(Settings::SEMINAR_FROM_DATE),
-            'seminarToDate' => $this->settingsFacade->getDateValue(Settings::SEMINAR_TO_DATE),
-            'editRegistrationTo' => $this->settingsFacade->getDateValue(Settings::EDIT_REGISTRATION_TO),
+            'seminarName' => $this->settingsService->getValue(Settings::SEMINAR_NAME),
+            'seminarFromDate' => $this->settingsService->getDateValue(Settings::SEMINAR_FROM_DATE),
+            'seminarToDate' => $this->settingsService->getDateValue(Settings::SEMINAR_TO_DATE),
+            'editRegistrationTo' => $this->settingsService->getDateValue(Settings::EDIT_REGISTRATION_TO),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -95,18 +98,18 @@ class SeminarForm
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function processForm(Form $form, \stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
-        $this->settingsFacade->setValue(Settings::SEMINAR_NAME, $values['seminarName']);
+        $this->settingsService->setValue(Settings::SEMINAR_NAME, $values['seminarName']);
         $implicitSubevent = $this->subeventRepository->findImplicit();
         $implicitSubevent->setName($values['seminarName']);
         $this->subeventRepository->save($implicitSubevent);
 
-        $this->settingsFacade->setDateValue(Settings::SEMINAR_FROM_DATE, $values['seminarFromDate']);
-        $this->settingsFacade->setDateValue(Settings::SEMINAR_TO_DATE, $values['seminarToDate']);
-        $this->settingsFacade->setDateValue(Settings::EDIT_REGISTRATION_TO, $values['editRegistrationTo']);
+        $this->settingsService->setDateValue(Settings::SEMINAR_FROM_DATE, $values['seminarFromDate']);
+        $this->settingsService->setDateValue(Settings::SEMINAR_TO_DATE, $values['seminarToDate']);
+        $this->settingsService->setDateValue(Settings::EDIT_REGISTRATION_TO, $values['editRegistrationTo']);
     }
 
     /**

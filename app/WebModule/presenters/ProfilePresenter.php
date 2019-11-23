@@ -21,6 +21,8 @@ use App\WebModule\Forms\RolesForm;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use PhpOffice\PhpSpreadsheet\Exception;
+use stdClass;
+use Throwable;
 
 /**
  * Presenter obsluhující profil uživatele.
@@ -93,7 +95,7 @@ class ProfilePresenter extends WebBasePresenter
 
     /**
      * @throws AbortException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function startup() : void
     {
@@ -109,7 +111,7 @@ class ProfilePresenter extends WebBasePresenter
 
     /**
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function renderDefault() : void
     {
@@ -134,7 +136,7 @@ class ProfilePresenter extends WebBasePresenter
     {
         $form = $this->personalDetailsFormFactory->create($this->user->id);
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             $this->flashMessage('web.profile.personal_details_update_successful', 'success');
 
             $this->redirect('this#collapsePersonalDetails');
@@ -161,13 +163,13 @@ class ProfilePresenter extends WebBasePresenter
 
     /**
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     protected function createComponentRolesForm() : Form
     {
         $form = $this->rolesFormFactory->create($this->user->id);
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             if ($form['submit']->isSubmittedBy()) {
                 $this->flashMessage('web.profile.roles_changed', 'success');
             } elseif ($form['cancelRegistration']->isSubmittedBy()) {

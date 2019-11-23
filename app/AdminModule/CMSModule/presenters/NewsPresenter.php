@@ -9,6 +9,7 @@ use App\AdminModule\CMSModule\Components\NewsGridControl;
 use App\AdminModule\CMSModule\Forms\NewsForm;
 use App\Model\CMS\NewsRepository;
 use Nette\Application\UI\Form;
+use stdClass;
 
 /**
  * Presenter starající se o správu aktualit.
@@ -50,7 +51,7 @@ class NewsPresenter extends CMSBasePresenter
     {
         $form = $this->newsFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             if ($form['cancel']->isSubmittedBy()) {
                 $this->redirect('News:default');
             }

@@ -7,11 +7,14 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseForm;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsFacade;
+use App\Model\Settings\SettingsRepository;
+use App\Services\SettingsService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
+use stdClass;
+use Throwable;
 
 /**
  * Formulář pro nastavení přihlášky.
@@ -26,20 +29,20 @@ class ApplicationForm
     /** @var BaseForm */
     private $baseFormFactory;
 
-    /** @var SettingsFacade */
-    private $settingsFacade;
+    /** @var SettingsService */
+    private $settingsService;
 
 
-    public function __construct(BaseForm $baseForm, SettingsFacade $settingsFacade)
+    public function __construct(BaseForm $baseForm, SettingsService $settingsService)
     {
         $this->baseFormFactory = $baseForm;
-        $this->settingsFacade  = $settingsFacade;
+        $this->settingsService = $settingsService;
     }
 
     /**
      * Vytvoří formulář.
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function create() : Form
     {
@@ -54,8 +57,8 @@ class ApplicationForm
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'applicationAgreement' => $this->settingsFacade->getValue(Settings::APPLICATION_AGREEMENT),
-            'editCustomInputsTo' => $this->settingsFacade->getDateValue(Settings::EDIT_CUSTOM_INPUTS_TO),
+            'applicationAgreement' => $this->settingsService->getValue(Settings::APPLICATION_AGREEMENT),
+            'editCustomInputsTo' => $this->settingsService->getDateValue(Settings::EDIT_CUSTOM_INPUTS_TO),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -68,11 +71,11 @@ class ApplicationForm
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function processForm(Form $form, \stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
-        $this->settingsFacade->setValue(Settings::APPLICATION_AGREEMENT, $values['applicationAgreement']);
-        $this->settingsFacade->setValue(Settings::EDIT_CUSTOM_INPUTS_TO, (string) $values['editCustomInputsTo']);
+        $this->settingsService->setValue(Settings::APPLICATION_AGREEMENT, $values['applicationAgreement']);
+        $this->settingsService->setValue(Settings::EDIT_CUSTOM_INPUTS_TO, (string) $values['editCustomInputsTo']);
     }
 }

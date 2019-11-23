@@ -14,6 +14,8 @@ use App\Services\MailService;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Mail\SendException;
+use stdClass;
+use Throwable;
 use Tracy\Debugger;
 use Tracy\ILogger;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
@@ -23,7 +25,6 @@ use Ublaboo\Mailing\Exception\MailingMailCreationException;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class SendForm
 {
@@ -128,10 +129,10 @@ class SendForm
     /**
      * Zpracuje formulář.
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      * @throws MailingMailCreationException
      */
-    public function processForm(Form $form, \stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         try {
             $recipientsRoles     = $this->roleRepository->findRolesByIds($values['recipientRoles']);

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\User;
 
-use App\Model\EntityRepository;
+use Doctrine\ORM\EntityRepository;
 
 /**
  * Třída spravující přihlášky rolí.

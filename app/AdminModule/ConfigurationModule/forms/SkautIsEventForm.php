@@ -8,10 +8,11 @@ use App\AdminModule\Forms\BaseForm;
 use App\Model\Enums\SkautIsEventType;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsFacade;
+use App\Model\Settings\SettingsRepository;
 use App\Model\SkautIs\SkautIsCourse;
 use App\Model\SkautIs\SkautIsCourseRepository;
 use App\Model\Structure\SubeventRepository;
+use App\Services\SettingsService;
 use App\Services\SkautIsEventEducationService;
 use App\Services\SkautIsEventGeneralService;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -20,6 +21,8 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
+use stdClass;
+use Throwable;
 use function count;
 
 /**
@@ -36,8 +39,8 @@ class SkautIsEventForm
     /** @var BaseForm */
     private $baseFormFactory;
 
-    /** @var SettingsFacade */
-    private $settingsFacade;
+    /** @var SettingsService */
+    private $settingsService;
 
     /** @var SkautIsCourseRepository */
     private $skautIsCourseRepository;
@@ -54,14 +57,14 @@ class SkautIsEventForm
 
     public function __construct(
         BaseForm $baseForm,
-        SettingsFacade $settingsFacade,
+        SettingsService $settingsService,
         SkautIsCourseRepository $skautIsCourseRepository,
         SkautIsEventGeneralService $skautIsEventGeneralService,
         SkautIsEventEducationService $skautIsEventEducationService,
         SubeventRepository $subeventRepository
     ) {
         $this->baseFormFactory              = $baseForm;
-        $this->settingsFacade               = $settingsFacade;
+        $this->settingsService               = $settingsService;
         $this->skautIsCourseRepository      = $skautIsCourseRepository;
         $this->skautIsEventGeneralService   = $skautIsEventGeneralService;
         $this->skautIsEventEducationService = $skautIsEventEducationService;
@@ -71,7 +74,7 @@ class SkautIsEventForm
     /**
      * Vytvoří formulář.
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function create() : Form
     {
@@ -108,7 +111,7 @@ class SkautIsEventForm
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'skautisEventType' => $this->settingsFacade->getValue(Settings::SKAUTIS_EVENT_TYPE),
+            'skautisEventType' => $this->settingsService->getValue(Settings::SKAUTIS_EVENT_TYPE),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -122,9 +125,9 @@ class SkautIsEventForm
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function processForm(Form $form, \stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         $eventId   = null;
         $eventName = null;
@@ -159,13 +162,13 @@ class SkautIsEventForm
                 break;
         }
 
-        $this->settingsFacade->setValue(Settings::SKAUTIS_EVENT_TYPE, $eventType);
+        $this->settingsService->setValue(Settings::SKAUTIS_EVENT_TYPE, $eventType);
 
         if ($eventId === null) {
             return;
         }
 
-        $this->settingsFacade->setIntValue(Settings::SKAUTIS_EVENT_ID, $eventId);
-        $this->settingsFacade->setValue(Settings::SKAUTIS_EVENT_NAME, $eventName);
+        $this->settingsService->setIntValue(Settings::SKAUTIS_EVENT_ID, $eventId);
+        $this->settingsService->setValue(Settings::SKAUTIS_EVENT_NAME, $eventName);
     }
 }

@@ -9,6 +9,7 @@ use App\Model\CMS\Document\DocumentRepository;
 use App\Model\CMS\Document\TagRepository;
 use App\Services\FilesService;
 use App\Utils\Helpers;
+use DateTime;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
@@ -16,10 +17,12 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Bridges\ApplicationLatte\Template;
+use Nette\Forms\Container;
 use Nette\Http\FileUpload;
 use Nette\Utils\Html;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
+use stdClass;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
@@ -28,8 +31,6 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
- *
- * @property-read Template $template
  */
 class DocumentsGridControl extends Control
 {
@@ -83,7 +84,7 @@ class DocumentsGridControl extends Control
         $grid->addColumnText('name', 'admin.cms.documents_name');
 
         $grid->addColumnText('tags', 'admin.cms.documents_tags')
-            ->setRenderer(function ($row) {
+            ->setRenderer(function (Document $row) {
                 $tags = Html::el();
                 foreach ($row->getTags() as $tag) {
                     $tags->addHtml(Html::el('span')
@@ -95,7 +96,7 @@ class DocumentsGridControl extends Control
             });
 
         $grid->addColumnText('file', 'admin.cms.documents_file')
-            ->setRenderer(function ($row) {
+            ->setRenderer(function (Document $row) {
                 return Html::el('a')
                     ->setAttribute('href', $this->getPresenter()->getTemplate()->basePath
                         . '/files' . $row->getFile())
@@ -113,7 +114,7 @@ class DocumentsGridControl extends Control
 
         $tagsOptions = $this->tagRepository->getTagsOptions();
 
-        $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function ($container) use ($tagsOptions) : void {
+        $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function (Container $container) use ($tagsOptions) : void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.documents_name_empty');
 
@@ -127,7 +128,7 @@ class DocumentsGridControl extends Control
         };
         $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
 
-        $grid->addInlineEdit()->onControlAdd[]  = function ($container) use ($tagsOptions) : void {
+        $grid->addInlineEdit()->onControlAdd[]  = function (Container $container) use ($tagsOptions) : void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.documents_name_empty');
 
@@ -138,7 +139,7 @@ class DocumentsGridControl extends Control
 
             $container->addText('description', '');
         };
-        $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) : void {
+        $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Document $item) : void {
             $container->setDefaults([
                 'name' => $item->getName(),
                 'tags' => $this->tagRepository->findTagsIds($item->getTags()),
@@ -163,7 +164,7 @@ class DocumentsGridControl extends Control
      * @throws OptimisticLockException
      * @throws AbortException
      */
-    public function add(\stdClass $values) : void
+    public function add(stdClass $values) : void
     {
         $file = $values['file'];
         $path = $this->generatePath($file);
@@ -175,7 +176,7 @@ class DocumentsGridControl extends Control
         $document->setTags($this->tagRepository->findTagsByIds($values['tags']));
         $document->setFile($path);
         $document->setDescription($values['description']);
-        $document->setTimestamp(new \DateTime());
+        $document->setTimestamp(new DateTime());
 
         $this->documentRepository->save($document);
 
@@ -190,7 +191,7 @@ class DocumentsGridControl extends Control
      * @throws OptimisticLockException
      * @throws AbortException
      */
-    public function edit(int $id, \stdClass $values) : void
+    public function edit(int $id, stdClass $values) : void
     {
         $document = $this->documentRepository->findById($id);
 
@@ -201,7 +202,7 @@ class DocumentsGridControl extends Control
             $this->filesService->save($file, $path);
 
             $document->setFile($path);
-            $document->setTimestamp(new \DateTime());
+            $document->setTimestamp(new DateTime());
         }
 
         $document->setName($values['name']);

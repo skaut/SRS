@@ -8,7 +8,8 @@ use App\AdminModule\Forms\BaseForm;
 use App\Model\Enums\ProgramRegistrationType;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsFacade;
+use App\Model\Settings\SettingsRepository;
+use App\Services\SettingsService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
@@ -16,6 +17,8 @@ use Nette;
 use Nette\Application\UI\Form;
 use Nette\Utils\DateTime;
 use Nextras\Forms\Controls\DateTimePicker;
+use stdClass;
+use Throwable;
 
 /**
  * Formulář pro nastavení programu.
@@ -31,24 +34,24 @@ class ProgramForm
     /** @var BaseForm */
     private $baseFormFactory;
 
-    /** @var SettingsFacade */
-    private $settingsFacade;
+    /** @var SettingsService */
+    private $settingsService;
 
     /** @var Translator */
     private $translator;
 
 
-    public function __construct(BaseForm $baseForm, SettingsFacade $settingsFacade, Translator $translator)
+    public function __construct(BaseForm $baseForm, SettingsService $settingsService, Translator $translator)
     {
         $this->baseFormFactory = $baseForm;
-        $this->settingsFacade  = $settingsFacade;
+        $this->settingsService = $settingsService;
         $this->translator      = $translator;
     }
 
     /**
      * Vytvoří formulář.
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function create() : Form
     {
@@ -90,12 +93,12 @@ class ProgramForm
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'isAllowedAddBlock' => $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK),
-            'isAllowedModifySchedule' => $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE),
-            'registerProgramsType' => $this->settingsFacade->getValue(Settings::REGISTER_PROGRAMS_TYPE),
-            'registerProgramsFrom' => $this->settingsFacade->getDateTimeValue(Settings::REGISTER_PROGRAMS_FROM),
-            'registerProgramsTo' => $this->settingsFacade->getDateTimeValue(Settings::REGISTER_PROGRAMS_TO),
-            'isAllowedRegisterProgramsBeforePayment' => $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT),
+            'isAllowedAddBlock' => $this->settingsService->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK),
+            'isAllowedModifySchedule' => $this->settingsService->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE),
+            'registerProgramsType' => $this->settingsService->getValue(Settings::REGISTER_PROGRAMS_TYPE),
+            'registerProgramsFrom' => $this->settingsService->getDateTimeValue(Settings::REGISTER_PROGRAMS_FROM),
+            'registerProgramsTo' => $this->settingsService->getDateTimeValue(Settings::REGISTER_PROGRAMS_TO),
+            'isAllowedRegisterProgramsBeforePayment' => $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -108,16 +111,16 @@ class ProgramForm
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function processForm(Form $form, \stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
-        $this->settingsFacade->setBoolValue(Settings::IS_ALLOWED_ADD_BLOCK, $values['isAllowedAddBlock']);
-        $this->settingsFacade->setBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE, $values['isAllowedModifySchedule']);
-        $this->settingsFacade->setValue(Settings::REGISTER_PROGRAMS_TYPE, $values['registerProgramsType']);
-        $this->settingsFacade->setBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, $values['isAllowedRegisterProgramsBeforePayment']);
-        $this->settingsFacade->setDateTimeValue(Settings::REGISTER_PROGRAMS_FROM, $values['registerProgramsFrom']);
-        $this->settingsFacade->setDateTimeValue(Settings::REGISTER_PROGRAMS_TO, $values['registerProgramsTo']);
+        $this->settingsService->setBoolValue(Settings::IS_ALLOWED_ADD_BLOCK, $values['isAllowedAddBlock']);
+        $this->settingsService->setBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE, $values['isAllowedModifySchedule']);
+        $this->settingsService->setValue(Settings::REGISTER_PROGRAMS_TYPE, $values['registerProgramsType']);
+        $this->settingsService->setBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, $values['isAllowedRegisterProgramsBeforePayment']);
+        $this->settingsService->setDateTimeValue(Settings::REGISTER_PROGRAMS_FROM, $values['registerProgramsFrom']);
+        $this->settingsService->setDateTimeValue(Settings::REGISTER_PROGRAMS_TO, $values['registerProgramsTo']);
     }
 
     /**

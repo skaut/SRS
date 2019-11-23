@@ -9,7 +9,7 @@ use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsFacade;
+use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\Application;
 use App\Model\User\ApplicationRepository;
@@ -18,11 +18,14 @@ use App\Model\User\SubeventsApplication;
 use App\Model\User\SubeventsApplicationRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
+use App\Services\ACLService;
 use App\Services\ApplicationService;
 use App\Services\Authenticator;
 use App\Services\MailService;
 use App\Services\PdfExportService;
 use App\Services\ProgramService;
+use App\Services\SettingsService;
+use App\Services\SubeventService;
 use App\Services\UserService;
 use App\Utils\Helpers;
 use App\Utils\Validators;
@@ -32,6 +35,8 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Bridges\ApplicationLatte\Template;
+use stdClass;
+use Throwable;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\Mailing\Exception\MailingException;
@@ -72,8 +77,8 @@ class ApplicationsGridControl extends Control
     /** @var MailService */
     private $mailService;
 
-    /** @var SettingsFacade */
-    private $settingsFacade;
+    /** @var SettingsService */
+    private $settingsService;
 
     /** @var Authenticator */
     private $authenticator;
@@ -99,6 +104,9 @@ class ApplicationsGridControl extends Control
     /** @var SubeventsApplicationRepository */
     private $subeventsApplicationRepository;
 
+    /** @var SubeventService */
+    private $subeventService;
+
 
     public function __construct(
         Translator $translator,
@@ -109,14 +117,15 @@ class ApplicationsGridControl extends Control
         ApplicationService $applicationService,
         ProgramRepository $programRepository,
         MailService $mailService,
-        SettingsFacade $settingsFacade,
+        SettingsService $settingsService,
         Authenticator $authenticator,
         PdfExportService $pdfExportService,
         ProgramService $programService,
         UserService $userService,
         Validators $validators,
         RolesApplicationRepository $rolesApplicationRepository,
-        SubeventsApplicationRepository $subeventsApplicationRepository
+        SubeventsApplicationRepository $subeventsApplicationRepository,
+        SubeventService $subeventService
     ) {
         parent::__construct();
 
@@ -128,7 +137,7 @@ class ApplicationsGridControl extends Control
         $this->applicationService             = $applicationService;
         $this->programRepository              = $programRepository;
         $this->mailService                    = $mailService;
-        $this->settingsFacade                 = $settingsFacade;
+        $this->settingsService                = $settingsService;
         $this->authenticator                  = $authenticator;
         $this->pdfExportService               = $pdfExportService;
         $this->programService                 = $programService;
@@ -136,6 +145,7 @@ class ApplicationsGridControl extends Control
         $this->validators                     = $validators;
         $this->rolesApplicationRepository     = $rolesApplicationRepository;
         $this->subeventsApplicationRepository = $subeventsApplicationRepository;
+        $this->subeventService                = $subeventService;
     }
 
     /**
@@ -150,7 +160,7 @@ class ApplicationsGridControl extends Control
      * Vytvoří komponentu.
      * @throws SettingsException
      * @throws NonUniqueResultException
-     * @throws \Throwable
+     * @throws Throwable
      * @throws DataGridException
      */
     public function createComponentApplicationsGrid(string $name) : void
@@ -207,7 +217,7 @@ class ApplicationsGridControl extends Control
         if ($explicitSubeventsExists) {
             if ($this->applicationService->isAllowedAddApplication($this->user)) {
                 $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function ($container) : void {
-                    $options = $this->subeventRepository->getNonRegisteredExplicitOptionsWithCapacity($this->user);
+                    $options = $this->subeventService->getNonRegisteredExplicitOptionsWithCapacity($this->user);
                     $container->addMultiSelect('subevents', '', $options)
                         ->setAttribute('class', 'datagrid-multiselect')
                         ->addRule(Form::FILLED, 'web.profile.applications_subevents_empty');
@@ -217,7 +227,7 @@ class ApplicationsGridControl extends Control
             }
 
             $grid->addInlineEdit()->onControlAdd[] = function ($container) : void {
-                $options = $this->subeventRepository->getExplicitOptionsWithCapacity();
+                $options = $this->subeventService->getExplicitOptionsWithCapacity();
                 $container->addMultiSelect('subevents', '', $options)
                     ->setAttribute('class', 'datagrid-multiselect')
                     ->addRule(Form::FILLED, 'web.profile.applications_subevents_empty');
@@ -260,9 +270,9 @@ class ApplicationsGridControl extends Control
     /**
      * Zpracuje přidání podakcí.
      * @throws AbortException
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function add(\stdClass $values) : void
+    public function add(stdClass $values) : void
     {
         $selectedSubevents         = $this->subeventRepository->findSubeventsByIds($values['subevents']);
         $selectedAndUsersSubevents = clone $this->user->getSubevents();
@@ -310,11 +320,11 @@ class ApplicationsGridControl extends Control
      * Zpracuje úpravu přihlášky.
      * @throws SettingsException
      * @throws AbortException
-     * @throws \Throwable
+     * @throws Throwable
      * @throws MailingException
      * @throws MailingMailCreationException
      */
-    public function edit(int $id, \stdClass $values) : void
+    public function edit(int $id, stdClass $values) : void
     {
         $application = $this->applicationRepository->findById($id);
 
@@ -366,7 +376,7 @@ class ApplicationsGridControl extends Control
     /**
      * Vygeneruje potvrzení o přijetí platby.
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function handleGeneratePaymentProofBank(int $id) : void
     {
@@ -381,7 +391,7 @@ class ApplicationsGridControl extends Control
      * Zruší přihlášku.
      * @throws SettingsException
      * @throws AbortException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function handleCancelApplication(int $id) : void
     {

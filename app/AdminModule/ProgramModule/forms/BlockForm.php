@@ -13,17 +13,21 @@ use App\Model\Program\BlockRepository;
 use App\Model\Program\CategoryRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsFacade;
+use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ProgramService;
+use App\Services\SettingsService;
+use App\Services\SubeventService;
 use App\Utils\Validators;
 use Doctrine\ORM\NonUniqueResultException;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
 use Nette\Forms\Controls\TextInput;
+use stdClass;
+use Throwable;
 
 /**
  * Formulář pro úpravu programového bloku.
@@ -66,8 +70,8 @@ class BlockForm
     /** @var CategoryRepository */
     private $categoryRepository;
 
-    /** @var SettingsFacade */
-    private $settingsFacade;
+    /** @var SettingsService */
+    private $settingsService;
 
     /** @var ProgramRepository */
     private $programRepository;
@@ -78,6 +82,9 @@ class BlockForm
     /** @var ProgramService */
     private $programService;
 
+    /** @var SubeventService */
+    private $subeventService;
+
     /** @var Validators */
     private $validators;
 
@@ -87,20 +94,22 @@ class BlockForm
         BlockRepository $blockRepository,
         UserRepository $userRepository,
         CategoryRepository $categoryRepository,
-        SettingsFacade $settingsFacade,
+        SettingsService $settingsService,
         ProgramRepository $programRepository,
         SubeventRepository $subeventRepository,
         ProgramService $programService,
+        SubeventService $subeventService,
         Validators $validators
     ) {
         $this->baseFormFactory    = $baseFormFactory;
         $this->blockRepository    = $blockRepository;
         $this->userRepository     = $userRepository;
         $this->categoryRepository = $categoryRepository;
-        $this->settingsFacade     = $settingsFacade;
+        $this->settingsService    = $settingsService;
         $this->programRepository  = $programRepository;
         $this->subeventRepository = $subeventRepository;
         $this->programService     = $programService;
+        $this->subeventService    = $subeventService;
         $this->validators         = $validators;
     }
 
@@ -123,7 +132,7 @@ class BlockForm
             ->addRule(Form::FILLED, 'admin.program.blocks_name_empty');
 
         if ($this->subeventsExists) {
-            $form->addSelect('subevent', 'admin.program.blocks_subevent', $this->subeventRepository->getSubeventsOptions())
+            $form->addSelect('subevent', 'admin.program.blocks_subevent', $this->subeventService->getSubeventsOptions())
                 ->setPrompt('')
                 ->addRule(Form::FILLED, 'admin.program.blocks_subevent_empty');
         }
@@ -229,16 +238,16 @@ class BlockForm
 
     /**
      * Zpracuje formulář.
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function processForm(Form $form, \stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         if ($form['cancel']->isSubmittedBy()) {
             return;
         }
 
         if (! $this->block) {
-            if (! $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK)) {
+            if (! $this->settingsService->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK)) {
                 return;
             }
         } elseif (! $this->user->isAllowedModifyBlock($this->block)) {

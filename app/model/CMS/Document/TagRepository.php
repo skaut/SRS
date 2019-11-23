@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Model\CMS\Document;
 
-use App\Model\EntityRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use function array_map;
@@ -83,7 +83,6 @@ class TagRepository extends EntityRepository
     /**
      * Uloží tag.
      * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function save(Tag $tag) : void
     {
@@ -94,7 +93,6 @@ class TagRepository extends EntityRepository
     /**
      * Odstraní tag.
      * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function remove(Tag $tag) : void
     {

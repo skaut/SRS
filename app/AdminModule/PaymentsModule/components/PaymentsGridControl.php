@@ -9,12 +9,12 @@ use App\Model\Payment\Payment;
 use App\Model\Payment\PaymentRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsFacade;
 use App\Model\User\ApplicationRepository;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\BankService;
 use App\Services\PdfExportService;
+use App\Services\SettingsService;
 use App\Utils\Helpers;
 use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
@@ -22,6 +22,8 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Forms\Container;
+use stdClass;
+use Throwable;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
@@ -47,8 +49,8 @@ class PaymentsGridControl extends Control
     /** @var UserRepository */
     private $userRepository;
 
-    /** @var SettingsFacade */
-    private $settingsFacade;
+    /** @var SettingsService */
+    private $settingsService;
 
     /** @var ApplicationService */
     private $applicationService;
@@ -65,7 +67,7 @@ class PaymentsGridControl extends Control
         PaymentRepository $paymentRepository,
         ApplicationRepository $applicationRepository,
         UserRepository $userRepository,
-        SettingsFacade $settingsFacade,
+        SettingsService $settingsService,
         ApplicationService $applicationService,
         PdfExportService $pdfExportService,
         BankService $bankService
@@ -76,7 +78,7 @@ class PaymentsGridControl extends Control
         $this->paymentRepository     = $paymentRepository;
         $this->applicationRepository = $applicationRepository;
         $this->userRepository        = $userRepository;
-        $this->settingsFacade        = $settingsFacade;
+        $this->settingsService       = $settingsService;
         $this->applicationService    = $applicationService;
         $this->pdfExportService      = $pdfExportService;
         $this->bankService           = $bankService;
@@ -94,7 +96,7 @@ class PaymentsGridControl extends Control
      * Vytvoří komponentu.
      * @throws DataGridException
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function createComponentPaymentsGrid(string $name) : void
     {
@@ -147,7 +149,7 @@ class PaymentsGridControl extends Control
         };
         $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
 
-        if ($this->settingsFacade->getValue(Settings::BANK_TOKEN) !== null) {
+        if ($this->settingsService->getValue(Settings::BANK_TOKEN) !== null) {
             $grid->addToolbarButton('checkPayments!')
                 ->setText('admin.payments.payments.check_payments');
         }
@@ -175,9 +177,9 @@ class PaymentsGridControl extends Control
     /**
      * Zpracuje přidání platby.
      * @throws AbortException
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function add(\stdClass $values) : void
+    public function add(stdClass $values) : void
     {
         $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
 
@@ -189,7 +191,7 @@ class PaymentsGridControl extends Control
 
     /**
      * Odstraní platbu.
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function handleDelete(int $id) : void
     {
@@ -206,7 +208,7 @@ class PaymentsGridControl extends Control
     /**
      * Vygeneruje potvrzení o přijetí platby.
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function handleGeneratePaymentProofBank(int $id) : void
     {
@@ -220,11 +222,11 @@ class PaymentsGridControl extends Control
     /**
      * Zkontroluje platby na bankovním účtu.
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function handleCheckPayments() : void
     {
-        $from = $this->settingsFacade->getDateValue(Settings::BANK_DOWNLOAD_FROM);
+        $from = $this->settingsService->getDateValue(Settings::BANK_DOWNLOAD_FROM);
         $this->bankService->downloadTransactions($from);
     }
 

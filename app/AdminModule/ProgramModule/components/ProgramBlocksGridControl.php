@@ -13,12 +13,13 @@ use App\Model\Program\CategoryRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsFacade;
+use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ExcelExportService;
 use App\Services\ProgramService;
+use App\Services\SettingsService;
 use App\Utils\Validators;
 use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
@@ -27,6 +28,7 @@ use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use PhpOffice\PhpSpreadsheet\Exception;
+use Throwable;
 use Tracy\Debugger;
 use Tracy\ILogger;
 use Ublaboo\DataGrid\DataGrid;
@@ -49,8 +51,8 @@ class ProgramBlocksGridControl extends Control
     /** @var BlockRepository */
     private $blockRepository;
 
-    /** @var SettingsFacade */
-    private $settingsFacade;
+    /** @var SettingsService */
+    private $settingsService;
 
     /** @var UserRepository */
     private $userRepository;
@@ -85,7 +87,7 @@ class ProgramBlocksGridControl extends Control
     public function __construct(
         Translator $translator,
         BlockRepository $blockRepository,
-        SettingsFacade $settingsFacade,
+        SettingsService $settingsService,
         UserRepository $userRepository,
         CategoryRepository $categoryRepository,
         ProgramRepository $programRepository,
@@ -99,7 +101,7 @@ class ProgramBlocksGridControl extends Control
 
         $this->translator         = $translator;
         $this->blockRepository    = $blockRepository;
-        $this->settingsFacade     = $settingsFacade;
+        $this->settingsService     = $settingsService;
         $this->userRepository     = $userRepository;
         $this->categoryRepository = $categoryRepository;
         $this->programRepository  = $programRepository;
@@ -123,7 +125,7 @@ class ProgramBlocksGridControl extends Control
     /**
      * Vytvoří komponentu.
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
@@ -169,7 +171,7 @@ class ProgramBlocksGridControl extends Control
         $grid->addColumnText('capacity', 'admin.program.blocks_capacity')
             ->setRendererOnCondition(function ($row) {
                 return $this->translator->translate('admin.program.blocks_capacity_unlimited');
-            }, function ($row) {
+            }, function (Block $row) {
                 return $row->getCapacity() === null;
             })
             ->setSortable();
@@ -204,7 +206,7 @@ class ProgramBlocksGridControl extends Control
 
         if (($this->getPresenter()->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS) ||
                 $this->getPresenter()->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS)) &&
-            $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK)
+            $this->settingsService->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK)
         ) {
             $grid->addToolbarButton('Blocks:add')
                 ->setIcon('plus')
@@ -231,7 +233,7 @@ class ProgramBlocksGridControl extends Control
     /**
      * Odstraní programový blok.
      * @throws AbortException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function handleDelete(int $id) : void
     {
@@ -267,7 +269,7 @@ class ProgramBlocksGridControl extends Control
             try {
                 $this->programService->updateBlockMandatory($block, $mandatory);
                 $p->flashMessage('admin.program.blocks_changed_mandatory', 'success');
-            } catch (\Throwable $ex) {
+            } catch (Throwable $ex) {
                 Debugger::log($ex, ILogger::WARNING);
                 $p->flashMessage('admin.program.blocks_change_mandatory_error', 'danger');
             }
@@ -295,7 +297,7 @@ class ProgramBlocksGridControl extends Control
     /**
      * Zpracuje export seznamu uživatelů, kteří mají blok zapsaný.
      * @throws AbortException
-     * @throws Exception
+     * @throws \Exception
      */
     public function handleExportBlocksAttendees() : void
     {

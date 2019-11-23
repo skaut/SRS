@@ -9,10 +9,12 @@ use App\Model\Enums\ApplicationState;
 use App\Model\Payment\Payment;
 use App\Model\Structure\Subevent;
 use App\Utils\Helpers;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Nettrine\ORM\Entity\Attributes\Id as Identifier;
+use Numbers_Words;
 use function implode;
 use function str_replace;
 
@@ -97,14 +99,14 @@ abstract class Application
     /**
      * Datum podání přihlášky.
      * @ORM\Column(type="datetime")
-     * @var \DateTime
+     * @var DateTime
      */
     protected $applicationDate;
 
     /**
      * Datum splatnosti.
      * @ORM\Column(type="date", nullable=true)
-     * @var \DateTime
+     * @var DateTime
      */
     protected $maturityDate;
 
@@ -118,7 +120,7 @@ abstract class Application
     /**
      * Datum zaplacení.
      * @ORM\Column(type="date", nullable=true)
-     * @var \DateTime
+     * @var DateTime
      */
     protected $paymentDate;
 
@@ -132,7 +134,7 @@ abstract class Application
     /**
      * Datum vytištění dokladu o zaplacení.
      * @ORM\Column(type="date", nullable=true)
-     * @var \DateTime
+     * @var DateTime
      */
     protected $incomeProofPrintedDate;
 
@@ -152,14 +154,14 @@ abstract class Application
     /**
      * Platnost záznamu od.
      * @ORM\Column(type="datetime")
-     * @var \DateTime
+     * @var DateTime
      */
     protected $validFrom;
 
     /**
      * Platnost záznamu do.
      * @ORM\Column(type="datetime", nullable=true)
-     * @var \DateTime
+     * @var DateTime
      */
     protected $validTo;
 
@@ -246,7 +248,7 @@ abstract class Application
      */
     public function getFeeWords() : string
     {
-        $numbersWords = new \Numbers_Words();
+        $numbersWords = new Numbers_Words();
         $feeWord      = $numbersWords->toWords($this->getFee(), 'cs');
         $feeWord      = str_replace(' ', '', $feeWord);
         return $feeWord;
@@ -275,17 +277,17 @@ abstract class Application
         $this->variableSymbol = $variableSymbol;
     }
 
-    public function getApplicationDate() : \DateTime
+    public function getApplicationDate() : DateTime
     {
         return $this->applicationDate;
     }
 
-    public function setApplicationDate(\DateTime $applicationDate) : void
+    public function setApplicationDate(DateTime $applicationDate) : void
     {
         $this->applicationDate = $applicationDate;
     }
 
-    public function getMaturityDate() : ?\DateTime
+    public function getMaturityDate() : ?DateTime
     {
         return $this->maturityDate;
     }
@@ -298,7 +300,7 @@ abstract class Application
         return $this->maturityDate !== null ? $this->maturityDate->format(Helpers::DATE_FORMAT) : null;
     }
 
-    public function setMaturityDate(?\DateTime $maturityDate) : void
+    public function setMaturityDate(?DateTime $maturityDate) : void
     {
         $this->maturityDate = $maturityDate;
     }
@@ -313,7 +315,7 @@ abstract class Application
         $this->paymentMethod = $paymentMethod;
     }
 
-    public function getPaymentDate() : ?\DateTime
+    public function getPaymentDate() : ?DateTime
     {
         return $this->paymentDate;
     }
@@ -326,7 +328,7 @@ abstract class Application
         return $this->paymentDate !== null ? $this->paymentDate->format(Helpers::DATE_FORMAT) : null;
     }
 
-    public function setPaymentDate(?\DateTime $paymentDate) : void
+    public function setPaymentDate(?DateTime $paymentDate) : void
     {
         $this->paymentDate = $paymentDate;
     }
@@ -341,7 +343,7 @@ abstract class Application
         $this->payment = $payment;
     }
 
-    public function getIncomeProofPrintedDate() : ?\DateTime
+    public function getIncomeProofPrintedDate() : ?DateTime
     {
         return $this->incomeProofPrintedDate;
     }
@@ -354,7 +356,7 @@ abstract class Application
         return $this->incomeProofPrintedDate !== null ? $this->incomeProofPrintedDate->format(Helpers::DATE_FORMAT) : null;
     }
 
-    public function setIncomeProofPrintedDate(?\DateTime $incomeProofPrintedDate) : void
+    public function setIncomeProofPrintedDate(?DateTime $incomeProofPrintedDate) : void
     {
         $this->incomeProofPrintedDate = $incomeProofPrintedDate;
     }
@@ -379,22 +381,22 @@ abstract class Application
         $this->createdBy = $createdBy;
     }
 
-    public function getValidFrom() : \DateTime
+    public function getValidFrom() : DateTime
     {
         return $this->validFrom;
     }
 
-    public function setValidFrom(\DateTime $validFrom) : void
+    public function setValidFrom(DateTime $validFrom) : void
     {
         $this->validFrom = $validFrom;
     }
 
-    public function getValidTo() : ?\DateTime
+    public function getValidTo() : ?DateTime
     {
         return $this->validTo;
     }
 
-    public function setValidTo(?\DateTime $validTo) : void
+    public function setValidTo(?DateTime $validTo) : void
     {
         $this->validTo = $validTo;
     }

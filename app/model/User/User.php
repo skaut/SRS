@@ -13,6 +13,7 @@ use App\Model\Program\Program;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Structure\Subevent;
 use App\Model\User\CustomInputValue\CustomInputValue;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -146,7 +147,7 @@ class User
     /**
      * Datum narození.
      * @ORM\Column(type="date", nullable=true)
-     * @var \DateTime
+     * @var DateTime
      */
     protected $birthdate;
 
@@ -167,7 +168,7 @@ class User
     /**
      * Datum posledního přihlášení.
      * @ORM\Column(type="datetime", nullable=true)
-     * @var \DateTime
+     * @var DateTime
      */
     protected $lastLogin;
 
@@ -216,14 +217,14 @@ class User
     /**
      * Příjezd.
      * @ORM\Column(type="datetime", nullable=true)
-     * @var \DateTime
+     * @var DateTime
      */
     protected $arrival;
 
     /**
      * Odjezd.
      * @ORM\Column(type="datetime", nullable=true)
-     * @var \DateTime
+     * @var DateTime
      */
     protected $departure;
 
@@ -280,14 +281,14 @@ class User
     /**
      * Datum poslední platby.
      * @ORM\Column(type="date", nullable=true)
-     * @var \DateTime
+     * @var DateTime
      */
     protected $lastPaymentDate;
 
     /**
      * Datum a čas vytvoření přihlášky rolí.
      * @ORM\Column(type="datetime", nullable=true)
-     * @var \DateTime
+     * @var DateTime
      */
     protected $rolesApplicationDate;
 
@@ -329,7 +330,7 @@ class User
     /**
      * Datum aktualizace fotky.
      * @ORM\Column(type="datetime", nullable=true)
-     * @var \DateTime
+     * @var DateTime
      */
     protected $photoUpdate;
 
@@ -537,19 +538,19 @@ class User
         $this->sex = $sex;
     }
 
-    public function getBirthdate() : ?\DateTime
+    public function getBirthdate() : ?DateTime
     {
         return $this->birthdate;
     }
 
-    public function setBirthdate(?\DateTime $birthdate) : void
+    public function setBirthdate(?DateTime $birthdate) : void
     {
         $this->birthdate = $birthdate;
     }
 
     public function getAge() : ?int
     {
-        return $this->birthdate !== null ? (new \DateTime())->diff($this->birthdate)->y : null;
+        return $this->birthdate !== null ? (new DateTime())->diff($this->birthdate)->y : null;
     }
 
     public function getSkautISUserId() : ?int
@@ -572,12 +573,12 @@ class User
         $this->skautISPersonId = $skautISPersonId;
     }
 
-    public function getLastLogin() : ?\DateTime
+    public function getLastLogin() : ?DateTime
     {
         return $this->lastLogin;
     }
 
-    public function setLastLogin(?\DateTime $lastLogin) : void
+    public function setLastLogin(?DateTime $lastLogin) : void
     {
         $this->lastLogin = $lastLogin;
     }
@@ -653,22 +654,22 @@ class User
         $this->attended = $attended;
     }
 
-    public function getArrival() : ?\DateTime
+    public function getArrival() : ?DateTime
     {
         return $this->arrival;
     }
 
-    public function setArrival(?\DateTime $arrival) : void
+    public function setArrival(?DateTime $arrival) : void
     {
         $this->arrival = $arrival;
     }
 
-    public function getDeparture() : ?\DateTime
+    public function getDeparture() : ?DateTime
     {
         return $this->departure;
     }
 
-    public function setDeparture(?\DateTime $departure) : void
+    public function setDeparture(?DateTime $departure) : void
     {
         $this->departure = $departure;
     }
@@ -1016,22 +1017,22 @@ class User
         $this->paymentMethod = $paymentMethod;
     }
 
-    public function getLastPaymentDate() : ?\DateTime
+    public function getLastPaymentDate() : ?DateTime
     {
         return $this->lastPaymentDate;
     }
 
-    public function setLastPaymentDate(?\DateTime $lastPaymentDate) : void
+    public function setLastPaymentDate(?DateTime $lastPaymentDate) : void
     {
         $this->lastPaymentDate = $lastPaymentDate;
     }
 
-    public function getRolesApplicationDate() : ?\DateTime
+    public function getRolesApplicationDate() : ?DateTime
     {
         return $this->rolesApplicationDate;
     }
 
-    public function setRolesApplicationDate(?\DateTime $rolesApplicationDate) : void
+    public function setRolesApplicationDate(?DateTime $rolesApplicationDate) : void
     {
         $this->rolesApplicationDate = $rolesApplicationDate;
     }
@@ -1112,12 +1113,12 @@ class User
         $this->photo = $photo;
     }
 
-    public function getPhotoUpdate() : ?\DateTime
+    public function getPhotoUpdate() : ?DateTime
     {
         return $this->photoUpdate;
     }
 
-    public function setPhotoUpdate(?\DateTime $photoUpdate) : void
+    public function setPhotoUpdate(?DateTime $photoUpdate) : void
     {
         $this->photoUpdate = $photoUpdate;
     }

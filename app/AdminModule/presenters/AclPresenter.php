@@ -15,6 +15,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Nette\Application\AbortException;
 use Nette\Forms\Form;
+use stdClass;
 
 /**
  * Presenter obsluhující správu rolí.
@@ -91,7 +92,7 @@ class AclPresenter extends AdminBasePresenter
     {
         $form = $this->addRoleFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             if ($form['cancel']->isSubmittedBy()) {
                 $this->redirect('Acl:default');
             }
@@ -113,7 +114,7 @@ class AclPresenter extends AdminBasePresenter
     {
         $form = $this->editRoleFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             if ($form['cancel']->isSubmittedBy()) {
                 $this->redirect('Acl:default');
             }

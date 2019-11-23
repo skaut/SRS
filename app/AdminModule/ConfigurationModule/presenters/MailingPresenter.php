@@ -7,8 +7,11 @@ namespace App\AdminModule\ConfigurationModule\Presenters;
 use App\AdminModule\ConfigurationModule\Forms\MailingForm;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsFacade;
+use App\Model\Settings\SettingsRepository;
+use App\Services\SettingsService;
 use Nette\Application\UI\Form;
+use stdClass;
+use Throwable;
 
 /**
  * Presenter obsluhující nastavení mailingu.
@@ -26,30 +29,30 @@ class MailingPresenter extends ConfigurationBasePresenter
     public $mailingFormFactory;
 
     /**
-     * @var SettingsFacade
+     * @var SettingsService
      * @inject
      */
-    public $settingsFacade;
+    public $settingsService;
 
 
     /**
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function renderDefault() : void
     {
-        $this->template->waiting = $this->settingsFacade->getValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE) !== null;
+        $this->template->waiting = $this->settingsService->getValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE) !== null;
     }
 
     /**
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     protected function createComponentMailingForm() : Form
     {
         $form = $this->mailingFormFactory->create($this->user->getId());
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');

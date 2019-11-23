@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Model\User;
 
-use App\Model\EntityRepository;
 use App\Model\Enums\ApplicationState;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -50,7 +50,6 @@ class ApplicationRepository extends EntityRepository
     }
 
     /**
-     * @throws NonUniqueResultException
      */
     public function findValidByVariableSymbol(?string $variableSymbol) : ?Application
     {
@@ -66,7 +65,6 @@ class ApplicationRepository extends EntityRepository
     /**
      * Uloží přihlášku.
      * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function save(Application $application) : void
     {
@@ -77,7 +75,6 @@ class ApplicationRepository extends EntityRepository
     /**
      * Odstraní přihlášku.
      * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function remove(Application $application) : void
     {

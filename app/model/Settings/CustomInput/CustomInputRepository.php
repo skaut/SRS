@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Settings\CustomInput;
 
-use App\Model\EntityRepository;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -40,7 +40,6 @@ class CustomInputRepository extends EntityRepository
 
     /**
      * Vrátí pozici posledního pole.
-     * @throws NonUniqueResultException
      */
     public function findLastPosition() : int
     {
@@ -54,7 +53,6 @@ class CustomInputRepository extends EntityRepository
      * Uloží pole.
      * @throws NonUniqueResultException
      * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function save(CustomInput $input) : void
     {
@@ -68,8 +66,6 @@ class CustomInputRepository extends EntityRepository
 
     /**
      * Odstraní pole.
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function remove(CustomInput $input) : void
     {
@@ -83,8 +79,6 @@ class CustomInputRepository extends EntityRepository
 
     /**
      * Přesune pole mezi pole s id prevId a nextId.
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function sort(int $itemId, int $prevId, int $nextId) : void
     {

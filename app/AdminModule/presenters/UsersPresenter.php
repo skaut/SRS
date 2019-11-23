@@ -23,6 +23,8 @@ use App\Services\ExcelExportService;
 use App\Services\PdfExportService;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
+use stdClass;
+use Throwable;
 
 /**
  * Presenter obsluhující správu uživatelů.
@@ -182,7 +184,7 @@ class UsersPresenter extends AdminBasePresenter
     }
 
     /**
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function handleCancelRegistration() : void
     {
@@ -204,7 +206,7 @@ class UsersPresenter extends AdminBasePresenter
     {
         $form = $this->addLectorFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             if ($form['cancel']->isSubmittedBy()) {
                 $this->redirect('Users:default');
             } else {
@@ -220,7 +222,7 @@ class UsersPresenter extends AdminBasePresenter
     {
         $form = $this->editUserPersonalDetailsFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             if ($form['cancel']->isSubmittedBy()) {
                 $this->redirect('this');
             } else {
@@ -244,7 +246,7 @@ class UsersPresenter extends AdminBasePresenter
             $this->redirect('this');
         };
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             if (! $form['cancel']->isSubmittedBy()) {
                 $this->flashMessage('admin.users.users_saved', 'success');
             }

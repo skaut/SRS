@@ -9,6 +9,7 @@ use App\Model\Page\PageException;
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
 use Nettrine\ORM\Entity\Attributes\Id as Identifier;
+use stdClass;
 
 /**
  * Abstraktní entita obsahu.
@@ -302,7 +303,7 @@ abstract class Content implements IContent
     /**
      * Zpracuje při uložení stránky část formuláře týkající se obsahu.
      */
-    public function contentFormSucceeded(Form $form, \stdClass $values) : void
+    public function contentFormSucceeded(Form $form, stdClass $values) : void
     {
         $values         = $values[$this->getContentFormName()];
         $this->position = $values['position'];

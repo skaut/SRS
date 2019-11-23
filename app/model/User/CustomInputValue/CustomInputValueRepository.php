@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\User\CustomInputValue;
 
-use App\Model\EntityRepository;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
@@ -26,8 +26,6 @@ class CustomInputValueRepository extends EntityRepository
 
     /**
      * Uloží hodnotu vlastního pole přihlášky.
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function save(CustomInputValue $value) : void
     {
@@ -37,8 +35,6 @@ class CustomInputValueRepository extends EntityRepository
 
     /**
      * Odstraní hodnotu vlastního pole přihlášky.
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function remove(CustomInputValue $value) : void
     {

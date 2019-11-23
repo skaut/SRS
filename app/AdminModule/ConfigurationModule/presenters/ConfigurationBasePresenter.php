@@ -11,6 +11,7 @@ use App\Model\Settings\SettingsException;
 use App\Model\Structure\SubeventRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Nette\Application\AbortException;
+use Throwable;
 
 /**
  * Basepresenter pro ConfigurationModule.
@@ -42,7 +43,7 @@ abstract class ConfigurationBasePresenter extends AdminBasePresenter
     /**
      * @throws SettingsException
      * @throws NonUniqueResultException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function beforeRender() : void
     {

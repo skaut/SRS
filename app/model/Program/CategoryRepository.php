@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Model\Program;
 
-use App\Model\EntityRepository;
 use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use function array_map;
@@ -104,8 +104,6 @@ class CategoryRepository extends EntityRepository
 
     /**
      * Uloží kategorii.
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function save(Category $category) : void
     {
@@ -115,8 +113,6 @@ class CategoryRepository extends EntityRepository
 
     /**
      * Odstraní kategorii.
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function remove(Category $category) : void
     {

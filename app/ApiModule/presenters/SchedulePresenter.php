@@ -8,10 +8,12 @@ use App\ApiModule\DTO\Schedule\ProgramSaveDTO;
 use App\ApiModule\DTO\Schedule\ResponseDTO;
 use App\ApiModule\Services\ScheduleService;
 use App\Model\Settings\SettingsException;
+use Exception;
 use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializerBuilder;
 use Nette\Application\AbortException;
 use Nette\Application\Responses\TextResponse;
+use Throwable;
 
 /**
  * API pro správu harmonogramu a zapisování programů.
@@ -55,7 +57,7 @@ class SchedulePresenter extends ApiBasePresenter
 
     /**
      * Vrací podrobnosti o všech programech pro použití v administraci harmonogramu.
-     * @throws \Exception
+     * @throws Exception
      * @throws AbortException
      */
     public function actionGetProgramsAdmin() : void
@@ -71,7 +73,7 @@ class SchedulePresenter extends ApiBasePresenter
      * Vrací podrobnosti o programech, ke kterým má uživatel přístup, pro použití v kalendáři pro výběr programů.
      * @throws SettingsException
      * @throws AbortException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function actionGetProgramsWeb() : void
     {
@@ -112,7 +114,7 @@ class SchedulePresenter extends ApiBasePresenter
      * Vrací nastavení pro FullCalendar.
      * @throws SettingsException
      * @throws AbortException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function actionGetCalendarConfig() : void
     {
@@ -127,7 +129,7 @@ class SchedulePresenter extends ApiBasePresenter
      * Uloží nebo vytvoří program.
      * @throws SettingsException
      * @throws AbortException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function actionSaveProgram(string $data) : void
     {
@@ -144,7 +146,7 @@ class SchedulePresenter extends ApiBasePresenter
      * Smaže program.
      * @throws SettingsException
      * @throws AbortException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function actionRemoveProgram(int $id) : void
     {
@@ -159,7 +161,7 @@ class SchedulePresenter extends ApiBasePresenter
      * Přihlásí program uživateli.
      * @throws SettingsException
      * @throws AbortException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function actionAttendProgram(int $id) : void
     {
@@ -174,7 +176,7 @@ class SchedulePresenter extends ApiBasePresenter
      * Odhlásí program uživateli.
      * @throws SettingsException
      * @throws AbortException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function actionUnattendProgram(int $id) : void
     {

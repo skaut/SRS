@@ -7,14 +7,18 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseForm;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsFacade;
+use App\Model\Settings\SettingsRepository;
 use App\Services\BankService;
+use App\Services\SettingsService;
+use DateTime;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use FioApi\Exceptions\InternalErrorException;
 use Nette;
 use Nette\Application\UI\Form;
 use Nextras\Forms\Controls\DatePicker;
+use stdClass;
+use Throwable;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
@@ -31,8 +35,8 @@ class BankForm
     /** @var BaseForm */
     private $baseFormFactory;
 
-    /** @var SettingsFacade */
-    private $settingsFacade;
+    /** @var SettingsService */
+    private $settingsService;
 
     /** @var BankService */
     private $bankService;
@@ -40,17 +44,17 @@ class BankForm
 
     public function __construct(
         BaseForm $baseForm,
-        SettingsFacade $settingsFacade,
+        SettingsService $settingsService,
         BankService $bankService
     ) {
         $this->baseFormFactory = $baseForm;
-        $this->settingsFacade  = $settingsFacade;
+        $this->settingsService = $settingsService;
         $this->bankService     = $bankService;
     }
 
     /**
      * Vytvoří formulář.
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function create() : Form
     {
@@ -80,16 +84,16 @@ class BankForm
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function processForm(Form $form, \stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         $token = $values['bankToken'];
         $from  = $values['bankDownloadFrom'];
 
         try {
             $this->bankService->downloadTransactions($from, $token);
-            $this->settingsFacade->setValue(Settings::BANK_TOKEN, $token);
+            $this->settingsService->setValue(Settings::BANK_TOKEN, $token);
         } catch (InternalErrorException $ex) {
             Debugger::log($ex, ILogger::WARNING);
             /** @var Nette\Forms\Controls\TextInput $bankTokenInput */
@@ -103,6 +107,6 @@ class BankForm
      */
     public function validateBankDownloadFromDate(DatePicker $field) : bool
     {
-        return $field->getValue() <= new \DateTime();
+        return $field->getValue() <= new DateTime();
     }
 }

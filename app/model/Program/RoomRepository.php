@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Model\Program;
 
-use App\Model\EntityRepository;
+use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\ORMException;
 use function array_map;
 
@@ -70,7 +70,6 @@ class RoomRepository extends EntityRepository
     /**
      * Uloží místnost.
      * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function save(Room $room) : void
     {
@@ -81,7 +80,6 @@ class RoomRepository extends EntityRepository
     /**
      * Odstraní místnost.
      * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function remove(Room $room) : void
     {
@@ -97,7 +95,7 @@ class RoomRepository extends EntityRepository
     /**
      * Je v místnosti jiný program ve stejnou dobu?
      */
-    public function hasOverlappingProgram(Room $room, ?int $programId, \DateTime $start, \DateTime $end) : bool
+    public function hasOverlappingProgram(Room $room, ?int $programId, DateTime $start, DateTime $end) : bool
     {
         $qb = $this->createQueryBuilder('r')
             ->select('r.id')

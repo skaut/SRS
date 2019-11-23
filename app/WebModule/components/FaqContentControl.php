@@ -11,6 +11,7 @@ use App\Model\CMS\FaqRepository;
 use App\WebModule\Forms\FaqForm;
 use Nette\Application\UI\Control;
 use Nette\Forms\Form;
+use stdClass;
 
 /**
  * Komponenta s FAQ.
@@ -59,7 +60,7 @@ class FaqContentControl extends Control
     {
         $form = $this->faqFormFactory->create($this->getPresenter()->getUser()->id);
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             $this->getPresenter()->flashMessage('web.faq_content.add_question_successful', 'success');
 
             $this->getPresenter()->redirect('this');

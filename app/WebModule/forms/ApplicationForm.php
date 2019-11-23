@@ -6,7 +6,6 @@ namespace App\WebModule\Forms;
 
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
-use App\Model\EntityManagerDecorator;
 use App\Model\Enums\Sex;
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\CustomInput\CustomFile;
@@ -15,7 +14,7 @@ use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\CustomInput\CustomSelect;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsFacade;
+use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\Subevent;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\ApplicationRepository;
@@ -26,14 +25,19 @@ use App\Model\User\CustomInputValue\CustomSelectValue;
 use App\Model\User\CustomInputValue\CustomTextValue;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
+use App\Services\ACLService;
 use App\Services\ApplicationService;
 use App\Services\FilesService;
 use App\Services\MailService;
 use App\Services\ProgramService;
+use App\Services\SettingsService;
 use App\Services\SkautIsService;
+use App\Services\SubeventService;
 use App\Utils\Validators;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NonUniqueResultException;
+use InvalidArgumentException;
 use Kdyby\Translation\Translator;
 use Nette;
 use Nette\Application\UI\Form;
@@ -42,7 +46,10 @@ use Nette\Forms\IControl;
 use Nette\Http\FileUpload;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
+use Nettrine\ORM\EntityManagerDecorator;
 use Skautis\Wsdl\WsdlException;
+use stdClass;
+use Throwable;
 use Tracy\Debugger;
 use Tracy\ILogger;
 use function array_key_exists;
@@ -100,8 +107,8 @@ class ApplicationForm
     /** @var SkautIsService */
     private $skautIsService;
 
-    /** @var SettingsFacade */
-    private $settingsFacade;
+    /** @var SettingsService */
+    private $settingsService;
 
     /** @var MailService */
     private $mailService;
@@ -111,6 +118,9 @@ class ApplicationForm
 
     /** @var ApplicationRepository */
     private $applicationRepository;
+
+    /** @var ACLService */
+    private $ACLService;
 
     /** @var ApplicationService */
     private $applicationService;
@@ -124,45 +134,50 @@ class ApplicationForm
     /** @var FilesService */
     private $filesService;
 
+    /** @var SubeventService */
+    private $subeventService;
+
     /** @var Translator */
     private $translator;
 
 
     public function __construct(
         BaseForm $baseFormFactory,
-        EntityManagerDecorator $em,
         UserRepository $userRepository,
         RoleRepository $roleRepository,
         CustomInputRepository $customInputRepository,
         CustomInputValueRepository $customInputValueRepository,
         ProgramRepository $programRepository,
         SkautIsService $skautIsService,
-        SettingsFacade $settingsFacade,
+        SettingsService $settingsService,
         MailService $mailService,
         SubeventRepository $subeventRepository,
         ApplicationRepository $applicationRepository,
+        ACLService $ACLService,
         ApplicationService $applicationService,
         ProgramService $programService,
         Validators $validators,
         FilesService $filesService,
+        SubeventService $subeventService,
         Translator $translator
     ) {
         $this->baseFormFactory            = $baseFormFactory;
-        $this->em                         = $em;
         $this->userRepository             = $userRepository;
         $this->roleRepository             = $roleRepository;
         $this->customInputRepository      = $customInputRepository;
         $this->customInputValueRepository = $customInputValueRepository;
         $this->programRepository          = $programRepository;
         $this->skautIsService             = $skautIsService;
-        $this->settingsFacade             = $settingsFacade;
+        $this->settingsService            = $settingsService;
         $this->mailService                = $mailService;
         $this->subeventRepository         = $subeventRepository;
         $this->applicationRepository      = $applicationRepository;
+        $this->ACLService                 = $ACLService;
         $this->applicationService         = $applicationService;
         $this->programService             = $programService;
         $this->validators                 = $validators;
         $this->filesService               = $filesService;
+        $this->subeventService            = $subeventService;
         $this->translator                 = $translator;
     }
 
@@ -170,7 +185,7 @@ class ApplicationForm
      * Vytvoří formulář.
      * @throws SettingsException
      * @throws NonUniqueResultException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function create(int $id) : Form
     {
@@ -230,7 +245,7 @@ class ApplicationForm
 
         $this->addCustomInputs($form);
 
-        $form->addCheckbox('agreement', $this->settingsFacade->getValue(Settings::APPLICATION_AGREEMENT))
+        $form->addCheckbox('agreement', $this->settingsService->getValue(Settings::APPLICATION_AGREEMENT))
             ->addRule(Form::FILLED, 'web.application_content.agreement_empty');
 
         $form->addSubmit('submit', 'web.application_content.register');
@@ -256,11 +271,11 @@ class ApplicationForm
 
     /**
      * Zpracuje formulář.
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function processForm(Form $form, \stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
-        $this->em->transactional(function ($em) use ($values) : void {
+        $this->em->transactional(function () use ($values) : void {
             if (array_key_exists('sex', $values)) {
                 $this->user->setSex($values['sex']);
             }
@@ -397,7 +412,7 @@ class ApplicationForm
                     break;
 
                 default:
-                    throw new \InvalidArgumentException();
+                    throw new InvalidArgumentException();
             }
 
             if (! $customInput->isMandatory()) {
@@ -411,6 +426,7 @@ class ApplicationForm
     /**
      * Přidá select pro výběr podakcí.
      * @throws NonUniqueResultException
+     * @throws \Doctrine\ORM\NoResultException
      */
     private function addSubeventsSelect(Form $form) : void
     {
@@ -418,7 +434,7 @@ class ApplicationForm
             return;
         }
 
-        $subeventsOptions = $this->subeventRepository->getExplicitOptionsWithCapacity();
+        $subeventsOptions = $this->subeventService->getExplicitOptionsWithCapacity();
 
         $subeventsSelect = $form->addMultiSelect('subevents', 'web.application_content.subevents')->setItems(
             $subeventsOptions
@@ -465,7 +481,7 @@ class ApplicationForm
      */
     private function addRolesSelect(Form $form) : void
     {
-        $registerableOptions = $this->roleRepository->getRegisterableNowOptionsWithCapacity();
+        $registerableOptions = $this->ACLService->getRegisterableNowOptionsWithCapacity();
 
         $rolesSelect = $form->addMultiSelect('roles', 'web.application_content.roles')->setItems(
             $registerableOptions

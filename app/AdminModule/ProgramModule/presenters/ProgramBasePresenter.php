@@ -9,6 +9,7 @@ use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\Settings\SettingsException;
 use Nette\Application\AbortException;
+use Throwable;
 
 /**
  * Basepresenter pro ProgramModule.
@@ -33,7 +34,7 @@ abstract class ProgramBasePresenter extends AdminBasePresenter
 
     /**
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function beforeRender() : void
     {

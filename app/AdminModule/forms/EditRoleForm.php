@@ -8,19 +8,22 @@ use App\Model\ACL\Permission;
 use App\Model\ACL\PermissionRepository;
 use App\Model\ACL\Resource;
 use App\Model\ACL\Role;
-use App\Model\ACL\RoleFacade;
 use App\Model\ACL\RoleRepository;
 use App\Model\CMS\PageRepository;
-use App\Model\EntityManagerDecorator;
 use App\Model\Program\ProgramRepository;
+use App\Services\ACLService;
 use App\Services\ProgramService;
 use Doctrine\DBAL\ConnectionException;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
 use Nette\Forms\Controls\SelectBox;
+use Nettrine\ORM\EntityManagerDecorator;
+use stdClass;
+use Throwable;
 use function in_array;
 
 /**
@@ -46,8 +49,8 @@ class EditRoleForm
     /** @var EntityManagerDecorator */
     private $em;
 
-    /** @var RoleFacade */
-    private $roleFacade;
+    /** @var ACLService */
+    private $ACLService;
 
     /** @var RoleRepository */
     private $roleRepository;
@@ -68,7 +71,7 @@ class EditRoleForm
     public function __construct(
         BaseForm $baseFormFactory,
         EntityManagerDecorator $em,
-        RoleFacade $roleFacade,
+        ACLService $ACLService,
         RoleRepository $roleRepository,
         PageRepository $pageRepository,
         PermissionRepository $permissionRepository,
@@ -77,7 +80,7 @@ class EditRoleForm
     ) {
         $this->baseFormFactory      = $baseFormFactory;
         $this->em                   = $em;
-        $this->roleFacade           = $roleFacade;
+        $this->ACLService           = $ACLService;
         $this->roleRepository       = $roleRepository;
         $this->pageRepository       = $pageRepository;
         $this->permissionRepository = $permissionRepository;
@@ -147,7 +150,7 @@ class EditRoleForm
             ->addCondition(Form::FILLED)
             ->addRule([$this, 'validateRedirectAllowed'], 'admin.acl.roles_redirect_after_login_restricted', [$allowedPages]);
 
-        $rolesOptions = $this->roleRepository->getRolesWithoutRoleOptions($this->role->getId());
+        $rolesOptions = $this->ACLService->getRolesWithoutRoleOptions($this->role->getId());
 
         $incompatibleRolesSelect = $form->addMultiSelect('incompatibleRoles', 'admin.acl.roles_incompatible_roles', $rolesOptions);
 
@@ -203,15 +206,15 @@ class EditRoleForm
 
     /**
      * Zpracuje formulář.
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function processForm(Form $form, \stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         if ($form['cancel']->isSubmittedBy()) {
             return;
         }
 
-        $this->em->transactional(function ($em) use ($values) : void {
+        $this->em->transactional(function () use ($values) : void {
             $capacity = $values['capacity'] !== '' ? $values['capacity'] : null;
 
             $this->role->setName($values['name']);
@@ -234,7 +237,7 @@ class EditRoleForm
                 $this->role->setFee($values['fee']);
             }
 
-            $this->roleFacade->save($this->role);
+            $this->ACLService->saveRole($this->role);
 
             $this->programService->updateUsersPrograms($this->role->getUsers());
         });
@@ -288,7 +291,6 @@ class EditRoleForm
     /**
      * Ověří kolize mezi vyžadovanými a nekompatibilními rolemi.
      * @param int[][] $args
-     * @throws ConnectionException
      */
     public function validateIncompatibleAndRequiredCollision(MultiSelectBox $field, array $args) : bool
     {

@@ -14,6 +14,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
+use stdClass;
 
 /**
  * Formulář pro úpravu otázky.
@@ -105,7 +106,7 @@ class FaqForm
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(Form $form, \stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         if ($form['cancel']->isSubmittedBy()) {
             return;

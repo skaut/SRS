@@ -11,6 +11,8 @@ use App\AdminModule\ConfigurationModule\Forms\PlacePointForm;
 use App\Model\Settings\Place\PlacePointRepository;
 use App\Model\Settings\SettingsException;
 use Nette\Application\UI\Form;
+use stdClass;
+use Throwable;
 
 /**
  * Presenter obsluhující nastavení místa semináře.
@@ -52,13 +54,13 @@ class PlacePresenter extends ConfigurationBasePresenter
 
     /**
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     protected function createComponentPlaceDescriptionForm() : Form
     {
         $form = $this->placeDescriptionFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');
@@ -71,7 +73,7 @@ class PlacePresenter extends ConfigurationBasePresenter
     {
         $form = $this->placePointFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             if ($form['cancel']->isSubmittedBy()) {
                 $this->redirect('Place:default');
             }

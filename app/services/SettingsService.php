@@ -2,41 +2,37 @@
 
 declare(strict_types=1);
 
-namespace App\Model\Settings;
+namespace App\Services;
 
-use App\Model\EntityManagerDecorator;
-use App\Model\EntityRepository;
+use App\Model\Settings\SettingsException;
+use App\Model\Settings\SettingsRepository;
 use App\Utils\Helpers;
+use DateTime;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Nette;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
-use const FILTER_VALIDATE_BOOLEAN;
-use const FILTER_VALIDATE_INT;
-use function filter_var;
+use Throwable;
 
 /**
- * Třída spravující nastavení.
+ * Služba pro správu nastavení.
  *
- * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
-class SettingsFacade
+class SettingsService
 {
-    /** @var EntityManagerDecorator */
-    private $em;
+    use Nette\SmartObject;
+
+    /** @var SettingsRepository */
+    private $settingsRepository;
 
     /** @var Cache */
     private $settingsCache;
 
-    /** @var EntityRepository */
-    private $settingsRepository;
 
-    public function __construct(EntityManagerDecorator $em, IStorage $storage)
-    {
-        $this->em                 = $em;
-        $this->settingsRepository = $em->getRepository(Settings::class);
+    public function __construct(SettingsRepository $settingsRepository, IStorage $storage) {
+        $this->settingsRepository = $settingsRepository;
         $this->settingsCache      = new Cache($storage, 'Settings');
     }
 
@@ -44,15 +40,14 @@ class SettingsFacade
      * Vrátí hodnotu položky.
      *
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function getValue(string $item) : ?string
     {
         $value = $this->settingsCache->load($item);
 
         if ($value === null) {
-            /** @var Settings $settings */
-            $settings = $this->settingsRepository->findOneBy(['item' => $item]);
+            $settings = $this->settingsRepository->findByItem($item);
             if ($settings === null) {
                 throw new SettingsException('Item ' . $item . ' was not found in table Settings.');
             }
@@ -68,16 +63,11 @@ class SettingsFacade
      * Nastaví hodnotu položky.
      *
      * @throws SettingsException
-     * @throws ORMException
-     * @throws OptimisticLockException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function setValue(string $item, ?string $value) : void
     {
-        /**
-         * @var Settings $settings
-         */
-        $settings = $this->settingsRepository->findOneBy(['item' => $item]);
+        $settings = $this->settingsRepository->findByItem($item);
         if ($settings === null) {
             throw new SettingsException('Item ' . $item . ' was not found in table Settings.');
         }
@@ -92,7 +82,7 @@ class SettingsFacade
      * Vrátí hodnotu položky typu int.
      *
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function getIntValue(string $item) : ?int
     {
@@ -109,7 +99,7 @@ class SettingsFacade
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function setIntValue(string $item, ?int $value) : void
     {
@@ -124,7 +114,7 @@ class SettingsFacade
      * Vrátí hodnotu položky typu bool.
      *
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function getBoolValue(string $item) : ?bool
     {
@@ -141,7 +131,7 @@ class SettingsFacade
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function setBoolValue(string $item, ?bool $value) : void
     {
@@ -156,22 +146,22 @@ class SettingsFacade
      * Vrátí hodnotu položky typu datum a čas.
      *
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function getDateTimeValue(string $item) : ?\DateTime
+    public function getDateTimeValue(string $item) : ?DateTime
     {
         $value = $this->getValue($item);
         if ($value === null) {
             return null;
         }
-        return new \DateTime($value);
+        return new DateTime($value);
     }
 
     /**
      * Vrátí hodnotu položky typu datum a čas jako text.
      *
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function getDateTimeValueText(string $item) : ?string
     {
@@ -179,7 +169,7 @@ class SettingsFacade
         if ($value === null) {
             return null;
         }
-        return (new \DateTime($value))->format(Helpers::DATETIME_FORMAT);
+        return (new DateTime($value))->format(Helpers::DATETIME_FORMAT);
     }
 
     /**
@@ -188,14 +178,14 @@ class SettingsFacade
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function setDateTimeValue(string $item, ?\DateTime $value) : void
+    public function setDateTimeValue(string $item, ?DateTime $value) : void
     {
         if ($value === null) {
             $this->setValue($item, null);
         } else {
-            $this->setValue($item, $value->format(\DateTime::ISO8601));
+            $this->setValue($item, $value->format(DateTime::ISO8601));
         }
     }
 
@@ -203,22 +193,22 @@ class SettingsFacade
      * Vrátí hodnotu položky typu datum.
      *
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function getDateValue(string $item) : ?\DateTime
+    public function getDateValue(string $item) : ?DateTime
     {
         $value = $this->getValue($item);
         if ($value === null) {
             return null;
         }
-        return new \DateTime($value);
+        return new DateTime($value);
     }
 
     /**
      * Vrátí hodnotu položky typu datum jako text.
      *
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function getDateValueText(string $item) : ?string
     {
@@ -226,7 +216,7 @@ class SettingsFacade
         if ($value === null) {
             return null;
         }
-        return (new \DateTime($value))->format(Helpers::DATE_FORMAT);
+        return (new DateTime($value))->format(Helpers::DATE_FORMAT);
     }
 
     /**
@@ -235,9 +225,9 @@ class SettingsFacade
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function setDateValue(string $item, ?\DateTime $value) : void
+    public function setDateValue(string $item, ?DateTime $value) : void
     {
         if ($value === null) {
             $this->setValue($item, null);

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Payment;
 
-use App\Model\EntityRepository;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
@@ -35,7 +35,6 @@ class PaymentRepository extends EntityRepository
     /**
      * Uloží platbu.
      * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function save(Payment $payment) : void
     {
@@ -46,7 +45,6 @@ class PaymentRepository extends EntityRepository
     /**
      * Odstraní platbu.
      * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function remove(Payment $payment) : void
     {

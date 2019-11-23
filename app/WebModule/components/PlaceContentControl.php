@@ -8,8 +8,10 @@ use App\Model\CMS\Content\ContentDTO;
 use App\Model\Settings\Place\PlacePointRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsFacade;
+use App\Model\Settings\SettingsRepository;
+use App\Services\SettingsService;
 use Nette\Application\UI\Control;
+use Throwable;
 
 /**
  * Komponenta s místem.
@@ -19,24 +21,24 @@ use Nette\Application\UI\Control;
  */
 class PlaceContentControl extends Control
 {
-    /** @var SettingsFacade */
-    private $settingsFacade;
+    /** @var SettingsService */
+    private $settingsService;
 
     /** @var PlacePointRepository */
     private $placePointRepository;
 
 
-    public function __construct(SettingsFacade $settingsFacade, PlacePointRepository $placePointRepository)
+    public function __construct(SettingsService $settingsService, PlacePointRepository $placePointRepository)
     {
         parent::__construct();
 
-        $this->settingsFacade       = $settingsFacade;
+        $this->settingsService      = $settingsService;
         $this->placePointRepository = $placePointRepository;
     }
 
     /**
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function render(ContentDTO $content) : void
     {
@@ -44,7 +46,7 @@ class PlaceContentControl extends Control
         $template->setFile(__DIR__ . '/templates/place_content.latte');
 
         $template->heading     = $content->getHeading();
-        $template->description = $this->settingsFacade->getValue(Settings::PLACE_DESCRIPTION);
+        $template->description = $this->settingsService->getValue(Settings::PLACE_DESCRIPTION);
         $template->points      = $this->placePointRepository->findAll();
 
         $template->render();

@@ -8,13 +8,15 @@ use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsFacade;
+use App\Model\Settings\SettingsRepository;
 use App\Model\User\UserRepository;
 use App\Services\MailService;
+use App\Services\SettingsService;
 use App\Services\SkautIsService;
 use Nette\Application\AbortException;
 use Nette\Security\AuthenticationException;
 use Nette\Security\Identity;
+use Throwable;
 use Ublaboo\Mailing\Exception\MailingException;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 use function strpos;
@@ -35,10 +37,10 @@ class AuthPresenter extends BasePresenter
     public $skautIsService;
 
     /**
-     * @var SettingsFacade
+     * @var SettingsService
      * @inject
      */
-    public $settingsFacade;
+    public $settingsService;
 
     /**
      * @var UserRepository
@@ -58,8 +60,7 @@ class AuthPresenter extends BasePresenter
      * @throws SettingsException
      * @throws AbortException
      * @throws AuthenticationException
-     * @throws \Throwable
-     * @throws MailingException
+     * @throws Throwable
      * @throws MailingMailCreationException
      */
     public function actionLogin(?string $backlink = null) : void
@@ -79,7 +80,7 @@ class AuthPresenter extends BasePresenter
             $user = $this->userRepository->findById($this->user->id);
 
             $this->mailService->sendMailFromTemplate($user, '', Template::SIGN_IN, [
-                TemplateVariable::SEMINAR_NAME => $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
+                TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
             ]);
         }
 
@@ -105,7 +106,7 @@ class AuthPresenter extends BasePresenter
      * Provede přesměrování po úspěšném přihlášení, v závislosti na nastavení, nastavení role nebo returnUrl.
      * @throws SettingsException
      * @throws AbortException
-     * @throws \Throwable
+     * @throws Throwable
      */
     private function redirectAfterLogin(?string $returnUrl) : void
     {
@@ -142,7 +143,7 @@ class AuthPresenter extends BasePresenter
         if ($redirectByRole && ! $multipleRedirects) {
             $slug = $redirectByRole;
         } else {
-            $slug = $this->settingsFacade->getValue(Settings::REDIRECT_AFTER_LOGIN);
+            $slug = $this->settingsService->getValue(Settings::REDIRECT_AFTER_LOGIN);
         }
 
         $this->redirect(':Web:Page:default', ['slug' => $slug]);

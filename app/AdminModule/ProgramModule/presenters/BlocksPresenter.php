@@ -20,6 +20,8 @@ use Doctrine\ORM\NonUniqueResultException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Http\Session;
+use stdClass;
+use Throwable;
 
 /**
  * Presenter obsluhující správu programových bloků.
@@ -82,7 +84,7 @@ class BlocksPresenter extends ProgramBasePresenter
 
     /**
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function renderDetail(int $id) : void
     {
@@ -91,7 +93,7 @@ class BlocksPresenter extends ProgramBasePresenter
         $this->template->block                     = $block;
         $this->template->programId                 = $this->session->getSection('srs')->programId;
         $this->template->userAllowedModifySchedule = $this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE) &&
-            $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE);
+            $this->settingsService->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE);
     }
 
     /**
@@ -130,14 +132,14 @@ class BlocksPresenter extends ProgramBasePresenter
      * Odstraní vybraný program.
      * @throws SettingsException
      * @throws AbortException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function handleDeleteProgram(int $programId) : void
     {
         $program = $this->programRepository->findById($programId);
 
         if (! $this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE) ||
-            ! $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)
+            ! $this->settingsService->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)
         ) {
             $this->getPresenter()->flashMessage('admin.program.blocks_program_modify_schedule_not_allowed', 'danger');
         } else {
@@ -165,13 +167,13 @@ class BlocksPresenter extends ProgramBasePresenter
     {
         $form = $this->blockFormFactory->create((int) $this->getParameter('id'), $this->getUser()->getId());
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             if ($form['cancel']->isSubmittedBy()) {
                 $this->redirect('Blocks:default');
             }
 
             if (! $values['id']) {
-                if (! $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK)) {
+                if (! $this->settingsService->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK)) {
                     $this->flashMessage('admin.program.blocks_add_not_allowed', 'danger');
                     $this->redirect('Blocks:default');
                 }

@@ -6,23 +6,24 @@ namespace App\WebModule\Presenters;
 
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
-use App\Model\ACL\ResourceFacade;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
-use App\Model\CMS\PageFacade;
 use App\Model\CMS\PageRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsFacade;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Presenters\BasePresenter;
+use App\Services\ACLService;
 use App\Services\Authenticator;
 use App\Services\Authorizator;
+use App\Services\CMSService;
 use App\Services\DatabaseService;
+use App\Services\SettingsService;
 use App\Services\SkautIsService;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Nette\Application\AbortException;
+use Throwable;
 use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\JavaScriptLoader;
 
@@ -47,34 +48,22 @@ abstract class WebBasePresenter extends BasePresenter
     public $authenticator;
 
     /**
-     * @var ResourceFacade
-     * @inject
-     */
-    public $resourceFacade;
-
-    /**
      * @var RoleRepository
      * @inject
      */
     public $roleRepository;
 
     /**
-     * @var PageFacade
+     * @var CMSService
      * @inject
      */
-    public $pageFacade;
+    public $CMSService;
 
     /**
-     * @var PageRepository
+     * @var SettingsService
      * @inject
      */
-    public $pageRepository;
-
-    /**
-     * @var SettingsFacade
-     * @inject
-     */
-    public $settingsFacade;
+    public $settingsService;
 
     /**
      * @var UserRepository
@@ -116,7 +105,7 @@ abstract class WebBasePresenter extends BasePresenter
 
     /**
      * @throws AbortException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function startup() : void
     {
@@ -135,7 +124,7 @@ abstract class WebBasePresenter extends BasePresenter
 
     /**
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function beforeRender() : void
     {
@@ -145,10 +134,10 @@ abstract class WebBasePresenter extends BasePresenter
 
         $this->template->backlink = $this->getHttpRequest()->getUrl()->getPath();
 
-        $this->template->logo        = $this->settingsFacade->getValue(Settings::LOGO);
-        $this->template->footer      = $this->settingsFacade->getValue(Settings::FOOTER);
-        $this->template->seminarName = $this->settingsFacade->getValue(Settings::SEMINAR_NAME);
-        $this->template->gaId        = $this->settingsFacade->getValue(Settings::GA_ID);
+        $this->template->logo        = $this->settingsService->getValue(Settings::LOGO);
+        $this->template->footer      = $this->settingsService->getValue(Settings::FOOTER);
+        $this->template->seminarName = $this->settingsService->getValue(Settings::SEMINAR_NAME);
+        $this->template->gaId        = $this->settingsService->getValue(Settings::GA_ID);
 
         $this->template->nonregisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
         $this->template->unapprovedRole    = $this->roleRepository->findBySystemName(Role::UNAPPROVED);
@@ -156,10 +145,10 @@ abstract class WebBasePresenter extends BasePresenter
 
         $this->template->adminAccess = $this->user->isAllowed(Resource::ADMIN, Permission::ACCESS);
 
-        $this->template->pages          = $this->pageFacade->findPublishedOrderedByPositionDTO();
+        $this->template->pages          = $this->CMSService->findPublishedOrderedByPositionDTO();
         $this->template->sidebarVisible = false;
 
-        $this->template->settings = $this->settingsFacade;
+        $this->template->settings = $this->settingsService;
     }
 
     /**
@@ -175,12 +164,12 @@ abstract class WebBasePresenter extends BasePresenter
     /**
      * Zkontroluje stav instalace.
      * @throws AbortException
-     * @throws \Throwable
+     * @throws Throwable
      */
     private function checkInstallation() : void
     {
         try {
-            if (! $this->settingsFacade->getBoolValue(Settings::ADMIN_CREATED)) {
+            if (! $this->settingsService->getBoolValue(Settings::ADMIN_CREATED)) {
                 $this->redirect(':Install:Install:default');
             } else {
                 $this->databaseService->update();

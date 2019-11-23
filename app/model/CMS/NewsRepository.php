@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\CMS;
 
-use App\Model\EntityRepository;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -28,7 +28,6 @@ class NewsRepository extends EntityRepository
 
     /**
      * Vrací id poslední aktuality.
-     * @throws NonUniqueResultException
      */
     public function findLastId() : int
     {
@@ -55,8 +54,6 @@ class NewsRepository extends EntityRepository
 
     /**
      * Uloží aktualitu.
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function save(News $news) : void
     {
@@ -66,8 +63,6 @@ class NewsRepository extends EntityRepository
 
     /**
      * Odstraní aktualitu.
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function remove(News $document) : void
     {

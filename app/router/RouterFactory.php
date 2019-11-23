@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App;
 
 use App\Model\CMS\PageDTO;
-use App\Model\CMS\PageFacade;
+use App\Services\CMSService;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Nette;
 use Nette\Application\Routers\Route;
@@ -13,13 +13,13 @@ use Nette\Application\Routers\RouteList;
 
 class RouterFactory
 {
-    /** @var PageFacade */
-    private $pageFacade;
+    /** @var CMSService */
+    private $CMSService;
 
 
-    public function __construct(PageFacade $pageFacade)
+    public function __construct(CMSService $CMSService)
     {
-        $this->pageFacade = $pageFacade;
+        $this->CMSService = $CMSService;
     }
 
     public function createRouter() : Nette\Application\IRouter
@@ -108,7 +108,7 @@ class RouterFactory
                 'presenter' => 'Page',
                 'page' => [
                     Route::FILTER_IN => function (string $slug) {
-                        return $this->pageFacade->findPublishedBySlugDTO($slug);
+                        return $this->CMSService->findPublishedBySlugDTO($slug);
                     },
                     Route::FILTER_OUT => function (PageDTO $page) {
                         return $page->getSlug();

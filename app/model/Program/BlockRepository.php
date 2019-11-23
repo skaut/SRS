@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Model\Program;
 
-use App\Model\EntityRepository;
 use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Structure\Subevent;
 use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -35,7 +35,6 @@ class BlockRepository extends EntityRepository
 
     /**
      * Vrací poslední id.
-     * @throws NonUniqueResultException
      */
     public function findLastId() : int
     {
@@ -184,7 +183,6 @@ class BlockRepository extends EntityRepository
     /**
      * Uloží blok.
      * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function save(Block $block) : void
     {
@@ -195,7 +193,6 @@ class BlockRepository extends EntityRepository
     /**
      * Odstraní blok.
      * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function remove(Block $block) : void
     {

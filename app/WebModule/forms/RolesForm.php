@@ -9,15 +9,19 @@ use App\Model\ACL\RoleRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsFacade;
+use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
+use App\Services\SettingsService;
 use App\Utils\Validators;
+use DateTime;
 use Kdyby\Translation\Translator;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
+use stdClass;
+use Throwable;
 
 /**
  * Formulář pro změnu rolí.
@@ -44,8 +48,8 @@ class RolesForm
     /** @var RoleRepository */
     private $roleRepository;
 
-    /** @var SettingsFacade */
-    private $settingsFacade;
+    /** @var SettingsService */
+    private $settingsService;
 
     /** @var ApplicationService */
     private $applicationService;
@@ -61,7 +65,7 @@ class RolesForm
         BaseForm $baseFormFactory,
         UserRepository $userRepository,
         RoleRepository $roleRepository,
-        SettingsFacade $settingsFacade,
+        SettingsService $settingsService,
         ApplicationService $applicationService,
         Translator $translator,
         Validators $validators
@@ -69,7 +73,7 @@ class RolesForm
         $this->baseFormFactory    = $baseFormFactory;
         $this->userRepository     = $userRepository;
         $this->roleRepository     = $roleRepository;
-        $this->settingsFacade     = $settingsFacade;
+        $this->settingsService    = $settingsService;
         $this->applicationService = $applicationService;
         $this->translator         = $translator;
         $this->validators         = $validators;
@@ -78,7 +82,7 @@ class RolesForm
     /**
      * Vytvoří formulář.
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function create(int $id) : Form
     {
@@ -146,14 +150,14 @@ class RolesForm
                 ->setAttribute('title', $form->getTranslator()->translate('web.profile.cancel_registration_disabled'));
         }
 
-        $ticketDownloadFrom = $this->settingsFacade->getDateTimeValue(Settings::TICKETS_FROM);
+        $ticketDownloadFrom = $this->settingsService->getDateTimeValue(Settings::TICKETS_FROM);
         if ($ticketDownloadFrom !== null) {
             $downloadTicketButton = $form->addSubmit('downloadTicket', 'web.profile.download_ticket')
                 ->setAttribute('class', 'btn-success');
 
             if ($this->user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))
                 || ! $this->user->hasPaidEveryApplication()
-                || $ticketDownloadFrom > new \DateTime()) {
+                || $ticketDownloadFrom > new DateTime()) {
                 $downloadTicketButton
                     ->setDisabled()
                     ->setAttribute('data-toggle', 'tooltip')
@@ -171,9 +175,9 @@ class RolesForm
 
     /**
      * Zpracuje formulář.
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function processForm(Form $form, \stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         if ($form['submit']->isSubmittedBy()) {
             $selectedRoles = $this->roleRepository->findRolesByIds($values['roles']);

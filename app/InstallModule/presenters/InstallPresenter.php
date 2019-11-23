@@ -6,18 +6,21 @@ namespace App\InstallModule\Presenters;
 
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
-use App\Model\EntityManagerDecorator;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsFacade;
+use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
+use App\Services\SettingsService;
 use Contributte\Console\Application;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\Migrations\Tools\Console\Command\MigrateCommand;
+use Doctrine\ORM\EntityManager;
+use Exception;
 use Nette\Application\AbortException;
+use Nettrine\ORM\EntityManagerDecorator;
 use Skautis\Config;
 use Skautis\Skautis;
 use Skautis\User;
@@ -26,6 +29,7 @@ use Skautis\Wsdl\WsdlException;
 use Skautis\Wsdl\WsdlManager;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Throwable;
 
 /**
  * Obsluhuje instalačního průvodce.
@@ -49,10 +53,10 @@ class InstallPresenter extends InstallBasePresenter
     public $em;
 
     /**
-     * @var SettingsFacade
+     * @var SettingsService
      * @inject
      */
-    public $settingsFacade;
+    public $settingsService;
 
     /**
      * @var RoleRepository
@@ -82,7 +86,7 @@ class InstallPresenter extends InstallBasePresenter
     /**
      * Zobrazení první stránky průvodce.
      * @throws AbortException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function renderDefault() : void
     {
@@ -91,7 +95,7 @@ class InstallPresenter extends InstallBasePresenter
         }
 
         try {
-            if ($this->settingsFacade->getBoolValue(Settings::ADMIN_CREATED)) {
+            if ($this->settingsService->getBoolValue(Settings::ADMIN_CREATED)) {
                 $this->redirect('installed');
             }
             $this->flashMessage('install.schema.schema_already_created', 'info');
@@ -103,7 +107,7 @@ class InstallPresenter extends InstallBasePresenter
 
     /**
      * Vytvoření schéma databáze a počátečních dat.
-     * @throws \Exception
+     * @throws Exception
      */
     public function handleImportSchema() : void
     {
@@ -128,12 +132,12 @@ class InstallPresenter extends InstallBasePresenter
     /**
      * Zobrazení stránky pro vytvoření administrátora.
      * @throws AbortException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function renderAdmin() : void
     {
         try {
-            if ($this->settingsFacade->getBoolValue(Settings::ADMIN_CREATED)) {
+            if ($this->settingsService->getBoolValue(Settings::ADMIN_CREATED)) {
                 $this->flashMessage('install.admin.admin_already_created', 'info');
                 $this->redirect('finish');
             }
@@ -147,7 +151,7 @@ class InstallPresenter extends InstallBasePresenter
             return;
         }
 
-        $this->em->transactional(function ($em) : void {
+        $this->em->transactional(function () : void {
             $user = $this->userRepository->findById($this->user->id);
             $this->userRepository->save($user);
 
@@ -162,7 +166,7 @@ class InstallPresenter extends InstallBasePresenter
                 true
             );
 
-            $this->settingsFacade->setBoolValue(Settings::ADMIN_CREATED, true);
+            $this->settingsService->setBoolValue(Settings::ADMIN_CREATED, true);
         });
 
         $this->user->logout(true);
@@ -186,12 +190,12 @@ class InstallPresenter extends InstallBasePresenter
     /**
      * Zobrazení stránky po úspěšné instalaci.
      * @throws AbortException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function renderFinish() : void
     {
         try {
-            if (! $this->settingsFacade->getBoolValue(Settings::ADMIN_CREATED)) {
+            if (! $this->settingsService->getBoolValue(Settings::ADMIN_CREATED)) {
                 $this->redirect('default');
             }
         } catch (TableNotFoundException $ex) {
@@ -204,12 +208,12 @@ class InstallPresenter extends InstallBasePresenter
     /**
      * Zobrazení stránky pokud byla instalace dokončena dříve.
      * @throws AbortException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function renderInstalled() : void
     {
         try {
-            if (! $this->settingsFacade->getBoolValue(Settings::ADMIN_CREATED)) {
+            if (! $this->settingsService->getBoolValue(Settings::ADMIN_CREATED)) {
                 $this->redirect('default');
             }
         } catch (TableNotFoundException $ex) {

@@ -7,6 +7,7 @@ namespace App\AdminModule\Presenters;
 use App\Model\Settings\SettingsException;
 use App\Model\Structure\SubeventRepository;
 use Doctrine\ORM\NonUniqueResultException;
+use Throwable;
 
 /**
  * Presenter obsluhující úvodní stránku.
@@ -26,7 +27,7 @@ class DashboardPresenter extends AdminBasePresenter
     /**
      * @throws SettingsException
      * @throws NonUniqueResultException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function beforeRender() : void
     {

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Model\ACL;
 
-use App\Model\EntityRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 

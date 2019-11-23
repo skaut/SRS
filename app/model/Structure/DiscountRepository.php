@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Structure;
 
-use App\Model\EntityRepository;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
@@ -26,8 +26,6 @@ class DiscountRepository extends EntityRepository
 
     /**
      * Uloží slevu.
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function save(Discount $discount) : void
     {
@@ -37,8 +35,6 @@ class DiscountRepository extends EntityRepository
 
     /**
      * Odstraní slevu.
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function remove(Discount $discount) : void
     {

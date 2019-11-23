@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Mailing;
 
-use App\Model\EntityRepository;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
@@ -35,7 +35,6 @@ class TemplateRepository extends EntityRepository
     /**
      * Uloží šablonu e-mailu.
      * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function save(Template $template) : void
     {

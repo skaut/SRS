@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace App\Model\Program;
 
-use App\Model\EntityRepository;
 use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Structure\Subevent;
 use App\Model\User\User;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Exception;
 use function array_map;
 use function array_merge;
 
@@ -35,7 +37,6 @@ class ProgramRepository extends EntityRepository
     /**
      * Uloží program.
      * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function save(Program $program) : void
     {
@@ -46,7 +47,6 @@ class ProgramRepository extends EntityRepository
     /**
      * Odstraní program.
      * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function remove(Program $program) : void
     {
@@ -85,7 +85,7 @@ class ProgramRepository extends EntityRepository
     /**
      * Vrací programy zablokované (programy stejného bloku a překrývající se programy) přihlášením se na program.
      * @return int[]
-     * @throws \Exception
+     * @throws Exception
      */
     public function findBlockedProgramsIdsByProgram(Program $program) : array
     {
@@ -114,7 +114,7 @@ class ProgramRepository extends EntityRepository
     /**
      * Vrací programy s překrývajícím se časem.
      * @return int[]
-     * @throws \Exception
+     * @throws Exception
      */
     public function findOverlappingProgramsIds(Program $program) : array
     {
@@ -140,7 +140,7 @@ class ProgramRepository extends EntityRepository
     /**
      * Překrývá se program s jiným programem?
      */
-    public function hasOverlappingProgram(?int $programId, \DateTime $start, \DateTime $end) : bool
+    public function hasOverlappingProgram(?int $programId, DateTime $start, DateTime $end) : bool
     {
         $qb = $this->createQueryBuilder('p')
             ->select('p.id')
@@ -164,7 +164,7 @@ class ProgramRepository extends EntityRepository
     /**
      * Překrývá se s jiným programem, který je automaticky zapisovaný.
      */
-    public function hasOverlappingAutoRegisteredProgram(?int $programId, \DateTime $start, \DateTime $end) : bool
+    public function hasOverlappingAutoRegisteredProgram(?int $programId, DateTime $start, DateTime $end) : bool
     {
         $qb = $this->createQueryBuilder('p')
             ->select('p.id')

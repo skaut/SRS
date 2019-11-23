@@ -13,15 +13,17 @@ use App\Model\Mailing\MailRepository;
 use App\Model\Mailing\TemplateRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsFacade;
+use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\Subevent;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Kdyby\Translation\Translator;
 use Nette;
+use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 use Ublaboo\Mailing\MailFactory;
 use function in_array;
@@ -40,8 +42,8 @@ class MailService
     /** @var MailFactory */
     private $mailFactory;
 
-    /** @var SettingsFacade */
-    private $settingsFacade;
+    /** @var SettingsService */
+    private $settingsService;
 
     /** @var MailRepository */
     private $mailRepository;
@@ -64,7 +66,7 @@ class MailService
 
     public function __construct(
         MailFactory $mailFactory,
-        SettingsFacade $settingsFacade,
+        SettingsService $settingsService,
         MailRepository $mailRepository,
         UserRepository $userRepository,
         RoleRepository $roleRepository,
@@ -73,7 +75,7 @@ class MailService
         Translator $translator
     ) {
         $this->mailFactory        = $mailFactory;
-        $this->settingsFacade     = $settingsFacade;
+        $this->settingsService    = $settingsService;
         $this->mailRepository     = $mailRepository;
         $this->userRepository     = $userRepository;
         $this->roleRepository     = $roleRepository;
@@ -88,7 +90,7 @@ class MailService
      * @param Collection|Subevent[] $recipientsSubevents
      * @param Collection|User[]     $recipientsUsers
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      * @throws MailingMailCreationException
      */
     public function sendMail(Collection $recipientsRoles, Collection $recipientsSubevents, Collection $recipientsUsers, string $copy, string $subject, string $text, bool $automatic = false) : void
@@ -117,8 +119,8 @@ class MailService
         }
 
         $messageData = new SrsMailData(
-            $this->settingsFacade->getValue(Settings::SEMINAR_EMAIL),
-            $this->settingsFacade->getValue(Settings::SEMINAR_NAME),
+            $this->settingsService->getValue(Settings::SEMINAR_EMAIL),
+            $this->settingsService->getValue(Settings::SEMINAR_NAME),
             $recipients,
             $copy,
             $subject,
@@ -133,7 +135,7 @@ class MailService
         $mailLog->setRecipientUsers($recipientsUsers);
         $mailLog->setSubject($subject);
         $mailLog->setText($text);
-        $mailLog->setDatetime(new \DateTime());
+        $mailLog->setDatetime(new DateTime());
         $mailLog->setAutomatic($automatic);
         $this->mailRepository->save($mailLog);
     }
@@ -142,7 +144,7 @@ class MailService
      * Rozešle e-mail podle šablony.
      * @param string[] $parameters
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      * @throws MailingMailCreationException
      */
     public function sendMailFromTemplate(?User $recipientUser, string $copy, string $type, array $parameters, bool $automatic = true) : void
@@ -162,7 +164,7 @@ class MailService
         }
 
         if ($template->isSendToOrganizer()) {
-            $copy = $this->settingsFacade->getValue(Settings::SEMINAR_EMAIL);
+            $copy = $this->settingsService->getValue(Settings::SEMINAR_EMAIL);
         }
 
         $subject = $template->getSubject();

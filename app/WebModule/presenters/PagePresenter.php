@@ -33,6 +33,7 @@ use App\WebModule\Components\ProgramsContentControl;
 use App\WebModule\Components\TextContentControl;
 use App\WebModule\Components\UsersContentControl;
 use Nette\Application\BadRequestException;
+use Throwable;
 
 /**
  * Presenter obshlující dynamicky vytvářené stránky pomocí administrace.
@@ -130,18 +131,18 @@ class PagePresenter extends WebBasePresenter
 
     /**
      * @throws BadRequestException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function renderDefault(?string $slug) : void
     {
         if ($slug === null) {
-            $page = $this->pageFacade->findPublishedBySlugDTO('/');
+            $page = $this->CMSService->findPublishedBySlugDTO('/');
             if ($page === null) {
                 $this->error($this->translator->translate('web.common.homepage_not_found'), 404);
             }
             $this->template->bodyClass = 'body-homepage';
         } else {
-            $page = $this->pageFacade->findPublishedBySlugDTO($slug);
+            $page = $this->CMSService->findPublishedBySlugDTO($slug);
             if ($page === null) {
                 $this->error($this->translator->translate('web.common.page_not_found'), 404);
             }

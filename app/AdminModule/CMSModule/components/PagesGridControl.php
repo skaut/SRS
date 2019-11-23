@@ -6,9 +6,9 @@ namespace App\AdminModule\CMSModule\Components;
 
 use App\Model\ACL\RoleRepository;
 use App\Model\CMS\Page;
-use App\Model\CMS\PageFacade;
 use App\Model\CMS\PageRepository;
 use App\Model\Page\PageException;
+use App\Services\CMSService;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -17,6 +17,8 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Bridges\ApplicationLatte\Template;
+use Nette\Forms\Container;
+use stdClass;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
@@ -36,8 +38,8 @@ class PagesGridControl extends Control
     /** @var Translator */
     private $translator;
 
-    /** @var PageFacade */
-    private $pageFacade;
+    /** @var CMSService */
+    private $CMSService;
 
     /** @var PageRepository */
     private $pageRepository;
@@ -46,12 +48,12 @@ class PagesGridControl extends Control
     private $roleRepository;
 
 
-    public function __construct(Translator $translator, PageFacade $pageFacade, PageRepository $pageRepository, RoleRepository $roleRepository)
+    public function __construct(Translator $translator, CMSService $CMSService, PageRepository $pageRepository, RoleRepository $roleRepository)
     {
         parent::__construct();
 
         $this->translator     = $translator;
-        $this->pageFacade     = $pageFacade;
+        $this->CMSService     = $CMSService;
         $this->pageRepository = $pageRepository;
         $this->roleRepository = $roleRepository;
     }
@@ -66,6 +68,7 @@ class PagesGridControl extends Control
 
     /**
      * Vytvoří komponentu.
+     *
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
@@ -104,7 +107,7 @@ class PagesGridControl extends Control
             true => 'admin.cms.pages_public_public',
         ];
 
-        $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function ($container) use ($rolesOptions, $publicOptions) : void {
+        $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function (Container $container) use ($rolesOptions, $publicOptions) : void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.pages_name_empty');
 
@@ -121,7 +124,7 @@ class PagesGridControl extends Control
         };
         $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
 
-        $grid->addInlineEdit()->onControlAdd[]  = function ($container) use ($rolesOptions, $publicOptions) : void {
+        $grid->addInlineEdit()->onControlAdd[]  = function (Container $container) use ($rolesOptions, $publicOptions) : void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.pages_name_empty');
 
@@ -134,7 +137,7 @@ class PagesGridControl extends Control
 
             $container->addSelect('public', '', $publicOptions);
         };
-        $grid->getInlineEdit()->onSetDefaults[] = function ($container, $item) : void {
+        $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Page $item) : void {
             $container['slug']
                 ->addRule(Form::IS_NOT_IN, 'admin.cms.pages_slug_exists', $this->pageRepository->findOthersSlugs($item->getId()));
 
@@ -159,26 +162,27 @@ class PagesGridControl extends Control
                 'data-toggle' => 'confirmation',
                 'data-content' => $this->translator->translate('admin.cms.pages_delete_confirm'),
             ]);
-        $grid->allowRowsAction('delete', function ($item) {
+        $grid->allowRowsAction('delete', function (Page $item) {
             return $item->getSlug() !== '/';
         });
     }
 
     /**
      * Zpracuje přidání stránky.
+     *
+     * @throws AbortException
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws AbortException
      */
-    public function add(\stdClass $values) : void
+    public function add(stdClass $values) : void
     {
         $page = new Page($values['name'], $values['slug']);
 
         $page->setRoles($this->roleRepository->findRolesByIds($values['roles']));
         $page->setPublic((bool) $values['public']);
 
-        $this->pageFacade->save($page);
+        $this->CMSService->savePage($page);
 
         $p = $this->getPresenter();
         $p->flashMessage('admin.cms.pages_saved', 'success');
@@ -188,12 +192,13 @@ class PagesGridControl extends Control
 
     /**
      * Zpracuje upravení stránky.
+     *
+     * @throws AbortException
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws AbortException
      */
-    public function edit(int $id, \stdClass $values) : void
+    public function edit(int $id, stdClass $values) : void
     {
         $page = $this->pageRepository->findById($id);
 
@@ -202,7 +207,7 @@ class PagesGridControl extends Control
         $page->setRoles($this->roleRepository->findRolesByIds($values['roles']));
         $page->setPublic((bool) $values['public']);
 
-        $this->pageFacade->save($page);
+        $this->CMSService->savePage($page);
 
         $p = $this->getPresenter();
         $p->flashMessage('admin.cms.pages_saved', 'success');
@@ -212,15 +217,16 @@ class PagesGridControl extends Control
 
     /**
      * Zpracuje odstranění stránky.
-     * @throws PageException
+     *
+     * @throws AbortException
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws AbortException
+     * @throws PageException
      */
     public function handleDelete(int $id) : void
     {
         $page = $this->pageRepository->findById($id);
-        $this->pageFacade->remove($page);
+        $this->CMSService->removePage($page);
 
         $this->getPresenter()->flashMessage('admin.cms.pages_deleted', 'success');
 
@@ -229,13 +235,14 @@ class PagesGridControl extends Control
 
     /**
      * Přesune stránku s $item_id mezi $prev_id a $next_id.
+     *
+     * @throws AbortException
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws AbortException
      */
     public function handleSort($item_id, $prev_id, $next_id) : void
     {
-        $this->pageFacade->sort((int) $item_id, (int) $prev_id, (int) $next_id);
+        $this->CMSService->sort((int) $item_id, (int) $prev_id, (int) $next_id);
 
         $p = $this->getPresenter();
         $p->flashMessage('admin.cms.pages_order_saved', 'success');
@@ -250,10 +257,11 @@ class PagesGridControl extends Control
 
     /**
      * Změní viditelnost stránky.
+     *
+     * @throws AbortException
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws AbortException
      */
     public function changeStatus(int $id, bool $public) : void
     {
@@ -265,7 +273,7 @@ class PagesGridControl extends Control
             $p->flashMessage('admin.cms.pages_change_public_denied', 'danger');
         } else {
             $page->setPublic($public);
-            $this->pageFacade->save($page);
+            $this->CMSService->savePage($page);
 
             $p->flashMessage('admin.cms.pages_changed_public', 'success');
         }

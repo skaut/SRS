@@ -9,6 +9,7 @@ use App\AdminModule\MailingModule\Components\MailTemplatesGridControl;
 use App\AdminModule\MailingModule\Forms\EditTemplateForm;
 use App\Model\Mailing\TemplateRepository;
 use Nette\Forms\Form;
+use stdClass;
 
 /**
  * Presenter obsluhující nastavení šablon automatických e-mailů.
@@ -53,7 +54,7 @@ class TemplatesPresenter extends MailingBasePresenter
     {
         $form = $this->editTemplateFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             if ($form['cancel']->isSubmittedBy()) {
                 $this->redirect('Templates:default');
             }

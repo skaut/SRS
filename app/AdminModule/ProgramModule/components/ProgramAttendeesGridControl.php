@@ -9,10 +9,11 @@ use App\Model\ACL\Resource;
 use App\Model\Enums\ApplicationState;
 use App\Model\Program\Program;
 use App\Model\Program\ProgramRepository;
-use App\Model\Settings\SettingsFacade;
+use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ProgramService;
+use App\Services\SettingsService;
 use Doctrine\ORM\QueryBuilder;
 use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
@@ -20,6 +21,7 @@ use Nette\Application\UI\Control;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
+use Throwable;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
@@ -54,8 +56,8 @@ class ProgramAttendeesGridControl extends Control
     /** @var UserRepository */
     private $userRepository;
 
-    /** @var SettingsFacade */
-    private $settingsFacade;
+    /** @var SettingsService */
+    private $settingsService;
 
     /** @var ProgramService */
     private $programService;
@@ -71,7 +73,7 @@ class ProgramAttendeesGridControl extends Control
         Translator $translator,
         ProgramRepository $programRepository,
         UserRepository $userRepository,
-        SettingsFacade $settingsFacade,
+        SettingsService $settingsService,
         ProgramService $programService,
         Session $session
     ) {
@@ -80,7 +82,7 @@ class ProgramAttendeesGridControl extends Control
         $this->translator        = $translator;
         $this->programRepository = $programRepository;
         $this->userRepository    = $userRepository;
-        $this->settingsFacade    = $settingsFacade;
+        $this->settingsService   = $settingsService;
         $this->programService    = $programService;
 
         $this->session        = $session;
@@ -201,7 +203,7 @@ class ProgramAttendeesGridControl extends Control
     /**
      * Přihlásí uživatele na program.
      * @throws AbortException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function handleRegister(int $id) : void
     {
@@ -231,7 +233,7 @@ class ProgramAttendeesGridControl extends Control
     /**
      * Odhlásí uživatele z programu.
      * @throws AbortException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function handleUnregister(int $id) : void
     {
@@ -260,7 +262,7 @@ class ProgramAttendeesGridControl extends Control
      * Hromadně přihlásí program uživatelům.
      * @param int[] $ids
      * @throws AbortException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function groupRegister(array $ids) : void
     {
@@ -293,7 +295,7 @@ class ProgramAttendeesGridControl extends Control
      * Hromadně odhlásí program uživatelům.
      * @param int[] $ids
      * @throws AbortException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function groupUnregister(array $ids) : void
     {

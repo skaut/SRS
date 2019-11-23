@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace App\AdminModule\Forms;
 
 use App\Model\ACL\Role;
-use App\Model\ACL\RoleFacade;
 use App\Model\ACL\RoleRepository;
+use App\Services\ACLService;
+use Doctrine\Migrations\Exception\AlreadyAtVersion;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
+use stdClass;
+use Throwable;
 
 /**
  * Formulář pro vytvoření role.
@@ -26,22 +29,23 @@ class AddRoleForm
     /** @var BaseForm */
     private $baseFormFactory;
 
-    /** @var RoleFacade */
-    private $roleFacade;
+    /** @var ACLService */
+    private $ACLService;
 
     /** @var RoleRepository */
     private $roleRepository;
 
 
-    public function __construct(BaseForm $baseFormFactory, RoleFacade $roleFacade, RoleRepository $roleRepository)
+    public function __construct(BaseForm $baseFormFactory, ACLService $ACLService, RoleRepository $roleRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
-        $this->roleFacade      = $roleFacade;
+        $this->ACLService      = $ACLService;
         $this->roleRepository  = $roleRepository;
     }
 
     /**
      * Vytvoří formulář.
+     * @throws Throwable
      */
     public function create() : Form
     {
@@ -49,10 +53,10 @@ class AddRoleForm
 
         $form->addText('name', 'admin.acl.roles_name')
             ->addRule(Form::FILLED, 'admin.acl.roles_name_empty')
-            ->addRule(Form::IS_NOT_IN, 'admin.acl.roles_name_exists', $this->roleFacade->findAllNames())
+            ->addRule(Form::IS_NOT_IN, 'admin.acl.roles_name_exists', $this->ACLService->findAllRoleNames())
             ->addRule(Form::NOT_EQUAL, 'admin.acl.roles_name_reserved', 'test');
 
-        $form->addSelect('parent', 'admin.acl.roles_parent', $this->roleRepository->getRolesWithoutRolesOptions([]))
+        $form->addSelect('parent', 'admin.acl.roles_parent', $this->ACLService->getRolesWithoutRolesOptions([]))
             ->setPrompt('')
             ->setAttribute('title', $form->getTranslator()->translate('admin.acl.roles_parent_note'));
 
@@ -69,10 +73,11 @@ class AddRoleForm
 
     /**
      * Zpracuje formulář.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(Form $form, \stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         if ($form['cancel']->isSubmittedBy()) {
             return;
@@ -120,6 +125,6 @@ class AddRoleForm
             }
         }
 
-        $this->roleFacade->save($role);
+        $this->ACLService->saveRole($role);
     }
 }

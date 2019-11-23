@@ -6,6 +6,7 @@ namespace App\AdminModule\ProgramModule\Presenters;
 
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
+use Throwable;
 
 /**
  * Presenter obsluhující správu harmonogramu.
@@ -18,11 +19,11 @@ class SchedulePresenter extends ProgramBasePresenter
 {
     /**
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function renderDefault() : void
     {
         $this->template->containerAttributes     = 'ng-app="scheduleApp" ng-controller="AdminScheduleCtrl"';
-        $this->template->isAllowedModifySchedule = $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE);
+        $this->template->isAllowedModifySchedule = $this->settingsService->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE);
     }
 }

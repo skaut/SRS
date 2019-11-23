@@ -22,12 +22,16 @@ use App\Model\Program\Room;
 use App\Model\Program\RoomRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsFacade;
+use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ProgramService;
+use App\Services\SettingsService;
+use DateInterval;
+use Exception;
 use Kdyby\Translation\Translator;
 use Nette;
+use Throwable;
 use const DATE_ISO8601;
 use function array_intersect;
 use function count;
@@ -62,8 +66,8 @@ class ScheduleService
     /** @var RoomRepository */
     private $roomRepository;
 
-    /** @var SettingsFacade */
-    private $settingsFacade;
+    /** @var SettingsService */
+    private $settingsService;
 
     /** @var ProgramService */
     private $programService;
@@ -75,7 +79,7 @@ class ScheduleService
         ProgramRepository $programRepository,
         BlockRepository $blockRepository,
         RoomRepository $roomRepository,
-        SettingsFacade $settingsFacade,
+        SettingsService $settingsService,
         ProgramService $programService
     ) {
         $this->translator        = $translator;
@@ -83,7 +87,7 @@ class ScheduleService
         $this->programRepository = $programRepository;
         $this->blockRepository   = $blockRepository;
         $this->roomRepository    = $roomRepository;
-        $this->settingsFacade    = $settingsFacade;
+        $this->settingsService   = $settingsService;
         $this->programService    = $programService;
     }
 
@@ -95,7 +99,7 @@ class ScheduleService
     /**
      * Vrací podrobnosti o všech programech pro použití v administraci harmonogramu.
      * @return ProgramDetailDTO[]
-     * @throws \Exception
+     * @throws Exception
      */
     public function getProgramsAdmin() : array
     {
@@ -111,7 +115,7 @@ class ScheduleService
      * Vrací podrobnosti o programech, ke kterým má uživatel přístup, pro použití v kalendáři pro výběr programů.
      * @return ProgramDetailDTO[]
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function getProgramsWeb() : array
     {
@@ -123,7 +127,7 @@ class ScheduleService
             $programDetailDTO->setUserAttends($program->isAttendee($this->user));
             $programDetailDTO->setBlocks($this->programRepository->findBlockedProgramsIdsByProgram($program));
             $programDetailDTO->setBlocked(false);
-            $programDetailDTO->setPaid($this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT)
+            $programDetailDTO->setPaid($this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT)
                 || ($this->user->hasPaidSubevent($program->getBlock()->getSubevent()) && $this->user->hasPaidRolesApplication()));
             $programDetailDTOs[] = $programDetailDTO;
         }
@@ -172,19 +176,19 @@ class ScheduleService
     /**
      * Vrací nastavení pro FullCalendar.
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function getCalendarConfig() : CalendarConfigDTO
     {
         $calendarConfigDTO = new CalendarConfigDTO();
 
-        $fromDate = $this->settingsFacade->getDateValue(Settings::SEMINAR_FROM_DATE);
-        $toDate   = $this->settingsFacade->getDateValue(Settings::SEMINAR_TO_DATE);
+        $fromDate = $this->settingsService->getDateValue(Settings::SEMINAR_FROM_DATE);
+        $toDate   = $this->settingsService->getDateValue(Settings::SEMINAR_TO_DATE);
 
         $calendarConfigDTO->setSeminarFromDate($fromDate->format('Y-m-d'));
         $calendarConfigDTO->setSeminarDuration($toDate->diff($fromDate)->d + 1);
         $calendarConfigDTO->setAllowedModifySchedule(
-            $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE) &&
+            $this->settingsService->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE) &&
             $this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE)
         );
 
@@ -194,7 +198,7 @@ class ScheduleService
     /**
      * Uloží nebo vytvoří program.
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function saveProgram(ProgramSaveDTO $programSaveDTO) : ResponseDTO
     {
@@ -206,11 +210,11 @@ class ScheduleService
         $room      = $programSaveDTO->getRoomId() ? $this->roomRepository->findById($programSaveDTO->getRoomId()) : null;
         $start     = $programSaveDTO->getStart();
         $end       = clone $start;
-        $end->add(new \DateInterval('PT' . $block->getDuration() . 'M'));
+        $end->add(new DateInterval('PT' . $block->getDuration() . 'M'));
 
         if (! $this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_user_not_allowed_manage'));
-        } elseif (! $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)) {
+        } elseif (! $this->settingsService->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_not_allowed_modfify'));
         } elseif ($room && $this->roomRepository->hasOverlappingProgram($room, $programId, $start, $end)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_room_occupied', null, ['name' => $room->getName()]));
@@ -238,7 +242,7 @@ class ScheduleService
     /**
      * Smaže program.
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function removeProgram(int $programId) : ResponseDTO
     {
@@ -249,7 +253,7 @@ class ScheduleService
 
         if (! $this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_user_not_allowed_manage'));
-        } elseif (! $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)) {
+        } elseif (! $this->settingsService->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_not_allowed_modfify'));
         } elseif (! $program) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_program_not_found'));
@@ -270,7 +274,7 @@ class ScheduleService
     /**
      * Přihlásí program uživateli.
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function attendProgram(int $programId) : ResponseDTO
     {
@@ -283,7 +287,7 @@ class ScheduleService
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_user_not_allowed_register_programs'));
         } elseif (! $this->programService->isAllowedRegisterPrograms()) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_register_programs_not_allowed'));
-        } elseif (! $this->settingsFacade->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT) &&
+        } elseif (! $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT) &&
             ! $this->user->hasPaidSubevent($program->getBlock()->getSubevent())
         ) {
             $responseDTO->setMessage($this->translator->translate('common.api.schedule_register_programs_before_payment_not_allowed'));
@@ -320,7 +324,7 @@ class ScheduleService
     /**
      * Odhlásí program uživateli.
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function unattendProgram(int $programId) : ResponseDTO
     {
@@ -352,7 +356,7 @@ class ScheduleService
 
     /**
      * Převede Program na ProgramDetailDTO.
-     * @throws \Exception
+     * @throws Exception
      */
     private function convertProgramToProgramDetailDTO(Program $program) : ProgramDetailDTO
     {

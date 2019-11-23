@@ -6,7 +6,6 @@ namespace App\AdminModule\Components;
 
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
-use App\Model\EntityManagerDecorator;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
 use App\Model\Enums\SkautIsEventType;
@@ -17,7 +16,7 @@ use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\CustomInput\CustomSelect;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsFacade;
+use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\ApplicationRepository;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
@@ -25,19 +24,24 @@ use App\Model\User\CustomInputValue\CustomSelectValue;
 use App\Model\User\CustomInputValue\CustomTextValue;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
+use App\Services\ACLService;
 use App\Services\ApplicationService;
 use App\Services\ExcelExportService;
 use App\Services\MailService;
 use App\Services\PdfExportService;
 use App\Services\ProgramService;
+use App\Services\SettingsService;
 use App\Services\SkautIsEventEducationService;
 use App\Services\SkautIsEventGeneralService;
 use App\Services\UserService;
 use App\Utils\Helpers;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
+use InvalidArgumentException;
 use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
@@ -45,7 +49,9 @@ use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\Utils\Html;
+use Nettrine\ORM\EntityManagerDecorator;
 use PhpOffice\PhpSpreadsheet\Exception;
+use Throwable;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
@@ -73,8 +79,8 @@ class UsersGridControl extends Control
     /** @var UserRepository */
     private $userRepository;
 
-    /** @var SettingsFacade */
-    private $settingsFacade;
+    /** @var SettingsService */
+    private $settingsService;
 
     /** @var CustomInputRepository */
     private $customInputRepository;
@@ -109,6 +115,9 @@ class UsersGridControl extends Control
     /** @var ApplicationRepository */
     private $applicationRepository;
 
+    /** @var ACLService */
+    private $ACLService;
+
     /** @var ApplicationService */
     private $applicationService;
 
@@ -129,7 +138,7 @@ class UsersGridControl extends Control
         Translator $translator,
         EntityManagerDecorator $em,
         UserRepository $userRepository,
-        SettingsFacade $settingsFacade,
+        SettingsService $settingsService,
         CustomInputRepository $customInputRepository,
         RoleRepository $roleRepository,
         ProgramRepository $programRepository,
@@ -140,6 +149,7 @@ class UsersGridControl extends Control
         Session $session,
         SubeventRepository $subeventRepository,
         ApplicationRepository $applicationRepository,
+        ACLService $ACLService,
         ApplicationService $applicationService,
         UserService $userService,
         ProgramService $programService,
@@ -151,7 +161,7 @@ class UsersGridControl extends Control
         $this->translator                   = $translator;
         $this->em                           = $em;
         $this->userRepository               = $userRepository;
-        $this->settingsFacade               = $settingsFacade;
+        $this->settingsService              = $settingsService;
         $this->customInputRepository        = $customInputRepository;
         $this->roleRepository               = $roleRepository;
         $this->programRepository            = $programRepository;
@@ -161,6 +171,7 @@ class UsersGridControl extends Control
         $this->mailService                  = $mailService;
         $this->subeventRepository           = $subeventRepository;
         $this->applicationRepository        = $applicationRepository;
+        $this->ACLService                   = $ACLService;
         $this->applicationService           = $applicationService;
         $this->userService                  = $userService;
         $this->programService               = $programService;
@@ -182,7 +193,7 @@ class UsersGridControl extends Control
     /**
      * Vytvoří komponentu.
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
@@ -201,7 +212,7 @@ class UsersGridControl extends Control
 
         $grid->addGroupMultiSelectAction(
             'admin.users.users_group_action_change_roles',
-            $this->roleRepository->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED])
+            $this->ACLService->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED])
         )
             ->onSelect[] = [$this, 'groupChangeRoles'];
 
@@ -211,7 +222,7 @@ class UsersGridControl extends Control
         $grid->addGroupAction('admin.users.users_group_action_mark_paid_today', $this->preparePaymentMethodOptionsWithoutEmpty())
             ->onSelect[] = [$this, 'groupMarkPaidToday'];
 
-        switch ($this->settingsFacade->getValue(Settings::SKAUTIS_EVENT_TYPE)) {
+        switch ($this->settingsService->getValue(Settings::SKAUTIS_EVENT_TYPE)) {
             case SkautIsEventType::GENERAL:
                 $grid->addGroupAction('admin.users.users_group_action_insert_into_skaut_is')
                     ->onSelect[] = [$this, 'groupInsertIntoSkautIs'];
@@ -223,7 +234,7 @@ class UsersGridControl extends Control
                 break;
 
             default:
-                throw new \InvalidArgumentException();
+                throw new InvalidArgumentException();
         }
 
         $grid->addGroupAction('admin.users.users_group_action_generate_payment_proofs')
@@ -292,7 +303,7 @@ class UsersGridControl extends Control
                 return Html::el('span')
                     ->style('color: red')
                     ->setText($this->userService->getMembershipText($row));
-            }, function ($row) {
+            }, function (User $row) {
                 return $row->getUnit() === null;
             })
             ->setSortable()
@@ -566,13 +577,13 @@ class UsersGridControl extends Control
      * Hromadně schválí uživatele.
      * @param int[] $ids
      * @throws AbortException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function groupApprove(array $ids) : void
     {
         $users = $this->userRepository->findUsersByIds($ids);
 
-        $this->em->transactional(function ($em) use ($users) : void {
+        $this->em->transactional(function () use ($users) : void {
             foreach ($users as $user) {
                 $user->setApproved(true);
                 $this->userRepository->save($user);
@@ -587,7 +598,7 @@ class UsersGridControl extends Control
      * Hromadně nastaví role.
      * @param int[] $ids
      * @param int[] $value
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function groupChangeRoles(array $ids, array $value) : void
     {
@@ -636,7 +647,7 @@ class UsersGridControl extends Control
 
         $loggedUser = $this->userRepository->findById($p->getUser()->id);
 
-        $this->em->transactional(function ($em) use ($selectedRoles, $users, $loggedUser) : void {
+        $this->em->transactional(function () use ($selectedRoles, $users, $loggedUser) : void {
             foreach ($users as $user) {
                 $this->applicationService->updateRoles($user, $selectedRoles, $loggedUser, true);
             }
@@ -650,13 +661,13 @@ class UsersGridControl extends Control
      * Hromadně označí uživatele jako zúčastněné.
      * @param int[] $ids
      * @throws AbortException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function groupMarkAttended(array $ids) : void
     {
         $users = $this->userRepository->findUsersByIds($ids);
 
-        $this->em->transactional(function ($em) use ($users) : void {
+        $this->em->transactional(function () use ($users) : void {
             foreach ($users as $user) {
                 $user->setAttended(true);
                 $this->userRepository->save($user);
@@ -671,7 +682,7 @@ class UsersGridControl extends Control
      * Hromadně označí uživatele jako zaplacené dnes.
      * @param int[] $ids
      * @throws AbortException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function groupMarkPaidToday(array $ids, string $paymentMethod) : void
     {
@@ -681,13 +692,13 @@ class UsersGridControl extends Control
 
         $loggedUser = $this->userRepository->findById($p->getUser()->id);
 
-        $this->em->transactional(function ($em) use ($users, $paymentMethod, $loggedUser) : void {
+        $this->em->transactional(function () use ($users, $paymentMethod, $loggedUser) : void {
             foreach ($users as $user) {
                 foreach ($user->getWaitingForPaymentApplications() as $application) {
                     $this->applicationService->updateApplicationPayment(
                         $application,
                         $paymentMethod,
-                        new \DateTime(),
+                        new DateTime(),
                         $application->getIncomeProofPrintedDate(),
                         $application->getMaturityDate(),
                         $loggedUser
@@ -704,7 +715,7 @@ class UsersGridControl extends Control
      * Hromadně vloží uživatele jako účastníky do skautIS.
      * @param int[] $ids
      * @throws AbortException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function groupInsertIntoSkautIs(array $ids, bool $accept) : void
     {
@@ -712,14 +723,14 @@ class UsersGridControl extends Control
 
         $p = $this->getPresenter();
 
-        $eventId = $this->settingsFacade->getIntValue(Settings::SKAUTIS_EVENT_ID);
+        $eventId = $this->settingsService->getIntValue(Settings::SKAUTIS_EVENT_ID);
 
         if ($eventId === null) {
             $p->flashMessage('admin.users.users_group_action_insert_into_skaut_is_error_not_connected', 'danger');
             $this->redirect('this');
         }
 
-        switch ($this->settingsFacade->getValue(Settings::SKAUTIS_EVENT_TYPE)) {
+        switch ($this->settingsService->getValue(Settings::SKAUTIS_EVENT_TYPE)) {
             case SkautIsEventType::GENERAL:
                 $skautIsEventService = $this->skautIsEventGeneralService;
                 break;
@@ -733,7 +744,7 @@ class UsersGridControl extends Control
                 break;
 
             default:
-                throw new \InvalidArgumentException();
+                throw new InvalidArgumentException();
         }
 
         if (! $skautIsEventService->isEventDraft($eventId)) {
@@ -774,8 +785,9 @@ class UsersGridControl extends Control
 
     /**
      * Zpracuje export seznamu uživatelů.
+     *
      * @throws AbortException
-     * @throws Exception
+     * @throws \Exception
      */
     public function handleExportUsers() : void
     {
@@ -802,7 +814,7 @@ class UsersGridControl extends Control
     /**
      * Zpracuje export seznamu uživatelů s rolemi.
      * @throws AbortException
-     * @throws Exception
+     * @throws \Exception
      */
     public function handleExportRoles() : void
     {
@@ -830,7 +842,7 @@ class UsersGridControl extends Control
     /**
      * Zpracuje export seznamu uživatelů s podakcemi a programy podle kategorií.
      * @throws AbortException
-     * @throws Exception
+     * @throws \Exception
      */
     public function handleExportSubeventsAndCategories() : void
     {
@@ -873,7 +885,7 @@ class UsersGridControl extends Control
     /**
      * Vygeneruje doklady o zaplacení.
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function handleGeneratePaymentProofs() : void
     {

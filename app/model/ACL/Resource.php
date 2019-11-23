@@ -15,7 +15,7 @@ use Nettrine\ORM\Entity\Attributes\Id as Identifier;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="ResourceRepository")
  * @ORM\Table(name="resource")
  */
 class Resource

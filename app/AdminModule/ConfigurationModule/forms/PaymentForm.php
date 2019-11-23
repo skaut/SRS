@@ -8,12 +8,16 @@ use App\AdminModule\Forms\BaseForm;
 use App\Model\Enums\MaturityType;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsFacade;
+use App\Model\Settings\SettingsRepository;
 use App\Model\User\UserRepository;
+use App\Services\SettingsService;
+use DateTime;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
+use stdClass;
+use Throwable;
 use function array_key_exists;
 
 /**
@@ -34,19 +38,19 @@ class PaymentForm extends UI\Control
     /** @var BaseForm */
     private $baseFormFactory;
 
-    /** @var SettingsFacade */
-    private $settingsFacade;
+    /** @var SettingsService */
+    private $settingsService;
 
     /** @var UserRepository */
     private $userRepository;
 
 
-    public function __construct(BaseForm $baseForm, SettingsFacade $settingsFacade, UserRepository $userRepository)
+    public function __construct(BaseForm $baseForm, SettingsService $settingsService, UserRepository $userRepository)
     {
         parent::__construct();
 
         $this->baseFormFactory = $baseForm;
-        $this->settingsFacade  = $settingsFacade;
+        $this->settingsService  = $settingsService;
         $this->userRepository  = $userRepository;
     }
 
@@ -62,7 +66,7 @@ class PaymentForm extends UI\Control
     /**
      * Vytvoří formulář.
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function createComponentForm() : Form
     {
@@ -120,14 +124,14 @@ class PaymentForm extends UI\Control
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'accountNumber' => $this->settingsFacade->getValue(Settings::ACCOUNT_NUMBER),
-            'variableSymbolCode' => $this->settingsFacade->getValue(Settings::VARIABLE_SYMBOL_CODE),
-            'maturityType' => $this->settingsFacade->getValue(Settings::MATURITY_TYPE),
-            'maturityDate' => $this->settingsFacade->getDateValue(Settings::MATURITY_DATE),
-            'maturityDays' => $this->settingsFacade->getIntValue(Settings::MATURITY_DAYS),
-            'maturityWorkDays' => $this->settingsFacade->getIntValue(Settings::MATURITY_WORK_DAYS),
-            'maturityReminder' => $this->settingsFacade->getIntValue(Settings::MATURITY_REMINDER),
-            'cancelRegistrationAfterMaturity' => $this->settingsFacade->getIntValue(Settings::CANCEL_REGISTRATION_AFTER_MATURITY),
+            'accountNumber' => $this->settingsService->getValue(Settings::ACCOUNT_NUMBER),
+            'variableSymbolCode' => $this->settingsService->getValue(Settings::VARIABLE_SYMBOL_CODE),
+            'maturityType' => $this->settingsService->getValue(Settings::MATURITY_TYPE),
+            'maturityDate' => $this->settingsService->getDateValue(Settings::MATURITY_DATE),
+            'maturityDays' => $this->settingsService->getIntValue(Settings::MATURITY_DAYS),
+            'maturityWorkDays' => $this->settingsService->getIntValue(Settings::MATURITY_WORK_DAYS),
+            'maturityReminder' => $this->settingsService->getIntValue(Settings::MATURITY_REMINDER),
+            'cancelRegistrationAfterMaturity' => $this->settingsService->getIntValue(Settings::CANCEL_REGISTRATION_AFTER_MATURITY),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -140,41 +144,41 @@ class PaymentForm extends UI\Control
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function processForm(Form $form, \stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
-        $this->settingsFacade->setValue(Settings::ACCOUNT_NUMBER, $values['accountNumber']);
-        $this->settingsFacade->setValue(Settings::VARIABLE_SYMBOL_CODE, $values['variableSymbolCode']);
-        $this->settingsFacade->setValue(Settings::MATURITY_TYPE, $values['maturityType']);
+        $this->settingsService->setValue(Settings::ACCOUNT_NUMBER, $values['accountNumber']);
+        $this->settingsService->setValue(Settings::VARIABLE_SYMBOL_CODE, $values['variableSymbolCode']);
+        $this->settingsService->setValue(Settings::MATURITY_TYPE, $values['maturityType']);
 
         if (array_key_exists('maturityDate', $values)) {
-            $this->settingsFacade->setDateValue(Settings::MATURITY_DATE, $values['maturityDate'] ?: (new \DateTime())->setTime(0, 0));
+            $this->settingsService->setDateValue(Settings::MATURITY_DATE, $values['maturityDate'] ?: (new DateTime())->setTime(0, 0));
         }
 
         if (array_key_exists('maturityDays', $values)) {
-            $this->settingsFacade->setIntValue(
+            $this->settingsService->setIntValue(
                 Settings::MATURITY_DAYS,
                 $values['maturityDays'] !== '' ? $values['maturityDays'] : 0
             );
         }
 
         if (array_key_exists('maturityWorkDays', $values)) {
-            $this->settingsFacade->setIntValue(
+            $this->settingsService->setIntValue(
                 Settings::MATURITY_WORK_DAYS,
                 $values['maturityWorkDays'] !== '' ? $values['maturityWorkDays'] : 0
             );
         }
 
         if (array_key_exists('maturityReminder', $values)) {
-            $this->settingsFacade->setIntValue(
+            $this->settingsService->setIntValue(
                 Settings::MATURITY_REMINDER,
                 $values['maturityReminder'] !== '' ? $values['maturityReminder'] : null
             );
         }
 
         if (array_key_exists('cancelRegistrationAfterMaturity', $values)) {
-            $this->settingsFacade->setIntValue(
+            $this->settingsService->setIntValue(
                 Settings::CANCEL_REGISTRATION_AFTER_MATURITY,
                 $values['cancelRegistrationAfterMaturity'] !== '' ? $values['cancelRegistrationAfterMaturity'] : null
             );

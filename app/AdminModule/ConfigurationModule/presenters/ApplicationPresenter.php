@@ -11,6 +11,8 @@ use App\AdminModule\ConfigurationModule\Forms\CustomInputForm;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\SettingsException;
 use Nette\Application\UI\Form;
+use stdClass;
+use Throwable;
 
 /**
  * Presenter obsluhující nastavení přihlášky.
@@ -56,13 +58,13 @@ class ApplicationPresenter extends ConfigurationBasePresenter
 
     /**
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     protected function createComponentApplicationForm() : Form
     {
         $form = $this->applicationFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');
@@ -75,7 +77,7 @@ class ApplicationPresenter extends ConfigurationBasePresenter
     {
         $form = $this->customInputFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             if (! $form['cancel']->isSubmittedBy()) {
                 $this->flashMessage('admin.configuration.custom_inputs_saved', 'success');
             }

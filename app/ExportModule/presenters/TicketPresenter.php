@@ -6,12 +6,14 @@ namespace App\ExportModule\Presenters;
 
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsFacade;
+use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\UserRepository;
+use App\Services\SettingsService;
 use Joseki\Application\Responses\PdfResponse;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
+use Throwable;
 use function random_bytes;
 
 /**
@@ -29,10 +31,10 @@ class TicketPresenter extends ExportBasePresenter
     public $userRepository;
 
     /**
-     * @var SettingsFacade
+     * @var SettingsService
      * @inject
      */
-    public $settingsFacade;
+    public $settingsService;
 
     /**
      * @var SubeventRepository
@@ -45,7 +47,7 @@ class TicketPresenter extends ExportBasePresenter
      * Vygeneruje vstupenku v PDF.
      * @throws AbortException
      * @throws SettingsException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function actionPdf() : void
     {
@@ -56,8 +58,8 @@ class TicketPresenter extends ExportBasePresenter
         $template = $this->createTemplate();
         $template->setFile(__DIR__ . '/templates/Ticket/pdf.latte');
 
-        $template->logo                    = $this->settingsFacade->getValue(Settings::LOGO);
-        $template->seminarName             = $this->settingsFacade->getValue(Settings::SEMINAR_NAME);
+        $template->logo                    = $this->settingsService->getValue(Settings::LOGO);
+        $template->seminarName             = $this->settingsService->getValue(Settings::SEMINAR_NAME);
         $template->ticketUser              = $this->userRepository->findById($this->user->id);
         $template->explicitSubeventsExists = $this->subeventRepository->explicitSubeventsExists();
 

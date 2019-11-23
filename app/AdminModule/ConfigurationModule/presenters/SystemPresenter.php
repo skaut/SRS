@@ -6,6 +6,7 @@ namespace App\AdminModule\ConfigurationModule\Presenters;
 
 use App\Commands\ClearCacheCommand;
 use Contributte\Console\Application;
+use Exception;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 
@@ -33,7 +34,7 @@ class SystemPresenter extends ConfigurationBasePresenter
 
     /**
      * Promaže cache.
-     * @throws \Exception
+     * @throws Exception
      */
     public function handleClearCache() : void
     {

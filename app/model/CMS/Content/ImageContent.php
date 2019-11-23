@@ -13,6 +13,7 @@ use Nette\Utils\Image;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
 use Nette\Utils\UnknownImageFileException;
+use stdClass;
 use function file_exists;
 
 /**
@@ -189,7 +190,7 @@ class ImageContent extends Content implements IContent
      * Zpracuje při uložení stránky část formuláře týkající se obsahu.
      * @throws UnknownImageFileException
      */
-    public function contentFormSucceeded(Form $form, \stdClass $values) : void
+    public function contentFormSucceeded(Form $form, stdClass $values) : void
     {
         parent::contentFormSucceeded($form, $values);
         $values = $values[$this->getContentFormName()];

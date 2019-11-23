@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\CMS;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Nettrine\ORM\Entity\Attributes\Id as Identifier;
 
@@ -30,7 +31,7 @@ class News
     /**
      * Datum publikování aktuality.
      * @ORM\Column(type="datetime")
-     * @var \DateTime
+     * @var DateTime
      */
     protected $published;
 
@@ -57,12 +58,12 @@ class News
         $this->text = $text;
     }
 
-    public function getPublished() : \DateTime
+    public function getPublished() : DateTime
     {
         return $this->published;
     }
 
-    public function setPublished(\DateTime $published) : void
+    public function setPublished(DateTime $published) : void
     {
         $this->published = $published;
     }

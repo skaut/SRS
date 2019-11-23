@@ -16,9 +16,8 @@ extensions:
 
     # ORM
     orm: Nettrine\ORM\DI\OrmExtension
-    #orm.cache: Nettrine\ORM\DI\OrmCacheExtension
-    orm.console: Nettrine\ORM\DI\OrmConsoleExtension
     orm.annotations: Nettrine\ORM\DI\OrmAnnotationsExtension
+    orm.console: Nettrine\ORM\DI\OrmConsoleExtension
 
     migrations: Nettrine\Migrations\DI\MigrationsExtension
     webloader: WebLoader\Nette\Extension
@@ -40,21 +39,21 @@ console:
     lazy: false
 
 dbal:
+    debug: %debugMode%
     connection:
         host: %database.host%
         dbname: %database.dbname%
         user: %database.user%
         password: %database.password%
-    debug: true
 
 orm:
-    # Own em class
-    entityManagerDecoratorClass: App\Model\EntityManagerDecorator
+	configuration:
+		autoGenerateProxyClasses: %debugMode%
 
 orm.annotations:
+    debug: %debugMode%
     paths:
-        - app/model
-    ignore: [] # ignored annotations
+        - %appDir%/model
 
 migrations:
     table: doctrine_migrations
@@ -75,12 +74,6 @@ translation:
     default: cs
     fallback: [cs_CZ, cs]
 
-decorator:
-    Symfony\Component\Console\Command\Command:
-        tags: [kdyby.console.command]
-    Symfony\Component\Console\Helper\Helper:
-        tags: [kdyby.console.helper]
-
 profiler:
     profile:
         createService: false
@@ -95,9 +88,12 @@ services:
     - App\RouterFactory
     router: @App\RouterFactory::createRouter
     authenticator: App\Services\Authenticator
+    - App\Services\Authorizator
+
+    - App\Services\ACLService
     - App\Services\ApplicationService
     - App\Services\BankService
-    - App\Services\Authorizator
+    - App\Services\CMSService
     - App\Services\DatabaseService(%appDir%/..)
     - App\Services\DiscountService
     - App\Services\ExcelExportService
@@ -105,22 +101,29 @@ services:
     - App\Services\MailService
     - App\Services\PdfExportService(%wwwDir%/pdf)
     - App\Services\ProgramService
-    - App\Services\UserService
-    - App\Services\SkautIsService
-    - App\Services\SkautIsEventGeneralService
+    - App\Services\SettingsService
     - App\Services\SkautIsEventEducationService
+    - App\Services\SkautIsEventGeneralService
+    - App\Services\SkautIsService
+    - App\Services\SubeventService
+    - App\Services\UserService
+
     - App\Commands\ClearCacheCommand(%appDir%/..)
     - App\ApiModule\Services\ScheduleService
-
     - App\Utils\Validators
 
     permissionRepository:
         class: App\Model\ACL\PermissionRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\ACL\Permission)
+    resourceRepository:
+        class: App\Model\ACL\ResourceRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\ACL\Resource)
     roleRepository:
         class: App\Model\ACL\RoleRepository
-        inject: yes
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\ACL\Role)
+    contentRepository:
+        class: App\Model\CMS\Content\ContentRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\CMS\Content\Content)
     documentRepository:
         class: App\Model\CMS\Document\DocumentRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\CMS\Document\Document)
@@ -136,15 +139,15 @@ services:
     pageRepository:
         class: App\Model\CMS\PageRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\CMS\Page)
-    paymentRepository:
-        class: App\Model\Payment\PaymentRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Payment\Payment)
     mailRepository:
         class: App\Model\Mailing\MailRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Mailing\Mail)
     templateRepository:
         class: App\Model\Mailing\TemplateRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Mailing\Template)
+    paymentRepository:
+        class: App\Model\Payment\PaymentRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Payment\Payment)
     blockRepository:
         class: App\Model\Program\BlockRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Program\Block)
@@ -163,6 +166,9 @@ services:
     placePointRepository:
         class: App\Model\Settings\Place\PlacePointRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Settings\Place\PlacePoint)
+    settingsRepository:
+        class: App\Model\Settings\SettingsRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Settings\Settings)
     skautIsCourseRepository:
         class: App\Model\SkautIs\SkautIsCourseRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\SkautIs\SkautIsCourse)
@@ -182,22 +188,15 @@ services:
     subeventsApplicationRepository:
         class: App\Model\User\SubeventsApplicationRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\SubeventsApplication)
-    variableSymbolRepository:
-        class: App\Model\User\VariableSymbolRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\VariableSymbol)
-    userRepository:
-        class: App\Model\User\UserRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\User)
     customInputValueRepository:
         class: App\Model\User\CustomInputValue\CustomInputValueRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\CustomInputValue\CustomInputValue)
-
-    - App\Model\ACL\PermissionFacade
-    - App\Model\ACL\ResourceFacade
-    - App\Model\ACL\RoleFacade
-    - App\Model\CMS\Content\ContentFacade
-    - App\Model\CMS\PageFacade
-    - App\Model\Settings\SettingsFacade
+    userRepository:
+        class: App\Model\User\UserRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\User)
+    variableSymbolRepository:
+        class: App\Model\User\VariableSymbolRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\VariableSymbol)
 
     - App\WebModule\Components\IApplicationContentControlFactory
     - App\WebModule\Components\IBlocksContentControlFactory
