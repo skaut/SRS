@@ -313,6 +313,6 @@ class ProgramBlocksGridControl extends Control
      */
     public function isAllowedModifyBlock(Block $block) : bool
     {
-        return $this->user->isAllowedModifyBlock($block);
+         return $this->getPresenter()->dbuser->isAllowedModifyBlock($block);
     }
 }
