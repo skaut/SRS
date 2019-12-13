@@ -34,8 +34,8 @@ use Throwable;
 use function array_intersect;
 use function count;
 use function floor;
-use function in_array;
 use const DATE_ISO8601;
+use function in_array;
 
 /**
  * Služba pro zpracování požadavků z API pro správu harmonogramu a zapisování programů.

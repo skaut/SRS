@@ -18,7 +18,6 @@ use Throwable;
 class Authorizator extends Nette\Security\Permission
 {
     /**
-     * Authorizator constructor.
      * @throws Throwable
      */
     public function __construct(ACLService $ACLService)

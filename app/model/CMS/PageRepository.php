@@ -13,6 +13,7 @@ use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Throwable;
+use const PHP_INT_MAX;
 use function array_map;
 
 /**

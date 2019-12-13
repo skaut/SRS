@@ -62,7 +62,7 @@ class SkautIsEventForm
         SubeventRepository $subeventRepository
     ) {
         $this->baseFormFactory              = $baseForm;
-        $this->settingsService               = $settingsService;
+        $this->settingsService              = $settingsService;
         $this->skautIsCourseRepository      = $skautIsCourseRepository;
         $this->skautIsEventGeneralService   = $skautIsEventGeneralService;
         $this->skautIsEventEducationService = $skautIsEventEducationService;

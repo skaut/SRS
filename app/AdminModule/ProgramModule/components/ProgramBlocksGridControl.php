@@ -92,7 +92,7 @@ class ProgramBlocksGridControl extends Control
 
         $this->translator         = $translator;
         $this->blockRepository    = $blockRepository;
-        $this->settingsService     = $settingsService;
+        $this->settingsService    = $settingsService;
         $this->userRepository     = $userRepository;
         $this->categoryRepository = $categoryRepository;
         $this->programRepository  = $programRepository;

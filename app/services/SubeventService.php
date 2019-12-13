@@ -27,7 +27,7 @@ class SubeventService
     public function __construct(SubeventRepository $subeventRepository, Translator $translator)
     {
         $this->subeventRepository = $subeventRepository;
-        $this->translator     = $translator;
+        $this->translator         = $translator;
     }
 
     /**

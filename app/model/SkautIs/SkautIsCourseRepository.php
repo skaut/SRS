@@ -7,6 +7,7 @@ namespace App\Model\SkautIs;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\ORMException;
 use function array_map;
 
 /**
@@ -27,6 +28,7 @@ class SkautIsCourseRepository extends EntityRepository
 
     /**
      * Uloží skautIS kurz.
+     * @throws ORMException
      */
     public function save(SkautIsCourse $skautIsCourse) : void
     {
@@ -36,6 +38,7 @@ class SkautIsCourseRepository extends EntityRepository
 
     /**
      * Odstraní skautIS kurz.
+     * @throws ORMException
      */
     public function remove(SkautIsCourse $skautIsCourse) : void
     {
@@ -44,6 +47,8 @@ class SkautIsCourseRepository extends EntityRepository
     }
 
     /**
+     * Odstraní všechny skautIS kurzy.
+     * @throws ORMException
      */
     public function removeAll() : void
     {

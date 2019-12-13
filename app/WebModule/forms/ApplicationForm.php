@@ -34,6 +34,7 @@ use App\Services\SubeventService;
 use App\Utils\Validators;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use InvalidArgumentException;
 use Kdyby\Translation\Translator;
 use Nette;
@@ -417,7 +418,7 @@ class ApplicationForm
     /**
      * Přidá select pro výběr podakcí.
      * @throws NonUniqueResultException
-     * @throws \Doctrine\ORM\NoResultException
+     * @throws NoResultException
      */
     private function addSubeventsSelect(Form $form) : void
     {

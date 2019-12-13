@@ -49,7 +49,7 @@ class PaymentForm extends UI\Control
         parent::__construct();
 
         $this->baseFormFactory = $baseForm;
-        $this->settingsService  = $settingsService;
+        $this->settingsService = $settingsService;
         $this->userRepository  = $userRepository;
     }
 

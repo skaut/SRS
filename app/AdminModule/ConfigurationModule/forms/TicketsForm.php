@@ -31,7 +31,7 @@ class TicketsForm
     public function __construct(BaseForm $baseForm, SettingsService $settingsService)
     {
         $this->baseFormFactory = $baseForm;
-        $this->settingsService  = $settingsService;
+        $this->settingsService = $settingsService;
     }
 
     /**

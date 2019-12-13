@@ -47,7 +47,7 @@ class WebForm
     ) {
         $this->baseFormFactory = $baseFormFactory;
         $this->pageRepository  = $pageRepository;
-        $this->settingsService  = $settingsService;
+        $this->settingsService = $settingsService;
         $this->filesService    = $filesService;
     }
 

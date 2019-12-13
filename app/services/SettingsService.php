@@ -14,6 +14,9 @@ use Nette;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 use Throwable;
+use const FILTER_VALIDATE_BOOLEAN;
+use const FILTER_VALIDATE_INT;
+use function filter_var;
 
 /**
  * Služba pro správu nastavení.
@@ -31,7 +34,8 @@ class SettingsService
     private $settingsCache;
 
 
-    public function __construct(SettingsRepository $settingsRepository, IStorage $storage) {
+    public function __construct(SettingsRepository $settingsRepository, IStorage $storage)
+    {
         $this->settingsRepository = $settingsRepository;
         $this->settingsCache      = new Cache($storage, 'Settings');
     }
