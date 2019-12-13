@@ -31,10 +31,10 @@ use Exception;
 use Kdyby\Translation\Translator;
 use Nette;
 use Throwable;
+use const DATE_ISO8601;
 use function array_intersect;
 use function count;
 use function floor;
-use const DATE_ISO8601;
 use function in_array;
 
 /**

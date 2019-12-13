@@ -151,7 +151,7 @@ class AdditionalInformationForm extends UI\Control
                     break;
 
                 case CustomInput::SELECT:
-                    $custom      = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions())
+                    $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions())
                         ->setDisabled(! $isAllowedEditCustomInputs);
                     if ($customInputValue) {
                         $custom->setDefaultValue($customInputValue->getValue());
