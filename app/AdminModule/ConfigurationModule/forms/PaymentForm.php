@@ -8,7 +8,6 @@ use App\AdminModule\Forms\BaseForm;
 use App\Model\Enums\MaturityType;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
 use App\Model\User\UserRepository;
 use App\Services\SettingsService;
 use DateTime;

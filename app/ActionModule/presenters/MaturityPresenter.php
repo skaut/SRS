@@ -12,7 +12,6 @@ use App\Model\Mailing\TemplateVariable;
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
 use App\Model\User\ApplicationRepository;
 use App\Model\User\RolesApplicationRepository;
 use App\Model\User\SubeventsApplicationRepository;
@@ -23,11 +22,9 @@ use App\Services\ProgramService;
 use App\Services\SettingsService;
 use App\Utils\Helpers;
 use DateTime;
-use Doctrine\ORM\EntityManager;
 use Nette\Application\Responses\TextResponse;
 use Nettrine\ORM\EntityManagerDecorator;
 use Throwable;
-use Ublaboo\Mailing\Exception\MailingException;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 
 /**

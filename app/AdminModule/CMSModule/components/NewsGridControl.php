@@ -20,9 +20,6 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  * Komponenta pro správu aktualit.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
- *
- * @property-read Template $template
  */
 class NewsGridControl extends Control
 {

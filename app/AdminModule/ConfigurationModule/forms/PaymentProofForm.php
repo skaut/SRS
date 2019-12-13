@@ -7,7 +7,6 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseForm;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
 use App\Services\SettingsService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -21,7 +20,6 @@ use Throwable;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class PaymentProofForm
 {

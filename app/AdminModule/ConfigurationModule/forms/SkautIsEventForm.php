@@ -8,7 +8,6 @@ use App\AdminModule\Forms\BaseForm;
 use App\Model\Enums\SkautIsEventType;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
 use App\Model\SkautIs\SkautIsCourse;
 use App\Model\SkautIs\SkautIsCourseRepository;
 use App\Model\Structure\SubeventRepository;
@@ -30,7 +29,6 @@ use function count;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class SkautIsEventForm
 {

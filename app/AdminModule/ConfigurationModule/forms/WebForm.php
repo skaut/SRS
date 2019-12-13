@@ -8,7 +8,6 @@ use App\AdminModule\Forms\BaseForm;
 use App\Model\CMS\PageRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
 use App\Services\FilesService;
 use App\Services\SettingsService;
 use Nette;

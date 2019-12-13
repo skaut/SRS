@@ -16,7 +16,6 @@ use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Forms\Container;
 use Nette\Http\FileUpload;
 use Nette\Utils\Html;
@@ -30,7 +29,6 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  * Komponenta pro správu dokumentů.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class DocumentsGridControl extends Control
 {

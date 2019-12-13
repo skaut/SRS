@@ -13,8 +13,6 @@ use App\Model\CMS\PageRepository;
 use App\Model\Program\ProgramRepository;
 use App\Services\ACLService;
 use App\Services\ProgramService;
-use Doctrine\DBAL\ConnectionException;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Nette;

@@ -9,7 +9,6 @@ use App\AdminModule\CMSModule\Components\PagesGridControl;
 use App\AdminModule\CMSModule\Forms\IPageFormFactory;
 use App\AdminModule\CMSModule\Forms\PageForm;
 use App\Model\CMS\Content\Content;
-use App\Model\CMS\Content\ContentRepository;
 use App\Model\CMS\PageRepository;
 
 /**
@@ -17,7 +16,6 @@ use App\Model\CMS\PageRepository;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class PagesPresenter extends CMSBasePresenter
 {

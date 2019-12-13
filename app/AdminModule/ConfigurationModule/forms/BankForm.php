@@ -7,7 +7,6 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseForm;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
 use App\Services\BankService;
 use App\Services\SettingsService;
 use DateTime;
@@ -26,7 +25,6 @@ use Tracy\ILogger;
  * Formulár pro nastavení párování plateb.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class BankForm
 {

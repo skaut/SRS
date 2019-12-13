@@ -26,7 +26,6 @@ use App\Services\FilesService;
 use App\Services\MailService;
 use App\Services\SettingsService;
 use App\Utils\Validators;
-use Doctrine\ORM\EntityManager;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
@@ -151,8 +150,6 @@ class EditUserSeminarForm
                 case CustomInput::TEXT:
                     $custom = $form->addText('custom' . $customInput->getId(), $customInput->getName());
                     if ($customInputValue) {
-                        /** @var CustomTextValue $customInputValue */
-                        $customInputValue = $customInputValue ?: new CustomTextValue();
                         $custom->setDefaultValue($customInputValue->getValue());
                     }
                     break;
@@ -160,19 +157,13 @@ class EditUserSeminarForm
                 case CustomInput::CHECKBOX:
                     $custom = $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName());
                     if ($customInputValue) {
-                        /** @var CustomCheckboxValue $customInputValue */
-                        $customInputValue = $customInputValue ?: new CustomCheckboxValue();
                         $custom->setDefaultValue($customInputValue->getValue());
                     }
                     break;
 
                 case CustomInput::SELECT:
-                    /** @var CustomSelect $customInput */
-                    $customInput = $customInput ?: new CustomSelect();
-                    $custom      = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions());
+                    $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions());
                     if ($customInputValue) {
-                        /** @var CustomSelectValue $customInputValue */
-                        $customInputValue = $customInputValue ?: new CustomSelectValue();
                         $custom->setDefaultValue($customInputValue->getValue());
                     }
                     break;

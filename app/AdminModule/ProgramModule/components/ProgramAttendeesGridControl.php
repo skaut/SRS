@@ -9,7 +9,6 @@ use App\Model\ACL\Resource;
 use App\Model\Enums\ApplicationState;
 use App\Model\Program\Program;
 use App\Model\Program\ProgramRepository;
-use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ProgramService;
@@ -18,7 +17,6 @@ use Doctrine\ORM\QueryBuilder;
 use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
-use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Throwable;
@@ -29,9 +27,6 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  * Komponenta pro správu účastníků programu.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
- *
- * @property-read Template $template
  */
 class ProgramAttendeesGridControl extends Control
 {

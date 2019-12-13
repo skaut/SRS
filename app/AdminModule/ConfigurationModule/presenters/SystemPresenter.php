@@ -20,7 +20,7 @@ use Symfony\Component\Console\Output\BufferedOutput;
 class SystemPresenter extends ConfigurationBasePresenter
 {
     /**
-     * @var    ClearCacheCommand
+     * @var ClearCacheCommand
      * @inject
      */
     public $clearCacheCommand;

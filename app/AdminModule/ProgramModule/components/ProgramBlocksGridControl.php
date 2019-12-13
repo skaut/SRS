@@ -39,9 +39,6 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  * Komponenta pro správu programových bloků.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
- *
- * @property-read Template $template
  */
 class ProgramBlocksGridControl extends Control
 {
@@ -81,8 +78,6 @@ class ProgramBlocksGridControl extends Control
     /** @var SessionSection */
     private $sessionSection;
 
-    /** @var User */
-    private $user;
 
     public function __construct(
         Translator $translator,
@@ -315,6 +310,6 @@ class ProgramBlocksGridControl extends Control
      */
     public function isAllowedModifyBlock(Block $block) : bool
     {
-        return $this->user->isAllowedModifyBlock($block);
+        return $this->getPresenter()->dbuser->isAllowedModifyBlock($block);
     }
 }

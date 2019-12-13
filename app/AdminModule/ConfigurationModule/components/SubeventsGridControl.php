@@ -10,10 +10,8 @@ use App\Model\Structure\SubeventRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
-use Mpdf\Tag\Sub;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
-use Nette\Bridges\ApplicationLatte\Template;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
@@ -21,9 +19,6 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  * Komponenta pro správu podakcí.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
- *
- * @property-read Template $template
  */
 class SubeventsGridControl extends Control
 {

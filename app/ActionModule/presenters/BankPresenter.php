@@ -6,7 +6,6 @@ namespace App\ActionModule\Presenters;
 
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
 use App\Services\BankService;
 use App\Services\SettingsService;
 use Nette\Application\Responses\TextResponse;
@@ -16,7 +15,6 @@ use Throwable;
  * Presenter obsluhující načítání plateb z API banky.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class BankPresenter extends ActionBasePresenter
 {

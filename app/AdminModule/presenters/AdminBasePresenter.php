@@ -9,11 +9,9 @@ use App\Model\ACL\Resource;
 use App\Model\ACL\RoleRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Presenters\BasePresenter;
-use App\Services\ACLService;
 use App\Services\Authorizator;
 use App\Services\SettingsService;
 use App\Services\SkautIsService;
@@ -28,7 +26,6 @@ use function array_keys;
  * BasePresenter pro AdminModule.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 abstract class AdminBasePresenter extends BasePresenter
 {
@@ -37,9 +34,6 @@ abstract class AdminBasePresenter extends BasePresenter
      * @inject
      */
     public $authorizator;
-
-    /** @var string */
-    protected $resource = null;
 
     /**
      * @var RoleRepository

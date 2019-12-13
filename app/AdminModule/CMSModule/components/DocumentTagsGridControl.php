@@ -14,7 +14,6 @@ use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Forms\Container;
 use stdClass;
 use Ublaboo\DataGrid\DataGrid;
@@ -26,9 +25,6 @@ use function count;
  * Komponenta pro správu štítků dokumentů.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
- *
- * @property-read Template $template
  */
 class DocumentTagsGridControl extends Control
 {
@@ -65,6 +61,7 @@ class DocumentTagsGridControl extends Control
 
     /**
      * Vytvoří komponentu.
+     *
      * @throws DataGridException
      */
     public function createComponentDocumentTagsGrid(string $name) : void
@@ -125,6 +122,7 @@ class DocumentTagsGridControl extends Control
 
     /**
      * Zpracuje přidání štítku dokumentu.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -145,6 +143,7 @@ class DocumentTagsGridControl extends Control
 
     /**
      * Zpracuje úpravu štítku dokumentu.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -165,6 +164,7 @@ class DocumentTagsGridControl extends Control
 
     /**
      * Zpracuje odstranění štítku dokumentu.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException

@@ -17,7 +17,6 @@ use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Forms\Container;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
-use PhpOffice\PhpSpreadsheet\Exception;
 use stdClass;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
@@ -26,9 +25,6 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  * Komponenta pro správu místností.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
- *
- * @property-read Template $template
  */
 class RoomsGridControl extends Control
 {

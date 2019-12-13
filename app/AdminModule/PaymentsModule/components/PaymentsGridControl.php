@@ -20,7 +20,6 @@ use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Forms\Container;
 use stdClass;
 use Throwable;
@@ -31,9 +30,6 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  * Komponenta pro správu plateb.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
- *
- * @property-read Template $template
  */
 class PaymentsGridControl extends Control
 {

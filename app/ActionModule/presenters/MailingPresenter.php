@@ -17,7 +17,6 @@ use Throwable;
  * Presenter obsluhující potvrzení změny e-mailu.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class MailingPresenter extends ActionBasePresenter
 {

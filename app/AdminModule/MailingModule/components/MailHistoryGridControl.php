@@ -19,9 +19,6 @@ use Ublaboo\DataGrid\DataGrid;
  * Komponenta pro výpis historie e-mailů.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
- *
- * @property-read Template $template
  */
 class MailHistoryGridControl extends Control
 {

@@ -34,7 +34,6 @@ use Throwable;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class BlockForm
 {
@@ -195,9 +194,7 @@ class BlockForm
             ->setAttribute('class', 'btn btn-warning');
 
         if ($this->block) {
-            /** @var TextInput $nameControl */
-            $nameControl = $form['name'];
-            $nameControl->addRule(Form::IS_NOT_IN, 'admin.program.blocks_name_exists', $this->blockRepository->findOthersNames($id));
+            $form['name']->addRule(Form::IS_NOT_IN, 'admin.program.blocks_name_exists', $this->blockRepository->findOthersNames($id));
 
             $form->setDefaults([
                 'id' => $id,
@@ -219,14 +216,10 @@ class BlockForm
                 ]);
             }
         } else {
-            /** @var TextInput $nameControl */
-            $nameControl = $form['name'];
-            $nameControl->addRule(Form::IS_NOT_IN, 'admin.program.blocks_name_exists', $this->blockRepository->findAllNames());
+            $form['name']->addRule(Form::IS_NOT_IN, 'admin.program.blocks_name_exists', $this->blockRepository->findAllNames());
 
             if (! $userIsAllowedManageAllPrograms) {
-                /** @var MultiSelectBox $lestorsControl */
-                $lestorsControl = $form['lectors'];
-                $lestorsControl->setDefaultValue([$this->user->getId()]);
+                $form['lectors']->setDefaultValue([$this->user->getId()]);
             }
         }
 

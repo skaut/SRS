@@ -9,7 +9,6 @@ use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\MailService;
@@ -19,7 +18,6 @@ use Nette\Application\LinkGenerator;
 use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
-use Ublaboo\Mailing\Exception\MailingException;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 use function md5;
 use function mt_rand;
@@ -31,7 +29,6 @@ use function uniqid;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class MailingForm
 {

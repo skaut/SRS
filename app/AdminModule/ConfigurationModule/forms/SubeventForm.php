@@ -7,8 +7,6 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseForm;
 use App\Model\Structure\Subevent;
 use App\Model\Structure\SubeventRepository;
-use Doctrine\DBAL\ConnectionException;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;

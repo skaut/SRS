@@ -65,8 +65,6 @@ use function explode;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
- *
- * @property-read Template $template
  */
 class UsersGridControl extends Control
 {
@@ -397,22 +395,18 @@ class UsersGridControl extends Control
 
             $columnCustomInput = $grid->addColumnText($columnCustomInputName, Helpers::truncate($customInput->getName(), 20))
                 ->setRenderer(function (User $user) use ($customInput) {
-                    /** @var CustomCheckboxValue $customInputValue */
                     $customInputValue = $user->getCustomInputValue($customInput);
                     if ($customInputValue) {
                         switch ($customInput->getType()) {
                             case CustomInput::TEXT:
-                                $customInputValue = $customInputValue ?: new CustomTextValue();
                                 return Helpers::truncate($customInputValue->getValue(), 20);
 
                             case CustomInput::CHECKBOX:
-                                $customInputValue = $customInputValue ?: new CustomCheckboxValue();
                                 return $customInputValue->getValue()
                                     ? $this->translator->translate('admin.common.yes')
                                     : $this->translator->translate('admin.common.no');
 
                             case CustomInput::SELECT:
-                                $customInputValue = $customInputValue ?: new CustomSelectValue();
                                 return $customInputValue->getValueOption();
 
                             case CustomInput::FILE:
@@ -464,8 +458,6 @@ class UsersGridControl extends Control
                     break;
 
                 case CustomInput::SELECT:
-                    /** @var CustomSelect $customInput */
-                    $customInput = $customInput ?: new CustomSelect();
                     $columnCustomInput->setFilterSelect(array_merge(['' => 'admin.common.all'], $customInput->getSelectOptions()))
                         ->setCondition(function (QueryBuilder $qb, string $value) use ($customInput) : void {
                             if ($value === '') {

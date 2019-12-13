@@ -8,7 +8,6 @@ use App\AdminModule\Forms\BaseForm;
 use App\Model\ACL\RoleRepository;
 use App\Model\CMS\Content\CapacitiesContent;
 use App\Model\CMS\Content\Content;
-use App\Model\CMS\Content\ContentRepository;
 use App\Model\CMS\Content\DocumentContent;
 use App\Model\CMS\Content\ImageContent;
 use App\Model\CMS\Content\UsersContent;
