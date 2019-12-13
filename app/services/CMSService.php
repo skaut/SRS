@@ -16,7 +16,6 @@ use Doctrine\ORM\ORMException;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 use Throwable;
-use const PHP_INT_MAX;
 use function array_map;
 
 /**

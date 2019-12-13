@@ -10,7 +10,6 @@ use App\Model\Structure\SubeventRepository;
 use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
-use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Forms\Container;
 use stdClass;
 use Throwable;

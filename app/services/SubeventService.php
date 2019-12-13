@@ -4,19 +4,9 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Model\ACL\PermissionRepository;
-use App\Model\ACL\ResourceRepository;
-use App\Model\ACL\RoleRepository;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\User;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
-use Nette\Caching\Cache;
-use Nette\Caching\IStorage;
-use function array_map;
 use Nette;
 
 /**

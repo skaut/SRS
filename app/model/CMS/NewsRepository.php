@@ -5,9 +5,6 @@ declare(strict_types=1);
 namespace App\Model\CMS;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 
 /**
  * Třída spravující aktuality.

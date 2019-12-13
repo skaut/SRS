@@ -8,7 +8,6 @@ use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
 use App\Services\SettingsService;
 use Nette\Application\AbortException;
 use Throwable;

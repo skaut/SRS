@@ -6,12 +6,12 @@ namespace App\Services;
 
 use App\Model\User\User;
 use Doctrine\Common\Collections\Collection;
+use Nette;
 use Skautis\Skautis;
 use Skautis\Wsdl\WsdlException;
 use stdClass;
 use Tracy\Debugger;
 use Tracy\ILogger;
-use Nette;
 
 /**
  * Služba pro správu skautIS akce.

@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Model\Structure;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 
 /**
  * Třída spravující slevy.

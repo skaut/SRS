@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Model\User\CustomInputValue;
 
-use App\Model\Settings\CustomInput\CustomSelect;
 use Doctrine\ORM\Mapping as ORM;
 use function explode;
 

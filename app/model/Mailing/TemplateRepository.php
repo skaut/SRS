@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Model\Mailing;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
 /**

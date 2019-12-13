@@ -13,7 +13,6 @@ use App\Model\Program\Room;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Structure\SubeventRepository;
-use App\Model\User\CustomInputValue\CustomSelectValue;
 use App\Model\User\User;
 use App\Utils\Helpers;
 use Doctrine\Common\Collections\ArrayCollection;

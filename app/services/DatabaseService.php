@@ -10,12 +10,12 @@ use Doctrine\Migrations\Tools\Console\Command\MigrateCommand;
 use Exception;
 use MySQLDump;
 use mysqli;
+use Nette;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 use Nette\DI\Container;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
-use Nette;
 use Throwable;
 
 /**

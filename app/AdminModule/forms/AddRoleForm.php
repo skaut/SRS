@@ -7,7 +7,6 @@ namespace App\AdminModule\Forms;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Services\ACLService;
-use Doctrine\Migrations\Exception\AlreadyAtVersion;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;

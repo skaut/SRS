@@ -8,7 +8,6 @@ use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
 use App\Model\User\UserRepository;
 use App\Services\MailService;
 use App\Services\SettingsService;
@@ -17,7 +16,6 @@ use Nette\Application\AbortException;
 use Nette\Security\AuthenticationException;
 use Nette\Security\Identity;
 use Throwable;
-use Ublaboo\Mailing\Exception\MailingException;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 use function strpos;
 

@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Model\User\CustomInputValue;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 
 /**
  * Třída spravující hodnoty vlastních polí přihlášky.

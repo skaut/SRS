@@ -6,7 +6,6 @@ namespace App\Model\Settings\CustomInput;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use const PHP_INT_MAX;
 

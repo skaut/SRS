@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Model\ACL\Role;
-use App\Services\ACLService;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Nette;
 use Throwable;

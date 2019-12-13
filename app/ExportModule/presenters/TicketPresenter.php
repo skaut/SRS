@@ -6,7 +6,6 @@ namespace App\ExportModule\Presenters;
 
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\UserRepository;
 use App\Services\SettingsService;

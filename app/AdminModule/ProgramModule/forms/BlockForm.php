@@ -13,7 +13,6 @@ use App\Model\Program\BlockRepository;
 use App\Model\Program\CategoryRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
@@ -24,8 +23,6 @@ use App\Utils\Validators;
 use Doctrine\ORM\NonUniqueResultException;
 use Nette;
 use Nette\Application\UI\Form;
-use Nette\Forms\Controls\MultiSelectBox;
-use Nette\Forms\Controls\TextInput;
 use stdClass;
 use Throwable;
 

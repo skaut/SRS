@@ -12,7 +12,6 @@ use App\Model\CMS\Content\ContentDTO;
 use App\Model\Enums\ProgramRegistrationType;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
 use App\Model\User\UserRepository;
 use App\Services\ProgramService;
 use App\Services\SettingsService;

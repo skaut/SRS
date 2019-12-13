@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Model\Settings\Place;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
 /**

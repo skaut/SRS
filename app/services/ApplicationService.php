@@ -16,7 +16,6 @@ use App\Model\Payment\Payment;
 use App\Model\Payment\PaymentRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
 use App\Model\Structure\DiscountRepository;
 use App\Model\Structure\Subevent;
 use App\Model\Structure\SubeventRepository;
@@ -32,7 +31,6 @@ use App\Utils\Helpers;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use InvalidArgumentException;
@@ -41,15 +39,14 @@ use Nette;
 use Nettrine\ORM\EntityManagerDecorator;
 use ReflectionException;
 use Throwable;
-use Ublaboo\Mailing\Exception\MailingException;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 use Yasumi\Yasumi;
-use const STR_PAD_LEFT;
 use function abs;
 use function array_diff;
 use function implode;
 use function str_pad;
 use function strval;
+use const STR_PAD_LEFT;
 
 /**
  * Služba pro správu přihlašování na akci.

@@ -8,7 +8,6 @@ use App\Model\CMS\Content\ContentDTO;
 use App\Model\Settings\Place\PlacePointRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
 use App\Services\SettingsService;
 use Nette\Application\UI\Control;
 use Throwable;

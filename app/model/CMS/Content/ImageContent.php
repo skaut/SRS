@@ -7,7 +7,6 @@ namespace App\Model\CMS\Content;
 use App\Services\FilesService;
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
-use Nette\Forms\Container;
 use Nette\Http\FileUpload;
 use Nette\Utils\Image;
 use Nette\Utils\Random;

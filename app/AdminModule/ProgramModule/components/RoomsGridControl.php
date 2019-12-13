@@ -13,7 +13,6 @@ use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Forms\Container;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;

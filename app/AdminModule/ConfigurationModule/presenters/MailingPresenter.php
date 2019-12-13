@@ -7,7 +7,6 @@ namespace App\AdminModule\ConfigurationModule\Presenters;
 use App\AdminModule\ConfigurationModule\Forms\MailingForm;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
 use App\Services\SettingsService;
 use Nette\Application\UI\Form;
 use stdClass;

@@ -14,11 +14,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
+use Nette;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 use Throwable;
 use function array_map;
-use Nette;
 
 /**
  *

@@ -22,7 +22,6 @@ use App\Model\Program\Room;
 use App\Model\Program\RoomRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ProgramService;
@@ -32,11 +31,11 @@ use Exception;
 use Kdyby\Translation\Translator;
 use Nette;
 use Throwable;
-use const DATE_ISO8601;
 use function array_intersect;
 use function count;
 use function floor;
 use function in_array;
+use const DATE_ISO8601;
 
 /**
  * Služba pro zpracování požadavků z API pro správu harmonogramu a zapisování programů.
