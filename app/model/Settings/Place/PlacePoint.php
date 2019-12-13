@@ -5,19 +5,18 @@ declare(strict_types=1);
 namespace App\Model\Settings\Place;
 
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id as Identifier;
+use Nettrine\ORM\Entity\Attributes\Id;
 
 /**
  * Entita mapového bodu.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="PlacePointRepository")
  * @ORM\Table(name="place_point")
  */
 class PlacePoint
 {
-    use Identifier;
+    use Id;
 
     /**
      * Název bodu.

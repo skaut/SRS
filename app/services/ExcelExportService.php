@@ -33,7 +33,6 @@ use function preg_replace;
  * Služba pro export do formátu XLSX.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class ExcelExportService
 {
@@ -371,7 +370,6 @@ class ExcelExportService
                     break;
 
                 case CustomInput::FILE:
-                    $width = null;
                     continue 2;
 
                 default:
@@ -434,8 +432,6 @@ class ExcelExportService
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->getNotRegisteredMandatoryBlocksText());
 
             foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
-                /** @var User $user */
-                /** @var CustomSelectValue $customInputValue */
                 $customInputValue = $user->getCustomInputValue($customInput);
 
                 if ($customInputValue) {
@@ -455,7 +451,6 @@ class ExcelExportService
                             break;
 
                         case CustomInput::FILE:
-                            $value = '';
                             continue 2;
 
                         default:

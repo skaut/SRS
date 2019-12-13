@@ -13,7 +13,6 @@ use stdClass;
  * Entita obsahu s informací o pořadateli.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity
  * @ORM\Table(name="organizer_content")
  */
@@ -47,7 +46,6 @@ class OrganizerContent extends Content implements IContent
     {
         parent::addContentForm($form);
 
-        /** @var Container $formContainer */
         $formContainer = $form[$this->getContentFormName()];
 
         $formContainer->addText('organizer', 'admin.cms.pages_content_organizer')

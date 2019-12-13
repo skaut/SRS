@@ -11,20 +11,19 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
-use Nettrine\ORM\Entity\Attributes\Id as Identifier;
+use Nettrine\ORM\Entity\Attributes\Id;
 
 /**
  * Entita program.
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="ProgramRepository")
  * @ORM\Table(name="program")
  */
 class Program
 {
-    use Identifier;
+    use Id;
 
     /**
      * Programový blok.

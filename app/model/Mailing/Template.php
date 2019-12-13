@@ -7,13 +7,12 @@ namespace App\Model\Mailing;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id as Identifier;
+use Nettrine\ORM\Entity\Attributes\Id;
 
 /**
  * Entita šablona automatického e-mailu.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="TemplateRepository")
  * @ORM\Table(name="mail_template")
  */
@@ -86,7 +85,7 @@ class Template
     public const CUSTOM_INPUT_VALUE_CHANGED = 'custom_input_value_changed';
 
 
-    use Identifier;
+    use Id;
 
     /**
      * Typ e-mailu.

@@ -7,14 +7,13 @@ namespace App\Model\ACL;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id as Identifier;
+use Nettrine\ORM\Entity\Attributes\Id;
 
 /**
  * Entita oprávnění.
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="PermissionRepository")
  * @ORM\Table(name="permission")
  */
@@ -78,7 +77,7 @@ class Permission
         self::CHOOSE_PROGRAMS,
     ];
 
-    use Identifier;
+    use Id;
 
     /**
      * Název oprávnění.

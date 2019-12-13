@@ -17,7 +17,6 @@ use Throwable;
  * Komponenta s místem.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class PlaceContentControl extends Control
 {

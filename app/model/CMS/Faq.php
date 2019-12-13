@@ -6,20 +6,19 @@ namespace App\Model\CMS;
 
 use App\Model\User\User;
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id as Identifier;
+use Nettrine\ORM\Entity\Attributes\Id;
 
 /**
  * Entita FAQ.
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="FaqRepository")
  * @ORM\Table(name="faq")
  */
 class Faq
 {
-    use Identifier;
+    use Id;
 
     /**
      * Otázka.

@@ -8,14 +8,13 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id as Identifier;
+use Nettrine\ORM\Entity\Attributes\Id;
 
 /**
  * Entita dokumentu.
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="DocumentRepository")
  * @ORM\Table(name="document")
  */
@@ -26,7 +25,7 @@ class Document
      */
     public const PATH = '/documents';
 
-    use Identifier;
+    use Id;
 
     /**
      * Tagy dokumentu.

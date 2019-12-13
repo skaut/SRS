@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id as Identifier;
+use Nettrine\ORM\Entity\Attributes\Id;
 use function array_key_exists;
 use function array_keys;
 use function implode;
@@ -19,13 +19,12 @@ use function implode;
  * Entita platba.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="PaymentRepository")
  * @ORM\Table(name="payment")
  */
 class Payment
 {
-    use Identifier;
+    use Id;
 
     /**
      * Id platby v systému banky.

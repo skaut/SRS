@@ -42,7 +42,6 @@ use function in_array;
  * Služba pro zpracování požadavků z API pro správu harmonogramu a zapisování programů.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class ScheduleService
 {

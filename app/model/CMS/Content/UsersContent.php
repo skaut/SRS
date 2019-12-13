@@ -8,6 +8,7 @@ use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\CMS\Page;
 use App\Model\Page\PageException;
+use App\Services\ACLService;
 use App\Utils\Helpers;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -20,7 +21,6 @@ use stdClass;
  * Entita obsahu se seznamem uživatelů.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity
  * @ORM\Table(name="users_content")
  */
@@ -39,6 +39,9 @@ class UsersContent extends Content implements IContent
     /** @var RoleRepository */
     private $roleRepository;
 
+    /** @var ACLService */
+    private $ACLService;
+
 
     /**
      * @throws PageException
@@ -52,6 +55,11 @@ class UsersContent extends Content implements IContent
     public function injectRoleRepository(RoleRepository $roleRepository) : void
     {
         $this->roleRepository = $roleRepository;
+    }
+
+    public function injectACLService(ACLService $ACLService) : void
+    {
+        $this->ACLService = $ACLService;
     }
 
     /**
@@ -80,13 +88,12 @@ class UsersContent extends Content implements IContent
     {
         parent::addContentForm($form);
 
-        /** @var Container $formContainer */
         $formContainer = $form[$this->getContentFormName()];
 
         $formContainer->addMultiSelect(
             'roles',
             'admin.cms.pages_content_users_roles',
-            $this->roleRepository->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED])
+            $this->ACLService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED])
         )
             ->setDefaultValue($this->roleRepository->findRolesIds($this->roles));
 

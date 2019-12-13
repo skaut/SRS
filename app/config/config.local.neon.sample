@@ -1,5 +1,4 @@
 parameters:
-    consoleUrl: https://srs.app
     database:
         host: localhost
         dbname: dbname

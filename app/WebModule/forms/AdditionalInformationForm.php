@@ -137,9 +137,7 @@ class AdditionalInformationForm extends UI\Control
 
             switch ($customInput->getType()) {
                 case CustomInput::TEXT:
-                    /** @var CustomTextValue $customInputValue */
-                    $customInputValue = $customInputValue ?: new CustomTextValue();
-                    $custom           = $form->addText('custom' . $customInput->getId(), $customInput->getName())
+                    $custom = $form->addText('custom' . $customInput->getId(), $customInput->getName())
                         ->setDisabled(! $isAllowedEditCustomInputs);
                     if ($customInputValue) {
                         $custom->setDefaultValue($customInputValue->getValue());
@@ -149,21 +147,15 @@ class AdditionalInformationForm extends UI\Control
                 case CustomInput::CHECKBOX:
                     $custom = $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName())
                         ->setDisabled(! $isAllowedEditCustomInputs);
-                    /** @var CustomCheckboxValue $customInputValue */
-                    $customInputValue = $customInputValue ?: new CustomCheckboxValue();
                     if ($customInputValue) {
                         $custom->setDefaultValue($customInputValue->getValue());
                     }
                     break;
 
                 case CustomInput::SELECT:
-                    /** @var CustomSelect $customInput */
-                    $customInput = $customInput ?: new CustomSelect();
                     $custom      = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions())
                         ->setDisabled(! $isAllowedEditCustomInputs);
                     if ($customInputValue) {
-                        /** @var CustomSelectValue $customInputValue */
-                        $customInputValue = $customInputValue ?: new CustomSelectValue();
                         $custom->setDefaultValue($customInputValue->getValue());
                     }
                     break;
@@ -171,8 +163,6 @@ class AdditionalInformationForm extends UI\Control
                 case CustomInput::FILE:
                     $custom = $form->addUpload('custom' . $customInput->getId(), $customInput->getName())
                         ->setDisabled(! $isAllowedEditCustomInputs);
-                    /** @var CustomFileValue $customInputValue */
-                    $customInputValue = $customInputValue ?: new CustomFileValue();
                     if ($customInputValue && $customInputValue->getValue()) {
                         $custom->setAttribute('data-current-file-link', $customInputValue->getValue())
                             ->setAttribute('data-current-file-name', array_values(array_slice(explode('/', $customInputValue->getValue()), -1))[0]);
@@ -219,9 +209,7 @@ class AdditionalInformationForm extends UI\Control
 
             if ($this->applicationService->isAllowedEditCustomInputs()) {
                 foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
-                    /** @var CustomTextValue $customInputValue */
                     $customInputValue = $this->user->getCustomInputValue($customInput);
-                    $customInputValue = $customInputValue ?: new CustomTextValue();
 
                     $oldValue = $customInputValue ? $customInputValue->getValue() : null;
 

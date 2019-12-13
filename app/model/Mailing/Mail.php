@@ -11,20 +11,19 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id as Identifier;
+use Nettrine\ORM\Entity\Attributes\Id;
 use function implode;
 
 /**
  * Entita e-mail.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="MailRepository")
  * @ORM\Table(name="mail")
  */
 class Mail
 {
-    use Identifier;
+    use Id;
 
     /**
      * Role, kterým byl e-mail odeslán.

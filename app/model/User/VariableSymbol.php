@@ -5,19 +5,18 @@ declare(strict_types=1);
 namespace App\Model\User;
 
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id as Identifier;
+use Nettrine\ORM\Entity\Attributes\Id;
 
 /**
  * Entita variabilní symbol.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="VariableSymbolRepository")
  * @ORM\Table(name="variable_symbol")
  */
 class VariableSymbol
 {
-    use Identifier;
+    use Id;
 
     /**
      * Variabilní symbol.

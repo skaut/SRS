@@ -21,7 +21,6 @@ use stdClass;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity
  * @ORM\Table(name="document_content")
  */
@@ -81,7 +80,6 @@ class DocumentContent extends Content implements IContent
     {
         parent::addContentForm($form);
 
-        /** @var Container $formContainer */
         $formContainer = $form[$this->getContentFormName()];
 
         $formContainer->addMultiSelect('tags', 'admin.cms.pages_content_tags', $this->tagRepository->getTagsOptions())

@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace App\Model\Structure;
 
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id as Identifier;
+use Nettrine\ORM\Entity\Attributes\Id;
 
 /**
  * Entita sleva.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="DiscountRepository")
  * @ORM\Table(name="discount")
  */
@@ -25,7 +24,7 @@ class Discount
     public const END               = '';
 
 
-    use Identifier;
+    use Id;
 
     /**
      * Podmínka.

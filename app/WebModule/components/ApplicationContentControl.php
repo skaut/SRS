@@ -27,7 +27,6 @@ use function json_encode;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class ApplicationContentControl extends Control
 {

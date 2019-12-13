@@ -16,7 +16,6 @@ use stdClass;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="ContentRepository")
  * @ORM\Table(name="content")
  * @ORM\InheritanceType("JOINED")

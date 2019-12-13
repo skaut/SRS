@@ -5,19 +5,18 @@ declare(strict_types=1);
 namespace App\Model\SkautIs;
 
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id as Identifier;
+use Nettrine\ORM\Entity\Attributes\Id;
 
 /**
  * Entita skautIS kurz.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="SkautIsCourseRepository")
  * @ORM\Table(name="skaut_is_course")
  */
 class SkautIsCourse
 {
-    use Identifier;
+    use Id;
 
     /**
      * SkautIS id kurzu.

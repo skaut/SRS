@@ -502,6 +502,7 @@ class ProgramService
     /**
      * Aktualizuje programy uživatelů (odhlásí nepovolené a přihlásí automaticky přihlašované).
      *
+     * @param Collection|User[] $users
      * @throws MailingException
      * @throws MailingMailCreationException
      * @throws ORMException

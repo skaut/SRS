@@ -21,7 +21,6 @@ use stdClass;
  * Entita obsahu s přehledem kapacit rolí.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity
  * @ORM\Table(name="capacities_content")
  */

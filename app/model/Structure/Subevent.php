@@ -12,20 +12,19 @@ use App\Model\User\SubeventsApplication;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id as Identifier;
+use Nettrine\ORM\Entity\Attributes\Id;
 use function implode;
 
 /**
  * Entita podakce.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="SubeventRepository")
  * @ORM\Table(name="subevent")
  */
 class Subevent
 {
-    use Identifier;
+    use Id;
 
     /**
      * Název podakce.

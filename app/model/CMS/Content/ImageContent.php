@@ -21,7 +21,6 @@ use function file_exists;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity
  * @ORM\Table(name="image_content")
  */
@@ -151,7 +150,7 @@ class ImageContent extends Content implements IContent
     public function addContentForm(Form $form) : Form
     {
         parent::addContentForm($form);
-        /** @var Container $formContainer */
+
         $formContainer = $form[$this->getContentFormName()];
 
         $formContainer->addText('currentImage', 'admin.cms.pages_content_image_current_file')

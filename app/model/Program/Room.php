@@ -7,19 +7,18 @@ namespace App\Model\Program;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id as Identifier;
+use Nettrine\ORM\Entity\Attributes\Id;
 
 /**
  * Entita místnost.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="RoomRepository")
  * @ORM\Table(name="room")
  */
 class Room
 {
-    use Identifier;
+    use Id;
 
     /**
      * Název místnosti.

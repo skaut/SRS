@@ -15,6 +15,7 @@ use App\Model\CMS\Document\TagRepository;
 use App\Model\CMS\Page;
 use App\Model\CMS\PageRepository;
 use App\Model\Page\PageException;
+use App\Services\ACLService;
 use App\Services\CMSService;
 use App\Services\FilesService;
 use Doctrine\ORM\OptimisticLockException;
@@ -70,6 +71,9 @@ class PageForm extends UI\Control
     /** @var PageRepository */
     private $pageRepository;
 
+    /** @var ACLService */
+    private $ACLService;
+
     /** @var CMSService */
     private $CMSService;
 
@@ -88,6 +92,7 @@ class PageForm extends UI\Control
         string $area,
         BaseForm $baseFormFactory,
         PageRepository $pageRepository,
+        ACLService $ACLService,
         CMSService $CMSService,
         RoleRepository $roleRepository,
         TagRepository $tagRepository,
@@ -100,6 +105,7 @@ class PageForm extends UI\Control
 
         $this->baseFormFactory = $baseFormFactory;
         $this->pageRepository  = $pageRepository;
+        $this->ACLService      = $ACLService;
         $this->CMSService      = $CMSService;
         $this->roleRepository  = $roleRepository;
         $this->tagRepository   = $tagRepository;
@@ -148,6 +154,7 @@ class PageForm extends UI\Control
                     break;
                 case UsersContent::class:
                     $content->injectRoleRepository($this->roleRepository);
+                    $content->injectACLService($this->ACLService);
                     break;
             }
             $form = $content->addContentForm($form);

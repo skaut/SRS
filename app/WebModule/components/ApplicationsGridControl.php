@@ -46,10 +46,6 @@ use Ublaboo\Mailing\Exception\MailingMailCreationException;
  * Komponenta pro správu vlastních přihlášek.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
- *
- * @property-read Template $template
- *
  */
 class ApplicationsGridControl extends Control
 {

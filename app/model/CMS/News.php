@@ -6,20 +6,19 @@ namespace App\Model\CMS;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id as Identifier;
+use Nettrine\ORM\Entity\Attributes\Id;
 
 /**
  * Entita aktuality.
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="NewsRepository")
  * @ORM\Table(name="news")
  */
 class News
 {
-    use Identifier;
+    use Id;
 
     /**
      * Text aktuality.

@@ -13,7 +13,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id as Identifier;
+use Nettrine\ORM\Entity\Attributes\Id;
 use Numbers_Words;
 use function implode;
 use function str_replace;
@@ -22,7 +22,6 @@ use function str_replace;
  * Abstraktní entita přihláška.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="ApplicationRepository")
  * @ORM\Table(name="application")
  * @ORM\InheritanceType("SINGLE_TABLE")
@@ -52,7 +51,7 @@ abstract class Application
      */
     protected $type;
 
-    use Identifier;
+    use Id;
 
     /**
      * Id přihlášky.

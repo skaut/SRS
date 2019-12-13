@@ -7,14 +7,13 @@ namespace App\Model\ACL;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id as Identifier;
+use Nettrine\ORM\Entity\Attributes\Id;
 
 /**
  * Entita prostředek.
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  * @ORM\Entity(repositoryClass="ResourceRepository")
  * @ORM\Table(name="resource")
  */
@@ -80,7 +79,7 @@ class Resource
         self::PAYMENTS,
     ];
 
-    use Identifier;
+    use Id;
 
     /**
      * Název prostředku.

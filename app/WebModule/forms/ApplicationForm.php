@@ -303,25 +303,21 @@ class ApplicationForm
 
                 switch ($customInput->getType()) {
                     case CustomInput::TEXT:
-                        /** @var CustomTextValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomTextValue();
                         $customInputValue->setValue($values['custom' . $customInput->getId()]);
                         break;
 
                     case CustomInput::CHECKBOX:
-                        /** @var CustomCheckboxValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomCheckboxValue();
                         $customInputValue->setValue($values['custom' . $customInput->getId()]);
                         break;
 
                     case CustomInput::SELECT:
-                        /** @var CustomSelectValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomSelectValue();
                         $customInputValue->setValue($values['custom' . $customInput->getId()]);
                         break;
 
                     case CustomInput::FILE:
-                        /** @var CustomFileValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomFileValue();
                         $file             = $values['custom' . $customInput->getId()];
                         if ($file->size > 0) {
@@ -402,9 +398,7 @@ class ApplicationForm
                     break;
 
                 case CustomInput::SELECT:
-                    /** @var CustomSelect $customInput */
-                    $customInput = $customInput ?: new CustomSelect();
-                    $custom      = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions());
+                    $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions());
                     break;
 
                 case CustomInput::FILE:

@@ -33,7 +33,6 @@ use function str_replace;
  * Služba pro rozesílání e-mailů.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class MailService
 {

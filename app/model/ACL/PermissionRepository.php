@@ -14,7 +14,6 @@ use Doctrine\ORM\NoResultException;
  * Třída spravující oprávnění.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class PermissionRepository extends EntityRepository
 {

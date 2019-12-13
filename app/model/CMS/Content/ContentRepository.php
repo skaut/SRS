@@ -12,7 +12,6 @@ use Doctrine\ORM\ORMException;
  * Třída spravující obsahy webu.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class ContentRepository extends EntityRepository
 {
