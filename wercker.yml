@@ -24,11 +24,11 @@ build:
 
         - script:
             name: static analysis (phpstan)
-            code: phing static-analysis
+            code: php phing.phar static-analysis
 
         - script:
             name: check coding standard
-            code: phing coding-standard
+            code: php phing.phar coding-standard
 
         - script:
             name: wait for MySQL connection
