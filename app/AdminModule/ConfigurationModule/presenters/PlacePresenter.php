@@ -74,7 +74,7 @@ class PlacePresenter extends ConfigurationBasePresenter
         $form = $this->placePointFormFactory->create((int) $this->getParameter('id'));
 
         $form->onSuccess[] = function (Form $form, stdClass $values) : void {
-            if ($form['cancel']->isSubmittedBy()) {
+            if ($form->isSubmitted() === $form['cancel']) {
                 $this->redirect('Place:default');
             }
 

@@ -124,7 +124,7 @@ class NewsGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $this['newsGrid']->redrawItem($id);
+            $this->getComponent('newsGrid')->redrawItem($id);
         } else {
             $this->redirect('this');
         }

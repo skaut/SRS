@@ -78,7 +78,7 @@ class ApplicationPresenter extends ConfigurationBasePresenter
         $form = $this->customInputFormFactory->create((int) $this->getParameter('id'));
 
         $form->onSuccess[] = function (Form $form, stdClass $values) : void {
-            if (! $form['cancel']->isSubmittedBy()) {
+            if ($form->isSubmitted() !== $form['cancel']) {
                 $this->flashMessage('admin.configuration.custom_inputs_saved', 'success');
             }
 

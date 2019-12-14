@@ -112,12 +112,12 @@ class FaqGridControl extends Control
     }
 
     /**
-     * Přesuee otázku $item_id mezi $prev_id a $next_id.
+     * Přesuene otázku $item_id mezi $prev_id a $next_id.
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
      */
-    public function handleSort($item_id, $prev_id, $next_id) : void
+    public function handleSort(?string $item_id, ?string $prev_id, ?string $next_id) : void
     {
         $this->faqRepository->sort((int) $item_id, (int) $prev_id, (int) $next_id);
 
@@ -126,7 +126,7 @@ class FaqGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $this['faqGrid']->reload();
+            $this->getComponent('faqGrid')->reload();
         } else {
             $this->redirect('this');
         }
@@ -150,7 +150,7 @@ class FaqGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $this['faqGrid']->redrawItem($id);
+            $this->getComponent('faqGrid')->redrawItem($id);
         } else {
             $this->redirect('this');
         }

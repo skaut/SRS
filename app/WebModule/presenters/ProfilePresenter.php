@@ -170,11 +170,11 @@ class ProfilePresenter extends WebBasePresenter
         $form = $this->rolesFormFactory->create($this->user->id);
 
         $form->onSuccess[] = function (Form $form, stdClass $values) : void {
-            if ($form['submit']->isSubmittedBy()) {
+            if ($form->isSubmitted() === $form['submit']) {
                 $this->flashMessage('web.profile.roles_changed', 'success');
-            } elseif ($form['cancelRegistration']->isSubmittedBy()) {
+            } elseif ($form->isSubmitted() === $form['cancelRegistration']) {
                 $this->flashMessage('web.profile.registration_canceled', 'success');
-            } elseif ($form['downloadTicket']->isSubmittedBy()) {
+            } elseif ($form->isSubmitted() === $form['downloadTicket']) {
                 $this->redirect(':Export:Ticket:pdf');
             }
 

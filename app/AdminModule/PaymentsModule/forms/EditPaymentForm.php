@@ -128,7 +128,7 @@ class EditPaymentForm
      */
     public function processForm(Form $form, stdClass $values) : void
     {
-        if (! $form['cancel']->isSubmittedBy()) {
+        if ($form->isSubmitted() !== $form['cancel']) {
             $loggedUser = $this->userRepository->findById($form->getPresenter()->user->id);
 
             $pairedApplications = $this->applicationRepository->findApplicationsByIds($values->pairedApplications);

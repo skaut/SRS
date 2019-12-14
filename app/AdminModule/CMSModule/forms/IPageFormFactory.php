@@ -15,5 +15,5 @@ interface IPageFormFactory
     /**
      * Vytvoří komponentu.
      */
-    public function create($id, $area) : PageForm;
+    public function create(string $id, string $area) : PageForm;
 }

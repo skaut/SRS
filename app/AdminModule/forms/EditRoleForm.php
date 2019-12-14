@@ -208,7 +208,7 @@ class EditRoleForm
      */
     public function processForm(Form $form, stdClass $values) : void
     {
-        if ($form['cancel']->isSubmittedBy()) {
+        if ($form->isSubmitted() === $form['cancel']) {
             return;
         }
 

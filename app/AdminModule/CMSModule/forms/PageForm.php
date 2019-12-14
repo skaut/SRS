@@ -201,20 +201,20 @@ class PageForm extends UI\Control
             }
         }
 
-        if ($form['submitAdd']->isSubmittedBy()) {
+        if ($form->isSubmitted() === $form['submitAdd']) {
             $contentClass = '\\App\\Model\\CMS\\Content\\' . ucfirst($type) . 'Content';
             $content      = new $contentClass($page, $area);
             $content->setHeading($form->getTranslator()->translate('common.content.default_heading.' . $type));
             $this->CMSService->saveContent($content);
         }
 
-        if ($form['submitAdd']->isSubmittedBy()) {
+        if ($form->isSubmitted() === $form['submitAdd']) {
             $submitName = 'submitAdd';
-        } elseif ($form['submitMain']->isSubmittedBy()) {
+        } elseif ($form->isSubmitted() === $form['submitMain']) {
             $submitName = 'submitMain';
-        } elseif ($form['submitSidebar']->isSubmittedBy()) {
+        } elseif ($form->isSubmitted() === $form['submitSidebar']) {
             $submitName = 'submitSidebar';
-        } elseif ($form['submitAndContinue']->isSubmittedBy()) {
+        } elseif ($form->isSubmitted() === $form['submitAndContinue']) {
             $submitName = 'submitAndContinue';
         } else {
             $submitName = 'submit';

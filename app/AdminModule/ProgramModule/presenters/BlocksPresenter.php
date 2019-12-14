@@ -167,7 +167,7 @@ class BlocksPresenter extends ProgramBasePresenter
         $form = $this->blockFormFactory->create((int) $this->getParameter('id'), $this->getUser()->getId());
 
         $form->onSuccess[] = function (Form $form, stdClass $values) : void {
-            if ($form['cancel']->isSubmittedBy()) {
+            if ($form->isSubmitted() === $form['cancel']) {
                 $this->redirect('Blocks:default');
             }
 
@@ -188,7 +188,7 @@ class BlocksPresenter extends ProgramBasePresenter
 
             $this->flashMessage('admin.program.blocks_saved', 'success');
 
-            if ($form['submitAndContinue']->isSubmittedBy()) {
+            if ($form->isSubmitted() === $form['submitAndContinue']) {
                 $id = $values->id ?: $this->blockRepository->findLastId();
                 $this->redirect('Blocks:edit', ['id' => $id]);
             } else {

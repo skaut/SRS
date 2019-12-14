@@ -207,7 +207,7 @@ class UsersPresenter extends AdminBasePresenter
         $form = $this->addLectorFormFactory->create();
 
         $form->onSuccess[] = function (Form $form, stdClass $values) : void {
-            if ($form['cancel']->isSubmittedBy()) {
+            if ($form->isSubmitted() === $form['cancel']) {
                 $this->redirect('Users:default');
             } else {
                 $this->flashMessage('admin.users.users_saved', 'success');
@@ -223,7 +223,7 @@ class UsersPresenter extends AdminBasePresenter
         $form = $this->editUserPersonalDetailsFormFactory->create((int) $this->getParameter('id'));
 
         $form->onSuccess[] = function (Form $form, stdClass $values) : void {
-            if ($form['cancel']->isSubmittedBy()) {
+            if ($form->isSubmitted() === $form['cancel']) {
                 $this->redirect('this');
             } else {
                 $this->flashMessage('admin.users.users_saved', 'success');
@@ -247,7 +247,7 @@ class UsersPresenter extends AdminBasePresenter
         };
 
         $form->onSuccess[] = function (Form $form, stdClass $values) : void {
-            if (! $form['cancel']->isSubmittedBy()) {
+            if ($form->isSubmitted() !== $form['cancel']) {
                 $this->flashMessage('admin.users.users_saved', 'success');
             }
 

@@ -14,6 +14,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\Forms\Controls\SubmitButton;
 use stdClass;
 
 /**
@@ -108,7 +109,7 @@ class FaqForm
      */
     public function processForm(Form $form, stdClass $values) : void
     {
-        if ($form['cancel']->isSubmittedBy()) {
+        if ($form->isSubmitted() === $form['cancel']) {
             return;
         }
 

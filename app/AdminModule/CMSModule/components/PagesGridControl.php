@@ -18,6 +18,7 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
+use Nette\Forms\Controls\TextInput;
 use stdClass;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
@@ -145,8 +146,9 @@ class PagesGridControl extends Control
             $container->addSelect('public', '', $publicOptions);
         };
         $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Page $item) : void {
-            $container['slug']
-                ->addRule(Form::IS_NOT_IN, 'admin.cms.pages_slug_exists', $this->pageRepository->findOthersSlugs($item->getId()));
+            /** @var TextInput $slugText */
+            $slugText = $container['slug'];
+            $slugText->addRule(Form::IS_NOT_IN, 'admin.cms.pages_slug_exists', $this->pageRepository->findOthersSlugs($item->getId()));
 
             $container->setDefaults([
                 'name' => $item->getName(),
@@ -247,7 +249,7 @@ class PagesGridControl extends Control
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function handleSort($item_id, $prev_id, $next_id) : void
+    public function handleSort(?string $item_id, ?string $prev_id, ?string $next_id) : void
     {
         $this->CMSService->sort((int) $item_id, (int) $prev_id, (int) $next_id);
 
@@ -256,7 +258,7 @@ class PagesGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $this['pagesGrid']->reload();
+            $this->getComponent('pagesGrid')->reload();
         } else {
             $this->redirect('this');
         }
@@ -287,7 +289,7 @@ class PagesGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $this['pagesGrid']->redrawItem($id);
+            $this->getComponent('pagesGrid')->redrawItem($id);
         } else {
             $this->redirect('this');
         }
