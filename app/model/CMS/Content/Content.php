@@ -305,8 +305,8 @@ abstract class Content implements IContent
     public function contentFormSucceeded(Form $form, stdClass $values) : void
     {
         $values         = $values[$this->getContentFormName()];
-        $this->position = $values['position'];
-        $this->heading  = $values['heading'];
+        $this->position = $values->position;
+        $this->heading  = $values->heading;
     }
 
     public function convertToDTO() : ContentDTO

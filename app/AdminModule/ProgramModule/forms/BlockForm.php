@@ -245,19 +245,19 @@ class BlockForm
         }
 
         if ($this->subeventsExists) {
-            $subevent = $values['subevent'] !== '' ? $this->subeventRepository->findById($values['subevent']) : null;
+            $subevent = $values->subevent !== '' ? $this->subeventRepository->findById($values->subevent) : null;
         } else {
             $subevent = $this->subeventRepository->findImplicit();
         }
-        $category  = $values['category'] !== '' ? $this->categoryRepository->findById($values['category']) : null;
-        $lectors   = $this->userRepository->findUsersByIds($values['lectors']);
-        $capacity  = $values['capacity'] !== '' ? $values['capacity'] : null;
-        $mandatory = $values['mandatory'] ? ($values['autoRegistered'] ? ProgramMandatoryType::AUTO_REGISTERED : ProgramMandatoryType::MANDATORY) : ProgramMandatoryType::VOLUNTARY;
+        $category  = $values->category !== '' ? $this->categoryRepository->findById($values->category) : null;
+        $lectors   = $this->userRepository->findUsersByIds($values->lectors);
+        $capacity  = $values->capacity !== '' ? $values->capacity : null;
+        $mandatory = $values->mandatory ? ($values->autoRegistered ? ProgramMandatoryType::AUTO_REGISTERED : ProgramMandatoryType::MANDATORY) : ProgramMandatoryType::VOLUNTARY;
 
         if (! $this->block) {
-            $this->programService->createBlock($values['name'], $subevent, $category, $lectors, $values['duration'], $capacity, $mandatory, $values['perex'], $values['description'], $values['tools']);
+            $this->programService->createBlock($values->name, $subevent, $category, $lectors, $values->duration, $capacity, $mandatory, $values->perex, $values->description, $values->tools);
         } else {
-            $this->programService->updateBlock($this->block, $values['name'], $subevent, $category, $lectors, $values['duration'], $capacity, $mandatory, $values['perex'], $values['description'], $values['tools']);
+            $this->programService->updateBlock($this->block, $values->name, $subevent, $category, $lectors, $values->duration, $capacity, $mandatory, $values->perex, $values->description, $values->tools);
         }
     }
 

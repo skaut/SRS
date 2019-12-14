@@ -87,9 +87,9 @@ class PaymentProofForm
      */
     public function processForm(Form $form, stdClass $values) : void
     {
-        $this->settingsService->setValue(Settings::COMPANY, $values['company']);
-        $this->settingsService->setValue(Settings::ICO, $values['ico']);
-        $this->settingsService->setValue(Settings::ACCOUNTANT, $values['accountant']);
-        $this->settingsService->setValue(Settings::PRINT_LOCATION, $values['printLocation']);
+        $this->settingsService->setValue(Settings::COMPANY, $values->company);
+        $this->settingsService->setValue(Settings::ICO, $values->ico);
+        $this->settingsService->setValue(Settings::ACCOUNTANT, $values->accountant);
+        $this->settingsService->setValue(Settings::PRINT_LOCATION, $values->printLocation);
     }
 }

@@ -136,8 +136,8 @@ class DocumentTagsGridControl extends Control
     {
         $tag = new Tag();
 
-        $tag->setName($values['name']);
-        $tag->setRoles($this->roleRepository->findRolesByIds($values['roles']));
+        $tag->setName($values->name);
+        $tag->setRoles($this->roleRepository->findRolesByIds($values->roles));
 
         $this->tagRepository->save($tag);
 
@@ -157,8 +157,8 @@ class DocumentTagsGridControl extends Control
     {
         $tag = $this->tagRepository->findById($id);
 
-        $tag->setName($values['name']);
-        $tag->setRoles($this->roleRepository->findRolesByIds($values['roles']));
+        $tag->setName($values->name);
+        $tag->setRoles($this->roleRepository->findRolesByIds($values->roles));
 
         $this->tagRepository->save($tag);
 

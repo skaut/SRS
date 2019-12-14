@@ -94,7 +94,7 @@ class DocumentContent extends Content implements IContent
     {
         parent::contentFormSucceeded($form, $values);
         $values     = $values[$this->getContentFormName()];
-        $this->tags = $this->tagRepository->findTagsByIds($values['tags']);
+        $this->tags = $this->tagRepository->findTagsByIds($values->tags);
     }
 
     public function convertToDTO() : ContentDTO

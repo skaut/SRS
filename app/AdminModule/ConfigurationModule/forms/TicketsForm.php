@@ -77,8 +77,8 @@ class TicketsForm
      */
     public function processForm(Form $form, stdClass $values) : void
     {
-        if ($values['ticketsAllowed']) {
-            $this->settingsService->setDateTimeValue(Settings::TICKETS_FROM, $values['ticketsFrom']);
+        if ($values->ticketsAllowed) {
+            $this->settingsService->setDateTimeValue(Settings::TICKETS_FROM, $values->ticketsFrom);
         } else {
             $this->settingsService->setDateTimeValue(Settings::TICKETS_FROM, null);
         }

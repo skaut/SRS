@@ -214,22 +214,22 @@ class AdditionalInformationForm extends UI\Control
                     switch ($customInput->getType()) {
                         case CustomInput::TEXT:
                             $customInputValue = $customInputValue ?: new CustomTextValue();
-                            $customInputValue->setValue($values['custom' . $customInput->getId()]);
+                            $customInputValue->setValue($values->custom' . $customInput->getId()]);
                             break;
 
                         case CustomInput::CHECKBOX:
                             $customInputValue = $customInputValue ?: new CustomCheckboxValue();
-                            $customInputValue->setValue($values['custom' . $customInput->getId()]);
+                            $customInputValue->setValue($values->custom' . $customInput->getId()]);
                             break;
 
                         case CustomInput::SELECT:
                             $customInputValue = $customInputValue ?: new CustomSelectValue();
-                            $customInputValue->setValue($values['custom' . $customInput->getId()]);
+                            $customInputValue->setValue($values->custom' . $customInput->getId()]);
                             break;
 
                         case CustomInput::FILE:
                             $customInputValue = $customInputValue ?: new CustomFileValue();
-                            $file             = $values['custom' . $customInput->getId()];
+                            $file             = $values->custom' . $customInput->getId()];
                             if ($file->size > 0) {
                                 $path = $this->generatePath($file);
                                 $this->filesService->save($file, $path);
@@ -250,13 +250,13 @@ class AdditionalInformationForm extends UI\Control
                 }
             }
 
-            $this->user->setAbout($values['about']);
+            $this->user->setAbout($values->about);
 
             if (array_key_exists('arrival', $values)) {
-                $this->user->setArrival($values['arrival']);
+                $this->user->setArrival($values->arrival);
             }
             if (array_key_exists('departure', $values)) {
-                $this->user->setDeparture($values['departure']);
+                $this->user->setDeparture($values->departure);
             }
 
             $this->userRepository->save($this->user);

@@ -186,10 +186,10 @@ class PageForm extends UI\Control
      */
     public function processForm(Form $form, stdClass $values) : void
     {
-        $page = $this->pageRepository->findById((int) $values['id']);
+        $page = $this->pageRepository->findById((int) $values->id);
 
-        $area = $values['area'];
-        $type = $values['type'];
+        $area = $values->area;
+        $type = $values->type;
 
         foreach ($page->getContents($area) as $content) {
             $formContainer = $values[$content->getContentFormName()];

@@ -165,16 +165,16 @@ class DocumentsGridControl extends Control
      */
     public function add(stdClass $values) : void
     {
-        $file = $values['file'];
+        $file = $values->file;
         $path = $this->generatePath($file);
         $this->filesService->save($file, $path);
 
         $document = new Document();
 
-        $document->setName($values['name']);
-        $document->setTags($this->tagRepository->findTagsByIds($values['tags']));
+        $document->setName($values->name);
+        $document->setTags($this->tagRepository->findTagsByIds($values->tags));
         $document->setFile($path);
-        $document->setDescription($values['description']);
+        $document->setDescription($values->description);
         $document->setTimestamp(new DateTime());
 
         $this->documentRepository->save($document);
@@ -194,7 +194,7 @@ class DocumentsGridControl extends Control
     {
         $document = $this->documentRepository->findById($id);
 
-        $file = $values['file'];
+        $file = $values->file;
         if ($file->size > 0) {
             $this->filesService->delete($this->documentRepository->find($id)->getFile());
             $path = $this->generatePath($file);
@@ -204,9 +204,9 @@ class DocumentsGridControl extends Control
             $document->setTimestamp(new DateTime());
         }
 
-        $document->setName($values['name']);
-        $document->setTags($this->tagRepository->findTagsByIds($values['tags']));
-        $document->setDescription($values['description']);
+        $document->setName($values->name);
+        $document->setTags($this->tagRepository->findTagsByIds($values->tags));
+        $document->setDescription($values->description);
 
         $this->documentRepository->save($document);
 

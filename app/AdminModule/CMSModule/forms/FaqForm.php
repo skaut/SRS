@@ -117,9 +117,9 @@ class FaqForm
             $this->faq->setAuthor($this->user);
         }
 
-        $this->faq->setQuestion($values['question']);
-        $this->faq->setAnswer($values['answer']);
-        $this->faq->setPublic($values['public']);
+        $this->faq->setQuestion($values->question);
+        $this->faq->setAnswer($values->answer);
+        $this->faq->setPublic($values->public);
 
         $this->faqRepository->save($this->faq);
     }

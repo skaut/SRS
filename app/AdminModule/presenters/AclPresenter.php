@@ -122,7 +122,7 @@ class AclPresenter extends AdminBasePresenter
             $this->flashMessage('admin.acl.roles_saved', 'success');
 
             if ($form['submitAndContinue']->isSubmittedBy()) {
-                $id = $values['id'];
+                $id = $values->id;
                 $this->redirect('Acl:edit', ['id' => $id]);
             } else {
                 $this->redirect('Acl:default');

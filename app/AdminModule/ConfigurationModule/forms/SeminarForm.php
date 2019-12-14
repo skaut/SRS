@@ -100,14 +100,14 @@ class SeminarForm
      */
     public function processForm(Form $form, stdClass $values) : void
     {
-        $this->settingsService->setValue(Settings::SEMINAR_NAME, $values['seminarName']);
+        $this->settingsService->setValue(Settings::SEMINAR_NAME, $values->seminarName);
         $implicitSubevent = $this->subeventRepository->findImplicit();
-        $implicitSubevent->setName($values['seminarName']);
+        $implicitSubevent->setName($values->seminarName);
         $this->subeventRepository->save($implicitSubevent);
 
-        $this->settingsService->setDateValue(Settings::SEMINAR_FROM_DATE, $values['seminarFromDate']);
-        $this->settingsService->setDateValue(Settings::SEMINAR_TO_DATE, $values['seminarToDate']);
-        $this->settingsService->setDateValue(Settings::EDIT_REGISTRATION_TO, $values['editRegistrationTo']);
+        $this->settingsService->setDateValue(Settings::SEMINAR_FROM_DATE, $values->seminarFromDate);
+        $this->settingsService->setDateValue(Settings::SEMINAR_TO_DATE, $values->seminarToDate);
+        $this->settingsService->setDateValue(Settings::EDIT_REGISTRATION_TO, $values->editRegistrationTo);
     }
 
     /**

@@ -135,17 +135,17 @@ class DiscountForm extends UI\Control
      */
     public function processForm(Form $form, stdClass $values) : void
     {
-        $this->id = (int) $values['id'];
+        $this->id = (int) $values->id;
 
-        if ($this->discountService->validateCondition(($values['condition']))) {
+        if ($this->discountService->validateCondition(($values->condition))) {
             if (! $this->id) {
                 $this->discount = new Discount();
             } else {
                 $this->discount = $this->discountRepository->findById($this->id);
             }
 
-            $this->discount->setDiscountCondition($values['condition']);
-            $this->discount->setDiscount($values['discount']);
+            $this->discount->setDiscountCondition($values->condition);
+            $this->discount->setDiscount($values->discount);
 
             $this->discountRepository->save($this->discount);
 

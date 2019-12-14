@@ -106,11 +106,11 @@ class EditTemplateForm
             return;
         }
 
-        $this->template->setActive($values['active']);
-        $this->template->setSendToUser(in_array('user', $values['recipients']));
-        $this->template->setSendToOrganizer(in_array('organizer', $values['recipients']));
-        $this->template->setSubject($values['subject']);
-        $this->template->setText($values['text']);
+        $this->template->setActive($values->active);
+        $this->template->setSendToUser(in_array('user', $values->recipients));
+        $this->template->setSendToOrganizer(in_array('organizer', $values->recipients));
+        $this->template->setSubject($values->subject);
+        $this->template->setText($values->text);
 
         $this->templateRepository->save($this->template);
     }

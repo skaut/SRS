@@ -285,7 +285,7 @@ class ApplicationsGridControl extends Control
      */
     public function add(stdClass $values) : void
     {
-        $selectedSubevents = $this->subeventRepository->findSubeventsByIds($values['subevents']);
+        $selectedSubevents = $this->subeventRepository->findSubeventsByIds($values->subevents);
 
         $p = $this->getPresenter();
 
@@ -316,7 +316,7 @@ class ApplicationsGridControl extends Control
     {
         $application = $this->applicationRepository->findById($id);
 
-        $selectedSubevents = $this->subeventRepository->findSubeventsByIds($values['subevents']);
+        $selectedSubevents = $this->subeventRepository->findSubeventsByIds($values->subevents);
 
         $p = $this->getPresenter();
 
@@ -350,10 +350,10 @@ class ApplicationsGridControl extends Control
             }
             $this->applicationService->updateApplicationPayment(
                 $application,
-                $values['paymentMethod'] ?: null,
-                $values['paymentDate'],
-                $values['incomeProofPrintedDate'],
-                $values['maturityDate'],
+                $values->paymentMethod ?: null,
+                $values->paymentDate,
+                $values->incomeProofPrintedDate,
+                $values->maturityDate,
                 $loggedUser
             );
         });

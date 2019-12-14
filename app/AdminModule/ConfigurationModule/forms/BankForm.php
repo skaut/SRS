@@ -86,8 +86,8 @@ class BankForm
      */
     public function processForm(Form $form, stdClass $values) : void
     {
-        $token = $values['bankToken'];
-        $from  = $values['bankDownloadFrom'];
+        $token = $values->bankToken;
+        $from  = $values->bankDownloadFrom;
 
         try {
             $this->bankService->downloadTransactions($from, $token);

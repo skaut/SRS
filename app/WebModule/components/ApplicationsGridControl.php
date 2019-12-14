@@ -268,7 +268,7 @@ class ApplicationsGridControl extends Control
      */
     public function add(stdClass $values) : void
     {
-        $selectedSubevents         = $this->subeventRepository->findSubeventsByIds($values['subevents']);
+        $selectedSubevents         = $this->subeventRepository->findSubeventsByIds($values->subevents);
         $selectedAndUsersSubevents = clone $this->user->getSubevents();
         foreach ($selectedSubevents as $subevent) {
             $selectedAndUsersSubevents->add($subevent);
@@ -322,7 +322,7 @@ class ApplicationsGridControl extends Control
     {
         $application = $this->applicationRepository->findById($id);
 
-        $selectedSubevents         = $this->subeventRepository->findSubeventsByIds($values['subevents']);
+        $selectedSubevents         = $this->subeventRepository->findSubeventsByIds($values->subevents);
         $selectedAndUsersSubevents = clone $this->user->getSubevents();
         foreach ($selectedSubevents as $subevent) {
             $selectedAndUsersSubevents->add($subevent);

@@ -145,8 +145,8 @@ class RoomsGridControl extends Control
     {
         $room = new Room();
 
-        $room->setName($values['name']);
-        $room->setCapacity($values['capacity'] !== '' ? $values['capacity'] : null);
+        $room->setName($values->name);
+        $room->setCapacity($values->capacity !== '' ? $values->capacity : null);
 
         $this->roomRepository->save($room);
 
@@ -166,8 +166,8 @@ class RoomsGridControl extends Control
     {
         $room = $this->roomRepository->findById($id);
 
-        $room->setName($values['name']);
-        $room->setCapacity($values['capacity'] !== '' ? $values['capacity'] : null);
+        $room->setName($values->name);
+        $room->setCapacity($values->capacity !== '' ? $values->capacity : null);
 
         $this->roomRepository->save($room);
 

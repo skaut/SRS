@@ -62,7 +62,7 @@ class HtmlContent extends Content implements IContent
     {
         parent::contentFormSucceeded($form, $values);
         $values     = $values[$this->getContentFormName()];
-        $this->text = $values['text'];
+        $this->text = $values->text;
     }
 
     public function convertToDTO() : ContentDTO

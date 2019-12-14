@@ -93,7 +93,7 @@ class SkautIsEventEducationGridControl extends Control
     {
         $subevent = $this->subeventRepository->findById($id);
 
-        $subevent->setSkautIsCourses($this->skautIsCourseRepository->findSkautIsCoursesByIds($values['skautIsCourses']));
+        $subevent->setSkautIsCourses($this->skautIsCourseRepository->findSkautIsCoursesByIds($values->skautIsCourses));
 
         $this->subeventRepository->save($subevent);
 

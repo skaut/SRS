@@ -105,9 +105,9 @@ class NewsForm
             $this->news = new News();
         }
 
-        $this->news->setText($values['text']);
-        $this->news->setPublished($values['published']);
-        $this->news->setPinned($values['pinned']);
+        $this->news->setText($values->text);
+        $this->news->setPublished($values->published);
+        $this->news->setPinned($values->pinned);
 
         $this->newsRepository->save($this->news);
     }

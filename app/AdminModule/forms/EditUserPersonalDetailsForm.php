@@ -137,21 +137,21 @@ class EditUserPersonalDetailsForm
             return;
         }
 
-        $this->user->setFirstName($values['firstName']);
-        $this->user->setLastName($values['lastName']);
-        $this->user->setNickName($values['nickName']);
-        $this->user->setDegreePre($values['degreePre']);
-        $this->user->setDegreePost($values['degreePost']);
-        $this->user->setEmail($values['email']);
-        $this->user->setBirthdate($values['birthdate']);
-        $this->user->setStreet($values['street']);
-        $this->user->setCity($values['city']);
-        $this->user->setPostcode($values['postcode']);
+        $this->user->setFirstName($values->firstName);
+        $this->user->setLastName($values->lastName);
+        $this->user->setNickName($values->nickName);
+        $this->user->setDegreePre($values->degreePre);
+        $this->user->setDegreePost($values->degreePost);
+        $this->user->setEmail($values->email);
+        $this->user->setBirthdate($values->birthdate);
+        $this->user->setStreet($values->street);
+        $this->user->setCity($values->city);
+        $this->user->setPostcode($values->postcode);
 
-        if (array_key_exists('removePhoto', $values) && $values['removePhoto']) {
+        if (array_key_exists('removePhoto', $values) && $values->removePhoto) {
             $this->user->setPhoto(null);
         } elseif (array_key_exists('newPhoto', $values)) {
-            $photo = $values['newPhoto'];
+            $photo = $values->newPhoto;
             if ($photo->size > 0) {
                 $photoExtension = image_type_to_extension(getimagesizefromstring($photo->getContents())[2]);
                 $photoName      = 'ext_' . $this->user->getId() . $photoExtension;

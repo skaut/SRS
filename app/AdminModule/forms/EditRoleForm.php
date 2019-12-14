@@ -213,26 +213,26 @@ class EditRoleForm
         }
 
         $this->em->transactional(function () use ($values) : void {
-            $capacity = $values['capacity'] !== '' ? $values['capacity'] : null;
+            $capacity = $values->capacity !== '' ? $values->capacity : null;
 
-            $this->role->setName($values['name']);
-            $this->role->setRegisterable($values['registerable']);
-            $this->role->setRegisterableFrom($values['registerableFrom']);
-            $this->role->setRegisterableTo($values['registerableTo']);
+            $this->role->setName($values->name);
+            $this->role->setRegisterable($values->registerable);
+            $this->role->setRegisterableFrom($values->registerableFrom);
+            $this->role->setRegisterableTo($values->registerableTo);
             $this->role->setCapacity($capacity);
-            $this->role->setApprovedAfterRegistration($values['approvedAfterRegistration']);
-            // $this->role->setSyncedWithSkautIS($values['syncedWithSkautIs']);
-            $this->role->setDisplayArrivalDeparture($values['displayArrivalDeparture']);
-            $this->role->setPermissions($this->permissionRepository->findPermissionsByIds($values['permissions']));
-            $this->role->setPages($this->pageRepository->findPagesBySlugs($values['pages']));
-            $this->role->setRedirectAfterLogin($values['redirectAfterLogin']);
-            $this->role->setIncompatibleRoles($this->roleRepository->findRolesByIds($values['incompatibleRoles']));
-            $this->role->setRequiredRoles($this->roleRepository->findRolesByIds($values['requiredRoles']));
+            $this->role->setApprovedAfterRegistration($values->approvedAfterRegistration);
+            // $this->role->setSyncedWithSkautIS($values->syncedWithSkautIs);
+            $this->role->setDisplayArrivalDeparture($values->displayArrivalDeparture);
+            $this->role->setPermissions($this->permissionRepository->findPermissionsByIds($values->permissions));
+            $this->role->setPages($this->pageRepository->findPagesBySlugs($values->pages));
+            $this->role->setRedirectAfterLogin($values->redirectAfterLogin);
+            $this->role->setIncompatibleRoles($this->roleRepository->findRolesByIds($values->incompatibleRoles));
+            $this->role->setRequiredRoles($this->roleRepository->findRolesByIds($values->requiredRoles));
 
-            if ($values['feeFromSubevents']) {
+            if ($values->feeFromSubevents) {
                 $this->role->setFee(null);
             } else {
-                $this->role->setFee($values['fee']);
+                $this->role->setFee($values->fee);
             }
 
             $this->ACLService->saveRole($this->role);

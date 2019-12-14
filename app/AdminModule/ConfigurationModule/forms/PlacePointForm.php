@@ -91,9 +91,9 @@ class PlacePointForm
             $this->placePoint = new PlacePoint();
         }
 
-        $this->placePoint->setName($values['name']);
-        $this->placePoint->setGpsLat($values['gps']->lat);
-        $this->placePoint->setGpsLon($values['gps']->lng);
+        $this->placePoint->setName($values->name);
+        $this->placePoint->setGpsLat($values->gps->lat);
+        $this->placePoint->setGpsLon($values->gps->lng);
 
         $this->placePointRepository->save($this->placePoint);
     }

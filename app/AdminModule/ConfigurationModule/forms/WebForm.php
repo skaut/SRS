@@ -97,7 +97,7 @@ class WebForm
      */
     public function processForm(Form $form, stdClass $values) : void
     {
-        $logo = $values['logo'];
+        $logo = $values->logo;
         if ($logo->size > 0) {
             $this->filesService->delete('/logo/' . $this->settingsService->getValue(Settings::LOGO));
 
@@ -108,8 +108,8 @@ class WebForm
             $this->settingsService->setValue(Settings::LOGO, $logoName);
         }
 
-        $this->settingsService->setValue(Settings::FOOTER, $values['footer']);
-        $this->settingsService->setValue(Settings::REDIRECT_AFTER_LOGIN, $values['redirectAfterLogin']);
-        $this->settingsService->setValue(Settings::GA_ID, $values['ga_id']);
+        $this->settingsService->setValue(Settings::FOOTER, $values->footer);
+        $this->settingsService->setValue(Settings::REDIRECT_AFTER_LOGIN, $values->redirectAfterLogin);
+        $this->settingsService->setValue(Settings::GA_ID, $values->ga_id);
     }
 }

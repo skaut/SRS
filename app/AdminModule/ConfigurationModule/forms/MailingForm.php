@@ -109,11 +109,11 @@ class MailingForm
      */
     public function processForm(Form $form, stdClass $values) : void
     {
-        if ($this->settingsService->getValue(Settings::SEMINAR_EMAIL) === $values['seminarEmail']) {
+        if ($this->settingsService->getValue(Settings::SEMINAR_EMAIL) === $values->seminarEmail) {
             return;
         }
 
-        $this->settingsService->setValue(Settings::SEMINAR_EMAIL_UNVERIFIED, $values['seminarEmail']);
+        $this->settingsService->setValue(Settings::SEMINAR_EMAIL_UNVERIFIED, $values->seminarEmail);
 
         $verificationCode = substr(md5(uniqid((string) mt_rand(), true)), 0, 8);
         $this->settingsService->setValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE, $verificationCode);
@@ -122,7 +122,7 @@ class MailingForm
 
         $this->mailService->sendMailFromTemplate(
             null,
-            $values['seminarEmail'],
+            $values->seminarEmail,
             Template::EMAIL_VERIFICATION,
             [
                 TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),

@@ -113,12 +113,12 @@ class ProgramForm
      */
     public function processForm(Form $form, stdClass $values) : void
     {
-        $this->settingsService->setBoolValue(Settings::IS_ALLOWED_ADD_BLOCK, $values['isAllowedAddBlock']);
-        $this->settingsService->setBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE, $values['isAllowedModifySchedule']);
-        $this->settingsService->setValue(Settings::REGISTER_PROGRAMS_TYPE, $values['registerProgramsType']);
-        $this->settingsService->setBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, $values['isAllowedRegisterProgramsBeforePayment']);
-        $this->settingsService->setDateTimeValue(Settings::REGISTER_PROGRAMS_FROM, $values['registerProgramsFrom']);
-        $this->settingsService->setDateTimeValue(Settings::REGISTER_PROGRAMS_TO, $values['registerProgramsTo']);
+        $this->settingsService->setBoolValue(Settings::IS_ALLOWED_ADD_BLOCK, $values->isAllowedAddBlock);
+        $this->settingsService->setBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE, $values->isAllowedModifySchedule);
+        $this->settingsService->setValue(Settings::REGISTER_PROGRAMS_TYPE, $values->registerProgramsType);
+        $this->settingsService->setBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, $values->isAllowedRegisterProgramsBeforePayment);
+        $this->settingsService->setDateTimeValue(Settings::REGISTER_PROGRAMS_FROM, $values->registerProgramsFrom);
+        $this->settingsService->setDateTimeValue(Settings::REGISTER_PROGRAMS_TO, $values->registerProgramsTo);
     }
 
     /**

@@ -185,7 +185,7 @@ class RolesForm
     public function processForm(Form $form, stdClass $values) : void
     {
         if ($form['submit']->isSubmittedBy()) {
-            $selectedRoles = $this->roleRepository->findRolesByIds($values['roles']);
+            $selectedRoles = $this->roleRepository->findRolesByIds($values->roles);
             $this->applicationService->updateRoles($this->user, $selectedRoles, $this->user);
         } elseif ($form['cancelRegistration']->isSubmittedBy()) {
             $this->applicationService->cancelRegistration($this->user, ApplicationState::CANCELED, $this->user);

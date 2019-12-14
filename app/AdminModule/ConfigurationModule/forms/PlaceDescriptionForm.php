@@ -70,6 +70,6 @@ class PlaceDescriptionForm
      */
     public function processForm(Form $form, stdClass $values) : void
     {
-        $this->settingsService->setValue(Settings::PLACE_DESCRIPTION, $values['placeDescription']);
+        $this->settingsService->setValue(Settings::PLACE_DESCRIPTION, $values->placeDescription);
     }
 }

@@ -193,9 +193,9 @@ class ImageContent extends Content implements IContent
         parent::contentFormSucceeded($form, $values);
         $values = $values[$this->getContentFormName()];
 
-        $file   = $values['image'];
-        $width  = $values['width'] !== '' ? $values['width'] : null;
-        $height = $values['height'] !== '' ? $values['height'] : null;
+        $file   = $values->image;
+        $width  = $values->width !== '' ? $values->width : null;
+        $height = $values->height !== '' ? $values->height : null;
 
         $image = null;
 
@@ -234,7 +234,7 @@ class ImageContent extends Content implements IContent
             $this->height = $height;
         }
 
-        $this->align = $values['align'];
+        $this->align = $values->align;
     }
 
     /**

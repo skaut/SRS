@@ -217,11 +217,11 @@ class EditUserSeminarForm
         $loggedUser = $this->userRepository->findById($form->getPresenter()->user->id);
 
         $this->em->transactional(function () use ($values, $loggedUser) : void {
-            $selectedRoles = $this->roleRepository->findRolesByIds($values['roles']);
+            $selectedRoles = $this->roleRepository->findRolesByIds($values->roles);
             $this->applicationService->updateRoles($this->user, $selectedRoles, $loggedUser);
 
-            $this->user->setApproved($values['approved']);
-            $this->user->setAttended($values['attended']);
+            $this->user->setApproved($values->approved);
+            $this->user->setAttended($values->attended);
 
             $customInputValueChanged = false;
 
@@ -234,22 +234,22 @@ class EditUserSeminarForm
                 switch ($customInput->getType()) {
                     case CustomInput::TEXT:
                         $customInputValue = $customInputValue ?: new CustomTextValue();
-                        $customInputValue->setValue($values['custom' . $customInput->getId()]);
+                        $customInputValue->setValue($values->custom' . $customInput->getId()]);
                         break;
 
                     case CustomInput::CHECKBOX:
                         $customInputValue = $customInputValue ?: new CustomCheckboxValue();
-                        $customInputValue->setValue($values['custom' . $customInput->getId()]);
+                        $customInputValue->setValue($values->custom' . $customInput->getId()]);
                         break;
 
                     case CustomInput::SELECT:
                         $customInputValue = $customInputValue ?: new CustomSelectValue();
-                        $customInputValue->setValue($values['custom' . $customInput->getId()]);
+                        $customInputValue->setValue($values->custom' . $customInput->getId()]);
                         break;
 
                     case CustomInput::FILE:
                         $customInputValue = $customInputValue ?: new CustomFileValue();
-                        $file             = $values['custom' . $customInput->getId()];
+                        $file             = $values->custom' . $customInput->getId()];
                         if ($file->size > 0) {
                             $path = $this->generatePath($file);
                             $this->filesService->save($file, $path);
@@ -270,16 +270,16 @@ class EditUserSeminarForm
             }
 
             if (array_key_exists('arrival', $values)) {
-                $this->user->setArrival($values['arrival']);
+                $this->user->setArrival($values->arrival);
             }
 
             if (array_key_exists('departure', $values)) {
-                $this->user->setDeparture($values['departure']);
+                $this->user->setDeparture($values->departure);
             }
 
-            $this->user->setAbout($values['about']);
+            $this->user->setAbout($values->about);
 
-            $this->user->setNote($values['privateNote']);
+            $this->user->setNote($values->privateNote);
 
             $this->userRepository->save($this->user);
 

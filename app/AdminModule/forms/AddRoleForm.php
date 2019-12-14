@@ -81,9 +81,9 @@ class AddRoleForm
             return;
         }
 
-        $role = new Role($values['name']);
+        $role = new Role($values->name);
 
-        $parent = $this->roleRepository->findById($values['parent']);
+        $parent = $this->roleRepository->findById($values->parent);
 
         $role->setSystem(false);
 

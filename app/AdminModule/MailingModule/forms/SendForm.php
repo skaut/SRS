@@ -147,11 +147,11 @@ class SendForm
     public function processForm(Form $form, stdClass $values) : void
     {
         try {
-            $recipientsRoles     = $this->roleRepository->findRolesByIds($values['recipientRoles']);
-            $recipientsSubevents = $this->subeventRepository->findSubeventsByIds($values['recipientSubevents']);
-            $recipientsUsers     = $this->userRepository->findUsersByIds($values['recipientUsers']);
+            $recipientsRoles     = $this->roleRepository->findRolesByIds($values->recipientRoles);
+            $recipientsSubevents = $this->subeventRepository->findSubeventsByIds($values->recipientSubevents);
+            $recipientsUsers     = $this->userRepository->findUsersByIds($values->recipientUsers);
 
-            $this->mailService->sendMail($recipientsRoles, $recipientsSubevents, $recipientsUsers, $values['copy'], $values['subject'], $values['text']);
+            $this->mailService->sendMail($recipientsRoles, $recipientsSubevents, $recipientsUsers, $values->copy, $values->subject, $values->text);
             $this->mailSuccess = true;
         } catch (SendException $ex) {
             Debugger::log($ex, ILogger::WARNING);

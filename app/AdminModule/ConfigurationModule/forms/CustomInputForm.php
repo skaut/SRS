@@ -112,7 +112,7 @@ class CustomInputForm
         }
 
         if (! $this->customInput) {
-            switch ($values['type']) {
+            switch ($values->type) {
                 case CustomInput::TEXT:
                     $this->customInput = new CustomText();
                     break;
@@ -124,7 +124,7 @@ class CustomInputForm
                 case CustomInput::SELECT:
                     $this->customInput = new CustomSelect();
 
-                    $options        = explode(',', $values['options']);
+                    $options        = explode(',', $values->options);
                     $optionsTrimmed = [];
                     foreach ($options as $option) {
                         $optionsTrimmed[] = trim($option);
@@ -139,8 +139,8 @@ class CustomInputForm
             }
         }
 
-        $this->customInput->setName($values['name']);
-        $this->customInput->setMandatory($values['mandatory']);
+        $this->customInput->setName($values->name);
+        $this->customInput->setMandatory($values->mandatory);
 
         $this->customInputRepository->save($this->customInput);
     }

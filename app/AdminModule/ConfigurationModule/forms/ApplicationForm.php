@@ -73,7 +73,7 @@ class ApplicationForm
      */
     public function processForm(Form $form, stdClass $values) : void
     {
-        $this->settingsService->setValue(Settings::APPLICATION_AGREEMENT, $values['applicationAgreement']);
-        $this->settingsService->setValue(Settings::EDIT_CUSTOM_INPUTS_TO, (string) $values['editCustomInputsTo']);
+        $this->settingsService->setValue(Settings::APPLICATION_AGREEMENT, $values->applicationAgreement);
+        $this->settingsService->setValue(Settings::EDIT_CUSTOM_INPUTS_TO, (string) $values->editCustomInputsTo);
     }
 }

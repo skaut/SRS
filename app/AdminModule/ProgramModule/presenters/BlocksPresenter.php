@@ -171,14 +171,14 @@ class BlocksPresenter extends ProgramBasePresenter
                 $this->redirect('Blocks:default');
             }
 
-            if (! $values['id']) {
+            if (! $values->id) {
                 if (! $this->settingsService->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK)) {
                     $this->flashMessage('admin.program.blocks_add_not_allowed', 'danger');
                     $this->redirect('Blocks:default');
                 }
             } else {
                 $user  = $this->userRepository->findById($this->user->getId());
-                $block = $this->blockRepository->findById((int) $values['id']);
+                $block = $this->blockRepository->findById((int) $values->id);
 
                 if (! $user->isAllowedModifyBlock($block)) {
                     $this->flashMessage('admin.program.blocks_edit_not_allowed', 'danger');
@@ -189,7 +189,7 @@ class BlocksPresenter extends ProgramBasePresenter
             $this->flashMessage('admin.program.blocks_saved', 'success');
 
             if ($form['submitAndContinue']->isSubmittedBy()) {
-                $id = $values['id'] ?: $this->blockRepository->findLastId();
+                $id = $values->id ?: $this->blockRepository->findLastId();
                 $this->redirect('Blocks:edit', ['id' => $id]);
             } else {
                 $this->redirect('Blocks:default');

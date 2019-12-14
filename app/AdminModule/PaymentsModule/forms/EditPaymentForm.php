@@ -131,9 +131,9 @@ class EditPaymentForm
         if (! $form['cancel']->isSubmittedBy()) {
             $loggedUser = $this->userRepository->findById($form->getPresenter()->user->id);
 
-            $pairedApplications = $this->applicationRepository->findApplicationsByIds($values['pairedApplications']);
+            $pairedApplications = $this->applicationRepository->findApplicationsByIds($values->pairedApplications);
 
-            $this->applicationService->updatePayment($this->payment, $values['date'], $values['amount'], $values['variableSymbol'], $pairedApplications, $loggedUser);
+            $this->applicationService->updatePayment($this->payment, $values->date, $values->amount, $values->variableSymbol, $pairedApplications, $loggedUser);
         }
     }
 }

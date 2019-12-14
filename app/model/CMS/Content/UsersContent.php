@@ -106,7 +106,7 @@ class UsersContent extends Content implements IContent
     {
         parent::contentFormSucceeded($form, $values);
         $values      = $values[$this->getContentFormName()];
-        $this->roles = $this->roleRepository->findRolesByIds($values['roles']);
+        $this->roles = $this->roleRepository->findRolesByIds($values->roles);
     }
 
     public function convertToDTO() : ContentDTO

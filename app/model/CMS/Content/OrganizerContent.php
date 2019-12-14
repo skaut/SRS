@@ -60,7 +60,7 @@ class OrganizerContent extends Content implements IContent
     {
         parent::contentFormSucceeded($form, $values);
         $values          = $values[$this->getContentFormName()];
-        $this->organizer = $values['organizer'];
+        $this->organizer = $values->organizer;
     }
 
     public function convertToDTO() : ContentDTO

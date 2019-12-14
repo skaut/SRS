@@ -77,7 +77,7 @@ class FaqForm
     {
         $faq = new Faq();
 
-        $faq->setQuestion($values['question']);
+        $faq->setQuestion($values->question);
         $faq->setAuthor($this->user);
 
         $this->faqRepository->save($faq);

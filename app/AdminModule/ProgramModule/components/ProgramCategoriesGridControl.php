@@ -146,7 +146,7 @@ class ProgramCategoriesGridControl extends Control
      */
     public function add(stdClass $values) : void
     {
-        $this->programService->createCategory($values['name'], $this->roleRepository->findRolesByIds($values['registerableRoles']));
+        $this->programService->createCategory($values->name, $this->roleRepository->findRolesByIds($values->registerableRoles));
 
         $this->getPresenter()->flashMessage('admin.program.categories_saved', 'success');
 
@@ -162,7 +162,7 @@ class ProgramCategoriesGridControl extends Control
     {
         $category = $this->categoryRepository->findById($id);
 
-        $this->programService->updateCategory($category, $values['name'], $this->roleRepository->findRolesByIds($values['registerableRoles']));
+        $this->programService->updateCategory($category, $values->name, $this->roleRepository->findRolesByIds($values->registerableRoles));
 
         $this->getPresenter()->flashMessage('admin.program.categories_saved', 'success');
         $this->redirect('this');

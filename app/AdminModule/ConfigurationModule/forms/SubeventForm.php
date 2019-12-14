@@ -158,13 +158,13 @@ class SubeventForm
             $this->subevent = new Subevent();
         }
 
-        $capacity = $values['capacity'] !== '' ? $values['capacity'] : null;
+        $capacity = $values->capacity !== '' ? $values->capacity : null;
 
-        $this->subevent->setName($values['name']);
+        $this->subevent->setName($values->name);
         $this->subevent->setCapacity($capacity);
-        $this->subevent->setFee($values['fee']);
-        $this->subevent->setIncompatibleSubevents($this->subeventRepository->findSubeventsByIds($values['incompatibleSubevents']));
-        $this->subevent->setRequiredSubevents($this->subeventRepository->findSubeventsByIds($values['requiredSubevents']));
+        $this->subevent->setFee($values->fee);
+        $this->subevent->setIncompatibleSubevents($this->subeventRepository->findSubeventsByIds($values->incompatibleSubevents));
+        $this->subevent->setRequiredSubevents($this->subeventRepository->findSubeventsByIds($values->requiredSubevents));
 
         $this->subeventRepository->save($this->subevent);
     }

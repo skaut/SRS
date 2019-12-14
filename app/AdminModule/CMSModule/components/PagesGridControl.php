@@ -184,10 +184,10 @@ class PagesGridControl extends Control
      */
     public function add(stdClass $values) : void
     {
-        $page = new Page($values['name'], $values['slug']);
+        $page = new Page($values->name, $values->slug);
 
-        $page->setRoles($this->roleRepository->findRolesByIds($values['roles']));
-        $page->setPublic((bool) $values['public']);
+        $page->setRoles($this->roleRepository->findRolesByIds($values->roles));
+        $page->setPublic((bool) $values->public);
 
         $this->CMSService->savePage($page);
 
@@ -209,10 +209,10 @@ class PagesGridControl extends Control
     {
         $page = $this->pageRepository->findById($id);
 
-        $page->setName($values['name']);
-        $page->setSlug($values['slug']);
-        $page->setRoles($this->roleRepository->findRolesByIds($values['roles']));
-        $page->setPublic((bool) $values['public']);
+        $page->setName($values->name);
+        $page->setSlug($values->slug);
+        $page->setRoles($this->roleRepository->findRolesByIds($values->roles));
+        $page->setPublic((bool) $values->public);
 
         $this->CMSService->savePage($page);
 

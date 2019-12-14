@@ -129,16 +129,16 @@ class SkautIsEventForm
     {
         $eventId   = null;
         $eventName = null;
-        $eventType = $values['skautisEventType'];
+        $eventType = $values->skautisEventType;
 
         switch ($eventType) {
             case SkautIsEventType::GENERAL:
-                $eventId   = $values['skautisEventGeneral'];
+                $eventId   = $values->skautisEventGeneral;
                 $eventName = $this->skautIsEventGeneralService->getEventDisplayName($eventId);
                 break;
 
             case SkautIsEventType::EDUCATION:
-                $eventId   = $values['skautisEventEducation'];
+                $eventId   = $values->skautisEventEducation;
                 $eventName = $this->skautIsEventEducationService->getEventDisplayName($eventId);
 
                 $courses = $this->skautIsEventEducationService->getEventCourses($eventId);

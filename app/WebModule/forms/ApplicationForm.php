@@ -275,25 +275,25 @@ class ApplicationForm
     {
         $this->em->transactional(function () use ($values) : void {
             if (array_key_exists('sex', $values)) {
-                $this->user->setSex($values['sex']);
+                $this->user->setSex($values->sex);
             }
             if (array_key_exists('firstName', $values)) {
-                $this->user->setFirstName($values['firstName']);
+                $this->user->setFirstName($values->firstName);
             }
             if (array_key_exists('lastName', $values)) {
-                $this->user->setLastName($values['lastName']);
+                $this->user->setLastName($values->lastName);
             }
             if (array_key_exists('nickName', $values)) {
-                $this->user->setNickName($values['nickName']);
+                $this->user->setNickName($values->nickName);
             }
             if (array_key_exists('birthdate', $values)) {
-                $this->user->setBirthdate($values['birthdate']);
+                $this->user->setBirthdate($values->birthdate);
             }
 
-            $this->user->setStreet($values['street']);
-            $this->user->setCity($values['city']);
-            $this->user->setPostcode($values['postcode']);
-            $this->user->setState($values['state']);
+            $this->user->setStreet($values->street);
+            $this->user->setCity($values->city);
+            $this->user->setPostcode($values->postcode);
+            $this->user->setState($values->state);
 
             //vlastni pole
             foreach ($this->customInputRepository->findAll() as $customInput) {
@@ -302,22 +302,22 @@ class ApplicationForm
                 switch ($customInput->getType()) {
                     case CustomInput::TEXT:
                         $customInputValue = $customInputValue ?: new CustomTextValue();
-                        $customInputValue->setValue($values['custom' . $customInput->getId()]);
+                        $customInputValue->setValue($values->custom' . $customInput->getId()]);
                         break;
 
                     case CustomInput::CHECKBOX:
                         $customInputValue = $customInputValue ?: new CustomCheckboxValue();
-                        $customInputValue->setValue($values['custom' . $customInput->getId()]);
+                        $customInputValue->setValue($values->custom' . $customInput->getId()]);
                         break;
 
                     case CustomInput::SELECT:
                         $customInputValue = $customInputValue ?: new CustomSelectValue();
-                        $customInputValue->setValue($values['custom' . $customInput->getId()]);
+                        $customInputValue->setValue($values->custom' . $customInput->getId()]);
                         break;
 
                     case CustomInput::FILE:
                         $customInputValue = $customInputValue ?: new CustomFileValue();
-                        $file             = $values['custom' . $customInput->getId()];
+                        $file             = $values->custom' . $customInput->getId()];
                         if ($file->size > 0) {
                             $path = $this->generatePath($file);
                             $this->filesService->save($file, $path);
@@ -333,23 +333,23 @@ class ApplicationForm
 
             //prijezd, odjezd
             if (array_key_exists('arrival', $values)) {
-                $this->user->setArrival($values['arrival']);
+                $this->user->setArrival($values->arrival);
             }
 
             if (array_key_exists('departure', $values)) {
-                $this->user->setDeparture($values['departure']);
+                $this->user->setDeparture($values->departure);
             }
 
             //role
             if (array_key_exists('roles', $values)) {
-                $roles = $this->roleRepository->findRolesByIds($values['roles']);
+                $roles = $this->roleRepository->findRolesByIds($values->roles);
             } else {
                 $roles = $this->roleRepository->findAllRegisterableNowOrderedByName();
             }
 
             //podakce
-            $subevents = $this->subeventRepository->explicitSubeventsExists() && ! empty($values['subevents'])
-                ? $this->subeventRepository->findSubeventsByIds($values['subevents'])
+            $subevents = $this->subeventRepository->explicitSubeventsExists() && ! empty($values->subevents)
+                ? $this->subeventRepository->findSubeventsByIds($values->subevents)
                 : new ArrayCollection([$this->subeventRepository->findImplicit()]);
 
             //aktualizace udaju ve skautIS

@@ -147,39 +147,39 @@ class PaymentForm extends UI\Control
      */
     public function processForm(Form $form, stdClass $values) : void
     {
-        $this->settingsService->setValue(Settings::ACCOUNT_NUMBER, $values['accountNumber']);
-        $this->settingsService->setValue(Settings::VARIABLE_SYMBOL_CODE, $values['variableSymbolCode']);
-        $this->settingsService->setValue(Settings::MATURITY_TYPE, $values['maturityType']);
+        $this->settingsService->setValue(Settings::ACCOUNT_NUMBER, $values->accountNumber);
+        $this->settingsService->setValue(Settings::VARIABLE_SYMBOL_CODE, $values->variableSymbolCode);
+        $this->settingsService->setValue(Settings::MATURITY_TYPE, $values->maturityType);
 
         if (array_key_exists('maturityDate', $values)) {
-            $this->settingsService->setDateValue(Settings::MATURITY_DATE, $values['maturityDate'] ?: (new DateTime())->setTime(0, 0));
+            $this->settingsService->setDateValue(Settings::MATURITY_DATE, $values->maturityDate ?: (new DateTime())->setTime(0, 0));
         }
 
         if (array_key_exists('maturityDays', $values)) {
             $this->settingsService->setIntValue(
                 Settings::MATURITY_DAYS,
-                $values['maturityDays'] !== '' ? $values['maturityDays'] : 0
+                $values->maturityDays !== '' ? $values->maturityDays : 0
             );
         }
 
         if (array_key_exists('maturityWorkDays', $values)) {
             $this->settingsService->setIntValue(
                 Settings::MATURITY_WORK_DAYS,
-                $values['maturityWorkDays'] !== '' ? $values['maturityWorkDays'] : 0
+                $values->maturityWorkDays !== '' ? $values->maturityWorkDays : 0
             );
         }
 
         if (array_key_exists('maturityReminder', $values)) {
             $this->settingsService->setIntValue(
                 Settings::MATURITY_REMINDER,
-                $values['maturityReminder'] !== '' ? $values['maturityReminder'] : null
+                $values->maturityReminder !== '' ? $values->maturityReminder : null
             );
         }
 
         if (array_key_exists('cancelRegistrationAfterMaturity', $values)) {
             $this->settingsService->setIntValue(
                 Settings::CANCEL_REGISTRATION_AFTER_MATURITY,
-                $values['cancelRegistrationAfterMaturity'] !== '' ? $values['cancelRegistrationAfterMaturity'] : null
+                $values->cancelRegistrationAfterMaturity !== '' ? $values->cancelRegistrationAfterMaturity : null
             );
         }
 
