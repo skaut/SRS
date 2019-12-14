@@ -19,6 +19,7 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
+use Nette\Forms\Controls\TextInput;
 use stdClass;
 use Throwable;
 use Ublaboo\DataGrid\DataGrid;
@@ -118,8 +119,9 @@ class ProgramCategoriesGridControl extends Control
                 ->addRule(Form::FILLED, 'admin.program.categories_registerable_roles_empty');
         };
         $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Category $item) : void {
-            $container['name']
-                ->addRule(Form::IS_NOT_IN, 'admin.program.categories_name_exists', $this->categoryRepository->findOthersNames($item->getId()));
+            /** @var TextInput $nameText */
+            $nameText = $container['name'];
+            $nameText->addRule(Form::IS_NOT_IN, 'admin.program.categories_name_exists', $this->categoryRepository->findOthersNames($item->getId()));
 
             $container->setDefaults([
                 'name' => $item->getName(),

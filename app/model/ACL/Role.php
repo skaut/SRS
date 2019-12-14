@@ -110,21 +110,21 @@ class Role
     /**
      * Uživatelé v roli.
      * @ORM\ManyToMany(targetEntity="\App\Model\User\User", mappedBy="roles", cascade={"persist"})
-     * @var Collection|User[]
+     * @var Collection<User>|User[]
      */
     protected $users;
 
     /**
      * Oprávnění role.
      * @ORM\ManyToMany(targetEntity="Permission", inversedBy="roles", cascade={"persist"})
-     * @var Collection|Permission[]
+     * @var Collection<Permission>|Permission[]
      */
     protected $permissions;
 
     /**
      * Stránky, ke kterým má role přístup.
      * @ORM\ManyToMany(targetEntity="\App\Model\CMS\Page", mappedBy="roles", cascade={"persist"})
-     * @var Collection|Page[]
+     * @var Collection<Page>|Page[]
      */
     protected $pages;
 
@@ -206,14 +206,14 @@ class Role
      *      joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="incompatible_role_id", referencedColumnName="id")}
      *      )
-     * @var Collection|Role[]
+     * @var Collection<Role>|Role[]
      */
     protected $incompatibleRoles;
 
     /**
      * Role vyžadující tuto roli.
      * @ORM\ManyToMany(targetEntity="Role", mappedBy="requiredRoles", cascade={"persist"})
-     * @var Collection|Role[]
+     * @var Collection<Role>|Role[]
      */
     protected $requiredByRole;
 
@@ -224,14 +224,14 @@ class Role
      *      joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="required_role_id", referencedColumnName="id")}
      *      )
-     * @var Collection|Role[]
+     * @var Collection<Role>|Role[]
      */
     protected $requiredRoles;
 
     /**
      * Kategorie programů, na které se mohou účastníci v roli přihlásit.
      * @ORM\ManyToMany(targetEntity="\App\Model\Program\Category", mappedBy="registerableRoles", cascade={"persist"})
-     * @var Collection|Category[]
+     * @var Collection<Category>|Category[]
      */
     protected $registerableCategories;
 
@@ -245,7 +245,7 @@ class Role
     /**
      * Kategorie dokumentů, ke kterým má role přístup.
      * @ORM\ManyToMany(targetEntity="\App\Model\CMS\Document\Tag", mappedBy="roles", cascade={"persist"})
-     * @var Collection|Tag[]
+     * @var Collection<Tag>|Tag[]
      */
     protected $tags;
 
@@ -284,7 +284,7 @@ class Role
     }
 
     /**
-     * @return Collection|User[]
+     * @return Collection<User>|User[]
      */
     public function getUsers() : Collection
     {
@@ -292,7 +292,7 @@ class Role
     }
 
     /**
-     * @return Collection|Permission[]
+     * @return Collection<Permission>|Permission[]
      */
     public function getPermissions() : Collection
     {
@@ -300,7 +300,7 @@ class Role
     }
 
     /**
-     * @param Collection|Permission[] $permissions
+     * @param Collection<Permission>|Permission[] $permissions
      */
     public function setPermissions(Collection $permissions) : void
     {
@@ -316,7 +316,7 @@ class Role
     }
 
     /**
-     * @return Collection|Page[]
+     * @return Collection<Page>|Page[]
      */
     public function getPages() : Collection
     {
@@ -324,7 +324,7 @@ class Role
     }
 
     /**
-     * @param Collection|Page[] $pages
+     * @param Collection<Page>|Page[] $pages
      */
     public function setPages(Collection $pages) : void
     {
@@ -470,7 +470,7 @@ class Role
     }
 
     /**
-     * @return Collection|Role[]
+     * @return Collection<Role>|Role[]
      */
     public function getIncompatibleRoles() : Collection
     {
@@ -478,7 +478,7 @@ class Role
     }
 
     /**
-     * @param Collection|Role[] $incompatibleRoles
+     * @param Collection<Role>|Role[] $incompatibleRoles
      */
     public function setIncompatibleRoles(Collection $incompatibleRoles) : void
     {
@@ -522,7 +522,7 @@ class Role
     }
 
     /**
-     * @return Collection|Role[]
+     * @return Collection<Role>|Role[]
      */
     public function getRequiredByRole() : Collection
     {
@@ -531,7 +531,7 @@ class Role
 
     /**
      * Vrací všechny (tranzitivně) role, kterými je tato role vyžadována.
-     * @return Collection|Role[]
+     * @return Collection<Role>|Role[]
      */
     public function getRequiredByRoleTransitive() : Collection
     {
@@ -543,7 +543,7 @@ class Role
     }
 
     /**
-     * @param Collection|Role[] $allRequiredByRole
+     * @param Collection<Role>|Role[] $allRequiredByRole
      */
     private function getRequiredByRoleTransitiveRec(Collection &$allRequiredByRole, Role $role) : void
     {
@@ -559,7 +559,7 @@ class Role
     }
 
     /**
-     * @return Collection|Role[]
+     * @return Collection<Role>|Role[]
      */
     public function getRequiredRoles() : Collection
     {
@@ -567,7 +567,7 @@ class Role
     }
 
     /**
-     * @param Collection|Role[] $requiredRoles
+     * @param Collection<Role>|Role[] $requiredRoles
      */
     public function setRequiredRoles(Collection $requiredRoles) : void
     {
@@ -588,7 +588,7 @@ class Role
 
     /**
      * Vrací všechny (tranzitivně) vyžadované role.
-     * @return Collection|Role[]
+     * @return Collection<Role>|Role[]
      */
     public function getRequiredRolesTransitive() : Collection
     {
@@ -600,7 +600,7 @@ class Role
     }
 
     /**
-     * @param Collection|Role[] $allRequiredRoles
+     * @param Collection<Role>|Role[] $allRequiredRoles
      */
     private function getRequiredRolesTransitiveRec(Collection &$allRequiredRoles, Role $role) : void
     {
@@ -628,7 +628,7 @@ class Role
     }
 
     /**
-     * @return Collection|Category[]
+     * @return Collection<Category>|Category[]
      */
     public function getRegisterableCategories() : Collection
     {
@@ -655,7 +655,7 @@ class Role
     }
 
     /**
-     * @return Collection|Tag[]
+     * @return Collection<Tag>|Tag[]
      */
     public function getTags() : Collection
     {

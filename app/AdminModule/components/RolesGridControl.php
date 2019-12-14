@@ -174,7 +174,9 @@ class RolesGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $this['rolesGrid']->redrawItem($id);
+            /** @var DataGrid $rolesGrid */
+            $rolesGrid = $this['rolesGrid'];
+            $rolesGrid->redrawItem($id);
         } else {
             $this->redirect('this');
         }

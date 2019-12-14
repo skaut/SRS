@@ -12,6 +12,7 @@ use App\Model\Settings\SettingsException;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\Application;
 use App\Model\User\ApplicationRepository;
+use App\Model\User\SubeventsApplication;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
@@ -345,7 +346,7 @@ class ApplicationsGridControl extends Control
         $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
 
         $this->em->transactional(function () use ($application, $selectedSubevents, $values, $loggedUser) : void {
-            if ($application->getType() === Application::SUBEVENTS) {
+            if ($application instanceof SubeventsApplication) {
                 $this->applicationService->updateSubeventsApplication($application, $selectedSubevents, $loggedUser);
             }
             $this->applicationService->updateApplicationPayment(
@@ -399,7 +400,7 @@ class ApplicationsGridControl extends Control
     {
         $application = $this->applicationRepository->findById($id);
 
-        if ($application->getType() === Application::SUBEVENTS && ! $application->isCanceled()) {
+        if ($application instanceof SubeventsApplication && ! $application->isCanceled()) {
             $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
             $this->applicationService->cancelSubeventsApplication($application, ApplicationState::CANCELED, $loggedUser);
             $this->getPresenter()->flashMessage('admin.users.users_applications_application_canceled', 'success');

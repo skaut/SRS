@@ -16,6 +16,7 @@ use Nette;
 use Nette\Application\UI\Form;
 use Nette\Utils\DateTime;
 use Nextras\Forms\Controls\DateTimePicker;
+use Nextras\Forms\Rendering\Bs3FormRenderer;
 use stdClass;
 use Throwable;
 
@@ -55,6 +56,7 @@ class ProgramForm
     {
         $form = $this->baseFormFactory->create();
 
+        /** @var Bs3FormRenderer $renderer */
         $renderer                                   = $form->getRenderer();
         $renderer->wrappers['control']['container'] = 'div class="col-sm-7 col-xs-7"';
         $renderer->wrappers['label']['container']   = 'div class="col-sm-5 col-xs-5 control-label"';
@@ -123,7 +125,7 @@ class ProgramForm
 
     /**
      * Ověří, že otevření zapisování programů je dříve než uzavření.
-     * @param DateTime[] $args
+     * @param ?DateTime[] $args
      */
     public function validateRegisterProgramsFrom(DateTimePicker $field, array $args) : bool
     {
@@ -135,7 +137,7 @@ class ProgramForm
 
     /**
      * Ověří, že uzavření zapisování programů je později než otevření.
-     * @param DateTime[] $args
+     * @param ?DateTime[] $args
      */
     public function validateRegisterProgramsTo(DateTimePicker $field, array $args) : bool
     {

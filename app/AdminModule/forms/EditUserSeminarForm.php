@@ -8,9 +8,12 @@ use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
+use App\Model\Settings\CustomInput\CustomCheckbox;
 use App\Model\Settings\CustomInput\CustomFile;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
+use App\Model\Settings\CustomInput\CustomSelect;
+use App\Model\Settings\CustomInput\CustomText;
 use App\Model\Settings\Settings;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
 use App\Model\User\CustomInputValue\CustomFileValue;
@@ -225,30 +228,29 @@ class EditUserSeminarForm
             $customInputValueChanged = false;
 
             foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
-                /** @var CustomTextValue $customInputValue */
                 $customInputValue = $this->user->getCustomInputValue($customInput);
-
                 $oldValue = $customInputValue ? $customInputValue->getValue() : null;
+                $inputName = 'custom' . $customInput->getId();
 
-                switch ($customInput->getType()) {
-                    case CustomInput::TEXT:
+                switch (true) {
+                    case $customInput instanceof CustomText:
                         $customInputValue = $customInputValue ?: new CustomTextValue();
-                        $customInputValue->setValue($values['custom' . $customInput->getId()]);
+                        $customInputValue->setValue($values->$inputName);
                         break;
 
-                    case CustomInput::CHECKBOX:
+                    case $customInput instanceof CustomCheckbox:
                         $customInputValue = $customInputValue ?: new CustomCheckboxValue();
-                        $customInputValue->setValue($values['custom' . $customInput->getId()]);
+                        $customInputValue->setValue($values->$inputName);
                         break;
 
-                    case CustomInput::SELECT:
+                    case $customInput instanceof CustomSelect:
                         $customInputValue = $customInputValue ?: new CustomSelectValue();
-                        $customInputValue->setValue($values['custom' . $customInput->getId()]);
+                        $customInputValue->setValue($values->$inputName);
                         break;
 
-                    case CustomInput::FILE:
+                    case $customInput instanceof CustomFile:
                         $customInputValue = $customInputValue ?: new CustomFileValue();
-                        $file             = $values['custom' . $customInput->getId()];
+                        $file             = $values->$inputName;
                         if ($file->size > 0) {
                             $path = $this->generatePath($file);
                             $this->filesService->save($file, $path);

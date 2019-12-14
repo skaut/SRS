@@ -89,7 +89,7 @@ class Permission
     /**
      * Role s tímto oprávněním.
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", mappedBy="permissions", cascade={"persist"})
-     * @var Collection|Role[]
+     * @var Collection<Role>|Role[]
      */
     protected $roles;
 
@@ -119,7 +119,7 @@ class Permission
     }
 
     /**
-     * @return Collection|Role[]
+     * @return Collection<Role>|Role[]
      */
     public function getRoles() : Collection
     {

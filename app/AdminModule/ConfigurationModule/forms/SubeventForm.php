@@ -31,7 +31,7 @@ class SubeventForm
 
     /**
      * Upravovaná podakce.
-     * @var Subevent
+     * @var ?Subevent
      */
     private $subevent;
 

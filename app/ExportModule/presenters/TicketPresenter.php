@@ -12,6 +12,7 @@ use App\Services\SettingsService;
 use Joseki\Application\Responses\PdfResponse;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
+use Nette\Bridges\ApplicationLatte\Template;
 use Throwable;
 use function random_bytes;
 
@@ -53,6 +54,7 @@ class TicketPresenter extends ExportBasePresenter
             throw new ForbiddenRequestException();
         }
 
+        /** @var Template $template */
         $template = $this->createTemplate();
         $template->setFile(__DIR__ . '/templates/Ticket/pdf.latte');
 

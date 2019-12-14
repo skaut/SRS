@@ -81,7 +81,7 @@ class CustomInputsGridControl extends Control
 
         $grid->addColumnText('options', 'admin.configuration.custom_inputs_options')
             ->setRenderer(function (CustomInput $input) {
-                return $input.isInstanceOf(CustomSelect::class) ? $input->getOptions() : null;
+                return $input instanceof CustomSelect ? $input->getOptions() : null;
             });
 
         $grid->addToolbarButton('Application:add')

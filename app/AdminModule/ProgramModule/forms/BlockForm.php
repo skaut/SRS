@@ -23,6 +23,8 @@ use App\Utils\Validators;
 use Doctrine\ORM\NonUniqueResultException;
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\Forms\Controls\MultiSelectBox;
+use Nette\Forms\Controls\TextInput;
 use stdClass;
 use Throwable;
 
@@ -44,7 +46,7 @@ class BlockForm
 
     /**
      * Upravovaný programový blok.
-     * @var Block
+     * @var ?Block
      */
     private $block;
 
@@ -190,8 +192,11 @@ class BlockForm
             ->setValidationScope([])
             ->setAttribute('class', 'btn btn-warning');
 
+        /** @var TextInput $nameText */
+        $nameText = $form['name'];
+
         if ($this->block) {
-            $form['name']->addRule(Form::IS_NOT_IN, 'admin.program.blocks_name_exists', $this->blockRepository->findOthersNames($id));
+            $nameText->addRule(Form::IS_NOT_IN, 'admin.program.blocks_name_exists', $this->blockRepository->findOthersNames($id));
 
             $form->setDefaults([
                 'id' => $id,
@@ -213,10 +218,12 @@ class BlockForm
                 ]);
             }
         } else {
-            $form['name']->addRule(Form::IS_NOT_IN, 'admin.program.blocks_name_exists', $this->blockRepository->findAllNames());
+            $nameText->addRule(Form::IS_NOT_IN, 'admin.program.blocks_name_exists', $this->blockRepository->findAllNames());
 
             if (! $userIsAllowedManageAllPrograms) {
-                $form['lectors']->setDefaultValue([$this->user->getId()]);
+                /** @var MultiSelectBox $lectorsMultiSelect */
+                $lectorsMultiSelect = $form['lectors'];
+                $lectorsMultiSelect->setDefaultValue([$this->user->getId()]);
             }
         }
 

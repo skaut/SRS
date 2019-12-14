@@ -6,9 +6,12 @@ namespace App\WebModule\Forms;
 
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
+use App\Model\Settings\CustomInput\CustomCheckbox;
 use App\Model\Settings\CustomInput\CustomFile;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
+use App\Model\Settings\CustomInput\CustomSelect;
+use App\Model\Settings\CustomInput\CustomText;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
@@ -132,8 +135,8 @@ class AdditionalInformationForm extends UI\Control
         foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
             $customInputValue = $this->user->getCustomInputValue($customInput);
 
-            switch ($customInput->getType()) {
-                case CustomInput::TEXT:
+            switch (true) {
+                case $customInput instanceof CustomText:
                     $custom = $form->addText('custom' . $customInput->getId(), $customInput->getName())
                         ->setDisabled(! $isAllowedEditCustomInputs);
                     if ($customInputValue) {
@@ -141,7 +144,7 @@ class AdditionalInformationForm extends UI\Control
                     }
                     break;
 
-                case CustomInput::CHECKBOX:
+                case $customInput instanceof CustomCheckbox:
                     $custom = $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName())
                         ->setDisabled(! $isAllowedEditCustomInputs);
                     if ($customInputValue) {
@@ -149,7 +152,7 @@ class AdditionalInformationForm extends UI\Control
                     }
                     break;
 
-                case CustomInput::SELECT:
+                case $customInput instanceof CustomSelect:
                     $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions())
                         ->setDisabled(! $isAllowedEditCustomInputs);
                     if ($customInputValue) {
@@ -157,7 +160,7 @@ class AdditionalInformationForm extends UI\Control
                     }
                     break;
 
-                case CustomInput::FILE:
+                case $customInput instanceof CustomFile:
                     $custom = $form->addUpload('custom' . $customInput->getId(), $customInput->getName())
                         ->setDisabled(! $isAllowedEditCustomInputs);
                     if ($customInputValue && $customInputValue->getValue()) {
@@ -207,28 +210,28 @@ class AdditionalInformationForm extends UI\Control
             if ($this->applicationService->isAllowedEditCustomInputs()) {
                 foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
                     $customInputValue = $this->user->getCustomInputValue($customInput);
-
                     $oldValue = $customInputValue ? $customInputValue->getValue() : null;
+                    $inputName = 'custom' . $customInput->getId();
 
-                    switch ($customInput->getType()) {
-                        case CustomInput::TEXT:
+                    switch (true) {
+                        case $customInput instanceof CustomText:
                             $customInputValue = $customInputValue ?: new CustomTextValue();
-                            $customInputValue->setValue($values['custom' . $customInput->getId()]);
+                            $customInputValue->setValue($values->$inputName);
                             break;
 
-                        case CustomInput::CHECKBOX:
+                        case $customInput instanceof CustomCheckbox:
                             $customInputValue = $customInputValue ?: new CustomCheckboxValue();
-                            $customInputValue->setValue($values['custom' . $customInput->getId()]);
+                            $customInputValue->setValue($values->$inputName);
                             break;
 
-                        case CustomInput::SELECT:
+                        case $customInput instanceof CustomSelect:
                             $customInputValue = $customInputValue ?: new CustomSelectValue();
-                            $customInputValue->setValue($values['custom' . $customInput->getId()]);
+                            $customInputValue->setValue($values->$inputName);
                             break;
 
-                        case CustomInput::FILE:
+                        case $customInput instanceof CustomFile:
                             $customInputValue = $customInputValue ?: new CustomFileValue();
-                            $file             = $values['custom' . $customInput->getId()];
+                            $file             = $values->$inputName;
                             if ($file->size > 0) {
                                 $path = $this->generatePath($file);
                                 $this->filesService->save($file, $path);

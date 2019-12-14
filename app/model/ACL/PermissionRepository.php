@@ -20,7 +20,7 @@ class PermissionRepository extends EntityRepository
     /**
      * Vrací oprávnění podle id.
      * @param int[] $ids
-     * @return Collection|Permission[]
+     * @return Collection<Permission>|Permission[]
      */
     public function findPermissionsByIds(array $ids) : Collection
     {
@@ -32,7 +32,7 @@ class PermissionRepository extends EntityRepository
 
     /**
      * Vrací id oprávnění.
-     * @param Collection|Permission[] $permissions
+     * @param Collection<Permission>|Permission[] $permissions
      * @return int[]
      */
     public function findPermissionsIds(Collection $permissions) : array

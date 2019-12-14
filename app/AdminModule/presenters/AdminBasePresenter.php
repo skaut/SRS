@@ -29,6 +29,9 @@ use function array_keys;
  */
 abstract class AdminBasePresenter extends BasePresenter
 {
+    /** @var string */
+    protected $resource = Resource::ADMIN;
+
     /**
      * @var Authorizator
      * @inject

@@ -88,7 +88,7 @@ class CustomInputForm
                 'mandatory' => $this->customInput->isMandatory(),
             ]);
 
-            if ($this->customInput->getType() === CustomInput::SELECT) {
+            if ($this->customInput instanceof CustomSelect) {
                 $customInput = $this->customInput;
                 $optionsText->setDefaultValue($customInput->getOptions());
             }

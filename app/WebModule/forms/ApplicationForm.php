@@ -8,9 +8,12 @@ use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Enums\Sex;
 use App\Model\Program\ProgramRepository;
+use App\Model\Settings\CustomInput\CustomCheckbox;
 use App\Model\Settings\CustomInput\CustomFile;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
+use App\Model\Settings\CustomInput\CustomSelect;
+use App\Model\Settings\CustomInput\CustomText;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\Structure\Subevent;
@@ -298,23 +301,23 @@ class ApplicationForm
             foreach ($this->customInputRepository->findAll() as $customInput) {
                 $customInputValue = $this->user->getCustomInputValue($customInput);
 
-                switch ($customInput->getType()) {
-                    case CustomInput::TEXT:
+                switch (true) {
+                    case $customInput instanceof CustomText:
                         $customInputValue = $customInputValue ?: new CustomTextValue();
                         $customInputValue->setValue($values['custom' . $customInput->getId()]);
                         break;
 
-                    case CustomInput::CHECKBOX:
+                    case $customInput instanceof CustomCheckbox:
                         $customInputValue = $customInputValue ?: new CustomCheckboxValue();
                         $customInputValue->setValue($values['custom' . $customInput->getId()]);
                         break;
 
-                    case CustomInput::SELECT:
+                    case $customInput instanceof CustomSelect:
                         $customInputValue = $customInputValue ?: new CustomSelectValue();
                         $customInputValue->setValue($values['custom' . $customInput->getId()]);
                         break;
 
-                    case CustomInput::FILE:
+                    case $customInput instanceof CustomFile:
                         $customInputValue = $customInputValue ?: new CustomFileValue();
                         $file             = $values['custom' . $customInput->getId()];
                         if ($file->size > 0) {
@@ -385,20 +388,20 @@ class ApplicationForm
     private function addCustomInputs(Form $form) : void
     {
         foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
-            switch ($customInput->getType()) {
-                case CustomInput::TEXT:
+            switch (true) {
+                case $customInput instanceof CustomText:
                     $custom = $form->addText('custom' . $customInput->getId(), $customInput->getName());
                     break;
 
-                case CustomInput::CHECKBOX:
+                case $customInput instanceof CustomCheckbox:
                     $custom = $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName());
                     break;
 
-                case CustomInput::SELECT:
+                case $customInput instanceof CustomSelect:
                     $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions());
                     break;
 
-                case CustomInput::FILE:
+                case $customInput instanceof CustomFile:
                     $custom = $form->addUpload('custom' . $customInput->getId(), $customInput->getName());
                     break;
 

@@ -11,12 +11,19 @@ use App\Model\Enums\PaymentType;
 use App\Model\Enums\SkautIsEventType;
 use App\Model\Program\BlockRepository;
 use App\Model\Program\ProgramRepository;
+use App\Model\Settings\CustomInput\CustomCheckbox;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
+use App\Model\Settings\CustomInput\CustomSelect;
+use App\Model\Settings\CustomInput\CustomText;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\ApplicationRepository;
+use App\Model\User\CustomInputValue\CustomCheckboxValue;
+use App\Model\User\CustomInputValue\CustomFileValue;
+use App\Model\User\CustomInputValue\CustomSelectValue;
+use App\Model\User\CustomInputValue\CustomTextValue;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ACLService;
@@ -397,19 +404,19 @@ class UsersGridControl extends Control
                 ->setRenderer(function (User $user) use ($customInput) {
                     $customInputValue = $user->getCustomInputValue($customInput);
                     if ($customInputValue) {
-                        switch ($customInput->getType()) {
-                            case CustomInput::TEXT:
+                        switch (true) {
+                            case $customInputValue instanceof CustomTextValue:
                                 return Helpers::truncate($customInputValue->getValue(), 20);
 
-                            case CustomInput::CHECKBOX:
+                            case $customInputValue instanceof CustomCheckboxValue:
                                 return $customInputValue->getValue()
                                     ? $this->translator->translate('admin.common.yes')
                                     : $this->translator->translate('admin.common.no');
 
-                            case CustomInput::SELECT:
+                            case $customInputValue instanceof CustomSelectValue:
                                 return $customInputValue->getValueOption();
 
-                            case CustomInput::FILE:
+                            case $customInputValue instanceof CustomFileValue:
                                 return $customInputValue->getValue()
                                     ? Html::el('a')
                                         ->setAttribute('href', $this->getPresenter()->getTemplate()->basePath
@@ -426,8 +433,8 @@ class UsersGridControl extends Control
                     return null;
                 });
 
-            switch ($customInput->getType()) {
-                case CustomInput::TEXT:
+            switch (true) {
+                case $customInput instanceof CustomText:
                     $columnCustomInput->setSortable()
                         ->setSortableCallback(function (QueryBuilder $qb, array $sort) use ($customInput, $columnCustomInputName) : void {
                             $qb->leftJoin('u.customInputValues', 'uCIV1')
@@ -439,7 +446,7 @@ class UsersGridControl extends Control
                         });
                     break;
 
-                case CustomInput::CHECKBOX:
+                case $customInput instanceof CustomCheckbox:
                     $columnCustomInput->setFilterSelect(['' => 'admin.common.all', 1 => 'admin.common.yes', 0 => 'admin.common.no'])
                         ->setCondition(function (QueryBuilder $qb, string $value) use ($customInput) : void {
                             if ($value === '') {
@@ -457,7 +464,7 @@ class UsersGridControl extends Control
                         ->setTranslateOptions();
                     break;
 
-                case CustomInput::SELECT:
+                case $customInput instanceof CustomSelect:
                     $columnCustomInput->setFilterSelect(array_merge(['' => 'admin.common.all'], $customInput->getSelectOptions()))
                         ->setCondition(function (QueryBuilder $qb, string $value) use ($customInput) : void {
                             if ($value === '') {
@@ -559,7 +566,9 @@ class UsersGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $this['usersGrid']->redrawItem($id);
+            /** @var DataGrid $usersGrid */
+            $usersGrid = $this['usersGrid'];
+            $usersGrid->redrawItem($id);
         } else {
             $this->redirect('this');
         }

@@ -33,8 +33,8 @@ class SendForm
     use Nette\SmartObject;
 
     /**
-     * Událost po úspěšně odeslaném e-mailu.
-     * @var callable
+     * Stav odeslání e-mailu.
+     * @var bool
      */
     public $mailSuccess;
 

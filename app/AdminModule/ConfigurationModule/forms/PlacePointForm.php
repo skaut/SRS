@@ -23,7 +23,7 @@ class PlacePointForm
 {
     use Nette\SmartObject;
 
-    /** @var PlacePoint */
+    /** @var ?PlacePoint */
     private $placePoint;
 
     /** @var BaseForm */

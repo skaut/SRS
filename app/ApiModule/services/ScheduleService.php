@@ -132,7 +132,7 @@ class ScheduleService
 
         foreach ($programDetailDTOs as $p1) {
             foreach ($programDetailDTOs as $p2) {
-                if ($p1 === $p2 || ! $p1->isUserAttends() || ! in_array($p2->getId(), $p1->getBlocks())) {
+                if (spl_object_id($p1) === spl_object_id($p2) || ! $p1->isUserAttends() || ! in_array($p2->getId(), $p1->getBlocks())) {
                     continue;
                 }
 

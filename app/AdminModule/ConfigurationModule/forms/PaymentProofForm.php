@@ -12,6 +12,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
+use Nextras\Forms\Rendering\Bs3FormRenderer;
 use stdClass;
 use Throwable;
 
@@ -47,6 +48,7 @@ class PaymentProofForm
     {
         $form = $this->baseFormFactory->create();
 
+        /** @var Bs3FormRenderer $renderer */
         $renderer                                   = $form->getRenderer();
         $renderer->wrappers['control']['container'] = 'div class="col-sm-7 col-xs-7"';
         $renderer->wrappers['label']['container']   = 'div class="col-sm-5 col-xs-5 control-label"';

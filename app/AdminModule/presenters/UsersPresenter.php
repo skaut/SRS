@@ -132,7 +132,7 @@ class UsersPresenter extends AdminBasePresenter
     /**
      * Zpracuje fulltext vyhledávání v displayName uživatelů.
      */
-    public function handleSearch($text) : void
+    public function handleSearch(?string $text) : void
     {
         $this->template->results = $this->userRepository->findNamesByLikeDisplayNameOrderedByDisplayName($text);
         $this->redrawControl('results');

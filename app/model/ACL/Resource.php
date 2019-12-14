@@ -91,7 +91,7 @@ class Resource
     /**
      * Oprávnění s tímto prostředkem.
      * @ORM\OneToMany(targetEntity="\App\Model\ACL\Permission", mappedBy="resource", cascade={"persist"})
-     * @var Collection|Permission[]
+     * @var Collection<Permission>|Permission[]
      */
     protected $permissions;
 
@@ -113,7 +113,7 @@ class Resource
     }
 
     /**
-     * @return Collection|Permission[]
+     * @return Collection<Permission>|Permission[]
      */
     public function getPermissions() : Collection
     {
