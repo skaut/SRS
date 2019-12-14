@@ -106,9 +106,9 @@ class DocumentTagsGridControl extends Control
                 ->addRule(Form::FILLED, 'admin.cms.tags_roles_empty');
         };
         $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Tag $item) : void {
-            /** @var TextInput */
-            $container['name']
-                ->addRule(Form::IS_NOT_IN, 'admin.cms.tags_name_exists', $this->tagRepository->findOthersNames($item->getId()));
+            /** @var TextInput $nameText */
+            $nameText = $container['name'];
+            $nameText->addRule(Form::IS_NOT_IN, 'admin.cms.tags_name_exists', $this->tagRepository->findOthersNames($item->getId()));
 
             $container->setDefaults([
                 'name' => $item->getName(),
