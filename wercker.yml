@@ -1,4 +1,4 @@
-box: jstanek/lebeda:7.1-ci
+box: fmasa/lebeda:7.1-ci
 
 build:
     services:
@@ -24,11 +24,11 @@ build:
 
         - script:
             name: static analysis (phpstan)
-            code: php phing.phar static-analysis
+            code: phing static-analysis
 
         - script:
             name: check coding standard
-            code: php phing.phar coding-standard
+            code: phing coding-standard
 
         - script:
             name: wait for MySQL connection
@@ -36,7 +36,7 @@ build:
 
         - script:
             name: run unit & integration tests
-            code: php phing.phar tests-with-coverage
+            code: phing tests-with-coverage
 
         - appnific/expandenv:
             input_file: app/config/config.ci.local.neon
@@ -65,4 +65,4 @@ deploy:
 
         - script:
             name: build and deploy tarball
-            code: php phing.phar deploy
+            code: phing deploy
