@@ -41,8 +41,12 @@ class DocumentTagsGridControl extends Control
     private $tagRepository;
 
 
-    public function __construct(Translator $translator, RoleRepository $roleRepository, ACLService $ACLService, TagRepository $tagRepository)
-    {
+    public function __construct(
+        Translator $translator,
+        RoleRepository $roleRepository,
+        ACLService $ACLService,
+        TagRepository $tagRepository
+    ) {
         parent::__construct();
 
         $this->translator     = $translator;
@@ -56,7 +60,8 @@ class DocumentTagsGridControl extends Control
      */
     public function render() : void
     {
-        $this->template->render(__DIR__ . '/templates/document_tags_grid.latte');
+        $this->template->setFile(__DIR__ . '/templates/document_tags_grid.latte');
+        $this->template->render();
     }
 
     /**

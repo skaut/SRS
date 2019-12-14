@@ -41,7 +41,8 @@ class MailTemplatesGridControl extends Control
      */
     public function render() : void
     {
-        $this->template->render(__DIR__ . '/templates/mail_templates_grid.latte');
+        $this->template->setFile(__DIR__ . '/templates/mail_templates_grid.latte');
+        $this->template->render();
     }
 
     /**

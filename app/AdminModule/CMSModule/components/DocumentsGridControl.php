@@ -64,7 +64,8 @@ class DocumentsGridControl extends Control
      */
     public function render() : void
     {
-        $this->template->render(__DIR__ . '/templates/documents_grid.latte');
+        $this->template->setFile(__DIR__ . '/templates/documents_grid.latte');
+        $this->template->render();
     }
 
     /**

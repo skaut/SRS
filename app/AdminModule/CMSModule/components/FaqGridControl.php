@@ -42,7 +42,8 @@ class FaqGridControl extends Control
      */
     public function render() : void
     {
-        $this->template->render(__DIR__ . '/templates/faq_grid.latte');
+        $this->template->setFile(__DIR__ . '/templates/faq_grid.latte');
+        $this->template->render();
     }
 
     /**

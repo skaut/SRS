@@ -43,7 +43,8 @@ class PlacePointsGridControl extends Control
      */
     public function render() : void
     {
-        $this->template->render(__DIR__ . '/templates/place_points_grid.latte');
+        $this->template->setFile(__DIR__ . '/templates/place_points_grid.latte');
+        $this->template->render();
     }
 
     /**

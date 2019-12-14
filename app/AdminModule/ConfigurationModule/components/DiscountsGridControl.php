@@ -56,7 +56,8 @@ class DiscountsGridControl extends Control
      */
     public function render() : void
     {
-        $this->template->render(__DIR__ . '/templates/discounts_grid.latte');
+        $this->template->setFile(__DIR__ . '/templates/discounts_grid.latte');
+        $this->template->render();
     }
 
     /**

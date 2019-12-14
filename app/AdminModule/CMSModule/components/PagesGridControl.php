@@ -69,7 +69,8 @@ class PagesGridControl extends Control
      */
     public function render() : void
     {
-        $this->template->render(__DIR__ . '/templates/pages_grid.latte');
+        $this->template->setFile(__DIR__ . '/templates/pages_grid.latte');
+        $this->template->render();
     }
 
     /**

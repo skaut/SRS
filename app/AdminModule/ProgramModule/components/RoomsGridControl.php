@@ -64,7 +64,8 @@ class RoomsGridControl extends Control
      */
     public function render() : void
     {
-        $this->template->render(__DIR__ . '/templates/rooms_grid.latte');
+        $this->template->setFile(__DIR__ . '/templates/rooms_grid.latte');
+        $this->template->render();
     }
 
     /**
