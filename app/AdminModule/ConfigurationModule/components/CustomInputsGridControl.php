@@ -6,6 +6,7 @@ namespace App\AdminModule\ConfigurationModule\Components;
 
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
+use App\Model\Settings\CustomInput\CustomSelect;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -64,8 +65,8 @@ class CustomInputsGridControl extends Control
         $grid->addColumnText('name', 'admin.configuration.custom_inputs_name');
 
         $grid->addColumnText('type', 'admin.configuration.custom_inputs_type')
-            ->setRenderer(function (CustomInput $row) {
-                return $this->translator->translate('admin.common.custom_' . $row->getType());
+            ->setRenderer(function (CustomInput $input) {
+                return $this->translator->translate('admin.common.custom_' . $input->getType());
             });
 
         $columnMandatory = $grid->addColumnStatus('mandatory', 'admin.configuration.custom_inputs_mandatory');
@@ -79,8 +80,8 @@ class CustomInputsGridControl extends Control
             ->onChange[] = [$this, 'changeMandatory'];
 
         $grid->addColumnText('options', 'admin.configuration.custom_inputs_options')
-            ->setRenderer(function (CustomInput $row) {
-                return $row->getType() === CustomInput::SELECT ? $row->getOptions() : null;
+            ->setRenderer(function (CustomInput $input) {
+                return $input.isInstanceOf(CustomSelect::class) ? $input->getOptions() : null;
             });
 
         $grid->addToolbarButton('Application:add')
@@ -121,7 +122,7 @@ class CustomInputsGridControl extends Control
      * @throws OptimisticLockException
      * @throws AbortException
      */
-    public function handleSort($item_id, $prev_id, $next_id) : void
+    public function handleSort(?string $item_id, ?string $prev_id, ?string $next_id) : void
     {
         $this->customInputRepository->sort((int) $item_id, (int) $prev_id, (int) $next_id);
 
@@ -130,7 +131,9 @@ class CustomInputsGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $this['customInputsGrid']->reload();
+            /** @var DataGrid $customInputsGrid */
+            $customInputsGrid = $this['customInputsGrid'];
+            $customInputsGrid->reload();
         } else {
             $this->redirect('this');
         }
@@ -154,7 +157,9 @@ class CustomInputsGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $this['customInputsGrid']->redrawItem($id);
+            /** @var DataGrid $customInputsGrid */
+            $customInputsGrid = $this['customInputsGrid'];
+            $customInputsGrid->redrawItem($id);
         } else {
             $this->redirect('this');
         }

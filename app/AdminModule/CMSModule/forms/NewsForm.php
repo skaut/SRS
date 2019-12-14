@@ -26,7 +26,7 @@ class NewsForm
 
     /**
      * Upravovaná aktualita.
-     * @var News
+     * @var ?News
      */
     private $news;
 

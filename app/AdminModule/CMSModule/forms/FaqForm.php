@@ -14,7 +14,6 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
-use Nette\Forms\Controls\SubmitButton;
 use stdClass;
 
 /**
@@ -29,7 +28,7 @@ class FaqForm
 
     /**
      * Upravovaná otázka.
-     * @var Faq
+     * @var ?Faq
      */
     private $faq;
 

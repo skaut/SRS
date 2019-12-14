@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Model\Settings;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\ORMException;
 
 /**
  * Třída spravující nastavení.
@@ -20,5 +21,14 @@ class SettingsRepository extends EntityRepository
     public function findByItem(?string $item) : ?Settings
     {
         return $this->findOneBy(['item' => $item]);
+    }
+
+    /**
+     * @throws ORMException
+     */
+    public function save(Settings $settings) : void
+    {
+        $this->_em->persist($settings);
+        $this->_em->flush();
     }
 }

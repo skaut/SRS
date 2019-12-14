@@ -41,12 +41,12 @@ use ReflectionException;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 use Yasumi\Yasumi;
-use const STR_PAD_LEFT;
 use function abs;
 use function array_diff;
 use function implode;
 use function str_pad;
 use function strval;
+use const STR_PAD_LEFT;
 
 /**
  * Služba pro správu přihlašování na akci.

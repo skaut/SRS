@@ -15,7 +15,6 @@ use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\UserRepository;
-use App\Services\ACLService;
 use App\Services\ExcelExportService;
 use App\Services\ProgramService;
 use App\Services\SettingsService;

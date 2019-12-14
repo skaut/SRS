@@ -16,6 +16,7 @@ use App\Services\SettingsService;
 use Nette;
 use Nette\Application\LinkGenerator;
 use Nette\Application\UI\Form;
+use Nextras\Forms\Rendering\Bs3FormRenderer;
 use stdClass;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
@@ -81,6 +82,7 @@ class MailingForm
 
         $form = $this->baseFormFactory->create();
 
+        /** @var Bs3FormRenderer $renderer */
         $renderer                                   = $form->getRenderer();
         $renderer->wrappers['control']['container'] = 'div class="col-sm-7 col-xs-7"';
         $renderer->wrappers['label']['container']   = 'div class="col-sm-5 col-xs-5 control-label"';

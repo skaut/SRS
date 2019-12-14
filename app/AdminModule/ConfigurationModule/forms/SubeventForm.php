@@ -7,7 +7,6 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseForm;
 use App\Model\Structure\Subevent;
 use App\Model\Structure\SubeventRepository;
-use App\Services\ACLService;
 use App\Services\SubeventService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;

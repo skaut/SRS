@@ -31,7 +31,7 @@ class DiscountForm extends UI\Control
 
     /**
      * Upravovaná sleva.
-     * @var Discount
+     * @var ?Discount
      */
     private $discount;
 

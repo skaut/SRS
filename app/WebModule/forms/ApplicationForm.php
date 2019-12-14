@@ -50,7 +50,6 @@ use stdClass;
 use Throwable;
 use Tracy\Debugger;
 use Tracy\ILogger;
-use function array_key_exists;
 use function array_keys;
 use function count;
 use function in_array;
@@ -274,19 +273,19 @@ class ApplicationForm
     public function processForm(Form $form, stdClass $values) : void
     {
         $this->em->transactional(function () use ($values) : void {
-            if (array_key_exists('sex', $values)) {
+            if (property_exists($values,'sex')) {
                 $this->user->setSex($values->sex);
             }
-            if (array_key_exists('firstName', $values)) {
+            if (property_exists($values, 'firstName')) {
                 $this->user->setFirstName($values->firstName);
             }
-            if (array_key_exists('lastName', $values)) {
+            if (property_exists($values, 'lastName')) {
                 $this->user->setLastName($values->lastName);
             }
-            if (array_key_exists('nickName', $values)) {
+            if (property_exists($values, 'nickName')) {
                 $this->user->setNickName($values->nickName);
             }
-            if (array_key_exists('birthdate', $values)) {
+            if (property_exists($values, 'birthdate')) {
                 $this->user->setBirthdate($values->birthdate);
             }
 
@@ -332,16 +331,16 @@ class ApplicationForm
             }
 
             //prijezd, odjezd
-            if (array_key_exists('arrival', $values)) {
+            if (property_exists($values, 'arrival')) {
                 $this->user->setArrival($values->arrival);
             }
 
-            if (array_key_exists('departure', $values)) {
+            if (property_exists($values, 'departure')) {
                 $this->user->setDeparture($values->departure);
             }
 
             //role
-            if (array_key_exists('roles', $values)) {
+            if (property_exists($values, 'roles')) {
                 $roles = $this->roleRepository->findRolesByIds($values->roles);
             } else {
                 $roles = $this->roleRepository->findAllRegisterableNowOrderedByName();

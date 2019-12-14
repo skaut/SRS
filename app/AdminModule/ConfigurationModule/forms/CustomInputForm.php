@@ -32,7 +32,7 @@ class CustomInputForm
 
     /**
      * Upravované pole.
-     * @var CustomInput
+     * @var ?CustomInput
      */
     private $customInput;
 

@@ -126,7 +126,9 @@ class FaqGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $this->getComponent('faqGrid')->reload();
+            /** @var DataGrid $faqGrid */
+            $faqGrid = $this['faqGrid'];
+            $faqGrid->reload();
         } else {
             $this->redirect('this');
         }
@@ -150,7 +152,9 @@ class FaqGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $this->getComponent('faqGrid')->redrawItem($id);
+            /** @var DataGrid $faqGrid */
+            $faqGrid = $this['faqGrid'];
+            $faqGrid->redrawItem($id);
         } else {
             $this->redirect('this');
         }

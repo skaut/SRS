@@ -12,7 +12,6 @@ use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
 use stdClass;
-use function array_key_exists;
 use function getimagesizefromstring;
 use function image_type_to_extension;
 
@@ -148,9 +147,9 @@ class EditUserPersonalDetailsForm
         $this->user->setCity($values->city);
         $this->user->setPostcode($values->postcode);
 
-        if (array_key_exists('removePhoto', $values) && $values->removePhoto) {
+        if (property_exists($values, 'removePhoto') && $values->removePhoto) {
             $this->user->setPhoto(null);
-        } elseif (array_key_exists('newPhoto', $values)) {
+        } elseif (property_exists($values, 'newPhoto')) {
             $photo = $values->newPhoto;
             if ($photo->size > 0) {
                 $photoExtension = image_type_to_extension(getimagesizefromstring($photo->getContents())[2]);

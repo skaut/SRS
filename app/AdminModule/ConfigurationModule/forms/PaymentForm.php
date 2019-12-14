@@ -15,9 +15,9 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
+use Nextras\Forms\Rendering\Bs3FormRenderer;
 use stdClass;
 use Throwable;
-use function array_key_exists;
 
 /**
  * Formulář pro nastavení platby.
@@ -71,6 +71,7 @@ class PaymentForm extends UI\Control
     {
         $form = $this->baseFormFactory->create();
 
+        /** @var Bs3FormRenderer $renderer */
         $renderer                                   = $form->getRenderer();
         $renderer->wrappers['control']['container'] = 'div class="col-sm-7 col-xs-7"';
         $renderer->wrappers['label']['container']   = 'div class="col-sm-5 col-xs-5 control-label"';
@@ -151,32 +152,32 @@ class PaymentForm extends UI\Control
         $this->settingsService->setValue(Settings::VARIABLE_SYMBOL_CODE, $values->variableSymbolCode);
         $this->settingsService->setValue(Settings::MATURITY_TYPE, $values->maturityType);
 
-        if (array_key_exists('maturityDate', $values)) {
+        if (property_exists($values, 'maturityDate')) {
             $this->settingsService->setDateValue(Settings::MATURITY_DATE, $values->maturityDate ?: (new DateTime())->setTime(0, 0));
         }
 
-        if (array_key_exists('maturityDays', $values)) {
+        if (property_exists($values, 'maturityDays')) {
             $this->settingsService->setIntValue(
                 Settings::MATURITY_DAYS,
                 $values->maturityDays !== '' ? $values->maturityDays : 0
             );
         }
 
-        if (array_key_exists('maturityWorkDays', $values)) {
+        if (property_exists($values, 'maturityWorkDays')) {
             $this->settingsService->setIntValue(
                 Settings::MATURITY_WORK_DAYS,
                 $values->maturityWorkDays !== '' ? $values->maturityWorkDays : 0
             );
         }
 
-        if (array_key_exists('maturityReminder', $values)) {
+        if (property_exists($values, 'maturityReminder')) {
             $this->settingsService->setIntValue(
                 Settings::MATURITY_REMINDER,
                 $values->maturityReminder !== '' ? $values->maturityReminder : null
             );
         }
 
-        if (array_key_exists('cancelRegistrationAfterMaturity', $values)) {
+        if (property_exists($values, 'cancelRegistrationAfterMaturity')) {
             $this->settingsService->setIntValue(
                 Settings::CANCEL_REGISTRATION_AFTER_MATURITY,
                 $values->cancelRegistrationAfterMaturity !== '' ? $values->cancelRegistrationAfterMaturity : null

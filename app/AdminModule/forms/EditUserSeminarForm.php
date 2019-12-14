@@ -34,7 +34,6 @@ use Nette\Utils\Strings;
 use Nettrine\ORM\EntityManagerDecorator;
 use stdClass;
 use Throwable;
-use function array_key_exists;
 
 /**
  * Formulář pro úpravu podrobností o účasti uživatele na semináři.
@@ -269,11 +268,11 @@ class EditUserSeminarForm
                 $customInputValueChanged = true;
             }
 
-            if (array_key_exists('arrival', $values)) {
+            if (property_exists($values, 'arrival')) {
                 $this->user->setArrival($values->arrival);
             }
 
-            if (array_key_exists('departure', $values)) {
+            if (property_exists($values, 'departure')) {
                 $this->user->setDeparture($values->departure);
             }
 

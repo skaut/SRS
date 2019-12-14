@@ -258,7 +258,9 @@ class PagesGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $this->getComponent('pagesGrid')->reload();
+            /** @var DataGrid $pagesGrid */
+            $pagesGrid = $this['pagesGrid'];
+            $pagesGrid->reload();
         } else {
             $this->redirect('this');
         }
@@ -289,7 +291,9 @@ class PagesGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $this->getComponent('pagesGrid')->redrawItem($id);
+            /** @var DataGrid $pagesGrid */
+            $pagesGrid = $this['pagesGrid'];
+            $pagesGrid->redrawItem($id);
         } else {
             $this->redirect('this');
         }

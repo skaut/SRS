@@ -16,7 +16,6 @@ use Skautis\Wsdl\WsdlException;
 use stdClass;
 use Tracy\Debugger;
 use Tracy\ILogger;
-use function array_key_exists;
 
 /**
  * Formulář pro úpravu osobních údajů.
@@ -134,19 +133,19 @@ class PersonalDetailsForm
      */
     public function processForm(Form $form, stdClass $values) : void
     {
-        if (array_key_exists('sex', $values)) {
+        if (property_exists($values, 'sex')) {
             $this->user->setSex($values->sex);
         }
-        if (array_key_exists('firstName', $values)) {
+        if (property_exists($values, 'firstName')) {
             $this->user->setFirstName($values->firstName);
         }
-        if (array_key_exists('lastName', $values)) {
+        if (property_exists($values, 'lastName')) {
             $this->user->setLastName($values->lastName);
         }
-        if (array_key_exists('nickName', $values)) {
+        if (property_exists($values, 'nickName')) {
             $this->user->setNickName($values->nickName);
         }
-        if (array_key_exists('birthdate', $values)) {
+        if (property_exists($values, 'birthdate')) {
             $this->user->setBirthdate($values->birthdate);
         }
 

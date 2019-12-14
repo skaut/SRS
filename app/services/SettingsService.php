@@ -14,9 +14,9 @@ use Nette;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 use Throwable;
+use function filter_var;
 use const FILTER_VALIDATE_BOOLEAN;
 use const FILTER_VALIDATE_INT;
-use function filter_var;
 
 /**
  * Služba pro správu nastavení.
@@ -75,10 +75,8 @@ class SettingsService
         if ($settings === null) {
             throw new SettingsException('Item ' . $item . ' was not found in table Settings.');
         }
-
         $settings->setValue($value);
-        $this->em->flush();
-
+        $this->settingsRepository->save($settings);
         $this->settingsCache->save($item, $value);
     }
 
