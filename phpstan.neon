@@ -1,28 +1,32 @@
-includes:
-    - vendor/phpstan/phpstan-doctrine/extension.neon
-    - vendor/phpstan/phpstan-doctrine/rules.neon
-    - vendor/phpstan/phpstan-nette/extension.neon
-    - vendor/phpstan/phpstan-nette/rules.neon
-
 parameters:
     autoload_directories:
         - %rootDir%/../../../app
+        - %rootDir%/../../../code-quality
 
-    ignoreErrors:
-        - '#Parameter (.*) of method (.*) has invalid typehint type Nette\\SmartObject#'
-        - '#Access to an undefined property Skautis\\Skautis#'
-        - '#Cannot access property \$MembershipAllOutput on array#'
-        - '#Call to an undefined method Nette\\ComponentModel\\IComponent::isSubmittedBy\(\)#'
-        - '#Call to an undefined method Ublaboo\\Mailing\\IMessageData::get#'
-        - '#Call to an undefined method Nette\\Application\\UI\\Form::addDatePicker#'
-        - '#Call to an undefined method Nette\\Application\\UI\\Form::addDateTimePicker#'
-        - '#Cannot call method redrawItem\(\) on void#'
-        - '#Call to an undefined method Nette\\Forms\\Container::addDatePicker\(\)#'
-        - '#Cannot call method reload\(\) on void#'
-        - '#Call to method setFilterSelect\(\) on an unknown class Ublaboo\\DataGrid\\Traits\\Column#'
-        - '#Call to an undefined method Nette\\Application\\UI\\Form::addGpsPicker\(\)#'
-        - '#Access to an undefined property Nette\\Forms\\IFormRenderer::\$wrappers#'
+includes:
+    - vendor/phpstan/phpstan-nette/extension.neon
+    - vendor/phpstan/phpstan-doctrine/extension.neon
 
-    doctrine:
-        repositoryClass: App\Model\EntityRepository
-        objectManagerLoader: tests/PHPStan/helpers/object-manager.php
+services:
+	- class: CodeQuality\ObjectIdentityComparisonRule
+	  tags: [ phpstan.rules.rule ]
+
+	- class: SkautisAliasesExtension
+	  tags: [ phpstan.broker.propertiesClassReflectionExtension ]
+
+	- class: CodeQuality\SkautisWebserviceMagicMethodsExtension
+	  tags: [ phpstan.broker.methodsClassReflectionExtension ]
+
+	- class: CodeQuality\QueryBusDynamicReturnTypeProvider
+	  arguments:
+	      - %autoload_directories%
+	      - %rootDir%/../../../temp
+	      - '~^.*QueryHandlers\\.*Handler$~'
+
+	  tags: [ phpstan.broker.dynamicMethodReturnTypeExtension ]
+
+	#
+	# Dynamic method return types
+	#
+	- class: CodeQuality\PresenterDynamicReturnTypeExtension
+	  tags: [ phpstan.broker.dynamicMethodReturnTypeExtension ]

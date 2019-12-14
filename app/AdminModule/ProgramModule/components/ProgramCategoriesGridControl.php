@@ -10,6 +10,7 @@ use App\Model\Program\Category;
 use App\Model\Program\CategoryRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\User\UserRepository;
+use App\Services\ACLService;
 use App\Services\ProgramService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -48,6 +49,9 @@ class ProgramCategoriesGridControl extends Control
     /** @var ProgramService */
     private $programService;
 
+    /** @var ACLService */
+    private $ACLService;
+
 
     public function __construct(
         Translator $translator,
@@ -55,7 +59,8 @@ class ProgramCategoriesGridControl extends Control
         RoleRepository $roleRepository,
         UserRepository $userRepository,
         ProgramRepository $programRepository,
-        ProgramService $programService
+        ProgramService $programService,
+        ACLService $ACLService
     ) {
         parent::__construct();
 
@@ -65,6 +70,7 @@ class ProgramCategoriesGridControl extends Control
         $this->userRepository     = $userRepository;
         $this->programRepository  = $programRepository;
         $this->programService     = $programService;
+        $this->ACLService         = $ACLService;
     }
 
     /**
@@ -91,7 +97,7 @@ class ProgramCategoriesGridControl extends Control
 
         $grid->addColumnText('registerableRoles', 'admin.program.categories_registerable_roles', 'registerableRolesText');
 
-        $rolesOptions = $this->roleRepository->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]);
+        $rolesOptions = $this->ACLService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]);
 
         $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function (Container $container) use ($rolesOptions) : void {
             $container->addText('name', '')

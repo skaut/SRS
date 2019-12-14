@@ -8,6 +8,7 @@ use App\Model\ACL\RoleRepository;
 use App\Model\CMS\Page;
 use App\Model\CMS\PageRepository;
 use App\Model\Page\PageException;
+use App\Services\ACLService;
 use App\Services\CMSService;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
@@ -43,15 +44,24 @@ class PagesGridControl extends Control
     /** @var RoleRepository */
     private $roleRepository;
 
+    /** @var ACLService */
+    private $ACLService;
 
-    public function __construct(Translator $translator, CMSService $CMSService, PageRepository $pageRepository, RoleRepository $roleRepository)
-    {
+
+    public function __construct(
+        Translator $translator,
+        CMSService $CMSService,
+        PageRepository $pageRepository,
+        RoleRepository $roleRepository,
+        ACLService $ACLService
+    ) {
         parent::__construct();
 
         $this->translator     = $translator;
         $this->CMSService     = $CMSService;
         $this->pageRepository = $pageRepository;
         $this->roleRepository = $roleRepository;
+        $this->ACLService     = $ACLService;
     }
 
     /**
@@ -97,7 +107,7 @@ class PagesGridControl extends Control
                 return count($this->roleRepository->findAll()) === $page->getRoles()->count();
             });
 
-        $rolesOptions  = $this->roleRepository->getRolesWithoutRolesOptions([]);
+        $rolesOptions  = $this->ACLService->getRolesWithoutRolesOptions([]);
         $publicOptions = [
             false => 'admin.cms.pages_public_private',
             true => 'admin.cms.pages_public_public',

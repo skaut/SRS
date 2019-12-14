@@ -10,7 +10,9 @@ use App\Model\ACL\RoleRepository;
 use App\Model\Settings\SettingsException;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\UserRepository;
+use App\Services\ACLService;
 use App\Services\MailService;
+use App\Services\SubeventService;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Mail\SendException;
@@ -51,19 +53,29 @@ class SendForm
     /** @var SubeventRepository */
     private $subeventRepository;
 
+    /** @var ACLService */
+    private $ACLService;
+
+    /** @var SubeventService */
+    private $subeventService;
+
 
     public function __construct(
         BaseForm $baseFormFactory,
         MailService $mailService,
         RoleRepository $roleRepository,
         UserRepository $userRepository,
-        SubeventRepository $subeventRepository
+        SubeventRepository $subeventRepository,
+        ACLService $ACLService,
+        SubeventService $subeventService
     ) {
         $this->baseFormFactory    = $baseFormFactory;
         $this->mailService        = $mailService;
         $this->roleRepository     = $roleRepository;
         $this->userRepository     = $userRepository;
         $this->subeventRepository = $subeventRepository;
+        $this->ACLService         = $ACLService;
+        $this->subeventService    = $subeventService;
     }
 
     /**
@@ -76,13 +88,13 @@ class SendForm
         $recipientRolesMultiSelect = $form->addMultiSelect(
             'recipientRoles',
             'admin.mailing.send.recipient_roles',
-            $this->roleRepository->getRolesWithoutRolesOptionsWithApprovedUsersCount([Role::GUEST, Role::UNAPPROVED])
+            $this->ACLService->getRolesWithoutRolesOptionsWithApprovedUsersCount([Role::GUEST, Role::UNAPPROVED])
         );
 
         $recipientSubeventsMultiSelect = $form->addMultiSelect(
             'recipientSubevents',
             'admin.mailing.send.recipient_subevents',
-            $this->subeventRepository->getSubeventsOptionsWithUsersCount()
+            $this->subeventService->getSubeventsOptionsWithUsersCount()
         );
 
         $recipientUsersMultiSelect = $form->addMultiSelect(

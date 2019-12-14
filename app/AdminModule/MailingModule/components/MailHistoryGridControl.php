@@ -8,6 +8,8 @@ use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Mailing\MailRepository;
 use App\Model\Structure\SubeventRepository;
+use App\Services\ACLService;
+use App\Services\SubeventService;
 use App\Utils\Helpers;
 use Doctrine\ORM\QueryBuilder;
 use Kdyby\Translation\Translator;
@@ -33,12 +35,20 @@ class MailHistoryGridControl extends Control
     /** @var SubeventRepository */
     private $subeventRepository;
 
+    /** @var ACLService */
+    private $ACLService;
+
+    /** @var SubeventService */
+    private $subeventService;
+
 
     public function __construct(
         Translator $translator,
         MailRepository $mailRepository,
         RoleRepository $roleRepository,
-        SubeventRepository $subeventRepository
+        SubeventRepository $subeventRepository,
+        ACLService $ACLService,
+        SubeventService $subeventService
     ) {
         parent::__construct();
 
@@ -46,6 +56,8 @@ class MailHistoryGridControl extends Control
         $this->mailRepository     = $mailRepository;
         $this->roleRepository     = $roleRepository;
         $this->subeventRepository = $subeventRepository;
+        $this->ACLService         = $ACLService;
+        $this->subeventService    = $subeventService;
     }
 
     /**
@@ -69,7 +81,7 @@ class MailHistoryGridControl extends Control
         $grid->setStrictSessionFilterValues(false);
 
         $grid->addColumnText('recipientRoles', 'admin.mailing.history.recipient_roles', 'recipientRolesText')
-            ->setFilterMultiSelect($this->roleRepository->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]))
+            ->setFilterMultiSelect($this->ACLService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]))
             ->setCondition(function (QueryBuilder $qb, $values) : void {
                 $qb->join('m.recipientRoles', 'r')
                     ->andWhere('r.id IN (:rids)')
@@ -77,7 +89,7 @@ class MailHistoryGridControl extends Control
             });
 
         $grid->addColumnText('recipientSubevents', 'admin.mailing.history.recipient_subevents', 'recipientSubeventsText')
-            ->setFilterMultiSelect($this->subeventRepository->getSubeventsOptions())
+            ->setFilterMultiSelect($this->subeventService->getSubeventsOptions())
             ->setCondition(function (QueryBuilder $qb, $values) : void {
                 $qb->join('m.recipientSubevents', 's')
                     ->andWhere('s.id IN (:sids)')

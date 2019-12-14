@@ -23,8 +23,12 @@ build:
             code: composer install
 
         - script:
+            name: static analysis (phpstan)
+            code: phing static-analysis
+
+        - script:
             name: check coding standard
-            code: php phing.phar coding-standard
+            code: phing coding-standard
 
         - script:
             name: wait for MySQL connection
@@ -38,49 +42,13 @@ build:
             input_file: app/config/config.ci.local.neon
             output_file: app/config/config.local.neon
 
-#        - script:
-#            name: start phantomjs
-#            code: phantomjs --webdriver=4444 --ignore-ssl-errors=true --ssl-protocol=any &
-#
-#        - script:
-#            name: Symlink webroot
-#            code: rm -r /var/www/html && ln -s $(pwd) /var/www/html
-
         - script:
             name: run database migrations
             code: php www/index.php migrations:migrate --no-interaction
 
         - script:
-            name: static analyze
-            code: php -d memory_limit=4G vendor/bin/phpstan analyse -l 2 -c phpstan.neon app
-
-#        - script:
-#            name: configure /etc/hosts (srs.loc)
-#            code: echo "127.0.0.1 srs.loc" >> /etc/hosts
-#
-#        - script:
-#            name: configure /etc/hosts (phantom)
-#            code: echo "127.0.0.1 phantom" >> /etc/hosts
-#
-#        - script:
-#            name: Make everything accessible
-#            code: chown www-data:www-data . -R && chmod 777 . -R
-#
-#        - script:
-#            name: start apache
-#            code: service apache2 restart
-#
-#        - script:
-#            name: give mysql and phantomjs some time
-#            code: sleep 5
-
-        - script:
             name: upload code coverage to codecov.io
             code: mv tests/_output/coverage.xml clover.xml && bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN
-
-#        - script:
-#            name: acceptance testing
-#            code: php phing.phar tests-acceptance
 
 deploy:
     steps:

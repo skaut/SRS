@@ -11,6 +11,7 @@ use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
+use App\Services\ACLService;
 use App\Services\ApplicationService;
 use App\Services\SettingsService;
 use App\Utils\Validators;
@@ -59,6 +60,9 @@ class RolesForm
     /** @var Validators */
     private $validators;
 
+    /** @var ACLService */
+    private $ACLService;
+
 
     public function __construct(
         BaseForm $baseFormFactory,
@@ -67,7 +71,8 @@ class RolesForm
         SettingsService $settingsService,
         ApplicationService $applicationService,
         Translator $translator,
-        Validators $validators
+        Validators $validators,
+        ACLService $ACLService
     ) {
         $this->baseFormFactory    = $baseFormFactory;
         $this->userRepository     = $userRepository;
@@ -76,6 +81,7 @@ class RolesForm
         $this->applicationService = $applicationService;
         $this->translator         = $translator;
         $this->validators         = $validators;
+        $this->ACLService         = $ACLService;
     }
 
     /**
@@ -92,7 +98,7 @@ class RolesForm
         $form->addHidden('id');
 
         $rolesSelect = $form->addMultiSelect('roles', 'web.profile.roles')->setItems(
-            $this->roleRepository->getRegisterableNowOrUsersOptionsWithCapacity($this->user)
+            $this->ACLService->getRegisterableNowOrUsersOptionsWithCapacity($this->user)
         )
             ->addRule(Form::FILLED, 'web.profile.roles_empty')
             ->addRule([$this, 'validateRolesCapacities'], 'web.profile.roles_capacity_occupied')

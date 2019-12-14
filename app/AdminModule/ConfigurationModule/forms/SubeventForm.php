@@ -7,6 +7,8 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseForm;
 use App\Model\Structure\Subevent;
 use App\Model\Structure\SubeventRepository;
+use App\Services\ACLService;
+use App\Services\SubeventService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
@@ -43,11 +45,20 @@ class SubeventForm
     /** @var SubeventRepository */
     private $subeventRepository;
 
-    public function __construct(EntityManagerDecorator $em, BaseForm $baseFormFactory, SubeventRepository $subeventRepository)
-    {
+    /** @var SubeventService */
+    private $subeventService;
+
+
+    public function __construct(
+        EntityManagerDecorator $em,
+        BaseForm $baseFormFactory,
+        SubeventRepository $subeventRepository,
+        SubeventService $subeventService
+    ) {
         $this->em                 = $em;
         $this->baseFormFactory    = $baseFormFactory;
         $this->subeventRepository = $subeventRepository;
+        $this->subeventService    = $subeventService;
     }
 
     /**
@@ -79,7 +90,7 @@ class SubeventForm
                 ->addRule(Form::INTEGER, 'admin.configuration.subevents_capacity_format')
                 ->addRule(Form::MIN, 'admin.configuration.subevents_capacity_low', $this->subevent->countUsers());
 
-            $subeventsOptions = $this->subeventRepository->getSubeventsWithoutSubeventOptions($this->subevent->getId());
+            $subeventsOptions = $this->subeventService->getSubeventsWithoutSubeventOptions($this->subevent->getId());
         } else {
             $nameText->addRule(Form::IS_NOT_IN, 'admin.configuration.subevents_name_exists', $this->subeventRepository->findAllNames());
             $capacityText
@@ -87,7 +98,7 @@ class SubeventForm
                 ->addRule(Form::INTEGER, 'admin.configuration.subevents_capacity_format')
                 ->addRule(Form::MIN, 'admin.configuration.subevents_capacity_low', 0);
 
-            $subeventsOptions = $this->subeventRepository->getSubeventsOptions();
+            $subeventsOptions = $this->subeventService->getSubeventsOptions();
         }
 
         $incompatibleSubeventsSelect = $form->addMultiSelect('incompatibleSubevents', 'admin.configuration.subevents_incompatible_subevents', $subeventsOptions);

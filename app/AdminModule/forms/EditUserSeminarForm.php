@@ -19,6 +19,7 @@ use App\Model\User\CustomInputValue\CustomSelectValue;
 use App\Model\User\CustomInputValue\CustomTextValue;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
+use App\Services\ACLService;
 use App\Services\ApplicationService;
 use App\Services\FilesService;
 use App\Services\MailService;
@@ -85,6 +86,9 @@ class EditUserSeminarForm
     /** @var SettingsService */
     private $settingsService;
 
+    /** @var ACLService */
+    private $ACLService;
+
 
     public function __construct(
         BaseForm $baseFormFactory,
@@ -97,7 +101,8 @@ class EditUserSeminarForm
         Validators $validators,
         FilesService $filesService,
         MailService $mailService,
-        SettingsService $settingsService
+        SettingsService $settingsService,
+        ACLService $ACLService
     ) {
         $this->baseFormFactory            = $baseFormFactory;
         $this->em                         = $em;
@@ -110,6 +115,7 @@ class EditUserSeminarForm
         $this->filesService               = $filesService;
         $this->mailService                = $mailService;
         $this->settingsService            = $settingsService;
+        $this->ACLService                 = $ACLService;
     }
 
     /**
@@ -126,7 +132,7 @@ class EditUserSeminarForm
         $form->addMultiSelect(
             'roles',
             'admin.users.users_roles',
-            $this->roleRepository->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED])
+            $this->ACLService->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED])
         )
             ->addRule(Form::FILLED, 'admin.users.users_edit_roles_empty')
             ->addRule([$this, 'validateRolesNonregistered'], 'admin.users.users_edit_roles_nonregistered')

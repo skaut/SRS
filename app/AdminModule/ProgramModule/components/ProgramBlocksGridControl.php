@@ -15,9 +15,11 @@ use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\UserRepository;
+use App\Services\ACLService;
 use App\Services\ExcelExportService;
 use App\Services\ProgramService;
 use App\Services\SettingsService;
+use App\Services\SubeventService;
 use App\Utils\Validators;
 use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
@@ -74,6 +76,9 @@ class ProgramBlocksGridControl extends Control
     /** @var SessionSection */
     private $sessionSection;
 
+    /** @var SubeventService */
+    private $subeventService;
+
 
     public function __construct(
         Translator $translator,
@@ -86,6 +91,7 @@ class ProgramBlocksGridControl extends Control
         ExcelExportService $excelExportService,
         ProgramService $programService,
         Validators $validators,
+        SubeventService $subeventService,
         Session $session
     ) {
         parent::__construct();
@@ -100,6 +106,7 @@ class ProgramBlocksGridControl extends Control
         $this->excelExportService = $excelExportService;
         $this->programService     = $programService;
         $this->validators         = $validators;
+        $this->subeventService    = $subeventService;
 
         $this->session        = $session;
         $this->sessionSection = $session->getSection('srs');
@@ -141,7 +148,7 @@ class ProgramBlocksGridControl extends Control
 
         $grid->addColumnText('subevent', 'admin.program.blocks_subevent', 'subevent.name')
             ->setSortable('s.name')
-            ->setFilterMultiSelect($this->subeventRepository->getSubeventsOptions(), 's.id');
+            ->setFilterMultiSelect($this->subeventService->getSubeventsOptions(), 's.id');
 
         $grid->addColumnText('category', 'admin.program.blocks_category', 'category.name')
             ->setSortable('c.name')

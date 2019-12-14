@@ -28,6 +28,7 @@ use App\Services\ProgramService;
 use App\Services\SettingsService;
 use App\Services\SkautIsEventEducationService;
 use App\Services\SkautIsEventGeneralService;
+use App\Services\SubeventService;
 use App\Services\UserService;
 use App\Utils\Helpers;
 use DateTime;
@@ -124,6 +125,9 @@ class UsersGridControl extends Control
     /** @var SkautIsEventGeneralService */
     private $skautIsEventGeneralService;
 
+    /** @var SubeventService */
+    private $subeventService;
+
 
     public function __construct(
         Translator $translator,
@@ -145,7 +149,8 @@ class UsersGridControl extends Control
         UserService $userService,
         ProgramService $programService,
         SkautIsEventEducationService $skautIsEventEducationService,
-        SkautIsEventGeneralService $skautIsEventGeneralService
+        SkautIsEventGeneralService $skautIsEventGeneralService,
+        SubeventService $subeventService
     ) {
         parent::__construct();
 
@@ -168,6 +173,7 @@ class UsersGridControl extends Control
         $this->programService               = $programService;
         $this->skautIsEventEducationService = $skautIsEventEducationService;
         $this->skautIsEventGeneralService   = $skautIsEventGeneralService;
+        $this->subeventService              = $subeventService;
 
         $this->session        = $session;
         $this->sessionSection = $session->getSection('srs');
@@ -252,7 +258,7 @@ class UsersGridControl extends Control
             ->setFilterText();
 
         $grid->addColumnText('roles', 'admin.users.users_roles', 'rolesText')
-            ->setFilterMultiSelect($this->roleRepository->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED]))
+            ->setFilterMultiSelect($this->ACLService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED]))
             ->setCondition(function ($qb, $values) : void {
                 $qb->join('u.roles', 'uR')
                     ->andWhere('uR.id IN (:rids)')
@@ -260,7 +266,7 @@ class UsersGridControl extends Control
             });
 
         $grid->addColumnText('subevents', 'admin.users.users_subevents', 'subeventsText')
-            ->setFilterMultiSelect($this->subeventRepository->getSubeventsOptions())
+            ->setFilterMultiSelect($this->subeventService->getSubeventsOptions())
             ->setCondition(function ($qb, $values) : void {
                 $qb->join('u.applications', 'uA')
                     ->join('uA.subevents', 'uAS')
