@@ -15,6 +15,7 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
+use Nette\Forms\Controls\TextInput;
 use stdClass;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
@@ -105,6 +106,7 @@ class DocumentTagsGridControl extends Control
                 ->addRule(Form::FILLED, 'admin.cms.tags_roles_empty');
         };
         $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Tag $item) : void {
+            /** @var TextInput */
             $container['name']
                 ->addRule(Form::IS_NOT_IN, 'admin.cms.tags_name_exists', $this->tagRepository->findOthersNames($item->getId()));
 
