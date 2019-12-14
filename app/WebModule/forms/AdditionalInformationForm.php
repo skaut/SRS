@@ -214,22 +214,22 @@ class AdditionalInformationForm extends UI\Control
                     switch ($customInput->getType()) {
                         case CustomInput::TEXT:
                             $customInputValue = $customInputValue ?: new CustomTextValue();
-                            $customInputValue->setValue($values->custom' . $customInput->getId()]);
+                            $customInputValue->setValue($values['custom' . $customInput->getId()]);
                             break;
 
                         case CustomInput::CHECKBOX:
                             $customInputValue = $customInputValue ?: new CustomCheckboxValue();
-                            $customInputValue->setValue($values->custom' . $customInput->getId()]);
+                            $customInputValue->setValue($values['custom' . $customInput->getId()]);
                             break;
 
                         case CustomInput::SELECT:
                             $customInputValue = $customInputValue ?: new CustomSelectValue();
-                            $customInputValue->setValue($values->custom' . $customInput->getId()]);
+                            $customInputValue->setValue($values['custom' . $customInput->getId()]);
                             break;
 
                         case CustomInput::FILE:
                             $customInputValue = $customInputValue ?: new CustomFileValue();
-                            $file             = $values->custom' . $customInput->getId()];
+                            $file             = $values['custom' . $customInput->getId()];
                             if ($file->size > 0) {
                                 $path = $this->generatePath($file);
                                 $this->filesService->save($file, $path);
