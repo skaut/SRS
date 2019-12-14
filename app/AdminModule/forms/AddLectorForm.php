@@ -124,24 +124,24 @@ class AddLectorForm
         $user = new User();
 
         $user->setExternalLector(true);
-        $user->setFirstName($values['firstName']);
-        $user->setLastName($values['lastName']);
-        $user->setNickName($values['nickName']);
-        $user->setDegreePre($values['degreePre']);
-        $user->setDegreePost($values['degreePost']);
-        $user->setEmail($values['email']);
-        $user->setBirthdate($values['birthdate'] !== null ? new DateTime($values['birthdate']) : null);
-        $user->setStreet($values['street']);
-        $user->setCity($values['city']);
-        $user->setPostcode($values['postcode']);
-        $user->setAbout($values['about']);
-        $user->setNote($values['privateNote']);
+        $user->setFirstName($values->firstName);
+        $user->setLastName($values->lastName);
+        $user->setNickName($values->nickName);
+        $user->setDegreePre($values->degreePre);
+        $user->setDegreePost($values->degreePost);
+        $user->setEmail($values->email);
+        $user->setBirthdate($values->birthdate !== null ? new DateTime($values->birthdate) : null);
+        $user->setStreet($values->street);
+        $user->setCity($values->city);
+        $user->setPostcode($values->postcode);
+        $user->setAbout($values->about);
+        $user->setNote($values->privateNote);
 
         $user->addRole($this->roleRepository->findBySystemName(Role::LECTOR));
 
         $this->userRepository->save($user);
 
-        $photo = $values['photo'];
+        $photo = $values->photo;
         if ($photo->size > 0) {
             $photoExtension = image_type_to_extension(getimagesizefromstring($photo->getContents())[2]);
             $photoName      = 'ext_' . $user->getId() . $photoExtension;
