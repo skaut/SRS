@@ -6,6 +6,7 @@ namespace App\Model\CMS\Content;
 
 use App\AdminModule\Forms\BaseForm;
 use Doctrine\ORM\Mapping as ORM;
+use Nette\Application\UI\Form;
 use stdClass;
 
 /**

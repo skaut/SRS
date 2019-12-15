@@ -477,8 +477,8 @@ class ApplicationService
         $oldMaturityDate           = $application->getMaturityDate();
 
         //pokud neni zmena, nic se neprovede
-        if ($paymentMethod === $oldPaymentMethod && $paymentDate === $oldPaymentDate
-            && $incomeProofPrintedDate === $oldIncomeProofPrintedDate && $maturityDate === $oldMaturityDate) {
+        if ($paymentMethod === $oldPaymentMethod && $paymentDate == $oldPaymentDate
+            && $incomeProofPrintedDate == $oldIncomeProofPrintedDate && $maturityDate == $oldMaturityDate) {
             return;
         }
 
@@ -811,7 +811,7 @@ class ApplicationService
 
                 for ($i = 0; $i < $workDays;) {
                     $date->modify('+1 days');
-                    $holidays = Yasumi::create('CzechRepublic', $date->format('Y'));
+                    $holidays = Yasumi::create('CzechRepublic', (int) $date->format('Y'));
 
                     if (! $holidays->isWorkingDay($date)) {
                         continue;

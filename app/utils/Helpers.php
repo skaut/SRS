@@ -38,7 +38,7 @@ class Helpers
 
     /**
      * Vrátí id prvků v kolekci.
-     * @param Collection|SmartObject[] $collection
+     * @param Collection|object[] $collection
      * @return int[]
      */
     public static function getIds(Collection $collection) : array

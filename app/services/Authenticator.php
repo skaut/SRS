@@ -174,6 +174,8 @@ class Authenticator implements NS\IAuthenticator
             $netteRoles[$testedRole->getId()] = $testedRole->getName();
         }
 
-        $user->identity->setRoles($netteRoles);
+        /** @var NS\Identity $identity */
+        $identity = $user->identity;
+        $identity->setRoles($netteRoles);
     }
 }

@@ -207,7 +207,7 @@ class SkautIsService
             'IsValid' => true,
         ]);
 
-        if (! array_key_exists('MembershipAllOutput', $membership)) {
+        if (! property_exists($membership, 'MembershipAllOutput')) {
             $membership = $this->skautIs->org->MembershipAllPerson([
                 'ID_Login' => $this->skautIs->getUser()->getLoginId(),
                 'ID_Person' => $personId,
@@ -215,7 +215,7 @@ class SkautIsService
                 'IsValid' => true,
             ]);
 
-            if (! array_key_exists('MembershipAllOutput', $membership)) {
+            if (! property_exists($membership, 'MembershipAllOutput')) {
                 return null;
             }
         }

@@ -966,7 +966,7 @@ class User
     public function hasProgramBlock(Block $block) : bool
     {
         return ! $this->programs->filter(function (Program $program) use ($block) {
-            return $program->getBlock() === $block;
+            return spl_object_id($program->getBlock()) === spl_object_id($block);
         })->isEmpty();
     }
 

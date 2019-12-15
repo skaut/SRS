@@ -159,7 +159,7 @@ class ProgramService
             $this->blockRepository->save($block);
 
             //aktualizace ucastniku pri zmene kategorie nebo podakce
-            if (($category !== $oldCategory) || ($subevent !== $oldSubevent)) {
+            if ((spl_object_id($category) !== spl_object_id($oldCategory)) || (spl_object_id($subevent) !== spl_object_id($oldSubevent))) {
                 $allowedUsers = $this->userRepository->findBlockAllowed($block);
 
                 foreach ($block->getPrograms() as $program) {
