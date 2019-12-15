@@ -139,7 +139,7 @@ class ProgramFormFactory
 
     /**
      * Ověří, že uzavření zapisování programů je později než otevření.
-     * @param DateTime[] $args
+     * @param DateTime[]|null[] $args
      */
     public function validateRegisterProgramsTo(DateTimePicker $field, array $args) : bool
     {
