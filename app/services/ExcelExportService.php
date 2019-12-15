@@ -13,6 +13,10 @@ use App\Model\Program\Room;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Structure\SubeventRepository;
+use App\Model\User\CustomInputValue\CustomCheckboxValue;
+use App\Model\User\CustomInputValue\CustomFileValue;
+use App\Model\User\CustomInputValue\CustomSelectValue;
+use App\Model\User\CustomInputValue\CustomTextValue;
 use App\Model\User\User;
 use App\Utils\Helpers;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -355,17 +359,19 @@ class ExcelExportService
         $sheet->getColumnDimensionByColumn($column++)->setWidth(30);
 
         foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
+            $width = null;
+
             switch ($customInput->getType()) {
                 case CustomInput::TEXT:
-                    $width = '30';
+                    $width = 30;
                     break;
 
                 case CustomInput::CHECKBOX:
-                    $width = '15';
+                    $width = 15;
                     break;
 
                 case CustomInput::SELECT:
-                    $width = '30';
+                    $width = 30;
                     break;
 
                 case CustomInput::FILE:
@@ -433,29 +439,21 @@ class ExcelExportService
             foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
                 $customInputValue = $user->getCustomInputValue($customInput);
 
-                if ($customInputValue) {
-                    switch ($customInputValue->getInput()->getType()) {
-                        case CustomInput::TEXT:
-                            $value = $customInputValue->getValue();
-                            break;
-
-                        case CustomInput::CHECKBOX:
-                            $value = $customInputValue->getValue()
-                                ? $this->translator->translate('common.export.common.yes')
-                                : $this->translator->translate('common.export.common.no');
-                            break;
-
-                        case CustomInput::SELECT:
-                            $value = $customInputValue->getValueOption();
-                            break;
-
-                        case CustomInput::FILE:
-                            continue 2;
-
-                        default:
-                            throw new InvalidArgumentException();
-                    }
-                } else {
+                if ($customInputValue instanceof CustomTextValue) {
+                    $value = $customInputValue->getValue();
+                }
+                elseif ($customInputValue instanceof CustomCheckboxValue) {
+                    $value = $customInputValue->getValue()
+                        ? $this->translator->translate('common.export.common.yes')
+                        : $this->translator->translate('common.export.common.no');
+                }
+                elseif ($customInputValue instanceof CustomSelectValue) {
+                    $value = $customInputValue->getValueOption();
+                }
+                elseif ($customInputValue instanceof CustomFileValue) {
+                    continue;
+                }
+                else {
                     $value = '';
                 }
 

@@ -49,7 +49,7 @@ class Block
     /**
      * Kategorie bloku.
      * @ORM\ManyToOne(targetEntity="Category", inversedBy="blocks", cascade={"persist"})
-     * @var Category
+     * @var ?Category
      */
     protected $category;
 

@@ -265,7 +265,7 @@ class Subevent
      */
     private function getRequiredBySubeventTransitiveRec(Collection &$allRequiredBySubevent, Subevent $subevent) : void
     {
-        if ($this === $subevent || $allRequiredBySubevent->contains($subevent)) {
+        if (spl_object_id($this) === spl_object_id($subevent) || $allRequiredBySubevent->contains($subevent)) {
             return;
         }
 
@@ -313,7 +313,7 @@ class Subevent
      */
     private function getRequiredSubeventsTransitiveRec(Collection &$allRequiredSubevents, Subevent $subevent) : void
     {
-        if ($this === $subevent || $allRequiredSubevents->contains($subevent)) {
+        if (spl_object_id($this) === spl_object_id($subevent) || $allRequiredSubevents->contains($subevent)) {
             return;
         }
 

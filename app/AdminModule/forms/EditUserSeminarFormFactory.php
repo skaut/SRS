@@ -228,7 +228,7 @@ class EditUserSeminarFormFactory
 
             foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
                 $customInputValue = $this->user->getCustomInputValue($customInput);
-                $inputName = 'custom' . $customInput->getId();
+                $customInputName = 'custom' . $customInput->getId();
                 $oldValue = null;
                 $newValue = null;
 
@@ -236,28 +236,28 @@ class EditUserSeminarFormFactory
                     /** @var CustomTextValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomTextValue();
                     $oldValue = $customInputValue->getValue();
-                    $newValue = $values->$inputName;
+                    $newValue = $values->$customInputName;
                     $customInputValue->setValue($newValue);
                 }
                 elseif ($customInput instanceof CustomCheckbox) {
                     /** @var CustomCheckboxValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomCheckboxValue();
                     $oldValue = $customInputValue->getValue();
-                    $newValue = $values->$inputName;
+                    $newValue = $values->$customInputName;
                     $customInputValue->setValue($newValue);
                 }
                 elseif ($customInput instanceof CustomSelect) {
                     /** @var CustomSelectValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomSelectValue();
                     $oldValue = $customInputValue->getValue();
-                    $newValue = $values->$inputName;
+                    $newValue = $values->$customInputName;
                     $customInputValue->setValue($newValue);
                 }
                 elseif ($customInput instanceof CustomFile) {
                     /** @var CustomFileValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomFileValue();
                     $oldValue = $customInputValue->getValue();
-                    $newValue = $values->$inputName;
+                    $newValue = $values->$customInputName;
                     if ($newValue->size > 0) {
                         $path = $this->generatePath($newValue);
                         $this->filesService->save($newValue, $path);

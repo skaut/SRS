@@ -133,11 +133,13 @@ class AdditionalInformationForm extends UI\Control
         $form = $this->baseFormFactory->create();
 
         foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
-            $customInputValue = $this->user->getCustomInputValue($customInput);
+            $custom = null;
 
             if ($customInput instanceof CustomText) {
                 $custom = $form->addText('custom' . $customInput->getId(), $customInput->getName())
                     ->setDisabled(!$isAllowedEditCustomInputs);
+                /** @var ?CustomTextValue $customInputValue */
+                $customInputValue = $this->user->getCustomInputValue($customInput);
                 if ($customInputValue) {
                     $custom->setDefaultValue($customInputValue->getValue());
                 }
@@ -145,6 +147,8 @@ class AdditionalInformationForm extends UI\Control
             elseif ($customInput instanceof CustomCheckbox) {
                 $custom = $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName())
                     ->setDisabled(!$isAllowedEditCustomInputs);
+                /** @var ?CustomCheckboxValue $customInputValue */
+                $customInputValue = $this->user->getCustomInputValue($customInput);
                 if ($customInputValue) {
                     $custom->setDefaultValue($customInputValue->getValue());
                 }
@@ -152,6 +156,8 @@ class AdditionalInformationForm extends UI\Control
             elseif ($customInput instanceof CustomSelect) {
                 $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions())
                     ->setDisabled(!$isAllowedEditCustomInputs);
+                /** @var ?CustomSelectValue $customInputValue */
+                $customInputValue = $this->user->getCustomInputValue($customInput);
                 if ($customInputValue) {
                     $custom->setDefaultValue($customInputValue->getValue());
                 }
@@ -159,6 +165,8 @@ class AdditionalInformationForm extends UI\Control
             elseif ($customInput instanceof CustomFile) {
                 $custom = $form->addUpload('custom' . $customInput->getId(), $customInput->getName())
                     ->setDisabled(!$isAllowedEditCustomInputs);
+                /** @var ?CustomFileValue $customInputValue */
+                $customInputValue = $this->user->getCustomInputValue($customInput);
                 if ($customInputValue && $customInputValue->getValue()) {
                     $custom->setAttribute('data-current-file-link', $customInputValue->getValue())
                         ->setAttribute('data-current-file-name', array_values(array_slice(explode('/', $customInputValue->getValue()), -1))[0]);
@@ -202,27 +210,39 @@ class AdditionalInformationForm extends UI\Control
             if ($this->applicationService->isAllowedEditCustomInputs()) {
                 foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
                     $customInputValue = $this->user->getCustomInputValue($customInput);
-                    $oldValue = $customInputValue ? $customInputValue->getValue() : null;
-                    $inputName = 'custom' . $customInput->getId();
+                    $customInputName = 'custom' . $customInput->getId();
+                    $oldValue = null;
+                    $newValue = null;
 
                     if ($customInput instanceof CustomText) {
+                        /** @var CustomTextValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomTextValue();
-                        $customInputValue->setValue($values->$inputName);
+                        $oldValue = $customInputValue->getValue();
+                        $newValue = $values->$customInputName;
+                        $customInputValue->setValue($newValue);
                     }
                     elseif ($customInput instanceof CustomCheckbox) {
+                        /** @var CustomCheckboxValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomCheckboxValue();
-                        $customInputValue->setValue($values->$inputName);
+                        $oldValue = $customInputValue->getValue();
+                        $newValue = $values->$customInputName;
+                        $customInputValue->setValue($newValue);
                     }
                     elseif ($customInput instanceof CustomSelect) {
+                        /** @var CustomSelectValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomSelectValue();
-                        $customInputValue->setValue($values->$inputName);
+                        $oldValue = $customInputValue->getValue();
+                        $newValue = $values->$customInputName;
+                        $customInputValue->setValue($newValue);
                     }
                     elseif ($customInput instanceof CustomFile) {
+                        /** @var CustomFileValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomFileValue();
-                        $file = $values->$inputName;
-                        if ($file->size > 0) {
-                            $path = $this->generatePath($file);
-                            $this->filesService->save($file, $path);
+                        $oldValue = $customInputValue->getValue();
+                        $newValue = $values->$customInputName;
+                        if ($newValue->size > 0) {
+                            $path = $this->generatePath($newValue);
+                            $this->filesService->save($newValue, $path);
                             $customInputValue->setValue($path);
                         }
                     }
@@ -231,11 +251,9 @@ class AdditionalInformationForm extends UI\Control
                     $customInputValue->setInput($customInput);
                     $this->customInputValueRepository->save($customInputValue);
 
-                    if ($oldValue === $customInputValue->getValue()) {
-                        continue;
+                    if ($oldValue !== $newValue) {
+                        $customInputValueChanged = true;
                     }
-
-                    $customInputValueChanged = true;
                 }
             }
 

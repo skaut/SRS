@@ -300,26 +300,27 @@ class ApplicationFormFactory
             //vlastni pole
             foreach ($this->customInputRepository->findAll() as $customInput) {
                 $customInputValue = $this->user->getCustomInputValue($customInput);
+                $customInputName = 'custom' . $customInput->getId();
 
                 if ($customInput instanceof CustomText) {
                     /** @var CustomTextValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomTextValue();
-                    $customInputValue->setValue($values['custom' . $customInput->getId()]);
+                    $customInputValue->setValue($values->$customInputName);
                 }
                 elseif ($customInput instanceof CustomCheckbox) {
                     /** @var CustomCheckboxValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomCheckboxValue();
-                    $customInputValue->setValue($values['custom' . $customInput->getId()]);
+                    $customInputValue->setValue($values->$customInputName);
                 }
                 elseif ($customInput instanceof CustomSelect) {
                     /** @var CustomSelectValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomSelectValue();
-                    $customInputValue->setValue($values['custom' . $customInput->getId()]);
+                    $customInputValue->setValue($values->$customInputName);
                 }
                 elseif ($customInput instanceof CustomFile) {
                     /** @var CustomFileValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomFileValue();
-                    $file = $values['custom' . $customInput->getId()];
+                    $file = $values->$customInputName;
                     if ($file->size > 0) {
                         $path = $this->generatePath($file);
                         $this->filesService->save($file, $path);

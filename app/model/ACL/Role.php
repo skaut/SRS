@@ -547,7 +547,7 @@ class Role
      */
     private function getRequiredByRoleTransitiveRec(Collection &$allRequiredByRole, Role $role) : void
     {
-        if ($this === $role || $allRequiredByRole->contains($role)) {
+        if (spl_object_id($this) === spl_object_id($role) || $allRequiredByRole->contains($role)) {
             return;
         }
 
@@ -604,7 +604,7 @@ class Role
      */
     private function getRequiredRolesTransitiveRec(Collection &$allRequiredRoles, Role $role) : void
     {
-        if ($this === $role || $allRequiredRoles->contains($role)) {
+        if (spl_object_id($this) === spl_object_id($role) || $allRequiredRoles->contains($role)) {
             return;
         }
 
