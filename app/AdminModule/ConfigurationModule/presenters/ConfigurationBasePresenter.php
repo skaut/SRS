@@ -6,7 +6,7 @@ namespace App\AdminModule\ConfigurationModule\Presenters;
 
 use App\AdminModule\Presenters\AdminBasePresenter;
 use App\Model\ACL\Permission;
-use App\Model\ACL\Resource;
+use App\Model\ACL\SrsResource;
 use App\Model\Settings\SettingsException;
 use App\Model\Structure\SubeventRepository;
 use Doctrine\ORM\NonUniqueResultException;
@@ -21,7 +21,7 @@ use Throwable;
 abstract class ConfigurationBasePresenter extends AdminBasePresenter
 {
     /** @var string */
-    protected $resource = Resource::CONFIGURATION;
+    protected $resource = SrsResource::CONFIGURATION;
 
     /**
      * @var SubeventRepository

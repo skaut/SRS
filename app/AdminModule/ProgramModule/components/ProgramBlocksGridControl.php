@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\ProgramModule\Components;
 
 use App\Model\ACL\Permission;
-use App\Model\ACL\Resource;
+use App\Model\ACL\SrsResource;
 use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Block;
 use App\Model\Program\BlockRepository;
@@ -203,8 +203,8 @@ class ProgramBlocksGridControl extends Control
                 return $row->getProgramsCount();
             });
 
-        if (($this->getPresenter()->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS) ||
-                $this->getPresenter()->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS)) &&
+        if (($this->getPresenter()->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS) ||
+                $this->getPresenter()->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS)) &&
             $this->settingsService->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK)
         ) {
             $grid->addToolbarButton('Blocks:add')

@@ -117,8 +117,8 @@ services:
         class: App\Model\ACL\PermissionRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\ACL\Permission)
     resourceRepository:
-        class: App\Model\ACL\ResourceRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\ACL\Resource)
+        class: App\Model\ACL\SrsResourceRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\ACL\SrsResource)
     roleRepository:
         class: App\Model\ACL\RoleRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\ACL\Role)

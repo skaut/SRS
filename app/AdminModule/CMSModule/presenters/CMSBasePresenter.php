@@ -6,7 +6,7 @@ namespace App\AdminModule\CMSModule\Presenters;
 
 use App\AdminModule\Presenters\AdminBasePresenter;
 use App\Model\ACL\Permission;
-use App\Model\ACL\Resource;
+use App\Model\ACL\SrsResource;
 use App\Model\Settings\SettingsException;
 use Nette\Application\AbortException;
 use Throwable;
@@ -19,7 +19,7 @@ use Throwable;
 abstract class CMSBasePresenter extends AdminBasePresenter
 {
     /** @var string */
-    protected $resource = Resource::CMS;
+    protected $resource = SrsResource::CMS;
 
 
     /**

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\ActionModule\Presenters;
 
 use App\Model\ACL\Permission;
-use App\Model\ACL\Resource;
+use App\Model\ACL\SrsResource;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Services\SettingsService;
@@ -46,7 +46,7 @@ class MailingPresenter extends ActionBasePresenter
             $this->flashMessage('admin.configuration.mailing_email_verification_error', 'danger');
         }
 
-        if ($this->user->isAllowed(Resource::CONFIGURATION, Permission::MANAGE)) {
+        if ($this->user->isAllowed(SrsResource::CONFIGURATION, Permission::MANAGE)) {
             $this->redirect(':Admin:Configuration:Mailing:default');
         } else {
             $this->redirect(':Web:Page:default');

@@ -14,10 +14,10 @@ use Nettrine\ORM\Entity\Attributes\Id;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
- * @ORM\Entity(repositoryClass="ResourceRepository")
+ * @ORM\Entity(repositoryClass="SrsResourceRepository")
  * @ORM\Table(name="resource")
  */
-class Resource
+class SrsResource
 {
     /**
      * Administrace.

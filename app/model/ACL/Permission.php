@@ -95,13 +95,13 @@ class Permission
 
     /**
      * Prostředek oprávnění.
-     * @ORM\ManyToOne(targetEntity="\App\Model\ACL\Resource", inversedBy="permissions", cascade={"persist"})
-     * @var Resource
+     * @ORM\ManyToOne(targetEntity="SrsResource", inversedBy="permissions", cascade={"persist"})
+     * @var SrsResource
      */
     protected $resource;
 
 
-    public function __construct(string $name, Resource $resource)
+    public function __construct(string $name, SrsResource $resource)
     {
         $this->name     = $name;
         $this->resource = $resource;
@@ -126,7 +126,7 @@ class Permission
         return $this->roles;
     }
 
-    public function getResource() : Resource
+    public function getResource() : SrsResource
     {
         return $this->resource;
     }

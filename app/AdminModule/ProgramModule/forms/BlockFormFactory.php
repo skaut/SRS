@@ -7,7 +7,7 @@ namespace App\AdminModule\ProgramModule\Forms;
 use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\ACL\Permission;
-use App\Model\ACL\Resource;
+use App\Model\ACL\SrsResource;
 use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Block;
 use App\Model\Program\BlockRepository;
@@ -139,7 +139,7 @@ class BlockFormFactory
         $form->addSelect('category', 'admin.program.blocks_category', $this->categoryRepository->getCategoriesOptions())
             ->setPrompt('');
 
-        $userIsAllowedManageAllPrograms = $this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS);
+        $userIsAllowedManageAllPrograms = $this->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS);
         if ($userIsAllowedManageAllPrograms) {
             $lectorsOptions = $this->userRepository->getLectorsOptions();
         } else {

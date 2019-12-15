@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\ProgramModule\Components;
 
 use App\Model\ACL\Permission;
-use App\Model\ACL\Resource;
+use App\Model\ACL\SrsResource;
 use App\Model\Enums\ApplicationState;
 use App\Model\Program\Program;
 use App\Model\Program\ProgramRepository;
@@ -174,7 +174,7 @@ class ProgramAttendeesGridControl extends Control
 
             $grid->setDefaultFilter(['attends' => 'yes'], false);
 
-            if ($this->user->isAllowed(Resource::USERS, Permission::MANAGE)) {
+            if ($this->user->isAllowed(SrsResource::USERS, Permission::MANAGE)) {
                 $grid->addAction('detail', 'admin.common.detail', ':Admin:Users:detail')
                     ->setClass('btn btn-xs btn-primary')
                     ->addAttributes(['target' => '_blank']);

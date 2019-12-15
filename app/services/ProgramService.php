@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Model\ACL\Permission;
-use App\Model\ACL\Resource;
+use App\Model\ACL\SrsResource;
 use App\Model\ACL\Role;
 use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Enums\ProgramRegistrationType;
@@ -522,7 +522,7 @@ class ProgramService
      */
     private function updateUserNotRegisteredMandatoryBlocks(User $user, bool $flush = true) : void
     {
-        if ($user->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS)) {
+        if ($user->isAllowed(SrsResource::PROGRAM, Permission::CHOOSE_PROGRAMS)) {
             $registerableCategories = $this->categoryRepository->findUserAllowed($user);
             $registeredSubevents    = $user->getSubevents();
 
@@ -560,7 +560,7 @@ class ProgramService
      */
     public function getUserAllowedPrograms(User $user) : Collection
     {
-        if (! $user->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS)) {
+        if (! $user->isAllowed(SrsResource::PROGRAM, Permission::CHOOSE_PROGRAMS)) {
             return new ArrayCollection();
         }
 

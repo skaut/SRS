@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\WebModule\Presenters;
 
 use App\Model\ACL\Permission;
-use App\Model\ACL\Resource;
+use App\Model\ACL\SrsResource;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Settings\Settings;
@@ -140,7 +140,7 @@ abstract class WebBasePresenter extends BasePresenter
         $this->template->unapprovedRole    = $this->roleRepository->findBySystemName(Role::UNAPPROVED);
         $this->template->testRole          = Role::TEST;
 
-        $this->template->adminAccess = $this->user->isAllowed(Resource::ADMIN, Permission::ACCESS);
+        $this->template->adminAccess = $this->user->isAllowed(SrsResource::ADMIN, Permission::ACCESS);
 
         $this->template->pages          = $this->CMSService->findPublishedOrderedByPositionDto();
         $this->template->sidebarVisible = false;

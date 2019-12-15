@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\Presenters;
 
 use App\Model\ACL\Permission;
-use App\Model\ACL\Resource;
+use App\Model\ACL\SrsResource;
 use App\Model\ACL\RoleRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
@@ -30,7 +30,7 @@ use function array_keys;
 abstract class AdminBasePresenter extends BasePresenter
 {
     /** @var string */
-    protected $resource = Resource::ADMIN;
+    protected $resource = SrsResource::ADMIN;
 
     /**
      * @var Authorizator
@@ -101,7 +101,7 @@ abstract class AdminBasePresenter extends BasePresenter
         if (! $this->user->isLoggedIn()) {
             $this->redirect(':Auth:login', ['backlink' => $this->getHttpRequest()->getUrl()->getPath()]);
         }
-        if (! $this->user->isAllowed(Resource::ADMIN, Permission::ACCESS)) {
+        if (! $this->user->isAllowed(SrsResource::ADMIN, Permission::ACCESS)) {
             $this->flashMessage('admin.common.access_denied', 'danger', 'lock');
             $this->redirect(':Web:Page:default');
         }
@@ -119,13 +119,13 @@ abstract class AdminBasePresenter extends BasePresenter
 
         $this->template->dbuser = $this->dbuser;
 
-        $this->template->resourceACL           = Resource::ACL;
-        $this->template->resourceCMS           = Resource::CMS;
-        $this->template->resourceConfiguration = Resource::CONFIGURATION;
-        $this->template->resourceUsers         = Resource::USERS;
-        $this->template->resourcePayments      = Resource::PAYMENTS;
-        $this->template->resourceMailing       = Resource::MAILING;
-        $this->template->resourceProgram       = Resource::PROGRAM;
+        $this->template->resourceACL           = SrsResource::ACL;
+        $this->template->resourceCMS           = SrsResource::CMS;
+        $this->template->resourceConfiguration = SrsResource::CONFIGURATION;
+        $this->template->resourceUsers         = SrsResource::USERS;
+        $this->template->resourcePayments      = SrsResource::PAYMENTS;
+        $this->template->resourceMailing       = SrsResource::MAILING;
+        $this->template->resourceProgram       = SrsResource::PROGRAM;
 
         $this->template->permissionAccess            = Permission::ACCESS;
         $this->template->permissionManage            = Permission::MANAGE;

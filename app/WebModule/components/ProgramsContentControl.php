@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\WebModule\Components;
 
 use App\Model\ACL\Permission;
-use App\Model\ACL\Resource;
+use App\Model\ACL\SrsResource;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\CMS\Content\ContentDto;
@@ -76,7 +76,7 @@ class ProgramsContentControl extends Control
         $template->guestRole = $user->isInRole($this->roleRepository->findBySystemName(Role::GUEST)->getName());
 
         if ($user->isLoggedIn()) {
-            $template->userHasPermission     = $user->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS);
+            $template->userHasPermission     = $user->isAllowed(SrsResource::PROGRAM, Permission::CHOOSE_PROGRAMS);
             $template->userWaitingForPayment = ! $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT)
                 && $this->userRepository->findById($user->getId())->getWaitingForPaymentApplications()->count() > 0;
         }

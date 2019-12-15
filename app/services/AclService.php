@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Model\ACL\PermissionRepository;
-use App\Model\ACL\ResourceRepository;
+use App\Model\ACL\SrsResourceRepository;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\User\User;
@@ -34,7 +34,7 @@ class AclService
     /** @var PermissionRepository */
     private $permissionRepository;
 
-    /** @var ResourceRepository */
+    /** @var SrsResourceRepository */
     private $resourceRepository;
 
     /** @var Translator */
@@ -53,7 +53,7 @@ class AclService
     public function __construct(
         RoleRepository $roleRepository,
         PermissionRepository $permissionRepository,
-        ResourceRepository $resourceRepository,
+        SrsResourceRepository $resourceRepository,
         Translator $translator,
         IStorage $storage
     ) {

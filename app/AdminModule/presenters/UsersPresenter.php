@@ -13,7 +13,7 @@ use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\Forms\EditUserPersonalDetailsFormFactory;
 use App\AdminModule\Forms\EditUserSeminarFormFactory;
 use App\Model\ACL\Permission;
-use App\Model\ACL\Resource;
+use App\Model\ACL\SrsResource;
 use App\Model\ACL\Role;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
@@ -35,7 +35,7 @@ use Throwable;
 class UsersPresenter extends AdminBasePresenter
 {
     /** @var string */
-    protected $resource = Resource::USERS;
+    protected $resource = SrsResource::USERS;
 
     /**
      * @var IUsersGridControlFactory

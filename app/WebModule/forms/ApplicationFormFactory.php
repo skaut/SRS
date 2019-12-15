@@ -302,18 +302,22 @@ class ApplicationFormFactory
                 $customInputValue = $this->user->getCustomInputValue($customInput);
 
                 if ($customInput instanceof CustomText) {
+                    /** @var CustomTextValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomTextValue();
                     $customInputValue->setValue($values['custom' . $customInput->getId()]);
                 }
                 elseif ($customInput instanceof CustomCheckbox) {
+                    /** @var CustomCheckboxValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomCheckboxValue();
                     $customInputValue->setValue($values['custom' . $customInput->getId()]);
                 }
                 elseif ($customInput instanceof CustomSelect) {
+                    /** @var CustomSelectValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomSelectValue();
                     $customInputValue->setValue($values['custom' . $customInput->getId()]);
                 }
                 elseif ($customInput instanceof CustomFile) {
+                    /** @var CustomFileValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomFileValue();
                     $file = $values['custom' . $customInput->getId()];
                     if ($file->size > 0) {

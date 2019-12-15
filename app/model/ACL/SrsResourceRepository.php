@@ -11,6 +11,6 @@ use Doctrine\ORM\EntityRepository;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class ResourceRepository extends EntityRepository
+class SrsResourceRepository extends EntityRepository
 {
 }

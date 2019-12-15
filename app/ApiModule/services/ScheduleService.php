@@ -12,7 +12,7 @@ use App\ApiModule\Dto\Schedule\ProgramDetailDto;
 use App\ApiModule\Dto\Schedule\ProgramSaveDto;
 use App\ApiModule\Dto\Schedule\ResponseDto;
 use App\Model\ACL\Permission;
-use App\Model\ACL\Resource;
+use App\Model\ACL\SrsResource;
 use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Block;
 use App\Model\Program\BlockRepository;
@@ -187,7 +187,7 @@ class ScheduleService
         $calendarConfigDto->setSeminarDuration($toDate->diff($fromDate)->d + 1);
         $calendarConfigDto->setAllowedModifySchedule(
             $this->settingsService->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE) &&
-            $this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE)
+            $this->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_SCHEDULE)
         );
 
         return $calendarConfigDto;
@@ -210,7 +210,7 @@ class ScheduleService
         $end       = clone $start;
         $end->add(new DateInterval('PT' . $block->getDuration() . 'M'));
 
-        if (! $this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE)) {
+        if (! $this->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_SCHEDULE)) {
             $responseDto->setMessage($this->translator->translate('common.api.schedule_user_not_allowed_manage'));
         } elseif (! $this->settingsService->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)) {
             $responseDto->setMessage($this->translator->translate('common.api.schedule_not_allowed_modfify'));
@@ -249,7 +249,7 @@ class ScheduleService
         $responseDto = new ResponseDto();
         $responseDto->setStatus('danger');
 
-        if (! $this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE)) {
+        if (! $this->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_SCHEDULE)) {
             $responseDto->setMessage($this->translator->translate('common.api.schedule_user_not_allowed_manage'));
         } elseif (! $this->settingsService->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)) {
             $responseDto->setMessage($this->translator->translate('common.api.schedule_not_allowed_modfify'));
@@ -281,7 +281,7 @@ class ScheduleService
         $responseDto = new ResponseDto();
         $responseDto->setStatus('danger');
 
-        if (! $this->user->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS)) {
+        if (! $this->user->isAllowed(SrsResource::PROGRAM, Permission::CHOOSE_PROGRAMS)) {
             $responseDto->setMessage($this->translator->translate('common.api.schedule_user_not_allowed_register_programs'));
         } elseif (! $this->programService->isAllowedRegisterPrograms()) {
             $responseDto->setMessage($this->translator->translate('common.api.schedule_register_programs_not_allowed'));

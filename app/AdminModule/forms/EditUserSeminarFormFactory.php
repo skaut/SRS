@@ -150,33 +150,32 @@ class EditUserSeminarFormFactory
         }
 
         foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
-            $customInputValue = $this->user->getCustomInputValue($customInput);
-
-            switch ($customInput->getType()) {
-                case CustomInput::TEXT:
-                    $custom = $form->addText('custom' . $customInput->getId(), $customInput->getName());
-                    if ($customInputValue) {
-                        $custom->setDefaultValue($customInputValue->getValue());
-                    }
-                    break;
-
-                case CustomInput::CHECKBOX:
-                    $custom = $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName());
-                    if ($customInputValue) {
-                        $custom->setDefaultValue($customInputValue->getValue());
-                    }
-                    break;
-
-                case CustomInput::SELECT:
-                    $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions());
-                    if ($customInputValue) {
-                        $custom->setDefaultValue($customInputValue->getValue());
-                    }
-                    break;
-
-                case CustomInput::FILE:
-                    $form->addUpload('custom' . $customInput->getId(), $customInput->getName());
-                    break;
+            if ($customInput instanceof CustomText) {
+                $custom = $form->addText('custom' . $customInput->getId(), $customInput->getName());
+                /** @var ?CustomTextValue $customInputValue */
+                $customInputValue = $this->user->getCustomInputValue($customInput);
+                if ($customInputValue) {
+                    $custom->setDefaultValue($customInputValue->getValue());
+                }
+            }
+            elseif ($customInput instanceof CustomCheckbox) {
+                $custom = $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName());
+                /** @var ?CustomCheckboxValue $customInputValue */
+                $customInputValue = $this->user->getCustomInputValue($customInput);
+                if ($customInputValue) {
+                    $custom->setDefaultValue($customInputValue->getValue());
+                }
+            }
+            elseif ($customInput instanceof CustomSelect) {
+                $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions());
+                /** @var ?CustomSelectValue $customInputValue */
+                $customInputValue = $this->user->getCustomInputValue($customInput);
+                if ($customInputValue) {
+                    $custom->setDefaultValue($customInputValue->getValue());
+                }
+            }
+            elseif ($customInput instanceof CustomFile) {
+                $form->addUpload('custom' . $customInput->getId(), $customInput->getName());
             }
         }
 
@@ -229,45 +228,50 @@ class EditUserSeminarFormFactory
 
             foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
                 $customInputValue = $this->user->getCustomInputValue($customInput);
-                $oldValue = $customInputValue ? $customInputValue->getValue() : null;
                 $inputName = 'custom' . $customInput->getId();
+                $oldValue = null;
+                $newValue = null;
 
-                switch (true) {
-                    case $customInput instanceof CustomText:
-                        $customInputValue = $customInputValue ?: new CustomTextValue();
-                        $customInputValue->setValue($values->$inputName);
-                        break;
-
-                    case $customInput instanceof CustomCheckbox:
-                        $customInputValue = $customInputValue ?: new CustomCheckboxValue();
-                        $customInputValue->setValue($values->$inputName);
-                        break;
-
-                    case $customInput instanceof CustomSelect:
-                        $customInputValue = $customInputValue ?: new CustomSelectValue();
-                        $customInputValue->setValue($values->$inputName);
-                        break;
-
-                    case $customInput instanceof CustomFile:
-                        $customInputValue = $customInputValue ?: new CustomFileValue();
-                        $file             = $values->$inputName;
-                        if ($file->size > 0) {
-                            $path = $this->generatePath($file);
-                            $this->filesService->save($file, $path);
-                            $customInputValue->setValue($path);
-                        }
-                        break;
+                if ($customInput instanceof CustomText) {
+                    /** @var CustomTextValue $customInputValue */
+                    $customInputValue = $customInputValue ?: new CustomTextValue();
+                    $oldValue = $customInputValue->getValue();
+                    $newValue = $values->$inputName;
+                    $customInputValue->setValue($newValue);
+                }
+                elseif ($customInput instanceof CustomCheckbox) {
+                    /** @var CustomCheckboxValue $customInputValue */
+                    $customInputValue = $customInputValue ?: new CustomCheckboxValue();
+                    $oldValue = $customInputValue->getValue();
+                    $newValue = $values->$inputName;
+                    $customInputValue->setValue($newValue);
+                }
+                elseif ($customInput instanceof CustomSelect) {
+                    /** @var CustomSelectValue $customInputValue */
+                    $customInputValue = $customInputValue ?: new CustomSelectValue();
+                    $oldValue = $customInputValue->getValue();
+                    $newValue = $values->$inputName;
+                    $customInputValue->setValue($newValue);
+                }
+                elseif ($customInput instanceof CustomFile) {
+                    /** @var CustomFileValue $customInputValue */
+                    $customInputValue = $customInputValue ?: new CustomFileValue();
+                    $oldValue = $customInputValue->getValue();
+                    $newValue = $values->$inputName;
+                    if ($newValue->size > 0) {
+                        $path = $this->generatePath($newValue);
+                        $this->filesService->save($newValue, $path);
+                        $customInputValue->setValue($path);
+                    }
                 }
 
                 $customInputValue->setUser($this->user);
                 $customInputValue->setInput($customInput);
                 $this->customInputValueRepository->save($customInputValue);
 
-                if ($oldValue === $customInputValue->getValue()) {
-                    continue;
+                if ($oldValue !== $newValue) {
+                    $customInputValueChanged = true;
                 }
-
-                $customInputValueChanged = true;
             }
 
             if (property_exists($values, 'arrival')) {
@@ -284,14 +288,12 @@ class EditUserSeminarFormFactory
 
             $this->userRepository->save($this->user);
 
-            if (! $customInputValueChanged) {
-                return;
+            if ($customInputValueChanged) {
+                $this->mailService->sendMailFromTemplate($this->user, '', Template::CUSTOM_INPUT_VALUE_CHANGED, [
+                    TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
+                    TemplateVariable::USER => $this->user->getDisplayName(),
+                ]);
             }
-
-            $this->mailService->sendMailFromTemplate($this->user, '', Template::CUSTOM_INPUT_VALUE_CHANGED, [
-                TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
-                TemplateVariable::USER => $this->user->getDisplayName(),
-            ]);
         });
     }
 

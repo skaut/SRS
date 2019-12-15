@@ -11,7 +11,7 @@ use App\AdminModule\ProgramModule\Components\ProgramAttendeesGridControl;
 use App\AdminModule\ProgramModule\Components\ProgramBlocksGridControl;
 use App\AdminModule\ProgramModule\Forms\BlockFormFactory;
 use App\Model\ACL\Permission;
-use App\Model\ACL\Resource;
+use App\Model\ACL\SrsResource;
 use App\Model\Program\BlockRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\Settings;
@@ -91,7 +91,7 @@ class BlocksPresenter extends ProgramBasePresenter
 
         $this->template->block                     = $block;
         $this->template->programId                 = $this->session->getSection('srs')->programId;
-        $this->template->userAllowedModifySchedule = $this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE) &&
+        $this->template->userAllowedModifySchedule = $this->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_SCHEDULE) &&
             $this->settingsService->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE);
     }
 
@@ -137,7 +137,7 @@ class BlocksPresenter extends ProgramBasePresenter
     {
         $program = $this->programRepository->findById($programId);
 
-        if (! $this->user->isAllowed(Resource::PROGRAM, Permission::MANAGE_SCHEDULE) ||
+        if (! $this->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_SCHEDULE) ||
             ! $this->settingsService->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)
         ) {
             $this->getPresenter()->flashMessage('admin.program.blocks_program_modify_schedule_not_allowed', 'danger');

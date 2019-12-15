@@ -10,7 +10,7 @@ use App\AdminModule\Forms\AddRoleFormFactory;
 use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\Forms\EditRoleFormFactory;
 use App\Model\ACL\Permission;
-use App\Model\ACL\Resource;
+use App\Model\ACL\SrsResource;
 use App\Services\Authenticator;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -26,7 +26,7 @@ use stdClass;
 class AclPresenter extends AdminBasePresenter
 {
     /** @var string */
-    protected $resource = Resource::ACL;
+    protected $resource = SrsResource::ACL;
 
     /**
      * @var AddRoleFormFactory

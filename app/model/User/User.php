@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Model\User;
 
 use App\Model\ACL\Permission;
-use App\Model\ACL\Resource;
+use App\Model\ACL\SrsResource;
 use App\Model\ACL\Role;
 use App\Model\Enums\ApplicationState;
 use App\Model\Program\Block;
@@ -764,11 +764,11 @@ class User
      */
     public function isAllowedModifyBlock(Block $block) : bool
     {
-        if ($this->isAllowed(Resource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS)) {
+        if ($this->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS)) {
             return true;
         }
 
-        if ($this->isAllowed(Resource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS) && $block->getLectors()->contains($this)) {
+        if ($this->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS) && $block->getLectors()->contains($this)) {
             return true;
         }
 
@@ -780,7 +780,7 @@ class User
      */
     public function isAllowedRegisterPrograms() : bool
     {
-        return $this->isApproved() && $this->isAllowed(Resource::PROGRAM, Permission::CHOOSE_PROGRAMS);
+        return $this->isApproved() && $this->isAllowed(SrsResource::PROGRAM, Permission::CHOOSE_PROGRAMS);
     }
 
     /**

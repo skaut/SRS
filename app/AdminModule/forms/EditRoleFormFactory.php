@@ -6,7 +6,7 @@ namespace App\AdminModule\Forms;
 
 use App\Model\ACL\Permission;
 use App\Model\ACL\PermissionRepository;
-use App\Model\ACL\Resource;
+use App\Model\ACL\SrsResource;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\CMS\PageRepository;
@@ -253,23 +253,23 @@ class EditRoleFormFactory
 
         $groupWebName    = 'common.permission_group.web';
         $optionsGroupWeb = &$options[$groupWebName];
-        $this->preparePermissionOption($optionsGroupWeb, Permission::CHOOSE_PROGRAMS, Resource::PROGRAM);
+        $this->preparePermissionOption($optionsGroupWeb, Permission::CHOOSE_PROGRAMS, SrsResource::PROGRAM);
 
         $groupAdminName    = 'common.permission_group.admin';
         $optionsGroupAdmin = &$options[$groupAdminName];
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::ACCESS, Resource::ADMIN);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, Resource::CMS);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::ACCESS, Resource::PROGRAM);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE_OWN_PROGRAMS, Resource::PROGRAM);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE_ALL_PROGRAMS, Resource::PROGRAM);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE_SCHEDULE, Resource::PROGRAM);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE_CATEGORIES, Resource::PROGRAM);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE_ROOMS, Resource::PROGRAM);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, Resource::USERS);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, Resource::PAYMENTS);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, Resource::ACL);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, Resource::MAILING);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, Resource::CONFIGURATION);
+        $this->preparePermissionOption($optionsGroupAdmin, Permission::ACCESS, SrsResource::ADMIN);
+        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, SrsResource::CMS);
+        $this->preparePermissionOption($optionsGroupAdmin, Permission::ACCESS, SrsResource::PROGRAM);
+        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE_OWN_PROGRAMS, SrsResource::PROGRAM);
+        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE_ALL_PROGRAMS, SrsResource::PROGRAM);
+        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE_SCHEDULE, SrsResource::PROGRAM);
+        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE_CATEGORIES, SrsResource::PROGRAM);
+        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE_ROOMS, SrsResource::PROGRAM);
+        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, SrsResource::USERS);
+        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, SrsResource::PAYMENTS);
+        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, SrsResource::ACL);
+        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, SrsResource::MAILING);
+        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, SrsResource::CONFIGURATION);
 
         return $options;
     }
