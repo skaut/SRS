@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
+use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Services\BankService;
@@ -16,6 +17,7 @@ use FioApi\Exceptions\InternalErrorException;
 use Nette;
 use Nette\Application\UI\Form;
 use Nextras\Forms\Controls\DatePicker;
+use Nextras\Forms\Rendering\Bs3FormRenderer;
 use stdClass;
 use Throwable;
 use Tracy\Debugger;
@@ -26,11 +28,11 @@ use Tracy\ILogger;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class BankForm
+class BankFormFactory
 {
     use Nette\SmartObject;
 
-    /** @var BaseForm */
+    /** @var BaseFormFactory */
     private $baseFormFactory;
 
     /** @var SettingsService */
@@ -41,7 +43,7 @@ class BankForm
 
 
     public function __construct(
-        BaseForm $baseForm,
+        BaseFormFactory $baseForm,
         SettingsService $settingsService,
         BankService $bankService
     ) {
@@ -54,10 +56,11 @@ class BankForm
      * Vytvoří formulář.
      * @throws Throwable
      */
-    public function create() : Form
+    public function create() : BaseForm
     {
         $form = $this->baseFormFactory->create();
 
+        /** @var Bs3FormRenderer $renderer */
         $renderer                                   = $form->getRenderer();
         $renderer->wrappers['control']['container'] = 'div class="col-sm-7 col-xs-7"';
         $renderer->wrappers['label']['container']   = 'div class="col-sm-5 col-xs-5 control-label"';
@@ -84,7 +87,7 @@ class BankForm
      * @throws OptimisticLockException
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(BaseForm $form, stdClass $values) : void
     {
         $token = $values->bankToken;
         $from  = $values->bankDownloadFrom;

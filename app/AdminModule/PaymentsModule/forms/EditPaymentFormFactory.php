@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\PaymentsModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
+use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Payment\Payment;
 use App\Model\Payment\PaymentRepository;
 use App\Model\User\ApplicationRepository;
@@ -20,7 +21,7 @@ use Throwable;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class EditPaymentForm
+class EditPaymentFormFactory
 {
     use Nette\SmartObject;
 
@@ -30,7 +31,7 @@ class EditPaymentForm
      */
     private $payment;
 
-    /** @var BaseForm */
+    /** @var BaseFormFactory */
     private $baseFormFactory;
 
     /** @var PaymentRepository */
@@ -47,7 +48,7 @@ class EditPaymentForm
 
 
     public function __construct(
-        BaseForm $baseFormFactory,
+        BaseFormFactory $baseFormFactory,
         PaymentRepository $paymentRepository,
         ApplicationRepository $applicationRepository,
         UserRepository $userRepository,
@@ -63,7 +64,7 @@ class EditPaymentForm
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id) : Form
+    public function create(int $id) : BaseForm
     {
         $this->payment = $this->paymentRepository->findById($id);
 
@@ -126,7 +127,7 @@ class EditPaymentForm
      * Zpracuje formulář.
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(BaseForm $form, stdClass $values) : void
     {
         if ($form->isSubmitted() !== $form['cancel']) {
             $loggedUser = $this->userRepository->findById($form->getPresenter()->user->id);

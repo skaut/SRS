@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
+use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Enums\MaturityType;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
@@ -34,7 +35,7 @@ class PaymentForm extends UI\Control
      */
     public $onSave;
 
-    /** @var BaseForm */
+    /** @var BaseFormFactory */
     private $baseFormFactory;
 
     /** @var SettingsService */
@@ -44,7 +45,7 @@ class PaymentForm extends UI\Control
     private $userRepository;
 
 
-    public function __construct(BaseForm $baseForm, SettingsService $settingsService, UserRepository $userRepository)
+    public function __construct(BaseFormFactory $baseForm, SettingsService $settingsService, UserRepository $userRepository)
     {
         parent::__construct();
 
@@ -67,7 +68,7 @@ class PaymentForm extends UI\Control
      * @throws SettingsException
      * @throws Throwable
      */
-    public function createComponentForm() : Form
+    public function createComponentForm() : BaseForm
     {
         $form = $this->baseFormFactory->create();
 
@@ -146,7 +147,7 @@ class PaymentForm extends UI\Control
      * @throws OptimisticLockException
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(BaseForm $form, stdClass $values) : void
     {
         $this->settingsService->setValue(Settings::ACCOUNT_NUMBER, $values->accountNumber);
         $this->settingsService->setValue(Settings::VARIABLE_SYMBOL_CODE, $values->variableSymbolCode);

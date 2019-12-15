@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\MailingModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
+use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Settings\SettingsException;
@@ -28,7 +29,7 @@ use Ublaboo\Mailing\Exception\MailingMailCreationException;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class SendForm
+class SendFormFactory
 {
     use Nette\SmartObject;
 
@@ -38,7 +39,7 @@ class SendForm
      */
     public $mailSuccess;
 
-    /** @var BaseForm */
+    /** @var BaseFormFactory */
     private $baseFormFactory;
 
     /** @var MailService */
@@ -61,7 +62,7 @@ class SendForm
 
 
     public function __construct(
-        BaseForm $baseFormFactory,
+        BaseFormFactory $baseFormFactory,
         MailService $mailService,
         RoleRepository $roleRepository,
         UserRepository $userRepository,
@@ -81,7 +82,7 @@ class SendForm
     /**
      * Vytvoří formulář.
      */
-    public function create() : Form
+    public function create() : BaseForm
     {
         $form = $this->baseFormFactory->create();
 
@@ -144,7 +145,7 @@ class SendForm
      * @throws Throwable
      * @throws MailingMailCreationException
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(BaseForm $form, stdClass $values) : void
     {
         try {
             $recipientsRoles     = $this->roleRepository->findRolesByIds($values->recipientRoles);

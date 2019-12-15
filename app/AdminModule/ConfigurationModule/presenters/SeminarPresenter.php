@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
-use App\AdminModule\ConfigurationModule\Forms\SeminarForm;
+use App\AdminModule\ConfigurationModule\Forms\SeminarFormFactory;
+use App\AdminModule\Forms\BaseForm;
 use App\Model\Settings\SettingsException;
-use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
 
@@ -19,7 +19,7 @@ use Throwable;
 class SeminarPresenter extends ConfigurationBasePresenter
 {
     /**
-     * @var SeminarForm
+     * @var SeminarFormFactory
      * @inject
      */
     public $seminarFormFactory;
@@ -29,11 +29,11 @@ class SeminarPresenter extends ConfigurationBasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    protected function createComponentSeminarForm() : Form
+    protected function createComponentSeminarForm() : BaseForm
     {
         $form = $this->seminarFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');

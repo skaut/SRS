@@ -29,7 +29,7 @@ use Throwable;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
-class RolesForm
+class RolesFormFactory
 {
     use Nette\SmartObject;
 
@@ -39,7 +39,7 @@ class RolesForm
      */
     private $user;
 
-    /** @var BaseForm */
+    /** @var BaseFormFactory */
     private $baseFormFactory;
 
     /** @var UserRepository */
@@ -65,7 +65,7 @@ class RolesForm
 
 
     public function __construct(
-        BaseForm $baseFormFactory,
+        BaseFormFactory $baseFormFactory,
         UserRepository $userRepository,
         RoleRepository $roleRepository,
         SettingsService $settingsService,
@@ -89,7 +89,7 @@ class RolesForm
      * @throws SettingsException
      * @throws Throwable
      */
-    public function create(int $id) : Form
+    public function create(int $id) : BaseForm
     {
         $this->user = $this->userRepository->findById($id);
 
@@ -182,7 +182,7 @@ class RolesForm
      * Zpracuje formulář.
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(BaseForm $form, stdClass $values) : void
     {
         if ($form->isSubmitted() === $form['submit']) {
             $selectedRoles = $this->roleRepository->findRolesByIds($values->roles);

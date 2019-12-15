@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
+use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\Structure\SubeventRepository;
@@ -25,11 +26,11 @@ use Throwable;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class SeminarForm
+class SeminarFormFactory
 {
     use Nette\SmartObject;
 
-    /** @var BaseForm */
+    /** @var BaseFormFactory */
     private $baseFormFactory;
 
     /** @var SettingsService */
@@ -40,7 +41,7 @@ class SeminarForm
 
 
     public function __construct(
-        BaseForm $baseForm,
+        BaseFormFactory $baseForm,
         SettingsService $settingsService,
         SubeventRepository $subeventRepository
     ) {
@@ -54,7 +55,7 @@ class SeminarForm
      * @throws SettingsException
      * @throws Throwable
      */
-    public function create() : Form
+    public function create() : BaseForm
     {
         $form = $this->baseFormFactory->create();
 
@@ -100,7 +101,7 @@ class SeminarForm
      * @throws SettingsException
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(BaseForm $form, stdClass $values) : void
     {
         $this->settingsService->setValue(Settings::SEMINAR_NAME, $values->seminarName);
         $implicitSubevent = $this->subeventRepository->findImplicit();

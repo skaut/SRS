@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
+use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Enums\ProgramRegistrationType;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
@@ -15,6 +16,7 @@ use Kdyby\Translation\Translator;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Utils\DateTime;
+use Nextras\Forms\Controls\DatePicker;
 use Nextras\Forms\Controls\DateTimePicker;
 use Nextras\Forms\Rendering\Bs3FormRenderer;
 use stdClass;
@@ -26,11 +28,11 @@ use Throwable;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class ProgramForm
+class ProgramFormFactory
 {
     use Nette\SmartObject;
 
-    /** @var BaseForm */
+    /** @var BaseFormFactory */
     private $baseFormFactory;
 
     /** @var SettingsService */
@@ -40,7 +42,7 @@ class ProgramForm
     private $translator;
 
 
-    public function __construct(BaseForm $baseForm, SettingsService $settingsService, Translator $translator)
+    public function __construct(BaseFormFactory $baseForm, SettingsService $settingsService, Translator $translator)
     {
         $this->baseFormFactory = $baseForm;
         $this->settingsService = $settingsService;
@@ -52,7 +54,7 @@ class ProgramForm
      * @throws SettingsException
      * @throws Throwable
      */
-    public function create() : Form
+    public function create() : BaseForm
     {
         $form = $this->baseFormFactory->create();
 
@@ -113,7 +115,7 @@ class ProgramForm
      * @throws OptimisticLockException
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(BaseForm $form, stdClass $values) : void
     {
         $this->settingsService->setBoolValue(Settings::IS_ALLOWED_ADD_BLOCK, $values->isAllowedAddBlock);
         $this->settingsService->setBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE, $values->isAllowedModifySchedule);
@@ -125,7 +127,7 @@ class ProgramForm
 
     /**
      * Ověří, že otevření zapisování programů je dříve než uzavření.
-     * @param ?DateTime[] $args
+     * @param DateTime[] $args
      */
     public function validateRegisterProgramsFrom(DateTimePicker $field, array $args) : bool
     {
@@ -137,7 +139,7 @@ class ProgramForm
 
     /**
      * Ověří, že uzavření zapisování programů je později než otevření.
-     * @param ?DateTime[] $args
+     * @param DateTime[] $args
      */
     public function validateRegisterProgramsTo(DateTimePicker $field, array $args) : bool
     {

@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
+use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Services\SettingsService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
-use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
 
@@ -20,18 +20,18 @@ use Throwable;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class PlaceDescriptionForm
+class PlaceDescriptionFormFactory
 {
     use Nette\SmartObject;
 
-    /** @var BaseForm */
+    /** @var BaseFormFactory */
     private $baseFormFactory;
 
     /** @var SettingsService */
     private $settingsService;
 
 
-    public function __construct(BaseForm $baseForm, SettingsService $settingsService)
+    public function __construct(BaseFormFactory $baseForm, SettingsService $settingsService)
     {
         $this->baseFormFactory = $baseForm;
         $this->settingsService = $settingsService;
@@ -42,7 +42,7 @@ class PlaceDescriptionForm
      * @throws SettingsException
      * @throws Throwable
      */
-    public function create() : Form
+    public function create() : BaseForm
     {
         $form = $this->baseFormFactory->create();
 
@@ -68,7 +68,7 @@ class PlaceDescriptionForm
      * @throws OptimisticLockException
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(BaseForm $form, stdClass $values) : void
     {
         $this->settingsService->setValue(Settings::PLACE_DESCRIPTION, $values->placeDescription);
     }

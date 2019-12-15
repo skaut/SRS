@@ -6,9 +6,9 @@ namespace App\AdminModule\CMSModule\Presenters;
 
 use App\AdminModule\CMSModule\Components\FaqGridControl;
 use App\AdminModule\CMSModule\Components\IFaqGridControlFactory;
-use App\AdminModule\CMSModule\Forms\FaqForm;
+use App\AdminModule\CMSModule\Forms\FaqFormFactory;
+use App\AdminModule\Forms\BaseForm;
 use App\Model\CMS\FaqRepository;
-use Nette\Application\UI\Form;
 use stdClass;
 
 /**
@@ -26,7 +26,7 @@ class FaqPresenter extends CMSBasePresenter
     public $faqGridControlFactory;
 
     /**
-     * @var FaqForm
+     * @var FaqFormFactory
      * @inject
      */
     public $faqFormFactory;
@@ -47,11 +47,11 @@ class FaqPresenter extends CMSBasePresenter
         return $this->faqGridControlFactory->create();
     }
 
-    protected function createComponentFaqForm() : Form
+    protected function createComponentFaqForm() : BaseForm
     {
         $form = $this->faqFormFactory->create((int) $this->getParameter('id'), $this->user->id);
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
             if ($form->isSubmitted() === $form['cancel']) {
                 $this->redirect('Faq:default');
             }

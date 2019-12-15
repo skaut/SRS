@@ -9,10 +9,10 @@ use App\Model\CMS\Document\TagRepository;
 use App\Model\CMS\Page;
 use App\Model\Page\PageException;
 use App\Utils\Helpers;
+use App\AdminModule\Forms\BaseForm;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Nette\Application\UI\Form;
 use stdClass;
 
 /**
@@ -75,7 +75,7 @@ class DocumentContent extends Content implements IContent
     /**
      * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
      */
-    public function addContentForm(Form $form) : Form
+    public function addContentForm(BaseForm $form) : BaseForm
     {
         parent::addContentForm($form);
 
@@ -90,7 +90,7 @@ class DocumentContent extends Content implements IContent
     /**
      * Zpracuje při uložení stránky část formuláře týkající se obsahu.
      */
-    public function contentFormSucceeded(Form $form, stdClass $values) : void
+    public function contentFormSucceeded(BaseForm $form, stdClass $values) : void
     {
         parent::contentFormSucceeded($form, $values);
         $values     = $values[$this->getContentFormName()];

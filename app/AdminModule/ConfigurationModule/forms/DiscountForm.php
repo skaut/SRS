@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
+use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Structure\Discount;
 use App\Model\Structure\DiscountRepository;
 use App\Model\Structure\SubeventRepository;
@@ -47,7 +48,7 @@ class DiscountForm extends UI\Control
      */
     public $onConditionError;
 
-    /** @var BaseForm */
+    /** @var BaseFormFactory */
     private $baseFormFactory;
 
     /** @var DiscountRepository */
@@ -62,7 +63,7 @@ class DiscountForm extends UI\Control
 
     public function __construct(
         int $id,
-        BaseForm $baseFormFactory,
+        BaseFormFactory $baseFormFactory,
         DiscountRepository $discountRepository,
         SubeventRepository $subeventRepository,
         DiscountService $discountService
@@ -93,7 +94,7 @@ class DiscountForm extends UI\Control
     /**
      * Vytvoří formulář.
      */
-    public function createComponentForm() : Form
+    public function createComponentForm() : BaseForm
     {
         $form = $this->baseFormFactory->create();
 
@@ -133,7 +134,7 @@ class DiscountForm extends UI\Control
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(BaseForm $form, stdClass $values) : void
     {
         $this->id = (int) $values->id;
 

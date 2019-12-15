@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\AdminModule\PaymentsModule\Presenters;
 
+use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\PaymentsModule\Components\IPaymentsGridControlFactory;
 use App\AdminModule\PaymentsModule\Components\PaymentsGridControl;
-use App\AdminModule\PaymentsModule\Forms\EditPaymentForm;
-use Nette\Forms\Form;
+use App\AdminModule\PaymentsModule\Forms\EditPaymentFormFactory;
 use stdClass;
 use Throwable;
 
@@ -25,7 +25,7 @@ class PaymentsPresenter extends PaymentsBasePresenter
     public $paymentsGridControlFactory;
 
     /**
-     * @var EditPaymentForm
+     * @var EditPaymentFormFactory
      * @inject
      */
     public $editPaymentFormFactory;
@@ -43,11 +43,11 @@ class PaymentsPresenter extends PaymentsBasePresenter
     /**
      * @throws Throwable
      */
-    protected function createComponentEditPaymentForm() : Form
+    protected function createComponentEditPaymentForm() : BaseForm
     {
         $form = $this->editPaymentFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
             if ($form->isSubmitted() !== $form['cancel']) {
                 $this->flashMessage('admin.payments.payments.saved', 'success');
             }

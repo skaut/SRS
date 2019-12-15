@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\ProgramModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
+use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\Enums\ProgramMandatoryType;
@@ -34,7 +35,7 @@ use Throwable;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class BlockForm
+class BlockFormFactory
 {
     use Nette\SmartObject;
 
@@ -56,7 +57,7 @@ class BlockForm
      */
     private $subeventsExists;
 
-    /** @var BaseForm */
+    /** @var BaseFormFactory */
     private $baseFormFactory;
 
     /** @var BlockRepository */
@@ -88,7 +89,7 @@ class BlockForm
 
 
     public function __construct(
-        BaseForm $baseFormFactory,
+        BaseFormFactory $baseFormFactory,
         BlockRepository $blockRepository,
         UserRepository $userRepository,
         CategoryRepository $categoryRepository,
@@ -115,7 +116,7 @@ class BlockForm
      * Vytvoří formulář.
      * @throws NonUniqueResultException
      */
-    public function create(int $id, int $userId) : Form
+    public function create(int $id, int $userId) : BaseForm
     {
         $this->block = $this->blockRepository->findById($id);
         $this->user  = $this->userRepository->findById($userId);
@@ -237,7 +238,7 @@ class BlockForm
      * Zpracuje formulář.
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(BaseForm $form, stdClass $values) : void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;

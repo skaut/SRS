@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
-use App\AdminModule\ConfigurationModule\Forms\ProgramForm;
+use App\AdminModule\ConfigurationModule\Forms\ProgramFormFactory;
+use App\AdminModule\Forms\BaseForm;
 use App\Model\Settings\SettingsException;
-use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
 
@@ -19,7 +19,7 @@ use Throwable;
 class ProgramPresenter extends ConfigurationBasePresenter
 {
     /**
-     * @var ProgramForm
+     * @var ProgramFormFactory
      * @inject
      */
     public $programFormFactory;
@@ -29,11 +29,11 @@ class ProgramPresenter extends ConfigurationBasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    protected function createComponentProgramForm() : Form
+    protected function createComponentProgramForm() : BaseForm
     {
         $form = $this->programFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');

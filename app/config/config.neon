@@ -215,12 +215,12 @@ services:
     - App\WebModule\Components\IApplicationsGridControlFactory
     - App\WebModule\Components\IOrganizerContentControlFactory
 
-    - App\WebModule\Forms\BaseForm
+    - App\WebModule\Forms\BaseFormFactory
     - App\WebModule\Forms\IAdditionalInformationFormFactory
-    - App\WebModule\Forms\ApplicationForm
-    - App\WebModule\Forms\FaqForm
-    - App\WebModule\Forms\PersonalDetailsForm
-    - App\WebModule\Forms\RolesForm
+    - App\WebModule\Forms\ApplicationFormFactory
+    - App\WebModule\Forms\FaqFormFactory
+    - App\WebModule\Forms\PersonalDetailsFormFactory
+    - App\WebModule\Forms\RolesFormFactory
 
     - App\AdminModule\Components\IApplicationsGridControlFactory
     - App\AdminModule\Components\IRolesGridControlFactory
@@ -244,43 +244,43 @@ services:
     - App\AdminModule\ProgramModule\Components\IRoomsGridControlFactory
     - App\AdminModule\ProgramModule\Components\IRoomScheduleGridControlFactory
 
-    - App\AdminModule\Forms\BaseForm
-    - App\AdminModule\Forms\AddLectorForm
-    - App\AdminModule\Forms\AddRoleForm
-    - App\AdminModule\Forms\EditRoleForm
-    - App\AdminModule\Forms\EditUserPersonalDetailsForm
-    - App\AdminModule\Forms\EditUserSeminarForm
-    - App\AdminModule\CMSModule\Forms\FaqForm
+    - App\AdminModule\Forms\BaseFormFactory
+    - App\AdminModule\Forms\AddLectorFormFactory
+    - App\AdminModule\Forms\AddRoleFormFactory
+    - App\AdminModule\Forms\EditRoleFormFactory
+    - App\AdminModule\Forms\EditUserPersonalDetailsFormFactory
+    - App\AdminModule\Forms\EditUserSeminarFormFactory
+    - App\AdminModule\CMSModule\Forms\FaqFormFactory
     pageFormFactory:
         class: App\AdminModule\CMSModule\Forms\PageForm(%id%, %area%, ...)
         implement: App\AdminModule\CMSModule\Forms\IPageFormFactory
         parameters: [id, area]
-    - App\AdminModule\CMSModule\Forms\NewsForm
-    - App\AdminModule\ConfigurationModule\Forms\ApplicationForm
-    - App\AdminModule\ConfigurationModule\Forms\BankForm
-    - App\AdminModule\ConfigurationModule\Forms\CustomInputForm
+    - App\AdminModule\CMSModule\Forms\NewsFormFactory
+    - App\AdminModule\ConfigurationModule\Forms\ApplicationFormFactory
+    - App\AdminModule\ConfigurationModule\Forms\BankFormFactory
+    - App\AdminModule\ConfigurationModule\Forms\CustomInputFormFactory
     discountFormFactory:
         class: App\AdminModule\ConfigurationModule\Forms\DiscountForm(%id%, ...)
         implement: App\AdminModule\ConfigurationModule\Forms\IDiscountFormFactory
         parameters: [id]
-    - App\AdminModule\ConfigurationModule\Forms\MailingForm
+    - App\AdminModule\ConfigurationModule\Forms\MailingFormFactory
     paymentFormFactory:
         class: App\AdminModule\ConfigurationModule\Forms\PaymentForm
         implement: App\AdminModule\ConfigurationModule\Forms\IPaymentFormFactory
-    - App\AdminModule\ConfigurationModule\Forms\PaymentProofForm
-    - App\AdminModule\ConfigurationModule\Forms\PlaceDescriptionForm
-    - App\AdminModule\ConfigurationModule\Forms\PlacePointForm
-    - App\AdminModule\ConfigurationModule\Forms\ProgramForm
-    - App\AdminModule\ConfigurationModule\Forms\SeminarForm
-    - App\AdminModule\ConfigurationModule\Forms\SkautIsEventForm
-    - App\AdminModule\ConfigurationModule\Forms\SubeventForm
-    - App\AdminModule\ConfigurationModule\Forms\SubeventsForm
-    - App\AdminModule\ConfigurationModule\Forms\TicketsForm
-    - App\AdminModule\ConfigurationModule\Forms\WebForm
-    - App\AdminModule\PaymentsModule\Forms\EditPaymentForm
-    - App\AdminModule\ProgramModule\Forms\BlockForm
-    - App\AdminModule\MailingModule\Forms\EditTemplateForm
-    - App\AdminModule\MailingModule\Forms\SendForm
+    - App\AdminModule\ConfigurationModule\Forms\PaymentProofFormFactory
+    - App\AdminModule\ConfigurationModule\Forms\PlaceDescriptionFormFactory
+    - App\AdminModule\ConfigurationModule\Forms\PlacePointFormFactory
+    - App\AdminModule\ConfigurationModule\Forms\ProgramFormFactory
+    - App\AdminModule\ConfigurationModule\Forms\SeminarFormFactory
+    - App\AdminModule\ConfigurationModule\Forms\SkautIsEventFormFactory
+    - App\AdminModule\ConfigurationModule\Forms\SubeventFormFactory
+    - App\AdminModule\ConfigurationModule\Forms\SubeventsFormFactory
+    - App\AdminModule\ConfigurationModule\Forms\TicketsFormFactory
+    - App\AdminModule\ConfigurationModule\Forms\WebFormFactory
+    - App\AdminModule\PaymentsModule\Forms\EditPaymentFormFactory
+    - App\AdminModule\ProgramModule\Forms\BlockFormFactory
+    - App\AdminModule\MailingModule\Forms\EditTemplateFormFactory
+    - App\AdminModule\MailingModule\Forms\SendFormFactory
 
 webloader:
     css:

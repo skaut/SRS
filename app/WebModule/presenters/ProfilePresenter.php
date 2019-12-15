@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\WebModule\Presenters;
 
+use App\WebModule\Forms\BaseForm;
 use App\Model\Enums\PaymentType;
 use App\Model\Settings\SettingsException;
 use App\Model\Structure\SubeventRepository;
@@ -16,10 +17,9 @@ use App\WebModule\Components\ApplicationsGridControl;
 use App\WebModule\Components\IApplicationsGridControlFactory;
 use App\WebModule\Forms\AdditionalInformationForm;
 use App\WebModule\Forms\IAdditionalInformationFormFactory;
-use App\WebModule\Forms\PersonalDetailsForm;
-use App\WebModule\Forms\RolesForm;
+use App\WebModule\Forms\PersonalDetailsFormFactory;
+use App\WebModule\Forms\RolesFormFactory;
 use Nette\Application\AbortException;
-use Nette\Application\UI\Form;
 use PhpOffice\PhpSpreadsheet\Exception;
 use stdClass;
 use Throwable;
@@ -33,7 +33,7 @@ use Throwable;
 class ProfilePresenter extends WebBasePresenter
 {
     /**
-     * @var PersonalDetailsForm
+     * @var PersonalDetailsFormFactory
      * @inject
      */
     public $personalDetailsFormFactory;
@@ -45,7 +45,7 @@ class ProfilePresenter extends WebBasePresenter
     public $additionalInformationFormFactory;
 
     /**
-     * @var RolesForm
+     * @var RolesFormFactory
      * @inject
      */
     public $rolesFormFactory;
@@ -132,11 +132,11 @@ class ProfilePresenter extends WebBasePresenter
         $this->sendResponse($response);
     }
 
-    protected function createComponentPersonalDetailsForm() : Form
+    protected function createComponentPersonalDetailsForm() : BaseForm
     {
         $form = $this->personalDetailsFormFactory->create($this->user->id);
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
             $this->flashMessage('web.profile.personal_details_update_successful', 'success');
 
             $this->redirect('this#collapsePersonalDetails');
@@ -165,11 +165,11 @@ class ProfilePresenter extends WebBasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    protected function createComponentRolesForm() : Form
+    protected function createComponentRolesForm() : BaseForm
     {
         $form = $this->rolesFormFactory->create($this->user->id);
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
             if ($form->isSubmitted() === $form['submit']) {
                 $this->flashMessage('web.profile.roles_changed', 'success');
             } elseif ($form->isSubmitted() === $form['cancelRegistration']) {

@@ -6,8 +6,8 @@ namespace App\Model\CMS\Content;
 
 use App\Model\CMS\Page;
 use App\Model\Page\PageException;
+use App\AdminModule\Forms\BaseForm;
 use Doctrine\ORM\Mapping as ORM;
-use Nette\Application\UI\Form;
 use Nettrine\ORM\Entity\Attributes\Id as Identifier;
 use stdClass;
 
@@ -269,7 +269,7 @@ abstract class Content implements IContent
     /**
      * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
      */
-    public function addContentForm(Form $form) : Form
+    public function addContentForm(BaseForm $form) : BaseForm
     {
         $formContainer = $form->addContainer($this->getContentFormName());
 
@@ -302,7 +302,7 @@ abstract class Content implements IContent
     /**
      * Zpracuje při uložení stránky část formuláře týkající se obsahu.
      */
-    public function contentFormSucceeded(Form $form, stdClass $values) : void
+    public function contentFormSucceeded(BaseForm $form, stdClass $values) : void
     {
         $values         = $values[$this->getContentFormName()];
         $this->position = $values->position;

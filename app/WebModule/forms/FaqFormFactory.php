@@ -21,7 +21,7 @@ use stdClass;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class FaqForm
+class FaqFormFactory
 {
     use Nette\SmartObject;
 
@@ -31,7 +31,7 @@ class FaqForm
      */
     private $user;
 
-    /** @var BaseForm */
+    /** @var BaseFormFactory */
     private $baseFormFactory;
 
     /** @var FaqRepository */
@@ -41,7 +41,7 @@ class FaqForm
     private $userRepository;
 
 
-    public function __construct(BaseForm $baseFormFactory, FaqRepository $faqRepository, UserRepository $userRepository)
+    public function __construct(BaseFormFactory $baseFormFactory, FaqRepository $faqRepository, UserRepository $userRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->faqRepository   = $faqRepository;
@@ -51,7 +51,7 @@ class FaqForm
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id) : Form
+    public function create(int $id) : BaseForm
     {
         $this->user = $this->userRepository->findById($id);
 
@@ -73,7 +73,7 @@ class FaqForm
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(BaseForm $form, stdClass $values) : void
     {
         $faq = new Faq();
 

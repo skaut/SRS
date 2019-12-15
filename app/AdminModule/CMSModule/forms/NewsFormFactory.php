@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\CMSModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
+use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\CMS\News;
 use App\Model\CMS\NewsRepository;
 use DateTime;
@@ -20,7 +21,7 @@ use stdClass;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class NewsForm
+class NewsFormFactory
 {
     use Nette\SmartObject;
 
@@ -30,14 +31,14 @@ class NewsForm
      */
     private $news;
 
-    /** @var BaseForm */
+    /** @var BaseFormFactory */
     private $baseFormFactory;
 
     /** @var NewsRepository */
     private $newsRepository;
 
 
-    public function __construct(BaseForm $baseFormFactory, NewsRepository $newsRepository)
+    public function __construct(BaseFormFactory $baseFormFactory, NewsRepository $newsRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->newsRepository  = $newsRepository;
@@ -46,7 +47,7 @@ class NewsForm
     /**
      * Vytvoří formulář.
      */
-    public function create(?int $id) : Form
+    public function create(?int $id) : BaseForm
     {
         $this->news = $this->newsRepository->findById($id);
 
@@ -95,7 +96,7 @@ class NewsForm
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(BaseForm $form, stdClass $values) : void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;

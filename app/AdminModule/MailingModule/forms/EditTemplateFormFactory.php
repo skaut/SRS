@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\MailingModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
+use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateRepository;
 use Doctrine\ORM\OptimisticLockException;
@@ -19,7 +20,7 @@ use function in_array;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class EditTemplateForm
+class EditTemplateFormFactory
 {
     use Nette\SmartObject;
 
@@ -29,14 +30,14 @@ class EditTemplateForm
      */
     private $template;
 
-    /** @var BaseForm */
+    /** @var BaseFormFactory */
     private $baseFormFactory;
 
     /** @var TemplateRepository */
     private $templateRepository;
 
 
-    public function __construct(BaseForm $baseFormFactory, TemplateRepository $templateRepository)
+    public function __construct(BaseFormFactory $baseFormFactory, TemplateRepository $templateRepository)
     {
         $this->baseFormFactory    = $baseFormFactory;
         $this->templateRepository = $templateRepository;
@@ -45,7 +46,7 @@ class EditTemplateForm
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id) : Form
+    public function create(int $id) : BaseForm
     {
         $this->template = $this->templateRepository->findById($id);
 
@@ -100,7 +101,7 @@ class EditTemplateForm
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(BaseForm $form, stdClass $values) : void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;

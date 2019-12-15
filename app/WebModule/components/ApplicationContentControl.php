@@ -13,7 +13,7 @@ use App\Model\Structure\SubeventRepository;
 use App\Model\User\UserRepository;
 use App\Services\Authenticator;
 use App\Services\SettingsService;
-use App\WebModule\Forms\ApplicationForm;
+use App\WebModule\Forms\ApplicationFormFactory;
 use Doctrine\ORM\NonUniqueResultException;
 use Nette\Application\UI\Control;
 use Nette\Forms\Form;
@@ -29,7 +29,7 @@ use function json_encode;
  */
 class ApplicationContentControl extends Control
 {
-    /** @var ApplicationForm */
+    /** @var ApplicationFormFactory */
     private $applicationFormFactory;
 
     /** @var UserRepository */
@@ -49,7 +49,7 @@ class ApplicationContentControl extends Control
 
 
     public function __construct(
-        ApplicationForm $applicationFormFactory,
+        ApplicationFormFactory $applicationFormFactory,
         Authenticator $authenticator,
         UserRepository $userRepository,
         RoleRepository $roleRepository,

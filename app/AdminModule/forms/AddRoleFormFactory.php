@@ -20,11 +20,11 @@ use Throwable;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class AddRoleForm
+class AddRoleFormFactory
 {
     use Nette\SmartObject;
 
-    /** @var BaseForm */
+    /** @var BaseFormFactory */
     private $baseFormFactory;
 
     /** @var ACLService */
@@ -34,7 +34,7 @@ class AddRoleForm
     private $roleRepository;
 
 
-    public function __construct(BaseForm $baseFormFactory, ACLService $ACLService, RoleRepository $roleRepository)
+    public function __construct(BaseFormFactory $baseFormFactory, ACLService $ACLService, RoleRepository $roleRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->ACLService      = $ACLService;
@@ -45,7 +45,7 @@ class AddRoleForm
      * Vytvoří formulář.
      * @throws Throwable
      */
-    public function create() : Form
+    public function create() : BaseForm
     {
         $form = $this->baseFormFactory->create();
 
@@ -75,7 +75,7 @@ class AddRoleForm
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(BaseForm $form, stdClass $values) : void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;

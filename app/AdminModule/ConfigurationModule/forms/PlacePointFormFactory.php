@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
+use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Settings\Place\PlacePoint;
 use App\Model\Settings\Place\PlacePointRepository;
 use Doctrine\ORM\OptimisticLockException;
@@ -19,21 +20,21 @@ use VojtechDobes\NetteForms\GpsPicker;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class PlacePointForm
+class PlacePointFormFactory
 {
     use Nette\SmartObject;
 
     /** @var ?PlacePoint */
     private $placePoint;
 
-    /** @var BaseForm */
+    /** @var BaseFormFactory */
     private $baseFormFactory;
 
     /** @var PlacePointRepository */
     private $placePointRepository;
 
 
-    public function __construct(BaseForm $baseForm, PlacePointRepository $placePointRepository)
+    public function __construct(BaseFormFactory $baseForm, PlacePointRepository $placePointRepository)
     {
         $this->baseFormFactory      = $baseForm;
         $this->placePointRepository = $placePointRepository;
@@ -42,7 +43,7 @@ class PlacePointForm
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id) : Form
+    public function create(int $id) : BaseForm
     {
         $this->placePoint = $this->placePointRepository->findById($id);
 
@@ -51,9 +52,9 @@ class PlacePointForm
         $form->addText('name', 'admin.configuration.place_points_name')
             ->addRule(Form::FILLED, 'admin.configuration.place_points_name_empty');
 
-        $form->addGpsPicker('gps', 'admin.configuration.place_points_place')
-            ->setDriver(GpsPicker::DRIVER_SEZNAM)
-            ->setSize('100%', 400);
+        $gpsPicker = $form->addGpsPicker('gps', 'admin.configuration.place_points_place');
+        $gpsPicker->setDriver(GpsPicker::DRIVER_SEZNAM);
+        $gpsPicker->setSize('100%', 400);
 
         $form->addSubmit('submit', 'admin.common.save');
 
@@ -81,7 +82,7 @@ class PlacePointForm
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(BaseForm $form, stdClass $values) : void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;

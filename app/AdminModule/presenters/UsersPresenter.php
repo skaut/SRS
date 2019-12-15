@@ -8,9 +8,10 @@ use App\AdminModule\Components\ApplicationsGridControl;
 use App\AdminModule\Components\IApplicationsGridControlFactory;
 use App\AdminModule\Components\IUsersGridControlFactory;
 use App\AdminModule\Components\UsersGridControl;
-use App\AdminModule\Forms\AddLectorForm;
-use App\AdminModule\Forms\EditUserPersonalDetailsForm;
-use App\AdminModule\Forms\EditUserSeminarForm;
+use App\AdminModule\Forms\AddLectorFormFactory;
+use App\AdminModule\Forms\BaseForm;
+use App\AdminModule\Forms\EditUserPersonalDetailsFormFactory;
+use App\AdminModule\Forms\EditUserSeminarFormFactory;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Model\ACL\Role;
@@ -22,7 +23,6 @@ use App\Services\ApplicationService;
 use App\Services\ExcelExportService;
 use App\Services\PdfExportService;
 use Nette\Application\AbortException;
-use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
 
@@ -44,19 +44,19 @@ class UsersPresenter extends AdminBasePresenter
     public $usersGridControlFactory;
 
     /**
-     * @var AddLectorForm
+     * @var AddLectorFormFactory
      * @inject
      */
     public $addLectorFormFactory;
 
     /**
-     * @var EditUserPersonalDetailsForm
+     * @var EditUserPersonalDetailsFormFactory
      * @inject
      */
     public $editUserPersonalDetailsFormFactory;
 
     /**
-     * @var EditUserSeminarForm
+     * @var EditUserSeminarFormFactory
      * @inject
      */
     public $editUserSeminarFormFactory;
@@ -202,11 +202,11 @@ class UsersPresenter extends AdminBasePresenter
         return $this->usersGridControlFactory->create();
     }
 
-    protected function createComponentAddLectorForm() : Form
+    protected function createComponentAddLectorForm() : BaseForm
     {
         $form = $this->addLectorFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
             if ($form->isSubmitted() === $form['cancel']) {
                 $this->redirect('Users:default');
             } else {
@@ -218,11 +218,11 @@ class UsersPresenter extends AdminBasePresenter
         return $form;
     }
 
-    protected function createComponentEditUserPersonalDetailsForm() : Form
+    protected function createComponentEditUserPersonalDetailsForm() : BaseForm
     {
         $form = $this->editUserPersonalDetailsFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
             if ($form->isSubmitted() === $form['cancel']) {
                 $this->redirect('this');
             } else {
@@ -234,11 +234,11 @@ class UsersPresenter extends AdminBasePresenter
         return $form;
     }
 
-    protected function createComponentEditUserSeminarForm() : Form
+    protected function createComponentEditUserSeminarForm() : BaseForm
     {
         $form = $this->editUserSeminarFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onError[] = function (Form $form) : void {
+        $form->onError[] = function (BaseForm $form) : void {
             foreach ($form->errors as $error) {
                 $this->flashMessage($error, 'danger');
             }
@@ -246,7 +246,7 @@ class UsersPresenter extends AdminBasePresenter
             $this->redirect('this');
         };
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
             if ($form->isSubmitted() !== $form['cancel']) {
                 $this->flashMessage('admin.users.users_saved', 'success');
             }

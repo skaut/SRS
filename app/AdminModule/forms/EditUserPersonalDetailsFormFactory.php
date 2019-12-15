@@ -20,7 +20,7 @@ use function image_type_to_extension;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class EditUserPersonalDetailsForm
+class EditUserPersonalDetailsFormFactory
 {
     use Nette\SmartObject;
 
@@ -30,7 +30,7 @@ class EditUserPersonalDetailsForm
      */
     private $user;
 
-    /** @var BaseForm */
+    /** @var BaseFormFactory */
     private $baseFormFactory;
 
     /** @var UserRepository */
@@ -40,7 +40,7 @@ class EditUserPersonalDetailsForm
     private $filesService;
 
 
-    public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository, FilesService $filesService)
+    public function __construct(BaseFormFactory $baseFormFactory, UserRepository $userRepository, FilesService $filesService)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->userRepository  = $userRepository;
@@ -50,7 +50,7 @@ class EditUserPersonalDetailsForm
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id) : Form
+    public function create(int $id) : BaseForm
     {
         $this->user = $this->userRepository->findById($id);
 
@@ -130,7 +130,7 @@ class EditUserPersonalDetailsForm
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(BaseForm $form, stdClass $values) : void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;

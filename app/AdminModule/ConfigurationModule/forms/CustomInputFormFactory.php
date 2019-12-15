@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
+use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Settings\CustomInput\CustomCheckbox;
 use App\Model\Settings\CustomInput\CustomFile;
 use App\Model\Settings\CustomInput\CustomInput;
@@ -26,7 +27,7 @@ use function trim;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class CustomInputForm
+class CustomInputFormFactory
 {
     use Nette\SmartObject;
 
@@ -36,14 +37,14 @@ class CustomInputForm
      */
     private $customInput;
 
-    /** @var BaseForm */
+    /** @var BaseFormFactory */
     private $baseFormFactory;
 
     /** @var CustomInputRepository */
     private $customInputRepository;
 
 
-    public function __construct(BaseForm $baseFormFactory, CustomInputRepository $customInputRepository)
+    public function __construct(BaseFormFactory $baseFormFactory, CustomInputRepository $customInputRepository)
     {
         $this->baseFormFactory       = $baseFormFactory;
         $this->customInputRepository = $customInputRepository;
@@ -52,7 +53,7 @@ class CustomInputForm
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id) : Form
+    public function create(int $id) : BaseForm
     {
         $this->customInput = $this->customInputRepository->findById($id);
 
@@ -105,7 +106,7 @@ class CustomInputForm
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(BaseForm $form, stdClass $values) : void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\CMSModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
+use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\ACL\RoleRepository;
 use App\Model\CMS\Content\CapacitiesContent;
 use App\Model\CMS\Content\Content;
@@ -21,7 +22,6 @@ use App\Services\FilesService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette\Application\UI;
-use Nette\Application\UI\Form;
 use stdClass;
 use function get_class;
 use function ucfirst;
@@ -65,7 +65,7 @@ class PageForm extends UI\Control
      */
     public $onPageSaveError;
 
-    /** @var BaseForm */
+    /** @var BaseFormFactory */
     private $baseFormFactory;
 
     /** @var PageRepository */
@@ -90,7 +90,7 @@ class PageForm extends UI\Control
     public function __construct(
         int $id,
         string $area,
-        BaseForm $baseFormFactory,
+        BaseFormFactory $baseFormFactory,
         PageRepository $pageRepository,
         ACLService $ACLService,
         CMSService $CMSService,
@@ -132,7 +132,7 @@ class PageForm extends UI\Control
      * Vytvoří komponentu.
      * @throws PageException
      */
-    public function createComponentForm() : Form
+    public function createComponentForm() : BaseForm
     {
         $form = $this->baseFormFactory->create();
 
@@ -171,7 +171,7 @@ class PageForm extends UI\Control
         $form->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
         $form->onSuccess[] = [$this, 'processForm'];
 
-        $form->onError[] = function (Form $form) : void {
+        $form->onError[] = function () : void {
             $this->onPageSaveError($this);
         };
 
@@ -184,7 +184,7 @@ class PageForm extends UI\Control
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(BaseForm $form, stdClass $values) : void
     {
         $page = $this->pageRepository->findById((int) $values->id);
 
@@ -192,7 +192,8 @@ class PageForm extends UI\Control
         $type = $values->type;
 
         foreach ($page->getContents($area) as $content) {
-            $formContainer = $values[$content->getContentFormName()];
+            $inputName = $content->getContentFormName();
+            $formContainer = $values->$inputName;
             if ($formContainer['delete']) {
                 $this->CMSService->removeContent($content);
             } else {

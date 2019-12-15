@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Model\CMS\Content;
 
 use App\Services\FilesService;
+use App\AdminModule\Forms\BaseForm;
 use Doctrine\ORM\Mapping as ORM;
-use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
 use Nette\Utils\Image;
 use Nette\Utils\Random;
@@ -146,7 +146,7 @@ class ImageContent extends Content implements IContent
     /**
      * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
      */
-    public function addContentForm(Form $form) : Form
+    public function addContentForm(BaseForm $form) : BaseForm
     {
         parent::addContentForm($form);
 
@@ -188,7 +188,7 @@ class ImageContent extends Content implements IContent
      * Zpracuje při uložení stránky část formuláře týkající se obsahu.
      * @throws UnknownImageFileException
      */
-    public function contentFormSucceeded(Form $form, stdClass $values) : void
+    public function contentFormSucceeded(BaseForm $form, stdClass $values) : void
     {
         parent::contentFormSucceeded($form, $values);
         $values = $values[$this->getContentFormName()];

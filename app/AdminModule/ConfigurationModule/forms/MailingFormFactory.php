@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
+use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Settings;
@@ -31,7 +32,7 @@ use function uniqid;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class MailingForm
+class MailingFormFactory
 {
     use Nette\SmartObject;
 
@@ -41,7 +42,7 @@ class MailingForm
      */
     private $user;
 
-    /** @var BaseForm */
+    /** @var BaseFormFactory */
     private $baseFormFactory;
 
     /** @var SettingsService */
@@ -58,7 +59,7 @@ class MailingForm
 
 
     public function __construct(
-        BaseForm $baseForm,
+        BaseFormFactory $baseForm,
         SettingsService $settingsService,
         UserRepository $userRepository,
         MailService $mailService,
@@ -76,7 +77,7 @@ class MailingForm
      * @throws SettingsException
      * @throws Throwable
      */
-    public function create(int $id) : Form
+    public function create(int $id) : BaseForm
     {
         $this->user = $this->userRepository->findById($id);
 
@@ -109,7 +110,7 @@ class MailingForm
      * @throws Throwable
      * @throws MailingMailCreationException
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(BaseForm $form, stdClass $values) : void
     {
         if ($this->settingsService->getValue(Settings::SEMINAR_EMAIL) === $values->seminarEmail) {
             return;

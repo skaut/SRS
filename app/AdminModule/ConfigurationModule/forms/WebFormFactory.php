@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
+use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\CMS\PageRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
@@ -23,11 +24,11 @@ use Throwable;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class WebForm
+class WebFormFactory
 {
     use Nette\SmartObject;
 
-    /** @var BaseForm */
+    /** @var BaseFormFactory */
     private $baseFormFactory;
 
     /** @var PageRepository */
@@ -41,7 +42,7 @@ class WebForm
 
 
     public function __construct(
-        BaseForm $baseFormFactory,
+        BaseFormFactory $baseFormFactory,
         PageRepository $pageRepository,
         SettingsService $settingsService,
         FilesService $filesService
@@ -57,7 +58,7 @@ class WebForm
      * @throws SettingsException
      * @throws Throwable
      */
-    public function create() : Form
+    public function create() : BaseForm
     {
         $form = $this->baseFormFactory->create();
 
@@ -97,7 +98,7 @@ class WebForm
      * @throws SettingsException
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(BaseForm $form, stdClass $values) : void
     {
         $logo = $values->logo;
         if ($logo->size > 0) {

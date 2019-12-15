@@ -6,15 +6,15 @@ namespace App\AdminModule\Presenters;
 
 use App\AdminModule\Components\IRolesGridControlFactory;
 use App\AdminModule\Components\RolesGridControl;
-use App\AdminModule\Forms\AddRoleForm;
-use App\AdminModule\Forms\EditRoleForm;
+use App\AdminModule\Forms\AddRoleFormFactory;
+use App\AdminModule\Forms\BaseForm;
+use App\AdminModule\Forms\EditRoleFormFactory;
 use App\Model\ACL\Permission;
 use App\Model\ACL\Resource;
 use App\Services\Authenticator;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Nette\Application\AbortException;
-use Nette\Forms\Form;
 use stdClass;
 
 /**
@@ -29,13 +29,13 @@ class AclPresenter extends AdminBasePresenter
     protected $resource = Resource::ACL;
 
     /**
-     * @var AddRoleForm
+     * @var AddRoleFormFactory
      * @inject
      */
     public $addRoleFormFactory;
 
     /**
-     * @var EditRoleForm
+     * @var EditRoleFormFactory
      * @inject
      */
     public $editRoleFormFactory;
@@ -88,11 +88,11 @@ class AclPresenter extends AdminBasePresenter
         return $this->rolesGridControlFactory->create();
     }
 
-    protected function createComponentAddRoleForm() : Form
+    protected function createComponentAddRoleForm() : BaseForm
     {
         $form = $this->addRoleFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
             if ($form->isSubmitted() === $form['cancel']) {
                 $this->redirect('Acl:default');
             }
@@ -110,11 +110,11 @@ class AclPresenter extends AdminBasePresenter
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    protected function createComponentEditRoleForm() : Form
+    protected function createComponentEditRoleForm() : BaseForm
     {
         $form = $this->editRoleFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
             if ($form->isSubmitted() === $form['cancel']) {
                 $this->redirect('Acl:default');
             }

@@ -24,7 +24,7 @@ use Tracy\ILogger;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
-class PersonalDetailsForm
+class PersonalDetailsFormFactory
 {
     use Nette\SmartObject;
 
@@ -37,7 +37,7 @@ class PersonalDetailsForm
     /** @var callable */
     public $onSkautIsError;
 
-    /** @var BaseForm */
+    /** @var BaseFormFactory */
     private $baseFormFactory;
 
     /** @var UserRepository */
@@ -47,7 +47,7 @@ class PersonalDetailsForm
     private $skautIsService;
 
 
-    public function __construct(BaseForm $baseFormFactory, UserRepository $userRepository, SkautIsService $skautIsService)
+    public function __construct(BaseFormFactory $baseFormFactory, UserRepository $userRepository, SkautIsService $skautIsService)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->userRepository  = $userRepository;
@@ -57,7 +57,7 @@ class PersonalDetailsForm
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id) : Form
+    public function create(int $id) : BaseForm
     {
         $this->user = $this->userRepository->findById($id);
 
@@ -131,7 +131,7 @@ class PersonalDetailsForm
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(BaseForm $form, stdClass $values) : void
     {
         if (property_exists($values, 'sex')) {
             $this->user->setSex($values->sex);

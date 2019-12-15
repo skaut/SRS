@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
-use App\AdminModule\ConfigurationModule\Forms\BankForm;
+use App\AdminModule\ConfigurationModule\Forms\BankFormFactory;
 use App\AdminModule\ConfigurationModule\Forms\IPaymentFormFactory;
 use App\AdminModule\ConfigurationModule\Forms\PaymentForm;
-use App\AdminModule\ConfigurationModule\Forms\PaymentProofForm;
-use App\AdminModule\ConfigurationModule\Forms\TicketsForm;
+use App\AdminModule\ConfigurationModule\Forms\PaymentProofFormFactory;
+use App\AdminModule\ConfigurationModule\Forms\TicketsFormFactory;
+use App\AdminModule\Forms\BaseForm;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
 
@@ -30,19 +30,19 @@ class PaymentPresenter extends ConfigurationBasePresenter
     public $paymentFormFactory;
 
     /**
-     * @var PaymentProofForm
+     * @var PaymentProofFormFactory
      * @inject
      */
     public $paymentProofFormFactory;
 
     /**
-     * @var BankForm
+     * @var BankFormFactory
      * @inject
      */
     public $bankFormFactory;
 
     /**
-     * @var TicketsForm
+     * @var TicketsFormFactory
      * @inject
      */
     public $ticketsFormFactory;
@@ -91,11 +91,11 @@ class PaymentPresenter extends ConfigurationBasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    protected function createComponentPaymentProofForm() : Form
+    protected function createComponentPaymentProofForm() : BaseForm
     {
         $form = $this->paymentProofFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
             $this->redirect('this');
         };
@@ -106,11 +106,11 @@ class PaymentPresenter extends ConfigurationBasePresenter
     /**
      * @throws Throwable
      */
-    protected function createComponentBankForm() : Form
+    protected function createComponentBankForm() : BaseForm
     {
         $form = $this->bankFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
             $this->redirect('this');
         };
@@ -122,11 +122,11 @@ class PaymentPresenter extends ConfigurationBasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    protected function createComponentTicketsForm() : Form
+    protected function createComponentTicketsForm() : BaseForm
     {
         $form = $this->ticketsFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
             $this->redirect('this');
         };

@@ -6,9 +6,9 @@ namespace App\AdminModule\CMSModule\Presenters;
 
 use App\AdminModule\CMSModule\Components\INewsGridControlFactory;
 use App\AdminModule\CMSModule\Components\NewsGridControl;
-use App\AdminModule\CMSModule\Forms\NewsForm;
+use App\AdminModule\CMSModule\Forms\NewsFormFactory;
+use App\AdminModule\Forms\BaseForm;
 use App\Model\CMS\NewsRepository;
-use Nette\Application\UI\Form;
 use stdClass;
 
 /**
@@ -26,7 +26,7 @@ class NewsPresenter extends CMSBasePresenter
     public $newsGridControlFactory;
 
     /**
-     * @var NewsForm
+     * @var NewsFormFactory
      * @inject
      */
     public $newsFormFactory;
@@ -47,11 +47,11 @@ class NewsPresenter extends CMSBasePresenter
         return $this->newsGridControlFactory->create();
     }
 
-    protected function createComponentNewsForm() : Form
+    protected function createComponentNewsForm() : BaseForm
     {
         $form = $this->newsFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
             if ($form->isSubmitted() === $form['cancel']) {
                 $this->redirect('News:default');
             }

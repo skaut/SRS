@@ -6,11 +6,11 @@ namespace App\AdminModule\ConfigurationModule\Presenters;
 
 use App\AdminModule\ConfigurationModule\Components\IPlacePointsGridControlFactory;
 use App\AdminModule\ConfigurationModule\Components\PlacePointsGridControl;
-use App\AdminModule\ConfigurationModule\Forms\PlaceDescriptionForm;
-use App\AdminModule\ConfigurationModule\Forms\PlacePointForm;
+use App\AdminModule\ConfigurationModule\Forms\PlaceDescriptionFormFactory;
+use App\AdminModule\ConfigurationModule\Forms\PlacePointFormFactory;
+use App\AdminModule\Forms\BaseForm;
 use App\Model\Settings\Place\PlacePointRepository;
 use App\Model\Settings\SettingsException;
-use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
 
@@ -28,13 +28,13 @@ class PlacePresenter extends ConfigurationBasePresenter
     public $placePointRepository;
 
     /**
-     * @var PlaceDescriptionForm
+     * @var PlaceDescriptionFormFactory
      * @inject
      */
     public $placeDescriptionFormFactory;
 
     /**
-     * @var PlacePointForm
+     * @var PlacePointFormFactory
      * @inject
      */
     public $placePointFormFactory;
@@ -56,11 +56,11 @@ class PlacePresenter extends ConfigurationBasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    protected function createComponentPlaceDescriptionForm() : Form
+    protected function createComponentPlaceDescriptionForm() : BaseForm
     {
         $form = $this->placeDescriptionFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');
@@ -69,11 +69,11 @@ class PlacePresenter extends ConfigurationBasePresenter
         return $form;
     }
 
-    protected function createComponentPlacePointForm() : Form
+    protected function createComponentPlacePointForm() : BaseForm
     {
         $form = $this->placePointFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
             if ($form->isSubmitted() === $form['cancel']) {
                 $this->redirect('Place:default');
             }

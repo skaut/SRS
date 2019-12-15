@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
+use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Enums\SkautIsEventType;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
@@ -19,7 +20,6 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
-use Nette\Application\UI\Form;
 use Nextras\Forms\Rendering\Bs3FormRenderer;
 use stdClass;
 use Throwable;
@@ -31,11 +31,11 @@ use function count;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class SkautIsEventForm
+class SkautIsEventFormFactory
 {
     use Nette\SmartObject;
 
-    /** @var BaseForm */
+    /** @var BaseFormFactory */
     private $baseFormFactory;
 
     /** @var SettingsService */
@@ -55,7 +55,7 @@ class SkautIsEventForm
 
 
     public function __construct(
-        BaseForm $baseForm,
+        BaseFormFactory $baseForm,
         SettingsService $settingsService,
         SkautIsCourseRepository $skautIsCourseRepository,
         SkautIsEventGeneralService $skautIsEventGeneralService,
@@ -75,7 +75,7 @@ class SkautIsEventForm
      * @throws SettingsException
      * @throws Throwable
      */
-    public function create() : Form
+    public function create() : BaseForm
     {
         $form = $this->baseFormFactory->create();
 
@@ -127,7 +127,7 @@ class SkautIsEventForm
      * @throws OptimisticLockException
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(BaseForm $form, stdClass $values) : void
     {
         $eventId   = null;
         $eventName = null;

@@ -59,7 +59,7 @@ class AdditionalInformationForm extends UI\Control
      */
     public $onSave;
 
-    /** @var BaseForm */
+    /** @var BaseFormFactory */
     private $baseFormFactory;
 
     /** @var EntityManagerDecorator */
@@ -88,7 +88,7 @@ class AdditionalInformationForm extends UI\Control
 
 
     public function __construct(
-        BaseForm $baseFormFactory,
+        BaseFormFactory $baseFormFactory,
         EntityManagerDecorator $em,
         UserRepository $userRepository,
         CustomInputRepository $customInputRepository,
@@ -125,7 +125,7 @@ class AdditionalInformationForm extends UI\Control
      * @throws SettingsException
      * @throws Throwable
      */
-    public function createComponentForm() : Form
+    public function createComponentForm() : BaseForm
     {
         $this->user                = $this->userRepository->findById($this->presenter->user->getId());
         $isAllowedEditCustomInputs = $this->applicationService->isAllowedEditCustomInputs();
@@ -202,7 +202,7 @@ class AdditionalInformationForm extends UI\Control
      * Zpracuje formulář.
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(BaseForm $form, stdClass $values) : void
     {
         $this->em->transactional(function () use ($values) : void {
             $customInputValueChanged = false;

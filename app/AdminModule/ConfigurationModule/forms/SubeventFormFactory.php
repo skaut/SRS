@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
+use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Structure\Subevent;
 use App\Model\Structure\SubeventRepository;
 use App\Services\SubeventService;
@@ -25,7 +26,7 @@ use function uniqid;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
-class SubeventForm
+class SubeventFormFactory
 {
     use Nette\SmartObject;
 
@@ -38,7 +39,7 @@ class SubeventForm
     /** @var EntityManagerDecorator */
     private $em;
 
-    /** @var BaseForm */
+    /** @var BaseFormFactory */
     private $baseFormFactory;
 
     /** @var SubeventRepository */
@@ -50,7 +51,7 @@ class SubeventForm
 
     public function __construct(
         EntityManagerDecorator $em,
-        BaseForm $baseFormFactory,
+        BaseFormFactory $baseFormFactory,
         SubeventRepository $subeventRepository,
         SubeventService $subeventService
     ) {
@@ -63,7 +64,7 @@ class SubeventForm
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id) : Form
+    public function create(int $id) : BaseForm
     {
         $this->subevent = $this->subeventRepository->findById($id);
 
@@ -147,7 +148,7 @@ class SubeventForm
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(BaseForm $form, stdClass $values) : void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;

@@ -6,11 +6,11 @@ namespace App\AdminModule\ConfigurationModule\Presenters;
 
 use App\AdminModule\ConfigurationModule\Components\ISubeventsGridControlFactory;
 use App\AdminModule\ConfigurationModule\Components\SubeventsGridControl;
-use App\AdminModule\ConfigurationModule\Forms\SubeventForm;
-use App\AdminModule\ConfigurationModule\Forms\SubeventsForm;
+use App\AdminModule\ConfigurationModule\Forms\SubeventFormFactory;
+use App\AdminModule\ConfigurationModule\Forms\SubeventsFormFactory;
+use App\AdminModule\Forms\BaseForm;
 use App\Model\Settings\SettingsException;
 use App\Model\Structure\SubeventRepository;
-use Nette\Forms\Form;
 use stdClass;
 use Throwable;
 
@@ -28,13 +28,13 @@ class SubeventsPresenter extends ConfigurationBasePresenter
     public $subeventsGridControlFactory;
 
     /**
-     * @var SubeventForm
+     * @var SubeventFormFactory
      * @inject
      */
     public $subeventFormFactory;
 
     /**
-     * @var SubeventsForm
+     * @var SubeventsFormFactory
      * @inject
      */
     public $subeventsFormFactory;
@@ -58,11 +58,11 @@ class SubeventsPresenter extends ConfigurationBasePresenter
         return $this->subeventsGridControlFactory->create();
     }
 
-    protected function createComponentSubeventForm() : Form
+    protected function createComponentSubeventForm() : BaseForm
     {
         $form = $this->subeventFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
             if ($form->isSubmitted() !== $form['cancel']) {
                 $this->flashMessage('admin.configuration.subevents_saved', 'success');
             }
@@ -77,11 +77,11 @@ class SubeventsPresenter extends ConfigurationBasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    protected function createComponentSubeventsForm() : Form
+    protected function createComponentSubeventsForm() : BaseForm
     {
         $form = $this->subeventsFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
             $this->redirect('this');
         };

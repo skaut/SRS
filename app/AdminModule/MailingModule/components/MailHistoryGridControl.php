@@ -111,16 +111,15 @@ class MailHistoryGridControl extends Control
         $grid->addColumnDateTime('datetime', 'admin.mailing.history.datetime')
             ->setFormat(Helpers::DATETIME_FORMAT);
 
-        $grid->addColumnText('automatic', 'admin.mailing.history.automatic')
-            ->setReplacement([
-                '0' => $this->translator->translate('admin.common.no'),
-                '1' => $this->translator->translate('admin.common.yes'),
-            ])
-            ->setFilterSelect([
-                '' => 'admin.common.all',
-                '0' => 'admin.common.no',
-                '1' => 'admin.common.yes',
-            ])
-            ->setTranslateOptions();
+        $automaticText = $grid->addColumnText('automatic', 'admin.mailing.history.automatic');
+        $automaticText->setReplacement([
+            '0' => $this->translator->translate('admin.common.no'),
+            '1' => $this->translator->translate('admin.common.yes'),
+        ]);
+        $automaticText->setFilterSelect([
+            '' => 'admin.common.all',
+            '0' => 'admin.common.no',
+            '1' => 'admin.common.yes',
+        ])->setTranslateOptions();
     }
 }

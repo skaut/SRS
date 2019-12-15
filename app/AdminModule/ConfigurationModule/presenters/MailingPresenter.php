@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
-use App\AdminModule\ConfigurationModule\Forms\MailingForm;
+use App\AdminModule\ConfigurationModule\Forms\MailingFormFactory;
+use App\AdminModule\Forms\BaseForm;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Services\SettingsService;
-use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
 
@@ -21,7 +21,7 @@ use Throwable;
 class MailingPresenter extends ConfigurationBasePresenter
 {
     /**
-     * @var MailingForm
+     * @var MailingFormFactory
      * @inject
      */
     public $mailingFormFactory;
@@ -46,11 +46,11 @@ class MailingPresenter extends ConfigurationBasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    protected function createComponentMailingForm() : Form
+    protected function createComponentMailingForm() : BaseForm
     {
         $form = $this->mailingFormFactory->create($this->user->getId());
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');

@@ -64,7 +64,7 @@ use function in_array;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
-class ApplicationForm
+class ApplicationFormFactory
 {
     use Nette\SmartObject;
 
@@ -83,7 +83,7 @@ class ApplicationForm
      */
     private $subeventsExists;
 
-    /** @var BaseForm */
+    /** @var BaseFormFactory */
     private $baseFormFactory;
 
     /** @var EntityManagerDecorator */
@@ -142,7 +142,7 @@ class ApplicationForm
 
 
     public function __construct(
-        BaseForm $baseFormFactory,
+        BaseFormFactory $baseFormFactory,
         UserRepository $userRepository,
         RoleRepository $roleRepository,
         CustomInputRepository $customInputRepository,
@@ -187,7 +187,7 @@ class ApplicationForm
      * @throws NonUniqueResultException
      * @throws Throwable
      */
-    public function create(int $id) : Form
+    public function create(int $id) : BaseForm
     {
         $this->user = $this->userRepository->findById($id);
 
@@ -273,7 +273,7 @@ class ApplicationForm
      * Zpracuje formulář.
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(BaseForm $form, stdClass $values) : void
     {
         $this->em->transactional(function () use ($values) : void {
             if (property_exists($values,'sex')) {
@@ -385,7 +385,7 @@ class ApplicationForm
     /**
      * Přidá vlastní pole přihlášky.
      */
-    private function addCustomInputs(Form $form) : void
+    private function addCustomInputs(BaseForm $form) : void
     {
         foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
             switch (true) {
@@ -422,7 +422,7 @@ class ApplicationForm
      * @throws NonUniqueResultException
      * @throws NoResultException
      */
-    private function addSubeventsSelect(Form $form) : void
+    private function addSubeventsSelect(BaseForm $form) : void
     {
         if (! $this->subeventRepository->explicitSubeventsExists()) {
             return;
@@ -473,7 +473,7 @@ class ApplicationForm
     /**
      * Přidá select pro výběr rolí.
      */
-    private function addRolesSelect(Form $form) : void
+    private function addRolesSelect(BaseForm $form) : void
     {
         $registerableOptions = $this->ACLService->getRegisterableNowOptionsWithCapacity();
 
@@ -533,7 +533,7 @@ class ApplicationForm
     /**
      * Přidá pole pro zadání příjezdu a odjezdu.
      */
-    private function addArrivalDeparture(Form $form) : void
+    private function addArrivalDeparture(BaseForm $form) : void
     {
         $form->addDateTimePicker('arrival', 'web.application_content.arrival')
             ->setOption('id', 'arrivalInput');

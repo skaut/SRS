@@ -31,7 +31,7 @@ use function in_array;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
-class EditRoleForm
+class EditRoleFormFactory
 {
     use Nette\SmartObject;
 
@@ -41,7 +41,7 @@ class EditRoleForm
      */
     private $role;
 
-    /** @var BaseForm */
+    /** @var BaseFormFactory */
     private $baseFormFactory;
 
     /** @var EntityManagerDecorator */
@@ -67,7 +67,7 @@ class EditRoleForm
 
 
     public function __construct(
-        BaseForm $baseFormFactory,
+        BaseFormFactory $baseFormFactory,
         EntityManagerDecorator $em,
         ACLService $ACLService,
         RoleRepository $roleRepository,
@@ -91,7 +91,7 @@ class EditRoleForm
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    public function create(int $id) : Form
+    public function create(int $id) : BaseForm
     {
         $this->role = $this->roleRepository->findById($id);
 
@@ -206,7 +206,7 @@ class EditRoleForm
      * Zpracuje formulář.
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(BaseForm $form, stdClass $values) : void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;

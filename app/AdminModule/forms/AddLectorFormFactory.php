@@ -24,11 +24,11 @@ use function image_type_to_extension;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class AddLectorForm
+class AddLectorFormFactory
 {
     use Nette\SmartObject;
 
-    /** @var BaseForm */
+    /** @var BaseFormFactory */
     private $baseFormFactory;
 
     /** @var UserRepository */
@@ -42,7 +42,7 @@ class AddLectorForm
 
 
     public function __construct(
-        BaseForm $baseFormFactory,
+        BaseFormFactory $baseFormFactory,
         UserRepository $userRepository,
         RoleRepository $roleRepository,
         FilesService $filesService
@@ -56,7 +56,7 @@ class AddLectorForm
     /**
      * Vytvoří formulář.
      */
-    public function create() : Form
+    public function create() : BaseForm
     {
         $form = $this->baseFormFactory->create();
 
@@ -115,7 +115,7 @@ class AddLectorForm
      * @throws OptimisticLockException
      * @throws Exception
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(BaseForm $form, stdClass $values) : void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
-use App\AdminModule\ConfigurationModule\Forms\WebForm;
+use App\AdminModule\ConfigurationModule\Forms\WebFormFactory;
+use App\AdminModule\Forms\BaseForm;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
 
@@ -20,7 +20,7 @@ use Throwable;
 class WebPresenter extends ConfigurationBasePresenter
 {
     /**
-     * @var WebForm
+     * @var WebFormFactory
      * @inject
      */
     public $webFormFactory;
@@ -39,11 +39,11 @@ class WebPresenter extends ConfigurationBasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    protected function createComponentSettingsForm() : Form
+    protected function createComponentSettingsForm() : BaseForm
     {
         $form = $this->webFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');

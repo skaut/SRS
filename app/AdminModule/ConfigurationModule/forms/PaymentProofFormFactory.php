@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
+use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Services\SettingsService;
@@ -22,18 +23,18 @@ use Throwable;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class PaymentProofForm
+class PaymentProofFormFactory
 {
     use Nette\SmartObject;
 
-    /** @var BaseForm */
+    /** @var BaseFormFactory */
     private $baseFormFactory;
 
     /** @var SettingsService */
     private $settingsService;
 
 
-    public function __construct(BaseForm $baseForm, SettingsService $settingsService)
+    public function __construct(BaseFormFactory $baseForm, SettingsService $settingsService)
     {
         $this->baseFormFactory = $baseForm;
         $this->settingsService = $settingsService;
@@ -44,7 +45,7 @@ class PaymentProofForm
      * @throws SettingsException
      * @throws Throwable
      */
-    public function create() : Form
+    public function create() : BaseForm
     {
         $form = $this->baseFormFactory->create();
 
@@ -87,7 +88,7 @@ class PaymentProofForm
      * @throws OptimisticLockException
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(BaseForm $form, stdClass $values) : void
     {
         $this->settingsService->setValue(Settings::COMPANY, $values->company);
         $this->settingsService->setValue(Settings::ICO, $values->ico);

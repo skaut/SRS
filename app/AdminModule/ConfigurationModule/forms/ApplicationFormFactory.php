@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
+use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Services\SettingsService;
@@ -16,22 +17,22 @@ use stdClass;
 use Throwable;
 
 /**
- * Formulář pro nastavení podakcí.
+ * Formulář pro nastavení přihlášky.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class SubeventsForm
+class ApplicationFormFactory
 {
     use Nette\SmartObject;
 
-    /** @var BaseForm */
+    /** @var BaseFormFactory */
     private $baseFormFactory;
 
     /** @var SettingsService */
     private $settingsService;
 
 
-    public function __construct(BaseForm $baseForm, SettingsService $settingsService)
+    public function __construct(BaseFormFactory $baseForm, SettingsService $settingsService)
     {
         $this->baseFormFactory = $baseForm;
         $this->settingsService = $settingsService;
@@ -42,16 +43,21 @@ class SubeventsForm
      * @throws SettingsException
      * @throws Throwable
      */
-    public function create() : Form
+    public function create() : BaseForm
     {
         $form = $this->baseFormFactory->create();
 
-        $form->addCheckbox('isAllowedAddSubeventsAfterPayment', 'admin.configuration.is_allowed_add_subevents_after_payment');
+        $form->addTextArea('applicationAgreement', 'admin.configuration.application_agreement')
+            ->setAttribute('rows', 5);
+
+        $form->addDatePicker('editCustomInputsTo', 'admin.configuration.application_edit_custom_inputs_to')
+            ->addRule(Form::FILLED, 'admin.configuration.application_edit_custom_inputs_to_empty');
 
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'isAllowedAddSubeventsAfterPayment' => $this->settingsService->getValue(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT),
+            'applicationAgreement' => $this->settingsService->getValue(Settings::APPLICATION_AGREEMENT),
+            'editCustomInputsTo' => $this->settingsService->getDateValue(Settings::EDIT_CUSTOM_INPUTS_TO),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -66,8 +72,9 @@ class SubeventsForm
      * @throws OptimisticLockException
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(BaseForm $form, stdClass $values) : void
     {
-        $this->settingsService->setBoolValue(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT, $values->isAllowedAddSubeventsAfterPayment);
+        $this->settingsService->setValue(Settings::APPLICATION_AGREEMENT, $values->applicationAgreement);
+        $this->settingsService->setValue(Settings::EDIT_CUSTOM_INPUTS_TO, (string) $values->editCustomInputsTo);
     }
 }
