@@ -9,6 +9,7 @@ use App\Model\Program\RoomRepository;
 use App\Services\ExcelExportService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Exception;
 use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
@@ -207,7 +208,7 @@ class RoomsGridControl extends Control
     /**
      * Zpracuje export harmonogramů místností.
      * @throws AbortException
-     * @throws \Exception
+     * @throws Exception
      */
     public function handleExportRoomsSchedules() : void
     {

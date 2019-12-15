@@ -6,7 +6,7 @@ namespace App\WebModule\Components;
 
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
-use App\Model\CMS\Content\ContentDTO;
+use App\Model\CMS\Content\ContentDto;
 use App\Model\CMS\FaqRepository;
 use App\WebModule\Forms\FaqFormFactory;
 use App\WebModule\Forms\BaseForm;
@@ -40,7 +40,7 @@ class FaqContentControl extends Control
         $this->roleRepository = $roleRepository;
     }
 
-    public function render(ContentDTO $content) : void
+    public function render(ContentDto $content) : void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/faq_content.latte');

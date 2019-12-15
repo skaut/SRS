@@ -8,7 +8,7 @@ use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Mailing\MailRepository;
 use App\Model\Structure\SubeventRepository;
-use App\Services\ACLService;
+use App\Services\AclService;
 use App\Services\SubeventService;
 use App\Utils\Helpers;
 use Doctrine\ORM\QueryBuilder;
@@ -35,7 +35,7 @@ class MailHistoryGridControl extends Control
     /** @var SubeventRepository */
     private $subeventRepository;
 
-    /** @var ACLService */
+    /** @var AclService */
     private $ACLService;
 
     /** @var SubeventService */
@@ -47,7 +47,7 @@ class MailHistoryGridControl extends Control
         MailRepository $mailRepository,
         RoleRepository $roleRepository,
         SubeventRepository $subeventRepository,
-        ACLService $ACLService,
+        AclService $ACLService,
         SubeventService $subeventService
     ) {
         parent::__construct();

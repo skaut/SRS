@@ -11,7 +11,7 @@ use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\CMS\PageRepository;
 use App\Model\Program\ProgramRepository;
-use App\Services\ACLService;
+use App\Services\AclService;
 use App\Services\ProgramService;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -47,7 +47,7 @@ class EditRoleFormFactory
     /** @var EntityManagerDecorator */
     private $em;
 
-    /** @var ACLService */
+    /** @var AclService */
     private $ACLService;
 
     /** @var RoleRepository */
@@ -69,7 +69,7 @@ class EditRoleFormFactory
     public function __construct(
         BaseFormFactory $baseFormFactory,
         EntityManagerDecorator $em,
-        ACLService $ACLService,
+        AclService $ACLService,
         RoleRepository $roleRepository,
         PageRepository $pageRepository,
         PermissionRepository $permissionRepository,

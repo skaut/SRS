@@ -91,10 +91,10 @@ services:
     console.application: Contributte\Console\Application
     - App\Services\Authorizator
 
-    - App\Services\ACLService
+    - App\Services\AclService
     - App\Services\ApplicationService
     - App\Services\BankService
-    - App\Services\CMSService
+    - App\Services\CmsService
     - App\Services\DatabaseService(%appDir%/..)
     - App\Services\DiscountService
     - App\Services\ExcelExportService

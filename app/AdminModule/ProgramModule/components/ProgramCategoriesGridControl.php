@@ -10,7 +10,7 @@ use App\Model\Program\Category;
 use App\Model\Program\CategoryRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\User\UserRepository;
-use App\Services\ACLService;
+use App\Services\AclService;
 use App\Services\ProgramService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -50,7 +50,7 @@ class ProgramCategoriesGridControl extends Control
     /** @var ProgramService */
     private $programService;
 
-    /** @var ACLService */
+    /** @var AclService */
     private $ACLService;
 
 
@@ -61,7 +61,7 @@ class ProgramCategoriesGridControl extends Control
         UserRepository $userRepository,
         ProgramRepository $programRepository,
         ProgramService $programService,
-        ACLService $ACLService
+        AclService $ACLService
     ) {
         parent::__construct();
 

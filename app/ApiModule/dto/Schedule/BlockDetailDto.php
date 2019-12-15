@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\ApiModule\DTO\Schedule;
+namespace App\ApiModule\Dto\Schedule;
 
-use ApiModule\DTO\Schedule\LectorDetailDTO;
+use ApiModule\Dto\Schedule\LectorDetailDto;
 use JMS\Serializer\Annotation as JMS;
 use Nette;
 
@@ -13,7 +13,7 @@ use Nette;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class BlockDetailDTO
+class BlockDetailDto
 {
     use Nette\SmartObject;
 
@@ -36,8 +36,8 @@ class BlockDetailDTO
     private $category;
 
     /**
-     * @JMS\Type("array<ApiModule\DTO\Schedule\LectorDetailDTO>")
-     * @var LectorDetailDTO[]
+     * @JMS\Type("array<ApiModule\Dto\Schedule\LectorDetailDto>")
+     * @var LectorDetailDto[]
      */
     private $lectors;
 
@@ -139,7 +139,7 @@ class BlockDetailDTO
     }
 
     /**
-     * @return LectorDetailDTO[]
+     * @return LectorDetailDto[]
      */
     public function getLectors() : array
     {
@@ -147,7 +147,7 @@ class BlockDetailDTO
     }
 
     /**
-     * @param LectorDetailDTO[] $lectors
+     * @param LectorDetailDto[] $lectors
      */
     public function setLectors(array $lectors) : void
     {

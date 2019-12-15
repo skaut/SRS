@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App;
 
-use App\Model\CMS\PageDTO;
-use App\Services\CMSService;
+use App\Model\CMS\PageDto;
+use App\Services\CmsService;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Nette;
 use Nette\Application\Routers\Route;
@@ -13,11 +13,11 @@ use Nette\Application\Routers\RouteList;
 
 class RouterFactory
 {
-    /** @var CMSService */
+    /** @var CmsService */
     private $CMSService;
 
 
-    public function __construct(CMSService $CMSService)
+    public function __construct(CmsService $CMSService)
     {
         $this->CMSService = $CMSService;
     }
@@ -108,9 +108,9 @@ class RouterFactory
                 'presenter' => 'Page',
                 'page' => [
                     Route::FILTER_IN => function (string $slug) {
-                        return $this->CMSService->findPublishedBySlugDTO($slug);
+                        return $this->CMSService->findPublishedBySlugDto($slug);
                     },
-                    Route::FILTER_OUT => function (PageDTO $page) {
+                    Route::FILTER_OUT => function (PageDto $page) {
                         return $page->getSlug();
                     },
                 ],

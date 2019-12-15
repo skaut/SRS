@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\WebModule\Components;
 
 use App\Model\ACL\RoleRepository;
-use App\Model\CMS\Content\CapacitiesContentDTO;
+use App\Model\CMS\Content\CapacitiesContentDto;
 use Nette\Application\UI\Control;
 
 /**
@@ -26,7 +26,7 @@ class CapacitiesContentControl extends Control
         $this->roleRepository = $roleRepository;
     }
 
-    public function render(CapacitiesContentDTO $content) : void
+    public function render(CapacitiesContentDto $content) : void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/capacities_content.latte');

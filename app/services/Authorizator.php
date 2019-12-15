@@ -20,7 +20,7 @@ class Authorizator extends Nette\Security\Permission
     /**
      * @throws Throwable
      */
-    public function __construct(ACLService $ACLService)
+    public function __construct(AclService $ACLService)
     {
         $this->addRole(Role::TEST); //role pouzivana pri testovani jine role
 

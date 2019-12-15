@@ -73,7 +73,7 @@ class ApplicationService
     /** @var DiscountRepository */
     private $discountRepository;
 
-    /** @var ACLService */
+    /** @var AclService */
     private $ACLService;
 
     /** @var RoleRepository */
@@ -110,7 +110,7 @@ class ApplicationService
         ApplicationRepository $applicationRepository,
         UserRepository $userRepository,
         DiscountRepository $discountRepository,
-        ACLService $ACLService,
+        AclService $ACLService,
         RoleRepository $roleRepository,
         SubeventRepository $subeventRepository,
         DiscountService $discountService,

@@ -178,7 +178,7 @@ class Page
     /**
      * @throws PageException
      */
-    public function convertToDTO() : PageDTO
+    public function convertToDto() : PageDto
     {
         $allowedRoles = array_map(function (Role $role) {
             return $role->getName();
@@ -186,14 +186,14 @@ class Page
 
         $mainContents = [];
         foreach ($this->getContents(Content::MAIN)->toArray() as $content) {
-            $mainContents[] = $content->convertToDTO();
+            $mainContents[] = $content->convertToDto();
         }
 
         $sidebarContents = [];
         foreach ($this->getContents(Content::SIDEBAR)->toArray() as $content) {
-            $sidebarContents[] = $content->convertToDTO();
+            $sidebarContents[] = $content->convertToDto();
         }
 
-        return new PageDTO($this->name, $this->slug, $allowedRoles, $mainContents, $sidebarContents, ! empty($sidebarContents));
+        return new PageDto($this->name, $this->slug, $allowedRoles, $mainContents, $sidebarContents, ! empty($sidebarContents));
     }
 }

@@ -9,7 +9,7 @@ namespace App\Model\CMS\Content;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class HtmlContentDTO extends ContentDTO
+class HtmlContentDto extends ContentDto
 {
     /**
      * Text.

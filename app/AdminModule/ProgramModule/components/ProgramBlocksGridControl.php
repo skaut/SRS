@@ -20,6 +20,7 @@ use App\Services\ProgramService;
 use App\Services\SettingsService;
 use App\Services\SubeventService;
 use App\Utils\Validators;
+use Exception;
 use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
@@ -275,7 +276,9 @@ class ProgramBlocksGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $this['programBlocksGrid']->redrawItem($id);
+            /** @var DataGrid $programBlocksGrid */
+            $programBlocksGrid = $this['programBlocksGrid'];
+            $programBlocksGrid->redrawItem($id);
         } else {
             $this->redirect('this');
         }
@@ -295,7 +298,7 @@ class ProgramBlocksGridControl extends Control
     /**
      * Zpracuje export seznamu uživatelů, kteří mají blok zapsaný.
      * @throws AbortException
-     * @throws \Exception
+     * @throws Exception
      */
     public function handleExportBlocksAttendees() : void
     {

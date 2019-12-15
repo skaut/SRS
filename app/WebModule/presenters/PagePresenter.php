@@ -135,13 +135,13 @@ class PagePresenter extends WebBasePresenter
     public function renderDefault(?string $slug) : void
     {
         if ($slug === null) {
-            $page = $this->CMSService->findPublishedBySlugDTO('/');
+            $page = $this->CMSService->findPublishedBySlugDto('/');
             if ($page === null) {
                 $this->error($this->translator->translate('web.common.homepage_not_found'), 404);
             }
             $this->template->bodyClass = 'body-homepage';
         } else {
-            $page = $this->CMSService->findPublishedBySlugDTO($slug);
+            $page = $this->CMSService->findPublishedBySlugDto($slug);
             if ($page === null) {
                 $this->error($this->translator->translate('web.common.page_not_found'), 404);
             }

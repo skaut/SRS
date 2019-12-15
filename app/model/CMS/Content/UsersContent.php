@@ -8,7 +8,7 @@ use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\CMS\Page;
 use App\Model\Page\PageException;
-use App\Services\ACLService;
+use App\Services\AclService;
 use App\Utils\Helpers;
 use App\AdminModule\Forms\BaseForm;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -38,7 +38,7 @@ class UsersContent extends Content implements IContent
     /** @var RoleRepository */
     private $roleRepository;
 
-    /** @var ACLService */
+    /** @var AclService */
     private $ACLService;
 
 
@@ -56,7 +56,7 @@ class UsersContent extends Content implements IContent
         $this->roleRepository = $roleRepository;
     }
 
-    public function injectACLService(ACLService $ACLService) : void
+    public function injectACLService(AclService $ACLService) : void
     {
         $this->ACLService = $ACLService;
     }
@@ -87,7 +87,8 @@ class UsersContent extends Content implements IContent
     {
         parent::addContentForm($form);
 
-        $formContainer = $form[$this->getContentFormName()];
+        $formName = $this->getContentFormName();
+        $formContainer = $form->$formName;
 
         $formContainer->addMultiSelect(
             'roles',
@@ -105,12 +106,13 @@ class UsersContent extends Content implements IContent
     public function contentFormSucceeded(BaseForm $form, stdClass $values) : void
     {
         parent::contentFormSucceeded($form, $values);
-        $values      = $values[$this->getContentFormName()];
+        $formName    = $this->getContentFormName();
+        $values      = $values->$formName;
         $this->roles = $this->roleRepository->findRolesByIds($values->roles);
     }
 
-    public function convertToDTO() : ContentDTO
+    public function convertToDto() : ContentDto
     {
-        return new UsersContentDTO($this->getComponentName(), $this->heading, Helpers::getIds($this->roles));
+        return new UsersContentDto($this->getComponentName(), $this->heading, Helpers::getIds($this->roles));
     }
 }

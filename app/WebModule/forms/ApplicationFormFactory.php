@@ -26,7 +26,7 @@ use App\Model\User\CustomInputValue\CustomSelectValue;
 use App\Model\User\CustomInputValue\CustomTextValue;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
-use App\Services\ACLService;
+use App\Services\AclService;
 use App\Services\ApplicationService;
 use App\Services\FilesService;
 use App\Services\MailService;
@@ -119,7 +119,7 @@ class ApplicationFormFactory
     /** @var ApplicationRepository */
     private $applicationRepository;
 
-    /** @var ACLService */
+    /** @var AclService */
     private $ACLService;
 
     /** @var ApplicationService */
@@ -153,7 +153,7 @@ class ApplicationFormFactory
         MailService $mailService,
         SubeventRepository $subeventRepository,
         ApplicationRepository $applicationRepository,
-        ACLService $ACLService,
+        AclService $ACLService,
         ApplicationService $applicationService,
         ProgramService $programService,
         Validators $validators,
@@ -301,31 +301,26 @@ class ApplicationFormFactory
             foreach ($this->customInputRepository->findAll() as $customInput) {
                 $customInputValue = $this->user->getCustomInputValue($customInput);
 
-                switch (true) {
-                    case $customInput instanceof CustomText:
-                        $customInputValue = $customInputValue ?: new CustomTextValue();
-                        $customInputValue->setValue($values['custom' . $customInput->getId()]);
-                        break;
-
-                    case $customInput instanceof CustomCheckbox:
-                        $customInputValue = $customInputValue ?: new CustomCheckboxValue();
-                        $customInputValue->setValue($values['custom' . $customInput->getId()]);
-                        break;
-
-                    case $customInput instanceof CustomSelect:
-                        $customInputValue = $customInputValue ?: new CustomSelectValue();
-                        $customInputValue->setValue($values['custom' . $customInput->getId()]);
-                        break;
-
-                    case $customInput instanceof CustomFile:
-                        $customInputValue = $customInputValue ?: new CustomFileValue();
-                        $file             = $values['custom' . $customInput->getId()];
-                        if ($file->size > 0) {
-                            $path = $this->generatePath($file);
-                            $this->filesService->save($file, $path);
-                            $customInputValue->setValue($path);
-                        }
-                        break;
+                if ($customInput instanceof CustomText) {
+                    $customInputValue = $customInputValue ?: new CustomTextValue();
+                    $customInputValue->setValue($values['custom' . $customInput->getId()]);
+                }
+                elseif ($customInput instanceof CustomCheckbox) {
+                    $customInputValue = $customInputValue ?: new CustomCheckboxValue();
+                    $customInputValue->setValue($values['custom' . $customInput->getId()]);
+                }
+                elseif ($customInput instanceof CustomSelect) {
+                    $customInputValue = $customInputValue ?: new CustomSelectValue();
+                    $customInputValue->setValue($values['custom' . $customInput->getId()]);
+                }
+                elseif ($customInput instanceof CustomFile) {
+                    $customInputValue = $customInputValue ?: new CustomFileValue();
+                    $file = $values['custom' . $customInput->getId()];
+                    if ($file->size > 0) {
+                        $path = $this->generatePath($file);
+                        $this->filesService->save($file, $path);
+                        $customInputValue->setValue($path);
+                    }
                 }
 
                 $customInputValue->setUser($this->user);

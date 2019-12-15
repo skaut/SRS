@@ -7,7 +7,7 @@ namespace App\AdminModule\CMSModule\Components;
 use App\Model\ACL\RoleRepository;
 use App\Model\CMS\Document\Tag;
 use App\Model\CMS\Document\TagRepository;
-use App\Services\ACLService;
+use App\Services\AclService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
@@ -35,7 +35,7 @@ class DocumentTagsGridControl extends Control
     /** @var RoleRepository */
     private $roleRepository;
 
-    /** @var ACLService */
+    /** @var AclService */
     private $ACLService;
 
     /** @var TagRepository */
@@ -45,7 +45,7 @@ class DocumentTagsGridControl extends Control
     public function __construct(
         Translator $translator,
         RoleRepository $roleRepository,
-        ACLService $ACLService,
+        AclService $ACLService,
         TagRepository $tagRepository
     ) {
         parent::__construct();

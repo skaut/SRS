@@ -135,42 +135,34 @@ class AdditionalInformationForm extends UI\Control
         foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
             $customInputValue = $this->user->getCustomInputValue($customInput);
 
-            switch (true) {
-                case $customInput instanceof CustomText:
-                    $custom = $form->addText('custom' . $customInput->getId(), $customInput->getName())
-                        ->setDisabled(! $isAllowedEditCustomInputs);
-                    if ($customInputValue) {
-                        $custom->setDefaultValue($customInputValue->getValue());
-                    }
-                    break;
-
-                case $customInput instanceof CustomCheckbox:
-                    $custom = $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName())
-                        ->setDisabled(! $isAllowedEditCustomInputs);
-                    if ($customInputValue) {
-                        $custom->setDefaultValue($customInputValue->getValue());
-                    }
-                    break;
-
-                case $customInput instanceof CustomSelect:
-                    $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions())
-                        ->setDisabled(! $isAllowedEditCustomInputs);
-                    if ($customInputValue) {
-                        $custom->setDefaultValue($customInputValue->getValue());
-                    }
-                    break;
-
-                case $customInput instanceof CustomFile:
-                    $custom = $form->addUpload('custom' . $customInput->getId(), $customInput->getName())
-                        ->setDisabled(! $isAllowedEditCustomInputs);
-                    if ($customInputValue && $customInputValue->getValue()) {
-                        $custom->setAttribute('data-current-file-link', $customInputValue->getValue())
-                            ->setAttribute('data-current-file-name', array_values(array_slice(explode('/', $customInputValue->getValue()), -1))[0]);
-                    }
-                    break;
-
-                default:
-                    throw new InvalidArgumentException();
+            if ($customInput instanceof CustomText) {
+                $custom = $form->addText('custom' . $customInput->getId(), $customInput->getName())
+                    ->setDisabled(!$isAllowedEditCustomInputs);
+                if ($customInputValue) {
+                    $custom->setDefaultValue($customInputValue->getValue());
+                }
+            }
+            elseif ($customInput instanceof CustomCheckbox) {
+                $custom = $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName())
+                    ->setDisabled(!$isAllowedEditCustomInputs);
+                if ($customInputValue) {
+                    $custom->setDefaultValue($customInputValue->getValue());
+                }
+            }
+            elseif ($customInput instanceof CustomSelect) {
+                $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions())
+                    ->setDisabled(!$isAllowedEditCustomInputs);
+                if ($customInputValue) {
+                    $custom->setDefaultValue($customInputValue->getValue());
+                }
+            }
+            elseif ($customInput instanceof CustomFile) {
+                $custom = $form->addUpload('custom' . $customInput->getId(), $customInput->getName())
+                    ->setDisabled(!$isAllowedEditCustomInputs);
+                if ($customInputValue && $customInputValue->getValue()) {
+                    $custom->setAttribute('data-current-file-link', $customInputValue->getValue())
+                        ->setAttribute('data-current-file-name', array_values(array_slice(explode('/', $customInputValue->getValue()), -1))[0]);
+                }
             }
 
             if ($customInput->isMandatory() && $customInput->getType() !== CustomInput::FILE) {
@@ -213,31 +205,26 @@ class AdditionalInformationForm extends UI\Control
                     $oldValue = $customInputValue ? $customInputValue->getValue() : null;
                     $inputName = 'custom' . $customInput->getId();
 
-                    switch (true) {
-                        case $customInput instanceof CustomText:
-                            $customInputValue = $customInputValue ?: new CustomTextValue();
-                            $customInputValue->setValue($values->$inputName);
-                            break;
-
-                        case $customInput instanceof CustomCheckbox:
-                            $customInputValue = $customInputValue ?: new CustomCheckboxValue();
-                            $customInputValue->setValue($values->$inputName);
-                            break;
-
-                        case $customInput instanceof CustomSelect:
-                            $customInputValue = $customInputValue ?: new CustomSelectValue();
-                            $customInputValue->setValue($values->$inputName);
-                            break;
-
-                        case $customInput instanceof CustomFile:
-                            $customInputValue = $customInputValue ?: new CustomFileValue();
-                            $file             = $values->$inputName;
-                            if ($file->size > 0) {
-                                $path = $this->generatePath($file);
-                                $this->filesService->save($file, $path);
-                                $customInputValue->setValue($path);
-                            }
-                            break;
+                    if ($customInput instanceof CustomText) {
+                        $customInputValue = $customInputValue ?: new CustomTextValue();
+                        $customInputValue->setValue($values->$inputName);
+                    }
+                    elseif ($customInput instanceof CustomCheckbox) {
+                        $customInputValue = $customInputValue ?: new CustomCheckboxValue();
+                        $customInputValue->setValue($values->$inputName);
+                    }
+                    elseif ($customInput instanceof CustomSelect) {
+                        $customInputValue = $customInputValue ?: new CustomSelectValue();
+                        $customInputValue->setValue($values->$inputName);
+                    }
+                    elseif ($customInput instanceof CustomFile) {
+                        $customInputValue = $customInputValue ?: new CustomFileValue();
+                        $file = $values->$inputName;
+                        if ($file->size > 0) {
+                            $path = $this->generatePath($file);
+                            $this->filesService->save($file, $path);
+                            $customInputValue->setValue($path);
+                        }
                     }
 
                     $customInputValue->setUser($this->user);

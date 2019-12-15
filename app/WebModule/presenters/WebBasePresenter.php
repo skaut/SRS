@@ -15,7 +15,7 @@ use App\Model\User\UserRepository;
 use App\Presenters\BasePresenter;
 use App\Services\Authenticator;
 use App\Services\Authorizator;
-use App\Services\CMSService;
+use App\Services\CmsService;
 use App\Services\DatabaseService;
 use App\Services\SettingsService;
 use App\Services\SkautIsService;
@@ -51,7 +51,7 @@ abstract class WebBasePresenter extends BasePresenter
     public $roleRepository;
 
     /**
-     * @var CMSService
+     * @var CmsService
      * @inject
      */
     public $CMSService;
@@ -142,7 +142,7 @@ abstract class WebBasePresenter extends BasePresenter
 
         $this->template->adminAccess = $this->user->isAllowed(Resource::ADMIN, Permission::ACCESS);
 
-        $this->template->pages          = $this->CMSService->findPublishedOrderedByPositionDTO();
+        $this->template->pages          = $this->CMSService->findPublishedOrderedByPositionDto();
         $this->template->sidebarVisible = false;
 
         $this->template->settings = $this->settingsService;

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\ApiModule\Presenters;
 
-use App\ApiModule\DTO\Schedule\ProgramSaveDTO;
-use App\ApiModule\DTO\Schedule\ResponseDTO;
+use App\ApiModule\Dto\Schedule\ProgramSaveDto;
+use App\ApiModule\Dto\Schedule\ResponseDto;
 use App\ApiModule\Services\ScheduleService;
 use App\Model\Settings\SettingsException;
 use Exception;
@@ -45,7 +45,7 @@ class SchedulePresenter extends ApiBasePresenter
         if ($this->user->isLoggedIn()) {
             $this->scheduleService->setUser($this->user->id);
         } else {
-            $data = new ResponseDTO();
+            $data = new ResponseDto();
             $data->setMessage($this->translator->translate('common.api.authentification_error'));
             $data->setStatus('danger');
 
@@ -133,9 +133,10 @@ class SchedulePresenter extends ApiBasePresenter
      */
     public function actionSaveProgram(string $data) : void
     {
-        $programSaveDTO = $this->serializer->deserialize($data, ProgramSaveDTO::class, 'json');
+        /** @var ProgramSaveDto $programSaveDto */
+        $programSaveDto = $this->serializer->deserialize($data, ProgramSaveDto::class, 'json');
 
-        $data = $this->scheduleService->saveProgram($programSaveDTO);
+        $data = $this->scheduleService->saveProgram($programSaveDto);
 
         $json     = $this->serializer->serialize($data, 'json');
         $response = new TextResponse($json);

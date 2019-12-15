@@ -322,49 +322,51 @@ class ApplicationsGridControl extends Control
     {
         $application = $this->applicationRepository->findById($id);
 
-        $selectedSubevents         = $this->subeventRepository->findSubeventsByIds($values->subevents);
-        $selectedAndUsersSubevents = clone $this->user->getSubevents();
-        foreach ($selectedSubevents as $subevent) {
-            $selectedAndUsersSubevents->add($subevent);
-        }
-        foreach ($application->getSubevents() as $subevent) {
-            $selectedAndUsersSubevents->removeElement($subevent);
-        }
+        if ($application instanceof SubeventsApplication) {
+            $selectedSubevents = $this->subeventRepository->findSubeventsByIds($values->subevents);
+            $selectedAndUsersSubevents = clone $this->user->getSubevents();
+            foreach ($selectedSubevents as $subevent) {
+                $selectedAndUsersSubevents->add($subevent);
+            }
+            foreach ($application->getSubevents() as $subevent) {
+                $selectedAndUsersSubevents->removeElement($subevent);
+            }
 
-        $p = $this->getPresenter();
+            $p = $this->getPresenter();
 
-        if (! $this->validators->validateSubeventsCapacities($selectedSubevents, $this->user)) {
-            $p->flashMessage('web.profile.applications_subevents_capacity_occupied', 'danger');
-            $this->redirect('this');
-        }
+            if (!$this->validators->validateSubeventsCapacities($selectedSubevents, $this->user)) {
+                $p->flashMessage('web.profile.applications_subevents_capacity_occupied', 'danger');
+                $this->redirect('this');
+            }
 
-        foreach ($this->subeventRepository->findAllExplicitOrderedByName() as $subevent) {
-            if (! $this->validators->validateSubeventsIncompatible($selectedAndUsersSubevents, $subevent)) {
+            foreach ($this->subeventRepository->findAllExplicitOrderedByName() as $subevent) {
+                if (!$this->validators->validateSubeventsIncompatible($selectedAndUsersSubevents, $subevent)) {
+                    $message = $this->translator->translate(
+                        'web.profile.applications_incompatible_subevents_selected',
+                        null,
+                        ['subevent' => $subevent->getName(), 'incompatibleSubevents' => $subevent->getIncompatibleSubeventsText()]
+                    );
+                    $p->flashMessage($message, 'danger');
+                    $this->redirect('this');
+                }
+                if ($this->validators->validateSubeventsRequired($selectedAndUsersSubevents, $subevent)) {
+                    continue;
+                }
+
                 $message = $this->translator->translate(
-                    'web.profile.applications_incompatible_subevents_selected',
+                    'web.profile.applications_required_subevents_not_selected',
                     null,
-                    ['subevent' => $subevent->getName(), 'incompatibleSubevents' => $subevent->getIncompatibleSubeventsText()]
+                    ['subevent' => $subevent->getName(), 'requiredSubevents' => $subevent->getRequiredSubeventsTransitiveText()]
                 );
                 $p->flashMessage($message, 'danger');
                 $this->redirect('this');
             }
-            if ($this->validators->validateSubeventsRequired($selectedAndUsersSubevents, $subevent)) {
-                continue;
-            }
 
-            $message = $this->translator->translate(
-                'web.profile.applications_required_subevents_not_selected',
-                null,
-                ['subevent' => $subevent->getName(), 'requiredSubevents' => $subevent->getRequiredSubeventsTransitiveText()]
-            );
-            $p->flashMessage($message, 'danger');
+            $this->applicationService->updateSubeventsApplication($application, $selectedSubevents, $this->user);
+
+            $p->flashMessage('web.profile.applications_edit_successful', 'success');
             $this->redirect('this');
         }
-
-        $this->applicationService->updateSubeventsApplication($application, $selectedSubevents, $this->user);
-
-        $p->flashMessage('web.profile.applications_edit_successful', 'success');
-        $this->redirect('this');
     }
 
     /**
@@ -391,11 +393,13 @@ class ApplicationsGridControl extends Control
     {
         $application = $this->applicationRepository->findById($id);
 
-        if ($this->applicationService->isAllowedEditApplication($application)) {
-            $this->applicationService->cancelSubeventsApplication($application, ApplicationState::CANCELED, $application->getUser());
-            $this->getPresenter()->flashMessage('web.profile.applications_application_canceled', 'success');
-        }
+        if ($application instanceof SubeventsApplication) {
+            if ($this->applicationService->isAllowedEditApplication($application)) {
+                $this->applicationService->cancelSubeventsApplication($application, ApplicationState::CANCELED, $application->getUser());
+                $this->getPresenter()->flashMessage('web.profile.applications_application_canceled', 'success');
+            }
 
-        $this->redirect('this');
+            $this->redirect('this');
+        }
     }
 }

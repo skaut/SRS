@@ -271,7 +271,8 @@ abstract class Content implements IContent
      */
     public function addContentForm(BaseForm $form) : BaseForm
     {
-        $formContainer = $form->addContainer($this->getContentFormName());
+        $formName = $this->getContentFormName();
+        $formContainer = $form->addContainer($form->$formName);
 
         $formContainer->addHidden('id')
             ->setAttribute('class', 'id');
@@ -304,13 +305,14 @@ abstract class Content implements IContent
      */
     public function contentFormSucceeded(BaseForm $form, stdClass $values) : void
     {
-        $values         = $values[$this->getContentFormName()];
+        $formName       = $this->getContentFormName();
+        $values         = $values->$formName;
         $this->position = $values->position;
         $this->heading  = $values->heading;
     }
 
-    public function convertToDTO() : ContentDTO
+    public function convertToDto() : ContentDto
     {
-        return new ContentDTO($this->getComponentName(), $this->heading);
+        return new ContentDto($this->getComponentName(), $this->heading);
     }
 }

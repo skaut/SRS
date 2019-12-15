@@ -6,7 +6,7 @@ namespace App\WebModule\Components;
 
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
-use App\Model\CMS\Content\ContentDTO;
+use App\Model\CMS\Content\ContentDto;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\Structure\SubeventRepository;
@@ -71,7 +71,7 @@ class ApplicationContentControl extends Control
      * @throws SettingsException
      * @throws Throwable
      */
-    public function render(ContentDTO $content) : void
+    public function render(ContentDto $content) : void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/application_content.latte');

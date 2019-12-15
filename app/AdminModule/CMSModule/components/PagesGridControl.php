@@ -8,8 +8,8 @@ use App\Model\ACL\RoleRepository;
 use App\Model\CMS\Page;
 use App\Model\CMS\PageRepository;
 use App\Model\Page\PageException;
-use App\Services\ACLService;
-use App\Services\CMSService;
+use App\Services\AclService;
+use App\Services\CmsService;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -36,7 +36,7 @@ class PagesGridControl extends Control
     /** @var Translator */
     private $translator;
 
-    /** @var CMSService */
+    /** @var CmsService */
     private $CMSService;
 
     /** @var PageRepository */
@@ -45,16 +45,16 @@ class PagesGridControl extends Control
     /** @var RoleRepository */
     private $roleRepository;
 
-    /** @var ACLService */
+    /** @var AclService */
     private $ACLService;
 
 
     public function __construct(
         Translator $translator,
-        CMSService $CMSService,
+        CmsService $CMSService,
         PageRepository $pageRepository,
         RoleRepository $roleRepository,
-        ACLService $ACLService
+        AclService $ACLService
     ) {
         parent::__construct();
 

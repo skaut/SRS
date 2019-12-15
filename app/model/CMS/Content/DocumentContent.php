@@ -79,7 +79,8 @@ class DocumentContent extends Content implements IContent
     {
         parent::addContentForm($form);
 
-        $formContainer = $form[$this->getContentFormName()];
+        $formName = $this->getContentFormName();
+        $formContainer = $form->$formName;
 
         $formContainer->addMultiSelect('tags', 'admin.cms.pages_content_tags', $this->tagRepository->getTagsOptions())
             ->setDefaultValue($this->tagRepository->findTagsIds($this->tags));
@@ -93,12 +94,13 @@ class DocumentContent extends Content implements IContent
     public function contentFormSucceeded(BaseForm $form, stdClass $values) : void
     {
         parent::contentFormSucceeded($form, $values);
-        $values     = $values[$this->getContentFormName()];
+        $formName   = $this->getContentFormName();
+        $values     = $values->$formName;
         $this->tags = $this->tagRepository->findTagsByIds($values->tags);
     }
 
-    public function convertToDTO() : ContentDTO
+    public function convertToDto() : ContentDto
     {
-        return new DocumentContentDTO($this->getComponentName(), $this->heading, Helpers::getIds($this->tags));
+        return new DocumentContentDto($this->getComponentName(), $this->heading, Helpers::getIds($this->tags));
     }
 }

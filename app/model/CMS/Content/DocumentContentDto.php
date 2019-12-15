@@ -9,7 +9,7 @@ namespace App\Model\CMS\Content;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class DocumentContentDTO extends ContentDTO
+class DocumentContentDto extends ContentDto
 {
     /**
      * Tagy dokumentů, které se zobrazí.

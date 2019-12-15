@@ -8,7 +8,7 @@ use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\User\UserRepository;
-use App\Services\ACLService;
+use App\Services\AclService;
 use App\Services\ProgramService;
 use App\Utils\Helpers;
 use Kdyby\Translation\Translator;
@@ -29,7 +29,7 @@ class RolesGridControl extends Control
     /** @var Translator */
     private $translator;
 
-    /** @var ACLService */
+    /** @var AclService */
     private $ACLService;
 
     /** @var RoleRepository */
@@ -47,7 +47,7 @@ class RolesGridControl extends Control
 
     public function __construct(
         Translator $translator,
-        ACLService $ACLService,
+        AclService $ACLService,
         RoleRepository $roleRepository,
         UserRepository $userRepository,
         ProgramRepository $programRepository,

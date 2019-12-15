@@ -11,7 +11,7 @@ use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
-use App\Services\ACLService;
+use App\Services\AclService;
 use App\Services\ApplicationService;
 use App\Services\SettingsService;
 use App\Utils\Validators;
@@ -60,7 +60,7 @@ class RolesFormFactory
     /** @var Validators */
     private $validators;
 
-    /** @var ACLService */
+    /** @var AclService */
     private $ACLService;
 
 
@@ -72,7 +72,7 @@ class RolesFormFactory
         ApplicationService $applicationService,
         Translator $translator,
         Validators $validators,
-        ACLService $ACLService
+        AclService $ACLService
     ) {
         $this->baseFormFactory    = $baseFormFactory;
         $this->userRepository     = $userRepository;

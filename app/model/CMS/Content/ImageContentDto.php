@@ -9,7 +9,7 @@ namespace App\Model\CMS\Content;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class ImageContentDTO extends ContentDTO
+class ImageContentDto extends ContentDto
 {
     /**
      * Adresa obrázku.

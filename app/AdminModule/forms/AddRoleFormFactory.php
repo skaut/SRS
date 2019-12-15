@@ -6,7 +6,7 @@ namespace App\AdminModule\Forms;
 
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
-use App\Services\ACLService;
+use App\Services\AclService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
@@ -27,14 +27,14 @@ class AddRoleFormFactory
     /** @var BaseFormFactory */
     private $baseFormFactory;
 
-    /** @var ACLService */
+    /** @var AclService */
     private $ACLService;
 
     /** @var RoleRepository */
     private $roleRepository;
 
 
-    public function __construct(BaseFormFactory $baseFormFactory, ACLService $ACLService, RoleRepository $roleRepository)
+    public function __construct(BaseFormFactory $baseFormFactory, AclService $ACLService, RoleRepository $roleRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->ACLService      = $ACLService;

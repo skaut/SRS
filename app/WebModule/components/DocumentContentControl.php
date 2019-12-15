@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
-use App\Model\CMS\Content\DocumentContentDTO;
+use App\Model\CMS\Content\DocumentContentDto;
 use App\Model\CMS\Document\DocumentRepository;
 use Nette\Application\UI\Control;
 use function array_keys;
@@ -29,7 +29,7 @@ class DocumentContentControl extends Control
         $this->documentRepository = $documentRepository;
     }
 
-    public function render(DocumentContentDTO $content) : void
+    public function render(DocumentContentDto $content) : void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/document_content.latte');

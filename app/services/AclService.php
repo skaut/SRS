@@ -24,7 +24,7 @@ use function array_map;
  *
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
-class ACLService
+class AclService
 {
     use Nette\SmartObject;
 
@@ -280,7 +280,7 @@ class ACLService
     /**
      * Vrací názvy všech oprávnění.
      *
-     * @return Collection|string[]
+     * @return Collection|string[][]
      * @throws Throwable
      */
     public function findAllPermissionNames() : Collection

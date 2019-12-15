@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\ApiModule\DTO\Schedule;
+namespace App\ApiModule\Dto\Schedule;
 
 use JMS\Serializer\Annotation as JMS;
 use Nette;
@@ -12,7 +12,7 @@ use Nette;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class ProgramDetailDTO
+class ProgramDetailDto
 {
     use Nette\SmartObject;
 

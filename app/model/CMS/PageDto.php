@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Model\CMS;
 
-use App\Model\CMS\Content\ContentDTO;
+use App\Model\CMS\Content\ContentDto;
 
-class PageDTO
+class PageDto
 {
     /**
      * Název stránky.
@@ -28,13 +28,13 @@ class PageDTO
 
     /**
      * Obsahy v hlavní části stránky.
-     * @var ContentDTO[]
+     * @var ContentDto[]
      */
     protected $mainContents;
 
     /**
      * Obsahy v postranní části stránky.
-     * @var ContentDTO[]
+     * @var ContentDto[]
      */
     protected $sidebarContents;
 
@@ -47,8 +47,8 @@ class PageDTO
 
     /**
      * @param string[]     $allowedRoles
-     * @param ContentDTO[] $mainContents
-     * @param ContentDTO[] $sidebarContents
+     * @param ContentDto[] $mainContents
+     * @param ContentDto[] $sidebarContents
      */
     public function __construct(string $name, string $slug, array $allowedRoles, array $mainContents, array $sidebarContents, bool $hasSidebar)
     {
@@ -79,7 +79,7 @@ class PageDTO
     }
 
     /**
-     * @return ContentDTO[]
+     * @return ContentDto[]
      */
     public function getMainContents() : array
     {
@@ -87,7 +87,7 @@ class PageDTO
     }
 
     /**
-     * @return ContentDTO[]
+     * @return ContentDto[]
      */
     public function getSidebarContents() : array
     {

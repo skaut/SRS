@@ -7,7 +7,7 @@ namespace App\Services;
 use App\Model\CMS\Content\Content;
 use App\Model\CMS\Content\ContentRepository;
 use App\Model\CMS\Page;
-use App\Model\CMS\PageDTO;
+use App\Model\CMS\PageDto;
 use App\Model\CMS\PageRepository;
 use App\Model\Page\PageException;
 use Doctrine\ORM\NonUniqueResultException;
@@ -24,7 +24,7 @@ use function array_map;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
-class CMSService
+class CmsService
 {
     /** @var Cache */
     private $pageCache;
@@ -93,38 +93,38 @@ class CMSService
      *
      * @throws Throwable
      */
-    public function findPublishedBySlugDTO(string $slug) : ?PageDTO
+    public function findPublishedBySlugDto(string $slug) : ?PageDto
     {
-        $pageDTO = $this->pageCache->load($slug);
-        if ($pageDTO === null) {
+        $pageDto = $this->pageCache->load($slug);
+        if ($pageDto === null) {
             $page = $this->pageRepository->findPublishedBySlug($slug);
             if ($page !== null) {
-                $pageDTO = $page->convertToDTO();
-                $this->pageCache->save($slug, $pageDTO);
+                $pageDto = $page->convertToDto();
+                $this->pageCache->save($slug, $pageDto);
             }
         }
-        return $pageDTO;
+        return $pageDto;
     }
 
     /**
      * Vrací DTO viditelných stránek, seřazená podle pozice.
      *
-     * @return PageDTO[]
+     * @return PageDto[]
      * @throws Throwable
      */
-    public function findPublishedOrderedByPositionDTO() : array
+    public function findPublishedOrderedByPositionDto() : array
     {
-        $pagesDTO = $this->menuCache->load(null);
-        if ($pagesDTO === null) {
-            $pagesDTO = array_map(
+        $pagesDto = $this->menuCache->load(null);
+        if ($pagesDto === null) {
+            $pagesDto = array_map(
                 function (Page $page) {
-                    return $page->convertToDTO();
+                    return $page->convertToDto();
                 },
                 $this->pageRepository->findPublishedOrderedByPosition()
             );
-            $this->menuCache->save(null, $pagesDTO);
+            $this->menuCache->save(null, $pagesDto);
         }
-        return $pagesDTO;
+        return $pagesDto;
     }
 
     /**

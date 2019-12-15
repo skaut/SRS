@@ -11,7 +11,7 @@ use App\Model\ACL\RoleRepository;
 use App\Model\Settings\SettingsException;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\UserRepository;
-use App\Services\ACLService;
+use App\Services\AclService;
 use App\Services\MailService;
 use App\Services\SubeventService;
 use Nette;
@@ -54,7 +54,7 @@ class SendFormFactory
     /** @var SubeventRepository */
     private $subeventRepository;
 
-    /** @var ACLService */
+    /** @var AclService */
     private $ACLService;
 
     /** @var SubeventService */
@@ -67,7 +67,7 @@ class SendFormFactory
         RoleRepository $roleRepository,
         UserRepository $userRepository,
         SubeventRepository $subeventRepository,
-        ACLService $ACLService,
+        AclService $ACLService,
         SubeventService $subeventService
     ) {
         $this->baseFormFactory    = $baseFormFactory;

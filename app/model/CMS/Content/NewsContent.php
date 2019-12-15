@@ -46,7 +46,8 @@ class NewsContent extends Content implements IContent
     {
         parent::addContentForm($form);
 
-        $formContainer = $form[$this->getContentFormName()];
+        $formName = $this->getContentFormName();
+        $formContainer = $form->$formName;
 
         $formContainer->addText('count', 'admin.cms.pages_content_news_count')
             ->setDefaultValue($this->count)
@@ -63,12 +64,13 @@ class NewsContent extends Content implements IContent
     public function contentFormSucceeded(BaseForm $form, stdClass $values) : void
     {
         parent::contentFormSucceeded($form, $values);
-        $values      = $values[$this->getContentFormName()];
+        $formName    = $this->getContentFormName();
+        $values      = $values->$formName;
         $this->count = $values->count !== '' ? $values->count : null;
     }
 
-    public function convertToDTO() : ContentDTO
+    public function convertToDto() : ContentDto
     {
-        return new NewsContentDTO($this->getComponentName(), $this->heading, $this->count);
+        return new NewsContentDto($this->getComponentName(), $this->heading, $this->count);
     }
 }

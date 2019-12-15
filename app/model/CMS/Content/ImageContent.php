@@ -150,7 +150,8 @@ class ImageContent extends Content implements IContent
     {
         parent::addContentForm($form);
 
-        $formContainer = $form[$this->getContentFormName()];
+        $formName = $this->getContentFormName();
+        $formContainer = $form->$formName;
 
         $formContainer->addText('currentImage', 'admin.cms.pages_content_image_current_file')
             ->setAttribute('data-type', 'image')
@@ -191,11 +192,12 @@ class ImageContent extends Content implements IContent
     public function contentFormSucceeded(BaseForm $form, stdClass $values) : void
     {
         parent::contentFormSucceeded($form, $values);
-        $values = $values[$this->getContentFormName()];
 
-        $file   = $values->image;
-        $width  = $values->width !== '' ? $values->width : null;
-        $height = $values->height !== '' ? $values->height : null;
+        $formName = $this->getContentFormName();
+        $values   = $values->$formName;
+        $file     = $values->image;
+        $width    = $values->width !== '' ? $values->width : null;
+        $height   = $values->height !== '' ? $values->height : null;
 
         $image = null;
 
@@ -258,8 +260,8 @@ class ImageContent extends Content implements IContent
         return '/images/' . Random::generate(5) . '/' . Strings::webalize($file->name, '.');
     }
 
-    public function convertToDTO() : ContentDTO
+    public function convertToDto() : ContentDto
     {
-        return new ImageContentDTO($this->getComponentName(), $this->heading, $this->image, $this->align, $this->width, $this->height);
+        return new ImageContentDto($this->getComponentName(), $this->heading, $this->image, $this->align, $this->width, $this->height);
     }
 }

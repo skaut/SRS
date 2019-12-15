@@ -9,7 +9,7 @@ namespace App\Model\CMS\Content;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class NewsContentDTO extends ContentDTO
+class NewsContentDto extends ContentDto
 {
     /**
      * Počet posledních novinek k zobrazení.

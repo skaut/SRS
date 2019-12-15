@@ -46,7 +46,8 @@ class HtmlContent extends Content implements IContent
     {
         parent::addContentForm($form);
 
-        $formContainer = $form[$this->getContentFormName()];
+        $formName = $this->getContentFormName();
+        $formContainer = $form->$formName;
 
         $formContainer->addTextArea('text', 'admin.cms.pages_content_html')
             ->setDefaultValue($this->text)
@@ -61,12 +62,13 @@ class HtmlContent extends Content implements IContent
     public function contentFormSucceeded(BaseForm $form, stdClass $values) : void
     {
         parent::contentFormSucceeded($form, $values);
-        $values     = $values[$this->getContentFormName()];
+        $formName   = $this->getContentFormName();
+        $values     = $values->$formName;
         $this->text = $values->text;
     }
 
-    public function convertToDTO() : ContentDTO
+    public function convertToDto() : ContentDto
     {
-        return new HtmlContentDTO($this->getComponentName(), $this->heading, $this->text);
+        return new HtmlContentDto($this->getComponentName(), $this->heading, $this->text);
     }
 }

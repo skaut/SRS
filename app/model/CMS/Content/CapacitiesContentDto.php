@@ -9,7 +9,7 @@ namespace App\Model\CMS\Content;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class CapacitiesContentDTO extends ContentDTO
+class CapacitiesContentDto extends ContentDto
 {
     /**
      * Role, jejichž obsazenosti se vypíší.

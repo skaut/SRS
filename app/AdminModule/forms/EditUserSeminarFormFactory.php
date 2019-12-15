@@ -22,7 +22,7 @@ use App\Model\User\CustomInputValue\CustomSelectValue;
 use App\Model\User\CustomInputValue\CustomTextValue;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
-use App\Services\ACLService;
+use App\Services\AclService;
 use App\Services\ApplicationService;
 use App\Services\FilesService;
 use App\Services\MailService;
@@ -88,7 +88,7 @@ class EditUserSeminarFormFactory
     /** @var SettingsService */
     private $settingsService;
 
-    /** @var ACLService */
+    /** @var AclService */
     private $ACLService;
 
 
@@ -104,7 +104,7 @@ class EditUserSeminarFormFactory
         FilesService $filesService,
         MailService $mailService,
         SettingsService $settingsService,
-        ACLService $ACLService
+        AclService $ACLService
     ) {
         $this->baseFormFactory            = $baseFormFactory;
         $this->em                         = $em;

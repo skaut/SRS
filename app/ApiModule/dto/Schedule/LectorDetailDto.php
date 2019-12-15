@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace ApiModule\DTO\Schedule;
+namespace ApiModule\Dto\Schedule;
 
 use JMS\Serializer\Annotation as JMS;
 use Nette;
 
 /**
- * Objekt pro přenos údajů o místnosti do FullCalendar.
+ * Objekt pro přenos údajů o lektorovi do FullCalendar.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class RoomDetailDTO
+class LectorDetailDto
 {
     use Nette\SmartObject;
 
@@ -29,10 +29,16 @@ class RoomDetailDTO
     private $name;
 
     /**
-     * @JMS\Type("integer")
-     * @var ?int
+     * @JMS\Type("string")
+     * @var string
      */
-    private $capacity;
+    private $about;
+
+    /**
+     * @JMS\Type("string")
+     * @var ?string
+     */
+    private $photo;
 
 
     public function getId() : int
@@ -55,13 +61,23 @@ class RoomDetailDTO
         $this->name = $name;
     }
 
-    public function getCapacity() : ?int
+    public function getAbout() : ?string
     {
-        return $this->capacity;
+        return $this->about;
     }
 
-    public function setCapacity(?int $capacity) : void
+    public function setAbout(?string $about) : void
     {
-        $this->capacity = $capacity;
+        $this->about = $about;
+    }
+
+    public function getPhoto() : ?string
+    {
+        return $this->photo;
+    }
+
+    public function setPhoto(?string $photo) : void
+    {
+        $this->photo = $photo;
     }
 }

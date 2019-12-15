@@ -26,7 +26,7 @@ use App\Model\User\CustomInputValue\CustomSelectValue;
 use App\Model\User\CustomInputValue\CustomTextValue;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
-use App\Services\ACLService;
+use App\Services\AclService;
 use App\Services\ApplicationService;
 use App\Services\ExcelExportService;
 use App\Services\MailService;
@@ -114,7 +114,7 @@ class UsersGridControl extends Control
     /** @var ApplicationRepository */
     private $applicationRepository;
 
-    /** @var ACLService */
+    /** @var AclService */
     private $ACLService;
 
     /** @var ApplicationService */
@@ -151,7 +151,7 @@ class UsersGridControl extends Control
         Session $session,
         SubeventRepository $subeventRepository,
         ApplicationRepository $applicationRepository,
-        ACLService $ACLService,
+        AclService $ACLService,
         ApplicationService $applicationService,
         UserService $userService,
         ProgramService $programService,
@@ -543,7 +543,9 @@ class UsersGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $this['usersGrid']->redrawItem($id);
+            /** @var DataGrid $usersGrid */
+            $usersGrid = $this['usersGrid'];
+            $usersGrid->redrawItem($id);
         } else {
             $this->redirect('this');
         }

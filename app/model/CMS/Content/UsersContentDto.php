@@ -9,7 +9,7 @@ namespace App\Model\CMS\Content;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class UsersContentDTO extends ContentDTO
+class UsersContentDto extends ContentDto
 {
     /**
      * Role, jejichž uživatelé budou vypsáni.
