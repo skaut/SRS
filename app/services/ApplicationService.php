@@ -487,8 +487,8 @@ class ApplicationService
         $oldMaturityDate           = $application->getMaturityDate();
 
         //pokud neni zmena, nic se neprovede
-        if ($paymentMethod === $oldPaymentMethod && $paymentDate === $oldPaymentDate
-            && $incomeProofPrintedDate === $oldIncomeProofPrintedDate && $maturityDate === $oldMaturityDate) {
+        if ($paymentMethod === $oldPaymentMethod && $paymentDate == $oldPaymentDate
+            && $incomeProofPrintedDate == $oldIncomeProofPrintedDate && $maturityDate == $oldMaturityDate) {
             return;
         }
 

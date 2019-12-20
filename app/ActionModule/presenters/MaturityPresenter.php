@@ -178,7 +178,7 @@ class MaturityPresenter extends ActionBasePresenter
             foreach ($user->getWaitingForPaymentApplications() as $application) {
                 $maturityDate = $application->getMaturityDate();
 
-                if ($maturityReminderDate === $maturityDate) {
+                if ($maturityReminderDate == $maturityDate) {
                     $this->mailService->sendMailFromTemplate($application->getUser(), '', Template::MATURITY_REMINDER, [
                         TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
                         TemplateVariable::APPLICATION_MATURITY => $maturityDate->format(Helpers::DATE_FORMAT),
