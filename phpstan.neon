@@ -4,6 +4,7 @@ parameters:
         - %rootDir%/../../../code-quality
 
     checkGenericClassInNonGenericObjectType: false
+    checkMissingIterableValueType: false
 
     ignoreErrors:
         - '#Call to an undefined method Nette\\Forms\\Container::addDatePicker\(\)\.#'
