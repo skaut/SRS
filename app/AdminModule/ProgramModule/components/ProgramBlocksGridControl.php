@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ProgramModule\Components;
 
+use App\AdminModule\Presenters\AdminBasePresenter;
 use App\Model\ACL\Permission;
 use App\Model\ACL\SrsResource;
 use App\Model\Enums\ProgramMandatoryType;
@@ -316,6 +317,8 @@ class ProgramBlocksGridControl extends Control
      */
     public function isAllowedModifyBlock(Block $block) : bool
     {
-        return $this->getPresenter()->dbuser->isAllowedModifyBlock($block);
+        /** @var AdminBasePresenter $presenter */
+        $presenter = $this->getPresenter();
+        return $presenter->dbuser->isAllowedModifyBlock($block);
     }
 }
