@@ -10,7 +10,6 @@ use App\Model\Enums\Sex;
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\CustomInput\CustomCheckbox;
 use App\Model\Settings\CustomInput\CustomFile;
-use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\CustomInput\CustomSelect;
 use App\Model\Settings\CustomInput\CustomText;
@@ -56,6 +55,7 @@ use Tracy\ILogger;
 use function array_keys;
 use function count;
 use function in_array;
+use function property_exists;
 
 /**
  * Formulář přihlášky.
@@ -70,6 +70,7 @@ class ApplicationFormFactory
 
     /**
      * Přihlášený uživatel.
+     *
      * @var User
      */
     private $user;
@@ -79,6 +80,7 @@ class ApplicationFormFactory
 
     /**
      * Jsou vytvořené podakce.
+     *
      * @var bool
      */
     private $subeventsExists;
@@ -140,7 +142,6 @@ class ApplicationFormFactory
     /** @var Translator */
     private $translator;
 
-
     public function __construct(
         BaseFormFactory $baseFormFactory,
         UserRepository $userRepository,
@@ -183,6 +184,7 @@ class ApplicationFormFactory
 
     /**
      * Vytvoří formulář.
+     *
      * @throws SettingsException
      * @throws NonUniqueResultException
      * @throws Throwable
@@ -271,12 +273,13 @@ class ApplicationFormFactory
 
     /**
      * Zpracuje formulář.
+     *
      * @throws Throwable
      */
     public function processForm(BaseForm $form, stdClass $values) : void
     {
         $this->em->transactional(function () use ($values) : void {
-            if (property_exists($values,'sex')) {
+            if (property_exists($values, 'sex')) {
                 $this->user->setSex($values->sex);
             }
             if (property_exists($values, 'firstName')) {
@@ -300,27 +303,24 @@ class ApplicationFormFactory
             //vlastni pole
             foreach ($this->customInputRepository->findAll() as $customInput) {
                 $customInputValue = $this->user->getCustomInputValue($customInput);
-                $customInputName = 'custom' . $customInput->getId();
+                $customInputName  = 'custom' . $customInput->getId();
 
                 if ($customInput instanceof CustomText) {
                     /** @var CustomTextValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomTextValue();
                     $customInputValue->setValue($values->$customInputName);
-                }
-                elseif ($customInput instanceof CustomCheckbox) {
+                } elseif ($customInput instanceof CustomCheckbox) {
                     /** @var CustomCheckboxValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomCheckboxValue();
                     $customInputValue->setValue($values->$customInputName);
-                }
-                elseif ($customInput instanceof CustomSelect) {
+                } elseif ($customInput instanceof CustomSelect) {
                     /** @var CustomSelectValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomSelectValue();
                     $customInputValue->setValue($values->$customInputName);
-                }
-                elseif ($customInput instanceof CustomFile) {
+                } elseif ($customInput instanceof CustomFile) {
                     /** @var CustomFileValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomFileValue();
-                    $file = $values->$customInputName;
+                    $file             = $values->$customInputName;
                     if ($file->size > 0) {
                         $path = $this->generatePath($file);
                         $this->filesService->save($file, $path);
@@ -419,6 +419,7 @@ class ApplicationFormFactory
 
     /**
      * Přidá select pro výběr podakcí.
+     *
      * @throws NonUniqueResultException
      * @throws NoResultException
      */
@@ -552,6 +553,7 @@ class ApplicationFormFactory
     public function validateSubeventsCapacities(MultiSelectBox $field) : bool
     {
         $selectedSubevents = $this->subeventRepository->findSubeventsByIds($field->getVaLue());
+
         return $this->validators->validateSubeventsCapacities($selectedSubevents, $this->user);
     }
 
@@ -561,50 +563,59 @@ class ApplicationFormFactory
     public function validateRolesCapacities(MultiSelectBox $field) : bool
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
+
         return $this->validators->validateRolesCapacities($selectedRoles, $this->user);
     }
 
     /**
      * Ověří kompatibilitu podakcí.
+     *
      * @param Subevent[] $args
      */
     public function validateSubeventsIncompatible(MultiSelectBox $field, array $args) : bool
     {
         $selectedSubevents = $this->subeventRepository->findSubeventsByIds($field->getValue());
         $testSubevent      = $args[0];
+
         return $this->validators->validateSubeventsIncompatible($selectedSubevents, $testSubevent);
     }
 
     /**
      * Ověří výběr požadovaných podakcí.
+     *
      * @param Subevent[] $args
      */
     public function validateSubeventsRequired(MultiSelectBox $field, array $args) : bool
     {
         $selectedSubevents = $this->subeventRepository->findSubeventsByIds($field->getValue());
         $testSubevent      = $args[0];
+
         return $this->validators->validateSubeventsRequired($selectedSubevents, $testSubevent);
     }
 
     /**
      * Ověří kompatibilitu rolí.
+     *
      * @param Role[] $args
      */
     public function validateRolesIncompatible(MultiSelectBox $field, array $args) : bool
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
         $testRole      = $args[0];
+
         return $this->validators->validateRolesIncompatible($selectedRoles, $testRole);
     }
 
     /**
      * Ověří výběr požadovaných rolí.
+     *
      * @param Role[] $args
      */
     public function validateRolesRequired(MultiSelectBox $field, array $args) : bool
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
         $testRole      = $args[0];
+
         return $this->validators->validateRolesRequired($selectedRoles, $testRole);
     }
 
@@ -614,6 +625,7 @@ class ApplicationFormFactory
     public function validateRolesRegisterable(MultiSelectBox $field) : bool
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
+
         return $this->validators->validateRolesRegisterable($selectedRoles, $this->user);
     }
 
@@ -628,6 +640,7 @@ class ApplicationFormFactory
                 return true;
             }
         }
+
         return false;
     }
 

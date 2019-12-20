@@ -44,7 +44,6 @@ class RolesGridControl extends Control
     /** @var ProgramService */
     private $programService;
 
-
     public function __construct(
         Translator $translator,
         AclService $ACLService,
@@ -74,6 +73,7 @@ class RolesGridControl extends Control
 
     /**
      * Vytvoří komponentu.
+     *
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
@@ -113,7 +113,7 @@ class RolesGridControl extends Control
         $grid->addColumnText('fee', 'admin.acl.roles_fee')
             ->setRendererOnCondition(function (Role $row) {
                 return $this->translator->translate('admin.acl.roles_fee_from_subevents');
-            }, function (Role $row) {
+            }, static function (Role $row) {
                 return $row->getFee() === null;
             });
 
@@ -134,13 +134,14 @@ class RolesGridControl extends Control
                 'data-toggle' => 'confirmation',
                 'data-content' => $this->translator->translate('admin.acl.roles_delete_confirm'),
             ]);
-        $grid->allowRowsAction('delete', function (Role $item) {
+        $grid->allowRowsAction('delete', static function (Role $item) {
             return ! $item->isSystem();
         });
     }
 
     /**
      * Zpracuje odstranění role.
+     *
      * @throws AbortException
      * @throws Throwable
      */
@@ -160,6 +161,7 @@ class RolesGridControl extends Control
 
     /**
      * Změní registrovatelnost role.
+     *
      * @throws AbortException
      */
     public function changeRegisterable(int $id, bool $registerable) : void

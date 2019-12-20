@@ -30,9 +30,9 @@ class BankPresenter extends ActionBasePresenter
      */
     public $settingsService;
 
-
     /**
      * Zkontroluje splatnost přihlášek.
+     *
      * @throws SettingsException
      * @throws Throwable
      */

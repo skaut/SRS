@@ -10,9 +10,10 @@ use Nettrine\ORM\Entity\Attributes\Id;
 /**
  * Entita skautIS kurz.
  *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="SkautIsCourseRepository")
  * @ORM\Table(name="skaut_is_course")
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class SkautIsCourse
 {
@@ -20,18 +21,21 @@ class SkautIsCourse
 
     /**
      * SkautIS id kurzu.
+     *
      * @ORM\Column(type="integer")
+     *
      * @var int
      */
     protected $skautIsCourseId;
 
     /**
      * Název kurzu.
+     *
      * @ORM\Column(type="string")
+     *
      * @var string
      */
     protected $name;
-
 
     public function getId() : int
     {

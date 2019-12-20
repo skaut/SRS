@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Model\CMS\Content;
 
+use App\AdminModule\Forms\BaseForm;
 use App\Model\CMS\Document\Tag;
 use App\Model\CMS\Document\TagRepository;
 use App\Model\CMS\Page;
 use App\Model\Page\PageException;
 use App\Utils\Helpers;
-use App\AdminModule\Forms\BaseForm;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -18,10 +18,11 @@ use stdClass;
 /**
  * Entita obsahu s dokumenty.
  *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity
  * @ORM\Table(name="document_content")
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class DocumentContent extends Content implements IContent
 {
@@ -30,14 +31,15 @@ class DocumentContent extends Content implements IContent
 
     /**
      * Tagy dokumentů, které se zobrazí.
+     *
      * @ORM\ManyToMany(targetEntity="\App\Model\CMS\Document\Tag")
+     *
      * @var Collection|Tag[]
      */
     protected $tags;
 
     /** @var TagRepository */
     private $tagRepository;
-
 
     /**
      * @throws PageException
@@ -79,7 +81,7 @@ class DocumentContent extends Content implements IContent
     {
         parent::addContentForm($form);
 
-        $formName = $this->getContentFormName();
+        $formName      = $this->getContentFormName();
         $formContainer = $form->$formName;
 
         $formContainer->addMultiSelect('tags', 'admin.cms.pages_content_tags', $this->tagRepository->getTagsOptions())

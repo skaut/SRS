@@ -30,7 +30,6 @@ class SubeventsFormFactory
     /** @var SettingsService */
     private $settingsService;
 
-
     public function __construct(BaseFormFactory $baseForm, SettingsService $settingsService)
     {
         $this->baseFormFactory = $baseForm;
@@ -39,6 +38,7 @@ class SubeventsFormFactory
 
     /**
      * Vytvoří formulář.
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -61,6 +61,7 @@ class SubeventsFormFactory
 
     /**
      * Zpracuje formulář.
+     *
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException

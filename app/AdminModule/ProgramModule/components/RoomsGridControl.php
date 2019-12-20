@@ -44,7 +44,6 @@ class RoomsGridControl extends Control
     /** @var SessionSection */
     private $sessionSection;
 
-
     public function __construct(
         Translator $translator,
         RoomRepository $roomRepository,
@@ -72,6 +71,7 @@ class RoomsGridControl extends Control
 
     /**
      * Vytvoří komponentu.
+     *
      * @throws DataGridException
      */
     public function createComponentRoomsGrid(string $name) : void
@@ -90,7 +90,7 @@ class RoomsGridControl extends Control
         $grid->addColumnText('capacity', 'admin.program.rooms_capacity')
             ->setRendererOnCondition(function (Room $row) {
                 return $this->translator->translate('admin.program.blocks_capacity_unlimited');
-            }, function (Room $row) {
+            }, static function (Room $row) {
                 return $row->getCapacity() === null;
             });
 
@@ -105,7 +105,7 @@ class RoomsGridControl extends Control
         };
         $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
 
-        $grid->addInlineEdit()->onControlAdd[]  = function (Container $container) : void {
+        $grid->addInlineEdit()->onControlAdd[]  = static function (Container $container) : void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.program.rooms_name_empty');
 
@@ -140,6 +140,7 @@ class RoomsGridControl extends Control
 
     /**
      * Zpracuje přidání místnosti.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -161,6 +162,7 @@ class RoomsGridControl extends Control
 
     /**
      * Zpracuje úpravu místnosti.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -182,6 +184,7 @@ class RoomsGridControl extends Control
 
     /**
      * Odstraní místnost.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -198,7 +201,9 @@ class RoomsGridControl extends Control
 
     /**
      * Hromadně vyexportuje harmonogramy místností.
+     *
      * @param int[] $ids
+     *
      * @throws AbortException
      */
     public function groupExportRoomsSchedules(array $ids) : void
@@ -209,6 +214,7 @@ class RoomsGridControl extends Control
 
     /**
      * Zpracuje export harmonogramů místností.
+     *
      * @throws AbortException
      * @throws Exception
      */

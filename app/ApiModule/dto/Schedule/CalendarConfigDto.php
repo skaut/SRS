@@ -34,7 +34,6 @@ class CalendarConfigDto
      */
     private $allowedModifySchedule;
 
-
     public function getSeminarFromDate() : string
     {
         return $this->seminarFromDate;

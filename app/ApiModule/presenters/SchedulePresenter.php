@@ -32,7 +32,6 @@ class SchedulePresenter extends ApiBasePresenter
     /** @var Serializer */
     private $serializer;
 
-
     /**
      * @throws AbortException
      */
@@ -57,6 +56,7 @@ class SchedulePresenter extends ApiBasePresenter
 
     /**
      * Vrací podrobnosti o všech programech pro použití v administraci harmonogramu.
+     *
      * @throws Exception
      * @throws AbortException
      */
@@ -71,6 +71,7 @@ class SchedulePresenter extends ApiBasePresenter
 
     /**
      * Vrací podrobnosti o programech, ke kterým má uživatel přístup, pro použití v kalendáři pro výběr programů.
+     *
      * @throws SettingsException
      * @throws AbortException
      * @throws Throwable
@@ -86,6 +87,7 @@ class SchedulePresenter extends ApiBasePresenter
 
     /**
      * Vrací podrobnosti o programových blocích.
+     *
      * @throws AbortException
      */
     public function actionGetBlocks() : void
@@ -99,6 +101,7 @@ class SchedulePresenter extends ApiBasePresenter
 
     /**
      * Vrací podrobnosti o místnostech.
+     *
      * @throws AbortException
      */
     public function actionGetRooms() : void
@@ -112,6 +115,7 @@ class SchedulePresenter extends ApiBasePresenter
 
     /**
      * Vrací nastavení pro FullCalendar.
+     *
      * @throws SettingsException
      * @throws AbortException
      * @throws Throwable
@@ -127,6 +131,7 @@ class SchedulePresenter extends ApiBasePresenter
 
     /**
      * Uloží nebo vytvoří program.
+     *
      * @throws SettingsException
      * @throws AbortException
      * @throws Throwable
@@ -145,6 +150,7 @@ class SchedulePresenter extends ApiBasePresenter
 
     /**
      * Smaže program.
+     *
      * @throws SettingsException
      * @throws AbortException
      * @throws Throwable
@@ -160,6 +166,7 @@ class SchedulePresenter extends ApiBasePresenter
 
     /**
      * Přihlásí program uživateli.
+     *
      * @throws SettingsException
      * @throws AbortException
      * @throws Throwable
@@ -175,6 +182,7 @@ class SchedulePresenter extends ApiBasePresenter
 
     /**
      * Odhlásí program uživateli.
+     *
      * @throws SettingsException
      * @throws AbortException
      * @throws Throwable

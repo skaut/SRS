@@ -22,7 +22,6 @@ class CategoriesPresenter extends ProgramBasePresenter
      */
     public $programCategoriesGridControlFactory;
 
-
     /**
      * @throws AbortException
      */

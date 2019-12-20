@@ -11,10 +11,11 @@ use stdClass;
 /**
  * Entita obsahu s textem.
  *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity
  * @ORM\Table(name="text_content")
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class TextContent extends Content implements IContent
 {
@@ -23,11 +24,12 @@ class TextContent extends Content implements IContent
 
     /**
      * Text.
+     *
      * @ORM\Column(type="text", nullable=true)
+     *
      * @var string
      */
     protected $text;
-
 
     public function getText() : ?string
     {
@@ -46,7 +48,7 @@ class TextContent extends Content implements IContent
     {
         parent::addContentForm($form);
 
-        $formName = $this->getContentFormName();
+        $formName      = $this->getContentFormName();
         $formContainer = $form->$formName;
 
         $formContainer->addTextArea('text', 'admin.cms.pages_content_text')

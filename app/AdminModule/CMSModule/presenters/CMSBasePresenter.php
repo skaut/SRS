@@ -21,7 +21,6 @@ abstract class CMSBasePresenter extends AdminBasePresenter
     /** @var string */
     protected $resource = SrsResource::CMS;
 
-
     /**
      * @throws AbortException
      */

@@ -6,9 +6,9 @@ namespace App\AdminModule\Forms;
 
 use App\Model\ACL\Permission;
 use App\Model\ACL\PermissionRepository;
-use App\Model\ACL\SrsResource;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
+use App\Model\ACL\SrsResource;
 use App\Model\CMS\PageRepository;
 use App\Model\Program\ProgramRepository;
 use App\Services\AclService;
@@ -37,6 +37,7 @@ class EditRoleFormFactory
 
     /**
      * Upravovaná role.
+     *
      * @var Role
      */
     private $role;
@@ -65,7 +66,6 @@ class EditRoleFormFactory
     /** @var ProgramService */
     private $programService;
 
-
     public function __construct(
         BaseFormFactory $baseFormFactory,
         EntityManagerDecorator $em,
@@ -88,6 +88,7 @@ class EditRoleFormFactory
 
     /**
      * Vytvoří formulář.
+     *
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
@@ -204,6 +205,7 @@ class EditRoleFormFactory
 
     /**
      * Zpracuje formulář.
+     *
      * @throws Throwable
      */
     public function processForm(BaseForm $form, stdClass $values) : void
@@ -243,7 +245,9 @@ class EditRoleFormFactory
 
     /**
      * Vrátí možná oprávnění jako možnosti pro select.
+     *
      * @return string[]
+     *
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
@@ -276,7 +280,9 @@ class EditRoleFormFactory
 
     /**
      * Připraví oprávnění jako možnost pro select.
+     *
      * @param string[] $optionsGroup
+     *
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
@@ -288,6 +294,7 @@ class EditRoleFormFactory
 
     /**
      * Ověří kolize mezi vyžadovanými a nekompatibilními rolemi.
+     *
      * @param int[][] $args
      */
     public function validateIncompatibleAndRequiredCollision(MultiSelectBox $field, array $args) : bool
@@ -321,6 +328,7 @@ class EditRoleFormFactory
 
     /**
      * Ověří, zda stránka, kam mají být uživatelé přesměrování po přihlášení, je pro ně viditelná.
+     *
      * @param string[][] $args
      */
     public function validateRedirectAllowed(SelectBox $field, array $args) : bool

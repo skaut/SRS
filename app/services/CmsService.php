@@ -19,7 +19,6 @@ use Throwable;
 use function array_map;
 
 /**
- *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
@@ -37,7 +36,6 @@ class CmsService
 
     /** @var ContentRepository */
     private $contentRepository;
-
 
     public function __construct(PageRepository $pageRepository, ContentRepository $contentRepository, IStorage $storage)
     {
@@ -103,6 +101,7 @@ class CmsService
                 $this->pageCache->save($slug, $pageDto);
             }
         }
+
         return $pageDto;
     }
 
@@ -110,6 +109,7 @@ class CmsService
      * Vrací DTO viditelných stránek, seřazená podle pozice.
      *
      * @return PageDto[]
+     *
      * @throws Throwable
      */
     public function findPublishedOrderedByPositionDto() : array
@@ -117,13 +117,14 @@ class CmsService
         $pagesDto = $this->menuCache->load(null);
         if ($pagesDto === null) {
             $pagesDto = array_map(
-                function (Page $page) {
+                static function (Page $page) {
                     return $page->convertToDto();
                 },
                 $this->pageRepository->findPublishedOrderedByPosition()
             );
             $this->menuCache->save(null, $pagesDto);
         }
+
         return $pagesDto;
     }
 

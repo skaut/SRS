@@ -28,6 +28,7 @@ class CategoryRepository extends EntityRepository
 
     /**
      * Vrací kategorie seřazené podle názvu.
+     *
      * @return Category[]
      */
     public function findAllOrderedByName() : array
@@ -40,6 +41,7 @@ class CategoryRepository extends EntityRepository
 
     /**
      * Vrací názvy všech kategorií.
+     *
      * @return string[]
      */
     public function findAllNames() : array
@@ -48,11 +50,13 @@ class CategoryRepository extends EntityRepository
             ->select('c.name')
             ->getQuery()
             ->getScalarResult();
+
         return array_map('current', $names);
     }
 
     /**
      * Vrací názvy kategorií, kromě kategorie s id.
+     *
      * @return string[]
      */
     public function findOthersNames(int $id) : array
@@ -63,11 +67,13 @@ class CategoryRepository extends EntityRepository
             ->setParameter('id', $id)
             ->getQuery()
             ->getScalarResult();
+
         return array_map('current', $names);
     }
 
     /**
      * Vrací kategorie, ze kterých si uživatel může vybírat programy.
+     *
      * @return Collection|Category[]
      */
     public function findUserAllowed(User $user) : Collection
@@ -78,11 +84,13 @@ class CategoryRepository extends EntityRepository
             ->where('u = :user')->setParameter('user', $user)
             ->getQuery()
             ->getResult();
+
         return new ArrayCollection($result);
     }
 
     /**
      * Vrací kategorie jako možnosti pro select.
+     *
      * @return string[]
      */
     public function getCategoriesOptions() : array
@@ -97,6 +105,7 @@ class CategoryRepository extends EntityRepository
         foreach ($categories as $category) {
             $options[$category['id']] = $category['name'];
         }
+
         return $options;
     }
 

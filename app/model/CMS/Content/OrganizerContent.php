@@ -11,9 +11,10 @@ use stdClass;
 /**
  * Entita obsahu s informací o pořadateli.
  *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity
  * @ORM\Table(name="organizer_content")
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class OrganizerContent extends Content implements IContent
 {
@@ -22,11 +23,12 @@ class OrganizerContent extends Content implements IContent
 
     /**
      * Pořadatel.
+     *
      * @ORM\Column(type="string", nullable=true)
+     *
      * @var string
      */
     protected $organizer;
-
 
     public function getOrganizer() : ?string
     {
@@ -45,7 +47,7 @@ class OrganizerContent extends Content implements IContent
     {
         parent::addContentForm($form);
 
-        $formName = $this->getContentFormName();
+        $formName      = $this->getContentFormName();
         $formContainer = $form->$formName;
 
         $formContainer->addText('organizer', 'admin.cms.pages_content_organizer')

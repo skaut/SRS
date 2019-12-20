@@ -34,7 +34,6 @@ class ResponseDto
      */
     private $program;
 
-
     public function getMessage() : string
     {
         return $this->message;

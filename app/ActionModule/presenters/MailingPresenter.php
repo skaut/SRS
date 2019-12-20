@@ -25,9 +25,9 @@ class MailingPresenter extends ActionBasePresenter
      */
     public $settingsService;
 
-
     /**
      * Ověří e-mail semináře.
+     *
      * @throws SettingsException
      * @throws AbortException
      * @throws Throwable

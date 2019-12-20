@@ -28,7 +28,9 @@ class TagRepository extends EntityRepository
 
     /**
      * Vrátí tagy podle id.
+     *
      * @param int[] $ids
+     *
      * @return Collection|Tag[]
      */
     public function findTagsByIds(array $ids) : Collection
@@ -36,23 +38,27 @@ class TagRepository extends EntityRepository
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids))
             ->orderBy(['name' => 'ASC']);
+
         return $this->matching($criteria);
     }
 
     /**
      * Vrátí id tagů.
+     *
      * @param Collection|Tag[] $tags
+     *
      * @return int[]
      */
     public function findTagsIds(Collection $tags) : array
     {
-        return array_map(function ($o) {
+        return array_map(static function ($o) {
             return $o->getId();
         }, $tags->toArray());
     }
 
     /**
      * Vrátí všechny názvy tagů.
+     *
      * @return string[]
      */
     public function findAllNames() : array
@@ -61,11 +67,13 @@ class TagRepository extends EntityRepository
             ->select('t.name')
             ->getQuery()
             ->getScalarResult();
+
         return array_map('current', $names);
     }
 
     /**
      * Vrátí názvy tagů, kromě tagu s id.
+     *
      * @return string[]
      */
     public function findOthersNames(int $id) : array
@@ -76,11 +84,13 @@ class TagRepository extends EntityRepository
             ->setParameter('id', $id)
             ->getQuery()
             ->getScalarResult();
+
         return array_map('current', $names);
     }
 
     /**
      * Uloží tag.
+     *
      * @throws ORMException
      */
     public function save(Tag $tag) : void
@@ -91,6 +101,7 @@ class TagRepository extends EntityRepository
 
     /**
      * Odstraní tag.
+     *
      * @throws ORMException
      */
     public function remove(Tag $tag) : void
@@ -101,6 +112,7 @@ class TagRepository extends EntityRepository
 
     /**
      * Vrátí seznam tagů jako možnosti pro select.
+     *
      * @return string[]
      */
     public function getTagsOptions() : array
@@ -115,6 +127,7 @@ class TagRepository extends EntityRepository
         foreach ($tags as $tag) {
             $options[$tag['id']] = $tag['name'];
         }
+
         return $options;
     }
 }

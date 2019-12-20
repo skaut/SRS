@@ -12,10 +12,11 @@ use stdClass;
 /**
  * Entita obsahu s aktualitami.
  *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity
  * @ORM\Table(name="news_content")
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class NewsContent extends Content implements IContent
 {
@@ -24,11 +25,12 @@ class NewsContent extends Content implements IContent
 
     /**
      * Počet posledních novinek k zobrazení.
+     *
      * @ORM\Column(type="integer", nullable=true)
+     *
      * @var int
      */
     protected $count;
-
 
     public function getCount() : ?int
     {
@@ -47,7 +49,7 @@ class NewsContent extends Content implements IContent
     {
         parent::addContentForm($form);
 
-        $formName = $this->getContentFormName();
+        $formName      = $this->getContentFormName();
         $formContainer = $form->$formName;
 
         $formContainer->addText('count', 'admin.cms.pages_content_news_count')

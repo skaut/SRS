@@ -127,7 +127,6 @@ class PagePresenter extends WebBasePresenter
      */
     public $organizerContentControlFactory;
 
-
     /**
      * @throws BadRequestException
      * @throws Throwable

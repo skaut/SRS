@@ -14,9 +14,10 @@ use function implode;
 /**
  * Entita kategorie programového bloku.
  *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="CategoryRepository")
  * @ORM\Table(name="category")
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class Category
 {
@@ -24,26 +25,31 @@ class Category
 
     /**
      * Název kategorie.
+     *
      * @ORM\Column(type="string", unique=true)
+     *
      * @var string
      */
     protected $name;
 
     /**
      * Role, které si mohou přihlašovat programy z kategorie.
+     *
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="registerableCategories", cascade={"persist"})
+     *
      * @var Collection|Role[]
      */
     protected $registerableRoles;
 
     /**
      * Bloky v kategorii.
+     *
      * @ORM\OneToMany(targetEntity="Block", mappedBy="category", cascade={"persist"})
      * @ORM\OrderBy({"name" = "ASC"})
+     *
      * @var Collection|Block[]
      */
     protected $blocks;
-
 
     public function __construct()
     {
@@ -76,7 +82,7 @@ class Category
 
     public function getRegisterableRolesText() : string
     {
-        return implode(', ', $this->registerableRoles->map(function (Role $role) {
+        return implode(', ', $this->registerableRoles->map(static function (Role $role) {
             return $role->getName();
         })->toArray());
     }

@@ -30,7 +30,6 @@ class PaymentsPresenter extends PaymentsBasePresenter
      */
     public $editPaymentFormFactory;
 
-
     public function renderEdit(int $id) : void
     {
     }

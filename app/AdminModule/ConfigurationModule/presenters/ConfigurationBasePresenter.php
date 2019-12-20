@@ -39,7 +39,6 @@ abstract class ConfigurationBasePresenter extends AdminBasePresenter
         $this->checkPermission(Permission::MANAGE);
     }
 
-
     /**
      * @throws SettingsException
      * @throws NonUniqueResultException

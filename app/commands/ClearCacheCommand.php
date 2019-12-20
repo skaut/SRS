@@ -29,7 +29,6 @@ class ClearCacheCommand extends Command
     /** @var string */
     private $dir;
 
-
     public function __construct(string $dir)
     {
         parent::__construct();
@@ -68,9 +67,11 @@ class ClearCacheCommand extends Command
             }
 
             $output->writeln('Cache cleared.');
+
             return 0;
         } catch (Throwable $ex) {
             $output->write('error');
+
             return 1;
         }
     }

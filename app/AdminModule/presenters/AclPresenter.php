@@ -52,7 +52,6 @@ class AclPresenter extends AdminBasePresenter
      */
     public $authenticator;
 
-
     /**
      * @throws AbortException
      */
@@ -72,6 +71,7 @@ class AclPresenter extends AdminBasePresenter
 
     /**
      * Zapne testování role.
+     *
      * @throws AbortException
      */
     public function actionTest(int $id) : void

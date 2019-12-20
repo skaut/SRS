@@ -28,6 +28,7 @@ class SkautIsCourseRepository extends EntityRepository
 
     /**
      * Uloží skautIS kurz.
+     *
      * @throws ORMException
      */
     public function save(SkautIsCourse $skautIsCourse) : void
@@ -38,6 +39,7 @@ class SkautIsCourseRepository extends EntityRepository
 
     /**
      * Odstraní skautIS kurz.
+     *
      * @throws ORMException
      */
     public function remove(SkautIsCourse $skautIsCourse) : void
@@ -48,6 +50,7 @@ class SkautIsCourseRepository extends EntityRepository
 
     /**
      * Odstraní všechny skautIS kurzy.
+     *
      * @throws ORMException
      */
     public function removeAll() : void
@@ -60,19 +63,23 @@ class SkautIsCourseRepository extends EntityRepository
 
     /**
      * Vrací id skautIS kurzů.
+     *
      * @param Collection|SkautIsCourse[] $skautIsCourses
+     *
      * @return int[]
      */
     public function findSkautIsCoursesIds(Collection $skautIsCourses) : array
     {
-        return array_map(function (SkautIsCourse $skautIsCourse) {
+        return array_map(static function (SkautIsCourse $skautIsCourse) {
             return $skautIsCourse->getId();
         }, $skautIsCourses->toArray());
     }
 
     /**
      * Vrací skautIS kurzy podle id.
+     *
      * @param int[] $ids
+     *
      * @return Collection|SkautIsCourse[]
      */
     public function findSkautIsCoursesByIds(array $ids) : Collection
@@ -80,11 +87,13 @@ class SkautIsCourseRepository extends EntityRepository
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids))
             ->orderBy(['name' => 'ASC']);
+
         return $this->matching($criteria);
     }
 
     /**
      * Vrací seznam skautIS kurzů jako možnosti pro select.
+     *
      * @return string[]
      */
     public function getSkautIsCoursesOptions() : array
@@ -99,6 +108,7 @@ class SkautIsCourseRepository extends EntityRepository
         foreach ($skautIsCourses as $skautIsCourse) {
             $options[$skautIsCourse['id']] = $skautIsCourse['name'];
         }
+
         return $options;
     }
 }

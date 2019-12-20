@@ -16,7 +16,6 @@ use Kdyby\Translation\Translator;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Utils\DateTime;
-use Nextras\Forms\Controls\DatePicker;
 use Nextras\Forms\Controls\DateTimePicker;
 use Nextras\Forms\Rendering\Bs3FormRenderer;
 use stdClass;
@@ -41,7 +40,6 @@ class ProgramFormFactory
     /** @var Translator */
     private $translator;
 
-
     public function __construct(BaseFormFactory $baseForm, SettingsService $settingsService, Translator $translator)
     {
         $this->baseFormFactory = $baseForm;
@@ -51,6 +49,7 @@ class ProgramFormFactory
 
     /**
      * Vytvoří formulář.
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -110,6 +109,7 @@ class ProgramFormFactory
 
     /**
      * Zpracuje formulář.
+     *
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException
@@ -127,6 +127,7 @@ class ProgramFormFactory
 
     /**
      * Ověří, že otevření zapisování programů je dříve než uzavření.
+     *
      * @param DateTime[]|null[] $args
      */
     public function validateRegisterProgramsFrom(DateTimePicker $field, array $args) : bool
@@ -134,11 +135,13 @@ class ProgramFormFactory
         if ($args[0] === null || $args[1] === null) {
             return true;
         }
+
         return $args[0] < $args[1];
     }
 
     /**
      * Ověří, že uzavření zapisování programů je později než otevření.
+     *
      * @param DateTime[]|null[] $args
      */
     public function validateRegisterProgramsTo(DateTimePicker $field, array $args) : bool
@@ -146,11 +149,13 @@ class ProgramFormFactory
         if ($args[0] === null || $args[1] === null) {
             return true;
         }
+
         return $args[0] > $args[1];
     }
 
     /**
      * Vrátí stavy registrace programů.
+     *
      * @return string[]
      */
     private function prepareRegisterProgramsTypeOptions() : array
@@ -159,6 +164,7 @@ class ProgramFormFactory
         foreach (ProgramRegistrationType::$types as $type) {
             $options[$type] = 'common.register_programs_type.' . $type;
         }
+
         return $options;
     }
 }

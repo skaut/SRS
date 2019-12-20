@@ -68,7 +68,6 @@ class ExcelExportService
     /** @var ProgramService */
     private $programService;
 
-
     public function __construct(
         Translator $translator,
         CustomInputRepository $customInputRepository,
@@ -93,8 +92,10 @@ class ExcelExportService
 
     /**
      * Vyexportuje matici uživatelů a rolí.
+     *
      * @param Collection|User[] $users
      * @param Collection|Role[] $roles
+     *
      * @throws \Exception
      */
     public function exportUsersRoles(Collection $users, Collection $roles, string $filename) : ExcelResponse
@@ -135,6 +136,7 @@ class ExcelExportService
 
     /**
      * Vyexportuje harmonogram uživatele.
+     *
      * @throws Exception
      */
     public function exportUserSchedule(User $user, string $filename) : ExcelResponse
@@ -144,7 +146,9 @@ class ExcelExportService
 
     /**
      * Vyexportuje harmonogramy uživatelů, každý uživatel na zvlástním listu.
+     *
      * @param Collection|User[] $users
+     *
      * @throws Exception
      * @throws \Exception
      */
@@ -202,6 +206,7 @@ class ExcelExportService
 
     /**
      * Vyexportuje harmonogram místnosti.
+     *
      * @throws \Exception
      */
     public function exportRoomSchedule(Room $room, string $filename) : ExcelResponse
@@ -211,7 +216,9 @@ class ExcelExportService
 
     /**
      * Vyexportuje harmonogramy místností.
+     *
      * @param Collection|Room[] $rooms
+     *
      * @throws \Exception
      */
     public function exportRoomsSchedules(Collection $rooms, string $filename) : ExcelResponse
@@ -264,6 +271,7 @@ class ExcelExportService
 
     /**
      * @param Collection|User[] $users
+     *
      * @throws \Exception
      */
     public function exportUsersList(Collection $users, string $filename) : ExcelResponse
@@ -441,19 +449,15 @@ class ExcelExportService
 
                 if ($customInputValue instanceof CustomTextValue) {
                     $value = $customInputValue->getValue();
-                }
-                elseif ($customInputValue instanceof CustomCheckboxValue) {
+                } elseif ($customInputValue instanceof CustomCheckboxValue) {
                     $value = $customInputValue->getValue()
                         ? $this->translator->translate('common.export.common.yes')
                         : $this->translator->translate('common.export.common.no');
-                }
-                elseif ($customInputValue instanceof CustomSelectValue) {
+                } elseif ($customInputValue instanceof CustomSelectValue) {
                     $value = $customInputValue->getValueOption();
-                }
-                elseif ($customInputValue instanceof CustomFileValue) {
+                } elseif ($customInputValue instanceof CustomFileValue) {
                     continue;
-                }
-                else {
+                } else {
                     $value = '';
                 }
 
@@ -463,11 +467,13 @@ class ExcelExportService
             $sheet->setCellValueByColumnAndRow($column, $row, $user->getNote());
             $sheet->getStyleByColumnAndRow($column++, $row)->getAlignment()->setWrapText(true);
         }
+
         return new ExcelResponse($this->spreadsheet, $filename);
     }
 
     /**
      * @param Collection|User[] $users
+     *
      * @throws \Exception
      */
     public function exportUsersSubeventsAndCategories(Collection $users, string $filename) : ExcelResponse
@@ -547,11 +553,13 @@ class ExcelExportService
                 $sheet->setCellValueByColumnAndRow($column++, $row, implode(', ', $rooms));
             }
         }
+
         return new ExcelResponse($this->spreadsheet, $filename);
     }
 
     /**
      * @param Collection|Block[] $blocks
+     *
      * @throws \Exception
      */
     public function exportBlocksAttendees(Collection $blocks, string $filename) : ExcelResponse
@@ -602,6 +610,7 @@ class ExcelExportService
     private static function cleanSheetName(string $name) : string
     {
         $name = preg_replace('[\\/\*\[\]:?]', '', $name);
+
         return Helpers::truncate($name, 28);
     }
 }

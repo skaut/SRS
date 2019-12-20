@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace App\WebModule\Forms;
 
-use Nette\Application\UI;
 use Nette\Application\UI\Form;
 use Nextras\Forms\Controls\DatePicker;
 use Nextras\Forms\Controls\DateTimePicker;
 use VojtechDobes\NetteForms\GpsPicker;
-
 
 /**
  * BaseForm pro WebModule.

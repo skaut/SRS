@@ -24,7 +24,6 @@ class ProgramPresenter extends ConfigurationBasePresenter
      */
     public $programFormFactory;
 
-
     /**
      * @throws SettingsException
      * @throws Throwable

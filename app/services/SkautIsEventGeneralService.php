@@ -27,6 +27,7 @@ class SkautIsEventGeneralService extends SkautIsEventService
 
     /**
      * Vloží účastníky do skautIS.
+     *
      * @param Collection|User[] $users
      */
     public function insertParticipants(int $eventId, Collection $users, bool $accept = false) : bool
@@ -49,6 +50,7 @@ class SkautIsEventGeneralService extends SkautIsEventService
             }
         } catch (WsdlException $ex) {
             Debugger::log($ex, ILogger::WARNING);
+
             return false;
         }
 
@@ -82,6 +84,7 @@ class SkautIsEventGeneralService extends SkautIsEventService
 
     /**
      * Vrací účastníky akce.
+     *
      * @return stdClass[]
      */
     private function getAllParticipants(int $eventId) : array

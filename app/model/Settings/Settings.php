@@ -9,10 +9,11 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Entita nastavení.
  *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="SettingsRepository")
  * @ORM\Table(name="settings")
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class Settings
 {
@@ -219,19 +220,22 @@ class Settings
 
     /**
      * Název položky nastavení.
+     *
      * @ORM\Column(type="string", unique=true)
      * @ORM\Id
+     *
      * @var string
      */
     protected $item;
 
     /**
      * Hodnota položky nastavení.
+     *
      * @ORM\Column(type="text", nullable=true)
+     *
      * @var string
      */
     protected $value;
-
 
     public function __construct(string $item, ?string $value)
     {

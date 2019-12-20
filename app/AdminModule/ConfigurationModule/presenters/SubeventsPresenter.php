@@ -45,7 +45,6 @@ class SubeventsPresenter extends ConfigurationBasePresenter
      */
     public $subeventRepository;
 
-
     public function renderEdit(int $id) : void
     {
         $subevent = $this->subeventRepository->findById($id);

@@ -33,6 +33,7 @@ class CustomInputFormFactory
 
     /**
      * Upravované pole.
+     *
      * @var ?CustomInput
      */
     private $customInput;
@@ -42,7 +43,6 @@ class CustomInputFormFactory
 
     /** @var CustomInputRepository */
     private $customInputRepository;
-
 
     public function __construct(BaseFormFactory $baseFormFactory, CustomInputRepository $customInputRepository)
     {
@@ -102,6 +102,7 @@ class CustomInputFormFactory
 
     /**
      * Zpracuje formulář.
+     *
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException
@@ -148,6 +149,7 @@ class CustomInputFormFactory
 
     /**
      * Vrátí typy vlastních polí jako možnosti pro select.
+     *
      * @return string[]
      */
     private function prepareCustomInputTypesOptions() : array
@@ -156,6 +158,7 @@ class CustomInputFormFactory
         foreach (CustomInput::$types as $type) {
             $options[$type] = 'admin.common.custom_' . $type;
         }
+
         return $options;
     }
 }

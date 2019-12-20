@@ -13,8 +13,8 @@ use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\Forms\EditUserPersonalDetailsFormFactory;
 use App\AdminModule\Forms\EditUserSeminarFormFactory;
 use App\Model\ACL\Permission;
-use App\Model\ACL\SrsResource;
 use App\Model\ACL\Role;
+use App\Model\ACL\SrsResource;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
 use App\Model\Settings\CustomInput\CustomInput;
@@ -91,7 +91,6 @@ class UsersPresenter extends AdminBasePresenter
      */
     public $applicationService;
 
-
     /**
      * @throws AbortException
      */
@@ -140,6 +139,7 @@ class UsersPresenter extends AdminBasePresenter
 
     /**
      * Zobrazí formulář pro editaci osobních údajů uživatele.
+     *
      * @throws AbortException
      */
     public function handleEditPersonalDetails() : void
@@ -155,6 +155,7 @@ class UsersPresenter extends AdminBasePresenter
 
     /**
      * Zobrazí formulář pro editaci údajů o účasti uživatele na semináři.
+     *
      * @throws AbortException
      */
     public function handleEditSeminar() : void
@@ -170,6 +171,7 @@ class UsersPresenter extends AdminBasePresenter
 
     /**
      * Zobrazí formulář pro editaci údajů o platbě uživatele.
+     *
      * @throws AbortException
      */
     public function handleEditPayment() : void

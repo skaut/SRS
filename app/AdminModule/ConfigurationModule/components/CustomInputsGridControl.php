@@ -30,7 +30,6 @@ class CustomInputsGridControl extends Control
     /** @var CustomInputRepository */
     private $customInputRepository;
 
-
     public function __construct(Translator $translator, CustomInputRepository $customInputRepository)
     {
         parent::__construct();
@@ -50,6 +49,7 @@ class CustomInputsGridControl extends Control
 
     /**
      * Vytvoří komponentu.
+     *
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
@@ -80,7 +80,7 @@ class CustomInputsGridControl extends Control
             ->onChange[] = [$this, 'changeMandatory'];
 
         $grid->addColumnText('options', 'admin.configuration.custom_inputs_options')
-            ->setRenderer(function (CustomInput $input) {
+            ->setRenderer(static function (CustomInput $input) {
                 return $input instanceof CustomSelect ? $input->getOptions() : null;
             });
 
@@ -102,6 +102,7 @@ class CustomInputsGridControl extends Control
 
     /**
      * Zpracuje odstranění vlastního pole.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -118,6 +119,7 @@ class CustomInputsGridControl extends Control
 
     /**
      * Přesune vlastní pole s id $item_id mezi $prev_id a $next_id.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -141,6 +143,7 @@ class CustomInputsGridControl extends Control
 
     /**
      * Změní povinnost pole.
+     *
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException

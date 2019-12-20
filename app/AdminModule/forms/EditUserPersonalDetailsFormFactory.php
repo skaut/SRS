@@ -14,6 +14,7 @@ use Nette\Application\UI\Form;
 use stdClass;
 use function getimagesizefromstring;
 use function image_type_to_extension;
+use function property_exists;
 
 /**
  * Formulář pro úpravu osobních údajů externích lektorů.
@@ -26,6 +27,7 @@ class EditUserPersonalDetailsFormFactory
 
     /**
      * Upravovaný uživatel.
+     *
      * @var User
      */
     private $user;
@@ -38,7 +40,6 @@ class EditUserPersonalDetailsFormFactory
 
     /** @var FilesService */
     private $filesService;
-
 
     public function __construct(BaseFormFactory $baseFormFactory, UserRepository $userRepository, FilesService $filesService)
     {
@@ -126,6 +127,7 @@ class EditUserPersonalDetailsFormFactory
 
     /**
      * Zpracuje formulář.
+     *
      * @throws Nette\Utils\UnknownImageFileException
      * @throws ORMException
      * @throws OptimisticLockException

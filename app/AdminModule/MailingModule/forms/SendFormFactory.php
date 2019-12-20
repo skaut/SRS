@@ -35,6 +35,7 @@ class SendFormFactory
 
     /**
      * Stav odeslání e-mailu.
+     *
      * @var bool
      */
     public $mailSuccess;
@@ -59,7 +60,6 @@ class SendFormFactory
 
     /** @var SubeventService */
     private $subeventService;
-
 
     public function __construct(
         BaseFormFactory $baseFormFactory,
@@ -141,6 +141,7 @@ class SendFormFactory
 
     /**
      * Zpracuje formulář.
+     *
      * @throws SettingsException
      * @throws Throwable
      * @throws MailingMailCreationException

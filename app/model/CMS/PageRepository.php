@@ -13,8 +13,8 @@ use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Throwable;
-use function array_map;
 use const PHP_INT_MAX;
+use function array_map;
 
 /**
  * Třída spravující stránky.
@@ -35,6 +35,7 @@ class PageRepository extends EntityRepository
 
     /**
      * Vrací viditelné stránky se zadaným slugem.
+     *
      * @throws Throwable
      */
     public function findPublishedBySlug(string $slug) : ?Page
@@ -44,6 +45,7 @@ class PageRepository extends EntityRepository
 
     /**
      * Vrací viditelné stránky, seřazené podle pozice.
+     *
      * @return Page[]
      */
     public function findPublishedOrderedByPosition() : array
@@ -53,6 +55,7 @@ class PageRepository extends EntityRepository
 
     /**
      * Vrací poslední pozici stránky.
+     *
      * @throws NonUniqueResultException
      * @throws NoResultException
      */
@@ -66,6 +69,7 @@ class PageRepository extends EntityRepository
 
     /**
      * Vrací všechny cesty.
+     *
      * @return string[]
      */
     public function findAllSlugs() : array
@@ -74,11 +78,13 @@ class PageRepository extends EntityRepository
             ->select('p.slug')
             ->getQuery()
             ->getScalarResult();
+
         return array_map('current', $slugs);
     }
 
     /**
      * Vrací všechny cesty, kromě cesty stránky s id.
+     *
      * @return string[]
      */
     public function findOthersSlugs(int $id) : array
@@ -89,24 +95,29 @@ class PageRepository extends EntityRepository
             ->setParameter('id', $id)
             ->getQuery()
             ->getScalarResult();
+
         return array_map('current', $slugs);
     }
 
     /**
      * Vrací id podle stránek.
+     *
      * @param Collection|Page[] $pages
+     *
      * @return int[]
      */
     public function findPagesIds(Collection $pages) : array
     {
-        return array_map(function (Page $o) {
+        return array_map(static function (Page $o) {
             return $o->getId();
         }, $pages->toArray());
     }
 
     /**
      * Vrací stránky podle cest.
+     *
      * @param string[] $slugs
+     *
      * @return Collection|Page[]
      */
     public function findPagesBySlugs(array $slugs) : Collection
@@ -114,23 +125,27 @@ class PageRepository extends EntityRepository
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('slug', $slugs))
             ->orderBy(['name' => 'ASC']);
+
         return $this->matching($criteria);
     }
 
     /**
      * Vrací cesty podle stránek.
+     *
      * @param Collection|Page[] $pages
+     *
      * @return string[]
      */
     public function findPagesSlugs(Collection $pages) : array
     {
-        return array_map(function (Page $o) {
+        return array_map(static function (Page $o) {
             return $o->getSlug();
         }, $pages->toArray());
     }
 
     /**
      * Vrací stránky jako možnosti pro select.
+     *
      * @return string[]
      */
     public function getPagesOptions() : array
@@ -145,6 +160,7 @@ class PageRepository extends EntityRepository
         foreach ($pages as $page) {
             $options[$page['slug']] = $page['name'];
         }
+
         return $options;
     }
 

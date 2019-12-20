@@ -10,9 +10,10 @@ use Nettrine\ORM\Entity\Attributes\Id;
 /**
  * Entita proměnná v automatickém e-mailu.
  *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity
  * @ORM\Table(name="mail_template_variable")
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class TemplateVariable
 {
@@ -75,13 +76,13 @@ class TemplateVariable
      * Jméno uživatele.
      */
     public const USER = 'user';
-
-
     use Id;
 
     /**
      * Název proměnné.
+     *
      * @ORM\Column(type="string")
+     *
      * @var string
      */
     protected $name;

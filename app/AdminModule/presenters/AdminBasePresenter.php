@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\AdminModule\Presenters;
 
 use App\Model\ACL\Permission;
-use App\Model\ACL\SrsResource;
 use App\Model\ACL\RoleRepository;
+use App\Model\ACL\SrsResource;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\User\User;
@@ -64,10 +64,10 @@ abstract class AdminBasePresenter extends BasePresenter
 
     /**
      * Přihlášený uživatel.
+     *
      * @var User
      */
     public $dbuser;
-
 
     /**
      * Načte css podle konfigurace v config.neon.
@@ -148,7 +148,7 @@ abstract class AdminBasePresenter extends BasePresenter
         $skautIsUserId                = $this->dbuser->getSkautISUserId();
         $skautIsRoles                 = $this->skautIsService->getUserRoles($skautIsUserId);
         $skautIsRoleSelectedId        = $this->skautIsService->getUserRoleId();
-        $skautIsRoleSelected          = array_filter($skautIsRoles, function ($r) use ($skautIsRoleSelectedId) {
+        $skautIsRoleSelected          = array_filter($skautIsRoles, static function ($r) use ($skautIsRoleSelectedId) {
             return $r->ID === $skautIsRoleSelectedId;
         });
         $this->template->skautIsRoles = $skautIsRoles;
@@ -161,6 +161,7 @@ abstract class AdminBasePresenter extends BasePresenter
 
     /**
      * Kontroluje oprávnění uživatele a případně jej přesměruje.
+     *
      * @throws AbortException
      */
     public function checkPermission(string $permission) : void

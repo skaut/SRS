@@ -16,10 +16,11 @@ use Nettrine\ORM\Entity\Attributes\Id;
 /**
  * Entita program.
  *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="ProgramRepository")
  * @ORM\Table(name="program")
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class Program
 {
@@ -27,39 +28,48 @@ class Program
 
     /**
      * Programový blok.
+     *
      * @ORM\ManyToOne(targetEntity="Block", inversedBy="programs", cascade={"persist"})
+     *
      * @var Block
      */
     protected $block;
 
     /**
      * Účastníci programu.
+     *
      * @ORM\ManyToMany(targetEntity="\App\Model\User\User", mappedBy="programs", cascade={"persist"})
+     *
      * @var Collection|User[]
      */
     protected $attendees;
 
     /**
      * Obsazenost.
+     *
      * @ORM\Column(type="integer")
+     *
      * @var int
      */
     protected $occupancy = 0;
 
     /**
      * Místnost.
+     *
      * @ORM\ManyToOne(targetEntity="Room", inversedBy="programs", cascade={"persist"})
+     *
      * @var Room
      */
     protected $room;
 
     /**
      * Začátek programu.
+     *
      * @ORM\Column(type="datetime")
+     *
      * @var DateTime
      */
     protected $start;
-
 
     public function __construct(Block $block)
     {
@@ -136,12 +146,14 @@ class Program
 
     /**
      * Vrací konec programu vypočtený podle délky bloku.
+     *
      * @throws Exception
      */
     public function getEnd() : DateTime
     {
-        $end = clone($this->start);
+        $end = clone$this->start;
         $end->add(new DateInterval('PT' . $this->block->getDuration() . 'M'));
+
         return $end;
     }
 }

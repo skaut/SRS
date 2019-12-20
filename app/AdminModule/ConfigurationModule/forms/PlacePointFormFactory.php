@@ -33,7 +33,6 @@ class PlacePointFormFactory
     /** @var PlacePointRepository */
     private $placePointRepository;
 
-
     public function __construct(BaseFormFactory $baseForm, PlacePointRepository $placePointRepository)
     {
         $this->baseFormFactory      = $baseForm;
@@ -79,6 +78,7 @@ class PlacePointFormFactory
 
     /**
      * Zpracuje formulář.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      */

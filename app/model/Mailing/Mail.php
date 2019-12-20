@@ -17,9 +17,10 @@ use function implode;
 /**
  * Entita e-mail.
  *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="MailRepository")
  * @ORM\Table(name="mail")
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class Mail
 {
@@ -27,53 +28,66 @@ class Mail
 
     /**
      * Role, kterým byl e-mail odeslán.
+     *
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role")
+     *
      * @var Collection|Role[]
      */
     protected $recipientRoles;
 
     /**
      * Podakce, jejichž účastníkům byl e-mail odeslán.
+     *
      * @ORM\ManyToMany(targetEntity="\App\Model\Structure\Subevent")
+     *
      * @var Collection|Subevent[]
      */
     protected $recipientSubevents;
 
     /**
      * Uživatelé, kterém byl e-mail odeslán.
+     *
      * @ORM\ManyToMany(targetEntity="\App\Model\User\User")
+     *
      * @var Collection|User[]
      */
     protected $recipientUsers;
 
     /**
      * Předmět e-mailu.
+     *
      * @ORM\Column(type="string")
+     *
      * @var string
      */
     protected $subject;
 
     /**
      * Text e-mailu.
+     *
      * @ORM\Column(type="text")
+     *
      * @var string
      */
     protected $text;
 
     /**
      * Datum a čas odeslání.
+     *
      * @ORM\Column(type="datetime")
+     *
      * @var DateTime
      */
     protected $datetime;
 
     /**
      * Automatický e-mail.
+     *
      * @ORM\Column(type="boolean")
+     *
      * @var bool
      */
     protected $automatic = false;
-
 
     public function __construct()
     {
@@ -111,7 +125,7 @@ class Mail
      */
     public function getRecipientRolesText() : string
     {
-        return implode(', ', $this->recipientRoles->map(function (Role $role) {
+        return implode(', ', $this->recipientRoles->map(static function (Role $role) {
             return $role->getName();
         })->toArray());
     }
@@ -140,7 +154,7 @@ class Mail
      */
     public function getRecipientSubeventsText() : string
     {
-        return implode(', ', $this->recipientSubevents->map(function (Subevent $subevent) {
+        return implode(', ', $this->recipientSubevents->map(static function (Subevent $subevent) {
             return $subevent->getName();
         })->toArray());
     }
@@ -169,7 +183,7 @@ class Mail
      */
     public function getRecipientUsersText() : string
     {
-        return implode(', ', $this->recipientUsers->map(function (User $user) {
+        return implode(', ', $this->recipientUsers->map(static function (User $user) {
             return $user->getDisplayName();
         })->toArray());
     }

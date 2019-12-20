@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\WebModule\Presenters;
 
 use App\Model\ACL\Permission;
-use App\Model\ACL\SrsResource;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
+use App\Model\ACL\SrsResource;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\User\User;
@@ -83,7 +83,6 @@ abstract class WebBasePresenter extends BasePresenter
     /** @var User */
     protected $dbuser;
 
-
     /**
      * Načte css podle konfigurace v config.neon.
      */
@@ -150,6 +149,7 @@ abstract class WebBasePresenter extends BasePresenter
 
     /**
      * Ukončí testování role.
+     *
      * @throws AbortException
      */
     public function actionExitRoleTest() : void
@@ -160,6 +160,7 @@ abstract class WebBasePresenter extends BasePresenter
 
     /**
      * Zkontroluje stav instalace.
+     *
      * @throws AbortException
      * @throws Throwable
      */

@@ -50,7 +50,6 @@ class PdfExportService
     /** @var ApplicationService */
     private $applicationService;
 
-
     /**
      * @throws ReflectionException
      */
@@ -79,6 +78,7 @@ class PdfExportService
 
     /**
      * Vygeneruje doklad o zaplacení pro přihlášku.
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -121,6 +121,7 @@ class PdfExportService
 
     /**
      * @param Collection|Application[] $applications
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -133,6 +134,7 @@ class PdfExportService
 
     /**
      * @param Collection|Application[] $applications
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -145,6 +147,7 @@ class PdfExportService
 
     /**
      * Vygeneruje doklady o zaplacení pro uživatele.
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -168,7 +171,9 @@ class PdfExportService
 
     /**
      * Vygeneruje doklady o zaplacení pro více uživatelů.
+     *
      * @param Collection|User[] $users
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -181,6 +186,7 @@ class PdfExportService
 
     /**
      * @param Collection|User[] $users
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -193,6 +199,7 @@ class PdfExportService
 
     /**
      * Vytvoří stránku s příjmovýchm dokladem.
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -229,6 +236,7 @@ class PdfExportService
 
     /**
      * Vytvoří stránku s potvrzením o přijetí platby.
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -258,6 +266,7 @@ class PdfExportService
 
     /**
      * Nastaví šablonu pro příjmový doklad.
+     *
      * @throws Exception
      */
     private function configureForIncomeProof() : void
@@ -269,6 +278,7 @@ class PdfExportService
 
     /**
      * Nastaví šablonu pro potvrzení o přijetí platby.
+     *
      * @throws Exception
      */
     private function configureForAccountProof() : void
@@ -284,6 +294,7 @@ class PdfExportService
     private function writeToday() : string
     {
         $today = new DateTime('now');
+
         return $today->format(Helpers::DATE_FORMAT);
     }
 }

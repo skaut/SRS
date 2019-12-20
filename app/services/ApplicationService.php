@@ -41,12 +41,12 @@ use ReflectionException;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 use Yasumi\Yasumi;
+use const STR_PAD_LEFT;
 use function abs;
 use function array_diff;
 use function implode;
 use function str_pad;
 use function strval;
-use const STR_PAD_LEFT;
 
 /**
  * Služba pro správu přihlašování na akci.
@@ -103,7 +103,6 @@ class ApplicationService
     /** @var PaymentRepository */
     private $paymentRepository;
 
-
     public function __construct(
         EntityManagerDecorator $em,
         SettingsService $settingsService,
@@ -140,8 +139,10 @@ class ApplicationService
 
     /**
      * Zaregistruje uživatele (vyplnění přihlášky / přidání role v administraci).
+     *
      * @param Collection|Role[]     $roles
      * @param Collection|Subevent[] $subevents
+     *
      * @throws Throwable
      */
     public function register(
@@ -195,7 +196,9 @@ class ApplicationService
 
     /**
      * Změní role uživatele.
+     *
      * @param Collection|Role[] $roles
+     *
      * @throws SettingsException
      * @throws Throwable
      * @throws MailingMailCreationException
@@ -206,10 +209,10 @@ class ApplicationService
 
         //pokud se role nezmenily, nic se neprovede
         if ($roles->count() === $oldRoles->count()) {
-            $rolesArray    = $roles->map(function (Role $role) {
+            $rolesArray    = $roles->map(static function (Role $role) {
                 return $role->getId();
             })->toArray();
-            $oldRolesArray = $oldRoles->map(function (Role $role) {
+            $oldRolesArray = $oldRoles->map(static function (Role $role) {
                 return $role->getId();
             })->toArray();
 
@@ -228,11 +231,11 @@ class ApplicationService
                 $user->setRoles($roles);
                 $this->userRepository->save($user);
 
-                if ($roles->forAll(function (int $key, Role $role) {
+                if ($roles->forAll(static function (int $key, Role $role) {
                     return $role->isApprovedAfterRegistration();
                 })) {
                     $user->setApproved(true);
-                } elseif (! $approve && $roles->exists(function (int $key, Role $role) use ($oldRoles) {
+                } elseif (! $approve && $roles->exists(static function (int $key, Role $role) use ($oldRoles) {
                     return ! $role->isApprovedAfterRegistration() && ! $oldRoles->contains($role);
                 })) {
                     $user->setApproved(false);
@@ -279,7 +282,7 @@ class ApplicationService
 
         $this->mailService->sendMailFromTemplate($user, '', Template::ROLES_CHANGED, [
             TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
-            TemplateVariable::USERS_ROLES => implode(', ', $roles->map(function (Role $role) {
+            TemplateVariable::USERS_ROLES => implode(', ', $roles->map(static function (Role $role) {
                 return $role->getName();
             })->toArray()),
         ]);
@@ -287,6 +290,7 @@ class ApplicationService
 
     /**
      * Zruší registraci uživatele na seminář.
+     *
      * @throws SettingsException
      * @throws Throwable
      * @throws MailingMailCreationException
@@ -338,7 +342,9 @@ class ApplicationService
 
     /**
      * Vytvoří novou přihlášku na podakce.
+     *
      * @param Collection|Subevent[] $subevents
+     *
      * @throws Throwable
      */
     public function addSubeventsApplication(User $user, Collection $subevents, User $createdBy) : void
@@ -360,7 +366,9 @@ class ApplicationService
 
     /**
      * Aktualizuje podakce přihlášky.
+     *
      * @param Collection|Subevent[] $subevents
+     *
      * @throws SettingsException
      * @throws Throwable
      * @throws MailingMailCreationException
@@ -375,10 +383,10 @@ class ApplicationService
 
         //pokud se podakce nezmenily, nic se neprovede
         if ($subevents->count() === $oldSubevents->count()) {
-            $subeventsArray    = $subevents->map(function (Subevent $subevent) {
+            $subeventsArray    = $subevents->map(static function (Subevent $subevent) {
                 return $subevent->getId();
             })->toArray();
-            $oldSubeventsArray = $oldSubevents->map(function (Subevent $subevent) {
+            $oldSubeventsArray = $oldSubevents->map(static function (Subevent $subevent) {
                 return $subevent->getId();
             })->toArray();
 
@@ -417,6 +425,7 @@ class ApplicationService
 
     /**
      * Zruší přihlášku na podakce.
+     *
      * @throws SettingsException
      * @throws Throwable
      * @throws MailingMailCreationException
@@ -461,6 +470,7 @@ class ApplicationService
 
     /**
      * Aktualizuje stav platby.
+     *
      * @throws Throwable
      */
     public function updateApplicationPayment(
@@ -477,8 +487,8 @@ class ApplicationService
         $oldMaturityDate           = $application->getMaturityDate();
 
         //pokud neni zmena, nic se neprovede
-        if ($paymentMethod === $oldPaymentMethod && $paymentDate == $oldPaymentDate
-            && $incomeProofPrintedDate == $oldIncomeProofPrintedDate && $maturityDate == $oldMaturityDate) {
+        if ($paymentMethod === $oldPaymentMethod && $paymentDate === $oldPaymentDate
+            && $incomeProofPrintedDate === $oldIncomeProofPrintedDate && $maturityDate === $oldMaturityDate) {
             return;
         }
 
@@ -569,6 +579,7 @@ class ApplicationService
 
     /**
      * @param Collection|Application[] $pairedApplications
+     *
      * @throws Throwable
      */
     public function updatePayment(Payment $payment, ?DateTime $date, ?float $amount, ?string $variableSymbol, Collection $pairedApplications, User $createdBy) : void
@@ -648,6 +659,7 @@ class ApplicationService
 
     /**
      * Může uživatel upravovat role?
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -660,6 +672,7 @@ class ApplicationService
 
     /**
      * Je uživateli povoleno upravit nebo zrušit přihlášku?
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -672,6 +685,7 @@ class ApplicationService
 
     /**
      * Může uživatel dodatečně přidávat podakce?
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -685,6 +699,7 @@ class ApplicationService
 
     /**
      * Může uživatel upravovat vlastní pole přihlášky?
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -695,6 +710,7 @@ class ApplicationService
 
     /**
      * @param Collection|Role[] $roles
+     *
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException
@@ -710,7 +726,7 @@ class ApplicationService
         $this->incrementRolesOccupancy($roles);
 
         $user->setApproved(true);
-        if (! $approve && $roles->exists(function (int $key, Role $role) {
+        if (! $approve && $roles->exists(static function (int $key, Role $role) {
             return ! $role->isApprovedAfterRegistration();
         })) {
             $user->setApproved(false);
@@ -740,6 +756,7 @@ class ApplicationService
 
     /**
      * @param Collection|Subevent[] $subevents
+     *
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException
@@ -792,6 +809,7 @@ class ApplicationService
 
     /**
      * Vypočítá datum splatnosti podle zvolené metody.
+     *
      * @throws SettingsException
      * @throws ReflectionException
      * @throws Throwable
@@ -801,10 +819,8 @@ class ApplicationService
         switch ($this->settingsService->getValue(Settings::MATURITY_TYPE)) {
             case MaturityType::DATE:
                 return $this->settingsService->getDateValue(Settings::MATURITY_DATE);
-
             case MaturityType::DAYS:
                 return (new DateTime())->modify('+' . $this->settingsService->getIntValue(Settings::MATURITY_DAYS) . ' days');
-
             case MaturityType::WORK_DAYS:
                 $workDays = $this->settingsService->getIntValue(Settings::MATURITY_WORK_DAYS);
                 $date     = new DateTime();
@@ -822,11 +838,13 @@ class ApplicationService
 
                 return $date;
         }
+
         return null;
     }
 
     /**
      * Vypočítá poplatek za role.
+     *
      * @param Collection|Role[] $roles
      */
     private function countRolesFee(Collection $roles) : int
@@ -846,6 +864,7 @@ class ApplicationService
 
     /**
      * Vypočítá poplatek za podakce přihlášky.
+     *
      * @param Collection|Role[]     $roles
      * @param Collection|Subevent[] $subevents
      */
@@ -897,6 +916,7 @@ class ApplicationService
 
     /**
      * Zvýší obsazenost rolí.
+     *
      * @param Collection|Role[] $roles
      */
     private function incrementRolesOccupancy(Collection $roles) : void
@@ -909,6 +929,7 @@ class ApplicationService
 
     /**
      * Sníží obsazenost rolí.
+     *
      * @param Collection|Role[] $roles
      */
     private function decrementRolesOccupancy(Collection $roles) : void
@@ -921,7 +942,9 @@ class ApplicationService
 
     /**
      * Zvýší obsazenost podakcí.
+     *
      * @param Collection|Subevent[] $subevents
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -935,7 +958,9 @@ class ApplicationService
 
     /**
      * Sníží obsazenost podakcí.
+     *
      * @param Collection|Subevent[] $subevents
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      */

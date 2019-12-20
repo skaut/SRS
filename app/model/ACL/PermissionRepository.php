@@ -19,7 +19,9 @@ class PermissionRepository extends EntityRepository
 {
     /**
      * Vrací oprávnění podle id.
+     *
      * @param int[] $ids
+     *
      * @return Collection|Permission[]
      */
     public function findPermissionsByIds(array $ids) : Collection
@@ -27,23 +29,27 @@ class PermissionRepository extends EntityRepository
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids))
             ->orderBy(['name' => 'ASC']);
+
         return $this->matching($criteria);
     }
 
     /**
      * Vrací id oprávnění.
+     *
      * @param Collection|Permission[] $permissions
+     *
      * @return int[]
      */
     public function findPermissionsIds(Collection $permissions) : array
     {
-        return $permissions->map(function (Permission $permission) {
+        return $permissions->map(static function (Permission $permission) {
             return $permission->getId();
         })->toArray();
     }
 
     /**
      * Vrací oprávnění podle názvu oprávnění a prostředku.
+     *
      * @throws NoResultException
      * @throws NonUniqueResultException
      */

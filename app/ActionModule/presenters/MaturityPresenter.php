@@ -101,9 +101,9 @@ class MaturityPresenter extends ActionBasePresenter
      */
     public $subeventsApplicationRepository;
 
-
     /**
      * Zruší přihlášky po splatnosti.
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -124,6 +124,7 @@ class MaturityPresenter extends ActionBasePresenter
 
                     if ($maturityDate !== null && $cancelRegistrationDate > $maturityDate) {
                         $this->applicationService->cancelRegistration($user, ApplicationState::CANCELED_NOT_PAID, null);
+
                         return;
                     }
                 }
@@ -141,7 +142,7 @@ class MaturityPresenter extends ActionBasePresenter
 
                 // pokud účastníkovi nezbyde žádná podakce, je třeba odebrat i roli s cenou podle podakcí, případně jej odhlásit
                 if ($subeventsApplicationCanceled && $user->getSubevents()->isEmpty()) {
-                    $newRoles = $user->getRoles()->filter(function (Role $role) {
+                    $newRoles = $user->getRoles()->filter(static function (Role $role) {
                         return $role->getFee() !== null;
                     });
                     if ($newRoles->isEmpty()) {
@@ -159,6 +160,7 @@ class MaturityPresenter extends ActionBasePresenter
 
     /**
      * Rozešle přípomínky splatnosti.
+     *
      * @throws SettingsException
      * @throws Throwable
      * @throws MailingMailCreationException
@@ -176,7 +178,7 @@ class MaturityPresenter extends ActionBasePresenter
             foreach ($user->getWaitingForPaymentApplications() as $application) {
                 $maturityDate = $application->getMaturityDate();
 
-                if ($maturityReminderDate == $maturityDate) {
+                if ($maturityReminderDate === $maturityDate) {
                     $this->mailService->sendMailFromTemplate($application->getUser(), '', Template::MATURITY_REMINDER, [
                         TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
                         TemplateVariable::APPLICATION_MATURITY => $maturityDate->format(Helpers::DATE_FORMAT),

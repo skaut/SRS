@@ -32,12 +32,14 @@ class ProgramAttendeesGridControl extends Control
 {
     /**
      * Aktuální program.
+     *
      * @var Program
      */
     private $program;
 
     /**
      * Přihlášený uživatel.
+     *
      * @var User
      */
     private $user;
@@ -62,7 +64,6 @@ class ProgramAttendeesGridControl extends Control
 
     /** @var SessionSection */
     private $sessionSection;
-
 
     public function __construct(
         Translator $translator,
@@ -95,6 +96,7 @@ class ProgramAttendeesGridControl extends Control
 
     /**
      * Vytvoří komponentu.
+     *
      * @throws DataGridException
      */
     public function createComponentProgramAttendeesGrid(string $name) : void
@@ -198,6 +200,7 @@ class ProgramAttendeesGridControl extends Control
 
     /**
      * Přihlásí uživatele na program.
+     *
      * @throws AbortException
      * @throws Throwable
      */
@@ -228,6 +231,7 @@ class ProgramAttendeesGridControl extends Control
 
     /**
      * Odhlásí uživatele z programu.
+     *
      * @throws AbortException
      * @throws Throwable
      */
@@ -256,7 +260,9 @@ class ProgramAttendeesGridControl extends Control
 
     /**
      * Hromadně přihlásí program uživatelům.
+     *
      * @param int[] $ids
+     *
      * @throws AbortException
      * @throws Throwable
      */
@@ -289,7 +295,9 @@ class ProgramAttendeesGridControl extends Control
 
     /**
      * Hromadně odhlásí program uživatelům.
+     *
      * @param int[] $ids
+     *
      * @throws AbortException
      * @throws Throwable
      */
@@ -323,6 +331,7 @@ class ProgramAttendeesGridControl extends Control
     private function isAllowedModifyProgram(Program $program) : bool
     {
         $user = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
+
         return $user->isAllowedModifyBlock($program->getBlock());
     }
 }

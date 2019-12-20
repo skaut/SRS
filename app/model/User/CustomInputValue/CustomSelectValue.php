@@ -11,19 +11,21 @@ use function explode;
 /**
  * Entita hodnota vlastního výběrového pole přihlášky.
  *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity
  * @ORM\Table(name="custom_select_value")
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class CustomSelectValue extends CustomInputValue
 {
     /**
      * Vybraná položka výběrového pole přihlášky.
+     *
      * @ORM\Column(type="integer", nullable=true)
+     *
      * @var int
      */
     protected $value;
-
 
     public function getValue() : ?int
     {
@@ -42,6 +44,7 @@ class CustomSelectValue extends CustomInputValue
     {
         /** @var CustomSelect $input */
         $input = $this->getInput();
+
         return $this->value !== 0 ? explode(', ', $input->getOptions())[$this->value - 1] : null;
     }
 }

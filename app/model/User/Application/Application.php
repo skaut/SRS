@@ -21,7 +21,6 @@ use function str_replace;
 /**
  * Abstraktní entita přihláška.
  *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="ApplicationRepository")
  * @ORM\Table(name="application")
  * @ORM\InheritanceType("SINGLE_TABLE")
@@ -30,140 +29,170 @@ use function str_replace;
  *     "roles_application" = "RolesApplication",
  *     "subevents_application" = "SubeventsApplication"
  * })
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 abstract class Application
 {
     /**
      * Přihláška rolí.
-     * @var string
      */
     public const ROLES = 'roles';
 
     /**
      * Přihláška na podakce.
-     * @var string
      */
     public const SUBEVENTS = 'subevents';
 
     /**
      * Typ přihlášky.
+     *
      * @var string
      */
     protected $type;
-
     use Id;
 
     /**
      * Id přihlášky.
+     *
      * @ORM\Column(type="integer", nullable=true)
+     *
      * @var int
      */
     protected $applicationId;
 
     /**
      * Uživatel.
+     *
      * @ORM\ManyToOne(targetEntity="User", inversedBy="applications", cascade={"persist"})
+     *
      * @var User
      */
     protected $user;
 
     /**
      * Role.
+     *
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", cascade={"persist"})
+     *
      * @var Collection|Role[]
      */
     protected $roles;
 
     /**
      * Podakce.
+     *
      * @ORM\ManyToMany(targetEntity="\App\Model\Structure\Subevent", inversedBy="applications", cascade={"persist"})
+     *
      * @var Collection|Subevent[]
      */
     protected $subevents;
 
     /**
      * Poplatek.
+     *
      * @ORM\Column(type="integer")
+     *
      * @var int
      */
     protected $fee;
 
     /**
      * Variabilní symbol.
+     *
      * @ORM\ManyToOne(targetEntity="VariableSymbol", cascade={"persist"})
+     *
      * @var VariableSymbol
      */
     protected $variableSymbol;
 
     /**
      * Datum podání přihlášky.
+     *
      * @ORM\Column(type="datetime")
+     *
      * @var DateTime
      */
     protected $applicationDate;
 
     /**
      * Datum splatnosti.
+     *
      * @ORM\Column(type="date", nullable=true)
+     *
      * @var DateTime
      */
     protected $maturityDate;
 
     /**
      * Platební metoda.
+     *
      * @ORM\Column(type="string", nullable=true)
+     *
      * @var string
      */
     protected $paymentMethod;
 
     /**
      * Datum zaplacení.
+     *
      * @ORM\Column(type="date", nullable=true)
+     *
      * @var DateTime
      */
     protected $paymentDate;
 
     /**
      * Spárovaná platba.
+     *
      * @ORM\ManyToOne(targetEntity="\App\Model\Payment\Payment", inversedBy="pairedApplications", cascade={"persist"})
+     *
      * @var Payment
      */
     protected $payment;
 
     /**
      * Datum vytištění dokladu o zaplacení.
+     *
      * @ORM\Column(type="date", nullable=true)
+     *
      * @var DateTime
      */
     protected $incomeProofPrintedDate;
 
     /**
      * Stav přihlášky.
+     *
      * @ORM\Column(type="string")
+     *
      * @var string
      */
     protected $state;
 
     /**
      * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
+     *
      * @var User
      */
     protected $createdBy;
 
     /**
      * Platnost záznamu od.
+     *
      * @ORM\Column(type="datetime")
+     *
      * @var DateTime
      */
     protected $validFrom;
 
     /**
      * Platnost záznamu do.
+     *
      * @ORM\Column(type="datetime", nullable=true)
+     *
      * @var DateTime
      */
     protected $validTo;
-
 
     public function __construct()
     {
@@ -214,7 +243,7 @@ abstract class Application
      */
     public function getRolesText() : string
     {
-        return implode(', ', $this->roles->map(function (Role $role) {
+        return implode(', ', $this->roles->map(static function (Role $role) {
             return $role->getName();
         })->toArray());
     }
@@ -232,7 +261,7 @@ abstract class Application
      */
     public function getSubeventsText() : string
     {
-        return implode(', ', $this->subevents->map(function (Subevent $subevent) {
+        return implode(', ', $this->subevents->map(static function (Subevent $subevent) {
             return $subevent->getName();
         })->toArray());
     }
@@ -250,6 +279,7 @@ abstract class Application
         $numbersWords = new Numbers_Words();
         $feeWord      = $numbersWords->toWords($this->getFee(), 'cs');
         $feeWord      = str_replace(' ', '', $feeWord);
+
         return $feeWord;
     }
 

@@ -37,30 +37,35 @@ class PageForm extends UI\Control
 {
     /**
      * Id upravované stránky.
+     *
      * @var int
      */
     public $id;
 
     /**
      * Upravovaná stránka.
+     *
      * @var Page
      */
     private $page;
 
     /**
      * Upravovaná oblast.
+     *
      * @var string
      */
     public $area;
 
     /**
      * Událost při uložení formuláře.
+     *
      * @var callable
      */
     public $onPageSave;
 
     /**
      * Událost při chybě ukládání stránky.
+     *
      * @var callable
      */
     public $onPageSaveError;
@@ -85,7 +90,6 @@ class PageForm extends UI\Control
 
     /** @var FilesService */
     private $filesService;
-
 
     public function __construct(
         int $id,
@@ -116,6 +120,7 @@ class PageForm extends UI\Control
 
     /**
      * Vykreslí komponentu.
+     *
      * @throws PageException
      */
     public function render() : void
@@ -130,6 +135,7 @@ class PageForm extends UI\Control
 
     /**
      * Vytvoří komponentu.
+     *
      * @throws PageException
      */
     public function createComponentForm() : BaseForm
@@ -180,6 +186,7 @@ class PageForm extends UI\Control
 
     /**
      * Zpracuje formulář.
+     *
      * @throws PageException
      * @throws ORMException
      * @throws OptimisticLockException
@@ -192,7 +199,7 @@ class PageForm extends UI\Control
         $type = $values->type;
 
         foreach ($page->getContents($area) as $content) {
-            $inputName = $content->getContentFormName();
+            $inputName     = $content->getContentFormName();
             $formContainer = $values->$inputName;
             if ($formContainer['delete']) {
                 $this->CMSService->removeContent($content);
@@ -226,6 +233,7 @@ class PageForm extends UI\Control
 
     /**
      * Připraví možnosti obsahů stránky pro select.
+     *
      * @return string[]
      */
     private function prepareContentTypesOptions() : array
@@ -234,6 +242,7 @@ class PageForm extends UI\Control
         foreach (Content::$types as $type) {
             $options[$type] = 'common.content.name.' . $type;
         }
+
         return $options;
     }
 }

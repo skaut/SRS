@@ -12,7 +12,6 @@ use App\Model\Enums\SkautIsEventType;
 use App\Model\Program\BlockRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\CustomInput\CustomCheckbox;
-use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\CustomInput\CustomSelect;
 use App\Model\Settings\CustomInput\CustomText;
@@ -135,7 +134,6 @@ class UsersGridControl extends Control
     /** @var SubeventService */
     private $subeventService;
 
-
     public function __construct(
         Translator $translator,
         EntityManagerDecorator $em,
@@ -197,6 +195,7 @@ class UsersGridControl extends Control
 
     /**
      * Vytvoří komponentu.
+     *
      * @throws SettingsException
      * @throws Throwable
      * @throws DataGridColumnStatusException
@@ -267,7 +266,7 @@ class UsersGridControl extends Control
 
         $grid->addColumnText('roles', 'admin.users.users_roles', 'rolesText')
             ->setFilterMultiSelect($this->ACLService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED]))
-            ->setCondition(function ($qb, $values) : void {
+            ->setCondition(static function ($qb, $values) : void {
                 $qb->join('u.roles', 'uR')
                     ->andWhere('uR.id IN (:rids)')
                     ->setParameter('rids', $values);
@@ -275,7 +274,7 @@ class UsersGridControl extends Control
 
         $grid->addColumnText('subevents', 'admin.users.users_subevents', 'subeventsText')
             ->setFilterMultiSelect($this->subeventService->getSubeventsOptions())
-            ->setCondition(function ($qb, $values) : void {
+            ->setCondition(static function ($qb, $values) : void {
                 $qb->join('u.applications', 'uA')
                     ->join('uA.subevents', 'uAS')
                     ->andWhere('uAS.id IN (:sids)')
@@ -308,11 +307,11 @@ class UsersGridControl extends Control
                 return Html::el('span')
                     ->style('color: red')
                     ->setText($this->userService->getMembershipText($row));
-            }, function (User $row) {
+            }, static function (User $row) {
                 return $row->getUnit() === null;
             })
             ->setSortable()
-            ->setSortableCallback(function (QueryBuilder $qb, array $sort) : void {
+            ->setSortableCallback(static function (QueryBuilder $qb, array $sort) : void {
                 $sortOrig = $sort['unit'];
                 $sortRev  = $sort['unit'] === 'DESC' ? 'ASC' : 'DESC';
                 $qb->orderBy('u.unit', $sortOrig)
@@ -323,13 +322,13 @@ class UsersGridControl extends Control
 
         $grid->addColumnNumber('age', 'admin.users.users_age')
             ->setSortable()
-            ->setSortableCallback(function (QueryBuilder $qb, array $sort) : void {
+            ->setSortableCallback(static function (QueryBuilder $qb, array $sort) : void {
                 $sortRev = $sort['age'] === 'DESC' ? 'ASC' : 'DESC';
                 $qb->orderBy('u.birthdate', $sortRev);
             });
 
         $grid->addColumnText('email', 'admin.users.users_email')
-            ->setRenderer(function (User $row) {
+            ->setRenderer(static function (User $row) {
                 return Html::el('a')
                     ->href('mailto:' . $row->getEmail())
                     ->setText($row->getEmail());
@@ -349,7 +348,7 @@ class UsersGridControl extends Control
 
         $grid->addColumnText('variableSymbol', 'admin.users.users_variable_symbol', 'variableSymbolsText')
             ->setFilterText()
-            ->setCondition(function (QueryBuilder $qb, $value) : void {
+            ->setCondition(static function (QueryBuilder $qb, $value) : void {
                 $qb->join('u.applications', 'uAVS')
                     ->join('uAVS.variableSymbol', 'uAVSVS')
                     ->andWhere('uAVSVS.variableSymbol LIKE :variableSymbol')
@@ -389,7 +388,7 @@ class UsersGridControl extends Control
             ->setTranslateOptions();
 
         $grid->addColumnText('notRegisteredMandatoryBlocksCount', 'admin.users.users_not_registered_mandatory_blocks')
-            ->setRenderer(function (User $user) {
+            ->setRenderer(static function (User $user) {
                 return Html::el('span')
                     ->setAttribute('data-toggle', 'tooltip')
                     ->setAttribute('title', $user->getNotRegisteredMandatoryBlocksText())
@@ -407,15 +406,12 @@ class UsersGridControl extends Control
                         switch (true) {
                             case $customInputValue instanceof CustomTextValue:
                                 return Helpers::truncate($customInputValue->getValue(), 20);
-
                             case $customInputValue instanceof CustomCheckboxValue:
                                 return $customInputValue->getValue()
                                     ? $this->translator->translate('admin.common.yes')
                                     : $this->translator->translate('admin.common.no');
-
                             case $customInputValue instanceof CustomSelectValue:
                                 return $customInputValue->getValueOption();
-
                             case $customInputValue instanceof CustomFileValue:
                                 return $customInputValue->getValue()
                                     ? Html::el('a')
@@ -430,13 +426,14 @@ class UsersGridControl extends Control
                                     : '';
                         }
                     }
+
                     return null;
                 });
 
             switch (true) {
                 case $customInput instanceof CustomText:
                     $columnCustomInput->setSortable()
-                        ->setSortableCallback(function (QueryBuilder $qb, array $sort) use ($customInput, $columnCustomInputName) : void {
+                        ->setSortableCallback(static function (QueryBuilder $qb, array $sort) use ($customInput, $columnCustomInputName) : void {
                             $qb->leftJoin('u.customInputValues', 'uCIV1')
                                 ->leftJoin('uCIV1.input', 'uCIVI1')
                                 ->leftJoin('App\Model\User\CustomInputValue\CustomTextValue', 'uCTV', 'WITH', 'uCIV1.id = uCTV.id')
@@ -448,7 +445,7 @@ class UsersGridControl extends Control
 
                 case $customInput instanceof CustomCheckbox:
                     $columnCustomInput->setFilterSelect(['' => 'admin.common.all', 1 => 'admin.common.yes', 0 => 'admin.common.no'])
-                        ->setCondition(function (QueryBuilder $qb, string $value) use ($customInput) : void {
+                        ->setCondition(static function (QueryBuilder $qb, string $value) use ($customInput) : void {
                             if ($value === '') {
                                 return;
                             } else {
@@ -466,7 +463,7 @@ class UsersGridControl extends Control
 
                 case $customInput instanceof CustomSelect:
                     $columnCustomInput->setFilterSelect(array_merge(['' => 'admin.common.all'], $customInput->getSelectOptions()))
-                        ->setCondition(function (QueryBuilder $qb, string $value) use ($customInput) : void {
+                        ->setCondition(static function (QueryBuilder $qb, string $value) use ($customInput) : void {
                             if ($value === '') {
                                 return;
                             } else {
@@ -502,7 +499,7 @@ class UsersGridControl extends Control
                 'data-toggle' => 'confirmation',
                 'data-content' => $this->translator->translate('admin.users.users_delete_confirm'),
             ]);
-        $grid->allowRowsAction('delete', function (User $item) {
+        $grid->allowRowsAction('delete', static function (User $item) {
             return $item->isExternalLector();
         });
 
@@ -511,6 +508,7 @@ class UsersGridControl extends Control
 
     /**
      * Zpracuje odstranění externího uživatele.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -528,6 +526,7 @@ class UsersGridControl extends Control
 
     /**
      * Změní stav uživatele.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -553,6 +552,7 @@ class UsersGridControl extends Control
 
     /**
      * Změní účast uživatele na semináři.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -578,7 +578,9 @@ class UsersGridControl extends Control
 
     /**
      * Hromadně schválí uživatele.
+     *
      * @param int[] $ids
+     *
      * @throws AbortException
      * @throws Throwable
      */
@@ -599,8 +601,10 @@ class UsersGridControl extends Control
 
     /**
      * Hromadně nastaví role.
+     *
      * @param int[] $ids
      * @param int[] $value
+     *
      * @throws Throwable
      */
     public function groupChangeRoles(array $ids, array $value) : void
@@ -617,7 +621,7 @@ class UsersGridControl extends Control
         }
 
         //v rolich musi byt dostatek volnych mist
-        $capacitiesOk = $selectedRoles->forAll(function (int $key, Role $role) use ($users) {
+        $capacitiesOk = $selectedRoles->forAll(static function (int $key, Role $role) use ($users) {
             if (! $role->hasLimitedCapacity()) {
                 return true;
             }
@@ -636,11 +640,7 @@ class UsersGridControl extends Control
                 $capacityNeeded--;
             }
 
-            if ($capacityNeeded <= $role->getCapacity()) {
-                return true;
-            }
-
-            return false;
+            return $capacityNeeded <= $role->getCapacity();
         });
 
         if (! $capacitiesOk) {
@@ -662,7 +662,9 @@ class UsersGridControl extends Control
 
     /**
      * Hromadně označí uživatele jako zúčastněné.
+     *
      * @param int[] $ids
+     *
      * @throws AbortException
      * @throws Throwable
      */
@@ -683,7 +685,9 @@ class UsersGridControl extends Control
 
     /**
      * Hromadně označí uživatele jako zaplacené dnes.
+     *
      * @param int[] $ids
+     *
      * @throws AbortException
      * @throws Throwable
      */
@@ -716,7 +720,9 @@ class UsersGridControl extends Control
 
     /**
      * Hromadně vloží uživatele jako účastníky do skautIS.
+     *
      * @param int[] $ids
+     *
      * @throws AbortException
      * @throws Throwable
      */
@@ -766,7 +772,9 @@ class UsersGridControl extends Control
 
     /**
      * Hromadně vygeneruje potvrzení o zaplacení.
+     *
      * @param int[] $ids
+     *
      * @throws AbortException
      */
     public function groupGeneratePaymentProofs(array $ids) : void
@@ -777,7 +785,9 @@ class UsersGridControl extends Control
 
     /**
      * Hromadně vyexportuje seznam uživatelů.
+     *
      * @param int[] $ids
+     *
      * @throws AbortException
      */
     public function groupExportUsers(array $ids) : void
@@ -805,7 +815,9 @@ class UsersGridControl extends Control
 
     /**
      * Hromadně vyexportuje seznam uživatelů s rolemi.
+     *
      * @param int[] $ids
+     *
      * @throws AbortException
      */
     public function groupExportRoles(array $ids) : void
@@ -816,6 +828,7 @@ class UsersGridControl extends Control
 
     /**
      * Zpracuje export seznamu uživatelů s rolemi.
+     *
      * @throws AbortException
      * @throws \Exception
      */
@@ -833,7 +846,9 @@ class UsersGridControl extends Control
 
     /**
      * Hromadně vyexportuje seznam uživatelů s podakcemi a programy podle kategorií.
+     *
      * @param int[] $ids
+     *
      * @throws AbortException
      */
     public function groupExportSubeventsAndCategories(array $ids) : void
@@ -844,6 +859,7 @@ class UsersGridControl extends Control
 
     /**
      * Zpracuje export seznamu uživatelů s podakcemi a programy podle kategorií.
+     *
      * @throws AbortException
      * @throws \Exception
      */
@@ -860,7 +876,9 @@ class UsersGridControl extends Control
 
     /**
      * Hromadně vyexportuje harmonogramy uživatelů.
+     *
      * @param int[] $ids
+     *
      * @throws AbortException
      */
     public function groupExportSchedules(array $ids) : void
@@ -871,6 +889,7 @@ class UsersGridControl extends Control
 
     /**
      * Zpracuje export harmonogramů uživatelů.
+     *
      * @throws AbortException
      * @throws Exception
      */
@@ -887,6 +906,7 @@ class UsersGridControl extends Control
 
     /**
      * Vygeneruje doklady o zaplacení.
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -903,6 +923,7 @@ class UsersGridControl extends Control
 
     /**
      * Vrátí platební metody jako možnosti pro select. Bez prázdné možnosti.
+     *
      * @return string[]
      */
     private function preparePaymentMethodOptionsWithoutEmpty() : array
@@ -911,11 +932,13 @@ class UsersGridControl extends Control
         foreach (PaymentType::$types as $type) {
             $options[$type] = 'common.payment.' . $type;
         }
+
         return $options;
     }
 
     /**
      * Vrátí platební metody jako možnosti pro select. Včetně smíšené.
+     *
      * @return string[]
      */
     private function preparePaymentMethodOptionsWithMixed() : array
@@ -925,11 +948,13 @@ class UsersGridControl extends Control
             $options[$type] = 'common.payment.' . $type;
         }
         $options[PaymentType::MIXED] = 'common.payment.' . PaymentType::MIXED;
+
         return $options;
     }
 
     /**
      * Vrátí možnosti vložení účastníků do vzdělávací akce skautIS.
+     *
      * @return string[]
      */
     private function prepareInsertIntoSkautIsOptions() : array
@@ -937,6 +962,7 @@ class UsersGridControl extends Control
         $options        = [];
         $options[false] = 'common.skautis_event_insert_type.registered';
         $options[true]  = 'common.skautis_event_insert_type.accepted';
+
         return $options;
     }
 }

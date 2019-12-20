@@ -45,7 +45,6 @@ class ApplicationPresenter extends ConfigurationBasePresenter
      */
     public $customInputFormFactory;
 
-
     public function renderEdit(int $id) : void
     {
         $this->template->customInput = $this->customInputRepository->findById($id);

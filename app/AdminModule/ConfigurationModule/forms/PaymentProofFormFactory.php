@@ -33,7 +33,6 @@ class PaymentProofFormFactory
     /** @var SettingsService */
     private $settingsService;
 
-
     public function __construct(BaseFormFactory $baseForm, SettingsService $settingsService)
     {
         $this->baseFormFactory = $baseForm;
@@ -42,6 +41,7 @@ class PaymentProofFormFactory
 
     /**
      * Vytvoří formulář.
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -83,6 +83,7 @@ class PaymentProofFormFactory
 
     /**
      * Zpracuje formulář.
+     *
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException

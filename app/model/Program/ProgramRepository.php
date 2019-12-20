@@ -35,6 +35,7 @@ class ProgramRepository extends EntityRepository
 
     /**
      * Uloží program.
+     *
      * @throws ORMException
      */
     public function save(Program $program) : void
@@ -45,6 +46,7 @@ class ProgramRepository extends EntityRepository
 
     /**
      * Odstraní program.
+     *
      * @throws ORMException
      */
     public function remove(Program $program) : void
@@ -55,18 +57,21 @@ class ProgramRepository extends EntityRepository
 
     /**
      * Vrací id podle programů.
+     *
      * @param Collection|Program[] $programs
+     *
      * @return int[]
      */
     public function findProgramsIds(Collection $programs) : array
     {
-        return array_map(function (Program $o) {
+        return array_map(static function (Program $o) {
             return $o->getId();
         }, $programs->toArray());
     }
 
     /**
      * Vrací programy, na které je uživatel zapsaný a jsou v danné kategorii.
+     *
      * @return Program[]
      */
     public function findUserRegisteredAndInCategory(User $user, Category $category) : array
@@ -83,7 +88,9 @@ class ProgramRepository extends EntityRepository
 
     /**
      * Vrací programy zablokované (programy stejného bloku a překrývající se programy) přihlášením se na program.
+     *
      * @return int[]
+     *
      * @throws Exception
      */
     public function findBlockedProgramsIdsByProgram(Program $program) : array
@@ -96,6 +103,7 @@ class ProgramRepository extends EntityRepository
 
     /**
      * Vrací programy stejného bloku.
+     *
      * @return int[]
      */
     public function findOtherProgramsWithSameBlockIds(Program $program) : array
@@ -107,12 +115,15 @@ class ProgramRepository extends EntityRepository
             ->andWhere('p.id != :pid')->setParameter('pid', $program->getId())
             ->getQuery()
             ->getScalarResult();
+
         return array_map('intval', array_map('current', $programs));
     }
 
     /**
      * Vrací programy s překrývajícím se časem.
+     *
      * @return int[]
+     *
      * @throws Exception
      */
     public function findOverlappingProgramsIds(Program $program) : array
@@ -133,6 +144,7 @@ class ProgramRepository extends EntityRepository
             ->setParameter('pid', $program->getId())
             ->getQuery()
             ->getScalarResult();
+
         return array_map('intval', array_map('current', $programs));
     }
 
@@ -188,8 +200,10 @@ class ProgramRepository extends EntityRepository
 
     /**
      * Vrací programy povolené pro kategorie a podakce.
+     *
      * @param Collection|Category[] $categories
      * @param Collection|Subevent[] $subevents
+     *
      * @return Collection|Program[]
      */
     public function findAllowedForCategoriesAndSubevents(Collection $categories, Collection $subevents) : Collection

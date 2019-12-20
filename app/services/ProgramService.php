@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Model\ACL\Permission;
-use App\Model\ACL\SrsResource;
 use App\Model\ACL\Role;
+use App\Model\ACL\SrsResource;
 use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Enums\ProgramRegistrationType;
 use App\Model\Mailing\Template;
@@ -66,7 +66,6 @@ class ProgramService
     /** @var MailService */
     private $mailService;
 
-
     public function __construct(
         EntityManagerDecorator $em,
         SettingsService $settingsService,
@@ -87,7 +86,9 @@ class ProgramService
 
     /**
      * Vytvoří programový blok.
+     *
      * @param Collection|User[] $lectors
+     *
      * @throws Throwable
      */
     public function createBlock(
@@ -124,7 +125,9 @@ class ProgramService
 
     /**
      * Aktualizuje programový blok.
+     *
      * @param Collection|User[] $lectors
+     *
      * @throws Throwable
      */
     public function updateBlock(
@@ -191,6 +194,7 @@ class ProgramService
 
     /**
      * Aktualizuje povinnost bloku.
+     *
      * @throws Throwable
      */
     public function updateBlockMandatory(Block $block, string $mandatory) : void
@@ -253,6 +257,7 @@ class ProgramService
 
     /**
      * Odstraní programový blok.
+     *
      * @throws Throwable
      */
     public function removeBlock(Block $block) : void
@@ -272,7 +277,9 @@ class ProgramService
 
     /**
      * Vytvoří kategorii programů.
+     *
      * @param Collection|Role[] $registerableRoles
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -288,7 +295,9 @@ class ProgramService
 
     /**
      * Aktualizuje kategorii programů.
+     *
      * @param Collection|Role[] $registerableRoles
+     *
      * @throws Throwable
      */
     public function updateCategory(Category $category, string $name, Collection $registerableRoles) : void
@@ -305,6 +314,7 @@ class ProgramService
 
     /**
      * Vytvoří program v harmonogramu.
+     *
      * @throws Throwable
      */
     public function createProgram(Block $block, ?Room $room, DateTime $start) : Program
@@ -332,6 +342,7 @@ class ProgramService
 
     /**
      * Aktualizuje program v harmonogramu.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -344,6 +355,7 @@ class ProgramService
 
     /**
      * Odstraní program z harmonogramu.
+     *
      * @throws Throwable
      */
     public function removeProgram(Program $program) : void
@@ -359,7 +371,9 @@ class ProgramService
 
     /**
      * Přihlásí uživatele na program.
+     *
      * @param bool $sendEmail Poslat uživateli e-mail o přihlášení?
+     *
      * @throws Throwable
      */
     public function registerProgram(User $user, Program $program, bool $sendEmail = false) : void
@@ -403,7 +417,9 @@ class ProgramService
 
     /**
      * Odhlásí uživatele z programu.
+     *
      * @param bool $sendEmail Poslat uživateli e-mail o odhlášení?
+     *
      * @throws Throwable
      */
     public function unregisterProgram(User $user, Program $program, bool $sendEmail = false) : void
@@ -447,6 +463,7 @@ class ProgramService
 
     /**
      * Je povoleno zapisování programů?
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -501,6 +518,7 @@ class ProgramService
      * Aktualizuje programy uživatelů (odhlásí nepovolené a přihlásí automaticky přihlašované).
      *
      * @param Collection|User[] $users
+     *
      * @throws MailingException
      * @throws MailingMailCreationException
      * @throws ORMException
@@ -542,7 +560,9 @@ class ProgramService
 
     /**
      * Aktualizuje uživatelům seznam nepřihlášených povinných bloků.
+     *
      * @param Collection|User[] $users
+     *
      * @throws Exception
      */
     private function updateUsersNotRegisteredMandatoryBlocks(Collection $users) : void
@@ -556,6 +576,7 @@ class ProgramService
 
     /**
      * Vrací programy, na které se uživatel může přihlásit.
+     *
      * @return Collection|Program[]
      */
     public function getUserAllowedPrograms(User $user) : Collection

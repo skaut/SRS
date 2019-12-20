@@ -31,7 +31,6 @@ class SubeventsGridControl extends Control
     /** @var BlockRepository */
     private $blockRepository;
 
-
     public function __construct(
         Translator $translator,
         SubeventRepository $subeventRepository,
@@ -55,6 +54,7 @@ class SubeventsGridControl extends Control
 
     /**
      * Vytvoří komponentu.
+     *
      * @throws DataGridException
      */
     public function createComponentSubeventsGrid(string $name) : void
@@ -82,7 +82,7 @@ class SubeventsGridControl extends Control
             ->setTitle('admin.common.add');
 
         $grid->addAction('edit', 'admin.common.edit', 'Subevents:edit');
-        $grid->allowRowsAction('edit', function (Subevent $item) {
+        $grid->allowRowsAction('edit', static function (Subevent $item) {
             return ! $item->isImplicit();
         });
 
@@ -94,13 +94,14 @@ class SubeventsGridControl extends Control
                 'data-toggle' => 'confirmation',
                 'data-content' => $this->translator->translate('admin.configuration.subevents_delete_confirm'),
             ]);
-        $grid->allowRowsAction('delete', function (Subevent $item) {
+        $grid->allowRowsAction('delete', static function (Subevent $item) {
             return ! $item->isImplicit();
         });
     }
 
     /**
      * Zpracuje odstranění podakce.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException

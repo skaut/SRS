@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Model\ACL\PermissionRepository;
-use App\Model\ACL\SrsResourceRepository;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
+use App\Model\ACL\SrsResourceRepository;
 use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -21,7 +21,6 @@ use Throwable;
 use function array_map;
 
 /**
- *
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class AclService
@@ -49,7 +48,6 @@ class AclService
     /** @var Cache */
     private $resourceNamesCache;
 
-
     public function __construct(
         RoleRepository $roleRepository,
         PermissionRepository $permissionRepository,
@@ -70,6 +68,7 @@ class AclService
      * Vrací názvy všech rolí.
      *
      * @return string[]
+     *
      * @throws Throwable
      */
     public function findAllRoleNames() : array
@@ -83,6 +82,7 @@ class AclService
             $names = array_map('current', $names);
             $this->roleNamesCache->save(null, $names);
         }
+
         return $names;
     }
 
@@ -112,6 +112,7 @@ class AclService
 
     /**
      * Vrací seznam rolí jako možnosti pro select, role specifikovaná parametrem je vynechána.
+     *
      * @return string[]
      */
     public function getRolesWithoutRoleOptions(int $roleId) : array
@@ -127,12 +128,15 @@ class AclService
         foreach ($roles as $role) {
             $options[$role['id']] = $role['name'];
         }
+
         return $options;
     }
 
     /**
      * Vrací role bez vybraných rolí jako možnosti pro select.
+     *
      * @param string[] $withoutRoles
+     *
      * @return string[]
      */
     public function getRolesWithoutRolesOptions(array $withoutRoles) : array
@@ -157,12 +161,15 @@ class AclService
         foreach ($roles as $role) {
             $options[$role['id']] = $role['name'];
         }
+
         return $options;
     }
 
     /**
      * Vrací seznam rolí bez vybraných rolí, s informací o obsazenosti, jako možnosti pro select.
+     *
      * @param string[] $withoutRoles
+     *
      * @return string[]
      */
     public function getRolesWithoutRolesOptionsWithCapacity(array $withoutRoles) : array
@@ -193,12 +200,15 @@ class AclService
                 $options[$role->getId()] = $role->getName();
             }
         }
+
         return $options;
     }
 
     /**
      * Vrací seznam rolí bez vybraných rolí, s informací o počtu uživatelů, jako možnosti pro select.
+     *
      * @param string[] $withoutRoles
+     *
      * @return string[]
      */
     public function getRolesWithoutRolesOptionsWithApprovedUsersCount(array $withoutRoles) : array
@@ -227,11 +237,13 @@ class AclService
                 ]
             );
         }
+
         return $options;
     }
 
     /**
      * Vrací seznam rolí s obsazenostmi jako možnosti pro select.
+     *
      * @return string[]
      */
     public function getRegisterableNowOptionsWithCapacity() : array
@@ -250,12 +262,14 @@ class AclService
                 $options[$role->getId()] = $role->getName();
             }
         }
+
         return $options;
     }
 
     /**
      * Vrací seznam rolí, které jsou v tuto chvíli registrovatelné nebo je uživatel má, s informací o jejich
      * obsazenosti, jako možnosti pro select.
+     *
      * @return string[]
      */
     public function getRegisterableNowOrUsersOptionsWithCapacity(User $user) : array
@@ -274,6 +288,7 @@ class AclService
                 $options[$role->getId()] = $role->getName();
             }
         }
+
         return $options;
     }
 
@@ -281,6 +296,7 @@ class AclService
      * Vrací názvy všech oprávnění.
      *
      * @return Collection|string[][]
+     *
      * @throws Throwable
      */
     public function findAllPermissionNames() : Collection
@@ -295,6 +311,7 @@ class AclService
                 ->getResult();
             $this->permissionNamesCache->save(null, $names);
         }
+
         return new ArrayCollection($names);
     }
 
@@ -302,6 +319,7 @@ class AclService
      * Vrací názvy všech prostředků.
      *
      * @return string[]
+     *
      * @throws Throwable
      */
     public function findAllResourceNames() : array
@@ -315,6 +333,7 @@ class AclService
             $names = array_map('current', $names);
             $this->resourceNamesCache->save(null, $names);
         }
+
         return $names;
     }
 }

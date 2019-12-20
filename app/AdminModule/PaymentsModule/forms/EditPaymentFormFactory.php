@@ -27,6 +27,7 @@ class EditPaymentFormFactory
 
     /**
      * Upravovaná platba.
+     *
      * @var Payment
      */
     private $payment;
@@ -45,7 +46,6 @@ class EditPaymentFormFactory
 
     /** @var ApplicationService */
     private $applicationService;
-
 
     public function __construct(
         BaseFormFactory $baseFormFactory,
@@ -125,6 +125,7 @@ class EditPaymentFormFactory
 
     /**
      * Zpracuje formulář.
+     *
      * @throws Throwable
      */
     public function processForm(BaseForm $form, stdClass $values) : void

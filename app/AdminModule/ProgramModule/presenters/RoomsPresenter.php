@@ -37,7 +37,6 @@ class RoomsPresenter extends ProgramBasePresenter
      */
     public $roomScheduleGridControlFactory;
 
-
     /**
      * @throws AbortException
      */

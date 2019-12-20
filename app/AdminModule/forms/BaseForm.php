@@ -9,7 +9,6 @@ use Nextras\Forms\Controls\DatePicker;
 use Nextras\Forms\Controls\DateTimePicker;
 use VojtechDobes\NetteForms\GpsPicker;
 
-
 /**
  * BaseForm pro AdminModule.
  *

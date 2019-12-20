@@ -8,8 +8,8 @@ use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\CMS\Content\ContentDto;
 use App\Model\CMS\FaqRepository;
-use App\WebModule\Forms\FaqFormFactory;
 use App\WebModule\Forms\BaseForm;
+use App\WebModule\Forms\FaqFormFactory;
 use Nette\Application\UI\Control;
 use stdClass;
 
@@ -29,7 +29,6 @@ class FaqContentControl extends Control
 
     /** @var RoleRepository */
     private $roleRepository;
-
 
     public function __construct(FaqFormFactory $faqFormFactory, FaqRepository $faqRepository, RoleRepository $roleRepository)
     {

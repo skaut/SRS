@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\WebModule\Presenters;
 
-use App\WebModule\Forms\BaseForm;
 use App\Model\Enums\PaymentType;
 use App\Model\Settings\SettingsException;
 use App\Model\Structure\SubeventRepository;
@@ -16,6 +15,7 @@ use App\Services\PdfExportService;
 use App\WebModule\Components\ApplicationsGridControl;
 use App\WebModule\Components\IApplicationsGridControlFactory;
 use App\WebModule\Forms\AdditionalInformationForm;
+use App\WebModule\Forms\BaseForm;
 use App\WebModule\Forms\IAdditionalInformationFormFactory;
 use App\WebModule\Forms\PersonalDetailsFormFactory;
 use App\WebModule\Forms\RolesFormFactory;
@@ -92,7 +92,6 @@ class ProfilePresenter extends WebBasePresenter
      */
     public $authenticator;
 
-
     /**
      * @throws AbortException
      * @throws Throwable
@@ -122,6 +121,7 @@ class ProfilePresenter extends WebBasePresenter
 
     /**
      * Vyexportuje rozvrh uživatele.
+     *
      * @throws AbortException
      * @throws Exception
      */
@@ -181,6 +181,7 @@ class ProfilePresenter extends WebBasePresenter
             $this->authenticator->updateRoles($this->user);
             $this->redirect('this#collapseSeminar');
         };
+
         return $form;
     }
 

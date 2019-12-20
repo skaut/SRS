@@ -9,19 +9,21 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Entita hodnota vlastního zaškrtávacího pole přihlášky.
  *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity
  * @ORM\Table(name="custom_checkbox_value")
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class CustomCheckboxValue extends CustomInputValue
 {
     /**
      * Hodnota zaškrtávacího pole přihlášky.
+     *
      * @ORM\Column(type="boolean")
+     *
      * @var bool
      */
     protected $value;
-
 
     public function getValue() : bool
     {

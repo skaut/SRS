@@ -25,7 +25,6 @@ class WebPresenter extends ConfigurationBasePresenter
      */
     public $webFormFactory;
 
-
     /**
      * @throws SettingsException
      * @throws Throwable

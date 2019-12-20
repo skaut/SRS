@@ -41,7 +41,6 @@ class BankFormFactory
     /** @var BankService */
     private $bankService;
 
-
     public function __construct(
         BaseFormFactory $baseForm,
         SettingsService $settingsService,
@@ -54,6 +53,7 @@ class BankFormFactory
 
     /**
      * Vytvoří formulář.
+     *
      * @throws Throwable
      */
     public function create() : BaseForm
@@ -82,6 +82,7 @@ class BankFormFactory
 
     /**
      * Zpracuje formulář.
+     *
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException

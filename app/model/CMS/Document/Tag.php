@@ -14,10 +14,11 @@ use function implode;
 /**
  * Entita tagu pro dokumenty.
  *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="TagRepository")
  * @ORM\Table(name="tag")
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class Tag
 {
@@ -25,25 +26,30 @@ class Tag
 
     /**
      * Dokumenty s tagem.
+     *
      * @ORM\ManyToMany(targetEntity="Document", mappedBy="tags", cascade={"persist"})
+     *
      * @var Collection|Document[]
      */
     protected $documents;
 
     /**
      * Název tagu.
+     *
      * @ORM\Column(type="string", unique=true)
+     *
      * @var string
      */
     protected $name;
 
     /**
      * Role oprávněné zobrazit dokumenty v této kategorií.
+     *
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="tags", cascade={"persist"})
+     *
      * @var Collection|Role[]
      */
     protected $roles;
-
 
     public function __construct()
     {
@@ -84,7 +90,7 @@ class Tag
 
     public function getRolesText() : string
     {
-        return implode(', ', $this->roles->map(function (Role $role) {
+        return implode(', ', $this->roles->map(static function (Role $role) {
             return $role->getName();
         })->toArray());
     }

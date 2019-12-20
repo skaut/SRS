@@ -26,8 +26,10 @@ class DocumentRepository extends EntityRepository
 
     /**
      * Vrací dokumenty podle rolí a vybraných tagů, seřazené podle názvu.
+     *
      * @param int[] $rolesIds pole id rolí
      * @param int[] $tagsIds
+     *
      * @return Collection|Document[]
      */
     public function findRolesAllowedByTagsOrderedByName(array $rolesIds, array $tagsIds) : Collection

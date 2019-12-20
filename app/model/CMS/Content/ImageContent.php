@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Model\CMS\Content;
 
-use App\Services\FilesService;
 use App\AdminModule\Forms\BaseForm;
+use App\Services\FilesService;
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
@@ -19,10 +19,11 @@ use function file_exists;
 /**
  * Entita obsahu s obrázkem.
  *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity
  * @ORM\Table(name="image_content")
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class ImageContent extends Content implements IContent
 {
@@ -53,35 +54,42 @@ class ImageContent extends Content implements IContent
 
     /**
      * Adresa obrázku.
+     *
      * @ORM\Column(type="string", nullable=true)
+     *
      * @var string
      */
     protected $image;
 
     /**
      * Zarovnání obrázku v textu.
+     *
      * @ORM\Column(type="string", nullable=true)
+     *
      * @var string
      */
     protected $align;
 
     /**
      * Šířka obrázku.
+     *
      * @ORM\Column(type="integer", nullable=true)
+     *
      * @var int
      */
     protected $width;
 
     /**
      * Výška obrázku.
+     *
      * @ORM\Column(type="integer", nullable=true)
+     *
      * @var int
      */
     protected $height;
 
     /** @var FilesService */
     private $filesService;
-
 
     public function injectFilesService(FilesService $filesService) : void
     {
@@ -151,7 +159,7 @@ class ImageContent extends Content implements IContent
     {
         parent::addContentForm($form);
 
-        $formName = $this->getContentFormName();
+        $formName      = $this->getContentFormName();
         $formContainer = $form->$formName;
 
         $formContainer->addText('currentImage', 'admin.cms.pages_content_image_current_file')
@@ -188,6 +196,7 @@ class ImageContent extends Content implements IContent
 
     /**
      * Zpracuje při uložení stránky část formuláře týkající se obsahu.
+     *
      * @throws UnknownImageFileException
      */
     public function contentFormSucceeded(BaseForm $form, stdClass $values) : void
@@ -227,9 +236,9 @@ class ImageContent extends Content implements IContent
                 $this->height = $image->getHeight();
             } elseif ($width) {
                 $this->width  = $width;
-                $this->height = ($image->getHeight() * $width) / $image->getWidth();
+                $this->height = $image->getHeight() * $width / $image->getWidth();
             } else {
-                $this->width  = ($image->getWidth() * $height) / $image->getHeight();
+                $this->width  = $image->getWidth() * $height / $image->getHeight();
                 $this->height = $height;
             }
         } else {
@@ -242,6 +251,7 @@ class ImageContent extends Content implements IContent
 
     /**
      * Vrátí možnosti zarovnání obrázku pro select.
+     *
      * @return string[]
      */
     private function prepareAlignOptions() : array
@@ -250,6 +260,7 @@ class ImageContent extends Content implements IContent
         foreach (self::$aligns as $align) {
             $options[$align] = 'common.align.' . $align;
         }
+
         return $options;
     }
 

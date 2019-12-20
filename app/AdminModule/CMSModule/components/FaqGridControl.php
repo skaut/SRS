@@ -28,7 +28,6 @@ class FaqGridControl extends Control
     /** @var FaqRepository */
     private $faqRepository;
 
-
     public function __construct(Translator $translator, FaqRepository $faqRepository)
     {
         parent::__construct();
@@ -48,6 +47,7 @@ class FaqGridControl extends Control
 
     /**
      * Vytvoří komponentu.
+     *
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
@@ -97,6 +97,7 @@ class FaqGridControl extends Control
 
     /**
      * Zpracuje odstranění otázky.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -113,6 +114,7 @@ class FaqGridControl extends Control
 
     /**
      * Přesuene otázku $item_id mezi $prev_id a $next_id.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -136,6 +138,7 @@ class FaqGridControl extends Control
 
     /**
      * Změní viditelnost otázky.
+     *
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException

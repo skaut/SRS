@@ -26,24 +26,28 @@ class DiscountForm extends UI\Control
 {
     /**
      * Id upravované slevy.
+     *
      * @var int
      */
     public $id;
 
     /**
      * Upravovaná sleva.
+     *
      * @var ?Discount
      */
     private $discount;
 
     /**
      * Událost při uložení formuláře.
+     *
      * @var callable
      */
     public $onSave;
 
     /**
      * Událost při chybě podmínky.
+     *
      * @var callable
      */
     public $onConditionError;
@@ -59,7 +63,6 @@ class DiscountForm extends UI\Control
 
     /** @var DiscountService */
     private $discountService;
-
 
     public function __construct(
         int $id,
@@ -131,6 +134,7 @@ class DiscountForm extends UI\Control
 
     /**
      * Zpracuje formulář.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -138,7 +142,7 @@ class DiscountForm extends UI\Control
     {
         $this->id = (int) $values->id;
 
-        if ($this->discountService->validateCondition(($values->condition))) {
+        if ($this->discountService->validateCondition($values->condition)) {
             if (! $this->id) {
                 $this->discount = new Discount();
             } else {

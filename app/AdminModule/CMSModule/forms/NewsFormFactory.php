@@ -27,6 +27,7 @@ class NewsFormFactory
 
     /**
      * Upravovaná aktualita.
+     *
      * @var ?News
      */
     private $news;
@@ -36,7 +37,6 @@ class NewsFormFactory
 
     /** @var NewsRepository */
     private $newsRepository;
-
 
     public function __construct(BaseFormFactory $baseFormFactory, NewsRepository $newsRepository)
     {
@@ -93,6 +93,7 @@ class NewsFormFactory
 
     /**
      * Zpracuje formulář.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      */

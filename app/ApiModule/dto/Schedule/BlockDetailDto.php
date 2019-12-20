@@ -107,7 +107,6 @@ class BlockDetailDto
      */
     private $userAttends;
 
-
     public function getId() : int
     {
         return $this->id;

@@ -41,18 +41,21 @@ class BlockFormFactory
 
     /**
      * Přihlášený uživatel.
+     *
      * @var User
      */
     private $user;
 
     /**
      * Upravovaný programový blok.
+     *
      * @var ?Block
      */
     private $block;
 
     /**
      * Jsou vytvořené podakce.
+     *
      * @var bool
      */
     private $subeventsExists;
@@ -87,7 +90,6 @@ class BlockFormFactory
     /** @var Validators */
     private $validators;
 
-
     public function __construct(
         BaseFormFactory $baseFormFactory,
         BlockRepository $blockRepository,
@@ -114,6 +116,7 @@ class BlockFormFactory
 
     /**
      * Vytvoří formulář.
+     *
      * @throws NonUniqueResultException
      */
     public function create(int $id, int $userId) : BaseForm
@@ -236,6 +239,7 @@ class BlockFormFactory
 
     /**
      * Zpracuje formulář.
+     *
      * @throws Throwable
      */
     public function processForm(BaseForm $form, stdClass $values) : void
@@ -277,6 +281,7 @@ class BlockFormFactory
         if ($this->block) {
             return $this->validators->validateBlockAutoRegistered($this->block);
         }
+
         return true;
     }
 }

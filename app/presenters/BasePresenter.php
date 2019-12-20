@@ -29,11 +29,11 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
      */
     public $translator;
 
-
     /**
      * Zobrazí přeloženou zprávu.
-     * @param string $message
-     * @param string $type
+     *
+     * @param string   $message
+     * @param string   $type
      * @param string[] $parameters
      */
     public function flashMessage($message, $type = 'info', ?string $icon = null, ?int $count = null, array $parameters = []) : stdClass

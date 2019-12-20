@@ -28,7 +28,6 @@ class TicketsFormFactory
     /** @var SettingsService */
     private $settingsService;
 
-
     public function __construct(BaseFormFactory $baseForm, SettingsService $settingsService)
     {
         $this->baseFormFactory = $baseForm;
@@ -37,6 +36,7 @@ class TicketsFormFactory
 
     /**
      * Vytvoří formulář.
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -72,6 +72,7 @@ class TicketsFormFactory
 
     /**
      * Zpracuje formulář.
+     *
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException

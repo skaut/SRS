@@ -16,6 +16,7 @@ use Skautis\Wsdl\WsdlException;
 use stdClass;
 use Tracy\Debugger;
 use Tracy\ILogger;
+use function property_exists;
 
 /**
  * Formulář pro úpravu osobních údajů.
@@ -30,6 +31,7 @@ class PersonalDetailsFormFactory
 
     /**
      * Přihlášený uživatel.
+     *
      * @var User
      */
     private $user;
@@ -45,7 +47,6 @@ class PersonalDetailsFormFactory
 
     /** @var SkautIsService */
     private $skautIsService;
-
 
     public function __construct(BaseFormFactory $baseFormFactory, UserRepository $userRepository, SkautIsService $skautIsService)
     {
@@ -128,6 +129,7 @@ class PersonalDetailsFormFactory
 
     /**
      * Zpracuje formulář.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      */

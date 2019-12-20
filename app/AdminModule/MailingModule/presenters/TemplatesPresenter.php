@@ -36,7 +36,6 @@ class TemplatesPresenter extends MailingBasePresenter
      */
     public $editTemplateFormFactory;
 
-
     public function renderEdit(int $id) : void
     {
         $template = $this->templateRepository->findById($id);

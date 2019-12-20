@@ -48,7 +48,6 @@ class PagesGridControl extends Control
     /** @var AclService */
     private $ACLService;
 
-
     public function __construct(
         Translator $translator,
         CmsService $CMSService,
@@ -132,7 +131,7 @@ class PagesGridControl extends Control
         };
         $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
 
-        $grid->addInlineEdit()->onControlAdd[]  = function (Container $container) use ($rolesOptions, $publicOptions) : void {
+        $grid->addInlineEdit()->onControlAdd[]  = static function (Container $container) use ($rolesOptions, $publicOptions) : void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.pages_name_empty');
 
@@ -171,7 +170,7 @@ class PagesGridControl extends Control
                 'data-toggle' => 'confirmation',
                 'data-content' => $this->translator->translate('admin.cms.pages_delete_confirm'),
             ]);
-        $grid->allowRowsAction('delete', function (Page $item) {
+        $grid->allowRowsAction('delete', static function (Page $item) {
             return $item->getSlug() !== '/';
         });
     }

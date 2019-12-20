@@ -47,7 +47,6 @@ class ApplicationContentControl extends Control
     /** @var SubeventRepository */
     private $subeventRepository;
 
-
     public function __construct(
         ApplicationFormFactory $applicationFormFactory,
         Authenticator $authenticator,

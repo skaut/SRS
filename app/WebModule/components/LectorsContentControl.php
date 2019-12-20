@@ -23,7 +23,6 @@ class LectorsContentControl extends Control
     /** @var RoleRepository */
     private $roleRepository;
 
-
     public function __construct(UserRepository $userRepository, RoleRepository $roleRepository)
     {
         parent::__construct();

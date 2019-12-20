@@ -73,7 +73,6 @@ class BlocksPresenter extends ProgramBasePresenter
      */
     public $programService;
 
-
     public function renderDefault() : void
     {
         $this->template->emptyUserInfo = empty($this->dbuser->getAbout());
@@ -112,6 +111,7 @@ class BlocksPresenter extends ProgramBasePresenter
 
     /**
      * Zobrazí přehled účastníků u vybraného programu.
+     *
      * @throws AbortException
      */
     public function handleShowAttendees(int $programId) : void
@@ -129,6 +129,7 @@ class BlocksPresenter extends ProgramBasePresenter
 
     /**
      * Odstraní vybraný program.
+     *
      * @throws SettingsException
      * @throws AbortException
      * @throws Throwable

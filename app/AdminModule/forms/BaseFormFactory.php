@@ -8,7 +8,6 @@ use Kdyby\Translation\Translator;
 use Nette;
 use Nextras\Forms\Rendering\Bs3FormRenderer;
 
-
 /**
  * BaseFormFactory pro AdminModule.
  *
@@ -20,7 +19,6 @@ class BaseFormFactory
 
     /** @var Translator */
     private $translator;
-
 
     public function __construct(Translator $translator)
     {
@@ -44,5 +42,3 @@ class BaseFormFactory
         return $form;
     }
 }
-
-

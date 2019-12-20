@@ -23,7 +23,6 @@ class DashboardPresenter extends AdminBasePresenter
      */
     public $subeventRepository;
 
-
     /**
      * @throws SettingsException
      * @throws NonUniqueResultException

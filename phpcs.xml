@@ -10,6 +10,7 @@
     <arg value="nps"/>
 
     <file>app</file>
+
     <rule ref="Doctrine">
         <!-- Zpusobuje problem s property pouzivanymi v Doctrine mappings -->
         <exclude name="SlevomatCodingStandard.Classes.UnusedPrivateElements"/>
@@ -29,5 +30,17 @@
         <!-- Docasne ignorovano, pro porovnavani objektu (DateTime) neni strict zadouci -->
         <exclude name="SlevomatCodingStandard.ControlStructures.DisallowEqualOperators.DisallowedEqualOperator"/>
         <exclude name="SlevomatCodingStandard.ControlStructures.DisallowEqualOperators.DisallowedNotEqualOperator"/>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Variables.UnusedVariable"/>
+    <rule ref="SlevomatCodingStandard.Classes.UnusedPrivateElements">
+        <properties>
+            <property name="alwaysUsedPropertiesAnnotations" type="array">
+                <element value="@ORM\Column"/>
+                <element value="@ORM\ManyToOne"/>
+                <element value="@ORM\OneToMany"/>
+                <element value="@ORM\ManyToMany"/>
+                <element value="@ORM\Embedded"/>
+            </property>
+        </properties>
     </rule>
 </ruleset>

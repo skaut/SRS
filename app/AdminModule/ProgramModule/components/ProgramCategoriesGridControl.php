@@ -53,7 +53,6 @@ class ProgramCategoriesGridControl extends Control
     /** @var AclService */
     private $ACLService;
 
-
     public function __construct(
         Translator $translator,
         CategoryRepository $categoryRepository,
@@ -85,6 +84,7 @@ class ProgramCategoriesGridControl extends Control
 
     /**
      * Vytvoří komponentu.
+     *
      * @throws DataGridException
      */
     public function createComponentProgramCategoriesGrid(string $name) : void
@@ -111,7 +111,7 @@ class ProgramCategoriesGridControl extends Control
         };
         $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
 
-        $grid->addInlineEdit()->onControlAdd[]  = function (Container $container) use ($rolesOptions) : void {
+        $grid->addInlineEdit()->onControlAdd[]  = static function (Container $container) use ($rolesOptions) : void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.program.categories_name_empty');
 
@@ -142,6 +142,7 @@ class ProgramCategoriesGridControl extends Control
 
     /**
      * Zpracuje přidání kategorie.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -157,6 +158,7 @@ class ProgramCategoriesGridControl extends Control
 
     /**
      * Zpracuje úpravu kategorie.
+     *
      * @throws AbortException
      * @throws Throwable
      */
@@ -172,6 +174,7 @@ class ProgramCategoriesGridControl extends Control
 
     /**
      * Odstraní kategorii.
+     *
      * @throws AbortException
      * @throws Throwable
      */

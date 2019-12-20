@@ -80,7 +80,6 @@ class ProgramBlocksGridControl extends Control
     /** @var SubeventService */
     private $subeventService;
 
-
     public function __construct(
         Translator $translator,
         BlockRepository $blockRepository,
@@ -124,6 +123,7 @@ class ProgramBlocksGridControl extends Control
 
     /**
      * Vytvoří komponentu.
+     *
      * @throws SettingsException
      * @throws Throwable
      * @throws DataGridColumnStatusException
@@ -158,7 +158,7 @@ class ProgramBlocksGridControl extends Control
 
         $grid->addColumnText('lectors', 'admin.program.blocks_lectors', 'lectorsText')
             ->setFilterMultiSelect($this->userRepository->getLectorsOptions())
-            ->setCondition(function ($qb, $values) : void {
+            ->setCondition(static function ($qb, $values) : void {
                 $qb->join('b.lectors', 'l')
                     ->andWhere('l.id IN (:lids)')
                     ->setParameter('lids', $values);
@@ -171,7 +171,7 @@ class ProgramBlocksGridControl extends Control
         $grid->addColumnText('capacity', 'admin.program.blocks_capacity')
             ->setRendererOnCondition(function ($row) {
                 return $this->translator->translate('admin.program.blocks_capacity_unlimited');
-            }, function (Block $row) {
+            }, static function (Block $row) {
                 return $row->getCapacity() === null;
             })
             ->setSortable();
@@ -200,7 +200,7 @@ class ProgramBlocksGridControl extends Control
             ->setTranslateOptions();
 
         $grid->addColumnNumber('programsCount', 'admin.program.blocks_programs_count')
-            ->setRenderer(function (Block $row) {
+            ->setRenderer(static function (Block $row) {
                 return $row->getProgramsCount();
             });
 
@@ -232,6 +232,7 @@ class ProgramBlocksGridControl extends Control
 
     /**
      * Odstraní programový blok.
+     *
      * @throws AbortException
      * @throws Throwable
      */
@@ -253,6 +254,7 @@ class ProgramBlocksGridControl extends Control
 
     /**
      * Změní povinnost bloku.
+     *
      * @throws AbortException
      */
     public function changeMandatory(int $id, string $mandatory) : void
@@ -287,7 +289,9 @@ class ProgramBlocksGridControl extends Control
 
     /**
      * Hromadně vyexportuje seznam uživatelů, kteří mají blok zapsaný.
+     *
      * @param int[] $ids
+     *
      * @throws AbortException
      */
     public function groupExportBlocksAttendees(array $ids) : void
@@ -298,6 +302,7 @@ class ProgramBlocksGridControl extends Control
 
     /**
      * Zpracuje export seznamu uživatelů, kteří mají blok zapsaný.
+     *
      * @throws AbortException
      * @throws Exception
      */
@@ -319,6 +324,7 @@ class ProgramBlocksGridControl extends Control
     {
         /** @var AdminBasePresenter $presenter */
         $presenter = $this->getPresenter();
+
         return $presenter->dbuser->isAllowedModifyBlock($block);
     }
 }

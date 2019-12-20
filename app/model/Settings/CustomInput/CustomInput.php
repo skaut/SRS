@@ -13,7 +13,6 @@ use Nettrine\ORM\Entity\Attributes\Id;
 /**
  * Abstraktní entita vlastní pole přihlášky.
  *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="CustomInputRepository")
  * @ORM\Table(name="custom_input")
  * @ORM\InheritanceType("JOINED")
@@ -24,30 +23,28 @@ use Nettrine\ORM\Entity\Attributes\Id;
  *     "custom_select" = "CustomSelect",
  *     "custom_file" = "CustomFile"
  * })
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 abstract class CustomInput
 {
     /**
      * Textové pole.
-     * @var string
      */
     public const TEXT = 'text';
 
     /**
      * Zaškrtávací pole.
-     * @var string
      */
     public const CHECKBOX = 'checkbox';
 
     /**
      * Výběrové pole.
-     * @var string
      */
     public const SELECT = 'select';
 
     /**
      * Soubor.
-     * @var string
      */
     public const FILE = 'file';
 
@@ -61,40 +58,47 @@ abstract class CustomInput
 
     /**
      * Typ vlastního pole.
+     *
      * @var string
      */
     protected $type;
-
     use Id;
 
     /**
      * Název vlastního pole.
+     *
      * @ORM\Column(type="string")
+     *
      * @var string
      */
     protected $name;
 
     /**
      * Povinné pole.
+     *
      * @ORM\Column(type="boolean")
+     *
      * @var bool
      */
     protected $mandatory = false;
 
     /**
      * Pořadí pole na přihlášce.
+     *
      * @ORM\Column(type="integer")
+     *
      * @var int
      */
     protected $position = 0;
 
     /**
      * Hodnoty pole pro jednotlivé uživatele.
+     *
      * @ORM\OneToMany(targetEntity="\App\Model\User\CustomInputValue\CustomInputValue", mappedBy="input", cascade={"persist"})
+     *
      * @var Collection|CustomInputValue[]
      */
     protected $customInputValues;
-
 
     public function __construct()
     {

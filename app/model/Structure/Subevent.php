@@ -18,9 +18,10 @@ use function implode;
 /**
  * Entita podakce.
  *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="SubeventRepository")
  * @ORM\Table(name="subevent")
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class Subevent
 {
@@ -28,43 +29,55 @@ class Subevent
 
     /**
      * Název podakce.
+     *
      * @ORM\Column(type="string", unique=true)
+     *
      * @var string
      */
     protected $name;
 
     /**
      * Implicitní podakce. Vytvořena automaticky.
+     *
      * @ORM\Column(type="boolean")
+     *
      * @var bool
      */
     protected $implicit = false;
 
     /**
      * Přihlášky.
+     *
      * @ORM\ManyToMany(targetEntity="\App\Model\User\SubeventsApplication", mappedBy="subevents", cascade={"persist"})
+     *
      * @var Collection|SubeventsApplication[]
      */
     protected $applications;
 
     /**
      * Bloky v podakci.
+     *
      * @ORM\OneToMany(targetEntity="\App\Model\Program\Block", mappedBy="subevent", cascade={"persist"})
      * @ORM\OrderBy({"name" = "ASC"})
+     *
      * @var Collection|Block[]
      */
     protected $blocks;
 
     /**
      * Poplatek.
+     *
      * @ORM\Column(type="integer")
+     *
      * @var int
      */
     protected $fee = 0;
 
     /**
      * Kapacita.
+     *
      * @ORM\Column(type="integer", nullable=true)
+     *
      * @var int
      */
     protected $capacity;
@@ -72,47 +85,56 @@ class Subevent
     /**
      * Obsazenost.
      * Bude se používat pro kontrolu kapacity.
+     *
      * @ORM\Column(type="integer")
+     *
      * @var int
      */
     protected $occupancy = 0;
 
     /**
      * Podakce neregistrovatelné současně s touto podakcí.
+     *
      * @ORM\ManyToMany(targetEntity="Subevent")
      * @ORM\JoinTable(name="subevent_subevent_incompatible",
      *      joinColumns={@ORM\JoinColumn(name="subevent_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="incompatible_subevent_id", referencedColumnName="id")}
      *      )
+     *
      * @var Collection|Subevent[]
      */
     protected $incompatibleSubevents;
 
     /**
      * Podakce vyžadující tuto podakci.
+     *
      * @ORM\ManyToMany(targetEntity="Subevent", mappedBy="requiredSubevents", cascade={"persist"})
+     *
      * @var Collection|Subevent[]
      */
     protected $requiredBySubevent;
 
     /**
      * Podakce vyžadované touto podakcí.
+     *
      * @ORM\ManyToMany(targetEntity="Subevent", inversedBy="requiredBySubevent")
      * @ORM\JoinTable(name="subevent_subevent_required",
      *      joinColumns={@ORM\JoinColumn(name="subevent_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="required_subevent_id", referencedColumnName="id")}
      *      )
+     *
      * @var Collection|Subevent[]
      */
     protected $requiredSubevents;
 
     /**
      * Propojené skautIS kurzy.
+     *
      * @ORM\ManyToMany(targetEntity="\App\Model\SkautIs\SkautIsCourse")
+     *
      * @var Collection|SkautIsCourse[]
      */
     protected $skautIsCourses;
-
 
     public function __construct()
     {
@@ -236,6 +258,7 @@ class Subevent
         foreach ($this->getIncompatibleSubevents() as $incompatibleSubevent) {
             $incompatibleSubeventsNames[] = $incompatibleSubevent->getName();
         }
+
         return implode(', ', $incompatibleSubeventsNames);
     }
 
@@ -249,6 +272,7 @@ class Subevent
 
     /**
      * Vrací všechny (tranzitivně) podakce, kterými je tato podakce vyžadována.
+     *
      * @return Collection|Subevent[]
      */
     public function getRequiredBySubeventTransitive() : Collection
@@ -257,6 +281,7 @@ class Subevent
         foreach ($this->requiredBySubevent as $requiredBySubevent) {
             $this->getRequiredBySubeventTransitiveRec($allRequiredBySubevent, $requiredBySubevent);
         }
+
         return $allRequiredBySubevent;
     }
 
@@ -297,6 +322,7 @@ class Subevent
 
     /**
      * Vrací všechny (tranzitivně) vyžadované podakce.
+     *
      * @return Collection|Subevent[]
      */
     public function getRequiredSubeventsTransitive() : Collection
@@ -305,6 +331,7 @@ class Subevent
         foreach ($this->requiredSubevents as $requiredSubevent) {
             $this->getRequiredSubeventsTransitiveRec($allRequiredSubevents, $requiredSubevent);
         }
+
         return $allRequiredSubevents;
     }
 
@@ -333,6 +360,7 @@ class Subevent
         foreach ($this->getRequiredSubeventsTransitive() as $requiredSubevent) {
             $requiredSubeventsNames[] = $requiredSubevent->getName();
         }
+
         return implode(', ', $requiredSubeventsNames);
     }
 
@@ -346,7 +374,7 @@ class Subevent
 
     public function getSkautIsCoursesText() : string
     {
-        return implode(', ', $this->skautIsCourses->map(function (SkautIsCourse $skautIsCourse) {
+        return implode(', ', $this->skautIsCourses->map(static function (SkautIsCourse $skautIsCourse) {
             return $skautIsCourse->getName();
         })->toArray());
     }
@@ -377,14 +405,11 @@ class Subevent
 //
 //        return $this->applications->matching($criteria)->count();
 
-        return $this->applications->filter(function (Application $application) {
-            if ($application->getValidTo() === null && (
+        return $this->applications->filter(static function (Application $application) {
+            return $application->getValidTo() === null && (
                 $application->getState() === ApplicationState::WAITING_FOR_PAYMENT ||
                 $application->getState() === ApplicationState::PAID_FREE ||
-                $application->getState() === ApplicationState::PAID)) {
-                return true;
-            }
-            return false;
+                $application->getState() === ApplicationState::PAID);
         })->count();
     }
 

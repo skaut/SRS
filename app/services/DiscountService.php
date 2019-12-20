@@ -25,18 +25,21 @@ class DiscountService
 
     /**
      * Tokeny podmínky.
+     *
      * @var string[][]
      */
     private $symbols;
 
     /**
      * Aktuálně zpracovávaný token.
+     *
      * @var int
      */
     private $currentSymbol;
 
     /**
      * Id zvolených podakcí.
+     *
      * @var int[]
      */
     private $selectedSubeventsIds;
@@ -50,7 +53,6 @@ class DiscountService
     /** @var Translator */
     private $translator;
 
-
     public function __construct(
         DiscountRepository $discountRepository,
         SubeventRepository $subeventRepository,
@@ -63,6 +65,7 @@ class DiscountService
 
     /**
      * Vypočítá slevu pro kombinaci podakcí.
+     *
      * @param int[] $selectedSubeventsIds
      */
     public function countDiscount(array $selectedSubeventsIds) : int

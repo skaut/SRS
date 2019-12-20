@@ -51,9 +51,9 @@ class AuthPresenter extends BasePresenter
      */
     public $mailService;
 
-
     /**
      * Přesměruje na přihlašovací stránku skautIS, nastaví přihlášení.
+     *
      * @throws SettingsException
      * @throws AbortException
      * @throws AuthenticationException
@@ -86,6 +86,7 @@ class AuthPresenter extends BasePresenter
 
     /**
      * Přesměruje na odhlašovací stránku skautIS.
+     *
      * @throws AbortException
      */
     public function actionLogout() : void
@@ -101,6 +102,7 @@ class AuthPresenter extends BasePresenter
 
     /**
      * Provede přesměrování po úspěšném přihlášení, v závislosti na nastavení, nastavení role nebo returnUrl.
+     *
      * @throws SettingsException
      * @throws AbortException
      * @throws Throwable

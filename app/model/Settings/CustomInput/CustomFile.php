@@ -9,9 +9,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Entita vlastní příloha přihlášky.
  *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity
  * @ORM\Table(name="custom_file")
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class CustomFile extends CustomInput
 {

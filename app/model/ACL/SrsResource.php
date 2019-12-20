@@ -12,58 +12,51 @@ use Nettrine\ORM\Entity\Attributes\Id;
 /**
  * Entita prostředek.
  *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="SrsResourceRepository")
  * @ORM\Table(name="resource")
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class SrsResource
 {
     /**
      * Administrace.
-     * @var string
      */
     public const ADMIN = 'admin';
 
     /**
      * Web.
-     * @var string
      */
     public const CMS = 'cms';
 
     /**
      * Role.
-     * @var string
      */
     public const ACL = 'acl';
 
     /**
      * Program.
-     * @var string
      */
     public const PROGRAM = 'program';
 
     /**
      * Nastavení.
-     * @var string
      */
     public const CONFIGURATION = 'configuration';
 
     /**
      * Uživatelé.
-     * @var string
      */
     public const USERS = 'users';
 
     /**
      * Mailing.
-     * @var string
      */
     public const MAILING = 'mailing';
 
     /**
      * Platby.
-     * @var string
      */
     public const PAYMENTS = 'payments';
 
@@ -78,23 +71,25 @@ class SrsResource
         self::MAILING,
         self::PAYMENTS,
     ];
-
     use Id;
 
     /**
      * Název prostředku.
+     *
      * @ORM\Column(type="string", unique=true)
+     *
      * @var string
      */
     protected $name;
 
     /**
      * Oprávnění s tímto prostředkem.
+     *
      * @ORM\OneToMany(targetEntity="\App\Model\ACL\Permission", mappedBy="resource", cascade={"persist"})
+     *
      * @var Collection|Permission[]
      */
     protected $permissions;
-
 
     public function __construct(string $name)
     {

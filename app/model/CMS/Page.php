@@ -19,10 +19,11 @@ use function in_array;
 /**
  * Entita stránky.
  *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="PageRepository")
  * @ORM\Table(name="page")
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class Page
 {
@@ -30,47 +31,58 @@ class Page
 
     /**
      * Název stránky.
+     *
      * @ORM\Column(type="string")
+     *
      * @var string
      */
     protected $name;
 
     /**
      * Cesta stránky.
+     *
      * @ORM\Column(type="string", unique=true)
+     *
      * @var string
      */
     protected $slug;
 
     /**
      * Pořadí v menu.
+     *
      * @ORM\Column(type="integer")
+     *
      * @var int
      */
     protected $position = 0;
 
     /**
      * Viditelná.
+     *
      * @ORM\Column(type="boolean")
+     *
      * @var bool
      */
     protected $public = false;
 
     /**
      * Role, které mají na stránku přístup.
+     *
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="pages", cascade={"persist"})
+     *
      * @var Collection|Role[]
      */
     protected $roles;
 
     /**
      * Obsahy na stránce.
+     *
      * @ORM\OneToMany(targetEntity="\App\Model\CMS\Content\Content", mappedBy="page", cascade={"persist"})
      * @ORM\OrderBy({"position" = "ASC"})
+     *
      * @var Collection|Content[]
      */
     protected $contents;
-
 
     public function __construct(string $name, string $slug)
     {
@@ -135,7 +147,7 @@ class Page
 
     public function getRolesText() : string
     {
-        return implode(', ', $this->roles->map(function (Role $role) {
+        return implode(', ', $this->roles->map(static function (Role $role) {
             return $role->getName();
         })->toArray());
     }
@@ -158,7 +170,9 @@ class Page
 
     /**
      * Vrací obsahy v oblasti.
+     *
      * @return Collection|Content[]
+     *
      * @throws PageException
      */
     public function getContents(?string $area = null) : Collection
@@ -172,6 +186,7 @@ class Page
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('area', $area))
             ->orderBy(['position' => 'ASC']);
+
         return $this->contents->matching($criteria);
     }
 
@@ -180,7 +195,7 @@ class Page
      */
     public function convertToDto() : PageDto
     {
-        $allowedRoles = array_map(function (Role $role) {
+        $allowedRoles = array_map(static function (Role $role) {
             return $role->getName();
         }, $this->roles->toArray());
 

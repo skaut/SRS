@@ -32,6 +32,7 @@ class SubeventFormFactory
 
     /**
      * Upravovaná podakce.
+     *
      * @var ?Subevent
      */
     private $subevent;
@@ -47,7 +48,6 @@ class SubeventFormFactory
 
     /** @var SubeventService */
     private $subeventService;
-
 
     public function __construct(
         EntityManagerDecorator $em,
@@ -145,6 +145,7 @@ class SubeventFormFactory
 
     /**
      * Zpracuje formulář.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -171,7 +172,9 @@ class SubeventFormFactory
 
     /**
      * Ověří kolize mezi vyžadovanými a nekompatibilními podakcemi.
+     *
      * @param int[][] $args
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      */

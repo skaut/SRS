@@ -41,7 +41,6 @@ class MailHistoryGridControl extends Control
     /** @var SubeventService */
     private $subeventService;
 
-
     public function __construct(
         Translator $translator,
         MailRepository $mailRepository,
@@ -83,7 +82,7 @@ class MailHistoryGridControl extends Control
 
         $grid->addColumnText('recipientRoles', 'admin.mailing.history.recipient_roles', 'recipientRolesText')
             ->setFilterMultiSelect($this->ACLService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]))
-            ->setCondition(function (QueryBuilder $qb, $values) : void {
+            ->setCondition(static function (QueryBuilder $qb, $values) : void {
                 $qb->join('m.recipientRoles', 'r')
                     ->andWhere('r.id IN (:rids)')
                     ->setParameter('rids', $values);
@@ -91,7 +90,7 @@ class MailHistoryGridControl extends Control
 
         $grid->addColumnText('recipientSubevents', 'admin.mailing.history.recipient_subevents', 'recipientSubeventsText')
             ->setFilterMultiSelect($this->subeventService->getSubeventsOptions())
-            ->setCondition(function (QueryBuilder $qb, $values) : void {
+            ->setCondition(static function (QueryBuilder $qb, $values) : void {
                 $qb->join('m.recipientSubevents', 's')
                     ->andWhere('s.id IN (:sids)')
                     ->setParameter('sids', $values);
@@ -99,7 +98,7 @@ class MailHistoryGridControl extends Control
 
         $grid->addColumnText('recipientUsers', 'admin.mailing.history.recipient_users', 'recipientUsersText')
             ->setFilterText()
-            ->setCondition(function (QueryBuilder $qb, $value) : void {
+            ->setCondition(static function (QueryBuilder $qb, $value) : void {
                 $qb->join('m.recipientUsers', 'u')
                     ->andWhere('u.displayName LIKE :displayName')
                     ->setParameter('displayName', '%' . $value . '%');

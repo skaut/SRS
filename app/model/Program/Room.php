@@ -12,9 +12,10 @@ use Nettrine\ORM\Entity\Attributes\Id;
 /**
  * Entita místnost.
  *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="RoomRepository")
  * @ORM\Table(name="room")
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class Room
 {
@@ -22,26 +23,31 @@ class Room
 
     /**
      * Název místnosti.
+     *
      * @ORM\Column(type="string", unique=true)
+     *
      * @var string
      */
     protected $name;
 
     /**
      * Kapacita.
+     *
      * @ORM\Column(type="integer", nullable=true)
+     *
      * @var int
      */
     protected $capacity;
 
     /**
      * Programy v místnosti.
+     *
      * @ORM\OneToMany(targetEntity="Program", mappedBy="room", cascade={"persist"})
      * @ORM\OrderBy({"start" = "ASC"})
+     *
      * @var Collection|Program[]
      */
     protected $programs;
-
 
     public function __construct()
     {

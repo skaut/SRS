@@ -24,7 +24,6 @@ class SeminarPresenter extends ConfigurationBasePresenter
      */
     public $seminarFormFactory;
 
-
     /**
      * @throws SettingsException
      * @throws Throwable

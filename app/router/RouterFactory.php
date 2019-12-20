@@ -16,7 +16,6 @@ class RouterFactory
     /** @var CmsService */
     private $CMSService;
 
-
     public function __construct(CmsService $CMSService)
     {
         $this->CMSService = $CMSService;
@@ -110,7 +109,7 @@ class RouterFactory
                     Route::FILTER_IN => function (string $slug) {
                         return $this->CMSService->findPublishedBySlugDto($slug);
                     },
-                    Route::FILTER_OUT => function (PageDto $page) {
+                    Route::FILTER_OUT => static function (PageDto $page) {
                         return $page->getSlug();
                     },
                 ],

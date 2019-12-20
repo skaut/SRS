@@ -17,6 +17,7 @@ class MailRepository extends EntityRepository
 {
     /**
      * Uloží e-mail.
+     *
      * @throws ORMException
      */
     public function save(Mail $mail) : void

@@ -31,9 +31,9 @@ class SystemPresenter extends ConfigurationBasePresenter
      */
     public $consoleApplication;
 
-
     /**
      * Promaže cache.
+     *
      * @throws Exception
      */
     public function handleClearCache() : void

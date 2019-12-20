@@ -37,7 +37,6 @@ class FaqPresenter extends CMSBasePresenter
      */
     public $faqRepository;
 
-
     public function renderEdit(int $id) : void
     {
     }

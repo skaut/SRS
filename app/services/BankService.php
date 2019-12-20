@@ -36,7 +36,6 @@ class BankService
     /** @var PaymentRepository */
     private $paymentRepository;
 
-
     public function __construct(
         ApplicationService $applicationService,
         EntityManagerDecorator $em,

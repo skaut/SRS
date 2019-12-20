@@ -31,11 +31,11 @@ use Exception;
 use Kdyby\Translation\Translator;
 use Nette;
 use Throwable;
+use const DATE_ISO8601;
 use function array_intersect;
 use function count;
 use function floor;
 use function in_array;
-use const DATE_ISO8601;
 
 /**
  * Služba pro zpracování požadavků z API pro správu harmonogramu a zapisování programů.
@@ -70,7 +70,6 @@ class ScheduleService
     /** @var ProgramService */
     private $programService;
 
-
     public function __construct(
         Translator $translator,
         UserRepository $userRepository,
@@ -96,7 +95,9 @@ class ScheduleService
 
     /**
      * Vrací podrobnosti o všech programech pro použití v administraci harmonogramu.
+     *
      * @return ProgramDetailDto[]
+     *
      * @throws Exception
      */
     public function getProgramsAdmin() : array
@@ -106,12 +107,15 @@ class ScheduleService
         foreach ($programs as $program) {
             $programAdminDetailDtos[] = $this->convertProgramToProgramDetailDto($program);
         }
+
         return $programAdminDetailDtos;
     }
 
     /**
      * Vrací podrobnosti o programech, ke kterým má uživatel přístup, pro použití v kalendáři pro výběr programů.
+     *
      * @return ProgramDetailDto[]
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -145,6 +149,7 @@ class ScheduleService
 
     /**
      * Vrací podrobnosti o programových blocích.
+     *
      * @return BlockDetailDto[]
      */
     public function getBlocks() : array
@@ -154,11 +159,13 @@ class ScheduleService
         foreach ($blocks as $block) {
             $blockDetailDtos[] = $this->convertBlockToBlockDetailDto($block);
         }
+
         return $blockDetailDtos;
     }
 
     /**
      * Vrací podrobnosti o místnostech.
+     *
      * @return RoomDetailDto[]
      */
     public function getRooms() : array
@@ -168,11 +175,13 @@ class ScheduleService
         foreach ($rooms as $room) {
             $roomDetailDtos[] = $this->convertRoomToRoomDetailDto($room);
         }
+
         return $roomDetailDtos;
     }
 
     /**
      * Vrací nastavení pro FullCalendar.
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -195,6 +204,7 @@ class ScheduleService
 
     /**
      * Uloží nebo vytvoří program.
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -239,6 +249,7 @@ class ScheduleService
 
     /**
      * Smaže program.
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -271,6 +282,7 @@ class ScheduleService
 
     /**
      * Přihlásí program uživateli.
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -295,7 +307,7 @@ class ScheduleService
             $responseDto->setMessage($this->translator->translate('common.api.schedule_program_already_registered'));
         } elseif ($program->getCapacity() !== null && $program->getCapacity() <= $program->getAttendeesCount()) {
             $responseDto->setMessage($this->translator->translate('common.api.schedule_program_no_vacancies'));
-        } elseif (! ($this->programService->getUserAllowedPrograms($this->user))->contains($program)) {
+        } elseif (! $this->programService->getUserAllowedPrograms($this->user)->contains($program)) {
             $responseDto->setMessage($this->translator->translate('common.api.schedule_program_category_not_allowed'));
         } elseif (count(
             array_intersect(
@@ -321,6 +333,7 @@ class ScheduleService
 
     /**
      * Odhlásí program uživateli.
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -354,6 +367,7 @@ class ScheduleService
 
     /**
      * Převede Program na ProgramDetailDto.
+     *
      * @throws Exception
      */
     private function convertProgramToProgramDetailDto(Program $program) : ProgramDetailDto

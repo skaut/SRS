@@ -22,7 +22,6 @@ abstract class InstallBasePresenter extends BasePresenter
      */
     public $translator;
 
-
     /**
      * Načte css podle konfigurace v config.neon.
      */

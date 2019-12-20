@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Model\CMS\Content;
 
+use App\AdminModule\Forms\BaseForm;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\CMS\Page;
 use App\Model\Page\PageException;
 use App\Services\AclService;
 use App\Utils\Helpers;
-use App\AdminModule\Forms\BaseForm;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -19,9 +19,10 @@ use stdClass;
 /**
  * Entita obsahu se seznamem uživatelů.
  *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity
  * @ORM\Table(name="users_content")
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class UsersContent extends Content implements IContent
 {
@@ -30,7 +31,9 @@ class UsersContent extends Content implements IContent
 
     /**
      * Role, jejichž uživatelé budou vypsáni.
+     *
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role")
+     *
      * @var Collection|Role[]
      */
     protected $roles;
@@ -40,7 +43,6 @@ class UsersContent extends Content implements IContent
 
     /** @var AclService */
     private $ACLService;
-
 
     /**
      * @throws PageException
@@ -87,7 +89,7 @@ class UsersContent extends Content implements IContent
     {
         parent::addContentForm($form);
 
-        $formName = $this->getContentFormName();
+        $formName      = $this->getContentFormName();
         $formContainer = $form->$formName;
 
         $formContainer->addMultiSelect(

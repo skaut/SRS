@@ -37,7 +37,6 @@ class NewsPresenter extends CMSBasePresenter
      */
     public $newsRepository;
 
-
     public function renderEdit(int $id) : void
     {
     }

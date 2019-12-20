@@ -28,7 +28,6 @@ class SkautIsEventEducationService extends SkautIsEventService
     /** @var SubeventRepository */
     private $subeventRepository;
 
-
     public function __construct(
         Skautis $skautIs,
         SkautIsCourseRepository $skautIsCourseRepository,
@@ -43,6 +42,7 @@ class SkautIsEventEducationService extends SkautIsEventService
     public function isEventDraft(int $eventId) : bool
     {
         return true;
+
 //        return $this->getEventDetail($eventId)->ID_EventEducationState === 'draft';
     }
 
@@ -84,6 +84,7 @@ class SkautIsEventEducationService extends SkautIsEventService
             }
         } catch (WsdlException $ex) {
             Debugger::log($ex, ILogger::WARNING);
+
             return false;
         }
 
@@ -122,6 +123,7 @@ class SkautIsEventEducationService extends SkautIsEventService
 
     /**
      * Vrací kurzy vzdělávací akce.
+     *
      * @return stdClass[]
      */
     public function getEventCourses(int $eventId) : array
@@ -148,11 +150,13 @@ class SkautIsEventEducationService extends SkautIsEventService
                 return true;
             }
         }
+
         return false;
     }
 
     /**
      * Vrací přihlášené účastníky kurzu.
+     *
      * @return stdClass[]
      */
     private function getAllParticipants(int $eventId, int $courseId) : array
@@ -182,6 +186,7 @@ class SkautIsEventEducationService extends SkautIsEventService
             'ID_EventEducationCourse' => $courseId,
             'ID_Person' => $personId,
         ]);
+
         return $response->ID;
     }
 

@@ -10,7 +10,6 @@ use Kdyby\Translation\Translator;
 use Nette;
 
 /**
- *
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class SubeventService
@@ -23,7 +22,6 @@ class SubeventService
     /** @var Translator */
     private $translator;
 
-
     public function __construct(SubeventRepository $subeventRepository, Translator $translator)
     {
         $this->subeventRepository = $subeventRepository;
@@ -32,6 +30,7 @@ class SubeventService
 
     /**
      * Vrací seznam podakcí jako možnosti pro select.
+     *
      * @return string[]
      */
     public function getSubeventsOptions() : array
@@ -46,11 +45,13 @@ class SubeventService
         foreach ($subevents as $subevent) {
             $options[$subevent['id']] = $subevent['name'];
         }
+
         return $options;
     }
 
     /**
      * Vrací seznam podakcí jako možnosti pro select, podakce specifikovaná parametrem je vynechána.
+     *
      * @return string[]
      */
     public function getSubeventsWithoutSubeventOptions(int $subeventId) : array
@@ -66,11 +67,13 @@ class SubeventService
         foreach ($subevents as $subevent) {
             $options[$subevent['id']] = $subevent['name'];
         }
+
         return $options;
     }
 
     /**
      * Vrací seznam podakcí, jako možnosti pro select
+     *
      * @return string[]
      */
     public function getExplicitOptions() : array
@@ -85,11 +88,13 @@ class SubeventService
         foreach ($subevents as $subevent) {
             $options[$subevent->getId()] = $subevent->getName();
         }
+
         return $options;
     }
 
     /**
      * Vrací seznam podakcí, s informací o obsazenosti, jako možnosti pro select
+     *
      * @return string[]
      */
     public function getSubeventsOptionsWithCapacity() : array
@@ -111,11 +116,13 @@ class SubeventService
                 $options[$subevent->getId()] = $subevent->getName();
             }
         }
+
         return $options;
     }
 
     /**
      * Vrací seznam podakcí, s informací o obsazenosti, jako možnosti pro select
+     *
      * @return string[]
      */
     public function getExplicitOptionsWithCapacity() : array
@@ -138,11 +145,13 @@ class SubeventService
                 $options[$subevent->getId()] = $subevent->getName();
             }
         }
+
         return $options;
     }
 
     /**
      * Vrací seznam podakcí, kromě podakcí uživatele, s informací o obsazenosti, jako možnosti pro select.
+     *
      * @return string[]
      */
     public function getNonRegisteredSubeventsOptionsWithCapacity(User $user) : array
@@ -175,11 +184,13 @@ class SubeventService
                 $options[$subevent->getId()] = $subevent->getName();
             }
         }
+
         return $options;
     }
 
     /**
      * Vrací seznam podakcí, kromě podakcí uživatele, s informací o obsazenosti, jako možnosti pro select.
+     *
      * @return string[]
      */
     public function getNonRegisteredExplicitOptionsWithCapacity(User $user) : array
@@ -214,11 +225,13 @@ class SubeventService
                 $options[$subevent->getId()] = $subevent->getName();
             }
         }
+
         return $options;
     }
 
     /**
      * Vrací seznam podakcí, s informací o počtu uživatelů, jako možnosti pro select.
+     *
      * @return string[]
      */
     public function getSubeventsOptionsWithUsersCount() : array
@@ -238,6 +251,7 @@ class SubeventService
                 ]
             );
         }
+
         return $options;
     }
 }

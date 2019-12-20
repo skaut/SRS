@@ -40,7 +40,6 @@ class DatabaseService
     /** @var Application */
     private $consoleApplication;
 
-
     public function __construct(string $dir, Container $container, IStorage $storage, Application $consoleApplication)
     {
         $this->dir       = $dir;
@@ -52,6 +51,7 @@ class DatabaseService
 
     /**
      * Vytvoří zálohu databáze a spustí migrace. Spouští se pouze pokud není v cache záznam o provedeném update.
+     *
      * @throws Throwable
      */
     public function update() : void
@@ -76,12 +76,14 @@ class DatabaseService
                 $this->consoleApplication->setAutoExit(false);
                 $this->consoleApplication->run($input, $output);
             }
+
             return true;
         });
     }
 
     /**
      * Vytvoří zálohu databáze.
+     *
      * @throws Exception
      */
     public function backup() : void

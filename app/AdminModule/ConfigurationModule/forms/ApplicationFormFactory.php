@@ -31,7 +31,6 @@ class ApplicationFormFactory
     /** @var SettingsService */
     private $settingsService;
 
-
     public function __construct(BaseFormFactory $baseForm, SettingsService $settingsService)
     {
         $this->baseFormFactory = $baseForm;
@@ -40,6 +39,7 @@ class ApplicationFormFactory
 
     /**
      * Vytvoří formulář.
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -67,6 +67,7 @@ class ApplicationFormFactory
 
     /**
      * Zpracuje formulář.
+     *
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException

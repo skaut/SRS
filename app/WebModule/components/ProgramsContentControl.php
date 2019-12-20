@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\WebModule\Components;
 
 use App\Model\ACL\Permission;
-use App\Model\ACL\SrsResource;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
+use App\Model\ACL\SrsResource;
 use App\Model\CMS\Content\ContentDto;
 use App\Model\Enums\ProgramRegistrationType;
 use App\Model\Settings\Settings;
@@ -37,7 +37,6 @@ class ProgramsContentControl extends Control
 
     /** @var ProgramService */
     private $programService;
-
 
     public function __construct(
         UserRepository $userRepository,

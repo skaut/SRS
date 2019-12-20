@@ -26,6 +26,7 @@ class RoomScheduleGridControl extends Control
 {
     /**
      * Aktulní místnost
+     *
      * @var Room
      */
     private $room;
@@ -41,7 +42,6 @@ class RoomScheduleGridControl extends Control
 
     /** @var ExcelExportService */
     private $excelExportService;
-
 
     public function __construct(
         Translator $translator,
@@ -68,6 +68,7 @@ class RoomScheduleGridControl extends Control
 
     /**
      * Vytvoří komponentu.
+     *
      * @throws DataGridException
      */
     public function createComponentRoomScheduleGrid(string $name) : void
@@ -97,6 +98,7 @@ class RoomScheduleGridControl extends Control
                     if ($capacity === null) {
                         return $row->getAttendeesCount();
                     }
+
                     return $row->getAttendeesCount() . '/' . $capacity;
                 }
             );

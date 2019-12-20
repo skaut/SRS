@@ -32,7 +32,6 @@ class MailingPresenter extends ConfigurationBasePresenter
      */
     public $settingsService;
 
-
     /**
      * @throws SettingsException
      * @throws Throwable

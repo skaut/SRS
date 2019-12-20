@@ -42,7 +42,6 @@ class SkautIsPresenter extends ConfigurationBasePresenter
      */
     public $skautIsCourseRepository;
 
-
     /**
      * @throws SettingsException
      * @throws Throwable
@@ -61,6 +60,7 @@ class SkautIsPresenter extends ConfigurationBasePresenter
 
     /**
      * Zruší propojení s akcí ve skautIS.
+     *
      * @throws SettingsException
      * @throws AbortException
      * @throws Throwable

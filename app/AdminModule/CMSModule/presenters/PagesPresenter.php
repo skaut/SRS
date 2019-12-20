@@ -37,7 +37,6 @@ class PagesPresenter extends CMSBasePresenter
      */
     public $pagesRepository;
 
-
     public function renderContent(int $id, string $area) : void
     {
         $page = $this->pagesRepository->findById($id);

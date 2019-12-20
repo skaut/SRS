@@ -13,10 +13,11 @@ use Nettrine\ORM\Entity\Attributes\Id;
 /**
  * Entita dokumentu.
  *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="DocumentRepository")
  * @ORM\Table(name="document")
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class Document
 {
@@ -24,44 +25,52 @@ class Document
      * Adresář pro ukládání dokumentů.
      */
     public const PATH = '/documents';
-
     use Id;
 
     /**
      * Tagy dokumentu.
+     *
      * @ORM\ManyToMany(targetEntity="Tag", inversedBy="documents", cascade={"persist"})
+     *
      * @var Collection|Tag[]
      */
     protected $tags;
 
     /**
      * Název dokumentu.
+     *
      * @ORM\Column(type="string")
+     *
      * @var string
      */
     protected $name;
 
     /**
      * Adresa souboru.
+     *
      * @ORM\Column(type="string")
+     *
      * @var string
      */
     protected $file;
 
     /**
      * Popis.
+     *
      * @ORM\Column(type="string", nullable=true)
+     *
      * @var string
      */
     protected $description;
 
     /**
      * Datum změny souboru.
+     *
      * @ORM\Column(type="datetime");
+     *
      * @var DateTime
      */
     protected $timestamp;
-
 
     public function __construct()
     {

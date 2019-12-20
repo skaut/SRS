@@ -11,10 +11,11 @@ use Nettrine\ORM\Entity\Attributes\Id;
 /**
  * Entita FAQ.
  *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="FaqRepository")
  * @ORM\Table(name="faq")
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class Faq
 {
@@ -22,39 +23,48 @@ class Faq
 
     /**
      * Otázka.
+     *
      * @ORM\Column(type="text")
+     *
      * @var string
      */
     protected $question;
 
     /**
      * Autor otázky.
+     *
      * @ORM\ManyToOne(targetEntity="\App\Model\User\User", cascade={"persist"})
+     *
      * @var User
      */
     protected $author;
 
     /**
      * Odpověď.
+     *
      * @ORM\Column(type="text", nullable=true)
+     *
      * @var string
      */
     protected $answer;
 
     /**
      * Otázka zveřejněna všem.
+     *
      * @ORM\Column(type="boolean")
+     *
      * @var bool
      */
     protected $public = false;
 
     /**
      * Pozice otázky.
+     *
      * @ORM\Column(type="integer")
+     *
      * @var int
      */
     protected $position = 0;
-
 
     public function getId() : int
     {

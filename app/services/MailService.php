@@ -61,7 +61,6 @@ class MailService
     /** @var Translator */
     private $translator;
 
-
     public function __construct(
         MailFactory $mailFactory,
         SettingsService $settingsService,
@@ -84,9 +83,11 @@ class MailService
 
     /**
      * Rozešle e-mail.
+     *
      * @param Collection|Role[]     $recipientsRoles
      * @param Collection|Subevent[] $recipientsSubevents
      * @param Collection|User[]     $recipientsUsers
+     *
      * @throws SettingsException
      * @throws Throwable
      * @throws MailingMailCreationException
@@ -140,7 +141,9 @@ class MailService
 
     /**
      * Rozešle e-mail podle šablony.
+     *
      * @param string[] $parameters
+     *
      * @throws SettingsException
      * @throws Throwable
      * @throws MailingMailCreationException

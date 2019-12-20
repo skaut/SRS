@@ -36,7 +36,6 @@ class DiscountsGridControl extends Control
     /** @var DiscountService */
     private $discountService;
 
-
     public function __construct(
         Translator $translator,
         DiscountRepository $discountRepository,
@@ -62,6 +61,7 @@ class DiscountsGridControl extends Control
 
     /**
      * Vytvoří komponentu.
+     *
      * @throws DataGridException
      */
     public function createComponentDiscountsGrid(string $name) : void
@@ -101,6 +101,7 @@ class DiscountsGridControl extends Control
 
     /**
      * Zpracuje odstranění slevy.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException

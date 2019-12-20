@@ -44,7 +44,6 @@ class DocumentsGridControl extends Control
     /** @var TagRepository */
     private $tagRepository;
 
-
     public function __construct(
         Translator $translator,
         DocumentRepository $documentRepository,
@@ -70,6 +69,7 @@ class DocumentsGridControl extends Control
 
     /**
      * Vytvoří komponentu.
+     *
      * @throws DataGridException
      */
     public function createComponentDocumentsGrid(string $name) : void
@@ -83,7 +83,7 @@ class DocumentsGridControl extends Control
         $grid->addColumnText('name', 'admin.cms.documents_name');
 
         $grid->addColumnText('tags', 'admin.cms.documents_tags')
-            ->setRenderer(function (Document $row) {
+            ->setRenderer(static function (Document $row) {
                 $tags = Html::el();
                 foreach ($row->getTags() as $tag) {
                     $tags->addHtml(Html::el('span')
@@ -91,6 +91,7 @@ class DocumentsGridControl extends Control
                         ->setText($tag->getName()));
                     $tags->addHtml(Html::el()->setText(' '));
                 }
+
                 return $tags;
             });
 
@@ -113,7 +114,7 @@ class DocumentsGridControl extends Control
 
         $tagsOptions = $this->tagRepository->getTagsOptions();
 
-        $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function (Container $container) use ($tagsOptions) : void {
+        $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = static function (Container $container) use ($tagsOptions) : void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.documents_name_empty');
 
@@ -127,7 +128,7 @@ class DocumentsGridControl extends Control
         };
         $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
 
-        $grid->addInlineEdit()->onControlAdd[]  = function (Container $container) use ($tagsOptions) : void {
+        $grid->addInlineEdit()->onControlAdd[]  = static function (Container $container) use ($tagsOptions) : void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.documents_name_empty');
 
@@ -159,6 +160,7 @@ class DocumentsGridControl extends Control
 
     /**
      * Zpracuje přidání dokumentu.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -186,6 +188,7 @@ class DocumentsGridControl extends Control
 
     /**
      * Zpracuje úpravu dokumentu.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -217,6 +220,7 @@ class DocumentsGridControl extends Control
 
     /**
      * Zpracuje odstranění dokumentu.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException

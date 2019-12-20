@@ -28,7 +28,6 @@ class DiscountsPresenter extends ConfigurationBasePresenter
      */
     public $discountFormFactory;
 
-
     protected function createComponentDiscountsGrid() : DiscountsGridControl
     {
         return $this->discountsGridControlFactory->create();

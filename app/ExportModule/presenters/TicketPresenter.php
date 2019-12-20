@@ -41,9 +41,9 @@ class TicketPresenter extends ExportBasePresenter
      */
     public $subeventRepository;
 
-
     /**
      * Vygeneruje vstupenku v PDF.
+     *
      * @throws AbortException
      * @throws SettingsException
      * @throws Throwable

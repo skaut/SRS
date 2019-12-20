@@ -35,6 +35,7 @@ class RolesFormFactory
 
     /**
      * Přihlášený uživatel.
+     *
      * @var User
      */
     private $user;
@@ -63,7 +64,6 @@ class RolesFormFactory
     /** @var AclService */
     private $ACLService;
 
-
     public function __construct(
         BaseFormFactory $baseFormFactory,
         UserRepository $userRepository,
@@ -86,6 +86,7 @@ class RolesFormFactory
 
     /**
      * Vytvoří formulář.
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -175,11 +176,13 @@ class RolesFormFactory
             'roles' => $this->roleRepository->findRolesIds($this->user->getRoles()),
         ]);
         $form->onSuccess[] = [$this, 'processForm'];
+
         return $form;
     }
 
     /**
      * Zpracuje formulář.
+     *
      * @throws Throwable
      */
     public function processForm(BaseForm $form, stdClass $values) : void
@@ -198,11 +201,13 @@ class RolesFormFactory
     public function validateRolesCapacities(MultiSelectBox $field) : bool
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
+
         return $this->validators->validateRolesCapacities($selectedRoles, $this->user);
     }
 
     /**
      * Ověří kompatibilitu rolí.
+     *
      * @param Role[] $args
      */
     public function validateRolesIncompatible(MultiSelectBox $field, array $args) : bool
@@ -215,6 +220,7 @@ class RolesFormFactory
 
     /**
      * Ověří výběr vyžadovaných rolí.
+     *
      * @param Role[] $args
      */
     public function validateRolesRequired(MultiSelectBox $field, array $args) : bool
@@ -231,6 +237,7 @@ class RolesFormFactory
     public function validateRolesRegisterable(MultiSelectBox $field) : bool
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
+
         return $this->validators->validateRolesRegisterable($selectedRoles, $this->user);
     }
 }

@@ -40,7 +40,6 @@ class WebFormFactory
     /** @var FilesService */
     private $filesService;
 
-
     public function __construct(
         BaseFormFactory $baseFormFactory,
         PageRepository $pageRepository,
@@ -55,6 +54,7 @@ class WebFormFactory
 
     /**
      * Vytvoří formulář.
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -94,6 +94,7 @@ class WebFormFactory
 
     /**
      * Zpracuje formulář.
+     *
      * @throws Nette\Utils\UnknownImageFileException
      * @throws SettingsException
      * @throws Throwable

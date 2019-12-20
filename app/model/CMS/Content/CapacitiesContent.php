@@ -4,25 +4,25 @@ declare(strict_types=1);
 
 namespace App\Model\CMS\Content;
 
+use App\AdminModule\Forms\BaseForm;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\CMS\Page;
 use App\Model\Page\PageException;
 use App\Services\AclService;
 use App\Utils\Helpers;
-use App\AdminModule\Forms\BaseForm;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Nette\Forms\Container;
 use stdClass;
 
 /**
  * Entita obsahu s přehledem kapacit rolí.
  *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity
  * @ORM\Table(name="capacities_content")
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class CapacitiesContent extends Content implements IContent
 {
@@ -31,7 +31,9 @@ class CapacitiesContent extends Content implements IContent
 
     /**
      * Role, jejichž obsazenosti se vypíší.
+     *
      * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role")
+     *
      * @var Collection|Role[]
      */
     protected $roles;
@@ -41,7 +43,6 @@ class CapacitiesContent extends Content implements IContent
 
     /** @var AclService */
     private $ACLService;
-
 
     /**
      * @throws PageException
@@ -88,7 +89,7 @@ class CapacitiesContent extends Content implements IContent
     {
         parent::addContentForm($form);
 
-        $formName = $this->getContentFormName();
+        $formName      = $this->getContentFormName();
         $formContainer = $form->$formName;
 
         $formContainer->addMultiSelect(

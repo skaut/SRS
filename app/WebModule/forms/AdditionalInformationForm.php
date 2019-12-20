@@ -25,7 +25,6 @@ use App\Services\ApplicationService;
 use App\Services\FilesService;
 use App\Services\MailService;
 use App\Services\SettingsService;
-use InvalidArgumentException;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
@@ -37,6 +36,7 @@ use Throwable;
 use function array_slice;
 use function array_values;
 use function explode;
+use function property_exists;
 
 /**
  * Formulář pro zadání doplňujících informací.
@@ -49,12 +49,14 @@ class AdditionalInformationForm extends UI\Control
 {
     /**
      * Přihlášený uživatel.
+     *
      * @var User
      */
     private $user;
 
     /**
      * Událost při uložení formuláře.
+     *
      * @var callable
      */
     public $onSave;
@@ -85,7 +87,6 @@ class AdditionalInformationForm extends UI\Control
 
     /** @var SettingsService */
     private $settingsService;
-
 
     public function __construct(
         BaseFormFactory $baseFormFactory,
@@ -122,6 +123,7 @@ class AdditionalInformationForm extends UI\Control
 
     /**
      * Vytvoří formulář.
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -137,34 +139,31 @@ class AdditionalInformationForm extends UI\Control
 
             if ($customInput instanceof CustomText) {
                 $custom = $form->addText('custom' . $customInput->getId(), $customInput->getName())
-                    ->setDisabled(!$isAllowedEditCustomInputs);
+                    ->setDisabled(! $isAllowedEditCustomInputs);
                 /** @var ?CustomTextValue $customInputValue */
                 $customInputValue = $this->user->getCustomInputValue($customInput);
                 if ($customInputValue) {
                     $custom->setDefaultValue($customInputValue->getValue());
                 }
-            }
-            elseif ($customInput instanceof CustomCheckbox) {
+            } elseif ($customInput instanceof CustomCheckbox) {
                 $custom = $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName())
-                    ->setDisabled(!$isAllowedEditCustomInputs);
+                    ->setDisabled(! $isAllowedEditCustomInputs);
                 /** @var ?CustomCheckboxValue $customInputValue */
                 $customInputValue = $this->user->getCustomInputValue($customInput);
                 if ($customInputValue) {
                     $custom->setDefaultValue($customInputValue->getValue());
                 }
-            }
-            elseif ($customInput instanceof CustomSelect) {
+            } elseif ($customInput instanceof CustomSelect) {
                 $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions())
-                    ->setDisabled(!$isAllowedEditCustomInputs);
+                    ->setDisabled(! $isAllowedEditCustomInputs);
                 /** @var ?CustomSelectValue $customInputValue */
                 $customInputValue = $this->user->getCustomInputValue($customInput);
                 if ($customInputValue) {
                     $custom->setDefaultValue($customInputValue->getValue());
                 }
-            }
-            elseif ($customInput instanceof CustomFile) {
+            } elseif ($customInput instanceof CustomFile) {
                 $custom = $form->addUpload('custom' . $customInput->getId(), $customInput->getName())
-                    ->setDisabled(!$isAllowedEditCustomInputs);
+                    ->setDisabled(! $isAllowedEditCustomInputs);
                 /** @var ?CustomFileValue $customInputValue */
                 $customInputValue = $this->user->getCustomInputValue($customInput);
                 if ($customInputValue && $customInputValue->getValue()) {
@@ -200,6 +199,7 @@ class AdditionalInformationForm extends UI\Control
 
     /**
      * Zpracuje formulář.
+     *
      * @throws Throwable
      */
     public function processForm(BaseForm $form, stdClass $values) : void
@@ -210,36 +210,33 @@ class AdditionalInformationForm extends UI\Control
             if ($this->applicationService->isAllowedEditCustomInputs()) {
                 foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
                     $customInputValue = $this->user->getCustomInputValue($customInput);
-                    $customInputName = 'custom' . $customInput->getId();
-                    $oldValue = null;
-                    $newValue = null;
+                    $customInputName  = 'custom' . $customInput->getId();
+                    $oldValue         = null;
+                    $newValue         = null;
 
                     if ($customInput instanceof CustomText) {
                         /** @var CustomTextValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomTextValue();
-                        $oldValue = $customInputValue->getValue();
-                        $newValue = $values->$customInputName;
+                        $oldValue         = $customInputValue->getValue();
+                        $newValue         = $values->$customInputName;
                         $customInputValue->setValue($newValue);
-                    }
-                    elseif ($customInput instanceof CustomCheckbox) {
+                    } elseif ($customInput instanceof CustomCheckbox) {
                         /** @var CustomCheckboxValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomCheckboxValue();
-                        $oldValue = $customInputValue->getValue();
-                        $newValue = $values->$customInputName;
+                        $oldValue         = $customInputValue->getValue();
+                        $newValue         = $values->$customInputName;
                         $customInputValue->setValue($newValue);
-                    }
-                    elseif ($customInput instanceof CustomSelect) {
+                    } elseif ($customInput instanceof CustomSelect) {
                         /** @var CustomSelectValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomSelectValue();
-                        $oldValue = $customInputValue->getValue();
-                        $newValue = $values->$customInputName;
+                        $oldValue         = $customInputValue->getValue();
+                        $newValue         = $values->$customInputName;
                         $customInputValue->setValue($newValue);
-                    }
-                    elseif ($customInput instanceof CustomFile) {
+                    } elseif ($customInput instanceof CustomFile) {
                         /** @var CustomFileValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomFileValue();
-                        $oldValue = $customInputValue->getValue();
-                        $newValue = $values->$customInputName;
+                        $oldValue         = $customInputValue->getValue();
+                        $newValue         = $values->$customInputName;
                         if ($newValue->size > 0) {
                             $path = $this->generatePath($newValue);
                             $this->filesService->save($newValue, $path);

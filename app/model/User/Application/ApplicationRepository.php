@@ -30,11 +30,13 @@ class ApplicationRepository extends EntityRepository
 
     /**
      * Vrací přihlášky podle id, které mají společné všechny verze přihlášky.
+     *
      * @return Collection|Application[]
      */
     public function findByApplicationId(int $id) : Collection
     {
         $result = $this->findBy(['applicationId' => $id]);
+
         return new ArrayCollection($result);
     }
 
@@ -45,6 +47,7 @@ class ApplicationRepository extends EntityRepository
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->isNull('validTo'));
+
         return $this->matching($criteria);
     }
 
@@ -64,6 +67,7 @@ class ApplicationRepository extends EntityRepository
 
     /**
      * Uloží přihlášku.
+     *
      * @throws ORMException
      */
     public function save(Application $application) : void
@@ -74,6 +78,7 @@ class ApplicationRepository extends EntityRepository
 
     /**
      * Odstraní přihlášku.
+     *
      * @throws ORMException
      */
     public function remove(Application $application) : void
@@ -84,30 +89,36 @@ class ApplicationRepository extends EntityRepository
 
     /**
      * Vrací přihlášky podle id.
+     *
      * @param int[] $ids
+     *
      * @return Collection|Application[]
      */
     public function findApplicationsByIds(array $ids) : Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids));
+
         return $this->matching($criteria);
     }
 
     /**
      * Vrací id přihlášek.
+     *
      * @param Collection|Application[] $applications
+     *
      * @return int[]
      */
     public function findApplicationsIds(Collection $applications) : array
     {
-        return array_map(function (Application $o) {
+        return array_map(static function (Application $o) {
             return $o->getId();
         }, $applications->toArray());
     }
 
     /**
      * @param Collection|Application[] $pairedApplications
+     *
      * @return Collection|Application[]
      */
     public function findWaitingForPaymentOrPairedApplications(Collection $pairedApplications) : Collection
@@ -116,7 +127,7 @@ class ApplicationRepository extends EntityRepository
             ->where(Criteria::expr()->isNull('validTo'))
             ->andWhere(Criteria::expr()->orX(
                 Criteria::expr()->eq('state', ApplicationState::WAITING_FOR_PAYMENT),
-                Criteria::expr()->in('id', $pairedApplications->map(function (Application $application) {
+                Criteria::expr()->in('id', $pairedApplications->map(static function (Application $application) {
                     return $application->getId();
                 })
                     ->toArray())
@@ -134,11 +145,13 @@ class ApplicationRepository extends EntityRepository
         foreach ($this->findValid() as $application) {
             $options[$application->getId()] = $application->getUser()->getLastName() . ' ' . $application->getUser()->getFirstName() . ' (' . $application->getVariableSymbolText() . ' - ' . $application->getFee() . ')';
         }
+
         return $options;
     }
 
     /**
      * @param Collection|Application[] $pairedApplications
+     *
      * @return string[]
      */
     public function getWaitingForPaymentOrPairedApplicationsVariableSymbolsOptions(Collection $pairedApplications) : array
@@ -147,6 +160,7 @@ class ApplicationRepository extends EntityRepository
         foreach ($this->findWaitingForPaymentOrPairedApplications($pairedApplications) as $application) {
             $options[$application->getId()] = $application->getUser()->getLastName() . ' ' . $application->getUser()->getFirstName() . ' (' . $application->getVariableSymbolText() . ' - ' . $application->getFee() . ')';
         }
+
         return $options;
     }
 }

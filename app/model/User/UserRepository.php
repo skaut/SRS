@@ -41,30 +41,36 @@ class UserRepository extends EntityRepository
 
     /**
      * Vrací uživatele podle id.
+     *
      * @param int[] $ids
+     *
      * @return Collection|User[]
      */
     public function findUsersByIds(array $ids) : Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids));
+
         return $this->matching($criteria);
     }
 
     /**
      * Vrací id uživatelů.
+     *
      * @param Collection|User[] $users
+     *
      * @return int[]
      */
     public function findUsersIds(Collection $users) : array
     {
-        return array_map(function (User $user) {
+        return array_map(static function (User $user) {
             return $user->getId();
         }, $users->toArray());
     }
 
     /**
      * Vrací jména uživatelů obsahující zadaný text, seřazená podle zobrazovaného jména.
+     *
      * @return string[]
      */
     public function findNamesByLikeDisplayNameOrderedByDisplayName(string $text) : array
@@ -79,6 +85,7 @@ class UserRepository extends EntityRepository
 
     /**
      * Vrací uživatele, kteří se synchronizují s účastníky skautIS akce.
+     *
      * @return User[]
      */
     public function findAllSyncedWithSkautIS() : array
@@ -93,6 +100,7 @@ class UserRepository extends EntityRepository
 
     /**
      * Vrací uživatele v roli.
+     *
      * @return User[]
      */
     public function findAllInRole(Role $role) : array
@@ -106,6 +114,7 @@ class UserRepository extends EntityRepository
 
     /**
      * Vrací schválené uživatele v roli.
+     *
      * @return User[]
      */
     public function findAllApprovedInRole(Role $role) : array
@@ -120,7 +129,9 @@ class UserRepository extends EntityRepository
 
     /**
      * Vrací uživatele v rolích.
+     *
      * @param int[] $rolesIds
+     *
      * @return User[]
      */
     public function findAllInRoles(array $rolesIds) : array
@@ -135,7 +146,9 @@ class UserRepository extends EntityRepository
 
     /**
      * Vrací schválené uživatele v rolích.
+     *
      * @param int[] $rolesIds
+     *
      * @return User[]
      */
     public function findAllApprovedInRoles(array $rolesIds) : array
@@ -151,7 +164,9 @@ class UserRepository extends EntityRepository
 
     /**
      * Vrací uživatele přihlášené na podakce.
+     *
      * @param int[] $subeventsIds
+     *
      * @return Collection|User[]
      */
     public function findAllWithSubevents(array $subeventsIds) : Collection
@@ -172,6 +187,7 @@ class UserRepository extends EntityRepository
 
     /**
      * Vrací uživatele s přihláškou čekající na zaplacení.
+     *
      * @return Collection|User[]
      */
     public function findAllWithWaitingForPaymentApplication() : Collection
@@ -189,6 +205,7 @@ class UserRepository extends EntityRepository
 
     /**
      * Vrací uživatele, kteří se mohou na program přihlásit.
+     *
      * @return Collection|User[]
      */
     public function findBlockAllowed(Block $block) : Collection
@@ -217,6 +234,7 @@ class UserRepository extends EntityRepository
 
     /**
      * Vrací uživatele jako možnosti pro select.
+     *
      * @return string[]
      */
     public function getUsersOptions() : array
@@ -231,11 +249,13 @@ class UserRepository extends EntityRepository
         foreach ($users as $user) {
             $options[$user['id']] = $user['displayName'];
         }
+
         return $options;
     }
 
     /**
      * Vrací lektory jako možnosti pro select.
+     *
      * @return string[]
      */
     public function getLectorsOptions() : array
@@ -253,6 +273,7 @@ class UserRepository extends EntityRepository
         foreach ($lectors as $lector) {
             $options[$lector['id']] = $lector['displayName'];
         }
+
         return $options;
     }
 

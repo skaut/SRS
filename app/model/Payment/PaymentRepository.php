@@ -33,6 +33,7 @@ class PaymentRepository extends EntityRepository
 
     /**
      * Uloží platbu.
+     *
      * @throws ORMException
      */
     public function save(Payment $payment) : void
@@ -43,6 +44,7 @@ class PaymentRepository extends EntityRepository
 
     /**
      * Odstraní platbu.
+     *
      * @throws ORMException
      */
     public function remove(Payment $payment) : void

@@ -53,7 +53,6 @@ class SkautIsEventFormFactory
     /** @var SubeventRepository */
     private $subeventRepository;
 
-
     public function __construct(
         BaseFormFactory $baseForm,
         SettingsService $settingsService,
@@ -72,6 +71,7 @@ class SkautIsEventFormFactory
 
     /**
      * Vytvoří formulář.
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -121,6 +121,7 @@ class SkautIsEventFormFactory
 
     /**
      * Zpracuje formulář.
+     *
      * @throws SettingsException
      * @throws NonUniqueResultException
      * @throws ORMException

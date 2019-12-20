@@ -29,7 +29,6 @@ class PlacePointsGridControl extends Control
     /** @var PlacePointRepository */
     private $placePointRepository;
 
-
     public function __construct(Translator $translator, PlacePointRepository $placePointRepository)
     {
         parent::__construct();
@@ -49,6 +48,7 @@ class PlacePointsGridControl extends Control
 
     /**
      * Vytvoří komponentu.
+     *
      * @throws DataGridException
      */
     public function createComponentPlacePointsGrid(string $name) : void
@@ -60,7 +60,7 @@ class PlacePointsGridControl extends Control
 
         $grid->addColumnText('name', 'admin.configuration.place_points_name');
         $grid->addColumnText('gps', 'admin.configuration.place_points_gps')
-            ->setRenderer(function (PlacePoint $row) {
+            ->setRenderer(static function (PlacePoint $row) {
                 $lat = $row->getGpsLat();
                 $lon = $row->getGpsLon();
 
@@ -88,6 +88,7 @@ class PlacePointsGridControl extends Control
 
     /**
      * Zpracuje odstranění mapového bodu.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException

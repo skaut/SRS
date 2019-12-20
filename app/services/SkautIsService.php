@@ -11,7 +11,7 @@ use Nette\Caching\IStorage;
 use Skautis\Skautis;
 use stdClass;
 use Throwable;
-use function array_key_exists;
+use function property_exists;
 
 /**
  * Služba pro komunikaci se skautIS.
@@ -28,7 +28,6 @@ class SkautIsService
 
     /** @var Cache */
     private $userRolesCache;
-
 
     public function __construct(Skautis $skautIS, IStorage $storage)
     {
@@ -59,11 +58,13 @@ class SkautIsService
     {
         $logoutTime = clone($this->skautIs->getUser()->getLogoutDate());
         $hardCheck  = $logoutTime->diff(new DateTime())->i < 25; //pokud od posledniho obnoveni prihlaseni ubehlo 5 minut
+
         return $this->skautIs->getUser()->isLoggedIn($hardCheck);
     }
 
     /**
      * Nastaví údaje vrácené skautIS po úspěšném přihlášení.
+     *
      * @param string[] $data
      */
     public function setLoginData(array $data) : void
@@ -73,7 +74,9 @@ class SkautIsService
 
     /**
      * Vrátí skautIS role uživatele.
+     *
      * @return stdClass[]
+     *
      * @throws Throwable
      */
     public function getUserRoles(int $userId) : array

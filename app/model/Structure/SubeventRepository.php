@@ -40,6 +40,7 @@ class SubeventRepository extends EntityRepository
 
     /**
      * Vrací názvy všech podakcí.
+     *
      * @return string[]
      */
     public function findAllNames() : array
@@ -48,11 +49,13 @@ class SubeventRepository extends EntityRepository
             ->select('s.name')
             ->getQuery()
             ->getScalarResult();
+
         return array_map('current', $names);
     }
 
     /**
      * Vrací vytvořené podakce, seřazené podle názvu.
+     *
      * @return Collection|Subevent[]
      */
     public function findAllExplicitOrderedByName() : Collection
@@ -62,11 +65,13 @@ class SubeventRepository extends EntityRepository
             ->orderBy('s.name')
             ->getQuery()
             ->getResult();
+
         return new ArrayCollection($result);
     }
 
     /**
      * Vrací názvy podakcí, kromě podakce se zadaným id.
+     *
      * @return string[]
      */
     public function findOthersNames(int $id) : array
@@ -77,12 +82,15 @@ class SubeventRepository extends EntityRepository
             ->setParameter('id', $id)
             ->getQuery()
             ->getScalarResult();
+
         return array_map('current', $names);
     }
 
     /**
      * Vrací podakce podle id.
+     *
      * @param int[] $ids
+     *
      * @return Collection|Subevent[]
      */
     public function findSubeventsByIds(array $ids) : Collection
@@ -90,17 +98,20 @@ class SubeventRepository extends EntityRepository
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids))
             ->orderBy(['name' => 'ASC']);
+
         return $this->matching($criteria);
     }
 
     /**
      * Vrací id podakcí.
+     *
      * @param Collection|Subevent[] $subevents
+     *
      * @return int[]
      */
     public function findSubeventsIds(Collection $subevents) : array
     {
-        return array_map(function (Subevent $o) {
+        return array_map(static function (Subevent $o) {
             return $o->getId();
         }, $subevents->toArray());
     }

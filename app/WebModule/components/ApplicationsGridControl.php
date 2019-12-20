@@ -100,7 +100,6 @@ class ApplicationsGridControl extends Control
     /** @var SubeventService */
     private $subeventService;
 
-
     public function __construct(
         Translator $translator,
         ApplicationRepository $applicationRepository,
@@ -152,6 +151,7 @@ class ApplicationsGridControl extends Control
 
     /**
      * Vytvoří komponentu.
+     *
      * @throws SettingsException
      * @throws NonUniqueResultException
      * @throws Throwable
@@ -239,7 +239,7 @@ class ApplicationsGridControl extends Control
         }
 
         $grid->addAction('generatePaymentProofBank', 'web.profile.applications_download_payment_proof');
-        $grid->allowRowsAction('generatePaymentProofBank', function (Application $item) {
+        $grid->allowRowsAction('generatePaymentProofBank', static function (Application $item) {
             return $item->getState() === ApplicationState::PAID
                 && $item->getPaymentMethod() === PaymentType::BANK
                 && $item->getPaymentDate();
@@ -256,13 +256,14 @@ class ApplicationsGridControl extends Control
             });
         }
 
-        $grid->setColumnsSummary(['fee'], function (Application $item, $column) {
+        $grid->setColumnsSummary(['fee'], static function (Application $item, $column) {
             return $item->isCanceled() ? 0 : $item->getFee();
         });
     }
 
     /**
      * Zpracuje přidání podakcí.
+     *
      * @throws AbortException
      * @throws Throwable
      */
@@ -312,6 +313,7 @@ class ApplicationsGridControl extends Control
 
     /**
      * Zpracuje úpravu přihlášky.
+     *
      * @throws SettingsException
      * @throws AbortException
      * @throws Throwable
@@ -323,7 +325,7 @@ class ApplicationsGridControl extends Control
         $application = $this->applicationRepository->findById($id);
 
         if ($application instanceof SubeventsApplication) {
-            $selectedSubevents = $this->subeventRepository->findSubeventsByIds($values->subevents);
+            $selectedSubevents         = $this->subeventRepository->findSubeventsByIds($values->subevents);
             $selectedAndUsersSubevents = clone $this->user->getSubevents();
             foreach ($selectedSubevents as $subevent) {
                 $selectedAndUsersSubevents->add($subevent);
@@ -334,13 +336,13 @@ class ApplicationsGridControl extends Control
 
             $p = $this->getPresenter();
 
-            if (!$this->validators->validateSubeventsCapacities($selectedSubevents, $this->user)) {
+            if (! $this->validators->validateSubeventsCapacities($selectedSubevents, $this->user)) {
                 $p->flashMessage('web.profile.applications_subevents_capacity_occupied', 'danger');
                 $this->redirect('this');
             }
 
             foreach ($this->subeventRepository->findAllExplicitOrderedByName() as $subevent) {
-                if (!$this->validators->validateSubeventsIncompatible($selectedAndUsersSubevents, $subevent)) {
+                if (! $this->validators->validateSubeventsIncompatible($selectedAndUsersSubevents, $subevent)) {
                     $message = $this->translator->translate(
                         'web.profile.applications_incompatible_subevents_selected',
                         null,
@@ -371,6 +373,7 @@ class ApplicationsGridControl extends Control
 
     /**
      * Vygeneruje potvrzení o přijetí platby.
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -385,6 +388,7 @@ class ApplicationsGridControl extends Control
 
     /**
      * Zruší přihlášku.
+     *
      * @throws SettingsException
      * @throws AbortException
      * @throws Throwable

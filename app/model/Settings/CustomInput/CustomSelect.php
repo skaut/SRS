@@ -11,9 +11,10 @@ use function explode;
 /**
  * Entita vlastní výběrové pole přihlášky.
  *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity
  * @ORM\Table(name="custom_select")
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class CustomSelect extends CustomInput
 {
@@ -22,11 +23,12 @@ class CustomSelect extends CustomInput
 
     /**
      * Možnosti výběrového pole oddělené čárkou.
+     *
      * @ORM\Column(type="string")
+     *
      * @var string
      */
     protected $options;
-
 
     public function getOptions() : string
     {
@@ -40,6 +42,7 @@ class CustomSelect extends CustomInput
 
     /**
      * Vrátí možnosti jako možnosti pro select.
+     *
      * @return string[]
      */
     public function getSelectOptions() : array

@@ -36,6 +36,7 @@ class NewsRepository extends EntityRepository
 
     /**
      * Vrací posledních $maxCount publikovaných aktualit.
+     *
      * @return News[]
      */
     public function findPublishedOrderedByPinnedAndDate(?int $maxCount) : array

@@ -11,10 +11,11 @@ use Nettrine\ORM\Entity\Attributes\Id;
 /**
  * Entita aktuality.
  *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="NewsRepository")
  * @ORM\Table(name="news")
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class News
 {
@@ -22,25 +23,30 @@ class News
 
     /**
      * Text aktuality.
+     *
      * @ORM\Column(type="text")
+     *
      * @var string
      */
     protected $text;
 
     /**
      * Datum publikování aktuality.
+     *
      * @ORM\Column(type="datetime")
+     *
      * @var DateTime
      */
     protected $published;
 
     /**
      * Připíchnutá nahoru.
+     *
      * @ORM\Column(type="boolean")
+     *
      * @var bool
      */
     protected $pinned = false;
-
 
     public function getId() : int
     {

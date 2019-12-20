@@ -10,40 +10,45 @@ class PageDto
 {
     /**
      * Název stránky.
+     *
      * @var string
      */
     protected $name;
 
     /**
      * Cesta stránky.
+     *
      * @var string
      */
     protected $slug;
 
     /**
      * Role, které mají na stránku přístup.
+     *
      * @var string[]
      */
     protected $allowedRoles;
 
     /**
      * Obsahy v hlavní části stránky.
+     *
      * @var ContentDto[]
      */
     protected $mainContents;
 
     /**
      * Obsahy v postranní části stránky.
+     *
      * @var ContentDto[]
      */
     protected $sidebarContents;
 
     /**
      * Má stránka sidebar?
+     *
      * @var bool
      */
     protected $hasSidebar;
-
 
     /**
      * @param string[]     $allowedRoles
@@ -101,6 +106,7 @@ class PageDto
 
     /**
      * Je stránka viditelná pro uživatele v rolích?
+     *
      * @param string[] $userRoles
      */
     public function isAllowedForRoles(array $userRoles) : bool
@@ -112,6 +118,7 @@ class PageDto
                 }
             }
         }
+
         return false;
     }
 }

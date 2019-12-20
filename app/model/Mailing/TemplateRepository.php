@@ -33,6 +33,7 @@ class TemplateRepository extends EntityRepository
 
     /**
      * Uloží šablonu e-mailu.
+     *
      * @throws ORMException
      */
     public function save(Template $template) : void

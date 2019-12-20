@@ -19,6 +19,7 @@ use Nette\Application\UI\Form;
 use Nextras\Forms\Rendering\Bs3FormRenderer;
 use stdClass;
 use Throwable;
+use function property_exists;
 
 /**
  * Formulář pro nastavení platby.
@@ -31,6 +32,7 @@ class PaymentForm extends UI\Control
 {
     /**
      * Událost při uložení formuláře.
+     *
      * @var callable
      */
     public $onSave;
@@ -43,7 +45,6 @@ class PaymentForm extends UI\Control
 
     /** @var UserRepository */
     private $userRepository;
-
 
     public function __construct(BaseFormFactory $baseForm, SettingsService $settingsService, UserRepository $userRepository)
     {
@@ -65,6 +66,7 @@ class PaymentForm extends UI\Control
 
     /**
      * Vytvoří formulář.
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -142,6 +144,7 @@ class PaymentForm extends UI\Control
 
     /**
      * Zpracuje formulář.
+     *
      * @throws SettingsException
      * @throws ORMException
      * @throws OptimisticLockException
@@ -190,6 +193,7 @@ class PaymentForm extends UI\Control
 
     /**
      * Vrátí způsoby výpočtu splatnosti jako možnosti pro select.
+     *
      * @return string[]
      */
     private function prepareMaturityTypeOptions() : array
@@ -198,6 +202,7 @@ class PaymentForm extends UI\Control
         foreach (MaturityType::$types as $type) {
             $options[$type] = 'common.maturity_type.' . $type;
         }
+
         return $options;
     }
 }

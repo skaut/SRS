@@ -50,6 +50,7 @@ class FaqRepository extends EntityRepository
 
     /**
      * Vrací publikované otázky seřazené podle pozice.
+     *
      * @return Faq[]
      */
     public function findPublishedOrderedByPosition() : array
@@ -59,6 +60,7 @@ class FaqRepository extends EntityRepository
 
     /**
      * Uloží otázku.
+     *
      * @throws NonUniqueResultException
      * @throws ORMException
      */

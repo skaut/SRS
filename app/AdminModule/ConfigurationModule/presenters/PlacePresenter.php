@@ -45,7 +45,6 @@ class PlacePresenter extends ConfigurationBasePresenter
      */
     public $placePointsGridControlFactory;
 
-
     public function renderEdit(int $id) : void
     {
         $placePoint                 = $this->placePointRepository->findById($id);

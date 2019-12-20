@@ -27,6 +27,7 @@ class FaqFormFactory
 
     /**
      * Přihlášený uživatel.
+     *
      * @var User
      */
     private $user;
@@ -39,7 +40,6 @@ class FaqFormFactory
 
     /** @var UserRepository */
     private $userRepository;
-
 
     public function __construct(BaseFormFactory $baseFormFactory, FaqRepository $faqRepository, UserRepository $userRepository)
     {
@@ -69,6 +69,7 @@ class FaqFormFactory
 
     /**
      * Zpracuje formulář.
+     *
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException

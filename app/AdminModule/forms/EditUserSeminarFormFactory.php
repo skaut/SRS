@@ -10,7 +10,6 @@ use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\CustomInput\CustomCheckbox;
 use App\Model\Settings\CustomInput\CustomFile;
-use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\CustomInput\CustomSelect;
 use App\Model\Settings\CustomInput\CustomText;
@@ -37,6 +36,7 @@ use Nette\Utils\Strings;
 use Nettrine\ORM\EntityManagerDecorator;
 use stdClass;
 use Throwable;
+use function property_exists;
 
 /**
  * Formulář pro úpravu podrobností o účasti uživatele na semináři.
@@ -51,6 +51,7 @@ class EditUserSeminarFormFactory
 
     /**
      * Upravovaný uživatel.
+     *
      * @var User
      */
     private $user;
@@ -90,7 +91,6 @@ class EditUserSeminarFormFactory
 
     /** @var AclService */
     private $ACLService;
-
 
     public function __construct(
         BaseFormFactory $baseFormFactory,
@@ -157,24 +157,21 @@ class EditUserSeminarFormFactory
                 if ($customInputValue) {
                     $custom->setDefaultValue($customInputValue->getValue());
                 }
-            }
-            elseif ($customInput instanceof CustomCheckbox) {
+            } elseif ($customInput instanceof CustomCheckbox) {
                 $custom = $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName());
                 /** @var ?CustomCheckboxValue $customInputValue */
                 $customInputValue = $this->user->getCustomInputValue($customInput);
                 if ($customInputValue) {
                     $custom->setDefaultValue($customInputValue->getValue());
                 }
-            }
-            elseif ($customInput instanceof CustomSelect) {
+            } elseif ($customInput instanceof CustomSelect) {
                 $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions());
                 /** @var ?CustomSelectValue $customInputValue */
                 $customInputValue = $this->user->getCustomInputValue($customInput);
                 if ($customInputValue) {
                     $custom->setDefaultValue($customInputValue->getValue());
                 }
-            }
-            elseif ($customInput instanceof CustomFile) {
+            } elseif ($customInput instanceof CustomFile) {
                 $form->addUpload('custom' . $customInput->getId(), $customInput->getName());
             }
         }
@@ -207,6 +204,7 @@ class EditUserSeminarFormFactory
 
     /**
      * Zpracuje formulář.
+     *
      * @throws Throwable
      */
     public function processForm(BaseForm $form, stdClass $values) : void
@@ -228,36 +226,33 @@ class EditUserSeminarFormFactory
 
             foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
                 $customInputValue = $this->user->getCustomInputValue($customInput);
-                $customInputName = 'custom' . $customInput->getId();
-                $oldValue = null;
-                $newValue = null;
+                $customInputName  = 'custom' . $customInput->getId();
+                $oldValue         = null;
+                $newValue         = null;
 
                 if ($customInput instanceof CustomText) {
                     /** @var CustomTextValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomTextValue();
-                    $oldValue = $customInputValue->getValue();
-                    $newValue = $values->$customInputName;
+                    $oldValue         = $customInputValue->getValue();
+                    $newValue         = $values->$customInputName;
                     $customInputValue->setValue($newValue);
-                }
-                elseif ($customInput instanceof CustomCheckbox) {
+                } elseif ($customInput instanceof CustomCheckbox) {
                     /** @var CustomCheckboxValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomCheckboxValue();
-                    $oldValue = $customInputValue->getValue();
-                    $newValue = $values->$customInputName;
+                    $oldValue         = $customInputValue->getValue();
+                    $newValue         = $values->$customInputName;
                     $customInputValue->setValue($newValue);
-                }
-                elseif ($customInput instanceof CustomSelect) {
+                } elseif ($customInput instanceof CustomSelect) {
                     /** @var CustomSelectValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomSelectValue();
-                    $oldValue = $customInputValue->getValue();
-                    $newValue = $values->$customInputName;
+                    $oldValue         = $customInputValue->getValue();
+                    $newValue         = $values->$customInputName;
                     $customInputValue->setValue($newValue);
-                }
-                elseif ($customInput instanceof CustomFile) {
+                } elseif ($customInput instanceof CustomFile) {
                     /** @var CustomFileValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomFileValue();
-                    $oldValue = $customInputValue->getValue();
-                    $newValue = $values->$customInputName;
+                    $oldValue         = $customInputValue->getValue();
+                    $newValue         = $values->$customInputName;
                     if ($newValue->size > 0) {
                         $path = $this->generatePath($newValue);
                         $this->filesService->save($newValue, $path);
@@ -303,6 +298,7 @@ class EditUserSeminarFormFactory
     public function validateRolesNonregistered(MultiSelectBox $field) : bool
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
+
         return $this->validators->validateRolesNonregistered($selectedRoles, $this->user);
     }
 
@@ -312,6 +308,7 @@ class EditUserSeminarFormFactory
     public function validateRolesCapacities(MultiSelectBox $field) : bool
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
+
         return $this->validators->validateRolesCapacities($selectedRoles, $this->user);
     }
 

@@ -11,14 +11,14 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Entita přihláška rolí.
  *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  * @ORM\Entity(repositoryClass="RolesApplicationRepository")
+ *
+ * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class RolesApplication extends Application
 {
     /** @var string */
     protected $type = Application::ROLES;
-
 
     /**
      * @param Collection|Role[] $roles

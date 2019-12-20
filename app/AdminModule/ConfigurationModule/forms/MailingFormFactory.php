@@ -38,6 +38,7 @@ class MailingFormFactory
 
     /**
      * Přihlášený uživatel.
+     *
      * @var User
      */
     private $user;
@@ -57,7 +58,6 @@ class MailingFormFactory
     /** @var LinkGenerator */
     private $linkGenerator;
 
-
     public function __construct(
         BaseFormFactory $baseForm,
         SettingsService $settingsService,
@@ -74,6 +74,7 @@ class MailingFormFactory
 
     /**
      * Vytvoří formulář.
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -105,6 +106,7 @@ class MailingFormFactory
 
     /**
      * Zpracuje formulář.
+     *
      * @throws Nette\Application\UI\InvalidLinkException
      * @throws SettingsException
      * @throws Throwable

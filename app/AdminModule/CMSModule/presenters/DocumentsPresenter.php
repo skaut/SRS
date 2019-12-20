@@ -29,7 +29,6 @@ class DocumentsPresenter extends CMSBasePresenter
      */
     public $documentTagsGridControlFactory;
 
-
     protected function createComponentDocumentsGrid() : DocumentsGridControl
     {
         return $this->documentsGridControlFactory->create();

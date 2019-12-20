@@ -50,6 +50,7 @@ class RoleRepository extends EntityRepository
 
     /**
      * Vrací id naposledy přidané role.
+     *
      * @throws NonUniqueResultException
      * @throws NoResultException
      */
@@ -63,6 +64,7 @@ class RoleRepository extends EntityRepository
 
     /**
      * Vrací názvy rolí, kromě role se zadaným id.
+     *
      * @return string[]
      */
     public function findOthersNames(int $id) : array
@@ -73,11 +75,13 @@ class RoleRepository extends EntityRepository
             ->setParameter('id', $id)
             ->getQuery()
             ->getScalarResult();
+
         return array_map('current', $names);
     }
 
     /**
      * Vrací registrovatelné role.
+     *
      * @return Role[]
      */
     public function findAllRegisterable() : array
@@ -87,40 +91,48 @@ class RoleRepository extends EntityRepository
 
     /**
      * Vrací role s omezenou kapacitou.
+     *
      * @return Collection|Role[]
      */
     public function findAllWithLimitedCapacity() : Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->neq('capacity', null));
+
         return $this->matching($criteria);
     }
 
     /**
      * Vrací role, u kterých se eviduje příjezd a odjezd.
+     *
      * @return Collection|Role[]
      */
     public function findAllWithArrivalDeparture() : Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('displayArrivalDeparture', true));
+
         return $this->matching($criteria);
     }
 
     /**
      * Vrací role, u kterých je cena počítána podle podakcí.
+     *
      * @return Collection|Role[]
      */
     public function findAllWithSubevents() : Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('fee', null));
+
         return $this->matching($criteria);
     }
 
     /**
      * Vrací role podle id.
+     *
      * @param int[] $ids
+     *
      * @return Collection|Role[]
      */
     public function findRolesByIds(array $ids) : Collection
@@ -128,12 +140,15 @@ class RoleRepository extends EntityRepository
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids))
             ->orderBy(['name' => 'ASC']);
+
         return $this->matching($criteria);
     }
 
     /**
      * Vrací role s počty uživatelů.
+     *
      * @param int[] $rolesIds
+     *
      * @return string[][]
      */
     public function countUsersInRoles(array $rolesIds) : array
@@ -150,18 +165,21 @@ class RoleRepository extends EntityRepository
 
     /**
      * Vrací id rolí.
+     *
      * @param Collection|Role[] $roles
+     *
      * @return int[]
      */
     public function findRolesIds(Collection $roles) : array
     {
-        return array_map(function ($o) {
+        return array_map(static function ($o) {
             return $o->getId();
         }, $roles->toArray());
     }
 
     /**
      * Vraci role, ktere jsou tuto chvíli registrovatelné, seřazené podle názvu.
+     *
      * @return Collection|Role[]
      */
     public function findAllRegisterableNowOrderedByName() : Collection
@@ -188,6 +206,7 @@ class RoleRepository extends EntityRepository
 
     /**
      * Vrací role, které jsou v tuto chvíli registrovatelné nebo je uživatel má, seřazené podle názvu.
+     *
      * @return Role[]
      */
     public function findAllRegisterableNowOrUsersOrderedByName(User $user) : array
@@ -241,6 +260,7 @@ class RoleRepository extends EntityRepository
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
+
         return $result ? $result['registerableFrom'] : null;
     }
 
@@ -257,6 +277,7 @@ class RoleRepository extends EntityRepository
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
+
         return $result ? $result['registerableTo'] : null;
     }
 

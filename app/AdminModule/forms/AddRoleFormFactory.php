@@ -33,7 +33,6 @@ class AddRoleFormFactory
     /** @var RoleRepository */
     private $roleRepository;
 
-
     public function __construct(BaseFormFactory $baseFormFactory, AclService $ACLService, RoleRepository $roleRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
@@ -43,6 +42,7 @@ class AddRoleFormFactory
 
     /**
      * Vytvoří formulář.
+     *
      * @throws Throwable
      */
     public function create() : BaseForm

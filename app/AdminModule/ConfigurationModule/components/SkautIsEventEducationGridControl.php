@@ -31,7 +31,6 @@ class SkautIsEventEducationGridControl extends Control
     /** @var SkautIsCourseRepository */
     private $skautIsCourseRepository;
 
-
     public function __construct(
         Translator $translator,
         SubeventRepository $subeventRepository,
@@ -86,6 +85,7 @@ class SkautIsEventEducationGridControl extends Control
 
     /**
      * Zpracuje úpravu propojení podakce s kurzy.
+     *
      * @throws AbortException
      * @throws Throwable
      */

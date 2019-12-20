@@ -40,7 +40,6 @@ class AddLectorFormFactory
     /** @var FilesService */
     private $filesService;
 
-
     public function __construct(
         BaseFormFactory $baseFormFactory,
         UserRepository $userRepository,
@@ -110,6 +109,7 @@ class AddLectorFormFactory
 
     /**
      * Zpracuje formulář.
+     *
      * @throws Nette\Utils\UnknownImageFileException
      * @throws ORMException
      * @throws OptimisticLockException

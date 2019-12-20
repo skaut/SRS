@@ -13,10 +13,10 @@ class UsersContentDto extends ContentDto
 {
     /**
      * Role, jejichž uživatelé budou vypsáni.
+     *
      * @var int[]
      */
     protected $roles;
-
 
     /**
      * @param int[] $roles

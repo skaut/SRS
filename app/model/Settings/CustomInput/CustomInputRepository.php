@@ -27,6 +27,7 @@ class CustomInputRepository extends EntityRepository
 
     /**
      * Vrací všechna pole seřazená podle pozice.
+     *
      * @return CustomInput[]
      */
     public function findAllOrderedByPosition() : array
@@ -50,6 +51,7 @@ class CustomInputRepository extends EntityRepository
 
     /**
      * Uloží pole.
+     *
      * @throws NonUniqueResultException
      * @throws ORMException
      */

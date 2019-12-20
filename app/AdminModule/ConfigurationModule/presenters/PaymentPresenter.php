@@ -47,7 +47,6 @@ class PaymentPresenter extends ConfigurationBasePresenter
      */
     public $ticketsFormFactory;
 
-
     /**
      * @throws SettingsException
      * @throws Throwable
@@ -64,6 +63,7 @@ class PaymentPresenter extends ConfigurationBasePresenter
 
     /**
      * Zruší propojení s API banky.
+     *
      * @throws SettingsException
      * @throws Throwable
      */

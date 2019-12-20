@@ -34,7 +34,6 @@ class RoomDetailDto
      */
     private $capacity;
 
-
     public function getId() : int
     {
         return $this->id;

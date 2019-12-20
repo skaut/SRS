@@ -26,6 +26,7 @@ class EditTemplateFormFactory
 
     /**
      * Upravovaná šablona.
+     *
      * @var Template
      */
     private $template;
@@ -35,7 +36,6 @@ class EditTemplateFormFactory
 
     /** @var TemplateRepository */
     private $templateRepository;
-
 
     public function __construct(BaseFormFactory $baseFormFactory, TemplateRepository $templateRepository)
     {
@@ -98,6 +98,7 @@ class EditTemplateFormFactory
 
     /**
      * Zpracuje formulář.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      */

@@ -21,7 +21,6 @@ abstract class PaymentsBasePresenter extends AdminBasePresenter
     /** @var string */
     protected $resource = SrsResource::PAYMENTS;
 
-
     /**
      * @throws AbortException
      */

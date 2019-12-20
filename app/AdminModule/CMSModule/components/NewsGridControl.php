@@ -28,7 +28,6 @@ class NewsGridControl extends Control
     /** @var NewsRepository */
     private $newsRepository;
 
-
     public function __construct(Translator $translator, NewsRepository $newsRepository)
     {
         parent::__construct();
@@ -48,6 +47,7 @@ class NewsGridControl extends Control
 
     /**
      * Vytvoří komponentu.
+     *
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
@@ -93,6 +93,7 @@ class NewsGridControl extends Control
 
     /**
      * Zpracuje odstranění aktuality.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException
@@ -109,6 +110,7 @@ class NewsGridControl extends Control
 
     /**
      * Změní připíchnutí aktuality.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws AbortException

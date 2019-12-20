@@ -40,6 +40,7 @@ class Validators
 
     /**
      * Ověří, že není vybrána role "Neregistrovaný".
+     *
      * @param Collection|Role[] $selectedRoles
      */
     public function validateRolesNonregistered(Collection $selectedRoles, User $user) : bool
@@ -47,11 +48,7 @@ class Validators
         $nonregisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
 
         if ($selectedRoles->contains($nonregisteredRole)) {
-            if ($user->isInRole($nonregisteredRole) && $selectedRoles->count() === 1) {
-                return true;
-            }
-
-            return false;
+            return $user->isInRole($nonregisteredRole) && $selectedRoles->count() === 1;
         }
 
         return true;
@@ -59,6 +56,7 @@ class Validators
 
     /**
      * Ověří kapacitu rolí.
+     *
      * @param Collection|Role[] $selectedRoles
      */
     public function validateRolesCapacities(Collection $selectedRoles, User $user) : bool
@@ -74,6 +72,7 @@ class Validators
 
     /**
      * Ověří kompatibilitu rolí.
+     *
      * @param Collection|Role[] $selectedRoles
      */
     public function validateRolesIncompatible(Collection $selectedRoles, Role $testRole) : bool
@@ -93,6 +92,7 @@ class Validators
 
     /**
      * Ověří výběr vyžadovaných rolí.
+     *
      * @param Collection|Role[] $selectedRoles
      */
     public function validateRolesRequired(Collection $selectedRoles, Role $testRole) : bool
@@ -112,6 +112,7 @@ class Validators
 
     /**
      * Ověří registrovatelnost rolí.
+     *
      * @param Collection|Role[] $selectedRoles
      */
     public function validateRolesRegisterable(Collection $selectedRoles, User $user) : bool
@@ -127,6 +128,7 @@ class Validators
 
     /**
      * Ověří kapacitu podakcí.
+     *
      * @param Collection|Subevent[] $selectedSubevents
      */
     public function validateSubeventsCapacities(Collection $selectedSubevents, User $user) : bool
@@ -142,6 +144,7 @@ class Validators
 
     /**
      * Ověří kompatibilitu podakcí.
+     *
      * @param Collection|Subevent[] $selectedSubevents
      */
     public function validateSubeventsIncompatible(Collection $selectedSubevents, Subevent $testSubevent) : bool
@@ -161,6 +164,7 @@ class Validators
 
     /**
      * Ověří výběr vyžadovaných podakcí.
+     *
      * @param Collection|Subevent[] $selectedSubevents
      */
     public function validateSubeventsRequired(Collection $selectedSubevents, Subevent $testSubevent) : bool
@@ -180,6 +184,7 @@ class Validators
 
     /**
      * Ověří, zda uživatel podakci již nemá.
+     *
      * @param Collection|Subevent[] $selectedSubevents
      */
     public function validateSubeventsRegistered(
@@ -194,6 +199,7 @@ class Validators
                 }
             }
         }
+
         return true;
     }
 
@@ -202,19 +208,15 @@ class Validators
      */
     public function validateBlockAutoRegistered(Block $block) : bool
     {
-        if ($block->getMandatory() !== ProgramMandatoryType::AUTO_REGISTERED
-            && ($block->getProgramsCount() > 1 || (
-                $block->getProgramsCount() === 1
-                && $this->programRepository->hasOverlappingProgram(
-                    $block->getPrograms()->first()->getId(),
-                    $block->getPrograms()->first()->getStart(),
-                    $block->getPrograms()->first()->getEnd()
+        return $block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED
+            || ($block->getProgramsCount() <= 1
+                && ($block->getProgramsCount() !== 1
+                    || ! $this->programRepository->hasOverlappingProgram(
+                        $block->getPrograms()->first()->getId(),
+                        $block->getPrograms()->first()->getStart(),
+                        $block->getPrograms()->first()->getEnd()
+                    )
                 )
-                )
-            )
-        ) {
-            return false;
-        }
-        return true;
+            );
     }
 }

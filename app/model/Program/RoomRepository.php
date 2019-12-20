@@ -29,6 +29,7 @@ class RoomRepository extends EntityRepository
 
     /**
      * Vrací názvy všech místností.
+     *
      * @return string[]
      */
     public function findAllNames() : array
@@ -37,11 +38,13 @@ class RoomRepository extends EntityRepository
             ->select('r.name')
             ->getQuery()
             ->getScalarResult();
+
         return array_map('current', $names);
     }
 
     /**
      * Vrací názvy místností, kromě místnosti s id.
+     *
      * @return string[]
      */
     public function findOthersNames(int $id) : array
@@ -52,23 +55,28 @@ class RoomRepository extends EntityRepository
             ->setParameter('id', $id)
             ->getQuery()
             ->getScalarResult();
+
         return array_map('current', $names);
     }
 
     /**
      * Vrací místnosti podle id.
+     *
      * @param int[] $ids
+     *
      * @return Collection|Room[]
      */
     public function findRoomsByIds(array $ids) : Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids));
+
         return $this->matching($criteria);
     }
 
     /**
      * Uloží místnost.
+     *
      * @throws ORMException
      */
     public function save(Room $room) : void
@@ -79,6 +87,7 @@ class RoomRepository extends EntityRepository
 
     /**
      * Odstraní místnost.
+     *
      * @throws ORMException
      */
     public function remove(Room $room) : void

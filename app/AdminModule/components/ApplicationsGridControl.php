@@ -90,7 +90,6 @@ class ApplicationsGridControl extends Control
     /** @var Validators */
     private $validators;
 
-
     public function __construct(
         Translator $translator,
         EntityManagerDecorator $em,
@@ -136,6 +135,7 @@ class ApplicationsGridControl extends Control
 
     /**
      * Vytvoří komponentu.
+     *
      * @throws NonUniqueResultException
      * @throws DataGridException
      * @throws NoResultException
@@ -179,6 +179,7 @@ class ApplicationsGridControl extends Control
                 if ($paymentMethod) {
                     return $this->translator->translate('common.payment.' . $paymentMethod);
                 }
+
                 return null;
             });
 
@@ -238,19 +239,19 @@ class ApplicationsGridControl extends Control
             ]);
         };
         $grid->getInlineEdit()->onSubmit[]      = [$this, 'edit'];
-        $grid->allowRowsInlineEdit(function (Application $item) {
+        $grid->allowRowsInlineEdit(static function (Application $item) {
             return ! $item->isCanceled();
         });
 
         $grid->addAction('generatePaymentProofCash', 'admin.users.users_applications_download_payment_proof_cash');
-        $grid->allowRowsAction('generatePaymentProofCash', function (Application $item) {
+        $grid->allowRowsAction('generatePaymentProofCash', static function (Application $item) {
             return $item->getState() === ApplicationState::PAID
                 && $item->getPaymentMethod() === PaymentType::CASH
                 && $item->getPaymentDate();
         });
 
         $grid->addAction('generatePaymentProofBank', 'admin.users.users_applications_download_payment_proof_bank');
-        $grid->allowRowsAction('generatePaymentProofBank', function (Application $item) {
+        $grid->allowRowsAction('generatePaymentProofBank', static function (Application $item) {
             return $item->getState() === ApplicationState::PAID
                 && $item->getPaymentMethod() === PaymentType::BANK
                 && $item->getPaymentDate();
@@ -262,16 +263,16 @@ class ApplicationsGridControl extends Control
                     'data-toggle' => 'confirmation',
                     'data-content' => $this->translator->translate('admin.users.users_applications_cancel_application_confirm'),
                 ])->setClass('btn btn-xs btn-danger');
-            $grid->allowRowsAction('cancelApplication', function (Application $item) {
+            $grid->allowRowsAction('cancelApplication', static function (Application $item) {
                 return $item->getType() === Application::SUBEVENTS && ! $item->isCanceled();
             });
         }
 
-        $grid->setColumnsSummary(['fee'], function (Application $item, $column) {
+        $grid->setColumnsSummary(['fee'], static function (Application $item, $column) {
             return $item->isCanceled() ? 0 : $item->getFee();
         });
 
-        $grid->setRowCallback(function (Application $application, Html $tr) : void {
+        $grid->setRowCallback(static function (Application $application, Html $tr) : void {
             if (! $application->isCanceled()) {
                 return;
             }
@@ -281,6 +282,7 @@ class ApplicationsGridControl extends Control
 
     /**
      * Zpracuje přidání podakcí.
+     *
      * @throws AbortException
      * @throws Throwable
      */
@@ -310,6 +312,7 @@ class ApplicationsGridControl extends Control
 
     /**
      * Zpracuje úpravu přihlášky.
+     *
      * @throws AbortException
      * @throws Throwable
      */
@@ -365,6 +368,7 @@ class ApplicationsGridControl extends Control
 
     /**
      * Vygeneruje příjmový pokladní doklad.
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -379,6 +383,7 @@ class ApplicationsGridControl extends Control
 
     /**
      * Vygeneruje potvrzení o přijetí platby.
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -393,6 +398,7 @@ class ApplicationsGridControl extends Control
 
     /**
      * Zruší přihlášku.
+     *
      * @throws AbortException
      * @throws Throwable
      */
@@ -411,6 +417,7 @@ class ApplicationsGridControl extends Control
 
     /**
      * Vrátí platební metody jako možnosti pro select.
+     *
      * @return string[]
      */
     private function preparePaymentMethodOptions() : array
@@ -420,6 +427,7 @@ class ApplicationsGridControl extends Control
         foreach (PaymentType::$types as $type) {
             $options[$type] = 'common.payment.' . $type;
         }
+
         return $options;
     }
 }

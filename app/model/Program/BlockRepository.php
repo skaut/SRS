@@ -44,6 +44,7 @@ class BlockRepository extends EntityRepository
 
     /**
      * Vrací názvy všech bloků.
+     *
      * @return string[]
      */
     public function findAllNames() : array
@@ -52,11 +53,13 @@ class BlockRepository extends EntityRepository
             ->select('b.name')
             ->getQuery()
             ->getScalarResult();
+
         return array_map('current', $names);
     }
 
     /**
      * Vrací všechny bloky seřazené podle názvu.
+     *
      * @return Block[]
      */
     public function findAllOrderedByName() : array
@@ -69,6 +72,7 @@ class BlockRepository extends EntityRepository
 
     /**
      * Vrací všechny bloky nezařezené v kategorii, seřazené podle názvu.
+     *
      * @return Block[]
      */
     public function findAllUncategorizedOrderedByName() : array
@@ -82,6 +86,7 @@ class BlockRepository extends EntityRepository
 
     /**
      * Vrací názvy ostatních bloků, kromě bloku se zadaným id.
+     *
      * @return string[]
      */
     public function findOthersNames(int $id) : array
@@ -92,11 +97,13 @@ class BlockRepository extends EntityRepository
             ->setParameter('id', $id)
             ->getQuery()
             ->getScalarResult();
+
         return array_map('current', $names);
     }
 
     /**
      * Vrací bloky podle textu obsaženého v názvu, seřazené podle názvu.
+     *
      * @return Block[]
      */
     public function findByLikeNameOrderedByName(string $text, bool $unassignedOnly = false) : array
@@ -117,8 +124,10 @@ class BlockRepository extends EntityRepository
 
     /**
      * Vrací bloky, které jsou pro uživatele povinné a není na ně přihlášený.
+     *
      * @param Collection|Category[] $categories
      * @param Collection|Subevent[] $subevents
+     *
      * @return Collection|Block[]
      */
     public function findMandatoryForCategoriesAndSubevents(User $user, Collection $categories, Collection $subevents) : Collection
@@ -156,30 +165,36 @@ class BlockRepository extends EntityRepository
 
     /**
      * Vrací id bloků.
+     *
      * @param Collection|Block[] $blocks
+     *
      * @return int[]
      */
     public function findBlocksIds(Collection $blocks) : array
     {
-        return array_map(function ($o) {
+        return array_map(static function ($o) {
             return $o->getId();
         }, $blocks->toArray());
     }
 
     /**
      * Vrací bloky podle id.
+     *
      * @param int[] $ids
+     *
      * @return Collection|Block[]
      */
     public function findBlocksByIds(array $ids) : Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids));
+
         return $this->matching($criteria);
     }
 
     /**
      * Uloží blok.
+     *
      * @throws ORMException
      */
     public function save(Block $block) : void
@@ -190,6 +205,7 @@ class BlockRepository extends EntityRepository
 
     /**
      * Odstraní blok.
+     *
      * @throws ORMException
      */
     public function remove(Block $block) : void

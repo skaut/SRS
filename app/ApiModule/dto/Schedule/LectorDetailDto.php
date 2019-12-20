@@ -40,7 +40,6 @@ class LectorDetailDto
      */
     private $photo;
 
-
     public function getId() : int
     {
         return $this->id;

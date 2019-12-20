@@ -39,7 +39,6 @@ class SeminarFormFactory
     /** @var SubeventRepository */
     private $subeventRepository;
 
-
     public function __construct(
         BaseFormFactory $baseForm,
         SettingsService $settingsService,
@@ -52,6 +51,7 @@ class SeminarFormFactory
 
     /**
      * Vytvoří formulář.
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -96,6 +96,7 @@ class SeminarFormFactory
 
     /**
      * Zpracuje formulář.
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws SettingsException
@@ -115,6 +116,7 @@ class SeminarFormFactory
 
     /**
      * Ověří, že datum začátku semináře je dříve než konce.
+     *
      * @param DateTime[] $args
      */
     public function validateSeminarFromDate(DatePicker $field, array $args) : bool
@@ -124,6 +126,7 @@ class SeminarFormFactory
 
     /**
      * Ověří, že datum konce semináře je později než začátku.
+     *
      * @param DateTime[] $args
      */
     public function validateSeminarToDate(DatePicker $field, array $args) : bool
@@ -133,6 +136,7 @@ class SeminarFormFactory
 
     /**
      * Ověří, že datum uzavření registrace je dříve než začátek semináře.
+     *
      * @param DateTime[] $args
      */
     public function validateEditRegistrationTo(DatePicker $field, array $args) : bool

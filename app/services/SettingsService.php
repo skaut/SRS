@@ -14,9 +14,9 @@ use Nette;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 use Throwable;
-use function filter_var;
 use const FILTER_VALIDATE_BOOLEAN;
 use const FILTER_VALIDATE_INT;
+use function filter_var;
 
 /**
  * Služba pro správu nastavení.
@@ -32,7 +32,6 @@ class SettingsService
 
     /** @var Cache */
     private $settingsCache;
-
 
     public function __construct(SettingsRepository $settingsRepository, IStorage $storage)
     {
@@ -92,6 +91,7 @@ class SettingsService
         if ($value === null) {
             return null;
         }
+
         return filter_var($value, FILTER_VALIDATE_INT);
     }
 
@@ -124,6 +124,7 @@ class SettingsService
         if ($value === null) {
             return null;
         }
+
         return filter_var($value, FILTER_VALIDATE_BOOLEAN);
     }
 
@@ -156,6 +157,7 @@ class SettingsService
         if ($value === null) {
             return null;
         }
+
         return new DateTime($value);
     }
 
@@ -171,6 +173,7 @@ class SettingsService
         if ($value === null) {
             return null;
         }
+
         return (new DateTime($value))->format(Helpers::DATETIME_FORMAT);
     }
 
@@ -203,6 +206,7 @@ class SettingsService
         if ($value === null) {
             return null;
         }
+
         return new DateTime($value);
     }
 
@@ -218,6 +222,7 @@ class SettingsService
         if ($value === null) {
             return null;
         }
+
         return (new DateTime($value))->format(Helpers::DATE_FORMAT);
     }
 

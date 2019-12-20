@@ -41,7 +41,6 @@ class DocumentTagsGridControl extends Control
     /** @var TagRepository */
     private $tagRepository;
 
-
     public function __construct(
         Translator $translator,
         RoleRepository $roleRepository,
@@ -99,7 +98,7 @@ class DocumentTagsGridControl extends Control
         };
         $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
 
-        $grid->addInlineEdit()->onControlAdd[]  = function (Container $container) use ($rolesOptions) : void {
+        $grid->addInlineEdit()->onControlAdd[]  = static function (Container $container) use ($rolesOptions) : void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.tags_name_empty');
             $container->addMultiSelect('roles', '', $rolesOptions)->setAttribute('class', 'datagrid-multiselect')

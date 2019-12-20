@@ -57,7 +57,6 @@ class PaymentsGridControl extends Control
     /** @var BankService */
     private $bankService;
 
-
     public function __construct(
         Translator $translator,
         PaymentRepository $paymentRepository,
@@ -91,6 +90,7 @@ class PaymentsGridControl extends Control
 
     /**
      * Vytvoří komponentu.
+     *
      * @throws DataGridException
      * @throws SettingsException
      * @throws Throwable
@@ -133,7 +133,7 @@ class PaymentsGridControl extends Control
             ->setFilterMultiSelect($this->preparePaymentStatesOptions())
             ->setTranslateOptions();
 
-        $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function (Container $container) : void {
+        $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = static function (Container $container) : void {
             $container->addDatePicker('date', '')
                 ->addRule(Form::FILLED, 'admin.payments.payments.date_empty');
 
@@ -152,7 +152,7 @@ class PaymentsGridControl extends Control
         }
 
         $grid->addAction('generatePaymentProofBank', 'admin.payments.payments.download_payment_proof_bank');
-        $grid->allowRowsAction('generatePaymentProofBank', function (Payment $payment) {
+        $grid->allowRowsAction('generatePaymentProofBank', static function (Payment $payment) {
             return $payment->getState() === PaymentState::PAIRED_AUTO || $payment->getState() === PaymentState::PAIRED_MANUAL;
         });
 
@@ -166,13 +166,14 @@ class PaymentsGridControl extends Control
                 'data-toggle' => 'confirmation',
                 'data-content' => $this->translator->translate('admin.payments.payments.delete_confirm'),
             ]);
-        $grid->allowRowsAction('delete', function (Payment $payment) {
+        $grid->allowRowsAction('delete', static function (Payment $payment) {
             return $payment->getTransactionId() === null;
         });
     }
 
     /**
      * Zpracuje přidání platby.
+     *
      * @throws AbortException
      * @throws Throwable
      */
@@ -188,6 +189,7 @@ class PaymentsGridControl extends Control
 
     /**
      * Odstraní platbu.
+     *
      * @throws Throwable
      */
     public function handleDelete(int $id) : void
@@ -204,6 +206,7 @@ class PaymentsGridControl extends Control
 
     /**
      * Vygeneruje potvrzení o přijetí platby.
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -218,6 +221,7 @@ class PaymentsGridControl extends Control
 
     /**
      * Zkontroluje platby na bankovním účtu.
+     *
      * @throws SettingsException
      * @throws Throwable
      */
@@ -229,6 +233,7 @@ class PaymentsGridControl extends Control
 
     /**
      * Vrátí stavy plateb jako možnosti pro select.
+     *
      * @return string[]
      */
     private function preparePaymentStatesOptions() : array
@@ -237,6 +242,7 @@ class PaymentsGridControl extends Control
         foreach (PaymentState::$states as $state) {
             $options[$state] = 'common.payment_state.' . $state;
         }
+
         return $options;
     }
 }
