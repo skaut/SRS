@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mailing;
 
-use Nette;
+use Nette\Mail\Message;
 use Ublaboo\Mailing\AbstractMail;
 use Ublaboo\Mailing\IComposableMail;
 use Ublaboo\Mailing\IMessageData;
@@ -16,7 +16,10 @@ use Ublaboo\Mailing\IMessageData;
  */
 class SrsMail extends AbstractMail implements IComposableMail
 {
-    public function compose(Nette\Mail\Message $message, ?IMessageData $mailData = null) : void
+    /**
+     * @param SrsMailData|null $mailData
+     */
+    public function compose(Message $message, ?IMessageData $mailData = null) : void
     {
         $message->setFrom($mailData->getFromEmail(), $mailData->getFromName());
 

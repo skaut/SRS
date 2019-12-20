@@ -5,6 +5,10 @@ parameters:
 
     checkGenericClassInNonGenericObjectType: false
 
+    ignoreErrors:
+        - Call to an undefined method Nette\Forms\Container::addDatePicker().
+        - Parameter (.*) of method Doctrine\Common\Collections\ExpressionBuilder::(.*))() expects array<int, mixed>|null, Doctrine\Common\Collections\Expr\Comparison given.
+
 includes:
     - vendor/phpstan/phpstan-nette/extension.neon
     - vendor/phpstan/phpstan-doctrine/extension.neon

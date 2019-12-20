@@ -436,8 +436,12 @@ class ApplicationFormFactory
         $subeventsSelect
             ->setRequired(false)
             ->addRule([$this, 'validateSubeventsCapacities'], 'web.application_content.subevents_capacity_occupied');
+
+        /** @var MultiSelectBox $rolesSelect */
+        $rolesSelect = $form['roles'];
+
         $subeventsSelect
-            ->addConditionOn($form['roles'], [$this, 'toggleSubeventsRequired'])
+            ->addConditionOn($rolesSelect, [$this, 'toggleSubeventsRequired'])
             ->addRule(Form::FILLED, 'web.application_content.subevents_empty');
 
         //generovani chybovych hlasek pro vsechny kombinace podakci

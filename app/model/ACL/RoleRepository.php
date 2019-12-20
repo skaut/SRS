@@ -43,7 +43,7 @@ class RoleRepository extends EntityRepository
     /**
      * Vrací systémovou roli podle systémového názvu.
      */
-    public function findBySystemName(string $name) : ?Role
+    public function findBySystemName(string $name) : Role
     {
         return $this->findOneBy(['systemName' => $name]);
     }

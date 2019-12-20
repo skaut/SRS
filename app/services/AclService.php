@@ -256,7 +256,7 @@ class AclService
     /**
      * Vrací seznam rolí, které jsou v tuto chvíli registrovatelné nebo je uživatel má, s informací o jejich
      * obsazenosti, jako možnosti pro select.
-     * @return Role[]
+     * @return <int, string>[]
      */
     public function getRegisterableNowOrUsersOptionsWithCapacity(User $user) : array
     {

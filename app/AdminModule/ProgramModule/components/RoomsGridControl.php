@@ -15,6 +15,7 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
+use Nette\Forms\Controls\TextInput;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use stdClass;
@@ -113,8 +114,9 @@ class RoomsGridControl extends Control
                 ->addRule(Form::INTEGER, 'admin.program.rooms_capacity_format');
         };
         $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Room $item) : void {
-            $container['name']
-                ->addRule(Form::IS_NOT_IN, 'admin.program.rooms_name_exists', $this->roomRepository->findOthersNames($item->getId()));
+            /** @var TextInput $nameText */
+            $nameText = $container['slug'];
+            $nameText->addRule(Form::IS_NOT_IN, 'admin.program.rooms_name_exists', $this->roomRepository->findOthersNames($item->getId()));
 
             $container->setDefaults([
                 'name' => $item->getName(),
