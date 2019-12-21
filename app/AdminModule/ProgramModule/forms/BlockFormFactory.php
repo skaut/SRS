@@ -9,6 +9,7 @@ use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\ACL\Permission;
 use App\Model\ACL\SrsResource;
 use App\Model\Enums\ProgramMandatoryType;
+use App\Model\Program\Block;
 use App\Model\Program\BlockRepository;
 use App\Model\Program\CategoryRepository;
 use App\Model\Settings\Settings;

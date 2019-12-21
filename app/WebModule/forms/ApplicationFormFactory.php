@@ -16,7 +16,6 @@ use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\Structure\Subevent;
 use App\Model\Structure\SubeventRepository;
-use App\Model\User\ApplicationRepository;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
 use App\Model\User\CustomInputValue\CustomFileValue;
 use App\Model\User\CustomInputValue\CustomInputValueRepository;
@@ -129,7 +128,6 @@ class ApplicationFormFactory
         SkautIsService $skautIsService,
         SettingsService $settingsService,
         SubeventRepository $subeventRepository,
-        ApplicationRepository $applicationRepository,
         AclService $ACLService,
         ApplicationService $applicationService,
         Validators $validators,
@@ -145,7 +143,6 @@ class ApplicationFormFactory
         $this->skautIsService             = $skautIsService;
         $this->settingsService            = $settingsService;
         $this->subeventRepository         = $subeventRepository;
-        $this->applicationRepository      = $applicationRepository;
         $this->ACLService                 = $ACLService;
         $this->applicationService         = $applicationService;
         $this->validators                 = $validators;
