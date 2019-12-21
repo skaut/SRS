@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\InstallModule\Presenters;
 
-use App\Model\ACL\Role;
-use App\Model\ACL\RoleRepository;
+use App\Model\Acl\Role;
+use App\Model\Acl\RoleRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\Structure\SubeventRepository;

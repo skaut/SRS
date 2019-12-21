@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Model\CMS\Content;
+namespace App\Model\Cms\Content;
 
 use App\AdminModule\Forms\BaseForm;
-use App\Model\CMS\Document\Tag;
-use App\Model\CMS\Document\TagRepository;
-use App\Model\CMS\Page;
+use App\Model\Cms\Document\Tag;
+use App\Model\Cms\Document\TagRepository;
+use App\Model\Cms\Page;
 use App\Model\Page\PageException;
 use App\Utils\Helpers;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -32,7 +32,7 @@ class DocumentContent extends Content implements IContent
     /**
      * Tagy dokumentů, které se zobrazí.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\CMS\Document\Tag")
+     * @ORM\ManyToMany(targetEntity="\App\Model\Cms\Document\Tag")
      *
      * @var Collection|Tag[]
      */

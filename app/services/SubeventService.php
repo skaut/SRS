@@ -6,8 +6,8 @@ namespace App\Services;
 
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\User;
-use Kdyby\Translation\Translator;
 use Nette;
+use Nette\Localization\ITranslator;
 
 /**
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
@@ -19,10 +19,10 @@ class SubeventService
     /** @var SubeventRepository */
     private $subeventRepository;
 
-    /** @var Translator */
+    /** @var ITranslator */
     private $translator;
 
-    public function __construct(SubeventRepository $subeventRepository, Translator $translator)
+    public function __construct(SubeventRepository $subeventRepository, ITranslator $translator)
     {
         $this->subeventRepository = $subeventRepository;
         $this->translator         = $translator;

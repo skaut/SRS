@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Model\CMS\Content;
+namespace App\Model\Cms\Content;
 
 use App\AdminModule\Forms\BaseForm;
 use App\Services\FilesService;

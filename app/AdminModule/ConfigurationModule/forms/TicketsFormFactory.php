@@ -11,7 +11,6 @@ use App\Model\Settings\SettingsException;
 use App\Services\SettingsService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Nextras\Forms\Rendering\Bs3FormRenderer;
 use stdClass;
 use Throwable;
 

@@ -5,9 +5,6 @@ declare(strict_types=1);
 namespace App\AdminModule\Forms;
 
 use Nette\Application\UI\Form;
-use Nextras\Forms\Controls\DatePicker;
-use Nextras\Forms\Controls\DateTimePicker;
-use VojtechDobes\NetteForms\GpsPicker;
 
 /**
  * BaseForm pro AdminModule.

@@ -15,8 +15,6 @@ use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Utils\DateTime;
-use Nextras\Forms\Controls\DatePicker;
-use Nextras\Forms\Rendering\Bs3FormRenderer;
 use stdClass;
 use Throwable;
 

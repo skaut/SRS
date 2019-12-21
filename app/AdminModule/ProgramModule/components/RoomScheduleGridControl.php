@@ -11,7 +11,6 @@ use App\Model\Program\RoomRepository;
 use App\Services\ExcelExportService;
 use App\Utils\Helpers;
 use Exception;
-use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;

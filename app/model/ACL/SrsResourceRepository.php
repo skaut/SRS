@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Model\ACL;
+namespace App\Model\Acl;
 
 use Doctrine\ORM\EntityRepository;
 

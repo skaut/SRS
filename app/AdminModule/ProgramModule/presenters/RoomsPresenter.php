@@ -8,7 +8,7 @@ use App\AdminModule\ProgramModule\Components\IRoomScheduleGridControlFactory;
 use App\AdminModule\ProgramModule\Components\IRoomsGridControlFactory;
 use App\AdminModule\ProgramModule\Components\RoomScheduleGridControl;
 use App\AdminModule\ProgramModule\Components\RoomsGridControl;
-use App\Model\ACL\Permission;
+use App\Model\Acl\Permission;
 use App\Model\Program\RoomRepository;
 use Nette\Application\AbortException;
 

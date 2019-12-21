@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace App\AdminModule\MailingModule\Components;
 
-use App\Model\ACL\Role;
+use App\Model\Acl\Role;
 use App\Model\Mailing\MailRepository;
 use App\Services\AclService;
 use App\Services\SubeventService;
 use App\Utils\Helpers;
 use Doctrine\ORM\QueryBuilder;
-use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 use Ublaboo\DataGrid\DataGrid;
@@ -29,7 +28,7 @@ class MailHistoryGridControl extends Control
     private $mailRepository;
 
     /** @var AclService */
-    private $ACLService;
+    private $aclService;
 
     /** @var SubeventService */
     private $subeventService;
@@ -37,14 +36,14 @@ class MailHistoryGridControl extends Control
     public function __construct(
         ITranslator $translator,
         MailRepository $mailRepository,
-        AclService $ACLService,
+        AclService $aclService,
         SubeventService $subeventService
     ) {
         parent::__construct();
 
         $this->translator      = $translator;
         $this->mailRepository  = $mailRepository;
-        $this->ACLService      = $ACLService;
+        $this->aclService      = $aclService;
         $this->subeventService = $subeventService;
     }
 
@@ -70,7 +69,7 @@ class MailHistoryGridControl extends Control
         $grid->setStrictSessionFilterValues(false);
 
         $grid->addColumnText('recipientRoles', 'admin.mailing.history.recipient_roles', 'recipientRolesText')
-            ->setFilterMultiSelect($this->ACLService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]))
+            ->setFilterMultiSelect($this->aclService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]))
             ->setCondition(static function (QueryBuilder $qb, $values) : void {
                 $qb->join('m.recipientRoles', 'r')
                     ->andWhere('r.id IN (:rids)')

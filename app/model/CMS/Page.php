@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Model\CMS;
+namespace App\Model\Cms;
 
-use App\Model\ACL\Role;
-use App\Model\CMS\Content\Content;
+use App\Model\Acl\Role;
+use App\Model\Cms\Content\Content;
 use App\Model\Page\PageException;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -68,7 +68,7 @@ class Page
     /**
      * Role, které mají na stránku přístup.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="pages", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role", inversedBy="pages", cascade={"persist"})
      *
      * @var Collection|Role[]
      */
@@ -77,7 +77,7 @@ class Page
     /**
      * Obsahy na stránce.
      *
-     * @ORM\OneToMany(targetEntity="\App\Model\CMS\Content\Content", mappedBy="page", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="\App\Model\Cms\Content\Content", mappedBy="page", cascade={"persist"})
      * @ORM\OrderBy({"position" = "ASC"})
      *
      * @var Collection|Content[]

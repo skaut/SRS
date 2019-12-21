@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ProgramModule\Components;
 
-use App\Model\ACL\Permission;
-use App\Model\ACL\SrsResource;
+use App\Model\Acl\Permission;
+use App\Model\Acl\SrsResource;
 use App\Model\Enums\ApplicationState;
 use App\Model\Program\Program;
 use App\Model\Program\ProgramRepository;
@@ -13,7 +13,6 @@ use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ProgramService;
 use Doctrine\ORM\QueryBuilder;
-use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;

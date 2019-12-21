@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Model\CMS;
+namespace App\Model\Cms;
 
 use App\Model\Page\PageException;
 use Doctrine\Common\Collections\Collection;

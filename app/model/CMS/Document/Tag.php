@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Model\CMS\Document;
+namespace App\Model\Cms\Document;
 
-use App\Model\ACL\Role;
+use App\Model\Acl\Role;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -45,7 +45,7 @@ class Tag
     /**
      * Role oprávněné zobrazit dokumenty v této kategorií.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="tags", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role", inversedBy="tags", cascade={"persist"})
      *
      * @var Collection|Role[]
      */

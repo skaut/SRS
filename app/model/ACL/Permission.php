@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Model\ACL;
+namespace App\Model\Acl;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -83,7 +83,7 @@ class Permission
     /**
      * Role s tímto oprávněním.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", mappedBy="permissions", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role", mappedBy="permissions", cascade={"persist"})
      *
      * @var Collection|Role[]
      */

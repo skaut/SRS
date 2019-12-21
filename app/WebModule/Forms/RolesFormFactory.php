@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\WebModule\Forms;
 
-use App\Model\ACL\Role;
-use App\Model\ACL\RoleRepository;
+use App\Model\Acl\Role;
+use App\Model\Acl\RoleRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
@@ -16,7 +16,6 @@ use App\Services\ApplicationService;
 use App\Services\SettingsService;
 use App\Utils\Validators;
 use DateTime;
-use Kdyby\Translation\Translator;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
@@ -63,7 +62,7 @@ class RolesFormFactory
     private $validators;
 
     /** @var AclService */
-    private $ACLService;
+    private $aclService;
 
     public function __construct(
         BaseFormFactory $baseFormFactory,
@@ -73,7 +72,7 @@ class RolesFormFactory
         ApplicationService $applicationService,
         ITranslator $translator,
         Validators $validators,
-        AclService $ACLService
+        AclService $aclService
     ) {
         $this->baseFormFactory    = $baseFormFactory;
         $this->userRepository     = $userRepository;
@@ -82,7 +81,7 @@ class RolesFormFactory
         $this->applicationService = $applicationService;
         $this->translator         = $translator;
         $this->validators         = $validators;
-        $this->ACLService         = $ACLService;
+        $this->aclService         = $aclService;
     }
 
     /**
@@ -100,7 +99,7 @@ class RolesFormFactory
         $form->addHidden('id');
 
         $rolesSelect = $form->addMultiSelect('roles', 'web.profile.roles')->setItems(
-            $this->ACLService->getRegisterableNowOrUsersOptionsWithCapacity($this->user)
+            $this->aclService->getRegisterableNowOrUsersOptionsWithCapacity($this->user)
         )
             ->addRule(Form::FILLED, 'web.profile.roles_empty')
             ->addRule([$this, 'validateRolesCapacities'], 'web.profile.roles_capacity_occupied')

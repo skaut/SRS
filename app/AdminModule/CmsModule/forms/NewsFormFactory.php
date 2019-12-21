@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\AdminModule\CMSModule\Forms;
+namespace App\AdminModule\CmsModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\Forms\BaseFormFactory;
-use App\Model\CMS\News;
-use App\Model\CMS\NewsRepository;
+use App\Model\Cms\News;
+use App\Model\Cms\NewsRepository;
 use DateTime;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;

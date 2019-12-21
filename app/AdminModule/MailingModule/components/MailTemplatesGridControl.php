@@ -7,7 +7,6 @@ namespace App\AdminModule\MailingModule\Components;
 use App\Model\Mailing\TemplateRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;

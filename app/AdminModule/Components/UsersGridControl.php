@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Components;
 
-use App\Model\ACL\Role;
-use App\Model\ACL\RoleRepository;
+use App\Model\Acl\Role;
+use App\Model\Acl\RoleRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
 use App\Model\Enums\SkautIsEventType;
@@ -38,7 +38,6 @@ use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Exception;
 use InvalidArgumentException;
-use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
@@ -94,7 +93,7 @@ class UsersGridControl extends Control
     private $excelExportService;
 
     /** @var AclService */
-    private $ACLService;
+    private $aclService;
 
     /** @var ApplicationService */
     private $applicationService;
@@ -121,7 +120,7 @@ class UsersGridControl extends Control
         PdfExportService $pdfExportService,
         ExcelExportService $excelExportService,
         Session $session,
-        AclService $ACLService,
+        AclService $aclService,
         ApplicationService $applicationService,
         UserService $userService,
         SkautIsEventEducationService $skautIsEventEducationService,
@@ -138,7 +137,7 @@ class UsersGridControl extends Control
         $this->roleRepository               = $roleRepository;
         $this->pdfExportService             = $pdfExportService;
         $this->excelExportService           = $excelExportService;
-        $this->ACLService                   = $ACLService;
+        $this->aclService                   = $aclService;
         $this->applicationService           = $applicationService;
         $this->userService                  = $userService;
         $this->skautIsEventEducationService = $skautIsEventEducationService;
@@ -181,7 +180,7 @@ class UsersGridControl extends Control
 
         $grid->addGroupMultiSelectAction(
             'admin.users.users_group_action_change_roles',
-            $this->ACLService->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED])
+            $this->aclService->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED])
         )
             ->onSelect[] = [$this, 'groupChangeRoles'];
 
@@ -230,7 +229,7 @@ class UsersGridControl extends Control
             ->setFilterText();
 
         $grid->addColumnText('roles', 'admin.users.users_roles', 'rolesText')
-            ->setFilterMultiSelect($this->ACLService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED]))
+            ->setFilterMultiSelect($this->aclService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED]))
             ->setCondition(static function ($qb, $values) : void {
                 $qb->join('u.roles', 'uR')
                     ->andWhere('uR.id IN (:rids)')

@@ -6,7 +6,7 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\Forms\BaseFormFactory;
-use App\Model\CMS\PageRepository;
+use App\Model\Cms\PageRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Services\FilesService;
@@ -14,7 +14,7 @@ use App\Services\SettingsService;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Utils\Strings;
-use Nextras\Forms\Rendering\Bs3FormRenderer;
+use Nextras\FormsRendering\Renderers\Bs3FormRenderer;
 use stdClass;
 use Throwable;
 

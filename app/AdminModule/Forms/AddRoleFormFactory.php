@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Forms;
 
-use App\Model\ACL\Role;
-use App\Model\ACL\RoleRepository;
+use App\Model\Acl\Role;
+use App\Model\Acl\RoleRepository;
 use App\Services\AclService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -28,15 +28,15 @@ class AddRoleFormFactory
     private $baseFormFactory;
 
     /** @var AclService */
-    private $ACLService;
+    private $aclService;
 
     /** @var RoleRepository */
     private $roleRepository;
 
-    public function __construct(BaseFormFactory $baseFormFactory, AclService $ACLService, RoleRepository $roleRepository)
+    public function __construct(BaseFormFactory $baseFormFactory, AclService $aclService, RoleRepository $roleRepository)
     {
         $this->baseFormFactory = $baseFormFactory;
-        $this->ACLService      = $ACLService;
+        $this->aclService      = $aclService;
         $this->roleRepository  = $roleRepository;
     }
 
@@ -51,10 +51,10 @@ class AddRoleFormFactory
 
         $form->addText('name', 'admin.acl.roles_name')
             ->addRule(Form::FILLED, 'admin.acl.roles_name_empty')
-            ->addRule(Form::IS_NOT_IN, 'admin.acl.roles_name_exists', $this->ACLService->findAllRoleNames())
+            ->addRule(Form::IS_NOT_IN, 'admin.acl.roles_name_exists', $this->aclService->findAllRoleNames())
             ->addRule(Form::NOT_EQUAL, 'admin.acl.roles_name_reserved', 'test');
 
-        $form->addSelect('parent', 'admin.acl.roles_parent', $this->ACLService->getRolesWithoutRolesOptions([]))
+        $form->addSelect('parent', 'admin.acl.roles_parent', $this->aclService->getRolesWithoutRolesOptions([]))
             ->setPrompt('')
             ->setAttribute('title', $form->getTranslator()->translate('admin.acl.roles_parent_note'));
 
@@ -123,6 +123,6 @@ class AddRoleFormFactory
             }
         }
 
-        $this->ACLService->saveRole($role);
+        $this->aclService->saveRole($role);
     }
 }

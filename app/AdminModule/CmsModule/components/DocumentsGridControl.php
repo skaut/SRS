@@ -2,17 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\AdminModule\CMSModule\Components;
+namespace App\AdminModule\CmsModule\Components;
 
-use App\Model\CMS\Document\Document;
-use App\Model\CMS\Document\DocumentRepository;
-use App\Model\CMS\Document\TagRepository;
+use App\Model\Cms\Document\Document;
+use App\Model\Cms\Document\DocumentRepository;
+use App\Model\Cms\Document\TagRepository;
 use App\Services\FilesService;
 use App\Utils\Helpers;
 use DateTime;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;

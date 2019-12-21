@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Mailing;
 
-use App\Model\ACL\Role;
+use App\Model\Acl\Role;
 use App\Model\Structure\Subevent;
 use App\Model\User\User;
 use DateTime;
@@ -29,7 +29,7 @@ class Mail
     /**
      * Role, kterým byl e-mail odeslán.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role")
+     * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role")
      *
      * @var Collection|Role[]
      */

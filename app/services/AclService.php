@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Model\ACL\PermissionRepository;
-use App\Model\ACL\Role;
-use App\Model\ACL\RoleRepository;
-use App\Model\ACL\SrsResourceRepository;
+use App\Model\Acl\PermissionRepository;
+use App\Model\Acl\Role;
+use App\Model\Acl\RoleRepository;
+use App\Model\Acl\SrsResourceRepository;
 use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Kdyby\Translation\Translator;
 use Nette;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
+use Nette\Localization\ITranslator;
 use Throwable;
 use function array_map;
 
@@ -36,7 +36,7 @@ class AclService
     /** @var SrsResourceRepository */
     private $resourceRepository;
 
-    /** @var Translator */
+    /** @var ITranslator */
     private $translator;
 
     /** @var Cache */
@@ -52,7 +52,7 @@ class AclService
         RoleRepository $roleRepository,
         PermissionRepository $permissionRepository,
         SrsResourceRepository $resourceRepository,
-        Translator $translator,
+        ITranslator $translator,
         IStorage $storage
     ) {
         $this->roleRepository       = $roleRepository;

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\AdminModule\CMSModule\Presenters;
+namespace App\AdminModule\CmsModule\Presenters;
 
-use App\AdminModule\CMSModule\Components\INewsGridControlFactory;
-use App\AdminModule\CMSModule\Components\NewsGridControl;
-use App\AdminModule\CMSModule\Forms\NewsFormFactory;
+use App\AdminModule\CmsModule\Components\INewsGridControlFactory;
+use App\AdminModule\CmsModule\Components\NewsGridControl;
+use App\AdminModule\CmsModule\Forms\NewsFormFactory;
 use App\AdminModule\Forms\BaseForm;
-use App\Model\CMS\NewsRepository;
+use App\Model\Cms\NewsRepository;
 use stdClass;
 
 /**
@@ -17,7 +17,7 @@ use stdClass;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class NewsPresenter extends CMSBasePresenter
+class NewsPresenter extends CmsBasePresenter
 {
     /**
      * @var INewsGridControlFactory

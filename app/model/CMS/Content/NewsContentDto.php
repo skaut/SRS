@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Model\CMS\Content;
+namespace App\Model\Cms\Content;
 
 /**
  * DTO obsahu s aktualitami.

@@ -2,15 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\AdminModule\CMSModule\Components;
+namespace App\AdminModule\CmsModule\Components;
 
-use App\Model\ACL\RoleRepository;
-use App\Model\CMS\Document\Tag;
-use App\Model\CMS\Document\TagRepository;
+use App\Model\Acl\RoleRepository;
+use App\Model\Cms\Document\Tag;
+use App\Model\Cms\Document\TagRepository;
 use App\Services\AclService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
@@ -37,7 +36,7 @@ class DocumentTagsGridControl extends Control
     private $roleRepository;
 
     /** @var AclService */
-    private $ACLService;
+    private $aclService;
 
     /** @var TagRepository */
     private $tagRepository;
@@ -45,14 +44,14 @@ class DocumentTagsGridControl extends Control
     public function __construct(
         ITranslator $translator,
         RoleRepository $roleRepository,
-        AclService $ACLService,
+        AclService $aclService,
         TagRepository $tagRepository
     ) {
         parent::__construct();
 
         $this->translator     = $translator;
         $this->roleRepository = $roleRepository;
-        $this->ACLService     = $ACLService;
+        $this->aclService     = $aclService;
         $this->tagRepository  = $tagRepository;
     }
 
@@ -87,7 +86,7 @@ class DocumentTagsGridControl extends Control
                 return count($this->roleRepository->findAll()) === $tag->getRoles()->count();
             });
 
-        $rolesOptions = $this->ACLService->getRolesWithoutRolesOptions([]);
+        $rolesOptions = $this->aclService->getRolesWithoutRolesOptions([]);
 
         $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function (Container $container) use ($rolesOptions) : void {
             $container->addText('name', '')

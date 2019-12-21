@@ -6,8 +6,8 @@ namespace App\Services;
 
 use App\Mailing\SrsMail;
 use App\Mailing\SrsMailData;
-use App\Model\ACL\Role;
-use App\Model\ACL\RoleRepository;
+use App\Model\Acl\Role;
+use App\Model\Acl\RoleRepository;
 use App\Model\Mailing\Mail;
 use App\Model\Mailing\MailRepository;
 use App\Model\Mailing\TemplateRepository;
@@ -20,8 +20,8 @@ use App\Model\User\UserRepository;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Kdyby\Translation\Translator;
 use Nette;
+use Nette\Localization\ITranslator;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 use Ublaboo\Mailing\MailFactory;
@@ -58,7 +58,7 @@ class MailService
     /** @var TemplateRepository */
     private $templateRepository;
 
-    /** @var Translator */
+    /** @var ITranslator */
     private $translator;
 
     public function __construct(
@@ -69,7 +69,7 @@ class MailService
         RoleRepository $roleRepository,
         SubeventRepository $subeventRepository,
         TemplateRepository $templateRepository,
-        Translator $translator
+        ITranslator $translator
     ) {
         $this->mailFactory        = $mailFactory;
         $this->settingsService    = $settingsService;

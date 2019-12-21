@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
-use App\Model\CMS\Content\HtmlContentDto;
+use App\Model\Cms\Content\HtmlContentDto;
 use Nette\Application\UI\Control;
 
 /**

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\AdminModule\CMSModule\Presenters;
+namespace App\AdminModule\CmsModule\Presenters;
 
-use App\AdminModule\CMSModule\Components\IPagesGridControlFactory;
-use App\AdminModule\CMSModule\Components\PagesGridControl;
-use App\AdminModule\CMSModule\Forms\IPageFormFactory;
-use App\AdminModule\CMSModule\Forms\PageForm;
-use App\Model\CMS\Content\Content;
-use App\Model\CMS\PageRepository;
+use App\AdminModule\CmsModule\Components\IPagesGridControlFactory;
+use App\AdminModule\CmsModule\Components\PagesGridControl;
+use App\AdminModule\CmsModule\Forms\IPageFormFactory;
+use App\AdminModule\CmsModule\Forms\PageForm;
+use App\Model\Cms\Content\Content;
+use App\Model\Cms\PageRepository;
 
 /**
  * Presenter starající se o správu stránek.
@@ -17,7 +17,7 @@ use App\Model\CMS\PageRepository;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class PagesPresenter extends CMSBasePresenter
+class PagesPresenter extends CmsBasePresenter
 {
     /**
      * @var IPagesGridControlFactory

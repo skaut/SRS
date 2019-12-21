@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Model\ACL\Role;
+use App\Model\Acl\Role;
 use App\Model\Program\Block;
 use App\Model\Program\CategoryRepository;
 use App\Model\Program\ProgramRepository;
@@ -23,8 +23,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Exception;
 use InvalidArgumentException;
-use Kdyby\Translation\Translator;
 use Nette;
+use Nette\Localization\ITranslator;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
@@ -43,7 +43,7 @@ class ExcelExportService
     /** @var Spreadsheet */
     private $spreadsheet;
 
-    /** @var Translator */
+    /** @var ITranslator */
     private $translator;
 
     /** @var CustomInputRepository */
@@ -62,7 +62,7 @@ class ExcelExportService
     private $programRepository;
 
     public function __construct(
-        Translator $translator,
+        ITranslator $translator,
         CustomInputRepository $customInputRepository,
         UserService $userService,
         SubeventRepository $subeventRepository,

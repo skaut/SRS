@@ -11,13 +11,13 @@
                     <li n:class="$presenter->isLinkCurrent(':Admin:Dashboard:*') ? active">
                         <a href="{plink :Admin:Dashboard:default}">{_admin.menu.dashboard}</a>
                     </li>
-                    {if $user->isAllowed($resourceCMS, $permissionManage)}
+                    {if $user->isAllowed($resourceCms, $permissionManage)}
                         <li n:class="
-                                $presenter->isLinkCurrent(':Admin:CMS:Pages:*') ||
-                                $presenter->isLinkCurrent(':Admin:CMS:News:*') ||
-                                $presenter->isLinkCurrent(':Admin:CMS:Documents:*') ||
-                                $presenter->isLinkCurrent(':Admin:CMS:Faq:*') ? active">
-                            <a href="{plink :Admin:CMS:Pages:default}">{_admin.menu.cms}</a>
+                                $presenter->isLinkCurrent(':Admin:Cms:Pages:*') ||
+                                $presenter->isLinkCurrent(':Admin:Cms:News:*') ||
+                                $presenter->isLinkCurrent(':Admin:Cms:Documents:*') ||
+                                $presenter->isLinkCurrent(':Admin:Cms:Faq:*') ? active">
+                            <a href="{plink :Admin:Cms:Pages:default}">{_admin.menu.cms}</a>
                         </li>
                     {/if}
                     {if $user->isAllowed($resourceProgram, $permissionAccess)}
@@ -39,7 +39,7 @@
                             <a href="{plink :Admin:Payments:Payments:default}">{_admin.menu.payments}</a>
                         </li>
                     {/if}
-                    {if $user->isAllowed($resourceACL, $permissionManage)}
+                    {if $user->isAllowed($resourceAcl, $permissionManage)}
                         <li n:class="$presenter->isLinkCurrent(':Admin:Acl:*') ? active">
                             <a href="{plink :Admin:Acl:default}">{_admin.menu.acl}</a>
                         </li>

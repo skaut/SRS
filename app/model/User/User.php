@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Model\User;
 
-use App\Model\ACL\Permission;
-use App\Model\ACL\Role;
-use App\Model\ACL\SrsResource;
+use App\Model\Acl\Permission;
+use App\Model\Acl\Role;
+use App\Model\Acl\SrsResource;
 use App\Model\Enums\ApplicationState;
 use App\Model\Program\Block;
 use App\Model\Program\Program;
@@ -284,7 +284,7 @@ class User
     /**
      * Role.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", inversedBy="users", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role", inversedBy="users", cascade={"persist"})
      *
      * @var Collection|Role[]
      */

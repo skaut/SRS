@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\AdminModule\PaymentsModule\Presenters;
 
 use App\AdminModule\Presenters\AdminBasePresenter;
-use App\Model\ACL\Permission;
-use App\Model\ACL\SrsResource;
+use App\Model\Acl\Permission;
+use App\Model\Acl\SrsResource;
 use App\Model\Settings\SettingsException;
 use Nette\Application\AbortException;
 use Throwable;

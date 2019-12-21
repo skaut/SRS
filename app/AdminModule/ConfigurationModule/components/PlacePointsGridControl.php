@@ -8,7 +8,6 @@ use App\Model\Settings\Place\PlacePoint;
 use App\Model\Settings\Place\PlacePointRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
@@ -30,7 +29,7 @@ class PlacePointsGridControl extends Control
     /** @var PlacePointRepository */
     private $placePointRepository;
 
-    public function __construct(Translator $translator, PlacePointRepository $placePointRepository)
+    public function __construct(ITranslator $translator, PlacePointRepository $placePointRepository)
     {
         parent::__construct();
 

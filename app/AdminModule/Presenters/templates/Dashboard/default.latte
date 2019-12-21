@@ -1,6 +1,6 @@
 {block main}
     <div class="dashboard">
-        {if $user->isAllowed($resourceCMS, $permissionManage)}
+        {if $user->isAllowed($resourceCms, $permissionManage)}
             <div class="row">
                 <div class="col-sm-12">
                     <div class="panel panel-default">
@@ -8,7 +8,7 @@
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-sm-2 col-xs-2">
-                                    <a href="{plink CMS:Pages:default}" class="btn btn-default btn-sm btn-block">
+                                    <a href="{plink Cms:Pages:default}" class="btn btn-default btn-sm btn-block">
                                         <span class="fa fa-2x fa-file-text-o"></span>
                                         <br>
                                         {_admin.cms.menu_pages}
@@ -16,7 +16,7 @@
                                 </div>
 
                                 <div class="col-sm-2 col-xs-2">
-                                    <a href="{plink CMS:News:default}" class="btn btn-default btn-sm btn-block">
+                                    <a href="{plink Cms:News:default}" class="btn btn-default btn-sm btn-block">
                                         <span class="fa fa-2x fa-newspaper-o"></span>
                                         <br>
                                         {_admin.cms.menu_news}
@@ -24,7 +24,7 @@
                                 </div>
 
                                 <div class="col-sm-2 col-xs-2">
-                                    <a href="{plink CMS:Documents:default}" class="btn btn-default btn-sm btn-block">
+                                    <a href="{plink Cms:Documents:default}" class="btn btn-default btn-sm btn-block">
                                         <span class="fa fa-2x fa-files-o"></span>
                                         <br>
                                         {_admin.cms.menu_documents}
@@ -32,7 +32,7 @@
                                 </div>
 
                                 <div class="col-sm-2 col-xs-2">
-                                    <a href="{plink CMS:Faq:default}" class="btn btn-default btn-sm btn-block">
+                                    <a href="{plink Cms:Faq:default}" class="btn btn-default btn-sm btn-block">
                                         <span class="fa fa-2x fa-comment-o"></span>
                                         <br>
                                         {_admin.cms.menu_faq}
@@ -138,7 +138,7 @@
             </div>
         {/if}
 
-        {if $user->isAllowed($resourceACL, $permissionManage)}
+        {if $user->isAllowed($resourceAcl, $permissionManage)}
             <div class="row">
                 <div class="col-sm-12">
                     <div class="panel panel-default">

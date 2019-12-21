@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\AdminModule\CMSModule\Forms;
+namespace App\AdminModule\CmsModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\Forms\BaseFormFactory;
-use App\Model\CMS\Faq;
-use App\Model\CMS\FaqRepository;
+use App\Model\Cms\Faq;
+use App\Model\Cms\FaqRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use Doctrine\ORM\NonUniqueResultException;

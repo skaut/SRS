@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\WebModule\Forms;
 
-use App\Model\ACL\Role;
-use App\Model\ACL\RoleRepository;
+use App\Model\Acl\Role;
+use App\Model\Acl\RoleRepository;
 use App\Model\Enums\Sex;
 use App\Model\Settings\CustomInput\CustomCheckbox;
 use App\Model\Settings\CustomInput\CustomFile;
@@ -34,7 +34,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use InvalidArgumentException;
-use Kdyby\Translation\Translator;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
@@ -103,7 +102,7 @@ class ApplicationFormFactory
     private $subeventRepository;
 
     /** @var AclService */
-    private $ACLService;
+    private $aclService;
 
     /** @var ApplicationService */
     private $applicationService;
@@ -129,7 +128,7 @@ class ApplicationFormFactory
         SkautIsService $skautIsService,
         SettingsService $settingsService,
         SubeventRepository $subeventRepository,
-        AclService $ACLService,
+        AclService $aclService,
         ApplicationService $applicationService,
         Validators $validators,
         FilesService $filesService,
@@ -144,7 +143,7 @@ class ApplicationFormFactory
         $this->skautIsService             = $skautIsService;
         $this->settingsService            = $settingsService;
         $this->subeventRepository         = $subeventRepository;
-        $this->ACLService                 = $ACLService;
+        $this->aclService                 = $aclService;
         $this->applicationService         = $applicationService;
         $this->validators                 = $validators;
         $this->filesService               = $filesService;
@@ -448,7 +447,7 @@ class ApplicationFormFactory
      */
     private function addRolesSelect(BaseForm $form) : void
     {
-        $registerableOptions = $this->ACLService->getRegisterableNowOptionsWithCapacity();
+        $registerableOptions = $this->aclService->getRegisterableNowOptionsWithCapacity();
 
         $rolesSelect = $form->addMultiSelect('roles', 'web.application_content.roles')->setItems(
             $registerableOptions

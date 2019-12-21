@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\AdminModule\CMSModule\Forms;
+namespace App\AdminModule\CmsModule\Forms;
 
 /**
  * Factory komponenty s formulářem pro úpravu obsahu stránky.

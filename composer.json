@@ -34,6 +34,7 @@
         "contributte/translation": "0.4.1",
 
         "nettrine/orm": "^0.4",
+        "nettrine/cache": "^0.1",
         "nettrine/migrations": "^0.6",
 
         "dg/mysql-dump": "^1.5",
@@ -76,7 +77,6 @@
         "squizlabs/php_codesniffer": "^3.2",
         "roave/security-advisories": "dev-master",
         "doctrine/coding-standard": "^6.0",
-        "php-vcr/php-vcr": "^1.4",
         "contributte/codeception": "dev-master",
         "nextras/mail-panel": "^2.5"
     },

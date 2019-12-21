@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Model\ACL\Role;
-use App\Model\ACL\RoleRepository;
+use App\Model\Acl\Role;
+use App\Model\Acl\RoleRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\MaturityType;
 use App\Model\Enums\PaymentState;
@@ -33,8 +33,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use InvalidArgumentException;
-use Kdyby\Translation\Translator;
 use Nette;
+use Nette\Localization\ITranslator;
 use Nettrine\ORM\EntityManagerDecorator;
 use ReflectionException;
 use Throwable;
@@ -70,7 +70,7 @@ class ApplicationService
     private $userRepository;
 
     /** @var AclService */
-    private $ACLService;
+    private $aclService;
 
     /** @var RoleRepository */
     private $roleRepository;
@@ -93,7 +93,7 @@ class ApplicationService
     /** @var UserService */
     private $userService;
 
-    /** @var Translator */
+    /** @var ITranslator */
     private $translator;
 
     /** @var PaymentRepository */
@@ -104,7 +104,7 @@ class ApplicationService
         SettingsService $settingsService,
         ApplicationRepository $applicationRepository,
         UserRepository $userRepository,
-        AclService $ACLService,
+        AclService $aclService,
         RoleRepository $roleRepository,
         SubeventRepository $subeventRepository,
         DiscountService $discountService,
@@ -112,14 +112,14 @@ class ApplicationService
         ProgramService $programService,
         MailService $mailService,
         UserService $userService,
-        Translator $translator,
+        ITranslator $translator,
         PaymentRepository $paymentRepository
     ) {
         $this->em                       = $em;
         $this->settingsService          = $settingsService;
         $this->applicationRepository    = $applicationRepository;
         $this->userRepository           = $userRepository;
-        $this->ACLService               = $ACLService;
+        $this->aclService               = $aclService;
         $this->roleRepository           = $roleRepository;
         $this->subeventRepository       = $subeventRepository;
         $this->discountService          = $discountService;
@@ -917,7 +917,7 @@ class ApplicationService
     {
         foreach ($roles as $role) {
             $this->roleRepository->incrementOccupancy($role);
-            $this->ACLService->saveRole($role);
+            $this->aclService->saveRole($role);
         }
     }
 
@@ -930,7 +930,7 @@ class ApplicationService
     {
         foreach ($roles as $role) {
             $this->roleRepository->decrementOccupancy($role);
-            $this->ACLService->saveRole($role);
+            $this->aclService->saveRole($role);
         }
     }
 

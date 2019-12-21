@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Router;
 
-use App\Model\CMS\PageDto;
+use App\Model\Cms\PageDto;
 use App\Services\CmsService;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Nette\Application\Routers\Route;
@@ -48,7 +48,7 @@ final class RouterFactory
         ]);
 
         $router[] = new Route('admin/cms/<presenter>/<action>[/<id>][/<area>]', [
-            'module' => 'Admin:CMS',
+            'module' => 'Admin:Cms',
             'presenter' => 'Page',
             'action' => 'default',
             'id' => null,

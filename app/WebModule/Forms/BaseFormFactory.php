@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace App\WebModule\Forms;
 
-use Kdyby\Translation\Translator;
 use Nette;
 use Nette\Localization\ITranslator;
-use Nextras\Forms\Rendering\Bs3FormRenderer;
 
 /**
  * BaseFormFactory pro WebModule.

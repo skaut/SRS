@@ -15,7 +15,6 @@ use App\Services\SettingsService;
 use Nette;
 use Nette\Application\LinkGenerator;
 use Nette\Application\UI\Form;
-use Nextras\Forms\Rendering\Bs3FormRenderer;
 use stdClass;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;

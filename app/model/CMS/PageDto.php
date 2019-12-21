@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Model\CMS;
+namespace App\Model\Cms;
 
-use App\Model\CMS\Content\ContentDto;
+use App\Model\Cms\Content\ContentDto;
 
 class PageDto
 {

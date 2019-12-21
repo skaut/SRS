@@ -9,7 +9,8 @@ session:
     expiration: 14 days
 
 services:
-    router: App\Router\RouterFactory::createRouter
+    - App\Router\RouterFactory
+    router: @App\Router\RouterFactory::createRouter
     authenticator: App\Services\Authenticator
     console.application: Contributte\Console\Application
     - App\Services\Authorizator
@@ -36,32 +37,32 @@ services:
     - App\Utils\Validators
 
     permissionRepository:
-        class: App\Model\ACL\PermissionRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\ACL\Permission)
+        class: App\Model\Acl\PermissionRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Acl\Permission)
     resourceRepository:
-        class: App\Model\ACL\SrsResourceRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\ACL\SrsResource)
+        class: App\Model\Acl\SrsResourceRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Acl\SrsResource)
     roleRepository:
-        class: App\Model\ACL\RoleRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\ACL\Role)
+        class: App\Model\Acl\RoleRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Acl\Role)
     contentRepository:
-        class: App\Model\CMS\Content\ContentRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\CMS\Content\Content)
+        class: App\Model\Cms\Content\ContentRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Cms\Content\Content)
     documentRepository:
-        class: App\Model\CMS\Document\DocumentRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\CMS\Document\Document)
+        class: App\Model\Cms\Document\DocumentRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Cms\Document\Document)
     tagRepository:
-        class: App\Model\CMS\Document\TagRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\CMS\Document\Tag)
+        class: App\Model\Cms\Document\TagRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Cms\Document\Tag)
     faqRepository:
-        class: App\Model\CMS\FaqRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\CMS\Faq)
+        class: App\Model\Cms\FaqRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Cms\Faq)
     newsRepository:
-        class: App\Model\CMS\NewsRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\CMS\News)
+        class: App\Model\Cms\NewsRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Cms\News)
     pageRepository:
-        class: App\Model\CMS\PageRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\CMS\Page)
+        class: App\Model\Cms\PageRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Cms\Page)
     mailRepository:
         class: App\Model\Mailing\MailRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Mailing\Mail)
@@ -147,11 +148,11 @@ services:
     - App\AdminModule\Components\IApplicationsGridControlFactory
     - App\AdminModule\Components\IRolesGridControlFactory
     - App\AdminModule\Components\IUsersGridControlFactory
-    - App\AdminModule\CMSModule\Components\IDocumentsGridControlFactory
-    - App\AdminModule\CMSModule\Components\IDocumentTagsGridControlFactory
-    - App\AdminModule\CMSModule\Components\IFaqGridControlFactory
-    - App\AdminModule\CMSModule\Components\INewsGridControlFactory
-    - App\AdminModule\CMSModule\Components\IPagesGridControlFactory
+    - App\AdminModule\CmsModule\Components\IDocumentsGridControlFactory
+    - App\AdminModule\CmsModule\Components\IDocumentTagsGridControlFactory
+    - App\AdminModule\CmsModule\Components\IFaqGridControlFactory
+    - App\AdminModule\CmsModule\Components\INewsGridControlFactory
+    - App\AdminModule\CmsModule\Components\IPagesGridControlFactory
     - App\AdminModule\ConfigurationModule\Components\ICustomInputsGridControlFactory
     - App\AdminModule\ConfigurationModule\Components\IDiscountsGridControlFactory
     - App\AdminModule\ConfigurationModule\Components\IPlacePointsGridControlFactory
@@ -172,12 +173,12 @@ services:
     - App\AdminModule\Forms\EditRoleFormFactory
     - App\AdminModule\Forms\EditUserPersonalDetailsFormFactory
     - App\AdminModule\Forms\EditUserSeminarFormFactory
-    - App\AdminModule\CMSModule\Forms\FaqFormFactory
+    - App\AdminModule\CmsModule\Forms\FaqFormFactory
     pageFormFactory:
-        factory: App\AdminModule\CMSModule\Forms\PageForm(%id%, %area%, ...)
-        implement: App\AdminModule\CMSModule\Forms\IPageFormFactory
+        factory: App\AdminModule\CmsModule\Forms\PageForm(%id%, %area%, ...)
+        implement: App\AdminModule\CmsModule\Forms\IPageFormFactory
         parameters: [id, area]
-    - App\AdminModule\CMSModule\Forms\NewsFormFactory
+    - App\AdminModule\CmsModule\Forms\NewsFormFactory
     - App\AdminModule\ConfigurationModule\Forms\ApplicationFormFactory
     - App\AdminModule\ConfigurationModule\Forms\BankFormFactory
     - App\AdminModule\ConfigurationModule\Forms\CustomInputFormFactory
@@ -212,6 +213,9 @@ extensions:
     dbal: Nettrine\DBAL\DI\DbalExtension
     dbal.console: Nettrine\DBAL\DI\DbalConsoleExtension
 
+    # Cache
+    nettrine.cache: Nettrine\Cache\DI\CacheExtension
+
     # ORM
     orm: Nettrine\ORM\DI\OrmExtension
     orm.annotations: Nettrine\ORM\DI\OrmAnnotationsExtension
@@ -222,10 +226,6 @@ extensions:
     skautis: Skautis\Nette\SkautisExtension
     translation: Contributte\Translation\DI\TranslationExtension
     mailing: Ublaboo\Mailing\DI\MailingExtension
-
-latte:
-    macros:
-        - Nextras\Forms\Bridges\Latte\Macros\BS3InputMacros
 
 console:
     name: SRS

@@ -11,8 +11,8 @@ use App\ApiModule\Dto\Schedule\CalendarConfigDto;
 use App\ApiModule\Dto\Schedule\ProgramDetailDto;
 use App\ApiModule\Dto\Schedule\ProgramSaveDto;
 use App\ApiModule\Dto\Schedule\ResponseDto;
-use App\Model\ACL\Permission;
-use App\Model\ACL\SrsResource;
+use App\Model\Acl\Permission;
+use App\Model\Acl\SrsResource;
 use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Block;
 use App\Model\Program\BlockRepository;
@@ -28,7 +28,6 @@ use App\Services\ProgramService;
 use App\Services\SettingsService;
 use DateInterval;
 use Exception;
-use Kdyby\Translation\Translator;
 use Nette;
 use Nette\Localization\ITranslator;
 use Throwable;
@@ -72,7 +71,7 @@ class ScheduleService
     private $programService;
 
     public function __construct(
-        Translator $translator,
+        ITranslator $translator,
         UserRepository $userRepository,
         ProgramRepository $programRepository,
         BlockRepository $blockRepository,

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\User;
 
-use App\Model\ACL\Role;
+use App\Model\Acl\Role;
 use App\Model\Enums\ApplicationState;
 use App\Model\Payment\Payment;
 use App\Model\Structure\Subevent;
@@ -73,7 +73,7 @@ abstract class Application
     /**
      * Role.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role", cascade={"persist"})
      *
      * @var Collection|Role[]
      */

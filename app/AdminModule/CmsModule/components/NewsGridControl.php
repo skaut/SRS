@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\AdminModule\CMSModule\Components;
+namespace App\AdminModule\CmsModule\Components;
 
-use App\Model\CMS\NewsRepository;
+use App\Model\Cms\NewsRepository;
 use App\Utils\Helpers;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Model\ACL\Role;
-use App\Model\ACL\RoleRepository;
+use App\Model\Acl\Role;
+use App\Model\Acl\RoleRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use DateTime;
@@ -16,6 +16,9 @@ use Nette;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 use Nette\Security as NS;
+use Nette\Security\IAuthenticator;
+use Nette\Security\Identity;
+use Nette\Security\IIdentity;
 use stdClass;
 
 /**
@@ -25,7 +28,7 @@ use stdClass;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
-class Authenticator implements NS\IAuthenticator
+class Authenticator implements IAuthenticator
 {
     use Nette\SmartObject;
 
@@ -68,7 +71,7 @@ class Authenticator implements NS\IAuthenticator
      * @throws OptimisticLockException
      * @throws Exception
      */
-    public function authenticate(array $credentials) : NS\Identity
+    public function authenticate(array $credentials) : IIdentity
     {
         $skautISUser = $this->skautIsService->getUserDetail();
 
@@ -100,7 +103,7 @@ class Authenticator implements NS\IAuthenticator
         //invalidace cache roli ze skautIS
         $this->userRolesCache->remove($user->getSkautISUserId());
 
-        return new NS\Identity($user->getId(), $netteRoles, ['firstLogin' => $firstLogin]);
+        return new Identity($user->getId(), $netteRoles, ['firstLogin' => $firstLogin]);
     }
 
     /**
@@ -176,7 +179,7 @@ class Authenticator implements NS\IAuthenticator
             $netteRoles[$testedRole->getId()] = $testedRole->getName();
         }
 
-        /** @var NS\Identity $identity */
+        /** @var Identity $identity */
         $identity = $user->identity;
         $identity->setRoles($netteRoles);
     }

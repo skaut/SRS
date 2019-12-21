@@ -6,8 +6,8 @@ namespace App\AdminModule\MailingModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\Forms\BaseFormFactory;
-use App\Model\ACL\Role;
-use App\Model\ACL\RoleRepository;
+use App\Model\Acl\Role;
+use App\Model\Acl\RoleRepository;
 use App\Model\Settings\SettingsException;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\UserRepository;
@@ -56,7 +56,7 @@ class SendFormFactory
     private $subeventRepository;
 
     /** @var AclService */
-    private $ACLService;
+    private $aclService;
 
     /** @var SubeventService */
     private $subeventService;
@@ -67,7 +67,7 @@ class SendFormFactory
         RoleRepository $roleRepository,
         UserRepository $userRepository,
         SubeventRepository $subeventRepository,
-        AclService $ACLService,
+        AclService $aclService,
         SubeventService $subeventService
     ) {
         $this->baseFormFactory    = $baseFormFactory;
@@ -75,7 +75,7 @@ class SendFormFactory
         $this->roleRepository     = $roleRepository;
         $this->userRepository     = $userRepository;
         $this->subeventRepository = $subeventRepository;
-        $this->ACLService         = $ACLService;
+        $this->aclService         = $aclService;
         $this->subeventService    = $subeventService;
     }
 
@@ -89,7 +89,7 @@ class SendFormFactory
         $recipientRolesMultiSelect = $form->addMultiSelect(
             'recipientRoles',
             'admin.mailing.send.recipient_roles',
-            $this->ACLService->getRolesWithoutRolesOptionsWithApprovedUsersCount([Role::GUEST, Role::UNAPPROVED])
+            $this->aclService->getRolesWithoutRolesOptionsWithApprovedUsersCount([Role::GUEST, Role::UNAPPROVED])
         );
 
         $recipientSubeventsMultiSelect = $form->addMultiSelect(

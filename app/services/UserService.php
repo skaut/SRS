@@ -6,8 +6,8 @@ namespace App\Services;
 
 use App\Model\Enums\PaymentType;
 use App\Model\User\User;
-use Kdyby\Translation\Translator;
 use Nette;
+use Nette\Localization\ITranslator;
 
 /**
  * Služba pro správu uživatelů.
@@ -18,10 +18,10 @@ class UserService
 {
     use Nette\SmartObject;
 
-    /** @var Translator */
+    /** @var ITranslator */
     private $translator;
 
-    public function __construct(Translator $translator)
+    public function __construct(ITranslator $translator)
     {
         $this->translator = $translator;
     }

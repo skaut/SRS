@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Forms;
 
-use App\Model\ACL\Role;
-use App\Model\ACL\RoleRepository;
+use App\Model\Acl\Role;
+use App\Model\Acl\RoleRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\FilesService;

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Model\ACL\Permission;
-use App\Model\ACL\Role;
-use App\Model\ACL\SrsResource;
+use App\Model\Acl\Permission;
+use App\Model\Acl\Role;
+use App\Model\Acl\SrsResource;
 use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Enums\ProgramRegistrationType;
 use App\Model\Mailing\Template;

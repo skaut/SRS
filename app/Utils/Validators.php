@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
-use App\Model\ACL\Role;
-use App\Model\ACL\RoleRepository;
+use App\Model\Acl\Role;
+use App\Model\Acl\RoleRepository;
 use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Block;
 use App\Model\Program\ProgramRepository;

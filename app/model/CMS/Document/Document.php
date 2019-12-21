@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Model\CMS\Document;
+namespace App\Model\Cms\Document;
 
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;

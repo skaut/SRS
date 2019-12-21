@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Model\CMS\Content;
+namespace App\Model\Cms\Content;
 
 use App\AdminModule\Forms\BaseForm;
-use App\Model\ACL\Role;
-use App\Model\ACL\RoleRepository;
-use App\Model\CMS\Page;
+use App\Model\Acl\Role;
+use App\Model\Acl\RoleRepository;
+use App\Model\Cms\Page;
 use App\Model\Page\PageException;
 use App\Services\AclService;
 use App\Utils\Helpers;
@@ -32,7 +32,7 @@ class UsersContent extends Content implements IContent
     /**
      * Role, jejichž uživatelé budou vypsáni.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\ACL\Role")
+     * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role")
      *
      * @var Collection|Role[]
      */
@@ -42,7 +42,7 @@ class UsersContent extends Content implements IContent
     private $roleRepository;
 
     /** @var AclService */
-    private $ACLService;
+    private $aclService;
 
     /**
      * @throws PageException
@@ -58,9 +58,9 @@ class UsersContent extends Content implements IContent
         $this->roleRepository = $roleRepository;
     }
 
-    public function injectACLService(AclService $ACLService) : void
+    public function injectAclService(AclService $aclService) : void
     {
-        $this->ACLService = $ACLService;
+        $this->AclService = $aclService;
     }
 
     /**
@@ -95,7 +95,7 @@ class UsersContent extends Content implements IContent
         $formContainer->addMultiSelect(
             'roles',
             'admin.cms.pages_content_users_roles',
-            $this->ACLService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED])
+            $this->aclService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED])
         )
             ->setDefaultValue($this->roleRepository->findRolesIds($this->roles));
 

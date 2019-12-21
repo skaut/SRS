@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\InstallModule\Presenters;
 
 use App\Presenters\BasePresenter;
-use Kdyby\Translation\Translator;
 use Nette\Localization\ITranslator;
 use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\JavaScriptLoader;

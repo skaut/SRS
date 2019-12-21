@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Forms;
 
-use App\Model\ACL\Permission;
-use App\Model\ACL\PermissionRepository;
-use App\Model\ACL\Role;
-use App\Model\ACL\RoleRepository;
-use App\Model\ACL\SrsResource;
-use App\Model\CMS\PageRepository;
+use App\Model\Acl\Permission;
+use App\Model\Acl\PermissionRepository;
+use App\Model\Acl\Role;
+use App\Model\Acl\RoleRepository;
+use App\Model\Acl\SrsResource;
+use App\Model\Cms\PageRepository;
 use App\Services\AclService;
 use App\Services\ProgramService;
 use Doctrine\ORM\NonUniqueResultException;
@@ -48,7 +48,7 @@ class EditRoleFormFactory
     private $em;
 
     /** @var AclService */
-    private $ACLService;
+    private $aclService;
 
     /** @var RoleRepository */
     private $roleRepository;
@@ -65,7 +65,7 @@ class EditRoleFormFactory
     public function __construct(
         BaseFormFactory $baseFormFactory,
         EntityManagerDecorator $em,
-        AclService $ACLService,
+        AclService $aclService,
         RoleRepository $roleRepository,
         PageRepository $pageRepository,
         PermissionRepository $permissionRepository,
@@ -73,7 +73,7 @@ class EditRoleFormFactory
     ) {
         $this->baseFormFactory      = $baseFormFactory;
         $this->em                   = $em;
-        $this->ACLService           = $ACLService;
+        $this->aclService           = $aclService;
         $this->roleRepository       = $roleRepository;
         $this->pageRepository       = $pageRepository;
         $this->permissionRepository = $permissionRepository;
@@ -143,7 +143,7 @@ class EditRoleFormFactory
             ->addCondition(Form::FILLED)
             ->addRule([$this, 'validateRedirectAllowed'], 'admin.acl.roles_redirect_after_login_restricted', [$allowedPages]);
 
-        $rolesOptions = $this->ACLService->getRolesWithoutRoleOptions($this->role->getId());
+        $rolesOptions = $this->aclService->getRolesWithoutRoleOptions($this->role->getId());
 
         $incompatibleRolesSelect = $form->addMultiSelect('incompatibleRoles', 'admin.acl.roles_incompatible_roles', $rolesOptions);
 
@@ -231,7 +231,7 @@ class EditRoleFormFactory
                 $this->role->setFee($values->fee);
             }
 
-            $this->ACLService->saveRole($this->role);
+            $this->aclService->saveRole($this->role);
 
             $this->programService->updateUsersPrograms($this->role->getUsers());
         });

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\AdminModule\CMSModule\Presenters;
+namespace App\AdminModule\CmsModule\Presenters;
 
-use App\AdminModule\CMSModule\Components\DocumentsGridControl;
-use App\AdminModule\CMSModule\Components\DocumentTagsGridControl;
-use App\AdminModule\CMSModule\Components\IDocumentsGridControlFactory;
-use App\AdminModule\CMSModule\Components\IDocumentTagsGridControlFactory;
+use App\AdminModule\CmsModule\Components\DocumentsGridControl;
+use App\AdminModule\CmsModule\Components\DocumentTagsGridControl;
+use App\AdminModule\CmsModule\Components\IDocumentsGridControlFactory;
+use App\AdminModule\CmsModule\Components\IDocumentTagsGridControlFactory;
 
 /**
  * Presenter starající se o správu dokumentů.
@@ -15,7 +15,7 @@ use App\AdminModule\CMSModule\Components\IDocumentTagsGridControlFactory;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class DocumentsPresenter extends CMSBasePresenter
+class DocumentsPresenter extends CmsBasePresenter
 {
     /**
      * @var IDocumentsGridControlFactory

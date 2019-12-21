@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace App\AdminModule\CMSModule\Presenters;
+namespace App\AdminModule\CmsModule\Presenters;
 
 use App\AdminModule\Presenters\AdminBasePresenter;
-use App\Model\ACL\Permission;
-use App\Model\ACL\SrsResource;
+use App\Model\Acl\Permission;
+use App\Model\Acl\SrsResource;
 use App\Model\Settings\SettingsException;
 use Nette\Application\AbortException;
 use Throwable;
 
 /**
- * BasePresenter pro CMSModule.
+ * BasePresenter pro CmsModule.
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-abstract class CMSBasePresenter extends AdminBasePresenter
+abstract class CmsBasePresenter extends AdminBasePresenter
 {
     /** @var string */
     protected $resource = SrsResource::CMS;

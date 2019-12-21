@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Model\ACL;
+namespace App\Model\Acl;
 
-use App\Model\CMS\Document\Tag;
-use App\Model\CMS\Page;
+use App\Model\Cms\Document\Tag;
+use App\Model\Cms\Page;
 use App\Model\Program\Category;
 use App\Model\User\User;
 use DateTime;
@@ -123,7 +123,7 @@ class Role
     /**
      * Stránky, ke kterým má role přístup.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\CMS\Page", mappedBy="roles", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="\App\Model\Cms\Page", mappedBy="roles", cascade={"persist"})
      *
      * @var Collection|Page[]
      */
@@ -276,7 +276,7 @@ class Role
     /**
      * Kategorie dokumentů, ke kterým má role přístup.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\CMS\Document\Tag", mappedBy="roles", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="\App\Model\Cms\Document\Tag", mappedBy="roles", cascade={"persist"})
      *
      * @var Collection|Tag[]
      */

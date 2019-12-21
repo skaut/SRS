@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Forms;
 
-use App\Model\ACL\Role;
-use App\Model\ACL\RoleRepository;
+use App\Model\Acl\Role;
+use App\Model\Acl\RoleRepository;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\CustomInput\CustomCheckbox;
@@ -90,7 +90,7 @@ class EditUserSeminarFormFactory
     private $settingsService;
 
     /** @var AclService */
-    private $ACLService;
+    private $aclService;
 
     public function __construct(
         BaseFormFactory $baseFormFactory,
@@ -104,7 +104,7 @@ class EditUserSeminarFormFactory
         FilesService $filesService,
         MailService $mailService,
         SettingsService $settingsService,
-        AclService $ACLService
+        AclService $aclService
     ) {
         $this->baseFormFactory            = $baseFormFactory;
         $this->em                         = $em;
@@ -117,7 +117,7 @@ class EditUserSeminarFormFactory
         $this->filesService               = $filesService;
         $this->mailService                = $mailService;
         $this->settingsService            = $settingsService;
-        $this->ACLService                 = $ACLService;
+        $this->aclService                 = $aclService;
     }
 
     /**
@@ -134,7 +134,7 @@ class EditUserSeminarFormFactory
         $form->addMultiSelect(
             'roles',
             'admin.users.users_roles',
-            $this->ACLService->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED])
+            $this->aclService->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED])
         )
             ->addRule(Form::FILLED, 'admin.users.users_edit_roles_empty')
             ->addRule([$this, 'validateRolesNonregistered'], 'admin.users.users_edit_roles_nonregistered')

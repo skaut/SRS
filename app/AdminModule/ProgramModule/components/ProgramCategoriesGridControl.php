@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ProgramModule\Components;
 
-use App\Model\ACL\Role;
-use App\Model\ACL\RoleRepository;
+use App\Model\Acl\Role;
+use App\Model\Acl\RoleRepository;
 use App\Model\Program\Category;
 use App\Model\Program\CategoryRepository;
 use App\Services\AclService;
 use App\Services\ProgramService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
@@ -44,14 +43,14 @@ class ProgramCategoriesGridControl extends Control
     private $programService;
 
     /** @var AclService */
-    private $ACLService;
+    private $aclService;
 
     public function __construct(
         ITranslator $translator,
         CategoryRepository $categoryRepository,
         RoleRepository $roleRepository,
         ProgramService $programService,
-        AclService $ACLService
+        AclService $aclService
     ) {
         parent::__construct();
 
@@ -59,7 +58,7 @@ class ProgramCategoriesGridControl extends Control
         $this->categoryRepository = $categoryRepository;
         $this->roleRepository     = $roleRepository;
         $this->programService     = $programService;
-        $this->ACLService         = $ACLService;
+        $this->aclService         = $aclService;
     }
 
     /**
@@ -88,7 +87,7 @@ class ProgramCategoriesGridControl extends Control
 
         $grid->addColumnText('registerableRoles', 'admin.program.categories_registerable_roles', 'registerableRolesText');
 
-        $rolesOptions = $this->ACLService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]);
+        $rolesOptions = $this->aclService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]);
 
         $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function (Container $container) use ($rolesOptions) : void {
             $container->addText('name', '')

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
-use App\Model\CMS\Content\OrganizerContentDto;
+use App\Model\Cms\Content\OrganizerContentDto;
 use Nette\Application\UI\Control;
 
 /**

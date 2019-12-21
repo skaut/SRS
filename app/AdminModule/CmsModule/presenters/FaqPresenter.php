@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\AdminModule\CMSModule\Presenters;
+namespace App\AdminModule\CmsModule\Presenters;
 
-use App\AdminModule\CMSModule\Components\FaqGridControl;
-use App\AdminModule\CMSModule\Components\IFaqGridControlFactory;
-use App\AdminModule\CMSModule\Forms\FaqFormFactory;
+use App\AdminModule\CmsModule\Components\FaqGridControl;
+use App\AdminModule\CmsModule\Components\IFaqGridControlFactory;
+use App\AdminModule\CmsModule\Forms\FaqFormFactory;
 use App\AdminModule\Forms\BaseForm;
-use App\Model\CMS\FaqRepository;
+use App\Model\Cms\FaqRepository;
 use stdClass;
 
 /**
@@ -17,7 +17,7 @@ use stdClass;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class FaqPresenter extends CMSBasePresenter
+class FaqPresenter extends CmsBasePresenter
 {
     /**
      * @var IFaqGridControlFactory

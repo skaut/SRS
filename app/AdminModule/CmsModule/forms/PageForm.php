@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\AdminModule\CMSModule\Forms;
+namespace App\AdminModule\CmsModule\Forms;
 
 use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\Forms\BaseFormFactory;
-use App\Model\ACL\RoleRepository;
-use App\Model\CMS\Content\CapacitiesContent;
-use App\Model\CMS\Content\Content;
-use App\Model\CMS\Content\DocumentContent;
-use App\Model\CMS\Content\ImageContent;
-use App\Model\CMS\Content\UsersContent;
-use App\Model\CMS\Document\TagRepository;
-use App\Model\CMS\Page;
-use App\Model\CMS\PageRepository;
+use App\Model\Acl\RoleRepository;
+use App\Model\Cms\Content\CapacitiesContent;
+use App\Model\Cms\Content\Content;
+use App\Model\Cms\Content\DocumentContent;
+use App\Model\Cms\Content\ImageContent;
+use App\Model\Cms\Content\UsersContent;
+use App\Model\Cms\Document\TagRepository;
+use App\Model\Cms\Page;
+use App\Model\Cms\PageRepository;
 use App\Model\Page\PageException;
 use App\Services\AclService;
 use App\Services\CmsService;
@@ -77,10 +77,10 @@ class PageForm extends UI\Control
     private $pageRepository;
 
     /** @var AclService */
-    private $ACLService;
+    private $aclService;
 
     /** @var CmsService */
-    private $CMSService;
+    private $cmsService;
 
     /** @var RoleRepository */
     private $roleRepository;
@@ -96,8 +96,8 @@ class PageForm extends UI\Control
         string $area,
         BaseFormFactory $baseFormFactory,
         PageRepository $pageRepository,
-        AclService $ACLService,
-        CmsService $CMSService,
+        AclService $aclService,
+        CmsService $cmsService,
         RoleRepository $roleRepository,
         TagRepository $tagRepository,
         FilesService $filesService
@@ -109,8 +109,8 @@ class PageForm extends UI\Control
 
         $this->baseFormFactory = $baseFormFactory;
         $this->pageRepository  = $pageRepository;
-        $this->ACLService      = $ACLService;
-        $this->CMSService      = $CMSService;
+        $this->aclService      = $aclService;
+        $this->cmsService      = $cmsService;
         $this->roleRepository  = $roleRepository;
         $this->tagRepository   = $tagRepository;
         $this->filesService    = $filesService;
@@ -150,7 +150,7 @@ class PageForm extends UI\Control
             switch (get_class($content)) {
                 case CapacitiesContent::class:
                     $content->injectRoleRepository($this->roleRepository);
-                    $content->injectACLService($this->ACLService);
+                    $content->injectAclService($this->aclService);
                     break;
                 case DocumentContent::class:
                     $content->injectTagRepository($this->tagRepository);
@@ -160,7 +160,7 @@ class PageForm extends UI\Control
                     break;
                 case UsersContent::class:
                     $content->injectRoleRepository($this->roleRepository);
-                    $content->injectACLService($this->ACLService);
+                    $content->injectAclService($this->aclService);
                     break;
             }
             $form = $content->addContentForm($form);
@@ -202,18 +202,18 @@ class PageForm extends UI\Control
             $inputName     = $content->getContentFormName();
             $formContainer = $values->$inputName;
             if ($formContainer['delete']) {
-                $this->CMSService->removeContent($content);
+                $this->cmsService->removeContent($content);
             } else {
                 $content->contentFormSucceeded($form, $values);
-                $this->CMSService->saveContent($content);
+                $this->cmsService->saveContent($content);
             }
         }
 
         if ($form->isSubmitted() === $form['submitAdd']) {
-            $contentClass = '\\App\\Model\\CMS\\Content\\' . ucfirst($type) . 'Content';
+            $contentClass = '\\App\\Model\\Cms\\Content\\' . ucfirst($type) . 'Content';
             $content      = new $contentClass($page, $area);
             $content->setHeading($form->getTranslator()->translate('common.content.default_heading.' . $type));
-            $this->CMSService->saveContent($content);
+            $this->cmsService->saveContent($content);
         }
 
         if ($form->isSubmitted() === $form['submitAdd']) {

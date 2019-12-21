@@ -21,7 +21,6 @@ use App\Services\SubeventService;
 use App\Utils\Helpers;
 use App\Utils\Validators;
 use Doctrine\ORM\NonUniqueResultException;
-use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
@@ -74,7 +73,7 @@ class ApplicationsGridControl extends Control
     private $subeventService;
 
     public function __construct(
-        Translator $translator,
+        ITranslator $translator,
         ApplicationRepository $applicationRepository,
         UserRepository $userRepository,
         SubeventRepository $subeventRepository,

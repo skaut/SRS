@@ -2,18 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\AdminModule\CMSModule\Components;
+namespace App\AdminModule\CmsModule\Components;
 
-use App\Model\ACL\RoleRepository;
-use App\Model\CMS\Page;
-use App\Model\CMS\PageRepository;
+use App\Model\Acl\RoleRepository;
+use App\Model\Cms\Page;
+use App\Model\Cms\PageRepository;
 use App\Model\Page\PageException;
 use App\Services\AclService;
 use App\Services\CmsService;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
@@ -38,7 +37,7 @@ class PagesGridControl extends Control
     private $translator;
 
     /** @var CmsService */
-    private $CMSService;
+    private $cmsService;
 
     /** @var PageRepository */
     private $pageRepository;
@@ -47,22 +46,22 @@ class PagesGridControl extends Control
     private $roleRepository;
 
     /** @var AclService */
-    private $ACLService;
+    private $aclService;
 
     public function __construct(
-        Translator $translator,
-        CmsService $CMSService,
+        ITranslator $translator,
+        CmsService $cmsService,
         PageRepository $pageRepository,
         RoleRepository $roleRepository,
-        AclService $ACLService
+        AclService $aclService
     ) {
         parent::__construct();
 
         $this->translator     = $translator;
-        $this->CMSService     = $CMSService;
+        $this->cmsService     = $cmsService;
         $this->pageRepository = $pageRepository;
         $this->roleRepository = $roleRepository;
-        $this->ACLService     = $ACLService;
+        $this->aclService     = $aclService;
     }
 
     /**
@@ -109,7 +108,7 @@ class PagesGridControl extends Control
                 return count($this->roleRepository->findAll()) === $page->getRoles()->count();
             });
 
-        $rolesOptions  = $this->ACLService->getRolesWithoutRolesOptions([]);
+        $rolesOptions  = $this->aclService->getRolesWithoutRolesOptions([]);
         $publicOptions = [
             false => 'admin.cms.pages_public_private',
             true => 'admin.cms.pages_public_public',
@@ -191,7 +190,7 @@ class PagesGridControl extends Control
         $page->setRoles($this->roleRepository->findRolesByIds($values->roles));
         $page->setPublic((bool) $values->public);
 
-        $this->CMSService->savePage($page);
+        $this->cmsService->savePage($page);
 
         $p = $this->getPresenter();
         $p->flashMessage('admin.cms.pages_saved', 'success');
@@ -216,7 +215,7 @@ class PagesGridControl extends Control
         $page->setRoles($this->roleRepository->findRolesByIds($values->roles));
         $page->setPublic((bool) $values->public);
 
-        $this->CMSService->savePage($page);
+        $this->cmsService->savePage($page);
 
         $p = $this->getPresenter();
         $p->flashMessage('admin.cms.pages_saved', 'success');
@@ -235,7 +234,7 @@ class PagesGridControl extends Control
     public function handleDelete(int $id) : void
     {
         $page = $this->pageRepository->findById($id);
-        $this->CMSService->removePage($page);
+        $this->cmsService->removePage($page);
 
         $this->getPresenter()->flashMessage('admin.cms.pages_deleted', 'success');
 
@@ -251,7 +250,7 @@ class PagesGridControl extends Control
      */
     public function handleSort(?string $item_id, ?string $prev_id, ?string $next_id) : void
     {
-        $this->CMSService->sort((int) $item_id, (int) $prev_id, (int) $next_id);
+        $this->cmsService->sort((int) $item_id, (int) $prev_id, (int) $next_id);
 
         $p = $this->getPresenter();
         $p->flashMessage('admin.cms.pages_order_saved', 'success');
@@ -284,7 +283,7 @@ class PagesGridControl extends Control
             $p->flashMessage('admin.cms.pages_change_public_denied', 'danger');
         } else {
             $page->setPublic($public);
-            $this->CMSService->savePage($page);
+            $this->cmsService->savePage($page);
 
             $p->flashMessage('admin.cms.pages_changed_public', 'success');
         }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Model\ACL;
+namespace App\Model\Acl;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -85,7 +85,7 @@ class SrsResource
     /**
      * Oprávnění s tímto prostředkem.
      *
-     * @ORM\OneToMany(targetEntity="\App\Model\ACL\Permission", mappedBy="resource", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="\App\Model\Acl\Permission", mappedBy="resource", cascade={"persist"})
      *
      * @var Collection|Permission[]
      */

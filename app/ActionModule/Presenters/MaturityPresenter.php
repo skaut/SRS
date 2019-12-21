@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\ActionModule\Presenters;
 
-use App\Model\ACL\Role;
-use App\Model\ACL\RoleRepository;
+use App\Model\Acl\Role;
+use App\Model\Acl\RoleRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;

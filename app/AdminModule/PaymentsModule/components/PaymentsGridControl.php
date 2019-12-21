@@ -15,7 +15,6 @@ use App\Services\BankService;
 use App\Services\PdfExportService;
 use App\Services\SettingsService;
 use App\Utils\Helpers;
-use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
@@ -55,7 +54,7 @@ class PaymentsGridControl extends Control
     private $bankService;
 
     public function __construct(
-        Translator $translator,
+        ITranslator $translator,
         PaymentRepository $paymentRepository,
         UserRepository $userRepository,
         SettingsService $settingsService,

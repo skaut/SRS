@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Presenters;
 
-use App\Model\ACL\Permission;
-use App\Model\ACL\RoleRepository;
-use App\Model\ACL\SrsResource;
+use App\Model\Acl\Permission;
+use App\Model\Acl\RoleRepository;
+use App\Model\Acl\SrsResource;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\User\User;
@@ -119,8 +119,8 @@ abstract class AdminBasePresenter extends BasePresenter
 
         $this->template->dbuser = $this->dbuser;
 
-        $this->template->resourceACL           = SrsResource::ACL;
-        $this->template->resourceCMS           = SrsResource::CMS;
+        $this->template->resourceAcl           = SrsResource::ACL;
+        $this->template->resourceCms           = SrsResource::CMS;
         $this->template->resourceConfiguration = SrsResource::CONFIGURATION;
         $this->template->resourceUsers         = SrsResource::USERS;
         $this->template->resourcePayments      = SrsResource::PAYMENTS;

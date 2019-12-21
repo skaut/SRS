@@ -6,7 +6,7 @@ namespace App\AdminModule\ProgramModule\Presenters;
 
 use App\AdminModule\ProgramModule\Components\IProgramCategoriesGridControlFactory;
 use App\AdminModule\ProgramModule\Components\ProgramCategoriesGridControl;
-use App\Model\ACL\Permission;
+use App\Model\Acl\Permission;
 use Nette\Application\AbortException;
 
 /**

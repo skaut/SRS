@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\AdminModule\ProgramModule\Components;
 
 use App\AdminModule\Presenters\AdminBasePresenter;
-use App\Model\ACL\Permission;
-use App\Model\ACL\SrsResource;
+use App\Model\Acl\Permission;
+use App\Model\Acl\SrsResource;
 use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Block;
 use App\Model\Program\BlockRepository;
@@ -20,7 +20,6 @@ use App\Services\SettingsService;
 use App\Services\SubeventService;
 use App\Utils\Validators;
 use Exception;
-use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;

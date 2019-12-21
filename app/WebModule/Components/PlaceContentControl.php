@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
-use App\Model\CMS\Content\ContentDto;
+use App\Model\Cms\Content\ContentDto;
 use App\Model\Settings\Place\PlacePointRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;

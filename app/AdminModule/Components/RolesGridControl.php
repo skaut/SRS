@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Components;
 
-use App\Model\ACL\Role;
-use App\Model\ACL\RoleRepository;
+use App\Model\Acl\Role;
+use App\Model\Acl\RoleRepository;
 use App\Services\AclService;
 use App\Utils\Helpers;
-use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
@@ -28,17 +27,17 @@ class RolesGridControl extends Control
     private $translator;
 
     /** @var AclService */
-    private $ACLService;
+    private $aclService;
 
     /** @var RoleRepository */
     private $roleRepository;
 
-    public function __construct(ITranslator $translator, AclService $ACLService, RoleRepository $roleRepository)
+    public function __construct(ITranslator $translator, AclService $aclService, RoleRepository $roleRepository)
     {
         parent::__construct();
 
         $this->translator     = $translator;
-        $this->ACLService     = $ACLService;
+        $this->aclService     = $aclService;
         $this->roleRepository = $roleRepository;
     }
 
@@ -130,7 +129,7 @@ class RolesGridControl extends Control
         $role = $this->roleRepository->findById($id);
 
         if ($role->getUsers()->isEmpty()) {
-            $this->ACLService->removeRole($role);
+            $this->aclService->removeRole($role);
             $this->getPresenter()->flashMessage('admin.acl.roles_deleted', 'success');
         } else {
             $this->getPresenter()->flashMessage('admin.acl.roles_deleted_error', 'danger');
@@ -149,7 +148,7 @@ class RolesGridControl extends Control
         $role = $this->roleRepository->findById($id);
 
         $role->setRegisterable($registerable);
-        $this->ACLService->saveRole($role);
+        $this->aclService->saveRole($role);
 
         $p = $this->getPresenter();
         $p->flashMessage('admin.acl.roles_changed_registerable', 'success');
