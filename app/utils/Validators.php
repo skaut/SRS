@@ -10,7 +10,6 @@ use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Block;
 use App\Model\Program\ProgramRepository;
 use App\Model\Structure\Subevent;
-use App\Model\Structure\SubeventRepository;
 use App\Model\User\Application;
 use App\Model\User\User;
 use Doctrine\Common\Collections\Collection;
@@ -25,17 +24,13 @@ class Validators
     /** @var RoleRepository */
     private $roleRepository;
 
-    /** @var SubeventRepository */
-    private $subeventRepository;
-
     /** @var ProgramRepository */
     private $programRepository;
 
-    public function __construct(RoleRepository $roleRepository, SubeventRepository $subeventRepository, ProgramRepository $programRepository)
+    public function __construct(RoleRepository $roleRepository, ProgramRepository $programRepository)
     {
-        $this->roleRepository     = $roleRepository;
-        $this->subeventRepository = $subeventRepository;
-        $this->programRepository  = $programRepository;
+        $this->roleRepository    = $roleRepository;
+        $this->programRepository = $programRepository;
     }
 
     /**

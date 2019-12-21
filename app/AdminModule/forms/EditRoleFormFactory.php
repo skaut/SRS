@@ -10,7 +10,6 @@ use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\ACL\SrsResource;
 use App\Model\CMS\PageRepository;
-use App\Model\Program\ProgramRepository;
 use App\Services\AclService;
 use App\Services\ProgramService;
 use Doctrine\ORM\NonUniqueResultException;
@@ -60,9 +59,6 @@ class EditRoleFormFactory
     /** @var PermissionRepository */
     private $permissionRepository;
 
-    /** @var ProgramRepository */
-    private $programRepository;
-
     /** @var ProgramService */
     private $programService;
 
@@ -73,7 +69,6 @@ class EditRoleFormFactory
         RoleRepository $roleRepository,
         PageRepository $pageRepository,
         PermissionRepository $permissionRepository,
-        ProgramRepository $programRepository,
         ProgramService $programService
     ) {
         $this->baseFormFactory      = $baseFormFactory;
@@ -82,7 +77,6 @@ class EditRoleFormFactory
         $this->roleRepository       = $roleRepository;
         $this->pageRepository       = $pageRepository;
         $this->permissionRepository = $permissionRepository;
-        $this->programRepository    = $programRepository;
         $this->programService       = $programService;
     }
 

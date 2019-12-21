@@ -12,7 +12,6 @@ use App\Model\Settings\SettingsException;
 use App\Services\SettingsService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Kdyby\Translation\Translator;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Utils\DateTime;
@@ -37,14 +36,10 @@ class ProgramFormFactory
     /** @var SettingsService */
     private $settingsService;
 
-    /** @var Translator */
-    private $translator;
-
-    public function __construct(BaseFormFactory $baseForm, SettingsService $settingsService, Translator $translator)
+    public function __construct(BaseFormFactory $baseForm, SettingsService $settingsService)
     {
         $this->baseFormFactory = $baseForm;
         $this->settingsService = $settingsService;
-        $this->translator      = $translator;
     }
 
     /**

@@ -12,7 +12,6 @@ use App\Model\Program\ProgramRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ProgramService;
-use App\Services\SettingsService;
 use Doctrine\ORM\QueryBuilder;
 use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
@@ -53,14 +52,8 @@ class ProgramAttendeesGridControl extends Control
     /** @var UserRepository */
     private $userRepository;
 
-    /** @var SettingsService */
-    private $settingsService;
-
     /** @var ProgramService */
     private $programService;
-
-    /** @var Session */
-    private $session;
 
     /** @var SessionSection */
     private $sessionSection;
@@ -69,7 +62,6 @@ class ProgramAttendeesGridControl extends Control
         Translator $translator,
         ProgramRepository $programRepository,
         UserRepository $userRepository,
-        SettingsService $settingsService,
         ProgramService $programService,
         Session $session
     ) {
@@ -78,10 +70,8 @@ class ProgramAttendeesGridControl extends Control
         $this->translator        = $translator;
         $this->programRepository = $programRepository;
         $this->userRepository    = $userRepository;
-        $this->settingsService   = $settingsService;
         $this->programService    = $programService;
 
-        $this->session        = $session;
         $this->sessionSection = $session->getSection('srs');
     }
 

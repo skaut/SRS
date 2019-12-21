@@ -12,9 +12,6 @@
     <file>app</file>
 
     <rule ref="Doctrine">
-        <!-- Zpusobuje problem s property pouzivanymi v Doctrine mappings -->
-        <exclude name="SlevomatCodingStandard.Classes.UnusedPrivateElements"/>
-
         <!-- Zakazuje pouziti @author anotace -->
         <exclude name="SlevomatCodingStandard.Commenting.ForbiddenAnnotations.AnnotationForbidden"/>
 
@@ -28,8 +25,11 @@
         <exclude name="SlevomatCodingStandard.Classes.SuperfluousExceptionNaming.SuperfluousSuffix"/>
 
         <!-- Docasne ignorovano, pro porovnavani objektu (DateTime) neni strict zadouci -->
-        <exclude name="SlevomatCodingStandard.ControlStructures.DisallowEqualOperators.DisallowedEqualOperator"/>
-        <exclude name="SlevomatCodingStandard.ControlStructures.DisallowEqualOperators.DisallowedNotEqualOperator"/>
+        <exclude name="SlevomatCodingStandard.Operators.DisallowEqualOperators.DisallowedEqualOperator"/>
+        <exclude name="SlevomatCodingStandard.Operators.DisallowEqualOperators.DisallowedNotEqualOperator"/>
+
+        <!-- Docasne ignorovano - problem ve foreach, pokud je potreba jen key -->
+        <exclude name="SlevomatCodingStandard.Variables.UnusedVariable.UnusedVariable"/>
     </rule>
     <rule ref="SlevomatCodingStandard.Variables.UnusedVariable"/>
     <rule ref="SlevomatCodingStandard.Classes.UnusedPrivateElements">

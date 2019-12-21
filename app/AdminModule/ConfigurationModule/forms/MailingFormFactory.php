@@ -10,8 +10,6 @@ use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\User\User;
-use App\Model\User\UserRepository;
 use App\Services\MailService;
 use App\Services\SettingsService;
 use Nette;
@@ -36,21 +34,11 @@ class MailingFormFactory
 {
     use Nette\SmartObject;
 
-    /**
-     * Přihlášený uživatel.
-     *
-     * @var User
-     */
-    private $user;
-
     /** @var BaseFormFactory */
     private $baseFormFactory;
 
     /** @var SettingsService */
     private $settingsService;
-
-    /** @var UserRepository */
-    private $userRepository;
 
     /** @var MailService */
     private $mailService;
@@ -61,13 +49,11 @@ class MailingFormFactory
     public function __construct(
         BaseFormFactory $baseForm,
         SettingsService $settingsService,
-        UserRepository $userRepository,
         MailService $mailService,
         LinkGenerator $linkGenerator
     ) {
         $this->baseFormFactory = $baseForm;
         $this->settingsService = $settingsService;
-        $this->userRepository  = $userRepository;
         $this->mailService     = $mailService;
         $this->linkGenerator   = $linkGenerator;
     }
@@ -80,8 +66,6 @@ class MailingFormFactory
      */
     public function create(int $id) : BaseForm
     {
-        $this->user = $this->userRepository->findById($id);
-
         $form = $this->baseFormFactory->create();
 
         /** @var Bs3FormRenderer $renderer */

@@ -6,10 +6,7 @@ namespace App\AdminModule\Components;
 
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
-use App\Model\Program\ProgramRepository;
-use App\Model\User\UserRepository;
 use App\Services\AclService;
-use App\Services\ProgramService;
 use App\Utils\Helpers;
 use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
@@ -35,31 +32,13 @@ class RolesGridControl extends Control
     /** @var RoleRepository */
     private $roleRepository;
 
-    /** @var UserRepository */
-    private $userRepository;
-
-    /** @var ProgramRepository */
-    private $programRepository;
-
-    /** @var ProgramService */
-    private $programService;
-
-    public function __construct(
-        Translator $translator,
-        AclService $ACLService,
-        RoleRepository $roleRepository,
-        UserRepository $userRepository,
-        ProgramRepository $programRepository,
-        ProgramService $programService
-    ) {
+    public function __construct(Translator $translator, AclService $ACLService, RoleRepository $roleRepository)
+    {
         parent::__construct();
 
-        $this->translator        = $translator;
-        $this->ACLService        = $ACLService;
-        $this->roleRepository    = $roleRepository;
-        $this->userRepository    = $userRepository;
-        $this->programRepository = $programRepository;
-        $this->programService    = $programService;
+        $this->translator     = $translator;
+        $this->ACLService     = $ACLService;
+        $this->roleRepository = $roleRepository;
     }
 
     /**

@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
-use App\Model\ACL\RoleRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
-use App\Model\Program\ProgramRepository;
 use App\Model\Settings\SettingsException;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\Application;
@@ -18,13 +16,8 @@ use App\Model\User\SubeventsApplicationRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
-use App\Services\Authenticator;
-use App\Services\MailService;
 use App\Services\PdfExportService;
-use App\Services\ProgramService;
-use App\Services\SettingsService;
 use App\Services\SubeventService;
-use App\Services\UserService;
 use App\Utils\Helpers;
 use App\Utils\Validators;
 use Doctrine\ORM\NonUniqueResultException;
@@ -55,38 +48,17 @@ class ApplicationsGridControl extends Control
     /** @var UserRepository */
     private $userRepository;
 
-    /** @var RoleRepository */
-    private $roleRepository;
-
     /** @var SubeventRepository */
     private $subeventRepository;
 
     /** @var ApplicationService */
     private $applicationService;
 
-    /** @var ProgramRepository */
-    private $programRepository;
-
-    /** @var MailService */
-    private $mailService;
-
-    /** @var SettingsService */
-    private $settingsService;
-
-    /** @var Authenticator */
-    private $authenticator;
-
     /** @var User */
     private $user;
 
     /** @var PdfExportService */
     private $pdfExportService;
-
-    /** @var ProgramService */
-    private $programService;
-
-    /** @var UserService */
-    private $userService;
 
     /** @var Validators */
     private $validators;
@@ -104,16 +76,9 @@ class ApplicationsGridControl extends Control
         Translator $translator,
         ApplicationRepository $applicationRepository,
         UserRepository $userRepository,
-        RoleRepository $roleRepository,
         SubeventRepository $subeventRepository,
         ApplicationService $applicationService,
-        ProgramRepository $programRepository,
-        MailService $mailService,
-        SettingsService $settingsService,
-        Authenticator $authenticator,
         PdfExportService $pdfExportService,
-        ProgramService $programService,
-        UserService $userService,
         Validators $validators,
         RolesApplicationRepository $rolesApplicationRepository,
         SubeventsApplicationRepository $subeventsApplicationRepository,
@@ -124,16 +89,9 @@ class ApplicationsGridControl extends Control
         $this->translator                     = $translator;
         $this->applicationRepository          = $applicationRepository;
         $this->userRepository                 = $userRepository;
-        $this->roleRepository                 = $roleRepository;
         $this->subeventRepository             = $subeventRepository;
         $this->applicationService             = $applicationService;
-        $this->programRepository              = $programRepository;
-        $this->mailService                    = $mailService;
-        $this->settingsService                = $settingsService;
-        $this->authenticator                  = $authenticator;
         $this->pdfExportService               = $pdfExportService;
-        $this->programService                 = $programService;
-        $this->userService                    = $userService;
         $this->validators                     = $validators;
         $this->rolesApplicationRepository     = $rolesApplicationRepository;
         $this->subeventsApplicationRepository = $subeventsApplicationRepository;

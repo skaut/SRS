@@ -11,10 +11,8 @@ use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Block;
 use App\Model\Program\BlockRepository;
 use App\Model\Program\CategoryRepository;
-use App\Model\Program\ProgramRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Structure\SubeventRepository;
 use App\Model\User\UserRepository;
 use App\Services\ExcelExportService;
 use App\Services\ProgramService;
@@ -56,12 +54,6 @@ class ProgramBlocksGridControl extends Control
     /** @var CategoryRepository */
     private $categoryRepository;
 
-    /** @var ProgramRepository */
-    private $programRepository;
-
-    /** @var SubeventRepository */
-    private $subeventRepository;
-
     /** @var ExcelExportService */
     private $excelExportService;
 
@@ -86,8 +78,6 @@ class ProgramBlocksGridControl extends Control
         SettingsService $settingsService,
         UserRepository $userRepository,
         CategoryRepository $categoryRepository,
-        ProgramRepository $programRepository,
-        SubeventRepository $subeventRepository,
         ExcelExportService $excelExportService,
         ProgramService $programService,
         Validators $validators,
@@ -101,8 +91,6 @@ class ProgramBlocksGridControl extends Control
         $this->settingsService    = $settingsService;
         $this->userRepository     = $userRepository;
         $this->categoryRepository = $categoryRepository;
-        $this->programRepository  = $programRepository;
-        $this->subeventRepository = $subeventRepository;
         $this->excelExportService = $excelExportService;
         $this->programService     = $programService;
         $this->validators         = $validators;

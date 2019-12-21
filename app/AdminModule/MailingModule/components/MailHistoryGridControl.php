@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\MailingModule\Components;
 
 use App\Model\ACL\Role;
-use App\Model\ACL\RoleRepository;
 use App\Model\Mailing\MailRepository;
-use App\Model\Structure\SubeventRepository;
 use App\Services\AclService;
 use App\Services\SubeventService;
 use App\Utils\Helpers;
@@ -29,12 +27,6 @@ class MailHistoryGridControl extends Control
     /** @var MailRepository */
     private $mailRepository;
 
-    /** @var RoleRepository */
-    private $roleRepository;
-
-    /** @var SubeventRepository */
-    private $subeventRepository;
-
     /** @var AclService */
     private $ACLService;
 
@@ -44,19 +36,15 @@ class MailHistoryGridControl extends Control
     public function __construct(
         Translator $translator,
         MailRepository $mailRepository,
-        RoleRepository $roleRepository,
-        SubeventRepository $subeventRepository,
         AclService $ACLService,
         SubeventService $subeventService
     ) {
         parent::__construct();
 
-        $this->translator         = $translator;
-        $this->mailRepository     = $mailRepository;
-        $this->roleRepository     = $roleRepository;
-        $this->subeventRepository = $subeventRepository;
-        $this->ACLService         = $ACLService;
-        $this->subeventService    = $subeventService;
+        $this->translator      = $translator;
+        $this->mailRepository  = $mailRepository;
+        $this->ACLService      = $ACLService;
+        $this->subeventService = $subeventService;
     }
 
     /**

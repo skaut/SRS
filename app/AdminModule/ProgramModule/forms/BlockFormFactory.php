@@ -9,10 +9,8 @@ use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\ACL\Permission;
 use App\Model\ACL\SrsResource;
 use App\Model\Enums\ProgramMandatoryType;
-use App\Model\Program\Block;
 use App\Model\Program\BlockRepository;
 use App\Model\Program\CategoryRepository;
-use App\Model\Program\ProgramRepository;
 use App\Model\Settings\Settings;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\User;
@@ -75,9 +73,6 @@ class BlockFormFactory
     /** @var SettingsService */
     private $settingsService;
 
-    /** @var ProgramRepository */
-    private $programRepository;
-
     /** @var SubeventRepository */
     private $subeventRepository;
 
@@ -96,7 +91,6 @@ class BlockFormFactory
         UserRepository $userRepository,
         CategoryRepository $categoryRepository,
         SettingsService $settingsService,
-        ProgramRepository $programRepository,
         SubeventRepository $subeventRepository,
         ProgramService $programService,
         SubeventService $subeventService,
@@ -107,7 +101,6 @@ class BlockFormFactory
         $this->userRepository     = $userRepository;
         $this->categoryRepository = $categoryRepository;
         $this->settingsService    = $settingsService;
-        $this->programRepository  = $programRepository;
         $this->subeventRepository = $subeventRepository;
         $this->programService     = $programService;
         $this->subeventService    = $subeventService;

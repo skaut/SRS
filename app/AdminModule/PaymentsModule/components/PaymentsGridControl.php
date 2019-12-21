@@ -9,7 +9,6 @@ use App\Model\Payment\Payment;
 use App\Model\Payment\PaymentRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\User\ApplicationRepository;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\BankService;
@@ -39,9 +38,6 @@ class PaymentsGridControl extends Control
     /** @var PaymentRepository */
     private $paymentRepository;
 
-    /** @var ApplicationRepository */
-    private $applicationRepository;
-
     /** @var UserRepository */
     private $userRepository;
 
@@ -60,7 +56,6 @@ class PaymentsGridControl extends Control
     public function __construct(
         Translator $translator,
         PaymentRepository $paymentRepository,
-        ApplicationRepository $applicationRepository,
         UserRepository $userRepository,
         SettingsService $settingsService,
         ApplicationService $applicationService,
@@ -69,14 +64,13 @@ class PaymentsGridControl extends Control
     ) {
         parent::__construct();
 
-        $this->translator            = $translator;
-        $this->paymentRepository     = $paymentRepository;
-        $this->applicationRepository = $applicationRepository;
-        $this->userRepository        = $userRepository;
-        $this->settingsService       = $settingsService;
-        $this->applicationService    = $applicationService;
-        $this->pdfExportService      = $pdfExportService;
-        $this->bankService           = $bankService;
+        $this->translator         = $translator;
+        $this->paymentRepository  = $paymentRepository;
+        $this->userRepository     = $userRepository;
+        $this->settingsService    = $settingsService;
+        $this->applicationService = $applicationService;
+        $this->pdfExportService   = $pdfExportService;
+        $this->bankService        = $bankService;
     }
 
     /**

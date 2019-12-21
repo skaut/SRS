@@ -9,7 +9,6 @@ use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Enums\MaturityType;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\User\UserRepository;
 use App\Services\SettingsService;
 use DateTime;
 use Doctrine\ORM\OptimisticLockException;
@@ -43,16 +42,12 @@ class PaymentForm extends UI\Control
     /** @var SettingsService */
     private $settingsService;
 
-    /** @var UserRepository */
-    private $userRepository;
-
-    public function __construct(BaseFormFactory $baseForm, SettingsService $settingsService, UserRepository $userRepository)
+    public function __construct(BaseFormFactory $baseForm, SettingsService $settingsService)
     {
         parent::__construct();
 
         $this->baseFormFactory = $baseForm;
         $this->settingsService = $settingsService;
-        $this->userRepository  = $userRepository;
     }
 
     /**

@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Model\Enums\PaymentType;
-use App\Model\User\ApplicationRepository;
 use App\Model\User\User;
-use App\Model\User\UserRepository;
 use Kdyby\Translation\Translator;
 use Nette;
 
@@ -23,20 +21,9 @@ class UserService
     /** @var Translator */
     private $translator;
 
-    /** @var UserRepository */
-    private $userRepository;
-
-    /** @var ApplicationRepository */
-    private $applicationRepository;
-
-    public function __construct(
-        Translator $translator,
-        UserRepository $userRepository,
-        ApplicationRepository $applicationRepository
-    ) {
-        $this->translator            = $translator;
-        $this->userRepository        = $userRepository;
-        $this->applicationRepository = $applicationRepository;
+    public function __construct(Translator $translator)
+    {
+        $this->translator = $translator;
     }
 
     public function getMembershipText(User $user) : string

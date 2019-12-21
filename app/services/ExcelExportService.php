@@ -6,7 +6,6 @@ namespace App\Services;
 
 use App\Model\ACL\Role;
 use App\Model\Program\Block;
-use App\Model\Program\BlockRepository;
 use App\Model\Program\CategoryRepository;
 use App\Model\Program\ProgramRepository;
 use App\Model\Program\Room;
@@ -22,11 +21,11 @@ use App\Utils\Helpers;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Exception;
 use InvalidArgumentException;
 use Kdyby\Translation\Translator;
 use Nette;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
-use PhpOffice\PhpSpreadsheet\Exception;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use function implode;
@@ -50,9 +49,6 @@ class ExcelExportService
     /** @var CustomInputRepository */
     private $customInputRepository;
 
-    /** @var BlockRepository */
-    private $blockRepository;
-
     /** @var UserService */
     private $userService;
 
@@ -65,29 +61,22 @@ class ExcelExportService
     /** @var ProgramRepository */
     private $programRepository;
 
-    /** @var ProgramService */
-    private $programService;
-
     public function __construct(
         Translator $translator,
         CustomInputRepository $customInputRepository,
-        BlockRepository $blockRepository,
         UserService $userService,
         SubeventRepository $subeventRepository,
         CategoryRepository $categoryRepository,
-        ProgramRepository $programRepository,
-        ProgramService $programService
+        ProgramRepository $programRepository
     ) {
         $this->spreadsheet = new Spreadsheet();
 
         $this->translator            = $translator;
         $this->customInputRepository = $customInputRepository;
-        $this->blockRepository       = $blockRepository;
         $this->userService           = $userService;
         $this->subeventRepository    = $subeventRepository;
         $this->categoryRepository    = $categoryRepository;
         $this->programRepository     = $programRepository;
-        $this->programService        = $programService;
     }
 
     /**
@@ -96,7 +85,7 @@ class ExcelExportService
      * @param Collection|User[] $users
      * @param Collection|Role[] $roles
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function exportUsersRoles(Collection $users, Collection $roles, string $filename) : ExcelResponse
     {
@@ -150,7 +139,7 @@ class ExcelExportService
      * @param Collection|User[] $users
      *
      * @throws Exception
-     * @throws \Exception
+     * @throws Exception
      */
     public function exportUsersSchedules(Collection $users, string $filename) : ExcelResponse
     {
@@ -207,7 +196,7 @@ class ExcelExportService
     /**
      * Vyexportuje harmonogram místnosti.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function exportRoomSchedule(Room $room, string $filename) : ExcelResponse
     {
@@ -219,7 +208,7 @@ class ExcelExportService
      *
      * @param Collection|Room[] $rooms
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function exportRoomsSchedules(Collection $rooms, string $filename) : ExcelResponse
     {
@@ -272,7 +261,7 @@ class ExcelExportService
     /**
      * @param Collection|User[] $users
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function exportUsersList(Collection $users, string $filename) : ExcelResponse
     {
@@ -474,7 +463,7 @@ class ExcelExportService
     /**
      * @param Collection|User[] $users
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function exportUsersSubeventsAndCategories(Collection $users, string $filename) : ExcelResponse
     {
@@ -560,7 +549,7 @@ class ExcelExportService
     /**
      * @param Collection|Block[] $blocks
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function exportBlocksAttendees(Collection $blocks, string $filename) : ExcelResponse
     {

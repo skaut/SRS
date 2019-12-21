@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Components;
 
-use App\Model\ACL\RoleRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
-use App\Model\Program\ProgramRepository;
 use App\Model\Settings\SettingsException;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\Application;
@@ -16,10 +14,7 @@ use App\Model\User\SubeventsApplication;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
-use App\Services\MailService;
 use App\Services\PdfExportService;
-use App\Services\ProgramService;
-use App\Services\SettingsService;
 use App\Services\SubeventService;
 use App\Utils\Helpers;
 use App\Utils\Validators;
@@ -57,32 +52,17 @@ class ApplicationsGridControl extends Control
     /** @var UserRepository */
     private $userRepository;
 
-    /** @var RoleRepository */
-    private $roleRepository;
-
     /** @var SubeventRepository */
     private $subeventRepository;
 
     /** @var ApplicationService */
     private $applicationService;
 
-    /** @var ProgramRepository */
-    private $programRepository;
-
-    /** @var MailService */
-    private $mailService;
-
-    /** @var SettingsService */
-    private $settingsService;
-
     /** @var User */
     private $user;
 
     /** @var PdfExportService */
     private $pdfExportService;
-
-    /** @var ProgramService */
-    private $programService;
 
     /** @var SubeventService */
     private $subeventService;
@@ -95,14 +75,9 @@ class ApplicationsGridControl extends Control
         EntityManagerDecorator $em,
         ApplicationRepository $applicationRepository,
         UserRepository $userRepository,
-        RoleRepository $roleRepository,
         SubeventRepository $subeventRepository,
         ApplicationService $applicationService,
-        ProgramRepository $programRepository,
-        MailService $mailService,
-        SettingsService $settingsService,
         PdfExportService $pdfExportService,
-        ProgramService $programService,
         SubeventService $subeventService,
         Validators $validators
     ) {
@@ -112,14 +87,9 @@ class ApplicationsGridControl extends Control
         $this->em                    = $em;
         $this->applicationRepository = $applicationRepository;
         $this->userRepository        = $userRepository;
-        $this->roleRepository        = $roleRepository;
         $this->subeventRepository    = $subeventRepository;
         $this->applicationService    = $applicationService;
-        $this->programRepository     = $programRepository;
-        $this->mailService           = $mailService;
-        $this->settingsService       = $settingsService;
         $this->pdfExportService      = $pdfExportService;
-        $this->programService        = $programService;
         $this->subeventService       = $subeventService;
         $this->validators            = $validators;
     }

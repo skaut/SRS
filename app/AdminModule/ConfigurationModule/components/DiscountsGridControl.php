@@ -6,7 +6,6 @@ namespace App\AdminModule\ConfigurationModule\Components;
 
 use App\Model\Structure\Discount;
 use App\Model\Structure\DiscountRepository;
-use App\Model\Structure\SubeventRepository;
 use App\Services\DiscountService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -30,23 +29,18 @@ class DiscountsGridControl extends Control
     /** @var DiscountRepository */
     private $discountRepository;
 
-    /** @var SubeventRepository */
-    private $subeventRepository;
-
     /** @var DiscountService */
     private $discountService;
 
     public function __construct(
         Translator $translator,
         DiscountRepository $discountRepository,
-        SubeventRepository $subeventRepository,
         DiscountService $discountService
     ) {
         parent::__construct();
 
         $this->translator         = $translator;
         $this->discountRepository = $discountRepository;
-        $this->subeventRepository = $subeventRepository;
         $this->discountService    = $discountService;
     }
 

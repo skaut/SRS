@@ -9,16 +9,12 @@ use App\Model\ACL\RoleRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
 use App\Model\Enums\SkautIsEventType;
-use App\Model\Program\BlockRepository;
-use App\Model\Program\ProgramRepository;
 use App\Model\Settings\CustomInput\CustomCheckbox;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\CustomInput\CustomSelect;
 use App\Model\Settings\CustomInput\CustomText;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Structure\SubeventRepository;
-use App\Model\User\ApplicationRepository;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
 use App\Model\User\CustomInputValue\CustomFileValue;
 use App\Model\User\CustomInputValue\CustomSelectValue;
@@ -28,9 +24,7 @@ use App\Model\User\UserRepository;
 use App\Services\AclService;
 use App\Services\ApplicationService;
 use App\Services\ExcelExportService;
-use App\Services\MailService;
 use App\Services\PdfExportService;
-use App\Services\ProgramService;
 use App\Services\SettingsService;
 use App\Services\SkautIsEventEducationService;
 use App\Services\SkautIsEventGeneralService;
@@ -42,6 +36,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
+use Exception;
 use InvalidArgumentException;
 use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
@@ -50,7 +45,6 @@ use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\Utils\Html;
 use Nettrine\ORM\EntityManagerDecorator;
-use PhpOffice\PhpSpreadsheet\Exception;
 use Throwable;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
@@ -86,12 +80,6 @@ class UsersGridControl extends Control
     /** @var RoleRepository */
     private $roleRepository;
 
-    /** @var ProgramRepository */
-    private $programRepository;
-
-    /** @var BlockRepository */
-    private $blockRepository;
-
     /** @var Session */
     private $session;
 
@@ -104,15 +92,6 @@ class UsersGridControl extends Control
     /** @var ExcelExportService */
     private $excelExportService;
 
-    /** @var MailService */
-    private $mailService;
-
-    /** @var SubeventRepository */
-    private $subeventRepository;
-
-    /** @var ApplicationRepository */
-    private $applicationRepository;
-
     /** @var AclService */
     private $ACLService;
 
@@ -121,9 +100,6 @@ class UsersGridControl extends Control
 
     /** @var UserService */
     private $userService;
-
-    /** @var ProgramService */
-    private $programService;
 
     /** @var SkautIsEventEducationService */
     private $skautIsEventEducationService;
@@ -141,18 +117,12 @@ class UsersGridControl extends Control
         SettingsService $settingsService,
         CustomInputRepository $customInputRepository,
         RoleRepository $roleRepository,
-        ProgramRepository $programRepository,
-        BlockRepository $blockRepository,
         PdfExportService $pdfExportService,
         ExcelExportService $excelExportService,
-        MailService $mailService,
         Session $session,
-        SubeventRepository $subeventRepository,
-        ApplicationRepository $applicationRepository,
         AclService $ACLService,
         ApplicationService $applicationService,
         UserService $userService,
-        ProgramService $programService,
         SkautIsEventEducationService $skautIsEventEducationService,
         SkautIsEventGeneralService $skautIsEventGeneralService,
         SubeventService $subeventService
@@ -165,17 +135,11 @@ class UsersGridControl extends Control
         $this->settingsService              = $settingsService;
         $this->customInputRepository        = $customInputRepository;
         $this->roleRepository               = $roleRepository;
-        $this->programRepository            = $programRepository;
-        $this->blockRepository              = $blockRepository;
         $this->pdfExportService             = $pdfExportService;
         $this->excelExportService           = $excelExportService;
-        $this->mailService                  = $mailService;
-        $this->subeventRepository           = $subeventRepository;
-        $this->applicationRepository        = $applicationRepository;
         $this->ACLService                   = $ACLService;
         $this->applicationService           = $applicationService;
         $this->userService                  = $userService;
-        $this->programService               = $programService;
         $this->skautIsEventEducationService = $skautIsEventEducationService;
         $this->skautIsEventGeneralService   = $skautIsEventGeneralService;
         $this->subeventService              = $subeventService;
@@ -800,7 +764,7 @@ class UsersGridControl extends Control
      * Zpracuje export seznamu uživatelů.
      *
      * @throws AbortException
-     * @throws \Exception
+     * @throws Exception
      */
     public function handleExportUsers() : void
     {
@@ -830,7 +794,7 @@ class UsersGridControl extends Control
      * Zpracuje export seznamu uživatelů s rolemi.
      *
      * @throws AbortException
-     * @throws \Exception
+     * @throws Exception
      */
     public function handleExportRoles() : void
     {
@@ -861,7 +825,7 @@ class UsersGridControl extends Control
      * Zpracuje export seznamu uživatelů s podakcemi a programy podle kategorií.
      *
      * @throws AbortException
-     * @throws \Exception
+     * @throws Exception
      */
     public function handleExportSubeventsAndCategories() : void
     {

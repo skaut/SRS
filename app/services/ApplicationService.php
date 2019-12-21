@@ -16,7 +16,6 @@ use App\Model\Payment\Payment;
 use App\Model\Payment\PaymentRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\Structure\DiscountRepository;
 use App\Model\Structure\Subevent;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\Application;
@@ -70,9 +69,6 @@ class ApplicationService
     /** @var UserRepository */
     private $userRepository;
 
-    /** @var DiscountRepository */
-    private $discountRepository;
-
     /** @var AclService */
     private $ACLService;
 
@@ -108,7 +104,6 @@ class ApplicationService
         SettingsService $settingsService,
         ApplicationRepository $applicationRepository,
         UserRepository $userRepository,
-        DiscountRepository $discountRepository,
         AclService $ACLService,
         RoleRepository $roleRepository,
         SubeventRepository $subeventRepository,
@@ -124,7 +119,6 @@ class ApplicationService
         $this->settingsService          = $settingsService;
         $this->applicationRepository    = $applicationRepository;
         $this->userRepository           = $userRepository;
-        $this->discountRepository       = $discountRepository;
         $this->ACLService               = $ACLService;
         $this->roleRepository           = $roleRepository;
         $this->subeventRepository       = $subeventRepository;

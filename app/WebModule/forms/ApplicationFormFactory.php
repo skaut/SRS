@@ -7,7 +7,6 @@ namespace App\WebModule\Forms;
 use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Enums\Sex;
-use App\Model\Program\ProgramRepository;
 use App\Model\Settings\CustomInput\CustomCheckbox;
 use App\Model\Settings\CustomInput\CustomFile;
 use App\Model\Settings\CustomInput\CustomInputRepository;
@@ -28,8 +27,6 @@ use App\Model\User\UserRepository;
 use App\Services\AclService;
 use App\Services\ApplicationService;
 use App\Services\FilesService;
-use App\Services\MailService;
-use App\Services\ProgramService;
 use App\Services\SettingsService;
 use App\Services\SkautIsService;
 use App\Services\SubeventService;
@@ -78,13 +75,6 @@ class ApplicationFormFactory
     /** @var callable */
     public $onSkautIsError;
 
-    /**
-     * Jsou vytvořené podakce.
-     *
-     * @var bool
-     */
-    private $subeventsExists;
-
     /** @var BaseFormFactory */
     private $baseFormFactory;
 
@@ -103,32 +93,20 @@ class ApplicationFormFactory
     /** @var CustomInputValueRepository */
     private $customInputValueRepository;
 
-    /** @var ProgramRepository */
-    private $programRepository;
-
     /** @var SkautIsService */
     private $skautIsService;
 
     /** @var SettingsService */
     private $settingsService;
 
-    /** @var MailService */
-    private $mailService;
-
     /** @var SubeventRepository */
     private $subeventRepository;
-
-    /** @var ApplicationRepository */
-    private $applicationRepository;
 
     /** @var AclService */
     private $ACLService;
 
     /** @var ApplicationService */
     private $applicationService;
-
-    /** @var ProgramService */
-    private $programService;
 
     /** @var Validators */
     private $validators;
@@ -148,15 +126,12 @@ class ApplicationFormFactory
         RoleRepository $roleRepository,
         CustomInputRepository $customInputRepository,
         CustomInputValueRepository $customInputValueRepository,
-        ProgramRepository $programRepository,
         SkautIsService $skautIsService,
         SettingsService $settingsService,
-        MailService $mailService,
         SubeventRepository $subeventRepository,
         ApplicationRepository $applicationRepository,
         AclService $ACLService,
         ApplicationService $applicationService,
-        ProgramService $programService,
         Validators $validators,
         FilesService $filesService,
         SubeventService $subeventService,
@@ -167,15 +142,12 @@ class ApplicationFormFactory
         $this->roleRepository             = $roleRepository;
         $this->customInputRepository      = $customInputRepository;
         $this->customInputValueRepository = $customInputValueRepository;
-        $this->programRepository          = $programRepository;
         $this->skautIsService             = $skautIsService;
         $this->settingsService            = $settingsService;
-        $this->mailService                = $mailService;
         $this->subeventRepository         = $subeventRepository;
         $this->applicationRepository      = $applicationRepository;
         $this->ACLService                 = $ACLService;
         $this->applicationService         = $applicationService;
-        $this->programService             = $programService;
         $this->validators                 = $validators;
         $this->filesService               = $filesService;
         $this->subeventService            = $subeventService;
@@ -192,8 +164,6 @@ class ApplicationFormFactory
     public function create(int $id) : BaseForm
     {
         $this->user = $this->userRepository->findById($id);
-
-        $this->subeventsExists = $this->subeventRepository->explicitSubeventsExists();
 
         $form = $this->baseFormFactory->create();
 

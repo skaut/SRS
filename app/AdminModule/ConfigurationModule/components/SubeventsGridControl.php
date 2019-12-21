@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Components;
 
-use App\Model\Program\BlockRepository;
 use App\Model\Structure\Subevent;
 use App\Model\Structure\SubeventRepository;
 use Doctrine\ORM\OptimisticLockException;
@@ -28,19 +27,12 @@ class SubeventsGridControl extends Control
     /** @var SubeventRepository */
     private $subeventRepository;
 
-    /** @var BlockRepository */
-    private $blockRepository;
-
-    public function __construct(
-        Translator $translator,
-        SubeventRepository $subeventRepository,
-        BlockRepository $blockRepository
-    ) {
+    public function __construct(Translator $translator, SubeventRepository $subeventRepository)
+    {
         parent::__construct();
 
         $this->translator         = $translator;
         $this->subeventRepository = $subeventRepository;
-        $this->blockRepository    = $blockRepository;
     }
 
     /**

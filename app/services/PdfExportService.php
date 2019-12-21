@@ -9,7 +9,6 @@ use App\Model\Enums\PaymentType;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\User\Application;
-use App\Model\User\ApplicationRepository;
 use App\Model\User\User;
 use App\Utils\Helpers;
 use DateTime;
@@ -44,9 +43,6 @@ class PdfExportService
     /** @var SettingsService */
     private $settingsService;
 
-    /** @var ApplicationRepository */
-    private $applicationRepository;
-
     /** @var ApplicationService */
     private $applicationService;
 
@@ -56,14 +52,12 @@ class PdfExportService
     public function __construct(
         string $dir,
         SettingsService $settingsService,
-        ApplicationRepository $applicationRepository,
         ApplicationService $applicationService
     ) {
         $this->dir = $dir;
 
-        $this->settingsService       = $settingsService;
-        $this->applicationRepository = $applicationRepository;
-        $this->applicationService    = $applicationService;
+        $this->settingsService    = $settingsService;
+        $this->applicationService = $applicationService;
 
         $this->fpdi = new FPDI();
 

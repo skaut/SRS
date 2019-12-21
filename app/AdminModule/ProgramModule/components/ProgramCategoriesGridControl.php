@@ -8,8 +8,6 @@ use App\Model\ACL\Role;
 use App\Model\ACL\RoleRepository;
 use App\Model\Program\Category;
 use App\Model\Program\CategoryRepository;
-use App\Model\Program\ProgramRepository;
-use App\Model\User\UserRepository;
 use App\Services\AclService;
 use App\Services\ProgramService;
 use Doctrine\ORM\OptimisticLockException;
@@ -41,12 +39,6 @@ class ProgramCategoriesGridControl extends Control
     /** @var RoleRepository */
     private $roleRepository;
 
-    /** @var UserRepository */
-    private $userRepository;
-
-    /** @var ProgramRepository */
-    private $programRepository;
-
     /** @var ProgramService */
     private $programService;
 
@@ -57,8 +49,6 @@ class ProgramCategoriesGridControl extends Control
         Translator $translator,
         CategoryRepository $categoryRepository,
         RoleRepository $roleRepository,
-        UserRepository $userRepository,
-        ProgramRepository $programRepository,
         ProgramService $programService,
         AclService $ACLService
     ) {
@@ -67,8 +57,6 @@ class ProgramCategoriesGridControl extends Control
         $this->translator         = $translator;
         $this->categoryRepository = $categoryRepository;
         $this->roleRepository     = $roleRepository;
-        $this->userRepository     = $userRepository;
-        $this->programRepository  = $programRepository;
         $this->programService     = $programService;
         $this->ACLService         = $ACLService;
     }

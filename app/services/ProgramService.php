@@ -28,7 +28,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Exception;
 use Nette;
 use Nettrine\ORM\EntityManagerDecorator;
 use Throwable;
@@ -533,46 +532,46 @@ class ProgramService
         }
     }
 
-    /**
-     * Aktualizuje uživateli seznam nepřihlášených povinných bloků.
-     *
-     * @throws Exception
-     */
-    private function updateUserNotRegisteredMandatoryBlocks(User $user, bool $flush = true) : void
-    {
-        if ($user->isAllowed(SrsResource::PROGRAM, Permission::CHOOSE_PROGRAMS)) {
-            $registerableCategories = $this->categoryRepository->findUserAllowed($user);
-            $registeredSubevents    = $user->getSubevents();
+//    /**
+//     * Aktualizuje uživateli seznam nepřihlášených povinných bloků.
+//     *
+//     * @throws Exception
+//     */
+//    private function updateUserNotRegisteredMandatoryBlocks(User $user, bool $flush = true) : void
+//    {
+//        if ($user->isAllowed(SrsResource::PROGRAM, Permission::CHOOSE_PROGRAMS)) {
+//            $registerableCategories = $this->categoryRepository->findUserAllowed($user);
+//            $registeredSubevents    = $user->getSubevents();
+//
+//            $notRegisteredMandatoryBlocks = $this->blockRepository->findMandatoryForCategoriesAndSubevents($user, $registerableCategories, $registeredSubevents);
+//
+//            $user->setNotRegisteredMandatoryBlocks($notRegisteredMandatoryBlocks);
+//        } else {
+//            $user->setNotRegisteredMandatoryBlocks(new ArrayCollection());
+//        }
+//
+//        if (! $flush) {
+//            return;
+//        }
+//
+//        $this->em->flush();
+//    }
 
-            $notRegisteredMandatoryBlocks = $this->blockRepository->findMandatoryForCategoriesAndSubevents($user, $registerableCategories, $registeredSubevents);
-
-            $user->setNotRegisteredMandatoryBlocks($notRegisteredMandatoryBlocks);
-        } else {
-            $user->setNotRegisteredMandatoryBlocks(new ArrayCollection());
-        }
-
-        if (! $flush) {
-            return;
-        }
-
-        $this->em->flush();
-    }
-
-    /**
-     * Aktualizuje uživatelům seznam nepřihlášených povinných bloků.
-     *
-     * @param Collection|User[] $users
-     *
-     * @throws Exception
-     */
-    private function updateUsersNotRegisteredMandatoryBlocks(Collection $users) : void
-    {
-        foreach ($users as $user) {
-            $this->updateUserNotRegisteredMandatoryBlocks($user, false);
-        }
-
-        $this->em->flush();
-    }
+//    /**
+//     * Aktualizuje uživatelům seznam nepřihlášených povinných bloků.
+//     *
+//     * @param Collection|User[] $users
+//     *
+//     * @throws Exception
+//     */
+//    private function updateUsersNotRegisteredMandatoryBlocks(Collection $users) : void
+//    {
+//        foreach ($users as $user) {
+//            $this->updateUserNotRegisteredMandatoryBlocks($user, false);
+//        }
+//
+//        $this->em->flush();
+//    }
 
     /**
      * Vrací programy, na které se uživatel může přihlásit.
