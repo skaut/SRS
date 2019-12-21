@@ -98,8 +98,6 @@ class DatabaseService
      */
     public function backup() : void
     {
-        $database = $this->container->parameters['database'];
-
         $host     = $this->em->getConnection()->getHost();
         $user     = $this->em->getConnection()->getUsername();
         $password = $this->em->getConnection()->getPassword();
