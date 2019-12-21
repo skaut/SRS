@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Model\ACL\Role;
+use App\Model\Acl\Role;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Nette;
 use Throwable;
@@ -20,18 +20,18 @@ class Authorizator extends Nette\Security\Permission
     /**
      * @throws Throwable
      */
-    public function __construct(AclService $ACLService)
+    public function __construct(AclService $aclService)
     {
         $this->addRole(Role::TEST); //role pouzivana pri testovani jine role
 
         try {
-            foreach ($ACLService->findAllResourceNames() as $resourceName) {
+            foreach ($aclService->findAllResourceNames() as $resourceName) {
                 $this->addResource($resourceName);
             }
-            foreach ($ACLService->findAllRoleNames() as $roleName) {
+            foreach ($aclService->findAllRoleNames() as $roleName) {
                 $this->addRole($roleName);
             }
-            foreach ($ACLService->findAllPermissionNames() as $permission) {
+            foreach ($aclService->findAllPermissionNames() as $permission) {
                 $this->allow($permission['roleName'], $permission['resourceName'], $permission['name']);
             }
         } catch (TableNotFoundException $ex) {

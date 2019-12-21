@@ -13,11 +13,11 @@ use Nette\Application\Routers\RouteList;
 final class RouterFactory
 {
     /** @var CmsService */
-    private $CmsService;
+    private $cmsService;
 
-    public function __construct(CmsService $CmsService)
+    public function __construct(CmsService $cmsService)
     {
-        $this->CmsService = $CmsService;
+        $this->cmsService = $cmsService;
     }
 
     public function createRouter(): RouteList
@@ -106,7 +106,7 @@ final class RouterFactory
                 'presenter' => 'Page',
                 'page' => [
                     Route::FILTER_IN => function (string $slug) {
-                        return $this->CmsService->findPublishedBySlugDto($slug);
+                        return $this->cmsService->findPublishedBySlugDto($slug);
                     },
                     Route::FILTER_OUT => static function (PageDto $page) {
                         return $page->getSlug();

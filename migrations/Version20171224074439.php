@@ -14,7 +14,7 @@ class Version20171224074439 extends AbstractMigration
     {
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE mail_template ADD system TINYINT(1) NOT NULL');
+        $this->addSql('ALTER TABLE mail_template ADD `system` TINYINT(1) NOT NULL');
         $this->addSql('UPDATE `mail_template` SET `send_to_user` = 0, `system` = 1 WHERE `mail_template`.`id` = 10');
     }
 

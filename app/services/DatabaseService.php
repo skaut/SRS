@@ -14,6 +14,7 @@ use Nette;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 use Nette\DI\Container;
+use Nettrine\ORM\EntityManagerDecorator;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Throwable;
@@ -40,13 +41,22 @@ class DatabaseService
     /** @var Application */
     private $consoleApplication;
 
-    public function __construct(string $dir, Container $container, IStorage $storage, Application $consoleApplication)
-    {
+    /** @var EntityManagerDecorator */
+    private $em;
+
+    public function __construct(
+        string $dir,
+        Container $container,
+        IStorage $storage,
+        Application $consoleApplication,
+        EntityManagerDecorator $em
+    ) {
         $this->dir       = $dir;
         $this->container = $container;
 
         $this->databaseCache      = new Cache($storage, 'Database');
         $this->consoleApplication = $consoleApplication;
+        $this->em                 = $em;
     }
 
     /**
@@ -90,10 +100,10 @@ class DatabaseService
     {
         $database = $this->container->parameters['database'];
 
-        $host     = $database['host'];
-        $user     = $database['user'];
-        $password = $database['password'];
-        $dbname   = $database['dbname'];
+        $host     = $this->em->getConnection()->getHost();
+        $user     = $this->em->getConnection()->getUsername();
+        $password = $this->em->getConnection()->getPassword();
+        $dbname   = $this->em->getConnection()->getDatabase();
 
         $dump = new MySQLDump(new mysqli($host, $user, $password, $dbname));
 

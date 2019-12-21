@@ -81,6 +81,12 @@ class InstallPresenter extends InstallBasePresenter
     public $applicationService;
 
     /**
+     * @var Skautis
+     * @inject
+     */
+    public $skautIs;
+
+    /**
      * Zobrazení první stránky průvodce.
      *
      * @throws AbortException
@@ -110,15 +116,15 @@ class InstallPresenter extends InstallBasePresenter
      */
     public function handleImportSchema() : void
     {
+        $this->consoleApplication->add(new MigrateCommand());
+        $this->consoleApplication->setAutoExit(false);
+
         $input  = new ArrayInput([
             'command' => 'migrations:migrate',
             '--no-interaction' => true,
         ]);
-        $output = new BufferedOutput();
 
-        $this->consoleApplication->add(new MigrateCommand());
-        $this->consoleApplication->setAutoExit(false);
-        $result = $this->consoleApplication->run($input, $output);
+        $result = $this->consoleApplication->run($input);
 
         if ($result !== 0) {
             $this->flashMessage('install.schema.schema_create_unsuccessful', 'danger');
@@ -234,9 +240,7 @@ class InstallPresenter extends InstallBasePresenter
     private function checkSkautISConnection() : bool
     {
         try {
-            $wsdlManager = new WsdlManager(new WebServiceFactory(), new Config($this->context->parameters['skautIS']['appId'], $this->context->parameters['skautIS']['test']));
-            $skautIS     = new Skautis($wsdlManager, new User($wsdlManager));
-            $skautIS->org->UnitAllRegistryBasic();
+            $this->skautIs->org->UnitAllRegistryBasic();
         } catch (WsdlException $ex) {
             return false;
         }

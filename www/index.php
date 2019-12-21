@@ -1,10 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
 if (file_exists('../.deployment.running'))
     require '.maintenance.php';
 
-$container = require __DIR__ . '/../app/bootstrap.php';
+require __DIR__ . '/../vendor/autoload.php';
 
-$container->getByType(Nette\Application\Application::class)
+App\Bootstrap::boot()
+    ->createContainer()
+    ->getByType(Nette\Application\Application::class)
     ->run();
