@@ -6,6 +6,7 @@ namespace App\AdminModule\Forms;
 
 use Nette;
 use Nette\Localization\ITranslator;
+use Nextras\FormsRendering\Renderers\Bs3FormRenderer;
 
 /**
  * BaseFormFactory pro AdminModule.
