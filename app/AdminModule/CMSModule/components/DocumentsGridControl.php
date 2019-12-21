@@ -18,6 +18,7 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Http\FileUpload;
+use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
@@ -32,7 +33,7 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class DocumentsGridControl extends Control
 {
-    /** @var Translator */
+    /** @var ITranslator */
     private $translator;
 
     /** @var DocumentRepository */
@@ -45,7 +46,7 @@ class DocumentsGridControl extends Control
     private $tagRepository;
 
     public function __construct(
-        Translator $translator,
+        ITranslator $translator,
         DocumentRepository $documentRepository,
         TagRepository $tagRepository,
         FilesService $filesService

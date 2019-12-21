@@ -11,6 +11,7 @@ use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
+use Nette\Localization\ITranslator;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 use function abs;
@@ -23,7 +24,7 @@ use function number_format;
  */
 class PlacePointsGridControl extends Control
 {
-    /** @var Translator */
+    /** @var ITranslator */
     private $translator;
 
     /** @var PlacePointRepository */

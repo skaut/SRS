@@ -20,6 +20,7 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
+use Nette\Localization\ITranslator;
 use stdClass;
 use Throwable;
 use Ublaboo\DataGrid\DataGrid;
@@ -32,7 +33,7 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class PaymentsGridControl extends Control
 {
-    /** @var Translator */
+    /** @var ITranslator */
     private $translator;
 
     /** @var PaymentRepository */

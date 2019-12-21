@@ -1,0 +1,21 @@
+parameters:
+
+dbal:
+    connection:
+        host: localhost
+        driver: mysqli
+        dbname: dbname
+        user: user
+        password: password
+
+skautis:
+    applicationId: skaut_is_app_id
+    testMode: false
+
+mail:
+    smtp: false
+    host:
+    port:
+    username:
+    password:
+    secure:

@@ -13,6 +13,7 @@ use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
+use Nette\Localization\ITranslator;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
@@ -24,13 +25,13 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class CustomInputsGridControl extends Control
 {
-    /** @var Translator */
+    /** @var ITranslator */
     private $translator;
 
     /** @var CustomInputRepository */
     private $customInputRepository;
 
-    public function __construct(Translator $translator, CustomInputRepository $customInputRepository)
+    public function __construct(ITranslator $translator, CustomInputRepository $customInputRepository)
     {
         parent::__construct();
 

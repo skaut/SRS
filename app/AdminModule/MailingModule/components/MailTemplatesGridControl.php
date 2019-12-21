@@ -10,6 +10,7 @@ use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
+use Nette\Localization\ITranslator;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
@@ -21,13 +22,13 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class MailTemplatesGridControl extends Control
 {
-    /** @var Translator */
+    /** @var ITranslator */
     private $translator;
 
     /** @var TemplateRepository */
     private $templateRepository;
 
-    public function __construct(Translator $translator, TemplateRepository $templateRepository)
+    public function __construct(ITranslator $translator, TemplateRepository $templateRepository)
     {
         parent::__construct();
 

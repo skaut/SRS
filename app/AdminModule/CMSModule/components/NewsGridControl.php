@@ -11,6 +11,7 @@ use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
+use Nette\Localization\ITranslator;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
@@ -22,13 +23,13 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class NewsGridControl extends Control
 {
-    /** @var Translator */
+    /** @var ITranslator */
     private $translator;
 
     /** @var NewsRepository */
     private $newsRepository;
 
-    public function __construct(Translator $translator, NewsRepository $newsRepository)
+    public function __construct(ITranslator $translator, NewsRepository $newsRepository)
     {
         parent::__construct();
 

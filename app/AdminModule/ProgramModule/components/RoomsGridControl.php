@@ -18,6 +18,7 @@ use Nette\Forms\Container;
 use Nette\Forms\Controls\TextInput;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
+use Nette\Localization\ITranslator;
 use stdClass;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
@@ -29,7 +30,7 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class RoomsGridControl extends Control
 {
-    /** @var Translator */
+    /** @var ITranslator */
     private $translator;
 
     /** @var RoomRepository */
@@ -45,7 +46,7 @@ class RoomsGridControl extends Control
     private $sessionSection;
 
     public function __construct(
-        Translator $translator,
+        ITranslator $translator,
         RoomRepository $roomRepository,
         ExcelExportService $excelExportService,
         Session $session

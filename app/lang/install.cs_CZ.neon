@@ -14,7 +14,7 @@ admin:
     text: "Pro administraci systému je třeba nastavit administrátora, v dalším kroku budete přesměrováni na přihlašovací stránku skautISu, přihlášenému uživateli bude v systému přiřazena administrátorská role."
     create_admin: "Přihlásit se"
     admin_already_created: "Administrátorská role již byla vytvořena."
-    skautis_access_denied: "Připojení ke skautISu se nepodařilo, zkontrolujte App ID a verzi v config.local.neon."
+    skautis_access_denied: "Připojení ke skautISu se nepodařilo, zkontrolujte App ID a verzi v local.neon."
 
 finish:
     heading: "Instalace dokončena"

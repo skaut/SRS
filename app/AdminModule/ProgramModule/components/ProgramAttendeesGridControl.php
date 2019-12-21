@@ -18,6 +18,7 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
+use Nette\Localization\ITranslator;
 use Throwable;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
@@ -43,7 +44,7 @@ class ProgramAttendeesGridControl extends Control
      */
     private $user;
 
-    /** @var Translator */
+    /** @var ITranslator */
     private $translator;
 
     /** @var ProgramRepository */
@@ -59,7 +60,7 @@ class ProgramAttendeesGridControl extends Control
     private $sessionSection;
 
     public function __construct(
-        Translator $translator,
+        ITranslator $translator,
         ProgramRepository $programRepository,
         UserRepository $userRepository,
         ProgramService $programService,

@@ -39,8 +39,8 @@ build:
             code: phing tests-with-coverage
 
         - appnific/expandenv:
-            input_file: app/config/config.ci.local.neon
-            output_file: app/config/config.local.neon
+            input_file: app/config/ci.local.neon
+            output_file: app/config/local.neon
 
         - script:
             name: run database migrations

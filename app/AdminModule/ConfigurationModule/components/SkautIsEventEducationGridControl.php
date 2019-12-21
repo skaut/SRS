@@ -11,6 +11,7 @@ use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Forms\Container;
+use Nette\Localization\ITranslator;
 use stdClass;
 use Throwable;
 use Ublaboo\DataGrid\DataGrid;
@@ -22,7 +23,7 @@ use Ublaboo\DataGrid\DataGrid;
  */
 class SkautIsEventEducationGridControl extends Control
 {
-    /** @var Translator */
+    /** @var ITranslator */
     private $translator;
 
     /** @var SubeventRepository */
@@ -32,7 +33,7 @@ class SkautIsEventEducationGridControl extends Control
     private $skautIsCourseRepository;
 
     public function __construct(
-        Translator $translator,
+        ITranslator $translator,
         SubeventRepository $subeventRepository,
         SkautIsCourseRepository $skautIsCourseRepository
     ) {

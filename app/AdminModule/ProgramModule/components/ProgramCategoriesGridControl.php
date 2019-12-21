@@ -18,6 +18,7 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\TextInput;
+use Nette\Localization\ITranslator;
 use stdClass;
 use Throwable;
 use Ublaboo\DataGrid\DataGrid;
@@ -30,7 +31,7 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class ProgramCategoriesGridControl extends Control
 {
-    /** @var Translator */
+    /** @var ITranslator */
     private $translator;
 
     /** @var CategoryRepository */
@@ -46,7 +47,7 @@ class ProgramCategoriesGridControl extends Control
     private $ACLService;
 
     public function __construct(
-        Translator $translator,
+        ITranslator $translator,
         CategoryRepository $categoryRepository,
         RoleRepository $roleRepository,
         ProgramService $programService,

@@ -11,6 +11,7 @@ use Doctrine\ORM\ORMException;
 use Kdyby\Translation\Translator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
+use Nette\Localization\ITranslator;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
@@ -21,13 +22,13 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class SubeventsGridControl extends Control
 {
-    /** @var Translator */
+    /** @var ITranslator */
     private $translator;
 
     /** @var SubeventRepository */
     private $subeventRepository;
 
-    public function __construct(Translator $translator, SubeventRepository $subeventRepository)
+    public function __construct(ITranslator $translator, SubeventRepository $subeventRepository)
     {
         parent::__construct();
 

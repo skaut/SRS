@@ -1,0 +1,19 @@
+parameters:
+
+dbal:
+    connection:
+        host: mysql-test
+        driver: mysqli
+        dbname: srs
+        user: root
+        password: root
+
+skautis:
+    applicationId: 31153c75-6c74-49ab-8660-123786a11a3b
+    testMode: true
+
+mail:
+    smtp: true
+    host: smtp-srs.loc
+    username: test@srs.loc
+
